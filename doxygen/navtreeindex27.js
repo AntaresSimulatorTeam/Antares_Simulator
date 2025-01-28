@@ -1,7 +1,5 @@
 var NAVTREEINDEX27 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroCost.html#a64422bb388bc66e345d92a2781722fd7":[9,0,0,13,11,4,76,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroStorage.html":[9,0,0,13,11,4,77],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroStorage.html#a0c87118454e4b767d4ba52277ebf5eb8":[9,0,0,13,11,4,77,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroStorage.html#a2b3c4b76f02fbd0a2c37359c94283420":[9,0,0,13,11,4,77,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardInflows.html":[9,0,0,13,11,4,78],
@@ -249,5 +247,7 @@ var NAVTREEINDEX27 =
 "structAntares_1_1Window_1_1Inspector_1_1PClusterNomCapacityColor.html":[9,0,0,19,1,34],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterRandomSpread.html":[9,0,0,19,1,35],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterReference.html":[9,0,0,19,1,36],
-"structAntares_1_1Window_1_1Inspector_1_1PClusterSpinning.html":[9,0,0,19,1,37]
+"structAntares_1_1Window_1_1Inspector_1_1PClusterSpinning.html":[9,0,0,19,1,37],
+"structAntares_1_1Window_1_1Inspector_1_1PClusterSpinningColor.html":[9,0,0,19,1,38],
+"structAntares_1_1Window_1_1Inspector_1_1PClusterStartupCost.html":[9,0,0,19,1,39]
 };

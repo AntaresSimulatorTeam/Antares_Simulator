@@ -1,7 +1,5 @@
 var NAVTREEINDEX24 =
 {
-"functions_type_r.html":[9,3,3,12],
-"functions_type_s.html":[9,3,3,13],
 "functions_type_t.html":[9,3,3,14],
 "functions_type_v.html":[9,3,3,15],
 "functions_u.html":[9,3,0,20],
@@ -249,5 +247,7 @@ var NAVTREEINDEX24 =
 "message_8hxx_source.html":[10,0,0,8,2,2,25],
 "minmax-data_8h_source.html":[10,0,0,4,17,0,0,0,0,3,6],
 "minmax_8h_source.html":[10,0,0,4,17,0,0,0,0,3,7],
-"minmax_8hxx_source.html":[10,0,0,4,17,0,0,0,0,3,8]
+"minmax_8hxx_source.html":[10,0,0,4,17,0,0,0,0,3,8],
+"misc-gen_8h_source.html":[10,0,0,8,0,0,0,0,8],
+"miscGenMinusRowPSP_8h_source.html":[10,0,0,4,17,0,0,0,0,1,4]
 };

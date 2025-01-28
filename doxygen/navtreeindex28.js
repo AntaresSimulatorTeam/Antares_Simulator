@@ -1,7 +1,5 @@
 var NAVTREEINDEX28 =
 {
-"structAntares_1_1Window_1_1Inspector_1_1PClusterSpinningColor.html":[9,0,0,19,1,38],
-"structAntares_1_1Window_1_1Inspector_1_1PClusterStartupCost.html":[9,0,0,19,1,39],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterUnitCount.html":[9,0,0,19,1,40],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterVariableOMcost.html":[9,0,0,19,1,41],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterVolatilityForced.html":[9,0,0,19,1,42],
@@ -249,5 +247,7 @@ var NAVTREEINDEX28 =
 "ui_2simulator_2application_2study_8h_source.html":[10,0,0,8,2,0,6],
 "ui_2simulator_2toolbox_2components_2datagrid_2component_8h_source.html":[10,0,0,8,2,1,1,1,2],
 "ui_2simulator_2toolbox_2components_2datagrid_2filter_2component_8h_source.html":[10,0,0,8,2,1,1,1,0,3],
-"ui_2simulator_2toolbox_2components_2datagrid_2filter_2filter_8h_source.html":[10,0,0,8,2,1,1,1,0,4]
+"ui_2simulator_2toolbox_2components_2datagrid_2filter_2filter_8h_source.html":[10,0,0,8,2,1,1,1,0,4],
+"ui_2simulator_2toolbox_2components_2datagrid_2filter_2operator_2all_8h_source.html":[10,0,0,8,2,1,1,1,0,1,0],
+"ui_2simulator_2toolbox_2components_2datagrid_2filter_2parameter_2parameter_8h_source.html":[10,0,0,8,2,1,1,1,0,2,0]
 };

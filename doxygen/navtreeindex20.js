@@ -1,7 +1,5 @@
 var NAVTREEINDEX20 =
 {
-"classCellColumnData.html#a2b8c47c484cfd3364a20b1597f17bc16":[9,0,54,2],
-"classCellColumnData.html#a9de1ff0803326e7a7cddc04ec579871c":[9,0,54,0],
 "classCellColumnData.html#acf382fdbf28ef94507b5a787a122e3d5":[9,0,54,4],
 "classConsistenceNumberOfDispatchableUnits.html":[9,0,59],
 "classConsistenceNumberOfDispatchableUnits.html#aecd29524ff5dd06cb34e9bd7033dca69":[9,0,59,0],
@@ -249,5 +247,7 @@ var NAVTREEINDEX20 =
 "classNbDispUnitsMinBoundSinceMinUpTime.html":[9,0,169],
 "classNbDispUnitsMinBoundSinceMinUpTime.html#a6c9076b36b6fba52d69c67ca72799e6b":[9,0,169,0],
 "classNbDispUnitsMinBoundSinceMinUpTimeGroup.html":[9,0,171],
-"classNbDispUnitsMinBoundSinceMinUpTimeGroup.html#ae10d38a9e22e00a2fd5e0d392506bf6e":[9,0,171,0]
+"classNbDispUnitsMinBoundSinceMinUpTimeGroup.html#ae10d38a9e22e00a2fd5e0d392506bf6e":[9,0,171,0],
+"classNbUnitsOutageLessThanNbUnitsStop.html":[9,0,172],
+"classNbUnitsOutageLessThanNbUnitsStop.html#a3744b46a326600cfa20c13008943853e":[9,0,172,0]
 };

@@ -2,8 +2,6 @@ var classAntares_1_1Solver_1_1Variable_1_1Container_1_1List =
 [
     [ "ListType", "classAntares_1_1Solver_1_1Variable_1_1Container_1_1List.html#ade48183d5d6e8bcd67fd78530c1d9557", null ],
     [ "NextType", "classAntares_1_1Solver_1_1Variable_1_1Container_1_1List.html#a2e98d3fdef83bb9716f339f668e6a2d4", null ],
-    [ "List", "classAntares_1_1Solver_1_1Variable_1_1Container_1_1List.html#afbdf40b5e0d4ea80f73d045d23a3020c", null ],
-    [ "~List", "classAntares_1_1Solver_1_1Variable_1_1Container_1_1List.html#a2c514fbc513cf3b1a145532e2299355f", null ],
     [ "buildDigest", "classAntares_1_1Solver_1_1Variable_1_1Container_1_1List.html#ab967510525e2f3670364ba5a8ae46ca8", null ],
     [ "buildSurveyReport", "classAntares_1_1Solver_1_1Variable_1_1Container_1_1List.html#aee22f18b519086d608ed552a4a7e1ba9", null ],
     [ "exportSurveyResults", "classAntares_1_1Solver_1_1Variable_1_1Container_1_1List.html#aeea2b05f6ad888e02e34afa9aadd1a7b", null ],

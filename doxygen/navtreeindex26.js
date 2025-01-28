@@ -1,7 +1,5 @@
 var NAVTREEINDEX26 =
 {
-"structAntares_1_1API_1_1SimulationResults.html#a54376dcd0475b0ca2b301d6dd5461726":[9,0,0,1,3,0],
-"structAntares_1_1API_1_1SimulationResults.html#aadded6e6147bd06bda57335ed88f9e89":[9,0,0,1,3,1],
 "structAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CheckMinUpDownTime.html":[9,0,0,2,0,0,10],
 "structAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CheckUnitCount.html":[9,0,0,2,0,0,11],
 "structAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1NoCheck.html":[9,0,0,2,0,0,48],
@@ -249,5 +247,7 @@ var NAVTREEINDEX26 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHurdleCosts.html":[9,0,0,13,11,4,75],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHurdleCosts.html#ad2f66c1da76a934161e490df11adf4f6":[9,0,0,13,11,4,75,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroCost.html":[9,0,0,13,11,4,76],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroCost.html#a0c6170ae4c6ee0834d7b053aa0615345":[9,0,0,13,11,4,76,1]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroCost.html#a0c6170ae4c6ee0834d7b053aa0615345":[9,0,0,13,11,4,76,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroCost.html#a64422bb388bc66e345d92a2781722fd7":[9,0,0,13,11,4,76,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroStorage.html":[9,0,0,13,11,4,77]
 };

@@ -1,7 +1,5 @@
 var NAVTREEINDEX17 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#af663a05ad57966120fa16ba9c00f8e2c":[9,0,0,13,11,23,4],
-"classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#afc2040381057f7e36cf4580c931e27fb":[9,0,0,13,11,23,3],
 "classAntares_1_1Solver_1_1Variable_1_1State.html":[9,0,0,13,11,35],
 "classAntares_1_1Solver_1_1Variable_1_1State.html#a0531f1e1a845ea1ab8ff7c248b7bf640":[9,0,0,13,11,35,5],
 "classAntares_1_1Solver_1_1Variable_1_1State.html#a1f96b8a70272676a148555c82a33b15d":[9,0,0,13,11,35,13],
@@ -249,5 +247,7 @@ var NAVTREEINDEX17 =
 "classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1AOperator.html#aa868acc69d4b716a5687df7c72174c48":[9,0,0,16,1,0,0,7],
 "classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1AOperator.html#ac27548f6da21b1330a30428d3eb86ba6":[9,0,0,16,1,0,0,3],
 "classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1AOperator.html#aff3dad8a52b9d848bfd1722c8d62341b":[9,0,0,16,1,0,0,0],
-"classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1EqualsTo.html":[9,0,0,16,1,0,2]
+"classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1EqualsTo.html":[9,0,0,16,1,0,2],
+"classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1GreaterThan.html":[9,0,0,16,1,0,3],
+"classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1GreaterThanOrEqualsTo.html":[9,0,0,16,1,0,4]
 };
