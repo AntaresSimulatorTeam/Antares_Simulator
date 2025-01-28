@@ -1,8 +1,5 @@
 var hierarchy =
 [
-    [ "Variable:: IVariable", null, [
-      [ "Antares::Solver::Variable::Economy::ProductionByDispatchablePlant< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByDispatchablePlant.html", null ]
-    ] ],
     [ "abc.ABCMeta", null, [
       [ "check_general.check_interface", "classcheck__general_1_1check__interface.html", null ]
     ] ],
@@ -235,6 +232,7 @@ var hierarchy =
     [ "YAML::convert< Monster >", "structYAML_1_1convert_3_01Monster_01_4.html", null ],
     [ "YAML::convert< Power >", "structYAML_1_1convert_3_01Power_01_4.html", null ],
     [ "YAML::convert< Vec3 >", "structYAML_1_1convert_3_01Vec3_01_4.html", null ],
+    [ "Antares::Concurrency::Detail::CopyableCallable< T >", "classAntares_1_1Concurrency_1_1Detail_1_1CopyableCallable.html", null ],
     [ "Antares::Data::Correlation", "classAntares_1_1Data_1_1Correlation.html", null ],
     [ "Antares::Window::CorrelationPanelData", "classAntares_1_1Window_1_1CorrelationPanelData.html", null ],
     [ "CORRESPONDANCE_DES_CONTRAINTES", "structCORRESPONDANCE__DES__CONTRAINTES.html", null ],
@@ -313,65 +311,185 @@ var hierarchy =
       [ "Antares::Data::ThermalCluster", "classAntares_1_1Data_1_1ThermalCluster.html", null ]
     ] ],
     [ "Antares::Solver::Variable::Container::EndOfList", "classAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList.html", [
-      [ "Antares::Solver::Variable::IVariable< OverallCost< Container::EndOfList >, Container::EndOfList, VCardOverallCost >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< SpilledEnergy< Container::EndOfList >, Container::EndOfList, VCardSpilledEnergy >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< SpatialAggregate< VarT, Container::EndOfList >, Container::EndOfList, VCardProxy< VarT > >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< AvailableDispatchGen< Container::EndOfList >, Container::EndOfList, VCardAvailableDispatchGen >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< Balance< Container::EndOfList >, Container::EndOfList, VCardBalance >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< BindingConstMarginCost< Container::EndOfList >, Container::EndOfList, VCardBindingConstMarginCost >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< CongestionFee< Container::EndOfList >, Container::EndOfList, VCardCongestionFee >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< CongestionFeeAbs< Container::EndOfList >, Container::EndOfList, VCardCongestionFeeAbs >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< CongestionProbability< Container::EndOfList >, Container::EndOfList, VCardCongestionProbability >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< DispatchableGenMargin< Container::EndOfList >, Container::EndOfList, VCardDispatchableGenMargin >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< DispatchableGeneration< Container::EndOfList >, Container::EndOfList, VCardDispatchableGeneration >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< DomesticUnsuppliedEnergy< Container::EndOfList >, Container::EndOfList, VCardDomesticUnsuppliedEnergy >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< DtgMarginCsr< Container::EndOfList >, Container::EndOfList, VCardDtgMarginCsr >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< FlowLinear< Container::EndOfList >, Container::EndOfList, VCardFlowLinear >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< FlowLinearAbs< Container::EndOfList >, Container::EndOfList, VCardFlowLinearAbs >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< FlowQuad< Container::EndOfList >, Container::EndOfList, VCardFlowQuad >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< HurdleCosts< Container::EndOfList >, Container::EndOfList, VCardHurdleCosts >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< HydroCost< Container::EndOfList >, Container::EndOfList, VCardHydroCost >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< HydroStorage< Container::EndOfList >, Container::EndOfList, VCardHydroStorage >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< Inflows< Container::EndOfList >, Container::EndOfList, VCardInflows >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< LMRViolations< Container::EndOfList >, Container::EndOfList, VCardLMRViolations >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< LOLD< Container::EndOfList >, Container::EndOfList, VCardLOLD >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< LOLD_CSR< Container::EndOfList >, Container::EndOfList, VCardLOLD_CSR >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< LOLP< Container::EndOfList >, Container::EndOfList, VCardLOLP >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< LOLP_CSR< Container::EndOfList >, Container::EndOfList, VCardLOLP_CSR >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< LoopFlow< Container::EndOfList >, Container::EndOfList, VCardLoopFlow >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< Marge< Container::EndOfList >, Container::EndOfList, VCardMARGE >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< MarginalCost< Container::EndOfList >, Container::EndOfList, VCardMarginalCost >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< MaxMrgCsr< Container::EndOfList >, Container::EndOfList, VCardMAX_MRG_CSR >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< MiscGenMinusRowPSP< Container::EndOfList >, Container::EndOfList, VCardMiscGenMinusRowPSP >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< NbOfDispatchedUnits< Container::EndOfList >, Container::EndOfList, VCardNbOfDispatchedUnits >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< NbOfDispatchedUnitsByPlant< Container::EndOfList >, Container::EndOfList, VCardNbOfDispatchedUnitsByPlant >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< NonProportionalCost< Container::EndOfList >, Container::EndOfList, VCardNonProportionalCost >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< NonProportionalCostByDispatchablePlant< Container::EndOfList >, Container::EndOfList, VCardNonProportionalCostByDispatchablePlant >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< OperatingCost< Container::EndOfList >, Container::EndOfList, VCardOperatingCost >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< OverallCostCsr< Container::EndOfList >, Container::EndOfList, VCardOverallCostCsr >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< Overflows< Container::EndOfList >, Container::EndOfList, VCardOverflow >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< PSP< Container::EndOfList >, Container::EndOfList, VCardPSP >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< Price< Container::EndOfList >, Container::EndOfList, VCardPrice >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< PriceCSR< Container::EndOfList >, Container::EndOfList, VCardPriceCSR >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< ProductionByRenewablePlant< Container::EndOfList >, Container::EndOfList, VCardProductionByRenewablePlant >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< ProfitByPlant< Container::EndOfList >, Container::EndOfList, VCardProfitByPlant >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< Pumping< Container::EndOfList >, Container::EndOfList, VCardPumping >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< RenewableGeneration< Container::EndOfList >, Container::EndOfList, VCardRenewableGeneration >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< ReservoirLevel< Container::EndOfList >, Container::EndOfList, VCardReservoirLevel >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< RowBalance< Container::EndOfList >, Container::EndOfList, VCardRowBalance >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< STSbyGroup< Container::EndOfList >, Container::EndOfList, VCardSTSbyGroup >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< STstorageCashFlowByCluster< Container::EndOfList >, Container::EndOfList, VCardSTstorageCashFlowByCluster >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< STstorageInjectionByCluster< Container::EndOfList >, Container::EndOfList, VCardSTstorageInjectionByCluster >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< STstorageLevelsByCluster< Container::EndOfList >, Container::EndOfList, VCardSTstorageLevelsByCluster >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< STstorageWithdrawalByCluster< Container::EndOfList >, Container::EndOfList, VCardSTstorageWithdrawalByCluster >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< ThermalAirPollutantEmissions< Container::EndOfList >, Container::EndOfList, VCardThermalAirPollutantEmissions >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< TimeSeriesValuesHydro< Container::EndOfList >, Container::EndOfList, VCardTimeSeriesValuesHydro >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< TimeSeriesValuesLoad< Container::EndOfList >, Container::EndOfList, VCardTimeSeriesValuesLoad >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< TimeSeriesValuesSolar< Container::EndOfList >, Container::EndOfList, VCardTimeSeriesValuesSolar >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< TimeSeriesValuesWind< Container::EndOfList >, Container::EndOfList, VCardTimeSeriesValuesWind >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< UnsupliedEnergy< Container::EndOfList >, Container::EndOfList, VCardUnsupliedEnergy >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< UnsupliedEnergyCSR< Container::EndOfList >, Container::EndOfList, VCardUnsupliedEnergyCSR >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::IVariable< WaterValue< Container::EndOfList >, Container::EndOfList, VCardWaterValue >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
+      [ "Antares::Solver::Variable::IVariable< OverallCost< Container::EndOfList >, Container::EndOfList, VCardOverallCost >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Adequacy::OverallCost< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost.html", null ],
+        [ "Antares::Solver::Variable::Economy::OverallCost< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< SpilledEnergy< Container::EndOfList >, Container::EndOfList, VCardSpilledEnergy >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Adequacy::SpilledEnergy< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy.html", null ],
+        [ "Antares::Solver::Variable::Economy::SpilledEnergy< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1SpilledEnergy.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< SpatialAggregate< VarT, Container::EndOfList >, Container::EndOfList, VCardProxy< VarT > >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Common::SpatialAggregate< VarT, NextT >", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< AvailableDispatchGen< Container::EndOfList >, Container::EndOfList, VCardAvailableDispatchGen >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::AvailableDispatchGen< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1AvailableDispatchGen.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< Balance< Container::EndOfList >, Container::EndOfList, VCardBalance >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::Balance< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Balance.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< BindingConstMarginCost< Container::EndOfList >, Container::EndOfList, VCardBindingConstMarginCost >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::BindingConstMarginCost< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< CongestionFee< Container::EndOfList >, Container::EndOfList, VCardCongestionFee >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::CongestionFee< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFee.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< CongestionFeeAbs< Container::EndOfList >, Container::EndOfList, VCardCongestionFeeAbs >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::CongestionFeeAbs< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeAbs.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< CongestionProbability< Container::EndOfList >, Container::EndOfList, VCardCongestionProbability >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::CongestionProbability< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< DispatchableGenMargin< Container::EndOfList >, Container::EndOfList, VCardDispatchableGenMargin >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::DispatchableGenMargin< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< DispatchableGeneration< Container::EndOfList >, Container::EndOfList, VCardDispatchableGeneration >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::DispatchableGeneration< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGeneration.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< DomesticUnsuppliedEnergy< Container::EndOfList >, Container::EndOfList, VCardDomesticUnsuppliedEnergy >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::DomesticUnsuppliedEnergy< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DomesticUnsuppliedEnergy.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< DtgMarginCsr< Container::EndOfList >, Container::EndOfList, VCardDtgMarginCsr >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::DtgMarginCsr< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DtgMarginCsr.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< FlowLinear< Container::EndOfList >, Container::EndOfList, VCardFlowLinear >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::FlowLinear< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinear.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< FlowLinearAbs< Container::EndOfList >, Container::EndOfList, VCardFlowLinearAbs >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::FlowLinearAbs< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinearAbs.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< FlowQuad< Container::EndOfList >, Container::EndOfList, VCardFlowQuad >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::FlowQuad< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowQuad.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< HurdleCosts< Container::EndOfList >, Container::EndOfList, VCardHurdleCosts >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::HurdleCosts< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< HydroCost< Container::EndOfList >, Container::EndOfList, VCardHydroCost >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::HydroCost< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< HydroStorage< Container::EndOfList >, Container::EndOfList, VCardHydroStorage >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::HydroStorage< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroStorage.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< Inflows< Container::EndOfList >, Container::EndOfList, VCardInflows >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::Inflows< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Inflows.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< LMRViolations< Container::EndOfList >, Container::EndOfList, VCardLMRViolations >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::LMRViolations< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LMRViolations.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< LOLD< Container::EndOfList >, Container::EndOfList, VCardLOLD >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::LOLD< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< LOLD_CSR< Container::EndOfList >, Container::EndOfList, VCardLOLD_CSR >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::LOLD_CSR< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__CSR.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< LOLP< Container::EndOfList >, Container::EndOfList, VCardLOLP >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::LOLP< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< LOLP_CSR< Container::EndOfList >, Container::EndOfList, VCardLOLP_CSR >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::LOLP_CSR< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP__CSR.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< LoopFlow< Container::EndOfList >, Container::EndOfList, VCardLoopFlow >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::LoopFlow< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< Marge< Container::EndOfList >, Container::EndOfList, VCardMARGE >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::Marge< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< MarginalCost< Container::EndOfList >, Container::EndOfList, VCardMarginalCost >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::MarginalCost< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< MaxMrgCsr< Container::EndOfList >, Container::EndOfList, VCardMAX_MRG_CSR >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::MaxMrgCsr< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCsr.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< MiscGenMinusRowPSP< Container::EndOfList >, Container::EndOfList, VCardMiscGenMinusRowPSP >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::MiscGenMinusRowPSP< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MiscGenMinusRowPSP.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< NbOfDispatchedUnits< Container::EndOfList >, Container::EndOfList, VCardNbOfDispatchedUnits >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::NbOfDispatchedUnits< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< NbOfDispatchedUnitsByPlant< Container::EndOfList >, Container::EndOfList, VCardNbOfDispatchedUnitsByPlant >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::NbOfDispatchedUnitsByPlant< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< NonProportionalCost< Container::EndOfList >, Container::EndOfList, VCardNonProportionalCost >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::NonProportionalCost< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCost.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< NonProportionalCostByDispatchablePlant< Container::EndOfList >, Container::EndOfList, VCardNonProportionalCostByDispatchablePlant >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::NonProportionalCostByDispatchablePlant< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispatchablePlant.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< OperatingCost< Container::EndOfList >, Container::EndOfList, VCardOperatingCost >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::OperatingCost< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCost.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< OverallCostCsr< Container::EndOfList >, Container::EndOfList, VCardOverallCostCsr >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::OverallCostCsr< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostCsr.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< Overflows< Container::EndOfList >, Container::EndOfList, VCardOverflow >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::Overflows< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Overflows.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< PSP< Container::EndOfList >, Container::EndOfList, VCardPSP >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::PSP< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< Price< Container::EndOfList >, Container::EndOfList, VCardPrice >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::Price< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Price.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< PriceCSR< Container::EndOfList >, Container::EndOfList, VCardPriceCSR >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::PriceCSR< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceCSR.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< ProductionByRenewablePlant< Container::EndOfList >, Container::EndOfList, VCardProductionByRenewablePlant >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::ProductionByRenewablePlant< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< ProfitByPlant< Container::EndOfList >, Container::EndOfList, VCardProfitByPlant >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::ProfitByPlant< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< Pumping< Container::EndOfList >, Container::EndOfList, VCardPumping >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::Pumping< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< RenewableGeneration< Container::EndOfList >, Container::EndOfList, VCardRenewableGeneration >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::RenewableGeneration< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< ReservoirLevel< Container::EndOfList >, Container::EndOfList, VCardReservoirLevel >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::ReservoirLevel< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< RowBalance< Container::EndOfList >, Container::EndOfList, VCardRowBalance >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::RowBalance< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< STSbyGroup< Container::EndOfList >, Container::EndOfList, VCardSTSbyGroup >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::STSbyGroup< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STSbyGroup.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< STstorageCashFlowByCluster< Container::EndOfList >, Container::EndOfList, VCardSTstorageCashFlowByCluster >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::STstorageCashFlowByCluster< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageCashFlowByCluster.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< STstorageInjectionByCluster< Container::EndOfList >, Container::EndOfList, VCardSTstorageInjectionByCluster >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::STstorageInjectionByCluster< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageInjectionByCluster.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< STstorageLevelsByCluster< Container::EndOfList >, Container::EndOfList, VCardSTstorageLevelsByCluster >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::STstorageLevelsByCluster< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageLevelsByCluster.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< STstorageWithdrawalByCluster< Container::EndOfList >, Container::EndOfList, VCardSTstorageWithdrawalByCluster >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::STstorageWithdrawalByCluster< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageWithdrawalByCluster.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< ThermalAirPollutantEmissions< Container::EndOfList >, Container::EndOfList, VCardThermalAirPollutantEmissions >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::ThermalAirPollutantEmissions< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ThermalAirPollutantEmissions.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< TimeSeriesValuesHydro< Container::EndOfList >, Container::EndOfList, VCardTimeSeriesValuesHydro >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::TimeSeriesValuesHydro< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesHydro.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< TimeSeriesValuesLoad< Container::EndOfList >, Container::EndOfList, VCardTimeSeriesValuesLoad >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::TimeSeriesValuesLoad< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesLoad.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< TimeSeriesValuesSolar< Container::EndOfList >, Container::EndOfList, VCardTimeSeriesValuesSolar >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::TimeSeriesValuesSolar< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesSolar.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< TimeSeriesValuesWind< Container::EndOfList >, Container::EndOfList, VCardTimeSeriesValuesWind >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::TimeSeriesValuesWind< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesWind.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< UnsupliedEnergy< Container::EndOfList >, Container::EndOfList, VCardUnsupliedEnergy >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::UnsupliedEnergy< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergy.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< UnsupliedEnergyCSR< Container::EndOfList >, Container::EndOfList, VCardUnsupliedEnergyCSR >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::UnsupliedEnergyCSR< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< WaterValue< Container::EndOfList >, Container::EndOfList, VCardWaterValue >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::WaterValue< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue.html", null ]
+      ] ],
       [ "Antares::Solver::Variable::Container::List< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Container_1_1List.html", null ]
     ] ],
     [ "ENERGIES_ET_PUISSANCES_HYDRAULIQUES", "structENERGIES__ET__PUISSANCES__HYDRAULIQUES.html", null ],
@@ -600,6 +718,20 @@ var hierarchy =
       [ "Antares::Component::MainPanel", "classAntares_1_1Component_1_1MainPanel.html", null ],
       [ "Antares::Component::MapNotebook", "classAntares_1_1Component_1_1MapNotebook.html", null ],
       [ "Antares::Component::Spotlight", "classAntares_1_1Component_1_1Spotlight.html", null ],
+      [ "Antares::Component::Spotlight::IProvider", "classAntares_1_1Component_1_1Spotlight_1_1IProvider.html", [
+        [ "Antares::Component::Spotlight::NullProvider", "classAntares_1_1Component_1_1Spotlight_1_1NullProvider.html", null ],
+        [ "Antares::Toolbox::InputSelector::SpotlightProviderArea", "classAntares_1_1Toolbox_1_1InputSelector_1_1SpotlightProviderArea.html", null ],
+        [ "Antares::Toolbox::InputSelector::SpotlightProviderConstraint", "classAntares_1_1Toolbox_1_1InputSelector_1_1SpotlightProviderConstraint.html", null ],
+        [ "Antares::Window::FileListProvider", "classAntares_1_1Window_1_1FileListProvider.html", null ],
+        [ "Antares::Window::FileSearchProvider", "classAntares_1_1Window_1_1FileSearchProvider.html", null ],
+        [ "Antares::Window::OutputViewer::Provider::Comparison", "classAntares_1_1Window_1_1OutputViewer_1_1Provider_1_1Comparison.html", null ],
+        [ "Antares::Window::OutputViewer::Provider::Outputs", "classAntares_1_1Window_1_1OutputViewer_1_1Provider_1_1Outputs.html", null ],
+        [ "Antares::Window::OutputViewer::Provider::Variables", "classAntares_1_1Window_1_1OutputViewer_1_1Provider_1_1Variables.html", null ],
+        [ "Antares::Window::OutputViewer::SpotlightProvider", "classAntares_1_1Window_1_1OutputViewer_1_1SpotlightProvider.html", null ],
+        [ "Antares::Window::OutputViewer::SpotlightProviderGlobalSelection", "classAntares_1_1Window_1_1OutputViewer_1_1SpotlightProviderGlobalSelection.html", null ],
+        [ "Antares::Window::OutputViewer::SpotlightProviderMCAll", "classAntares_1_1Window_1_1OutputViewer_1_1SpotlightProviderMCAll.html", null ],
+        [ "Antares::Window::SpotlightProviderWindows", "classAntares_1_1Window_1_1SpotlightProviderWindows.html", null ]
+      ] ],
       [ "Antares::Forms::ApplWnd", "classAntares_1_1Forms_1_1ApplWnd.html", null ],
       [ "Antares::Map::Component", "classAntares_1_1Map_1_1Component.html", null ],
       [ "Antares::Solver::Application", "classAntares_1_1Solver_1_1Application.html", null ],
@@ -678,7 +810,9 @@ var hierarchy =
       [ "Antares::Component::HTMLListbox::Item::Info", "classAntares_1_1Component_1_1HTMLListbox_1_1Item_1_1Info.html", null ],
       [ "Antares::Component::HTMLListbox::Item::PathListItem", "classAntares_1_1Component_1_1HTMLListbox_1_1Item_1_1PathListItem.html", null ]
     ] ],
-    [ "Component::Spotlight::IItem", null, [
+    [ "Antares::Component::Spotlight::IItem", "classAntares_1_1Component_1_1Spotlight_1_1IItem.html", [
+      [ "Antares::Component::Spotlight::Separator", "classAntares_1_1Component_1_1Spotlight_1_1Separator.html", null ],
+      [ "Antares::Component::Spotlight::Text", "classAntares_1_1Component_1_1Spotlight_1_1Text.html", null ],
       [ "Antares::Toolbox::Spotlight::ItemArea", "classAntares_1_1Toolbox_1_1Spotlight_1_1ItemArea.html", null ],
       [ "Antares::Toolbox::Spotlight::ItemConstraint", "classAntares_1_1Toolbox_1_1Spotlight_1_1ItemConstraint.html", null ],
       [ "Antares::Window::ItemWindow", "classAntares_1_1Window_1_1ItemWindow.html", null ]
@@ -809,22 +943,8 @@ var hierarchy =
       [ "Antares::Component::Datagrid::Selection::Minimum", "classAntares_1_1Component_1_1Datagrid_1_1Selection_1_1Minimum.html", null ],
       [ "Antares::Component::Datagrid::Selection::Sum", "classAntares_1_1Component_1_1Datagrid_1_1Selection_1_1Sum.html", null ]
     ] ],
+    [ "Antares::Component::Spotlight::IItem::IPart", "classAntares_1_1Component_1_1Spotlight_1_1IItem_1_1IPart.html", null ],
     [ "IItem::IPart", "classIItem_1_1IPart.html", null ],
-    [ "Antares::Component::Spotlight::IProvider", null, [
-      [ "Antares::Window::FileSearchProvider", "classAntares_1_1Window_1_1FileSearchProvider.html", null ],
-      [ "Antares::Window::OutputViewer::Provider::Comparison", "classAntares_1_1Window_1_1OutputViewer_1_1Provider_1_1Comparison.html", null ],
-      [ "Antares::Window::OutputViewer::Provider::Outputs", "classAntares_1_1Window_1_1OutputViewer_1_1Provider_1_1Outputs.html", null ],
-      [ "Antares::Window::OutputViewer::Provider::Variables", "classAntares_1_1Window_1_1OutputViewer_1_1Provider_1_1Variables.html", null ],
-      [ "Antares::Window::OutputViewer::SpotlightProvider", "classAntares_1_1Window_1_1OutputViewer_1_1SpotlightProvider.html", null ],
-      [ "Antares::Window::OutputViewer::SpotlightProviderGlobalSelection", "classAntares_1_1Window_1_1OutputViewer_1_1SpotlightProviderGlobalSelection.html", null ],
-      [ "Antares::Window::OutputViewer::SpotlightProviderMCAll", "classAntares_1_1Window_1_1OutputViewer_1_1SpotlightProviderMCAll.html", null ],
-      [ "Antares::Window::SpotlightProviderWindows", "classAntares_1_1Window_1_1SpotlightProviderWindows.html", null ]
-    ] ],
-    [ "Component::Spotlight::IProvider", null, [
-      [ "Antares::Toolbox::InputSelector::SpotlightProviderArea", "classAntares_1_1Toolbox_1_1InputSelector_1_1SpotlightProviderArea.html", null ],
-      [ "Antares::Toolbox::InputSelector::SpotlightProviderConstraint", "classAntares_1_1Toolbox_1_1InputSelector_1_1SpotlightProviderConstraint.html", null ],
-      [ "Antares::Window::FileListProvider", "classAntares_1_1Window_1_1FileListProvider.html", null ]
-    ] ],
     [ "Antares::Solver::IResultWriter", "classAntares_1_1Solver_1_1IResultWriter.html", [
       [ "Antares::Solver::ImmediateFileResultWriter", "classAntares_1_1Solver_1_1ImmediateFileResultWriter.html", null ],
       [ "Antares::Solver::InMemoryWriter", "classAntares_1_1Solver_1_1InMemoryWriter.html", null ],
@@ -850,6 +970,9 @@ var hierarchy =
     ] ],
     [ "Antares::Solver::Simulation::ITimeSeriesNumbersWriter", "classAntares_1_1Solver_1_1Simulation_1_1ITimeSeriesNumbersWriter.html", [
       [ "Antares::Solver::Simulation::BindingConstraintsTimeSeriesNumbersWriter", "classAntares_1_1Solver_1_1Simulation_1_1BindingConstraintsTimeSeriesNumbersWriter.html", null ]
+    ] ],
+    [ "Variable::IVariable", null, [
+      [ "Antares::Solver::Variable::Economy::ProductionByDispatchablePlant< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByDispatchablePlant.html", null ]
     ] ],
     [ "JIT", "classJIT.html", null ],
     [ "json_collector.jsonCollector", "classjson__collector_1_1jsonCollector.html", null ],
@@ -908,17 +1031,19 @@ var hierarchy =
     [ "Antares::Forms::MainFormData", "classAntares_1_1Forms_1_1MainFormData.html", null ],
     [ "Antares::Map::Manager", "classAntares_1_1Map_1_1Manager.html", null ],
     [ "Antares::Map::MapRenderOptions", "structAntares_1_1Map_1_1MapRenderOptions.html", null ],
-    [ "Antares::Matrix< T, ReadWriteT >", "classAntares_1_1Matrix.html", [
-      [ "Matrix_easy_to_fill< double, double >", "classMatrix__easy__to__fill.html", null ],
-      [ "Matrix_easy_to_fill< T, ReadWriteT >", "classMatrix__easy__to__fill.html", [
+    [ "Antares::Matrix< T, ReadWriteT >", "classAntares_1_1Matrix.html", null ],
+    [ "Antares::Matrix< double >", "classAntares_1_1Matrix.html", null ],
+    [ "Antares::Matrix< double, double >", "classAntares_1_1Matrix.html", [
+      [ "Matrix_easy_to_fill< double, double >", "classMatrix__easy__to__fill.html", [
         [ "Matrix_load_bypass< T, ReadWriteT >", "classMatrix__load__bypass.html", null ]
       ] ],
+      [ "Matrix_easy_to_fill< T, ReadWriteT >", "classMatrix__easy__to__fill.html", null ],
       [ "Matrix_mock_load_to_buffer< T, ReadWriteT >", "classMatrix__mock__load__to__buffer.html", null ]
     ] ],
-    [ "Antares::Matrix< double, double >", "classAntares_1_1Matrix.html", null ],
+    [ "Antares::Matrix< float >", "classAntares_1_1Matrix.html", null ],
     [ "Antares::Matrix< float, float >", "classAntares_1_1Matrix.html", null ],
+    [ "Antares::Matrix< int32_t >", "classAntares_1_1Matrix.html", null ],
     [ "Antares::Matrix< int32_t, int32_t >", "classAntares_1_1Matrix.html", null ],
-    [ "Antares::Matrix< T, ReadWriteT >", "classAntares_1_1Matrix.html", null ],
     [ "Antares::Matrix< uint32_t >", "classAntares_1_1Matrix.html", null ],
     [ "Antares::matrix_to_buffer_dumper_factory", "classAntares_1_1matrix__to__buffer__dumper__factory.html", null ],
     [ "Antares::MatrixSubColumn< T >", "classAntares_1_1MatrixSubColumn.html", null ],
@@ -977,69 +1102,7 @@ var hierarchy =
       [ "Antares::Solver::Variable::R::AllYears::MinMaxBase< true, NextT >", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase.html", [
         [ "Antares::Solver::Variable::R::AllYears::Min< NextT >", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Min.html", null ]
       ] ],
-      [ "Antares::Solver::Variable::IVariable< ChildT, NextT, VCardT >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
-        [ "Antares::Solver::Variable::Adequacy::OverallCost< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost.html", null ],
-        [ "Antares::Solver::Variable::Adequacy::SpilledEnergy< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy.html", null ],
-        [ "Antares::Solver::Variable::Common::SpatialAggregate< VarT, NextT >", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html", null ],
-        [ "Antares::Solver::Variable::Economy::AvailableDispatchGen< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1AvailableDispatchGen.html", null ],
-        [ "Antares::Solver::Variable::Economy::Balance< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Balance.html", null ],
-        [ "Antares::Solver::Variable::Economy::BindingConstMarginCost< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html", null ],
-        [ "Antares::Solver::Variable::Economy::CongestionFee< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFee.html", null ],
-        [ "Antares::Solver::Variable::Economy::CongestionFeeAbs< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeAbs.html", null ],
-        [ "Antares::Solver::Variable::Economy::CongestionProbability< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html", null ],
-        [ "Antares::Solver::Variable::Economy::DispatchableGenMargin< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html", null ],
-        [ "Antares::Solver::Variable::Economy::DispatchableGeneration< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGeneration.html", null ],
-        [ "Antares::Solver::Variable::Economy::DomesticUnsuppliedEnergy< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DomesticUnsuppliedEnergy.html", null ],
-        [ "Antares::Solver::Variable::Economy::DtgMarginCsr< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DtgMarginCsr.html", null ],
-        [ "Antares::Solver::Variable::Economy::FlowLinear< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinear.html", null ],
-        [ "Antares::Solver::Variable::Economy::FlowLinearAbs< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinearAbs.html", null ],
-        [ "Antares::Solver::Variable::Economy::FlowQuad< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowQuad.html", null ],
-        [ "Antares::Solver::Variable::Economy::HurdleCosts< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html", null ],
-        [ "Antares::Solver::Variable::Economy::HydroCost< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost.html", null ],
-        [ "Antares::Solver::Variable::Economy::HydroStorage< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroStorage.html", null ],
-        [ "Antares::Solver::Variable::Economy::Inflows< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Inflows.html", null ],
-        [ "Antares::Solver::Variable::Economy::LMRViolations< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LMRViolations.html", null ],
-        [ "Antares::Solver::Variable::Economy::LOLD< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD.html", null ],
-        [ "Antares::Solver::Variable::Economy::LOLD_CSR< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__CSR.html", null ],
-        [ "Antares::Solver::Variable::Economy::LOLP< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP.html", null ],
-        [ "Antares::Solver::Variable::Economy::LOLP_CSR< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP__CSR.html", null ],
-        [ "Antares::Solver::Variable::Economy::LoopFlow< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html", null ],
-        [ "Antares::Solver::Variable::Economy::Marge< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html", null ],
-        [ "Antares::Solver::Variable::Economy::MarginalCost< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html", null ],
-        [ "Antares::Solver::Variable::Economy::MaxMrgCsr< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCsr.html", null ],
-        [ "Antares::Solver::Variable::Economy::MiscGenMinusRowPSP< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MiscGenMinusRowPSP.html", null ],
-        [ "Antares::Solver::Variable::Economy::NbOfDispatchedUnits< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits.html", null ],
-        [ "Antares::Solver::Variable::Economy::NbOfDispatchedUnitsByPlant< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant.html", null ],
-        [ "Antares::Solver::Variable::Economy::NonProportionalCost< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCost.html", null ],
-        [ "Antares::Solver::Variable::Economy::NonProportionalCostByDispatchablePlant< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispatchablePlant.html", null ],
-        [ "Antares::Solver::Variable::Economy::OperatingCost< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCost.html", null ],
-        [ "Antares::Solver::Variable::Economy::OverallCost< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost.html", null ],
-        [ "Antares::Solver::Variable::Economy::OverallCostCsr< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostCsr.html", null ],
-        [ "Antares::Solver::Variable::Economy::Overflows< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Overflows.html", null ],
-        [ "Antares::Solver::Variable::Economy::PSP< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP.html", null ],
-        [ "Antares::Solver::Variable::Economy::Price< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Price.html", null ],
-        [ "Antares::Solver::Variable::Economy::PriceCSR< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceCSR.html", null ],
-        [ "Antares::Solver::Variable::Economy::ProductionByRenewablePlant< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant.html", null ],
-        [ "Antares::Solver::Variable::Economy::ProfitByPlant< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html", null ],
-        [ "Antares::Solver::Variable::Economy::Pumping< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping.html", null ],
-        [ "Antares::Solver::Variable::Economy::RenewableGeneration< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html", null ],
-        [ "Antares::Solver::Variable::Economy::ReservoirLevel< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel.html", null ],
-        [ "Antares::Solver::Variable::Economy::RowBalance< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance.html", null ],
-        [ "Antares::Solver::Variable::Economy::STSbyGroup< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STSbyGroup.html", null ],
-        [ "Antares::Solver::Variable::Economy::STstorageCashFlowByCluster< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageCashFlowByCluster.html", null ],
-        [ "Antares::Solver::Variable::Economy::STstorageInjectionByCluster< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageInjectionByCluster.html", null ],
-        [ "Antares::Solver::Variable::Economy::STstorageLevelsByCluster< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageLevelsByCluster.html", null ],
-        [ "Antares::Solver::Variable::Economy::STstorageWithdrawalByCluster< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageWithdrawalByCluster.html", null ],
-        [ "Antares::Solver::Variable::Economy::SpilledEnergy< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1SpilledEnergy.html", null ],
-        [ "Antares::Solver::Variable::Economy::ThermalAirPollutantEmissions< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ThermalAirPollutantEmissions.html", null ],
-        [ "Antares::Solver::Variable::Economy::TimeSeriesValuesHydro< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesHydro.html", null ],
-        [ "Antares::Solver::Variable::Economy::TimeSeriesValuesLoad< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesLoad.html", null ],
-        [ "Antares::Solver::Variable::Economy::TimeSeriesValuesSolar< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesSolar.html", null ],
-        [ "Antares::Solver::Variable::Economy::TimeSeriesValuesWind< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesWind.html", null ],
-        [ "Antares::Solver::Variable::Economy::UnsupliedEnergy< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergy.html", null ],
-        [ "Antares::Solver::Variable::Economy::UnsupliedEnergyCSR< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html", null ],
-        [ "Antares::Solver::Variable::Economy::WaterValue< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue.html", null ]
-      ] ],
+      [ "Antares::Solver::Variable::IVariable< ChildT, NextT, VCardT >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
       [ "Antares::Solver::Variable::R::AllYears::MinMaxBase< OpInferior, NextT >", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase.html", null ],
       [ "Antares::Solver::Variable::R::AllYears::Raw< NextT, FileFilter >", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html", null ]
     ] ],
@@ -1246,8 +1309,8 @@ var hierarchy =
     [ "PRODUCTION_THERMIQUE", "structPRODUCTION__THERMIQUE.html", null ],
     [ "PRODUCTION_THERMIQUE_OPTIMALE", "structPRODUCTION__THERMIQUE__OPTIMALE.html", null ],
     [ "Antares::Solver::Progression", "classAntares_1_1Solver_1_1Progression.html", null ],
-    [ "Antares::Data::ShortTermStorage::Properties", "classAntares_1_1Data_1_1ShortTermStorage_1_1Properties.html", null ],
     [ "ShortTermStorage::PROPERTIES", "structShortTermStorage_1_1PROPERTIES.html", null ],
+    [ "Antares::Data::ShortTermStorage::Properties", "classAntares_1_1Data_1_1ShortTermStorage_1_1Properties.html", null ],
     [ "Antares::IniFile::Property", "classAntares_1_1IniFile_1_1Property.html", null ],
     [ "Antares::Window::Inspector::PSimulationMode", "structAntares_1_1Window_1_1Inspector_1_1PSimulationMode.html", null ],
     [ "Antares::Window::Inspector::PStudy1stJanuary", "structAntares_1_1Window_1_1Inspector_1_1PStudy1stJanuary.html", null ],
@@ -1344,6 +1407,7 @@ var hierarchy =
     [ "SavingToStreamFixture", "structSavingToStreamFixture.html", null ],
     [ "Antares::Solver::ScenarioBuilderOwner", "classAntares_1_1Solver_1_1ScenarioBuilderOwner.html", null ],
     [ "ScenarioBuilderRule", "classScenarioBuilderRule.html", null ],
+    [ "Antares::Component::Spotlight::SearchToken", "classAntares_1_1Component_1_1Spotlight_1_1SearchToken.html", null ],
     [ "SearchToken", "classSearchToken.html", null ],
     [ "Antares::IniFile::Section", "classAntares_1_1IniFile_1_1Section.html", null ],
     [ "Antares::Component::Datagrid::SelectionRect", "classAntares_1_1Component_1_1Datagrid_1_1SelectionRect.html", null ],
@@ -1565,6 +1629,7 @@ var hierarchy =
     [ "SystemBuilderCreationFixture", "structSystemBuilderCreationFixture.html", null ],
     [ "Antares::Study::SystemModel::SystemData", "structAntares_1_1Study_1_1SystemModel_1_1SystemData.html", null ],
     [ "SystemLinearProblem", "classSystemLinearProblem.html", null ],
+    [ "Antares::Component::Spotlight::IItem::Tag", "classAntares_1_1Component_1_1Spotlight_1_1IItem_1_1Tag.html", null ],
     [ "IItem::Tag", "classIItem_1_1Tag.html", null ],
     [ "TargetVectorUpdater", "classTargetVectorUpdater.html", null ],
     [ "Antares::Solver::Progression::Task", "classAntares_1_1Solver_1_1Progression_1_1Task.html", null ],

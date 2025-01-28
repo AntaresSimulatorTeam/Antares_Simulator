@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['captiontype_0',['CaptionType',['../classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#aa5a1b7d507f6d77d2aca09f0add98fa1',1,'Antares::Solver::Variable::SurveyResults']]],
-  ['childtype_1',['ChildType',['../classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a9e9169616e939ab1ef3e729d1ec1b8ce',1,'Antares::Solver::Variable::IVariable']]],
+  ['captiontype_0',['CaptionType',['../classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#a7fd98fcf31ffba706c7d58757d43e529',1,'Antares::Solver::Variable::SurveyResults']]],
+  ['childtype_1',['ChildType',['../classAntares_1_1Solver_1_1Variable_1_1IVariable.html#ac8cd02b94a10389ef9995c037a344ba8',1,'Antares::Solver::Variable::IVariable']]],
   ['clusteroffsetmap_2',['clusterOffsetMap',['../classAntares_1_1Data_1_1BindingConstraint.html#a37dcf51cba09d96ac42bce8408eb6933',1,'Antares::Data::BindingConstraint']]],
   ['clusterweightmap_3',['clusterWeightMap',['../classAntares_1_1Data_1_1BindingConstraint.html#ac3cf3c114e5dfcf67d7f7d5a532d8d2a',1,'Antares::Data::BindingConstraint']]],
   ['coefficients_4',['Coefficients',['../classAntares_1_1Data_1_1HydroAllocation.html#ae51e4f93585d23d50332288a372df88d',1,'Antares::Data::HydroAllocation']]],

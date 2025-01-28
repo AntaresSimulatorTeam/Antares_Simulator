@@ -1,7 +1,7 @@
 var classAntares_1_1Solver_1_1Variable_1_1SurveyResults =
 [
-    [ "CaptionType", "classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#aa5a1b7d507f6d77d2aca09f0add98fa1", null ],
-    [ "PrecisionType", "classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#a9bc5ae944289790cc214a37b05d11d11", null ],
+    [ "CaptionType", "classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#a7fd98fcf31ffba706c7d58757d43e529", null ],
+    [ "PrecisionType", "classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#a47ff8dbc4513909b5f24e8b7422ae605", null ],
     [ "SurveyResults", "classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#ab7badf12c0f2c8bd9da330b602af896a", null ],
     [ "~SurveyResults", "classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#ab2b82bea22aadb135da7facc9f484e12", null ],
     [ "exportDigestAllYears", "classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#af40d76b1764e10de48d2d4503749ee0f", null ],

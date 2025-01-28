@@ -17,13 +17,13 @@ var classAntares_1_1Data_1_1RenewableCluster =
       [ "powerGeneration", "classAntares_1_1Data_1_1RenewableCluster.html#a4e8f1513b5d1b2b4f06b9da1edeb2d76ab453418249e824c51b9fb26bce4f6646", null ],
       [ "productionFactor", "classAntares_1_1Data_1_1RenewableCluster.html#a4e8f1513b5d1b2b4f06b9da1edeb2d76a743e0e2f86fd56e598bd49dc43e2b7c4", null ]
     ] ],
-    [ "RenewableCluster", "classAntares_1_1Data_1_1RenewableCluster.html#a3c9a530ab8e9ec5406d23136f31c06c6", null ],
-    [ "copyFrom", "classAntares_1_1Data_1_1RenewableCluster.html#a42c158eb0bd0eff4fc7868102a8fe924", null ],
-    [ "forceReload", "classAntares_1_1Data_1_1RenewableCluster.html#ac2aa017881ae145e2c422298f272311c", null ],
+    [ "RenewableCluster", "classAntares_1_1Data_1_1RenewableCluster.html#ad77d7be48eb17c4f772c4ce89e4d1340", null ],
+    [ "copyFrom", "classAntares_1_1Data_1_1RenewableCluster.html#ac90970e7f27d1260c7595ea2d90a0854", null ],
+    [ "forceReload", "classAntares_1_1Data_1_1RenewableCluster.html#a05333f93322f7fc3f91fe465e1381741", null ],
     [ "groupId", "classAntares_1_1Data_1_1RenewableCluster.html#a242c33df7d31195d2fcadd40c93cff62", null ],
-    [ "integrityCheck", "classAntares_1_1Data_1_1RenewableCluster.html#a82efd74ab839881d99f179dab4a308ef", null ],
-    [ "markAsModified", "classAntares_1_1Data_1_1RenewableCluster.html#ae8ec6b0966a8bec49347a806054cd484", null ],
-    [ "reset", "classAntares_1_1Data_1_1RenewableCluster.html#a45d0c3151285c29957c016f920077693", null ],
-    [ "setGroup", "classAntares_1_1Data_1_1RenewableCluster.html#a021725327dab871273ea8d04da9f0a19", null ],
+    [ "integrityCheck", "classAntares_1_1Data_1_1RenewableCluster.html#a6e736803d342b8ec4ac59190698e33d8", null ],
+    [ "markAsModified", "classAntares_1_1Data_1_1RenewableCluster.html#a5c6682e9e1b91cdf0f073486d5e6f432", null ],
+    [ "reset", "classAntares_1_1Data_1_1RenewableCluster.html#a21280218e126ee7bcac55e3c523264e8", null ],
+    [ "setGroup", "classAntares_1_1Data_1_1RenewableCluster.html#a0e3033fbf5a09bb3edcce6fb88472a4c", null ],
     [ "groupID", "classAntares_1_1Data_1_1RenewableCluster.html#a68675a5d06a20fc0d9a8eb6d677ca4bd", null ]
 ];

@@ -12,7 +12,7 @@ var searchData=
   ['hurdlescost_9',['HurdlesCost',['../classAntares_1_1Action_1_1AntaresStudy_1_1Link_1_1HurdlesCost.html',1,'Antares::Action::AntaresStudy::Link']]],
   ['hydraulicsmoothinggroup_10',['HydraulicSmoothingGroup',['../classHydraulicSmoothingGroup.html',1,'']]],
   ['hydro_5fproblem_5fcosts_11',['Hydro_problem_costs',['../classHydro__problem__costs.html',1,'']]],
-  ['hydroallocation_12',['hydroallocation',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1HydroAllocation.html',1,'Antares::Component::Datagrid::Renderer::HydroAllocation'],['../classAntares_1_1Data_1_1HydroAllocation.html',1,'Antares::Data::HydroAllocation']]],
+  ['hydroallocation_12',['HydroAllocation',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1HydroAllocation.html',1,'Antares::Component::Datagrid::Renderer::HydroAllocation'],['../classAntares_1_1Data_1_1HydroAllocation.html',1,'Antares::Data::HydroAllocation']]],
   ['hydroareanumberoftsretriever_13',['HydroAreaNumberOfTSretriever',['../classAntares_1_1Solver_1_1HydroAreaNumberOfTSretriever.html',1,'Antares::Solver']]],
   ['hydrocost_14',['HydroCost',['../classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost.html',1,'Antares::Solver::Variable::Economy']]],
   ['hydrocostnoise_15',['hydroCostNoise',['../classAntares_1_1Solver_1_1Simulation_1_1hydroCostNoise.html',1,'Antares::Solver::Simulation']]],

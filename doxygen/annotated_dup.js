@@ -239,6 +239,9 @@ var annotated_dup =
         [ "WIPPanel", "classAntares_1_1Component_1_1WIPPanel.html", "classAntares_1_1Component_1_1WIPPanel" ]
       ] ],
       [ "Concurrency", null, [
+        [ "Detail", null, [
+          [ "CopyableCallable", "classAntares_1_1Concurrency_1_1Detail_1_1CopyableCallable.html", null ]
+        ] ],
         [ "FutureSet", "classAntares_1_1Concurrency_1_1FutureSet.html", "classAntares_1_1Concurrency_1_1FutureSet" ]
       ] ],
       [ "Data", null, [
@@ -1462,7 +1465,7 @@ var annotated_dup =
     [ "LinearProblemMatrixStartUpCosts", "classLinearProblemMatrixStartUpCosts.html", null ],
     [ "LinkVariable", "structLinkVariable.html", null ],
     [ "Matrix_easy_to_fill", "classMatrix__easy__to__fill.html", "classMatrix__easy__to__fill" ],
-    [ "Matrix_load_bypass", "classMatrix__load__bypass.html", null ],
+    [ "Matrix_load_bypass", "classMatrix__load__bypass.html", "classMatrix__load__bypass" ],
     [ "Matrix_mock_load_to_buffer", "classMatrix__mock__load__to__buffer.html", null ],
     [ "MaxHydroPower", "classMaxHydroPower.html", "classMaxHydroPower" ],
     [ "MaxHydroPowerData", "structMaxHydroPowerData.html", null ],

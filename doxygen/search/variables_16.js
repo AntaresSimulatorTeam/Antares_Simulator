@@ -8,7 +8,7 @@ var searchData=
   ['weekfirstday_5',['weekFirstDay',['../structAntares_1_1Date_1_1Calendar_1_1Settings.html#a74af88b90038e83fb25c558efa1d9178',1,'Antares::Date::Calendar::Settings']]],
   ['weekintheyear_6',['weekInTheYear',['../classAntares_1_1Solver_1_1Variable_1_1State.html#ab923ce202f9511e42a0902dd85b34c03',1,'Antares::Solver::Variable::State']]],
   ['weeks_7',['weeks',['../classAntares_1_1Date_1_1Calendar.html#a360c3f5cbdbb7d4294424edee091037f',1,'Antares::Date::Calendar']]],
-  ['weight_8',['weight',['../classSearchToken.html#a1f8bc3288e4ac749a641b508999f08a8',1,'SearchToken']]],
+  ['weight_8',['weight',['../classSearchToken.html#a1f8bc3288e4ac749a641b508999f08a8',1,'SearchToken::weight'],['../classAntares_1_1Component_1_1Spotlight_1_1SearchToken.html#a1b40d81e4405d6b4ea9951c577c2c937',1,'Antares::Component::Spotlight::SearchToken::weight']]],
   ['width_9',['width',['../classAntares_1_1Matrix.html#a94b3558d8413485d98daadada6e1aba6',1,'Antares::Matrix::width'],['../classResultMatrix.html#a3b15782001a37e00af3269be8412c5b7',1,'ResultMatrix::width']]],
   ['wind_10',['wind',['../classAntares_1_1Data_1_1Area.html#af593b90ffde0b3e1d025f99fa654161e',1,'Antares::Data::Area::wind'],['../classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#afc1340f754e33c589bcc82ef974681e2',1,'Antares::Data::ScenarioBuilder::Rules::wind']]],
   ['wipenabled_11',['wipEnabled',['../classAntares_1_1Forms_1_1MainFormData.html#ae3ff5788d3fc2fae544362da67c1b35d',1,'Antares::Forms::MainFormData']]],

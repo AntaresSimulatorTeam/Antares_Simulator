@@ -1,11 +1,11 @@
 var classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas =
 [
     [ "Statistics", "structAntares_1_1Solver_1_1Variable_1_1SetsOfAreas_1_1Statistics.html", null ],
-    [ "AncestorType", "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#aa67ba324885ff7541d1c6beae1ecc385", null ],
-    [ "NextType", "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#ab0e212d228b794bee094820716f31201", null ],
-    [ "ResultsType", "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a3a51500810e027a9488d4552676041d3", null ],
-    [ "SetOfAreasVector", "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a8959103c5c75d3d03bff351f22134cab", null ],
-    [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#af2dafdea8b317a43d6cac2ddd76a6cc6", null ],
+    [ "AncestorType", "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#ad919d3570398c6c050ba45f7f8f678db", null ],
+    [ "NextType", "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a7ea66370213b76135f3906dfa3c770be", null ],
+    [ "ResultsType", "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#afc2040381057f7e36cf4580c931e27fb", null ],
+    [ "SetOfAreasVector", "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#af663a05ad57966120fa16ba9c00f8e2c", null ],
+    [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a67c6faf66274423f91b1237e260b0afa", null ],
     [ "SetsOfAreas", "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#aa697be12f5e996ecd53e7fc33c70d10b", null ],
     [ "~SetsOfAreas", "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a01fffc8172275ed391265371b7833db3", null ],
     [ "pOriginalSets", "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a62bc87298d8e11efed81a313ec05077a", null ],

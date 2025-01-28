@@ -1,8 +1,8 @@
 var classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFee =
 [
     [ "Statistics", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFee_1_1Statistics.html", null ],
-    [ "AncestorType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFee.html#a4feb6cd38dc930fe8c03af80e89705a5", null ],
-    [ "NextType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFee.html#aab185e0531984128377c415dc9ceb12c", null ],
-    [ "ResultsType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFee.html#a76e956c782fa006d5392677b4dc56816", null ],
-    [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFee.html#a051c1a23fd06a6a190402b0df67a75d3", null ]
+    [ "AncestorType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFee.html#a9309027efd3f0745bbf0c1e0232d00b0", null ],
+    [ "NextType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFee.html#ae280af44781717d14f288ed969f95a3b", null ],
+    [ "ResultsType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFee.html#a2cfaced4694d3291899ab3ac11d3d1fe", null ],
+    [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFee.html#ac434b5b7e367a12386f70f48c6421963", null ]
 ];

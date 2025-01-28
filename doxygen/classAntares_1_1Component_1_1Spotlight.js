@@ -1,5 +1,11 @@
 var classAntares_1_1Component_1_1Spotlight =
 [
+    [ "IItem", "classAntares_1_1Component_1_1Spotlight_1_1IItem.html", "classAntares_1_1Component_1_1Spotlight_1_1IItem" ],
+    [ "IProvider", "classAntares_1_1Component_1_1Spotlight_1_1IProvider.html", "classAntares_1_1Component_1_1Spotlight_1_1IProvider" ],
+    [ "NullProvider", "classAntares_1_1Component_1_1Spotlight_1_1NullProvider.html", "classAntares_1_1Component_1_1Spotlight_1_1NullProvider" ],
+    [ "SearchToken", "classAntares_1_1Component_1_1Spotlight_1_1SearchToken.html", "classAntares_1_1Component_1_1Spotlight_1_1SearchToken" ],
+    [ "Separator", "classAntares_1_1Component_1_1Spotlight_1_1Separator.html", "classAntares_1_1Component_1_1Spotlight_1_1Separator" ],
+    [ "Text", "classAntares_1_1Component_1_1Spotlight_1_1Text.html", "classAntares_1_1Component_1_1Spotlight_1_1Text" ],
     [ "Options", "classAntares_1_1Component_1_1Spotlight.html#a6802aa582d503c66dc43c5c8949c7d14", [
       [ "optNone", "classAntares_1_1Component_1_1Spotlight.html#a6802aa582d503c66dc43c5c8949c7d14a11fe2149b1bd42c9f8e399c8c0720aed", null ],
       [ "optResultsInAPopup", "classAntares_1_1Component_1_1Spotlight.html#a6802aa582d503c66dc43c5c8949c7d14af3cd14b1097233bf749f226c440ac5fb", null ],

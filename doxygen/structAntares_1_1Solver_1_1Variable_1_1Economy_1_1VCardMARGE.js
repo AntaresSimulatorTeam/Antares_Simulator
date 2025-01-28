@@ -1,5 +1,5 @@
 var structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMARGE =
 [
-    [ "ResultsType", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMARGE.html#aa2bc74a0fdda4c40ab632cbcc7e68126", null ],
-    [ "VCardForSpatialAggregate", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMARGE.html#a5cb4c597576b00691ce461250e7d7611", null ]
+    [ "ResultsType", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMARGE.html#a355227babed4d8e6c45e401b3233fe17", null ],
+    [ "VCardForSpatialAggregate", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMARGE.html#a9333f447cfe30ad78fe2ed52fc3b8bb1", null ]
 ];

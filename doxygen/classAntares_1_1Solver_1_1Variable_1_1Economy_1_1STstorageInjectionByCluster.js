@@ -1,8 +1,8 @@
 var classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageInjectionByCluster =
 [
     [ "Statistics", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageInjectionByCluster_1_1Statistics.html", null ],
-    [ "AncestorType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageInjectionByCluster.html#a5eb516545128094556ed6d93615c1c77", null ],
-    [ "NextType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageInjectionByCluster.html#a3434e87544617b28f2ec9d9761cd8086", null ],
-    [ "ResultsType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageInjectionByCluster.html#ae9db13aef63a14fd61a617f69ea1c1e9", null ],
-    [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageInjectionByCluster.html#a840461b989c3b0c0dc37b8dff695ac04", null ]
+    [ "AncestorType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageInjectionByCluster.html#a6c5ef032891df412490143f4a28ce678", null ],
+    [ "NextType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageInjectionByCluster.html#a9946f4fca54166690ef3948e4290eadb", null ],
+    [ "ResultsType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageInjectionByCluster.html#a865df540dfc4b7dbb3060291101f8793", null ],
+    [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageInjectionByCluster.html#af483ff0bbbe217e4cf6566f81fd142d7", null ]
 ];

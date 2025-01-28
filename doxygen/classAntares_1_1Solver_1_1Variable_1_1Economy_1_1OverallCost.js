@@ -1,8 +1,8 @@
 var classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost =
 [
     [ "Statistics", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost_1_1Statistics.html", null ],
-    [ "AncestorType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost.html#ab6693b6e18ec12db223458bb0328953a", null ],
-    [ "NextType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost.html#ae8100341abd51f9764eed1f6c34a3d3a", null ],
-    [ "ResultsType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost.html#a1b6beddf1f3e6cce29576ca020bf814e", null ],
-    [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost.html#a3e015800864ddf416a07776080e61ff0", null ]
+    [ "AncestorType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost.html#a83dda8edc68128fef66d33d8407e179b", null ],
+    [ "NextType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost.html#a71c5cead7636429ff5edff5799ea6ff7", null ],
+    [ "ResultsType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost.html#adacb033aaf125ff62a6ff20b17c3f19e", null ],
+    [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost.html#ace28ed84c4828f1b7fd3abd9e8365cc5", null ]
 ];
