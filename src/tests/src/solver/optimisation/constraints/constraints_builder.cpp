@@ -28,6 +28,7 @@
 
 #include "antares/antares/constants.h"
 #include "antares/solver/optimisation/constraints/ShortTermStorageCumulation.h"
+#include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 /*
@@ -383,4 +384,83 @@ BOOST_FIXTURE_TEST_CASE(MultipleAreasTest, BB)
     BOOST_CHECK_EQUAL(builder.data.Sens[1], '<');
     BOOST_CHECK_EQUAL(builder.data.Sens[2], '>');
     BOOST_CHECK_EQUAL(builder.data.Sens[3], '>');
+}
+
+BOOST_AUTO_TEST_CASE(TestShortTermStorageCumulation)
+{
+    // Setup test data
+    PROBLEME_HEBDO problemeHebdo;
+
+    problemeHebdo.ProblemeAResoudre = std::make_unique<PROBLEME_ANTARES_A_RESOUDRE>();
+
+    PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre = *problemeHebdo.ProblemeAResoudre;
+
+    // Initialize problem size
+    const int numberOfAreas = 2;
+    const int numberOfConstraints = 10;
+    const int weekFirstHour = 168; // One week worth of hours
+
+    // Setup second member vector
+    problemeAResoudre.SecondMembre.resize(numberOfConstraints, 0.0);
+    problemeAResoudre.AdresseOuPlacerLaValeurDesCoutsMarginaux.resize(numberOfConstraints, nullptr);
+    problemeAResoudre.NombreDeContraintes = numberOfConstraints;
+
+    // Setup storage constraints mapping
+    problemeHebdo.CorrespondanceCntNativesCntOptimHebdomadaires.ShortTermStorageCumulation = {1,
+                                                                                              2,
+                                                                                              3};
+
+    // Setup short term storage data
+    problemeHebdo.ShortTermStorage.resize(numberOfAreas);
+
+    // Area 0 setup
+    ShortTermStorage::AREA_INPUT& area0 = problemeHebdo.ShortTermStorage[0];
+    area0.resize(1);
+    Antares::Data::ShortTermStorage::AdditionalConstraints additionalConstraint0;
+    additionalConstraint0.rhs = {10.0, 15.0, 20.0, 25.0}; // RHS values for the first few hours
+
+    Antares::Data::ShortTermStorage::SingleAdditionalConstraint constraint0;
+    constraint0.globalIndex = 1;
+    constraint0.hours = {0, 1, 2}; // First three hours
+    additionalConstraint0.constraints.push_back(constraint0);
+    auto& storage0_area0 = area0[0];
+    storage0_area0.additionalConstraints.push_back(additionalConstraint0);
+
+    // Area 1 setup
+    ShortTermStorage::AREA_INPUT& area1 = problemeHebdo.ShortTermStorage[1];
+    area1.resize(1);
+    Antares::Data::ShortTermStorage::AdditionalConstraints additionalConstraint1;
+    additionalConstraint1.rhs = {5.0, 8.0, 12.0, 15.0}; // RHS values for the first few hours
+
+    Antares::Data::ShortTermStorage::SingleAdditionalConstraint constraint1;
+    constraint1.globalIndex = 2;
+    constraint1.hours = {0, 1}; // First two hours
+    additionalConstraint1.constraints.push_back(constraint1);
+
+    auto& storage1_area1 = area1[0];
+    storage1_area1.additionalConstraints.push_back(additionalConstraint1);
+
+    // Setup remaining problem parameters
+    problemeHebdo.weekInTheYear = 1;
+    problemeHebdo.NombreDePays = numberOfAreas;
+    problemeHebdo.OptimisationAvecCoutsDeDemarrage = false;
+
+    // Call the function
+    OPT_InitialiserLeSecondMembreDuProblemeLineaire(&problemeHebdo,
+                                                    0,  // PremierPdtDeLIntervalle
+                                                    24, // DernierPdtDeLIntervalle
+                                                    0,  // NumeroDeLIntervalle
+                                                    1   // optimizationNumber
+    );
+
+    // Verify the results
+    // For area 0, sum should be 10.0 + 15.0 + 20.0 = 45.0
+    BOOST_CHECK_CLOSE(problemeAResoudre.SecondMembre[1], 45.0, 0.001);
+
+    // For area 1, sum should be 5.0 + 8.0 = 13.0
+    BOOST_CHECK_CLOSE(problemeAResoudre.SecondMembre[2], 13.0, 0.001);
+
+    // Check that other constraints weren't affected
+    BOOST_CHECK_SMALL(problemeAResoudre.SecondMembre[0], 0.001);
+    BOOST_CHECK_SMALL(problemeAResoudre.SecondMembre[3], 0.001);
 }
