@@ -204,7 +204,7 @@ void LinearProblemBuildingFixture::buildLinearProblem(FillContext& time_scenario
     LinearProblemBuilder linear_problem_builder(fillers_ptr);
     LinearProblemData dummy_data;
 
-    linear_problem_builder.build(*pb.get(), dummy_data, time_scenario_ctx);
+    linear_problem_builder.build(*pb, dummy_data, time_scenario_ctx);
 }
 
 BOOST_FIXTURE_TEST_SUITE(_ComponentFiller_addVariables_, LinearProblemBuildingFixture)
@@ -245,7 +245,7 @@ BOOST_AUTO_TEST_CASE(ten_timesteps_var_with_literal_bounds_to_filler__problem_co
     for (unsigned int i = 0; i < nb_var; i++)
     {
         auto* var = pb->getVariable("some_component.var1_" + to_string(i));
-        BOOST_CHECK(var);
+        BOOST_REQUIRE(var);
         BOOST_CHECK_EQUAL(var->getLb(), -5);
         BOOST_CHECK_EQUAL(var->getUb(), 10);
         BOOST_CHECK(!var->isInteger());
@@ -314,13 +314,13 @@ BOOST_AUTO_TEST_CASE(
     for (auto i = 0; i < nb_var; i++)
     {
         auto* var1 = pb->getVariable("component_1.var1_" + to_string(i));
-        BOOST_CHECK(var1);
+        BOOST_REQUIRE(var1);
         BOOST_CHECK(!var1->isInteger());
         BOOST_CHECK_EQUAL(var1->getLb(), -1.);
         BOOST_CHECK_EQUAL(var1->getUb(), 6.);
 
         auto* var2 = pb->getVariable("component_2.var2_" + to_string(i));
-        BOOST_CHECK(var2);
+        BOOST_REQUIRE(var2);
         BOOST_CHECK(!var2->isInteger());
         BOOST_CHECK_EQUAL(var2->getLb(), -3.);
         BOOST_CHECK_EQUAL(var2->getUb(), 2.);
@@ -459,11 +459,11 @@ BOOST_AUTO_TEST_CASE(ct_with_ten_vars__pb_contains_ten_ct)
     for (auto i = 0; i < nb_var; i++)
     {
         auto ct = pb->getConstraint("componentToto.ct1_" + to_string(i));
-        BOOST_CHECK(ct);
+        BOOST_REQUIRE(ct);
         BOOST_CHECK_EQUAL(ct->getLb(), -pb->infinity());
         BOOST_CHECK_EQUAL(ct->getUb(), 3);
         auto var = pb->getVariable("componentToto.var1_" + to_string(i));
-        BOOST_CHECK(var);
+        BOOST_REQUIRE(var);
         BOOST_CHECK(var->isInteger());
         BOOST_CHECK_EQUAL(ct->getCoefficient(var), 1);
     }
