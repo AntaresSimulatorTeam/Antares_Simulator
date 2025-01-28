@@ -400,6 +400,8 @@ BOOST_AUTO_TEST_CASE(TestShortTermStorageCumulation)
     const int numberOfConstraints = 10;
     const int weekFirstHour = 168; // One week worth of hours
 
+    const int numberOfTimeSteps = 24;
+
     // Setup second member vector
     problemeAResoudre.SecondMembre.resize(numberOfConstraints, 0.0);
     problemeAResoudre.AdresseOuPlacerLaValeurDesCoutsMarginaux.resize(numberOfConstraints, nullptr);
@@ -409,6 +411,53 @@ BOOST_AUTO_TEST_CASE(TestShortTermStorageCumulation)
     problemeHebdo.CorrespondanceCntNativesCntOptimHebdomadaires.ShortTermStorageCumulation = {1,
                                                                                               2,
                                                                                               3};
+
+    problemeHebdo.CorrespondanceCntNativesCntOptimJournalieres.resize(1);
+
+    // Initialize CorrespondanceCntNativesCntOptim for each time step
+    problemeHebdo.CorrespondanceCntNativesCntOptim.resize(numberOfTimeSteps);
+    for (auto& corresp: problemeHebdo.CorrespondanceCntNativesCntOptim)
+    {
+        corresp.NumeroDeContrainteDesBilansPays.resize(numberOfAreas, 0);
+        corresp.NumeroDeContraintePourEviterLesChargesFictives.resize(numberOfAreas, 0);
+        corresp.NumeroDeContrainteDesNiveauxPays.resize(numberOfAreas, 0);
+        corresp.NumeroDeContrainteDeDissociationDeFlux.resize(1, 0);
+        corresp.NumeroDeContrainteDesContraintesCouplantes.resize(1, 0);
+        corresp.ShortTermStorageLevelConstraint.resize(numberOfAreas, 0);
+    }
+    problemeHebdo.NumeroDeContrainteEnergieHydraulique.resize(numberOfAreas, -1);
+    problemeHebdo.CaracteristiquesHydrauliques.resize(numberOfAreas,
+                                                      {.TurbinageEntreBornes = false,
+                                                       .SansHeuristique = false,
+                                                       .SuiviNiveauHoraire = false});
+
+    // Initialize other required vectors
+    problemeHebdo.ConsommationsAbattues.resize(numberOfTimeSteps);
+    for (auto& cons: problemeHebdo.ConsommationsAbattues)
+    {
+        cons.ConsommationAbattueDuPays.resize(numberOfAreas, 0.0);
+    }
+
+    problemeHebdo.AllMustRunGeneration.resize(numberOfTimeSteps);
+    for (auto& gen: problemeHebdo.AllMustRunGeneration)
+    {
+        gen.AllMustRunGenerationOfArea.resize(numberOfAreas, 0.0);
+    }
+
+    problemeHebdo.NumeroDeJourDuPasDeTemps.resize(numberOfTimeSteps, 0);
+    problemeHebdo.DefaillanceNegativeUtiliserConsoAbattue.resize(numberOfAreas, false);
+    problemeHebdo.DefaillanceNegativeUtiliserPMinThermique.resize(numberOfAreas, true);
+
+    // Initialize ResultatsHoraires
+    problemeHebdo.ResultatsHoraires.resize(numberOfAreas);
+    for (auto& resultats: problemeHebdo.ResultatsHoraires)
+    {
+        resultats.CoutsMarginauxHoraires.resize(numberOfTimeSteps, 0.0);
+    }
+    //
+    // // Add initialization for ResultatsContraintesCouplantes
+    // problemeHebdo.ResultatsContraintesCouplantes.resize(1); // At least one for binding
+    // constraints problemeHebdo.ResultatsContraintesCouplantes[0].resize(numberOfTimeSteps, 0.0);
 
     // Setup short term storage data
     problemeHebdo.ShortTermStorage.resize(numberOfAreas);
@@ -421,9 +470,14 @@ BOOST_AUTO_TEST_CASE(TestShortTermStorageCumulation)
 
     Antares::Data::ShortTermStorage::SingleAdditionalConstraint constraint0;
     constraint0.globalIndex = 1;
-    constraint0.hours = {0, 1, 2}; // First three hours
+    constraint0.hours = {1, 2, 3}; // First three hours
     additionalConstraint0.constraints.push_back(constraint0);
     auto& storage0_area0 = area0[0];
+    storage0_area0.series = std::make_shared<Antares::Data::ShortTermStorage::Series>();
+    // Initialize series data for the full year
+    storage0_area0.series->inflows.resize(HOURS_PER_YEAR, 10.0); // Default inflow value
+    storage0_area0.series->maxInjectionModulation.resize(HOURS_PER_YEAR, 100.0);
+    storage0_area0.series->maxWithdrawalModulation.resize(HOURS_PER_YEAR, 100.0);
     storage0_area0.additionalConstraints.push_back(additionalConstraint0);
 
     // Area 1 setup
@@ -434,16 +488,28 @@ BOOST_AUTO_TEST_CASE(TestShortTermStorageCumulation)
 
     Antares::Data::ShortTermStorage::SingleAdditionalConstraint constraint1;
     constraint1.globalIndex = 2;
-    constraint1.hours = {0, 1}; // First two hours
+    constraint1.hours = {1, 2}; // First two hours
     additionalConstraint1.constraints.push_back(constraint1);
 
     auto& storage1_area1 = area1[0];
+    storage1_area1.series = std::make_shared<Antares::Data::ShortTermStorage::Series>();
+
+    // Initialize series data for the full year
+    storage1_area1.series->inflows.resize(HOURS_PER_YEAR, 0.0); // Default inflow value
+    storage1_area1.series->maxInjectionModulation.resize(HOURS_PER_YEAR, 0.0);
+    storage1_area1.series->maxWithdrawalModulation.resize(HOURS_PER_YEAR, 0.0);
     storage1_area1.additionalConstraints.push_back(additionalConstraint1);
 
     // Setup remaining problem parameters
-    problemeHebdo.weekInTheYear = 1;
+    problemeHebdo.weekInTheYear = 0;
     problemeHebdo.NombreDePays = numberOfAreas;
     problemeHebdo.OptimisationAvecCoutsDeDemarrage = false;
+    problemeHebdo.NombreDePasDeTempsDUneJournee = 24;
+    problemeHebdo.NombreDePasDeTempsPourUneOptimisation = 24;
+    problemeHebdo.NombreDeContraintesCouplantes = 0;
+    problemeHebdo.NombreDInterconnexions = 0;
+    problemeHebdo.OptimisationAuPasHebdomadaire = false;
+    problemeHebdo.YaDeLaReserveJmoins1 = false;
 
     // Call the function
     OPT_InitialiserLeSecondMembreDuProblemeLineaire(&problemeHebdo,
@@ -453,14 +519,19 @@ BOOST_AUTO_TEST_CASE(TestShortTermStorageCumulation)
                                                     1   // optimizationNumber
     );
 
+    auto constraint0_index = problemeHebdo.CorrespondanceCntNativesCntOptimHebdomadaires
+                               .ShortTermStorageCumulation[constraint0.globalIndex]; // = 2
+
     // Verify the results
     // For area 0, sum should be 10.0 + 15.0 + 20.0 = 45.0
-    BOOST_CHECK_CLOSE(problemeAResoudre.SecondMembre[1], 45.0, 0.001);
+    BOOST_CHECK_CLOSE(problemeAResoudre.SecondMembre[constraint0_index], 45.0, 0.001);
 
+    auto constraint1_index = problemeHebdo.CorrespondanceCntNativesCntOptimHebdomadaires
+                               .ShortTermStorageCumulation[constraint1.globalIndex]; // = 3
     // For area 1, sum should be 5.0 + 8.0 = 13.0
-    BOOST_CHECK_CLOSE(problemeAResoudre.SecondMembre[2], 13.0, 0.001);
+    BOOST_CHECK_CLOSE(problemeAResoudre.SecondMembre[constraint1_index], 13.0, 0.001);
 
     // Check that other constraints weren't affected
     BOOST_CHECK_SMALL(problemeAResoudre.SecondMembre[0], 0.001);
-    BOOST_CHECK_SMALL(problemeAResoudre.SecondMembre[3], 0.001);
+    BOOST_CHECK_SMALL(problemeAResoudre.SecondMembre[4], 0.001);
 }
