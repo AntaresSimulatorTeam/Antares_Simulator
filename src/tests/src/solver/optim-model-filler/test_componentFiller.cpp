@@ -608,6 +608,7 @@ BOOST_AUTO_TEST_CASE(one_var_with_objective)
     BOOST_CHECK_NO_THROW(pb->getVariable("componentA.x"));
     BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(pb->getVariable("componentA.x")), 1);
 }
+
 BOOST_AUTO_TEST_CASE(one_time_dependent_var_with_objective)
 {
     auto objective = variable("x", Antares::Solver::Visitors::TimeIndex::VARYING_IN_TIME_ONLY);
