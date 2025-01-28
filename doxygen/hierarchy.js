@@ -1598,7 +1598,7 @@ var hierarchy =
     [ "study_run.study_run", "classstudy__run_1_1study__run.html", null ],
     [ "StudyBuilder", "structStudyBuilder.html", [
       [ "HydroMaxPowerStudy", "structHydroMaxPowerStudy.html", null ],
-      [ "StudyFixture", "structStudyFixture.html", null ],
+      [ "StudyFixture< FirstDay, LastDay >", "structStudyFixture.html", null ],
       [ "StudyForBCTest", "structStudyForBCTest.html", [
         [ "StudyWithBConCluster", "structStudyWithBConCluster.html", null ],
         [ "StudyWithBConLink", "structStudyWithBConLink.html", null ]
