@@ -608,6 +608,26 @@ BOOST_AUTO_TEST_CASE(one_var_with_objective)
     BOOST_CHECK_NO_THROW(pb->getVariable("componentA.x"));
     BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(pb->getVariable("componentA.x")), 1);
 }
+BOOST_AUTO_TEST_CASE(one_time_dependent_var_with_objective)
+{
+    auto objective = variable("x", Antares::Solver::Visitors::TimeIndex::VARYING_IN_TIME_ONLY);
+
+    createModelWithOneFloatVar("model", {}, "x", literal(-50), literal(-40), {}, objective, true);
+    createComponent("model", "componentA", {});
+
+    constexpr unsigned int last_time_step = 9;
+    FillContext ctx{0, last_time_step};
+    buildLinearProblem(ctx);
+    const auto nb_var = ctx.getNumberOfTimestep(); // = 10
+
+    BOOST_CHECK_EQUAL(pb->variableCount(), nb_var);
+    for (auto i = 0; i < nb_var; i++)
+    {
+        const auto var_name = "componentA.x_" + to_string(i);
+        BOOST_CHECK_NO_THROW(pb->getVariable(var_name));
+        BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(pb->getVariable(var_name)), 1);
+    }
+}
 
 BOOST_AUTO_TEST_CASE(two_vars_but_only_one_in_objective)
 {
