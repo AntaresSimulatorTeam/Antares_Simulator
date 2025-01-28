@@ -152,142 +152,142 @@ jobs:
         run: |
           git submodule update --init --remote src/tests/resources/Antares_Simulator_Tests_NR
 
-      #      - name: Run named mps tests
-      #        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
-      #        uses: ./.github/workflows/run-tests
-      #        with:
-      #          simtest-tag: ${{ env.SIMTEST }}
-      #          batch-name: valid-named-mps
-      #          os: ${{ env.os }}
-      #          variant: "named-mps"
-      #
-      #      - name: Run unfeasibility-related tests
-      #        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
-      #        run: |
-      #          cd _build
-      #          ctest -C Release --output-on-failure -R "^unfeasible$"
-      #
-      #      - name: Run unit and end-to-end tests
-      #        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
-      #        run: |
-      #          cd _build
-      #          ctest -C Release --output-on-failure -L "unit|end-to-end" -LE ortools
-      #
-      #      - name: Upload build on failure
-      #        if: ${{ failure() }}
-      #        uses: actions/upload-artifact@v4
-      #        with:
-      #          name: MPS-diff
-      #          path: ${{ github.workspace }}/src/tests/mps
-      #
-      #      - name: Run tests for adequacy patch (CSR)
-      #        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
-      #        uses: ./.github/workflows/run-tests
-      #        with:
-      #          simtest-tag: ${{ env.SIMTEST }}
-      #          batch-name: adequacy-patch-CSR
-      #          os: ${{ env.os }}
-      #
-      #      - name: Run tests about infinity on BCs RHS
-      #        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-      #        uses: ./.github/workflows/run-tests
-      #        with:
-      #          simtest-tag: ${{ env.SIMTEST }}
-      #          batch-name: valid-v830
-      #          os: ${{ env.os }}
+      - name: Run named mps tests
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: valid-named-mps
+          os: ${{ env.os }}
+          variant: "named-mps"
 
-      #      - name: Run MILP with CBC
-      #        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-      #        uses: ./.github/workflows/run-tests
-      #        with:
-      #          simtest-tag: ${{ env.SIMTEST }}
-      #          batch-name: valid-milp
-      #          variant: "milp-cbc"
-      #          os: ${{ env.os }}
+      - name: Run unfeasibility-related tests
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
+        run: |
+          cd _build
+          ctest -C Release --output-on-failure -R "^unfeasible$"
 
-      #      - name: Run tests introduced in 8.6.0
-      #        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-      #        uses: ./.github/workflows/run-tests
-      #        with:
-      #          simtest-tag: ${{ env.SIMTEST }}
-      #          batch-name: valid-v860
-      #          os: ${{ env.os }}
-      #
-      #      - name: Run tests introduced in 8.7.0
-      #        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-      #        uses: ./.github/workflows/run-tests
-      #        with:
-      #          simtest-tag: ${{ env.SIMTEST }}
-      #          batch-name: valid-v870
-      #          os: ${{ env.os }}
-      #
-      #      - name: Run tests introduced in 9.1.0
-      #        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-      #        uses: ./.github/workflows/run-tests
-      #        with:
-      #          simtest-tag: ${{ env.SIMTEST }}
-      #          batch-name: valid-v910
-      #          os: ${{ env.os }}
-      #
-      #      - name: Run tests introduced in 9.2.0
-      #        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-      #        uses: ./.github/workflows/run-tests
-      #        with:
-      #          simtest-tag: ${{ env.SIMTEST }}
-      #          batch-name: valid-v920
-      #          os: ${{ env.os }}
-      #
-      #      - name: Run short-tests
-      #        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-      #        uses: ./.github/workflows/run-tests
-      #        with:
-      #          simtest-tag: ${{ env.SIMTEST }}
-      #          batch-name: short-tests
-      #          os: ${{ env.os }}
-      #
-      #      - name: Run cucumber on short-tests
-      #        uses: ./.github/workflows/cucumber-tests
-      #        with:
-      #          feature: "features/short_tests.feature"
-      #
-      #      - name: Run mps tests
-      #        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-      #        uses: ./.github/workflows/run-tests
-      #        with:
-      #          simtest-tag: ${{ env.SIMTEST }}
-      #          batch-name: valid-mps
-      #          os: ${{ env.os }}
-      #
-      #      - name: Run parallel tests
-      #        if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
-      #        uses: ./.github/workflows/run-tests
-      #        with:
-      #          simtest-tag: ${{ env.SIMTEST }}
-      #          batch-name: valid-parallel
-      #          os: ${{ env.os }}
-      #          variant: "parallel"
-      #
-      #      - name: Run tests for time series generator tool
-      #        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-      #        uses: ./.github/workflows/run-tests
-      #        with:
-      #          simtest-tag: ${{ env.SIMTEST }}
-      #          batch-name: ts-generator
-      #          os: ${{ env.os }}
-      #          variant: "tsgenerator"
-      #
-      #      - name: Run medium-tests
-      #        if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
-      #        uses: ./.github/workflows/run-tests
-      #        with:
-      #          simtest-tag: ${{ env.SIMTEST }}
-      #          batch-name: medium-tests
-      #          os: ${{ env.os }}
-      #
-      #      - name: Run cucumber on medium-tests
-      #        uses: ./.github/workflows/cucumber-tests
-      #        with:
-      #          feature: "features/medium_tests.feature"
+      - name: Run unit and end-to-end tests
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
+        run: |
+          cd _build
+          ctest -C Release --output-on-failure -L "unit|end-to-end" -LE ortools
+
+      - name: Upload build on failure
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: MPS-diff
+          path: ${{ github.workspace }}/src/tests/mps
+
+      - name: Run tests for adequacy patch (CSR)
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: adequacy-patch-CSR
+          os: ${{ env.os }}
+
+      - name: Run tests about infinity on BCs RHS
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: valid-v830
+          os: ${{ env.os }}
+
+      - name: Run MILP with CBC
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: valid-milp
+          variant: "milp-cbc"
+          os: ${{ env.os }}
+
+      - name: Run tests introduced in 8.6.0
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: valid-v860
+          os: ${{ env.os }}
+
+      - name: Run tests introduced in 8.7.0
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: valid-v870
+          os: ${{ env.os }}
+
+      - name: Run tests introduced in 9.1.0
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: valid-v910
+          os: ${{ env.os }}
+
+      - name: Run tests introduced in 9.2.0
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: valid-v920
+          os: ${{ env.os }}
+
+      - name: Run short-tests
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: short-tests
+          os: ${{ env.os }}
+
+      - name: Run cucumber on short-tests
+        uses: ./.github/workflows/cucumber-tests
+        with:
+          feature: "features/short_tests.feature"
+
+      - name: Run mps tests
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: valid-mps
+          os: ${{ env.os }}
+
+      - name: Run parallel tests
+        if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: valid-parallel
+          os: ${{ env.os }}
+          variant: "parallel"
+
+      - name: Run tests for time series generator tool
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: ts-generator
+          os: ${{ env.os }}
+          variant: "tsgenerator"
+
+      - name: Run medium-tests
+        if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: medium-tests
+          os: ${{ env.os }}
+
+      - name: Run cucumber on medium-tests
+        uses: ./.github/workflows/cucumber-tests
+        with:
+          feature: "features/medium_tests.feature"
 
       - name: Run long-tests-1
         if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
