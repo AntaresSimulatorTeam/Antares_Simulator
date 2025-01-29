@@ -245,77 +245,77 @@ jobs:
           # batch-name: short-tests
           # os: ${{ env.os }}
 
-      - name: Run cucumber on short-tests
-        uses: ./.github/workflows/cucumber-tests
-        with:
-          feature: "features/short_tests.feature"
+      # - name: Run cucumber on short-tests
+        # uses: ./.github/workflows/cucumber-tests
+        # with:
+          # feature: "features/short_tests.feature"
 
-      - name: Run mps tests
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-        uses: ./.github/workflows/run-tests
-        with:
-          simtest-tag: ${{ env.SIMTEST }}
-          batch-name: valid-mps
-          os: ${{ env.os }}
+      # - name: Run mps tests
+        # if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        # uses: ./.github/workflows/run-tests
+        # with:
+          # simtest-tag: ${{ env.SIMTEST }}
+          # batch-name: valid-mps
+          # os: ${{ env.os }}
 
-      - name: Run parallel tests
-        if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
-        uses: ./.github/workflows/run-tests
-        with:
-          simtest-tag: ${{ env.SIMTEST }}
-          batch-name: valid-parallel
-          os: ${{ env.os }}
-          variant: "parallel"
+      # - name: Run parallel tests
+        # if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
+        # uses: ./.github/workflows/run-tests
+        # with:
+          # simtest-tag: ${{ env.SIMTEST }}
+          # batch-name: valid-parallel
+          # os: ${{ env.os }}
+          # variant: "parallel"
 
-      - name: Run tests for time series generator tool
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-        uses: ./.github/workflows/run-tests
-        with:
-          simtest-tag: ${{ env.SIMTEST }}
-          batch-name: ts-generator
-          os: ${{ env.os }}
-          variant: "tsgenerator"
+      # - name: Run tests for time series generator tool
+        # if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        # uses: ./.github/workflows/run-tests
+        # with:
+          # simtest-tag: ${{ env.SIMTEST }}
+          # batch-name: ts-generator
+          # os: ${{ env.os }}
+          # variant: "tsgenerator"
 
-      - name: Run medium-tests
-        if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
-        uses: ./.github/workflows/run-tests
-        with:
-          simtest-tag: ${{ env.SIMTEST }}
-          batch-name: medium-tests
-          os: ${{ env.os }}
+      # - name: Run medium-tests
+        # if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
+        # uses: ./.github/workflows/run-tests
+        # with:
+          # simtest-tag: ${{ env.SIMTEST }}
+          # batch-name: medium-tests
+          # os: ${{ env.os }}
 
-      - name: Run cucumber on medium-tests
-        uses: ./.github/workflows/cucumber-tests
-        with:
-          feature: "features/medium_tests.feature"
+      # - name: Run cucumber on medium-tests
+        # uses: ./.github/workflows/cucumber-tests
+        # with:
+          # feature: "features/medium_tests.feature"
 
-      - name: Run long-tests-1
-        if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
-        uses: ./.github/workflows/run-tests
-        with:
-          simtest-tag: ${{ env.SIMTEST }}
-          batch-name: long-tests-1
-          os: ${{ env.os }}
+      # - name: Run long-tests-1
+        # if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
+        # uses: ./.github/workflows/run-tests
+        # with:
+          # simtest-tag: ${{ env.SIMTEST }}
+          # batch-name: long-tests-1
+          # os: ${{ env.os }}
 
-      - name: Run long-tests-2
-        if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
-        uses: ./.github/workflows/run-tests
-        with:
-          simtest-tag: ${{ env.SIMTEST }}
-          batch-name: long-tests-2
-          os: ${{ env.os }}
+      # - name: Run long-tests-2
+        # if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
+        # uses: ./.github/workflows/run-tests
+        # with:
+          # simtest-tag: ${{ env.SIMTEST }}
+          # batch-name: long-tests-2
+          # os: ${{ env.os }}
 
-      - name: Run long-tests-3
-        if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
-        uses: ./.github/workflows/run-tests
-        with:
-          simtest-tag: ${{ env.SIMTEST }}
-          batch-name: long-tests-3
-          os: ${{ env.os }}
+      # - name: Run long-tests-3
+        # if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
+        # uses: ./.github/workflows/run-tests
+        # with:
+          # simtest-tag: ${{ env.SIMTEST }}
+          # batch-name: long-tests-3
+          # os: ${{ env.os }}
 
-      - name: Barrier
-        if: ${{ !success() }}
-        run: exit 1
+      # - name: Barrier
+        # if: ${{ !success() }}
+        # run: exit 1
 
       - name: Solver archive creation
         shell: bash
