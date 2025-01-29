@@ -8,6 +8,8 @@
 #include <antares/exception/AssertionError.hpp>
 #include <antares/Enum.hpp>
 #include <filesystem>
+#include <antares/solver/optimisation/opt_constants.h>
+#include "antares/solver/utils/basis_status.h"
 
 using namespace operations_research;
 
@@ -338,7 +340,8 @@ static void transferBasis(std::vector<operations_research::MPSolver::BasisStatus
 MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
                            MPSolver* solver,
                            bool keepBasis,
-                           const OptimizationOptions& options)
+                           const OptimizationOptions& options,
+                           const int optimizationNumber)
 {
     MPSolverParameters params;
     setGenericParameters(
@@ -366,7 +369,10 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
             transferBasis(Probleme->StatutDesContraintes, solver->constraints());
         }
     }
-
+    if (optimizationNumber == DEUXIEME_OPTIMISATION)
+    {
+        solver->SetSolverSpecificParametersAsString("LPFLAGS 0");
+    }
     return solver;
 }
 
