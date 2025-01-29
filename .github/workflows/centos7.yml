@@ -7,7 +7,7 @@ on:
     branches:
       - develop
       - dependabot/*
-      - feature/r-and-d-force-dual-simplex-in-optim-2
+      - feature/r-and-force-simplex-optim-2-on-v880
   schedule:
     - cron: '21 2 * * *'
   workflow_call:
