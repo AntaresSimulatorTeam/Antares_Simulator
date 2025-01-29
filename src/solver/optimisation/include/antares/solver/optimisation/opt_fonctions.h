@@ -96,6 +96,8 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
 
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*,
                                                                                    bool);
+void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireRampesThermiques(PROBLEME_HEBDO*,
+                                                                                   bool);
 void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*,
                                                                             const int,
                                                                             const int);

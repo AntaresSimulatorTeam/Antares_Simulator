@@ -225,19 +225,19 @@ void State::initFromThermalClusterIndexProduction(const uint clusterEnabledIndex
             double stoppingProduction = std::max(0., -startingStoppingProduction);
 
             double rampingIncrease
-              = std::max(p - thermal[area->index].productionLastHour[clusterAreaWideIndex]
+              = std::max(p - thermal[area->index].productionLastHour[clusterEnabledIndex]
                            - startingProduction,
                          0.);
 
             double rampingDecrease
-              = std::max(thermal[area->index].productionLastHour[clusterAreaWideIndex] - p
+              = std::max(thermal[area->index].productionLastHour[clusterEnabledIndex] - p
                            - stoppingProduction,
                          0.);
 
-            thermal[area->index].thermalClustersOperatingCost[clusterAreaWideIndex]
+            thermal[area->index].thermalClustersOperatingCost[clusterEnabledIndex]
               += rampingIncrease * thermalCluster->ramping->powerIncreaseCost;
 
-                thermal[area->index].thermalClustersOperatingCost[clusterAreaWideIndex]
+                thermal[area->index].thermalClustersOperatingCost[clusterEnabledIndex]
               += rampingDecrease * thermalCluster->ramping->powerDecreaseCost; 
         }
 

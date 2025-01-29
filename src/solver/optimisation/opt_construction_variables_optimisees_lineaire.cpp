@@ -24,6 +24,7 @@
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 #include "variables/VariableManagerUtils.h"
+#include <antares/solver/optimisation/opt_fonctions.h>
 
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*,
                                                                                    bool);

@@ -112,12 +112,12 @@ void InternalExportDigestLinksMatrix(const Data::Study& study,
 }
 
 static void ExportGridInfosAreas(const Data::Study& study,
-                                 const Yuni::String& originalOutput,
+                                 const std::string& originalOutput,
                                  IResultWriter& writer)
 {
-    Clob out;
-    Clob outLinks;
-    Clob outThermal;
+    Yuni::Clob out;
+    Yuni::Clob outLinks;
+    Yuni::Clob outThermal;
 
     out << "id\tname\n";
     outLinks << "upstream\tdownstream\n";

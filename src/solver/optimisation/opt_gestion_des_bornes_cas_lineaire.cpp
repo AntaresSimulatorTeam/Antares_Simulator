@@ -27,6 +27,7 @@
 
 #include "variables/VariableManagement.h"
 #include "variables/VariableManagerUtils.h"
+#include <antares/solver/optimisation/opt_fonctions.h>
 
 void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*,
                                                                             const int,

@@ -69,47 +69,6 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo)
     int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
                                                   ->NombreDePasDeTempsPourUneOptimisation;
 
-    int Sparsity = mxPaliers * problemeHebdo->NombreDePays;
-    Sparsity += problemeHebdo->NombreDInterconnexions;
-    if (Sparsity > 100)
-    {
-        Sparsity = 100;
-    }
-
-    int NbTermes = 0;
-    NbTermes += ProblemeAResoudre->NombreDeContraintes;
-
-    int Adder = mxPaliers;
-    Adder += 4;
-    Adder *= problemeHebdo->NombreDePays;
-    Adder += 2 * problemeHebdo->NombreDInterconnexions;
-    Adder *= NombreDePasDeTempsPourUneOptimisation;
-
-    NbTermes += Adder;
-
-    NbTermes += Adder;
-
-    Adder = 3 * problemeHebdo->NombreDInterconnexions * NombreDePasDeTempsPourUneOptimisation;
-    NbTermes += Adder;
-
-    Adder = Sparsity * problemeHebdo->NombreDeContraintesCouplantes;
-    Adder *= (NombreDePasDeTempsPourUneOptimisation);
-    Adder += Sparsity * (7 + 7) * problemeHebdo->NombreDeContraintesCouplantes;
-
-    NbTermes += Adder;
-
-    NbTermes += 3 * problemeHebdo->NombreDePays * NombreDePasDeTempsPourUneOptimisation;
-    NbTermes += problemeHebdo->NombreDePays * NombreDePasDeTempsPourUneOptimisation * 4;
-    NbTermes += problemeHebdo->NombreDePays * NombreDePasDeTempsPourUneOptimisation * 5;
-
-    NbTermes += problemeHebdo->NombreDePays * NombreDePasDeTempsPourUneOptimisation
-                * 2; /*inequality constraint on final hydros level*/
-    NbTermes += 1;   /* constraint includes hydro generation, pumping and final level */
-    NbTermes += 101; /* constraint expressing final level as a sum of stock layers */
-
-    NbTermes += problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage;
-    NbTermes += problemeHebdo->NbTermesContraintesPourLesRampes;
-
     logs.info();
     logs.info()
       << " Starting Memory Allocation for a Weekly Optimization problem in Canonical form ";

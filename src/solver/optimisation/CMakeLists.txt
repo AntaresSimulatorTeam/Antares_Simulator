@@ -20,7 +20,7 @@ set(RTESOLVER_OPT
         opt_numero_de_jour_du_pas_de_temps.cpp
         opt_construction_variables_optimisees_quadratique.cpp
         opt_decompte_variables_et_contraintes.cpp
-        opt_decompte_variables_et_contraintes.cpp
+        opt_construction_variables_rampes_thermiques.cpp
         opt_gestion_des_bornes_cas_lineaire.cpp
         opt_verification_presence_reserve_jmoins1.cpp
         opt_init_contraintes_hydrauliques.cpp
@@ -196,6 +196,9 @@ set(RTESOLVER_OPT
         variables/VariableManagerUtils.cpp
         include/antares/solver/optimisation/HebdoProblemToLpsTranslator.h
         HebdoProblemToLpsTranslator.cpp
+        include/antares/solver/optimisation/LegacyOrtoolsLinearProblem.h
+        include/antares/solver/optimisation/LegacyFiller.h
+        LegacyFiller.cpp
 )
 
 

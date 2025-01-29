@@ -21,6 +21,7 @@
 
 #include <antares/antares/fatal-error.h>
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include <antares/solver/optimisation/opt_fonctions.h>
 
 using namespace Antares;
 
