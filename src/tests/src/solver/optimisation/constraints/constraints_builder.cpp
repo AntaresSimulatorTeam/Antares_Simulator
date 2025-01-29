@@ -468,7 +468,49 @@ struct ExpectedResult
     double rhs;
 };
 
-std::vector<ExpectedResult> SetupTwoStoragesOnTwoAreasExample(PROBLEME_HEBDO& problemeHebdo)
+ExpectedResult SetupSingleStorageOneArea(PROBLEME_HEBDO& problemeHebdo)
+{
+    // Setup a single storage in one area
+    ShortTermStorage::AREA_INPUT& area0 = problemeHebdo.ShortTermStorage[0];
+    area0.resize(1);
+
+    Antares::Data::ShortTermStorage::AdditionalConstraints additionalConstraint;
+    additionalConstraint.rhs = {12.0, 18.0, 24.0}; // RHS values for first hours
+
+    Antares::Data::ShortTermStorage::SingleAdditionalConstraint constraint;
+    constraint.globalIndex = 0;
+    constraint.hours = {1, 2, 3}; // First three hours
+    additionalConstraint.constraints.push_back(constraint);
+
+    auto& storage_area0 = area0[0];
+    storage_area0.series = std::make_shared<Antares::Data::ShortTermStorage::Series>();
+    storage_area0.series->inflows.resize(HOURS_PER_YEAR, 5.0); // Default inflow
+    storage_area0.additionalConstraints.push_back(additionalConstraint);
+
+    // Expected result: Sum of 12.0 + 18.0 + 24.0 = 54.0
+    return {.constraint_index = problemeHebdo.CorrespondanceCntNativesCntOptimHebdomadaires
+                                  .ShortTermStorageCumulation[constraint.globalIndex],
+            .rhs = 54.0};
+}
+
+BOOST_AUTO_TEST_CASE(TestSingleStorageOneArea)
+{
+    PROBLEME_HEBDO problemeHebdo;
+    const int numberOfAreas = 1;
+    const int numberOfConstraints = 5;
+    const int numberOfTimeSteps = 24;
+
+    SetupProblemHebdo(problemeHebdo, numberOfAreas, numberOfConstraints, numberOfTimeSteps);
+    const auto [constraint_index, expected_rhs] = SetupSingleStorageOneArea(problemeHebdo);
+    // Call function
+    OPT_InitialiserLeSecondMembreDuProblemeLineaire(&problemeHebdo, 0, 24, 0, 1);
+
+    PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre = *problemeHebdo.ProblemeAResoudre;
+
+    BOOST_CHECK_CLOSE(problemeAResoudre.SecondMembre[constraint_index], expected_rhs, 0.001);
+}
+
+std::vector<ExpectedResult> SetupMultipleStoragesDifferentAreas(PROBLEME_HEBDO& problemeHebdo)
 {
     // Area 0 setup
     ShortTermStorage::AREA_INPUT& area0 = problemeHebdo.ShortTermStorage[0];
@@ -517,7 +559,7 @@ std::vector<ExpectedResult> SetupTwoStoragesOnTwoAreasExample(PROBLEME_HEBDO& pr
              .rhs = 13.0}};
 }
 
-BOOST_AUTO_TEST_CASE(TestShortTermStorageCumulationRhs)
+BOOST_AUTO_TEST_CASE(TestMultipleStoragesDifferentAreas)
 {
     // Setup test data
     PROBLEME_HEBDO problemeHebdo;
@@ -528,7 +570,7 @@ BOOST_AUTO_TEST_CASE(TestShortTermStorageCumulationRhs)
     const int numberOfTimeSteps = 24;
 
     SetupProblemHebdo(problemeHebdo, numberOfAreas, numberOfConstraints, numberOfTimeSteps);
-    const auto expected_results = SetupTwoStoragesOnTwoAreasExample(problemeHebdo);
+    const auto expected_results = SetupMultipleStoragesDifferentAreas(problemeHebdo);
 
     // Call the function
     OPT_InitialiserLeSecondMembreDuProblemeLineaire(&problemeHebdo,
@@ -556,48 +598,6 @@ BOOST_AUTO_TEST_CASE(TestShortTermStorageCumulationRhs)
     {
         BOOST_CHECK_SMALL(problemeAResoudre.SecondMembre[index], 0.001);
     }
-}
-
-ExpectedResult SetupSingleStorageOneArea(PROBLEME_HEBDO& problemeHebdo)
-{
-    // Setup a single storage in one area
-    ShortTermStorage::AREA_INPUT& area0 = problemeHebdo.ShortTermStorage[0];
-    area0.resize(1);
-
-    Antares::Data::ShortTermStorage::AdditionalConstraints additionalConstraint;
-    additionalConstraint.rhs = {12.0, 18.0, 24.0}; // RHS values for first hours
-
-    Antares::Data::ShortTermStorage::SingleAdditionalConstraint constraint;
-    constraint.globalIndex = 0;
-    constraint.hours = {1, 2, 3}; // First three hours
-    additionalConstraint.constraints.push_back(constraint);
-
-    auto& storage_area0 = area0[0];
-    storage_area0.series = std::make_shared<Antares::Data::ShortTermStorage::Series>();
-    storage_area0.series->inflows.resize(HOURS_PER_YEAR, 5.0); // Default inflow
-    storage_area0.additionalConstraints.push_back(additionalConstraint);
-
-    // Expected result: Sum of 12.0 + 18.0 + 24.0 = 54.0
-    return {.constraint_index = problemeHebdo.CorrespondanceCntNativesCntOptimHebdomadaires
-                                  .ShortTermStorageCumulation[constraint.globalIndex],
-            .rhs = 54.0};
-}
-
-BOOST_AUTO_TEST_CASE(TestSingleStorageOneArea)
-{
-    PROBLEME_HEBDO problemeHebdo;
-    const int numberOfAreas = 1;
-    const int numberOfConstraints = 5;
-    const int numberOfTimeSteps = 24;
-
-    SetupProblemHebdo(problemeHebdo, numberOfAreas, numberOfConstraints, numberOfTimeSteps);
-    const auto [constraint_index, expected_rhs] = SetupSingleStorageOneArea(problemeHebdo);
-    // Call function
-    OPT_InitialiserLeSecondMembreDuProblemeLineaire(&problemeHebdo, 0, 24, 0, 1);
-
-    PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre = *problemeHebdo.ProblemeAResoudre;
-
-    BOOST_CHECK_CLOSE(problemeAResoudre.SecondMembre[constraint_index], expected_rhs, 0.001);
 }
 
 std::vector<ExpectedResult> SetupMultipleStoragesSameArea(PROBLEME_HEBDO& problemeHebdo)
