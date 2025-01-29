@@ -20,17 +20,10 @@
 */
 
 #include <yuni/yuni.h>
-#include <yuni/core/math.h>
-#include <yuni/io/directory.h>
-#include <yuni/io/file.h>
 
 #include <antares/logs/logs.h>
 #include <antares/solver/ts-generator/prepro.h>
 #include "antares/study/study.h"
-
-using namespace Yuni;
-
-#define SEP IO::Separator
 
 namespace Antares::Data
 {
@@ -50,23 +43,20 @@ void PreproAvailability::copyFrom(const PreproAvailability& rhs)
 
 bool PreproAvailability::saveToFolder(const AnyString& folder) const
 {
-    if (IO::Directory::Create(folder))
+    if (Yuni::IO::Directory::Create(folder))
     {
-        String buffer;
-        buffer.clear() << folder << SEP << "data.txt";
+        Yuni::String buffer;
+        buffer.clear() << folder << Yuni::IO::Separator << "data.txt";
         return data.saveToCSVFile(buffer, /*decimal*/ 6);
     }
     return false;
 }
 
-bool PreproAvailability::loadFromFolder(Study& study, const AnyString& folder)
+bool PreproAvailability::loadFromFolder(Study& study, const std::filesystem::path& folder)
 {
-    auto& buffer = study.bufferLoadingTS;
-
-    buffer.clear() << folder << SEP << "data.txt";
-
+    auto filePath = folder / "data.txt";
     // standard loading
-    return data.loadFromCSVFile(buffer,
+    return data.loadFromCSVFile(filePath.string(),
                                 preproAvailabilityMax,
                                 DAYS_PER_YEAR,
                                 Matrix<>::optFixedSize,
@@ -156,11 +146,6 @@ bool PreproAvailability::forceReload(bool reload) const
 void PreproAvailability::markAsModified() const
 {
     data.markAsModified();
-}
-
-uint64_t PreproAvailability::memoryUsage() const
-{
-    return sizeof(PreproAvailability);
 }
 
 void PreproAvailability::reset()

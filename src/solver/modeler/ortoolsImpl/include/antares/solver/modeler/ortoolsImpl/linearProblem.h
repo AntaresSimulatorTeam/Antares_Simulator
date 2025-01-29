@@ -36,19 +36,49 @@ class MPObjective;
 namespace Antares::Solver::Modeler::OrtoolsImpl
 {
 
-class OrtoolsLinearProblem final: public Api::ILinearProblem
+class OrtoolsLinearProblem: public Api::ILinearProblem
 {
 public:
     OrtoolsLinearProblem(bool isMip, const std::string& solverName);
     ~OrtoolsLinearProblem() override = default;
 
     OrtoolsMipVariable* addNumVariable(double lb, double ub, const std::string& name) override;
+
+    std::vector<Api::IMipVariable*> addNumVariable(double lb,
+                                                   double ub,
+                                                   const std::string& name,
+                                                   unsigned int number_new_variables) override;
+
     OrtoolsMipVariable* addIntVariable(double lb, double ub, const std::string& name) override;
 
+    std::vector<Api::IMipVariable*> addIntVariable(double lb,
+                                                   double ub,
+                                                   const std::string& name,
+                                                   unsigned int number_new_variables) override;
+
+    OrtoolsMipVariable* addVariable(double lb,
+                                    double ub,
+                                    bool integer,
+                                    const std::string& name) override;
+
+    std::vector<Api::IMipVariable*> addVariable(double lb,
+                                                double ub,
+                                                bool integer,
+                                                const std::string& name,
+                                                unsigned int number_new_variables) override;
+
     OrtoolsMipVariable* getVariable(const std::string& name) const override;
+    int variableCount() const override;
 
     OrtoolsMipConstraint* addConstraint(double lb, double ub, const std::string& name) override;
+
+    std::vector<Api::IMipConstraint*> addConstraint(double lb,
+                                                    double ub,
+                                                    const std::string& name,
+                                                    unsigned int number_new_constraints) override;
+
     OrtoolsMipConstraint* getConstraint(const std::string& name) const override;
+    int constraintCount() const override;
 
     void setObjectiveCoefficient(Api::IMipVariable* var, double coefficient) override;
     double getObjectiveCoefficient(const Api::IMipVariable* var) const override;
@@ -60,11 +90,15 @@ public:
     bool isMaximization() const override;
 
     OrtoolsMipSolution* solve(bool verboseSolver) override;
+    void WriteLP(const std::string& filename) override;
+
+    double infinity() const override;
+
+protected:
+    operations_research::MPSolver* MpSolver() const;
 
 private:
-    OrtoolsMipVariable* addVariable(double lb, double ub, bool integer, const std::string& name);
-
-    std::shared_ptr<operations_research::MPSolver> mpSolver_;
+    operations_research::MPSolver* mpSolver_;
     operations_research::MPObjective* objective_;
     operations_research::MPSolverParameters params_;
 

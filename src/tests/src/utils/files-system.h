@@ -31,6 +31,6 @@
 
 std::filesystem::path generateAndCreateDirName(const std::string&);
 
-void createFolder(const std::string& path, const std::string& folder_name);
+std::filesystem::path createFolder(const std::string& path, const std::string& folder_name);
 void createFile(const std::string& folder_path, const std::string& file_name);
 void removeFolder(std::string& path, std::string& folder_name);

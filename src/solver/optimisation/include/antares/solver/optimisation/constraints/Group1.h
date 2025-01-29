@@ -37,7 +37,10 @@ public:
 private:
     AreaBalanceData GetAreaBalanceData();
     FictitiousLoadData GetFictitiousLoadData();
-    ShortTermStorageLevelData GetShortTermStorageLevelData();
+    ShortTermStorageData GetShortTermStorageData();
+
+    ShortTermStorageCumulativeConstraintData GetShortTermStorageCumulativeConstraintData();
+
     FlowDissociationData GetFlowDissociationData();
     BindingConstraintHourData GetBindingConstraintHourData();
 };

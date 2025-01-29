@@ -276,6 +276,7 @@ BOOST_FIXTURE_TEST_CASE(simple_constant_expression, Registry<Node>)
 
     // Port field
     PortFieldNode portFieldNode("port", "field");
+    PortFieldSumNode portFieldSumNode("port", "sum");
 
     // 65.*p1
     Node* mult = create<MultiplicationNode>(&var1, &par);
@@ -283,6 +284,10 @@ BOOST_FIXTURE_TEST_CASE(simple_constant_expression, Registry<Node>)
     Node* expr = create<SumNode>(mult, &portFieldNode);
     BOOST_CHECK_EQUAL(printVisitor.dispatch(expr), "((65.000000*p1)+port.field)");
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(expr), LinearStatus::CONSTANT);
+
+    Node* expr2 = create<SumNode>(mult, &portFieldSumNode);
+    BOOST_CHECK_EQUAL(printVisitor.dispatch(expr2), "((65.000000*p1)+port.sum)");
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(expr2), LinearStatus::CONSTANT);
 }
 
 BOOST_FIXTURE_TEST_CASE(LinearityVisitor_name, Registry<Node>)

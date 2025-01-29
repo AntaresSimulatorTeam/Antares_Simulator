@@ -21,6 +21,7 @@
 
 #include "antares/solver/expressions/visitors/EvalVisitor.h"
 
+#include <cmath>
 #include <numeric>
 
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
@@ -108,6 +109,11 @@ double EvalVisitor::visit(const Nodes::NegationNode* node)
 }
 
 double EvalVisitor::visit(const Nodes::PortFieldNode* node)
+{
+    throw EvalVisitorNotImplemented(name(), node->name());
+}
+
+double EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
 {
     throw EvalVisitorNotImplemented(name(), node->name());
 }

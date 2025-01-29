@@ -45,11 +45,6 @@ ATSP::ATSP():
 
 ATSP::~ATSP()
 {
-    for (uint i = 0; i != pArea.size(); ++i)
-    {
-        delete pArea[i];
-    }
-
     if (pAutoClean)
     {
         logs.info() << "Cleaning...";
@@ -116,7 +111,7 @@ void ATSP::printSummary() const
 
     for (uint i = 0; i != pArea.size(); ++i)
     {
-        const AreaInfo& info = *pArea[i];
+        const AreaInfo& info = pArea[i];
         if (info.rawData)
         {
             logs.info() << "  " << info.name << ": law '"
@@ -163,7 +158,7 @@ bool ATSP::writeMoments() const
 
     for (uint i = 0; i < pArea.size(); ++i)
     {
-        const AreaInfo& info = *(pArea[i]);
+        const AreaInfo& info = pArea[i];
         if (!info.enabled)
         {
             continue;

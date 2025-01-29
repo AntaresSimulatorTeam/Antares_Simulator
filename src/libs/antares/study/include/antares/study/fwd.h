@@ -434,6 +434,7 @@ PowerFluctuations StringToPowerFluctuations(const AnyString& text);
 enum SheddingPolicy
 {
     shpShavePeaks = 0,
+    shpAccurateShavePeaks,
     shpMinimizeDuration,
     shpUnknown,
 };

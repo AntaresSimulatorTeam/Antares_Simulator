@@ -94,6 +94,11 @@ LinearStatus LinearityVisitor::visit(const Nodes::PortFieldNode*)
     return LinearStatus::CONSTANT;
 }
 
+LinearStatus LinearityVisitor::visit(const Nodes::PortFieldSumNode*)
+{
+    return LinearStatus::CONSTANT;
+}
+
 LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::ComponentVariableNode*)
 {
     return LinearStatus::LINEAR;

@@ -39,9 +39,8 @@ public:
     int& nombreDeContraintes;
     int& nombreDeTermesDansLaMatriceDeContrainte;
     std::vector<int>& IndicesDebutDeLigne;
-    std::vector<double>& CoefficientsDeLaMatriceDesContraintes;
-    std::vector<int>& IndicesColonnes;
-    int& NombreDeTermesAllouesDansLaMatriceDesContraintes; // TODO Check if ref is needed
+    SparseVector<double>& CoefficientsDeLaMatriceDesContraintes;
+    SparseVector<int>& IndicesColonnes;
     std::vector<int>& NombreDeTermesDesLignes;
     std::string& Sens;
     int& IncrementDAllocationMatriceDesContraintes;
@@ -127,14 +126,28 @@ public:
 
     ConstraintBuilder& IntercoIndirectCost(unsigned int index, double coeff);
 
-    ConstraintBuilder& ShortTermStorageInjection(unsigned int index, double coeff);
+    ConstraintBuilder& ShortTermStorageInjection(unsigned int index,
+                                                 double coeff,
+                                                 int offset = 0,
+                                                 int delta = 0);
 
-    ConstraintBuilder& ShortTermStorageWithdrawal(unsigned int index, double coeff);
+    ConstraintBuilder& ShortTermStorageWithdrawal(unsigned int index,
+                                                  double coeff,
+                                                  int offset = 0,
+                                                  int delta = 0);
 
     ConstraintBuilder& ShortTermStorageLevel(unsigned int index,
                                              double coeff,
                                              int offset = 0,
                                              int delta = 0);
+    ConstraintBuilder& ShortTermCostVariationInjection(unsigned int index,
+                                                       double coeff,
+                                                       int offset = 0,
+                                                       int delta = 0);
+    ConstraintBuilder& ShortTermCostVariationWithdrawal(unsigned int index,
+                                                        double coeff,
+                                                        int offset = 0,
+                                                        int delta = 0);
 
     ConstraintBuilder& HydProd(unsigned int index, double coeff);
 
@@ -232,8 +245,6 @@ public:
 private:
     void OPT_ChargerLaContrainteDansLaMatriceDesContraintes();
 
-    void OPT_AugmenterLaTailleDeLaMatriceDesContraintes();
-
     unsigned int hourInWeek_ = 0;
 
     char operator_ = '=';
@@ -298,4 +309,16 @@ struct StartUpCostsData
 {
     const std::vector<PALIERS_THERMIQUES>& PaliersThermiquesDuPays;
     bool Simulation;
+};
+
+struct ShortTermStorageData
+{
+    std::vector<CORRESPONDANCES_DES_CONTRAINTES>& CorrespondanceCntNativesCntOptim;
+
+    const std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorage;
+};
+
+struct ShortTermStorageCumulativeConstraintData: ShortTermStorageData
+{
+    CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES& CorrespondanceCntNativesCntOptimHebdomadaires;
 };

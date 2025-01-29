@@ -64,7 +64,8 @@ Node* ComparisonFixture::createComplexExpression()
     Node* sub = registry_.create<SubtractionNode>(add, neg);
     Node* cmp = registry_.create<GreaterThanOrEqualNode>(sub, add);
     Node* pf = registry_.create<PortFieldNode>("port", "field");
-    Node* addf = registry_.create<SumNode>(pf, cmp);
+    Node* pfsum = registry_.create<PortFieldSumNode>("port", "sum");
+    Node* addf = registry_.create<SumNode>(pf, pfsum, cmp);
     return addf;
 }
 

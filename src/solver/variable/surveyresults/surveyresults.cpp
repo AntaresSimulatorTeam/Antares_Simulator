@@ -32,10 +32,7 @@
 #include <antares/utils/utils.h>
 
 
-using namespace Yuni;
 using namespace Antares;
-
-#define SEP IO::Separator
 
 namespace Antares::Solver::Variable::Private
 {
@@ -172,12 +169,12 @@ static void ExportGridInfosAreas(const Data::Study& study,
               }
           } // each thermal cluster
       }); // each area
-    auto add = [&writer, &originalOutput](const YString& filename, Clob&& buffer)
+    auto add = [&writer, &originalOutput](const std::string& filename, Yuni::Clob&& buffer)
     {
-
-        YString path;
-        path << originalOutput << SEP << "grid" << SEP << filename;
-        writer.addEntryFromBuffer(path.c_str(), buffer);
+        std::filesystem::path path = originalOutput;
+        path /= "grid";
+        path /= filename;
+        writer.addEntryFromBuffer(path.string(), buffer);
     };
 
     add("areas.txt", std::move(out));
@@ -185,7 +182,7 @@ static void ExportGridInfosAreas(const Data::Study& study,
     add("thermal.txt", std::move(outThermal));
 }
 
-SurveyResultsData::SurveyResultsData(const Data::Study& s, const String& o):
+SurveyResultsData::SurveyResultsData(const Data::Study& s, const Yuni::String& o):
     columnIndex((uint)-1),
     thermalCluster(nullptr),
     area(nullptr),
@@ -520,7 +517,7 @@ static inline void WriteIndexHeaderToFileDescriptor(int precisionLevel,
     s += '\n';
 }
 
-SurveyResults::SurveyResults(const Data::Study& s, const String& o, IResultWriter& writer):
+SurveyResults::SurveyResults(const Data::Study& s, const Yuni::String& o, IResultWriter& writer):
     data(s, o),
     yearByYearResults(false),
     isCurrentVarNA(nullptr),
@@ -564,16 +561,12 @@ SurveyResults::SurveyResults(const Data::Study& s, const String& o, IResultWrite
     }
 
     uint nbAreas = s.areas.size();
-    uint nbSetsOfAreas = s.areas.size();
+    uint nbSetsOfAreas = s.setsOfAreas.size();
     digestSize = (nbAreas > nbSetsOfAreas) ? nbAreas : nbSetsOfAreas;
     digestNonApplicableStatus = new bool*[digestSize];
     for (uint i = 0; i < digestSize; i++)
     {
-        digestNonApplicableStatus[i] = new bool[maxVariables];
-        for (uint v = 0; v < maxVariables; v++)
-        {
-            digestNonApplicableStatus[i][v] = false;
-        }
+        digestNonApplicableStatus[i] = new bool[maxVariables]{false};
     }
 }
 

@@ -60,19 +60,19 @@ In every *Antares Simulator* [release](https://github.com/AntaresSimulatorTeam/A
 the user guide is printed to a PDF file and published in the assets. This document can be downloaded by users who 
 want to install *Antares Simulator* and be able to consult its documentation off-line.  
 
-In practice, the PDF is generated automatically from Markdown files under [reference-guide](./user-guide) by 
+In practice, the PDF is generated automatically from Markdown files under [user-guide](./user-guide) by 
 [Sphinx](https://www.sphinx-doc.org/) (using LaTeX). The script for this generation is in [pdf-doc-generation-with-sphinx/create_pdf_doc.sh](./pdf-doc-generation-with-sphinx/create_pdf_doc.sh); 
 it is automatically run by a GitHub [action](../.github/workflows/build-userguide.yml) during every release, and for 
 each pull request (in order to verify that the PDF builds).  
 
 While the source material used for the PDF user guide are the same as the ones used for the mkdocs website (i.e. 
-Markdown files under `reference-guide`), some extra source files are needed:
+Markdown files under `user-guide`), some extra source files are needed:
 - As for all Sphinx projects, this one needs a configuration file: [conf.py](./pdf-doc-generation-with-sphinx/source/conf.py). 
   This file allows you to customize the Sphinx build, in the same way mkdoks.yml allows you to customize mkdocs build. 
 - Sphinx navigation is built iteratively, using "index" files that refer to each other. The top-most index file is 
   [pdf-doc-generation-with-sphinx/source/index.rst](./pdf-doc-generation-with-sphinx/source/index.rst). It points to 
-  [reference-guide/00-index.md](user-guide/00-index.md), which in turns points to other pages or indexes, 
-  defining the whole navigation tree of the documentation. **This [reference-guide/00-index.md](user-guide/00-index.md) 
+  [user-guide/00-index.md](user-guide/00-index.md), which in turns points to other pages or indexes, 
+  defining the whole navigation tree of the documentation. **This [user-guide/00-index.md](user-guide/00-index.md) 
   file should be updated** in the same way mkdocs.yml is, in order to keep the navigation tree of the PDF document 
   synchronized with the navigation tree of the mkdocs website.
 
@@ -80,9 +80,9 @@ When modifying the user guide content, you can easily preview the resulting PDF 
 root of the project and running:
 ```bash
 cd docs/pdf-doc-generation-with-sphinx
-bash create_pdf_doc.sh reference-guide.pdf
+bash create_pdf_doc.sh user-guide.pdf
 ```
-Sphinx will create a `reference-guide.pdf` file in `docs/pdf-doc-generation-with-sphinx`.
+Sphinx will create a `user-guide.pdf` file in `docs/pdf-doc-generation-with-sphinx`.
 
 ### Doxygen
 [//]: # (TODO)

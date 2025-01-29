@@ -28,7 +28,7 @@
 #include <antares/utils/utils.h>
 #include "antares/study/study.h"
 
-using namespace Yuni;
+namespace fs = std::filesystem;
 
 namespace Antares::Data
 {
@@ -88,21 +88,20 @@ void ClusterList<ClusterT>::resizeAllTimeseriesNumbers(uint n) const
     }
 }
 
-#define SEP IO::Separator
-
 template<class ClusterT>
 void ClusterList<ClusterT>::storeTimeseriesNumbers(Solver::IResultWriter& writer) const
 {
-    Clob path;
     std::string ts_content;
+    fs::path basePath = fs::path("ts-numbers") / typeID();
 
     for (auto& cluster: each_enabled())
     {
-        path.clear() << "ts-numbers" << SEP << typeID() << SEP << cluster->parentArea->id << SEP
-                     << cluster->id() << ".txt";
+        fs::path path = basePath / cluster->parentArea->id.c_str()
+                        / std::string(cluster->id() + ".txt");
+
         ts_content.clear(); // We must clear ts_content here, since saveToBuffer does not do it.
         cluster->series.timeseriesNumbers.saveToBuffer(ts_content);
-        writer.addEntryFromBuffer(path.c_str(), ts_content);
+        writer.addEntryFromBuffer(path, ts_content);
     }
 }
 
@@ -154,15 +153,13 @@ void ClusterList<ClusterT>::rebuildIndexes()
     unsigned int index = 0;
     for (auto& c: allClusters_)
     {
-        c->areaWideIndex = index;
-        index++;
+        c->areaWideIndex = index++;
     }
 
     index = 0;
     for (auto& c: each_enabled())
     {
-        c->areaWideIndex = index;
-        index++;
+        c->enabledIndex = index++;
     }
 }
 
@@ -261,7 +258,7 @@ bool ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder) cons
 }
 
 template<class ClusterT>
-bool ClusterList<ClusterT>::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
+bool ClusterList<ClusterT>::loadDataSeriesFromFolder(Study& s, const std::filesystem::path& folder)
 {
     return std::ranges::all_of(allClusters_,
                                [&s, &folder](auto c)

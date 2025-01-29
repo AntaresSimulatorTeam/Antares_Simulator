@@ -286,7 +286,7 @@ public:
               state.year,
               state.hourInTheYear);
 
-            pValuesForTheCurrentYear[numSpace][renewableCluster->areaWideIndex]
+            pValuesForTheCurrentYear[numSpace][renewableCluster->enabledIndex]
               .hour[state.hourInTheYear]
               += renewableClusterProduction;
         }
@@ -308,15 +308,6 @@ public:
         return pValuesForTheCurrentYear[numSpace][column].hour;
     }
 
-    inline uint64_t memoryUsage() const
-    {
-        uint64_t r = (sizeof(IntermediateValues) * pSize + IntermediateValues::MemoryUsage())
-                     * pNbYearsParallel;
-        r += sizeof(double) * pSize * HOURS_PER_YEAR * pNbYearsParallel;
-        r += AncestorType::memoryUsage();
-        return r;
-    }
-
     void localBuildAnnualSurveyReport(SurveyResults& results,
                                       int fileLevel,
                                       int precision,
@@ -335,7 +326,7 @@ public:
                 // Write the data for the current year
                 results.variableCaption = cluster->name();
                 results.variableUnit = VCardType::Unit();
-                pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex]
+                pValuesForTheCurrentYear[numSpace][cluster->enabledIndex]
                   .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
             }
         }

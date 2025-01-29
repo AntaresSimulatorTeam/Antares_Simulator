@@ -64,6 +64,21 @@ wxMenuBar* ApplWnd::createMenu()
     return ret;
 }
 
+wxMenu* ApplWnd::createPopupMenuOperatorsOnGrid()
+{
+    auto* menu = new wxMenu();
+
+    // Wizard
+    Menu::CreateItem(menu, mnIDPopupOpNone, wxT("None"), "images/16x16/empty.png");
+    menu->AppendSeparator();
+    Menu::CreateItem(menu, mnIDPopupOpAverage, wxT("Average "));
+    Menu::CreateItem(menu, mnIDPopupOpCellCount, wxT("Cell count "));
+    Menu::CreateItem(menu, mnIDPopupOpMinimum, wxT("Minimum "));
+    Menu::CreateItem(menu, mnIDPopupOpMaximum, wxT("Maximum "));
+    Menu::CreateItem(menu, mnIDPopupOpSum, wxT("Sum "));
+    return menu;
+}
+
 wxMenu* ApplWnd::createMenuFiles()
 {
     delete pMenuFile;
@@ -626,9 +641,9 @@ void ApplWnd::evtOnOpenStudyFolderInExplorer(wxCommandEvent&)
     {
         if (System::windows)
             wxExecute(wxString(wxT("explorer.exe \""))
-                      << wxStringFromUTF8(study->folder) << wxT("\""));
+                      << wxStringFromUTF8(study->folder.string()) << wxT("\""));
         else
-            wxExecute(wxString(wxT("xdg-open \"")) << wxStringFromUTF8(study->folder) << wxT("\""));
+            wxExecute(wxString(wxT("xdg-open \"")) << wxStringFromUTF8(study->folder.string()) << wxT("\""));
     }
 }
 

@@ -20,9 +20,11 @@
  */
 
 #include <exception>
+#include <fstream>
 #include <memory>
 #include <ortools/linear_solver/linear_solver.h>
 
+#include <antares/logs/logs.h>
 #include <antares/solver/modeler/ortoolsImpl/linearProblem.h>
 #include <antares/solver/utils/ortools_utils.h>
 
@@ -31,16 +33,8 @@ namespace Antares::Solver::Modeler::OrtoolsImpl
 
 OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solverName)
 {
-    auto* mpSolver = isMip ? MPSolver::CreateSolver(
-                               (OrtoolsUtils::solverMap.at(solverName)).MIPSolverName)
-                           : MPSolver::CreateSolver(
-                               (OrtoolsUtils::solverMap.at(solverName)).LPSolverName);
-
-    mpSolver_ = std::unique_ptr<operations_research::MPSolver>(mpSolver);
-    objective_ = mpSolver->MutableObjective();
-
-    params_.SetIntegerParam(MPSolverParameters::SCALING, 0);
-    params_.SetIntegerParam(MPSolverParameters::PRESOLVE, 0);
+    mpSolver_ = MPSolverFactory(isMip, solverName);
+    objective_ = mpSolver_->MutableObjective();
 }
 
 class ElemAlreadyExists: public std::exception
@@ -74,11 +68,39 @@ OrtoolsMipVariable* OrtoolsLinearProblem::addVariable(double lb,
     return pair.first->second.get(); // <<name, var>, bool>
 }
 
+std::vector<Api::IMipVariable*> OrtoolsLinearProblem::addVariable(double lb,
+                                                                  double ub,
+                                                                  bool integer,
+                                                                  const std::string& name,
+                                                                  unsigned int number_new_variables)
+{
+    std::vector<Api::IMipVariable*> new_variables;
+    for (unsigned int i = 0; i < number_new_variables; i++)
+    {
+        new_variables.push_back(addVariable(lb, ub, integer, name + '_' + std::to_string(i)));
+    }
+    return new_variables;
+}
+
 OrtoolsMipVariable* OrtoolsLinearProblem::addNumVariable(double lb,
                                                          double ub,
                                                          const std::string& name)
 {
     return addVariable(lb, ub, false, name);
+}
+
+std::vector<Api::IMipVariable*> OrtoolsLinearProblem::addNumVariable(
+  double lb,
+  double ub,
+  const std::string& name,
+  unsigned int number_new_variables)
+{
+    std::vector<Api::IMipVariable*> new_variables;
+    for (unsigned int i = 0; i < number_new_variables; i++)
+    {
+        new_variables.push_back(addNumVariable(lb, ub, name + '_' + std::to_string(i)));
+    }
+    return new_variables;
 }
 
 OrtoolsMipVariable* OrtoolsLinearProblem::addIntVariable(double lb,
@@ -88,9 +110,28 @@ OrtoolsMipVariable* OrtoolsLinearProblem::addIntVariable(double lb,
     return addVariable(lb, ub, true, name);
 }
 
+std::vector<Api::IMipVariable*> OrtoolsLinearProblem::addIntVariable(
+  double lb,
+  double ub,
+  const std::string& name,
+  unsigned int number_new_variables)
+{
+    std::vector<Api::IMipVariable*> new_variables;
+    for (unsigned int i = 0; i < number_new_variables; i++)
+    {
+        new_variables.push_back(addIntVariable(lb, ub, name + '_' + std::to_string(i)));
+    }
+    return new_variables;
+}
+
 OrtoolsMipVariable* OrtoolsLinearProblem::getVariable(const std::string& name) const
 {
     return variables_.at(name).get();
+}
+
+int OrtoolsLinearProblem::variableCount() const
+{
+    return mpSolver_->NumVariables();
 }
 
 OrtoolsMipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
@@ -115,9 +156,28 @@ OrtoolsMipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
     return pair.first->second.get(); // <<name, constraint>, bool>
 }
 
+std::vector<Api::IMipConstraint*> OrtoolsLinearProblem::addConstraint(
+  double lb,
+  double ub,
+  const std::string& name,
+  unsigned int number_new_constraints)
+{
+    std::vector<Api::IMipConstraint*> new_constraints;
+    for (unsigned int i = 0; i < number_new_constraints; i++)
+    {
+        new_constraints.push_back(addConstraint(lb, ub, name + '_' + std::to_string(i)));
+    }
+    return new_constraints;
+}
+
 OrtoolsMipConstraint* OrtoolsLinearProblem::getConstraint(const std::string& name) const
 {
     return constraints_.at(name).get();
+}
+
+int OrtoolsLinearProblem::constraintCount() const
+{
+    return mpSolver_->NumConstraints();
 }
 
 static const operations_research::MPVariable* getMpVar(const Api::IMipVariable* var)
@@ -162,6 +222,19 @@ bool OrtoolsLinearProblem::isMaximization() const
     return objective_->maximization();
 }
 
+void OrtoolsLinearProblem::WriteLP(const std::string& filename)
+{
+    std::string out;
+    mpSolver_->ExportModelAsLpFormat(false, &out);
+    std::ofstream of(filename);
+    of << out;
+}
+
+MPSolver* OrtoolsLinearProblem::MpSolver() const
+{
+    return mpSolver_;
+}
+
 OrtoolsMipSolution* OrtoolsLinearProblem::solve(bool verboseSolver)
 {
     if (verboseSolver)
@@ -173,6 +246,11 @@ OrtoolsMipSolution* OrtoolsLinearProblem::solve(bool verboseSolver)
 
     solution_ = std::make_unique<OrtoolsMipSolution>(mpStatus, mpSolver_);
     return solution_.get();
+}
+
+double OrtoolsLinearProblem::infinity() const
+{
+    return MPSolver::infinity();
 }
 
 } // namespace Antares::Solver::Modeler::OrtoolsImpl

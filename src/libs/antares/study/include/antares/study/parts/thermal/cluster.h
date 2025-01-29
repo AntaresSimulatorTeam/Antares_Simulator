@@ -34,6 +34,7 @@
 
 #include "../../fwd.h"
 #include "../common/cluster.h"
+#include "cost_provider.h"
 #include "defines.h"
 #include "ecoInput.h"
 #include "pollutant.h"
@@ -64,6 +65,12 @@ enum class LocalTSGenerationBehavior
     forceGen,
     forceNoGen
 };
+
+double computeMarketBidCost(double fuelCost,
+                            double fuelEfficiency,
+                            double co2EmissionFactor,
+                            double co2cost,
+                            double variableomcost);
 
 /*!
 ** \brief A single thermal cluster
@@ -148,13 +155,6 @@ public:
     */
     void calculationOfSpinning();
 
-    //! \name MarketBid and Marginal Costs
-    //@{
-    /*!
-    ** \brief Calculation of market bid and marginals costs per hour
-    */
-    void ComputeCostTimeSeries();
-
     /*!
     ** \brief Calculation of spinning (reverse)
     **
@@ -186,12 +186,6 @@ public:
     */
     uint groupId() const override;
 
-    /*!
-    ** \brief Get the memory consummed by the thermal cluster (in bytes)
-    */
-    uint64_t memoryUsage() const override;
-    //@}
-
     //! \name validity of Min Stable Power
     //@{
     // bool minStablePowerValidity() const;
@@ -213,10 +207,6 @@ public:
     //@}
 
     bool doWeGenerateTS(bool globalTSgeneration) const;
-
-    double getOperatingCost(uint tsIndex, uint hourInTheYear) const;
-    double getMarginalCost(uint tsIndex, uint hourInTheYear) const;
-    double getMarketBidCost(uint hourInTheYear, uint year) const;
 
     // Check & correct availability timeseries for thermal availability
     // Only applies if time-series are ready-made
@@ -382,28 +372,15 @@ public:
     //! Data for the preprocessor
     std::unique_ptr<PreproAvailability> prepro;
 
-    /*!
-    ** \brief Production Cost, Market Bid Cost and Marginal Cost Matrixes - Per Hour and per Time
-    *Series
-    */
-    struct CostsTimeSeries
-    {
-        std::array<double, HOURS_PER_YEAR> productionCostTs;
-        std::array<double, HOURS_PER_YEAR> marketBidCostTS;
-        std::array<double, HOURS_PER_YEAR> marginalCostTS;
-    };
-
-    std::vector<CostsTimeSeries> costsTimeSeries;
-
     EconomicInputData ecoInput;
 
     LocalTSGenerationBehavior tsGenBehavior = LocalTSGenerationBehavior::useGlobalParameter;
 
     friend class ThermalClusterList;
 
-    double computeMarketBidCost(double fuelCost, double co2EmissionFactor, double co2cost);
-
     unsigned int precision() const override;
+
+    CostProvider& getCostProvider();
 
 private:
     // Calculation of marketBid and marginal costs hourly time series
@@ -416,12 +393,7 @@ private:
     // Marginal_Cost[€/MWh] = Market_Bid_Cost[€/MWh] = (Fuel_Cost[€/GJ] * 3.6 * 100 / Efficiency[%])
     // CO2_emission_factor[tons/MWh] * C02_cost[€/tons] + Variable_O&M_cost[€/MWh]
 
-    void fillMarketBidCostTS();
-    void fillMarginalCostTS();
-    void resizeCostTS();
-    void ComputeMarketBidTS();
-    void MarginalCostEqualsMarketBid();
-    void ComputeProductionCostTS();
+    std::unique_ptr<CostProvider> costProvider;
 
 }; // class ThermalCluster
 } // namespace Data

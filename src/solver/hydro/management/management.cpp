@@ -24,10 +24,7 @@
 #include <cmath>
 #include <limits>
 
-#include <antares/antares/fatal-error.h>
 #include <antares/study/area/scratchpad.h>
-#include <antares/study/parts/hydro/container.h>
-#include <antares/study/study.h>
 
 namespace Antares
 {

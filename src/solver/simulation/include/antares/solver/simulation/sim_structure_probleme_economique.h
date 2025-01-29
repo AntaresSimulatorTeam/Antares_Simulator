@@ -75,6 +75,8 @@ struct CORRESPONDANCES_DES_VARIABLES
         std::vector<int> InjectionVariable;
         std::vector<int> WithdrawalVariable;
         std::vector<int> LevelVariable;
+        std::vector<int> CostVariationInjection;
+        std::vector<int> CostVariationWithdrawal;
     } SIM_ShortTermStorage;
 };
 
@@ -101,6 +103,10 @@ struct CORRESPONDANCES_DES_CONTRAINTES
     std::vector<int> NumeroDeContrainteDesNiveauxPays;
 
     std::vector<int> ShortTermStorageLevelConstraint;
+    std::vector<int> ShortTermStorageCostVariationInjectionForward;
+    std::vector<int> ShortTermStorageCostVariationInjectionBackward;
+    std::vector<int> ShortTermStorageCostVariationWithdrawalForward;
+    std::vector<int> ShortTermStorageCostVariationWithdrawalBackward;
 };
 
 struct CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES
@@ -111,6 +117,7 @@ struct CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES
 struct CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES
 {
     std::vector<int> NumeroDeContrainteDesContraintesCouplantes;
+    std::vector<int> ShortTermStorageCumulation;
 };
 
 struct VALEURS_DE_NTC_ET_RESISTANCES
@@ -178,9 +185,11 @@ struct PROPERTIES
     double withdrawalEfficiency;
     double initialLevel;
     bool initialLevelOptim;
+    bool penalizeVariationWithdrawal;
+    bool penalizeVariationInjection;
 
     std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
-
+    std::vector<Antares::Data::ShortTermStorage::AdditionalConstraints> additionalConstraints;
     int clusterGlobalIndex;
     std::string name;
 };
@@ -348,18 +357,18 @@ private:
     double capacity;
     std::vector<double>& inflows;
     std::vector<double>& ovf;
-    std::vector<double>& turb;
+    const std::vector<double>& turb;
     double pumpRatio;
-    std::vector<double>& pump;
+    const std::vector<double>& pump;
     double excessDown;
 
 public:
     computeTimeStepLevel(const double& startLvl,
                          std::vector<double>& infl,
                          std::vector<double>& overfl,
-                         std::vector<double>& H,
+                         const std::vector<double>& H,
                          double pumpEff,
-                         std::vector<double>& Pump,
+                         const std::vector<double>& Pump,
                          double rc):
         step(0),
         level(startLvl),
@@ -442,6 +451,7 @@ struct RESULTATS_HORAIRES
     std::vector<double> debordementsHoraires;
 
     std::vector<double> CoutsMarginauxHoraires;
+    std::vector<double> CoutsMarginauxHorairesCSR;
     std::vector<PRODUCTION_THERMIQUE_OPTIMALE> ProductionThermique; // index is pdtHebdo
 
     std::vector<::ShortTermStorage::RESULTS> ShortTermStorage;
@@ -540,6 +550,7 @@ struct PROBLEME_HEBDO
     bool exportMPSOnError = false;
     bool ExportStructure = false;
     bool NamedProblems = false;
+    bool exportSolutions = false;
 
     uint32_t HeureDansLAnnee = 0;
     bool LeProblemeADejaEteInstancie = false;

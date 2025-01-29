@@ -71,11 +71,6 @@ protected:
         // Does nothing
     }
 
-    static uint64_t memoryUsage()
-    {
-        return 0;
-    }
-
     template<template<class, int> class DecoratorT>
     static Antares::Memory::Stored<double>::ConstReturnType hourlyValuesForSpatialAggregate()
     {

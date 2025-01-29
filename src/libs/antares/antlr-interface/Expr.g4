@@ -17,22 +17,54 @@ grammar Expr;
 /* To match the whole input */
 fullexpr: expr EOF;
 
-shift: TIME (op=('+' | '-') expr)?;
-
-expr: '-' expr                  # negation
-    | expr op=('/' | '*') expr  # muldiv
-    | expr op=('+' | '-') expr  # addsub
-    | expr COMPARISON expr      # comparison
-    | IDENTIFIER                # identifier
-    | IDENTIFIER '.' IDENTIFIER # portField
-    | NUMBER                    # number
-    | '(' expr ')'              # expression
-    | IDENTIFIER '(' expr ')'   # function
-    | IDENTIFIER '[' shift (',' shift)* ']'  # timeShift
-    | IDENTIFIER '[' expr  (',' expr )* ']'  # timeIndex
-    | IDENTIFIER '[' shift1=shift '..' shift2=shift ']'      # timeShiftRange
-    | IDENTIFIER '[' expr '..' expr ']'      # timeRange
+expr
+    : atom                                     # unsignedAtom
+    | IDENTIFIER '.' IDENTIFIER                # portField
+    | '-' expr                                 # negation
+    | '(' expr ')'                             # expression
+    | expr op=('/' | '*') expr                 # muldiv
+    | expr op=('+' | '-') expr                 # addsub
+    | expr COMPARISON expr                     # comparison
+    | 'sum' '(' expr ')'                    # allTimeSum
+    | 'sum' '(' from=shift '..' to=shift ',' expr ')'  # timeSum
+    | IDENTIFIER '(' expr ')'                  # function
+    | IDENTIFIER '[' shift ']'                 # timeShift
+    | IDENTIFIER '[' expr  ']'                 # timeIndex
     ;
+
+atom
+    : NUMBER                                   # number
+    | IDENTIFIER                               # identifier
+    ;
+
+// a shift is required to be either "t" or "t + ..." or "t - ..."
+// Note: simply defining it as "shift: TIME ('+' | '-') expr" won't work
+//       because the minus sign will not have the expected precedence:
+//       "t - d + 1" would be equivalent to "t - (d + 1)"
+shift: TIME shift_expr?;
+
+// Because the shift MUST start with + or -, we need
+// to differentiate it from generic "expr".
+// A shift expression can only be extended to the right by a
+// "right_expr" which cannot start with a + or -,
+// unlike shift_expr itself.
+// TODO: the grammar is still a little weird, because we
+//       allow more things in the "expr" parts of those
+//       shift expressions than on their left-most part
+//       (port fields, nested time shifts and so on).
+shift_expr
+    : shift_expr op=('*' | '/') right_expr     # shiftMuldiv
+    | shift_expr op=('+' | '-') right_expr     # shiftAddsub
+    | op=('+' | '-') atom                      # signedAtom
+    | op=('+' | '-') '(' expr ')'              # signedExpression
+    ;
+
+right_expr
+    : right_expr op=('/' | '*') right_expr     # rightMuldiv
+    | '(' expr ')'                             # rightExpression
+    | atom                                     # rightAtom
+    ;
+
 
 fragment DIGIT         : [0-9] ;
 fragment CHAR          : [a-zA-Z_];
@@ -42,9 +74,5 @@ NUMBER        : DIGIT+ ('.' DIGIT+)?;
 TIME          : 't';
 IDENTIFIER    : CHAR CHAR_OR_DIGIT*;
 COMPARISON    : ( '=' | '>=' | '<=' );
-ADDSUB        : ( '+' | '-' );
-MULDIV        : ( '*' | '/' );
-LBRACKET: '[';
-RBRACKET: ']';
 
 WS: (' ' | '\t' | '\r'| '\n') -> skip;

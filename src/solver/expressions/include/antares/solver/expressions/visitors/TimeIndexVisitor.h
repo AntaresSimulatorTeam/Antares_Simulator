@@ -32,12 +32,14 @@ namespace Antares::Solver::Visitors
 class TimeIndexVisitor: public NodeVisitor<TimeIndex>
 {
 public:
+    // TODO if Node contains time and scenario dependency,  do we need this ctor?
     /**
      * @brief Constructs a time index visitor with the specified context.
      *
      * @param context The context containing the time index for each node.
      */
     explicit TimeIndexVisitor(std::unordered_map<const Nodes::Node*, TimeIndex> context);
+    explicit TimeIndexVisitor() = default;
 
     std::string name() const override;
 
@@ -55,6 +57,7 @@ private:
     TimeIndex visit(const Nodes::ParameterNode* param) override;
     TimeIndex visit(const Nodes::LiteralNode* lit) override;
     TimeIndex visit(const Nodes::PortFieldNode* port_field_node) override;
+    TimeIndex visit(const Nodes::PortFieldSumNode* port_field_node) override;
     TimeIndex visit(const Nodes::ComponentVariableNode* component_variable_node) override;
     TimeIndex visit(const Nodes::ComponentParameterNode* component_parameter_node) override;
 };

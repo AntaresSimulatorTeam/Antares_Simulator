@@ -26,7 +26,8 @@
 #include <antares/solver/expressions/Registry.hxx>
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/expressions/visitors/CompareVisitor.h>
-#include <antares/solver/expressions/visitors/PortfieldSubstitutionVisitor.h>
+#include <antares/solver/expressions/visitors/PortFieldSubstitutionVisitor.h>
+#include <antares/solver/expressions/visitors/PortFieldSumSubstitutionVisitor.h>
 #include <antares/solver/expressions/visitors/PrintVisitor.h>
 #include <antares/solver/expressions/visitors/SubstitutionVisitor.h>
 
@@ -113,10 +114,12 @@ public:
 
     Node* substitute(Node* original)
     {
-        PortfieldSubstitutionContext ctx;
-        ctx.portfield.emplace(PortFieldNode("port", "literal"), create<LiteralNode>(10));
+        PortFieldSubstitutionContext ctx;
+        ctx.portfield.emplace(std::piecewise_construct,
+                              std::forward_as_tuple("port", "literal"),
+                              std::forward_as_tuple(create<LiteralNode>(10)));
 
-        PortfieldSubstitutionVisitor sub(*this, ctx);
+        PortFieldSubstitutionVisitor sub(*this, ctx);
         return sub.dispatch(original);
     }
 };
@@ -134,10 +137,63 @@ BOOST_FIXTURE_TEST_CASE(PortfieldSubstitutionVisitor_simple, SubstitutionFixture
 
 BOOST_FIXTURE_TEST_CASE(PortfieldSubstitutionVisitor_name, Registry<Node>)
 {
-    PortfieldSubstitutionContext ctx;
+    PortFieldSubstitutionContext ctx;
 
-    PortfieldSubstitutionVisitor substitutionVisitor(*this, ctx);
-    BOOST_CHECK_EQUAL(substitutionVisitor.name(), "PortfieldSubstitutionVisitor");
+    PortFieldSubstitutionVisitor substitutionVisitor(*this, ctx);
+    BOOST_CHECK_EQUAL(substitutionVisitor.name(), "PortFieldSubstitutionVisitor");
+}
+
+class SumSubstitutionFixture: public Registry<Node>
+{
+public:
+    Node* originalExpression()
+    {
+        Node* port1 = create<PortFieldSumNode>("port", "sum of literal");
+        Node* port2 = create<PortFieldNode>("another port", "another field");
+        Node* root = create<SumNode>(port1, port2);
+        return root;
+    }
+
+    Node* expectedExpressionAfterSubstitution()
+    {
+        Node* node1 = create<SumNode>(create<LiteralNode>(12), create<LiteralNode>(7));
+        Node* port2 = create<PortFieldNode>("another port", "another field");
+        Node* root = create<SumNode>(node1, port2);
+        return root;
+    }
+
+    Node* substitute(Node* original)
+    {
+        PortFieldSumSubstitutionContext ctx;
+        Node* sum1 = create<LiteralNode>(12);
+        Node* sum2 = create<LiteralNode>(7);
+        std::vector<Node*> v = {sum1, sum2};
+        ctx.portfieldSum.emplace(std::piecewise_construct,
+                                 std::forward_as_tuple("port", "sum of literal"),
+                                 std::forward_as_tuple(v));
+
+        PortFieldSumSubstitutionVisitor sub(*this, ctx);
+        return sub.dispatch(original);
+    }
+};
+
+BOOST_FIXTURE_TEST_CASE(PortFieldSumSubstitutionVisitor_simple, SumSubstitutionFixture)
+
+{
+    Node* original = originalExpression();
+    Node* substituted = substitute(original);
+    Node* expected = expectedExpressionAfterSubstitution();
+
+    CompareVisitor cmp;
+    BOOST_CHECK(cmp.dispatch(substituted, expected));
+}
+
+BOOST_FIXTURE_TEST_CASE(PortfieldSumSubstitutionVisitor_name, Registry<Node>)
+{
+    PortFieldSumSubstitutionContext ctx;
+
+    PortFieldSumSubstitutionVisitor substitutionVisitor(*this, ctx);
+    BOOST_CHECK_EQUAL(substitutionVisitor.name(), "PortFieldSumSubstitutionVisitor");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -152,8 +152,6 @@ public:
                                  int precision,
                                  uint numSpace) const;
 
-    uint64_t memoryUsage() const;
-
     template<class V>
     void yearEndSpatialAggregates(V&, uint, uint)
     {

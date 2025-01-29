@@ -55,11 +55,6 @@ void Container::markAsModified() const
     }
 }
 
-uint64_t Container::memoryUsage() const
-{
-    return sizeof(Container) + series.memoryUsage() + ((!prepro) ? 0 : prepro->memoryUsage());
-}
-
 void Container::resetToDefault()
 {
     series.reset();

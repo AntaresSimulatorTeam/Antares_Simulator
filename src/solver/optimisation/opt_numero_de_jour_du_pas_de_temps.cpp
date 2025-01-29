@@ -19,10 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <math.h>
-
-#include "antares/solver/optimisation/opt_fonctions.h"
-#include "antares/solver/simulation/simulation.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 void OPT_NumeroDeJourDuPasDeTemps(PROBLEME_HEBDO* problemeHebdo)
 {
@@ -33,7 +30,6 @@ void OPT_NumeroDeJourDuPasDeTemps(PROBLEME_HEBDO* problemeHebdo)
         double X = pdtHebdo / problemeHebdo->NombreDePasDeTempsDUneJournee;
         problemeHebdo->NumeroDeJourDuPasDeTemps[pdtHebdo] = (int)floor(X);
     }
-    return;
 }
 
 void OPT_NumeroDIntervalleOptimiseDuPasDeTemps(PROBLEME_HEBDO* problemeHebdo)
@@ -43,5 +39,4 @@ void OPT_NumeroDIntervalleOptimiseDuPasDeTemps(PROBLEME_HEBDO* problemeHebdo)
         double X = pdtHebdo / problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
         problemeHebdo->NumeroDIntervalleOptimiseDuPasDeTemps[pdtHebdo] = (int)floor(X);
     }
-    return;
 }

@@ -75,4 +75,3 @@ jobs:
         tag: ${{ github.event.inputs.release_tag }}
       run: |
         gh release upload "$tag" ${{ env.PDF_PATH }}      
-

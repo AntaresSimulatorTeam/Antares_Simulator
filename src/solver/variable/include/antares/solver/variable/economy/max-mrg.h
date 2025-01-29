@@ -23,6 +23,8 @@
 
 #include "antares/solver/variable/variable.h"
 
+#include "max-mrg-utils.h"
+
 namespace Antares
 {
 namespace Solver
@@ -91,11 +93,6 @@ struct VCardMARGE
     typedef IntermediateValuesBaseType* IntermediateValuesTypeForSpatialAg;
 
 }; // class VCard
-
-/*!
-** \brief Prepare MAX.MRG results for a given week
-*/
-void PrepareMaxMRG(const State& state, double* opmrg, uint numSpace);
 
 /*!
 ** \brief Max MRG
@@ -206,8 +203,6 @@ public:
     {
         // Compute all statistics for the current year (daily,weekly,monthly)
         pValuesForTheCurrentYear[numSpace].computeStatisticsForTheCurrentYear();
-        // Merge all those values with the global results
-        // AncestorType::pResults.merge(year, pValuesForTheCurrentYear);
 
         // Next variable
         NextType::yearEnd(year, numSpace);
@@ -242,7 +237,11 @@ public:
     void weekForEachArea(State& state, unsigned int numSpace)
     {
         double* rawhourly = Memory::RawPointer(pValuesForTheCurrentYear[numSpace].hour);
-        PrepareMaxMRG(state, rawhourly + state.hourInTheYear, numSpace);
+
+        // Getting data required to compute max margin
+        MaxMrgUsualDataFactory maxMRGdataFactory(state, numSpace);
+        MaxMRGinput maxMRGinput = maxMRGdataFactory.data();
+        computeMaxMRG(rawhourly + state.hourInTheYear, maxMRGinput);
 
         // next
         NextType::weekForEachArea(state, numSpace);

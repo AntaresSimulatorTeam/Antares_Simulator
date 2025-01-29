@@ -307,10 +307,10 @@ void MemoryStatistics::refreshInformation()
         {
             s.clear();
             CString<5, false> driveletter;
-            driveletter += study->folder[0];
+            driveletter += study->folder.string()[0];
             s << wxStringFromUTF8(driveletter) << wxT(": ");
 
-            uint64_t diskFree = DiskFreeSpace(study->folder);
+            uint64_t diskFree = DiskFreeSpace(study->folder.string());
             if (diskFree == (uint64_t)-1)
                 s << wxT("N/A");
             else

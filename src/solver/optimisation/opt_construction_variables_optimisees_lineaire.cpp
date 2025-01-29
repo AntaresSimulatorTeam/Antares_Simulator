@@ -20,11 +20,13 @@
  */
 #include <spx_constantes_externes.h>
 
-#include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/optimisation/opt_rename_problem.h"
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 #include "variables/VariableManagerUtils.h"
+
+void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*,
+                                                                                   bool);
 
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo)
 {
@@ -109,6 +111,29 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 variableNamer.ShortTermStorageLevel(NombreDeVariables, storage.name);
                 NombreDeVariables++;
+
+                // 4. Cost Variation Injection
+                if (storage.penalizeVariationInjection)
+                {
+                    variableManager.ShortTermStorageCostVariationInjection(clusterGlobalIndex, pdt)
+                      = NombreDeVariables;
+                    ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                      = VARIABLE_BORNEE_INFERIEUREMENT;
+                    variableNamer.ShortTermStorageCostVariationInjection(NombreDeVariables,
+                                                                         storage.name);
+                    ++NombreDeVariables;
+                }
+                // 5. Cost Variation Withdrawal
+                if (storage.penalizeVariationWithdrawal)
+                {
+                    variableManager.ShortTermStorageCostVariationWithdrawal(clusterGlobalIndex, pdt)
+                      = NombreDeVariables;
+                    ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                      = VARIABLE_BORNEE_INFERIEUREMENT;
+                    variableNamer.ShortTermStorageCostVariationWithdrawal(NombreDeVariables,
+                                                                          storage.name);
+                    ++NombreDeVariables;
+                }
             }
 
             variableManager.PositiveUnsuppliedEnergy(pays, pdt) = NombreDeVariables;

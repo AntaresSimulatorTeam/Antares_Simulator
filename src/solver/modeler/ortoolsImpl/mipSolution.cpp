@@ -26,7 +26,7 @@ namespace Antares::Solver::Modeler::OrtoolsImpl
 {
 
 OrtoolsMipSolution::OrtoolsMipSolution(operations_research::MPSolver::ResultStatus& status,
-                                       std::shared_ptr<operations_research::MPSolver> solver):
+                                       operations_research::MPSolver* solver):
     status_(status),
     mpSolver_(solver)
 {
@@ -91,6 +91,11 @@ std::vector<double> OrtoolsMipSolution::getOptimalValues(
     }
 
     return solution;
+}
+
+const std::map<std::string, double>& OrtoolsMipSolution::getOptimalValues() const
+{
+    return solution_;
 }
 
 } // namespace Antares::Solver::Modeler::OrtoolsImpl

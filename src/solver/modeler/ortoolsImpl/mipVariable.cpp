@@ -66,4 +66,9 @@ const std::string& OrtoolsMipVariable::getName() const
     return mpVar_->name();
 }
 
+bool OrtoolsMipVariable::isInteger() const
+{
+    return mpVar_->integer();
+}
+
 } // namespace Antares::Solver::Modeler::OrtoolsImpl

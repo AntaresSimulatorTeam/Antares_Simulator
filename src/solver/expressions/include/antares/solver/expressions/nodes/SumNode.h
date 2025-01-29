@@ -75,7 +75,7 @@ public:
 
     Node* operator[](std::size_t idx) const;
 
-    unsigned int size() const;
+    size_t size() const;
 
     std::string name() const override
     {

@@ -44,6 +44,8 @@ public:
 
     const std::string& getName() const override;
 
+    bool isInteger() const override;
+
     const operations_research::MPVariable* getMpVar() const;
 
     ~OrtoolsMipVariable() override = default;

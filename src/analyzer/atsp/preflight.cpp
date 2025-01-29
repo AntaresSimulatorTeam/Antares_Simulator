@@ -43,7 +43,7 @@ bool ATSP::preflight()
         for (uint i = 0; i != pArea.size(); ++i)
         {
             String& folder = folderPerArea[i];
-            folder.clear() << pTemp << SEP << tsName << SEP << (i / 256) << SEP << pArea[i]->name;
+            folder.clear() << pTemp << SEP << tsName << SEP << (i / 256) << SEP << pArea[i].name;
             if (!IO::Directory::Create(folder))
             {
                 logs.error() << "impossible to create the directory " << folder;
@@ -67,8 +67,8 @@ bool ATSP::preflight()
     {
         if (!preflight(i))
         {
-            pArea[i]->enabled = false;
-            logs.info() << " The area '" << pArea[i]->name << "' has been removed";
+            pArea[i].enabled = false;
+            logs.info() << " The area '" << pArea[i].name << "' has been removed";
         }
         else
         {
@@ -102,7 +102,7 @@ bool ATSP::preflight()
 bool ATSP::preflight(const uint areaIndex)
 {
     // Alias to the current area info
-    const AreaInfo& info = *(pArea[areaIndex]);
+    const AreaInfo& info = pArea[areaIndex];
     // The folder for the current area
     const String& folder = folderPerArea[areaIndex];
 

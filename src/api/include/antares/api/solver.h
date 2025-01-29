@@ -21,6 +21,9 @@
  */
 
 #pragma once
+
+#include <antares/optimization-options/options.h>
+
 #include "SimulationResults.h"
 
 namespace Antares::API
@@ -31,5 +34,8 @@ namespace Antares::API
  * @return SimulationResults object which contains the results of the simulation.
  * @exception noexcept This function does not throw exceptions.
  */
-SimulationResults PerformSimulation(const std::filesystem::path& study_path) noexcept;
+SimulationResults PerformSimulation(
+  const std::filesystem::path& study_path,
+  const std::filesystem::path& output,
+  const Antares::Solver::Optimization::OptimizationOptions& optOptions) noexcept;
 } // namespace Antares::API

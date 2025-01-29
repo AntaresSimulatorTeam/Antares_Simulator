@@ -51,6 +51,7 @@ public:
     Nodes::Node* visit(const Nodes::ParameterNode* node) override;
     Nodes::Node* visit(const Nodes::LiteralNode* node) override;
     Nodes::Node* visit(const Nodes::PortFieldNode* node) override;
+    Nodes::Node* visit(const Nodes::PortFieldSumNode* node) override;
     Nodes::Node* visit(const Nodes::ComponentVariableNode* node) override;
     Nodes::Node* visit(const Nodes::ComponentParameterNode* node) override;
 

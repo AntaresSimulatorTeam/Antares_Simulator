@@ -22,8 +22,7 @@
 #define __LIBS_ANTARES_IO_FILE_H__
 
 #include <filesystem>
-
-#include <yuni/core/string.h>
+#include <string>
 
 namespace Antares::IO
 {

@@ -30,6 +30,7 @@
 #include <antares/solver/expressions/nodes/NegationNode.h>
 #include <antares/solver/expressions/nodes/ParameterNode.h>
 #include <antares/solver/expressions/nodes/PortFieldNode.h>
+#include <antares/solver/expressions/nodes/PortFieldSumNode.h>
 #include <antares/solver/expressions/nodes/SubtractionNode.h>
 #include <antares/solver/expressions/nodes/SumNode.h>
 #include <antares/solver/expressions/nodes/VariableNode.h>

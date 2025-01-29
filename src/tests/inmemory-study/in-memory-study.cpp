@@ -159,14 +159,14 @@ averageResults OutputRetriever::thermalGeneration(ThermalCluster* cluster)
 {
     auto result = retrieveResultsForThermalCluster<
       Variable::Economy::VCardProductionByDispatchablePlant>(cluster);
-    return averageResults((*result)[cluster->areaWideIndex].avgdata);
+    return averageResults((*result)[cluster->enabledIndex].avgdata);
 }
 
 averageResults OutputRetriever::thermalNbUnitsON(ThermalCluster* cluster)
 {
     auto result = retrieveResultsForThermalCluster<
       Variable::Economy::VCardNbOfDispatchedUnitsByPlant>(cluster);
-    return averageResults((*result)[cluster->areaWideIndex].avgdata);
+    return averageResults((*result)[cluster->enabledIndex].avgdata);
 }
 
 ScenarioBuilderRule::ScenarioBuilderRule(Study& study)

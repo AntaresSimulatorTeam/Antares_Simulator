@@ -23,6 +23,7 @@
 namespace Antares::Solver::Nodes
 {
 class Node;
+class BinaryNode;
 class SumNode;
 class SubtractionNode;
 class MultiplicationNode;
@@ -38,4 +39,5 @@ class ComponentParameterNode;
 class ParameterNode;
 class VariableNode;
 class PortFieldNode;
+class PortFieldSumNode;
 } // namespace Antares::Solver::Nodes

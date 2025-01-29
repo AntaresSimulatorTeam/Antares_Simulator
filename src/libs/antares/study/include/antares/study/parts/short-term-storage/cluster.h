@@ -20,11 +20,13 @@
  */
 
 #pragma once
+#include <filesystem>
 #include <memory>
 #include <string>
 
 #include <antares/inifile/inifile.h>
 
+#include "additionalConstraints.h"
 #include "properties.h"
 #include "series.h"
 
@@ -34,17 +36,21 @@ class STStorageCluster
 {
 public:
     bool enabled() const;
+
     bool validate() const;
 
     bool loadFromSection(const IniFile::Section& section);
-    bool loadSeries(const std::string& folder) const;
+
+    bool loadSeries(const std::filesystem::path& folder) const;
 
     void saveProperties(IniFile& ini) const;
+
     bool saveSeries(const std::string& path) const;
 
     std::string id;
 
     std::shared_ptr<Series> series = std::make_shared<Series>();
     mutable Properties properties;
+    std::vector<AdditionalConstraints> additionalConstraints;
 };
 } // namespace Antares::Data::ShortTermStorage
