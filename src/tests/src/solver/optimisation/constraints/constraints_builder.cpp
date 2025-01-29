@@ -386,7 +386,7 @@ BOOST_FIXTURE_TEST_CASE(MultipleAreasTest, BB)
     BOOST_CHECK_EQUAL(builder.data.Sens[3], '>');
 }
 
-void setupProblemHebdo(PROBLEME_HEBDO& problemeHebdo,
+void SetupProblemHebdo(PROBLEME_HEBDO& problemeHebdo,
                        int numberOfAreas,
                        int numberOfConstraints,
 
@@ -461,19 +461,14 @@ void setupProblemHebdo(PROBLEME_HEBDO& problemeHebdo,
     problemeHebdo.YaDeLaReserveJmoins1 = false;
     problemeHebdo.weekInTheYear = 0;
 }
-
-BOOST_AUTO_TEST_CASE(TestShortTermStorageCumulation)
+struct ExpectedResult
 {
-    // Setup test data
-    PROBLEME_HEBDO problemeHebdo;
-    // Initialize problem size
-    const int numberOfAreas = 2;
-    const int numberOfConstraints = 10;
+    int constraint_index;
+    double rhs;
+};
 
-    const int numberOfTimeSteps = 24;
-
-    setupProblemHebdo(problemeHebdo, numberOfAreas, numberOfConstraints, numberOfTimeSteps);
-
+std::vector<ExpectedResult> SetupTwoStoragesOnTwoAreasExample(PROBLEME_HEBDO& problemeHebdo)
+{
     // Area 0 setup
     ShortTermStorage::AREA_INPUT& area0 = problemeHebdo.ShortTermStorage[0];
     area0.resize(1);
@@ -511,6 +506,28 @@ BOOST_AUTO_TEST_CASE(TestShortTermStorageCumulation)
     storage1_area1.series->maxInjectionModulation.resize(HOURS_PER_YEAR, 0.0);
     storage1_area1.series->maxWithdrawalModulation.resize(HOURS_PER_YEAR, 0.0);
     storage1_area1.additionalConstraints.push_back(additionalConstraint1);
+    // For area 0, sum should be 10.0 + 15.0 + 20.0 = 45.0
+    // For area 1, sum should be 5.0 + 8.0 = 13.0
+    return {{.constraint_index = problemeHebdo.CorrespondanceCntNativesCntOptimHebdomadaires
+                                   .ShortTermStorageCumulation[constraint0.globalIndex] /*= 2*/,
+             .rhs = 45.0},
+            {.constraint_index = problemeHebdo.CorrespondanceCntNativesCntOptimHebdomadaires
+                                   .ShortTermStorageCumulation[constraint1.globalIndex] /* =3 */,
+             .rhs = 13.0}};
+}
+
+BOOST_AUTO_TEST_CASE(TestShortTermStorageCumulationRhs)
+{
+    // Setup test data
+    PROBLEME_HEBDO problemeHebdo;
+    // Initialize problem size
+    const int numberOfAreas = 2;
+    const int numberOfConstraints = 10;
+
+    const int numberOfTimeSteps = 24;
+
+    SetupProblemHebdo(problemeHebdo, numberOfAreas, numberOfConstraints, numberOfTimeSteps);
+    SetupTwoStoragesOnTwoAreasExample(problemeHebdo);
 
     // Call the function
     OPT_InitialiserLeSecondMembreDuProblemeLineaire(&problemeHebdo,
@@ -520,19 +537,23 @@ BOOST_AUTO_TEST_CASE(TestShortTermStorageCumulation)
                                                     1   // optimizationNumber
     );
 
-    auto constraint0_index = problemeHebdo.CorrespondanceCntNativesCntOptimHebdomadaires
-                               .ShortTermStorageCumulation[constraint0.globalIndex]; // = 2
-
+    PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre = *problemeHebdo.ProblemeAResoudre;
+    std::vector<int> not_affected_constraints_indices;
+    std::iota(not_affected_constraints_indices.begin(), not_affected_constraints_indices.end(), 0);
     // Verify the results
-    // For area 0, sum should be 10.0 + 15.0 + 20.0 = 45.0
-    BOOST_CHECK_CLOSE(problemeAResoudre.SecondMembre[constraint0_index], 45.0, 0.001);
+    const auto expected_results = SetupTwoStoragesOnTwoAreasExample(problemeHebdo);
+    for (const auto& [constraint_index, expected_rhs]: expected_results)
+    {
+        BOOST_CHECK_CLOSE(problemeAResoudre.SecondMembre[constraint_index], expected_rhs, 0.001);
 
-    auto constraint1_index = problemeHebdo.CorrespondanceCntNativesCntOptimHebdomadaires
-                               .ShortTermStorageCumulation[constraint1.globalIndex]; // = 3
-    // For area 1, sum should be 5.0 + 8.0 = 13.0
-    BOOST_CHECK_CLOSE(problemeAResoudre.SecondMembre[constraint1_index], 13.0, 0.001);
+        // remove this constraint from the list
+        erase_if(not_affected_constraints_indices,
+                 [&constraint_index](const int index) { return index == constraint_index; });
+    }
 
     // Check that other constraints weren't affected
-    BOOST_CHECK_SMALL(problemeAResoudre.SecondMembre[0], 0.001);
-    BOOST_CHECK_SMALL(problemeAResoudre.SecondMembre[4], 0.001);
+    for (auto index: not_affected_constraints_indices)
+    {
+        BOOST_CHECK_SMALL(problemeAResoudre.SecondMembre[index], 0.001);
+    }
 }
