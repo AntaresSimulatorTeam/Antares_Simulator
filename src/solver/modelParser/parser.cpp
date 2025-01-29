@@ -23,7 +23,7 @@
 
 #include "antares/solver/modelParser/Library.h"
 
-#include "encoders.hxx"
+#include "decoders.hxx"
 
 namespace Antares::Solver::ModelParser
 {
