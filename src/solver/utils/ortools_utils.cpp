@@ -245,6 +245,10 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
     {
         Probleme->basisStatus.setStartingBasis(solver);
     }
+    if (optimizationNumber == DEUXIEME_OPTIMISATION)
+    {
+        solver->SetSolverSpecificParametersAsString("LPFLAGS 0");
+    }
 
     if (solveAndManageStatus(solver, Probleme->ExistenceDUneSolution, params))
     {
@@ -254,10 +258,6 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
         {
             Probleme->basisStatus.extractBasis(solver);
         }
-    }
-    if (optimizationNumber == DEUXIEME_OPTIMISATION)
-    {
-        solver->SetSolverSpecificParametersAsString("LPFLAGS 0");
     }
     return solver;
 }
