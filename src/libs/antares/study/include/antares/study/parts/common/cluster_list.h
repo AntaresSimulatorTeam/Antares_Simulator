@@ -85,7 +85,7 @@ public:
     **
     ** The indexes for clusters will be rebuilt.
     */
-    bool rename(const std::string& idToFind, const std::string& newName);
+    bool rename(std::string idToFind, std::string newName);
 
     /*!
     ** \brief Remove properly a cluster
