@@ -8,7 +8,6 @@
 #include <antares/exception/AssertionError.hpp>
 #include <antares/Enum.hpp>
 #include <filesystem>
-#include "antares/solver/utils/basis_status.h"
 
 using namespace operations_research;
 
