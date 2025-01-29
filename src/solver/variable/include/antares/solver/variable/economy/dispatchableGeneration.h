@@ -80,8 +80,8 @@ struct VCardDispatchableGeneration
     static constexpr uint8_t isPossiblyNonApplicable = 0;
 
     typedef IntermediateValues IntermediateValuesDeepType;
-    typedef IntermediateValues* IntermediateValuesBaseType;
-    typedef IntermediateValuesBaseType* IntermediateValuesType;
+    typedef std::vector<IntermediateValues> IntermediateValuesBaseType;
+    typedef std::vector<IntermediateValuesBaseType> IntermediateValuesType;
 
 }; // class VCard
 
@@ -124,25 +124,10 @@ public:
         };
     };
 
-public:
-    DispatchableGeneration():
-        pValuesForTheCurrentYear(nullptr)
-    {
-    }
-
-    ~DispatchableGeneration()
-    {
-        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-        {
-            delete[] pValuesForTheCurrentYear[numSpace];
-        }
-        delete[] pValuesForTheCurrentYear;
-    }
-
     void initializeFromArea(Data::Study* study, Data::Area* area)
     {
         pNbYearsParallel = study->maxNbYearsInParallel;
-        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
+        pValuesForTheCurrentYear.resize(pNbYearsParallel);
 
         // Building the vector of group names the clusters belong to.
         std::set<std::string> names;
@@ -161,8 +146,7 @@ public:
 
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
             {
-                pValuesForTheCurrentYear[numSpace] = new VCardType::IntermediateValuesDeepType
-                  [nbColumns_];
+                pValuesForTheCurrentYear[numSpace].resize(nbColumns_);
             }
 
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
@@ -181,11 +165,6 @@ public:
         }
         else
         {
-            for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-            {
-                pValuesForTheCurrentYear[numSpace] = nullptr;
-            }
-
             AncestorType::pResults.clear();
         }
         // Next
