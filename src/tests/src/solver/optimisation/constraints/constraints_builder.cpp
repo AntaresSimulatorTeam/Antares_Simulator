@@ -386,21 +386,15 @@ BOOST_FIXTURE_TEST_CASE(MultipleAreasTest, BB)
     BOOST_CHECK_EQUAL(builder.data.Sens[3], '>');
 }
 
-BOOST_AUTO_TEST_CASE(TestShortTermStorageCumulation)
-{
-    // Setup test data
-    PROBLEME_HEBDO problemeHebdo;
+void setupProblemHebdo(PROBLEME_HEBDO& problemeHebdo,
+                       int numberOfAreas,
+                       int numberOfConstraints,
 
+                       int numberOfTimeSteps)
+{
     problemeHebdo.ProblemeAResoudre = std::make_unique<PROBLEME_ANTARES_A_RESOUDRE>();
 
     PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre = *problemeHebdo.ProblemeAResoudre;
-
-    // Initialize problem size
-    const int numberOfAreas = 2;
-    const int numberOfConstraints = 10;
-    const int weekFirstHour = 168; // One week worth of hours
-
-    const int numberOfTimeSteps = 24;
 
     // Setup second member vector
     problemeAResoudre.SecondMembre.resize(numberOfConstraints, 0.0);
@@ -454,13 +448,31 @@ BOOST_AUTO_TEST_CASE(TestShortTermStorageCumulation)
     {
         resultats.CoutsMarginauxHoraires.resize(numberOfTimeSteps, 0.0);
     }
-    //
-    // // Add initialization for ResultatsContraintesCouplantes
-    // problemeHebdo.ResultatsContraintesCouplantes.resize(1); // At least one for binding
-    // constraints problemeHebdo.ResultatsContraintesCouplantes[0].resize(numberOfTimeSteps, 0.0);
 
     // Setup short term storage data
     problemeHebdo.ShortTermStorage.resize(numberOfAreas);
+    problemeHebdo.NombreDePays = numberOfAreas;
+    problemeHebdo.OptimisationAvecCoutsDeDemarrage = false;
+    problemeHebdo.NombreDePasDeTempsDUneJournee = 24;
+    problemeHebdo.NombreDePasDeTempsPourUneOptimisation = 24;
+    problemeHebdo.NombreDeContraintesCouplantes = 0;
+    problemeHebdo.NombreDInterconnexions = 0;
+    problemeHebdo.OptimisationAuPasHebdomadaire = false;
+    problemeHebdo.YaDeLaReserveJmoins1 = false;
+    problemeHebdo.weekInTheYear = 0;
+}
+
+BOOST_AUTO_TEST_CASE(TestShortTermStorageCumulation)
+{
+    // Setup test data
+    PROBLEME_HEBDO problemeHebdo;
+    // Initialize problem size
+    const int numberOfAreas = 2;
+    const int numberOfConstraints = 10;
+
+    const int numberOfTimeSteps = 24;
+
+    setupProblemHebdo(problemeHebdo, numberOfAreas, numberOfConstraints, numberOfTimeSteps);
 
     // Area 0 setup
     ShortTermStorage::AREA_INPUT& area0 = problemeHebdo.ShortTermStorage[0];
@@ -483,33 +495,22 @@ BOOST_AUTO_TEST_CASE(TestShortTermStorageCumulation)
     // Area 1 setup
     ShortTermStorage::AREA_INPUT& area1 = problemeHebdo.ShortTermStorage[1];
     area1.resize(1);
-    Antares::Data::ShortTermStorage::AdditionalConstraints additionalConstraint1;
+    Data::ShortTermStorage::AdditionalConstraints additionalConstraint1;
     additionalConstraint1.rhs = {5.0, 8.0, 12.0, 15.0}; // RHS values for the first few hours
 
-    Antares::Data::ShortTermStorage::SingleAdditionalConstraint constraint1;
+    Data::ShortTermStorage::SingleAdditionalConstraint constraint1;
     constraint1.globalIndex = 2;
     constraint1.hours = {1, 2}; // First two hours
     additionalConstraint1.constraints.push_back(constraint1);
 
     auto& storage1_area1 = area1[0];
-    storage1_area1.series = std::make_shared<Antares::Data::ShortTermStorage::Series>();
+    storage1_area1.series = std::make_shared<Data::ShortTermStorage::Series>();
 
     // Initialize series data for the full year
     storage1_area1.series->inflows.resize(HOURS_PER_YEAR, 0.0); // Default inflow value
     storage1_area1.series->maxInjectionModulation.resize(HOURS_PER_YEAR, 0.0);
     storage1_area1.series->maxWithdrawalModulation.resize(HOURS_PER_YEAR, 0.0);
     storage1_area1.additionalConstraints.push_back(additionalConstraint1);
-
-    // Setup remaining problem parameters
-    problemeHebdo.weekInTheYear = 0;
-    problemeHebdo.NombreDePays = numberOfAreas;
-    problemeHebdo.OptimisationAvecCoutsDeDemarrage = false;
-    problemeHebdo.NombreDePasDeTempsDUneJournee = 24;
-    problemeHebdo.NombreDePasDeTempsPourUneOptimisation = 24;
-    problemeHebdo.NombreDeContraintesCouplantes = 0;
-    problemeHebdo.NombreDInterconnexions = 0;
-    problemeHebdo.OptimisationAuPasHebdomadaire = false;
-    problemeHebdo.YaDeLaReserveJmoins1 = false;
 
     // Call the function
     OPT_InitialiserLeSecondMembreDuProblemeLineaire(&problemeHebdo,
