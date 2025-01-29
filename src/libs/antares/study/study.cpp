@@ -858,7 +858,7 @@ bool Study::areaRename(Area* area, AreaName newName)
 }
 
 // TODO VP: delete with GUI
-bool Study::clusterRename(Cluster* cluster, const std::string& newName)
+bool Study::clusterRename(Cluster* cluster, std::string newName)
 {
     // A name must not be empty
     if (!cluster or newName.empty())
