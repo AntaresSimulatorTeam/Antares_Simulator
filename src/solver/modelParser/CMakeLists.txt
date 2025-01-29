@@ -1,6 +1,6 @@
 set(SOURCES
         parser.cpp
-        encoders.hxx
+        decoders.hxx
         include/antares/solver/modelParser/parser.h
 )
 

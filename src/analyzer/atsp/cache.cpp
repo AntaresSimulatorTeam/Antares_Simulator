@@ -25,15 +25,9 @@ namespace Antares
 {
 void ATSP::cacheCreate()
 {
-    pCacheMatrix = new Matrix<>[pArea.size()];
+    pCacheMatrix.resize(pArea.size());
     pCacheMemoryUsed = sizeof(Matrix<>) * pArea.size();
     pCacheLastValidIndex = 0;
-}
-
-void ATSP::cacheDestroy()
-{
-    delete[] pCacheMatrix;
-    pCacheMatrix = nullptr;
 }
 
 void ATSP::cacheClear()

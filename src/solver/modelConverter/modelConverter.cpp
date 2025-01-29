@@ -50,6 +50,7 @@ std::vector<Antares::Study::SystemModel::PortType> convertTypes(
 {
     // Convert portTypes to Antares::Study::SystemModel::PortType
     std::vector<Antares::Study::SystemModel::PortType> out;
+    out.reserve(library.port_types.size());
     for (const auto& portType: library.port_types)
     {
         std::vector<Antares::Study::SystemModel::PortField> fields;
@@ -77,6 +78,7 @@ std::vector<Antares::Study::SystemModel::Parameter> convertParameters(
 {
     namespace SM = Antares::Study::SystemModel;
     std::vector<SM::Parameter> parameters;
+    parameters.reserve(model.parameters.size());
     for (const auto& parameter: model.parameters)
     {
         parameters.emplace_back(parameter.id,
@@ -119,7 +121,7 @@ std::vector<Antares::Study::SystemModel::Variable> convertVariables(const ModelP
     namespace SM = Antares::Study::SystemModel;
 
     std::vector<SM::Variable> variables;
-
+    variables.reserve(model.variables.size());
     for (const auto& variable: model.variables)
     {
         SM::Expression lb(variable.lower_bound,
@@ -153,6 +155,7 @@ std::vector<Antares::Study::SystemModel::Constraint> convertConstraints(
   const Antares::Solver::ModelParser::Model& model)
 {
     std::vector<Antares::Study::SystemModel::Constraint> constraints;
+    constraints.reserve(model.constraints.size());
     for (const auto& constraint: model.constraints)
     {
         auto nodeRegistry = convertExpressionToNode(constraint.expression, model);
@@ -173,6 +176,7 @@ std::vector<Antares::Study::SystemModel::Model> convertModels(
   const Antares::Solver::ModelParser::Library& library)
 {
     std::vector<Antares::Study::SystemModel::Model> models;
+    models.reserve(library.models.size());
     for (const auto& model: library.models)
     {
         Antares::Study::SystemModel::ModelBuilder modelBuilder;
