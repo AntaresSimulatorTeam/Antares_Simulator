@@ -461,6 +461,7 @@ void SetupProblemHebdo(PROBLEME_HEBDO& problemeHebdo,
     problemeHebdo.YaDeLaReserveJmoins1 = false;
     problemeHebdo.weekInTheYear = 0;
 }
+
 struct ExpectedResult
 {
     int constraint_index;
