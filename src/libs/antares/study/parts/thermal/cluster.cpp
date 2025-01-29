@@ -765,16 +765,14 @@ double ThermalCluster::getMarginalCost(uint serieIndex, uint hourInTheYear) cons
 
 double ThermalCluster::getMarketBidCost(uint hourInTheYear, uint year) const
 {
-    uint serieIndex = series.getSeriesIndex(year);
-
-    double mod = modulation[thermalModulationMarketBid][serieIndex];
-
+    double mod = modulation[thermalModulationMarketBid][hourInTheYear];
     if (costgeneration == Data::setManually)
     {
         return marketBidCost * mod;
     }
     else
     {
+        uint serieIndex = series.getSeriesIndex(year);
         const uint tsIndex = Math::Min(serieIndex, costsTimeSeries.size() - 1);
         return costsTimeSeries[tsIndex].marketBidCostTS[hourInTheYear] * mod;
     }
