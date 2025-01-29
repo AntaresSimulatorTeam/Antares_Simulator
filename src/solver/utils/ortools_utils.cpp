@@ -25,6 +25,7 @@
 
 #include <antares/exception/LoadingError.hpp>
 #include <antares/logs/logs.h>
+#include <antares/solver/optimisation/opt_constants.h>
 #include "antares/antares/Enum.hpp"
 #include "antares/solver/utils/basis_status.h"
 
@@ -227,7 +228,8 @@ bool solveAndManageStatus(MPSolver* solver, int& resultStatus, const MPSolverPar
 MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
                            MPSolver* solver,
                            bool keepBasis,
-                           const OptimizationOptions& options)
+                           const OptimizationOptions& options,
+                           const int optimizationNumber)
 {
     MPSolverParameters params;
     setGenericParameters(
@@ -253,7 +255,10 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
             Probleme->basisStatus.extractBasis(solver);
         }
     }
-
+    if (optimizationNumber == DEUXIEME_OPTIMISATION)
+    {
+        solver->SetSolverSpecificParametersAsString("LPFLAGS 0");
+    }
     return solver;
 }
 
