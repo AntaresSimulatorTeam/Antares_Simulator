@@ -8,7 +8,6 @@
 #include <antares/exception/AssertionError.hpp>
 #include <antares/Enum.hpp>
 #include <filesystem>
-#include <antares/solver/optimisation/opt_constants.h>
 #include "antares/solver/utils/basis_status.h"
 
 using namespace operations_research;
@@ -358,7 +357,7 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
         solver->SetStartingLpBasis(Probleme->StatutDesVariables,
                                    Probleme->StatutDesContraintes);
     }
-    if (optimizationNumber == DEUXIEME_OPTIMISATION)
+    if (optimizationNumber == 2)
     {
         solver->SetSolverSpecificParametersAsString("LPFLAGS 0");
     }
