@@ -358,6 +358,10 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
         solver->SetStartingLpBasis(Probleme->StatutDesVariables,
                                    Probleme->StatutDesContraintes);
     }
+    if (optimizationNumber == DEUXIEME_OPTIMISATION)
+    {
+        solver->SetSolverSpecificParametersAsString("LPFLAGS 0");
+    }
 
     if (solveAndManageStatus(solver, Probleme->ExistenceDUneSolution, params))
     {
@@ -368,10 +372,6 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
             transferBasis(Probleme->StatutDesVariables, solver->variables());
             transferBasis(Probleme->StatutDesContraintes, solver->constraints());
         }
-    }
-    if (optimizationNumber == DEUXIEME_OPTIMISATION)
-    {
-        solver->SetSolverSpecificParametersAsString("LPFLAGS 0");
     }
     return solver;
 }
