@@ -442,11 +442,6 @@ bool Data::ThermalCluster::integrityCheck()
 
 bool ThermalCluster::checkModulation()
 {
-    if (modulation.height <= 0)
-    {
-        return true;
-    }
-
     std::string buffer = "Thermal cluster: " + parentArea->name + '/' + pName + ": Modulation";
     if (modulation.width and modulation.height)
     {
