@@ -59,7 +59,7 @@ public:
     void setName(const AnyString& newname);
     Yuni::String getFullName() const;
 
-    void setGroup(const std::string& newgrp);
+    void setGroup(const std::string& group);
     std::string getGroup() const;
 
     /*!

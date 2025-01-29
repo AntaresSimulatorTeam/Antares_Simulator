@@ -164,7 +164,7 @@ void ClusterList<ClusterT>::rebuildIndexes()
 }
 
 template<class ClusterT>
-bool ClusterList<ClusterT>::rename(std::string idToFind, std::string newName)
+bool ClusterList<ClusterT>::rename(const std::string& idToFind, const std::string& newName)
 {
     if (idToFind.empty() or newName.empty())
     {

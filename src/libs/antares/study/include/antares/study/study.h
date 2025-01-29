@@ -272,7 +272,7 @@ public:
     ** \param cluster The cluster
     ** \return True if the operation succeeded, false otherwise
     */
-    bool clusterRename(Cluster* cluster, std::string newName);
+    bool clusterRename(Cluster* cluster, const std::string& newName);
     //@}
 
     //! \name Read-only
