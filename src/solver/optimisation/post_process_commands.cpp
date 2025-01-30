@@ -360,7 +360,7 @@ void CurtailmentSharingPostProcessCmd::execute(const optRuntimeData& opt_runtime
 
 
     for (uint hour = 0; hour < 5; hour++){
-        auto f = problemeHebdo_->ValeursDeNTC[hour].ValeurDuFlux;
+        auto f = problemeHebdo_->ValeursDeNTC[hour].ValeurDuFlux;;
         logs.info() << "[adq-patch] flux After Redispatch:" <<f;
     }
 
