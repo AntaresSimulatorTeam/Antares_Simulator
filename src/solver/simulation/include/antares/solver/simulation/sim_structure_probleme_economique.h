@@ -30,6 +30,8 @@
 #include "antares/study/fwd.h"
 #include "antares/study/study.h"
 
+typedef int mmmmm;
+
 class AdequacyPatchRuntimeData;
 
 struct CORRESPONDANCES_DES_VARIABLES
