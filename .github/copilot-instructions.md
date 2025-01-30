@@ -1,0 +1,1 @@
+use the instructions from file docs/developer-guide/6-Contributing.md
