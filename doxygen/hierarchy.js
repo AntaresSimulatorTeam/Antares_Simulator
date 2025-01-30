@@ -499,9 +499,6 @@ var hierarchy =
     [ "Antares::API::Error", "structAntares_1_1API_1_1Error.html", null ],
     [ "json_collector.error", "classjson__collector_1_1error.html", null ],
     [ "Antares::Solver::Visitors::EvaluationContext", "classAntares_1_1Solver_1_1Visitors_1_1EvaluationContext.html", null ],
-    [ "std::exception", null, [
-      [ "Antares::Solver::Modeler::OrtoolsImpl::ElemAlreadyExists", "classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1ElemAlreadyExists.html", null ]
-    ] ],
     [ "ExchangeBalanceData", "structExchangeBalanceData.html", null ],
     [ "Antares::Toolbox::Process::Execute", "classAntares_1_1Toolbox_1_1Process_1_1Execute.html", null ],
     [ "Antares::Study::SystemModel::Expression", "classAntares_1_1Study_1_1SystemModel_1_1Expression.html", null ],
@@ -1396,6 +1393,7 @@ var hierarchy =
       [ "Antares::Solver::ModelConverter::NoParameterOrVariableWithThisName", "classAntares_1_1Solver_1_1ModelConverter_1_1NoParameterOrVariableWithThisName.html", null ],
       [ "Antares::Solver::ModelConverter::NotImplemented", "classAntares_1_1Solver_1_1ModelConverter_1_1NotImplemented.html", null ],
       [ "Antares::Solver::ModelConverter::UnknownTypeException", "classAntares_1_1Solver_1_1ModelConverter_1_1UnknownTypeException.html", null ],
+      [ "Antares::Solver::Modeler::OrtoolsImpl::ElemAlreadyExists", "classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1ElemAlreadyExists.html", null ],
       [ "Antares::Solver::SystemConverter::ErrorWhileSplittingLibraryAndModel", "classAntares_1_1Solver_1_1SystemConverter_1_1ErrorWhileSplittingLibraryAndModel.html", null ],
       [ "Antares::Solver::SystemConverter::LibraryNotFound", "classAntares_1_1Solver_1_1SystemConverter_1_1LibraryNotFound.html", null ],
       [ "Antares::Solver::SystemConverter::ModelNotFound", "classAntares_1_1Solver_1_1SystemConverter_1_1ModelNotFound.html", null ],
