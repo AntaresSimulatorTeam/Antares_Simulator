@@ -1,7 +1,5 @@
 #include "antares/solver/modeler/dataSeries/dataSeriesRepo.h"
 
-#include <stdexcept>
-
 namespace Antares::Solver::Modeler::DataSeries
 {
 void DataSeriesRepository::addDataSeries(std::unique_ptr<IDataSeries> dataSeries)

@@ -3,6 +3,7 @@
 
 #include <map>
 #include <memory>
+#include <stdexcept>
 #include <string>
 
 #include "dataSeries.h"
