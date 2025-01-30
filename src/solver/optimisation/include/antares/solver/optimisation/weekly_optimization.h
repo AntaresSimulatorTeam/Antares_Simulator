@@ -37,7 +37,7 @@ public:
     ~WeeklyOptimization() = default;
     void solve();
 
-private:
+public:
     Antares::Solver::Optimization::OptimizationOptions options_;
     PROBLEME_HEBDO* const problemeHebdo_ = nullptr;
     IResultWriter& writer_;

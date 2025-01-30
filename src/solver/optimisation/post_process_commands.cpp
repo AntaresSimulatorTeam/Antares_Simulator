@@ -290,103 +290,28 @@ void CurtailmentSharingPostProcessCmd::execute(const optRuntimeData& opt_runtime
     auto backup = problemeHebdo_->CorrespondanceVarNativesVarOptim;
 
     auto variableManager = VariableManagerFromProblemHebdo(problemeHebdo_);
-    // int var = variableManager_.NTCDirect(Interco, triggeredHour);
-    // Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[Interco]
-    // apply ADQP
+
+    for (uint hour = 0; hour < 5; hour++){
+        auto f = problemeHebdo_->ValeursDeNTC[hour].ValeurDuFlux;
+        logs.info() << "[adq-patch] flux Before ADQPTCH:" <<f;// << problemeHebdo_;
+    }
+
+
+
     for (int hourInWeek: hoursRequiringCurtailmentSharing)
-
     {
-        // for (uint32_t Interco = 0; Interco < problemeHebdo_->NombreDInterconnexions; ++Interco){
-        //     int var = variableManager.NTCDirect(Interco, hourInWeek);
-        //     problemAresdoudre.Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[Interco]
-        //     logs.info() << "[adq-patch] Hello NTCs";
-
-        // }
-
-        // problemAresdoudre. etc . Xmax[var] =
-        // ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[Interco]
-
         logs.info() << "[adq-patch] CSR triggered for Year:" << year + 1
                     << " Hour:" << week * nbHoursInWeek + hourInWeek + 1;
         hourlyCsrProblem.setHour(hourInWeek);
         hourlyCsrProblem.run(week, year);
-        // To redispatch here
-        // problemeHebdo_[numSpace].solve();
-        // OPT_OptimisationHebdomadaire(options_, problemeHebdo_, writer_,
-        // simulationObserver_.get());
-        // opt_runtime_data.weeklyOptimization.problemeHebdo_.ValeursDeNTC;
-
-        // auto interco = opt_runtime_data.weeklyOptimization.study.runtime.Interco
-        // auto R = opt_runtime_data.weeklyOptimization.problemeHebdo_->ResultatsHoraires
-        //  Here to check
-        //  opt_runtime_data.weekly_optimization.problemeHebdo_.ValeursDeNTC;
         logs.info() << "[adq-patch] CSR triggered for Year:";
     }
 
-    // for (auto& cnxn: opt_runtime_data.weeklyOptimization.problemeHebdo_->ValeursDeNTC){
-    //         logs.info() << "[adq-patch] Hello ValeurDeFlux AFTER adq is:"<<cnxn.ValeurDuFlux;
-    //         cnxn.ValeurDeNTCOrigineVersExtremite = cnxn.ValeurDuFlux;
-    //         cnxn.ValeurDeNTCExtremiteVersOrigine = cnxn.ValeurDuFlux;
-    // }
-    // for (auto& cnxn: opt_runtime_data.weeklyOptimization.problemeHebdo_->ValeursDeNTC){
-    //     for (auto& v: cnxn.ValeurDeNTCOrigineVersExtremite){
-    //         v = v + 1;
-    //     }
-    //     for (auto& v: cnxn.ValeurDeNTCExtremiteVersOrigine){
-    //         v = v + 1;
-    //     }
-    // }
 
-    // // REDISPATCH
-    // for (int hourInWeek: hoursRequiringCurtailmentSharing){
-    //     for (uint32_t Interco = 0; Interco < problemeHebdo_->NombreDInterconnexions; ++Interco){
-    //         int var = variableManager.NTCDirect(Interco, hourInWeek);
-    //         auto& Xmax = problemeHebdo_->ProblemeAResoudre.get()->Xmax[Interco];// .Xmax[var] =
-    //         1; auto& Xmin = problemeHebdo_->ProblemeAResoudre.get()->Xmin[Interco];// .Xmax[var]
-    //         = 1;
-
-    //         auto f = problemeHebdo_->ValeursDeNTC[Interco].ValeurDuFlux[Interco];//
-    //         ->ValeurDeNTCOrigineVersExtremite[Interco].ValeurDeFlux; Xmax = f + 1; Xmin = f - 1;
-    //         // auto c = b[Interco].ValeurDuFlux;
-
-    //     }
-    //     logs.info() << "[adq-patch] Hello NTCs";
-
-    // }
-
-    // // REDISPATCH OLD Flow cons
-    // for (int hourInWeek: hoursRequiringCurtailmentSharing){
-    //     for (uint32_t Interco = 0; Interco < problemeHebdo_->NombreDInterconnexions; ++Interco){
-    //         // int var = variableManager.NTCDirect(Interco, hourInWeek);
-    //         auto& Xmax = problemeHebdo_->ProblemeAResoudre.get()->Xmax[Interco];// .Xmax[var] =
-    //         1; auto& Xmin = problemeHebdo_->ProblemeAResoudre.get()->Xmin[Interco];// .Xmax[var]
-    //         = 1;
-
-    //         auto f = problemeHebdo_->ValeursDeNTC[Interco].ValeurDuFlux[Interco];//
-    //         ->ValeurDeNTCOrigineVersExtremite[Interco].ValeurDeFlux; Xmax = f + 1; Xmin = f - 1;
-    //         // auto c = b[Interco].ValeurDuFlux;
-
-    //     }
-    //     logs.info() << "[adq-patch] Hello NTCs";
-
-    // }
-
-    // auto variableManager = VariableManagerFromProblemHebdo(problemeHebdo);
-    // for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
-    //      pdtHebdo++, pdtJour++)
-    // {
-    //     VALEURS_DE_NTC_ET_RESISTANCES& ValeursDeNTC = problemeHebdo->ValeursDeNTC[pdtHebdo];
-
-    //     for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
-    //     {
-    //         int var = variableManager.NTCDirect(interco, pdtJour);
-    //         const COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
-
-    //         Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[interco];
-    //         Xmin[var] = -(ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[interco]);
-
-    //         if (std::isinf(Xmax[var]) && Xmax[var] > 0)
-    //         {
+    for (uint hour = 0; hour < 5; hour++){
+        auto f = problemeHebdo_->ValeursDeNTC[hour].ValeurDuFlux;
+        logs.info() << "[adq-patch] flux After ADQPTCH:" <<f;// << problemeHebdo_;
+    }
 
     // REDISPATCH NEW Flow COnst
     std::vector<double>& Xmax = problemeHebdo_->ProblemeAResoudre->Xmax;
@@ -399,36 +324,20 @@ void CurtailmentSharingPostProcessCmd::execute(const optRuntimeData& opt_runtime
         for (uint32_t Interco = 0; Interco < problemeHebdo_->NombreDInterconnexions; ++Interco)
         {
             int var = variableManager.NTCDirect(Interco, hourInWeek);
-            // auto& Xmax[var] =
-            // problemeHebdo->ValeursDeNTC[problemeHebdo_].ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[interco];
-            // auto& Xmax = problemeHebdo->ValeursDeNTC[pdtHebdo];
-            // Xmax[var] = problemeHebdo_->ProblemeAResoudre.get()->Xmax[var];// .Xmax[var] = 1;
-            // Xmin[var] = problemeHebdo_->ProblemeAResoudre.get()->Xmin[var];// .Xmax[var] = 1;
-
-            // auto f = problemeHebdo_->ValeursDeNTC[Interco].ValeurDuFlux[var];//
-            // ->ValeurDeNTCOrigineVersExtremite[Interco].ValeurDeFlux;
-            auto f = problemeHebdo_->ValeursDeNTC[hourInWeek].ValeurDuFlux
-                       [Interco]; // ->ValeurDeNTCOrigineVersExtremite[Interco].ValeurDeFlux;
-            Xmax[var] = f + 1;
-            Xmin[var] = f - 1;
+            auto f = problemeHebdo_->ValeursDeNTC[hourInWeek].ValeurDuFlux[Interco]; 
+            Xmax[var] = f + 0.1;
+            Xmin[var] = f - 0.1;
             logs.info() << problemeHebdo_->ProblemeAResoudre->NomDesVariables[var];
-            // auto c = b[Interco].ValeurDuFlux;
         }
         logs.info() << "[adq-patch] Hello NTCs";
     }
 
     // // here we redispatch truly and smarlty
-    // OPT_OptimisationHebdomadaire(opt_runtime_data.weeklyOptimization.options_,
-    //                              problemeHebdo_,
-    //                              opt_runtime_data.weeklyOptimization.writer_,
-    //                              opt_runtime_data.weeklyOptimization.simulationObserver_);
 
-    opt_runtime_data.weeklyOptimization.solve();
-
-    // opt_runtime_data.weeklyOptimization.solve();
 
     const int NombreDePasDeTempsPourUneOptimisation = problemeHebdo_
                                                         ->NombreDePasDeTempsPourUneOptimisation;
+
 
     int DernierPdtDeLIntervalle;
     for (uint pdtHebdo = 0, numeroDeLIntervalle = 0; pdtHebdo < problemeHebdo_->NombreDePasDeTemps;
@@ -441,13 +350,20 @@ void CurtailmentSharingPostProcessCmd::execute(const optRuntimeData& opt_runtime
           numeroDeLIntervalle,
           problemeHebdo_->weekInTheYear,
           problemeHebdo_->year);
-        // bool b = OPT_AppelDuSimplexe(opt_runtime_data.weeklyOptimization.options_,
-        //                          problemeHebdo_,
-        //                          numeroDeLIntervalle,
-        //                          1,
-        //                          *optPeriodStringGenerator,
-        //                          opt_runtime_data.weeklyOptimization.writer_);
+        bool b = OPT_AppelDuSimplexe(opt_runtime_data.weeklyOptimization.options_,
+                                 problemeHebdo_,
+                                 numeroDeLIntervalle,
+                                 1,
+                                 *optPeriodStringGenerator,
+                                 opt_runtime_data.weeklyOptimization.writer_);
     }
+
+
+    for (uint hour = 0; hour < 5; hour++){
+        auto f = problemeHebdo_->ValeursDeNTC[hour].ValeurDuFlux;
+        logs.info() << "[adq-patch] flux After Redispatch:" <<f;
+    }
+
 }
 
 double CurtailmentSharingPostProcessCmd::calculateDensNewAndTotalLmrViolation()
@@ -529,3 +445,99 @@ std::vector<double> CurtailmentSharingPostProcessCmd::calculateENSoverAllAreasFo
 }
 
 } // namespace Antares::Solver::Simulation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // OPT_OptimisationHebdomadaire(opt_runtime_data.weeklyOptimization.options_,
+    //                              problemeHebdo_,
+    //                              opt_runtime_data.weeklyOptimization.writer_,
+    //                              opt_runtime_data.weeklyOptimization.simulationObserver_);
+
+
+
+    // opt_runtime_data.weeklyOptimization.solve();
+
+    // opt_runtime_data.weeklyOptimization.solve();
+
+
+
+
+    // for (auto& cnxn: opt_runtime_data.weeklyOptimization.problemeHebdo_->ValeursDeNTC){
+    //         logs.info() << "[adq-patch] Hello ValeurDeFlux AFTER adq is:"<<cnxn.ValeurDuFlux;
+    //         cnxn.ValeurDeNTCOrigineVersExtremite = cnxn.ValeurDuFlux;
+    //         cnxn.ValeurDeNTCExtremiteVersOrigine = cnxn.ValeurDuFlux;
+    // }
+    // for (auto& cnxn: opt_runtime_data.weeklyOptimization.problemeHebdo_->ValeursDeNTC){
+    //     for (auto& v: cnxn.ValeurDeNTCOrigineVersExtremite){
+    //         v = v + 1;
+    //     }
+    //     for (auto& v: cnxn.ValeurDeNTCExtremiteVersOrigine){
+    //         v = v + 1;
+    //     }
+    // }
+
+    // // REDISPATCH
+    // for (int hourInWeek: hoursRequiringCurtailmentSharing){
+    //     for (uint32_t Interco = 0; Interco < problemeHebdo_->NombreDInterconnexions; ++Interco){
+    //         int var = variableManager.NTCDirect(Interco, hourInWeek);
+    //         auto& Xmax = problemeHebdo_->ProblemeAResoudre.get()->Xmax[Interco];// .Xmax[var] =
+    //         1; auto& Xmin = problemeHebdo_->ProblemeAResoudre.get()->Xmin[Interco];// .Xmax[var]
+    //         = 1;
+
+    //         auto f = problemeHebdo_->ValeursDeNTC[Interco].ValeurDuFlux[Interco];//
+    //         ->ValeurDeNTCOrigineVersExtremite[Interco].ValeurDeFlux; Xmax = f + 1; Xmin = f - 1;
+    //         // auto c = b[Interco].ValeurDuFlux;
+
+    //     }
+    //     logs.info() << "[adq-patch] Hello NTCs";
+
+    // }
+
+    // // REDISPATCH OLD Flow cons
+    // for (int hourInWeek: hoursRequiringCurtailmentSharing){
+    //     for (uint32_t Interco = 0; Interco < problemeHebdo_->NombreDInterconnexions; ++Interco){
+    //         // int var = variableManager.NTCDirect(Interco, hourInWeek);
+    //         auto& Xmax = problemeHebdo_->ProblemeAResoudre.get()->Xmax[Interco];// .Xmax[var] =
+    //         1; auto& Xmin = problemeHebdo_->ProblemeAResoudre.get()->Xmin[Interco];// .Xmax[var]
+    //         = 1;
+
+    //         auto f = problemeHebdo_->ValeursDeNTC[Interco].ValeurDuFlux[Interco];//
+    //         ->ValeurDeNTCOrigineVersExtremite[Interco].ValeurDeFlux; Xmax = f + 1; Xmin = f - 1;
+    //         // auto c = b[Interco].ValeurDuFlux;
+
+    //     }
+    //     logs.info() << "[adq-patch] Hello NTCs";
+
+    // }
+
+    // auto variableManager = VariableManagerFromProblemHebdo(problemeHebdo);
+    // for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
+    //      pdtHebdo++, pdtJour++)
+    // {
+    //     VALEURS_DE_NTC_ET_RESISTANCES& ValeursDeNTC = problemeHebdo->ValeursDeNTC[pdtHebdo];
+
+    //     for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
+    //     {
+    //         int var = variableManager.NTCDirect(interco, pdtJour);
+    //         const COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
+
+    //         Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[interco];
+    //         Xmin[var] = -(ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[interco]);
+
+    //         if (std::isinf(Xmax[var]) && Xmax[var] > 0)
+    //         {
