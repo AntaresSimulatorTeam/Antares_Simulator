@@ -1,1 +1,1 @@
-read the instructions from the file in 6-Contributing.md
+read the instructions from file 6-Contributing.md
