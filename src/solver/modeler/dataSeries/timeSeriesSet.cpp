@@ -3,8 +3,6 @@
 #include <stdexcept>
 #include <string>
 
-#include "antares/solver/modeler/dataSeries/timeSeriesSetExceptions.h"
-
 namespace Antares::Solver::Modeler::DataSeries
 {
 TimeSeriesSet::TimeSeriesSet(std::string name, unsigned int height):
@@ -17,7 +15,7 @@ void TimeSeriesSet::add(const std::vector<double>& ts)
 {
     if (ts.size() != height_)
     {
-        throw TSset_AddTSofWrongSize(name(), ts.size(), height_);
+        throw AddTSofWrongSize(name(), ts.size(), height_);
     }
     tsSet_.push_back(std::move(ts));
 }
@@ -26,17 +24,17 @@ double TimeSeriesSet::getData(unsigned rank, unsigned hour)
 {
     if (tsSet_.empty())
     {
-        throw TSset_Empty(name());
+        throw Empty(name());
     }
 
     if (rank > tsSet_.size() - 1)
     {
-        throw TSset_RankTooBig(name(), rank);
+        throw RankTooBig(name(), rank);
     }
 
     if (hour > height_ - 1)
     {
-        throw TSset_HourTooBig(name(), hour);
+        throw HourTooBig(name(), hour);
     }
 
     return tsSet_[rank][hour];
