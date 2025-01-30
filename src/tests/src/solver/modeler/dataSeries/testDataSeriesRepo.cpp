@@ -5,9 +5,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <antares/solver/modeler/dataSeries/dataSeriesRepo.h>
-#include "antares/solver/modeler/dataSeries/dataSeriesRepoExceptions.h"
-#include "antares/solver/modeler/dataSeries/timeSeriesSet.h"
-#include "antares/solver/modeler/dataSeries/timeSeriesSetExceptions.h"
+#include <antares/solver/modeler/dataSeries/timeSeriesSet.h>
 
 using namespace Antares::Solver::Modeler::DataSeries;
 
@@ -17,7 +15,7 @@ BOOST_AUTO_TEST_CASE(repo_is_empty__asking_any_data_series_raises_exception)
 
     std::string expected_err_msg = "Data series repo is empty, and somebody requests data from it";
     BOOST_CHECK_EXCEPTION(dataSeriesRepository.getDataSeries("dummy name"),
-                          DataSeriesRepo_Empty,
+                          DataSeriesRepository::Empty,
                           checkMessage(expected_err_msg));
 }
 
@@ -32,7 +30,7 @@ BOOST_AUTO_TEST_CASE(adding_to_repo_a_data_it_already_contains___exception_raise
 
     std::string expected_err_msg = "Data series repo : data series 'some TS set' already exists";
     BOOST_CHECK_EXCEPTION(dataSeriesRepository.addDataSeries(std::move(some_other_TS_set)),
-                          DataSeriesRepo_DSalreadyExists,
+                          DataSeriesRepository::DataSeriesAlreadyExists,
                           checkMessage(expected_err_msg));
 }
 
@@ -44,7 +42,7 @@ BOOST_AUTO_TEST_CASE(repo_not_empty__asking_nonexistent_data_raises_exception)
 
     std::string expected_err_msg = "Data series repo : data series 'dummy name' does not exist";
     BOOST_CHECK_EXCEPTION(dataSeriesRepository.getDataSeries("dummy name"),
-                          DataSeriesRepo_DataSeriesNotExist,
+                          DataSeriesRepository::DataSeriesNotExist,
                           checkMessage(expected_err_msg));
 }
 
@@ -74,7 +72,7 @@ BOOST_AUTO_TEST_CASE(asking_repo_data_for_a_too_big_hour___exception_from_data_s
     unsigned hour = 100; // Hour too big
     std::string expected_err_msg = "TS set 'some TS set' : hour 100 exceeds TS set's height";
     BOOST_CHECK_EXCEPTION(dataSeriesRepository.getDataSeries("some TS set").getData(rank, hour),
-                          TSset_HourTooBig,
+                          TimeSeriesSet::HourTooBig,
                           checkMessage(expected_err_msg));
 }
 
