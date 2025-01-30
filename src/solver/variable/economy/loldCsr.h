@@ -69,7 +69,7 @@ struct VCardLOLD_CSR
         //! Indentation (GUI)
         nodeDepthForGUI = +0,
         //! Decimal precision
-        decimal = 2,
+        decimal = 4,
         //! Number of columns used by the variable (One ResultsType per column)
         columnCount = 1,
         //! The Spatial aggregation
