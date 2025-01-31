@@ -146,19 +146,64 @@ def test_unfeasible_problem_04__error_dry(study_path, check_runner):
 
 
 @pytest.mark.unfeasible
-def test_unfeasible_problem_05(solver_path):
-    study_path = ALL_STUDIES_PATH / "specific-tests" / "unfeasible-problem" / "unfeasible_problem_05"
-    #Not all years with errors are tested, there is more than 200 years with errors
-    years_warning = {10: [19], 11: [19], 16: [19],29: [19],  41: [42, 43, 49],43: [42, 43, 49],46: [42, 43, 49],142: [42, 43, 49]}
-    years_error = {10: [19]}
-    check_all_unfeasible_options(solver_path, study_path, years_error, years_warning)
+@pytest.mark.parametrize('study_path', [ALL_STUDIES_PATH / "unfeasible_problem_05"], indirect=True)
+def test_unfeasible_problem_05__warning_dry(study_path, check_runner):
+    warnings_on_weeks = []
+    warnings_on_weeks.append(weeks_in_year(year=10, weeks=[19]))
+    warnings_on_weeks.append(weeks_in_year(year=11, weeks=[19]))
+    warnings_on_weeks.append(weeks_in_year(year=16, weeks=[19]))
+    warnings_on_weeks.append(weeks_in_year(year=29, weeks=[19]))
+    warnings_on_weeks.append(weeks_in_year(year=41, weeks=[42,43,49]))
+    warnings_on_weeks.append(weeks_in_year(year=43, weeks=[42,43,49]))
+    warnings_on_weeks.append(weeks_in_year(year=46, weeks=[42,43,49]))
+    warnings_on_weeks.append(weeks_in_year(year=142, weeks=[42,43,49]))
+
+    checks = check_list()
+    checks.add(check = unfeasible_problem(study_path, new_behavior="warning-dry",
+                                          checks_on_weeks=warnings_on_weeks,
+                                          simulation=check_runner.get_simulation()))
+    check_runner.run(checks)
 
 @pytest.mark.unfeasible
-def test_unfeasible_problem_06(solver_path):
-    study_path = ALL_STUDIES_PATH / "specific-tests" / "unfeasible-problem" / "unfeasible_problem_06"
-    years_warning = {3: [19], 6: [42, 43, 49], 7: [19], 8: [19]}
-    years_error = {3: [19]}
-    check_all_unfeasible_options(solver_path, study_path, years_error, years_warning)
+@pytest.mark.parametrize('study_path', [ALL_STUDIES_PATH / "unfeasible_problem_05"], indirect=True)
+def test_unfeasible_problem_05__error_dry(study_path, check_runner):
+    errors_on_weeks = []
+    errors_on_weeks.append(weeks_in_year(year=10, weeks=[19]))
+
+    checks = check_list()
+    checks.add(check = unfeasible_problem(study_path, new_behavior="error-dry",
+                                          checks_on_weeks=errors_on_weeks,
+                                          simulation=check_runner.get_simulation()))
+    check_runner.run(checks)
+
+
+@pytest.mark.unfeasible
+@pytest.mark.parametrize('study_path', [ALL_STUDIES_PATH / "unfeasible_problem_06"], indirect=True)
+def test_unfeasible_problem_06__warning_dry(study_path, check_runner):
+    warnings_on_weeks = []
+    warnings_on_weeks.append(weeks_in_year(year=3, weeks=[19]))
+    warnings_on_weeks.append(weeks_in_year(year=6, weeks=[42,43,49]))
+    warnings_on_weeks.append(weeks_in_year(year=7, weeks=[19]))
+    warnings_on_weeks.append(weeks_in_year(year=8, weeks=[19]))
+
+    checks = check_list()
+    checks.add(check = unfeasible_problem(study_path, new_behavior="warning-dry",
+                                          checks_on_weeks=warnings_on_weeks,
+                                          simulation=check_runner.get_simulation()))
+    check_runner.run(checks)
+
+@pytest.mark.unfeasible
+@pytest.mark.parametrize('study_path', [ALL_STUDIES_PATH / "unfeasible_problem_06"], indirect=True)
+def test_unfeasible_problem_06__error_dry(study_path, check_runner):
+    errors_on_weeks = []
+    errors_on_weeks.append(weeks_in_year(year=3, weeks=[19]))
+
+    checks = check_list()
+    checks.add(check = unfeasible_problem(study_path, new_behavior="error-dry",
+                                          checks_on_weeks=errors_on_weeks,
+                                          simulation=check_runner.get_simulation()))
+    check_runner.run(checks)
+
 
 @pytest.mark.unfeasible
 def test_unfeasible_problem_07(solver_path):
