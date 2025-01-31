@@ -53,10 +53,6 @@ public:
     /// Create a ComponentFiller for a Component
     explicit ComponentFiller(const Study::SystemModel::Component& component);
 
-    void addVariables_(Solver::Modeler::Api::ILinearProblem& pb,
-                       const std::unique_ptr<Solver::Visitors::EvalVisitor>& evaluator,
-                       unsigned int nb_vars) const;
-
     void addVariables(Solver::Modeler::Api::ILinearProblem& pb,
                       Solver::Modeler::Api::LinearProblemData& data,
                       Solver::Modeler::Api::FillContext& ctx) override;

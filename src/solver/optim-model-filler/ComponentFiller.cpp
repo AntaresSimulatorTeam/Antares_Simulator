@@ -44,42 +44,34 @@ bool checkTimeSteps(Solver::Modeler::Api::FillContext& ctx)
     return ctx.getFirstTimeStep() <= ctx.getLastTimeStep();
 }
 
-void ComponentFiller::addVariables_(Solver::Modeler::Api::ILinearProblem& pb,
-                                    const std::unique_ptr<Solver::Visitors::EvalVisitor>& evaluator,
-                                    unsigned int nb_vars) const
-{
-    for (const auto& variable: component_.getModel()->Variables() | std::views::values)
-    {
-        if (variable.isTimeDependent())
-        {
-            pb.addVariable(evaluator->dispatch(variable.LowerBound().RootNode()),
-                           evaluator->dispatch(variable.UpperBound().RootNode()),
-                           variable.Type() != Study::SystemModel::ValueType::FLOAT,
-                           component_.Id() + "." + variable.Id(),
-                           nb_vars);
-        }
-        else
-        {
-            pb.addVariable(evaluator->dispatch(variable.LowerBound().RootNode()),
-                           evaluator->dispatch(variable.UpperBound().RootNode()),
-                           variable.Type() != Study::SystemModel::ValueType::FLOAT,
-                           component_.Id() + "." + variable.Id());
-        }
-    }
-}
-
 void ComponentFiller::addVariables(Solver::Modeler::Api::ILinearProblem& pb,
                                    Solver::Modeler::Api::LinearProblemData& data,
                                    Solver::Modeler::Api::FillContext& ctx)
 {
-    auto evaluator = std::make_unique<Solver::Visitors::EvalVisitor>(evaluationContext_);
-    if (checkTimeSteps(ctx))
-    {
-        addVariables_(pb, evaluator, ctx.getNumberOfTimestep());
-    }
-    else
+    if (!checkTimeSteps(ctx))
     {
         // exception?
+        return;
+    }
+
+    Solver::Visitors::EvalVisitor evaluator(evaluationContext_);
+    for (const auto& variable: component_.getModel()->Variables() | std::views::values)
+    {
+        if (variable.isTimeDependent())
+        {
+            pb.addVariable(evaluator.dispatch(variable.LowerBound().RootNode()),
+                           evaluator.dispatch(variable.UpperBound().RootNode()),
+                           variable.Type() != Study::SystemModel::ValueType::FLOAT,
+                           component_.Id() + "." + variable.Id(),
+                           ctx.getNumberOfTimestep());
+        }
+        else
+        {
+            pb.addVariable(evaluator.dispatch(variable.LowerBound().RootNode()),
+                           evaluator.dispatch(variable.UpperBound().RootNode()),
+                           variable.Type() != Study::SystemModel::ValueType::FLOAT,
+                           component_.Id() + "." + variable.Id());
+        }
     }
 }
 

@@ -37,12 +37,12 @@ OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solver
     objective_ = mpSolver_->MutableObjective();
 }
 
-class ElemAlreadyExists: public std::exception
+class ElemAlreadyExists: public std::runtime_error
 {
 public:
-    const char* what() const noexcept override
+    explicit ElemAlreadyExists():
+        std::runtime_error("Element name already exists in linear problem")
     {
-        return "Element name already exists in linear problem";
     }
 };
 
