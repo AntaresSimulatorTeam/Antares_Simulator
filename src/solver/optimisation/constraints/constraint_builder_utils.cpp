@@ -43,7 +43,5 @@ ConstraintBuilderData NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre
             problemeHebdo->NamedProblems,
             problemeHebdo->NomsDesPays,
             problemeHebdo->weekInTheYear,
-            problemeHebdo->NombreDePasDeTemps,
-            problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage,
-            problemeHebdo->NbTermesContraintesPourLesRampes};
+            problemeHebdo->NombreDePasDeTemps};
 }

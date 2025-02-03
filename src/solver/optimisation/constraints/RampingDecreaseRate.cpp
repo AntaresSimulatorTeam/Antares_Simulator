@@ -33,7 +33,6 @@ void RampingDecreaseRate::add(int pays, int index, int pdt)
     }
     else
     {
-        builder.data.NbTermesContraintesPourLesRampes += 5;
         builder.data.nombreDeContraintes++;
     }
 }

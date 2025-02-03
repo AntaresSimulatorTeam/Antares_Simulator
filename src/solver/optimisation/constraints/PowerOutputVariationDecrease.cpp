@@ -32,7 +32,6 @@ void PowerOutputVariationDecrease::add(int pays, int index, int pdt)
     }
     else
     {
-        builder.data.NbTermesContraintesPourLesRampes += 4;
         builder.data.nombreDeContraintes++;
     }
 }

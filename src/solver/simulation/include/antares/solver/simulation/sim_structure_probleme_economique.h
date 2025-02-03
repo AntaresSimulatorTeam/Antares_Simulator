@@ -527,8 +527,6 @@ struct PROBLEME_HEBDO
     std::vector<::ShortTermStorage::AREA_INPUT> ShortTermStorage;
 
     /* Optimization problem */
-    uint32_t NbTermesContraintesPourLesCoutsDeDemarrage = 0;
-    uint32_t NbTermesContraintesPourLesRampes = 0;
     std::vector<bool> DefaillanceNegativeUtiliserPMinThermique;
     std::vector<bool> DefaillanceNegativeUtiliserHydro;
     std::vector<bool> DefaillanceNegativeUtiliserConsoAbattue;
