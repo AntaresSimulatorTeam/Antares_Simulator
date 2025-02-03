@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -15,6 +16,33 @@ public:
 private:
     unsigned height_ = 0;
     std::vector<std::vector<double>> tsSet_;
+
+public:
+    class AddTSofWrongSize: public std::invalid_argument
+    {
+    public:
+        explicit AddTSofWrongSize(const std::string& name,
+                                  const size_t& tsSize,
+                                  const unsigned& height);
+    };
+
+    class Empty: public std::invalid_argument
+    {
+    public:
+        explicit Empty(const std::string& name);
+    };
+
+    class RankTooBig: public std::invalid_argument
+    {
+    public:
+        explicit RankTooBig(const std::string& name, unsigned rank);
+    };
+
+    class HourTooBig: public std::invalid_argument
+    {
+    public:
+        explicit HourTooBig(const std::string& name, unsigned hour);
+    };
 };
 
 } // namespace Antares::Solver::Modeler::DataSeries

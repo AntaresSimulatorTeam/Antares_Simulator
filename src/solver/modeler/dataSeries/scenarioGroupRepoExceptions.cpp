@@ -1,22 +1,22 @@
-#include "antares/solver/modeler/dataSeries/scenarioGroupRepoExceptions.h"
-
 #include <string>
+
+#include "antares/solver/modeler/dataSeries/scenarioGroupRepo.h"
 
 namespace Antares::Solver::Modeler::DataSeries
 {
 
-ScGroup_AlreadyExists::ScGroup_AlreadyExists(const std::string& groupId):
+ScenarioGroupRepository::AlreadyExists::AlreadyExists(const std::string& groupId):
     std::invalid_argument("Scenario group '" + groupId + "' already exists in group repo.")
 {
 }
 
-ScGroup_DoesNotExist::ScGroup_DoesNotExist(const std::string& groupId):
+ScenarioGroupRepository::DoesNotExist::DoesNotExist(const std::string& groupId):
     std::invalid_argument("Scenario group '" + groupId + "' does not exist in group repo.")
 {
 }
 
-ScGroup_ScenarioNotExist::ScGroup_ScenarioNotExist(const std::string& groupId,
-                                                   const unsigned scenario):
+ScenarioGroupRepository::ScenarioNotExist::ScenarioNotExist(const std::string& groupId,
+                                                            const unsigned scenario):
     std::invalid_argument("In scenario group '" + groupId + "', scenario '"
                           + std::to_string(scenario) + "' does not exist.")
 {

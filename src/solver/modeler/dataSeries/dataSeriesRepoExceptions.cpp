@@ -1,20 +1,20 @@
-#include "antares/solver/modeler/dataSeries/dataSeriesRepoExceptions.h"
-
 #include <string>
+
+#include "antares/solver/modeler/dataSeries/dataSeriesRepo.h"
 
 namespace Antares::Solver::Modeler::DataSeries
 {
-DataSeriesRepo_Empty::DataSeriesRepo_Empty():
+DataSeriesRepository::Empty::Empty():
     std::invalid_argument("Data series repo is empty, and somebody requests data from it")
 {
 }
 
-DataSeriesRepo_DataSeriesNotExist::DataSeriesRepo_DataSeriesNotExist(const std::string setId):
+DataSeriesRepository::DataSeriesNotExist::DataSeriesNotExist(const std::string& setId):
     std::invalid_argument("Data series repo : data series '" + setId + "' does not exist")
 {
 }
 
-DataSeriesRepo_DSalreadyExists::DataSeriesRepo_DSalreadyExists(const std::string setId):
+DataSeriesRepository::DataSeriesAlreadyExists::DataSeriesAlreadyExists(const std::string& setId):
     std::invalid_argument("Data series repo : data series '" + setId + "' already exists")
 {
 }

@@ -2,8 +2,6 @@
 
 #include <stdexcept>
 
-#include "antares/solver/modeler/dataSeries/scenarioGroupRepoExceptions.h"
-
 namespace Antares::Solver::Modeler::DataSeries
 {
 void ScenarioGroupRepository::addPairScenarioRankToGroup(
@@ -12,7 +10,7 @@ void ScenarioGroupRepository::addPairScenarioRankToGroup(
 {
     if (scenarioGroups_.contains(groupId))
     {
-        throw ScGroup_AlreadyExists(groupId);
+        throw AlreadyExists(groupId);
     }
     scenarioGroups_[groupId] = {scenarioToRank};
 }
@@ -21,12 +19,12 @@ unsigned ScenarioGroupRepository::getDataRank(const std::string& groupId, const 
 {
     if (!scenarioGroups_.contains(groupId))
     {
-        throw ScGroup_DoesNotExist(groupId);
+        throw DoesNotExist(groupId);
     }
 
     if (!scenarioGroups_.at(groupId).contains(scenario))
     {
-        throw ScGroup_ScenarioNotExist(groupId, scenario);
+        throw ScenarioNotExist(groupId, scenario);
     }
 
     return scenarioGroups_.at(groupId).at(scenario);
