@@ -4,7 +4,7 @@ var searchData=
   ['economy_1',['Economy',['../classAntares_1_1Solver_1_1Simulation_1_1Economy.html',1,'Antares::Solver::Simulation']]],
   ['edge_2',['Edge',['../classAntares_1_1Graph_1_1Edge.html',1,'Antares::Graph']]],
   ['elemalreadyexists_3',['ElemAlreadyExists',['../classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1ElemAlreadyExists.html',1,'Antares::Solver::Modeler::OrtoolsImpl']]],
-  ['empty_4',['Empty',['../structAntares_1_1Solver_1_1Variable_1_1Empty.html',1,'Antares::Solver::Variable']]],
+  ['empty_4',['Empty',['../classAntares_1_1Solver_1_1Modeler_1_1DataSeries_1_1DataSeriesRepository_1_1Empty.html',1,'Antares::Solver::Modeler::DataSeries::DataSeriesRepository::Empty'],['../classAntares_1_1Solver_1_1Modeler_1_1DataSeries_1_1TimeSeriesSet_1_1Empty.html',1,'Antares::Solver::Modeler::DataSeries::TimeSeriesSet::Empty'],['../structAntares_1_1Solver_1_1Variable_1_1Empty.html',1,'Antares::Solver::Variable::Empty']]],
   ['enabled_5',['Enabled',['../classAntares_1_1Action_1_1AntaresStudy_1_1Constraint_1_1Enabled.html',1,'Antares::Action::AntaresStudy::Constraint']]],
   ['endoflist_6',['EndOfList',['../classAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList.html',1,'Antares::Solver::Variable::Container']]],
   ['energies_5fet_5fpuissances_5fhydrauliques_7',['ENERGIES_ET_PUISSANCES_HYDRAULIQUES',['../structENERGIES__ET__PUISSANCES__HYDRAULIQUES.html',1,'']]],

@@ -279,6 +279,7 @@ var hierarchy =
       [ "Antares::Data::ScenarioBuilder::hydroLevelsData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html", null ]
     ] ],
     [ "Antares::Data::DataSeriesHydro", "classAntares_1_1Data_1_1DataSeriesHydro.html", null ],
+    [ "Antares::Solver::Modeler::DataSeries::DataSeriesRepository", "classAntares_1_1Solver_1_1Modeler_1_1DataSeries_1_1DataSeriesRepository.html", null ],
     [ "Antares::Toolbox::Filter::Operator::DataType", "structAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1DataType.html", null ],
     [ "Antares::Date::DayInterval", "structAntares_1_1Date_1_1DayInterval.html", null ],
     [ "Antares::DebugData", "structAntares_1_1DebugData.html", null ],
@@ -555,6 +556,9 @@ var hierarchy =
       [ "Antares::one_column__dumper< T, ReadWriteT, PredicateT >", "classAntares_1_1one__column____dumper.html", null ]
     ] ],
     [ "Antares::Private::OutputViewerData::Panel::IData", "classAntares_1_1Private_1_1OutputViewerData_1_1Panel_1_1IData.html", null ],
+    [ "Antares::Solver::Modeler::DataSeries::IDataSeries", "classAntares_1_1Solver_1_1Modeler_1_1DataSeries_1_1IDataSeries.html", [
+      [ "Antares::Solver::Modeler::DataSeries::TimeSeriesSet", "classAntares_1_1Solver_1_1Modeler_1_1DataSeries_1_1TimeSeriesSet.html", null ]
+    ] ],
     [ "Antares::Component::Datagrid::Renderer::CorrelationMatrix::IDatasource", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CorrelationMatrix_1_1IDatasource.html", [
       [ "Antares::Window::DatasourceAlphaOrder", "classAntares_1_1Window_1_1DatasourceAlphaOrder.html", null ],
       [ "Antares::Window::DatasourceColorOrder", "classAntares_1_1Window_1_1DatasourceColorOrder.html", null ],
@@ -843,6 +847,9 @@ var hierarchy =
         [ "Antares::Optimization::LegacyOrtoolsLinearProblem", "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html", null ]
       ] ]
     ] ],
+    [ "Antares::Solver::Modeler::Api::ILinearProblemData", "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1ILinearProblemData.html", [
+      [ "Antares::Solver::Modeler::DataSeries::LinearProblemData", "classAntares_1_1Solver_1_1Modeler_1_1DataSeries_1_1LinearProblemData.html", null ]
+    ] ],
     [ "Antares::Solver::Modeler::Api::IMipSolution", "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1IMipSolution.html", [
       [ "Antares::Solver::Modeler::OrtoolsImpl::OrtoolsMipSolution", "classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsMipSolution.html", null ]
     ] ],
@@ -930,6 +937,16 @@ var hierarchy =
     [ "IntoUTF8ArgsTranslator", "classIntoUTF8ArgsTranslator.html", null ],
     [ "Antares::Solver::IntraModalConsistencyChecker", "classAntares_1_1Solver_1_1IntraModalConsistencyChecker.html", null ],
     [ "std::invalid_argument", null, [
+      [ "Antares::Solver::Modeler::DataSeries::DataSeriesRepository::DataSeriesAlreadyExists", "classAntares_1_1Solver_1_1Modeler_1_1DataSeries_1_1DataSeriesRepository_1_1DataSeriesAlreadyExists.html", null ],
+      [ "Antares::Solver::Modeler::DataSeries::DataSeriesRepository::DataSeriesNotExist", "classAntares_1_1Solver_1_1Modeler_1_1DataSeries_1_1DataSeriesRepository_1_1DataSeriesNotExist.html", null ],
+      [ "Antares::Solver::Modeler::DataSeries::DataSeriesRepository::Empty", "classAntares_1_1Solver_1_1Modeler_1_1DataSeries_1_1DataSeriesRepository_1_1Empty.html", null ],
+      [ "Antares::Solver::Modeler::DataSeries::ScenarioGroupRepository::AlreadyExists", "classAntares_1_1Solver_1_1Modeler_1_1DataSeries_1_1ScenarioGroupRepository_1_1AlreadyExists.html", null ],
+      [ "Antares::Solver::Modeler::DataSeries::ScenarioGroupRepository::DoesNotExist", "classAntares_1_1Solver_1_1Modeler_1_1DataSeries_1_1ScenarioGroupRepository_1_1DoesNotExist.html", null ],
+      [ "Antares::Solver::Modeler::DataSeries::ScenarioGroupRepository::ScenarioNotExist", "classAntares_1_1Solver_1_1Modeler_1_1DataSeries_1_1ScenarioGroupRepository_1_1ScenarioNotExist.html", null ],
+      [ "Antares::Solver::Modeler::DataSeries::TimeSeriesSet::AddTSofWrongSize", "classAntares_1_1Solver_1_1Modeler_1_1DataSeries_1_1TimeSeriesSet_1_1AddTSofWrongSize.html", null ],
+      [ "Antares::Solver::Modeler::DataSeries::TimeSeriesSet::Empty", "classAntares_1_1Solver_1_1Modeler_1_1DataSeries_1_1TimeSeriesSet_1_1Empty.html", null ],
+      [ "Antares::Solver::Modeler::DataSeries::TimeSeriesSet::HourTooBig", "classAntares_1_1Solver_1_1Modeler_1_1DataSeries_1_1TimeSeriesSet_1_1HourTooBig.html", null ],
+      [ "Antares::Solver::Modeler::DataSeries::TimeSeriesSet::RankTooBig", "classAntares_1_1Solver_1_1Modeler_1_1DataSeries_1_1TimeSeriesSet_1_1RankTooBig.html", null ],
       [ "Antares::Solver::Visitors::EvalVisitorNotImplemented", "classAntares_1_1Solver_1_1Visitors_1_1EvalVisitorNotImplemented.html", null ],
       [ "Antares::Solver::Visitors::InvalidNode", "classAntares_1_1Solver_1_1Visitors_1_1InvalidNode.html", null ]
     ] ],
@@ -997,7 +1014,6 @@ var hierarchy =
     [ "Antares::Optimization::LinearExpression", "classAntares_1_1Optimization_1_1LinearExpression.html", null ],
     [ "Antares::Solver::Modeler::Api::LinearProblemBuilder", "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemBuilder.html", null ],
     [ "LinearProblemBuildingFixture", "structLinearProblemBuildingFixture.html", null ],
-    [ "Antares::Solver::Modeler::Api::LinearProblemData", "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemData.html", null ],
     [ "Antares::Solver::Modeler::Api::LinearProblemFiller", "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemFiller.html", [
       [ "Antares::Optimization::ComponentFiller", "classAntares_1_1Optimization_1_1ComponentFiller.html", null ],
       [ "Antares::Optimization::LegacyFiller", "classAntares_1_1Optimization_1_1LegacyFiller.html", null ],
@@ -1405,6 +1421,7 @@ var hierarchy =
     [ "SavingToStreamFixture", "structSavingToStreamFixture.html", null ],
     [ "Antares::Solver::ScenarioBuilderOwner", "classAntares_1_1Solver_1_1ScenarioBuilderOwner.html", null ],
     [ "ScenarioBuilderRule", "classScenarioBuilderRule.html", null ],
+    [ "Antares::Solver::Modeler::DataSeries::ScenarioGroupRepository", "classAntares_1_1Solver_1_1Modeler_1_1DataSeries_1_1ScenarioGroupRepository.html", null ],
     [ "Antares::Component::Spotlight::SearchToken", "classAntares_1_1Component_1_1Spotlight_1_1SearchToken.html", null ],
     [ "SearchToken", "classSearchToken.html", null ],
     [ "Antares::IniFile::Section", "classAntares_1_1IniFile_1_1Section.html", null ],

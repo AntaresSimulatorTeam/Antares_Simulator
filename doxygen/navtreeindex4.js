@@ -1,5 +1,6 @@
 var NAVTREEINDEX4 =
 {
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1InflowPattern.html":[9,0,0,2,0,0,34],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1InflowPattern.html#a093877b4767aa42139f31214cd6305dc":[9,0,0,2,0,0,34,3],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1InflowPattern.html#a125499a9a59e489be3f1bcc27a792775":[9,0,0,2,0,0,34,10],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1InflowPattern.html#a3fc766e53ce9cd5943598dd3e64c6d6f":[9,0,0,2,0,0,34,7],
@@ -248,6 +249,5 @@ var NAVTREEINDEX4 =
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesCluster.html#a0e62726a2a5da5b017ee1ebd68f70abb":[9,0,0,2,0,0,77,9],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesCluster.html#a402786422efbabd1f37c25ce15821688":[9,0,0,2,0,0,77,5],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesCluster.html#a615fa1acfe333c1a2adab5eec88d7650":[9,0,0,2,0,0,77,0],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesCluster.html#a69f24a7c72e64453bd4b78580589db3f":[9,0,0,2,0,0,77,7],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesCluster.html#a70088679ffb37907b56b753be1c8e35a":[9,0,0,2,0,0,77,12]
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesCluster.html#a69f24a7c72e64453bd4b78580589db3f":[9,0,0,2,0,0,77,7]
 };

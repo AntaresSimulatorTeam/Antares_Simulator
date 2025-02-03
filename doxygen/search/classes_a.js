@@ -24,7 +24,7 @@ var searchData=
   ['linearityvisitor_21',['LinearityVisitor',['../classAntares_1_1Solver_1_1Visitors_1_1LinearityVisitor.html',1,'Antares::Solver::Visitors']]],
   ['linearproblembuilder_22',['LinearProblemBuilder',['../classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemBuilder.html',1,'Antares::Solver::Modeler::Api']]],
   ['linearproblembuildingfixture_23',['LinearProblemBuildingFixture',['../structLinearProblemBuildingFixture.html',1,'']]],
-  ['linearproblemdata_24',['LinearProblemData',['../classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemData.html',1,'Antares::Solver::Modeler::Api']]],
+  ['linearproblemdata_24',['LinearProblemData',['../classAntares_1_1Solver_1_1Modeler_1_1DataSeries_1_1LinearProblemData.html',1,'Antares::Solver::Modeler::DataSeries']]],
   ['linearproblemfiller_25',['LinearProblemFiller',['../classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemFiller.html',1,'Antares::Solver::Modeler::Api']]],
   ['linearproblemmatrix_26',['LinearProblemMatrix',['../classLinearProblemMatrix.html',1,'']]],
   ['linearproblemmatrixstartupcosts_27',['LinearProblemMatrixStartUpCosts',['../classLinearProblemMatrixStartUpCosts.html',1,'']]],

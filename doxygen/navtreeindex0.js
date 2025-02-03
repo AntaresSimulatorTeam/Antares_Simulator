@@ -71,6 +71,7 @@ var NAVTREEINDEX0 =
 "HydroPowerSmoothingUsingVariationSum_8h_source.html":[10,0,0,4,11,1,0,0,0,1,27],
 "HydroPower_8h_source.html":[10,0,0,4,11,1,0,0,0,1,23],
 "HydroTSNumberData_8h_source.html":[10,0,0,3,0,25,0,0,0,8,3],
+"ILinearProblemData_8h_source.html":[10,0,0,4,8,0,0,0,0,0,0,2],
 "IName_8h_source.html":[10,0,0,4,2,0,0,0,0,4],
 "ISimulationObserver_8h_source.html":[10,0,0,4,13,0,0,0,0,7],
 "IStudyLoader_8h_source.html":[10,0,0,3,0,26,0,0,0,0],
@@ -201,7 +202,7 @@ var NAVTREEINDEX0 =
 "antares_8h_source.html":[10,0,0,3,0,10,0,0,0],
 "any_8h_source.html":[10,0,0,8,2,1,1,1,0,0,0],
 "api_2include_2antares_2api_2solver_8h_source.html":[10,0,0,1,0,0,0,1],
-"api_2include_2antares_2solver_2modeler_2api_2linearProblem_8h_source.html":[10,0,0,4,8,0,0,0,0,0,0,2],
+"api_2include_2antares_2solver_2modeler_2api_2linearProblem_8h_source.html":[10,0,0,4,8,0,0,0,0,0,0,3],
 "api_2include_2antares_2solver_2modeler_2api_2mipConstraint_8h_source.html":[10,0,0,4,8,0,0,0,0,0,0,6],
 "api_2include_2antares_2solver_2modeler_2api_2mipSolution_8h_source.html":[10,0,0,4,8,0,0,0,0,0,0,7],
 "api_2include_2antares_2solver_2modeler_2api_2mipVariable_8h_source.html":[10,0,0,4,8,0,0,0,0,0,0,8],
@@ -248,6 +249,5 @@ var NAVTREEINDEX0 =
 "classAntaresStudy.html#ab6f4f792b5935789742af31eb967e28f":[9,0,34,0],
 "classAntaresStudy.html#abcc86fd1a57c449e3beb2c103ecca756":[9,0,34,4],
 "classAntaresStudyAnalyzerJob.html":[9,0,35],
-"classAntares_1_1API_1_1APIInternal.html":[9,0,0,1,0],
-"classAntares_1_1API_1_1APIInternal.html#a060612c9356bcf28bef40e0c8e975263":[9,0,0,1,0,0]
+"classAntares_1_1API_1_1APIInternal.html":[9,0,0,1,0]
 };
