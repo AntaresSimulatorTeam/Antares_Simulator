@@ -10,7 +10,7 @@ add_boost_test(TestModelParser
   testSystemParser.cpp
   testSystemConverter.cpp
   LIBS
-  Antares::solver-expressions
+  Antares::expressions
   Antares::modelConverter
   Antares::modelParser
   Antares::systemParser

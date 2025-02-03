@@ -22,12 +22,13 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <antares/solver/expressions/nodes/ExpressionsNodes.h>
-#include "antares/solver/expressions/Registry.hxx"
-#include "antares/solver/expressions/visitors/CompareVisitor.h"
+#include <antares/expressions/nodes/ExpressionsNodes.h>
+#include "antares/expressions/Registry.hxx"
+#include "antares/expressions/visitors/CompareVisitor.h"
 #include "antares/solver/modelConverter/convertorVisitor.h"
 #include "antares/solver/modelParser/Library.h"
 
+using namespace Antares::Expressions;
 using namespace Antares::Solver;
 
 class ExpressionToNodeConvertorEmptyModel

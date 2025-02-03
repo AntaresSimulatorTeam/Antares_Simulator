@@ -6,4 +6,5 @@ add_subdirectory(libs)
 
 add_subdirectory(solver)
 
+add_subdirectory(expressions)
 add_subdirectory(study)

@@ -23,8 +23,9 @@
 #include <map>
 #include <vector>
 
+#include <antares/expressions/expression.h>
+
 #include "constraint.h"
-#include "expression.h"
 #include "parameter.h"
 #include "port.h"
 #include "variable.h"

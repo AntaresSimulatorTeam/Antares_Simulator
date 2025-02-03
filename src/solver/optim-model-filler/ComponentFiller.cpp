@@ -21,12 +21,12 @@
 
 #include <ranges>
 
-#include <antares/solver/expressions/nodes/ExpressionsNodes.h>
-#include <antares/solver/expressions/visitors/EvalVisitor.h>
+#include <antares/expressions/nodes/ExpressionsNodes.h>
+#include <antares/expressions/visitors/EvalVisitor.h>
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
 #include <antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h>
 #include <antares/study/system-model/variable.h>
-#include "antares/solver/expressions/visitors/TimeIndexVisitor.h"
+#include "antares/expressions/visitors/TimeIndexVisitor.h"
 
 namespace Antares::Optimization
 {
@@ -54,7 +54,7 @@ void ComponentFiller::addVariables(Solver::Modeler::Api::ILinearProblem& pb,
         return;
     }
 
-    Solver::Visitors::EvalVisitor evaluator(evaluationContext_);
+    Expressions::Visitors::EvalVisitor evaluator(evaluationContext_);
     for (const auto& variable: component_.getModel()->Variables() | std::views::values)
     {
         if (variable.isTimeDependent())
@@ -183,12 +183,12 @@ void ComponentFiller::addObjective(Solver::Modeler::Api::ILinearProblem& pb,
     }
 }
 
-bool ComponentFiller::IsThisConstraintTimeDependent(const Solver::Nodes::Node* node)
+bool ComponentFiller::IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node)
 {
-    Solver::Visitors::TimeIndexVisitor timeIndexVisitor;
+    Expressions::Visitors::TimeIndexVisitor timeIndexVisitor;
     const auto ret = timeIndexVisitor.dispatch(node);
-    return ret == Solver::Visitors::TimeIndex::VARYING_IN_TIME_ONLY
-           || ret == Solver::Visitors::TimeIndex::VARYING_IN_TIME_AND_SCENARIO;
+    return ret == Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY
+           || ret == Expressions::Visitors::TimeIndex::VARYING_IN_TIME_AND_SCENARIO;
 }
 
 // return false if the variable with the id var_id is not found or if it is not time-dependent

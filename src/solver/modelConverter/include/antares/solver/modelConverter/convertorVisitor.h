@@ -23,11 +23,12 @@
 
 #include <ExprVisitor.h>
 
-#include <antares/solver/expressions/NodeRegistry.h>
+#include <antares/expressions/NodeRegistry.h>
 #include "antares/solver/modelParser/Library.h"
 
 namespace Antares::Solver::ModelConverter
 {
 
-NodeRegistry convertExpressionToNode(const std::string& exprStr, const ModelParser::Model& model);
+Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
+                                                  const ModelParser::Model& model);
 } // namespace Antares::Solver::ModelConverter

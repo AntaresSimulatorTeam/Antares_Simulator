@@ -37,7 +37,7 @@ class Library;
 }
 } // namespace Antares
 
-namespace Antares::Solver::Nodes
+namespace Antares::Expressions::Nodes
 {
 class Node;
 }
@@ -50,5 +50,5 @@ public:
     explicit UnknownTypeException(ModelParser::ValueType type);
 };
 
-Antares::Study::SystemModel::Library convert(const Antares::Solver::ModelParser::Library& library);
+Study::SystemModel::Library convert(const ModelParser::Library& library);
 } // namespace Antares::Solver::ModelConverter

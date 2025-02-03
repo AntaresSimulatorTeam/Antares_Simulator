@@ -21,10 +21,9 @@
 
 #include "antares/solver/modelConverter/modelConverter.h"
 
-#include "antares/solver/expressions/visitors/TimeIndex.h"
+#include "antares/expressions/expression.h"
 #include "antares/solver/modelConverter/convertorVisitor.h"
 #include "antares/study/system-model/constraint.h"
-#include "antares/study/system-model/expression.h"
 #include "antares/study/system-model/library.h"
 #include "antares/study/system-model/model.h"
 #include "antares/study/system-model/parameter.h"

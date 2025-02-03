@@ -24,7 +24,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "antares/solver/expressions/nodes/Node.h"
+#include "antares/expressions/nodes/Node.h"
 #include "antares/solver/modelConverter/modelConverter.h"
 #include "antares/solver/modelParser/Library.h"
 #include "antares/study/system-model/library.h"
@@ -174,7 +174,7 @@ BOOST_FIXTURE_TEST_CASE(model_variables_properly_translated, Fixture)
 BOOST_AUTO_TEST_CASE(model_ports_properly_translated, *boost::unit_test::disabled())
 {
     ModelParser::Library library;
-    Registry<Nodes::Node> registry;
+    Antares::Expressions::Registry<Antares::Expressions::Nodes::Node> registry;
     ModelParser::Model model1{.id = "model1",
                               .description = "description",
                               .parameters = {},

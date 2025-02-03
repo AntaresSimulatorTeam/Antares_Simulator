@@ -23,8 +23,8 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "antares/solver/expressions/nodes/ExpressionsNodes.h"
-#include "antares/solver/expressions/visitors/TimeIndex.h"
+#include "antares/expressions/nodes/ExpressionsNodes.h"
+#include "antares/expressions/visitors/TimeIndex.h"
 #include "antares/solver/modeler/api/linearProblemBuilder.h"
 #include "antares/solver/modeler/dataSeries/linearProblemData.h"
 #include "antares/solver/modeler/ortoolsImpl/linearProblem.h"
@@ -39,7 +39,8 @@ using namespace Antares::Solver::Modeler::Api;
 using namespace Antares::Solver::Modeler::DataSeries;
 using namespace Antares::Study::SystemModel;
 using namespace Antares::Optimization;
-using namespace Antares::Solver::Nodes;
+using namespace Antares::Expressions;
+using namespace Antares::Expressions::Nodes;
 using namespace std;
 
 struct VariableData
@@ -61,7 +62,7 @@ struct ConstraintData
 struct LinearProblemBuildingFixture
 {
     map<string, Model> models;
-    Antares::Solver::Registry<Node> nodes;
+    Registry<Node> nodes;
     vector<Component> components;
     unique_ptr<ILinearProblem> pb;
 
@@ -96,16 +97,16 @@ struct LinearProblemBuildingFixture
         return nodes.create<LiteralNode>(value);
     }
 
-    Node* parameter(const string& paramId,
-                    const Antares::Solver::Visitors::TimeIndex& timeIndex = Antares::Solver::
-                      Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
+    Node* parameter(
+      const string& paramId,
+      const Visitors::TimeIndex& timeIndex = Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
     {
         return nodes.create<ParameterNode>(paramId, timeIndex);
     }
 
-    Node* variable(const string& varId,
-                   const Antares::Solver::Visitors::TimeIndex& timeIndex = Antares::Solver::
-                     Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
+    Node* variable(
+      const string& varId,
+      const Visitors::TimeIndex& timeIndex = Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
     {
         return nodes.create<VariableNode>(varId, timeIndex);
     }
@@ -137,7 +138,7 @@ void LinearProblemBuildingFixture::createModel(string modelId,
 {
     auto createExpression = [this](Node* node)
     {
-        Antares::Solver::NodeRegistry node_registry(node, move(nodes));
+        Antares::Expressions::NodeRegistry node_registry(node, move(nodes));
         Expression expression("expression", move(node_registry));
         return expression;
     };
@@ -441,7 +442,8 @@ BOOST_AUTO_TEST_CASE(ct_one_var__pb_contains_the_ct)
 BOOST_AUTO_TEST_CASE(ct_with_ten_vars__pb_contains_ten_ct)
 {
     // var1 <= 3
-    auto var_node = variable("var1", Antares::Solver::Visitors::TimeIndex::VARYING_IN_TIME_ONLY);
+    auto var_node = variable("var1",
+                             Antares::Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY);
     auto three = literal(3);
     auto ct_node = nodes.create<LessThanOrEqualNode>(var_node, three);
 
@@ -613,7 +615,7 @@ BOOST_AUTO_TEST_CASE(one_var_with_objective)
 
 BOOST_AUTO_TEST_CASE(one_time_dependent_var_with_objective)
 {
-    auto objective = variable("x", Antares::Solver::Visitors::TimeIndex::VARYING_IN_TIME_ONLY);
+    auto objective = variable("x", Antares::Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY);
 
     createModelWithOneFloatVar("model", {}, "x", literal(-50), literal(-40), {}, objective, true);
     createComponent("model", "componentA", {});

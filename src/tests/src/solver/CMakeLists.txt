@@ -1,4 +1,3 @@
-add_subdirectory(expressions)
 add_subdirectory(infeasible-problem-analysis)
 add_subdirectory(lps)
 add_subdirectory(modelParser)

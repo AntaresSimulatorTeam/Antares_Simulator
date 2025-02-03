@@ -19,9 +19,8 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include <antares/solver/expressions/nodes/ExpressionsNodes.h>
+#include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/modelConverter/convertorVisitor.h>
-#include "antares/solver/expressions/visitors/TimeIndex.h"
 
 #include "ExprLexer.h"
 #include "ExprParser.h"
@@ -30,13 +29,13 @@
 namespace Antares::Solver::ModelConverter
 {
 
-using namespace Antares::Solver::Nodes;
+using namespace Antares::Expressions::Nodes;
 
-/// Visitor to convert ANTLR expressions to Antares::Solver::Nodes
+/// Visitor to convert ANTLR expressions to Antares::Expressions::Nodes
 class ConvertorVisitor: public ExprVisitor
 {
 public:
-    ConvertorVisitor(Registry<Nodes::Node>& registry, const ModelParser::Model& model);
+    ConvertorVisitor(Expressions::Registry<Node>& registry, const ModelParser::Model& model);
 
     std::any visit(antlr4::tree::ParseTree* tree) override;
 
@@ -66,11 +65,12 @@ public:
     std::any visitRightExpression(ExprParser::RightExpressionContext* context) override;
 
 private:
-    Registry<Nodes::Node>& registry_;
+    Expressions::Registry<Node>& registry_;
     const ModelParser::Model& model_;
 };
 
-NodeRegistry convertExpressionToNode(const std::string& exprStr, const ModelParser::Model& model)
+Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
+                                                  const ModelParser::Model& model)
 {
     if (exprStr.empty())
     {
@@ -82,13 +82,13 @@ NodeRegistry convertExpressionToNode(const std::string& exprStr, const ModelPars
     ExprParser parser(&tokens);
 
     ExprParser::ExprContext* tree = parser.expr();
-    Antares::Solver::Registry<Node> registry;
+    Expressions::Registry<Node> registry;
     ConvertorVisitor visitor(registry, model);
     auto root = std::any_cast<Node*>(visitor.visit(tree));
-    return NodeRegistry(root, std::move(registry));
+    return Expressions::NodeRegistry(root, std::move(registry));
 }
 
-ConvertorVisitor::ConvertorVisitor(Antares::Solver::Registry<Node>& registry,
+ConvertorVisitor::ConvertorVisitor(Expressions::Registry<Node>& registry,
                                    const ModelParser::Model& model):
     registry_(registry),
     model_(model)
@@ -115,10 +115,11 @@ static constexpr unsigned int convertBool(bool in)
     return in ? 1 : 0;
 }
 
-static constexpr Visitors::TimeIndex convertToTimeIndex(bool timedependent, bool scenariodependent)
+static constexpr Expressions::Visitors::TimeIndex convertToTimeIndex(bool timedependent,
+                                                                     bool scenariodependent)
 {
-    return static_cast<Visitors::TimeIndex>((convertBool(scenariodependent) << 1)
-                                            | convertBool(timedependent));
+    return static_cast<Expressions::Visitors::TimeIndex>((convertBool(scenariodependent) << 1)
+                                                         | convertBool(timedependent));
 }
 
 std::any ConvertorVisitor::visitIdentifier(ExprParser::IdentifierContext* context)

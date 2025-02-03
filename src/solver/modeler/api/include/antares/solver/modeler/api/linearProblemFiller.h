@@ -27,12 +27,12 @@
 #include <antares/solver/modeler/api/ILinearProblemData.h>
 #include <antares/solver/modeler/api/linearProblem.h>
 
-namespace Antares::Solver::Visitors
+namespace Antares::Expressions::Visitors
 {
 enum class TimeIndex : unsigned int;
 }
 
-namespace Antares::Solver::Nodes
+namespace Antares::Expressions::Nodes
 {
 class Node;
 }
@@ -67,7 +67,8 @@ struct FillContext
 private:
     unsigned firstTimeStep = 0;
     unsigned lastTimeStep = 0;
-    std::unordered_map<const Nodes::Node*, Visitors::TimeIndex> nodesTimeIndex;
+    std::unordered_map<const Expressions::Nodes::Node*, Expressions::Visitors::TimeIndex>
+      nodesTimeIndex;
 };
 
 class LinearProblemFiller

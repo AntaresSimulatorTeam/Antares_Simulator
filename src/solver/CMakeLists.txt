@@ -9,7 +9,6 @@ endif (MSVC)
 
 add_subdirectory(application)
 add_subdirectory(constraints-builder)
-add_subdirectory(expressions)
 add_subdirectory(hydro)
 add_subdirectory(infeasible-problem-analysis)
 add_subdirectory(lps)
