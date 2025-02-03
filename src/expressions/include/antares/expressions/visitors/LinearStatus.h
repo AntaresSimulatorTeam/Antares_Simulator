@@ -20,7 +20,7 @@
 */
 #pragma once
 
-namespace Antares::Solver::Visitors
+namespace Antares::Expressions::Visitors
 {
 /**
  * @brief Represents the linearity of a node.
@@ -175,4 +175,4 @@ constexpr LinearStatus operator-(LinearStatus a)
 {
     return a;
 }
-} // namespace Antares::Solver::Visitors
+} // namespace Antares::Expressions::Visitors

@@ -1,3 +1,4 @@
+
 /*
 ** Copyright 2007-2024, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
@@ -19,25 +20,13 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
-#include <string>
+#include <stdexcept>
 
-namespace Antares::Solver
+namespace Antares::Expressions::Visitors
 {
-class Hashable
+class InvalidNode: public std::invalid_argument
 {
 public:
-    Hashable(const std::string& s1, const std::string& s2);
-    ~Hashable() = default;
-
-    bool operator==(const Hashable& other) const;
-
-    const std::string& s1;
-    const std::string& s2;
+    explicit InvalidNode(const std::string& node_name = "");
 };
-
-struct PortFieldHash
-{
-    std::size_t operator()(const Hashable& n) const;
-};
-
-} // namespace Antares::Solver
+} // namespace Antares::Expressions::Visitors

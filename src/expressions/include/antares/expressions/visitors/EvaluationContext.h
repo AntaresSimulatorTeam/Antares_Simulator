@@ -3,7 +3,7 @@
 #include <map>
 #include <string>
 
-namespace Antares::Solver::Visitors
+namespace Antares::Expressions::Visitors
 {
 /**
  * @brief Represents the context for evaluating expressions.
@@ -58,4 +58,4 @@ private:
     std::map<std::string, double> variables_;
 };
 
-} // namespace Antares::Solver::Visitors
+} // namespace Antares::Expressions::Visitors

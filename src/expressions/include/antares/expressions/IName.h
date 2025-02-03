@@ -21,7 +21,7 @@
 #pragma once
 #include <string>
 
-namespace Antares::Solver
+namespace Antares::Expressions
 {
 class IName
 {
@@ -30,4 +30,4 @@ public:
     virtual std::string name() const = 0;
     bool operator==(const IName& other) const = default;
 };
-} // namespace Antares::Solver
+} // namespace Antares::Expressions

@@ -19,39 +19,25 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
+#include <string>
 
-namespace Antares::Solver::Visitors
+namespace Antares::Expressions
 {
-/**
- * @brief Represents the time and scenario variation of a value.
- */
-enum class TimeIndex : unsigned int
+class Hashable
 {
-    CONSTANT_IN_TIME_AND_SCENARIO = 0,
-    VARYING_IN_TIME_ONLY = 1,
-    VARYING_IN_SCENARIO_ONLY = 2,
-    VARYING_IN_TIME_AND_SCENARIO = 3
+public:
+    Hashable(const std::string& s1, const std::string& s2);
+    ~Hashable() = default;
+
+    bool operator==(const Hashable& other) const;
+
+    const std::string& s1;
+    const std::string& s2;
 };
 
-/**
- * @brief Combines two TimeIndex values.
- *
- * @param left The left operand.
- * @param right The right operand.
- *
- * @return The combined TimeIndex value.
- */
-constexpr TimeIndex operator|(const TimeIndex& left, const TimeIndex& right)
+struct PortFieldHash
 {
-    /*
-     0 | x = x
-     3 | x = 3
-     1 | 1 = 1
-     1 | 2 = 3
-     2 | 2 = 2
-     */
-    return static_cast<TimeIndex>(static_cast<unsigned int>(left)
-                                  | static_cast<unsigned int>(right));
-}
+    std::size_t operator()(const Hashable& n) const;
+};
 
-} // namespace Antares::Solver::Visitors
+} // namespace Antares::Expressions
