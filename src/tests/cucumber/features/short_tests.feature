@@ -2,7 +2,7 @@ Feature: short tests
 
   @fast @short
   Scenario: 001 One node - passive
-    Given the study path is "short-tests/001 One node - passive"
+    Given the study path is "Antares_Simulator_Tests_NR/short-tests/001 One node - passive"
     When I run antares simulator
     Then the simulation takes less than 5 seconds
     And the simulation succeeds
@@ -10,7 +10,7 @@ Feature: short tests
 
   @fast @short
   Scenario: 002 Thermal fleet - Base
-    Given the study path is "short-tests/002 Thermal fleet - Base"
+    Given the study path is "Antares_Simulator_Tests_NR/short-tests/002 Thermal fleet - Base"
     When I run antares simulator
     Then the simulation takes less than 5 seconds
     And the simulation succeeds
@@ -20,7 +20,7 @@ Feature: short tests
 
   @fast @short
   Scenario: 003 Thermal fleet - Must-run
-    Given the study path is "short-tests/003 Thermal fleet - Must-run"
+    Given the study path is "Antares_Simulator_Tests_NR/short-tests/003 Thermal fleet - Must-run"
     When I run antares simulator
     Then the simulation takes less than 5 seconds
     And the simulation succeeds
@@ -31,7 +31,7 @@ Feature: short tests
 
   @fast @short
   Scenario: 004 Thermal fleet - Partial must-run
-    Given the study path is "short-tests/004 Thermal fleet - Partial must-run"
+    Given the study path is "Antares_Simulator_Tests_NR/short-tests/004 Thermal fleet - Partial must-run"
     When I run antares simulator
     Then the simulation takes less than 5 seconds
     And the simulation succeeds
@@ -42,7 +42,7 @@ Feature: short tests
 
   @fast @short
   Scenario: 005 Thermal fleet - Minimum stable power and min up down times
-    Given the study path is "short-tests/005 Thermal fleet - Minimum stable power and min up down times"
+    Given the study path is "Antares_Simulator_Tests_NR/short-tests/005 Thermal fleet - Minimum stable power and min up down times"
     When I run antares simulator
     Then the simulation takes less than 5 seconds
     And the simulation succeeds
@@ -61,7 +61,7 @@ Feature: short tests
   Scenario: 006 Thermal fleet - Extra costs
     # Like previous test, but with extra non-proportional (NP) costs
     # NP costs = 1756400 ; OP costs = 2.75816e+07 (like test 5) => Total cost = 2.9338e+07
-    Given the study path is "short-tests/006 Thermal fleet - Extra costs"
+    Given the study path is "Antares_Simulator_Tests_NR/short-tests/006 Thermal fleet - Extra costs"
     When I run antares simulator
     Then the simulation takes less than 5 seconds
     And the simulation succeeds
@@ -82,7 +82,7 @@ Feature: short tests
     # This example is the first of a set of two that are comparing the two unit-commitment modes of Antares.
     # Fast mode
     # => overall cost is not great, there are a lot of startups, and min up & down time are considered equal
-    Given the study path is "short-tests/007 Thermal fleet - Fast unit commitment"
+    Given the study path is "Antares_Simulator_Tests_NR/short-tests/007 Thermal fleet - Fast unit commitment"
     When I run antares simulator
     Then the simulation takes less than 5 seconds
     And the simulation succeeds
@@ -104,7 +104,7 @@ Feature: short tests
   Scenario: 008 Thermal fleet - Accurate unit commitment
     # Like previous test, but with unit commitment
     # => overall cost is better, there are less startups, and min up & down time are not equal
-    Given the study path is "short-tests/008 Thermal fleet - Accurate unit commitment"
+    Given the study path is "Antares_Simulator_Tests_NR/short-tests/008 Thermal fleet - Accurate unit commitment"
     When I run antares simulator
     Then the simulation takes less than 5 seconds
     And the simulation succeeds
@@ -124,7 +124,7 @@ Feature: short tests
 
   @fast @short
   Scenario: 021 Four areas - DC law
-    Given the study path is "short-tests/021 Four areas - DC law"
+    Given the study path is "Antares_Simulator_Tests_NR/short-tests/021 Four areas - DC law"
     When I run antares simulator
     Then the simulation takes less than 20 seconds
     And the simulation succeeds

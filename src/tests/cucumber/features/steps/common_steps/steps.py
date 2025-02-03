@@ -6,7 +6,10 @@ import pathlib
 from behave import *
 
 from common_steps.assertions import *
-from common_steps.simulator_utils import *
+from common_steps.simulator_utils import run_simulation
+from common_steps.modeler_utils import run_modeler
+
+from features.steps.common_steps.assertions import assert_double_close
 
 
 @given('the study path is "{string}"')
@@ -121,3 +124,13 @@ def check_pmin_pmax(context, area, prod_name, min_p, max_p):
             lambda n: n * max_p)).all(), f"max_p constraint not respected during year {year}"
         assert (actual_hourly_prod >= actual_n_dispatched_units.apply(
             lambda n: n * min_p)).all(), f"min_p constraint not respected during year {year}"
+
+
+@when("I run antares modeler")
+def run_antares_modeler(context):
+    run_modeler(context)
+
+
+@step('the optimal value of variable {var} is {value:g}')
+def modeler_var_optimal_value(context, var, value):
+    assert_double_close(value, context.moh.get_optimal_value(var), 1e-6)

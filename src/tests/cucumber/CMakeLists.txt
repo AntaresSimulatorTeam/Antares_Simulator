@@ -3,5 +3,7 @@ file(GENERATE OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/behave.ini CONTENT
 \n\
 antares-solver = $<TARGET_FILE:antares-solver>\
 \n\
-resources-path = ${CMAKE_SOURCE_DIR}/tests/resources/Antares_Simulator_Tests_NR"
+antares-modeler = $<TARGET_FILE:antares-modeler>\
+\n\
+resources-path = ${CMAKE_SOURCE_DIR}/tests/resources"
         CONDITION $<STREQUAL:$<CONFIG>,${CMAKE_BUILD_TYPE}>)
