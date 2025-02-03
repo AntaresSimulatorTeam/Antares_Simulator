@@ -270,8 +270,8 @@ v = w * (x + z);
 ## Logging functions:
 
 - Use `Antares::logs.[level]() << message` for logging, below is more detailed description for level:
-  - `logs.info() << msg` - always prints log message
-  - `logs.debug() << msg` - logs only in DEBUG
-  - `logs.warning() << msg` - the same as `logs.info()` but catches your attention
-  - `logs.error()` - the same as `logs.warning()`, but triggers an error when loading a study, with exceptions
-  - `logs.fatal()` - same as `logs.error()`
+  - `logs.fatal()`: indicates an error that causes a sudden shutdown of the application (e.g. null pointer exception, stack overflow, etc.). **Must not be used in antares-simulator** (use `error()` instead)
+  - `logs.error()`: indicates an error that causes unexpected processing behavior or interruption. Use it for anything that causes the simulation to stop (missing or malformed data, optimization error, etc.)
+  - `logs.warning() << msg`: indicates undesired behavior that is not an error, and that does not interrupt processing or the application. Use if for issues that do not interrupt simulation (obsolete parameter ignored, input data ignored, etc.).
+  - `logs.info() << msg`: information message explaining how the simulator works, intended for the person or application using it
+  - `logs.debug() << msg`: information message to facilitate debugging, intended for developers

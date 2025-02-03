@@ -242,7 +242,7 @@ std::vector<double> extractLoadForCurrentWeek(const Data::Area& area,
                                               const unsigned int firstHourOfWeek)
 {
     std::vector<double> load_to_return(HOURS_IN_WEEK, 0.);
-    for (int h = 0; h < HOURS_IN_WEEK; h++)
+    for (unsigned int h = 0; h < HOURS_IN_WEEK; ++h)
     {
         load_to_return[h] = area.load.series.getColumn(year)[h + firstHourOfWeek];
     }
@@ -255,7 +255,7 @@ std::vector<double> extractHydroPmin(const Data::Area& area,
 {
     // area->hydro.series->mingen.timeSeries
     std::vector<double> hydroPmin(HOURS_IN_WEEK, 0.);
-    for (int h = 0; h < HOURS_IN_WEEK; h++)
+    for (unsigned int h = 0; h < HOURS_IN_WEEK; ++h)
     {
         hydroPmin[h] = area.hydro.series->mingen.getColumn(year)[h + firstHourOfWeek];
     }
