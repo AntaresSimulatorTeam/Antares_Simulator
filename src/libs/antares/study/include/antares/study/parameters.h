@@ -408,6 +408,13 @@ public:
             Hourly
         };
         HydroPmax hydroPmax = HydroPmax::Daily;
+
+        enum class Rampes
+        {
+            Enabled,
+            Disabled
+        };
+        Rampes rampes = Rampes::Disabled;
     };
 
     Compatibility compatibility;

@@ -57,8 +57,6 @@ struct BB
     std::string Sens = std::string(4, '='); // Placeholder for constraint senses
     int IncrementDAllocationMatriceDesContraintes = 10;
     std::vector<CORRESPONDANCES_DES_VARIABLES> CorrespondanceVarNativesVarOptim;
-    uint32_t nbTermesContraintesPourLesCoutsDeDemarrage = 0;
-    uint32_t nbTermesContraintesPourLesRampes = 0;
     ;
 
     void set_correspondances_des_variables()
@@ -197,9 +195,7 @@ struct BB
                 NamedProblems,
                 NomsDesPays,
                 weekInTheYear,
-                NombreDePasDeTemps,
-                nbTermesContraintesPourLesCoutsDeDemarrage,
-                nbTermesContraintesPourLesRampes};
+                NombreDePasDeTemps};
     }
 };
 

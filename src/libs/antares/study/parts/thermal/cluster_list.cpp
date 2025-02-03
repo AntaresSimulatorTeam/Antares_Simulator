@@ -65,7 +65,8 @@ std::string ThermalClusterList::typeID() const
 
 static bool ThermalClusterLoadFromSection(const AnyString& filename,
                                           ThermalCluster& cluster,
-                                          const IniFile::Section& section);
+                                          const IniFile::Section& section,
+                                          bool rampingEnabledGlobal);
 
 void ThermalClusterList::rebuildIndex() const
 {
@@ -117,9 +118,14 @@ bool ThermalClusterList::loadFromFolder(Study& study, const fs::path& folder, Ar
         }
 
         auto cluster = std::make_shared<ThermalCluster>(area);
-
+        
         // Load data of a thermal cluster from a ini file section
-        if (!ThermalClusterLoadFromSection(study.buffer, *cluster, *section))
+        bool rampesEnabled = study.parameters.compatibility.rampes
+                             == Parameters::Compatibility::Rampes::Enabled;
+        if (!ThermalClusterLoadFromSection(study.buffer,
+                                           *cluster,
+                                           *section, 
+                                           rampesEnabled))
         {
             continue;
         }
@@ -335,7 +341,8 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
 
 bool ThermalClusterLoadFromSection(const AnyString& filename,
                                    ThermalCluster& cluster,
-                                   const IniFile::Section& section)
+                                   const IniFile::Section& section,
+                                   bool rampingEnabledGlobal)
 {
     if (section.name.empty())
     {
@@ -343,16 +350,21 @@ bool ThermalClusterLoadFromSection(const AnyString& filename,
     }
 
     cluster.setName(section.name);
-
-    // initialize the ramping attributes only if ramping-enabled=true
-    auto* rampingEnabledProperty = section.find("ramping-enabled");
-    if(rampingEnabledProperty)
+    if (rampingEnabledGlobal)
     {
-        bool rampingEnabled = false;
-        bool attributeOK = rampingEnabledProperty->value.to<bool>(rampingEnabled);
-        if (rampingEnabled && attributeOK)
-            cluster.ramping = ThermalCluster::Ramping();
+        // initialize the ramping attributes only if ramping-enabled=true
+        auto* rampingEnabledProperty = section.find("ramping-enabled");
+        if (rampingEnabledProperty)
+        {
+            bool rampingEnabled = false;
+            bool attributeOK = rampingEnabledProperty->value.to<bool>(rampingEnabled);
+            if (rampingEnabled && attributeOK)
+            {
+                cluster.ramping = ThermalCluster::Ramping();
+            }
+        }
     }
+   
 
     if (section.firstProperty)
     {

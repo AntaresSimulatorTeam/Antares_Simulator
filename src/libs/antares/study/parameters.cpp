@@ -241,6 +241,39 @@ bool StringToCompatibilityHydroPmax(Parameters::Compatibility::HydroPmax& mode,
     return false;
 }
 
+const char* CompatibilityRampesToCString(Parameters::Compatibility::Rampes mode)
+{
+    switch (mode)
+    {
+    case Parameters::Compatibility::Rampes::Disabled:
+        return "disabled";
+    case Parameters::Compatibility::Rampes::Enabled:
+        return "enabled";
+    default:
+        return "Unknown";
+    }
+}
+
+bool StringToCompatibilityRampes(Parameters::Compatibility::Rampes& mode,
+                                   const std::string& text)
+{
+    if (text.empty())
+    {
+        return false;
+    }
+    if (text == "disabled")
+    {
+        mode = Parameters::Compatibility::Rampes::Disabled;
+        return true;
+    }
+    if (text == "enabled")
+    {
+        mode = Parameters::Compatibility::Rampes::Enabled;
+        return true;
+    }
+    return false;
+}
+
 bool Parameters::economy() const
 {
     return mode == SimulationMode::Economy;
@@ -1100,6 +1133,11 @@ static bool SGDIntLoadFamily_Compatibility(Parameters& d,
     if (key == "hydro-pmax")
     {
         return StringToCompatibilityHydroPmax(d.compatibility.hydroPmax, value);
+    }
+
+    else if (key == "rampes")
+    {
+        return StringToCompatibilityRampes(d.compatibility.rampes, value);
     }
 
     return false;
@@ -2029,6 +2067,7 @@ void Parameters::saveToINI(IniFile& ini) const
     {
         auto* section = ini.addSection("compatibility");
         section->add("hydro-pmax", CompatibilityHydroPmaxToCString(compatibility.hydroPmax));
+        section->add("rampes", CompatibilityRampesToCString(compatibility.rampes));
     }
 }
 

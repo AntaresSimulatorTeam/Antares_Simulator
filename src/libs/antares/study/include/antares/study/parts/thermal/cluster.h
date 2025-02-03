@@ -39,7 +39,6 @@
 #include "ecoInput.h"
 #include "pollutant.h"
 
-
 namespace Antares
 {
 namespace Data
