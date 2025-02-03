@@ -1417,6 +1417,7 @@ var annotated_dup =
     [ "ExchangeBalance", "classExchangeBalance.html", null ],
     [ "ExchangeBalanceData", "structExchangeBalanceData.html", null ],
     [ "ExchangeBalanceGroup", "classExchangeBalanceGroup.html", null ],
+    [ "ExpectedResult", "structExpectedResult.html", null ],
     [ "ExprBaseVisitor", "classExprBaseVisitor.html", "classExprBaseVisitor" ],
     [ "ExpressionToNodeConvertorEmptyModel", "classExpressionToNodeConvertorEmptyModel.html", null ],
     [ "ExprLexer", "classExprLexer.html", null ],

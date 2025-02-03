@@ -122,7 +122,7 @@ var NAVTREEINDEX =
 "solver_2variable_2include_2antares_2solver_2variable_2info_8h_source.html",
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDispatchableGenMargin.html",
 "structAntares_1_1Window_1_1Inspector_1_1PClusterArea.html",
-"tools_2yby-aggregator_2output_8h_source.html"
+"tools_2yby-aggregator_2job_8h_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
