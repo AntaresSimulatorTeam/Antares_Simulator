@@ -90,7 +90,6 @@ void updatingWeeklyFinalHydroLevel(const Data::AreaList& areas, PROBLEME_HEBDO& 
         }
 
         uint index = area->index;
-        double reservoirCapacity = area->hydro.reservoirCapacity;
         const RESULTATS_HORAIRES& weeklyResults = problem.ResultatsHoraires[index];
         const std::vector<double>& niv = weeklyResults.niveauxHoraires;
 
