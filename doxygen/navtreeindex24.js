@@ -1,5 +1,6 @@
 var NAVTREEINDEX24 =
 {
+"functions_k.html":[9,3,0,10],
 "functions_l.html":[9,3,0,11],
 "functions_m.html":[9,3,0,12],
 "functions_n.html":[9,3,0,13],
@@ -248,6 +249,5 @@ var NAVTREEINDEX24 =
 "md_src_2tests_2run-study-tests_2readme.html":[4],
 "md_src_2tests_2run-study-tests_2readme.html#autotoc_md16":[4,0],
 "md_src_2tests_2run-study-tests_2readme.html#autotoc_md17":[4,1],
-"md_src_2tests_2run-study-tests_2readme.html#autotoc_md18":[4,2],
-"md_src_2tests_2run-study-tests_2readme.html#autotoc_md19":[4,3]
+"md_src_2tests_2run-study-tests_2readme.html#autotoc_md18":[4,2]
 };

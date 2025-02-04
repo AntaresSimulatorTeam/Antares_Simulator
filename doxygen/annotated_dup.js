@@ -1280,6 +1280,9 @@ var annotated_dup =
     [ "kirchhoff_pytest", null, [
       [ "StudyReference", "classkirchhoff__pytest_1_1StudyReference.html", null ]
     ] ],
+    [ "modeler_output_handler", null, [
+      [ "modeler_output_handler", "classmodeler__output__handler_1_1modeler__output__handler.html", null ]
+    ] ],
     [ "output_compare", null, [
       [ "output_compare", "classoutput__compare_1_1output__compare.html", null ]
     ] ],

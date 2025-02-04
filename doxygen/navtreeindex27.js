@@ -1,5 +1,6 @@
 var NAVTREEINDEX27 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability_1_1Multiple.html":[9,0,0,13,11,4,67,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDispatchableGenMargin.html":[9,0,0,13,11,4,69],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDispatchableGenMargin.html#a5c854a4a0fd7c48b97e49b4fcba13522":[9,0,0,13,11,4,69,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDispatchableGenMargin.html#aff37168f38390e798668288dc8a32841":[9,0,0,13,11,4,69,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX27 =
 "structAntares_1_1Window_1_1Inspector_1_1PAreaColor_1_1Color.html":[9,0,0,19,1,10,0],
 "structAntares_1_1Window_1_1Inspector_1_1PAreaFiltering.html":[9,0,0,19,1,11],
 "structAntares_1_1Window_1_1Inspector_1_1PAreaResortStatus.html":[9,0,0,19,1,12],
-"structAntares_1_1Window_1_1Inspector_1_1PAreaSpilledEnergyCost.html":[9,0,0,19,1,13],
-"structAntares_1_1Window_1_1Inspector_1_1PAreaUnsuppliedEnergyCost.html":[9,0,0,19,1,14]
+"structAntares_1_1Window_1_1Inspector_1_1PAreaSpilledEnergyCost.html":[9,0,0,19,1,13]
 };

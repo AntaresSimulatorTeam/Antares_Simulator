@@ -115,14 +115,14 @@ var NAVTREEINDEX =
 "classAntares_1_1Window_1_1Inspector_1_1Frame.html#a562816e280ebe7133a01b84bc97b90d8",
 "classBenchmarking_1_1StudyInfoCollector.html",
 "classModifiedINode.html#a32e5cffa56a52c2d00558645b6816fd4",
-"day_8h_source.html",
-"dir_9e00e12edd9c85dc5bf8c416fbc7b695.html",
-"functions_l.html",
-"md_src_2tests_2run-study-tests_2readme.html#autotoc_md20",
-"solver_2variable_2include_2antares_2solver_2variable_2info_8h_source.html",
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDispatchableGenMargin.html",
-"structAntares_1_1Window_1_1Inspector_1_1PClusterArea.html",
-"tools_2yby-aggregator_2job_8h_source.html"
+"date_8h_source.html",
+"dir_9de0b226a6248df62fc4ff1ce1bffcc7.html",
+"functions_k.html",
+"md_src_2tests_2run-study-tests_2readme.html#autotoc_md19",
+"solver_2variable_2include_2antares_2solver_2variable_2economy_2links_8h_source.html",
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability_1_1Multiple.html",
+"structAntares_1_1Window_1_1Inspector_1_1PAreaUnsuppliedEnergyCost.html",
+"toolbox_2input_2input_8h_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

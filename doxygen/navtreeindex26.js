@@ -1,5 +1,6 @@
 var NAVTREEINDEX26 =
 {
+"solver_2variable_2include_2antares_2solver_2variable_2economy_2links_8h_source.html":[10,0,0,4,17,0,0,0,0,2,12],
 "solver_2variable_2include_2antares_2solver_2variable_2info_8h_source.html":[10,0,0,4,17,0,0,0,0,13],
 "solver_2variable_2include_2antares_2solver_2variable_2state_8h_source.html":[10,0,0,4,17,0,0,0,0,17],
 "solver_2variable_2include_2antares_2solver_2variable_2storage_2fwd_8h_source.html":[10,0,0,4,17,0,0,0,0,3,3],
@@ -19,7 +20,7 @@ var NAVTREEINDEX26 =
 "stdDeviation_8h_source.html":[10,0,0,4,17,0,0,0,0,3,14],
 "store-timeseries-numbers_8h_source.html":[10,0,0,3,0,25,0,0,0,0,5],
 "store-timeseries-numbers_8hxx_source.html":[10,0,0,3,0,25,0,0,0,0,6],
-"structALL__MUST__RUN__GENERATION.html":[9,0,32],
+"structALL__MUST__RUN__GENERATION.html":[9,0,33],
 "structAntares_1_1API_1_1Error.html":[9,0,0,1,1],
 "structAntares_1_1API_1_1Error.html#ad5d0c6db0418afc065901a9827ab5d93":[9,0,0,1,1,0],
 "structAntares_1_1API_1_1SimulationResults.html":[9,0,0,1,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX26 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionFeeAbs.html":[9,0,0,13,11,4,66],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionFeeAbs.html#aa6b8bd649b95f3c962af25b2631ec774":[9,0,0,13,11,4,66,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability.html":[9,0,0,13,11,4,67],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability.html#a2206c6ba3afbe5bcccc1fc2e516124a4":[9,0,0,13,11,4,67,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability_1_1Multiple.html":[9,0,0,13,11,4,67,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability.html#a2206c6ba3afbe5bcccc1fc2e516124a4":[9,0,0,13,11,4,67,1]
 };

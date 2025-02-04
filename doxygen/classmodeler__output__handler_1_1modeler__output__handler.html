@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: SystemLinearProblem Class Reference</title>
+<title>Antares Simulator: modeler_output_handler.modeler_output_handler Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -111,7 +111,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){initNavTree('classSystemLinearProblem.html',''); initResizable(true); });
+$(function(){initNavTree('classmodeler__output__handler_1_1modeler__output__handler.html',''); initResizable(true); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -139,29 +139,39 @@ $(function(){initNavTree('classSystemLinearProblem.html',''); initResizable(true
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="classSystemLinearProblem-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">SystemLinearProblem Class Reference</div></div>
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="classmodeler__output__handler_1_1modeler__output__handler-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">modeler_output_handler.modeler_output_handler Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a648c8d2231f2a805ea4bb1828c608829" id="r_a648c8d2231f2a805ea4bb1828c608829"><td class="memItemLeft" align="right" valign="top"><a id="a648c8d2231f2a805ea4bb1828c608829" name="a648c8d2231f2a805ea4bb1828c608829"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>SystemLinearProblem</b> (const <a class="el" href="classAntares_1_1Study_1_1SystemModel_1_1System.html">Study::SystemModel::System</a> &amp;system)</td></tr>
-<tr class="separator:a648c8d2231f2a805ea4bb1828c608829"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa15f8a13930f77a269fe0d36cab8f94" id="r_aaa15f8a13930f77a269fe0d36cab8f94"><td class="memItemLeft" align="right" valign="top"><a id="aaa15f8a13930f77a269fe0d36cab8f94" name="aaa15f8a13930f77a269fe0d36cab8f94"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Provide</b> (<a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1ILinearProblem.html">ILinearProblem</a> &amp;pb, const <a class="el" href="structAntares_1_1Solver_1_1ModelerParameters.html">ModelerParameters</a> &amp;parameters)</td></tr>
-<tr class="separator:aaa15f8a13930f77a269fe0d36cab8f94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a67f7789106bc9d88c4b6e37aa9057bb2" id="r_a67f7789106bc9d88c4b6e37aa9057bb2"><td class="memItemLeft" align="right" valign="top"><a id="a67f7789106bc9d88c4b6e37aa9057bb2" name="a67f7789106bc9d88c4b6e37aa9057bb2"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>__init__</b> (self, study_output_path)</td></tr>
+<tr class="separator:a67f7789106bc9d88c4b6e37aa9057bb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0eaeac41f2a6f2d9d472c26913df84c0" id="r_a0eaeac41f2a6f2d9d472c26913df84c0"><td class="memItemLeft" align="right" valign="top"><a id="a0eaeac41f2a6f2d9d472c26913df84c0" name="a0eaeac41f2a6f2d9d472c26913df84c0"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>get_optimal_value</b> (self, str var)</td></tr>
+<tr class="separator:a0eaeac41f2a6f2d9d472c26913df84c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:aa28cced8fae88eb3616bb1c362b22153" id="r_aa28cced8fae88eb3616bb1c362b22153"><td class="memItemLeft" align="right" valign="top"><a id="aa28cced8fae88eb3616bb1c362b22153" name="aa28cced8fae88eb3616bb1c362b22153"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>study_output_path</b> = study_output_path</td></tr>
+<tr class="separator:aa28cced8fae88eb3616bb1c362b22153"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90624ec25d8ffc71bad35299e713990d" id="r_a90624ec25d8ffc71bad35299e713990d"><td class="memItemLeft" align="right" valign="top"><a id="a90624ec25d8ffc71bad35299e713990d" name="a90624ec25d8ffc71bad35299e713990d"></a>
+pd.DataFrame&#160;</td><td class="memItemRight" valign="bottom"><b>results</b> = self.__read_csv(&quot;solution.csv&quot;)</td></tr>
+<tr class="separator:a90624ec25d8ffc71bad35299e713990d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>src/solver/modeler/<b>main.cpp</b></li>
+<li>src/tests/cucumber/features/steps/common_steps/<b>modeler_output_handler.py</b></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="classSystemLinearProblem.html">SystemLinearProblem</a></li>
+    <li class="navelem"><b>modeler_output_handler</b></li><li class="navelem"><a class="el" href="classmodeler__output__handler_1_1modeler__output__handler.html">modeler_output_handler</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>

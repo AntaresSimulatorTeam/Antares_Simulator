@@ -1,5 +1,6 @@
 var NAVTREEINDEX25 =
 {
+"md_src_2tests_2run-study-tests_2readme.html#autotoc_md19":[4,3],
 "md_src_2tests_2run-study-tests_2readme.html#autotoc_md20":[4,4],
 "md_src_2tests_2run-study-tests_2readme.html#autotoc_md21":[4,5],
 "md_src_2tests_2run-study-tests_2readme.html#autotoc_md22":[4,5,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX25 =
 "solver_2variable_2include_2antares_2solver_2variable_2commons_2links_2links_8h_source.html":[10,0,0,4,17,0,0,0,0,1,0,0],
 "solver_2variable_2include_2antares_2solver_2variable_2container_8h_source.html":[10,0,0,4,17,0,0,0,0,10],
 "solver_2variable_2include_2antares_2solver_2variable_2container_8hxx_source.html":[10,0,0,4,17,0,0,0,0,11],
-"solver_2variable_2include_2antares_2solver_2variable_2economy_2all_8h_source.html":[10,0,0,4,17,0,0,0,0,2,2],
-"solver_2variable_2include_2antares_2solver_2variable_2economy_2links_8h_source.html":[10,0,0,4,17,0,0,0,0,2,12]
+"solver_2variable_2include_2antares_2solver_2variable_2economy_2all_8h_source.html":[10,0,0,4,17,0,0,0,0,2,2]
 };
