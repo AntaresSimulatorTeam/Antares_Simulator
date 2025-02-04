@@ -73,15 +73,14 @@ BOOST_FIXTURE_TEST_CASE(negation, ExpressionToNodeConvertorEmptyModel)
 
 BOOST_AUTO_TEST_CASE(identifier)
 {
-    YmlModel::Model model{
-      .id = "model0",
-      .description = "description",
-      .parameters = {{"param1", true, false}, {"param2", false, false}},
-      .variables = {{"varP", "7", "pmin", YmlModel::ValueType::CONTINUOUS}},
-      .ports = {},
-      .port_field_definitions = {},
-      .constraints = {},
-      .objective = "objectives"};
+    YmlModel::Model model{.id = "model0",
+                          .description = "description",
+                          .parameters = {{"param1", true, false}, {"param2", false, false}},
+                          .variables = {{"varP", "7", "pmin", YmlModel::ValueType::CONTINUOUS}},
+                          .ports = {},
+                          .port_field_definitions = {},
+                          .constraints = {},
+                          .objective = "objectives"};
     ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
     {
@@ -106,15 +105,14 @@ bool expectedMessage(const std::runtime_error& ex)
 
 BOOST_AUTO_TEST_CASE(identifierNotFound)
 {
-    YmlModel::Model model{
-      .id = "model0",
-      .description = "description",
-      .parameters = {{"param1", true, false}},
-      .variables = {{"varP", "7", "pmin", YmlModel::ValueType::CONTINUOUS}},
-      .ports = {},
-      .port_field_definitions = {},
-      .constraints = {},
-      .objective = "objectives"};
+    YmlModel::Model model{.id = "model0",
+                          .description = "description",
+                          .parameters = {{"param1", true, false}},
+                          .variables = {{"varP", "7", "pmin", YmlModel::ValueType::CONTINUOUS}},
+                          .ports = {},
+                          .port_field_definitions = {},
+                          .constraints = {},
+                          .objective = "objectives"};
 
     std::string expression = "abc"; // not a param or var
     BOOST_CHECK_EXCEPTION(ModelConverter::convertExpressionToNode(expression, model),
@@ -193,15 +191,14 @@ BOOST_FIXTURE_TEST_CASE(comparison, ExpressionToNodeConvertorEmptyModel)
 
 BOOST_AUTO_TEST_CASE(medium_expression)
 {
-    YmlModel::Model model{
-      .id = "model0",
-      .description = "description",
-      .parameters = {{"param1", true, false}, {"param2", false, false}},
-      .variables = {{"varP", "7", "param1", YmlModel::ValueType::CONTINUOUS}},
-      .ports = {},
-      .port_field_definitions = {},
-      .constraints = {},
-      .objective = "objectives"};
+    YmlModel::Model model{.id = "model0",
+                          .description = "description",
+                          .parameters = {{"param1", true, false}, {"param2", false, false}},
+                          .variables = {{"varP", "7", "param1", YmlModel::ValueType::CONTINUOUS}},
+                          .ports = {},
+                          .port_field_definitions = {},
+                          .constraints = {},
+                          .objective = "objectives"};
 
     ExpressionToNodeConvertorEmptyModel converter(std::move(model));
     std::string expression = "(12 * (4 - 1) + param1) / -(42 + 3 + varP)";

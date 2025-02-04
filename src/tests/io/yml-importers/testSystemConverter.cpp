@@ -37,13 +37,13 @@ using namespace Antares::Study;
 struct LibraryObjects
 {
     YmlModel::Model model1{.id = "node",
-                              .description = "description",
-                              .parameters = {{"cost", true, false}},
-                              .variables = {},
-                              .ports = {},
-                              .port_field_definitions = {},
-                              .constraints = {{"constraint1", "cost"}},
-                              .objective = ""};
+                           .description = "description",
+                           .parameters = {{"cost", true, false}},
+                           .variables = {},
+                           .ports = {},
+                           .port_field_definitions = {},
+                           .constraints = {{"constraint1", "cost"}},
+                           .objective = ""};
 
     YmlSystem::Parser parser;
     YmlModel::Library library;

@@ -102,13 +102,13 @@ BOOST_FIXTURE_TEST_CASE(portType_with_fields_properly_translated, Fixture)
 BOOST_FIXTURE_TEST_CASE(empty_model_properly_translated, Fixture)
 {
     YmlModel::Model model1{.id = "model1",
-                              .description = "description",
-                              .parameters = {{"param1", true, false}},
-                              .variables = {},
-                              .ports = {},
-                              .port_field_definitions = {},
-                              .constraints = {},
-                              .objective = "param1"};
+                           .description = "description",
+                           .parameters = {{"param1", true, false}},
+                           .variables = {},
+                           .ports = {},
+                           .port_field_definitions = {},
+                           .constraints = {},
+                           .objective = "param1"};
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);
     BOOST_REQUIRE_EQUAL(lib.Models().size(), 1);
@@ -120,13 +120,13 @@ BOOST_FIXTURE_TEST_CASE(empty_model_properly_translated, Fixture)
 BOOST_FIXTURE_TEST_CASE(model_parameters_properly_translated, Fixture)
 {
     YmlModel::Model model1{.id = "model1",
-                              .description = "description",
-                              .parameters = {{"param1", true, false}, {"param2", false, false}},
-                              .variables = {},
-                              .ports = {},
-                              .port_field_definitions{},
-                              .constraints{},
-                              .objective = ""};
+                           .description = "description",
+                           .parameters = {{"param1", true, false}, {"param2", false, false}},
+                           .variables = {},
+                           .ports = {},
+                           .port_field_definitions{},
+                           .constraints{},
+                           .objective = ""};
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);
     auto& model = lib.Models().at("model1");
@@ -176,13 +176,13 @@ BOOST_AUTO_TEST_CASE(model_ports_properly_translated, *boost::unit_test::disable
     YmlModel::Library library;
     Antares::Expressions::Registry<Antares::Expressions::Nodes::Node> registry;
     YmlModel::Model model1{.id = "model1",
-                              .description = "description",
-                              .parameters = {},
-                              .variables = {},
-                              .ports = {{"port1", "flow"}, {"port2", "impedance"}},
-                              .port_field_definitions = {},
-                              .constraints = {},
-                              .objective = ""};
+                           .description = "description",
+                           .parameters = {},
+                           .variables = {},
+                           .ports = {{"port1", "flow"}, {"port2", "impedance"}},
+                           .port_field_definitions = {},
+                           .constraints = {},
+                           .objective = ""};
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);
     [[maybe_unused]] auto& model = lib.Models().at("model1");
@@ -199,15 +199,15 @@ BOOST_AUTO_TEST_CASE(model_ports_properly_translated, *boost::unit_test::disable
 BOOST_FIXTURE_TEST_CASE(model_constraints_properly_translated, Fixture)
 {
     YmlModel::Model model1{.id = "model1",
-                              .description = "description",
-                              .parameters = {{"expression1", true, false},
-                                             {"expression2", true, false}},
-                              .variables = {},
-                              .ports = {},
-                              .port_field_definitions = {},
-                              .constraints = {{"constraint1", "expression1"},
-                                              {"constraint2", "expression2"}},
-                              .objective = ""};
+                           .description = "description",
+                           .parameters = {{"expression1", true, false},
+                                          {"expression2", true, false}},
+                           .variables = {},
+                           .ports = {},
+                           .port_field_definitions = {},
+                           .constraints = {{"constraint1", "expression1"},
+                                           {"constraint2", "expression2"}},
+                           .objective = ""};
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);
     auto& model = lib.Models().at("model1");
@@ -223,15 +223,14 @@ BOOST_FIXTURE_TEST_CASE(model_constraints_properly_translated, Fixture)
 // Test with 2 models
 BOOST_FIXTURE_TEST_CASE(multiple_models_properly_translated, Fixture)
 {
-    YmlModel::Model model1{
-      .id = "model1",
-      .description = "description",
-      .parameters = {{"param1", true, false}, {"param2", false, false}},
-      .variables = {{"varP", "7", "param2", YmlModel::ValueType::CONTINUOUS}},
-      .ports = {},
-      .port_field_definitions = {},
-      .constraints = {},
-      .objective = ""};
+    YmlModel::Model model1{.id = "model1",
+                           .description = "description",
+                           .parameters = {{"param1", true, false}, {"param2", false, false}},
+                           .variables = {{"varP", "7", "param2", YmlModel::ValueType::CONTINUOUS}},
+                           .ports = {},
+                           .port_field_definitions = {},
+                           .constraints = {},
+                           .objective = ""};
     YmlModel::Model model2{
       .id = "model2",
       .description = "description",

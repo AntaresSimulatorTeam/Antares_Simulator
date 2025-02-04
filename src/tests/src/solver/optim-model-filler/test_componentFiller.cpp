@@ -203,7 +203,9 @@ void LinearProblemBuildingFixture::buildLinearProblem(FillContext& time_scenario
     {
         fillers_ptr.push_back(component_filler.get());
     }
-    pb = make_unique<Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem>(false, "sirius");
+    pb = make_unique<Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem>(
+      false,
+      "sirius");
     LinearProblemBuilder linear_problem_builder(fillers_ptr);
     LinearProblemData dummy_data;
 
