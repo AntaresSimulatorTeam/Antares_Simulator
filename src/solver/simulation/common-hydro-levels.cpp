@@ -28,35 +28,6 @@ namespace Antares::Solver::Simulation
 {
 using Constants::nbHoursInAWeek;
 
-void computingHydroLevels(const Data::AreaList& areas,
-                          PROBLEME_HEBDO& problem,
-                          bool remixWasRun,
-                          bool computeAnyway)
-{
-    for (const auto& [_, area]: areas)
-    {
-        if (!area->hydro.reservoirManagement)
-        {
-            continue;
-        }
-
-        if (!computeAnyway && area->hydro.useHeuristicTarget != remixWasRun)
-        {
-            continue;
-        }
-
-        uint index = area->index;
-
-        double reservoirCapacity = area->hydro.reservoirCapacity;
-        RESULTATS_HORAIRES& weeklyResults = problem.ResultatsHoraires[index];
-        std::vector<double>& niv = weeklyResults.niveauxHoraires;
-        for (uint h = 0; h < nbHoursInAWeek; h++)
-        {
-            niv[h] = niv[h] * 100 / reservoirCapacity;
-        }
-    }
-}
-
 void interpolateWaterValue(const Data::AreaList& areas,
                            PROBLEME_HEBDO& problem,
                            const Date::Calendar& calendar,
@@ -95,14 +66,14 @@ void interpolateWaterValue(const Data::AreaList& areas,
 
         std::vector<double>& niv = weeklyResults.niveauxHoraires;
 
-        waterVal[0] = Data::getWaterValue(problem.previousSimulationFinalLevel[index] * 100
+        waterVal[0] = Data::getWaterValue(100 * problem.previousSimulationFinalLevel[index]
                                             / reservoirCapacity,
                                           area->hydro.waterValues,
                                           weekFirstDay);
 
         for (uint h = 1; h < nbHoursInAWeek; h++)
         {
-            waterVal[h] = Data::getWaterValue(niv[h - 1],
+            waterVal[h] = Data::getWaterValue(100 * niv[h - 1] / reservoirCapacity,
                                               area->hydro.waterValues,
                                               daysOfWeek[h / 24]);
         }
@@ -119,15 +90,11 @@ void updatingWeeklyFinalHydroLevel(const Data::AreaList& areas, PROBLEME_HEBDO& 
         }
 
         uint index = area->index;
-
         double reservoirCapacity = area->hydro.reservoirCapacity;
+        const RESULTATS_HORAIRES& weeklyResults = problem.ResultatsHoraires[index];
+        const std::vector<double>& niv = weeklyResults.niveauxHoraires;
 
-        RESULTATS_HORAIRES& weeklyResults = problem.ResultatsHoraires[index];
-
-        std::vector<double>& niv = weeklyResults.niveauxHoraires;
-
-        problem.previousSimulationFinalLevel[index] = niv[nbHoursInAWeek - 1] * reservoirCapacity
-                                                      / 100;
+        problem.previousSimulationFinalLevel[index] = niv[nbHoursInAWeek - 1];
     }
 }
 
