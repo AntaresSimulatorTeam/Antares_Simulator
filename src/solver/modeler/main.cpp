@@ -51,7 +51,7 @@ public:
         std::vector<LinearProblemFiller*> fillers_ptr;
         for (const auto& [_, component]: system_.Components())
         {
-            auto cf = std::make_unique<Antares::Optimization::ComponentFiller>(component);
+            auto cf = std::make_unique<Optimization::ComponentFiller>(component);
             fillers.push_back(std::move(cf));
         }
         for (auto& component_filler: fillers)
@@ -66,7 +66,7 @@ public:
     }
 
 private:
-    const Antares::Study::SystemModel::System& system_;
+    const Study::SystemModel::System& system_;
 };
 
 static void usage()
@@ -103,6 +103,19 @@ int main(int argc, const char** argv)
         const auto system = LoadFiles::loadSystem(studyPath, libraries);
         logs.info() << "System loaded";
         SystemLinearProblem system_linear_problem(system);
+
+        auto outputPath = studyPath / "output";
+        if (!parameters.noOutput)
+        {
+            logs.info() << "Output folder : " << outputPath;
+            if (!std::filesystem::is_directory(outputPath)
+                && !std::filesystem::create_directory(outputPath))
+            {
+                logs.error() << "Failed to create output directory. Exiting simulation.";
+                return EXIT_FAILURE;
+            }
+        }
+
         logs.info() << "linear problem of System loaded";
         OrtoolsLinearProblem ortools_linear_problem(true, parameters.solver);
 
@@ -116,8 +129,8 @@ int main(int argc, const char** argv)
         if (!parameters.noOutput)
         {
             logs.info() << "Writing problem.lp...";
-            auto mps_path = std::filesystem::current_path() / "problem.lp";
-            ortools_linear_problem.WriteLP(mps_path.string());
+            auto lp_path = outputPath / "problem.lp";
+            ortools_linear_problem.WriteLP(lp_path.string());
         }
 
         logs.info() << "Launching resolution...";
@@ -129,7 +142,7 @@ int main(int argc, const char** argv)
             if (!parameters.noOutput)
             {
                 logs.info() << "Writing variables...";
-                std::ofstream sol_out(std::filesystem::current_path() / "solution.csv");
+                std::ofstream sol_out(outputPath / "solution.csv");
                 for (const auto& [name, value]: solution->getOptimalValues())
                 {
                     sol_out << name << " " << value << std::endl;
