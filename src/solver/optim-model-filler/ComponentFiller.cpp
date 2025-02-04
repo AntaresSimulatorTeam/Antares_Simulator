@@ -89,10 +89,11 @@ void ComponentFiller::addStaticConstraint(Optimisation::LinearProblemApi::ILinea
     }
 }
 
-void ComponentFiller::addTimeDependentConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                                                  const LinearConstraint& linear_constraint,
-                                                  const std::string& constraint_id,
-                                                  unsigned int nb_cstr) const
+void ComponentFiller::addTimeDependentConstraints(
+  Optimisation::LinearProblemApi::ILinearProblem& pb,
+  const LinearConstraint& linear_constraint,
+  const std::string& constraint_id,
+  unsigned int nb_cstr) const
 {
     auto vect_ct = pb.addConstraint(linear_constraint.lb,
                                     linear_constraint.ub,

@@ -25,10 +25,10 @@
 
 #include <antares/antares/fatal-error.h>
 #include <antares/logs/logs.h>
-#include "antares/optimization-options/options.h"
-#include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
 #include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
+#include "antares/optimization-options/options.h"
+#include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
 #include "antares/solver/optimisation/LegacyFiller.h"
 #include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"

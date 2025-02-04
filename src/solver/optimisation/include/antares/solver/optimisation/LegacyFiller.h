@@ -5,28 +5,29 @@
 
 namespace Antares::Optimization
 {
-class LegacyFiller: public Antares::Optimisation::LinearProblemApi::LinearProblemFiller
+class LegacyFiller: public Optimisation::LinearProblemApi::LinearProblemFiller
 {
 public:
-    explicit LegacyFiller(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
-    void addVariables(Antares::Optimisation::LinearProblemApi::ILinearProblem& pb,
-                      Antares::Optimisation::LinearProblemApi::ILinearProblemData& data,
-                      Antares::Optimisation::LinearProblemApi::FillContext& ctx) override;
-    void addConstraints(Antares::Optimisation::LinearProblemApi::ILinearProblem& pb,
-                        Antares::Optimisation::LinearProblemApi::ILinearProblemData& data,
-                        Antares::Optimisation::LinearProblemApi::FillContext& ctx) override;
-    void addObjective(Antares::Optimisation::LinearProblemApi::ILinearProblem& pb,
-                      Antares::Optimisation::LinearProblemApi::ILinearProblemData& data,
-                      Antares::Optimisation::LinearProblemApi::FillContext& ctx) override;
+    explicit LegacyFiller(const PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
+    void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
+                      Optimisation::LinearProblemApi::ILinearProblemData& data,
+                      Optimisation::LinearProblemApi::FillContext& ctx) override;
+    void addConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
+                        Optimisation::LinearProblemApi::ILinearProblemData& data,
+                        Optimisation::LinearProblemApi::FillContext& ctx) override;
+    void addObjective(Optimisation::LinearProblemApi::ILinearProblem& pb,
+                      Optimisation::LinearProblemApi::ILinearProblemData& data,
+                      Optimisation::LinearProblemApi::FillContext& ctx) override;
 
 private:
-    const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe_;
+    const PROBLEME_SIMPLEXE_NOMME* problemeSimplexe_;
 
-    void CreateVariable(unsigned idxVar, Antares::Optimisation::LinearProblemApi::ILinearProblem& pb) const;
-    void CopyVariables(Antares::Optimisation::LinearProblemApi::ILinearProblem& pb) const;
-    void UpdateContraints(unsigned idxRow, Antares::Optimisation::LinearProblemApi::ILinearProblem& pb) const;
-    void CopyRows(Antares::Optimisation::LinearProblemApi::ILinearProblem& pb) const;
-    void CopyMatrix(Antares::Optimisation::LinearProblemApi::ILinearProblem& pb) const;
+    void CreateVariable(unsigned idxVar, Optimisation::LinearProblemApi::ILinearProblem& pb) const;
+    void CopyVariables(Optimisation::LinearProblemApi::ILinearProblem& pb) const;
+    void UpdateContraints(unsigned idxRow,
+                          Optimisation::LinearProblemApi::ILinearProblem& pb) const;
+    void CopyRows(Optimisation::LinearProblemApi::ILinearProblem& pb) const;
+    void CopyMatrix(Optimisation::LinearProblemApi::ILinearProblem& pb) const;
     std::string GetVariableName(unsigned index) const;
     std::string GetConstraintName(unsigned index) const;
 };
