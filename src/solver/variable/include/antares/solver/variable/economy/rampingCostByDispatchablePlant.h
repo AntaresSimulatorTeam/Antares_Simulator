@@ -233,7 +233,7 @@ public:
              i <= state.study.runtime.rangeLimits.hour[Data::rangeEnd];
              ++i)
         {
-            pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex].hour[i]
+            pValuesForTheCurrentYear[numSpace][state.thermalCluster->enabledIndex].hour[i]
               = state.thermalClusterRampingCostForYear[i];
         }
 
