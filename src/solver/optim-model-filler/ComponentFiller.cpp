@@ -39,14 +39,14 @@ ComponentFiller::ComponentFiller(const Study::SystemModel::Component& component)
 {
 }
 
-bool checkTimeSteps(Solver::Modeler::Api::FillContext& ctx)
+bool checkTimeSteps(Optimisation::LinearProblemApi::FillContext& ctx)
 {
     return ctx.getFirstTimeStep() <= ctx.getLastTimeStep();
 }
 
-void ComponentFiller::addVariables(Solver::Modeler::Api::ILinearProblem& pb,
-                                   Solver::Modeler::Api::ILinearProblemData& data,
-                                   Solver::Modeler::Api::FillContext& ctx)
+void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
+                                   Optimisation::LinearProblemApi::ILinearProblemData& data,
+                                   Optimisation::LinearProblemApi::FillContext& ctx)
 {
     if (!checkTimeSteps(ctx))
     {
@@ -75,7 +75,7 @@ void ComponentFiller::addVariables(Solver::Modeler::Api::ILinearProblem& pb,
     }
 }
 
-void ComponentFiller::addStaticConstraint(Solver::Modeler::Api::ILinearProblem& pb,
+void ComponentFiller::addStaticConstraint(Optimisation::LinearProblemApi::ILinearProblem& pb,
                                           const LinearConstraint& linear_constraint,
                                           const std::string& constraint_id) const
 {
@@ -89,7 +89,7 @@ void ComponentFiller::addStaticConstraint(Solver::Modeler::Api::ILinearProblem& 
     }
 }
 
-void ComponentFiller::addTimeDependentConstraints(Solver::Modeler::Api::ILinearProblem& pb,
+void ComponentFiller::addTimeDependentConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
                                                   const LinearConstraint& linear_constraint,
                                                   const std::string& constraint_id,
                                                   unsigned int nb_cstr) const
@@ -119,9 +119,9 @@ void ComponentFiller::addTimeDependentConstraints(Solver::Modeler::Api::ILinearP
     }
 }
 
-void ComponentFiller::addConstraints(Solver::Modeler::Api::ILinearProblem& pb,
-                                     Solver::Modeler::Api::ILinearProblemData& data,
-                                     Solver::Modeler::Api::FillContext& ctx)
+void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
+                                     Optimisation::LinearProblemApi::ILinearProblemData& data,
+                                     Optimisation::LinearProblemApi::FillContext& ctx)
 {
     ReadLinearConstraintVisitor visitor(evaluationContext_);
     for (const auto& constraint: component_.getModel()->getConstraints() | std::views::values)
@@ -147,9 +147,9 @@ void ComponentFiller::addConstraints(Solver::Modeler::Api::ILinearProblem& pb,
     }
 }
 
-void ComponentFiller::addObjective(Solver::Modeler::Api::ILinearProblem& pb,
-                                   Solver::Modeler::Api::ILinearProblemData& data,
-                                   Solver::Modeler::Api::FillContext& ctx)
+void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProblem& pb,
+                                   Optimisation::LinearProblemApi::ILinearProblemData& data,
+                                   Optimisation::LinearProblemApi::FillContext& ctx)
 {
     auto model = component_.getModel();
     if (model->Objective().Empty())

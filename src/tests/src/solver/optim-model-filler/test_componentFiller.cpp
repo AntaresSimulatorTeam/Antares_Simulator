@@ -25,9 +25,9 @@
 
 #include "antares/expressions/nodes/ExpressionsNodes.h"
 #include "antares/expressions/visitors/TimeIndex.h"
-#include "antares/solver/modeler/api/linearProblemBuilder.h"
-#include "antares/solver/modeler/dataSeries/linearProblemData.h"
-#include "antares/solver/modeler/ortoolsImpl/linearProblem.h"
+#include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
+#include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
+#include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/study/system-model/component.h"
 #include "antares/study/system-model/parameter.h"
@@ -35,8 +35,8 @@
 
 #include "unit_test_utils.h"
 
-using namespace Antares::Solver::Modeler::Api;
-using namespace Antares::Solver::Modeler::DataSeries;
+using namespace Antares::Optimisation::LinearProblemApi;
+using namespace Antares::Optimisation::LinearProblemDataImpl;
 using namespace Antares::Study::SystemModel;
 using namespace Antares::Optimization;
 using namespace Antares::Expressions;
@@ -203,7 +203,7 @@ void LinearProblemBuildingFixture::buildLinearProblem(FillContext& time_scenario
     {
         fillers_ptr.push_back(component_filler.get());
     }
-    pb = make_unique<Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProblem>(false, "sirius");
+    pb = make_unique<Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem>(false, "sirius");
     LinearProblemBuilder linear_problem_builder(fillers_ptr);
     LinearProblemData dummy_data;
 

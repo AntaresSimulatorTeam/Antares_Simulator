@@ -20,7 +20,7 @@ target_link_libraries(${PROJ}
         PRIVATE
         Antares::expressions
         Antares::antares-study-system-model
-        Antares::modeler_api
+        Antares::linear-problem-api
 )
 
 target_include_directories(${PROJ}

@@ -22,66 +22,56 @@
 #include <fstream>
 
 #include <antares/logs/logs.h>
-#include <antares/solver/modeler/api/linearProblemBuilder.h>
-#include <antares/solver/modeler/dataSeries/linearProblemData.h>
+#include <antares/optimisation/linear-problem-api/linearProblemBuilder.h>
+#include <antares/optimisation/linear-problem-data-impl/linearProblemData.h>
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
-#include <antares/solver/modeler/ortoolsImpl/linearProblem.h>
+#include <antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h>
 #include <antares/solver/modeler/parameters/parseModelerParameters.h>
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
 
-#include "api/include/antares/solver/modeler/api/linearProblem.h"
+#include "antares/optimisation/linear-problem-api/linearProblem.h"
 
-using namespace Antares::Solver::Modeler::OrtoolsImpl;
+using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares;
 using namespace Antares::Solver;
-using namespace Antares::Solver::Modeler::Api;
+using namespace Antares::Optimisation::LinearProblemApi;
 
-class SystemLinearProblem
-{
+class SystemLinearProblem {
 public:
-    explicit SystemLinearProblem(const Antares::Study::SystemModel::System& system):
-        system_(system)
-    {
+    explicit SystemLinearProblem(const Study::SystemModel::System &system): system_(system) {
     }
 
     ~SystemLinearProblem() = default;
 
-    void Provide(ILinearProblem& pb, const ModelerParameters& parameters)
-    {
-        std::vector<std::unique_ptr<Antares::Optimization::ComponentFiller>> fillers;
-        std::vector<Antares::Solver::Modeler::Api::LinearProblemFiller*> fillers_ptr;
-        for (const auto& [_, component]: system_.Components())
-        {
+    void Provide(ILinearProblem &pb, const ModelerParameters &parameters) {
+        std::vector<std::unique_ptr<Optimization::ComponentFiller> > fillers;
+        std::vector<LinearProblemFiller *> fillers_ptr;
+        for (const auto &[_, component]: system_.Components()) {
             auto cf = std::make_unique<Antares::Optimization::ComponentFiller>(component);
             fillers.push_back(std::move(cf));
         }
-        for (auto& component_filler: fillers)
-        {
+        for (auto &component_filler: fillers) {
             fillers_ptr.push_back(component_filler.get());
         }
 
         LinearProblemBuilder linear_problem_builder(fillers_ptr);
-        Modeler::DataSeries::LinearProblemData dummy_data;
+        Optimisation::LinearProblemDataImpl::LinearProblemData dummy_data;
         FillContext dummy_time_scenario_ctx = {parameters.firstTimeStep, parameters.lastTimeStep};
         linear_problem_builder.build(pb, dummy_data, dummy_time_scenario_ctx);
     }
 
 private:
-    const Antares::Study::SystemModel::System& system_;
+    const Antares::Study::SystemModel::System &system_;
 };
 
-static void usage()
-{
+static void usage() {
     std::cout << "Usage:\n"
-              << "antares-modeler <path/to/study>\n";
+            << "antares-modeler <path/to/study>\n";
 }
 
-int main(int argc, const char** argv)
-{
+int main(int argc, const char **argv) {
     logs.applicationName("modeler");
-    if (argc <= 1)
-
-    {
+    if (argc <= 1) {
         logs.error() << "No study path provided, exiting.";
         usage();
         return EXIT_FAILURE;
@@ -90,14 +80,12 @@ int main(int argc, const char** argv)
     std::filesystem::path studyPath(argv[1]);
     logs.info() << "Study path: " << studyPath;
 
-    if (!std::filesystem::is_directory(studyPath))
-    {
+    if (!std::filesystem::is_directory(studyPath)) {
         logs.error() << "The path provided isn't a valid directory, exiting";
         return EXIT_FAILURE;
     }
 
-    try
-    {
+    try {
         const auto parameters = LoadFiles::loadParameters(studyPath);
         logs.info() << "Parameters loaded";
         const auto libraries = LoadFiles::loadLibraries(studyPath);
@@ -115,40 +103,33 @@ int main(int argc, const char** argv)
         logs.info() << "Number of variables: " << ortools_linear_problem.variableCount();
         logs.info() << "Number of constraints: " << ortools_linear_problem.constraintCount();
 
-        if (!parameters.noOutput)
-        {
+        if (!parameters.noOutput) {
             logs.info() << "Writing problem.lp...";
             auto mps_path = std::filesystem::current_path() / "problem.lp";
             ortools_linear_problem.WriteLP(mps_path.string());
         }
 
         logs.info() << "Launching resolution...";
-        auto* solution = ortools_linear_problem.solve(parameters.solverLogs);
-        switch (solution->getStatus())
-        {
-        case Antares::Solver::Modeler::Api::MipStatus::OPTIMAL:
-        case Antares::Solver::Modeler::Api::MipStatus::FEASIBLE:
-            if (!parameters.noOutput)
-            {
-                logs.info() << "Writing variables...";
-                std::ofstream sol_out(std::filesystem::current_path() / "solution.csv");
-                for (const auto& [name, value]: solution->getOptimalValues())
-                {
-                    sol_out << name << " " << value << std::endl;
+        auto *solution = ortools_linear_problem.solve(parameters.solverLogs);
+        switch (solution->getStatus()) {
+            case MipStatus::OPTIMAL:
+            case MipStatus::FEASIBLE:
+                if (!parameters.noOutput) {
+                    logs.info() << "Writing variables...";
+                    std::ofstream sol_out(std::filesystem::current_path() / "solution.csv");
+                    for (const auto &[name, value]: solution->getOptimalValues()) {
+                        sol_out << name << " " << value << std::endl;
+                    }
                 }
-            }
-            break;
-        default:
-            logs.error() << "Problem during linear optimization";
+                break;
+            default:
+                logs.error() << "Problem during linear optimization";
         }
-    }
-    catch (const LoadFiles::ErrorLoadingYaml&)
-    {
+    } catch (const LoadFiles::ErrorLoadingYaml &) {
         logs.error() << "Error while loading files, exiting";
         return EXIT_FAILURE;
     }
-    catch (const std::exception& e)
-    {
+    catch (const std::exception &e) {
         logs.error() << e.what();
         logs.error() << "Error during the execution, exiting";
         return EXIT_FAILURE;

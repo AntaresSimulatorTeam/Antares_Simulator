@@ -1,6 +1,6 @@
 #include "antares/solver/optimisation/LegacyFiller.h"
 
-using namespace Antares::Solver::Modeler::Api;
+using namespace Antares::Optimisation::LinearProblemApi;
 
 namespace Antares::Optimization
 {
