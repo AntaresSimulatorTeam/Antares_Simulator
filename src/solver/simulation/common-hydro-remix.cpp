@@ -294,23 +294,20 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
           const auto& dtgMrgArray = area.scratchpad[numSpace].dispatchableGenerationMargin;
           const std::vector<double> dtgMrg(dtgMrgArray, dtgMrgArray + HOURS_IN_WEEK);
 
-          auto [H, U, L] = shavePeaksByRemixingHydro(DispatchGen,
-                                                     hydroGen,
-                                                     unsupE,
-                                                     hydroPmax,
-                                                     hydroPmin,
-                                                     initLevel,
-                                                     capacity,
-                                                     efficiency,
-                                                     reservoirManagement,
-                                                     inflows,
-                                                     ovf,
-                                                     pump,
-                                                     spillage,
-                                                     dtgMrg);
-          hydroGen = H;
-          unsupE = U;
-          levels = L;
+          std::tie(hydroGen, unsupE, levels) = shavePeaksByRemixingHydro(DispatchGen,
+                                                                         hydroGen,
+                                                                         unsupE,
+                                                                         hydroPmax,
+                                                                         hydroPmin,
+                                                                         initLevel,
+                                                                         capacity,
+                                                                         efficiency,
+                                                                         reservoirManagement,
+                                                                         inflows,
+                                                                         ovf,
+                                                                         pump,
+                                                                         spillage,
+                                                                         dtgMrg);
       });
 }
 
