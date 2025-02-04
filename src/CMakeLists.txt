@@ -264,6 +264,7 @@ OMESSAGE("") # empty line
 
 # Sub Directories
 add_subdirectory(api)
+add_subdirectory(io)
 add_subdirectory(libs) 		#antares-core fswalker
 
 if(BUILD_UI)

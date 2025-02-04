@@ -1,6 +1,6 @@
 project(Expressions)
 
-
+add_subdirectory(antlr-interface)
 set(SRC_Expressions
         nodes/PortFieldNode.cpp
         nodes/PortFieldSumNode.cpp

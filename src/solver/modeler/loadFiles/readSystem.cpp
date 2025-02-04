@@ -22,15 +22,16 @@
 #include <yaml-cpp/yaml.h>
 
 #include <antares/io/file.h>
+#include <antares/io/inputs/yml-system/converter.h>
+#include <antares/io/inputs/yml-system/parser.h>
 #include <antares/logs/logs.h>
-#include <antares/solver/systemParser/converter.h>
-#include <antares/solver/systemParser/parser.h>
 #include "antares/solver/modeler/loadFiles/loadFiles.h"
 
 namespace fs = std::filesystem;
 
 namespace Antares::Solver::LoadFiles
 {
+using namespace IO::Inputs;
 
 Study::SystemModel::System loadSystem(const fs::path& studyPath,
                                       const std::vector<Study::SystemModel::Library>& libraries)
@@ -47,8 +48,8 @@ Study::SystemModel::System loadSystem(const fs::path& studyPath,
         throw ErrorLoadingYaml(e.what());
     }
 
-    SystemParser::Parser parser;
-    SystemParser::System systemObj;
+    YmlSystem::Parser parser;
+    YmlSystem::System systemObj;
     try
     {
         systemObj = parser.parse(systemStr);
