@@ -213,8 +213,6 @@ bool Adequacy::year(Progression::Task& progression,
                                              resultWriter,
                                              simulationObserver_.get());
 
-                computingHydroLevels(study.areas, currentProblem, false);
-
                 RemixHydroForAllAreas(study.areas,
                                       currentProblem,
                                       study.parameters.shedding.policy,

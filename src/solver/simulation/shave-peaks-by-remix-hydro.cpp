@@ -155,7 +155,7 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
                                            const std::vector<double>& HydroPmin,
                                            double initialLevel,
                                            double reservoirCapacity,
-                                           double eff,
+                                           double pumpingEfficiency,
                                            bool reservoirManagement,
                                            const std::vector<double>& inflows,
                                            const std::vector<double>& overflow,
@@ -166,10 +166,12 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
     std::vector<double> levels(DispatchGen.size());
     if (!levels.empty() && reservoirManagement)
     {
-        levels[0] = initialLevel + inflows[0] - overflow[0] + eff * pump[0] - HydroGen[0];
+        levels[0] = initialLevel + inflows[0] - overflow[0] + pumpingEfficiency * pump[0]
+                    - HydroGen[0];
         for (size_t h = 1; h < levels.size(); ++h)
         {
-            levels[h] = levels[h - 1] + inflows[h] - overflow[h] + eff * pump[h] - HydroGen[h];
+            levels[h] = levels[h - 1] + inflows[h] - overflow[h] + pumpingEfficiency * pump[h]
+                        - HydroGen[h];
         }
     }
 
@@ -324,10 +326,11 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
                        std::plus<>());
         if (reservoirManagement)
         {
-            levels[0] = initialLevel + inflows[0] - overflow[0] + eff * pump[0] - OutHydroGen[0];
+            levels[0] = initialLevel + inflows[0] - overflow[0] + pumpingEfficiency * pump[0]
+                        - OutHydroGen[0];
             for (size_t h = 1; h < levels.size(); ++h)
             {
-                levels[h] = levels[h - 1] + inflows[h] - overflow[h] + eff * pump[h]
+                levels[h] = levels[h - 1] + inflows[h] - overflow[h] + pumpingEfficiency * pump[h]
                             - OutHydroGen[h];
             }
         }
