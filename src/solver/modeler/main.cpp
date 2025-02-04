@@ -90,7 +90,7 @@ int main(int argc, const char** argv)
     std::filesystem::path studyPath(argv[1]);
     logs.info() << "Study path: " << studyPath;
 
-    if (!is_directory(studyPath))
+    if (!std::filesystem::is_directory(studyPath))
     {
         logs.error() << "The path provided isn't a valid directory, exiting";
         return EXIT_FAILURE;
@@ -110,14 +110,11 @@ int main(int argc, const char** argv)
         if (!parameters.noOutput)
         {
             logs.info() << "Output folder : " << outputPath;
-            if (!is_directory(outputPath))
+            if (!std::filesystem::is_directory(outputPath)
+                && !std::filesystem::create_directory(outputPath))
             {
-                if (!create_directory(outputPath))
-                {
-                    logs.error() << "Failed to create output directory. Exiting simulation.";
-                    throw std::runtime_error(
-                      "Failed to create output directory. Exiting simulation.");
-                }
+                logs.error() << "Failed to create output directory. Exiting simulation.";
+                return EXIT_FAILURE;
             }
         }
 
@@ -134,8 +131,8 @@ int main(int argc, const char** argv)
         if (!parameters.noOutput)
         {
             logs.info() << "Writing problem.lp...";
-            auto mps_path = outputPath / "problem.lp";
-            ortools_linear_problem.WriteLP(mps_path.string());
+            auto lp_path = outputPath / "problem.lp";
+            ortools_linear_problem.WriteLP(lp_path.string());
         }
 
         logs.info() << "Launching resolution...";
