@@ -69,8 +69,7 @@ void PartHydro::reset()
     powerToLevel = false;
     leewayLowerBound = 1.;
     leewayUpperBound = 1.;
-    overflowCost = 0.;
-    levelCost = 0.;
+    overflowSpilledCostDifference = 1.;
 
     inflowPattern.reset(1, DAYS_PER_YEAR, true);
     inflowPattern.fillColumn(0, 1.0);
@@ -326,14 +325,13 @@ bool PartHydro::LoadFromFolder(Study& study, const fs::path& folder)
               && ret;
     }
 
-    if (IniFile::Section* section = ini.find("overflow cost"))
+    if (IniFile::Section* section = ini.find("overflow spilled cost difference"))
     {
-        ret = loadProperties(study, section->firstProperty, path, &PartHydro::overflowCost) && ret;
-    }
-
-    if (IniFile::Section* section = ini.find("level cost"))
-    {
-        ret = loadProperties(study, section->firstProperty, path, &PartHydro::levelCost) && ret;
+        ret = loadProperties(study,
+                             section->firstProperty,
+                             path,
+                             &PartHydro::overflowSpilledCostDifference)
+              && ret;
     }
 
     return ret;
@@ -582,14 +580,8 @@ bool PartHydro::SaveToFolder(const AreaList& areas, const AnyString& folder)
           {
               allSections.sPowerToLevel->add(area.id, true);
           }
-          if (area.hydro.overflowCost)
-          {
-              allSections.sOverflowCost->add(area.id, area.hydro.overflowCost);
-          }
-          if (area.hydro.levelCost)
-          {
-              allSections.sLevelCost->add(area.id, area.hydro.levelCost);
-          }
+
+          allSections.sOverflowCost->add(area.id, area.hydro.overflowSpilledCostDifference);
 
           // max hours gen
           buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP

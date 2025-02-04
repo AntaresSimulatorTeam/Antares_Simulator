@@ -34,6 +34,8 @@
 using namespace Antares;
 using namespace Antares::Data;
 
+constexpr double LEVEL_COST = -1.e-6;
+
 static void importShortTermStorages(
   const AreaList& areas,
   std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorageOut)
@@ -167,8 +169,9 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         problem.CoutDeDefaillanceNegative[i] = area.thermal.spilledEnergyCost;
 
         // Hydraulic
-        problem.CoutDeDebordement[i] = area.hydro.overflowCost;
-        problem.CoutDeRemplissage[i] = area.hydro.levelCost;
+        problem.CoutDeDebordement[i] = area.thermal.spilledEnergyCost
+                                       + area.hydro.overflowSpilledCostDifference;
+        problem.CoutDeRemplissage[i] = LEVEL_COST;
 
         problem.DefaillanceNegativeUtiliserPMinThermique[i] = (anoOtherDispatchPower
                                                                & area.nodalOptimization)
