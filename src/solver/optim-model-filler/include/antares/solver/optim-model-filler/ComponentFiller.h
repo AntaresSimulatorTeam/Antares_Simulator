@@ -25,9 +25,17 @@
 #include <antares/study/system-model/component.h>
 #include "antares/solver/expressions/visitors/EvaluationContext.h"
 
+#include "ReadLinearConstraintVisitor.h"
+
 namespace Antares::Study::SystemModel
 {
 class Component;
+class Variable;
+} // namespace Antares::Study::SystemModel
+
+namespace Antares::Solver::Visitors
+{
+class EvalVisitor;
 }
 
 namespace Antares::Optimization
@@ -46,17 +54,32 @@ public:
     explicit ComponentFiller(const Study::SystemModel::Component& component);
 
     void addVariables(Solver::Modeler::Api::ILinearProblem& pb,
-                      Solver::Modeler::Api::LinearProblemData& data,
+                      Solver::Modeler::Api::ILinearProblemData& data,
                       Solver::Modeler::Api::FillContext& ctx) override;
+
+    void addStaticConstraint(Solver::Modeler::Api::ILinearProblem& pb,
+                             const LinearConstraint& linear_constraint,
+                             const std::string& constraint_id) const;
+
+    void addTimeDependentConstraints(Solver::Modeler::Api::ILinearProblem& pb,
+                                     const LinearConstraint& linear_constraint,
+                                     const std::string& constraint_id,
+                                     unsigned int nb_cstr) const;
+
     void addConstraints(Solver::Modeler::Api::ILinearProblem& pb,
-                        Solver::Modeler::Api::LinearProblemData& data,
+                        Solver::Modeler::Api::ILinearProblemData& data,
                         Solver::Modeler::Api::FillContext& ctx) override;
     void addObjective(Solver::Modeler::Api::ILinearProblem& pb,
-                      Solver::Modeler::Api::LinearProblemData& data,
+                      Solver::Modeler::Api::ILinearProblemData& data,
                       Solver::Modeler::Api::FillContext& ctx) override;
 
 private:
+    static bool IsThisConstraintTimeDependent(const Solver::Nodes::Node* node);
+
+    bool IsThisVariableTimeDependent(const std::string& var_id) const;
+
     const Study::SystemModel::Component& component_;
     Solver::Visitors::EvaluationContext evaluationContext_;
+    const std::map<std::string, Study::SystemModel::Variable>& modelVariable_;
 };
 } // namespace Antares::Optimization

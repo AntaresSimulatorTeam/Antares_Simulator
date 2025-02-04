@@ -21,9 +21,15 @@
 #pragma once
 
 #include <string>
+#include <unordered_map>
 
 #include "expression.h"
 #include "parameter.h"
+
+namespace Antares::Solver::Visitors
+{
+enum class TimeIndex : unsigned int;
+}
 
 namespace Antares::Study::SystemModel
 {

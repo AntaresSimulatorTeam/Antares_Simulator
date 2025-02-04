@@ -23,6 +23,7 @@
 #include <string>
 
 #include "valueType.h"
+#include "timeAndScenarioType.h"
 
 namespace Antares::Study::SystemModel
 {
@@ -35,22 +36,7 @@ namespace Antares::Study::SystemModel
 class Parameter
 {
 public:
-    /** Using enum class to avoid primitive obsession. Mainly prevent headhaches when reading
-     * Parameter("Param", ValueType::FLOAT, false, true)
-     * Avoid mixing wich value is which boolean parameter
-     */
 
-    enum class TimeDependent : bool
-    {
-        NO = false,
-        YES = true
-    };
-
-    enum class ScenarioDependent : bool
-    {
-        NO = false,
-        YES = true
-    };
 
     explicit Parameter(std::string id,
                        TimeDependent timeDependent,

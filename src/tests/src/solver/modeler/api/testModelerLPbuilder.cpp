@@ -23,6 +23,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <antares/solver/modeler/api/linearProblemBuilder.h>
+#include <antares/solver/modeler/dataSeries/linearProblemData.h>
 #include <antares/solver/modeler/ortoolsImpl/linearProblem.h>
 
 #include "mock-fillers/FillerContext.h"
@@ -31,6 +32,7 @@
 #include "mock-fillers/TwoVarsTwoConstraintsFiller.h"
 
 using namespace Antares::Solver::Modeler::Api;
+using namespace Antares::Solver::Modeler::DataSeries;
 using namespace Antares::Solver::Modeler::OrtoolsImpl;
 
 struct Fixture

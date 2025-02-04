@@ -278,7 +278,7 @@ public:
         for (auto& cluster: area->thermal.list.each_enabled())
         {
             pValuesForTheCurrentYear[numSpace][cluster->groupID][state.hourInTheYear]
-              += thermal[area->index].thermalClustersProductions[cluster->areaWideIndex];
+              += thermal[area->index].thermalClustersProductions[cluster->enabledIndex];
         }
 
         // Next variable

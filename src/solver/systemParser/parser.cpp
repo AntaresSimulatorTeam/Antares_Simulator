@@ -23,7 +23,7 @@
 
 #include "antares/solver/systemParser/system.h"
 
-#include "encoders.hxx"
+#include "decoders.hxx"
 
 namespace Antares::Solver::SystemParser
 {

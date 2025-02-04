@@ -198,15 +198,6 @@ public:
     };
 
 public:
-    SpatialAggregate()
-    {
-    }
-
-    ~SpatialAggregate()
-    {
-        delete[] pValuesForTheCurrentYear;
-    }
-
     void initializeFromStudy(Data::Study& study)
     {
         typedef

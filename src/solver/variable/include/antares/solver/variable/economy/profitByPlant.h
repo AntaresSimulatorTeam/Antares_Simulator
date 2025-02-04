@@ -82,8 +82,8 @@ struct VCardProfitByPlant
     static constexpr uint8_t isPossiblyNonApplicable = 0;
 
     typedef IntermediateValues IntermediateValuesDeepType;
-    typedef IntermediateValues* IntermediateValuesBaseType;
-    typedef IntermediateValuesBaseType* IntermediateValuesType;
+    typedef std::vector<IntermediateValues> IntermediateValuesBaseType;
+    typedef std::vector<IntermediateValuesBaseType> IntermediateValuesType;
 }; // class VCard
 
 /*!
@@ -127,18 +127,8 @@ public:
 
 public:
     ProfitByPlant():
-        pValuesForTheCurrentYear(nullptr),
         pNbClustersOfArea(0)
     {
-    }
-
-    ~ProfitByPlant()
-    {
-        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-        {
-            delete[] pValuesForTheCurrentYear[numSpace];
-        }
-        delete[] pValuesForTheCurrentYear;
     }
 
     void initializeFromStudy(Data::Study& study)
@@ -151,7 +141,7 @@ public:
     {
         // Get the number of years in parallel
         pNbYearsParallel = study->maxNbYearsInParallel;
-        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
+        pValuesForTheCurrentYear.resize(pNbYearsParallel);
 
         // Get the area
         pNbClustersOfArea = area->thermal.list.enabledCount();
@@ -160,8 +150,7 @@ public:
             AncestorType::pResults.resize(pNbClustersOfArea);
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
             {
-                pValuesForTheCurrentYear[numSpace] = new VCardType::IntermediateValuesDeepType
-                  [pNbClustersOfArea];
+                pValuesForTheCurrentYear[numSpace].resize(pNbClustersOfArea);
             }
 
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
@@ -180,11 +169,6 @@ public:
         }
         else
         {
-            for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-            {
-                pValuesForTheCurrentYear[numSpace] = nullptr;
-            }
-
             AncestorType::pResults.clear();
         }
 
@@ -281,11 +265,11 @@ public:
         for (auto& cluster: area->thermal.list.each_enabled())
         {
             double hourlyClusterProduction = thermal[area->index]
-                                               .thermalClustersProductions[cluster->areaWideIndex];
+                                               .thermalClustersProductions[cluster->enabledIndex];
             uint tsIndex = cluster->series.timeseriesNumbers[state.year];
 
             // Thermal cluster profit
-            pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[hourInTheYear]
+            pValuesForTheCurrentYear[numSpace][cluster->enabledIndex].hour[hourInTheYear]
               = std::max((hourlyClusterProduction - cluster->PthetaInf[hourInTheYear]), 0.)
                 * (-areaMarginalCosts[hourInTheWeek]
                    - cluster->getCostProvider().getMarginalCost(tsIndex, hourInTheYear));
@@ -299,7 +283,7 @@ public:
       unsigned int,
       unsigned int numSpace) const
     {
-        return pValuesForTheCurrentYear[numSpace]->hour;
+        return pValuesForTheCurrentYear[numSpace][0].hour;
     }
 
     void localBuildAnnualSurveyReport(SurveyResults& results,
@@ -321,7 +305,7 @@ public:
                 // Write the data for the current year
                 results.variableCaption = cluster->name(); // VCardType::Caption();
                 results.variableUnit = VCardType::Unit();
-                pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex]
+                pValuesForTheCurrentYear[numSpace][cluster->enabledIndex]
                   .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
             }
         }

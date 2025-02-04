@@ -28,22 +28,6 @@ namespace Solver
 namespace Variable
 {
 template<class NextT>
-inline SetsOfAreas<NextT>::SetsOfAreas()
-{
-    // Do nothing
-}
-
-template<class NextT>
-inline SetsOfAreas<NextT>::~SetsOfAreas()
-{
-    // Releasing the memory occupied by the areas
-    for (typename SetOfAreasVector::iterator i = pBegin; i != pEnd; ++i)
-    {
-        delete *i;
-    }
-}
-
-template<class NextT>
 void SetsOfAreas<NextT>::initializeFromStudy(Data::Study& study)
 {
     using namespace Antares;
@@ -74,8 +58,7 @@ void SetsOfAreas<NextT>::initializeFromStudy(Data::Study& study)
             continue;
         }
 
-        // Instancing a new set of variables of the area
-        NextType* n = new NextType();
+        auto n = std::make_unique<NextT>();
 
         // Initialize the variables
         // From the study
@@ -90,8 +73,8 @@ void SetsOfAreas<NextT>::initializeFromStudy(Data::Study& study)
         // is variable's column(s) printed in output (set of areas) reports ?
         n->getPrintStatusFromStudy(study);
 
-        // Adding the variables for the area in the list
-        pSetsOfAreas.push_back(n);
+        pSetsOfAreas.push_back(std::move(n));
+
         auto* originalSet = &sets[setIndex];
         assert(originalSet != NULL);
         assert(!originalSet->empty());
@@ -99,10 +82,6 @@ void SetsOfAreas<NextT>::initializeFromStudy(Data::Study& study)
 
         pNames.push_back(setname);
     }
-
-    // Initializing iterators
-    pBegin = pSetsOfAreas.begin();
-    pEnd = pSetsOfAreas.end();
 }
 
 template<class NextT>
@@ -255,12 +234,12 @@ void SetsOfAreas<NextT>::buildDigest(SurveyResults& results, int digestLevel, in
         results.data.area = nullptr;
         results.data.rowIndex = 0;
 
-        for (auto i = pBegin; i != pEnd; ++i)
+        for (auto& set: pSetsOfAreas)
         {
             results.data.columnIndex = 0;
             results.data.rowCaptions[results.data.rowIndex].clear()
               << "@ " << pNames[results.data.rowIndex];
-            (*i)->buildDigest(results, digestLevel, dataLevel);
+            set->buildDigest(results, digestLevel, dataLevel);
             ++results.data.rowIndex;
         }
     }

@@ -38,9 +38,8 @@ static Model createModelWithParameters()
 {
     ModelBuilder model_builder;
     return model_builder.withId("model")
-      .withParameters(
-        {Parameter("param1", Parameter::TimeDependent::NO, Parameter::ScenarioDependent::NO),
-         Parameter("param2", Parameter::TimeDependent::NO, Parameter::ScenarioDependent::NO)})
+      .withParameters({Parameter("param1", TimeDependent::NO, ScenarioDependent::NO),
+                       Parameter("param2", TimeDependent::NO, ScenarioDependent::NO)})
       .build();
 }
 

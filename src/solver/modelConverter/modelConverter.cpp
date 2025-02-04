@@ -21,6 +21,7 @@
 
 #include "antares/solver/modelConverter/modelConverter.h"
 
+#include "antares/solver/expressions/visitors/TimeIndex.h"
 #include "antares/solver/modelConverter/convertorVisitor.h"
 #include "antares/study/system-model/constraint.h"
 #include "antares/study/system-model/expression.h"
@@ -49,6 +50,7 @@ std::vector<Antares::Study::SystemModel::PortType> convertTypes(
 {
     // Convert portTypes to Antares::Study::SystemModel::PortType
     std::vector<Antares::Study::SystemModel::PortType> out;
+    out.reserve(library.port_types.size());
     for (const auto& portType: library.port_types)
     {
         std::vector<Antares::Study::SystemModel::PortField> fields;
@@ -74,15 +76,14 @@ std::vector<Antares::Study::SystemModel::PortType> convertTypes(
 std::vector<Antares::Study::SystemModel::Parameter> convertParameters(
   const Antares::Solver::ModelParser::Model& model)
 {
-    std::vector<Antares::Study::SystemModel::Parameter> parameters;
+    namespace SM = Antares::Study::SystemModel;
+    std::vector<SM::Parameter> parameters;
+    parameters.reserve(model.parameters.size());
     for (const auto& parameter: model.parameters)
     {
-        parameters.emplace_back(
-          parameter.id,
-          static_cast<Antares::Study::SystemModel::Parameter::TimeDependent>(
-            parameter.time_dependent),
-          static_cast<Antares::Study::SystemModel::Parameter::ScenarioDependent>(
-            parameter.scenario_dependent));
+        parameters.emplace_back(parameter.id,
+                                SM::fromBool<SM::TimeDependent>(parameter.time_dependent),
+                                SM::fromBool<SM::ScenarioDependent>(parameter.scenario_dependent));
     }
     return parameters;
 }
@@ -117,19 +118,22 @@ Antares::Study::SystemModel::ValueType convertType(Antares::Solver::ModelParser:
  */
 std::vector<Antares::Study::SystemModel::Variable> convertVariables(const ModelParser::Model& model)
 {
-    std::vector<Antares::Study::SystemModel::Variable> variables;
+    namespace SM = Antares::Study::SystemModel;
+
+    std::vector<SM::Variable> variables;
+    variables.reserve(model.variables.size());
     for (const auto& variable: model.variables)
     {
-        Antares::Study::SystemModel::Expression lb(variable.lower_bound,
-                                                   convertExpressionToNode(variable.lower_bound,
-                                                                           model));
-        Antares::Study::SystemModel::Expression ub(variable.upper_bound,
-                                                   convertExpressionToNode(variable.upper_bound,
-                                                                           model));
+        SM::Expression lb(variable.lower_bound,
+                          convertExpressionToNode(variable.lower_bound, model));
+        SM::Expression ub(variable.upper_bound,
+                          convertExpressionToNode(variable.upper_bound, model));
         variables.emplace_back(variable.id,
                                std::move(lb),
                                std::move(ub),
-                               convertType(variable.variable_type));
+                               convertType(variable.variable_type),
+                               SM::fromBool<SM::TimeDependent>(variable.time_dependent),
+                               SM::fromBool<SM::ScenarioDependent>(variable.scenario_dependent));
     }
 
     return variables;
@@ -151,12 +155,13 @@ std::vector<Antares::Study::SystemModel::Constraint> convertConstraints(
   const Antares::Solver::ModelParser::Model& model)
 {
     std::vector<Antares::Study::SystemModel::Constraint> constraints;
+    constraints.reserve(model.constraints.size());
     for (const auto& constraint: model.constraints)
     {
-        auto expr = convertExpressionToNode(constraint.expression, model);
+        auto nodeRegistry = convertExpressionToNode(constraint.expression, model);
         constraints.emplace_back(constraint.id,
                                  Antares::Study::SystemModel::Expression{constraint.expression,
-                                                                         std::move(expr)});
+                                                                         std::move(nodeRegistry)});
     }
     return constraints;
 }
@@ -171,6 +176,7 @@ std::vector<Antares::Study::SystemModel::Model> convertModels(
   const Antares::Solver::ModelParser::Library& library)
 {
     std::vector<Antares::Study::SystemModel::Model> models;
+    models.reserve(library.models.size());
     for (const auto& model: library.models)
     {
         Antares::Study::SystemModel::ModelBuilder modelBuilder;

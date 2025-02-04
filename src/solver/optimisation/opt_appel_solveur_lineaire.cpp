@@ -28,6 +28,7 @@
 #include "antares/optimization-options/options.h"
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
 #include "antares/solver/modeler/api/linearProblemBuilder.h"
+#include "antares/solver/modeler/dataSeries/linearProblemData.h"
 #include "antares/solver/optimisation/LegacyFiller.h"
 #include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
@@ -37,6 +38,7 @@
 
 using namespace operations_research;
 using namespace Antares::Solver::Modeler::Api;
+using namespace Antares::Solver::Modeler::DataSeries;
 using namespace Antares::Solver::Modeler::OrtoolsImpl;
 
 using Antares::Solver::IResultWriter;

@@ -153,15 +153,13 @@ void ClusterList<ClusterT>::rebuildIndexes()
     unsigned int index = 0;
     for (auto& c: allClusters_)
     {
-        c->areaWideIndex = index;
-        index++;
+        c->areaWideIndex = index++;
     }
 
     index = 0;
     for (auto& c: each_enabled())
     {
-        c->areaWideIndex = index;
-        index++;
+        c->enabledIndex = index++;
     }
 }
 
