@@ -505,7 +505,6 @@ bool PartHydro::SaveToFolder(const AreaList& areas, const AnyString& folder)
         IniFile::Section* sLeewayUp;
         IniFile::Section* spumpingEfficiency;
         IniFile::Section* sOverflowCost;
-        IniFile::Section* sLevelCost;
 
         AllSections(IniFile& ini):
             s(ini.addSection("inter-daily-breakdown")),
@@ -523,8 +522,7 @@ bool PartHydro::SaveToFolder(const AreaList& areas, const AnyString& folder)
             sLeewayLow(ini.addSection("leeway low")),
             sLeewayUp(ini.addSection("leeway up")),
             spumpingEfficiency(ini.addSection("pumping efficiency")),
-            sOverflowCost(ini.addSection("overflow cost")),
-            sLevelCost(ini.addSection("level cost"))
+            sOverflowCost(ini.addSection("overflow spilled cost difference"))
         {
         }
     };
