@@ -119,7 +119,6 @@ public:
     const Type& operator[](const uint index) const;
     //@}
 
-public:
     //! Range
     Antares::Data::StudyRangeLimits* pRange;
     //! Calendar, from the study, but dedicated to the output (with leap year)
@@ -137,17 +136,6 @@ public:
     mutable Antares::Memory::Stored<Type>::Type hour;
     //! Year
     Type year;
-
-private:
-    // non copyable
-    IntermediateValues(const IntermediateValues&)
-    {
-    }
-
-    IntermediateValues& operator=(const IntermediateValues&)
-    {
-        return *this;
-    }
 
     template<uint Size, class VCardT, class A>
     void internalExportAnnualValues(SurveyResults& report, const A& array, bool annual) const;

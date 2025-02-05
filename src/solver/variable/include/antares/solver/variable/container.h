@@ -55,18 +55,6 @@ public:
     };
 
 public:
-    //! \name Constructor & Destructor
-    //@{
-    /*!
-    ** \brief Default Constructor
-    */
-    List();
-    /*!
-    ** \brief Destructor
-    */
-    ~List();
-    //@}
-
     //! \name Variable initialization
     //@{
     /*!

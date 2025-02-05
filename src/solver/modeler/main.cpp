@@ -23,20 +23,13 @@
 
 #include <antares/logs/logs.h>
 #include <antares/solver/modeler/api/linearProblemBuilder.h>
+#include <antares/solver/modeler/dataSeries/linearProblemData.h>
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include <antares/solver/modeler/ortoolsImpl/linearProblem.h>
 #include <antares/solver/modeler/parameters/parseModelerParameters.h>
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
 
-#include "../optimisation/include/antares/solver/optimisation/LegacyFiller.h"
 #include "api/include/antares/solver/modeler/api/linearProblem.h"
-
-namespace Antares::Solver::Modeler::Api
-{
-struct FillContext;
-class LinearProblemData;
-class ILinearProblem;
-} // namespace Antares::Solver::Modeler::Api
 
 using namespace Antares::Solver::Modeler::OrtoolsImpl;
 using namespace Antares;
@@ -46,7 +39,7 @@ using namespace Antares::Solver::Modeler::Api;
 class SystemLinearProblem
 {
 public:
-    explicit SystemLinearProblem(const Antares::Study::SystemModel::System& system):
+    explicit SystemLinearProblem(const Study::SystemModel::System& system):
         system_(system)
     {
     }
@@ -55,11 +48,11 @@ public:
 
     void Provide(ILinearProblem& pb, const ModelerParameters& parameters)
     {
-        std::vector<std::unique_ptr<Antares::Optimization::ComponentFiller>> fillers;
-        std::vector<Antares::Solver::Modeler::Api::LinearProblemFiller*> fillers_ptr;
+        std::vector<std::unique_ptr<Optimization::ComponentFiller>> fillers;
+        std::vector<LinearProblemFiller*> fillers_ptr;
         for (const auto& [_, component]: system_.Components())
         {
-            auto cf = std::make_unique<Antares::Optimization::ComponentFiller>(component);
+            auto cf = std::make_unique<Optimization::ComponentFiller>(component);
             fillers.push_back(std::move(cf));
         }
         for (auto& component_filler: fillers)
@@ -68,13 +61,13 @@ public:
         }
 
         LinearProblemBuilder linear_problem_builder(fillers_ptr);
-        LinearProblemData dummy_data;
+        Modeler::DataSeries::LinearProblemData dummy_data;
         FillContext dummy_time_scenario_ctx = {parameters.firstTimeStep, parameters.lastTimeStep};
         linear_problem_builder.build(pb, dummy_data, dummy_time_scenario_ctx);
     }
 
 private:
-    const Antares::Study::SystemModel::System& system_;
+    const Study::SystemModel::System& system_;
 };
 
 static void usage()
@@ -112,6 +105,19 @@ int main(int argc, const char** argv)
         const auto system = LoadFiles::loadSystem(studyPath, libraries);
         logs.info() << "System loaded";
         SystemLinearProblem system_linear_problem(system);
+
+        auto outputPath = studyPath / "output";
+        if (!parameters.noOutput)
+        {
+            logs.info() << "Output folder : " << outputPath;
+            if (!std::filesystem::is_directory(outputPath)
+                && !std::filesystem::create_directory(outputPath))
+            {
+                logs.error() << "Failed to create output directory. Exiting simulation.";
+                return EXIT_FAILURE;
+            }
+        }
+
         logs.info() << "linear problem of System loaded";
         OrtoolsLinearProblem ortools_linear_problem(true, parameters.solver);
 
@@ -125,20 +131,20 @@ int main(int argc, const char** argv)
         if (!parameters.noOutput)
         {
             logs.info() << "Writing problem.lp...";
-            auto mps_path = std::filesystem::current_path() / "problem.lp";
-            ortools_linear_problem.WriteLP(mps_path.string());
+            auto lp_path = outputPath / "problem.lp";
+            ortools_linear_problem.WriteLP(lp_path.string());
         }
 
         logs.info() << "Launching resolution...";
         auto* solution = ortools_linear_problem.solve(parameters.solverLogs);
         switch (solution->getStatus())
         {
-        case Antares::Solver::Modeler::Api::MipStatus::OPTIMAL:
-        case Antares::Solver::Modeler::Api::MipStatus::FEASIBLE:
+        case MipStatus::OPTIMAL:
+        case MipStatus::FEASIBLE:
             if (!parameters.noOutput)
             {
                 logs.info() << "Writing variables...";
-                std::ofstream sol_out(std::filesystem::current_path() / "solution.csv");
+                std::ofstream sol_out(outputPath / "solution.csv");
                 for (const auto& [name, value]: solution->getOptimalValues())
                 {
                     sol_out << name << " " << value << std::endl;

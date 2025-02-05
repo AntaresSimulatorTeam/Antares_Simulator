@@ -226,6 +226,7 @@ target_link_libraries(model_antares
         PRIVATE
         infeasible_problem_analysis
         Antares::modeler_api
+        data-series-lib
         Antares::modeler-ortools-impl
 )
 

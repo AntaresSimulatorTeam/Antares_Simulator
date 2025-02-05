@@ -2,7 +2,7 @@ Feature: medium tests
 
   @fast @medium @incomplete
   Scenario: 035 Mixed Expansion - Smart grid model 2
-    Given the study path is "medium-tests/035 Mixed Expansion - Smart grid model 2"
+    Given the study path is "Antares_Simulator_Tests_NR/medium-tests/035 Mixed Expansion - Smart grid model 2"
     When I run antares simulator
     Then the simulation takes less than 30 seconds
     And the simulation succeeds

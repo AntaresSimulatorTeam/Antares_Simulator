@@ -19,35 +19,32 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include <antares/solver/modeler/api/linearProblemData.h>
+#pragma once
 
-namespace Antares::Solver::Modeler::Api
+#include <memory>
+#include <string>
+
+#include "antares/solver/modeler/api/ILinearProblemData.h"
+#include "antares/solver/modeler/dataSeries/dataSeriesRepo.h"
+#include "antares/solver/modeler/dataSeries/scenarioGroupRepo.h"
+
+namespace Antares::Solver::Modeler::DataSeries
 {
 
-unsigned LinearProblemData::getTimeResolutionInMinutes()
+class LinearProblemData: public Api::ILinearProblemData
 {
-    return timeResolutionInMinutes_;
-}
+public:
+    double getData(const std::string& dataSetId,
+                   const std::string& scenarioGroup,
+                   const unsigned scenario,
+                   const unsigned hour) override;
 
-bool LinearProblemData::hasScalarData(const std::string& key)
-{
-    return scalarData_.contains(key);
-}
+    void addScenarioGroup(const std::string& groupId, std::pair<unsigned, unsigned> scenarioToRank);
+    void addDataSeries(std::unique_ptr<IDataSeries> dataSeries);
 
-double LinearProblemData::getScalarData(const std::string& key, unsigned scenario)
-{
-    return scalarData_.at(key)[scenario];
-}
+private:
+    DataSeries::DataSeriesRepository dataSeriesRepository_;
+    DataSeries::ScenarioGroupRepository groupRepository_;
+};
 
-bool LinearProblemData::hasTimedData(const std::string& key)
-{
-    return timedData_.contains(key);
-}
-
-const std::vector<double>& LinearProblemData::getTimedData(const std::string& key,
-                                                           unsigned scenario)
-{
-    return timedData_.at(key)[scenario];
-}
-
-} // namespace Antares::Solver::Modeler::Api
+} // namespace Antares::Solver::Modeler::DataSeries
