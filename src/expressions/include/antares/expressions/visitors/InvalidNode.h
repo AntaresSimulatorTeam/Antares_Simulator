@@ -27,6 +27,6 @@ namespace Antares::Expressions::Visitors
 class InvalidNode: public std::invalid_argument
 {
 public:
-    explicit InvalidNode(const std::string& node_name = "");
+    explicit InvalidNode(const std::string& node_name);
 };
 } // namespace Antares::Expressions::Visitors
