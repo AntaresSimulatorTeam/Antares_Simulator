@@ -29,7 +29,7 @@ public:
     Hashable(const std::string& s1, const std::string& s2);
     ~Hashable() = default;
 
-    bool operator==(const Hashable& other) const;
+    bool operator==(const Hashable& other) const = default;
 
     const std::string& s1;
     const std::string& s2;
