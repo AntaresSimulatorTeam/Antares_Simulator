@@ -44,11 +44,12 @@ public:
     PortFieldSubstitutionVisitor(Registry<Nodes::Node>& registry,
                                  PortFieldSubstitutionContext& ctx);
 
-    PortFieldSubstitutionContext& ctx_;
     std::string name() const override;
 
 private:
     // Only override visit method for PortField, clone the rest
     Nodes::Node* visit(const Nodes::PortFieldNode* node) override;
+    const PortFieldSubstitutionContext& ctx_;
+
 };
 } // namespace Antares::Expressions::Visitors
