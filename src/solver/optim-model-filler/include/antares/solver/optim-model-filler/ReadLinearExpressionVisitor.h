@@ -34,29 +34,33 @@
 namespace Antares::Optimization
 {
 
-class ReadLinearExpressionVisitor: public Solver::Visitors::NodeVisitor<LinearExpression>
+class ReadLinearExpressionVisitor
+    : public Solver::Visitors::NodeVisitor<TimeDependentLinearExpression>
 {
 public:
-    ReadLinearExpressionVisitor() = default;
-    explicit ReadLinearExpressionVisitor(Solver::Visitors::EvaluationContext context);
+    explicit ReadLinearExpressionVisitor(const std::vector<unsigned int>& timesteps);
+    explicit ReadLinearExpressionVisitor(Solver::Visitors::EvaluationContext context,
+                                         const std::vector<unsigned int>& timesteps);
     std::string name() const override;
 
 private:
     const Solver::Visitors::EvaluationContext context_;
-    LinearExpression visit(const Solver::Nodes::SumNode* node) override;
-    LinearExpression visit(const Solver::Nodes::SubtractionNode* node) override;
-    LinearExpression visit(const Solver::Nodes::MultiplicationNode* node) override;
-    LinearExpression visit(const Solver::Nodes::DivisionNode* node) override;
-    LinearExpression visit(const Solver::Nodes::EqualNode* node) override;
-    LinearExpression visit(const Solver::Nodes::LessThanOrEqualNode* node) override;
-    LinearExpression visit(const Solver::Nodes::GreaterThanOrEqualNode* node) override;
-    LinearExpression visit(const Solver::Nodes::NegationNode* node) override;
-    LinearExpression visit(const Solver::Nodes::VariableNode* node) override;
-    LinearExpression visit(const Solver::Nodes::ParameterNode* node) override;
-    LinearExpression visit(const Solver::Nodes::LiteralNode* node) override;
-    LinearExpression visit(const Solver::Nodes::PortFieldNode* node) override;
-    LinearExpression visit(const Solver::Nodes::PortFieldSumNode* node) override;
-    LinearExpression visit(const Solver::Nodes::ComponentVariableNode* node) override;
-    LinearExpression visit(const Solver::Nodes::ComponentParameterNode* node) override;
+    TimeDependentLinearExpression visit(const Solver::Nodes::SumNode* node) override;
+    TimeDependentLinearExpression visit(const Solver::Nodes::SubtractionNode* node) override;
+    TimeDependentLinearExpression visit(const Solver::Nodes::MultiplicationNode* node) override;
+    TimeDependentLinearExpression visit(const Solver::Nodes::DivisionNode* node) override;
+    TimeDependentLinearExpression visit(const Solver::Nodes::EqualNode* node) override;
+    TimeDependentLinearExpression visit(const Solver::Nodes::LessThanOrEqualNode* node) override;
+    TimeDependentLinearExpression visit(const Solver::Nodes::GreaterThanOrEqualNode* node) override;
+    TimeDependentLinearExpression visit(const Solver::Nodes::NegationNode* node) override;
+    TimeDependentLinearExpression visit(const Solver::Nodes::VariableNode* node) override;
+    TimeDependentLinearExpression visit(const Solver::Nodes::ParameterNode* node) override;
+    TimeDependentLinearExpression visit(const Solver::Nodes::LiteralNode* node) override;
+    TimeDependentLinearExpression visit(const Solver::Nodes::PortFieldNode* node) override;
+    TimeDependentLinearExpression visit(const Solver::Nodes::PortFieldSumNode* node) override;
+    TimeDependentLinearExpression visit(const Solver::Nodes::ComponentVariableNode* node) override;
+    TimeDependentLinearExpression visit(const Solver::Nodes::ComponentParameterNode* node) override;
+
+    std::vector<unsigned int> timesteps_ = {};
 };
 } // namespace Antares::Optimization

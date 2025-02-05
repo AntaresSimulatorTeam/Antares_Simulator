@@ -19,6 +19,7 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include <algorithm>
 #include <stdexcept>
 
 #include <antares/solver/optim-model-filler/LinearExpression.h>
@@ -83,6 +84,13 @@ LinearExpression LinearExpression::operator+(const LinearExpression& other) cons
     return {offset_ + other.offset_, add_maps(coef_per_var_, other.coef_per_var_, 1)};
 }
 
+LinearExpression& LinearExpression::operator+=(const LinearExpression& other)
+{
+    this->offset_ += other.offset_;
+    this->coef_per_var_ = add_maps(coef_per_var_, other.coef_per_var_, 1);
+    return *this;
+}
+
 LinearExpression LinearExpression::operator-(const LinearExpression& other) const
 {
     return {offset_ - other.offset_, add_maps(coef_per_var_, other.coef_per_var_, -1)};
@@ -117,4 +125,97 @@ LinearExpression LinearExpression::negate() const
 {
     return {-offset_, scale_map(coef_per_var_, -1)};
 }
+
+TimeDependentLinearExpression::TimeDependentLinearExpression(
+  const std::map<unsigned int, LinearExpression>& linearExpressions):
+    linearExpressions_(linearExpressions)
+
+{
+}
+
+TimeDependentLinearExpression TimeDependentLinearExpression::operator+(
+  const TimeDependentLinearExpression& other) const
+{
+    const auto& linear_expressions = GetLinearExpressions();
+    const auto& other_linear_expressions = other.GetLinearExpressions();
+
+    std::map result(linear_expressions);
+    for (auto [key, value]: other_linear_expressions)
+    {
+        if (result.contains(key))
+        {
+            result[key] += value;
+        }
+        else
+        {
+            result[key] = value;
+        }
+    }
+
+    return TimeDependentLinearExpression(std::move(result));
+}
+
+TimeDependentLinearExpression TimeDependentLinearExpression::operator-(
+  const TimeDependentLinearExpression& other) const
+{
+    checkOtherLength(other);
+    const auto& linear_expressions = GetLinearExpressions();
+    const auto& other_linear_expressions = other.GetLinearExpressions();
+    std::map<unsigned int, LinearExpression> result(linear_expressions.size());
+    for (size_t i = 0; i < linear_expressions.size(); ++i)
+    {
+        result[i] = linear_expressions[i] - other_linear_expressions[i];
+    }
+    return TimeDependentLinearExpression(std::move(result));
+}
+
+TimeDependentLinearExpression TimeDependentLinearExpression::operator*(
+  const TimeDependentLinearExpression& other) const
+{
+    checkOtherLength(other);
+    const auto& linear_expressions = GetLinearExpressions();
+    const auto& other_linear_expressions = other.GetLinearExpressions();
+    std::map<unsigned int, LinearExpression> result(linear_expressions.size());
+    for (size_t i = 0; i < linear_expressions.size(); ++i)
+    {
+        result[i] = linear_expressions[i] * other_linear_expressions[i];
+    }
+    return TimeDependentLinearExpression(std::move(result));
+}
+
+TimeDependentLinearExpression TimeDependentLinearExpression::operator/(
+  const TimeDependentLinearExpression& other) const
+{
+    checkOtherLength(other);
+    const auto& linear_expressions = GetLinearExpressions();
+    const auto& other_linear_expressions = other.GetLinearExpressions();
+    std::map<unsigned int, LinearExpression> result(linear_expressions.size());
+    for (size_t i = 0; i < linear_expressions.size(); ++i)
+    {
+        result[i] = linear_expressions[i] / other_linear_expressions[i];
+    }
+    return TimeDependentLinearExpression(std::move(result));
+}
+
+TimeDependentLinearExpression TimeDependentLinearExpression::negate() const
+{
+    const auto& linear_expressions = GetLinearExpressions();
+    std::map<unsigned int, LinearExpression> result(linear_expressions.size());
+    for (size_t i = 0; i < linear_expressions.size(); ++i)
+    {
+        result[i] = linear_expressions[i].negate();
+    }
+    return TimeDependentLinearExpression(std::move(result));
+}
+
+std::map<unsigned int, LinearExpression> TimeDependentLinearExpression::GetLinearExpressions() const
+{
+    linearExpressions_;
+}
+
+size_t TimeDependentLinearExpression::getSize() const
+{
+    return linearExpressions_.size();
+}
+
 } // namespace Antares::Optimization

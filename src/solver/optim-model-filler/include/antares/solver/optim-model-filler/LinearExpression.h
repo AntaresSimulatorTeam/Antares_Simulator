@@ -23,6 +23,7 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
 namespace Antares::Optimization
 {
@@ -66,8 +67,36 @@ public:
         return coef_per_var_;
     }
 
+    LinearExpression& operator+=(const LinearExpression& value);
+
 private:
     double offset_ = 0;
     std::map<std::string, double> coef_per_var_;
+};
+// time dependent parameter
+class TimeDependentLinearExpression
+{
+public:
+    TimeDependentLinearExpression() = default;
+    TimeDependentLinearExpression(const std::map<unsigned, LinearExpression>& linearExpressions);
+    void checkOtherLength(const TimeDependentLinearExpression& other) const;
+
+    /// Sum two linear expressions
+    TimeDependentLinearExpression operator+(const TimeDependentLinearExpression& other) const;
+    /// Subtract two linear expressions
+    TimeDependentLinearExpression operator-(const TimeDependentLinearExpression& other) const;
+    /// Multiply two linear expressions
+    /// Only one can have non-zero coefficients, otherwise the result cannot be linear
+    TimeDependentLinearExpression operator*(const TimeDependentLinearExpression& other) const;
+    /// Divide two linear expressions
+    /// Only first expression can have non-zero coefficients, otherwise the result cannot be linear
+    TimeDependentLinearExpression operator/(const TimeDependentLinearExpression& other) const;
+    /// Multiply linear expression by -1
+    TimeDependentLinearExpression negate() const;
+    std::map<unsigned, LinearExpression> GetLinearExpressions() const;
+    size_t getSize() const;
+
+private:
+    std::map<unsigned, LinearExpression> linearExpressions_;
 };
 } // namespace Antares::Optimization
