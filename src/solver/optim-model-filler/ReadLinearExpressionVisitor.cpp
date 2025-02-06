@@ -51,12 +51,28 @@ std::string ReadLinearExpressionVisitor::name() const
 
 LinearExpression ReadLinearExpressionVisitor::visit(const SumNode* node)
 {
+    // auto operands = node->getOperands();
+    // return std::accumulate(std::begin(operands),
+    //                        std::end(operands),
+    //                        LinearExpression(registry_),
+    //                        [this](LinearExpression sum, Node* operand)
+    //                        { return sum + dispatch(operand); });
+
     auto operands = node->getOperands();
-    return std::accumulate(std::begin(operands),
-                           std::end(operands),
-                           LinearExpression(registry_),
-                           [this](LinearExpression sum, Node* operand)
-                           { return sum + dispatch(operand); });
+
+    if (operands.empty())
+    {
+        return LinearExpression(registry_); // Return default zero expression
+    }
+
+    LinearExpression result = dispatch(operands.front());
+
+    for (size_t i = 1; i < operands.size(); ++i)
+    {
+        result += dispatch(operands[i]); // Now using in-place addition
+    }
+
+    return result;
 }
 
 LinearExpression ReadLinearExpressionVisitor::visit(const SubtractionNode* node)

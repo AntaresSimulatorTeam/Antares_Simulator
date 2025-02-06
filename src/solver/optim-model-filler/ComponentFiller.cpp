@@ -124,7 +124,8 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
                                      Optimisation::LinearProblemApi::ILinearProblemData& data,
                                      Optimisation::LinearProblemApi::FillContext& ctx)
 {
-    ReadLinearConstraintVisitor visitor(evaluationContext_);
+    Expressions::Registry<Expressions::Nodes::Node> registry;
+    ReadLinearConstraintVisitor visitor(registry, evaluationContext_);
     for (const auto& constraint: component_.getModel()->getConstraints() | std::views::values)
     {
         auto* root_node = constraint.expression().RootNode();
@@ -157,9 +158,11 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
     {
         return;
     }
-    ReadLinearExpressionVisitor visitor(evaluationContext_);
+    Expressions::Registry<Expressions::Nodes::Node> registry;
+    ReadLinearExpressionVisitor visitor(registry, evaluationContext_);
     auto linear_expression = visitor.dispatch(model->Objective().RootNode());
-    if (abs(linear_expression.offset()) > 1e-10)
+    Expressions::Visitors::EvalVisitor evaluator(evaluationContext_);
+    if (abs(evaluator.dispatch(linear_expression.offset())) > 1e-10)
     {
         throw std::invalid_argument("Antares does not support objective offsets (found in model '"
                                     + model->Id() + "' of component '" + component_.Id() + "').");

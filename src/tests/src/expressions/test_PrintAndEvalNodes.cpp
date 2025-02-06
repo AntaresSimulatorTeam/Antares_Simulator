@@ -216,7 +216,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param, Registry<Node>)
 {
     ParameterNode root("my-param");
     const double value = 221.3;
-    EvaluationContext context({{"my-param", value}}, {});
+    EvaluationContext context({{"my-param", {value}}}, {});
 
     EvalVisitor evalVisitor(context);
     const double eval = evalVisitor.dispatch(&root);
@@ -228,7 +228,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_variable, Registry<Node>)
 {
     VariableNode root("my-variable");
     const double value = 221.3;
-    EvaluationContext context({}, {{"my-variable", value}});
+    EvaluationContext context({}, {{"my-variable", {value}}});
 
     EvalVisitor evalVisitor(context);
     const double eval = evalVisitor.dispatch(&root);

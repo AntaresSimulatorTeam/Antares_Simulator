@@ -45,19 +45,21 @@ namespace Antares::Optimization
  */
 struct LinearConstraint
 {
-    std::map<std::string, double> coef_per_var;
-    double lb = -std::numeric_limits<double>::infinity();
-    double ub = std::numeric_limits<double>::infinity();
+    std::map<std::string, Expressions::Nodes::Node*> coef_per_var;
+    Expressions::Nodes::Node* lb; //= -std::numeric_limits<double>::infinity();
+    Expressions::Nodes::Node* ub; //= std::numeric_limits<double>::infinity();
 };
 
 class ReadLinearConstraintVisitor: public Expressions::Visitors::NodeVisitor<LinearConstraint>
 {
 public:
-    ReadLinearConstraintVisitor() = default;
-    explicit ReadLinearConstraintVisitor(Expressions::Visitors::EvaluationContext context);
+    ReadLinearConstraintVisitor(Expressions::Registry<Expressions::Nodes::Node>& registry);
+    explicit ReadLinearConstraintVisitor(Expressions::Registry<Expressions::Nodes::Node>& registry,
+                                         Expressions::Visitors::EvaluationContext context);
     std::string name() const override;
 
 private:
+    Expressions::Registry<Expressions::Nodes::Node>& registry_;
     ReadLinearExpressionVisitor linear_expression_visitor_;
     LinearConstraint visit(const Expressions::Nodes::SumNode* node) override;
     LinearConstraint visit(const Expressions::Nodes::SubtractionNode* node) override;

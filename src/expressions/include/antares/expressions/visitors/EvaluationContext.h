@@ -2,6 +2,7 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
 namespace Antares::Expressions::Visitors
 {
@@ -25,8 +26,8 @@ public:
      * @param parameters parameter values.
      * @param variables variable values.
      */
-    explicit EvaluationContext(std::map<std::string, double> parameters,
-                               std::map<std::string, double> variables);
+    explicit EvaluationContext(std::map<std::string, std::vector<double>> parameters,
+                               std::map<std::string, std::vector<double>> variables);
 
     /**
      * @brief Retrieves the value of a variable.
@@ -35,7 +36,7 @@ public:
      * @return The value of the variable.
      * @throws std::out_of_range If the variable is not found.
      */
-    double getVariableValue(const std::string& key) const;
+    std::vector<double> getVariableValue(const std::string& key) const;
 
     /**
      * @brief Retrieves the value of a parameter.
@@ -44,18 +45,21 @@ public:
      * @return The value of the parameter.
      * @throws std::out_of_range If the parameter is not found.
      */
-    double getParameterValue(const std::string& key) const;
+    std::vector<double> getParameterValue(const std::string& key) const;
+    [[nodiscard]] unsigned int numberOfTimesteps() const;
+
+private:
+    unsigned int number_timesteps_ = 0;
 
 private:
     /**
      * @brief A map storing parameter values.
      */
-    std::map<std::string, double> parameters_;
-
+    std::map<std::string, std::vector<double>> parameters_;
     /**
      * @brief A map storing variable values.
      */
-    std::map<std::string, double> variables_;
+    std::map<std::string, std::vector<double>> variables_;
 };
 
 } // namespace Antares::Expressions::Visitors

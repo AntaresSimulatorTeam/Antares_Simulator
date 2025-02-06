@@ -41,7 +41,7 @@ public:
 /**
  * @brief Represents a visitor for evaluating expressions within a given context.
  */
-class EvalVisitor: public NodeVisitor<double>
+class EvalVisitor: public NodeVisitor<std::vector<double>>
 {
 public:
     /**
@@ -59,20 +59,20 @@ public:
 
 private:
     const EvaluationContext context_;
-    double visit(const Nodes::SumNode* node) override;
-    double visit(const Nodes::SubtractionNode* node) override;
-    double visit(const Nodes::MultiplicationNode* node) override;
-    double visit(const Nodes::DivisionNode* node) override;
-    double visit(const Nodes::EqualNode* node) override;
-    double visit(const Nodes::LessThanOrEqualNode* node) override;
-    double visit(const Nodes::GreaterThanOrEqualNode* node) override;
-    double visit(const Nodes::NegationNode* node) override;
-    double visit(const Nodes::VariableNode* node) override;
-    double visit(const Nodes::ParameterNode* node) override;
-    double visit(const Nodes::LiteralNode* node) override;
-    double visit(const Nodes::PortFieldNode* node) override;
-    double visit(const Nodes::PortFieldSumNode* node) override;
-    double visit(const Nodes::ComponentVariableNode* node) override;
-    double visit(const Nodes::ComponentParameterNode* node) override;
+    std::vector<double> visit(const Nodes::SumNode* node) override;
+    std::vector<double> visit(const Nodes::SubtractionNode* node) override;
+    std::vector<double> visit(const Nodes::MultiplicationNode* node) override;
+    std::vector<double> visit(const Nodes::DivisionNode* node) override;
+    std::vector<double> visit(const Nodes::EqualNode* node) override;
+    std::vector<double> visit(const Nodes::LessThanOrEqualNode* node) override;
+    std::vector<double> visit(const Nodes::GreaterThanOrEqualNode* node) override;
+    std::vector<double> visit(const Nodes::NegationNode* node) override;
+    std::vector<double> visit(const Nodes::VariableNode* node) override;
+    std::vector<double> visit(const Nodes::ParameterNode* node) override;
+    std::vector<double> visit(const Nodes::LiteralNode* node) override;
+    std::vector<double> visit(const Nodes::PortFieldNode* node) override;
+    std::vector<double> visit(const Nodes::PortFieldSumNode* node) override;
+    std::vector<double> visit(const Nodes::ComponentVariableNode* node) override;
+    std::vector<double> visit(const Nodes::ComponentParameterNode* node) override;
 };
 } // namespace Antares::Expressions::Visitors

@@ -102,6 +102,15 @@ LinearExpression LinearExpression::operator+(const LinearExpression& other) cons
             add_maps(registry_, coef_per_var_, other.coef_per_var_, 1)};
 }
 
+LinearExpression& LinearExpression::operator+=(const LinearExpression& other)
+{
+    offset_ = registry_.create<Nodes::SumNode>(offset_, other.offset_);
+
+    coef_per_var_ = add_maps(registry_, coef_per_var_, other.coef_per_var_, 1);
+
+    return *this;
+}
+
 LinearExpression LinearExpression::operator-(const LinearExpression& other) const
 {
     return {registry_,

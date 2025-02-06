@@ -49,6 +49,7 @@ public:
                      std::map<std::string, Expressions::Nodes::Node*> coef_per_var);
     /// Sum two linear expressions
     LinearExpression operator+(const LinearExpression& other) const;
+    LinearExpression& operator+=(const LinearExpression& other);
     /// Subtract two linear expressions
     LinearExpression operator-(const LinearExpression& other) const;
     /// Multiply two linear expressions

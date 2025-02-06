@@ -52,7 +52,7 @@ BOOST_FIXTURE_TEST_CASE(test_visit_equal_node, Registry<Node>)
                                                            create<VariableNode>("var1")),
                                 create<NegationNode>(create<ParameterNode>("param1")));
     Node* node = create<EqualNode>(lhs, rhs);
-    EvaluationContext context({{"param1", 9.}}, {});
+    EvaluationContext context({{"param1", {9.}}}, {});
     ReadLinearConstraintVisitor visitor(context);
     auto constraint = visitor.dispatch(node);
     BOOST_CHECK_EQUAL(constraint.lb, -14.);
@@ -71,7 +71,7 @@ BOOST_FIXTURE_TEST_CASE(test_visit_less_than_or_equal_node, Registry<Node>)
                                                            create<VariableNode>("var2")),
                                 create<NegationNode>(create<ParameterNode>("param1")));
     Node* node = create<LessThanOrEqualNode>(lhs, rhs);
-    EvaluationContext context({{"param1", 10.}}, {});
+    EvaluationContext context({{"param1", {10.}}}, {});
     ReadLinearConstraintVisitor visitor(context);
     auto constraint = visitor.dispatch(node);
     BOOST_CHECK_EQUAL(constraint.lb, -std::numeric_limits<double>::infinity());
@@ -91,7 +91,7 @@ BOOST_FIXTURE_TEST_CASE(test_visit_greater_than_or_equal_node, Registry<Node>)
                                                            create<VariableNode>("var1")),
                                 create<NegationNode>(create<ParameterNode>("param1")));
     Node* node = create<GreaterThanOrEqualNode>(lhs, rhs);
-    EvaluationContext context({{"param1", 9.}}, {});
+    EvaluationContext context({{"param1", {9}.}}, {});
     ReadLinearConstraintVisitor visitor(context);
     auto constraint = visitor.dispatch(node);
     BOOST_CHECK_EQUAL(constraint.lb, -14);

@@ -56,7 +56,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param, Registry<Node>)
 {
     // 5 + param(3) = 8
     Node* sum = create<SumNode>(create<LiteralNode>(5.), create<ParameterNode>("param"));
-    EvaluationContext evaluation_context({{"param", 3.}}, {});
+    EvaluationContext evaluation_context({{"param", {3.}}}, {});
     ReadLinearExpressionVisitor visitor(evaluation_context);
     auto linear_expression = visitor.dispatch(sum);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 8.);
@@ -69,7 +69,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var, Registry<Node>)
     Node* product = create<MultiplicationNode>(create<LiteralNode>(7.),
                                                create<VariableNode>("var"));
     Node* sum = create<SumNode>(create<LiteralNode>(60.), create<ParameterNode>("param"), product);
-    EvaluationContext evaluation_context({{"param", -5.}}, {});
+    EvaluationContext evaluation_context({{"param", {-5.}}}, {});
     ReadLinearExpressionVisitor visitor(evaluation_context);
     auto linear_expression = visitor.dispatch(sum);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 55.);
@@ -123,7 +123,7 @@ BOOST_FIXTURE_TEST_CASE(visit_complex_expression, Registry<Node>)
       create<MultiplicationNode>(create<LiteralNode>(6.), create<VariableNode>("var2")) // 6 * var2
     );
 
-    EvaluationContext evaluation_context({{"param1", -2.}, {"param2", 8.}}, {});
+    EvaluationContext evaluation_context({{"param1", {-2.}}, {"param2", {8.}}}, {});
     ReadLinearExpressionVisitor visitor(evaluation_context);
     auto linear_expression = visitor.dispatch(big_sum);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 10.);

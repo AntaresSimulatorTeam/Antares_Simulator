@@ -23,6 +23,9 @@
 
 #include <cmath>
 #include <numeric>
+#include <ranges>
+
+#include "yuni/io/directory/info/platform.h"
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 
@@ -33,97 +36,152 @@ EvalVisitor::EvalVisitor(EvaluationContext context):
 {
 }
 
-double EvalVisitor::visit(const Nodes::SumNode* node)
+std::vector<double> EvalVisitor::visit(const Nodes::SumNode* node)
 {
-    auto operands = node->getOperands();
-    return std::accumulate(std::begin(operands),
-                           std::end(operands),
-                           0,
-                           [this](double sum, Nodes::Node* operand)
-                           { return sum + dispatch(operand); });
+    // auto operands = node->getOperands();
+    // return std::accumulate(std::begin(operands),
+    //                        std::end(operands),
+    //                        0,
+    //                        [this](double sum, Nodes::Node* operand)
+    //                        { return sum + dispatch(operand); });
+
+    const auto& operands = node->getOperands();
+    if (operands.empty())
+    {
+        return {};
+    }
+
+    std::vector<double> result = dispatch(operands.front());
+
+    for (size_t i = 1; i < operands.size(); ++i)
+    {
+        const auto& operandVec = dispatch(operands[i]);
+        if (operandVec.size() != result.size())
+        {
+            throw std::runtime_error("Vector size mismatch in SumNode");
+        }
+        std::ranges::transform(result, operandVec, result.begin(), std::plus<>());
+    }
+
+    return result;
 }
 
-double EvalVisitor::visit(const Nodes::SubtractionNode* node)
+std::vector<double> EvalVisitor::visit(const Nodes::SubtractionNode* node)
 {
-    return dispatch(node->left()) - dispatch(node->right());
+    // return dispatch(node->left()) - dispatch(node->right());
+
+    auto left = dispatch(node->left());
+    auto right = dispatch(node->right());
+
+    if (left.size() != right.size())
+    {
+        throw std::runtime_error("Vector size mismatch in SubtractionNode");
+    }
+
+    std::vector<double> result(left.size());
+    std::ranges::transform(left, right, result.begin(), std::minus<>());
+
+    return result;
 }
 
-double EvalVisitor::visit(const Nodes::MultiplicationNode* node)
+std::vector<double> EvalVisitor::visit(const Nodes::MultiplicationNode* node)
 {
-    return dispatch(node->left()) * dispatch(node->right());
+    // return dispatch(node->left()) * dispatch(node->right());
+
+    auto left = dispatch(node->left());
+    auto right = dispatch(node->right());
+
+    if (left.size() != right.size())
+    {
+        throw std::runtime_error("Vector size mismatch in MultiplicationNode");
+    }
+
+    std::vector<double> result(left.size());
+    std::ranges::transform(left, right, result.begin(), std::multiplies<>());
+
+    return result;
 }
 
-double EvalVisitor::visit(const Nodes::DivisionNode* node)
+std::vector<double> EvalVisitor::visit(const Nodes::DivisionNode* node)
 {
-    double left = dispatch(node->left());
-    double right = dispatch(node->right());
-    double result = 0.;
+    const auto left = dispatch(node->left());
+    const auto right = dispatch(node->right());
+    std::vector<double> result(left.size());
+    unsigned int index = 0;
     try
     {
-        result = left / right;
-        if (!std::isfinite(result))
+        for (; index < left.size(); ++index)
         {
-            throw EvalVisitorDivisionException(left, right, "is not a finite number");
+            result[index] = left[index] / right[index];
+            if (!std::isfinite(result[index]))
+            {
+                throw EvalVisitorDivisionException(left[index],
+                                                   right[index],
+                                                   "is not a finite number");
+            }
         }
     }
     catch (const std::exception& ex)
     {
-        throw EvalVisitorDivisionException(left, right, ex.what());
+        throw EvalVisitorDivisionException(left[index], right[index], ex.what());
     }
     return result;
 }
 
-double EvalVisitor::visit(const Nodes::EqualNode* node)
+std::vector<double> EvalVisitor::visit(const Nodes::EqualNode* node)
 {
     throw EvalVisitorNotImplemented(name(), node->name());
 }
 
-double EvalVisitor::visit(const Nodes::LessThanOrEqualNode* node)
+std::vector<double> EvalVisitor::visit(const Nodes::LessThanOrEqualNode* node)
 {
     throw EvalVisitorNotImplemented(name(), node->name());
 }
 
-double EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
+std::vector<double> EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
 {
     throw EvalVisitorNotImplemented(name(), node->name());
 }
 
-double EvalVisitor::visit(const Nodes::VariableNode* node)
+std::vector<double> EvalVisitor::visit(const Nodes::VariableNode* node)
 {
+    // TODO where it's used?
     return context_.getVariableValue(node->value());
 }
 
-double EvalVisitor::visit(const Nodes::ParameterNode* node)
+std::vector<double> EvalVisitor::visit(const Nodes::ParameterNode* node)
 {
     return context_.getParameterValue(node->value());
 }
 
-double EvalVisitor::visit(const Nodes::LiteralNode* node)
+std::vector<double> EvalVisitor::visit(const Nodes::LiteralNode* node)
 {
-    return node->value();
+    return std::vector<double>(context_.numberOfTimesteps(), node->value());
 }
 
-double EvalVisitor::visit(const Nodes::NegationNode* node)
+std::vector<double> EvalVisitor::visit(const Nodes::NegationNode* node)
 {
-    return -dispatch(node->child());
+    auto ret = dispatch(node->child());
+    std::ranges::transform(ret, ret.begin(), [](double x) { return x * -1; });
+    return ret;
 }
 
-double EvalVisitor::visit(const Nodes::PortFieldNode* node)
-{
-    throw EvalVisitorNotImplemented(name(), node->name());
-}
-
-double EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
+std::vector<double> EvalVisitor::visit(const Nodes::PortFieldNode* node)
 {
     throw EvalVisitorNotImplemented(name(), node->name());
 }
 
-double EvalVisitor::visit(const Nodes::ComponentVariableNode* node)
+std::vector<double> EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
 {
     throw EvalVisitorNotImplemented(name(), node->name());
 }
 
-double EvalVisitor::visit(const Nodes::ComponentParameterNode* node)
+std::vector<double> EvalVisitor::visit(const Nodes::ComponentVariableNode* node)
+{
+    throw EvalVisitorNotImplemented(name(), node->name());
+}
+
+std::vector<double> EvalVisitor::visit(const Nodes::ComponentParameterNode* node)
 {
     throw EvalVisitorNotImplemented(name(), node->name());
 }
