@@ -211,7 +211,11 @@ bool RenewableClusterList::loadFromFolder(const fs::path& folder, Area* area)
 
         return ret;
     }
-    return false;
+    else
+    {
+        logs.error() << "Error opening file " << filename;
+        return false;
+    }
 }
 
 bool RenewableClusterList::validateClusters() const

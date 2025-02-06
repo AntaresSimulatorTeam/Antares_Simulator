@@ -1215,15 +1215,23 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     {
         // The cluster list must be loaded before the method ensureDataIsInitialized is called
         // in order to allocate data with all renewable clusters.
-        fs::path renewClusterPath = pStudy.folderInput / "renewables" / "clusters";
 
-        auto end = areas.end();
-        for (auto i = areas.begin(); i != end; ++i)
+        fs::path renewClusterPath = pStudy.folderInput / "renewables" / "clusters";
+        if (!fs::is_directory(renewClusterPath))
         {
-            Area& area = *(i->second);
-            fs::path areaPath = renewClusterPath / area.id.to<std::string>();
-            ret = area.renewable.list.loadFromFolder(areaPath, &area) && ret;
-            ret = area.renewable.list.validateClusters() && ret;
+            logs.info() << "Renewable directory missing " << renewClusterPath;
+            logs.info() << "Skipped loading renewable clusters";
+        }
+        else
+        {
+            auto end = areas.end();
+            for (auto i = areas.begin(); i != end; ++i)
+            {
+                Area& area = *(i->second);
+                fs::path areaPath = renewClusterPath / area.id.to<std::string>();
+                ret = area.renewable.list.loadFromFolder(areaPath, &area) && ret;
+                ret = area.renewable.list.validateClusters() && ret;
+            }
         }
     }
 
