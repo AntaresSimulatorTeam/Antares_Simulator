@@ -145,8 +145,9 @@ std::vector<double> EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node
 
 std::vector<double> EvalVisitor::visit(const Nodes::VariableNode* node)
 {
-    // TODO where it's used?
-    return context_.getVariableValue(node->value());
+    // TODO where it's used? // Exception?
+    return std::vector<double>(context_.numberOfTimesteps(),
+                               context_.getVariableValue(node->value()));
 }
 
 std::vector<double> EvalVisitor::visit(const Nodes::ParameterNode* node)

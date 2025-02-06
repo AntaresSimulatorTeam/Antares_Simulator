@@ -2,26 +2,23 @@
 
 namespace Antares::Expressions::Visitors
 {
-EvaluationContext::EvaluationContext(std::map<std::string, std::vector<double>> parameters,
-                                     std::map<std::string, std::vector<double>> variables):
-    number_timesteps_(
-      parameters.empty()
-        ? 0
-        : parameters.begin()
-            ->second.size()), // assume that all parameters have the same timestep size
-                              // TODO check non-emptiness of parameters
+EvaluationContext::EvaluationContext(std::map<std::string, ComponentParameter> parameters,
+                                     std::map<std::string, double> variables,
+                                     unsigned int number_timesteps):
+    number_timesteps_(number_timesteps),
+    // TODO check non-emptiness of parameters
     parameters_(std::move(parameters)),
     variables_(std::move(variables))
 
 {
 }
 
-std::vector<double> EvaluationContext::getVariableValue(const std::string& key) const
+double EvaluationContext::getVariableValue(const std::string& key) const
 {
     return variables_.at(key);
 }
 
-std::vector<double> EvaluationContext::getParameterValue(const std::string& key) const
+ComponentParameter EvaluationContext::getParameterValue(const std::string& key) const
 {
     return parameters_.at(key);
 }
