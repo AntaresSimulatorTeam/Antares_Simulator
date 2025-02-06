@@ -37,7 +37,8 @@ public:
      */
     explicit EvaluationContext(std::map<std::string, ComponentParameter> parameters,
                                std::map<std::string, double> variables,
-                               unsigned int number_timesteps);
+                               const std::vector<unsigned int>& timesteps/*,
+                               Optimisation::LinearProblemApi::ILinearProblemData& data*/);
 
     /**
      * @brief Retrieves the value of a variable.
@@ -57,9 +58,10 @@ public:
      */
     ComponentParameter getParameterValue(const std::string& key) const;
     [[nodiscard]] unsigned int numberOfTimesteps() const;
+    [[nodiscard]] std::vector<unsigned int> getTimesteps() const;
 
 private:
-    unsigned int number_timesteps_ = 0;
+    std::vector<unsigned int> timesteps_;
 
     /**
      * @brief A map storing parameter values.

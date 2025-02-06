@@ -45,16 +45,16 @@ public:
     OrtoolsMipVariable* addNumVariable(double lb, double ub, const std::string& name) override;
 
     std::vector<LinearProblemApi::IMipVariable*> addNumVariable(
-      double lb,
-      double ub,
+      const std::vector<double>& lb,
+      const std::vector<double>& ub,
       const std::string& name,
       unsigned int number_new_variables) override;
 
     OrtoolsMipVariable* addIntVariable(double lb, double ub, const std::string& name) override;
 
     std::vector<LinearProblemApi::IMipVariable*> addIntVariable(
-      double lb,
-      double ub,
+      const std::vector<double>& lb,
+      const std::vector<double>& ub,
       const std::string& name,
       unsigned int number_new_variables) override;
 
@@ -64,8 +64,8 @@ public:
                                     const std::string& name) override;
 
     std::vector<LinearProblemApi::IMipVariable*> addVariable(
-      double lb,
-      double ub,
+      const std::vector<double>& lb,
+      const std::vector<double>& ub,
       bool integer,
       const std::string& name,
       unsigned int number_new_variables) override;
