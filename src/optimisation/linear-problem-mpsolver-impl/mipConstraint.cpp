@@ -63,7 +63,8 @@ void OrtoolsMipConstraint::setCoefficient(LinearProblemApi::IMipVariable* var, d
     auto* mpvar = dynamic_cast<OrtoolsMipVariable*>(var);
     if (!mpvar)
     {
-        logs.error() << "Invalid cast, tried from LinearProblemApi::IMipVariable to OrtoolsMipVariable";
+        logs.error()
+          << "Invalid cast, tried from LinearProblemApi::IMipVariable to OrtoolsMipVariable";
         throw std::bad_cast();
     }
 
@@ -75,7 +76,8 @@ double OrtoolsMipConstraint::getCoefficient(LinearProblemApi::IMipVariable* var)
     auto* mpvar = dynamic_cast<OrtoolsMipVariable*>(var);
     if (!mpvar)
     {
-        logs.error() << "Invalid cast, tried from LinearProblemApi::IMipVariable to OrtoolsMipVariable";
+        logs.error()
+          << "Invalid cast, tried from LinearProblemApi::IMipVariable to OrtoolsMipVariable";
         throw std::bad_cast();
     }
 
