@@ -6,7 +6,7 @@ var searchData=
   ['basisstatusimpl_3',['BasisStatusImpl',['../classAntares_1_1Optimization_1_1BasisStatusImpl.html',1,'Antares::Optimization']]],
   ['bb_4',['BB',['../structBB.html',1,'']]],
   ['behavior_5fflag_5',['behavior_flag',['../classunfeasible__problem_1_1behavior__flag.html',1,'unfeasible_problem']]],
-  ['binarynode_6',['BinaryNode',['../classAntares_1_1Solver_1_1Nodes_1_1BinaryNode.html',1,'Antares::Solver::Nodes']]],
+  ['binarynode_6',['BinaryNode',['../classAntares_1_1Expressions_1_1Nodes_1_1BinaryNode.html',1,'Antares::Expressions::Nodes']]],
   ['bindingconstmargincost_7',['BindingConstMarginCost',['../classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html',1,'Antares::Solver::Variable::Economy']]],
   ['bindingconstraint_8',['BindingConstraint',['../classAntares_1_1Data_1_1BindingConstraint.html',1,'Antares::Data::BindingConstraint'],['../classAntares_1_1Map_1_1BindingConstraint.html',1,'Antares::Map::BindingConstraint'],['../classAntares_1_1Toolbox_1_1InputSelector_1_1BindingConstraint.html',1,'Antares::Toolbox::InputSelector::BindingConstraint'],['../classAntares_1_1Window_1_1BindingConstraint.html',1,'Antares::Window::BindingConstraint']]],
   ['bindingconstraintdata_9',['BindingConstraintData',['../classBindingConstraintData.html',1,'']]],
@@ -33,7 +33,7 @@ var searchData=
   ['blankcell_30',['blankCell',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1blankCell.html',1,'Antares::Component::Datagrid::Renderer']]],
   ['bound_5fflex_5fdown_5fnode_31',['BOUND_FLEX_DOWN_NODE',['../structBOUND__FLEX__DOWN__NODE.html',1,'']]],
   ['bound_5fflex_5fup_5fnode_32',['BOUND_FLEX_UP_NODE',['../structBOUND__FLEX__UP__NODE.html',1,'']]],
-  ['boxstyle_33',['BoxStyle',['../structAntares_1_1Solver_1_1Visitors_1_1BoxStyle.html',1,'Antares::Solver::Visitors']]],
+  ['boxstyle_33',['BoxStyle',['../structAntares_1_1Expressions_1_1Visitors_1_1BoxStyle.html',1,'Antares::Expressions::Visitors']]],
   ['buffer_34',['Buffer',['../classAntares_1_1UnitTests_1_1Buffer.html',1,'Antares::UnitTests']]],
   ['buildcontext_35',['BuildContext',['../classAntares_1_1ExtSource_1_1Handler_1_1BuildContext.html',1,'Antares::ExtSource::Handler']]],
   ['button_36',['Button',['../classAntares_1_1Component_1_1Button.html',1,'Antares::Component']]]

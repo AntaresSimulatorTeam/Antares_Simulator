@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: src/solver/expressions/include/antares/solver/expressions/nodes/DivisionNode.h Source File</title>
+<title>Antares Simulator: src/expressions/include/antares/expressions/nodes/DivisionNode.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -162,15 +162,15 @@ $(function(){initNavTree('DivisionNode_8h_source.html',''); initResizable(true);
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment">*/</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;antares/solver/expressions/nodes/BinaryNode.h&gt;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;antares/expressions/nodes/BinaryNode.h&gt;</span></div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">namespace </span>Antares::Solver::Nodes</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">namespace </span>Antares::Expressions::Nodes</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>{</div>
 <div class="foldopen" id="foldopen00030" data-start="{" data-end="};">
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Nodes_1_1DivisionNode.html">   30</a></span><span class="keyword">class </span><a class="code hl_class" href="classAntares_1_1Solver_1_1Nodes_1_1DivisionNode.html">DivisionNode</a>: <span class="keyword">public</span> <a class="code hl_class" href="classAntares_1_1Solver_1_1Nodes_1_1BinaryNode.html">BinaryNode</a></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="classAntares_1_1Expressions_1_1Nodes_1_1DivisionNode.html">   30</a></span><span class="keyword">class </span><a class="code hl_class" href="classAntares_1_1Expressions_1_1Nodes_1_1DivisionNode.html">DivisionNode</a>: <span class="keyword">public</span> <a class="code hl_class" href="classAntares_1_1Expressions_1_1Nodes_1_1BinaryNode.html">BinaryNode</a></div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>{</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="keyword">using </span><a class="code hl_function" href="classAntares_1_1Solver_1_1Nodes_1_1BinaryNode.html#a1d868c1c7d1a307fa3e2d8e3e27d3413">BinaryNode::BinaryNode</a>;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="keyword">using </span><a class="code hl_function" href="classAntares_1_1Expressions_1_1Nodes_1_1BinaryNode.html#a893c3edcae6c95ac309885357683b003">BinaryNode::BinaryNode</a>;</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    std::string name()<span class="keyword"> const override</span></div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="keyword">    </span>{</div>
@@ -178,16 +178,16 @@ $(function(){initNavTree('DivisionNode_8h_source.html',''); initResizable(true);
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    }</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>};</div>
 </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>} <span class="comment">// namespace Antares::Solver::Nodes</span></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Nodes_1_1BinaryNode_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Nodes_1_1BinaryNode.html">Antares::Solver::Nodes::BinaryNode</a></div><div class="ttdef"><b>Definition</b> BinaryNode.h:28</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Nodes_1_1BinaryNode_html_a1d868c1c7d1a307fa3e2d8e3e27d3413"><div class="ttname"><a href="classAntares_1_1Solver_1_1Nodes_1_1BinaryNode.html#a1d868c1c7d1a307fa3e2d8e3e27d3413">Antares::Solver::Nodes::BinaryNode::BinaryNode</a></div><div class="ttdeci">BinaryNode(Node *left, Node *right)</div><div class="ttdoc">Constructs a binary node with the specified left and right operands.</div><div class="ttdef"><b>Definition</b> BinaryNode.cpp:25</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Nodes_1_1DivisionNode_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Nodes_1_1DivisionNode.html">Antares::Solver::Nodes::DivisionNode</a></div><div class="ttdoc">Represents a division node in a syntax tree.</div><div class="ttdef"><b>Definition</b> DivisionNode.h:31</div></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>} <span class="comment">// namespace Antares::Expressions::Nodes</span></div>
+<div class="ttc" id="aclassAntares_1_1Expressions_1_1Nodes_1_1BinaryNode_html"><div class="ttname"><a href="classAntares_1_1Expressions_1_1Nodes_1_1BinaryNode.html">Antares::Expressions::Nodes::BinaryNode</a></div><div class="ttdef"><b>Definition</b> BinaryNode.h:28</div></div>
+<div class="ttc" id="aclassAntares_1_1Expressions_1_1Nodes_1_1BinaryNode_html_a893c3edcae6c95ac309885357683b003"><div class="ttname"><a href="classAntares_1_1Expressions_1_1Nodes_1_1BinaryNode.html#a893c3edcae6c95ac309885357683b003">Antares::Expressions::Nodes::BinaryNode::BinaryNode</a></div><div class="ttdeci">BinaryNode(Node *left, Node *right)</div><div class="ttdoc">Constructs a binary node with the specified left and right operands.</div><div class="ttdef"><b>Definition</b> BinaryNode.cpp:25</div></div>
+<div class="ttc" id="aclassAntares_1_1Expressions_1_1Nodes_1_1DivisionNode_html"><div class="ttname"><a href="classAntares_1_1Expressions_1_1Nodes_1_1DivisionNode.html">Antares::Expressions::Nodes::DivisionNode</a></div><div class="ttdoc">Represents a division node in a syntax tree.</div><div class="ttdef"><b>Definition</b> DivisionNode.h:31</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_0aee2537bb9bfdf74d4f1bc27c62cfd4.html">expressions</a></li><li class="navelem"><a class="el" href="dir_04f581786a6da1faadf2478af8b77e88.html">include</a></li><li class="navelem"><a class="el" href="dir_57f0c638f0fd1255113679746c823c1c.html">antares</a></li><li class="navelem"><a class="el" href="dir_86f044c14eaf9131c4fec3d22a9871a0.html">solver</a></li><li class="navelem"><a class="el" href="dir_1b63cdd565ac8086a558e14ec3a92f8c.html">expressions</a></li><li class="navelem"><a class="el" href="dir_04c8783b0078f87a911ffa23a4cc3ccd.html">nodes</a></li><li class="navelem"><b>DivisionNode.h</b></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_a46804c238c82b8f14fa9386c13825af.html">expressions</a></li><li class="navelem"><a class="el" href="dir_432673341fda9fdda342856bdfa291ab.html">include</a></li><li class="navelem"><a class="el" href="dir_2029e7711f29bb6b96dc5870729a8848.html">antares</a></li><li class="navelem"><a class="el" href="dir_19ff128a63cbd20da0e3cb306cc82c00.html">expressions</a></li><li class="navelem"><a class="el" href="dir_75cb52c67590822925fc99be5c7920e3.html">nodes</a></li><li class="navelem"><b>DivisionNode.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>

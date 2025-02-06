@@ -1,10 +1,5 @@
 var NAVTREEINDEX3 =
 {
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ATimeSeries.html#a080a086fd4941e19fa3956324257a94a":[9,0,0,2,0,0,7,5],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ATimeSeries.html#a26f31c097ef612acc0d331ecbb9f07a9":[9,0,0,2,0,0,7,7],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ATimeSeries.html#a3676ef64cb5b50f60ed8bd01377c4a11":[9,0,0,2,0,0,7,11],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ATimeSeries.html#a38f84dc27d59d828a7448a2575fb1338":[9,0,0,2,0,0,7,3],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ATimeSeries.html#a72dbaf2077d84cbb2e0eae87a157bcaf":[9,0,0,2,0,0,7,13],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ATimeSeries.html#ab7d9ad6c318033be6da4d1beb19290ca":[9,0,0,2,0,0,7,6],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ATimeSeries.html#ad12b7b91b66f437df0efc7ea13d53731":[9,0,0,2,0,0,7,10],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ATimeSeries.html#ad25c25923ed206f164f7c4e48bd70ab3":[9,0,0,2,0,0,7,8],
@@ -249,5 +244,10 @@ var NAVTREEINDEX3 =
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html#acafb38091cfe2d8162c08d05a9a2bafa":[9,0,0,2,0,0,37,0],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html#acfa8caccc646bbba2e51455a62266400":[9,0,0,2,0,0,37,30],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html#ada6518d90d3c947a642248be9d8f5197":[9,0,0,2,0,0,37,17],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html#af00b61bfab183e88d9e2120decd9167c":[9,0,0,2,0,0,37,10]
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html#af00b61bfab183e88d9e2120decd9167c":[9,0,0,2,0,0,37,10],
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1InflowPattern.html":[9,0,0,2,0,0,34],
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1InflowPattern.html#a093877b4767aa42139f31214cd6305dc":[9,0,0,2,0,0,34,3],
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1InflowPattern.html#a125499a9a59e489be3f1bcc27a792775":[9,0,0,2,0,0,34,10],
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1InflowPattern.html#a3fc766e53ce9cd5943598dd3e64c6d6f":[9,0,0,2,0,0,34,7],
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1InflowPattern.html#a4e536d6548b830b20849da2012ba2dd0":[9,0,0,2,0,0,34,6]
 };

@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: src/solver/modelConverter/include/antares/solver/modelConverter/convertorVisitor.h Source File</title>
+<title>Antares Simulator: src/io/inputs/model-converter/include/antares/io/inputs/model-converter/convertorVisitor.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -165,20 +165,21 @@ $(function(){initNavTree('convertorVisitor_8h_source.html',''); initResizable(tr
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;ExprVisitor.h&gt;</span></div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &lt;antares/solver/expressions/NodeRegistry.h&gt;</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;antares/solver/modelParser/Library.h&quot;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &lt;antares/expressions/NodeRegistry.h&gt;</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;antares/io/inputs/yml-model/Library.h&quot;</span></div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">namespace </span>Antares::Solver::ModelConverter</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">namespace </span>Antares::IO::Inputs::ModelConverter</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>{</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>NodeRegistry convertExpressionToNode(<span class="keyword">const</span> std::string&amp; exprStr, <span class="keyword">const</span> ModelParser::Model&amp; model);</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>} <span class="comment">// namespace Antares::Solver::ModelConverter</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>Expressions::NodeRegistry convertExpressionToNode(<span class="keyword">const</span> std::string&amp; exprStr,</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>                                                  <span class="keyword">const</span> YmlModel::Model&amp; model);</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>} <span class="comment">// namespace Antares::IO::Inputs::ModelConverter</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_3db9a2a40d57223b2efd1096323f05c0.html">modelConverter</a></li><li class="navelem"><a class="el" href="dir_0e49393de806b56b880749f5c19fea39.html">include</a></li><li class="navelem"><a class="el" href="dir_065d888e99491eebf5d295e8780acbbe.html">antares</a></li><li class="navelem"><a class="el" href="dir_38b84a18f9268d72b19434d4c4d23e61.html">solver</a></li><li class="navelem"><a class="el" href="dir_981146c5804a4ae97d1dbb7022a094eb.html">modelConverter</a></li><li class="navelem"><b>convertorVisitor.h</b></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c184e51c84f2c3f0345bbc8a0d75d3e1.html">io</a></li><li class="navelem"><a class="el" href="dir_870ff71a535e526e8b1632e04f8fa134.html">inputs</a></li><li class="navelem"><a class="el" href="dir_d1a61619b8879784895a8f51fab43fac.html">model-converter</a></li><li class="navelem"><a class="el" href="dir_0b49f2c0c42ac9238401bd8828c3a92d.html">include</a></li><li class="navelem"><a class="el" href="dir_97d2b2629a1655db9d0e183b67d70f73.html">antares</a></li><li class="navelem"><a class="el" href="dir_4075a7754e6f8a67880c58e0e146a336.html">io</a></li><li class="navelem"><a class="el" href="dir_2f039fa045ef2cf8ef17e71221619912.html">inputs</a></li><li class="navelem"><a class="el" href="dir_7d4a875771aab3217199849c4d0f25ca.html">model-converter</a></li><li class="navelem"><b>convertorVisitor.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>

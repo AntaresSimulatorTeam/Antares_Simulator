@@ -1,12 +1,12 @@
 var searchData=
 [
-  ['hashable_0',['Hashable',['../classAntares_1_1Solver_1_1Hashable.html',1,'Antares::Solver']]],
+  ['hashable_0',['Hashable',['../classAntares_1_1Expressions_1_1Hashable.html',1,'Antares::Expressions']]],
   ['hebdoproblemtolpstranslator_1',['HebdoProblemToLpsTranslator',['../classAntares_1_1Solver_1_1HebdoProblemToLpsTranslator.html',1,'Antares::Solver']]],
   ['hour_2',['Hour',['../classAntares_1_1Toolbox_1_1Filter_1_1Hour.html',1,'Antares::Toolbox::Filter']]],
   ['hourinterval_3',['HourInterval',['../structAntares_1_1Date_1_1HourInterval.html',1,'Antares::Date']]],
   ['hourlybc_4',['HourlyBC',['../classAntares_1_1Optimization_1_1HourlyBC.html',1,'Antares::Optimization']]],
   ['hourlycsrproblem_5',['HourlyCSRProblem',['../classHourlyCSRProblem.html',1,'']]],
-  ['hourtoobig_6',['HourTooBig',['../classAntares_1_1Solver_1_1Modeler_1_1DataSeries_1_1TimeSeriesSet_1_1HourTooBig.html',1,'Antares::Solver::Modeler::DataSeries::TimeSeriesSet']]],
+  ['hourtoobig_6',['HourTooBig',['../classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1TimeSeriesSet_1_1HourTooBig.html',1,'Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet']]],
   ['houryear_7',['HourYear',['../classAntares_1_1Toolbox_1_1Filter_1_1HourYear.html',1,'Antares::Toolbox::Filter']]],
   ['hurdlecosts_8',['HurdleCosts',['../classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html',1,'Antares::Solver::Variable::Economy']]],
   ['hurdlecostsusagebutton_9',['hurdleCostsUsageButton',['../classAntares_1_1Window_1_1hurdleCostsUsageButton.html',1,'Antares::Window']]],

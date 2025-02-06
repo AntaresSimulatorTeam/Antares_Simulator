@@ -1,9 +1,9 @@
 var concepts =
 [
     [ "Antares", null, [
-      [ "Solver", null, [
+      [ "Expressions", null, [
         [ "Nodes", null, [
-          [ "NodePtr", "conceptAntares_1_1Solver_1_1Nodes_1_1NodePtr.html", null ]
+          [ "NodePtr", "conceptAntares_1_1Expressions_1_1Nodes_1_1NodePtr.html", null ]
         ] ]
       ] ]
     ] ]

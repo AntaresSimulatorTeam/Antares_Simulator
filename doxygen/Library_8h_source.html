@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: src/solver/modelParser/include/antares/solver/modelParser/Library.h Source File</title>
+<title>Antares Simulator: src/io/inputs/yml-model/include/antares/io/inputs/yml-model/Library.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -167,11 +167,11 @@ $(function(){initNavTree('Library_8h_source.html',''); initResizable(true); });
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">namespace </span>Antares::Solver::ModelParser</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">namespace </span>Antares::IO::Inputs::YmlModel</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>{</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="comment">// Define structures</span></div>
 <div class="foldopen" id="foldopen00031" data-start="{" data-end="};">
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1ModelParser_1_1Parameter.html">   31</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structAntares_1_1Solver_1_1ModelParser_1_1Parameter.html">Parameter</a></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parameter.html">   31</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parameter.html">Parameter</a></div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>{</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    std::string id;</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keywordtype">bool</span> time_dependent;</div>
@@ -203,7 +203,7 @@ $(function(){initNavTree('Library_8h_source.html',''); initResizable(true); });
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>}</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
 <div class="foldopen" id="foldopen00061" data-start="{" data-end="};">
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1ModelParser_1_1Variable.html">   61</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structAntares_1_1Solver_1_1ModelParser_1_1Variable.html">Variable</a></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable.html">   61</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable.html">Variable</a></div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>{</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    std::string id;</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    std::string lower_bound;</div>
@@ -215,7 +215,7 @@ $(function(){initNavTree('Library_8h_source.html',''); initResizable(true); });
 </div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
 <div class="foldopen" id="foldopen00071" data-start="{" data-end="};">
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1ModelParser_1_1Port.html">   71</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structAntares_1_1Solver_1_1ModelParser_1_1Port.html">Port</a></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno"><a class="line" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Port.html">   71</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Port.html">Port</a></div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>{</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    std::string id;</div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    std::string type;</div>
@@ -223,7 +223,7 @@ $(function(){initNavTree('Library_8h_source.html',''); initResizable(true); });
 </div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
 <div class="foldopen" id="foldopen00077" data-start="{" data-end="};">
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1ModelParser_1_1PortFieldDefinition.html">   77</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structAntares_1_1Solver_1_1ModelParser_1_1PortFieldDefinition.html">PortFieldDefinition</a></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno"><a class="line" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortFieldDefinition.html">   77</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortFieldDefinition.html">PortFieldDefinition</a></div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>{</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    std::string port;</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    std::string field;</div>
@@ -232,7 +232,7 @@ $(function(){initNavTree('Library_8h_source.html',''); initResizable(true); });
 </div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
 <div class="foldopen" id="foldopen00084" data-start="{" data-end="};">
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1ModelParser_1_1Constraint.html">   84</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structAntares_1_1Solver_1_1ModelParser_1_1Constraint.html">Constraint</a></div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno"><a class="line" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Constraint.html">   84</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Constraint.html">Constraint</a></div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>{</div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    std::string id;</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    std::string expression;</div>
@@ -240,7 +240,7 @@ $(function(){initNavTree('Library_8h_source.html',''); initResizable(true); });
 </div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
 <div class="foldopen" id="foldopen00090" data-start="{" data-end="};">
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1ModelParser_1_1Model.html">   90</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structAntares_1_1Solver_1_1ModelParser_1_1Model.html">Model</a></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno"><a class="line" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html">   90</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html">Model</a></div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>{</div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    std::string id;</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    std::string description;</div>
@@ -254,7 +254,7 @@ $(function(){initNavTree('Library_8h_source.html',''); initResizable(true); });
 </div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
 <div class="foldopen" id="foldopen00102" data-start="{" data-end="};">
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1ModelParser_1_1PortType.html">  102</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structAntares_1_1Solver_1_1ModelParser_1_1PortType.html">PortType</a></div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno"><a class="line" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType.html">  102</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType.html">PortType</a></div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>{</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    std::string id;</div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    std::string description;</div>
@@ -265,7 +265,7 @@ $(function(){initNavTree('Library_8h_source.html',''); initResizable(true); });
 </div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
 <div class="foldopen" id="foldopen00111" data-start="{" data-end="};">
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1ModelParser_1_1Library.html">  111</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structAntares_1_1Solver_1_1ModelParser_1_1Library.html">Library</a></div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno"><a class="line" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library.html">  111</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library.html">Library</a></div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>{</div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    std::string id;</div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    std::string description;</div>
@@ -273,21 +273,21 @@ $(function(){initNavTree('Library_8h_source.html',''); initResizable(true); });
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    std::vector&lt;Model&gt; models;</div>
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>};</div>
 </div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>} <span class="comment">// namespace Antares::Solver::ModelParser</span></div>
-<div class="ttc" id="astructAntares_1_1Solver_1_1ModelParser_1_1Constraint_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1ModelParser_1_1Constraint.html">Antares::Solver::ModelParser::Constraint</a></div><div class="ttdef"><b>Definition</b> Library.h:85</div></div>
-<div class="ttc" id="astructAntares_1_1Solver_1_1ModelParser_1_1Library_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1ModelParser_1_1Library.html">Antares::Solver::ModelParser::Library</a></div><div class="ttdef"><b>Definition</b> Library.h:112</div></div>
-<div class="ttc" id="astructAntares_1_1Solver_1_1ModelParser_1_1Model_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1ModelParser_1_1Model.html">Antares::Solver::ModelParser::Model</a></div><div class="ttdef"><b>Definition</b> Library.h:91</div></div>
-<div class="ttc" id="astructAntares_1_1Solver_1_1ModelParser_1_1Parameter_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1ModelParser_1_1Parameter.html">Antares::Solver::ModelParser::Parameter</a></div><div class="ttdef"><b>Definition</b> Library.h:32</div></div>
-<div class="ttc" id="astructAntares_1_1Solver_1_1ModelParser_1_1PortFieldDefinition_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1ModelParser_1_1PortFieldDefinition.html">Antares::Solver::ModelParser::PortFieldDefinition</a></div><div class="ttdef"><b>Definition</b> Library.h:78</div></div>
-<div class="ttc" id="astructAntares_1_1Solver_1_1ModelParser_1_1PortType_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1ModelParser_1_1PortType.html">Antares::Solver::ModelParser::PortType</a></div><div class="ttdef"><b>Definition</b> Library.h:103</div></div>
-<div class="ttc" id="astructAntares_1_1Solver_1_1ModelParser_1_1Port_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1ModelParser_1_1Port.html">Antares::Solver::ModelParser::Port</a></div><div class="ttdef"><b>Definition</b> Library.h:72</div></div>
-<div class="ttc" id="astructAntares_1_1Solver_1_1ModelParser_1_1Variable_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1ModelParser_1_1Variable.html">Antares::Solver::ModelParser::Variable</a></div><div class="ttdef"><b>Definition</b> Library.h:62</div></div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>} <span class="comment">// namespace Antares::IO::Inputs::YmlModel</span></div>
+<div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Constraint_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Constraint.html">Antares::IO::Inputs::YmlModel::Constraint</a></div><div class="ttdef"><b>Definition</b> Library.h:85</div></div>
+<div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library.html">Antares::IO::Inputs::YmlModel::Library</a></div><div class="ttdef"><b>Definition</b> Library.h:112</div></div>
+<div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html">Antares::IO::Inputs::YmlModel::Model</a></div><div class="ttdef"><b>Definition</b> Library.h:91</div></div>
+<div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parameter_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parameter.html">Antares::IO::Inputs::YmlModel::Parameter</a></div><div class="ttdef"><b>Definition</b> Library.h:32</div></div>
+<div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortFieldDefinition_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortFieldDefinition.html">Antares::IO::Inputs::YmlModel::PortFieldDefinition</a></div><div class="ttdef"><b>Definition</b> Library.h:78</div></div>
+<div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType.html">Antares::IO::Inputs::YmlModel::PortType</a></div><div class="ttdef"><b>Definition</b> Library.h:103</div></div>
+<div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Port_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Port.html">Antares::IO::Inputs::YmlModel::Port</a></div><div class="ttdef"><b>Definition</b> Library.h:72</div></div>
+<div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable.html">Antares::IO::Inputs::YmlModel::Variable</a></div><div class="ttdef"><b>Definition</b> Library.h:62</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_38f620856b24f9f739572d552a9d1420.html">modelParser</a></li><li class="navelem"><a class="el" href="dir_1d128c9e57b26015ad85f0db759739f5.html">include</a></li><li class="navelem"><a class="el" href="dir_879bc7486cf4d126aed0fe444f0c47c4.html">antares</a></li><li class="navelem"><a class="el" href="dir_a56142f6be17aeb07263747bdf67cfa2.html">solver</a></li><li class="navelem"><a class="el" href="dir_68b7982f0ecff093398d925eede38b21.html">modelParser</a></li><li class="navelem"><b>Library.h</b></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c184e51c84f2c3f0345bbc8a0d75d3e1.html">io</a></li><li class="navelem"><a class="el" href="dir_870ff71a535e526e8b1632e04f8fa134.html">inputs</a></li><li class="navelem"><a class="el" href="dir_61f9421503dae37c5392ed806696d91a.html">yml-model</a></li><li class="navelem"><a class="el" href="dir_56c27702e79bd17f441192555e272e33.html">include</a></li><li class="navelem"><a class="el" href="dir_f680ac59d197fac28049cfc955daadc8.html">antares</a></li><li class="navelem"><a class="el" href="dir_f5f08421715a186f918fb90f999f11f4.html">io</a></li><li class="navelem"><a class="el" href="dir_d5d9cac05469a8a3d8be4fb8be536f4c.html">inputs</a></li><li class="navelem"><a class="el" href="dir_a6f9d64c1fc01455e9509dcfc9e8f818.html">yml-model</a></li><li class="navelem"><b>Library.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>

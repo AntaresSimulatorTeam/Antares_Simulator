@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: src/solver/modeler/dataSeries/include/antares/solver/modeler/dataSeries/linearProblemData.h Source File</title>
+<title>Antares Simulator: src/optimisation/linear-problem-data-impl/include/antares/optimisation/linear-problem-data-impl/linearProblemData.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -166,15 +166,15 @@ $(function(){initNavTree('linearProblemData_8h_source.html',''); initResizable(t
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;antares/solver/modeler/api/ILinearProblemData.h&quot;</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;antares/solver/modeler/dataSeries/dataSeriesRepo.h&quot;</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &quot;antares/solver/modeler/dataSeries/scenarioGroupRepo.h&quot;</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;antares/optimisation/linear-problem-api/ILinearProblemData.h&quot;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;antares/optimisation/linear-problem-data-impl/dataSeriesRepo.h&quot;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &quot;antares/optimisation/linear-problem-data-impl/scenarioGroupRepo.h&quot;</span></div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">namespace </span>Antares::Solver::Modeler::DataSeries</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">namespace </span>Antares::Optimisation::LinearProblemDataImpl</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>{</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
 <div class="foldopen" id="foldopen00034" data-start="{" data-end="};">
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Modeler_1_1DataSeries_1_1LinearProblemData.html">   34</a></span><span class="keyword">class </span><a class="code hl_class" href="classAntares_1_1Solver_1_1Modeler_1_1DataSeries_1_1LinearProblemData.html">LinearProblemData</a>: <span class="keyword">public</span> <a class="code hl_class" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1ILinearProblemData.html">Api::ILinearProblemData</a></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1LinearProblemData.html">   34</a></span><span class="keyword">class </span><a class="code hl_class" href="classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1LinearProblemData.html">LinearProblemData</a>: <span class="keyword">public</span> <a class="code hl_class" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">LinearProblemApi::ILinearProblemData</a></div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>{</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="keyword">public</span>:</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keywordtype">double</span> getData(<span class="keyword">const</span> std::string&amp; dataSetId,</div>
@@ -186,22 +186,22 @@ $(function(){initNavTree('linearProblemData_8h_source.html',''); initResizable(t
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordtype">void</span> addDataSeries(std::unique_ptr&lt;IDataSeries&gt; dataSeries);</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <a class="code hl_class" href="classAntares_1_1Solver_1_1Modeler_1_1DataSeries_1_1DataSeriesRepository.html">DataSeries::DataSeriesRepository</a> dataSeriesRepository_;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <a class="code hl_class" href="classAntares_1_1Solver_1_1Modeler_1_1DataSeries_1_1ScenarioGroupRepository.html">DataSeries::ScenarioGroupRepository</a> groupRepository_;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <a class="code hl_class" href="classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository.html">DataSeriesRepository</a> dataSeriesRepository_;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <a class="code hl_class" href="classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository.html">ScenarioGroupRepository</a> groupRepository_;</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>};</div>
 </div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>} <span class="comment">// namespace Antares::Solver::Modeler::DataSeries</span></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Modeler_1_1Api_1_1ILinearProblemData_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1ILinearProblemData.html">Antares::Solver::Modeler::Api::ILinearProblemData</a></div><div class="ttdef"><b>Definition</b> ILinearProblemData.h:10</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Modeler_1_1DataSeries_1_1DataSeriesRepository_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Modeler_1_1DataSeries_1_1DataSeriesRepository.html">Antares::Solver::Modeler::DataSeries::DataSeriesRepository</a></div><div class="ttdef"><b>Definition</b> dataSeriesRepo.h:15</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Modeler_1_1DataSeries_1_1LinearProblemData_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Modeler_1_1DataSeries_1_1LinearProblemData.html">Antares::Solver::Modeler::DataSeries::LinearProblemData</a></div><div class="ttdef"><b>Definition</b> linearProblemData.h:35</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Modeler_1_1DataSeries_1_1ScenarioGroupRepository_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Modeler_1_1DataSeries_1_1ScenarioGroupRepository.html">Antares::Solver::Modeler::DataSeries::ScenarioGroupRepository</a></div><div class="ttdef"><b>Definition</b> scenarioGroupRepo.h:10</div></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>} <span class="comment">// namespace Antares::Optimisation::LinearProblemDataImpl</span></div>
+<div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">Antares::Optimisation::LinearProblemApi::ILinearProblemData</a></div><div class="ttdef"><b>Definition</b> ILinearProblemData.h:10</div></div>
+<div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository.html">Antares::Optimisation::LinearProblemDataImpl::DataSeriesRepository</a></div><div class="ttdef"><b>Definition</b> dataSeriesRepo.h:15</div></div>
+<div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1LinearProblemData_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1LinearProblemData.html">Antares::Optimisation::LinearProblemDataImpl::LinearProblemData</a></div><div class="ttdef"><b>Definition</b> linearProblemData.h:35</div></div>
+<div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository.html">Antares::Optimisation::LinearProblemDataImpl::ScenarioGroupRepository</a></div><div class="ttdef"><b>Definition</b> scenarioGroupRepo.h:10</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_b8241ba192950c55c6815e86d6b06d2c.html">modeler</a></li><li class="navelem"><a class="el" href="dir_f3be1f26c2d6a467fcffa7b15dca6916.html">dataSeries</a></li><li class="navelem"><a class="el" href="dir_426274d2c6ed183ca6a39af670884531.html">include</a></li><li class="navelem"><a class="el" href="dir_55d52ba83f9b314ec2dd4d7fcfcd12c0.html">antares</a></li><li class="navelem"><a class="el" href="dir_335103d8b1d31511b72287d2363da876.html">solver</a></li><li class="navelem"><a class="el" href="dir_3def81e0e31c1b8488ebff6ec9010b6e.html">modeler</a></li><li class="navelem"><a class="el" href="dir_89721b29e84c4d27eef3235705093f54.html">dataSeries</a></li><li class="navelem"><b>linearProblemData.h</b></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_df940598938059c8102df77332c101e5.html">optimisation</a></li><li class="navelem"><a class="el" href="dir_af6048b6920247df6a9d7b097c3defd9.html">linear-problem-data-impl</a></li><li class="navelem"><a class="el" href="dir_ef40270c11645fefe8fd5acc5df1e4b7.html">include</a></li><li class="navelem"><a class="el" href="dir_b599908ab8ed2e81b30ceb3393861c3b.html">antares</a></li><li class="navelem"><a class="el" href="dir_2c13c2bf4cfdfe5fb6ed03c27228bdee.html">optimisation</a></li><li class="navelem"><a class="el" href="dir_858418f9e7d17ff8c89dd54ecc57baaa.html">linear-problem-data-impl</a></li><li class="navelem"><b>linearProblemData.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
