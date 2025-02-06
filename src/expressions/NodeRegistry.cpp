@@ -4,8 +4,9 @@
 
 namespace Antares::Expressions
 {
-NodeRegistry::NodeRegistry(Antares::Expressions::Nodes::Node* node,
-                           Antares::Expressions::Registry<Antares::Expressions::Nodes::Node> registry):
+NodeRegistry::NodeRegistry(
+  Antares::Expressions::Nodes::Node* node,
+  Antares::Expressions::Registry<Antares::Expressions::Nodes::Node> registry):
     node(node),
     registry(std::move(registry))
 {

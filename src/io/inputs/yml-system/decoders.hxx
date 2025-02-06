@@ -73,8 +73,8 @@ struct convert<Antares::IO::Inputs::YmlSystem::Component>
         rhs.id = node["id"].as<std::string>();
         rhs.model = node["model"].as<std::string>();
         rhs.scenarioGroup = node["scenario-group"].as<std::string>();
-        rhs.parameters = as_fallback_default<std::vector<Antares::IO::Inputs::YmlSystem::Parameter>>(
-          node["parameters"]);
+        rhs.parameters = as_fallback_default<
+          std::vector<Antares::IO::Inputs::YmlSystem::Parameter>>(node["parameters"]);
         return true;
     }
 };
@@ -86,8 +86,8 @@ struct convert<Antares::IO::Inputs::YmlSystem::System>
     {
         rhs.id = node["id"].as<std::string>();
         rhs.libraries = as_fallback_default<std::vector<std::string>>(node["model-libraries"]);
-        rhs.components = as_fallback_default<std::vector<Antares::IO::Inputs::YmlSystem::Component>>(
-          node["components"]);
+        rhs.components = as_fallback_default<
+          std::vector<Antares::IO::Inputs::YmlSystem::Component>>(node["components"]);
         return true;
     }
 };
