@@ -20,13 +20,10 @@
 */
 #pragma once
 
-#include <string>
+#include <filesystem>
 
-namespace Antares::Optimisation::LinearProblemDataImpl
-{
-class DataSeriesRepository;
-class TimeSeriesSet;
-} // namespace Antares::Optimisation::LinearProblemDataImpl
+#include <antares/optimisation/linear-problem-data-impl/dataSeriesRepo.h>
+#include <antares/optimisation/linear-problem-data-impl/timeSeriesSet.h>
 
 /**
  * Reads a DataSeriesRepo from a directory
@@ -38,16 +35,22 @@ namespace Antares::IO::Inputs::DataSeriesCsvImporter
 class TimeSeriesSetImporter
 {
 public:
+    TimeSeriesSetImporter() = delete; // must not be used
     static Optimisation::LinearProblemDataImpl::TimeSeriesSet importFromFile(
-      const std::string& path,
+      const std::filesystem::path& path,
       char csvSeparator = ';');
+
+private:
+    static std::vector<std::vector<double>> csvToMatrix(const std::filesystem::path& path,
+                                                        char csvSeparator = ';');
 };
 
 class DataSeriesRepoImporter
 {
 public:
+    DataSeriesRepoImporter() = delete; // must not be used
     static Optimisation::LinearProblemDataImpl::DataSeriesRepository importFromDirectory(
-      const std::string& path,
+      const std::filesystem::path&,
       char csvSeparator = ';');
 };
 

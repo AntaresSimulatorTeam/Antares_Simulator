@@ -24,6 +24,7 @@ target_link_libraries(modeler-lib
         Antares::linear-problem-api
         # TODO FIXME don't depend on implementations
         Antares::linear-problem-mpsolver-impl
+        Antares::data-series-csv-importer
 )
 
 target_link_libraries(antares-modeler
@@ -32,6 +33,7 @@ target_link_libraries(antares-modeler
         linear-problem-data-impl
         linear-problem-mpsolver-impl
         optim-model-filler
+        data-series-csv-importer
 )
 
 import_std_libs(antares-modeler)

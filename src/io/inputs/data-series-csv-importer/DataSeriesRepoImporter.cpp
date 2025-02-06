@@ -23,8 +23,6 @@
 #include <boost/regex.hpp>
 
 #include <antares/io/inputs/data-series-csv-importer/DataSeriesRepoImporter.h>
-#include <antares/optimisation/linear-problem-data-impl/dataSeriesRepo.h>
-#include <antares/optimisation/linear-problem-data-impl/timeSeriesSet.h>
 
 namespace Antares::IO::Inputs::DataSeriesCsvImporter
 {
@@ -32,64 +30,78 @@ using namespace std;
 using namespace boost;
 using namespace Optimisation::LinearProblemDataImpl;
 
-DataSeriesRepository DataSeriesRepoImporter::importFromDirectory(const string& path,
+DataSeriesRepository DataSeriesRepoImporter::importFromDirectory(const std::filesystem::path& path,
                                                                  char csvSeparator)
 {
-    return DataSeriesRepository();
+    if (!is_directory(path))
+    {
+        throw invalid_argument("Not a directory: " + path.string());
+    }
+    DataSeriesRepository repo{};
+    for (const auto& entry: std::filesystem::directory_iterator(path))
+    {
+        if (!is_regular_file(entry))
+        {
+            continue;
+        }
+        if (entry.path().extension() == ".csv")
+        {
+            std::unique_ptr<IDataSeries> timeSeriesSet = make_unique<TimeSeriesSet>(
+              TimeSeriesSetImporter::importFromFile(entry, csvSeparator));
+            repo.addDataSeries(std::move(timeSeriesSet));
+        }
+    }
+    return repo;
 }
 
-TimeSeriesSet TimeSeriesSetImporter::importFromFile(const string& path, char csvSeparator)
+vector<vector<double>> TimeSeriesSetImporter::csvToMatrix(const std::filesystem::path& path,
+                                                          char csvSeparator)
 {
-    // used to split the file in lines
-    const regex linesregx("\\r\\n|\\n\\r|\\n|\\r");
-    // used to split each line to tokens, assuming ',' as column separator
-    const regex fieldsregx(csvSeparator + "(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
+    // TODO: add logs?
+    // logs.debug() << "Loading data-series from " << path;
     vector<vector<double>> result;
-    ifstream infile;
-    infile.open(path);
-    char data[1024];
-    infile.read(data, sizeof(data));
-    data[infile.tellg()] = '\0';
-    unsigned int length = strlen(data);
-
-    // iterator splits data to lines
-    cregex_token_iterator li(data, data + length, linesregx, -1);
-    cregex_token_iterator end;
-
-    while (li != end)
+    ifstream infile(path, std::ios_base::binary | std::ios_base::in);
+    if (!infile.is_open())
     {
-        string line = li->str();
-        ++li;
-
-        // Split line to tokens
-        sregex_token_iterator ti(line.begin(), line.end(), fieldsregx, -1);
-        sregex_token_iterator end2;
-
+        throw invalid_argument("Could not open file " + path.filename().string());
+    }
+    string line;
+    string element;
+    while (!infile.eof())
+    {
         vector<double> row;
-        while (ti != end2)
+        getline(infile, line);
+        std::stringstream ss(line);
+        while (getline(ss, element, csvSeparator))
         {
-            double token = stod(ti->str());
-            ++ti;
-            row.push_back(token);
+            row.push_back(stod(element));
         }
         result.push_back(row);
     }
+    return move(result);
+}
+
+TimeSeriesSet TimeSeriesSetImporter::importFromFile(const std::filesystem::path& path,
+                                                    char csvSeparator)
+{
+    auto csvMatrix = csvToMatrix(path, csvSeparator);
     // We have to transpose the matrix
-    string id = path; // TODO
-    if (result.empty())
+    // TODO: we may want to improve this by reading directly into the TimeSeriesSet object, or
+    // by creating a specific IDataSeries implementation
+    int nTimestamps = csvMatrix.size();
+    TimeSeriesSet timeSeriesSet(path.stem(), nTimestamps);
+    if (nTimestamps == 0)
     {
-        return TimeSeriesSet(id, 0);
+        return timeSeriesSet;
     }
-    int nTimestamps = result.size();
-    TimeSeriesSet timeSeriesSet(id, nTimestamps);
-    int nSets = result[0].size();
+    int nSets = csvMatrix[0].size();
     for (int i = 0; i < nSets; ++i)
     {
         vector<double> set;
         set.reserve(nTimestamps);
         for (int j = 0; j < nTimestamps; ++j)
         {
-            set.push_back(result[j][i]);
+            set.push_back(csvMatrix[j][i]);
         }
         timeSeriesSet.add(set);
     }

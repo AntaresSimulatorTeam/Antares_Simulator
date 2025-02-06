@@ -15,9 +15,9 @@ target_include_directories(data-series-csv-importer
 
 # Link dependencies
 target_link_libraries(data-series-csv-importer
-        PRIVATE
-        linear-problem-data-impl
         PUBLIC
+        linear-problem-data-impl
+        PRIVATE
         Boost::headers
 )
 

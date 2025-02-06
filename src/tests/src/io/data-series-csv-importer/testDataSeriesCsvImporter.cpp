@@ -1,0 +1,231 @@
+/*
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
+**
+** Antares_Simulator is free software: you can redistribute it and/or modify
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
+** (at your option) any later version.
+**
+** Antares_Simulator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** Mozilla Public Licence 2.0 for more details.
+**
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+*/
+#define WIN32_LEAN_AND_MEAN
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <unit_test_utils.h>
+
+#include <boost/test/unit_test.hpp>
+
+#include <antares/io/inputs/data-series-csv-importer/DataSeriesRepoImporter.h>
+
+using namespace std;
+using namespace Antares::IO::Inputs::DataSeriesCsvImporter;
+using namespace Antares::Optimisation::LinearProblemDataImpl;
+
+struct CsvCreationFixture
+{
+    filesystem::path temp_path;
+
+    CsvCreationFixture()
+    {
+        temp_path = filesystem::temp_directory_path() /= std::tmpnam(nullptr);
+        filesystem::create_directories(temp_path);
+    }
+
+    filesystem::path writeFile(string filename, string content);
+};
+
+filesystem::path CsvCreationFixture::writeFile(const string filename, const string content)
+{
+    auto filepath = temp_path / (filename + ".csv");
+    std::ofstream outfile(filepath);
+    outfile << content;
+    outfile.close();
+    return filepath;
+}
+
+BOOST_FIXTURE_TEST_SUITE(_DataSeriesImport_OneCsvFile_, CsvCreationFixture)
+
+BOOST_AUTO_TEST_CASE(invalid_file)
+{
+    BOOST_CHECK_EXCEPTION(TimeSeriesSetImporter::importFromFile(temp_path / "dummy_123.csv"),
+                          std::invalid_argument,
+                          checkMessage("Could not open file dummy_123.csv"));
+}
+
+BOOST_AUTO_TEST_CASE(empty_file)
+{
+    auto path = writeFile("empty", "");
+    auto timeSeriesSet = TimeSeriesSetImporter::importFromFile(path);
+    BOOST_CHECK_EQUAL(timeSeriesSet.name(), "empty");
+    BOOST_CHECK_EXCEPTION(timeSeriesSet.getData(0, 0),
+                          TimeSeriesSet::Empty,
+                          checkMessage(
+                            "TS set 'empty' : empty, requesting a value makes no sense"));
+}
+
+BOOST_AUTO_TEST_CASE(one_line_one_column)
+{
+    auto path = writeFile("one", "138.583");
+    auto timeSeriesSet = TimeSeriesSetImporter::importFromFile(path);
+    BOOST_CHECK_EQUAL(timeSeriesSet.name(), "one");
+    BOOST_CHECK_EQUAL(timeSeriesSet.getData(0, 0), 138.583);
+    BOOST_CHECK_EXCEPTION(timeSeriesSet.getData(1, 0),
+                          TimeSeriesSet::RankTooBig,
+                          checkMessage("TS set 'one' : rank 1 exceeds TS set's width"));
+    BOOST_CHECK_EXCEPTION(timeSeriesSet.getData(0, 1),
+                          TimeSeriesSet::HourTooBig,
+                          checkMessage("TS set 'one' : hour 1 exceeds TS set's height"));
+}
+
+BOOST_AUTO_TEST_CASE(one_line_two_columns)
+{
+    auto path = writeFile("one_by_two", "123,456.789");
+    auto timeSeriesSet = TimeSeriesSetImporter::importFromFile(path, ',');
+    BOOST_CHECK_EQUAL(timeSeriesSet.name(), "one_by_two");
+    BOOST_CHECK_EQUAL(timeSeriesSet.getData(0, 0), 123);
+    BOOST_CHECK_EQUAL(timeSeriesSet.getData(1, 0), 456.789);
+    BOOST_CHECK_EXCEPTION(timeSeriesSet.getData(2, 0),
+                          TimeSeriesSet::RankTooBig,
+                          checkMessage("TS set 'one_by_two' : rank 2 exceeds TS set's width"));
+    BOOST_CHECK_EXCEPTION(timeSeriesSet.getData(0, 1),
+                          TimeSeriesSet::HourTooBig,
+                          checkMessage("TS set 'one_by_two' : hour 1 exceeds TS set's height"));
+}
+
+BOOST_AUTO_TEST_CASE(two_lines_one_column)
+{
+    auto path = writeFile("two_by_one", "123\n20");
+    auto timeSeriesSet = TimeSeriesSetImporter::importFromFile(path);
+    BOOST_CHECK_EQUAL(timeSeriesSet.name(), "two_by_one");
+    BOOST_CHECK_EQUAL(timeSeriesSet.getData(0, 0), 123);
+    BOOST_CHECK_EQUAL(timeSeriesSet.getData(0, 1), 20);
+    BOOST_CHECK_EXCEPTION(timeSeriesSet.getData(1, 0),
+                          TimeSeriesSet::RankTooBig,
+                          checkMessage("TS set 'two_by_one' : rank 1 exceeds TS set's width"));
+    BOOST_CHECK_EXCEPTION(timeSeriesSet.getData(0, 2),
+                          TimeSeriesSet::HourTooBig,
+                          checkMessage("TS set 'two_by_one' : hour 2 exceeds TS set's height"));
+}
+
+BOOST_AUTO_TEST_CASE(two_lines_two_columns)
+{
+    auto path = writeFile("two_by_two", "1;2\n3;4");
+    auto timeSeriesSet = TimeSeriesSetImporter::importFromFile(path, ';');
+    BOOST_CHECK_EQUAL(timeSeriesSet.name(), "two_by_two");
+    BOOST_CHECK_EQUAL(timeSeriesSet.getData(0, 0), 1);
+    BOOST_CHECK_EQUAL(timeSeriesSet.getData(0, 1), 3);
+    BOOST_CHECK_EQUAL(timeSeriesSet.getData(1, 0), 2);
+    BOOST_CHECK_EQUAL(timeSeriesSet.getData(1, 1), 4);
+    BOOST_CHECK_EXCEPTION(timeSeriesSet.getData(2, 1),
+                          TimeSeriesSet::RankTooBig,
+                          checkMessage("TS set 'two_by_two' : rank 2 exceeds TS set's width"));
+    BOOST_CHECK_EXCEPTION(timeSeriesSet.getData(1, 2),
+                          TimeSeriesSet::HourTooBig,
+                          checkMessage("TS set 'two_by_two' : hour 2 exceeds TS set's height"));
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_FIXTURE_TEST_SUITE(_DataSeriesImport_AllCsvFiles_, CsvCreationFixture)
+
+BOOST_AUTO_TEST_CASE(empty_dir)
+{
+    auto repo = DataSeriesRepoImporter::importFromDirectory(temp_path);
+    BOOST_CHECK_EXCEPTION(repo.getDataSeries("any"),
+                          DataSeriesRepository::Empty,
+                          checkMessage(
+                            "Data series repo is empty, and somebody requests data from it"));
+}
+
+BOOST_AUTO_TEST_CASE(one_simple_file)
+{
+    writeFile("one", "123");
+    auto repo = DataSeriesRepoImporter::importFromDirectory(temp_path);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("one").name(), "one");
+    BOOST_CHECK_EQUAL(repo.getDataSeries("one").getData(0, 0), 123);
+}
+
+BOOST_AUTO_TEST_CASE(two_simple_files)
+{
+    writeFile("one", "123");
+    writeFile("two", "456");
+    auto repo = DataSeriesRepoImporter::importFromDirectory(temp_path);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("one").name(), "one");
+    BOOST_CHECK_EQUAL(repo.getDataSeries("two").name(), "two");
+    BOOST_CHECK_EQUAL(repo.getDataSeries("one").getData(0, 0), 123);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("two").getData(0, 0), 456);
+}
+
+BOOST_AUTO_TEST_CASE(three_small_files)
+{
+    writeFile("gen1_p_max", "1;2;3;4\n5;6;7;8\n9;10;11;12\n13;14;15;16.17");
+    writeFile("gen2_p_max", "10\n20\n30\n40");
+    writeFile("node1_load", "20;30\n21;31\n22;32\n23;33");
+    auto repo = DataSeriesRepoImporter::importFromDirectory(temp_path);
+
+    BOOST_CHECK_EQUAL(repo.getDataSeries("gen1_p_max").name(), "gen1_p_max");
+    BOOST_CHECK_EQUAL(repo.getDataSeries("gen1_p_max").getData(0, 0), 1);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("gen1_p_max").getData(1, 0), 2);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("gen1_p_max").getData(2, 0), 3);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("gen1_p_max").getData(3, 0), 4);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("gen1_p_max").getData(0, 1), 5);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("gen1_p_max").getData(1, 1), 6);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("gen1_p_max").getData(2, 1), 7);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("gen1_p_max").getData(3, 1), 8);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("gen1_p_max").getData(0, 2), 9);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("gen1_p_max").getData(1, 2), 10);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("gen1_p_max").getData(2, 2), 11);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("gen1_p_max").getData(3, 2), 12);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("gen1_p_max").getData(0, 3), 13);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("gen1_p_max").getData(1, 3), 14);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("gen1_p_max").getData(2, 3), 15);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("gen1_p_max").getData(3, 3), 16.17);
+    BOOST_CHECK_EXCEPTION(repo.getDataSeries("gen1_p_max").getData(4, 0),
+                          TimeSeriesSet::RankTooBig,
+                          checkMessage("TS set 'gen1_p_max' : rank 4 exceeds TS set's width"));
+    BOOST_CHECK_EXCEPTION(repo.getDataSeries("gen1_p_max").getData(0, 4),
+                          TimeSeriesSet::HourTooBig,
+                          checkMessage("TS set 'gen1_p_max' : hour 4 exceeds TS set's height"));
+
+    BOOST_CHECK_EQUAL(repo.getDataSeries("gen2_p_max").name(), "gen2_p_max");
+    BOOST_CHECK_EQUAL(repo.getDataSeries("gen2_p_max").getData(0, 0), 10);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("gen2_p_max").getData(0, 1), 20);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("gen2_p_max").getData(0, 2), 30);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("gen2_p_max").getData(0, 3), 40);
+    BOOST_CHECK_EXCEPTION(repo.getDataSeries("gen2_p_max").getData(1, 0),
+                          TimeSeriesSet::RankTooBig,
+                          checkMessage("TS set 'gen2_p_max' : rank 1 exceeds TS set's width"));
+    BOOST_CHECK_EXCEPTION(repo.getDataSeries("gen2_p_max").getData(0, 4),
+                          TimeSeriesSet::HourTooBig,
+                          checkMessage("TS set 'gen2_p_max' : hour 4 exceeds TS set's height"));
+
+    BOOST_CHECK_EQUAL(repo.getDataSeries("node1_load").name(), "node1_load");
+    BOOST_CHECK_EQUAL(repo.getDataSeries("node1_load").getData(0, 0), 20);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("node1_load").getData(0, 1), 21);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("node1_load").getData(0, 2), 22);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("node1_load").getData(0, 3), 23);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("node1_load").getData(1, 0), 30);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("node1_load").getData(1, 1), 31);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("node1_load").getData(1, 2), 32);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("node1_load").getData(1, 3), 33);
+    BOOST_CHECK_EXCEPTION(repo.getDataSeries("node1_load").getData(2, 0),
+                          TimeSeriesSet::RankTooBig,
+                          checkMessage("TS set 'node1_load' : rank 2 exceeds TS set's width"));
+    BOOST_CHECK_EXCEPTION(repo.getDataSeries("node1_load").getData(0, 4),
+                          TimeSeriesSet::HourTooBig,
+                          checkMessage("TS set 'node1_load' : hour 4 exceeds TS set's height"));
+}
+
+BOOST_AUTO_TEST_SUITE_END()
