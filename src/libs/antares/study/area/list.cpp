@@ -192,9 +192,10 @@ static bool AreaListSaveThermalDataToFile(const AreaList& list, const AnyString&
     return ini.save(filename);
 }
 
-static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const AnyString& folder)
+static bool AreaListSaveToFolderSingleArea(const Area& area, const AnyString& folder)
 {
     bool ret = true;
+    Clob buffer;
 
     // A specific folder for general data
     buffer.clear() << folder << SEP << "input" << SEP << "areas" << SEP << area.id;
@@ -762,7 +763,7 @@ bool AreaList::saveToFolder(const AnyString& folder) const
       {
           logs.info() << "Exporting the area " << (area.index + 1) << '/' << areas.size() << ": "
                       << area.name;
-          ret = AreaListSaveToFolderSingleArea(area, buffer, folder) && ret;
+          ret = AreaListSaveToFolderSingleArea(area, folder) && ret;
       });
 
     // Hydro
