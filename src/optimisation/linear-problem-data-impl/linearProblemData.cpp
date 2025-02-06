@@ -44,4 +44,12 @@ double LinearProblemData::getData(const std::string& dataSetId,
     return dataSeriesRepository_.getDataSeries(dataSetId).getData(rank, hour);
 }
 
+std::vector<double> LinearProblemData::getData(const std::string& dataSetId,
+                                               const std::string& scenarioGroup,
+                                               const unsigned scenario)
+{
+    unsigned rank = groupRepository_.getDataRank(scenarioGroup, scenario);
+    return dataSeriesRepository_.getDataSeries(dataSetId).getData(rank);
+}
+
 } // namespace Antares::Optimisation::LinearProblemDataImpl

@@ -33,7 +33,7 @@ namespace Antares::Optimization
 
 ComponentFiller::ComponentFiller(const Study::SystemModel::Component& component):
     component_(component),
-    evaluationContext_(component_.getParameterValues(), {}),
+    /*evaluationContext_(component_.getParameterValues(), {}),*/
     modelVariable_(component.getModel()->Variables())
 
 {
@@ -53,7 +53,7 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
         // exception?
         return;
     }
-
+    Expressions::Visitors::EvaluationContext;
     Expressions::Visitors::EvalVisitor evaluator(evaluationContext_);
     for (const auto& variable: component_.getModel()->Variables() | std::views::values)
     {

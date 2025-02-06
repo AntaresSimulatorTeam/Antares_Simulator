@@ -56,11 +56,11 @@ struct convert<Antares::IO::Inputs::YmlSystem::Parameter>
         }
         rhs.id = node["id"].as<std::string>();
         rhs.type = node["type"].as<std::string>();
-        rhs.value = node["value"].as<double>();
+        // value could be filename or double in which case it'll be converted later
+        rhs.value = node["value"].as<std::string>();
         return true;
     }
 };
-
 template<>
 struct convert<Antares::IO::Inputs::YmlSystem::Component>
 {

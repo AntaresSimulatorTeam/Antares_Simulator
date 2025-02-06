@@ -101,10 +101,13 @@ static SystemModel::Component createComponent(const YmlSystem::Component& c,
 
     SystemModel::ComponentBuilder component_builder;
 
-    std::map<std::string, double> parameters;
+    std::map<std::string, Expressions::Visitors::ComponentParameter> parameters;
     for (const auto& p: c.parameters)
     {
-        parameters.try_emplace(p.id, p.value);
+        parameters.try_emplace(p.id,
+                               Expressions::Visitors::ComponentParameter{.id = p.id,
+                                                                         .type = p.type,
+                                                                         .value = p.value});
     }
 
     auto component = component_builder.withId(c.id)

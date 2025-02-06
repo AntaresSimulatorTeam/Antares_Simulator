@@ -39,6 +39,10 @@ public:
                    const unsigned scenario,
                    const unsigned hour) override;
 
+    std::vector<double> getData(const std::string& dataSetId,
+                                const std::string& scenarioGroup,
+                                const unsigned scenario) override;
+
     void addScenarioGroup(const std::string& groupId, std::pair<unsigned, unsigned> scenarioToRank);
     void addDataSeries(std::unique_ptr<IDataSeries> dataSeries);
 

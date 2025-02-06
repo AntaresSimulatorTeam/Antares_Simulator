@@ -31,7 +31,7 @@ struct Parameter
 {
     std::string id;
     std::string type;
-    double value;
+    std::string value;
 };
 
 struct Component
