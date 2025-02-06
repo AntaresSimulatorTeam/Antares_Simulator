@@ -24,6 +24,10 @@
 #include <map>
 #include <string>
 
+#include "antares/expressions/NodeRegistry.h"
+#include "antares/expressions/nodes/LiteralNode.h"
+#include "antares/expressions/nodes/Node.h"
+
 namespace Antares::Optimization
 {
 /**
@@ -37,10 +41,12 @@ class LinearExpression
 {
 public:
     /// Build a linear expression with zero offset and zero coefficients
-    LinearExpression() = default;
+    LinearExpression(Expressions::Registry<Expressions::Nodes::Node>& registry);
     /// Build a linear expression with a given offset and a given map of non-zero coefficients per
     /// variable ID
-    LinearExpression(double offset, std::map<std::string, double> coef_per_var);
+    LinearExpression(Expressions::Registry<Expressions::Nodes::Node>& registry,
+                     Expressions::Nodes::Node* offset,
+                     std::map<std::string, Expressions::Nodes::Node*> coef_per_var);
     /// Sum two linear expressions
     LinearExpression operator+(const LinearExpression& other) const;
     /// Subtract two linear expressions
@@ -55,19 +61,22 @@ public:
     LinearExpression negate() const;
 
     /// Get the offset
-    double offset() const
+    Expressions::Nodes::Node* offset() const
     {
         return offset_;
     }
 
     /// Get the non-zero coefficients per variable ID
-    std::map<std::string, double> coefPerVar() const
+    std::map<std::string, Expressions::Nodes::Node*> coefPerVar() const
     {
         return coef_per_var_;
     }
 
 private:
-    double offset_ = 0;
-    std::map<std::string, double> coef_per_var_;
+    Expressions::Registry<Expressions::Nodes::Node>& registry_;
+
+    // Expressions::NodeRegistry node_registry_;
+    Expressions::Nodes::Node* offset_ = registry_.create<Expressions::Nodes::LiteralNode>(0);
+    std::map<std::string, Expressions::Nodes::Node*> coef_per_var_;
 };
 } // namespace Antares::Optimization

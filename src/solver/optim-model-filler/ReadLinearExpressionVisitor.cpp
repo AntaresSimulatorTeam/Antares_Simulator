@@ -32,8 +32,15 @@ namespace Antares::Optimization
 {
 
 ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
+  Expressions::Registry<Node>& registry,
   Expressions::Visitors::EvaluationContext context):
+    registry_(registry),
     context_(std::move(context))
+{
+}
+
+ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(Expressions::Registry<Node>& registry):
+    registry_(registry)
 {
 }
 
@@ -47,7 +54,7 @@ LinearExpression ReadLinearExpressionVisitor::visit(const SumNode* node)
     auto operands = node->getOperands();
     return std::accumulate(std::begin(operands),
                            std::end(operands),
-                           LinearExpression(),
+                           LinearExpression(registry_),
                            [this](LinearExpression sum, Node* operand)
                            { return sum + dispatch(operand); });
 }
@@ -89,17 +96,21 @@ LinearExpression ReadLinearExpressionVisitor::visit(const NegationNode* node)
 
 LinearExpression ReadLinearExpressionVisitor::visit(const VariableNode* node)
 {
-    return LinearExpression(0, {{node->value(), 1}});
+    return LinearExpression(registry_,
+                            registry_.create<LiteralNode>(0),
+                            {{node->value(), registry_.create<LiteralNode>(1)}});
 }
 
 LinearExpression ReadLinearExpressionVisitor::visit(const ParameterNode* node)
 {
-    return {context_.getParameterValue(node->value()), {}};
+    // TODO copy the node or use it as it?
+    return {registry_, registry_.create<ParameterNode>(node->value(), node->timeIndex()), {}};
 }
 
 LinearExpression ReadLinearExpressionVisitor::visit(const LiteralNode* node)
 {
-    return {node->value(), {}};
+    // TODO copy the node or use it as it?
+    return {registry_, registry_.create<LiteralNode>(node->value()), {}};
 }
 
 LinearExpression ReadLinearExpressionVisitor::visit(const PortFieldNode* node)
