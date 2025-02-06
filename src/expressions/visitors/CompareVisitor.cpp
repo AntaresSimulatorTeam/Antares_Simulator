@@ -22,7 +22,9 @@
 #include <antares/expressions/visitors/CompareVisitor.h>
 
 template<class T, class V>
-static bool compareBinaryNode(V& visitor, const T* node, const Antares::Expressions::Nodes::Node* other)
+static bool compareBinaryNode(V& visitor,
+                              const T* node,
+                              const Antares::Expressions::Nodes::Node* other)
 {
     if (const T* other_node = dynamic_cast<const T*>(other))
     {

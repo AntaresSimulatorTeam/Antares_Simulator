@@ -68,11 +68,12 @@ OrtoolsMipVariable* OrtoolsLinearProblem::addVariable(double lb,
     return pair.first->second.get(); // <<name, var>, bool>
 }
 
-std::vector<LinearProblemApi::IMipVariable*> OrtoolsLinearProblem::addVariable(double lb,
-                                                                  double ub,
-                                                                  bool integer,
-                                                                  const std::string& name,
-                                                                  unsigned int number_new_variables)
+std::vector<LinearProblemApi::IMipVariable*> OrtoolsLinearProblem::addVariable(
+  double lb,
+  double ub,
+  bool integer,
+  const std::string& name,
+  unsigned int number_new_variables)
 {
     std::vector<LinearProblemApi::IMipVariable*> new_variables;
     for (unsigned int i = 0; i < number_new_variables; i++)
@@ -186,18 +187,21 @@ static const operations_research::MPVariable* getMpVar(const LinearProblemApi::I
     const auto* OrtoolsMipVar = dynamic_cast<const OrtoolsMipVariable*>(var);
     if (!OrtoolsMipVar)
     {
-        logs.error() << "Invalid cast, tried from LinearProblemApi::IMipVariable to OrtoolsMipVariable";
+        logs.error()
+          << "Invalid cast, tried from LinearProblemApi::IMipVariable to OrtoolsMipVariable";
         throw std::bad_cast();
     }
     return OrtoolsMipVar->getMpVar();
 }
 
-void OrtoolsLinearProblem::setObjectiveCoefficient(LinearProblemApi::IMipVariable* var, double coefficient)
+void OrtoolsLinearProblem::setObjectiveCoefficient(LinearProblemApi::IMipVariable* var,
+                                                   double coefficient)
 {
     objective_->SetCoefficient(getMpVar(var), coefficient);
 }
 
-double OrtoolsLinearProblem::getObjectiveCoefficient(const LinearProblemApi::IMipVariable* var) const
+double OrtoolsLinearProblem::getObjectiveCoefficient(
+  const LinearProblemApi::IMipVariable* var) const
 {
     return objective_->GetCoefficient(getMpVar(var));
 }
