@@ -192,7 +192,9 @@ static bool AreaListSaveThermalDataToFile(const AreaList& list, const AnyString&
     return ini.save(filename);
 }
 
-static bool AreaListSaveToFolderSingleArea(const Area& area, const AnyString& folder)
+static bool AreaListSaveToFolderSingleArea(const Area& area,
+                                           const AnyString& folder,
+                                           Parameters::Compatibility::HydroPmax& hydroPmax)
 {
     bool ret = true;
     Clob buffer;
@@ -274,7 +276,7 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, const AnyString& fo
         if (area.hydro.series) // Series
         {
             buffer.clear() << folder << SEP << "input" << SEP << "hydro" << SEP << "series";
-            ret = area.hydro.series->saveToFolder(area.id, buffer) && ret;
+            ret = area.hydro.series->saveToFolder(area.id, buffer, hydroPmax) && ret;
         }
     }
 
@@ -763,7 +765,10 @@ bool AreaList::saveToFolder(const AnyString& folder) const
       {
           logs.info() << "Exporting the area " << (area.index + 1) << '/' << areas.size() << ": "
                       << area.name;
-          ret = AreaListSaveToFolderSingleArea(area, folder) && ret;
+          ret = AreaListSaveToFolderSingleArea(area,
+                                               folder,
+                                               pStudy.parameters.compatibility.hydroPmax)
+                && ret;
       });
 
     // Hydro
