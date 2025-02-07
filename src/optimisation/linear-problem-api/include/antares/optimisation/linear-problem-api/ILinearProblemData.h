@@ -9,6 +9,7 @@ namespace Antares::Optimisation::LinearProblemApi
 
 class ILinearProblemData
 {
+public:
     virtual double getData(const std::string& dataSetId,
                            const std::string& scenarioGroup,
                            const unsigned scenario,

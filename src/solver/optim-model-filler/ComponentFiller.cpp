@@ -19,6 +19,7 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include <numeric>
 #include <ranges>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
@@ -53,8 +54,15 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
         // exception?
         return;
     }
-    Expressions::Visitors::EvaluationContext;
-    Expressions::Visitors::EvalVisitor evaluator(evaluationContext_);
+
+    // TODO
+    std::vector<unsigned int> timeSteps(ctx.getNumberOfTimestep());
+    std::iota(timeSteps.begin(), timeSteps.end(), ctx.getFirstTimeStep());
+    Expressions::Visitors::EvaluationContext evaluation_context(component_.getParameterValues(),
+                                                                {},
+                                                                timeSteps,
+                                                                data);
+    Expressions::Visitors::EvalVisitor evaluator(evaluation_context);
     for (const auto& variable: component_.getModel()->Variables() | std::views::values)
     {
         if (variable.isTimeDependent())
@@ -67,8 +75,9 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
         }
         else
         {
-            pb.addVariable(evaluator.dispatch(variable.LowerBound().RootNode()),
-                           evaluator.dispatch(variable.UpperBound().RootNode()),
+            // TODO
+            pb.addVariable(evaluator.dispatch(variable.LowerBound().RootNode())[0],
+                           evaluator.dispatch(variable.UpperBound().RootNode())[0],
                            variable.Type() != Study::SystemModel::ValueType::FLOAT,
                            component_.Id() + "." + variable.Id());
         }
@@ -77,10 +86,11 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
 
 void ComponentFiller::addStaticConstraint(Optimisation::LinearProblemApi::ILinearProblem& pb,
                                           const LinearConstraint& linear_constraint,
-                                          const std::string& constraint_id) const
+                                          const std::string& constraint_id,
+                                          Expressions::Visitors::EvalVisitor& evaluator) const
 {
-    auto* ct = pb.addConstraint(linear_constraint.lb,
-                                linear_constraint.ub,
+    auto* ct = pb.addConstraint(evaluator.dispatch(linear_constraint.lb)[0],
+                                evaluator.dispatch(linear_constraint.ub)[0],
                                 component_.Id() + "." + constraint_id);
     for (auto [var_id, coef]: linear_constraint.coef_per_var)
     {
@@ -93,28 +103,31 @@ void ComponentFiller::addTimeDependentConstraints(
   Optimisation::LinearProblemApi::ILinearProblem& pb,
   const LinearConstraint& linear_constraint,
   const std::string& constraint_id,
-  unsigned int nb_cstr) const
+  unsigned int nb_cstr,
+  Expressions::Visitors::EvalVisitor& evaluator) const
 {
-    auto vect_ct = pb.addConstraint(linear_constraint.lb,
-                                    linear_constraint.ub,
+    auto vect_ct = pb.addConstraint(evaluator.dispatch(linear_constraint.lb),
+                                    evaluator.dispatch(linear_constraint.ub),
                                     component_.Id() + "." + constraint_id,
                                     nb_cstr);
+
     for (auto cstr(0); cstr < nb_cstr; ++cstr)
     {
         auto* ct = vect_ct[cstr];
-        for (const auto& [var_id, coef]: linear_constraint.coef_per_var)
+        for (const auto& [var_id, coeffs]: linear_constraint.coef_per_var)
         {
+            const auto all_coeffs = evaluator.dispatch(coeffs);
             // TODO FIXME the coefficient needs to be time-dependent
             if (IsThisVariableTimeDependent(var_id))
             {
                 auto* variable = pb.getVariable(component_.Id() + "." + var_id + '_'
                                                 + std::to_string(cstr));
-                ct->setCoefficient(variable, coef);
+                ct->setCoefficient(variable, all_coeffs[cstr]);
             }
             else
             {
                 auto* variable = pb.getVariable(component_.Id() + "." + var_id);
-                ct->setCoefficient(variable, coef);
+                ct->setCoefficient(variable, all_coeffs[0]);
             }
         }
     }
@@ -124,6 +137,15 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
                                      Optimisation::LinearProblemApi::ILinearProblemData& data,
                                      Optimisation::LinearProblemApi::FillContext& ctx)
 {
+    // TODO
+    std::vector<unsigned int> timeSteps(ctx.getNumberOfTimestep());
+    std::iota(timeSteps.begin(), timeSteps.end(), ctx.getFirstTimeStep());
+    Expressions::Visitors::EvaluationContext evaluation_context(component_.getParameterValues(),
+                                                                {},
+                                                                timeSteps,
+                                                                data);
+    Expressions::Visitors::EvalVisitor evaluator(evaluation_context);
+
     Expressions::Registry<Expressions::Nodes::Node> registry;
     ReadLinearConstraintVisitor visitor(registry, evaluationContext_);
     for (const auto& constraint: component_.getModel()->getConstraints() | std::views::values)
@@ -139,11 +161,12 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
                 addTimeDependentConstraints(pb,
                                             linear_constraint,
                                             constraint.Id(),
-                                            ctx.getNumberOfTimestep());
+                                            ctx.getNumberOfTimestep(),
+                                            evaluator);
             }
             else
             {
-                addStaticConstraint(pb, linear_constraint, constraint.Id());
+                addStaticConstraint(pb, linear_constraint, constraint.Id(), evaluator);
             }
         }
     }

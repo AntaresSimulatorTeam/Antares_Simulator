@@ -23,6 +23,11 @@
 #include <antares/expressions/visitors/EvaluationContext.h>
 #include "antares/expressions/visitors/NodeVisitor.h"
 
+namespace Antares::Optimisation::LinearProblemApi
+{
+class ILinearProblemData;
+}
+
 namespace Antares::Expressions::Visitors
 {
 

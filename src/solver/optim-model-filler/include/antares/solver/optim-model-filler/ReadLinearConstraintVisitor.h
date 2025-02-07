@@ -54,8 +54,6 @@ class ReadLinearConstraintVisitor: public Expressions::Visitors::NodeVisitor<Lin
 {
 public:
     ReadLinearConstraintVisitor(Expressions::Registry<Expressions::Nodes::Node>& registry);
-    explicit ReadLinearConstraintVisitor(Expressions::Registry<Expressions::Nodes::Node>& registry,
-                                         Expressions::Visitors::EvaluationContext context);
     std::string name() const override;
 
 private:

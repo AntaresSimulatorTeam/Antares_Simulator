@@ -35,14 +35,6 @@ ReadLinearConstraintVisitor::ReadLinearConstraintVisitor(
 {
 }
 
-ReadLinearConstraintVisitor::ReadLinearConstraintVisitor(
-  Expressions::Registry<Expressions::Nodes::Node>& registry,
-  Expressions::Visitors::EvaluationContext context):
-    registry_(registry),
-    linear_expression_visitor_(registry, std::move(context))
-{
-}
-
 std::string ReadLinearConstraintVisitor::name() const
 {
     return "ReadLinearConstraintVisitor";

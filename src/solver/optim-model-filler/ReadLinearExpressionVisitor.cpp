@@ -31,14 +31,6 @@ using namespace Antares::Expressions::Nodes;
 namespace Antares::Optimization
 {
 
-ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
-  Expressions::Registry<Node>& registry,
-  Expressions::Visitors::EvaluationContext context):
-    registry_(registry),
-    context_(std::move(context))
-{
-}
-
 ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(Expressions::Registry<Node>& registry):
     registry_(registry)
 {

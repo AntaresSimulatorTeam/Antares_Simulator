@@ -38,13 +38,13 @@ class ReadLinearExpressionVisitor: public Expressions::Visitors::NodeVisitor<Lin
 {
 public:
     ReadLinearExpressionVisitor(Expressions::Registry<Expressions::Nodes::Node>& registry);
-    explicit ReadLinearExpressionVisitor(Expressions::Registry<Expressions::Nodes::Node>& registry,
-                                         Expressions::Visitors::EvaluationContext context);
+    // explicit ReadLinearExpressionVisitor(Expressions::Registry<Expressions::Nodes::Node>&
+    // registry);
     std::string name() const override;
 
 private:
     Expressions::Registry<Expressions::Nodes::Node>& registry_;
-    const Expressions::Visitors::EvaluationContext context_;
+    // const Expressions::Visitors::EvaluationContext context_;
     LinearExpression visit(const Expressions::Nodes::SumNode* node) override;
     LinearExpression visit(const Expressions::Nodes::SubtractionNode* node) override;
     LinearExpression visit(const Expressions::Nodes::MultiplicationNode* node) override;

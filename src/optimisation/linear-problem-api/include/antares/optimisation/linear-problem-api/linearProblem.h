@@ -81,8 +81,8 @@ public:
     virtual IMipConstraint* addConstraint(double lb, double ub, const std::string& name) = 0;
 
     /// Add range of bounded constraints to the problem
-    virtual std::vector<IMipConstraint*> addConstraint(double lb,
-                                                       double ub,
+    virtual std::vector<IMipConstraint*> addConstraint(const std::vector<double>& lb,
+                                                       const std::vector<double>& ub,
                                                        const std::string& name,
                                                        unsigned int number_new_constraints)
       = 0;

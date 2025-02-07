@@ -59,12 +59,14 @@ public:
 
     void addStaticConstraint(Optimisation::LinearProblemApi::ILinearProblem& pb,
                              const LinearConstraint& linear_constraint,
-                             const std::string& constraint_id) const;
+                             const std::string& constraint_id,
+                             Expressions::Visitors::EvalVisitor& evaluator) const;
 
     void addTimeDependentConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
                                      const LinearConstraint& linear_constraint,
                                      const std::string& constraint_id,
-                                     unsigned int nb_cstr) const;
+                                     unsigned int nb_cstr,
+                                     Expressions::Visitors::EvalVisitor& evaluator) const;
 
     void addConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
                         Optimisation::LinearProblemApi::ILinearProblemData& data,
@@ -79,7 +81,7 @@ private:
     bool IsThisVariableTimeDependent(const std::string& var_id) const;
 
     const Study::SystemModel::Component& component_;
-    Expressions::Visitors::EvaluationContext evaluationContext_;
+    // Expressions::Visitors::EvaluationContext evaluationContext_;
     const std::map<std::string, Study::SystemModel::Variable>& modelVariable_;
 };
 } // namespace Antares::Optimization

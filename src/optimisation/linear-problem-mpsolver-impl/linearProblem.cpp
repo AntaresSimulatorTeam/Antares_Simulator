@@ -158,8 +158,8 @@ OrtoolsMipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
 }
 
 std::vector<LinearProblemApi::IMipConstraint*> OrtoolsLinearProblem::addConstraint(
-  double lb,
-  double ub,
+  const std::vector<double>& lb,
+  const std::vector<double>& ub,
   const std::string& name,
   unsigned int number_new_constraints)
 {

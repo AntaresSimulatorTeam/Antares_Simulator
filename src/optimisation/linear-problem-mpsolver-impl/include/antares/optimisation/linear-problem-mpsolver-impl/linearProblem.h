@@ -76,8 +76,8 @@ public:
     OrtoolsMipConstraint* addConstraint(double lb, double ub, const std::string& name) override;
 
     std::vector<LinearProblemApi::IMipConstraint*> addConstraint(
-      double lb,
-      double ub,
+      const std::vector<double>& lb,
+      const std::vector<double>& ub,
       const std::string& name,
       unsigned int number_new_constraints) override;
 
