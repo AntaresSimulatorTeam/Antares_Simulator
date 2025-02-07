@@ -13,4 +13,5 @@
 07-thermal-heuristic.md
 08-appendix.md
 09-command-line.md
+optional-features/00-index.md
 ```

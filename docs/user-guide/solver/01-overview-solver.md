@@ -6,7 +6,7 @@ The *Solver* is *Antares Simulator*'s main feature.
 
 **Monte Carlo Simulation** Runs either an economy simulation or an adequacy simulation
 depending on the values of the [parameters](04-parameters.md).
-If hardware resources and simulation settings allow it, simulations can benefit from [multi-threading](../optional-features/multi-threading.md).
+If hardware resources and simulation settings allow it, simulations can benefit from [multi-threading](optional-features/multi-threading.md).
 
 
 ## Antares at one glance

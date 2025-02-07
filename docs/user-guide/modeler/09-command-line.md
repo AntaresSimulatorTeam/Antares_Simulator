@@ -9,16 +9,12 @@ hide:
 
 The modeler takes only one argument: the path to the [study directory](02-inputs.md#study-structure).  
 
-Example:
+Example for Windows users:
+~~~
+antares-modeler.exe C:\path\to\my\study
+~~~
 
-=== "Windows"
-
-    ~~~
-    antares-modeler.exe C:\path\to\my\study
-    ~~~
-
-=== "Ubuntu"
-
-    ~~~
-    antares-modeler /path/to/my/study
-    ~~~
+For Linux users:
+~~~
+antares-modeler /path/to/my/study
+~~~

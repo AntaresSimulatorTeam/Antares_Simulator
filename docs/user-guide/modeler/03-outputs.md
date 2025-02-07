@@ -10,8 +10,8 @@ and one containing the optimization model.
 
 ### Description
 
-The optimization results are written under **output/solution.csv**.  
-The file is in CSV format, with values seperated by a space, and the floating point represented by the `.` character.  
+The optimization results are written under **output/solution.tsv**.  
+The file is in TSV format, with values seperated by a tab, and the floating point represented by the `.` character.  
 
 The first column contains the IDs of the variables, composed by **componentID.variableID_s_t**, where:  
 
@@ -24,7 +24,7 @@ The second column contains optimal variable values.
 
 ### Example
 Output file for a simulation with 2 scenarios and 3 timestamps.
-~~~csv
+~~~
 generator1.is_on_0_0 1
 generator1.is_on_0_1 1
 generator1.is_on_0_2 1
