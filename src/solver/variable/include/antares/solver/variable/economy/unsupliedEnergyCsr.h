@@ -60,8 +60,6 @@ struct VCardUnsupliedEnergyCSR
 
     //! The VCard to look for for calculating spatial aggregates
     typedef VCardUnsupliedEnergyCSR VCardForSpatialAggregate;
-
-    //! Data Level
     static constexpr uint8_t categoryDataLevel = Category::DataLevel::area;
     //! File level (provided by the type of the results)
     static constexpr uint8_t categoryFileLevel = ResultsType::categoryFile
@@ -85,7 +83,7 @@ struct VCardUnsupliedEnergyCSR
     static constexpr uint8_t isPossiblyNonApplicable = 0;
 
     typedef IntermediateValues IntermediateValuesBaseType;
-    typedef IntermediateValues* IntermediateValuesType;
+    typedef std::vector<IntermediateValues> IntermediateValuesType;
 
     typedef IntermediateValuesBaseType* IntermediateValuesTypeForSpatialAg;
 
@@ -128,11 +126,6 @@ public:
     };
 
 public:
-    ~UnsupliedEnergyCSR()
-    {
-        delete[] pValuesForTheCurrentYear;
-    }
-
     void initializeFromStudy(Data::Study& study)
     {
         pNbYearsParallel = study.maxNbYearsInParallel;
@@ -140,7 +133,7 @@ public:
         // Intermediate values
         InitializeResultsFromStudy(AncestorType::pResults, study);
 
-        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
+        pValuesForTheCurrentYear.resize(pNbYearsParallel);
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
         {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);

@@ -38,7 +38,8 @@ template<class StringT>
 void TransformNameIntoID(const AnyString& name, StringT& out);
 std::string transformNameIntoID(const std::string& name);
 
-std::string FormattedTime(const std::string& format);
+std::tm getCurrentTime();
+std::string formatTime(const std::tm& localTime, const std::string& format);
 
 /*!
 ** \brief Beautify a name, for renaming an area for example
@@ -52,8 +53,12 @@ std::vector<std::pair<std::string, std::string>> splitStringIntoPairs(const std:
 
 namespace Utils
 {
+
 bool isZero(double d);
 double round(double d, unsigned precision);
+double ceilDiv(double numerator, double denominator);
+double floorDiv(double numerator, double denominator);
+
 } // namespace Utils
 } // namespace Antares
 

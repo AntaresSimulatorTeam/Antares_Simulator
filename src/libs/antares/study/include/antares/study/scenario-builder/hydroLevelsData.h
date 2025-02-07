@@ -51,7 +51,7 @@ public:
     /*!
     ** \brief Reset data from the study
     */
-    bool reset(const Study& study);
+    bool reset(const Study& study) override;
 
     /*!
     ** \brief Export the data into a mere INI file
@@ -68,9 +68,9 @@ public:
     void setTSnumber(uint index, uint year, double value);
     //@}
 
-    uint width() const;
+    uint width() const override;
 
-    uint height() const;
+    uint height() const override;
 
     double get_value(uint x, uint y) const;
 

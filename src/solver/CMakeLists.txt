@@ -13,13 +13,15 @@ add_subdirectory(hydro)
 add_subdirectory(infeasible-problem-analysis)
 add_subdirectory(lps)
 add_subdirectory(misc)
+add_subdirectory(modeler)
 add_subdirectory(optimisation)
 add_subdirectory(signal-handling)
 add_subdirectory(simulation)
 add_subdirectory(ts-generator)
 add_subdirectory(utils)
 add_subdirectory(variable)
-add_subdirectory(expressions)
+add_subdirectory(optim-model-filler)
+
 #
 # Resource file for Windows
 #
@@ -58,20 +60,20 @@ add_executable(antares-solver
 set_target_properties(antares-solver PROPERTIES OUTPUT_NAME ${exec_name})
 
 set(ANTARES_SOLVER_LIBS
-	Antares::args_helper
-	Antares::date
-	Antares::benchmarking
-	Antares::result_writer
-	Antares::sys
-	Antares::infoCollection
-	Antares::checks
-	Antares::misc
+        Antares::args_helper
+        Antares::date
+        Antares::benchmarking
+        Antares::result_writer
+        Antares::sys
+        Antares::infoCollection
+        Antares::checks
+        Antares::misc
         Antares::optimization-options
         Antares::signal-handling
         Antares::locale
-	yuni-static-uuid
-	yuni-static-core		
-	${CMAKE_THREADS_LIBS_INIT}
+        yuni-static-uuid
+        yuni-static-core
+        ${CMAKE_THREADS_LIBS_INIT}
 )
 
 set(ANTARES_SOLVER_LIBS ${ANTARES_SOLVER_LIBS}

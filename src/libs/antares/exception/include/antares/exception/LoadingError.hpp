@@ -140,7 +140,7 @@ public:
 class InvalidStudy: public LoadingError
 {
 public:
-    explicit InvalidStudy(const Yuni::String& study);
+    explicit InvalidStudy(const std::string& study);
 };
 
 class NoStudyProvided: public LoadingError

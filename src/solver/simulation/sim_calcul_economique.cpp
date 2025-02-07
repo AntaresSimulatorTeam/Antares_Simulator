@@ -19,20 +19,17 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <cmath>
+#include <algorithm>
 #include <sstream>
 
 #include <antares/antares/fatal-error.h>
-#include <antares/study/area/constants.h>
 #include <antares/study/area/scratchpad.h>
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/simulation/simulation.h"
 #include "antares/study/fwd.h"
-#include "antares/study/simulation.h"
 
 using namespace Antares;
 using namespace Antares::Data;
@@ -42,6 +39,7 @@ static void importShortTermStorages(
   std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorageOut)
 {
     int clusterGlobalIndex = 0;
+    int constraintGlobalIndex = 0;
     for (uint areaIndex = 0; areaIndex != areas.size(); areaIndex++)
     {
         ShortTermStorageOut[areaIndex].resize(areas[areaIndex]->shortTermStorage.count());
@@ -59,7 +57,22 @@ static void importShortTermStorages(
             toInsert.withdrawalNominalCapacity = st.properties.withdrawalNominalCapacity.value();
             toInsert.initialLevel = st.properties.initialLevel;
             toInsert.initialLevelOptim = st.properties.initialLevelOptim;
+            toInsert.penalizeVariationInjection = st.properties.penalizeVariationInjection;
+            toInsert.penalizeVariationWithdrawal = st.properties.penalizeVariationWithdrawal;
             toInsert.name = st.properties.name;
+            for (const auto& constraint: st.additionalConstraints)
+            {
+                if (constraint.enabled)
+                {
+                    auto newConstraint = constraint;
+                    for (auto& c: newConstraint.constraints)
+                    {
+                        c.globalIndex = constraintGlobalIndex;
+                        ++constraintGlobalIndex;
+                    }
+                    toInsert.additionalConstraints.push_back(std::move(newConstraint));
+                }
+            }
 
             toInsert.series = st.series;
 
@@ -109,6 +122,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.NombreDeContraintesCouplantes = activeConstraints.size();
 
     problem.ExportMPS = study.parameters.include.exportMPS;
+    problem.exportSolutions = study.parameters.include.exportSolutions;
     problem.ExportStructure = study.parameters.include.exportStructure;
     problem.NamedProblems = study.parameters.namedProblems;
     problem.exportMPSOnError = Data::exportMPS(parameters.include.unfeasibleProblemBehavior);
@@ -151,8 +165,6 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         problem.CoutDeDefaillancePositive[i] = area.thermal.unsuppliedEnergyCost;
 
         problem.CoutDeDefaillanceNegative[i] = area.thermal.spilledEnergyCost;
-
-        problem.CoutDeDefaillanceEnReserve[i] = area.thermal.unsuppliedEnergyCost;
 
         problem.DefaillanceNegativeUtiliserPMinThermique[i] = (anoOtherDispatchPower
                                                                & area.nodalOptimization)
@@ -837,6 +849,12 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                     }
 
                     marginGen = weekGenerationTarget;
+
+                    if (problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir
+                        < weekTarget_tmp)
+                    {
+                        marginGen = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
+                    }
                 }
 
                 if (not problem.CaracteristiquesHydrauliques[k].TurbinageEntreBornes)

@@ -47,8 +47,6 @@
 
 using namespace Yuni;
 
-#define SEP Yuni::IO::Separator
-
 namespace Antares
 {
 /*extern*/

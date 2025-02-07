@@ -82,10 +82,8 @@ struct VCardNbOfDispatchedUnitsByPlant
     static constexpr uint8_t isPossiblyNonApplicable = 0;
 
     typedef IntermediateValues IntermediateValuesDeepType;
-    typedef IntermediateValues* IntermediateValuesBaseType;
-    typedef IntermediateValuesBaseType* IntermediateValuesType;
-
-    // typedef IntermediateValues IntermediateValuesType;
+    typedef std::vector<IntermediateValues> IntermediateValuesBaseType;
+    typedef std::vector<IntermediateValuesBaseType> IntermediateValuesType;
 
 }; // class VCard
 
@@ -132,18 +130,8 @@ public:
 
 public:
     NbOfDispatchedUnitsByPlant():
-        pValuesForTheCurrentYear(NULL),
         pSize(0)
     {
-    }
-
-    ~NbOfDispatchedUnitsByPlant()
-    {
-        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-        {
-            delete[] pValuesForTheCurrentYear[numSpace];
-        }
-        delete[] pValuesForTheCurrentYear;
     }
 
     void initializeFromStudy(Data::Study& study)
@@ -155,7 +143,7 @@ public:
     void initializeFromArea(Data::Study* study, Data::Area* area)
     {
         pNbYearsParallel = study->maxNbYearsInParallel;
-        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
+        pValuesForTheCurrentYear.resize(pNbYearsParallel);
 
         // Get the area
         pSize = area->thermal.list.enabledCount();
@@ -164,8 +152,7 @@ public:
             AncestorType::pResults.resize(pSize);
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
             {
-                pValuesForTheCurrentYear[numSpace] = new VCardType::IntermediateValuesDeepType
-                  [pSize];
+                pValuesForTheCurrentYear[numSpace].resize(pSize);
             }
 
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
@@ -184,11 +171,6 @@ public:
         }
         else
         {
-            for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-            {
-                pValuesForTheCurrentYear[numSpace] = nullptr;
-            }
-
             AncestorType::pResults.clear();
         }
 
@@ -237,7 +219,7 @@ public:
         for (unsigned int i = 0; i <= state.study.runtime.rangeLimits.hour[Data::rangeEnd]; ++i)
         {
             state.thermalClusterDispatchedUnitsCountForYear[i] += static_cast<uint>(
-              pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex].hour[i]);
+              pValuesForTheCurrentYear[numSpace][state.thermalCluster->enabledIndex].hour[i]);
         }
 
         // Next variable
@@ -251,7 +233,7 @@ public:
              i <= state.study.runtime.rangeLimits.hour[Data::rangeEnd];
              ++i)
         {
-            pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex].hour[i]
+            pValuesForTheCurrentYear[numSpace][state.thermalCluster->enabledIndex].hour[i]
               = state.thermalClusterDispatchedUnitsCountForYear[i];
         }
 
@@ -308,8 +290,8 @@ public:
         auto& thermal = state.thermal;
         for (auto& cluster: area->thermal.list.each_enabled())
         {
-            pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[state.hourInTheYear]
-              = thermal[area->index].numberOfUnitsONbyCluster[cluster->areaWideIndex];
+            pValuesForTheCurrentYear[numSpace][cluster->enabledIndex].hour[state.hourInTheYear]
+              = thermal[area->index].numberOfUnitsONbyCluster[cluster->enabledIndex];
         }
 
         // Next variable
@@ -320,7 +302,7 @@ public:
       unsigned int,
       unsigned int numSpace) const
     {
-        return pValuesForTheCurrentYear[numSpace]->hour;
+        return pValuesForTheCurrentYear[numSpace][0].hour;
     }
 
     void localBuildAnnualSurveyReport(SurveyResults& results,
@@ -342,7 +324,7 @@ public:
                 // Write the data for the current year
                 results.variableCaption = cluster->name(); // VCardType::Caption();
                 results.variableUnit = VCardType::Unit();
-                pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex]
+                pValuesForTheCurrentYear[numSpace][cluster->enabledIndex]
                   .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
             }
         }

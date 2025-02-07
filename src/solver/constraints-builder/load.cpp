@@ -18,16 +18,9 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-#include <yuni/io/file.h>
-
-#include <antares/inifile/inifile.h>
 #include "antares/config/config.h"
 #include "antares/solver/constraints-builder/cbuilder.h"
 #include "antares/study/area/constants.h"
-
-using namespace Yuni;
-
-#define SEP Yuni::IO::Separator
 
 namespace Antares
 {

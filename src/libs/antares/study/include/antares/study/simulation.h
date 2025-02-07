@@ -34,6 +34,8 @@ namespace Data
 /*!
 ** \brief Set of settings for a simulation
 */
+
+// TODO VP: remove with GUI
 class SimulationComments final
 {
 public:
@@ -64,9 +66,6 @@ public:
     bool saveToFolder(const AnyString& folder) const;
 
     void saveUsingWriter(Solver::IResultWriter& writer, const AnyString& folder) const;
-
-    //! Get (in bytes) the amount of memory used by the class
-    uint64_t memoryUsage() const;
 
 public:
     //! Comments

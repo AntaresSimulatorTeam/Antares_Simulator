@@ -21,24 +21,22 @@
 
 #include <limits>
 
-#include "antares/solver/optimisation/opt_fonctions.h"
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-
 /*
  pi_define.h doesn't include this header, yet it uses struct jmp_buf.
  It would be nice to remove this include, but would require to change pi_define.h,
  which isn't part of Antares
 */
-#include <setjmp.h>
 
+#include <setjmp.h>
 extern "C"
 {
-#include "pi_define.h"
-#include "pi_definition_arguments.h"
-#include "pi_fonctions.h"
+#include <pi_constantes_externes.h>
+#include <pi_definition_arguments.h>
+#include <pi_fonctions.h>
 }
 
 #include <antares/logs/logs.h>
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
 using namespace Antares;
 

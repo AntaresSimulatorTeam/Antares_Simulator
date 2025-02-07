@@ -21,6 +21,9 @@
 
 #include "antares/solver/optimisation/constraints/Group1.h"
 
+#include "antares/solver/optimisation/constraints/ShortTermStorageCostVariation.h"
+#include "antares/solver/optimisation/constraints/ShortTermStorageCumulation.h"
+
 AreaBalanceData Group1::GetAreaBalanceData()
 {
     return {.CorrespondanceCntNativesCntOptim = problemeHebdo_->CorrespondanceCntNativesCntOptim,
@@ -39,12 +42,19 @@ FictitiousLoadData Group1::GetFictitiousLoadData()
             .DefaillanceNegativeUtiliserHydro = problemeHebdo_->DefaillanceNegativeUtiliserHydro};
 }
 
-ShortTermStorageLevelData Group1::GetShortTermStorageLevelData()
+ShortTermStorageData Group1::GetShortTermStorageData()
 {
     return {
       .CorrespondanceCntNativesCntOptim = problemeHebdo_->CorrespondanceCntNativesCntOptim,
       .ShortTermStorage = problemeHebdo_->ShortTermStorage,
     };
+}
+
+ShortTermStorageCumulativeConstraintData Group1::GetShortTermStorageCumulativeConstraintData()
+{
+    return {problemeHebdo_->CorrespondanceCntNativesCntOptim,
+            problemeHebdo_->ShortTermStorage,
+            problemeHebdo_->CorrespondanceCntNativesCntOptimHebdomadaires};
 }
 
 FlowDissociationData Group1::GetFlowDissociationData()
@@ -72,8 +82,25 @@ void Group1::BuildConstraints()
     auto fictitiousLoadData = GetFictitiousLoadData();
     FictitiousLoad fictitiousLoad(builder_, fictitiousLoadData);
 
-    auto shortTermStorageLevelData = GetShortTermStorageLevelData();
-    ShortTermStorageLevel shortTermStorageLevel(builder_, shortTermStorageLevelData);
+    auto shortTermStorageData = GetShortTermStorageData();
+    ShortTermStorageLevel shortTermStorageLevel(builder_, shortTermStorageData);
+
+    ShortTermStorageCostVariationInjectionBackward shortTermStorageCostVariationInjectionBackward(
+      builder_,
+      shortTermStorageData);
+    ShortTermStorageCostVariationInjectionForward shortTermStorageCostVariationInjectionForward(
+      builder_,
+      shortTermStorageData);
+    ShortTermStorageCostVariationWithdrawalBackward shortTermStorageCostVariationWithdrawalBackward(
+      builder_,
+      shortTermStorageData);
+    ShortTermStorageCostVariationWithdrawalForward shortTermStorageCostVariationWithdrawalForward(
+      builder_,
+      shortTermStorageData);
+
+    auto shortTermStorageCumulativeConstraintData = GetShortTermStorageCumulativeConstraintData();
+    ShortTermStorageCumulation shortTermStorageCumulation(builder_,
+                                                          shortTermStorageCumulativeConstraintData);
 
     auto flowDissociationData = GetFlowDissociationData();
     FlowDissociation flowDissociation(builder_, flowDissociationData);
@@ -91,6 +118,10 @@ void Group1::BuildConstraints()
             areaBalance.add(pdt, pays);
             fictitiousLoad.add(pdt, pays);
             shortTermStorageLevel.add(pdt, pays);
+            shortTermStorageCostVariationInjectionBackward.add(pdt, pays);
+            shortTermStorageCostVariationInjectionForward.add(pdt, pays);
+            shortTermStorageCostVariationWithdrawalBackward.add(pdt, pays);
+            shortTermStorageCostVariationWithdrawalForward.add(pdt, pays);
         }
 
         for (uint32_t interco = 0; interco < problemeHebdo_->NombreDInterconnexions; interco++)
@@ -104,5 +135,10 @@ void Group1::BuildConstraints()
         {
             bindingConstraintHour.add(pdt, cntCouplante);
         }
+    }
+
+    for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; ++pays)
+    {
+        shortTermStorageCumulation.add(pays);
     }
 }

@@ -21,7 +21,6 @@
 #ifndef __SOLVER_VARIABLE_ECONOMY_BALANCE_H__
 #define __SOLVER_VARIABLE_ECONOMY_BALANCE_H__
 
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include "antares/solver/variable/variable.h"
 
 namespace Antares
@@ -87,7 +86,7 @@ struct VCardBalance
     static constexpr uint8_t isPossiblyNonApplicable = 0;
 
     typedef IntermediateValues IntermediateValuesBaseType;
-    typedef IntermediateValues* IntermediateValuesType;
+    typedef std::vector<IntermediateValues> IntermediateValuesType;
 
     typedef IntermediateValuesBaseType* IntermediateValuesTypeForSpatialAg;
 
@@ -134,7 +133,6 @@ public:
 public:
     ~Balance()
     {
-        delete[] pValuesForTheCurrentYear;
         delete[] bilanPays;
         delete[] pInterco;
     }
@@ -145,7 +143,7 @@ public:
 
         InitializeResultsFromStudy(AncestorType::pResults, study);
 
-        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
+        pValuesForTheCurrentYear.resize(pNbYearsParallel);
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
         {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);

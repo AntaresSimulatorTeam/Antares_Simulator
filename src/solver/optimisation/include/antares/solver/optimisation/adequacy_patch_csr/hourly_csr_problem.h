@@ -31,10 +31,69 @@
 
 #include "../variables/VariableManagerUtils.h"
 
+struct LinkVariable
+{
+    LinkVariable():
+        directVar(-1),
+        indirectVar(-1)
+    {
+    }
+
+    LinkVariable(int direct, int indirect):
+        directVar(direct),
+        indirectVar(indirect)
+    {
+    }
+
+    inline bool check() const
+    {
+        if (directVar < 0)
+        {
+            Antares::logs.warning() << "directVar < 0 detected, this should not happen";
+        }
+        if (indirectVar < 0)
+        {
+            Antares::logs.warning() << "indirectVar < 0 detected, this should not happen";
+        }
+
+        return (directVar >= 0) && (indirectVar >= 0);
+    }
+
+    int directVar;
+    int indirectVar;
+};
+
 struct PROBLEME_HEBDO;
 
 class HourlyCSRProblem
 {
+    using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
+
+public:
+    explicit HourlyCSRProblem(const AdqPatchParams& adqPatchParams, PROBLEME_HEBDO* p):
+        adqPatchParams_(adqPatchParams),
+        variableManager_(p->CorrespondanceVarNativesVarOptim,
+                         p->NumeroDeVariableStockFinal,
+                         p->NumeroDeVariableDeTrancheDeStock,
+                         p->NombreDePasDeTempsPourUneOptimisation),
+        problemeHebdo_(p)
+    {
+        double temp = pow(10, -adqPatchParams.curtailmentSharing.thresholdVarBoundsRelaxation);
+        belowThisThresholdSetToZero = std::min(temp, 0.1);
+
+        allocateProblem();
+    }
+
+    HourlyCSRProblem(const HourlyCSRProblem&) = delete;
+    HourlyCSRProblem& operator=(const HourlyCSRProblem&) = delete;
+
+    inline void setHour(int hour)
+    {
+        triggeredHour = hour;
+    }
+
+    void run(uint week, uint year);
+
 private:
     void calculateCsrParameters();
 
@@ -65,85 +124,26 @@ private:
     void setQuadraticCost();
     void setLinearCost();
 
-private:
-    using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
+public:
+    // TODO [gp] : try to make these members private
+    double belowThisThresholdSetToZero;
+    std::map<int, int> numberOfConstraintCsrAreaBalance;
+    std::set<int> ensVariablesInsideAdqPatch;       // place inside only ENS inside adq-patch
+    std::set<int> varToBeSetToZeroIfBelowThreshold; // place inside only ENS and Spillage variable
+    int triggeredHour;
+
     const AdqPatchParams& adqPatchParams_;
     VariableManagement::VariableManager variableManager_;
 
-public:
-    void run(uint week, uint year);
-
-    // TODO[FOM] Make these members private
-    int triggeredHour;
-    double belowThisThresholdSetToZero;
     PROBLEME_HEBDO* problemeHebdo_;
     PROBLEME_ANTARES_A_RESOUDRE problemeAResoudre_;
 
-    explicit HourlyCSRProblem(const AdqPatchParams& adqPatchParams, PROBLEME_HEBDO* p):
-        adqPatchParams_(adqPatchParams),
-        variableManager_(p->CorrespondanceVarNativesVarOptim,
-                         p->NumeroDeVariableStockFinal,
-                         p->NumeroDeVariableDeTrancheDeStock,
-                         p->NombreDePasDeTempsPourUneOptimisation),
-        problemeHebdo_(p)
-    {
-        double temp = pow(10, -adqPatchParams.curtailmentSharing.thresholdVarBoundsRelaxation);
-        belowThisThresholdSetToZero = std::min(temp, 0.1);
-
-        allocateProblem();
-    }
-
-    ~HourlyCSRProblem() = default;
-
-    HourlyCSRProblem(const HourlyCSRProblem&) = delete;
-    HourlyCSRProblem& operator=(const HourlyCSRProblem&) = delete;
-
-    inline void setHour(int hour)
-    {
-        triggeredHour = hour;
-    }
-
     std::map<int, int> numberOfConstraintCsrEns;
-    std::map<int, int> numberOfConstraintCsrAreaBalance;
     std::map<int, int> numberOfConstraintCsrFlowDissociation;
     std::map<int, int> numberOfConstraintCsrHourlyBinding; // length is number of binding constraint
                                                            // contains interco 2-2
 
     std::map<int, double> rhsAreaBalanceValues;
-    std::set<int> varToBeSetToZeroIfBelowThreshold; // place inside only ENS and Spillage variable
-    std::set<int> ensVariablesInsideAdqPatch;       // place inside only ENS inside adq-patch
-
-    struct LinkVariable
-    {
-        LinkVariable():
-            directVar(-1),
-            indirectVar(-1)
-        {
-        }
-
-        LinkVariable(int direct, int indirect):
-            directVar(direct),
-            indirectVar(indirect)
-        {
-        }
-
-        inline bool check() const
-        {
-            if (directVar < 0)
-            {
-                Antares::logs.warning() << "directVar < 0 detected, this should not happen";
-            }
-            if (indirectVar < 0)
-            {
-                Antares::logs.warning() << "indirectVar < 0 detected, this should not happen";
-            }
-
-            return (directVar >= 0) && (indirectVar >= 0);
-        }
-
-        int directVar;
-        int indirectVar;
-    };
 
     // links between two areas inside the adq-patch domain
     std::map<int, LinkVariable> linkInsideAdqPatch;

@@ -112,7 +112,7 @@ public:
     */
     [[nodiscard]] bool loadFromFolder(Data::Study& s,
                                       const Data::StudyLoadOptions& options,
-                                      const AnyString& folder);
+                                      const std::filesystem::path& folder);
 
     /*!
     ** \brief Save all binding constraints into a folder
@@ -156,11 +156,6 @@ public:
     ** \brief Convert all weekly constraints into daily ones
     */
     void changeConstraintsWeeklyToDaily();
-
-    /*!
-    ** \brief Get the memory usage
-    */
-    [[nodiscard]] uint64_t memoryUsage() const;
 
     /*!
     ** \brief Invalidate all matrices of all binding constraints

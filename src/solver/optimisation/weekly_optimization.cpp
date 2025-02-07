@@ -27,14 +27,10 @@ namespace Antares::Solver::Optimization
 {
 WeeklyOptimization::WeeklyOptimization(const OptimizationOptions& options,
                                        PROBLEME_HEBDO* problemeHebdo,
-                                       AdqPatchParams& adqPatchParams,
-                                       uint thread_number,
                                        IResultWriter& writer,
                                        Simulation::ISimulationObserver& simulationObserver):
     options_(options),
     problemeHebdo_(problemeHebdo),
-    adqPatchParams_(adqPatchParams),
-    thread_number_(thread_number),
     writer_(writer),
     simulationObserver_(simulationObserver)
 {
@@ -42,11 +38,7 @@ WeeklyOptimization::WeeklyOptimization(const OptimizationOptions& options,
 
 void WeeklyOptimization::solve()
 {
-    OPT_OptimisationHebdomadaire(options_,
-                                 problemeHebdo_,
-                                 adqPatchParams_,
-                                 writer_,
-                                 simulationObserver_.get());
+    OPT_OptimisationHebdomadaire(options_, problemeHebdo_, writer_, simulationObserver_.get());
 }
 
 } // namespace Antares::Solver::Optimization

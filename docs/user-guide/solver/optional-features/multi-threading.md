@@ -14,12 +14,12 @@ Provided that hardware resources are large enough, this mode may reduce signific
 
 To benefit from multi-threading, the simulation must be run in the following context:
 
-- The [parallel](../08-command-line.md#simulation) option must be enabled (it is disabled by default)
-- The simulation [mode](../04-parameters.md#mode) must be either `Adequacy` or `Economy`
+- The [parallel](../02-command-line.md#simulation) option must be enabled (it is disabled by default)
+- The simulation [mode](../static-modeler/04-parameters.md#mode) must be either `Adequacy` or `Economy`
 
 When the "parallel" solver option is used, each Monte-Carlo year is dispatched in an individual process on the available CPU cores.
 The number of such individual processes depends on the characteristics of the local hardware and on the value given to
-the study-dependent [number-of-cores-mode](../04-parameters.md#number-of-cores-mode) advanced parameter.
+the study-dependent [number-of-cores-mode](../static-modeler/04-parameters.md#number-of-cores-mode) advanced parameter.
 This parameter can take five different values (Minimum, Low, Medium, High, Maximum).
 The number of independent processes resulting from the combination (local hardware + study settings) is given in the
 following table, which shows the CPU allowances granted in the different configurations.

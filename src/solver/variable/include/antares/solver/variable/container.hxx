@@ -23,12 +23,9 @@
 
 #include <memory>
 
-#include <yuni/yuni.h>
 #include <yuni/core/static/types.h>
 
 #include "antares/solver/variable/surveyresults/reportbuilder.hxx"
-
-#define SEP Yuni::IO::Separator
 
 namespace Antares
 {
@@ -38,16 +35,6 @@ namespace Variable
 {
 namespace Container
 {
-template<class NextT>
-inline List<NextT>::List()
-{
-}
-
-template<class NextT>
-inline List<NextT>::~List()
-{
-}
-
 template<class NextT>
 inline void List<NextT>::initializeFromStudy(Data::Study& study)
 {
@@ -238,12 +225,6 @@ inline void List<NextT>::retrieveResultsForLink(
 }
 
 template<class NextT>
-inline uint64_t List<NextT>::memoryUsage() const
-{
-    return sizeof(ListType) + NextType::memoryUsage();
-}
-
-template<class NextT>
 void List<NextT>::buildSurveyReport(SurveyResults& results,
                                     int dataLevel,
                                     int fileLevel,
@@ -254,7 +235,8 @@ void List<NextT>::buildSurveyReport(SurveyResults& results,
 
     // The new filename
     results.data.filename.clear();
-    results.data.filename << results.data.output << SEP;
+    results.data.filename << std::filesystem::path(static_cast<std::string>(results.data.output))
+                               / "";
     Category::FileLevelToStream(results.data.filename, fileLevel);
     results.data.filename << '-';
     Category::PrecisionLevelToStream(results.data.filename, precision);
@@ -283,7 +265,8 @@ void List<NextT>::buildAnnualSurveyReport(SurveyResults& results,
 
     // The new filename
     results.data.filename.clear();
-    results.data.filename << results.data.output << SEP;
+    results.data.filename << std::filesystem::path(static_cast<std::string>(results.data.output))
+                               / "";
     Category::FileLevelToStream(results.data.filename, fileLevel);
     results.data.filename << '-';
     Category::PrecisionLevelToStream(results.data.filename, precision);
@@ -333,32 +316,32 @@ void List<NextT>::exportSurveyResults(bool global,
         logs.info() << "Exporting the annual results";
     }
 
-    auto survey = std::make_shared<SurveyResults>(*pStudy, output, writer);
+    SurveyResults survey(*pStudy, output, writer);
 
     // Year by year ?
-    survey->yearByYearResults = !global;
+    survey.yearByYearResults = !global;
 
     if (global)
     {
         // alias to the type of the report builder
         using Builder = SurveyReportBuilder<true, ListType>;
         // Building the survey results for each possible state
-        Builder::Run(*this, *survey);
+        Builder::Run(*this, survey);
 
         // Exporting the Grid (information about the study)
-        survey->exportGridInfos();
+        survey.exportGridInfos();
 
         // Exporting the digest
         // The digest must be exported after the real report because some values
         // are computed at this moment.
-        Builder::RunDigest(*this, *survey, writer);
+        Builder::RunDigest(*this, survey, writer);
     }
     else
     {
         // alias to the type of the report builder
         using Builder = SurveyReportBuilder<false, ListType>;
         // Building the survey results for each possible state
-        Builder::Run(*this, *survey, numSpace);
+        Builder::Run(*this, survey, numSpace);
     }
 }
 

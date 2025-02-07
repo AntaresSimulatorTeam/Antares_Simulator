@@ -137,8 +137,6 @@ public:
 
     uint visibleLinksCount(uint layerID);
 
-    uint64_t memoryUsage() const;
-
 public:
     //! Areas ordered by their name + links ordered by their name
     Area::LinkMap orderedAreasAndLinks;

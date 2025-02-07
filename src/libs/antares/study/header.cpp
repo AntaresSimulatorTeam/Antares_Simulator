@@ -179,7 +179,7 @@ bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
     return false;
 }
 
-bool StudyHeader::loadFromFile(const AnyString& filename, bool warnings)
+bool StudyHeader::loadFromFile(const fs::path& filename, bool warnings)
 {
     // (Re)Initialize the internal settings
     reset();

@@ -46,7 +46,6 @@ Benchmarking::OptimizationInfo Adequacy::getOptimizationInfo() const
 
     optInfo.nbVariables = Pb->NombreDeVariables;
     optInfo.nbConstraints = Pb->NombreDeContraintes;
-    optInfo.nbNonZeroCoeffs = Pb->NombreDeTermesAllouesDansLaMatriceDesContraintes;
     return optInfo;
 }
 
@@ -211,7 +210,6 @@ bool Adequacy::year(Progression::Task& progression,
             {
                 OPT_OptimisationHebdomadaire(createOptimizationOptions(study),
                                              &currentProblem,
-                                             study.parameters.adqPatchParams,
                                              resultWriter,
                                              simulationObserver_.get());
 

@@ -22,7 +22,6 @@
 #define __SOLVER_VARIABLE_ECONOMY_MiscGenMinusRowPSP_H__
 
 #include <antares/study/area/constants.h>
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include "antares/solver/variable/variable.h"
 
 namespace Antares
@@ -85,7 +84,7 @@ struct VCardMiscGenMinusRowPSP
     static constexpr uint8_t isPossiblyNonApplicable = 0;
 
     typedef IntermediateValues IntermediateValuesBaseType;
-    typedef IntermediateValues* IntermediateValuesType;
+    typedef std::vector<IntermediateValues> IntermediateValuesType;
     typedef IntermediateValuesBaseType* IntermediateValuesTypeForSpatialAg;
 
 }; // class VCard
@@ -130,11 +129,6 @@ public:
     };
 
 public:
-    ~MiscGenMinusRowPSP()
-    {
-        delete[] pValuesForTheCurrentYear;
-    }
-
     void initializeFromStudy(Data::Study& study)
     {
         pNbYearsParallel = study.maxNbYearsInParallel;
@@ -143,7 +137,7 @@ public:
         InitializeResultsFromStudy(AncestorType::pResults, study);
 
         // Intermediate values
-        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
+        pValuesForTheCurrentYear.resize(pNbYearsParallel);
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
         {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);

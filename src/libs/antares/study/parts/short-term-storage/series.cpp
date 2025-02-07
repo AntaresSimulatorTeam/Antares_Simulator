@@ -33,24 +33,30 @@
 namespace Antares::Data::ShortTermStorage
 {
 
-bool Series::loadFromFolder(const std::string& folder)
+namespace fs = std::filesystem;
+
+bool Series::loadFromFolder(const fs::path& folder)
 {
     bool ret = true;
 
-    ret = loadFile(folder + SEP + "PMAX-injection.txt", maxInjectionModulation) && ret;
-    ret = loadFile(folder + SEP + "PMAX-withdrawal.txt", maxWithdrawalModulation) && ret;
-    ret = loadFile(folder + SEP + "inflows.txt", inflows) && ret;
-    ret = loadFile(folder + SEP + "lower-rule-curve.txt", lowerRuleCurve) && ret;
-    ret = loadFile(folder + SEP + "upper-rule-curve.txt", upperRuleCurve) && ret;
+    ret = loadFile(folder / "PMAX-injection.txt", maxInjectionModulation) && ret;
+    ret = loadFile(folder / "PMAX-withdrawal.txt", maxWithdrawalModulation) && ret;
+    ret = loadFile(folder / "inflows.txt", inflows) && ret;
+    ret = loadFile(folder / "lower-rule-curve.txt", lowerRuleCurve) && ret;
+    ret = loadFile(folder / "upper-rule-curve.txt", upperRuleCurve) && ret;
 
-    ret = loadFile(folder + SEP + "cost-injection.txt", costInjection) && ret;
-    ret = loadFile(folder + SEP + "cost-withdrawal.txt", costWithdrawal) && ret;
-    ret = loadFile(folder + SEP + "cost-level.txt", costLevel) && ret;
+    ret = loadFile(folder / "cost-injection.txt", costInjection) && ret;
+    ret = loadFile(folder / "cost-withdrawal.txt", costWithdrawal) && ret;
+    ret = loadFile(folder / "cost-level.txt", costLevel) && ret;
+
+    ret = loadFile(folder / "cost-variation-injection.txt", costVariationInjection) && ret;
+
+    ret = loadFile(folder / "cost-variation-withdrawal.txt", costVariationWithdrawal) && ret;
 
     return ret;
 }
 
-bool loadFile(const std::string& path, std::vector<double>& vect)
+bool loadFile(const fs::path& path, std::vector<double>& vect)
 {
     logs.debug() << "  :: loading file " << path;
 
@@ -101,16 +107,16 @@ bool loadFile(const std::string& path, std::vector<double>& vect)
     return true;
 }
 
+void fillIfEmpty(std::vector<double>& v, double value)
+{
+    if (v.empty())
+    {
+        v.resize(HOURS_PER_YEAR, value);
+    }
+}
+
 void Series::fillDefaultSeriesIfEmpty()
 {
-    auto fillIfEmpty = [](std::vector<double>& v, double value)
-    {
-        if (v.empty())
-        {
-            v.resize(HOURS_PER_YEAR, value);
-        }
-    };
-
     fillIfEmpty(maxInjectionModulation, 1.0);
     fillIfEmpty(maxWithdrawalModulation, 1.0);
     fillIfEmpty(inflows, 0.0);
@@ -120,6 +126,10 @@ void Series::fillDefaultSeriesIfEmpty()
     fillIfEmpty(costInjection, 0.0);
     fillIfEmpty(costWithdrawal, 0.0);
     fillIfEmpty(costLevel, 0.0);
+
+    fillIfEmpty(costVariationInjection, 0.0);
+
+    fillIfEmpty(costVariationWithdrawal, 0.0);
 }
 
 bool Series::saveToFolder(const std::string& folder) const
@@ -145,6 +155,9 @@ bool Series::saveToFolder(const std::string& folder) const
     checkWrite("cost-injection.txt", costInjection);
     checkWrite("cost-withdrawal.txt", costWithdrawal);
     checkWrite("cost-level.txt", costLevel);
+
+    checkWrite("cost-variation-injection.txt", costVariationInjection);
+    checkWrite("cost-variation-withdrawal.txt", costVariationWithdrawal);
 
     return ret;
 }
@@ -213,7 +226,9 @@ bool Series::validateSizes(const std::string& id) const
            && checkSize("upper-rule-curve.txt", id, upperRuleCurve)
            && checkSize("cost-injection.txt", id, costInjection)
            && checkSize("cost-withdrawal.txt", id, costWithdrawal)
-           && checkSize("cost-level.txt", id, costLevel);
+           && checkSize("cost-level.txt", id, costLevel)
+           && checkSize("cost-variation-injection.txt", id, costVariationInjection)
+           && checkSize("cost-variation-withdrawal.txt", id, costVariationWithdrawal);
 }
 
 bool Series::validateMaxInjection(const std::string& id) const

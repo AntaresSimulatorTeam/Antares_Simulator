@@ -4,11 +4,10 @@ from pathlib import Path
 from utils.assertions import check
 
 class study_run:
-    def __init__(self, study_path, solver_path, use_ortools, ortools_solver, named_mps_problems, parallel):
+    def __init__(self, study_path, antares_simu_path, solver_name, named_mps_problems, parallel):
         self.study_path = study_path
-        self.solver_path = solver_path
-        self.use_ortools = use_ortools
-        self.ortools_solver = ortools_solver
+        self.antares_simu_path = antares_simu_path
+        self.solverName = solver_name
         self.named_mps_problems = named_mps_problems
         self.parallel = parallel
         self.raise_exception_on_failure = True
@@ -20,12 +19,10 @@ class study_run:
 
     def run(self):
         print("\nRunning the study")
-        solver_full_path = str(Path(self.solver_path).resolve())
+        antares_full_path = str(Path(self.antares_simu_path).resolve())
 
-        command = [solver_full_path, "-i", str(self.study_path)]
-        if self.use_ortools:
-            command.append('--use-ortools')
-            command.append('--ortools-solver=' + self.ortools_solver)
+        command = [antares_full_path, "-i", str(self.study_path)]
+        command.append('--solver=' + self.solverName)
         if self.named_mps_problems:
             command.append('--named-mps-problems')
         if self.parallel:

@@ -221,6 +221,10 @@ SheddingPolicy StringToSheddingPolicy(const AnyString& text)
     {
         return shpShavePeaks;
     }
+    if (s == "accurate shave peaks")
+    {
+        return shpAccurateShavePeaks;
+    }
     if (s == "minimize duration")
     {
         return shpMinimizeDuration;
@@ -235,6 +239,8 @@ const char* SheddingPolicyToCString(SheddingPolicy strategy)
     {
     case shpShavePeaks:
         return "shave peaks";
+    case shpAccurateShavePeaks:
+        return "accurate shave peaks";
     case shpMinimizeDuration:
         return "minimize duration";
     case shpUnknown:

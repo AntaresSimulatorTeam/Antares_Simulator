@@ -34,7 +34,7 @@ the random factors that may affect the balance between load and generation. Econ
 as much a critical role as they do in the other kinds of studies since the stakes are mainly to know if and
 when supply security is likely to be jeopardized (detailed costs incurred in more ordinary conditions are of
 comparatively lower importance). In these studies, the default *Antares* option to use is the
-[`adequacy`](18-parameters.md#mode) simulation mode.
+[`adequacy`](solver/static-modeler/04-parameters.md#mode) simulation mode.
 
 ### Transmission project profitability
 [//]: # (TODO: explain what "fair and perfect market" means)
@@ -45,7 +45,7 @@ and/or improvement of the security of supply (reduction of the loss-of-load expe
 In these studies, economic parameters and the physical modeling of the dynamic constraints bearing on
 the generating units are of paramount importance. Though a thorough survey of many "Monte-Carlo years"
 is still required, the number of scenarios to simulate is not as large as in generation adequacy studies.
-In these studies, the default *Antares* option to use is the [`economy`](18-parameters.md#mode) simulation mode.
+In these studies, the default *Antares* option to use is the [`economy`](solver/static-modeler/04-parameters.md#mode) simulation mode.
 
 ## Performance considerations
 Typically, *Antares* has to solve a least-cost hydro-thermal power schedule and unit commitment problem, with an hourly 
@@ -54,7 +54,7 @@ The large number and the size of the individual problems to solve often make opt
 
 Depending on user-defined results accuracy requirements, various practical options[^2] allow to simplify either
 the formulation of the problems, or their resolution.
-[^2]: See [hydro-pricing-mode](solver/04-parameters.md#hydro-pricing-mode), [unit-commitment-mode](solver/04-parameters.md#unit-commitment-mode)
+[^2]: See [hydro-pricing-mode](solver/static-modeler/04-parameters.md#hydro-pricing-mode), [unit-commitment-mode](solver/static-modeler/04-parameters.md#unit-commitment-mode)
 
 [//]: # (TODO: list in [^2] the other parameters that have impact on performance)
 
@@ -73,4 +73,4 @@ operation problems (one for each week of each Monte-Carlo year), assumed to be i
 Note that, however, dependency issues such as the management of hydro stock (or any other kind of energy storage
 facility) may bring a significant coupling between the successive problems, which needs to be addressed properly[^3].
 
-[^3]: See how *Antares* addresses stock dependency between successive problems [here](solver/06-hydro-heuristics.md#seasonal-hydro-pre-allocation).
+[^3]: See how *Antares* addresses stock dependency between successive problems [here](solver/static-modeler/06-hydro-heuristics.md#seasonal-hydro-pre-allocation).

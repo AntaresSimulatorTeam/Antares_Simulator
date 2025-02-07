@@ -273,13 +273,6 @@ public:
     void beforeYearByYearExport(uint year, uint numSpace);
     //@}
 
-    //! \name Misc
-    //@{
-    /*!
-    ** \brief Get the memory used by this variable and all other in the static list
-    */
-    uint64_t memoryUsage() const;
-
     /*!
     ** \brief "Print" informations about the variable tree
     */

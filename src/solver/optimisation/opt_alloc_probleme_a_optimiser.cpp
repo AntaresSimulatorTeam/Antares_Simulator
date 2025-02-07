@@ -24,16 +24,7 @@
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
-using namespace Antares;
-
-#ifdef _MSC_VER
-#define SNPRINTF sprintf_s
-#else
-#define SNPRINTF snprintf
-#endif
-
-void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
-                                                 int NbTermes)
+void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
 {
     const size_t nbVariables = ProblemeAResoudre->NombreDeVariables;
     const size_t nbConstraints = ProblemeAResoudre->NombreDeContraintes;
@@ -41,12 +32,6 @@ void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* Pr
     ProblemeAResoudre->Sens.resize(nbConstraints);
     ProblemeAResoudre->IndicesDebutDeLigne.assign(nbConstraints, 0);
     ProblemeAResoudre->NombreDeTermesDesLignes.assign(nbConstraints, 0);
-
-    ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes.assign(NbTermes, 0.);
-    ProblemeAResoudre->IndicesColonnes.assign(NbTermes, 0);
-
-    ProblemeAResoudre->NombreDeTermesAllouesDansLaMatriceDesContraintes = NbTermes;
-    ProblemeAResoudre->IncrementDAllocationMatriceDesContraintes = (int)(0.1 * NbTermes);
 
     ProblemeAResoudre->CoutQuadratique.assign(nbVariables, 0.);
     ProblemeAResoudre->CoutLineaire.assign(nbVariables, 0.);
@@ -77,62 +62,20 @@ void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* Pr
     ProblemeAResoudre->VariablesEntieres.resize(nbVariables);
 }
 
-static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int mxPaliers)
+static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
     int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
                                                   ->NombreDePasDeTempsPourUneOptimisation;
 
-    int Sparsity = mxPaliers * problemeHebdo->NombreDePays;
-    Sparsity += problemeHebdo->NombreDInterconnexions;
-    if (Sparsity > 100)
-    {
-        Sparsity = 100;
-    }
-
-    int NbTermes = 0;
-    NbTermes += ProblemeAResoudre->NombreDeContraintes;
-
-    int Adder = mxPaliers;
-    Adder += 4;
-    Adder *= problemeHebdo->NombreDePays;
-    Adder += 2 * problemeHebdo->NombreDInterconnexions;
-    Adder *= NombreDePasDeTempsPourUneOptimisation;
-
-    NbTermes += Adder;
-
-    NbTermes += Adder;
-
-    Adder = 3 * problemeHebdo->NombreDInterconnexions * NombreDePasDeTempsPourUneOptimisation;
-    NbTermes += Adder;
-
-    Adder = Sparsity * problemeHebdo->NombreDeContraintesCouplantes;
-    Adder *= (NombreDePasDeTempsPourUneOptimisation);
-    Adder += Sparsity * (7 + 7) * problemeHebdo->NombreDeContraintesCouplantes;
-
-    NbTermes += Adder;
-
-    NbTermes += 3 * problemeHebdo->NombreDePays * NombreDePasDeTempsPourUneOptimisation;
-    NbTermes += problemeHebdo->NombreDePays * NombreDePasDeTempsPourUneOptimisation * 4;
-    NbTermes += problemeHebdo->NombreDePays * NombreDePasDeTempsPourUneOptimisation * 5;
-
-    NbTermes += problemeHebdo->NombreDePays * NombreDePasDeTempsPourUneOptimisation
-                * 2; /*inequality constraint on final hydros level*/
-    NbTermes += 1;   /* constraint includes hydro generation, pumping and final level */
-    NbTermes += 101; /* constraint expressing final level as a sum of stock layers */
-
-    NbTermes += problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage;
-
     logs.info();
     logs.info()
       << " Starting Memory Allocation for a Weekly Optimization problem in Canonical form ";
     logs.info() << " ( Problem Size :" << ProblemeAResoudre->NombreDeVariables << " variables "
                 << ProblemeAResoudre->NombreDeContraintes << " Constraints) ";
-    logs.info() << " Expected Number of Non-zero terms in Problem Matrix : " << NbTermes;
-    logs.info();
 
-    OPT_AllocateFromNumberOfVariableConstraints(problemeHebdo->ProblemeAResoudre.get(), NbTermes);
+    OPT_AllocateFromNumberOfVariableConstraints(problemeHebdo->ProblemeAResoudre.get());
 
     int NbIntervalles = problemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation;
 
@@ -147,24 +90,7 @@ void OPT_AllocDuProblemeAOptimiser(PROBLEME_HEBDO* problemeHebdo)
 {
     problemeHebdo->ProblemeAResoudre = std::make_unique<PROBLEME_ANTARES_A_RESOUDRE>();
 
-    int mxPaliers = OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(problemeHebdo);
+    OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(problemeHebdo);
 
-    optimisationAllocateProblem(problemeHebdo, mxPaliers);
-}
-
-void OPT_AugmenterLaTailleDeLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
-{
-    int NbTermes = ProblemeAResoudre->NombreDeTermesAllouesDansLaMatriceDesContraintes;
-    NbTermes += ProblemeAResoudre->IncrementDAllocationMatriceDesContraintes;
-
-    logs.info();
-    logs.info() << " Expected Number of Non-zero terms in Problem Matrix : increased to : "
-                << NbTermes;
-    logs.info();
-
-    ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes.resize(NbTermes);
-
-    ProblemeAResoudre->IndicesColonnes.resize(NbTermes);
-
-    ProblemeAResoudre->NombreDeTermesAllouesDansLaMatriceDesContraintes = NbTermes;
+    optimisationAllocateProblem(problemeHebdo);
 }

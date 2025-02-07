@@ -21,7 +21,6 @@
 #ifndef __SOLVER_VARIABLE_ECONOMY_Join_H__
 #define __SOLVER_VARIABLE_ECONOMY_Join_H__
 
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include "antares/solver/variable/variable.h"
 
 namespace Antares
@@ -325,11 +324,6 @@ public:
     {
         LeftType ::template simulationEndSpatialAggregates(allVars);
         RightType::template simulationEndSpatialAggregates(allVars);
-    }
-
-    uint64_t memoryUsage() const
-    {
-        return LeftType::memoryUsage() + RightType::memoryUsage();
     }
 
     template<class I>

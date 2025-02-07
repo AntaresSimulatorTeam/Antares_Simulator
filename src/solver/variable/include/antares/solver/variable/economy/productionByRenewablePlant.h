@@ -82,8 +82,8 @@ struct VCardProductionByRenewablePlant
     static constexpr uint8_t isPossiblyNonApplicable = 0;
 
     typedef IntermediateValues IntermediateValuesDeepType;
-    typedef IntermediateValues* IntermediateValuesBaseType;
-    typedef IntermediateValuesBaseType* IntermediateValuesType;
+    typedef std::vector<IntermediateValues> IntermediateValuesBaseType;
+    typedef std::vector<IntermediateValuesBaseType> IntermediateValuesType;
 
 }; // class VCard
 
@@ -129,18 +129,8 @@ public:
 
 public:
     ProductionByRenewablePlant():
-        pValuesForTheCurrentYear(nullptr),
         pSize(0)
     {
-    }
-
-    ~ProductionByRenewablePlant()
-    {
-        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-        {
-            delete[] pValuesForTheCurrentYear[numSpace];
-        }
-        delete[] pValuesForTheCurrentYear;
     }
 
     void initializeFromStudy(Data::Study& study)
@@ -153,7 +143,7 @@ public:
     {
         // Get the number of years in parallel
         pNbYearsParallel = study->maxNbYearsInParallel;
-        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
+        pValuesForTheCurrentYear.resize(pNbYearsParallel);
 
         // Get the area
         pSize = area->renewable.list.enabledCount();
@@ -163,8 +153,7 @@ public:
 
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
             {
-                pValuesForTheCurrentYear[numSpace] = new VCardType::IntermediateValuesDeepType
-                  [pSize];
+                pValuesForTheCurrentYear[numSpace].resize(pSize);
             }
 
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
@@ -183,11 +172,6 @@ public:
         }
         else
         {
-            for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-            {
-                pValuesForTheCurrentYear[numSpace] = nullptr;
-            }
-
             AncestorType::pResults.clear();
         }
         // Next
@@ -286,7 +270,7 @@ public:
               state.year,
               state.hourInTheYear);
 
-            pValuesForTheCurrentYear[numSpace][renewableCluster->areaWideIndex]
+            pValuesForTheCurrentYear[numSpace][renewableCluster->enabledIndex]
               .hour[state.hourInTheYear]
               += renewableClusterProduction;
         }
@@ -308,15 +292,6 @@ public:
         return pValuesForTheCurrentYear[numSpace][column].hour;
     }
 
-    inline uint64_t memoryUsage() const
-    {
-        uint64_t r = (sizeof(IntermediateValues) * pSize + IntermediateValues::MemoryUsage())
-                     * pNbYearsParallel;
-        r += sizeof(double) * pSize * HOURS_PER_YEAR * pNbYearsParallel;
-        r += AncestorType::memoryUsage();
-        return r;
-    }
-
     void localBuildAnnualSurveyReport(SurveyResults& results,
                                       int fileLevel,
                                       int precision,
@@ -335,7 +310,7 @@ public:
                 // Write the data for the current year
                 results.variableCaption = cluster->name();
                 results.variableUnit = VCardType::Unit();
-                pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex]
+                pValuesForTheCurrentYear[numSpace][cluster->enabledIndex]
                   .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
             }
         }

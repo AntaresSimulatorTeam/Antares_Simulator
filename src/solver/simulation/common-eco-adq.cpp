@@ -94,7 +94,6 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
         NullSimulationObserver simulationObserver;
         OPT_OptimisationHebdomadaire(createOptimizationOptions(study),
                                      &problem,
-                                     study.parameters.adqPatchParams,
                                      resultWriter,
                                      simulationObserver);
     }
@@ -110,7 +109,9 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
 
         for (uint j = 0; j < study.runtime.interconnectionsCount(); ++j)
         {
-            transitMoyenInterconnexionsRecalculQuadratique[j][indx] = ntcValues.ValeurDuFlux[j];
+            study.runtime.transitMoyenInterconnexionsRecalculQuadratique[j][indx] = ntcValues
+                                                                                      .ValeurDuFlux
+                                                                                        [j];
         }
     }
 }
@@ -170,7 +171,7 @@ void ComputeFlowQuad(Data::Study& study,
                 for (uint i = 0; i < (uint)problem.NombreDePasDeTemps; ++i)
                 {
                     const uint indx = i + PasDeTempsDebut;
-                    transitMoyenInterconnexionsRecalculQuadratique[j][indx] = 0;
+                    study.runtime.transitMoyenInterconnexionsRecalculQuadratique[j][indx] = 0;
                 }
             }
         }
@@ -256,6 +257,8 @@ void PrepareRandomNumbers(Data::Study& study,
           //-----------------------------
           for (auto& cluster: area.thermal.list.each_enabled())
           {
+              // we use the areaWideIndex because the thermal noises are randomly calculated
+              // for every cluster to avoid different results if a cluster is deactivated
               uint clusterIndex = cluster->areaWideIndex;
               double& rnd = randomForYear.pThermalNoisesByArea[indexArea][clusterIndex];
               double randomClusterProdCost(0.);
@@ -377,7 +380,7 @@ void BuildThermalPartOfWeeklyProblem(Data::Study& study,
                              .PuissanceDisponibleEtCout[cluster->index];
 
                 Pt.CoutHoraireDeProductionDuPalierThermique[hourInWeek]
-                  = cluster->getMarketBidCost(hourInYear, year)
+                  = cluster->getCostProvider().getMarketBidCost(hourInYear, year)
                     + thermalNoises[areaIdx][cluster->areaWideIndex];
 
                 Pt.PuissanceDisponibleDuPalierThermique[hourInWeek] = cluster->series

@@ -143,11 +143,6 @@ void UIRuntimeInfo::reloadBindingConstraints()
     }
 }
 
-uint64_t UIRuntimeInfo::memoryUsage() const
-{
-    return sizeof(UIRuntimeInfo) + sizeof(AreaLink*) * pLink.size();
-}
-
 uint UIRuntimeInfo::countItems(BindingConstraint::Operator op, BindingConstraint::Type type)
 {
     ByOperatorAndType::const_iterator i = byOperator.find(op);

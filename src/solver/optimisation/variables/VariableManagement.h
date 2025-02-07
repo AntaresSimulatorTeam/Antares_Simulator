@@ -1,6 +1,5 @@
 #pragma once
 
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 namespace VariableManagement
@@ -67,6 +66,14 @@ public:
                                unsigned int hourInWeek,
                                int offset = 0,
                                int delta = 0);
+    int& ShortTermStorageCostVariationInjection(unsigned int index,
+                                                unsigned int hourInWeek,
+                                                int offset = 0,
+                                                int delta = 0);
+    int& ShortTermStorageCostVariationWithdrawal(unsigned int index,
+                                                 unsigned int hourInWeek,
+                                                 int offset = 0,
+                                                 int delta = 0);
 
     int& HydProd(unsigned int index, unsigned int hourInWeek, int offset = 0, int delta = 0);
 

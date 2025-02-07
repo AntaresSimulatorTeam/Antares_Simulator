@@ -91,11 +91,6 @@ public:
         DecoratorType::template buildDigest<VCardT>(results, digestLevel, dataLevel);
     }
 
-    uint64_t memoryUsage() const
-    {
-        return DecoratorType::memoryUsage();
-    }
-
     Antares::Memory::Stored<double>::ConstReturnType hourlyValuesForSpatialAggregate() const
     {
         return DecoratorType::template hourlyValuesForSpatialAggregate<

@@ -379,7 +379,7 @@ void Areas<NextT>::hourForEachArea(State& state, uint numSpace)
           for (const auto& cluster: area.thermal.list.each_enabled())
           {
               // Intiializing the state for the current thermal cluster
-              state.initFromThermalClusterIndex(cluster->areaWideIndex);
+              state.initFromThermalClusterIndex(cluster->enabledIndex);
           }
 
           // Variables
@@ -456,7 +456,7 @@ void Areas<NextT>::yearEndBuild(State& state, uint year, uint numSpace)
               variablesForArea.yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);
 
               // Building the end of year
-              state.yearEndBuildFromThermalClusterIndex(cluster->areaWideIndex);
+              state.yearEndBuildFromThermalClusterIndex(cluster->enabledIndex);
 
               // Variables
               variablesForArea.yearEndBuildForEachThermalCluster(state, year, numSpace);
@@ -538,19 +538,6 @@ void Areas<NextT>::beforeYearByYearExport(uint year, uint numSpace)
         pAreas[i].beforeYearByYearExport(year, numSpace);
     }
 }
-
-template<class NextT>
-uint64_t Areas<NextT>::memoryUsage() const
-{
-    uint64_t result = 0;
-    for (unsigned int i = 0; i != pAreaCount; ++i)
-    {
-        result += sizeof(NextType) + sizeof(void*); // overhead vector
-        result += pAreas[i].memoryUsage();
-    }
-    return result;
-}
-
 } // namespace Variable
 } // namespace Solver
 } // namespace Antares

@@ -124,11 +124,6 @@ public:
                   const Study& study);
 
     /*!
-    ** \brief Get the amount of memory used the correlation matrices
-    */
-    uint64_t memoryUsage() const;
-
-    /*!
     ** \brief Invalidate all matrices
     */
     bool forceReload(bool reload = false) const;

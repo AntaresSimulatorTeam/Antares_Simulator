@@ -21,8 +21,6 @@
 #ifndef __SOLVER_VARIABLE_ECONOMY_TimeSeriesValuesLoad_H__
 #define __SOLVER_VARIABLE_ECONOMY_TimeSeriesValuesLoad_H__
 
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
-
 #include "../variable.h"
 
 namespace Antares
@@ -88,7 +86,7 @@ struct VCardTimeSeriesValuesLoad
     static constexpr uint8_t isPossiblyNonApplicable = 0;
 
     typedef IntermediateValues IntermediateValuesBaseType;
-    typedef IntermediateValues* IntermediateValuesType;
+    typedef std::vector<IntermediateValues> IntermediateValuesType;
 
     typedef IntermediateValuesBaseType* IntermediateValuesTypeForSpatialAg;
 
@@ -134,18 +132,13 @@ public:
     };
 
 public:
-    ~TimeSeriesValuesLoad()
-    {
-        delete[] pValuesForTheCurrentYear;
-    }
-
     void initializeFromStudy(Data::Study& study)
     {
         pNbYearsParallel = study.maxNbYearsInParallel;
 
         InitializeResultsFromStudy(AncestorType::pResults, study);
 
-        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
+        pValuesForTheCurrentYear.resize(pNbYearsParallel);
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
         {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);

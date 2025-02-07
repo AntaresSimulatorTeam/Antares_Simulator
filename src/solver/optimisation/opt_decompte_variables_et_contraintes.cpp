@@ -20,13 +20,11 @@
  */
 
 #include <antares/antares/fatal-error.h>
-#include <antares/logs/logs.h>
-#include "antares/solver/optimisation/opt_fonctions.h"
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
-#include "antares/solver/simulation/simulation.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 using namespace Antares;
+
+void OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(PROBLEME_HEBDO*);
 
 int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO* problemeHebdo)
 {
@@ -146,12 +144,12 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
             ProblemeAResoudre->NombreDeContraintes += 2; /* 2 constraints bounding the overall
                                                             energy generated over the period (10a in
                                                             the reference document) */
-            ProblemeAResoudre
-              ->NombreDeContraintes++; /* 1 constraint setting the level variation over the period
-                                          (10b in the reference document) */
-            ProblemeAResoudre
-              ->NombreDeContraintes++; /* 1 constraint bounding the overall energy pumped over the
-                                          period (10c in the reference document) */
+            ProblemeAResoudre->NombreDeContraintes++;
+            /* 1 constraint setting the level variation over the period
+                                               (10b in the reference document) */
+            ProblemeAResoudre->NombreDeContraintes++;
+            /* 1 constraint bounding the overall energy pumped over the
+                                               period (10c in the reference document) */
         }
 
         if (!Pump && TurbEntreBornes && !MonitorHourlyLev)
@@ -194,16 +192,16 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
             ProblemeAResoudre->NombreDeContraintes += 2; /* 2 constraints bounding the overall
                                                             energy generated over the period (10a in
                                                             the reference document) */
-            ProblemeAResoudre
-              ->NombreDeContraintes++; /* 1 constraint setting the level variation over the period
-                                          (10b in the reference document) */
-            ProblemeAResoudre
-              ->NombreDeContraintes++; /* 1 constraint bounding the overall energy pumped over the
-                                          period (10c in the reference document) */
-            ProblemeAResoudre->NombreDeContraintes
-              += nombreDePasDeTempsPourUneOptimisation; /* T constraints expressing the level hourly
-                                                           variations (14a in the reference
-                                                           document) */
+            ProblemeAResoudre->NombreDeContraintes++;
+            /* 1 constraint setting the level variation over the period
+                                               (10b in the reference document) */
+            ProblemeAResoudre->NombreDeContraintes++;
+            /* 1 constraint bounding the overall energy pumped over the
+                                               period (10c in the reference document) */
+            ProblemeAResoudre->NombreDeContraintes += nombreDePasDeTempsPourUneOptimisation;
+            /* T constraints expressing the level hourly
+                                                                variations (14a in the reference
+                                                                document) */
         }
         if (!Pump && !TurbEntreBornes && MonitorHourlyLev)
         {
@@ -212,7 +210,6 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
                              + areaName);
         }
     }
-
     // Short term storage
     {
         const uint nbSTS = problemeHebdo->NumberOfShortTermStorages;
@@ -220,6 +217,44 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
         ProblemeAResoudre->NombreDeVariables += 3 * nbSTS * nombreDePasDeTempsPourUneOptimisation;
         // Level equation (Level[h+1] = Level[h] + ...)
         ProblemeAResoudre->NombreDeContraintes += nbSTS * nombreDePasDeTempsPourUneOptimisation;
+
+        for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; ++pays)
+        {
+            for (const auto& storage: problemeHebdo->ShortTermStorage[pays])
+            {
+                /*
+                 * ShortTermStorageCostVariationInjectionBackward
+                 * ShortTermStorageCostVariationInjectionForward
+                 */
+                if (storage.penalizeVariationInjection)
+                {
+                    // CostVariationInjection
+                    ProblemeAResoudre->NombreDeVariables += nombreDePasDeTempsPourUneOptimisation;
+                    ProblemeAResoudre->NombreDeContraintes
+                      += 2 * nombreDePasDeTempsPourUneOptimisation;
+                }
+
+                /*
+                 * ShortTermStorageCostVariationWithdrawalBackward
+                 * ShortTerStorageCostVariationWithdrawalForward
+                 */
+                if (storage.penalizeVariationWithdrawal)
+                {
+                    // CostVariationWithdrawal
+                    ProblemeAResoudre->NombreDeVariables += nombreDePasDeTempsPourUneOptimisation;
+                    ProblemeAResoudre->NombreDeContraintes
+                      += 2 * nombreDePasDeTempsPourUneOptimisation;
+                }
+                if (!storage.additionalConstraints.empty())
+                {
+                    for (const auto& additionalConstraints: storage.additionalConstraints)
+                    {
+                        ProblemeAResoudre->NombreDeContraintes += additionalConstraints
+                                                                    .enabledConstraints();
+                    }
+                }
+            }
+        }
     }
 
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
@@ -232,7 +267,6 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
                 ProblemeAResoudre->NombreDeVariables += nombreDePasDeTempsPourUneOptimisation * 2;
                 ProblemeAResoudre->NombreDeContraintes += nombreDePasDeTempsPourUneOptimisation;
             }
-
             else if (problemeHebdo->TypeDeLissageHydraulique
                      == LISSAGE_HYDRAULIQUE_SUR_VARIATION_MAX)
             {

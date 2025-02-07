@@ -27,8 +27,6 @@
 
 #include <antares/logs/logs.h>
 
-#define SEP Yuni::IO::Separator
-
 namespace Antares::Data::ShortTermStorage
 {
 
@@ -91,6 +89,16 @@ bool Properties::loadKey(const IniFile::Property* p)
         return true;
     }
 
+    if (p->key == "penalize-variation-withdrawal")
+    {
+        return p->value.to<bool>(this->penalizeVariationWithdrawal);
+    }
+
+    if (p->key == "penalize-variation-injection")
+    {
+        return p->value.to<bool>(this->penalizeVariationInjection);
+    }
+
     if (p->key == "enabled")
     {
         return p->value.to<bool>(this->enabled);
@@ -113,6 +121,8 @@ void Properties::save(IniFile& ini) const
     s->add("efficiency", this->injectionEfficiency);
     s->add("efficiencyWithdrawal", this->withdrawalEfficiency);
     s->add("initialleveloptim", this->initialLevelOptim);
+    s->add("penalize-variation-injection", this->penalizeVariationInjection);
+    s->add("penalize-variation-withdrawal", this->penalizeVariationWithdrawal);
     s->add("enabled", this->enabled);
 }
 
@@ -201,6 +211,12 @@ bool Properties::validate()
         initialLevel = initiallevelDefault;
         logs.warning() << "initiallevel for cluster: " << name
                        << " should be inferior to 1, value has been set to " << initialLevel;
+    }
+
+    if (groupName.empty())
+    {
+        logs.warning() << "Group name is empty for short term storage " << name;
+        return false;
     }
 
     return true;

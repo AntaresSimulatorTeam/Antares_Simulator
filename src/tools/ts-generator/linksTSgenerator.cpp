@@ -337,7 +337,8 @@ void LinksTSgenerator::extractLinksSpecificTSparameters()
 
 bool LinksTSgenerator::generate()
 {
-    auto saveTSpath = fs::path(studyFolder_) / "output" / FormattedTime("%Y%m%d-%H%M");
+    auto saveTSpath = fs::path(studyFolder_) / "output"
+                      / formatTime(getCurrentTime(), "%Y%m%d-%H%M");
     saveTSpath /= "ts-generator";
     saveTSpath /= "links";
 

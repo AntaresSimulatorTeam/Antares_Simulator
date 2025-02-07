@@ -49,31 +49,31 @@ if(Python3_Interpreter_FOUND)
       # TODO : add more study batches
       add_test(
         NAME unfeasible
-        COMMAND Python3::Interpreter -m pytest -m unfeasible --solver-path=$<TARGET_FILE:antares-solver>
+        COMMAND Python3::Interpreter -m pytest -m unfeasible --antares-simu-path=$<TARGET_FILE:antares-solver>
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
         )
 
       add_test(
         NAME json
-        COMMAND Python3::Interpreter -m pytest -m json --solver-path=$<TARGET_FILE:antares-solver>
+        COMMAND Python3::Interpreter -m pytest -m json --antares-simu-path=$<TARGET_FILE:antares-solver>
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
         )
 
       add_test(
         NAME named-mps
-        COMMAND Python3::Interpreter -m pytest -m json --solver-path=$<TARGET_FILE:antares-solver> --named-mps-problems
+        COMMAND Python3::Interpreter -m pytest -m json --antares-simu-path=$<TARGET_FILE:antares-solver> --named-mps-problems
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
         )
 
       add_test(
         NAME milp-cbc
-        COMMAND Python3::Interpreter -m pytest -m json --solver-path=$<TARGET_FILE:antares-solver> --use-ortools --ortools-solver coin
+        COMMAND Python3::Interpreter -m pytest -m json --antares-simu-path=$<TARGET_FILE:antares-solver> --solver coin
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
         )
 
       add_test(
         NAME parallel
-        COMMAND Python3::Interpreter -m pytest -m json --solver-path=$<TARGET_FILE:antares-solver> --force-parallel
+        COMMAND Python3::Interpreter -m pytest -m json --antares-simu-path=$<TARGET_FILE:antares-solver> --force-parallel
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
         )
 

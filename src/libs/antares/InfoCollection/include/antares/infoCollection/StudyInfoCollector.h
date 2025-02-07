@@ -51,7 +51,6 @@ private:
     void maxNbYearsInParallelToFileContent(FileContent& file_content);
     void solverVersionToFileContent(FileContent& file_content);
 
-    void ORToolsUsed(FileContent& file_content);
     void ORToolsSolver(FileContent& file_content);
 
     // Member data
@@ -62,7 +61,6 @@ struct OptimizationInfo
 {
     unsigned int nbVariables = 0;
     unsigned int nbConstraints = 0;
-    unsigned int nbNonZeroCoeffs = 0;
 };
 
 class SimulationInfoCollector
