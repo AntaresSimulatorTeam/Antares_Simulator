@@ -26,8 +26,6 @@
 
 namespace Antares::IO::Inputs::DataSeriesCsvImporter
 {
-using namespace std;
-using namespace boost;
 using namespace Optimisation::LinearProblemDataImpl;
 
 DataSeriesRepository DataSeriesRepoImporter::importFromDirectory(const std::filesystem::path& path,
@@ -35,7 +33,7 @@ DataSeriesRepository DataSeriesRepoImporter::importFromDirectory(const std::file
 {
     if (!is_directory(path))
     {
-        throw invalid_argument("Not a directory: " + path.string());
+        throw std::invalid_argument("Not a directory: " + path.string());
     }
     DataSeriesRepository repo{};
     for (const auto& entry: std::filesystem::directory_iterator(path))
@@ -44,9 +42,9 @@ DataSeriesRepository DataSeriesRepoImporter::importFromDirectory(const std::file
         {
             continue;
         }
-        if (entry.path().extension() == ".csv")
+        if (entry.path().extension() == ".csv" || entry.path().extension() == ".tsv")
         {
-            std::unique_ptr<IDataSeries> timeSeriesSet = make_unique<TimeSeriesSet>(
+            std::unique_ptr<IDataSeries> timeSeriesSet = std::make_unique<TimeSeriesSet>(
               TimeSeriesSetImporter::importFromFile(entry, csvSeparator));
             repo.addDataSeries(std::move(timeSeriesSet));
         }
@@ -54,31 +52,60 @@ DataSeriesRepository DataSeriesRepoImporter::importFromDirectory(const std::file
     return repo;
 }
 
-vector<vector<double>> TimeSeriesSetImporter::csvToMatrix(const std::filesystem::path& path,
-                                                          char csvSeparator)
+std::vector<std::vector<double>> TimeSeriesSetImporter::csvToMatrix(
+  const std::filesystem::path& path,
+  char csvSeparator)
 {
-    // TODO: add logs?
-    // logs.debug() << "Loading data-series from " << path;
-    vector<vector<double>> result;
-    ifstream infile(path, std::ios_base::binary | std::ios_base::in);
+    std::vector<std::vector<double>> result;
+    std::ifstream infile(path, std::ios_base::binary | std::ios_base::in);
     if (!infile.is_open())
     {
-        throw invalid_argument("Could not open file " + path.filename().string());
+        throw std::invalid_argument("Could not open file " + path.filename().string());
     }
-    string line;
-    string element;
+    std::string line;
+    std::string element;
+    bool empty_line_found = false;
     while (!infile.eof())
     {
-        vector<double> row;
+        std::vector<double> row;
         getline(infile, line);
+        if (line.empty())
+        {
+            empty_line_found = true;
+            continue;
+        }
+        if (empty_line_found)
+        {
+            // only accept empty lines in the end of the file
+            throw std::invalid_argument(path.filename().string()
+                                        + ": empty line in the middle of the file");
+        }
         std::stringstream ss(line);
         while (getline(ss, element, csvSeparator))
         {
-            row.push_back(stod(element));
+            if (element.empty())
+            {
+                throw std::invalid_argument(path.filename().string()
+                                            + ": columns have inconsistent number of rows");
+            }
+            try
+            {
+                row.push_back(std::stod(element));
+            }
+            catch (const std::invalid_argument& e)
+            {
+                throw std::invalid_argument(path.filename().string() + ": \"" + element
+                                            + "\" is not a number");
+            }
+        }
+        if (!result.empty() && row.size() != result[0].size())
+        {
+            throw std::invalid_argument(path.filename().string()
+                                        + ": rows have inconsistent number of columns");
         }
         result.push_back(row);
     }
-    return move(result);
+    return result;
 }
 
 TimeSeriesSet TimeSeriesSetImporter::importFromFile(const std::filesystem::path& path,
@@ -97,7 +124,7 @@ TimeSeriesSet TimeSeriesSetImporter::importFromFile(const std::filesystem::path&
     int nSets = csvMatrix[0].size();
     for (int i = 0; i < nSets; ++i)
     {
-        vector<double> set;
+        std::vector<double> set;
         set.reserve(nTimestamps);
         for (int j = 0; j < nTimestamps; ++j)
         {

@@ -110,7 +110,7 @@ int main(int argc, const char** argv)
         try
         {
             dataSeriesRepository = IO::Inputs::DataSeriesCsvImporter::DataSeriesRepoImporter::
-              importFromDirectory(studyPath / "input" / "data-series", ';');
+              importFromDirectory(studyPath / "input" / "data-series", '\t');
             logs.info() << "Data-series loaded";
         }
         catch (const std::exception& e)

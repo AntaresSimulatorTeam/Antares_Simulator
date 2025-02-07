@@ -38,11 +38,11 @@ public:
     TimeSeriesSetImporter() = delete; // must not be used
     static Optimisation::LinearProblemDataImpl::TimeSeriesSet importFromFile(
       const std::filesystem::path& path,
-      char csvSeparator = ';');
+      char csvSeparator = '\t');
 
 private:
     static std::vector<std::vector<double>> csvToMatrix(const std::filesystem::path& path,
-                                                        char csvSeparator = ';');
+                                                        char csvSeparator = '\t');
 };
 
 class DataSeriesRepoImporter
@@ -51,7 +51,7 @@ public:
     DataSeriesRepoImporter() = delete; // must not be used
     static Optimisation::LinearProblemDataImpl::DataSeriesRepository importFromDirectory(
       const std::filesystem::path&,
-      char csvSeparator = ';');
+      char csvSeparator = '\t');
 };
 
 } // namespace Antares::IO::Inputs::DataSeriesCsvImporter

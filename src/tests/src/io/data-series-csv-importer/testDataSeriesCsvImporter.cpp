@@ -48,7 +48,7 @@ struct CsvCreationFixture
 
 filesystem::path CsvCreationFixture::writeFile(const string filename, const string content)
 {
-    auto filepath = temp_path / (filename + ".csv");
+    auto filepath = temp_path / (filename);
     std::ofstream outfile(filepath);
     outfile << content;
     outfile.close();
@@ -57,16 +57,48 @@ filesystem::path CsvCreationFixture::writeFile(const string filename, const stri
 
 BOOST_FIXTURE_TEST_SUITE(_DataSeriesImport_OneCsvFile_, CsvCreationFixture)
 
-BOOST_AUTO_TEST_CASE(invalid_file)
+BOOST_AUTO_TEST_CASE(files_does_not_exist)
 {
-    BOOST_CHECK_EXCEPTION(TimeSeriesSetImporter::importFromFile(temp_path / "dummy_123.csv"),
+    BOOST_CHECK_EXCEPTION(TimeSeriesSetImporter::importFromFile(temp_path / "dummy_123.tsv"),
                           std::invalid_argument,
-                          checkMessage("Could not open file dummy_123.csv"));
+                          checkMessage("Could not open file dummy_123.tsv"));
+}
+
+BOOST_AUTO_TEST_CASE(inconsistent_columns)
+{
+    auto path = writeFile("wrong.csv", "1;2\n3");
+    BOOST_CHECK_EXCEPTION(TimeSeriesSetImporter::importFromFile(path, ';'),
+                          std::invalid_argument,
+                          checkMessage("wrong.csv: rows have inconsistent number of columns"));
+}
+
+BOOST_AUTO_TEST_CASE(inconsistent_rows)
+{
+    auto path = writeFile("wrong2.csv", "1;2\n;3");
+    BOOST_CHECK_EXCEPTION(TimeSeriesSetImporter::importFromFile(path, ';'),
+                          std::invalid_argument,
+                          checkMessage("wrong2.csv: columns have inconsistent number of rows"));
+}
+
+BOOST_AUTO_TEST_CASE(not_a_number)
+{
+    auto path = writeFile("wrong.csv", "1;2\nXy;3");
+    BOOST_CHECK_EXCEPTION(TimeSeriesSetImporter::importFromFile(path, ';'),
+                          std::invalid_argument,
+                          checkMessage("wrong.csv: \"Xy\" is not a number"));
+}
+
+BOOST_AUTO_TEST_CASE(empty_line)
+{
+    auto path = writeFile("wrong.csv", "1;2\n\n3;4");
+    BOOST_CHECK_EXCEPTION(TimeSeriesSetImporter::importFromFile(path, ';'),
+                          std::invalid_argument,
+                          checkMessage("wrong.csv: empty line in the middle of the file"));
 }
 
 BOOST_AUTO_TEST_CASE(empty_file)
 {
-    auto path = writeFile("empty", "");
+    auto path = writeFile("empty.csv", "");
     auto timeSeriesSet = TimeSeriesSetImporter::importFromFile(path);
     BOOST_CHECK_EQUAL(timeSeriesSet.name(), "empty");
     BOOST_CHECK_EXCEPTION(timeSeriesSet.getData(0, 0),
@@ -77,7 +109,7 @@ BOOST_AUTO_TEST_CASE(empty_file)
 
 BOOST_AUTO_TEST_CASE(one_line_one_column)
 {
-    auto path = writeFile("one", "138.583");
+    auto path = writeFile("one.tsv", "138.583");
     auto timeSeriesSet = TimeSeriesSetImporter::importFromFile(path);
     BOOST_CHECK_EQUAL(timeSeriesSet.name(), "one");
     BOOST_CHECK_EQUAL(timeSeriesSet.getData(0, 0), 138.583);
@@ -91,7 +123,7 @@ BOOST_AUTO_TEST_CASE(one_line_one_column)
 
 BOOST_AUTO_TEST_CASE(one_line_two_columns)
 {
-    auto path = writeFile("one_by_two", "123,456.789");
+    auto path = writeFile("one_by_two.csv", "123,456.789\n");
     auto timeSeriesSet = TimeSeriesSetImporter::importFromFile(path, ',');
     BOOST_CHECK_EQUAL(timeSeriesSet.name(), "one_by_two");
     BOOST_CHECK_EQUAL(timeSeriesSet.getData(0, 0), 123);
@@ -106,7 +138,7 @@ BOOST_AUTO_TEST_CASE(one_line_two_columns)
 
 BOOST_AUTO_TEST_CASE(two_lines_one_column)
 {
-    auto path = writeFile("two_by_one", "123\n20");
+    auto path = writeFile("two_by_one.tsv", "123\n20");
     auto timeSeriesSet = TimeSeriesSetImporter::importFromFile(path);
     BOOST_CHECK_EQUAL(timeSeriesSet.name(), "two_by_one");
     BOOST_CHECK_EQUAL(timeSeriesSet.getData(0, 0), 123);
@@ -121,8 +153,8 @@ BOOST_AUTO_TEST_CASE(two_lines_one_column)
 
 BOOST_AUTO_TEST_CASE(two_lines_two_columns)
 {
-    auto path = writeFile("two_by_two", "1;2\n3;4");
-    auto timeSeriesSet = TimeSeriesSetImporter::importFromFile(path, ';');
+    auto path = writeFile("two_by_two.csv", "1\t2\n3\t4");
+    auto timeSeriesSet = TimeSeriesSetImporter::importFromFile(path, '\t');
     BOOST_CHECK_EQUAL(timeSeriesSet.name(), "two_by_two");
     BOOST_CHECK_EQUAL(timeSeriesSet.getData(0, 0), 1);
     BOOST_CHECK_EQUAL(timeSeriesSet.getData(0, 1), 3);
@@ -151,7 +183,7 @@ BOOST_AUTO_TEST_CASE(empty_dir)
 
 BOOST_AUTO_TEST_CASE(one_simple_file)
 {
-    writeFile("one", "123");
+    writeFile("one.tsv", "123");
     auto repo = DataSeriesRepoImporter::importFromDirectory(temp_path);
     BOOST_CHECK_EQUAL(repo.getDataSeries("one").name(), "one");
     BOOST_CHECK_EQUAL(repo.getDataSeries("one").getData(0, 0), 123);
@@ -159,8 +191,8 @@ BOOST_AUTO_TEST_CASE(one_simple_file)
 
 BOOST_AUTO_TEST_CASE(two_simple_files)
 {
-    writeFile("one", "123");
-    writeFile("two", "456");
+    writeFile("one.csv", "123");
+    writeFile("two.tsv", "456");
     auto repo = DataSeriesRepoImporter::importFromDirectory(temp_path);
     BOOST_CHECK_EQUAL(repo.getDataSeries("one").name(), "one");
     BOOST_CHECK_EQUAL(repo.getDataSeries("two").name(), "two");
@@ -170,9 +202,9 @@ BOOST_AUTO_TEST_CASE(two_simple_files)
 
 BOOST_AUTO_TEST_CASE(three_small_files)
 {
-    writeFile("gen1_p_max", "1;2;3;4\n5;6;7;8\n9;10;11;12\n13;14;15;16.17");
-    writeFile("gen2_p_max", "10\n20\n30\n40");
-    writeFile("node1_load", "20;30\n21;31\n22;32\n23;33");
+    writeFile("gen1_p_max.csv", "1\t2\t3\t4\n5\t6\t7\t8\n9\t10\t11\t12\n13\t14\t15\t16.17");
+    writeFile("gen2_p_max.tsv", "10\n20\n30\n40");
+    writeFile("node1_load.tsv", "20\t30\n21\t31\n22\t32\n23\t33");
     auto repo = DataSeriesRepoImporter::importFromDirectory(temp_path);
 
     BOOST_CHECK_EQUAL(repo.getDataSeries("gen1_p_max").name(), "gen1_p_max");
