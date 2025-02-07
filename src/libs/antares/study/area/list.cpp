@@ -774,7 +774,7 @@ bool AreaList::saveToFolder(const AnyString& folder) const
     // Hydro
     // The hydro files must be saved after the area has been invalidated
     buffer.clear() << folder << SEP << "input" << SEP << "hydro";
-    ret = PartHydro::SaveToFolder(*this, buffer) && ret;
+    ret = PartHydro::SaveToFolder(*this, buffer, pStudy.parameters.compatibility.hydroPmax) && ret;
 
     // update nameid set
     updateNameIDSet();
