@@ -467,7 +467,7 @@ bool PartHydro::validate(Study& study)
 
 bool PartHydro::SaveToFolder(const AreaList& areas,
                              const AnyString& folder,
-                             const Parameters::Compatibility::HydroPmax& hydroPmax)
+                             const Parameters::Compatibility::HydroPmax hydroPmax)
 {
     if (!folder)
     {
@@ -575,7 +575,7 @@ bool PartHydro::SaveToFolder(const AreaList& areas,
               buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
                              << "maxDailyGenEnergy_" << area.id << ".txt";
               ret = area.hydro.dailyNbHoursAtGenPmax.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
-              
+
               buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
                              << "maxDailyPumpEnergy_" << area.id << ".txt";
               ret = area.hydro.dailyNbHoursAtPumpPmax.saveToCSVFile(buffer, /*decimal*/ 2) && ret;

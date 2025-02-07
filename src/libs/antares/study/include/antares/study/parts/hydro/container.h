@@ -133,7 +133,7 @@ public:
     */
     static bool SaveToFolder(const AreaList& areas,
                              const AnyString& folder,
-                             const Parameters::Compatibility::HydroPmax& hydroPmax);
+                             const Parameters::Compatibility::HydroPmax hydroPmax);
 
     /*!
     ** \brief Default Constructor

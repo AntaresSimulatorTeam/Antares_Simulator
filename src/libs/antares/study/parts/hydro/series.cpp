@@ -193,7 +193,7 @@ void DataSeriesHydro::buildHourlyMaxPowerFromDailyTS(
 
 bool DataSeriesHydro::saveToFolder(const AreaName& areaID,
                                    const AnyString& folder,
-                                   Parameters::Compatibility::HydroPmax& hydroPmax) const
+                                   Parameters::Compatibility::HydroPmax hydroPmax) const
 {
     String buffer;
     buffer.clear() << folder << SEP << areaID;

@@ -221,7 +221,7 @@ const char* CompatibilityHydroPmaxToCString(Parameters::Compatibility::HydroPmax
     }
 }
 
-bool StringToCompatibilityHydroPmax(Parameters::Compatibility::HydroPmax& mode,
+bool StringToCompatibilityHydroPmax(Parameters::Compatibility::HydroPmax mode,
                                     const std::string& text)
 {
     if (text.empty())

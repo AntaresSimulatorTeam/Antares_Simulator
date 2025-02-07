@@ -93,7 +93,7 @@ public:
     */
     bool saveToFolder(const AreaName& areaID,
                       const AnyString& folder,
-                      Parameters::Compatibility::HydroPmax& hydroPmax) const;
+                      Parameters::Compatibility::HydroPmax hydroPmax) const;
     //@}
 
     TimeSeriesNumbers timeseriesNumbers;
