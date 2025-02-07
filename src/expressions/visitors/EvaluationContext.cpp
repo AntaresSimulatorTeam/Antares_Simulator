@@ -32,7 +32,7 @@ std::vector<double> EvaluationContext::getParameterValue(
         return std::vector(timesteps_.size(), std::stod(parameter_value));
     }
     // TODO
-    return data_.getData(parameter_value, "", 0);
+    return data_.getData(parameter_value, "group 1", 0);
 }
 
 [[nodiscard]] unsigned int EvaluationContext::numberOfTimesteps() const

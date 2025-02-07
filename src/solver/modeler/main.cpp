@@ -29,6 +29,7 @@
 #include <antares/solver/modeler/parameters/parseModelerParameters.h>
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
+#include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
 
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares;
@@ -60,7 +61,22 @@ public:
         }
 
         LinearProblemBuilder linear_problem_builder(fillers_ptr);
+
+        unsigned number_timestep = parameters.lastTimeStep - parameters.firstTimeStep + 1;
+        auto time_series = std::make_unique<Optimisation::LinearProblemDataImpl::TimeSeriesSet>(
+          "load",
+          number_timestep);
+        std::vector<double> myTimeSeries(number_timestep, 0.);
+        std::iota(myTimeSeries.begin(), myTimeSeries.end(), 0.);
+        time_series->add(myTimeSeries);
+
         Optimisation::LinearProblemDataImpl::LinearProblemData dummy_data;
+        // Adding a scenario group to the linear problem data
+        const unsigned year = 0;
+        const unsigned rank = 0;
+        const std::string groupName = "group 1";
+        dummy_data.addScenarioGroup(groupName, {year, rank});
+        dummy_data.addDataSeries(std::move(time_series));
         FillContext dummy_time_scenario_ctx = {parameters.firstTimeStep, parameters.lastTimeStep};
         linear_problem_builder.build(pb, dummy_data, dummy_time_scenario_ctx);
     }
