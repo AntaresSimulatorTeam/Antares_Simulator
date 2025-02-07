@@ -264,6 +264,7 @@ Example:
 components:
   - id: generator1
     model: my_lib_id.dc_generator
+    scenario-group: thermal_group 
     parameters:
       - id: min_active_power_setpoint
         type: constant
@@ -276,6 +277,7 @@ components:
         value: generator1_cost
   - id: generator2
     model: my_lib_id.dc_generator
+    scenario-group: hydro_group
     parameters:
       - id: min_active_power_setpoint
         type: constant
@@ -294,6 +296,8 @@ components:
 - **model**: the ID of the model to use for the component, composed as "library_id.model_id", where "library_id" is the 
   ID of the model library (must be listed in the [required model libraries](#id-description-and-model-libraries)), and 
   "model_id" is the ID of the model as it is defined inside the [model library](#models).
+- **scenario-group** _(only needed if the model has scenario-dependent parameters)_: the ID of the scenario group this 
+  component belongs to. Must be correctly configured in the [scenario builder](#scenario-builder), and respect [these rules](#rules-for-ids).
 - **parameters** _(not needed if model has no parameters)_: a collection of values for the model's parameters. Note that 
   all the parameters of the model should have their values assigned by the component.
     - **id**: the ID of the parameter, as defined by the [model](#models)
@@ -328,14 +332,69 @@ connections:
   of the two models must define the port (in the "port-field-definition" section).
 
 ## Data series
-TODO
+The **input/data-series** directory contains all data-series needed by the [system description](#system-file) to define 
+component parameter values.  
+
+Currently, Antares modeler supports defining data-series using CSV files. Values must be separated using the `;` character, 
+and the character `.` represents the floating point.
+
+### Naming
+CSV files inside the directory should respect the "XXX.csv" naming template, where "XXX" is the ID of the data-series. 
+Thus, this ID is unique, and is the one to be used in the [system file](#system-file).  
+
+### Constant series
+To define a constant series (neither time nor scenario dependent), simply write one value in the file.  
+Example file content:
+~~~csv
+345.3
+~~~
+
+### Time-dependent series
+To define a time-dependent series, define a column vector, where every timestamp is represented by a row.  
+Example file for a simulation with 6 timestamps:
+~~~csv
+10
+15
+34
+56
+34
+65
+~~~
+Note that Antares modeler currently does not conduct quality checks on data-series, and that it is up to you to ensure 
+that the rows cover the [time horizon](04-parameters.md#horizon) of the simulation.
+
+### Scenario-dependent series
+To define a parameter value that changes depending on the scenario, define a row vector, where every data set is 
+represented by a column.  
+Currently, Antares modeler does not support scenario building. Thus, please ensure that every scenario you want to 
+simulate has an associated column in the scenario-dependent series file.  
+In the future, you will be able to use the [scenario builder](#scenario-builder) to map different scenarios to the data 
+sets, in order to avoid duplicating data.  
+Example file for a simulation with 4 scenarios:  
+~~~csv
+54;67.5;23.652;253
+~~~
+
+### Time and scenario-dependent series
+Use the two methods described above.  
+Example file for a simulation with 2 timestamps and 3 scenarios:
+~~~csv
+2345;1243;123
+2378;7458;0
+~~~
 
 ## Rules for IDs
-All IDs for the objects in the model library and system file must respect the following:  
+All IDs in the model library and system file must respect the following:  
 
 - Alphanumeric characters are allowed, as well as the underscore (`_`) character
 - All other characters are prohibited
 - Only lower-case is allowed
+
+## Scenario builder
+_**This feature is under development**_  
+This feature allows you to map, for different scenario groups of components, all scenarios to a limited number of data 
+sets. This prevents duplication of data when some data-series are "less" scenario-dependent than others.  
+For now, "scenario-groups" are ignored and scenario indices map to data set indices.
 
 ## Full examples
 You can find some simple to more complex studies in our [test base here](https://github.com/AntaresSimulatorTeam/Antares_Simulator/tree/develop/src/tests/resources/modeler).
