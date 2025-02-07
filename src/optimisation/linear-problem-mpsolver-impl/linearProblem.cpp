@@ -166,7 +166,7 @@ std::vector<LinearProblemApi::IMipConstraint*> OrtoolsLinearProblem::addConstrai
     std::vector<LinearProblemApi::IMipConstraint*> new_constraints;
     for (unsigned int i = 0; i < number_new_constraints; i++)
     {
-        new_constraints.push_back(addConstraint(lb, ub, name + '_' + std::to_string(i)));
+        new_constraints.push_back(addConstraint(lb[i], ub[i], name + '_' + std::to_string(i)));
     }
     return new_constraints;
 }

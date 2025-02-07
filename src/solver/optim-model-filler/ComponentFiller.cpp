@@ -95,7 +95,7 @@ void ComponentFiller::addStaticConstraint(Optimisation::LinearProblemApi::ILinea
     for (auto [var_id, coef]: linear_constraint.coef_per_var)
     {
         auto* variable = pb.getVariable(component_.Id() + "." + var_id);
-        ct->setCoefficient(variable, coef);
+        ct->setCoefficient(variable, evaluator.dispatch(coef)[0]);
     }
 }
 
@@ -111,12 +111,15 @@ void ComponentFiller::addTimeDependentConstraints(
                                     component_.Id() + "." + constraint_id,
                                     nb_cstr);
 
-    for (auto cstr(0); cstr < nb_cstr; ++cstr)
+    // for (auto cstr(0); cstr < nb_cstr; ++cstr)
+    // {
+    for (const auto& [var_id, coeffs]: linear_constraint.coef_per_var)
     {
-        auto* ct = vect_ct[cstr];
-        for (const auto& [var_id, coeffs]: linear_constraint.coef_per_var)
+        const auto all_coeffs = evaluator.dispatch(coeffs);
+        for (auto cstr(0); cstr < nb_cstr; ++cstr)
         {
-            const auto all_coeffs = evaluator.dispatch(coeffs);
+            auto* ct = vect_ct[cstr];
+
             // TODO FIXME the coefficient needs to be time-dependent
             if (IsThisVariableTimeDependent(var_id))
             {
@@ -131,6 +134,8 @@ void ComponentFiller::addTimeDependentConstraints(
             }
         }
     }
+
+    // }
 }
 
 void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
@@ -147,7 +152,7 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
     Expressions::Visitors::EvalVisitor evaluator(evaluation_context);
 
     Expressions::Registry<Expressions::Nodes::Node> registry;
-    ReadLinearConstraintVisitor visitor(registry, evaluationContext_);
+    ReadLinearConstraintVisitor visitor(registry);
     for (const auto& constraint: component_.getModel()->getConstraints() | std::views::values)
     {
         auto* root_node = constraint.expression().RootNode();
@@ -182,30 +187,40 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
         return;
     }
     Expressions::Registry<Expressions::Nodes::Node> registry;
-    ReadLinearExpressionVisitor visitor(registry, evaluationContext_);
+    ReadLinearExpressionVisitor visitor(registry);
     auto linear_expression = visitor.dispatch(model->Objective().RootNode());
-    Expressions::Visitors::EvalVisitor evaluator(evaluationContext_);
-    if (abs(evaluator.dispatch(linear_expression.offset())) > 1e-10)
+    // TODO
+    std::vector<unsigned int> timeSteps(ctx.getNumberOfTimestep());
+    std::iota(timeSteps.begin(), timeSteps.end(), ctx.getFirstTimeStep());
+    Expressions::Visitors::EvaluationContext evaluation_context(component_.getParameterValues(),
+                                                                {},
+                                                                timeSteps,
+                                                                data);
+    Expressions::Visitors::EvalVisitor evaluator(evaluation_context);
+    // TODO
+    if (abs(evaluator.dispatch(linear_expression.offset())[0]) > 1e-10)
     {
         throw std::invalid_argument("Antares does not support objective offsets (found in model '"
                                     + model->Id() + "' of component '" + component_.Id() + "').");
     }
 
-    for (auto [var_id, coef]: linear_expression.coefPerVar())
+    for (auto [var_id, coeffs]: linear_expression.coefPerVar())
     {
+        const auto all_coeffs = evaluator.dispatch(coeffs);
+
         if (IsThisVariableTimeDependent(var_id))
         {
             for (auto var_pos = 0; var_pos != ctx.getNumberOfTimestep(); ++var_pos)
             {
                 auto* variable = pb.getVariable(component_.Id() + "." + var_id + '_'
                                                 + std::to_string(var_pos));
-                pb.setObjectiveCoefficient(variable, coef);
+                pb.setObjectiveCoefficient(variable, all_coeffs[var_pos]);
             }
         }
         else
         {
             auto* variable = pb.getVariable(component_.Id() + "." + var_id);
-            pb.setObjectiveCoefficient(variable, coef);
+            pb.setObjectiveCoefficient(variable, all_coeffs[0]);
         }
     }
 }
