@@ -34,3 +34,10 @@ Feature: 2.5 - Pure modeler simple studies, with no ports and no timeseries
     And the optimal value of variable node2.gen1_up_0 is 1
     And the optimal value of variable node2.gen2_p_0 is 500
     And the optimal value of variable node2.gen2_up_0 is 1
+
+  Scenario: 2.5.4: Test with integer variable
+    Given the study path is "modeler/epic2/us2.5/study_2.5.4"
+    When I run antares modeler
+    Then the simulation succeeds
+    And the optimal value of variable node1.gen_total_p is 1000
+    And the optimal value of variable node1.gen_n_on is 4

@@ -1,0 +1,28 @@
+system:
+  id: sys_example4
+  description: test system
+  model-libraries: lib_example3
+
+  components:
+  - id: node1
+    model: lib_example3.node_genCluster_oneLoad
+    scenario-group: sg
+    parameters:
+    - id: load
+      type: constant
+      value: 1000
+    - id: gen_min_p
+      type: constant
+      value: 150
+    - id: gen_max_p
+      type: constant
+      value: 300
+    - id: gen_cluster_size
+      type: constant
+      value: 10
+    - id: gen_prop_cost
+      type: constant
+      value: 0.5
+    - id: gen_fixed_cost
+      type: constant
+      value: 10
