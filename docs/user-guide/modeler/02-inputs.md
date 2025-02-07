@@ -33,7 +33,7 @@ library:
 - **id**: the unique ID for you library. Beware that if you are using many libraries in your study, every library must 
   have a unique ID. This ID will be used inside the [system description file](#system-file) in order to reference the 
   library's objects. It must respect [these rules](#rules-for-ids).
-- **description** _(optional)_: a free description of your library. Has no impact on the simulation.
+- **description** _(optional)_: a free description of your library. Has no effect on the simulation.
 
 ### Port types
 The **port-types** collection lists the possible types of [ports](05-model.md#ports-and-connections) inside the library, 
@@ -55,7 +55,7 @@ port-types:
 ~~~
 
 - **id**: the ID for the port type. Must be unique inside the scope of the library, and respect [these rules](#rules-for-ids).
-- **description** _(optional)_: a free description of your port type. Has no impact on the simulation.
+- **description** _(optional)_: a free description of your port type. Has no effect on the simulation.
 - **fields**: a collection of coherent fields that transit through this port type. A field holds a single floating number.
     - **id**: the ID of the field. Must be unique in the scope of the port type, and respect [these rules](#rules-for-ids).
 
@@ -107,7 +107,7 @@ models:
 ~~~
 
 - **id**: an ID for the model. Must be unique inside the scope of the library, and respect [these rules](#rules-for-ids).
-- **description** _(optional)_: a free description of the model
+- **description** _(optional)_: a free description of the model. Has no effect on the simulation.
 - **parameters** _(optional)_: a collection of parameters for the model. The values for these parameters will be set in the [system file](#system-file).
     - **id**: an ID for the parameter. Must be unique inside the scope of the model, and respect [these rules](#rules-for-ids).
     - **time-dependent**: `true` or `false`, indicates whether the parameter depends on time or is constant across the whole simulation horizon.
@@ -251,6 +251,81 @@ system:
   - model-libraries: my_library_id, my_other_library_id
 ~~~
 
+- **id**: an ID for your system. Has no effect on the simulation.
+- **description** _(optional)_: a free description of your system. Has no effect on the simulation.
+- **model-libraries**: a collection of model libraries needed for your system. Must contain at least one element, and
+  refer to IDs of model libraries found in the **input/model-libraries" directory. Beware that the ID of the library is 
+  one defined in its header, not the name of the file.
+
+### Components
+The **components** section lists all the [components](05-model.md#components) of your simulated system.  
+Example:
+~~~yaml
+components:
+  - id: generator1
+    model: my_lib_id.dc_generator
+    parameters:
+      - id: min_active_power_setpoint
+        type: constant
+        value: 100
+      - id: max_active_power_setpoint
+        type: time-and-scenario-dependent
+        value: generator1_max_p
+      - id: proportional_cost
+        type: scenario-dependent
+        value: generator1_cost
+  - id: generator2
+    model: my_lib_id.dc_generator
+    parameters:
+      - id: min_active_power_setpoint
+        type: constant
+        value: 20
+      - id: max_active_power_setpoint
+        type: time-dependent
+        value: generator2_max_p
+      - id: proportional_cost
+        type: constant
+        value: 0.5
+  - id: node1
+    model: my_lib_id.node
+~~~
+
+- **id**: an ID for the component. Must be unique in the scope of the system, and respect [these rules](#rules-for-ids).
+- **model**: the ID of the model to use for the component, composed as "library_id.model_id", where "library_id" is the 
+  ID of the model library (must be listed in the [required model libraries](#id-description-and-model-libraries)), and 
+  "model_id" is the ID of the model as it is defined inside the [model library](#models).
+- **parameters** _(not needed if model has no parameters)_: a collection of values for the model's parameters. Note that 
+  all the parameters of the model should have their values assigned by the component.
+    - **id**: the ID of the parameter, as defined by the [model](#models)
+    - **type**: the type of the value given to the parameter: `constant`, `time-dependent`, `scenario-dependent`, or 
+      `time-and-scenario-dependent`. Note that this type must be as or less restrictive as the type defined by the model. 
+      For example, a parameter that is defined as time-dependent and scenario-dependent by the model, can be defined as 
+      `time-and-scenario-dependent`, only `time-dependent`, or `constant` by the component. However, a parameter that 
+      is defined as constant by the model, can only be defined as constant by the component.
+    - **value**: the value of the parameter:
+        - If type is `constant`, then this is a scalar expression, or the ID of a constant [data serie](#data-series) 
+        - If type is `time-dependent`, then this is the ID of a time-dependent [data serie](#data-series)
+        - If type is `scenario-dependent`, then this is the ID of a scenario-dependent [data serie](#data-series)
+        - If type is `time-and-scenario-dependent`, then this is the ID of a time-and-scenario-dependent [data serie](#data-series)
+
+### Port connections
+The **connections** section lists the port connections between components.  
+Example:  
+~~~yaml
+connections:
+  - component1: generator1
+    port1: injection
+    component2: node1
+    port2: injections
+  - component1: generator2
+    port1: injection
+    component2: node1
+    port2: injections
+~~~
+
+- **component1**, **component2**: the IDs of the components to connect together
+- **port1**, **port2**: the IDs of the respective ports to connect (as defined by the two models). Note that exactly one 
+  of the two models must define the port (in the "port-field-definition" section).
 
 ## Data series
 TODO
