@@ -247,7 +247,7 @@ jobs:
       - name: Run cucumber on short-tests
         uses: ./.github/workflows/cucumber-tests
         with:
-          feature: "features/short_tests.feature"
+          feature: "features/solver-features/short_tests.feature"
 
       - name: Run mps tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
@@ -286,7 +286,7 @@ jobs:
       - name: Run cucumber on medium-tests
         uses: ./.github/workflows/cucumber-tests
         with:
-          feature: "features/medium_tests.feature"
+          feature: "features/solver-features/medium_tests.feature"
 
       - name: Run long-tests-1
         if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
@@ -311,6 +311,11 @@ jobs:
           simtest-tag: ${{ env.SIMTEST }}
           batch-name: long-tests-3
           os: ${{ env.os }}
+
+      - name: Run cucumber on modeler
+        uses: ./.github/workflows/cucumber-tests
+        with:
+          feature: "features/modeler-features"
 
       - name: Barrier
         if: ${{ !success() }}

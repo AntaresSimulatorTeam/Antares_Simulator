@@ -115,9 +115,9 @@ public:
     /*!
     ** \brief Default Constructor
     */
-    SetsOfAreas();
+    SetsOfAreas() = default;
     //! Destructor
-    ~SetsOfAreas();
+    ~SetsOfAreas() = default;
     //@}
 
     void initializeFromStudy(Data::Study& study);
@@ -198,15 +198,11 @@ public:
 
 public:
     //! Area list
-    typedef std::vector<NextType*> SetOfAreasVector;
+    typedef std::vector<std::unique_ptr<NextType>> SetOfAreasVector;
     //! Area list
     SetOfAreasVector pSetsOfAreas;
     //! Reference to the origina set
     std::vector<const Data::Sets::SetAreasType*> pOriginalSets;
-    //! An iterator for the begining of the list
-    typename SetOfAreasVector::iterator pBegin;
-    //! An iterator to the end of the list
-    typename SetOfAreasVector::iterator pEnd;
     //! The study
     const Data::Study* pStudy;
 

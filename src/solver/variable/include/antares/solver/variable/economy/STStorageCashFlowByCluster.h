@@ -75,8 +75,8 @@ struct VCardSTstorageCashFlowByCluster
     static constexpr uint8_t isPossiblyNonApplicable = 0;
 
     typedef IntermediateValues IntermediateValuesDeepType;
-    typedef IntermediateValues* IntermediateValuesBaseType;
-    typedef IntermediateValuesBaseType* IntermediateValuesType;
+    typedef std::vector<IntermediateValues> IntermediateValuesBaseType;
+    typedef std::vector<IntermediateValuesBaseType> IntermediateValuesType;
 
 }; // class VCard
 
@@ -119,20 +119,11 @@ public:
 public:
     STstorageCashFlowByCluster() = default;
 
-    ~STstorageCashFlowByCluster()
-    {
-        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-        {
-            delete[] pValuesForTheCurrentYear[numSpace];
-        }
-        delete[] pValuesForTheCurrentYear;
-    }
-
     void initializeFromArea(Data::Study* study, Data::Area* area)
     {
         // Get the number of years in parallel
         pNbYearsParallel = study->maxNbYearsInParallel;
-        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
+        pValuesForTheCurrentYear.resize(pNbYearsParallel);
 
         // Get the area
         nbClusters_ = area->shortTermStorage.count();
@@ -142,8 +133,7 @@ public:
 
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
             {
-                pValuesForTheCurrentYear[numSpace] = new VCardType::IntermediateValuesDeepType
-                  [nbClusters_];
+                pValuesForTheCurrentYear[numSpace].resize(nbClusters_);
             }
 
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
@@ -162,11 +152,6 @@ public:
         }
         else
         {
-            for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-            {
-                pValuesForTheCurrentYear[numSpace] = nullptr;
-            }
-
             AncestorType::pResults.clear();
         }
         // Next
@@ -289,7 +274,7 @@ public:
 
 private:
     //! Intermediate values for each year
-    typename VCardType::IntermediateValuesType pValuesForTheCurrentYear = nullptr;
+    typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     size_t nbClusters_ = 0;
     unsigned int pNbYearsParallel = 0;
 

@@ -18,9 +18,9 @@ set_target_properties(${PROJ} PROPERTIES LINKER_LANGUAGE CXX)
 
 target_link_libraries(${PROJ}
         PRIVATE
-        Antares::solver-expressions
+        Antares::expressions
         Antares::antares-study-system-model
-        Antares::modeler_api
+        Antares::linear-problem-api
 )
 
 target_include_directories(${PROJ}

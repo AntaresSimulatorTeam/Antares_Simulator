@@ -23,10 +23,11 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "antares/solver/expressions/nodes/ExpressionsNodes.h"
-#include "antares/solver/expressions/visitors/TimeIndex.h"
-#include "antares/solver/modeler/api/linearProblemBuilder.h"
-#include "antares/solver/modeler/ortoolsImpl/linearProblem.h"
+#include "antares/expressions/nodes/ExpressionsNodes.h"
+#include "antares/expressions/visitors/TimeIndex.h"
+#include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
+#include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
+#include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/study/system-model/component.h"
 #include "antares/study/system-model/parameter.h"
@@ -34,10 +35,12 @@
 
 #include "unit_test_utils.h"
 
-using namespace Antares::Solver::Modeler::Api;
+using namespace Antares::Optimisation::LinearProblemApi;
+using namespace Antares::Optimisation::LinearProblemDataImpl;
 using namespace Antares::Study::SystemModel;
 using namespace Antares::Optimization;
-using namespace Antares::Solver::Nodes;
+using namespace Antares::Expressions;
+using namespace Antares::Expressions::Nodes;
 using namespace std;
 
 struct VariableData
@@ -59,7 +62,7 @@ struct ConstraintData
 struct LinearProblemBuildingFixture
 {
     map<string, Model> models;
-    Antares::Solver::Registry<Node> nodes;
+    Registry<Node> nodes;
     vector<Component> components;
     unique_ptr<ILinearProblem> pb;
 
@@ -75,11 +78,12 @@ struct LinearProblemBuildingFixture
                                     Node* lb,
                                     Node* ub,
                                     const vector<ConstraintData>& constraintsData,
-                                    Node* objective = nullptr)
+                                    Node* objective = nullptr,
+                                    bool time_dependent = false)
     {
         createModel(modelId,
                     parameterIds,
-                    {{varId, ValueType::FLOAT, lb, ub, false, false}},
+                    {{varId, ValueType::FLOAT, lb, ub, time_dependent, false}},
                     constraintsData,
                     objective);
     }
@@ -93,16 +97,16 @@ struct LinearProblemBuildingFixture
         return nodes.create<LiteralNode>(value);
     }
 
-    Node* parameter(const string& paramId,
-                    const Antares::Solver::Visitors::TimeIndex& timeIndex = Antares::Solver::
-                      Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
+    Node* parameter(
+      const string& paramId,
+      const Visitors::TimeIndex& timeIndex = Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
     {
         return nodes.create<ParameterNode>(paramId, timeIndex);
     }
 
-    Node* variable(const string& varId,
-                   const Antares::Solver::Visitors::TimeIndex& timeIndex = Antares::Solver::
-                     Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
+    Node* variable(
+      const string& varId,
+      const Visitors::TimeIndex& timeIndex = Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
     {
         return nodes.create<VariableNode>(varId, timeIndex);
     }
@@ -117,7 +121,13 @@ struct LinearProblemBuildingFixture
         return nodes.create<NegationNode>(node);
     }
 
-    void buildLinearProblem();
+    void buildLinearProblem(FillContext& time_scenario_ctx);
+
+    void buildLinearProblem()
+    {
+        FillContext time_scenario_ctx = {0, 0};
+        buildLinearProblem(time_scenario_ctx);
+    }
 };
 
 void LinearProblemBuildingFixture::createModel(string modelId,
@@ -128,7 +138,7 @@ void LinearProblemBuildingFixture::createModel(string modelId,
 {
     auto createExpression = [this](Node* node)
     {
-        Antares::Solver::NodeRegistry node_registry(node, move(nodes));
+        Antares::Expressions::NodeRegistry node_registry(node, move(nodes));
         Expression expression("expression", move(node_registry));
         return expression;
     };
@@ -180,7 +190,7 @@ void LinearProblemBuildingFixture::createComponent(const string& modelId,
     components.push_back(move(component));
 }
 
-void LinearProblemBuildingFixture::buildLinearProblem()
+void LinearProblemBuildingFixture::buildLinearProblem(FillContext& time_scenario_ctx)
 {
     vector<unique_ptr<ComponentFiller>> fillers;
     vector<LinearProblemFiller*> fillers_ptr;
@@ -193,11 +203,13 @@ void LinearProblemBuildingFixture::buildLinearProblem()
     {
         fillers_ptr.push_back(component_filler.get());
     }
-    pb = make_unique<Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProblem>(false, "sirius");
+    pb = make_unique<Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem>(
+      false,
+      "sirius");
     LinearProblemBuilder linear_problem_builder(fillers_ptr);
     LinearProblemData dummy_data;
-    FillContext dummy_time_scenario_ctx = {0, 0};
-    linear_problem_builder.build(*pb.get(), dummy_data, dummy_time_scenario_ctx);
+
+    linear_problem_builder.build(*pb, dummy_data, time_scenario_ctx);
 }
 
 BOOST_FIXTURE_TEST_SUITE(_ComponentFiller_addVariables_, LinearProblemBuildingFixture)
@@ -216,6 +228,34 @@ BOOST_AUTO_TEST_CASE(var_with_literal_bounds_to_filler__problem_contains_one_var
     BOOST_CHECK_EQUAL(var->getUb(), 10);
     BOOST_CHECK(!var->isInteger());
     BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(var), 0);
+}
+
+BOOST_AUTO_TEST_CASE(ten_timesteps_var_with_literal_bounds_to_filler__problem_contains_ten_vars)
+{
+    createModelWithOneFloatVar("some_model",
+                               {},
+                               "var1",
+                               literal(-5),
+                               literal(10),
+                               {},
+                               nullptr,
+                               true);
+    createComponent("some_model", "some_component");
+    constexpr unsigned int last_time_step = 9;
+    FillContext ctx{0, last_time_step};
+    buildLinearProblem(ctx);
+    const auto nb_var = ctx.getNumberOfTimestep(); // = 10
+    BOOST_CHECK_EQUAL(pb->variableCount(), nb_var);
+    BOOST_CHECK_EQUAL(pb->constraintCount(), 0);
+    for (unsigned int i = 0; i < nb_var; i++)
+    {
+        auto* var = pb->getVariable("some_component.var1_" + to_string(i));
+        BOOST_REQUIRE(var);
+        BOOST_CHECK_EQUAL(var->getLb(), -5);
+        BOOST_CHECK_EQUAL(var->getUb(), 10);
+        BOOST_CHECK(!var->isInteger());
+        BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(var), 0);
+    }
 }
 
 BOOST_AUTO_TEST_CASE(var_with_wrong_parameter_lb__exception_is_raised)
@@ -261,6 +301,35 @@ BOOST_AUTO_TEST_CASE(two_variables_given_to_different_fillers__LP_contains_the_t
     BOOST_CHECK(!var2->isInteger());
     BOOST_CHECK_EQUAL(var2->getLb(), -3.);
     BOOST_CHECK_EQUAL(var2->getUb(), 2.);
+}
+
+BOOST_AUTO_TEST_CASE(
+  two_times_10_variables_given_to_different_fillers__LP_contains_the_two_variables)
+{
+    createModelWithOneFloatVar("m1", {}, "var1", literal(-1), literal(6), {}, nullptr, true);
+    createModelWithOneFloatVar("m2", {}, "var2", literal(-3), literal(2), {}, nullptr, true);
+    createComponent("m1", "component_1");
+    createComponent("m2", "component_2");
+    constexpr unsigned int last_time_step = 9;
+    FillContext ctx{0, last_time_step};
+    buildLinearProblem(ctx);
+    const auto nb_var = ctx.getNumberOfTimestep(); // = 10
+
+    BOOST_CHECK_EQUAL(pb->variableCount(), 2 * 10);
+    for (auto i = 0; i < nb_var; i++)
+    {
+        auto* var1 = pb->getVariable("component_1.var1_" + to_string(i));
+        BOOST_REQUIRE(var1);
+        BOOST_CHECK(!var1->isInteger());
+        BOOST_CHECK_EQUAL(var1->getLb(), -1.);
+        BOOST_CHECK_EQUAL(var1->getUb(), 6.);
+
+        auto* var2 = pb->getVariable("component_2.var2_" + to_string(i));
+        BOOST_REQUIRE(var2);
+        BOOST_CHECK(!var2->isInteger());
+        BOOST_CHECK_EQUAL(var2->getLb(), -3.);
+        BOOST_CHECK_EQUAL(var2->getUb(), 2.);
+    }
 }
 
 BOOST_AUTO_TEST_CASE(var_whose_bounds_are_parameters_given_to_component__problem_contains_this_var)
@@ -370,6 +439,40 @@ BOOST_AUTO_TEST_CASE(ct_one_var__pb_contains_the_ct)
     BOOST_CHECK_EQUAL(ct->getLb(), -pb->infinity());
     BOOST_CHECK_EQUAL(ct->getUb(), 3);
     BOOST_CHECK_EQUAL(ct->getCoefficient(var), 1);
+}
+
+BOOST_AUTO_TEST_CASE(ct_with_ten_vars__pb_contains_ten_ct)
+{
+    // var1 <= 3
+    auto var_node = variable("var1",
+                             Antares::Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY);
+    auto three = literal(3);
+    auto ct_node = nodes.create<LessThanOrEqualNode>(var_node, three);
+
+    createModel("model",
+                {},
+                {{"var1", ValueType::BOOL, literal(-5), literal(10), true, false}},
+                {{"ct1", ct_node}});
+    createComponent("model", "componentToto");
+    constexpr unsigned int last_time_step = 9;
+    FillContext ctx{0, last_time_step};
+    buildLinearProblem(ctx);
+    const auto nb_var = ctx.getNumberOfTimestep(); // = 10
+
+    BOOST_CHECK_EQUAL(pb->variableCount(), 10);
+    BOOST_CHECK_EQUAL(pb->constraintCount(), 10);
+
+    for (auto i = 0; i < nb_var; i++)
+    {
+        auto ct = pb->getConstraint("componentToto.ct1_" + to_string(i));
+        BOOST_REQUIRE(ct);
+        BOOST_CHECK_EQUAL(ct->getLb(), -pb->infinity());
+        BOOST_CHECK_EQUAL(ct->getUb(), 3);
+        auto var = pb->getVariable("componentToto.var1_" + to_string(i));
+        BOOST_REQUIRE(var);
+        BOOST_CHECK(var->isInteger());
+        BOOST_CHECK_EQUAL(ct->getCoefficient(var), 1);
+    }
 }
 
 BOOST_AUTO_TEST_CASE(ct_one_var_with_coef__pb_contains_the_ct)
@@ -510,6 +613,27 @@ BOOST_AUTO_TEST_CASE(one_var_with_objective)
     BOOST_CHECK_EQUAL(pb->variableCount(), 1);
     BOOST_CHECK_NO_THROW(pb->getVariable("componentA.x"));
     BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(pb->getVariable("componentA.x")), 1);
+}
+
+BOOST_AUTO_TEST_CASE(one_time_dependent_var_with_objective)
+{
+    auto objective = variable("x", Antares::Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY);
+
+    createModelWithOneFloatVar("model", {}, "x", literal(-50), literal(-40), {}, objective, true);
+    createComponent("model", "componentA", {});
+
+    constexpr unsigned int last_time_step = 9;
+    FillContext ctx{0, last_time_step};
+    buildLinearProblem(ctx);
+    const auto nb_var = ctx.getNumberOfTimestep(); // = 10
+
+    BOOST_CHECK_EQUAL(pb->variableCount(), nb_var);
+    for (auto i = 0; i < nb_var; i++)
+    {
+        const auto var_name = "componentA.x_" + to_string(i);
+        BOOST_CHECK_NO_THROW(pb->getVariable(var_name));
+        BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(pb->getVariable(var_name)), 1);
+    }
 }
 
 BOOST_AUTO_TEST_CASE(two_vars_but_only_one_in_objective)

@@ -36,16 +36,6 @@ namespace Variable
 namespace Container
 {
 template<class NextT>
-inline List<NextT>::List()
-{
-}
-
-template<class NextT>
-inline List<NextT>::~List()
-{
-}
-
-template<class NextT>
 inline void List<NextT>::initializeFromStudy(Data::Study& study)
 {
     // Store a pointer to the current study
@@ -326,32 +316,32 @@ void List<NextT>::exportSurveyResults(bool global,
         logs.info() << "Exporting the annual results";
     }
 
-    auto survey = std::make_shared<SurveyResults>(*pStudy, output, writer);
+    SurveyResults survey(*pStudy, output, writer);
 
     // Year by year ?
-    survey->yearByYearResults = !global;
+    survey.yearByYearResults = !global;
 
     if (global)
     {
         // alias to the type of the report builder
         using Builder = SurveyReportBuilder<true, ListType>;
         // Building the survey results for each possible state
-        Builder::Run(*this, *survey);
+        Builder::Run(*this, survey);
 
         // Exporting the Grid (information about the study)
-        survey->exportGridInfos();
+        survey.exportGridInfos();
 
         // Exporting the digest
         // The digest must be exported after the real report because some values
         // are computed at this moment.
-        Builder::RunDigest(*this, *survey, writer);
+        Builder::RunDigest(*this, survey, writer);
     }
     else
     {
         // alias to the type of the report builder
         using Builder = SurveyReportBuilder<false, ListType>;
         // Building the survey results for each possible state
-        Builder::Run(*this, *survey, numSpace);
+        Builder::Run(*this, survey, numSpace);
     }
 }
 

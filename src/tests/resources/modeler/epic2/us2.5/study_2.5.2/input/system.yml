@@ -1,0 +1,31 @@
+system:
+  id: sys_example2
+  description: test system
+  model-libraries: lib_example2
+
+  components:
+  - id: node1
+    model: lib_example2.node_2gen_1load_mingen
+    scenario-group: sg
+    parameters:
+    - id: load
+      type: constant
+      value: 100
+    - id: gen1_max_p
+      type: constant
+      value: 80
+    - id: gen1_min_p
+      type: constant
+      value: 1
+    - id: gen1_prop_cost
+      type: constant
+      value: 0.5
+    - id: gen2_max_p
+      type: constant
+      value: 200
+    - id: gen2_min_p
+      type: constant
+      value: 40
+    - id: gen2_prop_cost
+      type: constant
+      value: 6

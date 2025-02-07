@@ -23,9 +23,9 @@ target_link_libraries(loadModelerFiles
         Antares::antares-study-system-model
         PRIVATE
         Antares::io
-        Antares::systemParser
-        Antares::modelParser
-        Antares::modelConverter
+        Antares::yml-system
+        Antares::yml-model
+        Antares::model-converter
         Antares::modelerParameters
 )
 

@@ -21,8 +21,8 @@
 
 #pragma once
 
-#include <antares/solver/expressions/visitors/EvaluationContext.h>
-#include <antares/solver/expressions/visitors/NodeVisitor.h>
+#include <antares/expressions/visitors/EvaluationContext.h>
+#include <antares/expressions/visitors/NodeVisitor.h>
 #include <antares/solver/optim-model-filler/LinearExpression.h>
 
 /**
@@ -34,29 +34,29 @@
 namespace Antares::Optimization
 {
 
-class ReadLinearExpressionVisitor: public Solver::Visitors::NodeVisitor<LinearExpression>
+class ReadLinearExpressionVisitor: public Expressions::Visitors::NodeVisitor<LinearExpression>
 {
 public:
     ReadLinearExpressionVisitor() = default;
-    explicit ReadLinearExpressionVisitor(Solver::Visitors::EvaluationContext context);
+    explicit ReadLinearExpressionVisitor(Expressions::Visitors::EvaluationContext context);
     std::string name() const override;
 
 private:
-    const Solver::Visitors::EvaluationContext context_;
-    LinearExpression visit(const Solver::Nodes::SumNode* node) override;
-    LinearExpression visit(const Solver::Nodes::SubtractionNode* node) override;
-    LinearExpression visit(const Solver::Nodes::MultiplicationNode* node) override;
-    LinearExpression visit(const Solver::Nodes::DivisionNode* node) override;
-    LinearExpression visit(const Solver::Nodes::EqualNode* node) override;
-    LinearExpression visit(const Solver::Nodes::LessThanOrEqualNode* node) override;
-    LinearExpression visit(const Solver::Nodes::GreaterThanOrEqualNode* node) override;
-    LinearExpression visit(const Solver::Nodes::NegationNode* node) override;
-    LinearExpression visit(const Solver::Nodes::VariableNode* node) override;
-    LinearExpression visit(const Solver::Nodes::ParameterNode* node) override;
-    LinearExpression visit(const Solver::Nodes::LiteralNode* node) override;
-    LinearExpression visit(const Solver::Nodes::PortFieldNode* node) override;
-    LinearExpression visit(const Solver::Nodes::PortFieldSumNode* node) override;
-    LinearExpression visit(const Solver::Nodes::ComponentVariableNode* node) override;
-    LinearExpression visit(const Solver::Nodes::ComponentParameterNode* node) override;
+    const Expressions::Visitors::EvaluationContext context_;
+    LinearExpression visit(const Expressions::Nodes::SumNode* node) override;
+    LinearExpression visit(const Expressions::Nodes::SubtractionNode* node) override;
+    LinearExpression visit(const Expressions::Nodes::MultiplicationNode* node) override;
+    LinearExpression visit(const Expressions::Nodes::DivisionNode* node) override;
+    LinearExpression visit(const Expressions::Nodes::EqualNode* node) override;
+    LinearExpression visit(const Expressions::Nodes::LessThanOrEqualNode* node) override;
+    LinearExpression visit(const Expressions::Nodes::GreaterThanOrEqualNode* node) override;
+    LinearExpression visit(const Expressions::Nodes::NegationNode* node) override;
+    LinearExpression visit(const Expressions::Nodes::VariableNode* node) override;
+    LinearExpression visit(const Expressions::Nodes::ParameterNode* node) override;
+    LinearExpression visit(const Expressions::Nodes::LiteralNode* node) override;
+    LinearExpression visit(const Expressions::Nodes::PortFieldNode* node) override;
+    LinearExpression visit(const Expressions::Nodes::PortFieldSumNode* node) override;
+    LinearExpression visit(const Expressions::Nodes::ComponentVariableNode* node) override;
+    LinearExpression visit(const Expressions::Nodes::ComponentParameterNode* node) override;
 };
 } // namespace Antares::Optimization

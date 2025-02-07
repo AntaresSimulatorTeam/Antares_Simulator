@@ -9,14 +9,10 @@ endif (MSVC)
 
 add_subdirectory(application)
 add_subdirectory(constraints-builder)
-add_subdirectory(expressions)
 add_subdirectory(hydro)
 add_subdirectory(infeasible-problem-analysis)
 add_subdirectory(lps)
 add_subdirectory(misc)
-add_subdirectory(modelConverter)
-add_subdirectory(modelParser)
-add_subdirectory(systemParser)
 add_subdirectory(modeler)
 add_subdirectory(optimisation)
 add_subdirectory(signal-handling)
@@ -59,7 +55,6 @@ add_library(solver-lib INTERFACE
 add_executable(antares-solver
         main.cpp
         ${SRCS}
-        modelParser/encoders.hxx
 )
 
 set_target_properties(antares-solver PROPERTIES OUTPUT_NAME ${exec_name})
