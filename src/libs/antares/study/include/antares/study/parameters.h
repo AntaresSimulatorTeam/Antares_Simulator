@@ -531,8 +531,8 @@ const char* SimulationModeToCString(SimulationMode mode);
 */
 bool StringToSimulationMode(SimulationMode& mode, Yuni::CString<20, false> text);
 
-const char* CompatibilityHydroPmaxToCString(Parameters::Compatibility::HydroPmax);
-bool StringToCompatibilityHydroPmax(Parameters::Compatibility::HydroPmax, const std::string& text);
+const char* CompatibilityHydroPmaxToCString(const Parameters::Compatibility::HydroPmax);
+bool StringToCompatibilityHydroPmax(Parameters::Compatibility::HydroPmax&, const std::string& text);
 
 } // namespace Antares::Data
 

@@ -194,7 +194,7 @@ static bool AreaListSaveThermalDataToFile(const AreaList& list, const AnyString&
 
 static bool AreaListSaveToFolderSingleArea(const Area& area,
                                            const AnyString& folder,
-                                           Parameters::Compatibility::HydroPmax hydroPmax)
+                                           const Parameters::Compatibility::HydroPmax hydroPmax)
 {
     bool ret = true;
     Clob buffer;
