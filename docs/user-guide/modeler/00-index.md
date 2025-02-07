@@ -12,4 +12,5 @@
 06-heuristics.md
 07-standard-library.md
 08-hybrid-studies.md
+09-command-line.md
 ```

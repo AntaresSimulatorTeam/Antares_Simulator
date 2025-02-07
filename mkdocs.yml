@@ -60,6 +60,7 @@ nav:
           - 'Heuristics': 'user-guide/modeler/06-heuristics.md'
           - 'Standard library': 'user-guide/modeler/07-standard-library.md'
           - 'Hybrid studies': 'user-guide/modeler/08-hybrid-studies.md'
+          - 'Command-line interface': 'user-guide/modeler/09-command-line.md'
       - 'Time-series generation':
           - 'Overview': 'user-guide/ts-generator/01-overview-tsgenerator.md'
           - 'Input files': 'user-guide/ts-generator/02-inputs.md'
