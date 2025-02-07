@@ -148,7 +148,8 @@ int main(int argc, const char** argv)
             auto lp_path = outputPath / "problem.lp";
             ortools_linear_problem.WriteLP(lp_path.string());
         }
-
+        // for (unsigned i = 0; i < ; ++i)
+        // {
         logs.info() << "Launching resolution...";
         auto* solution = ortools_linear_problem.solve(parameters.solverLogs);
         switch (solution->getStatus())
