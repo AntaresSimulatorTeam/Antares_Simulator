@@ -335,12 +335,12 @@ connections:
 The **input/data-series** directory contains all data-series needed by the [system description](#system-file) to define 
 component parameter values.  
 
-Currently, Antares modeler supports defining data-series using TSB files. Values must be separated using the tabs, 
-and the character `.` represents the floating point.
+Currently, Antares modeler supports defining data-series using tab-seperated-values files. Values must be separated 
+using tabs, and the character `.` represents the floating point.
 
 ### Naming
-TSV files inside the directory should respect the "XXX.tsv" naming template, where "XXX" is the ID of the data-series. 
-Thus, this ID is unique, and is the one to be used in the [system file](#system-file).  
+TSV files inside the directory should respect the "XXX.tsv" or the "XXX.csv" naming template, where "XXX" is the ID of 
+the data-series. Thus, this ID is unique, and is the one to be used in the [system file](#system-file).  
 
 ### Constant series
 To define a constant series (neither time nor scenario dependent), simply write one value in the file.  
