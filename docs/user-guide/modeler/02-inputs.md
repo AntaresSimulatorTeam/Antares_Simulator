@@ -20,13 +20,13 @@ The study can rely on only one library, or can mix models from different librari
 Currently, Antares modeler supports libraries that are each defined in a single yml file.  
 
 The header of the yml file must contain exactly one "library" key at the root level.  
-The **library** object contains one **id**, one **description**, one **port-types** collection, and one **models**collection.  
-Unless stated otherwise, these fields are mandatory.
+The **library** object contains one **id**, one **description**, one **port-types** collection, and one **models** collection.  
+Unless stated otherwise, all listed fields are mandatory.
 ### ID & description
 Example:
 ~~~yaml
 library:
-  id: my-library-id
+  id: my_library_id
   description: my library is great!
 ~~~
 
@@ -43,11 +43,11 @@ models would not be able to communicate with each-other).
 Example:
 ~~~yaml
 port-types:
-  - id: dc-port
+  - id: dc_port
     description: A port which transfers power flow value
     fields:
       - id: flow
-  - id: ac-port
+  - id: ac_port
     description: A port which transfers power flow and voltage angle values
     fields:
       - id: flow
@@ -64,7 +64,7 @@ The **models** collection lists all the [models](05-model.md#models) that can be
 Example:
 ~~~yaml
 models:
-  - id: generator-dc
+  - id: generator_dc
     description: A simple DC model of a generator
     parameters:
       - id: min_active_power_setpoint
@@ -91,7 +91,7 @@ models:
     objective: active_power * proportional_cost
     ports:
       - id: injection
-        type: dc-port
+        type: dc_port
     port-field-definitions:
       - port: injection
         field: flow
@@ -100,7 +100,7 @@ models:
     description: A balance node with injections (productions and loads)
     ports:
       - id: injections
-        type: dc-port
+        type: dc_port
     binding-constraints:
       - id: balance
         expression: sum_connections(injections.flow) = 0
@@ -230,11 +230,27 @@ You can aggregate incoming ports using the following operator:
 
 Examples:
 ~~~yaml
-expression: sum(dc-port.flow) = 0
+expression: sum(dc_port.flow) = 0
 ~~~
 
 ## System file
-TODO
+The system file describes the energy system that is to be simulated, by listing the [components](05-model.md#components) 
+and the [port connections](05-model.md#ports-and-connections).  
+Currently, Antares modeler supports importing the system from a yaml file.
+
+The header of the yml file must contain exactly one "system" key at the root level.  
+The **system** object contains one **id**, one **description**, one **model-libraries** collection, one **components** collection.  
+Unless stated otherwise, all listed fields are mandatory.
+
+### ID, description, and model libraries
+Example:
+~~~yaml
+system:
+  - id: my_system
+  - description: my system is even greater!
+  - model-libraries: my_library_id, my_other_library_id
+~~~
+
 
 ## Data series
 TODO
@@ -242,7 +258,7 @@ TODO
 ## Rules for IDs
 All IDs for the objects in the model library and system file must respect the following:  
 
-- Alphanumeric characters are allowed, as well as the underscore (`_`) and dash (`-`) characters
+- Alphanumeric characters are allowed, as well as the underscore (`_`) character
 - All other characters are prohibited
 - Only lower-case is allowed
 
