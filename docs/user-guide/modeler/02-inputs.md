@@ -240,7 +240,8 @@ TODO
 TODO
 
 ## Rules for IDs
-All IDs for the objects in the model library and system file must respect the following:
+All IDs for the objects in the model library and system file must respect the following:  
+
 - Alphanumeric characters are allowed, as well as the underscore (`_`) and dash (`-`) characters
 - All other characters are prohibited
 - Only lower-case is allowed
