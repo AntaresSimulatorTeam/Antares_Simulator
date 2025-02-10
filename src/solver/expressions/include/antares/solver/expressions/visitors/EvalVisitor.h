@@ -21,7 +21,13 @@
 #pragma once
 
 #include <antares/solver/expressions/visitors/EvaluationContext.h>
+#include <antares/solver/modeler/api/ILinearProblemData.h>
 #include "antares/solver/expressions/visitors/NodeVisitor.h"
+
+namespace Antares::Solver::Modeler::Api
+{
+struct DataSeriesKeys;
+}
 
 namespace Antares::Solver::Visitors
 {
@@ -169,7 +175,7 @@ public:
     /**
      * @brief Default constructor, creates an evaluation visitor with no context.
      */
-    EvalVisitor() = default; // No context (variables / parameters)
+    // EvalVisitor() = default; // No context (variables / parameters)
 
     /**
      * @brief Constructs an evaluation visitor with the specified context.
@@ -177,12 +183,12 @@ public:
      * @param context The evaluation context.
      * @param dataSeriesKeys
      */
-    explicit EvalVisitor(EvaluationContext context, DataSeriesKeys dataSeriesKeys);
+    explicit EvalVisitor(EvaluationContext context, Modeler::Api::DataSeriesKeys dataSeriesKeys);
     std::string name() const override;
 
 private:
     const EvaluationContext context_;
-    DataSeriesKeys dataSeriesKeys_;
+    Modeler::Api::DataSeriesKeys dataSeriesKeys_;
     EvaluationResult visit(const Nodes::SumNode* node) override;
     EvaluationResult visit(const Nodes::SubtractionNode* node) override;
     EvaluationResult visit(const Nodes::MultiplicationNode* node) override;

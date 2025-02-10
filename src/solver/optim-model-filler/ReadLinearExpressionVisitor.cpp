@@ -24,8 +24,8 @@
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/expressions/visitors/EvaluationContext.h>
 #include <antares/solver/expressions/visitors/NodeVisitor.h>
+#include <antares/solver/modeler/api/ILinearProblemData.h>
 #include <antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h>
-
 using namespace Antares::Solver::Nodes;
 
 namespace Antares::Optimization
@@ -33,7 +33,7 @@ namespace Antares::Optimization
 
 ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
   Solver::Visitors::EvaluationContext context,
-  Solver::Visitors::DataSeriesKeys dataSeriesKeys):
+  Solver::Modeler::Api::DataSeriesKeys dataSeriesKeys):
     context_(std::move(context)),
     dataSeriesKeys_(std::move(dataSeriesKeys))
 {

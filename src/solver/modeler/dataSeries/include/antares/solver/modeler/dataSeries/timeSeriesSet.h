@@ -12,6 +12,7 @@ public:
     explicit TimeSeriesSet(std::string name, unsigned height);
     void add(const std::vector<double>& ts);
     double getData(unsigned rank, unsigned hour) override;
+    std::vector<double> getData(unsigned rank) override;
 
 private:
     unsigned height_ = 0;

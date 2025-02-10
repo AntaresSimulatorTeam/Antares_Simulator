@@ -57,21 +57,23 @@ void ComponentFiller::addVariables(Solver::Modeler::Api::ILinearProblem& pb,
                                                           {},
                                                           data);
 
-    Solver::Visitors::EvalVisitor evaluator(evaluationContext);
+    Solver::Visitors::EvalVisitor evaluator(evaluationContext, ctx.getDataSeriesKeys());
     for (const auto& variable: component_.getModel()->Variables() | std::views::values)
     {
+        const auto& lb = evaluator.dispatch(variable.LowerBound().RootNode());
+        const auto& ub = evaluator.dispatch(variable.UpperBound().RootNode());
         if (variable.isTimeDependent())
         {
-            pb.addVariable(evaluator.dispatch(variable.LowerBound().RootNode()),
-                           evaluator.dispatch(variable.UpperBound().RootNode()),
+            pb.addVariable(lb.values(),
+                           ub.values(),
                            variable.Type() != Study::SystemModel::ValueType::FLOAT,
                            component_.Id() + "." + variable.Id(),
                            ctx.getNumberOfTimestep());
         }
         else
         {
-            pb.addVariable(evaluator.dispatch(variable.LowerBound().RootNode()),
-                           evaluator.dispatch(variable.UpperBound().RootNode()),
+            pb.addVariable(lb.value(),
+                           ub.value(),
                            variable.Type() != Study::SystemModel::ValueType::FLOAT,
                            component_.Id() + "." + variable.Id());
         }
@@ -93,24 +95,27 @@ void ComponentFiller::addStaticConstraint(Solver::Modeler::Api::ILinearProblem& 
 }
 
 void ComponentFiller::addTimeDependentConstraints(Solver::Modeler::Api::ILinearProblem& pb,
-                                                  const LinearConstraint& linear_constraint,
-                                                  const std::string& constraint_id,
-                                                  unsigned int nb_cstr) const
+  const std::vector<LinearConstraint>& linear_constraints,
+  const std::string& constraint_id) const
 {
-    auto vect_ct = pb.addConstraint(linear_constraint.lb,
-                                    linear_constraint.ub,
-                                    component_.Id() + "." + constraint_id,
-                                    nb_cstr);
-    for (auto cstr(0); cstr < nb_cstr; ++cstr)
+    // auto vect_ct = pb.addConstraint(linear_constraint.lb,
+    //                                 linear_constraint.ub,
+    //                                 component_.Id() + "." + constraint_id,
+    //                                 nb_cstr);
+    unsigned int constraint_count = 0;
+    for (const auto& linear_constraint: linear_constraints)
     {
-        auto* ct = vect_ct[cstr];
+        auto* ct = pb.addConstraint(linear_constraint.lb,
+                                    linear_constraint.ub,
+                                    component_.Id() + "." + constraint_id + '_'
+                                      + std::to_string(constraint_count));
         for (const auto& [var_id, coef]: linear_constraint.coef_per_var)
         {
             // TODO FIXME the coefficient needs to be time-dependent
             if (IsThisVariableTimeDependent(var_id))
             {
                 auto* variable = pb.getVariable(component_.Id() + "." + var_id + '_'
-                                                + std::to_string(cstr));
+                                                + std::to_string(constraint_count));
                 ct->setCoefficient(variable, coef);
             }
             else
@@ -119,6 +124,7 @@ void ComponentFiller::addTimeDependentConstraints(Solver::Modeler::Api::ILinearP
                 ct->setCoefficient(variable, coef);
             }
         }
+        ++constraint_count;
     }
 }
 
@@ -126,25 +132,26 @@ void ComponentFiller::addConstraints(Solver::Modeler::Api::ILinearProblem& pb,
                                      Solver::Modeler::Api::ILinearProblemData& data,
                                      Solver::Modeler::Api::FillContext& ctx)
 {
-    ReadLinearConstraintVisitor visitor(evaluationContext_);
+    Solver::Visitors::EvaluationContext evaluationContext(component_.getParameterValues(),
+                                                          {},
+                                                          data);
+    ReadLinearConstraintVisitor visitor(evaluationContext, ctx.getDataSeriesKeys());
     for (const auto& constraint: component_.getModel()->getConstraints() | std::views::values)
     {
         auto* root_node = constraint.expression().RootNode();
-        auto linear_constraint = visitor.dispatch(root_node);
+        auto linear_constraints = visitor.dispatch(root_node);
         // TODO timesteps will be a parameter
         if (checkTimeSteps(ctx))
         {
             if (IsThisConstraintTimeDependent(root_node))
 
             {
-                addTimeDependentConstraints(pb,
-                                            linear_constraint,
-                                            constraint.Id(),
-                                            ctx.getNumberOfTimestep());
+                addTimeDependentConstraints(pb, linear_constraints, constraint.Id());
             }
             else
             {
-                addStaticConstraint(pb, linear_constraint, constraint.Id());
+                // TODO
+                addStaticConstraint(pb, linear_constraints[0], constraint.Id());
             }
         }
     }
@@ -159,8 +166,20 @@ void ComponentFiller::addObjective(Solver::Modeler::Api::ILinearProblem& pb,
     {
         return;
     }
-    ReadLinearExpressionVisitor visitor(evaluationContext_);
-    auto linear_expression = visitor.dispatch(model->Objective().RootNode());
+    Solver::Visitors::EvaluationContext evaluationContext(component_.getParameterValues(),
+                                                          {},
+                                                          data);
+    const auto& dataSerieKeys = ctx.getDataSeriesKeys();
+    // TODO objective expression is not Timedependent
+
+    ReadLinearExpressionVisitor visitor(evaluationContext,
+                                        {.timeSteps = {0},
+                                         .scenarioGroup = dataSerieKeys.scenarioGroup,
+                                         .scenario = dataSerieKeys.scenario});
+
+    auto linear_expression = visitor.dispatch(model->Objective().RootNode())
+                               .GetLinearExpressions()[0];
+
     if (abs(linear_expression.offset()) > 1e-10)
     {
         throw std::invalid_argument("Antares does not support objective offsets (found in model '"

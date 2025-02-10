@@ -41,7 +41,7 @@ namespace Antares::Solver::Modeler::Api
 {
 struct FillContext
 {
-    FillContext(unsigned first, unsigned last):
+    FillContext(unsigned first, unsigned last, DataSeriesKeys dataSeriesKeys):
         firstTimeStep(first),
         lastTimeStep(last)
     {
@@ -64,10 +64,15 @@ struct FillContext
         return lastTimeStep - firstTimeStep + 1;
     }
 
+    [[nodiscard]] DataSeriesKeys getDataSeriesKeys() const
+    {
+        return dataSeriesKeys;
+    }
+
 private:
     unsigned firstTimeStep = 0;
     unsigned lastTimeStep = 0;
-    std::unordered_map<const Nodes::Node*, Visitors::TimeIndex> nodesTimeIndex;
+    DataSeriesKeys dataSeriesKeys;
 };
 
 class LinearProblemFiller

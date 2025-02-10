@@ -21,14 +21,14 @@
 
 #include "antares/solver/expressions/visitors/EvalVisitor.h"
 
-#include <cmath>
 #include <numeric>
 
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
+#include <antares/solver/modeler/api/ILinearProblemData.h>
 
 namespace Antares::Solver::Visitors
 {
-EvalVisitor::EvalVisitor(EvaluationContext context, DataSeriesKeys dataSeriesKeys):
+EvalVisitor::EvalVisitor(EvaluationContext context, Modeler::Api::DataSeriesKeys dataSeriesKeys):
     context_(std::move(context)),
     dataSeriesKeys_(std::move(dataSeriesKeys))
 {

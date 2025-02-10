@@ -14,4 +14,5 @@ add_boost_test(test-expressions
   test_AstDOTStyleVisitor.cpp
   LIBS
   solver-expressions
-  solver-expressions-iterators)
+        solver-expressions-iterators
+        data-series-lib)

@@ -101,6 +101,6 @@ public:
     size_t getSize() const;
 
 private:
-    std::map<unsigned, LinearExpression> linearExpressions_;
+    std::map<unsigned int, LinearExpression> linearExpressions_;
 };
 } // namespace Antares::Optimization

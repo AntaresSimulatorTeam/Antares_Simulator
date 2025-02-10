@@ -83,7 +83,7 @@ BOOST_FIXTURE_TEST_CASE(full_model_system, LibraryObjects)
     BOOST_CHECK_EQUAL(systemModel.Components().size(), 1);
     BOOST_CHECK_EQUAL(systemModel.Components().at("N").Id(), "N");
     BOOST_CHECK_EQUAL(systemModel.Components().at("N").getModel()->Id(), "node");
-    BOOST_CHECK_EQUAL(systemModel.Components().at("N").getParameterValue("cost"), 30);
+    BOOST_CHECK_EQUAL(std::stod(systemModel.Components().at("N").getParameterValue("cost")), 30);
 }
 
 BOOST_FIXTURE_TEST_CASE(bad_param_name_in_component, LibraryObjects)
@@ -273,9 +273,9 @@ BOOST_AUTO_TEST_CASE(Full_system_test)
     BOOST_CHECK_EQUAL(systemModel.Components().at("N").getScenarioGroupId(), "group-234");
 
     BOOST_CHECK_EQUAL(systemModel.Components().at("G").getModel()->Id(), "generator");
-    BOOST_CHECK_EQUAL(systemModel.Components().at("G").getParameterValue("cost"), 30);
-    BOOST_CHECK_EQUAL(systemModel.Components().at("G").getParameterValue("p_max"), 100);
+    BOOST_CHECK_EQUAL(std::stod(systemModel.Components().at("G").getParameterValue("cost")), 30);
+    BOOST_CHECK_EQUAL(std::stod(systemModel.Components().at("G").getParameterValue("p_max")), 100);
 
     BOOST_CHECK_EQUAL(systemModel.Components().at("D").getModel()->Id(), "demand");
-    BOOST_CHECK_EQUAL(systemModel.Components().at("D").getParameterValue("demand"), 100);
+    BOOST_CHECK_EQUAL(std::stod(systemModel.Components().at("D").getParameterValue("demand")), 100);
 }

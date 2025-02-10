@@ -12,13 +12,6 @@ class ILinearProblemData;
 namespace Antares::Solver::Visitors
 {
 
-struct DataSeriesKeys
-{
-    std::vector<unsigned int> timeSteps;
-    std::string scenarioGroup;
-    unsigned scenario;
-};
-
 /**
  * @brief Represents the context for evaluating expressions.
  *
@@ -31,7 +24,7 @@ public:
      * @brief Default constructor, creates an evaluation context without parameter and variable
      * values.
      */
-    EvaluationContext() = default;
+    // EvaluationContext() = default;
     /**
      * @brief Constructs an evaluation context with the specified parameter and variable
      * values.

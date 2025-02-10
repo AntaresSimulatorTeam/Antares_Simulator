@@ -7,6 +7,13 @@
 namespace Antares::Solver::Modeler::Api
 {
 
+struct DataSeriesKeys
+{
+    std::vector<unsigned int> timeSteps;
+    std::string scenarioGroup;
+    unsigned scenario;
+};
+
 class ILinearProblemData
 {
 public:

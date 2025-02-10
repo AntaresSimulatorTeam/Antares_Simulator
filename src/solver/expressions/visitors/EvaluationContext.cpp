@@ -1,7 +1,6 @@
 #include <antares/solver/expressions/visitors/EvaluationContext.h>
 #include <antares/solver/modeler/api/ILinearProblemData.h>
 
-#include "../../modeler/api/include/antares/solver/modeler/api/ILinearProblemData.h"
 
 namespace Antares::Solver::Visitors
 {

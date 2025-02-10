@@ -25,8 +25,9 @@
 #include <string>
 
 #include "antares/solver/modeler/api/ILinearProblemData.h"
-#include "antares/solver/modeler/dataSeries/dataSeriesRepo.h"
-#include "antares/solver/modeler/dataSeries/scenarioGroupRepo.h"
+
+#include "dataSeriesRepo.h"
+#include "scenarioGroupRepo.h"
 
 namespace Antares::Solver::Modeler::DataSeries
 {

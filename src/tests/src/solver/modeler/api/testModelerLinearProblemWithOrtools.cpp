@@ -73,7 +73,8 @@ BOOST_FIXTURE_TEST_CASE(add_int_variable_to_problem___check_var_exists, FixtureE
 // Test bulk addition of integer variables
 BOOST_FIXTURE_TEST_CASE(add_int_variables_to_problem___check_all_vars_exist, FixtureEmptyProblem)
 {
-    auto vars = pb->addIntVariable(1, 5, "int_var", 2);
+    unsigned int num_var = 2;
+    auto vars = pb->addIntVariable({1, 1}, {5, 5}, "int_var", 2);
 
     BOOST_CHECK_EQUAL(vars.size(), 2); // Check 2 variables created
 
@@ -101,7 +102,7 @@ BOOST_FIXTURE_TEST_CASE(add_num_variable_to_problem___check_var_exists, FixtureE
 // Test bulk addition of numeric variables
 BOOST_FIXTURE_TEST_CASE(add_num_variables_to_problem___check_all_vars_exist, FixtureEmptyProblem)
 {
-    auto vars = pb->addNumVariable(0, 10, "var", 3);
+    auto vars = pb->addNumVariable({0, 0, 0}, {10, 10, 10}, "var", 3);
 
     BOOST_CHECK_EQUAL(vars.size(), 3); // Check 3 variables created
 
@@ -120,8 +121,8 @@ BOOST_FIXTURE_TEST_CASE(add_num_variables_to_problem___check_all_vars_exist, Fix
 BOOST_FIXTURE_TEST_CASE(add_mixed_variables_to_problem___check_all_vars_exist, FixtureEmptyProblem)
 {
     auto nb_vars_per_type = 2;
-    auto num_vars = pb->addVariable(0, 20, false, "num_var", nb_vars_per_type);
-    auto int_vars = pb->addVariable(12, 34, true, "int_var", nb_vars_per_type);
+    auto num_vars = pb->addVariable({0, 0}, {20, 20}, false, "num_var", nb_vars_per_type);
+    auto int_vars = pb->addVariable({12, 12}, {34, 34}, true, "int_var", nb_vars_per_type);
 
     BOOST_CHECK_EQUAL(int_vars.size(), nb_vars_per_type); // Check 2 int variables created
     BOOST_CHECK_EQUAL(num_vars.size(), nb_vars_per_type); // Check 2 numeric variables created
@@ -157,7 +158,7 @@ BOOST_FIXTURE_TEST_CASE(add_constraint_to_problem___check_constraint_exists, Fix
 BOOST_FIXTURE_TEST_CASE(add_constraints_to_problem___check_all_constraints_exist,
                         FixtureEmptyProblem)
 {
-    auto constraints = pb->addConstraint(5, 15, "constraint", 3);
+    auto constraints = pb->addConstraint({5, 5, 5}, {15, 15, 15}, "constraint", 3);
 
     BOOST_CHECK_EQUAL(constraints.size(), 3); // Check 3 constraints created
 
@@ -207,8 +208,8 @@ BOOST_FIXTURE_TEST_CASE(add_already_existing_var_to_problem_leads_to_exception, 
 // Test bulk addition of variables with duplicate names
 BOOST_FIXTURE_TEST_CASE(add_duplicate_variable_names_leads_to_exception, FixtureEmptyProblem)
 {
-    pb->addNumVariable(0, 10, "duplicate_var", 1);
-    BOOST_CHECK_EXCEPTION(pb->addNumVariable(0, 10, "duplicate_var", 1),
+    pb->addNumVariable({0}, {10}, "duplicate_var", 1);
+    BOOST_CHECK_EXCEPTION(pb->addNumVariable({0}, {10}, "duplicate_var", 1),
                           std::exception,
                           expectedMessage);
 }
@@ -223,8 +224,8 @@ BOOST_FIXTURE_TEST_CASE(add_already_existing_constaint_to_problem_leads_to_excep
 // Test bulk addition of constraints with duplicate names
 BOOST_FIXTURE_TEST_CASE(add_duplicate_constraint_names_leads_to_exception, FixtureEmptyProblem)
 {
-    pb->addConstraint(0, 1, "duplicate_constraint", 1);
-    BOOST_CHECK_EXCEPTION(pb->addConstraint(0, 1, "duplicate_constraint", 1),
+    pb->addConstraint({0}, {1}, "duplicate_constraint", 1);
+    BOOST_CHECK_EXCEPTION(pb->addConstraint({0}, {1}, "duplicate_constraint", 1),
                           std::exception,
                           expectedMessage);
 }
@@ -233,7 +234,7 @@ BOOST_FIXTURE_TEST_CASE(add_duplicate_constraint_names_leads_to_exception, Fixtu
 BOOST_FIXTURE_TEST_CASE(mix_bulk_and_single_variable_additions, FixtureEmptyProblem)
 {
     pb->addNumVariable(0, 5, "single_var");
-    auto vars = pb->addNumVariable(5, 10, "bulk_var", 2);
+    auto vars = pb->addNumVariable({5, 5}, {10, 10}, "bulk_var", 2);
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 3); // Total variables should be 3
 

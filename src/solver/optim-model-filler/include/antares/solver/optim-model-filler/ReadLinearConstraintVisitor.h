@@ -55,7 +55,9 @@ class ReadLinearConstraintVisitor
 {
 public:
     ReadLinearConstraintVisitor() = default;
-    explicit ReadLinearConstraintVisitor(Solver::Visitors::EvaluationContext context);
+    explicit ReadLinearConstraintVisitor(
+      Solver::Visitors::EvaluationContext context,
+      const Solver::Modeler::Api::DataSeriesKeys& dataSeriesKeys);
     std::string name() const override;
 
 private:

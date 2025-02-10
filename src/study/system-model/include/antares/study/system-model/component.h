@@ -72,7 +72,7 @@ public:
         return data_.parameter_values;
     }
 
-    double getParameterValue(const std::string& parameter_id) const
+    std::string getParameterValue(const std::string& parameter_id) const
     {
         if (!data_.parameter_values.contains(parameter_id))
         {

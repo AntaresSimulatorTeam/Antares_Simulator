@@ -22,6 +22,17 @@ void TimeSeriesSet::add(const std::vector<double>& ts)
 
 double TimeSeriesSet::getData(unsigned rank, unsigned hour)
 {
+
+    if (hour > height_ - 1)
+    {
+        throw HourTooBig(name(), hour);
+    }
+
+    return getData(rank)[hour];
+}
+
+std::vector<double> TimeSeriesSet::getData(unsigned rank)
+{
     if (tsSet_.empty())
     {
         throw Empty(name());
@@ -32,11 +43,6 @@ double TimeSeriesSet::getData(unsigned rank, unsigned hour)
         throw RankTooBig(name(), rank);
     }
 
-    if (hour > height_ - 1)
-    {
-        throw HourTooBig(name(), hour);
-    }
-
-    return tsSet_[rank][hour];
+    return tsSet_[rank];
 }
 } // namespace Antares::Solver::Modeler::DataSeries

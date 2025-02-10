@@ -23,6 +23,7 @@
 
 #include <antares/solver/expressions/visitors/EvaluationContext.h>
 #include <antares/solver/expressions/visitors/NodeVisitor.h>
+#include <antares/solver/modeler/api/ILinearProblemData.h>
 #include <antares/solver/optim-model-filler/LinearExpression.h>
 
 /**
@@ -39,7 +40,10 @@ class ReadLinearExpressionVisitor
 {
 public:
     explicit ReadLinearExpressionVisitor(Solver::Visitors::EvaluationContext context,
-                                         Solver::Visitors::DataSeriesKeys dataSeriesKeys);
+                                         Solver::Modeler::Api::DataSeriesKeys dataSeriesKeys);
+
+    // TODO
+    ReadLinearExpressionVisitor() = default;
     std::string name() const override;
 
 private:
@@ -60,6 +64,6 @@ private:
     TimeDependentLinearExpression visit(const Solver::Nodes::ComponentVariableNode* node) override;
     TimeDependentLinearExpression visit(const Solver::Nodes::ComponentParameterNode* node) override;
 
-    Solver::Visitors::DataSeriesKeys dataSeriesKeys_;
+    Solver::Modeler::Api::DataSeriesKeys dataSeriesKeys_;
 };
 } // namespace Antares::Optimization
