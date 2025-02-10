@@ -43,12 +43,14 @@ DataSeriesRepository DataSeriesRepoImporter::importFromDirectory(const std::file
         throw std::invalid_argument("Not a directory: " + path.string());
     }
 
-    auto paths = std::filesystem::directory_iterator{path};
-    auto pathFilter = std::views::filter([](const auto& e) { return is_regular_file(e); })
-                      | std::views::filter(&hasRightExtension);
+    using std::views::filter;
+    auto pathFilter = filter(static_cast<bool (*)(const std::filesystem::path&)>(
+                        &std::filesystem::is_regular_file))
+                      | filter(&hasRightExtension);
 
     DataSeriesRepository repo{};
-    for (const auto& entry: paths | pathFilter)
+    for (auto paths = std::filesystem::directory_iterator{path};
+         const auto& entry: paths | pathFilter)
     {
         std::unique_ptr<IDataSeries> timeSeriesSet = std::make_unique<TimeSeriesSet>(
           TimeSeriesSetImporter::importFromFile(entry, csvSeparator));
