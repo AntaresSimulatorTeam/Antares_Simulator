@@ -7,6 +7,7 @@ on:
     branches:
       - develop
       - dependabot/*
+      - fix/oracle8
 
   schedule:
     - cron: '21 2 * * *'
@@ -82,9 +83,6 @@ jobs:
            wget ${{env.ORTOOLS_URL}} -O ortools.zip
            unzip ortools.zip
            rm ortools.zip
-
-    - name: Init submodule
-      run: git submodule update --init --remote src/tests/resources/Antares_Simulator_Tests
 
     - name: Install dependencies
       run: |
