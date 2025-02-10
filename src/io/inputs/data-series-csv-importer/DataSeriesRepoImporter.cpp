@@ -120,9 +120,9 @@ TimeSeriesSet TimeSeriesSetImporter::importFromFile(const std::filesystem::path&
     // We have to transpose the matrix
     // TODO: we may want to improve this by reading directly into the TimeSeriesSet object, or
     // by creating a specific IDataSeries implementation
-    int nTimestamps = csvMatrix.size();
-    TimeSeriesSet timeSeriesSet(path.stem().string(), nTimestamps);
-    if (nTimestamps == 0)
+    int nTimesteps = csvMatrix.size();
+    TimeSeriesSet timeSeriesSet(path.stem().string(), nTimesteps);
+    if (nTimesteps == 0)
     {
         return timeSeriesSet;
     }
@@ -130,8 +130,8 @@ TimeSeriesSet TimeSeriesSetImporter::importFromFile(const std::filesystem::path&
     for (int i = 0; i < nSets; ++i)
     {
         std::vector<double> set;
-        set.reserve(nTimestamps);
-        for (int j = 0; j < nTimestamps; ++j)
+        set.reserve(nTimesteps);
+        for (int j = 0; j < nTimesteps; ++j)
         {
             set.push_back(csvMatrix[j][i]);
         }

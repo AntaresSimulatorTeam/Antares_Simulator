@@ -181,6 +181,15 @@ BOOST_AUTO_TEST_CASE(empty_dir)
                             "Data series repo is empty, and somebody requests data from it"));
 }
 
+BOOST_AUTO_TEST_CASE(two_files_with_same_name)
+{
+    writeFile("data.tsv", "123");
+    writeFile("data.csv", "527");
+    BOOST_CHECK_EXCEPTION(DataSeriesRepoImporter::importFromDirectory(temp_path),
+                          DataSeriesRepository::DataSeriesAlreadyExists,
+                          checkMessage("Data series repo : data series 'data' already exists"));
+}
+
 BOOST_AUTO_TEST_CASE(one_simple_file)
 {
     writeFile("one.tsv", "123");
