@@ -1,6 +1,6 @@
 Feature: 2.5 - Pure modeler simple studies, with no ports and no timeseries
 
-  Scenario: 2.5.1: One model with one load and two generators, one timestamp
+  Scenario: 2.5.1: One model with one load and two generators, one timestep
     Given the study path is "modeler/epic2/us2.5/study_2.5.1"
     When I run antares modeler
     Then the simulation succeeds
@@ -8,25 +8,25 @@ Feature: 2.5 - Pure modeler simple studies, with no ports and no timeseries
     And the optimal value of variable node1.gen1_p_0 is 80
     And the optimal value of variable node1.gen2_p_0 is 20
 
-  Scenario: 2.5.2: One model with one load and two generators (minP), three timestamps
+  Scenario: 2.5.2: One model with one load and two generators (minP), three timesteps
     Given the study path is "modeler/epic2/us2.5/study_2.5.2"
     When I run antares modeler
     Then the simulation succeeds
     And the objective value is 810
     And the optimal values of the variables are
-      | component | variable | timestamp | value |
+      | component | variable | timestep | value |
       | node1     | gen1_up  | 0-2       | 1     |
       | node1     | gen1_p   | 0-2       | 60    |
       | node1     | gen1_up  | 0-2       | 1     |
       | node1     | gen2_p   | 0-2       | 40    |
 
-  Scenario: 2.5.3: Two libs, one timestamp
+  Scenario: 2.5.3: Two libs, one timestep
     Given the study path is "modeler/epic2/us2.5/study_2.5.3"
     When I run antares modeler
     Then the simulation succeeds
     And the objective value is 15600
     And the optimal values of the variables are
-      | component | variable | timestamp | value |
+      | component | variable | timestep | value |
       | node1     | gen1_p   | 0         | 0     |
       | node1     | gen2_p   | 0         | 100   |
       | node2     | gen1_p   | 0         | 500   |

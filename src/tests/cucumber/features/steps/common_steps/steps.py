@@ -142,7 +142,7 @@ def modeler_obj_value(context, value):
 @step('the optimal values of the variables are')
 def modeler_var_optimal_value(context):
     for row in context.table:
-        ts_array = row["timestamp"].split("-")
+        ts_array = row["timestep"].split("-")
         ts_start = int(ts_array[0])
         ts_end =  int(ts_array[1]) if len(ts_array) == 2 else ts_start
         for ts in range(ts_start, ts_end + 1):
