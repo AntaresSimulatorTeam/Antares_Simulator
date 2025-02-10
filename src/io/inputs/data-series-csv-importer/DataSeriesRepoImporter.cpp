@@ -32,7 +32,7 @@ using namespace Optimisation::LinearProblemDataImpl;
 bool hasRightExtension(const std::filesystem::directory_entry& e)
 {
     auto ext = e.path().extension();
-    return (ext == ".csv") | (ext == ".tsv");
+    return (ext == ".csv") || (ext == ".tsv");
 }
 
 DataSeriesRepository DataSeriesRepoImporter::importFromDirectory(const std::filesystem::path& path,
