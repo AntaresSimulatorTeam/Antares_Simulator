@@ -29,7 +29,7 @@ namespace Antares::IO::Inputs::DataSeriesCsvImporter
 {
 using namespace Optimisation::LinearProblemDataImpl;
 
-bool hasRightExtension(const auto& e)
+bool hasRightExtension(const std::filesystem::directory_entry& e)
 {
     auto ext = e.path().extension();
     return ext == ".csv" | ext == ".tsv";
@@ -45,7 +45,7 @@ DataSeriesRepository DataSeriesRepoImporter::importFromDirectory(const std::file
 
     auto paths = std::filesystem::directory_iterator{path};
     auto pathFilter = std::views::filter([](const auto& e) { return is_regular_file(e); })
-                      | std::views::filter([](const auto& e) { return hasRightExtension(e); });
+                      | std::views::filter(&hasRightExtension);
 
     DataSeriesRepository repo{};
     for (const auto& entry: paths | pathFilter)
