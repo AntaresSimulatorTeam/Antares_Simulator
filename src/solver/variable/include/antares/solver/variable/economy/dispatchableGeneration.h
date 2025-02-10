@@ -82,6 +82,7 @@ struct VCardDispatchableGeneration
     typedef IntermediateValues IntermediateValuesDeepType;
     typedef std::vector<IntermediateValues> IntermediateValuesBaseType;
     typedef std::vector<IntermediateValuesBaseType> IntermediateValuesType;
+    typedef IntermediateValuesBaseType* IntermediateValuesTypeForSpatialAg;
 
 }; // class VCard
 
@@ -123,6 +124,13 @@ public:
                        : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
+
+    template<class U>
+    static void InitializeAndReset(U& out, Data::Study& study)
+    {
+        out.initializeFromStudy(study);
+        out.reset();
+    }
 
     void initializeFromArea(Data::Study* study, Data::Area* area)
     {
