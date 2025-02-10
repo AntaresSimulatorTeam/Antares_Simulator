@@ -267,26 +267,32 @@ components:
     scenario-group: thermal_group 
     parameters:
       - id: min_active_power_setpoint
-        type: constant
+        time-dependent: false
+        scenario-dependent: false
         value: 100
       - id: max_active_power_setpoint
-        type: time-and-scenario-dependent
+        time-dependent: true
+        scenario-dependent: true
         value: generator1_max_p
       - id: proportional_cost
-        type: scenario-dependent
+        time-dependent: false
+        scenario-dependent: true
         value: generator1_cost
   - id: generator2
     model: my_lib_id.dc_generator
     scenario-group: hydro_group
     parameters:
       - id: min_active_power_setpoint
-        type: constant
+        time-dependent: false
+        scenario-dependent: false
         value: 20
       - id: max_active_power_setpoint
-        type: time-dependent
+        time-dependent: true
+        scenario-dependent: false
         value: generator2_max_p
       - id: proportional_cost
-        type: constant
+        time-dependent: false
+        scenario-dependent: false
         value: 0.5
   - id: node1
     model: my_lib_id.node
@@ -301,16 +307,15 @@ components:
 - **parameters** _(not needed if model has no parameters)_: a collection of values for the model's parameters. Note that 
   all the parameters of the model should have their values assigned by the component.
     - **id**: the ID of the parameter, as defined by the [model](#models)
-    - **type**: the type of the value given to the parameter: `constant`, `time-dependent`, `scenario-dependent`, or 
-      `time-and-scenario-dependent`. Note that this type must be as or less restrictive as the type defined by the model. 
-      For example, a parameter that is defined as time-dependent and scenario-dependent by the model, can be defined as 
-      `time-and-scenario-dependent`, only `time-dependent`, or `constant` by the component. However, a parameter that 
-      is defined as constant by the model, can only be defined as constant by the component.
+    - **time-dependent**: `true` or `false`, indicates whether the parameter depends on time or is constant across the 
+      whole simulation horizon. If the model parameter is not time-dependent, this can't be set to true.
+    - **scenario-dependent**: `true` or `false`, indicates whether the parameter changes depending on the simulated 
+      scenario, or is the same for all scenarios. If the model parameter is not scenario-dependent, this can't be set to true.
     - **value**: the value of the parameter:
-        - If type is `constant`, then this is a scalar expression, or the ID of a constant [data serie](#data-series) 
-        - If type is `time-dependent`, then this is the ID of a time-dependent [data serie](#data-series)
-        - If type is `scenario-dependent`, then this is the ID of a scenario-dependent [data serie](#data-series)
-        - If type is `time-and-scenario-dependent`, then this is the ID of a time-and-scenario-dependent [data serie](#data-series)
+        - If the parameter is constant, then this is a scalar expression, or the ID of a constant [data serie](#data-series) 
+        - If the parameter is time-dependent, then this is the ID of a time-dependent [data serie](#data-series)
+        - If the parameter is scenario-dependent, then this is the ID of a scenario-dependent [data serie](#data-series)
+        - If the parameter is time and scenario-dependent, then this is the ID of a time-and-scenario-dependent [data serie](#data-series)
 
 ### Port connections
 The **connections** section lists the port connections between components.  
