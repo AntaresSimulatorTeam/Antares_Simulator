@@ -1217,12 +1217,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
         // in order to allocate data with all renewable clusters.
 
         fs::path renewClusterPath = pStudy.folderInput / "renewables" / "clusters";
-        if (!fs::is_directory(renewClusterPath))
-        {
-            logs.info() << "Renewable directory missing " << renewClusterPath;
-            logs.info() << "Skipped loading renewable clusters";
-        }
-        else
+        if (fs::is_directory(renewClusterPath))
         {
             auto end = areas.end();
             for (auto i = areas.begin(); i != end; ++i)
@@ -1232,6 +1227,11 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
                 ret = area.renewable.list.loadFromFolder(areaPath, &area) && ret;
                 ret = area.renewable.list.validateClusters() && ret;
             }
+        }
+        else
+        {
+            logs.info() << "Renewable directory missing " << renewClusterPath;
+            logs.info() << "Skipped loading renewable clusters";
         }
     }
 
