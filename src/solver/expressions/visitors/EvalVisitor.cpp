@@ -28,102 +28,120 @@
 
 namespace Antares::Solver::Visitors
 {
-EvalVisitor::EvalVisitor(EvaluationContext context):
-    context_(std::move(context))
+EvalVisitor::EvalVisitor(EvaluationContext context, DataSeriesKeys dataSeriesKeys):
+    context_(std::move(context)),
+    dataSeriesKeys_(std::move(dataSeriesKeys))
 {
 }
 
-double EvalVisitor::visit(const Nodes::SumNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::SumNode* node)
 {
     auto operands = node->getOperands();
     return std::accumulate(std::begin(operands),
                            std::end(operands),
-                           0,
-                           [this](double sum, Nodes::Node* operand)
+                           EvaluationResult{0.},
+                           [this](EvaluationResult sum, Nodes::Node* operand)
                            { return sum + dispatch(operand); });
 }
 
-double EvalVisitor::visit(const Nodes::SubtractionNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::SubtractionNode* node)
 {
     return dispatch(node->left()) - dispatch(node->right());
 }
 
-double EvalVisitor::visit(const Nodes::MultiplicationNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::MultiplicationNode* node)
 {
     return dispatch(node->left()) * dispatch(node->right());
 }
 
-double EvalVisitor::visit(const Nodes::DivisionNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::DivisionNode* node)
 {
-    double left = dispatch(node->left());
-    double right = dispatch(node->right());
-    double result = 0.;
+    // double left = dispatch(node->left());
+    // double right = dispatch(node->right());
+    // double result = 0.;
     try
     {
-        result = left / right;
-        if (!std::isfinite(result))
-        {
-            throw EvalVisitorDivisionException(left, right, "is not a finite number");
-        }
+        // result = left / right;
+        // if (!std::isfinite(result))
+        // {
+        //     throw EvalVisitorDivisionException(left, right, "is not a finite number");
+        // }
+        return dispatch(node->left()) / dispatch(node->right());
     }
     catch (const std::exception& ex)
     {
-        throw EvalVisitorDivisionException(left, right, ex.what());
+        throw EvalVisitorDivisionException(ex.what());
     }
-    return result;
 }
 
-double EvalVisitor::visit(const Nodes::EqualNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::EqualNode* node)
 {
     throw EvalVisitorNotImplemented(name(), node->name());
 }
 
-double EvalVisitor::visit(const Nodes::LessThanOrEqualNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::LessThanOrEqualNode* node)
 {
     throw EvalVisitorNotImplemented(name(), node->name());
 }
 
-double EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
 {
     throw EvalVisitorNotImplemented(name(), node->name());
 }
 
-double EvalVisitor::visit(const Nodes::VariableNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 {
-    return context_.getVariableValue(node->value());
+    return EvaluationResult{context_.getVariableValue(node->value())};
 }
 
-double EvalVisitor::visit(const Nodes::ParameterNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
 {
-    return context_.getConstantParameterValue(node->value());
+    if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
+    {
+        return EvaluationResult{context_.getSystemParameterValueAsDouble(node->value())};
+    }
+    else
+    {
+        std::vector<double> params;
+        params.reserve(dataSeriesKeys_.timeSteps.size());
+        for (auto timeStep: dataSeriesKeys_.timeSteps)
+        {
+            params.emplace_back(
+              context_.getParameterValue(context_.getSystemParameterValue(node->value()),
+                                         dataSeriesKeys_.scenarioGroup,
+                                         dataSeriesKeys_.scenario,
+                                         timeStep));
+        }
+        return EvaluationResult{params};
+    }
 }
 
-double EvalVisitor::visit(const Nodes::LiteralNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::LiteralNode* node)
 {
-    return node->value();
+    return EvaluationResult{node->value()};
 }
 
-double EvalVisitor::visit(const Nodes::NegationNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::NegationNode* node)
 {
     return -dispatch(node->child());
 }
 
-double EvalVisitor::visit(const Nodes::PortFieldNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::PortFieldNode* node)
 {
     throw EvalVisitorNotImplemented(name(), node->name());
 }
 
-double EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
 {
     throw EvalVisitorNotImplemented(name(), node->name());
 }
 
-double EvalVisitor::visit(const Nodes::ComponentVariableNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::ComponentVariableNode* node)
 {
     throw EvalVisitorNotImplemented(name(), node->name());
 }
 
-double EvalVisitor::visit(const Nodes::ComponentParameterNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::ComponentParameterNode* node)
 {
     throw EvalVisitorNotImplemented(name(), node->name());
 }
@@ -133,17 +151,26 @@ std::string EvalVisitor::name() const
     return "EvalVisitor";
 }
 
-EvalVisitorDivisionException::EvalVisitorDivisionException(double left,
-                                                           double right,
-                                                           const std::string& message):
-    std::runtime_error("DivisionNode: Error while evaluating : " + std::to_string(left) + "/"
-                       + std::to_string(right) + " " + message)
+EvalVisitorDivisionException::EvalVisitorDivisionException(const std::string& message):
+    std::runtime_error("DivisionNode Error: " + message)
 {
 }
 
 EvalVisitorNotImplemented::EvalVisitorNotImplemented(const std::string& visitor,
                                                      const std::string& node):
     std::invalid_argument("Visitor" + visitor + " not implemented for node type " + node)
+{
+}
+
+EvaluationResult::EvaluationResult(double value):
+    value_(value),
+    evaluationResultType(EvaluationResultType::CONSTANT)
+{
+}
+
+EvaluationResult::EvaluationResult(const std::vector<double>& values):
+    values_(values),
+    evaluationResultType(EvaluationResultType::NOTCONSTANT)
 {
 }
 } // namespace Antares::Solver::Visitors

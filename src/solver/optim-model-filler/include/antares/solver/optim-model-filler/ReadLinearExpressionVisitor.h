@@ -33,22 +33,13 @@
  */
 namespace Antares::Optimization
 {
-struct DataSeriesKeys
-{
-    std::vector<unsigned int> timeSteps;
-    std::map<std::string, std::string> dataSetId;
-    std::string scenarioGroup;
-    unsigned scenario;
-};
 
 class ReadLinearExpressionVisitor
     : public Solver::Visitors::NodeVisitor<TimeDependentLinearExpression>
 {
 public:
-    // TODO all timestep or just final timestep?
-    explicit ReadLinearExpressionVisitor(DataSeriesKeys dataSeriesKeys);
     explicit ReadLinearExpressionVisitor(Solver::Visitors::EvaluationContext context,
-                                         DataSeriesKeys dataSeriesKeys);
+                                         Solver::Visitors::DataSeriesKeys dataSeriesKeys);
     std::string name() const override;
 
 private:
@@ -69,6 +60,6 @@ private:
     TimeDependentLinearExpression visit(const Solver::Nodes::ComponentVariableNode* node) override;
     TimeDependentLinearExpression visit(const Solver::Nodes::ComponentParameterNode* node) override;
 
-    DataSeriesKeys dataSeriesKeys_;
+    Solver::Visitors::DataSeriesKeys dataSeriesKeys_;
 };
 } // namespace Antares::Optimization

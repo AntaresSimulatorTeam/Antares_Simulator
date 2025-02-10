@@ -101,7 +101,8 @@ static SystemModel::Component createComponent(const SystemParser::Component& c,
 
     SystemModel::ComponentBuilder component_builder;
 
-    std::map<std::string, double> parameters;
+    // TODO we need type
+    std::map<std::string, std::string> parameters;
     for (const auto& p: c.parameters)
     {
         parameters.try_emplace(p.id, p.value);

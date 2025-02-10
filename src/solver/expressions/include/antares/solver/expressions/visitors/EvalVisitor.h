@@ -29,7 +29,7 @@ namespace Antares::Solver::Visitors
 class EvalVisitorDivisionException: public std::runtime_error
 {
 public:
-    EvalVisitorDivisionException(double left, double right, const std::string& message);
+    EvalVisitorDivisionException(const std::string& message);
 };
 
 class EvalVisitorNotImplemented: public std::invalid_argument
@@ -37,11 +37,133 @@ class EvalVisitorNotImplemented: public std::invalid_argument
 public:
     EvalVisitorNotImplemented(const std::string& visitor, const std::string& node);
 };
+enum class EvaluationResultType : bool
+{
+    CONSTANT = true,
+    NOTCONSTANT = false
+};
+
+class EvaluationResult
+{
+public:
+    explicit EvaluationResult(double value);
+
+    explicit EvaluationResult(const std::vector<double>& values);
+
+    EvaluationResult operator+(const EvaluationResult& right) const
+    {
+        return applyOperator(right, std::plus<>());
+    }
+
+    EvaluationResult operator-(const EvaluationResult& right) const
+    {
+        return applyOperator(right, std::minus<>());
+    }
+
+    EvaluationResult operator*(const EvaluationResult& right) const
+    {
+        return applyOperator(right, std::multiplies<>());
+    }
+
+    EvaluationResult operator/(const EvaluationResult& right) const
+    {
+        return applyOperator(right, std::divides<>());
+    }
+
+    EvaluationResult operator-() const
+    {
+        return applyUnaryOperator(std::negate<>());
+    }
+
+    [[nodiscard]] double value() const
+    {
+        return value_;
+    }
+
+    [[nodiscard]] std::vector<double> values() const
+    {
+        return values_;
+    }
+
+    [[nodiscard]] EvaluationResultType getEvaluationResultType() const
+    {
+        return evaluationResultType;
+    }
+
+private:
+    double value_ = 0.;
+    std::vector<double> values_ = {};
+    EvaluationResultType evaluationResultType;
+
+    template<typename Op>
+    EvaluationResult applyOperator(const EvaluationResult& right, Op op) const;
+    template<typename Op>
+    EvaluationResult applyUnaryOperator(Op op) const;
+};
+
+template<typename Op>
+EvaluationResult EvaluationResult::applyOperator(const EvaluationResult& right, Op op) const
+{
+    EvaluationResult result(0.0);
+
+    if (evaluationResultType == EvaluationResultType::CONSTANT
+        && right.evaluationResultType == EvaluationResultType::CONSTANT)
+    {
+        result.value_ = op(value_, right.value_);
+    }
+    else if (evaluationResultType == EvaluationResultType::CONSTANT)
+    {
+        result.values_ = right.values_;
+        for (double& v: result.values_)
+        {
+            v = op(value_, v);
+        }
+    }
+    else if (right.evaluationResultType == EvaluationResultType::CONSTANT)
+    {
+        result.values_ = values_;
+        for (double& v: result.values_)
+        {
+            v = op(v, right.value_);
+        }
+    }
+    else if (values_.size() == right.values_.size())
+    {
+        result.values_ = values_;
+        for (size_t i = 0; i < values_.size(); ++i)
+        {
+            result.values_[i] = op(values_[i], right.values_[i]);
+        }
+    }
+
+    return result;
+}
+
+template<typename Op>
+EvaluationResult EvaluationResult::applyUnaryOperator(Op op) const
+{
+    EvaluationResult result(0.0);
+
+    if (evaluationResultType == EvaluationResultType::CONSTANT)
+    {
+        result.value_ = op(value_);
+    }
+    else
+    {
+        result.values_ = values_;
+        for (double& v: result.values_)
+        {
+            v = op(v);
+        }
+    }
+
+    return result;
+}
 
 /**
  * @brief Represents a visitor for evaluating expressions within a given context.
  */
-class EvalVisitor: public NodeVisitor<double>
+class EvalVisitor: public NodeVisitor<EvaluationResult>
 {
 public:
     /**
@@ -53,26 +175,28 @@ public:
      * @brief Constructs an evaluation visitor with the specified context.
      *
      * @param context The evaluation context.
+     * @param dataSeriesKeys
      */
-    explicit EvalVisitor(EvaluationContext context);
+    explicit EvalVisitor(EvaluationContext context, DataSeriesKeys dataSeriesKeys);
     std::string name() const override;
 
 private:
     const EvaluationContext context_;
-    double visit(const Nodes::SumNode* node) override;
-    double visit(const Nodes::SubtractionNode* node) override;
-    double visit(const Nodes::MultiplicationNode* node) override;
-    double visit(const Nodes::DivisionNode* node) override;
-    double visit(const Nodes::EqualNode* node) override;
-    double visit(const Nodes::LessThanOrEqualNode* node) override;
-    double visit(const Nodes::GreaterThanOrEqualNode* node) override;
-    double visit(const Nodes::NegationNode* node) override;
-    double visit(const Nodes::VariableNode* node) override;
-    double visit(const Nodes::ParameterNode* node) override;
-    double visit(const Nodes::LiteralNode* node) override;
-    double visit(const Nodes::PortFieldNode* node) override;
-    double visit(const Nodes::PortFieldSumNode* node) override;
-    double visit(const Nodes::ComponentVariableNode* node) override;
-    double visit(const Nodes::ComponentParameterNode* node) override;
+    DataSeriesKeys dataSeriesKeys_;
+    EvaluationResult visit(const Nodes::SumNode* node) override;
+    EvaluationResult visit(const Nodes::SubtractionNode* node) override;
+    EvaluationResult visit(const Nodes::MultiplicationNode* node) override;
+    EvaluationResult visit(const Nodes::DivisionNode* node) override;
+    EvaluationResult visit(const Nodes::EqualNode* node) override;
+    EvaluationResult visit(const Nodes::LessThanOrEqualNode* node) override;
+    EvaluationResult visit(const Nodes::GreaterThanOrEqualNode* node) override;
+    EvaluationResult visit(const Nodes::NegationNode* node) override;
+    EvaluationResult visit(const Nodes::VariableNode* node) override;
+    EvaluationResult visit(const Nodes::ParameterNode* node) override;
+    EvaluationResult visit(const Nodes::LiteralNode* node) override;
+    EvaluationResult visit(const Nodes::PortFieldNode* node) override;
+    EvaluationResult visit(const Nodes::PortFieldSumNode* node) override;
+    EvaluationResult visit(const Nodes::ComponentVariableNode* node) override;
+    EvaluationResult visit(const Nodes::ComponentParameterNode* node) override;
 };
 } // namespace Antares::Solver::Visitors

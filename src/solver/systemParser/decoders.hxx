@@ -56,7 +56,7 @@ struct convert<Antares::Solver::SystemParser::Parameter>
         }
         rhs.id = node["id"].as<std::string>();
         rhs.type = node["type"].as<std::string>();
-        rhs.value = node["value"].as<double>();
+        rhs.value = node["value"].as<std::string>();
         return true;
     }
 };

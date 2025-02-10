@@ -36,7 +36,7 @@ class ComponentData
 public:
     std::string id;
     const Model* model = nullptr;
-    std::map<std::string, double> parameter_values;
+    std::map<std::string, std::string> parameter_values;
     std::string scenario_group_id;
 
     void reset()
@@ -67,7 +67,7 @@ public:
         return data_.model;
     }
 
-    const std::map<std::string, double>& getParameterValues() const
+    const std::map<std::string, std::string>& getParameterValues() const
     {
         return data_.parameter_values;
     }
@@ -99,7 +99,7 @@ class ComponentBuilder
 public:
     ComponentBuilder& withId(std::string_view id);
     ComponentBuilder& withModel(const Model* model);
-    ComponentBuilder& withParameterValues(std::map<std::string, double> parameter_values);
+    ComponentBuilder& withParameterValues(std::map<std::string, std::string> parameter_values);
     ComponentBuilder& withScenarioGroupId(const std::string& scenario_group_id);
     Component build();
 

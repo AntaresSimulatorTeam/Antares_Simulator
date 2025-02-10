@@ -33,13 +33,8 @@ namespace Antares::Optimization
 
 ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
   Solver::Visitors::EvaluationContext context,
-  DataSeriesKeys dataSeriesKeys):
+  Solver::Visitors::DataSeriesKeys dataSeriesKeys):
     context_(std::move(context)),
-    dataSeriesKeys_(std::move(dataSeriesKeys))
-{
-}
-
-ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(DataSeriesKeys dataSeriesKeys):
     dataSeriesKeys_(std::move(dataSeriesKeys))
 {
 }
@@ -106,15 +101,14 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Parameter
     {
         return TimeDependentLinearExpression(
           dataSeriesKeys_.timeSteps,
-          LinearExpression(context_.getConstantParameterValue(node->value()), {}));
+          LinearExpression(context_.getSystemParameterValueAsDouble(node->value()), {}));
     }
     else // TODO for now considering only timedepend -- only
     {
-        // assuming that dataSeriesKeys_.dataSetId[param_name] gives the param dataseries
-        const auto param_values = context_.getParameterValue(
-          dataSeriesKeys_.dataSetId[node->value()],
-          dataSeriesKeys_.scenarioGroup,
-          dataSeriesKeys_.scenario);
+        const auto param_values = context_.getParameterValue(context_.getSystemParameterValue(
+                                                               node->value()),
+                                                             dataSeriesKeys_.scenarioGroup,
+                                                             dataSeriesKeys_.scenario);
 
         std::map<unsigned int, LinearExpression> linearExpressions;
 
