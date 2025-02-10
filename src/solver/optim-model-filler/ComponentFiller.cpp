@@ -20,6 +20,7 @@
  */
 
 #include <ranges>
+#include <variant>
 
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/expressions/visitors/EvalVisitor.h>
@@ -43,6 +44,19 @@ bool checkTimeSteps(Solver::Modeler::Api::FillContext& ctx)
     return ctx.getFirstTimeStep() <= ctx.getLastTimeStep();
 }
 
+static auto ExtractEvaluationResult(const Solver::Visitors::EvaluationResult& evaluation_result)
+{
+    if (evaluation_result.getEvaluationResultType()
+        == Solver::Visitors::EvaluationResultType::CONSTANT)
+    {
+        return std::variant<double, std::vector<double>>{evaluation_result.value()};
+    }
+    else
+    {
+        return std::variant<double, std::vector<double>>{evaluation_result.values()};
+    }
+}
+
 void ComponentFiller::addVariables(Solver::Modeler::Api::ILinearProblem& pb,
                                    Solver::Modeler::Api::ILinearProblemData& data,
                                    Solver::Modeler::Api::FillContext& ctx)
@@ -64,11 +78,20 @@ void ComponentFiller::addVariables(Solver::Modeler::Api::ILinearProblem& pb,
         const auto& ub = evaluator.dispatch(variable.UpperBound().RootNode());
         if (variable.isTimeDependent())
         {
-            pb.addVariable(lb.values(),
-                           ub.values(),
-                           variable.Type() != Study::SystemModel::ValueType::FLOAT,
-                           component_.Id() + "." + variable.Id(),
-                           ctx.getNumberOfTimestep());
+            const auto lb_values = ExtractEvaluationResult(lb);
+            const auto ub_values = ExtractEvaluationResult(ub);
+
+            std::visit(
+              [&pb, &variable, this, &ctx](const auto& lb_, const auto& ub_)
+              {
+                  pb.addVariable(lb_,
+                                 ub_,
+                                 variable.Type() != Study::SystemModel::ValueType::FLOAT,
+                                 component_.Id() + "." + variable.Id(),
+                                 ctx.getNumberOfTimestep());
+              },
+              lb_values,
+              ub_values);
         }
         else
         {

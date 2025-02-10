@@ -81,6 +81,47 @@ std::vector<Api::IMipVariable*> OrtoolsLinearProblem::addVariable(const std::vec
     }
     return new_variables;
 }
+std::vector<Api::IMipVariable*> OrtoolsLinearProblem::addVariable(double lb,
+                                                                  double ub,
+                                                                  bool integer,
+                                                                  const std::string& name,
+                                                                  unsigned int number_new_variables)
+{
+    std::vector<Api::IMipVariable*> new_variables;
+    for (unsigned int i = 0; i < number_new_variables; i++)
+    {
+        new_variables.push_back(addVariable(lb, ub, integer, name + '_' + std::to_string(i)));
+    }
+    return new_variables;
+}
+
+std::vector<Api::IMipVariable*> OrtoolsLinearProblem::addVariable(const std::vector<double>& lb,
+                                                                  double ub,
+                                                                  bool integer,
+                                                                  const std::string& name,
+                                                                  unsigned int number_new_variables)
+{
+    std::vector<Api::IMipVariable*> new_variables;
+    for (unsigned int i = 0; i < number_new_variables; i++)
+    {
+        new_variables.push_back(addVariable(lb[i], ub, integer, name + '_' + std::to_string(i)));
+    }
+    return new_variables;
+}
+
+std::vector<Api::IMipVariable*> OrtoolsLinearProblem::addVariable(double lb,
+                                                                  const std::vector<double>& ub,
+                                                                  bool integer,
+                                                                  const std::string& name,
+                                                                  unsigned int number_new_variables)
+{
+    std::vector<Api::IMipVariable*> new_variables;
+    for (unsigned int i = 0; i < number_new_variables; i++)
+    {
+        new_variables.push_back(addVariable(lb, ub[i], integer, name + '_' + std::to_string(i)));
+    }
+    return new_variables;
+}
 
 OrtoolsMipVariable* OrtoolsLinearProblem::addNumVariable(double lb,
                                                          double ub,
@@ -103,6 +144,48 @@ std::vector<Api::IMipVariable*> OrtoolsLinearProblem::addNumVariable(
     return new_variables;
 }
 
+std::vector<Api::IMipVariable*> OrtoolsLinearProblem::addNumVariable(
+  double lb,
+  double ub,
+  const std::string& name,
+  unsigned int number_new_variables)
+{
+    std::vector<Api::IMipVariable*> new_variables;
+    for (unsigned int i = 0; i < number_new_variables; i++)
+    {
+        new_variables.push_back(addNumVariable(lb, ub, name + '_' + std::to_string(i)));
+    }
+    return new_variables;
+}
+
+std::vector<Api::IMipVariable*> OrtoolsLinearProblem::addNumVariable(
+  const std::vector<double>& lb,
+  double ub,
+  const std::string& name,
+  unsigned int number_new_variables)
+{
+    std::vector<Api::IMipVariable*> new_variables;
+    for (unsigned int i = 0; i < number_new_variables; i++)
+    {
+        new_variables.push_back(addNumVariable(lb[i], ub, name + '_' + std::to_string(i)));
+    }
+    return new_variables;
+}
+
+std::vector<Api::IMipVariable*> OrtoolsLinearProblem::addNumVariable(
+  double lb,
+  const std::vector<double>& ub,
+  const std::string& name,
+  unsigned int number_new_variables)
+{
+    std::vector<Api::IMipVariable*> new_variables;
+    for (unsigned int i = 0; i < number_new_variables; i++)
+    {
+        new_variables.push_back(addNumVariable(lb, ub[i], name + '_' + std::to_string(i)));
+    }
+    return new_variables;
+}
+
 OrtoolsMipVariable* OrtoolsLinearProblem::addIntVariable(double lb,
                                                          double ub,
                                                          const std::string& name)
@@ -120,6 +203,47 @@ std::vector<Api::IMipVariable*> OrtoolsLinearProblem::addIntVariable(
     for (unsigned int i = 0; i < number_new_variables; i++)
     {
         new_variables.push_back(addIntVariable(lb[i], ub[i], name + '_' + std::to_string(i)));
+    }
+    return new_variables;
+}
+std::vector<Api::IMipVariable*> OrtoolsLinearProblem::addIntVariable(
+  double lb,
+  double ub,
+  const std::string& name,
+  unsigned int number_new_variables)
+{
+    std::vector<Api::IMipVariable*> new_variables;
+    for (unsigned int i = 0; i < number_new_variables; i++)
+    {
+        new_variables.push_back(addIntVariable(lb, ub, name + '_' + std::to_string(i)));
+    }
+    return new_variables;
+}
+
+std::vector<Api::IMipVariable*> OrtoolsLinearProblem::addIntVariable(
+  const std::vector<double>& lb,
+  double ub,
+  const std::string& name,
+  unsigned int number_new_variables)
+{
+    std::vector<Api::IMipVariable*> new_variables;
+    for (unsigned int i = 0; i < number_new_variables; i++)
+    {
+        new_variables.push_back(addIntVariable(lb[i], ub, name + '_' + std::to_string(i)));
+    }
+    return new_variables;
+}
+
+std::vector<Api::IMipVariable*> OrtoolsLinearProblem::addIntVariable(
+  double lb,
+  const std::vector<double>& ub,
+  const std::string& name,
+  unsigned int number_new_variables)
+{
+    std::vector<Api::IMipVariable*> new_variables;
+    for (unsigned int i = 0; i < number_new_variables; i++)
+    {
+        new_variables.push_back(addIntVariable(lb, ub[i], name + '_' + std::to_string(i)));
     }
     return new_variables;
 }
@@ -166,6 +290,48 @@ std::vector<Api::IMipConstraint*> OrtoolsLinearProblem::addConstraint(
     for (unsigned int i = 0; i < number_new_constraints; i++)
     {
         new_constraints.push_back(addConstraint(lb[i], ub[i], name + '_' + std::to_string(i)));
+    }
+    return new_constraints;
+}
+
+std::vector<Api::IMipConstraint*> OrtoolsLinearProblem::addConstraint(
+  double lb,
+  double ub,
+  const std::string& name,
+  unsigned int number_new_constraints)
+{
+    std::vector<Api::IMipConstraint*> new_constraints;
+    for (unsigned int i = 0; i < number_new_constraints; i++)
+    {
+        new_constraints.push_back(addConstraint(lb, ub, name + '_' + std::to_string(i)));
+    }
+    return new_constraints;
+}
+
+std::vector<Api::IMipConstraint*> OrtoolsLinearProblem::addConstraint(
+  const std::vector<double>& lb,
+  double ub,
+  const std::string& name,
+  unsigned int number_new_constraints)
+{
+    std::vector<Api::IMipConstraint*> new_constraints;
+    for (unsigned int i = 0; i < number_new_constraints; i++)
+    {
+        new_constraints.push_back(addConstraint(lb[i], ub, name + '_' + std::to_string(i)));
+    }
+    return new_constraints;
+}
+
+std::vector<Api::IMipConstraint*> OrtoolsLinearProblem::addConstraint(
+  double lb,
+  const std::vector<double>& ub,
+  const std::string& name,
+  unsigned int number_new_constraints)
+{
+    std::vector<Api::IMipConstraint*> new_constraints;
+    for (unsigned int i = 0; i < number_new_constraints; i++)
+    {
+        new_constraints.push_back(addConstraint(lb, ub[i], name + '_' + std::to_string(i)));
     }
     return new_constraints;
 }
