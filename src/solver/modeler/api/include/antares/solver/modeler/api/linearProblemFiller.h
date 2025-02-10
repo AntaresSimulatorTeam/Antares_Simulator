@@ -43,7 +43,8 @@ struct FillContext
 {
     FillContext(unsigned first, unsigned last, DataSeriesKeys dataSeriesKeys):
         firstTimeStep(first),
-        lastTimeStep(last)
+        lastTimeStep(last),
+        dataSeriesKeys(std::move(dataSeriesKeys))
     {
     }
 

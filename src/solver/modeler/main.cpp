@@ -28,6 +28,7 @@
 #include <antares/solver/modeler/ortoolsImpl/linearProblem.h>
 #include <antares/solver/modeler/parameters/parseModelerParameters.h>
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
+#include "antares/solver/modeler/dataSeries/timeSeriesSet.h"
 
 #include "api/include/antares/solver/modeler/api/linearProblem.h"
 
@@ -62,7 +63,9 @@ public:
 
         LinearProblemBuilder linear_problem_builder(fillers_ptr);
         Modeler::DataSeries::LinearProblemData dummy_data;
-        std::vector<unsigned int> timeSteps(parameters.lastTimeStep - parameters.firstTimeStep + 1);
+
+        const auto number_of_timeStep = parameters.lastTimeStep - parameters.firstTimeStep + 1;
+        std::vector<unsigned int> timeSteps(number_of_timeStep);
         std::ranges::generate(timeSteps, [i = parameters.firstTimeStep]() mutable { return i++; });
         unsigned int scenario = 0;
         std::string scenarionGroup = "group 1";
@@ -70,6 +73,13 @@ public:
                                               .scenarioGroup = scenarionGroup,
                                               .scenario = scenario};
 
+        auto time_series = std::make_unique<Modeler::DataSeries::TimeSeriesSet>("load",
+                                                                                number_of_timeStep);
+        std::vector<double> myTimeSeries(timeSteps.begin(), timeSteps.end());
+        std::iota(myTimeSeries.begin(), myTimeSeries.end(), 0.);
+        time_series->add(myTimeSeries);
+        dummy_data.addScenarioGroup(scenarionGroup, {0, scenario});
+        dummy_data.addDataSeries(std::move(time_series));
         FillContext dummy_time_scenario_ctx = {parameters.firstTimeStep,
                                                parameters.lastTimeStep,
                                                my_data_series_keys};
