@@ -42,7 +42,7 @@ public:
 
 private:
     static std::vector<std::vector<double>> csvToMatrix(const std::filesystem::path& path,
-                                                        char csvSeparator = '\t');
+                                                        char csvSeparator);
 };
 
 class DataSeriesRepoImporter
