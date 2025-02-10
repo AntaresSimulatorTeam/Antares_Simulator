@@ -45,7 +45,7 @@ void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
     //   the ID for example)
 
     // group
-    group_ = cluster.group_;
+    setGroup(cluster.getGroup());
 
     // Enabled
     enabled = cluster.enabled;

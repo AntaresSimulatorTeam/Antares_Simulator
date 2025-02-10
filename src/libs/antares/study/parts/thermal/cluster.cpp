@@ -133,7 +133,7 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     mustrunOrigin = cluster.mustrunOrigin;
 
     // group
-    group_ = cluster.group_;
+    setGroup(cluster.getGroup());
 
     // Enabled
     enabled = cluster.enabled;

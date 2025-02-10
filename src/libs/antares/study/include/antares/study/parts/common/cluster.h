@@ -137,9 +137,9 @@ protected:
     std::string pName;
     std::string pID;
 
+private:
     std::string group_ = "OTHER";
 
-private:
     virtual unsigned int precision() const = 0;
 };
 } // namespace Data
