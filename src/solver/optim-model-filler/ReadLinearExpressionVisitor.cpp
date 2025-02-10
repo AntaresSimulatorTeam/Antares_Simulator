@@ -33,15 +33,14 @@ namespace Antares::Optimization
 
 ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
   Solver::Visitors::EvaluationContext context,
-  const std::vector<unsigned int>& timesteps):
+  DataSeriesKeys dataSeriesKeys):
     context_(std::move(context)),
-    timesteps_(timesteps)
+    dataSeriesKeys_(std::move(dataSeriesKeys))
 {
 }
 
-ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
-  const std::vector<unsigned int>& timesteps):
-    timesteps_(timesteps)
+ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(DataSeriesKeys dataSeriesKeys):
+    dataSeriesKeys_(std::move(dataSeriesKeys))
 {
 }
 
@@ -55,7 +54,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const SumNode* 
     auto operands = node->getOperands();
     return std::accumulate(std::begin(operands),
                            std::end(operands),
-                           TimeDependentLinearExpression(),
+                           TimeDependentLinearExpression(dataSeriesKeys_.timeSteps),
                            [this](TimeDependentLinearExpression sum, Node* operand)
                            { return sum + dispatch(operand); });
 }
@@ -97,17 +96,40 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const NegationN
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const VariableNode* node)
 {
-    return LinearExpression(0, {{node->value(), 1}});
+    return TimeDependentLinearExpression(dataSeriesKeys_.timeSteps,
+                                         LinearExpression(0, {{node->value(), 1}}));
 }
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const ParameterNode* node)
 {
-    return {context_.getParameterValue(node->value()), {}};
+    if (node->timeIndex() == Solver::Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
+    {
+        return TimeDependentLinearExpression(
+          dataSeriesKeys_.timeSteps,
+          LinearExpression(context_.getConstantParameterValue(node->value()), {}));
+    }
+    else // TODO for now considering only timedepend -- only
+    {
+        // assuming that dataSeriesKeys_.dataSetId[param_name] gives the param dataseries
+        const auto param_values = context_.getParameterValue(
+          dataSeriesKeys_.dataSetId[node->value()],
+          dataSeriesKeys_.scenarioGroup,
+          dataSeriesKeys_.scenario);
+
+        std::map<unsigned int, LinearExpression> linearExpressions;
+
+        for (auto timeStep: dataSeriesKeys_.timeSteps)
+        {
+            linearExpressions[timeStep] = LinearExpression(param_values[timeStep], {});
+        }
+        return TimeDependentLinearExpression(linearExpressions);
+    }
 }
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const LiteralNode* node)
 {
-    return {node->value(), {}};
+    return TimeDependentLinearExpression(dataSeriesKeys_.timeSteps,
+                                         LinearExpression(node->value(), {}));
 }
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const PortFieldNode* node)

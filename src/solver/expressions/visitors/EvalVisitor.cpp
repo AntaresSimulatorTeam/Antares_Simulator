@@ -95,7 +95,7 @@ double EvalVisitor::visit(const Nodes::VariableNode* node)
 
 double EvalVisitor::visit(const Nodes::ParameterNode* node)
 {
-    return context_.getParameterValue(node->value());
+    return context_.getConstantParameterValue(node->value());
 }
 
 double EvalVisitor::visit(const Nodes::LiteralNode* node)

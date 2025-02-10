@@ -44,15 +44,15 @@ public:
 
     OrtoolsMipVariable* addNumVariable(double lb, double ub, const std::string& name) override;
 
-    std::vector<Api::IMipVariable*> addNumVariable(double lb,
-                                                   double ub,
+    std::vector<Api::IMipVariable*> addNumVariable(const std::vector<double>& lb,
+                                                   const std::vector<double>& ub,
                                                    const std::string& name,
                                                    unsigned int number_new_variables) override;
 
     OrtoolsMipVariable* addIntVariable(double lb, double ub, const std::string& name) override;
 
-    std::vector<Api::IMipVariable*> addIntVariable(double lb,
-                                                   double ub,
+    std::vector<Api::IMipVariable*> addIntVariable(const std::vector<double>& lb,
+                                                   const std::vector<double>& ub,
                                                    const std::string& name,
                                                    unsigned int number_new_variables) override;
 
@@ -61,8 +61,8 @@ public:
                                     bool integer,
                                     const std::string& name) override;
 
-    std::vector<Api::IMipVariable*> addVariable(double lb,
-                                                double ub,
+    std::vector<Api::IMipVariable*> addVariable(const std::vector<double>& lb,
+                                                const std::vector<double>& ub,
                                                 bool integer,
                                                 const std::string& name,
                                                 unsigned int number_new_variables) override;
@@ -72,8 +72,8 @@ public:
 
     OrtoolsMipConstraint* addConstraint(double lb, double ub, const std::string& name) override;
 
-    std::vector<Api::IMipConstraint*> addConstraint(double lb,
-                                                    double ub,
+    std::vector<Api::IMipConstraint*> addConstraint(const std::vector<double>& lb,
+                                                    const std::vector<double>& ub,
                                                     const std::string& name,
                                                     unsigned int number_new_constraints) override;
 

@@ -77,9 +77,13 @@ private:
 class TimeDependentLinearExpression
 {
 public:
-    TimeDependentLinearExpression() = default;
+    TimeDependentLinearExpression(const std::vector<unsigned int>& timesteps);
+
+    // Construction from one LinearExpression, to be duplicated for all timestep
+    TimeDependentLinearExpression(const std::vector<unsigned int>& timesteps,
+                                  const LinearExpression& linearExpression);
     TimeDependentLinearExpression(const std::map<unsigned, LinearExpression>& linearExpressions);
-    void checkOtherLength(const TimeDependentLinearExpression& other) const;
+    // void checkOtherLength(const TimeDependentLinearExpression& other) const;
 
     /// Sum two linear expressions
     TimeDependentLinearExpression operator+(const TimeDependentLinearExpression& other) const;

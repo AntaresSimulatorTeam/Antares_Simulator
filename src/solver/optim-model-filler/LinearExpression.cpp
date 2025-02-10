@@ -126,6 +126,24 @@ LinearExpression LinearExpression::negate() const
     return {-offset_, scale_map(coef_per_var_, -1)};
 }
 
+TimeDependentLinearExpression::TimeDependentLinearExpression(const std::vector<unsigned>& timesteps)
+{
+    for (auto timestep: timesteps)
+    {
+        linearExpressions_[timestep] = LinearExpression();
+    }
+}
+
+TimeDependentLinearExpression::TimeDependentLinearExpression(
+  const std::vector<unsigned>& timesteps,
+  const LinearExpression& linearExpression)
+{
+    for (auto timestep: timesteps)
+    {
+        linearExpressions_[timestep] = linearExpression;
+    }
+}
+
 TimeDependentLinearExpression::TimeDependentLinearExpression(
   const std::map<unsigned int, LinearExpression>& linearExpressions):
     linearExpressions_(linearExpressions)
@@ -158,13 +176,13 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator+(
 TimeDependentLinearExpression TimeDependentLinearExpression::operator-(
   const TimeDependentLinearExpression& other) const
 {
-    checkOtherLength(other);
+    // checkOtherLength(other);
     const auto& linear_expressions = GetLinearExpressions();
     const auto& other_linear_expressions = other.GetLinearExpressions();
     std::map<unsigned int, LinearExpression> result(linear_expressions.size());
     for (size_t i = 0; i < linear_expressions.size(); ++i)
     {
-        result[i] = linear_expressions[i] - other_linear_expressions[i];
+        result[i] = linear_expressions.at(i) - other_linear_expressions.at(i);
     }
     return TimeDependentLinearExpression(std::move(result));
 }
@@ -172,13 +190,13 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator-(
 TimeDependentLinearExpression TimeDependentLinearExpression::operator*(
   const TimeDependentLinearExpression& other) const
 {
-    checkOtherLength(other);
+    //   checkOtherLength(other);
     const auto& linear_expressions = GetLinearExpressions();
     const auto& other_linear_expressions = other.GetLinearExpressions();
     std::map<unsigned int, LinearExpression> result(linear_expressions.size());
     for (size_t i = 0; i < linear_expressions.size(); ++i)
     {
-        result[i] = linear_expressions[i] * other_linear_expressions[i];
+        result[i] = linear_expressions.at(i) * other_linear_expressions.at(i);
     }
     return TimeDependentLinearExpression(std::move(result));
 }
@@ -186,13 +204,13 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator*(
 TimeDependentLinearExpression TimeDependentLinearExpression::operator/(
   const TimeDependentLinearExpression& other) const
 {
-    checkOtherLength(other);
+    // checkOtherLength(other);
     const auto& linear_expressions = GetLinearExpressions();
     const auto& other_linear_expressions = other.GetLinearExpressions();
     std::map<unsigned int, LinearExpression> result(linear_expressions.size());
     for (size_t i = 0; i < linear_expressions.size(); ++i)
     {
-        result[i] = linear_expressions[i] / other_linear_expressions[i];
+        result[i] = linear_expressions.at(i) / other_linear_expressions.at(i);
     }
     return TimeDependentLinearExpression(std::move(result));
 }
@@ -203,7 +221,7 @@ TimeDependentLinearExpression TimeDependentLinearExpression::negate() const
     std::map<unsigned int, LinearExpression> result(linear_expressions.size());
     for (size_t i = 0; i < linear_expressions.size(); ++i)
     {
-        result[i] = linear_expressions[i].negate();
+        result[i] = linear_expressions.at(i).negate();
     }
     return TimeDependentLinearExpression(std::move(result));
 }
