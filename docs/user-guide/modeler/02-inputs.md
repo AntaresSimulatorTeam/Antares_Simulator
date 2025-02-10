@@ -345,7 +345,7 @@ using tabs, and the character `.` represents the floating point.
 
 ### Naming
 TSV files inside the directory should respect the "XXX.tsv" or the "XXX.csv" naming template, where "XXX" is the ID of 
-the data-series. Thus, this ID is unique, and is the one to be used in the [system file](#system-file).  
+the data-series. Thus, this ID **must be unique**, and is the one to be used in the [system file](#system-file).  
 
 ### Constant series
 To define a constant series (neither time nor scenario dependent), simply write one value in the file.  
