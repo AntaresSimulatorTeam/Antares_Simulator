@@ -264,15 +264,18 @@ OMESSAGE("") # empty line
 
 # Sub Directories
 add_subdirectory(api)
+add_subdirectory(io)
 add_subdirectory(libs) 		#antares-core fswalker
 
 if(BUILD_UI)
 	add_subdirectory(ui)		#all antares ui libs + antares simulator
 endif()
 
-add_subdirectory(study)	    #antares study model
-add_subdirectory(solver)	#antares solver and all associated libs
-add_subdirectory(analyzer)	#antares analyser
+add_subdirectory(expressions)   #modeler expressions (AST)
+add_subdirectory(optimisation)  #optimisation APIs
+add_subdirectory(study)	        #antares study model
+add_subdirectory(solver)	    #antares solver and all associated libs
+add_subdirectory(analyzer)      #antares analyser
 
 # Tools
 if (BUILD_TOOLS)
