@@ -19,6 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include <fstream>
+#include <ranges>
 
 #include <boost/regex.hpp>
 
@@ -28,6 +29,12 @@ namespace Antares::IO::Inputs::DataSeriesCsvImporter
 {
 using namespace Optimisation::LinearProblemDataImpl;
 
+bool hasRightExtension(const std::filesystem::directory_entry& e)
+{
+    auto ext = e.path().extension();
+    return (ext == ".csv") || (ext == ".tsv");
+}
+
 DataSeriesRepository DataSeriesRepoImporter::importFromDirectory(const std::filesystem::path& path,
                                                                  char csvSeparator)
 {
@@ -35,19 +42,19 @@ DataSeriesRepository DataSeriesRepoImporter::importFromDirectory(const std::file
     {
         throw std::invalid_argument("Not a directory: " + path.string());
     }
+
+    using std::views::filter;
+    auto pathFilter = filter(static_cast<bool (*)(const std::filesystem::path&)>(
+                        &std::filesystem::is_regular_file))
+                      | filter(&hasRightExtension);
+
     DataSeriesRepository repo{};
-    for (const auto& entry: std::filesystem::directory_iterator(path))
+    for (auto paths = std::filesystem::directory_iterator{path};
+         const auto& entry: paths | pathFilter)
     {
-        if (!is_regular_file(entry))
-        {
-            continue;
-        }
-        if (entry.path().extension() == ".csv" || entry.path().extension() == ".tsv")
-        {
-            std::unique_ptr<IDataSeries> timeSeriesSet = std::make_unique<TimeSeriesSet>(
-              TimeSeriesSetImporter::importFromFile(entry, csvSeparator));
-            repo.addDataSeries(std::move(timeSeriesSet));
-        }
+        std::unique_ptr<IDataSeries> timeSeriesSet = std::make_unique<TimeSeriesSet>(
+          TimeSeriesSetImporter::importFromFile(entry, csvSeparator));
+        repo.addDataSeries(std::move(timeSeriesSet));
     }
     return repo;
 }
