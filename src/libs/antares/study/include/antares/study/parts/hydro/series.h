@@ -91,7 +91,9 @@ public:
     ** \param folder The target folder
     ** \return A non-zero value if the operation succeeded, 0 otherwise
     */
-    bool saveToFolder(const AreaName& areaID, const AnyString& folder) const;
+    bool saveToFolder(const AreaName& areaID,
+                      const AnyString& folder,
+                      Parameters::Compatibility::HydroPmax hydroPmax) const;
     //@}
 
     TimeSeriesNumbers timeseriesNumbers;
