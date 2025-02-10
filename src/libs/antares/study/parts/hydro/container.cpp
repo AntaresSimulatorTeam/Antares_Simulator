@@ -465,7 +465,9 @@ bool PartHydro::validate(Study& study)
     return checkProperties(study) && ret;
 }
 
-bool PartHydro::SaveToFolder(const AreaList& areas, const AnyString& folder)
+bool PartHydro::SaveToFolder(const AreaList& areas,
+                             const AnyString& folder,
+                             const Parameters::Compatibility::HydroPmax hydroPmax)
 {
     if (!folder)
     {
@@ -524,7 +526,7 @@ bool PartHydro::SaveToFolder(const AreaList& areas, const AnyString& folder)
 
     // Add all alpha values for each area
     areas.each(
-      [&allSections, &buffer, &folder, &ret](const Data::Area& area)
+      [&allSections, &buffer, &folder, &hydroPmax, &ret](const Data::Area& area)
       {
           allSections.s->add(area.id, area.hydro.interDailyBreakdown);
           allSections.smod->add(area.id, area.hydro.intraDailyModulation);
@@ -568,13 +570,23 @@ bool PartHydro::SaveToFolder(const AreaList& areas, const AnyString& folder)
           }
 
           // max hours gen
-          buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                         << "maxDailyGenEnergy_" << area.id << ".txt";
-          ret = area.hydro.dailyNbHoursAtGenPmax.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
-          // max hours pump
-          buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                         << "maxDailyPumpEnergy_" << area.id << ".txt";
-          ret = area.hydro.dailyNbHoursAtPumpPmax.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
+          if (hydroPmax == Parameters::Compatibility::HydroPmax::Hourly)
+          {
+              buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
+                             << "maxDailyGenEnergy_" << area.id << ".txt";
+              ret = area.hydro.dailyNbHoursAtGenPmax.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
+
+              buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
+                             << "maxDailyPumpEnergy_" << area.id << ".txt";
+              ret = area.hydro.dailyNbHoursAtPumpPmax.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
+          }
+          else
+          {
+              buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxpower_"
+                             << area.id << ".txt";
+              ret = area.hydro.dailyMaxPumpAndGen.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
+          }
+
           // credit modulations
           buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
                          << "creditmodulations_" << area.id << ".txt";
