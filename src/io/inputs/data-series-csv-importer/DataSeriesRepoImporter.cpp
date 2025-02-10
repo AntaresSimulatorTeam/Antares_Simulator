@@ -19,6 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include <fstream>
+#include <ranges>
 
 #include <boost/regex.hpp>
 
@@ -28,6 +29,12 @@ namespace Antares::IO::Inputs::DataSeriesCsvImporter
 {
 using namespace Optimisation::LinearProblemDataImpl;
 
+bool hasRightExtension(const auto& e)
+{
+    auto ext = e.path().extension();
+    return ext == ".csv" | ext == ".tsv";
+}
+
 DataSeriesRepository DataSeriesRepoImporter::importFromDirectory(const std::filesystem::path& path,
                                                                  char csvSeparator)
 {
@@ -35,19 +42,17 @@ DataSeriesRepository DataSeriesRepoImporter::importFromDirectory(const std::file
     {
         throw std::invalid_argument("Not a directory: " + path.string());
     }
+
+    auto paths = std::filesystem::directory_iterator{path};
+    auto pathFilter = std::views::filter([](const auto& e) { return is_regular_file(e); })
+                      | std::views::filter([](const auto& e) { return hasRightExtension(e); });
+
     DataSeriesRepository repo{};
-    for (const auto& entry: std::filesystem::directory_iterator(path))
+    for (const auto& entry: paths | pathFilter)
     {
-        if (!is_regular_file(entry))
-        {
-            continue;
-        }
-        if (entry.path().extension() == ".csv" || entry.path().extension() == ".tsv")
-        {
-            std::unique_ptr<IDataSeries> timeSeriesSet = std::make_unique<TimeSeriesSet>(
-              TimeSeriesSetImporter::importFromFile(entry, csvSeparator));
-            repo.addDataSeries(std::move(timeSeriesSet));
-        }
+        std::unique_ptr<IDataSeries> timeSeriesSet = std::make_unique<TimeSeriesSet>(
+          TimeSeriesSetImporter::importFromFile(entry, csvSeparator));
+        repo.addDataSeries(std::move(timeSeriesSet));
     }
     return repo;
 }
@@ -116,7 +121,7 @@ TimeSeriesSet TimeSeriesSetImporter::importFromFile(const std::filesystem::path&
     // TODO: we may want to improve this by reading directly into the TimeSeriesSet object, or
     // by creating a specific IDataSeries implementation
     int nTimestamps = csvMatrix.size();
-    TimeSeriesSet timeSeriesSet(path.stem(), nTimestamps);
+    TimeSeriesSet timeSeriesSet(path.stem().string(), nTimestamps);
     if (nTimestamps == 0)
     {
         return timeSeriesSet;
