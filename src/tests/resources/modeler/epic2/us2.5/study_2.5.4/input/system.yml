@@ -1,6 +1,7 @@
 system:
   id: sys_example4
-  description: test system
+  description: a node with up to 10 similar generators (min_p=150, max_p=300, cost = 0.5 €/MWh + 10€/hour of up time).
+   Load is of 1000MW; thus 4 generators should be used. Objective = 1000*0.5 + 4*10 = 540.
   model-libraries: lib_example3
 
   components:
