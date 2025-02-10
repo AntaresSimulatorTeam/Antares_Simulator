@@ -203,9 +203,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>LoadMaxPower</b> (con
 <tr class="memitem:a9059611c7cee449d1916ad462cd60536" id="r_a9059611c7cee449d1916ad462cd60536"><td class="memItemLeft" align="right" valign="top"><a id="a9059611c7cee449d1916ad462cd60536" name="a9059611c7cee449d1916ad462cd60536"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>buildHourlyMaxPowerFromDailyTS</b> (const <a class="el" href="classAntares_1_1Matrix.html">Matrix</a>&lt; double &gt;::ColumnType &amp;DailyMaxGenPower, const <a class="el" href="classAntares_1_1Matrix.html">Matrix</a>&lt; double &gt;::ColumnType &amp;DailyMaxPumpPower)</td></tr>
 <tr class="separator:a9059611c7cee449d1916ad462cd60536"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aacfee212cf8a11c60021f5e60fe903f2" id="r_aacfee212cf8a11c60021f5e60fe903f2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aacfee212cf8a11c60021f5e60fe903f2">saveToFolder</a> (const AreaName &amp;areaID, const AnyString &amp;folder) const</td></tr>
-<tr class="memdesc:aacfee212cf8a11c60021f5e60fe903f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save data series for hydro into a folder (<code>input/hydro/series</code>)  <br /></td></tr>
-<tr class="separator:aacfee212cf8a11c60021f5e60fe903f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ab15d36fd0a050b8f358197178c7d9f" id="r_a5ab15d36fd0a050b8f358197178c7d9f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5ab15d36fd0a050b8f358197178c7d9f">saveToFolder</a> (const AreaName &amp;areaID, const AnyString &amp;folder, Parameters::Compatibility::HydroPmax hydroPmax) const</td></tr>
+<tr class="memdesc:a5ab15d36fd0a050b8f358197178c7d9f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save data series for hydro into a folder (<code>input/hydro/series</code>)  <br /></td></tr>
+<tr class="separator:a5ab15d36fd0a050b8f358197178c7d9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac19100162bc273064d4f906c0344c2c9" id="r_ac19100162bc273064d4f906c0344c2c9"><td class="memItemLeft" align="right" valign="top"><a id="ac19100162bc273064d4f906c0344c2c9" name="ac19100162bc273064d4f906c0344c2c9"></a>
 uint&#160;</td><td class="memItemRight" valign="bottom"><b>TScount</b> () const</td></tr>
 <tr class="separator:ac19100162bc273064d4f906c0344c2c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -236,8 +236,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>resizeTSinDeratedMode
 
 </div>
 </div>
-<a id="aacfee212cf8a11c60021f5e60fe903f2" name="aacfee212cf8a11c60021f5e60fe903f2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aacfee212cf8a11c60021f5e60fe903f2">&#9670;&#160;</a></span>saveToFolder()</h2>
+<a id="a5ab15d36fd0a050b8f358197178c7d9f" name="a5ab15d36fd0a050b8f358197178c7d9f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ab15d36fd0a050b8f358197178c7d9f">&#9670;&#160;</a></span>saveToFolder()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -250,7 +250,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>resizeTSinDeratedMode
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const AnyString &amp;</td>          <td class="paramname"><span class="paramname"><em>folder</em></span>&#160;) const</td>
+          <td class="paramtype">const AnyString &amp;</td>          <td class="paramname"><span class="paramname"><em>folder</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Parameters::Compatibility::HydroPmax</td>          <td class="paramname"><span class="paramname"><em>hydroPmax</em></span>&#160;) const</td>
         </tr>
       </table>
 </div><div class="memdoc">

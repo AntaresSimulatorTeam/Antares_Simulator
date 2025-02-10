@@ -1,5 +1,6 @@
 var NAVTREEINDEX26 =
 {
+"structAntares_1_1Data_1_1CompareAreaName.html":[9,0,0,4,23],
 "structAntares_1_1Data_1_1CompareBindingConstraintName.html":[9,0,0,4,24],
 "structAntares_1_1Data_1_1CompareClusterName.html":[9,0,0,4,25],
 "structAntares_1_1Data_1_1CompareLinkName.html":[9,0,0,4,26],
@@ -248,6 +249,5 @@ var NAVTREEINDEX26 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLD.html":[9,0,0,16,5,4,80],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLD.html#a3524d342ae27f821668634679aba0a65":[9,0,0,16,5,4,80,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLD.html#a556c4f4512527eb45895e9197f972b99":[9,0,0,16,5,4,80,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLD__CSR.html":[9,0,0,16,5,4,81],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLD__CSR.html#a1ea9dbb09ca765da4ac100e8076fbee9":[9,0,0,16,5,4,81,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLD__CSR.html":[9,0,0,16,5,4,81]
 };

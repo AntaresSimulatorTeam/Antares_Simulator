@@ -204,9 +204,9 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:ac3d9fad9b3e6c888828ac9a2fa747a2c" id="r_ac3d9fad9b3e6c888828ac9a2fa747a2c"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac3d9fad9b3e6c888828ac9a2fa747a2c">validate</a> (<a class="el" href="classAntares_1_1Data_1_1Study.html">Study</a> &amp;study)</td></tr>
 <tr class="memdesc:ac3d9fad9b3e6c888828ac9a2fa747a2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check and validate the loaded datas.  <br /></td></tr>
 <tr class="separator:ac3d9fad9b3e6c888828ac9a2fa747a2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7b54e56957144bb514a440bb1d954417" id="r_a7b54e56957144bb514a440bb1d954417"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7b54e56957144bb514a440bb1d954417">SaveToFolder</a> (const <a class="el" href="classAntares_1_1Data_1_1AreaList.html">AreaList</a> &amp;areas, const AnyString &amp;folder)</td></tr>
-<tr class="memdesc:a7b54e56957144bb514a440bb1d954417"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save data from several containers to a folder (except data for the prepro and time-series)  <br /></td></tr>
-<tr class="separator:a7b54e56957144bb514a440bb1d954417"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1fd93c64d7eab554cf02bf1c33acb1f7" id="r_a1fd93c64d7eab554cf02bf1c33acb1f7"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1fd93c64d7eab554cf02bf1c33acb1f7">SaveToFolder</a> (const <a class="el" href="classAntares_1_1Data_1_1AreaList.html">AreaList</a> &amp;areas, const AnyString &amp;folder, const Parameters::Compatibility::HydroPmax hydroPmax)</td></tr>
+<tr class="memdesc:a1fd93c64d7eab554cf02bf1c33acb1f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save data from several containers to a folder (except data for the prepro and time-series)  <br /></td></tr>
+<tr class="separator:a1fd93c64d7eab554cf02bf1c33acb1f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -270,6 +270,8 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>leewayUpperBound</b
 double&#160;</td><td class="memItemRight" valign="bottom"><b>pumpingEfficiency</b></td></tr>
 <tr class="memdesc:af823acf557789b06efc959a3e3679458"><td class="mdescLeft">&#160;</td><td class="mdescRight">Puming efficiency. <br /></td></tr>
 <tr class="separator:af823acf557789b06efc959a3e3679458"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a027739891684b9cf423aadc83da1c9ae" id="r_a027739891684b9cf423aadc83da1c9ae"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Matrix.html">Matrix</a>&lt; double, double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a027739891684b9cf423aadc83da1c9ae">dailyMaxPumpAndGen</a></td></tr>
+<tr class="separator:a027739891684b9cf423aadc83da1c9ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a60e0880e27ad840a15123f0b07a7cd40" id="r_a60e0880e27ad840a15123f0b07a7cd40"><td class="memItemLeft" align="right" valign="top"><a id="a60e0880e27ad840a15123f0b07a7cd40" name="a60e0880e27ad840a15123f0b07a7cd40"></a>
 <a class="el" href="classAntares_1_1Matrix.html">Matrix</a>&lt; double, double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>creditModulation</b></td></tr>
 <tr class="memdesc:a60e0880e27ad840a15123f0b07a7cd40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Credit Modulation (default 0, 101 * 2) <br /></td></tr>
@@ -395,8 +397,8 @@ std::vector&lt; std::optional&lt; double &gt; &gt;&#160;</td><td class="memItemR
 
 </div>
 </div>
-<a id="a7b54e56957144bb514a440bb1d954417" name="a7b54e56957144bb514a440bb1d954417"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7b54e56957144bb514a440bb1d954417">&#9670;&#160;</a></span>SaveToFolder()</h2>
+<a id="a1fd93c64d7eab554cf02bf1c33acb1f7" name="a1fd93c64d7eab554cf02bf1c33acb1f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1fd93c64d7eab554cf02bf1c33acb1f7">&#9670;&#160;</a></span>SaveToFolder()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -412,7 +414,12 @@ std::vector&lt; std::optional&lt; double &gt; &gt;&#160;</td><td class="memItemR
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const AnyString &amp;</td>          <td class="paramname"><span class="paramname"><em>folder</em></span>&#160;)</td>
+          <td class="paramtype">const AnyString &amp;</td>          <td class="paramname"><span class="paramname"><em>folder</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Parameters::Compatibility::HydroPmax</td>          <td class="paramname"><span class="paramname"><em>hydroPmax</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -459,6 +466,22 @@ std::vector&lt; std::optional&lt; double &gt; &gt;&#160;</td><td class="memItemR
 
 <p>Check and validate the loaded datas. </p>
 <dl class="section return"><dt>Returns</dt><dd>A non-zero value if the operation succeeded, 0 otherwise </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a027739891684b9cf423aadc83da1c9ae" name="a027739891684b9cf423aadc83da1c9ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a027739891684b9cf423aadc83da1c9ae">&#9670;&#160;</a></span>dailyMaxPumpAndGen</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAntares_1_1Matrix.html">Matrix</a>&lt;double, double&gt; Antares::Data::PartHydro::dailyMaxPumpAndGen</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Daily max power ({generating max <a class="el" href="structPower.html">Power</a>, generating max energy, pumping max power, pumping max energy}x365) </p>
 
 </div>
 </div>

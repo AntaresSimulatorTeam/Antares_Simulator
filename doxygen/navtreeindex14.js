@@ -1,5 +1,6 @@
 var NAVTREEINDEX14 =
 {
+"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a25dfff44a3d369c82cf2b507b34f5b87":[9,0,0,13,0,3,10],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a36e400f9243d3946d7b17d286e13e649":[7,0,0,1,0,3,4],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a36e400f9243d3946d7b17d286e13e649":[9,0,0,13,0,3,4],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a440f0f0b3f1626d1d336f1bc185774b4":[7,0,0,1,0,3,7],
@@ -248,6 +249,5 @@ var NAVTREEINDEX14 =
 "classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml.html":[9,0,0,16,1,0],
 "classAntares_1_1Solver_1_1LpsFromAntares.html":[9,0,0,16,19],
 "classAntares_1_1Solver_1_1NullResultWriter.html":[9,0,0,16,21],
-"classAntares_1_1Solver_1_1Optimization_1_1CsrQuadraticProblem.html":[9,0,0,16,2,0],
-"classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization.html":[9,0,0,16,2,2]
+"classAntares_1_1Solver_1_1Optimization_1_1CsrQuadraticProblem.html":[9,0,0,16,2,0]
 };

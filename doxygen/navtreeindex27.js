@@ -1,5 +1,6 @@
 var NAVTREEINDEX27 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLD__CSR.html#a1ea9dbb09ca765da4ac100e8076fbee9":[9,0,0,16,5,4,81,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLP.html":[9,0,0,16,5,4,82],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLP.html#a7eab3014e287f95b7994c0131aa4129f":[9,0,0,16,5,4,82,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLP.html#ae417faffa2d20e80490b1986796ff223":[9,0,0,16,5,4,82,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX27 =
 "structAntares_1_1Window_1_1Inspector_1_1PRnClusterTSMode.html":[9,0,0,22,1,58],
 "structAntares_1_1Window_1_1Inspector_1_1PSimulationMode.html":[9,0,0,22,1,59],
 "structAntares_1_1Window_1_1Inspector_1_1PStudy1stJanuary.html":[9,0,0,22,1,60],
-"structAntares_1_1Window_1_1Inspector_1_1PStudyBuildingMode.html":[9,0,0,22,1,61],
-"structAntares_1_1Window_1_1Inspector_1_1PStudyCalBegin.html":[9,0,0,22,1,62]
+"structAntares_1_1Window_1_1Inspector_1_1PStudyBuildingMode.html":[9,0,0,22,1,61]
 };

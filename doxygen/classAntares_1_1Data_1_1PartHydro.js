@@ -11,6 +11,7 @@ var classAntares_1_1Data_1_1PartHydro =
     [ "reset", "classAntares_1_1Data_1_1PartHydro.html#a62e9b91214feb6cded4b8340a77ec4de", null ],
     [ "allocation", "classAntares_1_1Data_1_1PartHydro.html#abef4d91c29b2032f5a1a00e8a05265c3", null ],
     [ "creditModulation", "classAntares_1_1Data_1_1PartHydro.html#a60e0880e27ad840a15123f0b07a7cd40", null ],
+    [ "dailyMaxPumpAndGen", "classAntares_1_1Data_1_1PartHydro.html#a027739891684b9cf423aadc83da1c9ae", null ],
     [ "followLoadModulations", "classAntares_1_1Data_1_1PartHydro.html#a8a190d7f96339a8bc35f4b24220d49ee", null ],
     [ "hardBoundsOnRuleCurves", "classAntares_1_1Data_1_1PartHydro.html#a0e3fb59adcfd8999205a30626d835b55", null ],
     [ "inflowPattern", "classAntares_1_1Data_1_1PartHydro.html#ad3c53faa44e795878bed7e666b4e8bb5", null ],

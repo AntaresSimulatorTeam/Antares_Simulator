@@ -1,5 +1,6 @@
 var NAVTREEINDEX17 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html#a3922838022f051023e92a12d5a37aa5e":[9,0,0,16,5,6,0,8,1],
 "classAntares_1_1Solver_1_1Variable_1_1Results.html":[9,0,0,16,5,22],
 "classAntares_1_1Solver_1_1Variable_1_1Results.html#a3375b5d47c33bbc6ac7389704c9940c2":[9,0,0,16,5,22,3],
 "classAntares_1_1Solver_1_1Variable_1_1Results.html#a6b4afe1dbff9ba4548bd5cf3cc0715bb":[9,0,0,16,5,22,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX17 =
 "classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter.html#aee19dac715d08e6fa29f2287c908d13a":[9,0,0,19,1,0,10,1],
 "classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter.html#af07a1a016c4a73a62c6b68eb3b533083":[9,0,0,19,1,0,10,13],
 "classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter.html#afc40b6fad7ff9e503d703ee5dcc59df6":[9,0,0,19,1,0,10,8],
-"classAntares_1_1Toolbox_1_1Filter_1_1Week.html":[9,0,0,19,1,13],
-"classAntares_1_1Toolbox_1_1Filter_1_1Week.html#aa9ec200d85b077fd977ec11c0bf64d7f":[9,0,0,19,1,13,0]
+"classAntares_1_1Toolbox_1_1Filter_1_1Week.html":[9,0,0,19,1,13]
 };

@@ -1,5 +1,6 @@
 var NAVTREEINDEX13 =
 {
+"classAntares_1_1Map_1_1Manager.html#a81a9b23334e591adce3cdb2bf0382801":[9,0,0,12,8,20],
 "classAntares_1_1Map_1_1Manager.html#a9586076a9ee16c2ccc3b56f9922734fc":[9,0,0,12,8,31],
 "classAntares_1_1Map_1_1Manager.html#ab3038c520511d4aa562be2f003dbf184":[9,0,0,12,8,25],
 "classAntares_1_1Map_1_1Manager.html#ab42ce2050ef28baf374910c85961907d":[9,0,0,12,8,27],
@@ -248,6 +249,5 @@ var NAVTREEINDEX13 =
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasName.html":[9,0,0,13,0,2],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html":[7,0,0,1,0,3],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html":[9,0,0,13,0,3],
-"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a25dfff44a3d369c82cf2b507b34f5b87":[7,0,0,1,0,3,10],
-"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a25dfff44a3d369c82cf2b507b34f5b87":[9,0,0,13,0,3,10]
+"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a25dfff44a3d369c82cf2b507b34f5b87":[7,0,0,1,0,3,10]
 };
