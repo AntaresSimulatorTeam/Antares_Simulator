@@ -23,6 +23,8 @@
 
 #include "variables/VariableManagerUtils.h"
 
+constexpr double LEVEL_COST = -1.e-6;
+
 void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO*, const int, const int);
 
 static void shortTermStorageCost(
@@ -304,7 +306,11 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
             var = variableManager.HydroLevel(pays, pdtJour);
             if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
             {
-                ProblemeAResoudre->CoutLineaire[var] = problemeHebdo->CoutDeRemplissage[pays];
+                // We use a non-zero cost to avoid indetermination of the
+                // overflow variable
+                // With a zero cost, overflows can occur at any moment
+                // With a slightly <0 cost, the overflow are forced to occur as late as possible
+                ProblemeAResoudre->CoutLineaire[var] = LEVEL_COST;
             }
 
             var = variableManager.PositiveUnsuppliedEnergy(pays, pdtJour);
