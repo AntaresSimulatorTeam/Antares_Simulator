@@ -7,7 +7,6 @@ on:
     branches:
       - develop
       - dependabot/*
-      - fix/oracle8
 
   schedule:
     - cron: '21 2 * * *'
