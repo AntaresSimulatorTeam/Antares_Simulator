@@ -22,8 +22,8 @@
 
 #include <string>
 
-#include "valueType.h"
 #include "timeAndScenarioType.h"
+#include "valueType.h"
 
 namespace Antares::Study::SystemModel
 {
@@ -36,8 +36,6 @@ namespace Antares::Study::SystemModel
 class Parameter
 {
 public:
-
-
     explicit Parameter(std::string id,
                        TimeDependent timeDependent,
                        ScenarioDependent scenarioDependent):

@@ -206,9 +206,9 @@ target_link_libraries(model_antares
         Antares::lps
         PRIVATE
         infeasible_problem_analysis
-        Antares::modeler_api
-        data-series-lib
-        Antares::modeler-ortools-impl
+        Antares::linear-problem-api
+        linear-problem-data-impl
+        Antares::linear-problem-mpsolver-impl
 )
 
 target_include_directories(model_antares

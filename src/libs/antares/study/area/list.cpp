@@ -192,9 +192,12 @@ static bool AreaListSaveThermalDataToFile(const AreaList& list, const AnyString&
     return ini.save(filename);
 }
 
-static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const AnyString& folder)
+static bool AreaListSaveToFolderSingleArea(const Area& area,
+                                           const AnyString& folder,
+                                           const Parameters::Compatibility::HydroPmax hydroPmax)
 {
     bool ret = true;
+    Clob buffer;
 
     // A specific folder for general data
     buffer.clear() << folder << SEP << "input" << SEP << "areas" << SEP << area.id;
@@ -273,7 +276,7 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
         if (area.hydro.series) // Series
         {
             buffer.clear() << folder << SEP << "input" << SEP << "hydro" << SEP << "series";
-            ret = area.hydro.series->saveToFolder(area.id, buffer) && ret;
+            ret = area.hydro.series->saveToFolder(area.id, buffer, hydroPmax) && ret;
         }
     }
 
@@ -762,13 +765,16 @@ bool AreaList::saveToFolder(const AnyString& folder) const
       {
           logs.info() << "Exporting the area " << (area.index + 1) << '/' << areas.size() << ": "
                       << area.name;
-          ret = AreaListSaveToFolderSingleArea(area, buffer, folder) && ret;
+          ret = AreaListSaveToFolderSingleArea(area,
+                                               folder,
+                                               pStudy.parameters.compatibility.hydroPmax)
+                && ret;
       });
 
     // Hydro
     // The hydro files must be saved after the area has been invalidated
     buffer.clear() << folder << SEP << "input" << SEP << "hydro";
-    ret = PartHydro::SaveToFolder(*this, buffer) && ret;
+    ret = PartHydro::SaveToFolder(*this, buffer, pStudy.parameters.compatibility.hydroPmax) && ret;
 
     // update nameid set
     updateNameIDSet();

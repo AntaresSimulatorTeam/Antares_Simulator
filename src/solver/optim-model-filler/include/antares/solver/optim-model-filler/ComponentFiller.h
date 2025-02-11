@@ -21,9 +21,9 @@
 
 #pragma once
 
-#include <antares/solver/modeler/api/linearProblemFiller.h>
+#include <antares/optimisation/linear-problem-api/linearProblemFiller.h>
 #include <antares/study/system-model/component.h>
-#include "antares/solver/expressions/visitors/EvaluationContext.h"
+#include "antares/expressions/visitors/EvaluationContext.h"
 
 #include "ReadLinearConstraintVisitor.h"
 
@@ -33,7 +33,7 @@ class Component;
 class Variable;
 } // namespace Antares::Study::SystemModel
 
-namespace Antares::Solver::Visitors
+namespace Antares::Expressions::Visitors
 {
 class EvalVisitor;
 }
@@ -42,10 +42,10 @@ namespace Antares::Optimization
 {
 /**
  * Component filler
- * Implements LinearProbleFiller interface.
+ * Implements LinearProblemFiller interface.
  * Fills a LinearProblem with variables, constraints, and objective coefficients of a Component
  */
-class ComponentFiller: public Solver::Modeler::Api::LinearProblemFiller
+class ComponentFiller: public Optimisation::LinearProblemApi::LinearProblemFiller
 {
 public:
     ComponentFiller() = delete;
@@ -53,33 +53,33 @@ public:
     /// Create a ComponentFiller for a Component
     explicit ComponentFiller(const Study::SystemModel::Component& component);
 
-    void addVariables(Solver::Modeler::Api::ILinearProblem& pb,
-                      Solver::Modeler::Api::ILinearProblemData& data,
-                      Solver::Modeler::Api::FillContext& ctx) override;
+    void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
+                      Optimisation::LinearProblemApi::ILinearProblemData& data,
+                      Optimisation::LinearProblemApi::FillContext& ctx) override;
 
-    void addStaticConstraint(Solver::Modeler::Api::ILinearProblem& pb,
+    void addStaticConstraint(Optimisation::LinearProblemApi::ILinearProblem& pb,
                              const LinearConstraint& linear_constraint,
                              const std::string& constraint_id) const;
 
-    void addTimeDependentConstraints(Solver::Modeler::Api::ILinearProblem& pb,
+    void addTimeDependentConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
                                      const LinearConstraint& linear_constraint,
                                      const std::string& constraint_id,
                                      unsigned int nb_cstr) const;
 
-    void addConstraints(Solver::Modeler::Api::ILinearProblem& pb,
-                        Solver::Modeler::Api::ILinearProblemData& data,
-                        Solver::Modeler::Api::FillContext& ctx) override;
-    void addObjective(Solver::Modeler::Api::ILinearProblem& pb,
-                      Solver::Modeler::Api::ILinearProblemData& data,
-                      Solver::Modeler::Api::FillContext& ctx) override;
+    void addConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
+                        Optimisation::LinearProblemApi::ILinearProblemData& data,
+                        Optimisation::LinearProblemApi::FillContext& ctx) override;
+    void addObjective(Optimisation::LinearProblemApi::ILinearProblem& pb,
+                      Optimisation::LinearProblemApi::ILinearProblemData& data,
+                      Optimisation::LinearProblemApi::FillContext& ctx) override;
 
 private:
-    static bool IsThisConstraintTimeDependent(const Solver::Nodes::Node* node);
+    static bool IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node);
 
     bool IsThisVariableTimeDependent(const std::string& var_id) const;
 
     const Study::SystemModel::Component& component_;
-    Solver::Visitors::EvaluationContext evaluationContext_;
+    Expressions::Visitors::EvaluationContext evaluationContext_;
     const std::map<std::string, Study::SystemModel::Variable>& modelVariable_;
 };
 } // namespace Antares::Optimization

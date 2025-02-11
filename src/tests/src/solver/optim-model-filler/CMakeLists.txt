@@ -8,8 +8,8 @@ add_boost_test(unit-tests-for-component-filler
         test_readLinearConstraintVisitor.cpp
         LIBS
         antares-study-system-model
-        Antares::modeler-ortools-impl
+        Antares::linear-problem-mpsolver-impl
         Antares::optim-model-filler
-        data-series-lib
+        linear-problem-data-impl
         test_utils_unit)
 

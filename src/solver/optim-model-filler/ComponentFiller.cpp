@@ -21,12 +21,12 @@
 
 #include <ranges>
 
-#include <antares/solver/expressions/nodes/ExpressionsNodes.h>
-#include <antares/solver/expressions/visitors/EvalVisitor.h>
+#include <antares/expressions/nodes/ExpressionsNodes.h>
+#include <antares/expressions/visitors/EvalVisitor.h>
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
 #include <antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h>
 #include <antares/study/system-model/variable.h>
-#include "antares/solver/expressions/visitors/TimeIndexVisitor.h"
+#include "antares/expressions/visitors/TimeIndexVisitor.h"
 
 namespace Antares::Optimization
 {
@@ -39,14 +39,14 @@ ComponentFiller::ComponentFiller(const Study::SystemModel::Component& component)
 {
 }
 
-bool checkTimeSteps(Solver::Modeler::Api::FillContext& ctx)
+bool checkTimeSteps(Optimisation::LinearProblemApi::FillContext& ctx)
 {
     return ctx.getFirstTimeStep() <= ctx.getLastTimeStep();
 }
 
-void ComponentFiller::addVariables(Solver::Modeler::Api::ILinearProblem& pb,
-                                   Solver::Modeler::Api::ILinearProblemData& data,
-                                   Solver::Modeler::Api::FillContext& ctx)
+void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
+                                   Optimisation::LinearProblemApi::ILinearProblemData& data,
+                                   Optimisation::LinearProblemApi::FillContext& ctx)
 {
     if (!checkTimeSteps(ctx))
     {
@@ -54,7 +54,7 @@ void ComponentFiller::addVariables(Solver::Modeler::Api::ILinearProblem& pb,
         return;
     }
 
-    Solver::Visitors::EvalVisitor evaluator(evaluationContext_);
+    Expressions::Visitors::EvalVisitor evaluator(evaluationContext_);
     for (const auto& variable: component_.getModel()->Variables() | std::views::values)
     {
         if (variable.isTimeDependent())
@@ -75,7 +75,7 @@ void ComponentFiller::addVariables(Solver::Modeler::Api::ILinearProblem& pb,
     }
 }
 
-void ComponentFiller::addStaticConstraint(Solver::Modeler::Api::ILinearProblem& pb,
+void ComponentFiller::addStaticConstraint(Optimisation::LinearProblemApi::ILinearProblem& pb,
                                           const LinearConstraint& linear_constraint,
                                           const std::string& constraint_id) const
 {
@@ -89,10 +89,11 @@ void ComponentFiller::addStaticConstraint(Solver::Modeler::Api::ILinearProblem& 
     }
 }
 
-void ComponentFiller::addTimeDependentConstraints(Solver::Modeler::Api::ILinearProblem& pb,
-                                                  const LinearConstraint& linear_constraint,
-                                                  const std::string& constraint_id,
-                                                  unsigned int nb_cstr) const
+void ComponentFiller::addTimeDependentConstraints(
+  Optimisation::LinearProblemApi::ILinearProblem& pb,
+  const LinearConstraint& linear_constraint,
+  const std::string& constraint_id,
+  unsigned int nb_cstr) const
 {
     auto vect_ct = pb.addConstraint(linear_constraint.lb,
                                     linear_constraint.ub,
@@ -119,9 +120,9 @@ void ComponentFiller::addTimeDependentConstraints(Solver::Modeler::Api::ILinearP
     }
 }
 
-void ComponentFiller::addConstraints(Solver::Modeler::Api::ILinearProblem& pb,
-                                     Solver::Modeler::Api::ILinearProblemData& data,
-                                     Solver::Modeler::Api::FillContext& ctx)
+void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
+                                     Optimisation::LinearProblemApi::ILinearProblemData& data,
+                                     Optimisation::LinearProblemApi::FillContext& ctx)
 {
     ReadLinearConstraintVisitor visitor(evaluationContext_);
     for (const auto& constraint: component_.getModel()->getConstraints() | std::views::values)
@@ -147,9 +148,9 @@ void ComponentFiller::addConstraints(Solver::Modeler::Api::ILinearProblem& pb,
     }
 }
 
-void ComponentFiller::addObjective(Solver::Modeler::Api::ILinearProblem& pb,
-                                   Solver::Modeler::Api::ILinearProblemData& data,
-                                   Solver::Modeler::Api::FillContext& ctx)
+void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProblem& pb,
+                                   Optimisation::LinearProblemApi::ILinearProblemData& data,
+                                   Optimisation::LinearProblemApi::FillContext& ctx)
 {
     auto model = component_.getModel();
     if (model->Objective().Empty())
@@ -183,12 +184,12 @@ void ComponentFiller::addObjective(Solver::Modeler::Api::ILinearProblem& pb,
     }
 }
 
-bool ComponentFiller::IsThisConstraintTimeDependent(const Solver::Nodes::Node* node)
+bool ComponentFiller::IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node)
 {
-    Solver::Visitors::TimeIndexVisitor timeIndexVisitor;
+    Expressions::Visitors::TimeIndexVisitor timeIndexVisitor;
     const auto ret = timeIndexVisitor.dispatch(node);
-    return ret == Solver::Visitors::TimeIndex::VARYING_IN_TIME_ONLY
-           || ret == Solver::Visitors::TimeIndex::VARYING_IN_TIME_AND_SCENARIO;
+    return ret == Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY
+           || ret == Expressions::Visitors::TimeIndex::VARYING_IN_TIME_AND_SCENARIO;
 }
 
 // return false if the variable with the id var_id is not found or if it is not time-dependent

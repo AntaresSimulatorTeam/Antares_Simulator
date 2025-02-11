@@ -25,13 +25,13 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <antares/solver/expressions/Registry.hxx>
-#include <antares/solver/expressions/nodes/ExpressionsNodes.h>
+#include <antares/expressions/Registry.hxx>
+#include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h>
 
-using namespace Antares::Solver;
-using namespace Antares::Solver::Nodes;
-using namespace Antares::Solver::Visitors;
+using namespace Antares::Expressions;
+using namespace Antares::Expressions::Nodes;
+using namespace Antares::Expressions::Visitors;
 
 using namespace Antares::Optimization;
 

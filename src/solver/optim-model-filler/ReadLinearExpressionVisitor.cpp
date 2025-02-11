@@ -21,18 +21,18 @@
 
 #include <numeric>
 
-#include <antares/solver/expressions/nodes/ExpressionsNodes.h>
-#include <antares/solver/expressions/visitors/EvaluationContext.h>
-#include <antares/solver/expressions/visitors/NodeVisitor.h>
+#include <antares/expressions/nodes/ExpressionsNodes.h>
+#include <antares/expressions/visitors/EvaluationContext.h>
+#include <antares/expressions/visitors/NodeVisitor.h>
 #include <antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h>
 
-using namespace Antares::Solver::Nodes;
+using namespace Antares::Expressions::Nodes;
 
 namespace Antares::Optimization
 {
 
 ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
-  Solver::Visitors::EvaluationContext context):
+  Expressions::Visitors::EvaluationContext context):
     context_(std::move(context))
 {
 }
