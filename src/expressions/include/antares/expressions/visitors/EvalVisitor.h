@@ -20,6 +20,8 @@
 */
 #pragma once
 
+#include <cmath>
+
 #include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include "antares/expressions/visitors/NodeVisitor.h"
