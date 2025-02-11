@@ -22,20 +22,19 @@
 #include <fstream>
 
 #include <antares/logs/logs.h>
-#include <antares/solver/modeler/api/linearProblemBuilder.h>
-#include <antares/solver/modeler/dataSeries/linearProblemData.h>
+#include <antares/optimisation/linear-problem-api/linearProblemBuilder.h>
+#include <antares/optimisation/linear-problem-data-impl/linearProblemData.h>
+#include <antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h>
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
-#include <antares/solver/modeler/ortoolsImpl/linearProblem.h>
 #include <antares/solver/modeler/parameters/parseModelerParameters.h>
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
-#include "antares/solver/modeler/dataSeries/timeSeriesSet.h"
+#include "antares/optimisation/linear-problem-api/linearProblem.h"
+#include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
 
-#include "api/include/antares/solver/modeler/api/linearProblem.h"
-
-using namespace Antares::Solver::Modeler::OrtoolsImpl;
+using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares;
 using namespace Antares::Solver;
-using namespace Antares::Solver::Modeler::Api;
+using namespace Antares::Optimisation::LinearProblemApi;
 
 class SystemLinearProblem
 {
@@ -62,19 +61,21 @@ public:
         }
 
         LinearProblemBuilder linear_problem_builder(fillers_ptr);
-        Modeler::DataSeries::LinearProblemData dummy_data;
+        Optimisation::LinearProblemDataImpl::LinearProblemData dummy_data;
 
         const auto number_of_timeStep = parameters.lastTimeStep - parameters.firstTimeStep + 1;
         std::vector<unsigned int> timeSteps(number_of_timeStep);
         std::ranges::generate(timeSteps, [i = parameters.firstTimeStep]() mutable { return i++; });
         unsigned int scenario = 0;
         std::string scenarionGroup = "group 1";
-        DataSeriesKeys my_data_series_keys = {.timeSteps = timeSteps,
-                                              .scenarioGroup = scenarionGroup,
-                                              .scenario = scenario};
+        Optimisation::LinearProblemApi::DataSeriesKeys my_data_series_keys = {
+          .timeSteps = timeSteps,
+          .scenarioGroup = scenarionGroup,
+          .scenario = scenario};
 
-        auto time_series = std::make_unique<Modeler::DataSeries::TimeSeriesSet>("load",
-                                                                                number_of_timeStep);
+        auto time_series = std::make_unique<Optimisation::LinearProblemDataImpl::TimeSeriesSet>(
+          "load",
+          number_of_timeStep);
         std::vector<double> myTimeSeries(timeSteps.begin(), timeSteps.end());
         std::iota(myTimeSeries.begin(), myTimeSeries.end(), 0.);
         time_series->add(myTimeSeries);
@@ -100,7 +101,6 @@ int main(int argc, const char** argv)
 {
     logs.applicationName("modeler");
     if (argc <= 1)
-
     {
         logs.error() << "No study path provided, exiting.";
         usage();
@@ -163,8 +163,9 @@ int main(int argc, const char** argv)
         case MipStatus::FEASIBLE:
             if (!parameters.noOutput)
             {
-                logs.info() << "Writing variables...";
+                logs.info() << "Writing objective & variable values...";
                 std::ofstream sol_out(outputPath / "solution.csv");
+                sol_out << "objective " << solution->getObjectiveValue() << std::endl;
                 for (const auto& [name, value]: solution->getOptimalValues())
                 {
                     sol_out << name << " " << value << std::endl;

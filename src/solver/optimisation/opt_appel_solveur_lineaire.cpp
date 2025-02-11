@@ -25,10 +25,10 @@
 
 #include <antares/antares/fatal-error.h>
 #include <antares/logs/logs.h>
+#include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
+#include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimization-options/options.h"
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
-#include "antares/solver/modeler/api/linearProblemBuilder.h"
-#include "antares/solver/modeler/dataSeries/linearProblemData.h"
 #include "antares/solver/optimisation/LegacyFiller.h"
 #include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
@@ -37,9 +37,9 @@
 #include "antares/solver/utils/mps_utils.h"
 
 using namespace operations_research;
-using namespace Antares::Solver::Modeler::Api;
-using namespace Antares::Solver::Modeler::DataSeries;
-using namespace Antares::Solver::Modeler::OrtoolsImpl;
+using namespace Antares::Optimisation::LinearProblemApi;
+using namespace Antares::Optimisation::LinearProblemDataImpl;
+using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 
 using Antares::Solver::IResultWriter;
 using Antares::Solver::Optimization::OptimizationOptions;

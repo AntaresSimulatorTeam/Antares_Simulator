@@ -25,14 +25,14 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <antares/solver/expressions/Registry.hxx>
-#include <antares/solver/expressions/nodes/ExpressionsNodes.h>
+#include <antares/expressions/Registry.hxx>
+#include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h>
-#include "antares/solver/modeler/dataSeries/linearProblemData.h"
+#include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 
-using namespace Antares::Solver;
-using namespace Antares::Solver::Nodes;
-using namespace Antares::Solver::Visitors;
+using namespace Antares::Expressions;
+using namespace Antares::Expressions::Nodes;
+using namespace Antares::Expressions::Visitors;
 
 using namespace Antares::Optimization;
 
@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_SUITE(_read_linear_expression_visitor_)
 
 struct MyDummyFixture: Registry<Node>
 {
-    Modeler::DataSeries::LinearProblemData data;
+    Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
     EvaluationContext evaluationContext{{}, {}, data};
     ReadLinearExpressionVisitor visitor{evaluationContext, {.timeSteps = {0}}};
 };

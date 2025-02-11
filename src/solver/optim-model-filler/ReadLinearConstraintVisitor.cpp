@@ -21,18 +21,18 @@
 
 #include <ranges>
 
-#include <antares/solver/expressions/nodes/ExpressionsNodes.h>
+#include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/optim-model-filler/LinearExpression.h>
 #include <antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h>
 
-using namespace Antares::Solver::Nodes;
+using namespace Antares::Expressions::Nodes;
 
 namespace Antares::Optimization
 {
 
 ReadLinearConstraintVisitor::ReadLinearConstraintVisitor(
-Solver::Visitors::EvaluationContext context,
-  const Solver::Modeler::Api::DataSeriesKeys& dataSeriesKeys):
+Expressions::Visitors::EvaluationContext context,
+  const Optimisation::LinearProblemApi::DataSeriesKeys& dataSeriesKeys):
     linear_expression_visitor_(std::move(context), dataSeriesKeys)
 {
 }

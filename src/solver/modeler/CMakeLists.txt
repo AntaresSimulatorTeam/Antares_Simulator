@@ -1,6 +1,3 @@
-add_subdirectory(api)
-add_subdirectory(dataSeries)
-add_subdirectory(ortoolsImpl)
 add_subdirectory(loadFiles)
 add_subdirectory(parameters)
 
@@ -24,16 +21,16 @@ target_link_libraries(modeler-lib
         Antares::loadModelerFiles
         Antares::modelerParameters
         Antares::optim-model-filler
-        Antares::modeler_api
+        Antares::linear-problem-api
         # TODO FIXME don't depend on implementations
-        Antares::modeler-ortools-impl
+        Antares::linear-problem-mpsolver-impl
 )
 
 target_link_libraries(antares-modeler
         PRIVATE
         modeler-lib
-        data-series-lib
-        modeler-ortools-impl
+        linear-problem-data-impl
+        linear-problem-mpsolver-impl
         optim-model-filler
 )
 

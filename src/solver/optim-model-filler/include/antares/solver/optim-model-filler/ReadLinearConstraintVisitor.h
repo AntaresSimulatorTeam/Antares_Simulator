@@ -23,8 +23,8 @@
 
 #include <limits>
 
-#include <antares/solver/expressions/visitors/EvaluationContext.h>
-#include <antares/solver/expressions/visitors/NodeVisitor.h>
+#include <antares/expressions/visitors/EvaluationContext.h>
+#include <antares/expressions/visitors/NodeVisitor.h>
 
 #include "ReadLinearExpressionVisitor.h"
 
@@ -51,31 +51,31 @@ struct LinearConstraint
 };
 
 class ReadLinearConstraintVisitor
-    : public Solver::Visitors::NodeVisitor<std::vector<LinearConstraint>>
+    : public Expressions::Visitors::NodeVisitor<std::vector<LinearConstraint>>
 {
 public:
     ReadLinearConstraintVisitor() = default;
     explicit ReadLinearConstraintVisitor(
-      Solver::Visitors::EvaluationContext context,
-      const Solver::Modeler::Api::DataSeriesKeys& dataSeriesKeys);
+      Expressions::Visitors::EvaluationContext context,
+      const Optimisation::LinearProblemApi::DataSeriesKeys& dataSeriesKeys);
     std::string name() const override;
 
 private:
     ReadLinearExpressionVisitor linear_expression_visitor_;
-    std::vector<LinearConstraint> visit(const Solver::Nodes::SumNode* node) override;
-    std::vector<LinearConstraint> visit(const Solver::Nodes::SubtractionNode* node) override;
-    std::vector<LinearConstraint> visit(const Solver::Nodes::MultiplicationNode* node) override;
-    std::vector<LinearConstraint> visit(const Solver::Nodes::DivisionNode* node) override;
-    std::vector<LinearConstraint> visit(const Solver::Nodes::EqualNode* node) override;
-    std::vector<LinearConstraint> visit(const Solver::Nodes::LessThanOrEqualNode* node) override;
-    std::vector<LinearConstraint> visit(const Solver::Nodes::GreaterThanOrEqualNode* node) override;
-    std::vector<LinearConstraint> visit(const Solver::Nodes::NegationNode* node) override;
-    std::vector<LinearConstraint> visit(const Solver::Nodes::VariableNode* node) override;
-    std::vector<LinearConstraint> visit(const Solver::Nodes::ParameterNode* node) override;
-    std::vector<LinearConstraint> visit(const Solver::Nodes::LiteralNode* node) override;
-    std::vector<LinearConstraint> visit(const Solver::Nodes::PortFieldNode* node) override;
-    std::vector<LinearConstraint> visit(const Solver::Nodes::PortFieldSumNode* node) override;
-    std::vector<LinearConstraint> visit(const Solver::Nodes::ComponentVariableNode* node) override;
-    std::vector<LinearConstraint> visit(const Solver::Nodes::ComponentParameterNode* node) override;
+    std::vector<LinearConstraint> visit(const Expressions::Nodes::SumNode* node) override;
+    std::vector<LinearConstraint> visit(const Expressions::Nodes::SubtractionNode* node) override;
+    std::vector<LinearConstraint> visit(const Expressions::Nodes::MultiplicationNode* node) override;
+    std::vector<LinearConstraint> visit(const Expressions::Nodes::DivisionNode* node) override;
+    std::vector<LinearConstraint> visit(const Expressions::Nodes::EqualNode* node) override;
+    std::vector<LinearConstraint> visit(const Expressions::Nodes::LessThanOrEqualNode* node) override;
+    std::vector<LinearConstraint> visit(const Expressions::Nodes::GreaterThanOrEqualNode* node) override;
+    std::vector<LinearConstraint> visit(const Expressions::Nodes::NegationNode* node) override;
+    std::vector<LinearConstraint> visit(const Expressions::Nodes::VariableNode* node) override;
+    std::vector<LinearConstraint> visit(const Expressions::Nodes::ParameterNode* node) override;
+    std::vector<LinearConstraint> visit(const Expressions::Nodes::LiteralNode* node) override;
+    std::vector<LinearConstraint> visit(const Expressions::Nodes::PortFieldNode* node) override;
+    std::vector<LinearConstraint> visit(const Expressions::Nodes::PortFieldSumNode* node) override;
+    std::vector<LinearConstraint> visit(const Expressions::Nodes::ComponentVariableNode* node) override;
+    std::vector<LinearConstraint> visit(const Expressions::Nodes::ComponentParameterNode* node) override;
 };
 } // namespace Antares::Optimization

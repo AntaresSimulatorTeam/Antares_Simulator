@@ -21,13 +21,13 @@
 
 #pragma once
 
-#include <antares/solver/modeler/ortoolsImpl/linearProblem.h>
+#include <antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h>
 
 namespace Antares::Optimization
 {
 
 class LegacyOrtoolsLinearProblem final
-    : public Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProblem
+    : public Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem
 {
 public:
     LegacyOrtoolsLinearProblem(bool isMip, const std::string& solverName):

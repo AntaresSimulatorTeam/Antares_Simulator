@@ -21,19 +21,19 @@
 
 #include <numeric>
 
-#include <antares/solver/expressions/nodes/ExpressionsNodes.h>
-#include <antares/solver/expressions/visitors/EvaluationContext.h>
-#include <antares/solver/expressions/visitors/NodeVisitor.h>
-#include <antares/solver/modeler/api/ILinearProblemData.h>
+#include <antares/expressions/nodes/ExpressionsNodes.h>
+#include <antares/expressions/visitors/EvaluationContext.h>
+#include <antares/expressions/visitors/NodeVisitor.h>
+#include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h>
-using namespace Antares::Solver::Nodes;
+using namespace Antares::Expressions::Nodes;
 
 namespace Antares::Optimization
 {
 
 ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
-  Solver::Visitors::EvaluationContext context,
-  Solver::Modeler::Api::DataSeriesKeys dataSeriesKeys):
+  Expressions::Visitors::EvaluationContext context,
+  Optimisation::LinearProblemApi::DataSeriesKeys dataSeriesKeys):
     context_(std::move(context)),
     dataSeriesKeys_(std::move(dataSeriesKeys))
 {
@@ -97,7 +97,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const VariableN
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const ParameterNode* node)
 {
-    if (node->timeIndex() == Solver::Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
+    if (node->timeIndex() == Expressions::Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
     {
         return TimeDependentLinearExpression(
           dataSeriesKeys_.timeSteps,

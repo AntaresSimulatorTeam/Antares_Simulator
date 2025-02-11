@@ -52,7 +52,8 @@ static void checkComponentDataValidity(const ComponentData& data)
     {
         if (!data.parameter_values.contains(param))
         {
-            throw std::invalid_argument("The component \"" + data.id + "\" has no value for parameter '" + param + "'");
+            throw std::invalid_argument("The component \"" + data.id
+                                        + "\" has no value for parameter '" + param + "'");
         }
     }
 }

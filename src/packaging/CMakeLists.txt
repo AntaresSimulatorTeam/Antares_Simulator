@@ -78,9 +78,9 @@ set(TARGET_LIBS #No alias
 
         # model_antares
         infeasible_problem_analysis
-        modeler_api
-        data-series-lib
-        modeler-ortools-impl
+        linear-problem-api
+        linear-problem-data-impl
+        linear-problem-mpsolver-impl
 
         # solver-lib
         args_helper
