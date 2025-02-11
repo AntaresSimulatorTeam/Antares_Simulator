@@ -57,6 +57,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal, MyDummyFixture)
     BOOST_CHECK_EQUAL(linear_expression.offset(), 5.);
     BOOST_CHECK(linear_expression.coefPerVar().empty());
 }
+
 std::pair<std::string, ContextParameter> build_context_parameter_with(
   const std::string& id,
   const std::string& value,
@@ -165,7 +166,6 @@ BOOST_FIXTURE_TEST_CASE(comparison_nodes__exception_thrown, MyDummyFixture)
 
 BOOST_FIXTURE_TEST_CASE(not_implemented_nodes__exception_thrown, MyDummyFixture)
 {
-
     Node* node = create<PortFieldNode>("port", "field");
     BOOST_CHECK_EXCEPTION(visitor.dispatch(node),
                           std::invalid_argument,

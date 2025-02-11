@@ -34,6 +34,7 @@ using namespace Antares::Expressions::Nodes;
 using namespace Antares::Expressions::Visitors;
 
 BOOST_AUTO_TEST_SUITE(_PrintAndEvalNodes_)
+
 struct MyDummyFixture: Registry<Node>
 {
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;

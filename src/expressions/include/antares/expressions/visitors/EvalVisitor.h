@@ -39,6 +39,7 @@ class EvalVisitorDivisionException: public std::runtime_error
 public:
     EvalVisitorDivisionException(double left, double right, const std::string& message);
 };
+
 class EvalVisitorNotImplemented: public std::invalid_argument
 {
 public:
@@ -212,7 +213,8 @@ public:
      * @param context The evaluation context.
      * @param dataSeriesKeys
      */
-    explicit EvalVisitor(EvaluationContext context, Optimisation::LinearProblemApi::DataSeriesKeys dataSeriesKeys);
+    explicit EvalVisitor(EvaluationContext context,
+                         Optimisation::LinearProblemApi::DataSeriesKeys dataSeriesKeys);
     std::string name() const override;
 
 private:

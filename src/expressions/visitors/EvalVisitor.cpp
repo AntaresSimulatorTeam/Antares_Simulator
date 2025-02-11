@@ -28,7 +28,8 @@
 
 namespace Antares::Expressions::Visitors
 {
-EvalVisitor::EvalVisitor(EvaluationContext context, Optimisation::LinearProblemApi::DataSeriesKeys dataSeriesKeys):
+EvalVisitor::EvalVisitor(EvaluationContext context,
+                         Optimisation::LinearProblemApi::DataSeriesKeys dataSeriesKeys):
     context_(std::move(context)),
     dataSeriesKeys_(std::move(dataSeriesKeys))
 {

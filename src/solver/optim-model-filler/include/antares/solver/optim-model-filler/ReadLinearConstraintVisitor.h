@@ -64,18 +64,23 @@ private:
     ReadLinearExpressionVisitor linear_expression_visitor_;
     std::vector<LinearConstraint> visit(const Expressions::Nodes::SumNode* node) override;
     std::vector<LinearConstraint> visit(const Expressions::Nodes::SubtractionNode* node) override;
-    std::vector<LinearConstraint> visit(const Expressions::Nodes::MultiplicationNode* node) override;
+    std::vector<LinearConstraint> visit(
+      const Expressions::Nodes::MultiplicationNode* node) override;
     std::vector<LinearConstraint> visit(const Expressions::Nodes::DivisionNode* node) override;
     std::vector<LinearConstraint> visit(const Expressions::Nodes::EqualNode* node) override;
-    std::vector<LinearConstraint> visit(const Expressions::Nodes::LessThanOrEqualNode* node) override;
-    std::vector<LinearConstraint> visit(const Expressions::Nodes::GreaterThanOrEqualNode* node) override;
+    std::vector<LinearConstraint> visit(
+      const Expressions::Nodes::LessThanOrEqualNode* node) override;
+    std::vector<LinearConstraint> visit(
+      const Expressions::Nodes::GreaterThanOrEqualNode* node) override;
     std::vector<LinearConstraint> visit(const Expressions::Nodes::NegationNode* node) override;
     std::vector<LinearConstraint> visit(const Expressions::Nodes::VariableNode* node) override;
     std::vector<LinearConstraint> visit(const Expressions::Nodes::ParameterNode* node) override;
     std::vector<LinearConstraint> visit(const Expressions::Nodes::LiteralNode* node) override;
     std::vector<LinearConstraint> visit(const Expressions::Nodes::PortFieldNode* node) override;
     std::vector<LinearConstraint> visit(const Expressions::Nodes::PortFieldSumNode* node) override;
-    std::vector<LinearConstraint> visit(const Expressions::Nodes::ComponentVariableNode* node) override;
-    std::vector<LinearConstraint> visit(const Expressions::Nodes::ComponentParameterNode* node) override;
+    std::vector<LinearConstraint> visit(
+      const Expressions::Nodes::ComponentVariableNode* node) override;
+    std::vector<LinearConstraint> visit(
+      const Expressions::Nodes::ComponentParameterNode* node) override;
 };
 } // namespace Antares::Optimization

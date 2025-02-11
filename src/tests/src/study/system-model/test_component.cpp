@@ -50,6 +50,7 @@ static Model createModelWithoutParameters()
 }
 
 BOOST_FIXTURE_TEST_SUITE(_Component_, ComponentBuilderCreationFixture)
+
 std::pair<std::string, Antares::Expressions::Visitors::ContextParameter>
 build_context_parameter_with(const std::string& id,
                              const std::string& value,

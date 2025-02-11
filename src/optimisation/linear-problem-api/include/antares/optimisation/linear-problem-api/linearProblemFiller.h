@@ -41,7 +41,9 @@ namespace Antares::Optimisation::LinearProblemApi
 {
 struct FillContext
 {
-    FillContext(unsigned first, unsigned last, Optimisation::LinearProblemApi::DataSeriesKeys dataSeriesKeys):
+    FillContext(unsigned first,
+                unsigned last,
+                Optimisation::LinearProblemApi::DataSeriesKeys dataSeriesKeys):
         firstTimeStep(first),
         lastTimeStep(last),
         dataSeriesKeys(std::move(dataSeriesKeys))

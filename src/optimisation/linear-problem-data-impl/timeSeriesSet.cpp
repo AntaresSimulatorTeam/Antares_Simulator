@@ -22,7 +22,6 @@ void TimeSeriesSet::add(const std::vector<double>& ts)
 
 double TimeSeriesSet::getData(unsigned rank, unsigned hour)
 {
-
     if (hour > height_ - 1)
     {
         throw HourTooBig(name(), hour);

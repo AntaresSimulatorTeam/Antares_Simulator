@@ -47,18 +47,21 @@ public:
     std::vector<LinearProblemApi::IMipVariable*> addNumVariable(
       const std::vector<double>& lb,
       const std::vector<double>& ub,
-                                                   const std::string& name,
-                                                   unsigned int number_new_variables) override;
-    std::vector<LinearProblemApi::IMipVariable*> addNumVariable(double lb,
-                                                   double ub,
-                                                   const std::string& name,
-                                                   unsigned int number_new_variables) override;
-    std::vector<LinearProblemApi::IMipVariable*> addNumVariable(const std::vector<double>& lb,
-                                                   double ub,
-                                                   const std::string& name,
-                                                   unsigned int number_new_variables) override;
-    std::vector<LinearProblemApi::IMipVariable*> addNumVariable(double lb,
-                                                   const std::vector<double>& ub,
+      const std::string& name,
+      unsigned int number_new_variables) override;
+    std::vector<LinearProblemApi::IMipVariable*> addNumVariable(
+      double lb,
+      double ub,
+      const std::string& name,
+      unsigned int number_new_variables) override;
+    std::vector<LinearProblemApi::IMipVariable*> addNumVariable(
+      const std::vector<double>& lb,
+      double ub,
+      const std::string& name,
+      unsigned int number_new_variables) override;
+    std::vector<LinearProblemApi::IMipVariable*> addNumVariable(
+      double lb,
+      const std::vector<double>& ub,
       const std::string& name,
       unsigned int number_new_variables) override;
 
@@ -67,18 +70,21 @@ public:
     std::vector<LinearProblemApi::IMipVariable*> addIntVariable(
       const std::vector<double>& lb,
       const std::vector<double>& ub,
-                                                   const std::string& name,
-                                                   unsigned int number_new_variables) override;
-    std::vector<LinearProblemApi::IMipVariable*> addIntVariable(double lb,
-                                                   double ub,
-                                                   const std::string& name,
-                                                   unsigned int number_new_variables) override;
-    std::vector<LinearProblemApi::IMipVariable*> addIntVariable(const std::vector<double>& lb,
-                                                   double ub,
-                                                   const std::string& name,
-                                                   unsigned int number_new_variables) override;
-    std::vector<LinearProblemApi::IMipVariable*> addIntVariable(double lb,
-                                                   const std::vector<double>& ub,
+      const std::string& name,
+      unsigned int number_new_variables) override;
+    std::vector<LinearProblemApi::IMipVariable*> addIntVariable(
+      double lb,
+      double ub,
+      const std::string& name,
+      unsigned int number_new_variables) override;
+    std::vector<LinearProblemApi::IMipVariable*> addIntVariable(
+      const std::vector<double>& lb,
+      double ub,
+      const std::string& name,
+      unsigned int number_new_variables) override;
+    std::vector<LinearProblemApi::IMipVariable*> addIntVariable(
+      double lb,
+      const std::vector<double>& ub,
       const std::string& name,
       unsigned int number_new_variables) override;
 
@@ -90,22 +96,25 @@ public:
     std::vector<LinearProblemApi::IMipVariable*> addVariable(
       const std::vector<double>& lb,
       const std::vector<double>& ub,
-                                                bool integer,
-                                                const std::string& name,
-                                                unsigned int number_new_variables) override;
+      bool integer,
+      const std::string& name,
+      unsigned int number_new_variables) override;
 
-    std::vector<LinearProblemApi::IMipVariable*> addVariable(double lb,
-                                                double ub,
-                                                bool integer,
-                                                const std::string& name,
-                                                unsigned int number_new_variables) override;
-    std::vector<LinearProblemApi::IMipVariable*> addVariable(const std::vector<double>& lb,
-                                                double ub,
-                                                bool integer,
-                                                const std::string& name,
-                                                unsigned int number_new_variables) override;
-    std::vector<LinearProblemApi::IMipVariable*> addVariable(double lb,
-                                                const std::vector<double>& ub,
+    std::vector<LinearProblemApi::IMipVariable*> addVariable(
+      double lb,
+      double ub,
+      bool integer,
+      const std::string& name,
+      unsigned int number_new_variables) override;
+    std::vector<LinearProblemApi::IMipVariable*> addVariable(
+      const std::vector<double>& lb,
+      double ub,
+      bool integer,
+      const std::string& name,
+      unsigned int number_new_variables) override;
+    std::vector<LinearProblemApi::IMipVariable*> addVariable(
+      double lb,
+      const std::vector<double>& ub,
       bool integer,
       const std::string& name,
       unsigned int number_new_variables) override;
@@ -118,18 +127,21 @@ public:
     std::vector<LinearProblemApi::IMipConstraint*> addConstraint(
       const std::vector<double>& lb,
       const std::vector<double>& ub,
-                                                    const std::string& name,
-                                                    unsigned int number_new_constraints) override;
-    std::vector<LinearProblemApi::IMipConstraint*> addConstraint(double lb,
-                                                    double ub,
-                                                    const std::string& name,
-                                                    unsigned int number_new_constraints) override;
-    std::vector<LinearProblemApi::IMipConstraint*> addConstraint(const std::vector<double>& lb,
-                                                    double ub,
-                                                    const std::string& name,
-                                                    unsigned int number_new_constraints) override;
-    std::vector<LinearProblemApi::IMipConstraint*> addConstraint(double lb,
-                                                    const std::vector<double>& ub,
+      const std::string& name,
+      unsigned int number_new_constraints) override;
+    std::vector<LinearProblemApi::IMipConstraint*> addConstraint(
+      double lb,
+      double ub,
+      const std::string& name,
+      unsigned int number_new_constraints) override;
+    std::vector<LinearProblemApi::IMipConstraint*> addConstraint(
+      const std::vector<double>& lb,
+      double ub,
+      const std::string& name,
+      unsigned int number_new_constraints) override;
+    std::vector<LinearProblemApi::IMipConstraint*> addConstraint(
+      double lb,
+      const std::vector<double>& ub,
       const std::string& name,
       unsigned int number_new_constraints) override;
 

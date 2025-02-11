@@ -73,6 +73,7 @@ private:
     double offset_ = 0;
     std::map<std::string, double> coef_per_var_;
 };
+
 // time dependent parameter
 class TimeDependentLinearExpression
 {

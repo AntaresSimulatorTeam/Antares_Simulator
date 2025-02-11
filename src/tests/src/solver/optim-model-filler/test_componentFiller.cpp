@@ -185,8 +185,9 @@ void LinearProblemBuildingFixture::createModel(string modelId,
     models[modelId] = move(model);
 }
 
-void LinearProblemBuildingFixture::createComponent(const string& modelId,
-                                                   const string& componentId,
+void LinearProblemBuildingFixture::createComponent(
+  const string& modelId,
+  const string& componentId,
   map<string, Visitors::ContextParameter> parameterValues)
 {
     BOOST_CHECK_NO_THROW(models.at(modelId));
