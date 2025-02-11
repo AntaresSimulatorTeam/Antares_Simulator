@@ -53,8 +53,8 @@ BOOST_FIXTURE_TEST_SUITE(_Component_, ComponentBuilderCreationFixture)
 std::pair<std::string, Antares::Expressions::Visitors::ContextParameter>
 build_context_parameter_with(const std::string& id,
                              const std::string& value,
-                             const Antares::Expressions::Visitors::ParamaterType& type = Antares::
-                               Expressions::Visitors::ParamaterType::CONSTANT)
+                             const Antares::Expressions::Visitors::ParameterType& type = Antares::
+                               Expressions::Visitors::ParameterType::CONSTANT)
 {
     return {id, {.id = id, .type = type, .value = value}};
 }

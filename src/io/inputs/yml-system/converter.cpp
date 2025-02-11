@@ -109,8 +109,8 @@ static SystemModel::Component createComponent(const YmlSystem::Component& c,
                                Expressions::Visitors::ContextParameter{
                                  .id = id,
                                  .type = type == "constant" // TODO apply tolower ?
-                                           ? Expressions::Visitors::ParamaterType::CONSTANT
-                                           : Expressions::Visitors::ParamaterType::TIMESERIE,
+                                           ? Expressions::Visitors::ParameterType::CONSTANT
+                                           : Expressions::Visitors::ParameterType::TIMESERIE,
                                  .value = value});
     }
 

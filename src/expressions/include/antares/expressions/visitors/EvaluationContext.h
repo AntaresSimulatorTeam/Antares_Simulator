@@ -11,7 +11,7 @@ class ILinearProblemData;
 
 namespace Antares::Expressions::Visitors
 {
-enum class ParamaterType : unsigned int
+enum class ParameterType : unsigned int
 {
     CONSTANT = 0,
     TIMESERIE = 1
@@ -21,7 +21,7 @@ enum class ParamaterType : unsigned int
 struct ContextParameter
 {
     std::string id;
-    ParamaterType type;
+    ParameterType type;
     std::string value;
 };
 
@@ -75,6 +75,9 @@ public:
                              const std::string& scenarioGroup,
                              const unsigned scenario,
                              unsigned int hour) const;
+
+    ParameterType getParameterType(const std::string& key) const;
+    ContextParameter getParameter(const std::string& key) const;
 
 private:
     /**

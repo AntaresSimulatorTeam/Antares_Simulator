@@ -60,7 +60,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal, MyDummyFixture)
 std::pair<std::string, ContextParameter> build_context_parameter_with(
   const std::string& id,
   const std::string& value,
-  const ParamaterType& type = ParamaterType::CONSTANT)
+  const ParameterType& type = ParameterType::CONSTANT)
 {
     return {id, {.id = id, .type = type, .value = value}};
 }

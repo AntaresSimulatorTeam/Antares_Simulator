@@ -97,7 +97,16 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const VariableN
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const ParameterNode* node)
 {
-    if (node->timeIndex() == Expressions::Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
+    const auto systemParameter = context_.getParameter(node->value());
+    if (node->timeIndex() == Expressions::Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
+        && systemParameter.type != Expressions::Visitors::ParameterType::CONSTANT)
+    {
+        // TODO
+        throw std::invalid_argument(
+          "Parameter " + node->value()
+          + " is declared constant in time and scenario in library but not in system");
+    }
+    else if (systemParameter.type == Expressions::Visitors::ParameterType::CONSTANT)
     {
         return TimeDependentLinearExpression(
           dataSeriesKeys_.timeSteps,

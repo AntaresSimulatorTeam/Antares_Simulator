@@ -41,4 +41,14 @@ double EvaluationContext::getParameterValue(const std::string& key,
 {
     return data_.getData(system_parameters_.at(key).value, scenarioGroup, scenario, hour);
 }
+
+ParameterType EvaluationContext::getParameterType(const std::string& key) const
+{
+    return system_parameters_.at(key).type;
+}
+
+ContextParameter EvaluationContext::getParameter(const std::string& key) const
+{
+    return system_parameters_.at(key);
+}
 } // namespace Antares::Expressions::Visitors
