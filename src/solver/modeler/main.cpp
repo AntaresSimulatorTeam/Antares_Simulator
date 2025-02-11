@@ -77,7 +77,7 @@ public:
           "load",
           number_of_timeStep);
         std::vector<double> myTimeSeries(timeSteps.begin(), timeSteps.end());
-        std::iota(myTimeSeries.begin(), myTimeSeries.end(), 0.);
+        // std::iota(myTimeSeries.begin(), myTimeSeries.end(), 0.);
         time_series->add(myTimeSeries);
         dummy_data.addScenarioGroup(scenarionGroup, {0, scenario});
         dummy_data.addDataSeries(std::move(time_series));

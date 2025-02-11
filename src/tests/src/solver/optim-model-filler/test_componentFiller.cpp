@@ -134,7 +134,7 @@ struct LinearProblemBuildingFixture
 
     void buildLinearProblem()
     {
-        FillContext time_scenario_ctx = {0, 0, {}};
+        FillContext time_scenario_ctx = {0, 0, {.timeSteps = {0}}};
         buildLinearProblem(time_scenario_ctx);
     }
 };
@@ -469,7 +469,9 @@ BOOST_AUTO_TEST_CASE(ct_with_ten_vars__pb_contains_ten_ct)
                 {{"ct1", ct_node}});
     createComponent("model", "componentToto");
     constexpr unsigned int last_time_step = 9;
-    FillContext ctx{0, last_time_step, {}};
+    std::vector<unsigned int> timeSteps(last_time_step + 1);
+    std::ranges::generate(timeSteps, [i = 0]() mutable { return i++; });
+    FillContext ctx{0, last_time_step, {.timeSteps = timeSteps}};
     buildLinearProblem(ctx);
     const auto nb_var = ctx.getNumberOfTimestep(); // = 10
 
