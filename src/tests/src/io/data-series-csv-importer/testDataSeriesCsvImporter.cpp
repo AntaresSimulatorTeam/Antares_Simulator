@@ -43,65 +43,57 @@ struct CsvCreationFixture
         filesystem::create_directories(temp_path);
     }
 
-    filesystem::path writeFile(string filename, string content);
+    void writeFile(string filename, string content);
 };
 
-filesystem::path CsvCreationFixture::writeFile(const string filename, const string content)
+void CsvCreationFixture::writeFile(const string filename, const string content)
 {
     auto filepath = temp_path / (filename);
     std::ofstream outfile(filepath);
     outfile << content;
     outfile.close();
-    return filepath;
 }
 
 BOOST_FIXTURE_TEST_SUITE(_DataSeriesImport_OneCsvFile_, CsvCreationFixture)
 
-BOOST_AUTO_TEST_CASE(files_does_not_exist)
-{
-    BOOST_CHECK_EXCEPTION(TimeSeriesSetImporter::importFromFile(temp_path / "dummy_123.tsv"),
-                          std::invalid_argument,
-                          checkMessage("Could not open file dummy_123.tsv"));
-}
-
 BOOST_AUTO_TEST_CASE(inconsistent_columns)
 {
-    auto path = writeFile("wrong.csv", "1;2\n3");
-    BOOST_CHECK_EXCEPTION(TimeSeriesSetImporter::importFromFile(path, ';'),
+    writeFile("wrong.csv", "1;2\n3");
+    BOOST_CHECK_EXCEPTION(DataSeriesRepoImporter::importFromDirectory(temp_path, ";"),
                           std::invalid_argument,
                           checkMessage("wrong.csv: rows have inconsistent number of columns"));
 }
 
 BOOST_AUTO_TEST_CASE(inconsistent_rows)
 {
-    auto path = writeFile("wrong2.csv", "1;2\n;3");
-    BOOST_CHECK_EXCEPTION(TimeSeriesSetImporter::importFromFile(path, ';'),
+    writeFile("wrong2.csv", "1;2\n;3");
+    BOOST_CHECK_EXCEPTION(DataSeriesRepoImporter::importFromDirectory(temp_path, ";"),
                           std::invalid_argument,
                           checkMessage("wrong2.csv: columns have inconsistent number of rows"));
 }
 
 BOOST_AUTO_TEST_CASE(not_a_number)
 {
-    auto path = writeFile("wrong.csv", "1;2\nXy;3");
-    BOOST_CHECK_EXCEPTION(TimeSeriesSetImporter::importFromFile(path, ';'),
+    writeFile("wrong.csv", "1;2\nXy;3");
+    BOOST_CHECK_EXCEPTION(DataSeriesRepoImporter::importFromDirectory(temp_path, ";"),
                           std::invalid_argument,
                           checkMessage("wrong.csv: \"Xy\" is not a number"));
 }
 
 BOOST_AUTO_TEST_CASE(empty_line)
 {
-    auto path = writeFile("wrong.csv", "1;2\n\n3;4");
-    BOOST_CHECK_EXCEPTION(TimeSeriesSetImporter::importFromFile(path, ';'),
+    writeFile("wrong.csv", "1;2\n\n3;4");
+    BOOST_CHECK_EXCEPTION(DataSeriesRepoImporter::importFromDirectory(temp_path, ";"),
                           std::invalid_argument,
                           checkMessage("wrong.csv: empty line in the middle of the file"));
 }
 
 BOOST_AUTO_TEST_CASE(empty_file)
 {
-    auto path = writeFile("empty.csv", "");
-    auto timeSeriesSet = TimeSeriesSetImporter::importFromFile(path);
-    BOOST_CHECK_EQUAL(timeSeriesSet.name(), "empty");
-    BOOST_CHECK_EXCEPTION(timeSeriesSet.getData(0, 0),
+    writeFile("empty.csv", "");
+    auto repo = DataSeriesRepoImporter::importFromDirectory(temp_path);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("empty").name(), "empty");
+    BOOST_CHECK_EXCEPTION(repo.getDataSeries("empty").getData(0, 0),
                           TimeSeriesSet::Empty,
                           checkMessage(
                             "TS set 'empty' : empty, requesting a value makes no sense"));
@@ -109,63 +101,82 @@ BOOST_AUTO_TEST_CASE(empty_file)
 
 BOOST_AUTO_TEST_CASE(one_line_one_column)
 {
-    auto path = writeFile("one.tsv", "138.583");
-    auto timeSeriesSet = TimeSeriesSetImporter::importFromFile(path);
-    BOOST_CHECK_EQUAL(timeSeriesSet.name(), "one");
-    BOOST_CHECK_EQUAL(timeSeriesSet.getData(0, 0), 138.583);
-    BOOST_CHECK_EXCEPTION(timeSeriesSet.getData(1, 0),
+    writeFile("one.tsv", "138.583");
+    auto repo = DataSeriesRepoImporter::importFromDirectory(temp_path);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("one").name(), "one");
+    BOOST_CHECK_EQUAL(repo.getDataSeries("one").getData(0, 0), 138.583);
+    BOOST_CHECK_EXCEPTION(repo.getDataSeries("one").getData(1, 0),
                           TimeSeriesSet::RankTooBig,
                           checkMessage("TS set 'one' : rank 1 exceeds TS set's width"));
-    BOOST_CHECK_EXCEPTION(timeSeriesSet.getData(0, 1),
+    BOOST_CHECK_EXCEPTION(repo.getDataSeries("one").getData(0, 1),
                           TimeSeriesSet::HourTooBig,
                           checkMessage("TS set 'one' : hour 1 exceeds TS set's height"));
 }
 
 BOOST_AUTO_TEST_CASE(one_line_two_columns)
 {
-    auto path = writeFile("one_by_two.csv", "123,456.789\n");
-    auto timeSeriesSet = TimeSeriesSetImporter::importFromFile(path, ',');
-    BOOST_CHECK_EQUAL(timeSeriesSet.name(), "one_by_two");
-    BOOST_CHECK_EQUAL(timeSeriesSet.getData(0, 0), 123);
-    BOOST_CHECK_EQUAL(timeSeriesSet.getData(1, 0), 456.789);
-    BOOST_CHECK_EXCEPTION(timeSeriesSet.getData(2, 0),
+    writeFile("one_by_two.csv", "123,456.789\n");
+    auto repo = DataSeriesRepoImporter::importFromDirectory(temp_path, ",");
+    BOOST_CHECK_EQUAL(repo.getDataSeries("one_by_two").name(), "one_by_two");
+    BOOST_CHECK_EQUAL(repo.getDataSeries("one_by_two").getData(0, 0), 123);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("one_by_two").getData(1, 0), 456.789);
+    BOOST_CHECK_EXCEPTION(repo.getDataSeries("one_by_two").getData(2, 0),
                           TimeSeriesSet::RankTooBig,
                           checkMessage("TS set 'one_by_two' : rank 2 exceeds TS set's width"));
-    BOOST_CHECK_EXCEPTION(timeSeriesSet.getData(0, 1),
+    BOOST_CHECK_EXCEPTION(repo.getDataSeries("one_by_two").getData(0, 1),
                           TimeSeriesSet::HourTooBig,
                           checkMessage("TS set 'one_by_two' : hour 1 exceeds TS set's height"));
 }
 
 BOOST_AUTO_TEST_CASE(two_lines_one_column)
 {
-    auto path = writeFile("two_by_one.tsv", "123\n20");
-    auto timeSeriesSet = TimeSeriesSetImporter::importFromFile(path);
-    BOOST_CHECK_EQUAL(timeSeriesSet.name(), "two_by_one");
-    BOOST_CHECK_EQUAL(timeSeriesSet.getData(0, 0), 123);
-    BOOST_CHECK_EQUAL(timeSeriesSet.getData(0, 1), 20);
-    BOOST_CHECK_EXCEPTION(timeSeriesSet.getData(1, 0),
+    writeFile("two_by_one.tsv", "123\n20");
+    auto repo = DataSeriesRepoImporter::importFromDirectory(temp_path);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("two_by_one").name(), "two_by_one");
+    BOOST_CHECK_EQUAL(repo.getDataSeries("two_by_one").getData(0, 0), 123);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("two_by_one").getData(0, 1), 20);
+    BOOST_CHECK_EXCEPTION(repo.getDataSeries("two_by_one").getData(1, 0),
                           TimeSeriesSet::RankTooBig,
                           checkMessage("TS set 'two_by_one' : rank 1 exceeds TS set's width"));
-    BOOST_CHECK_EXCEPTION(timeSeriesSet.getData(0, 2),
+    BOOST_CHECK_EXCEPTION(repo.getDataSeries("two_by_one").getData(0, 2),
                           TimeSeriesSet::HourTooBig,
                           checkMessage("TS set 'two_by_one' : hour 2 exceeds TS set's height"));
 }
 
 BOOST_AUTO_TEST_CASE(two_lines_two_columns)
 {
-    auto path = writeFile("two_by_two.csv", "1\t2\n3\t4");
-    auto timeSeriesSet = TimeSeriesSetImporter::importFromFile(path, '\t');
-    BOOST_CHECK_EQUAL(timeSeriesSet.name(), "two_by_two");
-    BOOST_CHECK_EQUAL(timeSeriesSet.getData(0, 0), 1);
-    BOOST_CHECK_EQUAL(timeSeriesSet.getData(0, 1), 3);
-    BOOST_CHECK_EQUAL(timeSeriesSet.getData(1, 0), 2);
-    BOOST_CHECK_EQUAL(timeSeriesSet.getData(1, 1), 4);
-    BOOST_CHECK_EXCEPTION(timeSeriesSet.getData(2, 1),
+    writeFile("two_by_two.csv", "1\t2\n3\t4");
+    auto repo = DataSeriesRepoImporter::importFromDirectory(temp_path);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("two_by_two").name(), "two_by_two");
+    BOOST_CHECK_EQUAL(repo.getDataSeries("two_by_two").getData(0, 0), 1);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("two_by_two").getData(0, 1), 3);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("two_by_two").getData(1, 0), 2);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("two_by_two").getData(1, 1), 4);
+    BOOST_CHECK_EXCEPTION(repo.getDataSeries("two_by_two").getData(2, 1),
                           TimeSeriesSet::RankTooBig,
                           checkMessage("TS set 'two_by_two' : rank 2 exceeds TS set's width"));
-    BOOST_CHECK_EXCEPTION(timeSeriesSet.getData(1, 2),
+    BOOST_CHECK_EXCEPTION(repo.getDataSeries("two_by_two").getData(1, 2),
                           TimeSeriesSet::HourTooBig,
                           checkMessage("TS set 'two_by_two' : hour 2 exceeds TS set's height"));
+}
+
+BOOST_AUTO_TEST_CASE(two_lines_three_columns_three_separators)
+{
+    writeFile("2x3.csv", "1\t2;3\n4,5\t6");
+    auto repo = DataSeriesRepoImporter::importFromDirectory(temp_path, "\t,;");
+    BOOST_CHECK_EQUAL(repo.getDataSeries("2x3").name(), "2x3");
+    BOOST_CHECK_EQUAL(repo.getDataSeries("2x3").getData(0, 0), 1);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("2x3").getData(0, 1), 4);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("2x3").getData(1, 0), 2);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("2x3").getData(1, 1), 5);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("2x3").getData(2, 0), 3);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("2x3").getData(2, 1), 6);
+    BOOST_CHECK_EXCEPTION(repo.getDataSeries("2x3").getData(3, 1),
+                          TimeSeriesSet::RankTooBig,
+                          checkMessage("TS set '2x3' : rank 3 exceeds TS set's width"));
+    BOOST_CHECK_EXCEPTION(repo.getDataSeries("2x3").getData(2, 2),
+                          TimeSeriesSet::HourTooBig,
+                          checkMessage("TS set '2x3' : hour 2 exceeds TS set's height"));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
