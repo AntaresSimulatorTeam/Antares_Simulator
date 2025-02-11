@@ -43,7 +43,7 @@ By convention, `year` start at 0 and `value` must be in interval [0, 1].
 
 #### Compatibility flag for hydro pmax coefficients
 
-In file settings/generaldata.ini, in section `other preferences`, add property `hydro-pmax-format` with possible values
+In file settings/generaldata.ini, in section `other preferences`, add property `hydro-pmax` with possible values
 `daily` (default, legacy) and `hourly` (new).
 
 Note: This flag allows to bypass the breaking change that took place in version 9.1 for hydro max powers. It is possible
