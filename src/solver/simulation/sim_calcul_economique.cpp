@@ -34,6 +34,8 @@
 using namespace Antares;
 using namespace Antares::Data;
 
+constexpr double LEVEL_TOLERANCE_MWH = 1.e-6;
+
 static void importShortTermStorages(
   const AreaList& areas,
   std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorageOut)
@@ -493,7 +495,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
               = problem.CaracteristiquesHydrauliques[k]
                   .NiveauInitialReservoir; /*for first 24-hour optim*/
             double nivInit = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
-            if (nivInit < -1e-6)
+            if (nivInit < -LEVEL_TOLERANCE_MWH)
             {
                 std::ostringstream msg;
                 msg << "Area " << area.name << ", week " << weekInTheYear + 1
@@ -501,7 +503,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                 throw FatalError(msg.str());
             }
 
-            if (nivInit > area.hydro.reservoirCapacity + 1e-6)
+            if (nivInit > area.hydro.reservoirCapacity + LEVEL_TOLERANCE_MWH)
             {
                 std::ostringstream msg;
                 msg << "Area " << area.name << ", week " << weekInTheYear + 1
