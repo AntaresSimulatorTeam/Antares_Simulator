@@ -38,13 +38,13 @@ namespace fs = std::filesystem;
 // =================
 // The fixture
 // =================
-struct Fixture
+struct CommonFixture
 {
     std::filesystem::path path;
     StudyLoadOptions options;
     StudyVersion version = StudyVersion::latest();
 
-    Fixture():
+    CommonFixture():
         tmp(fs::temp_directory_path()),
         hydroIni(tmp / "hydro.ini"),
         study(std::make_unique<Study>())
@@ -60,7 +60,7 @@ struct Fixture
         return east->hydro.LoadIniFile(*study, tmp) && west->hydro.LoadIniFile(*study, tmp);
     }
 
-    ~Fixture()
+    ~CommonFixture()
     {
         fs::remove(hydroIni);
     }
@@ -78,7 +78,7 @@ private:
     std::unique_ptr<Study> study;
 };
 
-void Fixture::writeValidFile()
+void CommonFixture::writeValidFile()
 {
     std::ofstream outfile(hydroIni);
     outfile <<
@@ -90,7 +90,7 @@ west = 2.31000
 east = true)";
 }
 
-void Fixture::writeInvalidFile()
+void CommonFixture::writeInvalidFile()
 {
     std::ofstream outfile(hydroIni);
     outfile <<
@@ -105,7 +105,7 @@ east = true)";
 
 BOOST_AUTO_TEST_SUITE(s)
 
-BOOST_FIXTURE_TEST_CASE(test_read_valid_file, Fixture)
+BOOST_FIXTURE_TEST_CASE(test_read_valid_file, CommonFixture)
 {
     writeValidFile();
     BOOST_CHECK(load());
@@ -113,7 +113,7 @@ BOOST_FIXTURE_TEST_CASE(test_read_valid_file, Fixture)
     BOOST_CHECK_EQUAL(west->hydro.overflowSpilledCostDifference, 2.31000);
 }
 
-BOOST_FIXTURE_TEST_CASE(test_read_invalid_file, Fixture)
+BOOST_FIXTURE_TEST_CASE(test_read_invalid_file, CommonFixture)
 {
     writeInvalidFile();
     BOOST_CHECK(!load());
