@@ -20,13 +20,13 @@
 */
 #include <algorithm>
 #include <fstream>
-#include <iterator>
-#include <utility>
+#include <ranges>
 #include <vector>
 
 #include <boost/algorithm/string.hpp>
 
 #include <antares/io/inputs/data-series-csv-importer/DataSeriesRepoImporter.h>
+#include <antares/optimisation/linear-problem-data-impl/timeSeriesSet.h>
 
 namespace Antares::IO::Inputs::DataSeriesCsvImporter
 {
@@ -129,6 +129,12 @@ static TimeSeriesSet importFromFile(const std::filesystem::path& path, std::stri
     return matrixToTimeSeriesSet(path.stem().string(), csvMatrix);
 }
 
+bool hasRightExtension(const std::filesystem::directory_entry& e)
+{
+    auto ext = e.path().extension();
+    return (ext == ".csv") || (ext == ".tsv");
+}
+
 DataSeriesRepository DataSeriesRepoImporter::importFromDirectory(const std::filesystem::path& path,
                                                                  std::string csvSeparators)
 {
@@ -136,19 +142,18 @@ DataSeriesRepository DataSeriesRepoImporter::importFromDirectory(const std::file
     {
         throw std::invalid_argument("Not a directory: " + path.string());
     }
+    using std::views::filter;
+    auto pathFilter = filter(static_cast<bool (*)(const std::filesystem::path&)>(
+                        &std::filesystem::is_regular_file))
+                      | filter(&hasRightExtension);
+
     DataSeriesRepository repo{};
-    for (const auto& entry: std::filesystem::directory_iterator(path))
+    for (auto paths = std::filesystem::directory_iterator{path};
+         const auto& entry: paths | pathFilter)
     {
-        if (!is_regular_file(entry))
-        {
-            continue;
-        }
-        if (entry.path().extension() == ".csv" || entry.path().extension() == ".tsv")
-        {
-            std::unique_ptr<IDataSeries> timeSeriesSet = std::make_unique<TimeSeriesSet>(
-              importFromFile(entry, csvSeparators));
-            repo.addDataSeries(std::move(timeSeriesSet));
-        }
+        std::unique_ptr<IDataSeries> timeSeriesSet = std::make_unique<TimeSeriesSet>(
+          importFromFile(entry, csvSeparators));
+        repo.addDataSeries(std::move(timeSeriesSet));
     }
     return repo;
 }

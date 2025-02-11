@@ -23,7 +23,6 @@
 #include <filesystem>
 
 #include <antares/optimisation/linear-problem-data-impl/dataSeriesRepo.h>
-#include <antares/optimisation/linear-problem-data-impl/timeSeriesSet.h>
 
 /**
  * Reads a DataSeriesRepo from a directory
