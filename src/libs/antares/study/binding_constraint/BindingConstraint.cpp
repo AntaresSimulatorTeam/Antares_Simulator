@@ -160,7 +160,7 @@ void BindingConstraint::weight(const AreaLink* lnk, double w)
 
 void BindingConstraint::weight(const ThermalCluster* cluster, double w)
 {
-    if (cluster && cluster->isActive())
+    if (cluster)
     {
         if (Math::Zero(w))
         {
@@ -196,7 +196,7 @@ void BindingConstraint::offset(const AreaLink* lnk, int o)
 
 void BindingConstraint::offset(const ThermalCluster* cluster, int o)
 {
-    if (cluster && cluster->isActive())
+    if (cluster)
     {
         if (Math::Zero(o))
         {
