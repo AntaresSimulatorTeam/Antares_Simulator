@@ -32,11 +32,11 @@ the simulation will fail with a warning. We recommend removing these properties 
       input/st-storage/series/<area id>/list.ini)
 
 - Added 5 optional timeseries for each STS in existing directory `input/st-storage/series/<area id>/<ST id>/`
-  - `cost-injection.txt`
-  - `cost-withdrawal.txt`
-  - `cost-level.txt`
-  - `cost-variation-injection.txt`
-  - `cost-variation-withdrawal.txt`
+	- `cost-injection.txt`
+	- `cost-withdrawal.txt`
+	- `cost-level.txt`
+	- `cost-variation-injection.txt`
+	- `cost-variation-withdrawal.txt`
 
 It is possible to provide only k of these time-series, for k=0..5. However, if present each file must contain either no value (same behavior as no file), or HOURS_PER_YEAR = 8760 coefficients in one column. These timeseries are located along existing series (rule-curves.txt, etc.).
 
@@ -59,7 +59,7 @@ In file settings/generaldata.ini, in new section `other preferences`, add new pr
 - `daily` (default, legacy) 
 - `hourly` (new).
 
-Note: This flag allows to bypass the breaking change that took place in version 9.1 for hydro max powers (see below). If flag is not specified or given value `daily`, the 8.8 format is used for hydro pmax time-series, consisting of a single file with 4 columns and 365 rows located in `input/hydro/common/capacity/maxpower_<area id>.txt`.
+Note: This flag allows to bypass the breaking change that was introduced in version 9.1 the representation of max hydro power (daily -> hourly, see below). If flag is not specified or given value `daily`, the 8.8 format will be used for hydro pmax time-series. For reference, this format consists of a single file with 4 columns and 365 rows located in `input/hydro/common/capacity/maxpower_<area id>.txt`.
 
 ### Output
 
