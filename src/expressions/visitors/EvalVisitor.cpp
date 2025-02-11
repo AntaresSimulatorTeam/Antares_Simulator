@@ -66,7 +66,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::DivisionNode* node)
     // {
     //     throw EvalVisitorDivisionException(left, right, "is not a finite number");
     // }
-        return dispatch(node->left()) / dispatch(node->right());
+    return dispatch(node->left()) / dispatch(node->right());
     // }
     // catch (const std::exception& ex)
     // {
