@@ -35,9 +35,8 @@ namespace Antares::Expressions::Visitors
 class EvalVisitorDivisionException: public std::runtime_error
 {
 public:
-    EvalVisitorDivisionException(const std::string& message);
+    EvalVisitorDivisionException(double left, double right, const std::string& message);
 };
-
 class EvalVisitorNotImplemented: public std::invalid_argument
 {
 public:
@@ -71,9 +70,37 @@ public:
         return applyOperator(right, std::multiplies<>());
     }
 
+    struct SafeDivides
+    {
+        double operator()(double lhs, double rhs) const
+        {
+            // if (rhs == 0.0)
+            // {
+            //     throw std::runtime_error("Division by zero in EvaluationResult.");
+            // }
+            double result{0.};
+            try
+            {
+                result = lhs / rhs;
+
+                if (!std::isfinite(result))
+                {
+                    throw EvalVisitorDivisionException(lhs, rhs, "is not a finite number");
+                }
+            }
+            catch (const std::exception& ex)
+            {
+                throw EvalVisitorDivisionException(lhs, rhs, ex.what());
+            }
+
+            return result;
+        }
+    };
+
     EvaluationResult operator/(const EvaluationResult& right) const
     {
-        return applyOperator(right, std::divides<>());
+        // return applyOperator(right, std::divides<>());
+        return applyOperator(right, SafeDivides{});
     }
 
     EvaluationResult operator-() const

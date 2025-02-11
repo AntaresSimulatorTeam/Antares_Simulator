@@ -59,19 +59,19 @@ EvaluationResult EvalVisitor::visit(const Nodes::DivisionNode* node)
     // double left = dispatch(node->left());
     // double right = dispatch(node->right());
     // double result = 0.;
-    try
-    {
-        // result = left / right;
-        // if (!std::isfinite(result))
-        // {
-        //     throw EvalVisitorDivisionException(left, right, "is not a finite number");
-        // }
+    // try
+    // {
+    // result = left / right;
+    // if (!std::isfinite(result))
+    // {
+    //     throw EvalVisitorDivisionException(left, right, "is not a finite number");
+    // }
         return dispatch(node->left()) / dispatch(node->right());
-    }
-    catch (const std::exception& ex)
-    {
-        throw EvalVisitorDivisionException(ex.what());
-    }
+    // }
+    // catch (const std::exception& ex)
+    // {
+    //     throw EvalVisitorDivisionException(ex.what());
+    // }
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::EqualNode* node)
@@ -151,8 +151,11 @@ std::string EvalVisitor::name() const
     return "EvalVisitor";
 }
 
-EvalVisitorDivisionException::EvalVisitorDivisionException(const std::string& message):
-    std::runtime_error("DivisionNode Error: " + message)
+EvalVisitorDivisionException::EvalVisitorDivisionException(double left,
+                                                           double right,
+                                                           const std::string& message):
+    std::runtime_error("DivisionNode: Error while evaluating : " + std::to_string(left) + "/"
+                       + std::to_string(right) + " " + message)
 {
 }
 
