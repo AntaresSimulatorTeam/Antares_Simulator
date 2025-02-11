@@ -11,6 +11,19 @@ class ILinearProblemData;
 
 namespace Antares::Expressions::Visitors
 {
+enum class ParamaterType : unsigned int
+{
+    CONSTANT = 0,
+    TIMESERIE = 1
+};
+
+// TODO this struct is exactly the same as the one in system.h
+struct ContextParameter
+{
+    std::string id;
+    ParamaterType type;
+    std::string value;
+};
 
 /**
  * @brief Represents the context for evaluating expressions.
@@ -32,7 +45,7 @@ public:
      * @param constant_parameters parameter values.
      * @param variables variable values.
      */
-    explicit EvaluationContext(std::map<std::string, std::string> system_parameters,
+    explicit EvaluationContext(std::map<std::string, ContextParameter> system_parameters,
                                std::map<std::string, double> variables,
                                Optimisation::LinearProblemApi::ILinearProblemData& data);
 
@@ -67,7 +80,7 @@ private:
     /**
      * @brief A map storing parameter values.
      */
-    std::map<std::string, std::string> system_parameters_;
+    std::map<std::string, ContextParameter> system_parameters_;
 
     /**
      * @brief A map storing variable values.

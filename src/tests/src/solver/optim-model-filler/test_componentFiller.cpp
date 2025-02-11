@@ -43,6 +43,15 @@ using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
 using namespace std;
 
+std::pair<std::string, Antares::Expressions::Visitors::ContextParameter>
+build_context_parameter_with(const std::string& id,
+                             const std::string& value,
+                             const Antares::Expressions::Visitors::ParamaterType& type = Antares::
+                               Expressions::Visitors::ParamaterType::CONSTANT)
+{
+    return {id, {.id = id, .type = type, .value = value}};
+}
+
 struct VariableData
 {
     string id;
@@ -90,7 +99,7 @@ struct LinearProblemBuildingFixture
 
     void createComponent(const string& modelId,
                          const string& componentId,
-                         map<string, std::string> parameterValues = {});
+                         map<string, Visitors::ContextParameter> parameterValues = {});
 
     Node* literal(double value)
     {
@@ -178,7 +187,7 @@ void LinearProblemBuildingFixture::createModel(string modelId,
 
 void LinearProblemBuildingFixture::createComponent(const string& modelId,
                                                    const string& componentId,
-                                                   map<string, std::string> parameterValues)
+  map<string, Visitors::ContextParameter> parameterValues)
 {
     BOOST_CHECK_NO_THROW(models.at(modelId));
     ComponentBuilder component_builder;
@@ -338,7 +347,10 @@ BOOST_AUTO_TEST_CASE(var_whose_bounds_are_parameters_given_to_component__problem
                 {"pmin", "pmax"},
                 {{"var1", ValueType::INTEGER, parameter("pmin"), parameter("pmax"), false, false}},
                 {});
-    createComponent("model", "componentToto", {{"pmin", "-3."}, {"pmax", "4."}});
+    createComponent("model",
+                    "componentToto",
+                    {build_context_parameter_with("pmin", "-3."),
+                     build_context_parameter_with("pmax", "4.")});
     buildLinearProblem();
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 1);
@@ -368,7 +380,9 @@ BOOST_AUTO_TEST_CASE(three_different_vars__exist)
     createModel("thermalClusterModel", {"pmin", "pmax", "nUnits"}, {var1, var2, var3}, {});
     createComponent("thermalClusterModel",
                     "thermalCluster1",
-                    {{"pmin", "100.248"}, {"pmax", "950.6784"}, {"nUnits", "17."}});
+                    {build_context_parameter_with("pmin", "100.248"),
+                     build_context_parameter_with("pmax", "950.6784"),
+                     build_context_parameter_with("nUnits", "17.")});
     buildLinearProblem();
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 3);
@@ -393,8 +407,8 @@ BOOST_AUTO_TEST_CASE(three_different_vars__exist)
 BOOST_AUTO_TEST_CASE(one_model_two_components__dont_clash)
 {
     createModelWithOneFloatVar("m1", {"ub"}, "var1", literal(-100), parameter("ub"), {});
-    createComponent("m1", "component_1", {{"ub", "15"}});
-    createComponent("m1", "component_2", {{"ub", "48"}});
+    createComponent("m1", "component_1", {build_context_parameter_with("ub", "15")});
+    createComponent("m1", "component_2", {build_context_parameter_with("ub", "48")});
     buildLinearProblem();
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 2);
@@ -539,7 +553,10 @@ BOOST_AUTO_TEST_CASE(ct_with_two_vars)
     createModel("my_new_model", params, {var1Data, var2Data}, {{"constraint1", ct_node}});
     createComponent("my_new_model",
                     "my_component",
-                    {{"param1", "-16"}, {"param2", "8"}, {"param3", "5"}, {"param4", "-3"}});
+                    {build_context_parameter_with("param1", "-16"),
+                     build_context_parameter_with("param2", "8"),
+                     build_context_parameter_with("param3", "5"),
+                     build_context_parameter_with("param4", "-3")});
     buildLinearProblem();
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 2);
@@ -659,7 +676,7 @@ BOOST_AUTO_TEST_CASE(one_var_with_param_objective)
     auto objective = multiply(negate(multiply(parameter("param"), parameter("param"))),
                               variable("x"));
     createModelWithOneFloatVar("model", {"param"}, "x", literal(-50), literal(-40), {}, objective);
-    createComponent("model", "componentA", {{"param", "5"}});
+    createComponent("model", "componentA", {build_context_parameter_with("param", "5")});
     buildLinearProblem();
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 1);

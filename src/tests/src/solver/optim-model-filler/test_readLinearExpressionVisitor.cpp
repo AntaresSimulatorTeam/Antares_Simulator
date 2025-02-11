@@ -57,12 +57,19 @@ BOOST_FIXTURE_TEST_CASE(visit_literal, MyDummyFixture)
     BOOST_CHECK_EQUAL(linear_expression.offset(), 5.);
     BOOST_CHECK(linear_expression.coefPerVar().empty());
 }
+std::pair<std::string, ContextParameter> build_context_parameter_with(
+  const std::string& id,
+  const std::string& value,
+  const ParamaterType& type = ParamaterType::CONSTANT)
+{
+    return {id, {.id = id, .type = type, .value = value}};
+}
 
 BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param, MyDummyFixture)
 {
     // 5 + param(3) = 8
     Node* sum = create<SumNode>(create<LiteralNode>(5.), create<ParameterNode>("param"));
-    EvaluationContext evaluation_context({{"param", "3."}}, {}, data);
+    EvaluationContext evaluation_context({{build_context_parameter_with("param", "3.")}}, {}, data);
     ReadLinearExpressionVisitor visitor(evaluation_context, {.timeSteps = {0}});
     auto linear_expression = visitor.dispatch(sum).GetLinearExpressions()[0];
     BOOST_CHECK_EQUAL(linear_expression.offset(), 8.);
@@ -75,7 +82,9 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var, MyDummyFixture)
     Node* product = create<MultiplicationNode>(create<LiteralNode>(7.),
                                                create<VariableNode>("var"));
     Node* sum = create<SumNode>(create<LiteralNode>(60.), create<ParameterNode>("param"), product);
-    EvaluationContext evaluation_context({{"param", "-5."}}, {}, data);
+    EvaluationContext evaluation_context({{build_context_parameter_with("param", "-5.")}},
+                                         {},
+                                         data);
     ReadLinearExpressionVisitor visitor(evaluation_context, {.timeSteps = {0}});
     auto linear_expression = visitor.dispatch(sum).GetLinearExpressions()[0];
     BOOST_CHECK_EQUAL(linear_expression.offset(), 55.);
@@ -127,7 +136,10 @@ BOOST_FIXTURE_TEST_CASE(visit_complex_expression, MyDummyFixture)
       create<MultiplicationNode>(create<LiteralNode>(6.), create<VariableNode>("var2")) // 6 * var2
     );
 
-    EvaluationContext evaluation_context({{"param1", "-2."}, {"param2", "8."}}, {}, data);
+    EvaluationContext evaluation_context({build_context_parameter_with("param1", "-2."),
+                                          build_context_parameter_with("param2", "8.")},
+                                         {},
+                                         data);
     ReadLinearExpressionVisitor visitor(evaluation_context, {.timeSteps = {0}});
     auto linear_expression = visitor.dispatch(big_sum).GetLinearExpressions()[0];
     BOOST_CHECK_EQUAL(linear_expression.offset(), 10.);

@@ -211,11 +211,19 @@ BOOST_FIXTURE_TEST_CASE(print_port_field_sum_node, MyDummyFixture)
     BOOST_CHECK_EQUAL(printed, "august.2024");
 }
 
+std::pair<std::string, ContextParameter> build_context_parameter_with(
+  const std::string& id,
+  const std::string& value,
+  const ParamaterType& type = ParamaterType::CONSTANT)
+{
+    return {id, {.id = id, .type = type, .value = value}};
+}
+
 BOOST_FIXTURE_TEST_CASE(evaluate_param, MyDummyFixture)
 {
     ParameterNode root("my-param", TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
     const std::string value = "221.3";
-    EvaluationContext context({{"my-param", value}}, {}, data);
+    EvaluationContext context({build_context_parameter_with("my-param", value)}, {}, data);
 
     EvalVisitor evalVisitor(context, {});
     const double eval = evalVisitor.dispatch(&root).value();

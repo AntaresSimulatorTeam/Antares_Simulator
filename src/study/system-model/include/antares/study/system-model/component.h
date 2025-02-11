@@ -22,6 +22,8 @@
 
 #include <map>
 
+#include <antares/expressions/visitors/EvaluationContext.h>
+
 #include "model.h"
 
 namespace Antares::Study::SystemModel
@@ -36,7 +38,7 @@ class ComponentData
 public:
     std::string id;
     const Model* model = nullptr;
-    std::map<std::string, std::string> parameter_values;
+    std::map<std::string, Expressions::Visitors::ContextParameter> parameter_values;
     std::string scenario_group_id;
 
     void reset()
@@ -67,7 +69,7 @@ public:
         return data_.model;
     }
 
-    const std::map<std::string, std::string>& getParameterValues() const
+    const std::map<std::string, Expressions::Visitors::ContextParameter>& getParameterValues() const
     {
         return data_.parameter_values;
     }
@@ -79,7 +81,7 @@ public:
             throw std::invalid_argument("Parameter '" + parameter_id + "' not found in component '"
                                         + data_.id + "'");
         }
-        return data_.parameter_values.at(parameter_id);
+        return data_.parameter_values.at(parameter_id).value;
     }
 
     std::string getScenarioGroupId() const
@@ -99,7 +101,8 @@ class ComponentBuilder
 public:
     ComponentBuilder& withId(std::string_view id);
     ComponentBuilder& withModel(const Model* model);
-    ComponentBuilder& withParameterValues(std::map<std::string, std::string> parameter_values);
+    ComponentBuilder& withParameterValues(
+      std::map<std::string, Expressions::Visitors::ContextParameter> parameter_values);
     ComponentBuilder& withScenarioGroupId(const std::string& scenario_group_id);
     Component build();
 
