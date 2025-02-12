@@ -102,6 +102,9 @@ bool BindingConstraintSaver::saveToEnv(EnvForSaving& env,
 
     // Exporting the matrix
     env.matrixFilename.clear() << bindingConstraint->timeSeriesFileName(env);
-    return bindingConstraint->RHSTimeSeries_.saveToCSVFile(env.matrixFilename.c_str(), 1, false, true);
+    return bindingConstraint->RHSTimeSeries_.saveToCSVFile(env.matrixFilename.c_str(),
+                                                           1,
+                                                           false,
+                                                           true);
 }
 } // namespace Antares::Data
