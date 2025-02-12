@@ -161,11 +161,6 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::load(En
                 bc->offset(clstr, o);
             }
 
-            if (!clstr->isActive())
-            {
-                bc->pEnabled = false;
-            }
-
             continue;
         }
     }
