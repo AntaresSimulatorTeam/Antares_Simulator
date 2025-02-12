@@ -1,5 +1,16 @@
 var NAVTREEINDEX27 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroStorage.html#a2b3c4b76f02fbd0a2c37359c94283420":[9,0,0,16,5,4,77,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardInflows.html":[9,0,0,16,5,4,78],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardInflows.html#a0fa1e77fa7a31811182aa7066f8f65ee":[9,0,0,16,5,4,78,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardInflows.html#af946dead58f6c82b804a984550cb4ee7":[9,0,0,16,5,4,78,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLMRViolations.html":[9,0,0,16,5,4,79],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLMRViolations.html#a2b5c3f7d8254b32c8109aab850ef1ca9":[9,0,0,16,5,4,79,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLMRViolations.html#a99cef817e7695c6c04c1b7d1b11328ba":[9,0,0,16,5,4,79,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLD.html":[9,0,0,16,5,4,80],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLD.html#a3524d342ae27f821668634679aba0a65":[9,0,0,16,5,4,80,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLD.html#a556c4f4512527eb45895e9197f972b99":[9,0,0,16,5,4,80,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLD__CSR.html":[9,0,0,16,5,4,81],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLD__CSR.html#a1ea9dbb09ca765da4ac100e8076fbee9":[9,0,0,16,5,4,81,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLP.html":[9,0,0,16,5,4,82],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLP.html#a7eab3014e287f95b7994c0131aa4129f":[9,0,0,16,5,4,82,0],
@@ -190,7 +201,7 @@ var NAVTREEINDEX27 =
 "structAntares_1_1Toolbox_1_1Filter_1_1ResultCaption.html":[9,0,0,19,1,11],
 "structAntares_1_1Toolbox_1_1Filter_1_1ResultNewInstance.html":[9,0,0,19,1,12],
 "structAntares_1_1UnitTests_1_1PredicateIdentity.html":[9,0,0,21,2],
-"structAntares_1_1VENTILATION__HYDRO__RESULTS__BY__AREA.html":[7,0,0,36],
+"structAntares_1_1VENTILATION__HYDRO__RESULTS__BY__AREA.html":[7,0,0,37],
 "structAntares_1_1VENTILATION__HYDRO__RESULTS__BY__AREA.html":[9,0,0,56],
 "structAntares_1_1Window_1_1Inspector_1_1Accumulator.html":[9,0,0,22,1,0],
 "structAntares_1_1Window_1_1Inspector_1_1AccumulatorCheck.html":[9,0,0,22,1,1],
@@ -238,16 +249,5 @@ var NAVTREEINDEX27 =
 "structAntares_1_1Window_1_1Inspector_1_1PLinkArea.html":[9,0,0,22,1,48],
 "structAntares_1_1Window_1_1Inspector_1_1PLinkColor.html":[9,0,0,22,1,49],
 "structAntares_1_1Window_1_1Inspector_1_1PLinkColor_1_1Color.html":[9,0,0,22,1,49,0],
-"structAntares_1_1Window_1_1Inspector_1_1PLinkComments.html":[9,0,0,22,1,50],
-"structAntares_1_1Window_1_1Inspector_1_1PLinkDisplayComments.html":[9,0,0,22,1,51],
-"structAntares_1_1Window_1_1Inspector_1_1PLinkFiltering.html":[9,0,0,22,1,52],
-"structAntares_1_1Window_1_1Inspector_1_1PLinkHurdlesCost.html":[9,0,0,22,1,53],
-"structAntares_1_1Window_1_1Inspector_1_1PLinkLoopFlow.html":[9,0,0,22,1,54],
-"structAntares_1_1Window_1_1Inspector_1_1PLinkPhaseShift.html":[9,0,0,22,1,55],
-"structAntares_1_1Window_1_1Inspector_1_1PLinkStyle.html":[9,0,0,22,1,56],
-"structAntares_1_1Window_1_1Inspector_1_1PLinkWidth.html":[9,0,0,22,1,57],
-"structAntares_1_1Window_1_1Inspector_1_1PRnClusterTSMode.html":[9,0,0,22,1,58],
-"structAntares_1_1Window_1_1Inspector_1_1PSimulationMode.html":[9,0,0,22,1,59],
-"structAntares_1_1Window_1_1Inspector_1_1PStudy1stJanuary.html":[9,0,0,22,1,60],
-"structAntares_1_1Window_1_1Inspector_1_1PStudyBuildingMode.html":[9,0,0,22,1,61]
+"structAntares_1_1Window_1_1Inspector_1_1PLinkComments.html":[9,0,0,22,1,50]
 };

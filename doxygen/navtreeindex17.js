@@ -1,5 +1,8 @@
 var NAVTREEINDEX17 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData.html":[9,0,0,16,5,6,0,5],
+"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html":[9,0,0,16,5,6,0,8],
+"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html#a02fc26267153c8dd7a1d55d4f2d63e9b":[9,0,0,16,5,6,0,8,0],
 "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html#a3922838022f051023e92a12d5a37aa5e":[9,0,0,16,5,6,0,8,1],
 "classAntares_1_1Solver_1_1Variable_1_1Results.html":[9,0,0,16,5,22],
 "classAntares_1_1Solver_1_1Variable_1_1Results.html#a3375b5d47c33bbc6ac7389704c9940c2":[9,0,0,16,5,22,3],
@@ -81,11 +84,11 @@ var NAVTREEINDEX17 =
 "classAntares_1_1Solver_1_1ZipWriteJob.html":[9,0,0,16,31],
 "classAntares_1_1Solver_1_1ZipWriter.html":[9,0,0,16,32],
 "classAntares_1_1Solver_1_1ZipWriter.html#a1aada9478675d3a460f1561be42a140e":[9,0,0,16,32,0],
-"classAntares_1_1State.html":[7,0,0,34],
+"classAntares_1_1State.html":[7,0,0,35],
 "classAntares_1_1State.html":[9,0,0,54],
 "classAntares_1_1Statistics_1_1LogsDumper.html":[9,0,0,17,0],
 "classAntares_1_1Statistics_1_1Updater.html":[9,0,0,17,1],
-"classAntares_1_1StudyUpdateLocker.html":[7,0,0,35],
+"classAntares_1_1StudyUpdateLocker.html":[7,0,0,36],
 "classAntares_1_1StudyUpdateLocker.html":[9,0,0,55],
 "classAntares_1_1Study_1_1SystemModel_1_1Component.html":[9,0,0,18,0,0],
 "classAntares_1_1Study_1_1SystemModel_1_1ComponentBuilder.html":[9,0,0,18,0,1],
@@ -246,8 +249,5 @@ var NAVTREEINDEX17 =
 "classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter.html#abc3efd4e48bbbf19839b0dcf859dfb6d":[9,0,0,19,1,0,10,3],
 "classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter.html#acd2e1574976867df4bbabae7680bb356":[9,0,0,19,1,0,10,10],
 "classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter.html#ad94672f42892c6ae0d87bfee75fdc5be":[9,0,0,19,1,0,10,11],
-"classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter.html#aee19dac715d08e6fa29f2287c908d13a":[9,0,0,19,1,0,10,1],
-"classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter.html#af07a1a016c4a73a62c6b68eb3b533083":[9,0,0,19,1,0,10,13],
-"classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter.html#afc40b6fad7ff9e503d703ee5dcc59df6":[9,0,0,19,1,0,10,8],
-"classAntares_1_1Toolbox_1_1Filter_1_1Week.html":[9,0,0,19,1,13]
+"classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter.html#aee19dac715d08e6fa29f2287c908d13a":[9,0,0,19,1,0,10,1]
 };

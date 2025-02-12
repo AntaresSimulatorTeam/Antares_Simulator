@@ -19,7 +19,7 @@ var searchData=
   ['finalstockexpression_16',['FinalStockExpression',['../classFinalStockExpression.html',1,'']]],
   ['finalstockexpressiondata_17',['FinalStockExpressionData',['../structFinalStockExpressionData.html',1,'']]],
   ['finalstockgroup_18',['FinalStockGroup',['../classFinalStockGroup.html',1,'']]],
-  ['fixture_19',['Fixture',['../structFixture.html',1,'']]],
+  ['fixture_19',['Fixture',['../classFixture.html',1,'']]],
   ['fixtureemptyproblem_20',['FixtureEmptyProblem',['../structFixtureEmptyProblem.html',1,'']]],
   ['fixturefeasibleproblem_21',['FixtureFeasibleProblem',['../structFixtureFeasibleProblem.html',1,'']]],
   ['fixturefull_22',['FixtureFull',['../structFixtureFull.html',1,'']]],

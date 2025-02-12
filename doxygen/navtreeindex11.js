@@ -1,5 +1,6 @@
 var NAVTREEINDEX11 =
 {
+"classAntares_1_1Data_1_1XCast.html#a240744a269ed67cb44095210d09bfdd4":[9,0,0,4,84,15],
 "classAntares_1_1Data_1_1XCast.html#a45cf83d40b900b21cdc7184a8c503e69":[9,0,0,4,84,12],
 "classAntares_1_1Data_1_1XCast.html#a529a98e256ca8b779ae00ff48da95cc5":[9,0,0,4,84,13],
 "classAntares_1_1Data_1_1XCast.html#a5405b02aedc965a25a743b9aeb24b9c9":[9,0,0,4,84,20],
@@ -198,11 +199,11 @@ var NAVTREEINDEX11 =
 "classAntares_1_1ExtSource_1_1Handler_1_1BuildContext.html#ad595d5490507f25caf0ee32e2121c3ac":[9,0,0,8,0,0,1],
 "classAntares_1_1ExtSource_1_1Handler_1_1BuildContext.html#ae636626919c90c5139c28d0a34b913d1":[9,0,0,8,0,0,0],
 "classAntares_1_1ExtSource_1_1Handler_1_1BuildContext.html#aea8f8f1d39614cfaaa1339206bdafee9":[9,0,0,8,0,0,3],
-"classAntares_1_1FatalError.html":[7,0,0,10],
+"classAntares_1_1FatalError.html":[7,0,0,11],
 "classAntares_1_1FatalError.html":[9,0,0,30],
-"classAntares_1_1FileTreeStudyLoader.html":[7,0,0,11],
+"classAntares_1_1FileTreeStudyLoader.html":[7,0,0,12],
 "classAntares_1_1FileTreeStudyLoader.html":[9,0,0,31],
-"classAntares_1_1FileTreeStudyLoader.html#aec874bace5d8216b2c11f0947d557019":[7,0,0,11,0],
+"classAntares_1_1FileTreeStudyLoader.html#aec874bace5d8216b2c11f0947d557019":[7,0,0,12,0],
 "classAntares_1_1FileTreeStudyLoader.html#aec874bace5d8216b2c11f0947d557019":[9,0,0,31,0],
 "classAntares_1_1Forms_1_1ApplWnd.html":[9,0,0,9,0],
 "classAntares_1_1Forms_1_1ApplWnd.html#a0302f49787d5b0f0c848598438024f3f":[9,0,0,9,0,31],
@@ -248,6 +249,5 @@ var NAVTREEINDEX11 =
 "classAntares_1_1Forms_1_1ApplWnd.html#adbf46159dd9dffb80d463fb010e556b7":[9,0,0,9,0,10],
 "classAntares_1_1Forms_1_1ApplWnd.html#af5c7a5288398258d77eca315c9d2a398":[9,0,0,9,0,32],
 "classAntares_1_1Forms_1_1ApplWnd.html#af6c362ac0ebf1a273d62607db1e01eff":[9,0,0,9,0,19],
-"classAntares_1_1Forms_1_1ApplWnd.html#af6e14c0939020acb268217be8610d7bf":[9,0,0,9,0,25],
-"classAntares_1_1Forms_1_1ApplWnd.html#af937605f1b728ad6c2669a106720d3a3":[9,0,0,9,0,38]
+"classAntares_1_1Forms_1_1ApplWnd.html#af6e14c0939020acb268217be8610d7bf":[9,0,0,9,0,25]
 };

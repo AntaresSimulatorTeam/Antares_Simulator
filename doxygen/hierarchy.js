@@ -252,6 +252,7 @@ var hierarchy =
     [ "CsrBindingConstraintHourData", "structCsrBindingConstraintHourData.html", null ],
     [ "CsrFlowDissociationData", "structCsrFlowDissociationData.html", null ],
     [ "Antares::Solver::Optimization::CsrQuadraticProblem", "classAntares_1_1Solver_1_1Optimization_1_1CsrQuadraticProblem.html", null ],
+    [ "CsvCreationFixture", "structCsvCreationFixture.html", null ],
     [ "CumulationConstraint", "classCumulationConstraint.html", [
       [ "InjectionCumulationConstraint", "classInjectionCumulationConstraint.html", null ],
       [ "NettingCumulationConstraint", "classNettingCumulationConstraint.html", null ],
@@ -279,6 +280,7 @@ var hierarchy =
       [ "Antares::Data::ScenarioBuilder::hydroLevelsData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html", null ]
     ] ],
     [ "Antares::Data::DataSeriesHydro", "classAntares_1_1Data_1_1DataSeriesHydro.html", null ],
+    [ "Antares::IO::Inputs::DataSeriesCsvImporter::DataSeriesRepoImporter", "classAntares_1_1IO_1_1Inputs_1_1DataSeriesCsvImporter_1_1DataSeriesRepoImporter.html", null ],
     [ "Antares::Optimisation::LinearProblemDataImpl::DataSeriesRepository", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository.html", null ],
     [ "Antares::Toolbox::Filter::Operator::DataType", "structAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1DataType.html", null ],
     [ "Antares::Date::DayInterval", "structAntares_1_1Date_1_1DayInterval.html", null ],
@@ -517,7 +519,7 @@ var hierarchy =
     [ "FirstDecoratorT", null, [
       [ "Antares::Solver::Variable::Results< FirstDecoratorT, DecoratorForSpatialAggregateT >", "classAntares_1_1Solver_1_1Variable_1_1Results.html", null ]
     ] ],
-    [ "Fixture", "structFixture.html", null ],
+    [ "Fixture", "classFixture.html", null ],
     [ "FixtureEmptyProblem", "structFixtureEmptyProblem.html", [
       [ "FixtureFeasibleProblem", "structFixtureFeasibleProblem.html", null ],
       [ "FixtureInfeasibleProblem", "structFixtureInfeasibleProblem.html", null ]

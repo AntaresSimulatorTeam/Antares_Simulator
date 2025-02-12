@@ -477,6 +477,9 @@ var annotated_dup =
       ] ],
       [ "IO", null, [
         [ "Inputs", null, [
+          [ "DataSeriesCsvImporter", "namespaceAntares_1_1IO_1_1Inputs_1_1DataSeriesCsvImporter.html", [
+            [ "DataSeriesRepoImporter", "classAntares_1_1IO_1_1Inputs_1_1DataSeriesCsvImporter_1_1DataSeriesRepoImporter.html", null ]
+          ] ],
           [ "ModelConverter", null, [
             [ "ConvertorVisitor", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ConvertorVisitor.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ConvertorVisitor" ],
             [ "NoParameterOrVariableWithThisName", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoParameterOrVariableWithThisName.html", null ],
@@ -1414,6 +1417,7 @@ var annotated_dup =
     [ "CsrBindingConstraintHourData", "structCsrBindingConstraintHourData.html", null ],
     [ "CsrFlowDissociation", "classCsrFlowDissociation.html", null ],
     [ "CsrFlowDissociationData", "structCsrFlowDissociationData.html", null ],
+    [ "CsvCreationFixture", "structCsvCreationFixture.html", null ],
     [ "CumulationConstraint", "classCumulationConstraint.html", null ],
     [ "DataFile", "classDataFile.html", "classDataFile" ],
     [ "DEMAND_FLEX_DOWN_POOL", "structDEMAND__FLEX__DOWN__POOL.html", null ],
@@ -1440,7 +1444,7 @@ var annotated_dup =
     [ "FinalStockExpression", "classFinalStockExpression.html", "classFinalStockExpression" ],
     [ "FinalStockExpressionData", "structFinalStockExpressionData.html", null ],
     [ "FinalStockGroup", "classFinalStockGroup.html", null ],
-    [ "Fixture", "structFixture.html", null ],
+    [ "Fixture", "classFixture.html", null ],
     [ "FixtureEmptyProblem", "structFixtureEmptyProblem.html", null ],
     [ "FixtureFeasibleProblem", "structFixtureFeasibleProblem.html", null ],
     [ "FixtureFull", "structFixtureFull.html", null ],

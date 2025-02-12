@@ -65,7 +65,7 @@ var searchData=
   ['fixgenrefreshforntc_62',['fixGenRefreshForNTC',['../classAntares_1_1Data_1_1Parameters.html#a8de0a85ffc9b17f484579b0d0435c4b3',1,'Antares::Data::Parameters']]],
   ['fixorientationforallinterconnections_63',['fixOrientationForAllInterconnections',['../classAntares_1_1Data_1_1AreaList.html#a8d39bfdd5dcea74fac7b674b1a408fd6',1,'Antares::Data::AreaList']]],
   ['fixrefreshintervals_64',['fixRefreshIntervals',['../classAntares_1_1Data_1_1Parameters.html#afeefe1610f75f63c01180b8a2d215eed',1,'Antares::Data::Parameters']]],
-  ['fixture_65',['Fixture',['../structFixture.html',1,'']]],
+  ['fixture_65',['Fixture',['../classFixture.html',1,'']]],
   ['fixtureemptyproblem_66',['FixtureEmptyProblem',['../structFixtureEmptyProblem.html',1,'']]],
   ['fixturefeasibleproblem_67',['FixtureFeasibleProblem',['../structFixtureFeasibleProblem.html',1,'']]],
   ['fixturefull_68',['FixtureFull',['../structFixtureFull.html',1,'']]],

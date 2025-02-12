@@ -1,5 +1,8 @@
 var NAVTREEINDEX15 =
 {
+"classAntares_1_1Solver_1_1LpsFromAntares.html":[9,0,0,16,19],
+"classAntares_1_1Solver_1_1NullResultWriter.html":[9,0,0,16,21],
+"classAntares_1_1Solver_1_1Optimization_1_1CsrQuadraticProblem.html":[9,0,0,16,2,0],
 "classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization.html":[9,0,0,16,2,2],
 "classAntares_1_1Solver_1_1Private_1_1Simulation_1_1CacheData.html":[9,0,0,16,3,0,0],
 "classAntares_1_1Solver_1_1Private_1_1Simulation_1_1CacheData.html#a16d2301564a42e83bb33d30978db1d20":[9,0,0,16,3,0,0,1],
@@ -246,8 +249,5 @@ var NAVTREEINDEX15 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCsr.html#a82f37d6949a97beea82b0bb36e52e4da":[9,0,0,16,5,4,25,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCsr.html#ada3c71d8294a42b983dac106338f4c93":[9,0,0,16,5,4,25,2],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgDataFactory.html":[9,0,0,16,5,4,27],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgUsualDataFactory.html":[9,0,0,16,5,4,29],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MiscGenMinusRowPSP.html":[9,0,0,16,5,4,30],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MiscGenMinusRowPSP.html#a106052a55e587b99ac0d741eabbe6f2c":[9,0,0,16,5,4,30,4],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MiscGenMinusRowPSP.html#a588213a79cbc53014bc6c8fc784f3687":[9,0,0,16,5,4,30,2]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgUsualDataFactory.html":[9,0,0,16,5,4,29]
 };

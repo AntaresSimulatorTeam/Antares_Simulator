@@ -14,6 +14,11 @@ var namespaces_dup =
         [ "StudyOpen", "namespaceAntares_1_1Dispatcher.html#ae0b031dfb682fa4710e119a0efd2fa14", null ],
         [ "Wait", "namespaceAntares_1_1Dispatcher.html#a7d529d349b513caf851b7a3594894cf8", null ]
       ] ],
+      [ "IO", null, [
+        [ "Inputs", null, [
+          [ "DataSeriesCsvImporter", "namespaceAntares_1_1IO_1_1Inputs_1_1DataSeriesCsvImporter.html", "namespaceAntares_1_1IO_1_1Inputs_1_1DataSeriesCsvImporter" ]
+        ] ]
+      ] ],
       [ "Optimisation", null, [
         [ "LinearProblemApi", "namespaceAntares_1_1Optimisation_1_1LinearProblemApi.html", "namespaceAntares_1_1Optimisation_1_1LinearProblemApi" ]
       ] ],
