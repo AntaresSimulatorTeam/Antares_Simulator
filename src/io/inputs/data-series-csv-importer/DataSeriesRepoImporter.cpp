@@ -27,6 +27,7 @@
 
 #include <antares/io/inputs/data-series-csv-importer/DataSeriesRepoImporter.h>
 #include <antares/optimisation/linear-problem-data-impl/timeSeriesSet.h>
+namespace fs = std::filesystem;
 
 namespace Antares::IO::Inputs::DataSeriesCsvImporter
 {
@@ -76,6 +77,7 @@ static std::vector<std::vector<double>> csvToMatrix(const std::filesystem::path&
     bool empty_line_found = false;
     while (std::getline(infile, line))
     {
+        boost::trim(line);
         if (line.empty())
         {
             empty_line_found = true;
@@ -143,16 +145,14 @@ DataSeriesRepository DataSeriesRepoImporter::importFromDirectory(const std::file
         throw std::invalid_argument("Not a directory: " + path.string());
     }
     using std::views::filter;
-    auto pathFilter = filter(static_cast<bool (*)(const std::filesystem::path&)>(
-                        &std::filesystem::is_regular_file))
+    auto pathFilter = filter(static_cast<bool (*)(const fs::path&)>(&fs::is_regular_file))
                       | filter(&hasRightExtension);
 
     DataSeriesRepository repo{};
     for (auto paths = std::filesystem::directory_iterator{path};
          const auto& entry: paths | pathFilter)
     {
-        std::unique_ptr<IDataSeries> timeSeriesSet = std::make_unique<TimeSeriesSet>(
-          importFromFile(entry, csvSeparators));
+        auto timeSeriesSet = std::make_unique<TimeSeriesSet>(importFromFile(entry, csvSeparators));
         repo.addDataSeries(std::move(timeSeriesSet));
     }
     return repo;
