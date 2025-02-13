@@ -109,11 +109,10 @@ EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
              timeStep <= dataSeriesKeys_.fillContext.getLastTimeStep();
              ++timeStep)
         {
-            params.emplace_back(
-              context_.getParameterValue(context_.getSystemParameterValue(node->value()),
-                                         dataSeriesKeys_.scenarioGroup,
-                                         dataSeriesKeys_.scenario,
-                                         timeStep));
+            params.emplace_back(context_.getParameterValue(node->value(),
+                                                           dataSeriesKeys_.scenarioGroup,
+                                                           dataSeriesKeys_.scenario,
+                                                           timeStep));
         }
         return EvaluationResult{params};
     }

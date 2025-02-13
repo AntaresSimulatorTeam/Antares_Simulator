@@ -30,8 +30,6 @@
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include <antares/solver/modeler/parameters/parseModelerParameters.h>
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
-#include "antares/optimisation/linear-problem-api/linearProblem.h"
-#include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
 
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares;
@@ -67,13 +65,9 @@ public:
 
         LinearProblemBuilder linear_problem_builder(fillers_ptr);
         LinearProblemData data(dataSeriesRepo);
-        // const auto number_of_timeStep = parameters.lastTimeStep - parameters.firstTimeStep + 1;
-        // std::vector<unsigned int> timeSteps(number_of_timeStep);
-        // std::ranges::generate(timeSteps, [i = parameters.firstTimeStep]() mutable { return i++;
-        // });
-
         FillContext dummy_time_scenario_ctx = {parameters.firstTimeStep, parameters.lastTimeStep};
         linear_problem_builder.build(pb, data, dummy_time_scenario_ctx);
+   
     }
 
 private:

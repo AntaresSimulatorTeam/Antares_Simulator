@@ -30,7 +30,8 @@ namespace Antares::IO::Inputs::YmlSystem
 struct Parameter
 {
     std::string id;
-    std::string type;
+    bool time_dependent;
+    bool scenario_dependent;
     std::string value;
 };
 
