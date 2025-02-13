@@ -20,12 +20,21 @@
  */
 
 #include <algorithm>
+#include <functional>
 #include <stdexcept>
 
 #include <antares/solver/optim-model-filler/LinearExpression.h>
 
 namespace Antares::Optimization
 {
+template<typename T>
+struct IdentityFunction
+{
+    const T& operator()(const T& t)
+    {
+        return t;
+    }
+};
 
 /**
  * Element-wise sum of two [string, double] maps, preceded an element-wise multiplication of the
@@ -36,21 +45,21 @@ namespace Antares::Optimization
  * @param rhs_multiplier The multiplier to apply to the right hand side map
  * @return The map resulting from the operation
  */
-template<typename Key, typename Value>
+template<typename Key, typename Value, typename UnaryOp = IdentityFunction<Value>>
 static std::map<Key, Value> add_maps(const std::map<Key, Value>& left,
                                      const std::map<Key, Value>& right,
-                                     double rhs_multiplier)
+                                     UnaryOp op = IdentityFunction<Value>{})
 {
     std::map result(left);
     for (auto [key, value]: right)
     {
         if (result.contains(key))
         {
-            result[key] += rhs_multiplier * value;
+            result[key] += op(value);
         }
         else
         {
-            result[key] = rhs_multiplier * value;
+            result[key] = op(value);
         }
     }
     return result;
@@ -82,19 +91,20 @@ LinearExpression::LinearExpression(double offset, std::map<std::string, double> 
 
 LinearExpression LinearExpression::operator+(const LinearExpression& other) const
 {
-    return {offset_ + other.offset_, add_maps(coef_per_var_, other.coef_per_var_, 1)};
+    return {offset_ + other.offset_, add_maps(coef_per_var_, other.coef_per_var_)};
 }
 
 LinearExpression& LinearExpression::operator+=(const LinearExpression& other)
 {
     this->offset_ += other.offset_;
-    this->coef_per_var_ = add_maps(coef_per_var_, other.coef_per_var_, 1);
+    this->coef_per_var_ = add_maps(coef_per_var_, other.coef_per_var_);
     return *this;
 }
 
 LinearExpression LinearExpression::operator-(const LinearExpression& other) const
 {
-    return {offset_ - other.offset_, add_maps(coef_per_var_, other.coef_per_var_, -1)};
+    return {offset_ - other.offset_,
+            add_maps(coef_per_var_, other.coef_per_var_, std::negate<double>())};
 }
 
 LinearExpression LinearExpression::operator*(const LinearExpression& other) const
@@ -122,7 +132,7 @@ LinearExpression LinearExpression::operator/(const LinearExpression& other) cons
     return LinearExpression(offset_ / other.offset_, scale_map(coef_per_var_, 1 / other.offset_));
 }
 
-LinearExpression LinearExpression::negate() const
+LinearExpression LinearExpression::operator-() const
 {
     return {-offset_, scale_map(coef_per_var_, -1)};
 }
@@ -157,7 +167,7 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator+(
 {
     // checkOtherLength(other);
 
-    return {add_maps(GetLinearExpressions(), other.GetLinearExpressions(), +1)};
+    return {add_maps(GetLinearExpressions(), other.GetLinearExpressions())};
     // const auto& linear_expressions = GetLinearExpressions();
     // const auto& other_linear_expressions = other.GetLinearExpressions();
     //
@@ -182,23 +192,23 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator-(
 {
     // checkOtherLength(other);
 
-    return {add_maps(GetLinearExpressions(), other.GetLinearExpressions(), -1)};
+    return {add_maps(GetLinearExpressions(), other.GetLinearExpressions(), std::negate<>())};
 
-    const auto& linear_expressions = GetLinearExpressions();
-    const auto& other_linear_expressions = other.GetLinearExpressions();
-    auto result(linear_expressions);
-    for (const auto& [timeStep, other_linear_expression]: other_linear_expressions)
-    {
-        if (result.contains(timeStep))
-        {
-            result[timeStep] = linear_expressions.at(timeStep) - other_linear_expression;
-        }
-        else
-        {
-            result[timeStep] = other_linear_expression;
-        }
-    }
-    return TimeDependentLinearExpression(std::move(result));
+    // const auto& linear_expressions = GetLinearExpressions();
+    // const auto& other_linear_expressions = other.GetLinearExpressions();
+    // auto result(linear_expressions);
+    // for (const auto& [timeStep, other_linear_expression]: other_linear_expressions)
+    // {
+    //     if (result.contains(timeStep))
+    //     {
+    //         result[timeStep] = linear_expressions.at(timeStep) - other_linear_expression;
+    //     }
+    //     else
+    //     {
+    //         result[timeStep] = other_linear_expression;
+    //     }
+    // }
+    // return TimeDependentLinearExpression(std::move(result));
 }
 
 TimeDependentLinearExpression TimeDependentLinearExpression::operator*(
@@ -235,7 +245,7 @@ TimeDependentLinearExpression TimeDependentLinearExpression::negate() const
     std::map<unsigned int, LinearExpression> result;
     for (size_t i = 0; i < linear_expressions.size(); ++i)
     {
-        result[i] = linear_expressions.at(i).negate();
+        result[i] = -linear_expressions.at(i);
     }
     return TimeDependentLinearExpression(std::move(result));
 }

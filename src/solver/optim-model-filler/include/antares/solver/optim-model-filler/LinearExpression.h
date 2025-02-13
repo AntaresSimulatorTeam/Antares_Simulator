@@ -53,7 +53,7 @@ public:
     /// Only first expression can have non-zero coefficients, otherwise the result cannot be linear
     LinearExpression operator/(const LinearExpression& other) const;
     /// Multiply linear expression by -1
-    LinearExpression negate() const;
+    LinearExpression operator-() const;
 
     /// Get the offset
     double offset() const
