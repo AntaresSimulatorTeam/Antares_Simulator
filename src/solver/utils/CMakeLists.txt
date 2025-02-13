@@ -28,7 +28,7 @@ if (NOT MSVC)
 endif ()
 target_link_libraries(utils
         PUBLIC
-        ortools::ortools
+        $<LINK_LIBRARY:WHOLE_ARCHIVE,ortools::ortools>
         sirius_solver
         Antares::study
         Antares::result_writer

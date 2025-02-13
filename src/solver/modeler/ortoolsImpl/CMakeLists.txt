@@ -26,7 +26,7 @@ target_link_libraries(${PROJ}
         Antares::modeler_api
         Antares::logs
         Antares::solverUtils
-        ortools::ortools
+		$<LINK_LIBRARY:WHOLE_ARCHIVE,ortools::ortools>
 )
 
 target_include_directories(${PROJ}

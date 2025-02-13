@@ -8,6 +8,6 @@ add_boost_test(tests-solver-utils
         INCLUDE
         "${CMAKE_SOURCE_DIR}/solver/utils"
         LIBS
-        ortools::ortools
+        $<LINK_LIBRARY:WHOLE_ARCHIVE,ortools::ortools>
         Antares::solverUtils
         test_utils_unit)
