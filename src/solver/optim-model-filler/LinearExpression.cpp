@@ -210,40 +210,43 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator-(
     // }
     // return TimeDependentLinearExpression(std::move(result));
 }
-
-TimeDependentLinearExpression TimeDependentLinearExpression::operator*(
-  const TimeDependentLinearExpression& other) const
+template<typename BinaryOperator>
+TimeDependentLinearExpression BinaryOpLinearExpression(
+  const std::map<unsigned int, LinearExpression>& left,
+  const std::map<unsigned int, LinearExpression>& right,
+  BinaryOperator op)
 {
-    //   checkOtherLength(other);
-
-    const auto& other_linear_expressions = other.GetLinearExpressions();
-    auto result(GetLinearExpressions());
-    for (const auto& [timeStep, other_linear_expression]: other_linear_expressions)
+    auto result(left);
+    for (const auto& [timeStep, other_linear_expression]: right)
     {
         if (result.contains(timeStep))
         {
-            result[timeStep] = result.at(timeStep) * other_linear_expression;
+            result[timeStep] = op(result.at(timeStep), other_linear_expression);
         }
         else
         {
             result[timeStep] = other_linear_expression;
         }
     }
-    return TimeDependentLinearExpression(std::move(result));
+    return {std::move(result)};
+}
+
+TimeDependentLinearExpression TimeDependentLinearExpression::operator*(
+  const TimeDependentLinearExpression& other) const
+{
+    //   checkOtherLength(other);
+    return BinaryOpLinearExpression(GetLinearExpressions(),
+                                    other.GetLinearExpressions(),
+                                    std::multiplies<>());
 }
 
 TimeDependentLinearExpression TimeDependentLinearExpression::operator/(
   const TimeDependentLinearExpression& other) const
 {
     // checkOtherLength(other);
-    const auto& linear_expressions = GetLinearExpressions();
-    const auto& other_linear_expressions = other.GetLinearExpressions();
-    std::map<unsigned int, LinearExpression> result;
-    for (size_t i = 0; i < linear_expressions.size(); ++i)
-    {
-        result[i] = linear_expressions.at(i) / other_linear_expressions.at(i);
-    }
-    return TimeDependentLinearExpression(std::move(result));
+    return BinaryOpLinearExpression(GetLinearExpressions(),
+                                    other.GetLinearExpressions(),
+                                    std::divides<>());
 }
 
 TimeDependentLinearExpression TimeDependentLinearExpression::negate() const
