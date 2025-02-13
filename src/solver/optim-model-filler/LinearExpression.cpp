@@ -141,7 +141,7 @@ TimeDependentLinearExpression::TimeDependentLinearExpression(
   const Optimisation::LinearProblemApi::FillContext& fillContext,
   const LinearExpression& linearExpression)
 {
-    for (auto timestep(fillContext.getFirstTimeStep()); timestep < fillContext.getLastTimeStep();
+    for (auto timestep(fillContext.getFirstTimeStep()); timestep <= fillContext.getLastTimeStep();
          ++timestep)
     {
         linearExpressions_[timestep] = linearExpression;
