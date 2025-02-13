@@ -246,9 +246,9 @@ Unless stated otherwise, all listed fields are mandatory.
 Example:
 ~~~yaml
 system:
-  - id: my_system
-  - description: my system is even greater!
-  - model-libraries: my_library_id, my_other_library_id
+  id: my_system
+  description: my system is even greater!
+  model-libraries: my_library_id, my_other_library_id
 ~~~
 
 - **id**: an ID for your system. Has no effect on the simulation.
