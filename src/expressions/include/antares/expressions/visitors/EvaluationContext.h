@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -78,6 +79,12 @@ public:
 
     ParameterType getParameterType(const std::string& key) const;
     ContextParameter getParameter(const std::string& key) const;
+
+    template<class T>
+    struct CouldNotEvaluateConstantParameter: T
+    {
+        using T::T;
+    };
 
 private:
     /**
