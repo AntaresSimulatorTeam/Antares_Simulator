@@ -49,7 +49,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const SumNode* 
     auto operands = node->getOperands();
     return std::accumulate(std::begin(operands),
                            std::end(operands),
-                           TimeDependentLinearExpression(dataSeriesKeys_.timeSteps),
+                           TimeDependentLinearExpression(dataSeriesKeys_.fillContext),
                            [this](TimeDependentLinearExpression sum, Node* operand)
                            { return sum + dispatch(operand); });
 }
@@ -91,7 +91,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const NegationN
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const VariableNode* node)
 {
-    return TimeDependentLinearExpression(dataSeriesKeys_.timeSteps,
+    return TimeDependentLinearExpression(dataSeriesKeys_.fillContext,
                                          LinearExpression(0, {{node->value(), 1}}));
 }
 
@@ -109,19 +109,20 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Parameter
     else if (systemParameter.type == Expressions::Visitors::ParameterType::CONSTANT)
     {
         return TimeDependentLinearExpression(
-          dataSeriesKeys_.timeSteps,
+          dataSeriesKeys_.fillContext,
           LinearExpression(context_.getSystemParameterValueAsDouble(node->value()), {}));
     }
     else // TODO for now considering only timedepend -- only
     {
-        const auto param_values = context_.getParameterValue(context_.getSystemParameterValue(
-                                                               node->value()),
+        const auto param_values = context_.getParameterValue(node->value(),
                                                              dataSeriesKeys_.scenarioGroup,
                                                              dataSeriesKeys_.scenario);
 
         std::map<unsigned int, LinearExpression> linearExpressions;
 
-        for (auto timeStep: dataSeriesKeys_.timeSteps)
+        for (auto timeStep = dataSeriesKeys_.fillContext.getFirstTimeStep();
+             timeStep <= dataSeriesKeys_.fillContext.getLastTimeStep();
+             ++timeStep)
         {
             linearExpressions[timeStep] = LinearExpression(param_values[timeStep], {});
         }
@@ -131,7 +132,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Parameter
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const LiteralNode* node)
 {
-    return TimeDependentLinearExpression(dataSeriesKeys_.timeSteps,
+    return TimeDependentLinearExpression(dataSeriesKeys_.fillContext,
                                          LinearExpression(node->value(), {}));
 }
 

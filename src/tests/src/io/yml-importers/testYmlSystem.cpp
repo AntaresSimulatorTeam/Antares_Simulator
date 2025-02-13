@@ -180,5 +180,5 @@ BOOST_AUTO_TEST_CASE(component_two_parameters)
     BOOST_CHECK_EQUAL(std::stod(param.value), 30);
     BOOST_CHECK_EQUAL(param2.id, "p_max");
     BOOST_CHECK_EQUAL(param2.type, "constant");
-    BOOST_CHECK_EQUAL(std::stod(param.value), 100);
+    BOOST_CHECK_EQUAL(std::stod(param2.value), 100);
 }

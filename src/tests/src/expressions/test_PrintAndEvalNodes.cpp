@@ -39,7 +39,10 @@ struct MyDummyFixture: Registry<Node>
 {
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
     EvaluationContext evaluationContext{{}, {}, data};
-    EvalVisitor evalVisitor{evaluationContext, {}};
+    Antares::Optimisation::LinearProblemApi::DataSeriesKeys keys{.fillContext = {0, 0},
+                                                                 .scenarioGroup = "",
+                                                                 .scenario = 0};
+    EvalVisitor evalVisitor{evaluationContext, keys};
 };
 
 BOOST_AUTO_TEST_CASE(print_single_literal)
@@ -226,7 +229,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param, MyDummyFixture)
     const std::string value = "221.3";
     EvaluationContext context({build_context_parameter_with("my-param", value)}, {}, data);
 
-    EvalVisitor evalVisitor(context, {});
+    EvalVisitor evalVisitor(context, keys);
     const double eval = evalVisitor.dispatch(&root).value();
 
     BOOST_CHECK_EQUAL(std::stod(value), eval);
@@ -238,7 +241,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_variable, MyDummyFixture)
     const double value = 221.3;
     EvaluationContext context({}, {{"my-variable", value}}, data);
 
-    EvalVisitor evalVisitor(context, {});
+    EvalVisitor evalVisitor(context, keys);
     const double eval = evalVisitor.dispatch(&root).value();
 
     BOOST_CHECK_EQUAL(value, eval);

@@ -25,6 +25,8 @@
 #include <string>
 #include <vector>
 
+#include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
+
 namespace Antares::Optimization
 {
 /**
@@ -78,10 +80,10 @@ private:
 class TimeDependentLinearExpression
 {
 public:
-    TimeDependentLinearExpression(const std::vector<unsigned int>& timesteps);
+    TimeDependentLinearExpression(const Optimisation::LinearProblemApi::FillContext& fillContext);
 
     // Construction from one LinearExpression, to be duplicated for all timestep
-    TimeDependentLinearExpression(const std::vector<unsigned int>& timesteps,
+    TimeDependentLinearExpression(const Optimisation::LinearProblemApi::FillContext& fillContext,
                                   const LinearExpression& linearExpression);
     TimeDependentLinearExpression(const std::map<unsigned, LinearExpression>& linearExpressions);
     // void checkOtherLength(const TimeDependentLinearExpression& other) const;

@@ -137,22 +137,21 @@ LinearExpression LinearExpression::operator-() const
     return {-offset_, scale_map(coef_per_var_, -1)};
 }
 
-TimeDependentLinearExpression::TimeDependentLinearExpression(const std::vector<unsigned>& timesteps)
+TimeDependentLinearExpression::TimeDependentLinearExpression(
+  const Optimisation::LinearProblemApi::FillContext& fillContext,
+  const LinearExpression& linearExpression)
 {
-    for (auto timestep: timesteps)
+    for (auto timestep(fillContext.getFirstTimeStep()); timestep < fillContext.getLastTimeStep();
+         ++timestep)
     {
-        linearExpressions_[timestep] = LinearExpression();
+        linearExpressions_[timestep] = linearExpression;
     }
 }
 
 TimeDependentLinearExpression::TimeDependentLinearExpression(
-  const std::vector<unsigned>& timesteps,
-  const LinearExpression& linearExpression)
+  const Optimisation::LinearProblemApi::FillContext& fillContext):
+    TimeDependentLinearExpression(fillContext, LinearExpression())
 {
-    for (auto timestep: timesteps)
-    {
-        linearExpressions_[timestep] = linearExpression;
-    }
 }
 
 TimeDependentLinearExpression::TimeDependentLinearExpression(
