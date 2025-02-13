@@ -215,12 +215,19 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator*(
   const TimeDependentLinearExpression& other) const
 {
     //   checkOtherLength(other);
-    const auto& linear_expressions = GetLinearExpressions();
+
     const auto& other_linear_expressions = other.GetLinearExpressions();
-    std::map<unsigned int, LinearExpression> result;
-    for (size_t i = 0; i < linear_expressions.size(); ++i)
+    auto result(GetLinearExpressions());
+    for (const auto& [timeStep, other_linear_expression]: other_linear_expressions)
     {
-        result[i] = linear_expressions.at(i) * other_linear_expressions.at(i);
+        if (result.contains(timeStep))
+        {
+            result[timeStep] = result.at(timeStep) * other_linear_expression;
+        }
+        else
+        {
+            result[timeStep] = other_linear_expression;
+        }
     }
     return TimeDependentLinearExpression(std::move(result));
 }
