@@ -21,20 +21,21 @@
 
 #include <fstream>
 
+#include <antares/io/inputs/data-series-csv-importer/DataSeriesRepoImporter.h>
 #include <antares/logs/logs.h>
+#include <antares/optimisation/linear-problem-api/linearProblem.h>
 #include <antares/optimisation/linear-problem-api/linearProblemBuilder.h>
 #include <antares/optimisation/linear-problem-data-impl/linearProblemData.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h>
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include <antares/solver/modeler/parameters/parseModelerParameters.h>
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
-#include "antares/optimisation/linear-problem-api/linearProblem.h"
-#include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
 
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares;
 using namespace Antares::Solver;
 using namespace Antares::Optimisation::LinearProblemApi;
+using namespace Antares::Optimisation::LinearProblemDataImpl;
 
 class SystemLinearProblem
 {
@@ -46,7 +47,9 @@ public:
 
     ~SystemLinearProblem() = default;
 
-    void Provide(ILinearProblem& pb, const ModelerParameters& parameters)
+    void Provide(ILinearProblem& pb,
+                 const ModelerParameters& parameters,
+                 DataSeriesRepository& dataSeriesRepo)
     {
         std::vector<std::unique_ptr<Optimization::ComponentFiller>> fillers;
         std::vector<LinearProblemFiller*> fillers_ptr;
@@ -61,30 +64,9 @@ public:
         }
 
         LinearProblemBuilder linear_problem_builder(fillers_ptr);
-        Optimisation::LinearProblemDataImpl::LinearProblemData dummy_data;
-
-        const auto number_of_timeStep = parameters.lastTimeStep - parameters.firstTimeStep + 1;
-        std::vector<unsigned int> timeSteps(number_of_timeStep);
-        std::ranges::generate(timeSteps, [i = parameters.firstTimeStep]() mutable { return i++; });
-        unsigned int scenario = 0;
-        std::string scenarionGroup = "group 1";
-        Optimisation::LinearProblemApi::DataSeriesKeys my_data_series_keys = {
-          .timeSteps = timeSteps,
-          .scenarioGroup = scenarionGroup,
-          .scenario = scenario};
-
-        auto time_series = std::make_unique<Optimisation::LinearProblemDataImpl::TimeSeriesSet>(
-          "load",
-          number_of_timeStep);
-        std::vector<double> myTimeSeries(timeSteps.begin(), timeSteps.end());
-        // std::iota(myTimeSeries.begin(), myTimeSeries.end(), 0.);
-        time_series->add(myTimeSeries);
-        dummy_data.addScenarioGroup(scenarionGroup, {0, scenario});
-        dummy_data.addDataSeries(std::move(time_series));
-        FillContext dummy_time_scenario_ctx = {parameters.firstTimeStep,
-                                               parameters.lastTimeStep,
-                                               my_data_series_keys};
-        linear_problem_builder.build(pb, dummy_data, dummy_time_scenario_ctx);
+        LinearProblemData data(dataSeriesRepo);
+        FillContext dummy_time_scenario_ctx = {parameters.firstTimeStep, parameters.lastTimeStep};
+        linear_problem_builder.build(pb, data, dummy_time_scenario_ctx);
     }
 
 private:
@@ -124,6 +106,18 @@ int main(int argc, const char** argv)
         logs.info() << "Libraries loaded";
         const auto system = LoadFiles::loadSystem(studyPath, libraries);
         logs.info() << "System loaded";
+        DataSeriesRepository dataSeriesRepository;
+        try
+        {
+            dataSeriesRepository = IO::Inputs::DataSeriesCsvImporter::DataSeriesRepoImporter::
+              importFromDirectory(studyPath / "input" / "data-series", "\t");
+            logs.info() << "Data-series loaded";
+        }
+        catch (const std::exception& e)
+        {
+            // Only warning, because data-series are not mandatory
+            logs.warning() << "Data series could not be imported: " << e.what();
+        }
         SystemLinearProblem system_linear_problem(system);
 
         auto outputPath = studyPath / "output";
@@ -141,7 +135,7 @@ int main(int argc, const char** argv)
         logs.info() << "linear problem of System loaded";
         OrtoolsLinearProblem ortools_linear_problem(true, parameters.solver);
 
-        system_linear_problem.Provide(ortools_linear_problem, parameters);
+        system_linear_problem.Provide(ortools_linear_problem, parameters, dataSeriesRepository);
 
         logs.info() << "Linear problem provided";
 

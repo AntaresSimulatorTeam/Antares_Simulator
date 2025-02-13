@@ -29,7 +29,7 @@
 #include "antares/io/inputs/yml-model/Library.h"
 
 using namespace Antares::Expressions;
-using namespace Antares::Solver;
+using namespace Antares::IO::Inputs;
 
 class ExpressionToNodeConvertorEmptyModel
 {
