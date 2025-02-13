@@ -36,9 +36,10 @@ namespace Antares::Optimization
  * @param rhs_multiplier The multiplier to apply to the right hand side map
  * @return The map resulting from the operation
  */
-static std::map<std::string, double> add_maps(const std::map<std::string, double>& left,
-                                              const std::map<std::string, double>& right,
-                                              double rhs_multiplier)
+template<typename Key, typename Value>
+static std::map<Key, Value> add_maps(const std::map<Key, Value>& left,
+                                     const std::map<Key, Value>& right,
+                                     double rhs_multiplier)
 {
     std::map result(left);
     for (auto [key, value]: right)
@@ -154,35 +155,48 @@ TimeDependentLinearExpression::TimeDependentLinearExpression(
 TimeDependentLinearExpression TimeDependentLinearExpression::operator+(
   const TimeDependentLinearExpression& other) const
 {
-    const auto& linear_expressions = GetLinearExpressions();
-    const auto& other_linear_expressions = other.GetLinearExpressions();
+    // checkOtherLength(other);
 
-    std::map result(linear_expressions);
-    for (auto [key, value]: other_linear_expressions)
-    {
-        if (result.contains(key))
-        {
-            result[key] += value;
-        }
-        else
-        {
-            result[key] = value;
-        }
-    }
-
-    return TimeDependentLinearExpression(std::move(result));
+    return {add_maps(GetLinearExpressions(), other.GetLinearExpressions(), +1)};
+    // const auto& linear_expressions = GetLinearExpressions();
+    // const auto& other_linear_expressions = other.GetLinearExpressions();
+    //
+    // std::map result(linear_expressions);
+    // for (auto [key, value]: other_linear_expressions)
+    // {
+    //     if (result.contains(key))
+    //     {
+    //         result[key] += value;
+    //     }
+    //     else
+    //     {
+    //         result[key] = value;
+    //     }
+    // }
+    //
+    // return TimeDependentLinearExpression(std::move(result));
 }
 
 TimeDependentLinearExpression TimeDependentLinearExpression::operator-(
   const TimeDependentLinearExpression& other) const
 {
     // checkOtherLength(other);
+
+    return {add_maps(GetLinearExpressions(), other.GetLinearExpressions(), -1)};
+
     const auto& linear_expressions = GetLinearExpressions();
     const auto& other_linear_expressions = other.GetLinearExpressions();
-    std::map<unsigned int, LinearExpression> result;
-    for (size_t i = 0; i < linear_expressions.size(); ++i)
+    auto result(linear_expressions);
+    for (const auto& [timeStep, other_linear_expression]: other_linear_expressions)
     {
-        result[i] = linear_expressions.at(i) - other_linear_expressions.at(i);
+        if (result.contains(timeStep))
+        {
+            result[timeStep] = linear_expressions.at(timeStep) - other_linear_expression;
+        }
+        else
+        {
+            result[timeStep] = other_linear_expression;
+        }
     }
     return TimeDependentLinearExpression(std::move(result));
 }
