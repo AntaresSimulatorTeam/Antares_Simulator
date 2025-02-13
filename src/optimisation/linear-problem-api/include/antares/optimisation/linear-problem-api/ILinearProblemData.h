@@ -6,10 +6,39 @@
 
 namespace Antares::Optimisation::LinearProblemApi
 {
+struct FillContext
+{
+    FillContext(unsigned first, unsigned last):
+        firstTimeStep(first),
+        lastTimeStep(last)
+    {
+    }
+
+    unsigned getFirstTimeStep() const
+    {
+        return firstTimeStep;
+    }
+
+    unsigned getLastTimeStep() const
+    {
+        return lastTimeStep;
+    }
+
+    std::vector<unsigned> scenariosSelected;
+
+    unsigned int getNumberOfTimestep() const
+    {
+        return lastTimeStep - firstTimeStep + 1;
+    }
+
+private:
+    unsigned firstTimeStep = 0;
+    unsigned lastTimeStep = 0;
+};
 
 struct DataSeriesKeys
 {
-    std::vector<unsigned int> timeSteps;
+    FillContext fillContext;
     std::string scenarioGroup;
     unsigned scenario;
 };

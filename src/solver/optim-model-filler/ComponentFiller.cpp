@@ -72,7 +72,11 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
                                                                {},
                                                                data);
 
-    Expressions::Visitors::EvalVisitor evaluator(evaluationContext, ctx.getDataSeriesKeys());
+    // TODO Optimisation::LinearProblemApi::DataSeriesKeys
+    Expressions::Visitors::EvalVisitor evaluator(evaluationContext,
+                                                 {.fillContext = ctx,
+                                                  .scenarioGroup = component_.getScenarioGroupId(),
+                                                  .scenario = 0});
     for (const auto& variable: component_.getModel()->Variables() | std::views::values)
     {
         const auto& lb = evaluator.dispatch(variable.LowerBound().RootNode());
@@ -160,7 +164,10 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
     Expressions::Visitors::EvaluationContext evaluationContext(component_.getParameterValues(),
                                                                {},
                                                                data);
-    ReadLinearConstraintVisitor visitor(evaluationContext, ctx.getDataSeriesKeys());
+    ReadLinearConstraintVisitor visitor(evaluationContext,
+                                        {.fillContext = ctx,
+                                         .scenarioGroup = component_.getScenarioGroupId(),
+                                         .scenario = 0});
     for (const auto& constraint: component_.getModel()->getConstraints() | std::views::values)
     {
         auto* root_node = constraint.expression().RootNode();
@@ -194,13 +201,13 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
     Expressions::Visitors::EvaluationContext evaluationContext(component_.getParameterValues(),
                                                                {},
                                                                data);
-    const auto& dataSerieKeys = ctx.getDataSeriesKeys();
     // TODO objective expression is not Timedependent
 
     ReadLinearExpressionVisitor visitor(evaluationContext,
-                                        {.timeSteps = {0},
-                                         .scenarioGroup = dataSerieKeys.scenarioGroup,
-                                         .scenario = dataSerieKeys.scenario});
+{.fillContext = {static_cast<unsigned int>(0),
+                                                         static_cast<unsigned>(0)},
+                                         .scenarioGroup = component_.getScenarioGroupId(),
+                                         .scenario = 0});
 
     auto linear_expression = visitor.dispatch(model->Objective().RootNode())
                                .GetLinearExpressions()[0];

@@ -25,6 +25,8 @@
 #include <string>
 #include <vector>
 
+#include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
+
 namespace Antares::Optimization
 {
 /**
@@ -53,7 +55,7 @@ public:
     /// Only first expression can have non-zero coefficients, otherwise the result cannot be linear
     LinearExpression operator/(const LinearExpression& other) const;
     /// Multiply linear expression by -1
-    LinearExpression negate() const;
+    LinearExpression operator-() const;
 
     /// Get the offset
     double offset() const
@@ -78,10 +80,10 @@ private:
 class TimeDependentLinearExpression
 {
 public:
-    TimeDependentLinearExpression(const std::vector<unsigned int>& timesteps);
+    TimeDependentLinearExpression(const Optimisation::LinearProblemApi::FillContext& fillContext);
 
     // Construction from one LinearExpression, to be duplicated for all timestep
-    TimeDependentLinearExpression(const std::vector<unsigned int>& timesteps,
+    TimeDependentLinearExpression(const Optimisation::LinearProblemApi::FillContext& fillContext,
                                   const LinearExpression& linearExpression);
     TimeDependentLinearExpression(const std::map<unsigned, LinearExpression>& linearExpressions);
     // void checkOtherLength(const TimeDependentLinearExpression& other) const;

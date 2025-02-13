@@ -65,21 +65,9 @@ public:
 
         LinearProblemBuilder linear_problem_builder(fillers_ptr);
         LinearProblemData data(dataSeriesRepo);
-
-        const auto number_of_timeStep = parameters.lastTimeStep - parameters.firstTimeStep + 1;
-        std::vector<unsigned int> timeSteps(number_of_timeStep);
-        std::ranges::generate(timeSteps, [i = parameters.firstTimeStep]() mutable { return i++; });
-        unsigned int scenario = 0;
-        std::string scenarionGroup = "group 1";
-        Optimisation::LinearProblemApi::DataSeriesKeys my_data_series_keys = {
-          .timeSteps = timeSteps,
-          .scenarioGroup = scenarionGroup,
-          .scenario = scenario};
-
-        FillContext dummy_time_scenario_ctx = {parameters.firstTimeStep,
-                                               parameters.lastTimeStep,
-                                               my_data_series_keys};
+        FillContext dummy_time_scenario_ctx = {parameters.firstTimeStep, parameters.lastTimeStep};
         linear_problem_builder.build(pb, data, dummy_time_scenario_ctx);
+   
     }
 
 private:

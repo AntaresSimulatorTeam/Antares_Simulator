@@ -49,7 +49,8 @@ struct MyDummyFixture: Registry<Node>
 {
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
     EvaluationContext evaluationContext{{}, {}, data};
-    EvalVisitor evalVisitor{evaluationContext, {}};
+    EvalVisitor evalVisitor{evaluationContext,
+                            {.fillContext = {0, 0}, .scenarioGroup = "", .scenario = 0}};
 };
 
 BOOST_FIXTURE_TEST_CASE(deep_tree_even, MyDummyFixture)

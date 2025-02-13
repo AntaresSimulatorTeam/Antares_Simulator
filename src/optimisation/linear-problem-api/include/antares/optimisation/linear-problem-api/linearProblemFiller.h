@@ -21,62 +21,13 @@
 
 #pragma once
 
-#include <memory>
-#include <unordered_map>
 
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 
-namespace Antares::Expressions::Visitors
-{
-enum class TimeIndex : unsigned int;
-}
-
-namespace Antares::Expressions::Nodes
-{
-class Node;
-}
-
 namespace Antares::Optimisation::LinearProblemApi
 {
-struct FillContext
-{
-    FillContext(unsigned first,
-                unsigned last,
-                Optimisation::LinearProblemApi::DataSeriesKeys dataSeriesKeys):
-        firstTimeStep(first),
-        lastTimeStep(last),
-        dataSeriesKeys(std::move(dataSeriesKeys))
-    {
-    }
 
-    unsigned getFirstTimeStep() const
-    {
-        return firstTimeStep;
-    }
-
-    unsigned getLastTimeStep() const
-    {
-        return lastTimeStep;
-    }
-
-    std::vector<unsigned> scenariosSelected;
-
-    unsigned int getNumberOfTimestep() const
-    {
-        return lastTimeStep - firstTimeStep + 1;
-    }
-
-    [[nodiscard]] Optimisation::LinearProblemApi::DataSeriesKeys getDataSeriesKeys() const
-    {
-        return dataSeriesKeys;
-    }
-
-private:
-    unsigned firstTimeStep = 0;
-    unsigned lastTimeStep = 0;
-    Optimisation::LinearProblemApi::DataSeriesKeys dataSeriesKeys;
-};
 
 class LinearProblemFiller
 {

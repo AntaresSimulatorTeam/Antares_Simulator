@@ -139,7 +139,7 @@ BOOST_AUTO_TEST_CASE(negate_linear_expression)
 {
     LinearExpression linearExpression(4., {{"var1", -5.}, {"var2", 6.}});
 
-    auto negative = linearExpression.negate();
+    auto negative = -linearExpression;
 
     BOOST_CHECK_EQUAL(negative.offset(), -4.);
     BOOST_CHECK_EQUAL(negative.coefPerVar().size(), 2);

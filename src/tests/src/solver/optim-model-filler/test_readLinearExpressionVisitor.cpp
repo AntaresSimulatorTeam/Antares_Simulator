@@ -42,7 +42,7 @@ struct MyDummyFixture: Registry<Node>
 {
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
     EvaluationContext evaluationContext{{}, {}, data};
-    ReadLinearExpressionVisitor visitor{evaluationContext, {.timeSteps = {0}}};
+    ReadLinearExpressionVisitor visitor{evaluationContext, {.fillContext = {0, 0}}};
 };
 
 BOOST_FIXTURE_TEST_CASE(name, MyDummyFixture)
@@ -71,7 +71,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param, MyDummyFixture)
     // 5 + param(3) = 8
     Node* sum = create<SumNode>(create<LiteralNode>(5.), create<ParameterNode>("param"));
     EvaluationContext evaluation_context({{build_context_parameter_with("param", "3.")}}, {}, data);
-    ReadLinearExpressionVisitor visitor(evaluation_context, {.timeSteps = {0}});
+    ReadLinearExpressionVisitor visitor(evaluation_context, {.fillContext = {0, 0}});
     auto linear_expression = visitor.dispatch(sum).GetLinearExpressions()[0];
     BOOST_CHECK_EQUAL(linear_expression.offset(), 8.);
     BOOST_CHECK(linear_expression.coefPerVar().empty());
@@ -86,7 +86,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var, MyDummyFixture)
     EvaluationContext evaluation_context({{build_context_parameter_with("param", "-5.")}},
                                          {},
                                          data);
-    ReadLinearExpressionVisitor visitor(evaluation_context, {.timeSteps = {0}});
+    ReadLinearExpressionVisitor visitor(evaluation_context, {.fillContext = {0, 0}});
     auto linear_expression = visitor.dispatch(sum).GetLinearExpressions()[0];
     BOOST_CHECK_EQUAL(linear_expression.offset(), 55.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
@@ -141,7 +141,7 @@ BOOST_FIXTURE_TEST_CASE(visit_complex_expression, MyDummyFixture)
                                           build_context_parameter_with("param2", "8.")},
                                          {},
                                          data);
-    ReadLinearExpressionVisitor visitor(evaluation_context, {.timeSteps = {0}});
+    ReadLinearExpressionVisitor visitor(evaluation_context, {.fillContext = {0, 0}});
     auto linear_expression = visitor.dispatch(big_sum).GetLinearExpressions()[0];
     BOOST_CHECK_EQUAL(linear_expression.offset(), 10.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 2);

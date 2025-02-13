@@ -134,7 +134,7 @@ struct LinearProblemBuildingFixture
 
     void buildLinearProblem()
     {
-        FillContext time_scenario_ctx = {0, 0, {.timeSteps = {0}}};
+        FillContext time_scenario_ctx = {0, 0};
         buildLinearProblem(time_scenario_ctx);
     }
 };
@@ -252,7 +252,7 @@ BOOST_AUTO_TEST_CASE(ten_timesteps_var_with_literal_bounds_to_filler__problem_co
                                true);
     createComponent("some_model", "some_component");
     constexpr unsigned int last_time_step = 9;
-    FillContext ctx{0, last_time_step, {}};
+    FillContext ctx{0, last_time_step};
     buildLinearProblem(ctx);
     const auto nb_var = ctx.getNumberOfTimestep(); // = 10
     BOOST_CHECK_EQUAL(pb->variableCount(), nb_var);
@@ -321,7 +321,7 @@ BOOST_AUTO_TEST_CASE(
     createComponent("m1", "component_1");
     createComponent("m2", "component_2");
     constexpr unsigned int last_time_step = 9;
-    FillContext ctx{0, last_time_step, {}};
+    FillContext ctx{0, last_time_step};
     buildLinearProblem(ctx);
     const auto nb_var = ctx.getNumberOfTimestep(); // = 10
 
@@ -472,7 +472,7 @@ BOOST_AUTO_TEST_CASE(ct_with_ten_vars__pb_contains_ten_ct)
     constexpr unsigned int last_time_step = 9;
     std::vector<unsigned int> timeSteps(last_time_step + 1);
     std::ranges::generate(timeSteps, [i = 0]() mutable { return i++; });
-    FillContext ctx{0, last_time_step, {.timeSteps = timeSteps}};
+    FillContext ctx{0, last_time_step};
     buildLinearProblem(ctx);
     const auto nb_var = ctx.getNumberOfTimestep(); // = 10
 
@@ -643,7 +643,7 @@ BOOST_AUTO_TEST_CASE(one_time_dependent_var_with_objective)
     createComponent("model", "componentA", {});
 
     constexpr unsigned int last_time_step = 9;
-    FillContext ctx{0, last_time_step, {}};
+    FillContext ctx{0, last_time_step};
     buildLinearProblem(ctx);
     const auto nb_var = ctx.getNumberOfTimestep(); // = 10
 

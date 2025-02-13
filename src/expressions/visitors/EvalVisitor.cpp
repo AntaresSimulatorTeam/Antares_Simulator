@@ -104,8 +104,10 @@ EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
     else
     {
         std::vector<double> params;
-        params.reserve(dataSeriesKeys_.timeSteps.size());
-        for (auto timeStep: dataSeriesKeys_.timeSteps)
+        params.reserve(dataSeriesKeys_.fillContext.getNumberOfTimestep());
+        for (auto timeStep = dataSeriesKeys_.fillContext.getFirstTimeStep();
+             timeStep <= dataSeriesKeys_.fillContext.getLastTimeStep();
+             ++timeStep)
         {
             params.emplace_back(context_.getParameterValue(node->value(),
                                                            dataSeriesKeys_.scenarioGroup,
