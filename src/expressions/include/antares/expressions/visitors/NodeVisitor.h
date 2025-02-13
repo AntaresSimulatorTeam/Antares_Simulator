@@ -72,7 +72,8 @@ struct NodeVisitsProvider
     {
         std::unordered_map<std::type_index, FunctionT> nodeDispatchFunctions;
         (
-          [&nodeDispatchFunctions] {
+          [&nodeDispatchFunctions]
+          {
               nodeDispatchFunctions[typeid(NodeTypes)] = &tryVisit<R,
                                                                    NodeVisitor<R, Args...>,
                                                                    NodeTypes>;
@@ -130,7 +131,7 @@ public:
         {
             return nodeVisitList.at(typeid(*node))(node, *this, args...);
         }
-        catch (std::exception&)
+        catch (std::exception& e)
         {
             log_.error("Antares::Expressions::Visitor: could not visit the node!");
             throw;

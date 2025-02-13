@@ -55,7 +55,8 @@ struct convert<Antares::IO::Inputs::YmlSystem::Parameter>
             return false;
         }
         rhs.id = node["id"].as<std::string>();
-        rhs.type = node["type"].as<std::string>();
+        rhs.time_dependent = node["time-dependent"].as<bool>();
+        rhs.scenario_dependent = node["scenario-dependent"].as<bool>();
         rhs.value = node["value"].as<std::string>();
         return true;
     }

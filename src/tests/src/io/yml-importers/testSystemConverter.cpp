@@ -72,7 +72,8 @@ BOOST_FIXTURE_TEST_CASE(full_model_system, LibraryObjects)
                   scenario-group: group-234
                   parameters:
                     - id: cost
-                      type: constant
+                      time-dependent: false
+                      scenario-dependent: false
                       value: 30
     )"s;
 
@@ -99,7 +100,8 @@ BOOST_FIXTURE_TEST_CASE(bad_param_name_in_component, LibraryObjects)
                   scenario-group: group-234
                   parameters:
                     - id: param_not_in_model
-                      type: constant
+                      time-dependent: false
+                      scenario-dependent: false
                       value: 30
     )"s;
 
@@ -154,7 +156,8 @@ BOOST_FIXTURE_TEST_CASE(bad_library_model_format, LibraryObjects)
                   scenario-group: group-234
                   parameters:
                     - id: cost
-                      type: constant
+                      time-dependent: false
+                      scenario-dependent: false
                       value: 30
     )"s;
 
@@ -242,10 +245,12 @@ BOOST_AUTO_TEST_CASE(Full_system_test)
               scenario-group: group-234
               parameters:
                 - id: cost
-                  type: constant
+                  time-dependent: false
+                  scenario-dependent: false
                   value: 30
                 - id: p_max
-                  type: constant
+                  time-dependent: false
+                  scenario-dependent: false
                   value: 100
 
             - id: D
@@ -253,7 +258,8 @@ BOOST_AUTO_TEST_CASE(Full_system_test)
               scenario-group: group-qsf
               parameters:
                 - id: demand
-                  type: constant
+                  time-dependent: false
+                  scenario-dependent: false
                   value: 100
     )"s;
 
