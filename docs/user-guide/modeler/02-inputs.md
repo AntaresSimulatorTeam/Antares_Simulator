@@ -312,7 +312,7 @@ components:
     - **scenario-dependent**: `true` or `false`, indicates whether the parameter changes depending on the simulated 
       scenario, or is the same for all scenarios. If the model parameter is not scenario-dependent, this can't be set to true.
     - **value**: the value of the parameter:
-        - If the parameter is constant, then this is a scalar expression, or the ID of a constant [data serie](#data-series) 
+        - If the parameter is constant, then this is a numerical value (using a data-series ID is not allowed in this case)
         - If the parameter is time-dependent, then this is the ID of a time-dependent [data serie](#data-series)
         - If the parameter is scenario-dependent, then this is the ID of a scenario-dependent [data serie](#data-series)
         - If the parameter is time and scenario-dependent, then this is the ID of a time-and-scenario-dependent [data serie](#data-series)
@@ -346,13 +346,6 @@ using tabs, and the character `.` represents the floating point.
 ### Naming
 TSV files inside the directory should respect the "XXX.tsv" or the "XXX.csv" naming template, where "XXX" is the ID of 
 the data-series. Thus, this ID **must be unique**, and is the one to be used in the [system file](#system-file).  
-
-### Constant series
-To define a constant series (neither time nor scenario dependent), simply write one value in the file.  
-Example file content:
-~~~
-345.3
-~~~
 
 ### Time-dependent series
 To define a time-dependent series, define a column vector, where every timestamp is represented by a row.  
