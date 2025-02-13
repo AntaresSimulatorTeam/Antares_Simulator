@@ -28,7 +28,7 @@
 #include <antares/study/system-model/system.h>
 
 using namespace std::string_literals;
-using namespace Antares::Solver;
+using namespace Antares::IO::Inputs;
 using namespace Antares::Study;
 
 BOOST_AUTO_TEST_CASE(empty_system)

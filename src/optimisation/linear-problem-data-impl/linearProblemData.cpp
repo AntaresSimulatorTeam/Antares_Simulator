@@ -40,7 +40,9 @@ double LinearProblemData::getData(const std::string& dataSetId,
                                   const unsigned scenario,
                                   const unsigned hour)
 {
-    unsigned rank = groupRepository_.getDataRank(scenarioGroup, scenario);
+    // TODO: use the following line to add scenario group support
+    // unsigned rank = groupRepository_.getDataRank(scenarioGroup, scenario);
+    unsigned rank = scenario;
     return dataSeriesRepository_.getDataSeries(dataSetId).getData(rank, hour);
 }
 

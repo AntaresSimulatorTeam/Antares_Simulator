@@ -34,6 +34,13 @@ namespace Antares::Optimisation::LinearProblemDataImpl
 class LinearProblemData: public LinearProblemApi::ILinearProblemData
 {
 public:
+    LinearProblemData() = default;
+
+    LinearProblemData(DataSeriesRepository& data_series_repository):
+        dataSeriesRepository_(std::move(data_series_repository))
+    {
+    }
+
     double getData(const std::string& dataSetId,
                    const std::string& scenarioGroup,
                    const unsigned scenario,

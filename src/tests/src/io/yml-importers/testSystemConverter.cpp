@@ -31,7 +31,7 @@
 #include "antares/study/system-model/library.h"
 
 using namespace std::string_literals;
-using namespace Antares::Solver;
+using namespace Antares::IO::Inputs;
 using namespace Antares::Study;
 
 struct LibraryObjects

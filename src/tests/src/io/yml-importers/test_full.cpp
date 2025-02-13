@@ -34,7 +34,7 @@
 #include "enum_operators.h"
 
 using namespace std::string_literals;
-using namespace Antares::Solver;
+using namespace Antares::IO::Inputs;
 using namespace Antares::Study;
 
 void checkParameter(const SystemModel::Parameter& parameter,
