@@ -24,7 +24,6 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/optim-model-filler/LinearExpression.h>
 #include <antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h>
-#include "antares/expressions/visitors/EvalVisitor.h"
 
 using namespace Antares::Expressions::Nodes;
 
