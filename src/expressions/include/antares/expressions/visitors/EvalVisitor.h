@@ -109,6 +109,7 @@ public:
     EvaluationResult operator-() const
     {
         return applyUnaryOperator(std::negate<>());
+        // return applyOperator(EvaluationResult{-1}, std::multiplies<>());
     }
 
     [[nodiscard]] double value() const
@@ -146,10 +147,15 @@ EvaluationResult EvaluationResult::applyOperator(const EvaluationResult& right, 
         && right.evaluationResultType == EvaluationResultType::CONSTANT)
     {
         result.value_ = op(value_, right.value_);
+        return result;
     }
-    else if (evaluationResultType == EvaluationResultType::CONSTANT)
+
+    result.evaluationResultType = EvaluationResultType::NOTCONSTANT;
+
+    if (evaluationResultType == EvaluationResultType::CONSTANT)
     {
         result.values_ = right.values_;
+
         for (double& v: result.values_)
         {
             v = op(value_, v);
@@ -158,6 +164,7 @@ EvaluationResult EvaluationResult::applyOperator(const EvaluationResult& right, 
     else if (right.evaluationResultType == EvaluationResultType::CONSTANT)
     {
         result.values_ = values_;
+
         for (double& v: result.values_)
         {
             v = op(v, right.value_);
@@ -166,11 +173,17 @@ EvaluationResult EvaluationResult::applyOperator(const EvaluationResult& right, 
     else if (values_.size() == right.values_.size())
     {
         result.values_ = values_;
+
         for (size_t i = 0; i < values_.size(); ++i)
         {
             result.values_[i] = op(values_[i], right.values_[i]);
         }
     }
+    // else throw exception?
+    // else
+    // {
+    //
+    // }
 
     return result;
 }
@@ -187,6 +200,7 @@ EvaluationResult EvaluationResult::applyUnaryOperator(Op op) const
     else
     {
         result.values_ = values_;
+        result.evaluationResultType = EvaluationResultType::NOTCONSTANT;
         for (double& v: result.values_)
         {
             v = op(v);
