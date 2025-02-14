@@ -292,10 +292,8 @@ void checkSolverExists(std::string solverName, const std::list<std::string> avai
 
 void checkForSolversExistence(Solver::Optimization::OptimizationOptions& solverOptions)
 {
-    checkSolverExists(solverOptions.linearSolver,
-                      getAvailableLinearSolverNames());
-    checkSolverExists(solverOptions.quadraticSolver,
-                      getAvailableQuadraticSolverNames());
+    checkSolverExists(solverOptions.linearSolver, getAvailableLinearSolverNames());
+    checkSolverExists(solverOptions.quadraticSolver, getAvailableQuadraticSolverNames());
 }
 
 void Settings::checkAndSetStudyFolder(const std::string& folder)

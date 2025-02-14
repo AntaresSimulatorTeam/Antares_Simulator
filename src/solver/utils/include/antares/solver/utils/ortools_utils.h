@@ -58,7 +58,6 @@ std::list<std::string> getAvailableLinearSolverNames();
  */
 std::string availableLinearSolversString();
 
-
 /*!
  *  \brief Returns a list of available ortools quadratic solver names on our side
  *
