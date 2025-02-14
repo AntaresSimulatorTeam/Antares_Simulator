@@ -23,6 +23,7 @@
 
 #include <yuni/yuni.h>
 
+#include <antares/correlation/correlation.h>
 #include <antares/study/xcast/xcast.h>
 
 namespace Antares::TSGenerator::XCast
