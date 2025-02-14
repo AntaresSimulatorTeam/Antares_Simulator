@@ -140,7 +140,7 @@ double applyOperation(double lhs, double rhs, BinaryOp op)
 }
 
 template<typename BinaryOp>
-double applyOperation(const std::vector<double>& lhs, double rhs, BinaryOp op)
+std::vector<double> applyOperation(const std::vector<double>& lhs, double rhs, BinaryOp op)
 {
     auto result(lhs);
     for (double& value: result)
@@ -151,7 +151,7 @@ double applyOperation(const std::vector<double>& lhs, double rhs, BinaryOp op)
 }
 
 template<typename BinaryOp>
-double applyOperation(double lhs, const std::vector<double>& rhs, BinaryOp op)
+std::vector<double> applyOperation(double lhs, const std::vector<double>& rhs, BinaryOp op)
 {
     auto result(rhs);
     for (double& value: result)
@@ -162,7 +162,7 @@ double applyOperation(double lhs, const std::vector<double>& rhs, BinaryOp op)
 }
 
 template<typename BinaryOp>
-double applyOperation(const std::vector<double>& lhs, const std::vector<double>& rhs, BinaryOp op)
+std::vector<double> applyOperation(const std::vector<double>& lhs, const std::vector<double>& rhs, BinaryOp op)
 {
     if (lhs.size() == rhs.size())
     {
@@ -191,7 +191,7 @@ EvaluationResult EvaluationResult::applyOperator(const EvaluationResult& right, 
 }
 
 template<typename UnaryOp>
-double applyOperation(const std::vector<double>& values, UnaryOp op)
+std::vector<double> applyOperation(const std::vector<double>& values, UnaryOp op)
 {
     auto result(values);
     for (double& v: result)
