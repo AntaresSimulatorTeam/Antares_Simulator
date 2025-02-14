@@ -25,6 +25,7 @@ set(TARGET_LIBS #No alias
         stdcxx
         StudyUtils
         utils
+        correlation
         path
         mersenne
         result_writer
