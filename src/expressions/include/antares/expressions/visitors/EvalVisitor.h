@@ -98,14 +98,12 @@ public:
 
     EvaluationResult operator/(const EvaluationResult& right) const
     {
-        // return evaluateBinaryOperation(right, std::divides<>());
         return evaluateBinaryOperation(right, SafeDivides{});
     }
 
     EvaluationResult operator-() const
     {
         return evaluateUnaryOperation(std::negate<>());
-        // return evaluateBinaryOperation(EvaluationResult{-1}, std::multiplies<>());
     }
 
     [[nodiscard]] std::variant<double, std::vector<double>> value() const
@@ -115,11 +113,19 @@ public:
 
     [[nodiscard]] double valueAsDouble() const
     {
+        if (!std::holds_alternative<double>(value_))
+        {
+            throw std::runtime_error("Expected a double but found a vector.");
+        }
         return std::get<double>(value_);
     }
 
     [[nodiscard]] std::vector<double> valuesAsVector() const
     {
+        if (!std::holds_alternative<std::vector<double>>(value_))
+        {
+            throw std::runtime_error("Expected a vector but found a double.");
+        }
         return std::get<std::vector<double>>(value_);
     }
 
