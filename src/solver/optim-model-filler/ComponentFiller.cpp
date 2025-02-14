@@ -85,8 +85,7 @@ public:
         if (lb.size() != count)
         {
             throw std::invalid_argument("requested " + std::to_string(count)
-                                        + " constraints but lb size = "
-                                        + std::to_string(lb.size()));
+                                        + " variables but lb size = " + std::to_string(lb.size()));
         }
 
         std::vector<Optimisation::LinearProblemApi::IMipVariable*> variables(count);
@@ -110,8 +109,7 @@ public:
         if (ub.size() != count)
         {
             throw std::invalid_argument("requested " + std::to_string(count)
-                                        + " constraints but ub size = "
-                                        + std::to_string(ub.size()));
+                                        + " variables but ub size = " + std::to_string(ub.size()));
         }
         std::vector<Optimisation::LinearProblemApi::IMipVariable*> variables(count);
         for (unsigned int i = first_index_; i <= last_index_; ++i)
@@ -135,7 +133,7 @@ public:
         if (lb.size() != ub.size() || lb.size() != count)
         {
             throw std::invalid_argument("requested " + std::to_string(count)
-                                        + " constraints but lb size = " + std::to_string(lb.size())
+                                        + " variables but lb size = " + std::to_string(lb.size())
                                         + " and ub size = " + std::to_string(ub.size()));
         }
         std::vector<Optimisation::LinearProblemApi::IMipVariable*> variables(count);
