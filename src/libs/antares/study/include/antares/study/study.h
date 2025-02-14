@@ -29,7 +29,6 @@
 #include <yuni/job/queue/service.h>
 #include <yuni/thread/thread.h>
 
-#include <antares/correlation/correlation.h>
 #include <antares/date/date.h>
 #include <antares/study/runtime/runtime.h>
 #include <antares/writer/i_writer.h>
