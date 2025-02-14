@@ -44,20 +44,6 @@ bool checkTimeSteps(Optimisation::LinearProblemApi::FillContext& ctx)
     return ctx.getFirstTimeStep() <= ctx.getLastTimeStep();
 }
 
-static auto ExtractEvaluationResult(
-  const Expressions::Visitors::EvaluationResult& evaluation_result)
-{
-    if (evaluation_result.getEvaluationResultType()
-        == Expressions::Visitors::EvaluationResultType::CONSTANT)
-    {
-        return std::variant<double, std::vector<double>>{evaluation_result.value()};
-    }
-    else
-    {
-        return std::variant<double, std::vector<double>>{evaluation_result.values()};
-    }
-}
-
 void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
                                    Optimisation::LinearProblemApi::ILinearProblemData& data,
                                    Optimisation::LinearProblemApi::FillContext& ctx)
@@ -83,9 +69,6 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
         const auto& ub = evaluator.dispatch(variable.UpperBound().RootNode());
         if (variable.isTimeDependent())
         {
-            const auto lb_values = ExtractEvaluationResult(lb);
-            const auto ub_values = ExtractEvaluationResult(ub);
-
             std::visit(
               [&pb, &variable, this, &ctx](const auto& lb_, const auto& ub_)
               {
@@ -95,13 +78,13 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
                                  component_.Id() + "." + variable.Id(),
                                  ctx.getNumberOfTimestep());
               },
-              lb_values,
-              ub_values);
+              lb.value(),
+              ub.value());
         }
         else
         {
-            pb.addVariable(lb.value(),
-                           ub.value(),
+            pb.addVariable(lb.valueAsDouble(),
+                           ub.valueAsDouble(),
                            variable.Type() != Study::SystemModel::ValueType::FLOAT,
                            component_.Id() + "." + variable.Id());
         }

@@ -57,14 +57,14 @@ BOOST_FIXTURE_TEST_CASE(deep_tree_even, MyDummyFixture)
 {
     Node* node = deepNegationTree(*this, 42., 1000);
     // (-1)^1000 = 1
-    BOOST_CHECK_EQUAL(evalVisitor.dispatch(node).value(), 42.);
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(node).valueAsDouble(), 42.);
 }
 
 BOOST_FIXTURE_TEST_CASE(deep_tree_odd, MyDummyFixture)
 {
     Node* node = deepNegationTree(*this, 42., 1001);
     // (-1)^1001 = -1
-    BOOST_CHECK_EQUAL(evalVisitor.dispatch(node).value(), -42.);
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(node).valueAsDouble(), -42.);
 }
 
 static Node* deepAddTree(Registry<Node>& registry, SumNode* root, int depth)
@@ -87,7 +87,7 @@ BOOST_FIXTURE_TEST_CASE(binary_tree, MyDummyFixture)
     SumNode* root = create<SumNode>(nullptr, nullptr);
     Node* node = deepAddTree(*this, root, 10);
     // We expect 1024 = 2^10 literal nodes, each carrying value 42.
-    BOOST_CHECK_EQUAL(evalVisitor.dispatch(node).value(), 42. * 1024);
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(node).valueAsDouble(), 42. * 1024);
 }
 
 BOOST_FIXTURE_TEST_CASE(wide_sum_tree, MyDummyFixture)
@@ -99,7 +99,7 @@ BOOST_FIXTURE_TEST_CASE(wide_sum_tree, MyDummyFixture)
         op = create<LiteralNode>(1.);
     }
     SumNode root(std::move(operands));
-    BOOST_CHECK_EQUAL(evalVisitor.dispatch(&root).value(), nb_operands * 1.);
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(&root).valueAsDouble(), nb_operands * 1.);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

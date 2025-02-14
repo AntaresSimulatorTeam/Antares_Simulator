@@ -21,6 +21,7 @@
 #pragma once
 
 #include <cmath>
+#include <variant>
 
 #include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
@@ -44,11 +45,6 @@ class EvalVisitorNotImplemented: public std::invalid_argument
 {
 public:
     EvalVisitorNotImplemented(const std::string& visitor, const std::string& node);
-};
-enum class EvaluationResultType : bool
-{
-    CONSTANT = true,
-    NOTCONSTANT = false
 };
 
 class EvaluationResult
@@ -112,14 +108,19 @@ public:
         // return applyOperator(EvaluationResult{-1}, std::multiplies<>());
     }
 
-    [[nodiscard]] double value() const
+    [[nodiscard]] std::variant<double, std::vector<double>> value() const
     {
         return value_;
     }
 
-    [[nodiscard]] std::vector<double> values() const
+    [[nodiscard]] double valueAsDouble() const
     {
-        return values_;
+        return std::get<double>(value_);
+    }
+
+    [[nodiscard]] std::vector<double> valuesAsVector() const
+    {
+        return std::get<std::vector<double>>(value_);
     }
 
     [[nodiscard]] EvaluationResultType getEvaluationResultType() const
@@ -128,9 +129,7 @@ public:
     }
 
 private:
-    double value_ = 0.;
-    std::vector<double> values_ = {};
-    EvaluationResultType evaluationResultType;
+    std::variant<double, std::vector<double>> value_;
 
     template<typename Op>
     EvaluationResult applyOperator(const EvaluationResult& right, Op op) const;
@@ -138,76 +137,87 @@ private:
     EvaluationResult applyUnaryOperator(Op op) const;
 };
 
+template<typename BinaryOp>
+double applyOperation(double lhs, double rhs, BinaryOp op)
+{
+    return op(lhs, rhs);
+}
+
+template<typename BinaryOp>
+double applyOperation(const std::vector<double>& lhs, double rhs, BinaryOp op)
+{
+    auto result(lhs);
+    for (double& value: result)
+    {
+        op(value, rhs);
+    }
+    return result;
+}
+
+template<typename BinaryOp>
+double applyOperation(double lhs, const std::vector<double>& rhs, BinaryOp op)
+{
+    auto result(rhs);
+    for (double& value: result)
+    {
+        op(value, lhs);
+    }
+    return result;
+}
+
+template<typename BinaryOp>
+double applyOperation(const std::vector<double>& lhs, const std::vector<double>& rhs, BinaryOp op)
+{
+    if (lhs.size() == rhs.size())
+    {
+        std::vector<double> result(rhs.size());
+        for (size_t i = 0; i < rhs.size(); ++i)
+        {
+            result.values_[i] = op(lhs[i], rhs[i]);
+        }
+    }
+    else
+    {
+        // TODO
+        throw std::runtime_error("Evaluation Visitor error....");
+    }
+}
+
 template<typename Op>
 EvaluationResult EvaluationResult::applyOperator(const EvaluationResult& right, Op op) const
 {
-    EvaluationResult result(0.0);
-
-    if (evaluationResultType == EvaluationResultType::CONSTANT
-        && right.evaluationResultType == EvaluationResultType::CONSTANT)
+    return
     {
-        result.value_ = op(value_, right.value_);
-        return result;
+        std::visit([&op](const auto& l, const auto& r) { applyOperation(l, u, op); },
+                   value_,
+                   right.value_);
     }
+}
 
-    result.evaluationResultType = EvaluationResultType::NOTCONSTANT;
-
-    if (evaluationResultType == EvaluationResultType::CONSTANT)
+template<typename UnaryOp>
+double applyOperation(const std::vector<double>& values, UnaryOp op)
+{
+    auto result(values);
+    for (double& v: result)
     {
-        result.values_ = right.values_;
-
-        for (double& v: result.values_)
-        {
-            v = op(value_, v);
-        }
+        v = op(v);
     }
-    else if (right.evaluationResultType == EvaluationResultType::CONSTANT)
-    {
-        result.values_ = values_;
-
-        for (double& v: result.values_)
-        {
-            v = op(v, right.value_);
-        }
-    }
-    else if (values_.size() == right.values_.size())
-    {
-        result.values_ = values_;
-
-        for (size_t i = 0; i < values_.size(); ++i)
-        {
-            result.values_[i] = op(values_[i], right.values_[i]);
-        }
-    }
-    // else throw exception?
-    // else
-    // {
-    //
-    // }
-
     return result;
+}
+
+template<typename UnaryOp>
+double applyOperation(double value, UnaryOp op)
+{
+    return op(value);
 }
 
 template<typename Op>
 EvaluationResult EvaluationResult::applyUnaryOperator(Op op) const
 {
-    EvaluationResult result(0.0);
-
-    if (evaluationResultType == EvaluationResultType::CONSTANT)
+    return
     {
-        result.value_ = op(value_);
+        std::visit([&Op](const auto& v) { return applyOperation(v, op); }, value_);
     }
-    else
-    {
-        result.values_ = values_;
-        result.evaluationResultType = EvaluationResultType::NOTCONSTANT;
-        for (double& v: result.values_)
-        {
-            v = op(v);
-        }
-    }
-
-    return result;
 }
 
 /**
