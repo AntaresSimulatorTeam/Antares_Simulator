@@ -74,7 +74,8 @@ bool BindingConstraintGroupRepository::timeSeriesWidthConsistentInGroups() const
             constraints,
             [&width](const std::shared_ptr<BindingConstraint>& bc)
             {
-                bool sameWidth = bc->RHSTimeSeries().width == width;
+                auto seriesWidth = bc->RHSTimeSeries().width;
+                bool sameWidth = seriesWidth == width || seriesWidth == 1;
                 if (!sameWidth)
                 {
                     logs.error() << "Inconsistent time series width for constraint of the same "
