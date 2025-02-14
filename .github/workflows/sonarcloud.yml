@@ -148,6 +148,22 @@ jobs:
           batch-name: adequacy-patch-CSR
           os: ${{ matrix.os }}
 
+      - name: Run named mps tests
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: valid-named-mps
+          os: ${{ env.os }}
+          variant: "named-mps"
+
+      - name: Run parallel tests
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: valid-parallel
+          os: ${{ env.os }}
+          variant: "parallel"
+
       - name: Collect coverage into one XML report
         run: |
           gcovr --sonarqube --output coverage.xml
