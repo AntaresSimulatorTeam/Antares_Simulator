@@ -184,7 +184,7 @@ EvaluationResult EvaluationResult::applyOperator(const EvaluationResult& right, 
 {
     return
     {
-        std::visit([&op](const auto& l, const auto& r) { applyOperation(l, u, op); },
+        std::visit([&op](const auto& l, const auto& r) { applyOperation(l, r, op); },
                    value_,
                    right.value_);
     }
