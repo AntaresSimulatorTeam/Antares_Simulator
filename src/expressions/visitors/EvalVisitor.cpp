@@ -177,4 +177,9 @@ EvaluationResult::EvaluationResult(const std::vector<double>& values):
 {
 }
 
+EvaluationResult::EvaluationResult(const std::variant<double, std::vector<double>>& value):
+    value_(value)
+{
+}
+
 } // namespace Antares::Expressions::Visitors

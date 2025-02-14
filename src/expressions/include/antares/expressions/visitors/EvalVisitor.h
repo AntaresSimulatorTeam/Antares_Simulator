@@ -126,6 +126,7 @@ public:
 
 private:
     std::variant<double, std::vector<double>> value_;
+    explicit EvaluationResult(const std::variant<double, std::vector<double>>& value);
 
     template<typename Op>
     EvaluationResult applyOperator(const EvaluationResult& right, Op op) const;
@@ -145,7 +146,7 @@ std::vector<double> applyOperation(const std::vector<double>& lhs, double rhs, B
     auto result(lhs);
     for (double& value: result)
     {
-        op(value, rhs);
+        value = op(value, rhs);
     }
     return result;
 }
@@ -153,12 +154,7 @@ std::vector<double> applyOperation(const std::vector<double>& lhs, double rhs, B
 template<typename BinaryOp>
 std::vector<double> applyOperation(double lhs, const std::vector<double>& rhs, BinaryOp op)
 {
-    auto result(rhs);
-    for (double& value: result)
-    {
-        op(value, lhs);
-    }
-    return result;
+    return applyOperation(rhs, lhs, op);
 }
 
 template<typename BinaryOp>
@@ -171,23 +167,20 @@ std::vector<double> applyOperation(const std::vector<double>& lhs, const std::ve
         {
             result[i] = op(lhs[i], rhs[i]);
         }
+        return result;
     }
-    else
-    {
-        // TODO
-        throw std::runtime_error("Evaluation Visitor error....");
-    }
+    // TODO
+    throw std::runtime_error("Evaluation Visitor error....");
 }
 
 template<typename Op>
 EvaluationResult EvaluationResult::applyOperator(const EvaluationResult& right, Op op) const
 {
-    return
-    {
-        std::visit([&op](const auto& l, const auto& r) { return applyOperation(l, r, op); },
-                   value_,
-                   right.value_);
-    }
+    return EvaluationResult(
+      std::visit([&op](const auto& l, const auto& r) -> std::variant<double, std::vector<double>>
+                 { return applyOperation(l, r, op); },
+                 value_,
+                 right.value_));
 }
 
 template<typename UnaryOp>
@@ -210,10 +203,10 @@ double applyOperation(double value, UnaryOp op)
 template<typename Op>
 EvaluationResult EvaluationResult::applyUnaryOperator(Op op) const
 {
-    return
-    {
-        std::visit([&op](const auto& v) { return applyOperation(v, op); }, value_);
-    }
+    return EvaluationResult(
+      std::visit([&op](const auto& v) -> std::variant<double, std::vector<double>>
+                 { return applyOperation(v, op); },
+                 value_));
 }
 
 /**
