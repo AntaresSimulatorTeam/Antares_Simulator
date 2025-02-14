@@ -69,7 +69,7 @@ struct VCardLOLD_CSR
     //! Indentation (GUI)
     static constexpr uint8_t nodeDepthForGUI = +0;
     //! Decimal precision
-    static constexpr uint8_t decimal = 2;
+    static constexpr uint8_t decimal = 4;
     //! Number of columns used by the variable (One ResultsType per column)
     static constexpr int columnCount = 1;
     //! The Spatial aggregation
@@ -82,7 +82,7 @@ struct VCardLOLD_CSR
     static constexpr uint8_t isPossiblyNonApplicable = 0;
 
     typedef IntermediateValues IntermediateValuesBaseType;
-    typedef IntermediateValues* IntermediateValuesType;
+    typedef std::vector<IntermediateValues> IntermediateValuesType;
 
     typedef IntermediateValuesBaseType* IntermediateValuesTypeForSpatialAg;
 
@@ -127,11 +127,6 @@ public:
     };
 
 public:
-    ~LOLD_CSR()
-    {
-        delete[] pValuesForTheCurrentYear;
-    }
-
     void initializeFromStudy(Data::Study& study)
     {
         pNbYearsParallel = study.maxNbYearsInParallel;
@@ -139,7 +134,7 @@ public:
         // Intermediate values
         InitializeResultsFromStudy(AncestorType::pResults, study);
 
-        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
+        pValuesForTheCurrentYear.resize(pNbYearsParallel);
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
         {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);

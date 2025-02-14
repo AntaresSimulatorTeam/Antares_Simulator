@@ -93,11 +93,10 @@ ModelBuilder& ModelBuilder::withParameters(std::vector<Parameter>&& parameters)
  */
 ModelBuilder& ModelBuilder::withVariables(std::vector<Variable>&& variables)
 {
-    std::transform(variables.begin(),
-                   variables.end(),
-                   std::inserter(model_.variables_, model_.variables_.end()),
-                   [](/*Non const to prevent copy*/ Variable& variable)
-                   { return std::make_pair(variable.Id(), std::move(variable)); });
+    std::ranges::transform(variables,
+                           std::inserter(model_.variables_, model_.variables_.end()),
+                           [](/*Non const to prevent copy*/ Variable& variable)
+                           { return std::make_pair(variable.Id(), std::move(variable)); });
     return *this;
 }
 

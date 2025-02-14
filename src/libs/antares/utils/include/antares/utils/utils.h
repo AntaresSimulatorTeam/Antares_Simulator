@@ -53,8 +53,12 @@ std::vector<std::pair<std::string, std::string>> splitStringIntoPairs(const std:
 
 namespace Utils
 {
+
 bool isZero(double d);
 double round(double d, unsigned precision);
+double ceilDiv(double numerator, double denominator);
+double floorDiv(double numerator, double denominator);
+
 } // namespace Utils
 } // namespace Antares
 

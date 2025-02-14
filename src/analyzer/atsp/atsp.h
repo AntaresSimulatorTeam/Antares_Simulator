@@ -67,7 +67,7 @@ private:
     {
     public:
         //! Vector
-        using Vector = std::vector<AreaInfo*>;
+        using Vector = std::vector<AreaInfo>;
 
     public:
         bool enabled;
@@ -200,7 +200,6 @@ private:
     bool writeMoments() const;
 
     void cacheCreate();
-    void cacheDestroy();
     void cacheClear();
     bool cacheFetch(uint index, Matrix<>& out) const;
 
@@ -289,7 +288,7 @@ private:
     uint64_t pLimitMemory;
     uint64_t pCacheMemoryUsed;
     uint pCacheLastValidIndex;
-    Matrix<>* pCacheMatrix;
+    std::vector<Matrix<>> pCacheMatrix;
 
     Yuni::String::Vector folderPerArea;
     //! Temporary string mainly used for filename manipulation

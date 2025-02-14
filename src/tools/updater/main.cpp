@@ -105,13 +105,12 @@ public:
 
         if (cleanup)
         {
-            auto* cleaner = new Data::StudyCleaningInfos(folder.c_str());
+            auto cleaner = std::make_unique<Data::StudyCleaningInfos>(folder.c_str());
             cleaner->onProgress = &onProgress;
             if (cleaner->analyze())
             {
                 cleaner->performCleanup();
             }
-            delete cleaner;
         }
 
         logs.info();

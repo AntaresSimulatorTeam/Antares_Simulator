@@ -1,0 +1,58 @@
+library:
+  id: lib_example2
+  description: test model library
+
+  models:
+    - id: node_2gen_1load_mingen
+      description: A simple node with two generators and one load, with min P constraints
+      parameters:
+        - id: load
+          time-dependent: false
+          scenario-dependent: false
+        - id: gen1_max_p
+          time-dependent: false
+          scenario-dependent: false
+        - id: gen1_min_p
+          time-dependent: false
+          scenario-dependent: false
+        - id: gen1_prop_cost
+          time-dependent: false
+          scenario-dependent: false
+        - id: gen2_max_p
+          time-dependent: false
+          scenario-dependent: false
+        - id: gen2_min_p
+          time-dependent: false
+          scenario-dependent: false
+        - id: gen2_prop_cost
+          time-dependent: false
+          scenario-dependent: false
+      variables:
+        - id: gen1_p
+          lower-bound: 0
+          upper-bound: gen1_max_p
+          variable-type: continuous
+        - id: gen1_up
+          variable-type: boolean
+          lower-bound: 0
+          upper-bound: 1
+        - id: gen2_p
+          lower-bound: 0
+          upper-bound: gen2_max_p
+          variable-type: continuous
+        - id: gen2_up
+          variable-type: boolean
+          lower-bound: 0
+          upper-bound: 1
+      constraints:
+        - id: balance
+          expression: gen1_p + gen2_p - load = 0
+        - id: gen1_gen_min_range
+          expression: gen1_up * gen1_min_p <= gen1_p
+        - id: gen1_gen_max_range
+          expression: gen1_p <= gen1_up * gen1_max_p
+        - id: gen2_gen_min_range
+          expression: gen2_up * gen2_min_p <= gen2_p
+        - id: gen2_gen_max_range
+          expression: gen2_p <= gen2_up * gen2_max_p
+      objective: gen1_p * gen1_prop_cost + gen2_p * gen2_prop_cost

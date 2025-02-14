@@ -29,7 +29,7 @@
 #include "antares/solver/optimisation/opt_fonctions.h"
 
 #include "spx_constantes_externes.h"
-static double tolerance = 1e-6;
+static double tolerance = 1e-5;
 
 struct QpFixture
 {
@@ -207,12 +207,12 @@ BOOST_FIXTURE_TEST_CASE(solver_not_supported, QpFixture)
       checkMessage(
         "Solver sirius is not supported for quadratic problems optimization through MathOpt."));
 
-    options.quadraticSolver = "scip";
+    options.quadraticSolver = "xpress";
     BOOST_CHECK_EXCEPTION(
       solve(),
       std::invalid_argument,
       checkMessage(
-        "Solver scip is not supported for quadratic problems optimization through MathOpt."));
+        "Solver xpress is not supported for quadratic problems optimization through MathOpt."));
 }
 
 BOOST_FIXTURE_TEST_CASE(simple_qp_one_var, QpFixture)

@@ -40,7 +40,7 @@ void Area::internalInitialize()
     // Make sure we have
     if (JIT::usedFromGUI)
     {
-        ui = new AreaUI();
+        ui = std::make_unique<AreaUI>();
     }
 }
 
@@ -76,9 +76,6 @@ Area::~Area()
 
     reserves.clear();
     miscGen.clear();
-
-    delete ui;
-    ui = nullptr;
 }
 
 void Area::clearAllLinks()

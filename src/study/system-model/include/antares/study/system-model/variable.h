@@ -22,7 +22,9 @@
 
 #include <string>
 
-#include "expression.h"
+#include <antares/expressions/expression.h>
+
+#include "timeAndScenarioType.h"
 #include "valueType.h"
 
 namespace Antares::Study::SystemModel
@@ -32,11 +34,18 @@ namespace Antares::Study::SystemModel
 class Variable
 {
 public:
-    Variable(std::string id, Expression lower_bound, Expression upper_bound, ValueType type):
+    Variable(std::string id,
+             Expression lower_bound,
+             Expression upper_bound,
+             ValueType type,
+             TimeDependent timeDependent,
+             ScenarioDependent scenarioDependent):
         id_(std::move(id)),
         type_(type),
         lowerBound_(std::move(lower_bound)),
-        upperBound_(std::move(upper_bound))
+        upperBound_(std::move(upper_bound)),
+        timeDependent(timeDependent),
+        scenarioDependent(scenarioDependent)
     {
     }
 
@@ -60,11 +69,23 @@ public:
         return upperBound_;
     }
 
+    [[nodiscard]] bool isTimeDependent() const
+    {
+        return timeDependent == TimeDependent::YES;
+    }
+
+    [[nodiscard]] bool IsScenarioDependent() const
+    {
+        return scenarioDependent == ScenarioDependent::YES;
+    }
+
 private:
     std::string id_;
     ValueType type_;
     Expression lowerBound_;
     Expression upperBound_;
+    TimeDependent timeDependent = TimeDependent::YES;
+    ScenarioDependent scenarioDependent = ScenarioDependent::YES;
 };
 
 } // namespace Antares::Study::SystemModel

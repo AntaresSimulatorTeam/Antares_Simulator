@@ -208,7 +208,7 @@ const char* SimulationModeToCString(SimulationMode mode)
     }
 }
 
-const char* CompatibilityHydroPmaxToCString(Parameters::Compatibility::HydroPmax mode)
+const char* CompatibilityHydroPmaxToCString(const Parameters::Compatibility::HydroPmax mode)
 {
     switch (mode)
     {
