@@ -286,19 +286,6 @@ OrtoolsMipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
     return pair.first->second.get(); // <<name, constraint>, bool>
 }
 
-std::vector<LinearProblemApi::IMipConstraint*> OrtoolsLinearProblem::addConstraint(
-  const std::vector<double>& lb,
-  const std::vector<double>& ub,
-  const std::string& name,
-  unsigned int number_new_constraints)
-{
-    std::vector<LinearProblemApi::IMipConstraint*> new_constraints;
-    for (unsigned int i = 0; i < number_new_constraints; i++)
-    {
-        new_constraints.push_back(addConstraint(lb[i], ub[i], name + '_' + std::to_string(i)));
-    }
-    return new_constraints;
-}
 
 std::vector<LinearProblemApi::IMipConstraint*> OrtoolsLinearProblem::addConstraint(
   double lb,
@@ -314,33 +301,6 @@ std::vector<LinearProblemApi::IMipConstraint*> OrtoolsLinearProblem::addConstrai
     return new_constraints;
 }
 
-std::vector<LinearProblemApi::IMipConstraint*> OrtoolsLinearProblem::addConstraint(
-  const std::vector<double>& lb,
-  double ub,
-  const std::string& name,
-  unsigned int number_new_constraints)
-{
-    std::vector<LinearProblemApi::IMipConstraint*> new_constraints;
-    for (unsigned int i = 0; i < number_new_constraints; i++)
-    {
-        new_constraints.push_back(addConstraint(lb[i], ub, name + '_' + std::to_string(i)));
-    }
-    return new_constraints;
-}
-
-std::vector<LinearProblemApi::IMipConstraint*> OrtoolsLinearProblem::addConstraint(
-  double lb,
-  const std::vector<double>& ub,
-  const std::string& name,
-  unsigned int number_new_constraints)
-{
-    std::vector<LinearProblemApi::IMipConstraint*> new_constraints;
-    for (unsigned int i = 0; i < number_new_constraints; i++)
-    {
-        new_constraints.push_back(addConstraint(lb, ub[i], name + '_' + std::to_string(i)));
-    }
-    return new_constraints;
-}
 
 OrtoolsMipConstraint* OrtoolsLinearProblem::getConstraint(const std::string& name) const
 {

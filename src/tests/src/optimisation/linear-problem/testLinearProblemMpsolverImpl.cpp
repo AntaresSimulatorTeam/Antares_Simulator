@@ -158,7 +158,7 @@ BOOST_FIXTURE_TEST_CASE(add_constraint_to_problem___check_constraint_exists, Fix
 BOOST_FIXTURE_TEST_CASE(add_constraints_to_problem___check_all_constraints_exist,
                         FixtureEmptyProblem)
 {
-    auto constraints = pb->addConstraint({5, 5, 5}, {15, 15, 15}, "constraint", 3);
+    auto constraints = pb->addConstraint(5, 15, "constraint", 3);
 
     BOOST_CHECK_EQUAL(constraints.size(), 3); // Check 3 constraints created
 
@@ -224,8 +224,8 @@ BOOST_FIXTURE_TEST_CASE(add_already_existing_constaint_to_problem_leads_to_excep
 // Test bulk addition of constraints with duplicate names
 BOOST_FIXTURE_TEST_CASE(add_duplicate_constraint_names_leads_to_exception, FixtureEmptyProblem)
 {
-    pb->addConstraint({0}, {1}, "duplicate_constraint", 1);
-    BOOST_CHECK_EXCEPTION(pb->addConstraint({0}, {1}, "duplicate_constraint", 1),
+    pb->addConstraint(0, 1, "duplicate_constraint", 1);
+    BOOST_CHECK_EXCEPTION(pb->addConstraint(0, 1, "duplicate_constraint", 1),
                           std::exception,
                           expectedMessage);
 }
