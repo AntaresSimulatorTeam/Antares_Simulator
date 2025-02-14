@@ -169,7 +169,7 @@ std::vector<double> applyOperation(const std::vector<double>& lhs, const std::ve
         std::vector<double> result(rhs.size());
         for (size_t i = 0; i < rhs.size(); ++i)
         {
-            result.values_[i] = op(lhs[i], rhs[i]);
+            result[i] = op(lhs[i], rhs[i]);
         }
     }
     else
