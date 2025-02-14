@@ -290,80 +290,134 @@ void CurtailmentSharingPostProcessCmd::execute(const optRuntimeData& opt_runtime
     auto backup = problemeHebdo_->CorrespondanceVarNativesVarOptim;
 
     auto variableManager = VariableManagerFromProblemHebdo(problemeHebdo_);
-
-    for (uint hour = 0; hour < 5; hour++){
+    
+    for (uint hour = 0; hour < nbHoursInWeek; hour++){
         auto f = problemeHebdo_->ValeursDeNTC[hour].ValeurDuFlux;
-        logs.info() << "[adq-patch] flux Before ADQPTCH:" <<f;// << problemeHebdo_;
+        // logs.info() << "[adq-patch] flux Before ADQPTCH:" <<f;// << problemeHebdo_;
     }
 
 
 
+    // logs.info()  << "Before:  ADQP::";
+    // ens bef adqp
+    std::vector<std::vector<double>> ENSBef, ENSAfter, SpillBef, SpillAfter;
+    ENSBef.resize(problemeHebdo_->NombreDePays);
+    SpillBef.resize(problemeHebdo_->NombreDePays);
+    ENSAfter.resize(problemeHebdo_->NombreDePays);
+    SpillAfter.resize(problemeHebdo_->NombreDePays);
+    
+    for (uint32_t area = 0; area < problemeHebdo_->NombreDePays; ++area)
+    {
+        // logs.info() << area << " with ens / Spill:";
+        ENSBef[area] = problemeHebdo_->ResultatsHoraires[area].ValeursHorairesDeDefaillancePositive;
+        SpillBef[area] = problemeHebdo_->ResultatsHoraires[area].ValeursHorairesDeDefaillanceNegative;
+    }
+
+
+    // RUN ADQP
     for (int hourInWeek: hoursRequiringCurtailmentSharing)
     {
-        logs.info() << "[adq-patch] CSR triggered for Year:" << year + 1
-                    << " Hour:" << week * nbHoursInWeek + hourInWeek + 1;
         hourlyCsrProblem.setHour(hourInWeek);
         hourlyCsrProblem.run(week, year);
-        logs.info() << "[adq-patch] CSR triggered for Year:";
     }
 
-
-    for (uint hour = 0; hour < 5; hour++){
-        auto f = problemeHebdo_->ValeursDeNTC[hour].ValeurDuFlux;
-        logs.info() << "[adq-patch] flux After ADQPTCH:" <<f;// << problemeHebdo_;
+    for (uint32_t area = 0; area < problemeHebdo_->NombreDePays; ++area){
+        logs.info() << area << " with ens / Spill:";
+        ENSAfter[area] = problemeHebdo_->ResultatsHoraires[area].ValeursHorairesDeDefaillancePositive;
+        SpillAfter[area] = problemeHebdo_->ResultatsHoraires[area].ValeursHorairesDeDefaillanceNegative;
     }
 
-    // REDISPATCH NEW Flow COnst
-    std::vector<double>& Xmax = problemeHebdo_->ProblemeAResoudre->Xmax;
-    std::vector<double>& Xmin = problemeHebdo_->ProblemeAResoudre->Xmin;
+    // Filtering Affected Areas, i.e, areas with weird case
+    std::set<uint32_t> affectedAreas;
 
-    problemeHebdo_->CorrespondanceVarNativesVarOptim = backup;
+    for (uint32_t area = 0; area < problemeHebdo_->NombreDePays; ++area) {
+        for (uint h = 0; h < nbHoursInWeek; ++h) {
+            logs.info() << area << " with ENSBef, ENSAfter / SpillBef, SpillAfter:" ;
+            logs.info() << ENSBef[area][h] << " " << ENSAfter[area][h] << " " 
+                        << SpillBef[area][h] << " " << SpillAfter[area][h] << " ";
 
-    for (int hourInWeek: hoursRequiringCurtailmentSharing)
-    {
-        for (uint32_t Interco = 0; Interco < problemeHebdo_->NombreDInterconnexions; ++Interco)
-        {
-            int var = variableManager.NTCDirect(Interco, hourInWeek);
-            auto f = problemeHebdo_->ValeursDeNTC[hourInWeek].ValeurDuFlux[Interco]; 
-            Xmax[var] = f + 0.1;
-            Xmin[var] = f - 0.1;
-            logs.info() << problemeHebdo_->ProblemeAResoudre->NomDesVariables[var];
+            // Check if ENS transitioned from 0 to positive
+            if (ENSBef[area][h] == 0 && ENSAfter[area][h] > 0) {
+                affectedAreas.insert(area);
+            }
+
+            // Check if Spillage transitioned from 0 to positive
+            if (SpillBef[area][h] == 0 && SpillAfter[area][h] > 0) {
+                affectedAreas.insert(area);
+            }
         }
-        logs.info() << "[adq-patch] Hello NTCs";
     }
 
-    // // here we redispatch truly and smarlty
+    // HERE WE DISPATCH IN CASES NEEDED 
+    if (!affectedAreas.empty()){
+        // Print the selected affected areas
+        logs.info() << "Affected Areas:";
+        for (const auto& area : affectedAreas) {
+            logs.info() << "Area " << area;
+        }
+
+        // accessing old bounds adress
+        std::vector<double>& Xmax = problemeHebdo_->ProblemeAResoudre->Xmax;
+        std::vector<double>& Xmin = problemeHebdo_->ProblemeAResoudre->Xmin;
+
+        problemeHebdo_->CorrespondanceVarNativesVarOptim = backup;
+
+        // nonAffected Areas dispatch has to be fixed, we do this by fixing their ENS to the old one
+        int var;
+        double oldValue;
+        for (uint h = 0; h < nbHoursInWeek ; ++h){
+            for (uint32_t area = 0; area < problemeHebdo_->NombreDePays; ++area) {
+                if (! affectedAreas.contains(area)){
+                    // logs.info() << "[adq-patch] Hello NTCs";
+                    var = problemeHebdo_->CorrespondanceVarNativesVarOptim[h].NumeroDeVariableDefaillancePositive[area];
+                    oldValue = ENSAfter[area][h];
+                    Xmax[var] = oldValue + 0.1;
+                    Xmin[var] = oldValue - 0.1;
+                
+                }
+            }
+        }    
+
+        // the flow is fixer for every connection
+        for (uint hourInWeek = 0; hourInWeek < nbHoursInWeek ; ++hourInWeek)// hourInWeek: hoursRequiringCurtailmentSharing)
+        {
+            for (uint32_t Interco = 0; Interco < problemeHebdo_->NombreDInterconnexions; ++Interco)
+            {
+                int var = variableManager.NTCDirect(Interco, hourInWeek);
+                auto f = problemeHebdo_->ValeursDeNTC[hourInWeek].ValeurDuFlux[Interco]; 
+                Xmax[var] = f + 0.1;
+                Xmin[var] = f - 0.1;
+                logs.info() << problemeHebdo_->ProblemeAResoudre->NomDesVariables[var];
+            }
+            // logs.info() << "[adq-patch] Hello NTCs";
+        }
+
+        // // here we redispatch truly and smartly
+        const int NombreDePasDeTempsPourUneOptimisation = problemeHebdo_
+                                                            ->NombreDePasDeTempsPourUneOptimisation;
 
 
-    const int NombreDePasDeTempsPourUneOptimisation = problemeHebdo_
-                                                        ->NombreDePasDeTempsPourUneOptimisation;
-
-
-    int DernierPdtDeLIntervalle;
-    for (uint pdtHebdo = 0, numeroDeLIntervalle = 0; pdtHebdo < problemeHebdo_->NombreDePasDeTemps;
-         pdtHebdo = DernierPdtDeLIntervalle, numeroDeLIntervalle++)
-    {
-        int PremierPdtDeLIntervalle = pdtHebdo;
-        DernierPdtDeLIntervalle = pdtHebdo + NombreDePasDeTempsPourUneOptimisation;
-        auto optPeriodStringGenerator = createOptPeriodAsString(
-          problemeHebdo_->OptimisationAuPasHebdomadaire,
-          numeroDeLIntervalle,
-          problemeHebdo_->weekInTheYear,
-          problemeHebdo_->year);
-        bool b = OPT_AppelDuSimplexe(opt_runtime_data.weeklyOptimization.options_,
-                                 problemeHebdo_,
-                                 numeroDeLIntervalle,
-                                 1,
-                                 *optPeriodStringGenerator,
-                                 opt_runtime_data.weeklyOptimization.writer_);
+        int DernierPdtDeLIntervalle;
+        for (uint pdtHebdo = 0, numeroDeLIntervalle = 0; pdtHebdo < problemeHebdo_->NombreDePasDeTemps;
+            pdtHebdo = DernierPdtDeLIntervalle, numeroDeLIntervalle++)
+        {
+            int PremierPdtDeLIntervalle = pdtHebdo;
+            DernierPdtDeLIntervalle = pdtHebdo + NombreDePasDeTempsPourUneOptimisation;
+            auto optPeriodStringGenerator = createOptPeriodAsString(
+            problemeHebdo_->OptimisationAuPasHebdomadaire,
+            numeroDeLIntervalle,
+            problemeHebdo_->weekInTheYear,
+            problemeHebdo_->year);
+            bool b = OPT_AppelDuSimplexe(opt_runtime_data.weeklyOptimization.options_,
+                                    problemeHebdo_,
+                                    numeroDeLIntervalle,
+                                    1,
+                                    *optPeriodStringGenerator,
+                                    opt_runtime_data.weeklyOptimization.writer_);
+        } // END REDISPATCH
+        
     }
-
-
-    for (uint hour = 0; hour < 5; hour++){
-        auto f = problemeHebdo_->ValeursDeNTC[hour].ValeurDuFlux;;
-        logs.info() << "[adq-patch] flux After Redispatch:" <<f;
-    }
-
+    
 }
 
 double CurtailmentSharingPostProcessCmd::calculateDensNewAndTotalLmrViolation()
@@ -541,3 +595,36 @@ std::vector<double> CurtailmentSharingPostProcessCmd::calculateENSoverAllAreasFo
 
     //         if (std::isinf(Xmax[var]) && Xmax[var] > 0)
     //         {
+
+
+
+
+
+    //    logs.info()  << "After ADQP::";    
+    // for (uint32_t area = 0; area < problemeHebdo_->NombreDePays; ++area)
+    // {
+    //     // ens bef adqp
+    //     std::vector<double> ENSAfter = problemeHebdo_->ResultatsHoraires[area].ValeursHorairesDeDefaillancePositive;
+    //     std::vector<double> SpillAfter = problemeHebdo_->ResultatsHoraires[area].ValeursHorairesDeDefaillanceNegative;
+
+    //     if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area] == Data::AdequacyPatch::physicalAreaInsideAdqPatch){
+    //         logs.info() << area << "with ens / Spill:";
+    //         for (uint h = 0; h < 5; ++h)
+    //         {                
+    //             logs.info() <<  " :" << ENSAfter[h] <<" "<< SpillAfter[h];
+    //         }
+    //     }
+    // }
+
+
+
+
+    // // After the ADQP ran, we check if there is apparition de l'ENS, Spillage qq part
+    // for (uint i = 0; i < nbHoursInWeek; ++i)
+    // {
+    //     int ENSBeforeAdqp = 0; // Adqp stands for Adequacy Patch
+    //     int ENSAfterAdqp = 0;
+    //     int SpillageBeforeAdqp = 0;
+    //     int SpillageAfterAdqp = 0;
+
+    // }

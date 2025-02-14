@@ -103,7 +103,7 @@ public:
                                   int offset = 0,
                                   int delta = 0);
 
-private:
+public:
     std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim_;
     std::vector<int>& NumeroDeVariableStockFinal_;
     std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock_;
