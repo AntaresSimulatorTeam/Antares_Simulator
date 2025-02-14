@@ -40,29 +40,38 @@ enum class SolverType;
 
 using namespace operations_research;
 
-enum class SolverClass
-{
-    LINEAR,
-    QUADRATIC
-};
-
 void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
                                                    Antares::Solver::IResultWriter& writer,
                                                    const std::string& filename);
 
 /*!
- *  \brief Return list of available ortools solver names on our side
+ *  \brief Returns a list of available ortools linear solver names on our side
  *
- *  \return List of available ortools solver names
+ *  \return List of available ortools linear solver names
  */
-std::list<std::string> getAvailableSolverNames(SolverClass solverClass);
+std::list<std::string> getAvailableLinearSolverNames();
 
 /*!
- *  \brief Return a single string containing all solvers available, separated by a ", " and ending
- * with a ".".
+ *  \brief Returns a comma-seperated-list of available ortools linear solver names on our side
  *
+ *  \return Comma-seperated-list of available ortools linear solver names
  */
-std::string availableSolversString(SolverClass solverClass);
+std::string availableLinearSolversString();
+
+
+/*!
+ *  \brief Returns a list of available ortools quadratic solver names on our side
+ *
+ *  \return List of available ortools quadratic solver names
+ */
+std::list<std::string> getAvailableQuadraticSolverNames();
+
+/*!
+ *  \brief Returns a comma-seperated-list of available ortools linear solver names on our side
+ *
+ *  \return Comma-seperated-list of available ortools linear solver names
+ */
+std::string availableQuadraticSolversString();
 
 /*!
  *  \brief Create a MPSolver with correct linear or mixed variant

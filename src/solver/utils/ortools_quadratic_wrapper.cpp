@@ -19,7 +19,6 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <absl/status/statusor.h>
 #include <ortools/math_opt/cpp/math_opt.h>
 #include <pi_constantes_externes.h>
 #include <vector>
@@ -43,7 +42,7 @@ void BuildConstraints(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre, Model& mod
 
 void checkOptions(const OptimizationOptions& options)
 {
-    auto availableSolversList = getAvailableSolverNames(SolverClass::QUADRATIC);
+    auto availableSolversList = getAvailableQuadraticSolverNames();
     bool solverFound = std::ranges::find(availableSolversList, options.quadraticSolver)
                        != availableSolversList.end();
     if (!solverFound || options.quadraticSolver.compare("sirius") == 0)

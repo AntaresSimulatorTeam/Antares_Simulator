@@ -49,9 +49,9 @@ namespace
 void printSolvers()
 {
     std::cout << "Available linear solvers: "
-              << availableSolversString(SolverClass::LINEAR) << std::endl;
+              << availableLinearSolversString() << std::endl;
     std::cout << "Available quadratic solvers: "
-              << availableSolversString(SolverClass::QUADRATIC) << std::endl;
+              << availableQuadraticSolversString() << std::endl;
 }
 } // namespace
 

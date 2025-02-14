@@ -361,15 +361,14 @@ std::list<std::string> getAvailableQuadraticSolverNames()
     return result;
 }
 
-std::list<std::string> getAvailableSolverNames(SolverClass solverClass)
+std::string availableLinearSolversString()
 {
-    return solverClass == SolverClass::LINEAR ? getAvailableLinearSolverNames()
-                                              : getAvailableQuadraticSolverNames();
+    return boost::algorithm::join(getAvailableLinearSolverNames(), ",") + ".";
 }
 
-std::string availableSolversString(SolverClass solverClass)
+std::string availableQuadraticSolversString()
 {
-    return boost::algorithm::join(getAvailableSolverNames(solverClass), ",") + ".";
+    return boost::algorithm::join(getAvailableQuadraticSolverNames(), ",") + ".";
 }
 
 static std::optional<std::string> translateSolverName(const std::string& solverName, bool isMip)

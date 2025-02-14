@@ -38,8 +38,6 @@ struct StudyForBCTest: public StudyBuilder
 
     // Data members
     AreaLink* link = nullptr;
-    Area* area1 = nullptr;
-    Area* area2 = nullptr;
     std::shared_ptr<ThermalCluster> cluster;
     std::shared_ptr<BindingConstraint> BC;
 };
@@ -48,8 +46,8 @@ StudyForBCTest::StudyForBCTest()
 {
     simulationBetweenDays(0, 7);
 
-    area1 = addAreaToStudy("Area 1");
-    area2 = addAreaToStudy("Area 2");
+    Area* area1 = addAreaToStudy("Area 1");
+    Area* area2 = addAreaToStudy("Area 2");
 
     TimeSeriesConfigurer(area1->load.series.timeSeries).setColumnCount(1).fillColumnWith(0, 0);
 
@@ -277,7 +275,6 @@ BOOST_FIXTURE_TEST_CASE(On_year_9__RHS_TS_number_4_is_taken_into_account, StudyW
     simulation->run();
 
     OutputRetriever output(simulation->rawSimu());
-    BOOST_TEST(output.flow(link).hour(0) == 40., tt::tolerance(0.001));
     BOOST_TEST(output.flow(link).hour(0) == 40., tt::tolerance(0.001));
 }
 

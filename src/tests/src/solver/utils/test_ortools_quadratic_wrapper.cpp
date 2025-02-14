@@ -40,29 +40,9 @@ struct QpFixture
         // Init empty problem
         problemeAResoudre.NombreDeVariables = 0;
         problemeAResoudre.NombreDeContraintes = 0;
-        problemeAResoudre.Sens = {};
-        problemeAResoudre.IndicesDebutDeLigne = {};
-        problemeAResoudre.NombreDeTermesDesLignes = {};
-        problemeAResoudre.CoefficientsDeLaMatriceDesContraintes = {};
-        problemeAResoudre.IndicesColonnes = {};
         problemeAResoudre.IncrementDAllocationMatriceDesContraintes = 0;
         problemeAResoudre.NombreDeTermesDansLaMatriceDesContraintes = 0;
-        problemeAResoudre.CoutQuadratique = {};
-        problemeAResoudre.CoutLineaire = {};
-        problemeAResoudre.TypeDeVariable = {};
-        problemeAResoudre.Xmin = {};
-        problemeAResoudre.Xmax = {};
-        problemeAResoudre.SecondMembre = {};
-        problemeAResoudre.AdresseOuPlacerLaValeurDesVariablesOptimisees = {};
-        problemeAResoudre.X = {};
-        problemeAResoudre.AdresseOuPlacerLaValeurDesCoutsMarginaux = {};
-        problemeAResoudre.CoutsMarginauxDesContraintes = {};
-        problemeAResoudre.AdresseOuPlacerLaValeurDesCoutsReduits = {};
-        problemeAResoudre.CoutsReduits = {};
         problemeAResoudre.ExistenceDUneSolution = NON_PI;
-        problemeAResoudre.NomDesVariables = {};
-        problemeAResoudre.NomDesContraintes = {};
-        problemeAResoudre.VariablesEntieres = {};
     }
 
     PROBLEME_ANTARES_A_RESOUDRE problemeAResoudre;
@@ -196,9 +176,9 @@ struct QpFixture
     }
 };
 
-BOOST_AUTO_TEST_SUITE(tests_on_ortools_quadratic_wrapper)
+BOOST_FIXTURE_TEST_SUITE(tests_on_ortools_quadratic_wrapper, QpFixture)
 
-BOOST_FIXTURE_TEST_CASE(solver_not_supported, QpFixture)
+BOOST_AUTO_TEST_CASE(solver_not_supported)
 {
     options.quadraticSolver = "sirius";
     BOOST_CHECK_EXCEPTION(
@@ -215,7 +195,7 @@ BOOST_FIXTURE_TEST_CASE(solver_not_supported, QpFixture)
         "Solver xpress is not supported for quadratic problems optimization through MathOpt."));
 }
 
-BOOST_FIXTURE_TEST_CASE(simple_qp_one_var, QpFixture)
+BOOST_AUTO_TEST_CASE(simple_qp_one_var)
 {
     // minimize(x * x - 0.5 * x)
     // such that 0 <= x <= 1
@@ -228,7 +208,7 @@ BOOST_FIXTURE_TEST_CASE(simple_qp_one_var, QpFixture)
     checkReducedCosts({0});
 }
 
-BOOST_FIXTURE_TEST_CASE(simple_qp_two_vars_1, QpFixture)
+BOOST_AUTO_TEST_CASE(simple_qp_two_vars_1)
 {
     // Primal:
     //   min  2x_0^2 + 0.5x_1^2 - x_0 - x_1 + 5
@@ -255,7 +235,7 @@ BOOST_FIXTURE_TEST_CASE(simple_qp_two_vars_1, QpFixture)
     checkReducedCosts({4, 0});
 }
 
-BOOST_FIXTURE_TEST_CASE(simple_qp_two_vars_2, QpFixture)
+BOOST_AUTO_TEST_CASE(simple_qp_two_vars_2)
 {
     // Primal:
     //   min  0.5x_0^2 + 0.5x_1^2 - 3x_0 - x_1
@@ -283,7 +263,7 @@ BOOST_FIXTURE_TEST_CASE(simple_qp_two_vars_2, QpFixture)
     checkReducedCosts({0, 0});
 }
 
-BOOST_FIXTURE_TEST_CASE(infeasible_qp, QpFixture)
+BOOST_AUTO_TEST_CASE(infeasible_qp)
 {
     // minimize(x * x - 0.5 * x)
     // such that -inf <= x <= 1
@@ -300,7 +280,7 @@ BOOST_FIXTURE_TEST_CASE(infeasible_qp, QpFixture)
     checkAllNan(reducedCosts);
 }
 
-BOOST_FIXTURE_TEST_CASE(unbounded_qp, QpFixture)
+BOOST_AUTO_TEST_CASE(unbounded_qp)
 {
     // minimize(x)
     // such that -inf <= x <= inf
@@ -319,7 +299,7 @@ BOOST_FIXTURE_TEST_CASE(unbounded_qp, QpFixture)
     checkAllNan(reducedCosts);
 }
 
-BOOST_FIXTURE_TEST_CASE(invalid_variable_type, QpFixture)
+BOOST_AUTO_TEST_CASE(invalid_variable_type)
 {
     addVar("x", -std::numeric_limits<double>::infinity(), 1, -0.5, 1);
     problemeAResoudre.TypeDeVariable[0] = 15;
@@ -328,7 +308,7 @@ BOOST_FIXTURE_TEST_CASE(invalid_variable_type, QpFixture)
                           checkMessage("Unknown variable type: 15"));
 }
 
-BOOST_FIXTURE_TEST_CASE(invalid_constraint_sense, QpFixture)
+BOOST_AUTO_TEST_CASE(invalid_constraint_sense)
 {
     addVar("x", -std::numeric_limits<double>::infinity(), 1, -0.5, 1);
     addConstr("c1", 3, std::numeric_limits<double>::infinity(), {0}, {1});
