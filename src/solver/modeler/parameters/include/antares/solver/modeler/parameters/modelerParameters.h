@@ -35,5 +35,8 @@ struct ModelerParameters
     std::string solverParameters;
     // Write output results
     bool noOutput = false;
+    // time steps
+    unsigned int firstTimeStep;
+    unsigned int lastTimeStep;
 };
 } // namespace Antares::Solver

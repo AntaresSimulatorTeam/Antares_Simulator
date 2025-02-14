@@ -82,8 +82,8 @@ struct VCardProductionByDispatchablePlant
     static constexpr uint8_t isPossiblyNonApplicable = 0;
 
     typedef IntermediateValues IntermediateValuesDeepType;
-    typedef IntermediateValues* IntermediateValuesBaseType;
-    typedef IntermediateValuesBaseType* IntermediateValuesType;
+    typedef std::vector<IntermediateValues> IntermediateValuesBaseType;
+    typedef std::vector<IntermediateValuesBaseType> IntermediateValuesType;
 
 }; // class VCard
 
@@ -130,7 +130,6 @@ public:
 
 public:
     ProductionByDispatchablePlant():
-        pValuesForTheCurrentYear(nullptr),
         pminOfTheClusterForYear(nullptr),
         pSize(0)
     {
@@ -138,12 +137,6 @@ public:
 
     ~ProductionByDispatchablePlant()
     {
-        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-        {
-            delete[] pValuesForTheCurrentYear[numSpace];
-        }
-        delete[] pValuesForTheCurrentYear;
-
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
         {
             delete[] pminOfTheClusterForYear[numSpace];
@@ -161,7 +154,7 @@ public:
     {
         // Get the number of years in parallel
         pNbYearsParallel = study->maxNbYearsInParallel;
-        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
+        pValuesForTheCurrentYear.resize(pNbYearsParallel);
         pminOfTheClusterForYear = new double*[pNbYearsParallel];
 
         // Get the area
@@ -172,8 +165,7 @@ public:
 
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
             {
-                pValuesForTheCurrentYear[numSpace] = new VCardType::IntermediateValuesDeepType
-                  [pSize];
+                pValuesForTheCurrentYear[numSpace].resize(pSize);
             }
 
             // Minimum power values of the cluster for the whole year - from the solver in the
@@ -203,7 +195,6 @@ public:
         {
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
             {
-                pValuesForTheCurrentYear[numSpace] = nullptr;
                 pminOfTheClusterForYear[numSpace] = nullptr;
             }
 

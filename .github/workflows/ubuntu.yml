@@ -142,10 +142,6 @@ jobs:
         run: |
           echo "SIMTEST=${{ fromJson(env.SIMTEST_JSON).version }}" >> $GITHUB_ENV
 
-      - name: Init submodule Antares_Simulator_Tests
-        run: |
-          git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests
-
       - name: Init submodule Antares_Simulator_Tests_NR
         run: |
           git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests_NR
@@ -204,15 +200,6 @@ jobs:
           batch-name: adequacy-patch-CSR
           os: ${{ env.os }}
 
-      - name: Run parallel tests
-        if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
-        uses: ./.github/workflows/run-tests
-        with:
-          simtest-tag: ${{ env.SIMTEST }}
-          batch-name: valid-parallel
-          os: ${{ env.os }}
-          variant: "parallel"
-
       - name: Run tests introduced in 8.6.0
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
@@ -256,7 +243,7 @@ jobs:
       - name: Run cucumber on short-tests
         uses: ./.github/workflows/cucumber-tests
         with:
-          feature: "features/short_tests.feature"
+          feature: "features/solver-features/short_tests.feature"
 
       - name: Run mps tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
@@ -295,7 +282,7 @@ jobs:
       - name: Run cucumber on medium-tests
         uses: ./.github/workflows/cucumber-tests
         with:
-          feature: "features/medium_tests.feature"
+          feature: "features/solver-features/medium_tests.feature"
 
       - name: Run long-tests-1
         if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
@@ -320,6 +307,11 @@ jobs:
           simtest-tag: ${{ env.SIMTEST }}
           batch-name: long-tests-3
           os: ${{ env.os }}
+
+      - name: Run cucumber on modeler
+        uses: ./.github/workflows/cucumber-tests
+        with:
+          feature: "features/modeler-features"
 
       - name: Barrier
         if: ${{ !success() }}

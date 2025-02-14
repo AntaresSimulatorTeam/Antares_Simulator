@@ -19,17 +19,17 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include <antares/solver/expressions/nodes/ExpressionsNodes.h>
+#include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/optim-model-filler/LinearExpression.h>
 #include <antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h>
 
-using namespace Antares::Solver::Nodes;
+using namespace Antares::Expressions::Nodes;
 
 namespace Antares::Optimization
 {
 
 ReadLinearConstraintVisitor::ReadLinearConstraintVisitor(
-  Solver::Visitors::EvaluationContext context):
+  Expressions::Visitors::EvaluationContext context):
     linear_expression_visitor_(std::move(context))
 {
 }

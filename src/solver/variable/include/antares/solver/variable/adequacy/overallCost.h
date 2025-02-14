@@ -85,7 +85,7 @@ struct VCardOverallCost
     static constexpr uint8_t isPossiblyNonApplicable = 0;
 
     typedef IntermediateValues IntermediateValuesBaseType;
-    typedef IntermediateValues* IntermediateValuesType;
+    typedef std::vector<IntermediateValues> IntermediateValuesType;
 
     typedef IntermediateValuesBaseType* IntermediateValuesTypeForSpatialAg;
 
@@ -131,11 +131,6 @@ public:
     };
 
 public:
-    ~OverallCost()
-    {
-        delete[] pValuesForTheCurrentYear;
-    }
-
     void initializeFromStudy(Data::Study& study)
     {
         pNbYearsParallel = study.maxNbYearsInParallel;
@@ -144,7 +139,7 @@ public:
         InitializeResultsFromStudy(AncestorType::pResults, study);
 
         // Intermediate values
-        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
+        pValuesForTheCurrentYear.resize(pNbYearsParallel);
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
         {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);

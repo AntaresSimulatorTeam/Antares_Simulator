@@ -29,12 +29,11 @@ CPack can be used to create the installer after the build phase:
     cd _build
     cpack3 -G TGZ
     ```
-    
+
     ### Required system libraries
-    There are still some system libraries that must be installed if you want to use *Antares Simulator*:  
+    There are still some system libraries that must be installed if you want to use *Antares Simulator*:
     ```
     sudo yum install epel-release
-    sudo yum install wxGTK3
     ```
 
 === "Ubuntu/Debian"
@@ -48,10 +47,4 @@ CPack can be used to create the installer after the build phase:
     ```
     cd _build
     cpack -G TGZ
-    ```
-    
-    ### Required system libraries
-    There are still some system libraries that must be installed if you want to use *Antares Simulator*:
-    ```
-    sudo apt install libwxgtk3.0-gtk3-0v5
     ```

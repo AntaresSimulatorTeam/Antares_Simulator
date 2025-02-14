@@ -38,8 +38,7 @@ bool thermalTSNumberData::reset(const Study& study)
     //   solver or not.
     // WARNING: At this point, the variable pArea->thermal.list.size()
     //   might not be valid (because not really initialized yet)
-    uint clusterCount = (study.usedByTheSolver) ? (pArea->thermal.list.enabledCount())
-                                                : pArea->thermal.list.allClustersCount();
+    uint clusterCount = pArea->thermal.list.allClustersCount();
 
     // Resize
     pTSNumberRules.reset(clusterCount, nbYears);
