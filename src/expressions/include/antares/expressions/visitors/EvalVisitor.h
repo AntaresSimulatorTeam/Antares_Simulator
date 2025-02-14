@@ -56,17 +56,17 @@ public:
 
     EvaluationResult operator+(const EvaluationResult& right) const
     {
-        return applyOperator(right, std::plus<>());
+        return evaluateBinaryOperation(right, std::plus<>());
     }
 
     EvaluationResult operator-(const EvaluationResult& right) const
     {
-        return applyOperator(right, std::minus<>());
+        return evaluateBinaryOperation(right, std::minus<>());
     }
 
     EvaluationResult operator*(const EvaluationResult& right) const
     {
-        return applyOperator(right, std::multiplies<>());
+        return evaluateBinaryOperation(right, std::multiplies<>());
     }
 
     struct SafeDivides
@@ -98,14 +98,14 @@ public:
 
     EvaluationResult operator/(const EvaluationResult& right) const
     {
-        // return applyOperator(right, std::divides<>());
-        return applyOperator(right, SafeDivides{});
+        // return evaluateBinaryOperation(right, std::divides<>());
+        return evaluateBinaryOperation(right, SafeDivides{});
     }
 
     EvaluationResult operator-() const
     {
-        return applyUnaryOperator(std::negate<>());
-        // return applyOperator(EvaluationResult{-1}, std::multiplies<>());
+        return evaluateUnaryOperation(std::negate<>());
+        // return evaluateBinaryOperation(EvaluationResult{-1}, std::multiplies<>());
     }
 
     [[nodiscard]] std::variant<double, std::vector<double>> value() const
@@ -129,19 +129,19 @@ private:
     explicit EvaluationResult(const std::variant<double, std::vector<double>>& value);
 
     template<typename Op>
-    EvaluationResult applyOperator(const EvaluationResult& right, Op op) const;
+    EvaluationResult evaluateBinaryOperation(const EvaluationResult& right, Op op) const;
     template<typename Op>
-    EvaluationResult applyUnaryOperator(Op op) const;
+    EvaluationResult evaluateUnaryOperation(Op op) const;
 };
 
 template<typename BinaryOp>
-double applyOperation(double lhs, double rhs, BinaryOp op)
+double computeBinaryOperation(double lhs, double rhs, BinaryOp op)
 {
     return op(lhs, rhs);
 }
 
 template<typename BinaryOp>
-std::vector<double> applyOperation(const std::vector<double>& lhs, double rhs, BinaryOp op)
+std::vector<double> computeBinaryOperation(const std::vector<double>& lhs, double rhs, BinaryOp op)
 {
     auto result(lhs);
     for (double& value: result)
@@ -152,13 +152,15 @@ std::vector<double> applyOperation(const std::vector<double>& lhs, double rhs, B
 }
 
 template<typename BinaryOp>
-std::vector<double> applyOperation(double lhs, const std::vector<double>& rhs, BinaryOp op)
+std::vector<double> computeBinaryOperation(double lhs, const std::vector<double>& rhs, BinaryOp op)
 {
-    return applyOperation(rhs, lhs, op);
+    return computeBinaryOperation(rhs, lhs, op);
 }
 
 template<typename BinaryOp>
-std::vector<double> applyOperation(const std::vector<double>& lhs, const std::vector<double>& rhs, BinaryOp op)
+std::vector<double> computeBinaryOperation(const std::vector<double>& lhs,
+                                           const std::vector<double>& rhs,
+                                           BinaryOp op)
 {
     if (lhs.size() == rhs.size())
     {
@@ -174,17 +176,18 @@ std::vector<double> applyOperation(const std::vector<double>& lhs, const std::ve
 }
 
 template<typename Op>
-EvaluationResult EvaluationResult::applyOperator(const EvaluationResult& right, Op op) const
+EvaluationResult EvaluationResult::evaluateBinaryOperation(const EvaluationResult& right,
+                                                           Op op) const
 {
     return EvaluationResult(
       std::visit([&op](const auto& l, const auto& r) -> std::variant<double, std::vector<double>>
-                 { return applyOperation(l, r, op); },
+                 { return computeBinaryOperation(l, r, op); },
                  value_,
                  right.value_));
 }
 
 template<typename UnaryOp>
-std::vector<double> applyOperation(const std::vector<double>& values, UnaryOp op)
+std::vector<double> computeUnaryOperation(const std::vector<double>& values, UnaryOp op)
 {
     auto result(values);
     for (double& v: result)
@@ -195,17 +198,17 @@ std::vector<double> applyOperation(const std::vector<double>& values, UnaryOp op
 }
 
 template<typename UnaryOp>
-double applyOperation(double value, UnaryOp op)
+double computeUnaryOperation(double value, UnaryOp op)
 {
     return op(value);
 }
 
 template<typename Op>
-EvaluationResult EvaluationResult::applyUnaryOperator(Op op) const
+EvaluationResult EvaluationResult::evaluateUnaryOperation(Op op) const
 {
     return EvaluationResult(
       std::visit([&op](const auto& v) -> std::variant<double, std::vector<double>>
-                 { return applyOperation(v, op); },
+                 { return computeUnaryOperation(v, op); },
                  value_));
 }
 
