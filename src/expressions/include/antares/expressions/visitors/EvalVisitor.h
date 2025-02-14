@@ -184,7 +184,7 @@ EvaluationResult EvaluationResult::applyOperator(const EvaluationResult& right, 
 {
     return
     {
-        std::visit([&op](const auto& l, const auto& r) { applyOperation(l, r, op); },
+        std::visit([&op](const auto& l, const auto& r) { return applyOperation(l, r, op); },
                    value_,
                    right.value_);
     }
@@ -212,7 +212,7 @@ EvaluationResult EvaluationResult::applyUnaryOperator(Op op) const
 {
     return
     {
-        std::visit([&Op](const auto& v) { return applyOperation(v, op); }, value_);
+        std::visit([&op](const auto& v) { return applyOperation(v, op); }, value_);
     }
 }
 
