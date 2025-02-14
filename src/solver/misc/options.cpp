@@ -22,20 +22,12 @@
 #include "antares/solver/misc/options.h"
 
 #include <algorithm>
-#include <cassert>
 #include <fstream>
-#include <limits>
-#include <string.h>
 
 #include <boost/algorithm/string/join.hpp>
 
-#include <yuni/yuni.h>
-
-#include <antares/antares/constants.h>
 #include <antares/exception/LoadingError.hpp>
-#include <antares/logs/logs.h>
 #include <antares/study/study.h>
-#include "antares/antares/Enum.hpp"
 #include "antares/config/config.h"
 #include "antares/solver/utils/ortools_utils.h"
 
@@ -78,21 +70,21 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
                 "Override the max number of years computed simultaneously");
 
     //--linear-solver
-    parser->add(options.optOptions.linearSolver,
+    parser->add(options.solverOptions.linearSolver,
                 ' ',
                 "linear-solver",
                 "Solver used for linear optimizations during simulation\nAvailable solver list : "
-                  + availableOrToolsSolversString(SolverClass::LINEAR));
+                  + availableSolversString(SolverClass::LINEAR));
 
     //--solver
-    parser->add(options.optOptions.linearSolver,
+    parser->add(options.solverOptions.linearSolver,
                 ' ',
                 "solver",
                 "Deprecated, use linear-solver instead.");
 
     //--linear-solver-parameters
     parser->add(
-      options.optOptions.linearSolverParameters,
+      options.solverOptions.linearSolverParameters,
       ' ',
       "linear-solver-parameters",
       "Set linear solver-specific parameters, for instance --linear-solver-parameters=\"THREADS 1 "
@@ -101,22 +93,22 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
       "Syntax is solver-dependent, and only supported for SCIP & XPRESS.");
 
     //--solver-parameters
-    parser->add(options.optOptions.linearSolverParameters,
+    parser->add(options.solverOptions.linearSolverParameters,
                 ' ',
                 "solver-parameters",
                 "Deprecated, use linear-solver-parameters instead.");
 
     //--quadratic-solver
     parser->add(
-      options.optOptions.quadraticSolver,
+      options.solverOptions.quadraticSolver,
       ' ',
       "quadratic-solver",
       "Solver used for quadratic optimizations during simulation\nAvailable solver list : "
-        + availableOrToolsSolversString(SolverClass::QUADRATIC));
+        + availableSolversString(SolverClass::QUADRATIC));
 
     //--quadratic-solver-parameters
     parser->add(
-      options.optOptions.quadraticSolverParameters,
+      options.solverOptions.quadraticSolverParameters,
       ' ',
       "quadratic-solver-parameters",
       "Set quadratic solver-specific parameters, for instance "
@@ -195,7 +187,7 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
                     "Export named constraints and variables in mps (both optim).");
 
     // --solver-logs
-    parser->addFlag(options.optOptions.solverLogs, ' ', "solver-logs", "Print solver logs.");
+    parser->addFlag(options.solverOptions.solverLogs, ' ', "solver-logs", "Print solver logs.");
 
     parser->addParagraph("\nMisc.");
     // --progress
@@ -279,7 +271,7 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
     }
 
     options.checkForceSimulationMode();
-    checkSolvers(options);
+    checkForSolversExistence(options.solverOptions);
 
     // no-output and force-zip-output
     if (settings.noOutput && settings.forceZipOutput)
@@ -298,11 +290,11 @@ void checkSolverExists(std::string solverName, const std::list<std::string> avai
     }
 }
 
-void checkSolvers(StudyLoadOptions& options)
+void checkForSolversExistence(Solver::Optimization::OptimizationOptions& solverOptions)
 {
-    checkSolverExists(options.optOptions.linearSolver,
+    checkSolverExists(solverOptions.linearSolver,
                       getAvailableSolverNames(SolverClass::LINEAR));
-    checkSolverExists(options.optOptions.quadraticSolver,
+    checkSolverExists(solverOptions.quadraticSolver,
                       getAvailableSolverNames(SolverClass::QUADRATIC));
 }
 

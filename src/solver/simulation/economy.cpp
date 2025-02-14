@@ -94,7 +94,8 @@ bool Economy::simulationBegin()
               study.areas,
               study.parameters.shedding.policy,
               study.parameters.simplexOptimizationRange,
-              study.calendar);
+              study.calendar,
+              study.parameters.optOptions);
         }
     }
 
@@ -165,8 +166,7 @@ bool Economy::year(Progression::Task& progression,
             // Runs all the post processes in the list of post-process commands
             optRuntimeData opt_runtime_data(state.year,
                                             w,
-                                            hourInTheYear,
-                                            study.parameters.optOptions);
+                                            hourInTheYear);
             postProcessesList_[numSpace]->runAll(opt_runtime_data);
 
             variables.weekBegin(state);

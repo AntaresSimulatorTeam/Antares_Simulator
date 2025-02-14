@@ -48,10 +48,10 @@ namespace
 {
 void printSolvers()
 {
-    std::cout << "Available linear solvers: "                                        // NOSONAR
-              << availableOrToolsSolversString(SolverClass::LINEAR) << std::endl;    // NOSONAR
-    std::cout << "Available quadratic solvers: "                                     // NOSONAR
-              << availableOrToolsSolversString(SolverClass::QUADRATIC) << std::endl; // NOSONAR
+    std::cout << "Available linear solvers: "
+              << availableSolversString(SolverClass::LINEAR) << std::endl;
+    std::cout << "Available quadratic solvers: "
+              << availableSolversString(SolverClass::QUADRATIC) << std::endl;
 }
 } // namespace
 
@@ -145,7 +145,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     }
 
     // For solver
-    study.parameters.optOptions = options.optOptions;
+    study.parameters.optOptions = options.solverOptions;
 
     // This settings can only be enabled from the solver
     // Prepare the output for the study

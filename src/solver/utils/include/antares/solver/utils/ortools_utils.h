@@ -62,7 +62,7 @@ std::list<std::string> getAvailableSolverNames(SolverClass solverClass);
  * with a ".".
  *
  */
-std::string availableOrToolsSolversString(SolverClass solverClass);
+std::string availableSolversString(SolverClass solverClass);
 
 /*!
  *  \brief Create a MPSolver with correct linear or mixed variant

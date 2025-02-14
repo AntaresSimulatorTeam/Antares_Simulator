@@ -211,8 +211,6 @@ void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
     removeTemporaryFile(tmpPath);
 }
 
-static int iLp = 0;
-
 bool solveAndManageStatus(MPSolver* solver, int& resultStatus, const MPSolverParameters& params)
 {
     auto status = solver->Solve(params);
@@ -369,7 +367,7 @@ std::list<std::string> getAvailableSolverNames(SolverClass solverClass)
                                               : getAvailableQuadraticSolverNames();
 }
 
-std::string availableOrToolsSolversString(SolverClass solverClass)
+std::string availableSolversString(SolverClass solverClass)
 {
     return boost::algorithm::join(getAvailableSolverNames(solverClass), ",") + ".";
 }

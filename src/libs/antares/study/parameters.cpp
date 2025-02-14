@@ -1283,13 +1283,7 @@ bool Parameters::loadFromINI(const IniFile& ini, const StudyVersion& version)
 void Parameters::handleOptimizationOptions(const StudyLoadOptions& options)
 {
     // Options only set from the command-line
-    optOptions.linearSolver = options.optOptions.linearSolver;
-    optOptions.linearSolverParameters = options.optOptions.linearSolverParameters;
-    optOptions.quadraticSolver = options.optOptions.quadraticSolver;
-    optOptions.quadraticSolverParameters = options.optOptions.quadraticSolverParameters;
-
-    // Options that can be set both in command-line and file
-    optOptions.solverLogs = options.optOptions.solverLogs || optOptions.solverLogs;
+    optOptions << options.solverOptions;
 }
 
 void Parameters::fixRefreshIntervals()
@@ -1782,10 +1776,10 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info() << "  :: ignoring solution export";
     }
 
-    logs.info() << "  :: solver " << options.optOptions.linearSolver
+    logs.info() << "  :: solver " << options.solverOptions.linearSolver
                 << " is used for linear problem resolution";
 
-    logs.info() << "  :: solver " << options.optOptions.quadraticSolver
+    logs.info() << "  :: solver " << options.solverOptions.quadraticSolver
                 << " is used for quadratic problem resolution";
 
     // indicated that Problems will be named

@@ -67,8 +67,8 @@ BOOST_FIXTURE_TEST_CASE(reset, Fixture)
 
 BOOST_FIXTURE_TEST_CASE(loadValid, Fixture)
 {
-    options.optOptions.linearSolver = "xpress";
-    options.optOptions.quadraticSolver = "scip";
+    options.solverOptions.linearSolver = "xpress";
+    options.solverOptions.quadraticSolver = "scip";
 
     writeValidFile();
     p.loadFromFile(path.string(), version);

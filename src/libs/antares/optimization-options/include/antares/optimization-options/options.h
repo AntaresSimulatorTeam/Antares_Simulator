@@ -33,5 +33,17 @@ struct OptimizationOptions
     std::string linearSolverParameters;
     std::string quadraticSolverParameters;
     bool solverLogs = false;
+
+    OptimizationOptions& operator<<(const OptimizationOptions& options)
+    {
+        // Overrides all attributes, but applies a logical OR for activating logs
+        // (Option that can be set both in command-line and file)
+        this->linearSolver = options.linearSolver;
+        this->quadraticSolver = options.quadraticSolver;
+        this->linearSolverParameters = options.linearSolverParameters;
+        this->quadraticSolverParameters = options.quadraticSolverParameters;
+        this->solverLogs = options.solverLogs || this->solverLogs;
+        return *this;
+    }
 };
 } // namespace Antares::Solver::Optimization

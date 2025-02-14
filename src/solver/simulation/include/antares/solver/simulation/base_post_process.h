@@ -35,18 +35,16 @@ namespace Antares::Solver::Simulation
 
 struct optRuntimeData
 {
-    optRuntimeData(unsigned int y, unsigned int w, unsigned int h, const OptimizationOptions& opt):
+    optRuntimeData(unsigned int y, unsigned int w, unsigned int h):
         year(y),
         week(w),
-        hourInTheYear(h),
-        options(opt)
+        hourInTheYear(h)
     {
     }
 
     unsigned int year = 0;
     unsigned int week = 0;
     unsigned int hourInTheYear = 0;
-    const OptimizationOptions& options;
 };
 
 class basePostProcessCommand
@@ -78,7 +76,8 @@ public:
                                                             AreaList& areas,
                                                             SheddingPolicy sheddingPolicy,
                                                             SimplexOptimization splxOptimization,
-                                                            Calendar& calendar);
+                                                            Calendar& calendar,
+                                                            const OptimizationOptions& solverOptions);
     void runAll(const optRuntimeData& opt_runtime_data);
 
 protected:

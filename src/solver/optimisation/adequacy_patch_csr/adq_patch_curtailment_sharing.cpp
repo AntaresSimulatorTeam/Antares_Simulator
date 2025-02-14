@@ -203,7 +203,7 @@ void HourlyCSRProblem::solveProblem(uint week, int year, const OptimizationOptio
     ADQ_PATCH_CSR(options, problemeAResoudre_, *this, adqPatchParams_, week, year);
 }
 
-void HourlyCSRProblem::run(uint week, uint year, const OptimizationOptions& options)
+void HourlyCSRProblem::run(uint week, uint year)
 {
     calculateCsrParameters();
     buildProblemVariables();
@@ -211,5 +211,5 @@ void HourlyCSRProblem::run(uint week, uint year, const OptimizationOptions& opti
     setVariableBounds();
     buildProblemConstraintsRHS();
     setProblemCost();
-    solveProblem(week, year, options);
+    solveProblem(week, year, solverOptions_);
 }

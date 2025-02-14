@@ -30,7 +30,6 @@
 #include "antares/concurrency/concurrency.h"
 #include "antares/solver/hydro/management/HydroInputsChecker.h"
 #include "antares/solver/hydro/management/management.h"
-#include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/opt_time_writer.h"
 #include "antares/solver/simulation/timeseries-numbers.h"
 #include "antares/solver/ts-generator/generator.h"

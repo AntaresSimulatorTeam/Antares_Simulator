@@ -31,7 +31,7 @@
 using Antares::Solver::Optimization::OptimizationOptions;
 using namespace operations_research::math_opt;
 
-constexpr double kInf = std::numeric_limits<double>::infinity();
+constexpr double infinity = std::numeric_limits<double>::infinity();
 
 void BuildVariablesAndObjective(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre, Model& model);
 void BuildConstraints(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre, Model& model);
@@ -96,15 +96,15 @@ void BuildVariablesAndObjective(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre, 
             break;
         case VARIABLE_BORNEE_INFERIEUREMENT:
             lb = ProblemeAResoudre->Xmin[i];
-            ub = kInf;
+            ub = infinity;
             break;
         case VARIABLE_BORNEE_SUPERIEUREMENT:
-            lb = -kInf;
+            lb = -infinity;
             ub = ProblemeAResoudre->Xmax[i];
             break;
         case VARIABLE_NON_BORNEE:
-            lb = -kInf;
-            ub = kInf;
+            lb = -infinity;
+            ub = infinity;
             break;
         default:
             throw std::invalid_argument("Unknown variable type: "
@@ -135,8 +135,8 @@ void BuildConstraints(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre, Model& mod
                           .data()[ProblemeAResoudre->IndicesDebutDeLigne[iCt] + iCoef];
             linear_expression += model.variable(iVar) * coef;
         }
-        double lb = -kInf;
-        double ub = kInf;
+        double lb = -infinity;
+        double ub = infinity;
         switch (ProblemeAResoudre->Sens[iCt])
         {
         case '=':

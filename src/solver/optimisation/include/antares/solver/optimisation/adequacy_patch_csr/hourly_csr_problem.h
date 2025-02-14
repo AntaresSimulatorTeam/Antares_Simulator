@@ -27,7 +27,6 @@
 
 #include <antares/logs/logs.h>
 #include <antares/study/parameters/adq-patch-params.h>
-#include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
 #include "../variables/VariableManagerUtils.h"
@@ -71,13 +70,16 @@ class HourlyCSRProblem
     using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
 
 public:
-    explicit HourlyCSRProblem(const AdqPatchParams& adqPatchParams, PROBLEME_HEBDO* p):
+    explicit HourlyCSRProblem(const AdqPatchParams& adqPatchParams,
+                              PROBLEME_HEBDO* p,
+                              const Solver::Optimization::OptimizationOptions& solverOptions):
         adqPatchParams_(adqPatchParams),
         variableManager_(p->CorrespondanceVarNativesVarOptim,
                          p->NumeroDeVariableStockFinal,
                          p->NumeroDeVariableDeTrancheDeStock,
                          p->NombreDePasDeTempsPourUneOptimisation),
-        problemeHebdo_(p)
+        problemeHebdo_(p),
+        solverOptions_(solverOptions)
     {
         double temp = pow(10, -adqPatchParams.curtailmentSharing.thresholdVarBoundsRelaxation);
         belowThisThresholdSetToZero = std::min(temp, 0.1);
@@ -93,11 +95,10 @@ public:
         triggeredHour = hour;
     }
 
-    void run(unsigned int week,
-             unsigned int year,
-             const Antares::Solver::Optimization::OptimizationOptions& options);
+    void run(unsigned int week, unsigned int year);
 
 private:
+    const Solver::Optimization::OptimizationOptions& solverOptions_;
     void calculateCsrParameters();
 
     void buildProblemVariables();

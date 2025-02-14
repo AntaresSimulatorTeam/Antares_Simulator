@@ -124,7 +124,8 @@ public:
     CurtailmentSharingPostProcessCmd(const AdqPatchParams& adqPatchParams,
                                      PROBLEME_HEBDO* problemeHebdo,
                                      AreaList& areas,
-                                     unsigned int numSpace);
+                                     unsigned int numSpace,
+                                     const OptimizationOptions& solverOptions);
 
     void execute(const optRuntimeData& opt_runtime_data) override;
 
@@ -138,6 +139,7 @@ private:
     const AreaList& area_list_;
     const AdqPatchParams& adqPatchParams_;
     unsigned int numSpace_ = 0;
+    const OptimizationOptions& solverOptions_;
 };
 
 } // namespace Antares::Solver::Simulation
