@@ -57,22 +57,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::MultiplicationNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::DivisionNode* node)
 {
-    // double left = dispatch(node->left());
-    // double right = dispatch(node->right());
-    // double result = 0.;
-    // try
-    // {
-    // result = left / right;
-    // if (!std::isfinite(result))
-    // {
-    //     throw EvalVisitorDivisionException(left, right, "is not a finite number");
-    // }
     return dispatch(node->left()) / dispatch(node->right());
-    // }
-    // catch (const std::exception& ex)
-    // {
-    //     throw EvalVisitorDivisionException(ex.what());
-    // }
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::EqualNode* node)
