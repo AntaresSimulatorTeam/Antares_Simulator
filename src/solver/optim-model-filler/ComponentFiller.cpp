@@ -44,20 +44,6 @@ bool checkTimeSteps(Optimisation::LinearProblemApi::FillContext& ctx)
     return ctx.getFirstTimeStep() <= ctx.getLastTimeStep();
 }
 
-static auto ExtractEvaluationResult(
-  const Expressions::Visitors::EvaluationResult& evaluation_result)
-{
-    if (evaluation_result.getEvaluationResultType()
-        == Expressions::Visitors::EvaluationResultType::CONSTANT)
-    {
-        return std::variant<double, std::vector<double>>{evaluation_result.value()};
-    }
-    else
-    {
-        return std::variant<double, std::vector<double>>{evaluation_result.values()};
-    }
-}
-
 void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
                                    Optimisation::LinearProblemApi::ILinearProblemData& data,
                                    Optimisation::LinearProblemApi::FillContext& ctx)
@@ -83,9 +69,6 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
         const auto& ub = evaluator.dispatch(variable.UpperBound().RootNode());
         if (variable.isTimeDependent())
         {
-            const auto lb_values = ExtractEvaluationResult(lb);
-            const auto ub_values = ExtractEvaluationResult(ub);
-
             std::visit(
               [&pb, &variable, this, &ctx](const auto& lb_, const auto& ub_)
               {
@@ -95,13 +78,13 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
                                  component_.Id() + "." + variable.Id(),
                                  ctx.getNumberOfTimestep());
               },
-              lb_values,
-              ub_values);
+              lb.value(),
+              ub.value());
         }
         else
         {
-            pb.addVariable(lb.value(),
-                           ub.value(),
+            pb.addVariable(lb.valueAsDouble(),
+                           ub.valueAsDouble(),
                            variable.Type() != Study::SystemModel::ValueType::FLOAT,
                            component_.Id() + "." + variable.Id());
         }
@@ -204,14 +187,14 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
     // TODO objective expression is not Timedependent
 
     ReadLinearExpressionVisitor visitor(evaluationContext,
-{.fillContext = {static_cast<unsigned int>(0),
-                                                         static_cast<unsigned>(0)},
+{.fillContext = ctx,
                                          .scenarioGroup = component_.getScenarioGroupId(),
                                          .scenario = 0});
 
-    auto linear_expression = visitor.dispatch(model->Objective().RootNode())
-                               .GetLinearExpressions()[0];
+    auto linear_expressions = visitor.dispatch(model->Objective().RootNode())
+                                .GetLinearExpressions();
 
+    const auto& linear_expression = linear_expressions[ctx.getFirstTimeStep()];
     if (abs(linear_expression.offset()) > 1e-10)
     {
         throw std::invalid_argument("Antares does not support objective offsets (found in model '"
@@ -222,11 +205,12 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
     {
         if (IsThisVariableTimeDependent(var_id))
         {
-            for (auto var_pos = 0; var_pos != ctx.getNumberOfTimestep(); ++var_pos)
+            for (auto var_pos = ctx.getFirstTimeStep(); var_pos <= ctx.getLastTimeStep(); ++var_pos)
             {
                 auto* variable = pb.getVariable(component_.Id() + "." + var_id + '_'
                                                 + std::to_string(var_pos));
-                pb.setObjectiveCoefficient(variable, coef);
+                pb.setObjectiveCoefficient(variable,
+                                           linear_expressions.at(var_pos).coefPerVar()[var_id]);
             }
         }
         else

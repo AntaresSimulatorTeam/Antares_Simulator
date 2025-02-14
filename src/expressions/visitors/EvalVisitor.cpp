@@ -168,14 +168,17 @@ EvalVisitorNotImplemented::EvalVisitorNotImplemented(const std::string& visitor,
 }
 
 EvaluationResult::EvaluationResult(double value):
-    value_(value),
-    evaluationResultType(EvaluationResultType::CONSTANT)
+    value_(value)
 {
 }
 
 EvaluationResult::EvaluationResult(const std::vector<double>& values):
-    values_(values),
-    evaluationResultType(EvaluationResultType::NOTCONSTANT)
+    value_(values)
+{
+}
+
+EvaluationResult::EvaluationResult(const std::variant<double, std::vector<double>>& value):
+    value_(value)
 {
 }
 
