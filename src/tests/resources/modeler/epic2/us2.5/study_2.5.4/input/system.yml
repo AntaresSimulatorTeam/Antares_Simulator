@@ -1,0 +1,29 @@
+system:
+  id: sys_example4
+  description: a node with up to 10 similar generators (min_p=150, max_p=300, cost = 0.5 €/MWh + 10€/hour of up time).
+   Load is of 1000MW; thus 4 generators should be used. Objective = 1000*0.5 + 4*10 = 540.
+  model-libraries: lib_example3
+
+  components:
+  - id: node1
+    model: lib_example3.node_genCluster_oneLoad
+    scenario-group: sg
+    parameters:
+    - id: load
+      type: constant
+      value: 1000
+    - id: gen_min_p
+      type: constant
+      value: 150
+    - id: gen_max_p
+      type: constant
+      value: 300
+    - id: gen_cluster_size
+      type: constant
+      value: 10
+    - id: gen_prop_cost
+      type: constant
+      value: 0.5
+    - id: gen_fixed_cost
+      type: constant
+      value: 10
