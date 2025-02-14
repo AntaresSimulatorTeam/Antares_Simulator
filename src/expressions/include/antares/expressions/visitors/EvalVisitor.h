@@ -123,10 +123,6 @@ public:
         return std::get<std::vector<double>>(value_);
     }
 
-    [[nodiscard]] EvaluationResultType getEvaluationResultType() const
-    {
-        return evaluationResultType;
-    }
 
 private:
     std::variant<double, std::vector<double>> value_;
