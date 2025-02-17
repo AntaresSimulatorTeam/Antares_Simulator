@@ -1,6 +1,8 @@
 system:
   id: sys_example2
-  description: test system
+  description: one load of 100 MW, one cheap generator gen1 (max_p=80 MW, cost=0.5€/MWh), one expensive generator gen2  
+   (min_p=40 MW, cost=6€/MWh). Thus, gen1 does not suffice, gen2 must be used at its min_p (40), and gen_1 must complete 
+   (60); on the 3 timestamps. Objective = 3 * (60 * 0.5 + 40 * 6) = 810
   model-libraries: lib_example2
 
   components:

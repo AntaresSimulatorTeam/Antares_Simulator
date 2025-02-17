@@ -15,6 +15,12 @@ The following properties were removed from **settings/generaldata.ini**.
 - `adequacy patch/set-to-null-ntc-between-physical-out-for-first-step`
 - `other preferences/initial-reservoir-levels`
 
+If the user provides any of the key/values below
+- `adequacy patch/enable-first-step = true`
+- `adequacy patch/set-to-null-ntc-between-physical-out-for-first-step = false`
+- `other preferences/initial-reservoir-levels = hot start`
+the simulation will fail with a warning. We recommend removing these properties from `settings/generaldata.ini`. Other values (e.g `adequacy patch/enable-first-step = false`) will be ignored.
+
 #### Short-term storages
 
 - Added properties:
@@ -25,12 +31,18 @@ The following properties were removed from **settings/generaldata.ini**.
     - `penalize-variation-withdrawal` boolean, default false (file
       input/st-storage/series/<area id>/list.ini)
 
-- Added timeseries cost-injection.txt, cost-withdrawal.txt, cost-level.txt, cost-variation-injection.txt and
-  cost-variation-withdrawal.txt. These files are optional. If present, they must contain either no value (same behavior
-  as no file), or HOURS_PER_YEAR = 8760 coefficients in one column. Each of these timeseries is located in directory
-  input/st-storage/series/<area id>/<ST id>/, along existing series (rule-curves.txt, etc.).
+- Added 5 optional timeseries for each STS in existing directory `input/st-storage/series/<area id>/<ST id>/`
+	- `cost-injection.txt`
+	- `cost-withdrawal.txt`
+	- `cost-level.txt`
+	- `cost-variation-injection.txt`
+	- `cost-variation-withdrawal.txt`
 
-#### Final levels / scenario-builder
+It is possible to provide only k of these time-series, for k=0..5. However, if present each file must contain either no value (same behavior as no file), or HOURS_PER_YEAR = 8760 coefficients in one column. These timeseries are located along existing series (rule-curves.txt, etc.).
+
+Note that in order for time-series `cost-variation-injection.txt` and `cost-variation-withdrawal.txt` to be taken into account, the user needs to set `penalize-variation-injection = true` (resp. `penalize-variation-withdrawal = true`). If not, these files will be ignored.
+
+####  Hydro final levels / scenario-builder
 
 - Added optional key type "hfl" (hydro final level) in the scenario builder. The syntax is equivalent to existing
   prefix "hl" (hydro initial level), that is
@@ -41,41 +53,13 @@ hl,area,<year> = <value>
 
 By convention, `year` start at 0 and `value` must be in interval [0, 1].
 
-#### Compatibility flag for hydro pmax coefficients
+#### Compatibility flag for hydro maximal power
 
-In file settings/generaldata.ini, in section `other preferences`, add property `hydro-pmax-format` with possible values
-`daily` (default, legacy) and `hourly` (new).
+In file settings/generaldata.ini, in new section `other preferences`, add new property `hydro-pmax` with possible values
+- `daily` (default, legacy) 
+- `hourly` (new).
 
-Note: This flag allows to bypass the breaking change that took place in version 9.1 for hydro max powers. It is possible
-to support only the `legacy` file format.
-
-### (TS-generator only) TS generation for link capacities
-
-In files input/links/<link1>/properties.ini, add the following properties
-
-- unitcount (unsigned int, default 1)
-- nominalcapacity (float, default 0)
-- law.planned (string "uniform"/"geometric", default "uniform")
-- law.forced (same)
-- volatility.planned (double in [0,1], default 0)
-- volatility.forced (same)
-- force-no-generation (true/false, default true)
-
-- "prepro" timeseries => input/links/<link 1>/prepro/<link 2>_{direct, indirect}.txt, 365x6 values, respectively "forced
-  outage duration", "planned outage duration", "forced outage rate", "planned outage rate", "minimum of groups in
-  maintenance", "maximum of groups in maintenance".
-- "modulation" timeseries => input/links/<link 1>/prepro/<link 2>_mod_{direct, indirect}.txt, 8760x1 values each
-  in [0, 1]
-- number of TS to generate => generaldata.ini/General/nbtimeserieslinks (unsigned int, default value 1)
-
-### Input
-
-#### Hydro Final Reservoir Level
-
-In the existing file **settings/scenariobuilder.dat**, under **&lt;ruleset&gt;** section following properties added (if
-final reservoir level specified, different from `init`):
-
-* **hfl,&lt;area&gt;,&lt;year&gt; = &lt;hfl-value&gt;**
+Note: This flag allows to bypass the breaking change that was introduced in version 9.1 the representation of max hydro power (daily -> hourly, see below). If flag is not specified or given value `daily`, the 8.8 format will be used for hydro pmax time-series. For reference, this format consists of a single file with 4 columns and 365 rows located in `input/hydro/common/capacity/maxpower_<area id>.txt`.
 
 ### Output
 

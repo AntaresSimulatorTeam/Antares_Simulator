@@ -191,7 +191,9 @@ void DataSeriesHydro::buildHourlyMaxPowerFromDailyTS(
     ConvertDailyTSintoHourlyTS(DailyMaxPumpPower, maxHourlyPumpPower.timeSeries[0]);
 }
 
-bool DataSeriesHydro::saveToFolder(const AreaName& areaID, const AnyString& folder) const
+bool DataSeriesHydro::saveToFolder(const AreaName& areaID,
+                                   const AnyString& folder,
+                                   Parameters::Compatibility::HydroPmax hydroPmax) const
 {
     String buffer;
     buffer.clear() << folder << SEP << areaID;
@@ -207,10 +209,14 @@ bool DataSeriesHydro::saveToFolder(const AreaName& areaID, const AnyString& fold
         ret = storage.timeSeries.saveToCSVFile(buffer, 0) && ret;
         buffer.clear() << folder << SEP << areaID << SEP << "mingen.txt";
         ret = mingen.timeSeries.saveToCSVFile(buffer, 0) && ret;
-        buffer.clear() << folder << SEP << areaID << SEP << "maxHourlyGenPower.txt";
-        ret = maxHourlyGenPower.timeSeries.saveToCSVFile(buffer, 0) && ret;
-        buffer.clear() << folder << SEP << areaID << SEP << "maxHourlyPumpPower.txt";
-        ret = maxHourlyPumpPower.timeSeries.saveToCSVFile(buffer, 0) && ret;
+
+        if (hydroPmax == Parameters::Compatibility::HydroPmax::Hourly)
+        {
+            buffer.clear() << folder << SEP << areaID << SEP << "maxHourlyGenPower.txt";
+            ret = maxHourlyGenPower.timeSeries.saveToCSVFile(buffer, 0) && ret;
+            buffer.clear() << folder << SEP << areaID << SEP << "maxHourlyPumpPower.txt";
+            ret = maxHourlyPumpPower.timeSeries.saveToCSVFile(buffer, 0) && ret;
+        }
 
         return ret;
     }

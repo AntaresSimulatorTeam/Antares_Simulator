@@ -1,6 +1,11 @@
 system:
   id: sys_example3
-  description: test system
+  description: in node1, gen is enough to fulfill load and is less expensive than gen1; thus gen1 must not be used (0)
+   and gen2 must be used at load level (100). Objective = 100 * 6 = 600 for node1.
+   In node2, load is 1000 MW and gen1 is cheap but not enough (max_p=650, cost=10€/MWh), and gen2 is large but more 
+   expensive (min_p=500, cost=20 €/MWh). Thus gen2 must be used at its minimum power (500) and gen1 should complete 
+   (500). Objective = 500 * 10 + 500 * 20 = 15000 for node2.
+   Total objective = 15600 for both nodes.
   model-libraries: lib_example1, lib_example2
 
   components:

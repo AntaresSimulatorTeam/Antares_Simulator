@@ -67,10 +67,10 @@ Here is a list of mandatory or optional CMake configuration options:
 | `CMAKE_TOOLCHAIN_FILE` | no           | Path to VCPKG toolchain file, allows to integrate VCPKG with cmake build         | `../vcpkg/scripts/buildsystems/vcpkg.cmake` |                                                           |
 | `VCPKG_TARGET_TRIPLET` | no           | Define VCPKG triplet (build type for dependencies etc.)                          | `x64-windows-antares` / `x64-linux-antares` |                                                           |
 
-> 💡 **Disable the UI build to make builds faster**
+> 💡 **Disable the UI build to make builds faster**  
 > The UI takes up a good chunk of compilation time. It is enabled by default, but you can disable it by turning off `BUILD_UI`
 
-> 💡 **Use Ninja to speed up target generation by CMake**
+> 💡 **Use Ninja to speed up target generation by CMake**  
 > At configure time, you may specify Ninja for generation instead of traditional Make. This will speed up the update
 > step after you make small changes to the code.
 > ```
