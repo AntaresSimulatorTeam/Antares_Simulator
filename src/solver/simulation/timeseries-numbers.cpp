@@ -219,7 +219,7 @@ bool IntraModalConsistencyChecker::checkTSconsistency()
         }
     }
 
-    if (!TimeSeriesNumbers::checkAllElementsIdenticalOrOne(listNumberTS))
+    if (!Utils::checkAllElementsIdenticalOrOne(listNumberTS))
     {
         logs.error() << "Intra-modal correlation: " << tsTitle_
                      << "'s numbers of time-series are not equal for all areas";
@@ -338,7 +338,7 @@ bool checkInterModalConsistencyForArea(const Area& area,
     }
 
     // Now check if all elements of list of TS numbers are identical or equal to 1
-    if (!TimeSeriesNumbers::checkAllElementsIdenticalOrOne(listNumberTsOverArea))
+    if (!Utils::checkAllElementsIdenticalOrOne(listNumberTsOverArea))
     {
         logs.error()
           << "Inter-modal correlation: time-series numbers of inter-modal modes in area '"
@@ -691,25 +691,6 @@ static void applyMatrixDrawsToInterModalModesInArea(
             }
         }
     }
-}
-
-bool TimeSeriesNumbers::checkAllElementsIdenticalOrOne(
-  std::vector<std::pair<unsigned, std::string>>& p)
-{
-    // Reject all 1 to the end
-    auto first_one = std::ranges::remove_if(p, [](const auto& pair) { return pair.first == 1; });
-    auto width = first_one.begin()->first;
-    return std::ranges::all_of(first_one,
-                               [&width](const auto& pair)
-                               {
-                                   if (pair.first != width)
-                                   {
-                                       logs.error()
-                                         << "Inconsitent time series width, found: " << pair.first
-                                         << " Previous was " << width << " for " << pair.second;
-                                   }
-                                   return true;
-                               });
 }
 
 using Checks = std::vector<std::pair<const Antares::Data::TimeSeriesNumbers*, std::string>>;
