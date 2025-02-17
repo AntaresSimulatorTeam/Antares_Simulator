@@ -15,3 +15,8 @@ Feature: 2.8
     And the objective value is 160
     And the optimal value of variable node1.gen1_p_0 is 80
     And the optimal value of variable node1.gen2_p_0 is 20
+
+  Scenario: 2.8.1: Exception handling: time series of different lengths.
+    Given the study path is "modeler/1_3"
+    When I run antares modeler
+    Then the simulation fails
