@@ -69,24 +69,16 @@ bool BindingConstraintGroupRepository::timeSeriesWidthConsistentInGroups() const
           {
               return false;
           }
-          auto width = (*constraints.begin())->RHSTimeSeries().width;
-          bool isConsistent = std::ranges::all_of(
-            constraints,
-            [&width](const std::shared_ptr<BindingConstraint>& bc)
-            {
-                auto seriesWidth = bc->RHSTimeSeries().width;
-                bool sameWidth = seriesWidth == width || seriesWidth == 1;
-                if (!sameWidth)
-                {
-                    logs.error() << "Inconsistent time series width for constraint of the same "
-                                    "group. Group at fault: "
-                                 << bc->group() << " .Previous width was " << width
-                                 << " new constraint " << bc->name() << " found with width of "
-                                 << bc->RHSTimeSeries().width;
-                }
-                return sameWidth;
-            });
-          return !isConsistent;
+
+          std::vector<std::pair<unsigned, std::string>> constraintsWidth;
+          constraintsWidth.reserve(constraints.size());
+          for (const auto& c: constraints)
+          {
+              std::string msg = "Constraint group: " << c->group() << " name: " << c->name();
+              constraintsWidth.push_back(c->RHSTimeSeries().width, msg);
+
+          }
+          return checkAllElementsIdenticalOrOne(constraintsWidth);
       });
     return allConsistent;
 }
