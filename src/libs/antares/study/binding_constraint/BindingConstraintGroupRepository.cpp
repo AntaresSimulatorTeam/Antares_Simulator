@@ -28,10 +28,9 @@
 #include <memory>
 #include <numeric>
 
+#include <antares/utils/utils.h>
 #include "antares/study/binding_constraint/BindingConstraintGroup.h"
 #include "antares/study/binding_constraint/BindingConstraintsRepository.h"
-
-#include <antares/utils/utils.h>
 
 namespace Antares::Data
 {
@@ -78,7 +77,6 @@ bool BindingConstraintGroupRepository::timeSeriesWidthConsistentInGroups() const
           {
               std::string msg = "Constraint group: " + c->group() + " name: " + c->name();
               constraintsWidth.push_back({c->RHSTimeSeries().width, msg});
-
           }
           return Utils::checkAllElementsIdenticalOrOne(constraintsWidth);
       });
