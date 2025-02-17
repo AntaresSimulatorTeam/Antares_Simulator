@@ -166,7 +166,6 @@ def get_value(row, ts):
 
     if "-" in ret and not ret.isdigit():  # Handle "80-0" but not single numbers
         ret = ret.split("-")  # Split into a list of strings
-        print(f" ret = {ret} , ts = {ts}")
         return float(ret[ts])  # Index and convert to float
 
     return float(ret)  # Single value case (apply to all timesteps)
