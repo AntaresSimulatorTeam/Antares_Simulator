@@ -172,6 +172,12 @@ double floorDiv(double numerator, double denominator)
     return std::floor(std::round(numerator / denominator * largeValue) / largeValue);
 }
 
+bool checkAllElementsIdenticalOrOne(std::vector<unsigned> w)
+{
+    auto first_one = std::remove(w.begin(), w.end(), 1); // Reject all 1 to the end
+    return std::adjacent_find(w.begin(), first_one, std::not_equal_to<uint>()) == first_one;
+}
+
 bool checkAllElementsIdenticalOrOne(std::vector<std::pair<unsigned, std::string>>& p)
 {
     // Reject all 1 to the end

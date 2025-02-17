@@ -207,16 +207,12 @@ private:
 bool IntraModalConsistencyChecker::checkTSconsistency()
 {
     logs.info() << "Checking intra-modal correlation: " << tsTitle_;
-    std::vector<std::pair<unsigned, std::string>> listNumberTS;
+    std::vector<unsigned> listNumberTS;
     for (auto i = study_.areas.begin(); i != study_.areas.end(); ++i)
     {
         const Area& area = *(i->second);
-        vector<uint> areaNumberTSList = tsCounter_->getAreaTimeSeriesNumber(area);
-        listNumberTS.reserve(listNumberTS.size() + areaNumberTSList.size());
-        for (const auto& ts: areaNumberTSList)
-        {
-            listNumberTS.push_back({ts, ""});
-        }
+        std::vector<unsigned> areaNumberTSList = tsCounter_->getAreaTimeSeriesNumber(area);
+        listNumberTS.insert(listNumberTS.end(), areaNumberTSList.begin(), areaNumberTSList.end());
     }
 
     if (!Utils::checkAllElementsIdenticalOrOne(listNumberTS))
@@ -226,10 +222,7 @@ bool IntraModalConsistencyChecker::checkTSconsistency()
         return false;
     }
     // At this point, all elements are identical or 1
-    nbTimeseries_ = std::ranges::max_element(listNumberTS,
-                                             [](const auto& a, const auto& b)
-                                             { return a.first < b.first; })
-                      ->first;
+    nbTimeseries_ = *(std::ranges::max_element(listNumberTS));
 
     return true;
 }
