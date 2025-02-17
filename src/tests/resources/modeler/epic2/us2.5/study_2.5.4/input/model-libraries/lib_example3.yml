@@ -1,0 +1,43 @@
+library:
+  id: lib_example3
+  description: test model library
+
+  models:
+    - id: node_genCluster_oneLoad
+      description: A simple node with a generator cluster and one load, to test integer variables
+      parameters:
+        - id: load
+          time-dependent: false
+          scenario-dependent: false
+        - id: gen_max_p
+          time-dependent: false
+          scenario-dependent: false
+        - id: gen_min_p
+          time-dependent: false
+          scenario-dependent: false
+        - id: gen_cluster_size
+          time-dependent: false
+          scenario-dependent: false
+        - id: gen_prop_cost
+          time-dependent: false
+          scenario-dependent: false
+        - id: gen_fixed_cost
+          time-dependent: false
+          scenario-dependent: false
+      variables:
+        - id: gen_total_p
+          lower-bound: 0
+          upper-bound: gen_max_p * gen_cluster_size
+          variable-type: continuous
+        - id: gen_n_on
+          lower-bound: 0
+          upper-bound: gen_cluster_size
+          variable-type: integer
+      constraints:
+        - id: respect_min_p
+          expression: gen_total_p >= gen_n_on * gen_min_p
+        - id: respect_max_p
+          expression: gen_total_p <= gen_n_on * gen_max_p
+        - id: balance
+          expression: gen_total_p = load
+      objective: gen_total_p * gen_prop_cost + gen_n_on * gen_fixed_cost

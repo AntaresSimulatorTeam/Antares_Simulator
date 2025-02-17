@@ -58,8 +58,6 @@ public:
     };
 
 private:
-    Matrix<double, double> dailyMaxPumpAndGen;
-
     PartHydro& hydro_;
     std::string areaID_;
     std::string areaName_;

@@ -1,6 +1,7 @@
 system:
   id: sys_example1
-  description: test system
+  description: one load of 100 MW, one cheap generator gen1 (max_p=80 MW, cost=0.5€/MWh), one expensive generator gen2  
+   (max_p=200 MW, cost=6€/MWh). Thus, gen1 must be used fully (80) and gen2 must complete (20), objective=80*0.5+20*6=160
   model-libraries: lib_example1
 
   components:

@@ -103,7 +103,7 @@ jobs:
 
       - name: Init submodule
         run: |
-          git submodule update --init --remote src/tests/resources/Antares_Simulator_Tests
+          git submodule update --init --remote src/tests/resources/Antares_Simulator_Tests_NR
 
       - name: Configure
         run: |
@@ -138,6 +138,14 @@ jobs:
         with:
           simtest-tag: ${{ env.SIMTEST }}
           batch-name: short-tests
+          os: ${{ matrix.os }}
+
+      - name: Run tests on adequacy patch (CSR)
+        continue-on-error: true
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: adequacy-patch-CSR
           os: ${{ matrix.os }}
 
       - name: Collect coverage into one XML report

@@ -144,10 +144,6 @@ jobs:
         run: |
           echo "SIMTEST=${{ fromJson(env.SIMTEST_JSON).version }}" >> $GITHUB_ENV
 
-      - name: Init submodule Antares_Simulator_Tests
-        run: |
-          git submodule update --init --remote src/tests/resources/Antares_Simulator_Tests
-
       - name: Init submodule Antares_Simulator_Tests_NR
         run: |
           git submodule update --init --remote src/tests/resources/Antares_Simulator_Tests_NR
