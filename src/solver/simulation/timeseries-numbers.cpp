@@ -207,12 +207,16 @@ private:
 bool IntraModalConsistencyChecker::checkTSconsistency()
 {
     logs.info() << "Checking intra-modal correlation: " << tsTitle_;
-    std::vector<uint> listNumberTS;
+    std::vector<std::pair<unsigned, std::string>> listNumberTS;
     for (auto i = study_.areas.begin(); i != study_.areas.end(); ++i)
     {
         const Area& area = *(i->second);
         vector<uint> areaNumberTSList = tsCounter_->getAreaTimeSeriesNumber(area);
-        listNumberTS.insert(listNumberTS.end(), areaNumberTSList.begin(), areaNumberTSList.end());
+        listNumberTS.reserve(listNumberTS.size() + areaNumberTSList.size());
+        for (const auto& ts: areaNumberTSList)
+        {
+            listNumberTS.push_back({ts, ""});
+        }
     }
 
     if (!TimeSeriesNumbers::checkAllElementsIdenticalOrOne(listNumberTS))
@@ -222,7 +226,10 @@ bool IntraModalConsistencyChecker::checkTSconsistency()
         return false;
     }
     // At this point, all elements are identical or 1
-    nbTimeseries_ = *(std::max_element(listNumberTS.begin(), listNumberTS.end()));
+    nbTimeseries_ = std::ranges::max_element(listNumberTS,
+                                             [](const auto& a, const auto& b)
+                                             { return a.first < b.first; })
+                      ->first;
 
     return true;
 }
@@ -274,34 +281,38 @@ bool checkInterModalConsistencyForArea(const Area& area,
     // 2. All elements of this list must be identical
 
     // The list containing the numbers of TS of every "inter-modal" mode over the current area
-    std::vector<uint> listNumberTsOverArea;
+    std::vector<std::pair<unsigned, std::string>> listNumberTsOverArea;
 
     // Load : Add load's number of TS in area ...
     int indexTS = ts_to_tsIndex.at(timeSeriesLoad);
     if (isTSintermodal[indexTS])
     {
-        listNumberTsOverArea.push_back(area.load.series.timeSeries.width);
+        listNumberTsOverArea.push_back(
+          {area.load.series.timeSeries.width, "Area: " + area.name + " load"});
     }
 
     // Solar : Add solar's number of TS in area ...
     indexTS = ts_to_tsIndex.at(timeSeriesSolar);
     if (isTSintermodal[indexTS])
     {
-        listNumberTsOverArea.push_back(area.solar.series.timeSeries.width);
+        listNumberTsOverArea.push_back(
+          {area.solar.series.timeSeries.width, "Area: " + area.name + " solar"});
     }
 
     // Wind : Add wind's number of TS in area ...
     indexTS = ts_to_tsIndex.at(timeSeriesWind);
     if (isTSintermodal[indexTS])
     {
-        listNumberTsOverArea.push_back(area.wind.series.timeSeries.width);
+        listNumberTsOverArea.push_back(
+          {area.wind.series.timeSeries.width, "Area: " + area.name + " wind"});
     }
 
     // Hydro : Add hydro's number of TS in area ...
     indexTS = ts_to_tsIndex.at(timeSeriesHydro);
     if (isTSintermodal[indexTS])
     {
-        listNumberTsOverArea.push_back(area.hydro.series->TScount());
+        listNumberTsOverArea.push_back(
+          {area.hydro.series->TScount(), "Area: " + area.name + " wind"});
     }
 
     // Thermal : Add thermal's number of TS of each cluster in area ...
@@ -310,7 +321,8 @@ bool checkInterModalConsistencyForArea(const Area& area,
     {
         for (auto& cluster: area.thermal.list.each_enabled())
         {
-            listNumberTsOverArea.push_back(cluster->series.timeSeries.width);
+            std::string msg = "Area: " + area.name + " thermal cluster " + cluster->id();
+            listNumberTsOverArea.push_back({cluster->series.timeSeries.width, msg});
         }
     }
 
@@ -320,7 +332,8 @@ bool checkInterModalConsistencyForArea(const Area& area,
     {
         for (const auto& cluster: area.renewable.list.each_enabled())
         {
-            listNumberTsOverArea.push_back(cluster->series.timeSeries.width);
+            std::string msg = "Area: " + area.name + " renew cluster " + cluster->id();
+            listNumberTsOverArea.push_back({cluster->series.timeSeries.width, msg});
         }
     }
 
@@ -680,10 +693,23 @@ static void applyMatrixDrawsToInterModalModesInArea(
     }
 }
 
-bool TimeSeriesNumbers::checkAllElementsIdenticalOrOne(std::vector<uint> w)
+bool TimeSeriesNumbers::checkAllElementsIdenticalOrOne(
+  std::vector<std::pair<unsigned, std::string>>& p)
 {
-    auto first_one = std::remove(w.begin(), w.end(), 1); // Reject all 1 to the end
-    return std::adjacent_find(w.begin(), first_one, std::not_equal_to<uint>()) == first_one;
+    // Reject all 1 to the end
+    auto first_one = std::ranges::remove_if(p, [](const auto& pair) { return pair.first == 1; });
+    auto width = first_one.begin()->first;
+    return std::ranges::all_of(first_one,
+                               [&width](const auto& pair)
+                               {
+                                   if (pair.first != width)
+                                   {
+                                       logs.error()
+                                         << "Inconsitent time series width, found: " << pair.first
+                                         << " Previous was " << width << " for " << pair.second;
+                                   }
+                                   return true;
+                               });
 }
 
 using Checks = std::vector<std::pair<const Antares::Data::TimeSeriesNumbers*, std::string>>;

@@ -39,7 +39,7 @@ bool Generate(Data::Study& study);
 void StoreTimeSeriesNumbersIntoOuput(Data::Study& study, IResultWriter& resultWriter);
 
 // Exported for unit-tests
-bool checkAllElementsIdenticalOrOne(std::vector<uint> w);
+bool checkAllElementsIdenticalOrOne(std::vector<std::pair<unsigned, std::string>>& p);
 
 } // namespace Antares::Solver::TimeSeriesNumbers
 
