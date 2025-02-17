@@ -140,6 +140,14 @@ jobs:
           batch-name: short-tests
           os: ${{ matrix.os }}
 
+      - name: Run tests on adequacy patch (CSR)
+        continue-on-error: true
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: adequacy-patch-CSR
+          os: ${{ matrix.os }}
+
       - name: Collect coverage into one XML report
         run: |
           gcovr --sonarqube --output coverage.xml

@@ -31,7 +31,7 @@ The scope of this document is exclusively devoted to step (4). Note that equival
 
 The following picture gives a functional view of all that is involved in steps (1) to (5). In this illustration, Step (4), whose goal is to solve the problems introduced in this document, is materialized by the red box.
 
-![Antares_Process](../img/Antares_Process.png)
+![Antares_Process](img/Antares_Process.png)
 
 The number and the size of the individual problems to solve (a least-cost hydro-thermal unit-commitment and power 
 schedule, with an hourly resolution and throughout a week, over a large interconnected system) make optimization 
@@ -564,7 +564,7 @@ Finally, upstream of the proper optimization, there is a last set of hydro-relat
 
 The following diagram summarizes the situation regarding both random and epsilon numbers defined and used within Antares. They are meant to build up, along with the regular description of the power system (physical limits and standard costs), an optimization framework that is up to the complex tasks at hand: balanced Monte- Carlo draws, reproducible simulations exploring the whole span of optimal operating configurations.
 
-![Random_Parameters](../img/Random_Parameters.png)
+![Random_Parameters](img/Random_Parameters.png)
 
 | Random Epsilons | Minimum absolute value  | Maximum absolute value   |
 |-----------------|-------------------------|--------------------------|
