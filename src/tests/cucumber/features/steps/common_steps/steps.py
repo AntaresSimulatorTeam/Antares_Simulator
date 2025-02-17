@@ -9,6 +9,8 @@ from common_steps.modeler_utils import run_modeler
 from common_steps.simulator_utils import run_simulation
 
 from features.steps.common_steps.assertions import assert_double_close
+from common_steps.modeler_output_handler import modeler_output_handler
+
 
 
 @given('the study path is "{string}"')
@@ -32,6 +34,14 @@ def after_feature(context, feature):
 @then('the simulation succeeds')
 def simu_success(context):
     assert context.return_code == 0
+
+
+@then('the modeler simulation succeeds')
+def simu_success(context):
+    assert context.return_code == 0
+    context.output_path = os.path.join(context.study_path, "output")  # TODO : fixme parse_output_folder_from_logs(out)
+    context.moh = modeler_output_handler(context.output_path)
+
 
 
 @then('the simulation fails')
@@ -155,6 +165,7 @@ def get_value(row, ts):
 
     if "-" in ret and not ret.isdigit():  # Handle "80-0" but not single numbers
         ret = ret.split("-")  # Split into a list of strings
+        print(f" ret = {ret} , ts = {ts}")
         return float(ret[ts])  # Index and convert to float
 
     return float(ret)  # Single value case (apply to all timesteps)
