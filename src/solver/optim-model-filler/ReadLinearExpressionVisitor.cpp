@@ -117,26 +117,20 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Parameter
         const auto param_values = context_.getParameterValue(node->value(),
                                                              dataSeriesKeys_.scenarioGroup,
                                                              dataSeriesKeys_.scenario);
-        // TODO move this check?
-        if (param_values.size() <= dataSeriesKeys_.fillContext.getNumberOfTimestep())
-        {
-            using namespace std::string_literals;
-            throw std::out_of_range(
-              "requested "s + std::to_string(dataSeriesKeys_.fillContext.getNumberOfTimestep())
-              + " entries for parameter " + node->value() + " got only "
-              + std::to_string(param_values.size()));
-        }
-        {
             std::map<unsigned int, LinearExpression> linearExpressions;
 
             for (auto timeStep = dataSeriesKeys_.fillContext.getFirstTimeStep();
                  timeStep <= dataSeriesKeys_.fillContext.getLastTimeStep();
                  ++timeStep)
             {
-                linearExpressions[timeStep] = LinearExpression(param_values[timeStep], {});
+                linearExpressions[timeStep] = LinearExpression(
+                  context_.getParameterValue(node->value(),
+                                             dataSeriesKeys_.scenarioGroup,
+                                             dataSeriesKeys_.scenario,
+                                             timeStep),
+                  {});
             }
             return TimeDependentLinearExpression(linearExpressions);
-        }
     }
 }
 
