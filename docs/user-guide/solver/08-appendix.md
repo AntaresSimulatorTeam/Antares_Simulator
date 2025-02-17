@@ -6,7 +6,7 @@
 
 [//]: # (TODO: specify where the MPS files are written)
 
-This [parameter](static-modeler/04-parameters.md#include-exportmps) does not influence the way calculations are carried
+This [parameter](04-parameters.md#include-exportmps) does not influence the way calculations are carried
 out,
 nor does it change their results.
 The effect of this preference is that, if the parameter is activated, *Antares* will produce and store in the
@@ -27,10 +27,10 @@ simulation is based. It is useful, however, to gather evidence on mathematical g
 
 File names are structured as follows:
 
-- When the optimization parameter [simplex-range](static-modeler/04-parameters.md#simplex-range) is set on `week`:  
+- When the optimization parameter [simplex-range](04-parameters.md#simplex-range) is set on `week`:  
   Problem-MC year-week number-date-time.mps  
   Criterion-MC year-week number-date-time.txt
-- When the optimization parameter [simplex-range](static-modeler/04-parameters.md#simplex-range) is set on `day`:  
+- When the optimization parameter [simplex-range](04-parameters.md#simplex-range) is set on `day`:  
   Problem-MC year-week number-date-time-day number.mps  
   Criterion-MC year-week number-date-time-day number.txt
 
@@ -50,7 +50,7 @@ txt extension.
 
 ## Details on the "include-unfeasible-problem-behavior" parameter
 
-This [parameter](static-modeler/04-parameters.md#include-unfeasible-problem-behavior) can take one of the four values:
+This [parameter](04-parameters.md#include-unfeasible-problem-behavior) can take one of the four values:
 `ERROR_DRY`, `ERROR_MPS`, `WARNING_DRY`, `WARNING_MPS`
 
 If `ERROR_DRY` or `ERROR_MPS` is selected, the simulation will stop right after encountering the first mathematically
@@ -201,7 +201,7 @@ The water value is taken to remain about the same throughout the week, and a con
 date and for the level at which the week_ **begins** _is used in the course of the optimization. A value interpolated
 from the reference table for the exact level reached at each time step within the week is used ex-post in the assessment
 of the variable "H.COST" (positive for generation, negative for pumping) defined
-in [Output Files](static-modeler/03-outputs.md). This
+in [Output Files](03-outputs.md). This
 option should be reserved to simulations in which computation resources are an issue or to simulations in which
 level-dependent water value variations throughout a week are known to be small.
 
@@ -211,7 +211,7 @@ The water value is considered as variable throughout the week. As a consequence,
 layer" of the stock from/to which energy can be withdrawn/injected, in an internal hydro merit-order involving the 100
 tabulated water-values found at the date at which the week **ends**. A value interpolated from the reference table for
 the exact level reached at each time step within the week is used ex-post in the assessment of the variable "H.COST" (
-positive for generation, negative for pumping) defined in [Output Files](static-modeler/03-outputs.md). This option
+positive for generation, negative for pumping) defined in [Output Files](03-outputs.md). This option
 should be used if
 computation resources are not an issue and if level-dependent water value variations throughout a week must be accounted
 for.
