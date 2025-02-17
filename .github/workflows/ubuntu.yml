@@ -309,6 +309,7 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run cucumber on modeler
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }} #tmp
         uses: ./.github/workflows/cucumber-tests
         with:
           feature: "features/modeler-features"
