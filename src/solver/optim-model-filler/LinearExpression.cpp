@@ -42,7 +42,6 @@ struct IdentityFunction
  * value. For every key: value = left_value + rhs_multiplier * right_value
  * @param left The left hand side map
  * @param right The right hand side map
- * @param rhs_multiplier The multiplier to apply to the right hand side map
  * @return The map resulting from the operation
  */
 template<typename Key, typename Value, typename UnaryOp = IdentityFunction<Value>>

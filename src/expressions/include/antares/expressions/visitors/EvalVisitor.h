@@ -71,29 +71,24 @@ public:
 
     struct SafeDivides
     {
+        static constexpr double DEFAULT_THRESHOLD = 1e-16;
+
+        explicit SafeDivides(double threshold = DEFAULT_THRESHOLD):
+            threshold_(threshold)
+        {
+        }
+
         double operator()(double lhs, double rhs) const
         {
-            // if (rhs == 0.0)
-            // {
-            //     throw std::runtime_error("Division by zero in EvaluationResult.");
-            // }
-            double result{0.};
-            try
+            if (std::abs(rhs) <= threshold_)
             {
-                result = lhs / rhs;
-
-                if (!std::isfinite(result))
-                {
-                    throw EvalVisitorDivisionException(lhs, rhs, "is not a finite number");
-                }
+                throw EvalVisitorDivisionException(lhs, rhs, "Division by zero");
             }
-            catch (const std::exception& ex)
-            {
-                throw EvalVisitorDivisionException(lhs, rhs, ex.what());
-            }
-
-            return result;
+            return lhs / rhs;
         }
+
+    private:
+        double threshold_;
     };
 
     EvaluationResult operator/(const EvaluationResult& right) const
