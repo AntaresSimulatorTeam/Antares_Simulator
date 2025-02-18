@@ -26,6 +26,10 @@ using namespace Antares;
 
 void OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(PROBLEME_HEBDO*);
 
+// This estimate is not very accurate, some constraints may not be enabled
+// in some cases.
+// The counting below should be removed, and we should instead use other methods
+// involving dynamic reallocations, etc.
 int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO* problemeHebdo)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;

@@ -23,7 +23,10 @@
 
 #include "variables/VariableManagerUtils.h"
 
+namespace
+{
 constexpr double LEVEL_COST = -1.e-6;
+}
 
 void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO*, const int, const int);
 

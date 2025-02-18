@@ -345,7 +345,7 @@ void Parameters::reset()
 
     // Shedding strategies
     power.fluctuations = lssFreeModulations;
-    shedding.policy = shpAccurateShavePeaks;
+    shedding.policy = shpShavePeaks;
 
     unitCommitment.ucMode = ucHeuristicFast;
     nbCores.ncMode = ncAvg;

@@ -60,37 +60,39 @@ int find_max_index(const std::vector<double>& TotalGen,
     return max_hour;
 }
 
-static bool operator<=(const std::vector<double>& a, const std::vector<double>& b)
+namespace
+{
+bool operator<=(const std::vector<double>& a, const std::vector<double>& b)
 {
     return a.size() == b.size()
            && std::ranges::all_of(std::views::iota(size_t{0}, a.size()),
                                   [&](size_t i) { return a[i] <= b[i]; });
 }
 
-static bool operator<=(const std::vector<double>& v, const double c)
+bool operator<=(const std::vector<double>& v, const double c)
 {
-    return std::ranges::all_of(v, [&c](const double& e) { return e <= c; });
+    return std::ranges::all_of(v, [&c](double e) { return e <= c; });
 }
 
-static bool operator>=(const std::vector<double>& v, const double c)
+bool operator>=(const std::vector<double>& v, const double c)
 {
-    return std::ranges::all_of(v, [&c](const double& e) { return e >= c; });
+    return std::ranges::all_of(v, [&c](double e) { return e >= c; });
 }
 
-static void checkInputCorrectness(const std::vector<double>& DispatchGen,
-                                  const std::vector<double>& HydroGen,
-                                  const std::vector<double>& UnsupE,
-                                  const std::vector<double>& levels,
-                                  const std::vector<double>& HydroPmax,
-                                  const std::vector<double>& HydroPmin,
-                                  double initialLevel,
-                                  double reservoirCapacity,
-                                  bool reservoirManagement,
-                                  const std::vector<double>& inflows,
-                                  const std::vector<double>& overflow,
-                                  const std::vector<double>& pump,
-                                  const std::vector<double>& Spillage,
-                                  const std::vector<double>& DTG_MRG)
+void checkInputCorrectness(const std::vector<double>& DispatchGen,
+                           const std::vector<double>& HydroGen,
+                           const std::vector<double>& UnsupE,
+                           const std::vector<double>& levels,
+                           const std::vector<double>& HydroPmax,
+                           const std::vector<double>& HydroPmin,
+                           double initialLevel,
+                           double reservoirCapacity,
+                           bool reservoirManagement,
+                           const std::vector<double>& inflows,
+                           const std::vector<double>& overflow,
+                           const std::vector<double>& pump,
+                           const std::vector<double>& Spillage,
+                           const std::vector<double>& DTG_MRG)
 {
     std::string msg_prefix = "Remix hydro input : ";
 
@@ -147,6 +149,7 @@ static void checkInputCorrectness(const std::vector<double>& DispatchGen,
         }
     }
 }
+} // namespace
 
 RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGen,
                                            const std::vector<double>& HydroGen,
@@ -260,14 +263,11 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
                     if (hourBottom < hourPeak)
                     {
                         max_pic = reservoirCapacity;
-                        max_creux = *std::min_element(intermediate_level.begin(),
-                                                      intermediate_level.end());
+                        max_creux = *std::ranges::min_element(intermediate_level);
                     }
                     else
                     {
-                        max_pic = reservoirCapacity
-                                  - *std::max_element(intermediate_level.begin(),
-                                                      intermediate_level.end());
+                        max_pic = reservoirCapacity - *std::ranges::max_element(intermediate_level);
                         max_creux = reservoirCapacity;
                     }
                 }
