@@ -106,7 +106,6 @@ set(SRC_VARIABLE_ECONOMY
         include/antares/solver/variable/economy/dtgMarginAfterCsr.h
         include/antares/solver/variable/economy/spilledEnergy.h
         include/antares/solver/variable/economy/dispatchableGeneration.h
-        include/antares/solver/variable/economy/minOfDispatchableGen.h
         include/antares/solver/variable/economy/renewableGeneration.h
         include/antares/solver/variable/economy/thermalAirPollutantEmissions.h
         include/antares/solver/variable/economy/productionByDispatchablePlant.h
