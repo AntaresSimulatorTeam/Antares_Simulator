@@ -30,3 +30,8 @@ Feature: 2.8
       | component | variable | timestep | value  |
       | node1     | gen1_p   | 0-1      | 80-0   |
       | node1     | gen2_p   | 0-1      | 20-100 |
+
+  Scenario: 2.8.1: Exception handling: given time serie for a constant in time parameter.
+    Given the study path is "modeler/1_5"
+    When I run antares modeler
+    Then the simulation fails
