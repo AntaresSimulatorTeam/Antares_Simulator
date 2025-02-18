@@ -4,12 +4,19 @@ import subprocess
 import os
 
 
-
 def run_modeler(context):
     command = build_antares_modeler_command(context)
     print(f"Running command: {command}")
-    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = process.communicate()
+    print("*********************** Begin stdout ***********************")
+    print(out.replace(b'\r\n', b'\n').decode('utf-8'))
+    print("*********************** End stdout ***********************")
+
+    print("*********************** Begin stderr ***********************")
+    print(err.replace(b'\r\n', b'\n').decode('utf-8'))
+    print("*********************** End stderr ***********************")
+
     context.return_code = process.returncode
 
 
