@@ -17,30 +17,33 @@ double EvaluationContext::getVariableValue(const std::string& key) const
     return variables_.at(key);
 }
 
-double EvaluationContext::getSystemParameterValueAsDouble(const std::string& key) const
+static double convertToDouble(const std::string& key, const std::string& value)
 {
-    auto it = system_parameters_.find(key);
-    if (it == system_parameters_.end())
-    {
-        throw CouldNotEvaluateConstantParameter<std::out_of_range>(
-          "Parameter '" + key + "' not found in system parameters.");
-    }
-
-    const std::string& value = it->second.value;
     try
     {
         return std::stod(value);
     }
     catch (const std::invalid_argument&)
     {
-        throw CouldNotEvaluateConstantParameter<std::invalid_argument>(
+        throw EvaluationContext::CouldNotEvaluateConstantParameter<std::invalid_argument>(
           "Parameter '" + key + "' has an invalid numerical format: '" + value + "'.");
     }
     catch (const std::out_of_range&)
     {
-        throw CouldNotEvaluateConstantParameter<std::out_of_range>(
+        throw EvaluationContext::CouldNotEvaluateConstantParameter<std::out_of_range>(
           "Parameter '" + key + "' is out of numerical range: '" + value + "'.");
     }
+}
+
+double EvaluationContext::getSystemParameterValueAsDouble(const std::string& key) const
+{
+    const auto it = system_parameters_.find(key);
+    if (it == system_parameters_.end())
+    {
+        throw CouldNotEvaluateConstantParameter<std::out_of_range>(
+          "Parameter '" + key + "' not found in system parameters.");
+    }
+    return convertToDouble(key, it->second.value);
 }
 
 std::string EvaluationContext::getSystemParameterValue(const std::string& key) const
