@@ -35,3 +35,14 @@ Feature: 2.8
     Given the study path is "modeler/1_5"
     When I run antares modeler
     Then the simulation fails
+
+
+  Scenario: 2.8.1: Mixture of constant parameters and time series (10 time steps)
+    Given the study path is "modeler/1_7"
+    When I run antares modeler
+    Then the modeler simulation succeeds
+    And the objective value is 16000
+    And the optimal values of the variables are
+      | component | variable | timestep | value |
+      | node1     | gen1_p   | 0-99     | 80    |
+      | node1     | gen2_p   | 0-99     | 20    |
