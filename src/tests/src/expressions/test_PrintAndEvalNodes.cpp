@@ -35,6 +35,50 @@ using namespace Antares::Expressions::Visitors;
 
 BOOST_AUTO_TEST_SUITE(_PrintAndEvalNodes_)
 
+BOOST_AUTO_TEST_CASE(test_getSystemParameterValueAsDouble)
+{
+    // Mock dependency
+    struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearProblemData
+    {
+        double getData(const std::string&, const std::string&, unsigned int, unsigned int) override
+        {
+            return 123.45; // Mock return value for testing
+        }
+    } mockData;
+
+    std::map<std::string, ContextParameter> system_parameters = {
+      {"valid_number", {"valid_number", ParameterType::CONSTANT, "42.5"}},
+      {"invalid_number", {"invalid_number", ParameterType::CONSTANT, "abc"}},
+      {"out_of_range", {"out_of_range", ParameterType::CONSTANT, "1e500"}},
+      {"timeserie_param", {"timeserie_param", ParameterType::TIMESERIE, "timeserie_file"}}};
+
+    std::map<std::string, double> variables; // Not needed for this test
+
+    EvaluationContext context(system_parameters, variables, mockData);
+
+    // 1. Valid number (CONSTANT)
+    BOOST_CHECK_EQUAL(context.getSystemParameterValueAsDouble("valid_number"), 42.5);
+
+    // 2. Parameter not found
+    BOOST_CHECK_THROW(context.getSystemParameterValueAsDouble("nonexistent"),
+                      EvaluationContext::CouldNotEvaluateConstantParameter<std::out_of_range>);
+
+    // 3. Invalid number format
+    BOOST_CHECK_THROW(context.getSystemParameterValueAsDouble("invalid_number"),
+                      EvaluationContext::CouldNotEvaluateConstantParameter<std::invalid_argument>);
+
+    // 4. Out of range value
+    BOOST_CHECK_THROW(context.getSystemParameterValueAsDouble("out_of_range"),
+                      EvaluationContext::CouldNotEvaluateConstantParameter<std::out_of_range>);
+
+    // 5. Timeserie parameter should NOT be converted to double, expect an exception
+    BOOST_CHECK_THROW(context.getSystemParameterValueAsDouble("timeserie_param"),
+                      EvaluationContext::CouldNotEvaluateConstantParameter<std::invalid_argument>);
+
+    // 6. Timeserie parameter should be handled by getParameterValue instead
+    BOOST_CHECK_EQUAL(context.getParameterValue("timeserie_param", "group1", 0, 1), 123.45);
+}
+
 struct MyDummyFixture: Registry<Node>
 {
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
