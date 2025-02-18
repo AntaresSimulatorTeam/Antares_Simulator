@@ -114,9 +114,6 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Parameter
     }
     else // TODO for now considering only timedepend -- only
     {
-        const auto param_values = context_.getParameterValue(node->value(),
-                                                             dataSeriesKeys_.scenarioGroup,
-                                                             dataSeriesKeys_.scenario);
             std::map<unsigned int, LinearExpression> linearExpressions;
 
             for (auto timeStep = dataSeriesKeys_.fillContext.getFirstTimeStep();

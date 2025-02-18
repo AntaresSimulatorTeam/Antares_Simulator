@@ -51,10 +51,6 @@ public:
                            const unsigned scenario,
                            const unsigned hour)
       = 0;
-    virtual std::vector<double> getData(const std::string& dataSetId,
-                                        const std::string& scenarioGroup,
-                                        const unsigned scenario)
-      = 0;
 };
 
 } // namespace Antares::Optimisation::LinearProblemApi

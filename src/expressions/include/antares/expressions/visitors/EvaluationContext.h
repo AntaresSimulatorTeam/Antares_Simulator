@@ -69,9 +69,6 @@ public:
     double getSystemParameterValueAsDouble(const std::string& key) const;
     std::string getSystemParameterValue(const std::string& key) const;
 
-    std::vector<double> getParameterValue(const std::string& key,
-                                          const std::string& scenarioGroup,
-                                          const unsigned scenario) const;
     double getParameterValue(const std::string& key,
                              const std::string& scenarioGroup,
                              const unsigned scenario,

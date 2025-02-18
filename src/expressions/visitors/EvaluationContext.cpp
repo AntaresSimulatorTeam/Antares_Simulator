@@ -51,13 +51,6 @@ std::string EvaluationContext::getSystemParameterValue(const std::string& key) c
     return system_parameters_.at(key).value;
 }
 
-std::vector<double> EvaluationContext::getParameterValue(const std::string& key,
-                                                         const std::string& scenarioGroup,
-                                                         const unsigned scenario) const
-{
-    return data_.getData(system_parameters_.at(key).value, scenarioGroup, scenario);
-}
-
 double EvaluationContext::getParameterValue(const std::string& key,
                                             const std::string& scenarioGroup,
                                             const unsigned scenario,
