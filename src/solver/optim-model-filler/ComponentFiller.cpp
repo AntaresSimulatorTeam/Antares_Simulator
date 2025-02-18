@@ -179,7 +179,6 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
                                                                {},
                                                                data);
 
-    // TODO Optimisation::LinearProblemApi::DataSeriesKeys
     Expressions::Visitors::EvalVisitor evaluator(evaluationContext,
                                                  {.fillContext = ctx,
                                                   .scenarioGroup = component_.getScenarioGroupId(),
@@ -190,6 +189,8 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
         const auto& ub = evaluator.dispatch(variable.UpperBound().RootNode());
         if (variable.isTimeDependent())
         {
+            // std::visit to handle the 4 cases: double/double, vector/double, double/vector and
+            // vector/vector.
             std::visit(
               [&pb, &variable, this, &ctx](const auto& lb_, const auto& ub_)
               {
@@ -231,10 +232,6 @@ void ComponentFiller::addTimeDependentConstraints(
   const std::vector<LinearConstraint>& linear_constraints,
   const std::string& constraint_id) const
 {
-    // auto vect_ct = pb.addConstraint(linear_constraint.lb,
-    //                                 linear_constraint.ub,
-    //                                 component_.Id() + "." + constraint_id,
-    //                                 nb_cstr);
     unsigned int constraint_count = 0;
     for (const auto& linear_constraint: linear_constraints)
     {
@@ -244,7 +241,6 @@ void ComponentFiller::addTimeDependentConstraints(
                                       + std::to_string(constraint_count));
         for (const auto& [var_id, coef]: linear_constraint.coef_per_var)
         {
-            // TODO FIXME the coefficient needs to be time-dependent
             if (IsThisVariableTimeDependent(var_id))
             {
                 auto* variable = pb.getVariable(component_.Id() + "." + var_id + '_'
@@ -276,7 +272,6 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
     {
         auto* root_node = constraint.expression().RootNode();
         auto linear_constraints = visitor.dispatch(root_node);
-        // TODO timesteps will be a parameter
         if (checkTimeSteps(ctx))
         {
             if (IsThisConstraintTimeDependent(root_node))
@@ -286,7 +281,6 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
             }
             else
             {
-                // TODO
                 addStaticConstraint(pb, linear_constraints[0], constraint.Id());
             }
         }
@@ -305,7 +299,6 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
     Expressions::Visitors::EvaluationContext evaluationContext(component_.getParameterValues(),
                                                                {},
                                                                data);
-    // TODO objective expression is not Timedependent
 
     ReadLinearExpressionVisitor visitor(evaluationContext,
 {.fillContext = ctx,

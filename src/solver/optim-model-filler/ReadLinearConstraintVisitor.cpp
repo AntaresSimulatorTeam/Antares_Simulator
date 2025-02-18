@@ -62,10 +62,6 @@ std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const EqualNode
 
 std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const LessThanOrEqualNode* node)
 {
-    // auto leftMinusRight = linear_expression_visitor_.dispatch(node->left())
-    //                       - linear_expression_visitor_.dispatch(node->right());
-    // return LinearConstraint{.coef_per_var = leftMinusRight.coefPerVar(),
-    //                         .ub = -leftMinusRight.offset()};
 
     auto leftMinusRight = linear_expression_visitor_.dispatch(node->left())
                           - linear_expression_visitor_.dispatch(node->right());
@@ -84,11 +80,6 @@ std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const LessThanO
 
 std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const GreaterThanOrEqualNode* node)
 {
-    // auto leftMinusRight = linear_expression_visitor_.dispatch(node->left())
-    //                       - linear_expression_visitor_.dispatch(node->right());
-    // return LinearConstraint{.coef_per_var = leftMinusRight.coefPerVar(),
-    //                         .lb = -leftMinusRight.offset()};
-
     auto leftMinusRight = linear_expression_visitor_.dispatch(node->left())
                           - linear_expression_visitor_.dispatch(node->right());
 
