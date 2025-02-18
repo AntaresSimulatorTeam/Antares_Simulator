@@ -21,6 +21,7 @@
 #pragma once
 
 #include <cmath>
+#include <sstream>
 #include <variant>
 
 #include <antares/expressions/visitors/EvaluationContext.h>
@@ -163,17 +164,20 @@ std::vector<double> computeBinaryOperation(const std::vector<double>& lhs,
                                            const std::vector<double>& rhs,
                                            BinaryOp op)
 {
-    if (lhs.size() == rhs.size())
+    if (lhs.size() != rhs.size())
     {
-        std::vector<double> result(rhs.size());
-        for (size_t i = 0; i < rhs.size(); ++i)
-        {
-            result[i] = op(lhs[i], rhs[i]);
-        }
-        return result;
+        std::ostringstream errorMsg;
+        errorMsg << "Failed to compute binary operation: vectors have different sizes ("
+                 << lhs.size() << " and " << rhs.size() << ").";
+        throw std::runtime_error(errorMsg.str());
     }
-    // TODO
-    throw std::runtime_error("Evaluation Visitor error....");
+
+    std::vector<double> result(lhs.size());
+    for (size_t i = 0; i < lhs.size(); ++i)
+    {
+        result[i] = op(lhs[i], rhs[i]);
+    }
+    return result;
 }
 
 template<typename Op>
