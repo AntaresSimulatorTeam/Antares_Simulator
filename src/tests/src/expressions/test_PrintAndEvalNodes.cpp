@@ -21,6 +21,8 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <boost/mpl/list.hpp>
+#include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
 #include <antares/expressions/Registry.hxx>
@@ -414,6 +416,131 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param, MyDummyFixture)
     const double eval = evalVisitor.dispatch(&root).valueAsDouble();
 
     BOOST_CHECK_EQUAL(std::stod(value), eval);
+}
+
+struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearProblemData
+{
+    double getData(const std::string& dataSetId,
+                   const std::string& scenarioGroup,
+                   const unsigned scenario,
+                   const unsigned hour) override
+    {
+        return hour; // for test
+    }
+};
+
+BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_param, MyDummyFixture)
+{
+    ParameterNode root("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
+    const std::string value = "dummy";
+    MockLinearProblemData dummy_data;
+    EvaluationContext context(
+      {build_context_parameter_with("my-param", value, ParameterType::TIMESERIE)},
+      {},
+      dummy_data);
+
+    unsigned hour_0 = 0;
+    unsigned hour_1 = 1;
+    EvalVisitor evalVisitor(context,
+                            {.fillContext = {hour_0, hour_1 /*two hours*/},
+                             .scenarioGroup = "",
+                             .scenario = 0});
+    const auto eval = evalVisitor.dispatch(&root).valuesAsVector();
+
+    BOOST_CHECK_EQUAL(eval[0], hour_0);
+    BOOST_CHECK_EQUAL(eval[1], hour_1);
+}
+
+BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_multiplication, MyDummyFixture)
+{
+    ParameterNode param("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
+    LiteralNode literal(2.0);
+    MultiplicationNode root(&literal, &param);
+    const std::string value = "dummy";
+    MockLinearProblemData dummy_data;
+    EvaluationContext context(
+      {build_context_parameter_with("my-param", value, ParameterType::TIMESERIE)},
+      {},
+      dummy_data);
+
+    unsigned hour_0 = 0;
+    unsigned hour_1 = 1;
+    EvalVisitor evalVisitor(context,
+                            {.fillContext = {hour_0, hour_1 /*two hours*/},
+                             .scenarioGroup = "",
+                             .scenario = 0});
+    const auto eval = evalVisitor.dispatch(&root).valuesAsVector();
+
+    BOOST_CHECK_EQUAL(eval[0], hour_0 * literal.value());
+    BOOST_CHECK_EQUAL(eval[1], hour_1 * literal.value());
+}
+
+// #include <boost/test/unit_test.hpp>
+// #include <boost/test/data/test_case.hpp>
+// #include <boost/test/data/monomorphic.hpp>
+
+namespace bdata = boost::unit_test::data;
+// Helper function to compute the expected value based on the operation type
+template<typename BinaryNode>
+double evalExpected(double a, double b);
+
+template<>
+double evalExpected<MultiplicationNode>(double a, double b)
+{
+    return a * b;
+}
+
+template<>
+double evalExpected<SumNode>(double a, double b)
+{
+    return a + b;
+}
+
+template<>
+double evalExpected<SubtractionNode>(double a, double b)
+{
+    return a - b;
+}
+
+template<>
+double evalExpected<DivisionNode>(double a, double b)
+{
+    return b != 0 ? a / b : 0;
+} // Handle division by zero
+
+template<typename BinaryNode>
+void evaluate_time_dependent_operation()
+{
+    ParameterNode param("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
+    LiteralNode literal(2.0);
+    BinaryNode root(&literal, &param); // Correctly use the type as a template argument
+    const std::string value = "dummy";
+    MockLinearProblemData dummy_data;
+    EvaluationContext context(
+      {build_context_parameter_with("my-param", value, ParameterType::TIMESERIE)},
+      {},
+      dummy_data);
+
+    unsigned hour_0 = 0;
+    unsigned hour_1 = 1;
+    EvalVisitor evalVisitor(context,
+                            {.fillContext = {hour_0, hour_1 /*two hours*/},
+                             .scenarioGroup = "",
+                             .scenario = 0});
+    const auto eval = evalVisitor.dispatch(&root).valuesAsVector();
+
+    BOOST_CHECK_EQUAL(eval[0], evalExpected<BinaryNode>(hour_0, literal.value()));
+    BOOST_CHECK_EQUAL(eval[1], evalExpected<BinaryNode>(hour_1, literal.value()));
+}
+
+// Define a list of types (not instances)
+using BinaryOperators = boost::mpl::
+  list<MultiplicationNode, SumNode, SubtractionNode, DivisionNode>;
+
+// Parametrize the test with types
+BOOST_AUTO_TEST_CASE_TEMPLATE(evaluate_time_dependent_operations, T, BinaryOperators)
+{
+    evaluate_time_dependent_operation<T>();
 }
 
 BOOST_FIXTURE_TEST_CASE(evaluate_variable, MyDummyFixture)
