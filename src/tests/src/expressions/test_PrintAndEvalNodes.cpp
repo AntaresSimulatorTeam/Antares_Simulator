@@ -79,6 +79,143 @@ BOOST_AUTO_TEST_CASE(test_getSystemParameterValueAsDouble)
     BOOST_CHECK_EQUAL(context.getParameterValue("timeserie_param", "group1", 0, 1), 123.45);
 }
 
+BOOST_AUTO_TEST_CASE(EvaluationResult_ConstructorTest)
+{
+    EvaluationResult res1(5.0);
+    BOOST_CHECK_EQUAL(std::get<double>(res1.value()), 5.0);
+
+    std::vector<double> vec = {1.0, 2.0, 3.0};
+    EvaluationResult res2(vec);
+    BOOST_CHECK(std::get<std::vector<double>>(res2.value()) == vec);
+}
+
+BOOST_AUTO_TEST_CASE(EvaluationResult_OperatorAdditionTest)
+{
+    EvaluationResult res1(5.0);
+    EvaluationResult res2(3.0);
+    EvaluationResult res3 = res1 + res2;
+    BOOST_CHECK_EQUAL(std::get<double>(res3.value()), 8.0);
+}
+
+BOOST_AUTO_TEST_CASE(EvaluationResult_OperatorSubtractionTest)
+{
+    EvaluationResult res1(5.0);
+    EvaluationResult res2(3.0);
+    EvaluationResult res3 = res1 - res2;
+    BOOST_CHECK_EQUAL(std::get<double>(res3.value()), 2.0);
+}
+
+BOOST_AUTO_TEST_CASE(EvaluationResult_OperatorMultiplicationTest)
+{
+    EvaluationResult res1(5.0);
+    EvaluationResult res2(3.0);
+    EvaluationResult res3 = res1 * res2;
+    BOOST_CHECK_EQUAL(std::get<double>(res3.value()), 15.0);
+}
+
+BOOST_AUTO_TEST_CASE(EvaluationResult_OperatorDivisionTest)
+{
+    EvaluationResult res1(6.0);
+    EvaluationResult res2(2.0);
+    EvaluationResult res3 = res1 / res2;
+    BOOST_CHECK_EQUAL(std::get<double>(res3.value()), 3.0);
+}
+
+BOOST_AUTO_TEST_CASE(EvaluationResult_DivisionByZeroTest)
+{
+    EvaluationResult res1(5.0);
+    EvaluationResult res2(0.0);
+    BOOST_CHECK_THROW(res1 / res2, EvalVisitorDivisionException);
+}
+
+BOOST_AUTO_TEST_CASE(EvaluationResult_OperatorNegationTest)
+{
+    EvaluationResult res1(5.0);
+    EvaluationResult res2 = -res1;
+    BOOST_CHECK_EQUAL(std::get<double>(res2.value()), -5.0);
+}
+
+BOOST_AUTO_TEST_CASE(EvaluationResult_VectorOperationTest)
+{
+    std::vector<double> vec1 = {1.0, 2.0, 3.0};
+    std::vector<double> vec2 = {4.0, 5.0, 6.0};
+    EvaluationResult res1(vec1);
+    EvaluationResult res2(vec2);
+    EvaluationResult res3 = res1 + res2;
+    const auto expected_result = std::vector<double>{5.0, 7.0, 9.0};
+    const auto result = std::get<std::vector<double>>(res3.value());
+    BOOST_CHECK_EQUAL_COLLECTIONS(result.cbegin(),
+                                  result.cend(),
+                                  expected_result.cbegin(),
+                                  expected_result.cend());
+}
+
+BOOST_AUTO_TEST_CASE(EvaluationResult_MismatchedVectorSizeTest)
+{
+    std::vector<double> vec1 = {1.0, 2.0};
+    std::vector<double> vec2 = {3.0, 4.0, 5.0};
+    EvaluationResult res1(vec1);
+    EvaluationResult res2(vec2);
+    BOOST_CHECK_THROW(res1 + res2, std::runtime_error);
+}
+
+BOOST_AUTO_TEST_CASE(EvaluationResult_ScalarVectorAdditionTest)
+{
+    EvaluationResult res1(2.0);
+    std::vector<double> vec = {1.0, 2.0, 3.0};
+    EvaluationResult res2(vec);
+    EvaluationResult res3 = res1 + res2;
+    const auto expected_result = std::vector<double>{3.0, 4.0, 5.0};
+    const auto result = std::get<std::vector<double>>(res3.value());
+    BOOST_CHECK_EQUAL_COLLECTIONS(result.cbegin(),
+                                  result.cend(),
+                                  expected_result.cbegin(),
+                                  expected_result.cend());
+}
+
+BOOST_AUTO_TEST_CASE(EvaluationResult_ScalarVectorMultiplicationTest)
+{
+    EvaluationResult res1(2.0);
+    std::vector<double> vec = {1.0, 2.0, 3.0};
+    EvaluationResult res2(vec);
+    EvaluationResult res3 = res1 * res2;
+    const auto expected_result = std::vector<double>{2.0, 4.0, 6.0};
+    const auto result = res3.valuesAsVector();
+    BOOST_CHECK_EQUAL_COLLECTIONS(result.cbegin(),
+                                  result.cend(),
+                                  expected_result.cbegin(),
+                                  expected_result.cend());
+}
+
+BOOST_AUTO_TEST_CASE(EvaluationResult_VectorVectorMultiplicationTest)
+{
+    std::vector<double> vec1 = {1.0, 2.0, 3.0};
+    std::vector<double> vec2 = {4.0, 5.0, 6.0};
+    EvaluationResult res1(vec1);
+    EvaluationResult res2(vec2);
+    EvaluationResult res3 = res1 * res2;
+    const auto expected_result = std::vector<double>{4.0, 10.0, 18.0};
+    const auto result = res3.valuesAsVector();
+    BOOST_CHECK_EQUAL_COLLECTIONS(result.cbegin(),
+                                  result.cend(),
+                                  expected_result.cbegin(),
+                                  expected_result.cend());
+}
+
+BOOST_AUTO_TEST_CASE(EvaluationResult_VectorScalarDivisionTest)
+{
+    std::vector<double> vec = {4.0, 8.0, 12.0};
+    EvaluationResult res1(vec);
+    EvaluationResult res2(2.0);
+    EvaluationResult res3 = res1 / res2;
+    const auto expected_result = std::vector<double>{2.0, 4.0, 6.0};
+    const auto result = std::get<std::vector<double>>(res3.value());
+    BOOST_CHECK_EQUAL_COLLECTIONS(result.cbegin(),
+                                  result.cend(),
+                                  expected_result.cbegin(),
+                                  expected_result.cend());
+}
+
 struct MyDummyFixture: Registry<Node>
 {
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
