@@ -124,6 +124,26 @@ BOOST_FIXTURE_TEST_CASE(hydroPmax, Fixture)
     BOOST_CHECK(!StringToCompatibilityHydroPmax(p.compatibility.hydroPmax, "abc"));
 }
 
+BOOST_AUTO_TEST_CASE(saveLoadGeneralData)
+{
+    IniFile ini;
+    Parameters parameters;
+    parameters.reset();
+    parameters.timeSeriesToGenerate = timeSeriesLoad | timeSeriesHydro | timeSeriesWind
+                                      | timeSeriesThermal | timeSeriesSolar | timeSeriesRenewable;
+
+    parameters.timeSeriesToRefresh = parameters.timeSeriesToGenerate;
+    parameters.resultFormat = zipArchive;
+
+    parameters.saveToINI(ini);
+
+    Parameters loaded;
+    loaded.loadFromINI(ini, StudyVersion::latest());
+    BOOST_CHECK_EQUAL(parameters.timeSeriesToGenerate, loaded.timeSeriesToGenerate);
+    BOOST_CHECK_EQUAL(parameters.timeSeriesToRefresh, loaded.timeSeriesToRefresh);
+    BOOST_CHECK_EQUAL(parameters.resultFormat, loaded.resultFormat);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 void Fixture::writeInvalidFile()
