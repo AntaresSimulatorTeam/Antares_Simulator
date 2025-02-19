@@ -280,32 +280,32 @@ bool checkInterModalConsistencyForArea(const Area& area,
     int indexTS = ts_to_tsIndex.at(timeSeriesLoad);
     if (isTSintermodal[indexTS])
     {
-        listNumberTsOverArea.push_back(
-          {area.load.series.timeSeries.width, "Area: " + area.name + " load"});
+        listNumberTsOverArea.emplace_back(area.load.series.timeSeries.width,
+                                          "Area: " + area.name + " load");
     }
 
     // Solar : Add solar's number of TS in area ...
     indexTS = ts_to_tsIndex.at(timeSeriesSolar);
     if (isTSintermodal[indexTS])
     {
-        listNumberTsOverArea.push_back(
-          {area.solar.series.timeSeries.width, "Area: " + area.name + " solar"});
+        listNumberTsOverArea.emplace_back(area.solar.series.timeSeries.width,
+                                          "Area: " + area.name + " solar");
     }
 
     // Wind : Add wind's number of TS in area ...
     indexTS = ts_to_tsIndex.at(timeSeriesWind);
     if (isTSintermodal[indexTS])
     {
-        listNumberTsOverArea.push_back(
-          {area.wind.series.timeSeries.width, "Area: " + area.name + " wind"});
+        listNumberTsOverArea.emplace_back(area.wind.series.timeSeries.width,
+                                          "Area: " + area.name + " wind");
     }
 
     // Hydro : Add hydro's number of TS in area ...
     indexTS = ts_to_tsIndex.at(timeSeriesHydro);
     if (isTSintermodal[indexTS])
     {
-        listNumberTsOverArea.push_back(
-          {area.hydro.series->TScount(), "Area: " + area.name + " wind"});
+        listNumberTsOverArea.emplace_back(area.hydro.series->TScount(),
+                                          "Area: " + area.name + " wind");
     }
 
     // Thermal : Add thermal's number of TS of each cluster in area ...
@@ -315,7 +315,7 @@ bool checkInterModalConsistencyForArea(const Area& area,
         for (auto& cluster: area.thermal.list.each_enabled())
         {
             std::string msg = "Area: " + area.name + " thermal cluster " + cluster->id();
-            listNumberTsOverArea.push_back({cluster->series.timeSeries.width, msg});
+            listNumberTsOverArea.emplace_back(cluster->series.timeSeries.width, msg);
         }
     }
 
@@ -326,12 +326,12 @@ bool checkInterModalConsistencyForArea(const Area& area,
         for (const auto& cluster: area.renewable.list.each_enabled())
         {
             std::string msg = "Area: " + area.name + " renew cluster " + cluster->id();
-            listNumberTsOverArea.push_back({cluster->series.timeSeries.width, msg});
+            listNumberTsOverArea.emplace_back(cluster->series.timeSeries.width, msg);
         }
     }
 
     // Now check if all elements of list of TS numbers are identical or equal to 1
-    if (!Utils::checkAllElementsIdenticalOrOne(listNumberTsOverArea))
+    if (!Utils::checkAllElementsIdenticalOrOne(listNumberTsOverArea).first)
     {
         logs.error()
           << "Inter-modal correlation: time-series numbers of inter-modal modes in area '"
@@ -699,7 +699,7 @@ static Checks buildChecksFromStudy(const AreaList& areas)
         for (const auto& [_, link]: area->links)
         {
             const std::string areaID2 = link->with->id.to<std::string>();
-            toCheck.push_back({&link->timeseriesNumbers, "link " + areaID + " / " + areaID2});
+            toCheck.emplace_back(&link->timeseriesNumbers, "link " + areaID + " / " + areaID2);
         }
     }
 
@@ -707,7 +707,7 @@ static Checks buildChecksFromStudy(const AreaList& areas)
     for (const auto& [_, area]: areas)
     {
         const std::string areaID = area->id.to<std::string>();
-        toCheck.push_back({&area->hydro.series->timeseriesNumbers, "hydro " + areaID});
+        toCheck.emplace_back(&area->hydro.series->timeseriesNumbers, "hydro " + areaID);
     }
 
     return toCheck;

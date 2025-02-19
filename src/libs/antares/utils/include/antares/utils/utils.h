@@ -60,7 +60,7 @@ double ceilDiv(double numerator, double denominator);
 double floorDiv(double numerator, double denominator);
 
 bool checkAllElementsIdenticalOrOne(std::vector<unsigned> w);
-bool checkAllElementsIdenticalOrOne(std::vector<std::pair<unsigned, std::string>>& p);
+std::pair<bool, std::string> checkAllElementsIdenticalOrOne(std::vector<std::pair<unsigned, std::string>>& p);
 
 } // namespace Utils
 } // namespace Antares
