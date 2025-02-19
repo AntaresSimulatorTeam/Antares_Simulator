@@ -1,6 +1,6 @@
 # Overview
 
-_**Disclaimer: please note that the new Antares dynamic modeler is still under development, and that some of the 
+_**Disclaimer: please note that the new Antares modeler is still under development, and that some of the 
 features described in this section may still be unavailable**_
 
 The new Antares dynamic modeler allows more flexibility in the definition of physical models used in the simulation. 
