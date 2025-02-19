@@ -698,4 +698,262 @@ BOOST_AUTO_TEST_CASE(offset_in_objective__throws_exception)
                                        "'model' of component 'componentA')."));
 }
 
+// Mock classes
+class MockMipVariable: public IMipVariable
+{
+public:
+    MockMipVariable(double lb, double ub, bool integer, const std::string& name):
+        lb_(lb),
+        ub_(ub),
+        integer_(integer),
+        name_(name)
+    {
+    }
+
+    bool isInteger() const override
+    {
+        return integer_;
+    }
+
+    void setLb(double lb) override
+    {
+        lb_ = lb;
+    }
+
+    void setUb(double ub) override
+    {
+        ub_ = ub;
+    }
+
+    void setBounds(double lb, double ub) override
+    {
+        lb_ = lb;
+        ub_ = ub;
+    }
+
+    double getLb() const override
+    {
+        return lb_;
+    }
+
+    double getUb() const override
+    {
+        return ub_;
+    }
+
+    const std::string& getName() const override
+    {
+        return name_;
+    }
+
+private:
+    double lb_;
+    double ub_;
+    bool integer_;
+    std::string name_;
+};
+
+class MockLinearProblem: public ILinearProblem
+{
+public:
+    std::vector<std::unique_ptr<MockMipVariable>> variables_;
+
+    MockMipVariable* addNumVariable(double lb, double ub, const std::string& name) override
+    {
+        variables_.emplace_back(std::make_unique<MockMipVariable>(lb, ub, false, name));
+        return variables_.back().get();
+    }
+
+    MockMipVariable* addIntVariable(double lb, double ub, const std::string& name) override
+    {
+        variables_.emplace_back(std::make_unique<MockMipVariable>(lb, ub, true, name));
+        return variables_.back().get();
+    }
+
+    MockMipVariable* addVariable(double lb,
+                                 double ub,
+                                 bool integer,
+                                 const std::string& name) override
+    {
+        return integer ? addIntVariable(lb, ub, name) : addNumVariable(lb, ub, name);
+    }
+
+    MockMipVariable* getVariable(const std::string& name) const override
+    {
+        for (const auto& var: variables_)
+        {
+            if (var->getName() == name)
+            {
+                return var.get();
+            }
+        }
+        return nullptr;
+    }
+
+    int variableCount() const override
+    {
+        return static_cast<int>(variables_.size());
+    }
+
+    IMipConstraint* addConstraint(double lb, double ub, const std::string& name) override
+    {
+        return nullptr;
+    }
+
+    IMipConstraint* getConstraint(const std::string& name) const override
+    {
+        return nullptr;
+    }
+
+    int constraintCount() const override
+    {
+        return 0;
+    }
+
+    void setObjectiveCoefficient(IMipVariable* var, double coefficient) override
+    {
+    }
+
+    double getObjectiveCoefficient(const IMipVariable* var) const override
+    {
+        return 0.0;
+    }
+
+    void setMinimization() override
+    {
+    }
+
+    void setMaximization() override
+    {
+    }
+
+    bool isMinimization() const override
+    {
+        return true;
+    }
+
+    bool isMaximization() const override
+    {
+        return false;
+    }
+
+    IMipSolution* solve(bool verboseSolver) override
+    {
+        return nullptr;
+    }
+
+    void WriteLP(const std::string& filename) override
+    {
+    }
+
+    double infinity() const override
+    {
+        return 1e20;
+    }
+};
+
+BOOST_AUTO_TEST_CASE(Constructor_ValidIndices)
+{
+    MockLinearProblem lp;
+    BOOST_CHECK_NO_THROW(VariablesBulkAddition(lp, 0, 5));
+}
+
+// de-comment if checkIndices is done in VariablesBulkAddition's ctor
+// BOOST_AUTO_TEST_CASE(Constructor_InvalidIndices)
+// {
+//     MockLinearProblem lp;
+//     BOOST_CHECK_THROW(VariablesBulkAddition(lp, 5, 0), std::invalid_argument);
+// }
+
+BOOST_AUTO_TEST_CASE(GetCountTest)
+{
+    MockLinearProblem lp;
+    VariablesBulkAddition vba(lp, 2, 6);
+    BOOST_CHECK_EQUAL(vba.getCount(), 5);
+}
+
+BOOST_AUTO_TEST_CASE(AddVariable_SingleBounds)
+{
+    MockLinearProblem lp;
+    VariablesBulkAddition vba(lp, 0, 2);
+    auto vars = vba.addVariable(0.0, 1.0, true, "x");
+    BOOST_CHECK_EQUAL(vars.size(), 3);
+    for (auto* v: vars)
+    {
+        BOOST_CHECK(v != nullptr);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(AddVariable_VectorLowerBound)
+{
+    MockLinearProblem lp;
+    VariablesBulkAddition vba(lp, 0, 2);
+    std::vector<double> lb = {0.1, 0.2, 0.3};
+    auto vars = vba.addVariable(lb, 1.0, true, "x");
+    BOOST_CHECK_EQUAL(vars.size(), 3);
+    for (auto* v: vars)
+    {
+        BOOST_CHECK(v != nullptr);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(AddVariable_VectorUpperBound)
+{
+    MockLinearProblem lp;
+    VariablesBulkAddition vba(lp, 0, 2);
+    std::vector<double> ub = {1.1, 1.2, 1.3};
+    auto vars = vba.addVariable(0.0, ub, true, "x");
+    BOOST_CHECK_EQUAL(vars.size(), 3);
+    for (auto* v: vars)
+    {
+        BOOST_CHECK(v != nullptr);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(AddVariable_VectorBounds)
+{
+    MockLinearProblem lp;
+    VariablesBulkAddition vba(lp, 0, 2);
+    std::vector<double> lb = {0.1, 0.2, 0.3};
+    std::vector<double> ub = {1.1, 1.2, 1.3};
+    auto vars = vba.addVariable(lb, ub, true, "x");
+    BOOST_CHECK_EQUAL(vars.size(), 3);
+    for (auto* v: vars)
+    {
+        BOOST_CHECK(v != nullptr);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(AddVariable_InvalidBounds)
+{
+    MockLinearProblem lp;
+    VariablesBulkAddition vba(lp, 0, 2);
+    std::vector<double> lb = {0.1, 0.2};
+    std::vector<double> ub = {1.1, 1.2, 1.3};
+    BOOST_CHECK_THROW(vba.addVariable(lb, ub, true, "x"), std::invalid_argument);
+}
+
+BOOST_AUTO_TEST_CASE(AddVariable_InvalidVectorLowerBound)
+{
+    MockLinearProblem lp;
+    VariablesBulkAddition vba(lp, 0, 2);
+    BOOST_CHECK_THROW(vba.addVariable({0.1, 0.2}, 1.0, true, "x"), std::invalid_argument);
+}
+
+BOOST_AUTO_TEST_CASE(AddVariable_InvalidVectorUpperBound)
+{
+    MockLinearProblem lp;
+    VariablesBulkAddition vba(lp, 0, 2);
+    BOOST_CHECK_THROW(vba.addVariable(0.0, {1.1, 1.2}, true, "x"), std::invalid_argument);
+}
+
+BOOST_AUTO_TEST_CASE(AddVariable_InvalidVectorBounds)
+{
+    MockLinearProblem lp;
+    VariablesBulkAddition vba(lp, 0, 2);
+    BOOST_CHECK_THROW(vba.addVariable({0.1, 0.2}, {1.1, 1.2, 1.3}, true, "x"),
+                      std::invalid_argument);
+    BOOST_CHECK_THROW(vba.addVariable({0.1, 0.2, 0.3}, {1.1, 1.2}, true, "x"),
+                      std::invalid_argument);
+}
 BOOST_AUTO_TEST_SUITE_END()

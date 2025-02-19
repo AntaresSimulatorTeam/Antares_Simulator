@@ -33,125 +33,117 @@ namespace Antares::Optimization
 {
 
 // TODO move me
-class VariablesBulkAddition
+VariablesBulkAddition::VariablesBulkAddition(
+  Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
+  unsigned int first_index,
+  unsigned int last_index):
+    linear_problem_(linear_problem),
+    first_index_(first_index),
+    last_index_(last_index)
 {
-public:
-    VariablesBulkAddition(Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
-                          unsigned int first_index,
-                          unsigned int last_index):
-        linear_problem_(linear_problem),
-        first_index_(first_index),
-        last_index_(last_index)
+    // TODO
+    // checkIndices();
+}
+
+void VariablesBulkAddition::checkIndices() const
+{
+    if (first_index_ > last_index_)
     {
-        // TODO
-        // checkIndices();
+        throw std::invalid_argument("First index out of range " + std::to_string(first_index_)
+                                    + " > " + std::to_string(last_index_));
+    }
+}
+
+unsigned VariablesBulkAddition::getCount() const
+{
+    return last_index_ - first_index_ + 1;
+}
+
+std::vector<Optimisation::LinearProblemApi::IMipVariable*> VariablesBulkAddition::addVariable(
+  double lb,
+  double ub,
+  bool integer,
+  const std::string& name) const
+{
+    std::vector<Optimisation::LinearProblemApi::IMipVariable*> variables(getCount());
+    for (unsigned int i = first_index_; i <= last_index_; ++i)
+    {
+        variables[i] = linear_problem_.addVariable(lb, ub, integer, name + "_" + std::to_string(i));
+    }
+    return variables;
+}
+
+std::vector<Optimisation::LinearProblemApi::IMipVariable*> VariablesBulkAddition::addVariable(
+  const std::vector<double>& lb,
+  double ub,
+  bool integer,
+  const std::string& name) const
+{
+    auto count = getCount();
+    if (lb.size() != count)
+    {
+        throw std::invalid_argument("requested " + std::to_string(count)
+                                    + " variables but lb size = " + std::to_string(lb.size()));
     }
 
-    void checkIndices() const
+    std::vector<Optimisation::LinearProblemApi::IMipVariable*> variables(count);
+    for (unsigned int i = first_index_; i <= last_index_; ++i)
     {
-        if (first_index_ > last_index_)
-        {
-            throw std::invalid_argument("First index out of range " + std::to_string(first_index_)
-                                        + " > " + std::to_string(last_index_));
-        }
+        variables[i] = linear_problem_.addVariable(lb[i],
+                                                   ub,
+                                                   integer,
+                                                   name + "_" + std::to_string(i));
     }
+    return variables;
+}
 
-    unsigned getCount() const
+std::vector<Optimisation::LinearProblemApi::IMipVariable*> VariablesBulkAddition::addVariable(
+  double lb,
+  const std::vector<double>& ub,
+  bool integer,
+  const std::string& name) const
+{
+    auto count = getCount();
+    if (ub.size() != count)
     {
-        return last_index_ - first_index_ + 1;
+        throw std::invalid_argument("requested " + std::to_string(count)
+                                    + " variables but ub size = " + std::to_string(ub.size()));
     }
-
-    std::vector<Optimisation::LinearProblemApi::IMipVariable*>
-    addVariable(double lb, double ub, bool integer, const std::string& name) const
+    std::vector<Optimisation::LinearProblemApi::IMipVariable*> variables(count);
+    for (unsigned int i = first_index_; i <= last_index_; ++i)
     {
-        std::vector<Optimisation::LinearProblemApi::IMipVariable*> variables(getCount());
-        for (unsigned int i = first_index_; i <= last_index_; ++i)
-        {
-            variables[i] = linear_problem_.addVariable(lb,
-                                                       ub,
-                                                       integer,
-                                                       name + "_" + std::to_string(i));
-        }
-        return variables;
+        variables[i] = linear_problem_.addVariable(lb,
+                                                   ub[i],
+                                                   integer,
+                                                   name + "_" + std::to_string(i));
     }
+    return variables;
+}
 
-    std::vector<Optimisation::LinearProblemApi::IMipVariable*> addVariable(
-      const std::vector<double>& lb,
-      double ub,
-      bool integer,
-      const std::string& name) const
+std::vector<Optimisation::LinearProblemApi::IMipVariable*> VariablesBulkAddition::addVariable(
+  const std::vector<double>& lb,
+  const std::vector<double>& ub,
+  bool integer,
+  const std::string& name) const
+{
+    auto count = getCount();
+
+    if (lb.size() != ub.size() || lb.size() != count)
     {
-        auto count = getCount();
-        if (lb.size() != count)
-        {
-            throw std::invalid_argument("requested " + std::to_string(count)
-                                        + " variables but lb size = " + std::to_string(lb.size()));
-        }
-
-        std::vector<Optimisation::LinearProblemApi::IMipVariable*> variables(count);
-        for (unsigned int i = first_index_; i <= last_index_; ++i)
-        {
-            variables[i] = linear_problem_.addVariable(lb[i],
-                                                       ub,
-                                                       integer,
-                                                       name + "_" + std::to_string(i));
-        }
-        return variables;
+        throw std::invalid_argument("requested " + std::to_string(count)
+                                    + " variables but lb size = " + std::to_string(lb.size())
+                                    + " and ub size = " + std::to_string(ub.size()));
     }
-
-    std::vector<Optimisation::LinearProblemApi::IMipVariable*> addVariable(
-      double lb,
-      const std::vector<double>& ub,
-      bool integer,
-      const std::string& name) const
+    std::vector<Optimisation::LinearProblemApi::IMipVariable*> variables(count);
+    for (unsigned int i = first_index_; i <= last_index_; ++i)
     {
-        auto count = getCount();
-        if (ub.size() != count)
-        {
-            throw std::invalid_argument("requested " + std::to_string(count)
-                                        + " variables but ub size = " + std::to_string(ub.size()));
-        }
-        std::vector<Optimisation::LinearProblemApi::IMipVariable*> variables(count);
-        for (unsigned int i = first_index_; i <= last_index_; ++i)
-        {
-            variables[i] = linear_problem_.addVariable(lb,
-                                                       ub[i],
-                                                       integer,
-                                                       name + "_" + std::to_string(i));
-        }
-        return variables;
+        variables[i] = linear_problem_.addVariable(lb[i],
+                                                   ub[i],
+                                                   integer,
+                                                   name + "_" + std::to_string(i));
     }
-
-    std::vector<Optimisation::LinearProblemApi::IMipVariable*> addVariable(
-      const std::vector<double>& lb,
-      const std::vector<double>& ub,
-      bool integer,
-      const std::string& name) const
-    {
-        auto count = getCount();
-
-        if (lb.size() != ub.size() || lb.size() != count)
-        {
-            throw std::invalid_argument("requested " + std::to_string(count)
-                                        + " variables but lb size = " + std::to_string(lb.size())
-                                        + " and ub size = " + std::to_string(ub.size()));
-        }
-        std::vector<Optimisation::LinearProblemApi::IMipVariable*> variables(count);
-        for (unsigned int i = first_index_; i <= last_index_; ++i)
-        {
-            variables[i] = linear_problem_.addVariable(lb[i],
-                                                       ub[i],
-                                                       integer,
-                                                       name + "_" + std::to_string(i));
-        }
-        return variables;
-    }
-
-private:
-    Optimisation::LinearProblemApi::ILinearProblem& linear_problem_;
-    unsigned int first_index_;
-    unsigned int last_index_;
-};
+    return variables;
+}
 
 ComponentFiller::ComponentFiller(const Study::SystemModel::Component& component):
     component_(component),
@@ -301,7 +293,7 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
                                                                data);
 
     ReadLinearExpressionVisitor visitor(evaluationContext,
-{.fillContext = ctx,
+                                        {.fillContext = ctx,
                                          .scenarioGroup = component_.getScenarioGroupId(),
                                          .scenario = 0});
 
