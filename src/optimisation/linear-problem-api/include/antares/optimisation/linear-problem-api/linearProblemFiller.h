@@ -21,13 +21,11 @@
 
 #pragma once
 
-
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 
 namespace Antares::Optimisation::LinearProblemApi
 {
-
 
 class LinearProblemFiller
 {

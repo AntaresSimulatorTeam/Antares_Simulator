@@ -68,7 +68,6 @@ OrtoolsMipVariable* OrtoolsLinearProblem::addVariable(double lb,
     return pair.first->second.get(); // <<name, var>, bool>
 }
 
-
 OrtoolsMipVariable* OrtoolsLinearProblem::addNumVariable(double lb,
                                                          double ub,
                                                          const std::string& name)
@@ -76,14 +75,12 @@ OrtoolsMipVariable* OrtoolsLinearProblem::addNumVariable(double lb,
     return addVariable(lb, ub, false, name);
 }
 
-
 OrtoolsMipVariable* OrtoolsLinearProblem::addIntVariable(double lb,
                                                          double ub,
                                                          const std::string& name)
 {
     return addVariable(lb, ub, true, name);
 }
-
 
 OrtoolsMipVariable* OrtoolsLinearProblem::getVariable(const std::string& name) const
 {

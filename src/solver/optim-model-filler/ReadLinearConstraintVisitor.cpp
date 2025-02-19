@@ -62,7 +62,6 @@ std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const EqualNode
 
 std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const LessThanOrEqualNode* node)
 {
-
     auto leftMinusRight = linear_expression_visitor_.dispatch(node->left())
                           - linear_expression_visitor_.dispatch(node->right());
 

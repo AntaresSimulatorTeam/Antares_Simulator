@@ -301,7 +301,7 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
                                                                data);
 
     ReadLinearExpressionVisitor visitor(evaluationContext,
-{.fillContext = ctx,
+                                        {.fillContext = ctx,
                                          .scenarioGroup = component_.getScenarioGroupId(),
                                          .scenario = 0});
 

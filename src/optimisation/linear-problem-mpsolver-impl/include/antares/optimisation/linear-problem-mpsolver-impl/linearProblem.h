@@ -51,12 +51,10 @@ public:
                                     bool integer,
                                     const std::string& name) override;
 
-
     OrtoolsMipVariable* getVariable(const std::string& name) const override;
     int variableCount() const override;
 
     OrtoolsMipConstraint* addConstraint(double lb, double ub, const std::string& name) override;
-
 
     OrtoolsMipConstraint* getConstraint(const std::string& name) const override;
     int constraintCount() const override;

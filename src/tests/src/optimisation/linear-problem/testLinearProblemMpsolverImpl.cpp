@@ -70,7 +70,6 @@ BOOST_FIXTURE_TEST_CASE(add_int_variable_to_problem___check_var_exists, FixtureE
     BOOST_CHECK_EQUAL(var->getUb(), 15);
 }
 
-
 BOOST_FIXTURE_TEST_CASE(add_num_variable_to_problem___check_var_exists, FixtureEmptyProblem)
 {
     pb->addNumVariable(2., 7., "var");
@@ -80,7 +79,6 @@ BOOST_FIXTURE_TEST_CASE(add_num_variable_to_problem___check_var_exists, FixtureE
     BOOST_CHECK_EQUAL(var->getLb(), 2.);
     BOOST_CHECK_EQUAL(var->getUb(), 7.);
 }
-
 
 BOOST_FIXTURE_TEST_CASE(add_constraint_to_problem___check_constraint_exists, FixtureEmptyProblem)
 {

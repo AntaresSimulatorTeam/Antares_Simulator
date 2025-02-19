@@ -67,7 +67,6 @@ public:
         LinearProblemData data(dataSeriesRepo);
         FillContext dummy_time_scenario_ctx = {parameters.firstTimeStep, parameters.lastTimeStep};
         linear_problem_builder.build(pb, data, dummy_time_scenario_ctx);
-   
     }
 
 private:

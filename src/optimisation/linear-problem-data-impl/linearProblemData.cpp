@@ -46,5 +46,4 @@ double LinearProblemData::getData(const std::string& dataSetId,
     return dataSeriesRepository_.getDataSeries(dataSetId).getData(rank, hour);
 }
 
-
 } // namespace Antares::Optimisation::LinearProblemDataImpl

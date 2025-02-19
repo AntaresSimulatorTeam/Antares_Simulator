@@ -350,7 +350,8 @@ BOOST_FIXTURE_TEST_CASE(DivisionNodeFull, MyDummyFixture)
 
     DivisionNode divisionNode4(&literalNode1, &literalVerySmall);
 
-    BOOST_CHECK_THROW(evalVisitor.dispatch(&divisionNode4).valueAsDouble(), EvalVisitorDivisionException);
+    BOOST_CHECK_THROW(evalVisitor.dispatch(&divisionNode4).valueAsDouble(),
+                      EvalVisitorDivisionException);
 }
 
 BOOST_FIXTURE_TEST_CASE(subtraction_node, MyDummyFixture)
