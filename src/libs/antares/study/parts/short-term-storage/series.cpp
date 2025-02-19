@@ -35,7 +35,7 @@ namespace Antares::Data::ShortTermStorage
 
 namespace fs = std::filesystem;
 
-bool Series::loadFromFolder(const fs::path& folder)
+bool Series::loadFromFolder(const fs::path& folder, StudyVersion studyVersion)
 {
     bool ret = true;
 
@@ -44,14 +44,16 @@ bool Series::loadFromFolder(const fs::path& folder)
     ret = loadFile(folder / "inflows.txt", inflows) && ret;
     ret = loadFile(folder / "lower-rule-curve.txt", lowerRuleCurve) && ret;
     ret = loadFile(folder / "upper-rule-curve.txt", upperRuleCurve) && ret;
+    if (studyVersion >= StudyVersion(9, 2))
+    {
+        ret = loadFile(folder / "cost-injection.txt", costInjection) && ret;
+        ret = loadFile(folder / "cost-withdrawal.txt", costWithdrawal) && ret;
+        ret = loadFile(folder / "cost-level.txt", costLevel) && ret;
 
-    ret = loadFile(folder / "cost-injection.txt", costInjection) && ret;
-    ret = loadFile(folder / "cost-withdrawal.txt", costWithdrawal) && ret;
-    ret = loadFile(folder / "cost-level.txt", costLevel) && ret;
+        ret = loadFile(folder / "cost-variation-injection.txt", costVariationInjection) && ret;
 
-    ret = loadFile(folder / "cost-variation-injection.txt", costVariationInjection) && ret;
-
-    ret = loadFile(folder / "cost-variation-withdrawal.txt", costVariationWithdrawal) && ret;
+        ret = loadFile(folder / "cost-variation-withdrawal.txt", costVariationWithdrawal) && ret;
+    }
 
     return ret;
 }
@@ -67,7 +69,8 @@ bool loadFile(const fs::path& path, std::vector<double>& vect)
 
     if (!file.is_open())
     {
-        logs.debug() << "File not found: " << path;
+        logs.info() << "Optional file not found: " << path
+                    << ", default values will be used if needed";
         return true;
     }
 

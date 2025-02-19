@@ -23,6 +23,8 @@
 #include <filesystem>
 #include <string>
 
+#include <antares/study/version.h>
+
 #include "cluster.h"
 
 namespace Antares::Data::ShortTermStorage
@@ -36,7 +38,7 @@ public:
     bool createSTStorageClustersFromIniFile(const std::filesystem::path& path);
 
     /// 2. Read ALL series
-    bool loadSeriesFromFolder(const std::filesystem::path& folder) const;
+    bool loadSeriesFromFolder(const std::filesystem::path& folder, StudyVersion studyVersion) const;
 
     /// Number of enabled ST storages, ignoring disabled ST storages
     std::size_t count() const;

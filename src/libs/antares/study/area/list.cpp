@@ -1020,7 +1020,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         fs::path seriesPath = study.folderInput / "st-storage" / "series"
                               / area.id.to<std::string>();
 
-        ret = area.shortTermStorage.loadSeriesFromFolder(seriesPath) && ret;
+        ret = area.shortTermStorage.loadSeriesFromFolder(seriesPath, studyVersion) && ret;
         ret = area.shortTermStorage.validate() && ret;
     }
 
@@ -1205,9 +1205,13 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
                 fs::path cluster_folder = stsFolder / "clusters" / area->id.c_str();
                 ret = area->shortTermStorage.createSTStorageClustersFromIniFile(cluster_folder)
                       && ret;
-
-                const auto constraints_folder = stsFolder / "constraints" / area->id.c_str();
-                ret = area->shortTermStorage.loadAdditionalConstraints(constraints_folder) && ret;
+                // Additional constraints were added from version 9.2
+                if (studyVersion >= StudyVersion(9, 2))
+                {
+                    const auto constraints_folder = stsFolder / "constraints" / area->id.c_str();
+                    ret = area->shortTermStorage.loadAdditionalConstraints(constraints_folder)
+                          && ret;
+                }
             }
         }
         else

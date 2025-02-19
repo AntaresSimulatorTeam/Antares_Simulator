@@ -192,6 +192,8 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
         // We don't want load RHS and link the STS time if the constraint is disabled
         if (!additionalConstraints.enabled)
         {
+            logs.info() << "Additional constraints disabled for ST "
+                        << additionalConstraints.cluster_id;
             return true;
         }
 
@@ -221,6 +223,8 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
         }
         else
         {
+            logs.info() << "Loaded ST additional constraint " << additionalConstraints.cluster_id
+                        << "/" << additionalConstraints.name;
             it->additionalConstraints.push_back(additionalConstraints);
         }
     }
@@ -228,7 +232,7 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
     return true;
 }
 
-bool STStorageInput::loadSeriesFromFolder(const fs::path& folder) const
+bool STStorageInput::loadSeriesFromFolder(const fs::path& folder, StudyVersion studyVersion) const
 {
     if (folder.empty())
     {
@@ -240,7 +244,7 @@ bool STStorageInput::loadSeriesFromFolder(const fs::path& folder) const
     for (auto& cluster: storagesByIndex)
     {
         fs::path seriesFolder = folder / cluster.id;
-        ret = cluster.loadSeries(seriesFolder) && ret;
+        ret = cluster.loadSeries(seriesFolder, studyVersion) && ret;
     }
 
     return ret;

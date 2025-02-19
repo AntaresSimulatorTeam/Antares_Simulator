@@ -24,6 +24,8 @@
 #include <string>
 #include <vector>
 
+#include <antares/study/version.h>
+
 namespace Antares::Data::ShortTermStorage
 {
 
@@ -35,7 +37,7 @@ public:
     bool validate(const std::string& id = "") const;
 
     // load all series files with folder path
-    bool loadFromFolder(const std::filesystem::path& folder);
+    bool loadFromFolder(const std::filesystem::path& folder, StudyVersion studyVersion);
     void fillDefaultSeriesIfEmpty();
 
     bool saveToFolder(const std::string& folder) const;
