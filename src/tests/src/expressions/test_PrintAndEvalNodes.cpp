@@ -512,11 +512,11 @@ void evaluate_time_dependent_operation()
     BinaryNode root(&literal, &param); // Correctly use the type as a template argument
     const std::string value = "dummy";
     MockLinearProblemData dummy_data;
+
     EvaluationContext context(
       {build_context_parameter_with("my-param", value, ParameterType::TIMESERIE)},
       {},
       dummy_data);
-
     unsigned hour_0 = 0;
     unsigned hour_1 = 1;
     EvalVisitor evalVisitor(context,

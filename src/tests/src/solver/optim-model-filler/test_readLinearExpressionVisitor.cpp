@@ -92,6 +92,53 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var, MyDummyFixture)
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar()["var"], 7.);
 }
+struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearProblemData
+{
+    double getData(const std::string& dataSetId,
+                   const std::string& scenarioGroup,
+                   const unsigned scenario,
+                   const unsigned hour) override
+    {
+        return hour; // for test
+    }
+};
+
+BOOST_FIXTURE_TEST_CASE(visit_literal_plus_time_dependent_param_plus_var, MyDummyFixture)
+{
+    // 60 + param_at_0 + 7 * var = { 60, {var : 7} }
+    // 60 + param_at_1 + 7 * var = { 61, {var : 7} }
+    Node* product = create<MultiplicationNode>(create<LiteralNode>(7.),
+                                               create<VariableNode>("var"));
+    Node* sum = create<SumNode>(create<LiteralNode>(60.), create<ParameterNode>("param"), product);
+    MockLinearProblemData my_data;
+    EvaluationContext evaluation_context(
+      {{build_context_parameter_with("param", "something", ParameterType::TIMESERIE)}},
+      {},
+      my_data);
+
+    unsigned hour_0 = 0;
+    unsigned hour_1 = 1;
+    ReadLinearExpressionVisitor visitor(evaluation_context, {.fillContext = {hour_0, hour_1}});
+    auto linear_expressions = visitor.dispatch(sum).GetLinearExpressions();
+    BOOST_CHECK_EQUAL(linear_expressions.at(0).offset(), 60.);
+    BOOST_CHECK_EQUAL(linear_expressions.at(1).offset(), 61.);
+    BOOST_CHECK_EQUAL(linear_expressions.at(0).coefPerVar().size(), 1);
+    BOOST_CHECK_EQUAL(linear_expressions.at(0).coefPerVar()["var"], 7.);
+    BOOST_CHECK_EQUAL(linear_expressions.at(1).coefPerVar()["var"], 7.);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_param_declared_const_in_library_but_time_dep_in_system,
+                        MyDummyFixture)
+{
+    ParameterNode p("param", TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+    EvaluationContext evaluation_context(
+      {{build_context_parameter_with("param", "something", ParameterType::TIMESERIE)}},
+      {},
+      data);
+
+    ReadLinearExpressionVisitor visitor(evaluation_context, {.fillContext = {0, 1}});
+    BOOST_CHECK_THROW(visitor.dispatch(&p), std::invalid_argument);
+}
 
 BOOST_FIXTURE_TEST_CASE(visit_negate_literal_plus_var, MyDummyFixture)
 {

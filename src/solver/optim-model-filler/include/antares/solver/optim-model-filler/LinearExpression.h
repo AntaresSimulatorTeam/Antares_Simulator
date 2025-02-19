@@ -58,16 +58,10 @@ public:
     LinearExpression operator-() const;
 
     /// Get the offset
-    double offset() const
-    {
-        return offset_;
-    }
+    double offset() const;
 
     /// Get the non-zero coefficients per variable ID
-    std::map<std::string, double> coefPerVar() const
-    {
-        return coef_per_var_;
-    }
+    std::map<std::string, double> coefPerVar() const;
 
     LinearExpression& operator+=(const LinearExpression& value);
 

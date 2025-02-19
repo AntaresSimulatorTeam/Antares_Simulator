@@ -93,6 +93,11 @@ LinearExpression LinearExpression::operator+(const LinearExpression& other) cons
     return {offset_ + other.offset_, add_maps(coef_per_var_, other.coef_per_var_)};
 }
 
+std::map<std::string, double> LinearExpression::coefPerVar() const
+{
+    return coef_per_var_;
+}
+
 LinearExpression& LinearExpression::operator+=(const LinearExpression& other)
 {
     this->offset_ += other.offset_;
@@ -134,6 +139,11 @@ LinearExpression LinearExpression::operator/(const LinearExpression& other) cons
 LinearExpression LinearExpression::operator-() const
 {
     return {-offset_, scale_map(coef_per_var_, -1)};
+}
+
+double LinearExpression::offset() const
+{
+    return offset_;
 }
 
 TimeDependentLinearExpression::TimeDependentLinearExpression(
