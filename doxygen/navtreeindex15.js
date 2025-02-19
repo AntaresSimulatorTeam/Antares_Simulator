@@ -1,5 +1,6 @@
 var NAVTREEINDEX15 =
 {
+"classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml.html":[9,0,0,16,1,0],
 "classAntares_1_1Solver_1_1LpsFromAntares.html":[9,0,0,16,19],
 "classAntares_1_1Solver_1_1NullResultWriter.html":[9,0,0,16,21],
 "classAntares_1_1Solver_1_1Optimization_1_1CsrQuadraticProblem.html":[9,0,0,16,2,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX15 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCsr.html#a7729aa62526dc7372a668afb0aea17b2":[9,0,0,16,5,4,25,1],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCsr.html#a82f37d6949a97beea82b0bb36e52e4da":[9,0,0,16,5,4,25,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCsr.html#ada3c71d8294a42b983dac106338f4c93":[9,0,0,16,5,4,25,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgDataFactory.html":[9,0,0,16,5,4,27],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgUsualDataFactory.html":[9,0,0,16,5,4,29]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgDataFactory.html":[9,0,0,16,5,4,27]
 };

@@ -1,5 +1,6 @@
 var NAVTREEINDEX14 =
 {
+"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasName.html":[9,0,0,13,0,2],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html":[7,0,0,2,0,3],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html":[9,0,0,13,0,3],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a25dfff44a3d369c82cf2b507b34f5b87":[7,0,0,2,0,3,10],
@@ -248,6 +249,5 @@ var NAVTREEINDEX14 =
 "classAntares_1_1Solver_1_1InMemoryWriter.html#ae79bc278d4eff373baf313ebb426361b":[9,0,0,16,15,0],
 "classAntares_1_1Solver_1_1Initialization_1_1Error_1_1NoQueueService.html":[9,0,0,16,0,0,0],
 "classAntares_1_1Solver_1_1IntraModalConsistencyChecker.html":[9,0,0,16,16],
-"classAntares_1_1Solver_1_1LoadAreaNumberOfTSretriever.html":[9,0,0,16,18],
-"classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml.html":[9,0,0,16,1,0]
+"classAntares_1_1Solver_1_1LoadAreaNumberOfTSretriever.html":[9,0,0,16,18]
 };

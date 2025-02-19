@@ -1,5 +1,6 @@
 var NAVTREEINDEX21 =
 {
+"classPMaxDispatchableGeneration.html":[9,0,196],
 "classPMaxDispatchableGeneration.html#a7d04afffc70692626007e0ea81d85c1a":[9,0,196,0],
 "classPMinDispatchableGeneration.html":[9,0,197],
 "classPMinDispatchableGeneration.html#a2d46790c674fec6498eb4a31d948e74a":[9,0,197,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX21 =
 "dir_1576b8b2060652e8326373c2526f8269.html":[10,0,0,9,1,0],
 "dir_158d2ddcdf5d27a2eb46fed0a14e6afe.html":[10,0,0,7,8,1,0,0,0,0,0],
 "dir_1612ffa9a80fe1197f82601243b27e72.html":[10,0,0,11,2,2,7],
-"dir_169f1962c8eff925da731e6423a64684.html":[10,0,0,4,1,3,0],
-"dir_178c8ef38b01ceddc925e5180d51db25.html":[10,0,0,7,7,0,0]
+"dir_169f1962c8eff925da731e6423a64684.html":[10,0,0,4,1,3,0]
 };

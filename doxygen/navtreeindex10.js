@@ -1,5 +1,6 @@
 var NAVTREEINDEX10 =
 {
+"classAntares_1_1Data_1_1Study.html#a083fcc4ef4e2a4e531a2f3ca520d7100":[9,0,0,4,52,57],
 "classAntares_1_1Data_1_1Study.html#a22b043da78ca567d89ca3169693e4b54":[9,0,0,4,52,17],
 "classAntares_1_1Data_1_1Study.html#a24abc348d810c423a622796e34afe476":[9,0,0,4,52,53],
 "classAntares_1_1Data_1_1Study.html#a26561b5030df89b922edb0453ad1ae5a":[9,0,0,4,52,48],
@@ -248,6 +249,5 @@ var NAVTREEINDEX10 =
 "classAntares_1_1Data_1_1Wind_1_1Prepro.html#aea3600b697dd706572d498474d0b897d":[9,0,0,4,5,1,6],
 "classAntares_1_1Data_1_1Wind_1_1Prepro.html#afecc20d60186934746a8eaacc47c9b4b":[9,0,0,4,5,1,0],
 "classAntares_1_1Data_1_1XCast.html":[9,0,0,4,84],
-"classAntares_1_1Data_1_1XCast.html#a063d8a5fa3fe7c4da73704ef9205f827":[9,0,0,4,84,7],
-"classAntares_1_1Data_1_1XCast.html#a19cae376dc69fe024b1cb7e5cbfa6ce5":[9,0,0,4,84,0]
+"classAntares_1_1Data_1_1XCast.html#a063d8a5fa3fe7c4da73704ef9205f827":[9,0,0,4,84,7]
 };

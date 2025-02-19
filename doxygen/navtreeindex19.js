@@ -1,5 +1,6 @@
 var NAVTREEINDEX19 =
 {
+"classAntares_1_1Window_1_1Message.html#afda9ab9d40e3986ea47e4a15103556e7a158a1a2245f7685732bbf62e671d921e":[9,0,0,22,41,1,7],
 "classAntares_1_1Window_1_1Message.html#afda9ab9d40e3986ea47e4a15103556e7a240e4be61dd0e8345744e6ea65cd6710":[9,0,0,22,41,1,13],
 "classAntares_1_1Window_1_1Message.html#afda9ab9d40e3986ea47e4a15103556e7a261e85ac32db084cd87e4382e4fd096b":[9,0,0,22,41,1,3],
 "classAntares_1_1Window_1_1Message.html#afda9ab9d40e3986ea47e4a15103556e7a3d6906f60cf25a8a9ace47b1d0a743ce":[9,0,0,22,41,1,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX19 =
 "classDataFile.html#ad12b664847b8779728608abb1d1141f4":[9,0,86,4],
 "classDataFile.html#af097c34a61a6f81c04436500e7555c81":[9,0,86,3],
 "classDataFile.html#afa12a7df346f64ff28425065607cc346":[9,0,86,0],
-"classExchangeBalance.html":[9,0,94],
-"classExchangeBalanceGroup.html":[9,0,96]
+"classExchangeBalance.html":[9,0,94]
 };

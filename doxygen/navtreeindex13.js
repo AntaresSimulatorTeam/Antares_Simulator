@@ -1,5 +1,6 @@
 var NAVTREEINDEX13 =
 {
+"classAntares_1_1Map_1_1Manager.html#a707552ee79e9af7f066d09d56a2fc05c":[9,0,0,12,8,18],
 "classAntares_1_1Map_1_1Manager.html#a796310f6d35ec2ca032c32eebf1c0b90":[9,0,0,12,8,11],
 "classAntares_1_1Map_1_1Manager.html#a7a4a3ac4b650695d9bcd0547b7ba2a9e":[9,0,0,12,8,6],
 "classAntares_1_1Map_1_1Manager.html#a7d73ea7ce54525207b2c9caaf807e52c":[9,0,0,12,8,26],
@@ -248,6 +249,5 @@ var NAVTREEINDEX13 =
 "classAntares_1_1MinGenerationScaling.html":[9,0,0,50],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasBounds.html":[7,0,0,2,0,1],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasBounds.html":[9,0,0,13,0,1],
-"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasName.html":[7,0,0,2,0,2],
-"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasName.html":[9,0,0,13,0,2]
+"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasName.html":[7,0,0,2,0,2]
 };

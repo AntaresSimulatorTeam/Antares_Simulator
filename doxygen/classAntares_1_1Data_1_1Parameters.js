@@ -14,6 +14,7 @@ var classAntares_1_1Data_1_1Parameters =
     [ "handleOptimizationOptions", "classAntares_1_1Data_1_1Parameters.html#ad31a8eb85a65f29306b294dcba6f5ac6", null ],
     [ "isTSGeneratedByPrepro", "classAntares_1_1Data_1_1Parameters.html#a55a1e8f48fa78e411e6d6237a4ded45f", null ],
     [ "loadFromFile", "classAntares_1_1Data_1_1Parameters.html#a8087b54093bb1905f4b9b0ae6826e350", null ],
+    [ "loadFromINI", "classAntares_1_1Data_1_1Parameters.html#af633756c84db9cba87fd741412a107a1", null ],
     [ "prepareForSimulation", "classAntares_1_1Data_1_1Parameters.html#a1f5a9de0308442c0b03b4d9ca3b72407", null ],
     [ "reset", "classAntares_1_1Data_1_1Parameters.html#a97958d62441d7301bf612d7ed78258f8", null ],
     [ "resetAdqPatchParameters", "classAntares_1_1Data_1_1Parameters.html#a9ab2f1c99f02dd3ea8a2399b57455eed", null ],
