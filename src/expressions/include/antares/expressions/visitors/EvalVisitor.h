@@ -125,7 +125,6 @@ public:
         return std::get<std::vector<double>>(value_);
     }
 
-
 private:
     std::variant<double, std::vector<double>> value_;
     explicit EvaluationResult(const std::variant<double, std::vector<double>>& value);

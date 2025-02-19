@@ -175,6 +175,7 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator-(
 
     return {add_maps(GetLinearExpressions(), other.GetLinearExpressions(), std::negate<>())};
 }
+
 template<typename BinaryOperator>
 TimeDependentLinearExpression BinaryOpLinearExpression(
   const std::map<unsigned int, LinearExpression>& left,
@@ -225,7 +226,8 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator-() const
     return TimeDependentLinearExpression(std::move(result));
 }
 
-std::map<unsigned int, LinearExpression> TimeDependentLinearExpression::GetLinearExpressions() const
+const std::map<unsigned int, LinearExpression>&
+TimeDependentLinearExpression::GetLinearExpressions() const
 {
     return linearExpressions_;
 }

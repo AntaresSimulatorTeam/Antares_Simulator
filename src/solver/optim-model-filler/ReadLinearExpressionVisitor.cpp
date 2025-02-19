@@ -114,20 +114,20 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Parameter
     }
     else // TODO for now considering only timedepend -- only
     {
-            std::map<unsigned int, LinearExpression> linearExpressions;
+        std::map<unsigned int, LinearExpression> linearExpressions;
 
-            for (auto timeStep = dataSeriesKeys_.fillContext.getFirstTimeStep();
-                 timeStep <= dataSeriesKeys_.fillContext.getLastTimeStep();
-                 ++timeStep)
-            {
-                linearExpressions[timeStep] = LinearExpression(
-                  context_.getParameterValue(node->value(),
-                                             dataSeriesKeys_.scenarioGroup,
-                                             dataSeriesKeys_.scenario,
-                                             timeStep),
-                  {});
-            }
-            return TimeDependentLinearExpression(linearExpressions);
+        for (auto timeStep = dataSeriesKeys_.fillContext.getFirstTimeStep();
+             timeStep <= dataSeriesKeys_.fillContext.getLastTimeStep();
+             ++timeStep)
+        {
+            linearExpressions[timeStep] = LinearExpression(
+              context_.getParameterValue(node->value(),
+                                         dataSeriesKeys_.scenarioGroup,
+                                         dataSeriesKeys_.scenario,
+                                         timeStep),
+              {});
+        }
+        return TimeDependentLinearExpression(linearExpressions);
     }
 }
 

@@ -100,7 +100,7 @@ public:
     TimeDependentLinearExpression operator/(const TimeDependentLinearExpression& other) const;
     /// Multiply linear expression by -1
     TimeDependentLinearExpression operator-() const;
-    std::map<unsigned, LinearExpression> GetLinearExpressions() const;
+    const std::map<unsigned, LinearExpression>& GetLinearExpressions() const;
     size_t getSize() const;
 
 private:
