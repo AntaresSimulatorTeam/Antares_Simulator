@@ -130,7 +130,7 @@ jobs:
         continue-on-error: true
         run: |
           cd $GITHUB_WORKSPACE/_build
-          ctest -C Release --output-on-failure -L "unit"
+          ctest -C Release --output-on-failure -L "unfeasible|unit"
 
       - name: Run short-tests
         continue-on-error: true
