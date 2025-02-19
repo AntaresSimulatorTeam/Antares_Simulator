@@ -16,8 +16,6 @@ public:
     }
 
     virtual double getData(unsigned int rank, unsigned int hour) = 0;
-    virtual std::vector<double> getData(unsigned int rank) = 0;
-
     std::string name() const
     {
         return name_;

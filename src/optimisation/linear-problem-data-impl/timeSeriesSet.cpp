@@ -22,16 +22,6 @@ void TimeSeriesSet::add(const std::vector<double>& ts)
 
 double TimeSeriesSet::getData(unsigned rank, unsigned hour)
 {
-    if (hour > height_ - 1)
-    {
-        throw HourTooBig(name(), hour);
-    }
-
-    return getData(rank)[hour];
-}
-
-std::vector<double> TimeSeriesSet::getData(unsigned rank)
-{
     if (tsSet_.empty())
     {
         throw Empty(name());
@@ -42,6 +32,12 @@ std::vector<double> TimeSeriesSet::getData(unsigned rank)
         throw RankTooBig(name(), rank);
     }
 
-    return tsSet_[rank];
+    if (hour > height_ - 1)
+    {
+        throw HourTooBig(name(), hour);
+    }
+    return tsSet_[rank][hour];
 }
+
+
 } // namespace Antares::Optimisation::LinearProblemDataImpl
