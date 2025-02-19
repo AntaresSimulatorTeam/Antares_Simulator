@@ -124,7 +124,9 @@ inline void List<NextT>::computeSpatialAggregatesSummary(
   unsigned int nbYearsForCurrentSummary)
 {
     // Next variable
-    NextT::computeSpatialAggregatesSummary(allVars, numSpaceToYear, nbYearsForCurrentSummary);
+    NextT::computeSpatialAggregatesSummary(allVars,
+                                                       numSpaceToYear,
+                                                       nbYearsForCurrentSummary);
 }
 
 template<class NextT>
