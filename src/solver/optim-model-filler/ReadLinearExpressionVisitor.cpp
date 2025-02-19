@@ -86,7 +86,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const GreaterTh
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const NegationNode* node)
 {
-    return dispatch(node->child()).negate();
+    return -dispatch(node->child());
 }
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const VariableNode* node)

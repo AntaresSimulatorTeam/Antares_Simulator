@@ -21,6 +21,8 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <boost/mpl/list.hpp>
+#include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
 #include <antares/expressions/Registry.hxx>
@@ -77,6 +79,143 @@ BOOST_AUTO_TEST_CASE(test_getSystemParameterValueAsDouble)
 
     // 6. Timeserie parameter should be handled by getParameterValue instead
     BOOST_CHECK_EQUAL(context.getParameterValue("timeserie_param", "group1", 0, 1), 123.45);
+}
+
+BOOST_AUTO_TEST_CASE(EvaluationResult_ConstructorTest)
+{
+    EvaluationResult res1(5.0);
+    BOOST_CHECK_EQUAL(std::get<double>(res1.value()), 5.0);
+
+    std::vector<double> vec = {1.0, 2.0, 3.0};
+    EvaluationResult res2(vec);
+    BOOST_CHECK(std::get<std::vector<double>>(res2.value()) == vec);
+}
+
+BOOST_AUTO_TEST_CASE(EvaluationResult_OperatorAdditionTest)
+{
+    EvaluationResult res1(5.0);
+    EvaluationResult res2(3.0);
+    EvaluationResult res3 = res1 + res2;
+    BOOST_CHECK_EQUAL(std::get<double>(res3.value()), 8.0);
+}
+
+BOOST_AUTO_TEST_CASE(EvaluationResult_OperatorSubtractionTest)
+{
+    EvaluationResult res1(5.0);
+    EvaluationResult res2(3.0);
+    EvaluationResult res3 = res1 - res2;
+    BOOST_CHECK_EQUAL(std::get<double>(res3.value()), 2.0);
+}
+
+BOOST_AUTO_TEST_CASE(EvaluationResult_OperatorMultiplicationTest)
+{
+    EvaluationResult res1(5.0);
+    EvaluationResult res2(3.0);
+    EvaluationResult res3 = res1 * res2;
+    BOOST_CHECK_EQUAL(std::get<double>(res3.value()), 15.0);
+}
+
+BOOST_AUTO_TEST_CASE(EvaluationResult_OperatorDivisionTest)
+{
+    EvaluationResult res1(6.0);
+    EvaluationResult res2(2.0);
+    EvaluationResult res3 = res1 / res2;
+    BOOST_CHECK_EQUAL(std::get<double>(res3.value()), 3.0);
+}
+
+BOOST_AUTO_TEST_CASE(EvaluationResult_DivisionByZeroTest)
+{
+    EvaluationResult res1(5.0);
+    EvaluationResult res2(0.0);
+    BOOST_CHECK_THROW(res1 / res2, EvalVisitorDivisionException);
+}
+
+BOOST_AUTO_TEST_CASE(EvaluationResult_OperatorNegationTest)
+{
+    EvaluationResult res1(5.0);
+    EvaluationResult res2 = -res1;
+    BOOST_CHECK_EQUAL(std::get<double>(res2.value()), -5.0);
+}
+
+BOOST_AUTO_TEST_CASE(EvaluationResult_VectorOperationTest)
+{
+    std::vector<double> vec1 = {1.0, 2.0, 3.0};
+    std::vector<double> vec2 = {4.0, 5.0, 6.0};
+    EvaluationResult res1(vec1);
+    EvaluationResult res2(vec2);
+    EvaluationResult res3 = res1 + res2;
+    const auto expected_result = std::vector<double>{5.0, 7.0, 9.0};
+    const auto result = std::get<std::vector<double>>(res3.value());
+    BOOST_CHECK_EQUAL_COLLECTIONS(result.cbegin(),
+                                  result.cend(),
+                                  expected_result.cbegin(),
+                                  expected_result.cend());
+}
+
+BOOST_AUTO_TEST_CASE(EvaluationResult_MismatchedVectorSizeTest)
+{
+    std::vector<double> vec1 = {1.0, 2.0};
+    std::vector<double> vec2 = {3.0, 4.0, 5.0};
+    EvaluationResult res1(vec1);
+    EvaluationResult res2(vec2);
+    BOOST_CHECK_THROW(res1 + res2, std::runtime_error);
+}
+
+BOOST_AUTO_TEST_CASE(EvaluationResult_ScalarVectorAdditionTest)
+{
+    EvaluationResult res1(2.0);
+    std::vector<double> vec = {1.0, 2.0, 3.0};
+    EvaluationResult res2(vec);
+    EvaluationResult res3 = res1 + res2;
+    const auto expected_result = std::vector<double>{3.0, 4.0, 5.0};
+    const auto result = std::get<std::vector<double>>(res3.value());
+    BOOST_CHECK_EQUAL_COLLECTIONS(result.cbegin(),
+                                  result.cend(),
+                                  expected_result.cbegin(),
+                                  expected_result.cend());
+}
+
+BOOST_AUTO_TEST_CASE(EvaluationResult_ScalarVectorMultiplicationTest)
+{
+    EvaluationResult res1(2.0);
+    std::vector<double> vec = {1.0, 2.0, 3.0};
+    EvaluationResult res2(vec);
+    EvaluationResult res3 = res1 * res2;
+    const auto expected_result = std::vector<double>{2.0, 4.0, 6.0};
+    const auto result = res3.valuesAsVector();
+    BOOST_CHECK_EQUAL_COLLECTIONS(result.cbegin(),
+                                  result.cend(),
+                                  expected_result.cbegin(),
+                                  expected_result.cend());
+}
+
+BOOST_AUTO_TEST_CASE(EvaluationResult_VectorVectorMultiplicationTest)
+{
+    std::vector<double> vec1 = {1.0, 2.0, 3.0};
+    std::vector<double> vec2 = {4.0, 5.0, 6.0};
+    EvaluationResult res1(vec1);
+    EvaluationResult res2(vec2);
+    EvaluationResult res3 = res1 * res2;
+    const auto expected_result = std::vector<double>{4.0, 10.0, 18.0};
+    const auto result = res3.valuesAsVector();
+    BOOST_CHECK_EQUAL_COLLECTIONS(result.cbegin(),
+                                  result.cend(),
+                                  expected_result.cbegin(),
+                                  expected_result.cend());
+}
+
+BOOST_AUTO_TEST_CASE(EvaluationResult_VectorScalarDivisionTest)
+{
+    std::vector<double> vec = {4.0, 8.0, 12.0};
+    EvaluationResult res1(vec);
+    EvaluationResult res2(2.0);
+    EvaluationResult res3 = res1 / res2;
+    const auto expected_result = std::vector<double>{2.0, 4.0, 6.0};
+    const auto result = std::get<std::vector<double>>(res3.value());
+    BOOST_CHECK_EQUAL_COLLECTIONS(result.cbegin(),
+                                  result.cend(),
+                                  expected_result.cbegin(),
+                                  expected_result.cend());
 }
 
 struct MyDummyFixture: Registry<Node>
@@ -277,6 +416,127 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param, MyDummyFixture)
     const double eval = evalVisitor.dispatch(&root).valueAsDouble();
 
     BOOST_CHECK_EQUAL(std::stod(value), eval);
+}
+
+struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearProblemData
+{
+    double getData(const std::string& dataSetId,
+                   const std::string& scenarioGroup,
+                   const unsigned scenario,
+                   const unsigned hour) override
+    {
+        return hour; // for test
+    }
+};
+
+BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_param, MyDummyFixture)
+{
+    ParameterNode root("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
+    const std::string value = "dummy";
+    MockLinearProblemData dummy_data;
+    EvaluationContext context(
+      {build_context_parameter_with("my-param", value, ParameterType::TIMESERIE)},
+      {},
+      dummy_data);
+
+    unsigned hour_0 = 0;
+    unsigned hour_1 = 1;
+    EvalVisitor evalVisitor(context,
+                            {.fillContext = {hour_0, hour_1 /*two hours*/},
+                             .scenarioGroup = "",
+                             .scenario = 0});
+    const auto eval = evalVisitor.dispatch(&root).valuesAsVector();
+
+    BOOST_CHECK_EQUAL(eval[0], hour_0);
+    BOOST_CHECK_EQUAL(eval[1], hour_1);
+}
+
+BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_multiplication, MyDummyFixture)
+{
+    ParameterNode param("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
+    LiteralNode literal(2.0);
+    MultiplicationNode root(&literal, &param);
+    const std::string value = "dummy";
+    MockLinearProblemData dummy_data;
+    EvaluationContext context(
+      {build_context_parameter_with("my-param", value, ParameterType::TIMESERIE)},
+      {},
+      dummy_data);
+
+    unsigned hour_0 = 0;
+    unsigned hour_1 = 1;
+    EvalVisitor evalVisitor(context,
+                            {.fillContext = {hour_0, hour_1 /*two hours*/},
+                             .scenarioGroup = "",
+                             .scenario = 0});
+    const auto eval = evalVisitor.dispatch(&root).valuesAsVector();
+
+    BOOST_CHECK_EQUAL(eval[0], hour_0 * literal.value());
+    BOOST_CHECK_EQUAL(eval[1], hour_1 * literal.value());
+}
+
+namespace bdata = boost::unit_test::data;
+// Helper function to compute the expected value based on the operation type
+template<typename BinaryNode>
+double evalExpected(double a, double b);
+
+template<>
+double evalExpected<MultiplicationNode>(double a, double b)
+{
+    return a * b;
+}
+
+template<>
+double evalExpected<SumNode>(double a, double b)
+{
+    return a + b;
+}
+
+template<>
+double evalExpected<SubtractionNode>(double a, double b)
+{
+    return a - b;
+}
+
+template<>
+double evalExpected<DivisionNode>(double a, double b)
+{
+    return b != 0 ? a / b : 0;
+} // Handle division by zero
+
+template<typename BinaryNode>
+void evaluate_time_dependent_operation()
+{
+    ParameterNode param("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
+    LiteralNode literal(2.0);
+    BinaryNode root(&literal, &param); // Correctly use the type as a template argument
+    const std::string value = "dummy";
+    MockLinearProblemData dummy_data;
+    EvaluationContext context(
+      {build_context_parameter_with("my-param", value, ParameterType::TIMESERIE)},
+      {},
+      dummy_data);
+
+    unsigned hour_0 = 0;
+    unsigned hour_1 = 1;
+    EvalVisitor evalVisitor(context,
+                            {.fillContext = {hour_0, hour_1 /*two hours*/},
+                             .scenarioGroup = "",
+                             .scenario = 0});
+    const auto eval = evalVisitor.dispatch(&root).valuesAsVector();
+
+    BOOST_CHECK_EQUAL(eval[0], evalExpected<BinaryNode>(hour_0, literal.value()));
+    BOOST_CHECK_EQUAL(eval[1], evalExpected<BinaryNode>(hour_1, literal.value()));
+}
+
+// Define a list of types (not instances)
+using BinaryOperators = boost::mpl::
+  list<MultiplicationNode, SumNode, SubtractionNode, DivisionNode>;
+
+// Parametrize the test with types
+BOOST_AUTO_TEST_CASE_TEMPLATE(evaluate_time_dependent_operations, T, BinaryOperators)
+{
+    evaluate_time_dependent_operation<T>();
 }
 
 BOOST_FIXTURE_TEST_CASE(evaluate_variable, MyDummyFixture)

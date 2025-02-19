@@ -99,7 +99,7 @@ public:
     /// Only first expression can have non-zero coefficients, otherwise the result cannot be linear
     TimeDependentLinearExpression operator/(const TimeDependentLinearExpression& other) const;
     /// Multiply linear expression by -1
-    TimeDependentLinearExpression negate() const;
+    TimeDependentLinearExpression operator-() const;
     const std::map<unsigned, LinearExpression>& GetLinearExpressions() const;
     size_t getSize() const;
 
