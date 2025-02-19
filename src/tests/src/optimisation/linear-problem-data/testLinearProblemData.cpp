@@ -9,14 +9,15 @@
 
 using namespace Antares::Optimisation::LinearProblemDataImpl;
 
-BOOST_AUTO_TEST_CASE(PbData_is_empty__asking_it_a_value_leads_to_exception)
+// TODO: activate this test when we support scenario groups
+/*BOOST_AUTO_TEST_CASE(PbData_is_empty__asking_it_a_value_leads_to_exception)
 {
     LinearProblemData linearProblemData;
     std::string expected_err_msg = "Scenario group 'group name' does not exist in group repo.";
     BOOST_CHECK_EXCEPTION(linearProblemData.getData("data set name", "group name", 0, 0),
                           std::invalid_argument,
                           checkMessage(expected_err_msg));
-}
+}*/
 
 BOOST_AUTO_TEST_CASE(ask_to_a_simple_linearProblemData_data_it_contains___answer_ok)
 {

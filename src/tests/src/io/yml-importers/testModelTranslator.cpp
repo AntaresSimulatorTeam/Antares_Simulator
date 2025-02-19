@@ -31,7 +31,7 @@
 
 #include "enum_operators.h"
 
-using namespace Antares::Solver;
+using namespace Antares::IO::Inputs;
 using namespace Antares::Study;
 
 struct Fixture
