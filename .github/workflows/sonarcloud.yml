@@ -130,7 +130,13 @@ jobs:
         continue-on-error: true
         run: |
           cd $GITHUB_WORKSPACE/_build
-          ctest -C Release --output-on-failure -L "unit"
+          ctest -C Release --output-on-failure -L "unit|end-to-end"
+
+      - name: Run unfeasibility-related tests
+        continue-on-error: true
+        run: |
+          cd _build
+          ctest -C Release --output-on-failure -R "^unfeasible$"
 
       - name: Run short-tests
         continue-on-error: true
@@ -154,7 +160,7 @@ jobs:
         with:
           simtest-tag: ${{ env.SIMTEST }}
           batch-name: valid-v860
-          os: ${{ env.os }}
+          os: ${{ matrix.os }}
 
       - name: Run tests introduced in 8.7.0
         continue-on-error: true
@@ -162,7 +168,7 @@ jobs:
         with:
           simtest-tag: ${{ env.SIMTEST }}
           batch-name: valid-v870
-          os: ${{ env.os }}
+          os: ${{ matrix.os }}
 
       - name: Run tests introduced in 9.1.0
         continue-on-error: true
@@ -170,7 +176,7 @@ jobs:
         with:
           simtest-tag: ${{ env.SIMTEST }}
           batch-name: valid-v910
-          os: ${{ env.os }}
+          os: ${{ matrix.os }}
 
       - name: Run tests introduced in 9.2.0
         continue-on-error: true
@@ -178,7 +184,7 @@ jobs:
         with:
           simtest-tag: ${{ env.SIMTEST }}
           batch-name: valid-v920
-          os: ${{ env.os }}
+          os: ${{ matrix.os }}
 
       - name: Collect coverage into one XML report
         run: |
