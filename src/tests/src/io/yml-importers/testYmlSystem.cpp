@@ -143,7 +143,8 @@ BOOST_AUTO_TEST_CASE(component_parameter)
                   scenario-group: group-234
                   parameters:
                     - id: cost
-                      type: constant
+                      time-dependent: false
+                      scenario-dependent: false
                       value: 30
     )"s;
     YmlSystem::System systemObj = parser.parse(system);
