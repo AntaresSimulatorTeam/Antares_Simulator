@@ -475,10 +475,6 @@ BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_multiplication, MyDummyFixture)
     BOOST_CHECK_EQUAL(eval[1], hour_1 * literal.value());
 }
 
-// #include <boost/test/unit_test.hpp>
-// #include <boost/test/data/test_case.hpp>
-// #include <boost/test/data/monomorphic.hpp>
-
 namespace bdata = boost::unit_test::data;
 // Helper function to compute the expected value based on the operation type
 template<typename BinaryNode>
