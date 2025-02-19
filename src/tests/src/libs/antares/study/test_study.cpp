@@ -363,7 +363,7 @@ BOOST_FIXTURE_TEST_CASE(saving_study, OneAreaStudy)
     enabledCluster->enabled = true;
     areaA->thermal.list.addToCompleteList(enabledCluster);
 
-    study->saveToFolder(std::filesystem::temp_directory_path().string());
+    BOOST_CHECK(study->saveToFolder(std::filesystem::temp_directory_path().string()));
 }
 
 BOOST_AUTO_TEST_SUITE_END() // version
