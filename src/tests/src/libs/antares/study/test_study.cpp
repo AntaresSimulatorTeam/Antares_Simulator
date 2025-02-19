@@ -359,9 +359,9 @@ BOOST_FIXTURE_TEST_CASE(cpu_count, OneAreaStudy)
 BOOST_FIXTURE_TEST_CASE(saving_study, OneAreaStudy)
 {
     auto enabledCluster = std::make_shared<ThermalCluster>(areaA);
-    enabledCluster->setName("Cluster2");
+    enabledCluster->setName("Cluster1");
     enabledCluster->enabled = true;
-    areaA->thermal.list.addToCompleteList(disabledCluster);
+    areaA->thermal.list.addToCompleteList(enabledCluster);
 
     study->saveToFolder(std::filesystem::temp_directory_path().string());
 }
