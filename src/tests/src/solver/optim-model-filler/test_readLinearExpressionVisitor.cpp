@@ -53,7 +53,7 @@ BOOST_FIXTURE_TEST_CASE(name, MyDummyFixture)
 BOOST_FIXTURE_TEST_CASE(visit_literal, MyDummyFixture)
 {
     Node* node = create<LiteralNode>(5.);
-    auto linear_expression = visitor.dispatch(node).GetLinearExpressions()[0];
+    auto linear_expression = visitor.dispatch(node).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 5.);
     BOOST_CHECK(linear_expression.coefPerVar().empty());
 }
@@ -72,7 +72,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param, MyDummyFixture)
     Node* sum = create<SumNode>(create<LiteralNode>(5.), create<ParameterNode>("param"));
     EvaluationContext evaluation_context({{build_context_parameter_with("param", "3.")}}, {}, data);
     ReadLinearExpressionVisitor visitor(evaluation_context, {.fillContext = {0, 0}});
-    auto linear_expression = visitor.dispatch(sum).GetLinearExpressions()[0];
+    auto linear_expression = visitor.dispatch(sum).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 8.);
     BOOST_CHECK(linear_expression.coefPerVar().empty());
 }
@@ -87,7 +87,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var, MyDummyFixture)
                                          {},
                                          data);
     ReadLinearExpressionVisitor visitor(evaluation_context, {.fillContext = {0, 0}});
-    auto linear_expression = visitor.dispatch(sum).GetLinearExpressions()[0];
+    auto linear_expression = visitor.dispatch(sum).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 55.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar()["var"], 7.);
@@ -100,7 +100,7 @@ BOOST_FIXTURE_TEST_CASE(visit_negate_literal_plus_var, MyDummyFixture)
                                                create<VariableNode>("var"));
     Node* sum = create<SumNode>(create<LiteralNode>(60.), product);
     Node* neg = create<NegationNode>(sum);
-    auto linear_expression = visitor.dispatch(neg).GetLinearExpressions()[0];
+    auto linear_expression = visitor.dispatch(neg).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), -60.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar()["var"], -7.);
@@ -112,7 +112,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_minus_var, MyDummyFixture)
     Node* product = create<MultiplicationNode>(create<LiteralNode>(7.),
                                                create<VariableNode>("var"));
     Node* sub = create<SubtractionNode>(create<LiteralNode>(60.), product);
-    auto linear_expression = visitor.dispatch(sub).GetLinearExpressions()[0];
+    auto linear_expression = visitor.dispatch(sub).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 60.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar()["var"], -7.);
@@ -142,7 +142,7 @@ BOOST_FIXTURE_TEST_CASE(visit_complex_expression, MyDummyFixture)
                                          {},
                                          data);
     ReadLinearExpressionVisitor visitor(evaluation_context, {.fillContext = {0, 0}});
-    auto linear_expression = visitor.dispatch(big_sum).GetLinearExpressions()[0];
+    auto linear_expression = visitor.dispatch(big_sum).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 10.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 2);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar()["var1"], 4.);
