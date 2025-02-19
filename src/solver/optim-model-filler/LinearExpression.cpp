@@ -166,23 +166,6 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator+(
     // checkOtherLength(other);
 
     return {add_maps(GetLinearExpressions(), other.GetLinearExpressions())};
-    // const auto& linear_expressions = GetLinearExpressions();
-    // const auto& other_linear_expressions = other.GetLinearExpressions();
-    //
-    // std::map result(linear_expressions);
-    // for (auto [key, value]: other_linear_expressions)
-    // {
-    //     if (result.contains(key))
-    //     {
-    //         result[key] += value;
-    //     }
-    //     else
-    //     {
-    //         result[key] = value;
-    //     }
-    // }
-    //
-    // return TimeDependentLinearExpression(std::move(result));
 }
 
 TimeDependentLinearExpression TimeDependentLinearExpression::operator-(
@@ -191,22 +174,6 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator-(
     // checkOtherLength(other);
 
     return {add_maps(GetLinearExpressions(), other.GetLinearExpressions(), std::negate<>())};
-
-    // const auto& linear_expressions = GetLinearExpressions();
-    // const auto& other_linear_expressions = other.GetLinearExpressions();
-    // auto result(linear_expressions);
-    // for (const auto& [timeStep, other_linear_expression]: other_linear_expressions)
-    // {
-    //     if (result.contains(timeStep))
-    //     {
-    //         result[timeStep] = linear_expressions.at(timeStep) - other_linear_expression;
-    //     }
-    //     else
-    //     {
-    //         result[timeStep] = other_linear_expression;
-    //     }
-    // }
-    // return TimeDependentLinearExpression(std::move(result));
 }
 template<typename BinaryOperator>
 TimeDependentLinearExpression BinaryOpLinearExpression(
