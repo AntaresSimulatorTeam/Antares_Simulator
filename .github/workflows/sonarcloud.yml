@@ -186,6 +186,11 @@ jobs:
           batch-name: valid-v920
           os: ${{ matrix.os }}
 
+      - name: Run cucumber on modeler
+        uses: ./.github/workflows/cucumber-tests
+        with:
+          feature: "features/modeler-features"
+
       - name: Collect coverage into one XML report
         run: |
           gcovr --sonarqube --output coverage.xml
