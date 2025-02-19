@@ -6,8 +6,9 @@
 
 namespace Antares::Optimisation::LinearProblemApi
 {
-struct FillContext
+class FillContext
 {
+public:
     FillContext(unsigned first, unsigned last):
         firstTimeStep(first),
         lastTimeStep(last)
@@ -24,14 +25,25 @@ struct FillContext
         return lastTimeStep;
     }
 
-    std::vector<unsigned> scenariosSelected;
 
     unsigned int getNumberOfTimestep() const
     {
         return lastTimeStep - firstTimeStep + 1;
     }
 
+    [[nodiscard]] std::vector<unsigned> getSelectedScenarios() const
+    {
+        return selectedScenario;
+    }
+
+    void addSelectedScenarios(unsigned scenario)
+    {
+        selectedScenario.push_back(scenario);
+    }
+
 private:
+    std::vector<unsigned> selectedScenario;
+
     unsigned firstTimeStep = 0;
     unsigned lastTimeStep = 0;
 };

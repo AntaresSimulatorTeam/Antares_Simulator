@@ -107,11 +107,17 @@ public:
         return value_;
     }
 
+    class EvalResultType: public std::runtime_error
+    {
+    public:
+        using std::runtime_error::runtime_error;
+    };
+
     [[nodiscard]] double valueAsDouble() const
     {
         if (!std::holds_alternative<double>(value_))
         {
-            throw std::runtime_error("Expected a double but found a vector.");
+            throw EvalResultType("Expected a double but found a vector.");
         }
         return std::get<double>(value_);
     }
@@ -120,7 +126,7 @@ public:
     {
         if (!std::holds_alternative<std::vector<double>>(value_))
         {
-            throw std::runtime_error("Expected a vector but found a double.");
+            throw EvalResultType("Expected a vector but found a double.");
         }
         return std::get<std::vector<double>>(value_);
     }
@@ -158,6 +164,12 @@ std::vector<double> computeBinaryOperation(double lhs, const std::vector<double>
     return computeBinaryOperation(rhs, lhs, op);
 }
 
+class VectorsMismatchSize final: public std::runtime_error
+{
+public:
+    using std::runtime_error::runtime_error;
+};
+
 template<typename BinaryOp>
 std::vector<double> computeBinaryOperation(const std::vector<double>& lhs,
                                            const std::vector<double>& rhs,
@@ -168,7 +180,7 @@ std::vector<double> computeBinaryOperation(const std::vector<double>& lhs,
         std::ostringstream errorMsg;
         errorMsg << "Failed to compute binary operation: vectors have different sizes ("
                  << lhs.size() << " and " << rhs.size() << ").";
-        throw std::runtime_error(errorMsg.str());
+        throw VectorsMismatchSize(errorMsg.str());
     }
 
     std::vector<double> result(lhs.size());
@@ -222,10 +234,6 @@ EvaluationResult EvaluationResult::evaluateUnaryOperation(Op op) const
 class EvalVisitor: public NodeVisitor<EvaluationResult>
 {
 public:
-    /**
-     * @brief Default constructor, creates an evaluation visitor with no context.
-     */
-    // EvalVisitor() = default; // No context (variables / parameters)
 
     /**
      * @brief Constructs an evaluation visitor with the specified context.

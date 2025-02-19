@@ -173,17 +173,15 @@ TimeDependentLinearExpression::TimeDependentLinearExpression(
 TimeDependentLinearExpression TimeDependentLinearExpression::operator+(
   const TimeDependentLinearExpression& other) const
 {
-    // checkOtherLength(other);
-
-    return {add_maps(GetLinearExpressions(), other.GetLinearExpressions())};
+    return TimeDependentLinearExpression(
+      add_maps(GetLinearExpressions(), other.GetLinearExpressions()));
 }
 
 TimeDependentLinearExpression TimeDependentLinearExpression::operator-(
   const TimeDependentLinearExpression& other) const
 {
-    // checkOtherLength(other);
-
-    return {add_maps(GetLinearExpressions(), other.GetLinearExpressions(), std::negate<>())};
+    return TimeDependentLinearExpression(
+      add_maps(GetLinearExpressions(), other.GetLinearExpressions(), std::negate<>()));
 }
 
 template<typename BinaryOperator>
@@ -204,13 +202,12 @@ TimeDependentLinearExpression BinaryOpLinearExpression(
             result[timeStep] = other_linear_expression;
         }
     }
-    return {std::move(result)};
+    return TimeDependentLinearExpression(std::move(result));
 }
 
 TimeDependentLinearExpression TimeDependentLinearExpression::operator*(
   const TimeDependentLinearExpression& other) const
 {
-    //   checkOtherLength(other);
     return BinaryOpLinearExpression(GetLinearExpressions(),
                                     other.GetLinearExpressions(),
                                     std::multiplies<>());
@@ -219,7 +216,6 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator*(
 TimeDependentLinearExpression TimeDependentLinearExpression::operator/(
   const TimeDependentLinearExpression& other) const
 {
-    // checkOtherLength(other);
     return BinaryOpLinearExpression(GetLinearExpressions(),
                                     other.GetLinearExpressions(),
                                     std::divides<>());

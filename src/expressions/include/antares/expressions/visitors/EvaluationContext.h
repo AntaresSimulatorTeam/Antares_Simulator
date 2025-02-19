@@ -18,7 +18,7 @@ enum class ParameterType : unsigned int
     TIMESERIE = 1
 };
 
-// TODO this struct is exactly the same as the one in system.h
+// this struct contains more or less the same infos as the one in system.h
 struct ContextParameter
 {
     std::string id;
@@ -34,11 +34,6 @@ struct ContextParameter
 class EvaluationContext
 {
 public:
-    /**
-     * @brief Default constructor, creates an evaluation context without parameter and variable
-     * values.
-     */
-    // EvaluationContext() = default;
     /**
      * @brief Constructs an evaluation context with the specified parameter and variable
      * values.

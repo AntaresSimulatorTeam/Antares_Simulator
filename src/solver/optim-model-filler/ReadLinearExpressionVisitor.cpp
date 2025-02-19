@@ -101,7 +101,6 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Parameter
     if (node->timeIndex() == Expressions::Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
         && systemParameter.type != Expressions::Visitors::ParameterType::CONSTANT)
     {
-        // TODO
         throw std::invalid_argument(
           "Parameter " + node->value()
           + " is declared constant in time and scenario in library but not in system");
@@ -112,7 +111,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Parameter
           dataSeriesKeys_.fillContext,
           LinearExpression(context_.getSystemParameterValueAsDouble(node->value()), {}));
     }
-    else // TODO for now considering only timedepend -- only
+    else // only timedepent
     {
         std::map<unsigned int, LinearExpression> linearExpressions;
 

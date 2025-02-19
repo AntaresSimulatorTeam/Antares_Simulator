@@ -101,7 +101,6 @@ static SystemModel::Component createComponent(const YmlSystem::Component& c,
 
     SystemModel::ComponentBuilder component_builder;
 
-    // TODO we need type
     std::map<std::string, Expressions::Visitors::ContextParameter> parameters;
     for (const auto& [id, time_dependent, scenario_dependent, value]: c.parameters)
     {

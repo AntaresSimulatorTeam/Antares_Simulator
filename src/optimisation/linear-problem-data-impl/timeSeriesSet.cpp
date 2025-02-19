@@ -39,5 +39,4 @@ double TimeSeriesSet::getData(unsigned rank, unsigned hour)
     return tsSet_[rank][hour];
 }
 
-
 } // namespace Antares::Optimisation::LinearProblemDataImpl

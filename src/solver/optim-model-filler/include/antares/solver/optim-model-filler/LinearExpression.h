@@ -74,13 +74,15 @@ private:
 class TimeDependentLinearExpression
 {
 public:
-    TimeDependentLinearExpression(const Optimisation::LinearProblemApi::FillContext& fillContext);
+    explicit TimeDependentLinearExpression(
+      const Optimisation::LinearProblemApi::FillContext& fillContext);
 
     // Construction from one LinearExpression, to be duplicated for all timestep
-    TimeDependentLinearExpression(const Optimisation::LinearProblemApi::FillContext& fillContext,
-                                  const LinearExpression& linearExpression);
-    TimeDependentLinearExpression(const std::map<unsigned, LinearExpression>& linearExpressions);
-    // void checkOtherLength(const TimeDependentLinearExpression& other) const;
+    explicit TimeDependentLinearExpression(
+      const Optimisation::LinearProblemApi::FillContext& fillContext,
+      const LinearExpression& linearExpression);
+    explicit TimeDependentLinearExpression(
+      const std::map<unsigned, LinearExpression>& linearExpressions);
 
     /// Sum two linear expressions
     TimeDependentLinearExpression operator+(const TimeDependentLinearExpression& other) const;

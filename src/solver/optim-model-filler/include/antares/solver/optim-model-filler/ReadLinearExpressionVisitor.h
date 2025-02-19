@@ -43,7 +43,6 @@ public:
       Expressions::Visitors::EvaluationContext context,
       Optimisation::LinearProblemApi::DataSeriesKeys dataSeriesKeys);
 
-    // TODO
     ReadLinearExpressionVisitor() = default;
     std::string name() const override;
 
