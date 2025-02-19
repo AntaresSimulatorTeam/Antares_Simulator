@@ -214,7 +214,7 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator/(
                                     std::divides<>());
 }
 
-TimeDependentLinearExpression TimeDependentLinearExpression::negate() const
+TimeDependentLinearExpression TimeDependentLinearExpression::operator-() const
 {
     const auto& linear_expressions = GetLinearExpressions();
     std::map<unsigned int, LinearExpression> result;

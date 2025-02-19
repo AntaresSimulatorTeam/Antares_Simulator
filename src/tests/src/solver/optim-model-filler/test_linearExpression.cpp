@@ -252,7 +252,7 @@ BOOST_AUTO_TEST_CASE(NegationOperator)
                                                 {1, LinearExpression(4.0, {{"y", 1.0}})}};
 
     TimeDependentLinearExpression expr(exp);
-    TimeDependentLinearExpression result = expr.negate();
+    TimeDependentLinearExpression result = -expr;
 
     BOOST_TEST(result.GetLinearExpressions().at(0).offset() == -3.0);
     BOOST_TEST(result.GetLinearExpressions().at(0).coefPerVar().at("x") == -2.0);
