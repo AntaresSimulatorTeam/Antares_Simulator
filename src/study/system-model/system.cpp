@@ -25,7 +25,7 @@
 
 namespace Antares::Study::SystemModel
 {
-System::System(const std::string_view id, std::vector<Component> components):
+System::System(const std::string_view id, std::vector<Component>&& components):
     id_(id)
 {
     // Check that mandatory attributes are not empty
@@ -37,7 +37,7 @@ System::System(const std::string_view id, std::vector<Component> components):
     {
         throw std::invalid_argument("A system must contain at least one component");
     }
-    std::ranges::transform(components,
+    std::ranges::transform(std::move(components),
                            std::inserter(components_, components_.end()),
                            [this](/*Non const to prevent copy*/ Component& component)
                            { return makeComponent(component); });
@@ -71,7 +71,7 @@ SystemBuilder& SystemBuilder::withId(std::string_view id)
  * \param components A vector of components to set.
  * \return Reference to the SystemBuilder object.
  */
-SystemBuilder& SystemBuilder::withComponents(std::vector<Component>& components)
+SystemBuilder& SystemBuilder::withComponents(std::vector<Component>&& components)
 {
     components_ = std::move(components);
     return *this;
@@ -82,8 +82,8 @@ SystemBuilder& SystemBuilder::withComponents(std::vector<Component>& components)
  *
  * \return The constructed System object.
  */
-System SystemBuilder::build() const
+System SystemBuilder::build()
 {
-    return System(id_, components_);
+    return System(id_, std::move(components_));
 }
 } // namespace Antares::Study::SystemModel

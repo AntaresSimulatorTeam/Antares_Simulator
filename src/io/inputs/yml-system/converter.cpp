@@ -125,7 +125,7 @@ SystemModel::System convert(const YmlSystem::System& ymlSystem,
     }
 
     SystemModel::SystemBuilder builder;
-    return builder.withId(ymlSystem.id).withComponents(components).build();
+    return builder.withId(ymlSystem.id).withComponents(std::move(components)).build();
 }
 
 } // namespace Antares::IO::Inputs::SystemConverter

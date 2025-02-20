@@ -58,7 +58,7 @@ public:
 private:
     // Only SystemBuilder is allowed to build System instances
     friend class SystemBuilder;
-    System(std::string_view id, std::vector<Component> components);
+    System(std::string_view id, std::vector<Component>&& components);
     std::string id_;
     std::unordered_map<std::string, Component> components_;
     std::pair<std::string, Component> makeComponent(Component& component) const;
@@ -68,8 +68,8 @@ class SystemBuilder
 {
 public:
     SystemBuilder& withId(std::string_view id);
-    SystemBuilder& withComponents(std::vector<Component>& components);
-    System build() const;
+    SystemBuilder& withComponents(std::vector<Component>&& components);
+    System build();
 
 private:
     std::string id_;
