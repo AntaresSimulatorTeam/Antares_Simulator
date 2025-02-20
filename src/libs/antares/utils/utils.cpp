@@ -175,7 +175,7 @@ double floorDiv(double numerator, double denominator)
 bool checkAllElementsIdenticalOrOne(std::vector<unsigned> w)
 {
     auto first_one = std::remove(w.begin(), w.end(), 1); // Reject all 1 to the end
-    return std::adjacent_find(w.begin(), first_one, std::not_equal_to<uint>()) == first_one;
+    return std::adjacent_find(w.begin(), first_one, std::not_equal_to<unsigned>()) == first_one;
 }
 
 std::pair<bool, std::string> checkAllElementsIdenticalOrOne(
@@ -183,15 +183,15 @@ std::pair<bool, std::string> checkAllElementsIdenticalOrOne(
 {
     // Reject all 1 to the end
     auto first_one = std::ranges::remove_if(p, [](const auto& pair) { return pair.first == 1; });
-    auto width = first_one.begin()->first;
-    for (const auto& pair: first_one)
+    auto width = p.begin()->first;
+    for (auto pair = p.begin(); pair < first_one.begin(); ++pair)
     {
-        if (pair.first != width)
+        if (pair->first != width)
         {
-            logs.error() << "Inconsitent time series width, found: " << pair.first
-                         << " Previous was " << width << " for " << pair.second;
+            logs.error() << "Inconsitent time series width, found: " << pair->first
+                         << " Previous was " << width << " for " << pair->second;
 
-            return {false, pair.second};
+            return {false, pair->second};
         }
     }
     return {true, ""};

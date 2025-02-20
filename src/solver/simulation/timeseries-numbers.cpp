@@ -305,7 +305,7 @@ bool checkInterModalConsistencyForArea(const Area& area,
     if (isTSintermodal[indexTS])
     {
         listNumberTsOverArea.emplace_back(area.hydro.series->TScount(),
-                                          "Area: " + area.name + " wind");
+                                          "Area: " + area.name + " hydro");
     }
 
     // Thermal : Add thermal's number of TS of each cluster in area ...
