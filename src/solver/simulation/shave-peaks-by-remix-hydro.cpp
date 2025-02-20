@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <numeric>
 #include <ranges>
+#include <span>
 #include <stdexcept>
 #include <vector>
 
@@ -255,10 +256,10 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
 
                 if (reservoirManagement)
                 {
-                    std::vector<double> intermediate_level(levels.begin()
-                                                             + std::min(hourBottom, hourPeak),
-                                                           levels.begin()
-                                                             + std::max(hourBottom, hourPeak));
+                    std::span<double> intermediate_level(levels.begin()
+                                                           + std::min(hourBottom, hourPeak),
+                                                         levels.begin()
+                                                           + std::max(hourBottom, hourPeak));
 
                     if (hourBottom < hourPeak)
                     {
