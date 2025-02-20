@@ -186,6 +186,15 @@ jobs:
           batch-name: valid-v920
           os: ${{ matrix.os }}
 
+      - name: Run named mps tests
+        continue-on-error: true
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: valid-named-mps
+          os: ${{ matrix.os }}
+          variant: "named-mps"
+
       - name: Run cucumber on modeler
         uses: ./.github/workflows/cucumber-tests
         with:
