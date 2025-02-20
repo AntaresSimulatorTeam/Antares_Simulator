@@ -131,6 +131,7 @@ uint ThermalCluster::groupId() const
     return groupID;
 }
 
+// TODO VP: delete with GUI
 void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
 {
     // Note: In this method, only the data can be copied (and not the name or
