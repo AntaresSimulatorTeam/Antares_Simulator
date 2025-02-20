@@ -22,7 +22,6 @@
 #include <numeric>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
-#include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/expressions/visitors/NodeVisitor.h>
 #include <antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h>
 
@@ -30,12 +29,6 @@ using namespace Antares::Expressions::Nodes;
 
 namespace Antares::Optimization
 {
-
-ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
-  Expressions::Visitors::EvaluationContext context):
-    context_(std::move(context))
-{
-}
 
 std::string ReadLinearExpressionVisitor::name() const
 {
@@ -94,7 +87,7 @@ LinearExpression ReadLinearExpressionVisitor::visit(const VariableNode* node)
 
 LinearExpression ReadLinearExpressionVisitor::visit(const ParameterNode* node)
 {
-    return {context_.getParameterValue(node->value()), {}};
+    throw std::invalid_argument("ReadLinearExpressionVisitor cannot visit ParameterNode");
 }
 
 LinearExpression ReadLinearExpressionVisitor::visit(const LiteralNode* node)

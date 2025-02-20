@@ -28,12 +28,6 @@ using namespace Antares::Expressions::Nodes;
 namespace Antares::Optimization
 {
 
-ReadLinearConstraintVisitor::ReadLinearConstraintVisitor(
-  Expressions::Visitors::EvaluationContext context):
-    linear_expression_visitor_(std::move(context))
-{
-}
-
 std::string ReadLinearConstraintVisitor::name() const
 {
     return "ReadLinearConstraintVisitor";

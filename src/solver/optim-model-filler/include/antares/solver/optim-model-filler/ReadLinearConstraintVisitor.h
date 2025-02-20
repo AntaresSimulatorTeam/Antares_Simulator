@@ -23,7 +23,6 @@
 
 #include <limits>
 
-#include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/expressions/visitors/NodeVisitor.h>
 
 #include "ReadLinearExpressionVisitor.h"
@@ -54,7 +53,6 @@ class ReadLinearConstraintVisitor: public Expressions::Visitors::NodeVisitor<Lin
 {
 public:
     ReadLinearConstraintVisitor() = default;
-    explicit ReadLinearConstraintVisitor(Expressions::Visitors::EvaluationContext context);
     std::string name() const override;
 
 private:

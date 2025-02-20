@@ -23,7 +23,6 @@
 
 #include <antares/optimisation/linear-problem-api/linearProblemFiller.h>
 #include <antares/study/system-model/component.h>
-#include "antares/expressions/visitors/EvaluationContext.h"
 
 #include "ReadLinearConstraintVisitor.h"
 
@@ -79,7 +78,6 @@ private:
     bool IsThisVariableTimeDependent(const std::string& var_id) const;
 
     const Study::SystemModel::Component& component_;
-    Expressions::Visitors::EvaluationContext evaluationContext_;
     const std::map<std::string, Study::SystemModel::Variable>& modelVariable_;
 };
 } // namespace Antares::Optimization

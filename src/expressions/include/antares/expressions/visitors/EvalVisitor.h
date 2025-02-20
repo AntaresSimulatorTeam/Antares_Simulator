@@ -20,7 +20,6 @@
 */
 #pragma once
 
-#include <antares/expressions/visitors/EvaluationContext.h>
 #include "antares/expressions/visitors/NodeVisitor.h"
 
 namespace Antares::Expressions::Visitors
@@ -45,20 +44,13 @@ class EvalVisitor: public NodeVisitor<double>
 {
 public:
     /**
-     * @brief Default constructor, creates an evaluation visitor with no context.
+     * @brief Default constructor
      */
-    EvalVisitor() = default; // No context (variables / parameters)
+    EvalVisitor() = default;
 
-    /**
-     * @brief Constructs an evaluation visitor with the specified context.
-     *
-     * @param context The evaluation context.
-     */
-    explicit EvalVisitor(EvaluationContext context);
     std::string name() const override;
 
 private:
-    const EvaluationContext context_;
     double visit(const Nodes::SumNode* node) override;
     double visit(const Nodes::SubtractionNode* node) override;
     double visit(const Nodes::MultiplicationNode* node) override;

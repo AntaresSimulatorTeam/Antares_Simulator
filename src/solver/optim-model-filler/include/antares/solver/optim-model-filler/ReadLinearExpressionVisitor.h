@@ -21,7 +21,6 @@
 
 #pragma once
 
-#include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/expressions/visitors/NodeVisitor.h>
 #include <antares/solver/optim-model-filler/LinearExpression.h>
 
@@ -38,11 +37,9 @@ class ReadLinearExpressionVisitor: public Expressions::Visitors::NodeVisitor<Lin
 {
 public:
     ReadLinearExpressionVisitor() = default;
-    explicit ReadLinearExpressionVisitor(Expressions::Visitors::EvaluationContext context);
     std::string name() const override;
 
 private:
-    const Expressions::Visitors::EvaluationContext context_;
     LinearExpression visit(const Expressions::Nodes::SumNode* node) override;
     LinearExpression visit(const Expressions::Nodes::SubtractionNode* node) override;
     LinearExpression visit(const Expressions::Nodes::MultiplicationNode* node) override;

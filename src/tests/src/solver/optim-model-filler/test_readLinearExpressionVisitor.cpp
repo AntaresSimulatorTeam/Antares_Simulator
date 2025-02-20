@@ -52,30 +52,30 @@ BOOST_FIXTURE_TEST_CASE(visit_literal, Registry<Node>)
     BOOST_CHECK(linear_expression.coefPerVar().empty());
 }
 
-BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param, Registry<Node>)
-{
-    // 5 + param(3) = 8
-    Node* sum = create<SumNode>(create<LiteralNode>(5.), create<ParameterNode>("param"));
-    EvaluationContext evaluation_context({{"param", 3.}}, {});
-    ReadLinearExpressionVisitor visitor(evaluation_context);
-    auto linear_expression = visitor.dispatch(sum);
-    BOOST_CHECK_EQUAL(linear_expression.offset(), 8.);
-    BOOST_CHECK(linear_expression.coefPerVar().empty());
-}
-
-BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var, Registry<Node>)
-{
-    // 60 + param(-5) + 7 * var = { 55, {var : 7} }
-    Node* product = create<MultiplicationNode>(create<LiteralNode>(7.),
-                                               create<VariableNode>("var"));
-    Node* sum = create<SumNode>(create<LiteralNode>(60.), create<ParameterNode>("param"), product);
-    EvaluationContext evaluation_context({{"param", -5.}}, {});
-    ReadLinearExpressionVisitor visitor(evaluation_context);
-    auto linear_expression = visitor.dispatch(sum);
-    BOOST_CHECK_EQUAL(linear_expression.offset(), 55.);
-    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
-    BOOST_CHECK_EQUAL(linear_expression.coefPerVar()["var"], 7.);
-}
+// BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param, Registry<Node>)
+// {
+//     // 5 + param(3) = 8
+//     Node* sum = create<SumNode>(create<LiteralNode>(5.), create<ParameterNode>("param"));
+//     EvaluationContext evaluation_context({{"param", 3.}}, {});
+//     ReadLinearExpressionVisitor visitor(evaluation_context);
+//     auto linear_expression = visitor.dispatch(sum);
+//     BOOST_CHECK_EQUAL(linear_expression.offset(), 8.);
+//     BOOST_CHECK(linear_expression.coefPerVar().empty());
+// }
+//
+// BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var, Registry<Node>)
+// {
+//     // 60 + param(-5) + 7 * var = { 55, {var : 7} }
+//     Node* product = create<MultiplicationNode>(create<LiteralNode>(7.),
+//                                                create<VariableNode>("var"));
+//     Node* sum = create<SumNode>(create<LiteralNode>(60.), create<ParameterNode>("param"), product);
+//     EvaluationContext evaluation_context({{"param", -5.}}, {});
+//     ReadLinearExpressionVisitor visitor(evaluation_context);
+//     auto linear_expression = visitor.dispatch(sum);
+//     BOOST_CHECK_EQUAL(linear_expression.offset(), 55.);
+//     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
+//     BOOST_CHECK_EQUAL(linear_expression.coefPerVar()["var"], 7.);
+// }
 
 BOOST_FIXTURE_TEST_CASE(visit_negate_literal_plus_var, Registry<Node>)
 {
@@ -104,33 +104,33 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_minus_var, Registry<Node>)
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar()["var"], -7.);
 }
 
-BOOST_FIXTURE_TEST_CASE(visit_complex_expression, Registry<Node>)
-{
-    // 2 * (13 + 3 * param1(-2) + 14 * var1) / 7 + param2(8) + 6 * var2 = {10 ; {var1:4, var2:6}}
-
-    // small_sum = 13 + 3 * param1(-2) + 14 * var1
-    Node* small_sum = create<SumNode>(create<LiteralNode>(13.),
-                                      create<MultiplicationNode>(create<LiteralNode>(3),
-                                                                 create<ParameterNode>("param1")),
-                                      create<MultiplicationNode>(create<LiteralNode>(14),
-                                                                 create<VariableNode>("var1")));
-
-    // big_sum = 2 * small_sum / 7 + param2(8) + 6 * var2
-    Node* big_sum = create<SumNode>(
-      create<DivisionNode>(create<MultiplicationNode>(create<LiteralNode>(2.), small_sum),
-                           create<LiteralNode>(7.)), // 2 * small_sum / 7
-      create<ParameterNode>("param2"),               // param2
-      create<MultiplicationNode>(create<LiteralNode>(6.), create<VariableNode>("var2")) // 6 * var2
-    );
-
-    EvaluationContext evaluation_context({{"param1", -2.}, {"param2", 8.}}, {});
-    ReadLinearExpressionVisitor visitor(evaluation_context);
-    auto linear_expression = visitor.dispatch(big_sum);
-    BOOST_CHECK_EQUAL(linear_expression.offset(), 10.);
-    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 2);
-    BOOST_CHECK_EQUAL(linear_expression.coefPerVar()["var1"], 4.);
-    BOOST_CHECK_EQUAL(linear_expression.coefPerVar()["var2"], 6.);
-}
+// BOOST_FIXTURE_TEST_CASE(visit_complex_expression, Registry<Node>)
+// {
+//     // 2 * (13 + 3 * param1(-2) + 14 * var1) / 7 + param2(8) + 6 * var2 = {10 ; {var1:4, var2:6}}
+//
+//     // small_sum = 13 + 3 * param1(-2) + 14 * var1
+//     Node* small_sum = create<SumNode>(create<LiteralNode>(13.),
+//                                       create<MultiplicationNode>(create<LiteralNode>(3),
+//                                                                  create<ParameterNode>("param1")),
+//                                       create<MultiplicationNode>(create<LiteralNode>(14),
+//                                                                  create<VariableNode>("var1")));
+//
+//     // big_sum = 2 * small_sum / 7 + param2(8) + 6 * var2
+//     Node* big_sum = create<SumNode>(
+//       create<DivisionNode>(create<MultiplicationNode>(create<LiteralNode>(2.), small_sum),
+//                            create<LiteralNode>(7.)), // 2 * small_sum / 7
+//       create<ParameterNode>("param2"),               // param2
+//       create<MultiplicationNode>(create<LiteralNode>(6.), create<VariableNode>("var2")) // 6 * var2
+//     );
+//
+//     EvaluationContext evaluation_context({{"param1", -2.}, {"param2", 8.}}, {});
+//     ReadLinearExpressionVisitor visitor(evaluation_context);
+//     auto linear_expression = visitor.dispatch(big_sum);
+//     BOOST_CHECK_EQUAL(linear_expression.offset(), 10.);
+//     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 2);
+//     BOOST_CHECK_EQUAL(linear_expression.coefPerVar()["var1"], 4.);
+//     BOOST_CHECK_EQUAL(linear_expression.coefPerVar()["var2"], 6.);
+// }
 
 BOOST_FIXTURE_TEST_CASE(comparison_nodes__exception_thrown, Registry<Node>)
 {

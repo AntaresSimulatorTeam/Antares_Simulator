@@ -12,7 +12,6 @@ set(SRC_Expressions
         visitors/CloneVisitor.cpp
         visitors/CompareVisitor.cpp
         visitors/EvalVisitor.cpp
-        visitors/EvaluationContext.cpp
         visitors/LinearityVisitor.cpp
         visitors/TimeIndexVisitor.cpp
         visitors/PrintVisitor.cpp
@@ -52,7 +51,6 @@ set(SRC_Expressions
         include/antares/expressions/visitors/CloneVisitor.h
         include/antares/expressions/visitors/CompareVisitor.h
         include/antares/expressions/visitors/EvalVisitor.h
-        include/antares/expressions/visitors/EvaluationContext.h
         include/antares/expressions/visitors/LinearStatus.h
         include/antares/expressions/visitors/LinearityVisitor.h
         include/antares/expressions/visitors/NodeVisitor.h

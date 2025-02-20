@@ -33,7 +33,6 @@ namespace Antares::Optimization
 
 ComponentFiller::ComponentFiller(const Study::SystemModel::Component& component):
     component_(component),
-    evaluationContext_(component_.getParameterValues(), {}),
     modelVariable_(component.Variables())
 
 {
@@ -54,7 +53,7 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
         return;
     }
 
-    Expressions::Visitors::EvalVisitor evaluator(evaluationContext_);
+    Expressions::Visitors::EvalVisitor evaluator{};
     for (const auto& variable: component_.Variables() | std::views::values)
     {
         if (variable.isTimeDependent())
@@ -124,7 +123,7 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
                                      Optimisation::LinearProblemApi::ILinearProblemData& data,
                                      Optimisation::LinearProblemApi::FillContext& ctx)
 {
-    ReadLinearConstraintVisitor visitor(evaluationContext_);
+    ReadLinearConstraintVisitor visitor{};
     for (const auto& constraint: component_.getConstraints() | std::views::values)
     {
         auto* root_node = constraint.expression().RootNode();
@@ -156,7 +155,7 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
     {
         return;
     }
-    ReadLinearExpressionVisitor visitor(evaluationContext_);
+    ReadLinearExpressionVisitor visitor{};
     auto linear_expression = visitor.dispatch(component_.Objective().RootNode());
     if (abs(linear_expression.offset()) > 1e-10)
     {

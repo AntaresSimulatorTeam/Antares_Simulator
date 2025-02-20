@@ -28,10 +28,6 @@
 
 namespace Antares::Expressions::Visitors
 {
-EvalVisitor::EvalVisitor(EvaluationContext context):
-    context_(std::move(context))
-{
-}
 
 double EvalVisitor::visit(const Nodes::SumNode* node)
 {
@@ -90,12 +86,12 @@ double EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
 
 double EvalVisitor::visit(const Nodes::VariableNode* node)
 {
-    return context_.getVariableValue(node->value());
+    throw EvalVisitorNotImplemented(name(), node->name());
 }
 
 double EvalVisitor::visit(const Nodes::ParameterNode* node)
 {
-    return context_.getParameterValue(node->value());
+    throw EvalVisitorNotImplemented(name(), node->name());
 }
 
 double EvalVisitor::visit(const Nodes::LiteralNode* node)
