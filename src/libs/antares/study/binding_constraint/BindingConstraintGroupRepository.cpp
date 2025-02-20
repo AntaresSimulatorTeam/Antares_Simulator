@@ -76,7 +76,7 @@ bool BindingConstraintGroupRepository::timeSeriesWidthConsistentInGroups() const
           for (const auto& c: constraints)
           {
               std::string msg = "Constraint group: " + c->group() + " name: " + c->name();
-              constraintsWidth.push_back({c->RHSTimeSeries().width, msg});
+              constraintsWidth.emplace_back(c->RHSTimeSeries().width, msg);
           }
           return Utils::checkAllElementsIdenticalOrOne(constraintsWidth).first;
       });
