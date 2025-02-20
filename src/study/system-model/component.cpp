@@ -21,7 +21,13 @@
 
 #include <ranges>
 
+#include <boost/move/utility_core.hpp>
+
 #include <antares/study/system-model/component.h>
+#include "antares/expressions/visitors/PrintVisitor.h"
+#include <antares/expressions/nodes/ExpressionsNodes.h>
+
+#include "ComponentExpressionVisitor.h"
 
 namespace Antares::Study::SystemModel
 {
@@ -62,6 +68,7 @@ Component::Component(const ComponentData& component_data)
 {
     checkComponentDataValidity(component_data);
     data_ = std::move(component_data);
+    interpretExpressions();
 }
 
 /**
@@ -124,6 +131,48 @@ Component ComponentBuilder::build()
     Component component(data_);
     data_.reset(); // makes the ComponentBuilder re-usable
     return component;
+}
+
+void Component::interpretExpressions()
+{
+    Expressions::Registry<Expressions::Nodes::Node> registry1;
+    auto visitor1 = ComponentExpressionVisitor(registry1, data_.parameter_values);
+    auto printVisitor = Expressions::Visitors::PrintVisitor();
+    auto* objectiveNode = visitor1.dispatch(getModel()->Objective().RootNode());
+    objective_ = Expression(printVisitor.dispatch(objectiveNode),
+                            {objectiveNode, std::move(registry1)});
+
+    for (auto& var: getModel()->Variables())
+    {
+        Expressions::Registry<Expressions::Nodes::Node> registry2;
+        auto visitor2 = ComponentExpressionVisitor(registry2, data_.parameter_values);
+        auto* lb = visitor2.dispatch(var.second.LowerBound().RootNode());
+        auto lb_expression = Expression(printVisitor.dispatch(lb), {lb, std::move(registry2)});
+        Expressions::Registry<Expressions::Nodes::Node> registry3;
+        auto visitor3 = ComponentExpressionVisitor(registry3, data_.parameter_values);
+        auto* ub = visitor3.dispatch(var.second.UpperBound().RootNode());
+        auto ub_expression = Expression(printVisitor.dispatch(ub), {ub, std::move(registry3)});
+        auto& model_var = var.second;
+        Variable newVar(model_var.Id(),
+                           std::move(lb_expression),
+                           std ::move(ub_expression),
+                           model_var.Type(),
+                           model_var.isTimeDependent() ? TimeDependent::YES : TimeDependent::NO,
+                           model_var.IsScenarioDependent() ? ScenarioDependent::YES
+                                                           : ScenarioDependent::NO);
+        variables_.insert({var.first, std::move(newVar)});
+    }
+
+    for (auto& ct: getModel()->getConstraints())
+    {
+        Expressions::Registry<Expressions::Nodes::Node> registry4;
+        auto visitor4 = ComponentExpressionVisitor(registry4, data_.parameter_values);
+        auto* expressionNode = visitor4.dispatch(ct.second.expression().RootNode());
+        auto expression = Expression(printVisitor.dispatch(expressionNode),
+                                     {expressionNode, std::move(registry4)});
+        Constraint newCt(ct.second.Id(), std::move(expression));
+        constraints_.insert({ct.first, std::move(newCt)});
+    }
 }
 
 } // namespace Antares::Study::SystemModel

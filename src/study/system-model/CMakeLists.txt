@@ -5,6 +5,8 @@ set(SRC_model
         model.cpp
         component.cpp
         system.cpp
+        ComponentExpressionVisitor.h
+        ComponentExpressionVisitor.cpp
         include/antares/study/system-model/library.h
         include/antares/study/system-model/model.h
         include/antares/study/system-model/parameter.h

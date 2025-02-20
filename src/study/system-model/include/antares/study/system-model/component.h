@@ -56,6 +56,9 @@ class Component
 public:
     // Only allowing one private constructor (see below) to forbid empty Components
     Component() = delete;
+    Component(Component&&) = default;
+    Component(const Component&) = delete;
+    ~Component() = default;
 
     const std::string& Id() const
     {
@@ -87,11 +90,31 @@ public:
         return data_.scenario_group_id;
     }
 
+    const Expression& Objective() const
+    {
+        return objective_;
+    }
+
+    const std::map<std::string, Constraint>& getConstraints() const
+    {
+        return constraints_;
+    }
+
+    const std::map<std::string, Variable>& Variables() const
+    {
+        // TODO : convert to vector?
+        return variables_;
+    }
+
 private:
     // Only ComponentBuilder is allowed to build Component instances
     friend class ComponentBuilder;
     explicit Component(const ComponentData& component_data);
     ComponentData data_;
+    std::map<std::string, Variable> variables_;
+    std::map<std::string, Constraint> constraints_;
+    Expression objective_;
+    void interpretExpressions();
 };
 
 class ComponentBuilder

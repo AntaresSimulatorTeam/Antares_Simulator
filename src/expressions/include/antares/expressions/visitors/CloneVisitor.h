@@ -55,7 +55,7 @@ public:
     Nodes::Node* visit(const Nodes::ComponentVariableNode* node) override;
     Nodes::Node* visit(const Nodes::ComponentParameterNode* node) override;
 
-private:
+protected:
     Registry<Nodes::Node>& registry_;
 };
 } // namespace Antares::Expressions::Visitors
