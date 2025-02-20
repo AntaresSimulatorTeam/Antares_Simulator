@@ -39,9 +39,8 @@ class ReadLinearExpressionVisitor
     : public Expressions::Visitors::NodeVisitor<TimeDependentLinearExpression>
 {
 public:
-    explicit ReadLinearExpressionVisitor(
-      Expressions::Visitors::EvaluationContext context,
-      Optimisation::LinearProblemApi::FillContext fillContext);
+    explicit ReadLinearExpressionVisitor(Expressions::Visitors::EvaluationContext context,
+                                         Optimisation::LinearProblemApi::FillContext fillContext);
 
     ReadLinearExpressionVisitor() = default;
     std::string name() const override;

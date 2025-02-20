@@ -128,8 +128,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Parameter
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const LiteralNode* node)
 {
-    return TimeDependentLinearExpression(fillContext_,
-                                         LinearExpression(node->value(), {}));
+    return TimeDependentLinearExpression(fillContext_, LinearExpression(node->value(), {}));
 }
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const PortFieldNode* node)

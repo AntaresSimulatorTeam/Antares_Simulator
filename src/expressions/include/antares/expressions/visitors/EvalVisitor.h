@@ -234,7 +234,6 @@ EvaluationResult EvaluationResult::evaluateUnaryOperation(Op op) const
 class EvalVisitor: public NodeVisitor<EvaluationResult>
 {
 public:
-
     /**
      * @brief Constructs an evaluation visitor with the specified context.
      *
