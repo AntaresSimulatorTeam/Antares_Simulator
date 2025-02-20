@@ -171,10 +171,7 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
                                                                {},
                                                                data);
 
-    Expressions::Visitors::EvalVisitor evaluator(evaluationContext,
-                                                 {.fillContext = ctx,
-                                                  .scenarioGroup = component_.getScenarioGroupId(),
-                                                  .scenario = 0});
+    Expressions::Visitors::EvalVisitor evaluator(evaluationContext, ctx);
     for (const auto& variable: component_.getModel()->Variables() | std::views::values)
     {
         const auto& lb = evaluator.dispatch(variable.LowerBound().RootNode());
@@ -256,10 +253,7 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
     Expressions::Visitors::EvaluationContext evaluationContext(component_.getParameterValues(),
                                                                {},
                                                                data);
-    ReadLinearConstraintVisitor visitor(evaluationContext,
-                                        {.fillContext = ctx,
-                                         .scenarioGroup = component_.getScenarioGroupId(),
-                                         .scenario = 0});
+    ReadLinearConstraintVisitor visitor(evaluationContext, ctx);
     for (const auto& constraint: component_.getModel()->getConstraints() | std::views::values)
     {
         auto* root_node = constraint.expression().RootNode();
@@ -292,10 +286,7 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
                                                                {},
                                                                data);
 
-    ReadLinearExpressionVisitor visitor(evaluationContext,
-                                        {.fillContext = ctx,
-                                         .scenarioGroup = component_.getScenarioGroupId(),
-                                         .scenario = 0});
+    ReadLinearExpressionVisitor visitor(evaluationContext, ctx);
 
     auto linear_expressions = visitor.dispatch(model->Objective().RootNode())
                                 .GetLinearExpressions();

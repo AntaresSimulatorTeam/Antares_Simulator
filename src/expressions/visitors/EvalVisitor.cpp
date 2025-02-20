@@ -29,9 +29,9 @@
 namespace Antares::Expressions::Visitors
 {
 EvalVisitor::EvalVisitor(EvaluationContext context,
-                         Optimisation::LinearProblemApi::DataSeriesKeys dataSeriesKeys):
+                         Optimisation::LinearProblemApi::FillContext fillContext):
     context_(std::move(context)),
-    dataSeriesKeys_(std::move(dataSeriesKeys))
+    fillContext_(std::move(fillContext))
 {
 }
 
@@ -89,15 +89,12 @@ EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
     else
     {
         std::vector<double> params;
-        params.reserve(dataSeriesKeys_.fillContext.getNumberOfTimestep());
-        for (auto timeStep = dataSeriesKeys_.fillContext.getFirstTimeStep();
-             timeStep <= dataSeriesKeys_.fillContext.getLastTimeStep();
+        params.reserve(fillContext_.getNumberOfTimestep());
+        for (auto timeStep = fillContext_.getFirstTimeStep();
+             timeStep <= fillContext_.getLastTimeStep();
              ++timeStep)
         {
-            params.emplace_back(context_.getParameterValue(node->value(),
-                                                           dataSeriesKeys_.scenarioGroup,
-                                                           dataSeriesKeys_.scenario,
-                                                           timeStep));
+            params.emplace_back(context_.getParameterValue(node->value(), "", 0, timeStep));
         }
         return EvaluationResult{params};
     }

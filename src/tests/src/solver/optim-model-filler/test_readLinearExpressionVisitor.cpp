@@ -42,7 +42,7 @@ struct MyDummyFixture: Registry<Node>
 {
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
     EvaluationContext evaluationContext{{}, {}, data};
-    ReadLinearExpressionVisitor visitor{evaluationContext, {.fillContext = {0, 0}}};
+    ReadLinearExpressionVisitor visitor{evaluationContext, {0, 0}};
 };
 
 BOOST_FIXTURE_TEST_CASE(name, MyDummyFixture)
@@ -71,7 +71,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param, MyDummyFixture)
     // 5 + param(3) = 8
     Node* sum = create<SumNode>(create<LiteralNode>(5.), create<ParameterNode>("param"));
     EvaluationContext evaluation_context({{build_context_parameter_with("param", "3.")}}, {}, data);
-    ReadLinearExpressionVisitor visitor(evaluation_context, {.fillContext = {0, 0}});
+    ReadLinearExpressionVisitor visitor(evaluation_context, {0, 0});
     auto linear_expression = visitor.dispatch(sum).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 8.);
     BOOST_CHECK(linear_expression.coefPerVar().empty());
@@ -86,7 +86,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var, MyDummyFixture)
     EvaluationContext evaluation_context({{build_context_parameter_with("param", "-5.")}},
                                          {},
                                          data);
-    ReadLinearExpressionVisitor visitor(evaluation_context, {.fillContext = {0, 0}});
+    ReadLinearExpressionVisitor visitor(evaluation_context, {0, 0});
     auto linear_expression = visitor.dispatch(sum).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 55.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
@@ -119,7 +119,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_time_dependent_param_plus_var, MyDumm
 
     unsigned hour_0 = 0;
     unsigned hour_1 = 1;
-    ReadLinearExpressionVisitor visitor(evaluation_context, {.fillContext = {hour_0, hour_1}});
+    ReadLinearExpressionVisitor visitor(evaluation_context, {hour_0, hour_1});
     auto linear_expressions = visitor.dispatch(sum).GetLinearExpressions();
     BOOST_CHECK_EQUAL(linear_expressions.at(0).offset(), 60.);
     BOOST_CHECK_EQUAL(linear_expressions.at(1).offset(), 61.);
@@ -137,7 +137,7 @@ BOOST_FIXTURE_TEST_CASE(visit_param_declared_const_in_library_but_time_dep_in_sy
       {},
       data);
 
-    ReadLinearExpressionVisitor visitor(evaluation_context, {.fillContext = {0, 1}});
+    ReadLinearExpressionVisitor visitor(evaluation_context, {0, 1});
     BOOST_CHECK_THROW(visitor.dispatch(&p), std::invalid_argument);
 }
 
@@ -189,7 +189,7 @@ BOOST_FIXTURE_TEST_CASE(visit_complex_expression, MyDummyFixture)
                                           build_context_parameter_with("param2", "8.")},
                                          {},
                                          data);
-    ReadLinearExpressionVisitor visitor(evaluation_context, {.fillContext = {0, 0}});
+    ReadLinearExpressionVisitor visitor(evaluation_context, {0, 0});
     auto linear_expression = visitor.dispatch(big_sum).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 10.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 2);

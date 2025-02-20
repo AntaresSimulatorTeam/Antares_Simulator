@@ -48,12 +48,6 @@ private:
     unsigned lastTimeStep = 0;
 };
 
-struct DataSeriesKeys
-{
-    FillContext fillContext;
-    std::string scenarioGroup;
-    unsigned scenario;
-};
 
 class ILinearProblemData
 {

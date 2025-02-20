@@ -41,7 +41,7 @@ class ReadLinearExpressionVisitor
 public:
     explicit ReadLinearExpressionVisitor(
       Expressions::Visitors::EvaluationContext context,
-      Optimisation::LinearProblemApi::DataSeriesKeys dataSeriesKeys);
+      Optimisation::LinearProblemApi::FillContext fillContext);
 
     ReadLinearExpressionVisitor() = default;
     std::string name() const override;
@@ -69,6 +69,6 @@ private:
     TimeDependentLinearExpression visit(
       const Expressions::Nodes::ComponentParameterNode* node) override;
 
-    Optimisation::LinearProblemApi::DataSeriesKeys dataSeriesKeys_;
+    Optimisation::LinearProblemApi::FillContext fillContext_;
 };
 } // namespace Antares::Optimization

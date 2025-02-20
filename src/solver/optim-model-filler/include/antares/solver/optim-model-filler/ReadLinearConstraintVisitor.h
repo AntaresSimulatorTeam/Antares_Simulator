@@ -57,7 +57,7 @@ public:
     ReadLinearConstraintVisitor() = default;
     explicit ReadLinearConstraintVisitor(
       Expressions::Visitors::EvaluationContext context,
-      const Optimisation::LinearProblemApi::DataSeriesKeys& dataSeriesKeys);
+      const Optimisation::LinearProblemApi::FillContext& fillContext);
     std::string name() const override;
 
 private:

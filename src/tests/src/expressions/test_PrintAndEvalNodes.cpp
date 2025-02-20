@@ -222,10 +222,8 @@ struct MyDummyFixture: Registry<Node>
 {
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
     EvaluationContext evaluationContext{{}, {}, data};
-    Antares::Optimisation::LinearProblemApi::DataSeriesKeys keys{.fillContext = {0, 0},
-                                                                 .scenarioGroup = "",
-                                                                 .scenario = 0};
-    EvalVisitor evalVisitor{evaluationContext, keys};
+    Antares::Optimisation::LinearProblemApi::FillContext fillContext{0, 0};
+    EvalVisitor evalVisitor{evaluationContext, fillContext};
 };
 
 BOOST_AUTO_TEST_CASE(print_single_literal)
@@ -412,7 +410,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param, MyDummyFixture)
     const std::string value = "221.3";
     EvaluationContext context({build_context_parameter_with("my-param", value)}, {}, data);
 
-    EvalVisitor evalVisitor(context, keys);
+    EvalVisitor evalVisitor(context, fillContext);
     const double eval = evalVisitor.dispatch(&root).valueAsDouble();
 
     BOOST_CHECK_EQUAL(std::stod(value), eval);
@@ -441,10 +439,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_param, MyDummyFixture)
 
     unsigned hour_0 = 0;
     unsigned hour_1 = 1;
-    EvalVisitor evalVisitor(context,
-                            {.fillContext = {hour_0, hour_1 /*two hours*/},
-                             .scenarioGroup = "",
-                             .scenario = 0});
+    EvalVisitor evalVisitor(context, {hour_0, hour_1 /*two hours*/});
     const auto eval = evalVisitor.dispatch(&root).valuesAsVector();
 
     BOOST_CHECK_EQUAL(eval[0], hour_0);
@@ -465,10 +460,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_multiplication, MyDummyFixture)
 
     unsigned hour_0 = 0;
     unsigned hour_1 = 1;
-    EvalVisitor evalVisitor(context,
-                            {.fillContext = {hour_0, hour_1 /*two hours*/},
-                             .scenarioGroup = "",
-                             .scenario = 0});
+    EvalVisitor evalVisitor(context, {hour_0, hour_1 /*two hours*/});
     const auto eval = evalVisitor.dispatch(&root).valuesAsVector();
 
     BOOST_CHECK_EQUAL(eval[0], hour_0 * literal.value());
@@ -519,10 +511,7 @@ void evaluate_time_dependent_operation()
       dummy_data);
     unsigned hour_0 = 0;
     unsigned hour_1 = 1;
-    EvalVisitor evalVisitor(context,
-                            {.fillContext = {hour_0, hour_1 /*two hours*/},
-                             .scenarioGroup = "",
-                             .scenario = 0});
+    EvalVisitor evalVisitor(context, {hour_0, hour_1 /*two hours*/});
     const auto eval = evalVisitor.dispatch(&root).valuesAsVector();
 
     BOOST_CHECK_EQUAL(eval[0], evalExpected<BinaryNode>(hour_0, literal.value()));
@@ -545,7 +534,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_variable, MyDummyFixture)
     const double value = 221.3;
     EvaluationContext context({}, {{"my-variable", value}}, data);
 
-    EvalVisitor evalVisitor(context, keys);
+    EvalVisitor evalVisitor(context, fillContext);
     const double eval = evalVisitor.dispatch(&root).valueAsDouble();
 
     BOOST_CHECK_EQUAL(value, eval);

@@ -239,15 +239,15 @@ public:
      * @brief Constructs an evaluation visitor with the specified context.
      *
      * @param context The evaluation context.
-     * @param dataSeriesKeys
+     * @param fillContext
      */
     explicit EvalVisitor(EvaluationContext context,
-                         Optimisation::LinearProblemApi::DataSeriesKeys dataSeriesKeys);
+                         Optimisation::LinearProblemApi::FillContext fillContext);
     std::string name() const override;
 
 private:
     const EvaluationContext context_;
-    Optimisation::LinearProblemApi::DataSeriesKeys dataSeriesKeys_;
+    Optimisation::LinearProblemApi::FillContext fillContext_;
     EvaluationResult visit(const Nodes::SumNode* node) override;
     EvaluationResult visit(const Nodes::SubtractionNode* node) override;
     EvaluationResult visit(const Nodes::MultiplicationNode* node) override;
