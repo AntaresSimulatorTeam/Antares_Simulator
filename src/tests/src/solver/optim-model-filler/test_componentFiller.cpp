@@ -264,9 +264,9 @@ BOOST_AUTO_TEST_CASE(var_with_wrong_parameter_lb__exception_is_raised)
                 {},
                 {{"variable", ValueType::FLOAT, parameter("parameter-not-in-model"), literal(10)}},
                 {});
-    createComponent("my-model", "my-component");
+    BOOST_CHECK_THROW(createComponent("my-model", "my-component"), invalid_argument);
     // TODO : improve exception message in eval visitor
-    BOOST_CHECK_THROW(buildLinearProblem(), out_of_range);
+    // BOOST_CHECK_THROW(buildLinearProblem(), invalid_argument);
 }
 
 BOOST_AUTO_TEST_CASE(var_with_wrong_variable_ub__exception_is_raised)

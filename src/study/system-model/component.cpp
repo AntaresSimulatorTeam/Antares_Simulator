@@ -138,9 +138,12 @@ void Component::interpretExpressions()
     Expressions::Registry<Expressions::Nodes::Node> registry1;
     auto visitor1 = ComponentExpressionVisitor(registry1, data_.parameter_values);
     auto printVisitor = Expressions::Visitors::PrintVisitor();
-    auto* objectiveNode = visitor1.dispatch(getModel()->Objective().RootNode());
-    objective_ = Expression(printVisitor.dispatch(objectiveNode),
-                            {objectiveNode, std::move(registry1)});
+    if (!getModel()->Objective().Empty())
+    {
+        auto* objectiveNode = visitor1.dispatch(getModel()->Objective().RootNode());
+        objective_ = Expression(printVisitor.dispatch(objectiveNode),
+                                {objectiveNode, std::move(registry1)});
+    }
 
     for (auto& var: getModel()->Variables())
     {
