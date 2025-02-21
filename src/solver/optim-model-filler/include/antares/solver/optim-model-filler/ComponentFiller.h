@@ -24,6 +24,7 @@
 #include <antares/optimisation/linear-problem-api/linearProblemFiller.h>
 #include <antares/study/system-model/component.h>
 #include "antares/expressions/visitors/EvaluationContext.h"
+#include "antares/solver/optim-model-filler/variableDict.h"
 
 #include "ReadLinearConstraintVisitor.h"
 
@@ -72,6 +73,8 @@ public:
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
                       Optimisation::LinearProblemApi::FillContext& ctx) override;
 
+    VariableDict<Optimisation::LinearProblemApi::IMipVariable*> variableDict;
+
 private:
     static bool IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node);
 
@@ -85,32 +88,24 @@ class VariablesBulkAddition
 {
 public:
     VariablesBulkAddition(Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
+                          VariableDict<Optimisation::LinearProblemApi::IMipVariable*>& variableDict,
                           unsigned int first_index,
                           unsigned int last_index);
     void checkIndices() const;
 
     unsigned getCount() const;
 
-    std::vector<Optimisation::LinearProblemApi::IMipVariable*>
-    addVariable(double lb, double ub, bool integer, const std::string& name) const;
-    std::vector<Optimisation::LinearProblemApi::IMipVariable*> addVariable(
-      const std::vector<double>& lb,
-      double ub,
-      bool integer,
-      const std::string& name) const;
-    std::vector<Optimisation::LinearProblemApi::IMipVariable*> addVariable(
-      double lb,
-      const std::vector<double>& ub,
-      bool integer,
-      const std::string& name) const;
-    std::vector<Optimisation::LinearProblemApi::IMipVariable*> addVariable(
-      const std::vector<double>& lb,
-      const std::vector<double>& ub,
-      bool integer,
-      const std::string& name) const;
+    void addVariable(double lb, double ub, bool integer, const FullKey&) const;
+    void addVariable(const std::vector<double>& lb, double ub, bool integer, const FullKey&) const;
+    void addVariable(double lb, const std::vector<double>& ub, bool integer, const FullKey&) const;
+    void addVariable(const std::vector<double>& lb,
+                     const std::vector<double>& ub,
+                     bool integer,
+                     const FullKey&) const;
 
 private:
     Optimisation::LinearProblemApi::ILinearProblem& linear_problem_;
+    VariableDict<Optimisation::LinearProblemApi::IMipVariable*>& variableDict;
     unsigned int first_index_;
     unsigned int last_index_;
 };
