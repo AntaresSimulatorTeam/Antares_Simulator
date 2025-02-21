@@ -181,17 +181,18 @@ bool checkAllElementsIdenticalOrOne(std::vector<unsigned> w)
 std::pair<bool, std::string> checkAllElementsIdenticalOrOne(
   std::vector<std::pair<unsigned, std::string>>& p)
 {
-    // Reject all 1 to the end
-    auto first_one = std::ranges::remove_if(p, [](const auto& pair) { return pair.first == 1; });
+    // Erase 1 from the vector
+    std::erase_if(p, [](const auto& pair) { return pair.first == 1; });
     auto width = p.begin()->first;
-    for (auto pair = p.begin(); pair < first_one.begin(); ++pair)
+    for (const auto& pair: p)
     {
-        if (pair->first != width)
+        logs.notice() << pair.first;
+        if (pair.first != width)
         {
-            logs.error() << "Inconsitent time series width, found: " << pair->first
-                         << " Previous was " << width << " for " << pair->second;
+            logs.error() << "Inconsitent time series width, found: " << pair.first
+                         << " Previous was " << width << " for " << pair.second;
 
-            return {false, pair->second};
+            return {false, pair.second};
         }
     }
     return {true, ""};
