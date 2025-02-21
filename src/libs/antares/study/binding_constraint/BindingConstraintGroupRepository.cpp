@@ -61,7 +61,7 @@ bool BindingConstraintGroupRepository::buildFrom(const BindingConstraintsReposit
 
 bool BindingConstraintGroupRepository::timeSeriesWidthConsistentInGroups() const
 {
-    bool allConsistent = std::ranges::any_of(
+    bool allConsistent = std::ranges::all_of(
       groups_,
       [](const auto& group)
       {
