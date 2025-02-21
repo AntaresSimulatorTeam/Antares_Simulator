@@ -231,7 +231,7 @@ public:
         pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear] = state.hourlyResults
                                                                          ->niveauxHoraires
                                                                            [state.hourInTheWeek]
-                                                                       * pReservoirCapacity / 100.;
+                                                                       / pReservoirCapacity * 100.;
 
         // Next variable
         NextType::hourForEachArea(state, numSpace);
