@@ -82,7 +82,7 @@ private:
     /**
      * @brief A map storing parameter values.
      */
-    std::map<std::string, ContextParameter> system_parameters_;
+    std::map<std::string, ContextParameter> parameters_types_and_values_;
 
     /**
      * @brief A map storing variable values.

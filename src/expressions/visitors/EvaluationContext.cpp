@@ -6,7 +6,7 @@ namespace Antares::Expressions::Visitors
 EvaluationContext::EvaluationContext(std::map<std::string, ContextParameter> system_parameters,
                                      std::map<std::string, double> variables,
                                      Optimisation::LinearProblemApi::ILinearProblemData& data):
-    system_parameters_(std::move(system_parameters)),
+    parameters_types_and_values_(std::move(system_parameters)),
     variables_(std::move(variables)),
     data_(data)
 {
@@ -37,8 +37,8 @@ static double convertToDouble(const std::string& key, const std::string& value)
 
 double EvaluationContext::getSystemParameterValueAsDouble(const std::string& key) const
 {
-    const auto it = system_parameters_.find(key);
-    if (it == system_parameters_.end())
+    const auto it = parameters_types_and_values_.find(key);
+    if (it == parameters_types_and_values_.end())
     {
         throw CouldNotEvaluateConstantParameter<std::out_of_range>(
           "Parameter '" + key + "' not found in system parameters.");
@@ -48,7 +48,7 @@ double EvaluationContext::getSystemParameterValueAsDouble(const std::string& key
 
 std::string EvaluationContext::getSystemParameterValue(const std::string& key) const
 {
-    return system_parameters_.at(key).value;
+    return parameters_types_and_values_.at(key).value;
 }
 
 double EvaluationContext::getParameterValue(const std::string& key,
@@ -56,16 +56,16 @@ double EvaluationContext::getParameterValue(const std::string& key,
                                             const unsigned scenario,
                                             unsigned int hour) const
 {
-    return data_.getData(system_parameters_.at(key).value, scenarioGroup, scenario, hour);
+    return data_.getData(parameters_types_and_values_.at(key).value, scenarioGroup, scenario, hour);
 }
 
 ParameterType EvaluationContext::getParameterType(const std::string& key) const
 {
-    return system_parameters_.at(key).type;
+    return parameters_types_and_values_.at(key).type;
 }
 
 ContextParameter EvaluationContext::getParameter(const std::string& key) const
 {
-    return system_parameters_.at(key);
+    return parameters_types_and_values_.at(key);
 }
 } // namespace Antares::Expressions::Visitors
