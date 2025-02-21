@@ -156,6 +156,7 @@ public:
     void initializeFromArea(Data::Study* study, Data::Area* area)
     {
         // Next
+        pReservoirLevel = area->hydro.reservoirLevel;
         NextType::initializeFromArea(study, area);
     }
 
@@ -229,7 +230,8 @@ public:
         // Retrieving hourly reservoir levels of week simulation
         pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear] = state.hourlyResults
                                                                          ->niveauxHoraires
-                                                                           [state.hourInTheWeek];
+                                                                           [state.hourInTheWeek]
+                                                                       * pReservoirLevel / 100.;
 
         // Next variable
         NextType::hourForEachArea(state, numSpace);
@@ -264,6 +266,7 @@ private:
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel;
+    double pReservoirLevel;
 
 }; // class HydroLevel
 
