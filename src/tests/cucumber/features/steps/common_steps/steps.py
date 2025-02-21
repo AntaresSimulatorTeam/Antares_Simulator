@@ -9,7 +9,6 @@ from common_steps.modeler_utils import run_modeler
 from common_steps.simulator_utils import run_simulation
 
 from features.steps.common_steps.assertions import assert_double_close
-from common_steps.modeler_output_handler import modeler_output_handler
 
 
 
@@ -36,12 +35,6 @@ def simu_success(context):
     assert context.return_code == 0
 
 
-@then('the modeler simulation succeeds')
-def simu_success(context):
-    print(f"context.return_code = {context.return_code} ***********************")
-    assert context.return_code == 0
-    context.output_path = os.path.join(context.study_path, "output")  # TODO : fixme parse_output_folder_from_logs(out)
-    context.moh = modeler_output_handler(context.output_path)
 
 
 

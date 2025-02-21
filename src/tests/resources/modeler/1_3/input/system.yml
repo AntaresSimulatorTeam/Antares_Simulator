@@ -1,6 +1,6 @@
 system:
   id: sys_example_1_3
-  description: test system
+  description: Bugged system because of timeseries of different sizes
   model-libraries: lib_example_1_3
 
   components:

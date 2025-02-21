@@ -2,6 +2,7 @@
 
 import subprocess
 import os
+from common_steps.modeler_output_handler import modeler_output_handler
 
 
 def run_modeler(context):
@@ -18,6 +19,10 @@ def run_modeler(context):
         print("*********************** Begin stderr ***********************")
         print(err.replace(b'\r\n', b'\n').decode('utf-8'))
         print("*********************** End stderr ***********************")
+    else:
+        context.output_path = os.path.join(context.study_path,
+                                           "output")  # TODO : fixme parse_output_folder_from_logs(out)
+        context.moh = modeler_output_handler(context.output_path)
 
     context.return_code = process.returncode
 
