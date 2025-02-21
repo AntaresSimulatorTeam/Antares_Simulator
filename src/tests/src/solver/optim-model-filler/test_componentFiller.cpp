@@ -854,23 +854,23 @@ public:
 
 BOOST_AUTO_TEST_CASE(VariableDict_MultipleScenarios)
 {
-    VariableDict<int> hm;
-    const FullKey key("component", "variable", 42, 50);
+    VariableDict<int> dict;
+    const FullKey key("component", "variable", /*timesteps*/ 42, /*scenarios*/ 50);
 
     // Add variables
-    hm.addVariable(key, [&](int timestep, int scenario, const std::string&) { return 1; });
+    dict.addVariable(key, [&](int timestep, int scenario, const std::string&) { return 1; });
 
     // operator() : component, variable, timestep, scenario
     for (int timestep = 0; timestep < key.getTimestep(); timestep++)
     {
         for (int scenario = 0; scenario < key.getScenario(); scenario++)
         {
-            BOOST_CHECK_EQUAL(hm("component", "variable", timestep, 0), 1);
+            BOOST_CHECK_EQUAL(dict("component", "variable", timestep, 0), 1);
         }
     }
 
     // Partial key : timestep, variable
-    auto& vc = hm[key.getPartialKey()];
+    auto& vc = dict[key.getPartialKey()];
     for (int timestep = 0; timestep < key.getTimestep(); timestep++)
     {
         for (int scenario = 0; scenario < key.getTimestep(); scenario++)
