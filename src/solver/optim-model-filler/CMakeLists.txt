@@ -3,10 +3,12 @@ set(PROJ optim-model-filler)
 set(SRC_optim_model_filler
         include/antares/solver/optim-model-filler/ComponentFiller.h
         include/antares/solver/optim-model-filler/LinearExpression.h
+        include/antares/solver/optim-model-filler/TimeDependentLinearExpression.h
         include/antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h
         include/antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h
         ComponentFiller.cpp
         LinearExpression.cpp
+        TimeDependentLinearExpression.cpp
         ReadLinearConstraintVisitor.cpp
         ReadLinearExpressionVisitor.cpp
 )

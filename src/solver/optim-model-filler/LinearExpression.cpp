@@ -27,43 +27,6 @@
 
 namespace Antares::Optimization
 {
-template<typename T>
-struct IdentityFunction
-{
-    const T& operator()(const T& t)
-    {
-        return t;
-    }
-};
-
-/**
- * Element-wise sum of two [string, double] maps, preceded an element-wise multiplication of the
- * right-hand-side map. Keys that do not exist in one of the two maps are considered to have a zero
- * value. For every key: value = left_value + rhs_multiplier * right_value
- * @param left The left hand side map
- * @param right The right hand side map
- * @return The map resulting from the operation
- */
-template<typename Key, typename Value, typename UnaryOp = IdentityFunction<Value>>
-static std::map<Key, Value> add_maps(const std::map<Key, Value>& left,
-                                     const std::map<Key, Value>& right,
-                                     UnaryOp op = IdentityFunction<Value>{})
-{
-    std::map result(left);
-    for (auto [key, value]: right)
-    {
-        if (result.contains(key))
-        {
-            result[key] += op(value);
-        }
-        else
-        {
-            result[key] = op(value);
-        }
-    }
-    return result;
-}
-
 /**
  * Element-wise multiplication of a map by a scale.
  * For every key: final_value = scale * initial_value
@@ -71,8 +34,7 @@ static std::map<Key, Value> add_maps(const std::map<Key, Value>& left,
  * @param scale The scale
  * @return The scaled map
  */
-static std::map<std::string, double> scale_map(const std::map<std::string, double>& map,
-                                               double scale)
+std::map<std::string, double> scale_map(const std::map<std::string, double>& map, double scale)
 {
     std::map<std::string, double> result;
     for (auto [key, value]: map)
@@ -146,101 +108,6 @@ double LinearExpression::offset() const
     return offset_;
 }
 
-TimeDependentLinearExpression::TimeDependentLinearExpression(
-  const Optimisation::LinearProblemApi::FillContext& fillContext,
-  const LinearExpression& linearExpression)
-{
-    for (auto timestep(fillContext.getFirstTimeStep()); timestep <= fillContext.getLastTimeStep();
-         ++timestep)
-    {
-        linearExpressions_[timestep] = linearExpression;
-    }
-}
 
-TimeDependentLinearExpression::TimeDependentLinearExpression(
-  const Optimisation::LinearProblemApi::FillContext& fillContext):
-    TimeDependentLinearExpression(fillContext, LinearExpression())
-{
-}
-
-TimeDependentLinearExpression::TimeDependentLinearExpression(
-  const std::map<unsigned int, LinearExpression>& linearExpressions):
-    linearExpressions_(linearExpressions)
-
-{
-}
-
-TimeDependentLinearExpression TimeDependentLinearExpression::operator+(
-  const TimeDependentLinearExpression& other) const
-{
-    return TimeDependentLinearExpression(
-      add_maps(GetLinearExpressions(), other.GetLinearExpressions()));
-}
-
-TimeDependentLinearExpression TimeDependentLinearExpression::operator-(
-  const TimeDependentLinearExpression& other) const
-{
-    return TimeDependentLinearExpression(
-      add_maps(GetLinearExpressions(), other.GetLinearExpressions(), std::negate<>()));
-}
-
-template<typename BinaryOperator>
-TimeDependentLinearExpression BinaryOpLinearExpression(
-  const std::map<unsigned int, LinearExpression>& left,
-  const std::map<unsigned int, LinearExpression>& right,
-  BinaryOperator op)
-{
-    auto result(left);
-    for (const auto& [timeStep, other_linear_expression]: right)
-    {
-        if (result.contains(timeStep))
-        {
-            result[timeStep] = op(result.at(timeStep), other_linear_expression);
-        }
-        else
-        {
-            result[timeStep] = other_linear_expression;
-        }
-    }
-    return TimeDependentLinearExpression(std::move(result));
-}
-
-TimeDependentLinearExpression TimeDependentLinearExpression::operator*(
-  const TimeDependentLinearExpression& other) const
-{
-    return BinaryOpLinearExpression(GetLinearExpressions(),
-                                    other.GetLinearExpressions(),
-                                    std::multiplies<>());
-}
-
-TimeDependentLinearExpression TimeDependentLinearExpression::operator/(
-  const TimeDependentLinearExpression& other) const
-{
-    return BinaryOpLinearExpression(GetLinearExpressions(),
-                                    other.GetLinearExpressions(),
-                                    std::divides<>());
-}
-
-TimeDependentLinearExpression TimeDependentLinearExpression::operator-() const
-{
-    const auto& linear_expressions = GetLinearExpressions();
-    std::map<unsigned int, LinearExpression> result;
-    for (size_t i = 0; i < linear_expressions.size(); ++i)
-    {
-        result[i] = -linear_expressions.at(i);
-    }
-    return TimeDependentLinearExpression(std::move(result));
-}
-
-const std::map<unsigned int, LinearExpression>&
-TimeDependentLinearExpression::GetLinearExpressions() const
-{
-    return linearExpressions_;
-}
-
-size_t TimeDependentLinearExpression::getSize() const
-{
-    return linearExpressions_.size();
-}
 
 } // namespace Antares::Optimization

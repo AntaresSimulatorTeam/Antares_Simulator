@@ -24,7 +24,7 @@
 #include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/expressions/visitors/NodeVisitor.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
-#include <antares/solver/optim-model-filler/LinearExpression.h>
+#include <antares/solver/optim-model-filler/TimeDependentLinearExpression.h>
 
 /**
  * Read Linear Expression Visitor
