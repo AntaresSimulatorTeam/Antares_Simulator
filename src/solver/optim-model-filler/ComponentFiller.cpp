@@ -206,7 +206,7 @@ void ComponentFiller::addStaticConstraint(Optimisation::LinearProblemApi::ILinea
                                 component_.Id() + "." + constraint_id);
     for (auto [var_id, coef]: linear_constraint.coef_per_var)
     {
-        auto* variable = pb.getVariable(component_.Id() + "." + var_id);
+        auto* variable = variableDict(component_.Id(), var_id, 0, 0);
         ct->setCoefficient(variable, coef);
     }
 }
@@ -226,13 +226,18 @@ void ComponentFiller::addTimeDependentConstraints(
         {
             if (IsThisVariableTimeDependent(var_id))
             {
-                auto* variable = pb.getVariable(component_.Id() + "." + var_id + '_'
-                                                + std::to_string(linear_constraint.timeStep));
+                // TODO scenario = 0
+                auto* variable = variableDict(component_.Id(),
+                                              var_id,
+                                              linear_constraint.timeStep,
+                                              0);
+
                 ct->setCoefficient(variable, coef);
             }
             else
             {
-                auto* variable = pb.getVariable(component_.Id() + "." + var_id);
+                auto* variable = variableDict(component_.Id(), var_id, 0, 0);
+
                 ct->setCoefficient(variable, coef);
             }
         }
@@ -297,15 +302,16 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
         {
             for (auto var_pos = ctx.getFirstTimeStep(); var_pos <= ctx.getLastTimeStep(); ++var_pos)
             {
-                auto* variable = pb.getVariable(component_.Id() + "." + var_id + '_'
-                                                + std::to_string(var_pos));
+                // TODO scenario = 0
+                auto* variable = variableDict(component_.Id(), var_id, var_pos, 0);
                 pb.setObjectiveCoefficient(variable,
                                            linear_expressions.at(var_pos).coefPerVar()[var_id]);
             }
         }
         else
         {
-            auto* variable = pb.getVariable(component_.Id() + "." + var_id);
+            // TODO scenario = 0
+            auto* variable = variableDict(component_.Id(), var_id, 0, 0);
             pb.setObjectiveCoefficient(variable, coef);
         }
     }
