@@ -108,6 +108,8 @@ public:
         pumpMod,
     };
 
+    static bool LoadIniFile(Study& study, const std::filesystem::path& folder);
+
     /*!
     ** \brief Load data for hydro container from a folder
     **
