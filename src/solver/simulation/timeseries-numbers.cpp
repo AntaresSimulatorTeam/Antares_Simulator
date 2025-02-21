@@ -331,7 +331,7 @@ bool checkInterModalConsistencyForArea(const Area& area,
     }
 
     // Now check if all elements of list of TS numbers are identical or equal to 1
-    if (!Utils::checkAllElementsIdenticalOrOne(listNumberTsOverArea).first)
+    if (!Utils::checkAllElementsIdenticalOrOne(listNumberTsOverArea))
     {
         logs.error()
           << "Inter-modal correlation: time-series numbers of inter-modal modes in area '"

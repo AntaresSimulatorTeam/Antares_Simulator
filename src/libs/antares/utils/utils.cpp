@@ -178,24 +178,22 @@ bool checkAllElementsIdenticalOrOne(std::vector<unsigned> w)
     return std::adjacent_find(w.begin(), first_one, std::not_equal_to<unsigned>()) == first_one;
 }
 
-std::pair<bool, std::string> checkAllElementsIdenticalOrOne(
-  std::vector<std::pair<unsigned, std::string>>& p)
+bool checkAllElementsIdenticalOrOne(std::vector<std::pair<unsigned, std::string>>& p)
 {
     // Erase 1 from the vector
     std::erase_if(p, [](const auto& pair) { return pair.first == 1; });
     auto width = p.begin()->first;
-    for (const auto& pair: p)
+    for (const auto& [w, msg]: p)
     {
-        logs.notice() << pair.first;
-        if (pair.first != width)
+        if (w != width)
         {
-            logs.error() << "Inconsitent time series width, found: " << pair.first
-                         << " Previous was " << width << " for " << pair.second;
+            logs.error() << "Inconsitent time series width, found: " << w << " Previous was "
+                         << width << " for " << msg;
 
-            return {false, pair.second};
+            return false;
         }
     }
-    return {true, ""};
+    return true;
 }
 
 } // namespace Utils
