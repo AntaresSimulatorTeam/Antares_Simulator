@@ -852,13 +852,38 @@ public:
     }
 };
 
-using VariableDict = Antares::Optimization::VariableDict<
-  Antares::Optimisation::LinearProblemApi::IMipVariable*>;
+BOOST_AUTO_TEST_CASE(VariableDict_MultipleScenarios)
+{
+    VariableDict<int> hm;
+    const FullKey key("component", "variable", 42, 50);
+
+    // Add variables
+    hm.addVariable(key, [&](int timestep, int scenario, const std::string&) { return 1; });
+
+    // operator() : component, variable, timestep, scenario
+    for (int timestep = 0; timestep < key.getTimestep(); timestep++)
+    {
+        for (int scenario = 0; scenario < key.getScenario(); scenario++)
+        {
+            BOOST_CHECK_EQUAL(hm("component", "variable", timestep, 0), 1);
+        }
+    }
+
+    // Partial key : timestep, variable
+    auto& vc = hm[key.getPartialKey()];
+    for (int timestep = 0; timestep < key.getTimestep(); timestep++)
+    {
+        for (int scenario = 0; scenario < key.getTimestep(); scenario++)
+        {
+            BOOST_CHECK_EQUAL(vc[timestep][scenario], 1);
+        }
+    }
+}
 
 BOOST_AUTO_TEST_CASE(Constructor_ValidIndices)
 {
     MockLinearProblem lp;
-    VariableDict vd;
+    VariableDict<IMipVariable*> vd;
     BOOST_CHECK_NO_THROW(VariablesBulkAddition(lp, vd, 0, 5));
 }
 
@@ -872,67 +897,83 @@ BOOST_AUTO_TEST_CASE(Constructor_ValidIndices)
 BOOST_AUTO_TEST_CASE(GetCountTest)
 {
     MockLinearProblem lp;
-    VariableDict vd;
-    VariablesBulkAddition vba(lp, vd, 2, 6);
+    VariableDict<IMipVariable*> vdict;
+    VariablesBulkAddition vba(lp, vdict, 2, 6);
     BOOST_CHECK_EQUAL(vba.getCount(), 5);
 }
 
 BOOST_AUTO_TEST_CASE(AddVariable_SingleBounds)
 {
     MockLinearProblem lp;
-    VariableDict vd;
-    VariablesBulkAddition vba(lp, vd, 0, 2);
-    const FullKey key("my-component", "my-variable", 1, 1);
+    VariableDict<IMipVariable*> vdict;
+    VariablesBulkAddition vba(lp, vdict, 0, 2);
+    const FullKey key("my-component", "my-variable", 3, 1);
     vba.addVariable(0.0, 1.0, true, key);
+    for (int ts = 0; ts < 3; ++ts)
+    {
+        BOOST_CHECK(vdict("my-component", "my-variable", ts, 0) != nullptr);
+    }
 }
 
 BOOST_AUTO_TEST_CASE(AddVariable_VectorLowerBound)
 {
     MockLinearProblem lp;
-    VariableDict vd;
-    VariablesBulkAddition vba(lp, vd, 0, 2);
+    VariableDict<IMipVariable*> vdict;
+    VariablesBulkAddition vba(lp, vdict, 0, 2);
     std::vector<double> lb = {0.1, 0.2, 0.3};
     const FullKey key("my-component", "my-variable", 3, 1);
     vba.addVariable(lb, 1.0, true, key);
+    for (int ts = 0; ts < 3; ++ts)
+    {
+        BOOST_CHECK(vdict("my-component", "my-variable", ts, 0) != nullptr);
+    }
 }
 
 BOOST_AUTO_TEST_CASE(AddVariable_VectorUpperBound)
 {
     MockLinearProblem lp;
-    VariableDict vd;
-    VariablesBulkAddition vba(lp, vd, 0, 2);
+    VariableDict<IMipVariable*> vdict;
+    VariablesBulkAddition vba(lp, vdict, 0, 2);
     std::vector<double> ub = {1.1, 1.2, 1.3};
     const FullKey key("my-component", "my-variable", 3, 1);
     vba.addVariable(0.0, ub, true, key);
+    for (int ts = 0; ts < 3; ++ts)
+    {
+        BOOST_CHECK(vdict("my-component", "my-variable", ts, 0) != nullptr);
+    }
 }
 
 BOOST_AUTO_TEST_CASE(AddVariable_VectorBounds)
 {
     MockLinearProblem lp;
-    VariableDict vd;
-    VariablesBulkAddition vba(lp, vd, 0, 2);
+    VariableDict<IMipVariable*> vdict;
+    VariablesBulkAddition vba(lp, vdict, 0, 2);
     std::vector<double> lb = {0.1, 0.2, 0.3};
     std::vector<double> ub = {1.1, 1.2, 1.3};
     const FullKey key("my-component", "my-variable", 3, 1);
     vba.addVariable(lb, ub, true, key);
+    for (int ts = 0; ts < 3; ++ts)
+    {
+        BOOST_CHECK(vdict("my-component", "my-variable", ts, 0) != nullptr);
+    }
 }
 
 BOOST_AUTO_TEST_CASE(AddVariable_InvalidBounds)
 {
     MockLinearProblem lp;
-    VariableDict vd;
-    VariablesBulkAddition vba(lp, vd, 0, 2);
+    VariableDict<IMipVariable*> vdict;
+    VariablesBulkAddition vba(lp, vdict, 0, 2);
     std::vector<double> lb = {0.1, 0.2};
     std::vector<double> ub = {1.1, 1.2, 1.3};
-    const FullKey key("my-component", "my-variable", 2, 1);
+    const FullKey key("my-component", "my-variable", 3, 1);
     BOOST_CHECK_THROW(vba.addVariable(lb, ub, true, key), std::invalid_argument);
 }
 
 BOOST_AUTO_TEST_CASE(AddVariable_InvalidVectorLowerBound)
 {
     MockLinearProblem lp;
-    VariableDict vd;
-    VariablesBulkAddition vba(lp, vd, 0, 2);
+    VariableDict<IMipVariable*> vdict;
+    VariablesBulkAddition vba(lp, vdict, 0, 2);
     const FullKey key("my-component", "my-variable", 2, 1);
     BOOST_CHECK_THROW(vba.addVariable({0.1, 0.2}, 1.0, true, key), std::invalid_argument);
 }
@@ -940,8 +981,8 @@ BOOST_AUTO_TEST_CASE(AddVariable_InvalidVectorLowerBound)
 BOOST_AUTO_TEST_CASE(AddVariable_InvalidVectorUpperBound)
 {
     MockLinearProblem lp;
-    VariableDict vd;
-    VariablesBulkAddition vba(lp, vd, 0, 2);
+    VariableDict<IMipVariable*> vdict;
+    VariablesBulkAddition vba(lp, vdict, 0, 2);
     const FullKey key("my-component", "my-variable", 2, 1);
     BOOST_CHECK_THROW(vba.addVariable(0.0, {1.1, 1.2}, true, key), std::invalid_argument);
 }
@@ -949,8 +990,8 @@ BOOST_AUTO_TEST_CASE(AddVariable_InvalidVectorUpperBound)
 BOOST_AUTO_TEST_CASE(AddVariable_InvalidVectorBounds)
 {
     MockLinearProblem lp;
-    VariableDict vd;
-    VariablesBulkAddition vba(lp, vd, 0, 2);
+    VariableDict<IMipVariable*> vdict;
+    VariablesBulkAddition vba(lp, vdict, 0, 2);
 
     const FullKey key("my-component", "my-variable", 2, 1);
 
