@@ -81,7 +81,6 @@ private:
     const std::map<std::string, Study::SystemModel::Variable>& modelVariable_;
 };
 
-// TODO move me
 class VariablesBulkAddition
 {
 public:

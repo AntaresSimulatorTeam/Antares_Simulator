@@ -32,7 +32,6 @@
 namespace Antares::Optimization
 {
 
-// TODO move me
 VariablesBulkAddition::VariablesBulkAddition(
   Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
   unsigned int first_index,
@@ -41,7 +40,7 @@ VariablesBulkAddition::VariablesBulkAddition(
     first_index_(first_index),
     last_index_(last_index)
 {
-    // TODO
+    // if not done previously
     // checkIndices();
 }
 
