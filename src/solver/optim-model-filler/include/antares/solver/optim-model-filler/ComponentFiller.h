@@ -62,8 +62,8 @@ public:
                              const std::string& constraint_id) const;
 
     void addTimeDependentConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
-      const std::map<unsigned int, LinearConstraint>& linear_constraints,
-      const std::string& constraint_id) const;
+                                     const std::vector<LinearConstraint>& linear_constraints,
+                                     const std::string& constraint_id) const;
 
     void addConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
                         Optimisation::LinearProblemApi::ILinearProblemData& data,

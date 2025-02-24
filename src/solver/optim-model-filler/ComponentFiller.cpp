@@ -218,21 +218,21 @@ void ComponentFiller::addStaticConstraint(Optimisation::LinearProblemApi::ILinea
 
 void ComponentFiller::addTimeDependentConstraints(
   Optimisation::LinearProblemApi::ILinearProblem& pb,
-  const std::map<unsigned int, LinearConstraint>& linear_constraints,
+  const std::vector<LinearConstraint>& linear_constraints,
   const std::string& constraint_id) const
 {
-    for (const auto& [timestep, linear_constraint]: linear_constraints)
+    for (const auto& linear_constraint: linear_constraints)
     {
         auto* ct = pb.addConstraint(linear_constraint.lb,
                                     linear_constraint.ub,
                                     component_.Id() + "." + constraint_id + '_'
-                                      + std::to_string(timestep));
+                                      + std::to_string(linear_constraint.timeStep));
         for (const auto& [var_id, coef]: linear_constraint.coef_per_var)
         {
             if (IsThisVariableTimeDependent(var_id))
             {
                 auto* variable = pb.getVariable(component_.Id() + "." + var_id + '_'
-                                                + std::to_string(timestep));
+                                                + std::to_string(linear_constraint.timeStep));
                 ct->setCoefficient(variable, coef);
             }
             else
@@ -255,7 +255,7 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
     for (const auto& constraint: component_.getModel()->getConstraints() | std::views::values)
     {
         auto* root_node = constraint.expression().RootNode();
-        const auto linear_constraints = visitor.dispatch(root_node);
+        auto linear_constraints = visitor.dispatch(root_node);
         if (checkTimeSteps(ctx))
         {
             if (IsThisConstraintTimeDependent(root_node))
@@ -265,7 +265,7 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
             }
             else
             {
-                addStaticConstraint(pb, linear_constraints.at(0), constraint.Id());
+                addStaticConstraint(pb, linear_constraints[0], constraint.Id());
             }
         }
     }

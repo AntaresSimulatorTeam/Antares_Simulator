@@ -48,10 +48,11 @@ struct LinearConstraint
     std::map<std::string, double> coef_per_var;
     double lb = -std::numeric_limits<double>::infinity();
     double ub = std::numeric_limits<double>::infinity();
+    unsigned int timeStep = 0;
 };
 
 class ReadLinearConstraintVisitor
-    : public Expressions::Visitors::NodeVisitor<std::map<unsigned int, LinearConstraint>>
+    : public Expressions::Visitors::NodeVisitor<std::vector<LinearConstraint>>
 {
 public:
     ReadLinearConstraintVisitor() = default;
@@ -62,35 +63,25 @@ public:
 
 private:
     ReadLinearExpressionVisitor linear_expression_visitor_;
-    std::map<unsigned int, LinearConstraint> visit(
-      const Expressions::Nodes::SumNode* node) override;
-    std::map<unsigned int, LinearConstraint> visit(
-      const Expressions::Nodes::SubtractionNode* node) override;
-    std::map<unsigned int, LinearConstraint> visit(
+    std::vector<LinearConstraint> visit(const Expressions::Nodes::SumNode* node) override;
+    std::vector<LinearConstraint> visit(const Expressions::Nodes::SubtractionNode* node) override;
+    std::vector<LinearConstraint> visit(
       const Expressions::Nodes::MultiplicationNode* node) override;
-    std::map<unsigned int, LinearConstraint> visit(
-      const Expressions::Nodes::DivisionNode* node) override;
-    std::map<unsigned int, LinearConstraint> visit(
-      const Expressions::Nodes::EqualNode* node) override;
-    std::map<unsigned int, LinearConstraint> visit(
+    std::vector<LinearConstraint> visit(const Expressions::Nodes::DivisionNode* node) override;
+    std::vector<LinearConstraint> visit(const Expressions::Nodes::EqualNode* node) override;
+    std::vector<LinearConstraint> visit(
       const Expressions::Nodes::LessThanOrEqualNode* node) override;
-    std::map<unsigned int, LinearConstraint> visit(
+    std::vector<LinearConstraint> visit(
       const Expressions::Nodes::GreaterThanOrEqualNode* node) override;
-    std::map<unsigned int, LinearConstraint> visit(
-      const Expressions::Nodes::NegationNode* node) override;
-    std::map<unsigned int, LinearConstraint> visit(
-      const Expressions::Nodes::VariableNode* node) override;
-    std::map<unsigned int, LinearConstraint> visit(
-      const Expressions::Nodes::ParameterNode* node) override;
-    std::map<unsigned int, LinearConstraint> visit(
-      const Expressions::Nodes::LiteralNode* node) override;
-    std::map<unsigned int, LinearConstraint> visit(
-      const Expressions::Nodes::PortFieldNode* node) override;
-    std::map<unsigned int, LinearConstraint> visit(
-      const Expressions::Nodes::PortFieldSumNode* node) override;
-    std::map<unsigned int, LinearConstraint> visit(
+    std::vector<LinearConstraint> visit(const Expressions::Nodes::NegationNode* node) override;
+    std::vector<LinearConstraint> visit(const Expressions::Nodes::VariableNode* node) override;
+    std::vector<LinearConstraint> visit(const Expressions::Nodes::ParameterNode* node) override;
+    std::vector<LinearConstraint> visit(const Expressions::Nodes::LiteralNode* node) override;
+    std::vector<LinearConstraint> visit(const Expressions::Nodes::PortFieldNode* node) override;
+    std::vector<LinearConstraint> visit(const Expressions::Nodes::PortFieldSumNode* node) override;
+    std::vector<LinearConstraint> visit(
       const Expressions::Nodes::ComponentVariableNode* node) override;
-    std::map<unsigned int, LinearConstraint> visit(
+    std::vector<LinearConstraint> visit(
       const Expressions::Nodes::ComponentParameterNode* node) override;
 };
 } // namespace Antares::Optimization
