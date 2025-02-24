@@ -152,7 +152,9 @@ DataSeriesRepository DataSeriesRepoImporter::importFromDirectory(const std::file
          const auto& entry: paths | pathFilter)
     {
         if (!hasRightExtension(entry))
+        {
             continue;
+        }
         auto timeSeriesSet = std::make_unique<TimeSeriesSet>(importFromFile(entry, csvSeparators));
         repo.addDataSeries(std::move(timeSeriesSet));
     }
