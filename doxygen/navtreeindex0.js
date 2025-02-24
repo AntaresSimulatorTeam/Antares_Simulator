@@ -148,6 +148,7 @@ var NAVTREEINDEX0 =
 "SumNode_8h_source.html":[10,0,0,3,1,0,0,1,18],
 "TSnumberData_8h_source.html":[10,0,0,5,0,23,0,0,0,8,15],
 "ThermalTSNumberData_8h_source.html":[10,0,0,5,0,23,0,0,0,8,14],
+"TimeDependentLinearExpression_8h_source.html":[10,0,0,7,7,0,0,0,0,4],
 "TimeIndexVisitor_8h_source.html":[10,0,0,3,1,0,0,2,14],
 "TimeIndex_8h_source.html":[10,0,0,3,1,0,0,2,13],
 "TwoVarsTwoConstraintsFiller_8h_source.html":[10,0,0,9,1,2,0,0,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX0 =
 "classAntares_1_1API_1_1APIInternal.html":[9,0,0,1,0],
 "classAntares_1_1API_1_1APIInternal.html#a060612c9356bcf28bef40e0c8e975263":[9,0,0,1,0,0],
 "classAntares_1_1API_1_1SimulationObserver.html":[9,0,0,1,2],
-"classAntares_1_1API_1_1SimulationObserver.html#aa0d727181abc78f0ccb3ce0362ae2b8b":[9,0,0,1,2,0],
-"classAntares_1_1API_1_1SimulationObserver.html#af6224b550ed1c7f63e1aa92205cbb99d":[9,0,0,1,2,1]
+"classAntares_1_1API_1_1SimulationObserver.html#aa0d727181abc78f0ccb3ce0362ae2b8b":[9,0,0,1,2,0]
 };

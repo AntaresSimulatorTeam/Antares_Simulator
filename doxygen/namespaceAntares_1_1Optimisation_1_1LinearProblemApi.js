@@ -1,6 +1,6 @@
 var namespaceAntares_1_1Optimisation_1_1LinearProblemApi =
 [
-    [ "FillContext", "structAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html", null ],
+    [ "FillContext", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html", null ],
     [ "IHasBounds", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasBounds.html", null ],
     [ "IHasName", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasName.html", null ],
     [ "ILinearProblem", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem" ],

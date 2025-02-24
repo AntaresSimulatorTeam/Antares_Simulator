@@ -10,6 +10,7 @@ var namespaceAntares_1_1Optimization =
     [ "HourlyBC", "classAntares_1_1Optimization_1_1HourlyBC.html", null ],
     [ "HydroLevel", "classAntares_1_1Optimization_1_1HydroLevel.html", null ],
     [ "HydroProduction", "classAntares_1_1Optimization_1_1HydroProduction.html", null ],
+    [ "IdentityFunction", "structAntares_1_1Optimization_1_1IdentityFunction.html", null ],
     [ "InfeasibleProblemReport", "classAntares_1_1Optimization_1_1InfeasibleProblemReport.html", null ],
     [ "LegacyFiller", "classAntares_1_1Optimization_1_1LegacyFiller.html", null ],
     [ "LegacyOrtoolsLinearProblem", "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html", null ],
@@ -19,10 +20,14 @@ var namespaceAntares_1_1Optimization =
     [ "ReadLinearConstraintVisitor", "classAntares_1_1Optimization_1_1ReadLinearConstraintVisitor.html", null ],
     [ "ReadLinearExpressionVisitor", "classAntares_1_1Optimization_1_1ReadLinearExpressionVisitor.html", null ],
     [ "STS", "classAntares_1_1Optimization_1_1STS.html", null ],
+    [ "TimeDependentLinearExpression", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression" ],
     [ "UnfeasibilityAnalysis", "classAntares_1_1Optimization_1_1UnfeasibilityAnalysis.html", null ],
     [ "UnfeasiblePbAnalyzer", "classAntares_1_1Optimization_1_1UnfeasiblePbAnalyzer.html", null ],
     [ "VariableBounds", "structAntares_1_1Optimization_1_1VariableBounds.html", null ],
     [ "VariablesBoundsConsistency", "classAntares_1_1Optimization_1_1VariablesBoundsConsistency.html", null ],
+    [ "VariablesBulkAddition", "classAntares_1_1Optimization_1_1VariablesBulkAddition.html", null ],
     [ "WatchedConstraint", "classAntares_1_1Optimization_1_1WatchedConstraint.html", null ],
-    [ "WeeklyBC", "classAntares_1_1Optimization_1_1WeeklyBC.html", null ]
+    [ "WeeklyBC", "classAntares_1_1Optimization_1_1WeeklyBC.html", null ],
+    [ "add_maps", "namespaceAntares_1_1Optimization.html#a6dc139997e7ee1e6da8968734691496a", null ],
+    [ "scale_map", "namespaceAntares_1_1Optimization.html#aff759992f046ef8adb4560fdc970f68c", null ]
 ];

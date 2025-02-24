@@ -1,5 +1,11 @@
 var NAVTREEINDEX15 =
 {
+"classAntares_1_1Solver_1_1ImmediateFileResultWriter.html#af331f4ce440c90a0b402f9dbd6c67629":[9,0,0,16,14,0],
+"classAntares_1_1Solver_1_1InMemoryWriter.html":[9,0,0,16,15],
+"classAntares_1_1Solver_1_1InMemoryWriter.html#ae79bc278d4eff373baf313ebb426361b":[9,0,0,16,15,0],
+"classAntares_1_1Solver_1_1Initialization_1_1Error_1_1NoQueueService.html":[9,0,0,16,0,0,0],
+"classAntares_1_1Solver_1_1IntraModalConsistencyChecker.html":[9,0,0,16,16],
+"classAntares_1_1Solver_1_1LoadAreaNumberOfTSretriever.html":[9,0,0,16,18],
 "classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml.html":[9,0,0,16,1,0],
 "classAntares_1_1Solver_1_1LpsFromAntares.html":[9,0,0,16,19],
 "classAntares_1_1Solver_1_1NullResultWriter.html":[9,0,0,16,21],
@@ -243,11 +249,5 @@ var NAVTREEINDEX15 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#a111c3f9116bf9e92376999cd51baad0e":[9,0,0,16,5,4,24,2],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#a46815db906c657a46558edf256272f42":[9,0,0,16,5,4,24,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#a4b4451d87579c4390ec2312bf70099c3":[9,0,0,16,5,4,24,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCSRdataFactory.html":[9,0,0,16,5,4,26],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCsr.html":[9,0,0,16,5,4,25],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCsr.html#a6ba23ea7cd1c1525b88b9228eb2d9ea3":[9,0,0,16,5,4,25,4],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCsr.html#a7729aa62526dc7372a668afb0aea17b2":[9,0,0,16,5,4,25,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCsr.html#a82f37d6949a97beea82b0bb36e52e4da":[9,0,0,16,5,4,25,3],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCsr.html#ada3c71d8294a42b983dac106338f4c93":[9,0,0,16,5,4,25,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgDataFactory.html":[9,0,0,16,5,4,27]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCSRdataFactory.html":[9,0,0,16,5,4,26]
 };

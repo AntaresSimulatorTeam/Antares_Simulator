@@ -138,6 +138,7 @@ $(function(){initNavTree('classAntares_1_1Expressions_1_1Visitors_1_1EvaluationC
 
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">Antares::Expressions::Visitors::EvaluationContext Class Reference</div></div>
@@ -149,28 +150,41 @@ $(function(){initNavTree('classAntares_1_1Expressions_1_1Visitors_1_1EvaluationC
 
 <p><code>#include &lt;<a class="el" href="EvaluationContext_8h_source.html">EvaluationContext.h</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext_1_1CouldNotEvaluateConstantParameter.html">CouldNotEvaluateConstantParameter</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a17e1b03fb93438d0ad748f4478c8fb14" id="r_a17e1b03fb93438d0ad748f4478c8fb14"><td class="memItemLeft" align="right" valign="top"><a id="a17e1b03fb93438d0ad748f4478c8fb14" name="a17e1b03fb93438d0ad748f4478c8fb14"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>EvaluationContext</b> ()=default</td></tr>
-<tr class="memdesc:a17e1b03fb93438d0ad748f4478c8fb14"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor, creates an evaluation context without parameter and variable values. <br /></td></tr>
-<tr class="separator:a17e1b03fb93438d0ad748f4478c8fb14"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a51d0fd15a7f6892be42300fe5acf2808" id="r_a51d0fd15a7f6892be42300fe5acf2808"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a51d0fd15a7f6892be42300fe5acf2808">EvaluationContext</a> (std::map&lt; std::string, double &gt; parameters, std::map&lt; std::string, double &gt; variables)</td></tr>
-<tr class="memdesc:a51d0fd15a7f6892be42300fe5acf2808"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs an evaluation context with the specified parameter and variable values.  <br /></td></tr>
-<tr class="separator:a51d0fd15a7f6892be42300fe5acf2808"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e58b0df45dde086de8f653c4edf744c" id="r_a9e58b0df45dde086de8f653c4edf744c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9e58b0df45dde086de8f653c4edf744c">EvaluationContext</a> (std::map&lt; std::string, <a class="el" href="structAntares_1_1Expressions_1_1Visitors_1_1ParameterTypeAndValue.html">ParameterTypeAndValue</a> &gt; system_parameters, std::map&lt; std::string, double &gt; variables, <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">Optimisation::LinearProblemApi::ILinearProblemData</a> &amp;data)</td></tr>
+<tr class="memdesc:a9e58b0df45dde086de8f653c4edf744c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs an evaluation context with the specified parameter and variable values.  <br /></td></tr>
+<tr class="separator:a9e58b0df45dde086de8f653c4edf744c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a28e992c2c8f078d0483fe8e4eb180864" id="r_a28e992c2c8f078d0483fe8e4eb180864"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a28e992c2c8f078d0483fe8e4eb180864">getVariableValue</a> (const std::string &amp;key) const</td></tr>
 <tr class="memdesc:a28e992c2c8f078d0483fe8e4eb180864"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the value of a variable.  <br /></td></tr>
 <tr class="separator:a28e992c2c8f078d0483fe8e4eb180864"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae81cfd7ff40dbf69488442217ea6b0e8" id="r_ae81cfd7ff40dbf69488442217ea6b0e8"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae81cfd7ff40dbf69488442217ea6b0e8">getParameterValue</a> (const std::string &amp;key) const</td></tr>
-<tr class="memdesc:ae81cfd7ff40dbf69488442217ea6b0e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the value of a parameter.  <br /></td></tr>
-<tr class="separator:ae81cfd7ff40dbf69488442217ea6b0e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6d2bf6b8939a28f3045477b0c2eb6c9" id="r_ac6d2bf6b8939a28f3045477b0c2eb6c9"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac6d2bf6b8939a28f3045477b0c2eb6c9">getSystemParameterValueAsDouble</a> (const std::string &amp;key) const</td></tr>
+<tr class="memdesc:ac6d2bf6b8939a28f3045477b0c2eb6c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the value of a parameter.  <br /></td></tr>
+<tr class="separator:ac6d2bf6b8939a28f3045477b0c2eb6c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e967516224ee8cc2c368b206590392d" id="r_a2e967516224ee8cc2c368b206590392d"><td class="memItemLeft" align="right" valign="top"><a id="a2e967516224ee8cc2c368b206590392d" name="a2e967516224ee8cc2c368b206590392d"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>getSystemParameterValue</b> (const std::string &amp;key) const</td></tr>
+<tr class="separator:a2e967516224ee8cc2c368b206590392d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14f040526788a3cb5d5477391b037b42" id="r_a14f040526788a3cb5d5477391b037b42"><td class="memItemLeft" align="right" valign="top"><a id="a14f040526788a3cb5d5477391b037b42" name="a14f040526788a3cb5d5477391b037b42"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>getParameterValue</b> (const std::string &amp;key, const std::string &amp;scenarioGroup, const unsigned scenario, unsigned int hour) const</td></tr>
+<tr class="separator:a14f040526788a3cb5d5477391b037b42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44e0bd5c9c01f4f364f6e0e5b0b00061" id="r_a44e0bd5c9c01f4f364f6e0e5b0b00061"><td class="memItemLeft" align="right" valign="top"><a id="a44e0bd5c9c01f4f364f6e0e5b0b00061" name="a44e0bd5c9c01f4f364f6e0e5b0b00061"></a>
+ParameterType&#160;</td><td class="memItemRight" valign="bottom"><b>getParameterType</b> (const std::string &amp;key) const</td></tr>
+<tr class="separator:a44e0bd5c9c01f4f364f6e0e5b0b00061"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af55c17111ca6a5e91c02822bae9069cb" id="r_af55c17111ca6a5e91c02822bae9069cb"><td class="memItemLeft" align="right" valign="top"><a id="af55c17111ca6a5e91c02822bae9069cb" name="af55c17111ca6a5e91c02822bae9069cb"></a>
+<a class="el" href="structAntares_1_1Expressions_1_1Visitors_1_1ParameterTypeAndValue.html">ParameterTypeAndValue</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getParameter</b> (const std::string &amp;key) const</td></tr>
+<tr class="separator:af55c17111ca6a5e91c02822bae9069cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents the context for evaluating expressions. </p>
 <p>Stores and provides access to parameter and variable values. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a51d0fd15a7f6892be42300fe5acf2808" name="a51d0fd15a7f6892be42300fe5acf2808"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a51d0fd15a7f6892be42300fe5acf2808">&#9670;&#160;</a></span>EvaluationContext()</h2>
+<a id="a9e58b0df45dde086de8f653c4edf744c" name="a9e58b0df45dde086de8f653c4edf744c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e58b0df45dde086de8f653c4edf744c">&#9670;&#160;</a></span>EvaluationContext()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -181,12 +195,17 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">Antares::Expressions::Visitors::EvaluationContext::EvaluationContext </td>
           <td>(</td>
-          <td class="paramtype">std::map&lt; std::string, double &gt;</td>          <td class="paramname"><span class="paramname"><em>parameters</em></span>, </td>
+          <td class="paramtype">std::map&lt; std::string, <a class="el" href="structAntares_1_1Expressions_1_1Visitors_1_1ParameterTypeAndValue.html">ParameterTypeAndValue</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>system_parameters</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::map&lt; std::string, double &gt;</td>          <td class="paramname"><span class="paramname"><em>variables</em></span>&#160;)</td>
+          <td class="paramtype">std::map&lt; std::string, double &gt;</td>          <td class="paramname"><span class="paramname"><em>variables</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">Optimisation::LinearProblemApi::ILinearProblemData</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>data</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -199,7 +218,7 @@ Public Member Functions</h2></td></tr>
 <p>Constructs an evaluation context with the specified parameter and variable values. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">parameters</td><td>parameter values. </td></tr>
+    <tr><td class="paramname">constant_parameters</td><td>parameter values. </td></tr>
     <tr><td class="paramname">variables</td><td>variable values. </td></tr>
   </table>
   </dd>
@@ -208,14 +227,14 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ae81cfd7ff40dbf69488442217ea6b0e8" name="ae81cfd7ff40dbf69488442217ea6b0e8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae81cfd7ff40dbf69488442217ea6b0e8">&#9670;&#160;</a></span>getParameterValue()</h2>
+<a id="ac6d2bf6b8939a28f3045477b0c2eb6c9" name="ac6d2bf6b8939a28f3045477b0c2eb6c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac6d2bf6b8939a28f3045477b0c2eb6c9">&#9670;&#160;</a></span>getSystemParameterValueAsDouble()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double Antares::Expressions::Visitors::EvaluationContext::getParameterValue </td>
+          <td class="memname">double Antares::Expressions::Visitors::EvaluationContext::getSystemParameterValueAsDouble </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>key</em></span></td><td>)</td>
           <td> const</td>

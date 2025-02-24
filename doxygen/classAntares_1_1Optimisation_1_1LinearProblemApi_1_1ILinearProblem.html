@@ -152,6 +152,7 @@ Inheritance diagram for Antares::Optimisation::LinearProblemApi::ILinearProblem:
   <img src="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.png" usemap="#Antares::Optimisation::LinearProblemApi::ILinearProblem_map" alt=""/>
   <map id="Antares::Optimisation::LinearProblemApi::ILinearProblem_map" name="Antares::Optimisation::LinearProblemApi::ILinearProblem_map">
 <area href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html" alt="Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem" shape="rect" coords="0,56,422,80"/>
+<area href="classMockLinearProblem.html" alt="MockLinearProblem" shape="rect" coords="432,56,854,80"/>
 <area href="classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html" alt="Antares::Optimization::LegacyOrtoolsLinearProblem" shape="rect" coords="0,112,422,136"/>
   </map>
 </div></div>
@@ -161,21 +162,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a36e400f9243d3946d7b17d286e13e649" id="r_a36e400f9243d3946d7b17d286e13e649"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">IMipVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a36e400f9243d3946d7b17d286e13e649">addNumVariable</a> (double lb, double ub, const std::string &amp;name)=0</td></tr>
 <tr class="memdesc:a36e400f9243d3946d7b17d286e13e649"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a continuous variable.  <br /></td></tr>
 <tr class="separator:a36e400f9243d3946d7b17d286e13e649"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe5a9088b0beceb2e4ac29d4df056309" id="r_afe5a9088b0beceb2e4ac29d4df056309"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">IMipVariable</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afe5a9088b0beceb2e4ac29d4df056309">addNumVariable</a> (double lb, double ub, const std::string &amp;name, unsigned int number_new_variables)=0</td></tr>
-<tr class="memdesc:afe5a9088b0beceb2e4ac29d4df056309"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create range of continuous variables.  <br /></td></tr>
-<tr class="separator:afe5a9088b0beceb2e4ac29d4df056309"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad9682a7e055a9ed23880e15f7f3d61e2" id="r_ad9682a7e055a9ed23880e15f7f3d61e2"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">IMipVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad9682a7e055a9ed23880e15f7f3d61e2">addIntVariable</a> (double lb, double ub, const std::string &amp;name)=0</td></tr>
 <tr class="memdesc:ad9682a7e055a9ed23880e15f7f3d61e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a integer variable.  <br /></td></tr>
 <tr class="separator:ad9682a7e055a9ed23880e15f7f3d61e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac96da618e8dcc8e1e6bead8450658e24" id="r_ac96da618e8dcc8e1e6bead8450658e24"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">IMipVariable</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac96da618e8dcc8e1e6bead8450658e24">addIntVariable</a> (double lb, double ub, const std::string &amp;name, unsigned int number_new_variables)=0</td></tr>
-<tr class="memdesc:ac96da618e8dcc8e1e6bead8450658e24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create range of integer variables.  <br /></td></tr>
-<tr class="separator:ac96da618e8dcc8e1e6bead8450658e24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5acd81810ce7954398aa520f0c71d18b" id="r_a5acd81810ce7954398aa520f0c71d18b"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">IMipVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5acd81810ce7954398aa520f0c71d18b">addVariable</a> (double lb, double ub, bool integer, const std::string &amp;name)=0</td></tr>
 <tr class="memdesc:a5acd81810ce7954398aa520f0c71d18b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a continuous or integer variable.  <br /></td></tr>
 <tr class="separator:a5acd81810ce7954398aa520f0c71d18b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a440f0f0b3f1626d1d336f1bc185774b4" id="r_a440f0f0b3f1626d1d336f1bc185774b4"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">IMipVariable</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a440f0f0b3f1626d1d336f1bc185774b4">addVariable</a> (double lb, double ub, bool integer, const std::string &amp;name, unsigned int number_new_variables)=0</td></tr>
-<tr class="memdesc:a440f0f0b3f1626d1d336f1bc185774b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create range continuous or integer variables.  <br /></td></tr>
-<tr class="separator:a440f0f0b3f1626d1d336f1bc185774b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adcab696d54ce663bb0f9bd842ce9c4ef" id="r_adcab696d54ce663bb0f9bd842ce9c4ef"><td class="memItemLeft" align="right" valign="top"><a id="adcab696d54ce663bb0f9bd842ce9c4ef" name="adcab696d54ce663bb0f9bd842ce9c4ef"></a>
 virtual <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">IMipVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getVariable</b> (const std::string &amp;name) const =0</td></tr>
 <tr class="separator:adcab696d54ce663bb0f9bd842ce9c4ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -185,9 +177,6 @@ virtual int&#160;</td><td class="memItemRight" valign="bottom"><b>variableCount<
 <tr class="memitem:a861e17f2d0f26a7d0fbd7fb86e6a3242" id="r_a861e17f2d0f26a7d0fbd7fb86e6a3242"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html">IMipConstraint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a861e17f2d0f26a7d0fbd7fb86e6a3242">addConstraint</a> (double lb, double ub, const std::string &amp;name)=0</td></tr>
 <tr class="memdesc:a861e17f2d0f26a7d0fbd7fb86e6a3242"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a bounded constraint to the problem.  <br /></td></tr>
 <tr class="separator:a861e17f2d0f26a7d0fbd7fb86e6a3242"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb3f25bef91e22d6b860b1e3931d3eb4" id="r_adb3f25bef91e22d6b860b1e3931d3eb4"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html">IMipConstraint</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adb3f25bef91e22d6b860b1e3931d3eb4">addConstraint</a> (double lb, double ub, const std::string &amp;name, unsigned int number_new_constraints)=0</td></tr>
-<tr class="memdesc:adb3f25bef91e22d6b860b1e3931d3eb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add range of bounded constraints to the problem.  <br /></td></tr>
-<tr class="separator:adb3f25bef91e22d6b860b1e3931d3eb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a034f77e52f3e2df0e9c1d0c0bb75a303" id="r_a034f77e52f3e2df0e9c1d0c0bb75a303"><td class="memItemLeft" align="right" valign="top"><a id="a034f77e52f3e2df0e9c1d0c0bb75a303" name="a034f77e52f3e2df0e9c1d0c0bb75a303"></a>
 virtual <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html">IMipConstraint</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getConstraint</b> (const std::string &amp;name) const =0</td></tr>
 <tr class="separator:a034f77e52f3e2df0e9c1d0c0bb75a303"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -226,7 +215,7 @@ virtual double&#160;</td><td class="memItemRight" valign="bottom"><b>infinity</b
 <div class="textblock"><p>Linear Problem This class is aimed at creating and manipulating variables/constraints Also used to control the objective, maximization or minimization, and to solve the problem </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a861e17f2d0f26a7d0fbd7fb86e6a3242" name="a861e17f2d0f26a7d0fbd7fb86e6a3242"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a861e17f2d0f26a7d0fbd7fb86e6a3242">&#9670;&#160;</a></span>addConstraint() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a861e17f2d0f26a7d0fbd7fb86e6a3242">&#9670;&#160;</a></span>addConstraint()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -259,55 +248,12 @@ virtual double&#160;</td><td class="memItemRight" valign="bottom"><b>infinity</b
 
 <p>Add a bounded constraint to the problem. </p>
 
-<p>Implemented in <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#a872e88fc0914e6c6f989870a3d28f57f">Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem</a>.</p>
-
-</div>
-</div>
-<a id="adb3f25bef91e22d6b860b1e3931d3eb4" name="adb3f25bef91e22d6b860b1e3931d3eb4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adb3f25bef91e22d6b860b1e3931d3eb4">&#9670;&#160;</a></span>addConstraint() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual std::vector&lt; <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html">IMipConstraint</a> * &gt; Antares::Optimisation::LinearProblemApi::ILinearProblem::addConstraint </td>
-          <td>(</td>
-          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>lb</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>ub</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">unsigned int</td>          <td class="paramname"><span class="paramname"><em>number_new_constraints</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Add range of bounded constraints to the problem. </p>
-
-<p>Implemented in <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#ae5e76dc95e9ac0fd0d121ca203227ca2">Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem</a>.</p>
+<p>Implemented in <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#a872e88fc0914e6c6f989870a3d28f57f">Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem</a>, and <a class="el" href="classMockLinearProblem.html#a1f85153e5a135ef9c064b9dac4660434">MockLinearProblem</a>.</p>
 
 </div>
 </div>
 <a id="ad9682a7e055a9ed23880e15f7f3d61e2" name="ad9682a7e055a9ed23880e15f7f3d61e2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad9682a7e055a9ed23880e15f7f3d61e2">&#9670;&#160;</a></span>addIntVariable() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad9682a7e055a9ed23880e15f7f3d61e2">&#9670;&#160;</a></span>addIntVariable()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -340,55 +286,12 @@ virtual double&#160;</td><td class="memItemRight" valign="bottom"><b>infinity</b
 
 <p>Create a integer variable. </p>
 
-<p>Implemented in <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#afb7e4695d5bd10634338525f08795264">Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem</a>.</p>
-
-</div>
-</div>
-<a id="ac96da618e8dcc8e1e6bead8450658e24" name="ac96da618e8dcc8e1e6bead8450658e24"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac96da618e8dcc8e1e6bead8450658e24">&#9670;&#160;</a></span>addIntVariable() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual std::vector&lt; <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">IMipVariable</a> * &gt; Antares::Optimisation::LinearProblemApi::ILinearProblem::addIntVariable </td>
-          <td>(</td>
-          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>lb</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>ub</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">unsigned int</td>          <td class="paramname"><span class="paramname"><em>number_new_variables</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Create range of integer variables. </p>
-
-<p>Implemented in <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#afeab82b5ef59f270de0ed513375d4bc7">Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem</a>.</p>
+<p>Implemented in <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#afb7e4695d5bd10634338525f08795264">Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem</a>, and <a class="el" href="classMockLinearProblem.html#aeeda6a740b905ee4a3606861ef725a89">MockLinearProblem</a>.</p>
 
 </div>
 </div>
 <a id="a36e400f9243d3946d7b17d286e13e649" name="a36e400f9243d3946d7b17d286e13e649"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a36e400f9243d3946d7b17d286e13e649">&#9670;&#160;</a></span>addNumVariable() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a36e400f9243d3946d7b17d286e13e649">&#9670;&#160;</a></span>addNumVariable()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -421,55 +324,12 @@ virtual double&#160;</td><td class="memItemRight" valign="bottom"><b>infinity</b
 
 <p>Create a continuous variable. </p>
 
-<p>Implemented in <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#a69cf94a6eec35c6475f8582f5e0f68e5">Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem</a>.</p>
-
-</div>
-</div>
-<a id="afe5a9088b0beceb2e4ac29d4df056309" name="afe5a9088b0beceb2e4ac29d4df056309"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afe5a9088b0beceb2e4ac29d4df056309">&#9670;&#160;</a></span>addNumVariable() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual std::vector&lt; <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">IMipVariable</a> * &gt; Antares::Optimisation::LinearProblemApi::ILinearProblem::addNumVariable </td>
-          <td>(</td>
-          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>lb</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>ub</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">unsigned int</td>          <td class="paramname"><span class="paramname"><em>number_new_variables</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Create range of continuous variables. </p>
-
-<p>Implemented in <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#a6008125b681b791903dd0bde30d3c322">Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem</a>.</p>
+<p>Implemented in <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#a69cf94a6eec35c6475f8582f5e0f68e5">Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem</a>, and <a class="el" href="classMockLinearProblem.html#a3405149790bd520eb03259676bfa2401">MockLinearProblem</a>.</p>
 
 </div>
 </div>
 <a id="a5acd81810ce7954398aa520f0c71d18b" name="a5acd81810ce7954398aa520f0c71d18b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5acd81810ce7954398aa520f0c71d18b">&#9670;&#160;</a></span>addVariable() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a5acd81810ce7954398aa520f0c71d18b">&#9670;&#160;</a></span>addVariable()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -507,55 +367,7 @@ virtual double&#160;</td><td class="memItemRight" valign="bottom"><b>infinity</b
 
 <p>Create a continuous or integer variable. </p>
 
-<p>Implemented in <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#a2b3b98b470c719c3e6458e081279f972">Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem</a>.</p>
-
-</div>
-</div>
-<a id="a440f0f0b3f1626d1d336f1bc185774b4" name="a440f0f0b3f1626d1d336f1bc185774b4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a440f0f0b3f1626d1d336f1bc185774b4">&#9670;&#160;</a></span>addVariable() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual std::vector&lt; <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">IMipVariable</a> * &gt; Antares::Optimisation::LinearProblemApi::ILinearProblem::addVariable </td>
-          <td>(</td>
-          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>lb</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>ub</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>integer</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">unsigned int</td>          <td class="paramname"><span class="paramname"><em>number_new_variables</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Create range continuous or integer variables. </p>
-
-<p>Implemented in <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#a6abcee3f5461cd57013d2f292c5e6db5">Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem</a>.</p>
+<p>Implemented in <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#a2b3b98b470c719c3e6458e081279f972">Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem</a>, and <a class="el" href="classMockLinearProblem.html#a2c3fd6b649f931400ec531bc70aba7e4">MockLinearProblem</a>.</p>
 
 </div>
 </div>
@@ -584,7 +396,7 @@ virtual double&#160;</td><td class="memItemRight" valign="bottom"><b>infinity</b
 
 <p>Sets the optimization direction to maximize. </p>
 
-<p>Implemented in <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#adb27c35d60176747dc2fc0b0a6208c2c">Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem</a>.</p>
+<p>Implemented in <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#adb27c35d60176747dc2fc0b0a6208c2c">Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem</a>, and <a class="el" href="classMockLinearProblem.html#a4562e02de024ff6c13df264d363aab9a">MockLinearProblem</a>.</p>
 
 </div>
 </div>
@@ -613,7 +425,7 @@ virtual double&#160;</td><td class="memItemRight" valign="bottom"><b>infinity</b
 
 <p>Sets the optimization direction to minimize. </p>
 
-<p>Implemented in <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#ab33feeaee7a419af07af27d33f012425">Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem</a>.</p>
+<p>Implemented in <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#ab33feeaee7a419af07af27d33f012425">Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem</a>, and <a class="el" href="classMockLinearProblem.html#a278425f71e237e9bdf318631d60543fc">MockLinearProblem</a>.</p>
 
 </div>
 </div>
@@ -646,7 +458,7 @@ virtual double&#160;</td><td class="memItemRight" valign="bottom"><b>infinity</b
 
 <p>Set the objective coefficient for a given variable. </p>
 
-<p>Implemented in <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#ab41e6e0ace04662a545d9994998a4abd">Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem</a>.</p>
+<p>Implemented in <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#ab41e6e0ace04662a545d9994998a4abd">Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem</a>, and <a class="el" href="classMockLinearProblem.html#ab32764781bd16b42c06ab43a0069c131">MockLinearProblem</a>.</p>
 
 </div>
 </div>
@@ -675,7 +487,7 @@ virtual double&#160;</td><td class="memItemRight" valign="bottom"><b>infinity</b
 
 <p>Solve the problem, returns a <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipSolution.html">IMipSolution</a>. </p>
 
-<p>Implemented in <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#a88ed3d6317fca4f49260a612490f996d">Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem</a>.</p>
+<p>Implemented in <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#a88ed3d6317fca4f49260a612490f996d">Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem</a>, and <a class="el" href="classMockLinearProblem.html#abe365fb3e329ad8f30054eda10bba4e6">MockLinearProblem</a>.</p>
 
 </div>
 </div>

@@ -166,10 +166,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a8a6bd2e80aedcf4f9295889d7d3d4ef4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a11a4d9233621b309b2c8fdb618970b04" id="r_a11a4d9233621b309b2c8fdb618970b04"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a11a4d9233621b309b2c8fdb618970b04">operator/</a> (const <a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> &amp;other) const</td></tr>
 <tr class="separator:a11a4d9233621b309b2c8fdb618970b04"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6715a2ade7dfe1511540f68e428f7d7b" id="r_a6715a2ade7dfe1511540f68e428f7d7b"><td class="memItemLeft" align="right" valign="top"><a id="a6715a2ade7dfe1511540f68e428f7d7b" name="a6715a2ade7dfe1511540f68e428f7d7b"></a>
-<a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>&#160;</td><td class="memItemRight" valign="bottom"><b>negate</b> () const</td></tr>
-<tr class="memdesc:a6715a2ade7dfe1511540f68e428f7d7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiply linear expression by -1. <br /></td></tr>
-<tr class="separator:a6715a2ade7dfe1511540f68e428f7d7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a21bddbc6ba6b61339e58c4b68cbbdc20" id="r_a21bddbc6ba6b61339e58c4b68cbbdc20"><td class="memItemLeft" align="right" valign="top"><a id="a21bddbc6ba6b61339e58c4b68cbbdc20" name="a21bddbc6ba6b61339e58c4b68cbbdc20"></a>
+<a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator-</b> () const</td></tr>
+<tr class="memdesc:a21bddbc6ba6b61339e58c4b68cbbdc20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiply linear expression by -1. <br /></td></tr>
+<tr class="separator:a21bddbc6ba6b61339e58c4b68cbbdc20"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7f461cc34aa1a1a7ebb76c01608cd8c0" id="r_a7f461cc34aa1a1a7ebb76c01608cd8c0"><td class="memItemLeft" align="right" valign="top"><a id="a7f461cc34aa1a1a7ebb76c01608cd8c0" name="a7f461cc34aa1a1a7ebb76c01608cd8c0"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>offset</b> () const</td></tr>
 <tr class="memdesc:a7f461cc34aa1a1a7ebb76c01608cd8c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the offset. <br /></td></tr>
@@ -178,6 +178,9 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>offset</b> () const
 std::map&lt; std::string, double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>coefPerVar</b> () const</td></tr>
 <tr class="memdesc:a969a383551141c898cfcdbe91b07cd9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the non-zero coefficients per variable ID. <br /></td></tr>
 <tr class="separator:a969a383551141c898cfcdbe91b07cd9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ca755877386f0a6eef40303520566bb" id="r_a2ca755877386f0a6eef40303520566bb"><td class="memItemLeft" align="right" valign="top"><a id="a2ca755877386f0a6eef40303520566bb" name="a2ca755877386f0a6eef40303520566bb"></a>
+<a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator+=</b> (const <a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> &amp;value)</td></tr>
+<tr class="separator:a2ca755877386f0a6eef40303520566bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Linear Expression Represents an expression that is linear in regard to an optimization problem's variables. It can be fully defined by:</p><ul>
