@@ -307,4 +307,31 @@ BOOST_AUTO_TEST_CASE(BC_load_legacy_range)
     BOOST_CHECK_CLOSE((*bc_gt)->RHSTimeSeries()[0][8783], 0.4, 0.0001);
 }
 
+BOOST_AUTO_TEST_CASE(BindingConstraint_clusterCount)
+{
+    auto study = std::make_unique<Study>();
+    auto area = study->areaAdd("area1");
+    BindingConstraint bc;
+    // Add a thermal cluster to area1 and bc
+    // return the number of clusters of bc
+    const auto addClusterCountClusters = [&area, &bc](bool enabled, bool mustrun)
+    {
+        auto cluster = std::make_shared<ThermalCluster>(area);
+        cluster->enabled = enabled;
+        cluster->mustrun = mustrun;
+        area->thermal.list.addToCompleteList(cluster);
+        bc.weight(cluster.get(), 5);
+        return bc.clusterCount();
+    };
+
+    // enabled, not mustrun, should be counted
+    BOOST_CHECK_EQUAL(addClusterCountClusters(true, false), 1);
+    // enabled, mustrun should not be counted
+    BOOST_CHECK_EQUAL(addClusterCountClusters(true, true), 1);
+    // disabled, mustrun should not be counted
+    BOOST_CHECK_EQUAL(addClusterCountClusters(false, true), 1);
+    // disabled, not mustrun should not be counted
+    BOOST_CHECK_EQUAL(addClusterCountClusters(false, false), 1);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
