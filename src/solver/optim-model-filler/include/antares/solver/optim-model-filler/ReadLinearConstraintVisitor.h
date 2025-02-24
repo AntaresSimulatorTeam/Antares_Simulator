@@ -48,6 +48,7 @@ struct LinearConstraint
     std::map<std::string, double> coef_per_var;
     double lb = -std::numeric_limits<double>::infinity();
     double ub = std::numeric_limits<double>::infinity();
+    unsigned int timeStep = 0;
 };
 
 class ReadLinearConstraintVisitor

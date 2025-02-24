@@ -221,19 +221,18 @@ void ComponentFiller::addTimeDependentConstraints(
   const std::vector<LinearConstraint>& linear_constraints,
   const std::string& constraint_id) const
 {
-    unsigned int constraint_count = 0;
     for (const auto& linear_constraint: linear_constraints)
     {
         auto* ct = pb.addConstraint(linear_constraint.lb,
                                     linear_constraint.ub,
                                     component_.Id() + "." + constraint_id + '_'
-                                      + std::to_string(constraint_count));
+                                      + std::to_string(linear_constraint.timeStep));
         for (const auto& [var_id, coef]: linear_constraint.coef_per_var)
         {
             if (IsThisVariableTimeDependent(var_id))
             {
                 auto* variable = pb.getVariable(component_.Id() + "." + var_id + '_'
-                                                + std::to_string(constraint_count));
+                                                + std::to_string(linear_constraint.timeStep));
                 ct->setCoefficient(variable, coef);
             }
             else
@@ -242,7 +241,6 @@ void ComponentFiller::addTimeDependentConstraints(
                 ct->setCoefficient(variable, coef);
             }
         }
-        ++constraint_count;
     }
 }
 

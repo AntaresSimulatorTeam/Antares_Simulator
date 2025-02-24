@@ -50,11 +50,12 @@ std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const EqualNode
     std::vector<LinearConstraint> constraints;
     constraints.reserve(leftMinusRightLinearExpression.size());
 
-    for (const auto& single: leftMinusRightLinearExpression | std::views::values)
+    for (const auto& [timeStep, value]: leftMinusRightLinearExpression)
     {
-        constraints.emplace_back(LinearConstraint{.coef_per_var = single.coefPerVar(),
-                                                  .lb = -single.offset(),
-                                                  .ub = -single.offset()});
+        constraints.emplace_back(LinearConstraint{.coef_per_var = value.coefPerVar(),
+                                                  .lb = -value.offset(),
+                                                  .ub = -value.offset(),
+                                                  .timeStep = timeStep});
     }
     return constraints;
 }
@@ -68,10 +69,11 @@ std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const LessThanO
     std::vector<LinearConstraint> constraints;
     constraints.reserve(leftMinusRightLinearExpression.size());
 
-    for (const auto& single: leftMinusRightLinearExpression | std::views::values)
+    for (const auto& [timeStep, value]: leftMinusRightLinearExpression)
     {
-        constraints.emplace_back(
-          LinearConstraint{.coef_per_var = single.coefPerVar(), .ub = -single.offset()});
+        constraints.emplace_back(LinearConstraint{.coef_per_var = value.coefPerVar(),
+                                                  .ub = -value.offset(),
+                                                  .timeStep = timeStep});
     }
     return constraints;
 }
@@ -85,10 +87,11 @@ std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const GreaterTh
     std::vector<LinearConstraint> constraints;
     constraints.reserve(leftMinusRightLinearExpression.size());
 
-    for (const auto& single: leftMinusRightLinearExpression | std::views::values)
+    for (const auto& [timeStep, value]: leftMinusRightLinearExpression)
     {
-        constraints.emplace_back(
-          LinearConstraint{.coef_per_var = single.coefPerVar(), .lb = -single.offset()});
+        constraints.emplace_back(LinearConstraint{.coef_per_var = value.coefPerVar(),
+                                                  .lb = -value.offset(),
+                                                  .timeStep = timeStep});
     }
     return constraints;
 }
