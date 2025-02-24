@@ -84,6 +84,8 @@ target_link_libraries(expressions
         PUBLIC
         Boost::headers
         Antares::logs
+        #TODO i need LinearProblemData
+        linear-problem-api
 )
 
 

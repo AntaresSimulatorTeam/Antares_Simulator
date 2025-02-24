@@ -62,9 +62,8 @@ public:
                              const std::string& constraint_id) const;
 
     void addTimeDependentConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                                     const LinearConstraint& linear_constraint,
-                                     const std::string& constraint_id,
-                                     unsigned int nb_cstr) const;
+                                     const std::vector<LinearConstraint>& linear_constraints,
+                                     const std::string& constraint_id) const;
 
     void addConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
                         Optimisation::LinearProblemApi::ILinearProblemData& data,
@@ -79,7 +78,40 @@ private:
     bool IsThisVariableTimeDependent(const std::string& var_id) const;
 
     const Study::SystemModel::Component& component_;
-    Expressions::Visitors::EvaluationContext evaluationContext_;
     const std::map<std::string, Study::SystemModel::Variable>& modelVariable_;
+};
+
+class VariablesBulkAddition
+{
+public:
+    VariablesBulkAddition(Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
+                          unsigned int first_index,
+                          unsigned int last_index);
+    void checkIndices() const;
+
+    unsigned getCount() const;
+
+    std::vector<Optimisation::LinearProblemApi::IMipVariable*>
+    addVariable(double lb, double ub, bool integer, const std::string& name) const;
+    std::vector<Optimisation::LinearProblemApi::IMipVariable*> addVariable(
+      const std::vector<double>& lb,
+      double ub,
+      bool integer,
+      const std::string& name) const;
+    std::vector<Optimisation::LinearProblemApi::IMipVariable*> addVariable(
+      double lb,
+      const std::vector<double>& ub,
+      bool integer,
+      const std::string& name) const;
+    std::vector<Optimisation::LinearProblemApi::IMipVariable*> addVariable(
+      const std::vector<double>& lb,
+      const std::vector<double>& ub,
+      bool integer,
+      const std::string& name) const;
+
+private:
+    Optimisation::LinearProblemApi::ILinearProblem& linear_problem_;
+    unsigned int first_index_;
+    unsigned int last_index_;
 };
 } // namespace Antares::Optimization
