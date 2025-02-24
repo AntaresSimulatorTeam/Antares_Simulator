@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 

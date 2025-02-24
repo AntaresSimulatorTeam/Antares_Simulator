@@ -28,10 +28,6 @@
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include "antares/expressions/visitors/NodeVisitor.h"
 
-namespace Antares::Optimisation::LinearProblemApi
-{
-struct DataSeriesKeys;
-}
 
 namespace Antares::Expressions::Visitors
 {
