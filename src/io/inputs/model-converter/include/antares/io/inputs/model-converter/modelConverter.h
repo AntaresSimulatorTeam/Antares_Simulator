@@ -50,5 +50,17 @@ public:
     explicit UnknownTypeException(YmlModel::ValueType type);
 };
 
+class PortTypeAlreadyExists: public std::runtime_error
+{
+public:
+    explicit PortTypeAlreadyExists(const std::string& id);
+};
+
+class PortTypeDoesntContainsFields: public std::runtime_error
+{
+public:
+    explicit PortTypeDoesntContainsFields(const std::string& id);
+};
+
 Study::SystemModel::Library convert(const YmlModel::Library& library);
 } // namespace Antares::IO::Inputs::ModelConverter

@@ -271,7 +271,6 @@ library:
         BOOST_REQUIRE_EQUAL(lib.PortTypes().size(), 1);
         auto& portType = lib.PortTypes().at("flow");
         BOOST_CHECK_EQUAL(portType.Id(), "flow");
-        BOOST_CHECK_EQUAL(portType.Description(), "A port which transfers power flow");
 
         BOOST_REQUIRE_EQUAL(portType.Fields().size(), 1);
         auto& portTypeField = portType.Fields().at(0);

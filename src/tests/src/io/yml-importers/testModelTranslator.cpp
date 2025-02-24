@@ -69,17 +69,13 @@ BOOST_FIXTURE_TEST_CASE(port_type_with_empty_fileds_properly_translated, Fixture
     SystemModel::Library lib = ModelConverter::convert(library);
     BOOST_REQUIRE_EQUAL(lib.PortTypes().size(), 2);
     BOOST_CHECK_EQUAL(lib.PortTypes().at("port1").Id(), "port1");
-    BOOST_CHECK_EQUAL(lib.PortTypes().at("port1").Description(), "flow port");
     BOOST_CHECK(lib.PortTypes().at("port1").Fields().empty());
     BOOST_CHECK_EQUAL(lib.PortTypes().at("port2").Id(), "port2");
-    BOOST_CHECK_EQUAL(lib.PortTypes().at("port2").Description(), "impedance port");
     BOOST_CHECK(lib.PortTypes().at("port2").Fields().empty());
     BOOST_REQUIRE_EQUAL(lib.PortTypes().size(), 2);
     BOOST_CHECK_EQUAL(lib.PortTypes().at("port1").Id(), "port1");
-    BOOST_CHECK_EQUAL(lib.PortTypes().at("port1").Description(), "flow port");
     BOOST_CHECK(lib.PortTypes().at("port1").Fields().empty());
     BOOST_CHECK_EQUAL(lib.PortTypes().at("port2").Id(), "port2");
-    BOOST_CHECK_EQUAL(lib.PortTypes().at("port2").Description(), "impedance port");
     BOOST_CHECK(lib.PortTypes().at("port2").Fields().empty());
 }
 

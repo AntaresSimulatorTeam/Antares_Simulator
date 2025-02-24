@@ -38,6 +38,16 @@ UnknownTypeException::UnknownTypeException(YmlModel::ValueType type):
 {
 }
 
+PortTypeDoesntContainsFields::PortTypeDoesntContainsFields(const std::string& id):
+    std::runtime_error("This port type doesn't contains fields: " + id)
+{
+}
+
+PortTypeAlreadyExists::PortTypeAlreadyExists(const std::string& id):
+    std::runtime_error("Port type already exists: " + id)
+{
+}
+
 /**
  * \brief Converts parameters from YmlModel::Model to SystemModel::Parameter.
  *
@@ -52,14 +62,24 @@ std::vector<Antares::Study::SystemModel::PortType> convertTypes(
     out.reserve(library.port_types.size());
     for (const auto& portType: library.port_types)
     {
+        if (portType.fields.empty()) // Can't have a port type without fields
+        {
+            throw PortTypeDoesntContainsFields(portType.id);
+        }
         std::vector<Antares::Study::SystemModel::PortField> fields;
         for (const auto& field: portType.fields)
         {
             fields.emplace_back(Antares::Study::SystemModel::PortField{field});
         }
-        Antares::Study::SystemModel::PortType portTypeModel(portType.id,
-                                                            portType.description,
-                                                            std::move(fields));
+
+        // Can't have port types with the same ID
+        if (std::ranges::find_if(out, [&portType](const auto& p) { return p.Id() == portType.id; })
+            != out.end())
+        {
+            throw PortTypeAlreadyExists(portType.id);
+        }
+
+        Antares::Study::SystemModel::PortType portTypeModel(portType.id, std::move(fields));
         out.emplace_back(std::move(portTypeModel));
     }
     return out;
