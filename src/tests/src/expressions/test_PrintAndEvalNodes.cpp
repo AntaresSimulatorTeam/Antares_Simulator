@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE(test_getSystemParameterValueAsDouble)
         }
     } mockData;
 
-    std::map<std::string, ContextParameter> system_parameters = {
+    std::map<std::string, ParameterTypeAndValue> system_parameters = {
       {"valid_number", {"valid_number", ParameterType::CONSTANT, "42.5"}},
       {"invalid_number", {"invalid_number", ParameterType::CONSTANT, "abc"}},
       {"out_of_range", {"out_of_range", ParameterType::CONSTANT, "1e500"}},
@@ -396,7 +396,7 @@ BOOST_FIXTURE_TEST_CASE(print_port_field_sum_node, MyDummyFixture)
     BOOST_CHECK_EQUAL(printed, "august.2024");
 }
 
-std::pair<std::string, ContextParameter> build_context_parameter_with(
+std::pair<std::string, ParameterTypeAndValue> build_context_parameter_with(
   const std::string& id,
   const std::string& value,
   const ParameterType& type = ParameterType::CONSTANT)

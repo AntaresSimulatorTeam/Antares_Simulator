@@ -43,7 +43,7 @@ using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
 using namespace std;
 
-std::pair<std::string, Antares::Expressions::Visitors::ContextParameter>
+std::pair<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue>
 build_context_parameter_with(const std::string& id,
                              const std::string& value,
                              const Antares::Expressions::Visitors::ParameterType& type = Antares::
@@ -99,7 +99,7 @@ struct LinearProblemBuildingFixture
 
     void createComponent(const string& modelId,
                          const string& componentId,
-                         map<string, Visitors::ContextParameter> parameterValues = {});
+                         map<string, Visitors::ParameterTypeAndValue> parameterValues = {});
 
     Node* literal(double value)
     {
@@ -188,7 +188,7 @@ void LinearProblemBuildingFixture::createModel(string modelId,
 void LinearProblemBuildingFixture::createComponent(
   const string& modelId,
   const string& componentId,
-  map<string, Visitors::ContextParameter> parameterValues)
+  map<string, Visitors::ParameterTypeAndValue> parameterValues)
 {
     BOOST_CHECK_NO_THROW(models.at(modelId));
     ComponentBuilder component_builder;

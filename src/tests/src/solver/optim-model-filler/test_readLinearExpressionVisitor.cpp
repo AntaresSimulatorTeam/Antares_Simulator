@@ -58,7 +58,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal, MyDummyFixture)
     BOOST_CHECK(linear_expression.coefPerVar().empty());
 }
 
-std::pair<std::string, ContextParameter> build_context_parameter_with(
+std::pair<std::string, ParameterTypeAndValue> build_context_parameter_with(
   const std::string& id,
   const std::string& value,
   const ParameterType& type = ParameterType::CONSTANT)

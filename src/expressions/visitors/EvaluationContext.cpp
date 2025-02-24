@@ -3,7 +3,7 @@
 
 namespace Antares::Expressions::Visitors
 {
-EvaluationContext::EvaluationContext(std::map<std::string, ContextParameter> system_parameters,
+EvaluationContext::EvaluationContext(std::map<std::string, ParameterTypeAndValue> system_parameters,
                                      std::map<std::string, double> variables,
                                      Optimisation::LinearProblemApi::ILinearProblemData& data):
     parameters_types_and_values_(std::move(system_parameters)),
@@ -64,7 +64,7 @@ ParameterType EvaluationContext::getParameterType(const std::string& key) const
     return parameters_types_and_values_.at(key).type;
 }
 
-ContextParameter EvaluationContext::getParameter(const std::string& key) const
+ParameterTypeAndValue EvaluationContext::getParameter(const std::string& key) const
 {
     return parameters_types_and_values_.at(key);
 }

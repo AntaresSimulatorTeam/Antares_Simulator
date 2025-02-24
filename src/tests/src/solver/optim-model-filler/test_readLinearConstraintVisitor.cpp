@@ -50,7 +50,7 @@ BOOST_FIXTURE_TEST_CASE(test_name, MyDummyFixture)
     BOOST_CHECK_EQUAL(visitor.name(), "ReadLinearConstraintVisitor");
 }
 
-std::pair<std::string, ContextParameter> build_context_parameter_with(
+std::pair<std::string, ParameterTypeAndValue> build_context_parameter_with(
   const std::string& id,
   const std::string& value,
   const ParameterType& type = ParameterType::CONSTANT)

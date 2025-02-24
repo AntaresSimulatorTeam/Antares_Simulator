@@ -19,7 +19,7 @@ enum class ParameterType : unsigned int
 };
 
 // this struct contains more or less the same infos as the one in system.h
-struct ContextParameter
+struct ParameterTypeAndValue
 {
     std::string id;
     ParameterType type;
@@ -41,7 +41,7 @@ public:
      * @param constant_parameters parameter values.
      * @param variables variable values.
      */
-    explicit EvaluationContext(std::map<std::string, ContextParameter> system_parameters,
+    explicit EvaluationContext(std::map<std::string, ParameterTypeAndValue> system_parameters,
                                std::map<std::string, double> variables,
                                Optimisation::LinearProblemApi::ILinearProblemData& data);
 
@@ -70,7 +70,7 @@ public:
                              unsigned int hour) const;
 
     ParameterType getParameterType(const std::string& key) const;
-    ContextParameter getParameter(const std::string& key) const;
+    ParameterTypeAndValue getParameter(const std::string& key) const;
 
     template<class T>
     struct CouldNotEvaluateConstantParameter: T
@@ -82,7 +82,7 @@ private:
     /**
      * @brief A map storing parameter values.
      */
-    std::map<std::string, ContextParameter> parameters_types_and_values_;
+    std::map<std::string, ParameterTypeAndValue> parameters_types_and_values_;
 
     /**
      * @brief A map storing variable values.
