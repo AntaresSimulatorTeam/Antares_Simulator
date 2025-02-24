@@ -61,22 +61,12 @@ BOOST_FIXTURE_TEST_CASE(library_id_description_properly_translated, Fixture)
 }
 
 // Test library with port types
-BOOST_FIXTURE_TEST_CASE(port_type_with_empty_fileds_properly_translated, Fixture)
+BOOST_FIXTURE_TEST_CASE(port_type_with_empty_fileds_exception, Fixture)
 {
     YmlModel::PortType portType1{"port1", "flow port", {}};
     YmlModel::PortType portType2{"port2", "impedance port", {}};
     library.port_types = {portType1, portType2};
-    SystemModel::Library lib = ModelConverter::convert(library);
-    BOOST_REQUIRE_EQUAL(lib.PortTypes().size(), 2);
-    BOOST_CHECK_EQUAL(lib.PortTypes().at("port1").Id(), "port1");
-    BOOST_CHECK(lib.PortTypes().at("port1").Fields().empty());
-    BOOST_CHECK_EQUAL(lib.PortTypes().at("port2").Id(), "port2");
-    BOOST_CHECK(lib.PortTypes().at("port2").Fields().empty());
-    BOOST_REQUIRE_EQUAL(lib.PortTypes().size(), 2);
-    BOOST_CHECK_EQUAL(lib.PortTypes().at("port1").Id(), "port1");
-    BOOST_CHECK(lib.PortTypes().at("port1").Fields().empty());
-    BOOST_CHECK_EQUAL(lib.PortTypes().at("port2").Id(), "port2");
-    BOOST_CHECK(lib.PortTypes().at("port2").Fields().empty());
+    BOOST_CHECK_THROW(ModelConverter::convert(library), std::runtime_error);
 }
 
 // Test library with port types and fields
@@ -144,8 +134,8 @@ BOOST_FIXTURE_TEST_CASE(model_variables_properly_translated, Fixture)
       .id = "model1",
       .description = "description",
       .parameters = {{"pmax", true, false}},
-      .variables = {{"var1", "7", "pmax", YmlModel::ValueType::BOOL},
-                    {"var2", "99999999.9999999", "var1", YmlModel::ValueType::INTEGER}},
+      .variables = {{"var1", "7", "pmax", YmlModel::ValueType::BOOL, true, true},
+                    {"var2", "99999999.9999999", "var1", YmlModel::ValueType::INTEGER, true, true}},
       .ports = {},
       .port_field_definitions = {},
       .constraints = {},
@@ -222,7 +212,7 @@ BOOST_FIXTURE_TEST_CASE(multiple_models_properly_translated, Fixture)
     YmlModel::Model model1{.id = "model1",
                            .description = "description",
                            .parameters = {{"param1", true, false}, {"param2", false, false}},
-                           .variables = {{"varP", "7", "param2", YmlModel::ValueType::CONTINUOUS}},
+                           .variables = {{"varP", "7", "param2", YmlModel::ValueType::CONTINUOUS, true, true}},
                            .ports = {},
                            .port_field_definitions = {},
                            .constraints = {},
@@ -231,8 +221,8 @@ BOOST_FIXTURE_TEST_CASE(multiple_models_properly_translated, Fixture)
       .id = "model2",
       .description = "description",
       .parameters = {},
-      .variables = {{"var1", "7", "8", YmlModel::ValueType::BOOL},
-                    {"var2", "99999999.9999999", "var1", YmlModel::ValueType::INTEGER}},
+      .variables = {{"var1", "7", "8", YmlModel::ValueType::BOOL, true, true},
+                    {"var2", "99999999.9999999", "var1", YmlModel::ValueType::INTEGER, true, true}},
       .ports = {},
       .port_field_definitions = {},
       .constraints = {},
