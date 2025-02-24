@@ -34,7 +34,7 @@ namespace Antares::Optimization
 
 VariablesBulkAddition::VariablesBulkAddition(
   Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
-  VariableDict<Optimisation::LinearProblemApi::IMipVariable*>& variableDict,
+  VariableDictionary& variableDict,
   unsigned int first_index,
   unsigned int last_index):
     linear_problem_(linear_problem),

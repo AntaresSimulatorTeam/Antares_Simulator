@@ -1,6 +1,6 @@
 #include <boost/container_hash/hash.hpp>
 
-#include <antares/solver/optim-model-filler/variableDict.h>
+#include <antares/solver/optim-model-filler/VariableDictionary.h>
 
 namespace Antares::Optimization
 {
@@ -23,7 +23,6 @@ const std::string& PartialKey::getVariable() const
 }
 
 // FullKey
-
 FullKey::FullKey(const std::string& component,
                  const std::string& variable,
                  int timestep,
@@ -71,15 +70,55 @@ std::size_t hash::operator()(const PartialKey& p) const
 
 std::string buildVariableName(const FullKey& key, int timestep, int scenario)
 {
-    std::string ret = key.getComponent() + "." + key.getVariable();
-    if (key.getTimestep() > 1)
-    {
-        ret += "_" + std::to_string(timestep);
-    }
-    if (key.getScenario() > 1)
-    {
-        ret += "_" + std::to_string(scenario);
-    }
-    return ret;
+    return key.getComponent() + "." + key.getVariable() + "_" + std::to_string(timestep) + "_"
+           + std::to_string(scenario);
 }
+
+void VariableDictionary::addVariable(const FullKey& k,
+                                     std::function<Value(int, int, const std::string&)>&& func)
+{
+    auto& m = hmv[k.getPartialKey()];
+    m.resize(k.getTimestep());
+    for (int timestep = 0; timestep < k.getTimestep(); ++timestep)
+    {
+        m[timestep].resize(k.getScenario());
+        for (int scenario = 0; scenario < k.getScenario(); ++scenario)
+        {
+            const std::string name = buildVariableName(k, timestep, scenario);
+            m[timestep][scenario] = func(timestep, scenario, name);
+        }
+    }
+}
+
+VariableDictionary::Value VariableDictionary::operator[](const FullKey& k) const
+{
+    return hmv.at(k.getPartialKey())[k.getTimestep()][k.getScenario()];
+}
+
+VariableDictionary::Value& VariableDictionary::operator[](const FullKey& k)
+{
+    return hmv[k.getPartialKey()][k.getTimestep()][k.getScenario()];
+}
+
+const VariableDictionary::TwoIndexVector& VariableDictionary::operator[](const PartialKey& k) const
+{
+    return hmv.at(k);
+}
+
+VariableDictionary::Value VariableDictionary::operator()(const std::string& component,
+                                                         const std::string& variable,
+                                                         int timestep,
+                                                         int scenario) const
+{
+    return hmv.at(PartialKey(component, variable))[timestep][scenario];
+}
+
+VariableDictionary::Value& VariableDictionary::operator()(const std::string& component,
+                                                          const std::string& variable,
+                                                          int timestep,
+                                                          int scenario)
+{
+    return hmv[PartialKey(component, variable)][timestep][scenario];
+}
+
 } // namespace Antares::Optimization

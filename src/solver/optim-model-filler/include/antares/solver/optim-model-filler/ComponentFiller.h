@@ -24,7 +24,7 @@
 #include <antares/optimisation/linear-problem-api/linearProblemFiller.h>
 #include <antares/study/system-model/component.h>
 #include "antares/expressions/visitors/EvaluationContext.h"
-#include "antares/solver/optim-model-filler/variableDict.h"
+#include "antares/solver/optim-model-filler/VariableDictionary.h"
 
 #include "ReadLinearConstraintVisitor.h"
 
@@ -73,7 +73,7 @@ public:
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
                       Optimisation::LinearProblemApi::FillContext& ctx) override;
 
-    VariableDict<Optimisation::LinearProblemApi::IMipVariable*> variableDict;
+    VariableDictionary variableDict;
 
 private:
     static bool IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node);
@@ -88,7 +88,7 @@ class VariablesBulkAddition
 {
 public:
     VariablesBulkAddition(Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
-                          VariableDict<Optimisation::LinearProblemApi::IMipVariable*>& variableDict,
+                          VariableDictionary& variableDict,
                           unsigned int first_index,
                           unsigned int last_index);
     void checkIndices() const;
@@ -105,7 +105,7 @@ public:
 
 private:
     Optimisation::LinearProblemApi::ILinearProblem& linear_problem_;
-    VariableDict<Optimisation::LinearProblemApi::IMipVariable*>& variableDict;
+    VariableDictionary& variableDict;
     unsigned int first_index_;
     unsigned int last_index_;
 };

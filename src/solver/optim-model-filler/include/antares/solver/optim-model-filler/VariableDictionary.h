@@ -6,6 +6,11 @@
 #include <unordered_map>
 #include <vector>
 
+namespace Antares::Optimisation::LinearProblemApi
+{
+class IMipVariable;
+}
+
 namespace Antares::Optimization
 {
 struct PartialKey
@@ -47,62 +52,30 @@ public:
 
 std::string buildVariableName(const FullKey& key, int timestep, int scenario);
 
-template<class Value>
-class VariableDict
+class VariableDictionary
 {
 private:
+    using Value = Antares::Optimisation::LinearProblemApi::IMipVariable*;
     using TwoIndexVector = std::vector<std::vector<Value>>;
     using HashMapVector = std::unordered_map<PartialKey, TwoIndexVector, hash>;
 
     HashMapVector hmv;
 
 public:
-    inline void addVariable(const FullKey& k,
-                            std::function<Value(int, int, const std::string&)>&& func)
-    {
-        auto& m = hmv[k.getPartialKey()];
-        m.resize(k.getTimestep());
-        for (int timestep = 0; timestep < k.getTimestep(); ++timestep)
-        {
-            m[timestep].resize(k.getScenario());
-            for (int scenario = 0; scenario < k.getScenario(); ++scenario)
-            {
-                // TODO allow multiple scenarios
-                const std::string name = buildVariableName(k, timestep, scenario);
-                m[timestep][scenario] = func(timestep, scenario, name);
-            }
-        }
-    }
+    void addVariable(const FullKey& k, std::function<Value(int, int, const std::string&)>&& func);
+    Value operator[](const FullKey& k) const;
+    Value& operator[](const FullKey& k);
 
-    inline Value operator[](const FullKey& k) const
-    {
-        return hmv.at(k.getPartialKey())[k.getTimestep()][k.getScenario()];
-    }
+    const TwoIndexVector& operator[](const PartialKey& k) const;
 
-    inline Value& operator[](const FullKey& k)
-    {
-        return hmv[k.getPartialKey()][k.getTimestep()][k.getScenario()];
-    }
+    Value operator()(const std::string& component,
+                     const std::string& variable,
+                     int timestep,
+                     int scenario) const;
 
-    inline const TwoIndexVector& operator[](const PartialKey& k) const
-    {
-        return hmv.at(k);
-    }
-
-    inline Value operator()(const std::string& component,
-                            const std::string& variable,
-                            int timestep,
-                            int scenario) const
-    {
-        return hmv.at(PartialKey(component, variable))[timestep][scenario];
-    }
-
-    inline Value& operator()(const std::string& component,
-                             const std::string& variable,
-                             int timestep,
-                             int scenario)
-    {
-        return hmv[PartialKey(component, variable)][timestep][scenario];
-    }
+    Value& operator()(const std::string& component,
+                      const std::string& variable,
+                      int timestep,
+                      int scenario);
 };
 } // namespace Antares::Optimization
