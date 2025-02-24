@@ -79,6 +79,7 @@ var hierarchy =
     [ "BindingConstraintDayData", "structBindingConstraintDayData.html", null ],
     [ "Antares::Data::BindingConstraintGroup", "classAntares_1_1Data_1_1BindingConstraintGroup.html", null ],
     [ "Antares::Data::BindingConstraintGroupRepository", "classAntares_1_1Data_1_1BindingConstraintGroupRepository.html", null ],
+    [ "BindingConstraintGroupRepositoryFixture", "structBindingConstraintGroupRepositoryFixture.html", null ],
     [ "BindingConstraintHourData", "structBindingConstraintHourData.html", null ],
     [ "Antares::Data::BindingConstraintLoader", "classAntares_1_1Data_1_1BindingConstraintLoader.html", null ],
     [ "Antares::Solver::Variable::BindingConstraints< NextT >", "classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html", null ],

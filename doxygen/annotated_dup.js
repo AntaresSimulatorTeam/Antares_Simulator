@@ -1387,6 +1387,7 @@ var annotated_dup =
     [ "BindingConstraintDay", "classBindingConstraintDay.html", "classBindingConstraintDay" ],
     [ "BindingConstraintDayData", "structBindingConstraintDayData.html", null ],
     [ "BindingConstraintDayGroup", "classBindingConstraintDayGroup.html", null ],
+    [ "BindingConstraintGroupRepositoryFixture", "structBindingConstraintGroupRepositoryFixture.html", null ],
     [ "BindingConstraintHour", "classBindingConstraintHour.html", "classBindingConstraintHour" ],
     [ "BindingConstraintHourData", "structBindingConstraintHourData.html", null ],
     [ "BindingConstraintWeek", "classBindingConstraintWeek.html", "classBindingConstraintWeek" ],
