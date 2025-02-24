@@ -34,11 +34,11 @@ namespace Antares::Optimization
 
 VariablesBulkAddition::VariablesBulkAddition(
   Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
-  VariableDictionary& variableDict,
+  VariableDictionary& variableDictionary,
   unsigned int first_index,
   unsigned int last_index):
     linear_problem_(linear_problem),
-    variableDict(variableDict),
+    variableDictionary(variableDictionary),
     first_index_(first_index),
     last_index_(last_index)
 {
@@ -65,9 +65,9 @@ void VariablesBulkAddition::addVariable(double lb,
                                         bool integer,
                                         const FullKey& key) const
 {
-    variableDict.addVariable(key,
-                             [&](int /*timestep*/, int /*scenario*/, const std::string& name)
-                             { return linear_problem_.addVariable(lb, ub, integer, name); });
+    variableDictionary.addVariable(key,
+                                   [&](int /*timestep*/, int /*scenario*/, const std::string& name)
+                                   { return linear_problem_.addVariable(lb, ub, integer, name); });
 }
 
 void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
@@ -82,7 +82,7 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
                                     + " variables but lb size = " + std::to_string(lb.size()));
     }
 
-    variableDict.addVariable(
+    variableDictionary.addVariable(
       key,
       [&](int timestep, int /*scenario*/, const std::string& name)
       { return linear_problem_.addVariable(lb[timestep], ub, integer, name); });
@@ -100,7 +100,7 @@ void VariablesBulkAddition::addVariable(double lb,
                                     + " variables but ub size = " + std::to_string(ub.size()));
     }
 
-    variableDict.addVariable(
+    variableDictionary.addVariable(
       key,
       [&](int timestep, int /*scenario*/, const std::string& name)
       { return linear_problem_.addVariable(lb, ub[timestep], integer, name); });
@@ -120,7 +120,7 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
                                     + " and ub size = " + std::to_string(ub.size()));
     }
 
-    variableDict.addVariable(
+    variableDictionary.addVariable(
       key,
       [&](int timestep, int /*scenario*/, const std::string& name)
       { return linear_problem_.addVariable(lb[timestep], ub[timestep], integer, name); });
@@ -170,7 +170,7 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
               [&pb, &variable, this, &ctx, &key](const auto& lb_, const auto& ub_)
               {
                   VariablesBulkAddition(pb,
-                                        variableDict,
+                                        variableDictionary,
                                         ctx.getFirstTimeStep(),
                                         ctx.getLastTimeStep())
                     .addVariable(lb_,
@@ -184,15 +184,15 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
         else
         {
             const FullKey key(component_.Id(), variable.Id(), 1, numberOfScenarios);
-            variableDict.addVariable(key,
-                                     [&](int, int, const std::string& name)
-                                     {
-                                         return pb.addVariable(
-                                           lb.valueAsDouble(),
-                                           ub.valueAsDouble(),
-                                           variable.Type() != Study::SystemModel::ValueType::FLOAT,
-                                           name);
-                                     });
+            variableDictionary.addVariable(
+              key,
+              [&](int, int, const std::string& name)
+              {
+                  return pb.addVariable(lb.valueAsDouble(),
+                                        ub.valueAsDouble(),
+                                        variable.Type() != Study::SystemModel::ValueType::FLOAT,
+                                        name);
+              });
         }
     }
 }
@@ -206,7 +206,7 @@ void ComponentFiller::addStaticConstraint(Optimisation::LinearProblemApi::ILinea
                                 component_.Id() + "." + constraint_id);
     for (auto [var_id, coef]: linear_constraint.coef_per_var)
     {
-        auto* variable = variableDict(component_.Id(), var_id, 0, 0);
+        auto* variable = variableDictionary(component_.Id(), var_id, 0, 0);
         ct->setCoefficient(variable, coef);
     }
 }
@@ -227,16 +227,16 @@ void ComponentFiller::addTimeDependentConstraints(
             if (IsThisVariableTimeDependent(var_id))
             {
                 // TODO scenario = 0
-                auto* variable = variableDict(component_.Id(),
-                                              var_id,
-                                              linear_constraint.timeStep,
-                                              0);
+                auto* variable = variableDictionary(component_.Id(),
+                                                    var_id,
+                                                    linear_constraint.timeStep,
+                                                    0);
 
                 ct->setCoefficient(variable, coef);
             }
             else
             {
-                auto* variable = variableDict(component_.Id(), var_id, 0, 0);
+                auto* variable = variableDictionary(component_.Id(), var_id, 0, 0);
 
                 ct->setCoefficient(variable, coef);
             }
@@ -303,7 +303,7 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
             for (auto var_pos = ctx.getFirstTimeStep(); var_pos <= ctx.getLastTimeStep(); ++var_pos)
             {
                 // TODO scenario = 0
-                auto* variable = variableDict(component_.Id(), var_id, var_pos, 0);
+                auto* variable = variableDictionary(component_.Id(), var_id, var_pos, 0);
                 pb.setObjectiveCoefficient(variable,
                                            linear_expressions.at(var_pos).coefPerVar()[var_id]);
             }
@@ -311,7 +311,7 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
         else
         {
             // TODO scenario = 0
-            auto* variable = variableDict(component_.Id(), var_id, 0, 0);
+            auto* variable = variableDictionary(component_.Id(), var_id, 0, 0);
             pb.setObjectiveCoefficient(variable, coef);
         }
     }

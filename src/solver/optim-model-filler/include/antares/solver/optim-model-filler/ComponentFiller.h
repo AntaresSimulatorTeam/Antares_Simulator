@@ -73,7 +73,7 @@ public:
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
                       Optimisation::LinearProblemApi::FillContext& ctx) override;
 
-    VariableDictionary variableDict;
+    VariableDictionary variableDictionary;
 
 private:
     static bool IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node);
@@ -88,7 +88,7 @@ class VariablesBulkAddition
 {
 public:
     VariablesBulkAddition(Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
-                          VariableDictionary& variableDict,
+                          VariableDictionary& variableDictionary,
                           unsigned int first_index,
                           unsigned int last_index);
     void checkIndices() const;
@@ -105,7 +105,7 @@ public:
 
 private:
     Optimisation::LinearProblemApi::ILinearProblem& linear_problem_;
-    VariableDictionary& variableDict;
+    VariableDictionary& variableDictionary;
     unsigned int first_index_;
     unsigned int last_index_;
 };
