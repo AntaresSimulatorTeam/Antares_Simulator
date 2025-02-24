@@ -69,7 +69,8 @@ public:
         return data_.model;
     }
 
-    const std::map<std::string, Expressions::Visitors::ParameterTypeAndValue>& getParameterValues() const
+    const std::map<std::string, Expressions::Visitors::ParameterTypeAndValue>& getParameterValues()
+      const
     {
         return data_.parameter_values;
     }

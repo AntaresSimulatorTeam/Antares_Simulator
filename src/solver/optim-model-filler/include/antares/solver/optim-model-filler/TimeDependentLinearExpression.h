@@ -27,10 +27,8 @@
 
 #include <antares/solver/optim-model-filler/LinearExpression.h>
 
-
 namespace Antares::Optimization
 {
-
 
 // time dependent parameter
 class TimeDependentLinearExpression

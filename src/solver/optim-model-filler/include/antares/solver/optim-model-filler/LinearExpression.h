@@ -117,5 +117,4 @@ private:
     std::map<std::string, double> coef_per_var_;
 };
 
-
 } // namespace Antares::Optimization

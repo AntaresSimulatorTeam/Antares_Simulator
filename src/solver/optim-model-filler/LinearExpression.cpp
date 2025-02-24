@@ -108,6 +108,4 @@ double LinearExpression::offset() const
     return offset_;
 }
 
-
-
 } // namespace Antares::Optimization

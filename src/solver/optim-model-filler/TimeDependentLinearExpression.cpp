@@ -28,7 +28,6 @@
 namespace Antares::Optimization
 {
 
-
 TimeDependentLinearExpression::TimeDependentLinearExpression(
   const Optimisation::LinearProblemApi::FillContext& fillContext,
   const LinearExpression& linearExpression)
