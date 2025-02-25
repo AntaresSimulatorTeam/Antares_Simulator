@@ -885,7 +885,7 @@ BOOST_AUTO_TEST_CASE(AddVariable_SingleBounds)
     VariableDictionary vdict;
     VariablesBulkAddition vba(lp, vdict);
     const PartialKey key("my-component", "my-variable");
-    const Dimensions dim({}, Dimensions::TimeInterval(0, 2));
+    const Dimensions dim({}, IntegerInterval(0, 2));
     vba.addVariable(0.0, 1.0, true, dim, key);
     for (int ts = 0; ts < 3; ++ts)
     {
@@ -900,7 +900,7 @@ BOOST_AUTO_TEST_CASE(AddVariable_VectorLowerBound)
     VariablesBulkAddition vba(lp, vdict);
     std::vector<double> lb = {0.1, 0.2, 0.3};
     const PartialKey key("my-component", "my-variable");
-    const Dimensions dim({}, Dimensions::TimeInterval(0, 2));
+    const Dimensions dim({}, IntegerInterval(0, 2));
     vba.addVariable(lb, 1.0, true, dim, key);
     for (int ts = 0; ts < 3; ++ts)
     {
@@ -915,7 +915,7 @@ BOOST_AUTO_TEST_CASE(AddVariable_VectorUpperBound)
     VariablesBulkAddition vba(lp, vdict);
     std::vector<double> ub = {1.1, 1.2, 1.3};
     const PartialKey key("my-component", "my-variable");
-    const Dimensions dim({}, Dimensions::TimeInterval(0, 2));
+    const Dimensions dim({}, IntegerInterval(0, 2));
     vba.addVariable(0.0, ub, true, dim, key);
     for (int ts = 0; ts < 3; ++ts)
     {
@@ -931,7 +931,7 @@ BOOST_AUTO_TEST_CASE(AddVariable_VectorBounds)
     std::vector<double> lb = {0.1, 0.2, 0.3};
     std::vector<double> ub = {1.1, 1.2, 1.3};
     const PartialKey key("my-component", "my-variable");
-    const Dimensions dim({}, Dimensions::TimeInterval(0, 2));
+    const Dimensions dim({}, IntegerInterval(0, 2));
     vba.addVariable(lb, ub, true, dim, key);
     for (int ts = 0; ts < 3; ++ts)
     {
@@ -946,7 +946,7 @@ BOOST_AUTO_TEST_CASE(AddVariable_InvalidBounds)
     VariablesBulkAddition vba(lp, vdict);
     std::vector<double> lb = {0.1, 0.2};
     std::vector<double> ub = {1.1, 1.2, 1.3};
-    const Dimensions dim({}, Dimensions::TimeInterval(0, 2));
+    const Dimensions dim({}, IntegerInterval(0, 2));
     const PartialKey key("my-component", "my-variable");
     BOOST_CHECK_THROW(vba.addVariable(lb, ub, true, dim, key), std::invalid_argument);
 }
@@ -957,7 +957,7 @@ BOOST_AUTO_TEST_CASE(AddVariable_InvalidVectorLowerBound)
     VariableDictionary vdict;
     VariablesBulkAddition vba(lp, vdict);
     const PartialKey key("my-component", "my-variable");
-    const Dimensions dim({}, Dimensions::TimeInterval(0, 2));
+    const Dimensions dim({}, IntegerInterval(0, 2));
     BOOST_CHECK_THROW(vba.addVariable({0.1, 0.2}, 1.0, true, dim, key), std::invalid_argument);
 }
 
@@ -967,7 +967,7 @@ BOOST_AUTO_TEST_CASE(AddVariable_InvalidVectorUpperBound)
     VariableDictionary vdict;
     VariablesBulkAddition vba(lp, vdict);
     const PartialKey key("my-component", "my-variable");
-    const Dimensions dim({}, Dimensions::TimeInterval(0, 2));
+    const Dimensions dim({}, IntegerInterval(0, 2));
     BOOST_CHECK_THROW(vba.addVariable(0.0, {1.1, 1.2}, true, dim, key), std::invalid_argument);
 }
 
@@ -978,7 +978,7 @@ BOOST_AUTO_TEST_CASE(AddVariable_InvalidVectorBounds)
     VariablesBulkAddition vba(lp, vdict);
 
     const PartialKey key("my-component", "my-variable");
-    const Dimensions dim({}, Dimensions::TimeInterval(0, 2));
+    const Dimensions dim({}, IntegerInterval(0, 2));
     BOOST_CHECK_THROW(vba.addVariable({0.1, 0.2}, {1.1, 1.2, 1.3}, true, dim, key),
                       std::invalid_argument);
     BOOST_CHECK_THROW(vba.addVariable({0.1, 0.2, 0.3}, {1.1, 1.2}, true, dim, key),

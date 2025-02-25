@@ -53,25 +53,54 @@ public:
     std::size_t operator()(const PartialKey& p) const;
 };
 
+struct IntegerInterval
+{
+    int initialTime = 0;
+    int finalTime = 0;
+
+    class Iterator
+    {
+    public:
+        Iterator(int current);
+        int operator*() const;
+        Iterator& operator++();
+        bool operator!=(const Iterator& other) const;
+
+    private:
+        int current_;
+    };
+
+    Iterator begin() const
+    {
+        return Iterator(initialTime);
+    }
+
+    Iterator end() const
+    {
+        return Iterator(finalTime + 1);
+    } // Make it inclusive
+
+    std::size_t size() const
+    {
+        return finalTime - initialTime + 1;
+    }
+};
+
 class Dimensions
 {
 public:
-    struct TimeInterval
-    {
-        int initialTime;
-        int finalTime;
-    };
-
-    Dimensions(std::optional<int> nbScenarios, std::optional<TimeInterval> timeInterval);
+    Dimensions() = default;
+    Dimensions(std::optional<IntegerInterval> scenarioInterval,
+               std::optional<IntegerInterval> timeInterval);
     bool isTimeDependent() const;
     bool isScenarioDependent() const;
-    std::vector<int> getTimesteps() const;
-    std::vector<int> getScenarioIndices() const;
+    IntegerInterval getTimesteps() const;
+    IntegerInterval getScenarioIndices() const;
     int getNumberOfTimesteps() const;
 
 private:
-    std::optional<int> nbScenarios;
-    std::optional<TimeInterval> timeInterval;
+    std::optional<IntegerInterval> scenarioInterval;
+    std::optional<IntegerInterval> timeInterval;
 };
 
 class VariableDictionary

@@ -148,8 +148,7 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
         if (variable.isTimeDependent())
         {
             const Dimensions dim({},
-                                 Dimensions::TimeInterval(ctx.getFirstTimeStep(),
-                                                          ctx.getLastTimeStep()));
+                                 IntegerInterval(ctx.getFirstTimeStep(), ctx.getLastTimeStep()));
             // std::visit to handle the 4 cases: double/double, vector/double,
             // double/vector and vector/vector.
             std::visit(

@@ -89,8 +89,30 @@ std::string buildVariableName(const PartialKey& key,
     return ret;
 }
 
-Dimensions::Dimensions(std::optional<int> nbScenarios, std::optional<TimeInterval> timeInterval):
-    nbScenarios(nbScenarios),
+IntegerInterval::Iterator::Iterator(int current):
+    current_(current)
+{
+}
+
+int IntegerInterval::Iterator::operator*() const
+{
+    return current_;
+}
+
+IntegerInterval::Iterator& IntegerInterval::Iterator::operator++()
+{ // Prefix increment
+    ++current_;
+    return *this;
+}
+
+bool IntegerInterval::Iterator::operator!=(const Iterator& other) const
+{
+    return current_ != other.current_;
+}
+
+Dimensions::Dimensions(std::optional<IntegerInterval> scenarioInterval,
+                       std::optional<IntegerInterval> timeInterval):
+    scenarioInterval(scenarioInterval),
     timeInterval(timeInterval)
 {
 }
@@ -102,43 +124,17 @@ bool Dimensions::isTimeDependent() const
 
 bool Dimensions::isScenarioDependent() const
 {
-    return nbScenarios.has_value();
+    return scenarioInterval.has_value();
 }
 
-std::vector<int> Dimensions::getTimesteps() const
+IntegerInterval Dimensions::getTimesteps() const
 {
-    if (timeInterval)
-    {
-        std::vector<int> ret(timeInterval->finalTime - timeInterval->initialTime + 1);
-        for (int t = timeInterval->initialTime; t <= timeInterval->finalTime; ++t)
-        {
-            ret[t - timeInterval->initialTime] = t;
-        }
-        return ret;
-    }
-    else
-    {
-        // Arbitrary
-        return {0};
-    }
+    return timeInterval.value_or(IntegerInterval{});
 }
 
-std::vector<int> Dimensions::getScenarioIndices() const
+IntegerInterval Dimensions::getScenarioIndices() const
 {
-    if (nbScenarios)
-    {
-        std::vector<int> ret(*nbScenarios);
-        for (int s = 0; s < *nbScenarios; ++s)
-        {
-            ret[s] = s;
-        }
-        return ret;
-    }
-    else
-    {
-        // Arbitrary
-        return {0};
-    }
+    return scenarioInterval.value_or(IntegerInterval{});
 }
 
 int Dimensions::getNumberOfTimesteps() const
@@ -168,7 +164,7 @@ void VariableDictionary::addVariable(const Dimensions& dimensions,
     auto& m = hmv[key];
     const auto scenarios = dimensions.getScenarioIndices();
     const auto timesteps = dimensions.getTimesteps();
-    const int offset = timesteps.front();
+    const int offset = *timesteps.begin();
     m.resize(scenarios.size());
     for (int scenario: scenarios)
     {
@@ -176,22 +172,24 @@ void VariableDictionary::addVariable(const Dimensions& dimensions,
 
         for (int timestep: timesteps)
         {
-            const auto ts = buildOptional(dimensions.isTimeDependent(), timestep);
             const auto sc = buildOptional(dimensions.isScenarioDependent(), scenario);
+            const auto ts = buildOptional(dimensions.isTimeDependent(), timestep);
             const std::string name = buildVariableName(key, sc, ts);
-            m[scenario][timestep - offset] = func(timestep, scenario, name);
+            m[scenario][timestep - offset] = func(scenario, timestep, name);
         }
     }
 }
 
 VariableDictionary::Value VariableDictionary::operator[](const FullKey& k) const
 {
-    return hmv.at(k.getPartialKey())[k.getScenario().value_or(0)][k.getTimestep().value_or(0)];
+    return hmv.at(k.getPartialKey())
+      .at(k.getScenario().value_or(0))
+      .at(k.getTimestep().value_or(0));
 }
 
 VariableDictionary::Value& VariableDictionary::operator[](const FullKey& k)
 {
-    return hmv[k.getPartialKey()][k.getScenario().value_or(0)][k.getTimestep().value_or(0)];
+    return hmv[k.getPartialKey()].at(k.getScenario().value_or(0)).at(k.getTimestep().value_or(0));
 }
 
 const VariableDictionary::TwoIndexVector& VariableDictionary::operator[](const PartialKey& k) const
@@ -202,13 +200,13 @@ const VariableDictionary::TwoIndexVector& VariableDictionary::operator[](const P
 VariableDictionary::Value VariableDictionary::operator()(const std::string& component,
                                                          const std::string& variable) const
 {
-    return hmv.at(PartialKey(component, variable))[0][0];
+    return hmv.at(PartialKey(component, variable)).at(0).at(0);
 }
 
 VariableDictionary::Value& VariableDictionary::operator()(const std::string& component,
                                                           const std::string& variable)
 {
-    return hmv.at(PartialKey(component, variable))[0][0];
+    return hmv.at(PartialKey(component, variable)).at(0).at(0);
 }
 
 VariableDictionary::Value VariableDictionary::operator()(const std::string& component,
@@ -216,7 +214,7 @@ VariableDictionary::Value VariableDictionary::operator()(const std::string& comp
                                                          int scenario,
                                                          int timestep) const
 {
-    return hmv.at(PartialKey(component, variable))[scenario][timestep];
+    return hmv.at(PartialKey(component, variable)).at(scenario).at(timestep);
 }
 
 VariableDictionary::Value& VariableDictionary::operator()(const std::string& component,
@@ -224,7 +222,7 @@ VariableDictionary::Value& VariableDictionary::operator()(const std::string& com
                                                           int scenario,
                                                           int timestep)
 {
-    return hmv[PartialKey(component, variable)][scenario][timestep];
+    return hmv[PartialKey(component, variable)].at(scenario).at(timestep);
 }
 
 } // namespace Antares::Optimization
