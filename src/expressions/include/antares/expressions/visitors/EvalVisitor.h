@@ -20,8 +20,18 @@
 */
 #pragma once
 
+#include <cmath>
+#include <sstream>
+#include <variant>
+
 #include <antares/expressions/visitors/EvaluationContext.h>
+#include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include "antares/expressions/visitors/NodeVisitor.h"
+
+namespace Antares::Optimisation::LinearProblemApi
+{
+struct DataSeriesKeys;
+}
 
 namespace Antares::Expressions::Visitors
 {
@@ -38,41 +48,219 @@ public:
     EvalVisitorNotImplemented(const std::string& visitor, const std::string& node);
 };
 
+class EvaluationResult
+{
+public:
+    explicit EvaluationResult(double value);
+
+    explicit EvaluationResult(const std::vector<double>& values);
+
+    EvaluationResult operator+(const EvaluationResult& right) const
+    {
+        return evaluateBinaryOperation(right, std::plus<>());
+    }
+
+    EvaluationResult operator-(const EvaluationResult& right) const
+    {
+        return evaluateBinaryOperation(right, std::minus<>());
+    }
+
+    EvaluationResult operator*(const EvaluationResult& right) const
+    {
+        return evaluateBinaryOperation(right, std::multiplies<>());
+    }
+
+    struct SafeDivides
+    {
+        static constexpr double DEFAULT_THRESHOLD = 1e-16;
+
+        explicit SafeDivides(double threshold = DEFAULT_THRESHOLD):
+            threshold_(threshold)
+        {
+        }
+
+        double operator()(double lhs, double rhs) const
+        {
+            if (std::abs(rhs) <= threshold_)
+            {
+                throw EvalVisitorDivisionException(lhs, rhs, "Division by zero");
+            }
+            return lhs / rhs;
+        }
+
+    private:
+        double threshold_;
+    };
+
+    EvaluationResult operator/(const EvaluationResult& right) const
+    {
+        return evaluateBinaryOperation(right, SafeDivides{});
+    }
+
+    EvaluationResult operator-() const
+    {
+        return evaluateUnaryOperation(std::negate<>());
+    }
+
+    [[nodiscard]] std::variant<double, std::vector<double>> value() const
+    {
+        return value_;
+    }
+
+    class EvalResultType: public std::runtime_error
+    {
+    public:
+        using std::runtime_error::runtime_error;
+    };
+
+    [[nodiscard]] double valueAsDouble() const
+    {
+        if (!std::holds_alternative<double>(value_))
+        {
+            throw EvalResultType("Expected a double but found a vector.");
+        }
+        return std::get<double>(value_);
+    }
+
+    [[nodiscard]] std::vector<double> valuesAsVector() const
+    {
+        if (!std::holds_alternative<std::vector<double>>(value_))
+        {
+            throw EvalResultType("Expected a vector but found a double.");
+        }
+        return std::get<std::vector<double>>(value_);
+    }
+
+private:
+    std::variant<double, std::vector<double>> value_;
+    explicit EvaluationResult(const std::variant<double, std::vector<double>>& value);
+
+    template<typename Op>
+    EvaluationResult evaluateBinaryOperation(const EvaluationResult& right, Op op) const;
+    template<typename Op>
+    EvaluationResult evaluateUnaryOperation(Op op) const;
+};
+
+template<typename BinaryOp>
+double computeBinaryOperation(double lhs, double rhs, BinaryOp op)
+{
+    return op(lhs, rhs);
+}
+
+template<typename BinaryOp>
+std::vector<double> computeBinaryOperation(const std::vector<double>& lhs, double rhs, BinaryOp op)
+{
+    auto result(lhs);
+    for (double& value: result)
+    {
+        value = op(value, rhs);
+    }
+    return result;
+}
+
+template<typename BinaryOp>
+std::vector<double> computeBinaryOperation(double lhs, const std::vector<double>& rhs, BinaryOp op)
+{
+    return computeBinaryOperation(rhs, lhs, op);
+}
+
+class VectorsMismatchSize final: public std::runtime_error
+{
+public:
+    using std::runtime_error::runtime_error;
+};
+
+template<typename BinaryOp>
+std::vector<double> computeBinaryOperation(const std::vector<double>& lhs,
+                                           const std::vector<double>& rhs,
+                                           BinaryOp op)
+{
+    if (lhs.size() != rhs.size())
+    {
+        std::ostringstream errorMsg;
+        errorMsg << "Failed to compute binary operation: vectors have different sizes ("
+                 << lhs.size() << " and " << rhs.size() << ").";
+        throw VectorsMismatchSize(errorMsg.str());
+    }
+
+    std::vector<double> result(lhs.size());
+    for (size_t i = 0; i < lhs.size(); ++i)
+    {
+        result[i] = op(lhs[i], rhs[i]);
+    }
+    return result;
+}
+
+template<typename Op>
+EvaluationResult EvaluationResult::evaluateBinaryOperation(const EvaluationResult& right,
+                                                           Op op) const
+{
+    return EvaluationResult(
+      std::visit([&op](const auto& l, const auto& r) -> std::variant<double, std::vector<double>>
+                 { return computeBinaryOperation(l, r, op); },
+                 value_,
+                 right.value_));
+}
+
+template<typename UnaryOp>
+std::vector<double> computeUnaryOperation(const std::vector<double>& values, UnaryOp op)
+{
+    auto result(values);
+    for (double& v: result)
+    {
+        v = op(v);
+    }
+    return result;
+}
+
+template<typename UnaryOp>
+double computeUnaryOperation(double value, UnaryOp op)
+{
+    return op(value);
+}
+
+template<typename Op>
+EvaluationResult EvaluationResult::evaluateUnaryOperation(Op op) const
+{
+    return EvaluationResult(
+      std::visit([&op](const auto& v) -> std::variant<double, std::vector<double>>
+                 { return computeUnaryOperation(v, op); },
+                 value_));
+}
+
 /**
  * @brief Represents a visitor for evaluating expressions within a given context.
  */
-class EvalVisitor: public NodeVisitor<double>
+class EvalVisitor: public NodeVisitor<EvaluationResult>
 {
 public:
-    /**
-     * @brief Default constructor, creates an evaluation visitor with no context.
-     */
-    EvalVisitor() = default; // No context (variables / parameters)
-
     /**
      * @brief Constructs an evaluation visitor with the specified context.
      *
      * @param context The evaluation context.
+     * @param fillContext
      */
-    explicit EvalVisitor(EvaluationContext context);
+    explicit EvalVisitor(EvaluationContext context,
+                         Optimisation::LinearProblemApi::FillContext fillContext);
     std::string name() const override;
 
 private:
     const EvaluationContext context_;
-    double visit(const Nodes::SumNode* node) override;
-    double visit(const Nodes::SubtractionNode* node) override;
-    double visit(const Nodes::MultiplicationNode* node) override;
-    double visit(const Nodes::DivisionNode* node) override;
-    double visit(const Nodes::EqualNode* node) override;
-    double visit(const Nodes::LessThanOrEqualNode* node) override;
-    double visit(const Nodes::GreaterThanOrEqualNode* node) override;
-    double visit(const Nodes::NegationNode* node) override;
-    double visit(const Nodes::VariableNode* node) override;
-    double visit(const Nodes::ParameterNode* node) override;
-    double visit(const Nodes::LiteralNode* node) override;
-    double visit(const Nodes::PortFieldNode* node) override;
-    double visit(const Nodes::PortFieldSumNode* node) override;
-    double visit(const Nodes::ComponentVariableNode* node) override;
-    double visit(const Nodes::ComponentParameterNode* node) override;
+    Optimisation::LinearProblemApi::FillContext fillContext_;
+    EvaluationResult visit(const Nodes::SumNode* node) override;
+    EvaluationResult visit(const Nodes::SubtractionNode* node) override;
+    EvaluationResult visit(const Nodes::MultiplicationNode* node) override;
+    EvaluationResult visit(const Nodes::DivisionNode* node) override;
+    EvaluationResult visit(const Nodes::EqualNode* node) override;
+    EvaluationResult visit(const Nodes::LessThanOrEqualNode* node) override;
+    EvaluationResult visit(const Nodes::GreaterThanOrEqualNode* node) override;
+    EvaluationResult visit(const Nodes::NegationNode* node) override;
+    EvaluationResult visit(const Nodes::VariableNode* node) override;
+    EvaluationResult visit(const Nodes::ParameterNode* node) override;
+    EvaluationResult visit(const Nodes::LiteralNode* node) override;
+    EvaluationResult visit(const Nodes::PortFieldNode* node) override;
+    EvaluationResult visit(const Nodes::PortFieldSumNode* node) override;
+    EvaluationResult visit(const Nodes::ComponentVariableNode* node) override;
+    EvaluationResult visit(const Nodes::ComponentParameterNode* node) override;
 };
 } // namespace Antares::Expressions::Visitors

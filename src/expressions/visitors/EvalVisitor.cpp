@@ -21,109 +21,111 @@
 
 #include "antares/expressions/visitors/EvalVisitor.h"
 
-#include <cmath>
 #include <numeric>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
+#include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 
 namespace Antares::Expressions::Visitors
 {
-EvalVisitor::EvalVisitor(EvaluationContext context):
-    context_(std::move(context))
+EvalVisitor::EvalVisitor(EvaluationContext context,
+                         Optimisation::LinearProblemApi::FillContext fillContext):
+    context_(std::move(context)),
+    fillContext_(std::move(fillContext))
 {
 }
 
-double EvalVisitor::visit(const Nodes::SumNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::SumNode* node)
 {
     auto operands = node->getOperands();
     return std::accumulate(std::begin(operands),
                            std::end(operands),
-                           0,
-                           [this](double sum, Nodes::Node* operand)
+                           EvaluationResult{0.},
+                           [this](EvaluationResult sum, Nodes::Node* operand)
                            { return sum + dispatch(operand); });
 }
 
-double EvalVisitor::visit(const Nodes::SubtractionNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::SubtractionNode* node)
 {
     return dispatch(node->left()) - dispatch(node->right());
 }
 
-double EvalVisitor::visit(const Nodes::MultiplicationNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::MultiplicationNode* node)
 {
     return dispatch(node->left()) * dispatch(node->right());
 }
 
-double EvalVisitor::visit(const Nodes::DivisionNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::DivisionNode* node)
 {
-    double left = dispatch(node->left());
-    double right = dispatch(node->right());
-    double result = 0.;
-    try
+    return dispatch(node->left()) / dispatch(node->right());
+}
+
+EvaluationResult EvalVisitor::visit(const Nodes::EqualNode* node)
+{
+    throw EvalVisitorNotImplemented(name(), node->name());
+}
+
+EvaluationResult EvalVisitor::visit(const Nodes::LessThanOrEqualNode* node)
+{
+    throw EvalVisitorNotImplemented(name(), node->name());
+}
+
+EvaluationResult EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
+{
+    throw EvalVisitorNotImplemented(name(), node->name());
+}
+
+EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
+{
+    return EvaluationResult{context_.getVariableValue(node->value())};
+}
+
+EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
+{
+    if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
     {
-        result = left / right;
-        if (!std::isfinite(result))
+        return EvaluationResult{context_.getSystemParameterValueAsDouble(node->value())};
+    }
+    else
+    {
+        std::vector<double> params;
+        params.reserve(fillContext_.getNumberOfTimestep());
+        for (auto timeStep = fillContext_.getFirstTimeStep();
+             timeStep <= fillContext_.getLastTimeStep();
+             ++timeStep)
         {
-            throw EvalVisitorDivisionException(left, right, "is not a finite number");
+            params.emplace_back(context_.getParameterValue(node->value(), "", 0, timeStep));
         }
+        return EvaluationResult{params};
     }
-    catch (const std::exception& ex)
-    {
-        throw EvalVisitorDivisionException(left, right, ex.what());
-    }
-    return result;
 }
 
-double EvalVisitor::visit(const Nodes::EqualNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::LiteralNode* node)
 {
-    throw EvalVisitorNotImplemented(name(), node->name());
+    return EvaluationResult{node->value()};
 }
 
-double EvalVisitor::visit(const Nodes::LessThanOrEqualNode* node)
-{
-    throw EvalVisitorNotImplemented(name(), node->name());
-}
-
-double EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
-{
-    throw EvalVisitorNotImplemented(name(), node->name());
-}
-
-double EvalVisitor::visit(const Nodes::VariableNode* node)
-{
-    return context_.getVariableValue(node->value());
-}
-
-double EvalVisitor::visit(const Nodes::ParameterNode* node)
-{
-    return context_.getParameterValue(node->value());
-}
-
-double EvalVisitor::visit(const Nodes::LiteralNode* node)
-{
-    return node->value();
-}
-
-double EvalVisitor::visit(const Nodes::NegationNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::NegationNode* node)
 {
     return -dispatch(node->child());
 }
 
-double EvalVisitor::visit(const Nodes::PortFieldNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::PortFieldNode* node)
 {
     throw EvalVisitorNotImplemented(name(), node->name());
 }
 
-double EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
 {
     throw EvalVisitorNotImplemented(name(), node->name());
 }
 
-double EvalVisitor::visit(const Nodes::ComponentVariableNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::ComponentVariableNode* node)
 {
     throw EvalVisitorNotImplemented(name(), node->name());
 }
 
-double EvalVisitor::visit(const Nodes::ComponentParameterNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::ComponentParameterNode* node)
 {
     throw EvalVisitorNotImplemented(name(), node->name());
 }
@@ -146,4 +148,20 @@ EvalVisitorNotImplemented::EvalVisitorNotImplemented(const std::string& visitor,
     std::invalid_argument("Visitor" + visitor + " not implemented for node type " + node)
 {
 }
+
+EvaluationResult::EvaluationResult(double value):
+    value_(value)
+{
+}
+
+EvaluationResult::EvaluationResult(const std::vector<double>& values):
+    value_(values)
+{
+}
+
+EvaluationResult::EvaluationResult(const std::variant<double, std::vector<double>>& value):
+    value_(value)
+{
+}
+
 } // namespace Antares::Expressions::Visitors

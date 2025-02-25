@@ -1,19 +1,10 @@
 {
   "name": "antares-simulator",
   "version-string": "9.2.0",
-  "builtin-baseline": "b322364f06308bdd24823f9d8f03fe0cc86fd46f",
-  "vcpkg-configuration": {
-    "overlay-ports": [
-      "./ports"
-    ],
-    "overlay-triplets": [
-      "./triplets"
-    ]
-  },
   "dependencies": [
     {
       "name": "sirius-solver",
-      "version>=": "1.5"
+      "version>=": "1.7"
     },
     {
       "name": "wxwidgets",

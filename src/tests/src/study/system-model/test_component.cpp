@@ -51,18 +51,28 @@ static Model createModelWithoutParameters()
 
 BOOST_FIXTURE_TEST_SUITE(_Component_, ComponentBuilderCreationFixture)
 
+std::pair<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue>
+build_context_parameter_with(const std::string& id,
+                             const std::string& value,
+                             const Antares::Expressions::Visitors::ParameterType& type = Antares::
+                               Expressions::Visitors::ParameterType::CONSTANT)
+{
+    return {id, {.id = id, .type = type, .value = value}};
+}
+
 BOOST_AUTO_TEST_CASE(nominal_build_with_parameters)
 {
     Model model = createModelWithParameters();
     auto component = component_builder.withId("component")
                        .withModel(&model)
-                       .withParameterValues({{"param1", 5}, {"param2", 3}})
+                       .withParameterValues({build_context_parameter_with("param1", "5"),
+                                             build_context_parameter_with("param2", "3")})
                        .withScenarioGroupId("scenario_group")
                        .build();
     BOOST_CHECK_EQUAL(component.Id(), "component");
     BOOST_CHECK_EQUAL(component.getModel(), &model);
-    BOOST_CHECK_EQUAL(component.getParameterValue("param1"), 5);
-    BOOST_CHECK_EQUAL(component.getParameterValue("param2"), 3);
+    BOOST_CHECK_EQUAL(std::stod(component.getParameterValue("param1")), 5);
+    BOOST_CHECK_EQUAL(std::stod(component.getParameterValue("param2")), 3);
     BOOST_CHECK_EXCEPTION(component.getParameterValue("param3"),
                           std::invalid_argument,
                           checkMessage("Parameter 'param3' not found in component 'component'"));
@@ -107,7 +117,8 @@ BOOST_AUTO_TEST_CASE(reuse_builder)
     Model model2 = createModelWithParameters();
     auto component2 = component_builder.withId("component2")
                         .withModel(&model2)
-                        .withParameterValues({{"param1", 5}, {"param2", 3}})
+                        .withParameterValues({build_context_parameter_with("param1", "5"),
+                                              build_context_parameter_with("param2", "3")})
                         .withScenarioGroupId("scenario_group2")
                         .build();
 
@@ -120,8 +131,8 @@ BOOST_AUTO_TEST_CASE(reuse_builder)
     BOOST_CHECK_EQUAL(component2.getModel(), &model2);
     BOOST_CHECK_EQUAL(component2.getScenarioGroupId(), "scenario_group2");
     BOOST_CHECK_EQUAL(component2.getParameterValues().size(), 2);
-    BOOST_CHECK_EQUAL(component2.getParameterValues().at("param1"), 5);
-    BOOST_CHECK_EQUAL(component2.getParameterValues().at("param2"), 3);
+    BOOST_CHECK_EQUAL(std::stod(component2.getParameterValues().at("param1").value), 5);
+    BOOST_CHECK_EQUAL(std::stod(component2.getParameterValues().at("param2").value), 3);
 }
 
 BOOST_AUTO_TEST_CASE(fail_on_no_id)
@@ -180,7 +191,7 @@ BOOST_AUTO_TEST_CASE(fail_on_missing_param)
     Model model = createModelWithParameters();
     auto component = component_builder.withId("component")
                        .withModel(&model)
-                       .withParameterValues({{"param2", 3}})
+                       .withParameterValues({build_context_parameter_with("param2", "3")})
                        .withScenarioGroupId("scenario_group");
     BOOST_CHECK_EXCEPTION(component_builder.build(),
                           std::invalid_argument,
@@ -193,7 +204,8 @@ BOOST_AUTO_TEST_CASE(fail_on_missing_wrong_param)
     Model model = createModelWithParameters();
     auto component = component_builder.withId("component")
                        .withModel(&model)
-                       .withParameterValues({{"param_1", 3}, {"param2", 3}})
+                       .withParameterValues({build_context_parameter_with("param_1", "3"),
+                                             build_context_parameter_with("param2", "3")})
                        .withScenarioGroupId("scenario_group");
     BOOST_CHECK_EXCEPTION(component_builder.build(),
                           std::invalid_argument,
@@ -206,7 +218,9 @@ BOOST_AUTO_TEST_CASE(fail_on_too_many_params1)
     Model model = createModelWithParameters();
     auto component = component_builder.withId("component")
                        .withModel(&model)
-                       .withParameterValues({{"param1", 3}, {"param2", 3}, {"param3", 3}})
+                       .withParameterValues({build_context_parameter_with("param1", "3"),
+                                             build_context_parameter_with("param2", "3"),
+                                             build_context_parameter_with("param3", "3")})
                        .withScenarioGroupId("scenario_group");
     BOOST_CHECK_EXCEPTION(component_builder.build(),
                           std::invalid_argument,
@@ -219,7 +233,7 @@ BOOST_AUTO_TEST_CASE(fail_on_too_many_params2)
     Model model = createModelWithoutParameters();
     auto component = component_builder.withId("component")
                        .withModel(&model)
-                       .withParameterValues({{"param1", 3}})
+                       .withParameterValues({build_context_parameter_with("param1", "3")})
                        .withScenarioGroupId("scenario_group");
     BOOST_CHECK_EXCEPTION(component_builder.build(),
                           std::invalid_argument,
