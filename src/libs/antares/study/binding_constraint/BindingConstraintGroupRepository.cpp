@@ -29,26 +29,43 @@ namespace Antares::Data {
         return timeSeriesWidthConsistentInGroups();
     }
 
+    static bool checkAllElementsIdenticalOrOne(std::vector<std::pair<unsigned, std::string>>& p)
+    {
+        // Erase 1 from the vector
+        std::erase_if(p, [](const auto& pair) { return pair.first == 1; });
+        auto width = p.begin()->first;
+        for (const auto& [w, msg]: p)
+        {
+            if (w != width)
+            {
+                logs.error() << "Inconsitent time series width, found: " << w << " Previous was "
+                    << width << " for " << msg;
+
+                return false;
+            }
+        }
+        return true;
+    }
+
     bool BindingConstraintGroupRepository::timeSeriesWidthConsistentInGroups() const {
-        bool allConsistent = !std::any_of(groups_.begin(), groups_.end(), [](const auto &group) {
-                                            const auto& constraints = group->constraints();
-                                            if (constraints.empty())
-                                                return false;
-                                            auto width = (*constraints.begin())->RHSTimeSeries().width;
-                                            bool isConsistent = std::all_of(constraints.begin(), constraints.end(), [&width](const std::shared_ptr<BindingConstraint>& bc){
-                                                              bool sameWidth = bc->RHSTimeSeries().width == width || bc->RHSTimeSeries().width == 1;
-                                                              if (!sameWidth) {
-                                                                  logs.error() << "Inconsistent time series width for constraint of the same group. Group at fault: "
-                                                                               << bc->group()
-                                                                               << " .Previous width was " << width
-                                                                               << " new constraint " << bc->name()
-                                                                               << " found with width of " << bc->RHSTimeSeries().width;
-                                                              }
-                                                              return sameWidth;
-                                                          });
-                                            return !isConsistent;
-        });
-        return allConsistent;
+        bool allConsistent = std::ranges::all_of(groups_, [](const auto& group)
+          {
+              const auto& constraints = group->constraints();
+              if (constraints.empty())
+              {
+                  return true;
+              }
+
+              std::vector<std::pair<unsigned, std::string>> constraintsWidth;
+              constraintsWidth.reserve(constraints.size());
+              for (const auto& c: constraints)
+              {
+                  std::string msg = "Constraint group: " + c->group() + " name: " + c->name();
+                  constraintsWidth.emplace_back(c->RHSTimeSeries().width, msg);
+              }
+              return checkAllElementsIdenticalOrOne(constraintsWidth);
+          });
+          return allConsistent;
     }
 
     void BindingConstraintGroupRepository::resizeAllTimeseriesNumbers(unsigned int nb_years) {
