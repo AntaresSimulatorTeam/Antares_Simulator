@@ -209,14 +209,15 @@ BOOST_FIXTURE_TEST_CASE(model_constraints_properly_translated, Fixture)
 // Test with 2 models
 BOOST_FIXTURE_TEST_CASE(multiple_models_properly_translated, Fixture)
 {
-    YmlModel::Model model1{.id = "model1",
-                           .description = "description",
-                           .parameters = {{"param1", true, false}, {"param2", false, false}},
-                           .variables = {{"varP", "7", "param2", YmlModel::ValueType::CONTINUOUS, true, true}},
-                           .ports = {},
-                           .port_field_definitions = {},
-                           .constraints = {},
-                           .objective = ""};
+    YmlModel::Model model1{
+      .id = "model1",
+      .description = "description",
+      .parameters = {{"param1", true, false}, {"param2", false, false}},
+      .variables = {{"varP", "7", "param2", YmlModel::ValueType::CONTINUOUS, true, true}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .objective = ""};
     YmlModel::Model model2{
       .id = "model2",
       .description = "description",

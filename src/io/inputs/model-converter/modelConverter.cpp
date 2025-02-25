@@ -48,12 +48,6 @@ PortTypeAlreadyExists::PortTypeAlreadyExists(const std::string& id):
 {
 }
 
-/**
- * \brief Converts parameters from YmlModel::Model to SystemModel::Parameter.
- *
- * \param model The YmlModel::Model object containing parameters.
- * \return A vector of SystemModel::Parameter objects.
- */
 std::vector<Antares::Study::SystemModel::PortType> convertTypes(
   const Antares::IO::Inputs::YmlModel::Library& library)
 {
@@ -86,11 +80,10 @@ std::vector<Antares::Study::SystemModel::PortType> convertTypes(
 }
 
 /**
- * \brief Converts a YmlModel::ValueType to an SystemModel::ValueType.
+ * \brief Converts parameters from YmlModel::Model to SystemModel::Parameter.
  *
- * \param type The YmlModel::ValueType to convert.
- * \return The corresponding SystemModel::ValueType.
- * \throws UnknownType if the type is unknown.
+ * \param model The YmlModel::Model object containing parameters.
+ * \return A vector of SystemModel::Parameter objects.
  */
 std::vector<Antares::Study::SystemModel::Parameter> convertParameters(
   const Antares::IO::Inputs::YmlModel::Model& model)
@@ -108,10 +101,11 @@ std::vector<Antares::Study::SystemModel::Parameter> convertParameters(
 }
 
 /**
- * \brief Converts variables from YmlModel::Model to SystemModel::Variable.
+ * \brief Converts a YmlModel::ValueType to an SystemModel::ValueType.
  *
- * \param model The YmlModel::Model object containing variables.
- * \return A vector of SystemModel::Variable objects.
+ * \param type The YmlModel::ValueType to convert.
+ * \return The corresponding SystemModel::ValueType.
+ * \throws UnknownType if the type is unknown.
  */
 Antares::Study::SystemModel::ValueType convertType(Antares::IO::Inputs::YmlModel::ValueType type)
 {
@@ -130,10 +124,10 @@ Antares::Study::SystemModel::ValueType convertType(Antares::IO::Inputs::YmlModel
 }
 
 /**
- * \brief Converts ports from YmlModel::Model to SystemModel::Port.
+ * \brief Converts variables from YmlModel::Model to SystemModel::Variable.
  *
- * \param model The YmlModel::Model object containing ports.
- * \return A vector of SystemModel::Port objects.
+ * \param model The YmlModel::Model object containing variables.
+ * \return A vector of SystemModel::Variable objects.
  */
 std::vector<Antares::Study::SystemModel::Variable> convertVariables(const YmlModel::Model& model)
 {
@@ -159,17 +153,23 @@ std::vector<Antares::Study::SystemModel::Variable> convertVariables(const YmlMod
 }
 
 /**
+ * \brief Converts ports from YmlModel::Model to SystemModel::Port.
+ *
+ * \param model The YmlModel::Model object containing ports.
+ * \return A vector of SystemModel::Port objects.
+ */
+std::vector<Antares::Study::SystemModel::Port> convertPorts(
+  const Antares::IO::Inputs::YmlModel::Model& model)
+{
+    return {};
+}
+
+/**
  * \brief Converts constraints from YmlModel::Model to SystemModel::Constraint.
  *
  * \param model The YmlModel::Model object containing constraints.
  * \return A vector of SystemModel::Constraint objects.
  */
-std::vector<Antares::Study::SystemModel::Port> convertPorts(
-  [[maybe_unused]] const Antares::IO::Inputs::YmlModel::Model& model)
-{
-    return {};
-}
-
 std::vector<Antares::Study::SystemModel::Constraint> convertConstraints(
   const Antares::IO::Inputs::YmlModel::Model& model)
 {
