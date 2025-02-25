@@ -23,12 +23,6 @@ def run_antares(context):
     run_simulation(context)
 
 
-def after_feature(context, feature):
-    # post-processing a test: clean up output files to avoid taking up all the disk space
-    if (context.output_path != None):
-        pathlib.Path.rmdir(context.output_path)
-
-
 @then('the simulation succeeds')
 def simu_success(context):
     assert context.return_code == 0
