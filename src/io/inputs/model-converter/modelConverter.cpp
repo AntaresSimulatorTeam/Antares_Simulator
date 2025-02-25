@@ -48,10 +48,10 @@ ObjectWithThisIdAlreadyExists::ObjectWithThisIdAlreadyExists(const std::string& 
 {
 }
 
+/// Convert portTypes to Antares::Study::SystemModel::PortType
 std::vector<Antares::Study::SystemModel::PortType> convertTypes(
   const Antares::IO::Inputs::YmlModel::Library& library)
 {
-    // Convert portTypes to Antares::Study::SystemModel::PortType
     std::vector<Antares::Study::SystemModel::PortType> out;
     out.reserve(library.port_types.size());
     for (const auto& portType: library.port_types)
@@ -159,7 +159,8 @@ std::vector<Antares::Study::SystemModel::Variable> convertVariables(const YmlMod
  * \return A vector of SystemModel::Port objects.
  */
 std::vector<Antares::Study::SystemModel::Port> convertPorts(
-  const Antares::IO::Inputs::YmlModel::Model& model)
+  const Antares::IO::Inputs::YmlModel::Model& model,
+  const std::vector<Antares::Study::SystemModel::PortType>& portTypes)
 {
     std::vector<Antares::Study::SystemModel::Port> ports;
     ports.reserve(model.ports.size());
@@ -167,13 +168,12 @@ std::vector<Antares::Study::SystemModel::Port> convertPorts(
     {
         // Can't have port with the same ID
         if (std::ranges::find_if(ports, [&port](const auto& p) { return p.Id() == port.id; })
-            != out.end())
+            != ports.end())
         {
             throw ObjectWithThisIdAlreadyExists(port.id);
         }
-        
-        /* if (std::ranges::find_if(model.portTypes, [&port](const auto& p) { return p.Id() == port.id; }) */
-        /*     != out.end()) */
+
+        /* auto it = std::ranges::find_if(portType, [&port](const auto& p) { return p.Id() == port.id; }); */
         /* ports.emplace_back(port.id, port); */
     }
     return ports;
@@ -207,7 +207,8 @@ std::vector<Antares::Study::SystemModel::Constraint> convertConstraints(
  * \return A vector of SystemModel::Model objects.
  */
 std::vector<Antares::Study::SystemModel::Model> convertModels(
-  const Antares::IO::Inputs::YmlModel::Library& library)
+  const Antares::IO::Inputs::YmlModel::Library& library,
+  const std::vector<Antares::Study::SystemModel::PortType>& portTypes)
 {
     std::vector<Antares::Study::SystemModel::Model> models;
     models.reserve(library.models.size());
@@ -216,7 +217,7 @@ std::vector<Antares::Study::SystemModel::Model> convertModels(
         Antares::Study::SystemModel::ModelBuilder modelBuilder;
         std::vector<Antares::Study::SystemModel::Parameter> parameters = convertParameters(model);
         std::vector<Antares::Study::SystemModel::Variable> variables = convertVariables(model);
-        std::vector<Antares::Study::SystemModel::Port> ports = convertPorts(model);
+        std::vector<Antares::Study::SystemModel::Port> ports = convertPorts(model, portTypes);
         std::vector<Antares::Study::SystemModel::Constraint> constraints = convertConstraints(
           model);
 
@@ -246,7 +247,7 @@ Antares::Study::SystemModel::Library convert(const Antares::IO::Inputs::YmlModel
 {
     Antares::Study::SystemModel::LibraryBuilder builder;
     std::vector<Antares::Study::SystemModel::PortType> portTypes = convertTypes(library);
-    std::vector<Antares::Study::SystemModel::Model> models = convertModels(library);
+    std::vector<Antares::Study::SystemModel::Model> models = convertModels(library, portTypes);
     Antares::Study::SystemModel::Library lib = builder.withId(library.id)
                                                  .withDescription(library.description)
                                                  .withPortTypes(std::move(portTypes))
