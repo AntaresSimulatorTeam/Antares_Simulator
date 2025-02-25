@@ -49,7 +49,7 @@ PortTypeNotFound::PortTypeNotFound(const std::string& portId, const std::string&
 }
 
 ObjectWithThisIdAlreadyExists::ObjectWithThisIdAlreadyExists(const std::string& id):
-    std::runtime_error("Port type already exists: " + id)
+    std::runtime_error("Object id already exists: " + id)
 {
 }
 
@@ -197,16 +197,24 @@ std::vector<Antares::Study::SystemModel::Port> convertPorts(
  * \return A vector of SystemModel::PortFieldDefinition objects.
  */
 std::vector<Study::SystemModel::PortFieldDefinition> convertPortFieldDefinitions(
-  const IO::Inputs::YmlModel::Model& model,
-  const std::vector<Study::SystemModel::PortFieldDefinition>& ports)
+  const IO::Inputs::YmlModel::Model& model)
 {
     std::vector<Study::SystemModel::PortFieldDefinition> portFieldDefinitions;
     portFieldDefinitions.reserve(model.port_field_definitions.size());
-    for (const auto& port: model.port_field_definitions)
+    for (const auto& pfdefinition: model.port_field_definitions)
     {
+        if (std::ranges::find_if(model.ports,
+                                 [&pfdefinition](const auto& p)
+                                 { return p.id == pfdefinition.port; })
+            == model.ports.end())
+        {
+            // TODO add custom ex
+            throw ObjectWithThisIdAlreadyExists(pfdefinition.port);
+        }
     }
     return portFieldDefinitions;
 }
+
 /**
  * \brief Converts constraints from YmlModel::Model to SystemModel::Constraint.
  *
