@@ -1,6 +1,5 @@
 # This file defines behave hooks to run before all tests
 import os.path
-import pathlib
 from shutil import rmtree
 
 def before_all(context):
