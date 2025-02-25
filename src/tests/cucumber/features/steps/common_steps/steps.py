@@ -131,23 +131,10 @@ def check_thermal_cluster_min_gen_for_week(context, area, week, year, cluster, d
     week_ts = extract_week_ts(ts, week)
     check_week_ts_has_daily_values(week_ts, list_daily_values)
 
-@then('in area "{area}", week {week:d}, year {year:d}, daily mingens for group "{group}" are {days}')
-def check_thermal_group_min_gen_for_week(context, area, week, year, group, days):
-    ts = context.soh.min_gen_for_thermal_group(area, year, group)
-    list_daily_values = make_daily_values_from_a_string(days)
-    week_ts = extract_week_ts(ts, week)
-    check_week_ts_has_daily_values(week_ts, list_daily_values)
-
 @then('in area "{area}", year {year:d}, no mingens for cluster "{cluster}"')
 def check_no_mingen_column_for_cluster(context, area, year, cluster):
     column_names = list(context.soh.details_hourly_for_cluster(area, year, cluster).columns)
     assert "MinGen - MWh" not in column_names, f"cluster %s should not be in file details" % cluster
-
-# Unused for now
-@then('in area "{area}", min gen for thermal group "{group_name}" on "{hour}" of year {year:d} is : {expected_value:g} MW')
-def check_thermal_group_min_gen_for_hour(context, area, group_name, hour, year, expected_value):
-    actual_value = context.soh.min_gen_for_thermal_group_at_hour(area, year, hour, group_name)
-    assert_double_close(expected_value, actual_value, 0.001)
 
 # Unused for now
 @then('in area "{area}", min gen for thermal cluster "{cluster_name}" on hour {hour:d} of year {year:d} is : {expected_value:g} MW')

@@ -85,14 +85,6 @@ class study_output_handler:
     def get_unsupplied_energy_mwh(self, area: str, year: int, date: str) -> float:
         return self.__get_values_hourly_for_specific_hour(area, year, date)["UNSP. ENRG"]["MWh"].sum()
 
-    def min_gen_for_thermal_group(self, area: str, year:int, group:str):
-        var_name = "MinGen-" + group
-        return self.__get_values_hourly(area, year)[var_name]["MWh"]
-
-    def min_gen_for_thermal_group_at_hour(self, area: str, year:int, hour:str, group_name:str) -> float:
-        var_name = "MinGen-" + group_name
-        return self.__get_values_hourly_for_specific_hour(area, year, hour)[var_name]["MWh"].sum()
-
     def min_gen_for_thermal_cluster(self, area: str, year: int, cluster: str):
         return self.__get_details_hourly(area, year)[cluster]["MinGen - MWh"]
 
