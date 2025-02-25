@@ -123,8 +123,8 @@ BOOST_FIXTURE_TEST_CASE(FillerWithContext, Fixture)
 
     ctx = FillContext(0, 5);
 
-    ctx.scenariosSelected.push_back(0);
-    ctx.scenariosSelected.push_back(2);
+    ctx.addSelectedScenarios(0);
+    ctx.addSelectedScenarios(2);
 
     LinearProblemBuilder lpBuilder(fillers);
     lpBuilder.build(*pb, LP_Data, ctx);

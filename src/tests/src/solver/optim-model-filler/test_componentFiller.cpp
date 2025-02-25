@@ -43,6 +43,15 @@ using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
 using namespace std;
 
+std::pair<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue>
+build_context_parameter_with(const std::string& id,
+                             const std::string& value,
+                             const Antares::Expressions::Visitors::ParameterType& type = Antares::
+                               Expressions::Visitors::ParameterType::CONSTANT)
+{
+    return {id, {.id = id, .type = type, .value = value}};
+}
+
 struct VariableData
 {
     string id;
@@ -90,7 +99,7 @@ struct LinearProblemBuildingFixture
 
     void createComponent(const string& modelId,
                          const string& componentId,
-                         map<string, double> parameterValues = {});
+                         map<string, Visitors::ParameterTypeAndValue> parameterValues = {});
 
     Node* literal(double value)
     {
@@ -176,9 +185,10 @@ void LinearProblemBuildingFixture::createModel(string modelId,
     models[modelId] = move(model);
 }
 
-void LinearProblemBuildingFixture::createComponent(const string& modelId,
-                                                   const string& componentId,
-                                                   map<string, double> parameterValues)
+void LinearProblemBuildingFixture::createComponent(
+  const string& modelId,
+  const string& componentId,
+  map<string, Visitors::ParameterTypeAndValue> parameterValues)
 {
     BOOST_CHECK_NO_THROW(models.at(modelId));
     ComponentBuilder component_builder;
@@ -338,7 +348,10 @@ BOOST_AUTO_TEST_CASE(var_whose_bounds_are_parameters_given_to_component__problem
                 {"pmin", "pmax"},
                 {{"var1", ValueType::INTEGER, parameter("pmin"), parameter("pmax"), false, false}},
                 {});
-    createComponent("model", "componentToto", {{"pmin", -3.}, {"pmax", 4.}});
+    createComponent("model",
+                    "componentToto",
+                    {build_context_parameter_with("pmin", "-3."),
+                     build_context_parameter_with("pmax", "4.")});
     buildLinearProblem();
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 1);
@@ -368,7 +381,9 @@ BOOST_AUTO_TEST_CASE(three_different_vars__exist)
     createModel("thermalClusterModel", {"pmin", "pmax", "nUnits"}, {var1, var2, var3}, {});
     createComponent("thermalClusterModel",
                     "thermalCluster1",
-                    {{"pmin", 100.248}, {"pmax", 950.6784}, {"nUnits", 17.}});
+                    {build_context_parameter_with("pmin", "100.248"),
+                     build_context_parameter_with("pmax", "950.6784"),
+                     build_context_parameter_with("nUnits", "17.")});
     buildLinearProblem();
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 3);
@@ -393,8 +408,8 @@ BOOST_AUTO_TEST_CASE(three_different_vars__exist)
 BOOST_AUTO_TEST_CASE(one_model_two_components__dont_clash)
 {
     createModelWithOneFloatVar("m1", {"ub"}, "var1", literal(-100), parameter("ub"), {});
-    createComponent("m1", "component_1", {{"ub", 15}});
-    createComponent("m1", "component_2", {{"ub", 48}});
+    createComponent("m1", "component_1", {build_context_parameter_with("ub", "15")});
+    createComponent("m1", "component_2", {build_context_parameter_with("ub", "48")});
     buildLinearProblem();
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 2);
@@ -455,6 +470,8 @@ BOOST_AUTO_TEST_CASE(ct_with_ten_vars__pb_contains_ten_ct)
                 {{"ct1", ct_node}});
     createComponent("model", "componentToto");
     constexpr unsigned int last_time_step = 9;
+    std::vector<unsigned int> timeSteps(last_time_step + 1);
+    std::ranges::generate(timeSteps, [i = 0]() mutable { return i++; });
     FillContext ctx{0, last_time_step};
     buildLinearProblem(ctx);
     const auto nb_var = ctx.getNumberOfTimestep(); // = 10
@@ -539,7 +556,10 @@ BOOST_AUTO_TEST_CASE(ct_with_two_vars)
     createModel("my_new_model", params, {var1Data, var2Data}, {{"constraint1", ct_node}});
     createComponent("my_new_model",
                     "my_component",
-                    {{"param1", -16}, {"param2", 8}, {"param3", 5}, {"param4", -3}});
+                    {build_context_parameter_with("param1", "-16"),
+                     build_context_parameter_with("param2", "8"),
+                     build_context_parameter_with("param3", "5"),
+                     build_context_parameter_with("param4", "-3")});
     buildLinearProblem();
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 2);
@@ -659,7 +679,7 @@ BOOST_AUTO_TEST_CASE(one_var_with_param_objective)
     auto objective = multiply(negate(multiply(parameter("param"), parameter("param"))),
                               variable("x"));
     createModelWithOneFloatVar("model", {"param"}, "x", literal(-50), literal(-40), {}, objective);
-    createComponent("model", "componentA", {{"param", 5}});
+    createComponent("model", "componentA", {build_context_parameter_with("param", "5")});
     buildLinearProblem();
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 1);
@@ -678,4 +698,262 @@ BOOST_AUTO_TEST_CASE(offset_in_objective__throws_exception)
                                        "'model' of component 'componentA')."));
 }
 
+// Mock classes
+class MockMipVariable: public IMipVariable
+{
+public:
+    MockMipVariable(double lb, double ub, bool integer, const std::string& name):
+        lb_(lb),
+        ub_(ub),
+        integer_(integer),
+        name_(name)
+    {
+    }
+
+    bool isInteger() const override
+    {
+        return integer_;
+    }
+
+    void setLb(double lb) override
+    {
+        lb_ = lb;
+    }
+
+    void setUb(double ub) override
+    {
+        ub_ = ub;
+    }
+
+    void setBounds(double lb, double ub) override
+    {
+        lb_ = lb;
+        ub_ = ub;
+    }
+
+    double getLb() const override
+    {
+        return lb_;
+    }
+
+    double getUb() const override
+    {
+        return ub_;
+    }
+
+    const std::string& getName() const override
+    {
+        return name_;
+    }
+
+private:
+    double lb_;
+    double ub_;
+    bool integer_;
+    std::string name_;
+};
+
+class MockLinearProblem: public ILinearProblem
+{
+public:
+    std::vector<std::unique_ptr<MockMipVariable>> variables_;
+
+    MockMipVariable* addNumVariable(double lb, double ub, const std::string& name) override
+    {
+        variables_.emplace_back(std::make_unique<MockMipVariable>(lb, ub, false, name));
+        return variables_.back().get();
+    }
+
+    MockMipVariable* addIntVariable(double lb, double ub, const std::string& name) override
+    {
+        variables_.emplace_back(std::make_unique<MockMipVariable>(lb, ub, true, name));
+        return variables_.back().get();
+    }
+
+    MockMipVariable* addVariable(double lb,
+                                 double ub,
+                                 bool integer,
+                                 const std::string& name) override
+    {
+        return integer ? addIntVariable(lb, ub, name) : addNumVariable(lb, ub, name);
+    }
+
+    MockMipVariable* getVariable(const std::string& name) const override
+    {
+        for (const auto& var: variables_)
+        {
+            if (var->getName() == name)
+            {
+                return var.get();
+            }
+        }
+        return nullptr;
+    }
+
+    int variableCount() const override
+    {
+        return static_cast<int>(variables_.size());
+    }
+
+    IMipConstraint* addConstraint(double lb, double ub, const std::string& name) override
+    {
+        return nullptr;
+    }
+
+    IMipConstraint* getConstraint(const std::string& name) const override
+    {
+        return nullptr;
+    }
+
+    int constraintCount() const override
+    {
+        return 0;
+    }
+
+    void setObjectiveCoefficient(IMipVariable* var, double coefficient) override
+    {
+    }
+
+    double getObjectiveCoefficient(const IMipVariable* var) const override
+    {
+        return 0.0;
+    }
+
+    void setMinimization() override
+    {
+    }
+
+    void setMaximization() override
+    {
+    }
+
+    bool isMinimization() const override
+    {
+        return true;
+    }
+
+    bool isMaximization() const override
+    {
+        return false;
+    }
+
+    IMipSolution* solve(bool verboseSolver) override
+    {
+        return nullptr;
+    }
+
+    void WriteLP(const std::string& filename) override
+    {
+    }
+
+    double infinity() const override
+    {
+        return 1e20;
+    }
+};
+
+BOOST_AUTO_TEST_CASE(Constructor_ValidIndices)
+{
+    MockLinearProblem lp;
+    BOOST_CHECK_NO_THROW(VariablesBulkAddition(lp, 0, 5));
+}
+
+// de-comment if checkIndices is done in VariablesBulkAddition's ctor
+// BOOST_AUTO_TEST_CASE(Constructor_InvalidIndices)
+// {
+//     MockLinearProblem lp;
+//     BOOST_CHECK_THROW(VariablesBulkAddition(lp, 5, 0), std::invalid_argument);
+// }
+
+BOOST_AUTO_TEST_CASE(GetCountTest)
+{
+    MockLinearProblem lp;
+    VariablesBulkAddition vba(lp, 2, 6);
+    BOOST_CHECK_EQUAL(vba.getCount(), 5);
+}
+
+BOOST_AUTO_TEST_CASE(AddVariable_SingleBounds)
+{
+    MockLinearProblem lp;
+    VariablesBulkAddition vba(lp, 0, 2);
+    auto vars = vba.addVariable(0.0, 1.0, true, "x");
+    BOOST_CHECK_EQUAL(vars.size(), 3);
+    for (auto* v: vars)
+    {
+        BOOST_CHECK(v != nullptr);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(AddVariable_VectorLowerBound)
+{
+    MockLinearProblem lp;
+    VariablesBulkAddition vba(lp, 0, 2);
+    std::vector<double> lb = {0.1, 0.2, 0.3};
+    auto vars = vba.addVariable(lb, 1.0, true, "x");
+    BOOST_CHECK_EQUAL(vars.size(), 3);
+    for (auto* v: vars)
+    {
+        BOOST_CHECK(v != nullptr);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(AddVariable_VectorUpperBound)
+{
+    MockLinearProblem lp;
+    VariablesBulkAddition vba(lp, 0, 2);
+    std::vector<double> ub = {1.1, 1.2, 1.3};
+    auto vars = vba.addVariable(0.0, ub, true, "x");
+    BOOST_CHECK_EQUAL(vars.size(), 3);
+    for (auto* v: vars)
+    {
+        BOOST_CHECK(v != nullptr);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(AddVariable_VectorBounds)
+{
+    MockLinearProblem lp;
+    VariablesBulkAddition vba(lp, 0, 2);
+    std::vector<double> lb = {0.1, 0.2, 0.3};
+    std::vector<double> ub = {1.1, 1.2, 1.3};
+    auto vars = vba.addVariable(lb, ub, true, "x");
+    BOOST_CHECK_EQUAL(vars.size(), 3);
+    for (auto* v: vars)
+    {
+        BOOST_CHECK(v != nullptr);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(AddVariable_InvalidBounds)
+{
+    MockLinearProblem lp;
+    VariablesBulkAddition vba(lp, 0, 2);
+    std::vector<double> lb = {0.1, 0.2};
+    std::vector<double> ub = {1.1, 1.2, 1.3};
+    BOOST_CHECK_THROW(vba.addVariable(lb, ub, true, "x"), std::invalid_argument);
+}
+
+BOOST_AUTO_TEST_CASE(AddVariable_InvalidVectorLowerBound)
+{
+    MockLinearProblem lp;
+    VariablesBulkAddition vba(lp, 0, 2);
+    BOOST_CHECK_THROW(vba.addVariable({0.1, 0.2}, 1.0, true, "x"), std::invalid_argument);
+}
+
+BOOST_AUTO_TEST_CASE(AddVariable_InvalidVectorUpperBound)
+{
+    MockLinearProblem lp;
+    VariablesBulkAddition vba(lp, 0, 2);
+    BOOST_CHECK_THROW(vba.addVariable(0.0, {1.1, 1.2}, true, "x"), std::invalid_argument);
+}
+
+BOOST_AUTO_TEST_CASE(AddVariable_InvalidVectorBounds)
+{
+    MockLinearProblem lp;
+    VariablesBulkAddition vba(lp, 0, 2);
+    BOOST_CHECK_THROW(vba.addVariable({0.1, 0.2}, {1.1, 1.2, 1.3}, true, "x"),
+                      std::invalid_argument);
+    BOOST_CHECK_THROW(vba.addVariable({0.1, 0.2, 0.3}, {1.1, 1.2}, true, "x"),
+                      std::invalid_argument);
+}
 BOOST_AUTO_TEST_SUITE_END()

@@ -28,6 +28,7 @@
 #include <memory>
 #include <numeric>
 
+#include <antares/utils/utils.h>
 #include "antares/study/binding_constraint/BindingConstraintGroup.h"
 #include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 
@@ -60,32 +61,24 @@ bool BindingConstraintGroupRepository::buildFrom(const BindingConstraintsReposit
 
 bool BindingConstraintGroupRepository::timeSeriesWidthConsistentInGroups() const
 {
-    bool allConsistent = !std::ranges::any_of(
+    bool allConsistent = std::ranges::all_of(
       groups_,
       [](const auto& group)
       {
           const auto& constraints = group->constraints();
           if (constraints.empty())
           {
-              return false;
+              return true;
           }
-          auto width = (*constraints.begin())->RHSTimeSeries().width;
-          bool isConsistent = std::ranges::all_of(
-            constraints,
-            [&width](const std::shared_ptr<BindingConstraint>& bc)
-            {
-                bool sameWidth = bc->RHSTimeSeries().width == width;
-                if (!sameWidth)
-                {
-                    logs.error() << "Inconsistent time series width for constraint of the same "
-                                    "group. Group at fault: "
-                                 << bc->group() << " .Previous width was " << width
-                                 << " new constraint " << bc->name() << " found with width of "
-                                 << bc->RHSTimeSeries().width;
-                }
-                return sameWidth;
-            });
-          return !isConsistent;
+
+          std::vector<std::pair<unsigned, std::string>> constraintsWidth;
+          constraintsWidth.reserve(constraints.size());
+          for (const auto& c: constraints)
+          {
+              std::string msg = "Constraint group: " + c->group() + " name: " + c->name();
+              constraintsWidth.emplace_back(c->RHSTimeSeries().width, msg);
+          }
+          return Utils::checkAllElementsIdenticalOrOne(constraintsWidth);
       });
     return allConsistent;
 }

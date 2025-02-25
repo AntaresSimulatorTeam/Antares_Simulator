@@ -143,14 +143,16 @@ BOOST_AUTO_TEST_CASE(component_parameter)
                   scenario-group: group-234
                   parameters:
                     - id: cost
-                      type: constant
+                      time-dependent: false
+                      scenario-dependent: false
                       value: 30
     )"s;
     YmlSystem::System systemObj = parser.parse(system);
     const auto& param = systemObj.components[0].parameters[0];
     BOOST_CHECK_EQUAL(param.id, "cost");
-    BOOST_CHECK_EQUAL(param.type, "constant");
-    BOOST_CHECK_EQUAL(param.value, 30);
+    BOOST_CHECK_EQUAL(param.time_dependent, false);
+    BOOST_CHECK_EQUAL(param.scenario_dependent, false);
+    BOOST_CHECK_EQUAL(std::stod(param.value), 30);
 }
 
 BOOST_AUTO_TEST_CASE(component_two_parameters)
@@ -166,19 +168,23 @@ BOOST_AUTO_TEST_CASE(component_two_parameters)
                   scenario-group: group-234
                   parameters:
                     - id: cost
-                      type: constant
+                      time-dependent: false
+                      scenario-dependent: false
                       value: 30
                     - id: p_max
-                      type: constant
+                      time-dependent: false
+                      scenario-dependent: false
                       value: 100
     )"s;
     YmlSystem::System systemObj = parser.parse(system);
     const auto& param = systemObj.components[0].parameters[0];
     const auto& param2 = systemObj.components[0].parameters[1];
     BOOST_CHECK_EQUAL(param.id, "cost");
-    BOOST_CHECK_EQUAL(param.type, "constant");
-    BOOST_CHECK_EQUAL(param.value, 30);
+    BOOST_CHECK_EQUAL(param.time_dependent, false);
+    BOOST_CHECK_EQUAL(param.scenario_dependent, false);
+    BOOST_CHECK_EQUAL(std::stod(param.value), 30);
     BOOST_CHECK_EQUAL(param2.id, "p_max");
-    BOOST_CHECK_EQUAL(param2.type, "constant");
-    BOOST_CHECK_EQUAL(param2.value, 100);
+    BOOST_CHECK_EQUAL(param2.time_dependent, false);
+    BOOST_CHECK_EQUAL(param2.scenario_dependent, false);
+    BOOST_CHECK_EQUAL(std::stod(param2.value), 100);
 }
