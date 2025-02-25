@@ -43,6 +43,11 @@ PortTypeDoesntContainsFields::PortTypeDoesntContainsFields(const std::string& id
 {
 }
 
+PortTypeNotFound::PortTypeNotFound(const std::string& portId, const std::string& portTypeId):
+    std::runtime_error("For the port: " + portId + " , port type not found: " + portTypeId)
+{
+}
+
 ObjectWithThisIdAlreadyExists::ObjectWithThisIdAlreadyExists(const std::string& id):
     std::runtime_error("Port type already exists: " + id)
 {
@@ -68,7 +73,7 @@ std::vector<Antares::Study::SystemModel::PortType> convertTypes(
 
         // Can't have port types with the same ID
         if (std::ranges::find_if(out, [&portType](const auto& p) { return p.Id() == portType.id; })
-            != out.end())
+            == out.end())
         {
             throw ObjectWithThisIdAlreadyExists(portType.id);
         }
@@ -173,8 +178,14 @@ std::vector<Antares::Study::SystemModel::Port> convertPorts(
             throw ObjectWithThisIdAlreadyExists(port.id);
         }
 
-        /* auto it = std::ranges::find_if(portType, [&port](const auto& p) { return p.Id() == port.id; }); */
-        /* ports.emplace_back(port.id, port); */
+        const auto it = std::ranges::find_if(portTypes,
+                                             [&port](const auto& pt)
+                                             { return pt.Id() == port.type; });
+        if (it == portTypes.end())
+        {
+            throw PortTypeNotFound(port.id, port.type);
+        }
+        ports.emplace_back(port.id, *it);
     }
     return ports;
 }

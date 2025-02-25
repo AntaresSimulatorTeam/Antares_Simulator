@@ -62,5 +62,11 @@ public:
     explicit PortTypeDoesntContainsFields(const std::string& id);
 };
 
+class PortTypeNotFound: public std::runtime_error
+{
+public:
+    explicit PortTypeNotFound(const std::string& portId, const std::string& portTypeId);
+};
+
 Study::SystemModel::Library convert(const YmlModel::Library& library);
 } // namespace Antares::IO::Inputs::ModelConverter
