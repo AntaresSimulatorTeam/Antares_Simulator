@@ -77,6 +77,9 @@ public:
     */
     bool loadFromFile(const std::filesystem::path& filename, const StudyVersion& version);
 
+    //! Load data from an INI file
+    bool loadFromINI(const IniFile& ini, const StudyVersion& version);
+
     /*!
     ** \brief Prepare all settings for a simulation
     **
@@ -507,9 +510,6 @@ public:
     Antares::Solver::Optimization::OptimizationOptions optOptions;
 
 private:
-    //! Load data from an INI file
-    bool loadFromINI(const IniFile& ini, const StudyVersion& version);
-
     void resetPlayedYears(uint nbOfYears);
 
     //! MC year weight for MC synthesis

@@ -11,6 +11,7 @@ from common_steps.simulator_utils import run_simulation
 from features.steps.common_steps.assertions import assert_double_close
 
 
+
 @given('the study path is "{string}"')
 def study_path_is(context, string):
     context.study_path = os.path.join(context.config.userdata["resources-path"], string.replace("/", os.sep))
@@ -32,6 +33,9 @@ def after_feature(context, feature):
 @then('the simulation succeeds')
 def simu_success(context):
     assert context.return_code == 0
+
+
+
 
 
 @then('the simulation fails')
@@ -147,4 +151,14 @@ def modeler_var_optimal_value(context):
         ts_end =  int(ts_array[1]) if len(ts_array) == 2 else ts_start
         for ts in range(ts_start, ts_end + 1):
             var_id = row["component"] + "." + row["variable"] + "_" + str(ts)
-            assert_double_close(float(row["value"]), context.moh.get_optimal_value(var_id), 1e-6)
+            assert_double_close(get_value(row, ts), context.moh.get_optimal_value(var_id), 1e-6)
+
+
+def get_value(row, ts):
+    ret = row["value"]
+
+    if "-" in ret and not ret.isdigit():  # Handle "80-0" but not single numbers
+        ret = ret.split("-")  # Split into a list of strings
+        return float(ret[ts])  # Index and convert to float
+
+    return float(ret)  # Single value case (apply to all timesteps)
