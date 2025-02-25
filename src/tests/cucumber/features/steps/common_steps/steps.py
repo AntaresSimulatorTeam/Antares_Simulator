@@ -150,7 +150,7 @@ def modeler_var_optimal_value(context):
         ts_start = int(ts_array[0])
         ts_end =  int(ts_array[1]) if len(ts_array) == 2 else ts_start
         for ts in range(ts_start, ts_end + 1):
-            var_id = row["component"] + "." + row["variable"] + "_" + str(ts)
+            var_id = row["component"] + "." + row["variable"] + "_t" + str(ts)
             assert_double_close(get_value(row, ts), context.moh.get_optimal_value(var_id), 1e-6)
 
 
