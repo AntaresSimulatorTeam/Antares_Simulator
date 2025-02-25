@@ -28,8 +28,6 @@ namespace Antares::Study::SystemModel
 
 class PortFieldDefinition
 {
-    PortFieldDefinition();
-    ~PortFieldDefinition() = default;
 
 private:
     Port port_;

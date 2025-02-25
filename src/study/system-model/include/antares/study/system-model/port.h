@@ -35,6 +35,7 @@ public:
         type_(type)
     {
     }
+
     const std::string& Id() const
     {
         return id_;

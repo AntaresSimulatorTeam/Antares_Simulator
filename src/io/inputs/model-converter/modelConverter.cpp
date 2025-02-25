@@ -191,6 +191,23 @@ std::vector<Antares::Study::SystemModel::Port> convertPorts(
 }
 
 /**
+ * \brief Converts PortFieldDefinition from YmlModel::Model to SystemModel::PortFieldDefinition.
+ *
+ * \param model The YmlModel::Model object containing port field definitions.
+ * \return A vector of SystemModel::PortFieldDefinition objects.
+ */
+std::vector<Study::SystemModel::PortFieldDefinition> convertPortFieldDefinitions(
+  const IO::Inputs::YmlModel::Model& model,
+  const std::vector<Study::SystemModel::PortFieldDefinition>& ports)
+{
+    std::vector<Study::SystemModel::PortFieldDefinition> portFieldDefinitions;
+    portFieldDefinitions.reserve(model.port_field_definitions.size());
+    for (const auto& port: model.port_field_definitions)
+    {
+    }
+    return portFieldDefinitions;
+}
+/**
  * \brief Converts constraints from YmlModel::Model to SystemModel::Constraint.
  *
  * \param model The YmlModel::Model object containing constraints.

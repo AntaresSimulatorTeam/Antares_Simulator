@@ -28,6 +28,7 @@
 #include "constraint.h"
 #include "parameter.h"
 #include "port.h"
+#include "portFieldDefinition.h"
 #include "variable.h"
 
 namespace Antares::Study::SystemModel
@@ -89,6 +90,7 @@ private:
     std::map<std::string, Variable> variables_;
     std::map<std::string, Constraint> constraints_;
     std::map<std::string, Port> ports_;
+    std::map<std::string, PortFieldDefinition> portFieldDefinitions_;
 };
 
 class ModelBuilder
