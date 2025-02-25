@@ -1,5 +1,7 @@
 # This file defines behave hooks to run before all tests
-import shutil
+import os.path
+import pathlib
+from shutil import rmtree
 
 def before_all(context):
     check_userdata_exists(context, "antares-solver")
@@ -12,5 +14,7 @@ def check_userdata_exists(context, data_name: str):
 
 def after_scenario(context, scenario):
     # post-processing a test: clean up output files to avoid taking up all the disk space
-    if (context.output_path != None):
-        shutil.rmtree(context.output_path)
+    if context.output_path != None:
+        rmtree(context.output_path)
+    if os.path.exists(os.path.join(context.study_path, "logs")):
+        rmtree(os.path.join(context.study_path, "logs"))

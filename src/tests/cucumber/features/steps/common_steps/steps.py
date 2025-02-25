@@ -1,7 +1,6 @@
 # Gherkins test steps definitions
 
 import os
-import pathlib
 
 from behave import *
 from common_steps.assertions import *
