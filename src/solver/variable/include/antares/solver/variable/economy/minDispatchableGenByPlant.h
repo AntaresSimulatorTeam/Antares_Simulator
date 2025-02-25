@@ -35,7 +35,7 @@ struct VCardMinDispatchableGenByPlant
     //! Unit
     static std::string Unit()
     {
-        return "MinGen - MWh";
+        return "MIN GEN - MWh";
     }
 
     //! The short description of the variable

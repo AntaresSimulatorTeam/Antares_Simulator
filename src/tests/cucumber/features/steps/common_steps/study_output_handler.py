@@ -86,10 +86,10 @@ class study_output_handler:
         return self.__get_values_hourly_for_specific_hour(area, year, date)["UNSP. ENRG"]["MWh"].sum()
 
     def min_gen_for_thermal_cluster(self, area: str, year: int, cluster: str):
-        return self.__get_details_hourly(area, year)[cluster]["MinGen - MWh"]
+        return self.__get_details_hourly(area, year)[cluster]["MIN GEN - MWh"]
 
     def min_gen_for_thermal_cluster_at_hour(self, area: str, year: int, hour: int, cluster_name: str):
-        return self.__get_details_hourly(area, year)[cluster_name]["MinGen - MWh"][hour]
+        return self.__get_details_hourly(area, year)[cluster_name]["MIN GEN - MWh"][hour]
 
     def get_specific_value(self, area: str, year: int, prod_name: str, date: str) -> float:
         return self.__get_values_hourly_for_specific_hour(area, year, date)[prod_name]["MWh"].sum()
