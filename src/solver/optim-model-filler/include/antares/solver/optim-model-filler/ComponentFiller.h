@@ -88,25 +88,30 @@ class VariablesBulkAddition
 {
 public:
     VariablesBulkAddition(Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
-                          VariableDictionary& variableDictionary,
-                          unsigned int first_index,
-                          unsigned int last_index);
-    void checkIndices() const;
-
-    unsigned getCount() const;
-
-    void addVariable(double lb, double ub, bool integer, const FullKey&) const;
-    void addVariable(const std::vector<double>& lb, double ub, bool integer, const FullKey&) const;
-    void addVariable(double lb, const std::vector<double>& ub, bool integer, const FullKey&) const;
+                          VariableDictionary& variableDictionary);
+    void addVariable(double lb,
+                     double ub,
+                     bool integer,
+                     const Dimensions& dim,
+                     const PartialKey&) const;
+    void addVariable(const std::vector<double>& lb,
+                     double ub,
+                     bool integer,
+                     const Dimensions& dim,
+                     const PartialKey&) const;
+    void addVariable(double lb,
+                     const std::vector<double>& ub,
+                     bool integer,
+                     const Dimensions& dim,
+                     const PartialKey&) const;
     void addVariable(const std::vector<double>& lb,
                      const std::vector<double>& ub,
                      bool integer,
-                     const FullKey&) const;
+                     const Dimensions& dim,
+                     const PartialKey&) const;
 
 private:
     Optimisation::LinearProblemApi::ILinearProblem& linear_problem_;
     VariableDictionary& variableDictionary;
-    unsigned int first_index_;
-    unsigned int last_index_;
 };
 } // namespace Antares::Optimization
