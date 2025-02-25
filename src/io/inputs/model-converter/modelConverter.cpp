@@ -43,7 +43,7 @@ PortTypeDoesntContainsFields::PortTypeDoesntContainsFields(const std::string& id
 {
 }
 
-PortTypeAlreadyExists::PortTypeAlreadyExists(const std::string& id):
+ObjectWithThisIdAlreadyExists::ObjectWithThisIdAlreadyExists(const std::string& id):
     std::runtime_error("Port type already exists: " + id)
 {
 }
@@ -70,7 +70,7 @@ std::vector<Antares::Study::SystemModel::PortType> convertTypes(
         if (std::ranges::find_if(out, [&portType](const auto& p) { return p.Id() == portType.id; })
             != out.end())
         {
-            throw PortTypeAlreadyExists(portType.id);
+            throw ObjectWithThisIdAlreadyExists(portType.id);
         }
 
         Antares::Study::SystemModel::PortType portTypeModel(portType.id, std::move(fields));
@@ -161,7 +161,22 @@ std::vector<Antares::Study::SystemModel::Variable> convertVariables(const YmlMod
 std::vector<Antares::Study::SystemModel::Port> convertPorts(
   const Antares::IO::Inputs::YmlModel::Model& model)
 {
-    return {};
+    std::vector<Antares::Study::SystemModel::Port> ports;
+    ports.reserve(model.ports.size());
+    for (const auto& port: model.ports)
+    {
+        // Can't have port with the same ID
+        if (std::ranges::find_if(ports, [&port](const auto& p) { return p.Id() == port.id; })
+            != out.end())
+        {
+            throw ObjectWithThisIdAlreadyExists(port.id);
+        }
+        
+        /* if (std::ranges::find_if(model.portTypes, [&port](const auto& p) { return p.Id() == port.id; }) */
+        /*     != out.end()) */
+        /* ports.emplace_back(port.id, port); */
+    }
+    return ports;
 }
 
 /**
