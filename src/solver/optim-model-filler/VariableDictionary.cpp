@@ -164,11 +164,11 @@ void VariableDictionary::addVariable(
 {
     auto& m = hmv[key];
     const auto scenarios = dimensions.getScenarioIndices();
-    const auto timesteps = dimensions.getTimesteps();
+    const auto time_interval = dimensions.getTimesteps();
     m.resize(scenarios.size());
-    for (int scenario: scenarios)
+    for (const auto scenario: scenarios)
     {
-        for (int timestep: timesteps)
+        for (const auto timestep: time_interval)
         {
             const auto sc = buildOptional(dimensions.isScenarioDependent(), scenario);
             const auto ts = buildOptional(dimensions.isTimeDependent(), timestep);
