@@ -97,8 +97,9 @@ std::pair<std::map<std::pair<int, int>, std::string>, VariableDictionary> namesF
 {
     VariableDictionary vdict;
     std::map<std::pair<int, int>, std::string> names;
-    vdict.addVariable(dim,
-                      PartialKey("component", "variable"),
+    vdict.addVariable(
+      dim,
+      PartialKey("component", "variable"),
       [&names](const TimeAndScenario& timeAndScenario, const std::string& name)
       {
           names[std::pair(timeAndScenario.scenario, timeAndScenario.timestep)] = name;
