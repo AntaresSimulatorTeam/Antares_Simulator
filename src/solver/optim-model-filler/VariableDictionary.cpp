@@ -187,7 +187,7 @@ std::optional<unsigned int> buildOptional(bool condition, unsigned int value)
 void VariableDictionary::addVariable(
   const Dimensions& dimensions,
   const PartialKey& key,
-  std::function<Value(unsigned int, unsigned int, const std::string&)>&& func)
+  std::function<Value(const TimeAndScenario&, const std::string&)>&& func)
 {
     auto& m = hmv[key];
     const auto scenarios = dimensions.getScenarioIndices();
@@ -202,7 +202,7 @@ void VariableDictionary::addVariable(
             const auto sc = buildOptional(dimensions.isScenarioDependent(), scenario);
             const auto ts = buildOptional(dimensions.isTimeDependent(), timestep);
             const std::string name = buildVariableName(key, sc, ts);
-            m[scenario][timestep] = func(scenario, timestep, name);
+            m[scenario][timestep] = func({.scenario = scenario, .timestep = timestep}, name);
         }
     }
 }

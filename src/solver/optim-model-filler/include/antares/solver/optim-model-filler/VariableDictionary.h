@@ -107,6 +107,12 @@ private:
     std::optional<IntegerInterval> timeInterval;
 };
 
+struct TimeAndScenario
+{
+    unsigned int scenario;
+    unsigned int timestep;
+};
+
 class VariableDictionary
 {
     using Value = Antares::Optimisation::LinearProblemApi::IMipVariable*;
@@ -135,7 +141,7 @@ class VariableDictionary
 public:
     void addVariable(const Dimensions& dimensions,
                      const PartialKey& key,
-                     std::function<Value(unsigned int, unsigned int, const std::string&)>&& func);
+                     std::function<Value(const TimeAndScenario&, const std::string&)>&& func);
 
     Value operator[](const FullKey& k) const;
     Value& operator[](const FullKey& k);

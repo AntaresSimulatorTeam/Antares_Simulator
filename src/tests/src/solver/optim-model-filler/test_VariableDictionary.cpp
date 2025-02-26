@@ -99,11 +99,11 @@ std::pair<std::map<std::pair<int, int>, std::string>, VariableDictionary> namesF
     std::map<std::pair<int, int>, std::string> names;
     vdict.addVariable(dim,
                       PartialKey("component", "variable"),
-                      [&names](int sc, int ts, const std::string& name)
-                      {
-                          names[std::pair(sc, ts)] = name;
-                          return nullptr;
-                      });
+      [&names](const TimeAndScenario& timeAndScenario, const std::string& name)
+      {
+          names[std::pair(timeAndScenario.scenario, timeAndScenario.timestep)] = name;
+          return nullptr;
+      });
     return {names, vdict};
 }
 
