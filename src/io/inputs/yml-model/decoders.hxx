@@ -133,7 +133,8 @@ struct convert<Antares::IO::Inputs::YmlModel::PortFieldDefinition>
     static bool decode(const Node& node, Antares::IO::Inputs::YmlModel::PortFieldDefinition& rhs)
     {
         if (!node.IsMap())
-        {
+        { 
+            // return true to avoid error ? port field definition not mandatory
             return false;
         }
         rhs.port = node["port"].as<std::string>();

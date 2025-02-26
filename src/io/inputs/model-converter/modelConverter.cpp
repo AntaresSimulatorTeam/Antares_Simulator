@@ -58,6 +58,13 @@ PortNotFoundForDefinition::PortNotFoundForDefinition(const std::string& portId):
 {
 }
 
+FieldNotFoundForDefinition::FieldNotFoundForDefinition(const std::string& portId,
+                                                       const std::string& fieldId):
+    std::runtime_error("In port-field-definitions, for port: " + portId
+                       + " , field not found: " + fieldId)
+{
+}
+
 /// Convert portTypes to Antares::Study::SystemModel::PortType
 std::vector<Antares::Study::SystemModel::PortType> convertTypes(
   const Antares::IO::Inputs::YmlModel::Library& library)
@@ -202,19 +209,32 @@ std::vector<Antares::Study::SystemModel::Port> convertPorts(
  * \return A vector of SystemModel::PortFieldDefinition objects.
  */
 std::vector<Study::SystemModel::PortFieldDefinition> convertPortFieldDefinitions(
-  const IO::Inputs::YmlModel::Model& model)
+  const IO::Inputs::YmlModel::Model& model,
+  const std::vector<Antares::Study::SystemModel::PortType>& portTypes)
 {
     std::vector<Study::SystemModel::PortFieldDefinition> portFieldDefinitions;
     portFieldDefinitions.reserve(model.port_field_definitions.size());
     for (const auto& pfdefinition: model.port_field_definitions)
     {
-        if (std::ranges::find_if(model.ports,
-                                 [&pfdefinition](const auto& p)
-                                 { return p.id == pfdefinition.port; })
-            == model.ports.end())
+        // first check if the port exists
+        auto itPort = std::ranges::find_if(model.ports,
+                                           [&pfdefinition](const auto& p)
+                                           { return p.id == pfdefinition.port; });
+        if (itPort == model.ports.end())
         {
-            // TODO add custom ex
             throw PortNotFoundForDefinition(pfdefinition.port);
+        }
+
+        // second check if the field exists in type
+        auto itType = std::ranges::find_if(portTypes,
+                                           [&itPort](const auto& pt)
+                                           { return pt.Id() == itPort->type; });
+        auto itField = std::ranges::find_if(itType->Fields(),
+                                            [&pfdefinition](const auto& field)
+                                            { return field.Id() == pfdefinition.field; });
+        if (itField == itType->Fields().end())
+        {
+            throw FieldNotFoundForDefinition(pfdefinition.port, pfdefinition.field);
         }
     }
     return portFieldDefinitions;
