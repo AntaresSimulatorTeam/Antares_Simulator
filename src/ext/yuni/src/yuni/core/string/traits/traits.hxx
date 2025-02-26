@@ -65,7 +65,10 @@ inline Data<ChunkSizeT, ExpandableT>::~Data()
     // The string is a string adapter only if the chunk size if null
     // When the string is an adapter, the variable is const
     if (chunkSize != 0)
+    {
         ::free(const_cast<void*>(static_cast<const void*>(data)));
+        data = nullptr;
+    }
 }
 
 #ifdef YUNI_HAS_CPP_MOVE

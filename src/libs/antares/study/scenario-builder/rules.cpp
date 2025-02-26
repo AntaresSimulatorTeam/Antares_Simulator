@@ -128,7 +128,9 @@ Data::Area* Rules::getArea(const AreaName& areaname, bool updaterMode)
     return area;
 }
 
-bool Rules::readThermalCluster(const AreaName::Vector& splitKey, String value, bool updaterMode)
+bool Rules::readThermalCluster(const AreaName::Vector& splitKey,
+                               const String& value,
+                               bool updaterMode)
 {
     const AreaName& areaname = splitKey[1];
     const uint year = splitKey[2].to<uint>();
@@ -155,8 +157,7 @@ bool Rules::readThermalCluster(const AreaName::Vector& splitKey, String value, b
         bool isTheActiveRule = (pName.toLower() == study_.parameters.activeRulesScenario.toLower());
         if (!updaterMode and isTheActiveRule)
         {
-            std::string clusterId
-              = (area->id).to<std::string>() + "." + clustername;
+            std::string clusterId = (area->id).to<std::string>() + "." + clustername;
             disabledClustersOnRuleActive[clusterId].push_back(year + 1);
             return false;
         }
@@ -164,7 +165,9 @@ bool Rules::readThermalCluster(const AreaName::Vector& splitKey, String value, b
     return true;
 }
 
-bool Rules::readRenewableCluster(const AreaName::Vector& splitKey, String value, bool updaterMode)
+bool Rules::readRenewableCluster(const AreaName::Vector& splitKey,
+                                 const String& value,
+                                 bool updaterMode)
 {
     const AreaName& areaname = splitKey[1];
     const uint year = splitKey[2].to<uint>();
@@ -192,8 +195,7 @@ bool Rules::readRenewableCluster(const AreaName::Vector& splitKey, String value,
         bool isTheActiveRule = (pName.toLower() == study_.parameters.activeRulesScenario.toLower());
         if (!updaterMode and isTheActiveRule)
         {
-            std::string clusterId
-              = (area->id).to<std::string>() + "." + clustername;
+            std::string clusterId = (area->id).to<std::string>() + "." + clustername;
             disabledClustersOnRuleActive[clusterId].push_back(year + 1);
             return false;
         }
@@ -201,7 +203,7 @@ bool Rules::readRenewableCluster(const AreaName::Vector& splitKey, String value,
     return true;
 }
 
-bool Rules::readLoad(const AreaName::Vector& splitKey, String value, bool updaterMode)
+bool Rules::readLoad(const AreaName::Vector& splitKey, const String& value, bool updaterMode)
 {
     const AreaName& areaname = splitKey[1];
     const uint year = splitKey[2].to<uint>();
@@ -215,7 +217,7 @@ bool Rules::readLoad(const AreaName::Vector& splitKey, String value, bool update
     return true;
 }
 
-bool Rules::readWind(const AreaName::Vector& splitKey, String value, bool updaterMode)
+bool Rules::readWind(const AreaName::Vector& splitKey, const String& value, bool updaterMode)
 {
     const uint year = splitKey[2].to<uint>();
     const AreaName& areaname = splitKey[1];
@@ -229,7 +231,7 @@ bool Rules::readWind(const AreaName::Vector& splitKey, String value, bool update
     return true;
 }
 
-bool Rules::readHydro(const AreaName::Vector& splitKey, String value, bool updaterMode)
+bool Rules::readHydro(const AreaName::Vector& splitKey, const String& value, bool updaterMode)
 {
     const uint year = splitKey[2].to<uint>();
     const AreaName& areaname = splitKey[1];
@@ -243,7 +245,7 @@ bool Rules::readHydro(const AreaName::Vector& splitKey, String value, bool updat
     return true;
 }
 
-bool Rules::readSolar(const AreaName::Vector& splitKey, String value, bool updaterMode)
+bool Rules::readSolar(const AreaName::Vector& splitKey, const String& value, bool updaterMode)
 {
     const uint year = splitKey[2].to<uint>();
     const AreaName& areaname = splitKey[1];
@@ -257,7 +259,7 @@ bool Rules::readSolar(const AreaName::Vector& splitKey, String value, bool updat
     return true;
 }
 
-bool Rules::readHydroLevels(const AreaName::Vector& splitKey, String value, bool updaterMode)
+bool Rules::readHydroLevels(const AreaName::Vector& splitKey, const String& value, bool updaterMode)
 {
     const uint year = splitKey[2].to<uint>();
     const AreaName& areaname = splitKey[1];
@@ -285,7 +287,7 @@ Data::AreaLink* Rules::getLink(const AreaName& fromAreaName,
     return link;
 }
 
-bool Rules::readLink(const AreaName::Vector& splitKey, String value, bool updaterMode)
+bool Rules::readLink(const AreaName::Vector& splitKey, const String& value, bool updaterMode)
 {
     const AreaName& fromAreaName = splitKey[1];
     const AreaName& toAreaName = splitKey[2];
@@ -314,13 +316,15 @@ bool Rules::checkGroupExists(const std::string& groupName) const
     const auto& groups = study_.bindingConstraintsGroups;
     if (!groups[groupName])
     {
-        logs.warning() << "[scenario-builder] The binding constraint group '" << groupName << "' does not exist";
+        logs.warning() << "[scenario-builder] The binding constraint group '" << groupName
+                       << "' does not exist";
         return false;
     }
     return true;
 }
 
-bool Rules::readBindingConstraints(const AreaName::Vector &splitKey, String value) {
+bool Rules::readBindingConstraints(const AreaName::Vector& splitKey, const String& value)
+{
     std::string group_name = splitKey[1].c_str();
     auto year = std::stoi(splitKey[2].c_str());
 
@@ -332,7 +336,7 @@ bool Rules::readBindingConstraints(const AreaName::Vector &splitKey, String valu
     return true;
 }
 
-bool Rules::readLine(const AreaName::Vector& splitKey, String value, bool updaterMode)
+bool Rules::readLine(const AreaName::Vector& splitKey, const String& value, bool updaterMode)
 {
     if (splitKey.size() <= 2)
         return false;

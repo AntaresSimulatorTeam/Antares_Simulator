@@ -84,7 +84,7 @@ public:
     /*!
     ** \brief Load information from a single line (extracted from an INI file)
     */
-    bool readLine(const AreaName::Vector& splitKey, String value, bool updaterMode = false);
+    bool readLine(const AreaName::Vector& splitKey, const String& value, bool updaterMode = false);
 
     /*!
     ** \brief Export the data into a mere INI file
@@ -133,16 +133,17 @@ public:
 
 private:
     // Member methods
-    bool readThermalCluster(const AreaName::Vector& instrs, String value, bool updaterMode);
-    bool readRenewableCluster(const AreaName::Vector& instrs, String value, bool updaterMode);
-    bool readLoad(const AreaName::Vector& instrs, String value, bool updaterMode);
-    bool readWind(const AreaName::Vector& instrs, String value, bool updaterMode);
-    bool readHydro(const AreaName::Vector& instrs, String value, bool updaterMode);
-    bool readSolar(const AreaName::Vector& instrs, String value, bool updaterMode);
-    bool readHydroLevels(const AreaName::Vector& instrs, String value, bool updaterMode);
-    bool readLink(const AreaName::Vector& instrs, String value, bool updaterMode);
-    bool readBindingConstraints(const AreaName::Vector &splitKey, String value);
-
+    bool readThermalCluster(const AreaName::Vector& instrs, const String& value, bool updaterMode);
+    bool readRenewableCluster(const AreaName::Vector& instrs,
+                              const String& value,
+                              bool updaterMode);
+    bool readLoad(const AreaName::Vector& instrs, const String& value, bool updaterMode);
+    bool readWind(const AreaName::Vector& instrs, const String& value, bool updaterMode);
+    bool readHydro(const AreaName::Vector& instrs, const String& value, bool updaterMode);
+    bool readSolar(const AreaName::Vector& instrs, const String& value, bool updaterMode);
+    bool readHydroLevels(const AreaName::Vector& instrs, const String& value, bool updaterMode);
+    bool readLink(const AreaName::Vector& instrs, const String& value, bool updaterMode);
+    bool readBindingConstraints(const AreaName::Vector& splitKey, const String& value);
 
     Data::Area* getArea(const AreaName& areaname, bool updaterMode);
     Data::AreaLink* getLink(const AreaName& fromAreaName,
