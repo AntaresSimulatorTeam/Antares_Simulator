@@ -25,8 +25,8 @@ const std::string& PartialKey::getVariable() const
 // FullKey
 FullKey::FullKey(const std::string& component,
                  const std::string& variable,
-                 int scenario,
-                 int timestep):
+                 unsigned int scenario,
+                 unsigned int timestep):
     pk(component, variable),
     scenario(scenario),
     timestep(timestep)
@@ -53,12 +53,12 @@ const std::string& FullKey::getVariable() const
     return pk.variable_id;
 }
 
-std::optional<int> FullKey::getScenario() const
+std::optional<unsigned int> FullKey::getScenario() const
 {
     return scenario;
 }
 
-std::optional<int> FullKey::getTimestep() const
+std::optional<unsigned int> FullKey::getTimestep() const
 {
     return timestep;
 }
@@ -74,8 +74,8 @@ std::size_t hash::operator()(const PartialKey& p) const
 }
 
 std::string buildVariableName(const PartialKey& key,
-                              std::optional<int> scenario,
-                              std::optional<int> timestep)
+                              std::optional<unsigned int> scenario,
+                              std::optional<unsigned int> timestep)
 {
     std::string ret = key.getComponent() + "." + key.getVariable();
     if (scenario.has_value())
@@ -89,12 +89,12 @@ std::string buildVariableName(const PartialKey& key,
     return ret;
 }
 
-IntegerInterval::Iterator::Iterator(int current):
+IntegerInterval::Iterator::Iterator(unsigned int current):
     current_(current)
 {
 }
 
-int IntegerInterval::Iterator::operator*() const
+unsigned int IntegerInterval::Iterator::operator*() const
 {
     return current_;
 }
@@ -144,7 +144,7 @@ unsigned int Dimensions::getNumberOfTimesteps() const
 
 namespace
 {
-std::optional<int> buildOptional(bool condition, int value)
+std::optional<unsigned int> buildOptional(bool condition, unsigned int value)
 {
     if (condition)
     {
@@ -209,16 +209,16 @@ VariableDictionary::Value& VariableDictionary::operator()(const std::string& com
 
 VariableDictionary::Value VariableDictionary::operator()(const std::string& component,
                                                          const std::string& variable,
-                                                         int scenario,
-                                                         int timestep) const
+                                                         unsigned int scenario,
+                                                         unsigned int timestep) const
 {
     return hmv.at(PartialKey(component, variable)).at(scenario).at(timestep);
 }
 
 VariableDictionary::Value& VariableDictionary::operator()(const std::string& component,
                                                           const std::string& variable,
-                                                          int scenario,
-                                                          int timestep)
+                                                          unsigned int scenario,
+                                                          unsigned int timestep)
 {
     return hmv[PartialKey(component, variable)].at(scenario).at(timestep);
 }
