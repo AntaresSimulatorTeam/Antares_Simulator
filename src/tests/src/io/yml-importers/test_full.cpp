@@ -53,8 +53,8 @@ void checkVariable(const SystemModel::Variable& variable,
                    const std::string& lowerBound,
                    const std::string& upperBound,
                    SystemModel::ValueType type,
-                   SystemModel::TimeDependent timeDependent,
-                   SystemModel::ScenarioDependent scenarioDependent)
+                   [[maybe_unused]] SystemModel::TimeDependent timeDependent,
+                   [[maybe_unused]] SystemModel::ScenarioDependent scenarioDependent)
 {
     std::cout << "Variable: " << variable.Id() << std::endl;
     BOOST_CHECK_EQUAL(variable.Id(), name);
