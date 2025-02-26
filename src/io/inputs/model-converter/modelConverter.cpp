@@ -43,13 +43,18 @@ PortTypeDoesntContainsFields::PortTypeDoesntContainsFields(const std::string& id
 {
 }
 
+ObjectWithThisIdAlreadyExists::ObjectWithThisIdAlreadyExists(const std::string& id):
+    std::runtime_error("Object id already exists: " + id)
+{
+}
+
 PortTypeNotFound::PortTypeNotFound(const std::string& portId, const std::string& portTypeId):
     std::runtime_error("For the port: " + portId + " , port type not found: " + portTypeId)
 {
 }
 
-ObjectWithThisIdAlreadyExists::ObjectWithThisIdAlreadyExists(const std::string& id):
-    std::runtime_error("Object id already exists: " + id)
+PortNotFoundForDefinition::PortNotFoundForDefinition(const std::string& portId):
+    std::runtime_error("In port-field-definitions, port not found: " + portId)
 {
 }
 
@@ -209,7 +214,7 @@ std::vector<Study::SystemModel::PortFieldDefinition> convertPortFieldDefinitions
             == model.ports.end())
         {
             // TODO add custom ex
-            throw ObjectWithThisIdAlreadyExists(pfdefinition.port);
+            throw PortNotFoundForDefinition(pfdefinition.port);
         }
     }
     return portFieldDefinitions;

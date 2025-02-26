@@ -68,5 +68,11 @@ public:
     explicit PortTypeNotFound(const std::string& portId, const std::string& portTypeId);
 };
 
+class PortNotFoundForDefinition: public std::runtime_error
+{
+public:
+    explicit PortNotFoundForDefinition(const std::string& portId);
+};
+
 Study::SystemModel::Library convert(const YmlModel::Library& library);
 } // namespace Antares::IO::Inputs::ModelConverter
