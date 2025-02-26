@@ -65,7 +65,7 @@ struct IntegerInterval
     class Iterator
     {
     public:
-        Iterator(unsigned int current);
+        explicit Iterator(unsigned int current);
         unsigned int operator*() const;
         Iterator& operator++();
         bool operator!=(const Iterator& other) const;

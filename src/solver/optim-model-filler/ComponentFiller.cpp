@@ -115,7 +115,9 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
     variableDictionary.addVariable(
       dim,
       key,
-      [&](unsigned int timestep, unsigned int /*scenario*/, const std::string& name)
+      [this, &lb, &ub, integer](unsigned int timestep,
+                                unsigned int /*scenario*/,
+                                const std::string& name)
       { return linear_problem_.addVariable(lb[timestep], ub[timestep], integer, name); });
 }
 
