@@ -555,9 +555,9 @@ int BindingConstraint::offset(const AreaLink* lnk) const
     return (i != pLinkOffsets.end()) ? i->second : 0;
 }
 
-int BindingConstraint::offset(const ThermalCluster* lnk) const
+int BindingConstraint::offset(const ThermalCluster* cluster) const
 {
-    auto i = pClusterOffsets.find(lnk);
+    auto i = pClusterOffsets.find(cluster);
     return (i != pClusterOffsets.end()) ? i->second : 0;
 }
 
