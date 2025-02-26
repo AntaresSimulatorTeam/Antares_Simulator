@@ -157,8 +157,9 @@ std::optional<unsigned int> buildOptional(bool condition, unsigned int value)
 }
 } // namespace
 
-void VariableDictionary::addVariable(const Dimensions& dimensions,
-                                     const PartialKey& key,
+void VariableDictionary::addVariable(
+  const Dimensions& dimensions,
+  const PartialKey& key,
   std::function<Value(unsigned int, unsigned int, const std::string&)>&& func)
 {
     auto& m = hmv[key];
@@ -167,7 +168,6 @@ void VariableDictionary::addVariable(const Dimensions& dimensions,
     m.resize(scenarios.size());
     for (int scenario: scenarios)
     {
-
         for (int timestep: timesteps)
         {
             const auto sc = buildOptional(dimensions.isScenarioDependent(), scenario);
