@@ -48,7 +48,9 @@ void VariablesBulkAddition::addVariable(double lb,
 {
     variableDictionary.addVariable(dim,
                                    key,
-                                   [&](int /*timestep*/, int /*scenario*/, const std::string& name)
+                                   [this, lb, ub, integer](int /*timestep*/,
+                                                           int /*scenario*/,
+                                                           const std::string& name)
                                    { return linear_problem_.addVariable(lb, ub, integer, name); });
 }
 
@@ -68,7 +70,9 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
     variableDictionary.addVariable(
       dim,
       key,
-      [&](int timestep, int /*scenario*/, const std::string& name)
+      [this, &lb, ub, integer](unsigned int timestep,
+                               unsigned int /*scenario*/,
+                               const std::string& name)
       { return linear_problem_.addVariable(lb[timestep], ub, integer, name); });
 }
 
@@ -88,7 +92,9 @@ void VariablesBulkAddition::addVariable(double lb,
     variableDictionary.addVariable(
       dim,
       key,
-      [&](int timestep, int /*scenario*/, const std::string& name)
+      [this, lb, &ub, integer](unsigned int timestep,
+                               unsigned int /*scenario*/,
+                               const std::string& name)
       { return linear_problem_.addVariable(lb, ub[timestep], integer, name); });
 }
 
@@ -109,7 +115,7 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
     variableDictionary.addVariable(
       dim,
       key,
-      [&](int timestep, int /*scenario*/, const std::string& name)
+      [&](unsigned int timestep, unsigned int /*scenario*/, const std::string& name)
       { return linear_problem_.addVariable(lb[timestep], ub[timestep], integer, name); });
 }
 
@@ -152,7 +158,7 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
             // std::visit to handle the 4 cases: double/double, vector/double,
             // double/vector and vector/vector.
             std::visit(
-              [&pb, &variable, this, &ctx, &key, &dim](const auto& lb_, const auto& ub_)
+              [&pb, &variable, this, &key, &dim](const auto& lb_, const auto& ub_)
               {
                   VariablesBulkAddition(pb, variableDictionary)
                     .addVariable(lb_,

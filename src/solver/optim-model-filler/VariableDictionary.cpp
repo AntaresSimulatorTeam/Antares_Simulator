@@ -137,7 +137,7 @@ IntegerInterval Dimensions::getScenarioIndices() const
     return scenarioInterval.value_or(IntegerInterval{});
 }
 
-int Dimensions::getNumberOfTimesteps() const
+unsigned int Dimensions::getNumberOfTimesteps() const
 {
     return timeInterval ? timeInterval->finalTime - timeInterval->initialTime + 1 : 1;
 }
@@ -159,23 +159,21 @@ std::optional<int> buildOptional(bool condition, int value)
 
 void VariableDictionary::addVariable(const Dimensions& dimensions,
                                      const PartialKey& key,
-                                     std::function<Value(int, int, const std::string&)>&& func)
+  std::function<Value(unsigned int, unsigned int, const std::string&)>&& func)
 {
     auto& m = hmv[key];
     const auto scenarios = dimensions.getScenarioIndices();
     const auto timesteps = dimensions.getTimesteps();
-    const int offset = *timesteps.begin();
     m.resize(scenarios.size());
     for (int scenario: scenarios)
     {
-        m[scenario].resize(timesteps.size());
 
         for (int timestep: timesteps)
         {
             const auto sc = buildOptional(dimensions.isScenarioDependent(), scenario);
             const auto ts = buildOptional(dimensions.isTimeDependent(), timestep);
             const std::string name = buildVariableName(key, sc, ts);
-            m[scenario][timestep - offset] = func(scenario, timestep, name);
+            m[scenario][timestep] = func(scenario, timestep, name);
         }
     }
 }

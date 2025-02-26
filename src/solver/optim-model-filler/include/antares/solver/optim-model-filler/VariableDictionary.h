@@ -2,6 +2,7 @@
 
 #include <compare>
 #include <functional>
+#include <map>
 #include <optional>
 #include <string>
 #include <unordered_map>
@@ -96,7 +97,7 @@ public:
     bool isScenarioDependent() const;
     IntegerInterval getTimesteps() const;
     IntegerInterval getScenarioIndices() const;
-    int getNumberOfTimesteps() const;
+    unsigned int getNumberOfTimesteps() const;
 
 private:
     std::optional<IntegerInterval> scenarioInterval;
@@ -105,11 +106,8 @@ private:
 
 class VariableDictionary
 {
-public:
-
-private:
     using Value = Antares::Optimisation::LinearProblemApi::IMipVariable*;
-    using TwoIndexVector = std::vector<std::vector<Value>>;
+    using TwoIndexVector = std::vector<std::map<unsigned int, Value>>;
     using HashMapVector = std::unordered_map<PartialKey, TwoIndexVector, hash>;
 
     HashMapVector hmv;
@@ -118,7 +116,7 @@ private:
 public:
     void addVariable(const Dimensions& dimensions,
                      const PartialKey& key,
-                     std::function<Value(int, int, const std::string&)>&& func);
+                     std::function<Value(unsigned int, unsigned int, const std::string&)>&& func);
 
     Value operator[](const FullKey& k) const;
     Value& operator[](const FullKey& k);
