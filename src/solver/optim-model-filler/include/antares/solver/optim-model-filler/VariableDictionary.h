@@ -32,18 +32,21 @@ struct PartialKey
 struct FullKey
 {
     const PartialKey pk;
-    const std::optional<int> scenario;
-    const std::optional<int> timestep;
+    const std::optional<unsigned int> scenario;
+    const std::optional<unsigned int> timestep;
 
     FullKey(const std::string& component, const std::string& variable);
-    FullKey(const std::string& component, const std::string& variable, int scenario, int timestep);
+    FullKey(const std::string& component,
+            const std::string& variable,
+            unsigned int scenario,
+            unsigned int timestep);
 
     const PartialKey& getPartialKey() const;
     const std::string& getComponent() const;
     const std::string& getVariable() const;
 
-    std::optional<int> getScenario() const;
-    std::optional<int> getTimestep() const;
+    std::optional<unsigned int> getScenario() const;
+    std::optional<unsigned int> getTimestep() const;
 
     auto operator<=>(const FullKey&) const = default; // Automatically generates <, >, ==, etc.
 };
@@ -56,14 +59,14 @@ public:
 
 struct IntegerInterval
 {
-    int initialTime = 0;
-    int finalTime = 0;
+    unsigned int initialTime = 0;
+    unsigned int finalTime = 0;
 
     class Iterator
     {
     public:
-        Iterator(int current);
-        int operator*() const;
+        Iterator(unsigned int current);
+        unsigned int operator*() const;
         Iterator& operator++();
         bool operator!=(const Iterator& other) const;
 
@@ -126,12 +129,12 @@ public:
 
     Value operator()(const std::string& component,
                      const std::string& variable,
-                     int scenario,
-                     int timestep) const;
+                     unsigned int scenario,
+                     unsigned int timestep) const;
 
     Value& operator()(const std::string& component,
                       const std::string& variable,
-                      int scenario,
-                      int timestep);
+                      unsigned int scenario,
+                      unsigned int timestep);
 };
 } // namespace Antares::Optimization
