@@ -142,6 +142,33 @@ unsigned int Dimensions::getNumberOfTimesteps() const
     return timeInterval ? timeInterval->finalTime - timeInterval->initialTime + 1 : 1;
 }
 
+void VariableDictionary::VectorWithOffset::resize(size_t initial_size, unsigned int offset)
+{
+    offset_ = offset;
+    values_.resize(initial_size);
+}
+
+VariableDictionary::Value& VariableDictionary::VectorWithOffset::operator[](unsigned int index)
+{
+    return values_[index - offset_];
+}
+
+const VariableDictionary::Value& VariableDictionary::VectorWithOffset::operator[](
+  unsigned int index) const
+{
+    return values_[index - offset_];
+}
+
+const VariableDictionary::Value& VariableDictionary::VectorWithOffset::at(unsigned int index) const
+{
+    return values_.at(index - offset_);
+}
+
+VariableDictionary::Value& VariableDictionary::VectorWithOffset::at(unsigned int index)
+{
+    return values_.at(index - offset_);
+}
+
 namespace
 {
 std::optional<unsigned int> buildOptional(bool condition, unsigned int value)
@@ -165,9 +192,11 @@ void VariableDictionary::addVariable(
     auto& m = hmv[key];
     const auto scenarios = dimensions.getScenarioIndices();
     const auto time_interval = dimensions.getTimesteps();
+    const int offset = *time_interval.begin();
     m.resize(scenarios.size());
     for (const auto scenario: scenarios)
     {
+        m[scenario].resize(time_interval.size(), offset);
         for (const auto timestep: time_interval)
         {
             const auto sc = buildOptional(dimensions.isScenarioDependent(), scenario);

@@ -110,7 +110,23 @@ private:
 class VariableDictionary
 {
     using Value = Antares::Optimisation::LinearProblemApi::IMipVariable*;
-    using TwoIndexVector = std::vector<std::map<unsigned int, Value>>;
+
+    class VectorWithOffset
+    {
+    public:
+        VectorWithOffset() = default;
+        void resize(size_t initial_size, unsigned offset);
+        Value& operator[](unsigned int index);
+        const Value& operator[](unsigned int index) const;
+        const Value& at(unsigned int index) const;
+        Value& at(unsigned int index);
+
+    private:
+        std::vector<Value> values_ = {};
+        unsigned offset_ = 0;
+    };
+
+    using TwoIndexVector = std::vector<VectorWithOffset>;
     using HashMapVector = std::unordered_map<PartialKey, TwoIndexVector, hash>;
 
     HashMapVector hmv;
