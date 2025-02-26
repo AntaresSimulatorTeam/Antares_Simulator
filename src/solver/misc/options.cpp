@@ -89,7 +89,8 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
       "linear-solver-parameters",
       "Set linear solver-specific parameters, for instance --linear-solver-parameters=\"THREADS 1 "
       "PRESOLVE 1\""
-      "for XPRESS or --linear-solver-parameters=\"parallel/maxnthreads 1, lp/presolving TRUE\" for SCIP."
+      "for XPRESS or --linear-solver-parameters=\"parallel/maxnthreads 1, lp/presolving TRUE\" for "
+      "SCIP."
       "Syntax is solver-dependent, and only supported for SCIP & XPRESS.");
 
     //--linear-solver-parameters
@@ -107,14 +108,13 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
         + availableQuadraticSolversString());
 
     //--quadratic-solver-parameters
-    parser->add(
-      options.solverOptions.quadraticSolverParameters,
-      ' ',
-      "quadratic-solver-parameters",
-      "Set quadratic solver-specific parameters, for instance "
-      "--quadratic-solver-parameters=\"THREADS 8\""
-      "for XPRESS or --quadratic-solver-parameters=\"parallel/maxnthreads 8\" for SCIP."
-      "Syntax is solver-dependent.");
+    parser->add(options.solverOptions.quadraticSolverParameters,
+                ' ',
+                "quadratic-solver-parameters",
+                "Set quadratic solver-specific parameters, for instance "
+                "--quadratic-solver-parameters=\"THREADS 8\""
+                "for XPRESS or --quadratic-solver-parameters=\"parallel/maxnthreads 8\" for SCIP."
+                "Syntax is solver-dependent.");
 
     parser->addParagraph("\nParameters");
     // --name
