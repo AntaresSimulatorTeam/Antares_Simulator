@@ -14,19 +14,24 @@ system:
     scenario-group: sg
     parameters:
     - id: load
-      type: constant
+      time-dependent: false
+      scenario-dependent: false
       value: 100
     - id: gen1_max_p
-      type: constant
+      time-dependent: false
+      scenario-dependent: false
       value: 80
     - id: gen1_prop_cost
-      type: constant
+      time-dependent: false
+      scenario-dependent: false
       value: 60
     - id: gen2_max_p
-      type: constant
+      time-dependent: false
+      scenario-dependent: false
       value: 200
     - id: gen2_prop_cost
-      type: constant
+      time-dependent: false
+      scenario-dependent: false
       value: 6
 
   - id: node2
@@ -34,23 +39,30 @@ system:
     scenario-group: sg
     parameters:
     - id: load
-      type: constant
+      time-dependent: false
+      scenario-dependent: false
       value: 1000
     - id: gen1_max_p
-      type: constant
+      time-dependent: false
+      scenario-dependent: false
       value: 650
     - id: gen1_min_p
-      type: constant
+      time-dependent: false
+      scenario-dependent: false
       value: 200
     - id: gen1_prop_cost
-      type: constant
+      time-dependent: false
+      scenario-dependent: false
       value: 10
     - id: gen2_max_p
-      type: constant
+      time-dependent: false
+      scenario-dependent: false
       value: 1000
     - id: gen2_min_p
-      type: constant
+      time-dependent: false
+      scenario-dependent: false
       value: 500
     - id: gen2_prop_cost
-      type: constant
+      time-dependent: false
+      scenario-dependent: false
       value: 20

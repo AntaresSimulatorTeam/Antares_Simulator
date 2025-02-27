@@ -40,7 +40,7 @@ struct CsvCreationFixture
 
     CsvCreationFixture()
     {
-        temp_path = filesystem::temp_directory_path() /= std::tmpnam(nullptr);
+        temp_path = filesystem::temp_directory_path() / std::tmpnam(nullptr);
         filesystem::create_directories(temp_path);
     }
 

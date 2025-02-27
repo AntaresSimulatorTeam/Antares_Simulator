@@ -23,7 +23,7 @@ void VarFillerContext::addVariables(ILinearProblem& pb,
 {
     for (unsigned timestep = ctx.getFirstTimeStep(); timestep < ctx.getLastTimeStep(); timestep++)
     {
-        for (unsigned scenario: ctx.scenariosSelected)
+        for (unsigned scenario: ctx.getSelectedScenarios())
         {
             pb.addNumVariable(timeseries[timestep][scenario],
                               timeseries[timestep][scenario],
