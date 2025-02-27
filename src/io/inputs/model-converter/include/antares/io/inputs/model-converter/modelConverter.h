@@ -50,10 +50,22 @@ public:
     explicit UnknownTypeException(YmlModel::ValueType type);
 };
 
-class ObjectWithThisIdAlreadyExists: public std::runtime_error
+class PortWithThisIdAlreadyExists: public std::runtime_error
 {
 public:
-    explicit ObjectWithThisIdAlreadyExists(const std::string& id);
+    explicit PortWithThisIdAlreadyExists(const std::string& id);
+};
+
+class PortTypeWithThisIdAlreadyExists: public std::runtime_error
+{
+public:
+    explicit PortTypeWithThisIdAlreadyExists(const std::string& id);
+};
+
+class ConstraintWithThisIdAlreadyExists: public std::runtime_error
+{
+public:
+    explicit ConstraintWithThisIdAlreadyExists(const std::string& id);
 };
 
 class PortTypeDoesntContainsFields: public std::runtime_error

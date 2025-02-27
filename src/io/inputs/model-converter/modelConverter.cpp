@@ -43,8 +43,18 @@ PortTypeDoesntContainsFields::PortTypeDoesntContainsFields(const std::string& id
 {
 }
 
-ObjectWithThisIdAlreadyExists::ObjectWithThisIdAlreadyExists(const std::string& id):
-    std::runtime_error("Object id already exists: " + id)
+PortWithThisIdAlreadyExists::PortWithThisIdAlreadyExists(const std::string& id):
+    std::runtime_error("Port with this ID already exists: " + id)
+{
+}
+
+PortTypeWithThisIdAlreadyExists::PortTypeWithThisIdAlreadyExists(const std::string& id):
+    std::runtime_error("Port type with this id already exists: " + id)
+{
+}
+
+ConstraintWithThisIdAlreadyExists::ConstraintWithThisIdAlreadyExists(const std::string& id):
+    std::runtime_error("Constraint with this id already exists: " + id)
 {
 }
 
@@ -87,7 +97,7 @@ std::vector<Study::SystemModel::PortType> convertTypes(const IO::Inputs::YmlMode
             != out.end())
         {
             std::cerr << portType.id << std::endl;
-            throw ObjectWithThisIdAlreadyExists(portType.id);
+            throw PortTypeWithThisIdAlreadyExists(portType.id);
         }
 
         Study::SystemModel::PortType portTypeModel(portType.id, std::move(fields));
@@ -187,7 +197,7 @@ std::vector<Study::SystemModel::Port> convertPorts(
         if (std::ranges::find_if(ports, [&port](const auto& p) { return p.Id() == port.id; })
             != ports.end())
         {
-            throw ObjectWithThisIdAlreadyExists(port.id);
+            throw PortWithThisIdAlreadyExists(port.id);
         }
 
         const auto it = std::ranges::find_if(portTypes,
@@ -263,10 +273,11 @@ std::vector<Study::SystemModel::Constraint> convertConstraints(
     for (const auto& constraint: model.constraints)
     {
         // Can't have constraints with the same ID
-        if (std::ranges::find_if(constraints, [&constraint](const auto& c) { return c.Id() == constraint.id; })
+        if (std::ranges::find_if(constraints,
+                                 [&constraint](const auto& c) { return c.Id() == constraint.id; })
             != constraints.end())
         {
-            throw ObjectWithThisIdAlreadyExists(constraint.id);
+            throw ConstraintWithThisIdAlreadyExists(constraint.id);
         }
 
         auto nodeRegistry = convertExpressionToNode(constraint.expression, model);
