@@ -84,8 +84,9 @@ std::vector<Study::SystemModel::PortType> convertTypes(const IO::Inputs::YmlMode
 
         // Can't have port types with the same ID
         if (std::ranges::find_if(out, [&portType](const auto& p) { return p.Id() == portType.id; })
-            == out.end())
+            != out.end())
         {
+            std::cerr << portType.id << std::endl;
             throw ObjectWithThisIdAlreadyExists(portType.id);
         }
 
@@ -237,6 +238,7 @@ std::vector<Study::SystemModel::PortFieldDefinition> convertPortFieldDefinitions
             throw FieldNotFoundForDefinition(pfdefinition.port, pfdefinition.field);
         }
 
+        // TODO: check if expression contains another port and raise an ex if so
         auto nodeRegistry = convertExpressionToNode(pfdefinition.definition, model);
 
         portFieldDefinitions.emplace_back(*itPort,
