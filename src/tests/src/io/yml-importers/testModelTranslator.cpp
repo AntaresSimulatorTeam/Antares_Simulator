@@ -88,7 +88,7 @@ bool emptyFields(const ModelConverter::PortTypeDoesntContainsFields& ex)
 
 bool portAlreadyExists(const ModelConverter::PortTypeWithThisIdAlreadyExists& ex)
 {
-    BOOST_CHECK_EQUAL(ex.what(), "This port type doesn't contains fields: port1");
+    BOOST_CHECK_EQUAL(ex.what(), "Port type with this id already exists: port2");
     return true;
 }
 // Test port types for exceptions
@@ -101,8 +101,8 @@ BOOST_FIXTURE_TEST_CASE(porttype_error_cases, Fixture)
                           emptyFields);
 
     // same name
-    YmlModel::PortType portType2{"port1", "flow port", {"field1", "field2"}};
-    YmlModel::PortType portType3{"port1", "impedance port", {"field3", "field4"}};
+    YmlModel::PortType portType2{"port2", "flow port", {"field1", "field2"}};
+    YmlModel::PortType portType3{"port2", "impedance port", {"field3", "field4"}};
     library.port_types = {portType2, portType3};
     /* BOOST_CHECK_EXCEPTION(ModelConverter::convert(libraryPortTypeWithThisIdAlreadyExists),
      * PortWithThisIdAlreadyExists); */
