@@ -78,7 +78,6 @@ public:
 private:
     static bool IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node);
 
-    bool IsThisVariableTimeDependent(const std::string& var_id) const;
 
     const Study::SystemModel::Component& component_;
     const std::map<std::string, Study::SystemModel::Variable>& modelVariable_;
