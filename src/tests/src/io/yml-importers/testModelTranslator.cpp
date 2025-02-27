@@ -105,8 +105,9 @@ BOOST_FIXTURE_TEST_CASE(port_type_error_cases, Fixture)
     YmlModel::PortType portType2{"port2", "flow port", {"field1", "field2"}};
     YmlModel::PortType portType3{"port2", "impedance port", {"field3", "field4"}};
     library.port_types = {portType2, portType3};
-    /* BOOST_CHECK_EXCEPTION(ModelConverter::convert(libraryPortTypeWithThisIdAlreadyExists),
-     * PortWithThisIdAlreadyExists); */
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library),
+                          ModelConverter::PortTypeWithThisIdAlreadyExists,
+                          portAlreadyExists);
 }
 
 // Test library with models
@@ -179,6 +180,22 @@ BOOST_FIXTURE_TEST_CASE(model_variables_properly_translated, Fixture)
     BOOST_CHECK_EQUAL(variable2.LowerBound().Value(), "99999999.9999999");
     BOOST_CHECK_EQUAL(variable2.UpperBound().Value(), "var1");
     BOOST_CHECK_EQUAL(variable2.Type(), SystemModel::ValueType::INTEGER);
+}
+
+// wrong variable ValueType
+BOOST_FIXTURE_TEST_CASE(wrong_value_type, Fixture)
+{
+    YmlModel::Model model1{
+      .id = "model1",
+      .description = "description",
+      .parameters = {{"param1", true, false}, {"param2", false, false}},
+      .variables = {{"varP", "7", "param2", static_cast<YmlModel::ValueType>(5), true, true}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .objective = ""};
+    library.models = {model1};
+    BOOST_CHECK_THROW(ModelConverter::convert(library), std::runtime_error);
 }
 
 // Test library with models and ports
@@ -262,21 +279,4 @@ BOOST_FIXTURE_TEST_CASE(multiple_models_properly_translated, Fixture)
     auto& modelo2 = lib.Models().at("model2");
     BOOST_REQUIRE_EQUAL(modelo2.Parameters().size(), 0);
     BOOST_REQUIRE_EQUAL(modelo2.Variables().size(), 2);
-}
-
-// test error cases
-BOOST_FIXTURE_TEST_CASE(exceptions, Fixture)
-{
-    // wrong variable ValueType
-    YmlModel::Model model1{
-      .id = "model1",
-      .description = "description",
-      .parameters = {{"param1", true, false}, {"param2", false, false}},
-      .variables = {{"varP", "7", "param2", static_cast<YmlModel::ValueType>(5), true, true}},
-      .ports = {},
-      .port_field_definitions = {},
-      .constraints = {},
-      .objective = ""};
-    library.models = {model1};
-    BOOST_CHECK_THROW(ModelConverter::convert(library), std::runtime_error);
 }
