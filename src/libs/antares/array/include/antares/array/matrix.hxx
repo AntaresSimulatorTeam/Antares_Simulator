@@ -577,12 +577,6 @@ void Matrix<T, ReadWriteT>::resize(uint w, uint h, bool fixedSize)
                 }
                 delete[] entry;
             }
-            if (!w and !h)
-            {
-                entry = nullptr;
-                width = 0;
-                height = 0;
-            }
             else
             {
                 // Assigning the new size
@@ -621,7 +615,7 @@ void Matrix<T, ReadWriteT>::resize(uint w, uint h, bool fixedSize)
 
 namespace // anonymous
 {
-static inline bool DetectEncoding(const AnyString& filename, const AnyString& data, size_t& offset)
+bool DetectEncoding(const AnyString& filename, const AnyString& data, size_t& offset)
 {
     if (data.size() > 1)
     {
