@@ -172,7 +172,11 @@ BOOST_AUTO_TEST_CASE(Full_system_test)
         library:
           id: std
           description: Standard library
-          port-types: []
+          port-types:
+            - id: flow
+              description: abc
+              fields:
+                  - id: port_name
 
           models:
             - id: generator
@@ -211,7 +215,11 @@ BOOST_AUTO_TEST_CASE(Full_system_test)
         library:
           id: mylib
           description: Extra library
-          port-types: []
+          port-types:
+            - id: flow
+              description: abc
+              fields:
+                  - id: port_name
 
           models:
             - id: demand
