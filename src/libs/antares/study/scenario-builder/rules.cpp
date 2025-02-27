@@ -113,9 +113,9 @@ bool Rules::reset()
     return true;
 }
 
-Data::Area* Rules::getArea(const AreaName& areaname, bool updaterMode)
+const Data::Area *Rules::getArea(const AreaName &areaname, bool updaterMode)
 {
-    Data::Area* area = study_.areas.find(areaname);
+    const Data::Area* area = study_.areas.find(areaname);
     if (!area && !updaterMode)
     {
         // silently ignore the error
@@ -135,7 +135,7 @@ bool Rules::readThermalCluster(const AreaName::Vector& splitKey, String value, b
         return false;
     }
 
-    Data::Area* area = getArea(areaname, updaterMode);
+    const Data::Area* area = getArea(areaname, updaterMode);
     if (!area)
     {
         return false;
@@ -148,7 +148,8 @@ bool Rules::readThermalCluster(const AreaName::Vector& splitKey, String value, b
     }
     else
     {
-        bool isTheActiveRule = (pName.toLower() == study_.parameters.activeRulesScenario.toLower());
+        auto rule = study_.parameters.activeRulesScenario;
+        bool isTheActiveRule = (pName.toLower() == rule.toLower());
         if (!updaterMode and isTheActiveRule)
         {
             std::string clusterId = (area->id).to<std::string>() + "." + clustername;
@@ -175,7 +176,7 @@ bool Rules::readRenewableCluster(const AreaName::Vector& splitKey, String value,
         return false;
     }
 
-    Data::Area* area = getArea(areaname, updaterMode);
+    const Data::Area* area = getArea(areaname, updaterMode);
     if (!area)
     {
         return false;
@@ -190,7 +191,9 @@ bool Rules::readRenewableCluster(const AreaName::Vector& splitKey, String value,
     }
     else
     {
-        bool isTheActiveRule = (pName.toLower() == study_.parameters.activeRulesScenario.toLower());
+        // Use temporary to create a copy because toLower is not const
+        auto rule = study_.parameters.activeRulesScenario;
+        bool isTheActiveRule = (pName.toLower() == rule.toLower());
         if (!updaterMode and isTheActiveRule)
         {
             std::string clusterId = (area->id).to<std::string>() + "." + clustername;
@@ -297,11 +300,11 @@ bool Rules::readFinalHydroLevels(const AreaName::Vector& splitKey, String value,
     return true;
 }
 
-Data::AreaLink* Rules::getLink(const AreaName& fromAreaName,
-                               const AreaName& toAreaName,
-                               bool updaterMode)
+const Data::AreaLink *Rules::getLink(const AreaName &fromAreaName,
+                                     const AreaName &toAreaName,
+                                     bool updaterMode)
 {
-    Data::AreaLink* link = study_.areas.findLink(fromAreaName, toAreaName);
+    const Data::AreaLink* link = study_.areas.findLink(fromAreaName, toAreaName);
     if (!link && !updaterMode)
     {
         // silently ignore the error
@@ -317,7 +320,7 @@ bool Rules::readLink(const AreaName::Vector& splitKey, String value, bool update
     const AreaName& toAreaName = splitKey[2];
     const uint year = splitKey[3].to<uint>();
 
-    Data::Area* fromArea = getArea(fromAreaName, updaterMode);
+    const Data::Area* fromArea = getArea(fromAreaName, updaterMode);
     if (!fromArea)
     {
         return false;
@@ -329,7 +332,7 @@ bool Rules::readLink(const AreaName::Vector& splitKey, String value, bool update
         return false;
     }
 
-    AreaLink* link = getLink(fromAreaName, toAreaName, updaterMode);
+    const AreaLink* link = getLink(fromAreaName, toAreaName, updaterMode);
     if (!link)
     {
         return false;
