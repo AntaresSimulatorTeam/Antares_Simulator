@@ -96,7 +96,6 @@ std::vector<Study::SystemModel::PortType> convertTypes(const IO::Inputs::YmlMode
         if (std::ranges::find_if(out, [&portType](const auto& p) { return p.Id() == portType.id; })
             != out.end())
         {
-            std::cerr << portType.id << std::endl;
             throw PortTypeWithThisIdAlreadyExists(portType.id);
         }
 

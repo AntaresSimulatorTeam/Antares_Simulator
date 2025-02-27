@@ -91,8 +91,9 @@ bool portAlreadyExists(const ModelConverter::PortTypeWithThisIdAlreadyExists& ex
     BOOST_CHECK_EQUAL(ex.what(), "Port type with this id already exists: port2");
     return true;
 }
+
 // Test port types for exceptions
-BOOST_FIXTURE_TEST_CASE(porttype_error_cases, Fixture)
+BOOST_FIXTURE_TEST_CASE(port_type_error_cases, Fixture)
 {
     YmlModel::PortType portType1{"port1", "empty port", {}};
     library.port_types = {portType1};
@@ -261,4 +262,21 @@ BOOST_FIXTURE_TEST_CASE(multiple_models_properly_translated, Fixture)
     auto& modelo2 = lib.Models().at("model2");
     BOOST_REQUIRE_EQUAL(modelo2.Parameters().size(), 0);
     BOOST_REQUIRE_EQUAL(modelo2.Variables().size(), 2);
+}
+
+// test error cases
+BOOST_FIXTURE_TEST_CASE(exceptions, Fixture)
+{
+    // wrong variable ValueType
+    YmlModel::Model model1{
+      .id = "model1",
+      .description = "description",
+      .parameters = {{"param1", true, false}, {"param2", false, false}},
+      .variables = {{"varP", "7", "param2", static_cast<YmlModel::ValueType>(5), true, true}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .objective = ""};
+    library.models = {model1};
+    BOOST_CHECK_THROW(ModelConverter::convert(library), std::runtime_error);
 }
