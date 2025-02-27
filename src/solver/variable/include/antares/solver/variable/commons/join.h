@@ -312,11 +312,11 @@ public:
                                          unsigned int nbYearsForCurrentSummary)
     {
         LeftType::computeSpatialAggregatesSummary(allVars,
-                                                            numSpaceToYear,
-                                                            nbYearsForCurrentSummary);
+                                                  numSpaceToYear,
+                                                  nbYearsForCurrentSummary);
         RightType::computeSpatialAggregatesSummary(allVars,
-                                                            numSpaceToYear,
-                                                            nbYearsForCurrentSummary);
+                                                   numSpaceToYear,
+                                                   nbYearsForCurrentSummary);
     }
 
     template<class V>
