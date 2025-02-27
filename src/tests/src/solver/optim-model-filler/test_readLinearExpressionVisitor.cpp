@@ -28,6 +28,7 @@
 #include <antares/expressions/Registry.hxx>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h>
+#include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
@@ -37,74 +38,135 @@ using namespace Antares::Optimization;
 
 BOOST_AUTO_TEST_SUITE(_read_linear_expression_visitor_)
 
-BOOST_AUTO_TEST_CASE(name)
+struct MyDummyFixture: Registry<Node>
 {
-    ReadLinearExpressionVisitor visitor;
+    Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
+    EvaluationContext evaluationContext{{}, {}, data};
+    ReadLinearExpressionVisitor visitor{evaluationContext, {0, 0}};
+};
+
+BOOST_FIXTURE_TEST_CASE(name, MyDummyFixture)
+{
     BOOST_CHECK_EQUAL(visitor.name(), "ReadLinearExpressionVisitor");
 }
 
-BOOST_FIXTURE_TEST_CASE(visit_literal, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(visit_literal, MyDummyFixture)
 {
     Node* node = create<LiteralNode>(5.);
-    ReadLinearExpressionVisitor visitor;
-    auto linear_expression = visitor.dispatch(node);
+    auto linear_expression = visitor.dispatch(node).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 5.);
     BOOST_CHECK(linear_expression.coefPerVar().empty());
 }
 
-BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param, Registry<Node>)
+std::pair<std::string, ParameterTypeAndValue> build_context_parameter_with(
+  const std::string& id,
+  const std::string& value,
+  const ParameterType& type = ParameterType::CONSTANT)
+{
+    return {id, {.id = id, .type = type, .value = value}};
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param, MyDummyFixture)
 {
     // 5 + param(3) = 8
     Node* sum = create<SumNode>(create<LiteralNode>(5.), create<ParameterNode>("param"));
-    EvaluationContext evaluation_context({{"param", 3.}}, {});
-    ReadLinearExpressionVisitor visitor(evaluation_context);
-    auto linear_expression = visitor.dispatch(sum);
+    EvaluationContext evaluation_context({{build_context_parameter_with("param", "3.")}}, {}, data);
+    ReadLinearExpressionVisitor visitor(evaluation_context, {0, 0});
+    auto linear_expression = visitor.dispatch(sum).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 8.);
     BOOST_CHECK(linear_expression.coefPerVar().empty());
 }
 
-BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var, MyDummyFixture)
 {
     // 60 + param(-5) + 7 * var = { 55, {var : 7} }
     Node* product = create<MultiplicationNode>(create<LiteralNode>(7.),
                                                create<VariableNode>("var"));
     Node* sum = create<SumNode>(create<LiteralNode>(60.), create<ParameterNode>("param"), product);
-    EvaluationContext evaluation_context({{"param", -5.}}, {});
-    ReadLinearExpressionVisitor visitor(evaluation_context);
-    auto linear_expression = visitor.dispatch(sum);
+    EvaluationContext evaluation_context({{build_context_parameter_with("param", "-5.")}},
+                                         {},
+                                         data);
+    ReadLinearExpressionVisitor visitor(evaluation_context, {0, 0});
+    auto linear_expression = visitor.dispatch(sum).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 55.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar()["var"], 7.);
 }
 
-BOOST_FIXTURE_TEST_CASE(visit_negate_literal_plus_var, Registry<Node>)
+struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearProblemData
+{
+    double getData(const std::string& dataSetId,
+                   const std::string& scenarioGroup,
+                   const unsigned scenario,
+                   const unsigned hour) override
+    {
+        return hour; // for test
+    }
+};
+
+BOOST_FIXTURE_TEST_CASE(visit_literal_plus_time_dependent_param_plus_var, MyDummyFixture)
+{
+    // 60 + param_at_0 + 7 * var = { 60, {var : 7} }
+    // 60 + param_at_1 + 7 * var = { 61, {var : 7} }
+    Node* product = create<MultiplicationNode>(create<LiteralNode>(7.),
+                                               create<VariableNode>("var"));
+    Node* sum = create<SumNode>(create<LiteralNode>(60.), create<ParameterNode>("param"), product);
+    MockLinearProblemData my_data;
+    EvaluationContext evaluation_context(
+      {{build_context_parameter_with("param", "something", ParameterType::TIMESERIE)}},
+      {},
+      my_data);
+
+    unsigned hour_0 = 0;
+    unsigned hour_1 = 1;
+    ReadLinearExpressionVisitor visitor(evaluation_context, {hour_0, hour_1});
+    auto linear_expressions = visitor.dispatch(sum).GetLinearExpressions();
+    BOOST_CHECK_EQUAL(linear_expressions.at(0).offset(), 60.);
+    BOOST_CHECK_EQUAL(linear_expressions.at(1).offset(), 61.);
+    BOOST_CHECK_EQUAL(linear_expressions.at(0).coefPerVar().size(), 1);
+    BOOST_CHECK_EQUAL(linear_expressions.at(0).coefPerVar()["var"], 7.);
+    BOOST_CHECK_EQUAL(linear_expressions.at(1).coefPerVar()["var"], 7.);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_param_declared_const_in_library_but_time_dep_in_system,
+                        MyDummyFixture)
+{
+    ParameterNode p("param", TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+    EvaluationContext evaluation_context(
+      {{build_context_parameter_with("param", "something", ParameterType::TIMESERIE)}},
+      {},
+      data);
+
+    ReadLinearExpressionVisitor visitor(evaluation_context, {0, 1});
+    BOOST_CHECK_THROW(visitor.dispatch(&p), std::invalid_argument);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_negate_literal_plus_var, MyDummyFixture)
 {
     // -(60 + 7 * var) = { -60, {var : -7} }
     Node* product = create<MultiplicationNode>(create<LiteralNode>(7.),
                                                create<VariableNode>("var"));
     Node* sum = create<SumNode>(create<LiteralNode>(60.), product);
     Node* neg = create<NegationNode>(sum);
-    ReadLinearExpressionVisitor visitor;
-    auto linear_expression = visitor.dispatch(neg);
+    auto linear_expression = visitor.dispatch(neg).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), -60.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar()["var"], -7.);
 }
 
-BOOST_FIXTURE_TEST_CASE(visit_literal_minus_var, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(visit_literal_minus_var, MyDummyFixture)
 {
     // 60 - 7 * var = { 60, {var : -7} }
     Node* product = create<MultiplicationNode>(create<LiteralNode>(7.),
                                                create<VariableNode>("var"));
     Node* sub = create<SubtractionNode>(create<LiteralNode>(60.), product);
-    ReadLinearExpressionVisitor visitor;
-    auto linear_expression = visitor.dispatch(sub);
+    auto linear_expression = visitor.dispatch(sub).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 60.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar()["var"], -7.);
 }
 
-BOOST_FIXTURE_TEST_CASE(visit_complex_expression, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(visit_complex_expression, MyDummyFixture)
 {
     // 2 * (13 + 3 * param1(-2) + 14 * var1) / 7 + param2(8) + 6 * var2 = {10 ; {var1:4, var2:6}}
 
@@ -123,19 +185,21 @@ BOOST_FIXTURE_TEST_CASE(visit_complex_expression, Registry<Node>)
       create<MultiplicationNode>(create<LiteralNode>(6.), create<VariableNode>("var2")) // 6 * var2
     );
 
-    EvaluationContext evaluation_context({{"param1", -2.}, {"param2", 8.}}, {});
-    ReadLinearExpressionVisitor visitor(evaluation_context);
-    auto linear_expression = visitor.dispatch(big_sum);
+    EvaluationContext evaluation_context({build_context_parameter_with("param1", "-2."),
+                                          build_context_parameter_with("param2", "8.")},
+                                         {},
+                                         data);
+    ReadLinearExpressionVisitor visitor(evaluation_context, {0, 0});
+    auto linear_expression = visitor.dispatch(big_sum).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 10.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 2);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar()["var1"], 4.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar()["var2"], 6.);
 }
 
-BOOST_FIXTURE_TEST_CASE(comparison_nodes__exception_thrown, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(comparison_nodes__exception_thrown, MyDummyFixture)
 {
     Node* literal = create<LiteralNode>(5.);
-    ReadLinearExpressionVisitor visitor;
     auto predicate = checkMessage("A linear expression can't contain comparison operators.");
 
     Node* node = create<EqualNode>(literal, literal);
@@ -148,10 +212,8 @@ BOOST_FIXTURE_TEST_CASE(comparison_nodes__exception_thrown, Registry<Node>)
     BOOST_CHECK_EXCEPTION(visitor.dispatch(node), std::invalid_argument, predicate);
 }
 
-BOOST_FIXTURE_TEST_CASE(not_implemented_nodes__exception_thrown, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(not_implemented_nodes__exception_thrown, MyDummyFixture)
 {
-    ReadLinearExpressionVisitor visitor;
-
     Node* node = create<PortFieldNode>("port", "field");
     BOOST_CHECK_EXCEPTION(visitor.dispatch(node),
                           std::invalid_argument,
