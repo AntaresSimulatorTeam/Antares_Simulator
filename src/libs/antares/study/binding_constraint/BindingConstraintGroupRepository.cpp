@@ -40,10 +40,9 @@ unsigned BindingConstraintGroupRepository::size() const
     return groups_.size();
 }
 
-bool BindingConstraintGroupRepository::buildFrom(const BindingConstraintsRepository& repository)
-{
-    for (const auto& constraint: repository)
-    {
+    bool BindingConstraintGroupRepository::buildFrom(const BindingConstraintsRepository &repository) {
+        groupsByName_.clear();
+        for (const auto& constraint: repository) {
         const auto group_found = operator[](constraint->group());
         BindingConstraintGroup* group;
         if (group_found)
@@ -89,14 +88,18 @@ void BindingConstraintGroupRepository::resizeAllTimeseriesNumbers(unsigned int n
                           [&nb_years](auto& group) { group->timeseriesNumbers.reset(nb_years); });
 }
 
-BindingConstraintGroup* BindingConstraintGroupRepository::operator[](const std::string& name) const
-{
-    if (auto group = std::ranges::find_if(groups_,
-                                          [&name](auto& group_of_constraint)
-                                          { return group_of_constraint->name() == name; });
-        group != groups_.end())
+    BindingConstraintGroup* BindingConstraintGroupRepository::operator[](const std::string& name) const {
+        if (auto it = groupsByName_.find(name); it != groupsByName_.end())
+        {
+            return it->second;
+        }
+        auto group = std::ranges::find_if(groups_, [&name](auto group_of_constraint) {
+                                        return group_of_constraint->name() == name;
+                                    });
+        if (group != groups_.end())
     {
-        return group->get();
+            groupsByName_[name] = *group;
+            return *group;
     }
     return nullptr;
 }
@@ -121,13 +124,14 @@ BindingConstraintGroupRepository::const_iterator BindingConstraintGroupRepositor
     return groups_.end();
 }
 
-BindingConstraintGroup* BindingConstraintGroupRepository::add(const std::string& name)
-{
-    return groups_.emplace_back(std::make_unique<BindingConstraintGroup>(name)).get();
+    BindingConstraintGroup* BindingConstraintGroupRepository::add(const std::string& name) {
+        auto& new_group = owning_groups_.emplace_back(std::make_unique<BindingConstraintGroup>(name));
+        return new_group.get();
 }
 
-void BindingConstraintGroupRepository::clear()
-{
+    void BindingConstraintGroupRepository::clear() {
+        groupsByName_.clear();
     groups_.clear();
+        owning_groups_.clear();
 }
 } // namespace Antares::Data

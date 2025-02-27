@@ -48,8 +48,8 @@ public:
 
     BindingConstraintGroup* operator[](const std::string& name) const;
 
-    using iterator = std::vector<std::unique_ptr<BindingConstraintGroup>>::iterator;
-    using const_iterator = std::vector<std::unique_ptr<BindingConstraintGroup>>::const_iterator;
+    using iterator = std::vector<BindingConstraintGroup*>::iterator;
+    using const_iterator = std::vector<BindingConstraintGroup*>::const_iterator;
 
     [[nodiscard]] iterator begin();
     [[nodiscard]] const_iterator begin() const;
@@ -63,7 +63,20 @@ public:
 private:
     [[nodiscard]] bool timeSeriesWidthConsistentInGroups() const;
 
-    std::vector<std::unique_ptr<BindingConstraintGroup>> groups_;
+    /**
+     * Owning vector of groups
+     */
+    std::vector<std::unique_ptr<BindingConstraintGroup>> owning_groups_;
+    /**
+     * Non-owning vector of groups. Used for accessing data
+     */
+    std::vector<BindingConstraintGroup*> groups_;
+    /**
+     * Used to speed up the search for a group by name
+     * Debatable: we could use a map and discard "groups_" vector
+     * Would require performance analysis
+     */
+    mutable std::unordered_map<std::string, BindingConstraintGroup*> groupsByName_;
 };
 
 } // namespace Antares::Data
