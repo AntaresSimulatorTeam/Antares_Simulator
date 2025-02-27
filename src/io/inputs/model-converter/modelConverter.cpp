@@ -210,17 +210,18 @@ std::vector<Antares::Study::SystemModel::Port> convertPorts(
  */
 std::vector<Study::SystemModel::PortFieldDefinition> convertPortFieldDefinitions(
   const IO::Inputs::YmlModel::Model& model,
-  const std::vector<Antares::Study::SystemModel::PortType>& portTypes)
+  const std::vector<Study::SystemModel::Port>& ports,
+  const std::vector<Study::SystemModel::PortType>& portTypes)
 {
     std::vector<Study::SystemModel::PortFieldDefinition> portFieldDefinitions;
     portFieldDefinitions.reserve(model.port_field_definitions.size());
     for (const auto& pfdefinition: model.port_field_definitions)
     {
         // first check if the port exists
-        auto itPort = std::ranges::find_if(model.ports,
+        auto itPort = std::ranges::find_if(ports,
                                            [&pfdefinition](const auto& p)
-                                           { return p.id == pfdefinition.port; });
-        if (itPort == model.ports.end())
+                                           { return p.Id() == pfdefinition.port; });
+        if (itPort == ports.end())
         {
             throw PortNotFoundForDefinition(pfdefinition.port);
         }
@@ -228,7 +229,7 @@ std::vector<Study::SystemModel::PortFieldDefinition> convertPortFieldDefinitions
         // second check if the field exists in type
         auto itType = std::ranges::find_if(portTypes,
                                            [&itPort](const auto& pt)
-                                           { return pt.Id() == itPort->type; });
+                                           { return pt.Id() == itPort->Type().Id(); });
         auto itField = std::ranges::find_if(itType->Fields(),
                                             [&pfdefinition](const auto& field)
                                             { return field.Id() == pfdefinition.field; });
@@ -236,6 +237,13 @@ std::vector<Study::SystemModel::PortFieldDefinition> convertPortFieldDefinitions
         {
             throw FieldNotFoundForDefinition(pfdefinition.port, pfdefinition.field);
         }
+
+        auto nodeRegistry = convertExpressionToNode(pfdefinition.definition, model);
+
+        portFieldDefinitions.emplace_back(*itPort,
+                                          *itField,
+                                          Study::SystemModel::Expression(pfdefinition.definition,
+                                                                         std::move(nodeRegistry)));
     }
     return portFieldDefinitions;
 }
