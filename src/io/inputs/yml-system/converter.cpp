@@ -101,10 +101,16 @@ static SystemModel::Component createComponent(const YmlSystem::Component& c,
 
     SystemModel::ComponentBuilder component_builder;
 
-    std::map<std::string, double> parameters;
-    for (const auto& p: c.parameters)
+    std::map<std::string, Expressions::Visitors::ParameterTypeAndValue> parameters;
+    for (const auto& [id, time_dependent, scenario_dependent, value]: c.parameters)
     {
-        parameters.try_emplace(p.id, p.value);
+        parameters.try_emplace(id,
+                               Expressions::Visitors::ParameterTypeAndValue{
+                                 .id = id,
+                                 .type = time_dependent
+                                           ? Expressions::Visitors::ParameterType::TIMESERIE
+                                           : Expressions::Visitors::ParameterType::CONSTANT,
+                                 .value = value});
     }
 
     auto component = component_builder.withId(c.id)

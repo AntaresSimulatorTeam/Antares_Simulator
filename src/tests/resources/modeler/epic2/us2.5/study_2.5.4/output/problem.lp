@@ -7,14 +7,14 @@
 \     Integer        : 1
 \     Continuous     : 1
 Minimize
- Obj: +10 node1.gen_n_on_0 +0.5 node1.gen_total_p_0 
+ Obj: +10 node1.gen_n_on_t0 +0.5 node1.gen_total_p_t0 
 Subject to
- node1.balance_0: +1 node1.gen_total_p_0  = 1000
- node1.respect_max_p_0: -300 node1.gen_n_on_0 +1 node1.gen_total_p_0  <= -0
- node1.respect_min_p_0: -150 node1.gen_n_on_0 +1 node1.gen_total_p_0  >= -0
+ node1.balance_0: +1 node1.gen_total_p_t0  = 1000
+ node1.respect_max_p_0: -300 node1.gen_n_on_t0 +1 node1.gen_total_p_t0  <= -0
+ node1.respect_min_p_0: -150 node1.gen_n_on_t0 +1 node1.gen_total_p_t0  >= -0
 Bounds
- 0 <= node1.gen_n_on_0 <= 10
- 0 <= node1.gen_total_p_0 <= 3000
+ 0 <= node1.gen_n_on_t0 <= 10
+ 0 <= node1.gen_total_p_t0 <= 3000
 Generals
- node1.gen_n_on_0
+ node1.gen_n_on_t0
 End
