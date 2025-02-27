@@ -196,6 +196,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Optimization_1_1STS.html">STS</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAntares_1_1Optimization_1_1TimeAndScenario.html">TimeAndScenario</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html">TimeDependentLinearExpression</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Optimization_1_1UnfeasibilityAnalysis.html">UnfeasibilityAnalysis</a></td></tr>
@@ -241,9 +243,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>checkTimeSteps</b> (<
 template&lt;typename BinaryOperator &gt; </td></tr>
 <tr class="memitem:aa4d5cf4ce824268e79487f6de35654ad"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html">TimeDependentLinearExpression</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>BinaryOpLinearExpression</b> (const std::map&lt; unsigned int, <a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> &gt; &amp;left, const std::map&lt; unsigned int, <a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> &gt; &amp;right, BinaryOperator op)</td></tr>
 <tr class="separator:aa4d5cf4ce824268e79487f6de35654ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad0db423696f27343cd3c3248bcfaa417" id="r_ad0db423696f27343cd3c3248bcfaa417"><td class="memItemLeft" align="right" valign="top"><a id="ad0db423696f27343cd3c3248bcfaa417" name="ad0db423696f27343cd3c3248bcfaa417"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>buildVariableName</b> (const <a class="el" href="structAntares_1_1Optimization_1_1PartialKey.html">PartialKey</a> &amp;key, std::optional&lt; int &gt; scenario, std::optional&lt; int &gt; timestep)</td></tr>
-<tr class="separator:ad0db423696f27343cd3c3248bcfaa417"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15f493edc83431c605a3638f1c9c7110" id="r_a15f493edc83431c605a3638f1c9c7110"><td class="memItemLeft" align="right" valign="top"><a id="a15f493edc83431c605a3638f1c9c7110" name="a15f493edc83431c605a3638f1c9c7110"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>buildVariableName</b> (const <a class="el" href="structAntares_1_1Optimization_1_1PartialKey.html">PartialKey</a> &amp;key, std::optional&lt; unsigned int &gt; scenario, std::optional&lt; unsigned int &gt; timestep)</td></tr>
+<tr class="separator:a15f493edc83431c605a3638f1c9c7110"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Read Linear Constraint Visitor Visits a Node and produces a Linear Constraint (defined by its Linear Expression and bounds). The root node is expected to be a comparison node.</p>

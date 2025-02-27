@@ -155,8 +155,10 @@ var NAVTREEINDEX26 =
 "structAntares_1_1Optimization_1_1PROBLEME__SIMPLEXE__NOMME.html":[9,0,0,14,21],
 "structAntares_1_1Optimization_1_1PartialKey.html":[7,0,0,3,20],
 "structAntares_1_1Optimization_1_1PartialKey.html":[9,0,0,14,20],
-"structAntares_1_1Optimization_1_1VariableBounds.html":[7,0,0,3,28],
-"structAntares_1_1Optimization_1_1VariableBounds.html":[9,0,0,14,28],
+"structAntares_1_1Optimization_1_1TimeAndScenario.html":[7,0,0,3,25],
+"structAntares_1_1Optimization_1_1TimeAndScenario.html":[9,0,0,14,25],
+"structAntares_1_1Optimization_1_1VariableBounds.html":[7,0,0,3,29],
+"structAntares_1_1Optimization_1_1VariableBounds.html":[9,0,0,14,29],
 "structAntares_1_1Solver_1_1ConstantDataFromAntares.html":[9,0,0,16,9],
 "structAntares_1_1Solver_1_1ModelerParameters.html":[9,0,0,16,20],
 "structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html":[9,0,0,16,2,1],
@@ -247,7 +249,5 @@ var NAVTREEINDEX26 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR_1_1Statistics.html":[9,0,0,16,5,4,61,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergy_1_1Statistics.html":[9,0,0,16,5,4,60,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardAvailableDispatchGen.html":[9,0,0,16,5,4,62],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardAvailableDispatchGen.html#a6c3732bbed87d62b536bdea26c334837":[9,0,0,16,5,4,62,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardAvailableDispatchGen.html#ae5f7f805a39912af3a6d892720c5bd18":[9,0,0,16,5,4,62,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBalance.html":[9,0,0,16,5,4,63]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardAvailableDispatchGen.html#a6c3732bbed87d62b536bdea26c334837":[9,0,0,16,5,4,62,1]
 };

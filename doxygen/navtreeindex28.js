@@ -1,5 +1,7 @@
 var NAVTREEINDEX28 =
 {
+"structAntares_1_1Window_1_1Inspector_1_1PAreaSpilledEnergyCost.html":[9,0,0,22,1,13],
+"structAntares_1_1Window_1_1Inspector_1_1PAreaUnsuppliedEnergyCost.html":[9,0,0,22,1,14],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterArea.html":[9,0,0,22,1,15],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterCO2.html":[9,0,0,22,1,16],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterCostGeneration.html":[9,0,0,22,1,17],
@@ -247,7 +249,5 @@ var NAVTREEINDEX28 =
 "toolbox_2components_2map_2nodes_2bindingconstraint_8h_source.html":[10,0,0,11,2,1,1,3,1,0],
 "toolbox_2components_2map_2nodes_2connection_8h_source.html":[10,0,0,11,2,1,1,3,1,1],
 "toolbox_2ext-source_2window_8h_source.html":[10,0,0,11,2,1,4,5],
-"toolbox_2input_2bindingconstraint_2bindingconstraint_8h_source.html":[10,0,0,11,2,1,5,0,0],
-"toolbox_2input_2bindingconstraint_8h_source.html":[10,0,0,11,2,1,5,2],
-"toolbox_2input_2connection_8h_source.html":[10,0,0,11,2,1,5,3]
+"toolbox_2input_2bindingconstraint_2bindingconstraint_8h_source.html":[10,0,0,11,2,1,5,0,0]
 };

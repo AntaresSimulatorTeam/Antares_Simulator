@@ -120,9 +120,9 @@ var NAVTREEINDEX =
 "functions_type_b.html",
 "md_src_2tests_2run-study-tests_2readme.html#autotoc_md20",
 "solver_2variable_2include_2antares_2solver_2variable_2variable_8h_source.html",
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBalance.html#a5b78a511dd81c4398861670b0eadc2a3",
-"structAntares_1_1Window_1_1Inspector_1_1PClusterArea.html",
-"toolbox_2input_2input_8h_source.html"
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardAvailableDispatchGen.html#ae5f7f805a39912af3a6d892720c5bd18",
+"structAntares_1_1Window_1_1Inspector_1_1PAreaSpilledEnergyCost.html",
+"toolbox_2input_2bindingconstraint_8h_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
