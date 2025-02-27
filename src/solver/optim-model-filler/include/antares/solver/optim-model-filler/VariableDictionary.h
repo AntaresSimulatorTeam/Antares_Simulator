@@ -71,7 +71,7 @@ struct IntegerInterval
         bool operator!=(const Iterator& other) const;
 
     private:
-        int current_;
+        unsigned int current_;
     };
 
     Iterator begin() const
