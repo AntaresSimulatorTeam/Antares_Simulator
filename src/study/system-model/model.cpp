@@ -38,7 +38,7 @@ Model ModelBuilder::build()
 {
     Model model = std::move(model_);
     model_ = Model(); // makes ModelBuilder re-usable
-    return std::move(model);
+    return model;
 }
 
 /**
