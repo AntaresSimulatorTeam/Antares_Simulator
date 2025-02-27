@@ -129,7 +129,7 @@ class VariableDictionary
 
     private:
         std::vector<Value> values_ = {};
-        unsigned offset_ = 0;
+        unsigned int offset_ = 0;
     };
 
     using TwoIndexVector = std::vector<VectorWithOffset>;

@@ -178,7 +178,7 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
             variableDictionary.addVariable(
               dim,
               key,
-              [&](const TimeAndScenario&, const std::string& name)
+              [&pb, &lb, &ub, &variable](const TimeAndScenario&, const std::string& name)
               {
                   return pb.addVariable(lb.valueAsDouble(),
                                         ub.valueAsDouble(),

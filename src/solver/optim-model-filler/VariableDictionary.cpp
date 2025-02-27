@@ -192,7 +192,7 @@ void VariableDictionary::addVariable(
     auto& m = hmv[key];
     const auto scenarios = dimensions.getScenarioIndices();
     const auto time_interval = dimensions.getTimesteps();
-    const int offset = *time_interval.begin();
+    const auto offset = *time_interval.begin();
     m.resize(scenarios.size());
     for (const auto scenario: scenarios)
     {
