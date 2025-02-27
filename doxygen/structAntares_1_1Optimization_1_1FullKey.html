@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: src/solver/optim-model-filler/include/antares/solver/optim-model-filler Directory Reference</title>
+<title>Antares Simulator: Antares::Optimization::FullKey Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -111,7 +111,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){initNavTree('dir_127d85b80ce91e86377b1838e8eb232e.html',''); initResizable(true); });
+$(function(){initNavTree('structAntares_1_1Optimization_1_1FullKey.html',''); initResizable(true); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -137,31 +137,63 @@ $(function(){initNavTree('dir_127d85b80ce91e86377b1838e8eb232e.html',''); initRe
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">optim-model-filler Directory Reference</div></div>
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="structAntares_1_1Optimization_1_1FullKey-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">Antares::Optimization::FullKey Struct Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="files" name="files"></a>
-Files</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="ComponentFiller_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>ComponentFiller.h</b></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="LinearExpression_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>LinearExpression.h</b></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="ReadLinearConstraintVisitor_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>ReadLinearConstraintVisitor.h</b></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="ReadLinearExpressionVisitor_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>ReadLinearExpressionVisitor.h</b></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="TimeDependentLinearExpression_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>TimeDependentLinearExpression.h</b></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="VariableDictionary_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>VariableDictionary.h</b></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a36a71e554b4bede0519a1b11711151ca" id="r_a36a71e554b4bede0519a1b11711151ca"><td class="memItemLeft" align="right" valign="top"><a id="a36a71e554b4bede0519a1b11711151ca" name="a36a71e554b4bede0519a1b11711151ca"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>FullKey</b> (const std::string &amp;component, const std::string &amp;variable)</td></tr>
+<tr class="separator:a36a71e554b4bede0519a1b11711151ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f367211ac383c54214ed768d2b4ed83" id="r_a8f367211ac383c54214ed768d2b4ed83"><td class="memItemLeft" align="right" valign="top"><a id="a8f367211ac383c54214ed768d2b4ed83" name="a8f367211ac383c54214ed768d2b4ed83"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>FullKey</b> (const std::string &amp;component, const std::string &amp;variable, int scenario, int timestep)</td></tr>
+<tr class="separator:a8f367211ac383c54214ed768d2b4ed83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a224826729e1d301885781024a9115046" id="r_a224826729e1d301885781024a9115046"><td class="memItemLeft" align="right" valign="top"><a id="a224826729e1d301885781024a9115046" name="a224826729e1d301885781024a9115046"></a>
+const <a class="el" href="structAntares_1_1Optimization_1_1PartialKey.html">PartialKey</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getPartialKey</b> () const</td></tr>
+<tr class="separator:a224826729e1d301885781024a9115046"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1fcd869065eed0574184dd722056ab5c" id="r_a1fcd869065eed0574184dd722056ab5c"><td class="memItemLeft" align="right" valign="top"><a id="a1fcd869065eed0574184dd722056ab5c" name="a1fcd869065eed0574184dd722056ab5c"></a>
+const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getComponent</b> () const</td></tr>
+<tr class="separator:a1fcd869065eed0574184dd722056ab5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1dda66ba015de8625cb923ebc026b9fe" id="r_a1dda66ba015de8625cb923ebc026b9fe"><td class="memItemLeft" align="right" valign="top"><a id="a1dda66ba015de8625cb923ebc026b9fe" name="a1dda66ba015de8625cb923ebc026b9fe"></a>
+const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getVariable</b> () const</td></tr>
+<tr class="separator:a1dda66ba015de8625cb923ebc026b9fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57fecb9ef4c4c2f35b39c94b0990baa9" id="r_a57fecb9ef4c4c2f35b39c94b0990baa9"><td class="memItemLeft" align="right" valign="top"><a id="a57fecb9ef4c4c2f35b39c94b0990baa9" name="a57fecb9ef4c4c2f35b39c94b0990baa9"></a>
+std::optional&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getScenario</b> () const</td></tr>
+<tr class="separator:a57fecb9ef4c4c2f35b39c94b0990baa9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1265037fabd9353950f1f3b201cebbe8" id="r_a1265037fabd9353950f1f3b201cebbe8"><td class="memItemLeft" align="right" valign="top"><a id="a1265037fabd9353950f1f3b201cebbe8" name="a1265037fabd9353950f1f3b201cebbe8"></a>
+std::optional&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getTimestep</b> () const</td></tr>
+<tr class="separator:a1265037fabd9353950f1f3b201cebbe8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aafd95ecd0fa2c097de55fc7691fca77a" id="r_aafd95ecd0fa2c097de55fc7691fca77a"><td class="memItemLeft" align="right" valign="top"><a id="aafd95ecd0fa2c097de55fc7691fca77a" name="aafd95ecd0fa2c097de55fc7691fca77a"></a>
+auto&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;=&gt;</b> (const <a class="el" href="structAntares_1_1Optimization_1_1FullKey.html">FullKey</a> &amp;) const =default</td></tr>
+<tr class="separator:aafd95ecd0fa2c097de55fc7691fca77a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a6dcd3606ca63d4db8f4d5cbf1fe9c9c8" id="r_a6dcd3606ca63d4db8f4d5cbf1fe9c9c8"><td class="memItemLeft" align="right" valign="top"><a id="a6dcd3606ca63d4db8f4d5cbf1fe9c9c8" name="a6dcd3606ca63d4db8f4d5cbf1fe9c9c8"></a>
+const <a class="el" href="structAntares_1_1Optimization_1_1PartialKey.html">PartialKey</a>&#160;</td><td class="memItemRight" valign="bottom"><b>pk</b></td></tr>
+<tr class="separator:a6dcd3606ca63d4db8f4d5cbf1fe9c9c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3279bb65db5ca2cfdfd2e628ff4bb90c" id="r_a3279bb65db5ca2cfdfd2e628ff4bb90c"><td class="memItemLeft" align="right" valign="top"><a id="a3279bb65db5ca2cfdfd2e628ff4bb90c" name="a3279bb65db5ca2cfdfd2e628ff4bb90c"></a>
+const std::optional&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>scenario</b></td></tr>
+<tr class="separator:a3279bb65db5ca2cfdfd2e628ff4bb90c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b441c1075ca2b98a974981f23c00730" id="r_a3b441c1075ca2b98a974981f23c00730"><td class="memItemLeft" align="right" valign="top"><a id="a3b441c1075ca2b98a974981f23c00730" name="a3b441c1075ca2b98a974981f23c00730"></a>
+const std::optional&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>timestep</b></td></tr>
+<tr class="separator:a3b441c1075ca2b98a974981f23c00730"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<hr/>The documentation for this struct was generated from the following files:<ul>
+<li>src/solver/optim-model-filler/include/antares/solver/optim-model-filler/<a class="el" href="VariableDictionary_8h_source.html">VariableDictionary.h</a></li>
+<li>src/solver/optim-model-filler/<b>VariableDictionary.cpp</b></li>
+</ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_6feeaea8bd29979b56256f58401b91b0.html">optim-model-filler</a></li><li class="navelem"><a class="el" href="dir_b2cbcd5d7b8340f070296625af291b61.html">include</a></li><li class="navelem"><a class="el" href="dir_178c8ef38b01ceddc925e5180d51db25.html">antares</a></li><li class="navelem"><a class="el" href="dir_4cd28f4d991dbf75622a77b5ee5a535e.html">solver</a></li><li class="navelem"><a class="el" href="dir_127d85b80ce91e86377b1838e8eb232e.html">optim-model-filler</a></li>
+    <li class="navelem"><b>Antares</b></li><li class="navelem"><a class="el" href="namespaceAntares_1_1Optimization.html">Optimization</a></li><li class="navelem"><a class="el" href="structAntares_1_1Optimization_1_1FullKey.html">FullKey</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>

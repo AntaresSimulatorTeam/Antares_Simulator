@@ -155,6 +155,7 @@ var NAVTREEINDEX0 =
 "UnaryNode_8h_source.html":[10,0,0,3,1,0,0,1,19],
 "UnfeasibleProblemBehavior_8hpp_source.html":[10,0,0,5,0,23,0,0,0,28],
 "UnfeasibleProblemError_8hpp_source.html":[10,0,0,5,0,7,0,0,0,3],
+"VariableDictionary_8h_source.html":[10,0,0,7,7,0,0,0,0,5],
 "VariableManagement_8h_source.html":[10,0,0,7,8,2,0],
 "VariableManagerUtils_8h_source.html":[10,0,0,7,8,2,1],
 "VariableNode_8h_source.html":[10,0,0,3,1,0,0,1,20],
@@ -248,6 +249,5 @@ var NAVTREEINDEX0 =
 "classAntaresStudyAnalyzerJob.html":[9,0,36],
 "classAntares_1_1API_1_1APIInternal.html":[9,0,0,1,0],
 "classAntares_1_1API_1_1APIInternal.html#a060612c9356bcf28bef40e0c8e975263":[9,0,0,1,0,0],
-"classAntares_1_1API_1_1SimulationObserver.html":[9,0,0,1,2],
-"classAntares_1_1API_1_1SimulationObserver.html#aa0d727181abc78f0ccb3ce0362ae2b8b":[9,0,0,1,2,0]
+"classAntares_1_1API_1_1SimulationObserver.html":[9,0,0,1,2]
 };

@@ -1,5 +1,6 @@
 var NAVTREEINDEX1 =
 {
+"classAntares_1_1API_1_1SimulationObserver.html#aa0d727181abc78f0ccb3ce0362ae2b8b":[9,0,0,1,2,0],
 "classAntares_1_1API_1_1SimulationObserver.html#af6224b550ed1c7f63e1aa92205cbb99d":[9,0,0,1,2,1],
 "classAntares_1_1ATSP.html":[7,0,0,7],
 "classAntares_1_1ATSP.html":[9,0,0,26],
@@ -248,6 +249,5 @@ var NAVTREEINDEX1 =
 "classAntares_1_1Action_1_1AntaresStudy_1_1ThermalCluster_1_1RootNode.html":[9,0,0,0,0,3,2],
 "classAntares_1_1Action_1_1AntaresStudy_1_1ThermalCluster_1_1RootNode.html#a083751cef921d32c62c6b39de14ce7e6":[9,0,0,0,0,3,2,2],
 "classAntares_1_1Action_1_1AntaresStudy_1_1ThermalCluster_1_1RootNode.html#a0d76e55f02ccb748208f5a803ca193f9":[9,0,0,0,0,3,2,6],
-"classAntares_1_1Action_1_1AntaresStudy_1_1ThermalCluster_1_1RootNode.html#a32f8905c95e85c96e312d8ee41490d8d":[9,0,0,0,0,3,2,1],
-"classAntares_1_1Action_1_1AntaresStudy_1_1ThermalCluster_1_1RootNode.html#a90b8d2bd0df1bda2fd88eed4d689c89c":[9,0,0,0,0,3,2,4]
+"classAntares_1_1Action_1_1AntaresStudy_1_1ThermalCluster_1_1RootNode.html#a32f8905c95e85c96e312d8ee41490d8d":[9,0,0,0,0,3,2,1]
 };

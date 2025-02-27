@@ -1,5 +1,14 @@
 var NAVTREEINDEX15 =
 {
+"classAntares_1_1Solver_1_1EnsureQueueStartedIfNeeded.html":[9,0,0,16,10],
+"classAntares_1_1Solver_1_1FinalLevelValidator.html":[9,0,0,16,11],
+"classAntares_1_1Solver_1_1HebdoProblemToLpsTranslator.html":[9,0,0,16,12],
+"classAntares_1_1Solver_1_1HebdoProblemToLpsTranslator.html#a2110528f3be01b0b0c8f9255d3317aad":[9,0,0,16,12,1],
+"classAntares_1_1Solver_1_1HebdoProblemToLpsTranslator.html#adbae3fe7a047491de04c12120ea8a69e":[9,0,0,16,12,0],
+"classAntares_1_1Solver_1_1HydroAreaNumberOfTSretriever.html":[9,0,0,16,13],
+"classAntares_1_1Solver_1_1IResultWriter.html":[9,0,0,16,17],
+"classAntares_1_1Solver_1_1IResultWriter.html#a866bc43cd373dc27cf69ec3968737c8c":[9,0,0,16,17,0],
+"classAntares_1_1Solver_1_1ImmediateFileResultWriter.html":[9,0,0,16,14],
 "classAntares_1_1Solver_1_1ImmediateFileResultWriter.html#af331f4ce440c90a0b402f9dbd6c67629":[9,0,0,16,14,0],
 "classAntares_1_1Solver_1_1InMemoryWriter.html":[9,0,0,16,15],
 "classAntares_1_1Solver_1_1InMemoryWriter.html#ae79bc278d4eff373baf313ebb426361b":[9,0,0,16,15,0],
@@ -240,14 +249,5 @@ var NAVTREEINDEX15 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#a4260fba13e7953d11cb5db55df79ce95":[9,0,0,16,5,4,22,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#af3ebe58b07ee4295306a450d0c16fd5a":[9,0,0,16,5,4,22,1],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html":[9,0,0,16,5,4,23],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#a25f4ee4b1887b1feddfcad05171a4769":[9,0,0,16,5,4,23,4],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#a3e1c3f76ac3931a54a0cda7923ea64e0":[9,0,0,16,5,4,23,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#a580b0b7ac260bb5bf4b6dfb80ea336ea":[9,0,0,16,5,4,23,3],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#a58d73702930696910bc3b1bddab46305":[9,0,0,16,5,4,23,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html":[9,0,0,16,5,4,24],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#a022dc9147a4555be13fe8ca6d3732662":[9,0,0,16,5,4,24,3],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#a111c3f9116bf9e92376999cd51baad0e":[9,0,0,16,5,4,24,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#a46815db906c657a46558edf256272f42":[9,0,0,16,5,4,24,4],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#a4b4451d87579c4390ec2312bf70099c3":[9,0,0,16,5,4,24,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCSRdataFactory.html":[9,0,0,16,5,4,26]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#a25f4ee4b1887b1feddfcad05171a4769":[9,0,0,16,5,4,23,4]
 };

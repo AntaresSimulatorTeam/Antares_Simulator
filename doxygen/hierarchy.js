@@ -294,6 +294,7 @@ var hierarchy =
     [ "DEMAND_FLEX_DOWN_POOL", "structDEMAND__FLEX__DOWN__POOL.html", null ],
     [ "DEMAND_FLEX_UP_POOL", "structDEMAND__FLEX__UP__POOL.html", null ],
     [ "DEMAND_MARKET_POOL", "structDEMAND__MARKET__POOL.html", null ],
+    [ "Antares::Optimization::Dimensions", "classAntares_1_1Optimization_1_1Dimensions.html", null ],
     [ "Antares::Forms::Disabler< WindowT >", "classAntares_1_1Forms_1_1Disabler.html", null ],
     [ "Antares::Forms::Disabler< ApplWnd >", "classAntares_1_1Forms_1_1Disabler_3_01ApplWnd_01_4.html", null ],
     [ "Antares::Data::ThermalCluster::DivModulation", "structAntares_1_1Data_1_1ThermalCluster_1_1DivModulation.html", null ],
@@ -531,11 +532,13 @@ var hierarchy =
     [ "FixtureStudyOnly", "structFixtureStudyOnly.html", null ],
     [ "FlowDissociationData", "structFlowDissociationData.html", null ],
     [ "Antares::Component::FrameShowData", "classAntares_1_1Component_1_1FrameShowData.html", null ],
+    [ "Antares::Optimization::FullKey", "structAntares_1_1Optimization_1_1FullKey.html", null ],
     [ "Antares::Concurrency::FutureSet", "classAntares_1_1Concurrency_1_1FutureSet.html", null ],
     [ "global_JIT_manager", "classglobal__JIT__manager.html", null ],
     [ "Antares::Graph::Grid< NodeT >", "classAntares_1_1Graph_1_1Grid.html", null ],
     [ "Antares::Graph::Grid< Antares::Data::Area >", "classAntares_1_1Graph_1_1Grid.html", null ],
     [ "Antares::GUILocker", "classAntares_1_1GUILocker.html", null ],
+    [ "Antares::Optimization::hash", "classAntares_1_1Optimization_1_1hash.html", null ],
     [ "Antares::Expressions::Hashable", "classAntares_1_1Expressions_1_1Hashable.html", [
       [ "Antares::Expressions::Nodes::PortFieldNode", "classAntares_1_1Expressions_1_1Nodes_1_1PortFieldNode.html", null ],
       [ "Antares::Expressions::Nodes::PortFieldSumNode", "classAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode.html", null ]
@@ -936,6 +939,7 @@ var hierarchy =
     [ "Antares::IniFile", "classAntares_1_1IniFile.html", null ],
     [ "InputFixture< size >", "structInputFixture.html", null ],
     [ "Antares::Window::Inspector::InspectorData", "classAntares_1_1Window_1_1Inspector_1_1InspectorData.html", null ],
+    [ "Antares::Optimization::IntegerInterval", "structAntares_1_1Optimization_1_1IntegerInterval.html", null ],
     [ "Antares::Solver::Simulation::interfacePostProcessList", "classAntares_1_1Solver_1_1Simulation_1_1interfacePostProcessList.html", [
       [ "Antares::Solver::Simulation::AdqPatchPostProcessList", "classAntares_1_1Solver_1_1Simulation_1_1AdqPatchPostProcessList.html", null ],
       [ "Antares::Solver::Simulation::OptPostProcessList", "classAntares_1_1Solver_1_1Simulation_1_1OptPostProcessList.html", null ]
@@ -988,6 +992,7 @@ var hierarchy =
       [ "Antares::Map::Connection", "classAntares_1_1Map_1_1Connection.html", null ],
       [ "Antares::Map::Node", "classAntares_1_1Map_1_1Node.html", null ]
     ] ],
+    [ "Antares::Optimization::IntegerInterval::Iterator", "classAntares_1_1Optimization_1_1IntegerInterval_1_1Iterator.html", null ],
     [ "Yuni::Thread::IThread", null, [
       [ "Antares::Toolbox::Jobs::JobThread", "classAntares_1_1Toolbox_1_1Jobs_1_1JobThread.html", null ],
       [ "Antares::Window::ThreadUpdater", "classAntares_1_1Window_1_1ThreadUpdater.html", null ]
@@ -1237,6 +1242,7 @@ var hierarchy =
     ] ],
     [ "Antares::Toolbox::Jobs::Part", "classAntares_1_1Toolbox_1_1Jobs_1_1Part.html", null ],
     [ "Antares::Data::PartHydro", "classAntares_1_1Data_1_1PartHydro.html", null ],
+    [ "Antares::Optimization::PartialKey", "structAntares_1_1Optimization_1_1PartialKey.html", null ],
     [ "Antares::Data::PartRenewable", "classAntares_1_1Data_1_1PartRenewable.html", null ],
     [ "Antares::Data::PartThermal", "classAntares_1_1Data_1_1PartThermal.html", null ],
     [ "PathList", "classPathList.html", null ],
@@ -1783,6 +1789,7 @@ var hierarchy =
     [ "Antares::Optimization::VariableBounds", "structAntares_1_1Optimization_1_1VariableBounds.html", null ],
     [ "Antares::Window::OutputViewer::Provider::VariableCollector", "classAntares_1_1Window_1_1OutputViewer_1_1Provider_1_1VariableCollector.html", null ],
     [ "VariableData", "structVariableData.html", null ],
+    [ "Antares::Optimization::VariableDictionary", "classAntares_1_1Optimization_1_1VariableDictionary.html", null ],
     [ "VariableManagement::VariableManager", "classVariableManagement_1_1VariableManager.html", null ],
     [ "Antares::Data::VariablePrintInfo", "classAntares_1_1Data_1_1VariablePrintInfo.html", null ],
     [ "Antares::Data::variablePrintInfoCollector", "classAntares_1_1Data_1_1variablePrintInfoCollector.html", null ],

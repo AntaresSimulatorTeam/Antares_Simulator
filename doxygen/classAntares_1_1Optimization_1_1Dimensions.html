@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: src/solver/optim-model-filler/include/antares/solver/optim-model-filler Directory Reference</title>
+<title>Antares Simulator: Antares::Optimization::Dimensions Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -111,7 +111,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){initNavTree('dir_127d85b80ce91e86377b1838e8eb232e.html',''); initResizable(true); });
+$(function(){initNavTree('classAntares_1_1Optimization_1_1Dimensions.html',''); initResizable(true); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -137,31 +137,44 @@ $(function(){initNavTree('dir_127d85b80ce91e86377b1838e8eb232e.html',''); initRe
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">optim-model-filler Directory Reference</div></div>
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="classAntares_1_1Optimization_1_1Dimensions-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">Antares::Optimization::Dimensions Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="files" name="files"></a>
-Files</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="ComponentFiller_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>ComponentFiller.h</b></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="LinearExpression_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>LinearExpression.h</b></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="ReadLinearConstraintVisitor_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>ReadLinearConstraintVisitor.h</b></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="ReadLinearExpressionVisitor_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>ReadLinearExpressionVisitor.h</b></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="TimeDependentLinearExpression_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>TimeDependentLinearExpression.h</b></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="VariableDictionary_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>VariableDictionary.h</b></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:ade6df1389d1f52aec6f4d081bb6b4fe3" id="r_ade6df1389d1f52aec6f4d081bb6b4fe3"><td class="memItemLeft" align="right" valign="top"><a id="ade6df1389d1f52aec6f4d081bb6b4fe3" name="ade6df1389d1f52aec6f4d081bb6b4fe3"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Dimensions</b> (std::optional&lt; <a class="el" href="structAntares_1_1Optimization_1_1IntegerInterval.html">IntegerInterval</a> &gt; scenarioInterval, std::optional&lt; <a class="el" href="structAntares_1_1Optimization_1_1IntegerInterval.html">IntegerInterval</a> &gt; timeInterval)</td></tr>
+<tr class="separator:ade6df1389d1f52aec6f4d081bb6b4fe3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab06c8987decc560e32b5d0edf50464ba" id="r_ab06c8987decc560e32b5d0edf50464ba"><td class="memItemLeft" align="right" valign="top"><a id="ab06c8987decc560e32b5d0edf50464ba" name="ab06c8987decc560e32b5d0edf50464ba"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isTimeDependent</b> () const</td></tr>
+<tr class="separator:ab06c8987decc560e32b5d0edf50464ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9fec7bfdb4efa7f7101ad8960d4eb24" id="r_aa9fec7bfdb4efa7f7101ad8960d4eb24"><td class="memItemLeft" align="right" valign="top"><a id="aa9fec7bfdb4efa7f7101ad8960d4eb24" name="aa9fec7bfdb4efa7f7101ad8960d4eb24"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isScenarioDependent</b> () const</td></tr>
+<tr class="separator:aa9fec7bfdb4efa7f7101ad8960d4eb24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31d304b4d8038d8f74190f3cd526e1e0" id="r_a31d304b4d8038d8f74190f3cd526e1e0"><td class="memItemLeft" align="right" valign="top"><a id="a31d304b4d8038d8f74190f3cd526e1e0" name="a31d304b4d8038d8f74190f3cd526e1e0"></a>
+<a class="el" href="structAntares_1_1Optimization_1_1IntegerInterval.html">IntegerInterval</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getTimesteps</b> () const</td></tr>
+<tr class="separator:a31d304b4d8038d8f74190f3cd526e1e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d5e73ff5d9e15a65dd0f20e4d44b06a" id="r_a9d5e73ff5d9e15a65dd0f20e4d44b06a"><td class="memItemLeft" align="right" valign="top"><a id="a9d5e73ff5d9e15a65dd0f20e4d44b06a" name="a9d5e73ff5d9e15a65dd0f20e4d44b06a"></a>
+<a class="el" href="structAntares_1_1Optimization_1_1IntegerInterval.html">IntegerInterval</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getScenarioIndices</b> () const</td></tr>
+<tr class="separator:a9d5e73ff5d9e15a65dd0f20e4d44b06a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9ba1e064876a8e44129012f7fa88f9f" id="r_af9ba1e064876a8e44129012f7fa88f9f"><td class="memItemLeft" align="right" valign="top"><a id="af9ba1e064876a8e44129012f7fa88f9f" name="af9ba1e064876a8e44129012f7fa88f9f"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>getNumberOfTimesteps</b> () const</td></tr>
+<tr class="separator:af9ba1e064876a8e44129012f7fa88f9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>src/solver/optim-model-filler/include/antares/solver/optim-model-filler/<a class="el" href="VariableDictionary_8h_source.html">VariableDictionary.h</a></li>
+<li>src/solver/optim-model-filler/<b>VariableDictionary.cpp</b></li>
+</ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_6feeaea8bd29979b56256f58401b91b0.html">optim-model-filler</a></li><li class="navelem"><a class="el" href="dir_b2cbcd5d7b8340f070296625af291b61.html">include</a></li><li class="navelem"><a class="el" href="dir_178c8ef38b01ceddc925e5180d51db25.html">antares</a></li><li class="navelem"><a class="el" href="dir_4cd28f4d991dbf75622a77b5ee5a535e.html">solver</a></li><li class="navelem"><a class="el" href="dir_127d85b80ce91e86377b1838e8eb232e.html">optim-model-filler</a></li>
+    <li class="navelem"><b>Antares</b></li><li class="navelem"><a class="el" href="namespaceAntares_1_1Optimization.html">Optimization</a></li><li class="navelem"><a class="el" href="classAntares_1_1Optimization_1_1Dimensions.html">Dimensions</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
