@@ -262,6 +262,13 @@ std::vector<Study::SystemModel::Constraint> convertConstraints(
     constraints.reserve(model.constraints.size());
     for (const auto& constraint: model.constraints)
     {
+        // Can't have constraints with the same ID
+        if (std::ranges::find_if(constraints, [&constraint](const auto& c) { return c.Id() == constraint.id; })
+            != constraints.end())
+        {
+            throw ObjectWithThisIdAlreadyExists(constraint.id);
+        }
+
         auto nodeRegistry = convertExpressionToNode(constraint.expression, model);
         constraints.emplace_back(constraint.id,
                                  Study::SystemModel::Expression{constraint.expression,
