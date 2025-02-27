@@ -44,9 +44,7 @@ Sets::Sets() : pStudy(nullptr)
     inUpdaterMode = false;
 }
 
-Sets::~Sets()
-{
-}
+Sets::~Sets() = default;
 
 void Sets::setStudy(Study& study)
 {
