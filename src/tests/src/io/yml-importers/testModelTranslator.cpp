@@ -61,12 +61,8 @@ BOOST_FIXTURE_TEST_CASE(library_id_description_properly_translated, Fixture)
 }
 
 // Test library with port types
-BOOST_FIXTURE_TEST_CASE(port_type_with_empty_fileds_exception, Fixture)
+BOOST_FIXTURE_TEST_CASE(port_type_with_empty_fields_exception, Fixture)
 {
-    YmlModel::PortType portType1{"port1", "flow port", {}};
-    YmlModel::PortType portType2{"port2", "impedance port", {}};
-    library.port_types = {portType1, portType2};
-    BOOST_CHECK_THROW(ModelConverter::convert(library), std::runtime_error);
 }
 
 // Test library with port types and fields
@@ -82,6 +78,34 @@ BOOST_FIXTURE_TEST_CASE(portType_with_fields_properly_translated, Fixture)
     BOOST_REQUIRE_EQUAL(lib.PortTypes().at("port2").Fields().size(), 2);
     BOOST_CHECK_EQUAL(lib.PortTypes().at("port2").Fields()[0].Id(), "field3");
     BOOST_CHECK_EQUAL(lib.PortTypes().at("port2").Fields()[1].Id(), "field4");
+}
+
+bool emptyFields(const ModelConverter::PortTypeDoesntContainsFields& ex)
+{
+    BOOST_CHECK_EQUAL(ex.what(), "This port type doesn't contains fields: port1");
+    return true;
+}
+
+bool portAlreadyExists(const ModelConverter::PortTypeWithThisIdAlreadyExists& ex)
+{
+    BOOST_CHECK_EQUAL(ex.what(), "This port type doesn't contains fields: port1");
+    return true;
+}
+// Test port types for exceptions
+BOOST_FIXTURE_TEST_CASE(porttype_error_cases, Fixture)
+{
+    YmlModel::PortType portType1{"port1", "empty port", {}};
+    library.port_types = {portType1};
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library),
+                          ModelConverter::PortTypeDoesntContainsFields,
+                          emptyFields);
+
+    // same name
+    YmlModel::PortType portType2{"port1", "flow port", {"field1", "field2"}};
+    YmlModel::PortType portType3{"port1", "impedance port", {"field3", "field4"}};
+    library.port_types = {portType2, portType3};
+    /* BOOST_CHECK_EXCEPTION(ModelConverter::convert(libraryPortTypeWithThisIdAlreadyExists),
+     * PortWithThisIdAlreadyExists); */
 }
 
 // Test library with models
