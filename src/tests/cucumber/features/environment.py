@@ -13,7 +13,7 @@ def check_userdata_exists(context, data_name: str):
 
 def after_scenario(context, scenario):
     # post-processing a test: clean up output files to avoid taking up all the disk space
-    if context.output_path != None:
+    if hasattr(context, "output_path") and  context.output_path != None:
         rmtree(context.output_path)
     if os.path.exists(os.path.join(context.study_path, "logs")):
         rmtree(os.path.join(context.study_path, "logs"))
