@@ -199,28 +199,29 @@ BOOST_FIXTURE_TEST_CASE(wrong_value_type, Fixture)
 }
 
 // Test library with models and ports
-BOOST_AUTO_TEST_CASE(model_ports_properly_translated, *boost::unit_test::disabled())
+BOOST_FIXTURE_TEST_CASE(model_ports_properly_translated, Fixture)
 {
-    YmlModel::Library library;
+    YmlModel::PortType portType1{"flow", "description", {"abc"}};
+    library.port_types = {portType1};
+
     Antares::Expressions::Registry<Antares::Expressions::Nodes::Node> registry;
     YmlModel::Model model1{.id = "model1",
                            .description = "description",
                            .parameters = {},
                            .variables = {},
-                           .ports = {{"port1", "flow"}, {"port2", "impedance"}},
+                           .ports = {{"port1", "flow"}, {"port2", "flow"}},
                            .port_field_definitions = {},
                            .constraints = {},
                            .objective = ""};
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);
     [[maybe_unused]] auto& model = lib.Models().at("model1");
-    // BOOST_REQUIRE_EQUAL(model.Ports().size(), 2);
-    // auto& port1 = model.Ports().at("port1");
-    // auto& port2 = model.Ports().at("port2");
-    // BOOST_CHECK_EQUAL(port1.Name(), "port1");
-    //  BOOST_CHECK_EQUALS port1.Type()
-    // BOOST_CHECK_EQUAL(port2.Name(), "port2");
-    // BOOST_CHECK_EQUALS port2.Type()
+    BOOST_REQUIRE_EQUAL(model.Ports().size(), 2);
+    auto& port1 = model.Ports().at("port1");
+    auto& port2 = model.Ports().at("port2");
+    BOOST_CHECK_EQUAL(port1.Id(), "port1");
+    BOOST_CHECK_EQUAL(port1.Type().Id(), lib.PortTypes().at(port1.Type().Id()).Id());
+    BOOST_CHECK_EQUAL(port2.Id(), "port2");
 }
 
 // Test library with models and constraints
