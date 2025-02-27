@@ -16,6 +16,7 @@ namespace Antares::Data {
     }
 
     bool BindingConstraintGroupRepository::buildFrom(const BindingConstraintsRepository &repository) {
+        groupsByName_.clear();
         for (const auto& constraint: repository) {
             const auto group_found = operator[](constraint->group());
             BindingConstraintGroup* group;
@@ -76,12 +77,17 @@ namespace Antares::Data {
     }
 
     BindingConstraintGroup* BindingConstraintGroupRepository::operator[](const std::string& name) const {
-        if (auto group = std::find_if(groups_.begin(), groups_.end(), [&name](auto& group_of_constraint) {
+        if (auto it = groupsByName_.find(name); it != groupsByName_.end())
+        {
+            return it->second;
+        }
+        auto group = std::ranges::find_if(groups_, [&name](auto group_of_constraint) {
                                         return group_of_constraint->name() == name;
                                     });
-            group != groups_.end())
+        if (group != groups_.end())
         {
-            return group->get();
+            groupsByName_[name] = *group;
+            return *group;
         }
         return nullptr;
     }
@@ -104,10 +110,13 @@ namespace Antares::Data {
     }
 
     BindingConstraintGroup* BindingConstraintGroupRepository::add(const std::string& name) {
-        return groups_.emplace_back(std::make_unique<BindingConstraintGroup>(name)).get();
+        auto& new_group = owning_groups_.emplace_back(std::make_unique<BindingConstraintGroup>(name));
+        return new_group.get();
     }
 
     void BindingConstraintGroupRepository::clear() {
+        groupsByName_.clear();
         groups_.clear();
+        owning_groups_.clear();
     }
 } // Data
