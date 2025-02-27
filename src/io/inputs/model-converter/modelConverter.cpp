@@ -66,10 +66,10 @@ FieldNotFoundForDefinition::FieldNotFoundForDefinition(const std::string& portId
 }
 
 /// Convert portTypes to Antares::Study::SystemModel::PortType
-std::vector<Antares::Study::SystemModel::PortType> convertTypes(
-  const Antares::IO::Inputs::YmlModel::Library& library)
+std::vector<Study::SystemModel::PortType> convertTypes(
+  const IO::Inputs::YmlModel::Library& library)
 {
-    std::vector<Antares::Study::SystemModel::PortType> out;
+    std::vector<Study::SystemModel::PortType> out;
     out.reserve(library.port_types.size());
     for (const auto& portType: library.port_types)
     {
@@ -77,10 +77,10 @@ std::vector<Antares::Study::SystemModel::PortType> convertTypes(
         {
             throw PortTypeDoesntContainsFields(portType.id);
         }
-        std::vector<Antares::Study::SystemModel::PortField> fields;
+        std::vector<Study::SystemModel::PortField> fields;
         for (const auto& field: portType.fields)
         {
-            fields.emplace_back(Antares::Study::SystemModel::PortField{field});
+            fields.emplace_back(Study::SystemModel::PortField{field});
         }
 
         // Can't have port types with the same ID
@@ -90,7 +90,7 @@ std::vector<Antares::Study::SystemModel::PortType> convertTypes(
             throw ObjectWithThisIdAlreadyExists(portType.id);
         }
 
-        Antares::Study::SystemModel::PortType portTypeModel(portType.id, std::move(fields));
+        Study::SystemModel::PortType portTypeModel(portType.id, std::move(fields));
         out.emplace_back(std::move(portTypeModel));
     }
     return out;
@@ -102,10 +102,10 @@ std::vector<Antares::Study::SystemModel::PortType> convertTypes(
  * \param model The YmlModel::Model object containing parameters.
  * \return A vector of SystemModel::Parameter objects.
  */
-std::vector<Antares::Study::SystemModel::Parameter> convertParameters(
-  const Antares::IO::Inputs::YmlModel::Model& model)
+std::vector<Study::SystemModel::Parameter> convertParameters(
+  const IO::Inputs::YmlModel::Model& model)
 {
-    namespace SM = Antares::Study::SystemModel;
+    namespace SM = Study::SystemModel;
     std::vector<SM::Parameter> parameters;
     parameters.reserve(model.parameters.size());
     for (const auto& parameter: model.parameters)
@@ -124,17 +124,17 @@ std::vector<Antares::Study::SystemModel::Parameter> convertParameters(
  * \return The corresponding SystemModel::ValueType.
  * \throws UnknownType if the type is unknown.
  */
-Antares::Study::SystemModel::ValueType convertType(Antares::IO::Inputs::YmlModel::ValueType type)
+Study::SystemModel::ValueType convertType(IO::Inputs::YmlModel::ValueType type)
 {
     using namespace std::string_literals;
     switch (type)
     {
-    case Antares::IO::Inputs::YmlModel::ValueType::CONTINUOUS:
-        return Antares::Study::SystemModel::ValueType::FLOAT;
-    case Antares::IO::Inputs::YmlModel::ValueType::INTEGER:
-        return Antares::Study::SystemModel::ValueType::INTEGER;
-    case Antares::IO::Inputs::YmlModel::ValueType::BOOL:
-        return Antares::Study::SystemModel::ValueType::BOOL;
+    case IO::Inputs::YmlModel::ValueType::CONTINUOUS:
+        return Study::SystemModel::ValueType::FLOAT;
+    case IO::Inputs::YmlModel::ValueType::INTEGER:
+        return Study::SystemModel::ValueType::INTEGER;
+    case IO::Inputs::YmlModel::ValueType::BOOL:
+        return Study::SystemModel::ValueType::BOOL;
     default:
         throw UnknownTypeException(type);
     }
@@ -146,7 +146,7 @@ Antares::Study::SystemModel::ValueType convertType(Antares::IO::Inputs::YmlModel
  * \param model The YmlModel::Model object containing variables.
  * \return A vector of SystemModel::Variable objects.
  */
-std::vector<Antares::Study::SystemModel::Variable> convertVariables(const YmlModel::Model& model)
+std::vector<Study::SystemModel::Variable> convertVariables(const YmlModel::Model& model)
 {
     namespace SM = Antares::Study::SystemModel;
 
@@ -175,11 +175,11 @@ std::vector<Antares::Study::SystemModel::Variable> convertVariables(const YmlMod
  * \param model The YmlModel::Model object containing ports.
  * \return A vector of SystemModel::Port objects.
  */
-std::vector<Antares::Study::SystemModel::Port> convertPorts(
-  const Antares::IO::Inputs::YmlModel::Model& model,
-  const std::vector<Antares::Study::SystemModel::PortType>& portTypes)
+std::vector<Study::SystemModel::Port> convertPorts(
+  const IO::Inputs::YmlModel::Model& model,
+  const std::vector<Study::SystemModel::PortType>& portTypes)
 {
-    std::vector<Antares::Study::SystemModel::Port> ports;
+    std::vector<Study::SystemModel::Port> ports;
     ports.reserve(model.ports.size());
     for (const auto& port: model.ports)
     {
@@ -254,16 +254,16 @@ std::vector<Study::SystemModel::PortFieldDefinition> convertPortFieldDefinitions
  * \param model The YmlModel::Model object containing constraints.
  * \return A vector of SystemModel::Constraint objects.
  */
-std::vector<Antares::Study::SystemModel::Constraint> convertConstraints(
-  const Antares::IO::Inputs::YmlModel::Model& model)
+std::vector<Study::SystemModel::Constraint> convertConstraints(
+  const IO::Inputs::YmlModel::Model& model)
 {
-    std::vector<Antares::Study::SystemModel::Constraint> constraints;
+    std::vector<Study::SystemModel::Constraint> constraints;
     constraints.reserve(model.constraints.size());
     for (const auto& constraint: model.constraints)
     {
         auto nodeRegistry = convertExpressionToNode(constraint.expression, model);
         constraints.emplace_back(constraint.id,
-                                 Antares::Study::SystemModel::Expression{constraint.expression,
+                                 Study::SystemModel::Expression{constraint.expression,
                                                                          std::move(nodeRegistry)});
     }
     return constraints;
@@ -275,26 +275,26 @@ std::vector<Antares::Study::SystemModel::Constraint> convertConstraints(
  * \param library The YmlModel::Library object containing models.
  * \return A vector of SystemModel::Model objects.
  */
-std::vector<Antares::Study::SystemModel::Model> convertModels(
-  const Antares::IO::Inputs::YmlModel::Library& library,
-  const std::vector<Antares::Study::SystemModel::PortType>& portTypes)
+std::vector<Study::SystemModel::Model> convertModels(
+  const IO::Inputs::YmlModel::Library& library,
+  const std::vector<Study::SystemModel::PortType>& portTypes)
 {
-    std::vector<Antares::Study::SystemModel::Model> models;
+    std::vector<Study::SystemModel::Model> models;
     models.reserve(library.models.size());
     for (const auto& model: library.models)
     {
-        Antares::Study::SystemModel::ModelBuilder modelBuilder;
-        std::vector<Antares::Study::SystemModel::Parameter> parameters = convertParameters(model);
-        std::vector<Antares::Study::SystemModel::Variable> variables = convertVariables(model);
-        std::vector<Antares::Study::SystemModel::Port> ports = convertPorts(model, portTypes);
-        std::vector<Antares::Study::SystemModel::Constraint> constraints = convertConstraints(
+        Study::SystemModel::ModelBuilder modelBuilder;
+        std::vector<Study::SystemModel::Parameter> parameters = convertParameters(model);
+        std::vector<Study::SystemModel::Variable> variables = convertVariables(model);
+        std::vector<Study::SystemModel::Port> ports = convertPorts(model, portTypes);
+        std::vector<Study::SystemModel::Constraint> constraints = convertConstraints(
           model);
 
         auto nodeObjective = convertExpressionToNode(model.objective, model);
 
         auto modelObj = modelBuilder.withId(model.id)
                           .withObjective(
-                            Antares::Study::SystemModel::Expression{model.objective,
+                            Study::SystemModel::Expression{model.objective,
                                                                     std::move(nodeObjective)})
                           .withParameters(std::move(parameters))
                           .withVariables(std::move(variables))
@@ -312,12 +312,12 @@ std::vector<Antares::Study::SystemModel::Model> convertModels(
  * \param library The YmlModel::Library object to convert.
  * \return The corresponding SystemModel::Library object.
  */
-Antares::Study::SystemModel::Library convert(const Antares::IO::Inputs::YmlModel::Library& library)
+Study::SystemModel::Library convert(const IO::Inputs::YmlModel::Library& library)
 {
-    Antares::Study::SystemModel::LibraryBuilder builder;
-    std::vector<Antares::Study::SystemModel::PortType> portTypes = convertTypes(library);
-    std::vector<Antares::Study::SystemModel::Model> models = convertModels(library, portTypes);
-    Antares::Study::SystemModel::Library lib = builder.withId(library.id)
+    Study::SystemModel::LibraryBuilder builder;
+    std::vector<Study::SystemModel::PortType> portTypes = convertTypes(library);
+    std::vector<Study::SystemModel::Model> models = convertModels(library, portTypes);
+    Study::SystemModel::Library lib = builder.withId(library.id)
                                                  .withDescription(library.description)
                                                  .withPortTypes(std::move(portTypes))
                                                  .withModels(std::move(models))
