@@ -79,5 +79,6 @@ class FieldNotFoundForDefinition: public std::runtime_error
 public:
     explicit FieldNotFoundForDefinition(const std::string& portId, const std::string& fieldId);
 };
+
 Study::SystemModel::Library convert(const YmlModel::Library& library);
 } // namespace Antares::IO::Inputs::ModelConverter

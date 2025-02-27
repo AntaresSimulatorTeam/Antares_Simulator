@@ -66,8 +66,7 @@ FieldNotFoundForDefinition::FieldNotFoundForDefinition(const std::string& portId
 }
 
 /// Convert portTypes to Antares::Study::SystemModel::PortType
-std::vector<Study::SystemModel::PortType> convertTypes(
-  const IO::Inputs::YmlModel::Library& library)
+std::vector<Study::SystemModel::PortType> convertTypes(const IO::Inputs::YmlModel::Library& library)
 {
     std::vector<Study::SystemModel::PortType> out;
     out.reserve(library.port_types.size());
@@ -264,7 +263,7 @@ std::vector<Study::SystemModel::Constraint> convertConstraints(
         auto nodeRegistry = convertExpressionToNode(constraint.expression, model);
         constraints.emplace_back(constraint.id,
                                  Study::SystemModel::Expression{constraint.expression,
-                                                                         std::move(nodeRegistry)});
+                                                                std::move(nodeRegistry)});
     }
     return constraints;
 }
@@ -287,15 +286,13 @@ std::vector<Study::SystemModel::Model> convertModels(
         std::vector<Study::SystemModel::Parameter> parameters = convertParameters(model);
         std::vector<Study::SystemModel::Variable> variables = convertVariables(model);
         std::vector<Study::SystemModel::Port> ports = convertPorts(model, portTypes);
-        std::vector<Study::SystemModel::Constraint> constraints = convertConstraints(
-          model);
+        std::vector<Study::SystemModel::Constraint> constraints = convertConstraints(model);
 
         auto nodeObjective = convertExpressionToNode(model.objective, model);
 
         auto modelObj = modelBuilder.withId(model.id)
-                          .withObjective(
-                            Study::SystemModel::Expression{model.objective,
-                                                                    std::move(nodeObjective)})
+                          .withObjective(Study::SystemModel::Expression{model.objective,
+                                                                        std::move(nodeObjective)})
                           .withParameters(std::move(parameters))
                           .withVariables(std::move(variables))
                           .withPorts(std::move(ports))
@@ -318,10 +315,10 @@ Study::SystemModel::Library convert(const IO::Inputs::YmlModel::Library& library
     std::vector<Study::SystemModel::PortType> portTypes = convertTypes(library);
     std::vector<Study::SystemModel::Model> models = convertModels(library, portTypes);
     Study::SystemModel::Library lib = builder.withId(library.id)
-                                                 .withDescription(library.description)
-                                                 .withPortTypes(std::move(portTypes))
-                                                 .withModels(std::move(models))
-                                                 .build();
+                                        .withDescription(library.description)
+                                        .withPortTypes(std::move(portTypes))
+                                        .withModels(std::move(models))
+                                        .build();
     return lib;
 }
 } // namespace Antares::IO::Inputs::ModelConverter

@@ -35,6 +35,7 @@ public:
         definition_(std::move(definition))
     {
     }
+
 private:
     Port port_;
     PortField field_;
