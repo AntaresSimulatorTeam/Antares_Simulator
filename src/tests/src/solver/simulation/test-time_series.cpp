@@ -36,7 +36,7 @@ using namespace Antares::Solver;
 using namespace Antares::Data;
 namespace fs = std::filesystem;
 
-void initializeStudy(Study& study)
+void initializeStudy(Data::Study& study)
 {
     study.parameters.derated = false;
 
@@ -51,12 +51,12 @@ void initializeStudy(Study& study)
     study.parameters.timeSeriesToRefresh = 0;
 }
 
-class PublicStudy: public Study
+class PublicStudy: public Data::Study
 {
 public:
     bool internalLoadBindingConstraints(const StudyLoadOptions& options) override
     {
-        return Study::internalLoadBindingConstraints(options);
+        return Data::Study::internalLoadBindingConstraints(options);
     }
 };
 

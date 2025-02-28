@@ -24,7 +24,7 @@
 
 #include "antares/application/ScenarioBuilderOwner.h"
 
-void initializeStudy(Study* study)
+void initializeStudy(Data::Study* study)
 {
     study->parameters.reset();
 }
@@ -50,7 +50,7 @@ std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& 
     return cluster;
 }
 
-void addScratchpadToEachArea(Study& study)
+void addScratchpadToEachArea(Data::Study& study)
 {
     for (auto& [_, area]: study.areas)
     {
@@ -169,7 +169,7 @@ averageResults OutputRetriever::thermalNbUnitsON(ThermalCluster* cluster)
     return averageResults((*result)[cluster->enabledIndex].avgdata);
 }
 
-ScenarioBuilderRule::ScenarioBuilderRule(Study& study)
+ScenarioBuilderRule::ScenarioBuilderRule(Data::Study& study)
 {
     study.scenarioRulesCreate();
     auto sets = study.scenarioRules.get();
@@ -206,7 +206,7 @@ StudyBuilder::StudyBuilder()
     // Make logs shrink to errors (and higher) only
     logs.verbosityLevel = Logs::Verbosity::Error::level;
 
-    study = std::make_unique<Study>(true);
+    study = std::make_unique<Data::Study>(true);
     simulation = std::make_shared<SimulationHandler>(*study);
 
     initializeStudy(study.get());
@@ -261,7 +261,7 @@ Area* StudyBuilder::addAreaToStudy(const std::string& areaName)
     return area;
 }
 
-std::shared_ptr<BindingConstraint> addBindingConstraints(Study& study,
+std::shared_ptr<BindingConstraint> addBindingConstraints(Data::Study& study,
                                                          std::string name,
                                                          std::string group)
 {

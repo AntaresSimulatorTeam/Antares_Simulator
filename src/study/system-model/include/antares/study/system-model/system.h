@@ -44,6 +44,7 @@ public:
     // Only allowing one private constructor (see below) to forbid empty Systems
     System() = delete;
     System(System& other) = delete;
+    System(System&& other) = default;
 
     const std::string& Id() const
     {

@@ -49,7 +49,7 @@ struct Fixture
     Fixture()
     {
         // Create studies
-        study = std::make_shared<Study>(true);
+        study = std::make_shared<Data::Study>(true);
 
         // Add areas to studies
         area_1 = study->areaAdd("Area1");
@@ -94,7 +94,7 @@ struct Fixture
         createFile(buffer, maxHourlyPumpPower_file);
     }
 
-    std::shared_ptr<Study> study;
+    std::shared_ptr<Data::Study> study;
     Area* area_1;
     std::string base_folder = fs::temp_directory_path().string();
     std::string series_folder = "series";

@@ -305,6 +305,8 @@ target_link_libraries(study
         Antares::exception
         Antares::benchmarking
         antares-solver-variable
+        modeler-lib # for hybrid studies
+        linear-problem-data-impl
 )
 
 target_include_directories(study

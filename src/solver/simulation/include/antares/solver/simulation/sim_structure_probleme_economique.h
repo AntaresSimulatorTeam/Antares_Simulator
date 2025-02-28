@@ -30,6 +30,15 @@
 #include "antares/study/fwd.h"
 #include "antares/study/study.h"
 
+namespace Antares::Study::SystemModel
+{
+class System;
+}
+namespace Antares::Optimisation::LinearProblemApi
+{
+class ILinearProblemData;
+}
+
 class AdequacyPatchRuntimeData;
 
 struct CORRESPONDANCES_DES_VARIABLES
@@ -671,6 +680,9 @@ public:
     std::vector<int> NbGrpOpt;         // ?
 
     std::unique_ptr<PROBLEME_ANTARES_A_RESOUDRE> ProblemeAResoudre;
+
+    Study::SystemModel::System* modelerSystem_; // for hybrid studies
+    Optimisation::LinearProblemApi::ILinearProblemData* linear_problem_data_; // for hybrid studies
 
     double maxPminThermiqueByDay[366];
 };

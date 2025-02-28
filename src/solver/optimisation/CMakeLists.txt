@@ -209,6 +209,9 @@ target_link_libraries(model_antares
         Antares::linear-problem-api
         linear-problem-data-impl
         Antares::linear-problem-mpsolver-impl
+        Antares::optim-model-filler
+        Antares::antares-study-system-model
+        Antares::expressions
 )
 
 target_include_directories(model_antares

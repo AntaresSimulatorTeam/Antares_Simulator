@@ -92,6 +92,10 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
     auto& parameters = study.parameters;
 
+    // For hybrid studies
+    problem.modelerSystem_ = study.getModelerSystem();
+    problem.linear_problem_data_ = study.getModelerData();
+
     problem.Expansion = (parameters.mode == Data::SimulationMode::Expansion);
     problem.firstWeekOfSimulation = false;
 
@@ -414,7 +418,7 @@ static void prepareBindingConstraint(PROBLEME_HEBDO& problem,
     }
 }
 
-void SIM_RenseignementProblemeHebdo(const Study& study,
+void SIM_RenseignementProblemeHebdo(const Antares::Data::Study& study,
                                     PROBLEME_HEBDO& problem,
                                     uint weekInTheYear,
                                     const int PasDeTempsDebut,

@@ -153,7 +153,7 @@ struct Fixture
 
     ~Fixture() = default;
 
-    Study::Ptr study = std::make_shared<Study>();
+    Data::Study::Ptr study = std::make_shared<Data::Study>();
     Area* area_1;
     Area* area_2;
     Area* area_3;

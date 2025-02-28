@@ -49,6 +49,16 @@
 #include "simulation.h"
 #include "version.h"
 
+namespace Antares::Optimisation::LinearProblemApi
+{
+class ILinearProblemData;
+}
+
+namespace Antares::Study::SystemModel
+{
+class System;
+}
+
 namespace Antares::Data
 {
 /*!
@@ -623,6 +633,11 @@ public:
     */
     const bool usedByTheSolver;
 
+    Antares::Study::SystemModel::System* getModelerSystem() const
+    { return system_.get(); };
+    Optimisation::LinearProblemApi::ILinearProblemData* getModelerData() const
+    { return linearProblemData_.get(); };
+
 protected:
     //! \name Loading
     //@{
@@ -636,6 +651,8 @@ protected:
     virtual bool internalLoadBindingConstraints(const StudyLoadOptions& options);
     //! Load all set of areas and links
     bool internalLoadSets();
+    //! Load extra modeler components for hybrid studies
+    bool internalLoadModelerComponents();
     //@}
 
     bool internalLoadIni(const std::filesystem::path& path, const StudyLoadOptions& options);
@@ -647,6 +664,9 @@ protected:
     //! Release all unnecessary buffers
     void reduceMemoryUsage();
     //@}
+private:
+    std::unique_ptr<Antares::Study::SystemModel::System> system_;
+    std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> linearProblemData_;
 
 }; // class Study
 

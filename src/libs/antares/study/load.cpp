@@ -21,6 +21,9 @@
 #include <fstream>
 
 #include <antares/benchmarking/DurationCollector.h>
+#include "antares/io/inputs/data-series-csv-importer/DataSeriesRepoImporter.h"
+#include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
+#include "antares/solver/modeler/loadFiles/loadFiles.h"
 #include "antares/study/scenario-builder/sets.h"
 #include "antares/study/study.h"
 #include "antares/study/ui-runtimeinfos.h"
@@ -222,7 +225,34 @@ bool Study::internalLoadFromFolder(const fs::path& path, const StudyLoadOptions&
     ret = internalLoadSets() && ret;
 
     parameterFiller(options);
+
+    // Modeler components for hybrid studies
+    internalLoadModelerComponents();
+
     return ret;
+}
+
+bool Study::internalLoadModelerComponents()
+{
+    try
+    {
+        const auto libraries = Solver::LoadFiles::loadLibraries(folder);
+        logs.info() << "Modeler Libraries loaded";
+        this->system_ = std::make_unique<Antares::Study::SystemModel::System>(std::move(Solver::LoadFiles::loadSystem(folder, libraries)));
+        logs.info() << "Modeler System loaded";
+        Optimisation::LinearProblemDataImpl::DataSeriesRepository dataSeriesRepository = IO::
+          Inputs::DataSeriesCsvImporter::DataSeriesRepoImporter::importFromDirectory(
+            folder / "input" / "data-series",
+            "\t");
+        logs.info() << "Modeler Data-series loaded";
+        //this->linearProblemData_ = Optimisation::LinearProblemDataImpl::LinearProblemData(
+          //dataSeriesRepository);
+    }
+    catch (const std::exception& e)
+    {
+        logs.info() << "No modeler inputs were loaded: " << e.what();
+    }
+    return true;
 }
 
 bool Study::internalLoadCorrelationMatrices(const StudyLoadOptions& options)
