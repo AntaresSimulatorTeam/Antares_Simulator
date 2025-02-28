@@ -33,8 +33,8 @@
 
 namespace Antares::IO::Inputs::ModelConverter
 {
-UnknownTypeException::UnknownTypeException(YmlModel::ValueType type):
-    std::runtime_error("Unknown type: " + YmlModel::toString(type))
+UnknownTypeException::UnknownTypeException(const std::string& type):
+    std::runtime_error("Unknown variable type: " + type)
 {
 }
 
@@ -44,7 +44,7 @@ PortTypeDoesntContainsFields::PortTypeDoesntContainsFields(const std::string& id
 }
 
 PortWithThisIdAlreadyExists::PortWithThisIdAlreadyExists(const std::string& id):
-    std::runtime_error("Port with this ID already exists: " + id)
+    std::runtime_error("Port with this id already exists: " + id)
 {
 }
 
@@ -145,7 +145,7 @@ Study::SystemModel::ValueType convertType(IO::Inputs::YmlModel::ValueType type)
     case IO::Inputs::YmlModel::ValueType::BOOL:
         return Study::SystemModel::ValueType::BOOL;
     default:
-        throw UnknownTypeException(type);
+        throw UnknownTypeException(IO::Inputs::YmlModel::toString(type));
     }
 }
 

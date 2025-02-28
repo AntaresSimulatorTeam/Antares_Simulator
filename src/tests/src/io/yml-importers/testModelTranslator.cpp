@@ -86,7 +86,7 @@ bool emptyFields(const ModelConverter::PortTypeDoesntContainsFields& ex)
     return true;
 }
 
-bool portAlreadyExists(const ModelConverter::PortTypeWithThisIdAlreadyExists& ex)
+bool portTypeAlreadyExists(const ModelConverter::PortTypeWithThisIdAlreadyExists& ex)
 {
     BOOST_CHECK_EQUAL(ex.what(), "Port type with this id already exists: port2");
     return true;
@@ -107,7 +107,7 @@ BOOST_FIXTURE_TEST_CASE(port_type_error_cases, Fixture)
     library.port_types = {portType2, portType3};
     BOOST_CHECK_EXCEPTION(ModelConverter::convert(library),
                           ModelConverter::PortTypeWithThisIdAlreadyExists,
-                          portAlreadyExists);
+                          portTypeAlreadyExists);
 }
 
 // Test library with models
@@ -223,6 +223,32 @@ BOOST_FIXTURE_TEST_CASE(model_ports_properly_translated, Fixture)
     BOOST_CHECK_EQUAL(port1.Type().Id(), lib.PortTypes().at(port1.Type().Id()).Id());
     BOOST_CHECK_EQUAL(port2.Id(), "port2");
 }
+
+bool portAlreadyExists(const ModelConverter::PortWithThisIdAlreadyExists& ex)
+{
+    BOOST_CHECK_EQUAL(ex.what(), "Port with this id already exists: port1");
+    return true;
+}
+
+// Test ports errors
+BOOST_FIXTURE_TEST_CASE(ports_errors_cases, Fixture)
+{
+    YmlModel::PortType portType1{"flow", "description", {"abc"}};
+    library.port_types = {portType1};
+
+    Antares::Expressions::Registry<Antares::Expressions::Nodes::Node> registry;
+    YmlModel::Model model1{.id = "model1",
+                           .description = "description",
+                           .parameters = {},
+                           .variables = {},
+                           .ports = {{"port1", "flow"}, {"port1", "flow"}},
+                           .port_field_definitions = {},
+                           .constraints = {},
+                           .objective = ""};
+    library.models = {model1};
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), ModelConverter::PortWithThisIdAlreadyExists, portAlreadyExists);
+}
+
 
 // Test library with models and constraints
 BOOST_FIXTURE_TEST_CASE(model_constraints_properly_translated, Fixture)

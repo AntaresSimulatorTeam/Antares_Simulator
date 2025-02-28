@@ -47,7 +47,7 @@ namespace Antares::IO::Inputs::ModelConverter
 class UnknownTypeException: public std::runtime_error
 {
 public:
-    explicit UnknownTypeException(YmlModel::ValueType type);
+    explicit UnknownTypeException(const std::string& type);
 };
 
 class PortWithThisIdAlreadyExists: public std::runtime_error
