@@ -18,8 +18,8 @@ set_target_properties(antares-modeler PROPERTIES OUTPUT_NAME ${exec_name})
 
 target_link_libraries(modeler-lib
         INTERFACE
-        Antares::loadModelerFiles
-        Antares::modelerParameters
+        Antares::load-modeler-files
+        Antares::modeler-parameters
         Antares::optim-model-filler
         Antares::linear-problem-api
         # TODO FIXME don't depend on implementations

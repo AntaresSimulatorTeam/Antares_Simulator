@@ -9,17 +9,17 @@ set(SOURCES
 )
 
 # Create the library
-add_library(loadModelerFiles STATIC ${SOURCES})
-add_library(Antares::loadModelerFiles ALIAS loadModelerFiles)
+add_library(load-modeler-files STATIC ${SOURCES})
+add_library(Antares::load-modeler-files ALIAS load-modeler-files)
 
 # Specify include directories
-target_include_directories(loadModelerFiles
+target_include_directories(load-modeler-files
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
 # Link dependencies (if any)
-target_link_libraries(loadModelerFiles
+target_link_libraries(load-modeler-files
         PUBLIC
         Antares::antares-study-system-model
         Antares::linear-problem-api
@@ -28,9 +28,9 @@ target_link_libraries(loadModelerFiles
         Antares::yml-system
         Antares::yml-model
         Antares::model-converter
-        Antares::modelerParameters
+        Antares::modeler-parameters
         Antares::data-series-csv-importer
-        linear-problem-data-impl
+        Antares::linear-problem-data-impl
 )
 
 install(DIRECTORY include/antares

@@ -37,7 +37,7 @@ std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> loadDataSeri
             "\t");
         logs.info() << "Data-series loaded";
         return std::make_unique<Optimisation::LinearProblemDataImpl::LinearProblemData>(
-          dataSeriesRepository);
+          std::move(dataSeriesRepository));
     }
     catch (const std::exception& e)
     {

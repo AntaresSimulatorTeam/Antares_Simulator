@@ -34,19 +34,20 @@ using namespace Antares;
 using namespace Antares::Solver;
 using namespace Antares::Optimisation::LinearProblemApi;
 
-class SystemLinearProblem
+class SystemLinearProblemBuilder
 {
 public:
-    explicit SystemLinearProblem(const Study::SystemModel::System& system,
-                                 ILinearProblemData& dataSeries):
-        system_(system),
-        dataSeries_(dataSeries)
+    explicit SystemLinearProblemBuilder(const Study::SystemModel::System& system,
+                                        ILinearProblemData& dataSeries):
+        system_(system)
     {
     }
 
-    ~SystemLinearProblem() = default;
+    ~SystemLinearProblemBuilder() = default;
 
-    void Provide(ILinearProblem& pb, const ModelerParameters& parameters)
+    void Provide(ILinearProblem& pb,
+                 const ModelerParameters& parameters,
+                 ILinearProblemData& dataSeries)
     {
         std::vector<std::unique_ptr<Optimization::ComponentFiller>> fillers;
         std::vector<LinearProblemFiller*> fillers_ptr;
@@ -62,12 +63,11 @@ public:
 
         LinearProblemBuilder linear_problem_builder(fillers_ptr);
         FillContext dummy_time_scenario_ctx = {parameters.firstTimeStep, parameters.lastTimeStep};
-        linear_problem_builder.build(pb, dataSeries_, dummy_time_scenario_ctx);
+        linear_problem_builder.build(pb, dataSeries, dummy_time_scenario_ctx);
     }
 
 private:
     const Study::SystemModel::System& system_;
-    ILinearProblemData& dataSeries_;
 };
 
 static void usage()
@@ -104,7 +104,7 @@ int main(int argc, const char** argv)
         const auto system = LoadFiles::loadSystem(studyPath, libraries);
         logs.info() << "System loaded";
         auto dataSeries = LoadFiles::loadDataSeries(studyPath);
-        SystemLinearProblem system_linear_problem(system, *dataSeries.get());
+        SystemLinearProblemBuilder system_linear_problem(system, *dataSeries.get());
 
         auto outputPath = studyPath / "output";
         if (!parameters.noOutput)
@@ -121,7 +121,7 @@ int main(int argc, const char** argv)
         logs.info() << "linear problem of System loaded";
         OrtoolsLinearProblem ortools_linear_problem(true, parameters.solver);
 
-        system_linear_problem.Provide(ortools_linear_problem, parameters);
+        system_linear_problem.Provide(ortools_linear_problem, parameters, *dataSeries);
 
         logs.info() << "Linear problem provided";
 
