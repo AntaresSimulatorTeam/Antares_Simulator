@@ -230,9 +230,16 @@ bool portAlreadyExists(const ModelConverter::PortWithThisIdAlreadyExists& ex)
     return true;
 }
 
+bool typeNotFound(const ModelConverter::PortTypeNotFound& ex)
+{
+    BOOST_CHECK_EQUAL(ex.what(), "For the port: port2 , port type not found: not flow");
+    return true;
+}
+
 // Test ports errors
 BOOST_FIXTURE_TEST_CASE(ports_errors_cases, Fixture)
 {
+    // test port already exists
     YmlModel::PortType portType1{"flow", "description", {"abc"}};
     library.port_types = {portType1};
 
@@ -246,9 +253,24 @@ BOOST_FIXTURE_TEST_CASE(ports_errors_cases, Fixture)
                            .constraints = {},
                            .objective = ""};
     library.models = {model1};
-    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), ModelConverter::PortWithThisIdAlreadyExists, portAlreadyExists);
-}
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library),
+                          ModelConverter::PortWithThisIdAlreadyExists,
+                          portAlreadyExists);
 
+    // test port type not found
+    YmlModel::Model model2{.id = "model2",
+                           .description = "description",
+                           .parameters = {},
+                           .variables = {},
+                           .ports = {{"port2", "not flow"}},
+                           .port_field_definitions = {},
+                           .constraints = {},
+                           .objective = ""};
+    library.models = {model2};
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library),
+                          ModelConverter::PortTypeNotFound,
+                          typeNotFound);
+}
 
 // Test library with models and constraints
 BOOST_FIXTURE_TEST_CASE(model_constraints_properly_translated, Fixture)
