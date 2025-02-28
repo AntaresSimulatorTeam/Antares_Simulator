@@ -25,8 +25,8 @@ const std::string& PartialKey::getVariable() const
 // FullKey
 FullKey::FullKey(const std::string& component,
                  const std::string& variable,
-                 int scenario,
-                 int timestep):
+                 unsigned int scenario,
+                 unsigned int timestep):
     pk(component, variable),
     scenario(scenario),
     timestep(timestep)
@@ -53,12 +53,12 @@ const std::string& FullKey::getVariable() const
     return pk.variable_id;
 }
 
-std::optional<int> FullKey::getScenario() const
+std::optional<unsigned int> FullKey::getScenario() const
 {
     return scenario;
 }
 
-std::optional<int> FullKey::getTimestep() const
+std::optional<unsigned int> FullKey::getTimestep() const
 {
     return timestep;
 }
@@ -74,8 +74,8 @@ std::size_t hash::operator()(const PartialKey& p) const
 }
 
 std::string buildVariableName(const PartialKey& key,
-                              std::optional<int> scenario,
-                              std::optional<int> timestep)
+                              std::optional<unsigned int> scenario,
+                              std::optional<unsigned int> timestep)
 {
     std::string ret = key.getComponent() + "." + key.getVariable();
     if (scenario.has_value())
@@ -89,12 +89,12 @@ std::string buildVariableName(const PartialKey& key,
     return ret;
 }
 
-IntegerInterval::Iterator::Iterator(int current):
+IntegerInterval::Iterator::Iterator(unsigned int current):
     current_(current)
 {
 }
 
-int IntegerInterval::Iterator::operator*() const
+unsigned int IntegerInterval::Iterator::operator*() const
 {
     return current_;
 }
@@ -137,14 +137,41 @@ IntegerInterval Dimensions::getScenarioIndices() const
     return scenarioInterval.value_or(IntegerInterval{});
 }
 
-int Dimensions::getNumberOfTimesteps() const
+unsigned int Dimensions::getNumberOfTimesteps() const
 {
     return timeInterval ? timeInterval->finalTime - timeInterval->initialTime + 1 : 1;
 }
 
+void VariableDictionary::VectorWithOffset::resize(size_t initial_size, unsigned int offset)
+{
+    offset_ = offset;
+    values_.resize(initial_size);
+}
+
+VariableDictionary::Value& VariableDictionary::VectorWithOffset::operator[](unsigned int index)
+{
+    return values_[index - offset_];
+}
+
+const VariableDictionary::Value& VariableDictionary::VectorWithOffset::operator[](
+  unsigned int index) const
+{
+    return values_[index - offset_];
+}
+
+const VariableDictionary::Value& VariableDictionary::VectorWithOffset::at(unsigned int index) const
+{
+    return values_.at(index - offset_);
+}
+
+VariableDictionary::Value& VariableDictionary::VectorWithOffset::at(unsigned int index)
+{
+    return values_.at(index - offset_);
+}
+
 namespace
 {
-std::optional<int> buildOptional(bool condition, int value)
+std::optional<unsigned int> buildOptional(bool condition, unsigned int value)
 {
     if (condition)
     {
@@ -157,25 +184,25 @@ std::optional<int> buildOptional(bool condition, int value)
 }
 } // namespace
 
-void VariableDictionary::addVariable(const Dimensions& dimensions,
-                                     const PartialKey& key,
-                                     std::function<Value(int, int, const std::string&)>&& func)
+void VariableDictionary::addVariable(
+  const Dimensions& dimensions,
+  const PartialKey& key,
+  std::function<Value(const TimeAndScenario&, const std::string&)>&& func)
 {
     auto& m = hmv[key];
     const auto scenarios = dimensions.getScenarioIndices();
-    const auto timesteps = dimensions.getTimesteps();
-    const int offset = *timesteps.begin();
+    const auto time_interval = dimensions.getTimesteps();
+    const auto offset = *time_interval.begin();
     m.resize(scenarios.size());
-    for (int scenario: scenarios)
+    for (const auto scenario: scenarios)
     {
-        m[scenario].resize(timesteps.size());
-
-        for (int timestep: timesteps)
+        m[scenario].resize(time_interval.size(), offset);
+        for (const auto timestep: time_interval)
         {
             const auto sc = buildOptional(dimensions.isScenarioDependent(), scenario);
             const auto ts = buildOptional(dimensions.isTimeDependent(), timestep);
             const std::string name = buildVariableName(key, sc, ts);
-            m[scenario][timestep - offset] = func(scenario, timestep, name);
+            m[scenario][timestep] = func({.scenario = scenario, .timestep = timestep}, name);
         }
     }
 }
@@ -211,16 +238,16 @@ VariableDictionary::Value& VariableDictionary::operator()(const std::string& com
 
 VariableDictionary::Value VariableDictionary::operator()(const std::string& component,
                                                          const std::string& variable,
-                                                         int scenario,
-                                                         int timestep) const
+                                                         unsigned int scenario,
+                                                         unsigned int timestep) const
 {
     return hmv.at(PartialKey(component, variable)).at(scenario).at(timestep);
 }
 
 VariableDictionary::Value& VariableDictionary::operator()(const std::string& component,
                                                           const std::string& variable,
-                                                          int scenario,
-                                                          int timestep)
+                                                          unsigned int scenario,
+                                                          unsigned int timestep)
 {
     return hmv[PartialKey(component, variable)].at(scenario).at(timestep);
 }

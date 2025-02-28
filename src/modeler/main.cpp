@@ -21,11 +21,9 @@
 
 #include <fstream>
 
-#include <antares/io/inputs/data-series-csv-importer/DataSeriesRepoImporter.h>
 #include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 #include <antares/optimisation/linear-problem-api/linearProblemBuilder.h>
-#include <antares/optimisation/linear-problem-data-impl/linearProblemData.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h>
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include <antares/solver/modeler/parameters/parseModelerParameters.h>
@@ -35,21 +33,20 @@ using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares;
 using namespace Antares::Solver;
 using namespace Antares::Optimisation::LinearProblemApi;
-using namespace Antares::Optimisation::LinearProblemDataImpl;
 
 class SystemLinearProblem
 {
 public:
-    explicit SystemLinearProblem(const Study::SystemModel::System& system):
-        system_(system)
+    explicit SystemLinearProblem(const Study::SystemModel::System& system,
+                                 ILinearProblemData& dataSeries):
+        system_(system),
+        dataSeries_(dataSeries)
     {
     }
 
     ~SystemLinearProblem() = default;
 
-    void Provide(ILinearProblem& pb,
-                 const ModelerParameters& parameters,
-                 DataSeriesRepository& dataSeriesRepo)
+    void Provide(ILinearProblem& pb, const ModelerParameters& parameters)
     {
         std::vector<std::unique_ptr<Optimization::ComponentFiller>> fillers;
         std::vector<LinearProblemFiller*> fillers_ptr;
@@ -64,13 +61,13 @@ public:
         }
 
         LinearProblemBuilder linear_problem_builder(fillers_ptr);
-        LinearProblemData data(dataSeriesRepo);
         FillContext dummy_time_scenario_ctx = {parameters.firstTimeStep, parameters.lastTimeStep};
-        linear_problem_builder.build(pb, data, dummy_time_scenario_ctx);
+        linear_problem_builder.build(pb, dataSeries_, dummy_time_scenario_ctx);
     }
 
 private:
     const Study::SystemModel::System& system_;
+    ILinearProblemData& dataSeries_;
 };
 
 static void usage()
@@ -106,19 +103,8 @@ int main(int argc, const char** argv)
         logs.info() << "Libraries loaded";
         const auto system = LoadFiles::loadSystem(studyPath, libraries);
         logs.info() << "System loaded";
-        DataSeriesRepository dataSeriesRepository;
-        try
-        {
-            dataSeriesRepository = IO::Inputs::DataSeriesCsvImporter::DataSeriesRepoImporter::
-              importFromDirectory(studyPath / "input" / "data-series", "\t");
-            logs.info() << "Data-series loaded";
-        }
-        catch (const std::exception& e)
-        {
-            // Only warning, because data-series are not mandatory
-            logs.warning() << "Data series could not be imported: " << e.what();
-        }
-        SystemLinearProblem system_linear_problem(system);
+        auto dataSeries = LoadFiles::loadDataSeries(studyPath);
+        SystemLinearProblem system_linear_problem(system, *dataSeries.get());
 
         auto outputPath = studyPath / "output";
         if (!parameters.noOutput)
@@ -135,7 +121,7 @@ int main(int argc, const char** argv)
         logs.info() << "linear problem of System loaded";
         OrtoolsLinearProblem ortools_linear_problem(true, parameters.solver);
 
-        system_linear_problem.Provide(ortools_linear_problem, parameters, dataSeriesRepository);
+        system_linear_problem.Provide(ortools_linear_problem, parameters);
 
         logs.info() << "Linear problem provided";
 

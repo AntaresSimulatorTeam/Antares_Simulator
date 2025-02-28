@@ -2,6 +2,7 @@
 
 #include <compare>
 #include <functional>
+#include <map>
 #include <optional>
 #include <string>
 #include <unordered_map>
@@ -31,18 +32,21 @@ struct PartialKey
 struct FullKey
 {
     const PartialKey pk;
-    const std::optional<int> scenario;
-    const std::optional<int> timestep;
+    const std::optional<unsigned int> scenario;
+    const std::optional<unsigned int> timestep;
 
     FullKey(const std::string& component, const std::string& variable);
-    FullKey(const std::string& component, const std::string& variable, int scenario, int timestep);
+    FullKey(const std::string& component,
+            const std::string& variable,
+            unsigned int scenario,
+            unsigned int timestep);
 
     const PartialKey& getPartialKey() const;
     const std::string& getComponent() const;
     const std::string& getVariable() const;
 
-    std::optional<int> getScenario() const;
-    std::optional<int> getTimestep() const;
+    std::optional<unsigned int> getScenario() const;
+    std::optional<unsigned int> getTimestep() const;
 
     auto operator<=>(const FullKey&) const = default; // Automatically generates <, >, ==, etc.
 };
@@ -55,19 +59,19 @@ public:
 
 struct IntegerInterval
 {
-    int initialTime = 0;
-    int finalTime = 0;
+    unsigned int initialTime = 0;
+    unsigned int finalTime = 0;
 
     class Iterator
     {
     public:
-        Iterator(int current);
-        int operator*() const;
+        explicit Iterator(unsigned int current);
+        unsigned int operator*() const;
         Iterator& operator++();
         bool operator!=(const Iterator& other) const;
 
     private:
-        int current_;
+        unsigned int current_;
     };
 
     Iterator begin() const
@@ -96,20 +100,39 @@ public:
     bool isScenarioDependent() const;
     IntegerInterval getTimesteps() const;
     IntegerInterval getScenarioIndices() const;
-    int getNumberOfTimesteps() const;
+    unsigned int getNumberOfTimesteps() const;
 
 private:
     std::optional<IntegerInterval> scenarioInterval;
     std::optional<IntegerInterval> timeInterval;
 };
 
+struct TimeAndScenario
+{
+    unsigned int scenario;
+    unsigned int timestep;
+};
+
 class VariableDictionary
 {
-public:
-
-private:
     using Value = Antares::Optimisation::LinearProblemApi::IMipVariable*;
-    using TwoIndexVector = std::vector<std::vector<Value>>;
+
+    class VectorWithOffset
+    {
+    public:
+        VectorWithOffset() = default;
+        void resize(size_t initial_size, unsigned offset);
+        Value& operator[](unsigned int index);
+        const Value& operator[](unsigned int index) const;
+        const Value& at(unsigned int index) const;
+        Value& at(unsigned int index);
+
+    private:
+        std::vector<Value> values_ = {};
+        unsigned int offset_ = 0;
+    };
+
+    using TwoIndexVector = std::vector<VectorWithOffset>;
     using HashMapVector = std::unordered_map<PartialKey, TwoIndexVector, hash>;
 
     HashMapVector hmv;
@@ -118,7 +141,7 @@ private:
 public:
     void addVariable(const Dimensions& dimensions,
                      const PartialKey& key,
-                     std::function<Value(int, int, const std::string&)>&& func);
+                     std::function<Value(const TimeAndScenario&, const std::string&)>&& func);
 
     Value operator[](const FullKey& k) const;
     Value& operator[](const FullKey& k);
@@ -128,12 +151,12 @@ public:
 
     Value operator()(const std::string& component,
                      const std::string& variable,
-                     int scenario,
-                     int timestep) const;
+                     unsigned int scenario,
+                     unsigned int timestep) const;
 
     Value& operator()(const std::string& component,
                       const std::string& variable,
-                      int scenario,
-                      int timestep);
+                      unsigned int scenario,
+                      unsigned int timestep);
 };
 } // namespace Antares::Optimization
