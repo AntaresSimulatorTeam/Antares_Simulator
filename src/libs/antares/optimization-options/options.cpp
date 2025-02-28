@@ -28,6 +28,8 @@ OptimizationOptions& OptimizationOptions::operator<<(const OptimizationOptions& 
     this->linearSolver = options.linearSolver;
     this->quadraticSolver = options.quadraticSolver;
     this->linearSolverParameters = options.linearSolverParameters;
+    this->lpSolverParamOptim1 = options.lpSolverParamOptim1;
+    this->lpSolverParamOptim2 = options.lpSolverParamOptim2;
     this->quadraticSolverParameters = options.quadraticSolverParameters;
     this->solverLogs = options.solverLogs || this->solverLogs;
     return *this;

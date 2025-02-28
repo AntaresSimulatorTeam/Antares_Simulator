@@ -34,6 +34,9 @@ public:
     std::string quadraticSolver = "sirius";
     //! The linear solver parameters
     std::string linearSolverParameters;
+    std::string lpSolverParamOptim1;
+    std::string lpSolverParamOptim2;
+
     //! The quadratic solver parameters
     std::string quadraticSolverParameters;
     //! Enable solver logs

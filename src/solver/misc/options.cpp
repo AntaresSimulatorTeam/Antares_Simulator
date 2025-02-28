@@ -98,6 +98,22 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
                 "solver-parameters",
                 "Deprecated, use linear-solver-parameters instead.");
 
+    // --lp-solver-param-optim-1
+    parser->add(
+            options.solverOptions.lpSolverParamOptim1,
+            ' ',
+            "lp-solver-param-optim-1",
+            "Set linear solver-specific parameters for first optimization."
+            " Only supported for SCIP & XPRESS.");
+
+    // --lp-solver-param-optim-2
+    parser->add(
+            options.solverOptions.lpSolverParamOptim2,
+            ' ',
+            "lp-solver-param-optim-2",
+            "Set linear solver-specific parameters for second optimization."
+            " Only supported for SCIP & XPRESS.");
+
     //--quadratic-solver
     parser->add(
       options.solverOptions.quadraticSolver,

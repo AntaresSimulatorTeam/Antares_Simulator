@@ -229,7 +229,10 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     ScenarioBuilderOwner(study).callScenarioBuilder();
 }
 
-void Application::startSimulation(Data::StudyLoadOptions& options)
+// TODO : this function is too long and has a bad name.
+// TODO : we should split it into (at least) 4 functions.
+// TODO : Naming will be easier.
+void Application::readStudy_makeChecks_and_printThings(Data::StudyLoadOptions& options)
 {
 // Starting !
 #ifdef GIT_SHA1_SHORT_STRING
@@ -346,7 +349,9 @@ void Application::prepare(int argc, const char* argv[])
     // Determine the log filename to use for this simulation
     resetLogFilename();
 
-    startSimulation(options);
+    readStudy_makeChecks_and_printThings(options);
+
+
 }
 
 void Application::onLogMessage(int level, const std::string& /*message*/)
