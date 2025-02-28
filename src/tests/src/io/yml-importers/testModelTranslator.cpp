@@ -204,7 +204,6 @@ BOOST_FIXTURE_TEST_CASE(model_ports_properly_translated, Fixture)
     YmlModel::PortType portType1{"flow", "description", {"abc"}};
     library.port_types = {portType1};
 
-    Antares::Expressions::Registry<Antares::Expressions::Nodes::Node> registry;
     YmlModel::Model model1{.id = "model1",
                            .description = "description",
                            .parameters = {},
@@ -243,7 +242,6 @@ BOOST_FIXTURE_TEST_CASE(ports_errors_cases, Fixture)
     YmlModel::PortType portType1{"flow", "description", {"abc"}};
     library.port_types = {portType1};
 
-    Antares::Expressions::Registry<Antares::Expressions::Nodes::Node> registry;
     YmlModel::Model model1{.id = "model1",
                            .description = "description",
                            .parameters = {},
@@ -361,7 +359,6 @@ BOOST_FIXTURE_TEST_CASE(model_port_field_definitions_properly_translated, Fixtur
     YmlModel::PortType portType1{"flow", "description", {"field1"}};
     library.port_types = {portType1};
 
-    Antares::Expressions::Registry<Antares::Expressions::Nodes::Node> registry;
     YmlModel::Model model1{.id = "model1",
                            .description = "description",
                            .parameters = {{"param1", true, false}},
@@ -378,4 +375,50 @@ BOOST_FIXTURE_TEST_CASE(model_port_field_definitions_properly_translated, Fixtur
     BOOST_CHECK_EQUAL(pfd1.getPort().Id(), "port1");
     BOOST_CHECK_EQUAL(pfd1.Field().Id(), "field1");
     BOOST_CHECK_EQUAL(pfd1.Definition().Value(), "param1");
+}
+
+bool portNotFoundForDef(const ModelConverter::PortNotFoundForDefinition& ex)
+{
+    BOOST_CHECK_EQUAL(ex.what(), "In port-field-definitions, port not found: port2");
+    return true;
+}
+
+bool fieldNotFoundForDef(const ModelConverter::FieldNotFoundForDefinition& ex)
+{
+    BOOST_CHECK_EQUAL(ex.what(),
+                      "In port-field-definitions, for port: port2 , field not found: field2");
+    return true;
+}
+
+// Test library ports field definitions errors
+BOOST_FIXTURE_TEST_CASE(port_field_definition_error_cases, Fixture)
+{
+    YmlModel::PortType portType1{"flow", "description", {"field1"}};
+    library.port_types = {portType1};
+
+    YmlModel::Model model1{.id = "model1",
+                           .description = "description",
+                           .parameters = {{"param1", true, false}},
+                           .variables = {},
+                           .ports = {{"port1", "flow"}},
+                           .port_field_definitions = {{"port2", "field1", "param1"}},
+                           .constraints = {},
+                           .objective = ""};
+    library.models = {model1};
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library),
+                          ModelConverter::PortNotFoundForDefinition,
+                          portNotFoundForDef);
+
+    YmlModel::Model model2{.id = "model2",
+                           .description = "description",
+                           .parameters = {{"param2", true, false}},
+                           .variables = {},
+                           .ports = {{"port2", "flow"}},
+                           .port_field_definitions = {{"port2", "field2", "param2"}},
+                           .constraints = {},
+                           .objective = ""};
+    library.models = {model2};
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library),
+                          ModelConverter::FieldNotFoundForDefinition,
+                          fieldNotFoundForDef);
 }
