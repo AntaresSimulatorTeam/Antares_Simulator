@@ -34,6 +34,7 @@ namespace Antares::Study::SystemModel
 {
 class System;
 }
+
 namespace Antares::Optimisation::LinearProblemApi
 {
 class ILinearProblemData;
@@ -681,7 +682,7 @@ public:
 
     std::unique_ptr<PROBLEME_ANTARES_A_RESOUDRE> ProblemeAResoudre;
 
-    Study::SystemModel::System* modelerSystem_; // for hybrid studies
+    Study::SystemModel::System* modelerSystem_;                               // for hybrid studies
     Optimisation::LinearProblemApi::ILinearProblemData* linear_problem_data_; // for hybrid studies
 
     double maxPminThermiqueByDay[366];

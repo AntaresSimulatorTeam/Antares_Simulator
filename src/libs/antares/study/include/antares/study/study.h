@@ -31,7 +31,10 @@
 
 #include <antares/correlation/correlation.h>
 #include <antares/date/date.h>
+#include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/study/runtime/runtime.h>
+#include <antares/study/system-model/library.h>
+#include <antares/study/system-model/system.h>
 #include <antares/writer/i_writer.h>
 #include "antares/antares/antares.h"
 #include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
@@ -48,10 +51,6 @@
 #include "sets.h"
 #include "simulation.h"
 #include "version.h"
-
-#include <antares/study/system-model/library.h>
-#include <antares/study/system-model/system.h>
-#include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 
 namespace Antares::Data
 {
@@ -628,9 +627,14 @@ public:
     const bool usedByTheSolver;
 
     Antares::Study::SystemModel::System* getModelerSystem() const
-    { return system_.get(); };
+    {
+        return system_.get();
+    }
+
     Optimisation::LinearProblemApi::ILinearProblemData* getModelerData() const
-    { return dataSeries_.get(); };
+    {
+        return dataSeries_.get();
+    }
 
 protected:
     //! \name Loading
@@ -658,6 +662,7 @@ protected:
     //! Release all unnecessary buffers
     void reduceMemoryUsage();
     //@}
+
 private:
     std::vector<Antares::Study::SystemModel::Library> libraries_;
     std::unique_ptr<Antares::Study::SystemModel::System> system_;

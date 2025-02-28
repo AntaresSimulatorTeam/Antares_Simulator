@@ -43,9 +43,9 @@
 #include "antares/study/runtime.h"
 #include "antares/study/scenario-builder/sets.h"
 #include "antares/study/scenario-builder/updater.hxx"
+#include "antares/study/system-model/system.h"
 #include "antares/study/ui-runtimeinfos.h"
 #include "antares/utils/utils.h"
-#include "antares/study/system-model/system.h"
 
 using namespace Yuni;
 
