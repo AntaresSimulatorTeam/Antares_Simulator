@@ -356,27 +356,24 @@ BOOST_FIXTURE_TEST_CASE(multiple_models_properly_translated, Fixture)
 }
 
 // Test library with ports field definitions
-/* BOOST_FIXTURE_TEST_CASE(model_port_field_definitions_properly_translated, Fixture) */
-/* { */
-/*     YmlModel::PortType portType1{"flow", "description", {"field1"}}; */
-/*     library.port_types = {portType1}; */
+BOOST_FIXTURE_TEST_CASE(model_port_field_definitions_properly_translated, Fixture)
+{
+    YmlModel::PortType portType1{"flow", "description", {"field1"}};
+    library.port_types = {portType1};
 
-/*     Antares::Expressions::Registry<Antares::Expressions::Nodes::Node> registry; */
-/*     YmlModel::Model model1{.id = "model1", */
-/*                            .description = "description", */
-/*                            .parameters = {}, */
-/*                            .variables = {}, */
-/*                            .ports = {{"port1", "flow"}}, */
-/*                            .port_field_definitions = {}, */
-/*                            .constraints = {}, */
-/*                            .objective = ""}; */
-/*     library.models = {model1}; */
-/*     SystemModel::Library lib = ModelConverter::convert(library); */
-/*     auto& model = lib.Models().at("model1"); */
+    Antares::Expressions::Registry<Antares::Expressions::Nodes::Node> registry;
+    YmlModel::Model model1{.id = "model1",
+                           .description = "description",
+                           .parameters = {{"param1", true, false}},
+                           .variables = {},
+                           .ports = {{"port1", "flow"}},
+                           .port_field_definitions = {{"port1", "field1", "param1"}},
+                           .constraints = {},
+                           .objective = ""};
+    library.models = {model1};
+    SystemModel::Library lib = ModelConverter::convert(library);
+    auto& model = lib.Models().at("model1");
 
-/*     auto& port1 = model.Ports().at("port1"); */
-/*     auto& port2 = model.Ports().at("port2"); */
-/*     BOOST_CHECK_EQUAL(port1.Id(), "port1"); */
-/*     BOOST_CHECK_EQUAL(port1.Type().Id(), lib.PortTypes().at(port1.Type().Id()).Id()); */
-/*     BOOST_CHECK_EQUAL(port2.Id(), "port2"); */
-/* } */
+    /* auto& port1 = model.PortFieldDefinition().at("port1"); */
+    /* BOOST_CHECK_EQUAL(port1.Id(), "port1"); */
+}
