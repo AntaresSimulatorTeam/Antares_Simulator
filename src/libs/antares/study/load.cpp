@@ -234,9 +234,9 @@ bool Study::internalLoadModelerComponents()
 {
     try
     {
-        const auto libraries = Solver::LoadFiles::loadLibraries(folder);
+        this->libraries_ = Solver::LoadFiles::loadLibraries(folder);
         logs.info() << "Modeler Libraries loaded";
-        this->system_ = std::make_unique<Antares::Study::SystemModel::System>(std::move(Solver::LoadFiles::loadSystem(folder, libraries)));
+        this->system_ = std::make_unique<Antares::Study::SystemModel::System>(std::move(Solver::LoadFiles::loadSystem(folder, this->libraries_)));
         logs.info() << "Modeler System loaded";
         this->dataSeries_ = Solver::LoadFiles::loadDataSeries(folder);
     }

@@ -204,7 +204,10 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
         {
             auto cf = std::make_unique<ComponentFiller>(component);
             componentFillers.push_back(std::move(cf));
-            fillersCollection.push_back(cf.get());
+        }
+        for (auto& component_filler: componentFillers)
+        {
+            fillersCollection.push_back(component_filler.get());
         }
     }
     FillContext fillCtx(problemeHebdo->weekInTheYear * 168 + 0,

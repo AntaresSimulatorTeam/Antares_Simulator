@@ -49,6 +49,7 @@
 #include "simulation.h"
 #include "version.h"
 
+#include <antares/study/system-model/library.h>
 #include <antares/study/system-model/system.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 
@@ -658,6 +659,7 @@ protected:
     void reduceMemoryUsage();
     //@}
 private:
+    std::vector<Antares::Study::SystemModel::Library> libraries_;
     std::unique_ptr<Antares::Study::SystemModel::System> system_;
     std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> dataSeries_;
 
