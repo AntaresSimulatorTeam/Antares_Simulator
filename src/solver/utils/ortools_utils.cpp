@@ -21,7 +21,6 @@
 #include "antares/solver/utils/ortools_utils.h"
 
 #include <filesystem>
-#include <fstream>
 #include <optional>
 
 #include <antares/exception/LoadingError.hpp>
@@ -200,11 +199,7 @@ void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
     const auto tmpPath = generateTempPath(filename);
 
     // 2. Write MPS to temporary file
-    std::string lp;
-    solver->ExportModelAsLpFormat(false, &lp);
-    std::ofstream out("/home/mitripet/" + tmpPath + ".lp");
-    out << lp;
-    out.close();
+    solver->Write(tmpPath);
 
     // 3. Copy to real output using generic writer
     writer.addEntryFromFile(filename, tmpPath);
