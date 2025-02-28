@@ -91,7 +91,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var, MyDummyFixture)
     auto linear_expression = visitor.dispatch(sum).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 55.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
-    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(FullKey(componentId, "var")), 7.);
+    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(FullKey(componentId, "var", 0, 0)), 7.);
 }
 
 struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearProblemData
@@ -125,8 +125,10 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_time_dependent_param_plus_var, MyDumm
     BOOST_CHECK_EQUAL(linear_expressions.at(0).offset(), 60.);
     BOOST_CHECK_EQUAL(linear_expressions.at(1).offset(), 61.);
     BOOST_CHECK_EQUAL(linear_expressions.at(0).coefPerVar().size(), 1);
-    BOOST_CHECK_EQUAL(linear_expressions.at(0).coefPerVar().at(FullKey(componentId, "var")), 7.);
-    BOOST_CHECK_EQUAL(linear_expressions.at(1).coefPerVar().at(FullKey(componentId, "var")), 7.);
+    BOOST_CHECK_EQUAL(linear_expressions.at(0).coefPerVar().at(FullKey(componentId, "var", 0, 0)),
+                      7.);
+    BOOST_CHECK_EQUAL(linear_expressions.at(1).coefPerVar().at(FullKey(componentId, "var", 0, 1)),
+                      7.);
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_param_declared_const_in_library_but_time_dep_in_system,
@@ -152,7 +154,7 @@ BOOST_FIXTURE_TEST_CASE(visit_negate_literal_plus_var, MyDummyFixture)
     auto linear_expression = visitor.dispatch(neg).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), -60.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
-    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(FullKey(componentId, "var")), -7.);
+    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(FullKey(componentId, "var", 0, 0)), -7.);
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_literal_minus_var, MyDummyFixture)
@@ -164,7 +166,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_minus_var, MyDummyFixture)
     auto linear_expression = visitor.dispatch(sub).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 60.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
-    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(FullKey(componentId, "var")), -7.);
+    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(FullKey(componentId, "var", 0, 0)), -7.);
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_complex_expression, MyDummyFixture)
@@ -194,8 +196,8 @@ BOOST_FIXTURE_TEST_CASE(visit_complex_expression, MyDummyFixture)
     auto linear_expression = visitor.dispatch(big_sum).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 10.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 2);
-    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(FullKey(componentId, "var1")), 4.);
-    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(FullKey(componentId, "var2")), 6.);
+    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(FullKey(componentId, "var1", 0, 0)), 4.);
+    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(FullKey(componentId, "var2", 0, 0)), 6.);
 }
 
 BOOST_FIXTURE_TEST_CASE(comparison_nodes__exception_thrown, MyDummyFixture)
