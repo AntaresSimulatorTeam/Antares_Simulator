@@ -38,9 +38,9 @@ class SystemLinearProblem
 {
 public:
     explicit SystemLinearProblem(const Study::SystemModel::System& system,
-                                 ILinearProblemData& data):
+                                 ILinearProblemData& dataSeries):
         system_(system),
-        data_(data)
+        dataSeries_(dataSeries)
     {
     }
 
@@ -62,12 +62,12 @@ public:
 
         LinearProblemBuilder linear_problem_builder(fillers_ptr);
         FillContext dummy_time_scenario_ctx = {parameters.firstTimeStep, parameters.lastTimeStep};
-        linear_problem_builder.build(pb, data_, dummy_time_scenario_ctx);
+        linear_problem_builder.build(pb, dataSeries_, dummy_time_scenario_ctx);
     }
 
 private:
     const Study::SystemModel::System& system_;
-    ILinearProblemData& data_;
+    ILinearProblemData& dataSeries_;
 };
 
 static void usage()
@@ -103,8 +103,8 @@ int main(int argc, const char** argv)
         logs.info() << "Libraries loaded";
         const auto system = LoadFiles::loadSystem(studyPath, libraries);
         logs.info() << "System loaded";
-        auto data = LoadFiles::loadData(studyPath);
-        SystemLinearProblem system_linear_problem(system, *data.get());
+        auto dataSeries = LoadFiles::loadDataSeries(studyPath);
+        SystemLinearProblem system_linear_problem(system, *dataSeries.get());
 
         auto outputPath = studyPath / "output";
         if (!parameters.noOutput)

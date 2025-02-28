@@ -39,7 +39,7 @@ std::vector<Study::SystemModel::Library> loadLibraries(const std::filesystem::pa
 Study::SystemModel::System loadSystem(const std::filesystem::path& studyPath,
                                       const std::vector<Study::SystemModel::Library>& libraries);
 
-std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> loadData(const std::filesystem::path& studyPath);
+std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> loadDataSeries(const std::filesystem::path& studyPath);
 
 void handleYamlError(const YAML::Exception& e, const std::string& context);
 

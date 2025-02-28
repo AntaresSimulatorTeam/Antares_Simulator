@@ -26,7 +26,7 @@
 
 namespace Antares::Solver::LoadFiles
 {
-std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> loadData(
+std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> loadDataSeries(
   const std::filesystem::path& studyPath)
 {
     try
