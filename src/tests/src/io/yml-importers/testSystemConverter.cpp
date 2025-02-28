@@ -197,7 +197,7 @@ BOOST_AUTO_TEST_CASE(Full_system_test)
                   type: flow
               port-field-definitions:
                 - port: injection_port
-                  field: flow
+                  field: port_name
                   definition: generation
               objective: cost * generation
 
@@ -233,7 +233,7 @@ BOOST_AUTO_TEST_CASE(Full_system_test)
                   type: flow
               port-field-definitions:
                 - port: injection_port
-                  field: flow
+                  field: port_name
                   definition: -demand
     )"s;
 

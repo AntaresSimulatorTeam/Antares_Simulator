@@ -306,6 +306,8 @@ std::vector<Study::SystemModel::Model> convertModels(
         std::vector<Study::SystemModel::Variable> variables = convertVariables(model);
         std::vector<Study::SystemModel::Port> ports = convertPorts(model, portTypes);
         std::vector<Study::SystemModel::Constraint> constraints = convertConstraints(model);
+        std::vector<Study::SystemModel::PortFieldDefinition>
+          portFieldDefinitions = convertPortFieldDefinitions(model, ports, portTypes);
 
         auto nodeObjective = convertExpressionToNode(model.objective, model);
 
@@ -316,6 +318,7 @@ std::vector<Study::SystemModel::Model> convertModels(
                           .withVariables(std::move(variables))
                           .withPorts(std::move(ports))
                           .withConstraints(std::move(constraints))
+                          .withPortFieldDefinitions(std::move(portFieldDefinitions))
                           .build();
         models.emplace_back(std::move(modelObj));
     }

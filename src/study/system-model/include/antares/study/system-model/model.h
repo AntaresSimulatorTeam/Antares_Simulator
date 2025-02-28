@@ -81,6 +81,11 @@ public:
         return ports_;
     }
 
+    const std::map<std::string, PortFieldDefinition>& PortFieldDefinitions() const
+    {
+        return portFieldDefinitions_;
+    }
+
 private:
     friend class ModelBuilder;
     std::string id_;
@@ -104,6 +109,7 @@ public:
     Model build();
 
     ModelBuilder& withConstraints(std::vector<Constraint>&& constraints);
+    ModelBuilder& withPortFieldDefinitions(std::vector<PortFieldDefinition>&& portFieldDefinitions);
 
 private:
     Model model_;

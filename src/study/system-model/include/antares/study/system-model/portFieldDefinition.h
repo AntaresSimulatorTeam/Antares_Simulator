@@ -36,6 +36,21 @@ public:
     {
     }
 
+    const Port& getPort() const
+    {
+        return port_;
+    }
+
+    const PortField& Field() const
+    {
+        return field_;
+    }
+
+    const Expression& Definition() const
+    {
+        return definition_;
+    }
+
 private:
     Port port_;
     PortField field_;
