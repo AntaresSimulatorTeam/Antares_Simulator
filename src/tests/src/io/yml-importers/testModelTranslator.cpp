@@ -297,6 +297,31 @@ BOOST_FIXTURE_TEST_CASE(model_constraints_properly_translated, Fixture)
     BOOST_CHECK_EQUAL(constraint2.expression().Value(), "expression2");
 }
 
+bool constraintAlreadyExists(const ModelConverter::ConstraintWithThisIdAlreadyExists& ex)
+{
+    BOOST_CHECK_EQUAL(ex.what(), "Constraint with this id already exists: constraint1");
+    return true;
+}
+
+// Test constraints errors
+BOOST_FIXTURE_TEST_CASE(constraints_error_cases, Fixture)
+{
+    YmlModel::Model model1{.id = "model1",
+                           .description = "description",
+                           .parameters = {{"expression1", true, false},
+                                          {"expression2", true, false}},
+                           .variables = {},
+                           .ports = {},
+                           .port_field_definitions = {},
+                           .constraints = {{"constraint1", "expression1"},
+                                           {"constraint1", "expression2"}},
+                           .objective = ""};
+    library.models = {model1};
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library),
+                          ModelConverter::ConstraintWithThisIdAlreadyExists,
+                          constraintAlreadyExists);
+}
+
 // Test with 2 models
 BOOST_FIXTURE_TEST_CASE(multiple_models_properly_translated, Fixture)
 {
@@ -329,3 +354,29 @@ BOOST_FIXTURE_TEST_CASE(multiple_models_properly_translated, Fixture)
     BOOST_REQUIRE_EQUAL(modelo2.Parameters().size(), 0);
     BOOST_REQUIRE_EQUAL(modelo2.Variables().size(), 2);
 }
+
+// Test library with ports field definitions
+/* BOOST_FIXTURE_TEST_CASE(model_port_field_definitions_properly_translated, Fixture) */
+/* { */
+/*     YmlModel::PortType portType1{"flow", "description", {"field1"}}; */
+/*     library.port_types = {portType1}; */
+
+/*     Antares::Expressions::Registry<Antares::Expressions::Nodes::Node> registry; */
+/*     YmlModel::Model model1{.id = "model1", */
+/*                            .description = "description", */
+/*                            .parameters = {}, */
+/*                            .variables = {}, */
+/*                            .ports = {{"port1", "flow"}}, */
+/*                            .port_field_definitions = {}, */
+/*                            .constraints = {}, */
+/*                            .objective = ""}; */
+/*     library.models = {model1}; */
+/*     SystemModel::Library lib = ModelConverter::convert(library); */
+/*     auto& model = lib.Models().at("model1"); */
+
+/*     auto& port1 = model.Ports().at("port1"); */
+/*     auto& port2 = model.Ports().at("port2"); */
+/*     BOOST_CHECK_EQUAL(port1.Id(), "port1"); */
+/*     BOOST_CHECK_EQUAL(port1.Type().Id(), lib.PortTypes().at(port1.Type().Id()).Id()); */
+/*     BOOST_CHECK_EQUAL(port2.Id(), "port2"); */
+/* } */
