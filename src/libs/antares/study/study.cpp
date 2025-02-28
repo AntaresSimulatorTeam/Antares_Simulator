@@ -46,7 +46,6 @@
 #include "antares/study/ui-runtimeinfos.h"
 #include "antares/utils/utils.h"
 #include "antares/study/system-model/system.h"
-#include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 
 using namespace Yuni;
 

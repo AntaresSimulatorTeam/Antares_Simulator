@@ -301,12 +301,14 @@ target_link_libraries(study
         antares-core
         antares-solver-simulation
         Antares::hydro
+        Antares::antares-study-system-model
+        linear-problem-api
         PRIVATE
         Antares::exception
         Antares::benchmarking
         antares-solver-variable
-        modeler-lib # for hybrid studies
-        linear-problem-data-impl
+        Antares::loadModelerFiles
+        Antares::modelerParameters
 )
 
 target_include_directories(study

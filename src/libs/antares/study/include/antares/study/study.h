@@ -49,15 +49,8 @@
 #include "simulation.h"
 #include "version.h"
 
-namespace Antares::Optimisation::LinearProblemApi
-{
-class ILinearProblemData;
-}
-
-namespace Antares::Study::SystemModel
-{
-class System;
-}
+#include <antares/study/system-model/system.h>
+#include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 
 namespace Antares::Data
 {
@@ -636,7 +629,7 @@ public:
     Antares::Study::SystemModel::System* getModelerSystem() const
     { return system_.get(); };
     Optimisation::LinearProblemApi::ILinearProblemData* getModelerData() const
-    { return linearProblemData_.get(); };
+    { return dataSeries_.get(); };
 
 protected:
     //! \name Loading
@@ -666,7 +659,7 @@ protected:
     //@}
 private:
     std::unique_ptr<Antares::Study::SystemModel::System> system_;
-    std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> linearProblemData_;
+    std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> dataSeries_;
 
 }; // class Study
 

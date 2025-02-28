@@ -21,8 +21,6 @@
 #include <fstream>
 
 #include <antares/benchmarking/DurationCollector.h>
-#include "antares/io/inputs/data-series-csv-importer/DataSeriesRepoImporter.h"
-#include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/solver/modeler/loadFiles/loadFiles.h"
 #include "antares/study/scenario-builder/sets.h"
 #include "antares/study/study.h"
@@ -240,13 +238,7 @@ bool Study::internalLoadModelerComponents()
         logs.info() << "Modeler Libraries loaded";
         this->system_ = std::make_unique<Antares::Study::SystemModel::System>(std::move(Solver::LoadFiles::loadSystem(folder, libraries)));
         logs.info() << "Modeler System loaded";
-        Optimisation::LinearProblemDataImpl::DataSeriesRepository dataSeriesRepository = IO::
-          Inputs::DataSeriesCsvImporter::DataSeriesRepoImporter::importFromDirectory(
-            folder / "input" / "data-series",
-            "\t");
-        logs.info() << "Modeler Data-series loaded";
-        //this->linearProblemData_ = Optimisation::LinearProblemDataImpl::LinearProblemData(
-          //dataSeriesRepository);
+        this->dataSeries_ = Solver::LoadFiles::loadDataSeries(folder);
     }
     catch (const std::exception& e)
     {
