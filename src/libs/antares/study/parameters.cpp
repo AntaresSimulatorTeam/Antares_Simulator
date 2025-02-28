@@ -1280,12 +1280,6 @@ bool Parameters::loadFromINI(const IniFile& ini, const StudyVersion& version)
     return true;
 }
 
-void Parameters::handleOptimizationOptions(const StudyLoadOptions& options)
-{
-    // Options only set from the command-line
-    optOptions << options.solverOptions;
-}
-
 void Parameters::fixRefreshIntervals()
 {
     using T = std::tuple<uint& /* refreshInterval */,
@@ -1421,7 +1415,7 @@ void Parameters::validateOptions(const StudyLoadOptions& options)
 
     namedProblems = options.namedProblems;
 
-    handleOptimizationOptions(options);
+    optOptions << options.solverOptions;
 }
 
 void Parameters::resetYearsWeigth()

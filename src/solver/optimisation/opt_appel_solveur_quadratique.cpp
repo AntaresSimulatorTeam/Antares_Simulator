@@ -30,8 +30,6 @@
 #include <setjmp.h>
 extern "C"
 {
-#include <pi_constantes_externes.h>
-#include <pi_definition_arguments.h>
 #include <pi_fonctions.h>
 }
 
@@ -43,30 +41,8 @@ extern "C"
 
 using namespace Antares;
 
-void SolveWithSirius(const Solver::Optimization::OptimizationOptions& options,
-                     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre);
-void ProcessResult(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre, int PdtHebdo);
-
-bool OPT_AppelDuSolveurQuadratique(const Solver::Optimization::OptimizationOptions& options,
-                                   PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
-                                   const int PdtHebdo)
-{
-    // as long as sirius quadratic optimization is not supported through or-tools, we have to keep
-    // this code separate
-    if (options.quadraticSolver.compare("sirius") == 0)
-    {
-        SolveWithSirius(options, ProblemeAResoudre);
-    }
-    else
-    {
-        SolveQuadraticProblemWithOrtools(options, ProblemeAResoudre);
-    }
-    ProcessResult(ProblemeAResoudre, PdtHebdo);
-    return ProblemeAResoudre->ExistenceDUneSolution == OUI_PI;
-}
-
-void SolveWithSirius(const Solver::Optimization::OptimizationOptions& options,
-                     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
+static void SolveWithSirius(const Solver::Optimization::OptimizationOptions& options,
+                            PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
 {
     if (!options.quadraticSolverParameters.empty())
     {
@@ -154,11 +130,10 @@ void SolveWithSirius(const Solver::Optimization::OptimizationOptions& options,
     }
 }
 
-void ProcessResult(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre, const int PdtHebdo)
+static void ProcessResult(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
 {
     if (ProblemeAResoudre->ExistenceDUneSolution == NON_PI)
     {
-        logs.warning() << "Quadratic Optimisation: No solution, hour " << PdtHebdo;
 #ifndef NDEBUG
 
         {
@@ -198,4 +173,21 @@ void ProcessResult(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre, const int Pdt
         }
 #endif
     }
+}
+
+bool OPT_AppelDuSolveurQuadratique(const Solver::Optimization::OptimizationOptions& options,
+                                   PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
+{
+    // as long as sirius quadratic optimization is not supported through or-tools, we have to keep
+    // this code separate
+    if (options.quadraticSolver.compare("sirius") == 0)
+    {
+        SolveWithSirius(options, ProblemeAResoudre);
+    }
+    else
+    {
+        SolveQuadraticProblemWithOrtools(options, ProblemeAResoudre);
+    }
+    ProcessResult(ProblemeAResoudre);
+    return ProblemeAResoudre->ExistenceDUneSolution == OUI_PI;
 }

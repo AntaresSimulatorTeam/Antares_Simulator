@@ -20,13 +20,13 @@
  */
 #define WIN32_LEAN_AND_MEAN
 
+#include <cmath>
 #include <pi_constantes_externes.h>
 #include <unit_test_utils.h>
 
 #include <boost/test/unit_test.hpp>
 
 #include <antares/solver/utils/ortools_quadratic_wrapper.h>
-#include "antares/solver/optimisation/opt_fonctions.h"
 
 #include "spx_constantes_externes.h"
 static double tolerance = 1e-5;
@@ -49,7 +49,7 @@ struct QpFixture
     std::vector<double> primals;
     std::vector<double> duals;
     std::vector<double> reducedCosts;
-    OptimizationOptions options;
+    Antares::Solver::Optimization::OptimizationOptions options;
 
     void solve()
     {

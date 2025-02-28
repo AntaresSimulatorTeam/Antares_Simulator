@@ -27,7 +27,6 @@
 #include <boost/algorithm/string/join.hpp>
 
 #include <antares/exception/LoadingError.hpp>
-#include <antares/study/study.h>
 #include "antares/config/config.h"
 #include "antares/solver/utils/ortools_utils.h"
 
