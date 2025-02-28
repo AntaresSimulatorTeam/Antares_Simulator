@@ -31,10 +31,8 @@ std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> loadDataSeri
 {
     try
     {
-        Optimisation::LinearProblemDataImpl::DataSeriesRepository
-
-          dataSeriesRepository
-          = IO::Inputs::DataSeriesCsvImporter::DataSeriesRepoImporter::importFromDirectory(
+        Optimisation::LinearProblemDataImpl::DataSeriesRepository dataSeriesRepository = IO::
+          Inputs::DataSeriesCsvImporter::DataSeriesRepoImporter::importFromDirectory(
             studyPath / "input" / "data-series",
             "\t");
         logs.info() << "Data-series loaded";
