@@ -376,4 +376,6 @@ BOOST_FIXTURE_TEST_CASE(model_port_field_definitions_properly_translated, Fixtur
     auto& port1 = model.Ports().at("port1");
     auto& pfd1 = model.PortFieldDefinitions().at("port1");
     BOOST_CHECK_EQUAL(pfd1.getPort().Id(), "port1");
+    BOOST_CHECK_EQUAL(pfd1.Field().Id(), "field1");
+    BOOST_CHECK_EQUAL(pfd1.Definition().Value(), "param1");
 }
