@@ -113,7 +113,7 @@ bool Rules::reset()
     return true;
 }
 
-const Data::Area *Rules::getArea(const AreaName &areaname, bool updaterMode)
+const Data::Area* Rules::getArea(const AreaName& areaname, bool updaterMode)
 {
     const Data::Area* area = study_.areas.find(areaname);
     if (!area && !updaterMode)
@@ -272,7 +272,9 @@ bool Rules::readSolar(const AreaName::Vector& splitKey, const String& value, boo
     return true;
 }
 
-bool Rules::readInitialHydroLevels(const AreaName::Vector& splitKey, const String& value, bool updaterMode)
+bool Rules::readInitialHydroLevels(const AreaName::Vector& splitKey,
+                                   const String& value,
+                                   bool updaterMode)
 {
     const uint year = splitKey[2].to<uint>();
     const AreaName& areaname = splitKey[1];
@@ -288,7 +290,9 @@ bool Rules::readInitialHydroLevels(const AreaName::Vector& splitKey, const Strin
     return true;
 }
 
-bool Rules::readFinalHydroLevels(const AreaName::Vector& splitKey, const String& value, bool updaterMode)
+bool Rules::readFinalHydroLevels(const AreaName::Vector& splitKey,
+                                 const String& value,
+                                 bool updaterMode)
 {
     const uint year = splitKey[2].to<uint>();
     const AreaName& areaname = splitKey[1];
@@ -304,8 +308,8 @@ bool Rules::readFinalHydroLevels(const AreaName::Vector& splitKey, const String&
     return true;
 }
 
-const Data::AreaLink *Rules::getLink(const AreaName &fromAreaName,
-                                     const AreaName &toAreaName,
+const Data::AreaLink* Rules::getLink(const AreaName& fromAreaName,
+                                     const AreaName& toAreaName,
                                      bool updaterMode)
 {
     const Data::AreaLink* link = study_.areas.findLink(fromAreaName, toAreaName);

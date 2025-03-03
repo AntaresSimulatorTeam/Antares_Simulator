@@ -132,20 +132,26 @@ public:
 private:
     // Member methods
     bool readThermalCluster(const AreaName::Vector& instrs, const String& value, bool updaterMode);
-    bool readRenewableCluster(const AreaName::Vector& instrs, const String& value, bool updaterMode);
+    bool readRenewableCluster(const AreaName::Vector& instrs,
+                              const String& value,
+                              bool updaterMode);
     bool readLoad(const AreaName::Vector& instrs, const String& value, bool updaterMode);
     bool readWind(const AreaName::Vector& instrs, const String& value, bool updaterMode);
     bool readHydro(const AreaName::Vector& instrs, const String& value, bool updaterMode);
     bool readSolar(const AreaName::Vector& instrs, const String& value, bool updaterMode);
-    bool readInitialHydroLevels(const AreaName::Vector& instrs, const String& value, bool updaterMode);
-    bool readFinalHydroLevels(const AreaName::Vector& instrs, const String& value, bool updaterMode);
+    bool readInitialHydroLevels(const AreaName::Vector& instrs,
+                                const String& value,
+                                bool updaterMode);
+    bool readFinalHydroLevels(const AreaName::Vector& instrs,
+                              const String& value,
+                              bool updaterMode);
     bool readLink(const AreaName::Vector& instrs, const String& value, bool updaterMode);
     bool readBindingConstraints(const AreaName::Vector& splitKey, const String& value);
 
-    const Data::Area *getArea(const AreaName &areaname, bool updaterMode);
+    const Data::Area* getArea(const AreaName& areaname, bool updaterMode);
 
-    const Data::AreaLink *getLink(const AreaName &fromAreaName,
-                                  const AreaName &toAreaName,
+    const Data::AreaLink* getLink(const AreaName& fromAreaName,
+                                  const AreaName& toAreaName,
                                   bool updaterMode);
     bool checkGroupExists(const std::string& groupName) const;
 
