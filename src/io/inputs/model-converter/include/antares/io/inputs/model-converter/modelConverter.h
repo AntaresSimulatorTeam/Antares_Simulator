@@ -44,6 +44,10 @@ class Node;
 
 namespace Antares::IO::Inputs::ModelConverter
 {
+
+Study::SystemModel::Library convert(const YmlModel::Library& library);
+
+// EXCEPTIONS
 class UnknownTypeException: public std::runtime_error
 {
 public:
@@ -92,5 +96,4 @@ public:
     explicit FieldNotFoundForDefinition(const std::string& portId, const std::string& fieldId);
 };
 
-Study::SystemModel::Library convert(const YmlModel::Library& library);
 } // namespace Antares::IO::Inputs::ModelConverter
