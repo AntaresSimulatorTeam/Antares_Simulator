@@ -22,6 +22,7 @@
 #include <algorithm>
 #include <functional>
 #include <map>
+#include <ranges>
 #include <stdexcept>
 
 #include <antares/solver/optim-model-filler/TimeDependentLinearExpression.h>
@@ -158,9 +159,10 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator[](int shif
     }
 
     std::unordered_map<unsigned int, LinearExpression> linearExpressions;
-    for (const auto& [timeStep, linear_expression]: linearExpressions_)
+    for (const auto& timeStep: linearExpressions_ | std::views::keys)
     {
-        linearExpressions[rotatedIndex(timeStep, shiftValue, fillContext)] = linear_expression;
+        linearExpressions[timeStep] = linearExpressions_.at(
+          rotatedIndex(timeStep, shiftValue, fillContext));
     }
     return TimeDependentLinearExpression(std::move(linearExpressions));
 }
