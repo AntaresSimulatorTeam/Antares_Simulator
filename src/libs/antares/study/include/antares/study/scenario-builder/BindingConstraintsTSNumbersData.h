@@ -25,6 +25,7 @@
 #pragma once
 
 #include "TSnumberData.h"
+#include <Eigen/Eigen>
 
 namespace Antares::Data::ScenarioBuilder
 {
@@ -37,14 +38,14 @@ public:
     bool reset(const Study& study) override;
     void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const override;
 
-    void setTSnumber(const std::string& group_name, unsigned year, unsigned value);
+    virtual void setTSnumber(const std::string& group_name, unsigned year, unsigned value);
     unsigned get(const std::string& group_name, unsigned year) const;
     bool apply(Study& study) override;
     CString<512, false> get_prefix() const override;
     unsigned get_tsGenCount(const Study& study) const override;
 
 private:
-    std::map<std::string, MatrixType> rules_;
+    std::map<std::string, Eigen::Matrix<uint32_t, Eigen::Dynamic, 0>> rules_;
 };
 
 inline unsigned BindingConstraintsTSNumberData::get(const std::string& group_name,
@@ -55,7 +56,7 @@ inline unsigned BindingConstraintsTSNumberData::get(const std::string& group_nam
     {
         return 0;
     }
-    return it->second[0][year];
+    return it->second.coeffRef(year, 0);
 }
 
 inline CString<512, false> BindingConstraintsTSNumberData::get_prefix() const
