@@ -284,8 +284,7 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
     auto linear_expressions = visitor.dispatch(model->Objective().RootNode())
                                 .GetLinearExpressions();
 
-    // const auto& linear_expression = linear_expressions[ctx.getFirstTimeStep()];
-    if (abs(linear_expressions[0].offset()) > 1e-10)
+    if (abs(linear_expressions[ctx.getFirstTimeStep()].offset()) > 1e-10)
     {
         throw std::invalid_argument("Antares does not support objective offsets (found in model '"
                                     + model->Id() + "' of component '" + component_.Id() + "').");
