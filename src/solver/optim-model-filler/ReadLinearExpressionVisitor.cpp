@@ -167,8 +167,9 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Component
     throw std::invalid_argument("ReadLinearExpressionVisitor cannot visit ComponentVariableNodes");
 }
 
-TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const ComponentParameterNode* node)
+TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const TimeShiftNode* node)
 {
-    throw std::invalid_argument("ReadLinearExpressionVisitor cannot visit ComponentParameterNodes");
+    const auto ret = dispatch(node->child());
+    return ret[node->shift()];
 }
 } // namespace Antares::Optimization

@@ -57,8 +57,12 @@ public:
     TimeDependentLinearExpression operator/(const TimeDependentLinearExpression& other) const;
     /// Multiply linear expression by -1
     TimeDependentLinearExpression operator-() const;
+    TimeDependentLinearExpression operator[](int shiftValue) const;
+
     const std::unordered_map<unsigned, LinearExpression>& GetLinearExpressions() const;
     size_t getSize() const;
+
+    Optimisation::LinearProblemApi::FillContext DeduceFillContext() const;
 
 private:
     std::unordered_map<unsigned int, LinearExpression> linearExpressions_;

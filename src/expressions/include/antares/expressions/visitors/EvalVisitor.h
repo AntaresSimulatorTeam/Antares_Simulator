@@ -131,6 +131,8 @@ public:
         return std::get<std::vector<double>>(value_);
     }
 
+    EvaluationResult operator[](int shiftValue) const;
+
 private:
     std::variant<double, std::vector<double>> value_;
     explicit EvaluationResult(const std::variant<double, std::vector<double>>& value);
@@ -139,6 +141,13 @@ private:
     EvaluationResult evaluateBinaryOperation(const EvaluationResult& right, Op op) const;
     template<typename Op>
     EvaluationResult evaluateUnaryOperation(Op op) const;
+
+    static double shift(double value, int)
+    {
+        return value;
+    }
+
+    static std::vector<double> shift(const std::vector<double>& values, int shiftValue);
 };
 
 template<typename BinaryOp>
@@ -262,5 +271,6 @@ private:
     EvaluationResult visit(const Nodes::PortFieldSumNode* node) override;
     EvaluationResult visit(const Nodes::ComponentVariableNode* node) override;
     EvaluationResult visit(const Nodes::ComponentParameterNode* node) override;
+    EvaluationResult visit(const Nodes::TimeShiftNode* node) override;
 };
 } // namespace Antares::Expressions::Visitors

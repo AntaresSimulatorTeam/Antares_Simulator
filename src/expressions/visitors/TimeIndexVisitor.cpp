@@ -111,6 +111,11 @@ TimeIndex TimeIndexVisitor::visit(const Nodes::ComponentParameterNode* component
     return context_.at(component_parameter_node);
 }
 
+TimeIndex TimeIndexVisitor::visit(const Nodes::TimeShiftNode* timeShiftNode)
+{
+    return dispatch(timeShiftNode->child());
+}
+
 TimeIndexVisitor::TimeIndexVisitor(std::unordered_map<const Nodes::Node*, TimeIndex> context):
     context_(std::move(context))
 {

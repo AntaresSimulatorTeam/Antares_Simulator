@@ -19,19 +19,25 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
-#include <antares/expressions/nodes/ComponentNode.h>
-#include <antares/expressions/nodes/DivisionNode.h>
-#include <antares/expressions/nodes/EqualNode.h>
-#include <antares/expressions/nodes/GreaterThanOrEqualNode.h>
-#include <antares/expressions/nodes/Leaf.h>
-#include <antares/expressions/nodes/LessThanOrEqualNode.h>
-#include <antares/expressions/nodes/LiteralNode.h>
-#include <antares/expressions/nodes/MultiplicationNode.h>
-#include <antares/expressions/nodes/NegationNode.h>
-#include <antares/expressions/nodes/ParameterNode.h>
-#include <antares/expressions/nodes/PortFieldNode.h>
-#include <antares/expressions/nodes/PortFieldSumNode.h>
-#include <antares/expressions/nodes/SubtractionNode.h>
-#include <antares/expressions/nodes/SumNode.h>
-#include <antares/expressions/nodes/TimeShiftNode.h>
-#include <antares/expressions/nodes/VariableNode.h>
+
+#include "antares/expressions/nodes/UnaryNode.h"
+
+namespace Antares::Expressions::Nodes
+{
+class TimeShiftNode: public UnaryNode
+{
+public:
+    TimeShiftNode(Node* toBeShifted, int shift);
+
+    std::string name() const override;
+
+    [[nodiscard]] int shift() const
+    {
+        return shift_;
+    }
+
+private:
+    int shift_ = 0;
+};
+
+} // namespace Antares::Expressions::Nodes

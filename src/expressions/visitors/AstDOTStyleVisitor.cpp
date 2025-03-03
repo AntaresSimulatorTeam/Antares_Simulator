@@ -182,6 +182,11 @@ void AstDOTStyleVisitor::visit(const Nodes::ComponentParameterNode* node, std::o
              os);
 }
 
+void AstDOTStyleVisitor::visit(const Nodes::TimeShiftNode* node, std::ostream& os)
+{
+    //
+}
+
 std::string AstDOTStyleVisitor::name() const
 {
     return "AstDOTStyleVisitor";

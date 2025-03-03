@@ -8,6 +8,8 @@ set(SRC_Expressions
         nodes/BinaryNode.cpp
         nodes/UnaryNode.cpp
         nodes/SumNode.cpp
+        nodes/TimeShiftNode.cpp
+
 
         visitors/CloneVisitor.cpp
         visitors/CompareVisitor.cpp
@@ -48,6 +50,8 @@ set(SRC_Expressions
         include/antares/expressions/nodes/SubtractionNode.h
         include/antares/expressions/nodes/UnaryNode.h
         include/antares/expressions/nodes/VariableNode.h
+        include/antares/expressions/nodes/TimeShiftNode.h
+
 
         include/antares/expressions/visitors/CloneVisitor.h
         include/antares/expressions/visitors/CompareVisitor.h

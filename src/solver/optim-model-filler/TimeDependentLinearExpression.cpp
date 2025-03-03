@@ -21,6 +21,7 @@
 
 #include <algorithm>
 #include <functional>
+#include <map>
 #include <stdexcept>
 
 #include <antares/solver/optim-model-filler/TimeDependentLinearExpression.h>
@@ -123,6 +124,46 @@ TimeDependentLinearExpression::GetLinearExpressions() const
 size_t TimeDependentLinearExpression::getSize() const
 {
     return linearExpressions_.size();
+}
+
+Optimisation::LinearProblemApi::FillContext TimeDependentLinearExpression::DeduceFillContext() const
+{
+    // TODO it would be much simpler if all ctor have fillContex
+    std::map ordered(linearExpressions_.begin(), linearExpressions_.end());
+    return {ordered.begin()->first, ordered.rbegin()->first};
+}
+
+int rotatedIndex(unsigned key,
+                 int shift,
+                 const Optimisation::LinearProblemApi::FillContext& fillContext)
+{
+    unsigned rangeSize = fillContext.getNumberOfTimestep();
+
+    // Normalize shift within bounds (to prevent negative indexing)
+    shift = (shift % static_cast<int>(rangeSize) + rangeSize) % static_cast<int>(rangeSize);
+
+    // Compute which key's value should be assigned to `key`
+    return fillContext.getFirstTimeStep()
+           + (key - fillContext.getFirstTimeStep() + shift) % rangeSize;
+}
+
+TimeDependentLinearExpression TimeDependentLinearExpression::operator[](int shiftValue) const
+{
+    auto fillContext = DeduceFillContext();
+    unsigned int number_of_timestep = fillContext.getNumberOfTimestep();
+
+    if (number_of_timestep == 0)
+    {
+        return TimeDependentLinearExpression(fillContext);
+    }
+
+    std::unordered_map<unsigned int, LinearExpression> linearExpressions;
+    for (const auto& [timeStep, linear_expression]: linearExpressions_)
+    {
+        linearExpressions[rotatedIndex(timeStep, shiftValue, fillContext)] = linear_expression.at(
+          timeStep);
+    }
+    return TimeDependentLinearExpression(std::move(linearExpressions));
 }
 
 } // namespace Antares::Optimization

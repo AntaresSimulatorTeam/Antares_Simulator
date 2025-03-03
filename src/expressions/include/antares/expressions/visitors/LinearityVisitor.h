@@ -49,5 +49,6 @@ private:
     LinearStatus visit(const Nodes::PortFieldSumNode* port_field_node) override;
     LinearStatus visit(const Nodes::ComponentVariableNode* component_variable_node) override;
     LinearStatus visit(const Nodes::ComponentParameterNode* component_parameter_node) override;
+    LinearStatus visit(const Nodes::TimeShiftNode* timeShiftNode) override;
 };
 } // namespace Antares::Expressions::Visitors

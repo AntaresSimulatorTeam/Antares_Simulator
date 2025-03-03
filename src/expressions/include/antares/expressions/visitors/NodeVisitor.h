@@ -282,6 +282,15 @@ public:
      * @return The result of processing the ComponentParameterNode.
      */
     virtual R visit(const Nodes::ComponentParameterNode*, Args... args) = 0;
+    /**
+     * @brief Visits a TimeShiftNode.
+     *
+     * @param node A pointer to the TimeShiftNode to be visited.
+     * @param args Additional arguments to be passed to the visitor's methods.
+     *
+     * @return The result of processing the TimeShiftNode.
+     */
+    virtual R visit(const Nodes::TimeShiftNode*, Args... args) = 0;
 
 private:
     // we use LogSink because the inclusion of <antares/logs/logs.h> somehow results in the

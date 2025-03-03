@@ -120,6 +120,11 @@ Nodes::Node* CloneVisitor::visit(const Nodes::ComponentParameterNode* component_
       component_parameter_node->getComponentName());
 }
 
+Nodes::Node* CloneVisitor::visit(const Nodes::TimeShiftNode* component_parameter_node)
+{
+    //
+}
+
 std::string CloneVisitor::name() const
 {
     return "CloneVisitor";

@@ -40,4 +40,5 @@ class ParameterNode;
 class VariableNode;
 class PortFieldNode;
 class PortFieldSumNode;
+class TimeShiftNode;
 } // namespace Antares::Expressions::Nodes

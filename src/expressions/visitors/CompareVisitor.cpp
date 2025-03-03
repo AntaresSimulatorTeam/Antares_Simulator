@@ -150,6 +150,10 @@ bool CompareVisitor::visit(const Nodes::ComponentParameterNode* node, const Node
 {
     return compareEqualOperator(node, other);
 }
+bool CompareVisitor::visit(const Nodes::TimeShiftNode* node, const Nodes::Node* other)
+{
+    //
+}
 
 std::string CompareVisitor::name() const
 {

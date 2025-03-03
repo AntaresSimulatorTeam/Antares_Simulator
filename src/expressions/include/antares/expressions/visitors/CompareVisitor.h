@@ -51,5 +51,6 @@ public:
                const Nodes::Node* other) override;
     bool visit(const Nodes::ComponentParameterNode* component_node,
                const Nodes::Node* other) override;
+    bool visit(const Nodes::TimeShiftNode* component_node, const Nodes::Node* other) override;
 };
 } // namespace Antares::Expressions::Visitors

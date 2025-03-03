@@ -69,6 +69,7 @@ private:
       const Expressions::Nodes::ComponentVariableNode* node) override;
     TimeDependentLinearExpression visit(
       const Expressions::Nodes::ComponentParameterNode* node) override;
+    TimeDependentLinearExpression visit(const Expressions::Nodes::TimeShiftNode* node) override;
 
     Optimisation::LinearProblemApi::FillContext fillContext_;
     const std::string& componentId_;

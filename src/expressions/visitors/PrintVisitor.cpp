@@ -110,6 +110,10 @@ std::string PrintVisitor::visit(const Nodes::ComponentParameterNode* node)
 {
     return node->getComponentId() + "." + node->getComponentName();
 }
+std::string PrintVisitor::visit(const Nodes::TimeShiftNode* timeShiftNode)
+{
+    return dispatch(timeShiftNode->child()) + "[" + std::to_string(timeShiftNode->shift()) + " ]";
+}
 
 std::string PrintVisitor::name() const
 {

@@ -48,5 +48,6 @@ private:
     std::string visit(const Nodes::PortFieldSumNode* node) override;
     std::string visit(const Nodes::ComponentVariableNode* node) override;
     std::string visit(const Nodes::ComponentParameterNode* node) override;
+    std::string visit(const Nodes::TimeShiftNode* node) override;
 };
 } // namespace Antares::Expressions::Visitors

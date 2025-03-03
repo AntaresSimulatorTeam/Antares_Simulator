@@ -130,6 +130,12 @@ EvaluationResult EvalVisitor::visit(const Nodes::ComponentParameterNode* node)
     throw EvalVisitorNotImplemented(name(), node->name());
 }
 
+EvaluationResult EvalVisitor::visit(const Nodes::TimeShiftNode* node)
+{
+    const auto ret = dispatch(node->child());
+    return ret[node->shift()];
+}
+
 std::string EvalVisitor::name() const
 {
     return "EvalVisitor";
@@ -162,6 +168,34 @@ EvaluationResult::EvaluationResult(const std::vector<double>& values):
 EvaluationResult::EvaluationResult(const std::variant<double, std::vector<double>>& value):
     value_(value)
 {
+}
+
+EvaluationResult EvaluationResult::operator[](int shiftValue) const
+{
+    return EvaluationResult(
+      std::visit([&shiftValue](const auto& l) -> std::variant<double, std::vector<double>>
+                 { return shift(l, shiftValue); },
+                 value_));
+}
+
+std::vector<double> EvaluationResult::shift(const std::vector<double>& values, int shiftValue)
+{
+    size_t n = values.size();
+    if (n == 0)
+    {
+        return {};
+    }
+
+    // Normalize shiftValue within bounds
+    shiftValue = (shiftValue % static_cast<int>(n) + n) % static_cast<int>(n);
+
+    // Create a copy of the original vector
+    std::vector<double> shiftedValues = values;
+
+    // Use std::rotate to perform the shift (left shift for positive values)
+    std::rotate(shiftedValues.begin(), shiftedValues.begin() + shiftValue, shiftedValues.end());
+
+    return shiftedValues;
 }
 
 } // namespace Antares::Expressions::Visitors
