@@ -1,8 +1,9 @@
+import os.path
 from os import walk
 from pathlib import Path
 from os.path import basename
 
-def look_for_studies(root_folder):
+def look_for_studies(root_folder, skipped_studies):
     to_return = []
     for current_folder, sub_folders, files in walk(root_folder):
         if skip_folder(current_folder):
@@ -12,6 +13,12 @@ def look_for_studies(root_folder):
             to_return.append(Path(current_folder))
             continue
 
+    for study in to_return:
+        name = str(study).replace(str(root_folder) + os.path.sep, "")
+        for skipped_study in skipped_studies:
+            if skipped_study in name:
+                to_return.remove(study)
+                break
     return to_return
 
 def skip_folder(folder):
