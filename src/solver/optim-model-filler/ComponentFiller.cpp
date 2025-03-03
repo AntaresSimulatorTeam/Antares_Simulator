@@ -118,7 +118,7 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
     {
         std::ostringstream errMessage;
         errMessage << "requested " << count << " variables but lb size = " << lb.size()
-                   << " and ub size = " + std::to_string(ub.size());
+                   << " and ub size = " << ub.size();
         throw std::invalid_argument(errMessage.str());
     }
     const auto offset = *dim.getTimesteps().begin();
@@ -213,10 +213,10 @@ void ComponentFiller::addStaticConstraint(Optimisation::LinearProblemApi::ILinea
     auto* ct = pb.addConstraint(linear_constraint.lb,
                                 linear_constraint.ub,
                                 component_.Id() + "." + constraint_id);
-    for (auto [variableFullKey, coef]: linear_constraint.coef_per_var)
+    for (auto [variableFullKey, coefficient]: linear_constraint.coef_per_var)
     {
         auto* variable = variableDictionary(variableFullKey);
-        ct->setCoefficient(variable, coef);
+        ct->setCoefficient(variable, coefficient);
     }
 }
 
@@ -231,12 +231,11 @@ void ComponentFiller::addTimeDependentConstraints(
                                     linear_constraint.ub,
                                     component_.Id() + "." + constraint_id + '_'
                                       + std::to_string(linear_constraint.timeStep));
-        for (const auto& [variableFullKey, coef]: linear_constraint.coef_per_var)
+        for (const auto& [variableFullKey, coefficient]: linear_constraint.coef_per_var)
         {
-            // TODO scenario = 0
             auto* variable = variableDictionary(variableFullKey);
 
-            ct->setCoefficient(variable, coef);
+            ct->setCoefficient(variable, coefficient);
         }
     }
 }
@@ -283,10 +282,10 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
 
     ReadLinearExpressionVisitor visitor(evaluationContext, ctx, component_.Id());
 
-    auto linear_expressions = visitor.dispatch(model->Objective().RootNode())
-                                .GetLinearExpressions();
+    const auto timeDependentLinearExpression = visitor.dispatch(model->Objective().RootNode());
+    const auto& linear_expressions = timeDependentLinearExpression.GetLinearExpressions();
 
-    if (abs(linear_expressions[ctx.getFirstTimeStep()].offset()) > 1e-10)
+    if (abs(linear_expressions.at(ctx.getFirstTimeStep()).offset()) > 1e-10)
     {
         throw std::invalid_argument("Antares does not support objective offsets (found in model '"
                                     + model->Id() + "' of component '" + component_.Id() + "').");
@@ -294,7 +293,7 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
 
     for (const auto& linear_expression: linear_expressions | std::views::values)
     {
-        for (auto [variableFullKey, coefficient]: linear_expression.coefPerVar())
+        for (const auto& [variableFullKey, coefficient]: linear_expression.coefPerVar())
         {
             auto* variable = variableDictionary(variableFullKey);
             pb.setObjectiveCoefficient(variable, coefficient);
