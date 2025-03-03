@@ -37,6 +37,7 @@ struct IdentityFunction
         return t;
     }
 };
+
 using FullKeyMap = std::unordered_map<FullKey, double, FullKeyHash>;
 
 /**

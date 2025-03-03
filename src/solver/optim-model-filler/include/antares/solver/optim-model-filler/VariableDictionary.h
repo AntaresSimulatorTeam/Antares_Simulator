@@ -37,9 +37,6 @@ class IMipVariable;
 namespace Antares::Optimization
 {
 
-
-
-
 struct IntegerInterval
 {
     unsigned int initialTime = 0;
