@@ -160,8 +160,7 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator[](int shif
     std::unordered_map<unsigned int, LinearExpression> linearExpressions;
     for (const auto& [timeStep, linear_expression]: linearExpressions_)
     {
-        linearExpressions[rotatedIndex(timeStep, shiftValue, fillContext)] = linear_expression.at(
-          timeStep);
+        linearExpressions[rotatedIndex(timeStep, shiftValue, fillContext)] = linear_expression;
     }
     return TimeDependentLinearExpression(std::move(linearExpressions));
 }

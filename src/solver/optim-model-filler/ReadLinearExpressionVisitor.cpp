@@ -167,6 +167,11 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Component
     throw std::invalid_argument("ReadLinearExpressionVisitor cannot visit ComponentVariableNodes");
 }
 
+TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const ComponentParameterNode* node)
+{
+    throw std::invalid_argument("ReadLinearExpressionVisitor cannot visit ComponentParameterNodes");
+}
+
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const TimeShiftNode* node)
 {
     const auto ret = dispatch(node->child());
