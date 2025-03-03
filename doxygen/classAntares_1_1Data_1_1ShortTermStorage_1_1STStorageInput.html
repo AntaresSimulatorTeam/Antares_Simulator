@@ -147,13 +147,13 @@ $(function(){initNavTree('classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageI
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a891ab2ddecb9962e2f84c94b79560cf1" id="r_a891ab2ddecb9962e2f84c94b79560cf1"><td class="memItemLeft" align="right" valign="top"><a id="a891ab2ddecb9962e2f84c94b79560cf1" name="a891ab2ddecb9962e2f84c94b79560cf1"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>validate</b> () const</td></tr>
-<tr class="separator:a891ab2ddecb9962e2f84c94b79560cf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a440dddb79b46122650aff34f681bf868" id="r_a440dddb79b46122650aff34f681bf868"><td class="memItemLeft" align="right" valign="top"><a id="a440dddb79b46122650aff34f681bf868" name="a440dddb79b46122650aff34f681bf868"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>validate</b> (<a class="el" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a> studyVersion) const</td></tr>
+<tr class="separator:a440dddb79b46122650aff34f681bf868"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa55981341015887337fa940a2b21f27a" id="r_aa55981341015887337fa940a2b21f27a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa55981341015887337fa940a2b21f27a">createSTStorageClustersFromIniFile</a> (const std::filesystem::path &amp;path)</td></tr>
 <tr class="separator:aa55981341015887337fa940a2b21f27a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8f46bb3a54b6ce7adcf1331d3e5c6767" id="r_a8f46bb3a54b6ce7adcf1331d3e5c6767"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8f46bb3a54b6ce7adcf1331d3e5c6767">loadSeriesFromFolder</a> (const std::filesystem::path &amp;folder) const</td></tr>
-<tr class="separator:a8f46bb3a54b6ce7adcf1331d3e5c6767"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac1dd8a3674752fa6f30fde4c224fa63" id="r_aac1dd8a3674752fa6f30fde4c224fa63"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aac1dd8a3674752fa6f30fde4c224fa63">loadSeriesFromFolder</a> (const std::filesystem::path &amp;folder, <a class="el" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a> studyVersion) const</td></tr>
+<tr class="separator:aac1dd8a3674752fa6f30fde4c224fa63"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af2339ee00e3c45b75a44233684dc2daf" id="r_af2339ee00e3c45b75a44233684dc2daf"><td class="memItemLeft" align="right" valign="top"><a id="af2339ee00e3c45b75a44233684dc2daf" name="af2339ee00e3c45b75a44233684dc2daf"></a>
 std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>count</b> () const</td></tr>
 <tr class="memdesc:af2339ee00e3c45b75a44233684dc2daf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of enabled ST storages, ignoring disabled ST storages. <br /></td></tr>
@@ -203,8 +203,8 @@ std::vector&lt; <a class="el" href="classAntares_1_1Data_1_1ShortTermStorage_1_1
 
 </div>
 </div>
-<a id="a8f46bb3a54b6ce7adcf1331d3e5c6767" name="a8f46bb3a54b6ce7adcf1331d3e5c6767"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8f46bb3a54b6ce7adcf1331d3e5c6767">&#9670;&#160;</a></span>loadSeriesFromFolder()</h2>
+<a id="aac1dd8a3674752fa6f30fde4c224fa63" name="aac1dd8a3674752fa6f30fde4c224fa63"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac1dd8a3674752fa6f30fde4c224fa63">&#9670;&#160;</a></span>loadSeriesFromFolder()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -212,8 +212,12 @@ std::vector&lt; <a class="el" href="classAntares_1_1Data_1_1ShortTermStorage_1_1
         <tr>
           <td class="memname">bool Antares::Data::ShortTermStorage::STStorageInput::loadSeriesFromFolder </td>
           <td>(</td>
-          <td class="paramtype">const std::filesystem::path &amp;</td>          <td class="paramname"><span class="paramname"><em>folder</em></span></td><td>)</td>
-          <td> const</td>
+          <td class="paramtype">const std::filesystem::path &amp;</td>          <td class="paramname"><span class="paramname"><em>folder</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a></td>          <td class="paramname"><span class="paramname"><em>studyVersion</em></span>&#160;) const</td>
         </tr>
       </table>
 </div><div class="memdoc">

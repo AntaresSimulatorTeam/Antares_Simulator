@@ -95,7 +95,7 @@ var searchData=
   ['loadonlyneeded_92',['loadOnlyNeeded',['../classAntares_1_1Data_1_1StudyLoadOptions.html#af047639f21e6aaab8fc1c85f9663c37e',1,'Antares::Data::StudyLoadOptions']]],
   ['loadpreprofromfolder_93',['loadPreproFromFolder',['../classAntares_1_1Data_1_1ThermalClusterList.html#a2989173c2d9a84cd2d5f9878234ef6c2',1,'Antares::Data::ThermalClusterList']]],
   ['loadscbuilderrenderer_94',['loadScBuilderRenderer',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1loadScBuilderRenderer.html',1,'Antares::Component::Datagrid::Renderer']]],
-  ['loadseriesfromfolder_95',['loadSeriesFromFolder',['../classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html#a8f46bb3a54b6ce7adcf1331d3e5c6767',1,'Antares::Data::ShortTermStorage::STStorageInput']]],
+  ['loadseriesfromfolder_95',['loadSeriesFromFolder',['../classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html#aac1dd8a3674752fa6f30fde4c224fa63',1,'Antares::Data::ShortTermStorage::STStorageInput']]],
   ['loadtsnumberdata_96',['loadTSNumberData',['../classAntares_1_1Data_1_1ScenarioBuilder_1_1loadTSNumberData.html',1,'Antares::Data::ScenarioBuilder']]],
   ['localareas_97',['localareas',['../classAntares_1_1TSGenerator_1_1XCast_1_1StudyData.html#a1b0a640c98e59ef30a2aee7edc8460c1',1,'Antares::TSGenerator::XCast::StudyData']]],
   ['localdatahydro_98',['Localdatahydro',['../classAntares_1_1Window_1_1Hydro_1_1Localdatahydro.html',1,'Antares::Window::Hydro::Localdatahydro'],['../classAntares_1_1Window_1_1Hydro_1_1Localdatahydro.html#a17f8be9ce3fd5afbfe3291b8e0f40f59',1,'Antares::Window::Hydro::Localdatahydro::Localdatahydro()']]],
