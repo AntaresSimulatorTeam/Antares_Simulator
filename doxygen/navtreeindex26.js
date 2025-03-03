@@ -1,7 +1,5 @@
 var NAVTREEINDEX26 =
 {
-"solver_2variable_2include_2antares_2solver_2variable_2variable_8h_source.html":[10,0,0,7,13,0,0,0,0,20],
-"solver_8data_8h_source.html":[10,0,0,7,10,0,0,0,0,17],
 "solver_8hxx_source.html":[10,0,0,7,10,0,0,0,0,19],
 "solver__utils_8h_source.html":[10,0,0,7,10,0,0,0,0,20],
 "spatial-aggregate_8h_source.html":[10,0,0,7,13,0,0,0,0,1,8],
@@ -163,10 +161,10 @@ var NAVTREEINDEX26 =
 "structAntares_1_1Solver_1_1ModelerParameters.html":[9,0,0,16,20],
 "structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html":[9,0,0,16,2,1],
 "structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html#a1b3d66ae8211fc0a17e451bbfd09d854":[9,0,0,16,2,1,0],
-"structAntares_1_1Solver_1_1Simulation_1_1RemixHydroOutput.html":[9,0,0,16,4,23],
+"structAntares_1_1Solver_1_1Simulation_1_1RemixHydroOutput.html":[9,0,0,16,4,22],
 "structAntares_1_1Solver_1_1Simulation_1_1compareHydroCostsNoises.html":[9,0,0,16,4,5],
-"structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html":[9,0,0,16,4,21],
-"structAntares_1_1Solver_1_1Simulation_1_1setOfParallelYears.html":[9,0,0,16,4,25],
+"structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html":[9,0,0,16,4,20],
+"structAntares_1_1Solver_1_1Simulation_1_1setOfParallelYears.html":[9,0,0,16,4,24],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost_1_1Statistics.html":[9,0,0,16,5,0,0,0],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy_1_1Statistics.html":[9,0,0,16,5,0,1,0],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html":[9,0,0,16,5,0,2],
@@ -249,5 +247,7 @@ var NAVTREEINDEX26 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR_1_1Statistics.html":[9,0,0,16,5,4,61,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergy_1_1Statistics.html":[9,0,0,16,5,4,60,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardAvailableDispatchGen.html":[9,0,0,16,5,4,62],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardAvailableDispatchGen.html#a6c3732bbed87d62b536bdea26c334837":[9,0,0,16,5,4,62,1]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardAvailableDispatchGen.html#a6c3732bbed87d62b536bdea26c334837":[9,0,0,16,5,4,62,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardAvailableDispatchGen.html#ae5f7f805a39912af3a6d892720c5bd18":[9,0,0,16,5,4,62,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBalance.html":[9,0,0,16,5,4,63]
 };

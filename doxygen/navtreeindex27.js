@@ -1,7 +1,5 @@
 var NAVTREEINDEX27 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardAvailableDispatchGen.html#ae5f7f805a39912af3a6d892720c5bd18":[9,0,0,16,5,4,62,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBalance.html":[9,0,0,16,5,4,63],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBalance.html#a5b78a511dd81c4398861670b0eadc2a3":[9,0,0,16,5,4,63,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBalance.html#af47dc9be331ea9b93e6162e8b9823413":[9,0,0,16,5,4,63,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost.html":[9,0,0,16,5,4,64],
@@ -249,5 +247,7 @@ var NAVTREEINDEX27 =
 "structAntares_1_1Window_1_1Inspector_1_1PAreaColor.html":[9,0,0,22,1,10],
 "structAntares_1_1Window_1_1Inspector_1_1PAreaColor_1_1Color.html":[9,0,0,22,1,10,0],
 "structAntares_1_1Window_1_1Inspector_1_1PAreaFiltering.html":[9,0,0,22,1,11],
-"structAntares_1_1Window_1_1Inspector_1_1PAreaResortStatus.html":[9,0,0,22,1,12]
+"structAntares_1_1Window_1_1Inspector_1_1PAreaResortStatus.html":[9,0,0,22,1,12],
+"structAntares_1_1Window_1_1Inspector_1_1PAreaSpilledEnergyCost.html":[9,0,0,22,1,13],
+"structAntares_1_1Window_1_1Inspector_1_1PAreaUnsuppliedEnergyCost.html":[9,0,0,22,1,14]
 };

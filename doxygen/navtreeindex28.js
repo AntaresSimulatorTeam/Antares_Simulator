@@ -1,7 +1,5 @@
 var NAVTREEINDEX28 =
 {
-"structAntares_1_1Window_1_1Inspector_1_1PAreaSpilledEnergyCost.html":[9,0,0,22,1,13],
-"structAntares_1_1Window_1_1Inspector_1_1PAreaUnsuppliedEnergyCost.html":[9,0,0,22,1,14],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterArea.html":[9,0,0,22,1,15],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterCO2.html":[9,0,0,22,1,16],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterCostGeneration.html":[9,0,0,22,1,17],
@@ -95,8 +93,9 @@ var NAVTREEINDEX28 =
 "structCORRESPONDANCE__DES__VARIABLES.html":[9,0,72],
 "structCORRESPONDANCE__DES__VARIABLES__PB__ETENDU.html":[9,0,73],
 "structCOUTS__DE__TRANSPORT.html":[9,0,78],
-"structComparisonFixture.html":[9,0,58],
-"structComponentBuilderCreationFixture.html":[9,0,59],
+"structCommonFixture.html":[9,0,57],
+"structComparisonFixture.html":[9,0,59],
+"structComponentBuilderCreationFixture.html":[9,0,60],
 "structConstraintData.html":[9,0,66],
 "structCsrAreaBalanceData.html":[9,0,80],
 "structCsrBindingConstraintHourData.html":[9,0,82],
@@ -203,7 +202,7 @@ var NAVTREEINDEX28 =
 "structYAML_1_1convert_3_01Monster_01_4.html":[9,0,29,13],
 "structYAML_1_1convert_3_01Power_01_4.html":[9,0,29,14],
 "structYAML_1_1convert_3_01Vec3_01_4.html":[9,0,29,15],
-"structcommonFixture.html":[9,0,57],
+"structcommonFixture.html":[9,0,58],
 "structsaveFixture.html":[9,0,229],
 "study_2system-model_2include_2antares_2study_2system-model_2component_8h_source.html":[10,0,0,8,0,0,0,0,0,0],
 "study_2system-model_2include_2antares_2study_2system-model_2constraint_8h_source.html":[10,0,0,8,0,0,0,0,0,1],
@@ -249,5 +248,6 @@ var NAVTREEINDEX28 =
 "toolbox_2components_2map_2nodes_2bindingconstraint_8h_source.html":[10,0,0,11,2,1,1,3,1,0],
 "toolbox_2components_2map_2nodes_2connection_8h_source.html":[10,0,0,11,2,1,1,3,1,1],
 "toolbox_2ext-source_2window_8h_source.html":[10,0,0,11,2,1,4,5],
-"toolbox_2input_2bindingconstraint_2bindingconstraint_8h_source.html":[10,0,0,11,2,1,5,0,0]
+"toolbox_2input_2bindingconstraint_2bindingconstraint_8h_source.html":[10,0,0,11,2,1,5,0,0],
+"toolbox_2input_2bindingconstraint_8h_source.html":[10,0,0,11,2,1,5,2]
 };
