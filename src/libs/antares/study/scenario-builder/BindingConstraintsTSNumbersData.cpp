@@ -83,7 +83,10 @@ void BindingConstraintsTSNumberData::saveToINIFile(const Study&, Yuni::IO::File:
 
 void BindingConstraintsTSNumberData::setTSnumber(const std::string& group_name, const uint year, uint value) {
     auto& group_ts_numbers = rules_[group_name];
-    group_ts_numbers[0][year] = value;
+    if (year < group_ts_numbers.height)
+    {
+        group_ts_numbers[0][year] = value;
+    }
 }
 
 } // namespace Antares
