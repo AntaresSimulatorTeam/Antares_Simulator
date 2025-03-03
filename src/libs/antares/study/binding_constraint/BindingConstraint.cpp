@@ -177,7 +177,7 @@ void BindingConstraint::weight(const AreaLink* lnk, double w)
 
 void BindingConstraint::weight(const ThermalCluster* cluster, double w)
 {
-    if (cluster && cluster->isActive())
+    if (cluster)
     {
         if (Utils::isZero(w))
         {
@@ -221,7 +221,7 @@ void BindingConstraint::offset(const AreaLink* lnk, int o)
 
 void BindingConstraint::offset(const ThermalCluster* cluster, int o)
 {
-    if (cluster && cluster->isActive())
+    if (cluster)
     {
         if (Utils::isZero(o))
         {
@@ -609,9 +609,9 @@ int BindingConstraint::offset(const AreaLink* lnk) const
     return (i != pLinkOffsets.end()) ? i->second : 0;
 }
 
-int BindingConstraint::offset(const ThermalCluster* lnk) const
+int BindingConstraint::offset(const ThermalCluster* cluster) const
 {
-    auto i = pClusterOffsets.find(lnk);
+    auto i = pClusterOffsets.find(cluster);
     return (i != pClusterOffsets.end()) ? i->second : 0;
 }
 

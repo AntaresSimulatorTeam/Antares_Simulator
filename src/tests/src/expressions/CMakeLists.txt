@@ -13,5 +13,6 @@ add_boost_test(test-expressions
   test_Iterators.cpp
   test_AstDOTStyleVisitor.cpp
   LIBS
-  expressions
-  expressions-iterators)
+        expressions
+        expressions-iterators
+        linear-problem-data-impl)

@@ -157,6 +157,12 @@ jobs:
           os: ${{ env.os }}
           variant: "named-mps"
 
+      - name: Run cucumber on short-tests
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
+        uses: ./.github/workflows/cucumber-tests
+        with:
+          feature: "features/solver-features/short_tests.feature"
+
       - name: Run unfeasibility-related tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
         run: |
@@ -241,10 +247,6 @@ jobs:
           batch-name: short-tests
           os: ${{ env.os }}
 
-      - name: Run cucumber on short-tests
-        uses: ./.github/workflows/cucumber-tests
-        with:
-          feature: "features/solver-features/short_tests.feature"
 
       - name: Run mps tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}

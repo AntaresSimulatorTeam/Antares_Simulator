@@ -24,6 +24,7 @@
 #include <antares/optimisation/linear-problem-api/linearProblemFiller.h>
 #include <antares/study/system-model/component.h>
 #include "antares/expressions/visitors/EvaluationContext.h"
+#include "antares/solver/optim-model-filler/VariableDictionary.h"
 
 #include "ReadLinearConstraintVisitor.h"
 
@@ -62,9 +63,8 @@ public:
                              const std::string& constraint_id) const;
 
     void addTimeDependentConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                                     const LinearConstraint& linear_constraint,
-                                     const std::string& constraint_id,
-                                     unsigned int nb_cstr) const;
+                                     const std::vector<LinearConstraint>& linear_constraints,
+                                     const std::string& constraint_id) const;
 
     void addConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
                         Optimisation::LinearProblemApi::ILinearProblemData& data,
@@ -73,13 +73,45 @@ public:
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
                       Optimisation::LinearProblemApi::FillContext& ctx) override;
 
+    VariableDictionary variableDictionary;
+
 private:
     static bool IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node);
 
     bool IsThisVariableTimeDependent(const std::string& var_id) const;
 
     const Study::SystemModel::Component& component_;
-    Expressions::Visitors::EvaluationContext evaluationContext_;
     const std::map<std::string, Study::SystemModel::Variable>& modelVariable_;
+};
+
+class VariablesBulkAddition
+{
+public:
+    VariablesBulkAddition(Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
+                          VariableDictionary& variableDictionary);
+    void addVariable(double lb,
+                     double ub,
+                     bool integer,
+                     const Dimensions& dim,
+                     const PartialKey&) const;
+    void addVariable(const std::vector<double>& lb,
+                     double ub,
+                     bool integer,
+                     const Dimensions& dim,
+                     const PartialKey&) const;
+    void addVariable(double lb,
+                     const std::vector<double>& ub,
+                     bool integer,
+                     const Dimensions& dim,
+                     const PartialKey&) const;
+    void addVariable(const std::vector<double>& lb,
+                     const std::vector<double>& ub,
+                     bool integer,
+                     const Dimensions& dim,
+                     const PartialKey&) const;
+
+private:
+    Optimisation::LinearProblemApi::ILinearProblem& linear_problem_;
+    VariableDictionary& variableDictionary;
 };
 } // namespace Antares::Optimization
