@@ -1,6 +1,22 @@
 Antares Changelog
 =================
 
+8.8.14 (03/2025)
+--------------------
+## New features
+- Increase precision for `LOLD[CSR]` and `MRG PRICE[CSR]` [ANT-2443] (#2613)
+
+## Bugfix
+- Segfault related to **scenariobuilder.dat** [ANT-2890] (#2675)
+- Binding constraints TS loading in 8.8 [ANT-2746] (#2635) 
+- Correct cluster count, load constraints even for disabled clusters [ANT-2754] (#2659) 
+- Fix function `ThermalCluster::getMarketBidCost` [ANT-2527] (#2605) (backport) 
+
+8.8.13 (01/2025)
+--------------------
+## Bugfix
+- Backport bug on annual aggregation [ANT-2630] (#2585)
+
 8.8.12 (01/2025)
 --------------------
 ## New features
