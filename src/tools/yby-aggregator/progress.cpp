@@ -104,3 +104,11 @@ bool Progress::onInterval(uint)
 
     return true;
 }
+
+void Progress::message(const std::string& msg)
+{
+    using namespace Antares;
+    logs.info() << msg;
+    ThreadingPolicy::MutexLocker locker(*this);
+    pMessage = msg;
+}

@@ -20,7 +20,6 @@ set(SRCS
         job.hxx
         job.cpp
         progress.h
-        progress.hxx
         progress.cpp
 )
 
