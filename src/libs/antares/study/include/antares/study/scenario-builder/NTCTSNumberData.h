@@ -41,7 +41,7 @@ public:
         pArea = area;
     }
 
-    void setDataForLink(const Antares::Data::AreaLink* link, const uint year, uint value);
+    void setTSnumber(const Antares::Data::AreaLink* link, const uint year, uint value);
     uint get(const Antares::Data::AreaLink* link, const uint year) const;
     bool apply(Study& study) override;
     CString<512, false> get_prefix() const override;

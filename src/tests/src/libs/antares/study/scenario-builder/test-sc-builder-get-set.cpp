@@ -1,0 +1,240 @@
+/*
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+#define BOOST_TEST_MODULE sc_builder_get_set
+
+/* The goal of this suite is to test the setTSnumber and get method for the following classes
+- loadTSNumberData
+- windTSNumberData
+- solarTSNumberData
+- hydroTSNumberData
+- thermalTSNumberData
+- renewableTSNumberData
+- ntcTSNumberData
+- BindingConstraintsTSNumberData
+*/
+
+#define WIN32_LEAN_AND_MEAN
+
+#include <boost/test/unit_test.hpp>
+
+#include <antares/study/scenario-builder/rules.h>
+#include <antares/study/study.h>
+
+BOOST_AUTO_TEST_SUITE(sc_builder)
+
+using namespace Antares::Data;
+using namespace Antares::Data::ScenarioBuilder;
+
+template<class TSData>
+class IntegerIndex
+{
+public:
+    IntegerIndex():
+        study(std::make_unique<Study>()),
+        area(study->areaAdd("area 1"))
+    {
+        study->parameters.nbYears = 5;
+        tsdata.reset(*study);
+        for (unsigned int year = 0; year < study->parameters.nbYears; ++year)
+        {
+            tsdata.setTSnumber(area->index, year, 12);
+        }
+    }
+
+    void check() const
+    {
+        for (unsigned int year = 0; year < study->parameters.nbYears; ++year)
+        {
+            BOOST_CHECK_EQUAL(tsdata.get_value(year, area->index), 12);
+        }
+    }
+
+private:
+    TSData tsdata;
+    std::unique_ptr<Study> study;
+    Area* area;
+};
+
+template<class TSData, class ObjectT>
+class StructureIndex
+{
+public:
+    virtual ObjectT getObject() const = 0;
+    virtual void attachArea() = 0;
+
+    explicit StructureIndex():
+        study(std::make_unique<Study>()),
+        area1(study->areaAdd("area 1")),
+        area2(study->areaAdd("area 2")),
+        link(AreaAddLinkBetweenAreas(area1, area2, false)),
+        thcluster(std::make_shared<ThermalCluster>(area1)),
+        rencluster(std::make_shared<RenewableCluster>(area1)),
+        bc(study->bindingConstraints.add("my-bc"))
+    {
+        study->parameters.nbYears = 5;
+
+        area1->thermal.list.addToCompleteList(thcluster);
+        area1->renewable.list.addToCompleteList(rencluster);
+
+        bc->group("my-group");
+    }
+
+    // virtual function calls not allowed in constructors (UB)
+    void initialize()
+    {
+        attachArea();
+        tsdata.reset(*study);
+        for (unsigned int year = 0; year < study->parameters.nbYears; ++year)
+        {
+            tsdata.setTSnumber(getObject(), year, 12);
+        }
+    }
+
+    void check() const
+    {
+        for (unsigned int year = 0; year < study->parameters.nbYears; ++year)
+        {
+            BOOST_CHECK_EQUAL(tsdata.get(getObject(), year), 12);
+        }
+    }
+
+protected:
+    std::unique_ptr<Study> study;
+    TSData tsdata;
+    Area *area1, *area2;
+    AreaLink* link;
+    std::shared_ptr<ThermalCluster> thcluster;
+    std::shared_ptr<RenewableCluster> rencluster;
+    std::shared_ptr<BindingConstraint> bc;
+};
+
+namespace Fixture
+{
+// BOOST_FIXTURE_TEST_CASE doesn't support templates
+using Load = IntegerIndex<loadTSNumberData>;
+using Wind = IntegerIndex<windTSNumberData>;
+using Solar = IntegerIndex<solarTSNumberData>;
+using Hydro = IntegerIndex<hydroTSNumberData>;
+
+struct Thermal: public StructureIndex<thermalTSNumberData, const ThermalCluster*>
+{
+    const ThermalCluster* getObject() const override
+    {
+        return thcluster.get();
+    }
+
+    void attachArea() override
+    {
+        tsdata.attachArea(area1);
+    }
+};
+
+struct Renewable: public StructureIndex<renewableTSNumberData, const RenewableCluster*>
+{
+    const RenewableCluster* getObject() const override
+    {
+        return rencluster.get();
+    }
+
+    void attachArea() override
+    {
+        tsdata.attachArea(area1);
+    }
+};
+
+struct Link: public StructureIndex<ntcTSNumberData, const AreaLink*>
+{
+    const AreaLink* getObject() const override
+    {
+        return link;
+    }
+
+    void attachArea() override
+    {
+        tsdata.attachArea(area1);
+    }
+};
+
+struct BindingConstraint: public StructureIndex<BindingConstraintsTSNumberData, std::string>
+{
+    BindingConstraint()
+    {
+        BOOST_REQUIRE(study->bindingConstraintsGroups.buildFrom(study->bindingConstraints));
+    }
+
+    std::string getObject() const override
+    {
+        return bc->group();
+    }
+
+    void attachArea() override
+    {
+        // No area is attached to a binding constraint
+    }
+};
+
+} // namespace Fixture
+
+BOOST_FIXTURE_TEST_CASE(load, Fixture::Load)
+
+{
+    check();
+}
+
+BOOST_FIXTURE_TEST_CASE(wind, Fixture::Wind)
+{
+    check();
+}
+
+BOOST_FIXTURE_TEST_CASE(solar, Fixture::Solar)
+{
+    check();
+}
+
+BOOST_FIXTURE_TEST_CASE(hydro, Fixture::Hydro)
+{
+    check();
+}
+
+BOOST_FIXTURE_TEST_CASE(thermal, Fixture::Thermal)
+{
+    initialize();
+    check();
+}
+
+BOOST_FIXTURE_TEST_CASE(renewable, Fixture::Renewable)
+{
+    initialize();
+    check();
+}
+
+BOOST_FIXTURE_TEST_CASE(link, Fixture::Link)
+{
+    initialize();
+    check();
+}
+
+BOOST_FIXTURE_TEST_CASE(binding_constraint, Fixture::BindingConstraint)
+{
+    initialize();
+    check();
+}
+BOOST_AUTO_TEST_SUITE_END()
