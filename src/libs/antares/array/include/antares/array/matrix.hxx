@@ -577,20 +577,18 @@ void Matrix<T, ReadWriteT>::resize(uint w, uint h, bool fixedSize)
                 }
                 delete[] entry;
             }
-            else
+
+            // Assigning the new size
+            width = w;
+            height = h;
+
+            // Allocating the entry for the matrix
+            entry = new typename Antares::Memory::Stored<T>::Type[width + 1];
+            entry[width] = nullptr;
+
+            for (uint i = 0; i != w; ++i)
             {
-                // Assigning the new size
-                width = w;
-                height = h;
-
-                // Allocating the entry for the matrix
-                entry = new typename Antares::Memory::Stored<T>::Type[width + 1];
-                entry[width] = nullptr;
-
-                for (uint i = 0; i != w; ++i)
-                {
-                    Antares::Memory::Allocate<T>(entry[i], height);
-                }
+                Antares::Memory::Allocate<T>(entry[i], height);
             }
         }
     }
