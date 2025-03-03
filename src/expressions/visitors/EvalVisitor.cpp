@@ -25,6 +25,7 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
+#include "antares/expressions/ShiftVector.h"
 
 namespace Antares::Expressions::Visitors
 {
@@ -180,22 +181,7 @@ EvaluationResult EvaluationResult::operator[](int shiftValue) const
 
 std::vector<double> EvaluationResult::shift(const std::vector<double>& values, int shiftValue)
 {
-    size_t n = values.size();
-    if (n == 0)
-    {
-        return {};
-    }
-
-    // Normalize shiftValue within bounds
-    shiftValue = (shiftValue % static_cast<int>(n) + n) % static_cast<int>(n);
-
-    // Create a copy of the original vector
-    std::vector<double> shiftedValues = values;
-
-    // Use std::rotate to perform the shift (left shift for positive values)
-    std::rotate(shiftedValues.begin(), shiftedValues.begin() + shiftValue, shiftedValues.end());
-
-    return shiftedValues;
+    return shiftVector(values, shiftValue);
 }
 
 } // namespace Antares::Expressions::Visitors

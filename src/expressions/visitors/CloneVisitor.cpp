@@ -122,7 +122,8 @@ Nodes::Node* CloneVisitor::visit(const Nodes::ComponentParameterNode* component_
 
 Nodes::Node* CloneVisitor::visit(const Nodes::TimeShiftNode* component_parameter_node)
 {
-    //
+    // TODO
+    return nullptr;
 }
 
 std::string CloneVisitor::name() const

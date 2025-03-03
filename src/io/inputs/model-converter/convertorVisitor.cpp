@@ -21,6 +21,7 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/io/inputs/model-converter/convertorVisitor.h>
+#include "antares/expressions/visitors/CompareVisitor.h"
 
 #include "ExprLexer.h"
 #include "ExprParser.h"
@@ -39,6 +40,7 @@ public:
 
     std::any visit(antlr4::tree::ParseTree* tree) override;
 
+    Node* convertIdentifier(const std::string& identifier) const;
     std::any visitIdentifier(ExprParser::IdentifierContext* context) override;
     std::any visitMuldiv(ExprParser::MuldivContext* context) override;
     std::any visitFullexpr(ExprParser::FullexprContext* context) override;
@@ -121,12 +123,13 @@ static constexpr Expressions::Visitors::TimeIndex convertToTimeIndex(bool timede
     return static_cast<Expressions::Visitors::TimeIndex>((convertBool(scenariodependent) << 1)
                                                          | convertBool(timedependent));
 }
-
-std::any ConvertorVisitor::visitIdentifier(ExprParser::IdentifierContext* context)
+Node* ConvertorVisitor::convertIdentifier(const std::string& identifier) const
 {
     for (const auto& param: model_.parameters)
     {
-        if (param.id == context->IDENTIFIER()->getText())
+        // if (param.id == context->IDENTIFIER()->getText())
+
+        if (param.id == identifier)
         {
             return static_cast<Node*>(
               registry_.create<ParameterNode>(param.id,
@@ -137,7 +140,7 @@ std::any ConvertorVisitor::visitIdentifier(ExprParser::IdentifierContext* contex
 
     for (const auto& var: model_.variables)
     {
-        if (var.id == context->getText())
+        if (var.id == identifier)
         {
             return static_cast<Node*>(
               registry_.create<VariableNode>(var.id,
@@ -145,8 +148,12 @@ std::any ConvertorVisitor::visitIdentifier(ExprParser::IdentifierContext* contex
                                                                 var.scenario_dependent)));
         }
     }
+    throw NoParameterOrVariableWithThisName(identifier);
+}
 
-    throw NoParameterOrVariableWithThisName(context->getText());
+std::any ConvertorVisitor::visitIdentifier(ExprParser::IdentifierContext* context)
+{
+    return convertIdentifier(context->getText());
 }
 
 std::any ConvertorVisitor::visitMuldiv(ExprParser::MuldivContext* context)
@@ -232,7 +239,13 @@ std::any ConvertorVisitor::visitTimeIndex([[maybe_unused]] ExprParser::TimeIndex
 // TODO implement this
 std::any ConvertorVisitor::visitTimeShift([[maybe_unused]] ExprParser::TimeShiftContext* context)
 {
-    throw NotImplemented("Node time shift not implemented yet");
+    Node* shifted_expr = convertIdentifier(context->getText());
+    auto time_shift = std::stoi(context->shift()->TIME()->getText());
+    if (time_shift == 0)
+    {
+        return shifted_expr;
+    }
+    return static_cast<Node*>(registry_.create<TimeShiftNode>(shifted_expr, time_shift));
 }
 
 // TODO implement this
@@ -278,21 +291,33 @@ std::any ConvertorVisitor::visitRightAtom([[maybe_unused]] ExprParser::RightAtom
 // TODO implement this
 std::any ConvertorVisitor::visitShift([[maybe_unused]] ExprParser::ShiftContext* context)
 {
-    throw NotImplemented("Node shift not implemented yet");
+    if (context->shift_expr() == nullptr)
+    {
+        return static_cast<Node*>(registry_.create<LiteralNode>(0));
+    }
+    return std::any_cast<Node*>(visit(context->shift_expr()));
 }
 
 // TODO implement this
 std::any ConvertorVisitor::visitShiftAddsub(
   [[maybe_unused]] ExprParser::ShiftAddsubContext* context)
 {
-    throw NotImplemented("Node shift add sub not implemented yet");
+    Node* left = std::any_cast<Node*>(visit(context->shift_expr()));
+    Node* right = std::any_cast<Node*>(visit(context->right_expr()));
+    const auto op = context->op->getText();
+    return (op == "+") ? static_cast<Node*>(registry_.create<SumNode>(left, right))
+                       : static_cast<Node*>(registry_.create<SubtractionNode>(left, right));
 }
 
 // TODO implement this
 std::any ConvertorVisitor::visitShiftMuldiv(
   [[maybe_unused]] ExprParser::ShiftMuldivContext* context)
 {
-    throw NotImplemented("Node shift mul div not implemented yet");
+    Node* left = std::any_cast<Node*>(visit(context->shift_expr()));
+    Node* right = std::any_cast<Node*>(visit(context->right_expr()));
+    const auto op = context->op->getText();
+    return (op == "*") ? static_cast<Node*>(registry_.create<MultiplicationNode>(left, right))
+                       : static_cast<Node*>(registry_.create<DivisionNode>(left, right));
 }
 
 // TODO implement this

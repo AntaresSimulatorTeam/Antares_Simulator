@@ -73,6 +73,7 @@ set(SRC_Expressions
         include/antares/expressions/IName.h
         include/antares/expressions/hashable.h
         include/antares/expressions/expression.h
+        include/antares/expressions/ShiftVector.h
 )
 
 source_group("expressions" FILES ${SRC_Expressions})
