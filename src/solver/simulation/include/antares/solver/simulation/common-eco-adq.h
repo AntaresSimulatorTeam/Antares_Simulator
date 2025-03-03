@@ -96,18 +96,6 @@ void RemixHydroForAllAreas(const Data::AreaList& areas,
                            uint hourInYear);
 
 /*
-** \brief Computing levels from hydro generation, natural and pumping inflows
-**
-** If hydro remix was not done yet, levels are computed only for areas for which we do not use the
-*heuristic
-** If hydro remix was done, levels are computed only for areas for which we use the heuristic
-*/
-void computingHydroLevels(const Data::AreaList& areas,
-                          PROBLEME_HEBDO& problem,
-                          bool remixWasRun,
-                          bool computeAnyway = false);
-
-/*
 ** \brief Interpolates water values related to reservoir levels for outputs only
 **
 ** \param areas : the areas of study

@@ -25,6 +25,7 @@
 #include <string>
 
 #include <antares/inifile/inifile.h>
+#include <antares/study/version.h>
 
 #include "additionalConstraints.h"
 #include "properties.h"
@@ -37,11 +38,11 @@ class STStorageCluster
 public:
     bool enabled() const;
 
-    bool validate() const;
+    bool validate(StudyVersion studyVersion) const;
 
     bool loadFromSection(const IniFile::Section& section);
 
-    bool loadSeries(const std::filesystem::path& folder) const;
+    bool loadSeries(const std::filesystem::path& folder, StudyVersion studyVersion) const;
 
     void saveProperties(IniFile& ini) const;
 
