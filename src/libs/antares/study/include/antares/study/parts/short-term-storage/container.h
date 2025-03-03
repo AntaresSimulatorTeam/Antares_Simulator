@@ -32,7 +32,7 @@ namespace Antares::Data::ShortTermStorage
 class STStorageInput
 {
 public:
-    bool validate() const;
+    bool validate(StudyVersion studyVersion) const;
 
     /// 1. Read list.ini
     bool createSTStorageClustersFromIniFile(const std::filesystem::path& path);

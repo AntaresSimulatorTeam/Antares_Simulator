@@ -64,7 +64,7 @@ bool STStorageCluster::enabled() const
     return properties.enabled;
 }
 
-bool STStorageCluster::validate() const
+bool STStorageCluster::validate(StudyVersion studyVersion) const
 {
     if (!enabled())
     {
@@ -72,7 +72,7 @@ bool STStorageCluster::validate() const
     }
 
     logs.debug() << "Validating properties and series for st storage: " << id;
-    return properties.validate() && series->validate(id);
+    return properties.validate() && series->validate(id, studyVersion);
 }
 
 bool STStorageCluster::loadSeries(const std::filesystem::path& folder,

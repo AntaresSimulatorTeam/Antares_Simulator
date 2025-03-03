@@ -1021,7 +1021,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                               / area.id.to<std::string>();
 
         ret = area.shortTermStorage.loadSeriesFromFolder(seriesPath, studyVersion) && ret;
-        ret = area.shortTermStorage.validate() && ret;
+        ret = area.shortTermStorage.validate(studyVersion) && ret;
     }
 
     // Renewable cluster list

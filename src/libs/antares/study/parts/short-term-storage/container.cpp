@@ -37,9 +37,11 @@ namespace fs = std::filesystem;
 
 namespace Antares::Data::ShortTermStorage
 {
-bool STStorageInput::validate() const
+bool STStorageInput::validate(StudyVersion studyVersion) const
 {
-    return std::ranges::all_of(storagesByIndex, [](auto& cluster) { return cluster.validate(); });
+    return std::ranges::all_of(storagesByIndex,
+                               [&studyVersion](auto& cluster)
+                               { return cluster.validate(studyVersion); });
 }
 
 bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path& path)
