@@ -62,8 +62,10 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
     auto count = dim.getNumberOfTimesteps();
     if (lb.size() != count)
     {
-        throw std::invalid_argument("requested " + std::to_string(count)
-                                    + " variables but lb size = " + std::to_string(lb.size()));
+        std::ostringstream errMessage;
+
+        errMessage << "requested " << count << " variables but lb size = " << lb.size();
+        throw std::invalid_argument(errMessage.str());
     }
     const auto offset = *dim.getTimesteps().begin();
 
@@ -88,8 +90,9 @@ void VariablesBulkAddition::addVariable(double lb,
     auto count = dim.getNumberOfTimesteps();
     if (ub.size() != count)
     {
-        throw std::invalid_argument("requested " + std::to_string(count)
-                                    + " variables but ub size = " + std::to_string(ub.size()));
+        std::ostringstream errMessage;
+        errMessage << "requested " << count << " variables but ub size = " << ub.size();
+        throw std::invalid_argument(errMessage.str());
     }
     const auto offset = *dim.getTimesteps().begin();
     variableDictionary.addVariable(
@@ -113,9 +116,10 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
     auto count = dim.getNumberOfTimesteps();
     if (lb.size() != ub.size() || lb.size() != count)
     {
-        throw std::invalid_argument("requested " + std::to_string(count)
-                                    + " variables but lb size = " + std::to_string(lb.size())
-                                    + " and ub size = " + std::to_string(ub.size()));
+        std::ostringstream errMessage;
+        errMessage << "requested " << count << " variables but lb size = " << lb.size()
+                   << " and ub size = " + std::to_string(ub.size());
+        throw std::invalid_argument(errMessage.str());
     }
     const auto offset = *dim.getTimesteps().begin();
 
