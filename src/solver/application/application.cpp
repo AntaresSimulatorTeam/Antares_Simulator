@@ -306,7 +306,7 @@ void Application::checkSolverOptions() const
 {
     auto& solverOptions = pStudy->parameters.optOptions;
     checkForSolversExistence(solverOptions);
-    // checkForSolverOptionsConsistency(solverOptions);
+    checkForSolverOptionsConsistency(solverOptions);
     checkSolverMILPincompatibility(pParameters->unitCommitment.ucMode,
                                    solverOptions.linearSolver);
 
@@ -368,6 +368,12 @@ void Application::prepare(int argc, const char* argv[])
     pStudy->parameters.optOptions << options.solverOptions;
     // Check solver options
     checkSolverOptions();
+    auto& solverOptions = pStudy->parameters.optOptions;
+    if (!solverOptions.linearSolverParameters.empty())
+    {
+        solverOptions.lpSolverParamOptim1 = solverOptions.linearSolverParameters;
+        solverOptions.lpSolverParamOptim2 = solverOptions.linearSolverParameters;
+    }
 }
 
 void Application::onLogMessage(int level, const std::string& /*message*/)

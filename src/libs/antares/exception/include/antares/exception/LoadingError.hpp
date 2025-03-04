@@ -137,6 +137,12 @@ public:
                                              const std::string& specificParameters);
 };
 
+class IncompatibleLinearSolverParameters: public LoadingError
+{
+public:
+    IncompatibleLinearSolverParameters();
+};
+
 class InvalidStudy: public LoadingError
 {
 public:

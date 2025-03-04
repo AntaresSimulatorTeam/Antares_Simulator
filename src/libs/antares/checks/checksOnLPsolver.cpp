@@ -6,6 +6,7 @@
 #include "antares/solver/utils/ortools_utils.h"
 
 using namespace Antares;
+using namespace Antares::Solver::Optimization;
 
 namespace Antares::Check
 {
@@ -19,7 +20,7 @@ static void checkSolverExists(std::string solverName, const std::list<std::strin
     }
 }
 
-void checkForSolversExistence(Solver::Optimization::OptimizationOptions& solverOptions)
+void checkForSolversExistence(OptimizationOptions& solverOptions)
 {
     checkSolverExists(solverOptions.linearSolver, getAvailableLinearSolverNames());
     checkSolverExists(solverOptions.quadraticSolver, getAvailableQuadraticSolverNames());
@@ -32,6 +33,18 @@ void checkSolverMILPincompatibility(Antares::Data::UnitCommitmentMode ucMode,
     if (ucMode == UnitCommitmentMode::ucMILP && solverName == "sirius")
     {
         throw Error::IncompatibleMILPOrtoolsSolver();
+    }
+}
+
+void checkForSolverOptionsConsistency(OptimizationOptions& solverOptions)
+{
+    bool UserSuppliedParamsBothOptims = !solverOptions.linearSolverParameters.empty();
+    bool UserSuppliedParamsOptim1 = !solverOptions.lpSolverParamOptim1.empty();
+    bool UserSuppliedParamsOptim2 = !solverOptions.lpSolverParamOptim2.empty();
+
+    if (UserSuppliedParamsBothOptims && (UserSuppliedParamsOptim1 || UserSuppliedParamsOptim2))
+    {
+        throw Error::IncompatibleLinearSolverParameters();
     }
 }
 } // namespace Antares::Check
