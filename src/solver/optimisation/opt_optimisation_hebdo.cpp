@@ -29,14 +29,14 @@ using namespace Antares::Data;
 
 using Solver::Optimization::OptimizationOptions;
 
-bool OPT_PilotageOptimisationLineaire(const OptimizationOptions&,
+bool OPT_PilotageOptimisationLineaire(OptimizationOptions&,
                                       PROBLEME_HEBDO*,
                                       Solver::IResultWriter&,
                                       Solver::Simulation::ISimulationObserver&);
 bool OPT_PilotageOptimisationQuadratique(const OptimizationOptions&, PROBLEME_HEBDO*);
 void OPT_LiberationProblemesSimplexe(const PROBLEME_HEBDO*);
 
-void OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
+void OPT_OptimisationHebdomadaire(OptimizationOptions& options,
                                   PROBLEME_HEBDO* pProblemeHebdo,
                                   Solver::IResultWriter& writer,
                                   Solver::Simulation::ISimulationObserver& simulationObserver)

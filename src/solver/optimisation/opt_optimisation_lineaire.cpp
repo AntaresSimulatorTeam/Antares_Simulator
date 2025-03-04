@@ -227,7 +227,7 @@ void resizeProbleme(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
 }
 } // namespace
 
-bool OPT_OptimisationLineaire(const OptimizationOptions& options,
+bool OPT_OptimisationLineaire(OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
                               Solver::IResultWriter& writer,
                               Solver::Simulation::ISimulationObserver& simulationObserver)
@@ -262,6 +262,7 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
         OPT_ExportStructures(problemeHebdo, writer);
     }
 
+    options.linearSolverParameters = options.lpSolverParamOptim1;
     bool ret = runWeeklyOptimization(options,
                                      problemeHebdo,
                                      writer,
@@ -275,6 +276,7 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
     {
         // We need to adjust some stuff before running the 2nd optimisation
         runThermalHeuristic(problemeHebdo);
+        options.linearSolverParameters = options.lpSolverParamOptim2;
         return runWeeklyOptimization(options,
                                      problemeHebdo,
                                      writer,

@@ -34,7 +34,7 @@
 using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
 using OptimizationOptions = Antares::Solver::Optimization::OptimizationOptions;
 
-void OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
+void OPT_OptimisationHebdomadaire(OptimizationOptions& options,
                                   PROBLEME_HEBDO* pProblemeHebdo,
                                   Solver::IResultWriter& writer,
                                   Solver::Simulation::ISimulationObserver& simulationObserver);
@@ -51,7 +51,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO*,
 void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO*, int, int, int, const int);
 void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO*, const int, const int);
 
-bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
+bool OPT_PilotageOptimisationLineaire(OptimizationOptions& options,
                                       PROBLEME_HEBDO* problemeHebdo,
                                       Solver::IResultWriter& writer,
                                       Solver::Simulation::ISimulationObserver& simulationObserver);
@@ -70,7 +70,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
                          Antares::Solver::IResultWriter& writer);
 void OPT_LiberationProblemesSimplexe(const PROBLEME_HEBDO*);
 
-bool OPT_OptimisationLineaire(const OptimizationOptions& options,
+bool OPT_OptimisationLineaire(OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
                               Solver::IResultWriter& writer,
                               Solver::Simulation::ISimulationObserver& simulationObserver);

@@ -368,6 +368,7 @@ void Application::prepare(int argc, const char* argv[])
     pStudy->parameters.optOptions << options.solverOptions;
     // Check solver options
     checkSolverOptions();
+
     auto& solverOptions = pStudy->parameters.optOptions;
     if (!solverOptions.linearSolverParameters.empty())
     {
