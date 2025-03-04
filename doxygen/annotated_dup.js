@@ -1278,6 +1278,12 @@ var annotated_dup =
     [ "find_reference", null, [
       [ "reference_folder_finder", "classfind__reference_1_1reference__folder__finder.html", null ]
     ] ],
+    [ "Fixture", null, [
+      [ "BindingConstraint", "structFixture_1_1BindingConstraint.html", null ],
+      [ "Link", "structFixture_1_1Link.html", null ],
+      [ "Renewable", "structFixture_1_1Renewable.html", null ],
+      [ "Thermal", "structFixture_1_1Thermal.html", null ]
+    ] ],
     [ "fixtures", null, [
       [ "check_handler", "classfixtures_1_1check__handler.html", null ]
     ] ],
@@ -1487,6 +1493,7 @@ var annotated_dup =
     [ "InjectionCumulationConstraint", "classInjectionCumulationConstraint.html", null ],
     [ "InMemoryStudyLoader", "classInMemoryStudyLoader.html", "classInMemoryStudyLoader" ],
     [ "InputFixture", "structInputFixture.html", null ],
+    [ "IntegerIndex", "classIntegerIndex.html", null ],
     [ "IntoUTF8ArgsTranslator", "classIntoUTF8ArgsTranslator.html", null ],
     [ "IProvider", "classIProvider.html", "classIProvider" ],
     [ "JIT", "classJIT.html", "classJIT" ],
@@ -1595,6 +1602,7 @@ var annotated_dup =
     [ "SparseVector", "classSparseVector.html", null ],
     [ "StartUpCostsData", "structStartUpCostsData.html", null ],
     [ "StringIsNotWellFormated", "classStringIsNotWellFormated.html", null ],
+    [ "StructureIndex", "classStructureIndex.html", null ],
     [ "StubOptPeriodStringGenerator", "classStubOptPeriodStringGenerator.html", null ],
     [ "StudyBuilder", "structStudyBuilder.html", null ],
     [ "StudyData", "classStudyData.html", "classStudyData" ],

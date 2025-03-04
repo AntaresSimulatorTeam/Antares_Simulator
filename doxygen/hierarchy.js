@@ -938,6 +938,7 @@ var hierarchy =
     [ "Antares::IniFile", "classAntares_1_1IniFile.html", null ],
     [ "InputFixture< size >", "structInputFixture.html", null ],
     [ "Antares::Window::Inspector::InspectorData", "classAntares_1_1Window_1_1Inspector_1_1InspectorData.html", null ],
+    [ "IntegerIndex< TSData >", "classIntegerIndex.html", null ],
     [ "Antares::Optimization::IntegerInterval", "structAntares_1_1Optimization_1_1IntegerInterval.html", null ],
     [ "Antares::Solver::Simulation::interfacePostProcessList", "classAntares_1_1Solver_1_1Simulation_1_1interfacePostProcessList.html", [
       [ "Antares::Solver::Simulation::AdqPatchPostProcessList", "classAntares_1_1Solver_1_1Simulation_1_1AdqPatchPostProcessList.html", null ],
@@ -1629,6 +1630,19 @@ var hierarchy =
     [ "Antares::Memory::Stored< CellData >", "structAntares_1_1Memory_1_1Stored.html", null ],
     [ "Antares::Memory::Stored< double >", "structAntares_1_1Memory_1_1Stored.html", null ],
     [ "Antares::Memory::Stored< Type >", "structAntares_1_1Memory_1_1Stored.html", null ],
+    [ "StructureIndex< TSData, ObjectT >", "classStructureIndex.html", null ],
+    [ "StructureIndex< BindingConstraintsTSNumberData, std::string >", "classStructureIndex.html", [
+      [ "Fixture::BindingConstraint", "structFixture_1_1BindingConstraint.html", null ]
+    ] ],
+    [ "StructureIndex< ntcTSNumberData, const AreaLink * >", "classStructureIndex.html", [
+      [ "Fixture::Link", "structFixture_1_1Link.html", null ]
+    ] ],
+    [ "StructureIndex< renewableTSNumberData, const RenewableCluster * >", "classStructureIndex.html", [
+      [ "Fixture::Renewable", "structFixture_1_1Renewable.html", null ]
+    ] ],
+    [ "StructureIndex< thermalTSNumberData, const ThermalCluster * >", "classStructureIndex.html", [
+      [ "Fixture::Thermal", "structFixture_1_1Thermal.html", null ]
+    ] ],
     [ "Antares::Data::ShortTermStorage::STStorageCluster", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html", null ],
     [ "Antares::Data::ShortTermStorage::STStorageInput", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html", null ],
     [ "study_input_handler.study_input_handler", "classstudy__input__handler_1_1study__input__handler.html", null ],

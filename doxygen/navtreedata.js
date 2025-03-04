@@ -114,15 +114,15 @@ var NAVTREEINDEX =
 "classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter.html#a0549e6e4c723dca545b366ff88c9dbaa",
 "classAntares_1_1Window_1_1Message.html",
 "classConstraintGroup.html",
-"classNullName.html",
-"dir_0b49f2c0c42ac9238401bd8828c3a92d.html",
-"dir_aa4a30e80944635998eaeefb17811ca9.html",
-"functions_type_d.html",
-"md_src_2tests_2run-study-tests_2readme.html#autotoc_md22",
-"solver_8hxx_source.html",
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBalance.html#a5b78a511dd81c4398861670b0eadc2a3",
-"structAntares_1_1Window_1_1Inspector_1_1PClusterArea.html",
-"toolbox_2input_2connection_8h_source.html"
+"classNettingCumulationConstraint.html",
+"dir_0a30ec3ba11d4bcec9eeae47fd14b8c6.html",
+"dir_a8ce1424c00c2b2cac1eab132cbe51c4.html",
+"functions_type_b.html",
+"md_src_2tests_2run-study-tests_2readme.html#autotoc_md20",
+"solver_2variable_2include_2antares_2solver_2variable_2variable_8h_source.html",
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardAvailableDispatchGen.html#ae5f7f805a39912af3a6d892720c5bd18",
+"structAntares_1_1Window_1_1Inspector_1_1PAreaSpilledEnergyCost.html",
+"toolbox_2components_2datagrid_2renderer_2connection_8h_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

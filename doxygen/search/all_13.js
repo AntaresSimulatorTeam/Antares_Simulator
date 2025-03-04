@@ -37,7 +37,7 @@ var searchData=
   ['the_20tests_34',['Running the tests',['../md_src_2tests_2cucumber_2readme.html#autotoc_md8',1,'']]],
   ['thematictrimming_35',['thematicTrimming',['../classAntares_1_1Data_1_1Parameters.html#a9d7b0550ac6f615f57158cb336ffc73e',1,'Antares::Data::Parameters']]],
   ['theme_36',['theme',['../classAntares_1_1Component_1_1Notebook.html#aa87e3b1c4d185ad341573c0f3f723e6e',1,'Antares::Component::Notebook']]],
-  ['thermal_37',['Thermal',['../structAntares_1_1Data_1_1Parameters_1_1IncludeOptions_1_1Thermal.html',1,'Antares::Data::Parameters::IncludeOptions']]],
+  ['thermal_37',['Thermal',['../structAntares_1_1Data_1_1Parameters_1_1IncludeOptions_1_1Thermal.html',1,'Antares::Data::Parameters::IncludeOptions::Thermal'],['../structFixture_1_1Thermal.html',1,'Fixture::Thermal']]],
   ['thermal_38',['thermal',['../classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#a3e615903944b9965ea059200f1c805ac',1,'Antares::Data::ScenarioBuilder::Rules']]],
   ['thermalaggregate_39',['thermalAggregate',['../classAntares_1_1Component_1_1HTMLListbox_1_1Item_1_1ThermalClusterItem.html#ae6fd562b28b784993a5ab6092180e832',1,'Antares::Component::HTMLListbox::Item::ThermalClusterItem']]],
   ['thermalairpollutantemissions_40',['ThermalAirPollutantEmissions',['../classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ThermalAirPollutantEmissions.html',1,'Antares::Solver::Variable::Economy']]],
