@@ -21,10 +21,7 @@
 
 #include "antares/solver/misc/options.h"
 
-#include <algorithm>
 #include <fstream>
-
-#include <boost/algorithm/string/join.hpp>
 
 #include <antares/exception/LoadingError.hpp>
 #include "antares/config/config.h"
@@ -99,20 +96,18 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
                 "Deprecated, use linear-solver-parameters instead.");
 
     // --lp-solver-param-optim-1
-    parser->add(
-            options.solverOptions.lpSolverParamOptim1,
-            ' ',
-            "lp-solver-param-optim-1",
-            "Set linear solver-specific parameters for first optimization."
-            " Only supported for SCIP & XPRESS.");
+    parser->add(options.solverOptions.lpSolverParamOptim1,
+                ' ',
+                "lp-solver-param-optim-1",
+                "Set linear solver-specific parameters for first optimization."
+                " Only supported for SCIP & XPRESS.");
 
     // --lp-solver-param-optim-2
-    parser->add(
-            options.solverOptions.lpSolverParamOptim2,
-            ' ',
-            "lp-solver-param-optim-2",
-            "Set linear solver-specific parameters for second optimization."
-            " Only supported for SCIP & XPRESS.");
+    parser->add(options.solverOptions.lpSolverParamOptim2,
+                ' ',
+                "lp-solver-param-optim-2",
+                "Set linear solver-specific parameters for second optimization."
+                " Only supported for SCIP & XPRESS.");
 
     //--quadratic-solver
     parser->add(
@@ -286,29 +281,12 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
     }
 
     options.checkForceSimulationMode();
-    checkForSolversExistence(options.solverOptions);
 
     // no-output and force-zip-output
     if (settings.noOutput && settings.forceZipOutput)
     {
         throw Error::IncompatibleOutputOptions("no-output and zip-output options are incompatible");
     }
-}
-
-void checkSolverExists(std::string solverName, const std::list<std::string> availableSolversList)
-{
-    // Check if solver is available
-    bool found = std::ranges::find(availableSolversList, solverName) != availableSolversList.end();
-    if (!found)
-    {
-        throw Error::InvalidSolver(solverName, boost::algorithm::join(availableSolversList, ","));
-    }
-}
-
-void checkForSolversExistence(Solver::Optimization::OptimizationOptions& solverOptions)
-{
-    checkSolverExists(solverOptions.linearSolver, getAvailableLinearSolverNames());
-    checkSolverExists(solverOptions.quadraticSolver, getAvailableQuadraticSolverNames());
 }
 
 void Settings::checkAndSetStudyFolder(const std::string& folder)

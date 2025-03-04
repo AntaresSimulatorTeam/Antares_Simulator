@@ -18,8 +18,7 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#ifndef __SOLVER_MISC_GETOPT_H__
-#define __SOLVER_MISC_GETOPT_H__
+#pragma once
 
 #include <memory>
 
@@ -74,6 +73,3 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings,
                                                    Antares::Data::StudyLoadOptions& options);
 
 void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOptions& options);
-
-void checkForSolversExistence(Solver::Optimization::OptimizationOptions& solverOptions);
-#endif /* __SOLVER_MISC_GETOPT_H__ */

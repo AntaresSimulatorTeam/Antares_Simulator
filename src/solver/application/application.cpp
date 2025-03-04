@@ -39,6 +39,7 @@
 #include "antares/solver/simulation/simulation.h"
 #include "antares/solver/simulation/solver.h"
 #include "antares/solver/utils/ortools_utils.h"
+#include "antares/checks/checksOnLPsolver.h"
 
 using namespace Antares::Check;
 
@@ -141,9 +142,6 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     {
         loadingException = std::current_exception();
     }
-
-    // For solver
-    study.parameters.optOptions = options.solverOptions;
 
     // This settings can only be enabled from the solver
     // Prepare the output for the study
@@ -276,10 +274,11 @@ void Application::readStudy_makeChecks_and_printThings(Data::StudyLoadOptions& o
 }
 
 void Application::postParametersChecks() const
-{ // Some more checks require the existence of pParameters, hence of a study.
+{
+    // Some more checks require the existence of pParameters, hence of a study.
     // Their execution is delayed up to this point.
-    checkSolverMILPincompatibility(pParameters->unitCommitment.ucMode,
-                                   pParameters->optOptions.linearSolver);
+//    checkSolverMILPincompatibility(pParameters->unitCommitment.ucMode,
+//                                   pParameters->optOptions.linearSolver);
 
     checkSimplexRangeHydroPricing(pParameters->simplexOptimizationRange,
                                   pParameters->hydroPricing.hpMode);
@@ -304,6 +303,22 @@ void Application::postParametersChecks() const
 
     checkFuelCostColumnNumber(pStudy->areas);
     checkCO2CostColumnNumber(pStudy->areas);
+}
+
+void Application::checkSolverOptions() const
+{
+    auto& solverOptions = pStudy->parameters.optOptions;
+    checkForSolversExistence(solverOptions);
+    checkSolverMILPincompatibility(pParameters->unitCommitment.ucMode,
+                                   solverOptions.linearSolver);
+
+    logs.info() << "  :: solver " << solverOptions.linearSolver
+                << " is used for linear problem resolution";
+
+    logs.info() << "  :: solver " << solverOptions.quadraticSolver
+                << " is used for quadratic problem resolution";
+
+    logs.info() << "  :: Printing solver logs : " << (solverOptions.solverLogs ? "True" : "False");
 }
 
 void Application::prepare(int argc, const char* argv[])
@@ -351,7 +366,10 @@ void Application::prepare(int argc, const char* argv[])
 
     readStudy_makeChecks_and_printThings(options);
 
-
+    // Set solver options from command line
+    pStudy->parameters.optOptions << options.solverOptions;
+    // Check solver options
+    checkSolverOptions();
 }
 
 void Application::onLogMessage(int level, const std::string& /*message*/)

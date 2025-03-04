@@ -126,9 +126,8 @@ private:
     bool handleOptions(const Data::StudyLoadOptions& options);
     // Return false if the user requested help, true otherwise
     bool parseCommandLine(Data::StudyLoadOptions& options);
-    void handleParserReturn(Yuni::GetOpt::Parser* parser);
     void postParametersChecks() const;
-
+    void checkSolverOptions() const;
 }; // class Application
 
 } // namespace Antares::Solver

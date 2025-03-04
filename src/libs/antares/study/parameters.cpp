@@ -1414,8 +1414,6 @@ void Parameters::validateOptions(const StudyLoadOptions& options)
     }
 
     namedProblems = options.namedProblems;
-
-    optOptions << options.solverOptions;
 }
 
 void Parameters::resetYearsWeigth()
@@ -1770,19 +1768,11 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info() << "  :: ignoring solution export";
     }
 
-    logs.info() << "  :: solver " << options.solverOptions.linearSolver
-                << " is used for linear problem resolution";
-
-    logs.info() << "  :: solver " << options.solverOptions.quadraticSolver
-                << " is used for quadratic problem resolution";
-
     // indicated that Problems will be named
     if (namedProblems)
     {
         logs.info() << "  :: The problems will contain named variables and constraints";
     }
-    // indicated whether solver logs will be printed
-    logs.info() << "  :: Printing solver logs : " << (optOptions.solverLogs ? "True" : "False");
 }
 
 void Parameters::resetPlaylist(uint nbOfYears)
