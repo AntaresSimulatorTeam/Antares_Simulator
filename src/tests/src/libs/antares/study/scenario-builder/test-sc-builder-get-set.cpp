@@ -47,6 +47,8 @@ study->parameters.nbYears). In this case, calls to setTSnumber should have no ef
 using namespace Antares::Data;
 using namespace Antares::Data::ScenarioBuilder;
 
+// We need a distinct TS number for each year
+// in order for tests to be more specific
 uint dummyTSNumber(uint y)
 {
     return y * y * y + 1;
