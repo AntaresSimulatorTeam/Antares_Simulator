@@ -59,7 +59,7 @@ By convention, `year` start at 0 and `value` must be in interval [0, 1].
 
 #### Compatibility flag for hydro maximal power
 
-In file settings/generaldata.ini, in new section `other preferences`, add new property `hydro-pmax` with possible values
+In file settings/generaldata.ini, in new section `compatibility`, add new property `hydro-pmax` with possible values
 - `daily` (default, legacy) 
 - `hourly` (new).
 
