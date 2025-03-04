@@ -9,7 +9,7 @@ using namespace Antares;
 
 namespace Antares::Check
 {
-void checkSolverExists(std::string solverName, const std::list<std::string> availableSolversList)
+static void checkSolverExists(std::string solverName, const std::list<std::string> availableSolversList)
 {
     // Check if solver is available
     bool found = std::ranges::find(availableSolversList, solverName) != availableSolversList.end();
