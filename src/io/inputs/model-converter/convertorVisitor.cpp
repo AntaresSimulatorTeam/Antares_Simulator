@@ -239,8 +239,8 @@ std::any ConvertorVisitor::visitTimeIndex([[maybe_unused]] ExprParser::TimeIndex
 // TODO implement this
 std::any ConvertorVisitor::visitTimeShift([[maybe_unused]] ExprParser::TimeShiftContext* context)
 {
-    Node* shifted_expr = convertIdentifier(context->getText());
-    auto time_shift = std::stoi(context->shift()->TIME()->getText());
+    Node* shifted_expr = convertIdentifier(context->IDENTIFIER()->getText());
+    auto time_shift = std::stoi(context->shift()->shift_expr()->getText());
     if (time_shift == 0)
     {
         return shifted_expr;
