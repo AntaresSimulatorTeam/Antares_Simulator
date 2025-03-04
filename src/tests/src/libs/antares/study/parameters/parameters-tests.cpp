@@ -80,6 +80,7 @@ BOOST_FIXTURE_TEST_CASE(loadValid, Fixture)
     BOOST_CHECK_EQUAL(p.include.reserve.dayAhead, true);
     BOOST_CHECK_EQUAL(p.optOptions.linearSolver, "xpress");
     BOOST_CHECK_EQUAL(p.optOptions.quadraticSolver, "scip");
+    BOOST_CHECK_EQUAL(p.shedding.policy, shpAccurateShavePeaks);
 }
 
 BOOST_FIXTURE_TEST_CASE(fixBadValue, Fixture)
@@ -239,7 +240,7 @@ void Fixture::writeValidFile()
             hydro-heuristic-policy = accommodate rule curves
             hydro-pricing-mode = fast
             power-fluctuations = free modulations
-            shedding-policy = shave peaks
+            shedding-policy = accurate shave peaks
             unit-commitment-mode = fast
             number-of-cores-mode = medium
             renewable-generation-modelling = aggregated

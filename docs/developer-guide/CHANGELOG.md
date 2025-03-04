@@ -13,6 +13,7 @@ toc_depth: 2
 * Add ts-generation for links [ANT-1084] (#1986)
 * Make it possible to specify the final hydro reservoir level [ANT-1084] (#1521)
 * Add support for more quadratic problem solvers [ANT-2546] (#2574)
+* Major changes on the hydro behavior. Use overflow from the weekly optimization problem, don't recompute levels as a post-processing. These changes improve the handling of min-gen constraints for hydro reservoirs. [ANT-1825]
 
 #### Removed features
 * Remove hydro hotstart (#2131)
