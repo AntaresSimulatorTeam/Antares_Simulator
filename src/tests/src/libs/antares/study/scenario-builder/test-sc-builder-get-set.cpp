@@ -340,9 +340,7 @@ BOOST_FIXTURE_TEST_CASE(link, Fixture::Link)
 }
 
 // This test is disabled for now because is causes a crash, wait for fix to be published
-BOOST_FIXTURE_TEST_CASE(binding_constraint,
-                        Fixture::BindingConstraint,
-                        *boost::unit_test::disabled())
+BOOST_FIXTURE_TEST_CASE(binding_constraint, Fixture::BindingConstraint)
 {
     setNumberOfYears(5);
     initializeTSNumbers(10);
