@@ -20,7 +20,7 @@
  */
 #define BOOST_TEST_MODULE sc_builder_get_set
 
-/* The goal of this suite is to test the setTSnumber and get method for the following classes
+/* The goal of this file is to test the setTSnumber and get method for the following classes
 - loadTSNumberData
 - windTSNumberData
 - solarTSNumberData
@@ -29,6 +29,12 @@
 - renewableTSNumberData
 - ntcTSNumberData
 - BindingConstraintsTSNumberData
+
+There are two test suites
+- sc_nominal tests the nominal cases, when all year indices are within bounds (0 <= index
+<study->parameters.nbYears)
+- sc_too_many_years tests the error cases, when some indices are out of bounds (index >=
+study->parameters.nbYears). In this case, calls to setTSnumber should have no effect.
 */
 
 #define WIN32_LEAN_AND_MEAN
@@ -209,6 +215,7 @@ BOOST_FIXTURE_TEST_CASE(load, Fixture::Load)
 {
     setNumberOfYears(5);
     initializeTSNumbers(5);
+
     check();
 }
 
@@ -248,6 +255,7 @@ BOOST_FIXTURE_TEST_CASE(renewable, Fixture::Renewable)
 {
     setNumberOfYears(5);
     initializeTSNumbers(5);
+
     check();
 }
 
@@ -274,6 +282,7 @@ BOOST_FIXTURE_TEST_CASE(load, Fixture::Load)
 {
     setNumberOfYears(5);
     initializeTSNumbers(10);
+
     check();
 }
 
