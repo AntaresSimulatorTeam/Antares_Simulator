@@ -446,6 +446,28 @@ BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_param, MyDummyFixture)
     BOOST_CHECK_EQUAL(eval[1], hour_1);
 }
 
+BOOST_FIXTURE_TEST_CASE(evaluate_shifted_param, MyDummyFixture)
+{
+    ParameterNode param("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
+    TimeShiftNode root(&param, -1);
+    const std::string value = "dummy";
+    MockLinearProblemData dummy_data;
+    EvaluationContext context(
+      {build_context_parameter_with("my-param", value, ParameterType::TIMESERIE)},
+      {},
+      dummy_data);
+
+    unsigned first = 0;
+    unsigned last = 2;
+    EvalVisitor evalVisitor(context, {first, last /*three hours*/});
+    const auto eval = evalVisitor.dispatch(&root).valuesAsVector();
+    // from MockLinearProblemData  param TSdata is {0, 1, 2}
+    // here we applied TimeShift t-1 {2, 0, 1}
+    BOOST_CHECK_EQUAL(eval[0], 2); //
+    BOOST_CHECK_EQUAL(eval[0], 0);
+    BOOST_CHECK_EQUAL(eval[1], 1);
+}
+
 BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_multiplication, MyDummyFixture)
 {
     ParameterNode param("my-param", TimeIndex::VARYING_IN_TIME_ONLY);

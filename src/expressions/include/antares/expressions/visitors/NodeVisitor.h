@@ -124,7 +124,8 @@ public:
           Nodes::PortFieldNode,
           Nodes::PortFieldSumNode,
           Nodes::ComponentVariableNode,
-          Nodes::ComponentParameterNode>();
+          Nodes::ComponentParameterNode,
+          Nodes::TimeShiftNode>();
 
         try
         {
