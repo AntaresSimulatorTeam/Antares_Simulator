@@ -1,7 +1,7 @@
 Feature: 2.5 - Pure modeler simple studies, with no ports and no timeseries
 
   Scenario: 2.5.1: One model with one load and two generators, one timestep
-    Given the study path is "modeler/epic2/us2.5/study_2.5.1"
+    Given the modeler study path is "modeler/epic2/us2.5/study_2.5.1"
     When I run antares modeler
     Then the simulation succeeds
     And the objective value is 160
@@ -9,7 +9,7 @@ Feature: 2.5 - Pure modeler simple studies, with no ports and no timeseries
     And the optimal value of variable node1.gen2_p_t0 is 20
 
   Scenario: 2.5.2: One model with one load and two generators (minP), three timesteps
-    Given the study path is "modeler/epic2/us2.5/study_2.5.2"
+    Given the modeler study path is "modeler/epic2/us2.5/study_2.5.2"
     When I run antares modeler
     Then the simulation succeeds
     And the objective value is 810
@@ -21,7 +21,7 @@ Feature: 2.5 - Pure modeler simple studies, with no ports and no timeseries
       | node1     | gen2_p   | 0-2       | 40    |
 
   Scenario: 2.5.3: Two libs, one timestep
-    Given the study path is "modeler/epic2/us2.5/study_2.5.3"
+    Given the modeler study path is "modeler/epic2/us2.5/study_2.5.3"
     When I run antares modeler
     Then the simulation succeeds
     And the objective value is 15600
@@ -35,7 +35,7 @@ Feature: 2.5 - Pure modeler simple studies, with no ports and no timeseries
       | node2     | gen2_up  | 0         | 1     |
 
   Scenario: 2.5.4: Test with integer variable
-    Given the study path is "modeler/epic2/us2.5/study_2.5.4"
+    Given the modeler study path is "modeler/epic2/us2.5/study_2.5.4"
     When I run antares modeler
     Then the simulation succeeds
     And the objective value is 540

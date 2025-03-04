@@ -14,9 +14,9 @@ class cucumberCollector:
         for feature in feature_files:
             with open(feature, "r") as f:
                 for line in f.readlines():
-                    if "Given the study path is \"Antares_Simulator_Tests_NR/" in line:
+                    if "Given solver the study path is \"Antares_Simulator_Tests_NR/" in line:
                         study = line.strip()
-                        study = study.replace("Given the study path is \"Antares_Simulator_Tests_NR/", "")
+                        study = study.replace("Given the solver study path is \"Antares_Simulator_Tests_NR/", "")
                         study = study.replace("\"", "")
                         studies.append(study)
         return studies
