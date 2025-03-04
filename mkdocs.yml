@@ -52,7 +52,7 @@ nav:
               - 'Usage with FICO® Xpress Optimizer': 'user-guide/solver/optional-features/xpress.md'
           - 'Appendix': 'user-guide/solver/03-appendix.md'
       - 'Modeler':
-          - 'Overview': 'user-guide/modeler/01-overview-dynamic-modeler.md'
+          - 'Overview': 'user-guide/modeler/01-overview-modeler.md'
           - 'Input files': 'user-guide/modeler/02-inputs.md'
           - 'Output files': 'user-guide/modeler/03-outputs.md'
           - 'Parameters': 'user-guide/modeler/04-parameters.md'

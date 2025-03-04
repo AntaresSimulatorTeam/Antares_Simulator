@@ -48,7 +48,8 @@ void VariablesBulkAddition::addVariable(double lb,
 {
     variableDictionary.addVariable(dim,
                                    key,
-                                   [&](int /*timestep*/, int /*scenario*/, const std::string& name)
+                                   [this, lb, ub, integer](const TimeAndScenario&,
+                                                           const std::string& name)
                                    { return linear_problem_.addVariable(lb, ub, integer, name); });
 }
 
@@ -64,12 +65,18 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
         throw std::invalid_argument("requested " + std::to_string(count)
                                     + " variables but lb size = " + std::to_string(lb.size()));
     }
+    const auto offset = *dim.getTimesteps().begin();
 
     variableDictionary.addVariable(
       dim,
       key,
-      [&](int timestep, int /*scenario*/, const std::string& name)
-      { return linear_problem_.addVariable(lb[timestep], ub, integer, name); });
+      [this, &lb, ub, integer, offset](const TimeAndScenario& timeAndScenario,
+                                       const std::string& name) {
+          return linear_problem_.addVariable(lb[timeAndScenario.timestep - offset],
+                                             ub,
+                                             integer,
+                                             name);
+      });
 }
 
 void VariablesBulkAddition::addVariable(double lb,
@@ -84,12 +91,17 @@ void VariablesBulkAddition::addVariable(double lb,
         throw std::invalid_argument("requested " + std::to_string(count)
                                     + " variables but ub size = " + std::to_string(ub.size()));
     }
-
+    const auto offset = *dim.getTimesteps().begin();
     variableDictionary.addVariable(
       dim,
       key,
-      [&](int timestep, int /*scenario*/, const std::string& name)
-      { return linear_problem_.addVariable(lb, ub[timestep], integer, name); });
+      [this, lb, &ub, integer, offset](const TimeAndScenario& timeAndScenario,
+                                       const std::string& name) {
+          return linear_problem_.addVariable(lb,
+                                             ub[timeAndScenario.timestep - offset],
+                                             integer,
+                                             name);
+      });
 }
 
 void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
@@ -105,12 +117,19 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
                                     + " variables but lb size = " + std::to_string(lb.size())
                                     + " and ub size = " + std::to_string(ub.size()));
     }
+    const auto offset = *dim.getTimesteps().begin();
 
     variableDictionary.addVariable(
       dim,
       key,
-      [&](int timestep, int /*scenario*/, const std::string& name)
-      { return linear_problem_.addVariable(lb[timestep], ub[timestep], integer, name); });
+      [this, &lb, &ub, integer, offset](const TimeAndScenario& timeAndScenario,
+                                        const std::string& name)
+      {
+          return linear_problem_.addVariable(lb[timeAndScenario.timestep - offset],
+                                             ub[timeAndScenario.timestep - offset],
+                                             integer,
+                                             name);
+      });
 }
 
 ComponentFiller::ComponentFiller(const Study::SystemModel::Component& component):
@@ -152,7 +171,7 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
             // std::visit to handle the 4 cases: double/double, vector/double,
             // double/vector and vector/vector.
             std::visit(
-              [&pb, &variable, this, &ctx, &key, &dim](const auto& lb_, const auto& ub_)
+              [&pb, &variable, this, &key, &dim](const auto& lb_, const auto& ub_)
               {
                   VariablesBulkAddition(pb, variableDictionary)
                     .addVariable(lb_,
@@ -172,7 +191,7 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
             variableDictionary.addVariable(
               dim,
               key,
-              [&](int, int, const std::string& name)
+              [&pb, &lb, &ub, &variable](const TimeAndScenario&, const std::string& name)
               {
                   return pb.addVariable(lb.valueAsDouble(),
                                         ub.valueAsDouble(),

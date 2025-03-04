@@ -27,6 +27,7 @@
 #include "antares/expressions/visitors/TimeIndex.h"
 #include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
+#include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/study/system-model/component.h"
@@ -74,12 +75,31 @@ struct LinearProblemBuildingFixture
     Registry<Node> nodes;
     vector<Component> components;
     unique_ptr<ILinearProblem> pb;
+    LinearProblemData dummy_data_;
 
     void createModel(string modelId,
                      vector<string> parameterIds,
                      vector<VariableData> variablesData,
                      vector<ConstraintData> constraintsData,
-                     Node* objective = nullptr);
+                     Node* objective = nullptr)
+    {
+        vector<Parameter> parameters;
+        for (auto parameter_id: std::move(parameterIds))
+        {
+            parameters.push_back(Parameter(parameter_id, TimeDependent::NO, ScenarioDependent::NO));
+        }
+        createModelWithSystemModelParameter(std::move(modelId),
+                                            parameters,
+                                            std::move(variablesData),
+                                            std::move(constraintsData),
+                                            objective);
+    }
+
+    void createModelWithSystemModelParameter(string modelId,
+                                             vector<Parameter>,
+                                             vector<VariableData> variablesData,
+                                             vector<ConstraintData> constraintsData,
+                                             Node* objective = nullptr);
 
     void createModelWithOneFloatVar(const string& modelId,
                                     const vector<string>& parameterIds,
@@ -130,7 +150,12 @@ struct LinearProblemBuildingFixture
         return nodes.create<NegationNode>(node);
     }
 
-    void buildLinearProblem(FillContext& time_scenario_ctx);
+    void buildLinearProblem(FillContext& time_scenario_ctx, LinearProblemData& dummy_data);
+
+    void buildLinearProblem(FillContext& time_scenario_ctx)
+    {
+        buildLinearProblem(time_scenario_ctx, dummy_data_);
+    }
 
     void buildLinearProblem()
     {
@@ -139,11 +164,12 @@ struct LinearProblemBuildingFixture
     }
 };
 
-void LinearProblemBuildingFixture::createModel(string modelId,
-                                               vector<string> parameterIds,
-                                               vector<VariableData> variablesData,
-                                               vector<ConstraintData> constraintsData,
-                                               Node* objective)
+void LinearProblemBuildingFixture::createModelWithSystemModelParameter(
+  string modelId,
+  vector<Parameter> parameters,
+  vector<VariableData> variablesData,
+  vector<ConstraintData> constraintsData,
+  Node* objective)
 {
     auto createExpression = [this](Node* node)
     {
@@ -152,11 +178,6 @@ void LinearProblemBuildingFixture::createModel(string modelId,
         return expression;
     };
 
-    vector<Parameter> parameters;
-    for (auto parameter_id: parameterIds)
-    {
-        parameters.push_back(Parameter(parameter_id, TimeDependent::NO, ScenarioDependent::NO));
-    }
     vector<Variable> variables;
     for (auto [id, type, lb, ub, timeDependent, scenarioDependent]: variablesData)
     {
@@ -200,7 +221,8 @@ void LinearProblemBuildingFixture::createComponent(
     components.push_back(move(component));
 }
 
-void LinearProblemBuildingFixture::buildLinearProblem(FillContext& time_scenario_ctx)
+void LinearProblemBuildingFixture::buildLinearProblem(FillContext& time_scenario_ctx,
+                                                      LinearProblemData& dummy_data)
 {
     vector<unique_ptr<ComponentFiller>> fillers;
     vector<LinearProblemFiller*> fillers_ptr;
@@ -217,7 +239,6 @@ void LinearProblemBuildingFixture::buildLinearProblem(FillContext& time_scenario
       false,
       "sirius");
     LinearProblemBuilder linear_problem_builder(fillers_ptr);
-    LinearProblemData dummy_data;
 
     linear_problem_builder.build(*pb, dummy_data, time_scenario_ctx);
 }
@@ -489,6 +510,83 @@ BOOST_AUTO_TEST_CASE(ct_with_ten_vars__pb_contains_ten_ct)
         BOOST_REQUIRE(var);
         BOOST_CHECK(var->isInteger());
         BOOST_CHECK_EQUAL(ct->getCoefficient(var), 1);
+    }
+}
+
+/**
+ * @brief Test case for ensuring that variable bounds are correctly set using a time-series.
+ *
+ * This test ensures that:
+ * - A variable `var1` has bounds that are set according to the given time-series values.
+ * - A constraint `5 - var1 <= 3` is correctly implemented.
+ * - A linear problem is built with time-series constraints.
+ * - The problem contains the expected number of variables and constraints.
+ * - Each constraint is correctly linked to its corresponding variable.
+ *
+ * @details
+ * Steps performed in the test:
+ * 1. Create a variable `var1` which varies in time.
+ * 2. Define a constraint `5 - var1 <= 3`.
+ * 3. Initialize a model with system model parameters including time-dependent bounds.
+ * 4. Create a component using a time-series parameter.
+ * 5. Build the linear problem using time-series data.
+ * 6. Verify that the number of variables and constraints matches expectations.
+ * 7. Validate each constraint's bounds, coefficient, and associated variable properties.
+ * 8. Ensure that variable bounds match the time step values.
+ */
+BOOST_AUTO_TEST_CASE(ct_with_time_series_variable_bounds)
+{
+    // 5 - var1 <= 3
+    auto var_node = variable("var1",
+                             Antares::Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY);
+    auto three = literal(3);
+    auto ct_node = nodes.create<LessThanOrEqualNode>(nodes.create<SubtractionNode>(literal(5),
+                                                                                   var_node),
+                                                     three);
+
+    createModelWithSystemModelParameter(
+      "model",
+      {Parameter{"bounds", TimeDependent::YES, ScenarioDependent::NO}},
+      {{"var1",
+        ValueType::BOOL,
+        parameter("bounds", Visitors::TimeIndex::VARYING_IN_TIME_ONLY),
+        parameter("bounds", Visitors::TimeIndex::VARYING_IN_TIME_ONLY),
+        true,
+        false}},
+      {{"ct1", ct_node}});
+
+    createComponent(
+      "model",
+      "componentToto",
+      {build_context_parameter_with("bounds", "bounds", Visitors::ParameterType::TIMESERIE)});
+
+    const vector<unsigned int> timeSteps{1, 2};
+    FillContext ctx{timeSteps.at(0), timeSteps.at(1)};
+
+    auto bounds_time_series = std::make_unique<TimeSeriesSet>("bounds", 3);
+    // setting 3 hours (including h 1 and 2)
+    bounds_time_series->add({1. * timeSteps.at(0), 1. * timeSteps.at(0), 1. * timeSteps.at(1)});
+    LinearProblemData data;
+    data.addDataSeries(std::move(bounds_time_series));
+
+    buildLinearProblem(ctx, data);
+    const auto nb_var = ctx.getNumberOfTimestep(); // = 2
+
+    BOOST_CHECK_EQUAL(pb->variableCount(), 2);
+    BOOST_CHECK_EQUAL(pb->constraintCount(), 2);
+
+    for (const auto t: timeSteps)
+    {
+        auto ct = pb->getConstraint("componentToto.ct1_" + to_string(t));
+        BOOST_REQUIRE(ct);
+        BOOST_CHECK_EQUAL(ct->getLb(), -pb->infinity());
+        BOOST_CHECK_EQUAL(ct->getUb(), -5 + 3);
+        auto var = pb->getVariable("componentToto.var1_t" + to_string(t));
+        BOOST_REQUIRE(var);
+        BOOST_CHECK(var->isInteger());
+        BOOST_CHECK_EQUAL(ct->getCoefficient(var), -1);
+        BOOST_CHECK_EQUAL(var->getLb(), t);
+        BOOST_CHECK_EQUAL(var->getUb(), t);
     }
 }
 
