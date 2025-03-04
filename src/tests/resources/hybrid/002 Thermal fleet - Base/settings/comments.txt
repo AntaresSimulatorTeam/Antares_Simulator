@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<richtext version="1.0.0.0" xmlns="http://www.wxwidgets.org">
+  <paragraphlayout textcolor="#000000" fontsize="8" fontstyle="90" fontweight="90" fontunderlined="0" fontface="MS Shell Dlg 2" alignment="1" parspacingafter="10" parspacingbefore="0" linespacing="10">
+    <paragraph textcolor="#000000" fontsize="8" fontstyle="90" fontweight="90" fontunderlined="0" fontface="MS Shell Dlg 2" alignment="1" leftindent="0" leftsubindent="0" parspacingafter="10" parspacingbefore="0" linespacing="10" bulletstyle="512" bulletnumber="5" bulletname="standard/circle" liststyle="Bullet List">
+      <text fontweight="92">In this second example, the adequacy between generation and consumption is simulated over one week.</text>
+    </paragraph>
+    <paragraph textcolor="#000000" fontsize="8" fontstyle="90" fontweight="90" fontunderlined="0" fontface="MS Shell Dlg 2" alignment="1" leftindent="0" leftsubindent="0" parspacingafter="10" parspacingbefore="0" linespacing="10" bulletstyle="512" bulletnumber="6" bulletname="standard/circle" liststyle="Bullet List">
+      <text fontweight="92"></text>
+    </paragraph>
+    <paragraph textcolor="#000000" fontsize="8" fontstyle="90" fontweight="90" fontunderlined="0" fontface="MS Shell Dlg 2" alignment="1" leftindent="0" leftsubindent="0" parspacingafter="10" parspacingbefore="0" linespacing="10" bulletstyle="512" bulletnumber="6" bulletname="standard/circle" liststyle="Bullet List">
+      <text fontweight="90">The following elements had been added to the study :</text>
+      <text></text>
+    </paragraph>
+    <paragraph>
+      <text>"-&gt; One (deterministic) time series of load, which range 3.5 to 6.2 GW "</text>
+    </paragraph>
+    <paragraph>
+      <text>-&gt; One (deterministic) time series of wind power generation, between 0 and 2 GW</text>
+    </paragraph>
+    <paragraph>
+      <text>-&gt; A thermal fleet, constituted of base, semi-base and peak thermal units :</text>
+    </paragraph>
+    <paragraph>
+      <symbol>9</symbol>
+      <text>"4  "</text>
+      <symbol>9</symbol>
+      <symbol>34</symbol>
+      <text>base</text>
+      <symbol>34</symbol>
+      <text>" "</text>
+      <symbol>9</symbol>
+      <symbol>9</symbol>
+      <text>units of 900 MW with a generation  cost of 35 euros/MWh</text>
+    </paragraph>
+    <paragraph>
+      <symbol>9</symbol>
+      <text>"5 "</text>
+      <symbol>9</symbol>
+      <symbol>34</symbol>
+      <text>semi-base</text>
+      <symbol>34</symbol>
+      <text>" "</text>
+      <symbol>9</symbol>
+      <text>units of 300 MW, with a generation  cost of 50 euros/MWh</text>
+    </paragraph>
+    <paragraph>
+      <symbol>9</symbol>
+      <text>"8 "</text>
+      <symbol>9</symbol>
+      <symbol>34</symbol>
+      <text>peak</text>
+      <symbol>34</symbol>
+      <text>" "</text>
+      <symbol>9</symbol>
+      <symbol>9</symbol>
+      <text>units of 100 MW, with a generation  cost  80 euros/MWh</text>
+    </paragraph>
+    <paragraph>
+      <text></text>
+    </paragraph>
+    <paragraph>
+      <text>Adequacy indexes (LOLP, LOLD, ENS, UNSUPPLIED ENERGY, ...), economic indexes (COST, MARGINAL COST, ...), the generation of each thermal cluster as well as the number of dispatched unit (NODU) of each type can be seen in the outputs of the simulation.</text>
+    </paragraph>
+    <paragraph>
+      <text></text>
+    </paragraph>
+    <paragraph>
+      <text>For example, in this case, there is a loss of load duration (LOLD) of 1h, with 52 MWh of unsupplied energy.</text>
+    </paragraph>
+    <paragraph>
+      <text>During this hour, all the thermal units are generating at their nominal capacity, but they still lack 52MW to meet the load.</text>
+    </paragraph>
+    <paragraph>
+      <text></text>
+    </paragraph>
+    <paragraph>
+      <text></text>
+    </paragraph>
+    <paragraph>
+      <text></text>
+    </paragraph>
+  </paragraphlayout>
+</richtext>
