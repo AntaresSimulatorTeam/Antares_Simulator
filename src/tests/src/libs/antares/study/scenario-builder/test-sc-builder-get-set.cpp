@@ -38,8 +38,6 @@
 #include <antares/study/scenario-builder/rules.h>
 #include <antares/study/study.h>
 
-BOOST_AUTO_TEST_SUITE(sc_builder)
-
 using namespace Antares::Data;
 using namespace Antares::Data::ScenarioBuilder;
 
@@ -51,9 +49,17 @@ public:
         study(std::make_unique<Study>()),
         area(study->areaAdd("area 1"))
     {
-        study->parameters.nbYears = 5;
+    }
+
+    void setNumberOfYears(uint nbYears)
+    {
+        study->parameters.nbYears = nbYears;
+    }
+
+    void initializeTSNumbers(uint nbYears)
+    {
         tsdata.reset(*study);
-        for (unsigned int year = 0; year < study->parameters.nbYears; ++year)
+        for (unsigned int year = 0; year < nbYears; ++year)
         {
             tsdata.setTSnumber(area->index, year, 12);
         }
@@ -89,20 +95,23 @@ public:
         rencluster(std::make_shared<RenewableCluster>(area1)),
         bc(study->bindingConstraints.add("my-bc"))
     {
-        study->parameters.nbYears = 5;
-
         area1->thermal.list.addToCompleteList(thcluster);
         area1->renewable.list.addToCompleteList(rencluster);
 
         bc->group("my-group");
     }
 
+    void setNumberOfYears(uint nbYears)
+    {
+        study->parameters.nbYears = nbYears;
+    }
+
     // virtual function calls not allowed in constructors (UB)
-    void initialize()
+    void initializeTSNumbers(uint nbYears)
     {
         attachArea();
         tsdata.reset(*study);
-        for (unsigned int year = 0; year < study->parameters.nbYears; ++year)
+        for (unsigned int year = 0; year < nbYears; ++year)
         {
             tsdata.setTSnumber(getObject(), year, 12);
         }
@@ -193,48 +202,132 @@ struct BindingConstraint: public StructureIndex<BindingConstraintsTSNumberData, 
 
 } // namespace Fixture
 
+BOOST_AUTO_TEST_SUITE(sc_nominal)
+
 BOOST_FIXTURE_TEST_CASE(load, Fixture::Load)
 
 {
+    setNumberOfYears(5);
+    initializeTSNumbers(5);
     check();
 }
 
 BOOST_FIXTURE_TEST_CASE(wind, Fixture::Wind)
 {
+    setNumberOfYears(5);
+    initializeTSNumbers(5);
+
     check();
 }
 
 BOOST_FIXTURE_TEST_CASE(solar, Fixture::Solar)
 {
+    setNumberOfYears(5);
+    initializeTSNumbers(5);
+
     check();
 }
 
 BOOST_FIXTURE_TEST_CASE(hydro, Fixture::Hydro)
 {
+    setNumberOfYears(5);
+    initializeTSNumbers(5);
+
     check();
 }
 
 BOOST_FIXTURE_TEST_CASE(thermal, Fixture::Thermal)
 {
-    initialize();
+    setNumberOfYears(5);
+    initializeTSNumbers(5);
+
     check();
 }
 
 BOOST_FIXTURE_TEST_CASE(renewable, Fixture::Renewable)
 {
-    initialize();
+    setNumberOfYears(5);
+    initializeTSNumbers(5);
     check();
 }
 
 BOOST_FIXTURE_TEST_CASE(link, Fixture::Link)
 {
-    initialize();
+    setNumberOfYears(5);
+    initializeTSNumbers(5);
     check();
 }
 
 BOOST_FIXTURE_TEST_CASE(binding_constraint, Fixture::BindingConstraint)
 {
-    initialize();
+    setNumberOfYears(5);
+    initializeTSNumbers(5);
+
+    check();
+}
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(sc_too_many_years)
+
+BOOST_FIXTURE_TEST_CASE(load, Fixture::Load)
+
+{
+    setNumberOfYears(5);
+    initializeTSNumbers(10);
+    check();
+}
+
+BOOST_FIXTURE_TEST_CASE(wind, Fixture::Wind)
+{
+    setNumberOfYears(5);
+    initializeTSNumbers(10);
+
+    check();
+}
+
+BOOST_FIXTURE_TEST_CASE(solar, Fixture::Solar)
+{
+    setNumberOfYears(5);
+    initializeTSNumbers(10);
+
+    check();
+}
+
+BOOST_FIXTURE_TEST_CASE(hydro, Fixture::Hydro)
+{
+    setNumberOfYears(5);
+    initializeTSNumbers(10);
+
+    check();
+}
+
+BOOST_FIXTURE_TEST_CASE(thermal, Fixture::Thermal)
+{
+    setNumberOfYears(5);
+    initializeTSNumbers(10);
+
+    check();
+}
+
+BOOST_FIXTURE_TEST_CASE(renewable, Fixture::Renewable)
+{
+    setNumberOfYears(5);
+    initializeTSNumbers(10);
+    check();
+}
+
+BOOST_FIXTURE_TEST_CASE(link, Fixture::Link)
+{
+    setNumberOfYears(5);
+    initializeTSNumbers(10);
+    check();
+}
+
+BOOST_FIXTURE_TEST_CASE(binding_constraint, Fixture::BindingConstraint)
+{
+    setNumberOfYears(5);
+    initializeTSNumbers(10);
+
     check();
 }
 BOOST_AUTO_TEST_SUITE_END()
