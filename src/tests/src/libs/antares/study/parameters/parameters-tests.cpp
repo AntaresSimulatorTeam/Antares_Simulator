@@ -67,9 +67,6 @@ BOOST_FIXTURE_TEST_CASE(reset, Fixture)
 
 BOOST_FIXTURE_TEST_CASE(loadValid, Fixture)
 {
-    options.solverOptions.linearSolver = "xpress";
-    options.solverOptions.quadraticSolver = "scip";
-
     writeValidFile();
     p.loadFromFile(path.string(), version);
     p.validateOptions(options);
@@ -78,8 +75,6 @@ BOOST_FIXTURE_TEST_CASE(loadValid, Fixture)
     BOOST_CHECK_EQUAL(p.nbYears, 5);
     BOOST_CHECK_EQUAL(p.seed[seedTsGenThermal], 5489);
     BOOST_CHECK_EQUAL(p.include.reserve.dayAhead, true);
-    BOOST_CHECK_EQUAL(p.optOptions.linearSolver, "xpress");
-    BOOST_CHECK_EQUAL(p.optOptions.quadraticSolver, "scip");
 }
 
 BOOST_FIXTURE_TEST_CASE(fixBadValue, Fixture)

@@ -306,6 +306,7 @@ void Application::checkSolverOptions() const
 {
     auto& solverOptions = pStudy->parameters.optOptions;
     checkForSolversExistence(solverOptions);
+    // checkForSolverOptionsConsistency(solverOptions);
     checkSolverMILPincompatibility(pParameters->unitCommitment.ucMode,
                                    solverOptions.linearSolver);
 
