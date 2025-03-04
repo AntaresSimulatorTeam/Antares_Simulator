@@ -464,8 +464,8 @@ BOOST_FIXTURE_TEST_CASE(evaluate_shifted_param, MyDummyFixture)
     // from MockLinearProblemData  param TSdata is {0, 1, 2}
     // here we applied TimeShift t-1 {2, 0, 1}
     BOOST_CHECK_EQUAL(eval[0], 2); //
-    BOOST_CHECK_EQUAL(eval[0], 0);
-    BOOST_CHECK_EQUAL(eval[1], 1);
+    BOOST_CHECK_EQUAL(eval[1], 0);
+    BOOST_CHECK_EQUAL(eval[2], 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_multiplication, MyDummyFixture)
