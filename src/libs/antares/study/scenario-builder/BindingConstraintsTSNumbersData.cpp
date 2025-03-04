@@ -113,7 +113,10 @@ void BindingConstraintsTSNumberData::setTSnumber(const std::string& group_name,
                                                  uint value)
 {
     auto& group_ts_numbers = rules_[group_name];
-    group_ts_numbers[0][year] = value;
+    if (year < group_ts_numbers.height)
+    {
+        group_ts_numbers[0][year] = value;
+    }
 }
 
 } // namespace Antares::Data::ScenarioBuilder
