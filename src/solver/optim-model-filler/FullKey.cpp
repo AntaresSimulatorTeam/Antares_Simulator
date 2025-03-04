@@ -69,14 +69,8 @@ std::size_t FullKeyHash::operator()(const FullKey& p) const
 {
     std::size_t seed = 0;
     boost::hash_combine(seed, p.getPartialKey());
-    if (p.getScenario())
-    {
-        boost::hash_combine(seed, p.getScenario());
-    }
-    if (p.getTimestep())
-    {
-        boost::hash_combine(seed, p.getTimestep());
-    }
+    boost::hash_combine(seed, p.getScenario());
+    boost::hash_combine(seed, p.getTimestep());
     return seed;
 }
 

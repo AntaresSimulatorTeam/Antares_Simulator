@@ -65,7 +65,7 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
         std::ostringstream errMessage;
 
         errMessage << "requested " << count << " variables but lb size = " << lb.size();
-        throw std::invalid_argument(errMessage.str());
+        throw BoundsSizeMismatch(errMessage.str());
     }
     const auto offset = *dim.getTimesteps().begin();
 
@@ -92,7 +92,7 @@ void VariablesBulkAddition::addVariable(double lb,
     {
         std::ostringstream errMessage;
         errMessage << "requested " << count << " variables but ub size = " << ub.size();
-        throw std::invalid_argument(errMessage.str());
+        throw BoundsSizeMismatch(errMessage.str());
     }
     const auto offset = *dim.getTimesteps().begin();
     variableDictionary.addVariable(
@@ -119,7 +119,7 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
         std::ostringstream errMessage;
         errMessage << "requested " << count << " variables but lb size = " << lb.size()
                    << " and ub size = " << ub.size();
-        throw std::invalid_argument(errMessage.str());
+        throw BoundsSizeMismatch(errMessage.str());
     }
     const auto offset = *dim.getTimesteps().begin();
 
@@ -213,7 +213,7 @@ void ComponentFiller::addStaticConstraint(Optimisation::LinearProblemApi::ILinea
     auto* ct = pb.addConstraint(linear_constraint.lb,
                                 linear_constraint.ub,
                                 component_.Id() + "." + constraint_id);
-    for (auto [variableFullKey, coefficient]: linear_constraint.coef_per_var)
+    for (const auto& [variableFullKey, coefficient]: linear_constraint.coef_per_var)
     {
         auto* variable = variableDictionary(variableFullKey);
         ct->setCoefficient(variable, coefficient);

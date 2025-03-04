@@ -55,7 +55,7 @@ LinearExpression LinearExpression::operator+(const LinearExpression& other) cons
     return {offset_ + other.offset_, add_maps(coef_per_var_, other.coef_per_var_)};
 }
 
-FullKeyMap LinearExpression::coefPerVar() const
+const FullKeyMap& LinearExpression::coefPerVar() const
 {
     return coef_per_var_;
 }

@@ -113,7 +113,7 @@ public:
     double offset() const;
 
     /// Get the non-zero coefficients per variable ID
-    FullKeyMap coefPerVar() const;
+    const FullKeyMap& coefPerVar() const;
 
     LinearExpression& operator+=(const LinearExpression& value);
 

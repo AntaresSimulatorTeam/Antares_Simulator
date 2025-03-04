@@ -108,6 +108,11 @@ public:
                      const Dimensions& dim,
                      const PartialKey&) const;
 
+    class BoundsSizeMismatch: public std::invalid_argument
+    {
+        using std::invalid_argument::invalid_argument;
+    };
+
 private:
     Optimisation::LinearProblemApi::ILinearProblem& linear_problem_;
     VariableDictionary& variableDictionary;
