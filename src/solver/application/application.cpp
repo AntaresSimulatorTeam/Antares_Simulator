@@ -277,9 +277,6 @@ void Application::postParametersChecks() const
 {
     // Some more checks require the existence of pParameters, hence of a study.
     // Their execution is delayed up to this point.
-//    checkSolverMILPincompatibility(pParameters->unitCommitment.ucMode,
-//                                   pParameters->optOptions.linearSolver);
-
     checkSimplexRangeHydroPricing(pParameters->simplexOptimizationRange,
                                   pParameters->hydroPricing.hpMode);
 

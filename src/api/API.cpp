@@ -70,7 +70,7 @@ SimulationResults APIInternal::execute(
 
     Settings settings;
     auto& parameters = study_->parameters;
-    parameters.optOptions = optOptions;
+    parameters.optOptions << optOptions;
 
     Benchmarking::DurationCollector durationCollector;
     Benchmarking::OptimizationInfo optimizationInfo;
