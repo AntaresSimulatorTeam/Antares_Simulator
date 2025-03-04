@@ -116,6 +116,11 @@ TimeIndex TimeIndexVisitor::visit(const Nodes::TimeShiftNode* timeShiftNode)
     return dispatch(timeShiftNode->child());
 }
 
+TimeIndex TimeIndexVisitor::visit(const Nodes::TimeIndexNode* timeIndexNode)
+{
+    return TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
+}
+
 TimeIndexVisitor::TimeIndexVisitor(std::unordered_map<const Nodes::Node*, TimeIndex> context):
     context_(std::move(context))
 {

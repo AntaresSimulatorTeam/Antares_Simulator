@@ -9,6 +9,7 @@ set(SRC_Expressions
         nodes/UnaryNode.cpp
         nodes/SumNode.cpp
         nodes/TimeShiftNode.cpp
+        nodes/TimeIndexNode.cpp
 
 
         visitors/CloneVisitor.cpp
@@ -51,6 +52,7 @@ set(SRC_Expressions
         include/antares/expressions/nodes/UnaryNode.h
         include/antares/expressions/nodes/VariableNode.h
         include/antares/expressions/nodes/TimeShiftNode.h
+        include/antares/expressions/nodes/TimeIndexNode.h
 
 
         include/antares/expressions/visitors/CloneVisitor.h

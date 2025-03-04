@@ -156,6 +156,12 @@ bool CompareVisitor::visit(const Nodes::TimeShiftNode* node, const Nodes::Node* 
     throw std::logic_error("Not implemented yet");
 }
 
+bool CompareVisitor::visit(const Nodes::TimeIndexNode* node, const Nodes::Node* other)
+{
+    // TODO
+    throw std::logic_error("Not implemented yet");
+}
+
 std::string CompareVisitor::name() const
 {
     return "CompareVisitor";

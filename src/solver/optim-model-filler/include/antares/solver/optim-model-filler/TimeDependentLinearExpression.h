@@ -57,7 +57,8 @@ public:
     TimeDependentLinearExpression operator/(const TimeDependentLinearExpression& other) const;
     /// Multiply linear expression by -1
     TimeDependentLinearExpression operator-() const;
-    TimeDependentLinearExpression operator[](int shiftValue) const;
+    TimeDependentLinearExpression shiftLinearExpressions(int shiftValue) const;
+    TimeDependentLinearExpression operator[](int index) const;
 
     const std::unordered_map<unsigned, LinearExpression>& GetLinearExpressions() const;
     size_t getSize() const;

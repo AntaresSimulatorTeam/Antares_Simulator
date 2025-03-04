@@ -112,6 +112,10 @@ LinearStatus LinearityVisitor::visit(const Nodes::TimeShiftNode* timeShiftNode)
 {
     return dispatch(timeShiftNode);
 }
+LinearStatus LinearityVisitor::visit(const Nodes::TimeIndexNode* timeIndexNode)
+{
+    return LinearStatus::CONSTANT;
+}
 
 std::string LinearityVisitor::name() const
 {

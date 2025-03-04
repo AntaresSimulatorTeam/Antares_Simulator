@@ -148,7 +148,8 @@ int rotatedIndex(unsigned key,
            + (key - fillContext.getFirstTimeStep() + shift) % rangeSize;
 }
 
-TimeDependentLinearExpression TimeDependentLinearExpression::operator[](int shiftValue) const
+TimeDependentLinearExpression TimeDependentLinearExpression::shiftLinearExpressions(
+  int shiftValue) const
 {
     auto fillContext = DeduceFillContext();
     unsigned int number_of_timestep = fillContext.getNumberOfTimestep();
@@ -165,6 +166,12 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator[](int shif
           rotatedIndex(timeStep, shiftValue, fillContext));
     }
     return TimeDependentLinearExpression(std::move(linearExpressions));
+}
+
+TimeDependentLinearExpression TimeDependentLinearExpression::operator[](int index) const
+{
+    // TODO check?
+    return TimeDependentLinearExpression({{index, linearExpressions_.at(index)}});
 }
 
 } // namespace Antares::Optimization

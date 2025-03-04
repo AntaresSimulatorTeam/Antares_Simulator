@@ -175,6 +175,12 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Component
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const TimeShiftNode* node)
 {
     const auto ret = dispatch(node->child());
-    return ret[node->shift()];
+    return ret.shiftLinearExpressions(node->shift());
+}
+
+TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const TimeIndexNode* node)
+{
+    const auto ret = dispatch(node->child());
+    return ret[node->index()];
 }
 } // namespace Antares::Optimization

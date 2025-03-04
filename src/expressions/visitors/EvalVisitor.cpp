@@ -134,7 +134,12 @@ EvaluationResult EvalVisitor::visit(const Nodes::ComponentParameterNode* node)
 EvaluationResult EvalVisitor::visit(const Nodes::TimeShiftNode* node)
 {
     const auto ret = dispatch(node->child());
-    return ret[node->shift()];
+    return ret.shiftResult(node->shift());
+}
+EvaluationResult EvalVisitor::visit(const Nodes::TimeIndexNode* node)
+{
+    const auto ret = dispatch(node->child());
+    return ret[node->index()];
 }
 
 std::string EvalVisitor::name() const
@@ -171,12 +176,22 @@ EvaluationResult::EvaluationResult(const std::variant<double, std::vector<double
 {
 }
 
-EvaluationResult EvaluationResult::operator[](int shiftValue) const
+EvaluationResult EvaluationResult::shiftResult(int shiftValue) const
 {
     return EvaluationResult(
       std::visit([&shiftValue](const auto& l) -> std::variant<double, std::vector<double>>
                  { return shift(l, shiftValue); },
                  value_));
+}
+EvaluationResult EvaluationResult::operator[](int index) const
+{
+    if (std::holds_alternative<double>(value_))
+    {
+        return *this;
+    }
+    // TODO check index vs value_.size()?
+
+    return EvaluationResult(std::get<std::vector<double>>(value_).at(index));
 }
 
 std::vector<double> EvaluationResult::shift(const std::vector<double>& values, int shiftValue)

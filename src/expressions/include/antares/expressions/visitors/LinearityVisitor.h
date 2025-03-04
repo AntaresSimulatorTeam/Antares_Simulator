@@ -50,5 +50,6 @@ private:
     LinearStatus visit(const Nodes::ComponentVariableNode* component_variable_node) override;
     LinearStatus visit(const Nodes::ComponentParameterNode* component_parameter_node) override;
     LinearStatus visit(const Nodes::TimeShiftNode* timeShiftNode) override;
+    LinearStatus visit(const Nodes::TimeIndexNode* timeIndexNode) override;
 };
 } // namespace Antares::Expressions::Visitors

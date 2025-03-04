@@ -61,5 +61,6 @@ private:
     TimeIndex visit(const Nodes::ComponentVariableNode* component_variable_node) override;
     TimeIndex visit(const Nodes::ComponentParameterNode* component_parameter_node) override;
     TimeIndex visit(const Nodes::TimeShiftNode* timeShiftNode) override;
+    TimeIndex visit(const Nodes::TimeIndexNode* timeIndexNode) override;
 };
 } // namespace Antares::Expressions::Visitors

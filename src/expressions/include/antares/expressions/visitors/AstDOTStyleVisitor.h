@@ -136,6 +136,7 @@ private:
     void visit(const Nodes::ComponentVariableNode* node, std::ostream& os) override;
     void visit(const Nodes::ComponentParameterNode* node, std::ostream& os) override;
     void visit(const Nodes::TimeShiftNode* node, std::ostream& os) override;
+    void visit(const Nodes::TimeIndexNode* node, std::ostream& os) override;
 
     void computeNumberNodesPerType();
     void makeLegend(std::ostream& os);

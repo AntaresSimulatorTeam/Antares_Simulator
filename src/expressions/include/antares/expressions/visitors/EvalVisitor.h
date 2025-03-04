@@ -131,7 +131,8 @@ public:
         return std::get<std::vector<double>>(value_);
     }
 
-    EvaluationResult operator[](int shiftValue) const;
+    EvaluationResult operator[](int index) const;
+    EvaluationResult shiftResult(int shiftValue) const;
 
 private:
     std::variant<double, std::vector<double>> value_;
@@ -272,5 +273,6 @@ private:
     EvaluationResult visit(const Nodes::ComponentVariableNode* node) override;
     EvaluationResult visit(const Nodes::ComponentParameterNode* node) override;
     EvaluationResult visit(const Nodes::TimeShiftNode* node) override;
+    EvaluationResult visit(const Nodes::TimeIndexNode* node) override;
 };
 } // namespace Antares::Expressions::Visitors

@@ -230,13 +230,13 @@ std::any ConvertorVisitor::visitNumber(ExprParser::NumberContext* context)
     return static_cast<Node*>(registry_.create<LiteralNode>(d));
 }
 
-// TODO implement this
 std::any ConvertorVisitor::visitTimeIndex([[maybe_unused]] ExprParser::TimeIndexContext* context)
 {
-    throw NotImplemented("Node time index not implemented yet");
+    Node* expr = convertIdentifier(context->IDENTIFIER()->getText());
+    auto index = std::stoi(context->expr()->getText());
+    return static_cast<Node*>(registry_.create<TimeIndexNode>(expr, index));
 }
 
-// TODO implement this
 std::any ConvertorVisitor::visitTimeShift([[maybe_unused]] ExprParser::TimeShiftContext* context)
 {
     Node* shifted_expr = convertIdentifier(context->IDENTIFIER()->getText());

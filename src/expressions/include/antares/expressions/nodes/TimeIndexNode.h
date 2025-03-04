@@ -20,26 +20,24 @@
 */
 #pragma once
 
+#include "antares/expressions/nodes/UnaryNode.h"
+
 namespace Antares::Expressions::Nodes
 {
-class Node;
-class BinaryNode;
-class SumNode;
-class SubtractionNode;
-class MultiplicationNode;
-class DivisionNode;
-class EqualNode;
-class LessThanOrEqualNode;
-class GreaterThanOrEqualNode;
-class NegationNode;
-class LiteralNode;
-class ComponentNode;
-class ComponentVariableNode;
-class ComponentParameterNode;
-class ParameterNode;
-class VariableNode;
-class PortFieldNode;
-class PortFieldSumNode;
-class TimeShiftNode;
-class TimeIndexNode;
+class TimeIndexNode: public UnaryNode
+{
+public:
+    TimeIndexNode(Node* toBeindexed, int index);
+
+    std::string name() const override;
+
+    [[nodiscard]] int index() const
+    {
+        return index_;
+    }
+
+private:
+    int index_ = 0;
+};
+
 } // namespace Antares::Expressions::Nodes
