@@ -211,6 +211,37 @@ BOOST_FIXTURE_TEST_CASE(Hourly_BC_restricts_cluster_generation_to_90, StudyWithB
     BOOST_TEST(output.thermalGeneration(cluster.get()).hour(10) == rhsValue, tt::tolerance(0.001));
 }
 
+BOOST_FIXTURE_TEST_CASE(Hourly_BC_restricts_cluster_disable_generation_to_90, StudyWithBConLink)
+{
+    setNumberMCyears(1);
+
+    BC->setTimeGranularity(BindingConstraint::typeHourly);
+    BC->operatorType(BindingConstraint::opEquality);
+
+    double rhsValue = 90.;
+    TimeSeriesConfigurer(BC->RHSTimeSeries()).setColumnCount(1).fillColumnWith(0, rhsValue);
+
+    auto cluster2 = std::make_shared<ThermalCluster>(link->from);
+    auto c = cluster2.get();
+    cluster2->setName("plop");
+    cluster2->reset();
+    //link->from->thermal.list.addToCompleteList(cluster2);
+
+    // ThermalClusterConfig(c)
+    //   .setNominalCapacity(100.)
+    //   .setAvailablePower(0, 100.)
+    //   .setCosts(50.)
+    //   .setUnitCount(1);
+    // BC->weight(c, 1);
+
+    simulation->create();
+    simulation->run();
+
+    OutputRetriever output(simulation->rawSimu());
+    BOOST_TEST(output.thermalGeneration(cluster.get()).hour(10) == rhsValue, tt::tolerance(0.001));
+    //BOOST_TEST(output.thermalGeneration(cluster2).hour(10) == rhsValue, tt::tolerance(0.001));
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(TESTING_BC_RHS_SCENARIZATION_WHEN_BC_ON_A_LINK)

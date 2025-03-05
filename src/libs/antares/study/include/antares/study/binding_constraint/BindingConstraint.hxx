@@ -49,9 +49,10 @@ inline uint BindingConstraint::linkCount() const
 
 inline uint BindingConstraint::clusterCount() const
 {
-    return std::ranges::count_if(pClusterWeights,
-                                 [](const std::pair<const Data::ThermalCluster*, double>& coeff)
-                                 { return coeff.first->isActive(); });
+    return std::ranges::count_if(pClusterWeights | std::views::keys,
+                                 [](const Data::ThermalCluster* coeff)
+                                 //{ return coeff->enabled || coeff->mustrun; });
+                                 { return coeff->isActive(); });
 }
 
 inline bool BindingConstraint::enabled() const
