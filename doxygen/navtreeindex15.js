@@ -1,5 +1,15 @@
 var NAVTREEINDEX15 =
 {
+"classAntares_1_1Private_1_1Window_1_1MemoryStatisticsData.html":[9,0,0,15,4,1],
+"classAntares_1_1Solver_1_1Application.html":[9,0,0,16,6],
+"classAntares_1_1Solver_1_1Application.html#a1017f09dcde5080ada2af4b4172f8138":[9,0,0,16,6,0],
+"classAntares_1_1Solver_1_1Application.html#a4026d1ad4f3a316165d04917797576ce":[9,0,0,16,6,5],
+"classAntares_1_1Solver_1_1Application.html#a717ddcf81267379bce00aecf165dd263":[9,0,0,16,6,4],
+"classAntares_1_1Solver_1_1Application.html#ab731ee5d76d2df87411284e1c79ff080":[9,0,0,16,6,1],
+"classAntares_1_1Solver_1_1Application.html#ac941ab441ad1379f58b0187287431a96":[9,0,0,16,6,3],
+"classAntares_1_1Solver_1_1Application.html#af3de96ebdc6b6d778e3bd041379d0312":[9,0,0,16,6,2],
+"classAntares_1_1Solver_1_1AreaLinksTransCapaNumberOfTSretriever.html":[9,0,0,16,7],
+"classAntares_1_1Solver_1_1AreaNumberOfTSretriever.html":[9,0,0,16,8],
 "classAntares_1_1Solver_1_1EnsureQueueStartedIfNeeded.html":[9,0,0,16,10],
 "classAntares_1_1Solver_1_1FinalLevelValidator.html":[9,0,0,16,11],
 "classAntares_1_1Solver_1_1HebdoProblemToLpsTranslator.html":[9,0,0,16,12],
@@ -239,15 +249,5 @@ var NAVTREEINDEX15 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP.html#a9552ace41fd9ad078b6d9c0c47401b7e":[9,0,0,16,5,4,20,2],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP__CSR.html":[9,0,0,16,5,4,21],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP__CSR.html#a1567e7d8d3ffd2ec8a7c1c38437cbfb0":[9,0,0,16,5,4,21,4],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP__CSR.html#a54f6cd42c322ce568799deb2be5a7e7f":[9,0,0,16,5,4,21,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP__CSR.html#aabf4802f703acba5acc85c929059a29e":[9,0,0,16,5,4,21,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP__CSR.html#ad3199edcdf5ab62b63468a731596fd58":[9,0,0,16,5,4,21,3],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html":[9,0,0,16,5,4,22],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#a2ac565971584facbedc94a1ba16ee4fe":[9,0,0,16,5,4,22,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#a348c7b06c91afbcd926c68bb0e3f1954":[9,0,0,16,5,4,22,4],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#a4260fba13e7953d11cb5db55df79ce95":[9,0,0,16,5,4,22,3],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#af3ebe58b07ee4295306a450d0c16fd5a":[9,0,0,16,5,4,22,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html":[9,0,0,16,5,4,23],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#a25f4ee4b1887b1feddfcad05171a4769":[9,0,0,16,5,4,23,4],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#a3e1c3f76ac3931a54a0cda7923ea64e0":[9,0,0,16,5,4,23,2]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP__CSR.html#a54f6cd42c322ce568799deb2be5a7e7f":[9,0,0,16,5,4,21,1]
 };

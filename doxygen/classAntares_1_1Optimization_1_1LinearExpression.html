@@ -152,8 +152,8 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><b>LinearExpression</b> ()=default</td></tr>
 <tr class="memdesc:a892a378fe885f50d122444e36cf6cd1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build a linear expression with zero offset and zero coefficients. <br /></td></tr>
 <tr class="separator:a892a378fe885f50d122444e36cf6cd1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46e3a5694d615443005df5a2a1375c45" id="r_a46e3a5694d615443005df5a2a1375c45"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a46e3a5694d615443005df5a2a1375c45">LinearExpression</a> (double <a class="el" href="#a7f461cc34aa1a1a7ebb76c01608cd8c0">offset</a>, std::map&lt; std::string, double &gt; coef_per_var)</td></tr>
-<tr class="separator:a46e3a5694d615443005df5a2a1375c45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af90fa939e915ebac1b82b4a9d78b856e" id="r_af90fa939e915ebac1b82b4a9d78b856e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af90fa939e915ebac1b82b4a9d78b856e">LinearExpression</a> (double <a class="el" href="#a7f461cc34aa1a1a7ebb76c01608cd8c0">offset</a>, FullKeyMap coef_per_var)</td></tr>
+<tr class="separator:af90fa939e915ebac1b82b4a9d78b856e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d9e530b98ad5e82fdf61bd2b6635d06" id="r_a8d9e530b98ad5e82fdf61bd2b6635d06"><td class="memItemLeft" align="right" valign="top"><a id="a8d9e530b98ad5e82fdf61bd2b6635d06" name="a8d9e530b98ad5e82fdf61bd2b6635d06"></a>
 <a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator+</b> (const <a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> &amp;other) const</td></tr>
 <tr class="memdesc:a8d9e530b98ad5e82fdf61bd2b6635d06"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sum two linear expressions. <br /></td></tr>
@@ -174,10 +174,10 @@ Public Member Functions</h2></td></tr>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>offset</b> () const</td></tr>
 <tr class="memdesc:a7f461cc34aa1a1a7ebb76c01608cd8c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the offset. <br /></td></tr>
 <tr class="separator:a7f461cc34aa1a1a7ebb76c01608cd8c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a969a383551141c898cfcdbe91b07cd9b" id="r_a969a383551141c898cfcdbe91b07cd9b"><td class="memItemLeft" align="right" valign="top"><a id="a969a383551141c898cfcdbe91b07cd9b" name="a969a383551141c898cfcdbe91b07cd9b"></a>
-std::map&lt; std::string, double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>coefPerVar</b> () const</td></tr>
-<tr class="memdesc:a969a383551141c898cfcdbe91b07cd9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the non-zero coefficients per variable ID. <br /></td></tr>
-<tr class="separator:a969a383551141c898cfcdbe91b07cd9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a105e25aae6d5d3c3a404908f7489e2a0" id="r_a105e25aae6d5d3c3a404908f7489e2a0"><td class="memItemLeft" align="right" valign="top"><a id="a105e25aae6d5d3c3a404908f7489e2a0" name="a105e25aae6d5d3c3a404908f7489e2a0"></a>
+const FullKeyMap &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>coefPerVar</b> () const</td></tr>
+<tr class="memdesc:a105e25aae6d5d3c3a404908f7489e2a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the non-zero coefficients per variable ID. <br /></td></tr>
+<tr class="separator:a105e25aae6d5d3c3a404908f7489e2a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2ca755877386f0a6eef40303520566bb" id="r_a2ca755877386f0a6eef40303520566bb"><td class="memItemLeft" align="right" valign="top"><a id="a2ca755877386f0a6eef40303520566bb" name="a2ca755877386f0a6eef40303520566bb"></a>
 <a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator+=</b> (const <a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> &amp;value)</td></tr>
 <tr class="separator:a2ca755877386f0a6eef40303520566bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -188,8 +188,8 @@ std::map&lt; std::string, double &gt;&#160;</td><td class="memItemRight" valign=
 <li>a scalar offset </li>
 </ul>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a46e3a5694d615443005df5a2a1375c45" name="a46e3a5694d615443005df5a2a1375c45"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a46e3a5694d615443005df5a2a1375c45">&#9670;&#160;</a></span>LinearExpression()</h2>
+<a id="af90fa939e915ebac1b82b4a9d78b856e" name="af90fa939e915ebac1b82b4a9d78b856e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af90fa939e915ebac1b82b4a9d78b856e">&#9670;&#160;</a></span>LinearExpression()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -202,7 +202,7 @@ std::map&lt; std::string, double &gt;&#160;</td><td class="memItemRight" valign=
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::map&lt; std::string, double &gt;</td>          <td class="paramname"><span class="paramname"><em>coef_per_var</em></span>&#160;)</td>
+          <td class="paramtype">FullKeyMap</td>          <td class="paramname"><span class="paramname"><em>coef_per_var</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">

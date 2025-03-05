@@ -8,8 +8,8 @@ var namespaceAntares_1_1Optimization =
     [ "DailyBC", "classAntares_1_1Optimization_1_1DailyBC.html", null ],
     [ "Dimensions", "classAntares_1_1Optimization_1_1Dimensions.html", null ],
     [ "FictitiousLoad", "classAntares_1_1Optimization_1_1FictitiousLoad.html", null ],
-    [ "FullKey", "structAntares_1_1Optimization_1_1FullKey.html", null ],
-    [ "hash", "classAntares_1_1Optimization_1_1hash.html", null ],
+    [ "FullKey", "classAntares_1_1Optimization_1_1FullKey.html", null ],
+    [ "FullKeyHash", "classAntares_1_1Optimization_1_1FullKeyHash.html", null ],
     [ "HourlyBC", "classAntares_1_1Optimization_1_1HourlyBC.html", null ],
     [ "HydroLevel", "classAntares_1_1Optimization_1_1HydroLevel.html", null ],
     [ "HydroProduction", "classAntares_1_1Optimization_1_1HydroProduction.html", null ],
@@ -20,7 +20,8 @@ var namespaceAntares_1_1Optimization =
     [ "LegacyOrtoolsLinearProblem", "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html", null ],
     [ "LinearConstraint", "structAntares_1_1Optimization_1_1LinearConstraint.html", null ],
     [ "LinearExpression", "classAntares_1_1Optimization_1_1LinearExpression.html", "classAntares_1_1Optimization_1_1LinearExpression" ],
-    [ "PartialKey", "structAntares_1_1Optimization_1_1PartialKey.html", null ],
+    [ "PartialKey", "classAntares_1_1Optimization_1_1PartialKey.html", null ],
+    [ "PartialKeyHash", "classAntares_1_1Optimization_1_1PartialKeyHash.html", null ],
     [ "PROBLEME_SIMPLEXE_NOMME", "structAntares_1_1Optimization_1_1PROBLEME__SIMPLEXE__NOMME.html", null ],
     [ "ReadLinearConstraintVisitor", "classAntares_1_1Optimization_1_1ReadLinearConstraintVisitor.html", null ],
     [ "ReadLinearExpressionVisitor", "classAntares_1_1Optimization_1_1ReadLinearExpressionVisitor.html", null ],
@@ -32,9 +33,9 @@ var namespaceAntares_1_1Optimization =
     [ "VariableBounds", "structAntares_1_1Optimization_1_1VariableBounds.html", null ],
     [ "VariableDictionary", "classAntares_1_1Optimization_1_1VariableDictionary.html", null ],
     [ "VariablesBoundsConsistency", "classAntares_1_1Optimization_1_1VariablesBoundsConsistency.html", null ],
-    [ "VariablesBulkAddition", "classAntares_1_1Optimization_1_1VariablesBulkAddition.html", null ],
+    [ "VariablesBulkAddition", "classAntares_1_1Optimization_1_1VariablesBulkAddition.html", "classAntares_1_1Optimization_1_1VariablesBulkAddition" ],
     [ "WatchedConstraint", "classAntares_1_1Optimization_1_1WatchedConstraint.html", null ],
     [ "WeeklyBC", "classAntares_1_1Optimization_1_1WeeklyBC.html", null ],
-    [ "add_maps", "namespaceAntares_1_1Optimization.html#a6dc139997e7ee1e6da8968734691496a", null ],
-    [ "scale_map", "namespaceAntares_1_1Optimization.html#aff759992f046ef8adb4560fdc970f68c", null ]
+    [ "add_maps", "namespaceAntares_1_1Optimization.html#a7259fee189da1b3acc1b243837e1df83", null ],
+    [ "scale_map", "namespaceAntares_1_1Optimization.html#a7190f8e021109840878686b5bf2f2ded", null ]
 ];

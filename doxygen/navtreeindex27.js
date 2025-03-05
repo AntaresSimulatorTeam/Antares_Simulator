@@ -1,5 +1,11 @@
 var NAVTREEINDEX27 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesSolar_1_1Statistics.html":[9,0,0,16,5,4,58,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesWind_1_1Statistics.html":[9,0,0,16,5,4,59,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR_1_1Statistics.html":[9,0,0,16,5,4,61,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergy_1_1Statistics.html":[9,0,0,16,5,4,60,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardAvailableDispatchGen.html":[9,0,0,16,5,4,62],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardAvailableDispatchGen.html#a6c3732bbed87d62b536bdea26c334837":[9,0,0,16,5,4,62,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardAvailableDispatchGen.html#ae5f7f805a39912af3a6d892720c5bd18":[9,0,0,16,5,4,62,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBalance.html":[9,0,0,16,5,4,63],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBalance.html#a5b78a511dd81c4398861670b0eadc2a3":[9,0,0,16,5,4,63,0],
@@ -243,11 +249,5 @@ var NAVTREEINDEX27 =
 "structAntares_1_1VENTILATION__HYDRO__RESULTS__BY__AREA.html":[7,0,0,37],
 "structAntares_1_1VENTILATION__HYDRO__RESULTS__BY__AREA.html":[9,0,0,56],
 "structAntares_1_1Window_1_1Inspector_1_1Accumulator.html":[9,0,0,22,1,0],
-"structAntares_1_1Window_1_1Inspector_1_1AccumulatorCheck.html":[9,0,0,22,1,1],
-"structAntares_1_1Window_1_1Inspector_1_1Add.html":[9,0,0,22,1,2],
-"structAntares_1_1Window_1_1Inspector_1_1PAdequacyPatchMode.html":[9,0,0,22,1,9],
-"structAntares_1_1Window_1_1Inspector_1_1PAreaColor.html":[9,0,0,22,1,10],
-"structAntares_1_1Window_1_1Inspector_1_1PAreaColor_1_1Color.html":[9,0,0,22,1,10,0],
-"structAntares_1_1Window_1_1Inspector_1_1PAreaFiltering.html":[9,0,0,22,1,11],
-"structAntares_1_1Window_1_1Inspector_1_1PAreaResortStatus.html":[9,0,0,22,1,12]
+"structAntares_1_1Window_1_1Inspector_1_1AccumulatorCheck.html":[9,0,0,22,1,1]
 };

@@ -576,8 +576,8 @@ var annotated_dup =
         [ "DailyBC", "classAntares_1_1Optimization_1_1DailyBC.html", null ],
         [ "Dimensions", "classAntares_1_1Optimization_1_1Dimensions.html", null ],
         [ "FictitiousLoad", "classAntares_1_1Optimization_1_1FictitiousLoad.html", null ],
-        [ "FullKey", "structAntares_1_1Optimization_1_1FullKey.html", null ],
-        [ "hash", "classAntares_1_1Optimization_1_1hash.html", null ],
+        [ "FullKey", "classAntares_1_1Optimization_1_1FullKey.html", null ],
+        [ "FullKeyHash", "classAntares_1_1Optimization_1_1FullKeyHash.html", null ],
         [ "HourlyBC", "classAntares_1_1Optimization_1_1HourlyBC.html", null ],
         [ "HydroLevel", "classAntares_1_1Optimization_1_1HydroLevel.html", null ],
         [ "HydroProduction", "classAntares_1_1Optimization_1_1HydroProduction.html", null ],
@@ -588,7 +588,8 @@ var annotated_dup =
         [ "LegacyOrtoolsLinearProblem", "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html", null ],
         [ "LinearConstraint", "structAntares_1_1Optimization_1_1LinearConstraint.html", null ],
         [ "LinearExpression", "classAntares_1_1Optimization_1_1LinearExpression.html", "classAntares_1_1Optimization_1_1LinearExpression" ],
-        [ "PartialKey", "structAntares_1_1Optimization_1_1PartialKey.html", null ],
+        [ "PartialKey", "classAntares_1_1Optimization_1_1PartialKey.html", null ],
+        [ "PartialKeyHash", "classAntares_1_1Optimization_1_1PartialKeyHash.html", null ],
         [ "PROBLEME_SIMPLEXE_NOMME", "structAntares_1_1Optimization_1_1PROBLEME__SIMPLEXE__NOMME.html", null ],
         [ "ReadLinearConstraintVisitor", "classAntares_1_1Optimization_1_1ReadLinearConstraintVisitor.html", null ],
         [ "ReadLinearExpressionVisitor", "classAntares_1_1Optimization_1_1ReadLinearExpressionVisitor.html", null ],
@@ -600,7 +601,7 @@ var annotated_dup =
         [ "VariableBounds", "structAntares_1_1Optimization_1_1VariableBounds.html", null ],
         [ "VariableDictionary", "classAntares_1_1Optimization_1_1VariableDictionary.html", null ],
         [ "VariablesBoundsConsistency", "classAntares_1_1Optimization_1_1VariablesBoundsConsistency.html", null ],
-        [ "VariablesBulkAddition", "classAntares_1_1Optimization_1_1VariablesBulkAddition.html", null ],
+        [ "VariablesBulkAddition", "classAntares_1_1Optimization_1_1VariablesBulkAddition.html", "classAntares_1_1Optimization_1_1VariablesBulkAddition" ],
         [ "WatchedConstraint", "classAntares_1_1Optimization_1_1WatchedConstraint.html", null ],
         [ "WeeklyBC", "classAntares_1_1Optimization_1_1WeeklyBC.html", null ]
       ] ],
@@ -1252,6 +1253,9 @@ var annotated_dup =
       [ "SimulationInfoCollector", "classBenchmarking_1_1SimulationInfoCollector.html", null ],
       [ "StudyInfoCollector", "classBenchmarking_1_1StudyInfoCollector.html", null ],
       [ "Timer", "classBenchmarking_1_1Timer.html", null ]
+    ] ],
+    [ "boost", null, [
+      [ "hash< Antares::Optimization::PartialKey >", "structboost_1_1hash_3_01Antares_1_1Optimization_1_1PartialKey_01_4.html", null ]
     ] ],
     [ "check_general", null, [
       [ "check_interface", "classcheck__general_1_1check__interface.html", null ],

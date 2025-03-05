@@ -531,13 +531,14 @@ var hierarchy =
     [ "FixtureStudyOnly", "structFixtureStudyOnly.html", null ],
     [ "FlowDissociationData", "structFlowDissociationData.html", null ],
     [ "Antares::Component::FrameShowData", "classAntares_1_1Component_1_1FrameShowData.html", null ],
-    [ "Antares::Optimization::FullKey", "structAntares_1_1Optimization_1_1FullKey.html", null ],
+    [ "Antares::Optimization::FullKey", "classAntares_1_1Optimization_1_1FullKey.html", null ],
+    [ "Antares::Optimization::FullKeyHash", "classAntares_1_1Optimization_1_1FullKeyHash.html", null ],
     [ "Antares::Concurrency::FutureSet", "classAntares_1_1Concurrency_1_1FutureSet.html", null ],
     [ "global_JIT_manager", "classglobal__JIT__manager.html", null ],
     [ "Antares::Graph::Grid< NodeT >", "classAntares_1_1Graph_1_1Grid.html", null ],
     [ "Antares::Graph::Grid< Antares::Data::Area >", "classAntares_1_1Graph_1_1Grid.html", null ],
     [ "Antares::GUILocker", "classAntares_1_1GUILocker.html", null ],
-    [ "Antares::Optimization::hash", "classAntares_1_1Optimization_1_1hash.html", null ],
+    [ "boost::hash< Antares::Optimization::PartialKey >", "structboost_1_1hash_3_01Antares_1_1Optimization_1_1PartialKey_01_4.html", null ],
     [ "Antares::Expressions::Hashable", "classAntares_1_1Expressions_1_1Hashable.html", [
       [ "Antares::Expressions::Nodes::PortFieldNode", "classAntares_1_1Expressions_1_1Nodes_1_1PortFieldNode.html", null ],
       [ "Antares::Expressions::Nodes::PortFieldSumNode", "classAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode.html", null ]
@@ -962,7 +963,8 @@ var hierarchy =
       [ "Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet::AddTSofWrongSize", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1TimeSeriesSet_1_1AddTSofWrongSize.html", null ],
       [ "Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet::Empty", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1TimeSeriesSet_1_1Empty.html", null ],
       [ "Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet::HourTooBig", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1TimeSeriesSet_1_1HourTooBig.html", null ],
-      [ "Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet::RankTooBig", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1TimeSeriesSet_1_1RankTooBig.html", null ]
+      [ "Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet::RankTooBig", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1TimeSeriesSet_1_1RankTooBig.html", null ],
+      [ "Antares::Optimization::VariablesBulkAddition::BoundsSizeMismatch", "classAntares_1_1Optimization_1_1VariablesBulkAddition_1_1BoundsSizeMismatch.html", null ]
     ] ],
     [ "Antares::Component::Datagrid::Selection::IOperator", "classAntares_1_1Component_1_1Datagrid_1_1Selection_1_1IOperator.html", [
       [ "Antares::Component::Datagrid::Selection::Average", "classAntares_1_1Component_1_1Datagrid_1_1Selection_1_1Average.html", null ],
@@ -1242,7 +1244,8 @@ var hierarchy =
     ] ],
     [ "Antares::Toolbox::Jobs::Part", "classAntares_1_1Toolbox_1_1Jobs_1_1Part.html", null ],
     [ "Antares::Data::PartHydro", "classAntares_1_1Data_1_1PartHydro.html", null ],
-    [ "Antares::Optimization::PartialKey", "structAntares_1_1Optimization_1_1PartialKey.html", null ],
+    [ "Antares::Optimization::PartialKey", "classAntares_1_1Optimization_1_1PartialKey.html", null ],
+    [ "Antares::Optimization::PartialKeyHash", "classAntares_1_1Optimization_1_1PartialKeyHash.html", null ],
     [ "Antares::Data::PartRenewable", "classAntares_1_1Data_1_1PartRenewable.html", null ],
     [ "Antares::Data::PartThermal", "classAntares_1_1Data_1_1PartThermal.html", null ],
     [ "PathList", "classPathList.html", null ],
