@@ -45,7 +45,7 @@ namespace Antares::Optimization
  */
 struct LinearConstraint
 {
-    std::unordered_map<FullKey, double, FullKeyHash> coef_per_var;
+    FullKeyMap coef_per_var;
     double lb = -std::numeric_limits<double>::infinity();
     double ub = std::numeric_limits<double>::infinity();
     unsigned int timeStep = 0;
