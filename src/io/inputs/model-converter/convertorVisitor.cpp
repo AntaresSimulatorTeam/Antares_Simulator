@@ -65,10 +65,13 @@ public:
     std::any visitShiftMuldiv(ExprParser::ShiftMuldivContext* context) override;
     std::any visitRightMuldiv(ExprParser::RightMuldivContext* context) override;
     std::any visitRightExpression(ExprParser::RightExpressionContext* context) override;
+    std::any visitTimeShiftExpr(ExprParser::TimeShiftExprContext* context) override;
 
 private:
     Expressions::Registry<Node>& registry_;
     const YmlModel::Model& model_;
+
+    std::any buildShiftNode(Node* shifted_expr, ExprParser::ShiftContext* context) const;
 };
 
 Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
@@ -237,15 +240,25 @@ std::any ConvertorVisitor::visitTimeIndex([[maybe_unused]] ExprParser::TimeIndex
     return static_cast<Node*>(registry_.create<TimeIndexNode>(expr, index));
 }
 
-std::any ConvertorVisitor::visitTimeShift([[maybe_unused]] ExprParser::TimeShiftContext* context)
+std::any ConvertorVisitor::buildShiftNode(Node* shifted_expr,
+                                          ExprParser::ShiftContext* context) const
 {
-    Node* shifted_expr = convertIdentifier(context->IDENTIFIER()->getText());
-    auto time_shift = std::stoi(context->shift()->shift_expr()->getText());
+    auto time_shift = std::stoi(context->shift_expr()->getText());
     if (time_shift == 0)
     {
         return shifted_expr;
     }
     return static_cast<Node*>(registry_.create<TimeShiftNode>(shifted_expr, time_shift));
+}
+
+std::any ConvertorVisitor::visitTimeShift([[maybe_unused]] ExprParser::TimeShiftContext* context)
+{
+    return buildShiftNode(convertIdentifier(context->IDENTIFIER()->getText()), context->shift());
+}
+
+std::any ConvertorVisitor::visitTimeShiftExpr(ExprParser::TimeShiftExprContext* context)
+{
+    return buildShiftNode(std::any_cast<Node*>(context->expr()->accept(this)), context->shift());
 }
 
 // TODO implement this

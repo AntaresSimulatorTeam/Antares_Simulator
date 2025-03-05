@@ -30,6 +30,7 @@ expr
     | IDENTIFIER '(' expr ')'                  # function
     | IDENTIFIER '[' shift ']'                 # timeShift
     | IDENTIFIER '[' expr  ']'                 # timeIndex
+    | '(' expr ')' '[' shift ']'               # timeShiftExpr
     ;
 
 atom
