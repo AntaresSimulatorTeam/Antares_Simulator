@@ -89,7 +89,7 @@ std::vector<Study::SystemModel::PortType> convertTypes(const IO::Inputs::YmlMode
         std::vector<Study::SystemModel::PortField> fields;
         for (const auto& field: portType.fields)
         {
-            fields.emplace_back(Study::SystemModel::PortField{field});
+            fields.emplace_back(field);
         }
 
         // Can't have port types with the same ID
