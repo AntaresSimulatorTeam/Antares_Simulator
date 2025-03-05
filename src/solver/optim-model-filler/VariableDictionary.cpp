@@ -205,18 +205,16 @@ VariableDictionary::Value& VariableDictionary::operator()(const std::string& com
 
 VariableDictionary::Value VariableDictionary::operator()(const FullKey& fullKey) const
 {
-    const auto& partialKey = fullKey.getPartialKey();
-    return this->operator()(partialKey.getComponent(),
-                            partialKey.getVariable(),
+    return this->operator()(fullKey.getComponent(),
+                            fullKey.getVariable(),
                             fullKey.getScenario().value_or(0),
                             fullKey.getTimestep().value_or(0));
 }
 
 VariableDictionary::Value& VariableDictionary::operator()(const FullKey& fullKey)
 {
-    const auto& partialKey = fullKey.getPartialKey();
-    return this->operator()(partialKey.getComponent(),
-                            partialKey.getVariable(),
+    return this->operator()(fullKey.getComponent(),
+                            fullKey.getVariable(),
                             fullKey.getScenario().value_or(0),
                             fullKey.getTimestep().value_or(0));
 }
