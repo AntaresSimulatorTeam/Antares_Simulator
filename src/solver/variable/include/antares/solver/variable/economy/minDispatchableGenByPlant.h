@@ -131,9 +131,7 @@ public:
         pValuesForTheCurrentYear.resize(pNbYearsParallel);
 
         // Get the area
-        nbClusters_ = std::ranges::count_if(area->thermal.list.all(),
-                                            [](auto c)
-                                            { return c->isEnabled() && !c->isMustRun(); });
+        nbClusters_ = area->thermal.list.enabledCount();
         if (nbClusters_)
         {
             AncestorType::pResults.resize(nbClusters_);
@@ -216,15 +214,14 @@ public:
     {
         auto& area = state.area;
         auto& thermal = state.thermal;
-        unsigned indexCluster = 0;
-        for (auto& cluster: area->thermal.list.each_enabled_and_not_mustrun())
+        for (auto& cluster: area->thermal.list.each_enabled())
         {
             double minGen = cluster->PthetaInf[state.hourInTheYear];
             double production = thermal[area->index]
                                   .thermalClustersProductions[cluster->enabledIndex];
 
-            pValuesForTheCurrentYear[numSpace][indexCluster++].hour[state.hourInTheYear] += std::
-              min(production, minGen);
+            pValuesForTheCurrentYear[numSpace][cluster->enabledIndex].hour[state.hourInTheYear]
+              += std::min(production, minGen);
         }
 
         // Next variable
@@ -258,13 +255,12 @@ public:
             const auto& thermal = results.data.area->thermal;
 
             // Write the data for the current year
-            unsigned indexCluster = 0;
-            for (auto& cluster: thermal.list.each_enabled_and_not_mustrun())
+            for (auto& cluster: thermal.list.each_enabled())
             {
                 // Write the data for the current year
                 results.variableCaption = cluster->name(); // VCardType::Caption();
                 results.variableUnit = VCardType::Unit();
-                pValuesForTheCurrentYear[numSpace][indexCluster++]
+                pValuesForTheCurrentYear[numSpace][cluster->enabledIndex]
                   .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
             }
         }
