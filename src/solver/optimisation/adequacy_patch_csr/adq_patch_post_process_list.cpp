@@ -37,8 +37,6 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(const AdqPatchParams& adqPatchP
     post_process_list.push_back(
       std::make_unique<DispatchableMarginPostProcessCmd>(problemeHebdo_, numSpace_, areas));
     // Here a post process particular to adq patch
-    post_process_list.push_back(
-      std::make_unique<HydroLevelsUpdatePostProcessCmd>(problemeHebdo_, areas, false, false));
     post_process_list.push_back(std::make_unique<RemixHydroPostProcessCmd>(problemeHebdo_,
                                                                            areas,
                                                                            sheddingPolicy,
@@ -52,8 +50,6 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(const AdqPatchParams& adqPatchP
       std::make_unique<DTGnettingAfterCSRcmd>(problemeHebdo_, areas, numSpace));
     post_process_list.push_back(
       std::make_unique<UpdateMrgPriceAfterCSRcmd>(problemeHebdo_, areas, numSpace));
-    post_process_list.push_back(
-      std::make_unique<HydroLevelsUpdatePostProcessCmd>(problemeHebdo_, areas, true, false));
     post_process_list.push_back(
       std::make_unique<InterpolateWaterValuePostProcessCmd>(problemeHebdo_, areas, calendar));
     post_process_list.push_back(

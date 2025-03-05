@@ -230,6 +230,11 @@ struct Fixture
         fs::remove(folder / "cost-variation-withdrawal.txt");
     }
 
+    bool loadFromFolder(StudyVersion version)
+    {
+        return series.loadFromFolder(folder, version);
+    }
+
     fs::path folder = getFolder();
 
     ShortTermStorage::Series series;
@@ -249,79 +254,109 @@ BOOST_AUTO_TEST_SUITE(s)
 BOOST_FIXTURE_TEST_CASE(check_vector_sizes, Fixture)
 {
     resizeFillVectors(series, 0.0, 12);
-    BOOST_CHECK(!series.validate());
+    BOOST_CHECK(!series.validate("", StudyVersion::latest()));
 
     resizeFillVectors(series, 0.0, 8760);
-    BOOST_CHECK(series.validate());
+    BOOST_CHECK(series.validate("", StudyVersion::latest()));
 }
 
 BOOST_FIXTURE_TEST_CASE(check_series_folder_loading, Fixture)
 {
     createFileSeries(1.0, 8760);
 
-    BOOST_CHECK(series.loadFromFolder(folder));
-    BOOST_CHECK(series.validate());
+    BOOST_CHECK(loadFromFolder(StudyVersion::latest()));
+    BOOST_CHECK(series.validate("", StudyVersion::latest()));
     BOOST_CHECK(series.inflows[0] == 1 && series.maxInjectionModulation[8759] == 1
                 && series.upperRuleCurve[1343] == 1 && series.costVariationInjection[0] == 1
                 && series.costVariationWithdrawal[0] == 1);
+}
+
+BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_880, Fixture)
+{
+    createFileSeries(1.0, 8760);
+
+    BOOST_CHECK(loadFromFolder(StudyVersion(8, 8)));
+    BOOST_CHECK(series.validate("", StudyVersion(8, 8)));
+    BOOST_CHECK(series.inflows[0] == 1 && series.maxInjectionModulation[8759] == 1
+                && series.upperRuleCurve[1343]);
+
+    // New elements should NOT be loaded if the study version is < 9.2
+    BOOST_CHECK(series.costVariationInjection.empty());
+    BOOST_CHECK(series.costVariationWithdrawal.empty());
+}
+
+BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_different_values_880, Fixture)
+{
+    createFileSeries(8760);
+
+    BOOST_CHECK(loadFromFolder(StudyVersion(8, 8)));
+    BOOST_CHECK(series.validate("", StudyVersion(8, 8)));
 }
 
 BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_different_values, Fixture)
 {
     createFileSeries(8760);
 
-    BOOST_CHECK(series.loadFromFolder(folder));
-    BOOST_CHECK(series.validate());
+    BOOST_CHECK(loadFromFolder(StudyVersion::latest()));
+    BOOST_CHECK(series.validate("", StudyVersion::latest()));
 }
 
 BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_negative_value, Fixture)
 {
     createFileSeries(-247.0, 8760);
 
-    BOOST_CHECK(series.loadFromFolder(folder));
-    BOOST_CHECK(!series.validate());
+    BOOST_CHECK(loadFromFolder(StudyVersion::latest()));
+    BOOST_CHECK(!series.validate("", StudyVersion::latest()));
 }
 
 BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_too_big, Fixture)
 {
     createFileSeries(1.0, 9000);
 
-    BOOST_CHECK(series.loadFromFolder(folder));
-    BOOST_CHECK(series.validate());
+    BOOST_CHECK(loadFromFolder(StudyVersion::latest()));
+    BOOST_CHECK(series.validate("", StudyVersion::latest()));
+}
+
+BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_too_big_880, Fixture)
+{
+    createFileSeries(1.0, 9000);
+
+    BOOST_CHECK(loadFromFolder(StudyVersion(8, 8)));
+    BOOST_CHECK(series.validate("", StudyVersion(8, 8)));
 }
 
 BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_too_small, Fixture)
 {
     createFileSeries(1.0, 100);
 
-    BOOST_CHECK(!series.loadFromFolder(folder));
-    BOOST_CHECK(!series.validate());
+    BOOST_CHECK(!loadFromFolder(StudyVersion::latest()));
+    BOOST_CHECK(!series.validate("", StudyVersion::latest()));
 }
 
 BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_empty, Fixture)
 {
-    BOOST_CHECK(series.loadFromFolder(folder));
-    BOOST_CHECK(!series.validate());
+    BOOST_CHECK(loadFromFolder(StudyVersion::latest()));
+    BOOST_CHECK(!series.validate("", StudyVersion::latest()));
 }
 
 BOOST_FIXTURE_TEST_CASE(check_series_vector_fill, Fixture)
 {
     series.fillDefaultSeriesIfEmpty();
-    BOOST_CHECK(series.validate());
+    BOOST_CHECK(series.validate("", StudyVersion::latest()));
 }
 
 BOOST_FIXTURE_TEST_CASE(check_cluster_series_vector_fill, Fixture)
 {
-    BOOST_CHECK(cluster.loadSeries(folder));
-    BOOST_CHECK(cluster.series->validate());
+    BOOST_CHECK(cluster.loadSeries(folder, StudyVersion::latest()));
+    BOOST_CHECK(cluster.series->validate("", StudyVersion::latest()));
 }
 
 BOOST_FIXTURE_TEST_CASE(check_cluster_series_load_vector, Fixture)
 {
     createFileSeries(0.5, 8760);
 
-    BOOST_CHECK(cluster.loadSeries(folder));
-    BOOST_CHECK(cluster.series->validate());
+    BOOST_CHECK(cluster.loadSeries(folder, StudyVersion::latest()));
+    BOOST_CHECK(cluster.series->validate("", StudyVersion::latest()));
     BOOST_CHECK(cluster.series->maxWithdrawalModulation[0] == 0.5
                 && cluster.series->inflows[2756] == 0.5
                 && cluster.series->lowerRuleCurve[6392] == 0.5
@@ -449,8 +484,8 @@ BOOST_FIXTURE_TEST_CASE(check_series_save, Fixture)
     BOOST_CHECK(series.saveToFolder(folder.string()));
     resizeFillVectors(series, 0, 0);
 
-    BOOST_CHECK(series.loadFromFolder(folder));
-    BOOST_CHECK(series.validate());
+    BOOST_CHECK(loadFromFolder(StudyVersion::latest()));
+    BOOST_CHECK(series.validate("", StudyVersion::latest()));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

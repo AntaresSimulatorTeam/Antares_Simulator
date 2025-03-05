@@ -29,7 +29,6 @@ void H2O_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES* DonneesMensuelle
 {
     const std::vector<double>& TurbineMax = DonneesMensuelles->TurbineMax;
     const std::vector<double>& TurbineMin = DonneesMensuelles->TurbineMin;
-    const std::vector<double>& TurbineCible = DonneesMensuelles->TurbineCible;
     std::vector<double>& Turbine = DonneesMensuelles->Turbine;
 
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
@@ -53,7 +52,7 @@ void H2O_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES* DonneesMensuelle
         int Var = CorrespondanceDesVariables.NumeroDeVariableTurbine[Pdt];
         Xmax[Var] = TurbineMax[Pdt];
 
-        Xmin[Var] = std::min(TurbineMax[Pdt], std::max(TurbineCible[Pdt], TurbineMin[Pdt]));
+        Xmin[Var] = std::min(TurbineMax[Pdt], TurbineMin[Pdt]);
 
         AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = &(Turbine[Pdt]);
     }

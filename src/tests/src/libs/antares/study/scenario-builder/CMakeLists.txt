@@ -24,3 +24,12 @@ add_boost_test(test-sc-builder-file-save
   "${src_tests_src_libs_antares_study}"
   LIBS
   model_antares)
+
+add_boost_test(test-sc-builder-get-set
+  SRC test-sc-builder-get-set.cpp
+  INCLUDE
+  "${src_libs_antares_study}"
+  "${src_libs_antares_study}/scenario-builder"
+  "${src_tests_src_libs_antares_study}"
+  LIBS
+  model_antares)
