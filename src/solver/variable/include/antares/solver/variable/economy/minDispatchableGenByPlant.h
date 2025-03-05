@@ -29,7 +29,7 @@ struct VCardMinDispatchableGenByPlant
     //! Caption
     static std::string Caption()
     {
-        return "Min DTG by plant";
+        return "MIN DTG by plant";
     }
 
     //! Unit
@@ -44,7 +44,7 @@ struct VCardMinDispatchableGenByPlant
         return "Min power by cluster";
     }
 
-    //! The expecte results
+    //! For synthesis
     typedef Results<R::AllYears::Average< // The average values throughout all years
       >>
       ResultsType;
