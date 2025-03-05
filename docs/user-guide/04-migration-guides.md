@@ -21,6 +21,10 @@ If the user provides any of the key/values below
 - `other preferences/initial-reservoir-levels = hot start`
 the simulation will fail with a warning. We recommend removing these properties from `settings/generaldata.ini`. Other values (e.g `adequacy patch/enable-first-step = false`) will be ignored.
 
+#### Hydraulic reservoirs / long-term storage
+- In existing file `input/hydro/hydro.ini`, add property `overflow spilled cost difference` for each area (double, default value = 1.). This value describes the additionnal cost of overflow relative to the cost of spillage for the area.
+- In file `settings/generaldata.ini`, for property `other-preferences/shedding-policy`, add value `accurate shave peaks`. This new value becomes the default value (previously `shave peaks`).
+
 #### Short-term storages
 
 - Added properties:
@@ -55,7 +59,7 @@ By convention, `year` start at 0 and `value` must be in interval [0, 1].
 
 #### Compatibility flag for hydro maximal power
 
-In file settings/generaldata.ini, in new section `other preferences`, add new property `hydro-pmax` with possible values
+In file settings/generaldata.ini, in new section `compatibility`, add new property `hydro-pmax` with possible values
 - `daily` (default, legacy) 
 - `hourly` (new).
 

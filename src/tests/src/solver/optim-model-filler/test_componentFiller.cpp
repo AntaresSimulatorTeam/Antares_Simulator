@@ -27,6 +27,7 @@
 #include "antares/expressions/visitors/TimeIndex.h"
 #include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
+#include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/study/system-model/component.h"
@@ -74,12 +75,31 @@ struct LinearProblemBuildingFixture
     Registry<Node> nodes;
     vector<Component> components;
     unique_ptr<ILinearProblem> pb;
+    LinearProblemData dummy_data_;
 
     void createModel(string modelId,
                      vector<string> parameterIds,
                      vector<VariableData> variablesData,
                      vector<ConstraintData> constraintsData,
-                     Node* objective = nullptr);
+                     Node* objective = nullptr)
+    {
+        vector<Parameter> parameters;
+        for (auto parameter_id: std::move(parameterIds))
+        {
+            parameters.push_back(Parameter(parameter_id, TimeDependent::NO, ScenarioDependent::NO));
+        }
+        createModelWithSystemModelParameter(std::move(modelId),
+                                            parameters,
+                                            std::move(variablesData),
+                                            std::move(constraintsData),
+                                            objective);
+    }
+
+    void createModelWithSystemModelParameter(string modelId,
+                                             vector<Parameter>,
+                                             vector<VariableData> variablesData,
+                                             vector<ConstraintData> constraintsData,
+                                             Node* objective = nullptr);
 
     void createModelWithOneFloatVar(const string& modelId,
                                     const vector<string>& parameterIds,
@@ -130,7 +150,12 @@ struct LinearProblemBuildingFixture
         return nodes.create<NegationNode>(node);
     }
 
-    void buildLinearProblem(FillContext& time_scenario_ctx);
+    void buildLinearProblem(FillContext& time_scenario_ctx, LinearProblemData& dummy_data);
+
+    void buildLinearProblem(FillContext& time_scenario_ctx)
+    {
+        buildLinearProblem(time_scenario_ctx, dummy_data_);
+    }
 
     void buildLinearProblem()
     {
@@ -139,11 +164,12 @@ struct LinearProblemBuildingFixture
     }
 };
 
-void LinearProblemBuildingFixture::createModel(string modelId,
-                                               vector<string> parameterIds,
-                                               vector<VariableData> variablesData,
-                                               vector<ConstraintData> constraintsData,
-                                               Node* objective)
+void LinearProblemBuildingFixture::createModelWithSystemModelParameter(
+  string modelId,
+  vector<Parameter> parameters,
+  vector<VariableData> variablesData,
+  vector<ConstraintData> constraintsData,
+  Node* objective)
 {
     auto createExpression = [this](Node* node)
     {
@@ -152,20 +178,15 @@ void LinearProblemBuildingFixture::createModel(string modelId,
         return expression;
     };
 
-    vector<Parameter> parameters;
-    for (auto parameter_id: parameterIds)
-    {
-        parameters.push_back(Parameter(parameter_id, TimeDependent::NO, ScenarioDependent::NO));
-    }
     vector<Variable> variables;
     for (auto [id, type, lb, ub, timeDependent, scenarioDependent]: variablesData)
     {
-        variables.push_back(move(Variable(id,
-                                          createExpression(lb),
-                                          createExpression(ub),
-                                          type,
-                                          fromBool<TimeDependent>(timeDependent),
-                                          fromBool<ScenarioDependent>(scenarioDependent))));
+        variables.emplace_back(id,
+                               createExpression(lb),
+                               createExpression(ub),
+                               type,
+                               fromBool<TimeDependent>(timeDependent),
+                               fromBool<ScenarioDependent>(scenarioDependent));
     }
     vector<Constraint> constraints;
     for (auto [id, expression]: constraintsData)
@@ -200,7 +221,8 @@ void LinearProblemBuildingFixture::createComponent(
     components.push_back(move(component));
 }
 
-void LinearProblemBuildingFixture::buildLinearProblem(FillContext& time_scenario_ctx)
+void LinearProblemBuildingFixture::buildLinearProblem(FillContext& time_scenario_ctx,
+                                                      LinearProblemData& dummy_data)
 {
     vector<unique_ptr<ComponentFiller>> fillers;
     vector<LinearProblemFiller*> fillers_ptr;
@@ -217,7 +239,6 @@ void LinearProblemBuildingFixture::buildLinearProblem(FillContext& time_scenario
       false,
       "sirius");
     LinearProblemBuilder linear_problem_builder(fillers_ptr);
-    LinearProblemData dummy_data;
 
     linear_problem_builder.build(*pb, dummy_data, time_scenario_ctx);
 }
@@ -233,7 +254,7 @@ BOOST_AUTO_TEST_CASE(var_with_literal_bounds_to_filler__problem_contains_one_var
     BOOST_CHECK_EQUAL(pb->variableCount(), 1);
     BOOST_CHECK_EQUAL(pb->constraintCount(), 0);
     auto* var = pb->getVariable("some_component.var1");
-    BOOST_CHECK(var);
+    BOOST_REQUIRE(var);
     BOOST_CHECK_EQUAL(var->getLb(), -5);
     BOOST_CHECK_EQUAL(var->getUb(), 10);
     BOOST_CHECK(!var->isInteger());
@@ -259,7 +280,7 @@ BOOST_AUTO_TEST_CASE(ten_timesteps_var_with_literal_bounds_to_filler__problem_co
     BOOST_CHECK_EQUAL(pb->constraintCount(), 0);
     for (unsigned int i = 0; i < nb_var; i++)
     {
-        auto* var = pb->getVariable("some_component.var1_" + to_string(i));
+        auto* var = pb->getVariable("some_component.var1_t" + to_string(i));
         BOOST_REQUIRE(var);
         BOOST_CHECK_EQUAL(var->getLb(), -5);
         BOOST_CHECK_EQUAL(var->getUb(), 10);
@@ -301,13 +322,13 @@ BOOST_AUTO_TEST_CASE(two_variables_given_to_different_fillers__LP_contains_the_t
     BOOST_CHECK_EQUAL(pb->variableCount(), 2);
 
     auto* var1 = pb->getVariable("component_1.var1");
-    BOOST_CHECK(var1);
+    BOOST_REQUIRE(var1);
     BOOST_CHECK(!var1->isInteger());
     BOOST_CHECK_EQUAL(var1->getLb(), -1.);
     BOOST_CHECK_EQUAL(var1->getUb(), 6.);
 
     auto* var2 = pb->getVariable("component_2.var2");
-    BOOST_CHECK(var2);
+    BOOST_REQUIRE(var2);
     BOOST_CHECK(!var2->isInteger());
     BOOST_CHECK_EQUAL(var2->getLb(), -3.);
     BOOST_CHECK_EQUAL(var2->getUb(), 2.);
@@ -328,13 +349,13 @@ BOOST_AUTO_TEST_CASE(
     BOOST_CHECK_EQUAL(pb->variableCount(), 2 * 10);
     for (auto i = 0; i < nb_var; i++)
     {
-        auto* var1 = pb->getVariable("component_1.var1_" + to_string(i));
+        auto* var1 = pb->getVariable("component_1.var1_t" + to_string(i));
         BOOST_REQUIRE(var1);
         BOOST_CHECK(!var1->isInteger());
         BOOST_CHECK_EQUAL(var1->getLb(), -1.);
         BOOST_CHECK_EQUAL(var1->getUb(), 6.);
 
-        auto* var2 = pb->getVariable("component_2.var2_" + to_string(i));
+        auto* var2 = pb->getVariable("component_2.var2_t" + to_string(i));
         BOOST_REQUIRE(var2);
         BOOST_CHECK(!var2->isInteger());
         BOOST_CHECK_EQUAL(var2->getLb(), -3.);
@@ -357,7 +378,7 @@ BOOST_AUTO_TEST_CASE(var_whose_bounds_are_parameters_given_to_component__problem
     BOOST_CHECK_EQUAL(pb->variableCount(), 1);
     BOOST_CHECK_EQUAL(pb->constraintCount(), 0);
     auto* var = pb->getVariable("componentToto.var1");
-    BOOST_CHECK(var);
+    BOOST_REQUIRE(var);
     BOOST_CHECK(var->isInteger());
     BOOST_CHECK_EQUAL(var->getLb(), -3.);
     BOOST_CHECK_EQUAL(var->getUb(), 4.);
@@ -389,17 +410,17 @@ BOOST_AUTO_TEST_CASE(three_different_vars__exist)
     BOOST_CHECK_EQUAL(pb->variableCount(), 3);
     BOOST_CHECK_EQUAL(pb->constraintCount(), 0);
     auto* is_cluster_on = pb->getVariable("thermalCluster1.is_cluster_on");
-    BOOST_CHECK(is_cluster_on);
+    BOOST_REQUIRE(is_cluster_on);
     BOOST_CHECK(is_cluster_on->isInteger());
     BOOST_CHECK_EQUAL(is_cluster_on->getLb(), 0);
     BOOST_CHECK_EQUAL(is_cluster_on->getUb(), 1);
     auto* n_started_units = pb->getVariable("thermalCluster1.n_started_units");
-    BOOST_CHECK(n_started_units);
+    BOOST_REQUIRE(n_started_units);
     BOOST_CHECK(n_started_units->isInteger());
     BOOST_CHECK_EQUAL(n_started_units->getLb(), 0);
     BOOST_CHECK_EQUAL(n_started_units->getUb(), 17);
     auto* p_per_unit = pb->getVariable("thermalCluster1.p_per_unit");
-    BOOST_CHECK(p_per_unit);
+    BOOST_REQUIRE(p_per_unit);
     BOOST_CHECK(!p_per_unit->isInteger());
     BOOST_CHECK_EQUAL(p_per_unit->getLb(), 100.248);
     BOOST_CHECK_EQUAL(p_per_unit->getUb(), 950.6784);
@@ -415,12 +436,12 @@ BOOST_AUTO_TEST_CASE(one_model_two_components__dont_clash)
     BOOST_CHECK_EQUAL(pb->variableCount(), 2);
     BOOST_CHECK_EQUAL(pb->constraintCount(), 0);
     auto* c1_var1 = pb->getVariable("component_1.var1");
-    BOOST_CHECK(c1_var1);
+    BOOST_REQUIRE(c1_var1);
     BOOST_CHECK(!c1_var1->isInteger());
     BOOST_CHECK_EQUAL(c1_var1->getLb(), -100);
     BOOST_CHECK_EQUAL(c1_var1->getUb(), 15);
     auto* c2_var1 = pb->getVariable("component_2.var1");
-    BOOST_CHECK(c2_var1);
+    BOOST_REQUIRE(c2_var1);
     BOOST_CHECK(!c2_var1->isInteger());
     BOOST_CHECK_EQUAL(c2_var1->getLb(), -100);
     BOOST_CHECK_EQUAL(c2_var1->getUb(), 48);
@@ -445,12 +466,12 @@ BOOST_AUTO_TEST_CASE(ct_one_var__pb_contains_the_ct)
     buildLinearProblem();
 
     auto var = pb->getVariable("componentToto.var1");
-    BOOST_CHECK(var);
+    BOOST_REQUIRE(var);
     BOOST_CHECK(var->isInteger());
     BOOST_CHECK_EQUAL(pb->variableCount(), 1);
     BOOST_CHECK_EQUAL(pb->constraintCount(), 1);
     auto ct = pb->getConstraint("componentToto.ct1");
-    BOOST_CHECK(ct);
+    BOOST_REQUIRE(ct);
     BOOST_CHECK_EQUAL(ct->getLb(), -pb->infinity());
     BOOST_CHECK_EQUAL(ct->getUb(), 3);
     BOOST_CHECK_EQUAL(ct->getCoefficient(var), 1);
@@ -485,10 +506,87 @@ BOOST_AUTO_TEST_CASE(ct_with_ten_vars__pb_contains_ten_ct)
         BOOST_REQUIRE(ct);
         BOOST_CHECK_EQUAL(ct->getLb(), -pb->infinity());
         BOOST_CHECK_EQUAL(ct->getUb(), 3);
-        auto var = pb->getVariable("componentToto.var1_" + to_string(i));
+        auto var = pb->getVariable("componentToto.var1_t" + to_string(i));
         BOOST_REQUIRE(var);
         BOOST_CHECK(var->isInteger());
         BOOST_CHECK_EQUAL(ct->getCoefficient(var), 1);
+    }
+}
+
+/**
+ * @brief Test case for ensuring that variable bounds are correctly set using a time-series.
+ *
+ * This test ensures that:
+ * - A variable `var1` has bounds that are set according to the given time-series values.
+ * - A constraint `5 - var1 <= 3` is correctly implemented.
+ * - A linear problem is built with time-series constraints.
+ * - The problem contains the expected number of variables and constraints.
+ * - Each constraint is correctly linked to its corresponding variable.
+ *
+ * @details
+ * Steps performed in the test:
+ * 1. Create a variable `var1` which varies in time.
+ * 2. Define a constraint `5 - var1 <= 3`.
+ * 3. Initialize a model with system model parameters including time-dependent bounds.
+ * 4. Create a component using a time-series parameter.
+ * 5. Build the linear problem using time-series data.
+ * 6. Verify that the number of variables and constraints matches expectations.
+ * 7. Validate each constraint's bounds, coefficient, and associated variable properties.
+ * 8. Ensure that variable bounds match the time step values.
+ */
+BOOST_AUTO_TEST_CASE(ct_with_time_series_variable_bounds)
+{
+    // 5 - var1 <= 3
+    auto var_node = variable("var1",
+                             Antares::Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY);
+    auto three = literal(3);
+    auto ct_node = nodes.create<LessThanOrEqualNode>(nodes.create<SubtractionNode>(literal(5),
+                                                                                   var_node),
+                                                     three);
+
+    createModelWithSystemModelParameter(
+      "model",
+      {Parameter{"bounds", TimeDependent::YES, ScenarioDependent::NO}},
+      {{"var1",
+        ValueType::BOOL,
+        parameter("bounds", Visitors::TimeIndex::VARYING_IN_TIME_ONLY),
+        parameter("bounds", Visitors::TimeIndex::VARYING_IN_TIME_ONLY),
+        true,
+        false}},
+      {{"ct1", ct_node}});
+
+    createComponent(
+      "model",
+      "componentToto",
+      {build_context_parameter_with("bounds", "bounds", Visitors::ParameterType::TIMESERIE)});
+
+    const vector<unsigned int> timeSteps{1, 2};
+    FillContext ctx{timeSteps.at(0), timeSteps.at(1)};
+
+    auto bounds_time_series = std::make_unique<TimeSeriesSet>("bounds", 3);
+    // setting 3 hours (including h 1 and 2)
+    bounds_time_series->add({1. * timeSteps.at(0), 1. * timeSteps.at(0), 1. * timeSteps.at(1)});
+    LinearProblemData data;
+    data.addDataSeries(std::move(bounds_time_series));
+
+    buildLinearProblem(ctx, data);
+    const auto nb_var = ctx.getNumberOfTimestep(); // = 2
+
+    BOOST_CHECK_EQUAL(pb->variableCount(), 2);
+    BOOST_CHECK_EQUAL(pb->constraintCount(), 2);
+
+    for (const auto t: timeSteps)
+    {
+        auto ct = pb->getConstraint("componentToto.ct1_" + to_string(t));
+        BOOST_REQUIRE(ct);
+        BOOST_CHECK_EQUAL(ct->getLb(), -pb->infinity());
+        BOOST_CHECK_EQUAL(ct->getUb(), -5 + 3);
+        auto var = pb->getVariable("componentToto.var1_t" + to_string(t));
+        BOOST_REQUIRE(var);
+        BOOST_CHECK(var->isInteger());
+        BOOST_CHECK_EQUAL(ct->getCoefficient(var), -1);
+        BOOST_CHECK_EQUAL(var->getLb(), t);
+        BOOST_CHECK_EQUAL(var->getUb(), t);
     }
 }
 
@@ -516,6 +614,7 @@ BOOST_AUTO_TEST_CASE(ct_one_var_with_coef__pb_contains_the_ct)
     BOOST_CHECK_EQUAL(pb->variableCount(), 1);
     BOOST_CHECK_NO_THROW(pb->getVariable("componentTata.var__1"));
     auto var = pb->getVariable("componentTata.var__1");
+    BOOST_REQUIRE(var);
     BOOST_CHECK_EQUAL(pb->constraintCount(), 1);
     BOOST_CHECK_NO_THROW(pb->getConstraint("componentTata.ct_1"));
     auto ct = pb->getConstraint("componentTata.ct_1");
@@ -569,8 +668,12 @@ BOOST_AUTO_TEST_CASE(ct_with_two_vars)
     BOOST_CHECK(ct);
     BOOST_CHECK_EQUAL(ct->getLb(), 77);
     BOOST_CHECK_EQUAL(ct->getUb(), 77);
-    BOOST_CHECK_EQUAL(ct->getCoefficient(pb->getVariable("my_component.v1")), -23);
-    BOOST_CHECK_EQUAL(ct->getCoefficient(pb->getVariable("my_component.v2")), 3);
+    auto* cv1 = pb->getVariable("my_component.v1");
+    BOOST_REQUIRE(cv1);
+    BOOST_CHECK_EQUAL(ct->getCoefficient(cv1), -23);
+    auto* cv2 = pb->getVariable("my_component.v2");
+    BOOST_REQUIRE(cv2);
+    BOOST_CHECK_EQUAL(ct->getCoefficient(cv2), 3);
 }
 
 BOOST_AUTO_TEST_CASE(two_constraints__they_are_created)
@@ -606,16 +709,31 @@ BOOST_AUTO_TEST_CASE(two_constraints__they_are_created)
     BOOST_CHECK(ct1);
     BOOST_CHECK_EQUAL(ct1->getLb(), -numeric_limits<float>::infinity());
     BOOST_CHECK_EQUAL(ct1->getUb(), 2);
-    BOOST_CHECK_EQUAL(ct1->getCoefficient(pb->getVariable("my_component.v1")), 3);
-    BOOST_CHECK_EQUAL(ct1->getCoefficient(pb->getVariable("my_component.v2")), -1);
+
+    {
+        auto* cv1 = pb->getVariable("my_component.v1");
+        BOOST_REQUIRE(cv1);
+        BOOST_CHECK_EQUAL(ct1->getCoefficient(cv1), 3);
+        auto* cv2 = pb->getVariable("my_component.v2");
+        BOOST_REQUIRE(cv2);
+        BOOST_CHECK_EQUAL(ct1->getCoefficient(cv2), -1);
+    }
 
     BOOST_CHECK_NO_THROW(pb->getConstraint("my_component.ct2"));
     auto ct2 = pb->getConstraint("my_component.ct2");
-    BOOST_CHECK(ct2);
+    BOOST_REQUIRE(ct2);
     BOOST_CHECK_EQUAL(ct2->getLb(), -numeric_limits<float>::infinity());
     BOOST_CHECK_EQUAL(ct2->getUb(), 0);
-    BOOST_CHECK_EQUAL(ct2->getCoefficient(pb->getVariable("my_component.v1")), -0.5);
-    BOOST_CHECK_EQUAL(ct2->getCoefficient(pb->getVariable("my_component.v2")), 1);
+
+    {
+        auto* cv1 = pb->getVariable("my_component.v1");
+        BOOST_REQUIRE(cv1);
+        BOOST_CHECK_EQUAL(ct2->getCoefficient(cv1), -0.5);
+
+        auto* cv2 = pb->getVariable("my_component.v2");
+        BOOST_REQUIRE(cv2);
+        BOOST_CHECK_EQUAL(ct2->getCoefficient(cv2), 1);
+    }
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -650,7 +768,7 @@ BOOST_AUTO_TEST_CASE(one_time_dependent_var_with_objective)
     BOOST_CHECK_EQUAL(pb->variableCount(), nb_var);
     for (auto i = 0; i < nb_var; i++)
     {
-        const auto var_name = "componentA.x_" + to_string(i);
+        const auto var_name = "componentA.x_t" + to_string(i);
         BOOST_CHECK_NO_THROW(pb->getVariable(var_name));
         BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(pb->getVariable(var_name)), 1);
     }
@@ -855,105 +973,113 @@ public:
 BOOST_AUTO_TEST_CASE(Constructor_ValidIndices)
 {
     MockLinearProblem lp;
-    BOOST_CHECK_NO_THROW(VariablesBulkAddition(lp, 0, 5));
-}
-
-// de-comment if checkIndices is done in VariablesBulkAddition's ctor
-// BOOST_AUTO_TEST_CASE(Constructor_InvalidIndices)
-// {
-//     MockLinearProblem lp;
-//     BOOST_CHECK_THROW(VariablesBulkAddition(lp, 5, 0), std::invalid_argument);
-// }
-
-BOOST_AUTO_TEST_CASE(GetCountTest)
-{
-    MockLinearProblem lp;
-    VariablesBulkAddition vba(lp, 2, 6);
-    BOOST_CHECK_EQUAL(vba.getCount(), 5);
+    VariableDictionary vdict;
+    BOOST_CHECK_NO_THROW(VariablesBulkAddition(lp, vdict));
 }
 
 BOOST_AUTO_TEST_CASE(AddVariable_SingleBounds)
 {
     MockLinearProblem lp;
-    VariablesBulkAddition vba(lp, 0, 2);
-    auto vars = vba.addVariable(0.0, 1.0, true, "x");
-    BOOST_CHECK_EQUAL(vars.size(), 3);
-    for (auto* v: vars)
+    VariableDictionary vdict;
+    VariablesBulkAddition vba(lp, vdict);
+    const PartialKey key("my-component", "my-variable");
+    const Dimensions dim({}, IntegerInterval(0, 2));
+    vba.addVariable(0.0, 1.0, true, dim, key);
+    for (int ts = 0; ts < 3; ++ts)
     {
-        BOOST_CHECK(v != nullptr);
+        BOOST_CHECK(vdict("my-component", "my-variable", 0, ts) != nullptr);
     }
 }
 
 BOOST_AUTO_TEST_CASE(AddVariable_VectorLowerBound)
 {
     MockLinearProblem lp;
-    VariablesBulkAddition vba(lp, 0, 2);
+    VariableDictionary vdict;
+    VariablesBulkAddition vba(lp, vdict);
     std::vector<double> lb = {0.1, 0.2, 0.3};
-    auto vars = vba.addVariable(lb, 1.0, true, "x");
-    BOOST_CHECK_EQUAL(vars.size(), 3);
-    for (auto* v: vars)
+    const PartialKey key("my-component", "my-variable");
+    const Dimensions dim({}, IntegerInterval(0, 2));
+    vba.addVariable(lb, 1.0, true, dim, key);
+    for (int ts = 0; ts < 3; ++ts)
     {
-        BOOST_CHECK(v != nullptr);
+        BOOST_CHECK(vdict("my-component", "my-variable", 0, ts) != nullptr);
     }
 }
 
 BOOST_AUTO_TEST_CASE(AddVariable_VectorUpperBound)
 {
     MockLinearProblem lp;
-    VariablesBulkAddition vba(lp, 0, 2);
+    VariableDictionary vdict;
+    VariablesBulkAddition vba(lp, vdict);
     std::vector<double> ub = {1.1, 1.2, 1.3};
-    auto vars = vba.addVariable(0.0, ub, true, "x");
-    BOOST_CHECK_EQUAL(vars.size(), 3);
-    for (auto* v: vars)
+    const PartialKey key("my-component", "my-variable");
+    const Dimensions dim({}, IntegerInterval(0, 2));
+    vba.addVariable(0.0, ub, true, dim, key);
+    for (int ts = 0; ts < 3; ++ts)
     {
-        BOOST_CHECK(v != nullptr);
+        BOOST_CHECK(vdict("my-component", "my-variable", 0, ts) != nullptr);
     }
 }
 
 BOOST_AUTO_TEST_CASE(AddVariable_VectorBounds)
 {
     MockLinearProblem lp;
-    VariablesBulkAddition vba(lp, 0, 2);
+    VariableDictionary vdict;
+    VariablesBulkAddition vba(lp, vdict);
     std::vector<double> lb = {0.1, 0.2, 0.3};
     std::vector<double> ub = {1.1, 1.2, 1.3};
-    auto vars = vba.addVariable(lb, ub, true, "x");
-    BOOST_CHECK_EQUAL(vars.size(), 3);
-    for (auto* v: vars)
+    const PartialKey key("my-component", "my-variable");
+    const Dimensions dim({}, IntegerInterval(0, 2));
+    vba.addVariable(lb, ub, true, dim, key);
+    for (int ts = 0; ts < 3; ++ts)
     {
-        BOOST_CHECK(v != nullptr);
+        BOOST_CHECK(vdict("my-component", "my-variable", 0, ts) != nullptr);
     }
 }
 
 BOOST_AUTO_TEST_CASE(AddVariable_InvalidBounds)
 {
     MockLinearProblem lp;
-    VariablesBulkAddition vba(lp, 0, 2);
+    VariableDictionary vdict;
+    VariablesBulkAddition vba(lp, vdict);
     std::vector<double> lb = {0.1, 0.2};
     std::vector<double> ub = {1.1, 1.2, 1.3};
-    BOOST_CHECK_THROW(vba.addVariable(lb, ub, true, "x"), std::invalid_argument);
+    const Dimensions dim({}, IntegerInterval(0, 2));
+    const PartialKey key("my-component", "my-variable");
+    BOOST_CHECK_THROW(vba.addVariable(lb, ub, true, dim, key), std::invalid_argument);
 }
 
 BOOST_AUTO_TEST_CASE(AddVariable_InvalidVectorLowerBound)
 {
     MockLinearProblem lp;
-    VariablesBulkAddition vba(lp, 0, 2);
-    BOOST_CHECK_THROW(vba.addVariable({0.1, 0.2}, 1.0, true, "x"), std::invalid_argument);
+    VariableDictionary vdict;
+    VariablesBulkAddition vba(lp, vdict);
+    const PartialKey key("my-component", "my-variable");
+    const Dimensions dim({}, IntegerInterval(0, 2));
+    BOOST_CHECK_THROW(vba.addVariable({0.1, 0.2}, 1.0, true, dim, key), std::invalid_argument);
 }
 
 BOOST_AUTO_TEST_CASE(AddVariable_InvalidVectorUpperBound)
 {
     MockLinearProblem lp;
-    VariablesBulkAddition vba(lp, 0, 2);
-    BOOST_CHECK_THROW(vba.addVariable(0.0, {1.1, 1.2}, true, "x"), std::invalid_argument);
+    VariableDictionary vdict;
+    VariablesBulkAddition vba(lp, vdict);
+    const PartialKey key("my-component", "my-variable");
+    const Dimensions dim({}, IntegerInterval(0, 2));
+    BOOST_CHECK_THROW(vba.addVariable(0.0, {1.1, 1.2}, true, dim, key), std::invalid_argument);
 }
 
 BOOST_AUTO_TEST_CASE(AddVariable_InvalidVectorBounds)
 {
     MockLinearProblem lp;
-    VariablesBulkAddition vba(lp, 0, 2);
-    BOOST_CHECK_THROW(vba.addVariable({0.1, 0.2}, {1.1, 1.2, 1.3}, true, "x"),
+    VariableDictionary vdict;
+    VariablesBulkAddition vba(lp, vdict);
+
+    const PartialKey key("my-component", "my-variable");
+    const Dimensions dim({}, IntegerInterval(0, 2));
+    BOOST_CHECK_THROW(vba.addVariable({0.1, 0.2}, {1.1, 1.2, 1.3}, true, dim, key),
                       std::invalid_argument);
-    BOOST_CHECK_THROW(vba.addVariable({0.1, 0.2, 0.3}, {1.1, 1.2}, true, "x"),
+    BOOST_CHECK_THROW(vba.addVariable({0.1, 0.2, 0.3}, {1.1, 1.2}, true, dim, key),
                       std::invalid_argument);
 }
 BOOST_AUTO_TEST_SUITE_END()

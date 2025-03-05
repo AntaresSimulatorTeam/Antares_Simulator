@@ -35,7 +35,7 @@ namespace Antares::Data::ShortTermStorage
 
 namespace fs = std::filesystem;
 
-bool Series::loadFromFolder(const fs::path& folder)
+bool Series::loadFromFolder(const fs::path& folder, StudyVersion studyVersion)
 {
     bool ret = true;
 
@@ -44,14 +44,16 @@ bool Series::loadFromFolder(const fs::path& folder)
     ret = loadFile(folder / "inflows.txt", inflows) && ret;
     ret = loadFile(folder / "lower-rule-curve.txt", lowerRuleCurve) && ret;
     ret = loadFile(folder / "upper-rule-curve.txt", upperRuleCurve) && ret;
+    if (studyVersion >= StudyVersion(9, 2))
+    {
+        ret = loadFile(folder / "cost-injection.txt", costInjection) && ret;
+        ret = loadFile(folder / "cost-withdrawal.txt", costWithdrawal) && ret;
+        ret = loadFile(folder / "cost-level.txt", costLevel) && ret;
 
-    ret = loadFile(folder / "cost-injection.txt", costInjection) && ret;
-    ret = loadFile(folder / "cost-withdrawal.txt", costWithdrawal) && ret;
-    ret = loadFile(folder / "cost-level.txt", costLevel) && ret;
+        ret = loadFile(folder / "cost-variation-injection.txt", costVariationInjection) && ret;
 
-    ret = loadFile(folder / "cost-variation-injection.txt", costVariationInjection) && ret;
-
-    ret = loadFile(folder / "cost-variation-withdrawal.txt", costVariationWithdrawal) && ret;
+        ret = loadFile(folder / "cost-variation-withdrawal.txt", costVariationWithdrawal) && ret;
+    }
 
     return ret;
 }
@@ -67,7 +69,8 @@ bool loadFile(const fs::path& path, std::vector<double>& vect)
 
     if (!file.is_open())
     {
-        logs.debug() << "File not found: " << path;
+        logs.info() << "Optional file not found: " << path
+                    << ", default values will be used if needed";
         return true;
     }
 
@@ -183,9 +186,9 @@ bool writeVectorToFile(const std::string& path, const std::vector<double>& vect)
     return true;
 }
 
-bool Series::validate(const std::string& id) const
+bool Series::validate(const std::string& id, StudyVersion studyVersion) const
 {
-    return validateSizes(id) && validateMaxInjection(id) && validateMaxWithdrawal(id)
+    return validateSizes(id, studyVersion) && validateMaxInjection(id) && validateMaxWithdrawal(id)
            && validateRuleCurves(id);
 }
 
@@ -217,18 +220,23 @@ static bool checkSize(const std::string& seriesFilename,
     return true;
 }
 
-bool Series::validateSizes(const std::string& id) const
+bool Series::validateSizes(const std::string& id, StudyVersion studyVersion) const
 {
-    return checkSize("PMAX-injection.txt", id, maxInjectionModulation)
-           && checkSize("PMAX-withdrawal.txt", id, maxWithdrawalModulation)
-           && checkSize("inflows.txt", id, inflows)
-           && checkSize("lower-rule-curve.txt", id, lowerRuleCurve)
-           && checkSize("upper-rule-curve.txt", id, upperRuleCurve)
-           && checkSize("cost-injection.txt", id, costInjection)
-           && checkSize("cost-withdrawal.txt", id, costWithdrawal)
-           && checkSize("cost-level.txt", id, costLevel)
-           && checkSize("cost-variation-injection.txt", id, costVariationInjection)
-           && checkSize("cost-variation-withdrawal.txt", id, costVariationWithdrawal);
+    bool ret = checkSize("PMAX-injection.txt", id, maxInjectionModulation)
+               && checkSize("PMAX-withdrawal.txt", id, maxWithdrawalModulation)
+               && checkSize("inflows.txt", id, inflows)
+               && checkSize("lower-rule-curve.txt", id, lowerRuleCurve)
+               && checkSize("upper-rule-curve.txt", id, upperRuleCurve);
+    // Some elements were introduced in version 9.2.0
+    if (studyVersion >= StudyVersion(9, 2))
+    {
+        ret = checkSize("cost-injection.txt", id, costInjection)
+              && checkSize("cost-withdrawal.txt", id, costWithdrawal)
+              && checkSize("cost-level.txt", id, costLevel)
+              && checkSize("cost-variation-injection.txt", id, costVariationInjection)
+              && checkSize("cost-variation-withdrawal.txt", id, costVariationWithdrawal) && ret;
+    }
+    return ret;
 }
 
 bool Series::validateMaxInjection(const std::string& id) const
