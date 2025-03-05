@@ -221,6 +221,47 @@ toc_depth: 2
 
 ## Branch 8.8.x (end of support 12/2025)
 
+### 8.8.14 (03/2025)
+
+#### Improvements
+- Increase precision for `LOLD[CSR]` and `MRG PRICE[CSR]` [ANT-2443] (#2613)
+
+#### Bugfix
+- Segfault related to **scenariobuilder.dat** [ANT-2890] (#2675)
+- Fix function `ThermalCluster::getMarketBidCost` [ANT-2527] (#2605) (backport) 
+
+#### Legacy GUI bugs
+- Binding constraints TS loading in 8.8 [ANT-2746] (#2635) 
+- Correct cluster count, load constraints even for disabled clusters [ANT-2754] (#2659) 
+
+### 8.8.13 (01/2025)
+
+#### Bugfix
+- Backport bug on annual aggregation [ANT-2630] (#2585)
+
+### 8.8.12 (01/2025)
+
+#### New features
+* Add variable MRG PRICE CSR [ANT-2562] (#2531)
+* Use VCPKG for dependencies (#2549)
+* Activate long tests on branch release/8.8.x (#2538)
+
+#### Bugfix
+* Fix segfault related to district for 8.8 [ANT-2452] (#2519)
+* Fix uninitialized CSR variables [ANT-2496] (#2518)
+* Fix segfault caused by invalid index [ANT-2582] (#2544)
+
+### 8.8.11 (11/2024)
+
+#### New features
+* Adding parameters for the used optimization solver [ANT-2280] (#2466)
+* Adequacy patch CSR : add out variables after DTG netting step [ANT-2295] (#2472)
+
+#### Bugfix
+* Legacy GUI : Restore and fix grid statistics [ANT-2381] (#2478)
+* Don't apply reverse spinning if the cluster is no force gen [ANT-2293] (#2468)
+* Use "trigerred" criterion for mrg price [ANT-2294] (#2453)
+
 ### 8.8.10 (09/2024)
 
 #### Bugfix (adequacy patch)
