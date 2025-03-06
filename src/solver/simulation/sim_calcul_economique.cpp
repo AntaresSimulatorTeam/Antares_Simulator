@@ -363,7 +363,7 @@ static void prepareBindingConstraint(PROBLEME_HEBDO &problem,
                 auto hourly_mustrun_production = std::accumulate(time_seriesAndWeight.begin(),
                     time_seriesAndWeight.end(),
                     0.,
-                    [pasDeTemps, &PasDeTempsDebut](double acc, const auto pair) {
+                    [pasDeTemps, PasDeTempsDebut](double acc, const auto pair) {
                         const auto& [ts, weight] = pair;
                         return acc + ts[PasDeTempsDebut + pasDeTemps] * weight;
                     });
@@ -381,7 +381,14 @@ static void prepareBindingConstraint(PROBLEME_HEBDO &problem,
                         .SecondMembreDeLaContrainteCouplante;
 
                 for (unsigned day = 0; day != 7; ++day) {
-                    sndMember[day] = column[weekFirstDay + day];
+                    auto mustrun_production = std::accumulate(time_seriesAndWeight.begin(),
+                        time_seriesAndWeight.end(),
+                        0.,
+                        [day, PasDeTempsDebut](double acc, const auto pair) {
+                            const auto& [ts, weight] = pair;
+                            return acc + ts[PasDeTempsDebut + day] * weight;
+                        });
+                    sndMember[day] = column[weekFirstDay + day] - mustrun_production;
                 }
 
                 break;
@@ -392,7 +399,14 @@ static void prepareBindingConstraint(PROBLEME_HEBDO &problem,
 
                 double sum = 0;
                 for (unsigned day = 0; day != 7; ++day) {
-                    sum += column[weekFirstDay + day];
+                    auto mustrun_production = std::accumulate(time_seriesAndWeight.begin(),
+                        time_seriesAndWeight.end(),
+                        0.,
+                        [weekFirstDay, day](double acc, const auto pair) {
+                            const auto& [ts, weight] = pair;
+                            return acc + ts[weekFirstDay + day] * weight;
+                        });
+                    sum += column[weekFirstDay + day] - mustrun_production;
                 }
 
                 problem.MatriceDesContraintesCouplantes[constraintIndex]
