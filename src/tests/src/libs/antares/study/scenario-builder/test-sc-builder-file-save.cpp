@@ -463,9 +463,9 @@ BOOST_FIXTURE_TEST_CASE(
   LINKS_NTC__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical,
   saveFixture)
 {
-    my_rule->linksNTC[area_1->index].setDataForLink(link_12, 5, 13);
-    my_rule->linksNTC[area_1->index].setDataForLink(link_13, 19, 8);
-    my_rule->linksNTC[area_2->index].setDataForLink(link_23, 2, 4);
+    my_rule->linksNTC[area_1->index].setTSnumber(link_12, 5, 13);
+    my_rule->linksNTC[area_1->index].setTSnumber(link_13, 19, 8);
+    my_rule->linksNTC[area_2->index].setTSnumber(link_23, 2, 4);
 
     saveScenarioBuilder();
 
@@ -517,8 +517,8 @@ BOOST_FIXTURE_TEST_CASE(
     my_rule->thermal[area_3->index].setTSnumber(thCluster_31.get(), 5, 13);
     my_rule->thermal[area_1->index].setTSnumber(thCluster_11.get(), 19, 8);
     my_rule->renewable[area_3->index].setTSnumber(rnCluster_32.get(), 5, 13);
-    my_rule->linksNTC[area_1->index].setDataForLink(link_13, 19, 8);
-    my_rule->linksNTC[area_2->index].setDataForLink(link_23, 2, 4);
+    my_rule->linksNTC[area_1->index].setTSnumber(link_13, 19, 8);
+    my_rule->linksNTC[area_2->index].setTSnumber(link_23, 2, 4);
     my_rule->hydroInitialLevels.setTSnumber(area_1->index, 5, 8);
     my_rule->binding_constraints.setTSnumber("group3", 10, 6);
 
