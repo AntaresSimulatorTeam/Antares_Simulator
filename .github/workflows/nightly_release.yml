@@ -9,6 +9,7 @@ on:
 
 jobs:
   build:
+    runs-on: ubuntu-22.04
     steps:
       - name: Run nightly release
         uses: ./.github/workflows/publish-release

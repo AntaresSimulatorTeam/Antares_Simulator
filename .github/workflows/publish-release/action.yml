@@ -1,6 +1,5 @@
 name: Create new release
 
-
 inputs:
   target_branch:
     description: "Target branch or full commit SHA"
@@ -19,6 +18,7 @@ inputs:
     description: "Set the release as latest"
     required: true
     type: boolean
+
 jobs:
   release:
     name: Release pushed tag
@@ -39,7 +39,6 @@ jobs:
               --notes="Run tests: $tests"\
               --target="$target_branch" \
               --latest=$latest
-  
 
   ubuntu:
     name: Release - Ubuntu
