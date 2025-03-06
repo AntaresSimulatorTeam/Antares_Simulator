@@ -34,6 +34,8 @@ public:
     SearchVisitor() = default;
     std::string name() const override;
 
+    std::vector<const Nodes::Node*> operator()(const Nodes::Node* root, const std::string& name);
+
     void visit(const Nodes::SumNode*, const std::string&) override;
     void visit(const Nodes::SubtractionNode*, const std::string&) override;
     void visit(const Nodes::MultiplicationNode*, const std::string&) override;

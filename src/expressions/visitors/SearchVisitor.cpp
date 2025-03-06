@@ -24,6 +24,13 @@
 namespace Antares::Expressions::Visitors
 {
 
+std::vector<const Nodes::Node*> SearchVisitor::operator()(const Nodes::Node* root,
+                                                          const std::string& name)
+{
+    dispatch(root, name);
+    return results_;
+}
+
 void SearchVisitor::addToVectorIfNameMatches(const Nodes::Node* node, const std::string& name)
 {
     if (node->name() == name)
