@@ -11,6 +11,10 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.REF }}
+
       - name: Run nightly release
         uses: ./.github/workflows/publish-release
         with:
