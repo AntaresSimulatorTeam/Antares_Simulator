@@ -127,10 +127,10 @@ jobs:
 
       - name: Update nightly release
         # if: ${{ env.REF == '/feature/nightly_release' }} # TODO change to develop
-        uses: eine/tip@master
+        uses: pyTooling/Actions/releaser@main
         with:
           tag: nightly
-          rm: true
+          rm: false
           token: ${{ secrets.GITHUB_TOKEN }}
           files: archive/*.tar.gz archive/*.rpm
 

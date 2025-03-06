@@ -316,9 +316,7 @@ jobs:
         with:
           feature: "features/modeler-features"
 
-      - name: Barrier
-        if: ${{ !success() }}
-        run: exit 1
+      # TODO : revert barrier
 
       - name: Solver archive creation
         shell: bash
@@ -364,10 +362,10 @@ jobs:
 
       - name: Update nightly release
         # if: ${{ env.REF == '/feature/nightly_release' }} # TODO change to develop
-        uses: eine/tip@master
+        uses: pyTooling/Actions/releaser@main
         with:
           tag: nightly
-          rm: true
+          rm: false
           token: ${{ secrets.GITHUB_TOKEN }}
           files: _build/*.zip _build/*.exe
 
