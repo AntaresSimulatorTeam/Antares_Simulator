@@ -45,7 +45,7 @@ namespace Antares::Optimization
  */
 struct LinearConstraint
 {
-    std::map<std::string, double> coef_per_var;
+    FullKeyMap coef_per_var;
     double lb = -std::numeric_limits<double>::infinity();
     double ub = std::numeric_limits<double>::infinity();
     unsigned int timeStep = 0;
@@ -58,7 +58,8 @@ public:
     ReadLinearConstraintVisitor() = default;
     explicit ReadLinearConstraintVisitor(
       Expressions::Visitors::EvaluationContext context,
-      const Optimisation::LinearProblemApi::FillContext& fillContext);
+      const Optimisation::LinearProblemApi::FillContext& fillContext,
+      const std::string& componentId /* or vector ?*/);
     std::string name() const override;
 
 private:

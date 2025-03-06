@@ -21,11 +21,12 @@
 
 #pragma once
 
-#include <map>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include <antares/solver/optim-model-filler/LinearExpression.h>
+#include "antares/optimisation/linear-problem-api/ILinearProblemData.h"
 
 namespace Antares::Optimization
 {
@@ -42,7 +43,7 @@ public:
       const Optimisation::LinearProblemApi::FillContext& fillContext,
       const LinearExpression& linearExpression);
     explicit TimeDependentLinearExpression(
-      const std::map<unsigned, LinearExpression>& linearExpressions);
+      const std::unordered_map<unsigned, LinearExpression>& linearExpressions);
 
     /// Sum two linear expressions
     TimeDependentLinearExpression operator+(const TimeDependentLinearExpression& other) const;
@@ -56,10 +57,10 @@ public:
     TimeDependentLinearExpression operator/(const TimeDependentLinearExpression& other) const;
     /// Multiply linear expression by -1
     TimeDependentLinearExpression operator-() const;
-    const std::map<unsigned, LinearExpression>& GetLinearExpressions() const;
+    const std::unordered_map<unsigned, LinearExpression>& GetLinearExpressions() const;
     size_t getSize() const;
 
 private:
-    std::map<unsigned int, LinearExpression> linearExpressions_;
+    std::unordered_map<unsigned int, LinearExpression> linearExpressions_;
 };
 } // namespace Antares::Optimization
