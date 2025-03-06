@@ -89,6 +89,41 @@ void SearchVisitor::visit(const Nodes::NegationNode* node, const std::string& na
     dispatch(node->child(), name);
 }
 
+void SearchVisitor::visit(const Nodes::VariableNode* node, const std::string& name)
+{
+    addToVectorIfNameMatches(node, name);
+}
+
+void SearchVisitor::visit(const Nodes::ParameterNode* node, const std::string& name)
+{
+    addToVectorIfNameMatches(node, name);
+}
+
+void SearchVisitor::visit(const Nodes::LiteralNode* node, const std::string& name)
+{
+    addToVectorIfNameMatches(node, name);
+}
+
+void SearchVisitor::visit(const Nodes::PortFieldNode* node, const std::string& name)
+{
+    addToVectorIfNameMatches(node, name);
+}
+
+void SearchVisitor::visit(const Nodes::PortFieldSumNode* node, const std::string& name)
+{
+    addToVectorIfNameMatches(node, name);
+}
+
+void SearchVisitor::visit(const Nodes::ComponentVariableNode* node, const std::string& name)
+{
+    addToVectorIfNameMatches(node, name);
+}
+
+void SearchVisitor::visit(const Nodes::ComponentParameterNode* node, const std::string& name)
+{
+    addToVectorIfNameMatches(node, name);
+}
+
 std::string SearchVisitor::name() const
 {
     return "SearchVisitor";
