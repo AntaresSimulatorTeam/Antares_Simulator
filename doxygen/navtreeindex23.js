@@ -1,5 +1,10 @@
 var NAVTREEINDEX23 =
 {
+"dir_a14d620aee62184c9a2e7b5b792d9fe9.html":[10,0,0,5,0,10,0,0],
+"dir_a29918ac9fe0ee5012a3a3af7a978897.html":[10,0,0,5,0,2,0,0],
+"dir_a35ca699852bc17e493a881d050215ce.html":[10,0,0,5,0,14,0],
+"dir_a402f9b54a9557d270876965a5c082b8.html":[10,0,0,11,2,1,1,1,1],
+"dir_a46804c238c82b8f14fa9386c13825af.html":[10,0,0,3],
 "dir_a5026c306b85c4d4525ccae1c833a895.html":[10,0,0,7,10,0,0,0,0],
 "dir_a51698c424ad92b4c553c81eb4d88e56.html":[10,0,0,11,2,2,10,1],
 "dir_a59c10f68ae6f7b645d194ef527e5ef7.html":[10,0,0,8],
@@ -173,8 +178,8 @@ var NAVTREEINDEX23 =
 "dsm_8h_source.html":[10,0,0,11,2,1,1,1,1,1,3],
 "dtgMarginAfterCsr_8h_source.html":[10,0,0,7,13,0,0,0,0,2,8],
 "ecoInput_8h_source.html":[10,0,0,5,0,23,0,0,0,5,6,6],
-"economy_2overallCost_8h_source.html":[10,0,0,7,13,0,0,0,0,2,26],
-"economy_2spilledEnergy_8h_source.html":[10,0,0,7,13,0,0,0,0,2,37],
+"economy_2overallCost_8h_source.html":[10,0,0,7,13,0,0,0,0,2,27],
+"economy_2spilledEnergy_8h_source.html":[10,0,0,7,13,0,0,0,0,2,38],
 "economy_8h_source.html":[10,0,0,7,10,0,0,0,0,6],
 "edit_8h_source.html":[10,0,0,11,2,2,2,1],
 "editor-calendar_8h_source.html":[10,0,0,11,2,2,7,4],
@@ -244,10 +249,5 @@ var NAVTREEINDEX23 =
 "functions_func_y.html":[9,3,1,23],
 "functions_func_z.html":[9,3,1,24],
 "functions_func_~.html":[9,3,1,25],
-"functions_g.html":[9,3,0,6],
-"functions_h.html":[9,3,0,7],
-"functions_i.html":[9,3,0,8],
-"functions_j.html":[9,3,0,9],
-"functions_k.html":[9,3,0,10],
-"functions_l.html":[9,3,0,11]
+"functions_g.html":[9,3,0,6]
 };

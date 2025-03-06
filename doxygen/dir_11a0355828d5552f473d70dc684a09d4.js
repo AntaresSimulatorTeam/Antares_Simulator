@@ -21,6 +21,7 @@ var dir_11a0355828d5552f473d70dc684a09d4 =
     [ "max-mrg-csr.h", "max-mrg-csr_8h_source.html", null ],
     [ "max-mrg-utils.h", "max-mrg-utils_8h_source.html", null ],
     [ "max-mrg.h", "max-mrg_8h_source.html", null ],
+    [ "minDispatchableGenByPlant.h", "minDispatchableGenByPlant_8h_source.html", null ],
     [ "nbOfDispatchedUnits.h", "nbOfDispatchedUnits_8h_source.html", null ],
     [ "nbOfDispatchedUnitsByPlant.h", "nbOfDispatchedUnitsByPlant_8h_source.html", null ],
     [ "nonProportionalCost.h", "nonProportionalCost_8h_source.html", null ],

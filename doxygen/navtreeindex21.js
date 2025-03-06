@@ -1,5 +1,10 @@
 var NAVTREEINDEX21 =
 {
+"classModifiedINode.html#ad0840cb4d096056fba4fe5bac78ce0d8":[9,0,173,1],
+"classModifiedINode.html#aef5298e99ca8bc33a33c40e05a3cd6d2":[9,0,173,4],
+"classMyStudyFinder.html":[9,0,177],
+"classMyStudyFinder.html#a003f153d7f4bfabfe207c1d616cf1acd":[9,0,177,0],
+"classMyStudyFinder.html#ad6c57712c579b96e22962c1f63441c31":[9,0,177,1],
 "classNameTranslator.html":[9,0,179],
 "classNamer.html":[9,0,178],
 "classNbDispUnitsMinBoundSinceMinUpTime.html":[9,0,180],
@@ -244,10 +249,5 @@ var NAVTREEINDEX21 =
 "datasources_8hxx_source.html":[10,0,0,11,2,2,5,1],
 "date_8h_source.html":[10,0,0,5,0,6,0,0,0,0],
 "day_8h_source.html":[10,0,0,11,2,1,1,1,0,0,2],
-"dayyear_8h_source.html":[10,0,0,11,2,1,1,1,0,0,3],
-"dbgrid_8h_source.html":[10,0,0,11,2,1,1,1,3],
-"decal-area-position_8h_source.html":[10,0,0,11,0,1,0,1,0],
-"decal-area-position_8hxx_source.html":[10,0,0,11,0,1,0,1,1],
-"default_8h_source.html":[10,0,0,11,2,1,1,1,4],
-"dir_00391469cb8886a3ac1b67cd679c42ba.html":[10,0,0,11,0,0,0]
+"dayyear_8h_source.html":[10,0,0,11,2,1,1,1,0,0,3]
 };

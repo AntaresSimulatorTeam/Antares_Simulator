@@ -1,5 +1,10 @@
 var NAVTREEINDEX20 =
 {
+"classCellColumnData.html#a9de1ff0803326e7a7cddc04ec579871c":[9,0,58,0],
+"classCellColumnData.html#acf382fdbf28ef94507b5a787a122e3d5":[9,0,58,4],
+"classConsistenceNumberOfDispatchableUnits.html":[9,0,63],
+"classConsistenceNumberOfDispatchableUnits.html#aecd29524ff5dd06cb34e9bd7033dca69":[9,0,63,0],
+"classConsistenceNumberOfDispatchableUnitsGroup.html":[9,0,64],
 "classConsistenceNumberOfDispatchableUnitsGroup.html#aaa29dc563394e66ef7e21e90d35a8dea":[9,0,64,0],
 "classConstraintBuilder.html":[9,0,66],
 "classConstraintBuilder.html#a4d02a1b27aad2b5d46657e46e1e8de9e":[9,0,66,4],
@@ -244,10 +249,5 @@ var NAVTREEINDEX20 =
 "classModifiedINode.html":[9,0,173],
 "classModifiedINode.html#a32e5cffa56a52c2d00558645b6816fd4":[9,0,173,3],
 "classModifiedINode.html#a4c02b074f9470a703af595fc2f08b4f8":[9,0,173,0],
-"classModifiedINode.html#a5f595069b77eb71490477a12952ffc1e":[9,0,173,2],
-"classModifiedINode.html#ad0840cb4d096056fba4fe5bac78ce0d8":[9,0,173,1],
-"classModifiedINode.html#aef5298e99ca8bc33a33c40e05a3cd6d2":[9,0,173,4],
-"classMyStudyFinder.html":[9,0,177],
-"classMyStudyFinder.html#a003f153d7f4bfabfe207c1d616cf1acd":[9,0,177,0],
-"classMyStudyFinder.html#ad6c57712c579b96e22962c1f63441c31":[9,0,177,1]
+"classModifiedINode.html#a5f595069b77eb71490477a12952ffc1e":[9,0,173,2]
 };
