@@ -92,38 +92,38 @@ def check_simu_time(context, seconds):
 
 @then('in area "{area}", during year {year:d}, loss of load lasts {lold_hours:d} hours')
 def check_lold_duration(context, area, year, lold_hours):
-    assert_double_close(lold_hours , context.soh.get_loss_of_load_duration_h(area, year), 0.001)
+    assert_double_close(lold_hours , context.soh.get_loss_of_load_duration_h(area, year), 0.001, "Loss of load")
 
 
 @then('in area "{area}", during year {year:d}, total spilled energy is {value:g} MWh')
 def check_spilled_energy_value(context, area, year, value):
-    assert_double_close(value ,context.soh.get_spilled_energy_mwh(area, year), 0.001)
+    assert_double_close(value ,context.soh.get_spilled_energy_mwh(area, year), 0.001, "Spilled energy")
 
 
 @then('in area "{area}", unsupplied energy on "{date}" of year {year:d} is of {unsupplied_energy_value:g} MW')
 def check_unsupplied_energy_value_for_date(context, area, date, year, unsupplied_energy_value):
     actual_unsp_energ = context.soh.get_unsupplied_energy_mwh(area, year, date)
-    assert_double_close(unsupplied_energy_value, actual_unsp_energ, 0.001)
+    assert_double_close(unsupplied_energy_value, actual_unsp_energ, 0.001, "Unsupplied energy")
 
 
 @then('in area "{area}", during year {year:d}, total unsupplied energy is {unsupplied_energy_value:g} MWh')
 def check_unsupplied_energy_value(context, area, year, unsupplied_energy_value):
-    assert_double_close(unsupplied_energy_value, context.soh.get_unsupplied_energy_mwh(area, year), 0.001)
+    assert_double_close(unsupplied_energy_value, context.soh.get_unsupplied_energy_mwh(area, year), 0.001, "Unsupplied energy")
 
 
 @then('in area "{area}", during year {year:d}, total hydro production is {value:g} MWh')
-def check_spilled_energy_value(context, area, year, value):
-    assert_double_close(value, context.soh.get_hydro_production_mwh(area, year), 0.001)
+def check_hydro_production_value(context, area, year, value):
+    assert_double_close(value, context.soh.get_hydro_production_mwh(area, year), 0.001, "Hydro production")
 
 
 @then('in area "{area}", during year {year:d}, total hydro pumping is {value:g} MWh')
-def check_spilled_energy_value(context, area, year, value):
-    assert_double_close(value, context.soh.get_hydro_pumping_mwh(area, year), 0.001)
+def check_hydro_pumping_value(context, area, year, value):
+    assert_double_close(value, context.soh.get_hydro_pumping_mwh(area, year), 0.001, "Hydro pumping")
 
 
 @then('in area "{area}", during year {year:d}, total balance is {value:g} MWh')
-def check_spilled_energy_value(context, area, year, value):
-    assert_double_close(value, context.soh.get_balance_mwh(area, year), 0.001)
+def check_balance_value(context, area, year, value):
+    assert_double_close(value, context.soh.get_balance_mwh(area, year), 0.001, "Balance")
 
 
 @then(
@@ -163,6 +163,24 @@ def check_pmin_pmax(context, area, prod_name, min_p, max_p):
         assert (actual_hourly_prod >= actual_n_dispatched_units.apply(
             lambda n: n * min_p)).all(), f"min_p constraint not respected during year {year}"
 
+@then("the annual results are")
+def check_annual_results(context):
+    for row in context.table:
+        area = row["area"]
+        year = int(row["year"])
+        if should_check(row, "hydro production"):
+            check_hydro_production_value(context, area, year, float(row["hydro production"]))
+        if should_check(row, "hydro pumping"):
+            check_hydro_pumping_value(context, area, year, float(row["hydro pumping"]))
+        if should_check(row, "balance"):
+            check_balance_value(context, area, year, float(row["balance"]))
+        if should_check(row, "spilled energy"):
+            check_spilled_energy_value(context, area, year, float(row["spilled energy"]))
+        if should_check(row, "unsupplied energy"):
+            check_unsupplied_energy_value(context, area, year, float(row["unsupplied energy"]))
+
+def should_check(row, key):
+    return key in row.headings and len(row[key]) > 0
 
 def run_simulation(context):
     command = build_antares_solver_command(context)
