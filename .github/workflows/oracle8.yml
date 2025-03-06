@@ -158,11 +158,11 @@ jobs:
       run: |
         gh release upload "$tag" _build/*.tar.gz _build/*.rpm
 
-    - name: Update nightly release
+    - name: Update continuous-delivery release
       # if: ${{ env.REF == '/feature/nightly_release' }} # TODO change to develop
       uses: pyTooling/Actions/releaser@main
       with:
-        tag: nightly
+        tag: continuous-delivery
         rm: false
         token: ${{ secrets.GITHUB_TOKEN }}
         files: _build/*.tar.gz _build/*.rpm
