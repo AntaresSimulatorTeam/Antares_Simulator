@@ -22,6 +22,7 @@ set(SRC_Expressions
         visitors/AstDOTStyleVisitor.cpp
         visitors/InvalidNode.cpp
         visitors/NodeVisitor.cpp
+        visitors/SearchVisitor.cpp
 
         hashable.cpp
 
@@ -64,6 +65,7 @@ set(SRC_Expressions
         include/antares/expressions/visitors/PortFieldSumSubstitutionVisitor.h
         include/antares/expressions/visitors/AstDOTStyleVisitor.h
         include/antares/expressions/visitors/InvalidNode.h
+        include/antares/expressions/visitors/SearchVisitor.h
 
         include/antares/expressions/Registry.hxx
         include/antares/expressions/IName.h

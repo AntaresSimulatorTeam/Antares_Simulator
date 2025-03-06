@@ -21,134 +21,72 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/SearchVisitor.h>
 
-template<class T, class V>
-static bool compareBinaryNode(V& visitor,
-                              const T* node,
-                              const Antares::Expressions::Nodes::Node* other)
-{
-    if (const T* other_node = dynamic_cast<const T*>(other))
-    {
-        bool left = visitor.dispatch(node->left(), other_node->left());
-        bool right = visitor.dispatch(node->right(), other_node->right());
-        return left && right;
-    }
-    return false;
-}
-
-template<class T>
-static bool compareGetValue(const T* node, const Antares::Expressions::Nodes::Node* other)
-{
-    if (const T* other_node = dynamic_cast<const T*>(other))
-    {
-        return node->value() == other_node->value();
-    }
-    return false;
-}
-
-template<class T>
-static bool compareEqualOperator(const T* node, const Antares::Expressions::Nodes::Node* other)
-{
-    if (const T* other_node = dynamic_cast<const T*>(other))
-    {
-        return *node == *other_node;
-    }
-    return false;
-}
-
 namespace Antares::Expressions::Visitors
 {
-bool SearchVisitor::visit(const Nodes::SumNode* node, const Nodes::Node* other)
+
+void SearchVisitor::addToVectorIfNameMatches(const Nodes::Node* node, const std::string& name)
 {
-    if (const auto* other_node = dynamic_cast<const Nodes::SumNode*>(other))
+    if (node->name() == name)
     {
-        if (node->size() != other_node->size())
-        {
-            return false;
-        }
-        for (std::size_t i = 0; i < node->size(); ++i)
-        {
-            if (!dispatch(node->getOperands()[i], other_node->getOperands()[i]))
-            {
-                return false;
-            }
-        }
-        return true;
+        results_.emplace_back(node);
     }
-    return false;
 }
 
-bool SearchVisitor::visit(const Nodes::SubtractionNode* node, const Nodes::Node* other)
+void SearchVisitor::visit(const Nodes::SumNode* node, const std::string& name)
 {
-    return compareBinaryNode(*this, node, other);
-}
-
-bool SearchVisitor::visit(const Nodes::MultiplicationNode* node, const Nodes::Node* other)
-{
-    return compareBinaryNode(*this, node, other);
-}
-
-bool SearchVisitor::visit(const Nodes::DivisionNode* node, const Nodes::Node* other)
-{
-    return compareBinaryNode(*this, node, other);
-}
-
-bool SearchVisitor::visit(const Nodes::EqualNode* node, const Nodes::Node* other)
-{
-    return compareBinaryNode(*this, node, other);
-}
-
-bool SearchVisitor::visit(const Nodes::LessThanOrEqualNode* node, const Nodes::Node* other)
-{
-    return compareBinaryNode(*this, node, other);
-}
-
-bool SearchVisitor::visit(const Nodes::GreaterThanOrEqualNode* node, const Nodes::Node* other)
-{
-    return compareBinaryNode(*this, node, other);
-}
-
-bool SearchVisitor::visit(const Nodes::NegationNode* node, const Nodes::Node* other)
-{
-    if (auto* other_node = dynamic_cast<const Nodes::NegationNode*>(other))
+    addToVectorIfNameMatches(node, name);
+    for (auto* operand: node->getOperands())
     {
-        return dispatch(node->child(), other_node->child());
+        dispatch(operand, name);
     }
-    return false;
 }
 
-bool SearchVisitor::visit(const Nodes::ParameterNode* node, const Nodes::Node* other)
+void SearchVisitor::visit(const Nodes::SubtractionNode* node, const std::string& name)
 {
-    return compareGetValue(node, other);
+    addToVectorIfNameMatches(node, name);
+    dispatch(node->left(), name);
+    dispatch(node->right(), name);
 }
 
-bool SearchVisitor::visit(const Nodes::LiteralNode* node, const Nodes::Node* other)
+void SearchVisitor::visit(const Nodes::MultiplicationNode* node, const std::string& name)
 {
-    return compareGetValue(node, other);
+    addToVectorIfNameMatches(node, name);
+    dispatch(node->left(), name);
+    dispatch(node->right(), name);
 }
 
-bool SearchVisitor::visit(const Nodes::VariableNode* node, const Nodes::Node* other)
+void SearchVisitor::visit(const Nodes::DivisionNode* node, const std::string& name)
 {
-    return compareGetValue(node, other);
+    addToVectorIfNameMatches(node, name);
+    dispatch(node->left(), name);
+    dispatch(node->right(), name);
 }
 
-bool Compareisitor::visit(const Nodes::PortFieldNode* node, const Nodes::Node* other)
+void SearchVisitor::visit(const Nodes::EqualNode* node, const std::string& name)
 {
-    return compareEqualOperator(node, other);
+    addToVectorIfNameMatches(node, name);
+    dispatch(node->left(), name);
+    dispatch(node->right(), name);
 }
 
-bool SearchVisitor::visit(const Nodes::PortFieldSumNode* node, const Nodes::Node* other)
+void SearchVisitor::visit(const Nodes::LessThanOrEqualNode* node, const std::string& name)
 {
-    return compareEqualOperator(node, other);
+    addToVectorIfNameMatches(node, name);
+    dispatch(node->left(), name);
+    dispatch(node->right(), name);
 }
 
-bool SearchVisitor::visit(const Nodes::ComponentVariableNode* node, const Nodes::Node* other)
+void SearchVisitor::visit(const Nodes::GreaterThanOrEqualNode* node, const std::string& name)
 {
-    return compareEqualOperator(node, other);
+    addToVectorIfNameMatches(node, name);
+    dispatch(node->left(), name);
+    dispatch(node->right(), name);
 }
 
-bool SearchVisitor::visit(const Nodes::ComponentParameterNode* node, const Nodes::Node* other)
+void SearchVisitor::visit(const Nodes::NegationNode* node, const std::string& name)
 {
-    return compareEqualOperator(node, other);
+    addToVectorIfNameMatches(node, name);
+    dispatch(node->child(), name);
 }
 
 std::string SearchVisitor::name() const

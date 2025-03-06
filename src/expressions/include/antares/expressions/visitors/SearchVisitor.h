@@ -28,28 +28,30 @@ namespace Antares::Expressions::Visitors
 /**
  * @brief Represents a visitor for searching node in a syntax tree.
  */
-class SearchVisitor: public NodeVisitor<bool, const Nodes::Node*>
+class SearchVisitor: public NodeVisitor<void, const std::string&>
 {
 public:
     SearchVisitor() = default;
     std::string name() const override;
 
-    bool visit(const Nodes::SumNode* add, const Nodes::Node* other) override;
-    bool visit(const Nodes::SubtractionNode* add, const Nodes::Node* other) override;
-    bool visit(const Nodes::MultiplicationNode* add, const Nodes::Node* other) override;
-    bool visit(const Nodes::DivisionNode* add, const Nodes::Node* other) override;
-    bool visit(const Nodes::EqualNode* add, const Nodes::Node* other) override;
-    bool visit(const Nodes::LessThanOrEqualNode* add, const Nodes::Node* other) override;
-    bool visit(const Nodes::GreaterThanOrEqualNode* add, const Nodes::Node* other) override;
-    bool visit(const Nodes::NegationNode* neg, const Nodes::Node* other) override;
-    bool visit(const Nodes::VariableNode* param, const Nodes::Node* other) override;
-    bool visit(const Nodes::ParameterNode* param, const Nodes::Node* other) override;
-    bool visit(const Nodes::LiteralNode* param, const Nodes::Node* other) override;
-    bool visit(const Nodes::PortFieldNode* port_field_node, const Nodes::Node* other) override;
-    bool visit(const Nodes::PortFieldSumNode* port_field_node, const Nodes::Node* other) override;
-    bool visit(const Nodes::ComponentVariableNode* component_node,
-               const Nodes::Node* other) override;
-    bool visit(const Nodes::ComponentParameterNode* component_node,
-               const Nodes::Node* other) override;
+    void visit(const Nodes::SumNode*, const std::string&) override;
+    void visit(const Nodes::SubtractionNode*, const std::string&) override;
+    void visit(const Nodes::MultiplicationNode*, const std::string&) override;
+    void visit(const Nodes::DivisionNode*, const std::string&) override;
+    void visit(const Nodes::EqualNode*, const std::string&) override;
+    void visit(const Nodes::LessThanOrEqualNode*, const std::string&) override;
+    void visit(const Nodes::GreaterThanOrEqualNode*, const std::string&) override;
+    void visit(const Nodes::NegationNode*, const std::string&) override;
+    void visit(const Nodes::VariableNode*, const std::string&) override;
+    void visit(const Nodes::ParameterNode*, const std::string&) override;
+    void visit(const Nodes::LiteralNode*, const std::string&) override;
+    void visit(const Nodes::PortFieldNode*, const std::string&) override;
+    void visit(const Nodes::PortFieldSumNode*, const std::string&) override;
+    void visit(const Nodes::ComponentVariableNode*, const std::string&) override;
+    void visit(const Nodes::ComponentParameterNode*, const std::string&) override;
+
+void addToVectorIfNameMatches(const Nodes::Node* node, const std::string& name);
+private:
+    std::vector<const Nodes::Node*> results_;
 };
 } // namespace Antares::Expressions::Visitors
