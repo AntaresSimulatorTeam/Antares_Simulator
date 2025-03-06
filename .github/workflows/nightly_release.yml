@@ -1,0 +1,17 @@
+name: Create a nightly release everyday
+
+on:
+  schedule:
+    - cron: '0 11 * * *'
+
+jobs:
+  build:
+    steps:
+      - name: Run nightly release
+        uses: ./.github/workflows/publish-release
+        with:
+          target_branch: "develop"
+          release_tag: "nightly"
+          release_name: "nightly"
+          run-tests: true
+          set_latest: false
