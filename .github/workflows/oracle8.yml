@@ -128,7 +128,7 @@ jobs:
            cmake --install . --prefix install
            pushd .
            cd install/bin
-           tar czf ../../antares-solver_oracle8.tar.gz antares-solver libsirius_solver.so
+           tar czf ../../antares-solver_oracle8.tar.gz antares-solver antares-modeler libsirius_solver.so
            popd
            rm -rf install
 
@@ -156,6 +156,15 @@ jobs:
         tag: ${{ github.event.inputs.release_tag }}
       run: |
         gh release upload "$tag" _build/*.tar.gz _build/*.rpm
+
+    - name: Update nightly release
+      # if: ${{ env.REF == '/feature/nightly_release' }} # TODO change to develop
+      uses: eine/tip@master
+      with:
+        tag: nightly
+        rm: true
+        token: ${{ secrets.GITHUB_TOKEN }}
+        files: _build/*.tar.gz _build/*.rpm
 
     - name: Cache vcpkg binary dir
       if: always()
