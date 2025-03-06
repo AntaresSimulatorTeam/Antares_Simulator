@@ -373,12 +373,21 @@ double getClustersHourlyProduction(int PasDeTempsDebut, int pasDeTemps,
 }
 
 
+double getClusterDailyProduction(int PasDeTempsDebut, TimeSeriesAndWeight clusterMustRunTimeSeriesAndWeight, unsigned day) {
+    double sum = 0;
+    for (int hour = 0; hour < HOURS_PER_DAY; ++hour) {
+        sum += getClustersHourlyProduction(PasDeTempsDebut, day * HOURS_PER_DAY + hour,
+                                           clusterMustRunTimeSeriesAndWeight);
+    }
+    return sum;
+}
+
 void prepareBindingConstraint(PROBLEME_HEBDO &problem,
-                                     int PasDeTempsDebut,
-                                     const BindingConstraintsRepository &bindingConstraints,
-                                     const BindingConstraintGroupRepository &bcgroups,
-                                     const uint weekFirstDay,
-                                     int pasDeTemps) {
+                              int PasDeTempsDebut,
+                              const BindingConstraintsRepository &bindingConstraints,
+                              const BindingConstraintGroupRepository &bcgroups,
+                              const uint weekFirstDay,
+                              int pasDeTemps) {
     auto activeConstraints = bindingConstraints.activeConstraints();
     const auto constraintCount = activeConstraints.size();
 
@@ -404,14 +413,8 @@ void prepareBindingConstraint(PROBLEME_HEBDO &problem,
                         .SecondMembreDeLaContrainteCouplante;
 
                 for (unsigned day = 0; day != 7; ++day) {
-                    auto mustrun_production = std::accumulate(clusterMustRunTimeSeriesAndWeight.begin(),
-                                                              clusterMustRunTimeSeriesAndWeight.end(),
-                                                              0.,
-                                                              [day, PasDeTempsDebut](double acc, const auto pair) {
-                                                                  const auto &[ts, weight] = pair;
-                                                                  return acc + ts[PasDeTempsDebut + day] * weight;
-                                                              });
-                    sndMember[day] = column[weekFirstDay + day] - mustrun_production;
+                    auto dailyClusterMustRunProduction = getClusterDailyProduction(PasDeTempsDebut, clusterMustRunTimeSeriesAndWeight, day);
+                    sndMember[day] = column[weekFirstDay + day] - dailyClusterMustRunProduction;
                 }
 
                 break;
