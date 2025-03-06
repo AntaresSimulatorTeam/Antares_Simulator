@@ -29,3 +29,4 @@
 #include "sim_structure_probleme_economique.h"
 
 std::vector<std::vector<double>> transitMoyenInterconnexionsRecalculQuadratique;
+Benchmarking::IDurationCollector* durColl;

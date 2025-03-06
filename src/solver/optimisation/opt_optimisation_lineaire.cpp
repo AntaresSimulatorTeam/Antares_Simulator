@@ -26,8 +26,12 @@
 */
 
 #include "sim_structure_probleme_economique.h"
+#include "sim_extern_variables_globales.h"
 #include "opt_fonctions.h"
 #include "opt_export_structure.h"
+
+#include <antares/benchmarking/timer.h>
+#include <antares/benchmarking/DurationCollector.h>
 
 #include <antares/logs/logs.h>
 #include "antares/solver/utils/filename.h"
@@ -177,7 +181,14 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
     if (ret && !problemeHebdo->Expansion && !problemeHebdo->OptimisationAvecVariablesEntieres)
     {
         // We need to adjust some stuff before running the 2nd optimisation
-        runThermalHeuristic(problemeHebdo);
+
+        {
+            Benchmarking::Timer timer;
+            runThermalHeuristic(problemeHebdo);
+            timer.stop();
+            durColl->addDuration("thermal_heuristic", timer.get_duration());
+        }
+
         return runWeeklyOptimization(
           options, problemeHebdo, adqPatchParams, writer, DEUXIEME_OPTIMISATION);
     }

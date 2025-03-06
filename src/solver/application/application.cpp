@@ -24,7 +24,7 @@
 #include <yuni/datetime/timestamp.h>
 #include <yuni/core/process/rename.h>
 
-
+#include "../simulation/sim_extern_variables_globales.h"
 #include "../simulation/simulation.h"
 
 using namespace Antares::Check;
@@ -149,12 +149,12 @@ void Application::prepare(int argc, char* argv[])
     checkSimplexRangeHydroHeuristic(pParameters->simplexOptimizationRange, pStudy->areas);
 
     if (pParameters->adqPatchParams.enabled)
-        pParameters->adqPatchParams.checkAdqPatchParams(pParameters->mode,
-                                                        pStudy->areas,
-                                                        pParameters->include.hurdleCosts);
+        pParameters->adqPatchParams.checkAdqPatchParams(
+          pParameters->mode, pStudy->areas, pParameters->include.hurdleCosts);
 
     bool tsGenThermal
-      = (0 != (pParameters->timeSeriesToGenerate & Antares::Data::TimeSeriesType::timeSeriesThermal));
+      = (0
+         != (pParameters->timeSeriesToGenerate & Antares::Data::TimeSeriesType::timeSeriesThermal));
 
     checkMinStablePower(tsGenThermal, pStudy->areas);
 
@@ -255,7 +255,8 @@ void Application::resetLogFilename() const
     // Making sure that the folder
     if (!Yuni::IO::Directory::Create(logfile))
     {
-        throw FatalError(std::string("Impossible to create the log folder at ") + logfile.c_str() + ". Aborting now.");
+        throw FatalError(std::string("Impossible to create the log folder at ") + logfile.c_str()
+                         + ". Aborting now.");
     }
 
     // Date/time
@@ -284,7 +285,7 @@ void Application::prepareWriter(const Antares::Data::Study& study,
     ioQueueService->maximumThreadCount(1);
     ioQueueService->start();
     resultWriter = resultWriterFactory(
-            study.parameters.resultFormat, study.folderOutput, ioQueueService, duration_collector);
+      study.parameters.resultFormat, study.folderOutput, ioQueueService, duration_collector);
 }
 
 void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
@@ -339,6 +340,8 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     // Initialize the result writer
     prepareWriter(study, pDurationCollector);
+
+    durColl = &pDurationCollector;
 
     // Some checks may have failed, but we need a writer to copy the logs
     // to the output directory
@@ -470,7 +473,10 @@ Application::~Application()
         try
         {
             logs.info() << LOG_UI_SOLVER_DONE;
-        } catch (...) {}; //Catching log exception
+        }
+        catch (...)
+        {
+        }; // Catching log exception
 
         // Copy the log file if a result writer is available
         if (!pStudy->parameters.noOutput && resultWriter)

@@ -34,6 +34,14 @@
 
 /* Resultats */
 /*-Economique-*/
+
 extern std::vector<std::vector<double>> transitMoyenInterconnexionsRecalculQuadratique;
+
+namespace Benchmarking
+{
+class IDurationCollector;
+}
+
+extern Benchmarking::IDurationCollector* durColl;
 
 #endif /* __SOLVER_SIMULATION_EXTERN_H__ */
