@@ -145,6 +145,42 @@ Feature: short tests
       | hydro node-2 | 1    | 26758144         | 0             | 0       | 63506522       | 0                 |
       | hydro node-3 | 1    | 35188296         | 0             | 0       | 80265517       | 0                 |
 
+  @fast @short @useless
+  Scenario: 053 System Map Editor - 1
+    # This was meant to be a GUI training scenario. Keeping it simple: only checking if simulation works & overall cost.
+    Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/053 System Map Editor - 1"
+    When I run antares simulator
+    Then the simulation succeeds
+    And the simulation takes less than 20 seconds
+    And the expected value of the annual system cost is 668214000000
+
+  @fast @short @useless
+  Scenario: 054 System Map Editor -2
+    # This was meant to be a GUI training scenario. Keeping it simple: only checking if simulation works & overall cost.
+    Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/054 System Map Editor -2"
+    When I run antares simulator
+    Then the simulation succeeds
+    And the simulation takes less than 20 seconds
+    And the expected value of the annual system cost is 2485600000000
+
+  @fast @short @useless
+  Scenario: 055 System Map Editor - 3
+    # This was meant to be a GUI training scenario. Keeping it simple: only checking if simulation works & overall cost.
+    Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/055 System Map Editor - 3"
+    When I run antares simulator
+    Then the simulation succeeds
+    And the simulation takes less than 20 seconds
+    And the expected value of the annual system cost is 760011000000
+
+  @fast @short @useless
+  Scenario: 056 System Map Editor - 4
+    # This was meant to be a GUI training scenario. Keeping it simple: only checking if simulation works & overall cost.
+    Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/056 System Map Editor - 4"
+    When I run antares simulator
+    Then the simulation succeeds
+    And the simulation takes less than 20 seconds
+    And the expected value of the annual system cost is 2485600000000
+
   @fast @short @hydro @storage
   Scenario: 065 Pumped storage plant -explicit model-01
     Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/065 Pumped storage plant -explicit model-01"
