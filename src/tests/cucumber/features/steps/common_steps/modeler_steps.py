@@ -1,9 +1,11 @@
 # Test steps definitions specific to antares-modeler
 
 import os
+import subprocess
 
 from behave import *
 from common_steps.assertions import *
+from common_steps.modeler_output_handler import modeler_output_handler
 
 
 @given('the modeler study path is "{string}"')
@@ -43,9 +45,6 @@ def get_value(row, ts):
         return float(ret[ts])  # Index and convert to float
 
     return float(ret)  # Single value case (apply to all timesteps)
-
-import subprocess
-from common_steps.modeler_output_handler import modeler_output_handler
 
 
 def run_modeler(context):
