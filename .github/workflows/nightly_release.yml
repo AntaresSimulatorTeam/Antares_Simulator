@@ -1,6 +1,9 @@
 name: Create a nightly release everyday
 
 on:
+  push:
+    branches:
+      - feature/nightly_release
   schedule:
     - cron: '0 11 * * *'
 
