@@ -177,7 +177,6 @@ void BindingConstraint::weight(const AreaLink* lnk, double w)
 
 void BindingConstraint::weight(const ThermalCluster* cluster, double w)
 {
-    int x= pClusterWeights.size();
     if (cluster)
     {
         if (Utils::isZero(w))
@@ -193,7 +192,6 @@ void BindingConstraint::weight(const ThermalCluster* cluster, double w)
             pClusterWeights[cluster] = w;
         }
     }
-    int y = pClusterWeights.size();
 }
 
 void BindingConstraint::removeAllWeights()
@@ -627,16 +625,14 @@ BindingConstraintStructures BindingConstraint::initLinkArrays() const
     std::vector<long> clusterIndex;
     std::vector<long> clustersAreaIndex;
 
-    auto links = linkCount();
-    linkWeight.resize(links);
-    linkOffset.resize(links);
-    linkIndex.resize(links);
+    linkWeight.resize(linkCount());
+    linkOffset.resize(linkCount());
+    linkIndex.resize(linkCount());
 
-    auto clusters = clusterCount();
-    clusterWeight.resize(clusters);
-    clusterOffset.resize(clusters);
-    clusterIndex.resize(clusters);
-    clustersAreaIndex.resize(clusters);
+    clusterWeight.resize(clusterCount());
+    clusterOffset.resize(clusterCount());
+    clusterIndex.resize(clusterCount());
+    clustersAreaIndex.resize(clusterCount());
 
     uint off = 0;
     auto end = pLinkWeights.end();
@@ -661,7 +657,6 @@ BindingConstraintStructures BindingConstraint::initLinkArrays() const
     for (auto i = pClusterWeights.begin(); i != cEnd; ++i)
     {
         if (i->first->isActive())
-        //if (i->first->enabled or i->first->mustrun)
         {
             clusterIndex[off] = (i->first)->index;
             clustersAreaIndex[off] = (i->first)->parentArea->index;
@@ -689,6 +684,11 @@ BindingConstraintStructures BindingConstraint::initLinkArrays() const
       clusterIndex,
       clustersAreaIndex,
     };
+}
+
+const BindingConstraint::clusterWeightMap&
+BindingConstraint::clusters() const {
+    return pClusterWeights;
 }
 
 bool BindingConstraint::forceReload(bool reload) const

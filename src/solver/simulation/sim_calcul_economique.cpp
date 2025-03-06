@@ -20,6 +20,7 @@
 */
 
 #include <algorithm>
+#include <span>
 #include <sstream>
 
 #include <antares/antares/fatal-error.h>
@@ -341,11 +342,34 @@ static void prepareBindingConstraint(PROBLEME_HEBDO &problem,
 
         auto &timeSeries = bc->RHSTimeSeries();
         const double *column = timeSeries[ts_number];
+        using Time_serie = std::span<const double>;
+        using Weight = double;
+        std::vector<std::pair<Time_serie, Weight>> time_seriesAndWeight;
+        auto mustrun_clusters = bc->clusters()
+                                | std::ranges::views::filter([](auto pair) {
+                                    const auto& [cluster, weight] = pair;
+                                    return cluster->isEnabled() && cluster->isMustRun();
+                                });
+        std::ranges::transform(mustrun_clusters,
+            std::back_inserter(time_seriesAndWeight),
+            [year = problem.year](auto pair) {
+                auto& [cluster, weight] = pair;
+                auto ts = std::span<const double>{cluster->series.getColumn(year), cluster->series.timeSeries.height};
+               return std::pair{ts, weight};
+            });
+
         switch (bc->type()) {
             case BindingConstraint::typeHourly: {
+                auto hourly_mustrun_production = std::accumulate(time_seriesAndWeight.begin(),
+                    time_seriesAndWeight.end(),
+                    0.,
+                    [pasDeTemps, &PasDeTempsDebut](double acc, const auto pair) {
+                        const auto& [ts, weight] = pair;
+                        return acc + ts[PasDeTempsDebut + pasDeTemps] * weight;
+                    });
                 problem.MatriceDesContraintesCouplantes[constraintIndex]
                         .SecondMembreDeLaContrainteCouplante[pasDeTemps]
-                        = column[PasDeTempsDebut + pasDeTemps];
+                        = column[PasDeTempsDebut + pasDeTemps] - hourly_mustrun_production;
                 break;
             }
             case BindingConstraint::typeDaily: {

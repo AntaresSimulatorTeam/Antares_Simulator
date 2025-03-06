@@ -371,6 +371,9 @@ public:
     template<class Env>
     std::string timeSeriesFileName(const Env& env) const;
 
+    const clusterWeightMap&
+    clusters() const ;
+
 private:
     //! Raw name
     ConstraintName pName;
