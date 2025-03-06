@@ -319,61 +319,61 @@ void SIM_InitialisationProblemeHebdo(Data::Study &study,
 }
 
 namespace {
-    using Time_serie = std::span<const double>;
-    using Weight = double;
-    using TimeSeriesAndWeight = std::vector<std::pair<Time_serie, Weight> >;
+using Time_serie = std::span<const double>;
+using Weight = double;
+using TimeSeriesAndWeight = std::vector<std::pair<Time_serie, Weight> >;
 
-    Time_serie timeSeriesColumn(BindingConstraint *bc, const BindingConstraintGroupRepository &bcgroups, int year) {
-        assert(bc->RHSTimeSeries().width && "Invalid constraint data width");
+Time_serie timeSeriesColumn(BindingConstraint *bc, const BindingConstraintGroupRepository &bcgroups, int year) {
+    assert(bc->RHSTimeSeries().width && "Invalid constraint data width");
 
-        uint tsIndexForBc = 0;
-        auto *group = bcgroups[bc->group()];
-        if (group) {
-            tsIndexForBc = group->timeseriesNumbers[year];
-        }
-
-        // If there is only one TS, always select it.
-        const auto ts_number = bc->RHSTimeSeries().width == 1 ? 0 : tsIndexForBc;
-        auto &timeSeries = bc->RHSTimeSeries();
-        const double *column = timeSeries[ts_number];
-        return {column, timeSeries.height};
+    uint tsIndexForBc = 0;
+    auto *group = bcgroups[bc->group()];
+    if (group) {
+        tsIndexForBc = group->timeseriesNumbers[year];
     }
 
-    TimeSeriesAndWeight getMustRunClusterTimeSeriesAndWeight(BindingConstraint *bc, int year) {
-        auto mustrun_clusters = bc->clusters()
-                                | std::ranges::views::filter([](auto pair) {
-                                    const auto &[cluster, weight] = pair;
-                                    return cluster->isEnabled() && cluster->isMustRun();
-                                });
-        TimeSeriesAndWeight time_seriesAndWeight;
-        time_seriesAndWeight.reserve(std::distance(mustrun_clusters.begin(), mustrun_clusters.end()));
-        std::ranges::transform(mustrun_clusters,
-                               std::back_inserter(time_seriesAndWeight),
-                               [year = year](auto pair) {
-                                   auto &[cluster, weight] = pair;
-                                   auto ts = std::span<const double>{
-                                       cluster->series.getColumn(year), cluster->series.timeSeries.height
-                                   };
-                                   return std::pair{ts, weight};
-                               });
-        return time_seriesAndWeight;
-    }
-
-    double getClustersHourlyProduction(int PasDeTempsDebut, int pasDeTemps,
-                                       TimeSeriesAndWeight clusterMustRunTimeSeriesAndWeight) {
-        return std::accumulate(clusterMustRunTimeSeriesAndWeight.begin(),
-                               clusterMustRunTimeSeriesAndWeight.end(),
-                               0.,
-                               [pasDeTemps, PasDeTempsDebut](
-                           double acc, const auto pair) {
-                                   const auto &[ts, weight] = pair;
-                                   return acc + ts[PasDeTempsDebut + pasDeTemps] *
-                                          weight;
-                               });
-    }
+    // If there is only one TS, always select it.
+    const auto ts_number = bc->RHSTimeSeries().width == 1 ? 0 : tsIndexForBc;
+    auto &timeSeries = bc->RHSTimeSeries();
+    const double *column = timeSeries[ts_number];
+    return {column, timeSeries.height};
 }
 
-static void prepareBindingConstraint(PROBLEME_HEBDO &problem,
+TimeSeriesAndWeight getMustRunClusterTimeSeriesAndWeight(BindingConstraint *bc, int year) {
+    auto mustrun_clusters = bc->clusters()
+                            | std::ranges::views::filter([](auto pair) {
+                                const auto &[cluster, weight] = pair;
+                                return cluster->isEnabled() && cluster->isMustRun();
+                            });
+    TimeSeriesAndWeight time_seriesAndWeight;
+    time_seriesAndWeight.reserve(std::distance(mustrun_clusters.begin(), mustrun_clusters.end()));
+    std::ranges::transform(mustrun_clusters,
+                           std::back_inserter(time_seriesAndWeight),
+                           [year = year](auto pair) {
+                               auto &[cluster, weight] = pair;
+                               auto ts = std::span<const double>{
+                                   cluster->series.getColumn(year), cluster->series.timeSeries.height
+                               };
+                               return std::pair{ts, weight};
+                           });
+    return time_seriesAndWeight;
+}
+
+double getClustersHourlyProduction(int PasDeTempsDebut, int pasDeTemps,
+                                   TimeSeriesAndWeight clusterMustRunTimeSeriesAndWeight) {
+    return std::accumulate(clusterMustRunTimeSeriesAndWeight.begin(),
+                           clusterMustRunTimeSeriesAndWeight.end(),
+                           0.,
+                           [pasDeTemps, PasDeTempsDebut](
+                       double acc, const auto pair) {
+                               const auto &[ts, weight] = pair;
+                               return acc + ts[PasDeTempsDebut + pasDeTemps] *
+                                      weight;
+                           });
+}
+
+
+void prepareBindingConstraint(PROBLEME_HEBDO &problem,
                                      int PasDeTempsDebut,
                                      const BindingConstraintsRepository &bindingConstraints,
                                      const BindingConstraintGroupRepository &bcgroups,
@@ -439,14 +439,14 @@ static void prepareBindingConstraint(PROBLEME_HEBDO &problem,
             case BindingConstraint::typeUnknown:
             case BindingConstraint::typeMax:
             default: {
-                assert(false && "invalid constraint type");
                 logs.error() << "internal error. Please submit a full bug report";
+                assert(false && "invalid constraint type");
                 break;
             }
         }
     }
 }
-
+}
 void SIM_RenseignementProblemeHebdo(const Study &study,
                                     PROBLEME_HEBDO &problem,
                                     uint weekInTheYear,
