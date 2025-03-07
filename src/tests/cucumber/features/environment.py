@@ -18,6 +18,6 @@ def after_scenario(context, scenario):
         return
     # else, clean up output files to avoid taking up all the disk space
     if hasattr(context, "output_path") and context.output_path is not None:
-        pass # rmtree(context.output_path) # TODO : revert
+        rmtree(context.output_path)
     if os.path.exists(os.path.join(context.study_path, "logs")):
         rmtree(os.path.join(context.study_path, "logs"))
