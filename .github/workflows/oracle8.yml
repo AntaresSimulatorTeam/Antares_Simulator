@@ -7,7 +7,6 @@ on:
     branches:
       - develop
       - dependabot/*
-      - feature/nightly_release # TODO revert
   schedule:
     - cron: '21 2 * * *'
   workflow_call:
@@ -158,13 +157,13 @@ jobs:
         gh release upload "$tag" _build/*.tar.gz _build/*.rpm
 
     - name: Rename assets for continuous-delivery release
-      if: github.ref == 'refs/heads/feature/nightly_release' # TODO revert to develop
+      if: github.ref == 'refs/heads/develop'
       run: |
         mv _build/antares-*-OracleServer-8.10.tar.gz _build/antares-cd-OracleServer-8.10.tar.gz
         mv _build/antares-*-OracleServer-8.10.rpm _build/antares-cd-OracleServer-8.10.rpm
 
     - name: Update continuous-delivery release
-      if: github.ref == 'refs/heads/feature/nightly_release' # TODO revert to develop
+      if: github.ref == 'refs/heads/develop'
       uses: pyTooling/Actions/releaser@main
       with:
         tag: continuous-delivery
