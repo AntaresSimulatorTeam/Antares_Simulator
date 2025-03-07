@@ -23,6 +23,7 @@
 
 #include <antares/expressions/iterators/pre-order.h>
 #include "antares/expressions/expression.h"
+#include <antares/expressions/nodes/PortFieldNode.h>
 #include "antares/io/inputs/model-converter/convertorVisitor.h"
 #include "antares/study/system-model/constraint.h"
 #include "antares/study/system-model/library.h"
@@ -73,6 +74,13 @@ FieldNotFoundForDefinition::FieldNotFoundForDefinition(const std::string& portId
                                                        const std::string& fieldId):
     std::runtime_error("In port-field-definitions, for port: " + portId
                        + " , field not found: " + fieldId)
+{
+}
+
+PortInDefinition::PortInDefinition(const std::string& portId,
+                                   const std::string& portInDefId):
+    std::runtime_error("In port-field-definitions, for port: " + portId
+                       + " , found another port in the definition: " + portInDefId)
 {
 }
 
@@ -250,15 +258,15 @@ std::vector<Study::SystemModel::PortFieldDefinition> convertPortFieldDefinitions
 
         auto nodeRegistry = convertExpressionToNode(pfdefinition.definition, model);
 
-        Expressions::Nodes::AST preorder(nodeRegistry.node);
+        using namespace Antares::Expressions::Nodes;
+        AST preorder(nodeRegistry.node);
         auto it = std::find_if(preorder.begin(),
                                preorder.end(),
-                               [](const Expressions::Nodes::Node& node)
+                               [](const Node& node)
                                { return node.name() == "PortFieldNode"; });
         if (it != preorder.end())
         {
-            // TODO: throw custom ex
-            throw FieldNotFoundForDefinition(pfdefinition.port, pfdefinition.field);
+            throw PortInDefinition(pfdefinition.port, dynamic_cast<PortFieldNode*>(&*it)->getPortName());
         }
 
         portFieldDefinitions.emplace_back(*itPort,

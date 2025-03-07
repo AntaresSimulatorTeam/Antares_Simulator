@@ -96,4 +96,10 @@ public:
     explicit FieldNotFoundForDefinition(const std::string& portId, const std::string& fieldId);
 };
 
+class PortInDefinition: public std::runtime_error
+{
+public:
+    explicit PortInDefinition(const std::string& portId, const std::string& portInDefId);
+};
+
 } // namespace Antares::IO::Inputs::ModelConverter
