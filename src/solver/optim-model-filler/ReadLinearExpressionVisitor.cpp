@@ -33,9 +33,11 @@ namespace Antares::Optimization
 
 ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
   Expressions::Visitors::EvaluationContext context,
-  Optimisation::LinearProblemApi::FillContext fillContext):
+  Optimisation::LinearProblemApi::FillContext fillContext,
+  const std::string& componentId):
     context_(std::move(context)),
-    fillContext_(std::move(fillContext))
+    fillContext_(std::move(fillContext)),
+    componentId_(componentId)
 {
 }
 
@@ -91,7 +93,26 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const NegationN
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const VariableNode* node)
 {
-    return TimeDependentLinearExpression(fillContext_, LinearExpression(0, {{node->value(), 1}}));
+    if (node->timeIndex() == Expressions::Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
+    {
+        return TimeDependentLinearExpression(
+          fillContext_,
+          LinearExpression(0, {{FullKey(componentId_, node->value()), 1}}));
+    }
+    else // only dependent
+    {
+        std::unordered_map<unsigned int, LinearExpression> linearExpressions;
+
+        for (auto timeStep = fillContext_.getFirstTimeStep();
+             timeStep <= fillContext_.getLastTimeStep();
+             ++timeStep)
+        {
+            linearExpressions[timeStep] = LinearExpression(
+              0,
+              {{FullKey(componentId_, node->value(), 0 /*TODO */, timeStep), 1}});
+        }
+        return TimeDependentLinearExpression(linearExpressions);
+    }
 }
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const ParameterNode* node)
@@ -110,9 +131,9 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Parameter
           fillContext_,
           LinearExpression(context_.getSystemParameterValueAsDouble(node->value()), {}));
     }
-    else // only timedepent
+    else // only dependent
     {
-        std::map<unsigned int, LinearExpression> linearExpressions;
+        std::unordered_map<unsigned int, LinearExpression> linearExpressions;
 
         for (auto timeStep = fillContext_.getFirstTimeStep();
              timeStep <= fillContext_.getLastTimeStep();

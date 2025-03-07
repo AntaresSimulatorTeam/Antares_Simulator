@@ -9,5 +9,5 @@ customizable behavior.
 
 All this is achieved by allowing the user to define the MIP variables and constraints behind every physical model
 instantiated in their energy system.  
-Of course, Antares is also delivered with a riche set of [standard models]() that can be used out-of-the-box, and that
+Of course, Antares is also delivered with a rich set of standard models that can be used out-of-the-box, and that
 can cover a large scope of everyday studies.

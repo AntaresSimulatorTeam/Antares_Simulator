@@ -54,6 +54,9 @@ Benchmarking::OptimizationInfo simulationRun(Antares::Data::Study& study,
                                              IResultWriter& resultWriter,
                                              Simulation::ISimulationObserver& simulationObserver)
 {
+    // gp : is there a reason why we do that here and not inside the clusters and
+    // gp : right after the read step ?
+    // gp : It would allow to move a piece of code out of the Study.
     study.computePThetaInfForThermalClusters();
 
     switch (study.runtime.mode)

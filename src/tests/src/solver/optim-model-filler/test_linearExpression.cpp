@@ -41,71 +41,96 @@ BOOST_AUTO_TEST_CASE(default_linear_expression)
 
 BOOST_AUTO_TEST_CASE(linear_expression_explicit_construction)
 {
-    LinearExpression linearExpression(4., {{"some key", -5.}});
+    LinearExpression linearExpression(4., {{FullKey("compo", "some key"), -5.}});
 
     BOOST_CHECK_EQUAL(linearExpression.offset(), 4.);
     BOOST_CHECK_EQUAL(linearExpression.coefPerVar().size(), 1);
-    BOOST_CHECK_EQUAL(linearExpression.coefPerVar()["some key"], -5.);
+    BOOST_CHECK_EQUAL(linearExpression.coefPerVar().at(FullKey("compo", "some key")), -5.);
 }
 
 BOOST_AUTO_TEST_CASE(sum_two_linear_expressions)
 {
-    LinearExpression linearExpression1(4., {{"var1", -5.}, {"var2", 6.}});
-    LinearExpression linearExpression2(-1., {{"var3", 20.}, {"var2", -4.}});
+    auto component = "compo";
+    LinearExpression linearExpression1(4.,
+                                       {{FullKey(component, "var1"), -5.},
+                                        {FullKey(component, "var2"), 6.}});
+    LinearExpression linearExpression2(-1.,
+                                       {{FullKey(component, "var3"), 20.},
+                                        {FullKey(component, "var2"), -4.}});
 
     auto sum = linearExpression1 + linearExpression2;
 
     BOOST_CHECK_EQUAL(sum.offset(), 3.);
     BOOST_CHECK_EQUAL(sum.coefPerVar().size(), 3);
-    BOOST_CHECK_EQUAL(sum.coefPerVar()["var1"], -5.);
-    BOOST_CHECK_EQUAL(sum.coefPerVar()["var2"], 2.);
-    BOOST_CHECK_EQUAL(sum.coefPerVar()["var3"], 20.);
+    BOOST_CHECK_EQUAL(sum.coefPerVar().at(FullKey(component, "var1")), -5.);
+    BOOST_CHECK_EQUAL(sum.coefPerVar().at(FullKey(component, "var2")), 2.);
+    BOOST_CHECK_EQUAL(sum.coefPerVar().at(FullKey(component, "var3")), 20.);
 }
 
 BOOST_AUTO_TEST_CASE(subtract_two_linear_expressions)
 {
-    LinearExpression linearExpression1(4., {{"var1", -5.}, {"var2", 6.}});
-    LinearExpression linearExpression2(-1., {{"var2", -4.}, {"var3", 20.}});
+    auto component = "compo";
+
+    LinearExpression linearExpression1(4.,
+                                       {{FullKey(component, "var1"), -5.},
+                                        {FullKey(component, "var2"), 6.}});
+    LinearExpression linearExpression2(-1.,
+                                       {{FullKey(component, "var2"), -4.},
+                                        {FullKey(component, "var3"), 20.}});
 
     auto subtract = linearExpression1 - linearExpression2;
 
     BOOST_CHECK_EQUAL(subtract.offset(), 5.);
     BOOST_CHECK_EQUAL(subtract.coefPerVar().size(), 3);
-    BOOST_CHECK_EQUAL(subtract.coefPerVar()["var1"], -5.);
-    BOOST_CHECK_EQUAL(subtract.coefPerVar()["var2"], 10.);
-    BOOST_CHECK_EQUAL(subtract.coefPerVar()["var3"], -20.);
+    BOOST_CHECK_EQUAL(subtract.coefPerVar().at(FullKey(component, "var1")), -5.);
+    BOOST_CHECK_EQUAL(subtract.coefPerVar().at(FullKey(component, "var2")), 10.);
+    BOOST_CHECK_EQUAL(subtract.coefPerVar().at(FullKey(component, "var3")), -20.);
 }
 
 BOOST_AUTO_TEST_CASE(multiply_linear_expression_by_scalar)
 {
-    LinearExpression linearExpression(4., {{"var1", -5.}, {"var2", 6.}});
+    auto component = "compo";
+
+    LinearExpression linearExpression(4.,
+                                      {{FullKey(component, "var1"), -5.},
+                                       {FullKey(component, "var2"), 6.}});
     LinearExpression someScalar(-2., {});
 
     auto product = linearExpression * someScalar;
 
     BOOST_CHECK_EQUAL(product.offset(), -8.);
     BOOST_CHECK_EQUAL(product.coefPerVar().size(), 2);
-    BOOST_CHECK_EQUAL(product.coefPerVar()["var1"], 10.);
-    BOOST_CHECK_EQUAL(product.coefPerVar()["var2"], -12.);
+    BOOST_CHECK_EQUAL(product.coefPerVar().at(FullKey(component, "var1")), 10.);
+    BOOST_CHECK_EQUAL(product.coefPerVar().at(FullKey(component, "var2")), -12.);
 }
 
 BOOST_AUTO_TEST_CASE(multiply_scalar_by_linear_expression)
 {
-    LinearExpression linearExpression(4., {{"var1", -5.}, {"var2", 6.}});
+    auto component = "compo";
+
+    LinearExpression linearExpression(4.,
+                                      {{FullKey(component, "var1"), -5.},
+                                       {FullKey(component, "var2"), 6.}});
     LinearExpression someScalar(-2., {});
 
     auto product = someScalar * linearExpression;
 
     BOOST_CHECK_EQUAL(product.offset(), -8.);
     BOOST_CHECK_EQUAL(product.coefPerVar().size(), 2);
-    BOOST_CHECK_EQUAL(product.coefPerVar()["var1"], 10.);
-    BOOST_CHECK_EQUAL(product.coefPerVar()["var2"], -12.);
+    BOOST_CHECK_EQUAL(product.coefPerVar().at(FullKey(component, "var1")), 10.);
+    BOOST_CHECK_EQUAL(product.coefPerVar().at(FullKey(component, "var2")), -12.);
 }
 
 BOOST_AUTO_TEST_CASE(multiply_two_linear_expressions_containing_variables__exception_raised)
 {
-    LinearExpression linearExpression1(4., {{"var1", -5.}, {"var2", 6.}});
-    LinearExpression linearExpression2(-1., {{"var2", -4.}, {"var3", 20.}});
+    auto component = "compo";
+
+    LinearExpression linearExpression1(4.,
+                                       {{FullKey(component, "var1"), -5.},
+                                        {FullKey(component, "var2"), 6.}});
+    LinearExpression linearExpression2(-1.,
+                                       {{FullKey(component, "var2"), -4.},
+                                        {FullKey(component, "var3"), 20.}});
 
     BOOST_CHECK_EXCEPTION(linearExpression1 * linearExpression2,
                           std::invalid_argument,
@@ -114,20 +139,28 @@ BOOST_AUTO_TEST_CASE(multiply_two_linear_expressions_containing_variables__excep
 
 BOOST_AUTO_TEST_CASE(divide_linear_expression_by_scalar)
 {
-    LinearExpression linearExpression(4., {{"var1", -5.}, {"var2", 6.}});
+    auto component = "compo";
+
+    LinearExpression linearExpression(4.,
+                                      {{FullKey(component, "var1"), -5.},
+                                       {FullKey(component, "var2"), 6.}});
     LinearExpression someScalar(-2., {});
 
     auto product = linearExpression / someScalar;
 
     BOOST_CHECK_EQUAL(product.offset(), -2.);
     BOOST_CHECK_EQUAL(product.coefPerVar().size(), 2);
-    BOOST_CHECK_EQUAL(product.coefPerVar()["var1"], 2.5);
-    BOOST_CHECK_EQUAL(product.coefPerVar()["var2"], -3.);
+    BOOST_CHECK_EQUAL(product.coefPerVar().at(FullKey(component, "var1")), 2.5);
+    BOOST_CHECK_EQUAL(product.coefPerVar().at(FullKey(component, "var2")), -3.);
 }
 
 BOOST_AUTO_TEST_CASE(divide_scalar_by_linear_expression__exception_raised)
 {
-    LinearExpression linearExpression(4., {{"var1", -5.}, {"var2", 6.}});
+    auto component = "compo";
+
+    LinearExpression linearExpression(4.,
+                                      {{FullKey(component, "var1"), -5.},
+                                       {FullKey(component, "var2"), 6.}});
     LinearExpression someScalar(-2., {});
 
     BOOST_CHECK_EXCEPTION(someScalar / linearExpression,
@@ -137,14 +170,18 @@ BOOST_AUTO_TEST_CASE(divide_scalar_by_linear_expression__exception_raised)
 
 BOOST_AUTO_TEST_CASE(negate_linear_expression)
 {
-    LinearExpression linearExpression(4., {{"var1", -5.}, {"var2", 6.}});
+    auto component = "compo";
+
+    LinearExpression linearExpression(4.,
+                                      {{FullKey(component, "var1"), -5.},
+                                       {FullKey(component, "var2"), 6.}});
 
     auto negative = -linearExpression;
 
     BOOST_CHECK_EQUAL(negative.offset(), -4.);
     BOOST_CHECK_EQUAL(negative.coefPerVar().size(), 2);
-    BOOST_CHECK_EQUAL(negative.coefPerVar()["var1"], 5.);
-    BOOST_CHECK_EQUAL(negative.coefPerVar()["var2"], -6.);
+    BOOST_CHECK_EQUAL(negative.coefPerVar().at(FullKey(component, "var1")), 5.);
+    BOOST_CHECK_EQUAL(negative.coefPerVar().at(FullKey(component, "var2")), -6.);
 }
 
 // Test default constructor
@@ -158,8 +195,10 @@ BOOST_AUTO_TEST_CASE(DefaultConstructor)
 // Test constructor with a single LinearExpression
 BOOST_AUTO_TEST_CASE(ConstructorWithLinearExpression)
 {
+    auto component = "compo";
+
     Antares::Optimisation::LinearProblemApi::FillContext context(0, 2);
-    LinearExpression le(5.0, {{"x", 2.0}});
+    LinearExpression le(5.0, {{FullKey(component, "x"), 2.0}});
     TimeDependentLinearExpression expr(context, le);
 
     auto expressions = expr.GetLinearExpressions();
@@ -167,15 +206,18 @@ BOOST_AUTO_TEST_CASE(ConstructorWithLinearExpression)
     for (const auto& [timestep, lexpr]: expressions)
     {
         BOOST_TEST(lexpr.offset() == 5.0);
-        BOOST_TEST(lexpr.coefPerVar().at("x") == 2.0);
+        BOOST_TEST(lexpr.coefPerVar().at(FullKey(component, "x")) == 2.0);
     }
 }
 
 // Test constructor with a map of LinearExpression objects
 BOOST_AUTO_TEST_CASE(ConstructorWithMap)
 {
-    std::map<unsigned, LinearExpression> expressions = {{0, LinearExpression(1.0, {{"a", 1.5}})},
-                                                        {1, LinearExpression(2.0, {{"b", 3.0}})}};
+    auto component = "compo";
+
+    std::unordered_map<unsigned, LinearExpression> expressions = {
+      {0, LinearExpression(1.0, {{FullKey(component, "a"), 1.5}})},
+      {1, LinearExpression(2.0, {{FullKey(component, "b"), 3.0}})}};
 
     TimeDependentLinearExpression expr(expressions);
     BOOST_TEST(expr.getSize() == 2);
@@ -186,40 +228,51 @@ BOOST_AUTO_TEST_CASE(ConstructorWithMap)
 // Test addition operator
 BOOST_AUTO_TEST_CASE(AdditionOperator)
 {
-    std::map<unsigned, LinearExpression> exp1 = {{0, LinearExpression(3.0, {{"x", 1.0}})},
-                                                 {1, LinearExpression(2.0, {{"y", 2.0}})}};
-    std::map<unsigned, LinearExpression> exp2 = {{0, LinearExpression(2.0, {{"x", 2.0}})},
-                                                 {1, LinearExpression(1.0, {{"y", 1.0}})}};
+    auto component = "compo";
+
+    std::unordered_map<unsigned, LinearExpression> exp1 = {
+      {0, LinearExpression(3.0, {{FullKey(component, "x"), 1.0}})},
+      {1, LinearExpression(2.0, {{FullKey(component, "y"), 2.0}})}};
+    std::unordered_map<unsigned, LinearExpression> exp2 = {
+      {0, LinearExpression(2.0, {{FullKey(component, "x"), 2.0}})},
+      {1, LinearExpression(1.0, {{FullKey(component, "y"), 1.0}})}};
 
     TimeDependentLinearExpression expr1(exp1), expr2(exp2);
     TimeDependentLinearExpression result = expr1 + expr2;
 
     BOOST_TEST(result.GetLinearExpressions().at(0).offset() == 5.0);
-    BOOST_TEST(result.GetLinearExpressions().at(0).coefPerVar().at("x") == 3.0);
-    BOOST_TEST(result.GetLinearExpressions().at(1).coefPerVar().at("y") == 3.0);
+    BOOST_TEST(result.GetLinearExpressions().at(0).coefPerVar().at(FullKey(component, "x")) == 3.0);
+    BOOST_TEST(result.GetLinearExpressions().at(1).coefPerVar().at(FullKey(component, "y")) == 3.0);
 }
 
 // Test subtraction operator
 BOOST_AUTO_TEST_CASE(SubtractionOperator)
 {
-    std::map<unsigned, LinearExpression> exp1 = {{0, LinearExpression(5.0, {{"x", 4.0}})},
-                                                 {1, LinearExpression(7.0, {{"y", 3.0}})}};
-    std::map<unsigned, LinearExpression> exp2 = {{0, LinearExpression(3.0, {{"x", 2.0}})},
-                                                 {1, LinearExpression(2.0, {{"y", 1.0}})}};
+    auto component = "compo";
+
+    std::unordered_map<unsigned, LinearExpression> exp1 = {
+      {0, LinearExpression(5.0, {{FullKey(component, "x"), 4.0}})},
+      {1, LinearExpression(7.0, {{FullKey(component, "y"), 3.0}})}};
+    std::unordered_map<unsigned, LinearExpression> exp2 = {
+      {0, LinearExpression(3.0, {{FullKey(component, "x"), 2.0}})},
+      {1, LinearExpression(2.0, {{FullKey(component, "y"), 1.0}})}};
 
     TimeDependentLinearExpression expr1(exp1), expr2(exp2);
     TimeDependentLinearExpression result = expr1 - expr2;
 
     BOOST_TEST(result.GetLinearExpressions().at(0).offset() == 2.0);
-    BOOST_TEST(result.GetLinearExpressions().at(0).coefPerVar().at("x") == 2.0);
-    BOOST_TEST(result.GetLinearExpressions().at(1).coefPerVar().at("y") == 2.0);
+    BOOST_TEST(result.GetLinearExpressions().at(0).coefPerVar().at(FullKey(component, "x")) == 2.0);
+    BOOST_TEST(result.GetLinearExpressions().at(1).coefPerVar().at(FullKey(component, "y")) == 2.0);
 }
 
 // Test multiplication operator
 BOOST_AUTO_TEST_CASE(MultiplicationOperator)
 {
-    std::map<unsigned, LinearExpression> exp1 = {{0, LinearExpression(2.0, {{"x", 3.0}})}};
-    std::map<unsigned, LinearExpression> exp2 = {
+    auto component = "compo";
+
+    std::unordered_map<unsigned, LinearExpression> exp1 = {
+      {0, LinearExpression(2.0, {{FullKey(component, "x"), 3.0}})}};
+    std::unordered_map<unsigned, LinearExpression> exp2 = {
       {0, LinearExpression(4.0, {})} // Only scalar allowed
     };
 
@@ -227,14 +280,18 @@ BOOST_AUTO_TEST_CASE(MultiplicationOperator)
     TimeDependentLinearExpression result = expr1 * expr2;
 
     BOOST_TEST(result.GetLinearExpressions().at(0).offset() == 8.0);
-    BOOST_TEST(result.GetLinearExpressions().at(0).coefPerVar().at("x") == 12.0);
+    BOOST_TEST(result.GetLinearExpressions().at(0).coefPerVar().at(FullKey(component, "x"))
+               == 12.0);
 }
 
 // Test division operator
 BOOST_AUTO_TEST_CASE(DivisionOperator)
 {
-    std::map<unsigned, LinearExpression> exp1 = {{0, LinearExpression(6.0, {{"x", 3.0}})}};
-    std::map<unsigned, LinearExpression> exp2 = {
+    auto component = "compo";
+
+    std::unordered_map<unsigned, LinearExpression> exp1 = {
+      {0, LinearExpression(6.0, {{FullKey(component, "x"), 3.0}})}};
+    std::unordered_map<unsigned, LinearExpression> exp2 = {
       {0, LinearExpression(2.0, {})} // Only scalar allowed
     };
 
@@ -242,43 +299,54 @@ BOOST_AUTO_TEST_CASE(DivisionOperator)
     TimeDependentLinearExpression result = expr1 / expr2;
 
     BOOST_TEST(result.GetLinearExpressions().at(0).offset() == 3.0);
-    BOOST_TEST(result.GetLinearExpressions().at(0).coefPerVar().at("x") == 1.5);
+    BOOST_TEST(result.GetLinearExpressions().at(0).coefPerVar().at(FullKey(component, "x")) == 1.5);
 }
 
 // Test negation
 BOOST_AUTO_TEST_CASE(NegationOperator)
 {
-    std::map<unsigned, LinearExpression> exp = {{0, LinearExpression(3.0, {{"x", 2.0}})},
-                                                {1, LinearExpression(4.0, {{"y", 1.0}})}};
+    auto component = "compo";
+
+    std::unordered_map<unsigned, LinearExpression> exp = {
+      {0, LinearExpression(3.0, {{FullKey(component, "x"), 2.0}})},
+      {1, LinearExpression(4.0, {{FullKey(component, "y"), 1.0}})}};
 
     TimeDependentLinearExpression expr(exp);
     TimeDependentLinearExpression result = -expr;
 
     BOOST_TEST(result.GetLinearExpressions().at(0).offset() == -3.0);
-    BOOST_TEST(result.GetLinearExpressions().at(0).coefPerVar().at("x") == -2.0);
-    BOOST_TEST(result.GetLinearExpressions().at(1).coefPerVar().at("y") == -1.0);
+    BOOST_TEST(result.GetLinearExpressions().at(0).coefPerVar().at(FullKey(component, "x"))
+               == -2.0);
+    BOOST_TEST(result.GetLinearExpressions().at(1).coefPerVar().at(FullKey(component, "y"))
+               == -1.0);
 }
 
 // Test GetLinearExpressions
 BOOST_AUTO_TEST_CASE(GetLinearExpressionsMethod)
 {
-    std::map<unsigned, LinearExpression> exp = {{0, LinearExpression(5.0, {{"x", 2.0}})},
-                                                {1, LinearExpression(3.0, {{"y", 4.0}})}};
+    auto component = "compo";
+
+    std::unordered_map<unsigned, LinearExpression> exp = {
+      {0, LinearExpression(5.0, {{FullKey(component, "x"), 2.0}})},
+      {1, LinearExpression(3.0, {{FullKey(component, "y"), 4.0}})}};
 
     TimeDependentLinearExpression expr(exp);
     auto expressions = expr.GetLinearExpressions();
 
     BOOST_TEST(expressions.size() == 2);
     BOOST_TEST(expressions.at(0).offset() == 5.0);
-    BOOST_TEST(expressions.at(1).coefPerVar().at("y") == 4.0);
+    BOOST_TEST(expressions.at(1).coefPerVar().at(FullKey(component, "y")) == 4.0);
 }
 
 // Test getSize()
 BOOST_AUTO_TEST_CASE(GetSizeMethod)
 {
-    std::map<unsigned, LinearExpression> exp = {{0, LinearExpression(1.0, {{"x", 1.0}})},
-                                                {1, LinearExpression(2.0, {{"y", 2.0}})},
-                                                {2, LinearExpression(3.0, {{"z", 3.0}})}};
+    auto component = "compo";
+
+    std::unordered_map<unsigned, LinearExpression> exp = {
+      {0, LinearExpression(1.0, {{FullKey(component, "x"), 1.0}})},
+      {1, LinearExpression(2.0, {{FullKey(component, "y"), 2.0}})},
+      {2, LinearExpression(3.0, {{FullKey(component, "z"), 3.0}})}};
 
     TimeDependentLinearExpression expr(exp);
     BOOST_TEST(expr.getSize() == 3);

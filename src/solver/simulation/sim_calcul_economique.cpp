@@ -35,6 +35,8 @@
 using namespace Antares;
 using namespace Antares::Data;
 
+constexpr double LEVEL_TOLERANCE_MWH = 1.e-6;
+
 static void importShortTermStorages(
     const AreaList &areas,
     std::vector<::ShortTermStorage::AREA_INPUT> &ShortTermStorageOut) {
@@ -157,6 +159,10 @@ void SIM_InitialisationProblemeHebdo(Data::Study &study,
 
         problem.CoutDeDefaillanceNegative[i] = area.thermal.spilledEnergyCost;
 
+        // Hydraulic
+        problem.CoutDeDebordement[i] = area.thermal.spilledEnergyCost
+                                       + area.hydro.overflowSpilledCostDifference;
+
         problem.DefaillanceNegativeUtiliserPMinThermique[i] = (anoOtherDispatchPower
                                                                & area.nodalOptimization)
                                                               != 0;
@@ -186,16 +192,12 @@ void SIM_InitialisationProblemeHebdo(Data::Study &study,
                                                                            .useHeuristicTarget
                                                                            || area.hydro.useLeeway);
 
-        problem.CaracteristiquesHydrauliques[i].SuiviNiveauHoraire
-                = area.hydro.reservoirManagement && (problem.OptimisationAuPasHebdomadaire)
-                  && (!area.hydro.useHeuristicTarget
-                      || problem.CaracteristiquesHydrauliques[i].PresenceDePompageModulable);
+        problem.CaracteristiquesHydrauliques[i].SuiviNiveauHoraire = area.hydro.reservoirManagement;
 
         problem.CaracteristiquesHydrauliques[i].DirectLevelAccess = false;
         problem.CaracteristiquesHydrauliques[i].AccurateWaterValue = false;
         if (problem.WaterValueAccurate && area.hydro.useWaterValue) {
             problem.CaracteristiquesHydrauliques[i].AccurateWaterValue = true;
-            problem.CaracteristiquesHydrauliques[i].SuiviNiveauHoraire = true;
             problem.CaracteristiquesHydrauliques[i].DirectLevelAccess = true;
         }
 
@@ -510,14 +512,16 @@ void SIM_RenseignementProblemeHebdo(const Study &study,
                     = problem.CaracteristiquesHydrauliques[k]
                     .NiveauInitialReservoir; /*for first 24-hour optim*/
             double nivInit = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
-            if (nivInit < 0.) {
+            if (nivInit < -LEVEL_TOLERANCE_MWH)
+            {
                 std::ostringstream msg;
                 msg << "Area " << area.name << ", week " << weekInTheYear + 1
                         << " : initial level < 0";
                 throw FatalError(msg.str());
             }
 
-            if (nivInit > area.hydro.reservoirCapacity) {
+            if (nivInit > area.hydro.reservoirCapacity + LEVEL_TOLERANCE_MWH)
+            {
                 std::ostringstream msg;
                 msg << "Area " << area.name << ", week " << weekInTheYear + 1
                         << " : initial level over capacity";
@@ -817,11 +821,6 @@ void SIM_RenseignementProblemeHebdo(const Study &study,
                     }
 
                     marginGen = weekGenerationTarget;
-
-                    if (problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir
-                        < weekTarget_tmp) {
-                        marginGen = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
-                    }
                 }
 
                 if (not problem.CaracteristiquesHydrauliques[k].TurbinageEntreBornes) {

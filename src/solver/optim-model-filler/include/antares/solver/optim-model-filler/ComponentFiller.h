@@ -24,6 +24,7 @@
 #include <antares/optimisation/linear-problem-api/linearProblemFiller.h>
 #include <antares/study/system-model/component.h>
 #include "antares/expressions/visitors/EvaluationContext.h"
+#include "antares/solver/optim-model-filler/VariableDictionary.h"
 
 #include "ReadLinearConstraintVisitor.h"
 
@@ -72,10 +73,10 @@ public:
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
                       Optimisation::LinearProblemApi::FillContext& ctx) override;
 
+    VariableDictionary variableDictionary;
+
 private:
     static bool IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node);
-
-    bool IsThisVariableTimeDependent(const std::string& var_id) const;
 
     const Study::SystemModel::Component& component_;
     const std::map<std::string, Study::SystemModel::Variable>& modelVariable_;
@@ -85,33 +86,35 @@ class VariablesBulkAddition
 {
 public:
     VariablesBulkAddition(Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
-                          unsigned int first_index,
-                          unsigned int last_index);
-    void checkIndices() const;
+                          VariableDictionary& variableDictionary);
+    void addVariable(double lb,
+                     double ub,
+                     bool integer,
+                     const Dimensions& dim,
+                     const PartialKey&) const;
+    void addVariable(const std::vector<double>& lb,
+                     double ub,
+                     bool integer,
+                     const Dimensions& dim,
+                     const PartialKey&) const;
+    void addVariable(double lb,
+                     const std::vector<double>& ub,
+                     bool integer,
+                     const Dimensions& dim,
+                     const PartialKey&) const;
+    void addVariable(const std::vector<double>& lb,
+                     const std::vector<double>& ub,
+                     bool integer,
+                     const Dimensions& dim,
+                     const PartialKey&) const;
 
-    unsigned getCount() const;
-
-    std::vector<Optimisation::LinearProblemApi::IMipVariable*>
-    addVariable(double lb, double ub, bool integer, const std::string& name) const;
-    std::vector<Optimisation::LinearProblemApi::IMipVariable*> addVariable(
-      const std::vector<double>& lb,
-      double ub,
-      bool integer,
-      const std::string& name) const;
-    std::vector<Optimisation::LinearProblemApi::IMipVariable*> addVariable(
-      double lb,
-      const std::vector<double>& ub,
-      bool integer,
-      const std::string& name) const;
-    std::vector<Optimisation::LinearProblemApi::IMipVariable*> addVariable(
-      const std::vector<double>& lb,
-      const std::vector<double>& ub,
-      bool integer,
-      const std::string& name) const;
+    class BoundsSizeMismatch: public std::invalid_argument
+    {
+        using std::invalid_argument::invalid_argument;
+    };
 
 private:
     Optimisation::LinearProblemApi::ILinearProblem& linear_problem_;
-    unsigned int first_index_;
-    unsigned int last_index_;
+    VariableDictionary& variableDictionary;
 };
 } // namespace Antares::Optimization
