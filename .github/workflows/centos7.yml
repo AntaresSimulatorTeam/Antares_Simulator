@@ -132,7 +132,7 @@ jobs:
           mv archive/antares-*-CentOS-7.9.2009.rpm  archive/antares-cd-CentOS-7.9.2009.rpm
 
       - name: Update continuous-delivery release
-        if: github.ref == 'refs/heads/develop'
+        if: github.ref == 'refs/heads/feature/nightly_release' # TODO revert to develop
         uses: pyTooling/Actions/releaser@main
         with:
           tag: continuous-delivery
