@@ -304,11 +304,17 @@ void Application::postParametersChecks() const
 
 void Application::checkSolverOptions() const
 {
-    auto& solverOptions = pStudy->parameters.optOptions;
+    const auto& unitCommitmentMode = pParameters->unitCommitment.ucMode;
+    bool milpRequired = (unitCommitmentMode == Data::UnitCommitmentMode::ucMILP);
+    const auto& solverOptions = pParameters->optOptions;
+
     checkForSolversExistence(solverOptions);
     checkForSolverOptionsConsistency(solverOptions);
-    checkSolverMILPincompatibility(pParameters->unitCommitment.ucMode,
-                                   solverOptions.linearSolver);
+
+    if(milpRequired)
+    {
+        checkSolverMILPoptionsConsistency(solverOptions);
+    }
 
     logs.info() << "  :: solver " << solverOptions.linearSolver
                 << " is used for linear problem resolution";

@@ -10,7 +10,6 @@
 namespace Antares::Check
 {
 void checkForSolversExistence(const Solver::Optimization::OptimizationOptions& solverOptions);
-void checkSolverMILPincompatibility(Data::UnitCommitmentMode ucMode,
-                                    const std::string& solverName);
-void checkForSolverOptionsConsistency(Solver::Optimization::OptimizationOptions& solverOptions);
+void checkSolverMILPoptionsConsistency(const Solver::Optimization::OptimizationOptions& solverOptions);
+void checkForSolverOptionsConsistency(const Solver::Optimization::OptimizationOptions& solverOptions);
 }

@@ -26,17 +26,15 @@ void checkForSolversExistence(const OptimizationOptions& solverOptions)
     checkSolverExists(solverOptions.quadraticSolver, getAvailableQuadraticSolverNames());
 }
 
-void checkSolverMILPincompatibility(Antares::Data::UnitCommitmentMode ucMode,
-                                    const std::string& solverName)
+void checkSolverMILPoptionsConsistency(const OptimizationOptions& solverOptions)
 {
-    using namespace Antares::Data;
-    if (ucMode == UnitCommitmentMode::ucMILP && solverName == "sirius")
+    if (solverOptions.linearSolver == "sirius")
     {
         throw Error::IncompatibleMILPOrtoolsSolver();
     }
 }
 
-void checkForSolverOptionsConsistency(OptimizationOptions& solverOptions)
+void checkForSolverOptionsConsistency(const OptimizationOptions& solverOptions)
 {
     bool UserSuppliedParamsBothOptims = !solverOptions.linearSolverParameters.empty();
     bool UserSuppliedParamsOptim1 = !solverOptions.lpSolverParamOptim1.empty();
