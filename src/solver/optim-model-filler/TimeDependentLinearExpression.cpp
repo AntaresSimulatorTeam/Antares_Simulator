@@ -46,7 +46,7 @@ TimeDependentLinearExpression::TimeDependentLinearExpression(
 }
 
 TimeDependentLinearExpression::TimeDependentLinearExpression(
-  const std::map<unsigned int, LinearExpression>& linearExpressions):
+  const std::unordered_map<unsigned int, LinearExpression>& linearExpressions):
     linearExpressions_(linearExpressions)
 
 {
@@ -68,8 +68,8 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator-(
 
 template<typename BinaryOperator>
 TimeDependentLinearExpression BinaryOpLinearExpression(
-  const std::map<unsigned int, LinearExpression>& left,
-  const std::map<unsigned int, LinearExpression>& right,
+  const std::unordered_map<unsigned int, LinearExpression>& left,
+  const std::unordered_map<unsigned int, LinearExpression>& right,
   BinaryOperator op)
 {
     auto result(left);
@@ -106,7 +106,7 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator/(
 TimeDependentLinearExpression TimeDependentLinearExpression::operator-() const
 {
     const auto& linear_expressions = GetLinearExpressions();
-    std::map<unsigned int, LinearExpression> result;
+    std::unordered_map<unsigned int, LinearExpression> result;
     for (size_t i = 0; i < linear_expressions.size(); ++i)
     {
         result[i] = -linear_expressions.at(i);
@@ -114,7 +114,7 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator-() const
     return TimeDependentLinearExpression(std::move(result));
 }
 
-const std::map<unsigned int, LinearExpression>&
+const std::unordered_map<unsigned int, LinearExpression>&
 TimeDependentLinearExpression::GetLinearExpressions() const
 {
     return linearExpressions_;

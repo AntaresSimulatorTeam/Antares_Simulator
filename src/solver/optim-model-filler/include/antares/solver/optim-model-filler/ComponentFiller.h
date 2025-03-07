@@ -78,8 +78,6 @@ public:
 private:
     static bool IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node);
 
-    bool IsThisVariableTimeDependent(const std::string& var_id) const;
-
     const Study::SystemModel::Component& component_;
     const std::map<std::string, Study::SystemModel::Variable>& modelVariable_;
 };
@@ -109,6 +107,11 @@ public:
                      bool integer,
                      const Dimensions& dim,
                      const PartialKey&) const;
+
+    class BoundsSizeMismatch: public std::invalid_argument
+    {
+        using std::invalid_argument::invalid_argument;
+    };
 
 private:
     Optimisation::LinearProblemApi::ILinearProblem& linear_problem_;
