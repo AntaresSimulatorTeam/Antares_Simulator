@@ -101,7 +101,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const VariableN
     }
     else // only dependent
     {
-        std::unordered_map<unsigned int, LinearExpression> linearExpressions;
+        LinearExpressionMap linearExpressions;
 
         for (auto timeStep = fillContext_.getFirstTimeStep();
              timeStep <= fillContext_.getLastTimeStep();
@@ -133,7 +133,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Parameter
     }
     else // only dependent
     {
-        std::unordered_map<unsigned int, LinearExpression> linearExpressions;
+        LinearExpressionMap linearExpressions;
 
         for (auto timeStep = fillContext_.getFirstTimeStep();
              timeStep <= fillContext_.getLastTimeStep();

@@ -48,7 +48,7 @@ TimeDependentLinearExpression::TimeDependentLinearExpression(
 }
 
 TimeDependentLinearExpression::TimeDependentLinearExpression(
-  const std::unordered_map<unsigned int, LinearExpression>& linearExpressions):
+  const LinearExpressionMap& linearExpressions):
     linearExpressions_(linearExpressions)
 
 {
@@ -69,10 +69,9 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator-(
 }
 
 template<typename BinaryOperator>
-TimeDependentLinearExpression BinaryOpLinearExpression(
-  const std::unordered_map<unsigned int, LinearExpression>& left,
-  const std::unordered_map<unsigned int, LinearExpression>& right,
-  BinaryOperator op)
+TimeDependentLinearExpression BinaryOpLinearExpression(const LinearExpressionMap& left,
+                                                       const LinearExpressionMap& right,
+                                                       BinaryOperator op)
 {
     auto result(left);
     for (const auto& [timeStep, other_linear_expression]: right)
@@ -108,7 +107,7 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator/(
 TimeDependentLinearExpression TimeDependentLinearExpression::operator-() const
 {
     const auto& linear_expressions = GetLinearExpressions();
-    std::unordered_map<unsigned int, LinearExpression> result;
+    LinearExpressionMap result;
     for (size_t i = 0; i < linear_expressions.size(); ++i)
     {
         result[i] = -linear_expressions.at(i);
@@ -116,8 +115,7 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator-() const
     return TimeDependentLinearExpression(std::move(result));
 }
 
-const std::unordered_map<unsigned int, LinearExpression>&
-TimeDependentLinearExpression::GetLinearExpressions() const
+const LinearExpressionMap& TimeDependentLinearExpression::GetLinearExpressions() const
 {
     return linearExpressions_;
 }
@@ -125,13 +123,6 @@ TimeDependentLinearExpression::GetLinearExpressions() const
 size_t TimeDependentLinearExpression::getSize() const
 {
     return linearExpressions_.size();
-}
-
-Optimisation::LinearProblemApi::FillContext TimeDependentLinearExpression::DeduceFillContext() const
-{
-    // TODO it would be much simpler if all ctor have fillContex
-    std::map ordered(linearExpressions_.begin(), linearExpressions_.end());
-    return {ordered.begin()->first, ordered.rbegin()->first};
 }
 
 int rotatedIndex(unsigned key,
@@ -151,7 +142,9 @@ int rotatedIndex(unsigned key,
 TimeDependentLinearExpression TimeDependentLinearExpression::shiftLinearExpressions(
   int shiftValue) const
 {
-    auto fillContext = DeduceFillContext();
+    const Optimisation::LinearProblemApi::FillContext fillContext{
+      linearExpressions_.begin()->first,
+      linearExpressions_.rbegin()->first};
     unsigned int number_of_timestep = fillContext.getNumberOfTimestep();
 
     if (number_of_timestep == 0)
@@ -159,7 +152,7 @@ TimeDependentLinearExpression TimeDependentLinearExpression::shiftLinearExpressi
         return TimeDependentLinearExpression(fillContext);
     }
 
-    std::unordered_map<unsigned int, LinearExpression> linearExpressions;
+    LinearExpressionMap linearExpressions;
     for (const auto& timeStep: linearExpressions_ | std::views::keys)
     {
         linearExpressions[timeStep] = linearExpressions_.at(

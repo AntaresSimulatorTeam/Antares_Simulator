@@ -30,6 +30,7 @@
 
 namespace Antares::Optimization
 {
+using LinearExpressionMap = std::map<unsigned int, LinearExpression>;
 
 // time dependent parameter
 class TimeDependentLinearExpression
@@ -42,8 +43,7 @@ public:
     explicit TimeDependentLinearExpression(
       const Optimisation::LinearProblemApi::FillContext& fillContext,
       const LinearExpression& linearExpression);
-    explicit TimeDependentLinearExpression(
-      const std::unordered_map<unsigned, LinearExpression>& linearExpressions);
+    explicit TimeDependentLinearExpression(const LinearExpressionMap& linearExpressions);
 
     /// Sum two linear expressions
     TimeDependentLinearExpression operator+(const TimeDependentLinearExpression& other) const;
@@ -60,12 +60,10 @@ public:
     TimeDependentLinearExpression shiftLinearExpressions(int shiftValue) const;
     TimeDependentLinearExpression operator[](int index) const;
 
-    const std::unordered_map<unsigned, LinearExpression>& GetLinearExpressions() const;
+    const LinearExpressionMap& GetLinearExpressions() const;
     size_t getSize() const;
 
-    Optimisation::LinearProblemApi::FillContext DeduceFillContext() const;
-
 private:
-    std::unordered_map<unsigned int, LinearExpression> linearExpressions_;
+    LinearExpressionMap linearExpressions_;
 };
 } // namespace Antares::Optimization
