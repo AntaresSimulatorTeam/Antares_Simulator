@@ -1,13 +1,33 @@
+/*
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
 #pragma once
 
-#include <compare>
 #include <functional>
-#include <map>
 #include <optional>
 #include <string>
 #include <unordered_map>
-#include <variant>
 #include <vector>
+
+#include <antares/solver/optim-model-filler/FullKey.h>
 
 namespace Antares::Optimisation::LinearProblemApi
 {
@@ -16,46 +36,6 @@ class IMipVariable;
 
 namespace Antares::Optimization
 {
-struct PartialKey
-{
-    const std::string component_id;
-    const std::string variable_id;
-
-    PartialKey(const std::string& component_id, const std::string& variable_id);
-
-    const std::string& getComponent() const;
-    const std::string& getVariable() const;
-
-    auto operator<=>(const PartialKey&) const = default; // Automatically generates <, >, ==, etc.
-};
-
-struct FullKey
-{
-    const PartialKey pk;
-    const std::optional<unsigned int> scenario;
-    const std::optional<unsigned int> timestep;
-
-    FullKey(const std::string& component, const std::string& variable);
-    FullKey(const std::string& component,
-            const std::string& variable,
-            unsigned int scenario,
-            unsigned int timestep);
-
-    const PartialKey& getPartialKey() const;
-    const std::string& getComponent() const;
-    const std::string& getVariable() const;
-
-    std::optional<unsigned int> getScenario() const;
-    std::optional<unsigned int> getTimestep() const;
-
-    auto operator<=>(const FullKey&) const = default; // Automatically generates <, >, ==, etc.
-};
-
-class hash
-{
-public:
-    std::size_t operator()(const PartialKey& p) const;
-};
 
 struct IntegerInterval
 {
@@ -133,7 +113,7 @@ class VariableDictionary
     };
 
     using TwoIndexVector = std::vector<VectorWithOffset>;
-    using HashMapVector = std::unordered_map<PartialKey, TwoIndexVector, hash>;
+    using HashMapVector = std::unordered_map<PartialKey, TwoIndexVector, PartialKeyHash>;
 
     HashMapVector hmv;
     const TwoIndexVector& operator[](const PartialKey& k) const;
@@ -158,5 +138,8 @@ public:
                       const std::string& variable,
                       unsigned int scenario,
                       unsigned int timestep);
+    Value operator()(const FullKey& fullKey) const;
+
+    Value& operator()(const FullKey& fullKey);
 };
 } // namespace Antares::Optimization

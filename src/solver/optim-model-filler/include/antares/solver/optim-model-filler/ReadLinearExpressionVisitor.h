@@ -24,6 +24,7 @@
 #include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/expressions/visitors/NodeVisitor.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
+#include <antares/solver/optim-model-filler/FullKey.h>
 #include <antares/solver/optim-model-filler/TimeDependentLinearExpression.h>
 
 /**
@@ -40,7 +41,8 @@ class ReadLinearExpressionVisitor
 {
 public:
     explicit ReadLinearExpressionVisitor(Expressions::Visitors::EvaluationContext context,
-                                         Optimisation::LinearProblemApi::FillContext fillContext);
+                                         Optimisation::LinearProblemApi::FillContext fillContext,
+                                         const std::string& componentId /* or vector ?*/);
 
     ReadLinearExpressionVisitor() = default;
     std::string name() const override;
@@ -69,5 +71,6 @@ private:
       const Expressions::Nodes::ComponentParameterNode* node) override;
 
     Optimisation::LinearProblemApi::FillContext fillContext_;
+    const std::string& componentId_;
 };
 } // namespace Antares::Optimization

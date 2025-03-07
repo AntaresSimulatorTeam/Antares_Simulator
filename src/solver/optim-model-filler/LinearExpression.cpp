@@ -34,9 +34,9 @@ namespace Antares::Optimization
  * @param scale The scale
  * @return The scaled map
  */
-std::map<std::string, double> scale_map(const std::map<std::string, double>& map, double scale)
+FullKeyMap scale_map(const FullKeyMap& map, double scale)
 {
-    std::map<std::string, double> result;
+    FullKeyMap result;
     for (auto [key, value]: map)
     {
         result[key] = scale * value;
@@ -44,7 +44,7 @@ std::map<std::string, double> scale_map(const std::map<std::string, double>& map
     return result;
 }
 
-LinearExpression::LinearExpression(double offset, std::map<std::string, double> coef_per_var):
+LinearExpression::LinearExpression(double offset, FullKeyMap coef_per_var):
     offset_(offset),
     coef_per_var_(std::move(coef_per_var))
 {
@@ -55,7 +55,7 @@ LinearExpression LinearExpression::operator+(const LinearExpression& other) cons
     return {offset_ + other.offset_, add_maps(coef_per_var_, other.coef_per_var_)};
 }
 
-std::map<std::string, double> LinearExpression::coefPerVar() const
+const FullKeyMap& LinearExpression::coefPerVar() const
 {
     return coef_per_var_;
 }

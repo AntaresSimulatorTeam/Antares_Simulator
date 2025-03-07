@@ -228,6 +228,8 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     ScenarioBuilderOwner(study).callScenarioBuilder();
 }
 
+// gp : here we don't "start simulation", but we mainly read input data for the simulation to
+// gp : be executed a bit later.
 void Application::startSimulation(Data::StudyLoadOptions& options)
 {
 // Starting !

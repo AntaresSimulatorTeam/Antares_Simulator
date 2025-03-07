@@ -75,9 +75,14 @@ The area files that belong to the "values" class display fields corresponding to
 
 | variables                              | description                                                                                                                                                                               |
 |----------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| OV.COST                                | Overall cost = operating cost + unsupplied cost+ spilled cost+ hydro cost                                                                                                                 |
+| OV.COST                                | Overall cost = operating cost + unsupplied cost + spilled cost + hydro cost                                                                                                                 |
+| OV. COST CSR                           | Same as above, but with CSR (adq patch's **C**urtailment **S**ha**R**ing) unsupplied cost version[^adqp]|
 | OP.COST                                | Operating cost = Proportional costs + Non- proportional costs                                                                                                                             |
 | MRG. PRICE                             | LMP : overall economic effect of a local 1MW load increase                                                                                                                                |
+| MRG. PRICE CSR                         | **IF** : CSR (**C**urtailment **S**ha**R**ing) unsupplied cost version (see above) == 0, then equals **MRG. PRICE** <br> **ELSE** : equals **UNSP. ENRG** [^adqp]|
+| DTG by plant                           | For any active thermal cluster, its production |
+| MIN DTG by plant                       | For any active thermal cluster, minimum between :<br> - the cluster production <br> - quantity : <span style="color:blue">min gen modulation</span> **x** <span style="color:blue">unit count</span> **x** <span style="color:blue">nominal capacity</span> associated to the cluster |
+| RES generation by plant                | For any active renewable cluster, its production (necessarily must-run). <br> Only when using clustered Renewable generation modeling. |
 | CO2, NH3, SO2, ... EMIS.               | Amount emitted by all dispatchable thermal plants for the following types of pollutants: CO2, SO2, NH3, NOX, PM2\_5, PM5, PM10, NMVOC, OP1, OP2, OP3, OP4, OP5 EMIS.                      |
 | BALANCE                                | Overall Import/export balance of the area (positive value : export)                                                                                                                       |
 | ROW BAL                                | Import/export with areas outside the modeled system (positive value: import) [^12]                                                                                                        |
@@ -113,26 +118,29 @@ The area files that belong to the "values" class display fields corresponding to
 | H.OVFL                                 | Wasted natural inflow overflowing from an already full energy storage unit                                                                                                                |
 | H.VAL                                  | Marginal value of stored energy (typically: shadow water value)                                                                                                                           |
 | H.COST                                 | Expenses /Income brought by energy storage actions (H.STOR,H.PUMP)                                                                                                                        |
+| <STS **group**\>_injection             | Injection of energy from the area into each short-term storage group                                                                                                                      |
+| <STS **group**\>_withdrawal            | Withdrawal of energy from each short-term storage group into the area                                                                                                                     |
+| <STS **group**\>_level                 | Average level  of each short-term storage group                                                                                                                                           |
+| <STS\>,P-injection                     | Injection of energy from the area into the short-term storage                                                                                                                             |
+| <STS\>,P-withdrawal                    | Withdrawal of energy the short-term storage into the area                                                                                                                                 |
+| <STS\>,Levels                          | Level  of the short-term storage                                                                                                                                                          |
 | UNSP. ENRG                             | Unsupplied energy: adequacy indicator (Expected Energy Not Served–EENS)                                                                                                                   |
-| SPIL. ENRG                             | Spilled energy (energy produced that cannot be used and has to be wasted)                                                                                                                 |
-| LOLD                                   | Loss of load duration: adequacy indicator (length of shortfalls)                                                                                                                          |
-| LOLP                                   | Loss of Load probability: adequacy indicator (probability of at least one hour of shortfall within the considered period, without normalization by the duration of the considered period) |
-| AVL DTG                               | Available dispatchable thermal generation (sum of av. power over all plants)                                                                                                              |
-| DTG MRG                               | Disp. Ther. Gen. (AVL DTG – sum of all dispatched thermal generation)                                                                                                                     |
-| MAX. MRG                               | Maximum margin: operational margin obtained if the hydro storage energy of the week were used to maximise margins instead of minimizing costs                                             |
+| UNSP. ENRG. CSR                        | Unsupplied enery after CSR (demand that cannot be satisfied)[^adqp]                                                                                                        |
 | DENS                                   | Domestic Energy Not Supplied: the difference between the local production capabilities of an area and its local load[^adqp]                                                               |
 | LMR. VIOL                              | Local Matching Rule Violation after the Antares Simulation as defined by the adequacy patch[^adqp]                                                                                        |
-| UNSP. ENRG. CSR                        | Unsupplied enery after CSR (demand that cannot be satisfied)[^adqp]                                                                                                        |
+| SPIL. ENRG                             | Spilled energy (energy produced that cannot be used and has to be wasted)                                                                                                                 |
+| LOLD                                   | Loss of load duration: adequacy indicator (length of shortfalls)                                                                                                                          |
+| LOLD CSR                               | Loss of load duration, CSR (**C**urtailment **S**ha**R**ing) version : same as above, but based on unsupplied energy CSR (see **UNSP. ENRG. CSR**) rather than **UNSP. ENRG**[^adqp] |
+| LOLP                                   | Loss of Load probability: adequacy indicator (probability of at least one hour of shortfall within the considered period, without normalization by the duration of the considered period) |
+| LOLP CSR                               | Loss of Load probability, CSR (**C**urtailment **S**ha**R**ing) version : same as above, but based on unsupplied energy CSR (see **UNSP. ENRG. CSR**) rather than **UNSP. ENRG**[^adqp] |
+| AVL DTG                                | Available dispatchable thermal generation (sum of av. power over all plants)                                                                                                              |
+| DTG MRG                                | Disp. Ther. Gen. (AVL DTG – sum of all dispatched thermal generation)                                                                                                                     |
+| MAX. MRG                               | Maximum margin: operational margin obtained if the hydro storage energy of the week were used to maximise margins instead of minimizing costs                                             |
 | DTG MRG CSR                            | DTG MRG after CSR[^adqp]                                                                                                        |
-| <Short-term storage group\>_injection  | Injection of energy from the area into each short-term storage group                                                                                                                      |
-| <Short-term storage group\>_withdrawal | Withdrawal of energy from each short-term storage group into the area                                                                                                                     |
-| <Short-term storage group\>_level      | Average level  of each short-term storage group                                                                                                                                           |
 | NP COST                                | Non-proportional costs of the dispatchable plants (start-up and fixed costs)                                                                                                              |
+| NP Cost by plant                       | Same as above, but by dispatchable plant |
 | NODU                                   | Number of Dispatched Units [^13]                                                                                                                                                          |
 | Profit                                 | Net profit of the cluster in euros ((MRG. PRICE - marginal cost of the cluster) * (dispatchable production of the cluster)[^15]                                                           |
-| <Short-term storage\>,P-injection      | Injection of energy from the area into the short-term storage                                                                                                                             |
-| <Short-term storage\>,P-withdrawal     | Withdrawal of energy the short-term storage into the area                                                                                                                                 |
-| <Short-term storage\>,Levels           | Level  of the short-term storage                                                                                                                                                          |
 
 _Note: The net profit is computed on full precision values for MRG. PRICE. The user may obtain slightly different results applying the given formula because MRG. PRICE values are rounded to 10^-2._
 
@@ -205,7 +213,7 @@ Alike Input data, output results can be filtered so as to include only items tha
 
 [^13]: NODU and NP Cost do not appear in "Adequacy" results since these variables are irrelevant in that context
 
-[^adqp]: Please note that this output variable is only available in the economy mode, when the adequacy patch is activated (see [Adequacy Patch](optional-features/adequacy-patch.md))
+[^adqp]: Please note that this output variable is only available in the economy mode, if adequacy patch is activated and the area the output variable belongs to is inside the adequacy patch domain (see [Adequacy Patch](optional-features/adequacy-patch.md))
 
 [^14]: This description applies to both « MC synthesis » files and "Year-by-Year" files, with some simplifications in the latter case
 
