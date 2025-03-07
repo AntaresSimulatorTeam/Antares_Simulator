@@ -330,7 +330,7 @@ jobs:
         shell: bash
         run: |
           cd _build
-          zip -r antares-solver_windows.zip solver/Release/antares-solver.exe solver/Release/antares-modeler.exe solver/Release/*.dll
+          zip -r antares-solver_windows.zip solver/Release/antares-solver.exe solver/Release/*.dll
 
       - name: NSIS Installer creation
         shell: bash
@@ -367,6 +367,12 @@ jobs:
         run: |
           gh release upload "$tag" _build/*.zip _build/*.exe
         shell: bash
+
+      - name: Rename assets for continuous-delivery release
+        if: github.ref == 'refs/heads/develop'
+        run: |
+          move _build/rte-antares-*-installer-64bits.zip _build/rte-antares-cd-installer-64bits.zip
+          move _build/rte-antares-*-installer-64bits.exe _build/rte-antares-cd-installer-64bits.exe
 
       - name: Update continuous-delivery release
         if: github.ref == 'refs/heads/develop'

@@ -341,7 +341,7 @@ jobs:
           cmake --install . --prefix install
           pushd .
           cd install/bin
-          tar czf ../../antares-solver_ubuntu22.04.tar.gz antares-solver antares-modeler libsirius_solver.so
+          tar czf ../../antares-solver_ubuntu22.04.tar.gz antares-solver libsirius_solver.so
           popd
           rm -rf install
 
@@ -365,6 +365,12 @@ jobs:
           tag: ${{ github.event.inputs.release_tag }}
         run: |
           gh release upload "$tag" _build/*.tar.gz _build/*.deb
+
+      - name: Rename assets for continuous-delivery release
+        if: github.ref == 'refs/heads/develop'
+        run: |
+          mv _build/antares-*-Ubuntu-22.04.tar.gz _build/antares-cd-Ubuntu-22.04.tar.gz
+          mv _build/antares-*-Ubuntu-22.04.deb _build/antares-cd-Ubuntu-22.04.deb
 
       - name: Update continuous-delivery release
         if: github.ref == 'refs/heads/develop'
