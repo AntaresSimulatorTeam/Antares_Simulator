@@ -180,22 +180,15 @@ void AstDOTStyleVisitor::visit(const Nodes::ComponentParameterNode* node, std::o
              os);
 }
 
-// Lambda function to convert int to "+value" or "-value"
-auto int_to_signed_string = [](int value)
-{ return (value >= 0) ? ("+" + std::to_string(value)) : std::to_string(value); };
-
 void AstDOTStyleVisitor::visit(const Nodes::TimeShiftNode* node, std::ostream& os)
 {
-    processUnaryOperation(node,
-                          "t" + int_to_signed_string(node->value()),
-                          NodeStyle::TimeShiftStyle,
-                          os);
+    processUnaryOperation(node, "t" + node->valueToSignedString(), NodeStyle::TimeShiftStyle, os);
 }
 
 void AstDOTStyleVisitor::visit(const Nodes::TimeIndexNode* node, std::ostream& os)
 {
     processUnaryOperation(node,
-                          "[" + int_to_signed_string(node->value()) + "]",
+                          "[" + node->valueToSignedString() + "]",
                           NodeStyle::TimeIndexStyle,
                           os);
 }

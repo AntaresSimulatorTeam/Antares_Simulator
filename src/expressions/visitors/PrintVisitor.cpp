@@ -112,12 +112,12 @@ std::string PrintVisitor::visit(const Nodes::ComponentParameterNode* node)
 }
 std::string PrintVisitor::visit(const Nodes::TimeShiftNode* timeShiftNode)
 {
-    return dispatch(timeShiftNode->child()) + "[" + std::to_string(timeShiftNode->value()) + " ]";
+    return dispatch(timeShiftNode->child()) + "[ t" + timeShiftNode->valueToSignedString() + " ]";
 }
 
 std::string PrintVisitor::visit(const Nodes::TimeIndexNode* timeIndexNode)
 {
-    return dispatch(timeIndexNode->child()) + "[" + std::to_string(timeIndexNode->value()) + " ]";
+    return dispatch(timeIndexNode->child()) + "[" + timeIndexNode->valueToSignedString() + " ]";
 }
 
 std::string PrintVisitor::name() const

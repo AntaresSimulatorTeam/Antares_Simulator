@@ -24,6 +24,7 @@
 
 namespace Antares::Expressions::Nodes
 {
+
 class ParameterizedUnaryNode: public UnaryNode
 {
 public:
@@ -33,6 +34,9 @@ public:
     {
         return value_;
     }
+
+    //  function to convert int to "+value" or "-value"
+    std::string valueToSignedString() const;
 
 private:
     int value_ = 0;

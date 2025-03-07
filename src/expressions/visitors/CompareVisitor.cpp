@@ -152,14 +152,20 @@ bool CompareVisitor::visit(const Nodes::ComponentParameterNode* node, const Node
 }
 bool CompareVisitor::visit(const Nodes::TimeShiftNode* node, const Nodes::Node* other)
 {
-    // TODO
-    throw std::logic_error("Not implemented yet");
+    if (auto* other_node = dynamic_cast<const Nodes::TimeShiftNode*>(other))
+    {
+        return dispatch(node->child(), other_node->child()) && node->value() == other_node->value();
+    }
+    return false;
 }
 
 bool CompareVisitor::visit(const Nodes::TimeIndexNode* node, const Nodes::Node* other)
 {
-    // TODO
-    throw std::logic_error("Not implemented yet");
+    if (auto* other_node = dynamic_cast<const Nodes::TimeIndexNode*>(other))
+    {
+        return dispatch(node->child(), other_node->child()) && node->value() == other_node->value();
+    }
+    return false;
 }
 
 std::string CompareVisitor::name() const

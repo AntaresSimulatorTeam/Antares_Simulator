@@ -110,9 +110,9 @@ LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::ComponentPara
 }
 LinearStatus LinearityVisitor::visit(const Nodes::TimeShiftNode* timeShiftNode)
 {
-    return dispatch(timeShiftNode);
+    return dispatch(timeShiftNode->child());
 }
-LinearStatus LinearityVisitor::visit(const Nodes::TimeIndexNode* timeIndexNode)
+LinearStatus LinearityVisitor::visit(const Nodes::TimeIndexNode*)
 {
     return LinearStatus::CONSTANT;
 }
