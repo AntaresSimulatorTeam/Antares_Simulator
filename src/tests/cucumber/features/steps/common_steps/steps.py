@@ -1,14 +1,19 @@
 # Gherkins test steps definitions
 
 import os
+import re
 
 from behave import *
+import numpy as np
+
 from common_steps.assertions import *
 from common_steps.modeler_utils import run_modeler
 from common_steps.simulator_utils import run_simulation
 
 from features.steps.common_steps.assertions import assert_double_close
 
+NB_HOURS_IN_WEEK = 168
+NB_DAYS_IN_WEEK = 7
 
 
 @given('the study path is "{string}"')
@@ -99,6 +104,40 @@ def check_prod_for_specific_year(context, area, year, prod_name, comparator_and_
         ok = ok | (actual_hourly_prod == 0)
     assert ok.all()
 
+def make_daily_values_from_a_string(days: str):
+    list_daily_values = [float(number) for number in re.findall(r'\d+', days)]
+    assert len(list_daily_values) == NB_DAYS_IN_WEEK, f"7 daily values expected, %d given" % len(list_daily_values)
+    return list_daily_values
+
+def check_week_ts_has_daily_values(week_ts,  list_daily_values):
+    split_ts = np.array_split(week_ts, NB_DAYS_IN_WEEK)
+    for day, daily_ts in enumerate(split_ts):
+        assert np.allclose(daily_ts, list_daily_values[day], atol=1e-2), \
+            f"day %d : all hourly values do not equal %.2f" % (day, list_daily_values[day])
+
+def extract_week_ts(ts, week):
+    assert week >= 1, f"week should be greater than 1"
+    assert ts.size >= 168, f"hourly values should have at least 168, it has %d" % ts.size
+    week_ts = ts[(week - 1) * NB_HOURS_IN_WEEK:week * NB_HOURS_IN_WEEK]
+    return week_ts
+
+@then('in area "{area}", week {week:d}, year {year:d}, daily mingens for cluster "{cluster}" are {days}')
+def check_thermal_cluster_min_gen_for_week(context, area, week, year, cluster, days):
+    ts = context.soh.min_gen_for_thermal_cluster(area, year, cluster)
+    list_daily_values = make_daily_values_from_a_string(days)
+    week_ts = extract_week_ts(ts, week)
+    check_week_ts_has_daily_values(week_ts, list_daily_values)
+
+@then('in area "{area}", year {year:d}, no mingens for cluster "{cluster}"')
+def check_no_mingen_column_for_cluster(context, area, year, cluster):
+    column_names = list(context.soh.details_hourly_for_cluster(area, year, cluster).columns)
+    assert "MinGen - MWh" not in column_names, f"cluster %s should not be in file details" % cluster
+
+# Unused for now
+@then('in area "{area}", min gen for thermal cluster "{cluster_name}" on hour {hour:d} of year {year:d} is : {expected_value:g} MW')
+def check_thermal_cluster_min_gen_for_hour(context, area, cluster_name, hour, year, expected_value):
+    actual_value = context.soh.min_gen_for_thermal_cluster_at_hour(area, year, hour, cluster_name)
+    assert_double_close(expected_value, actual_value, 0.001)
 
 @then('in area "{area}", hourly production of "{prod_name}" is always {comparator_and_hourly_prod} MWh')
 def check_prod_for_all_years(context, area, prod_name, comparator_and_hourly_prod):
@@ -109,7 +148,6 @@ def check_prod_for_all_years(context, area, prod_name, comparator_and_hourly_pro
 @step('in area "{area}", during year {year:d}, total non-proportional cost is {np_cost:g}')
 def check_np_cost_for_specific_year(context, area, year, np_cost):
     assert_double_close(np_cost, context.soh.get_non_proportional_cost(area, year), 1e-6)
-
 
 @then('in area "{area}", the units of "{prod_name}" produce between {min_p:g} and {max_p:g} MWh hourly')
 def check_pmin_pmax(context, area, prod_name, min_p, max_p):
