@@ -322,7 +322,9 @@ const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::solv
   {"sirius", {"sirius_lp", "sirius"}},
   {"coin", {"clp", "cbc"}},
   {"glpk", {"glpk_lp", "glpk"}},
-  {"scip", {"scip", "scip"}}};
+  {"scip", {"", "scip"}}, // SCIP only supports MIPs
+  {"highs", {"highs_lp", "highs"}},
+  {"pdlp", {"pdlp", ""}}}; // PDLP only supports LPs
 
 std::list<std::string> getAvailableOrtoolsSolverName()
 {
@@ -356,30 +358,29 @@ std::string availableOrToolsSolversString()
 
 static std::optional<std::string> translateSolverName(const std::string& solverName, bool isMip)
 {
-    try
-    {
-        if (isMip)
-        {
-            return OrtoolsUtils::solverMap.at(solverName).MIPSolverName;
-        }
-        else
-        {
-            return OrtoolsUtils::solverMap.at(solverName).LPSolverName;
-        }
-    }
-    catch (const std::out_of_range&)
+    if (!OrtoolsUtils::solverMap.contains(solverName))
     {
         return {};
+    }
+    auto names = OrtoolsUtils::solverMap.at(solverName);
+    if (isMip)
+    {
+        return names.MIPSolverName.empty() ? std::optional<std::string>() : names.MIPSolverName;
+    }
+    else
+    {
+        return names.LPSolverName.empty() ? std::optional<std::string>() : names.LPSolverName;
     }
 }
 
 MPSolver* MPSolverFactory(const bool isMip, const std::string& solverName)
 {
-    const std::string notFound = "Solver " + solverName + " not found";
+    const std::string notFound
+      = "Solver " + solverName + " was not found or does not support the optimization problem type";
     const std::invalid_argument except(notFound);
 
     auto internalSolverName = translateSolverName(solverName, isMip);
-    if (!internalSolverName)
+    if (!internalSolverName.has_value())
     {
         throw except;
     }
