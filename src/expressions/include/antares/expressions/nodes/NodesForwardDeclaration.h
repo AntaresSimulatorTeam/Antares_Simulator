@@ -24,6 +24,7 @@ namespace Antares::Expressions::Nodes
 {
 class Node;
 class BinaryNode;
+class UnaryNode;
 class SumNode;
 class SubtractionNode;
 class MultiplicationNode;

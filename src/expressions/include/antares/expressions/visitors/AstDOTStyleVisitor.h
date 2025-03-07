@@ -182,6 +182,21 @@ private:
                                 const std::string& label,
                                 const BoxStyle& box_style,
                                 std::ostream& os);
+    /**
+     * @brief Processes a unary operation node.
+     *
+     * Handles the specific case of unary operation nodes by emitting the appropriate
+     * DOT representation.
+     *
+     * @param node The unary operation node to be processed.
+     * @param label The label to be used for the node.
+     * @param box_style The style to be applied to the node's box.
+     * @param os The output stream to which the node representation is written.
+     */
+    void processUnaryOperation(const Nodes::UnaryNode* node,
+                               const std::string& label,
+                               const BoxStyle& box_style,
+                               std::ostream& os);
 
     /**
      * @brief A map of nodes to their unique IDs.
