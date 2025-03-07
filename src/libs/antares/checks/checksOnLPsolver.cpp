@@ -10,7 +10,7 @@ using namespace Antares::Solver::Optimization;
 
 namespace Antares::Check
 {
-static void checkSolverExists(std::string solverName, const std::list<std::string> availableSolversList)
+static void checkSolverExists(const std::string solverName, const std::list<std::string> availableSolversList)
 {
     // Check if solver is available
     bool found = std::ranges::find(availableSolversList, solverName) != availableSolversList.end();
@@ -20,7 +20,7 @@ static void checkSolverExists(std::string solverName, const std::list<std::strin
     }
 }
 
-void checkForSolversExistence(OptimizationOptions& solverOptions)
+void checkForSolversExistence(const OptimizationOptions& solverOptions)
 {
     checkSolverExists(solverOptions.linearSolver, getAvailableLinearSolverNames());
     checkSolverExists(solverOptions.quadraticSolver, getAvailableQuadraticSolverNames());
