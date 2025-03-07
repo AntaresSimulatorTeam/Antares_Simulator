@@ -100,6 +100,12 @@ public:
     IncompatibleMILPOrtoolsSolver();
 };
 
+class UseMILPsolverWithWrongOptions: public LoadingError
+{
+public:
+    UseMILPsolverWithWrongOptions();
+};
+
 class IncompatibleOptRangeHydroPricing: public LoadingError
 {
 public:

@@ -132,6 +132,12 @@ IncompatibleMILPOrtoolsSolver::IncompatibleMILPOrtoolsSolver():
 {
 }
 
+UseMILPsolverWithWrongOptions::UseMILPsolverWithWrongOptions():
+    LoadingError("'milp' solver cannot be used with options for optimization 1 or 2")
+{
+}
+
+
 IncompatibleOptRangeHydroPricing::IncompatibleOptRangeHydroPricing():
     LoadingError("Simplex optimization range and hydro pricing mode : values are not compatible ")
 {
