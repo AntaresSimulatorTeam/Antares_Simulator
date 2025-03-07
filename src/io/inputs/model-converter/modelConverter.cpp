@@ -21,6 +21,7 @@
 
 #include "antares/io/inputs/model-converter/modelConverter.h"
 
+#include <antares/expressions/iterators/pre-order.h>
 #include "antares/expressions/expression.h"
 #include "antares/io/inputs/model-converter/convertorVisitor.h"
 #include "antares/study/system-model/constraint.h"
@@ -247,8 +248,18 @@ std::vector<Study::SystemModel::PortFieldDefinition> convertPortFieldDefinitions
             throw FieldNotFoundForDefinition(pfdefinition.port, pfdefinition.field);
         }
 
-        // TODO: check if expression contains another port and raise an ex if so
         auto nodeRegistry = convertExpressionToNode(pfdefinition.definition, model);
+
+        Expressions::Nodes::AST preorder(nodeRegistry.node);
+        auto it = std::find_if(preorder.begin(),
+                               preorder.end(),
+                               [](const Expressions::Nodes::Node& node)
+                               { return node.name() == "PortFieldNode"; });
+        if (it != preorder.end())
+        {
+            // TODO: throw custom ex
+            throw FieldNotFoundForDefinition(pfdefinition.port, pfdefinition.field);
+        }
 
         portFieldDefinitions.emplace_back(*itPort,
                                           *itField,
