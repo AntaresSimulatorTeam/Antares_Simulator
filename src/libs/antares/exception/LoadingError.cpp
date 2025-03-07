@@ -82,7 +82,7 @@ InvalidSolver::InvalidSolver(const std::string& solver, const std::string& avail
 }
 
 IncompatibleLinearSolverParameters::IncompatibleLinearSolverParameters():
-    LoadingError("You can't supply parameters for one particular and both optimization")
+    LoadingError("You can't supply parameters for one particular and both optimizations")
 {
 }
 
