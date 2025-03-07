@@ -267,7 +267,9 @@ Here is a list of new output variables in recent versions:
 | 8.8 | UNSP. ENRG CSR (also introduced in 9.2) | values-*.txt | yes |
 | 8.8 | LOLD_CSR, LOLP_CSR (also introduced in 9.2) | values-*.txt | yes |
 | 8.8 | MAX MRG CSR (also introduced in 9.2) | values-*.txt | yes |
+| 8.8 | OV. COST CSR (also introduced in 9.2) | values-*.txt | yes |
 | 9.1 | **Short-term storage** - dynamic groups instead of static groups. For any group :<br>\<STS group\>_injection <br> \<STS group\>_withdrawal <br> \<STS group\>_level| values-*.txt | yes |
 | 9.2 | MIN DTG by plant <br> PriceCSR (also introduced in 8.8) <br> UNSP. ENRG CSR (also introduced in 8.8) | details-\*.txt <br> values-\*.txt <br> values-*.txt| yes <br> yes <br> yes|
 | 9.2 | LOLD_CSR, LOLP_CSR (also introduced in 8.8) | values-\*.txt| yes |
 | 9.2 | MAX MRG CSR (also introduced in 8.8) | values-*.txt | yes |
+| 9.2 | OV. COST CSR (also introduced in 8.8) | values-*.txt | yes |
