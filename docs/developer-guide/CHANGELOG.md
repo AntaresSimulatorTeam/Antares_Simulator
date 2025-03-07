@@ -14,10 +14,16 @@ toc_depth: 2
 * Make it possible to specify the final hydro reservoir level [ANT-1084] (#1521)
 * Major changes on the hydro behavior. Use overflow from the weekly optimization problem, don't recompute levels as a post-processing. These changes improve the handling of min-gen constraints for hydro reservoirs. [ANT-1825]
 
+
+
+
 #### Removed features
 * Remove hydro hotstart (#2131)
 * Remove adequacy patch lmr [ANT-1933] (#2341)
 * Possibility to disable OR-Tools. All problems are now solved through OR-Tools (#2450)
+
+
+
 
 #### Improvements
 * Changed the formula for the number of cores [details](../user-guide/solver/optional-features/multi-threading.md)
@@ -27,6 +33,12 @@ toc_depth: 2
 * Infeasibility analyzer [ANT-1825] (#2232) (#2227)
 * Collect hydro validation errors (#2204)
 * Perform hydro checks prior to the simulation [ANT-1720] (#2132)
+* New output variable : partial min gen for thermal clusters [ANT-2425] (#2608)
+Improve logging & loading of STS elements introduced in v9.2.0 [ANT-2730] (#2648)
+Accurate remix hydro [ANT-1825] (#2599)
+Increase precision for LOLD[CSR] and MRG PRICE[CSR] [ANT-2443] (#2618)
+
+
 
 #### Bugfixes
 * Adequacy Patch regression [ANT-1845] (#2235)
@@ -38,6 +50,9 @@ toc_depth: 2
 * Fix reset order (#2304)
 * Restore correct behavior when options -h/--list-solvers are provided (#2138)
 * Fix missing synthesis results for links (#2115)
+Check scenario year for Binding constraints [ANT-2890] (#2674)
+[GUI] Fix binding constraint TS & weights loading [ANT-2746] [ANT-2754] (#2636)
+
 
 #### Modeler
 * 1.1: Modeler API [ANT-1876] (#2286) (#2391)
@@ -52,6 +67,13 @@ toc_depth: 2
 * 4.5 Full exemple of parsing (#2448)
 * Add SumNode "wide" test (#2403)
 * Add iterators on ASTs, allowing for loops (#2387)
+* Use variable dict (#2670)(#2655)
+Support time dependency [ANT-2749] (#2622)
+Import modeler data-series [ANT-2033] (#2621)
+Documentation (#2624)
+Tests (#2626)
+
+
 
 #### CI
 * SonarCloud job, improvements, bugfixes (#2315) (#2281) (#2246)
@@ -66,6 +88,9 @@ toc_depth: 2
 * Add short test to coverage analysis (#2280) (#2267)
 * Check formatting as part of the CI (workflow only) (#2198)
 * Always run clang-format on PR (#2230)
+Fix OL8 workflow (#2632)
+Fix migration guide (#2633)
+
 
 #### Build
 * vcpkg (linux, sirius) (#2078) (#2090) (#2145)
@@ -73,6 +98,12 @@ toc_depth: 2
 * Use OR-Tools v9.11-rte1.1 (#2437)
 * Fix or-tools integration (#2402)
 * Better dependencies with cmake, antares matrix (#2369)
+Fix build for clang (#2654)
+Place all unit test executables in the same build subdirectory (#2658)
+Improve vcpkg configuration (#2630)
+
+
+
 
 #### Doc
 * CHANGELOG improvements (#2287) (#2229) (#2125)
@@ -82,6 +113,9 @@ toc_depth: 2
 * Fix links in README (#2310)
 * Document clang-format (#2243)
 * Add help button to website (#2368)
+
+
+
 
 #### Code quality
 * Using filesystem path instead of Yuni [ANT-1999] (#2435) (#2454) (#2123) (#2066)
@@ -107,6 +141,9 @@ toc_depth: 2
 * Capture explicit var for lambdas (#2170)
 * Fix circular dependencies on CMake targets (#2140)
 * Fix Variable::Join (#2116)
+Add tests for TSData getters & setters (#2677)
+Improve unit tests for cost computation (non-constant modulation) [ANT-2527] (#2681)
+
 
 #### Technical cleaning
 * Remove last global variable (#2410)
@@ -121,11 +158,18 @@ toc_depth: 2
 * Remove unused headers in src/solver (yuni, cstdint, sim.h) (#2371)
 * Remove unused CMake option BUILD MINIZIP (#2210)
 * Remove useless forward declaration (#2268)
+cleanup cucumber test outputs (#2663)
+
+
+
 
 #### For developers
 
 * Update ortools to 9.11-rte1.1
 * Various improvement to code quality
+* Sonarcloud coverage (#2652)(#2649)(#2647)(#2640)(#2641)(#2645) (#2639)
+
+
 
 ## Branch 9.1.x
 
