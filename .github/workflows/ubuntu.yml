@@ -70,7 +70,7 @@ jobs:
       - name: Install libraries
         run: |
           sudo apt-get update
-          sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
+          sudo apt-get install libwxgtk3.0-gtk3-dev
           sudo apt-get install g++-10 gcc-10
 
       - name: Config OR-Tools URL
@@ -160,7 +160,7 @@ jobs:
         uses: ./.github/workflows/cucumber-tests
         with:
           feature: "features/solver-features/short_tests.feature"
-          
+
       - name: Run unfeasibility-related tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         run: |
