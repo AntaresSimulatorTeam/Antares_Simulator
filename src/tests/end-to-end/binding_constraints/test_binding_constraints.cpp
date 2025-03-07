@@ -225,7 +225,7 @@ BOOST_FIXTURE_TEST_CASE(Hourly_BC_restricts_cluster_disable_generation_to_90, St
     auto c = cluster2.get();
     cluster2->setName("plop");
     cluster2->reset();
-    //link->from->thermal.list.addToCompleteList(cluster2);
+    // link->from->thermal.list.addToCompleteList(cluster2);
 
     // ThermalClusterConfig(c)
     //   .setNominalCapacity(100.)
@@ -239,7 +239,7 @@ BOOST_FIXTURE_TEST_CASE(Hourly_BC_restricts_cluster_disable_generation_to_90, St
 
     OutputRetriever output(simulation->rawSimu());
     BOOST_TEST(output.thermalGeneration(cluster.get()).hour(10) == rhsValue, tt::tolerance(0.001));
-    //BOOST_TEST(output.thermalGeneration(cluster2).hour(10) == rhsValue, tt::tolerance(0.001));
+    // BOOST_TEST(output.thermalGeneration(cluster2).hour(10) == rhsValue, tt::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
