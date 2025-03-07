@@ -321,7 +321,9 @@ jobs:
         with:
           feature: "features/modeler-features"
 
-      # TODO : revert barrier
+      - name: Barrier
+        if: ${{ !success() }}
+        run: exit 1
 
       - name: Installer .deb creation
         run: |

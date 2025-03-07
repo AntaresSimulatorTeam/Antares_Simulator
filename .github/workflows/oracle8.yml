@@ -159,7 +159,7 @@ jobs:
         gh release upload "$tag" _build/*.tar.gz _build/*.rpm
 
     - name: Update continuous-delivery release
-      # if: ${{ env.REF == '/feature/nightly_release' }} # TODO change to develop
+      if: github.ref == 'refs/heads/feature/nightly_release' # TODO change to develop
       uses: pyTooling/Actions/releaser@main
       with:
         tag: continuous-delivery
