@@ -375,8 +375,8 @@ static std::optional<std::string> translateSolverName(const std::string& solverN
 
 MPSolver* MPSolverFactory(const bool isMip, const std::string& solverName)
 {
-    const std::string notFound
-      = "Solver " + solverName + " was not found or does not support the optimization problem type";
+    const std::string notFound = "Solver " + solverName + " was not found or does not support "
+                                 + (isMip ? "MIP" : "LP") + " problems";
     const std::invalid_argument except(notFound);
 
     auto internalSolverName = translateSolverName(solverName, isMip);
