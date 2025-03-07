@@ -7,8 +7,6 @@ on:
     branches:
       - develop
       - dependabot/*
-      - feature/nightly_release # TODO revert this
-
   schedule:
     - cron: '21 2 * * *'
   workflow_call:
@@ -159,7 +157,7 @@ jobs:
         gh release upload "$tag" _build/*.tar.gz _build/*.rpm
 
     - name: Update continuous-delivery release
-      if: github.ref == 'refs/heads/feature/nightly_release' # TODO change to develop
+      if: github.ref == 'refs/heads/develop'
       uses: pyTooling/Actions/releaser@main
       with:
         tag: continuous-delivery
