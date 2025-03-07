@@ -134,12 +134,12 @@ EvaluationResult EvalVisitor::visit(const Nodes::ComponentParameterNode* node)
 EvaluationResult EvalVisitor::visit(const Nodes::TimeShiftNode* node)
 {
     const auto ret = dispatch(node->child());
-    return ret.shiftResult(node->shift());
+    return ret.shiftResult(node->value());
 }
 EvaluationResult EvalVisitor::visit(const Nodes::TimeIndexNode* node)
 {
     const auto ret = dispatch(node->child());
-    return ret[node->index()];
+    return ret[node->value()];
 }
 
 std::string EvalVisitor::name() const
