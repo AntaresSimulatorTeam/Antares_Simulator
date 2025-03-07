@@ -1,11 +1,13 @@
 # Test steps definitions specific to antares-solver
 
 import os
+import re
 import shutil
 import subprocess
 import tempfile
 from pathlib import Path
 
+import numpy as np
 from behave import *
 from common_steps.assertions import *
 from common_steps.solver_input_handler import solver_input_handler
@@ -13,6 +15,8 @@ from common_steps.solver_output_handler import solver_output_handler
 
 from features.steps.common_steps.assertions import assert_double_close
 
+NB_HOURS_IN_WEEK = 168
+NB_DAYS_IN_WEEK = 7
 
 def create_temporary_copy(path):
     temp_path = tempfile.TemporaryDirectory().name
@@ -221,3 +225,38 @@ def parse_output_folder_from_logs(logs: bytes) -> str:
         if b'Output folder : ' in line:
             return line.split(b'Output folder : ')[1].decode('ascii')
     raise LookupError("Could not parse output folder in output logs")
+
+def make_daily_values_from_a_string(days: str):
+    list_daily_values = [float(number) for number in re.findall(r'\d+', days)]
+    assert len(list_daily_values) == NB_DAYS_IN_WEEK, f"7 daily values expected, %d given" % len(list_daily_values)
+    return list_daily_values
+
+def check_week_ts_has_daily_values(week_ts,  list_daily_values):
+    split_ts = np.array_split(week_ts, NB_DAYS_IN_WEEK)
+    for day, daily_ts in enumerate(split_ts):
+        assert np.allclose(daily_ts, list_daily_values[day], atol=1e-2), \
+            f"day %d : all hourly values do not equal %.2f" % (day, list_daily_values[day])
+
+def extract_week_ts(ts, week):
+    assert week >= 1, f"week should be greater than 1"
+    assert ts.size >= 168, f"hourly values should have at least 168, it has %d" % ts.size
+    week_ts = ts[(week - 1) * NB_HOURS_IN_WEEK:week * NB_HOURS_IN_WEEK]
+    return week_ts
+
+@then('in area "{area}", week {week:d}, year {year:d}, daily mingens for cluster "{cluster}" are {days}')
+def check_thermal_cluster_min_gen_for_week(context, area, week, year, cluster, days):
+    ts = context.soh.min_gen_for_thermal_cluster(area, year, cluster)
+    list_daily_values = make_daily_values_from_a_string(days)
+    week_ts = extract_week_ts(ts, week)
+    check_week_ts_has_daily_values(week_ts, list_daily_values)
+
+@then('in area "{area}", year {year:d}, no mingens for cluster "{cluster}"')
+def check_no_mingen_column_for_cluster(context, area, year, cluster):
+    column_names = list(context.soh.details_hourly_for_cluster(area, year, cluster).columns)
+    assert "MinGen - MWh" not in column_names, f"cluster %s should not be in file details" % cluster
+
+# Unused for now
+@then('in area "{area}", min gen for thermal cluster "{cluster_name}" on hour {hour:d} of year {year:d} is : {expected_value:g} MW')
+def check_thermal_cluster_min_gen_for_hour(context, area, cluster_name, hour, year, expected_value):
+    actual_value = context.soh.min_gen_for_thermal_cluster_at_hour(area, year, hour, cluster_name)
+    assert_double_close(expected_value, actual_value, 0.001)
