@@ -301,17 +301,11 @@ std::any ConvertorVisitor::visitRightAtom([[maybe_unused]] ExprParser::RightAtom
     throw NotImplemented("Node right atom not implemented yet");
 }
 
-// TODO implement this
 std::any ConvertorVisitor::visitShift([[maybe_unused]] ExprParser::ShiftContext* context)
 {
-    if (context->shift_expr() == nullptr)
-    {
-        return static_cast<Node*>(registry_.create<LiteralNode>(0));
-    }
     return std::any_cast<Node*>(visit(context->shift_expr()));
 }
 
-// TODO implement this
 std::any ConvertorVisitor::visitShiftAddsub(
   [[maybe_unused]] ExprParser::ShiftAddsubContext* context)
 {
