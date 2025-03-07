@@ -129,7 +129,7 @@ jobs:
         # TODO if develop
         run: |
           mv archive/antares-*-CentOS-7.9.2009.tar.gz archive/antares-cd-CentOS-7.9.2009.tar.gz
-          mv archive/antares-*-CentOS-7.9.2009.rpm  archive/antares-cd-CentOS-7.9.2009.tar.gz
+          mv archive/antares-*-CentOS-7.9.2009.rpm  archive/antares-cd-CentOS-7.9.2009.rpm
 
       - name: Update continuous-delivery release
         if: github.ref == 'refs/heads/develop'
