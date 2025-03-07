@@ -77,19 +77,19 @@ BOOST_AUTO_TEST_CASE(test_pdlp_support)
     auto lpSolver = MPSolverFactory(false, "pdlp");
     BOOST_CHECK(lpSolver);
     BOOST_CHECK_EQUAL(SolverType::PDLP_LINEAR_PROGRAMMING, lpSolver->ProblemType());
-    BOOST_CHECK_EXCEPTION(
-      MPSolverFactory(true, "pdlp"),
-      std::invalid_argument,
-      checkMessage("Solver pdlp was not found or does not support MIP problems"));
+    BOOST_CHECK_EXCEPTION(MPSolverFactory(true, "pdlp"),
+                          std::invalid_argument,
+                          checkMessage(
+                            "Solver pdlp was not found or does not support MIP problems"));
 }
 
 // SCIP only supports MIP
 BOOST_AUTO_TEST_CASE(test_scip_support)
 {
-    BOOST_CHECK_EXCEPTION(
-      MPSolverFactory(false, "scip"),
-      std::invalid_argument,
-      checkMessage("Solver scip was not found or does not support LP problems"));
+    BOOST_CHECK_EXCEPTION(MPSolverFactory(false, "scip"),
+                          std::invalid_argument,
+                          checkMessage(
+                            "Solver scip was not found or does not support LP problems"));
     auto mipSolver = MPSolverFactory(true, "scip");
     BOOST_CHECK(mipSolver);
     BOOST_CHECK_EQUAL(SolverType::SCIP_MIXED_INTEGER_PROGRAMMING, mipSolver->ProblemType());
