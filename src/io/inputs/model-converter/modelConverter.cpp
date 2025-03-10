@@ -276,8 +276,9 @@ std::vector<Study::SystemModel::PortFieldDefinition> convertPortFieldDefinitions
     return portFieldDefinitions;
 }
 
-static void addSingleConstraint(const std::vector<Study::SystemModel::Constraint>& constraints,
-                                const IO::Inputs::YmlModel::Constraint& constraint)
+static void addSingleConstraint(std::vector<Study::SystemModel::Constraint>& constraints,
+                                const IO::Inputs::YmlModel::Constraint& constraint,
+                                const IO::Inputs::YmlModel::Model& model)
 {
     // Can't have constraints with the same ID
     if (std::ranges::find_if(constraints,
@@ -307,12 +308,12 @@ std::vector<Study::SystemModel::Constraint> convertConstraints(
 
     for (const auto& constraint: model.constraints)
     {
-        addSingleConstraint(constraints, constraint);
+        addSingleConstraint(constraints, constraint, model);
     }
 
     for (const auto& constraint: model.binding_constraints)
     {
-        addSingleConstraint(constraints, constraint);
+        addSingleConstraint(constraints, constraint, model);
     }
     return constraints;
 }
@@ -335,9 +336,9 @@ std::vector<Study::SystemModel::Model> convertModels(
         std::vector<Study::SystemModel::Parameter> parameters = convertParameters(model);
         std::vector<Study::SystemModel::Variable> variables = convertVariables(model);
         std::vector<Study::SystemModel::Port> ports = convertPorts(model, portTypes);
-        std::vector<Study::SystemModel::Constraint> constraints = convertConstraints(model);
         std::vector<Study::SystemModel::PortFieldDefinition>
           portFieldDefinitions = convertPortFieldDefinitions(model, ports, portTypes);
+        std::vector<Study::SystemModel::Constraint> constraints = convertConstraints(model);
 
         auto nodeObjective = convertExpressionToNode(model.objective, model);
 

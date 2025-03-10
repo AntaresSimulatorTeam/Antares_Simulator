@@ -117,6 +117,9 @@ library:
         - port: injection_port
           field: flow
           definition: generation
+      binding-constraints:
+        - id: balance
+          expression: injection_port.flow = 0
       objective: cost * generation
 
     - id: node
@@ -124,9 +127,6 @@ library:
       ports:
         - id: injection_port
           type: flow
-      binding-constraints:
-        - id: balance
-          expression:  injection_port = 0
 
     - id: spillage
       description: A basic spillage model
@@ -281,7 +281,7 @@ library:
         BOOST_CHECK_EQUAL(model0.Id(), "generator");
         BOOST_CHECK_EQUAL(model0.Objective().Value(), "cost * generation");
 
-        BOOST_REQUIRE_EQUAL(model0.getConstraints().size(), 0);
+        BOOST_REQUIRE_EQUAL(model0.getConstraints().size(), 1);
         BOOST_REQUIRE_EQUAL(model0.Parameters().size(), 2);
         BOOST_REQUIRE_EQUAL(model0.Variables().size(), 1);
         // BOOST_REQUIRE_EQUAL(model0.Ports().size(), 1); Unsuported

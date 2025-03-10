@@ -43,6 +43,7 @@ struct LibraryObjects
                            .ports = {},
                            .port_field_definitions = {},
                            .constraints = {{"constraint1", "cost"}},
+                           .binding_constraints = {},
                            .objective = ""};
 
     YmlSystem::Parser parser;
@@ -206,9 +207,6 @@ BOOST_AUTO_TEST_CASE(Full_system_test)
               ports:
                 - id: injection_port
                   type: flow
-              binding-constraints:
-                - id: balance
-                  expression: injection_port.flow = 0
     )"s;
 
     const auto libraryYaml2 = R"(
