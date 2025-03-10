@@ -22,8 +22,8 @@ Feature: 3 - Simple end-to-end tests to test temporal expression management : Ti
       | node1     | gen2_p   | 0        | 50    |
       | node1     | gen1_p   | 1        | 75    |
       | node1     | gen2_p   | 1        | 25    |
-      | node1     | gen1_p   | 2        | 80    |
-      | node1     | gen2_p   | 2        | 20    |
+      | node1     | gen1_p   | 2        | 100   |
+      | node1     | gen2_p   | 2        | 0     |
 
 #TODO test input contains illegal expression, to be updated
   Scenario: 3.3: One model with one load and two generators, two timesteps ; TimeShift operator in a constraint => generator1 should have a constant power. The TimeShift operator is applied to an expression.

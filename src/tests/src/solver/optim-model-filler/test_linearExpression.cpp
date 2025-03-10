@@ -352,4 +352,105 @@ BOOST_AUTO_TEST_CASE(GetSizeMethod)
     BOOST_TEST(expr.getSize() == 3);
 }
 
+// Test shiftLinearExpressions with positive shift
+BOOST_AUTO_TEST_CASE(ShiftLinearExpressionsPositive)
+{
+    auto component = "compo";
+
+    LinearExpressionMap exp = {{0, LinearExpression(1.0, {{FullKey(component, "a"), 1.0}})},
+                               {1, LinearExpression(2.0, {{FullKey(component, "b"), 2.0}})},
+                               {2, LinearExpression(3.0, {{FullKey(component, "c"), 3.0}})}};
+
+    Antares::Optimization::TimeDependentLinearExpression expr(exp);
+    Antares::Optimization::TimeDependentLinearExpression result = expr.shiftLinearExpressions(1);
+
+    BOOST_TEST(result.getSize() == 3);
+    BOOST_TEST(result.GetLinearExpressions().at(0).offset() == 3.0);
+    BOOST_TEST(result.GetLinearExpressions().at(1).offset() == 1.0);
+    BOOST_TEST(result.GetLinearExpressions().at(2).offset() == 2.0);
+}
+
+// Test shiftLinearExpressions with negative shift
+BOOST_AUTO_TEST_CASE(ShiftLinearExpressionsNegative)
+{
+    auto component = "compo";
+
+    LinearExpressionMap exp = {{0, LinearExpression(1.0, {{FullKey(component, "a"), 1.0}})},
+                               {1, LinearExpression(2.0, {{FullKey(component, "b"), 2.0}})},
+                               {2, LinearExpression(3.0, {{FullKey(component, "c"), 3.0}})}};
+
+    Antares::Optimization::TimeDependentLinearExpression expr(exp);
+    Antares::Optimization::TimeDependentLinearExpression result = expr.shiftLinearExpressions(-1);
+
+    BOOST_TEST(result.getSize() == 3);
+    BOOST_TEST(result.GetLinearExpressions().at(0).offset() == 2.0);
+    BOOST_TEST(result.GetLinearExpressions().at(1).offset() == 3.0);
+    BOOST_TEST(result.GetLinearExpressions().at(2).offset() == 1.0);
+}
+
+// Test shiftLinearExpressions with zero shift
+BOOST_AUTO_TEST_CASE(ShiftLinearExpressionsZero)
+{
+    auto component = "compo";
+
+    LinearExpressionMap exp = {{0, LinearExpression(1.0, {{FullKey(component, "a"), 1.0}})},
+                               {1, LinearExpression(2.0, {{FullKey(component, "b"), 2.0}})},
+                               {2, LinearExpression(3.0, {{FullKey(component, "c"), 3.0}})}};
+
+    Antares::Optimization::TimeDependentLinearExpression expr(exp);
+    Antares::Optimization::TimeDependentLinearExpression result = expr.shiftLinearExpressions(0);
+
+    BOOST_TEST(result.getSize() == 3);
+    BOOST_TEST(result.GetLinearExpressions().at(0).offset() == 1.0);
+    BOOST_TEST(result.GetLinearExpressions().at(1).offset() == 2.0);
+    BOOST_TEST(result.GetLinearExpressions().at(2).offset() == 3.0);
+}
+
+// Test shiftLinearExpressions with shift greater than size
+BOOST_AUTO_TEST_CASE(ShiftLinearExpressionsGreaterThanSize)
+{
+    auto component = "compo";
+
+    LinearExpressionMap exp = {{0, LinearExpression(1.0, {{FullKey(component, "a"), 1.0}})},
+                               {1, LinearExpression(2.0, {{FullKey(component, "b"), 2.0}})},
+                               {2, LinearExpression(3.0, {{FullKey(component, "c"), 3.0}})}};
+
+    Antares::Optimization::TimeDependentLinearExpression expr(exp);
+    Antares::Optimization::TimeDependentLinearExpression result = expr.shiftLinearExpressions(4);
+
+    BOOST_TEST(result.getSize() == 3);
+    BOOST_TEST(result.GetLinearExpressions().at(0).offset() == 2.0);
+    BOOST_TEST(result.GetLinearExpressions().at(1).offset() == 3.0);
+    BOOST_TEST(result.GetLinearExpressions().at(2).offset() == 1.0);
+}
+
+// Test operator[] with valid index
+BOOST_AUTO_TEST_CASE(OperatorIndexValid)
+{
+    auto component = "compo";
+
+    LinearExpressionMap exp = {{0, LinearExpression(1.0, {{FullKey(component, "a"), 1.0}})},
+                               {1, LinearExpression(2.0, {{FullKey(component, "b"), 2.0}})},
+                               {2, LinearExpression(3.0, {{FullKey(component, "c"), 3.0}})}};
+
+    Antares::Optimization::TimeDependentLinearExpression expr(exp);
+    Antares::Optimization::TimeDependentLinearExpression result = expr[1];
+
+    BOOST_TEST(result.getSize() == 1);
+    BOOST_TEST(result.GetLinearExpressions().at(1).offset() == 2.0);
+    BOOST_TEST(result.GetLinearExpressions().at(1).coefPerVar().at(FullKey(component, "b")) == 2.0);
+}
+
+// Test operator[] with invalid index
+BOOST_AUTO_TEST_CASE(OperatorIndexInvalid)
+{
+    auto component = "compo";
+
+    LinearExpressionMap exp = {{0, LinearExpression(1.0, {{FullKey(component, "a"), 1.0}})},
+                               {1, LinearExpression(2.0, {{FullKey(component, "b"), 2.0}})},
+                               {2, LinearExpression(3.0, {{FullKey(component, "c"), 3.0}})}};
+
+    Antares::Optimization::TimeDependentLinearExpression expr(exp);
+    BOOST_CHECK_THROW(expr[3], std::out_of_range);
+}
 BOOST_AUTO_TEST_SUITE_END()
