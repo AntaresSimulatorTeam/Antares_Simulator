@@ -107,7 +107,7 @@ public:
         return value_;
     }
 
-    class EvalResultType: public std::runtime_error
+    class EvalResultTypeError: public std::runtime_error
     {
     public:
         using std::runtime_error::runtime_error;
@@ -117,7 +117,7 @@ public:
     {
         if (!std::holds_alternative<double>(value_))
         {
-            throw EvalResultType("Expected a double but found a vector.");
+            throw EvalResultTypeError("Expected a double but found a vector.");
         }
         return std::get<double>(value_);
     }
@@ -126,7 +126,7 @@ public:
     {
         if (!std::holds_alternative<std::vector<double>>(value_))
         {
-            throw EvalResultType("Expected a vector but found a double.");
+            throw EvalResultTypeError("Expected a vector but found a double.");
         }
         return std::get<std::vector<double>>(value_);
     }

@@ -30,6 +30,7 @@
 #include <antares/expressions/visitors/EvalVisitor.h>
 #include <antares/expressions/visitors/PrintVisitor.h>
 #include <antares/optimisation/linear-problem-data-impl/linearProblemData.h>
+#include "antares/expressions/ShiftVector.h"
 
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
@@ -446,10 +447,20 @@ BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_param, MyDummyFixture)
     BOOST_CHECK_EQUAL(eval[1], hour_1);
 }
 
-BOOST_FIXTURE_TEST_CASE(evaluate_shifted_param, MyDummyFixture)
+BOOST_FIXTURE_TEST_CASE(evaluate_shifted_literal, MyDummyFixture)
+{
+    LiteralNode literal_node(13.0);
+    TimeShiftNode time_shift_node(&literal_node, 2);
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(&time_shift_node).valueAsDouble(), 13.0);
+    BOOST_CHECK_THROW(evalVisitor.dispatch(&time_shift_node).valuesAsVector(),
+                      EvaluationResult::EvalResultTypeError);
+}
+
+template<typename UnaryNodeWithParameter>
+EvaluationResult CreateAndEvalutateParameterizedUnaryNode(int p)
 {
     ParameterNode param("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
-    TimeShiftNode root(&param, -1);
+    UnaryNodeWithParameter root(&param, p);
     const std::string value = "dummy";
     MockLinearProblemData dummy_data;
     EvaluationContext context(
@@ -460,12 +471,25 @@ BOOST_FIXTURE_TEST_CASE(evaluate_shifted_param, MyDummyFixture)
     unsigned first = 0;
     unsigned last = 2;
     EvalVisitor evalVisitor(context, {first, last /*three hours*/});
-    const auto eval = evalVisitor.dispatch(&root).valuesAsVector();
+    return evalVisitor.dispatch(&root);
+}
+
+BOOST_FIXTURE_TEST_CASE(evaluate_shifted_param, MyDummyFixture)
+{
+    const auto eval = CreateAndEvalutateParameterizedUnaryNode<TimeShiftNode>(-1).valuesAsVector();
     // from MockLinearProblemData  param TSdata is {0, 1, 2}
     // here we applied TimeShift t-1 {2, 0, 1}
     BOOST_CHECK_EQUAL(eval[0], 2); //
     BOOST_CHECK_EQUAL(eval[1], 0);
     BOOST_CHECK_EQUAL(eval[2], 1);
+}
+
+BOOST_FIXTURE_TEST_CASE(evaluate_timeIndex_param, MyDummyFixture)
+{
+    const auto eval = CreateAndEvalutateParameterizedUnaryNode<TimeIndexNode>(1).valueAsDouble();
+    // from MockLinearProblemData  param TSdata is {0, 1, 2}
+    // here we applied TimeIndex[1]
+    BOOST_CHECK_EQUAL(eval, 1); //
 }
 
 BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_multiplication, MyDummyFixture)
@@ -540,6 +564,67 @@ void evaluate_time_dependent_operation()
     BOOST_CHECK_EQUAL(eval[1], evalExpected<BinaryNode>(hour_1, literal.value()));
 }
 
+template<typename BinaryNode>
+void evaluate_time_dependent_operation_on_TimeShiftNode(int timeShift)
+{
+    ParameterNode param("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
+    LiteralNode literal(2.0);
+    BinaryNode binary_node(&literal, &param); // Correctly use the type as a template argument
+
+    TimeShiftNode root(&binary_node, timeShift);
+    const std::string value = "dummy";
+
+    MockLinearProblemData dummy_data;
+
+    EvaluationContext context(
+      {build_context_parameter_with("my-param", value, ParameterType::TIMESERIE)},
+      {},
+      dummy_data);
+
+    std::vector<unsigned int> hours = {0, 1};
+
+    EvalVisitor evalVisitor(context, {hours.at(0), hours.at(1) /*two hours*/});
+    const auto eval = evalVisitor.dispatch(&root).valuesAsVector();
+
+    std::vector<double> result_before_timeShift = {evalExpected<BinaryNode>(hours.at(0),
+                                                                            literal.value()),
+                                                   evalExpected<BinaryNode>(hours.at(1),
+                                                                            literal.value())};
+    const auto after_timeShift = shiftVector(result_before_timeShift, timeShift);
+    BOOST_CHECK_EQUAL(eval[0], after_timeShift.at(0));
+    BOOST_CHECK_EQUAL(eval[1], after_timeShift.at(1));
+}
+
+template<typename BinaryNode>
+void evaluate_time_dependent_operation_on_TimeIndexNode(int timeIndex)
+{
+    ParameterNode param("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
+    LiteralNode literal(2.0);
+    BinaryNode binary_node(&literal, &param); // Correctly use the type as a template argument
+
+    TimeIndexNode root(&binary_node, timeIndex);
+    const std::string value = "dummy";
+
+    MockLinearProblemData dummy_data;
+
+    EvaluationContext context(
+      {build_context_parameter_with("my-param", value, ParameterType::TIMESERIE)},
+      {},
+      dummy_data);
+
+    std::vector<unsigned int> hours = {0, 1};
+
+    EvalVisitor evalVisitor(context, {hours.at(0), hours.at(1) /*two hours*/});
+    const auto eval = evalVisitor.dispatch(&root).valueAsDouble();
+
+    std::vector<double> result_before_timeIndex = {evalExpected<BinaryNode>(hours.at(0),
+                                                                            literal.value()),
+                                                   evalExpected<BinaryNode>(hours.at(1),
+                                                                            literal.value())};
+
+    BOOST_CHECK_EQUAL(eval, result_before_timeIndex.at(timeIndex));
+}
+
 // Define a list of types (not instances)
 using BinaryOperators = boost::mpl::
   list<MultiplicationNode, SumNode, SubtractionNode, DivisionNode>;
@@ -548,6 +633,19 @@ using BinaryOperators = boost::mpl::
 BOOST_AUTO_TEST_CASE_TEMPLATE(evaluate_time_dependent_operations, T, BinaryOperators)
 {
     evaluate_time_dependent_operation<T>();
+} // Parametrize the test with types
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(evaluate_time_dependent_operations_time_shift_node,
+                              T,
+                              BinaryOperators)
+{
+    evaluate_time_dependent_operation_on_TimeShiftNode<T>(-2);
+}
+BOOST_AUTO_TEST_CASE_TEMPLATE(evaluate_time_dependent_operations_time_index_node,
+                              T,
+                              BinaryOperators)
+{
+    evaluate_time_dependent_operation_on_TimeIndexNode<T>(1);
 }
 
 BOOST_FIXTURE_TEST_CASE(evaluate_variable, MyDummyFixture)
