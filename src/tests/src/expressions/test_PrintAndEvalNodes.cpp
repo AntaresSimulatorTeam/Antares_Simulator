@@ -792,4 +792,84 @@ BOOST_FIXTURE_TEST_CASE(EvalVisitor_name, MyDummyFixture)
 {
     BOOST_CHECK_EQUAL(evalVisitor.name(), "EvalVisitor");
 }
+
+BOOST_AUTO_TEST_CASE(testShiftEmptyVector)
+{
+    std::vector<int> emptyVector;
+    std::vector<int> result = shiftVector(emptyVector, 5);
+    BOOST_CHECK(result.empty());
+}
+
+BOOST_AUTO_TEST_CASE(testZeroShift)
+{
+    std::vector<int> zeroShiftVector = {1, 2, 3, 4, 5};
+    std::vector<int> result = shiftVector(zeroShiftVector, 0);
+    BOOST_CHECK_EQUAL_COLLECTIONS(result.begin(),
+                                  result.end(),
+                                  zeroShiftVector.begin(),
+                                  zeroShiftVector.end());
+}
+
+BOOST_AUTO_TEST_CASE(testPositiveShift)
+{
+    std::vector<int> positiveShiftVector = {1, 2, 3, 4, 5};
+    std::vector<int> expected = {3, 4, 5, 1, 2};
+    std::vector<int> result = shiftVector(positiveShiftVector, 2);
+    BOOST_CHECK_EQUAL_COLLECTIONS(result.begin(), result.end(), expected.begin(), expected.end());
+}
+
+BOOST_AUTO_TEST_CASE(testNegativeShift)
+{
+    std::vector<int> negativeShiftVector = {1, 2, 3, 4, 5};
+    std::vector<int> expected = {4, 5, 1, 2, 3};
+    std::vector<int> result = shiftVector(negativeShiftVector, -2);
+    BOOST_CHECK_EQUAL_COLLECTIONS(result.begin(), result.end(), expected.begin(), expected.end());
+}
+
+BOOST_AUTO_TEST_CASE(testShiftEqualToSize)
+{
+    std::vector<int> equalShiftVector = {1, 2, 3, 4, 5};
+    std::vector<int> result = shiftVector(equalShiftVector, 5);
+    BOOST_CHECK_EQUAL_COLLECTIONS(result.begin(),
+                                  result.end(),
+                                  equalShiftVector.begin(),
+                                  equalShiftVector.end());
+}
+
+BOOST_AUTO_TEST_CASE(testShiftGreaterThanSize)
+{
+    std::vector<int> greaterShiftVector = {1, 2, 3, 4, 5};
+    std::vector<int> expected = {3, 4, 5, 1, 2};
+    std::vector<int> result = shiftVector(greaterShiftVector, 7);
+    BOOST_CHECK_EQUAL_COLLECTIONS(result.begin(), result.end(), expected.begin(), expected.end());
+}
+
+BOOST_AUTO_TEST_CASE(testSingleElementVector)
+{
+    std::vector<int> singleElementVector = {42};
+    std::vector<int> result = shiftVector(singleElementVector, 3);
+    BOOST_CHECK_EQUAL_COLLECTIONS(result.begin(),
+                                  result.end(),
+                                  singleElementVector.begin(),
+                                  singleElementVector.end());
+}
+
+BOOST_AUTO_TEST_CASE(testLargeShiftValues)
+{
+    std::vector<int> largeShiftVector = {1, 2, 3, 4, 5};
+    std::vector<int> expectedPositive = {4, 5, 1, 2, 3};
+    std::vector<int> expectedNegative = {3, 4, 5, 1, 2};
+    // 1000003 % 5 = 3.
+    std::vector<int> resultPositive = shiftVector(largeShiftVector, 1000003);
+    // -1000003 % 5 = -3 and (-3 + 5) % 5 = 2
+    std::vector<int> resultNegative = shiftVector(largeShiftVector, -1000003);
+    BOOST_CHECK_EQUAL_COLLECTIONS(resultPositive.begin(),
+                                  resultPositive.end(),
+                                  expectedPositive.begin(),
+                                  expectedPositive.end());
+    BOOST_CHECK_EQUAL_COLLECTIONS(resultNegative.begin(),
+                                  resultNegative.end(),
+                                  expectedNegative.begin(),
+                                  expectedNegative.end());
+}
 BOOST_AUTO_TEST_SUITE_END()
