@@ -81,6 +81,7 @@ BOOST_AUTO_TEST_CASE(identifier)
       .ports = {},
       .port_field_definitions = {},
       .constraints = {},
+      .binding_constraints = {},
       .objective = "objectives"};
     ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
@@ -114,6 +115,7 @@ BOOST_AUTO_TEST_CASE(identifierNotFound)
       .ports = {},
       .port_field_definitions = {},
       .constraints = {},
+  .binding_constraints = {},
       .objective = "objectives"};
 
     std::string expression = "abc"; // not a param or var
@@ -200,6 +202,7 @@ BOOST_AUTO_TEST_CASE(portfield)
                           .ports = {},
                           .port_field_definitions = {{"port1", "field1", ""}},
                           .constraints = {},
+                          .binding_constraints = {},
                           .objective = "objectives"};
 
     ExpressionToNodeConvertorEmptyModel converter(std::move(model));
@@ -207,6 +210,9 @@ BOOST_AUTO_TEST_CASE(portfield)
     auto expr = converter.run(expression);
 
     BOOST_CHECK_EQUAL(expr.node->name(), "PortFieldNode");
+
+    expression = "port2.field1";
+    BOOST_CHECK_THROW(converter.run(expression), std::runtime_error);
 }
 
 BOOST_AUTO_TEST_CASE(medium_expression)
@@ -219,6 +225,7 @@ BOOST_AUTO_TEST_CASE(medium_expression)
       .ports = {},
       .port_field_definitions = {},
       .constraints = {},
+      .binding_constraints = {},
       .objective = "objectives"};
 
     ExpressionToNodeConvertorEmptyModel converter(std::move(model));
