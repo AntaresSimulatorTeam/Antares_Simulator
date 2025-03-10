@@ -224,7 +224,7 @@ public:
     void hourForEachArea(State& state, unsigned int numSpace)
     {
         double bilanPays = 0.;
-        long Interco = state.problemeHebdo->IndexDebutIntercoOrigine[state.area->index];
+        int Interco = state.problemeHebdo->IndexDebutIntercoOrigine[state.area->index];
         while (Interco >= 0)
         {
             bilanPays += state.ntc.ValeurDuFlux[Interco];
