@@ -9,7 +9,8 @@ toc_depth: 2
 ### 9.2.0
 #### New features
 * Short term storage: withdrawal efficiency [ANT-1862] (#2223)
-* Short term storage: costs [ANT-1854] (#2302)
+* Short term storage: penalty on level, injection, withdrawal [ANT-1854] (#2302)
+* Short term storage: additional constraints on injection, withdrawal, netting [ANT-1855] (#2550, #2546)
 * Short term storage: penalty for storage control, injection and withdrawal flow gradient [ANT-2300] (#2491)
 * Add ts-generation for links [ANT-1084] (#1986)
 * Make it possible to specify the final hydro reservoir level [ANT-1084] (#1521)
