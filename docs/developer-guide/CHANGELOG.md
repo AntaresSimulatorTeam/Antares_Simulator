@@ -211,7 +211,7 @@ toc_depth: 2
 
 #### For developers
 
-* Support for Ubuntu 22, Ubuntu 20 deprecated
+* Support for Ubuntu 22, Ubuntu 20 dropped
 * Update ortools to 9.11-rte1.2
 * Various improvement to code quality
 * Sonarcloud coverage (#2652)(#2649)(#2647)(#2640)(#2641)(#2645)(#2639)
