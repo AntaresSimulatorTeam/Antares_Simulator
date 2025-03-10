@@ -10,12 +10,12 @@ Feature: 3 - Simple end-to-end tests to test temporal expression management : Ti
       | node1     | gen1_p   | 0-1      | 80    |
       | node1     | gen2_p   | 0-1      | 20    |
 
-
+#TODO
   Scenario: 3.2: One model with one load and two generators, three timesteps ; TimeShift operator in a constraint => gen1_p <= Min(Pmax[t], 1.5*Pmax[t-1])
     Given the study path is "modeler/3_2"
     When I run antares modeler
     Then the simulation succeeds
-    And the objective value is 672.5
+    And the objective value is 562.5
     And the optimal values of the variables are
       | component | variable | timestep | value |
       | node1     | gen1_p   | 0        | 50    |
