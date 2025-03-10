@@ -37,8 +37,7 @@ using namespace Antares::Optimisation::LinearProblemApi;
 class SystemLinearProblemBuilder
 {
 public:
-    explicit SystemLinearProblemBuilder(const Study::SystemModel::System& system,
-                                        ILinearProblemData& dataSeries):
+    explicit SystemLinearProblemBuilder(const Study::SystemModel::System& system):
         system_(system)
     {
     }
@@ -104,7 +103,7 @@ int main(int argc, const char** argv)
         const auto system = LoadFiles::loadSystem(studyPath, libraries);
         logs.info() << "System loaded";
         auto dataSeries = LoadFiles::loadDataSeries(studyPath);
-        SystemLinearProblemBuilder system_linear_problem(system, *dataSeries.get());
+        SystemLinearProblemBuilder system_linear_problem(system);
 
         auto outputPath = studyPath / "output";
         if (!parameters.noOutput)
