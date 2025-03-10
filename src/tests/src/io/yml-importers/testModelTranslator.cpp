@@ -393,7 +393,7 @@ bool portInDef(const ModelConverter::PortInDefinition& ex)
 {
     BOOST_CHECK_EQUAL(
       ex.what(),
-      "In port-field-definitions, for port: port2 , found another port in the definition: port2");
+      "In port-field-definitions, for port: port4 , found another port in the definition: port3");
     return true;
 }
 
@@ -429,16 +429,16 @@ BOOST_FIXTURE_TEST_CASE(port_field_definition_error_cases, Fixture)
                           ModelConverter::FieldNotFoundForDefinition,
                           fieldNotFoundForDef);
 
-    /* YmlModel::Model model3{.id = "model3", */
-    /*                        .description = "description", */
-    /*                        .parameters = {{"param3", true, false}}, */
-    /*                        .variables = {}, */
-    /*                        .ports = {{"port3", "flow"}}, */
-    /*                        .port_field_definitions = {{"port3", "field1", "port3"}}, */
-    /*                        .constraints = {}, */
-    /*                        .objective = ""}; */
-    /* library.models = {model3}; */
-    /* BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), */
-    /*                       ModelConverter::PortInDefinition, */
-    /*                       portInDef); */
+    YmlModel::Model model3{.id = "model3",
+                           .description = "description",
+                           .parameters = {{"param3", true, false}},
+                           .variables = {},
+                           .ports = {{"port3", "flow"}, {"port4", "flow"}},
+                           .port_field_definitions = {{"port3", "field1", ""}, {"port4", "field1", "port3.field1"}},
+                           .constraints = {},
+                           .objective = ""};
+    library.models = {model3};
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library),
+                          ModelConverter::PortInDefinition,
+                          portInDef);
 }
