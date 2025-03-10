@@ -227,14 +227,16 @@ public:
         int Interco = state.problemeHebdo->IndexDebutIntercoOrigine[state.area->index];
         while (Interco >= 0)
         {
-            bilanPays += state.ntc.ValeurDuFlux[Interco];
-            Interco = state.problemeHebdo->IndexSuivantIntercoOrigine[Interco];
+            bilanPays += state.ntc.ValeurDuFlux[static_cast<std::size_t>(Interco)];
+            Interco = state.problemeHebdo
+                        ->IndexSuivantIntercoOrigine[static_cast<std::size_t>(Interco)];
         }
         Interco = state.problemeHebdo->IndexDebutIntercoExtremite[state.area->index];
         while (Interco >= 0)
         {
-            bilanPays -= state.ntc.ValeurDuFlux[Interco];
-            Interco = state.problemeHebdo->IndexSuivantIntercoExtremite[Interco];
+            bilanPays -= state.ntc.ValeurDuFlux[static_cast<std::size_t>(Interco)];
+            Interco = state.problemeHebdo
+                        ->IndexSuivantIntercoExtremite[static_cast<std::size_t>(Interco)];
         }
 
         pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = bilanPays;
