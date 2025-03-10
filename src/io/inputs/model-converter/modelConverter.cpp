@@ -276,6 +276,23 @@ std::vector<Study::SystemModel::PortFieldDefinition> convertPortFieldDefinitions
     return portFieldDefinitions;
 }
 
+static void addSingleConstraint(const std::vector<Study::SystemModel::Constraint>& constraints,
+                                const IO::Inputs::YmlModel::Constraint& constraint)
+{
+    // Can't have constraints with the same ID
+    if (std::ranges::find_if(constraints,
+                             [&constraint](const auto& c) { return c.Id() == constraint.id; })
+        != constraints.end())
+    {
+        throw ConstraintWithThisIdAlreadyExists(constraint.id);
+    }
+
+    auto nodeRegistry = convertExpressionToNode(constraint.expression, model);
+    constraints.emplace_back(constraint.id,
+                             Study::SystemModel::Expression{constraint.expression,
+                                                            std::move(nodeRegistry)});
+}
+
 /**
  * \brief Converts constraints from YmlModel::Model to SystemModel::Constraint.
  *
@@ -287,20 +304,15 @@ std::vector<Study::SystemModel::Constraint> convertConstraints(
 {
     std::vector<Study::SystemModel::Constraint> constraints;
     constraints.reserve(model.constraints.size());
+
     for (const auto& constraint: model.constraints)
     {
-        // Can't have constraints with the same ID
-        if (std::ranges::find_if(constraints,
-                                 [&constraint](const auto& c) { return c.Id() == constraint.id; })
-            != constraints.end())
-        {
-            throw ConstraintWithThisIdAlreadyExists(constraint.id);
-        }
+        addSingleConstraint(constraints, constraint);
+    }
 
-        auto nodeRegistry = convertExpressionToNode(constraint.expression, model);
-        constraints.emplace_back(constraint.id,
-                                 Study::SystemModel::Expression{constraint.expression,
-                                                                std::move(nodeRegistry)});
+    for (const auto& constraint: model.binding_constraints)
+    {
+        addSingleConstraint(constraints, constraint);
     }
     return constraints;
 }
