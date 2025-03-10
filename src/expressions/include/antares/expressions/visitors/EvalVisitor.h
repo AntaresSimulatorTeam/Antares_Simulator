@@ -131,8 +131,8 @@ public:
         return std::get<std::vector<double>>(value_);
     }
 
-    EvaluationResult operator[](int index) const;
-    EvaluationResult shiftResult(int shiftValue) const;
+    EvaluationResult operator[](int timeIndex) const;
+    EvaluationResult shiftResult(int timeShift) const;
 
 private:
     std::variant<double, std::vector<double>> value_;

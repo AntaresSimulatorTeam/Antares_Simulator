@@ -176,14 +176,14 @@ EvaluationResult::EvaluationResult(const std::variant<double, std::vector<double
 {
 }
 
-EvaluationResult EvaluationResult::shiftResult(int shiftValue) const
+EvaluationResult EvaluationResult::shiftResult(int timeShift) const
 {
     return EvaluationResult(
-      std::visit([&shiftValue](const auto& l) -> std::variant<double, std::vector<double>>
-                 { return shift(l, shiftValue); },
+      std::visit([&timeShift](const auto& l) -> std::variant<double, std::vector<double>>
+                 { return shift(l, timeShift); },
                  value_));
 }
-EvaluationResult EvaluationResult::operator[](int index) const
+EvaluationResult EvaluationResult::operator[](int timeIndex) const
 {
     if (std::holds_alternative<double>(value_))
     {
@@ -191,12 +191,12 @@ EvaluationResult EvaluationResult::operator[](int index) const
     }
     // TODO check index vs value_.size()?
 
-    return EvaluationResult(std::get<std::vector<double>>(value_).at(index));
+    return EvaluationResult(std::get<std::vector<double>>(value_).at(timeIndex));
 }
 
-std::vector<double> EvaluationResult::shift(const std::vector<double>& values, int shiftValue)
+std::vector<double> EvaluationResult::shift(const std::vector<double>& values, int timeShift)
 {
-    return shiftVector(values, shiftValue);
+    return shiftVector(values, timeShift);
 }
 
 } // namespace Antares::Expressions::Visitors

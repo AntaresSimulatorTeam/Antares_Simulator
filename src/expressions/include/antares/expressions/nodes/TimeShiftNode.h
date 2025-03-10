@@ -29,7 +29,7 @@ class TimeShiftNode: public ParameterizedUnaryNode
 public:
     using ParameterizedUnaryNode::ParameterizedUnaryNode;
 
-    std::string TimeShiftNode::name() const override
+    std::string name() const override
     {
         return "TimeShiftNode";
     }
