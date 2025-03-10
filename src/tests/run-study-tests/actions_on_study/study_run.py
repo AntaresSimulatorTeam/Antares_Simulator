@@ -3,13 +3,14 @@ import os
 from pathlib import Path
 from utils.assertions import check
 
+
 class study_run:
     def __init__(self, study_path, antares_simu_path, solver_name, named_mps_problems, parallel):
         self.study_path = study_path
         self.antares_simu_path = antares_simu_path
         self.solverName = solver_name
-        self.named_mps_problems = named_mps_problems
-        self.parallel = parallel
+        self.named_mps_problems = True
+        self.parallel = True
         self.raise_exception_on_failure = True
         self.return_code = 0
 
@@ -37,7 +38,6 @@ class study_run:
             return
 
         check(self.success(), f"Solver returned error {self.return_code}")
-
 
     def get_return_code(self):
         return self.return_code
