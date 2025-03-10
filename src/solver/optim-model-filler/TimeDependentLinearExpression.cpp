@@ -163,8 +163,10 @@ TimeDependentLinearExpression TimeDependentLinearExpression::shiftLinearExpressi
 
 TimeDependentLinearExpression TimeDependentLinearExpression::operator[](int index) const
 {
-    // TODO check?
-    return TimeDependentLinearExpression({{index, linearExpressions_.at(index)}});
+    const Optimisation::LinearProblemApi::FillContext fillContext{
+      linearExpressions_.begin()->first,
+      linearExpressions_.rbegin()->first};
+    return TimeDependentLinearExpression(fillContext, linearExpressions_.at(index));
 }
 
 } // namespace Antares::Optimization

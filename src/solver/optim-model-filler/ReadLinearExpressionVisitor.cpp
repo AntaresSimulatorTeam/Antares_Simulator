@@ -103,7 +103,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const VariableN
     {
         LinearExpressionMap linearExpressions;
 
-        for (auto timeStep = fillContext_.getFirstTimeStep();
+        for (unsigned int timeStep = fillContext_.getFirstTimeStep();
              timeStep <= fillContext_.getLastTimeStep();
              ++timeStep)
         {
