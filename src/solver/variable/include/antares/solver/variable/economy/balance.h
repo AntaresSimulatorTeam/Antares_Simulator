@@ -233,8 +233,8 @@ public:
         Interco = state.problemeHebdo->IndexDebutIntercoExtremite[state.area->index];
         while (Interco >= 0)
         {
-            bilanPays -= state.ntc.ValeurDuFlux[Interco[numSpace]];
-            Interco = state.problemeHebdo->IndexSuivantIntercoExtremite[Interco[numSpace]];
+            bilanPays -= state.ntc.ValeurDuFlux[Interco];
+            Interco = state.problemeHebdo->IndexSuivantIntercoExtremite[Interco];
         }
 
         pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = bilanPays;
