@@ -115,7 +115,7 @@ BOOST_AUTO_TEST_CASE(identifierNotFound)
       .ports = {},
       .port_field_definitions = {},
       .constraints = {},
-  .binding_constraints = {},
+      .binding_constraints = {},
       .objective = "objectives"};
 
     std::string expression = "abc"; // not a param or var
