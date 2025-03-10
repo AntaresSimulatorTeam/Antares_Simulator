@@ -220,14 +220,13 @@ public:
     using std::runtime_error::runtime_error;
 };
 
-// TODO implement this
 std::any ConvertorVisitor::visitPortField(ExprParser::PortFieldContext* context)
 {
-    for (const auto& port: model_.ports)
+    for (const auto& pfd: model_.port_field_definitions)
     {
-        if (port.id == context->IDENTIFIER()[0]->getText())
+        if (pfd.port == context->IDENTIFIER()[0]->getText())
         {
-            return static_cast<Node*>(registry_.create<PortFieldNode>(port.id, port.type));
+            return static_cast<Node*>(registry_.create<PortFieldNode>(pfd.port, pfd.field));
         }
     }
 

@@ -189,6 +189,24 @@ BOOST_FIXTURE_TEST_CASE(comparison, ExpressionToNodeConvertorEmptyModel)
     BOOST_CHECK_EQUAL(toLiteral(nodeGreater->right())->value(), 27);
 }
 
+BOOST_AUTO_TEST_CASE(portfield)
+{
+    YmlModel::Model model{.id = "model0",
+                          .description = "description",
+                          .parameters = {},
+                          .variables = {},
+                          .ports = {},
+                          .port_field_definitions = {{"port1", "field1", ""}},
+                          .constraints = {},
+                          .objective = "objectives"};
+
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+    std::string expression = "port1.field1";
+    auto expr = converter.run(expression);
+
+    BOOST_CHECK_EQUAL(expr.node->name(), "PortFieldNode");
+}
+
 BOOST_AUTO_TEST_CASE(medium_expression)
 {
     YmlModel::Model model{.id = "model0",
