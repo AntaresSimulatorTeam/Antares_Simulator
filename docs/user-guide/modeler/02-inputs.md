@@ -95,7 +95,7 @@ models:
     port-field-definitions:
       - port: injection
         field: flow
-        definition: power
+        definition: active_power
   - id: node
     description: A balance node with injections (productions and loads)
     ports:
