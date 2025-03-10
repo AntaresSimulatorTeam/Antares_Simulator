@@ -210,7 +210,8 @@ toc_depth: 2
 
 #### For developers
 
-* Update ortools to 9.11-rte1.1
+* Support for Ubuntu 22, Ubuntu 20 deprecated
+* Update ortools to 9.11-rte1.2
 * Various improvement to code quality
 * Sonarcloud coverage (#2652)(#2649)(#2647)(#2640)(#2641)(#2645)(#2639)
 * Write raw optimization results [ANT-2302] (#2565)
