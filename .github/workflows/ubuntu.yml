@@ -160,6 +160,12 @@ jobs:
         uses: ./.github/workflows/cucumber-tests
         with:
           feature: "features/solver-features/short_tests.feature"
+
+      - name: Run cucumber on modeler
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/cucumber-tests
+        with:
+          feature: "features/modeler-features"
           
       - name: Run unfeasibility-related tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
@@ -316,10 +322,6 @@ jobs:
           batch-name: long-tests-3
           os: ${{ env.os }}
 
-      - name: Run cucumber on modeler
-        uses: ./.github/workflows/cucumber-tests
-        with:
-          feature: "features/modeler-features"
 
       - name: Barrier
         if: ${{ !success() }}

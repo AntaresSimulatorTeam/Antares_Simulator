@@ -78,7 +78,10 @@ public:
         Node* timeShiftNode = registry_.create<TimeShiftNode>(parameterNode, -10);
         Node* literalNode = registry_.create<LiteralNode>(6.62607015);
         Node* literalNode2 = registry_.create<LiteralNode>(-34);
-        Node* timeIndexNode = registry_.create<TimeIndexNode>(literalNode, literalNode2);
+        Node* parm2 = registry_.create<ParameterNode>("par");
+        Node* timeIndexNode = registry_.create<TimeIndexNode>(
+          literalNode,
+          registry_.create<SumNode>(parm2, literalNode2));
 
         return registry_.create<SumNode>(gt, timeIndexNode, timeShiftNode);
     }
@@ -207,12 +210,16 @@ node[style = filled]
   19 -> 20;
   19 -> 21;
   20 [label="6.626070", shape="box", style="filled, solid", color="lightgray"];
-  21 [label="-34.000000", shape="box", style="filled, solid", color="lightgray"];
-  1 -> 22;
-  22 [label="t-10", shape="hexagon", style="filled, solid", color="aqua"];
-  22 -> 23;
-  23 [label="Param(Planck's constant)", shape="box", style="filled, solid", color="wheat"];
-label="AST Diagram(Total nodes : 23)"
+  21 [label="+", shape="hexagon", style="filled, solid", color="aqua"];
+  21 -> 22;
+  22 [label="Param(par)", shape="box", style="filled, solid", color="wheat"];
+  21 -> 23;
+  23 [label="-34.000000", shape="box", style="filled, solid", color="lightgray"];
+  1 -> 24;
+  24 [label="t-10", shape="hexagon", style="filled, solid", color="aqua"];
+  24 -> 25;
+  25 [label="Param(Planck's constant)", shape="box", style="filled, solid", color="wheat"];
+label="AST Diagram(Total nodes : 25)"
 labelloc = "t"
 subgraph cluster_legend {
 label = "Legend";
@@ -239,7 +246,7 @@ legend_MultiplicationNode [ label =" MultiplicationNode: 1"]
 legend_MultiplicationNode -> legend_NegationNode [style=invis];
 legend_NegationNode [ label =" NegationNode: 1"]
 legend_NegationNode -> legend_ParameterNode [style=invis];
-legend_ParameterNode [ label =" ParameterNode: 2"]
+legend_ParameterNode [ label =" ParameterNode: 3"]
 legend_ParameterNode -> legend_PortFieldNode [style=invis];
 legend_PortFieldNode [ label =" PortFieldNode: 1"]
 legend_PortFieldNode -> legend_PortFieldSumNode [style=invis];
@@ -247,7 +254,7 @@ legend_PortFieldSumNode [ label =" PortFieldSumNode: 1"]
 legend_PortFieldSumNode -> legend_SubtractionNode [style=invis];
 legend_SubtractionNode [ label =" SubtractionNode: 1"]
 legend_SubtractionNode -> legend_SumNode [style=invis];
-legend_SumNode [ label =" SumNode: 2"]
+legend_SumNode [ label =" SumNode: 3"]
 legend_SumNode -> legend_TimeIndexNode [style=invis];
 legend_TimeIndexNode [ label =" TimeIndexNode: 1"]
 legend_TimeIndexNode -> legend_TimeShiftNode [style=invis];
