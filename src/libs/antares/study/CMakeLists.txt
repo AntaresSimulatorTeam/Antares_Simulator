@@ -284,8 +284,6 @@ set(SRC_ALL
 add_library(study ${SRC_ALL})
 add_library(Antares::study ALIAS study)
 
-find_package(Eigen3 REQUIRED)
-
 target_link_libraries(study
         PUBLIC
         yuni-static-core
@@ -303,7 +301,6 @@ target_link_libraries(study
         antares-core
         antares-solver-simulation
         Antares::hydro
-        Eigen3::Eigen
         PRIVATE
         Antares::exception
         Antares::benchmarking
