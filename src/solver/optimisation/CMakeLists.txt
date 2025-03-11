@@ -207,7 +207,7 @@ target_link_libraries(model_antares
         PRIVATE
         infeasible_problem_analysis
         Antares::linear-problem-api
-        linear-problem-data-impl
+        Antares::linear-problem-data-impl
         Antares::linear-problem-mpsolver-impl
 )
 
