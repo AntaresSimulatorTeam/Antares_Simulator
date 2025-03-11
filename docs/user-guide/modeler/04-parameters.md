@@ -6,7 +6,7 @@ The modeler parameters are currently held in a **parameters.yml** file under the
 
 ### solver
 - **Expected value:** one of the following (case-sensitive):
-    - `sirius` (only supports binary variables in MIP)
+    - `sirius` (LP only)
     - `scip` (MIP only)
     - `coin`
     - `xpress`
