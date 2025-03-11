@@ -248,7 +248,9 @@ There is also a 99.8 % probability that it lies within the interval:
 <center>**EASC +/- 3 (SASC / sqrt(N))**</center>
 
 ### Changelog
-Here is a list of new output variables in recent versions:
+The following table contains a list of new output variables in recent versions.
+
+**Note** : some output variables were introduced both in **8.8** and **9.2**, meaning that **9.0** and **9.1** don't have them. See this footnote[^16].
 
 | Version | Variable(s) introduced                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | Files                     | Enabled by default |
 |---------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------|--------------------|
@@ -263,13 +265,12 @@ Here is a list of new output variables in recent versions:
 | 8.6     | PSP_open_injection, PSP_open_withdrawal, PSP_open_level, PSP_closed_injection, PSP_closed_withdrawal, PSP_closed_level, Pondage_injection, Pondage_withdrawal, Pondage_level, Battery_injection, Battery_withdrawal, Battery_level, Other1_injection, Other1_withdrawal, Other1_level, Other2_injection, Other2_withdrawal, Other2_level, Other3_injection, Other3_withdrawal, Other3_level, Other4_injection, Other4_withdrawal, Other4_level, Other5_injection, Other5_withdrawal, Other5_level | values-*.txt              | yes                |
 | 8.6     | STS inj by plant, STS withdrawal by plant, STS lvl by plant                                                                                                                                                                                                                                                                                                                                                                                                                                       | details-STstorage-*.txt   | yes                |
 | 8.6     | CO2 EMIS., NH3 EMIS., SO2 EMIS., NOX EMIS., PM2_5 EMIS., PM5 EMIS., PM10 EMIS., NMVOC EMIS., OP1 EMIS., OP2 EMIS., OP3 EMIS., OP4 EMIS., OP5 EMIS.                                                                                                                                                                                                                                                                                                                                                | values-*.txt              | yes                |
-| 8.8 | PriceCSR (also introduced in 9.2) | values-*.txt | yes |
-| 8.8 | UNSP. ENRG CSR (also introduced in 9.2) | values-*.txt | yes |
-| 8.8 | LOLD_CSR, LOLP_CSR (also introduced in 9.2) | values-*.txt | yes |
-| 8.8 | MAX MRG CSR (also introduced in 9.2) | values-*.txt | yes |
-| 8.8 | OV. COST CSR (also introduced in 9.2) | values-*.txt | yes |
+| 8.8 | PriceCSR[^16] | values-*.txt | yes |
+| 8.8 | UNSP. ENRG CSR[^16] | values-*.txt | yes |
+| 8.8 | LOLD_CSR, LOLP_CSR[^16] | values-*.txt | yes |
+| 8.8 | MAX MRG CSR[^16] | values-*.txt | yes |
+| 8.8 | OV. COST CSR[^16] | values-*.txt | yes |
 | 9.1 | **Short-term storage** - dynamic groups instead of static groups. For any group :<br>\<STS group\>_injection <br> \<STS group\>_withdrawal <br> \<STS group\>_level| values-*.txt | yes |
-| 9.2 | MIN DTG by plant <br> PriceCSR (also introduced in 8.8) <br> UNSP. ENRG CSR (also introduced in 8.8) | details-\*.txt <br> values-\*.txt <br> values-*.txt| yes <br> yes <br> yes|
-| 9.2 | LOLD_CSR, LOLP_CSR (also introduced in 8.8) | values-\*.txt| yes |
-| 9.2 | MAX MRG CSR (also introduced in 8.8) | values-*.txt | yes |
-| 9.2 | OV. COST CSR (also introduced in 8.8) | values-*.txt | yes |
+| 9.2 | MIN DTG by plant | details-\*.txt | yes |
+
+[^16] : this output variable was introduced both in **8.8** and **9.2**, meaning that **9.0** and **9.1** don't have it.
