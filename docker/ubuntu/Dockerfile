@@ -36,7 +36,7 @@ RUN apt install -y --no-install-recommends --no-install-suggests \
     unzip \
     ca-certificates \
     texinfo \
-    libwxgtk3.0-gtk3-dev \
+    libwxgtk3.0-gtk3-dev uuid-dev \
     lsb-release wget software-properties-common gnupg \
     libexpat1-dev libipt-dev file \
     python3-distutils libstdc++-10-dev \

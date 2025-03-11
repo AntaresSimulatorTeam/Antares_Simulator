@@ -43,14 +43,19 @@ struct Component
     std::vector<Parameter> parameters;
 };
 
+struct Connection {
+    std::string component1;
+    std::string component2;
+    std::string port1;
+    std::string port2;
+};
+
 struct System
 {
     std::string id;
     std::vector<std::string> libraries;
     std::vector<Component> components;
-
-    // will be implemented later
-    // std::vector<Connections> connections;
+    std::vector<Connection> connections;
 };
 
 } // namespace Antares::IO::Inputs::YmlSystem
