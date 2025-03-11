@@ -38,7 +38,7 @@ Model ModelBuilder::build()
 {
     Model model = std::move(model_);
     model_ = Model(); // makes ModelBuilder re-usable
-    return std::move(model);
+    return model;
 }
 
 /**
@@ -133,6 +133,25 @@ ModelBuilder& ModelBuilder::withConstraints(std::vector<Constraint>&& constraint
                    std::inserter(model_.constraints_, model_.constraints_.end()),
                    [](/*Non const to prevent copy*/ Constraint& constraint)
                    { return std::make_pair(constraint.Id(), std::move(constraint)); });
+    return *this;
+}
+
+/**
+ * \brief Sets the ports of the model.
+ *
+ * \param ports A vector of Port objects to set.
+ * \return Reference to the ModelBuilder object.
+ *
+ * inputs it not garanteed to be valid after the call
+ */
+ModelBuilder& ModelBuilder::withPortFieldDefinitions(
+  std::vector<PortFieldDefinition>&& portFieldDefinitions)
+{
+    std::transform(portFieldDefinitions.begin(),
+                   portFieldDefinitions.end(),
+                   std::inserter(model_.portFieldDefinitions_, model_.portFieldDefinitions_.end()),
+                   [](/*Non const to prevent copy*/ PortFieldDefinition& pfd)
+                   { return std::make_pair(pfd.getPort().Id(), std::move(pfd)); });
     return *this;
 }
 
