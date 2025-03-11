@@ -319,7 +319,7 @@ void ORTOOLS_LibererProbleme(MPSolver* solver)
 
 const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::solverMap = {
   {"xpress", {"xpress_lp", "xpress"}},
-  {"sirius", {"sirius_lp", std::nullopt}},
+  {"sirius", {"sirius_lp", std::nullopt}}, // only allowed in LP (MIP only supports binaries)
   {"coin", {"clp", "cbc"}},
   {"glpk", {"glpk_lp", "glpk"}},
   {"scip", {std::nullopt, "scip"}}, // SCIP only supports MIPs
