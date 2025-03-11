@@ -62,6 +62,9 @@ BOOST_AUTO_TEST_CASE(empty_connections_is_allowed)
     BOOST_CHECK(systemObj.connections.empty());
 }
 
+/**
+* Idealy we would like to throw an error if connection is not a map
+*/
 BOOST_AUTO_TEST_CASE(connection_is_map)
 {
     YmlSystem::Parser parser;
@@ -91,6 +94,101 @@ BOOST_AUTO_TEST_CASE(connection_is_read_properly)
                   port1: injection_port
                   component2: D
                   port2: other_port
+    )"s;
+    YmlSystem::System systemObj = parser.parse(system);
+    BOOST_CHECK_EQUAL(systemObj.connections[0].component1, "N");
+    BOOST_CHECK_EQUAL(systemObj.connections[0].port1, "injection_port");
+    BOOST_CHECK_EQUAL(systemObj.connections[0].component2, "D");
+    BOOST_CHECK_EQUAL(systemObj.connections[0].port2, "other_port");
+}
+
+BOOST_AUTO_TEST_CASE(missing_port2_error)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: ""
+            description: ""
+            model-libraries: []
+            components: []
+            connections:
+                - component1: N
+                  port1: injection_port
+                  component2: D
+    )"s;
+    BOOST_CHECK_THROW(parser.parse(system), YAML::InvalidNode);
+}
+
+BOOST_AUTO_TEST_CASE(missing_port1_error)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: ""
+            description: ""
+            model-libraries: []
+            components: []
+            connections:
+                - component1: N
+                  port2: injection_port
+                  component2: D
+    )"s;
+    BOOST_CHECK_THROW(parser.parse(system), YAML::InvalidNode);
+}
+
+BOOST_AUTO_TEST_CASE(missing_component1_error)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: ""
+            description: ""
+            model-libraries: []
+            components: []
+            connections:
+                - port2: N
+                  port1: injection_port
+                  component2: D
+    )"s;
+    BOOST_CHECK_THROW(parser.parse(system), YAML::InvalidNode);
+}
+
+BOOST_AUTO_TEST_CASE(missing_component2_error)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: ""
+            description: ""
+            model-libraries: []
+            components: []
+            connections:
+                - component1: N
+                  port1: injection_port
+                  port2: D
+    )"s;
+    BOOST_CHECK_THROW(parser.parse(system), YAML::InvalidNode);
+}
+
+/**
+ * Test that an extra field in the connection does not cause an error
+ * Test the implementation more than the expected behaviour
+ */
+BOOST_AUTO_TEST_CASE(extra_field_does_not_cause_error)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: ""
+            description: ""
+            model-libraries: []
+            components: []
+            connections:
+                - component1: N
+                  port1: injection_port
+                  component2: D
+                  port2: other_port
+                  component3: R
     )"s;
     YmlSystem::System systemObj = parser.parse(system);
     BOOST_CHECK_EQUAL(systemObj.connections[0].component1, "N");
