@@ -64,7 +64,7 @@ public:
 private:
     // Only SystemBuilder is allowed to build System instances
     friend class SystemBuilder;
-    System(std::string id, std::vector<Component> components, std::vector<Connection> connections);
+    System(std::string id, std::vector<Component>& components, std::vector<Connection>& connections);
 
     std::string id_;
     std::unordered_map<std::string, Component> components_;
@@ -83,8 +83,8 @@ public:
 
 private:
     std::string id_;
-    std::vector<Component> components_;
-    std::vector<Connection> connections_;
+    mutable std::vector<Component> components_;
+    mutable std::vector<Connection> connections_;
 };
 
 } // namespace Antares::Study::SystemModel

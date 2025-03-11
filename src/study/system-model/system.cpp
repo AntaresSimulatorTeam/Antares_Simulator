@@ -25,7 +25,7 @@
 
 namespace Antares::Study::SystemModel
 {
-System::System(std::string id, std::vector<Component> components, std::vector<Connection> connections):
+System::System(std::string id, std::vector<Component>& components, std::vector<Connection>& connections):
     id_(std::move(id)),
     connections_(std::move(connections))
 {
@@ -92,7 +92,7 @@ SystemBuilder& SystemBuilder::withConnections(std::vector<Connection> &connectio
 
 /**
  * \brief Builds and returns the System object.
- *
+ * \warning The SystemBuilder object is not reusable after calling this method.
  * \return The constructed System object.
  */
 System SystemBuilder::build() const
