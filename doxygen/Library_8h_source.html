@@ -249,37 +249,38 @@ $(function(){initNavTree('Library_8h_source.html',''); initResizable(true); });
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    std::vector&lt;Port&gt; ports;</div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    std::vector&lt;PortFieldDefinition&gt; port_field_definitions;</div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    std::vector&lt;Constraint&gt; constraints;</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    std::string objective;</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>};</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    std::vector&lt;Constraint&gt; binding_constraints;</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    std::string objective;</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>};</div>
 </div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
-<div class="foldopen" id="foldopen00102" data-start="{" data-end="};">
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno"><a class="line" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType.html">  102</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType.html">PortType</a></div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>{</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    std::string id;</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    std::string description;</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    <span class="comment">// Small optimization: we only need the name of the fields</span></div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <span class="comment">// No need for an intermediate struct &quot;field&quot; with just a string &quot;name&quot; member</span></div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    std::vector&lt;std::string&gt; fields;</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>};</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
+<div class="foldopen" id="foldopen00103" data-start="{" data-end="};">
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno"><a class="line" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType.html">  103</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType.html">PortType</a></div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>{</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    std::string id;</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    std::string description;</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <span class="comment">// Small optimization: we only need the name of the fields</span></div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    <span class="comment">// No need for an intermediate struct &quot;field&quot; with just a string &quot;name&quot; member</span></div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    std::vector&lt;std::string&gt; fields;</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>};</div>
 </div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
-<div class="foldopen" id="foldopen00111" data-start="{" data-end="};">
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno"><a class="line" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library.html">  111</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library.html">Library</a></div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>{</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    std::string id;</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    std::string description;</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    std::vector&lt;PortType&gt; port_types;</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    std::vector&lt;Model&gt; models;</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>};</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
+<div class="foldopen" id="foldopen00112" data-start="{" data-end="};">
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno"><a class="line" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library.html">  112</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library.html">Library</a></div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>{</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    std::string id;</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    std::string description;</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    std::vector&lt;PortType&gt; port_types;</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    std::vector&lt;Model&gt; models;</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>};</div>
 </div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>} <span class="comment">// namespace Antares::IO::Inputs::YmlModel</span></div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>} <span class="comment">// namespace Antares::IO::Inputs::YmlModel</span></div>
 <div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Constraint_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Constraint.html">Antares::IO::Inputs::YmlModel::Constraint</a></div><div class="ttdef"><b>Definition</b> Library.h:85</div></div>
-<div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library.html">Antares::IO::Inputs::YmlModel::Library</a></div><div class="ttdef"><b>Definition</b> Library.h:112</div></div>
+<div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library.html">Antares::IO::Inputs::YmlModel::Library</a></div><div class="ttdef"><b>Definition</b> Library.h:113</div></div>
 <div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html">Antares::IO::Inputs::YmlModel::Model</a></div><div class="ttdef"><b>Definition</b> Library.h:91</div></div>
 <div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parameter_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parameter.html">Antares::IO::Inputs::YmlModel::Parameter</a></div><div class="ttdef"><b>Definition</b> Library.h:32</div></div>
 <div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortFieldDefinition_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortFieldDefinition.html">Antares::IO::Inputs::YmlModel::PortFieldDefinition</a></div><div class="ttdef"><b>Definition</b> Library.h:78</div></div>
-<div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType.html">Antares::IO::Inputs::YmlModel::PortType</a></div><div class="ttdef"><b>Definition</b> Library.h:103</div></div>
+<div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType.html">Antares::IO::Inputs::YmlModel::PortType</a></div><div class="ttdef"><b>Definition</b> Library.h:104</div></div>
 <div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Port_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Port.html">Antares::IO::Inputs::YmlModel::Port</a></div><div class="ttdef"><b>Definition</b> Library.h:72</div></div>
 <div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable.html">Antares::IO::Inputs::YmlModel::Variable</a></div><div class="ttdef"><b>Definition</b> Library.h:62</div></div>
 </div><!-- fragment --></div><!-- contents -->

@@ -1,5 +1,15 @@
 var NAVTREEINDEX27 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Price_1_1Statistics.html":[9,0,0,16,5,4,40,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByDispatchablePlant_1_1Statistics.html":[9,0,0,16,5,4,42,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant_1_1Statistics.html":[9,0,0,16,5,4,43,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant_1_1Statistics.html":[9,0,0,16,5,4,44,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping_1_1Statistics.html":[9,0,0,16,5,4,46,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration_1_1Statistics.html":[9,0,0,16,5,4,47,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel_1_1Statistics.html":[9,0,0,16,5,4,48,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance_1_1Statistics.html":[9,0,0,16,5,4,49,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STSbyGroup_1_1Statistics.html":[9,0,0,16,5,4,51,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageCashFlowByCluster_1_1Statistics.html":[9,0,0,16,5,4,52,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageInjectionByCluster_1_1Statistics.html":[9,0,0,16,5,4,53,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageLevelsByCluster_1_1Statistics.html":[9,0,0,16,5,4,54,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageWithdrawalByCluster_1_1Statistics.html":[9,0,0,16,5,4,55,0],
@@ -239,15 +249,5 @@ var NAVTREEINDEX27 =
 "structAntares_1_1Solver_1_1Variable_1_1VariableAccessor_3_01ResultsT_00_01Category_1_1noColumn_01_4.html":[9,0,0,16,5,41],
 "structAntares_1_1Solver_1_1Variable_1_1VariableAccessor_3_01ResultsT_00_01Category_1_1singleColumn_01_4.html":[9,0,0,16,5,42],
 "structAntares_1_1Solver_1_1WeeklyDataFromAntares.html":[9,0,0,16,27],
-"structAntares_1_1Solver_1_1WeeklyProblemId.html":[9,0,0,16,28],
-"structAntares_1_1Study_1_1SystemModel_1_1SystemData.html":[9,0,0,18,0,16],
-"structAntares_1_1TSGenerator_1_1LinkTSgenerationParams.html":[9,0,0,20,4],
-"structAntares_1_1TSGenerator_1_1Settings.html":[9,0,0,20,5],
-"structAntares_1_1TSGenerator_1_1Settings.html#a6ec5d8d2e2827a019c8ed7d1f3605959":[9,0,0,20,5,0],
-"structAntares_1_1TSGenerator_1_1Settings.html#abdce4e3fac8b79c797fb3a211b14126b":[9,0,0,20,5,1],
-"structAntares_1_1TSGenerator_1_1Settings.html#ac3be8bf0b35454fac9fd90e3d510939f":[9,0,0,20,5,2],
-"structAntares_1_1TSGenerator_1_1Settings.html#aeaebfc4ee66d6615bf628d17129d02ee":[9,0,0,20,5,3],
-"structAntares_1_1TSGenerator_1_1StudyParamsForLinkTS.html":[9,0,0,20,6],
-"structAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1DataType.html":[9,0,0,19,1,0,1],
-"structAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter_1_1Value.html":[9,0,0,19,1,0,10,0]
+"structAntares_1_1Solver_1_1WeeklyProblemId.html":[9,0,0,16,28]
 };

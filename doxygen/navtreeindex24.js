@@ -1,5 +1,15 @@
 var NAVTREEINDEX24 =
 {
+"functions_func_s.html":[9,3,1,17],
+"functions_func_t.html":[9,3,1,18],
+"functions_func_u.html":[9,3,1,19],
+"functions_func_v.html":[9,3,1,20],
+"functions_func_w.html":[9,3,1,21],
+"functions_func_x.html":[9,3,1,22],
+"functions_func_y.html":[9,3,1,23],
+"functions_func_z.html":[9,3,1,24],
+"functions_func_~.html":[9,3,1,25],
+"functions_g.html":[9,3,0,6],
 "functions_h.html":[9,3,0,7],
 "functions_i.html":[9,3,0,8],
 "functions_j.html":[9,3,0,9],
@@ -239,15 +249,5 @@ var NAVTREEINDEX24 =
 "manager_8hxx_source.html":[10,0,0,12,2,1,1,3,8],
 "map_2nodes_2item_8h_source.html":[10,0,0,12,2,1,1,3,1,3],
 "mapnotebook_8h_source.html":[10,0,0,12,2,1,1,4,0],
-"marginalCost_8h_source.html":[10,0,0,8,12,0,0,0,0,2,1,8],
-"math_8hxx_source.html":[10,0,0,8,10,0,0,0,0,0,1],
-"matrix-bypass-load_8h_source.html":[10,0,0,10,1,1,0,0,1],
-"matrix-dp-make_8h_source.html":[10,0,0,8,5,0,0,0,0,2],
-"matrix-dp-make_8hxx_source.html":[10,0,0,8,5,0,0,0,0,3],
-"matrix-to-buffer_8h_source.html":[10,0,0,5,0,1,0,0,0,0],
-"matrix-to-buffer_8hxx_source.html":[10,0,0,5,0,1,0,0,0,1],
-"max-mrg-csr_8h_source.html":[10,0,0,8,12,0,0,0,0,2,18],
-"max-mrg-utils_8h_source.html":[10,0,0,8,12,0,0,0,0,2,19],
-"max-mrg_8h_source.html":[10,0,0,8,12,0,0,0,0,2,20],
-"mc-playlist_8h_source.html":[10,0,0,12,2,1,1,1,1,16]
+"marginalCost_8h_source.html":[10,0,0,8,12,0,0,0,0,2,1,8]
 };

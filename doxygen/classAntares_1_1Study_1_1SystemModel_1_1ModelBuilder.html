@@ -167,6 +167,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0c6f180b175ccf88b97f64cac6f576ed" id="r_a0c6f180b175ccf88b97f64cac6f576ed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Study_1_1SystemModel_1_1ModelBuilder.html">ModelBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0c6f180b175ccf88b97f64cac6f576ed">withConstraints</a> (std::vector&lt; <a class="el" href="classAntares_1_1Study_1_1SystemModel_1_1Constraint.html">Constraint</a> &gt; &amp;&amp;constraints)</td></tr>
 <tr class="memdesc:a0c6f180b175ccf88b97f64cac6f576ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the ID of the library.  <br /></td></tr>
 <tr class="separator:a0c6f180b175ccf88b97f64cac6f576ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb239a1755350761621a30b3b7965b2d" id="r_afb239a1755350761621a30b3b7965b2d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Study_1_1SystemModel_1_1ModelBuilder.html">ModelBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afb239a1755350761621a30b3b7965b2d">withPortFieldDefinitions</a> (std::vector&lt; <a class="el" href="classAntares_1_1Study_1_1SystemModel_1_1PortFieldDefinition.html">PortFieldDefinition</a> &gt; &amp;&amp;portFieldDefinitions)</td></tr>
+<tr class="memdesc:afb239a1755350761621a30b3b7965b2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the ports of the model.  <br /></td></tr>
+<tr class="separator:afb239a1755350761621a30b3b7965b2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="a4cbbc48bb568511c046107a1679307cf" name="a4cbbc48bb568511c046107a1679307cf"></a>
@@ -287,6 +290,33 @@ Public Member Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">parameters</td><td>A vector of <a class="el" href="classAntares_1_1Study_1_1SystemModel_1_1Parameter.html">Parameter</a> objects to set. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Reference to the <a class="el" href="classAntares_1_1Study_1_1SystemModel_1_1ModelBuilder.html">ModelBuilder</a> object.</dd></dl>
+<p>inputs it not garanteed to be valid after the call </p>
+
+</div>
+</div>
+<a id="afb239a1755350761621a30b3b7965b2d" name="afb239a1755350761621a30b3b7965b2d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afb239a1755350761621a30b3b7965b2d">&#9670;&#160;</a></span>withPortFieldDefinitions()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAntares_1_1Study_1_1SystemModel_1_1ModelBuilder.html">ModelBuilder</a> &amp; Antares::Study::SystemModel::ModelBuilder::withPortFieldDefinitions </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="classAntares_1_1Study_1_1SystemModel_1_1PortFieldDefinition.html">PortFieldDefinition</a> &gt; &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>portFieldDefinitions</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets the ports of the model. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ports</td><td>A vector of <a class="el" href="classAntares_1_1Study_1_1SystemModel_1_1Port.html">Port</a> objects to set. </td></tr>
   </table>
   </dd>
 </dl>

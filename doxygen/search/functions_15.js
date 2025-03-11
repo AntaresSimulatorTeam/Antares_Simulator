@@ -17,12 +17,13 @@ var searchData=
   ['withobjective_14',['withObjective',['../classAntares_1_1Study_1_1SystemModel_1_1ModelBuilder.html#a2e89ac06a8d9d96cb843526d4ecec702',1,'Antares::Study::SystemModel::ModelBuilder']]],
   ['withparameters_15',['withParameters',['../classAntares_1_1Study_1_1SystemModel_1_1ModelBuilder.html#acf8c266e62a3c056b4a355327f8e10dc',1,'Antares::Study::SystemModel::ModelBuilder']]],
   ['withparametervalues_16',['withParameterValues',['../classAntares_1_1Study_1_1SystemModel_1_1ComponentBuilder.html#ac086ff9992414abebc81bfa11271db02',1,'Antares::Study::SystemModel::ComponentBuilder']]],
-  ['withports_17',['withPorts',['../classAntares_1_1Study_1_1SystemModel_1_1ModelBuilder.html#a269faafa1e18c36894a9008ac3f59402',1,'Antares::Study::SystemModel::ModelBuilder']]],
-  ['withporttypes_18',['withPortTypes',['../classAntares_1_1Study_1_1SystemModel_1_1LibraryBuilder.html#a082cac0a31e073ee5a213fb504df1f61',1,'Antares::Study::SystemModel::LibraryBuilder']]],
-  ['withscenariogroupid_19',['withScenarioGroupId',['../classAntares_1_1Study_1_1SystemModel_1_1ComponentBuilder.html#ac938e41bfe96f972a48d4baa9d96df87',1,'Antares::Study::SystemModel::ComponentBuilder']]],
-  ['withvariables_20',['withVariables',['../classAntares_1_1Study_1_1SystemModel_1_1ModelBuilder.html#aa0cd1f914afd0c2c9f37f010e9f1246b',1,'Antares::Study::SystemModel::ModelBuilder']]],
-  ['wizardheader_21',['WizardHeader',['../classAntares_1_1Toolbox_1_1Components_1_1WizardHeader.html#a1e938d56429fde5b9b519df6af54abc6',1,'Antares::Toolbox::Components::WizardHeader']]],
-  ['workingdirectory_22',['workingDirectory',['../classAntares_1_1Toolbox_1_1Process_1_1Execute.html#a15d940372a181292cc5f592ae61a060c',1,'Antares::Toolbox::Process::Execute::workingDirectory() const'],['../classAntares_1_1Toolbox_1_1Process_1_1Execute.html#af8fc127000f67de42edfda62e59fdb8a',1,'Antares::Toolbox::Process::Execute::workingDirectory(const wxString &amp;v)']]],
-  ['wouldyouliketosavethestudy_23',['wouldYouLikeToSaveTheStudy',['../classAntares_1_1Forms_1_1ApplWnd.html#a57779655f50017c99c00106329ed41f8',1,'Antares::Forms::ApplWnd']]],
-  ['writeresults_24',['writeResults',['../classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html#a2be5eb8d41a753544ee76677a61fe8d7',1,'Antares::Solver::Simulation::ISimulation']]]
+  ['withportfielddefinitions_17',['withPortFieldDefinitions',['../classAntares_1_1Study_1_1SystemModel_1_1ModelBuilder.html#afb239a1755350761621a30b3b7965b2d',1,'Antares::Study::SystemModel::ModelBuilder']]],
+  ['withports_18',['withPorts',['../classAntares_1_1Study_1_1SystemModel_1_1ModelBuilder.html#a269faafa1e18c36894a9008ac3f59402',1,'Antares::Study::SystemModel::ModelBuilder']]],
+  ['withporttypes_19',['withPortTypes',['../classAntares_1_1Study_1_1SystemModel_1_1LibraryBuilder.html#a082cac0a31e073ee5a213fb504df1f61',1,'Antares::Study::SystemModel::LibraryBuilder']]],
+  ['withscenariogroupid_20',['withScenarioGroupId',['../classAntares_1_1Study_1_1SystemModel_1_1ComponentBuilder.html#ac938e41bfe96f972a48d4baa9d96df87',1,'Antares::Study::SystemModel::ComponentBuilder']]],
+  ['withvariables_21',['withVariables',['../classAntares_1_1Study_1_1SystemModel_1_1ModelBuilder.html#aa0cd1f914afd0c2c9f37f010e9f1246b',1,'Antares::Study::SystemModel::ModelBuilder']]],
+  ['wizardheader_22',['WizardHeader',['../classAntares_1_1Toolbox_1_1Components_1_1WizardHeader.html#a1e938d56429fde5b9b519df6af54abc6',1,'Antares::Toolbox::Components::WizardHeader']]],
+  ['workingdirectory_23',['workingDirectory',['../classAntares_1_1Toolbox_1_1Process_1_1Execute.html#a15d940372a181292cc5f592ae61a060c',1,'Antares::Toolbox::Process::Execute::workingDirectory() const'],['../classAntares_1_1Toolbox_1_1Process_1_1Execute.html#af8fc127000f67de42edfda62e59fdb8a',1,'Antares::Toolbox::Process::Execute::workingDirectory(const wxString &amp;v)']]],
+  ['wouldyouliketosavethestudy_24',['wouldYouLikeToSaveTheStudy',['../classAntares_1_1Forms_1_1ApplWnd.html#a57779655f50017c99c00106329ed41f8',1,'Antares::Forms::ApplWnd']]],
+  ['writeresults_25',['writeResults',['../classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html#a2be5eb8d41a753544ee76677a61fe8d7',1,'Antares::Solver::Simulation::ISimulation']]]
 ];

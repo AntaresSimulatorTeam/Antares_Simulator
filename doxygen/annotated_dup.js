@@ -484,9 +484,18 @@ var annotated_dup =
             [ "DataSeriesRepoImporter", "classAntares_1_1IO_1_1Inputs_1_1DataSeriesCsvImporter_1_1DataSeriesRepoImporter.html", null ]
           ] ],
           [ "ModelConverter", null, [
+            [ "ConstraintWithThisIdAlreadyExists", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ConstraintWithThisIdAlreadyExists.html", null ],
             [ "ConvertorVisitor", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ConvertorVisitor.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ConvertorVisitor" ],
+            [ "FieldNotFoundForDefinition", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1FieldNotFoundForDefinition.html", null ],
             [ "NoParameterOrVariableWithThisName", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoParameterOrVariableWithThisName.html", null ],
+            [ "NoPortWithThisId", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoPortWithThisId.html", null ],
             [ "NotImplemented", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NotImplemented.html", null ],
+            [ "PortInDefinition", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortInDefinition.html", null ],
+            [ "PortNotFoundForDefinition", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortNotFoundForDefinition.html", null ],
+            [ "PortTypeDoesntContainsFields", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortTypeDoesntContainsFields.html", null ],
+            [ "PortTypeNotFound", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortTypeNotFound.html", null ],
+            [ "PortTypeWithThisIdAlreadyExists", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortTypeWithThisIdAlreadyExists.html", null ],
+            [ "PortWithThisIdAlreadyExists", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortWithThisIdAlreadyExists.html", null ],
             [ "UnknownTypeException", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1UnknownTypeException.html", null ]
           ] ],
           [ "SystemConverter", null, [

@@ -1,5 +1,15 @@
 var NAVTREEINDEX26 =
 {
+"solve__problem_8h_source.html":[10,0,0,8,7,0,0],
+"solver_2application_2include_2antares_2application_2application_8h_source.html":[10,0,0,8,0,0,0,0,0],
+"solver_2constraints-builder_2include_2antares_2solver_2constraints-builder_2grid_8h_source.html":[10,0,0,8,1,0,0,0,0,1],
+"solver_2hydro_2include_2antares_2solver_2hydro_2management_2management_8h_source.html":[10,0,0,8,2,0,0,0,0,2,3],
+"solver_2misc_2include_2antares_2solver_2misc_2options_8h_source.html":[10,0,0,8,5,0,0,0,0,4],
+"solver_2signal-handling_2include_2antares_2signal-handling_2common_8h_source.html":[10,0,0,8,8,0,0,0,0],
+"solver_2simulation_2include_2antares_2solver_2simulation_2simulation_8h_source.html":[10,0,0,8,9,0,0,0,0,16],
+"solver_2simulation_2include_2antares_2solver_2simulation_2solver_8h_source.html":[10,0,0,8,9,0,0,0,0,18],
+"solver_2ts-generator_2include_2antares_2solver_2ts-generator_2prepro_8h_source.html":[10,0,0,8,10,0,0,0,0,4],
+"solver_2ts-generator_2include_2antares_2solver_2ts-generator_2xcast_2constants_8h_source.html":[10,0,0,8,10,0,0,0,0,0,0],
 "solver_2ts-generator_2include_2antares_2solver_2ts-generator_2xcast_2studydata_8h_source.html":[10,0,0,8,10,0,0,0,0,0,3],
 "solver_2ts-generator_2include_2antares_2solver_2ts-generator_2xcast_2xcast_8h_source.html":[10,0,0,8,10,0,0,0,0,0,5],
 "solver_2ts-generator_2include_2antares_2solver_2ts-generator_2xcast_2xcast_8hxx_source.html":[10,0,0,8,10,0,0,0,0,0,6],
@@ -239,15 +249,5 @@ var NAVTREEINDEX26 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost_1_1Statistics.html":[9,0,0,16,5,4,37,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Overflows_1_1Statistics.html":[9,0,0,16,5,4,39,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP_1_1Statistics.html":[9,0,0,16,5,4,45,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceCSR_1_1Statistics.html":[9,0,0,16,5,4,41,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Price_1_1Statistics.html":[9,0,0,16,5,4,40,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByDispatchablePlant_1_1Statistics.html":[9,0,0,16,5,4,42,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant_1_1Statistics.html":[9,0,0,16,5,4,43,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant_1_1Statistics.html":[9,0,0,16,5,4,44,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping_1_1Statistics.html":[9,0,0,16,5,4,46,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration_1_1Statistics.html":[9,0,0,16,5,4,47,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel_1_1Statistics.html":[9,0,0,16,5,4,48,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance_1_1Statistics.html":[9,0,0,16,5,4,49,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STSbyGroup_1_1Statistics.html":[9,0,0,16,5,4,51,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageCashFlowByCluster_1_1Statistics.html":[9,0,0,16,5,4,52,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceCSR_1_1Statistics.html":[9,0,0,16,5,4,41,0]
 };
