@@ -31,9 +31,6 @@
     },
     {
       "name": "antlr4"
-    },
-    {
-      "name": "eigen3"
     }
   ]
 }
