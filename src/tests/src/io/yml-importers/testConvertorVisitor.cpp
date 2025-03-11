@@ -188,8 +188,7 @@ BOOST_FIXTURE_TEST_CASE(comparison, ExpressionToNodeConvertorEmptyModel)
     BOOST_CHECK_EQUAL(toLiteral(nodeGreater->left())->value(), 8364);
     BOOST_CHECK_EQUAL(toLiteral(nodeGreater->right())->value(), 27);
 }
-
-BOOST_AUTO_TEST_CASE(medium_expression)
+ExpressionToNodeConvertorEmptyModel createMediumExpression()
 {
     YmlModel::Model model{.id = "model0",
                           .description = "description",
@@ -200,12 +199,11 @@ BOOST_AUTO_TEST_CASE(medium_expression)
                           .constraints = {},
                           .objective = "objectives"};
 
-    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
-    std::string expression = "(12 * (4 - 1) + param1) / -(42 + 3 + varP)";
-    auto expr = converter.run(expression);
+    return {std::move(model)};
+}
 
-    Registry<Nodes::Node> registry;
-
+std::pair<std::string, Nodes::Node*> expected_expression(Registry<Nodes::Node>& registry)
+{
     auto* param = registry.create<Nodes::ParameterNode>("param1");
     auto* var = registry.create<Nodes::VariableNode>("varP");
     auto* l3 = registry.create<Nodes::LiteralNode>(3);
@@ -220,7 +218,60 @@ BOOST_AUTO_TEST_CASE(medium_expression)
     auto* sum3 = registry.create<Nodes::SumNode>(sum2, var);
     auto* neg = registry.create<Nodes::NegationNode>(sum3);
     auto* div = registry.create<Nodes::DivisionNode>(sum1, neg);
+    return {"(12 * (4 - 1) + param1) / -(42 + 3 + varP)", div};
+}
+
+BOOST_AUTO_TEST_CASE(medium_expression)
+{
+    Registry<Nodes::Node> registry;
+
+    const auto [expression, div] = expected_expression(registry);
+    const auto expr = createMediumExpression().run(expression);
 
     Visitors::CompareVisitor cmp;
     BOOST_CHECK(cmp.dispatch(expr.node, div));
+}
+
+BOOST_AUTO_TEST_CASE(NumericalTimeIndexExpresion)
+{
+    Registry<Nodes::Node> registry;
+
+    const auto [expression, div] = expected_expression(registry);
+    const auto expressionWithNumericalTimeIndex = "(" + expression + ")" + "[12]";
+    auto expr = createMediumExpression().run(expressionWithNumericalTimeIndex);
+
+    auto* time_index = registry.create<Nodes::LiteralNode>(12);
+    auto* timeIndexNode = registry.create<Nodes::TimeIndexNode>(div, time_index);
+
+    Visitors::CompareVisitor cmp;
+    BOOST_CHECK(cmp.dispatch(expr.node, timeIndexNode));
+}
+
+BOOST_AUTO_TEST_CASE(TimeIndexExpresion)
+{
+    Registry<Nodes::Node> registry;
+
+    const auto [expression, div] = expected_expression(registry);
+    const auto expressionWithNumericalTimeIndex = "(" + expression + ")" + "[param1]";
+    auto expr = createMediumExpression().run(expressionWithNumericalTimeIndex);
+
+    auto* time_index = registry.create<Nodes::ParameterNode>("param1");
+    auto* timeIndexNode = registry.create<Nodes::TimeIndexNode>(div, time_index);
+
+    Visitors::CompareVisitor cmp;
+    BOOST_CHECK(cmp.dispatch(expr.node, timeIndexNode));
+}
+
+BOOST_AUTO_TEST_CASE(TimeShiftExpresion)
+{
+    Registry<Nodes::Node> registry;
+
+    const auto [expression, div] = expected_expression(registry);
+    const auto expressionWithNumericalTimeIndex = "(" + expression + ")" + "[t-89]";
+    auto expr = createMediumExpression().run(expressionWithNumericalTimeIndex);
+
+    auto* timeShiftNode = registry.create<Nodes::TimeShiftNode>(div, -89);
+
+    Visitors::CompareVisitor cmp;
+    BOOST_CHECK(cmp.dispatch(expr.node, timeShiftNode));
 }
