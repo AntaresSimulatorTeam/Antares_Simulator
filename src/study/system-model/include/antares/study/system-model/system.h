@@ -23,6 +23,7 @@
 #include <unordered_map>
 
 #include "component.h"
+#include "connection.h"
 
 namespace Antares::Study::SystemModel
 {
@@ -55,12 +56,19 @@ public:
         return components_;
     }
 
+    const std::vector<Connection>& Connections() const
+    {
+        return connections_;
+    }
+
 private:
     // Only SystemBuilder is allowed to build System instances
     friend class SystemBuilder;
-    System(std::string_view id, std::vector<Component> components);
+    System(std::string id, std::vector<Component> components, std::vector<Connection> connections);
+
     std::string id_;
     std::unordered_map<std::string, Component> components_;
+    std::vector<Connection> connections_;
     std::pair<std::string, Component> makeComponent(Component& component) const;
 };
 
@@ -69,11 +77,14 @@ class SystemBuilder
 public:
     SystemBuilder& withId(std::string_view id);
     SystemBuilder& withComponents(std::vector<Component>& components);
+    SystemBuilder& withConnections(std::vector<Connection> &connections);
+
     System build() const;
 
 private:
     std::string id_;
     std::vector<Component> components_;
+    std::vector<Connection> connections_;
 };
 
 } // namespace Antares::Study::SystemModel

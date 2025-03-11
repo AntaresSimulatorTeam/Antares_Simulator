@@ -25,11 +25,12 @@
 
 namespace Antares::Study::SystemModel
 {
-System::System(const std::string_view id, std::vector<Component> components):
-    id_(id)
+System::System(std::string id, std::vector<Component> components, std::vector<Connection> connections):
+    id_(std::move(id)),
+    connections_(std::move(connections))
 {
     // Check that mandatory attributes are not empty
-    if (id.empty())
+    if (id_.empty())
     {
         throw std::invalid_argument("A system can't have an empty id");
     }
@@ -78,12 +79,24 @@ SystemBuilder& SystemBuilder::withComponents(std::vector<Component>& components)
 }
 
 /**
+ * \brief Sets the components of the system.
+ *
+ * \param connections A vector of components to set.
+ * \return Reference to the SystemBuilder object.
+ */
+SystemBuilder& SystemBuilder::withConnections(std::vector<Connection> &connections)
+{
+    connections_ = std::move(connections);
+    return *this;
+}
+
+/**
  * \brief Builds and returns the System object.
  *
  * \return The constructed System object.
  */
 System SystemBuilder::build() const
 {
-    return System(id_, components_);
+    return System(id_, components_, connections_);
 }
 } // namespace Antares::Study::SystemModel

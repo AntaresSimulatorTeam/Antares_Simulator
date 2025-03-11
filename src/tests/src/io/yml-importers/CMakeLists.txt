@@ -4,11 +4,11 @@ add_boost_test(TestYmlModel
   SRC
   enum_operators.h
   testConvertorVisitor.cpp
-  testModelTranslator.cpp
+  testLibraryTranslator.cpp
   testSystemConverter.cpp
-  testYmlConnection.cpp
-  testYmlModel.cpp
+  testYmlLibrary.cpp
   testYmlSystem.cpp
+  testYmlSystemConnection.cpp
   test_full.cpp
   LIBS
   Antares::expressions

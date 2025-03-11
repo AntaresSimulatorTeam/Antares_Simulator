@@ -167,6 +167,33 @@ BOOST_FIXTURE_TEST_CASE(bad_library_model_format, LibraryObjects)
     BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), std::runtime_error);
 }
 
+BOOST_FIXTURE_TEST_CASE(convert_connections_properly, LibraryObjects) {
+    const auto systemYaml = R"(
+        system:
+            id: base_system
+            description: real application model
+            model-libraries: [std]
+            components:
+                - id: N
+                  model: std.node
+                  scenario-group: group-234
+                  parameters:
+                    - id: cost
+                      time-dependent: false
+                      scenario-dependent: false
+                      value: 30
+            connections:
+            - component1: N
+              port1: injection_port
+              component2: D
+              port2: other_port
+    )"s;
+
+    YmlSystem::System systemObj = parser.parse(systemYaml);
+    auto systemModel = SystemConverter::convert(systemObj, libraries);
+    BOOST_CHECK_EQUAL(systemModel.Connections().size(), 1);
+}
+
 BOOST_AUTO_TEST_CASE(Full_system_test)
 {
     const auto libraryYaml = R"(

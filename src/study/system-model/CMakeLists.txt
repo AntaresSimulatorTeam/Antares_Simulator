@@ -5,19 +5,20 @@ set(SRC_model
         model.cpp
         component.cpp
         system.cpp
+        include/antares/study/system-model/component.h
+        include/antares/study/system-model/connection.h
+        include/antares/study/system-model/constraint.h
         include/antares/study/system-model/library.h
         include/antares/study/system-model/model.h
         include/antares/study/system-model/parameter.h
-        include/antares/study/system-model/valueType.h
-        include/antares/study/system-model/variable.h
-        include/antares/study/system-model/constraint.h
         include/antares/study/system-model/port.h
         include/antares/study/system-model/portField.h
         include/antares/study/system-model/portFieldDefinition.h
         include/antares/study/system-model/portType.h
-        include/antares/study/system-model/component.h
         include/antares/study/system-model/system.h
         include/antares/study/system-model/timeAndScenarioType.h
+        include/antares/study/system-model/valueType.h
+        include/antares/study/system-model/variable.h
 )
 
 source_group("SystemModel" FILES ${SRC_model})

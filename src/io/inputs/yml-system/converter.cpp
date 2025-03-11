@@ -28,9 +28,7 @@
 
 using namespace Antares::Study;
 
-namespace Antares::IO::Inputs::SystemConverter
-{
-
+namespace Antares::IO::Inputs::SystemConverter {
 class ErrorWhileSplittingLibraryAndModel: public std::runtime_error
 {
 public:
@@ -58,7 +56,8 @@ public:
     }
 };
 
-static std::pair<std::string, std::string> splitLibraryModelString(const std::string& s)
+namespace {
+std::pair<std::string, std::string> splitLibraryModelString(const std::string& s)
 {
     size_t pos = s.find('.');
     if (pos == std::string::npos)
@@ -71,7 +70,7 @@ static std::pair<std::string, std::string> splitLibraryModelString(const std::st
     return {library, model};
 }
 
-static const SystemModel::Model& getModel(const std::vector<SystemModel::Library>& libraries,
+const SystemModel::Model& getModel(const std::vector<SystemModel::Library>& libraries,
                                           const std::string& libraryId,
                                           const std::string& modelId)
 {
@@ -91,7 +90,7 @@ static const SystemModel::Model& getModel(const std::vector<SystemModel::Library
     return search->second;
 }
 
-static SystemModel::Component createComponent(const YmlSystem::Component& c,
+SystemModel::Component createComponent(const YmlSystem::Component& c,
                                               const std::vector<SystemModel::Library>& libraries)
 {
     const auto [libraryId, modelId] = splitLibraryModelString(c.model);
@@ -121,6 +120,10 @@ static SystemModel::Component createComponent(const YmlSystem::Component& c,
     return component;
 }
 
+SystemModel::Connection createConnection(const Antares::IO::Inputs::YmlSystem::Connection & connection, const std::vector<SystemModel::Library> & vector) {
+    return SystemModel::Connection();
+}
+}
 SystemModel::System convert(const YmlSystem::System& ymlSystem,
                             const std::vector<SystemModel::Library>& libraries)
 {
@@ -130,8 +133,17 @@ SystemModel::System convert(const YmlSystem::System& ymlSystem,
         components.push_back(createComponent(c, libraries));
     }
 
+    std::vector<SystemModel::Connection> connections;
+    for (const auto& c: ymlSystem.connections)
+    {
+        connections.push_back(createConnection(c, libraries));
+    }
+
     SystemModel::SystemBuilder builder;
-    return builder.withId(ymlSystem.id).withComponents(components).build();
+    return builder.withId(ymlSystem.id)
+                    .withComponents(components)
+                    .withConnections(connections)
+                    .build();
 }
 
 } // namespace Antares::IO::Inputs::SystemConverter
