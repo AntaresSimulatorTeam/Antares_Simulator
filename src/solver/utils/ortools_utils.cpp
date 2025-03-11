@@ -319,7 +319,7 @@ void ORTOOLS_LibererProbleme(MPSolver* solver)
 
 const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::solverMap = {
   {"xpress", {"xpress_lp", "xpress"}},
-  {"sirius", {"sirius_lp", "sirius"}},
+  {"sirius", {"sirius_lp", std::nullopt}},
   {"coin", {"clp", "cbc"}},
   {"glpk", {"glpk_lp", "glpk"}},
   {"scip", {std::nullopt, "scip"}}, // SCIP only supports MIPs
@@ -382,10 +382,6 @@ static std::optional<std::string> translateSolverName(const std::string& solverN
 
 MPSolver* MPSolverFactory(const bool isMip, const std::string& solverName)
 {
-    const std::string notFound = "Solver " + solverName + " was not found or does not support "
-                                 + (isMip ? "MIP" : "LP") + " problems";
-    const std::invalid_argument except(notFound);
-
     auto internalSolverName = translateSolverName(solverName, isMip);
     if (!internalSolverName.has_value())
     {

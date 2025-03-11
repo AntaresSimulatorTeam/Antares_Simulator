@@ -20,6 +20,7 @@
  */
 
 #include <fstream>
+#include <ranges>
 
 #include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
@@ -28,7 +29,6 @@
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include <antares/solver/modeler/parameters/parseModelerParameters.h>
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
-
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares;
 using namespace Antares::Solver;
@@ -118,7 +118,18 @@ int main(int argc, const char** argv)
         }
 
         logs.info() << "linear problem of System loaded";
-        OrtoolsLinearProblem ortools_linear_problem(true, parameters.solver);
+        // Problem is MIP if any variable of any component is not continuous
+        bool isMip = std::ranges::any_of(
+          system.Components() | std::views::values,
+          [](const auto& component)
+          {
+              return std::ranges::any_of(component.getModel()->Variables() | std::views::values,
+                                         [](const auto& variable) {
+                                             return variable.Type()
+                                                    != Study::SystemModel::ValueType::FLOAT;
+                                         });
+          });
+        OrtoolsLinearProblem ortools_linear_problem(isMip, parameters.solver);
 
         system_linear_problem.Provide(ortools_linear_problem, parameters, *dataSeries);
 

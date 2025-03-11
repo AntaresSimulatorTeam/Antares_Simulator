@@ -55,9 +55,7 @@ BOOST_AUTO_TEST_SUITE(_ortools_utils_)
 // The following solvers support LP & MIP
 BOOST_DATA_TEST_CASE(
   test_lp_and_mip_solvers_support,
-  bdata::make({SolverTestData{"sirius", false, SolverType::SIRIUS_LINEAR_PROGRAMMING},
-               SolverTestData{"sirius", true, SolverType::SIRIUS_MIXED_INTEGER_PROGRAMMING},
-               SolverTestData{"xpress", false, SolverType::XPRESS_LINEAR_PROGRAMMING},
+  bdata::make({SolverTestData{"xpress", false, SolverType::XPRESS_LINEAR_PROGRAMMING},
                SolverTestData{"xpress", true, SolverType::XPRESS_MIXED_INTEGER_PROGRAMMING},
                SolverTestData{"coin", false, SolverType::CLP_LINEAR_PROGRAMMING},
                SolverTestData{"coin", true, SolverType::CBC_MIXED_INTEGER_PROGRAMMING},
@@ -69,6 +67,18 @@ BOOST_DATA_TEST_CASE(
     auto solver = MPSolverFactory(sample.is_mip, sample.solver_name);
     BOOST_REQUIRE(solver);
     BOOST_CHECK_EQUAL(sample.expected_type, solver->ProblemType());
+}
+
+// SIRIUS only supports LP
+BOOST_AUTO_TEST_CASE(test_sirius_support)
+{
+    auto lpSolver = MPSolverFactory(false, "sirius");
+    BOOST_REQUIRE(lpSolver);
+    BOOST_CHECK_EQUAL(SolverType::SIRIUS_LINEAR_PROGRAMMING, lpSolver->ProblemType());
+    BOOST_CHECK_EXCEPTION(
+      MPSolverFactory(true, "sirius"),
+      std::invalid_argument,
+      checkMessage("Solver sirius is not supported by Antares or does not support MIP problems."));
 }
 
 // PDLP only supports LP
