@@ -117,7 +117,7 @@ std::string PrintVisitor::visit(const Nodes::TimeShiftNode* node)
 
 std::string PrintVisitor::visit(const Nodes::TimeIndexNode* node)
 {
-    return dispatch(node->left()) + "[" + dispatch(node->right()) + " ]";
+    return dispatch(node->left()) + "[ " + dispatch(node->right()) + " ]";
 }
 
 std::string PrintVisitor::name() const

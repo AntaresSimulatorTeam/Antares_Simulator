@@ -796,6 +796,29 @@ BOOST_FIXTURE_TEST_CASE(EvalVisitor_name, MyDummyFixture)
     BOOST_CHECK_EQUAL(evalVisitor.name(), "EvalVisitor");
 }
 
+BOOST_FIXTURE_TEST_CASE(PrintTimeIndexNode, MyDummyFixture)
+{
+    Node* literal1 = create<LiteralNode>(1.);
+    Node* param1 = create<ParameterNode>("value");
+    Node* expr1 = create<TimeIndexNode>(literal1, param1);
+    PrintVisitor printVisitor;
+    BOOST_CHECK(printVisitor.dispatch(expr1) == "1.000000[ value ]");
+}
+
+BOOST_FIXTURE_TEST_CASE(PrintTimeShiftNode, MyDummyFixture)
+{
+    Node* literal1 = create<LiteralNode>(1.);
+    Node* param1 = create<ParameterNode>("value");
+    PrintVisitor printVisitor;
+    // --
+    Node* positive_shift = create<TimeShiftNode>(literal1, 23);
+    const auto printed = printVisitor.dispatch(positive_shift);
+    BOOST_CHECK(printVisitor.dispatch(positive_shift) == "1.000000[ t+23  ]");
+    // --
+    Node* negative_shift = create<TimeShiftNode>(literal1, -31);
+    BOOST_CHECK(printVisitor.dispatch(negative_shift) == "1.000000[ t-31  ]");
+}
+
 BOOST_AUTO_TEST_CASE(testShiftEmptyVector)
 {
     std::vector<int> emptyVector;
