@@ -1689,7 +1689,7 @@ var hierarchy =
     [ "Antares::Study::SystemModel::SystemBuilder", "classAntares_1_1Study_1_1SystemModel_1_1SystemBuilder.html", null ],
     [ "SystemBuilderCreationFixture", "structSystemBuilderCreationFixture.html", null ],
     [ "Antares::Study::SystemModel::SystemData", "structAntares_1_1Study_1_1SystemModel_1_1SystemData.html", null ],
-    [ "SystemLinearProblem", "classSystemLinearProblem.html", null ],
+    [ "SystemLinearProblemBuilder", "classSystemLinearProblemBuilder.html", null ],
     [ "T", null, [
       [ "Antares::Expressions::Visitors::EvaluationContext::CouldNotEvaluateConstantParameter< T >", "structAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext_1_1CouldNotEvaluateConstantParameter.html", null ]
     ] ],

@@ -272,6 +272,10 @@
 <a href="registry_8inc_8hxx_source.html"/>
 <a href="io_2include_2antares_2io_2statistics_8h_source.html"/>
 <a href="libs_2fswalker_2statistics_8h_source.html"/>
+<a href="loadFiles_8h_source.html"/>
+<a href="encoder_8hxx_source.html"/>
+<a href="modelerParameters_8h_source.html"/>
+<a href="parseModelerParameters_8h_source.html"/>
 <a href="hasBounds_8h_source.html"/>
 <a href="hasName_8h_source.html"/>
 <a href="ILinearProblemData_8h_source.html"/>
@@ -326,10 +330,6 @@
 <a href="matrix-dp-make_8hxx_source.html"/>
 <a href="system-memory_8h_source.html"/>
 <a href="write-command-line_8h_source.html"/>
-<a href="loadFiles_8h_source.html"/>
-<a href="encoder_8hxx_source.html"/>
-<a href="modelerParameters_8h_source.html"/>
-<a href="parseModelerParameters_8h_source.html"/>
 <a href="ComponentFiller_8h_source.html"/>
 <a href="FullKey_8h_source.html"/>
 <a href="LinearExpression_8h_source.html"/>
@@ -1452,8 +1452,8 @@
 <a href="classSumSubstitutionFixture-members.html"/>
 <a href="structSystemBuilderCreationFixture.html"/>
 <a href="structSystemBuilderCreationFixture-members.html"/>
-<a href="classSystemLinearProblem.html"/>
-<a href="classSystemLinearProblem-members.html"/>
+<a href="classSystemLinearProblemBuilder.html"/>
+<a href="classSystemLinearProblemBuilder-members.html"/>
 <a href="classSystemMemoryLogger.html"/>
 <a href="classSystemMemoryLogger-members.html"/>
 <a href="classTargetVectorUpdater.html"/>
@@ -4064,6 +4064,8 @@
 <a href="dir_062f7d3efd76d54ab788e74a3a0f1291.html"/>
 <a href="dir_a0b8a91da6a47618100ab8cfd2af6f4b.html"/>
 <a href="dir_beff7427979cae89e6df9e0b39a4fa89.html"/>
+<a href="dir_f0a1227722302b853dd1dbdee3f8cd3d.html"/>
+<a href="dir_1baaf84e482046e72068898187f3c9eb.html"/>
 <a href="dir_c8ceafb835666cb064a700e6d49a3a45.html"/>
 <a href="dir_b599908ab8ed2e81b30ceb3393861c3b.html"/>
 <a href="dir_9dbf243344eb85409e4172ea92865620.html"/>
@@ -4073,8 +4075,6 @@
 <a href="dir_742ec377836bf9d24f96770b5cf727f0.html"/>
 <a href="dir_ba54bc5704d9f71026c3c6911b8439ee.html"/>
 <a href="dir_27a1bea1daab16028077c65cd7701cda.html"/>
-<a href="dir_196642b4fd992036a705fef22f044f4d.html"/>
-<a href="dir_c92b1872bf201ba5dcc29e27182c5261.html"/>
 <a href="dir_178c8ef38b01ceddc925e5180d51db25.html"/>
 <a href="dir_4f3aa64cbfddff7c3784c9e1340ff9b3.html"/>
 <a href="dir_41c23919e1b723f4d0d676cd8e856d40.html"/>
@@ -4242,6 +4242,8 @@
 <a href="dir_2e53fb72742097640a59c97f0cbb5132.html"/>
 <a href="dir_5681df0d0874e53b9f0d3358f4aa8851.html"/>
 <a href="dir_ae73bb7e32b3d1051c8a9b9ee6c4dc40.html"/>
+<a href="dir_bd8fd2ac40d01e398fd429e689e5a220.html"/>
+<a href="dir_dcadec33bc2d0c24a5097e5634b1e0a8.html"/>
 <a href="dir_e3676f23c07af761287360981340dc65.html"/>
 <a href="dir_ef40270c11645fefe8fd5acc5df1e4b7.html"/>
 <a href="dir_e70932d37c99a7b02223547dd0bb6a96.html"/>
@@ -4251,8 +4253,6 @@
 <a href="dir_5d6e7331949999ad732ebe255eac5fb5.html"/>
 <a href="dir_aa4a30e80944635998eaeefb17811ca9.html"/>
 <a href="dir_fe2fe394782b40d5cc2bd67ea3b35a0c.html"/>
-<a href="dir_9e9e16c419b2d5c25af5b7c820e7b316.html"/>
-<a href="dir_6efe61222ddc8b7b19e2ca1ce3114990.html"/>
 <a href="dir_b2cbcd5d7b8340f070296625af291b61.html"/>
 <a href="dir_7f9265255be167d9fc7d889839beddde.html"/>
 <a href="dir_4e4e78ccd4c71defdbad1c35bb83e3ce.html"/>
@@ -4313,8 +4313,8 @@
 <a href="dir_d554ddccc6682e57d909cba15bd99e12.html"/>
 <a href="dir_eb58f8592652a350d91e29e49bf44f35.html"/>
 <a href="dir_84d845c13bf6781661e876c129369764.html"/>
-<a href="dir_816ca9ee4ee8411d8871cd6353896e88.html"/>
-<a href="dir_cbd2842271c9897f9bdaae5837db0f29.html"/>
+<a href="dir_03bde25dd5aaf6a48891929ad3468560.html"/>
+<a href="dir_01a5b12af437d98f9990671de8689261.html"/>
 <a href="dir_aabef65587a183c6431a19cd5819160b.html"/>
 <a href="dir_00744117a42d95692e735523462d1048.html"/>
 <a href="dir_f20647b1090d249bf2f121d83761a13f.html"/>
@@ -4341,9 +4341,9 @@
 <a href="dir_d60295aed24c0177daf8769f9d0ea2ec.html"/>
 <a href="dir_d1a61619b8879784895a8f51fab43fac.html"/>
 <a href="dir_7d4a875771aab3217199849c4d0f25ca.html"/>
-<a href="dir_b8241ba192950c55c6815e86d6b06d2c.html"/>
-<a href="dir_310b93f53c80f789bc9ba94e053d951b.html"/>
-<a href="dir_3d9facc91adb5b2c8f3e6d3eacbcaee6.html"/>
+<a href="dir_45215590e5c4d98109af9f0f9921f13a.html"/>
+<a href="dir_40456181201b16ba8903bfa7d723e8fd.html"/>
+<a href="dir_0fcb474aba142fb34af9f53cd9ff9f7f.html"/>
 <a href="dir_dc0fd9a41eb2038316ee0294b7a7656c.html"/>
 <a href="dir_8bbbb0eb92ac813eae479ee349215236.html"/>
 <a href="dir_16090663f25fbb3f79644b81fcb763a1.html"/>
@@ -4375,8 +4375,8 @@
 <a href="dir_a8105e53224513a6872d62dd582a3fcf.html"/>
 <a href="dir_1d6e56aaf5f25f48a59d07f4d4e40386.html"/>
 <a href="dir_c7cca0652acaf186c32aeeba35a7a87d.html"/>
-<a href="dir_1be945db1f517ba25296079194b0c07b.html"/>
-<a href="dir_f938cff109db358b4ef39274886d9f4b.html"/>
+<a href="dir_0f7ca19394ffe4fa64c36164a0539f3f.html"/>
+<a href="dir_da6d219d5957e23a24b3b985d7a586f8.html"/>
 <a href="dir_6326769d2aa62a6a3c04a16f4f16aff9.html"/>
 <a href="dir_224d90a60db29009de345742193465a9.html"/>
 <a href="dir_648354d973dace25fe649075a998c814.html"/>
@@ -4424,14 +4424,14 @@
 <a href="dir_b2f0c8ed8a5758d1aac7fdf012e1db88.html"/>
 <a href="dir_394fc4a0913f10e9697a49a5bcd8e815.html"/>
 <a href="dir_6f08076471432372ddeb7cb60abfd634.html"/>
+<a href="dir_054476bb392b66ea06d3553241bb42da.html"/>
+<a href="dir_24f4e39c43a16b605cd7cf6a4c69fe11.html"/>
 <a href="dir_041db6ad6a3d44280e40e5af409429cb.html"/>
 <a href="dir_27a305c03e4e0b8c49e7d9826fef767a.html"/>
 <a href="dir_7181ed59e89dd22aa941945b98a336a2.html"/>
 <a href="dir_545a710dcb7af9077001c48ffba1892c.html"/>
 <a href="dir_2185f45920d33cff22e16af8fa2cfbc8.html"/>
 <a href="dir_6d8814fc264459e0132bdc90aca4f991.html"/>
-<a href="dir_3bca595f83e991540ea810be31ee97a4.html"/>
-<a href="dir_ca9b6dd1a4eaa26ee22386f1aec94708.html"/>
 <a href="dir_4cd28f4d991dbf75622a77b5ee5a535e.html"/>
 <a href="dir_e3cb1c1c156f8a1a0f5e657d39af19ce.html"/>
 <a href="dir_fd28d3366d3b8c3567af53eb90468272.html"/>
@@ -9993,7 +9993,7 @@
 <a href="classStudyData.html#afd28a35c2a5d4eacabb6ac999e0bb3e7"/>
 <a href="classSubstitutionFixture.html"/>
 <a href="classSumSubstitutionFixture.html"/>
-<a href="classSystemLinearProblem.html"/>
+<a href="classSystemLinearProblemBuilder.html"/>
 <a href="classSystemMemoryLogger.html"/>
 <a href="classTargetVectorUpdater.html"/>
 <a href="classTestException.html"/>
@@ -10130,11 +10130,14 @@
 <a href="dir_00391469cb8886a3ac1b67cd679c42ba.html"/>
 <a href="dir_00744117a42d95692e735523462d1048.html"/>
 <a href="dir_013ef82fe57c42c8e3d883bad18f5d18.html"/>
+<a href="dir_01a5b12af437d98f9990671de8689261.html"/>
 <a href="dir_01d94dfbc9f6f4679baa28bc0b3d7c44.html"/>
 <a href="dir_01daa5499a3d0d650df878715323f7b3.html"/>
 <a href="dir_02ed6be7069011b4f32a39bb272deec4.html"/>
+<a href="dir_03bde25dd5aaf6a48891929ad3468560.html"/>
 <a href="dir_041db6ad6a3d44280e40e5af409429cb.html"/>
 <a href="dir_04e4a32e7d8a704be3454b9da19e81c2.html"/>
+<a href="dir_054476bb392b66ea06d3553241bb42da.html"/>
 <a href="dir_05a7c855464509c3bf6911034d82e3fa.html"/>
 <a href="dir_062f7d3efd76d54ab788e74a3a0f1291.html"/>
 <a href="dir_07832cf260a181bdbe7f084c52884903.html"/>
@@ -10146,6 +10149,8 @@
 <a href="dir_0e26ae5d2579a31dc8587379f400ed71.html"/>
 <a href="dir_0e300ef0200bc54708d5e182bb4f700b.html"/>
 <a href="dir_0f23e24d818be2c7715d706baee3a029.html"/>
+<a href="dir_0f7ca19394ffe4fa64c36164a0539f3f.html"/>
+<a href="dir_0fcb474aba142fb34af9f53cd9ff9f7f.html"/>
 <a href="dir_1199457920f57344d3ddde9c23cc12a1.html"/>
 <a href="dir_11a0355828d5552f473d70dc684a09d4.html"/>
 <a href="dir_11b5039d496084a5c0f289a3bb0bc86d.html"/>
@@ -10165,12 +10170,11 @@
 <a href="dir_169f1962c8eff925da731e6423a64684.html"/>
 <a href="dir_178c8ef38b01ceddc925e5180d51db25.html"/>
 <a href="dir_1911e97f812e1ff2d7b011ec6c5377a1.html"/>
-<a href="dir_196642b4fd992036a705fef22f044f4d.html"/>
 <a href="dir_19f914d3a411d39afa354cf434728b4b.html"/>
 <a href="dir_19ff128a63cbd20da0e3cb306cc82c00.html"/>
 <a href="dir_1b3e80f603ae7a09fcd50617a35fa996.html"/>
 <a href="dir_1b5d0521e8155fd5356782a86d8acc95.html"/>
-<a href="dir_1be945db1f517ba25296079194b0c07b.html"/>
+<a href="dir_1baaf84e482046e72068898187f3c9eb.html"/>
 <a href="dir_1cfff9f84b004df122b21e2e2156d46f.html"/>
 <a href="dir_1d0e87cb135b680ae0ee4cb4bf6de804.html"/>
 <a href="dir_1d6e56aaf5f25f48a59d07f4d4e40386.html"/>
@@ -10185,6 +10189,7 @@
 <a href="dir_23b57c65fded76c9567f8107eedea0ec.html"/>
 <a href="dir_24387afcdea2111b4e61a92705183b96.html"/>
 <a href="dir_24b88b432671c12e274897a9b49ec241.html"/>
+<a href="dir_24f4e39c43a16b605cd7cf6a4c69fe11.html"/>
 <a href="dir_258bd09816de12988b451f46e2dc401f.html"/>
 <a href="dir_277fb58041675eee9065ef1bb52f0052.html"/>
 <a href="dir_27a1bea1daab16028077c65cd7701cda.html"/>
@@ -10198,7 +10203,6 @@
 <a href="dir_2e53fb72742097640a59c97f0cbb5132.html"/>
 <a href="dir_2f039fa045ef2cf8ef17e71221619912.html"/>
 <a href="dir_2feb0503147a76867e231cf3cf75c598.html"/>
-<a href="dir_310b93f53c80f789bc9ba94e053d951b.html"/>
 <a href="dir_31917a331b9d8c666e42785655dcd6bd.html"/>
 <a href="dir_31e596973f26040e311ea4bf7062cfbe.html"/>
 <a href="dir_3427371fd7d6dc8a679c3fe5e7764794.html"/>
@@ -10210,13 +10214,12 @@
 <a href="dir_389cd7214eb0a4ef7b8c2e3d5bc9c048.html"/>
 <a href="dir_394fc4a0913f10e9697a49a5bcd8e815.html"/>
 <a href="dir_3bb0031885445f22f4fc108b28822cff.html"/>
-<a href="dir_3bca595f83e991540ea810be31ee97a4.html"/>
-<a href="dir_3d9facc91adb5b2c8f3e6d3eacbcaee6.html"/>
 <a href="dir_3e822a6ee4d724687cb7bda3e29a5b91.html"/>
 <a href="dir_3ebd0c6b198e2534b75d9212614d1ade.html"/>
 <a href="dir_3f1d2acaa2b49164edb3d2d81e88fdf6.html"/>
 <a href="dir_3f30f22d4279c069a3690fc8f743ea2b.html"/>
 <a href="dir_3f403faaf41dfab56c1c466daa868636.html"/>
+<a href="dir_40456181201b16ba8903bfa7d723e8fd.html"/>
 <a href="dir_4075a7754e6f8a67880c58e0e146a336.html"/>
 <a href="dir_41c23919e1b723f4d0d676cd8e856d40.html"/>
 <a href="dir_42914326553459773601304acc1ed067.html"/>
@@ -10224,6 +10227,7 @@
 <a href="dir_432673341fda9fdda342856bdfa291ab.html"/>
 <a href="dir_44c52917d0c81d51cf4d3c6bd903286f.html"/>
 <a href="dir_44f9bd718728581550ea4fab84861031.html"/>
+<a href="dir_45215590e5c4d98109af9f0f9921f13a.html"/>
 <a href="dir_457c73a7c2e6241a953ec93f00bc1246.html"/>
 <a href="dir_45d8b2952d31a195976ac28b4c90ee1b.html"/>
 <a href="dir_46299c1dca5fa7808a79e8f529bc1501.html"/>
@@ -10287,7 +10291,6 @@
 <a href="dir_6eccbe1c151b0c708db2d7dc07169755.html"/>
 <a href="dir_6eee0dfdd066b044c69bdb740ef62e26.html"/>
 <a href="dir_6efb262abdbedccdfab2fe711b62dc58.html"/>
-<a href="dir_6efe61222ddc8b7b19e2ca1ce3114990.html"/>
 <a href="dir_6f00510b7097164f5f535b4c885ed77a.html"/>
 <a href="dir_6f724c1577d83e384c3c5323dd839627.html"/>
 <a href="dir_6feeaea8bd29979b56256f58401b91b0.html"/>
@@ -10323,7 +10326,6 @@
 <a href="dir_809617fd37fc39803a560efea9cccbab.html"/>
 <a href="dir_80a4f60ad72736ee103e1a8cccd74f5f.html"/>
 <a href="dir_8151ff04c252fc11dbcc2541bbcf115c.html"/>
-<a href="dir_816ca9ee4ee8411d8871cd6353896e88.html"/>
 <a href="dir_81fa6c6b0bdbbfb2fb372445f3b3569c.html"/>
 <a href="dir_82e68c49439fe91b1c3f7ccd1fcbbabe.html"/>
 <a href="dir_84c8e4260ed2388ac0d5c9a6bb56a201.html"/>
@@ -10369,7 +10371,6 @@
 <a href="dir_9dbf243344eb85409e4172ea92865620.html"/>
 <a href="dir_9de0b226a6248df62fc4ff1ce1bffcc7.html"/>
 <a href="dir_9e00e12edd9c85dc5bf8c416fbc7b695.html"/>
-<a href="dir_9e9e16c419b2d5c25af5b7c820e7b316.html"/>
 <a href="dir_9fe1df0e9293a13578c3a890ab883f5c.html"/>
 <a href="dir_a09de2a846902f5a3d76c81d052b57f3.html"/>
 <a href="dir_a0b8a91da6a47618100ab8cfd2af6f4b.html"/>
@@ -10419,7 +10420,6 @@
 <a href="dir_b62c0098d8d77819e143d0f8e4c47469.html"/>
 <a href="dir_b65d2de451fce0e7507c47d5aa0f9ef0.html"/>
 <a href="dir_b717ec7e246021b930e4c7205e128a05.html"/>
-<a href="dir_b8241ba192950c55c6815e86d6b06d2c.html"/>
 <a href="dir_b89309f7b0994e54c2ca58e16db6405e.html"/>
 <a href="dir_b8a32678b670e8635940802fe3720571.html"/>
 <a href="dir_b97846e63deca7b7739263a4b7ec2ef1.html"/>
@@ -10433,6 +10433,7 @@
 <a href="dir_bb4f70fc19932ce04d6f526e485551a0.html"/>
 <a href="dir_bc0999a656393231a8eda92bace80a38.html"/>
 <a href="dir_bc48e7f0ad8ebe05e0cbe1432e759530.html"/>
+<a href="dir_bd8fd2ac40d01e398fd429e689e5a220.html"/>
 <a href="dir_be0e9c95a8ce4e25190ecd0a834598f4.html"/>
 <a href="dir_be7d6ff4eb04ff96c849054e504acaf2.html"/>
 <a href="dir_beff7427979cae89e6df9e0b39a4fa89.html"/>
@@ -10453,12 +10454,9 @@
 <a href="dir_c895c7cee8ef584b26b911de2b4dd891.html"/>
 <a href="dir_c8ceafb835666cb064a700e6d49a3a45.html"/>
 <a href="dir_c8fab6c433788cb512af860fc6a8eefa.html"/>
-<a href="dir_c92b1872bf201ba5dcc29e27182c5261.html"/>
 <a href="dir_c974d614457d11523978ea19772609ca.html"/>
 <a href="dir_ca34f09bda743cd578baff63517bd688.html"/>
-<a href="dir_ca9b6dd1a4eaa26ee22386f1aec94708.html"/>
 <a href="dir_cacb4a209dd3586743fc8424ee0da1f5.html"/>
-<a href="dir_cbd2842271c9897f9bdaae5837db0f29.html"/>
 <a href="dir_cc916e2f44333e82b34e0f3894ee9ade.html"/>
 <a href="dir_ccb0271c3f5d8205cf5104e2cff46f15.html"/>
 <a href="dir_ce980317fbc69b3f740ff45def79f52e.html"/>
@@ -10486,7 +10484,9 @@
 <a href="dir_da561f49584e8b544d49113b783d491a.html"/>
 <a href="dir_da5c6b39c0a2f54e57df6799511cd3ab.html"/>
 <a href="dir_da61e3e9a357748887e3ca8d7c5a0c16.html"/>
+<a href="dir_da6d219d5957e23a24b3b985d7a586f8.html"/>
 <a href="dir_db06ba97cc566b79297f3a8d417cad51.html"/>
+<a href="dir_dcadec33bc2d0c24a5097e5634b1e0a8.html"/>
 <a href="dir_dd1991e05807c7bf23ad71a26e798096.html"/>
 <a href="dir_de18dccabb4bcf9dc3115c184e93a575.html"/>
 <a href="dir_de22f370622642a3ccd3068314076c4e.html"/>
@@ -10517,6 +10517,7 @@
 <a href="dir_ef685d8b7fd6cac78c9f14322de7752d.html"/>
 <a href="dir_efd047713bcd1ccefe55d92ae4bcf67b.html"/>
 <a href="dir_f0800fc495482c581e54bbff12fc1fa1.html"/>
+<a href="dir_f0a1227722302b853dd1dbdee3f8cd3d.html"/>
 <a href="dir_f0a90e62a1a9f5ef86f667baefa1eed2.html"/>
 <a href="dir_f20647b1090d249bf2f121d83761a13f.html"/>
 <a href="dir_f29c49b486707c7343f6e57aca063a47.html"/>
@@ -10529,7 +10530,6 @@
 <a href="dir_f70fc361ef747381a940a444cb7a251a.html"/>
 <a href="dir_f88c54e4b5dabafd98e61beb9026508c.html"/>
 <a href="dir_f8d6e11e2fa60a07dc105ade5f3f2220.html"/>
-<a href="dir_f938cff109db358b4ef39274886d9f4b.html"/>
 <a href="dir_f97ee60bd78c8fdd8d390ea597d29d09.html"/>
 <a href="dir_f9eda1b8d034eb2050930c0b08f0b64e.html"/>
 <a href="dir_fa141a173360257e5d7a9b0704276e43.html"/>

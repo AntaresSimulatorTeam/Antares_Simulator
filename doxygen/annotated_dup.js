@@ -1619,7 +1619,7 @@ var annotated_dup =
     [ "SubstitutionFixture", "classSubstitutionFixture.html", null ],
     [ "SumSubstitutionFixture", "classSumSubstitutionFixture.html", null ],
     [ "SystemBuilderCreationFixture", "structSystemBuilderCreationFixture.html", null ],
-    [ "SystemLinearProblem", "classSystemLinearProblem.html", null ],
+    [ "SystemLinearProblemBuilder", "classSystemLinearProblemBuilder.html", null ],
     [ "SystemMemoryLogger", "classSystemMemoryLogger.html", null ],
     [ "TargetVectorUpdater", "classTargetVectorUpdater.html", null ],
     [ "TestContext", "structTestContext.html", null ],

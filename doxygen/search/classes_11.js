@@ -218,6 +218,6 @@ var searchData=
   ['systembuilder_215',['SystemBuilder',['../classAntares_1_1Study_1_1SystemModel_1_1SystemBuilder.html',1,'Antares::Study::SystemModel']]],
   ['systembuildercreationfixture_216',['SystemBuilderCreationFixture',['../structSystemBuilderCreationFixture.html',1,'']]],
   ['systemdata_217',['SystemData',['../structAntares_1_1Study_1_1SystemModel_1_1SystemData.html',1,'Antares::Study::SystemModel']]],
-  ['systemlinearproblem_218',['SystemLinearProblem',['../classSystemLinearProblem.html',1,'']]],
+  ['systemlinearproblembuilder_218',['SystemLinearProblemBuilder',['../classSystemLinearProblemBuilder.html',1,'']]],
   ['systemmemorylogger_219',['SystemMemoryLogger',['../classSystemMemoryLogger.html',1,'']]]
 ];
