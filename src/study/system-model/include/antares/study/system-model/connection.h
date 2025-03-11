@@ -22,7 +22,7 @@
 
 namespace Antares::Study::SystemModel
 {
-class Connection {
-
-    };
-}
+class Connection
+{
+};
+} // namespace Antares::Study::SystemModel

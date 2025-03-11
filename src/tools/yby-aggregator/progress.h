@@ -27,13 +27,15 @@
 
 #include <antares/logs/logs.h>
 
-class Progress final : public Yuni::Thread::Timer {
+class Progress final: public Yuni::Thread::Timer
+{
 public:
     //! The threading policy
     using ThreadingPolicy = Yuni::Thread::Timer::ThreadingPolicy;
 
     //! Different states related to the progression
-    enum State {
+    enum State
+    {
         stJobs,
         stWrite,
         stReading,
@@ -55,7 +57,7 @@ public:
     bool completed() const;
 
     //! Set the message to display into logs
-    void message(const std::string &msg);
+    void message(const std::string& msg);
 
     //! The current state in the progression
     State state;

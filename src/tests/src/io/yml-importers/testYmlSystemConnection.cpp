@@ -26,8 +26,8 @@
 #include <antares/io/inputs/yml-system/converter.h>
 #include <antares/io/inputs/yml-system/parser.h>
 #include <antares/study/system-model/system.h>
-#include "yaml-cpp/yaml.h"
 
+#include "yaml-cpp/yaml.h"
 
 using namespace std::string_literals;
 using namespace Antares::IO::Inputs;
@@ -63,8 +63,8 @@ BOOST_AUTO_TEST_CASE(empty_connections_is_allowed)
 }
 
 /**
-* Idealy we would like to throw an error if connection is not a map
-*/
+ * Idealy we would like to throw an error if connection is not a map
+ */
 BOOST_AUTO_TEST_CASE(connection_is_map)
 {
     YmlSystem::Parser parser;

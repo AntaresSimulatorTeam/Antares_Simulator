@@ -43,7 +43,8 @@ struct Component
     std::vector<Parameter> parameters;
 };
 
-struct Connection {
+struct Connection
+{
     std::string component1;
     std::string component2;
     std::string port1;

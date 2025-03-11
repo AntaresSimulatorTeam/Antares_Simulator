@@ -81,7 +81,8 @@ struct convert<Antares::IO::Inputs::YmlSystem::Component>
 };
 
 template<>
-    struct  convert<Antares::IO::Inputs::YmlSystem::Connection> {
+struct convert<Antares::IO::Inputs::YmlSystem::Connection>
+{
     static bool decode(const Node& node, Antares::IO::Inputs::YmlSystem::Connection& rhs)
     {
         if (!node.IsMap())

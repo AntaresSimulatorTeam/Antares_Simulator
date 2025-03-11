@@ -167,7 +167,8 @@ BOOST_FIXTURE_TEST_CASE(bad_library_model_format, LibraryObjects)
     BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), std::runtime_error);
 }
 
-BOOST_FIXTURE_TEST_CASE(convert_connections_properly, LibraryObjects) {
+BOOST_FIXTURE_TEST_CASE(convert_connections_properly, LibraryObjects)
+{
     const auto systemYaml = R"(
         system:
             id: base_system

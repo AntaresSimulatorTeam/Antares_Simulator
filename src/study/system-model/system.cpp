@@ -25,7 +25,9 @@
 
 namespace Antares::Study::SystemModel
 {
-System::System(std::string id, std::vector<Component>& components, std::vector<Connection>& connections):
+System::System(std::string id,
+               std::vector<Component>& components,
+               std::vector<Connection>& connections):
     id_(std::move(id)),
     connections_(std::move(connections))
 {
@@ -84,7 +86,7 @@ SystemBuilder& SystemBuilder::withComponents(std::vector<Component>& components)
  * \param connections A vector of components to set.
  * \return Reference to the SystemBuilder object.
  */
-SystemBuilder& SystemBuilder::withConnections(std::vector<Connection> &connections)
+SystemBuilder& SystemBuilder::withConnections(std::vector<Connection>& connections)
 {
     connections_ = std::move(connections);
     return *this;

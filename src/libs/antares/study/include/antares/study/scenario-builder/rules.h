@@ -142,10 +142,10 @@ private:
     bool readLink(const AreaName::Vector& instrs, String value, bool updaterMode);
     bool readBindingConstraints(const AreaName::Vector& splitKey, String value);
 
-    const Data::Area *getArea(const AreaName &areaname, bool updaterMode);
+    const Data::Area* getArea(const AreaName& areaname, bool updaterMode);
 
-    const Data::AreaLink *getLink(const AreaName &fromAreaName,
-                                  const AreaName &toAreaName,
+    const Data::AreaLink* getLink(const AreaName& fromAreaName,
+                                  const AreaName& toAreaName,
                                   bool updaterMode);
     bool checkGroupExists(const std::string& groupName) const;
 
