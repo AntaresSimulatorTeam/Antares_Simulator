@@ -70,7 +70,7 @@ toc_depth: 2
 #### Build
 * vcpkg (linux, sirius) (#2078) (#2090) (#2145)
 * Remove src/antares-deps (#2182)
-* Use OR-Tools v9.11-rte1.1 (#2437)
+* Use OR-Tools v9.11-rte1.3 (#2437)
 * Fix or-tools integration (#2402)
 * Better dependencies with cmake, antares matrix (#2369)
 
