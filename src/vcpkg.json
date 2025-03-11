@@ -34,10 +34,6 @@
     },
     {
       "name": "eigen3"
-    },
-    {
-      "name": "libuuid",
-      "platform": "!windows"
     }
   ]
 }
