@@ -66,6 +66,7 @@ public:
     std::any visitRightMuldiv(ExprParser::RightMuldivContext* context) override;
     std::any visitRightExpression(ExprParser::RightExpressionContext* context) override;
     std::any visitTimeShiftExpr(ExprParser::TimeShiftExprContext* context) override;
+    std::any visitTimeIndexExpr(ExprParser::TimeIndexExprContext* context) override;
 
 private:
     Expressions::Registry<Node>& registry_;
@@ -236,7 +237,7 @@ std::any ConvertorVisitor::visitNumber(ExprParser::NumberContext* context)
 std::any ConvertorVisitor::visitTimeIndex([[maybe_unused]] ExprParser::TimeIndexContext* context)
 {
     Node* expr = convertIdentifier(context->IDENTIFIER()->getText());
-    auto index = std::stoi(context->expr()->getText());
+    auto index = registry_.create<LiteralNode>(std::stoi(context->expr()->getText()));
     return static_cast<Node*>(registry_.create<TimeIndexNode>(expr, index));
 }
 
@@ -259,6 +260,13 @@ std::any ConvertorVisitor::visitTimeShift([[maybe_unused]] ExprParser::TimeShift
 std::any ConvertorVisitor::visitTimeShiftExpr(ExprParser::TimeShiftExprContext* context)
 {
     return buildShiftNode(std::any_cast<Node*>(context->expr()->accept(this)), context->shift());
+}
+
+std::any ConvertorVisitor::visitTimeIndexExpr(ExprParser::TimeIndexExprContext* context)
+{
+    Node* left = std::any_cast<Node*>(visit(context->expr(0)));
+    Node* right = std::any_cast<Node*>(visit(context->expr(1)));
+    return static_cast<Node*>(registry_.create<TimeIndexNode>(left, right));
 }
 
 // TODO implement this

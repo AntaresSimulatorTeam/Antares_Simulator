@@ -20,14 +20,14 @@
 */
 #pragma once
 
-#include "antares/expressions/nodes/ParameterizedUnaryNode.h"
+#include "antares/expressions/nodes/BinaryNode.h"
 
 namespace Antares::Expressions::Nodes
 {
-class TimeIndexNode: public ParameterizedUnaryNode
+class TimeIndexNode: public BinaryNode
 {
 public:
-    using ParameterizedUnaryNode::ParameterizedUnaryNode;
+    using BinaryNode::BinaryNode;
 
     std::string name() const override
     {

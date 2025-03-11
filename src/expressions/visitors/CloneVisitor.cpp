@@ -128,8 +128,8 @@ Nodes::Node* CloneVisitor::visit(const Nodes::TimeShiftNode* timeShiftNode)
 
 Nodes::Node* CloneVisitor::visit(const Nodes::TimeIndexNode* timeIndexNode)
 {
-    return registry_.create<Nodes::TimeIndexNode>(dispatch(timeIndexNode->child()),
-                                                  timeIndexNode->value());
+    return registry_.create<Nodes::TimeIndexNode>(dispatch(timeIndexNode->left()),
+                                                  dispatch(timeIndexNode->right()));
 }
 
 std::string CloneVisitor::name() const

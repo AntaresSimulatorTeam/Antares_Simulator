@@ -31,6 +31,8 @@ public:
 
     virtual std::any visitAllTimeSum(ExprParser::AllTimeSumContext *context) = 0;
 
+    virtual std::any visitTimeIndexExpr(ExprParser::TimeIndexExprContext *context) = 0;
+
     virtual std::any visitAddsub(ExprParser::AddsubContext *context) = 0;
 
     virtual std::any visitTimeShiftExpr(ExprParser::TimeShiftExprContext *context) = 0;

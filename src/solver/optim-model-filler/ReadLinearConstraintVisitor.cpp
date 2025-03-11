@@ -165,16 +165,11 @@ std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const Component
 
 std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const TimeShiftNode* node)
 {
-    // TODO
-    // throw IllegalNodeException();
-
-    return shiftVector(dispatch(node->child()), node->value());
+    throw IllegalNodeException();
 }
 
 std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const TimeIndexNode* node)
 {
-    // TODO
-    // throw IllegalNodeException();
-    return {dispatch(node->child()).at(node->value())};
+    throw IllegalNodeException();
 }
 } // namespace Antares::Optimization

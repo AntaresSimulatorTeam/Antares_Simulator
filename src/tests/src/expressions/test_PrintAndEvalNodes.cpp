@@ -456,11 +456,11 @@ BOOST_FIXTURE_TEST_CASE(evaluate_shifted_literal, MyDummyFixture)
                       EvaluationResult::EvalResultTypeError);
 }
 
-template<typename UnaryNodeWithParameter>
-EvaluationResult CreateAndEvalutateParameterizedUnaryNode(int p)
+template<typename left, typename right>
+EvaluationResult CreateAndEvalutateTimeNode(const right& p)
 {
     ParameterNode param("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
-    UnaryNodeWithParameter root(&param, p);
+    left root(&param, p);
     const std::string value = "dummy";
     MockLinearProblemData dummy_data;
     EvaluationContext context(
@@ -476,7 +476,7 @@ EvaluationResult CreateAndEvalutateParameterizedUnaryNode(int p)
 
 BOOST_FIXTURE_TEST_CASE(evaluate_shifted_param, MyDummyFixture)
 {
-    const auto eval = CreateAndEvalutateParameterizedUnaryNode<TimeShiftNode>(-1).valuesAsVector();
+    const auto eval = CreateAndEvalutateTimeNode<TimeShiftNode, int>(-1).valuesAsVector();
     // from MockLinearProblemData  param TSdata is {0, 1, 2}
     // here we applied TimeShift t-1 {2, 0, 1}
     BOOST_CHECK_EQUAL(eval[0], 2); //
@@ -486,7 +486,9 @@ BOOST_FIXTURE_TEST_CASE(evaluate_shifted_param, MyDummyFixture)
 
 BOOST_FIXTURE_TEST_CASE(evaluate_timeIndex_param, MyDummyFixture)
 {
-    const auto eval = CreateAndEvalutateParameterizedUnaryNode<TimeIndexNode>(1).valueAsDouble();
+    LiteralNode literal_node(1.0);
+    const auto eval = CreateAndEvalutateTimeNode<TimeIndexNode, Node*>(&literal_node)
+                        .valueAsDouble();
     // from MockLinearProblemData  param TSdata is {0, 1, 2}
     // here we applied TimeIndex[1]
     BOOST_CHECK_EQUAL(eval, 1); //
@@ -596,7 +598,7 @@ void evaluate_time_dependent_operation_on_TimeShiftNode(int timeShift)
 }
 
 template<typename BinaryNode>
-void evaluate_time_dependent_operation_on_TimeIndexNode(int timeIndex)
+void evaluate_time_dependent_operation_on_TimeIndexNode(Node* timeIndex)
 {
     ParameterNode param("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
     LiteralNode literal(2.0);
@@ -621,8 +623,8 @@ void evaluate_time_dependent_operation_on_TimeIndexNode(int timeIndex)
                                                                             literal.value()),
                                                    evalExpected<BinaryNode>(hours.at(1),
                                                                             literal.value())};
-
-    BOOST_CHECK_EQUAL(eval, result_before_timeIndex.at(timeIndex));
+    const auto timeIndexInt = static_cast<int>(evalVisitor.dispatch(timeIndex).valueAsDouble());
+    BOOST_CHECK_EQUAL(eval, result_before_timeIndex.at(timeIndexInt));
 }
 
 // Define a list of types (not instances)
@@ -645,7 +647,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(evaluate_time_dependent_operations_time_index_node
                               T,
                               BinaryOperators)
 {
-    evaluate_time_dependent_operation_on_TimeIndexNode<T>(1);
+    LiteralNode literal_node(1);
+    evaluate_time_dependent_operation_on_TimeIndexNode<T>(&literal_node);
 }
 
 BOOST_FIXTURE_TEST_CASE(evaluate_variable, MyDummyFixture)

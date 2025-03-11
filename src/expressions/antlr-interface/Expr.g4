@@ -31,6 +31,7 @@ expr
     | IDENTIFIER '[' shift ']'                 # timeShift
     | IDENTIFIER '[' expr  ']'                 # timeIndex
     | '(' expr ')' '[' shift ']'               # timeShiftExpr
+    | '(' expr ')' '[' expr ']'               # timeIndexExpr
     ;
 
 atom

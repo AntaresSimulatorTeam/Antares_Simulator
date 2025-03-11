@@ -22,7 +22,6 @@
 
 #include <map>
 #include <ostream>
-#include <utility>
 
 #include "antares/expressions/visitors/NodeVisitor.h"
 
@@ -90,7 +89,7 @@ public:
      * @param os The output stream to which the DOT representation is written.
      * @param tree_name The name of the tree graph. Defaults to "ExpressionTree".
      */
-    void NewTreeGraph(std::ostream& os, const std::string& tree_name = "ExpressionTree");
+    static void NewTreeGraph(std::ostream& os, const std::string& tree_name = "ExpressionTree");
 
     /**
      * @brief Ends the current tree graph.
@@ -162,10 +161,10 @@ private:
      * @param box_style The style to be applied to the node's box.
      * @param os The output stream to which the node representation is written.
      */
-    void emitNode(unsigned int id,
-                  const std::string& label,
-                  const BoxStyle& box_style,
-                  std::ostream& os);
+    static void emitNode(unsigned int id,
+                         const std::string& label,
+                         const BoxStyle& box_style,
+                         std::ostream& os);
 
     /**
      * @brief Processes a binary operation node.

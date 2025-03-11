@@ -37,7 +37,8 @@ ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
   const std::string& componentId):
     context_(std::move(context)),
     fillContext_(std::move(fillContext)),
-    componentId_(componentId)
+    componentId_(componentId),
+    evalVisitor_(context_, fillContext_) // TODO
 {
 }
 
@@ -180,7 +181,9 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const TimeShift
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const TimeIndexNode* node)
 {
-    const auto ret = dispatch(node->child());
-    return ret[node->value()];
+    const auto ret = dispatch(node->left());
+    // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
+    const auto timeIndex = static_cast<int>(evalVisitor_.dispatch(node->right()).valueAsDouble());
+    return ret[timeIndex];
 }
 } // namespace Antares::Optimization

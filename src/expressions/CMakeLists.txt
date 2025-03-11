@@ -8,7 +8,7 @@ set(SRC_Expressions
         nodes/BinaryNode.cpp
         nodes/UnaryNode.cpp
         nodes/SumNode.cpp
-        nodes/ParameterizedUnaryNode.cpp
+        nodes/TimeShiftNode.cpp
 
 
         visitors/CloneVisitor.cpp
@@ -50,7 +50,6 @@ set(SRC_Expressions
         include/antares/expressions/nodes/SubtractionNode.h
         include/antares/expressions/nodes/UnaryNode.h
         include/antares/expressions/nodes/VariableNode.h
-        include/antares/expressions/nodes/TimeShiftNode.h
         include/antares/expressions/nodes/TimeIndexNode.h
 
 
@@ -75,7 +74,7 @@ set(SRC_Expressions
         include/antares/expressions/hashable.h
         include/antares/expressions/expression.h
         include/antares/expressions/ShiftVector.h
-        include/antares/expressions/nodes/ParameterizedUnaryNode.h
+        include/antares/expressions/nodes/TimeShiftNode.h
 )
 
 source_group("expressions" FILES ${SRC_Expressions})

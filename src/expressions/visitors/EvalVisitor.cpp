@@ -138,8 +138,10 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeShiftNode* node)
 }
 EvaluationResult EvalVisitor::visit(const Nodes::TimeIndexNode* node)
 {
-    const auto ret = dispatch(node->child());
-    return ret[node->value()];
+    const auto ret = dispatch(node->left());
+    // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
+    const auto timeIndex = static_cast<int>(dispatch(node->right()).valueAsDouble());
+    return ret[timeIndex];
 }
 
 std::string EvalVisitor::name() const

@@ -39,6 +39,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual std::any visitTimeIndexExpr(ExprParser::TimeIndexExprContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitAddsub(ExprParser::AddsubContext *ctx) override {
     return visitChildren(ctx);
   }

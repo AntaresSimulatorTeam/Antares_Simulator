@@ -76,8 +76,9 @@ public:
         auto gt = makeExpression();
         Node* parameterNode = registry_.create<ParameterNode>("Planck's constant");
         Node* timeShiftNode = registry_.create<TimeShiftNode>(parameterNode, -10);
-        Node* literalNode = registry_.create<LiteralNode>(6.62607015e-34);
-        Node* timeIndexNode = registry_.create<TimeIndexNode>(literalNode, 200);
+        Node* literalNode = registry_.create<LiteralNode>(6.62607015);
+        Node* literalNode2 = registry_.create<LiteralNode>(-34);
+        Node* timeIndexNode = registry_.create<TimeIndexNode>(literalNode, literalNode2);
 
         return registry_.create<SumNode>(gt, timeIndexNode, timeShiftNode);
     }
@@ -202,14 +203,16 @@ node[style = filled]
   8 -> 18;
   18 [label="PFSUM(portfield,sum)", shape="component", style="filled, solid", color="olive"];
   1 -> 19;
-  19 [label="[+200]", shape="diamond", style="filled", color="gold"];
+  19 [label="[]", shape="diamond", style="filled", color="gold"];
   19 -> 20;
-  20 [label="0.000000", shape="box", style="filled, solid", color="lightgray"];
-  1 -> 21;
-  21 [label="t-10", shape="hexagon", style="filled, solid", color="aqua"];
-  21 -> 22;
-  22 [label="Param(Planck's constant)", shape="box", style="filled, solid", color="wheat"];
-label="AST Diagram(Total nodes : 22)"
+  19 -> 21;
+  20 [label="6.626070", shape="box", style="filled, solid", color="lightgray"];
+  21 [label="-34.000000", shape="box", style="filled, solid", color="lightgray"];
+  1 -> 22;
+  22 [label="t-10", shape="hexagon", style="filled, solid", color="aqua"];
+  22 -> 23;
+  23 [label="Param(Planck's constant)", shape="box", style="filled, solid", color="wheat"];
+label="AST Diagram(Total nodes : 23)"
 labelloc = "t"
 subgraph cluster_legend {
 label = "Legend";
@@ -230,7 +233,7 @@ legend_GreaterThanOrEqualNode [ label =" GreaterThanOrEqualNode: 1"]
 legend_GreaterThanOrEqualNode -> legend_LessThanOrEqualNode [style=invis];
 legend_LessThanOrEqualNode [ label =" LessThanOrEqualNode: 1"]
 legend_LessThanOrEqualNode -> legend_LiteralNode [style=invis];
-legend_LiteralNode [ label =" LiteralNode: 4"]
+legend_LiteralNode [ label =" LiteralNode: 5"]
 legend_LiteralNode -> legend_MultiplicationNode [style=invis];
 legend_MultiplicationNode [ label =" MultiplicationNode: 1"]
 legend_MultiplicationNode -> legend_NegationNode [style=invis];

@@ -23,6 +23,7 @@
 #include <algorithm>
 
 #include "antares/expressions/nodes/ExpressionsNodes.h"
+#include "antares/expressions/visitors/EvalVisitor.h"
 
 namespace Antares::Expressions::Visitors
 {
@@ -187,10 +188,7 @@ void AstDOTStyleVisitor::visit(const Nodes::TimeShiftNode* node, std::ostream& o
 
 void AstDOTStyleVisitor::visit(const Nodes::TimeIndexNode* node, std::ostream& os)
 {
-    processUnaryOperation(node,
-                          "[" + node->valueToSignedString() + "]",
-                          NodeStyle::TimeIndexStyle,
-                          os);
+    processBinaryOperation(node, "[]", NodeStyle::TimeIndexStyle, os);
 }
 
 std::string AstDOTStyleVisitor::name() const

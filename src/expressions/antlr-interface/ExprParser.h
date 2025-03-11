@@ -120,6 +120,16 @@ public:
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
+  class  TimeIndexExprContext : public ExprContext {
+  public:
+    TimeIndexExprContext(ExprContext *ctx);
+
+    std::vector<ExprContext *> expr();
+    ExprContext* expr(size_t i);
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
   class  AddsubContext : public ExprContext {
   public:
     AddsubContext(ExprContext *ctx);
