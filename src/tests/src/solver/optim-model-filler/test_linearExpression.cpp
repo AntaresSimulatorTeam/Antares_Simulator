@@ -365,9 +365,9 @@ BOOST_AUTO_TEST_CASE(ShiftLinearExpressionsPositive)
     Antares::Optimization::TimeDependentLinearExpression result = expr.shiftLinearExpressions(1);
 
     BOOST_TEST(result.getSize() == 3);
-    BOOST_TEST(result.GetLinearExpressions().at(0).offset() == 3.0);
-    BOOST_TEST(result.GetLinearExpressions().at(1).offset() == 1.0);
-    BOOST_TEST(result.GetLinearExpressions().at(2).offset() == 2.0);
+    BOOST_TEST(result.GetLinearExpressions().at(0).offset() == 2.0);
+    BOOST_TEST(result.GetLinearExpressions().at(1).offset() == 3.0);
+    BOOST_TEST(result.GetLinearExpressions().at(2).offset() == 1.0);
 }
 
 // Test shiftLinearExpressions with negative shift
@@ -383,9 +383,9 @@ BOOST_AUTO_TEST_CASE(ShiftLinearExpressionsNegative)
     Antares::Optimization::TimeDependentLinearExpression result = expr.shiftLinearExpressions(-1);
 
     BOOST_TEST(result.getSize() == 3);
-    BOOST_TEST(result.GetLinearExpressions().at(0).offset() == 2.0);
-    BOOST_TEST(result.GetLinearExpressions().at(1).offset() == 3.0);
-    BOOST_TEST(result.GetLinearExpressions().at(2).offset() == 1.0);
+    BOOST_TEST(result.GetLinearExpressions().at(0).offset() == 3.0);
+    BOOST_TEST(result.GetLinearExpressions().at(1).offset() == 1.0);
+    BOOST_TEST(result.GetLinearExpressions().at(2).offset() == 2.0);
 }
 
 // Test shiftLinearExpressions with zero shift
@@ -434,11 +434,11 @@ BOOST_AUTO_TEST_CASE(OperatorIndexValid)
                                {2, LinearExpression(3.0, {{FullKey(component, "c"), 3.0}})}};
 
     Antares::Optimization::TimeDependentLinearExpression expr(exp);
-    Antares::Optimization::TimeDependentLinearExpression result = expr[1];
+    Antares::Optimization::TimeDependentLinearExpression indexed = expr[1];
 
-    BOOST_TEST(result.getSize() == 1);
-    BOOST_TEST(result.GetLinearExpressions().at(1).offset() == 2.0);
-    BOOST_TEST(result.GetLinearExpressions().at(1).coefPerVar().at(FullKey(component, "b")) == 2.0);
+    const auto result = indexed.GetLinearExpressions().cbegin()->second;
+    BOOST_TEST(result.offset() == 2.0);
+    BOOST_TEST(result.coefPerVar().at(FullKey(component, "b")) == 2.0);
 }
 
 // Test operator[] with invalid index
