@@ -34,13 +34,13 @@ struct OneAreaStudy
 {
     OneAreaStudy()
     {
-        study = std::make_unique<Study>();
+        study = std::make_unique<Data::Study>();
         areaA = study->areaAdd("A");
         study->parameters.simulationDays.first = 0;
         study->parameters.simulationDays.end = 7;
     }
 
-    std::unique_ptr<Study> study;
+    std::unique_ptr<Data::Study> study;
     Area* areaA;
 };
 
@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_SUITE(areas_operations)
 
 BOOST_AUTO_TEST_CASE(area_add)
 {
-    auto study = std::make_unique<Study>();
+    auto study = std::make_unique<Data::Study>();
     const auto areaA = study->areaAdd("A");
     BOOST_CHECK(areaA != nullptr);
     BOOST_CHECK_EQUAL(areaA->name, "A");
@@ -326,7 +326,7 @@ BOOST_AUTO_TEST_CASE(version_parsing)
 
 BOOST_FIXTURE_TEST_CASE(check_filename_limit, OneAreaStudy)
 {
-    auto s = std::make_unique<Study>();
+    auto s = std::make_unique<Data::Study>();
     BOOST_CHECK(s->checkForFilenameLimits(true)); // empty areas should return true
 
     BOOST_CHECK(study->checkForFilenameLimits(true));

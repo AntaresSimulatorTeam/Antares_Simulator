@@ -416,7 +416,7 @@ static void prepareBindingConstraint(PROBLEME_HEBDO& problem,
     }
 }
 
-void SIM_RenseignementProblemeHebdo(const Study& study,
+void SIM_RenseignementProblemeHebdo(const Data::Study& study,
                                     PROBLEME_HEBDO& problem,
                                     uint weekInTheYear,
                                     const int PasDeTempsDebut,
