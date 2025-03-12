@@ -26,6 +26,9 @@
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/common-eco-adq.h"
 #include "antares/solver/utils/filename.h"
+#include "antares/solver/optimisation/run-thermal-heuristic.h"
+
+
 
 namespace Antares::Solver::Simulation
 {
@@ -296,9 +299,6 @@ void CurtailmentSharingPostProcessCmd::execute(const optRuntimeData& opt_runtime
         // logs.info() << "[adq-patch] flux Before ADQPTCH:" <<f;// << problemeHebdo_;
     }
 
-
-
-    // logs.info()  << "Before:  ADQP::";
     // ens bef adqp
     std::vector<std::vector<double>> ENSBef, ENSAfter, SpillBef, SpillAfter;
     ENSBef.resize(problemeHebdo_->NombreDePays);
@@ -367,8 +367,8 @@ void CurtailmentSharingPostProcessCmd::execute(const optRuntimeData& opt_runtime
         double oldValue;
         for (uint h = 0; h < nbHoursInWeek ; ++h){
             for (uint32_t area = 0; area < problemeHebdo_->NombreDePays; ++area) {
-                if (! affectedAreas.contains(area)){
-                    // logs.info() << "[adq-patch] Hello NTCs";
+                if (affectedAreas.contains(area)){
+                    logs.info() << "[adq-patch] Affected Area loop I "<<area;
                     var = problemeHebdo_->CorrespondanceVarNativesVarOptim[h].NumeroDeVariableDefaillancePositive[area];
                     oldValue = ENSAfter[area][h];
                     Xmax[var] = oldValue + 0.1;
@@ -378,7 +378,48 @@ void CurtailmentSharingPostProcessCmd::execute(const optRuntimeData& opt_runtime
             }
         }    
 
-        // the flow is fixer for every connection
+        // Also, affectedAreas that are exporting cannot have an ENS, i.e, their ENS is zero.
+        // int var;
+        // double oldValue;
+        double bilanPays;
+        long pInterco;
+        for (uint h = 0; h < nbHoursInWeek ; ++h){
+            for (uint32_t area = 0; area < problemeHebdo_->NombreDePays; ++area) {
+                if (affectedAreas.contains(area)){
+                    logs.info() << "[adq-patch] Affected Area loop II "<<area;
+
+                    // compute Balance of area:
+                    bilanPays = 0;
+                    // Export, négative
+                    pInterco = problemeHebdo_->IndexDebutIntercoOrigine[area];
+                    while(pInterco >=0){
+                        bilanPays += problemeHebdo_->ValeursDeNTC[h].ValeurDuFlux[pInterco];
+                        pInterco = problemeHebdo_->IndexSuivantIntercoOrigine[pInterco];
+                        logs.info() << "[adq-patch] Interco Exp "<<problemeHebdo_->ValeursDeNTC[h].ValeurDuFlux[pInterco];
+                    }
+                    // Import, positive
+                    pInterco = problemeHebdo_->IndexDebutIntercoExtremite[area];
+                    while(pInterco >=0){
+                        bilanPays += problemeHebdo_->ValeursDeNTC[h].ValeurDuFlux[pInterco];
+                        pInterco = problemeHebdo_->IndexSuivantIntercoExtremite[pInterco];
+                        logs.info() << "[adq-patch] Interco Imp. "<<problemeHebdo_->ValeursDeNTC[h].ValeurDuFlux[pInterco];
+                    }
+                    if (bilanPays != 0)
+                        logs.info() << "[adq-patch] NetPos "<<bilanPays;
+                    // if export bigger than import, i.e, bilanPays is negative. 
+                    // an area that is exporting should have ENS <=0.
+                    if (bilanPays < 0.){
+                        var = problemeHebdo_->CorrespondanceVarNativesVarOptim[h].NumeroDeVariableDefaillancePositive[area];
+                        oldValue = ENSAfter[area][h];
+                        // Xmax[var] = oldValue + 0.1;
+                        Xmin[var] = 0.;
+                    }
+                    
+                }
+            }
+        }
+
+        // the flow is fixed for every connection
         for (uint hourInWeek = 0; hourInWeek < nbHoursInWeek ; ++hourInWeek)// hourInWeek: hoursRequiringCurtailmentSharing)
         {
             for (uint32_t Interco = 0; Interco < problemeHebdo_->NombreDInterconnexions; ++Interco)
@@ -392,6 +433,11 @@ void CurtailmentSharingPostProcessCmd::execute(const optRuntimeData& opt_runtime
             // logs.info() << "[adq-patch] Hello NTCs";
         }
 
+
+
+
+
+        // REDISPATCH PART
         // // here we redispatch truly and smartly
         const int NombreDePasDeTempsPourUneOptimisation = problemeHebdo_
                                                             ->NombreDePasDeTempsPourUneOptimisation;
@@ -399,8 +445,8 @@ void CurtailmentSharingPostProcessCmd::execute(const optRuntimeData& opt_runtime
 
         int DernierPdtDeLIntervalle;
         for (uint pdtHebdo = 0, numeroDeLIntervalle = 0; pdtHebdo < problemeHebdo_->NombreDePasDeTemps;
-            pdtHebdo = DernierPdtDeLIntervalle, numeroDeLIntervalle++)
-        {
+            pdtHebdo = DernierPdtDeLIntervalle, numeroDeLIntervalle++){
+
             int PremierPdtDeLIntervalle = pdtHebdo;
             DernierPdtDeLIntervalle = pdtHebdo + NombreDePasDeTempsPourUneOptimisation;
             auto optPeriodStringGenerator = createOptPeriodAsString(
@@ -411,14 +457,25 @@ void CurtailmentSharingPostProcessCmd::execute(const optRuntimeData& opt_runtime
             bool b = OPT_AppelDuSimplexe(opt_runtime_data.weeklyOptimization.options_,
                                     problemeHebdo_,
                                     numeroDeLIntervalle,
-                                    1,
+                                    PREMIERE_OPTIMISATION,
                                     *optPeriodStringGenerator,
                                     opt_runtime_data.weeklyOptimization.writer_);
-        } // END REDISPATCH
-        
-    }
-    
-}
+
+            if (b && !problemeHebdo_->Expansion && !problemeHebdo_->OptimisationAvecVariablesEntieres)
+            {
+                // We need to adjust some stuff before running the 2nd optimisation
+                runThermalHeuristic(problemeHebdo_);
+                
+                bool b = OPT_AppelDuSimplexe(opt_runtime_data.weeklyOptimization.options_,
+                                    problemeHebdo_,
+                                    numeroDeLIntervalle,
+                                    DEUXIEME_OPTIMISATION,
+                                    *optPeriodStringGenerator,
+                                    opt_runtime_data.weeklyOptimization.writer_);    
+            } // END second sep
+        } // ENS REDISPATCH
+    } // END REDISPATCH IF SET Affected non empty
+} // END CSR
 
 double CurtailmentSharingPostProcessCmd::calculateDensNewAndTotalLmrViolation()
 {

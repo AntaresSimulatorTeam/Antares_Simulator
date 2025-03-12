@@ -27,6 +27,7 @@
 #include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/utils/filename.h"
+#include "antares/solver/optimisation/run-thermal-heuristic.h"
 
 using namespace Antares::Solver;
 using Antares::Solver::Optimization::OptimizationOptions;
@@ -188,17 +189,17 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
     return true;
 }
 
-void runThermalHeuristic(PROBLEME_HEBDO* problemeHebdo)
-{
-    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
-    {
-        OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(problemeHebdo);
-    }
-    else
-    {
-        OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(problemeHebdo);
-    }
-}
+// void runThermalHeuristic(PROBLEME_HEBDO* problemeHebdo)
+// {
+//     if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
+//     {
+//         OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(problemeHebdo);
+//     }
+//     else
+//     {
+//         OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(problemeHebdo);
+//     }
+// }
 
 void resizeProbleme(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                     unsigned nombreDeVariables,

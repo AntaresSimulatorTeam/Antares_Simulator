@@ -37,6 +37,8 @@ set(RTESOLVER_OPT
         opt_decompte_variables_et_contraintes_couts_demarrage.cpp
         opt_init_minmax_groupes_couts_demarrage.cpp
         opt_nombre_min_groupes_demarres_couts_demarrage.cpp
+        include/antares/solver/optimisation/run-thermal-heuristic.h
+        run-themal-heuristic.cpp
         include/antares/solver/optimisation/opt_export_structure.h
         opt_export_structure.cpp
         include/antares/solver/optimisation/weekly_optimization.h
