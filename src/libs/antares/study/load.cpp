@@ -21,6 +21,7 @@
 #include <fstream>
 
 #include <antares/benchmarking/DurationCollector.h>
+#include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include "antares/study/scenario-builder/sets.h"
 #include "antares/study/study.h"
 #include "antares/study/ui-runtimeinfos.h"
@@ -222,7 +223,29 @@ bool Study::internalLoadFromFolder(const fs::path& path, const StudyLoadOptions&
     ret = internalLoadSets() && ret;
 
     parameterFiller(options);
+
+    // Modeler components for hybrid studies
+    internalLoadModelerComponents();
+
     return ret;
+}
+
+bool Study::internalLoadModelerComponents()
+{
+    try
+    {
+        this->libraries_ = Solver::LoadFiles::loadLibraries(folder);
+        logs.info() << "Modeler Libraries loaded";
+        this->system_ = std::make_unique<Antares::Study::SystemModel::System>(
+          std::move(Solver::LoadFiles::loadSystem(folder, this->libraries_)));
+        logs.info() << "Modeler System loaded";
+        this->dataSeries_ = Solver::LoadFiles::loadDataSeries(folder);
+    }
+    catch (const std::exception& e)
+    {
+        logs.info() << "No modeler inputs were loaded: " << e.what();
+    }
+    return true;
 }
 
 bool Study::internalLoadCorrelationMatrices(const StudyLoadOptions& options)

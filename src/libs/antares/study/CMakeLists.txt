@@ -308,6 +308,7 @@ target_link_libraries(study
         Antares::benchmarking
         antares-solver-variable
         Antares::load-modeler-files
+        Antares::modeler-parameters
 )
 
 target_include_directories(study
