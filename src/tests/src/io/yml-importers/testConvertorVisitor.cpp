@@ -289,7 +289,7 @@ BOOST_AUTO_TEST_CASE(TimeIndexExpresion)
     BOOST_CHECK(cmp.dispatch(expr.node, timeIndexNode));
 }
 
-BOOST_AUTO_TEST_CASE(TimeShiftExpresion)
+BOOST_AUTO_TEST_CASE(TimeShiftExpression)
 {
     Registry<Nodes::Node> registry;
 
@@ -297,7 +297,28 @@ BOOST_AUTO_TEST_CASE(TimeShiftExpresion)
     const auto expressionWithNumericalTimeIndex = "(" + expression + ")" + "[t-89]";
     auto expr = createMediumExpression().run(expressionWithNumericalTimeIndex);
 
-    auto* timeShiftNode = registry.create<Nodes::TimeShiftNode>(div, -89);
+    auto* lit = registry.create<Nodes::LiteralNode>(89);
+    auto* neg = registry.create<Nodes::NegationNode>(lit);
+    auto* timeShiftNode = registry.create<Nodes::TimeShiftNode>(div, neg);
+
+    Visitors::CompareVisitor cmp;
+    BOOST_CHECK(cmp.dispatch(expr.node, timeShiftNode));
+}
+
+BOOST_AUTO_TEST_CASE(TimeShiftExpressionMul)
+{
+    Registry<Nodes::Node> registry;
+
+    const auto [expression, div] = expected_expression(registry);
+    const auto expressionWithNumericalTimeIndex = "(" + expression + ")" + "[t-89*param1]";
+    auto expr = createMediumExpression().run(expressionWithNumericalTimeIndex);
+
+    auto* lit = registry.create<Nodes::LiteralNode>(89);
+    auto* neg = registry.create<Nodes::NegationNode>(lit);
+
+    auto* param = registry.create<Nodes::ParameterNode>("param1");
+    auto* mult = registry.create<Nodes::MultiplicationNode>(neg, param);
+    auto* timeShiftNode = registry.create<Nodes::TimeShiftNode>(div, mult);
 
     Visitors::CompareVisitor cmp;
     BOOST_CHECK(cmp.dispatch(expr.node, timeShiftNode));

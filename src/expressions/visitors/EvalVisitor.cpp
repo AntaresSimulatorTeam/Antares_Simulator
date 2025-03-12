@@ -133,8 +133,10 @@ EvaluationResult EvalVisitor::visit(const Nodes::ComponentParameterNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::TimeShiftNode* node)
 {
-    const auto ret = dispatch(node->child());
-    return ret.shiftResult(node->value());
+    const auto ret = dispatch(node->left());
+    // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
+    const auto timeShift = static_cast<int>(dispatch(node->right()).valueAsDouble());
+    return ret.shiftResult(timeShift);
 }
 EvaluationResult EvalVisitor::visit(const Nodes::TimeIndexNode* node)
 {

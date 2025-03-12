@@ -175,8 +175,10 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Component
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const TimeShiftNode* node)
 {
-    const auto ret = dispatch(node->child());
-    return ret.shiftLinearExpressions(node->value());
+    const auto ret = dispatch(node->left());
+    // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
+    const auto timeShift = static_cast<int>(evalVisitor_.dispatch(node->right()).valueAsDouble());
+    return ret.shiftLinearExpressions(timeShift);
 }
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const TimeIndexNode* node)

@@ -88,7 +88,8 @@ std::string PrintVisitor::visit(const Nodes::VariableNode* node)
 
 std::string PrintVisitor::visit(const Nodes::LiteralNode* node)
 {
-    return std::to_string(node->value());
+    const auto value = std::to_string(node->value());
+    return node->value() >= 0 ? "+" + value : value;
 }
 
 std::string PrintVisitor::visit(const Nodes::PortFieldNode* node)
@@ -112,7 +113,8 @@ std::string PrintVisitor::visit(const Nodes::ComponentParameterNode* node)
 }
 std::string PrintVisitor::visit(const Nodes::TimeShiftNode* node)
 {
-    return dispatch(node->child()) + "[ t" + node->valueToSignedString() + " ]";
+    // add sign?
+    return dispatch(node->left()) + "[ t " + dispatch(node->right()) + " ]";
 }
 
 std::string PrintVisitor::visit(const Nodes::TimeIndexNode* node)

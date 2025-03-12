@@ -122,8 +122,8 @@ Nodes::Node* CloneVisitor::visit(const Nodes::ComponentParameterNode* component_
 
 Nodes::Node* CloneVisitor::visit(const Nodes::TimeShiftNode* timeShiftNode)
 {
-    return registry_.create<Nodes::TimeShiftNode>(dispatch(timeShiftNode->child()),
-                                                  timeShiftNode->value());
+    return registry_.create<Nodes::TimeShiftNode>(dispatch(timeShiftNode->left()),
+                                                  timeShiftNode->right());
 }
 
 Nodes::Node* CloneVisitor::visit(const Nodes::TimeIndexNode* timeIndexNode)

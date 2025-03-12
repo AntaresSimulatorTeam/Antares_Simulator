@@ -150,13 +150,9 @@ bool CompareVisitor::visit(const Nodes::ComponentParameterNode* node, const Node
 {
     return compareEqualOperator(node, other);
 }
-bool CompareVisitor::visit(const Nodes::TimeShiftNode* node, const Nodes::Node* other)
+bool CompareVisitor::visit(const Nodes::TimeShiftNode* timeShiftNode, const Nodes::Node* other)
 {
-    if (auto* other_node = dynamic_cast<const Nodes::TimeShiftNode*>(other))
-    {
-        return dispatch(node->child(), other_node->child()) && node->value() == other_node->value();
-    }
-    return false;
+    return compareBinaryNode(*this, timeShiftNode, other);
 }
 
 bool CompareVisitor::visit(const Nodes::TimeIndexNode* timeIndexNode, const Nodes::Node* other)

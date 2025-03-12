@@ -74,10 +74,10 @@ public:
     Node* makeBiggerExpression()
     {
         auto gt = makeExpression();
-        Node* parameterNode = registry_.create<ParameterNode>("Planck's constant");
-        Node* timeShiftNode = registry_.create<TimeShiftNode>(parameterNode, -10);
-        Node* literalNode = registry_.create<LiteralNode>(6.62607015);
         Node* literalNode2 = registry_.create<LiteralNode>(-34);
+        Node* parameterNode = registry_.create<ParameterNode>("Planck's constant");
+        Node* timeShiftNode = registry_.create<TimeShiftNode>(parameterNode, literalNode2);
+        Node* literalNode = registry_.create<LiteralNode>(6.62607015);
         Node* parm2 = registry_.create<ParameterNode>("par");
         Node* timeIndexNode = registry_.create<TimeIndexNode>(
           literalNode,

@@ -183,7 +183,7 @@ void AstDOTStyleVisitor::visit(const Nodes::ComponentParameterNode* node, std::o
 
 void AstDOTStyleVisitor::visit(const Nodes::TimeShiftNode* node, std::ostream& os)
 {
-    processUnaryOperation(node, "t" + node->valueToSignedString(), NodeStyle::TimeShiftStyle, os);
+    processBinaryOperation(node, "[t]", NodeStyle::TimeShiftStyle, os);
 }
 
 void AstDOTStyleVisitor::visit(const Nodes::TimeIndexNode* node, std::ostream& os)

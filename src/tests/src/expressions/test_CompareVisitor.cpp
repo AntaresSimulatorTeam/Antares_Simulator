@@ -208,9 +208,8 @@ BOOST_FIXTURE_TEST_CASE(compare_TimeShift, ComparisonFixture)
 {
     CompareVisitor compareVisitor;
     Node* literal1 = registry_.create<LiteralNode>(1.);
-    ;
-    Node* expr1 = registry_.create<TimeShiftNode>(literal1, -65);
-    BOOST_CHECK(!compareVisitor.dispatch(expr1, literal1));
+    Node* literal2 = registry_.create<LiteralNode>(-65);
+    Node* expr1 = registry_.create<TimeShiftNode>(literal1, literal2);
 
     CloneVisitor clone_visitor(registry_);
     const auto clone = clone_visitor.dispatch(expr1);

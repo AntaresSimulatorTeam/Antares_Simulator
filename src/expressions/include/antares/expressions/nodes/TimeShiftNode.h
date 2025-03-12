@@ -20,23 +20,19 @@
 */
 #pragma once
 
-#include "antares/expressions/nodes/UnaryNode.h"
+#include "antares/expressions/nodes/BinaryNode.h"
 
 namespace Antares::Expressions::Nodes
 {
 
-class TimeShiftNode: public UnaryNode
+class TimeShiftNode: public BinaryNode
 {
 public:
-    explicit TimeShiftNode(Node* child, int value);
+    using BinaryNode::BinaryNode;
 
-    [[nodiscard]] int value() const;
-
-    //  function to convert int to "+value" or "-value"
-    std::string valueToSignedString() const;
-    std::string name() const override;
-
-private:
-    int value_ = 0;
+    std::string name() const override
+    {
+        return "TimeShiftNode";
+    }
 };
 } // namespace Antares::Expressions::Nodes

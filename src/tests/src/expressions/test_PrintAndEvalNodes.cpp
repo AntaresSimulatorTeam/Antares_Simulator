@@ -250,7 +250,7 @@ BOOST_AUTO_TEST_CASE(print_single_literal)
     PrintVisitor printVisitor;
     const auto printed = printVisitor.dispatch(&literal);
 
-    BOOST_CHECK_EQUAL(printed, "21.000000"); // TODO Number of decimals implementation dependent ?
+    BOOST_CHECK_EQUAL(printed, "+21.000000"); // TODO Number of decimals implementation dependent ?
 }
 
 BOOST_FIXTURE_TEST_CASE(eval_single_literal, MyDummyFixture)
@@ -282,7 +282,7 @@ BOOST_FIXTURE_TEST_CASE(print_add_two_literals, MyDummyFixture)
     const auto printed = printVisitor.dispatch(root);
 
     BOOST_CHECK_EQUAL(printed,
-                      "(21.000000+2.000000)"); // TODO Number of decimals implementation dependent ?
+      "(+21.000000+2.000000)"); // TODO Number of decimals implementation dependent ?
 }
 
 BOOST_FIXTURE_TEST_CASE(print_add_one_literal, MyDummyFixture)
@@ -466,7 +466,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_param, MyDummyFixture)
 BOOST_FIXTURE_TEST_CASE(evaluate_shifted_literal, MyDummyFixture)
 {
     LiteralNode literal_node(13.0);
-    TimeShiftNode time_shift_node(&literal_node, 2);
+    TimeShiftNode time_shift_node(&literal_node, &literal_node);
     BOOST_CHECK_EQUAL(evalVisitor.dispatch(&time_shift_node).valueAsDouble(), 13.0);
     BOOST_CHECK_THROW(evalVisitor.dispatch(&time_shift_node).valuesAsVector(),
                       EvaluationResult::EvalResultTypeError);
@@ -492,7 +492,9 @@ EvaluationResult CreateAndEvalutateTimeNode(const right& p)
 
 BOOST_FIXTURE_TEST_CASE(evaluate_shifted_param, MyDummyFixture)
 {
-    const auto eval = CreateAndEvalutateTimeNode<TimeShiftNode, int>(-1).valuesAsVector();
+    LiteralNode literal_node(-1.0);
+    const auto eval = CreateAndEvalutateTimeNode<TimeShiftNode, Node*>(&literal_node)
+                        .valuesAsVector();
     // from MockLinearProblemData  param TSdata is {0, 1, 2}
     // here we applied TimeShift t-1 {2, 0, 1}
     BOOST_CHECK_EQUAL(eval[0], 2); //
@@ -583,7 +585,7 @@ void evaluate_time_dependent_operation()
 }
 
 template<typename BinaryNode>
-void evaluate_time_dependent_operation_on_TimeShiftNode(int timeShift)
+void evaluate_time_dependent_operation_on_TimeShiftNode(Node* timeShift)
 {
     ParameterNode param("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
     LiteralNode literal(2.0);
@@ -608,7 +610,10 @@ void evaluate_time_dependent_operation_on_TimeShiftNode(int timeShift)
                                                                             literal.value()),
                                                    evalExpected<BinaryNode>(hours.at(1),
                                                                             literal.value())};
-    const auto after_timeShift = shiftVector(result_before_timeShift, timeShift);
+
+    const auto evaluatedtimeShift = static_cast<int>(
+      evalVisitor.dispatch(timeShift).valueAsDouble());
+    const auto after_timeShift = shiftVector(result_before_timeShift, evaluatedtimeShift);
     BOOST_CHECK_EQUAL(eval[0], after_timeShift.at(0));
     BOOST_CHECK_EQUAL(eval[1], after_timeShift.at(1));
 }
@@ -657,8 +662,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(evaluate_time_dependent_operations_time_shift_node
                               T,
                               BinaryOperators)
 {
-    evaluate_time_dependent_operation_on_TimeShiftNode<T>(-2);
+    LiteralNode literal_node(-2);
+    evaluate_time_dependent_operation_on_TimeShiftNode<T>(&literal_node);
 }
+
 BOOST_AUTO_TEST_CASE_TEMPLATE(evaluate_time_dependent_operations_time_index_node,
                               T,
                               BinaryOperators)
@@ -845,13 +852,19 @@ BOOST_FIXTURE_TEST_CASE(PrintTimeIndexNodeArithmeticNodes, MyDummyFixture)
 BOOST_FIXTURE_TEST_CASE(PrintTimeShiftNode, MyDummyFixture)
 {
     Node* literal1 = create<LiteralNode>(1.);
+    Node* literal2 = create<LiteralNode>(23);
     PrintVisitor printVisitor;
     // --
-    Node* positive_shift = create<TimeShiftNode>(literal1, 23);
-    BOOST_CHECK(printVisitor.dispatch(positive_shift) == "1.000000[ t+23 ]");
+    Node* positive_shift = create<TimeShiftNode>(literal1, literal2);
+    auto n = printVisitor.dispatch(positive_shift);
+    BOOST_CHECK(printVisitor.dispatch(positive_shift) == "+1.000000[ t +23.000000 ]");
     // --
-    Node* negative_shift = create<TimeShiftNode>(literal1, -31);
-    BOOST_CHECK(printVisitor.dispatch(negative_shift) == "1.000000[ t-31 ]");
+
+    Node* literal3 = create<LiteralNode>(-31);
+    Node* negative_shift = create<TimeShiftNode>(literal1, literal3);
+
+    auto nn = printVisitor.dispatch(negative_shift);
+    BOOST_CHECK(printVisitor.dispatch(negative_shift) == "+1.000000[ t -31.000000 ]");
 }
 
 BOOST_AUTO_TEST_CASE(testShiftEmptyVector)

@@ -8,7 +8,6 @@ set(SRC_Expressions
         nodes/BinaryNode.cpp
         nodes/UnaryNode.cpp
         nodes/SumNode.cpp
-        nodes/TimeShiftNode.cpp
 
 
         visitors/CloneVisitor.cpp

@@ -72,7 +72,7 @@ private:
     Expressions::Registry<Node>& registry_;
     const YmlModel::Model& model_;
 
-    std::any buildShiftNode(Node* shifted_expr, ExprParser::ShiftContext* context) const;
+    std::any buildShiftNode(Node* shifted_expr, ExprParser::ShiftContext* context);
 };
 
 Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
@@ -257,14 +257,11 @@ std::any ConvertorVisitor::visitTimeIndex([[maybe_unused]] ExprParser::TimeIndex
     return static_cast<Node*>(registry_.create<TimeIndexNode>(expr, index));
 }
 
-std::any ConvertorVisitor::buildShiftNode(Node* shifted_expr,
-                                          ExprParser::ShiftContext* context) const
+std::any ConvertorVisitor::buildShiftNode(Node* shifted_expr, ExprParser::ShiftContext* context)
 {
-    auto time_shift = std::stoi(context->shift_expr()->getText());
-    if (time_shift == 0)
-    {
-        return shifted_expr;
-    }
+    // auto time_shift = std::stoi(context->shift_expr()->getText());
+    auto time_shift = std::any_cast<Node*>(context->shift_expr()->accept(this));
+
     return static_cast<Node*>(registry_.create<TimeShiftNode>(shifted_expr, time_shift));
 }
 
@@ -322,7 +319,7 @@ std::any ConvertorVisitor::visitUnsignedAtom(ExprParser::UnsignedAtomContext* co
 // TODO implement this
 std::any ConvertorVisitor::visitRightAtom([[maybe_unused]] ExprParser::RightAtomContext* context)
 {
-    throw NotImplemented("Node right atom not implemented yet");
+    return context->atom()->accept(this);
 }
 
 std::any ConvertorVisitor::visitShift([[maybe_unused]] ExprParser::ShiftContext* context)

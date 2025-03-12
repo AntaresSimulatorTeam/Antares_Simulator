@@ -113,7 +113,7 @@ TimeIndex TimeIndexVisitor::visit(const Nodes::ComponentParameterNode* component
 
 TimeIndex TimeIndexVisitor::visit(const Nodes::TimeShiftNode* timeShiftNode)
 {
-    return dispatch(timeShiftNode->child());
+    return dispatch(timeShiftNode->left());
 }
 
 TimeIndex TimeIndexVisitor::visit(const Nodes::TimeIndexNode* timeIndexNode)
