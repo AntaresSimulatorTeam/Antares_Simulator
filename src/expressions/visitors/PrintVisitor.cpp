@@ -111,6 +111,7 @@ std::string PrintVisitor::visit(const Nodes::ComponentParameterNode* node)
 {
     return node->getComponentId() + "." + node->getComponentName();
 }
+
 std::string PrintVisitor::trimAndFormat(const std::string& in)
 {
     auto s = in;

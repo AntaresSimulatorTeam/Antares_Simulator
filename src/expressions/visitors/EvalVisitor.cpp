@@ -138,6 +138,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeShiftNode* node)
     const auto timeShift = static_cast<int>(dispatch(node->right()).valueAsDouble());
     return ret.shiftResult(timeShift);
 }
+
 EvaluationResult EvalVisitor::visit(const Nodes::TimeIndexNode* node)
 {
     const auto ret = dispatch(node->left());
@@ -187,6 +188,7 @@ EvaluationResult EvaluationResult::shiftResult(int timeShift) const
                  { return shift(l, timeShift); },
                  value_));
 }
+
 EvaluationResult EvaluationResult::operator[](int timeIndex) const
 {
     if (std::holds_alternative<double>(value_))

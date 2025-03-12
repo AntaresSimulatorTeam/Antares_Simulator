@@ -215,9 +215,9 @@ BOOST_AUTO_TEST_CASE(ConstructorWithMap)
 {
     auto component = "compo";
 
-    LinearExpressionMap expressions = {
-      {0, LinearExpression(1.0, {{FullKey(component, "a"), 1.5}})},
-      {1, LinearExpression(2.0, {{FullKey(component, "b"), 3.0}})}};
+    LinearExpressionMap expressions = {{0, LinearExpression(1.0, {{FullKey(component, "a"), 1.5}})},
+                                       {1,
+                                        LinearExpression(2.0, {{FullKey(component, "b"), 3.0}})}};
 
     TimeDependentLinearExpression expr(expressions);
     BOOST_TEST(expr.getSize() == 2);
@@ -230,12 +230,10 @@ BOOST_AUTO_TEST_CASE(AdditionOperator)
 {
     auto component = "compo";
 
-    LinearExpressionMap exp1 = {
-      {0, LinearExpression(3.0, {{FullKey(component, "x"), 1.0}})},
-      {1, LinearExpression(2.0, {{FullKey(component, "y"), 2.0}})}};
-    LinearExpressionMap exp2 = {
-      {0, LinearExpression(2.0, {{FullKey(component, "x"), 2.0}})},
-      {1, LinearExpression(1.0, {{FullKey(component, "y"), 1.0}})}};
+    LinearExpressionMap exp1 = {{0, LinearExpression(3.0, {{FullKey(component, "x"), 1.0}})},
+                                {1, LinearExpression(2.0, {{FullKey(component, "y"), 2.0}})}};
+    LinearExpressionMap exp2 = {{0, LinearExpression(2.0, {{FullKey(component, "x"), 2.0}})},
+                                {1, LinearExpression(1.0, {{FullKey(component, "y"), 1.0}})}};
 
     TimeDependentLinearExpression expr1(exp1), expr2(exp2);
     TimeDependentLinearExpression result = expr1 + expr2;
@@ -250,12 +248,10 @@ BOOST_AUTO_TEST_CASE(SubtractionOperator)
 {
     auto component = "compo";
 
-    LinearExpressionMap exp1 = {
-      {0, LinearExpression(5.0, {{FullKey(component, "x"), 4.0}})},
-      {1, LinearExpression(7.0, {{FullKey(component, "y"), 3.0}})}};
-    LinearExpressionMap exp2 = {
-      {0, LinearExpression(3.0, {{FullKey(component, "x"), 2.0}})},
-      {1, LinearExpression(2.0, {{FullKey(component, "y"), 1.0}})}};
+    LinearExpressionMap exp1 = {{0, LinearExpression(5.0, {{FullKey(component, "x"), 4.0}})},
+                                {1, LinearExpression(7.0, {{FullKey(component, "y"), 3.0}})}};
+    LinearExpressionMap exp2 = {{0, LinearExpression(3.0, {{FullKey(component, "x"), 2.0}})},
+                                {1, LinearExpression(2.0, {{FullKey(component, "y"), 1.0}})}};
 
     TimeDependentLinearExpression expr1(exp1), expr2(exp2);
     TimeDependentLinearExpression result = expr1 - expr2;
@@ -270,8 +266,7 @@ BOOST_AUTO_TEST_CASE(MultiplicationOperator)
 {
     auto component = "compo";
 
-    LinearExpressionMap exp1 = {
-      {0, LinearExpression(2.0, {{FullKey(component, "x"), 3.0}})}};
+    LinearExpressionMap exp1 = {{0, LinearExpression(2.0, {{FullKey(component, "x"), 3.0}})}};
     LinearExpressionMap exp2 = {
       {0, LinearExpression(4.0, {})} // Only scalar allowed
     };
@@ -289,8 +284,7 @@ BOOST_AUTO_TEST_CASE(DivisionOperator)
 {
     auto component = "compo";
 
-    LinearExpressionMap exp1 = {
-      {0, LinearExpression(6.0, {{FullKey(component, "x"), 3.0}})}};
+    LinearExpressionMap exp1 = {{0, LinearExpression(6.0, {{FullKey(component, "x"), 3.0}})}};
     LinearExpressionMap exp2 = {
       {0, LinearExpression(2.0, {})} // Only scalar allowed
     };
@@ -307,9 +301,8 @@ BOOST_AUTO_TEST_CASE(NegationOperator)
 {
     auto component = "compo";
 
-    LinearExpressionMap exp = {
-      {0, LinearExpression(3.0, {{FullKey(component, "x"), 2.0}})},
-      {1, LinearExpression(4.0, {{FullKey(component, "y"), 1.0}})}};
+    LinearExpressionMap exp = {{0, LinearExpression(3.0, {{FullKey(component, "x"), 2.0}})},
+                               {1, LinearExpression(4.0, {{FullKey(component, "y"), 1.0}})}};
 
     TimeDependentLinearExpression expr(exp);
     TimeDependentLinearExpression result = -expr;
@@ -326,9 +319,8 @@ BOOST_AUTO_TEST_CASE(GetLinearExpressionsMethod)
 {
     auto component = "compo";
 
-    LinearExpressionMap exp = {
-      {0, LinearExpression(5.0, {{FullKey(component, "x"), 2.0}})},
-      {1, LinearExpression(3.0, {{FullKey(component, "y"), 4.0}})}};
+    LinearExpressionMap exp = {{0, LinearExpression(5.0, {{FullKey(component, "x"), 2.0}})},
+                               {1, LinearExpression(3.0, {{FullKey(component, "y"), 4.0}})}};
 
     TimeDependentLinearExpression expr(exp);
     auto expressions = expr.GetLinearExpressions();
@@ -343,10 +335,9 @@ BOOST_AUTO_TEST_CASE(GetSizeMethod)
 {
     auto component = "compo";
 
-    LinearExpressionMap exp = {
-      {0, LinearExpression(1.0, {{FullKey(component, "x"), 1.0}})},
-      {1, LinearExpression(2.0, {{FullKey(component, "y"), 2.0}})},
-      {2, LinearExpression(3.0, {{FullKey(component, "z"), 3.0}})}};
+    LinearExpressionMap exp = {{0, LinearExpression(1.0, {{FullKey(component, "x"), 1.0}})},
+                               {1, LinearExpression(2.0, {{FullKey(component, "y"), 2.0}})},
+                               {2, LinearExpression(3.0, {{FullKey(component, "z"), 3.0}})}};
 
     TimeDependentLinearExpression expr(exp);
     BOOST_TEST(expr.getSize() == 3);

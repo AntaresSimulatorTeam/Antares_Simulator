@@ -136,6 +136,7 @@ static constexpr Expressions::Visitors::TimeIndex convertToTimeIndex(bool timede
     return static_cast<Expressions::Visitors::TimeIndex>((convertBool(scenariodependent) << 1)
                                                          | convertBool(timedependent));
 }
+
 Node* ConvertorVisitor::convertIdentifier(const std::string& identifier) const
 {
     for (const auto& param: model_.parameters)

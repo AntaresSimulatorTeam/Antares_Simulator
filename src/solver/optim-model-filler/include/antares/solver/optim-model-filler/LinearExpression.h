@@ -41,24 +41,31 @@ struct IdentityFunction
 using FullKeyMap = std::unordered_map<FullKey, double, FullKeyHash>;
 
 /**
- * @brief Element-wise sum of two maps, with an optional transformation applied to the values of the right-hand-side map.
+ * @brief Element-wise sum of two maps, with an optional transformation applied to the values of the
+ * right-hand-side map.
  *
  * This function performs an element-wise sum of two maps. For each key present in either map:
- * - If the key exists in both maps, the value in the result map is computed as `left_value + op(right_value)`.
- * - If the key exists only in the right map, the value in the result map is computed as `op(right_value)`.
- * - If the key exists only in the left map, the value in the result map is copied from the left map.
+ * - If the key exists in both maps, the value in the result map is computed as `left_value +
+ * op(right_value)`.
+ * - If the key exists only in the right map, the value in the result map is computed as
+ * `op(right_value)`.
+ * - If the key exists only in the left map, the value in the result map is copied from the left
+ * map.
  *
- * The function is generic and works with any map-like container that supports the following operations:
+ * The function is generic and works with any map-like container that supports the following
+ * operations:
  * - `contains(key)`: Checks if a key exists in the map.
  * - `operator[](key)`: Accesses or inserts a value for a key.
  * - `+=`: Adds the value to an existing value in the map (must be supported by the mapped type).
  *
  * @tparam MapType The type of the map (e.g., `std::map`, `std::unordered_map`).
- * @tparam UnaryOp The type of the transformation function applied to the values of the right-hand-side map. Defaults to `IdentityFunction`.
+ * @tparam UnaryOp The type of the transformation function applied to the values of the
+ * right-hand-side map. Defaults to `IdentityFunction`.
  *
  * @param left The left-hand-side map.
  * @param right The right-hand-side map.
- * @param op A unary operation to transform the values of the right-hand-side map before adding them. Defaults to the identity function.
+ * @param op A unary operation to transform the values of the right-hand-side map before adding
+ * them. Defaults to the identity function.
  * @return A new map containing the element-wise sum of the two input maps.
  *
  * @example

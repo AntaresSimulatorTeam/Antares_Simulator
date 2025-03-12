@@ -93,7 +93,7 @@ BOOST_FIXTURE_TEST_CASE(nodes_name, Registry<Node>)
       {create<ParameterNode>(literalNode->name()), "ParameterNode"},
       {create<VariableNode>(literalNode->name()), "VariableNode"},
       {create<PortFieldNode>(literalNode->name(), literalNode->name()), "PortFieldNode"},
-{create<PortFieldSumNode>(literalNode->name(), literalNode->name()), "PortFieldSumNode"},
+      {create<PortFieldSumNode>(literalNode->name(), literalNode->name()), "PortFieldSumNode"},
       {create<TimeShiftNode>(literalNode, literalNode), "TimeShiftNode"},
       {create<TimeIndexNode>(literalNode, literalNode), "TimeIndexNode"}};
 
@@ -102,11 +102,5 @@ BOOST_FIXTURE_TEST_CASE(nodes_name, Registry<Node>)
         BOOST_CHECK_EQUAL(node->name(), name);
     }
 }
-
-
-
-
-
-
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -138,6 +138,7 @@ BOOST_AUTO_TEST_CASE(EvaluationResult_OperatorNegationOnSingleValue)
     BOOST_CHECK_THROW(res2.valuesAsVector(), EvaluationResult::EvalResultTypeError);
     BOOST_CHECK_EQUAL(std::get<double>(res2.value()), -5.0);
 }
+
 BOOST_AUTO_TEST_CASE(EvaluationResult_OperatorNegationOnVector)
 {
     EvaluationResult res1({5.0, 986.});

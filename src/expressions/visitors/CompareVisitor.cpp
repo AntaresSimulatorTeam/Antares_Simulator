@@ -150,6 +150,7 @@ bool CompareVisitor::visit(const Nodes::ComponentParameterNode* node, const Node
 {
     return compareEqualOperator(node, other);
 }
+
 bool CompareVisitor::visit(const Nodes::TimeShiftNode* timeShiftNode, const Nodes::Node* other)
 {
     return compareBinaryNode(*this, timeShiftNode, other);

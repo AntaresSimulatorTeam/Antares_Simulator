@@ -214,17 +214,19 @@ BOOST_AUTO_TEST_CASE(portfield)
     expression = "port2.field1";
     BOOST_CHECK_THROW(converter.run(expression), std::runtime_error);
 }
+
 ExpressionToNodeConvertorEmptyModel createMediumExpression()
 {
-    YmlModel::Model model{.id = "model0",
-                          .description = "description",
-                          .parameters = {{"param1", true, false}, {"param2", false, false}},
-                          .variables = {{"varP", "7", "param1", YmlModel::ValueType::CONTINUOUS, false, false}},
-                          .ports = {},
-                          .port_field_definitions = {},
-                          .constraints = {},
-                          .binding_constraints = {},
-                          .objective = "objectives"};
+    YmlModel::Model model{
+      .id = "model0",
+      .description = "description",
+      .parameters = {{"param1", true, false}, {"param2", false, false}},
+      .variables = {{"varP", "7", "param1", YmlModel::ValueType::CONTINUOUS, false, false}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .binding_constraints = {},
+      .objective = "objectives"};
 
     return {std::move(model)};
 }
