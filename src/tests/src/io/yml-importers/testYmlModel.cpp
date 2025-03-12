@@ -644,3 +644,13 @@ BOOST_AUTO_TEST_CASE(model_attributs_can_be_ommited)
     BOOST_CHECK(libraryObj.models[0].constraints.empty());
     BOOST_CHECK_EQUAL(libraryObj.models[0].objective, "");
 }
+
+BOOST_AUTO_TEST_CASE(test_variable_to_string)
+{
+    namespace YmlMod = Antares::IO::Inputs::YmlModel;
+
+    BOOST_CHECK_EQUAL(YmlMod::toString(YmlMod::ValueType::CONTINUOUS), "CONTINUOUS");
+    BOOST_CHECK_EQUAL(YmlMod::toString(YmlMod::ValueType::INTEGER), "INTEGER");
+    BOOST_CHECK_EQUAL(YmlMod::toString(YmlMod::ValueType::BOOL), "BOOL");
+    BOOST_CHECK_EQUAL(YmlMod::toString(static_cast<YmlMod::ValueType>(5)), "UNKNOWN");
+}

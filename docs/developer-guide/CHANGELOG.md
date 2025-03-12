@@ -8,8 +8,10 @@ toc_depth: 2
 
 ### 9.2.0
 #### New features
-* Short term storage withdrawal efficiency [ANT-1862] (#2223)
-* Short term storage costs [ANT-1854] (#2302)
+* Short term storage: withdrawal efficiency [ANT-1862] (#2223)
+* Short term storage: penalty on level, injection, withdrawal [ANT-1854] (#2302)
+* Short term storage: additional constraints on injection, withdrawal, netting [ANT-1855] (#2550, #2546)
+* Short term storage: penalty for storage control, injection and withdrawal flow gradient [ANT-2300] (#2491)
 * Add ts-generation for links [ANT-1084] (#1986)
 * Make it possible to specify the final hydro reservoir level [ANT-1084] (#1521)
 * Major changes on the hydro behavior. Use overflow from the weekly optimization problem, don't recompute levels as a post-processing. These changes improve the handling of min-gen constraints for hydro reservoirs. [ANT-1825]
@@ -27,6 +29,17 @@ toc_depth: 2
 * Infeasibility analyzer [ANT-1825] (#2232) (#2227)
 * Collect hydro validation errors (#2204)
 * Perform hydro checks prior to the simulation [ANT-1720] (#2132)
+* New output variable : partial min gen for thermal clusters [ANT-2425] (#2608)
+* Improve logging & loading of STS elements introduced in v9.2.0 [ANT-2730] (#2648)
+* Accurate remix hydro [ANT-1825] (#2599)
+* Increase precision for LOLD[CSR] and MRG PRICE[CSR] [ANT-2443] (#2618)
+* Add variable MRG PRICE CSR [ANT-2562] (#2559)
+* Add optional additionnal constraints to short-term storage objects [ANT-1855] (#2546)
+* Adding constraints on injection-witdrawal cumulation with constant RHS [ANT-1885] (#2535)
+* Remove direct use of Sirius solver (ANT-1152) (#2450)
+* Allow the passing of optimization options through the API (#2502)
+* Place CSR after hydro remix [ANT-2070] (#2438)
+* Remove computation for number of non-zero terms in the constraint matrix [ANT-2258] (#2496)
 
 #### Bugfixes
 * Adequacy Patch regression [ANT-1845] (#2235)
@@ -38,20 +51,52 @@ toc_depth: 2
 * Fix reset order (#2304)
 * Restore correct behavior when options -h/--list-solvers are provided (#2138)
 * Fix missing synthesis results for links (#2115)
-
+* Check scenario year for Binding constraints [ANT-2890] (#2674)
+* [GUI] Fix binding constraint TS & weights loading [ANT-2746] [ANT-2754] (#2636)
+* Fix the upgrade from v8.8 to 9.2 of hydro power matrices [ANT-2742] (#2625)
+* Fix segfault on BP studies (#2598)
+* Fix milp bug (#2489)
+* GUI bug: wrong indexes for thermal clusters in scenario builder [ANT-2580] (#2576)
+* Output results : fix annual aggregation (#2580)
+* Fix segfault caused by invalid index [ANT-2582] (#2543)
+* Rebase the 8.8.x branch on top of develop to take multiple fixes into account (#2512)
+* Default solver in GUI (#2524)
+* Fix launch studies with empty solver (#2523)
+* Fix cost for ST storage (#2522)
+* Fix segfault when there are more districts than areas [ANT-2452] (#2516)
+* Fix variable bounds for 1st week in the year (#2517)
+* Fix timestamp = 0 in file info.antares-output (ANT-2494) (#2508)
+* Fix build after the removal of bool OptimizationOptions::ortoolsUsed (#2505)
+ 
 #### Modeler
 * 1.1: Modeler API [ANT-1876] (#2286) (#2391)
 * 1.1c: Scenarize problem filler (#2445)
 * 2.1: Lib for modeling objects (#2383)
+* 2.2: System model [ANT-2208] (#2500)
 * 2.4: Expression visitors : first implementation (#2290)
 * 2.4a: Replace AddNode with SumNode (#2396)
 * 2.4c: portfield substitution (#2406)
 * 2.4c: PortFieldSum and substitution [ANT-2005] (#2415)
 * 2.4e: visualize ast with graphviz [ANT-2036] (#2399) (#2426) (#2429)
-* 4.5 Parse yaml [ANT-2206] (#2433) (#2431) (#2447)
+* 2.5a: Read models and system yaml files [ANT-2306] (#2540) (#2539)
+* 2.5b: build linear problem from components (#2558)
+* 2.7: Introducing time dependency behaviour (#2572)
+* 4.1: Data (#2577)
+* 4.4: expression parsing [ANT-2313] (#2471)
+* 4.5 Parse yaml [ANT-2206] (#2433) (#2431) (#Output results : fix annual aggregation (#2580)2447)
 * 4.5 Full exemple of parsing (#2448)
+* 4.6: system import [ANT-2207] (#2530)
 * Add SumNode "wide" test (#2403)
 * Add iterators on ASTs, allowing for loops (#2387)
+* Use variable dict (#2670)(#2655)
+* Support time dependency [ANT-2749] (#2622)
+* Import modeler data-series [ANT-2033] (#2621)
+* Simplify ComponentFiller::addVariables (#2615)
+* add of unit tests for time dependant expression [ANT-2608] (#2597)
+* Refactor modeler code (#2616)
+* Move libObjectModel code (#2498)
+* Documentation (#2624)(#2473)
+* Tests (#2626)(#2617)
 
 #### CI
 * SonarCloud job, improvements, bugfixes (#2315) (#2281) (#2246)
@@ -66,6 +111,10 @@ toc_depth: 2
 * Add short test to coverage analysis (#2280) (#2267)
 * Check formatting as part of the CI (workflow only) (#2198)
 * Always run clang-format on PR (#2230)
+* Fix OL8 workflow (#2632)
+* Fix migration guide (#2633)
+* Parallel tests run twice on ubuntu CI (#2587)
+* centos build (#2509) (#2510)
 
 #### Build
 * vcpkg (linux, sirius) (#2078) (#2090) (#2145)
@@ -73,6 +122,13 @@ toc_depth: 2
 * Use OR-Tools v9.11-rte1.1 (#2437)
 * Fix or-tools integration (#2402)
 * Better dependencies with cmake, antares matrix (#2369)
+* Fix build for clang (#2654)
+* Place all unit test executables in the same build subdirectory (#2658)
+* Improve vcpkg configuration (#2630)
+* Remove recently introduced build warnings (#2602)(#2569)
+* Update vcpkg@2023.07.21 -> vcpkg@2024.12.16, Boost@1.81.0 -> Boost@1.86.0 (#2553)
+* Fix yaml-cpp target to avoid cmake warnings (#2564)
+* Use sirius-solver@antares-integration-v1.6 (#2533)
 
 #### Doc
 * CHANGELOG improvements (#2287) (#2229) (#2125)
@@ -82,6 +138,9 @@ toc_depth: 2
 * Fix links in README (#2310)
 * Document clang-format (#2243)
 * Add help button to website (#2368)
+* Remove doc related to the GUI (#2238)
+* Update doc for command invokation : --ortools-solver -> --solver (#2507)
+* Migration doc : move hydro level from v8.7.0 to v9.2.0 (#2482)
 
 #### Code quality
 * Using filesystem path instead of Yuni [ANT-1999] (#2435) (#2454) (#2123) (#2066)
@@ -107,6 +166,20 @@ toc_depth: 2
 * Capture explicit var for lambdas (#2170)
 * Fix circular dependencies on CMake targets (#2140)
 * Fix Variable::Join (#2116)
+* Throw exception instead of pointer to exception (#2600)
+* Clean up container.h / container.hxx (#2601)
+* Remove a few new/delete in src/solver/variable (#2595)
+* Remove manual allocations for set of areas, simplify code (#2588)
+* Rename encoders.hxx -> decoders.hxx (#2591)
+* Remove new/delete for AreaUI (#2589)
+* Remove new/delete from analyzer (#2590)
+* Fix NonMovable class (#2555)
+* High-level API: provide output path instead of returning it [ANT-2561] (#2548)
+* Add a warning if sts group property is empty [ANT-2026] (#2534)
+* Add interface for Thermal costs, fix wrong values in GUI (#2526)
+* Fix function ThermalCluster::getMarketBidCost [ANT-2527] (#2525)
+* Rename thread number -> numSpace for consistency (#2515)
+* Use thread-safe version of localtime (#2503)
 
 #### Technical cleaning
 * Remove last global variable (#2410)
@@ -121,11 +194,29 @@ toc_depth: 2
 * Remove unused headers in src/solver (yuni, cstdint, sim.h) (#2371)
 * Remove unused CMake option BUILD MINIZIP (#2210)
 * Remove useless forward declaration (#2268)
+* Remove Antares_Simulator_Tests submodule (#2606)
+* Remove unused enum class (#2584)
+
+#### Tests
+* Unfeasible tests (#2611)
+* Add unit tests on class Antares::Solver::Variable::IntermediateValues (#2593)
+* Add tests for TSData getters & setters (#2677)
+* Improve unit tests for cost computation (non-constant modulation) [ANT-2527] (#2681)
+* Unit test for the RHS of cumulative constraints (#2603)
+* cleanup cucumber test outputs (#2663)
+* Checkout test nr to main (#2586)
+* Add unit test -- short-term storage cumulation constraints (#2563)
+* Add and use add_boost_test CMake helper function (#2545) (#2552)
+* Unit test for reverse calculation (#2483)
 
 #### For developers
 
-* Update ortools to 9.11-rte1.1
+* Support for Ubuntu 22, Ubuntu 20 dropped
+* Update ortools to 9.11-rte1.2
 * Various improvement to code quality
+* Sonarcloud coverage (#2652)(#2649)(#2647)(#2640)(#2641)(#2645)(#2639)
+* Write raw optimization results [ANT-2302] (#2565)
+
 
 ## Branch 9.1.x
 

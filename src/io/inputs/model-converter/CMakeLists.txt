@@ -24,6 +24,7 @@ target_link_libraries(model-converter
         Antares::yml-model
         Antares::antlr-interface
         Antares::expressions
+        Antares::expressions-iterators
 )
 
 install(DIRECTORY include/antares

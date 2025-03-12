@@ -36,7 +36,7 @@ class LinearProblemData: public LinearProblemApi::ILinearProblemData
 public:
     LinearProblemData() = default;
 
-    LinearProblemData(DataSeriesRepository& data_series_repository):
+    explicit LinearProblemData(DataSeriesRepository data_series_repository):
         dataSeriesRepository_(std::move(data_series_repository))
     {
     }
