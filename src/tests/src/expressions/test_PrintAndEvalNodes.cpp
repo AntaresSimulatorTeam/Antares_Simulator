@@ -944,4 +944,40 @@ BOOST_AUTO_TEST_CASE(testLargeShiftValues)
                                   expectedNegative.begin(),
                                   expectedNegative.end());
 }
+
+BOOST_AUTO_TEST_CASE(TrimLeadingWhitespace)
+{
+    BOOST_CHECK_EQUAL(PrintVisitor::trimAndFormat("   example"), "+example");
+}
+
+BOOST_AUTO_TEST_CASE(PreserveLeadingMinus)
+{
+    BOOST_CHECK_EQUAL(PrintVisitor::trimAndFormat("   -value"), "-value");
+}
+
+BOOST_AUTO_TEST_CASE(PreserveLeadingPlus)
+{
+    BOOST_CHECK_EQUAL(PrintVisitor::trimAndFormat("   +text"), "+text");
+}
+
+BOOST_AUTO_TEST_CASE(AddPlusIfNoSign)
+{
+    BOOST_CHECK_EQUAL(PrintVisitor::trimAndFormat("noSign"), "+noSign");
+}
+
+BOOST_AUTO_TEST_CASE(HandleAlreadySignedString)
+{
+    BOOST_CHECK_EQUAL(PrintVisitor::trimAndFormat("-already"), "-already");
+    BOOST_CHECK_EQUAL(PrintVisitor::trimAndFormat("+already"), "+already");
+}
+
+BOOST_AUTO_TEST_CASE(HandleOnlySpaces)
+{
+    BOOST_CHECK_EQUAL(PrintVisitor::trimAndFormat("   "), "");
+}
+
+BOOST_AUTO_TEST_CASE(HandleEmptyString)
+{
+    BOOST_CHECK_EQUAL(PrintVisitor::trimAndFormat(""), "");
+}
 BOOST_AUTO_TEST_SUITE_END()

@@ -31,6 +31,7 @@ class PrintVisitor: public NodeVisitor<std::string>
 {
 public:
     std::string name() const override;
+    static std::string trimAndFormat(const std::string& in);
 
 private:
     std::string visit(const Nodes::SumNode* node) override;
