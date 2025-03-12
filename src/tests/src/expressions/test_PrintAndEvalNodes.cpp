@@ -796,27 +796,46 @@ BOOST_FIXTURE_TEST_CASE(EvalVisitor_name, MyDummyFixture)
     BOOST_CHECK_EQUAL(evalVisitor.name(), "EvalVisitor");
 }
 
-BOOST_FIXTURE_TEST_CASE(PrintTimeIndexNode, MyDummyFixture)
+BOOST_FIXTURE_TEST_CASE(PrintTimeIndexNodeLiteralAndParameter, MyDummyFixture)
 {
     Node* literal1 = create<LiteralNode>(1.);
     Node* param1 = create<ParameterNode>("value");
     Node* expr1 = create<TimeIndexNode>(literal1, param1);
+
     PrintVisitor printVisitor;
     BOOST_CHECK(printVisitor.dispatch(expr1) == "1.000000[ value ]");
+
+    Node* expr2 = create<TimeIndexNode>(param1, literal1);
+    BOOST_CHECK(printVisitor.dispatch(expr2) == "value[ 1.000000 ]");
+}
+
+BOOST_FIXTURE_TEST_CASE(PrintTimeIndexNodeArithmeticNodes, MyDummyFixture)
+{
+    Node* literal1 = create<LiteralNode>(1.);
+    Node* param1 = create<ParameterNode>("value");
+    Node* sum1 = create<SumNode>(literal1, param1);
+    Node* sub1 = create<SubtractionNode>(param1, literal1);
+    const Node* expr1 = create<TimeIndexNode>(sum1, sub1);
+
+    PrintVisitor printVisitor;
+    BOOST_CHECK(printVisitor.dispatch(expr1) == "(1.000000+value)[ (value-1.000000) ]");
+
+    Node* mult1 = create<MultiplicationNode>(literal1, param1);
+    Node* div1 = create<DivisionNode>(param1, literal1);
+    const Node* expr2 = create<TimeIndexNode>(mult1, div1);
+    BOOST_CHECK(printVisitor.dispatch(expr2) == "(1.000000*value)[ (value/1.000000) ]");
 }
 
 BOOST_FIXTURE_TEST_CASE(PrintTimeShiftNode, MyDummyFixture)
 {
     Node* literal1 = create<LiteralNode>(1.);
-    Node* param1 = create<ParameterNode>("value");
     PrintVisitor printVisitor;
     // --
     Node* positive_shift = create<TimeShiftNode>(literal1, 23);
-    const auto printed = printVisitor.dispatch(positive_shift);
-    BOOST_CHECK(printVisitor.dispatch(positive_shift) == "1.000000[ t+23  ]");
+    BOOST_CHECK(printVisitor.dispatch(positive_shift) == "1.000000[ t+23 ]");
     // --
     Node* negative_shift = create<TimeShiftNode>(literal1, -31);
-    BOOST_CHECK(printVisitor.dispatch(negative_shift) == "1.000000[ t-31  ]");
+    BOOST_CHECK(printVisitor.dispatch(negative_shift) == "1.000000[ t-31 ]");
 }
 
 BOOST_AUTO_TEST_CASE(testShiftEmptyVector)

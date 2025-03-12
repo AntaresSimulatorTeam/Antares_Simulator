@@ -93,12 +93,40 @@ BOOST_FIXTURE_TEST_CASE(nodes_name, Registry<Node>)
       {create<ParameterNode>(literalNode->name()), "ParameterNode"},
       {create<VariableNode>(literalNode->name()), "VariableNode"},
       {create<PortFieldNode>(literalNode->name(), literalNode->name()), "PortFieldNode"},
-      {create<PortFieldSumNode>(literalNode->name(), literalNode->name()), "PortFieldSumNode"}};
+{create<PortFieldSumNode>(literalNode->name(), literalNode->name()), "PortFieldSumNode"},
+      {create<TimeShiftNode>(literalNode, 15), "TimeShiftNode"},
+      {create<TimeIndexNode>(literalNode, literalNode), "TimeIndexNode"}};
 
     for (auto [node, name]: nodes)
     {
         BOOST_CHECK_EQUAL(node->name(), name);
     }
+}
+
+BOOST_AUTO_TEST_CASE(TimeShiftNodeConstructorTest)
+{
+    ParameterNode parameter_node("value");
+    TimeShiftNode node(&parameter_node, 42);
+    BOOST_CHECK_EQUAL(node.value(), 42);
+}
+
+BOOST_AUTO_TEST_CASE(TimeShiftNodeValueTest)
+{
+    ParameterNode parameter_node("value");
+
+    TimeShiftNode node(&parameter_node, -10);
+    BOOST_CHECK_EQUAL(node.value(), -10);
+}
+
+BOOST_AUTO_TEST_CASE(TimeShiftNodeValueToSignedStringTest)
+{
+    ParameterNode parameter_node("value");
+
+    TimeShiftNode positiveNode(&parameter_node, 42);
+    TimeShiftNode negativeNode(&parameter_node, -10);
+
+    BOOST_CHECK_EQUAL(positiveNode.valueToSignedString(), "+42");
+    BOOST_CHECK_EQUAL(negativeNode.valueToSignedString(), "-10");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
