@@ -131,11 +131,27 @@ BOOST_AUTO_TEST_CASE(EvaluationResult_DivisionByZeroTest)
     BOOST_CHECK_THROW(res1 / res2, EvalVisitorDivisionException);
 }
 
-BOOST_AUTO_TEST_CASE(EvaluationResult_OperatorNegationTest)
+BOOST_AUTO_TEST_CASE(EvaluationResult_OperatorNegationOnSingleValue)
 {
     EvaluationResult res1(5.0);
     EvaluationResult res2 = -res1;
+    BOOST_CHECK_THROW(res2.valuesAsVector(), EvaluationResult::EvalResultTypeError);
     BOOST_CHECK_EQUAL(std::get<double>(res2.value()), -5.0);
+}
+BOOST_AUTO_TEST_CASE(EvaluationResult_OperatorNegationOnVector)
+{
+    EvaluationResult res1({5.0, 986.});
+    EvaluationResult res2 = -res1;
+    BOOST_CHECK_THROW(res2.valueAsDouble(), EvaluationResult::EvalResultTypeError);
+
+    const std::vector<double> expected_result{-5.0, -986.};
+
+    const auto result = std::get<std::vector<double>>(res2.value());
+
+    BOOST_CHECK_EQUAL_COLLECTIONS(result.cbegin(),
+                                  result.cend(),
+                                  expected_result.cbegin(),
+                                  expected_result.cend());
 }
 
 BOOST_AUTO_TEST_CASE(EvaluationResult_VectorOperationTest)

@@ -9,6 +9,12 @@ TimeShiftNode::TimeShiftNode(Node* child, int value):
     value_(value)
 {
 }
+
+int TimeShiftNode::value() const
+{
+    return value_;
+}
+
 // function to convert int to "+value" or "-value"
 std::string TimeShiftNode::valueToSignedString() const
 {

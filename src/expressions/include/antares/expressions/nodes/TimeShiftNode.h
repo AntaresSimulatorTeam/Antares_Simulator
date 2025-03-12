@@ -30,10 +30,7 @@ class TimeShiftNode: public UnaryNode
 public:
     explicit TimeShiftNode(Node* child, int value);
 
-    [[nodiscard]] int value() const
-    {
-        return value_;
-    }
+    [[nodiscard]] int value() const;
 
     //  function to convert int to "+value" or "-value"
     std::string valueToSignedString() const;
