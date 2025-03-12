@@ -250,7 +250,7 @@ BOOST_AUTO_TEST_CASE(print_single_literal)
     PrintVisitor printVisitor;
     const auto printed = printVisitor.dispatch(&literal);
 
-    BOOST_CHECK_EQUAL(printed, "+21.000000"); // TODO Number of decimals implementation dependent ?
+    BOOST_CHECK_EQUAL(printed, "21.000000"); // TODO Number of decimals implementation dependent ?
 }
 
 BOOST_FIXTURE_TEST_CASE(eval_single_literal, MyDummyFixture)
@@ -282,7 +282,7 @@ BOOST_FIXTURE_TEST_CASE(print_add_two_literals, MyDummyFixture)
     const auto printed = printVisitor.dispatch(root);
 
     BOOST_CHECK_EQUAL(printed,
-      "(+21.000000+2.000000)"); // TODO Number of decimals implementation dependent ?
+                      "(21.000000+2.000000)"); // TODO Number of decimals implementation dependent ?
 }
 
 BOOST_FIXTURE_TEST_CASE(print_add_one_literal, MyDummyFixture)
@@ -856,15 +856,13 @@ BOOST_FIXTURE_TEST_CASE(PrintTimeShiftNode, MyDummyFixture)
     PrintVisitor printVisitor;
     // --
     Node* positive_shift = create<TimeShiftNode>(literal1, literal2);
-    auto n = printVisitor.dispatch(positive_shift);
-    BOOST_CHECK(printVisitor.dispatch(positive_shift) == "+1.000000[ t +23.000000 ]");
+    BOOST_CHECK(printVisitor.dispatch(positive_shift) == "1.000000[ t +23.000000 ]");
     // --
 
     Node* literal3 = create<LiteralNode>(-31);
     Node* negative_shift = create<TimeShiftNode>(literal1, literal3);
 
-    auto nn = printVisitor.dispatch(negative_shift);
-    BOOST_CHECK(printVisitor.dispatch(negative_shift) == "+1.000000[ t -31.000000 ]");
+    BOOST_CHECK(printVisitor.dispatch(negative_shift) == "1.000000[ t -31.000000 ]");
 }
 
 BOOST_AUTO_TEST_CASE(testShiftEmptyVector)

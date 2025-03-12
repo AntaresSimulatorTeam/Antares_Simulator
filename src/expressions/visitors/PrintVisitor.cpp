@@ -20,6 +20,7 @@
 */
 #include <iostream>
 #include <numeric>
+#include <ranges>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/PrintVisitor.h>
@@ -88,8 +89,7 @@ std::string PrintVisitor::visit(const Nodes::VariableNode* node)
 
 std::string PrintVisitor::visit(const Nodes::LiteralNode* node)
 {
-    const auto value = std::to_string(node->value());
-    return node->value() >= 0 ? "+" + value : value;
+    return std::to_string(node->value());
 }
 
 std::string PrintVisitor::visit(const Nodes::PortFieldNode* node)
@@ -113,8 +113,22 @@ std::string PrintVisitor::visit(const Nodes::ComponentParameterNode* node)
 }
 std::string PrintVisitor::visit(const Nodes::TimeShiftNode* node)
 {
-    // add sign?
-    return dispatch(node->left()) + "[ t " + dispatch(node->right()) + " ]";
+    auto trim_and_format = [](const std::string& in)
+    {
+        auto s = in;
+        // Trim left (remove leading whitespace)
+        auto it = std::ranges::find_if_not(s, [](unsigned char ch) { return std::isspace(ch); });
+        s.erase(s.begin(), it);
+
+        // Ensure it starts with '+' or '-'
+        if (!s.empty() && (s.front() != '-' && s.front() != '+'))
+        {
+            s.insert(s.begin(), '+');
+        }
+        return s;
+    };
+    auto formatedShift = trim_and_format(dispatch(node->right()));
+    return dispatch(node->left()) + "[ t " + formatedShift + " ]";
 }
 
 std::string PrintVisitor::visit(const Nodes::TimeIndexNode* node)

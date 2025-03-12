@@ -216,9 +216,11 @@ node[style = filled]
   21 -> 23;
   23 [label="-34.000000", shape="box", style="filled, solid", color="lightgray"];
   1 -> 24;
-  24 [label="t-10", shape="hexagon", style="filled, solid", color="aqua"];
+  24 [label="[t]", shape="hexagon", style="filled, solid", color="aqua"];
   24 -> 25;
+  24 -> 23;
   25 [label="Param(Planck's constant)", shape="box", style="filled, solid", color="wheat"];
+  23 [label="-34.000000", shape="box", style="filled, solid", color="lightgray"];
 label="AST Diagram(Total nodes : 25)"
 labelloc = "t"
 subgraph cluster_legend {
