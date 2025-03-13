@@ -141,7 +141,6 @@ Node* ConvertorVisitor::convertIdentifier(const std::string& identifier) const
 {
     for (const auto& param: model_.parameters)
     {
-        // if (param.id == context->IDENTIFIER()->getText())
 
         if (param.id == identifier)
         {
@@ -254,14 +253,13 @@ std::any ConvertorVisitor::visitNumber(ExprParser::NumberContext* context)
 std::any ConvertorVisitor::visitTimeIndex([[maybe_unused]] ExprParser::TimeIndexContext* context)
 {
     Node* expr = convertIdentifier(context->IDENTIFIER()->getText());
-    auto index = registry_.create<LiteralNode>(std::stoi(context->expr()->getText()));
+    auto* index = registry_.create<LiteralNode>(std::stoi(context->expr()->getText()));
     return static_cast<Node*>(registry_.create<TimeIndexNode>(expr, index));
 }
 
 std::any ConvertorVisitor::buildShiftNode(Node* shifted_expr, ExprParser::ShiftContext* context)
 {
-    // auto time_shift = std::stoi(context->shift_expr()->getText());
-    auto time_shift = std::any_cast<Node*>(context->shift_expr()->accept(this));
+    auto* time_shift = std::any_cast<Node*>(context->shift_expr()->accept(this));
 
     return static_cast<Node*>(registry_.create<TimeShiftNode>(shifted_expr, time_shift));
 }

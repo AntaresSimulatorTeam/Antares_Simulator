@@ -38,7 +38,7 @@ ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
     context_(std::move(context)),
     fillContext_(std::move(fillContext)),
     componentId_(componentId),
-    evalVisitor_(context_, fillContext_) // TODO
+    evalVisitor_(context_, fillContext_)
 {
 }
 
