@@ -42,7 +42,7 @@ void OptimizationOptions::initializeWith(const CmdLineOptimOptions &cmdLineOptim
     if (cmdLineOptimOptions.linearSolverParameters.empty())
     {
         firstOpimOptions.solverParameters = cmdLineOptimOptions.lpSolverParamOptim1;
-        secondOpimOptions.solverParameters = cmdLineOptimOptions.lpSolverParamOptim1;
+        secondOpimOptions.solverParameters = cmdLineOptimOptions.lpSolverParamOptim2;
     }
     else
     {
