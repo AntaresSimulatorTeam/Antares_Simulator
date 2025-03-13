@@ -29,11 +29,13 @@ BOOST_AUTO_TEST_SUITE(OptimizationOptionsTests)
 
 BOOST_AUTO_TEST_CASE(test_insertion_operator)
 {
-    OptimizationOptions options1{.firstOpimOptions.solverName = "scip",
-                                 .quadraticOptimOptions.solverName = "xpress",
-                                 .firstOpimOptions.solverParameters = "opt2 52",
-                                 .quadraticOptimOptions.solverParameters = "opt9 23",
-                                 .solverLogs = true};
+    OptimizationOptions options1;
+    options1.firstOpimOptions.solverName = "scip";
+    options1.quadraticOptimOptions.solverName = "xpress";
+    options1.firstOpimOptions.solverParameters = "opt2 52";
+    options1.quadraticOptimOptions.solverParameters = "opt9 23";
+    options1.solverLogs = true;
+
     CmdLineOptimOptions options2{.linearSolver = "sirius",
                                  .quadraticSolver = "coin",
                                  .linearSolverParameters = "opt1 5",

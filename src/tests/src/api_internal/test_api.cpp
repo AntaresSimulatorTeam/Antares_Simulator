@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_CASE(result_with_ortools_coin)
 {
     API::APIInternal api;
     auto study_loader = std::make_unique<InMemoryStudyLoader>();
-    const Solver::Optimization::OptimizationOptions opt{.linearSolver = "coin",
+    const Solver::Optimization::CmdLineOptimOptions opt{.linearSolver = "coin",
                                                         .quadraticSolver = "sirius",
                                                         .linearSolverParameters = "",
                                                         .quadraticSolverParameters = "",
@@ -112,7 +112,7 @@ BOOST_AUTO_TEST_CASE(invalid_ortools_linear_solver)
 {
     API::APIInternal api;
     auto study_loader = std::make_unique<InMemoryStudyLoader>();
-    const Solver::Optimization::OptimizationOptions opt{
+    const Solver::Optimization::CmdLineOptimOptions opt{
       .linearSolver = "this-solver-does-not-exist",
       .quadraticSolver = "sirius",
       .linearSolverParameters = "",

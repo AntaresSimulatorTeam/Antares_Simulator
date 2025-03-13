@@ -201,7 +201,8 @@ BOOST_FIXTURE_TEST_CASE(milp_two_mc_single_unit_single_scenario, StudyFixture)
     // Use OR-Tools / COIN for MILP
     auto& p = study->parameters;
     p.unitCommitment.ucMode = ucMILP;
-    p.optOptions.linearSolver = "coin";
+    p.optOptions.firstOpimOptions.solverName = "coin";
+    p.optOptions.secondOpimOptions.solverName = "coin";
 
     simulation->create();
     simulation->run();
@@ -229,7 +230,8 @@ BOOST_FIXTURE_TEST_CASE(milp_two_mc_two_unit_single_scenario, StudyFixture)
     // Use OR-Tools / COIN for MILP
     auto& p = study->parameters;
     p.unitCommitment.ucMode = ucMILP;
-    p.optOptions.linearSolver = "coin";
+    p.optOptions.firstOpimOptions.solverName = "coin";
+    p.optOptions.secondOpimOptions.solverName = "coin";
 
     simulation->create();
     simulation->run();

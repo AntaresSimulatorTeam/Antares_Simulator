@@ -25,12 +25,12 @@ namespace Antares::Solver::Optimization
 void OptimizationOptions::initializeWith(const CmdLineOptimOptions &cmdLineOptimOptions)
 {
     // To be removed
-    this->linearSolver = cmdLineOptimOptions.linearSolver;
-    this->quadraticSolver = cmdLineOptimOptions.quadraticSolver;
-    this->linearSolverParameters = cmdLineOptimOptions.linearSolverParameters;
-    this->lpSolverParamOptim1 = cmdLineOptimOptions.lpSolverParamOptim1;
-    this->lpSolverParamOptim2 = cmdLineOptimOptions.lpSolverParamOptim2;
-    this->quadraticSolverParameters = cmdLineOptimOptions.quadraticSolverParameters;
+//    this->linearSolver = cmdLineOptimOptions.linearSolver;
+//    this->quadraticSolver = cmdLineOptimOptions.quadraticSolver;
+//    this->linearSolverParameters = cmdLineOptimOptions.linearSolverParameters;
+//    this->lpSolverParamOptim1 = cmdLineOptimOptions.lpSolverParamOptim1;
+//    this->lpSolverParamOptim2 = cmdLineOptimOptions.lpSolverParamOptim2;
+//    this->quadraticSolverParameters = cmdLineOptimOptions.quadraticSolverParameters;
     this->solverLogs = cmdLineOptimOptions.solverLogs || this->solverLogs;
 
     // Solver names
@@ -55,8 +55,8 @@ void OptimizationOptions::initializeWith(const CmdLineOptimOptions &cmdLineOptim
 
     // Do solvers log their own messaqes
     firstOpimOptions.solverLogs = cmdLineOptimOptions.solverLogs || solverLogs;
-    secondOpimOptions.solverName = cmdLineOptimOptions.solverLogs || solverLogs;
-    quadraticOptimOptions.solverName = cmdLineOptimOptions.solverLogs || solverLogs;
+    secondOpimOptions.solverLogs = cmdLineOptimOptions.solverLogs || solverLogs;
+    quadraticOptimOptions.solverLogs = cmdLineOptimOptions.solverLogs || solverLogs;
 
 }
 }

@@ -112,7 +112,7 @@ void notifyProblemHebdo(const PROBLEME_HEBDO* problemeHebdo,
 }
 } // namespace
 
-bool runWeeklyOptimization(const OptimizationOptions& options,
+bool runWeeklyOptimization(const SingleOptimOptions& options,
                            PROBLEME_HEBDO* problemeHebdo,
                            Solver::IResultWriter& writer,
                            int optimizationNumber,
@@ -262,8 +262,7 @@ bool OPT_OptimisationLineaire(OptimizationOptions& options,
         OPT_ExportStructures(problemeHebdo, writer);
     }
 
-    options.linearSolverParameters = options.lpSolverParamOptim1;
-    bool ret = runWeeklyOptimization(options,
+    bool ret = runWeeklyOptimization(options.firstOpimOptions,
                                      problemeHebdo,
                                      writer,
                                      PREMIERE_OPTIMISATION,
@@ -276,8 +275,7 @@ bool OPT_OptimisationLineaire(OptimizationOptions& options,
     {
         // We need to adjust some stuff before running the 2nd optimisation
         runThermalHeuristic(problemeHebdo);
-        options.linearSolverParameters = options.lpSolverParamOptim2;
-        return runWeeklyOptimization(options,
+        return runWeeklyOptimization(options.secondOpimOptions,
                                      problemeHebdo,
                                      writer,
                                      DEUXIEME_OPTIMISATION,

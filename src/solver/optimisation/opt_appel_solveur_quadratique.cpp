@@ -41,10 +41,10 @@ extern "C"
 
 using namespace Antares;
 
-static void SolveWithSirius(const Solver::Optimization::OptimizationOptions& options,
+static void SolveWithSirius(const Solver::Optimization::SingleOptimOptions& options,
                             PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
 {
-    if (!options.quadraticSolverParameters.empty())
+    if (!options.solverParameters.empty())
     {
         logs.warning()
           << "Quadratic solver parameters are not supported by SIRIUS; they will be ignored.";
@@ -175,12 +175,12 @@ static void ProcessResult(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
     }
 }
 
-bool OPT_AppelDuSolveurQuadratique(const Solver::Optimization::OptimizationOptions& options,
+bool OPT_AppelDuSolveurQuadratique(const Solver::Optimization::SingleOptimOptions& options,
                                    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
 {
     // as long as sirius quadratic optimization is not supported through or-tools, we have to keep
     // this code separate
-    if (options.quadraticSolver.compare("sirius") == 0)
+    if (options.solverName.compare("sirius") == 0)
     {
         SolveWithSirius(options, ProblemeAResoudre);
     }

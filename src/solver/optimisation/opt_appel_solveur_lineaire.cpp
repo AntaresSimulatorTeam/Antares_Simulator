@@ -42,7 +42,7 @@ using namespace Antares::Optimisation::LinearProblemDataImpl;
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 
 using Antares::Solver::IResultWriter;
-using Antares::Solver::Optimization::OptimizationOptions;
+using Antares::Solver::Optimization::SingleOptimOptions;
 
 class TimeMeasurement
 {
@@ -82,7 +82,7 @@ struct SimplexResult
     mpsWriterFactory mps_writer_factory;
 };
 
-static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
+static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                           PROBLEME_HEBDO* problemeHebdo,
                                           Optimization::PROBLEME_SIMPLEXE_NOMME& Probleme,
                                           const int NumIntervalle,
@@ -192,7 +192,7 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     Probleme.NombreDeContraintesCoupes = 0;
 
     auto ortoolsProblem = std::make_unique<LegacyOrtoolsLinearProblem>(Probleme.isMIP(),
-                                                                       options.linearSolver);
+                                                                       options.solverName);
     auto legacyOrtoolsFiller = std::make_unique<LegacyFiller>(&Probleme);
     std::vector<LinearProblemFiller*> fillersCollection = {legacyOrtoolsFiller.get()};
     LinearProblemData LP_Data;
@@ -254,7 +254,7 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     return {.success = true, .timeMeasure = timeMeasure, .mps_writer_factory = mps_writer_factory};
 }
 
-bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
+bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                          PROBLEME_HEBDO* problemeHebdo,
                          int NumIntervalle,
                          const int optimizationNumber,
@@ -355,7 +355,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
         Probleme.SetUseNamedProblems(true);
 
         auto ortoolsProblem = std::make_unique<LegacyOrtoolsLinearProblem>(Probleme.isMIP(),
-                                                                           options.linearSolver);
+                                                                           options.solverName);
         auto legacyOrtoolsFiller = std::make_unique<LegacyFiller>(&Probleme);
         std::vector<LinearProblemFiller*> fillersCollection = {legacyOrtoolsFiller.get()};
         LinearProblemData LP_Data;

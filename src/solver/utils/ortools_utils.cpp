@@ -36,7 +36,7 @@ using namespace operations_research;
 const std::string XPRESS_PARAMS = "THREADS 1";
 const std::string SCIP_PARAMS = "parallel/maxnthreads 1";
 
-using Antares::Solver::Optimization::OptimizationOptions;
+using Antares::Solver::Optimization::SingleOptimOptions;
 
 // MPSolverParameters's copy constructor is private
 static void setGenericParameters(MPSolverParameters& params)
@@ -230,7 +230,7 @@ bool solveAndManageStatus(MPSolver* solver, int& resultStatus, const MPSolverPar
 MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
                            MPSolver* solver,
                            bool keepBasis,
-                           const OptimizationOptions& options)
+                           const SingleOptimOptions& options)
 {
     MPSolverParameters params;
     // Keep generic params for default settings working for all solvers
@@ -239,7 +239,7 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
     {
         solver->EnableOutput();
     }
-    TuneSolverSpecificOptions(solver, options.linearSolver, options.linearSolverParameters);
+    TuneSolverSpecificOptions(solver, options.solverName, options.solverParameters);
     const bool warmStart = solverSupportsWarmStart(solver->ProblemType());
     // Provide an initial simplex basis, if any
     if (warmStart && Probleme->basisExists())

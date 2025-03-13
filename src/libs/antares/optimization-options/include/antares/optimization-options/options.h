@@ -55,16 +55,11 @@ public:
     // ------------------
     // to be removed
     // ------------------
-    //! The solver used for linear problems, sirius is the default
-    std::string linearSolver = "sirius";
-    //! The solver used for quadratic problems, sirius is the default
-    std::string quadraticSolver = "sirius";
-    //! The linear solver parameters
-    std::string linearSolverParameters;
-    std::string lpSolverParamOptim1;
-    std::string lpSolverParamOptim2;
-
-    //! The quadratic solver parameters
-    std::string quadraticSolverParameters;
+//    std::string linearSolver = "sirius";
+//    std::string quadraticSolver = "sirius";
+//    std::string linearSolverParameters;
+//    std::string lpSolverParamOptim1;
+//    std::string lpSolverParamOptim2;
+//    std::string quadraticSolverParameters;
 };
 } // namespace Antares::Solver::Optimization

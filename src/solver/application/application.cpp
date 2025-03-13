@@ -349,9 +349,8 @@ void Application::prepare(int argc, const char* argv[])
     // Check solver options
     const auto& unitCommitmentMode = pParameters->unitCommitment.ucMode;
     bool milpRequired = (unitCommitmentMode == Data::UnitCommitmentMode::ucMILP);
-    const auto& solverOptions = pParameters->optOptions;
 
-    checkSolverOptions(solverOptions, milpRequired);
+    checkSolverOptions(options.solverOptions, milpRequired);
 
     // Set solver options from command line
     pStudy->parameters.optOptions.initializeWith(options.solverOptions);
