@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 
+find_package(yaml-cpp REQUIRED)
+
 PROJECT(API_client)
 
 set(CMAKE_CXX_STANDARD 20)
