@@ -84,6 +84,23 @@ struct SimplexResult
     mpsWriterFactory mps_writer_factory;
 };
 
+static void fillModelerComponents(std::vector<std::unique_ptr<ComponentFiller>>& componentFillers,
+                                  std::vector<LinearProblemFiller*>& fillersCollection,
+                                  Study::SystemModel::System* modelerSystem)
+{
+    if (modelerSystem == nullptr)
+    {
+        return;
+    }
+
+    for (const auto& [_, component]: modelerSystem->Components())
+    {
+        auto cf = std::make_unique<ComponentFiller>(component);
+        componentFillers.push_back(std::move(cf));
+        fillersCollection.push_back(cf.get());
+    }
+}
+
 static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
                                           PROBLEME_HEBDO* problemeHebdo,
                                           Optimization::PROBLEME_SIMPLEXE_NOMME& Probleme,
@@ -198,18 +215,9 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     auto legacyOrtoolsFiller = std::make_unique<LegacyFiller>(&Probleme);
     std::vector<LinearProblemFiller*> fillersCollection = {legacyOrtoolsFiller.get()};
     std::vector<std::unique_ptr<ComponentFiller>> componentFillers;
-    if (problemeHebdo->modelerSystem_ != nullptr)
-    {
-        for (const auto& [_, component]: problemeHebdo->modelerSystem_->Components())
-        {
-            auto cf = std::make_unique<ComponentFiller>(component);
-            componentFillers.push_back(std::move(cf));
-        }
-        for (auto& component_filler: componentFillers)
-        {
-            fillersCollection.push_back(component_filler.get());
-        }
-    }
+
+    fillModelerComponents(componentFillers, fillersCollection, problemeHebdo->modelerSystem_);
+
     FillContext fillCtx(problemeHebdo->weekInTheYear * 168 + 0,
                         problemeHebdo->weekInTheYear * 168 + 167);
     LinearProblemBuilder linearProblemBuilder(fillersCollection);
@@ -390,15 +398,9 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
         auto legacyOrtoolsFiller = std::make_unique<LegacyFiller>(&Probleme);
         std::vector<LinearProblemFiller*> fillersCollection = {legacyOrtoolsFiller.get()};
         std::vector<std::unique_ptr<ComponentFiller>> componentFillers;
-        if (problemeHebdo->modelerSystem_ != nullptr)
-        {
-            for (const auto& [_, component]: problemeHebdo->modelerSystem_->Components())
-            {
-                auto cf = std::make_unique<ComponentFiller>(component);
-                componentFillers.push_back(std::move(cf));
-                fillersCollection.push_back(cf.get());
-            }
-        }
+
+        fillModelerComponents(componentFillers, fillersCollection, problemeHebdo->modelerSystem_);
+
         FillContext fillCtx(problemeHebdo->weekInTheYear * 168 + 0,
                             problemeHebdo->weekInTheYear * 168 + 167);
         LinearProblemBuilder linearProblemBuilder(fillersCollection);
