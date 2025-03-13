@@ -141,7 +141,6 @@ Node* ConvertorVisitor::convertIdentifier(const std::string& identifier) const
 {
     for (const auto& param: model_.parameters)
     {
-
         if (param.id == identifier)
         {
             return static_cast<Node*>(
