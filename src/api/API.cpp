@@ -35,7 +35,7 @@ namespace Antares::API
 SimulationResults APIInternal::run(
   const IStudyLoader& study_loader,
   const std::filesystem::path& output,
-  const Antares::Solver::Optimization::OptimizationOptions& optOptions)
+  const Antares::Solver::Optimization::CmdLineOptimOptions& optOptions)
 {
     try
     {
@@ -58,7 +58,7 @@ SimulationResults APIInternal::run(
  */
 SimulationResults APIInternal::execute(
   const std::filesystem::path& output,
-  const Antares::Solver::Optimization::OptimizationOptions& optOptions) const
+  const Antares::Solver::Optimization::CmdLineOptimOptions& optOptions) const
 {
     // study_ == nullptr e.g when the -h flag is given
     if (!study_)
@@ -70,7 +70,7 @@ SimulationResults APIInternal::execute(
 
     Settings settings;
     auto& parameters = study_->parameters;
-    parameters.optOptions << optOptions;
+    parameters.optOptions.initializeWith(optOptions);
 
     Benchmarking::DurationCollector durationCollector;
     Benchmarking::OptimizationInfo optimizationInfo;

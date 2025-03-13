@@ -127,7 +127,6 @@ private:
     // Return false if the user requested help, true otherwise
     bool parseCommandLine(Data::StudyLoadOptions& options);
     void postParametersChecks() const;
-    void checkSolverOptions() const;
 }; // class Application
 
 } // namespace Antares::Solver

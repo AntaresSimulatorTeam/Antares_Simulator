@@ -302,29 +302,6 @@ void Application::postParametersChecks() const
     checkCO2CostColumnNumber(pStudy->areas);
 }
 
-void Application::checkSolverOptions() const
-{
-    const auto& unitCommitmentMode = pParameters->unitCommitment.ucMode;
-    bool milpRequired = (unitCommitmentMode == Data::UnitCommitmentMode::ucMILP);
-    const auto& solverOptions = pParameters->optOptions;
-
-    checkForSolversExistence(solverOptions);
-    checkForSolverOptionsConsistency(solverOptions);
-
-    if(milpRequired)
-    {
-        checkSolverMILPoptionsConsistency(solverOptions);
-    }
-
-    logs.info() << "  :: solver " << solverOptions.linearSolver
-                << " is used for linear problem resolution";
-
-    logs.info() << "  :: solver " << solverOptions.quadraticSolver
-                << " is used for quadratic problem resolution";
-
-    logs.info() << "  :: Printing solver logs : " << (solverOptions.solverLogs ? "True" : "False");
-}
-
 void Application::prepare(int argc, const char* argv[])
 {
     pArgc = argc;
@@ -370,17 +347,15 @@ void Application::prepare(int argc, const char* argv[])
 
     readStudy_makeChecks_and_printThings(options);
 
-    // Set solver options from command line
-    pStudy->parameters.optOptions << options.solverOptions;
     // Check solver options
-    checkSolverOptions();
+    const auto& unitCommitmentMode = pParameters->unitCommitment.ucMode;
+    bool milpRequired = (unitCommitmentMode == Data::UnitCommitmentMode::ucMILP);
+    const auto& solverOptions = pParameters->optOptions;
 
-    auto& solverOptions = pStudy->parameters.optOptions;
-    if (!solverOptions.linearSolverParameters.empty())
-    {
-        solverOptions.lpSolverParamOptim1 = solverOptions.linearSolverParameters;
-        solverOptions.lpSolverParamOptim2 = solverOptions.linearSolverParameters;
-    }
+    checkSolverOptions(solverOptions, milpRequired);
+
+    // Set solver options from command line
+    pStudy->parameters.optOptions.initializeWith(options.solverOptions);
 }
 
 void Application::onLogMessage(int level, const std::string& /*message*/)

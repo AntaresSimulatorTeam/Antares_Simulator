@@ -29,23 +29,23 @@ BOOST_AUTO_TEST_SUITE(OptimizationOptionsTests)
 
 BOOST_AUTO_TEST_CASE(test_insertion_operator)
 {
-    OptimizationOptions options1{.linearSolver = "scip",
-                                 .quadraticSolver = "xpress",
-                                 .linearSolverParameters = "opt2 52",
-                                 .quadraticSolverParameters = "opt9 23",
+    OptimizationOptions options1{.firstOpimOptions.solverName = "scip",
+                                 .quadraticOptimOptions.solverName = "xpress",
+                                 .firstOpimOptions.solverParameters = "opt2 52",
+                                 .quadraticOptimOptions.solverParameters = "opt9 23",
                                  .solverLogs = true};
-    OptimizationOptions options2{.linearSolver = "sirius",
+    CmdLineOptimOptions options2{.linearSolver = "sirius",
                                  .quadraticSolver = "coin",
                                  .linearSolverParameters = "opt1 5",
                                  .quadraticSolverParameters = "opt6 7",
                                  .solverLogs = false};
-    options1 << options2;
+    options1.initializeWith(options2);
     // All fields of options1 must be overwritten with those of options2, except solverLogs which is
     // a logical OR
-    BOOST_CHECK_EQUAL(options1.linearSolver, "sirius");
-    BOOST_CHECK_EQUAL(options1.quadraticSolver, "coin");
-    BOOST_CHECK_EQUAL(options1.linearSolverParameters, "opt1 5");
-    BOOST_CHECK_EQUAL(options1.quadraticSolverParameters, "opt6 7");
+    BOOST_CHECK_EQUAL(options1.firstOpimOptions.solverName, "sirius");
+    BOOST_CHECK_EQUAL(options1.quadraticOptimOptions.solverName, "coin");
+    BOOST_CHECK_EQUAL(options1.firstOpimOptions.solverParameters, "opt1 5");
+    BOOST_CHECK_EQUAL(options1.quadraticOptimOptions.solverParameters, "opt6 7");
     BOOST_CHECK_EQUAL(options1.solverLogs, true);
 }
 

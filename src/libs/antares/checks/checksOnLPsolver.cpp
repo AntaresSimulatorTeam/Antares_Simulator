@@ -3,6 +3,7 @@
 #include <boost/algorithm/string/join.hpp>
 
 #include <antares/exception/LoadingError.hpp>
+#include <antares/logs/logs.h>
 #include "antares/solver/utils/ortools_utils.h"
 
 using namespace Antares;
@@ -44,5 +45,24 @@ void checkForSolverOptionsConsistency(const OptimizationOptions& solverOptions)
     {
         throw Error::IncompatibleLinearSolverParameters();
     }
+}
+
+void checkSolverOptions(const OptimizationOptions& solverOptions, bool milpRequired)
+{
+    checkForSolversExistence(solverOptions);
+    checkForSolverOptionsConsistency(solverOptions);
+
+    if(milpRequired)
+    {
+        checkSolverMILPoptionsConsistency(solverOptions);
+    }
+
+    logs.info() << "  :: solver " << solverOptions.linearSolver
+                << " is used for linear problem resolution";
+
+    logs.info() << "  :: solver " << solverOptions.quadraticSolver
+                << " is used for quadratic problem resolution";
+
+    logs.info() << "  :: Printing solver logs : " << (solverOptions.solverLogs ? "True" : "False");
 }
 } // namespace Antares::Check

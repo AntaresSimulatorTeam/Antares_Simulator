@@ -19,18 +19,44 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include "antares/optimization-options/options.h"
-using namespace Antares::Solver::Optimization;
 
-OptimizationOptions& OptimizationOptions::operator<<(const OptimizationOptions& options)
+namespace Antares::Solver::Optimization
 {
-    // Overrides all attributes, but applies a logical OR for activating logs
-    // (Option that can be set both in command-line and file)
-    this->linearSolver = options.linearSolver;
-    this->quadraticSolver = options.quadraticSolver;
-    this->linearSolverParameters = options.linearSolverParameters;
-    this->lpSolverParamOptim1 = options.lpSolverParamOptim1;
-    this->lpSolverParamOptim2 = options.lpSolverParamOptim2;
-    this->quadraticSolverParameters = options.quadraticSolverParameters;
-    this->solverLogs = options.solverLogs || this->solverLogs;
-    return *this;
+void OptimizationOptions::initializeWith(const CmdLineOptimOptions &cmdLineOptimOptions)
+{
+    // To be removed
+    this->linearSolver = cmdLineOptimOptions.linearSolver;
+    this->quadraticSolver = cmdLineOptimOptions.quadraticSolver;
+    this->linearSolverParameters = cmdLineOptimOptions.linearSolverParameters;
+    this->lpSolverParamOptim1 = cmdLineOptimOptions.lpSolverParamOptim1;
+    this->lpSolverParamOptim2 = cmdLineOptimOptions.lpSolverParamOptim2;
+    this->quadraticSolverParameters = cmdLineOptimOptions.quadraticSolverParameters;
+    this->solverLogs = cmdLineOptimOptions.solverLogs || this->solverLogs;
+
+    // Solver names
+    firstOpimOptions.solverName = cmdLineOptimOptions.linearSolver;
+    secondOpimOptions.solverName = cmdLineOptimOptions.linearSolver;
+    quadraticOptimOptions.solverName = cmdLineOptimOptions.quadraticSolver;
+
+    // Linear solver parameters
+    if (cmdLineOptimOptions.linearSolverParameters.empty())
+    {
+        firstOpimOptions.solverParameters = cmdLineOptimOptions.lpSolverParamOptim1;
+        secondOpimOptions.solverParameters = cmdLineOptimOptions.lpSolverParamOptim1;
+    }
+    else
+    {
+        firstOpimOptions.solverParameters = cmdLineOptimOptions.linearSolverParameters;
+        secondOpimOptions.solverParameters = cmdLineOptimOptions.linearSolverParameters;
+    }
+
+    // Quadratic solver parameters
+    quadraticOptimOptions.solverParameters = cmdLineOptimOptions.quadraticSolverParameters;
+
+    // Do solvers log their own messaqes
+    firstOpimOptions.solverLogs = cmdLineOptimOptions.solverLogs || solverLogs;
+    secondOpimOptions.solverName = cmdLineOptimOptions.solverLogs || solverLogs;
+    quadraticOptimOptions.solverName = cmdLineOptimOptions.solverLogs || solverLogs;
+
+}
 }
