@@ -11,9 +11,9 @@ using namespace Antares::Solver::Optimization;
 
 namespace Antares::Check
 {
-static void checkSolverExists(const std::string solverName, const std::list<std::string> availableSolversList)
+static void checkSolverExists(const std::string solverName,
+                              const std::list<std::string> availableSolversList)
 {
-    // Check if solver is available
     bool found = std::ranges::find(availableSolversList, solverName) != availableSolversList.end();
     if (!found)
     {
@@ -52,7 +52,7 @@ void checkSolverOptions(const CmdLineOptimOptions& solverOptions, bool milpRequi
     checkForSolversExistence(solverOptions);
     checkForSolverOptionsConsistency(solverOptions);
 
-    if(milpRequired)
+    if (milpRequired)
     {
         checkSolverMILPoptionsConsistency(solverOptions);
     }

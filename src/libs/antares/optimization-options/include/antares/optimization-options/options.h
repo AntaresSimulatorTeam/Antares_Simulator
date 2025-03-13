@@ -51,15 +51,5 @@ public:
     SingleOptimOptions secondOpimOptions;
     SingleOptimOptions quadraticOptimOptions;
     bool solverLogs = false;
-
-    // ------------------
-    // to be removed
-    // ------------------
-//    std::string linearSolver = "sirius";
-//    std::string quadraticSolver = "sirius";
-//    std::string linearSolverParameters;
-//    std::string lpSolverParamOptim1;
-//    std::string lpSolverParamOptim2;
-//    std::string quadraticSolverParameters;
 };
 } // namespace Antares::Solver::Optimization

@@ -52,7 +52,8 @@ bool OPT_PilotageOptimisationQuadratique(const OptimizationOptions& options,
 
             OPT_InitialiserLesCoutsQuadratiques(problemeHebdo, pdtHebdo);
 
-            result = OPT_AppelDuSolveurQuadratique(options.quadraticOptimOptions, problemeHebdo->ProblemeAResoudre.get())
+            result = OPT_AppelDuSolveurQuadratique(options.quadraticOptimOptions,
+                                                   problemeHebdo->ProblemeAResoudre.get())
                      && result;
 
             if (!result)
