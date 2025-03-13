@@ -122,7 +122,7 @@ var NAVTREEINDEX =
 "solve__problem_8h_source.html",
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Price_1_1Statistics.html",
 "structAntares_1_1Study_1_1SystemModel_1_1SystemData.html",
-"suffix-for-constraint-names_8hxx_source.html"
+"suffix-for-constraint-names_8h_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
