@@ -363,10 +363,10 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
         LinearProblemBuilder linearProblemBuilder(fillersCollection);
 
         linearProblemBuilder.build(*ortoolsProblem, LP_Data, fillCtx);
-        auto MPproblem = std::shared_ptr<MPSolver>(ortoolsProblem->getMpSolver());
+        auto* MPproblem = ortoolsProblem->getMpSolver();
 
         auto analyzer = makeUnfeasiblePbAnalyzer();
-        analyzer->run(MPproblem.get());
+        analyzer->run(MPproblem);
         analyzer->printReport();
 
         auto mps_writer_on_error = simplexResult.mps_writer_factory.createOnOptimizationError();
