@@ -26,7 +26,7 @@
 
 using Antares::Solver::Optimization::OptimizationOptions;
 
-bool OPT_PilotageOptimisationLineaire(OptimizationOptions& options,
+bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
                                       PROBLEME_HEBDO* problemeHebdo,
                                       Solver::IResultWriter& writer,
                                       Solver::Simulation::ISimulationObserver& simulationObserver)

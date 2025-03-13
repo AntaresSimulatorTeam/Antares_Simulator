@@ -36,7 +36,7 @@ using OptimizationOptions = Antares::Solver::Optimization::OptimizationOptions;
 using SingleOptimOptions = Antares::Solver::Optimization::SingleOptimOptions;
 
 
-void OPT_OptimisationHebdomadaire(OptimizationOptions& options,
+void OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
                                   PROBLEME_HEBDO* pProblemeHebdo,
                                   Solver::IResultWriter& writer,
                                   Solver::Simulation::ISimulationObserver& simulationObserver);
@@ -53,7 +53,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO*,
 void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO*, int, int, int, const int);
 void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO*, const int, const int);
 
-bool OPT_PilotageOptimisationLineaire(OptimizationOptions& options,
+bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
                                       PROBLEME_HEBDO* problemeHebdo,
                                       Solver::IResultWriter& writer,
                                       Solver::Simulation::ISimulationObserver& simulationObserver);
@@ -72,7 +72,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                          Antares::Solver::IResultWriter& writer);
 void OPT_LiberationProblemesSimplexe(const PROBLEME_HEBDO*);
 
-bool OPT_OptimisationLineaire(OptimizationOptions& options,
+bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
                               Solver::IResultWriter& writer,
                               Solver::Simulation::ISimulationObserver& simulationObserver);
