@@ -266,6 +266,22 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
             throw FatalError("Internal error: insufficient memory");
         }
     }
+
+    // WRITE MODELER SOLUTIONS
+    std::stringstream contentStream;
+
+    // we want to only get modeler variables, they're added after legacy vars
+    auto start = solver->variables().begin() + Probleme.NombreDeVariables;
+    for (auto v = start; v < solver->variables().end(); v++)
+    {
+        contentStream << (*v)->name() << "\t" << (*v)->solution_value() << std::endl;
+    }
+
+    auto modelerSolutionFilename = createModelerSolutionsFilename(optPeriodStringGenerator,
+                                                                  optimizationNumber);
+    std::string content = contentStream.str();
+    writer.addEntryFromBuffer(modelerSolutionFilename, content);
+
     return {.success = true, .timeMeasure = timeMeasure, .mps_writer_factory = mps_writer_factory};
 }
 
