@@ -36,7 +36,6 @@
 #include "antares/solver/misc/system-memory.h"
 #include "antares/solver/misc/write-command-line.h"
 #include "antares/solver/simulation/simulation-run.h"
-#include "antares/solver/simulation/simulation.h"
 #include "antares/solver/simulation/solver.h"
 #include "antares/solver/utils/ortools_utils.h"
 #include "antares/checks/checksOnLPsolver.h"
