@@ -221,7 +221,6 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
-    // TODO should we use mpsExportStatus::EXPORT_BOTH_OPTIMS ?
     mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
                                         problemeHebdo->exportMPSOnError,
                                         optimizationNumber,
