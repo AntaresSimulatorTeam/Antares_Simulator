@@ -29,12 +29,14 @@
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimization-options/options.h"
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
+#include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/solver/optimisation/LegacyFiller.h"
 #include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/utils/filename.h"
 #include "antares/solver/utils/mps_utils.h"
+#include "antares/study/system-model/system.h"
 
 using namespace operations_research;
 using namespace Antares::Optimisation::LinearProblemApi;
@@ -195,17 +197,31 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
                                                                        options.ortoolsSolver);
     auto legacyOrtoolsFiller = std::make_unique<LegacyFiller>(&Probleme);
     std::vector<LinearProblemFiller*> fillersCollection = {legacyOrtoolsFiller.get()};
-    LinearProblemData LP_Data;
-    FillContext fillCtx(0, 167);
+    std::vector<std::unique_ptr<ComponentFiller>> componentFillers;
+    if (problemeHebdo->modelerSystem_ != nullptr)
+    {
+        for (const auto& [_, component]: problemeHebdo->modelerSystem_->Components())
+        {
+            auto cf = std::make_unique<ComponentFiller>(component);
+            componentFillers.push_back(std::move(cf));
+        }
+        for (auto& component_filler: componentFillers)
+        {
+            fillersCollection.push_back(component_filler.get());
+        }
+    }
+    FillContext fillCtx(problemeHebdo->weekInTheYear * 168 + 0,
+                        problemeHebdo->weekInTheYear * 168 + 167);
     LinearProblemBuilder linearProblemBuilder(fillersCollection);
 
     if (solver == nullptr)
     {
-        linearProblemBuilder.build(*ortoolsProblem, LP_Data, fillCtx);
+        linearProblemBuilder.build(*ortoolsProblem, *problemeHebdo->linear_problem_data_, fillCtx);
         solver = ortoolsProblem->getMpSolver();
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
+    // TODO should we use mpsExportStatus::EXPORT_BOTH_OPTIMS ?
     mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
                                         problemeHebdo->exportMPSOnError,
                                         optimizationNumber,
@@ -358,11 +374,21 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
                                                                            options.ortoolsSolver);
         auto legacyOrtoolsFiller = std::make_unique<LegacyFiller>(&Probleme);
         std::vector<LinearProblemFiller*> fillersCollection = {legacyOrtoolsFiller.get()};
-        LinearProblemData LP_Data;
-        FillContext fillCtx(0, 167);
+        std::vector<std::unique_ptr<ComponentFiller>> componentFillers;
+        if (problemeHebdo->modelerSystem_ != nullptr)
+        {
+            for (const auto& [_, component]: problemeHebdo->modelerSystem_->Components())
+            {
+                auto cf = std::make_unique<ComponentFiller>(component);
+                componentFillers.push_back(std::move(cf));
+                fillersCollection.push_back(cf.get());
+            }
+        }
+        FillContext fillCtx(problemeHebdo->weekInTheYear * 168 + 0,
+                            problemeHebdo->weekInTheYear * 168 + 167);
         LinearProblemBuilder linearProblemBuilder(fillersCollection);
 
-        linearProblemBuilder.build(*ortoolsProblem, LP_Data, fillCtx);
+        linearProblemBuilder.build(*ortoolsProblem, *problemeHebdo->linear_problem_data_, fillCtx);
         auto MPproblem = std::shared_ptr<MPSolver>(ortoolsProblem->getMpSolver());
 
         auto analyzer = makeUnfeasiblePbAnalyzer();

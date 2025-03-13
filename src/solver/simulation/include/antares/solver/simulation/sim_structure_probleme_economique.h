@@ -608,5 +608,8 @@ public:
     std::unique_ptr<PROBLEME_ANTARES_A_RESOUDRE> ProblemeAResoudre;
 
     double maxPminThermiqueByDay[366];
+
+    Study::SystemModel::System* modelerSystem_;                               // for hybrid studies
+    Optimisation::LinearProblemApi::ILinearProblemData* linear_problem_data_; // for hybrid studies
 };
 #endif
