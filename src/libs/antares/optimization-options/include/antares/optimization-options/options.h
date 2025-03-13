@@ -51,5 +51,7 @@ public:
     SingleOptimOptions secondOpimOptions;
     SingleOptimOptions quadraticOptimOptions;
     bool solverLogs = false;
+    // For Xpansion only
+    std::string ortoolsSolver = "sirius";
 };
 } // namespace Antares::Solver::Optimization
