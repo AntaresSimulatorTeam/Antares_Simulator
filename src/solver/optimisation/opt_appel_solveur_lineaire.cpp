@@ -97,7 +97,10 @@ static void fillModelerComponents(std::vector<std::unique_ptr<ComponentFiller>>&
     {
         auto cf = std::make_unique<ComponentFiller>(component);
         componentFillers.push_back(std::move(cf));
-        fillersCollection.push_back(cf.get());
+    }
+    for (auto& component_filler: componentFillers)
+    {
+        fillersCollection.push_back(component_filler.get());
     }
 }
 
