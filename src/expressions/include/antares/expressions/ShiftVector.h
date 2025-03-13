@@ -26,14 +26,14 @@
 template<class T>
 std::vector<T> shiftVector(const std::vector<T>& values, int shiftValue)
 {
-    size_t n = values.size();
+    const auto n = static_cast<int>(values.size());
     if (n == 0)
     {
         return {};
     }
 
     // Normalize shiftValue within bounds
-    shiftValue = (shiftValue % static_cast<int>(n) + n) % static_cast<int>(n);
+    shiftValue = (shiftValue % n + n) % n;
 
     // Create a copy of the original vector
     auto shiftedValues = values;

@@ -236,6 +236,60 @@ BOOST_AUTO_TEST_CASE(EvaluationResult_VectorScalarDivisionTest)
                                   expected_result.cend());
 }
 
+// Equality operator
+bool operator==(const EvaluationResult& lhs, const EvaluationResult& rhs)
+{
+    const auto lhs_value = lhs.value();
+    const auto rhs_value = rhs.value();
+    if (std::holds_alternative<double>(lhs_value) && std::holds_alternative<double>(rhs_value))
+    {
+        return std::get<double>(lhs_value) == std::get<double>(rhs_value);
+    }
+    else if (std::holds_alternative<std::vector<double>>(lhs_value)
+             && std::holds_alternative<std::vector<double>>(rhs_value))
+    {
+        return std::get<std::vector<double>>(lhs_value) == std::get<std::vector<double>>(rhs_value);
+    }
+    return false;
+}
+
+BOOST_AUTO_TEST_CASE(EvaluationResult_operator_bracket)
+{
+    const std::vector<double> vec = {4.0, 8.0, 12.0};
+    const EvaluationResult res1(vec);
+
+    BOOST_CHECK_NO_THROW(res1[0].valueAsDouble());
+    BOOST_CHECK_THROW(res1[0].valuesAsVector(), EvaluationResult::EvalResultTypeError);
+    BOOST_CHECK_EQUAL(res1[0].valueAsDouble(), vec[0]);
+    BOOST_CHECK_EQUAL(res1[1].valueAsDouble(), vec[1]);
+    BOOST_CHECK_EQUAL(res1[2].valueAsDouble(), vec[2]);
+}
+
+BOOST_AUTO_TEST_CASE(EvaluationResult_operator_bracket_one_value)
+{
+    const EvaluationResult res1(2025.03);
+
+    BOOST_CHECK_NO_THROW(res1[0].valueAsDouble());
+    BOOST_CHECK_THROW(res1[0].valuesAsVector(), EvaluationResult::EvalResultTypeError);
+    BOOST_CHECK_EQUAL(res1[0].valueAsDouble(), 2025.03);
+    BOOST_CHECK_EQUAL(res1[10].valueAsDouble(), 2025.03);
+    BOOST_CHECK_EQUAL(res1[2000].valueAsDouble(), 2025.03);
+    BOOST_CHECK_EQUAL(res1[-20000].valueAsDouble(), 2025.03);
+    BOOST_CHECK_EQUAL(res1[2025.03].valueAsDouble(), 2025.03);
+}
+
+BOOST_AUTO_TEST_CASE(EvaluationResult_invalid_index)
+{
+    const std::vector<double> vec = {4.0, 8.0, 12.0};
+    const EvaluationResult res1(vec);
+
+    for (const int size = static_cast<int>(vec.size());
+         const auto& invalidIndex: {-40, size, size + 56})
+    {
+        BOOST_CHECK_THROW(res1[invalidIndex], EvaluationResult::EvalResultTimeIndexOutOfRange);
+    }
+}
+
 struct MyDummyFixture: Registry<Node>
 {
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;

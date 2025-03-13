@@ -195,9 +195,12 @@ EvaluationResult EvaluationResult::operator[](int timeIndex) const
     {
         return *this;
     }
-    // TODO check index vs value_.size()?
-
-    return EvaluationResult(std::get<std::vector<double>>(value_).at(timeIndex));
+    const auto& vec = std::get<std::vector<double>>(value_);
+    if (timeIndex < 0 || timeIndex >= vec.size())
+    {
+        throw EvalResultTimeIndexOutOfRange("timeIndex is out of range");
+    }
+    return EvaluationResult(vec.at(timeIndex));
 }
 
 std::vector<double> EvaluationResult::shift(const std::vector<double>& values, int timeShift)
