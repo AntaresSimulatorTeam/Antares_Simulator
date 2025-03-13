@@ -33,7 +33,7 @@ namespace Antares::Optimisation::LinearProblemMpsolverImpl
 
 OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solverName)
 {
-    mpSolver_ = std::unique_ptr<operations_research::MPSolver>(MPSolverFactory(isMip, solverName));
+    mpSolver_ = MPSolverFactory(isMip, solverName);
     objective_ = mpSolver_->MutableObjective();
 }
 
@@ -179,7 +179,7 @@ void OrtoolsLinearProblem::WriteLP(const std::string& filename)
 
 MPSolver* OrtoolsLinearProblem::MpSolver() const
 {
-    return mpSolver_.get();
+    return mpSolver_;
 }
 
 OrtoolsMipSolution* OrtoolsLinearProblem::solve(bool verboseSolver)
@@ -191,7 +191,7 @@ OrtoolsMipSolution* OrtoolsLinearProblem::solve(bool verboseSolver)
 
     auto mpStatus = mpSolver_->Solve(params_);
 
-    solution_ = std::make_unique<OrtoolsMipSolution>(mpStatus, mpSolver_.get());
+    solution_ = std::make_unique<OrtoolsMipSolution>(mpStatus, mpSolver_);
     return solution_.get();
 }
 
