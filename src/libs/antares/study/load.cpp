@@ -245,6 +245,11 @@ bool Study::internalLoadModelerComponents()
     {
         logs.info() << "No modeler inputs were loaded: " << e.what();
     }
+
+    if (fs::exists(folder / "parameters.yml"))
+    {
+        logs.warning() << "parameters.yml ignored, use command line to set solver parameters";
+    }
     return true;
 }
 
