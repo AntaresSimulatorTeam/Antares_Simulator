@@ -119,7 +119,6 @@ toc_depth: 2
 #### Build
 * vcpkg (linux, sirius) (#2078) (#2090) (#2145)
 * Remove src/antares-deps (#2182)
-* Use OR-Tools v9.11-rte1.1 (#2437)
 * Fix or-tools integration (#2402)
 * Better dependencies with cmake, antares matrix (#2369)
 * Fix build for clang (#2654)
@@ -212,7 +211,7 @@ toc_depth: 2
 #### For developers
 
 * Support for Ubuntu 22, Ubuntu 20 dropped
-* Update ortools to 9.11-rte1.2
+* Update ortools to 9.11-rte1.3
 * Various improvement to code quality
 * Sonarcloud coverage (#2652)(#2649)(#2647)(#2640)(#2641)(#2645)(#2639)
 * Write raw optimization results [ANT-2302] (#2565)

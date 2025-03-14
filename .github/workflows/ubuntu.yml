@@ -38,7 +38,7 @@ jobs:
     name: Build
     env:
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
-      os: ubuntu-20.04 # TODO keep it = ub-20.04 until tests releases are not updated
+      os: ubuntu-22.04
       # Caching strategy of VCPKG dependencies
       VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg_cache,readwrite"
 

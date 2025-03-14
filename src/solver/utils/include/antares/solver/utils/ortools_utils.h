@@ -68,7 +68,7 @@ class OrtoolsUtils
 public:
     struct SolverNames
     {
-        std::string LPSolverName, MIPSolverName;
+        std::optional<std::string> LPSolverName, MIPSolverName;
     };
     static const std::map<std::string, struct SolverNames> solverMap;
 };
