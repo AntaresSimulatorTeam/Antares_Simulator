@@ -75,16 +75,16 @@ BOOST_AUTO_TEST_CASE(initializing_options_from_cmd_line_options)
     cmdLineOptions.quadraticSolverParameters = "opt6 7";
 
     OptimizationOptions options;
-    options.firstOpimOptions.solverName = "scip";
+    options.firstOptimOptions.solverName = "scip";
     options.quadraticOptimOptions.solverName = "xpress";
-    options.firstOpimOptions.solverParameters = "opt2 52";
+    options.firstOptimOptions.solverParameters = "opt2 52";
     options.quadraticOptimOptions.solverParameters = "opt9 23";
 
     options.initializeWith(cmdLineOptions);
 
-    BOOST_CHECK_EQUAL(options.firstOpimOptions.solverName, "sirius");
+    BOOST_CHECK_EQUAL(options.firstOptimOptions.solverName, "sirius");
     BOOST_CHECK_EQUAL(options.quadraticOptimOptions.solverName, "coin");
-    BOOST_CHECK_EQUAL(options.firstOpimOptions.solverParameters, "opt1 5");
+    BOOST_CHECK_EQUAL(options.firstOptimOptions.solverParameters, "opt1 5");
     BOOST_CHECK_EQUAL(options.quadraticOptimOptions.solverParameters, "opt6 7");
 }
 

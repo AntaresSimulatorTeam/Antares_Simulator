@@ -109,7 +109,7 @@ BOOST_AUTO_TEST_CASE(invalid_ortools_linear_solver)
     API::APIInternal api;
     auto study_loader = std::make_unique<InMemoryStudyLoader>();
     Solver::Optimization::OptimizationOptions opt;
-    opt.firstOpimOptions.solverName = "this-solver-does-not-exist";
+    opt.firstOptimOptions.solverName = "this-solver-does-not-exist";
 
     auto shouldThrow = [&api, &study_loader, &opt] { return api.run(*study_loader, {}, opt); };
     BOOST_CHECK_EXCEPTION(

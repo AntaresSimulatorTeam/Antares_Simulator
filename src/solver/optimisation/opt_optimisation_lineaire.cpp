@@ -262,7 +262,7 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
         OPT_ExportStructures(problemeHebdo, writer);
     }
 
-    bool ret = runWeeklyOptimization(options.firstOpimOptions,
+    bool ret = runWeeklyOptimization(options.firstOptimOptions,
                                      problemeHebdo,
                                      writer,
                                      PREMIERE_OPTIMISATION,
@@ -275,7 +275,7 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
     {
         // We need to adjust some stuff before running the 2nd optimisation
         runThermalHeuristic(problemeHebdo);
-        return runWeeklyOptimization(options.secondOpimOptions,
+        return runWeeklyOptimization(options.secondOptimOptions,
                                      problemeHebdo,
                                      writer,
                                      DEUXIEME_OPTIMISATION,

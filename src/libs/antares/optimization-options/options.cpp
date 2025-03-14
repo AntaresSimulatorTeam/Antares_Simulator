@@ -26,25 +26,25 @@ void OptimizationOptions::initializeWith(const CmdLineOptimOptions& cmdLineOptim
 {
     // Do solvers log their own messaqes
     solverLogs = cmdLineOptimOptions.solverLogs || solverLogs;
-    firstOpimOptions.solverLogs = solverLogs;
-    secondOpimOptions.solverLogs = solverLogs;
+    firstOptimOptions.solverLogs = solverLogs;
+    secondOptimOptions.solverLogs = solverLogs;
     quadraticOptimOptions.solverLogs = solverLogs;
 
     // Solver names
-    firstOpimOptions.solverName = cmdLineOptimOptions.linearSolver;
-    secondOpimOptions.solverName = cmdLineOptimOptions.linearSolver;
+    firstOptimOptions.solverName = cmdLineOptimOptions.linearSolver;
+    secondOptimOptions.solverName = cmdLineOptimOptions.linearSolver;
     quadraticOptimOptions.solverName = cmdLineOptimOptions.quadraticSolver;
 
     // Linear solver parameters
     if (cmdLineOptimOptions.linearSolverParameters.empty())
     {
-        firstOpimOptions.solverParameters = cmdLineOptimOptions.lpSolverParamOptim1;
-        secondOpimOptions.solverParameters = cmdLineOptimOptions.lpSolverParamOptim2;
+        firstOptimOptions.solverParameters = cmdLineOptimOptions.lpSolverParamOptim1;
+        secondOptimOptions.solverParameters = cmdLineOptimOptions.lpSolverParamOptim2;
     }
     else
     {
-        firstOpimOptions.solverParameters = cmdLineOptimOptions.linearSolverParameters;
-        secondOpimOptions.solverParameters = cmdLineOptimOptions.linearSolverParameters;
+        firstOptimOptions.solverParameters = cmdLineOptimOptions.linearSolverParameters;
+        secondOptimOptions.solverParameters = cmdLineOptimOptions.linearSolverParameters;
     }
 
     // Quadratic solver parameters

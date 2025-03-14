@@ -47,8 +47,8 @@ class OptimizationOptions
 public:
     void initializeWith(const CmdLineOptimOptions& cmdLineOptimOptions);
 
-    SingleOptimOptions firstOpimOptions;
-    SingleOptimOptions secondOpimOptions;
+    SingleOptimOptions firstOptimOptions;
+    SingleOptimOptions secondOptimOptions;
     SingleOptimOptions quadraticOptimOptions;
     bool solverLogs = false;
 };

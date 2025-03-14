@@ -61,8 +61,8 @@ BOOST_FIXTURE_TEST_CASE(reset, Fixture)
     BOOST_CHECK_EQUAL(p.simulationDays.first, 0);
     BOOST_CHECK_EQUAL(p.nbTimeSeriesThermal, 1);
     BOOST_CHECK_EQUAL(p.synthesis, true);
-    BOOST_CHECK_EQUAL(p.optOptions.firstOpimOptions.solverName, "sirius");
-    BOOST_CHECK_EQUAL(p.optOptions.secondOpimOptions.solverName, "sirius");
+    BOOST_CHECK_EQUAL(p.optOptions.firstOptimOptions.solverName, "sirius");
+    BOOST_CHECK_EQUAL(p.optOptions.secondOptimOptions.solverName, "sirius");
     BOOST_CHECK_EQUAL(p.optOptions.quadraticOptimOptions.solverName, "sirius");
 }
 
