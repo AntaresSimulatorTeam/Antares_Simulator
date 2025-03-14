@@ -86,7 +86,7 @@ struct SimplexResult
 
 static void fillModelerComponents(std::vector<std::unique_ptr<ComponentFiller>>& componentFillers,
                                   std::vector<LinearProblemFiller*>& fillersCollection,
-                                  Study::SystemModel::System* modelerSystem)
+                                  Antares::Study::SystemModel::System* modelerSystem)
 {
     if (modelerSystem == nullptr)
     {
