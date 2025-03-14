@@ -1,6 +1,6 @@
 ---
 hide:
- - toc
+  - toc
 ---
 
 # Command-line instructions
@@ -9,15 +9,15 @@ hide:
 
 ## Simulation
 
-| command                | usage                                                                                             |
-|:-----------------------|:--------------------------------------------------------------------------------------------------|
-| -i, --input            | Study folder                                                                                      |
-| --expansion            | Force the simulation in [expansion](04-parameters.md#mode) mode                                   |
-| --economy              | Force the simulation in [economy](04-parameters.md#mode) mode                                     |
-| --adequacy             | Force the simulation in [adequacy](04-parameters.md#mode) mode                                    |
-| --parallel             | Enable [parallel](optional-features/multi-threading.md) computation of MC years                   |
-| --force-parallel=VALUE | Override the max number of years computed [simultaneously](optional-features/multi-threading.md)  |
-| --solver=VALUE         | The optimization solver to use. Possible values are: `sirius` (default), `coin`, `xpress`, `scip` |
+| command                | usage                                                                                                                                                    |
+|:-----------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| -i, --input            | Study folder                                                                                                                                             |
+| --expansion            | Force the simulation in [expansion](04-parameters.md#mode) mode                                                                                          |
+| --economy              | Force the simulation in [economy](04-parameters.md#mode) mode                                                                                            |
+| --adequacy             | Force the simulation in [adequacy](04-parameters.md#mode) mode                                                                                           |
+| --parallel             | Enable [parallel](optional-features/multi-threading.md) computation of MC years                                                                          |
+| --force-parallel=VALUE | Override the max number of years computed [simultaneously](optional-features/multi-threading.md)                                                         |
+| --solver=VALUE         | The optimization solver to use. Possible values are: `sirius` (default, LP only), `coin`, `xpress`, `scip` (MIP only), `glpk`, `highs`, `pdlp` (LP only) |
 
 ## Parameters
 
@@ -35,15 +35,15 @@ hide:
 
 ## Optimization
 
-| command                  | usage                                                                                                                                                                                                                                                  |
-|:-------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| --optimization-range     | Force the [simplex optimization range](04-parameters.md#simplex-range) ('day' or 'week')                                                                                                                                                               |
-| --no-constraints         | Ignore all binding constraints                                                                                                                                                                                                                         |
-| --no-ts-import           | Do not import timeseries into the input folder (this option may be useful for running old studies without upgrade)                                                                                                                                     |
-| -m, --mps-export         | Export anonymous MPS, weekly or daily optimal UC+dispatch linear (MPS will be named if the problem is infeasible)                                                                                                                                      |
-| -s, --named-mps-problems | Export named MPS, weekly or daily optimal UC+dispatch linear                                                                                                                                                                                           |
-| --solver-logs            | Print solver logs                                                                                                                                                                                                                                      |
-| --solver-parameters      | Set solver-specific parameters, for instance `--solver-parameters="THREADS 1 PRESOLVE 1"` for XPRESS or `--solver-parameters="parallel/maxnthreads 1, lp/presolving TRUE"` for SCIP. Syntax is solver-dependent, and only supported for SCIP & XPRESS. |
+| command                  | usage                                                                                                                                                                                                                                                        |
+|:-------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| --optimization-range     | Force the [simplex optimization range](04-parameters.md#simplex-range) ('day' or 'week')                                                                                                                                                                     |
+| --no-constraints         | Ignore all binding constraints                                                                                                                                                                                                                               |
+| --no-ts-import           | Do not import timeseries into the input folder (this option may be useful for running old studies without upgrade)                                                                                                                                           |
+| -m, --mps-export         | Export anonymous MPS, weekly or daily optimal UC+dispatch linear (MPS will be named if the problem is infeasible)                                                                                                                                            |
+| -s, --named-mps-problems | Export named MPS, weekly or daily optimal UC+dispatch linear                                                                                                                                                                                                 |
+| --solver-logs            | Print solver logs                                                                                                                                                                                                                                            |
+| --solver-parameters      | Set solver-specific parameters, for instance `--solver-parameters="THREADS 1 PRESOLVE 1"` for XPRESS or `--solver-parameters="parallel/maxnthreads 1, lp/presolving TRUE"` for SCIP. Syntax is solver-dependent, and only supported for SCIP, XPRESS & PDLP. |
 
 ## Misc.
 
