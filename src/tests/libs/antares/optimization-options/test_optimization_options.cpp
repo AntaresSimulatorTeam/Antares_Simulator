@@ -63,9 +63,18 @@ BOOST_AUTO_TEST_CASE(cmd_line_options_has_params_for_both_optims_and_for_optim_1
 
 BOOST_AUTO_TEST_CASE(cmd_line_options_asks_for_MILP_with_Sirius_solver__exception_raised)
 {
-    bool MILPisAsked = true;
-    BOOST_CHECK_THROW(Check::checkSolverOptions(cmdLineOptions, MILPisAsked),
+    bool MILPrequired = true;
+    BOOST_CHECK_THROW(Check::checkSolverOptions(cmdLineOptions, MILPrequired),
                       Error::IncompatibleMILPOrtoolsSolver);
+}
+
+BOOST_AUTO_TEST_CASE(MILP_is_required_and_params_for_optim1_is_supplied__exception_raised)
+{
+    bool MILPrequired = true;
+    cmdLineOptions.linearSolver = "coin"; // When MILP, linear solver cannot be Sirius (default)
+    cmdLineOptions.lpSolverParamOptim1 = "Some parameters for solver at optim 1";
+    BOOST_CHECK_THROW(Check::checkSolverOptions(cmdLineOptions, MILPrequired),
+                      Error::UseMILPsolverWithWrongOptions);
 }
 
 BOOST_AUTO_TEST_CASE(initializing_options_from_cmd_line_options)
