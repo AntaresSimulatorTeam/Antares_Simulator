@@ -73,6 +73,7 @@ private:
     const YmlModel::Model& model_;
 
     std::any buildShiftNode(Node* shifted_expr, ExprParser::ShiftContext* context);
+    Node* NodeFromShiftContext(ExprParser::Shift_exprContext* shift_expr);
 };
 
 Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
@@ -286,9 +287,28 @@ std::any ConvertorVisitor::visitFunction([[maybe_unused]] ExprParser::FunctionCo
     throw NotImplemented("Node function not implemented yet");
 }
 
+Node* ConvertorVisitor::NodeFromShiftContext(ExprParser::Shift_exprContext* shift_expr)
+{
+    if (shift_expr)
+    {
+        return std::any_cast<Node*>(shift_expr->accept(this));
+    }
+    else
+    {
+        return registry_.create<LiteralNode>(0);
+    }
+}
+
 // TODO implement this
 std::any ConvertorVisitor::visitTimeSum([[maybe_unused]] ExprParser::TimeSumContext* context)
 {
+    auto from = NodeFromShiftContext(context->from->shift_expr());
+
+    auto to = NodeFromShiftContext(context->to->shift_expr());
+
+    auto expr = std::any_cast<Node*>(context->expr()->accept(this));
+    auto from1 = std::any_cast<Node*>(context->shift(0)->accept(this));
+
     throw NotImplemented("Node time sum not implemented yet");
 }
 
