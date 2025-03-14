@@ -36,7 +36,7 @@ static void checkSolverMILPoptionsConsistency(const CmdLineOptimOptions& solverO
 
     bool UserSuppliedParamsOptim1 = !solverOptions.lpSolverParamOptim1.empty();
     bool UserSuppliedParamsOptim2 = !solverOptions.lpSolverParamOptim2.empty();
-    if(UserSuppliedParamsOptim1 || UserSuppliedParamsOptim2)
+    if (UserSuppliedParamsOptim1 || UserSuppliedParamsOptim2)
     {
         throw Error::UseMILPsolverWithWrongOptions();
     }

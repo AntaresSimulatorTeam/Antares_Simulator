@@ -137,7 +137,6 @@ UseMILPsolverWithWrongOptions::UseMILPsolverWithWrongOptions():
 {
 }
 
-
 IncompatibleOptRangeHydroPricing::IncompatibleOptRangeHydroPricing():
     LoadingError("Simplex optimization range and hydro pricing mode : values are not compatible ")
 {
