@@ -89,7 +89,7 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
       "SCIP."
       "Syntax is solver-dependent, and only supported for SCIP & XPRESS.");
 
-    //--linear-solver-parameters
+    //--solver-parameters
     parser->add(options.solverOptions.linearSolverParameters,
                 ' ',
                 "solver-parameters",

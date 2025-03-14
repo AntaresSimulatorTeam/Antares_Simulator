@@ -20,38 +20,30 @@
  */
 
 #pragma once
-#include <filesystem>
-#include <memory>
+
 #include <string>
 
-#include <antares/inifile/inifile.h>
-#include <antares/study/version.h>
-
-#include "additionalConstraints.h"
-#include "properties.h"
-#include "series.h"
-
-namespace Antares::Data::ShortTermStorage
+namespace Antares::Optimization
 {
-class STStorageCluster
+class PartialKey
 {
 public:
-    bool enabled() const;
+    PartialKey(const std::string& component_id, const std::string& variable_id);
 
-    bool validate(StudyVersion studyVersion) const;
+    const std::string& getComponent() const;
+    const std::string& getVariable() const;
 
-    bool loadFromSection(const IniFile::Section& section);
+    auto operator<=>(const PartialKey&) const = default; // Automatically generates <, >, ==, etc.
 
-    bool loadSeries(const std::filesystem::path& folder, StudyVersion studyVersion) const;
-
-    void saveProperties(IniFile& ini) const;
-
-    bool saveSeries(const std::string& path) const;
-
-    std::string id;
-
-    std::shared_ptr<Series> series = std::make_shared<Series>();
-    mutable Properties properties;
-    std::vector<AdditionalConstraints> additionalConstraints;
+private:
+    std::string component_id;
+    std::string variable_id;
 };
-} // namespace Antares::Data::ShortTermStorage
+
+class PartialKeyHash
+{
+public:
+    std::size_t operator()(const PartialKey& p) const;
+};
+
+} // namespace Antares::Optimization

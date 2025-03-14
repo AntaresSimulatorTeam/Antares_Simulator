@@ -108,6 +108,8 @@ public:
         pumpMod,
     };
 
+    static bool LoadIniFile(Study& study, const std::filesystem::path& folder);
+
     /*!
     ** \brief Load data for hydro container from a folder
     **
@@ -228,6 +230,8 @@ public:
     std::unordered_map<uint, AreaDependantHydroManagementData> managementData;
 
     std::vector<std::optional<double>> deltaBetweenFinalAndInitialLevels;
+
+    double overflowSpilledCostDifference = 1.;
 
 private:
     static bool checkReservoirLevels(const Study& study);

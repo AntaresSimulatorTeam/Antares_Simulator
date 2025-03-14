@@ -62,8 +62,10 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
     auto count = dim.getNumberOfTimesteps();
     if (lb.size() != count)
     {
-        throw std::invalid_argument("requested " + std::to_string(count)
-                                    + " variables but lb size = " + std::to_string(lb.size()));
+        std::ostringstream errMessage;
+
+        errMessage << "requested " << count << " variables but lb size = " << lb.size();
+        throw BoundsSizeMismatch(errMessage.str());
     }
     const auto offset = *dim.getTimesteps().begin();
 
@@ -88,8 +90,9 @@ void VariablesBulkAddition::addVariable(double lb,
     auto count = dim.getNumberOfTimesteps();
     if (ub.size() != count)
     {
-        throw std::invalid_argument("requested " + std::to_string(count)
-                                    + " variables but ub size = " + std::to_string(ub.size()));
+        std::ostringstream errMessage;
+        errMessage << "requested " << count << " variables but ub size = " << ub.size();
+        throw BoundsSizeMismatch(errMessage.str());
     }
     const auto offset = *dim.getTimesteps().begin();
     variableDictionary.addVariable(
@@ -113,9 +116,10 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
     auto count = dim.getNumberOfTimesteps();
     if (lb.size() != ub.size() || lb.size() != count)
     {
-        throw std::invalid_argument("requested " + std::to_string(count)
-                                    + " variables but lb size = " + std::to_string(lb.size())
-                                    + " and ub size = " + std::to_string(ub.size()));
+        std::ostringstream errMessage;
+        errMessage << "requested " << count << " variables but lb size = " << lb.size()
+                   << " and ub size = " << ub.size();
+        throw BoundsSizeMismatch(errMessage.str());
     }
     const auto offset = *dim.getTimesteps().begin();
 
@@ -209,10 +213,10 @@ void ComponentFiller::addStaticConstraint(Optimisation::LinearProblemApi::ILinea
     auto* ct = pb.addConstraint(linear_constraint.lb,
                                 linear_constraint.ub,
                                 component_.Id() + "." + constraint_id);
-    for (auto [var_id, coef]: linear_constraint.coef_per_var)
+    for (const auto& [variableFullKey, coefficient]: linear_constraint.coef_per_var)
     {
-        auto* variable = variableDictionary(component_.Id(), var_id);
-        ct->setCoefficient(variable, coef);
+        auto* variable = variableDictionary(variableFullKey);
+        ct->setCoefficient(variable, coefficient);
     }
 }
 
@@ -227,23 +231,11 @@ void ComponentFiller::addTimeDependentConstraints(
                                     linear_constraint.ub,
                                     component_.Id() + "." + constraint_id + '_'
                                       + std::to_string(linear_constraint.timeStep));
-        for (const auto& [var_id, coef]: linear_constraint.coef_per_var)
+        for (const auto& [variableFullKey, coefficient]: linear_constraint.coef_per_var)
         {
-            if (IsThisVariableTimeDependent(var_id))
-            {
-                // TODO scenario = 0
-                auto* variable = variableDictionary(component_.Id(),
-                                                    var_id,
-                                                    0,
-                                                    linear_constraint.timeStep);
+            auto* variable = variableDictionary(variableFullKey);
 
-                ct->setCoefficient(variable, coef);
-            }
-            else
-            {
-                auto* variable = variableDictionary(component_.Id(), var_id);
-                ct->setCoefficient(variable, coef);
-            }
+            ct->setCoefficient(variable, coefficient);
         }
     }
 }
@@ -255,7 +247,7 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
     Expressions::Visitors::EvaluationContext evaluationContext(component_.getParameterValues(),
                                                                {},
                                                                data);
-    ReadLinearConstraintVisitor visitor(evaluationContext, ctx);
+    ReadLinearConstraintVisitor visitor(evaluationContext, ctx, component_.Id());
     for (const auto& constraint: component_.getModel()->getConstraints() | std::views::values)
     {
         auto* root_node = constraint.expression().RootNode();
@@ -288,35 +280,23 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
                                                                {},
                                                                data);
 
-    ReadLinearExpressionVisitor visitor(evaluationContext, ctx);
+    ReadLinearExpressionVisitor visitor(evaluationContext, ctx, component_.Id());
 
-    auto linear_expressions = visitor.dispatch(model->Objective().RootNode())
-                                .GetLinearExpressions();
+    const auto timeDependentLinearExpression = visitor.dispatch(model->Objective().RootNode());
+    const auto& linear_expressions = timeDependentLinearExpression.GetLinearExpressions();
 
-    const auto& linear_expression = linear_expressions[ctx.getFirstTimeStep()];
-    if (abs(linear_expression.offset()) > 1e-10)
+    if (abs(linear_expressions.at(ctx.getFirstTimeStep()).offset()) > 1e-10)
     {
         throw std::invalid_argument("Antares does not support objective offsets (found in model '"
                                     + model->Id() + "' of component '" + component_.Id() + "').");
     }
 
-    for (auto [var_id, coef]: linear_expression.coefPerVar())
+    for (const auto& linear_expression: linear_expressions | std::views::values)
     {
-        if (IsThisVariableTimeDependent(var_id))
+        for (const auto& [variableFullKey, coefficient]: linear_expression.coefPerVar())
         {
-            for (auto var_pos = ctx.getFirstTimeStep(); var_pos <= ctx.getLastTimeStep(); ++var_pos)
-            {
-                // TODO scenario = 0
-                auto* variable = variableDictionary(component_.Id(), var_id, 0, var_pos);
-                pb.setObjectiveCoefficient(variable,
-                                           linear_expressions.at(var_pos).coefPerVar()[var_id]);
-            }
-        }
-        else
-        {
-            // TODO scenario = 0
-            auto* variable = variableDictionary(component_.Id(), var_id);
-            pb.setObjectiveCoefficient(variable, coef);
+            auto* variable = variableDictionary(variableFullKey);
+            pb.setObjectiveCoefficient(variable, coefficient);
         }
     }
 }
@@ -329,13 +309,4 @@ bool ComponentFiller::IsThisConstraintTimeDependent(const Expressions::Nodes::No
            || ret == Expressions::Visitors::TimeIndex::VARYING_IN_TIME_AND_SCENARIO;
 }
 
-// return false if the variable with the id var_id is not found or if it is not time-dependent
-bool ComponentFiller::IsThisVariableTimeDependent(const std::string& var_id) const
-{
-    if (const auto& it = modelVariable_.find(var_id); it != modelVariable_.end())
-    {
-        return it->second.isTimeDependent();
-    }
-    return false;
-}
 } // namespace Antares::Optimization

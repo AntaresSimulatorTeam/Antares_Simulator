@@ -19,39 +19,37 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#pragma once
-#include <filesystem>
-#include <memory>
-#include <string>
+#include <boost/container_hash/hash.hpp>
 
-#include <antares/inifile/inifile.h>
-#include <antares/study/version.h>
+#include <antares/solver/optim-model-filler/PartialKey.h>
 
-#include "additionalConstraints.h"
-#include "properties.h"
-#include "series.h"
-
-namespace Antares::Data::ShortTermStorage
+namespace Antares::Optimization
 {
-class STStorageCluster
+
+// PartialKey
+PartialKey::PartialKey(const std::string& component_id, const std::string& variable_id):
+    component_id(component_id),
+    variable_id(variable_id)
 {
-public:
-    bool enabled() const;
+}
 
-    bool validate(StudyVersion studyVersion) const;
+const std::string& PartialKey::getComponent() const
+{
+    return component_id;
+}
 
-    bool loadFromSection(const IniFile::Section& section);
+const std::string& PartialKey::getVariable() const
+{
+    return variable_id;
+}
 
-    bool loadSeries(const std::filesystem::path& folder, StudyVersion studyVersion) const;
+// PartialKeyhash
 
-    void saveProperties(IniFile& ini) const;
-
-    bool saveSeries(const std::string& path) const;
-
-    std::string id;
-
-    std::shared_ptr<Series> series = std::make_shared<Series>();
-    mutable Properties properties;
-    std::vector<AdditionalConstraints> additionalConstraints;
-};
-} // namespace Antares::Data::ShortTermStorage
+std::size_t PartialKeyHash::operator()(const PartialKey& p) const
+{
+    std::size_t seed = 0;
+    boost::hash_combine(seed, p.getComponent());
+    boost::hash_combine(seed, p.getVariable());
+    return seed;
+}
+} // namespace Antares::Optimization
