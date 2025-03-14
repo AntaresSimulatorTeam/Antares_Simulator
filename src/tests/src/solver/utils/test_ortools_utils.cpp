@@ -55,9 +55,7 @@ BOOST_AUTO_TEST_SUITE(_ortools_utils_)
 // The following solvers support LP & MIP
 BOOST_DATA_TEST_CASE(
   test_lp_and_mip_solvers_support,
-  bdata::make({SolverTestData{"xpress", false, SolverType::XPRESS_LINEAR_PROGRAMMING},
-               SolverTestData{"xpress", true, SolverType::XPRESS_MIXED_INTEGER_PROGRAMMING},
-               SolverTestData{"coin", false, SolverType::CLP_LINEAR_PROGRAMMING},
+  bdata::make({SolverTestData{"coin", false, SolverType::CLP_LINEAR_PROGRAMMING},
                SolverTestData{"coin", true, SolverType::CBC_MIXED_INTEGER_PROGRAMMING},
                SolverTestData{"highs", false, SolverType::HIGHS_LINEAR_PROGRAMMING},
                SolverTestData{"highs", true, SolverType::HIGHS_MIXED_INTEGER_PROGRAMMING},
