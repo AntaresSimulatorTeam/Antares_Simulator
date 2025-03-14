@@ -27,28 +27,29 @@ using namespace Antares::Solver::Optimization;
 
 BOOST_AUTO_TEST_SUITE(OptimizationOptionsTests)
 
-BOOST_AUTO_TEST_CASE(test_insertion_operator)
+BOOST_AUTO_TEST_CASE(initializing_options_from_cmd_line_options)
 {
-    OptimizationOptions options1;
-    options1.firstOpimOptions.solverName = "scip";
-    options1.quadraticOptimOptions.solverName = "xpress";
-    options1.firstOpimOptions.solverParameters = "opt2 52";
-    options1.quadraticOptimOptions.solverParameters = "opt9 23";
-    options1.solverLogs = true;
+    CmdLineOptimOptions cmdLineOptions{.linearSolver = "sirius",
+                                       .quadraticSolver = "coin",
+                                       .linearSolverParameters = "opt1 5",
+                                       .quadraticSolverParameters = "opt6 7",
+                                       .solverLogs = false};
 
-    CmdLineOptimOptions options2{.linearSolver = "sirius",
-                                 .quadraticSolver = "coin",
-                                 .linearSolverParameters = "opt1 5",
-                                 .quadraticSolverParameters = "opt6 7",
-                                 .solverLogs = false};
-    options1.initializeWith(options2);
-    // All fields of options1 must be overwritten with those of options2, except solverLogs which is
+    OptimizationOptions options;
+    options.firstOpimOptions.solverName = "scip";
+    options.quadraticOptimOptions.solverName = "xpress";
+    options.firstOpimOptions.solverParameters = "opt2 52";
+    options.quadraticOptimOptions.solverParameters = "opt9 23";
+    options.solverLogs = true;
+
+    options.initializeWith(cmdLineOptions);
+    // All fields of options must be overwritten with those of options2, except solverLogs which is
     // a logical OR
-    BOOST_CHECK_EQUAL(options1.firstOpimOptions.solverName, "sirius");
-    BOOST_CHECK_EQUAL(options1.quadraticOptimOptions.solverName, "coin");
-    BOOST_CHECK_EQUAL(options1.firstOpimOptions.solverParameters, "opt1 5");
-    BOOST_CHECK_EQUAL(options1.quadraticOptimOptions.solverParameters, "opt6 7");
-    BOOST_CHECK_EQUAL(options1.solverLogs, true);
+    BOOST_CHECK_EQUAL(options.firstOpimOptions.solverName, "sirius");
+    BOOST_CHECK_EQUAL(options.quadraticOptimOptions.solverName, "coin");
+    BOOST_CHECK_EQUAL(options.firstOpimOptions.solverParameters, "opt1 5");
+    BOOST_CHECK_EQUAL(options.quadraticOptimOptions.solverParameters, "opt6 7");
+    BOOST_CHECK_EQUAL(options.solverLogs, true);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
