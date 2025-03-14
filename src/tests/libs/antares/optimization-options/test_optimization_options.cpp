@@ -19,10 +19,12 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #define WIN32_LEAN_AND_MEAN
+
 #include <boost/test/unit_test.hpp>
 
 #include <antares/optimization-options/options.h>
 #include "antares/checks/checksOnLPsolver.h"
+#include "antares/exception/LoadingError.hpp"
 
 using namespace Antares;
 using namespace Antares::Solver::Optimization;
@@ -35,29 +37,56 @@ BOOST_AUTO_TEST_CASE(check_default_cmd_line_options)
     BOOST_CHECK_NO_THROW(Check::checkSolverOptions(cmdLineOptions));
 }
 
+BOOST_AUTO_TEST_CASE(when_cmd_line_options_has_linear_solver_name_empty__exception_raised)
+{
+    CmdLineOptimOptions cmdLineOptions;
+    cmdLineOptions.linearSolver.clear();
+    BOOST_CHECK_THROW(Check::checkSolverOptions(cmdLineOptions), Error::InvalidSolver);
+}
+
+BOOST_AUTO_TEST_CASE(when_cmd_line_options_has_quadratic_solver_name_empty__exception_raised)
+{
+    CmdLineOptimOptions cmdLineOptions;
+    cmdLineOptions.quadraticSolver.clear();
+    BOOST_CHECK_THROW(Check::checkSolverOptions(cmdLineOptions), Error::InvalidSolver);
+}
+
+BOOST_AUTO_TEST_CASE(cmd_line_options_has_params_for_both_optims_and_for_optim_1__exception_raised)
+{
+    CmdLineOptimOptions cmdLineOptions;
+    cmdLineOptions.linearSolverParameters = "some params for both optims";
+    cmdLineOptions.lpSolverParamOptim1 = "some params for optim 1";
+    BOOST_CHECK_THROW(Check::checkSolverOptions(cmdLineOptions),
+                      Error::IncompatibleLinearSolverParameters);
+}
+
+BOOST_AUTO_TEST_CASE(cmd_line_options_asks_for_MILP_with_Sirius_solver__exception_raised)
+{
+    CmdLineOptimOptions cmdLineOptions;
+    bool MILPisAsked = true;
+    BOOST_CHECK_THROW(Check::checkSolverOptions(cmdLineOptions, MILPisAsked),
+                      Error::IncompatibleMILPOrtoolsSolver);
+}
+
 BOOST_AUTO_TEST_CASE(initializing_options_from_cmd_line_options)
 {
-    CmdLineOptimOptions cmdLineOptions{.linearSolver = "sirius",
-                                       .quadraticSolver = "coin",
-                                       .linearSolverParameters = "opt1 5",
-                                       .quadraticSolverParameters = "opt6 7",
-                                       .solverLogs = false};
+    CmdLineOptimOptions cmdLineOptions;
+    cmdLineOptions.quadraticSolver = "coin";
+    cmdLineOptions.linearSolverParameters = "opt1 5";
+    cmdLineOptions.quadraticSolverParameters = "opt6 7";
 
     OptimizationOptions options;
     options.firstOpimOptions.solverName = "scip";
     options.quadraticOptimOptions.solverName = "xpress";
     options.firstOpimOptions.solverParameters = "opt2 52";
     options.quadraticOptimOptions.solverParameters = "opt9 23";
-    options.solverLogs = true;
 
     options.initializeWith(cmdLineOptions);
-    // All fields of options must be overwritten with those of options2, except solverLogs which is
-    // a logical OR
+
     BOOST_CHECK_EQUAL(options.firstOpimOptions.solverName, "sirius");
     BOOST_CHECK_EQUAL(options.quadraticOptimOptions.solverName, "coin");
     BOOST_CHECK_EQUAL(options.firstOpimOptions.solverParameters, "opt1 5");
     BOOST_CHECK_EQUAL(options.quadraticOptimOptions.solverParameters, "opt6 7");
-    BOOST_CHECK_EQUAL(options.solverLogs, true);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
