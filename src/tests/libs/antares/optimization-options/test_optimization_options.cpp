@@ -29,31 +29,32 @@
 using namespace Antares;
 using namespace Antares::Solver::Optimization;
 
-BOOST_AUTO_TEST_SUITE(OptimizationOptionsTests)
+struct CmdLineOptionsFixture
+{
+    CmdLineOptimOptions cmdLineOptions;
+};
+
+BOOST_FIXTURE_TEST_SUITE(OptimizationOptionsTests, CmdLineOptionsFixture)
 
 BOOST_AUTO_TEST_CASE(check_default_cmd_line_options)
 {
-    CmdLineOptimOptions cmdLineOptions;
     BOOST_CHECK_NO_THROW(Check::checkSolverOptions(cmdLineOptions));
 }
 
 BOOST_AUTO_TEST_CASE(when_cmd_line_options_has_linear_solver_name_empty__exception_raised)
 {
-    CmdLineOptimOptions cmdLineOptions;
     cmdLineOptions.linearSolver.clear();
     BOOST_CHECK_THROW(Check::checkSolverOptions(cmdLineOptions), Error::InvalidSolver);
 }
 
 BOOST_AUTO_TEST_CASE(when_cmd_line_options_has_quadratic_solver_name_empty__exception_raised)
 {
-    CmdLineOptimOptions cmdLineOptions;
     cmdLineOptions.quadraticSolver.clear();
     BOOST_CHECK_THROW(Check::checkSolverOptions(cmdLineOptions), Error::InvalidSolver);
 }
 
 BOOST_AUTO_TEST_CASE(cmd_line_options_has_params_for_both_optims_and_for_optim_1__exception_raised)
 {
-    CmdLineOptimOptions cmdLineOptions;
     cmdLineOptions.linearSolverParameters = "some params for both optims";
     cmdLineOptions.lpSolverParamOptim1 = "some params for optim 1";
     BOOST_CHECK_THROW(Check::checkSolverOptions(cmdLineOptions),
@@ -62,7 +63,6 @@ BOOST_AUTO_TEST_CASE(cmd_line_options_has_params_for_both_optims_and_for_optim_1
 
 BOOST_AUTO_TEST_CASE(cmd_line_options_asks_for_MILP_with_Sirius_solver__exception_raised)
 {
-    CmdLineOptimOptions cmdLineOptions;
     bool MILPisAsked = true;
     BOOST_CHECK_THROW(Check::checkSolverOptions(cmdLineOptions, MILPisAsked),
                       Error::IncompatibleMILPOrtoolsSolver);
@@ -70,7 +70,6 @@ BOOST_AUTO_TEST_CASE(cmd_line_options_asks_for_MILP_with_Sirius_solver__exceptio
 
 BOOST_AUTO_TEST_CASE(initializing_options_from_cmd_line_options)
 {
-    CmdLineOptimOptions cmdLineOptions;
     cmdLineOptions.quadraticSolver = "coin";
     cmdLineOptions.linearSolverParameters = "opt1 5";
     cmdLineOptions.quadraticSolverParameters = "opt6 7";
