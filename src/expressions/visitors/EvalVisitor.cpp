@@ -155,14 +155,15 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
 
     // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
     const auto to = static_cast<int>(dispatch(node->to()).valueAsDouble());
-    // EvaluationResult ret(0.);
-    //
-    // for (auto shift = from; shift <= to; ++shift)
-    // {
-    //     ret += expression[rotatedIndex(shift, shift, from, to)];
-    // }
 
-    return expression.timeSumResult(from, to);
+    // return expression.timeSumResult(from, to);
+    // OR
+    EvaluationResult ret(0.);
+    for (auto shift = from; shift <= to; shift++)
+    {
+        ret += expression.shiftResult(shift);
+    }
+    return ret;
 }
 
 std::string EvalVisitor::name() const

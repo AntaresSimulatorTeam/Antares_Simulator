@@ -190,13 +190,20 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const TimeIndex
 }
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const TimeSumNode* node)
 {
-    const auto ret = dispatch(node->expression());
+    const auto expression = dispatch(node->expression());
     // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
     const auto from = static_cast<int>(evalVisitor_.dispatch(node->from()).valueAsDouble());
 
     // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
     const auto to = static_cast<int>(evalVisitor_.dispatch(node->to()).valueAsDouble());
 
-    return ret.timeSumLinearExpressions(from, to);
+    // return expression.timeSumLinearExpressions(from, to);
+    // OR
+    TimeDependentLinearExpression ret(fillContext_);
+    for (auto shift = from; shift <= to; shift++)
+    {
+        ret += expression.shiftLinearExpressions(shift);
+    }
+    return ret;
 }
 } // namespace Antares::Optimization
