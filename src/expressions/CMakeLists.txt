@@ -7,7 +7,7 @@ set(SRC_Expressions
         nodes/ComponentNode.cpp
         nodes/BinaryNode.cpp
         nodes/UnaryNode.cpp
-        nodes/SumNode.cpp
+        nodes/MultipleChildNode.cpp
 
 
         visitors/CloneVisitor.cpp
@@ -29,6 +29,7 @@ set(SRC_Expressions
         NodeRegistry.cpp
         include/antares/expressions/NodeRegistry.h
         include/antares/expressions/nodes/SumNode.h
+        include/antares/expressions/nodes/MultipleChildNode.h
         include/antares/expressions/nodes/BinaryNode.h
         include/antares/expressions/nodes/ComparisonNode.h
         include/antares/expressions/nodes/ComponentNode.h
