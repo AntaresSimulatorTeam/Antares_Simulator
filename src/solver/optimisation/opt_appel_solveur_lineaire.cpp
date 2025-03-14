@@ -92,7 +92,7 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
                                           IResultWriter& writer)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
-    auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx[NumIntervalle]);
+    auto* solver = ProblemeAResoudre->ProblemesSpx[NumIntervalle];
 
     const int opt = optimizationNumber - 1;
     assert(opt >= 0 && opt < 2);
@@ -220,7 +220,7 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     solver = ORTOOLS_Simplexe(&Probleme, solver, keepBasis, options);
     if (solver != nullptr)
     {
-        ProblemeAResoudre->ProblemesSpx[NumIntervalle] = (void*)solver;
+        ProblemeAResoudre->ProblemesSpx[NumIntervalle] = solver;
     }
 
     measure.tick();
