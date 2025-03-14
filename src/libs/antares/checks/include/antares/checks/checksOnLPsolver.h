@@ -9,9 +9,11 @@
 
 namespace Antares::Check
 {
-void checkSolverOptions(const Antares::Solver::Optimization::CmdLineOptimOptions& solverOptions,
+void checkSolverOptions(const Solver::Optimization::CmdLineOptimOptions& solverOptions,
                         bool milpRequired);
 void checkForSolversExistence(const Solver::Optimization::CmdLineOptimOptions& solverOptions);
-void checkSolverMILPoptionsConsistency(const Solver::Optimization::CmdLineOptimOptions& solverOptions);
-void checkForSolverOptionsConsistency(const Solver::Optimization::CmdLineOptimOptions& solverOptions);
-}
+void checkSolverMILPoptionsConsistency(
+  const Solver::Optimization::CmdLineOptimOptions& solverOptions);
+void checkForSolverOptionsConsistency(
+  const Solver::Optimization::CmdLineOptimOptions& solverOptions);
+} // namespace Antares::Check
