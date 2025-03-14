@@ -6,4 +6,5 @@ add_boost_test(TestOptimizationOptions
         test_optimization_options.cpp
         LIBS
         Antares::optimization-options
+        Antares::checks
         Boost::unit_test_framework)

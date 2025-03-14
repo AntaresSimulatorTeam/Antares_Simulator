@@ -22,10 +22,18 @@
 #include <boost/test/unit_test.hpp>
 
 #include <antares/optimization-options/options.h>
+#include "antares/checks/checksOnLPsolver.h"
 
+using namespace Antares;
 using namespace Antares::Solver::Optimization;
 
 BOOST_AUTO_TEST_SUITE(OptimizationOptionsTests)
+
+BOOST_AUTO_TEST_CASE(check_default_cmd_line_options)
+{
+    CmdLineOptimOptions cmdLineOptions;
+    BOOST_CHECK_NO_THROW(Check::checkSolverOptions(cmdLineOptions));
+}
 
 BOOST_AUTO_TEST_CASE(initializing_options_from_cmd_line_options)
 {

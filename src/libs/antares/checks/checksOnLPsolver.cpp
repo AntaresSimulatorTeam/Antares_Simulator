@@ -21,13 +21,13 @@ static void checkSolverExists(const std::string solverName,
     }
 }
 
-void checkForSolversExistence(const CmdLineOptimOptions& solverOptions)
+static void checkForSolversExistence(const CmdLineOptimOptions& solverOptions)
 {
     checkSolverExists(solverOptions.linearSolver, getAvailableLinearSolverNames());
     checkSolverExists(solverOptions.quadraticSolver, getAvailableQuadraticSolverNames());
 }
 
-void checkSolverMILPoptionsConsistency(const CmdLineOptimOptions& solverOptions)
+static void checkSolverMILPoptionsConsistency(const CmdLineOptimOptions& solverOptions)
 {
     if (solverOptions.linearSolver == "sirius")
     {
@@ -35,7 +35,7 @@ void checkSolverMILPoptionsConsistency(const CmdLineOptimOptions& solverOptions)
     }
 }
 
-void checkForSolverOptionsConsistency(const CmdLineOptimOptions& solverOptions)
+static void checkForSolverOptionsConsistency(const CmdLineOptimOptions& solverOptions)
 {
     bool UserSuppliedParamsBothOptims = !solverOptions.linearSolverParameters.empty();
     bool UserSuppliedParamsOptim1 = !solverOptions.lpSolverParamOptim1.empty();
