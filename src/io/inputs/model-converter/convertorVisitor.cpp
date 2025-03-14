@@ -21,6 +21,7 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/io/inputs/model-converter/convertorVisitor.h>
+#include "antares/expressions/nodes/TimeSumNode.h"
 #include "antares/expressions/visitors/CompareVisitor.h"
 
 #include "ExprLexer.h"
@@ -307,9 +308,8 @@ std::any ConvertorVisitor::visitTimeSum([[maybe_unused]] ExprParser::TimeSumCont
     auto to = NodeFromShiftContext(context->to->shift_expr());
 
     auto expr = std::any_cast<Node*>(context->expr()->accept(this));
-    auto from1 = std::any_cast<Node*>(context->shift(0)->accept(this));
 
-    throw NotImplemented("Node time sum not implemented yet");
+    return static_cast<Node*>(registry_.create<TimeSumNode>(from, to, expr));
 }
 
 // TODO implement this

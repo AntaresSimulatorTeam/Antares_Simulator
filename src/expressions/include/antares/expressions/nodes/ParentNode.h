@@ -37,11 +37,11 @@ std::vector<T> createVector(T first, Args... args)
     return std::vector<T>{first, args...};
 }
 
-class MultipleChildNode: public Node
+class ParentNode: public Node
 {
 public:
     template<typename... NodePtr>
-    explicit MultipleChildNode(NodePtr... operands)
+    explicit ParentNode(NodePtr... operands)
     {
         if constexpr (sizeof...(NodePtr))
         {
@@ -50,26 +50,26 @@ public:
     }
 
     /**
-     * @brief Constructs a multiple child node node with the specified operands.
+     * @brief Constructs a parent node with the specified operands.
      *
      * @param operands The operands, collected in a vector
      */
-    explicit MultipleChildNode(const std::vector<Node*>& operands);
+    explicit ParentNode(const std::vector<Node*>& operands);
 
     /**
-     * @brief Constructs a multiple child node node with the specified operands. Vector is moved.
+     * @brief Constructs a parent node with the specified operands. Vector is moved.
      *
      * @param operands The operands, collected in a vector
      */
-    explicit MultipleChildNode(std::vector<Node*>&& operands):
+    explicit ParentNode(std::vector<Node*>&& operands):
         operands_(std::move(operands))
     {
     }
 
     /**
-     * @brief Retrieves the operands of the multiple child node.
+     * @brief Retrieves the operands of the parent node.
      *
-     * @return A vector of pointers to the operands of the multiple child node.
+     * @return A vector of pointers to the operands of the parent node.
      */
     const std::vector<Node*>& getOperands() const;
 

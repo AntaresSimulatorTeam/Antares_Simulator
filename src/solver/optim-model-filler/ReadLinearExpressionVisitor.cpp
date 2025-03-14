@@ -188,4 +188,15 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const TimeIndex
     const auto timeIndex = static_cast<int>(evalVisitor_.dispatch(node->right()).valueAsDouble());
     return ret[timeIndex];
 }
+TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const TimeSumNode* node)
+{
+    const auto ret = dispatch(node->expression());
+    // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
+    const auto from = static_cast<int>(evalVisitor_.dispatch(node->from()).valueAsDouble());
+
+    // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
+    const auto to = static_cast<int>(evalVisitor_.dispatch(node->to()).valueAsDouble());
+
+    return ret.timeSumLinearExpressions(from, to);
+}
 } // namespace Antares::Optimization

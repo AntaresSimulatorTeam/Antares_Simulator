@@ -59,9 +59,11 @@ public:
     TimeDependentLinearExpression operator-() const;
     TimeDependentLinearExpression shiftLinearExpressions(int shiftValue) const;
     TimeDependentLinearExpression operator[](int index) const;
+    TimeDependentLinearExpression timeSumLinearExpressions(int from, int to) const;
 
     const LinearExpressionMap& GetLinearExpressions() const;
     size_t getSize() const;
+    TimeDependentLinearExpression& operator+=(const TimeDependentLinearExpression& other);
 
 private:
     LinearExpressionMap linearExpressions_;

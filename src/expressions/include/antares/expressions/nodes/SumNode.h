@@ -22,16 +22,16 @@
 
 #include <vector>
 
-#include "antares/expressions/nodes/MultipleChildNode.h"
+#include "antares/expressions/nodes/ParentNode.h"
 
 namespace Antares::Expressions::Nodes
 {
 
 
-class SumNode: public MultipleChildNode
+class SumNode: public ParentNode
 {
 public:
-    using MultipleChildNode::MultipleChildNode;
+    using ParentNode::ParentNode;
 
     std::string name() const override
     {

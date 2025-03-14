@@ -7,7 +7,8 @@ set(SRC_Expressions
         nodes/ComponentNode.cpp
         nodes/BinaryNode.cpp
         nodes/UnaryNode.cpp
-        nodes/MultipleChildNode.cpp
+        nodes/ParentNode.cpp
+        nodes/TimeSumNode.cpp
 
 
         visitors/CloneVisitor.cpp
@@ -29,7 +30,7 @@ set(SRC_Expressions
         NodeRegistry.cpp
         include/antares/expressions/NodeRegistry.h
         include/antares/expressions/nodes/SumNode.h
-        include/antares/expressions/nodes/MultipleChildNode.h
+        include/antares/expressions/nodes/ParentNode.h
         include/antares/expressions/nodes/BinaryNode.h
         include/antares/expressions/nodes/ComparisonNode.h
         include/antares/expressions/nodes/ComponentNode.h
@@ -75,6 +76,9 @@ set(SRC_Expressions
         include/antares/expressions/expression.h
         include/antares/expressions/ShiftVector.h
         include/antares/expressions/nodes/TimeShiftNode.h
+        include/antares/expressions/nodes/TimeSumNode.h
+        nodes/TimeSumNode.cpp
+        include/antares/expressions/RotateIndex.h
 )
 
 source_group("expressions" FILES ${SRC_Expressions})

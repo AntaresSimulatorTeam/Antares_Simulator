@@ -119,6 +119,11 @@ LinearStatus LinearityVisitor::visit(const Nodes::TimeIndexNode*)
     return LinearStatus::CONSTANT;
 }
 
+LinearStatus LinearityVisitor::visit(const Nodes::TimeSumNode* timeSumNode)
+{
+    return dispatch(timeSumNode->expression());
+}
+
 std::string LinearityVisitor::name() const
 {
     return "LinearityVisitor";

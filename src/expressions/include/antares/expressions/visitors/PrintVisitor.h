@@ -51,5 +51,6 @@ private:
     std::string visit(const Nodes::ComponentParameterNode* node) override;
     std::string visit(const Nodes::TimeShiftNode* node) override;
     std::string visit(const Nodes::TimeIndexNode* node) override;
+    std::string visit(const Nodes::TimeSumNode* node) override;
 };
 } // namespace Antares::Expressions::Visitors

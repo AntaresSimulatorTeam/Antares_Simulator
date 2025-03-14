@@ -121,6 +121,12 @@ TimeIndex TimeIndexVisitor::visit(const Nodes::TimeIndexNode* timeIndexNode)
     return TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
 }
 
+TimeIndex TimeIndexVisitor::visit(const Nodes::TimeSumNode* timeSumNode)
+{
+    // TODO  case from = to
+    return dispatch(timeSumNode->expression());
+}
+
 TimeIndexVisitor::TimeIndexVisitor(std::unordered_map<const Nodes::Node*, TimeIndex> context):
     context_(std::move(context))
 {

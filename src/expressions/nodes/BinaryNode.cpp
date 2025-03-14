@@ -23,7 +23,7 @@
 namespace Antares::Expressions::Nodes
 {
 BinaryNode::BinaryNode(Node* left, Node* right):
-    MultipleChildNode(left, right)
+    ParentNode(left, right)
 {
 }
 

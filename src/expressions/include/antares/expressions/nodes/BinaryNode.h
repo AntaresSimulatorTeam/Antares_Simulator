@@ -20,11 +20,11 @@
 */
 #pragma once
 
-#include <antares/expressions/nodes/MultipleChildNode.h>
+#include <antares/expressions/nodes/ParentNode.h>
 
 namespace Antares::Expressions::Nodes
 {
-class BinaryNode: public MultipleChildNode
+class BinaryNode: public ParentNode
 {
 public:
     /**
