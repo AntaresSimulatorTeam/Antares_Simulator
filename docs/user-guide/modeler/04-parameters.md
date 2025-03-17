@@ -6,10 +6,13 @@ The modeler parameters are currently held in a **parameters.yml** file under the
 
 ### solver
 - **Expected value:** one of the following (case-sensitive):
-    - `sirius`
-    - `scip`
+    - `sirius` (LP only)
+    - `scip` (MIP only)
     - `coin`
     - `xpress`
+    - `glpk`
+    - `highs`
+    - `pdlp` (LP only)
 - **Required:** **no**
 - **Default value:** `sirius`
 - **Usage:** the solver to use for optimization problem resolution
@@ -26,7 +29,7 @@ The modeler parameters are currently held in a **parameters.yml** file under the
 - **Required:** no
 - **Default value:** empty
 - **Usage:** Set solver-specific parameters, for instance `THREADS 1 PRESOLVE 1` for XPRESS or 
-  `parallel/maxnthreads 1, lp/presolving TRUE` for SCIP. Syntax is solver-dependent, and only supported for SCIP & XPRESS.
+  `parallel/maxnthreads 1, lp/presolving TRUE` for SCIP. Syntax is solver-dependent, and only supported for SCIP, XPRESS & PDLP.
 
 ## Horizon
 

@@ -93,6 +93,7 @@ add_library(expressions-iterators
         iterators/pre-order.cpp
         include/antares/expressions/iterators/pre-order.h
 )
+add_library(Antares::expressions-iterators ALIAS expressions-iterators)
 
 target_link_libraries(expressions-iterators PRIVATE expressions)
 

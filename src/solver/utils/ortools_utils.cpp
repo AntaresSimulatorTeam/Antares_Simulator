@@ -322,10 +322,12 @@ void ORTOOLS_LibererProbleme(MPSolver* solver)
 
 const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::mpSolverMap = {
   {"xpress", {"xpress_lp", "xpress"}},
-  {"sirius", {"sirius_lp", "sirius"}},
+  {"sirius", {"sirius_lp", std::nullopt}}, // only allowed in LP (MIP only supports binaries)
   {"coin", {"clp", "cbc"}},
   {"glpk", {"glpk_lp", "glpk"}},
-  {"scip", {"scip", "scip"}}};
+  {"scip", {std::nullopt, "scip"}}, // SCIP only supports MIPs
+  {"highs", {"highs_lp", "highs"}},
+  {"pdlp", {"pdlp", std::nullopt}}}; // PDLP only supports LPs
 
 // TODO: add XPRESS support when added in or-tools: {"xpress", math_opt::SolverType::kXpress}
 const std::map<std::string, math_opt::SolverType> OrtoolsUtils::mathoptSolverMap = {
@@ -339,7 +341,14 @@ std::list<std::string> getAvailableLinearSolverNames()
     for (const auto& solverName: OrtoolsUtils::mpSolverMap)
     {
         MPSolver::OptimizationProblemType solverType;
-        MPSolver::ParseSolverType(solverName.second.LPSolverName, &solverType);
+        if (solverName.second.LPSolverName.has_value())
+        {
+            MPSolver::ParseSolverType(solverName.second.LPSolverName.value(), &solverType);
+        }
+        else
+        {
+            MPSolver::ParseSolverType(solverName.second.MIPSolverName.value(), &solverType);
+        }
 
         if (MPSolver::SupportsProblemType(solverType))
         {
@@ -373,20 +382,18 @@ std::string availableQuadraticSolversString()
 
 static std::optional<std::string> translateSolverName(const std::string& solverName, bool isMip)
 {
-    try
-    {
-        if (isMip)
-        {
-            return OrtoolsUtils::mpSolverMap.at(solverName).MIPSolverName;
-        }
-        else
-        {
-            return OrtoolsUtils::mpSolverMap.at(solverName).LPSolverName;
-        }
-    }
-    catch (const std::out_of_range&)
+    if (!OrtoolsUtils::solverMap.contains(solverName))
     {
         return {};
+    }
+    auto names = OrtoolsUtils::solverMap.at(solverName);
+    if (isMip)
+    {
+        return names.MIPSolverName;
+    }
+    else
+    {
+        return names.LPSolverName;
     }
 }
 
@@ -397,15 +404,18 @@ MPSolver* MPSolverFactory(const bool isMip, const std::string& solverName)
     const std::invalid_argument except(notFound);
 
     auto internalSolverName = translateSolverName(solverName, isMip);
-    if (!internalSolverName)
+    if (!internalSolverName.has_value())
     {
-        throw except;
+        throw std::invalid_argument("Solver " + solverName
+                                    + " is not supported by Antares or does not support "
+                                    + (isMip ? "MIP" : "LP") + " problems.");
     }
 
     MPSolver* solver = MPSolver::CreateSolver(*internalSolverName);
     if (!solver)
     {
-        throw except;
+        throw std::invalid_argument("Solver " + solverName + " (" + *internalSolverName
+                                    + ") could not be loaded by OR-Tools MPSolver.");
     }
 
     return solver;

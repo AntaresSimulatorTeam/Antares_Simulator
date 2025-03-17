@@ -7,5 +7,5 @@ add_boost_test(unit-tests-for-modeler-api
         testLinearProblemMpsolverImpl.cpp
         LIBS
         Antares::linear-problem-mpsolver-impl
-        linear-problem-data-impl)
+        Antares::linear-problem-data-impl)
 

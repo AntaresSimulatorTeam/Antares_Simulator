@@ -43,6 +43,7 @@ struct LibraryObjects
                            .ports = {},
                            .port_field_definitions = {},
                            .constraints = {{"constraint1", "cost"}},
+                           .binding_constraints = {},
                            .objective = ""};
 
     YmlSystem::Parser parser;
@@ -172,7 +173,11 @@ BOOST_AUTO_TEST_CASE(Full_system_test)
         library:
           id: std
           description: Standard library
-          port-types: []
+          port-types:
+            - id: flow
+              description: abc
+              fields:
+                  - id: port_name
 
           models:
             - id: generator
@@ -193,7 +198,7 @@ BOOST_AUTO_TEST_CASE(Full_system_test)
                   type: flow
               port-field-definitions:
                 - port: injection_port
-                  field: flow
+                  field: port_name
                   definition: generation
               objective: cost * generation
 
@@ -202,16 +207,17 @@ BOOST_AUTO_TEST_CASE(Full_system_test)
               ports:
                 - id: injection_port
                   type: flow
-              binding-constraints:
-                - id: balance
-                  expression: injection_port.flow = 0
     )"s;
 
     const auto libraryYaml2 = R"(
         library:
           id: mylib
           description: Extra library
-          port-types: []
+          port-types:
+            - id: flow
+              description: abc
+              fields:
+                  - id: port_name
 
           models:
             - id: demand
@@ -225,7 +231,7 @@ BOOST_AUTO_TEST_CASE(Full_system_test)
                   type: flow
               port-field-definitions:
                 - port: injection_port
-                  field: flow
+                  field: port_name
                   definition: -demand
     )"s;
 
