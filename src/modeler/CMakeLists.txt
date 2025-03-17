@@ -6,12 +6,11 @@ OMESSAGE("  :: modeler")
 set(exec_name "antares-modeler")
 
 add_library(modeler-lib INTERFACE
-        ${SRCS}
+        include/antares/modeler/data.h
 )
 
 add_executable(antares-modeler
         main.cpp
-        ${SRCS}
 )
 
 set_target_properties(antares-modeler PROPERTIES OUTPUT_NAME ${exec_name})
