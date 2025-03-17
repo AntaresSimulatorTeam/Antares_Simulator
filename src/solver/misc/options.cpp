@@ -109,6 +109,16 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
                 "Set linear solver-specific parameters for second optimization."
                 " Only supported for SCIP & XPRESS.");
 
+    parser->add(options.solverOptions.useOptim1BasisInNextWeek,
+                ' ',
+                "use-optim-1-basis-next-week",
+                "Use basis of first optimization in next week's first optimization");
+
+    parser->add(options.solverOptions.useOptim1BasisInOptim2,
+                ' ',
+                "use-optim-1-basis-optim-2",
+                "Use basis of first optimization in second optimization");
+
     //--quadratic-solver
     parser->add(
       options.solverOptions.quadraticSolver,

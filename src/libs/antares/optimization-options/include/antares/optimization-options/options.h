@@ -34,10 +34,12 @@ struct SingleOptimOptions
 struct CmdLineOptimOptions
 {
     std::string linearSolver = "sirius";
-    std::string quadraticSolver = "sirius";
     std::string linearSolverParameters;
     std::string lpSolverParamOptim1;
     std::string lpSolverParamOptim2;
+    bool useOptim1BasisInNextWeek = false;
+    bool useOptim1BasisInOptim2 = false;
+    std::string quadraticSolver = "sirius";
     std::string quadraticSolverParameters;
     bool solverLogs = false;
 };
