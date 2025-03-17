@@ -12,7 +12,6 @@ toc_depth: 2
 * Short term storage: penalty on level, injection, withdrawal [ANT-1854] (#2302)
 * Short term storage: additional constraints on injection, withdrawal, netting [ANT-1855] (#2550, #2546)
 * Short term storage: penalty for storage control, injection and withdrawal flow gradient [ANT-2300] (#2491)
-* Add ts-generation for links [ANT-1084] (#1986)
 * Make it possible to specify the final hydro reservoir level [ANT-1084] (#1521)
 * Major changes on the hydro behavior. Use overflow from the weekly optimization problem, don't recompute levels as a post-processing. These changes improve the handling of min-gen constraints for hydro reservoirs. [ANT-1825]
 
