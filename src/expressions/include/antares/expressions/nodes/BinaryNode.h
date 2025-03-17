@@ -49,7 +49,5 @@ public:
      * @return A pointer to the right operand.
      */
     Node* right() const;
-
-
 };
 } // namespace Antares::Expressions::Nodes

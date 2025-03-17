@@ -188,6 +188,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const TimeIndex
     const auto timeIndex = static_cast<int>(evalVisitor_.dispatch(node->right()).valueAsDouble());
     return ret[timeIndex];
 }
+
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const TimeSumNode* node)
 {
     const auto expression = dispatch(node->expression());

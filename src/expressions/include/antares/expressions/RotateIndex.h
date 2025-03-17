@@ -21,7 +21,6 @@
 #pragma once
 #include "antares/optimisation/linear-problem-api/ILinearProblemData.h"
 
-
 /**
  * @brief Computes a rotated index within a bounded range of timesteps.
  *

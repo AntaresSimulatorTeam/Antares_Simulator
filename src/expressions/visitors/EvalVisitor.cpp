@@ -147,6 +147,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeIndexNode* node)
     const auto timeIndex = static_cast<int>(dispatch(node->right()).valueAsDouble());
     return ret[timeIndex];
 }
+
 EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
 {
     const auto expression = dispatch(node->expression());
@@ -244,6 +245,5 @@ std::vector<double> EvaluationResult::shift(const std::vector<double>& values, i
 {
     return shiftVector(values, timeShift);
 }
-
 
 } // namespace Antares::Expressions::Visitors

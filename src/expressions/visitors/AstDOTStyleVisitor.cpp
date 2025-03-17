@@ -250,7 +250,6 @@ void AstDOTStyleVisitor::processParentNode(const Nodes::ParentNode* node,
     }
 }
 
-
 void AstDOTStyleVisitor::NewTreeGraph(std::ostream& os, const std::string& tree_name)
 {
     os << "digraph " + tree_name + " {\n";

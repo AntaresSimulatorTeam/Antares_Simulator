@@ -42,6 +42,5 @@ public:
      * @return A pointer to the child node.
      */
     Node* child() const;
-
 };
 } // namespace Antares::Expressions::Nodes
