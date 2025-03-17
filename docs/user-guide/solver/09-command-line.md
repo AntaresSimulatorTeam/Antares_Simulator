@@ -9,15 +9,15 @@ hide:
 
 ## Simulation
 
-| command                | usage                                                                                                                                                    |
-|:-----------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------|
-| -i, --input            | Study folder                                                                                                                                             |
-| --expansion            | Force the simulation in [expansion](04-parameters.md#mode) mode                                                                                          |
-| --economy              | Force the simulation in [economy](04-parameters.md#mode) mode                                                                                            |
-| --adequacy             | Force the simulation in [adequacy](04-parameters.md#mode) mode                                                                                           |
-| --parallel             | Enable [parallel](optional-features/multi-threading.md) computation of MC years                                                                          |
-| --force-parallel=VALUE | Override the max number of years computed [simultaneously](optional-features/multi-threading.md)                                                         |
-| --solver=VALUE         | The optimization solver to use. Possible values are: `sirius` (default, LP only), `coin`, `xpress`, `scip` (MIP only), `glpk`, `highs`, `pdlp` (LP only) |
+| command                | usage                                                                                                                                                                 |
+|:-----------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| -i, --input            | Study folder                                                                                                                                                          |
+| --expansion            | Force the simulation in [expansion](04-parameters.md#mode) mode                                                                                                       |
+| --economy              | Force the simulation in [economy](04-parameters.md#mode) mode                                                                                                         |
+| --adequacy             | Force the simulation in [adequacy](04-parameters.md#mode) mode                                                                                                        |
+| --parallel             | Enable [parallel](optional-features/multi-threading.md) computation of MC years                                                                                       |
+| --force-parallel=VALUE | Override the max number of years computed [simultaneously](optional-features/multi-threading.md)                                                                      |
+| --solver=VALUE         | The optimization solver to use. Possible values are: `sirius` (default, LP only), `coin`, `xpress`, `scip` (MIP only), `glpk` (Linux only), `highs`, `pdlp` (LP only) |
 
 ## Parameters
 
