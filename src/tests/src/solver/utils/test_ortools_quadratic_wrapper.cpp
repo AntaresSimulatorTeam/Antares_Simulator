@@ -186,13 +186,6 @@ BOOST_AUTO_TEST_CASE(solver_not_supported)
       std::invalid_argument,
       checkMessage(
         "Solver sirius is not supported for quadratic problems optimization through MathOpt."));
-
-    options.quadraticSolver = "xpress";
-    BOOST_CHECK_EXCEPTION(
-      solve(),
-      std::invalid_argument,
-      checkMessage(
-        "Solver xpress is not supported for quadratic problems optimization through MathOpt."));
 }
 
 BOOST_AUTO_TEST_CASE(simple_qp_one_var)

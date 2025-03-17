@@ -329,10 +329,10 @@ const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::mpSo
   {"highs", {"highs_lp", "highs"}},
   {"pdlp", {"pdlp", std::nullopt}}}; // PDLP only supports LPs
 
-// TODO: add XPRESS support when added in or-tools: {"xpress", math_opt::SolverType::kXpress}
 const std::map<std::string, math_opt::SolverType> OrtoolsUtils::mathoptSolverMap = {
   {"pdlp", math_opt::SolverType::kPdlp},
-  {"scip", math_opt::SolverType::kGscip}};
+  {"scip", math_opt::SolverType::kGscip},
+  {"xpress", math_opt::SolverType::kXpress}};
 
 std::list<std::string> getAvailableLinearSolverNames()
 {
@@ -382,11 +382,11 @@ std::string availableQuadraticSolversString()
 
 static std::optional<std::string> translateSolverName(const std::string& solverName, bool isMip)
 {
-    if (!OrtoolsUtils::solverMap.contains(solverName))
+    if (!OrtoolsUtils::mpSolverMap.contains(solverName))
     {
         return {};
     }
-    auto names = OrtoolsUtils::solverMap.at(solverName);
+    auto names = OrtoolsUtils::mpSolverMap.at(solverName);
     if (isMip)
     {
         return names.MIPSolverName;
