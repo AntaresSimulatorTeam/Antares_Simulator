@@ -10,7 +10,7 @@ The modeler parameters are currently held in a **parameters.yml** file under the
     - `scip` (MIP only)
     - `coin`
     - `xpress`
-    - `glpk`
+    - `glpk` (Linux only)
     - `highs`
     - `pdlp` (LP only)
 - **Required:** **no**
