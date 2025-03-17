@@ -137,6 +137,11 @@ Nodes::Node* CloneVisitor::visit(const Nodes::TimeSumNode* node)
                                                 dispatch(node->expression()));
 }
 
+Nodes::Node* CloneVisitor::visit(const Nodes::AllTimeSumNode* node)
+{
+    return registry_.create<Nodes::AllTimeSumNode>(dispatch(node->child()));
+}
+
 std::string CloneVisitor::name() const
 {
     return "CloneVisitor";

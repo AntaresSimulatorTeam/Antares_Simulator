@@ -176,25 +176,6 @@ TimeDependentLinearExpression TimeDependentLinearExpression::timeSumLinearExpres
     }
     return ret;
 
-    // unsigned int number_of_timestep = fillContext.getNumberOfTimestep();
-    //
-    // if (number_of_timestep == 0)
-    // {
-    //     return TimeDependentLinearExpression(fillContext);
-    // }
-    //
-    // LinearExpressionMap linearExpressions;
-    // for (const auto& timeStep: linearExpressions_ | std::views::keys)
-    // {
-    //     // linearExpressions[timeStep] = LinearExpression();
-    //     for (auto shift = from; shift <= to; ++shift)
-    //     {
-    //         linearExpressions[timeStep] += linearExpressions_.at(
-    //           rotatedIndex(timeStep, shift, fillContext));
-    //     }
-    // }
-    //
-    // return TimeDependentLinearExpression(std::move(linearExpressions));
 }
 
 } // namespace Antares::Optimization

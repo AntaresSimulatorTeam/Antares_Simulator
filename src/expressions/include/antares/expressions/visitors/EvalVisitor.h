@@ -282,5 +282,6 @@ private:
     EvaluationResult visit(const Nodes::TimeShiftNode* node) override;
     EvaluationResult visit(const Nodes::TimeIndexNode* node) override;
     EvaluationResult visit(const Nodes::TimeSumNode* node) override;
+    EvaluationResult visit(const Nodes::AllTimeSumNode* node) override;
 };
 } // namespace Antares::Expressions::Visitors

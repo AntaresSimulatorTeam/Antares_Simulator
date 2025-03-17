@@ -19,6 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
+#include <antares/expressions/nodes/AllTimeSumNode.h>
 #include <antares/expressions/nodes/ComponentNode.h>
 #include <antares/expressions/nodes/DivisionNode.h>
 #include <antares/expressions/nodes/EqualNode.h>

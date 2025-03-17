@@ -127,6 +127,11 @@ TimeIndex TimeIndexVisitor::visit(const Nodes::TimeSumNode* timeSumNode)
     return dispatch(timeSumNode->expression());
 }
 
+TimeIndex TimeIndexVisitor::visit(const Nodes::AllTimeSumNode* timeSumNode)
+{
+    return TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
+}
+
 TimeIndexVisitor::TimeIndexVisitor(std::unordered_map<const Nodes::Node*, TimeIndex> context):
     context_(std::move(context))
 {

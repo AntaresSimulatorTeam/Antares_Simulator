@@ -157,9 +157,20 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
     const auto to = static_cast<int>(dispatch(node->to()).valueAsDouble());
 
     EvaluationResult ret(0.);
-    for (auto shift = from; shift <= to; shift++)
+    for (auto shift = from; shift <= to; ++shift)
     {
         ret += expression.shiftResult(shift);
+    }
+    return ret;
+}
+
+EvaluationResult EvalVisitor::visit(const Nodes::AllTimeSumNode* node)
+{
+    EvaluationResult expression = dispatch(node->child());
+    EvaluationResult ret(0.);
+    for (auto t = 0; t < fillContext_.getNumberOfTimestep(); ++t)
+    {
+        ret += expression[t];
     }
     return ret;
 }

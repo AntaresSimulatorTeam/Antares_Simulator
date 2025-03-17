@@ -197,12 +197,18 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const TimeSumNo
     // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
     const auto to = static_cast<int>(evalVisitor_.dispatch(node->to()).valueAsDouble());
 
-    // return expression.timeSumLinearExpressions(from, to);
-    // OR
+    return expression.timeSumLinearExpressions(from, to);
+}
+
+TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const AllTimeSumNode* node)
+{
+    const auto expression = dispatch(node->child());
     TimeDependentLinearExpression ret(fillContext_);
-    for (auto shift = from; shift <= to; shift++)
+    for (auto timeStep = fillContext_.getFirstTimeStep();
+         timeStep <= fillContext_.getLastTimeStep();
+         ++timeStep)
     {
-        ret += expression.shiftLinearExpressions(shift);
+        ret += expression[timeStep];
     }
     return ret;
 }

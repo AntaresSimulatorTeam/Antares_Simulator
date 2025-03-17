@@ -312,10 +312,10 @@ std::any ConvertorVisitor::visitTimeSum([[maybe_unused]] ExprParser::TimeSumCont
     return static_cast<Node*>(registry_.create<TimeSumNode>(from, to, expr));
 }
 
-// TODO implement this
 std::any ConvertorVisitor::visitAllTimeSum([[maybe_unused]] ExprParser::AllTimeSumContext* context)
 {
-    throw NotImplemented("Node all time sum  not implemented yet");
+    auto expr = std::any_cast<Node*>(context->expr()->accept(this));
+    return static_cast<Node*>(registry_.create<AllTimeSumNode>(expr));
 }
 
 // shift related, not tested

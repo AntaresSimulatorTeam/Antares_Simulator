@@ -146,6 +146,11 @@ std::string PrintVisitor::visit(const Nodes::TimeSumNode* node)
            + trimAndFormat(dispatch(node->expression())) + ")";
 }
 
+std::string PrintVisitor::visit(const Nodes::AllTimeSumNode* node)
+{
+    return "sum(" + trimAndFormat(dispatch(node->child())) + ")";
+}
+
 std::string PrintVisitor::name() const
 {
     return "PrintVisitor";

@@ -20,30 +20,21 @@
 */
 #pragma once
 
+#include <antares/expressions/nodes/UnaryNode.h>
+
 namespace Antares::Expressions::Nodes
 {
-class Node;
-class BinaryNode;
-class UnaryNode;
-class SumNode;
-class SubtractionNode;
-class MultiplicationNode;
-class DivisionNode;
-class EqualNode;
-class LessThanOrEqualNode;
-class GreaterThanOrEqualNode;
-class NegationNode;
-class LiteralNode;
-class ComponentNode;
-class ComponentVariableNode;
-class ComponentParameterNode;
-class ParameterNode;
-class VariableNode;
-class PortFieldNode;
-class PortFieldSumNode;
-class TimeShiftNode;
-class TimeIndexNode;
-class TimeSumNode;
-class ParentNode;
-class AllTimeSumNode;
+/**
+ * @brief Represents a AllTimeSumNode node in a syntax tree.
+ */
+class AllTimeSumNode final: public UnaryNode
+{
+public:
+    using UnaryNode::UnaryNode;
+
+    std::string name() const override
+    {
+        return "AllTimeSumNode";
+    }
+};
 } // namespace Antares::Expressions::Nodes

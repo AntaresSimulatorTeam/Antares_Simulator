@@ -160,6 +160,11 @@ bool CompareVisitor::visit(const Nodes::TimeSumNode* timeSumNode, const Nodes::N
     return compareParentNode(*this, timeSumNode, other);
 }
 
+bool CompareVisitor::visit(const Nodes::AllTimeSumNode* alltimeSumNode, const Nodes::Node* other)
+{
+    return compareParentNode(*this, alltimeSumNode, other);
+}
+
 std::string CompareVisitor::name() const
 {
     return "CompareVisitor";

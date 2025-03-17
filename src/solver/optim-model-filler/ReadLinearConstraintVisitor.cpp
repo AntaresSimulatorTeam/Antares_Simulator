@@ -177,4 +177,9 @@ std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const TimeSumNo
 {
     throw IllegalNodeException();
 }
+
+std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const AllTimeSumNode* node)
+{
+    throw IllegalNodeException();
+}
 } // namespace Antares::Optimization
