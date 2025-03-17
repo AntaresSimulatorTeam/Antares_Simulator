@@ -167,9 +167,9 @@ public:
     */
     void markAsModified() const;
 
-    static std::vector<std::shared_ptr<BindingConstraint>> LoadBindingConstraint(EnvForLoading env);
+    static Vector LoadBindingConstraint(EnvForLoading env);
 
-    [[nodiscard]] std::vector<std::shared_ptr<BindingConstraint>> activeConstraints() const;
+    [[nodiscard]] Vector activeConstraints() const;
 
     [[nodiscard]] Vector getPtrForInequalityBindingConstraints() const;
 
@@ -177,9 +177,9 @@ private:
     bool internalSaveToFolder(Data::BindingConstraintSaver::EnvForSaving& env) const;
 
     //! All constraints
-    Data::BindingConstraintsRepository::Vector constraints_;
+    Vector constraints_;
 
-    mutable std::vector<std::shared_ptr<BindingConstraint>> activeConstraints_;
+    mutable Vector activeConstraints_;
 };
 
 struct WhoseNameContains final
