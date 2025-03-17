@@ -175,7 +175,20 @@ TimeDependentLinearExpression TimeDependentLinearExpression::timeSumLinearExpres
         ret += shiftLinearExpressions(shift);
     }
     return ret;
+}
 
+TimeDependentLinearExpression TimeDependentLinearExpression::allTimeSumLinearExpressions() const
+{
+    const Optimisation::LinearProblemApi::FillContext fillContext{
+      linearExpressions_.begin()->first,
+      linearExpressions_.rbegin()->first};
+    TimeDependentLinearExpression ret(fillContext);
+    for (auto timeStep = fillContext.getFirstTimeStep(); timeStep <= fillContext.getLastTimeStep();
+         ++timeStep)
+    {
+        ret += operator[](timeStep);
+    }
+    return ret;
 }
 
 } // namespace Antares::Optimization

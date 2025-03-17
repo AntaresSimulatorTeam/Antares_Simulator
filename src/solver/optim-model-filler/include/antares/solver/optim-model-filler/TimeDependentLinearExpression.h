@@ -60,6 +60,7 @@ public:
     TimeDependentLinearExpression shiftLinearExpressions(int shiftValue) const;
     TimeDependentLinearExpression operator[](int index) const;
     TimeDependentLinearExpression timeSumLinearExpressions(int from, int to) const;
+    TimeDependentLinearExpression allTimeSumLinearExpressions() const;
 
     const LinearExpressionMap& GetLinearExpressions() const;
     size_t getSize() const;

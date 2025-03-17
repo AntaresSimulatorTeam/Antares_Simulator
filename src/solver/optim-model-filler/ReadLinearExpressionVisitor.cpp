@@ -203,13 +203,6 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const TimeSumNo
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const AllTimeSumNode* node)
 {
     const auto expression = dispatch(node->child());
-    TimeDependentLinearExpression ret(fillContext_);
-    for (auto timeStep = fillContext_.getFirstTimeStep();
-         timeStep <= fillContext_.getLastTimeStep();
-         ++timeStep)
-    {
-        ret += expression[timeStep];
-    }
-    return ret;
+    return expression.allTimeSumLinearExpressions();
 }
 } // namespace Antares::Optimization
