@@ -137,7 +137,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeShiftNode* node)
     const auto ret = dispatch(node->left());
     // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
     const auto timeShift = static_cast<int>(dispatch(node->right()).valueAsDouble());
-    return ret.shiftResult(timeShift);
+    return ret.timeShift(timeShift);
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::TimeIndexNode* node)
@@ -155,24 +155,13 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
 
     // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
     const auto to = static_cast<int>(dispatch(node->to()).valueAsDouble());
-
-    EvaluationResult ret(0.);
-    for (auto shift = from; shift <= to; ++shift)
-    {
-        ret += expression.shiftResult(shift);
-    }
-    return ret;
+    return expression.timeSum(from, to);
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::AllTimeSumNode* node)
 {
-    EvaluationResult expression = dispatch(node->child());
-    EvaluationResult ret(0.);
-    for (auto t = 0; t < fillContext_.getNumberOfTimestep(); ++t)
-    {
-        ret += expression[t];
-    }
-    return ret;
+    const EvaluationResult expression = dispatch(node->child());
+    return expression.alltimeSum(fillContext_.getNumberOfTimestep());
 }
 
 std::string EvalVisitor::name() const
@@ -209,12 +198,32 @@ EvaluationResult::EvaluationResult(const std::variant<double, std::vector<double
 {
 }
 
-EvaluationResult EvaluationResult::shiftResult(int timeShift) const
+EvaluationResult EvaluationResult::timeShift(int time_shift) const
 {
     return EvaluationResult(
-      std::visit([&timeShift](const auto& l) -> std::variant<double, std::vector<double>>
-                 { return shift(l, timeShift); },
+      std::visit([&time_shift](const auto& l) -> std::variant<double, std::vector<double>>
+                 { return shift(l, time_shift); },
                  value_));
+}
+
+EvaluationResult EvaluationResult::timeSum(int from, int to) const
+{
+    EvaluationResult ret(0.);
+    for (auto shift = from; shift <= to; ++shift)
+    {
+        ret += timeShift(shift);
+    }
+    return ret;
+}
+
+EvaluationResult EvaluationResult::alltimeSum(int numberOfTimeStep) const
+{
+    EvaluationResult ret(0.);
+    for (auto t = 0; t < numberOfTimeStep; ++t)
+    {
+        ret += operator[](t);
+    }
+    return ret;
 }
 
 EvaluationResult EvaluationResult::operator[](int timeIndex) const

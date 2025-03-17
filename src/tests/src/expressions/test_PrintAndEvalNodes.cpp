@@ -293,24 +293,24 @@ BOOST_AUTO_TEST_CASE(EvaluationResult_invalid_index)
 BOOST_AUTO_TEST_CASE(ShiftResult_DoubleValue)
 {
     const EvaluationResult eval(4.0);
-    const EvaluationResult shiftedEval = eval.shiftResult(2);
-    BOOST_CHECK_THROW(eval.shiftResult(2).valuesAsVector(), EvaluationResult::EvalResultTypeError);
-    BOOST_CHECK_NO_THROW(eval.shiftResult(2).valueAsDouble());
+    const EvaluationResult shiftedEval = eval.timeShift(2);
+    BOOST_CHECK_THROW(eval.timeShift(2).valuesAsVector(), EvaluationResult::EvalResultTypeError);
+    BOOST_CHECK_NO_THROW(eval.timeShift(2).valueAsDouble());
 
-    BOOST_CHECK_EQUAL(eval.shiftResult(2).valueAsDouble(), 4.0);
-    BOOST_CHECK_EQUAL(eval.shiftResult(-2).valueAsDouble(), 4.0);
-    BOOST_CHECK_EQUAL(eval.shiftResult(0).valueAsDouble(), 4.0);
-    BOOST_CHECK_EQUAL(eval.shiftResult(-20).valueAsDouble(), 4.0);
-    BOOST_CHECK_EQUAL(eval.shiftResult(200).valueAsDouble(), 4.0);
+    BOOST_CHECK_EQUAL(eval.timeShift(2).valueAsDouble(), 4.0);
+    BOOST_CHECK_EQUAL(eval.timeShift(-2).valueAsDouble(), 4.0);
+    BOOST_CHECK_EQUAL(eval.timeShift(0).valueAsDouble(), 4.0);
+    BOOST_CHECK_EQUAL(eval.timeShift(-20).valueAsDouble(), 4.0);
+    BOOST_CHECK_EQUAL(eval.timeShift(200).valueAsDouble(), 4.0);
 }
 
 BOOST_AUTO_TEST_CASE(ShiftResult_VectorValue_PositiveShift)
 {
     EvaluationResult eval(std::vector<double>{1.0, 2.0, 3.0});
 
-    BOOST_CHECK_THROW(eval.shiftResult(2).valueAsDouble(), EvaluationResult::EvalResultTypeError);
-    BOOST_CHECK_NO_THROW(eval.shiftResult(2).valuesAsVector());
-    const auto res = eval.shiftResult(1).valuesAsVector();
+    BOOST_CHECK_THROW(eval.timeShift(2).valueAsDouble(), EvaluationResult::EvalResultTypeError);
+    BOOST_CHECK_NO_THROW(eval.timeShift(2).valuesAsVector());
+    const auto res = eval.timeShift(1).valuesAsVector();
     const std::vector<double> expected{2.0, 3.0, 1.0};
     BOOST_CHECK_EQUAL_COLLECTIONS(res.begin(), res.end(), expected.begin(), expected.end());
 }
@@ -318,7 +318,7 @@ BOOST_AUTO_TEST_CASE(ShiftResult_VectorValue_PositiveShift)
 BOOST_AUTO_TEST_CASE(ShiftResult_VectorValue_NegativeShift)
 {
     const EvaluationResult eval(std::vector<double>{1.0, 2.0, 3.0});
-    const auto res = eval.shiftResult(-1).valuesAsVector();
+    const auto res = eval.timeShift(-1).valuesAsVector();
     const std::vector<double> expected{3.0, 1.0, 2.0};
     BOOST_CHECK_EQUAL_COLLECTIONS(res.begin(), res.end(), expected.begin(), expected.end());
 }
@@ -327,7 +327,7 @@ BOOST_AUTO_TEST_CASE(ShiftResult_VectorValue_ZeroShift)
 {
     std::vector<double> vec{1.0, 2.0, 3.0};
     const EvaluationResult eval(vec);
-    const auto res = eval.shiftResult(0).valuesAsVector();
+    const auto res = eval.timeShift(0).valuesAsVector();
 
     BOOST_CHECK_EQUAL_COLLECTIONS(res.begin(), res.end(), vec.begin(), vec.end());
 }
@@ -336,7 +336,7 @@ BOOST_AUTO_TEST_CASE(ShiftResult_EmptyVector)
 {
     std::vector<double> emptyVec{};
     const EvaluationResult eval(emptyVec);
-    const auto res = eval.shiftResult(1).valuesAsVector();
+    const auto res = eval.timeShift(1).valuesAsVector();
     BOOST_CHECK_EQUAL_COLLECTIONS(res.begin(), res.end(), emptyVec.begin(), emptyVec.end());
 }
 

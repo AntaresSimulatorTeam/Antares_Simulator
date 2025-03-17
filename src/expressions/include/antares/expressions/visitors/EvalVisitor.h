@@ -139,7 +139,9 @@ public:
     }
 
     EvaluationResult operator[](int timeIndex) const;
-    EvaluationResult shiftResult(int timeShift) const;
+    EvaluationResult timeShift(int time_shift) const;
+    EvaluationResult timeSum(int from, int to) const;
+    EvaluationResult alltimeSum(int numberOfTimeStep) const;
 
 private:
     std::variant<double, std::vector<double>> value_;
