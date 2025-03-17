@@ -70,7 +70,7 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
                 ' ',
                 "linear-solver",
                 "Solver used for linear optimizations during simulation. Available solver list : "
-                  + availableLinearSolversString());
+                  + toString(availableLinearSolversList()));
 
     //--solver
     parser->add(options.solverOptions.linearSolver,
@@ -79,14 +79,13 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
                 "Deprecated, use linear-solver instead.");
 
     //--linear-solver-parameters
-    parser->add(
-      options.solverOptions.linearSolverParameters,
-      ' ',
-      "linear-solver-parameters",
-      "Linear solver-specific parameters, for instance \"THREADS 1 "
-      "PRESOLVE 1\""
-      " for XPRESS or \"parallel/maxnthreads 1, lp/presolving TRUE\" for "
-      "SCIP. Syntax is solver-dependent, and only supported for SCIP & XPRESS.");
+    parser->add(options.solverOptions.linearSolverParameters,
+                ' ',
+                "linear-solver-parameters",
+                "Linear solver-specific parameters, for instance \"THREADS 1 "
+                "PRESOLVE 1\""
+                " for XPRESS or \"parallel/maxnthreads 1, lp/presolving TRUE\" for "
+                "SCIP. Syntax is solver-dependent, and only supported for SCIP & XPRESS.");
 
     //--solver-parameters
     parser->add(options.solverOptions.linearSolverParameters,
@@ -114,7 +113,7 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
       ' ',
       "quadratic-solver",
       "Solver used for quadratic optimizations during simulation. Available solver list : "
-        + availableQuadraticSolversString());
+        + toString(availableQuadraticSolversList()));
 
     //--quadratic-solver-parameters
     parser->add(options.solverOptions.quadraticSolverParameters,
@@ -126,10 +125,7 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
 
     parser->addParagraph("\nParameters");
     // --name
-    parser->add(settings.simulationName,
-                'n',
-                "name",
-                "Name of the current simulation");
+    parser->add(settings.simulationName, 'n', "name", "Name of the current simulation");
     // --generators-only
     parser->addFlag(settings.tsGeneratorsOnly,
                     'g',

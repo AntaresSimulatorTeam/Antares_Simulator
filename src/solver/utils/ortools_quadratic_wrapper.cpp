@@ -42,7 +42,7 @@ void BuildConstraints(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre, Model& mod
 
 void checkOptions(const SingleOptimOptions& options)
 {
-    auto availableSolversList = getAvailableQuadraticSolverNames();
+    auto availableSolversList = availableQuadraticSolversList();
     bool solverFound = std::ranges::find(availableSolversList, options.solverName)
                        != availableSolversList.end();
     if (!solverFound || options.solverName.compare("sirius") == 0)

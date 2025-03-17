@@ -332,7 +332,7 @@ const std::map<std::string, math_opt::SolverType> OrtoolsUtils::mathoptSolverMap
   {"pdlp", math_opt::SolverType::kPdlp},
   {"scip", math_opt::SolverType::kGscip}};
 
-std::list<std::string> getAvailableLinearSolverNames()
+std::list<std::string> availableLinearSolversList()
 {
     std::list<std::string> result;
 
@@ -349,7 +349,7 @@ std::list<std::string> getAvailableLinearSolverNames()
     return result;
 }
 
-std::list<std::string> getAvailableQuadraticSolverNames()
+std::list<std::string> availableQuadraticSolversList()
 {
     std::list<std::string> result;
     // Sirius is supported, but not through mathopt
@@ -361,14 +361,9 @@ std::list<std::string> getAvailableQuadraticSolverNames()
     return result;
 }
 
-std::string availableLinearSolversString()
+std::string toString(const std::list<std::string>& solverList)
 {
-    return boost::algorithm::join(getAvailableLinearSolverNames(), ",") + ".";
-}
-
-std::string availableQuadraticSolversString()
-{
-    return boost::algorithm::join(getAvailableQuadraticSolverNames(), ",") + ".";
+    return boost::algorithm::join(solverList, ",") + ".";
 }
 
 static std::optional<std::string> translateSolverName(const std::string& solverName, bool isMip)
