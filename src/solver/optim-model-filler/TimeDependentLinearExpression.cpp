@@ -168,25 +168,33 @@ TimeDependentLinearExpression TimeDependentLinearExpression::timeSumLinearExpres
     const Optimisation::LinearProblemApi::FillContext fillContext{
       linearExpressions_.begin()->first,
       linearExpressions_.rbegin()->first};
-    unsigned int number_of_timestep = fillContext.getNumberOfTimestep();
+    TimeDependentLinearExpression ret(fillContext);
 
-    if (number_of_timestep == 0)
+    for (auto shift = from; shift <= to; ++shift)
     {
-        return TimeDependentLinearExpression(fillContext);
+        ret += shiftLinearExpressions(shift);
     }
+    return ret;
 
-    LinearExpressionMap linearExpressions;
-    for (const auto& timeStep: linearExpressions_ | std::views::keys)
-    {
-        // linearExpressions[timeStep] = LinearExpression();
-        for (auto shift = from; shift <= to; ++shift)
-        {
-            linearExpressions[timeStep] += linearExpressions_.at(
-              rotatedIndex(timeStep, shift, fillContext));
-        }
-    }
-
-    return TimeDependentLinearExpression(std::move(linearExpressions));
+    // unsigned int number_of_timestep = fillContext.getNumberOfTimestep();
+    //
+    // if (number_of_timestep == 0)
+    // {
+    //     return TimeDependentLinearExpression(fillContext);
+    // }
+    //
+    // LinearExpressionMap linearExpressions;
+    // for (const auto& timeStep: linearExpressions_ | std::views::keys)
+    // {
+    //     // linearExpressions[timeStep] = LinearExpression();
+    //     for (auto shift = from; shift <= to; ++shift)
+    //     {
+    //         linearExpressions[timeStep] += linearExpressions_.at(
+    //           rotatedIndex(timeStep, shift, fillContext));
+    //     }
+    // }
+    //
+    // return TimeDependentLinearExpression(std::move(linearExpressions));
 }
 
 } // namespace Antares::Optimization

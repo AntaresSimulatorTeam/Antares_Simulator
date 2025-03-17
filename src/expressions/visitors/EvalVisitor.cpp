@@ -156,8 +156,6 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
     // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
     const auto to = static_cast<int>(dispatch(node->to()).valueAsDouble());
 
-    // return expression.timeSumResult(from, to);
-    // OR
     EvaluationResult ret(0.);
     for (auto shift = from; shift <= to; shift++)
     {
@@ -208,28 +206,6 @@ EvaluationResult EvaluationResult::shiftResult(int timeShift) const
                  value_));
 }
 
-std::vector<double> EvaluationResult::timeSum(const std::vector<double>& values, int from, int to)
-{
-    std::vector<double> ret(values.size());
-    auto rangeSize = to - from + 1;
-    for (auto t = 0; t < ret.size(); ++t)
-    {
-        for (auto shift = from; shift <= to; ++shift)
-        {
-            ret[t] += values.at(rotatedIndex(t, shift, 0, rangeSize));
-        }
-    }
-    return ret;
-}
-
-EvaluationResult EvaluationResult::timeSumResult(int from, int to) const
-{
-    return EvaluationResult(
-      std::visit([&from, &to](const auto& l) -> std::variant<double, std::vector<double>>
-                 { return timeSum(l, from, to); },
-                 value_));
-}
-
 EvaluationResult EvaluationResult::operator[](int timeIndex) const
 {
     if (std::holds_alternative<double>(value_))
@@ -249,9 +225,5 @@ std::vector<double> EvaluationResult::shift(const std::vector<double>& values, i
     return shiftVector(values, timeShift);
 }
 
-double EvaluationResult::timeSum(double value, int from, int to)
-{
-    return value * (to - from + 1);
-}
 
 } // namespace Antares::Expressions::Visitors

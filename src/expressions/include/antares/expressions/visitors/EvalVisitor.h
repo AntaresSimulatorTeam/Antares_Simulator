@@ -140,7 +140,6 @@ public:
 
     EvaluationResult operator[](int timeIndex) const;
     EvaluationResult shiftResult(int timeShift) const;
-    EvaluationResult timeSumResult(int from, int to) const;
 
 private:
     std::variant<double, std::vector<double>> value_;
@@ -157,10 +156,6 @@ private:
     }
 
     static std::vector<double> shift(const std::vector<double>& values, int shiftValue);
-
-    static double timeSum(double value, int from, int to);
-
-    static std::vector<double> timeSum(const std::vector<double>& values, int from, int to);
 };
 
 template<typename BinaryOp>

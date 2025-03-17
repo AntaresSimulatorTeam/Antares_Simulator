@@ -21,14 +21,6 @@
 #pragma once
 #include "antares/optimisation/linear-problem-api/ILinearProblemData.h"
 
-inline int rotatedIndex(unsigned key, int shift, unsigned int firstTimeStep, unsigned int rangeSize)
-{
-    // Normalize shift within bounds (to prevent negative indexing)
-    shift = (shift % static_cast<int>(rangeSize) + rangeSize) % static_cast<int>(rangeSize);
-
-    // Compute which key's value should be assigned to `key`
-    return firstTimeStep + (key - firstTimeStep + shift) % rangeSize;
-}
 
 /**
  * @brief Computes a rotated index within a bounded range of timesteps.
@@ -87,8 +79,12 @@ inline int rotatedIndex(unsigned key,
                         int shift,
                         const Antares::Optimisation::LinearProblemApi::FillContext& fillContext)
 {
-    return rotatedIndex(key,
-                        shift,
-                        fillContext.getFirstTimeStep(),
-                        fillContext.getNumberOfTimestep());
+    unsigned rangeSize = fillContext.getNumberOfTimestep();
+
+    // Normalize shift within bounds (to prevent negative indexing)
+    shift = (shift % static_cast<int>(rangeSize) + rangeSize) % static_cast<int>(rangeSize);
+
+    // Compute which key's value should be assigned to `key`
+    return fillContext.getFirstTimeStep()
+           + (key - fillContext.getFirstTimeStep() + shift) % rangeSize;
 }
