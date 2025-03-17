@@ -36,4 +36,3 @@ struct Data
 };
 
 } // namespace Antares::Study::SystemModel
-
