@@ -43,7 +43,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::SumNode* node)
     return std::accumulate(std::begin(operands),
                            std::end(operands),
                            EvaluationResult{0.},
-                           [this](EvaluationResult sum, Nodes::Node* operand)
+                           [this](const EvaluationResult& sum, const Nodes::Node* operand)
                            { return sum + dispatch(operand); });
 }
 
