@@ -211,7 +211,7 @@ bc,<group>,<MC Year> = <TS number>
 This line is not mandatory for every group & MC year. If absent, the TS number will be drawn randomly (usual behavior).
 
 - 0 &lt;= MC Year &lt; generaldata.ini/general.nbyears
-- 1 &lt;=TS number &lt;= number of columns for the group
+- 1 &lt;=TS number &lt;= index of the column for the group
 
 #### Thermal cluster new properties
 
