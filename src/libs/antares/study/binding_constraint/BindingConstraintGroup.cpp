@@ -40,7 +40,7 @@ BindingConstraintGroup::BindingConstraintGroup(std::string name):
 {
 }
 
-std::set<std::shared_ptr<BindingConstraint>> BindingConstraintGroup::constraints() const
+BindingConstraintGroup::Set BindingConstraintGroup::constraints() const
 {
     return constraints_;
 }
