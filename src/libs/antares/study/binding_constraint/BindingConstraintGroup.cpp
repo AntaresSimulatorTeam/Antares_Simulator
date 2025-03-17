@@ -40,7 +40,7 @@ BindingConstraintGroup::BindingConstraintGroup(std::string name):
 {
 }
 
-std::set<std::shared_ptr<BindingConstraint>> BindingConstraintGroup::constraints() const
+const BindingConstraint::Set& BindingConstraintGroup::constraints() const
 {
     return constraints_;
 }
@@ -52,7 +52,12 @@ unsigned BindingConstraintGroup::numberOfTimeseries() const
     {
         return 0;
     }
-    return (*constraints_.begin())->RHSTimeSeries().width;
+    auto it = std::ranges::max_element(constraints_,
+                                       [](const auto& a, const auto& b) {
+                                           return a->RHSTimeSeries().width
+                                                  < b->RHSTimeSeries().width;
+                                       });
+    return (*it)->RHSTimeSeries().width;
 }
 
 } // namespace Antares::Data
