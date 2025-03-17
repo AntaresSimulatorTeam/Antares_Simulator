@@ -35,9 +35,6 @@ namespace Antares::Data
 class BindingConstraintGroup
 {
 public:
-    //! Ordered Set of binding constraints
-    using Set = std::set<std::shared_ptr<BindingConstraint>, CompareBindingConstraintName>;
-
     explicit BindingConstraintGroup(std::string name);
 
     [[nodiscard]] std::string name()
@@ -46,14 +43,14 @@ public:
     }
 
     void add(const std::shared_ptr<BindingConstraint>& constraint);
-    [[nodiscard]] const Set& constraints() const;
+    [[nodiscard]] const BindingConstraint::Set& constraints() const;
     [[nodiscard]] unsigned numberOfTimeseries() const;
 
     // Public data members
     TimeSeriesNumbers timeseriesNumbers;
 
 private:
-    Set constraints_;
+    BindingConstraint::Set constraints_;
     std::string name_;
 };
 

@@ -40,7 +40,7 @@ BindingConstraintGroup::BindingConstraintGroup(std::string name):
 {
 }
 
-const BindingConstraintGroup::Set& BindingConstraintGroup::constraints() const
+const BindingConstraint::Set& BindingConstraintGroup::constraints() const
 {
     return constraints_;
 }
