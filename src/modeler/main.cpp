@@ -99,12 +99,10 @@ int main(int argc, const char** argv)
     {
         const auto parameters = LoadFiles::loadParameters(studyPath);
         logs.info() << "Parameters loaded";
-        const auto libraries = LoadFiles::loadLibraries(studyPath);
-        logs.info() << "Libraries loaded";
-        const auto system = LoadFiles::loadSystem(studyPath, libraries);
-        logs.info() << "System loaded";
-        auto dataSeries = LoadFiles::loadDataSeries(studyPath);
-        SystemLinearProblemBuilder system_linear_problem(system);
+
+        Modeler::Data data = loadAll(studyPath);
+
+        SystemLinearProblemBuilder system_linear_problem(data.system_);
 
         auto outputPath = studyPath / "output";
         if (!parameters.noOutput)
@@ -121,7 +119,7 @@ int main(int argc, const char** argv)
         logs.info() << "linear problem of System loaded";
         // Problem is MIP if any variable of any component is not continuous
         bool isMip = std::ranges::any_of(
-          system.Components() | std::views::values,
+          data.system_.Components() | std::views::values,
           [](const auto& component)
           {
               return std::ranges::any_of(component.getModel()->Variables() | std::views::values,

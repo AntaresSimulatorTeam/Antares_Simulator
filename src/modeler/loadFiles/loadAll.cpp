@@ -29,26 +29,16 @@ namespace Antares::Solver::LoadFiles
 Modeler::Data loadAll(const std::filesystem::path& studyPath)
 {
     Modeler::Data data;
-    try
-    {
-        data.libraries_ = LoadFiles::loadLibraries(studyPath);
-        logs.info() << "Libraries loaded";
 
-        data.system_ = std::make_unique<Antares::Study::SystemModel::System>(
-          std::move(Solver::LoadFiles::loadSystem(studyPath, data.libraries_)));
-        logs.info() << "System loaded";
+    data.libraries_ = LoadFiles::loadLibraries(studyPath);
+    logs.info() << "Libraries loaded";
 
-        data.dataSeries_= LoadFiles::loadDataSeries(studyPath);
-    }
-    catch (const LoadFiles::ErrorLoadingYaml&)
-    {
-        logs.error() << "Error while loading files, exiting";
-    }
-    catch (const std::exception& e)
-    {
-        logs.error() << e.what();
-        logs.error() << "Error during the execution, exiting";
-    }
+    data.system_ = std::make_unique<Antares::Study::SystemModel::System>(
+      std::move(Solver::LoadFiles::loadSystem(studyPath, data.libraries_)));
+    logs.info() << "System loaded";
+
+    data.dataSeries_ = LoadFiles::loadDataSeries(studyPath);
+
     return data;
 }
 

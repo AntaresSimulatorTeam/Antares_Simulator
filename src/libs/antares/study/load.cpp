@@ -230,16 +230,11 @@ bool Study::internalLoadFromFolder(const fs::path& path, const StudyLoadOptions&
     return ret;
 }
 
-bool Study::internalLoadModelerComponents()
+void Study::internalLoadModelerComponents()
 {
     try
     {
-        this->libraries_ = Solver::LoadFiles::loadLibraries(folder);
-        logs.info() << "Modeler Libraries loaded";
-        this->system_ = std::make_unique<Antares::Study::SystemModel::System>(
-          std::move(Solver::LoadFiles::loadSystem(folder, this->libraries_)));
-        logs.info() << "Modeler System loaded";
-        this->dataSeries_ = Solver::LoadFiles::loadDataSeries(folder);
+        modelerDatas_ = Solver::LoadFiles::loadAll(folder);
     }
     catch (const std::exception& e)
     {
@@ -250,7 +245,6 @@ bool Study::internalLoadModelerComponents()
     {
         logs.warning() << "parameters.yml ignored, use command line to set solver parameters";
     }
-    return true;
 }
 
 bool Study::internalLoadCorrelationMatrices(const StudyLoadOptions& options)

@@ -39,6 +39,7 @@
 #include "antares/antares/antares.h"
 #include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
 #include "antares/study/binding_constraint/BindingConstraintsRepository.h"
+#include "antares/solver/modeler/loadFiles/data.h"
 
 #include "area/store-timeseries-numbers.h"
 #include "binding_constraint/BindingConstraint.h"
@@ -625,12 +626,12 @@ public:
 
     Antares::Study::SystemModel::System* getModelerSystem() const
     {
-        return system_.get();
+        return modelerDatas_.system_.get();
     }
 
     Optimisation::LinearProblemApi::ILinearProblemData* getModelerData() const
     {
-        return dataSeries_.get();
+        return modelerDatas_.dataSeries_.get();
     }
 
 protected:
@@ -651,7 +652,7 @@ protected:
     bool internalLoadIni(const std::filesystem::path& path, const StudyLoadOptions& options);
 
     //! Load extra modeler components for hybrid studies
-    bool internalLoadModelerComponents();
+    void internalLoadModelerComponents();
 
     void parameterFiller(const StudyLoadOptions& options);
 
@@ -662,9 +663,7 @@ protected:
     //@}
 
 private:
-    std::vector<Antares::Study::SystemModel::Library> libraries_;
-    std::unique_ptr<Antares::Study::SystemModel::System> system_;
-    std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> dataSeries_;
+    Antares::Modeler::Data modelerDatas_;
 }; // class Study
 
 /*!

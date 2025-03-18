@@ -303,12 +303,12 @@ target_link_libraries(study
         Antares::hydro
         Antares::antares-study-system-model
         linear-problem-api
+        Antares::load-modeler-files
+        Antares::modeler-parameters
         PRIVATE
         Antares::exception
         Antares::benchmarking
         antares-solver-variable
-        Antares::load-modeler-files
-        Antares::modeler-parameters
 )
 
 target_include_directories(study
