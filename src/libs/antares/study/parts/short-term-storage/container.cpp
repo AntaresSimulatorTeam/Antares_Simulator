@@ -31,7 +31,6 @@
 #include <antares/logs/logs.h>
 #include <antares/utils/utils.h>
 
-
 #define SEP Yuni::IO::Separator
 
 namespace fs = std::filesystem;
