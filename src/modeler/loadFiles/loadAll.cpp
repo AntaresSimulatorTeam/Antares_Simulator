@@ -20,37 +20,36 @@
  */
 
 #include <antares/logs/logs.h>
-
 #include "antares/solver/modeler/loadFiles/data.h"
 #include "antares/solver/modeler/loadFiles/loadFiles.h"
 
 namespace Antares::Solver::LoadFiles
 {
 
-Antares::Modeler::Data loadAll(const std::filesystem::path& studyPath)
+Modeler::Data loadAll(const std::filesystem::path& studyPath)
 {
+    Modeler::Data data;
     try
     {
-        auto libraries = LoadFiles::loadLibraries(studyPath);
+        data.libraries_ = LoadFiles::loadLibraries(studyPath);
         logs.info() << "Libraries loaded";
-        auto system = LoadFiles::loadSystem(studyPath, libraries);
-        logs.info() << "System loaded";
-        auto dataSeries = LoadFiles::loadDataSeries(studyPath);
 
-        Antares::Modeler::Data data(libraries, system, dataSeries);
-        return data;
+        data.system_ = std::make_unique<Antares::Study::SystemModel::System>(
+          std::move(Solver::LoadFiles::loadSystem(studyPath, data.libraries_)));
+        logs.info() << "System loaded";
+
+        data.dataSeries_= LoadFiles::loadDataSeries(studyPath);
     }
     catch (const LoadFiles::ErrorLoadingYaml&)
     {
         logs.error() << "Error while loading files, exiting";
-        return EXIT_FAILURE;
     }
     catch (const std::exception& e)
     {
         logs.error() << e.what();
         logs.error() << "Error during the execution, exiting";
-        return EXIT_FAILURE;
     }
+    return data;
 }
 
 } // namespace Antares::Solver::LoadFiles

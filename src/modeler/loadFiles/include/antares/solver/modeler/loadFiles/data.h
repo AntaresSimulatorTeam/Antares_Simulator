@@ -22,7 +22,6 @@
 
 #include <vector>
 
-
 #include <antares/optimisation/linear-problem-data-impl/linearProblemData.h>
 #include <antares/solver/modeler/parameters/modelerParameters.h>
 #include <antares/study/system-model/library.h>
@@ -33,31 +32,6 @@ namespace Antares::Modeler
 
 struct Data
 {
-    Data(const std::vector<Study::SystemModel::Library>& libraries,
-         std::unique_ptr<Study::SystemModel::System> system,
-         std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> dataSeries):
-        libraries_(libraries),
-        system_(std::move(system)),
-        dataSeries_(std::move(dataSeries))
-    {
-    }
-
-    const std::vector<Study::SystemModel::Library>& getLibraries() const
-    {
-        return libraries_;
-    }
-
-    const Study::SystemModel::System* getSystem() const
-    {
-        return system_.get();
-    }
-
-    const Optimisation::LinearProblemApi::ILinearProblemData* getDataSeries() const
-    {
-        return dataSeries_.get();
-    }
-
-private:
     std::vector<Study::SystemModel::Library> libraries_;
     std::unique_ptr<Study::SystemModel::System> system_;
     std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> dataSeries_;
