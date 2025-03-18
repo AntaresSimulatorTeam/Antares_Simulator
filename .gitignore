@@ -60,4 +60,3 @@ __pycache__
 venv/
 vcpkg_installed
 /src/tests/cucumber/behave.ini
-/.gitignore
