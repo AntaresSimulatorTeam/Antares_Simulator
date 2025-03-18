@@ -41,6 +41,8 @@ extern "C"
 
 using namespace Antares;
 
+// TODO : there are 2 SolveWithSirius(...) solving a quadratic problem by interior point.
+// TODO : we should try to avoid code duplications.
 static void SolveWithSirius(const Solver::Optimization::SingleOptimOptions& options,
                             PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
 {

@@ -289,6 +289,8 @@ bool ADQ_PATCH_CSR(const SingleOptimOptions& options,
     }
 }
 
+// TODO : there are 2 SolveWithSirius(...) solving a quadratic problem by interior point.
+// TODO : we should try to avoid code duplications.
 bool SolveWithSirius(const SingleOptimOptions& options,
                      PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre)
 {
