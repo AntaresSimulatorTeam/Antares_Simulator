@@ -7,9 +7,9 @@ set(ANTARES_VERSION_REVISION  0)
 
 # Beta release
 set(ANTARES_BETA 0)
-set(ANTARES_RC 9)
+set(ANTARES_RC 0)
 
-set(ANTARES_VERSION_YEAR      2024)
+set(ANTARES_VERSION_YEAR      2025)
 
 project(antares
         VERSION ${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION})
@@ -276,6 +276,7 @@ add_subdirectory(optimisation)  #optimisation APIs
 add_subdirectory(study)	        #antares study model
 add_subdirectory(solver)	    #antares solver and all associated libs
 add_subdirectory(analyzer)      #antares analyser
+add_subdirectory(modeler)       #antares modeler
 
 # Tools
 if (BUILD_TOOLS)

@@ -38,7 +38,7 @@ Model ModelBuilder::build()
 {
     Model model = std::move(model_);
     model_ = Model(); // makes ModelBuilder re-usable
-    return std::move(model);
+    return model;
 }
 
 /**
@@ -79,7 +79,10 @@ ModelBuilder& ModelBuilder::withParameters(std::vector<Parameter>&& parameters)
                    parameters.end(),
                    std::inserter(model_.parameters_, model_.parameters_.end()),
                    [](/*Non const to prevent copy*/ Parameter& parameter)
-                   { return std::make_pair(parameter.Id(), std::move(parameter)); });
+                   {
+                       auto id = parameter.Id();
+                       return std::make_pair(id, std::move(parameter));
+                   });
     return *this;
 }
 
@@ -96,7 +99,10 @@ ModelBuilder& ModelBuilder::withVariables(std::vector<Variable>&& variables)
     std::ranges::transform(variables,
                            std::inserter(model_.variables_, model_.variables_.end()),
                            [](/*Non const to prevent copy*/ Variable& variable)
-                           { return std::make_pair(variable.Id(), std::move(variable)); });
+                           {
+                               auto id = variable.Id();
+                               return std::make_pair(id, std::move(variable));
+                           });
     return *this;
 }
 
@@ -114,7 +120,10 @@ ModelBuilder& ModelBuilder::withPorts(std::vector<Port>&& ports)
                    ports.end(),
                    std::inserter(model_.ports_, model_.ports_.end()),
                    [](/*Non const to prevent copy*/ Port& port)
-                   { return std::make_pair(port.Id(), std::move(port)); });
+                   {
+                       auto id = port.Id();
+                       return std::make_pair(id, std::move(port));
+                   });
     return *this;
 }
 
@@ -132,7 +141,32 @@ ModelBuilder& ModelBuilder::withConstraints(std::vector<Constraint>&& constraint
                    constraints.end(),
                    std::inserter(model_.constraints_, model_.constraints_.end()),
                    [](/*Non const to prevent copy*/ Constraint& constraint)
-                   { return std::make_pair(constraint.Id(), std::move(constraint)); });
+                   {
+                       auto id = constraint.Id();
+                       return std::make_pair(id, std::move(constraint));
+                   });
+    return *this;
+}
+
+/**
+ * \brief Sets the ports of the model.
+ *
+ * \param ports A vector of Port objects to set.
+ * \return Reference to the ModelBuilder object.
+ *
+ * inputs it not garanteed to be valid after the call
+ */
+ModelBuilder& ModelBuilder::withPortFieldDefinitions(
+  std::vector<PortFieldDefinition>&& portFieldDefinitions)
+{
+    std::transform(portFieldDefinitions.begin(),
+                   portFieldDefinitions.end(),
+                   std::inserter(model_.portFieldDefinitions_, model_.portFieldDefinitions_.end()),
+                   [](/*Non const to prevent copy*/ PortFieldDefinition& pfd)
+                   {
+                       auto id = pfd.getPort().Id();
+                       return std::make_pair(id, std::move(pfd));
+                   });
     return *this;
 }
 

@@ -30,6 +30,12 @@ namespace Antares::Study::SystemModel
 class Port
 {
 public:
+    Port(const std::string& id, const PortType& type):
+        id_(id),
+        type_(type)
+    {
+    }
+
     const std::string& Id() const
     {
         return id_;

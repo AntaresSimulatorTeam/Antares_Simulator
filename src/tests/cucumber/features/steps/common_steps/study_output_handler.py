@@ -4,6 +4,7 @@ import os
 import pandas as pd
 import configparser
 from enum import Enum
+from pathlib import Path
 
 
 class result_type(Enum):
@@ -40,7 +41,8 @@ class study_output_handler:
 
     def __read_csv(self, file_name) -> pd.DataFrame:
         ignore_rows = [0, 1, 2, 3, 6]
-        absolute_path = os.path.join(self.study_output_path, file_name.replace("/", os.sep))
+        absolute_path = Path(os.path.join(self.study_output_path, file_name.replace("/", os.sep)))
+        assert absolute_path.exists(), f"Path %s does not exist." % absolute_path
         return pd.read_csv(absolute_path, header=[0, 1], skiprows=ignore_rows, sep='\t', low_memory=False)
 
     def __if_none_then_parse(self, rs: result_type, area, year, file_name: str):
@@ -68,6 +70,9 @@ class study_output_handler:
     def __get_details_hourly(self, area: str, year: int):
         return self.__if_none_then_parse(result_type.DETAILS, area.lower(), year, "details-hourly.txt")
 
+    def details_hourly_for_cluster(self, area: str, year: int, cluster: str):
+        return self.__if_none_then_parse(result_type.DETAILS, area.lower(), year, "details-hourly.txt")[cluster]
+
     def get_hourly_prod_mwh(self, area: str, year: int, prod_name: str) -> pd.Series:
         return self.__get_details_hourly(area, year)[prod_name]['MWh']
 
@@ -79,6 +84,15 @@ class study_output_handler:
 
     def get_unsupplied_energy_mwh(self, area: str, year: int, date: str) -> float:
         return self.__get_values_hourly_for_specific_hour(area, year, date)["UNSP. ENRG"]["MWh"].sum()
+
+    def min_gen_for_thermal_cluster(self, area: str, year: int, cluster: str):
+        return self.__get_details_hourly(area, year)[cluster]["MIN GEN - MWh"]
+
+    def min_gen_for_thermal_cluster_at_hour(self, area: str, year: int, hour: int, cluster_name: str):
+        return self.__get_details_hourly(area, year)[cluster_name]["MIN GEN - MWh"][hour]
+
+    def get_specific_value(self, area: str, year: int, prod_name: str, date: str) -> float:
+        return self.__get_values_hourly_for_specific_hour(area, year, date)[prod_name]["MWh"].sum()
 
     def get_non_proportional_cost(self, area: str, year: int) -> float:
         return self.__get_values_hourly(area, year)["NP COST"]["Euro"].sum()

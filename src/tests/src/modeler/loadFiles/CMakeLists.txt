@@ -5,6 +5,6 @@ add_boost_test(loadFiles
   testLoadModelerFiles.cpp
   testParameters.cpp
   LIBS
-  Antares::modelerParameters
-        Antares::loadModelerFiles
+  Antares::modeler-parameters
+  Antares::load-modeler-files
   test_utils_unit)

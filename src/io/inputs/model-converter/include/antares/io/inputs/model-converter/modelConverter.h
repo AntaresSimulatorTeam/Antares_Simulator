@@ -44,11 +44,62 @@ class Node;
 
 namespace Antares::IO::Inputs::ModelConverter
 {
+
+Study::SystemModel::Library convert(const YmlModel::Library& library);
+
+// EXCEPTIONS
 class UnknownTypeException: public std::runtime_error
 {
 public:
-    explicit UnknownTypeException(YmlModel::ValueType type);
+    explicit UnknownTypeException(const std::string& type);
 };
 
-Study::SystemModel::Library convert(const YmlModel::Library& library);
+class PortWithThisIdAlreadyExists: public std::runtime_error
+{
+public:
+    explicit PortWithThisIdAlreadyExists(const std::string& id);
+};
+
+class PortTypeWithThisIdAlreadyExists: public std::runtime_error
+{
+public:
+    explicit PortTypeWithThisIdAlreadyExists(const std::string& id);
+};
+
+class ConstraintWithThisIdAlreadyExists: public std::runtime_error
+{
+public:
+    explicit ConstraintWithThisIdAlreadyExists(const std::string& id);
+};
+
+class PortTypeDoesntContainsFields: public std::runtime_error
+{
+public:
+    explicit PortTypeDoesntContainsFields(const std::string& id);
+};
+
+class PortTypeNotFound: public std::runtime_error
+{
+public:
+    explicit PortTypeNotFound(const std::string& portId, const std::string& portTypeId);
+};
+
+class PortNotFoundForDefinition: public std::runtime_error
+{
+public:
+    explicit PortNotFoundForDefinition(const std::string& portId);
+};
+
+class FieldNotFoundForDefinition: public std::runtime_error
+{
+public:
+    explicit FieldNotFoundForDefinition(const std::string& portId, const std::string& fieldId);
+};
+
+class PortInDefinition: public std::runtime_error
+{
+public:
+    explicit PortInDefinition(const std::string& portId, const std::string& portInDefId);
+};
+
 } // namespace Antares::IO::Inputs::ModelConverter

@@ -28,8 +28,28 @@ namespace Antares::Study::SystemModel
 
 class PortFieldDefinition
 {
-    PortFieldDefinition();
-    ~PortFieldDefinition() = default;
+public:
+    PortFieldDefinition(Port port, PortField field, Expression definition):
+        port_(std::move(port)),
+        field_(std::move(field)),
+        definition_(std::move(definition))
+    {
+    }
+
+    const Port& getPort() const
+    {
+        return port_;
+    }
+
+    const PortField& Field() const
+    {
+        return field_;
+    }
+
+    const Expression& Definition() const
+    {
+        return definition_;
+    }
 
 private:
     Port port_;
