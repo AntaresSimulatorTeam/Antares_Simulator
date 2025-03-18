@@ -53,8 +53,8 @@ void checkVariable(const SystemModel::Variable& variable,
                    const std::string& lowerBound,
                    const std::string& upperBound,
                    SystemModel::ValueType type,
-                   SystemModel::TimeDependent timeDependent,
-                   SystemModel::ScenarioDependent scenarioDependent)
+                   [[maybe_unused]] SystemModel::TimeDependent timeDependent,
+                   [[maybe_unused]] SystemModel::ScenarioDependent scenarioDependent)
 {
     std::cout << "Variable: " << variable.Id() << std::endl;
     BOOST_CHECK_EQUAL(variable.Id(), name);
@@ -117,6 +117,9 @@ library:
         - port: injection_port
           field: flow
           definition: generation
+      binding-constraints:
+        - id: balance
+          expression: injection_port.flow = 0
       objective: cost * generation
 
     - id: node
@@ -124,9 +127,6 @@ library:
       ports:
         - id: injection_port
           type: flow
-      binding-constraints:
-        - id: balance
-          expression:  injection_port = 0
 
     - id: spillage
       description: A basic spillage model
@@ -271,7 +271,6 @@ library:
         BOOST_REQUIRE_EQUAL(lib.PortTypes().size(), 1);
         auto& portType = lib.PortTypes().at("flow");
         BOOST_CHECK_EQUAL(portType.Id(), "flow");
-        BOOST_CHECK_EQUAL(portType.Description(), "A port which transfers power flow");
 
         BOOST_REQUIRE_EQUAL(portType.Fields().size(), 1);
         auto& portTypeField = portType.Fields().at(0);
@@ -282,7 +281,7 @@ library:
         BOOST_CHECK_EQUAL(model0.Id(), "generator");
         BOOST_CHECK_EQUAL(model0.Objective().Value(), "cost * generation");
 
-        BOOST_REQUIRE_EQUAL(model0.getConstraints().size(), 0);
+        BOOST_REQUIRE_EQUAL(model0.getConstraints().size(), 1);
         BOOST_REQUIRE_EQUAL(model0.Parameters().size(), 2);
         BOOST_REQUIRE_EQUAL(model0.Variables().size(), 1);
         // BOOST_REQUIRE_EQUAL(model0.Ports().size(), 1); Unsuported

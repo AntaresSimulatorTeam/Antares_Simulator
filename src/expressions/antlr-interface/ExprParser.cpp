@@ -64,42 +64,46 @@ void exprParserInitialize() {
     }
   );
   static const int32_t serializedATNSegment[] = {
-  	4,1,17,117,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,1,0,1,0,1,
+  	4,1,17,131,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,1,0,1,0,1,
   	0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
   	1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-  	1,1,1,1,1,1,1,1,1,1,1,3,1,56,8,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-  	5,1,67,8,1,10,1,12,1,70,9,1,1,2,1,2,3,2,74,8,2,1,3,1,3,3,3,78,8,3,1,4,
-  	1,4,1,4,1,4,1,4,1,4,1,4,1,4,3,4,88,8,4,1,4,1,4,1,4,1,4,1,4,1,4,5,4,96,
-  	8,4,10,4,12,4,99,9,4,1,5,1,5,1,5,1,5,1,5,1,5,3,5,107,8,5,1,5,1,5,1,5,
-  	5,5,112,8,5,10,5,12,5,115,9,5,1,5,0,3,2,8,10,6,0,2,4,6,8,10,0,2,1,0,5,
-  	6,2,0,2,2,7,7,128,0,12,1,0,0,0,2,55,1,0,0,0,4,73,1,0,0,0,6,75,1,0,0,0,
-  	8,87,1,0,0,0,10,106,1,0,0,0,12,13,3,2,1,0,13,14,5,0,0,1,14,1,1,0,0,0,
-  	15,16,6,1,-1,0,16,56,3,4,2,0,17,18,5,15,0,0,18,19,5,1,0,0,19,56,5,15,
-  	0,0,20,21,5,2,0,0,21,56,3,2,1,10,22,23,5,3,0,0,23,24,3,2,1,0,24,25,5,
-  	4,0,0,25,56,1,0,0,0,26,27,5,8,0,0,27,28,5,3,0,0,28,29,3,2,1,0,29,30,5,
-  	4,0,0,30,56,1,0,0,0,31,32,5,8,0,0,32,33,5,3,0,0,33,34,3,6,3,0,34,35,5,
-  	9,0,0,35,36,3,6,3,0,36,37,5,10,0,0,37,38,3,2,1,0,38,39,5,4,0,0,39,56,
-  	1,0,0,0,40,41,5,15,0,0,41,42,5,3,0,0,42,43,3,2,1,0,43,44,5,4,0,0,44,56,
-  	1,0,0,0,45,46,5,15,0,0,46,47,5,11,0,0,47,48,3,6,3,0,48,49,5,12,0,0,49,
-  	56,1,0,0,0,50,51,5,15,0,0,51,52,5,11,0,0,52,53,3,2,1,0,53,54,5,12,0,0,
-  	54,56,1,0,0,0,55,15,1,0,0,0,55,17,1,0,0,0,55,20,1,0,0,0,55,22,1,0,0,0,
-  	55,26,1,0,0,0,55,31,1,0,0,0,55,40,1,0,0,0,55,45,1,0,0,0,55,50,1,0,0,0,
-  	56,68,1,0,0,0,57,58,10,8,0,0,58,59,7,0,0,0,59,67,3,2,1,9,60,61,10,7,0,
-  	0,61,62,7,1,0,0,62,67,3,2,1,8,63,64,10,6,0,0,64,65,5,16,0,0,65,67,3,2,
-  	1,7,66,57,1,0,0,0,66,60,1,0,0,0,66,63,1,0,0,0,67,70,1,0,0,0,68,66,1,0,
-  	0,0,68,69,1,0,0,0,69,3,1,0,0,0,70,68,1,0,0,0,71,74,5,13,0,0,72,74,5,15,
-  	0,0,73,71,1,0,0,0,73,72,1,0,0,0,74,5,1,0,0,0,75,77,5,14,0,0,76,78,3,8,
-  	4,0,77,76,1,0,0,0,77,78,1,0,0,0,78,7,1,0,0,0,79,80,6,4,-1,0,80,81,7,1,
-  	0,0,81,88,3,4,2,0,82,83,7,1,0,0,83,84,5,3,0,0,84,85,3,2,1,0,85,86,5,4,
-  	0,0,86,88,1,0,0,0,87,79,1,0,0,0,87,82,1,0,0,0,88,97,1,0,0,0,89,90,10,
-  	4,0,0,90,91,7,0,0,0,91,96,3,10,5,0,92,93,10,3,0,0,93,94,7,1,0,0,94,96,
-  	3,10,5,0,95,89,1,0,0,0,95,92,1,0,0,0,96,99,1,0,0,0,97,95,1,0,0,0,97,98,
-  	1,0,0,0,98,9,1,0,0,0,99,97,1,0,0,0,100,101,6,5,-1,0,101,102,5,3,0,0,102,
-  	103,3,2,1,0,103,104,5,4,0,0,104,107,1,0,0,0,105,107,3,4,2,0,106,100,1,
-  	0,0,0,106,105,1,0,0,0,107,113,1,0,0,0,108,109,10,3,0,0,109,110,7,0,0,
-  	0,110,112,3,10,5,4,111,108,1,0,0,0,112,115,1,0,0,0,113,111,1,0,0,0,113,
-  	114,1,0,0,0,114,11,1,0,0,0,115,113,1,0,0,0,10,55,66,68,73,77,87,95,97,
-  	106,113
+  	1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+  	1,1,1,1,3,1,70,8,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,5,1,81,8,1,10,
+  	1,12,1,84,9,1,1,2,1,2,3,2,88,8,2,1,3,1,3,3,3,92,8,3,1,4,1,4,1,4,1,4,1,
+  	4,1,4,1,4,1,4,3,4,102,8,4,1,4,1,4,1,4,1,4,1,4,1,4,5,4,110,8,4,10,4,12,
+  	4,113,9,4,1,5,1,5,1,5,1,5,1,5,1,5,3,5,121,8,5,1,5,1,5,1,5,5,5,126,8,5,
+  	10,5,12,5,129,9,5,1,5,0,3,2,8,10,6,0,2,4,6,8,10,0,2,1,0,5,6,2,0,2,2,7,
+  	7,144,0,12,1,0,0,0,2,69,1,0,0,0,4,87,1,0,0,0,6,89,1,0,0,0,8,101,1,0,0,
+  	0,10,120,1,0,0,0,12,13,3,2,1,0,13,14,5,0,0,1,14,1,1,0,0,0,15,16,6,1,-1,
+  	0,16,70,3,4,2,0,17,18,5,15,0,0,18,19,5,1,0,0,19,70,5,15,0,0,20,21,5,2,
+  	0,0,21,70,3,2,1,12,22,23,5,3,0,0,23,24,3,2,1,0,24,25,5,4,0,0,25,70,1,
+  	0,0,0,26,27,5,8,0,0,27,28,5,3,0,0,28,29,3,2,1,0,29,30,5,4,0,0,30,70,1,
+  	0,0,0,31,32,5,8,0,0,32,33,5,3,0,0,33,34,3,6,3,0,34,35,5,9,0,0,35,36,3,
+  	6,3,0,36,37,5,10,0,0,37,38,3,2,1,0,38,39,5,4,0,0,39,70,1,0,0,0,40,41,
+  	5,15,0,0,41,42,5,3,0,0,42,43,3,2,1,0,43,44,5,4,0,0,44,70,1,0,0,0,45,46,
+  	5,15,0,0,46,47,5,11,0,0,47,48,3,6,3,0,48,49,5,12,0,0,49,70,1,0,0,0,50,
+  	51,5,15,0,0,51,52,5,11,0,0,52,53,3,2,1,0,53,54,5,12,0,0,54,70,1,0,0,0,
+  	55,56,5,3,0,0,56,57,3,2,1,0,57,58,5,4,0,0,58,59,5,11,0,0,59,60,3,6,3,
+  	0,60,61,5,12,0,0,61,70,1,0,0,0,62,63,5,3,0,0,63,64,3,2,1,0,64,65,5,4,
+  	0,0,65,66,5,11,0,0,66,67,3,2,1,0,67,68,5,12,0,0,68,70,1,0,0,0,69,15,1,
+  	0,0,0,69,17,1,0,0,0,69,20,1,0,0,0,69,22,1,0,0,0,69,26,1,0,0,0,69,31,1,
+  	0,0,0,69,40,1,0,0,0,69,45,1,0,0,0,69,50,1,0,0,0,69,55,1,0,0,0,69,62,1,
+  	0,0,0,70,82,1,0,0,0,71,72,10,10,0,0,72,73,7,0,0,0,73,81,3,2,1,11,74,75,
+  	10,9,0,0,75,76,7,1,0,0,76,81,3,2,1,10,77,78,10,8,0,0,78,79,5,16,0,0,79,
+  	81,3,2,1,9,80,71,1,0,0,0,80,74,1,0,0,0,80,77,1,0,0,0,81,84,1,0,0,0,82,
+  	80,1,0,0,0,82,83,1,0,0,0,83,3,1,0,0,0,84,82,1,0,0,0,85,88,5,13,0,0,86,
+  	88,5,15,0,0,87,85,1,0,0,0,87,86,1,0,0,0,88,5,1,0,0,0,89,91,5,14,0,0,90,
+  	92,3,8,4,0,91,90,1,0,0,0,91,92,1,0,0,0,92,7,1,0,0,0,93,94,6,4,-1,0,94,
+  	95,7,1,0,0,95,102,3,4,2,0,96,97,7,1,0,0,97,98,5,3,0,0,98,99,3,2,1,0,99,
+  	100,5,4,0,0,100,102,1,0,0,0,101,93,1,0,0,0,101,96,1,0,0,0,102,111,1,0,
+  	0,0,103,104,10,4,0,0,104,105,7,0,0,0,105,110,3,10,5,0,106,107,10,3,0,
+  	0,107,108,7,1,0,0,108,110,3,10,5,0,109,103,1,0,0,0,109,106,1,0,0,0,110,
+  	113,1,0,0,0,111,109,1,0,0,0,111,112,1,0,0,0,112,9,1,0,0,0,113,111,1,0,
+  	0,0,114,115,6,5,-1,0,115,116,5,3,0,0,116,117,3,2,1,0,117,118,5,4,0,0,
+  	118,121,1,0,0,0,119,121,3,4,2,0,120,114,1,0,0,0,120,119,1,0,0,0,121,127,
+  	1,0,0,0,122,123,10,3,0,0,123,124,7,0,0,0,124,126,3,10,5,4,125,122,1,0,
+  	0,0,126,129,1,0,0,0,127,125,1,0,0,0,127,128,1,0,0,0,128,11,1,0,0,0,129,
+  	127,1,0,0,0,10,69,80,82,87,91,101,109,111,120,127
   };
   staticData->serializedATN = antlr4::atn::SerializedATNView(serializedATNSegment, sizeof(serializedATNSegment) / sizeof(serializedATNSegment[0]));
 
@@ -218,29 +222,6 @@ void ExprParser::ExprContext::copyFrom(ExprContext *ctx) {
   ParserRuleContext::copyFrom(ctx);
 }
 
-//----------------- TimeSumContext ------------------------------------------------------------------
-
-ExprParser::ExprContext* ExprParser::TimeSumContext::expr() {
-  return getRuleContext<ExprParser::ExprContext>(0);
-}
-
-std::vector<ExprParser::ShiftContext *> ExprParser::TimeSumContext::shift() {
-  return getRuleContexts<ExprParser::ShiftContext>();
-}
-
-ExprParser::ShiftContext* ExprParser::TimeSumContext::shift(size_t i) {
-  return getRuleContext<ExprParser::ShiftContext>(i);
-}
-
-ExprParser::TimeSumContext::TimeSumContext(ExprContext *ctx) { copyFrom(ctx); }
-
-
-std::any ExprParser::TimeSumContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (auto parserVisitor = dynamic_cast<ExprVisitor*>(visitor))
-    return parserVisitor->visitTimeSum(this);
-  else
-    return visitor->visitChildren(this);
-}
 //----------------- NegationContext ------------------------------------------------------------------
 
 ExprParser::ExprContext* ExprParser::NegationContext::expr() {
@@ -286,25 +267,6 @@ std::any ExprParser::ExpressionContext::accept(tree::ParseTreeVisitor *visitor) 
   else
     return visitor->visitChildren(this);
 }
-//----------------- TimeIndexContext ------------------------------------------------------------------
-
-tree::TerminalNode* ExprParser::TimeIndexContext::IDENTIFIER() {
-  return getToken(ExprParser::IDENTIFIER, 0);
-}
-
-ExprParser::ExprContext* ExprParser::TimeIndexContext::expr() {
-  return getRuleContext<ExprParser::ExprContext>(0);
-}
-
-ExprParser::TimeIndexContext::TimeIndexContext(ExprContext *ctx) { copyFrom(ctx); }
-
-
-std::any ExprParser::TimeIndexContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (auto parserVisitor = dynamic_cast<ExprVisitor*>(visitor))
-    return parserVisitor->visitTimeIndex(this);
-  else
-    return visitor->visitChildren(this);
-}
 //----------------- ComparisonContext ------------------------------------------------------------------
 
 std::vector<ExprParser::ExprContext *> ExprParser::ComparisonContext::expr() {
@@ -343,41 +305,22 @@ std::any ExprParser::AllTimeSumContext::accept(tree::ParseTreeVisitor *visitor) 
   else
     return visitor->visitChildren(this);
 }
-//----------------- TimeShiftContext ------------------------------------------------------------------
+//----------------- TimeIndexExprContext ------------------------------------------------------------------
 
-tree::TerminalNode* ExprParser::TimeShiftContext::IDENTIFIER() {
-  return getToken(ExprParser::IDENTIFIER, 0);
+std::vector<ExprParser::ExprContext *> ExprParser::TimeIndexExprContext::expr() {
+  return getRuleContexts<ExprParser::ExprContext>();
 }
 
-ExprParser::ShiftContext* ExprParser::TimeShiftContext::shift() {
-  return getRuleContext<ExprParser::ShiftContext>(0);
+ExprParser::ExprContext* ExprParser::TimeIndexExprContext::expr(size_t i) {
+  return getRuleContext<ExprParser::ExprContext>(i);
 }
 
-ExprParser::TimeShiftContext::TimeShiftContext(ExprContext *ctx) { copyFrom(ctx); }
+ExprParser::TimeIndexExprContext::TimeIndexExprContext(ExprContext *ctx) { copyFrom(ctx); }
 
 
-std::any ExprParser::TimeShiftContext::accept(tree::ParseTreeVisitor *visitor) {
+std::any ExprParser::TimeIndexExprContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<ExprVisitor*>(visitor))
-    return parserVisitor->visitTimeShift(this);
-  else
-    return visitor->visitChildren(this);
-}
-//----------------- FunctionContext ------------------------------------------------------------------
-
-tree::TerminalNode* ExprParser::FunctionContext::IDENTIFIER() {
-  return getToken(ExprParser::IDENTIFIER, 0);
-}
-
-ExprParser::ExprContext* ExprParser::FunctionContext::expr() {
-  return getRuleContext<ExprParser::ExprContext>(0);
-}
-
-ExprParser::FunctionContext::FunctionContext(ExprContext *ctx) { copyFrom(ctx); }
-
-
-std::any ExprParser::FunctionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (auto parserVisitor = dynamic_cast<ExprVisitor*>(visitor))
-    return parserVisitor->visitFunction(this);
+    return parserVisitor->visitTimeIndexExpr(this);
   else
     return visitor->visitChildren(this);
 }
@@ -397,6 +340,25 @@ ExprParser::AddsubContext::AddsubContext(ExprContext *ctx) { copyFrom(ctx); }
 std::any ExprParser::AddsubContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<ExprVisitor*>(visitor))
     return parserVisitor->visitAddsub(this);
+  else
+    return visitor->visitChildren(this);
+}
+//----------------- TimeShiftExprContext ------------------------------------------------------------------
+
+ExprParser::ExprContext* ExprParser::TimeShiftExprContext::expr() {
+  return getRuleContext<ExprParser::ExprContext>(0);
+}
+
+ExprParser::ShiftContext* ExprParser::TimeShiftExprContext::shift() {
+  return getRuleContext<ExprParser::ShiftContext>(0);
+}
+
+ExprParser::TimeShiftExprContext::TimeShiftExprContext(ExprContext *ctx) { copyFrom(ctx); }
+
+
+std::any ExprParser::TimeShiftExprContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<ExprVisitor*>(visitor))
+    return parserVisitor->visitTimeShiftExpr(this);
   else
     return visitor->visitChildren(this);
 }
@@ -438,6 +400,86 @@ std::any ExprParser::MuldivContext::accept(tree::ParseTreeVisitor *visitor) {
   else
     return visitor->visitChildren(this);
 }
+//----------------- TimeSumContext ------------------------------------------------------------------
+
+ExprParser::ExprContext* ExprParser::TimeSumContext::expr() {
+  return getRuleContext<ExprParser::ExprContext>(0);
+}
+
+std::vector<ExprParser::ShiftContext *> ExprParser::TimeSumContext::shift() {
+  return getRuleContexts<ExprParser::ShiftContext>();
+}
+
+ExprParser::ShiftContext* ExprParser::TimeSumContext::shift(size_t i) {
+  return getRuleContext<ExprParser::ShiftContext>(i);
+}
+
+ExprParser::TimeSumContext::TimeSumContext(ExprContext *ctx) { copyFrom(ctx); }
+
+
+std::any ExprParser::TimeSumContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<ExprVisitor*>(visitor))
+    return parserVisitor->visitTimeSum(this);
+  else
+    return visitor->visitChildren(this);
+}
+//----------------- TimeIndexContext ------------------------------------------------------------------
+
+tree::TerminalNode* ExprParser::TimeIndexContext::IDENTIFIER() {
+  return getToken(ExprParser::IDENTIFIER, 0);
+}
+
+ExprParser::ExprContext* ExprParser::TimeIndexContext::expr() {
+  return getRuleContext<ExprParser::ExprContext>(0);
+}
+
+ExprParser::TimeIndexContext::TimeIndexContext(ExprContext *ctx) { copyFrom(ctx); }
+
+
+std::any ExprParser::TimeIndexContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<ExprVisitor*>(visitor))
+    return parserVisitor->visitTimeIndex(this);
+  else
+    return visitor->visitChildren(this);
+}
+//----------------- TimeShiftContext ------------------------------------------------------------------
+
+tree::TerminalNode* ExprParser::TimeShiftContext::IDENTIFIER() {
+  return getToken(ExprParser::IDENTIFIER, 0);
+}
+
+ExprParser::ShiftContext* ExprParser::TimeShiftContext::shift() {
+  return getRuleContext<ExprParser::ShiftContext>(0);
+}
+
+ExprParser::TimeShiftContext::TimeShiftContext(ExprContext *ctx) { copyFrom(ctx); }
+
+
+std::any ExprParser::TimeShiftContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<ExprVisitor*>(visitor))
+    return parserVisitor->visitTimeShift(this);
+  else
+    return visitor->visitChildren(this);
+}
+//----------------- FunctionContext ------------------------------------------------------------------
+
+tree::TerminalNode* ExprParser::FunctionContext::IDENTIFIER() {
+  return getToken(ExprParser::IDENTIFIER, 0);
+}
+
+ExprParser::ExprContext* ExprParser::FunctionContext::expr() {
+  return getRuleContext<ExprParser::ExprContext>(0);
+}
+
+ExprParser::FunctionContext::FunctionContext(ExprContext *ctx) { copyFrom(ctx); }
+
+
+std::any ExprParser::FunctionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<ExprVisitor*>(visitor))
+    return parserVisitor->visitFunction(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 ExprParser::ExprContext* ExprParser::expr() {
    return expr(0);
@@ -464,7 +506,7 @@ ExprParser::ExprContext* ExprParser::expr(int precedence) {
   try {
     size_t alt;
     enterOuterAlt(_localctx, 1);
-    setState(55);
+    setState(69);
     _errHandler->sync(this);
     switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 0, _ctx)) {
     case 1: {
@@ -497,7 +539,7 @@ ExprParser::ExprContext* ExprParser::expr(int precedence) {
       setState(20);
       match(ExprParser::T__1);
       setState(21);
-      expr(10);
+      expr(12);
       break;
     }
 
@@ -597,11 +639,49 @@ ExprParser::ExprContext* ExprParser::expr(int precedence) {
       break;
     }
 
+    case 10: {
+      _localctx = _tracker.createInstance<TimeShiftExprContext>(_localctx);
+      _ctx = _localctx;
+      previousContext = _localctx;
+      setState(55);
+      match(ExprParser::T__2);
+      setState(56);
+      expr(0);
+      setState(57);
+      match(ExprParser::T__3);
+      setState(58);
+      match(ExprParser::T__10);
+      setState(59);
+      shift();
+      setState(60);
+      match(ExprParser::T__11);
+      break;
+    }
+
+    case 11: {
+      _localctx = _tracker.createInstance<TimeIndexExprContext>(_localctx);
+      _ctx = _localctx;
+      previousContext = _localctx;
+      setState(62);
+      match(ExprParser::T__2);
+      setState(63);
+      expr(0);
+      setState(64);
+      match(ExprParser::T__3);
+      setState(65);
+      match(ExprParser::T__10);
+      setState(66);
+      expr(0);
+      setState(67);
+      match(ExprParser::T__11);
+      break;
+    }
+
     default:
       break;
     }
     _ctx->stop = _input->LT(-1);
-    setState(68);
+    setState(82);
     _errHandler->sync(this);
     alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 2, _ctx);
     while (alt != 2 && alt != atn::ATN::INVALID_ALT_NUMBER) {
@@ -609,17 +689,17 @@ ExprParser::ExprContext* ExprParser::expr(int precedence) {
         if (!_parseListeners.empty())
           triggerExitRuleEvent();
         previousContext = _localctx;
-        setState(66);
+        setState(80);
         _errHandler->sync(this);
         switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 1, _ctx)) {
         case 1: {
           auto newContext = _tracker.createInstance<MuldivContext>(_tracker.createInstance<ExprContext>(parentContext, parentState));
           _localctx = newContext;
           pushNewRecursionContext(newContext, startState, RuleExpr);
-          setState(57);
+          setState(71);
 
-          if (!(precpred(_ctx, 8))) throw FailedPredicateException(this, "precpred(_ctx, 8)");
-          setState(58);
+          if (!(precpred(_ctx, 10))) throw FailedPredicateException(this, "precpred(_ctx, 10)");
+          setState(72);
           antlrcpp::downCast<MuldivContext *>(_localctx)->op = _input->LT(1);
           _la = _input->LA(1);
           if (!(_la == ExprParser::T__4
@@ -631,8 +711,8 @@ ExprParser::ExprContext* ExprParser::expr(int precedence) {
             _errHandler->reportMatch(this);
             consume();
           }
-          setState(59);
-          expr(9);
+          setState(73);
+          expr(11);
           break;
         }
 
@@ -640,10 +720,10 @@ ExprParser::ExprContext* ExprParser::expr(int precedence) {
           auto newContext = _tracker.createInstance<AddsubContext>(_tracker.createInstance<ExprContext>(parentContext, parentState));
           _localctx = newContext;
           pushNewRecursionContext(newContext, startState, RuleExpr);
-          setState(60);
+          setState(74);
 
-          if (!(precpred(_ctx, 7))) throw FailedPredicateException(this, "precpred(_ctx, 7)");
-          setState(61);
+          if (!(precpred(_ctx, 9))) throw FailedPredicateException(this, "precpred(_ctx, 9)");
+          setState(75);
           antlrcpp::downCast<AddsubContext *>(_localctx)->op = _input->LT(1);
           _la = _input->LA(1);
           if (!(_la == ExprParser::T__1
@@ -655,8 +735,8 @@ ExprParser::ExprContext* ExprParser::expr(int precedence) {
             _errHandler->reportMatch(this);
             consume();
           }
-          setState(62);
-          expr(8);
+          setState(76);
+          expr(10);
           break;
         }
 
@@ -664,13 +744,13 @@ ExprParser::ExprContext* ExprParser::expr(int precedence) {
           auto newContext = _tracker.createInstance<ComparisonContext>(_tracker.createInstance<ExprContext>(parentContext, parentState));
           _localctx = newContext;
           pushNewRecursionContext(newContext, startState, RuleExpr);
-          setState(63);
+          setState(77);
 
-          if (!(precpred(_ctx, 6))) throw FailedPredicateException(this, "precpred(_ctx, 6)");
-          setState(64);
+          if (!(precpred(_ctx, 8))) throw FailedPredicateException(this, "precpred(_ctx, 8)");
+          setState(78);
           match(ExprParser::COMPARISON);
-          setState(65);
-          expr(7);
+          setState(79);
+          expr(9);
           break;
         }
 
@@ -678,7 +758,7 @@ ExprParser::ExprContext* ExprParser::expr(int precedence) {
           break;
         } 
       }
-      setState(70);
+      setState(84);
       _errHandler->sync(this);
       alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 2, _ctx);
     }
@@ -748,13 +828,13 @@ ExprParser::AtomContext* ExprParser::atom() {
     exitRule();
   });
   try {
-    setState(73);
+    setState(87);
     _errHandler->sync(this);
     switch (_input->LA(1)) {
       case ExprParser::NUMBER: {
         _localctx = _tracker.createInstance<ExprParser::NumberContext>(_localctx);
         enterOuterAlt(_localctx, 1);
-        setState(71);
+        setState(85);
         match(ExprParser::NUMBER);
         break;
       }
@@ -762,7 +842,7 @@ ExprParser::AtomContext* ExprParser::atom() {
       case ExprParser::IDENTIFIER: {
         _localctx = _tracker.createInstance<ExprParser::IdentifierContext>(_localctx);
         enterOuterAlt(_localctx, 2);
-        setState(72);
+        setState(86);
         match(ExprParser::IDENTIFIER);
         break;
       }
@@ -822,16 +902,16 @@ ExprParser::ShiftContext* ExprParser::shift() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(75);
+    setState(89);
     match(ExprParser::TIME);
-    setState(77);
+    setState(91);
     _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == ExprParser::T__1
 
     || _la == ExprParser::T__6) {
-      setState(76);
+      setState(90);
       shift_expr(0);
     }
    
@@ -954,7 +1034,7 @@ ExprParser::Shift_exprContext* ExprParser::shift_expr(int precedence) {
   try {
     size_t alt;
     enterOuterAlt(_localctx, 1);
-    setState(87);
+    setState(101);
     _errHandler->sync(this);
     switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 5, _ctx)) {
     case 1: {
@@ -962,7 +1042,7 @@ ExprParser::Shift_exprContext* ExprParser::shift_expr(int precedence) {
       _ctx = _localctx;
       previousContext = _localctx;
 
-      setState(80);
+      setState(94);
       antlrcpp::downCast<SignedAtomContext *>(_localctx)->op = _input->LT(1);
       _la = _input->LA(1);
       if (!(_la == ExprParser::T__1
@@ -974,7 +1054,7 @@ ExprParser::Shift_exprContext* ExprParser::shift_expr(int precedence) {
         _errHandler->reportMatch(this);
         consume();
       }
-      setState(81);
+      setState(95);
       atom();
       break;
     }
@@ -983,7 +1063,7 @@ ExprParser::Shift_exprContext* ExprParser::shift_expr(int precedence) {
       _localctx = _tracker.createInstance<SignedExpressionContext>(_localctx);
       _ctx = _localctx;
       previousContext = _localctx;
-      setState(82);
+      setState(96);
       antlrcpp::downCast<SignedExpressionContext *>(_localctx)->op = _input->LT(1);
       _la = _input->LA(1);
       if (!(_la == ExprParser::T__1
@@ -995,11 +1075,11 @@ ExprParser::Shift_exprContext* ExprParser::shift_expr(int precedence) {
         _errHandler->reportMatch(this);
         consume();
       }
-      setState(83);
+      setState(97);
       match(ExprParser::T__2);
-      setState(84);
+      setState(98);
       expr(0);
-      setState(85);
+      setState(99);
       match(ExprParser::T__3);
       break;
     }
@@ -1008,7 +1088,7 @@ ExprParser::Shift_exprContext* ExprParser::shift_expr(int precedence) {
       break;
     }
     _ctx->stop = _input->LT(-1);
-    setState(97);
+    setState(111);
     _errHandler->sync(this);
     alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 7, _ctx);
     while (alt != 2 && alt != atn::ATN::INVALID_ALT_NUMBER) {
@@ -1016,17 +1096,17 @@ ExprParser::Shift_exprContext* ExprParser::shift_expr(int precedence) {
         if (!_parseListeners.empty())
           triggerExitRuleEvent();
         previousContext = _localctx;
-        setState(95);
+        setState(109);
         _errHandler->sync(this);
         switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 6, _ctx)) {
         case 1: {
           auto newContext = _tracker.createInstance<ShiftMuldivContext>(_tracker.createInstance<Shift_exprContext>(parentContext, parentState));
           _localctx = newContext;
           pushNewRecursionContext(newContext, startState, RuleShift_expr);
-          setState(89);
+          setState(103);
 
           if (!(precpred(_ctx, 4))) throw FailedPredicateException(this, "precpred(_ctx, 4)");
-          setState(90);
+          setState(104);
           antlrcpp::downCast<ShiftMuldivContext *>(_localctx)->op = _input->LT(1);
           _la = _input->LA(1);
           if (!(_la == ExprParser::T__4
@@ -1038,7 +1118,7 @@ ExprParser::Shift_exprContext* ExprParser::shift_expr(int precedence) {
             _errHandler->reportMatch(this);
             consume();
           }
-          setState(91);
+          setState(105);
           right_expr(0);
           break;
         }
@@ -1047,10 +1127,10 @@ ExprParser::Shift_exprContext* ExprParser::shift_expr(int precedence) {
           auto newContext = _tracker.createInstance<ShiftAddsubContext>(_tracker.createInstance<Shift_exprContext>(parentContext, parentState));
           _localctx = newContext;
           pushNewRecursionContext(newContext, startState, RuleShift_expr);
-          setState(92);
+          setState(106);
 
           if (!(precpred(_ctx, 3))) throw FailedPredicateException(this, "precpred(_ctx, 3)");
-          setState(93);
+          setState(107);
           antlrcpp::downCast<ShiftAddsubContext *>(_localctx)->op = _input->LT(1);
           _la = _input->LA(1);
           if (!(_la == ExprParser::T__1
@@ -1062,7 +1142,7 @@ ExprParser::Shift_exprContext* ExprParser::shift_expr(int precedence) {
             _errHandler->reportMatch(this);
             consume();
           }
-          setState(94);
+          setState(108);
           right_expr(0);
           break;
         }
@@ -1071,7 +1151,7 @@ ExprParser::Shift_exprContext* ExprParser::shift_expr(int precedence) {
           break;
         } 
       }
-      setState(99);
+      setState(113);
       _errHandler->sync(this);
       alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 7, _ctx);
     }
@@ -1174,7 +1254,7 @@ ExprParser::Right_exprContext* ExprParser::right_expr(int precedence) {
   try {
     size_t alt;
     enterOuterAlt(_localctx, 1);
-    setState(106);
+    setState(120);
     _errHandler->sync(this);
     switch (_input->LA(1)) {
       case ExprParser::T__2: {
@@ -1182,11 +1262,11 @@ ExprParser::Right_exprContext* ExprParser::right_expr(int precedence) {
         _ctx = _localctx;
         previousContext = _localctx;
 
-        setState(101);
+        setState(115);
         match(ExprParser::T__2);
-        setState(102);
+        setState(116);
         expr(0);
-        setState(103);
+        setState(117);
         match(ExprParser::T__3);
         break;
       }
@@ -1196,7 +1276,7 @@ ExprParser::Right_exprContext* ExprParser::right_expr(int precedence) {
         _localctx = _tracker.createInstance<RightAtomContext>(_localctx);
         _ctx = _localctx;
         previousContext = _localctx;
-        setState(105);
+        setState(119);
         atom();
         break;
       }
@@ -1205,7 +1285,7 @@ ExprParser::Right_exprContext* ExprParser::right_expr(int precedence) {
       throw NoViableAltException(this);
     }
     _ctx->stop = _input->LT(-1);
-    setState(113);
+    setState(127);
     _errHandler->sync(this);
     alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 9, _ctx);
     while (alt != 2 && alt != atn::ATN::INVALID_ALT_NUMBER) {
@@ -1216,10 +1296,10 @@ ExprParser::Right_exprContext* ExprParser::right_expr(int precedence) {
         auto newContext = _tracker.createInstance<RightMuldivContext>(_tracker.createInstance<Right_exprContext>(parentContext, parentState));
         _localctx = newContext;
         pushNewRecursionContext(newContext, startState, RuleRight_expr);
-        setState(108);
+        setState(122);
 
         if (!(precpred(_ctx, 3))) throw FailedPredicateException(this, "precpred(_ctx, 3)");
-        setState(109);
+        setState(123);
         antlrcpp::downCast<RightMuldivContext *>(_localctx)->op = _input->LT(1);
         _la = _input->LA(1);
         if (!(_la == ExprParser::T__4
@@ -1231,10 +1311,10 @@ ExprParser::Right_exprContext* ExprParser::right_expr(int precedence) {
           _errHandler->reportMatch(this);
           consume();
         }
-        setState(110);
+        setState(124);
         right_expr(4); 
       }
-      setState(115);
+      setState(129);
       _errHandler->sync(this);
       alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 9, _ctx);
     }
@@ -1261,9 +1341,9 @@ bool ExprParser::sempred(RuleContext *context, size_t ruleIndex, size_t predicat
 
 bool ExprParser::exprSempred(ExprContext *_localctx, size_t predicateIndex) {
   switch (predicateIndex) {
-    case 0: return precpred(_ctx, 8);
-    case 1: return precpred(_ctx, 7);
-    case 2: return precpred(_ctx, 6);
+    case 0: return precpred(_ctx, 10);
+    case 1: return precpred(_ctx, 9);
+    case 2: return precpred(_ctx, 8);
 
   default:
     break;

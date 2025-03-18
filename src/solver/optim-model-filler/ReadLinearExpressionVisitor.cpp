@@ -37,7 +37,8 @@ ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
   const std::string& componentId):
     context_(std::move(context)),
     fillContext_(std::move(fillContext)),
-    componentId_(componentId)
+    componentId_(componentId),
+    evalVisitor_(context_, fillContext_)
 {
 }
 
@@ -101,9 +102,9 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const VariableN
     }
     else // only dependent
     {
-        std::unordered_map<unsigned int, LinearExpression> linearExpressions;
+        LinearExpressionMap linearExpressions;
 
-        for (auto timeStep = fillContext_.getFirstTimeStep();
+        for (unsigned int timeStep = fillContext_.getFirstTimeStep();
              timeStep <= fillContext_.getLastTimeStep();
              ++timeStep)
         {
@@ -133,7 +134,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Parameter
     }
     else // only dependent
     {
-        std::unordered_map<unsigned int, LinearExpression> linearExpressions;
+        LinearExpressionMap linearExpressions;
 
         for (auto timeStep = fillContext_.getFirstTimeStep();
              timeStep <= fillContext_.getLastTimeStep();
@@ -170,5 +171,21 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Component
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const ComponentParameterNode* node)
 {
     throw std::invalid_argument("ReadLinearExpressionVisitor cannot visit ComponentParameterNodes");
+}
+
+TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const TimeShiftNode* node)
+{
+    const auto ret = dispatch(node->left());
+    // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
+    const auto timeShift = static_cast<int>(evalVisitor_.dispatch(node->right()).valueAsDouble());
+    return ret.shiftLinearExpressions(timeShift);
+}
+
+TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const TimeIndexNode* node)
+{
+    const auto ret = dispatch(node->left());
+    // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
+    const auto timeIndex = static_cast<int>(evalVisitor_.dispatch(node->right()).valueAsDouble());
+    return ret[timeIndex];
 }
 } // namespace Antares::Optimization

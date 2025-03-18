@@ -33,4 +33,6 @@
 #include <antares/expressions/nodes/PortFieldSumNode.h>
 #include <antares/expressions/nodes/SubtractionNode.h>
 #include <antares/expressions/nodes/SumNode.h>
+#include <antares/expressions/nodes/TimeIndexNode.h>
+#include <antares/expressions/nodes/TimeShiftNode.h>
 #include <antares/expressions/nodes/VariableNode.h>
