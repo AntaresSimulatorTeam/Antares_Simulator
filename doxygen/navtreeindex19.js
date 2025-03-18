@@ -1,5 +1,16 @@
 var NAVTREEINDEX19 =
 {
+"classAntares_1_1Window_1_1Inspector_1_1ClusterUpdater.html":[9,0,0,22,1,3],
+"classAntares_1_1Window_1_1Inspector_1_1ClusterUpdaterRenewable.html":[9,0,0,22,1,4],
+"classAntares_1_1Window_1_1Inspector_1_1ClusterUpdaterThermal.html":[9,0,0,22,1,5],
+"classAntares_1_1Window_1_1Inspector_1_1Frame.html":[9,0,0,22,1,6],
+"classAntares_1_1Window_1_1Inspector_1_1Frame.html#a1aed621fba7ed90fd9df11a41b1af2ca":[9,0,0,22,1,6,0],
+"classAntares_1_1Window_1_1Inspector_1_1Frame.html#a406cba965c4dce65d86bc8f782e12fa0":[9,0,0,22,1,6,5],
+"classAntares_1_1Window_1_1Inspector_1_1Frame.html#a562816e280ebe7133a01b84bc97b90d8":[9,0,0,22,1,6,6],
+"classAntares_1_1Window_1_1Inspector_1_1Frame.html#aaa94f8dab84326e6e15f2b68e71b0b99":[9,0,0,22,1,6,2],
+"classAntares_1_1Window_1_1Inspector_1_1Frame.html#abd16286a1b706158556141a1cc70034a":[9,0,0,22,1,6,1],
+"classAntares_1_1Window_1_1Inspector_1_1Frame.html#acdd045bbe778b6e5afcf92b4a853cffb":[9,0,0,22,1,6,4],
+"classAntares_1_1Window_1_1Inspector_1_1Frame.html#ae1599cba87cff332e182866e56060df1":[9,0,0,22,1,6,3],
 "classAntares_1_1Window_1_1Inspector_1_1InspectorData.html":[9,0,0,22,1,7],
 "classAntares_1_1Window_1_1Inspector_1_1InspectorData.html#a0630a60c041fbd24493de4ac403ec0c6":[9,0,0,22,1,7,0],
 "classAntares_1_1Window_1_1Inspector_1_1InspectorData.html#a2e36b512b75c33389b42339eb8bd8c99":[9,0,0,22,1,7,7],
@@ -238,16 +249,5 @@ var NAVTREEINDEX19 =
 "classAntares_1_1one__column____dumper.html":[7,0,0,33],
 "classAntares_1_1one__column____dumper.html":[9,0,0,52],
 "classAreaBalance.html":[9,0,39],
-"classAreaBalance.html#acac223592c6c4c93365b0786b3a790a0":[9,0,39,0],
-"classAreaHydroLevel.html":[9,0,41],
-"classAreaHydroLevel.html#abbf1c0f06757373ddf69600149f67682":[9,0,41,0],
-"classAreaHydroLevelGroup.html":[9,0,43],
-"classBenchmarking_1_1DurationCollector.html":[9,0,2,0],
-"classBenchmarking_1_1FileContent.html":[9,0,2,1],
-"classBenchmarking_1_1SimulationInfoCollector.html":[9,0,2,3],
-"classBenchmarking_1_1StudyInfoCollector.html":[9,0,2,4],
-"classBenchmarking_1_1Timer.html":[9,0,2,5],
-"classBindingConstraintData.html":[9,0,46],
-"classBindingConstraintDay.html":[9,0,47],
-"classBindingConstraintDay.html#a2e34353696b4c761e4f3abd6eab832d9":[9,0,47,0]
+"classAreaBalance.html#acac223592c6c4c93365b0786b3a790a0":[9,0,39,0]
 };

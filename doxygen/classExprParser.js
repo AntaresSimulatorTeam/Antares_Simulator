@@ -24,7 +24,9 @@ var classExprParser =
     [ "SignedAtomContext", "classExprParser_1_1SignedAtomContext.html", null ],
     [ "SignedExpressionContext", "classExprParser_1_1SignedExpressionContext.html", null ],
     [ "TimeIndexContext", "classExprParser_1_1TimeIndexContext.html", null ],
+    [ "TimeIndexExprContext", "classExprParser_1_1TimeIndexExprContext.html", null ],
     [ "TimeShiftContext", "classExprParser_1_1TimeShiftContext.html", null ],
+    [ "TimeShiftExprContext", "classExprParser_1_1TimeShiftExprContext.html", null ],
     [ "TimeSumContext", "classExprParser_1_1TimeSumContext.html", null ],
     [ "UnsignedAtomContext", "classExprParser_1_1UnsignedAtomContext.html", null ]
 ];

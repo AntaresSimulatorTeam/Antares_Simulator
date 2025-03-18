@@ -87,42 +87,43 @@ var NAVTREE =
     ] ],
     [ "Files", "files.html", [
       [ "File List", "files.html", "files_dup" ]
-    ] ]
+    ] ],
+    [ "Examples", "examples.html", "examples" ]
   ] ]
 ];
 
 var NAVTREEINDEX =
 [
 "API_8h_source.html",
-"classAntares_1_1API_1_1APIInternal.html#a060612c9356bcf28bef40e0c8e975263",
-"classAntares_1_1Action_1_1AntaresStudy_1_1ThermalCluster_1_1RootNode.html#a0d76e55f02ccb748208f5a803ca193f9",
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ATimeSeries.html#a080a086fd4941e19fa3956324257a94a",
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1InflowPattern.html",
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesCluster.html#a70088679ffb37907b56b753be1c8e35a",
-"classAntares_1_1Component_1_1HTMLListbox_1_1Component.html#a52bf75cce3dfbe027acd0f8e35ad182b",
-"classAntares_1_1Component_1_1Spotlight_1_1IItem.html#a6fae94288d539009a32c4773287318b0",
-"classAntares_1_1Data_1_1BindingConstraint.html#a8038a983063c5e836785d243a1090bea",
-"classAntares_1_1Data_1_1Parameters.html#af633756c84db9cba87fd741412a107a1",
-"classAntares_1_1Data_1_1Study.html#a051242994d00f5b6185473ae79b7b5c8",
-"classAntares_1_1Data_1_1Wind_1_1Prepro.html#aea3600b697dd706572d498474d0b897d",
-"classAntares_1_1Forms_1_1ApplWnd.html#ad26cba8245cbd0a00271d3dfcda0bde5",
-"classAntares_1_1Map_1_1Manager.html#a1993ca8f24c324621794b018ff11891f",
-"classAntares_1_1MersenneTwister.html#a8917b8a35e3f2835054b6c2b67274569",
-"classAntares_1_1Private_1_1Spotlight_1_1SpotlightMiniFrame.html",
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__CSR.html#afcbfccd9fe1f19e4321cf13b2a5075c4",
-"classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#af4b9f95d680693e676879f67da048c8d",
-"classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1AOperator.html#a6b0463b2ae2438350a5aaee19fcecc0b",
-"classAntares_1_1Window_1_1Inspector_1_1InspectorData.html",
-"classBindingConstraintDayGroup.html",
-"classMockLinearProblem.html#a3405149790bd520eb03259676bfa2401",
-"dailypower_8h_source.html",
-"dir_99497d0af51c3bcc79dc2ce1f2d9887c.html",
-"functions_func_s.html",
-"math_8hxx_source.html",
-"solve__problem_8h_source.html",
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Price_1_1Statistics.html",
-"structAntares_1_1Study_1_1SystemModel_1_1SystemData.html",
-"suffix-for-constraint-names_8h_source.html"
+"classAntaresStudy.html#a6caee79a802e8be7616bc9cc8a0f19d9",
+"classAntares_1_1Action_1_1AntaresStudy_1_1ThermalCluster_1_1Create.html#a3b161b45d30643f9c5b33bd32554009c",
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ARendererArea.html#afa7bfc7a779968092ab68e643f45c0fb",
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html#ac8611b95de14c70992135c5654219726",
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesCluster.html#a0546bb4abe613326d8a7d536296a4e1f",
+"classAntares_1_1Component_1_1HTMLListbox_1_1Component.html",
+"classAntares_1_1Component_1_1Spotlight_1_1IItem.html#a54c046cd097dda379e8e7380a1389afa",
+"classAntares_1_1Data_1_1BindingConstraint.html#a684a8d7529c2f34fcdd710b512f4bd48",
+"classAntares_1_1Data_1_1Parameters.html#adf27a1980d99322a294ed7260a7a66a4",
+"classAntares_1_1Data_1_1Solar_1_1Prepro.html#a9c0ea0ddf94aa0cde4f6e168e2e7944c",
+"classAntares_1_1Data_1_1Wind_1_1Prepro.html#a4f20143250454a983818a9cbce771d1e",
+"classAntares_1_1Forms_1_1ApplWnd.html#a9584446978a4772a352e0f8de8451d04",
+"classAntares_1_1Map_1_1Item.html#aa597a86a73b4e73ac0b003fc948bcce1",
+"classAntares_1_1Memory.html#ae52786b2c1f35d82f6ad1d9579020071",
+"classAntares_1_1Private_1_1OutputViewerData_1_1Panel.html#a86ed4e44d3c98f3cf02b5d34b3598f5b",
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LMRViolations.html#a867ce821450c9fb516456bcf1a80bb49",
+"classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#a35be4965da822309d6173e74f1f1bc1d",
+"classAntares_1_1Toolbox_1_1Filter_1_1Input.html#a7b5b85e05bda5b0bcdf40cc152d1dac5",
+"classAntares_1_1Window_1_1Inspector_1_1ClusterUpdater.html",
+"classAreaHydroLevel.html",
+"classMaxPumping.html#a6d8321813803c01b92d9b34095a0e7e0",
+"context_8h_source.html",
+"dir_94404efe9a1f603038ab38329d8b7052.html",
+"functions_func_d.html",
+"loldCsr_8h_source.html",
+"simulator_2toolbox_2wx-wrapper_8h_source.html",
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCsr_1_1Statistics.html",
+"structAntares_1_1Solver_1_1Variable_1_1VCardAllBindingConstraints.html#aa98b8087a86434b5fc1bfd95935ae9e0",
+"structsaveFixture.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

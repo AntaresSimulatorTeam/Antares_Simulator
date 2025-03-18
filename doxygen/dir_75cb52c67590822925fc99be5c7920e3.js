@@ -19,6 +19,8 @@ var dir_75cb52c67590822925fc99be5c7920e3 =
     [ "PortFieldSumNode.h", "PortFieldSumNode_8h_source.html", null ],
     [ "SubtractionNode.h", "SubtractionNode_8h_source.html", null ],
     [ "SumNode.h", "SumNode_8h_source.html", null ],
+    [ "TimeIndexNode.h", "TimeIndexNode_8h_source.html", null ],
+    [ "TimeShiftNode.h", "TimeShiftNode_8h_source.html", null ],
     [ "UnaryNode.h", "UnaryNode_8h_source.html", null ],
     [ "VariableNode.h", "VariableNode_8h_source.html", null ]
 ];

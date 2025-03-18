@@ -36,6 +36,5 @@ var namespaceAntares_1_1Optimization =
     [ "VariablesBulkAddition", "classAntares_1_1Optimization_1_1VariablesBulkAddition.html", "classAntares_1_1Optimization_1_1VariablesBulkAddition" ],
     [ "WatchedConstraint", "classAntares_1_1Optimization_1_1WatchedConstraint.html", null ],
     [ "WeeklyBC", "classAntares_1_1Optimization_1_1WeeklyBC.html", null ],
-    [ "add_maps", "namespaceAntares_1_1Optimization.html#a7259fee189da1b3acc1b243837e1df83", null ],
     [ "scale_map", "namespaceAntares_1_1Optimization.html#a7190f8e021109840878686b5bf2f2ded", null ]
 ];

@@ -164,6 +164,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:acebaeec356705f761609b3f73303c445" id="r_acebaeec356705f761609b3f73303c445"><td class="memItemLeft" align="right" valign="top"><a id="acebaeec356705f761609b3f73303c445" name="acebaeec356705f761609b3f73303c445"></a>
 std::any&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (antlr4::tree::ParseTree *tree) override</td></tr>
 <tr class="separator:acebaeec356705f761609b3f73303c445"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab070493cb398c26a9dfad5418b6fbab2" id="r_ab070493cb398c26a9dfad5418b6fbab2"><td class="memItemLeft" align="right" valign="top"><a id="ab070493cb398c26a9dfad5418b6fbab2" name="ab070493cb398c26a9dfad5418b6fbab2"></a>
+<a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Node</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>convertIdentifier</b> (const std::string &amp;identifier) const</td></tr>
+<tr class="separator:ab070493cb398c26a9dfad5418b6fbab2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acd84a9e98d25ec98d018c880af15c944" id="r_acd84a9e98d25ec98d018c880af15c944"><td class="memItemLeft" align="right" valign="top">std::any&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acd84a9e98d25ec98d018c880af15c944">visitIdentifier</a> (<a class="el" href="classExprParser_1_1IdentifierContext.html">ExprParser::IdentifierContext</a> *context) override</td></tr>
 <tr class="separator:acd84a9e98d25ec98d018c880af15c944"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa196e779463758a9388f6421a976d1b6" id="r_aa196e779463758a9388f6421a976d1b6"><td class="memItemLeft" align="right" valign="top">std::any&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa196e779463758a9388f6421a976d1b6">visitMuldiv</a> (<a class="el" href="classExprParser_1_1MuldivContext.html">ExprParser::MuldivContext</a> *context) override</td></tr>
@@ -210,6 +213,10 @@ std::any&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (antlr4
 <tr class="separator:ae9143dbb1b526baf5e7db47b884cd344"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa5fea366f6fe6b2ea01303dab64f0249" id="r_aa5fea366f6fe6b2ea01303dab64f0249"><td class="memItemLeft" align="right" valign="top">std::any&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa5fea366f6fe6b2ea01303dab64f0249">visitRightExpression</a> (<a class="el" href="classExprParser_1_1RightExpressionContext.html">ExprParser::RightExpressionContext</a> *context) override</td></tr>
 <tr class="separator:aa5fea366f6fe6b2ea01303dab64f0249"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85ad9d0d3f222ee5d5e123d090012530" id="r_a85ad9d0d3f222ee5d5e123d090012530"><td class="memItemLeft" align="right" valign="top">std::any&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a85ad9d0d3f222ee5d5e123d090012530">visitTimeShiftExpr</a> (<a class="el" href="classExprParser_1_1TimeShiftExprContext.html">ExprParser::TimeShiftExprContext</a> *context) override</td></tr>
+<tr class="separator:a85ad9d0d3f222ee5d5e123d090012530"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5feb3505190c901b0bb0570e864014b" id="r_ac5feb3505190c901b0bb0570e864014b"><td class="memItemLeft" align="right" valign="top">std::any&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac5feb3505190c901b0bb0570e864014b">visitTimeIndexExpr</a> (<a class="el" href="classExprParser_1_1TimeIndexExprContext.html">ExprParser::TimeIndexExprContext</a> *context) override</td></tr>
+<tr class="separator:ac5feb3505190c901b0bb0570e864014b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classExprVisitor"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classExprVisitor')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classExprVisitor.html">ExprVisitor</a></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -756,6 +763,33 @@ std::any&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (antlr4
 
 </div>
 </div>
+<a id="ac5feb3505190c901b0bb0570e864014b" name="ac5feb3505190c901b0bb0570e864014b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5feb3505190c901b0bb0570e864014b">&#9670;&#160;</a></span>visitTimeIndexExpr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::any Antares::IO::Inputs::ModelConverter::ConvertorVisitor::visitTimeIndexExpr </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classExprParser_1_1TimeIndexExprContext.html">ExprParser::TimeIndexExprContext</a> *</td>          <td class="paramname"><span class="paramname"><em>context</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classExprVisitor.html">ExprVisitor</a>.</p>
+
+</div>
+</div>
 <a id="ada3eefb7c1bbf5eac2ba3818e6809fd1" name="ada3eefb7c1bbf5eac2ba3818e6809fd1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ada3eefb7c1bbf5eac2ba3818e6809fd1">&#9670;&#160;</a></span>visitTimeShift()</h2>
 
@@ -769,6 +803,33 @@ std::any&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (antlr4
           <td class="memname">std::any Antares::IO::Inputs::ModelConverter::ConvertorVisitor::visitTimeShift </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classExprParser_1_1TimeShiftContext.html">ExprParser::TimeShiftContext</a> *</td>          <td class="paramname"><span class="paramname"><em>context</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classExprVisitor.html">ExprVisitor</a>.</p>
+
+</div>
+</div>
+<a id="a85ad9d0d3f222ee5d5e123d090012530" name="a85ad9d0d3f222ee5d5e123d090012530"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a85ad9d0d3f222ee5d5e123d090012530">&#9670;&#160;</a></span>visitTimeShiftExpr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::any Antares::IO::Inputs::ModelConverter::ConvertorVisitor::visitTimeShiftExpr </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classExprParser_1_1TimeShiftExprContext.html">ExprParser::TimeShiftExprContext</a> *</td>          <td class="paramname"><span class="paramname"><em>context</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>

@@ -920,7 +920,9 @@ var hierarchy =
           ] ],
           [ "Antares::Expressions::Nodes::DivisionNode", "classAntares_1_1Expressions_1_1Nodes_1_1DivisionNode.html", null ],
           [ "Antares::Expressions::Nodes::MultiplicationNode", "classAntares_1_1Expressions_1_1Nodes_1_1MultiplicationNode.html", null ],
-          [ "Antares::Expressions::Nodes::SubtractionNode", "classAntares_1_1Expressions_1_1Nodes_1_1SubtractionNode.html", null ]
+          [ "Antares::Expressions::Nodes::SubtractionNode", "classAntares_1_1Expressions_1_1Nodes_1_1SubtractionNode.html", null ],
+          [ "Antares::Expressions::Nodes::TimeIndexNode", "classAntares_1_1Expressions_1_1Nodes_1_1TimeIndexNode.html", null ],
+          [ "Antares::Expressions::Nodes::TimeShiftNode", "classAntares_1_1Expressions_1_1Nodes_1_1TimeShiftNode.html", null ]
         ] ],
         [ "Antares::Expressions::Nodes::ComponentNode", "classAntares_1_1Expressions_1_1Nodes_1_1ComponentNode.html", [
           [ "Antares::Expressions::Nodes::ComponentParameterNode", "classAntares_1_1Expressions_1_1Nodes_1_1ComponentParameterNode.html", null ],
@@ -1190,6 +1192,9 @@ var hierarchy =
     [ "Antares::Solver::Simulation::optRuntimeData", "structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html", null ],
     [ "Antares::Solver::Variable::R::AllYears::Or< NextT, FileFilter >", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Or.html", null ],
     [ "OrtoolsUtils", "classOrtoolsUtils.html", null ],
+    [ "std::out_of_range", null, [
+      [ "Antares::Expressions::Visitors::EvaluationResult::EvalResultTimeIndexOutOfRange", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult_1_1EvalResultTimeIndexOutOfRange.html", null ]
+    ] ],
     [ "Antares::Data::Output", "classAntares_1_1Data_1_1Output.html", null ],
     [ "Output", "classOutput.html", null ],
     [ "find_output.output_folder_finder", "classfind__output_1_1output__folder__finder.html", null ],
@@ -1227,7 +1232,9 @@ var hierarchy =
         [ "ExprParser::NegationContext", "classExprParser_1_1NegationContext.html", null ],
         [ "ExprParser::PortFieldContext", "classExprParser_1_1PortFieldContext.html", null ],
         [ "ExprParser::TimeIndexContext", "classExprParser_1_1TimeIndexContext.html", null ],
+        [ "ExprParser::TimeIndexExprContext", "classExprParser_1_1TimeIndexExprContext.html", null ],
         [ "ExprParser::TimeShiftContext", "classExprParser_1_1TimeShiftContext.html", null ],
+        [ "ExprParser::TimeShiftExprContext", "classExprParser_1_1TimeShiftExprContext.html", null ],
         [ "ExprParser::TimeSumContext", "classExprParser_1_1TimeSumContext.html", null ],
         [ "ExprParser::UnsignedAtomContext", "classExprParser_1_1UnsignedAtomContext.html", null ]
       ] ],
@@ -1432,7 +1439,7 @@ var hierarchy =
         [ "Antares::Error::WritingPID", "classAntares_1_1Error_1_1WritingPID.html", null ]
       ] ],
       [ "Antares::Expressions::Visitors::EvalVisitorDivisionException", "classAntares_1_1Expressions_1_1Visitors_1_1EvalVisitorDivisionException.html", null ],
-      [ "Antares::Expressions::Visitors::EvaluationResult::EvalResultType", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult_1_1EvalResultType.html", null ],
+      [ "Antares::Expressions::Visitors::EvaluationResult::EvalResultTypeError", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult_1_1EvalResultTypeError.html", null ],
       [ "Antares::Expressions::Visitors::VectorsMismatchSize", "classAntares_1_1Expressions_1_1Visitors_1_1VectorsMismatchSize.html", null ],
       [ "Antares::FatalError", "classAntares_1_1FatalError.html", null ],
       [ "Antares::IO::Inputs::ModelConverter::ConstraintWithThisIdAlreadyExists", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ConstraintWithThisIdAlreadyExists.html", null ],

@@ -225,6 +225,9 @@ Typedefs</h2></td></tr>
 <tr class="memitem:a427660223379d64faaed88575500b59c" id="r_a427660223379d64faaed88575500b59c"><td class="memItemLeft" align="right" valign="top"><a id="a427660223379d64faaed88575500b59c" name="a427660223379d64faaed88575500b59c"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>FullKeyMap</b> = std::unordered_map&lt;<a class="el" href="classAntares_1_1Optimization_1_1FullKey.html">FullKey</a>, double, <a class="el" href="classAntares_1_1Optimization_1_1FullKeyHash.html">FullKeyHash</a>&gt;</td></tr>
 <tr class="separator:a427660223379d64faaed88575500b59c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee7e994ff1f3a291f3c480dee5d95a5d" id="r_aee7e994ff1f3a291f3c480dee5d95a5d"><td class="memItemLeft" align="right" valign="top"><a id="aee7e994ff1f3a291f3c480dee5d95a5d" name="aee7e994ff1f3a291f3c480dee5d95a5d"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>LinearExpressionMap</b> = std::map&lt;unsigned int, <a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>&gt;</td></tr>
+<tr class="separator:aee7e994ff1f3a291f3c480dee5d95a5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -243,15 +246,19 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>greaterValue</b> (con
 <tr class="memitem:ae0584e4fd68915bb875f24b8a87d74f1" id="r_ae0584e4fd68915bb875f24b8a87d74f1"><td class="memItemLeft" align="right" valign="top"><a id="ae0584e4fd68915bb875f24b8a87d74f1" name="ae0584e4fd68915bb875f24b8a87d74f1"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>checkTimeSteps</b> (<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Optimisation::LinearProblemApi::FillContext</a> &amp;ctx)</td></tr>
 <tr class="separator:ae0584e4fd68915bb875f24b8a87d74f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7259fee189da1b3acc1b243837e1df83" id="r_a7259fee189da1b3acc1b243837e1df83"><td class="memTemplParams" colspan="2">template&lt;typename Key , typename Value , typename UnaryOp  = IdentityFunction&lt;Value&gt;, typename HashType  = std::hash&lt;Key&gt;&gt; </td></tr>
-<tr class="memitem:a7259fee189da1b3acc1b243837e1df83"><td class="memTemplItemLeft" align="right" valign="top">std::unordered_map&lt; Key, Value, HashType &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a7259fee189da1b3acc1b243837e1df83">add_maps</a> (const std::unordered_map&lt; Key, Value, HashType &gt; &amp;left, const std::unordered_map&lt; Key, Value, HashType &gt; &amp;right, UnaryOp op=<a class="el" href="structAntares_1_1Optimization_1_1IdentityFunction.html">IdentityFunction</a>&lt; Value &gt;{})</td></tr>
-<tr class="separator:a7259fee189da1b3acc1b243837e1df83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad00fe40a4b316cd35898e1f69e71b511" id="r_ad00fe40a4b316cd35898e1f69e71b511"><td class="memTemplParams" colspan="2"><a id="ad00fe40a4b316cd35898e1f69e71b511" name="ad00fe40a4b316cd35898e1f69e71b511"></a>
+template&lt;typename MapType , typename UnaryOp  = IdentityFunction&lt;typename MapType::mapped_type&gt;&gt; </td></tr>
+<tr class="memitem:ad00fe40a4b316cd35898e1f69e71b511"><td class="memTemplItemLeft" align="right" valign="top">MapType&#160;</td><td class="memTemplItemRight" valign="bottom"><b>add_maps</b> (const MapType &amp;left, const MapType &amp;right, UnaryOp op=<a class="el" href="structAntares_1_1Optimization_1_1IdentityFunction.html">IdentityFunction</a>&lt; typename MapType::mapped_type &gt;{})</td></tr>
+<tr class="separator:ad00fe40a4b316cd35898e1f69e71b511"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7190f8e021109840878686b5bf2f2ded" id="r_a7190f8e021109840878686b5bf2f2ded"><td class="memItemLeft" align="right" valign="top">FullKeyMap&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7190f8e021109840878686b5bf2f2ded">scale_map</a> (const FullKeyMap &amp;map, double scale)</td></tr>
 <tr class="separator:a7190f8e021109840878686b5bf2f2ded"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a174aac2934121dd494dd144122e4a33f" id="r_a174aac2934121dd494dd144122e4a33f"><td class="memTemplParams" colspan="2"><a id="a174aac2934121dd494dd144122e4a33f" name="a174aac2934121dd494dd144122e4a33f"></a>
+<tr class="memitem:ad1882deb11352b01b4acb8b3bcc263b0" id="r_ad1882deb11352b01b4acb8b3bcc263b0"><td class="memTemplParams" colspan="2"><a id="ad1882deb11352b01b4acb8b3bcc263b0" name="ad1882deb11352b01b4acb8b3bcc263b0"></a>
 template&lt;typename BinaryOperator &gt; </td></tr>
-<tr class="memitem:a174aac2934121dd494dd144122e4a33f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html">TimeDependentLinearExpression</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>BinaryOpLinearExpression</b> (const std::unordered_map&lt; unsigned int, <a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> &gt; &amp;left, const std::unordered_map&lt; unsigned int, <a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> &gt; &amp;right, BinaryOperator op)</td></tr>
-<tr class="separator:a174aac2934121dd494dd144122e4a33f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1882deb11352b01b4acb8b3bcc263b0"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html">TimeDependentLinearExpression</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>BinaryOpLinearExpression</b> (const LinearExpressionMap &amp;left, const LinearExpressionMap &amp;right, BinaryOperator op)</td></tr>
+<tr class="separator:ad1882deb11352b01b4acb8b3bcc263b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a768a066a45bbab3a5a8b3d935efec01d" id="r_a768a066a45bbab3a5a8b3d935efec01d"><td class="memItemLeft" align="right" valign="top"><a id="a768a066a45bbab3a5a8b3d935efec01d" name="a768a066a45bbab3a5a8b3d935efec01d"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>rotatedIndex</b> (unsigned key, int shift, const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Optimisation::LinearProblemApi::FillContext</a> &amp;fillContext)</td></tr>
+<tr class="separator:a768a066a45bbab3a5a8b3d935efec01d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a15f493edc83431c605a3638f1c9c7110" id="r_a15f493edc83431c605a3638f1c9c7110"><td class="memItemLeft" align="right" valign="top"><a id="a15f493edc83431c605a3638f1c9c7110" name="a15f493edc83431c605a3638f1c9c7110"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>buildVariableName</b> (const <a class="el" href="classAntares_1_1Optimization_1_1PartialKey.html">PartialKey</a> &amp;key, std::optional&lt; unsigned int &gt; scenario, std::optional&lt; unsigned int &gt; timestep)</td></tr>
 <tr class="separator:a15f493edc83431c605a3638f1c9c7110"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -260,42 +267,6 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>buildVariableN
 <div class="textblock"><p>Read Linear Constraint Visitor Visits a Node and produces a Linear Constraint (defined by its Linear Expression and bounds). The root node is expected to be a comparison node.</p>
 <p>Read Linear Expression Visitor Visits a Node and produces a Linear Expression (defined by an offset and non-zero coefficients of variables) Comparison Nodes are not allowed </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a7259fee189da1b3acc1b243837e1df83" name="a7259fee189da1b3acc1b243837e1df83"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7259fee189da1b3acc1b243837e1df83">&#9670;&#160;</a></span>add_maps()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Key , typename Value , typename UnaryOp  = IdentityFunction&lt;Value&gt;, typename HashType  = std::hash&lt;Key&gt;&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">std::unordered_map&lt; Key, Value, HashType &gt; Antares::Optimization::add_maps </td>
-          <td>(</td>
-          <td class="paramtype">const std::unordered_map&lt; Key, Value, HashType &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>left</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::unordered_map&lt; Key, Value, HashType &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>right</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">UnaryOp</td>          <td class="paramname"><span class="paramname"><em>op</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="structAntares_1_1Optimization_1_1IdentityFunction.html">IdentityFunction</a>&lt;Value&gt;{}</span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Element-wise sum of two [string, double] maps, preceded an element-wise multiplication of the right-hand-side map. Keys that do not exist in one of the two maps are considered to have a zero value. For every key: value = left_value + rhs_multiplier * right_value </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">left</td><td>The left hand side map </td></tr>
-    <tr><td class="paramname">right</td><td>The right hand side map </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The map resulting from the operation </dd></dl>
-
-</div>
-</div>
 <a id="a7190f8e021109840878686b5bf2f2ded" name="a7190f8e021109840878686b5bf2f2ded"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7190f8e021109840878686b5bf2f2ded">&#9670;&#160;</a></span>scale_map()</h2>
 
@@ -322,6 +293,8 @@ template&lt;typename Key , typename Value , typename UnaryOp  = IdentityFunction
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The scaled map </dd></dl>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2github_2workspace_2src_2solver_2optim-model-filler_2include_2antares_2solver_2optim-model-filler_2LinearExpression_8h-example.html#a0">/github/workspace/src/solver/optim-model-filler/include/antares/solver/optim-model-filler/LinearExpression.h</a>.</dd>
+</dl>
 
 </div>
 </div>

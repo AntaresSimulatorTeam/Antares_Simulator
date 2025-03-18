@@ -152,9 +152,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9680ac5856db729f7fead85cd81b84ea" id="r_a9680ac5856db729f7fead85cd81b84ea"><td class="memItemLeft" align="right" valign="top"><a id="a9680ac5856db729f7fead85cd81b84ea" name="a9680ac5856db729f7fead85cd81b84ea"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>TimeDependentLinearExpression</b> (const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Optimisation::LinearProblemApi::FillContext</a> &amp;fillContext, const <a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> &amp;linearExpression)</td></tr>
 <tr class="separator:a9680ac5856db729f7fead85cd81b84ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac6a045c284535ebd26f3d71fd6e7908f" id="r_ac6a045c284535ebd26f3d71fd6e7908f"><td class="memItemLeft" align="right" valign="top"><a id="ac6a045c284535ebd26f3d71fd6e7908f" name="ac6a045c284535ebd26f3d71fd6e7908f"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>TimeDependentLinearExpression</b> (const std::unordered_map&lt; unsigned, <a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> &gt; &amp;linearExpressions)</td></tr>
-<tr class="separator:ac6a045c284535ebd26f3d71fd6e7908f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a725639421cee6eda3edaa9dab54f072f" id="r_a725639421cee6eda3edaa9dab54f072f"><td class="memItemLeft" align="right" valign="top"><a id="a725639421cee6eda3edaa9dab54f072f" name="a725639421cee6eda3edaa9dab54f072f"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>TimeDependentLinearExpression</b> (const LinearExpressionMap &amp;linearExpressions)</td></tr>
+<tr class="separator:a725639421cee6eda3edaa9dab54f072f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5d6a8a21541dbab9e7808d0c0866b657" id="r_a5d6a8a21541dbab9e7808d0c0866b657"><td class="memItemLeft" align="right" valign="top"><a id="a5d6a8a21541dbab9e7808d0c0866b657" name="a5d6a8a21541dbab9e7808d0c0866b657"></a>
 <a class="el" href="classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html">TimeDependentLinearExpression</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator+</b> (const <a class="el" href="classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html">TimeDependentLinearExpression</a> &amp;other) const</td></tr>
 <tr class="memdesc:a5d6a8a21541dbab9e7808d0c0866b657"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sum two linear expressions. <br /></td></tr>
@@ -171,9 +171,15 @@ Public Member Functions</h2></td></tr>
 <a class="el" href="classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html">TimeDependentLinearExpression</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator-</b> () const</td></tr>
 <tr class="memdesc:afaa6bbd69ca5d8c9549c4f30c838e5ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiply linear expression by -1. <br /></td></tr>
 <tr class="separator:afaa6bbd69ca5d8c9549c4f30c838e5ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aac47605aabed224345b4c0c6888e31a2" id="r_aac47605aabed224345b4c0c6888e31a2"><td class="memItemLeft" align="right" valign="top"><a id="aac47605aabed224345b4c0c6888e31a2" name="aac47605aabed224345b4c0c6888e31a2"></a>
-const std::unordered_map&lt; unsigned, <a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>GetLinearExpressions</b> () const</td></tr>
-<tr class="separator:aac47605aabed224345b4c0c6888e31a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11fbb0f1e946451e864af13e245de350" id="r_a11fbb0f1e946451e864af13e245de350"><td class="memItemLeft" align="right" valign="top"><a id="a11fbb0f1e946451e864af13e245de350" name="a11fbb0f1e946451e864af13e245de350"></a>
+<a class="el" href="classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html">TimeDependentLinearExpression</a>&#160;</td><td class="memItemRight" valign="bottom"><b>shiftLinearExpressions</b> (int shiftValue) const</td></tr>
+<tr class="separator:a11fbb0f1e946451e864af13e245de350"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52b013d3f2cfe79a0d5d2722d5d49cb6" id="r_a52b013d3f2cfe79a0d5d2722d5d49cb6"><td class="memItemLeft" align="right" valign="top"><a id="a52b013d3f2cfe79a0d5d2722d5d49cb6" name="a52b013d3f2cfe79a0d5d2722d5d49cb6"></a>
+<a class="el" href="classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html">TimeDependentLinearExpression</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator[]</b> (int index) const</td></tr>
+<tr class="separator:a52b013d3f2cfe79a0d5d2722d5d49cb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3a431f3e6f512785e747d531413f270" id="r_ac3a431f3e6f512785e747d531413f270"><td class="memItemLeft" align="right" valign="top"><a id="ac3a431f3e6f512785e747d531413f270" name="ac3a431f3e6f512785e747d531413f270"></a>
+const LinearExpressionMap &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>GetLinearExpressions</b> () const</td></tr>
+<tr class="separator:ac3a431f3e6f512785e747d531413f270"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaf8b91166e2aa0873d75053e19e85a4f" id="r_aaf8b91166e2aa0873d75053e19e85a4f"><td class="memItemLeft" align="right" valign="top"><a id="aaf8b91166e2aa0873d75053e19e85a4f" name="aaf8b91166e2aa0873d75053e19e85a4f"></a>
 size_t&#160;</td><td class="memItemRight" valign="bottom"><b>getSize</b> () const</td></tr>
 <tr class="separator:aaf8b91166e2aa0873d75053e19e85a4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -194,6 +200,8 @@ size_t&#160;</td><td class="memItemRight" valign="bottom"><b>getSize</b> () cons
       </table>
 </div><div class="memdoc">
 <p>Multiply two linear expressions Only one can have non-zero coefficients, otherwise the result cannot be linear </p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2github_2workspace_2src_2solver_2optim-model-filler_2TimeDependentLinearExpression_8cpp-example.html#a2">/github/workspace/src/solver/optim-model-filler/TimeDependentLinearExpression.cpp</a>.</dd>
+</dl>
 
 </div>
 </div>
@@ -212,6 +220,8 @@ size_t&#160;</td><td class="memItemRight" valign="bottom"><b>getSize</b> () cons
       </table>
 </div><div class="memdoc">
 <p>Divide two linear expressions Only first expression can have non-zero coefficients, otherwise the result cannot be linear </p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2github_2workspace_2src_2solver_2optim-model-filler_2TimeDependentLinearExpression_8cpp-example.html#a3">/github/workspace/src/solver/optim-model-filler/TimeDependentLinearExpression.cpp</a>.</dd>
+</dl>
 
 </div>
 </div>
