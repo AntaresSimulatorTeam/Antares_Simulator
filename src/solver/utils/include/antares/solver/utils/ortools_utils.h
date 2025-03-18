@@ -44,7 +44,6 @@ void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
                                                    Antares::Solver::IResultWriter& writer,
                                                    const std::string& filename);
 
-
 /*!
  *  \brief Returns a comma-seperated-list of available ortools linear solver names on our side
  *
@@ -58,7 +57,6 @@ std::string toString(const std::list<std::string>& solverList);
  *  \return List of available ortools linear solver names
  */
 std::list<std::string> availableLinearSolversList();
-
 
 /*!
  *  \brief Returns a list of available ortools quadratic solver names on our side
