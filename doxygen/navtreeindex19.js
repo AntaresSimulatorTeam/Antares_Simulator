@@ -1,7 +1,5 @@
 var NAVTREEINDEX19 =
 {
-"classAntares_1_1Window_1_1Inspector_1_1ClusterUpdater.html":[9,0,0,22,1,3],
-"classAntares_1_1Window_1_1Inspector_1_1ClusterUpdaterRenewable.html":[9,0,0,22,1,4],
 "classAntares_1_1Window_1_1Inspector_1_1ClusterUpdaterThermal.html":[9,0,0,22,1,5],
 "classAntares_1_1Window_1_1Inspector_1_1Frame.html":[9,0,0,22,1,6],
 "classAntares_1_1Window_1_1Inspector_1_1Frame.html#a1aed621fba7ed90fd9df11a41b1af2ca":[9,0,0,22,1,6,0],
@@ -249,5 +247,7 @@ var NAVTREEINDEX19 =
 "classAntares_1_1one__column____dumper.html":[7,0,0,33],
 "classAntares_1_1one__column____dumper.html":[9,0,0,52],
 "classAreaBalance.html":[9,0,39],
-"classAreaBalance.html#acac223592c6c4c93365b0786b3a790a0":[9,0,39,0]
+"classAreaBalance.html#acac223592c6c4c93365b0786b3a790a0":[9,0,39,0],
+"classAreaHydroLevel.html":[9,0,41],
+"classAreaHydroLevel.html#abbf1c0f06757373ddf69600149f67682":[9,0,41,0]
 };

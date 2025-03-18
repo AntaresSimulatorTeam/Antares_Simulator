@@ -1,7 +1,5 @@
 var NAVTREEINDEX27 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCsr_1_1Statistics.html":[9,0,0,16,5,4,25,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlant_1_1Statistics.html":[9,0,0,16,5,4,30,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MiscGenMinusRowPSP_1_1Statistics.html":[9,0,0,16,5,4,31,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant_1_1Statistics.html":[9,0,0,16,5,4,33,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits_1_1Statistics.html":[9,0,0,16,5,4,32,0],
@@ -249,5 +247,7 @@ var NAVTREEINDEX27 =
 "structAntares_1_1Solver_1_1Variable_1_1Storage.html#a098bf203496fc294b05299b694da2459":[9,0,0,16,5,36,0],
 "structAntares_1_1Solver_1_1Variable_1_1VCardAllAreas.html":[9,0,0,16,5,43],
 "structAntares_1_1Solver_1_1Variable_1_1VCardAllAreas.html#a19d3f8f09be6b8fc974f9b0bc1300637":[9,0,0,16,5,43,0],
-"structAntares_1_1Solver_1_1Variable_1_1VCardAllBindingConstraints.html":[9,0,0,16,5,44]
+"structAntares_1_1Solver_1_1Variable_1_1VCardAllBindingConstraints.html":[9,0,0,16,5,44],
+"structAntares_1_1Solver_1_1Variable_1_1VCardAllBindingConstraints.html#aa98b8087a86434b5fc1bfd95935ae9e0":[9,0,0,16,5,44,0],
+"structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html":[9,0,0,16,5,45]
 };

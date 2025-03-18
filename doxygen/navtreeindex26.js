@@ -1,7 +1,5 @@
 var NAVTREEINDEX26 =
 {
-"simulator_2toolbox_2wx-wrapper_8h_source.html":[10,0,0,12,2,1,16],
-"simulator_2windows_2inspector_2data_8hxx_source.html":[10,0,0,12,2,2,7,3],
 "simulator_2windows_2inspector_2frame_8h_source.html":[10,0,0,12,2,2,7,5],
 "simulator_2windows_2output_2mini-frame_8h_source.html":[10,0,0,12,2,2,10,8],
 "simulator_2windows_2output_2panel_2panel_8h_source.html":[10,0,0,12,2,2,10,0,1],
@@ -249,5 +247,7 @@ var NAVTREEINDEX26 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow_1_1Statistics.html":[9,0,0,16,5,4,22,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge_1_1Statistics.html":[9,0,0,16,5,4,23,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost_1_1Statistics.html":[9,0,0,16,5,4,24,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html":[9,0,0,16,5,4,28]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html":[9,0,0,16,5,4,28],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCsr_1_1Statistics.html":[9,0,0,16,5,4,25,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlant_1_1Statistics.html":[9,0,0,16,5,4,30,0]
 };
