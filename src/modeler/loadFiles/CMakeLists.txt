@@ -7,6 +7,7 @@ set(SOURCES
         handleErrors.cpp
 
         include/antares/solver/modeler/loadFiles/loadFiles.h
+        include/antares/solver/modeler/loadFiles/data.h
 )
 
 # Create the library

@@ -22,16 +22,19 @@
 
 #include <vector>
 
-#include "library.h"
-#include "system.h"
 
-namespace Antares::Study::SystemModel
+#include <antares/optimisation/linear-problem-data-impl/linearProblemData.h>
+#include <antares/solver/modeler/parameters/modelerParameters.h>
+#include <antares/study/system-model/library.h>
+#include <antares/study/system-model/system.h>
+
+namespace Antares::Modeler
 {
 
 struct Data
 {
-    Data(const std::vector<Library>& libraries,
-         std::unique_ptr<System> system,
+    Data(const std::vector<Study::SystemModel::Library>& libraries,
+         std::unique_ptr<Study::SystemModel::System> system,
          std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> dataSeries):
         libraries_(libraries),
         system_(std::move(system)),
@@ -39,12 +42,12 @@ struct Data
     {
     }
 
-    const std::vector<Library>& getLibraries() const
+    const std::vector<Study::SystemModel::Library>& getLibraries() const
     {
         return libraries_;
     }
 
-    const System* getSystem() const
+    const Study::SystemModel::System* getSystem() const
     {
         return system_.get();
     }
@@ -55,8 +58,8 @@ struct Data
     }
 
 private:
-    std::vector<Library> libraries_;
-    std::unique_ptr<System> system_;
+    std::vector<Study::SystemModel::Library> libraries_;
+    std::unique_ptr<Study::SystemModel::System> system_;
     std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> dataSeries_;
 };
 

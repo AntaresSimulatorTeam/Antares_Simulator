@@ -19,23 +19,26 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include <antares/modeler/data.h>
+#include <antares/logs/logs.h>
+
+#include "antares/solver/modeler/loadFiles/data.h"
 #include "antares/solver/modeler/loadFiles/loadFiles.h"
 
 namespace Antares::Solver::LoadFiles
 {
 
-Study::SystemModel::Data loadAll(const fs::path& studyPath)
+Antares::Modeler::Data loadAll(const std::filesystem::path& studyPath)
 {
     try
     {
-        Study::SystemModel::Data data;
-        const auto libraries = LoadFiles::loadLibraries(studyPath);
+        auto libraries = LoadFiles::loadLibraries(studyPath);
         logs.info() << "Libraries loaded";
-        const auto system = LoadFiles::loadSystem(studyPath, libraries);
+        auto system = LoadFiles::loadSystem(studyPath, libraries);
         logs.info() << "System loaded";
         auto dataSeries = LoadFiles::loadDataSeries(studyPath);
-        return Study::SystemModel::Data {libraries, system, dataSeries};
+
+        Antares::Modeler::Data data(libraries, system, dataSeries);
+        return data;
     }
     catch (const LoadFiles::ErrorLoadingYaml&)
     {
