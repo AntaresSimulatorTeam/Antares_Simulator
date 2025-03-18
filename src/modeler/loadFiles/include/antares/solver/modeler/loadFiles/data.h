@@ -30,6 +30,31 @@ namespace Antares::Study::SystemModel
 
 struct Data
 {
+    Data(const std::vector<Library>& libraries,
+         std::unique_ptr<System> system,
+         std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> dataSeries):
+        libraries_(libraries),
+        system_(std::move(system)),
+        dataSeries_(std::move(dataSeries))
+    {
+    }
+
+    const std::vector<Library>& getLibraries() const
+    {
+        return libraries_;
+    }
+
+    const System* getSystem() const
+    {
+        return system_.get();
+    }
+
+    const Optimisation::LinearProblemApi::ILinearProblemData* getDataSeries() const
+    {
+        return dataSeries_.get();
+    }
+
+private:
     std::vector<Library> libraries_;
     std::unique_ptr<System> system_;
     std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> dataSeries_;

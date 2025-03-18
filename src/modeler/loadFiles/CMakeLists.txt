@@ -1,4 +1,5 @@
 set(SOURCES
+        loadAll.cpp
         readSystem.cpp
         readLibraries.cpp
         readParameters.cpp

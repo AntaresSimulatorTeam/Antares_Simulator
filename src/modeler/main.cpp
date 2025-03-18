@@ -29,6 +29,7 @@
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include <antares/solver/modeler/parameters/parseModelerParameters.h>
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
+
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares;
 using namespace Antares::Solver;
