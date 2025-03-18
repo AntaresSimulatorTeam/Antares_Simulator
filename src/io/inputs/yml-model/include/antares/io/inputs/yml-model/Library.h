@@ -96,6 +96,7 @@ struct Model
     std::vector<Port> ports;
     std::vector<PortFieldDefinition> port_field_definitions;
     std::vector<Constraint> constraints;
+    std::vector<Constraint> binding_constraints;
     std::string objective;
 };
 

@@ -17,14 +17,14 @@ static void checkSolverExists(const std::string solverName,
     bool found = std::ranges::find(availableSolversList, solverName) != availableSolversList.end();
     if (!found)
     {
-        throw Error::InvalidSolver(solverName, boost::algorithm::join(availableSolversList, ","));
+        throw Error::InvalidSolver(solverName, toString(availableSolversList));
     }
 }
 
 static void checkForSolversExistence(const CmdLineOptimOptions& solverOptions)
 {
-    checkSolverExists(solverOptions.linearSolver, getAvailableLinearSolverNames());
-    checkSolverExists(solverOptions.quadraticSolver, getAvailableQuadraticSolverNames());
+    checkSolverExists(solverOptions.linearSolver, availableLinearSolversList());
+    checkSolverExists(solverOptions.quadraticSolver, availableQuadraticSolversList());
 }
 
 static void checkSolverMILPoptionsConsistency(const CmdLineOptimOptions& solverOptions)

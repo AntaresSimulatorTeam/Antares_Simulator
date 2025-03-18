@@ -109,6 +109,15 @@ public:
     }
 };
 
+class NoPortWithThisId: public std::runtime_error
+{
+public:
+    explicit NoPortWithThisId(const std::string& name):
+        runtime_error("No port found for this identifier: " + name)
+    {
+    }
+};
+
 // to silent warning, convert bool to unsigned int
 static constexpr unsigned int convertBool(bool in)
 {
@@ -211,10 +220,17 @@ public:
     using std::runtime_error::runtime_error;
 };
 
-// TODO implement this
-std::any ConvertorVisitor::visitPortField([[maybe_unused]] ExprParser::PortFieldContext* context)
+std::any ConvertorVisitor::visitPortField(ExprParser::PortFieldContext* context)
 {
-    throw NotImplemented("Node portfield not implemented yet");
+    for (const auto& pfd: model_.port_field_definitions)
+    {
+        if (pfd.port == context->IDENTIFIER()[0]->getText())
+        {
+            return static_cast<Node*>(registry_.create<PortFieldNode>(pfd.port, pfd.field));
+        }
+    }
+
+    throw NoPortWithThisId(context->IDENTIFIER()[0]->getText());
 }
 
 std::any ConvertorVisitor::visitNumber(ExprParser::NumberContext* context)

@@ -69,8 +69,8 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
     parser->add(options.solverOptions.linearSolver,
                 ' ',
                 "linear-solver",
-                "Solver used for linear optimizations during simulation\nAvailable solver list : "
-                  + availableLinearSolversString());
+                "Solver used for linear optimizations during simulation. Available solver list : "
+                  + toString(availableLinearSolversList()));
 
     //--solver
     parser->add(options.solverOptions.linearSolver,
@@ -79,15 +79,13 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
                 "Deprecated, use linear-solver instead.");
 
     //--linear-solver-parameters
-    parser->add(
-      options.solverOptions.linearSolverParameters,
-      ' ',
-      "linear-solver-parameters",
-      "Set linear solver-specific parameters, for instance --linear-solver-parameters=\"THREADS 1 "
-      "PRESOLVE 1\""
-      "for XPRESS or --linear-solver-parameters=\"parallel/maxnthreads 1, lp/presolving TRUE\" for "
-      "SCIP."
-      "Syntax is solver-dependent, and only supported for SCIP & XPRESS.");
+    parser->add(options.solverOptions.linearSolverParameters,
+                ' ',
+                "linear-solver-parameters",
+                "Linear solver-specific parameters, for instance \"THREADS 1 "
+                "PRESOLVE 1\""
+                " for XPRESS or \"parallel/maxnthreads 1, lp/presolving TRUE\" for "
+                "SCIP. Syntax is solver-dependent, and only supported for SCIP & XPRESS.");
 
     //--solver-parameters
     parser->add(options.solverOptions.linearSolverParameters,
@@ -99,14 +97,14 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
     parser->add(options.solverOptions.lpSolverParamOptim1,
                 ' ',
                 "lp-solver-param-optim-1",
-                "Set linear solver-specific parameters for first optimization."
+                "Linear solver-specific parameters for first optimization."
                 " Only supported for SCIP & XPRESS.");
 
     // --lp-solver-param-optim-2
     parser->add(options.solverOptions.lpSolverParamOptim2,
                 ' ',
                 "lp-solver-param-optim-2",
-                "Set linear solver-specific parameters for second optimization."
+                "Linear solver-specific parameters for second optimization."
                 " Only supported for SCIP & XPRESS.");
 
     //--quadratic-solver
@@ -114,24 +112,20 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
       options.solverOptions.quadraticSolver,
       ' ',
       "quadratic-solver",
-      "Solver used for quadratic optimizations during simulation\nAvailable solver list : "
-        + availableQuadraticSolversString());
+      "Solver used for quadratic optimizations during simulation. Available solver list : "
+        + toString(availableQuadraticSolversList()));
 
     //--quadratic-solver-parameters
     parser->add(options.solverOptions.quadraticSolverParameters,
                 ' ',
                 "quadratic-solver-parameters",
-                "Set quadratic solver-specific parameters, for instance "
-                "--quadratic-solver-parameters=\"THREADS 8\""
-                "for XPRESS or --quadratic-solver-parameters=\"parallel/maxnthreads 8\" for SCIP."
+                "Quadratic solver-specific parameters, for instance \"THREADS 8\""
+                " for XPRESS or \"parallel/maxnthreads 8\" for SCIP. "
                 "Syntax is solver-dependent.");
 
     parser->addParagraph("\nParameters");
     // --name
-    parser->add(settings.simulationName,
-                'n',
-                "name",
-                "Set the name of the new simulation to VALUE");
+    parser->add(settings.simulationName, 'n', "name", "Name of the current simulation");
     // --generators-only
     parser->addFlag(settings.tsGeneratorsOnly,
                     'g',
