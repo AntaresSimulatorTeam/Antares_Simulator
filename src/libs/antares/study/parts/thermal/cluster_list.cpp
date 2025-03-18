@@ -126,8 +126,8 @@ bool ThermalClusterList::loadFromFolder(Study& study, const fs::path& folder, Ar
 
         if (area->thermal.list.containsName(cluster.get()->name()))
         {
-            logs.warning() << "Two thermal clusters named " << cluster.get()->name() << " inside area "
-                           << area->name;
+            logs.warning() << "Two thermal clusters named " << cluster.get()->name()
+                           << " inside area " << area->name;
         }
 
         // Keeping the current value of 'mustrun' somewhere else

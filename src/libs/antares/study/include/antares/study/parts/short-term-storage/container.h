@@ -23,8 +23,9 @@
 #include <filesystem>
 #include <string>
 
-#include <antares/study/version.h>
 #include <antares/study/fwd.h>
+#include <antares/study/version.h>
+
 #include "cluster.h"
 
 namespace Antares::Data::ShortTermStorage

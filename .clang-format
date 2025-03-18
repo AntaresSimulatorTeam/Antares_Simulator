@@ -59,7 +59,7 @@ AlignArrayOfStructures: None
 #           each other
 AlignConsecutiveAssignments: false
 
-AlignConsecutiveBitFields: false
+#AlignConsecutiveBitFields: false
 
 # If true, aligns consecutive declarations
 # -> false: since it can be strange when types with different length are near
@@ -82,7 +82,7 @@ AlignEscapedNewlines: Left
 #          multiple lines
 #          int aaa = bbbbbbbbbbbbbbb +
 #                    ccccccccccccccc;
-AlignOperands: true
+#AlignOperands: true
 
 # If true, aligns trailing comments
 # -> true: this is cleaner
@@ -105,14 +105,14 @@ AllowAllArgumentsOnNextLine: false
 #                           int e);
 AllowAllParametersOfDeclarationOnNextLine: false
 
-AllowBreakBeforeNoexceptSpecifier: Never
+#AllowBreakBeforeNoexceptSpecifier: Never
 
 # If true, allows contracting simple braced statements to a single line
 # -> false: Not allowed for the sake of absolute clarity
 AllowShortBlocksOnASingleLine: false
 
 # No short instructions on single line
-AllowShortEnumsOnASingleLine: false
+#AllowShortEnumsOnASingleLine: false
 
 # If true, short case labels will be contracted to a single line
 # -> false: Not allowed, only one instruction per line
@@ -309,13 +309,13 @@ IncludeIsMainSourceRegex: ''
 # public/private/protected not indented
 IndentAccessModifiers: false
 
-IndentCaseBlocks: false
+#IndentCaseBlocks: false
 
 # Indent case labels one level from the switch statement
 # -> false
 IndentCaseLabels: false
 
-IndentExternBlock: NoIndent
+#IndentExternBlock: NoIndent
 
 IndentGotoLabels: false
 
