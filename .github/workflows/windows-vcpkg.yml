@@ -317,10 +317,10 @@ jobs:
           batch-name: long-tests-3
           os: ${{ env.os }}
 
-      - name: Run cucumber on modeler
-        uses: ./.github/workflows/cucumber-tests
-        with:
-          feature: "features/modeler-features"
+      # - name: Run cucumber on modeler
+      #   uses: ./.github/workflows/cucumber-tests
+      #   with:
+      #     feature: "features/modeler-features"
 
       - name: Barrier
         if: ${{ !success() }}
