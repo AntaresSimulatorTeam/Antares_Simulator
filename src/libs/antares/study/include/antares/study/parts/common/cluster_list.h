@@ -149,6 +149,7 @@ public:
     unsigned int allClustersCount() const;
     void addToCompleteList(std::shared_ptr<ClusterT> cluster);
     void sortCompleteList();
+    bool containsName(Antares::Data::ClusterName name);
 
 protected:
     std::vector<std::shared_ptr<ClusterT>> allClusters_;

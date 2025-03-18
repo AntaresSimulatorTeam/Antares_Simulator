@@ -24,7 +24,7 @@
 #include <string>
 
 #include <antares/study/version.h>
-
+#include <antares/study/fwd.h>
 #include "cluster.h"
 
 namespace Antares::Data::ShortTermStorage
@@ -35,7 +35,8 @@ public:
     bool validate(StudyVersion studyVersion) const;
 
     /// 1. Read list.ini
-    bool createSTStorageClustersFromIniFile(const std::filesystem::path& path);
+    bool createSTStorageClustersFromIniFile(const std::filesystem::path& path,
+                                            Antares::Data::AreaName id);
 
     /// 2. Read ALL series
     bool loadSeriesFromFolder(const std::filesystem::path& folder, StudyVersion studyVersion) const;

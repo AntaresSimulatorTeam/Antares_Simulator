@@ -131,6 +131,19 @@ void ClusterList<ClusterT>::sortCompleteList()
 }
 
 template<class ClusterT>
+bool ClusterList<ClusterT>::containsName(Antares::Data::ClusterName name)
+{
+    for (int clusterIndex = 0; clusterIndex < allClusters_.size(); clusterIndex++)
+    {
+        if (allClusters_[clusterIndex].get()->name() == name)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+template<class ClusterT>
 unsigned int ClusterList<ClusterT>::enabledCount() const
 {
     return std::ranges::count_if(allClusters_, &ClusterT::isEnabled);

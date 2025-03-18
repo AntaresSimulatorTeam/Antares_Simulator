@@ -31,6 +31,7 @@
 #include <antares/logs/logs.h>
 #include <antares/utils/utils.h>
 
+
 #define SEP Yuni::IO::Separator
 
 namespace fs = std::filesystem;
@@ -44,7 +45,8 @@ bool STStorageInput::validate(StudyVersion studyVersion) const
                                { return cluster.validate(studyVersion); });
 }
 
-bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path& path)
+bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path& path,
+                                                        Antares::Data::AreaName id)
 {
     const fs::path pathIni = path / "list.ini";
     IniFile ini;
@@ -67,7 +69,13 @@ bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path& path)
         {
             return false;
         }
-
+        for (int index = 0; index < storagesByIndex.size(); index++)
+        {
+            if (cluster.id == storagesByIndex.at(index).id)
+            {
+                logs.warning() << "Two STS named " << cluster.id << " inside area " << id;
+            }
+        }
         storagesByIndex.push_back(cluster);
     }
 
