@@ -11,6 +11,6 @@ add_boost_test(unit-tests-for-component-filler
         antares-study-system-model
         Antares::linear-problem-mpsolver-impl
         Antares::optim-model-filler
-        linear-problem-data-impl
+        Antares::linear-problem-data-impl
         test_utils_unit)
 

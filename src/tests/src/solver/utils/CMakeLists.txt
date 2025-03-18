@@ -5,6 +5,7 @@ add_boost_test(tests-solver-utils
         test_main.cpp
         basis_status.cpp
         test_ortools_quadratic_wrapper.cpp
+        test_ortools_utils.cpp
         INCLUDE
         "${CMAKE_SOURCE_DIR}/solver/utils"
         LIBS

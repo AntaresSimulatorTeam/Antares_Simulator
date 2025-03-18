@@ -18,22 +18,19 @@ set_target_properties(antares-modeler PROPERTIES OUTPUT_NAME ${exec_name})
 
 target_link_libraries(modeler-lib
         INTERFACE
-        Antares::loadModelerFiles
-        Antares::modelerParameters
+        Antares::load-modeler-files
+        Antares::modeler-parameters
         Antares::optim-model-filler
         Antares::linear-problem-api
         # TODO FIXME don't depend on implementations
         Antares::linear-problem-mpsolver-impl
-        Antares::data-series-csv-importer
 )
 
 target_link_libraries(antares-modeler
         PRIVATE
         modeler-lib
-        linear-problem-data-impl
         linear-problem-mpsolver-impl
         optim-model-filler
-        data-series-csv-importer
 )
 
 import_std_libs(antares-modeler)

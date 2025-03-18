@@ -134,6 +134,7 @@ struct convert<Antares::IO::Inputs::YmlModel::PortFieldDefinition>
     {
         if (!node.IsMap())
         {
+            // return true to avoid error ? port field definition not mandatory
             return false;
         }
         rhs.port = node["port"].as<std::string>();
@@ -180,6 +181,8 @@ struct convert<Antares::IO::Inputs::YmlModel::Model>
           node["port-field-definitions"]);
         rhs.constraints = as_fallback_default<
           std::vector<Antares::IO::Inputs::YmlModel::Constraint>>(node["constraints"]);
+        rhs.binding_constraints = as_fallback_default<
+          std::vector<Antares::IO::Inputs::YmlModel::Constraint>>(node["binding-constraints"]);
         rhs.objective = node["objective"].as<std::string>("");
         return true;
     }
