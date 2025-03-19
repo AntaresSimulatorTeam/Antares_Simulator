@@ -1,6 +1,6 @@
 # Hybrid studies
 
-Hybrid studies are legacy studies, with the modeler files and directories in addition: see [inputs](./0.2-inputs.md)
+Hybrid studies are legacy studies, with the modeler files and directories in addition: see [inputs](../0.2-inputs.md)
 
 The parameter.yml file from modeler studies is ignored, solver parameters depends on the command line as usual with legacy studies.
 
