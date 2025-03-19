@@ -63,7 +63,7 @@ public:
     //! Current study
     Data::Study& study;
     //! All variables
-    Solver::Variable::Economy::AllVariables variables;
+    // Solver::Variable::Economy::AllVariables variables;
     //! Prepro only
     bool preproOnly;
 
@@ -77,7 +77,7 @@ protected:
               uint numSpace,
               yearRandomNumbers& randomForYear,
               std::list<uint>& failedWeekList,
-              bool isFirstPerformedYearOfSimulation,
+              // bool isFirstPerformedYearOfSimulation,
               const HYDRO_VENTILATION_RESULTS&,
               OptimizationStatisticsWriter& optWriter,
               const Antares::Data::Area::ScratchMap& scratchmap);

@@ -45,11 +45,12 @@ public:
     yearJob(ISimulation<Impl>* simulation,
             unsigned int pY,
             std::map<uint, bool>& pYearFailed,
-            std::map<uint, bool>& pIsFirstPerformedYearOfASet,
+            // std::map<uint, bool>& pIsFirstPerformedYearOfASet,
             bool pFirstSetParallelWithAPerformedYearWasRun,
-            unsigned int pNumSpace,
+            // unsigned int pNumSpace,
+            NumSpaceManager& numspaceManager,
             randomNumbers& pRandomForParallelYears,
-            bool pPerformCalculations,
+            // bool pPerformCalculations,
             Data::Study& pStudy,
             std::vector<Variable::State>& pStates,
             bool pYearByYear,
@@ -59,11 +60,12 @@ public:
         simulation_(simulation),
         y(pY),
         yearFailed(pYearFailed),
-        isFirstPerformedYearOfASet(pIsFirstPerformedYearOfASet),
+        // isFirstPerformedYearOfASet(pIsFirstPerformedYearOfASet),
         firstSetParallelWithAPerformedYearWasRun(pFirstSetParallelWithAPerformedYearWasRun),
-        numSpace(pNumSpace),
+        numspaceManager(numspaceManager),
+        // numSpace(pNumSpace),
         randomForParallelYears(pRandomForParallelYears),
-        performCalculations(pPerformCalculations),
+        // performCalculations(pPerformCalculations),
         study(pStudy),
         states(pStates),
         yearByYear(pYearByYear),
@@ -82,11 +84,12 @@ private:
     ISimulation<Impl>* simulation_;
     unsigned int y;
     std::map<uint, bool>& yearFailed;
-    std::map<uint, bool>& isFirstPerformedYearOfASet;
+    // std::map<uint, bool>& isFirstPerformedYearOfASet;
     bool firstSetParallelWithAPerformedYearWasRun;
-    unsigned int numSpace;
+    // unsigned int numSpace;
+    NumSpaceManager& numspaceManager;
     randomNumbers& randomForParallelYears;
-    bool performCalculations;
+    const bool performCalculations = true;
     Data::Study& study;
     std::vector<Variable::State>& states;
     bool yearByYear;
@@ -145,6 +148,9 @@ public:
             // 1 - Applying random levels for current year
             auto randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
 
+            int numSpace = numspaceManager.getAvailableNumSpace();
+            assert(numSpace >= 0);
+
             // Getting the scratchMap associated to the current year
             Antares::Data::Area::ScratchMap scratchmap = study.areas.buildScratchMap(numSpace);
 
@@ -160,11 +166,12 @@ public:
             state.year = y;
 
             // 5 - Resetting all variables for the output
-            simulation_->variables.yearBegin(y, numSpace);
+            // simulation_->variables.yearBegin(y, numSpace);
 
             // 6 - The Solver itself
-            bool isFirstPerformedYearOfSimulation = isFirstPerformedYearOfASet[y]
-                                                    && not firstSetParallelWithAPerformedYearWasRun;
+            // bool isFirstPerformedYearOfSimulation = isFirstPerformedYearOfASet[y]
+            //                                         && not
+            //                                         firstSetParallelWithAPerformedYearWasRun;
             std::list<uint> failedWeekList;
 
             OptimizationStatisticsWriter optWriter(pResultWriter, y);
@@ -173,7 +180,7 @@ public:
                                                numSpace,
                                                randomForCurrentYear,
                                                failedWeekList,
-                                               isFirstPerformedYearOfSimulation,
+                                               // isFirstPerformedYearOfSimulation,
                                                hydroManagement.ventilationResults(),
                                                optWriter,
                                                scratchmap);
@@ -181,17 +188,17 @@ public:
             // Log failing weeks
             logFailedWeek(y, study, failedWeekList);
 
-            simulation_->variables.yearEndBuild(state, y, numSpace);
+            // simulation_->variables.yearEndBuild(state, y, numSpace);
 
             // 7 - End of the year, this is the last stade where the variables can retrieve
             // their data for this year.
-            simulation_->variables.yearEnd(y, numSpace);
+            // simulation_->variables.yearEnd(y, numSpace);
 
             // 8 - Spatial clusters
             // Notifying all variables to perform spatial aggregates.
             // This must be done only when all variables have finished to compute their
             // data for the year.
-            simulation_->variables.yearEndSpatialAggregates(simulation_->variables, y, numSpace);
+            // simulation_->variables.yearEndSpatialAggregates(simulation_->variables, y, numSpace);
 
             // 9 - Write results for the current year
             if (yearByYear)
@@ -199,11 +206,12 @@ public:
                 pDurationCollector("yby_export") << [this]
                 {
                     // Before writing, some variable may require minor modifications
-                    simulation_->variables.beforeYearByYearExport(y, numSpace);
+                    // simulation_->variables.beforeYearByYearExport(y, numSpace);
                     // writing the results for the current year into the output
-                    simulation_->writeResults(false, y, numSpace); // false for synthesis
+                    // simulation_->writeResults(false, y, numSpace); // false for synthesis
                 };
             }
+            numspaceManager.freeNumSpace(numSpace);
         }
         else
         {
@@ -214,7 +222,6 @@ public:
             yearFailed[y] = false;
 
         } // End if(performCalculations)
-
     } // End of onExecute() method
 };
 
@@ -228,7 +235,6 @@ inline ISimulation<ImplementationType>::ISimulation(
     ImplementationType(study, resultWriter, simulationObserver),
     study(study),
     settings(settings),
-    pNbYearsReallyPerformed(0),
     pNbMaxPerformedYearsInParallel(0),
     pYearByYear(study.parameters.yearByYear),
     pFirstSetParallelWithAPerformedYearWasRun(false),
@@ -249,6 +255,9 @@ inline ISimulation<ImplementationType>::ISimulation(
     {
         pYearByYear = false;
     }
+
+    pNbYearsReallyPerformed = std::ranges::count_if(study.parameters.yearsFilter,
+                                                    [](bool x) { return x; });
 }
 
 template<class ImplementationType>
@@ -272,17 +281,18 @@ void ISimulation<ImplementationType>::run()
     pNbMaxPerformedYearsInParallel = study.maxNbYearsInParallel;
 
     // Initialize all data
-    ImplementationType::variables.initializeFromStudy(study);
+    // ImplementationType::variables.initializeFromStudy(study);
     // Computing the max number columns a report of any kind can contain.
     study.parameters.variablesPrintInfo.computeMaxColumnsCountInReports();
 
     logs.info() << "Allocating resources...";
 
-    // Memory usage
-    {
-        Variable::PrintInfosStdCout c;
-        ImplementationType::variables.template provideInformations<Variable::PrintInfosStdCout>(c);
-    }
+    // // Memory usage
+    // {
+    //     Variable::PrintInfosStdCout c;
+    //     ImplementationType::variables.template
+    //     provideInformations<Variable::PrintInfosStdCout>(c);
+    // }
 
     // Preprocessors
     // Determine if we have to use the preprocessors at least one time.
@@ -313,7 +323,7 @@ void ISimulation<ImplementationType>::run()
             return;
         }
         // Allocating the memory
-        ImplementationType::variables.simulationBegin();
+        // ImplementationType::variables.simulationBegin();
 
         // For beauty
         logs.info();
@@ -343,13 +353,13 @@ void ISimulation<ImplementationType>::run()
         // Post operations
         pDurationCollector("post_processing") << [this] { ImplementationType::simulationEnd(); };
 
-        ImplementationType::variables.simulationEnd();
+        // ImplementationType::variables.simulationEnd();
 
         // Spatial clusters
         // Notifying all variables to perform the final spatial clusters.
         // This must be done only when all variables have finished to compute their
         // own data.
-        ImplementationType::variables.simulationEndSpatialAggregates(ImplementationType::variables);
+        // ImplementationType::variables.simulationEndSpatialAggregates(ImplementationType::variables);
     }
 }
 
@@ -399,10 +409,10 @@ void ISimulation<ImplementationType>::writeResults(bool synthesis, uint year, ui
         }
 
         // Dumping
-        ImplementationType::variables.exportSurveyResults(synthesis,
-                                                          newPath,
-                                                          numSpace,
-                                                          pResultWriter);
+        // ImplementationType::variables.exportSurveyResults(synthesis,
+        //                                                   newPath,
+        //                                                   numSpace,
+        //                                                   pResultWriter);
     }
 }
 
@@ -493,21 +503,21 @@ uint ISimulation<ImplementationType>::buildSetsOfParallelYears(
 
         // Do we refresh just before this year ? If yes a new set of parallel years has to be
         // created
-        bool refreshing = false;
-        refreshing = pData.haveToRefreshTSLoad && (y % pData.refreshIntervalLoad == 0);
-        refreshing = refreshing
-                     || (pData.haveToRefreshTSSolar && (y % pData.refreshIntervalSolar == 0));
-        refreshing = refreshing
-                     || (pData.haveToRefreshTSWind && (y % pData.refreshIntervalWind == 0));
-        refreshing = refreshing
-                     || (pData.haveToRefreshTSHydro && (y % pData.refreshIntervalHydro == 0));
+        // bool refreshing = false;
+        // refreshing = pData.haveToRefreshTSLoad && (y % pData.refreshIntervalLoad == 0);
+        // refreshing = refreshing
+        //              || (pData.haveToRefreshTSSolar && (y % pData.refreshIntervalSolar == 0));
+        // refreshing = refreshing
+        //              || (pData.haveToRefreshTSWind && (y % pData.refreshIntervalWind == 0));
+        // refreshing = refreshing
+        //              || (pData.haveToRefreshTSHydro && (y % pData.refreshIntervalHydro == 0));
 
-        // Some thermal clusters may override the global parameter.
-        // Therefore, we may want to refresh TS even if pData.haveToRefreshTSThermal == false
-        bool haveToRefreshTSThermal = pData.haveToRefreshTSThermal
-                                      || study.runtime.thermalTSRefresh;
-        refreshing = refreshing
-                     || (haveToRefreshTSThermal && (y % pData.refreshIntervalThermal == 0));
+        // // Some thermal clusters may override the global parameter.
+        // // Therefore, we may want to refresh TS even if pData.haveToRefreshTSThermal == false
+        // bool haveToRefreshTSThermal = pData.haveToRefreshTSThermal
+        //                               || study.runtime.thermalTSRefresh;
+        // refreshing = refreshing
+        //              || (haveToRefreshTSThermal && (y % pData.refreshIntervalThermal == 0));
 
         // We build a new set of parallel years if one of these conditions is fulfilled :
         //	- We have to refresh (or regenerate) some or all time series before running the
@@ -515,7 +525,7 @@ uint ISimulation<ImplementationType>::buildSetsOfParallelYears(
         //	- This is the first year (to be executed or not) after the previous set is full with
         //    years to be executed. That is : in the previous set filled, the max number of
         //    years to be actually run is reached.
-        buildNewSet = buildNewSet || refreshing;
+        // buildNewSet = buildNewSet || refreshing;
 
         if (buildNewSet)
         {
@@ -531,17 +541,17 @@ uint ISimulation<ImplementationType>::buildSetsOfParallelYears(
 
             // In case we have to regenerate times series before run the current set of parallel
             // years
-            if (refreshing)
-            {
-                set->regenerateTS = true;
-                set->yearForTSgeneration = y;
-            }
+            // if (refreshing)
+            // {
+            //     set->regenerateTS = true;
+            //     set->yearForTSgeneration = y;
+            // }
         }
 
         set->yearsIndices.push_back(y);
         set->nbYears++;
         set->yearFailed[y] = true;
-        set->isFirstPerformedYearOfASet[y] = false;
+        // set->isFirstPerformedYearOfASet[y] = false;
 
         if (performCalculations)
         {
@@ -559,7 +569,7 @@ uint ISimulation<ImplementationType>::buildSetsOfParallelYears(
 
             if (!foundFirstPerformedYearOfCurrentSet)
             {
-                set->isFirstPerformedYearOfASet[y] = true;
+                // set->isFirstPerformedYearOfASet[y] = true;
                 foundFirstPerformedYearOfCurrentSet = true;
             }
         }
@@ -941,9 +951,10 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     // in a set The variable "maxNbYearsPerformedInAset" is the maximum numbers of years to be
     // actually executed in a set. A set contains some years to be actually executed (at most
     // "pNbMaxPerformedYearsInParallel" years) and some others to skip.
-    uint maxNbYearsPerformedInAset = buildSetsOfParallelYears(firstYear,
-                                                              endYear,
-                                                              setsOfParallelYears);
+    uint maxNbYearsPerformedInAset = pNbMaxPerformedYearsInParallel;
+    // uint maxNbYearsPerformedInAset = buildSetsOfParallelYears(firstYear,
+    //                                                           endYear,
+    //                                                           setsOfParallelYears);
     // Related to annual costs statistics (printed in output into separate files)
     pAnnualStatistics.setNbPerformedYears(pNbYearsReallyPerformed);
 
@@ -961,51 +972,51 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     logs.info() << " Doing hydro validation";
 
     // Loop over sets of parallel years to check hydro inputs
-    for (const auto& batch: setsOfParallelYears)
+    for (int year = firstYear; year < endYear; year++)
     {
-        if (batch.regenerateTS)
-        {
-            break;
-        }
-        for (auto year: batch.yearsIndices)
+        if (study.parameters.yearsFilter[year])
         {
             hydroInputsChecker.Execute(year);
         }
     }
+
     hydroInputsChecker.CheckForErrors();
 
     logs.info() << " Starting the simulation";
 
     // Loop over sets of parallel years to run the simulation
-    for (auto& batch: setsOfParallelYears)
-    {
-        // 1 - We may want to regenerate the time-series this year.
-        // This is the case when the preprocessors are enabled from the
-        // interface and/or the refresh is enabled.
-        if (batch.regenerateTS)
-        {
-            regenerateTimeSeries(batch.yearForTSgeneration);
-        }
-        computeRandomNumbers(randomForParallelYears,
-                             batch.yearsIndices,
-                             batch.isYearPerformed,
-                             randomHydroGenerator);
+    // 1 - We may want to regenerate the time-series this year.
+    // This is the case when the preprocessors are enabled from the
+    // interface and/or the refresh is enabled.
+    // if (batch.regenerateTS)
+    // {
+    //     regenerateTimeSeries(batch.yearForTSgeneration);
+    // }
+    // computeRandomNumbers(randomForParallelYears,
+    //                      batch.yearsIndices,
+    //                      batch.isYearPerformed,
+    //                      randomHydroGenerator);
 
-        bool yearPerformed = false;
-        Concurrency::FutureSet results;
-        for (auto y: batch.yearsIndices)
+    std::map<uint, bool> yearFailed;
+    NumSpaceManager numspaceManager(study.maxNbYearsInParallel);
+
+    bool yearPerformed = false;
+    Concurrency::FutureSet results;
+    for (int year = firstYear; year < endYear; year++)
+    {
+        if (study.parameters.yearsFilter[year])
         {
             // for each year not handled earlier
-            hydroInputsChecker.Execute(y);
+            // FOM remove ?
+            hydroInputsChecker.Execute(year);
             hydroInputsChecker.CheckForErrors();
 
-            bool performCalculations = batch.isYearPerformed[y];
-            unsigned int numSpace = 999999;
-            if (performCalculations)
-            {
-                yearPerformed = true;
-                numSpace = batch.performedYearToSpace[y];
-            }
+            // unsigned int numSpace = 999999;
+            // if (performCalculations)
+            // {
+            //     yearPerformed = true;
+            //     numSpace = batch.performedYearToSpace[y];
+            // }
 
             // If the year has not to be rerun, we skip the computation of the year.
             // Note that, when we enter for the first time in the "for" loop, all years of the set
@@ -1014,13 +1025,14 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
 
             auto task = std::make_shared<yearJob<ImplementationType>>(
               this,
-              y,
-              batch.yearFailed,
-              batch.isFirstPerformedYearOfASet,
+              year,
+              yearFailed,
+              // batch.isFirstPerformedYearOfASet,
               pFirstSetParallelWithAPerformedYearWasRun,
-              numSpace,
+              numspaceManager,
+              // numSpace,
               randomForParallelYears,
-              performCalculations,
+              // performCalculations,
               study,
               state,
               pYearByYear,
@@ -1028,53 +1040,52 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
               pResultWriter,
               simulationObserver_.get());
             results.add(Concurrency::AddTask(*pQueueService, task));
-        } // End loop over years of the current set of parallel years
-
-        logPerformedYearsInAset(batch);
-
-        pQueueService->start();
-
-        pQueueService->wait(Yuni::qseIdle);
-        pQueueService->stop();
-        results.join();
-        pResultWriter.flush();
-
-        // At this point, the first set of parallel year(s) was run with at least one year
-        // performed
-        if (!pFirstSetParallelWithAPerformedYearWasRun && yearPerformed)
-        {
-            pFirstSetParallelWithAPerformedYearWasRun = true;
         }
+    }
 
-        // On regarde si au moins une année du lot n'a pas trouvé de solution
-        for (auto& [year, failed]: batch.yearFailed)
+    // logPerformedYearsInAset(batch);
+
+    pQueueService->start();
+
+    pQueueService->wait(Yuni::qseIdle);
+    pQueueService->stop();
+    results.join();
+    pResultWriter.flush();
+
+    // At this point, the first set of parallel year(s) was run with at least one year
+    // performed
+    if (!pFirstSetParallelWithAPerformedYearWasRun && yearPerformed)
+    {
+        pFirstSetParallelWithAPerformedYearWasRun = true;
+    }
+
+    // On regarde si au moins une année du lot n'a pas trouvé de solution
+    for (auto& [year, failed]: yearFailed)
+    {
+        // Si une année du lot d'années n'a pas trouvé de solution, on arrête tout
+        if (failed)
         {
-            // Si une année du lot d'années n'a pas trouvé de solution, on arrête tout
-            if (failed)
-            {
-                std::ostringstream msg;
-                msg << "Year " << year + 1 << " has failed in the previous set of parallel year.";
-                throw FatalError(msg.str());
-            }
+            std::ostringstream msg;
+            msg << "Year " << year + 1 << " has failed in the previous set of parallel year.";
+            throw FatalError(msg.str());
         }
-        // Computing the summary : adding the contribution of MC years
-        // previously computed in parallel
-        ImplementationType::variables.computeSummary(batch.spaceToPerformedYear,
-                                                     batch.nbPerformedYears);
+    }
+    // Computing the summary : adding the contribution of MC years
+    // previously computed in parallel
+    // ImplementationType::variables.computeSummary(batch.spaceToPerformedYear,
+    //                                              batch.nbPerformedYears);
 
-        // Computing summary of spatial aggregations
-        ImplementationType::variables.computeSpatialAggregatesSummary(ImplementationType::variables,
-                                                                      batch.spaceToPerformedYear,
-                                                                      batch.nbPerformedYears);
+    // Computing summary of spatial aggregations
+    // ImplementationType::variables.computeSpatialAggregatesSummary(ImplementationType::variables,
+    //                                                               batch.spaceToPerformedYear,
+    //                                                               batch.nbPerformedYears);
 
-        // Computes statistics on annual (system and solution) costs, to be printed in output into
-        // separate files
-        computeAnnualCostsStatistics(state, batch);
+    // Computes statistics on annual (system and solution) costs, to be printed in output into
+    // separate files
+    // computeAnnualCostsStatistics(state, batch);
 
-        // Set to zero the random numbers of all parallel years
-        randomForParallelYears.reset();
-
-    } // End loop over sets of parallel years
+    // Set to zero the random numbers of all parallel years
+    randomForParallelYears.reset();
 
     // Writing annual costs statistics
     pAnnualStatistics.endStandardDeviations();

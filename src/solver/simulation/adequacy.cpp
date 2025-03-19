@@ -121,7 +121,7 @@ bool Adequacy::year(Progression::Task& progression,
                     uint numSpace,
                     yearRandomNumbers& randomForYear,
                     std::list<uint>& failedWeekList,
-                    bool isFirstPerformedYearOfSimulation,
+                    // bool isFirstPerformedYearOfSimulation,
                     const HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
                     OptimizationStatisticsWriter& optWriter,
                     const Antares::Data::Area::ScratchMap& scratchmap)
@@ -137,10 +137,10 @@ bool Adequacy::year(Progression::Task& progression,
     state.startANewYear();
 
     int hourInTheYear = pStartTime;
-    if (isFirstPerformedYearOfSimulation)
-    {
-        currentProblem.firstWeekOfSimulation = true;
-    }
+    // if (isFirstPerformedYearOfSimulation)
+    // {
+    //     currentProblem.firstWeekOfSimulation = true;
+    // }
     bool reinitOptim = true;
 
     for (uint w = 0; w != pNbWeeks; ++w)
@@ -329,7 +329,7 @@ bool Adequacy::year(Progression::Task& progression,
 
         updatingWeeklyFinalHydroLevel(study.areas, currentProblem);
 
-        variables.weekBegin(state);
+        // variables.weekBegin(state);
         uint previousHourInTheYear = state.hourInTheYear;
 
         for (uint hw = 0; hw != nbHoursInAWeek;
@@ -339,16 +339,16 @@ bool Adequacy::year(Progression::Task& progression,
 
             state.ntc = currentProblem.ValeursDeNTC[hw];
 
-            variables.hourBegin(state.hourInTheYear);
+            // variables.hourBegin(state.hourInTheYear);
 
-            variables.hourForEachArea(state, numSpace);
+            // variables.hourForEachArea(state, numSpace);
 
-            variables.hourEnd(state, state.hourInTheYear);
+            // variables.hourEnd(state, state.hourInTheYear);
         }
 
         state.hourInTheYear = previousHourInTheYear;
-        variables.weekForEachArea(state, numSpace);
-        variables.weekEnd(state);
+        // variables.weekForEachArea(state, numSpace);
+        // variables.weekEnd(state);
 
         hourInTheYear += nbHoursInAWeek;
 
@@ -383,8 +383,8 @@ static std::vector<AvgExchangeResults*> retrieveBalance(
     for (uint areaIndex = 0; areaIndex < nbAreas; ++areaIndex)
     {
         const Data::Area* area = study.areas.byIndex[areaIndex];
-        variables.retrieveResultsForArea<Variable::Economy::VCardBalance>(&balance[areaIndex],
-                                                                          area);
+        // variables.retrieveResultsForArea<Variable::Economy::VCardBalance>(&balance[areaIndex],
+        //                                                                   area);
     }
     return balance;
 }
@@ -393,8 +393,8 @@ void Adequacy::simulationEnd()
 {
     if (!preproOnly && study.runtime.interconnectionsCount() > 0)
     {
-        auto balance = retrieveBalance(study, variables);
-        ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks);
+        // auto balance = retrieveBalance(study, variables);
+        // ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks);
     }
 }
 
