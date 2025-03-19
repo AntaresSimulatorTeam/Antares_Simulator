@@ -998,7 +998,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     //                      randomHydroGenerator);
 
     std::map<uint, bool> yearFailed;
-    NumSpaceManager numspaceManager(study.maxNbYearsInParallel);
+    NumSpaceManager numspaceManager(pNbMaxPerformedYearsInParallel);
 
     bool yearPerformed = false;
     Concurrency::FutureSet results;
