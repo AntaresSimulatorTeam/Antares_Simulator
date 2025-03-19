@@ -326,6 +326,7 @@ BOOST_FIXTURE_TEST_CASE(CheckTimeShiftOnVariableLinearity, Registry<Node>)
     BOOST_CHECK(linearityVisitor.dispatch(expr1)
                 == LinearStatus::LINEAR); // because literal1 is constant
 }
+
 BOOST_FIXTURE_TEST_CASE(CheckTimeSumOnLiteralLinearity, Registry<Node>)
 {
     LinearityVisitor linearityVisitor;
