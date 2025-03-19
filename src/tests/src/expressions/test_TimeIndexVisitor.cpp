@@ -80,6 +80,109 @@ BOOST_FIXTURE_TEST_CASE(simple_time_dependant_expression, Registry<Node>)
     BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(expr), TimeIndex::VARYING_IN_TIME_AND_SCENARIO);
 }
 
+BOOST_FIXTURE_TEST_CASE(timeShift_expression, Registry<Node>)
+{
+    PrintVisitor printVisitor;
+    // LiteralNode --> constant in time and for all scenarios
+    LiteralNode literalNode(65.);
+
+    // Parameter --> constant in time and varying scenarios
+    ParameterNode parameterNode1("p1", TimeIndex::VARYING_IN_SCENARIO_ONLY);
+
+    // Variable time varying but constant across scenarios
+    VariableNode variableNode1("v1", TimeIndex::VARYING_IN_TIME_ONLY);
+    TimeIndexVisitor timeIndexVisitor;
+
+    TimeShiftNode constant_time_shift_node(&literalNode, &parameterNode1);
+
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(&constant_time_shift_node),
+                      TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+
+    TimeShiftNode scenario_only_time_shift_node(&parameterNode1, &literalNode);
+
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(&scenario_only_time_shift_node),
+                      TimeIndex::VARYING_IN_SCENARIO_ONLY);
+
+    TimeShiftNode time_dep_only_time_shift_node(&variableNode1, &literalNode);
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(&time_dep_only_time_shift_node),
+                      TimeIndex::VARYING_IN_TIME_ONLY);
+}
+
+BOOST_FIXTURE_TEST_CASE(timeIndexNode_expression, Registry<Node>)
+{
+    PrintVisitor printVisitor;
+    // LiteralNode --> constant in time and for all scenarios
+    LiteralNode literalNode(65.);
+
+    // Parameter --> constant in time and varying scenarios
+    ParameterNode parameterNode1("p1", TimeIndex::VARYING_IN_SCENARIO_ONLY);
+
+    // Variable time varying but constant across scenarios
+    VariableNode variableNode1("v1", TimeIndex::VARYING_IN_TIME_ONLY);
+    TimeIndexVisitor timeIndexVisitor;
+
+    TimeIndexNode t1(&literalNode, &parameterNode1);
+
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(&t1), TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+
+    TimeIndexNode t2(&parameterNode1, &literalNode);
+
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(&t2), TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+
+    TimeIndexNode t3(&variableNode1, &literalNode);
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(&t3), TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+}
+
+BOOST_FIXTURE_TEST_CASE(timeSumNode_expression, Registry<Node>)
+{
+    PrintVisitor printVisitor;
+    // LiteralNode --> constant in time and for all scenarios
+    LiteralNode from(65.);
+
+    // Parameter --> constant in time and varying scenarios
+    ParameterNode to("p1", TimeIndex::VARYING_IN_SCENARIO_ONLY);
+
+    // Variable time varying but constant across scenarios
+    VariableNode variableNode1("v1", TimeIndex::VARYING_IN_TIME_ONLY);
+    TimeIndexVisitor timeIndexVisitor;
+
+    TimeSumNode t1(&from, &to, &from);
+
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(&t1), TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+
+    TimeSumNode t2(&from, &to, &to);
+
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(&t2), TimeIndex::VARYING_IN_SCENARIO_ONLY);
+
+    TimeSumNode t3(&from, &to, &variableNode1);
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(&t3), TimeIndex::VARYING_IN_TIME_ONLY);
+}
+
+BOOST_FIXTURE_TEST_CASE(alltimeSumNode_expression, Registry<Node>)
+{
+    PrintVisitor printVisitor;
+    // LiteralNode --> constant in time and for all scenarios
+    LiteralNode literalNode(65.);
+
+    // Parameter --> constant in time and varying scenarios
+    ParameterNode parameterNode1("p1", TimeIndex::VARYING_IN_SCENARIO_ONLY);
+
+    // Variable time varying but constant across scenarios
+    VariableNode variableNode1("v1", TimeIndex::VARYING_IN_TIME_ONLY);
+    TimeIndexVisitor timeIndexVisitor;
+
+    AllTimeSumNode t1(&literalNode);
+
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(&t1), TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+
+    AllTimeSumNode t2(&parameterNode1);
+
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(&t2), TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+
+    AllTimeSumNode t3(&variableNode1);
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(&t3), TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+}
+
 static const std::vector<TimeIndex> TimeIndex_ALL{TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO,
                                                   TimeIndex::VARYING_IN_TIME_ONLY,
                                                   TimeIndex::VARYING_IN_SCENARIO_ONLY,

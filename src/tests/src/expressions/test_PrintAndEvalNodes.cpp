@@ -340,6 +340,58 @@ BOOST_AUTO_TEST_CASE(ShiftResult_EmptyVector)
     BOOST_CHECK_EQUAL_COLLECTIONS(res.begin(), res.end(), emptyVec.begin(), emptyVec.end());
 }
 
+BOOST_AUTO_TEST_CASE(TimeSum_DoubleValue)
+{
+    const EvaluationResult eval(4.0);
+    const EvaluationResult sum = eval.timeSum(-2, 2);
+    BOOST_CHECK_EQUAL(sum.valueAsDouble(), 20.0); // 4.0 * 5 = 20.0
+
+    BOOST_CHECK_THROW(eval.timeSum(-1, 0).valuesAsVector(), EvaluationResult::EvalResultTypeError);
+}
+
+BOOST_AUTO_TEST_CASE(TimeSum_VectorValue_PositiveShift)
+{
+    const EvaluationResult eval(std::vector<double>{1.0, 2.0, 3.0});
+    const auto sum = eval.timeSum(0, 2).valuesAsVector();
+    BOOST_CHECK_THROW(eval.timeSum(-1, 0).valueAsDouble(), EvaluationResult::EvalResultTypeError);
+    const std::vector<double> expected(3.0, 1.0 + 2.0 + 3.0);
+
+    BOOST_CHECK_EQUAL_COLLECTIONS(sum.begin(), sum.end(), expected.begin(), expected.end());
+}
+
+BOOST_AUTO_TEST_CASE(TimeSum_VectorValue_NegativeShift)
+{
+    const EvaluationResult eval(std::vector<double>{1.0, 2.0, 3.0});
+    const auto sum = eval.timeSum(-1, 0).valuesAsVector();
+    BOOST_CHECK_THROW(eval.timeSum(-1, 0).valueAsDouble(), EvaluationResult::EvalResultTypeError);
+
+    const std::vector<double> expected{3.0 + 1.0, 1.0 + 2.0, 2.0 + 3.0};
+
+    BOOST_CHECK_EQUAL_COLLECTIONS(sum.begin(), sum.end(), expected.begin(), expected.end());
+}
+
+BOOST_AUTO_TEST_CASE(AlltimeSum_DoubleValue)
+{
+    const EvaluationResult eval(4.0);
+    const EvaluationResult sum = eval.alltimeSum(5);
+    BOOST_CHECK_EQUAL(sum.valueAsDouble(), 20.0); // 4.0 * 5 = 20.0
+
+    BOOST_CHECK_THROW(sum.valuesAsVector(), EvaluationResult::EvalResultTypeError);
+}
+
+BOOST_AUTO_TEST_CASE(AlltimeSum_VectorValue)
+{
+    const EvaluationResult eval(std::vector<double>{1.0, 2.0, 3.0});
+    const EvaluationResult sum = eval.alltimeSum(3);
+    BOOST_CHECK_EQUAL(sum.valueAsDouble(), 6.0); // 1.0 + 2.0 + 3.0 = 6.0
+}
+
+BOOST_AUTO_TEST_CASE(AlltimeSum_VectorValue_OutOfRange)
+{
+    const EvaluationResult eval(std::vector<double>{1.0, 2.0, 3.0});
+    BOOST_CHECK_THROW(eval.alltimeSum(4), EvaluationResult::EvalResultTimeIndexOutOfRange);
+}
+
 struct MyDummyFixture: Registry<Node>
 {
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
@@ -644,6 +696,33 @@ BOOST_FIXTURE_TEST_CASE(evaluate_timeSum_param, MyDummyFixture)
     BOOST_CHECK_EQUAL(eval.at(0), 0 + 1); // add param.at(0)+param.at(1)
     BOOST_CHECK_EQUAL(eval.at(1), 1 + 2); // add param.at(1)+param.at(2)
     BOOST_CHECK_EQUAL(eval.at(2), 2 + 0); // add param.at(2)+param.at(0)
+}
+
+EvaluationResult CreateAndEvaluateAllTimeSumNode()
+{
+    ParameterNode param("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
+    AllTimeSumNode root(&param);
+    const std::string value = "dummy";
+    MockLinearProblemData dummy_data;
+    EvaluationContext context(
+      {build_context_parameter_with("my-param", value, ParameterType::TIMESERIE)},
+      {},
+      dummy_data);
+
+    unsigned first = 0;
+    unsigned last = 2;
+    EvalVisitor evalVisitor(context, {first, last /*three hours*/});
+    return evalVisitor.dispatch(&root);
+}
+
+BOOST_FIXTURE_TEST_CASE(evaluate_alltimeSum_param, MyDummyFixture)
+{
+    LiteralNode from(0.0);
+    LiteralNode to(1.0);
+    const auto eval = CreateAndEvaluateAllTimeSumNode().valueAsDouble();
+    // from MockLinearProblemData  param TSdata is {0, 1, 2}
+    // here we applied TimeSum from t+0 and to t+1
+    BOOST_CHECK_EQUAL(eval, 0 + 1 + 2); // add param.at(0)+param.at(1)
 }
 
 BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_multiplication, MyDummyFixture)
