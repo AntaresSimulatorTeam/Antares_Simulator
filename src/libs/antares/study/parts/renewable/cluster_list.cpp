@@ -203,12 +203,6 @@ bool RenewableClusterList::loadFromFolder(const fs::path& folder, Area* area)
                     continue;
                 }
 
-                if (area->renewable.list.containsName(cluster.get()->name()))
-                {
-                    logs.warning() << "Two renewable clusters named " << cluster.get()->name()
-                                   << " inside area " << area->name;
-                }
-
                 addToCompleteList(cluster);
             }
         }

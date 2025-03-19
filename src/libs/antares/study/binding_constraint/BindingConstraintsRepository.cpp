@@ -218,23 +218,10 @@ bool BindingConstraintsRepository::loadFromFolder(Study& study,
             if (env.section->firstProperty)
             {
                 auto new_bc = LoadBindingConstraint(env);
-                for (int indexCst = 0; indexCst < constraints_.size(); indexCst++)
-                {
-                    if (constraints_.at(indexCst).get()->id() == new_bc.begin()->get()->id())
-                    {
-                        logs.warning()
-                          << "Two binding constraints with id " << new_bc.begin()->get()->id();
-                    }
-
-                    if (constraints_.at(indexCst).get()->name() == new_bc.begin()->get()->name())
-                    {
-                        logs.warning()
-                          << "Two binding constraints named " << new_bc.begin()->get()->name();
-                    }
-                }
                 std::copy(new_bc.begin(), new_bc.end(), std::back_inserter(constraints_));
             }
         }
+        this->checkDouble();
     }
 
     // Logs
@@ -264,6 +251,27 @@ bool BindingConstraintsRepository::loadFromFolder(Study& study,
     }
 
     return true;
+}
+
+void BindingConstraintsRepository::checkDouble() const
+{
+    for (int indexCst = 0; indexCst < constraints_.size() - 1 ; indexCst++)
+    {
+        Antares::Data::ConstraintName name = constraints_.at(indexCst).get()->name();
+        Antares::Data::ConstraintName id = constraints_.at(indexCst).get()->id();
+
+        for (int indexCstSearch = indexCst + 1; indexCstSearch < constraints_.size(); indexCstSearch++)
+        {
+            if (name == constraints_.at(indexCstSearch).get()->name())
+            {
+                logs.warning() << "Two binding constraints named " << name;
+            }
+            if (id == constraints_.at(indexCstSearch).get()->id())
+            {
+                logs.warning() << "Two binding constraints with id " << id;
+            }
+        }
+    }
 }
 
 void BindingConstraintsRepository::changeConstraintsWeeklyToDaily()

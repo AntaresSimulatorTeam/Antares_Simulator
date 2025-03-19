@@ -117,6 +117,7 @@ void ClusterList<ClusterT>::addToCompleteList(std::shared_ptr<ClusterT> cluster)
 {
     if (alreadyInAllClusters(cluster->id()))
     {
+        logs.warning() << "Two cluster with id " << cluster->id();
         return;
     }
     allClusters_.push_back(cluster);
@@ -128,19 +129,6 @@ template<class ClusterT>
 void ClusterList<ClusterT>::sortCompleteList()
 {
     std::ranges::sort(allClusters_, [](const auto a, const auto b) { return a->id() < b->id(); });
-}
-
-template<class ClusterT>
-bool ClusterList<ClusterT>::containsName(Antares::Data::ClusterName name)
-{
-    for (int clusterIndex = 0; clusterIndex < allClusters_.size(); clusterIndex++)
-    {
-        if (allClusters_[clusterIndex].get()->name() == name)
-        {
-            return true;
-        }
-    }
-    return false;
 }
 
 template<class ClusterT>

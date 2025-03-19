@@ -83,6 +83,11 @@ public:
     //@}
 
     /*!
+    ** \brief Checks for doubles of name or ID inside the vector
+    */
+    void checkDouble() const;
+
+    /*!
     ** \brief Add a new binding constraint
     */
     std::shared_ptr<BindingConstraint> add(const AnyString& name);

@@ -44,8 +44,7 @@ bool STStorageInput::validate(StudyVersion studyVersion) const
                                { return cluster.validate(studyVersion); });
 }
 
-bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path& path,
-                                                        Antares::Data::AreaName id)
+bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path& path)
 {
     const fs::path pathIni = path / "list.ini";
     IniFile ini;
@@ -68,21 +67,27 @@ bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path& path,
         {
             return false;
         }
-        for (int index = 0; index < storagesByIndex.size(); index++)
-        {
-            if (cluster.id == storagesByIndex.at(index).id)
-            {
-                logs.warning() << "Two STS named " << cluster.id << " inside area " << id;
-            }
-        }
+        this->checkForDoubles(cluster.id);
         storagesByIndex.push_back(cluster);
     }
+
 
     std::ranges::sort(storagesByIndex,
                       [](const auto& a, const auto& b)
                       { return a.properties.name < b.properties.name; });
 
     return true;
+}
+
+void STStorageInput::checkForDoubles(std::string clusterID) const
+{
+    for (int index = 0; index < storagesByIndex.size(); index++)
+    {
+        if (clusterID == storagesByIndex.at(index).id)
+        {
+            logs.warning() << "Two STS with id " << clusterID;
+        }
+    }
 }
 
 static bool loadHours(std::string hoursStr, AdditionalConstraints& additionalConstraints)

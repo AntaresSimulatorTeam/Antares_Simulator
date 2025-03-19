@@ -23,7 +23,6 @@
 #include <filesystem>
 #include <string>
 
-#include <antares/study/fwd.h>
 #include <antares/study/version.h>
 
 #include "cluster.h"
@@ -36,8 +35,7 @@ public:
     bool validate(StudyVersion studyVersion) const;
 
     /// 1. Read list.ini
-    bool createSTStorageClustersFromIniFile(const std::filesystem::path& path,
-                                            Antares::Data::AreaName id);
+    bool createSTStorageClustersFromIniFile(const std::filesystem::path& path);
 
     /// 2. Read ALL series
     bool loadSeriesFromFolder(const std::filesystem::path& folder, StudyVersion studyVersion) const;
@@ -53,6 +51,8 @@ public:
     bool saveToFolder(const std::string& folder) const;
 
     bool saveDataSeriesToFolder(const std::string& folder) const;
+
+    void checkForDoubles(std::string clusterID) const;
 
     std::vector<STStorageCluster> storagesByIndex;
 

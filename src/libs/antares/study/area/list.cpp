@@ -580,10 +580,6 @@ bool AreaList::loadListFromFile(const fs::path& filename)
             logs.error() << "character '*' is forbidden in area name: `" << name << "`";
             continue;
         }
-        if (this->findFromName(name) != nullptr)
-        {
-            logs.warning() << "Two areas named " << name;
-        }
         // Add the area in the list
         AreaListAddFromNames(*this, name, lname);
     }
@@ -1207,8 +1203,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
             for (const auto& area: areas | std::views::values)
             {
                 fs::path cluster_folder = stsFolder / "clusters" / area->id.c_str();
-                ret = area->shortTermStorage.createSTStorageClustersFromIniFile(cluster_folder,
-                                                                                area->id)
+                ret = area->shortTermStorage.createSTStorageClustersFromIniFile(cluster_folder)
                       && ret;
                 // Additional constraints were added from version 9.2
                 if (studyVersion >= StudyVersion(9, 2))
