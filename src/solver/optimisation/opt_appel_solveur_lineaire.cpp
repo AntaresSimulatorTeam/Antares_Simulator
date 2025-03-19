@@ -114,7 +114,7 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
                                           IResultWriter& writer)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
-    auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx[NumIntervalle]);
+    auto* solver = ProblemeAResoudre->ProblemesSpx[NumIntervalle];
 
     const int opt = optimizationNumber - 1;
     assert(opt >= 0 && opt < 2);
@@ -246,7 +246,7 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     solver = ORTOOLS_Simplexe(&Probleme, solver, keepBasis, options);
     if (solver != nullptr)
     {
-        ProblemeAResoudre->ProblemesSpx[NumIntervalle] = (void*)solver;
+        ProblemeAResoudre->ProblemesSpx[NumIntervalle] = solver;
     }
 
     measure.tick();
@@ -409,10 +409,10 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
         LinearProblemBuilder linearProblemBuilder(fillersCollection);
 
         linearProblemBuilder.build(*ortoolsProblem, *problemeHebdo->linear_problem_data_, fillCtx);
-        auto MPproblem = std::shared_ptr<MPSolver>(ortoolsProblem->getMpSolver());
+        auto* MPproblem = ortoolsProblem->getMpSolver();
 
         auto analyzer = makeUnfeasiblePbAnalyzer();
-        analyzer->run(MPproblem.get());
+        analyzer->run(MPproblem);
         analyzer->printReport();
 
         auto mps_writer_on_error = simplexResult.mps_writer_factory.createOnOptimizationError();

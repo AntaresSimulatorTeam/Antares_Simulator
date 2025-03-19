@@ -131,7 +131,9 @@ BOOST_FIXTURE_TEST_CASE(test_visit_illegal_node, MyDummyFixture)
                                         create<PortFieldNode>("port", "field"),
                                         create<PortFieldSumNode>("port", "field"),
                                         create<ComponentVariableNode>("x", "y"),
-                                        create<ComponentParameterNode>("x", "y")};
+                                        create<ComponentParameterNode>("x", "y"),
+                                        create<TimeShiftNode>(lit, lit),
+                                        create<TimeIndexNode>(lit, lit)};
 
     for (Node* node: illegal_nodes)
     {

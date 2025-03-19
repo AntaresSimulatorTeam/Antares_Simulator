@@ -54,6 +54,8 @@ public:
     Nodes::Node* visit(const Nodes::PortFieldSumNode* node) override;
     Nodes::Node* visit(const Nodes::ComponentVariableNode* node) override;
     Nodes::Node* visit(const Nodes::ComponentParameterNode* node) override;
+    Nodes::Node* visit(const Nodes::TimeShiftNode* node) override;
+    Nodes::Node* visit(const Nodes::TimeIndexNode* node) override;
 
 private:
     Registry<Nodes::Node>& registry_;

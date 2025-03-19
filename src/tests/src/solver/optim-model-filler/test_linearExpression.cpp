@@ -215,9 +215,9 @@ BOOST_AUTO_TEST_CASE(ConstructorWithMap)
 {
     auto component = "compo";
 
-    std::unordered_map<unsigned, LinearExpression> expressions = {
-      {0, LinearExpression(1.0, {{FullKey(component, "a"), 1.5}})},
-      {1, LinearExpression(2.0, {{FullKey(component, "b"), 3.0}})}};
+    LinearExpressionMap expressions = {{0, LinearExpression(1.0, {{FullKey(component, "a"), 1.5}})},
+                                       {1,
+                                        LinearExpression(2.0, {{FullKey(component, "b"), 3.0}})}};
 
     TimeDependentLinearExpression expr(expressions);
     BOOST_TEST(expr.getSize() == 2);
@@ -230,12 +230,10 @@ BOOST_AUTO_TEST_CASE(AdditionOperator)
 {
     auto component = "compo";
 
-    std::unordered_map<unsigned, LinearExpression> exp1 = {
-      {0, LinearExpression(3.0, {{FullKey(component, "x"), 1.0}})},
-      {1, LinearExpression(2.0, {{FullKey(component, "y"), 2.0}})}};
-    std::unordered_map<unsigned, LinearExpression> exp2 = {
-      {0, LinearExpression(2.0, {{FullKey(component, "x"), 2.0}})},
-      {1, LinearExpression(1.0, {{FullKey(component, "y"), 1.0}})}};
+    LinearExpressionMap exp1 = {{0, LinearExpression(3.0, {{FullKey(component, "x"), 1.0}})},
+                                {1, LinearExpression(2.0, {{FullKey(component, "y"), 2.0}})}};
+    LinearExpressionMap exp2 = {{0, LinearExpression(2.0, {{FullKey(component, "x"), 2.0}})},
+                                {1, LinearExpression(1.0, {{FullKey(component, "y"), 1.0}})}};
 
     TimeDependentLinearExpression expr1(exp1), expr2(exp2);
     TimeDependentLinearExpression result = expr1 + expr2;
@@ -250,12 +248,10 @@ BOOST_AUTO_TEST_CASE(SubtractionOperator)
 {
     auto component = "compo";
 
-    std::unordered_map<unsigned, LinearExpression> exp1 = {
-      {0, LinearExpression(5.0, {{FullKey(component, "x"), 4.0}})},
-      {1, LinearExpression(7.0, {{FullKey(component, "y"), 3.0}})}};
-    std::unordered_map<unsigned, LinearExpression> exp2 = {
-      {0, LinearExpression(3.0, {{FullKey(component, "x"), 2.0}})},
-      {1, LinearExpression(2.0, {{FullKey(component, "y"), 1.0}})}};
+    LinearExpressionMap exp1 = {{0, LinearExpression(5.0, {{FullKey(component, "x"), 4.0}})},
+                                {1, LinearExpression(7.0, {{FullKey(component, "y"), 3.0}})}};
+    LinearExpressionMap exp2 = {{0, LinearExpression(3.0, {{FullKey(component, "x"), 2.0}})},
+                                {1, LinearExpression(2.0, {{FullKey(component, "y"), 1.0}})}};
 
     TimeDependentLinearExpression expr1(exp1), expr2(exp2);
     TimeDependentLinearExpression result = expr1 - expr2;
@@ -270,9 +266,8 @@ BOOST_AUTO_TEST_CASE(MultiplicationOperator)
 {
     auto component = "compo";
 
-    std::unordered_map<unsigned, LinearExpression> exp1 = {
-      {0, LinearExpression(2.0, {{FullKey(component, "x"), 3.0}})}};
-    std::unordered_map<unsigned, LinearExpression> exp2 = {
+    LinearExpressionMap exp1 = {{0, LinearExpression(2.0, {{FullKey(component, "x"), 3.0}})}};
+    LinearExpressionMap exp2 = {
       {0, LinearExpression(4.0, {})} // Only scalar allowed
     };
 
@@ -289,9 +284,8 @@ BOOST_AUTO_TEST_CASE(DivisionOperator)
 {
     auto component = "compo";
 
-    std::unordered_map<unsigned, LinearExpression> exp1 = {
-      {0, LinearExpression(6.0, {{FullKey(component, "x"), 3.0}})}};
-    std::unordered_map<unsigned, LinearExpression> exp2 = {
+    LinearExpressionMap exp1 = {{0, LinearExpression(6.0, {{FullKey(component, "x"), 3.0}})}};
+    LinearExpressionMap exp2 = {
       {0, LinearExpression(2.0, {})} // Only scalar allowed
     };
 
@@ -307,9 +301,8 @@ BOOST_AUTO_TEST_CASE(NegationOperator)
 {
     auto component = "compo";
 
-    std::unordered_map<unsigned, LinearExpression> exp = {
-      {0, LinearExpression(3.0, {{FullKey(component, "x"), 2.0}})},
-      {1, LinearExpression(4.0, {{FullKey(component, "y"), 1.0}})}};
+    LinearExpressionMap exp = {{0, LinearExpression(3.0, {{FullKey(component, "x"), 2.0}})},
+                               {1, LinearExpression(4.0, {{FullKey(component, "y"), 1.0}})}};
 
     TimeDependentLinearExpression expr(exp);
     TimeDependentLinearExpression result = -expr;
@@ -326,9 +319,8 @@ BOOST_AUTO_TEST_CASE(GetLinearExpressionsMethod)
 {
     auto component = "compo";
 
-    std::unordered_map<unsigned, LinearExpression> exp = {
-      {0, LinearExpression(5.0, {{FullKey(component, "x"), 2.0}})},
-      {1, LinearExpression(3.0, {{FullKey(component, "y"), 4.0}})}};
+    LinearExpressionMap exp = {{0, LinearExpression(5.0, {{FullKey(component, "x"), 2.0}})},
+                               {1, LinearExpression(3.0, {{FullKey(component, "y"), 4.0}})}};
 
     TimeDependentLinearExpression expr(exp);
     auto expressions = expr.GetLinearExpressions();
@@ -343,13 +335,113 @@ BOOST_AUTO_TEST_CASE(GetSizeMethod)
 {
     auto component = "compo";
 
-    std::unordered_map<unsigned, LinearExpression> exp = {
-      {0, LinearExpression(1.0, {{FullKey(component, "x"), 1.0}})},
-      {1, LinearExpression(2.0, {{FullKey(component, "y"), 2.0}})},
-      {2, LinearExpression(3.0, {{FullKey(component, "z"), 3.0}})}};
+    LinearExpressionMap exp = {{0, LinearExpression(1.0, {{FullKey(component, "x"), 1.0}})},
+                               {1, LinearExpression(2.0, {{FullKey(component, "y"), 2.0}})},
+                               {2, LinearExpression(3.0, {{FullKey(component, "z"), 3.0}})}};
 
     TimeDependentLinearExpression expr(exp);
     BOOST_TEST(expr.getSize() == 3);
 }
 
+// Test shiftLinearExpressions with positive shift
+BOOST_AUTO_TEST_CASE(ShiftLinearExpressionsPositive)
+{
+    auto component = "compo";
+
+    LinearExpressionMap exp = {{0, LinearExpression(1.0, {{FullKey(component, "a"), 1.0}})},
+                               {1, LinearExpression(2.0, {{FullKey(component, "b"), 2.0}})},
+                               {2, LinearExpression(3.0, {{FullKey(component, "c"), 3.0}})}};
+
+    Antares::Optimization::TimeDependentLinearExpression expr(exp);
+    Antares::Optimization::TimeDependentLinearExpression result = expr.shiftLinearExpressions(1);
+
+    BOOST_TEST(result.getSize() == 3);
+    BOOST_TEST(result.GetLinearExpressions().at(0).offset() == 2.0);
+    BOOST_TEST(result.GetLinearExpressions().at(1).offset() == 3.0);
+    BOOST_TEST(result.GetLinearExpressions().at(2).offset() == 1.0);
+}
+
+// Test shiftLinearExpressions with negative shift
+BOOST_AUTO_TEST_CASE(ShiftLinearExpressionsNegative)
+{
+    auto component = "compo";
+
+    LinearExpressionMap exp = {{0, LinearExpression(1.0, {{FullKey(component, "a"), 1.0}})},
+                               {1, LinearExpression(2.0, {{FullKey(component, "b"), 2.0}})},
+                               {2, LinearExpression(3.0, {{FullKey(component, "c"), 3.0}})}};
+
+    Antares::Optimization::TimeDependentLinearExpression expr(exp);
+    Antares::Optimization::TimeDependentLinearExpression result = expr.shiftLinearExpressions(-1);
+
+    BOOST_TEST(result.getSize() == 3);
+    BOOST_TEST(result.GetLinearExpressions().at(0).offset() == 3.0);
+    BOOST_TEST(result.GetLinearExpressions().at(1).offset() == 1.0);
+    BOOST_TEST(result.GetLinearExpressions().at(2).offset() == 2.0);
+}
+
+// Test shiftLinearExpressions with zero shift
+BOOST_AUTO_TEST_CASE(ShiftLinearExpressionsZero)
+{
+    auto component = "compo";
+
+    LinearExpressionMap exp = {{0, LinearExpression(1.0, {{FullKey(component, "a"), 1.0}})},
+                               {1, LinearExpression(2.0, {{FullKey(component, "b"), 2.0}})},
+                               {2, LinearExpression(3.0, {{FullKey(component, "c"), 3.0}})}};
+
+    Antares::Optimization::TimeDependentLinearExpression expr(exp);
+    Antares::Optimization::TimeDependentLinearExpression result = expr.shiftLinearExpressions(0);
+
+    BOOST_TEST(result.getSize() == 3);
+    BOOST_TEST(result.GetLinearExpressions().at(0).offset() == 1.0);
+    BOOST_TEST(result.GetLinearExpressions().at(1).offset() == 2.0);
+    BOOST_TEST(result.GetLinearExpressions().at(2).offset() == 3.0);
+}
+
+// Test shiftLinearExpressions with shift greater than size
+BOOST_AUTO_TEST_CASE(ShiftLinearExpressionsGreaterThanSize)
+{
+    auto component = "compo";
+
+    LinearExpressionMap exp = {{0, LinearExpression(1.0, {{FullKey(component, "a"), 1.0}})},
+                               {1, LinearExpression(2.0, {{FullKey(component, "b"), 2.0}})},
+                               {2, LinearExpression(3.0, {{FullKey(component, "c"), 3.0}})}};
+
+    Antares::Optimization::TimeDependentLinearExpression expr(exp);
+    Antares::Optimization::TimeDependentLinearExpression result = expr.shiftLinearExpressions(4);
+
+    BOOST_TEST(result.getSize() == 3);
+    BOOST_TEST(result.GetLinearExpressions().at(0).offset() == 2.0);
+    BOOST_TEST(result.GetLinearExpressions().at(1).offset() == 3.0);
+    BOOST_TEST(result.GetLinearExpressions().at(2).offset() == 1.0);
+}
+
+// Test operator[] with valid index
+BOOST_AUTO_TEST_CASE(OperatorIndexValid)
+{
+    auto component = "compo";
+
+    LinearExpressionMap exp = {{0, LinearExpression(1.0, {{FullKey(component, "a"), 1.0}})},
+                               {1, LinearExpression(2.0, {{FullKey(component, "b"), 2.0}})},
+                               {2, LinearExpression(3.0, {{FullKey(component, "c"), 3.0}})}};
+
+    Antares::Optimization::TimeDependentLinearExpression expr(exp);
+    Antares::Optimization::TimeDependentLinearExpression indexed = expr[1];
+
+    const auto result = indexed.GetLinearExpressions().cbegin()->second;
+    BOOST_TEST(result.offset() == 2.0);
+    BOOST_TEST(result.coefPerVar().at(FullKey(component, "b")) == 2.0);
+}
+
+// Test operator[] with invalid index
+BOOST_AUTO_TEST_CASE(OperatorIndexInvalid)
+{
+    auto component = "compo";
+
+    LinearExpressionMap exp = {{0, LinearExpression(1.0, {{FullKey(component, "a"), 1.0}})},
+                               {1, LinearExpression(2.0, {{FullKey(component, "b"), 2.0}})},
+                               {2, LinearExpression(3.0, {{FullKey(component, "c"), 3.0}})}};
+
+    Antares::Optimization::TimeDependentLinearExpression expr(exp);
+    BOOST_CHECK_THROW(expr[3], std::out_of_range);
+}
 BOOST_AUTO_TEST_SUITE_END()

@@ -23,6 +23,7 @@
 #include <algorithm>
 
 #include "antares/expressions/nodes/ExpressionsNodes.h"
+#include "antares/expressions/visitors/EvalVisitor.h"
 
 namespace Antares::Expressions::Visitors
 {
@@ -38,6 +39,8 @@ static constexpr BoxStyle ParameterStyle{"wheat", "box", "filled, solid"};
 static constexpr BoxStyle ComponentParameterStyle{"springgreen", "octagon", "filled, solid"};
 static constexpr BoxStyle ComponentVariableStyle{"goldenrod", "octagon", "filled, solid"};
 static constexpr BoxStyle PortFieldStyle{"olive", "component", "filled, solid"};
+static constexpr BoxStyle TimeIndexStyle{"gold", "diamond", "filled"};
+static constexpr BoxStyle TimeShiftStyle{"aqua", "hexagon", "filled, solid"};
 } // namespace NodeStyle
 
 void makeLegendTitle(std::ostream& os)
@@ -139,11 +142,7 @@ void AstDOTStyleVisitor::visit(const Nodes::LiteralNode* node, std::ostream& os)
 
 void AstDOTStyleVisitor::visit(const Nodes::NegationNode* node, std::ostream& os)
 {
-    auto id = getNodeID(node);
-    emitNode(id, "-", NodeStyle::NegationStyle, os);
-    auto childId = getNodeID(node->child());
-    os << "  " << id << " -> " << childId << ";\n";
-    dispatch(node->child(), os);
+    processUnaryOperation(node, "-", NodeStyle::NegationStyle, os);
 }
 
 void AstDOTStyleVisitor::visit(const Nodes::PortFieldNode* node, std::ostream& os)
@@ -180,6 +179,16 @@ void AstDOTStyleVisitor::visit(const Nodes::ComponentParameterNode* node, std::o
              "CP(" + node->getComponentId() + "," + node->getComponentName() + ")",
              NodeStyle::ComponentParameterStyle,
              os);
+}
+
+void AstDOTStyleVisitor::visit(const Nodes::TimeShiftNode* node, std::ostream& os)
+{
+    processBinaryOperation(node, "[t]", NodeStyle::TimeShiftStyle, os);
+}
+
+void AstDOTStyleVisitor::visit(const Nodes::TimeIndexNode* node, std::ostream& os)
+{
+    processBinaryOperation(node, "[]", NodeStyle::TimeIndexStyle, os);
 }
 
 std::string AstDOTStyleVisitor::name() const
@@ -233,6 +242,18 @@ void AstDOTStyleVisitor::processBinaryOperation(const Nodes::BinaryNode* node,
 
     dispatch(left, os);
     dispatch(right, os);
+}
+
+void AstDOTStyleVisitor::processUnaryOperation(const Nodes::UnaryNode* node,
+                                               const std::string& label,
+                                               const BoxStyle& box_style,
+                                               std::ostream& os)
+{
+    auto id = getNodeID(node);
+    emitNode(id, label, box_style, os);
+    auto childId = getNodeID(node->child());
+    os << "  " << id << " -> " << childId << ";\n";
+    dispatch(node->child(), os);
 }
 
 void AstDOTStyleVisitor::NewTreeGraph(std::ostream& os, const std::string& tree_name)

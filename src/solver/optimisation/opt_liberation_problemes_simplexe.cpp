@@ -50,7 +50,7 @@ void OPT_LiberationProblemesSimplexe(const PROBLEME_HEBDO* problemeHebdo)
     {
         for (int numIntervalle = 0; numIntervalle < nbIntervalles; numIntervalle++)
         {
-            auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx[numIntervalle]);
+            auto* solver = ProblemeAResoudre->ProblemesSpx[numIntervalle];
 
             if (solver)
             {
