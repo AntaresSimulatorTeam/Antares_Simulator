@@ -18,7 +18,13 @@ hide:
 | --parallel               | Enable [parallel](optional-features/multi-threading.md) computation of MC years                                                                                       |
 | --force-parallel=VALUE   | Override the max number of years computed [simultaneously](optional-features/multi-threading.md)                                                                      |
 | --linear-solver=VALUE    | The optimization solver to use for linear problems. Possible values are: `sirius` (default, LP only), `coin`, `xpress`, `scip` (MIP only), `glpk` (Linux only), `highs`, `pdlp` (LP only) |
+| --linear-solver-parameters=VALUE | Linear solver-specific parameters. Syntax is solver-dependent, and only supported for `sirius` and `xpress` |
+| --lp-solver-param-optim-1=VALUE | Linear solver-specific parameters for first optimization. Only supported for `scip` and `xpress`. |
+| --lp-solver-param-optim-2=VALUE |  Linear solver-specific parameters for second optimization. Only supported for `scip` and `xpress`. |
+| --use-optim-1-basis-next-week |  Use basis of first optimization in next week's first optimization |
+| --use-optim-1-basis-optim-2 | Use basis of first optimization in second optimization |
 | --quadratic-solver=VALUE | The optimization solver to use for quadratic problems. Possible values are: `sirius` (default), `pdlp` |
+| --quadratic-solver-parameters=VALUE | Quadratic solver-specific parameters. Syntax is solver-dependent. |
 
 ## Parameters
 
