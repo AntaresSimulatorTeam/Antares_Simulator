@@ -100,6 +100,30 @@ BOOST_FIXTURE_TEST_CASE(clone_TimeIndexNode, Registry<Node>)
     BOOST_CHECK(rightChild->value() == "yolo");
 }
 
+BOOST_FIXTURE_TEST_CASE(clone_TimeSumNode, Registry<Node>)
+{
+    LiteralNode from(35.);
+    ParameterNode to("yolo");
+    ParameterNode expr("da");
+    const TimeSumNode node(&from, &to, &expr);
+
+    CloneVisitor clone_visitor(*this);
+    const auto clone = clone_visitor.dispatch(&node);
+    const auto cloneTimeSum = dynamic_cast<TimeSumNode*>(clone);
+
+    BOOST_REQUIRE(cloneTimeSum);
+    const auto fromChild = dynamic_cast<LiteralNode*>(cloneTimeSum->from());
+    BOOST_REQUIRE(fromChild);
+    BOOST_CHECK(fromChild->value() == 35);
+
+    const auto toChild = dynamic_cast<ParameterNode*>(cloneTimeSum->to());
+    BOOST_REQUIRE(toChild);
+    BOOST_CHECK(toChild->value() == "yolo");
+    const auto expression = dynamic_cast<ParameterNode*>(cloneTimeSum->expression());
+    BOOST_REQUIRE(expression);
+    BOOST_CHECK(expression->value() == "da");
+}
+
 BOOST_FIXTURE_TEST_CASE(CloneVisitor_name, Registry<Node>)
 {
     CloneVisitor cloneVisitor(*this);
