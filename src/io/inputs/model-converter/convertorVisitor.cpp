@@ -300,14 +300,13 @@ Node* ConvertorVisitor::NodeFromShiftContext(ExprParser::Shift_exprContext* shif
     }
 }
 
-// TODO implement this
 std::any ConvertorVisitor::visitTimeSum([[maybe_unused]] ExprParser::TimeSumContext* context)
 {
-    auto from = NodeFromShiftContext(context->from->shift_expr());
+    auto* from = NodeFromShiftContext(context->from->shift_expr());
 
-    auto to = NodeFromShiftContext(context->to->shift_expr());
+    auto* to = NodeFromShiftContext(context->to->shift_expr());
 
-    auto expr = std::any_cast<Node*>(context->expr()->accept(this));
+    auto* expr = std::any_cast<Node*>(context->expr()->accept(this));
 
     return static_cast<Node*>(registry_.create<TimeSumNode>(from, to, expr));
 }
@@ -377,7 +376,12 @@ std::any ConvertorVisitor::visitRightMuldiv(
 std::any ConvertorVisitor::visitSignedExpression(
   [[maybe_unused]] ExprParser::SignedExpressionContext* context)
 {
-    throw NotImplemented("Node signed expression not implemented yet");
+    auto a = context->expr()->accept(this);
+    if (context->op->getText() == "-")
+    {
+        return static_cast<Node*>(registry_.create<NegationNode>(std::any_cast<Node*>(a)));
+    }
+    return a;
 }
 
 std::any ConvertorVisitor::visitRightExpression(ExprParser::RightExpressionContext* context)

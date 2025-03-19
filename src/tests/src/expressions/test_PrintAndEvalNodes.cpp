@@ -578,7 +578,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_shifted_literal, MyDummyFixture)
 }
 
 template<typename left, typename right>
-EvaluationResult CreateAndEvalutateTimeNode(const right& p)
+EvaluationResult CreateAndEvaluateTimeNode(const right& p)
 {
     ParameterNode param("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
     left root(&param, p);
@@ -598,7 +598,7 @@ EvaluationResult CreateAndEvalutateTimeNode(const right& p)
 BOOST_FIXTURE_TEST_CASE(evaluate_shifted_param, MyDummyFixture)
 {
     LiteralNode literal_node(-1.0);
-    const auto eval = CreateAndEvalutateTimeNode<TimeShiftNode, Node*>(&literal_node)
+    const auto eval = CreateAndEvaluateTimeNode<TimeShiftNode, Node*>(&literal_node)
                         .valuesAsVector();
     // from MockLinearProblemData  param TSdata is {0, 1, 2}
     // here we applied TimeShift t-1 {2, 0, 1}
@@ -610,11 +610,40 @@ BOOST_FIXTURE_TEST_CASE(evaluate_shifted_param, MyDummyFixture)
 BOOST_FIXTURE_TEST_CASE(evaluate_timeIndex_param, MyDummyFixture)
 {
     LiteralNode literal_node(1.0);
-    const auto eval = CreateAndEvalutateTimeNode<TimeIndexNode, Node*>(&literal_node)
+    const auto eval = CreateAndEvaluateTimeNode<TimeIndexNode, Node*>(&literal_node)
                         .valueAsDouble();
     // from MockLinearProblemData  param TSdata is {0, 1, 2}
     // here we applied TimeIndex[1]
     BOOST_CHECK_EQUAL(eval, 1); //
+}
+
+EvaluationResult CreateAndEvaluateTimeSumNode(Node* from, Node* to)
+{
+    ParameterNode param("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
+    TimeSumNode root(from, to, &param);
+    const std::string value = "dummy";
+    MockLinearProblemData dummy_data;
+    EvaluationContext context(
+      {build_context_parameter_with("my-param", value, ParameterType::TIMESERIE)},
+      {},
+      dummy_data);
+
+    unsigned first = 0;
+    unsigned last = 2;
+    EvalVisitor evalVisitor(context, {first, last /*three hours*/});
+    return evalVisitor.dispatch(&root);
+}
+
+BOOST_FIXTURE_TEST_CASE(evaluate_timeSum_param, MyDummyFixture)
+{
+    LiteralNode from(0.0);
+    LiteralNode to(1.0);
+    const auto eval = CreateAndEvaluateTimeSumNode(&from, &to).valuesAsVector();
+    // from MockLinearProblemData  param TSdata is {0, 1, 2}
+    // here we applied TimeSum from t+0 and to t+1
+    BOOST_CHECK_EQUAL(eval.at(0), 0 + 1); // add param.at(0)+param.at(1)
+    BOOST_CHECK_EQUAL(eval.at(1), 1 + 2); // add param.at(1)+param.at(2)
+    BOOST_CHECK_EQUAL(eval.at(2), 2 + 0); // add param.at(2)+param.at(0)
 }
 
 BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_multiplication, MyDummyFixture)
