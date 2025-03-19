@@ -38,7 +38,7 @@ using namespace Antares::Optimisation::LinearProblemApi;
 class SystemLinearProblemBuilder
 {
 public:
-    explicit SystemLinearProblemBuilder(const Study::SystemModel::System& system):
+    explicit SystemLinearProblemBuilder(const Study::SystemModel::System* system):
         system_(system)
     {
     }
@@ -47,11 +47,11 @@ public:
 
     void Provide(ILinearProblem& pb,
                  const ModelerParameters& parameters,
-                 ILinearProblemData& dataSeries)
+                 ILinearProblemData* dataSeries)
     {
         std::vector<std::unique_ptr<Optimization::ComponentFiller>> fillers;
         std::vector<LinearProblemFiller*> fillers_ptr;
-        for (const auto& [_, component]: system_.Components())
+        for (const auto& [_, component]: system_->Components())
         {
             auto cf = std::make_unique<Optimization::ComponentFiller>(component);
             fillers.push_back(std::move(cf));
@@ -63,11 +63,11 @@ public:
 
         LinearProblemBuilder linear_problem_builder(fillers_ptr);
         FillContext dummy_time_scenario_ctx = {parameters.firstTimeStep, parameters.lastTimeStep};
-        linear_problem_builder.build(pb, dataSeries, dummy_time_scenario_ctx);
+        linear_problem_builder.build(pb, *dataSeries, dummy_time_scenario_ctx);
     }
 
 private:
-    const Study::SystemModel::System& system_;
+    const Study::SystemModel::System* system_;
 };
 
 static void usage()
@@ -100,9 +100,9 @@ int main(int argc, const char** argv)
         const auto parameters = LoadFiles::loadParameters(studyPath);
         logs.info() << "Parameters loaded";
 
-        Modeler::Data data = loadAll(studyPath);
+        Modeler::Data data = LoadFiles::loadAll(studyPath);
 
-        SystemLinearProblemBuilder system_linear_problem(data.system_);
+        SystemLinearProblemBuilder system_linear_problem(data.system_.get());
 
         auto outputPath = studyPath / "output";
         if (!parameters.noOutput)
@@ -119,7 +119,7 @@ int main(int argc, const char** argv)
         logs.info() << "linear problem of System loaded";
         // Problem is MIP if any variable of any component is not continuous
         bool isMip = std::ranges::any_of(
-          data.system_.Components() | std::views::values,
+          data.system_->Components() | std::views::values,
           [](const auto& component)
           {
               return std::ranges::any_of(component.getModel()->Variables() | std::views::values,
@@ -130,7 +130,7 @@ int main(int argc, const char** argv)
           });
         OrtoolsLinearProblem ortools_linear_problem(isMip, parameters.solver);
 
-        system_linear_problem.Provide(ortools_linear_problem, parameters, *dataSeries);
+        system_linear_problem.Provide(ortools_linear_problem, parameters, data.dataSeries_.get());
 
         logs.info() << "Linear problem provided";
 
