@@ -21,6 +21,8 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <fstream>
+
 #include <boost/test/unit_test.hpp>
 
 #include <antares/expressions/Registry.hxx>
@@ -67,6 +69,21 @@ public:
           lessThanOrEqualNode);
 
         return greaterThanOrEqualNode;
+    }
+
+    Node* makeBiggerExpression()
+    {
+        auto gt = makeExpression();
+        Node* literalNode2 = registry_.create<LiteralNode>(-34);
+        Node* parameterNode = registry_.create<ParameterNode>("Planck's constant");
+        Node* timeShiftNode = registry_.create<TimeShiftNode>(parameterNode, literalNode2);
+        Node* literalNode = registry_.create<LiteralNode>(6.62607015);
+        Node* parm2 = registry_.create<ParameterNode>("par");
+        Node* timeIndexNode = registry_.create<TimeIndexNode>(
+          literalNode,
+          registry_.create<SumNode>(parm2, literalNode2));
+
+        return registry_.create<SumNode>(gt, timeIndexNode, timeShiftNode);
     }
 
     static std::string expectedDotContent()
@@ -149,6 +166,108 @@ legend_VariableNode [ label =" VariableNode: 1"]
 )raw";
     }
 
+    static std::string expectedForBiggerDotContent()
+    {
+        return R"raw(digraph ExpressionTree {
+node[style = filled]
+  1 [label="+", shape="hexagon", style="filled, solid", color="aqua"];
+  1 -> 2;
+  2 [label=">=", shape="diamond", style="filled", color="yellow"];
+  2 -> 3;
+  2 -> 4;
+  3 [label="54.000000", shape="box", style="filled, solid", color="lightgray"];
+  4 [label="<=", shape="diamond", style="filled", color="yellow"];
+  4 -> 5;
+  4 -> 6;
+  5 [label="53.000000", shape="box", style="filled, solid", color="lightgray"];
+  6 [label="==", shape="diamond", style="filled", color="yellow"];
+  6 -> 7;
+  6 -> 8;
+  7 [label="-", shape="oval", style="filled, rounded", color="aqua"];
+  7 -> 9;
+  7 -> 10;
+  9 [label="CV(1150,otherStation)", shape="octagon", style="filled, solid", color="goldenrod"];
+  10 [label="CP(1151,otherConstant)", shape="octagon", style="filled, solid", color="springgreen"];
+  8 [label="+", shape="hexagon", style="filled, solid", color="aqua"];
+  8 -> 11;
+  11 [label="/", shape="oval", style="filled, rounded", color="aqua"];
+  11 -> 12;
+  11 -> 13;
+  12 [label="Var(atoms_count)", shape="box", style="filled, solid", color="gold"];
+  13 [label="*", shape="oval", style="filled, rounded", color="aqua"];
+  13 -> 14;
+  13 -> 15;
+  14 [label="-", shape="invtriangle", style="filled, solid", color="tomato"];
+  14 -> 16;
+  16 [label="-40.000000", shape="box", style="filled, solid", color="lightgray"];
+  15 [label="Param(avogadro_constant)", shape="box", style="filled, solid", color="wheat"];
+  8 -> 17;
+  17 [label="PF(gasStation,1149)", shape="component", style="filled, solid", color="olive"];
+  8 -> 18;
+  18 [label="PFSUM(portfield,sum)", shape="component", style="filled, solid", color="olive"];
+  1 -> 19;
+  19 [label="[]", shape="diamond", style="filled", color="gold"];
+  19 -> 20;
+  19 -> 21;
+  20 [label="6.626070", shape="box", style="filled, solid", color="lightgray"];
+  21 [label="+", shape="hexagon", style="filled, solid", color="aqua"];
+  21 -> 22;
+  22 [label="Param(par)", shape="box", style="filled, solid", color="wheat"];
+  21 -> 23;
+  23 [label="-34.000000", shape="box", style="filled, solid", color="lightgray"];
+  1 -> 24;
+  24 [label="[t]", shape="hexagon", style="filled, solid", color="aqua"];
+  24 -> 25;
+  24 -> 23;
+  25 [label="Param(Planck's constant)", shape="box", style="filled, solid", color="wheat"];
+  23 [label="-34.000000", shape="box", style="filled, solid", color="lightgray"];
+label="AST Diagram(Total nodes : 25)"
+labelloc = "t"
+subgraph cluster_legend {
+label = "Legend";
+style = dashed;
+fontsize = 16;
+color = lightgrey;
+node [shape=plaintext];
+
+legend_ComponentParameterNode [ label =" ComponentParameterNode: 1"]
+legend_ComponentParameterNode -> legend_ComponentVariableNode [style=invis];
+legend_ComponentVariableNode [ label =" ComponentVariableNode: 1"]
+legend_ComponentVariableNode -> legend_DivisionNode [style=invis];
+legend_DivisionNode [ label =" DivisionNode: 1"]
+legend_DivisionNode -> legend_EqualNode [style=invis];
+legend_EqualNode [ label =" EqualNode: 1"]
+legend_EqualNode -> legend_GreaterThanOrEqualNode [style=invis];
+legend_GreaterThanOrEqualNode [ label =" GreaterThanOrEqualNode: 1"]
+legend_GreaterThanOrEqualNode -> legend_LessThanOrEqualNode [style=invis];
+legend_LessThanOrEqualNode [ label =" LessThanOrEqualNode: 1"]
+legend_LessThanOrEqualNode -> legend_LiteralNode [style=invis];
+legend_LiteralNode [ label =" LiteralNode: 5"]
+legend_LiteralNode -> legend_MultiplicationNode [style=invis];
+legend_MultiplicationNode [ label =" MultiplicationNode: 1"]
+legend_MultiplicationNode -> legend_NegationNode [style=invis];
+legend_NegationNode [ label =" NegationNode: 1"]
+legend_NegationNode -> legend_ParameterNode [style=invis];
+legend_ParameterNode [ label =" ParameterNode: 3"]
+legend_ParameterNode -> legend_PortFieldNode [style=invis];
+legend_PortFieldNode [ label =" PortFieldNode: 1"]
+legend_PortFieldNode -> legend_PortFieldSumNode [style=invis];
+legend_PortFieldSumNode [ label =" PortFieldSumNode: 1"]
+legend_PortFieldSumNode -> legend_SubtractionNode [style=invis];
+legend_SubtractionNode [ label =" SubtractionNode: 1"]
+legend_SubtractionNode -> legend_SumNode [style=invis];
+legend_SumNode [ label =" SumNode: 3"]
+legend_SumNode -> legend_TimeIndexNode [style=invis];
+legend_TimeIndexNode [ label =" TimeIndexNode: 1"]
+legend_TimeIndexNode -> legend_TimeShiftNode [style=invis];
+legend_TimeShiftNode [ label =" TimeShiftNode: 1"]
+legend_TimeShiftNode -> legend_VariableNode [style=invis];
+legend_VariableNode [ label =" VariableNode: 1"]
+}
+}
+)raw";
+    }
+
     Registry<Node> registry_;
 };
 
@@ -162,6 +281,18 @@ BOOST_FIXTURE_TEST_CASE(
     astGraphVisitor(dotContentStream, makeExpression());
 
     BOOST_CHECK_EQUAL(dotContentStream.str(), expectedDotContent());
+}
+
+BOOST_FIXTURE_TEST_CASE(
+  dot_visitor_is_run_on_other_complex_expression___resulting_dot_content_as_expected,
+  Fixture)
+{
+    std::ostringstream dotContentStream;
+
+    AstDOTStyleVisitor astGraphVisitor;
+    astGraphVisitor(dotContentStream, makeBiggerExpression());
+
+    BOOST_CHECK_EQUAL(dotContentStream.str(), expectedForBiggerDotContent());
 }
 
 BOOST_FIXTURE_TEST_CASE(AstDOTStyleVisitor_name, Registry<Node>)

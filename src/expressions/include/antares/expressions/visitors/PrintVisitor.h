@@ -31,6 +31,7 @@ class PrintVisitor: public NodeVisitor<std::string>
 {
 public:
     std::string name() const override;
+    static std::string trimAndFormat(const std::string& in);
 
 private:
     std::string visit(const Nodes::SumNode* node) override;
@@ -48,5 +49,7 @@ private:
     std::string visit(const Nodes::PortFieldSumNode* node) override;
     std::string visit(const Nodes::ComponentVariableNode* node) override;
     std::string visit(const Nodes::ComponentParameterNode* node) override;
+    std::string visit(const Nodes::TimeShiftNode* node) override;
+    std::string visit(const Nodes::TimeIndexNode* node) override;
 };
 } // namespace Antares::Expressions::Visitors

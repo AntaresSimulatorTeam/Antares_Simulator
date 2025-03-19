@@ -118,5 +118,6 @@ BOOST_AUTO_TEST_CASE(invalid_ortools_solver)
     auto shouldThrow = [&api, &study_loader, &opt] { return api.run(*study_loader, {}, opt); };
     BOOST_CHECK_EXCEPTION(shouldThrow(),
                           std::invalid_argument,
-                          checkMessage("Solver this-solver-does-not-exist not found"));
+                          checkMessage("Solver this-solver-does-not-exist is not supported by "
+                                       "Antares or does not support LP problems."));
 }
