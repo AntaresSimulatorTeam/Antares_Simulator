@@ -20,6 +20,7 @@
  */
 
 #include <chrono>
+#include <span>
 #include <spx_definition_arguments.h>
 #include <spx_fonctions.h>
 
@@ -112,12 +113,15 @@ static void writeModelerSolutions(const operations_research::MPSolver* solver,
                                   IResultWriter& writer)
 {
     std::stringstream contentStream;
+    std::vector<MPVariable*> variables = solver->variables();
 
     // we want to only get modeler variables, they're added after legacy vars
-    auto start = solver->variables().begin() + Probleme.NombreDeVariables;
-    for (auto v = start; v < solver->variables().end(); v++)
+    std::span<MPVariable*> modelerVariables(variables.begin() + Probleme.NombreDeVariables,
+                                            variables.end());
+
+    for (auto v: modelerVariables)
     {
-        contentStream << (*v)->name() << "\t" << (*v)->solution_value() << std::endl;
+        contentStream << v->name() << "\t" << v->solution_value() << std::endl;
     }
 
     auto modelerSolutionFilename = createModelerSolutionsFilename(optPeriodStringGenerator,
