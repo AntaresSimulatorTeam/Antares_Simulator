@@ -35,10 +35,10 @@ void OptimizationOptions::initializeWith(const CmdLineOptimOptions& cmdLineOptim
     secondOptimOptions.solverName = cmdLineOptimOptions.linearSolver;
     quadraticOptimOptions.solverName = cmdLineOptimOptions.quadraticSolver;
 
+    // Storing basis or giving solver a basis, depending on optimization (first or second)
     firstOptimOptions.solverAcquiresBasis = cmdLineOptimOptions.useOptim1BasisInNextWeek;
-    firstOptimOptions.solverExportBasis = cmdLineOptimOptions.useOptim1BasisInNextWeek
-                                          || cmdLineOptimOptions.useOptim1BasisInOptim2;
-
+    firstOptimOptions.solverExportsBasis = cmdLineOptimOptions.useOptim1BasisInNextWeek
+                                           || cmdLineOptimOptions.useOptim1BasisInOptim2;
     secondOptimOptions.solverAcquiresBasis = cmdLineOptimOptions.useOptim1BasisInOptim2;
 
     // Linear solver parameters

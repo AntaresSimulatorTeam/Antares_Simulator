@@ -216,8 +216,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     mps_writer->runIfNeeded(writer, filename);
 
     TimeMeasurement measure;
-    const bool keepBasis = (optimizationNumber == PREMIERE_OPTIMISATION);
-    solver = ORTOOLS_Simplexe(&Probleme, solver, keepBasis, options);
+    solver = ORTOOLS_Simplexe(&Probleme, solver, options);
     if (solver != nullptr)
     {
         ProblemeAResoudre->ProblemesSpx[NumIntervalle] = (void*)solver;

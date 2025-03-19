@@ -31,7 +31,6 @@ using namespace operations_research;
 
 MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
                            MPSolver* ProbSpx,
-                           bool keepBasis,
                            const Antares::Solver::Optimization::SingleOptimOptions& options);
 
 void ORTOOLS_ModifierLeVecteurCouts(MPSolver* ProbSpx, const double* costs, int nbVar);

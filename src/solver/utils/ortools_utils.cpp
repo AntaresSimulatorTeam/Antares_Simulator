@@ -227,9 +227,29 @@ bool solveAndManageStatus(MPSolver* solver, int& resultStatus, const MPSolverPar
     return resultStatus == OUI_SPX;
 }
 
+static bool doWeGiveBasisToSolver(const SingleOptimOptions& options,
+                                  const MPSolver* solver,
+                                  const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme)
+{
+    if (solverSupportsWarmStart(solver->ProblemType()) && Probleme->basisExists()
+        && options.solverAcquiresBasis)
+    {
+        return true;
+    }
+    return false;
+}
+
+static bool doWeStoreSolverBasis(const SingleOptimOptions& options, const MPSolver* solver)
+{
+    if (solverSupportsWarmStart(solver->ProblemType()) && options.solverExportsBasis)
+    {
+        return true;
+    }
+    return false;
+}
+
 MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
                            MPSolver* solver,
-                           bool keepBasis,
                            const SingleOptimOptions& options)
 {
     MPSolverParameters params;
@@ -240,9 +260,8 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
         solver->EnableOutput();
     }
     TuneSolverSpecificOptions(solver, options.solverName, options.solverParameters);
-    const bool warmStart = solverSupportsWarmStart(solver->ProblemType());
-    // Provide an initial simplex basis, if any
-    if (warmStart && Probleme->basisExists())
+
+    if (doWeGiveBasisToSolver(options, solver, Probleme))
     {
         Probleme->basisStatus.setStartingBasis(solver);
     }
@@ -250,8 +269,7 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
     if (solveAndManageStatus(solver, Probleme->ExistenceDUneSolution, params))
     {
         extract_from_MPSolver(solver, Probleme);
-        // Save the final simplex basis for next resolutions
-        if (warmStart && keepBasis)
+        if (doWeStoreSolverBasis(options, solver))
         {
             Probleme->basisStatus.extractBasis(solver);
         }
@@ -331,8 +349,8 @@ const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::mpSo
 
 const std::map<std::string, math_opt::SolverType> OrtoolsUtils::mathoptSolverMap = {
   {"pdlp", math_opt::SolverType::kPdlp},
-  {"scip", math_opt::SolverType::kGscip},
-  {"xpress", math_opt::SolverType::kXpress}};
+  {"scip", math_opt::SolverType::kGscip}/*,
+  {"xpress", math_opt::SolverType::kXpress}*/};
 
 std::list<std::string> availableLinearSolversList()
 {
