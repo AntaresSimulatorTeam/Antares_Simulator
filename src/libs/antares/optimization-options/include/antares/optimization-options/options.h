@@ -37,8 +37,8 @@ struct CmdLineOptimOptions
     std::string linearSolverParameters;
     std::string lpSolverParamOptim1;
     std::string lpSolverParamOptim2;
-    bool useOptim1BasisInNextWeek = false;
-    bool useOptim1BasisInOptim2 = false;
+    bool useOptim1BasisInNextWeek = true;
+    bool useOptim1BasisInOptim2 = true;
     std::string quadraticSolver = "sirius";
     std::string quadraticSolverParameters;
     bool solverLogs = false;
@@ -53,5 +53,10 @@ public:
     SingleOptimOptions secondOptimOptions;
     SingleOptimOptions quadraticOptimOptions;
     bool solverLogs = false;
+
+    // Reusing basis of first optimization (in case we have 2 weekly
+    // linear optimizations [not MILP])
+    bool useOptim1BasisInNextWeek = true;
+    bool useOptim1BasisInOptim2 = true;
 };
 } // namespace Antares::Solver::Optimization

@@ -35,6 +35,9 @@ void OptimizationOptions::initializeWith(const CmdLineOptimOptions& cmdLineOptim
     secondOptimOptions.solverName = cmdLineOptimOptions.linearSolver;
     quadraticOptimOptions.solverName = cmdLineOptimOptions.quadraticSolver;
 
+    useOptim1BasisInNextWeek = cmdLineOptimOptions.useOptim1BasisInNextWeek;
+    useOptim1BasisInOptim2 = cmdLineOptimOptions.useOptim1BasisInOptim2;
+
     // Linear solver parameters
     if (cmdLineOptimOptions.linearSolverParameters.empty())
     {
