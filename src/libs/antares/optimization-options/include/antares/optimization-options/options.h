@@ -28,6 +28,12 @@ struct SingleOptimOptions
 {
     std::string solverName = "sirius";
     std::string solverParameters;
+
+    // Reusing basis of first optimization (in case we have 2 weekly
+    // linear optimizations [not MILP])
+    bool solverAcquiresBasis = false;
+    bool solverExportBasis = false;
+
     bool solverLogs = false;
 };
 
@@ -53,10 +59,5 @@ public:
     SingleOptimOptions secondOptimOptions;
     SingleOptimOptions quadraticOptimOptions;
     bool solverLogs = false;
-
-    // Reusing basis of first optimization (in case we have 2 weekly
-    // linear optimizations [not MILP])
-    bool useOptim1BasisInNextWeek = true;
-    bool useOptim1BasisInOptim2 = true;
 };
 } // namespace Antares::Solver::Optimization
