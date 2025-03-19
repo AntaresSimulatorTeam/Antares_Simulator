@@ -28,6 +28,7 @@ namespace Antares::Solver::LoadFiles
 
 Modeler::Data loadAll(const std::filesystem::path& studyPath)
 {
+    logs.info() << "Loading modeler files...";
     Modeler::Data data;
 
     data.libraries_ = LoadFiles::loadLibraries(studyPath);
@@ -38,6 +39,7 @@ Modeler::Data loadAll(const std::filesystem::path& studyPath)
     logs.info() << "System loaded";
 
     data.dataSeries_ = LoadFiles::loadDataSeries(studyPath);
+    logs.info() << "Timeseries loaded";
 
     return data;
 }

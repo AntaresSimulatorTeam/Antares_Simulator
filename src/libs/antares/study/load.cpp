@@ -234,7 +234,7 @@ void Study::internalLoadModelerComponents()
 {
     try
     {
-        modelerDatas_ = Solver::LoadFiles::loadAll(folder);
+        modelerInput_ = Solver::LoadFiles::loadAll(folder);
     }
     catch (const std::exception& e)
     {

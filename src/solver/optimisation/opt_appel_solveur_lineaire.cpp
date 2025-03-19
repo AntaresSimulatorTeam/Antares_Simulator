@@ -86,7 +86,7 @@ struct SimplexResult
 
 static void fillModelerComponents(std::vector<std::unique_ptr<ComponentFiller>>& componentFillers,
                                   std::vector<LinearProblemFiller*>& fillersCollection,
-                                  Antares::Study::SystemModel::System* modelerSystem)
+                                  const Antares::Study::SystemModel::System* modelerSystem)
 {
     if (modelerSystem == nullptr)
     {
@@ -102,6 +102,28 @@ static void fillModelerComponents(std::vector<std::unique_ptr<ComponentFiller>>&
     {
         fillersCollection.push_back(component_filler.get());
     }
+}
+
+static void writeModelerSolutions(const operations_research::MPSolver* solver,
+                                  Optimization::PROBLEME_SIMPLEXE_NOMME& Probleme,
+                                  const int NumIntervalle,
+                                  const int optimizationNumber,
+                                  const OptPeriodStringGenerator& optPeriodStringGenerator,
+                                  IResultWriter& writer)
+{
+    std::stringstream contentStream;
+
+    // we want to only get modeler variables, they're added after legacy vars
+    auto start = solver->variables().begin() + Probleme.NombreDeVariables;
+    for (auto v = start; v < solver->variables().end(); v++)
+    {
+        contentStream << (*v)->name() << "\t" << (*v)->solution_value() << std::endl;
+    }
+
+    auto modelerSolutionFilename = createModelerSolutionsFilename(optPeriodStringGenerator,
+                                                                  optimizationNumber);
+    std::string content = contentStream.str();
+    writer.addEntryFromBuffer(modelerSolutionFilename, content);
 }
 
 static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
@@ -227,6 +249,9 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
 
     if (solver == nullptr)
     {
+        // Note that the modeler is only called for the 1st simulation week,
+        // this limitation must be lifted later,
+        // when appropriate solvers (e.g with warm start) is integrated.
         linearProblemBuilder.build(*ortoolsProblem, *problemeHebdo->linear_problem_data_, fillCtx);
         solver = ortoolsProblem->getMpSolver();
     }
@@ -278,20 +303,12 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
         }
     }
 
-    // WRITE MODELER SOLUTIONS
-    std::stringstream contentStream;
-
-    // we want to only get modeler variables, they're added after legacy vars
-    auto start = solver->variables().begin() + Probleme.NombreDeVariables;
-    for (auto v = start; v < solver->variables().end(); v++)
-    {
-        contentStream << (*v)->name() << "\t" << (*v)->solution_value() << std::endl;
-    }
-
-    auto modelerSolutionFilename = createModelerSolutionsFilename(optPeriodStringGenerator,
-                                                                  optimizationNumber);
-    std::string content = contentStream.str();
-    writer.addEntryFromBuffer(modelerSolutionFilename, content);
+    writeModelerSolutions(solver,
+                          Probleme,
+                          NumIntervalle,
+                          optimizationNumber,
+                          optPeriodStringGenerator,
+                          writer);
 
     return {.success = true, .timeMeasure = timeMeasure, .mps_writer_factory = mps_writer_factory};
 }

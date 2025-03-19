@@ -626,12 +626,12 @@ public:
 
     Antares::Study::SystemModel::System* getModelerSystem() const
     {
-        return modelerDatas_.system_.get();
+        return modelerInput_.system_.get();
     }
 
     Optimisation::LinearProblemApi::ILinearProblemData* getModelerData() const
     {
-        return modelerDatas_.dataSeries_.get();
+        return modelerInput_.dataSeries_.get();
     }
 
 protected:
@@ -663,7 +663,7 @@ protected:
     //@}
 
 private:
-    Antares::Modeler::Data modelerDatas_;
+    Antares::Modeler::Data modelerInput_;
 }; // class Study
 
 /*!
