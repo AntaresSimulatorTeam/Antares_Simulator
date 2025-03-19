@@ -999,6 +999,38 @@ BOOST_FIXTURE_TEST_CASE(PrintTimeShiftNode, MyDummyFixture)
     BOOST_CHECK(printVisitor.dispatch(negative_shift) == "1.000000[ t -31.000000 ]");
 }
 
+BOOST_FIXTURE_TEST_CASE(PrintTimeSumNode, MyDummyFixture)
+{
+    Node* from = create<LiteralNode>(1.);
+    Node* to = create<LiteralNode>(23);
+    Node* expression = create<ParameterNode>("p");
+    PrintVisitor printVisitor;
+    // --
+    Node* positive_shift = create<TimeSumNode>(from, to, expression);
+    auto n = printVisitor.dispatch(positive_shift);
+    BOOST_CHECK(printVisitor.dispatch(positive_shift) == "sum(t+1.000000 .. t+23.000000, p)");
+    // --
+
+    Node* mfrom = create<LiteralNode>(-1.);
+    Node* mto = create<LiteralNode>(-23);
+    Node* negative_shift = create<TimeSumNode>(mfrom, mto, expression);
+    auto m = printVisitor.dispatch(negative_shift);
+
+    BOOST_CHECK(printVisitor.dispatch(negative_shift) == "sum(t-1.000000 .. t-23.000000, p)");
+}
+
+BOOST_FIXTURE_TEST_CASE(PrintAllTimeSumNode, MyDummyFixture)
+{
+    Node* num = create<LiteralNode>(1.);
+    Node* p = create<ParameterNode>("p");
+    Node* expression = create<MultiplicationNode>(p, num);
+    PrintVisitor printVisitor;
+    // --
+    Node* alltimesum = create<AllTimeSumNode>(expression);
+    BOOST_CHECK(printVisitor.dispatch(alltimesum) == "sum((p*1.000000))");
+    // --
+}
+
 BOOST_AUTO_TEST_CASE(testShiftEmptyVector)
 {
     std::vector<int> emptyVector;
