@@ -37,4 +37,4 @@ struct Data
     std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> dataSeries_;
 };
 
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::Modeler
