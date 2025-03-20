@@ -411,9 +411,9 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
                                                                            options.ortoolsSolver);
         auto legacyOrtoolsFiller = std::make_unique<LegacyFiller>(&Probleme);
         std::vector<LinearProblemFiller*> fillersCollection = {legacyOrtoolsFiller.get()};
-        std::vector<std::unique_ptr<ComponentFiller>> componentFillers;
 
-        fillModelerComponents(componentFillers, fillersCollection, problemeHebdo->modelerSystem_);
+        auto componentFillers = buildComponentFillers(problemeHebdo->modelerSystem_);
+        std::ranges::copy(componentFillers, std::back_inserter(fillersCollection));
 
         FillContext fillCtx(problemeHebdo->weekInTheYear * 168 + 0,
                             problemeHebdo->weekInTheYear * 168 + 167);
