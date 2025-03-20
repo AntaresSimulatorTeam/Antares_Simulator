@@ -85,8 +85,7 @@ struct SimplexResult
     mpsWriterFactory mps_writer_factory;
 };
 
-static std::vector<LinearProblemFiller*> buildComponentFillers(
-  const Antares::Study::SystemModel::System* modelerSystem)
+static auto buildComponentFillers(const Antares::Study::SystemModel::System* modelerSystem)
 {
     std::vector<LinearProblemFiller*> componentFillers;
     if (!modelerSystem)
