@@ -89,7 +89,7 @@ static void fillModelerComponents(std::vector<std::unique_ptr<ComponentFiller>>&
                                   std::vector<LinearProblemFiller*>& fillersCollection,
                                   const Antares::Study::SystemModel::System* modelerSystem)
 {
-    if (modelerSystem == nullptr)
+    if (!modelerSystem)
     {
         return;
     }

@@ -31,14 +31,14 @@ Modeler::Data loadAll(const std::filesystem::path& studyPath)
     logs.info() << "Loading modeler files...";
     Modeler::Data data;
 
-    data.libraries_ = LoadFiles::loadLibraries(studyPath);
+    data.libraries_ = loadLibraries(studyPath);
     logs.info() << "Libraries loaded";
 
     data.system_ = std::make_unique<Antares::Study::SystemModel::System>(
-      std::move(Solver::LoadFiles::loadSystem(studyPath, data.libraries_)));
+      loadSystem(studyPath, data.libraries_));
     logs.info() << "System loaded";
 
-    data.dataSeries_ = LoadFiles::loadDataSeries(studyPath);
+    data.dataSeries_ = loadDataSeries(studyPath);
     logs.info() << "Timeseries loaded";
 
     return data;
