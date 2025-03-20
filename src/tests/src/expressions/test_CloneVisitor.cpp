@@ -124,6 +124,22 @@ BOOST_FIXTURE_TEST_CASE(clone_TimeSumNode, Registry<Node>)
     BOOST_CHECK(expression->value() == "da");
 }
 
+BOOST_FIXTURE_TEST_CASE(clone_AllTimeSumNode, Registry<Node>)
+{
+    ParameterNode expr("da");
+    const AllTimeSumNode node(&expr);
+
+    CloneVisitor clone_visitor(*this);
+    const auto clone = clone_visitor.dispatch(&node);
+    const auto cloneAllTimeSum = dynamic_cast<AllTimeSumNode*>(clone);
+
+    BOOST_REQUIRE(cloneAllTimeSum);
+
+    const auto expression = dynamic_cast<ParameterNode*>(cloneAllTimeSum->child());
+    BOOST_REQUIRE(expression);
+    BOOST_CHECK(expression->value() == "da");
+}
+
 BOOST_FIXTURE_TEST_CASE(CloneVisitor_name, Registry<Node>)
 {
     CloneVisitor cloneVisitor(*this);
