@@ -88,7 +88,12 @@ struct SimplexResult
 static std::vector<LinearProblemFiller*> buildComponentFillers(const Antares::Study::SystemModel::System* modelerSystem)
 {
     std::vector<LinearProblemFiller*> componentFillers;
-    for (const auto& component: std::views::values(modelerSystem->Components()))
+    if (!modelerSystem)
+    {
+        return componentFillers;
+    }
+
+    for (const auto& component: modelerSystem->Components() | std::views::values)
     {
         componentFillers.push_back(std::make_unique<ComponentFiller>(component).get());
     }
