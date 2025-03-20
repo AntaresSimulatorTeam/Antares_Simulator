@@ -139,10 +139,8 @@ const char* BindingConstraint::MathOperatorToCString(BindingConstraint::Operator
 
 BindingConstraint::~BindingConstraint()
 {
-#ifndef NDEBUG
     pName = "<INVALID>";
     pID = "<INVALID>";
-#endif
 }
 
 void BindingConstraint::name(const AnyString& newname)

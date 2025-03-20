@@ -203,6 +203,7 @@ double calculateCSRcost(const PROBLEME_POINT_INTERIEUR& Probleme,
     return cost;
 }
 
+#ifndef NDEBUG
 void CSR_DEBUG_HANDLE(const PROBLEME_POINT_INTERIEUR& Probleme)
 {
     logs.info();
@@ -237,6 +238,7 @@ void CSR_DEBUG_HANDLE(const PROBLEME_POINT_INTERIEUR& Probleme)
         }
     }
 }
+#endif
 
 void handleInteriorPointError([[maybe_unused]] const PROBLEME_POINT_INTERIEUR& Probleme,
                               int hour,
