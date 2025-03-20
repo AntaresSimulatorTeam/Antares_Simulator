@@ -181,14 +181,7 @@ bool checkAllElementsIdenticalOrOne(std::vector<unsigned> w)
 bool checkAllElementsIdenticalOrOne(std::vector<std::pair<unsigned, std::string>>& p)
 {
     // Erase 1 from the vector
-    auto message = p.begin()->second;
     std::erase_if(p, [](const auto& pair) { return pair.first == 1; });
-    if (p.size() == 0)
-    {
-        logs.error() << "Error : empty timeseries, checkAllElementsIdenticalOrOne failed for "
-                     << message;
-        return false;
-    }
     auto width = p.begin()->first;
     for (const auto& [w, msg]: p)
     {
