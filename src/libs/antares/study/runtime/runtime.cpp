@@ -287,10 +287,8 @@ void StudyRuntimeInfos::initializeRandomNumberGenerators(const Parameters& param
     logs.info() << "Initializing random number generators...";
     for (uint i = 0; i != Data::seedMax; ++i)
     {
-#ifndef NDEBUG
         logs.debug() << "  random number generator: " << Data::SeedToCString((Data::SeedIndex)i)
                      << ", seed: " << parameters.seed[i];
-#endif
         random[i].reset(parameters.seed[i]);
     }
 }
@@ -437,7 +435,6 @@ StudyRuntimeInfos::~StudyRuntimeInfos()
     logs.debug() << "Releasing runtime data";
 }
 
-#ifndef NDEBUG
 void StudyRangeLimits::checkIntegrity() const
 {
     assert(hour[rangeBegin] <= hour[rangeEnd]);
@@ -447,7 +444,6 @@ void StudyRangeLimits::checkIntegrity() const
     assert(day[rangeBegin] < 367);
     assert(day[rangeEnd] < 367);
 }
-#endif
 
 void StudyRuntimeInfos::disableAllFilters(Study& study)
 {

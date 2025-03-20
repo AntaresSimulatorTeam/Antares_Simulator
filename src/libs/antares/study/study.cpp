@@ -381,11 +381,9 @@ bool Study::initializeRuntimeInfos()
 void Study::performTransformationsBeforeLaunchingSimulation()
 {
 // Those computations are also made from the TS-Generator (ts-generator/xcast/xcast.cpp)
-#ifndef NDEBUG
     logs.debug();
     logs.debug() << "applying transformations required by the simulation...";
     logs.debug() << "  > adding DSM values";
-#endif
 
     // ForEach area
     areas.each(
