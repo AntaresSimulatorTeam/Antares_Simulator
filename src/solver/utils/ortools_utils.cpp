@@ -231,21 +231,13 @@ static bool doWeGiveBasisToSolver(const SingleOptimOptions& options,
                                   const MPSolver* solver,
                                   const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme)
 {
-    if (solverSupportsWarmStart(solver->ProblemType()) && Probleme->basisExists()
-        && options.solverAcquiresBasis)
-    {
-        return true;
-    }
-    return false;
+    return solverSupportsWarmStart(solver->ProblemType()) && Probleme->basisExists()
+           && options.solverUsesBasis;
 }
 
 static bool doWeStoreSolverBasis(const SingleOptimOptions& options, const MPSolver* solver)
 {
-    if (solverSupportsWarmStart(solver->ProblemType()) && options.solverExportsBasis)
-    {
-        return true;
-    }
-    return false;
+    return solverSupportsWarmStart(solver->ProblemType()) && options.solverExportsBasis;
 }
 
 MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
