@@ -85,24 +85,14 @@ struct SimplexResult
     mpsWriterFactory mps_writer_factory;
 };
 
-static void fillModelerComponents(std::vector<std::unique_ptr<ComponentFiller>>& componentFillers,
-                                  std::vector<LinearProblemFiller*>& fillersCollection,
-                                  const Antares::Study::SystemModel::System* modelerSystem)
+static std::vector<LinearProblemFiller*> buildComponentFillers(const Antares::Study::SystemModel::System* modelerSystem)
 {
-    if (modelerSystem == nullptr)
+    std::vector<LinearProblemFiller*> componentFillers;
+    for (const auto& component: std::views::values(modelerSystem->Components()))
     {
-        return;
+        componentFillers.push_back(std::make_unique<ComponentFiller>(component).get());
     }
-
-    for (const auto& [_, component]: modelerSystem->Components())
-    {
-        auto cf = std::make_unique<ComponentFiller>(component);
-        componentFillers.push_back(std::move(cf));
-    }
-    for (auto& component_filler: componentFillers)
-    {
-        fillersCollection.push_back(component_filler.get());
-    }
+    return componentFillers;
 }
 
 static void writeModelerSolutions(const operations_research::MPSolver* solver,
@@ -243,9 +233,9 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
                                                                        options.ortoolsSolver);
     auto legacyOrtoolsFiller = std::make_unique<LegacyFiller>(&Probleme);
     std::vector<LinearProblemFiller*> fillersCollection = {legacyOrtoolsFiller.get()};
-    std::vector<std::unique_ptr<ComponentFiller>> componentFillers;
 
-    fillModelerComponents(componentFillers, fillersCollection, problemeHebdo->modelerSystem_);
+    auto componentFillers = buildComponentFillers(problemeHebdo->modelerSystem_);
+    std::ranges::copy(componentFillers, std::back_inserter(fillersCollection));
 
     FillContext fillCtx(problemeHebdo->weekInTheYear * 168 + 0,
                         problemeHebdo->weekInTheYear * 168 + 167);
