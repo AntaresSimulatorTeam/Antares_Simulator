@@ -305,11 +305,7 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
         }
     }
 
-    writeModelerSolutions(solver,
-                          Probleme,
-                          optimizationNumber,
-                          optPeriodStringGenerator,
-                          writer);
+    writeModelerSolutions(solver, Probleme, optimizationNumber, optPeriodStringGenerator, writer);
 
     return {.success = true, .timeMeasure = timeMeasure, .mps_writer_factory = mps_writer_factory};
 }
