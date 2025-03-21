@@ -62,6 +62,8 @@ StudyFixture::StudyFixture()
       .setAvailablePower(0, 50.)
       .setCosts(clusterCost)
       .setUnitCount(1);
+
+    cluster->initCostProvider();
 }
 
 struct HydroMaxPowerStudy: public StudyBuilder
