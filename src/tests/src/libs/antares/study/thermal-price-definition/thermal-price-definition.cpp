@@ -239,6 +239,7 @@ BOOST_FIXTURE_TEST_CASE(ThermalCluster_costGenManualCalculationOfMarketBidAndMar
     cluster->modulation.resize(thermalModulationMax, HOURS_PER_YEAR);
     cluster->costgeneration = Data::setManually;
 
+    cluster->initCostProvider();
     auto& cp = cluster->getCostProvider();
     for (uint hour = 0; hour < HOURS_PER_YEAR; hour++)
     {
@@ -272,6 +273,7 @@ BOOST_FIXTURE_TEST_CASE(
 
     cluster->tsNumbers.reset(1);
 
+    cluster->initCostProvider();
     auto& cp = cluster->getCostProvider();
     BOOST_CHECK_CLOSE(cp.getMarginalCost(0, 0), 24.12, 0.001);
     BOOST_CHECK_CLOSE(cp.getMarketBidCost(2637, 0), 24.12, 0.001);
@@ -297,6 +299,7 @@ BOOST_AUTO_TEST_CASE(non_constant_marketbid_modulation)
     auto& mod = cluster.modulation;
     mod.resize(thermalModulationMax, HOURS_PER_YEAR);
     mod.fill(1.);
+    cluster.initCostProvider();
 
     {
         mod[thermalModulationMarketBid][0] = .5;
