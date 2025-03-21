@@ -124,6 +124,7 @@ Data::ThermalCluster::ThermalCluster(Area* parent):
 {
     // assert
     assert(parent && "A parent for a thermal dispatchable cluster can not be null");
+    initCostProvider();
 }
 
 uint ThermalCluster::groupId() const
