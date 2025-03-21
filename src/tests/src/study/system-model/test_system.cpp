@@ -32,10 +32,10 @@ using namespace Antares::Study::SystemModel;
 struct SystemBuilderCreationFixture
 {
     SystemBuilder system_builder;
-    std::vector<Component> components;
+    std::unordered_map<std::string, Component> components;
 };
 
-static Component createComponent(std::string id)
+static std::pair<std::string, Component> createComponent(std::string id)
 {
     ModelBuilder model_builder;
     auto model = model_builder.withId("model").build();
@@ -44,7 +44,7 @@ static Component createComponent(std::string id)
                        .withModel(&model)
                        .withScenarioGroupId("scenario_group")
                        .build();
-    return component;
+    return {id, component};
 }
 
 BOOST_AUTO_TEST_SUITE(_System_)
@@ -86,14 +86,16 @@ BOOST_FIXTURE_TEST_CASE(fail_on_no_component2, SystemBuilderCreationFixture)
 
 BOOST_FIXTURE_TEST_CASE(fail_on_components_with_same_id, SystemBuilderCreationFixture)
 {
-    components = {createComponent("component1"),
-                  createComponent("component2"),
-                  createComponent("component2")};
-    system_builder.withId("system").withComponents({components});
-    BOOST_CHECK_EXCEPTION(system_builder.build(),
-                          std::invalid_argument,
-                          checkMessage("System has at least two components with the same id "
-                                       "('component2'), this is not supported"));
+    // TODO the check is done earlier in SystemModel::System convert(const YmlSystem::System&
+    // ymlSystem, const std::vector<SystemModel::Library>& libraries)
+    //  components = {createComponent("component1"),
+    //                createComponent("component2"),
+    //                createComponent("component2")};
+    //  system_builder.withId("system").withComponents({components});
+    //  BOOST_CHECK_EXCEPTION(system_builder.build(),
+    //                        std::invalid_argument,
+    //                        checkMessage("System has at least two components with the same id "
+    //                                     "('component2'), this is not supported"));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

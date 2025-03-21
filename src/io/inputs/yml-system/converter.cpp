@@ -121,17 +121,77 @@ static SystemModel::Component createComponent(const YmlSystem::Component& c,
     return component;
 }
 
+static SystemModel::Connection createConnection(
+  const YmlSystem::Connection& connection,
+  const std::unordered_map<std::string, SystemModel::Component>& components)
+{
+    // const auto& first_component = components.at(connection.firstEntry.componentId);
+    // const auto& first_port =
+    // first_component.getModel()->Ports().at(connection.firstEntry.portId); const auto&
+    // second_component = components.at(connection.secondEntry.componentId); const auto& second_port
+    // = second_component.getModel()->Ports().at(
+    //   connection.secondEntry.portId);
+    //
+    // return {SystemModel::ConnectionEntry{&first_component, &first_port},
+    //         SystemModel::ConnectionEntry{&second_component, &second_port}};
+
+    auto findComponent = [&](const std::string& id) -> const SystemModel::Component&
+    {
+        const auto it = components.find(id);
+        if (it == components.end())
+        {
+            throw std::invalid_argument("Component with id '" + id + "' not found in system.");
+        }
+        return it->second;
+    };
+
+    const auto& first_component = findComponent(connection.firstEntry.componentId);
+    const auto& second_component = findComponent(connection.secondEntry.componentId);
+
+    auto findPort = [](const SystemModel::Component& component,
+                       const std::string& portId) -> const SystemModel::Port&
+    {
+        const auto& ports = component.getModel()->Ports();
+        const auto it = ports.find(portId);
+        if (it == ports.end())
+        {
+            throw std::invalid_argument("Port with id '" + portId + "' not found in component '"
+                                        + component.Id() + "'.");
+        }
+        return it->second;
+    };
+
+    const auto& first_port = findPort(first_component, connection.firstEntry.portId);
+    const auto& second_port = findPort(second_component, connection.secondEntry.portId);
+
+    return {SystemModel::ConnectionEntry(&first_component, &first_port),
+            SystemModel::ConnectionEntry(&second_component, &second_port)};
+}
+
 SystemModel::System convert(const YmlSystem::System& ymlSystem,
                             const std::vector<SystemModel::Library>& libraries)
 {
-    std::vector<SystemModel::Component> components;
+    std::unordered_map<std::string, SystemModel::Component> components;
     for (const auto& c: ymlSystem.components)
     {
-        components.push_back(createComponent(c, libraries));
+        if (components.contains(c.id))
+        {
+            throw std::invalid_argument("System has at least two components with the same id ('"
+                                        + c.id + "'), this is not supported");
+        }
+        components.emplace(c.id, createComponent(c, libraries));
     }
-
+    std::vector<SystemModel::Connection> connections;
+    connections.reserve(ymlSystem.connections.size());
+    for (const auto& connection: ymlSystem.connections)
+    {
+        connections.push_back(createConnection(connection, components));
+    }
     SystemModel::SystemBuilder builder;
-    return builder.withId(ymlSystem.id).withComponents(components).build();
+    return builder.withId(ymlSystem.id)
+      .withComponents(components)
+      .withConnections(connections)
+      .build();
 }
 
 } // namespace Antares::IO::Inputs::SystemConverter

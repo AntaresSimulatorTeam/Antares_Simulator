@@ -38,3 +38,10 @@ system:
       time-dependent: false
       scenario-dependent: false
       value: 6.0
+  connections:
+    - component1: node1
+      port_1: injection_port
+      component2: node1
+      port_2: injection_port
+
+

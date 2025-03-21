@@ -25,8 +25,12 @@
 
 namespace Antares::Study::SystemModel
 {
-System::System(const std::string_view id, std::vector<Component> components):
-    id_(id)
+System::System(const std::string_view id,
+               const std::unordered_map<std::string, Component>& components,
+               const std::vector<Connection>& connections):
+    id_(id),
+    components_(components),
+    connections_(connections) // no further verifications
 {
     // Check that mandatory attributes are not empty
     if (id.empty())
@@ -37,20 +41,10 @@ System::System(const std::string_view id, std::vector<Component> components):
     {
         throw std::invalid_argument("A system must contain at least one component");
     }
-    std::ranges::transform(components,
-                           std::inserter(components_, components_.end()),
-                           [this](/*Non const to prevent copy*/ Component& component)
-                           { return makeComponent(component); });
-}
-
-std::pair<std::string, Component> System::makeComponent(Component& component) const
-{
-    if (components_.contains(component.Id()))
-    {
-        throw std::invalid_argument("System has at least two components with the same id ('"
-                                    + component.Id() + "'), this is not supported");
-    }
-    return std::make_pair(component.Id(), std::move(component));
+    // std::ranges::transform(components,
+    //                        std::inserter(components_, components_.end()),
+    //                        [this](/*Non const to prevent copy*/ Component& component)
+    //                        { return makeComponent(component); });
 }
 
 /**
@@ -71,9 +65,15 @@ SystemBuilder& SystemBuilder::withId(std::string_view id)
  * \param components A vector of components to set.
  * \return Reference to the SystemBuilder object.
  */
-SystemBuilder& SystemBuilder::withComponents(std::vector<Component>& components)
+SystemBuilder& SystemBuilder::withComponents(std::unordered_map<std::string, Component>& components)
 {
     components_ = std::move(components);
+    return *this;
+}
+
+SystemBuilder& SystemBuilder::withConnections(const std::vector<Connection>& connections)
+{
+    connections_ = connections;
     return *this;
 }
 
@@ -84,6 +84,6 @@ SystemBuilder& SystemBuilder::withComponents(std::vector<Component>& components)
  */
 System SystemBuilder::build() const
 {
-    return System(id_, components_);
+    return System(id_, components_, connections_);
 }
 } // namespace Antares::Study::SystemModel
