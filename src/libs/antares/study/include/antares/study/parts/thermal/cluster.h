@@ -353,6 +353,7 @@ public:
 
     unsigned int precision() const override;
 
+    void initCostProvider();
     CostProvider& getCostProvider();
 
 private:
