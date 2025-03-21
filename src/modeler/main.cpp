@@ -102,7 +102,7 @@ int main(int argc, const char** argv)
 
         Modeler::Data data = LoadFiles::loadAll(studyPath);
 
-        SystemLinearProblemBuilder system_linear_problem(data.system_.get());
+        SystemLinearProblemBuilder system_linear_problem(data.system.get());
 
         auto outputPath = studyPath / "output";
         if (!parameters.noOutput)
@@ -119,7 +119,7 @@ int main(int argc, const char** argv)
         logs.info() << "linear problem of System loaded";
         // Problem is MIP if any variable of any component is not continuous
         bool isMip = std::ranges::any_of(
-          data.system_->Components() | std::views::values,
+          data.system->Components() | std::views::values,
           [](const auto& component)
           {
               return std::ranges::any_of(component.getModel()->Variables() | std::views::values,
@@ -130,7 +130,7 @@ int main(int argc, const char** argv)
           });
         OrtoolsLinearProblem ortools_linear_problem(isMip, parameters.solver);
 
-        system_linear_problem.Provide(ortools_linear_problem, parameters, data.dataSeries_.get());
+        system_linear_problem.Provide(ortools_linear_problem, parameters, data.dataSeries.get());
 
         logs.info() << "Linear problem provided";
 

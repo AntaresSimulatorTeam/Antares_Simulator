@@ -96,8 +96,7 @@ static void fillModelerComponents(std::vector<std::unique_ptr<ComponentFiller>>&
 
     for (const auto& [_, component]: modelerSystem->Components())
     {
-        auto cf = std::make_unique<ComponentFiller>(component);
-        componentFillers.push_back(std::move(cf));
+        componentFillers.push_back(std::make_unique<ComponentFiller>(component));
     }
     for (auto& component_filler: componentFillers)
     {
@@ -107,7 +106,6 @@ static void fillModelerComponents(std::vector<std::unique_ptr<ComponentFiller>>&
 
 static void writeModelerSolutions(const operations_research::MPSolver* solver,
                                   Optimization::PROBLEME_SIMPLEXE_NOMME& Probleme,
-                                  const int NumIntervalle,
                                   const int optimizationNumber,
                                   const OptPeriodStringGenerator& optPeriodStringGenerator,
                                   IResultWriter& writer)
@@ -245,7 +243,7 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     std::vector<LinearProblemFiller*> fillersCollection = {legacyOrtoolsFiller.get()};
     std::vector<std::unique_ptr<ComponentFiller>> componentFillers;
 
-    fillModelerComponents(componentFillers, fillersCollection, problemeHebdo->modelerSystem_);
+    fillModelerComponents(componentFillers, fillersCollection, problemeHebdo->modelerSystem);
 
     FillContext fillCtx(problemeHebdo->weekInTheYear * 168 + 0,
                         problemeHebdo->weekInTheYear * 168 + 167);
@@ -309,7 +307,6 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
 
     writeModelerSolutions(solver,
                           Probleme,
-                          NumIntervalle,
                           optimizationNumber,
                           optPeriodStringGenerator,
                           writer);
@@ -423,7 +420,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
         std::vector<LinearProblemFiller*> fillersCollection = {legacyOrtoolsFiller.get()};
         std::vector<std::unique_ptr<ComponentFiller>> componentFillers;
 
-        fillModelerComponents(componentFillers, fillersCollection, problemeHebdo->modelerSystem_);
+        fillModelerComponents(componentFillers, fillersCollection, problemeHebdo->modelerSystem);
 
         FillContext fillCtx(problemeHebdo->weekInTheYear * 168 + 0,
                             problemeHebdo->weekInTheYear * 168 + 167);

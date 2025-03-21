@@ -225,12 +225,12 @@ bool Study::internalLoadFromFolder(const fs::path& path, const StudyLoadOptions&
     parameterFiller(options);
 
     // Modeler components for hybrid studies
-    internalLoadModelerComponents();
+    loadModelerComponents();
 
     return ret;
 }
 
-void Study::internalLoadModelerComponents()
+void Study::loadModelerComponents()
 {
     try
     {

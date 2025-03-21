@@ -626,12 +626,12 @@ public:
 
     Antares::Study::SystemModel::System* getModelerSystem() const
     {
-        return modelerInput_.system_.get();
+        return modelerInput_.system.get();
     }
 
     Optimisation::LinearProblemApi::ILinearProblemData* getModelerData() const
     {
-        return modelerInput_.dataSeries_.get();
+        return modelerInput_.dataSeries.get();
     }
 
 protected:
@@ -652,7 +652,7 @@ protected:
     bool internalLoadIni(const std::filesystem::path& path, const StudyLoadOptions& options);
 
     //! Load extra modeler components for hybrid studies
-    void internalLoadModelerComponents();
+    void loadModelerComponents();
 
     void parameterFiller(const StudyLoadOptions& options);
 
