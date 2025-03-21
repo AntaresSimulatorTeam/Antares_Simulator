@@ -325,6 +325,14 @@ BOOST_FIXTURE_TEST_CASE(
     BOOST_CHECK_EQUAL(dotContentStream.str(), expectedDotContent());
 }
 
+BOOST_FIXTURE_TEST_CASE(testing_a_dot_maker, Fixture)
+{
+    AstDOTStyleVisitor astGraphVisitor;
+    std::ostringstream dotStream = astGraphVisitor.makeDotStream(makeExpression());
+
+    BOOST_CHECK_EQUAL(dotStream.str(), expectedDotContent());
+}
+
 BOOST_FIXTURE_TEST_CASE(
   dot_visitor_is_run_on_other_complex_expression___resulting_dot_content_as_expected,
   Fixture)

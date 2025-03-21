@@ -117,6 +117,7 @@ public:
      * @param root The root of the expression to be output.
      */
     void operator()(std::ostream& os, const Nodes::Node* root);
+    std::ostringstream makeDotStream(const Nodes::Node* root);
 
 private:
     void visit(const Nodes::SumNode* node, std::ostream& os) override;

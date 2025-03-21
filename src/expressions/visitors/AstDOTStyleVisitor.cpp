@@ -60,7 +60,8 @@ void ProcessElementLegend(const std::string& element_name, size_t size, std::ost
 
 void AddFiliation(std::ostream& os, const std::string& parent_id, const std::string& child_id)
 {
-    os << "legend_" << parent_id << " -> " << "legend_" << child_id << " [style=invis];\n";
+    os << "legend_" << parent_id << " -> "
+       << "legend_" << child_id << " [style=invis];\n";
 }
 
 void AstDOTStyleVisitor::makeLegend(std::ostream& os)
@@ -279,4 +280,12 @@ void AstDOTStyleVisitor::operator()(std::ostream& os, const Nodes::Node* root)
     dispatch(root, os);
     EndTreeGraph(os);
 }
+
+std::ostringstream AstDOTStyleVisitor::makeDotStream(const Nodes::Node* root)
+{
+    std::ostringstream outStream;
+    this->operator()(outStream, root);
+    return outStream;
+}
+
 } // namespace Antares::Expressions::Visitors
