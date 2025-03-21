@@ -237,20 +237,20 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
 
     Probleme.NombreDeContraintesCoupes = 0;
 
-    auto ortoolsProblem = std::make_unique<LegacyOrtoolsLinearProblem>(Probleme.isMIP(),
-                                                                       options.ortoolsSolver);
-    auto legacyOrtoolsFiller = std::make_unique<LegacyFiller>(&Probleme);
-    std::vector<LinearProblemFiller*> fillersCollection = {legacyOrtoolsFiller.get()};
-    std::vector<std::unique_ptr<ComponentFiller>> componentFillers;
-
-    fillModelerComponents(componentFillers, fillersCollection, problemeHebdo->modelerSystem);
-
-    FillContext fillCtx(problemeHebdo->weekInTheYear * 168 + 0,
-                        problemeHebdo->weekInTheYear * 168 + 167);
-    LinearProblemBuilder linearProblemBuilder(fillersCollection);
-
     if (solver == nullptr)
     {
+        auto ortoolsProblem = std::make_unique<LegacyOrtoolsLinearProblem>(Probleme.isMIP(),
+                                                                           options.ortoolsSolver);
+        auto legacyOrtoolsFiller = std::make_unique<LegacyFiller>(&Probleme);
+        std::vector<LinearProblemFiller*> fillersCollection = {legacyOrtoolsFiller.get()};
+        std::vector<std::unique_ptr<ComponentFiller>> componentFillers;
+
+        fillModelerComponents(componentFillers, fillersCollection, problemeHebdo->modelerSystem);
+
+        FillContext fillCtx(problemeHebdo->weekInTheYear * 168 + 0,
+                            problemeHebdo->weekInTheYear * 168 + 167);
+        LinearProblemBuilder linearProblemBuilder(fillersCollection);
+
         // Note that the modeler is only called for the 1st simulation week,
         // this limitation must be lifted later,
         // when appropriate solvers (e.g with warm start) is integrated.
