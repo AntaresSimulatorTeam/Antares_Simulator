@@ -380,7 +380,7 @@ bool Study::initializeRuntimeInfos()
 
 void Study::performTransformationsBeforeLaunchingSimulation()
 {
-// Those computations are also made from the TS-Generator (ts-generator/xcast/xcast.cpp)
+    // Those computations are also made from the TS-Generator (ts-generator/xcast/xcast.cpp)
     logs.debug();
     logs.debug() << "applying transformations required by the simulation...";
     logs.debug() << "  > adding DSM values";
