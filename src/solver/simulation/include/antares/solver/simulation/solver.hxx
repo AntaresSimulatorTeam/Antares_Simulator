@@ -149,6 +149,7 @@ public:
             auto randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
 
             int numSpace = numspaceManager.getAvailableNumSpace();
+            logs.info() << "year " << y << " started and received numSpace " << numSpace;
             assert(numSpace >= 0);
 
             // Getting the scratchMap associated to the current year
@@ -211,6 +212,7 @@ public:
                     // simulation_->writeResults(false, y, numSpace); // false for synthesis
                 };
             }
+            logs.info() << "year " << y << " ended and returned numSpace " << numSpace;
             numspaceManager.freeNumSpace(numSpace);
         }
         else
