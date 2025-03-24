@@ -47,10 +47,17 @@ public:
         return fields_;
     }
 
+    bool operator==(const PortType& other) const = default;
+
 private:
     std::string id_;
 
     std::vector<PortField> fields_;
 };
+
+// inline bool PortType::operator==(const PortType& other) const
+// {
+//     return id_ == other.id_ && fields_ == other.fields_;
+// }
 
 } // namespace Antares::Study::SystemModel

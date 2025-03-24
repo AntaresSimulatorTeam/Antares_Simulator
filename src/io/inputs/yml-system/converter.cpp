@@ -123,18 +123,9 @@ static SystemModel::Component createComponent(const YmlSystem::Component& c,
 
 static SystemModel::Connection createConnection(
   const YmlSystem::Connection& connection,
-  const std::unordered_map<std::string, SystemModel::Component>& components)
+  const std::unordered_map<std::string, SystemModel::Component>& components,
+  const std::vector<SystemModel::Library>& libraries)
 {
-    // const auto& first_component = components.at(connection.firstEntry.componentId);
-    // const auto& first_port =
-    // first_component.getModel()->Ports().at(connection.firstEntry.portId); const auto&
-    // second_component = components.at(connection.secondEntry.componentId); const auto& second_port
-    // = second_component.getModel()->Ports().at(
-    //   connection.secondEntry.portId);
-    //
-    // return {SystemModel::ConnectionEntry{&first_component, &first_port},
-    //         SystemModel::ConnectionEntry{&second_component, &second_port}};
-
     auto findComponent = [&](const std::string& id) -> const SystemModel::Component&
     {
         const auto it = components.find(id);
@@ -144,9 +135,6 @@ static SystemModel::Connection createConnection(
         }
         return it->second;
     };
-
-    const auto& first_component = findComponent(connection.firstEntry.componentId);
-    const auto& second_component = findComponent(connection.secondEntry.componentId);
 
     auto findPort = [](const SystemModel::Component& component,
                        const std::string& portId) -> const SystemModel::Port&
@@ -161,8 +149,32 @@ static SystemModel::Connection createConnection(
         return it->second;
     };
 
+    auto AmISenderPort = [](const SystemModel::Port& port,
+                            const SystemModel::Component& component) -> bool
+    {
+        const auto& portFieldDefinitions = component.getModel()->PortFieldDefinitions();
+
+        // TODO check
+        return portFieldDefinitions.find(port.Id()) != portFieldDefinitions.end();
+    };
+
+    const auto& first_component = findComponent(connection.firstEntry.componentId);
     const auto& first_port = findPort(first_component, connection.firstEntry.portId);
+    bool isfirstPortSend = AmISenderPort(first_port, first_component);
+    const auto& second_component = findComponent(connection.secondEntry.componentId);
     const auto& second_port = findPort(second_component, connection.secondEntry.portId);
+
+    if (isfirstPortSend == AmISenderPort(second_port, second_component))
+    {
+        throw std::invalid_argument("Both ports '" + first_port.Id() + "' and '" + second_port.Id()
+                                    + "' are " + (isfirstPortSend ? "senders " : "receivers"));
+    }
+
+    if (first_port.Type() != second_port.Type())
+    {
+        throw std::invalid_argument("Ports '" + first_port.Id() + "' and '" + second_port.Id()
+                                    + "' are not the same type!");
+    }
 
     return {SystemModel::ConnectionEntry(&first_component, &first_port),
             SystemModel::ConnectionEntry(&second_component, &second_port)};
@@ -185,7 +197,7 @@ SystemModel::System convert(const YmlSystem::System& ymlSystem,
     connections.reserve(ymlSystem.connections.size());
     for (const auto& connection: ymlSystem.connections)
     {
-        connections.push_back(createConnection(connection, components));
+        connections.push_back(createConnection(connection, components, libraries));
     }
     SystemModel::SystemBuilder builder;
     return builder.withId(ymlSystem.id)

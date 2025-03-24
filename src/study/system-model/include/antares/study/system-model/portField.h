@@ -37,6 +37,7 @@ public:
     {
         return id_;
     }
+bool operator==(const PortField&) const = default;
 
 private:
     std::string id_;
