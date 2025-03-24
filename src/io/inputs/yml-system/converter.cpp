@@ -154,20 +154,19 @@ static SystemModel::Connection createConnection(
     {
         const auto& portFieldDefinitions = component.getModel()->PortFieldDefinitions();
 
-        // TODO check
-        return portFieldDefinitions.find(port.Id()) != portFieldDefinitions.end();
+        return portFieldDefinitions.contains(port.Id());
     };
 
     const auto& first_component = findComponent(connection.firstEntry.componentId);
     const auto& first_port = findPort(first_component, connection.firstEntry.portId);
-    bool isfirstPortSend = AmISenderPort(first_port, first_component);
+    const bool isFirstPortSending = AmISenderPort(first_port, first_component);
     const auto& second_component = findComponent(connection.secondEntry.componentId);
     const auto& second_port = findPort(second_component, connection.secondEntry.portId);
 
-    if (isfirstPortSend == AmISenderPort(second_port, second_component))
+    if (isFirstPortSending == AmISenderPort(second_port, second_component))
     {
         throw std::invalid_argument("Both ports '" + first_port.Id() + "' and '" + second_port.Id()
-                                    + "' are " + (isfirstPortSend ? "senders " : "receivers"));
+                                    + "' are " + (isFirstPortSending ? "senders " : "receivers"));
     }
 
     if (first_port.Type() != second_port.Type())
