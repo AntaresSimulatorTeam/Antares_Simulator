@@ -164,11 +164,12 @@ static SystemModel::Connection createConnection(
     const auto& second_component = findComponent(connection.secondEntry.componentId);
     const auto& second_port = findPort(second_component, connection.secondEntry.portId);
 
-    if (isfirstPortSend == AmISenderPort(second_port, second_component))
-    {
-        throw std::invalid_argument("Both ports '" + first_port.Id() + "' and '" + second_port.Id()
-                                    + "' are " + (isfirstPortSend ? "senders " : "receivers"));
-    }
+    // if (isfirstPortSend == AmISenderPort(second_port, second_component))
+    // {
+    //     throw std::invalid_argument("Both ports '" + first_port.Id() + "' and '" +
+    //     second_port.Id()
+    //                                 + "' are " + (isfirstPortSend ? "senders " : "receivers"));
+    // }
 
     if (first_port.Type() != second_port.Type())
     {

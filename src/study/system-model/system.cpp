@@ -26,11 +26,11 @@
 namespace Antares::Study::SystemModel
 {
 System::System(const std::string_view id,
-               const std::unordered_map<std::string, Component>& components,
-               const std::vector<Connection>& connections):
+               std::unordered_map<std::string, Component>& components,
+               std::vector<Connection>& connections):
     id_(id),
-    components_(components),
-    connections_(connections) // no further verifications
+    components_(std::move(components)),
+    connections_(std::move(connections)) // no further verifications
 {
     // Check that mandatory attributes are not empty
     if (id.empty())
@@ -82,7 +82,7 @@ SystemBuilder& SystemBuilder::withConnections(const std::vector<Connection>& con
  *
  * \return The constructed System object.
  */
-System SystemBuilder::build() const
+System SystemBuilder::build()
 {
     return System(id_, components_, connections_);
 }
