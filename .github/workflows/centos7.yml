@@ -116,6 +116,11 @@ jobs:
           ls -la .ccache
           docker rm $container_id
 
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: targz
+          path: archive/*.tar.gz
 
       - name: Publish assets
         if: ${{ env.IS_RELEASE == 'true' }}
