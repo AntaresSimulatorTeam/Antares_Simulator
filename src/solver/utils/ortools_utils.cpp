@@ -210,10 +210,7 @@ void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
 
 bool solveAndManageStatus(MPSolver* solver, int& resultStatus, const MPSolverParameters& params)
 {
-    Antares::logs.info() << "Solving " << solver->underlying_solver() << "@" << solver;
     auto status = solver->Solve(params);
-    Antares::logs.info() << "Solved " << solver->underlying_solver() << "@" << solver;
-
     if (status == MPSolver::OPTIMAL || status == MPSolver::FEASIBLE)
     {
         resultStatus = OUI_SPX;
