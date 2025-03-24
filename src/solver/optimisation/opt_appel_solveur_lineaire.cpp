@@ -191,16 +191,15 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
 
     Probleme.NombreDeContraintesCoupes = 0;
 
-    auto ortoolsProblem = std::make_unique<LegacyOrtoolsLinearProblem>(Probleme.isMIP(),
-                                                                       options.ortoolsSolver);
-    auto legacyOrtoolsFiller = std::make_unique<LegacyFiller>(&Probleme);
-    std::vector<LinearProblemFiller*> fillersCollection = {legacyOrtoolsFiller.get()};
-    LinearProblemData LP_Data;
-    FillContext fillCtx(0, 167);
-    LinearProblemBuilder linearProblemBuilder(fillersCollection);
-
     if (solver == nullptr)
     {
+        auto ortoolsProblem = std::make_unique<LegacyOrtoolsLinearProblem>(Probleme.isMIP(),
+                                                                           options.ortoolsSolver);
+        auto legacyOrtoolsFiller = std::make_unique<LegacyFiller>(&Probleme);
+        std::vector<LinearProblemFiller*> fillersCollection = {legacyOrtoolsFiller.get()};
+        LinearProblemData LP_Data;
+        FillContext fillCtx(0, 167);
+        LinearProblemBuilder linearProblemBuilder(fillersCollection);
         linearProblemBuilder.build(*ortoolsProblem, LP_Data, fillCtx);
         solver = ortoolsProblem->getMpSolver();
     }
