@@ -37,7 +37,7 @@ System::System(const std::string_view id,
     {
         throw std::invalid_argument("A system can't have an empty id");
     }
-    if (components.empty())
+    if (components_.empty())
     {
         throw std::invalid_argument("A system must contain at least one component");
     }
