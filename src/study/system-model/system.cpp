@@ -26,8 +26,8 @@
 namespace Antares::Study::SystemModel
 {
 System::System(const std::string_view id,
-               std::unordered_map<std::string, Component>& components,
-               std::vector<Connection>& connections):
+               std::unordered_map<std::string, Component>&& components,
+               std::vector<Connection>&& connections):
     id_(id),
     components_(std::move(components)),
     connections_(std::move(connections)) // no further verifications
@@ -65,13 +65,14 @@ SystemBuilder& SystemBuilder::withId(std::string_view id)
  * \param components A vector of components to set.
  * \return Reference to the SystemBuilder object.
  */
-SystemBuilder& SystemBuilder::withComponents(std::unordered_map<std::string, Component>& components)
+SystemBuilder& SystemBuilder::withComponents(
+  std::unordered_map<std::string, Component>&& components)
 {
     components_ = std::move(components);
     return *this;
 }
 
-SystemBuilder& SystemBuilder::withConnections(const std::vector<Connection>& connections)
+SystemBuilder& SystemBuilder::withConnections(std::vector<Connection>&& connections)
 {
     connections_ = connections;
     return *this;
@@ -84,6 +85,6 @@ SystemBuilder& SystemBuilder::withConnections(const std::vector<Connection>& con
  */
 System SystemBuilder::build()
 {
-    return System(id_, components_, connections_);
+    return System(id_, std::move(components_), std::move(connections_));
 }
 } // namespace Antares::Study::SystemModel

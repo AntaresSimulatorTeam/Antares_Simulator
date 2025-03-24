@@ -164,17 +164,16 @@ static SystemModel::Connection createConnection(
     const auto& second_component = findComponent(connection.secondEntry.componentId);
     const auto& second_port = findPort(second_component, connection.secondEntry.portId);
 
-    // if (isfirstPortSend == AmISenderPort(second_port, second_component))
-    // {
-    //     throw std::invalid_argument("Both ports '" + first_port.Id() + "' and '" +
-    //     second_port.Id()
-    //                                 + "' are " + (isfirstPortSend ? "senders " : "receivers"));
-    // }
+    if (isfirstPortSend == AmISenderPort(second_port, second_component))
+    {
+        throw std::invalid_argument("Both ports '" + first_port.Id() + "' and '" + second_port.Id()
+                                    + "' are " + (isfirstPortSend ? "senders " : "receivers"));
+    }
 
     if (first_port.Type() != second_port.Type())
     {
         throw std::invalid_argument("Ports '" + first_port.Id() + "' and '" + second_port.Id()
-                                    + "' are not the same type!");
+                                    + "' are not of the same type!");
     }
 
     return {SystemModel::ConnectionEntry(&first_component, &first_port),
@@ -202,8 +201,8 @@ SystemModel::System convert(const YmlSystem::System& ymlSystem,
     }
     SystemModel::SystemBuilder builder;
     return builder.withId(ymlSystem.id)
-      .withComponents(components)
-      .withConnections(connections)
+      .withComponents(std::move(components))
+      .withConnections(std::move(connections))
       .build();
 }
 
