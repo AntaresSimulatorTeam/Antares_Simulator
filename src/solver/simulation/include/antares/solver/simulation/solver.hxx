@@ -170,9 +170,6 @@ public:
             // simulation_->variables.yearBegin(y, numSpace);
 
             // 6 - The Solver itself
-            // bool isFirstPerformedYearOfSimulation = isFirstPerformedYearOfASet[y]
-            //                                         && not
-            //                                         firstSetParallelWithAPerformedYearWasRun;
             std::list<uint> failedWeekList;
 
             OptimizationStatisticsWriter optWriter(pResultWriter, y);
@@ -181,7 +178,6 @@ public:
                                                numSpace,
                                                randomForCurrentYear,
                                                failedWeekList,
-                                               // isFirstPerformedYearOfSimulation,
                                                hydroManagement.ventilationResults(),
                                                optWriter,
                                                scratchmap);

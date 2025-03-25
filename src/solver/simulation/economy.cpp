@@ -113,7 +113,6 @@ bool Economy::year(Progression::Task& progression,
                    uint numSpace,
                    yearRandomNumbers& randomForYear,
                    std::list<uint>& failedWeekList,
-                   // bool isFirstPerformedYearOfSimulation,
                    const HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
                    OptimizationStatisticsWriter& optWriter,
                    const Antares::Data::Area::ScratchMap& scratchmap)
@@ -129,10 +128,6 @@ bool Economy::year(Progression::Task& progression,
     state.startANewYear();
 
     int hourInTheYear = pStartTime;
-    // if (isFirstPerformedYearOfSimulation)
-    // {
-    //     currentProblem.firstWeekOfSimulation = true;
-    // }
     bool reinitOptim = true;
 
     for (uint w = 0; w != pNbWeeks; ++w)
@@ -222,8 +217,6 @@ bool Economy::year(Progression::Task& progression,
         }
 
         hourInTheYear += nbHoursInAWeek;
-
-        currentProblem.firstWeekOfSimulation = false;
 
         ++progression;
     }
