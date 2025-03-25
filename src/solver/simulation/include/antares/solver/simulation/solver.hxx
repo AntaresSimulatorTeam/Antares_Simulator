@@ -167,7 +167,7 @@ public:
             state.year = y;
 
             // 5 - Resetting all variables for the output
-            // simulation_->variables.yearBegin(y, numSpace);
+            simulation_->variables.yearBegin(y, numSpace);
 
             // 6 - The Solver itself
             // bool isFirstPerformedYearOfSimulation = isFirstPerformedYearOfASet[y]
