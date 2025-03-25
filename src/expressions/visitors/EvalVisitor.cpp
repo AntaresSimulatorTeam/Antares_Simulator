@@ -32,19 +32,15 @@ namespace Antares::Expressions::Visitors
 {
 EvalVisitor::EvalVisitor(EvaluationContext context,
                          Optimisation::LinearProblemApi::FillContext fillContext):
-                      context_(std::move(context)),
+    context_(std::move(context)),
     fillContext_(std::move(fillContext))
 {
-
-
-
-
 }
 
-EvaluationResult               EvalVisitor::visit(const Nodes::SumNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::SumNode* node)
 {
     auto operands = node->getOperands();
-    return std::accumulate(              std::begin(operands),
+    return std::accumulate(std::begin(operands),
                            std::end(operands),
                            EvaluationResult{0.},
                            [this](const EvaluationResult& sum, const Nodes::Node* operand)
@@ -53,7 +49,7 @@ EvaluationResult               EvalVisitor::visit(const Nodes::SumNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::SubtractionNode* node)
 {
-    return dispatch(node->left()) - dispatch(node->right());
+    return            dispatch(node->left()) -              dispatch(node->right());
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::MultiplicationNode* node)
