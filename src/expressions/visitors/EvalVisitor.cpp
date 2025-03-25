@@ -115,9 +115,9 @@ EvaluationResult EvalVisitor::visit(const Nodes::LiteralNode* node)
     EvaluationResult{node->value()};
 }
 
-EvaluationResult EvalVisitor::visit(const Nodes::NegationNode* node)
+EvaluationResult        EvalVisitor::visit(const Nodes::NegationNode* node)
 {
-    return -dispatch(node->child());
+    return                           -dispatch(node->child());
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::PortFieldNode* node)
