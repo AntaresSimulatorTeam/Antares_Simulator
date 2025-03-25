@@ -9,16 +9,16 @@ hide:
 
 ## Simulation
 
-| command                  | usage                                                                                                                                                                 |
-|:-------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| -i, --input              | Study folder                                                                                                                                                          |
-| --expansion              | Force the simulation in [expansion](04-parameters.md#mode) mode                                                                                                       |
-| --economy                | Force the simulation in [economy](04-parameters.md#mode) mode                                                                                                         |
-| --adequacy               | Force the simulation in [adequacy](04-parameters.md#mode) mode                                                                                                        |
-| --parallel               | Enable [parallel](optional-features/multi-threading.md) computation of MC years                                                                                       |
-| --force-parallel=VALUE   | Override the max number of years computed [simultaneously](optional-features/multi-threading.md)                                                                      |
+| command                  | usage                                                                                                                                                                                     |
+|:-------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| -i, --input              | Study folder                                                                                                                                                                              |
+| --expansion              | Force the simulation in [expansion](04-parameters.md#mode) mode                                                                                                                           |
+| --economy                | Force the simulation in [economy](04-parameters.md#mode) mode                                                                                                                             |
+| --adequacy               | Force the simulation in [adequacy](04-parameters.md#mode) mode                                                                                                                            |
+| --parallel               | Enable [parallel](optional-features/multi-threading.md) computation of MC years                                                                                                           |
+| --force-parallel=VALUE   | Override the max number of years computed [simultaneously](optional-features/multi-threading.md)                                                                                          |
 | --linear-solver=VALUE    | The optimization solver to use for linear problems. Possible values are: `sirius` (default, LP only), `coin`, `xpress`, `scip` (MIP only), `glpk` (Linux only), `highs`, `pdlp` (LP only) |
-| --quadratic-solver=VALUE | The optimization solver to use for quadratic problems. Possible values are: `sirius` (default), `pdlp` |
+| --quadratic-solver=VALUE | The optimization solver to use for quadratic problems. Possible values are: `sirius` (default), `pdlp`, `scip`                                                                             |
 
 ## Parameters
 
