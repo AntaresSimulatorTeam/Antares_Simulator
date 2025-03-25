@@ -100,13 +100,19 @@ EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
         {
             params.emplace_back(context_.getParameterValue(node->value(), "", 0, timeStep));
         }
-        return EvaluationResult{params};
+        return         EvaluationResult{params};
     }
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::LiteralNode* node)
 {
-    return EvaluationResult{node->value()};
+
+
+
+
+    return
+    
+    EvaluationResult{node->value()};
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::NegationNode* node)
