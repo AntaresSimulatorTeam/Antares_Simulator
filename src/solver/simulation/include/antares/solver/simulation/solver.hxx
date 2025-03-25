@@ -257,9 +257,6 @@ inline ISimulation<ImplementationType>::ISimulation(
     {
         pYearByYear = false;
     }
-
-    pNbYearsReallyPerformed = std::ranges::count_if(study.parameters.yearsFilter,
-                                                    [](bool x) { return x; });
 }
 
 template<class ImplementationType>
@@ -916,25 +913,6 @@ void ISimulation<ImplementationType>::computeAnnualCostsStatistics(
     }
 }
 
-static inline void logPerformedYearsInAset(setOfParallelYears& set)
-{
-    logs.info() << "parallel batch size : " << set.nbYears << " (" << set.nbPerformedYears
-                << " perfomed)";
-
-    std::string performedYearsToLog = "";
-
-    std::ranges::for_each(set.yearsIndices,
-                          [&set, &performedYearsToLog](const uint& y)
-                          {
-                              if (set.isYearPerformed[y])
-                              {
-                                  performedYearsToLog += std::to_string(y + 1) + " ";
-                              }
-                          });
-
-    logs.info() << "Year(s) " << performedYearsToLog;
-}
-
 template<class ImplementationType>
 void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
                                                        uint endYear,
@@ -1044,8 +1022,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
             results.add(Concurrency::AddTask(*pQueueService, task));
         }
     }
-
-    // logPerformedYearsInAset(batch);
 
     pQueueService->start();
 
