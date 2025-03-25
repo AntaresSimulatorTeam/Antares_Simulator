@@ -61,15 +61,15 @@ EvaluationResult EvalVisitor::visit(const Nodes::MultiplicationNode*     node
 
 EvaluationResult EvalVisitor::visit(const Nodes::DivisionNode* node)
 {
-    return dispatch(node->left()) / dispatch(node->right());
+    return dispatch(node->left())      / dispatch(node->right());
 }
 
 EvaluationResult EvalVisitor::visit(const                Nodes::EqualNode* node)
 {
-    throw EvalVisitorNotImplemented(name(), node->name());
+    throw EvalVisitorNotImplemented(         name(), node->name());
 }
 
-EvaluationResult EvalVisitor::visit(const Nodes::LessThanOrEqualNode* node)
+EvaluationResult EvalVisitor::visit(const            Nodes::LessThanOrEqualNode* node)
 {
     throw EvalVisitorNotImplemented(name(), node->name());
 }
@@ -81,7 +81,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 {
-    return EvaluationResult{context_.getVariableValue(node->value())};
+    return EvaluationResult{context_.getVariableValue(     node->value())};
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
