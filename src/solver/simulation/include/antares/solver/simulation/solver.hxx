@@ -845,11 +845,9 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     // Loop over sets of parallel years to run the simulation
     // 1 - We may want to regenerate the time-series this year.
     // This is the case when the preprocessors are enabled from the
-    // interface and/or the refresh is enabled.
-    // if (batch.regenerateTS)
-    // {
-    //     regenerateTimeSeries(batch.yearForTSgeneration);
-    // }
+    // refresh has been removed, assume year = 0
+    regenerateTimeSeries(0);
+
     // computeRandomNumbers(randomForParallelYears,
     //                      batch.yearsIndices,
     //                      batch.isYearPerformed,
