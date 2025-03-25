@@ -280,18 +280,17 @@ void ISimulation<ImplementationType>::run()
     pNbMaxPerformedYearsInParallel = study.maxNbYearsInParallel;
 
     // Initialize all data
-    // ImplementationType::variables.initializeFromStudy(study);
+    ImplementationType::variables.initializeFromStudy(study);
     // Computing the max number columns a report of any kind can contain.
     study.parameters.variablesPrintInfo.computeMaxColumnsCountInReports();
 
     logs.info() << "Allocating resources...";
 
-    // // Memory usage
-    // {
-    //     Variable::PrintInfosStdCout c;
-    //     ImplementationType::variables.template
-    //     provideInformations<Variable::PrintInfosStdCout>(c);
-    // }
+    // Memory usage
+    {
+        Variable::PrintInfosStdCout c;
+        ImplementationType::variables.template provideInformations<Variable::PrintInfosStdCout>(c);
+    }
 
     // Preprocessors
     // Determine if we have to use the preprocessors at least one time.
@@ -322,7 +321,7 @@ void ISimulation<ImplementationType>::run()
             return;
         }
         // Allocating the memory
-        // ImplementationType::variables.simulationBegin();
+        ImplementationType::variables.simulationBegin();
 
         // For beauty
         logs.info();
@@ -352,13 +351,13 @@ void ISimulation<ImplementationType>::run()
         // Post operations
         pDurationCollector("post_processing") << [this] { ImplementationType::simulationEnd(); };
 
-        // ImplementationType::variables.simulationEnd();
+        ImplementationType::variables.simulationEnd();
 
         // Spatial clusters
         // Notifying all variables to perform the final spatial clusters.
         // This must be done only when all variables have finished to compute their
         // own data.
-        // ImplementationType::variables.simulationEndSpatialAggregates(ImplementationType::variables);
+        ImplementationType::variables.simulationEndSpatialAggregates(ImplementationType::variables);
     }
 }
 
@@ -408,10 +407,10 @@ void ISimulation<ImplementationType>::writeResults(bool synthesis, uint year, ui
         }
 
         // Dumping
-        // ImplementationType::variables.exportSurveyResults(synthesis,
-        //                                                   newPath,
-        //                                                   numSpace,
-        //                                                   pResultWriter);
+        ImplementationType::variables.exportSurveyResults(synthesis,
+                                                          newPath,
+                                                          numSpace,
+                                                          pResultWriter);
     }
 }
 
