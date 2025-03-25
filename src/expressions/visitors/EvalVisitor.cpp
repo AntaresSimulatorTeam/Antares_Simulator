@@ -41,10 +41,10 @@ EvalVisitor::EvalVisitor(EvaluationContext context,
 
 }
 
-EvaluationResult     EvalVisitor::visit(const Nodes::SumNode* node)
+EvaluationResult               EvalVisitor::visit(const Nodes::SumNode* node)
 {
     auto operands = node->getOperands();
-    return std::accumulate(std::begin(operands),
+    return std::accumulate(              std::begin(operands),
                            std::end(operands),
                            EvaluationResult{0.},
                            [this](const EvaluationResult& sum, const Nodes::Node* operand)
