@@ -130,7 +130,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
     throw EvalVisitorNotImplemented       (name(), node->name());
 }
 
-EvaluationResult EvalVisitor::visit(const Nodes::ComponentVariableNode* node)
+EvaluationResult EvalVisitor::visit(         const Nodes::ComponentVariableNode* node)
 {
     throw EvalVisitorNotImplemented(name(), node->name());
 }
@@ -140,7 +140,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::ComponentParameterNode* node)
     throw EvalVisitorNotImplemented(name(), node->name());
 }
 
-EvaluationResult       EvalVisitor::visit(const Nodes::TimeShiftNode* node)
+EvaluationResult       EvalVisitor::visit(       const Nodes::TimeShiftNode* node)
 {
     const auto ret = dispatch(node->left());
     // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
@@ -160,7 +160,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
 {
     const auto expression = dispatch(node->expression());
     // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
-    const auto from = static_cast<int>(dispatch(node->from()).valueAsDouble());
+    const auto from = static_cast<int>(     dispatch(node->from()).valueAsDouble());
 
     // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
     const auto to = static_cast<int>(dispatch(node->to()).valueAsDouble());
