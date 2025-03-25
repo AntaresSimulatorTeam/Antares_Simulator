@@ -46,7 +46,6 @@ public:
             unsigned int pY,
             std::map<uint, bool>& pYearFailed,
             // std::map<uint, bool>& pIsFirstPerformedYearOfASet,
-            bool pFirstSetParallelWithAPerformedYearWasRun,
             // unsigned int pNumSpace,
             NumSpaceManager& numspaceManager,
             randomNumbers& pRandomForParallelYears,
@@ -60,8 +59,6 @@ public:
         simulation_(simulation),
         y(pY),
         yearFailed(pYearFailed),
-        // isFirstPerformedYearOfASet(pIsFirstPerformedYearOfASet),
-        firstSetParallelWithAPerformedYearWasRun(pFirstSetParallelWithAPerformedYearWasRun),
         numspaceManager(numspaceManager),
         // numSpace(pNumSpace),
         randomForParallelYears(pRandomForParallelYears),
@@ -85,7 +82,6 @@ private:
     unsigned int y;
     std::map<uint, bool>& yearFailed;
     // std::map<uint, bool>& isFirstPerformedYearOfASet;
-    bool firstSetParallelWithAPerformedYearWasRun;
     // unsigned int numSpace;
     NumSpaceManager& numspaceManager;
     randomNumbers& randomForParallelYears;
@@ -235,7 +231,6 @@ inline ISimulation<ImplementationType>::ISimulation(
     settings(settings),
     pNbMaxPerformedYearsInParallel(0),
     pYearByYear(study.parameters.yearByYear),
-    pFirstSetParallelWithAPerformedYearWasRun(false),
     pDurationCollector(duration_collector),
     pQueueService(study.pQueueService),
     pResultWriter(resultWriter),
@@ -1026,7 +1021,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
               year,
               yearFailed,
               // batch.isFirstPerformedYearOfASet,
-              pFirstSetParallelWithAPerformedYearWasRun,
               numspaceManager,
               // numSpace,
               randomForParallelYears,
@@ -1049,13 +1043,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     pQueueService->stop();
     results.join();
     pResultWriter.flush();
-
-    // At this point, the first set of parallel year(s) was run with at least one year
-    // performed
-    if (!pFirstSetParallelWithAPerformedYearWasRun && yearPerformed)
-    {
-        pFirstSetParallelWithAPerformedYearWasRun = true;
-    }
 
     // On regarde si au moins une année du lot n'a pas trouvé de solution
     for (auto& [year, failed]: yearFailed)

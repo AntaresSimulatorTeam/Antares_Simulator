@@ -178,8 +178,6 @@ private:
     uint pNbMaxPerformedYearsInParallel;
     //! Year by year output results
     bool pYearByYear;
-    //! The first set of parallel year(s) with a performed year was already run ?
-    bool pFirstSetParallelWithAPerformedYearWasRun;
 
     //! Statistics about annual (system and solution) costs
     annualCostsStatistics pAnnualStatistics;
