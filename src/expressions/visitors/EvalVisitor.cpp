@@ -49,7 +49,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::SumNode* node)
 
 EvaluationResult EvalVisitor::visit(const             Nodes::SubtractionNode* node)
 {
-    return                         dispatch(              node->left()) -              dispatch(node->right());
+    return                         dispatch(                       node->left()) -              dispatch(node->right());
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::MultiplicationNode* node)
@@ -62,7 +62,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::DivisionNode* node)
     return dispatch(node->left()) / dispatch(node->right());
 }
 
-EvaluationResult EvalVisitor::visit(const Nodes::EqualNode* node)
+EvaluationResult EvalVisitor::visit(const                Nodes::EqualNode* node)
 {
     throw EvalVisitorNotImplemented(name(), node->name());
 }
