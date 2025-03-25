@@ -189,17 +189,17 @@ public:
             // Log failing weeks
             logFailedWeek(y, study, failedWeekList);
 
-            // simulation_->variables.yearEndBuild(state, y, numSpace);
+            simulation_->variables.yearEndBuild(state, y, numSpace);
 
             // 7 - End of the year, this is the last stade where the variables can retrieve
             // their data for this year.
-            // simulation_->variables.yearEnd(y, numSpace);
+            simulation_->variables.yearEnd(y, numSpace);
 
             // 8 - Spatial clusters
             // Notifying all variables to perform spatial aggregates.
             // This must be done only when all variables have finished to compute their
             // data for the year.
-            // simulation_->variables.yearEndSpatialAggregates(simulation_->variables, y, numSpace);
+            simulation_->variables.yearEndSpatialAggregates(simulation_->variables, y, numSpace);
 
             // 9 - Write results for the current year
             if (yearByYear)
