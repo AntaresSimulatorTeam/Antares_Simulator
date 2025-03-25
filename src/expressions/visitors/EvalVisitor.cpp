@@ -93,9 +93,9 @@ EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
     else
     {
         std::vector<double> params;
-        params.reserve(fillContext_.getNumberOfTimestep());
-        for (auto timeStep = fillContext_.getFirstTimeStep();
-             timeStep <= fillContext_.getLastTimeStep();
+        params.reserve(         fillContext_.getNumberOfTimestep());
+        for (auto timeStep      = fillContext_.getFirstTimeStep();
+             timeStep         <= fillContext_.getLastTimeStep();
              ++timeStep)
         {
             params.emplace_back(context_.getParameterValue(node->value(), "", 0, timeStep));
