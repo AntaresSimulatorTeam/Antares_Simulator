@@ -342,14 +342,6 @@ public:
     //! Write the simulation synthesis into the output
     bool synthesis;
 
-    //! \name Optimization
-    //@{
-    //! Spillage bound
-    bool spillageBound;
-
-    //! Improve units startup
-    bool improveUnitsStartup;
-
     //! Accuracy on correlation
     uint timeSeriesAccuracyOnCorrelation;
 

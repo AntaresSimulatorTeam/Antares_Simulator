@@ -21,6 +21,8 @@
 
 #include <algorithm>
 #include <functional>
+#include <map>
+#include <ranges>
 #include <stdexcept>
 
 #include <antares/solver/optim-model-filler/TimeDependentLinearExpression.h>
@@ -46,7 +48,7 @@ TimeDependentLinearExpression::TimeDependentLinearExpression(
 }
 
 TimeDependentLinearExpression::TimeDependentLinearExpression(
-  const std::unordered_map<unsigned int, LinearExpression>& linearExpressions):
+  const LinearExpressionMap& linearExpressions):
     linearExpressions_(linearExpressions)
 
 {
@@ -67,10 +69,9 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator-(
 }
 
 template<typename BinaryOperator>
-TimeDependentLinearExpression BinaryOpLinearExpression(
-  const std::unordered_map<unsigned int, LinearExpression>& left,
-  const std::unordered_map<unsigned int, LinearExpression>& right,
-  BinaryOperator op)
+TimeDependentLinearExpression BinaryOpLinearExpression(const LinearExpressionMap& left,
+                                                       const LinearExpressionMap& right,
+                                                       BinaryOperator op)
 {
     auto result(left);
     for (const auto& [timeStep, other_linear_expression]: right)
@@ -106,7 +107,7 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator/(
 TimeDependentLinearExpression TimeDependentLinearExpression::operator-() const
 {
     const auto& linear_expressions = GetLinearExpressions();
-    std::unordered_map<unsigned int, LinearExpression> result;
+    LinearExpressionMap result;
     for (size_t i = 0; i < linear_expressions.size(); ++i)
     {
         result[i] = -linear_expressions.at(i);
@@ -114,8 +115,7 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator-() const
     return TimeDependentLinearExpression(std::move(result));
 }
 
-const std::unordered_map<unsigned int, LinearExpression>&
-TimeDependentLinearExpression::GetLinearExpressions() const
+const LinearExpressionMap& TimeDependentLinearExpression::GetLinearExpressions() const
 {
     return linearExpressions_;
 }
@@ -123,6 +123,103 @@ TimeDependentLinearExpression::GetLinearExpressions() const
 size_t TimeDependentLinearExpression::getSize() const
 {
     return linearExpressions_.size();
+}
+
+/**
+ * @brief Computes a rotated index within a bounded range of timesteps.
+ *
+ * This function calculates the new index for a given key after applying a
+ * cyclic shift within a specified range of timesteps. The shift is normalized
+ * to ensure it falls within the bounds of the range size, and the resulting
+ * index is computed using modulo arithmetic to handle wrap-around cases.
+ *
+ * @param key The original index or key for which the rotated index is computed.
+ * @param shift The amount by which the index should be rotated. This value
+ *              can be positive or negative.
+ * @param fillContext A context object providing information about the range
+ *                    of timesteps, including the total number of timesteps
+ *                    and the first timestep.
+ *
+ * @return The new index after applying the rotation.
+ *
+ * @example
+ * // Example usage with visual representation:
+ * Optimisation::LinearProblemApi::FillContext fillContext;
+ * fillContext.NumberOfTimestep = 5; // Range size is 5
+ * fillContext.firstTimeStep = 10;   // First timestep is 10
+ * // Timesteps range: {10, 11, 12, 13, 14}
+ *
+ * unsigned key = 12;
+ * int shift = 2;
+ * int newIndex = rotatedIndex(key, shift, fillContext);
+ *
+ * // Step-by-step calculation:
+ * // 1. Normalize shift: shift = (2 % 5 + 5) % 5 = 2
+ * // 2. Compute relative position of key: key - firstTimeStep = 12 - 10 = 2
+ * // 3. Apply shift: (2 + 2) % 5 = 4
+ * // 4. Convert back to original range: 10 + 4 = 14
+ * // newIndex will be 14
+ *
+ * @example
+ * // Example with negative shift and visual representation:
+ * Optimisation::LinearProblemApi::FillContext fillContext;
+ * fillContext.NumberOfTimestep = 5; // Range size is 5
+ * fillContext.firstTimeStep = 10;   // First timestep is 10
+ * // Timesteps range: {10, 11, 12, 13, 14}
+ *
+ * unsigned key = 12;
+ * int shift = -2;
+ * int newIndex = rotatedIndex(key, shift, fillContext);
+ *
+ * // Step-by-step calculation:
+ * // 1. Normalize shift: shift = (-2 % 5 + 5) % 5 = 3
+ * // 2. Compute relative position of key: key - firstTimeStep = 12 - 10 = 2
+ * // 3. Apply shift: (2 + 3) % 5 = 0
+ * // 4. Convert back to original range: 10 + 0 = 10
+ * // newIndex will be 10
+ */
+int rotatedIndex(unsigned key,
+                 int shift,
+                 const Optimisation::LinearProblemApi::FillContext& fillContext)
+{
+    unsigned rangeSize = fillContext.getNumberOfTimestep();
+
+    // Normalize shift within bounds (to prevent negative indexing)
+    shift = (shift % static_cast<int>(rangeSize) + rangeSize) % static_cast<int>(rangeSize);
+
+    // Compute which key's value should be assigned to `key`
+    return fillContext.getFirstTimeStep()
+           + (key - fillContext.getFirstTimeStep() + shift) % rangeSize;
+}
+
+TimeDependentLinearExpression TimeDependentLinearExpression::shiftLinearExpressions(
+  int shiftValue) const
+{
+    const Optimisation::LinearProblemApi::FillContext fillContext{
+      linearExpressions_.begin()->first,
+      linearExpressions_.rbegin()->first};
+    unsigned int number_of_timestep = fillContext.getNumberOfTimestep();
+
+    if (number_of_timestep == 0)
+    {
+        return TimeDependentLinearExpression(fillContext);
+    }
+
+    LinearExpressionMap linearExpressions;
+    for (const auto& timeStep: linearExpressions_ | std::views::keys)
+    {
+        linearExpressions[timeStep] = linearExpressions_.at(
+          rotatedIndex(timeStep, shiftValue, fillContext));
+    }
+    return TimeDependentLinearExpression(std::move(linearExpressions));
+}
+
+TimeDependentLinearExpression TimeDependentLinearExpression::operator[](int index) const
+{
+    const Optimisation::LinearProblemApi::FillContext fillContext{
+      linearExpressions_.begin()->first,
+      linearExpressions_.rbegin()->first};
+    return TimeDependentLinearExpression(fillContext, linearExpressions_.at(index));
 }
 
 } // namespace Antares::Optimization

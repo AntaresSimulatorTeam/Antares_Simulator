@@ -28,11 +28,6 @@
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include "antares/expressions/visitors/NodeVisitor.h"
 
-namespace Antares::Optimisation::LinearProblemApi
-{
-struct DataSeriesKeys;
-}
-
 namespace Antares::Expressions::Visitors
 {
 
@@ -107,17 +102,23 @@ public:
         return value_;
     }
 
-    class EvalResultType: public std::runtime_error
+    class EvalResultTypeError: public std::runtime_error
     {
     public:
         using std::runtime_error::runtime_error;
+    };
+
+    class EvalResultTimeIndexOutOfRange: public std::out_of_range
+    {
+    public:
+        using std::out_of_range::out_of_range;
     };
 
     [[nodiscard]] double valueAsDouble() const
     {
         if (!std::holds_alternative<double>(value_))
         {
-            throw EvalResultType("Expected a double but found a vector.");
+            throw EvalResultTypeError("Expected a double but found a vector.");
         }
         return std::get<double>(value_);
     }
@@ -126,10 +127,13 @@ public:
     {
         if (!std::holds_alternative<std::vector<double>>(value_))
         {
-            throw EvalResultType("Expected a vector but found a double.");
+            throw EvalResultTypeError("Expected a vector but found a double.");
         }
         return std::get<std::vector<double>>(value_);
     }
+
+    EvaluationResult operator[](int timeIndex) const;
+    EvaluationResult shiftResult(int timeShift) const;
 
 private:
     std::variant<double, std::vector<double>> value_;
@@ -139,6 +143,13 @@ private:
     EvaluationResult evaluateBinaryOperation(const EvaluationResult& right, Op op) const;
     template<typename Op>
     EvaluationResult evaluateUnaryOperation(Op op) const;
+
+    static double shift(double value, int)
+    {
+        return value;
+    }
+
+    static std::vector<double> shift(const std::vector<double>& values, int shiftValue);
 };
 
 template<typename BinaryOp>
@@ -262,5 +273,7 @@ private:
     EvaluationResult visit(const Nodes::PortFieldSumNode* node) override;
     EvaluationResult visit(const Nodes::ComponentVariableNode* node) override;
     EvaluationResult visit(const Nodes::ComponentParameterNode* node) override;
+    EvaluationResult visit(const Nodes::TimeShiftNode* node) override;
+    EvaluationResult visit(const Nodes::TimeIndexNode* node) override;
 };
 } // namespace Antares::Expressions::Visitors

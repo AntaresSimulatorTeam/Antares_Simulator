@@ -351,9 +351,6 @@ void Parameters::reset()
     nbCores.ncMode = ncAvg;
     renewableGeneration.rgModelling = rgAggregated;
 
-    // Misc
-    improveUnitsStartup = false;
-
     include.constraints = true;
     include.hurdleCosts = true;
     transmissionCapacities = GlobalTransmissionCapacities::localValuesForAllLinks;
@@ -513,7 +510,7 @@ static bool SGDIntLoadFamily_General(Parameters& d,
     }
     if (key == "improveunitsstartup")
     {
-        return true; // value.to<bool>(d.improveUnitsStartup);
+        return true;
     }
 
     if (key == "january.1st") // after 4.3

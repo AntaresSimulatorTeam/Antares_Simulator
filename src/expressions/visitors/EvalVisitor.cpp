@@ -25,6 +25,7 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
+#include "antares/expressions/ShiftVector.h"
 
 namespace Antares::Expressions::Visitors
 {
@@ -130,6 +131,22 @@ EvaluationResult EvalVisitor::visit(const Nodes::ComponentParameterNode* node)
     throw EvalVisitorNotImplemented(name(), node->name());
 }
 
+EvaluationResult EvalVisitor::visit(const Nodes::TimeShiftNode* node)
+{
+    const auto ret = dispatch(node->left());
+    // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
+    const auto timeShift = static_cast<int>(dispatch(node->right()).valueAsDouble());
+    return ret.shiftResult(timeShift);
+}
+
+EvaluationResult EvalVisitor::visit(const Nodes::TimeIndexNode* node)
+{
+    const auto ret = dispatch(node->left());
+    // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
+    const auto timeIndex = static_cast<int>(dispatch(node->right()).valueAsDouble());
+    return ret[timeIndex];
+}
+
 std::string EvalVisitor::name() const
 {
     return "EvalVisitor";
@@ -162,6 +179,33 @@ EvaluationResult::EvaluationResult(const std::vector<double>& values):
 EvaluationResult::EvaluationResult(const std::variant<double, std::vector<double>>& value):
     value_(value)
 {
+}
+
+EvaluationResult EvaluationResult::shiftResult(int timeShift) const
+{
+    return EvaluationResult(
+      std::visit([&timeShift](const auto& l) -> std::variant<double, std::vector<double>>
+                 { return shift(l, timeShift); },
+                 value_));
+}
+
+EvaluationResult EvaluationResult::operator[](int timeIndex) const
+{
+    if (std::holds_alternative<double>(value_))
+    {
+        return *this;
+    }
+    const auto& vec = std::get<std::vector<double>>(value_);
+    if (timeIndex < 0 || timeIndex >= vec.size())
+    {
+        throw EvalResultTimeIndexOutOfRange("timeIndex is out of range");
+    }
+    return EvaluationResult(vec.at(timeIndex));
+}
+
+std::vector<double> EvaluationResult::shift(const std::vector<double>& values, int timeShift)
+{
+    return shiftVector(values, timeShift);
 }
 
 } // namespace Antares::Expressions::Visitors

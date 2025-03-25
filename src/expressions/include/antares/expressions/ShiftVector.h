@@ -19,39 +19,27 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-//
-// Created by marechaljas on 28/06/23.
-//
-
 #pragma once
+#include <algorithm>
+#include <vector>
 
-#include <memory>
-
-#include "BindingConstraint.h"
-
-namespace Antares::Data
+template<class T>
+std::vector<T> shiftVector(const std::vector<T>& values, int shiftValue)
 {
-
-class BindingConstraintGroup
-{
-public:
-    explicit BindingConstraintGroup(std::string name);
-
-    [[nodiscard]] std::string name()
+    const auto n = static_cast<int>(values.size());
+    if (n == 0)
     {
-        return name_;
+        return {};
     }
 
-    void add(const std::shared_ptr<BindingConstraint>& constraint);
-    [[nodiscard]] const BindingConstraint::Set& constraints() const;
-    [[nodiscard]] unsigned numberOfTimeseries() const;
+    // Normalize shiftValue within bounds
+    shiftValue = (shiftValue % n + n) % n;
 
-    // Public data members
-    TimeSeriesNumbers timeseriesNumbers;
+    // Create a copy of the original vector
+    auto shiftedValues = values;
 
-private:
-    BindingConstraint::Set constraints_;
-    std::string name_;
-};
+    // Use std::rotate to perform the shift (left shift for positive values)
+    std::rotate(shiftedValues.begin(), shiftedValues.begin() + shiftValue, shiftedValues.end());
 
-} // namespace Antares::Data
+    return shiftedValues;
+}

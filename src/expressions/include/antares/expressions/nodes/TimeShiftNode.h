@@ -20,27 +20,19 @@
 */
 #pragma once
 
+#include "antares/expressions/nodes/BinaryNode.h"
+
 namespace Antares::Expressions::Nodes
 {
-class Node;
-class BinaryNode;
-class UnaryNode;
-class SumNode;
-class SubtractionNode;
-class MultiplicationNode;
-class DivisionNode;
-class EqualNode;
-class LessThanOrEqualNode;
-class GreaterThanOrEqualNode;
-class NegationNode;
-class LiteralNode;
-class ComponentNode;
-class ComponentVariableNode;
-class ComponentParameterNode;
-class ParameterNode;
-class VariableNode;
-class PortFieldNode;
-class PortFieldSumNode;
-class TimeShiftNode;
-class TimeIndexNode;
+
+class TimeShiftNode: public BinaryNode
+{
+public:
+    using BinaryNode::BinaryNode;
+
+    std::string name() const override
+    {
+        return "TimeShiftNode";
+    }
+};
 } // namespace Antares::Expressions::Nodes
