@@ -166,7 +166,7 @@ bool Economy::year(Progression::Task& progression,
             optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
             postProcessesList_[numSpace]->runAll(opt_runtime_data);
 
-            // variables.weekBegin(state);
+            variables.weekBegin(state);
             uint previousHourInTheYear = state.hourInTheYear;
 
             for (uint hw = 0; hw != nbHoursInAWeek;
@@ -176,16 +176,16 @@ bool Economy::year(Progression::Task& progression,
 
                 state.ntc = currentProblem.ValeursDeNTC[hw];
 
-                // variables.hourBegin(state.hourInTheYear);
+                variables.hourBegin(state.hourInTheYear);
 
-                // variables.hourForEachArea(state, numSpace);
+                variables.hourForEachArea(state, numSpace);
 
-                // variables.hourEnd(state, state.hourInTheYear);
+                variables.hourEnd(state, state.hourInTheYear);
             }
 
             state.hourInTheYear = previousHourInTheYear;
-            // variables.weekForEachArea(state, numSpace);
-            // variables.weekEnd(state);
+            variables.weekForEachArea(state, numSpace);
+            variables.weekEnd(state);
 
             for (int opt = 0; opt < 7; opt++)
             {
@@ -252,8 +252,8 @@ static std::vector<AvgExchangeResults*> retrieveBalance(
     for (uint areaIndex = 0; areaIndex < nbAreas; ++areaIndex)
     {
         const Data::Area* area = study.areas.byIndex[areaIndex];
-        // variables.retrieveResultsForArea<Variable::Economy::VCardBalance>(&balance[areaIndex],
-        //                                                                   area);
+        variables.retrieveResultsForArea<Variable::Economy::VCardBalance>(&balance[areaIndex],
+                                                                          area);
     }
     return balance;
 }
@@ -262,8 +262,8 @@ void Economy::simulationEnd()
 {
     if (!preproOnly && study.runtime.interconnectionsCount() > 0)
     {
-        // auto balance = retrieveBalance(study, variables);
-        // ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks);
+        auto balance = retrieveBalance(study, variables);
+        ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks);
     }
 }
 

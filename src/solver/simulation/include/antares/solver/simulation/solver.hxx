@@ -204,12 +204,12 @@ public:
             // 9 - Write results for the current year
             if (yearByYear)
             {
-                pDurationCollector("yby_export") << [this]
+                pDurationCollector("yby_export") << [&]
                 {
                     // Before writing, some variable may require minor modifications
-                    // simulation_->variables.beforeYearByYearExport(y, numSpace);
+                    simulation_->variables.beforeYearByYearExport(y, numSpace);
                     // writing the results for the current year into the output
-                    // simulation_->writeResults(false, y, numSpace); // false for synthesis
+                    simulation_->writeResults(false, y, numSpace); // false for synthesis
                 };
             }
             logs.debug() << "year " << y << " ended and returned numSpace " << numSpace;

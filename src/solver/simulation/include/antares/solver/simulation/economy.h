@@ -63,7 +63,7 @@ public:
     //! Current study
     Data::Study& study;
     //! All variables
-    // Solver::Variable::Economy::AllVariables variables;
+    Solver::Variable::Economy::AllVariables variables;
     //! Prepro only
     bool preproOnly;
 

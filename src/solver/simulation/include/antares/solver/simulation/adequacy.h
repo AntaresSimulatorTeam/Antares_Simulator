@@ -60,7 +60,7 @@ public:
     //! Current study
     Data::Study& study;
     //! All variables
-    // Solver::Variable::Adequacy::AllVariables variables;
+    Solver::Variable::Adequacy::AllVariables variables;
     //! Prepro only
     bool preproOnly = false;
 
