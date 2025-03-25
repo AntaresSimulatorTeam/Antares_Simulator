@@ -95,7 +95,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
         std::vector<double> params;
         params.reserve(         fillContext_.getNumberOfTimestep());
         for (auto timeStep      = fillContext_.getFirstTimeStep();
-             timeStep         <= fillContext_.getLastTimeStep();
+             timeStep         <=     fillContext_.getLastTimeStep();
              ++timeStep)
         {
             params.emplace_back(context_.getParameterValue(node->value(), "", 0, timeStep));
@@ -127,7 +127,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::PortFieldNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
 {
-    throw EvalVisitorNotImplemented(name(), node->name());
+    throw EvalVisitorNotImplemented       (name(), node->name());
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::ComponentVariableNode* node)
