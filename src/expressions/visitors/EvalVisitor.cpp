@@ -152,7 +152,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeIndexNode* node)
 {
     const auto ret = dispatch(node->left());
     // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
-    const auto timeIndex = static_cast<int>(dispatch(node->right()).valueAsDouble());
+    const auto timeIndex =        static_cast<int>(dispatch(node->right()).valueAsDouble());
     return ret[timeIndex];
 }
 
@@ -164,7 +164,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
 
     // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
     const auto to = static_cast<int>(dispatch(node->to()).valueAsDouble());
-    return expression.timeSum(from, to);
+    return expression.timeSum(from     , to);
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::AllTimeSumNode* node)
