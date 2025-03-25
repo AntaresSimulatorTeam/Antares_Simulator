@@ -44,10 +44,10 @@ EvaluationResult EvalVisitor::visit(const Nodes::SumNode* node)
                            std::end(operands),
                            EvaluationResult{0.},
                            [this](const EvaluationResult& sum, const Nodes::Node* operand)
-                           { return sum         + dispatch(operand); });
+                           { return sum                      + dispatch(operand); });
 }
 
-EvaluationResult EvalVisitor::visit(const Nodes::SubtractionNode* node)
+EvaluationResult EvalVisitor::visit(const             Nodes::SubtractionNode* node)
 {
     return                         dispatch(node->left()) -              dispatch(node->right());
 }
