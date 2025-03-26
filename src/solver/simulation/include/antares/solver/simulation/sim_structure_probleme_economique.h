@@ -172,19 +172,19 @@ namespace ShortTermStorage
 {
 struct PROPERTIES
 {
-    double reservoirCapacity;
-    double injectionNominalCapacity;
-    double withdrawalNominalCapacity;
-    double injectionEfficiency;
-    double withdrawalEfficiency;
-    double initialLevel;
-    bool initialLevelOptim;
-    bool penalizeVariationWithdrawal;
-    bool penalizeVariationInjection;
+    double reservoirCapacity{0.};
+    double injectionNominalCapacity{0.};
+    double withdrawalNominalCapacity{0.};
+    double injectionEfficiency{0.};
+    double withdrawalEfficiency{0.};
+    double initialLevel{0.};
+    bool initialLevelOptim{false};
+    bool penalizeVariationWithdrawal{false};
+    bool penalizeVariationInjection{false};
 
     std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
     std::vector<Antares::Data::ShortTermStorage::AdditionalConstraints> additionalConstraints;
-    int clusterGlobalIndex;
+    int clusterGlobalIndex{0};
     std::string name;
 };
 
@@ -201,37 +201,37 @@ struct RESULTS
 
 struct DEMAND_MARKET_POOL
 {
-    double* TotalDemandOfMarketPool;
+    double* TotalDemandOfMarketPool{nullptr};
 };
 
 struct DEMAND_FLEX_UP_POOL
 {
-    double* FosteredDemandOfFlexUpPool;
+    double* FosteredDemandOfFlexUpPool{nullptr};
 };
 
 struct DEMAND_FLEX_DOWN_POOL
 {
-    double* FosteredDemandOfFlexDownPool;
+    double* FosteredDemandOfFlexDownPool{nullptr};
 };
 
 struct BOUND_FLEX_UP_NODE
 {
-    double* BoundFlexUpNode;
+    double* BoundFlexUpNode{nullptr};
 };
 
 struct BOUND_FLEX_DOWN_NODE
 {
-    double* BoundFlexDownNode;
+    double* BoundFlexDownNode{nullptr};
 };
 
 struct LEVEL_FLEX_UP_NODE
 {
-    double* LevelFlexUpNode;
+    double* LevelFlexUpNode{nullptr};
 };
 
 struct LEVEL_FLEX_DOWN_NODE
 {
-    double* LevelFlexDownNode;
+    double* LevelFlexDownNode{nullptr};
 };
 
 struct CONSOMMATIONS_ABATTUES
@@ -265,7 +265,7 @@ struct PDISP_ET_COUTS_HORAIRES_PAR_PALIER
 
 struct PALIERS_THERMIQUES
 {
-    int NombreDePaliersThermiques;
+    int NombreDePaliersThermiques{0};
 
     std::vector<int> minUpDownTime;
 
@@ -299,34 +299,34 @@ struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
     std::vector<double> MaxEnergiePompageParIntervalleOptimise;
     std::vector<double> ContrainteDePmaxPompageHoraire;
 
-    double MaxDesPmaxHydrauliques;
+    double MaxDesPmaxHydrauliques{0.};
 
-    bool PresenceDePompageModulable;
-    bool PresenceDHydrauliqueModulable;
+    bool PresenceDePompageModulable{false};
+    bool PresenceDHydrauliqueModulable{false};
 
-    double PenalisationDeLaVariationDeProductionHydrauliqueSurSommeDesVariations;
-    double PenalisationDeLaVariationDeProductionHydrauliqueSurVariationMax;
+    double PenalisationDeLaVariationDeProductionHydrauliqueSurSommeDesVariations{0.};
+    double PenalisationDeLaVariationDeProductionHydrauliqueSurVariationMax{0.};
 
-    double WeeklyWaterValueStateRegular;
+    double WeeklyWaterValueStateRegular{0.};
 
-    bool TurbinageEntreBornes;
-    bool SansHeuristique;
-    bool SuiviNiveauHoraire;
+    bool TurbinageEntreBornes{false};
+    bool SansHeuristique{false};
+    bool SuiviNiveauHoraire{false};
 
     std::vector<double> NiveauHoraireSup;
     std::vector<double> NiveauHoraireInf;
 
     std::vector<double> ApportNaturelHoraire;
     std::vector<double> MingenHoraire; /*Minimum Hourly Hydro-Storage Generation*/
-    double NiveauInitialReservoir;
-    double TailleReservoir;
-    double PumpingRatio;
+    double NiveauInitialReservoir{0.};
+    double TailleReservoir{0.};
+    double PumpingRatio{0.};
 
-    double WeeklyGeneratingModulation;
-    double WeeklyPumpingModulation;
-    bool DirectLevelAccess; /*  determines the type of constraints bearing on the final stok level*/
-    bool AccurateWaterValue;     /*  determines the type of modelling used for water budget*/
-    double LevelForTimeInterval; /*  value computed by the simulator in water-value based modes*/
+    double WeeklyGeneratingModulation{0.};
+    double WeeklyPumpingModulation{0.};
+    bool DirectLevelAccess{false}; /*  determines the type of constraints bearing on the final stok level*/
+    bool AccurateWaterValue{false};     /*  determines the type of modelling used for water budget*/
+    double LevelForTimeInterval{0.}; /*  value computed by the simulator in water-value based modes*/
     std::vector<double> WaterLayerValues;      /*  reference costs for the last time step (caution :
                                       dimension set to      100, should be made dynamic)*/
     std::vector<double> InflowForTimeInterval; /*  Energy input to the reservoir, used to in the
@@ -377,8 +377,8 @@ struct RESULTATS_HORAIRES
 
 struct COUTS_DE_TRANSPORT
 {
-    bool IntercoGereeAvecDesCouts;
-    bool IntercoGereeAvecLoopFlow;
+    bool IntercoGereeAvecDesCouts{false};
+    bool IntercoGereeAvecLoopFlow{false};
     std::vector<double> CoutDeTransportOrigineVersExtremite;
     std::vector<double> CoutDeTransportExtremiteVersOrigine;
 
