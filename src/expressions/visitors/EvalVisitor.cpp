@@ -43,16 +43,16 @@ EvaluationResult EvalVisitor::visit(const Nodes::SumNode* node)
     return std::accumulate(std::begin(operands),
                            std::end(operands),
                            EvaluationResult{0.},
-                           [this](const           EvaluationResult& sum, const Nodes::Node* operand)
-                           { return sum                      + dispatch(operand); });
+                           [this](const EvaluationResult& sum, const Nodes::Node* operand)
+                           { return sum + dispatch(operand); });
 }
 
-EvaluationResult EvalVisitor::visit(const             Nodes::SubtractionNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::SubtractionNode* node)
 {
-    return                         dispatch(                                 node->left()) -              dispatch(node->right());
+    return dispatch(node->left()) - dispatch(node->right());
 }
 
-EvaluationResult EvalVisitor::visit(const Nodes::MultiplicationNode*     node
+EvaluationResult EvalVisitor::visit(const Nodes::MultiplicationNode* node
 
 )
 {
@@ -61,17 +61,17 @@ EvaluationResult EvalVisitor::visit(const Nodes::MultiplicationNode*     node
 
 EvaluationResult EvalVisitor::visit(const Nodes::DivisionNode* node)
 {
-    return dispatch(node->left())      / dispatch(node->right());
+    return dispatch(node->left()) / dispatch(node->right());
 }
 
-EvaluationResult EvalVisitor::visit(const                Nodes::EqualNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::EqualNode* node)
 {
-    throw EvalVisitorNotImplemented(         name(), node->name());
+    throw EvalVisitorNotImplemented(name(), node->name());
 }
 
-EvaluationResult EvalVisitor::visit(const            Nodes::LessThanOrEqualNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::LessThanOrEqualNode* node)
 {
-    throw EvalVisitorNotImplemented(              name(), node->name());
+    throw EvalVisitorNotImplemented(name(), node->name());
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
@@ -81,7 +81,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 {
-    return EvaluationResult{context_.getVariableValue(     node->value())};
+    return EvaluationResult{context_.getVariableValue(node->value())};
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
@@ -93,31 +93,27 @@ EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
     else
     {
         std::vector<double> params;
-        params.reserve(         fillContext_.getNumberOfTimestep());
-        for (auto timeStep      = fillContext_.getFirstTimeStep();
-             timeStep         <=     fillContext_.getLastTimeStep();
+        params.reserve(fillContext_.getNumberOfTimestep());
+        for (auto timeStep = fillContext_.getFirstTimeStep();
+             timeStep <= fillContext_.getLastTimeStep();
              ++timeStep)
         {
             params.emplace_back(context_.getParameterValue(node->value(), "", 0, timeStep));
         }
-        return         EvaluationResult{params};
+        return EvaluationResult{params};
     }
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::LiteralNode* node)
 {
-
-
-
-
     return
-    
-    EvaluationResult{node->value()};
+
+      EvaluationResult{node->value()};
 }
 
-EvaluationResult        EvalVisitor::visit(const Nodes::NegationNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::NegationNode* node)
 {
-    return                           -dispatch(node->child());
+    return -dispatch(node->child());
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::PortFieldNode* node)
@@ -127,10 +123,10 @@ EvaluationResult EvalVisitor::visit(const Nodes::PortFieldNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
 {
-    throw EvalVisitorNotImplemented       (name(), node->name());
+    throw EvalVisitorNotImplemented(name(), node->name());
 }
 
-EvaluationResult EvalVisitor::visit(         const Nodes::ComponentVariableNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::ComponentVariableNode* node)
 {
     throw EvalVisitorNotImplemented(name(), node->name());
 }
@@ -140,11 +136,11 @@ EvaluationResult EvalVisitor::visit(const Nodes::ComponentParameterNode* node)
     throw EvalVisitorNotImplemented(name(), node->name());
 }
 
-EvaluationResult       EvalVisitor::visit(       const Nodes::TimeShiftNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::TimeShiftNode* node)
 {
     const auto ret = dispatch(node->left());
     // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
-    const auto timeShift          = static_cast<int>(dispatch(node->right()).valueAsDouble());
+    const auto timeShift = static_cast<int>(dispatch(node->right()).valueAsDouble());
     return ret.timeShift(timeShift);
 }
 
@@ -152,7 +148,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeIndexNode* node)
 {
     const auto ret = dispatch(node->left());
     // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
-    const auto timeIndex =        static_cast<int>(dispatch(node->right()).valueAsDouble());
+    const auto timeIndex = static_cast<int>(dispatch(node->right()).valueAsDouble());
     return ret[timeIndex];
 }
 
@@ -160,11 +156,11 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
 {
     const auto expression = dispatch(node->expression());
     // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
-    const auto from = static_cast<int>(     dispatch(node->from()).valueAsDouble());
+    const auto from = static_cast<int>(dispatch(node->from()).valueAsDouble());
 
     // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
     const auto to = static_cast<int>(dispatch(node->to()).valueAsDouble());
-    return expression.timeSum(from     , to);
+    return expression.timeSum(from, to);
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::AllTimeSumNode* node)
@@ -218,7 +214,7 @@ EvaluationResult EvaluationResult::timeShift(int time_shift) const
 EvaluationResult EvaluationResult::timeSum(int from, int to) const
 {
     EvaluationResult ret(0.);
-    for (auto shift = from; shift <= to; ++shift)
+    for (int shift = from; shift <= to; ++shift)
     {
         ret += timeShift(shift);
     }
