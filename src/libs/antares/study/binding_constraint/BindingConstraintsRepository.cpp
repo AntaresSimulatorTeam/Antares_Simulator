@@ -269,7 +269,10 @@ void BindingConstraintsRepository::checkDouble() const
             }
             if (id == constraints_.at(indexCstSearch).get()->id())
             {
-                logs.warning() << "Two binding constraints with id " << id;
+                if (!(name.endsWith("_sup") || name.endsWith("_inf")))
+                {
+                    logs.warning() << "Two binding constraints with id " << id;
+                }
             }
         }
     }
