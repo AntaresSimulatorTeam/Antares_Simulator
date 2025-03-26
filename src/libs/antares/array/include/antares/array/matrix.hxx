@@ -181,8 +181,7 @@ namespace Antares {
                                                    jit(nullptr) {
         if (0 == width or 0 == height) {
         } else {
-            entry.resize(w + 1);
-            entry[w] = nullptr;
+            entry.resize(w);
 
             for (uint i = 0; i != w; ++i) {
                 Antares::Memory::Allocate<T>(entry[i], h);
@@ -198,8 +197,7 @@ namespace Antares {
             width = 0;
             height = 0;
         } else {
-            entry.resize(width + 1);
-            entry[width] = nullptr;
+            entry.resize(width);
 
             for (uint i = 0; i != rhs.width; ++i) {
                 Antares::Memory::Allocate<T>(entry[i], height);
@@ -228,8 +226,8 @@ namespace Antares {
             and "Internal variable jit is set but JIT is not globally enabled (overflow?)");
         delete jit;
 
-        for (uint i = 0; i != width; ++i) {
-            Antares::Memory::Release(entry[i]);
+        for (auto t: entry) {
+            Antares::Memory::Release(t);
         }
         entry.clear();
     }
@@ -436,8 +434,8 @@ namespace Antares {
 
     template<class T, class ReadWriteT>
     void Matrix<T, ReadWriteT>::clear() {
-        for (uint i = 0; i != width; ++i) {
-            Antares::Memory::Release(entry[i]);
+        for (auto t: entry) {
+            Antares::Memory::Release(t);
         }
         entry.clear();
         width = 0;
@@ -463,6 +461,9 @@ namespace Antares {
             if (!w or !h) {
                 clear();
             } else {
+                for (auto t: entry) {
+                    Antares::Memory::Release(t);
+                }
                 entry.clear();
 
                 // Assigning the new size
@@ -470,9 +471,8 @@ namespace Antares {
                 height = h;
 
                 // Allocating the entry for the matrix
-                entry.resize(width + 1);
+                entry.resize(width);
                 entry.shrink_to_fit();
-                entry[width] = nullptr;
 
                 for (uint i = 0; i != w; ++i) {
                     Antares::Memory::Allocate<T>(entry[i], height);
