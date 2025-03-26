@@ -71,7 +71,7 @@ struct CORRESPONDANCES_DES_VARIABLES
         std::vector<int> LevelVariable;
         std::vector<int> CostVariationInjection;
         std::vector<int> CostVariationWithdrawal;
-    } SIM_ShortTermStorage;
+    } SIM_ShortTermStorage{};
 };
 
 struct CORRESPONDANCES_DES_CONTRAINTES
@@ -126,46 +126,46 @@ struct VALEURS_DE_NTC_ET_RESISTANCES
 
 struct TRANSFER_BOUND_AND_LEVEL_MARKET_EDGE
 {
-    double* TransferBoundMarketEdge;
-    double* TransferLevelMarketEdge;
+    double* TransferBoundMarketEdge{nullptr};
+    double* TransferLevelMarketEdge{nullptr};
 };
 
 struct TRANSFER_BOUND_AND_LEVEL_FLEX_UP_EDGE
 {
-    double* TransferBoundFlexUpEdge;
-    double* TransferLevelFlexUpEdge;
+    double* TransferBoundFlexUpEdge{nullptr};
+    double* TransferLevelFlexUpEdge{nullptr};
 };
 
 struct TRANSFER_BOUND_AND_LEVEL_FLEX_DOWN_EDGE
 {
-    double* TransferBoundFlexDownEdge;
-    double* TransferLevelFlexDownEdge;
+    double* TransferBoundFlexDownEdge{nullptr};
+    double* TransferLevelFlexDownEdge{nullptr};
 };
 
 struct CONTRAINTES_COUPLANTES
 {
-    char TypeDeContrainteCouplante;
-    char SensDeLaContrainteCouplante;
+    char TypeDeContrainteCouplante{'\0'};
+    char SensDeLaContrainteCouplante{'\0'};
 
     std::vector<double> SecondMembreDeLaContrainteCouplante;
 
-    int NombreDElementsDansLaContrainteCouplante;
-    int NombreDInterconnexionsDansLaContrainteCouplante;
+    int NombreDElementsDansLaContrainteCouplante{0};
+    int NombreDInterconnexionsDansLaContrainteCouplante{0};
 
     std::vector<double> PoidsDeLInterconnexion;
     std::vector<int> NumeroDeLInterconnexion;
     std::vector<int> OffsetTemporelSurLInterco;
 
-    int NombreDePaliersDispatchDansLaContrainteCouplante;
+    int NombreDePaliersDispatchDansLaContrainteCouplante{0};
 
     std::vector<double> PoidsDuPalierDispatch;
     std::vector<int> PaysDuPalierDispatch;
     std::vector<int> NumeroDuPalierDispatch;
     std::vector<int> OffsetTemporelSurLePalierDispatch;
 
-    const char* NomDeLaContrainteCouplante;
+    const char* NomDeLaContrainteCouplante{nullptr};
 
-    std::shared_ptr<Data::BindingConstraint> bindingConstraint;
+    std::shared_ptr<Data::BindingConstraint> bindingConstraint{nullptr};
 };
 
 namespace ShortTermStorage
@@ -182,7 +182,7 @@ struct PROPERTIES
     bool penalizeVariationWithdrawal{false};
     bool penalizeVariationInjection{false};
 
-    std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
+    std::shared_ptr<Antares::Data::ShortTermStorage::Series> series{nullptr};
     std::vector<Antares::Data::ShortTermStorage::AdditionalConstraints> additionalConstraints;
     int clusterGlobalIndex{0};
     std::string name;
