@@ -37,6 +37,12 @@ OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solver
     objective_ = mpSolver_->MutableObjective();
 }
 
+OrtoolsLinearProblem::~OrtoolsLinearProblem()
+{
+    std::ranges::for_each(variables_, [](OrtoolsMipVariable* v) { delete v; });
+    std::ranges::for_each(constraints_, [](OrtoolsMipConstraint* c) { delete c; });
+}
+
 class ElemAlreadyExists: public std::runtime_error
 {
 public:
@@ -51,12 +57,6 @@ OrtoolsMipVariable* OrtoolsLinearProblem::addVariable(double lb,
                                                       bool integer,
                                                       const std::string& name)
 {
-    if (variables_.contains(name))
-    {
-        logs.error() << "This variable already exists: " << name;
-        throw ElemAlreadyExists();
-    }
-
     auto* mpVar = mpSolver_->MakeVar(lb, ub, integer, name);
 
     if (!mpVar)
@@ -64,8 +64,8 @@ OrtoolsMipVariable* OrtoolsLinearProblem::addVariable(double lb,
         logs.error() << "Couldn't add variable to Ortools MPSolver: " << name;
     }
 
-    const auto& pair = variables_.emplace(name, std::make_unique<OrtoolsMipVariable>(mpVar));
-    return pair.first->second.get(); // <<name, var>, bool>
+    variables_.push_back(new OrtoolsMipVariable(mpVar));
+    return variables_.back();
 }
 
 OrtoolsMipVariable* OrtoolsLinearProblem::addNumVariable(double lb,
@@ -82,9 +82,9 @@ OrtoolsMipVariable* OrtoolsLinearProblem::addIntVariable(double lb,
     return addVariable(lb, ub, true, name);
 }
 
-OrtoolsMipVariable* OrtoolsLinearProblem::getVariable(const std::string& name) const
+OrtoolsMipVariable* OrtoolsLinearProblem::getVariable(std::size_t index) const
 {
-    return variables_.at(name).get();
+    return variables_.at(index);
 }
 
 int OrtoolsLinearProblem::variableCount() const
@@ -96,12 +96,6 @@ OrtoolsMipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
                                                           double ub,
                                                           const std::string& name)
 {
-    if (constraints_.contains(name))
-    {
-        logs.error() << "This constraint already exists: " << name;
-        throw ElemAlreadyExists();
-    }
-
     auto* mpConstraint = mpSolver_->MakeRowConstraint(lb, ub, name);
 
     if (!mpConstraint)
@@ -109,14 +103,13 @@ OrtoolsMipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
         logs.error() << "Couldn't add variable to Ortools MPSolver: " << name;
     }
 
-    const auto& pair = constraints_.emplace(name,
-                                            std::make_unique<OrtoolsMipConstraint>(mpConstraint));
-    return pair.first->second.get(); // <<name, constraint>, bool>
+    constraints_.push_back(new OrtoolsMipConstraint(mpConstraint));
+    return constraints_.back();
 }
 
-OrtoolsMipConstraint* OrtoolsLinearProblem::getConstraint(const std::string& name) const
+OrtoolsMipConstraint* OrtoolsLinearProblem::getConstraint(std::size_t index) const
 {
-    return constraints_.at(name).get();
+    return constraints_.at(index);
 }
 
 int OrtoolsLinearProblem::constraintCount() const
