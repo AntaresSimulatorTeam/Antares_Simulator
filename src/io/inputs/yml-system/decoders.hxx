@@ -85,7 +85,7 @@ struct convert<Antares::IO::Inputs::YmlSystem::Connection>
 {
     static bool decode(const Node& node, Antares::IO::Inputs::YmlSystem::Connection& rhs)
     {
-        if (!node.IsMap() && !node.size() != 4)
+        if (!node.IsMap() && node.size() != 4)
         {
             return false;
         }
