@@ -41,9 +41,9 @@ extern "C"
 /* Matrice des contraintes: il y aura une seule instance pour tous les reservoirs */
 /* Dans ce struct il n'y a que des donnees qui sont lues et surtout pas ecrites   */
 /* Ce struct est instancie une seule fois                                         */
-typedef struct
+struct PROBLEME_LINEAIRE_PARTIE_FIXE
 {
-    int NombreDeVariables;
+    int NombreDeVariables{0};
     std::vector<double> CoutLineaire;
     std::vector<double> CoutLineaireBruite; /* Ajout de bruit pour forcer l'unicité des solutions */
     std::vector<int> TypeDeVariable; /* Indicateur du type de variable, il ne doit prendre que les
@@ -55,17 +55,21 @@ typedef struct
                             VARIABLE_NON_BORNEE
                                            */
     /* La matrice des contraintes */
-    int NombreDeContraintes;
+    int NombreDeContraintes{0};
     std::vector<char> Sens;
     std::vector<int> IndicesDebutDeLigne;
     std::vector<int> NombreDeTermesDesLignes;
     std::vector<double> CoefficientsDeLaMatriceDesContraintes;
     std::vector<int> IndicesColonnes;
-    int NombreDeTermesAlloues;
-} PROBLEME_LINEAIRE_PARTIE_FIXE;
+    int NombreDeTermesAlloues{0};
+
+    ~PROBLEME_LINEAIRE_PARTIE_FIXE() {
+        int x = 0;
+    }
+};
 
 /* Partie variable renseignee avant le lancement de l'optimisation de chaque reservoir */
-typedef struct
+struct PROBLEME_LINEAIRE_PARTIE_VARIABLE
 {
     /* Donnees variables de la matrice des contraintes */
     /* On met quand-meme les bornes dans la partie variable pour le cas ou on voudrait avoir
@@ -80,7 +84,7 @@ typedef struct
     /* Resultat */
     std::vector<double> X;
     /* En Entree ou en Sortie */
-    int ExistenceDUneSolution; /* En sortie, vaut :
+    int ExistenceDUneSolution{0}; /* En sortie, vaut :
                                   OUI_SPX s'il y a une solution,
                                                           NON_SPX s'il n'y a pas de solution
                                   admissible SPX_ERREUR_INTERNE si probleme a l'execution
@@ -98,10 +102,10 @@ typedef struct
       CoutsReduits; /* Vecteur a passer au Simplexe pour recuperer les couts reduits */
     std::vector<double> CoutsMarginauxDesContraintes; /* Vecteur a passer au Simplexe pour recuperer
                                              les couts marginaux */
-} PROBLEME_LINEAIRE_PARTIE_VARIABLE;
+};
 
 /* Les correspondances des variables */
-typedef struct
+struct CORRESPONDANCE_DES_VARIABLES
 {
     std::vector<int> NumeroDeVariableVolume;               /* Volumes */
     std::vector<int> NumeroDeVariableTurbine;              /* Turbines */
@@ -112,15 +116,13 @@ typedef struct
       NumeroDeVariableDEcartPositifAuTurbineCible; /* Ecart positif au volume cible */
     std::vector<int>
       NumeroDeVariableDEcartNegatifAuTurbineCible; /* Ecart negatif au volume cible */
-    int NumeroDeLaVariableXi; /* Variable decrivant l'ecart max au turbine cible */
-} CORRESPONDANCE_DES_VARIABLES;
+    int NumeroDeLaVariableXi{0}; /* Variable decrivant l'ecart max au turbine cible */
+};
 
 /* Structure uniquement exploitee par l'optimisation (donc a ne pas acceder depuis l'exterieur) */
-typedef struct
+struct PROBLEME_HYDRAULIQUE
 {
-    int NombreDeReservoirs;
-    char LesCoutsOntEteInitialises; /* Vaut OUI ou NON */
-
+    int NombreDeReservoirs{0};
     CORRESPONDANCE_DES_VARIABLES CorrespondanceDesVariables;
 
     PROBLEME_LINEAIRE_PARTIE_FIXE ProblemeLineairePartieFixe;
@@ -128,9 +130,9 @@ typedef struct
 
     std::vector<PROBLEME_SPX*> ProblemeSpx; /* Il y en a 1 par reservoir */
 
-    double CoutDeLaSolution;
-    double CoutDeLaSolutionBruite;
+    double CoutDeLaSolution{0.};
+    double CoutDeLaSolutionBruite{0.};
 
-} PROBLEME_HYDRAULIQUE;
+};
 
 #endif

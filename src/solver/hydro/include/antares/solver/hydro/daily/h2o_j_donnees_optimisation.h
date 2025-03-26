@@ -50,7 +50,7 @@ extern "C"
 /* Ce struct est instancie une seule fois                                         */
 struct PROBLEME_LINEAIRE_PARTIE_FIXE
 {
-    int NombreDeVariables;
+    int NombreDeVariables{0};
     std::vector<double> CoutLineaire;
     std::vector<int> TypeDeVariable; /* Indicateur du type de variable, il ne doit prendre que les
                            suivantes (voir le fichier spx_constantes_externes.h mais ne jamais
@@ -61,13 +61,13 @@ struct PROBLEME_LINEAIRE_PARTIE_FIXE
                             VARIABLE_NON_BORNEE
                                            */
     /* La matrice des contraintes */
-    int NombreDeContraintes;
+    int NombreDeContraintes{0};
     std::vector<char> Sens;
     std::vector<int> IndicesDebutDeLigne;
     std::vector<int> NombreDeTermesDesLignes;
     std::vector<double> CoefficientsDeLaMatriceDesContraintes;
     std::vector<int> IndicesColonnes;
-    int NombreDeTermesAlloues;
+    int NombreDeTermesAlloues{0};
 };
 
 /* Partie variable renseignee avant le lancement de l'optimisation de chaque reservoir */
@@ -86,7 +86,7 @@ struct PROBLEME_LINEAIRE_PARTIE_VARIABLE
     /* Resultat */
     std::vector<double> X;
     /* En Entree ou en Sortie */
-    int ExistenceDUneSolution; /* En sortie, vaut :
+    int ExistenceDUneSolution{NON_SPX}; /* En sortie, vaut :
                                   OUI_SPX s'il y a une solution,
                                                           NON_SPX s'il n'y a pas de solution
                                   admissible SPX_ERREUR_INTERNE si probleme a l'execution
@@ -109,7 +109,7 @@ struct PROBLEME_LINEAIRE_PARTIE_VARIABLE
 /* Les correspondances fixes des contraintes */
 struct CORRESPONDANCE_DES_CONTRAINTES
 {
-    int NumeroDeContrainteDEnergieMensuelle;
+    int NumeroDeContrainteDEnergieMensuelle{0};
     std::vector<int> NumeroDeContrainteSurXi;
 };
 
@@ -117,17 +117,15 @@ struct CORRESPONDANCE_DES_CONTRAINTES
 struct CORRESPONDANCE_DES_VARIABLES
 {
     std::vector<int> NumeroDeVariableTurbine; /* Turbines */
-    int NumeroDeLaVariableMu;                 /* Variable de deversement (total sur la periode) */
-    int NumeroDeLaVariableXi; /* Variable decrivant l'ecart max au turbine cible quand le turbine
+    int NumeroDeLaVariableMu{0};                 /* Variable de deversement (total sur la periode) */
+    int NumeroDeLaVariableXi{0}; /* Variable decrivant l'ecart max au turbine cible quand le turbine
                                  est inferieur au turbine cible */
 };
 
 /* Structure uniquement exploitee par l'optimisation (donc a ne pas acceder depuis l'exterieur) */
 struct PROBLEME_HYDRAULIQUE
 {
-    char LesCoutsOntEteInitialises; /* Vaut OUI ou NON */
-
-    int NombreDeProblemes;
+    int NombreDeProblemes{0};
     std::vector<int> NbJoursDUnProbleme;
 
     std::vector<CORRESPONDANCE_DES_VARIABLES> CorrespondanceDesVariables;
@@ -138,6 +136,15 @@ struct PROBLEME_HYDRAULIQUE
 
     std::vector<PROBLEME_SPX*>
       ProblemeSpx; /* Il y en a 1 par reservoir. Un probleme couvre 1 mois */
+
+    ~PROBLEME_HYDRAULIQUE() {
+        for (auto* problem: ProblemeSpx) {
+            if (problem)
+            {
+                SPX_LibererProbleme(problem);
+            }
+        }
+    }
 };
 
 #endif
