@@ -121,18 +121,18 @@ struct MatrixScalar<float>
 } // anonymous namespace
 
 template<class T, class ReadWriteT, class PredicateT>
-I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>* matrix_to_buffer_dumper_factory::get_dumper(
+std::unique_ptr<I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>> matrix_to_buffer_dumper_factory::get_dumper(
   const Matrix<T, ReadWriteT>* mtx,
   std::string& data,
   PredicateT& predicate)
 {
     if (mtx->width == 1)
     {
-        return new one_column__dumper<T, ReadWriteT, PredicateT>(mtx, data, predicate);
+        return std::make_unique<one_column__dumper<T, ReadWriteT, PredicateT>>(mtx, data, predicate);
     }
     else
     {
-        return new multiple_columns__dumper<T, ReadWriteT, PredicateT>(mtx, data, predicate);
+        return std::make_unique<multiple_columns__dumper<T, ReadWriteT, PredicateT>>(mtx, data, predicate);
     }
 }
 

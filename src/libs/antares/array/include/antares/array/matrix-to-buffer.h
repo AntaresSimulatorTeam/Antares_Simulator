@@ -49,7 +49,7 @@ public:
     }
 
     template<class T, class ReadWriteT, class PredicateT>
-    I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>* get_dumper(const Matrix<T, ReadWriteT>* mtx,
+    std::unique_ptr<I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>> get_dumper(const Matrix<T, ReadWriteT>* mtx,
                                                                   std::string& data,
                                                                   PredicateT& predicate);
 };
