@@ -43,15 +43,6 @@ OrtoolsLinearProblem::~OrtoolsLinearProblem()
     std::ranges::for_each(constraints_, [](OrtoolsMipConstraint* c) { delete c; });
 }
 
-class ElemAlreadyExists: public std::runtime_error
-{
-public:
-    explicit ElemAlreadyExists():
-        std::runtime_error("Element name already exists in linear problem")
-    {
-    }
-};
-
 OrtoolsMipVariable* OrtoolsLinearProblem::addVariable(double lb,
                                                       double ub,
                                                       bool integer,
