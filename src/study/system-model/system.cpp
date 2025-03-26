@@ -47,6 +47,11 @@ System::System(const std::string_view id,
     //                        { return makeComponent(component); });
 }
 
+const std::vector<Connection>& System::connections() const
+{
+    return connections_;
+}
+
 /**
  * \brief Sets the ID of the system.
  *

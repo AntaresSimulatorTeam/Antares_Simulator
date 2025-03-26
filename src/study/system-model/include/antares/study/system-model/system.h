@@ -56,6 +56,8 @@ public:
         return components_;
     }
 
+    [[nodiscard]] const std::vector<Connection>& connections() const;
+
 private:
     // Only SystemBuilder is allowed to build System instances
     friend class SystemBuilder;

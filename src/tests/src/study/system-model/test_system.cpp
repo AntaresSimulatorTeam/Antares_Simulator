@@ -25,9 +25,12 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include "antares/io/inputs/model-converter/convertorVisitor.h"
+#include "antares/io/inputs/yml-model/Library.h"
 #include "antares/study/system-model/system.h"
 
 using namespace Antares::Study::SystemModel;
+using namespace Antares::IO::Inputs::ModelConverter;
 
 struct SystemBuilderCreationFixture
 {
@@ -47,6 +50,44 @@ static std::pair<std::string, Component> createComponent(std::string id)
     return {id, component};
 }
 
+static Model createModelWithPort()
+{
+    ModelBuilder model_builder;
+    PortField port_field("field");
+
+    Port port1("port1", PortType("type", {port_field}));
+    Port port2("port2", PortType("type", {port_field}));
+    Antares::IO::Inputs::YmlModel::Variable v = {
+      .id = "x",
+      .lower_bound = "2",
+      .upper_bound = "4",
+      .variable_type = Antares::IO::Inputs::YmlModel::ValueType::CONTINUOUS,
+      .time_dependent = true,
+      .scenario_dependent = true};
+    Antares::IO::Inputs::YmlModel::Model ymlmodel = {.variables = {v},
+                                                     .port_field_definitions = {
+                                                       {"port1", "field", v.id}}};
+
+    auto nodeRegistry = Antares::IO::Inputs::ModelConverter::convertExpressionToNode(v.id,
+                                                                                     ymlmodel);
+    std::vector<PortFieldDefinition> portFieldDefinitions;
+    portFieldDefinitions.emplace_back(port1, port_field, Expression(v.id, std::move(nodeRegistry)));
+
+    return model_builder.withId("model")
+      .withPorts({port1, port2})
+      .withPortFieldDefinitions(std::move(portFieldDefinitions))
+      .build();
+}
+
+static Connection createConnection(const Component& comp1, const Component& comp2)
+{
+    auto& port1 = comp1.getModel()->Ports().at("port1");
+    auto& port2 = comp2.getModel()->Ports().at("port2");
+
+    ConnectionEntry entry1(&comp1, &port1);
+    ConnectionEntry entry2(&comp2, &port2);
+    return Connection(entry1, entry2);
+}
 BOOST_AUTO_TEST_SUITE(_System_)
 
 BOOST_FIXTURE_TEST_CASE(nominal_build, SystemBuilderCreationFixture)
@@ -57,6 +98,44 @@ BOOST_FIXTURE_TEST_CASE(nominal_build, SystemBuilderCreationFixture)
     BOOST_CHECK_EQUAL(system.Components().size(), 2);
     BOOST_CHECK_EQUAL(system.Components().at("component1").Id(), "component1");
     BOOST_CHECK_EQUAL(system.Components().at("component2").Id(), "component2");
+    BOOST_CHECK(system.connections().empty());
+}
+
+BOOST_FIXTURE_TEST_CASE(nominal_build_with_connections, SystemBuilderCreationFixture)
+{
+    auto compoBuildHelper = [](const std::string& id,
+                               const Model& model) -> std::pair<std::string, Component>
+    {
+        ComponentBuilder component_builder;
+        auto component = component_builder.withId(id)
+                           .withModel(&model)
+                           .withScenarioGroupId("scenario_group")
+                           .build();
+        return {id, component};
+    };
+    auto model = createModelWithPort();
+    auto [id1, comp1] = compoBuildHelper("component1", model);
+    auto [id2, comp2] = compoBuildHelper("component2", model);
+    components.emplace(id1, comp1);
+    components.emplace(id2, comp2);
+
+    std::vector connections = {createConnection(comp1, comp2)};
+
+    auto system = system_builder.withId("system")
+                    .withComponents(std::move(components))
+                    .withConnections(std::move(connections))
+                    .build();
+
+    BOOST_CHECK_EQUAL(system.Id(), "system");
+    BOOST_CHECK_EQUAL(system.Components().size(), 2);
+    BOOST_CHECK_EQUAL(system.connections().size(), 1);
+
+    // Verify connection contents
+    const auto& conn = system.connections()[0];
+    BOOST_CHECK_EQUAL(conn.firstEntry().component()->Id(), "component1");
+    BOOST_CHECK_EQUAL(conn.firstEntry().port()->Id(), "port1");
+    BOOST_CHECK_EQUAL(conn.secondEntry().component()->Id(), "component2");
+    BOOST_CHECK_EQUAL(conn.secondEntry().port()->Id(), "port2");
 }
 
 BOOST_FIXTURE_TEST_CASE(fail_on_no_id, SystemBuilderCreationFixture)

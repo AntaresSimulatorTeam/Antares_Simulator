@@ -42,6 +42,16 @@ class Connection
 public:
     Connection(const ConnectionEntry& firstEntry, const ConnectionEntry& secondEntry);
 
+    [[nodiscard]] const ConnectionEntry& firstEntry() const
+    {
+        return firstEntry_;
+    }
+
+    [[nodiscard]] const ConnectionEntry& secondEntry() const
+    {
+        return secondEntry_;
+    }
+
 private:
     ConnectionEntry firstEntry_;
     ConnectionEntry secondEntry_;
