@@ -30,7 +30,6 @@
 namespace Antares::Optimization
 {
 
-template<typename T>
 using FullKeyMap = std::unordered_map<FullKey, double, FullKeyHash>;
 
 /**
