@@ -67,7 +67,7 @@ bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path& path)
         {
             return false;
         }
-
+        this->checkForDoubles(cluster.id);
         storagesByIndex.push_back(cluster);
     }
 
@@ -76,6 +76,17 @@ bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path& path)
                       { return a.properties.name < b.properties.name; });
 
     return true;
+}
+
+void STStorageInput::checkForDoubles(std::string clusterID) const
+{
+    for (int index = 0; index < storagesByIndex.size(); index++)
+    {
+        if (clusterID == storagesByIndex.at(index).id)
+        {
+            logs.warning() << "Two STS with id " << clusterID;
+        }
+    }
 }
 
 static bool loadHours(std::string hoursStr, AdditionalConstraints& additionalConstraints)

@@ -52,6 +52,8 @@ public:
 
     bool saveDataSeriesToFolder(const std::string& folder) const;
 
+    void checkForDoubles(std::string clusterID) const;
+
     std::vector<STStorageCluster> storagesByIndex;
 
     /// Number cumulative - constraint

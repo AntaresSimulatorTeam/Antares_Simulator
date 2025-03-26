@@ -117,6 +117,7 @@ void ClusterList<ClusterT>::addToCompleteList(std::shared_ptr<ClusterT> cluster)
 {
     if (alreadyInAllClusters(cluster->id()))
     {
+        logs.warning() << "Two cluster with id " << cluster->id();
         return;
     }
     allClusters_.push_back(cluster);
