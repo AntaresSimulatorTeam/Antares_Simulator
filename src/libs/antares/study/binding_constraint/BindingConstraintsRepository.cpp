@@ -255,12 +255,13 @@ bool BindingConstraintsRepository::loadFromFolder(Study& study,
 
 void BindingConstraintsRepository::checkDouble() const
 {
-    for (int indexCst = 0; indexCst < constraints_.size() - 1 ; indexCst++)
+    for (int indexCst = 0; indexCst < constraints_.size() - 1; indexCst++)
     {
         Antares::Data::ConstraintName name = constraints_.at(indexCst).get()->name();
         Antares::Data::ConstraintName id = constraints_.at(indexCst).get()->id();
 
-        for (int indexCstSearch = indexCst + 1; indexCstSearch < constraints_.size(); indexCstSearch++)
+        for (int indexCstSearch = indexCst + 1; indexCstSearch < constraints_.size();
+             indexCstSearch++)
         {
             if (name == constraints_.at(indexCstSearch).get()->name())
             {
