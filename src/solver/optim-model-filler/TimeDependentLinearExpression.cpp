@@ -47,7 +47,7 @@ TimeDependentLinearExpression::TimeDependentLinearExpression(
 {
 }
 
-TimeDependentLinearExpression::TimeDependentLinearExpression(
+   TimeDependentLinearExpression::TimeDependentLinearExpression(
   const LinearExpressionMap& linearExpressions):
     linearExpressions_(linearExpressions)
 
