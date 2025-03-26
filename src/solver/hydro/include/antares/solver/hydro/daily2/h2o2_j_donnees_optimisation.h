@@ -128,8 +128,6 @@ typedef struct
 /* Structure uniquement exploitee par l'optimisation (donc a ne pas acceder depuis l'exterieur) */
 typedef struct
 {
-    char LesCoutsOntEteInitialises; /* Vaut OUI ou NON */
-
     int NombreDeProblemes;
     std::vector<int> NbJoursDUnProbleme;
 

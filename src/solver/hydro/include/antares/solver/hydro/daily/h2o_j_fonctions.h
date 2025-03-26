@@ -24,7 +24,7 @@
 
 #include <memory>
 
-std::unique_ptr<DONNEES_MENSUELLES> H2O_J_Instanciation(void);
+DONNEES_MENSUELLES H2O_J_Instanciation(void);
 
 void H2O_J_OptimiserUnMois(DONNEES_MENSUELLES*);
 void H2O_J_Free(DONNEES_MENSUELLES*);

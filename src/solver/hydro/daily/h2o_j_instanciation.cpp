@@ -24,11 +24,11 @@
 #include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily/h2o_j_fonctions.h"
 
-std::unique_ptr<DONNEES_MENSUELLES> H2O_J_Instanciation(void)
+DONNEES_MENSUELLES H2O_J_Instanciation()
 {
-    auto DonneesMensuelles = std::make_unique<DONNEES_MENSUELLES>();
+    DONNEES_MENSUELLES DonneesMensuelles;
 
-    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
+    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles.ProblemeHydraulique;
 
     ProblemeHydraulique.NombreDeProblemes = 4;
 
@@ -40,10 +40,10 @@ std::unique_ptr<DONNEES_MENSUELLES> H2O_J_Instanciation(void)
     NbJoursDUnProbleme[2] = 30;
     NbJoursDUnProbleme[3] = 31;
 
-    DonneesMensuelles->TurbineMax.assign(NbJoursDUnProbleme[3], 0.);
-    DonneesMensuelles->TurbineMin.assign(NbJoursDUnProbleme[3], 0.);
-    DonneesMensuelles->TurbineCible.assign(NbJoursDUnProbleme[3], 0.);
-    DonneesMensuelles->Turbine.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuelles.TurbineMax.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuelles.TurbineMin.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuelles.TurbineCible.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuelles.Turbine.assign(NbJoursDUnProbleme[3], 0.);
 
     int NombreDeProblemes = ProblemeHydraulique.NombreDeProblemes;
 

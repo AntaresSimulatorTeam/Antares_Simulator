@@ -230,8 +230,6 @@ void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_rese
                   throw FatalError(msg.str());
               }
               }
-
-              H2O_M_Free(problem);
           }
 
           else
