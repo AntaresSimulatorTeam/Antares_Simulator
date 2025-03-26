@@ -167,7 +167,7 @@ static SystemModel::Connection createConnection(
         throw std::invalid_argument("Ports '" + first_port.Id() + "' and '" + second_port.Id()
                                     + "' are not of the same type!");
     }
-    for (const auto field: first_port.Type().Fields())
+    for (const auto& field: first_port.Type().Fields())
     {
         if (const bool isFirstPortSending = AmISendingField(field.Id(), first_component);
             isFirstPortSending == AmISendingField(field.Id(), second_component))
