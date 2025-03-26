@@ -22,6 +22,7 @@
 #include "antares/io/inputs/yml-system/converter.h"
 
 #include <algorithm>
+#include <sstream>
 
 #include "antares/io/inputs/yml-system/system.h"
 #include "antares/study/system-model/system.h"
@@ -149,30 +150,34 @@ static SystemModel::Connection createConnection(
         return it->second;
     };
 
-    auto AmISenderPort = [](const SystemModel::Port& port,
-                            const SystemModel::Component& component) -> bool
+    auto AmISendingField = [](const std::string& field,
+                              const SystemModel::Component& component) -> bool
     {
         const auto& portFieldDefinitions = component.getModel()->PortFieldDefinitions();
 
-        return portFieldDefinitions.contains(port.Id());
+        return portFieldDefinitions.contains(field);
     };
 
     const auto& first_component = findComponent(connection.firstEntry.componentId);
     const auto& first_port = findPort(first_component, connection.firstEntry.portId);
-    const bool isFirstPortSending = AmISenderPort(first_port, first_component);
     const auto& second_component = findComponent(connection.secondEntry.componentId);
     const auto& second_port = findPort(second_component, connection.secondEntry.portId);
-
-    if (isFirstPortSending == AmISenderPort(second_port, second_component))
-    {
-        throw std::invalid_argument("Both ports '" + first_port.Id() + "' and '" + second_port.Id()
-                                    + "' are " + (isFirstPortSending ? "senders " : "receivers"));
-    }
-
     if (first_port.Type() != second_port.Type())
     {
         throw std::invalid_argument("Ports '" + first_port.Id() + "' and '" + second_port.Id()
                                     + "' are not of the same type!");
+    }
+    for (const auto field: first_port.Type().Fields())
+    {
+        if (const bool isFirstPortSending = AmISendingField(field.Id(), first_component);
+            isFirstPortSending == AmISendingField(field.Id(), second_component))
+        {
+            std::ostringstream msg;
+            msg << "Field '" << field.Id() << " is "
+                << (isFirstPortSending ? "sending " : "receiving ")
+                << " in both ports " + first_port.Id() << "' and '" << second_port.Id() << "'";
+            throw std::invalid_argument(msg.str());
+        }
     }
 
     return {SystemModel::ConnectionEntry(&first_component, &first_port),
