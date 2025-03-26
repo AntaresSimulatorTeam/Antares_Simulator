@@ -71,7 +71,6 @@ bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path& path)
         storagesByIndex.push_back(cluster);
     }
 
-
     std::ranges::sort(storagesByIndex,
                       [](const auto& a, const auto& b)
                       { return a.properties.name < b.properties.name; });
