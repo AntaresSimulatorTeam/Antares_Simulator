@@ -176,7 +176,7 @@ void one_column__dumper<T, ReadWriteT, PredicateT>::run()
     {
         MatrixScalar<ReadWriteT>::Append(this->buffer_,
                                          (ReadWriteT)this->predicate_((this->mtx_)->entry[0][y]),
-                                         this->format_);
+                                         this->format_.c_str());
         this->buffer_ += '\n';
     }
 }
@@ -188,14 +188,14 @@ void multiple_columns__dumper<T, ReadWriteT, PredicateT>::run()
     {
         MatrixScalar<ReadWriteT>::Append(this->buffer_,
                                          (ReadWriteT)this->predicate_((this->mtx_)->entry[0][y]),
-                                         this->format_);
+                                         this->format_.c_str());
         for (uint x = 1; x < (this->mtx_)->width; ++x)
         {
             this->buffer_ += '\t';
             MatrixScalar<ReadWriteT>::Append(this->buffer_,
                                              (ReadWriteT)this->predicate_(
                                                (this->mtx_)->entry[x][y]),
-                                             this->format_);
+                                             this->format_.c_str());
         }
         this->buffer_ += '\n';
     }

@@ -63,24 +63,18 @@ public:
                            PredicateT& predicate):
         mtx_(mtx),
         buffer_(data),
-        predicate_(predicate),
-        format_(nullptr)
+        predicate_(predicate)
     {
     }
 
     void set_print_format(bool isDecimal, uint precision);
     virtual void run() = 0;
 
-    ~I_mtx_to_buffer_dumper()
-    {
-        delete format_;
-    }
-
 protected:
     const Matrix<T, ReadWriteT>* mtx_;
     std::string& buffer_;
     PredicateT& predicate_;
-    const char* format_;
+    std::string format_;
 };
 
 template<class T, class ReadWriteT, class PredicateT>
