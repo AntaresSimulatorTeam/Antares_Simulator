@@ -21,62 +21,63 @@
 
 #include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily/h2o_j_fonctions.h"
-
-void H2O_J_ConstruireLesContraintes(int NbPdt,
-                                    std::vector<int>& NumeroDeVariableTurbine,
-                                    int NumeroDeLaVariableMu,
-                                    int NumeroDeLaVariableXi,
-                                    std::vector<int>& IndicesDebutDeLigne,
-                                    std::vector<char>& Sens,
-                                    std::vector<int>& NombreDeTermesDesLignes,
-                                    std::vector<double>& CoefficientsDeLaMatriceDesContraintes,
-                                    std::vector<int>& IndicesColonnes,
-                                    CORRESPONDANCE_DES_CONTRAINTES& CorrespondanceDesContraintes)
-{
-    int NombreDeContraintes = 0;
-    int NombreDeTermes = 0;
-    int il = 0;
-
-    IndicesDebutDeLigne[NombreDeContraintes] = il;
-    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
+namespace DoneesOptimisationJournaliere {
+    void H2O_J_ConstruireLesContraintes(int NbPdt,
+                                        std::vector<int>& NumeroDeVariableTurbine,
+                                        int NumeroDeLaVariableMu,
+                                        int NumeroDeLaVariableXi,
+                                        std::vector<int>& IndicesDebutDeLigne,
+                                        std::vector<char>& Sens,
+                                        std::vector<int>& NombreDeTermesDesLignes,
+                                        std::vector<double>& CoefficientsDeLaMatriceDesContraintes,
+                                        std::vector<int>& IndicesColonnes,
+                                        CORRESPONDANCE_DES_CONTRAINTES& CorrespondanceDesContraintes)
     {
-        CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-        IndicesColonnes[il] = NumeroDeVariableTurbine[Pdt];
-        il++;
-        NombreDeTermes++;
-    }
-    CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-    IndicesColonnes[il] = NumeroDeLaVariableMu;
-    il++;
-    NombreDeTermes++;
+        int NombreDeContraintes = 0;
+        int NombreDeTermes = 0;
+        int il = 0;
 
-    Sens[NombreDeContraintes] = '=';
-    NombreDeTermesDesLignes[NombreDeContraintes] = NombreDeTermes;
-
-    CorrespondanceDesContraintes.NumeroDeContrainteDEnergieMensuelle = NombreDeContraintes;
-    NombreDeContraintes++;
-
-    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
-    {
-        NombreDeTermes = 0;
         IndicesDebutDeLigne[NombreDeContraintes] = il;
-
+        for (int Pdt = 0; Pdt < NbPdt; Pdt++)
+        {
+            CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+            IndicesColonnes[il] = NumeroDeVariableTurbine[Pdt];
+            il++;
+            NombreDeTermes++;
+        }
         CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-        IndicesColonnes[il] = NumeroDeVariableTurbine[Pdt];
+        IndicesColonnes[il] = NumeroDeLaVariableMu;
         il++;
         NombreDeTermes++;
 
-        CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-        IndicesColonnes[il] = NumeroDeLaVariableXi;
-        il++;
-        NombreDeTermes++;
-
-        Sens[NombreDeContraintes] = '>';
+        Sens[NombreDeContraintes] = '=';
         NombreDeTermesDesLignes[NombreDeContraintes] = NombreDeTermes;
 
-        CorrespondanceDesContraintes.NumeroDeContrainteSurXi[Pdt] = NombreDeContraintes;
+        CorrespondanceDesContraintes.NumeroDeContrainteDEnergieMensuelle = NombreDeContraintes;
         NombreDeContraintes++;
-    }
 
-    return;
+        for (int Pdt = 0; Pdt < NbPdt; Pdt++)
+        {
+            NombreDeTermes = 0;
+            IndicesDebutDeLigne[NombreDeContraintes] = il;
+
+            CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+            IndicesColonnes[il] = NumeroDeVariableTurbine[Pdt];
+            il++;
+            NombreDeTermes++;
+
+            CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+            IndicesColonnes[il] = NumeroDeLaVariableXi;
+            il++;
+            NombreDeTermes++;
+
+            Sens[NombreDeContraintes] = '>';
+            NombreDeTermesDesLignes[NombreDeContraintes] = NombreDeTermes;
+
+            CorrespondanceDesContraintes.NumeroDeContrainteSurXi[Pdt] = NombreDeContraintes;
+            NombreDeContraintes++;
+        }
+
+        return;
+    }
 }

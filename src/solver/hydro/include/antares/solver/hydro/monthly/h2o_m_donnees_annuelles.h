@@ -31,14 +31,14 @@
 /*************************************************************************************************/
 /*                    Structure contenant les champs a renseigner par l'appelant */
 
-typedef struct
+struct DONNEES_ANNUELLES
 {
     /* En entree: seules les donnees ci-dessous doivent etre renseignees par l'appelant apres
        avoir appele " H2O_M_Instanciation " */
     /* Commence a 0 pour le 1er janvier et se termine a 11 pour le 1er decembre */
-    double CoutDepassementVolume;   /* A renseigner par l'appelant : 1 valeur */
-    double CoutViolMaxDuVolumeMin;  // A renseigner par l'appelant : 1 valeur
-    double VolumeInitial;           /* A renseigner par l'appelant : 1 valeur */
+    double CoutDepassementVolume{0.};   /* A renseigner par l'appelant : 1 valeur */
+    double CoutViolMaxDuVolumeMin{0.};  // A renseigner par l'appelant : 1 valeur
+    double VolumeInitial{0.};           /* A renseigner par l'appelant : 1 valeur */
     std::vector<double> TurbineMax; /* A renseigner par l'appelant : 1 valeur par mois */
     std::vector<double> TurbineMin;
     std::vector<double> TurbineCible; /* A renseigner par l'appelant : 1 valeur par mois */
@@ -49,7 +49,7 @@ typedef struct
 
     /* Les resultats */
     char
-      ResultatsValides;          /* Vaut:
+      ResultatsValides{NON};          /* Vaut:
                                     OUI si la solution est exploitable pour le reservoir
                                     NON s'il y a eu un probleme dans la resolution
                                                                                                                               EMERGENCY_SHUT_DOWN si la resolution du probleme a donne lieu a une erreur interne
@@ -59,8 +59,8 @@ typedef struct
 
     /******************************************************************************************/
     /* Problemes internes (utilise uniquement par l'optimisation) */
-    PROBLEME_HYDRAULIQUE ProblemeHydraulique;
-    int NombreDePasDeTemps; /* 12 */
-} DONNEES_ANNUELLES;
+    DonneesOptimisationMensuelle::PROBLEME_HYDRAULIQUE ProblemeHydraulique{};
+    int NombreDePasDeTemps{12}; /* 12 */
+};
 
 #endif
