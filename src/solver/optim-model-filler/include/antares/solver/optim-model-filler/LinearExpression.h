@@ -96,10 +96,8 @@ using FullKeyMap = std::unordered_map<FullKey, double, FullKeyHash>;
  * auto result = add_maps(map3, map4);
  * ```
  */
-template<typename MapType, typename UnaryOp = std::identity<typename MapType::mapped_type>>
-MapType add_maps(const MapType& left,
-                 const MapType& right,
-                 UnaryOp op = std::identity<typename MapType::mapped_type>{})
+template<typename MapType, typename UnaryOp = std::identity>
+MapType add_maps(const MapType& left, const MapType& right, UnaryOp op = std::identity{})
 {
     auto result(left);
     for (auto [key, value]: right)
