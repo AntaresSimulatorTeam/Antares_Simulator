@@ -26,97 +26,99 @@
 
 #define ZERO 1.e-9
 
-void H2O_J_LisserLesSurTurbines(DONNEES_MENSUELLES* DonneesMensuelles, int NumeroDeProbleme)
-{
-    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
-
-    auto& Turbine = DonneesMensuelles->Turbine;
-    const auto& TurbineMax = DonneesMensuelles->TurbineMax;
-    const auto& TurbineCible = DonneesMensuelles->TurbineCible;
-
-    const int NbPdt = ProblemeHydraulique.NbJoursDUnProbleme[NumeroDeProbleme];
-
-    std::vector<bool> flag(NbPdt);
-
-    double SurTurbineARepartir = 0.0;
-    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
+namespace DoneesOptimisationJournaliere {
+    void H2O_J_LisserLesSurTurbines(DONNEES_MENSUELLES* DonneesMensuelles, int NumeroDeProbleme)
     {
-        flag[Pdt] = (Turbine[Pdt] - TurbineCible[Pdt] > ZERO);
-    }
+        PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 
-    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
-    {
-        if (flag[Pdt])
+        auto& Turbine = DonneesMensuelles->Turbine;
+        const auto& TurbineMax = DonneesMensuelles->TurbineMax;
+        const auto& TurbineCible = DonneesMensuelles->TurbineCible;
+
+        const int NbPdt = ProblemeHydraulique.NbJoursDUnProbleme[NumeroDeProbleme];
+
+        std::vector<bool> flag(NbPdt);
+
+        double SurTurbineARepartir = 0.0;
+        for (int Pdt = 0; Pdt < NbPdt; Pdt++)
         {
-            SurTurbineARepartir += Turbine[Pdt] - TurbineCible[Pdt];
+            flag[Pdt] = (Turbine[Pdt] - TurbineCible[Pdt] > ZERO);
         }
-    }
 
-    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
-    {
-        flag[Pdt] = (TurbineMax[Pdt] - TurbineCible[Pdt] > ZERO);
-    };
+        for (int Pdt = 0; Pdt < NbPdt; Pdt++)
+        {
+            if (flag[Pdt])
+            {
+                SurTurbineARepartir += Turbine[Pdt] - TurbineCible[Pdt];
+            }
+        }
 
-    int NbCycles = 0;
-BoucleDeRepartition:
+        for (int Pdt = 0; Pdt < NbPdt; Pdt++)
+        {
+            flag[Pdt] = (TurbineMax[Pdt] - TurbineCible[Pdt] > ZERO);
+        };
 
-    const int Np = std::count(flag.begin(), flag.end(), true);
+        int NbCycles = 0;
+        BoucleDeRepartition:
 
-    if (Np == 0)
-    {
+            const int Np = std::count(flag.begin(), flag.end(), true);
+
+        if (Np == 0)
+        {
+            return;
+        }
+
+        double MargeMin = 0.;
+        for (int Pdt = 0; Pdt < NbPdt; Pdt++)
+        {
+            MargeMin += TurbineMax[Pdt];
+        }
+
+        for (int Pdt = 0; Pdt < NbPdt; Pdt++)
+        {
+            if (flag[Pdt] && TurbineMax[Pdt] - TurbineCible[Pdt] < MargeMin)
+            {
+                MargeMin = TurbineMax[Pdt] - TurbineCible[Pdt];
+            }
+        }
+
+        double Xmoy = SurTurbineARepartir / Np;
+        double SurTurbine;
+        if (Xmoy <= MargeMin)
+        {
+            SurTurbine = Xmoy;
+        }
+        else
+        {
+            SurTurbine = MargeMin;
+        }
+
+        bool limiteAtteinte = false;
+        for (int Pdt = 0; Pdt < NbPdt; Pdt++)
+        {
+            if (!flag[Pdt])
+            {
+                continue;
+            }
+
+            Turbine[Pdt] = TurbineCible[Pdt] + SurTurbine;
+            if (TurbineMax[Pdt] - Turbine[Pdt] <= ZERO)
+            {
+                SurTurbineARepartir -= SurTurbine;
+                limiteAtteinte = true;
+                flag[Pdt] = false;
+            }
+        }
+
+        if (limiteAtteinte && SurTurbineARepartir > 0.0)
+        {
+            NbCycles++;
+            if (NbCycles <= NbPdt)
+            {
+                goto BoucleDeRepartition;
+            }
+        }
+
         return;
     }
-
-    double MargeMin = 0.;
-    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
-    {
-        MargeMin += TurbineMax[Pdt];
-    }
-
-    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
-    {
-        if (flag[Pdt] && TurbineMax[Pdt] - TurbineCible[Pdt] < MargeMin)
-        {
-            MargeMin = TurbineMax[Pdt] - TurbineCible[Pdt];
-        }
-    }
-
-    double Xmoy = SurTurbineARepartir / Np;
-    double SurTurbine;
-    if (Xmoy <= MargeMin)
-    {
-        SurTurbine = Xmoy;
-    }
-    else
-    {
-        SurTurbine = MargeMin;
-    }
-
-    bool limiteAtteinte = false;
-    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
-    {
-        if (!flag[Pdt])
-        {
-            continue;
-        }
-
-        Turbine[Pdt] = TurbineCible[Pdt] + SurTurbine;
-        if (TurbineMax[Pdt] - Turbine[Pdt] <= ZERO)
-        {
-            SurTurbineARepartir -= SurTurbine;
-            limiteAtteinte = true;
-            flag[Pdt] = false;
-        }
-    }
-
-    if (limiteAtteinte && SurTurbineARepartir > 0.0)
-    {
-        NbCycles++;
-        if (NbCycles <= NbPdt)
-        {
-            goto BoucleDeRepartition;
-        }
-    }
-
-    return;
 }
