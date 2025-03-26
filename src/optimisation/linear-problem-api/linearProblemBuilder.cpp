@@ -33,7 +33,6 @@ LinearProblemBuilder::LinearProblemBuilder(const std::vector<LinearProblemFiller
 
 void LinearProblemBuilder::build(ILinearProblem& pb, ILinearProblemData& data, FillContext& ctx)
 {
-    // TODO grouper les appels
     std::ranges::for_each(fillers_,
                           [&](const auto& filler) { filler->addVariables(pb, data, ctx); });
     std::ranges::for_each(fillers_,
