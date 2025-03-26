@@ -154,7 +154,7 @@ $(function(){initNavTree('_2github_2workspace_2src_2solver_2optim-model-filler_2
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">MapType</td><td>The type of the map (e.g., <code>std::map</code>, <code>std::unordered_map</code>). </td></tr>
-    <tr><td class="paramname">UnaryOp</td><td>The type of the transformation function applied to the values of the right-hand-side map. Defaults to <code>IdentityFunction</code>.</td></tr>
+    <tr><td class="paramname">UnaryOp</td><td>The type of the transformation function applied to the values of the right-hand-side map. Defaults to <code>std::identity</code>.</td></tr>
   </table>
   </dd>
 </dl>
@@ -202,6 +202,7 @@ $(function(){initNavTree('_2github_2workspace_2src_2solver_2optim-model-filler_2
 <div class="line"> </div>
 <div class="line"><span class="preprocessor">#pragma once</span></div>
 <div class="line"> </div>
+<div class="line"><span class="preprocessor">#include &lt;functional&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;unordered_map&gt;</span></div>
 <div class="line"> </div>
@@ -210,21 +211,10 @@ $(function(){initNavTree('_2github_2workspace_2src_2solver_2optim-model-filler_2
 <div class="line"><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceAntares_1_1Optimization.html">Antares::Optimization</a></div>
 <div class="line">{</div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><span class="keyword">struct </span>IdentityFunction</div>
-<div class="line">{</div>
-<div class="line">    <span class="keyword">const</span> T&amp; operator()(<span class="keyword">const</span> T&amp; t)</div>
-<div class="line">    {</div>
-<div class="line">        <span class="keywordflow">return</span> t;</div>
-<div class="line">    }</div>
-<div class="line">};</div>
-<div class="line"> </div>
 <div class="line"><span class="keyword">using </span>FullKeyMap = std::unordered_map&lt;FullKey, double, FullKeyHash&gt;;</div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> MapType, <span class="keyword">typename</span> UnaryOp = IdentityFunction&lt;<span class="keyword">typename</span> MapType::mapped_type&gt;&gt;</div>
-<div class="line">MapType add_maps(<span class="keyword">const</span> MapType&amp; left,</div>
-<div class="line">                 <span class="keyword">const</span> MapType&amp; right,</div>
-<div class="line">                 UnaryOp op = IdentityFunction&lt;typename MapType::mapped_type&gt;{})</div>
+<div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> MapType, <span class="keyword">typename</span> UnaryOp = std::<span class="keywordtype">id</span>entity&gt;</div>
+<div class="line">MapType add_maps(<span class="keyword">const</span> MapType&amp; left, <span class="keyword">const</span> MapType&amp; right, UnaryOp op = std::identity{})</div>
 <div class="line">{</div>
 <div class="line">    <span class="keyword">auto</span> result(left);</div>
 <div class="line">    <span class="keywordflow">for</span> (<span class="keyword">auto</span> [key, value]: right)</div>

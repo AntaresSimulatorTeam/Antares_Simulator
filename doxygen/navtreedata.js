@@ -121,9 +121,9 @@ var NAVTREEINDEX =
 "functions_func_f.html",
 "lolpCsr_8h_source.html",
 "simulator_2windows_2inspector_2frame_8h_source.html",
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MiscGenMinusRowPSP_1_1Statistics.html",
-"structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#a3fb862fe2eabfef1fd6705a593943529",
-"study_2system-model_2include_2antares_2study_2system-model_2constraint_8h_source.html"
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits_1_1Statistics.html",
+"structAntares_1_1Solver_1_1Variable_1_1VCardAllSetsOfAreas.html#af66352f3d375fc6454b72ec25427fa76",
+"study_2system-model_2include_2antares_2study_2system-model_2system_8h_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -173,8 +173,6 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Optimization_1_1HydroProduction.html">HydroProduction</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAntares_1_1Optimization_1_1IdentityFunction.html">IdentityFunction</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Optimization_1_1InfeasibleProblemReport.html">InfeasibleProblemReport</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAntares_1_1Optimization_1_1IntegerInterval.html">IntegerInterval</a></td></tr>
@@ -246,10 +244,10 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>greaterValue</b> (con
 <tr class="memitem:ae0584e4fd68915bb875f24b8a87d74f1" id="r_ae0584e4fd68915bb875f24b8a87d74f1"><td class="memItemLeft" align="right" valign="top"><a id="ae0584e4fd68915bb875f24b8a87d74f1" name="ae0584e4fd68915bb875f24b8a87d74f1"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>checkTimeSteps</b> (<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Optimisation::LinearProblemApi::FillContext</a> &amp;ctx)</td></tr>
 <tr class="separator:ae0584e4fd68915bb875f24b8a87d74f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad00fe40a4b316cd35898e1f69e71b511" id="r_ad00fe40a4b316cd35898e1f69e71b511"><td class="memTemplParams" colspan="2"><a id="ad00fe40a4b316cd35898e1f69e71b511" name="ad00fe40a4b316cd35898e1f69e71b511"></a>
-template&lt;typename MapType , typename UnaryOp  = IdentityFunction&lt;typename MapType::mapped_type&gt;&gt; </td></tr>
-<tr class="memitem:ad00fe40a4b316cd35898e1f69e71b511"><td class="memTemplItemLeft" align="right" valign="top">MapType&#160;</td><td class="memTemplItemRight" valign="bottom"><b>add_maps</b> (const MapType &amp;left, const MapType &amp;right, UnaryOp op=<a class="el" href="structAntares_1_1Optimization_1_1IdentityFunction.html">IdentityFunction</a>&lt; typename MapType::mapped_type &gt;{})</td></tr>
-<tr class="separator:ad00fe40a4b316cd35898e1f69e71b511"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5883ed16372622a37ab368363396eb3a" id="r_a5883ed16372622a37ab368363396eb3a"><td class="memTemplParams" colspan="2"><a id="a5883ed16372622a37ab368363396eb3a" name="a5883ed16372622a37ab368363396eb3a"></a>
+template&lt;typename MapType , typename UnaryOp  = std::identity&gt; </td></tr>
+<tr class="memitem:a5883ed16372622a37ab368363396eb3a"><td class="memTemplItemLeft" align="right" valign="top">MapType&#160;</td><td class="memTemplItemRight" valign="bottom"><b>add_maps</b> (const MapType &amp;left, const MapType &amp;right, UnaryOp op=std::identity{})</td></tr>
+<tr class="separator:a5883ed16372622a37ab368363396eb3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7190f8e021109840878686b5bf2f2ded" id="r_a7190f8e021109840878686b5bf2f2ded"><td class="memItemLeft" align="right" valign="top">FullKeyMap&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7190f8e021109840878686b5bf2f2ded">scale_map</a> (const FullKeyMap &amp;map, double scale)</td></tr>
 <tr class="separator:a7190f8e021109840878686b5bf2f2ded"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad1882deb11352b01b4acb8b3bcc263b0" id="r_ad1882deb11352b01b4acb8b3bcc263b0"><td class="memTemplParams" colspan="2"><a id="ad1882deb11352b01b4acb8b3bcc263b0" name="ad1882deb11352b01b4acb8b3bcc263b0"></a>

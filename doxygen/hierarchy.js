@@ -587,7 +587,6 @@ var hierarchy =
         ] ]
       ] ]
     ] ],
-    [ "Antares::Optimization::IdentityFunction< T >", "structAntares_1_1Optimization_1_1IdentityFunction.html", null ],
     [ "Yuni::IEventObserver", null, [
       [ "Antares::Component::Datagrid::Component", "classAntares_1_1Component_1_1Datagrid_1_1Component.html", null ],
       [ "Antares::Component::Datagrid::InternalState", "classAntares_1_1Component_1_1Datagrid_1_1InternalState.html", null ],

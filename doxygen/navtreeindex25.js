@@ -88,7 +88,7 @@ var NAVTREEINDEX25 =
 "namespaceAntares_1_1IO_1_1Inputs_1_1DataSeriesCsvImporter.html":[7,0,0,1,0,0],
 "namespaceAntares_1_1Optimisation_1_1LinearProblemApi.html":[7,0,0,2,0],
 "namespaceAntares_1_1Optimization.html":[7,0,0,3],
-"namespaceAntares_1_1Optimization.html#a7190f8e021109840878686b5bf2f2ded":[7,0,0,3,36],
+"namespaceAntares_1_1Optimization.html#a7190f8e021109840878686b5bf2f2ded":[7,0,0,3,35],
 "namespaceAntares_1_1WIP.html":[7,0,0,4],
 "namespaceAntares_1_1WIP.html#a5d019198babc35a52835e1aba563721f":[7,0,0,4,2],
 "namespaceAntares_1_1WIP.html#a64916a3bc8c14f79984b879747e719be":[7,0,0,4,1],

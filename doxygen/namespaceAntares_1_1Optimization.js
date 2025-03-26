@@ -13,7 +13,6 @@ var namespaceAntares_1_1Optimization =
     [ "HourlyBC", "classAntares_1_1Optimization_1_1HourlyBC.html", null ],
     [ "HydroLevel", "classAntares_1_1Optimization_1_1HydroLevel.html", null ],
     [ "HydroProduction", "classAntares_1_1Optimization_1_1HydroProduction.html", null ],
-    [ "IdentityFunction", "structAntares_1_1Optimization_1_1IdentityFunction.html", null ],
     [ "InfeasibleProblemReport", "classAntares_1_1Optimization_1_1InfeasibleProblemReport.html", null ],
     [ "IntegerInterval", "structAntares_1_1Optimization_1_1IntegerInterval.html", "structAntares_1_1Optimization_1_1IntegerInterval" ],
     [ "LegacyFiller", "classAntares_1_1Optimization_1_1LegacyFiller.html", null ],
