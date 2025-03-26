@@ -165,14 +165,14 @@ void XCast::updateMissingCoefficients(PredicateT& predicate)
             {
             case Data::XCast::dtNormal:
             {
-                float** v = data.data.entry;
+                auto v = data.data.entry;
                 v[gamma][realmonth] = v[alpha][realmonth] - 6.f * v[beta][realmonth];
                 v[delta][realmonth] = v[alpha][realmonth] + 6.f * v[beta][realmonth];
                 break;
             }
             case Data::XCast::dtWeibullShapeA:
             {
-                float** v = data.data.entry;
+                auto v = data.data.entry;
                 v[delta][realmonth] = (float)GammaEuler(1. + 1. / v[alpha][realmonth]);
                 break;
             }

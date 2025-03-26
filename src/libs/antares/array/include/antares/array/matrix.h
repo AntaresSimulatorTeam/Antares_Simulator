@@ -442,7 +442,7 @@ public:
     //! Height of the matrix
     mutable uint height;
     //! All entries of the matrix (bidimensional array)
-    mutable ColumnType* entry;
+    mutable std::vector<ColumnType> entry;
     //! Just-in-time informations
     mutable JIT::Informations* jit;
 

@@ -172,7 +172,6 @@ namespace Antares {
     template<class T, class ReadWriteT>
     inline Matrix<T, ReadWriteT>::Matrix(): width(0),
                                             height(0),
-                                            entry(nullptr),
                                             jit(nullptr) {
     }
 
@@ -181,9 +180,8 @@ namespace Antares {
                                                    height(h),
                                                    jit(nullptr) {
         if (0 == width or 0 == height) {
-            entry = nullptr;
         } else {
-            entry = new typename Antares::Memory::Stored<T>::Type[w + 1];
+            entry.resize(w + 1);
             entry[w] = nullptr;
 
             for (uint i = 0; i != w; ++i) {
@@ -197,11 +195,10 @@ namespace Antares {
                                                                      height(rhs.height),
                                                                      jit(nullptr) {
         if (0 == width or 0 == height) {
-            entry = nullptr;
             width = 0;
             height = 0;
         } else {
-            entry = new typename Antares::Memory::Stored<T>::Type[width + 1];
+            entry.resize(width + 1);
             entry[width] = nullptr;
 
             for (uint i = 0; i != rhs.width; ++i) {
@@ -221,7 +218,6 @@ namespace Antares {
     template<class U, class V>
     Matrix<T, ReadWriteT>::Matrix(const Matrix<U, V> &rhs): width(0),
                                                             height(0),
-                                                            entry(nullptr),
                                                             jit(nullptr) {
         copyFrom(rhs);
     }
@@ -232,12 +228,10 @@ namespace Antares {
             and "Internal variable jit is set but JIT is not globally enabled (overflow?)");
         delete jit;
 
-        if (entry) {
-            for (uint i = 0; i != width; ++i) {
-                Antares::Memory::Release(entry[i]);
-            }
-            delete[] entry;
+        for (uint i = 0; i != width; ++i) {
+            Antares::Memory::Release(entry[i]);
         }
+        entry.clear();
     }
 
     template<class T, class ReadWriteT>
@@ -442,13 +436,10 @@ namespace Antares {
 
     template<class T, class ReadWriteT>
     void Matrix<T, ReadWriteT>::clear() {
-        if (entry) {
-            for (uint i = 0; i != width; ++i) {
-                Antares::Memory::Release(entry[i]);
-            }
-            delete[] entry;
-            entry = nullptr;
+        for (uint i = 0; i != width; ++i) {
+            Antares::Memory::Release(entry[i]);
         }
+        entry.clear();
         width = 0;
         height = 0;
     }
@@ -472,19 +463,15 @@ namespace Antares {
             if (!w or !h) {
                 clear();
             } else {
-                if (entry) {
-                    for (uint i = 0; i != width; ++i) {
-                        Antares::Memory::Release(entry[i]);
-                    }
-                    delete[] entry;
-                }
+                entry.clear();
 
                 // Assigning the new size
                 width = w;
                 height = h;
 
                 // Allocating the entry for the matrix
-                entry = new typename Antares::Memory::Stored<T>::Type[width + 1];
+                entry.resize(width + 1);
+                entry.shrink_to_fit();
                 entry[width] = nullptr;
 
                 for (uint i = 0; i != w; ++i) {
@@ -1137,7 +1124,7 @@ namespace Antares {
     template<class T, class ReadWriteT>
     template<class U>
     void Matrix<T, ReadWriteT>::multiplyAllEntriesBy(const U &c) {
-        if (!entry) {
+        if (entry.size() == 0) {
             return;
         }
 
@@ -1295,14 +1282,12 @@ namespace Antares {
         height = rhs.height;
         jit = rhs.jit;
         if (0 == width || 0 == height) {
-            entry = nullptr;
             width = 0;
             height = 0;
         } else {
-            entry = rhs.entry;
+            entry = std::move(rhs.entry);
         }
         // Prevent spurious de-allocation from rhs's destructor
-        rhs.entry = nullptr;
         return *this;
     }
 
