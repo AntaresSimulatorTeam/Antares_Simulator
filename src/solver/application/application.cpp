@@ -28,6 +28,7 @@
 #include <antares/infoCollection/StudyInfoCollector.h>
 #include <antares/logs/hostinfo.h>
 #include <antares/resources/resources.h>
+#include <antares/study/duplicates.h>
 #include <antares/sys/policy.h>
 #include <antares/writer/writer_factory.h>
 #include "antares/antares/version.h"
@@ -127,6 +128,8 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         {
             throw Error::NoAreas();
         }
+
+        checkForDuplicates(study);
 
         // no output ?
         study.parameters.noOutput = pSettings.noOutput;

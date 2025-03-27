@@ -54,31 +54,37 @@ bool check(const Container& c, const std::string& objectType, const std::string&
     return true;
 }
 
-const std::string kArea = "area ";
+std::string nameArea(const std::string& name)
+{
+    return "area `" + name + "`";
+}
+
 } // namespace
 
-namespace Antares::Data
+namespace Antares::Check
 {
-bool checkForDuplicates(const Study& study)
+bool checkForDuplicates(const Antares::Data::Study& study)
 {
     bool ret = true;
     ret = check(study.bindingConstraints, "binding constraint", "study") && ret;
 
     for (const auto& [areaName, area]: study.areas)
     {
-        ret = check(area->thermal.list.all(), "thermal cluster", kArea + areaName) && ret;
+        ret = check(area->thermal.list.all(), "thermal cluster", nameArea(areaName)) && ret;
     }
 
     for (const auto& [areaName, area]: study.areas)
     {
-        ret = check(area->renewable.list.all(), "renewable cluster", kArea + areaName) && ret;
+        ret = check(area->renewable.list.all(), "renewable cluster", nameArea(areaName)) && ret;
     }
 
     for (const auto& [areaName, area]: study.areas)
     {
-        ret = check(area->shortTermStorage.storagesByIndex, "short term storage", kArea + areaName)
+        ret = check(area->shortTermStorage.storagesByIndex,
+                    "short term storage",
+                    nameArea(areaName))
               && ret;
     }
     return ret;
 }
-} // namespace Antares::Data
+} // namespace Antares::Check

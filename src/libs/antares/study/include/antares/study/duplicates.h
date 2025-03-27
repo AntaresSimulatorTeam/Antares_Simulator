@@ -23,6 +23,10 @@ namespace Antares::Data
 {
 // Forward decl, we don't need the full definition for Study
 class Study;
+} // namespace Antares::Data
+
+namespace Antares::Check
+{
 /* Check for duplicate elements
    - For each area
     - Thermal clusters
@@ -31,5 +35,5 @@ class Study;
    - Binding constraints
    Return true if no duplicates, false if some duplicates
 */
-bool checkForDuplicates(const Study& study);
-} // namespace Antares::Data
+bool checkForDuplicates(const Antares::Data::Study& study);
+} // namespace Antares::Check
