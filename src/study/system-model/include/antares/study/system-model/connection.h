@@ -24,6 +24,51 @@
 
 namespace Antares::Study::SystemModel
 {
+
+// Define an enumeration for the role of a ConnectionEntry
+enum class FieldRole
+{
+    Sender,
+    Receiver
+};
+
+/**
+ * @brief Overloads the ! operator to return the opposite FieldRole.
+ *
+ * @param role The FieldRole value to negate.
+ * @return The opposite FieldRole value.
+ */
+constexpr FieldRole operator!(const FieldRole& role)
+{
+    return (role == FieldRole::Sender) ? FieldRole::Receiver : FieldRole::Sender;
+}
+
+/**
+ * @brief Overloads the << operator to print FieldRole as a string.
+ *
+ * @param os The output stream.
+ * @param role The FieldRole value to print.
+ * @return The modified output stream.
+ */
+inline std::ostream& operator<<(std::ostream& os, const FieldRole& role)
+{
+    switch (role)
+    {
+    case FieldRole::Sender:
+        return os << "Sender";
+    case FieldRole::Receiver:
+        return os << "Receiver";
+    default:
+        return os << "Unknown";
+    }
+}
+
+struct PortFieldsRole
+{
+    const Port* port;
+    std::map<PortField, FieldRole> roles;
+};
+
 /**
  * @class ConnectionEntry
  * @brief Represents an entry in a connection, associating a component with a port.
@@ -38,17 +83,17 @@ public:
      * @brief Constructs a ConnectionEntry with the specified component and port.
      *
      * @param component A pointer to the component. Must not be null.
-     * @param port A pointer to the port. Must not be null.
+     * @param portFieldsRole
      * @throw std::invalid_argument if either component or port is null.
      */
-    ConnectionEntry(const Component* component, const Port* port);
+    ConnectionEntry(const Component* component, const PortFieldsRole& portFieldsRole);
 
     /**
-     * @brief Returns the port associated with this connection entry.
+     * @brief Returns the portFieldsRole associated with this connection entry.
      *
-     * @return A pointer to the port.
+     * @return A pointer to the portFieldsRole.
      */
-    [[nodiscard]] const Port* port() const;
+    [[nodiscard]] const PortFieldsRole& portFieldsRole() const;
 
     /**
      * @brief Returns the component associated with this connection entry.
@@ -58,7 +103,7 @@ public:
     [[nodiscard]] const Component* component() const;
 
 private:
-    const Port* port_;           ///< Pointer to the associated port.
+    PortFieldsRole portFieldsRole_; ///< Pointer to the associated port.
     const Component* component_; ///< Pointer to the associated component.
 };
 
@@ -75,8 +120,8 @@ public:
     /**
      * @brief Constructs a Connection with the specified first and second entries.
      *
-     * @param firstEntry The first connection entry.
-     * @param secondEntry The second connection entry.
+     * @param firstEntry The connection entry for the sender.
+     * @param secondEntry The connection entry for the receiver.
      */
     Connection(const ConnectionEntry& firstEntry, const ConnectionEntry& secondEntry);
 

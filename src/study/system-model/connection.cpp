@@ -24,24 +24,24 @@
 
 namespace Antares::Study::SystemModel
 {
-ConnectionEntry::ConnectionEntry(const Component* component, const Port* port)
+ConnectionEntry::ConnectionEntry(const Component* component, const PortFieldsRole& portFieldsRole)
 {
     if (component == nullptr)
     {
         throw std::invalid_argument("component must not be null");
     }
-    if (port == nullptr)
+    if (portFieldsRole.port == nullptr)
     {
         throw std::invalid_argument("port must not be null");
     }
 
-    port_ = port;
+    portFieldsRole_ = portFieldsRole;
     component_ = component;
 }
 
-const Port* ConnectionEntry::port() const
+const PortFieldsRole& ConnectionEntry::portFieldsRole() const
 {
-    return port_;
+    return portFieldsRole_;
 }
 
 const Component* ConnectionEntry::component() const
@@ -53,6 +53,10 @@ Connection::Connection(const ConnectionEntry& firstEntry, const ConnectionEntry&
     firstEntry_(firstEntry),
     secondEntry_(secondEntry)
 {
+    // if (senderEntry.role() != FieldRole::Sender || receiverEntry.role() != FieldRole::Receiver)
+    // {
+    //     throw std::invalid_argument("Entries must have correct roles: Sender and Receiver");
+    // }
 }
 
 const ConnectionEntry& Connection::firstEntry() const
