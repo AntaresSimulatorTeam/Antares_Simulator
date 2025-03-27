@@ -1,6 +1,5 @@
 var NAVTREEINDEX26 =
 {
-"simulator_2windows_2inspector_2frame_8h_source.html":[10,0,0,12,2,2,7,5],
 "simulator_2windows_2output_2mini-frame_8h_source.html":[10,0,0,12,2,2,10,8],
 "simulator_2windows_2output_2panel_2panel_8h_source.html":[10,0,0,12,2,2,10,0,1],
 "simulator_2windows_2output_2panel_8h_source.html":[10,0,0,12,2,2,10,10],
@@ -249,5 +248,6 @@ var NAVTREEINDEX26 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCsr_1_1Statistics.html":[9,0,0,16,5,4,25,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlant_1_1Statistics.html":[9,0,0,16,5,4,30,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MiscGenMinusRowPSP_1_1Statistics.html":[9,0,0,16,5,4,31,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant_1_1Statistics.html":[9,0,0,16,5,4,33,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant_1_1Statistics.html":[9,0,0,16,5,4,33,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits_1_1Statistics.html":[9,0,0,16,5,4,32,0]
 };

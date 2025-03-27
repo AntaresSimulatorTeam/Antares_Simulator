@@ -1,6 +1,5 @@
 var NAVTREEINDEX15 =
 {
-"classAntares_1_1Private_1_1OutputViewerData_1_1Panel.html#a9f0b9653f644df93895fb56a375b52d0":[9,0,0,15,2,3,12],
 "classAntares_1_1Private_1_1OutputViewerData_1_1Panel.html#ac0d4132b99db0024012e4c49ad753a70":[9,0,0,15,2,3,6],
 "classAntares_1_1Private_1_1OutputViewerData_1_1Panel.html#ae6d760e7e9832e754f22eea556840ac3":[9,0,0,15,2,3,9],
 "classAntares_1_1Private_1_1OutputViewerData_1_1Panel.html#ae88a26ff00d64b5bcff23e92380c3338":[9,0,0,15,2,3,5],
@@ -249,5 +248,6 @@ var NAVTREEINDEX15 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LMRViolations.html#a1e8ccf0a915677bc2adf144844154368":[9,0,0,16,5,4,17,1],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LMRViolations.html#a48a10831ce847a7c1fc26bff957acc76":[9,0,0,16,5,4,17,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LMRViolations.html#a867ce821450c9fb516456bcf1a80bb49":[9,0,0,16,5,4,17,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LMRViolations.html#aa9c92e30b9f8c17bc0f2c475d55e53b1":[9,0,0,16,5,4,17,3]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LMRViolations.html#aa9c92e30b9f8c17bc0f2c475d55e53b1":[9,0,0,16,5,4,17,3],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD.html":[9,0,0,16,5,4,18]
 };

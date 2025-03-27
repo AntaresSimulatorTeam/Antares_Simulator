@@ -1,6 +1,5 @@
 var NAVTREEINDEX20 =
 {
-"classAreaHydroLevelGroup.html":[9,0,43],
 "classBenchmarking_1_1DurationCollector.html":[9,0,2,0],
 "classBenchmarking_1_1FileContent.html":[9,0,2,1],
 "classBenchmarking_1_1SimulationInfoCollector.html":[9,0,2,3],
@@ -249,5 +248,6 @@ var NAVTREEINDEX20 =
 "classMaxHydroPower.html#a10a5b06ff8ca24c03b46a50f54181347":[9,0,159,0],
 "classMaxPumping.html":[9,0,161],
 "classMaxPumping.html#a6d8321813803c01b92d9b34095a0e7e0":[9,0,161,0],
-"classMaxPumpingGroup.html":[9,0,163]
+"classMaxPumpingGroup.html":[9,0,163],
+"classMinDownTime.html":[9,0,164]
 };

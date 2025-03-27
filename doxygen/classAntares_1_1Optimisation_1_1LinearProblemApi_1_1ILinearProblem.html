@@ -168,18 +168,24 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5acd81810ce7954398aa520f0c71d18b" id="r_a5acd81810ce7954398aa520f0c71d18b"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">IMipVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5acd81810ce7954398aa520f0c71d18b">addVariable</a> (double lb, double ub, bool integer, const std::string &amp;name)=0</td></tr>
 <tr class="memdesc:a5acd81810ce7954398aa520f0c71d18b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a continuous or integer variable.  <br /></td></tr>
 <tr class="separator:a5acd81810ce7954398aa520f0c71d18b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adcab696d54ce663bb0f9bd842ce9c4ef" id="r_adcab696d54ce663bb0f9bd842ce9c4ef"><td class="memItemLeft" align="right" valign="top"><a id="adcab696d54ce663bb0f9bd842ce9c4ef" name="adcab696d54ce663bb0f9bd842ce9c4ef"></a>
-virtual <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">IMipVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getVariable</b> (const std::string &amp;name) const =0</td></tr>
-<tr class="separator:adcab696d54ce663bb0f9bd842ce9c4ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a180562957e3d03bb2d68cd1fa748016e" id="r_a180562957e3d03bb2d68cd1fa748016e"><td class="memItemLeft" align="right" valign="top"><a id="a180562957e3d03bb2d68cd1fa748016e" name="a180562957e3d03bb2d68cd1fa748016e"></a>
+virtual <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">IMipVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getVariable</b> (std::size_t index) const =0</td></tr>
+<tr class="separator:a180562957e3d03bb2d68cd1fa748016e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1048503da24cc1931029e294f15b7402" id="r_a1048503da24cc1931029e294f15b7402"><td class="memItemLeft" align="right" valign="top"><a id="a1048503da24cc1931029e294f15b7402" name="a1048503da24cc1931029e294f15b7402"></a>
+virtual <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">IMipVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>lookupVariable</b> (const std::string &amp;name) const =0</td></tr>
+<tr class="separator:a1048503da24cc1931029e294f15b7402"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac94919884b7a2f4079ec8d3c7a71658" id="r_aac94919884b7a2f4079ec8d3c7a71658"><td class="memItemLeft" align="right" valign="top"><a id="aac94919884b7a2f4079ec8d3c7a71658" name="aac94919884b7a2f4079ec8d3c7a71658"></a>
 virtual int&#160;</td><td class="memItemRight" valign="bottom"><b>variableCount</b> () const =0</td></tr>
 <tr class="separator:aac94919884b7a2f4079ec8d3c7a71658"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a861e17f2d0f26a7d0fbd7fb86e6a3242" id="r_a861e17f2d0f26a7d0fbd7fb86e6a3242"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html">IMipConstraint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a861e17f2d0f26a7d0fbd7fb86e6a3242">addConstraint</a> (double lb, double ub, const std::string &amp;name)=0</td></tr>
 <tr class="memdesc:a861e17f2d0f26a7d0fbd7fb86e6a3242"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a bounded constraint to the problem.  <br /></td></tr>
 <tr class="separator:a861e17f2d0f26a7d0fbd7fb86e6a3242"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a034f77e52f3e2df0e9c1d0c0bb75a303" id="r_a034f77e52f3e2df0e9c1d0c0bb75a303"><td class="memItemLeft" align="right" valign="top"><a id="a034f77e52f3e2df0e9c1d0c0bb75a303" name="a034f77e52f3e2df0e9c1d0c0bb75a303"></a>
-virtual <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html">IMipConstraint</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getConstraint</b> (const std::string &amp;name) const =0</td></tr>
-<tr class="separator:a034f77e52f3e2df0e9c1d0c0bb75a303"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90db16e65150d9ca3f563f8a0ef15728" id="r_a90db16e65150d9ca3f563f8a0ef15728"><td class="memItemLeft" align="right" valign="top"><a id="a90db16e65150d9ca3f563f8a0ef15728" name="a90db16e65150d9ca3f563f8a0ef15728"></a>
+virtual <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html">IMipConstraint</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getConstraint</b> (std::size_t index) const =0</td></tr>
+<tr class="separator:a90db16e65150d9ca3f563f8a0ef15728"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea223baedac473d37587a4fa2b47e358" id="r_aea223baedac473d37587a4fa2b47e358"><td class="memItemLeft" align="right" valign="top"><a id="aea223baedac473d37587a4fa2b47e358" name="aea223baedac473d37587a4fa2b47e358"></a>
+virtual <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html">IMipConstraint</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>lookupConstraint</b> (const std::string &amp;name) const =0</td></tr>
+<tr class="separator:aea223baedac473d37587a4fa2b47e358"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a10c229dc9006f9ffb36bd7d32948e8c0" id="r_a10c229dc9006f9ffb36bd7d32948e8c0"><td class="memItemLeft" align="right" valign="top"><a id="a10c229dc9006f9ffb36bd7d32948e8c0" name="a10c229dc9006f9ffb36bd7d32948e8c0"></a>
 virtual int&#160;</td><td class="memItemRight" valign="bottom"><b>constraintCount</b> () const =0</td></tr>
 <tr class="separator:a10c229dc9006f9ffb36bd7d32948e8c0"><td class="memSeparator" colspan="2">&#160;</td></tr>

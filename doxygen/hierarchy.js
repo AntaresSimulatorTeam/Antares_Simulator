@@ -1456,7 +1456,6 @@ var hierarchy =
       [ "Antares::IO::Inputs::SystemConverter::ErrorWhileSplittingLibraryAndModel", "classAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ErrorWhileSplittingLibraryAndModel.html", null ],
       [ "Antares::IO::Inputs::SystemConverter::LibraryNotFound", "classAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1LibraryNotFound.html", null ],
       [ "Antares::IO::Inputs::SystemConverter::ModelNotFound", "classAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ModelNotFound.html", null ],
-      [ "Antares::Optimisation::LinearProblemMpsolverImpl::ElemAlreadyExists", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1ElemAlreadyExists.html", null ],
       [ "Antares::Solver::Initialization::Error::NoQueueService", "classAntares_1_1Solver_1_1Initialization_1_1Error_1_1NoQueueService.html", null ],
       [ "Antares::Solver::LoadFiles::ErrorLoadingYaml", "classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml.html", null ],
       [ "Antares::Solver::WeeklyProblemTranslationException", "classAntares_1_1Solver_1_1WeeklyProblemTranslationException.html", null ],

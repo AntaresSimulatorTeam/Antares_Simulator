@@ -571,7 +571,6 @@ var annotated_dup =
           [ "TimeSeriesSet", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1TimeSeriesSet.html", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1TimeSeriesSet" ]
         ] ],
         [ "LinearProblemMpsolverImpl", null, [
-          [ "ElemAlreadyExists", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1ElemAlreadyExists.html", null ],
           [ "OrtoolsLinearProblem", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem" ],
           [ "OrtoolsMipConstraint", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipConstraint.html", null ],
           [ "OrtoolsMipSolution", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipSolution.html", null ],

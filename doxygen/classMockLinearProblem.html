@@ -165,15 +165,19 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2c3fd6b649f931400ec531bc70aba7e4" id="r_a2c3fd6b649f931400ec531bc70aba7e4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classMockMipVariable.html">MockMipVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2c3fd6b649f931400ec531bc70aba7e4">addVariable</a> (double lb, double ub, bool integer, const std::string &amp;name) override</td></tr>
 <tr class="memdesc:a2c3fd6b649f931400ec531bc70aba7e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a continuous or integer variable.  <br /></td></tr>
 <tr class="separator:a2c3fd6b649f931400ec531bc70aba7e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5459899845c3790e44f9017f280cdb23" id="r_a5459899845c3790e44f9017f280cdb23"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classMockMipVariable.html">MockMipVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5459899845c3790e44f9017f280cdb23">getVariable</a> (const std::string &amp;name) const override</td></tr>
-<tr class="separator:a5459899845c3790e44f9017f280cdb23"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7eb3a3d53dbf0d047f1d6f538745a88f" id="r_a7eb3a3d53dbf0d047f1d6f538745a88f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classMockMipVariable.html">MockMipVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7eb3a3d53dbf0d047f1d6f538745a88f">getVariable</a> (std::size_t idx) const override</td></tr>
+<tr class="separator:a7eb3a3d53dbf0d047f1d6f538745a88f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4463d67df9dd07b14ecfe90c20bf7625" id="r_a4463d67df9dd07b14ecfe90c20bf7625"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classMockMipVariable.html">MockMipVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4463d67df9dd07b14ecfe90c20bf7625">lookupVariable</a> (const std::string &amp;name) const override</td></tr>
+<tr class="separator:a4463d67df9dd07b14ecfe90c20bf7625"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af78b0d69d93e854f1a5542806176d54a" id="r_af78b0d69d93e854f1a5542806176d54a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af78b0d69d93e854f1a5542806176d54a">variableCount</a> () const override</td></tr>
 <tr class="separator:af78b0d69d93e854f1a5542806176d54a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1f85153e5a135ef9c064b9dac4660434" id="r_a1f85153e5a135ef9c064b9dac4660434"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html">IMipConstraint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1f85153e5a135ef9c064b9dac4660434">addConstraint</a> (double lb, double ub, const std::string &amp;name) override</td></tr>
 <tr class="memdesc:a1f85153e5a135ef9c064b9dac4660434"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a bounded constraint to the problem.  <br /></td></tr>
 <tr class="separator:a1f85153e5a135ef9c064b9dac4660434"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb05b16e971b335be45621af9ed4de0c" id="r_adb05b16e971b335be45621af9ed4de0c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html">IMipConstraint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adb05b16e971b335be45621af9ed4de0c">getConstraint</a> (const std::string &amp;name) const override</td></tr>
-<tr class="separator:adb05b16e971b335be45621af9ed4de0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b5e3834ef03256f71650f4e57cad451" id="r_a0b5e3834ef03256f71650f4e57cad451"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html">IMipConstraint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0b5e3834ef03256f71650f4e57cad451">lookupConstraint</a> (const std::string &amp;name) const override</td></tr>
+<tr class="separator:a0b5e3834ef03256f71650f4e57cad451"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc3133523c886036c4d2e717d978047e" id="r_adc3133523c886036c4d2e717d978047e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html">IMipConstraint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adc3133523c886036c4d2e717d978047e">getConstraint</a> (std::size_t idx) const override</td></tr>
+<tr class="separator:adc3133523c886036c4d2e717d978047e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8995cf8176cf34aeccdea065ae3b7b4" id="r_ac8995cf8176cf34aeccdea065ae3b7b4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac8995cf8176cf34aeccdea065ae3b7b4">constraintCount</a> () const override</td></tr>
 <tr class="separator:ac8995cf8176cf34aeccdea065ae3b7b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab32764781bd16b42c06ab43a0069c131" id="r_ab32764781bd16b42c06ab43a0069c131"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab32764781bd16b42c06ab43a0069c131">setObjectiveCoefficient</a> (<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">IMipVariable</a> *var, double coefficient) override</td></tr>
@@ -391,8 +395,8 @@ std::vector&lt; std::unique_ptr&lt; <a class="el" href="classMockMipVariable.htm
 
 </div>
 </div>
-<a id="adb05b16e971b335be45621af9ed4de0c" name="adb05b16e971b335be45621af9ed4de0c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adb05b16e971b335be45621af9ed4de0c">&#9670;&#160;</a></span>getConstraint()</h2>
+<a id="adc3133523c886036c4d2e717d978047e" name="adc3133523c886036c4d2e717d978047e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc3133523c886036c4d2e717d978047e">&#9670;&#160;</a></span>getConstraint()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -403,7 +407,7 @@ std::vector&lt; std::unique_ptr&lt; <a class="el" href="classMockMipVariable.htm
         <tr>
           <td class="memname"><a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html">IMipConstraint</a> * MockLinearProblem::getConstraint </td>
           <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
+          <td class="paramtype">std::size_t</td>          <td class="paramname"><span class="paramname"><em>idx</em></span></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -445,8 +449,8 @@ std::vector&lt; std::unique_ptr&lt; <a class="el" href="classMockMipVariable.htm
 
 </div>
 </div>
-<a id="a5459899845c3790e44f9017f280cdb23" name="a5459899845c3790e44f9017f280cdb23"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5459899845c3790e44f9017f280cdb23">&#9670;&#160;</a></span>getVariable()</h2>
+<a id="a7eb3a3d53dbf0d047f1d6f538745a88f" name="a7eb3a3d53dbf0d047f1d6f538745a88f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7eb3a3d53dbf0d047f1d6f538745a88f">&#9670;&#160;</a></span>getVariable()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -457,7 +461,7 @@ std::vector&lt; std::unique_ptr&lt; <a class="el" href="classMockMipVariable.htm
         <tr>
           <td class="memname"><a class="el" href="classMockMipVariable.html">MockMipVariable</a> * MockLinearProblem::getVariable </td>
           <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
+          <td class="paramtype">std::size_t</td>          <td class="paramname"><span class="paramname"><em>idx</em></span></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -539,6 +543,60 @@ std::vector&lt; std::unique_ptr&lt; <a class="el" href="classMockMipVariable.htm
           <td class="memname">bool MockLinearProblem::isMinimization </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">Antares::Optimisation::LinearProblemApi::ILinearProblem</a>.</p>
+
+</div>
+</div>
+<a id="a0b5e3834ef03256f71650f4e57cad451" name="a0b5e3834ef03256f71650f4e57cad451"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b5e3834ef03256f71650f4e57cad451">&#9670;&#160;</a></span>lookupConstraint()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html">IMipConstraint</a> * MockLinearProblem::lookupConstraint </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">Antares::Optimisation::LinearProblemApi::ILinearProblem</a>.</p>
+
+</div>
+</div>
+<a id="a4463d67df9dd07b14ecfe90c20bf7625" name="a4463d67df9dd07b14ecfe90c20bf7625"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4463d67df9dd07b14ecfe90c20bf7625">&#9670;&#160;</a></span>lookupVariable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classMockMipVariable.html">MockMipVariable</a> * MockLinearProblem::lookupVariable </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
