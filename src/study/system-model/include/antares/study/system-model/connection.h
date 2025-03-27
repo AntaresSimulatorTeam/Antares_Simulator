@@ -33,17 +33,6 @@ enum class FieldRole
 };
 
 /**
- * @brief Overloads the ! operator to return the opposite FieldRole.
- *
- * @param role The FieldRole value to negate.
- * @return The opposite FieldRole value.
- */
-constexpr FieldRole operator!(const FieldRole& role)
-{
-    return (role == FieldRole::Sender) ? FieldRole::Receiver : FieldRole::Sender;
-}
-
-/**
  * @brief Overloads the << operator to print FieldRole as a string.
  *
  * @param os The output stream.
@@ -79,6 +68,7 @@ public:
      * @brief Constructs a ConnectionEntry with the specified component and port.
      *
      * @param component A pointer to the component. Must not be null.
+     * @param port A pointer to the port. Must not be null.
      * @param portFieldsRole
      * @throw std::invalid_argument if either component or port is null.
      */

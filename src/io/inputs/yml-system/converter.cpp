@@ -143,7 +143,7 @@ static SystemModel::Connection createConnection(
 {
     auto findComponent = [&components](const std::string& id) -> const SystemModel::Component&
     {
-        const auto it = components.find(id);
+        const auto& it = components.find(id);
         if (it == components.end())
         {
             throw std::invalid_argument("Component with id '" + id + "' not found in system.");
@@ -155,7 +155,7 @@ static SystemModel::Connection createConnection(
                        const std::string& portId) -> const SystemModel::Port&
     {
         const auto& ports = component.getModel()->Ports();
-        const auto it = ports.find(portId);
+        const auto& it = ports.find(portId);
         if (it == ports.end())
         {
             throw std::invalid_argument("Port with id '" + portId + "' not found in component '"
@@ -188,8 +188,9 @@ static SystemModel::Connection createConnection(
     for (const auto& field: first_port.Type().Fields())
     {
         const auto firstPortFieldRole = ExposeFieldRole(field.Id(), first_component);
+        const auto secondPortFieldRole = ExposeFieldRole(field.Id(), second_component);
 
-        if (firstPortFieldRole == ExposeFieldRole(field.Id(), second_component))
+        if (firstPortFieldRole == secondPortFieldRole)
         {
             std::ostringstream msg;
             msg << "Field '" << field.Id() << "' is " << firstPortFieldRole << " in both ports '"
@@ -197,7 +198,7 @@ static SystemModel::Connection createConnection(
             throw std::invalid_argument(msg.str());
         }
         firstPortFieldsRole.emplace(field, firstPortFieldRole);
-        secondPortFieldsRole.emplace(field, !firstPortFieldRole);
+        secondPortFieldsRole.emplace(field, secondPortFieldRole);
     }
 
     return {SystemModel::ConnectionEntry(&first_component, &first_port, firstPortFieldsRole),
