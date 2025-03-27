@@ -201,8 +201,12 @@ static SystemModel::Connection createConnection(
         secondPortFieldsRole.emplace(field, secondPortFieldRole);
     }
 
-    return {SystemModel::ConnectionEntry(&first_component, &first_port, firstPortFieldsRole),
-            SystemModel::ConnectionEntry(&second_component, &second_port, secondPortFieldsRole)};
+    return {SystemModel::ConnectionEntry(&first_component,
+                                         &first_port,
+                                         std::move(firstPortFieldsRole)),
+            SystemModel::ConnectionEntry(&second_component,
+                                         &second_port,
+                                         std::move(secondPortFieldsRole))};
 }
 
 SystemModel::System convert(const YmlSystem::System& ymlSystem,
