@@ -39,8 +39,8 @@ OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solver
 
 OrtoolsLinearProblem::~OrtoolsLinearProblem()
 {
-    std::ranges::for_each(variables_, [](OrtoolsMipVariable* v) { delete v; });
-    std::ranges::for_each(constraints_, [](OrtoolsMipConstraint* c) { delete c; });
+    std::ranges::for_each(variables_, std::default_delete<OrtoolsMipVariable>());
+    std::ranges::for_each(constraints_, std::default_delete<OrtoolsMipConstraint>());
 }
 
 OrtoolsMipVariable* OrtoolsLinearProblem::addVariable(double lb,
