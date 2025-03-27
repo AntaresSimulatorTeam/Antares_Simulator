@@ -41,7 +41,7 @@ enum class FieldRole
  */
 inline std::ostream& operator<<(std::ostream& os, const FieldRole& role)
 {
-      switch (role)
+    switch (role)
     {
     case FieldRole::Sender:
         return os << "Sender";
