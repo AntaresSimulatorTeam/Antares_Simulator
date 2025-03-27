@@ -40,7 +40,7 @@ class OrtoolsLinearProblem: public LinearProblemApi::ILinearProblem
 {
 public:
     OrtoolsLinearProblem(bool isMip, const std::string& solverName);
-    virtual ~OrtoolsLinearProblem();
+    ~OrtoolsLinearProblem() override = default;
 
     OrtoolsMipVariable* addNumVariable(double lb, double ub, const std::string& name) override;
 
@@ -84,8 +84,8 @@ private:
     operations_research::MPObjective* objective_;
     operations_research::MPSolverParameters params_;
 
-    std::vector<OrtoolsMipVariable*> variables_;
-    std::vector<OrtoolsMipConstraint*> constraints_;
+    std::vector<std::unique_ptr<OrtoolsMipVariable>> variables_;
+    std::vector<std::unique_ptr<OrtoolsMipConstraint>> constraints_;
 
     std::unique_ptr<OrtoolsMipSolution> solution_;
 };

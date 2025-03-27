@@ -37,12 +37,6 @@ OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solver
     objective_ = mpSolver_->MutableObjective();
 }
 
-OrtoolsLinearProblem::~OrtoolsLinearProblem()
-{
-    std::ranges::for_each(variables_, std::default_delete<OrtoolsMipVariable>());
-    std::ranges::for_each(constraints_, std::default_delete<OrtoolsMipConstraint>());
-}
-
 OrtoolsMipVariable* OrtoolsLinearProblem::addVariable(double lb,
                                                       double ub,
                                                       bool integer,
@@ -55,8 +49,8 @@ OrtoolsMipVariable* OrtoolsLinearProblem::addVariable(double lb,
         logs.error() << "Couldn't add variable to Ortools MPSolver: " << name;
     }
 
-    variables_.push_back(new OrtoolsMipVariable(mpVar));
-    return variables_.back();
+    variables_.push_back(std::make_unique<OrtoolsMipVariable>(mpVar));
+    return variables_.back().get();
 }
 
 OrtoolsMipVariable* OrtoolsLinearProblem::addNumVariable(double lb,
@@ -75,16 +69,17 @@ OrtoolsMipVariable* OrtoolsLinearProblem::addIntVariable(double lb,
 
 OrtoolsMipVariable* OrtoolsLinearProblem::getVariable(std::size_t index) const
 {
-    return variables_.at(index);
+    return variables_.at(index).get();
 }
 
 OrtoolsMipVariable* OrtoolsLinearProblem::lookupVariable(const std::string& name) const
 {
     auto it = std::ranges::find_if(variables_,
-                                   [&name](OrtoolsMipVariable* v) { return v->getName() == name; });
+                                   [&name](const std::unique_ptr<OrtoolsMipVariable>& v)
+                                   { return v->getName() == name; });
     if (it != variables_.end())
     {
-        return *it;
+        return it->get();
     }
     return nullptr;
 }
@@ -92,11 +87,11 @@ OrtoolsMipVariable* OrtoolsLinearProblem::lookupVariable(const std::string& name
 OrtoolsMipConstraint* OrtoolsLinearProblem::lookupConstraint(const std::string& name) const
 {
     auto it = std::ranges::find_if(constraints_,
-                                   [&name](OrtoolsMipConstraint* c)
+                                   [&name](const std::unique_ptr<OrtoolsMipConstraint>& c)
                                    { return c->getName() == name; });
     if (it != constraints_.end())
     {
-        return *it;
+        return it->get();
     }
     return nullptr;
 }
@@ -117,13 +112,13 @@ OrtoolsMipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
         logs.error() << "Couldn't add variable to Ortools MPSolver: " << name;
     }
 
-    constraints_.push_back(new OrtoolsMipConstraint(mpConstraint));
-    return constraints_.back();
+    constraints_.push_back(std::make_unique<OrtoolsMipConstraint>(mpConstraint));
+    return constraints_.back().get();
 }
 
 OrtoolsMipConstraint* OrtoolsLinearProblem::getConstraint(std::size_t index) const
 {
-    return constraints_.at(index);
+    return constraints_.at(index).get();
 }
 
 int OrtoolsLinearProblem::constraintCount() const
