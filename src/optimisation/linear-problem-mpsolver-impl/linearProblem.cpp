@@ -78,6 +78,29 @@ OrtoolsMipVariable* OrtoolsLinearProblem::getVariable(std::size_t index) const
     return variables_.at(index);
 }
 
+OrtoolsMipVariable* OrtoolsLinearProblem::lookupVariable(const std::string& name) const
+{
+    auto it = std::ranges::find_if(variables_,
+                                   [&name](OrtoolsMipVariable* v) { return v->getName() == name; });
+    if (it != variables_.end())
+    {
+        return *it;
+    }
+    return nullptr;
+}
+
+OrtoolsMipConstraint* OrtoolsLinearProblem::lookupConstraint(const std::string& name) const
+{
+    auto it = std::ranges::find_if(constraints_,
+                                   [&name](OrtoolsMipConstraint* c)
+                                   { return c->getName() == name; });
+    if (it != constraints_.end())
+    {
+        return *it;
+    }
+    return nullptr;
+}
+
 int OrtoolsLinearProblem::variableCount() const
 {
     return mpSolver_->NumVariables();

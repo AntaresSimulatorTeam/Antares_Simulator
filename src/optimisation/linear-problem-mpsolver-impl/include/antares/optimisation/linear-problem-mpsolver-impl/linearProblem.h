@@ -52,11 +52,14 @@ public:
                                     const std::string& name) override;
 
     OrtoolsMipVariable* getVariable(std::size_t index) const override;
+    OrtoolsMipVariable* lookupVariable(const std::string& name) const override;
+
     int variableCount() const override;
 
     OrtoolsMipConstraint* addConstraint(double lb, double ub, const std::string& name) override;
 
     OrtoolsMipConstraint* getConstraint(std::size_t index) const override;
+    OrtoolsMipConstraint* lookupConstraint(const std::string& name) const override;
     int constraintCount() const override;
 
     void setObjectiveCoefficient(LinearProblemApi::IMipVariable* var, double coefficient) override;
