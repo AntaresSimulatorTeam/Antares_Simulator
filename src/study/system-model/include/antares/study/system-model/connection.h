@@ -24,45 +24,79 @@
 
 namespace Antares::Study::SystemModel
 {
+/**
+ * @class ConnectionEntry
+ * @brief Represents an entry in a connection, associating a component with a port.
+ *
+ * The ConnectionEntry class is used to store a connection between a component and a port.
+ * It ensures that both the component and port are valid (non-null) upon construction.
+ */
 class ConnectionEntry
 {
 public:
+    /**
+     * @brief Constructs a ConnectionEntry with the specified component and port.
+     *
+     * @param component A pointer to the component. Must not be null.
+     * @param port A pointer to the port. Must not be null.
+     * @throw std::invalid_argument if either component or port is null.
+     */
     ConnectionEntry(const Component* component, const Port* port);
 
+    /**
+     * @brief Returns the port associated with this connection entry.
+     *
+     * @return A pointer to the port.
+     */
     [[nodiscard]] const Port* port() const;
+
+    /**
+     * @brief Returns the component associated with this connection entry.
+     *
+     * @return A pointer to the component.
+     */
     [[nodiscard]] const Component* component() const;
 
 private:
-    const Port* port_;
-    const Component* component_;
+    const Port* port_;           ///< Pointer to the associated port.
+    const Component* component_; ///< Pointer to the associated component.
 };
 
+/**
+ * @class Connection
+ * @brief Represents a connection between two ConnectionEntry objects.
+ *
+ * The Connection class is used to manage a connection between two entries,
+ * each representing a component-port pair.
+ */
 class Connection
 {
 public:
+    /**
+     * @brief Constructs a Connection with the specified first and second entries.
+     *
+     * @param firstEntry The first connection entry.
+     * @param secondEntry The second connection entry.
+     */
     Connection(const ConnectionEntry& firstEntry, const ConnectionEntry& secondEntry);
 
-    [[nodiscard]] const ConnectionEntry& firstEntry() const
-    {
-        return firstEntry_;
-    }
+    /**
+     * @brief Returns the first connection entry.
+     *
+     * @return A constant reference to the first connection entry.
+     */
+    [[nodiscard]] const ConnectionEntry& firstEntry() const;
 
-    [[nodiscard]] const ConnectionEntry& secondEntry() const
-    {
-        return secondEntry_;
-    }
+    /**
+     * @brief Returns the second connection entry.
+     *
+     * @return A constant reference to the second connection entry.
+     */
+    [[nodiscard]] const ConnectionEntry& secondEntry() const;
 
 private:
-    ConnectionEntry firstEntry_;
-    ConnectionEntry secondEntry_;
+    ConnectionEntry firstEntry_;  ///< The first connection entry.
+    ConnectionEntry secondEntry_; ///< The second connection entry.
 };
 
-//
-// class ConnectionBuilder
-// {
-// public:
-//     ConnectionBuilder& withFirstEntry(const ConnectionEntry& entry);
-//     ConnectionBuilder& withSecondEntry(ConnectionEntry);
-//     Connection build() const;
-// };
 } // namespace Antares::Study::SystemModel

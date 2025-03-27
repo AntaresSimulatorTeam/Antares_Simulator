@@ -122,12 +122,26 @@ static SystemModel::Component createComponent(const YmlSystem::Component& c,
     return component;
 }
 
+/**
+ * @brief Creates a SystemModel::Connection from a YmlSystem::Connection and a map of components.
+ *
+ * This function constructs a SystemModel::Connection by looking up components and ports
+ * based on the IDs provided in the YmlSystem::Connection. It ensures that the ports are
+ * of the same type and that fields are correctly configured for sending and receiving.
+ *
+ * @param connection A YmlSystem::Connection object containing the connection details.
+ * @param components An unordered map of component IDs to SystemModel::Component objects.
+ *
+ * @return A SystemModel::Connection object representing the created connection.
+ *
+ * @throw std::invalid_argument if a component or port is not found, if the ports are not
+ *        of the same type, or if fields are incorrectly configured for sending/receiving.
+ */
 static SystemModel::Connection createConnection(
   const YmlSystem::Connection& connection,
-  const std::unordered_map<std::string, SystemModel::Component>& components,
-  const std::vector<SystemModel::Library>& libraries)
+  const std::unordered_map<std::string, SystemModel::Component>& components)
 {
-    auto findComponent = [&](const std::string& id) -> const SystemModel::Component&
+    auto findComponent = [&components](const std::string& id) -> const SystemModel::Component&
     {
         const auto it = components.find(id);
         if (it == components.end())
@@ -169,13 +183,13 @@ static SystemModel::Connection createConnection(
     }
     for (const auto& field: first_port.Type().Fields())
     {
-        if (const bool isFirstPortSending = AmISendingField(field.Id(), first_component);
-            isFirstPortSending == AmISendingField(field.Id(), second_component))
+        if (const bool isFirstPortFieldSending = AmISendingField(field.Id(), first_component);
+            isFirstPortFieldSending == AmISendingField(field.Id(), second_component))
         {
             std::ostringstream msg;
-            msg << "Field '" << field.Id() << " is "
-                << (isFirstPortSending ? "sending " : "receiving ")
-                << " in both ports " + first_port.Id() << "' and '" << second_port.Id() << "'";
+            msg << "Field '" << field.Id() << "' is "
+                << (isFirstPortFieldSending ? "sending " : "receiving ") << " in both ports '"
+                << first_port.Id() << "' and '" << second_port.Id() << "'";
             throw std::invalid_argument(msg.str());
         }
     }
@@ -201,7 +215,7 @@ SystemModel::System convert(const YmlSystem::System& ymlSystem,
     connections.reserve(ymlSystem.connections.size());
     for (const auto& connection: ymlSystem.connections)
     {
-        connections.push_back(createConnection(connection, components, libraries));
+        connections.push_back(createConnection(connection, components));
     }
     SystemModel::SystemBuilder builder;
     return builder.withId(ymlSystem.id)
