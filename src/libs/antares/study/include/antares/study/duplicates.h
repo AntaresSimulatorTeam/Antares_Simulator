@@ -29,7 +29,6 @@ class Study;
     - Renewable clusters
     - Short-term storage
    - Binding constraints
-   - Areas
    Return true if no duplicates, false if some duplicates
 */
 bool checkForDuplicates(const Study& study);

@@ -25,6 +25,8 @@
 #include <antares/logs/logs.h>
 #include <antares/study/study.h>
 
+namespace
+{
 template<class T>
 std::string getName(const T& t)
 {
@@ -53,10 +55,8 @@ bool check(const Container& c, const std::string& objectType, const std::string&
     return true;
 }
 
-namespace
-{
 const std::string kArea = "area ";
-}
+} // namespace
 
 namespace Antares::Data
 {
