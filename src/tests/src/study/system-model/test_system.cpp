@@ -84,8 +84,8 @@ static Connection createConnection(const Component& comp1, const Component& comp
     auto& port1 = comp1.getModel()->Ports().at("port1");
     auto& port2 = comp2.getModel()->Ports().at("port2");
 
-    ConnectionEntry entry1(&comp1, {&port1, {{PortField{"field"}, FieldRole::Sender}}});
-    ConnectionEntry entry2(&comp2, {&port2, {{PortField{"field"}, FieldRole::Receiver}}});
+    ConnectionEntry entry1(&comp1, &port1, {{PortField{"field"}, FieldRole::Sender}});
+    ConnectionEntry entry2(&comp2, &port2, {{PortField{"field"}, FieldRole::Receiver}});
     return Connection(entry1, entry2);
 }
 BOOST_AUTO_TEST_SUITE(_System_)
@@ -133,13 +133,13 @@ BOOST_FIXTURE_TEST_CASE(nominal_build_with_connections, SystemBuilderCreationFix
     // Verify connection contents
     const auto& conn = system.connections()[0];
     BOOST_CHECK_EQUAL(conn.firstEntry().component()->Id(), "component1");
-    const auto& [firstPort, firstRoles] = conn.firstEntry().portFieldsRole();
-    BOOST_CHECK_EQUAL(firstPort->Id(), "port1");
+    BOOST_CHECK_EQUAL(conn.firstEntry().port()->Id(), "port1");
+    const auto& firstRoles = conn.firstEntry().portFieldsRole();
     BOOST_CHECK_EQUAL(firstRoles.size(), 1);
     BOOST_CHECK_EQUAL(firstRoles.at(PortField("field")), FieldRole::Sender);
     BOOST_CHECK_EQUAL(conn.secondEntry().component()->Id(), "component2");
-    const auto& [secondPort, secondRoles] = conn.secondEntry().portFieldsRole();
-    BOOST_CHECK_EQUAL(secondPort->Id(), "port2");
+    BOOST_CHECK_EQUAL(conn.secondEntry().port()->Id(), "port2");
+    const auto& secondRoles = conn.secondEntry().portFieldsRole();
     BOOST_CHECK_EQUAL(secondRoles.size(), 1);
     BOOST_CHECK_EQUAL(secondRoles.at(PortField("field")), FieldRole::Receiver);
 }

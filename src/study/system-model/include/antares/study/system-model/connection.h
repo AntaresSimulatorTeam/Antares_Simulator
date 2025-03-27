@@ -63,11 +63,7 @@ inline std::ostream& operator<<(std::ostream& os, const FieldRole& role)
     }
 }
 
-struct PortFieldsRole
-{
-    const Port* port;
-    std::map<PortField, FieldRole> roles;
-};
+using PortFieldsRole = std::map<PortField, FieldRole>;
 
 /**
  * @class ConnectionEntry
@@ -86,7 +82,9 @@ public:
      * @param portFieldsRole
      * @throw std::invalid_argument if either component or port is null.
      */
-    ConnectionEntry(const Component* component, const PortFieldsRole& portFieldsRole);
+    ConnectionEntry(const Component* component,
+                    const Port* port,
+                    const PortFieldsRole& portFieldsRole);
 
     /**
      * @brief Returns the portFieldsRole associated with this connection entry.
@@ -102,9 +100,12 @@ public:
      */
     [[nodiscard]] const Component* component() const;
 
+    [[nodiscard]] const Port* port() const;
+
 private:
-    PortFieldsRole portFieldsRole_; ///< Pointer to the associated port.
     const Component* component_; ///< Pointer to the associated component.
+    const Port* port_;           ///< Pointer to the associated port.
+    PortFieldsRole portFieldsRole_;
 };
 
 /**

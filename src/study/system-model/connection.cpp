@@ -24,19 +24,22 @@
 
 namespace Antares::Study::SystemModel
 {
-ConnectionEntry::ConnectionEntry(const Component* component, const PortFieldsRole& portFieldsRole)
+ConnectionEntry::ConnectionEntry(const Component* component,
+                                 const Port* port,
+                                 const PortFieldsRole& portFieldsRole)
 {
     if (component == nullptr)
     {
         throw std::invalid_argument("component must not be null");
     }
-    if (portFieldsRole.port == nullptr)
+    if (port == nullptr)
     {
         throw std::invalid_argument("port must not be null");
     }
 
-    portFieldsRole_ = portFieldsRole;
     component_ = component;
+    port_ = port;
+    portFieldsRole_ = portFieldsRole;
 }
 
 const PortFieldsRole& ConnectionEntry::portFieldsRole() const
@@ -47,6 +50,11 @@ const PortFieldsRole& ConnectionEntry::portFieldsRole() const
 const Component* ConnectionEntry::component() const
 {
     return component_;
+}
+
+const Port* ConnectionEntry::port() const
+{
+    return port_;
 }
 
 Connection::Connection(const ConnectionEntry& firstEntry, const ConnectionEntry& secondEntry):

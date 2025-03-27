@@ -184,9 +184,7 @@ static SystemModel::Connection createConnection(
     }
 
     SystemModel::PortFieldsRole firstPortFieldsRole;
-    firstPortFieldsRole.port = &first_port;
     SystemModel::PortFieldsRole secondPortFieldsRole;
-    secondPortFieldsRole.port = &second_port;
     for (const auto& field: first_port.Type().Fields())
     {
         const auto firstPortFieldRole = ExposeFieldRole(field.Id(), first_component);
@@ -198,12 +196,12 @@ static SystemModel::Connection createConnection(
                 << first_port.Id() << "' and '" << second_port.Id() << "'";
             throw std::invalid_argument(msg.str());
         }
-        firstPortFieldsRole.roles.emplace(field, firstPortFieldRole);
-        secondPortFieldsRole.roles.emplace(field, !firstPortFieldRole);
+        firstPortFieldsRole.emplace(field, firstPortFieldRole);
+        secondPortFieldsRole.emplace(field, !firstPortFieldRole);
     }
 
-    return {SystemModel::ConnectionEntry(&first_component, firstPortFieldsRole),
-            SystemModel::ConnectionEntry(&second_component, secondPortFieldsRole)};
+    return {SystemModel::ConnectionEntry(&first_component, &first_port, firstPortFieldsRole),
+            SystemModel::ConnectionEntry(&second_component, &second_port, secondPortFieldsRole)};
 }
 
 SystemModel::System convert(const YmlSystem::System& ymlSystem,
