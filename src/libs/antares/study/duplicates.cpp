@@ -45,10 +45,9 @@ bool check(const Container& c, const std::string& objectType, const std::string&
     std::set<std::string> names;
     for (const auto& it: c)
     {
-        auto [name, inserted] = names.insert(getName(it));
-        if (!inserted)
+        if (auto [name, inserted] = names.insert(getName(it)); !inserted)
         {
-            logs.error() << "Duplicate " << objectType << " `" << name << "` found in " << context;
+            logs.error() << "Duplicate " << objectType << " `" << *name << "` found in " << context;
             return false;
         }
     }
