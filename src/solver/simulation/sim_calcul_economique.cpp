@@ -95,7 +95,6 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     auto& parameters = study.parameters;
 
     problem.Expansion = (parameters.mode == Data::SimulationMode::Expansion);
-    problem.firstWeekOfSimulation = false;
 
     // gp adq : to be removed
     if (parameters.adqPatchParams.enabled)
