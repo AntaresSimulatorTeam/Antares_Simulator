@@ -54,7 +54,7 @@ bool check(const Container& c, const std::string& objectType, const std::string&
     return true;
 }
 
-std::string nameArea(const std::string& name)
+std::string quoteArea(const std::string& name)
 {
     return "area `" + name + "`";
 }
@@ -70,19 +70,19 @@ bool checkForDuplicates(const Antares::Data::Study& study)
 
     for (const auto& [areaName, area]: study.areas)
     {
-        ret = check(area->thermal.list.all(), "thermal cluster", nameArea(areaName)) && ret;
+        ret = check(area->thermal.list.all(), "thermal cluster", quoteArea(areaName)) && ret;
     }
 
     for (const auto& [areaName, area]: study.areas)
     {
-        ret = check(area->renewable.list.all(), "renewable cluster", nameArea(areaName)) && ret;
+        ret = check(area->renewable.list.all(), "renewable cluster", quoteArea(areaName)) && ret;
     }
 
     for (const auto& [areaName, area]: study.areas)
     {
         ret = check(area->shortTermStorage.storagesByIndex,
                     "short term storage",
-                    nameArea(areaName))
+                    quoteArea(areaName))
               && ret;
     }
     return ret;
