@@ -19,41 +19,18 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#pragma once
-#include <filesystem>
-#include <memory>
-#include <string>
-
-#include <antares/inifile/inifile.h>
-#include <antares/study/version.h>
-
-#include "additionalConstraints.h"
-#include "properties.h"
-#include "series.h"
-
-namespace Antares::Data::ShortTermStorage
+namespace Antares::Data
 {
-class STStorageCluster
-{
-public:
-    bool enabled() const;
-
-    std::string name() const;
-
-    bool validate(StudyVersion studyVersion) const;
-
-    bool loadFromSection(const IniFile::Section& section);
-
-    bool loadSeries(const std::filesystem::path& folder, StudyVersion studyVersion) const;
-
-    void saveProperties(IniFile& ini) const;
-
-    bool saveSeries(const std::string& path) const;
-
-    std::string id;
-
-    std::shared_ptr<Series> series = std::make_shared<Series>();
-    mutable Properties properties;
-    std::vector<AdditionalConstraints> additionalConstraints;
-};
-} // namespace Antares::Data::ShortTermStorage
+// Forward decl, we don't need the full definition for Study
+class Study;
+/* Check for duplicate elements
+   - For each area
+    - Thermal clusters
+    - Renewable clusters
+    - Short-term storage
+   - Binding constraints
+   - Areas
+   Return true if no duplicates, false if some duplicates
+*/
+bool checkForDuplicates(const Study& study);
+} // namespace Antares::Data
