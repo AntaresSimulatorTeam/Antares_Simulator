@@ -1,0 +1,68 @@
+system:
+  id: sys_example3
+  description: in node1, gen is enough to fulfill load and is less expensive than gen1; thus gen1 must not be used (0)
+   and gen2 must be used at load level (100). Objective = 100 * 6 = 600 for node1.
+   In node2, load is 1000 MW and gen1 is cheap but not enough (max_p=650, cost=10€/MWh), and gen2 is large but more 
+   expensive (min_p=500, cost=20 €/MWh). Thus gen2 must be used at its minimum power (500) and gen1 should complete 
+   (500). Objective = 500 * 10 + 500 * 20 = 15000 for node2.
+   Total objective = 15600 for both nodes.
+  model-libraries: lib_example1, lib_example2
+
+  components:
+  - id: node1
+    model: lib_example1.node_2gen_1load
+    scenario-group: sg
+    parameters:
+    - id: load
+      time-dependent: false
+      scenario-dependent: false
+      value: 100
+    - id: gen1_max_p
+      time-dependent: false
+      scenario-dependent: false
+      value: 80
+    - id: gen1_prop_cost
+      time-dependent: false
+      scenario-dependent: false
+      value: 60
+    - id: gen2_max_p
+      time-dependent: false
+      scenario-dependent: false
+      value: 200
+    - id: gen2_prop_cost
+      time-dependent: false
+      scenario-dependent: false
+      value: 6
+
+  - id: node2
+    model: lib_example2.node_2gen_1load_mingen
+    scenario-group: sg
+    parameters:
+    - id: load
+      time-dependent: false
+      scenario-dependent: false
+      value: 1000
+    - id: gen1_max_p
+      time-dependent: false
+      scenario-dependent: false
+      value: 650
+    - id: gen1_min_p
+      time-dependent: false
+      scenario-dependent: false
+      value: 200
+    - id: gen1_prop_cost
+      time-dependent: false
+      scenario-dependent: false
+      value: 10
+    - id: gen2_max_p
+      time-dependent: false
+      scenario-dependent: false
+      value: 1000
+    - id: gen2_min_p
+      time-dependent: false
+      scenario-dependent: false
+      value: 500
+    - id: gen2_prop_cost
+      time-dependent: false
+      scenario-dependent: false
+      value: 20
