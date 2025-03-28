@@ -19,8 +19,7 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#define BOOST_TEST_MODULE test solver utils
-
+#define BOOST_TEST_MODULE optimizationOptions
 #define WIN32_LEAN_AND_MEAN
 
 #include <boost/test/unit_test.hpp>

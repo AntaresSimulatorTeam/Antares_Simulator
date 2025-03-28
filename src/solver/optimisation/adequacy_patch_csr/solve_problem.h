@@ -7,7 +7,8 @@
 
 using namespace Antares::Data::AdequacyPatch;
 
-bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE&,
+bool ADQ_PATCH_CSR(const OptimizationOptions& options,
+                   PROBLEME_ANTARES_A_RESOUDRE&,
                    HourlyCSRProblem&,
                    const AdqPatchParams&,
                    unsigned int week,

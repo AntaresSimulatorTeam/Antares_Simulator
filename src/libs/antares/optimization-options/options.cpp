@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -18,27 +18,17 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
+#include "antares/optimization-options/options.h"
+using namespace Antares::Solver::Optimization;
 
-#pragma once
-#include <string>
-
-namespace Antares::Solver::Optimization
+OptimizationOptions& OptimizationOptions::operator<<(const OptimizationOptions& options)
 {
-
-class OptimizationOptions
-{
-public:
-    //! The solver used for linear problems, sirius is the default
-    std::string linearSolver = "sirius";
-    //! The solver used for quadratic problems, sirius is the default
-    std::string quadraticSolver = "sirius";
-    //! The linear solver parameters
-    std::string linearSolverParameters;
-    //! The quadratic solver parameters
-    std::string quadraticSolverParameters;
-    //! Enable solver logs
-    bool solverLogs = false;
-
-    OptimizationOptions& operator<<(const OptimizationOptions& options);
-};
-} // namespace Antares::Solver::Optimization
+    // Overrides all attributes, but applies a logical OR for activating logs
+    // (Option that can be set both in command-line and file)
+    this->linearSolver = options.linearSolver;
+    this->quadraticSolver = options.quadraticSolver;
+    this->linearSolverParameters = options.linearSolverParameters;
+    this->quadraticSolverParameters = options.quadraticSolverParameters;
+    this->solverLogs = options.solverLogs || this->solverLogs;
+    return *this;
+}

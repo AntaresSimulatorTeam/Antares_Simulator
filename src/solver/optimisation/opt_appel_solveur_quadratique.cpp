@@ -30,19 +30,26 @@
 #include <setjmp.h>
 extern "C"
 {
-#include <pi_constantes_externes.h>
-#include <pi_definition_arguments.h>
 #include <pi_fonctions.h>
 }
 
 #include <antares/logs/logs.h>
+#include "antares/optimization-options/options.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/utils/ortools_quadratic_wrapper.h"
+#include "antares/solver/utils/ortools_utils.h"
 
 using namespace Antares;
 
-bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
-                                   const int PdtHebdo)
+static void SolveWithSirius(const Solver::Optimization::OptimizationOptions& options,
+                            PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
 {
+    if (!options.quadraticSolverParameters.empty())
+    {
+        logs.warning()
+          << "Quadratic solver parameters are not supported by SIRIUS; they will be ignored.";
+    }
+
     PROBLEME_POINT_INTERIEUR Probleme;
 
     double ToleranceSurLAdmissibilite = 1.e-5;
@@ -63,6 +70,9 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
     Probleme.NombreDeVariables = ProblemeAResoudre->NombreDeVariables;
     Probleme.TypeDeVariable = ProblemeAResoudre->TypeDeVariable.data();
 
+    // The problem has no binary variable
+    // We use the fact that CoutsReduits is a vector of 1 element per variable, initialized to 0
+    // TODO: make this cleaner
     Probleme.VariableBinaire = (char*)ProblemeAResoudre->CoutsReduits.data();
 
     Probleme.NombreDeContraintes = ProblemeAResoudre->NombreDeContraintes;
@@ -106,13 +116,9 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
                 *pt = ProblemeAResoudre->X[i];
             }
         }
-
-        return true;
     }
     else
     {
-        logs.warning() << "Quadratic Optimisation: No solution, hour " << PdtHebdo;
-
         for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; i++)
         {
             double* pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i];
@@ -121,7 +127,13 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
                 *pt = std::numeric_limits<double>::quiet_NaN();
             }
         }
+    }
+}
 
+static void ProcessResult(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
+{
+    if (ProblemeAResoudre->ExistenceDUneSolution == NON_PI)
+    {
 #ifndef NDEBUG
 
         {
@@ -160,7 +172,22 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
             }
         }
 #endif
-
-        return false;
     }
+}
+
+bool OPT_AppelDuSolveurQuadratique(const Solver::Optimization::OptimizationOptions& options,
+                                   PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
+{
+    // as long as sirius quadratic optimization is not supported through or-tools, we have to keep
+    // this code separate
+    if (options.quadraticSolver == "sirius")
+    {
+        SolveWithSirius(options, ProblemeAResoudre);
+    }
+    else
+    {
+        SolveQuadraticProblemWithOrtools(options, ProblemeAResoudre);
+    }
+    ProcessResult(ProblemeAResoudre);
+    return ProblemeAResoudre->ExistenceDUneSolution == OUI_PI;
 }

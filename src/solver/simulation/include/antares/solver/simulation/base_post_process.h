@@ -23,6 +23,7 @@
 #include <memory>
 #include <vector>
 
+#include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 using namespace Antares::Data;
@@ -69,13 +70,15 @@ public:
     // gp : to the create(...) method, and to underlying calls to constructors.
     // gp : In case we need new data for a new post process, we would not have to change
     // gp : the constructors' signatures of the post process list classes.
-    static std::unique_ptr<interfacePostProcessList> create(AdqPatchParams& adqPatchParams,
-                                                            PROBLEME_HEBDO* problemeHebdo,
-                                                            uint numSpace,
-                                                            AreaList& areas,
-                                                            SheddingPolicy sheddingPolicy,
-                                                            SimplexOptimization splxOptimization,
-                                                            Calendar& calendar);
+    static std::unique_ptr<interfacePostProcessList> create(
+      AdqPatchParams& adqPatchParams,
+      PROBLEME_HEBDO* problemeHebdo,
+      uint numSpace,
+      AreaList& areas,
+      SheddingPolicy sheddingPolicy,
+      SimplexOptimization splxOptimization,
+      Calendar& calendar,
+      const OptimizationOptions& solverOptions);
     void runAll(const optRuntimeData& opt_runtime_data);
 
 protected:
