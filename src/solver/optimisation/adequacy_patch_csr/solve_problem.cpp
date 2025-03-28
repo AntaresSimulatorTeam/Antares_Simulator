@@ -31,6 +31,8 @@
 */
 #include <setjmp.h>
 
+#include "antares/solver/utils/ortools_quadratic_wrapper.h"
+
 extern "C"
 {
 #include "pi_define.h"
@@ -56,6 +58,9 @@ std::unique_ptr<PROBLEME_POINT_INTERIEUR> buildInteriorPointProblem(
     Probleme->NombreDeVariables = ProblemeAResoudre.NombreDeVariables;
     Probleme->TypeDeVariable = ProblemeAResoudre.TypeDeVariable.data();
 
+    // The problem has no binary variable
+    // We use the fact that CoutsReduits is a vector of 1 element per variable, initialized to 0
+    // TODO: make this cleaner
     Probleme->VariableBinaire = (char*)ProblemeAResoudre.CoutsReduits.data();
 
     Probleme->NombreDeContraintes = ProblemeAResoudre.NombreDeContraintes;
@@ -142,7 +147,7 @@ void storeOrDisregardInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE& Pro
     }
 }
 
-double calculateCSRcost(const PROBLEME_POINT_INTERIEUR& Probleme,
+double calculateCSRcost(const PROBLEME_ANTARES_A_RESOUDRE& Probleme,
                         const HourlyCSRProblem& hourlyCsrProblem,
                         const AdqPatchParams& adqPatchParams)
 {
@@ -203,7 +208,7 @@ double calculateCSRcost(const PROBLEME_POINT_INTERIEUR& Probleme,
     return cost;
 }
 
-void CSR_DEBUG_HANDLE(const PROBLEME_POINT_INTERIEUR& Probleme)
+void CSR_DEBUG_HANDLE(PROBLEME_ANTARES_A_RESOUDRE& Probleme)
 {
     logs.info();
     logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
@@ -238,7 +243,7 @@ void CSR_DEBUG_HANDLE(const PROBLEME_POINT_INTERIEUR& Probleme)
     }
 }
 
-void handleInteriorPointError([[maybe_unused]] const PROBLEME_POINT_INTERIEUR& Probleme,
+void handleInteriorPointError([[maybe_unused]] PROBLEME_ANTARES_A_RESOUDRE& Probleme,
                               int hour,
                               uint weekNb,
                               int yearNb)
@@ -253,23 +258,21 @@ void handleInteriorPointError([[maybe_unused]] const PROBLEME_POINT_INTERIEUR& P
 #endif
 }
 
-bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
+bool Solve(const OptimizationOptions& options, PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre);
+
+bool ADQ_PATCH_CSR(const OptimizationOptions& options,
+                   PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
                    HourlyCSRProblem& hourlyCsrProblem,
                    const AdqPatchParams& adqPatchParams,
                    uint weekNb,
                    int yearNb)
 {
-    auto interiorPointProblem = buildInteriorPointProblem(ProblemeAResoudre);
-    double costPriorToCsr = calculateCSRcost(*interiorPointProblem,
-                                             hourlyCsrProblem,
-                                             adqPatchParams);
-    PI_Quamin(interiorPointProblem.get()); // resolution
-    if (interiorPointProblem->ExistenceDUneSolution == OUI_PI)
+    double costPriorToCsr = calculateCSRcost(ProblemeAResoudre, hourlyCsrProblem, adqPatchParams);
+    bool feasible = Solve(options, ProblemeAResoudre);
+    if (feasible)
     {
         setToZeroIfBelowThreshold(ProblemeAResoudre, hourlyCsrProblem);
-        double costAfterCsr = calculateCSRcost(*interiorPointProblem,
-                                               hourlyCsrProblem,
-                                               adqPatchParams);
+        double costAfterCsr = calculateCSRcost(ProblemeAResoudre, hourlyCsrProblem, adqPatchParams);
         storeOrDisregardInteriorPointResults(ProblemeAResoudre,
                                              hourlyCsrProblem,
                                              adqPatchParams,
@@ -281,10 +284,36 @@ bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
     }
     else
     {
-        handleInteriorPointError(*interiorPointProblem,
-                                 hourlyCsrProblem.triggeredHour,
-                                 weekNb,
-                                 yearNb);
+        handleInteriorPointError(ProblemeAResoudre, hourlyCsrProblem.triggeredHour, weekNb, yearNb);
         return false;
     }
+}
+
+bool SolveWithSirius(const OptimizationOptions& options,
+                     PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre)
+{
+    if (!options.quadraticSolverParameters.empty())
+    {
+        logs.warning()
+          << "Quadratic solver parameters are not supported by SIRIUS; they will be ignored.";
+    }
+    auto interiorPointProblem = buildInteriorPointProblem(ProblemeAResoudre);
+    PI_Quamin(interiorPointProblem.get()); // resolution
+    return interiorPointProblem->ExistenceDUneSolution == OUI_PI;
+}
+
+bool SolveWithOrtools(const OptimizationOptions& options,
+                      PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre)
+{
+    SolveQuadraticProblemWithOrtools(options, &ProblemeAResoudre);
+    return ProblemeAResoudre.ExistenceDUneSolution == OUI_PI;
+}
+
+bool Solve(const OptimizationOptions& options, PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre)
+{
+    if (options.quadraticSolver.compare("sirius") == 0)
+    {
+        return SolveWithSirius(options, ProblemeAResoudre);
+    }
+    return SolveWithOrtools(options, ProblemeAResoudre);
 }

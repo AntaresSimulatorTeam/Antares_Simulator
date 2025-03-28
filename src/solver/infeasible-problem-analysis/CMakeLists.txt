@@ -17,7 +17,9 @@ set(SRC_INFEASIBLE_PROBLEM_ANALYSIS
 add_library(infeasible_problem_analysis ${SRC_INFEASIBLE_PROBLEM_ANALYSIS})
 target_link_libraries(infeasible_problem_analysis
         PRIVATE
-        ortools::ortools
+        # Until issue here is resolved, link the whole archive: https://github.com/google/or-tools/discussions/4538
+        # TODO: keep an eye out for bug resolution in future versions of ortools (> 9.12)
+        $<LINK_LIBRARY:WHOLE_ARCHIVE,ortools::ortools>
         Boost::headers
         Antares::logs
 )
