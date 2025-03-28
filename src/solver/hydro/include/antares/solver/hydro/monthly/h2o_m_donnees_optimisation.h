@@ -63,10 +63,6 @@ namespace DonneesOptimisationMensuelle {
         std::vector<double> CoefficientsDeLaMatriceDesContraintes;
         std::vector<int> IndicesColonnes;
         int NombreDeTermesAlloues{0};
-
-        ~PROBLEME_LINEAIRE_PARTIE_FIXE() {
-            int x = 0;
-        }
     };
 
     /* Partie variable renseignee avant le lancement de l'optimisation de chaque reservoir */
@@ -118,15 +114,6 @@ namespace DonneesOptimisationMensuelle {
         std::vector<int>
           NumeroDeVariableDEcartNegatifAuTurbineCible; /* Ecart negatif au volume cible */
         int NumeroDeLaVariableXi{0}; /* Variable decrivant l'ecart max au turbine cible */
-
-        ~CORRESPONDANCE_DES_VARIABLES() {
-            int x = 0;
-            ++x;
-        }
-        CORRESPONDANCE_DES_VARIABLES() {
-            int x = 0;
-            ++x;
-        }
     };
 
     /* Structure uniquement exploitee par l'optimisation (donc a ne pas acceder depuis l'exterieur) */
