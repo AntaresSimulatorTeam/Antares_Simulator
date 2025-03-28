@@ -11,7 +11,6 @@ var classAntares_1_1Data_1_1Parameters =
     [ "fixRefreshIntervals", "classAntares_1_1Data_1_1Parameters.html#afeefe1610f75f63c01180b8a2d215eed", null ],
     [ "getYearsWeight", "classAntares_1_1Data_1_1Parameters.html#a137e194dc21bcd3bd6ffc6ca92bbe4c6", null ],
     [ "getYearsWeightSum", "classAntares_1_1Data_1_1Parameters.html#ae546a909d1ea38ff69eeab19baafd99c", null ],
-    [ "handleOptimizationOptions", "classAntares_1_1Data_1_1Parameters.html#ad31a8eb85a65f29306b294dcba6f5ac6", null ],
     [ "isTSGeneratedByPrepro", "classAntares_1_1Data_1_1Parameters.html#a55a1e8f48fa78e411e6d6237a4ded45f", null ],
     [ "loadFromFile", "classAntares_1_1Data_1_1Parameters.html#a8087b54093bb1905f4b9b0ae6826e350", null ],
     [ "loadFromINI", "classAntares_1_1Data_1_1Parameters.html#af633756c84db9cba87fd741412a107a1", null ],

@@ -16,8 +16,8 @@ var classAntares_1_1Data_1_1StudyLoadOptions =
     [ "namedProblems", "classAntares_1_1Data_1_1StudyLoadOptions.html#ab050b0cc2f04f643ac71bd7e57dfd4bd", null ],
     [ "nbYears", "classAntares_1_1Data_1_1StudyLoadOptions.html#ad4ac05f7bbfb4a51f549fd6e6ea281d9", null ],
     [ "noTimeseriesImportIntoInput", "classAntares_1_1Data_1_1StudyLoadOptions.html#a6d101aeacfd15c3b07fc41acce1b5ced", null ],
-    [ "optOptions", "classAntares_1_1Data_1_1StudyLoadOptions.html#acea0e2cf0297b6aa5f357701bdf7e565", null ],
     [ "prepareOutput", "classAntares_1_1Data_1_1StudyLoadOptions.html#a9751b6e06083f06e331a2731170c3a6e", null ],
     [ "simplexOptimizationRange", "classAntares_1_1Data_1_1StudyLoadOptions.html#a2ef386b36efcd3f12fd76d8756207510", null ],
+    [ "solverOptions", "classAntares_1_1Data_1_1StudyLoadOptions.html#aec3d61ddba2a997e77c569b4a139dc9f", null ],
     [ "usedByTheSolver", "classAntares_1_1Data_1_1StudyLoadOptions.html#ab44e57f6b6a32ece0b7c96f16f36f3e8", null ]
 ];

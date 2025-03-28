@@ -1,5 +1,12 @@
 var NAVTREEINDEX26 =
 {
+"simulator_2toolbox_2components_2htmllistbox_2item_2group_8h_source.html":[10,0,0,12,2,1,1,2,1,4],
+"simulator_2toolbox_2components_2map_2settings_8h_source.html":[10,0,0,12,2,1,1,3,9],
+"simulator_2toolbox_2create_8h_source.html":[10,0,0,12,2,1,9],
+"simulator_2toolbox_2create_8hxx_source.html":[10,0,0,12,2,1,10],
+"simulator_2toolbox_2wx-wrapper_8h_source.html":[10,0,0,12,2,1,16],
+"simulator_2windows_2inspector_2data_8hxx_source.html":[10,0,0,12,2,2,7,3],
+"simulator_2windows_2inspector_2frame_8h_source.html":[10,0,0,12,2,2,7,5],
 "simulator_2windows_2output_2mini-frame_8h_source.html":[10,0,0,12,2,2,10,8],
 "simulator_2windows_2output_2panel_2panel_8h_source.html":[10,0,0,12,2,2,10,0,1],
 "simulator_2windows_2output_2panel_8h_source.html":[10,0,0,12,2,2,10,10],
@@ -191,8 +198,6 @@ var NAVTREEINDEX26 =
 "structAntares_1_1Optimization_1_1VariableBounds.html":[9,0,0,14,29],
 "structAntares_1_1Solver_1_1ConstantDataFromAntares.html":[9,0,0,16,9],
 "structAntares_1_1Solver_1_1ModelerParameters.html":[9,0,0,16,20],
-"structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html":[9,0,0,16,2,1],
-"structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html#a1b3d66ae8211fc0a17e451bbfd09d854":[9,0,0,16,2,1,0],
 "structAntares_1_1Solver_1_1Simulation_1_1RemixHydroOutput.html":[9,0,0,16,4,22],
 "structAntares_1_1Solver_1_1Simulation_1_1compareHydroCostsNoises.html":[9,0,0,16,4,5],
 "structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html":[9,0,0,16,4,20],
@@ -244,10 +249,5 @@ var NAVTREEINDEX26 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow_1_1Statistics.html":[9,0,0,16,5,4,22,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge_1_1Statistics.html":[9,0,0,16,5,4,23,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost_1_1Statistics.html":[9,0,0,16,5,4,24,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html":[9,0,0,16,5,4,28],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCsr_1_1Statistics.html":[9,0,0,16,5,4,25,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlant_1_1Statistics.html":[9,0,0,16,5,4,30,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MiscGenMinusRowPSP_1_1Statistics.html":[9,0,0,16,5,4,31,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant_1_1Statistics.html":[9,0,0,16,5,4,33,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits_1_1Statistics.html":[9,0,0,16,5,4,32,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html":[9,0,0,16,5,4,28]
 };

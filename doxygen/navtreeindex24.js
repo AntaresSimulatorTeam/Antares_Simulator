@@ -1,5 +1,10 @@
 var NAVTREEINDEX24 =
 {
+"functions_func_b.html":[9,3,1,1],
+"functions_func_c.html":[9,3,1,2],
+"functions_func_d.html":[9,3,1,3],
+"functions_func_e.html":[9,3,1,4],
+"functions_func_f.html":[9,3,1,5],
 "functions_func_g.html":[9,3,1,6],
 "functions_func_h.html":[9,3,1,7],
 "functions_func_i.html":[9,3,1,8],
@@ -244,10 +249,5 @@ var NAVTREEINDEX24 =
 "locale_8h_source.html":[10,0,0,5,0,13,0,0,0,0],
 "locales_8h_source.html":[10,0,0,12,2,1,13],
 "locator_8h_source.html":[10,0,0,5,0,14,0,0,0,0],
-"lock_8h_source.html":[10,0,0,12,1,4],
-"log__cleaner_8h_source.html":[10,0,0,12,2,0,2],
-"logfile_8h_source.html":[10,0,0,12,2,1,1,1,1,13],
-"loldCsr_8h_source.html":[10,0,0,8,12,0,0,0,0,2,15],
-"lold_8h_source.html":[10,0,0,8,12,0,0,0,0,2,14],
-"lolpCsr_8h_source.html":[10,0,0,8,12,0,0,0,0,2,17]
+"lock_8h_source.html":[10,0,0,12,1,4]
 };

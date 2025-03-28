@@ -152,12 +152,14 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:a2e378133b4bc85626dc9cad12407d447" id="r_a2e378133b4bc85626dc9cad12407d447"><td class="memItemLeft" align="right" valign="top">static const std::map&lt; std::string, struct <a class="el" href="structOrtoolsUtils_1_1SolverNames.html">SolverNames</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2e378133b4bc85626dc9cad12407d447">solverMap</a></td></tr>
-<tr class="separator:a2e378133b4bc85626dc9cad12407d447"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80bf7fd73f7adef2c748f5f55564a104" id="r_a80bf7fd73f7adef2c748f5f55564a104"><td class="memItemLeft" align="right" valign="top">static const std::map&lt; std::string, <a class="el" href="structOrtoolsUtils_1_1SolverNames.html">SolverNames</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a80bf7fd73f7adef2c748f5f55564a104">mpSolverMap</a></td></tr>
+<tr class="separator:a80bf7fd73f7adef2c748f5f55564a104"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a011fa2b7da76f9ca8c11d1a36fbd47fc" id="r_a011fa2b7da76f9ca8c11d1a36fbd47fc"><td class="memItemLeft" align="right" valign="top">static const std::map&lt; std::string, math_opt::SolverType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a011fa2b7da76f9ca8c11d1a36fbd47fc">mathoptSolverMap</a></td></tr>
+<tr class="separator:a011fa2b7da76f9ca8c11d1a36fbd47fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a2e378133b4bc85626dc9cad12407d447" name="a2e378133b4bc85626dc9cad12407d447"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2e378133b4bc85626dc9cad12407d447">&#9670;&#160;</a></span>solverMap</h2>
+<a id="a011fa2b7da76f9ca8c11d1a36fbd47fc" name="a011fa2b7da76f9ca8c11d1a36fbd47fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a011fa2b7da76f9ca8c11d1a36fbd47fc">&#9670;&#160;</a></span>mathoptSolverMap</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -166,7 +168,32 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const std::map&lt; std::string, struct <a class="el" href="structOrtoolsUtils_1_1SolverNames.html">OrtoolsUtils::SolverNames</a> &gt; OrtoolsUtils::solverMap</td>
+          <td class="memname">const std::map&lt; std::string, math_opt::SolverType &gt; OrtoolsUtils::mathoptSolverMap</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
+<div class="line">  {<span class="stringliteral">&quot;pdlp&quot;</span>, math_opt::SolverType::kPdlp},</div>
+<div class="line">  {<span class="stringliteral">&quot;scip&quot;</span>, math_opt::SolverType::kGscip}}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a80bf7fd73f7adef2c748f5f55564a104" name="a80bf7fd73f7adef2c748f5f55564a104"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a80bf7fd73f7adef2c748f5f55564a104">&#9670;&#160;</a></span>mpSolverMap</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::map&lt; std::string, struct <a class="el" href="structOrtoolsUtils_1_1SolverNames.html">OrtoolsUtils::SolverNames</a> &gt; OrtoolsUtils::mpSolverMap</td>
         </tr>
       </table>
   </td>

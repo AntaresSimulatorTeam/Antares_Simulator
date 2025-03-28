@@ -1,6 +1,5 @@
 var NAVTREEINDEX15 =
 {
-"classAntares_1_1Private_1_1OutputViewerData_1_1Panel.html#ac0d4132b99db0024012e4c49ad753a70":[9,0,0,15,2,3,6],
 "classAntares_1_1Private_1_1OutputViewerData_1_1Panel.html#ae6d760e7e9832e754f22eea556840ac3":[9,0,0,15,2,3,9],
 "classAntares_1_1Private_1_1OutputViewerData_1_1Panel.html#ae88a26ff00d64b5bcff23e92380c3338":[9,0,0,15,2,3,5],
 "classAntares_1_1Private_1_1OutputViewerData_1_1Panel_1_1IData.html":[9,0,0,15,2,3,0],
@@ -46,6 +45,12 @@ var NAVTREEINDEX15 =
 "classAntares_1_1Solver_1_1LpsFromAntares.html":[9,0,0,16,19],
 "classAntares_1_1Solver_1_1NullResultWriter.html":[9,0,0,16,21],
 "classAntares_1_1Solver_1_1Optimization_1_1CsrQuadraticProblem.html":[9,0,0,16,2,0],
+"classAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html":[9,0,0,16,2,1],
+"classAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html#a1cb0b877bfeb31f382639219441e8fba":[9,0,0,16,2,1,1],
+"classAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html#a1e8e337a31a25dad11aaa6ff607783b4":[9,0,0,16,2,1,0],
+"classAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html#a3ad17dd29028cdb77143c46eff2dadcf":[9,0,0,16,2,1,4],
+"classAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html#a456133ff87e4c4ee50ef30ea78e7bfe1":[9,0,0,16,2,1,2],
+"classAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html#a919e4f28788a917d192ffea46659a9dc":[9,0,0,16,2,1,3],
 "classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization.html":[9,0,0,16,2,2],
 "classAntares_1_1Solver_1_1Private_1_1Simulation_1_1CacheData.html":[9,0,0,16,3,0,0],
 "classAntares_1_1Solver_1_1Private_1_1Simulation_1_1CacheData.html#a16d2301564a42e83bb33d30978db1d20":[9,0,0,16,3,0,0,1],
@@ -244,10 +249,5 @@ var NAVTREEINDEX15 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Inflows.html#a4ab5d2a974823c4e3e7f1908fb1c5d3f":[9,0,0,16,5,4,16,1],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Inflows.html#a4eae8aea35bb92752016182f1be949f4":[9,0,0,16,5,4,16,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Inflows.html#ad6f038346fb727e100b8130e58f4882a":[9,0,0,16,5,4,16,4],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LMRViolations.html":[9,0,0,16,5,4,17],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LMRViolations.html#a1e8ccf0a915677bc2adf144844154368":[9,0,0,16,5,4,17,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LMRViolations.html#a48a10831ce847a7c1fc26bff957acc76":[9,0,0,16,5,4,17,4],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LMRViolations.html#a867ce821450c9fb516456bcf1a80bb49":[9,0,0,16,5,4,17,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LMRViolations.html#aa9c92e30b9f8c17bc0f2c475d55e53b1":[9,0,0,16,5,4,17,3],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD.html":[9,0,0,16,5,4,18]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LMRViolations.html":[9,0,0,16,5,4,17]
 };

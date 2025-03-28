@@ -652,7 +652,7 @@ var annotated_dup =
         ] ],
         [ "Optimization", null, [
           [ "CsrQuadraticProblem", "classAntares_1_1Solver_1_1Optimization_1_1CsrQuadraticProblem.html", null ],
-          [ "OptimizationOptions", "structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html", "structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions" ],
+          [ "OptimizationOptions", "classAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html", "classAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions" ],
           [ "WeeklyOptimization", "classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization.html", null ]
         ] ],
         [ "Private", null, [
@@ -1587,6 +1587,7 @@ var annotated_dup =
     [ "PRODUCTION_THERMIQUE_OPTIMALE", "structPRODUCTION__THERMIQUE__OPTIMALE.html", null ],
     [ "Progress", "classProgress.html", "classProgress" ],
     [ "PublicStudy", "classPublicStudy.html", "classPublicStudy" ],
+    [ "QpFixture", "structQpFixture.html", null ],
     [ "QuadraticProblemMatrix", "classQuadraticProblemMatrix.html", null ],
     [ "ReadFromStreamFixture", "structReadFromStreamFixture.html", null ],
     [ "RealName", "classRealName.html", null ],

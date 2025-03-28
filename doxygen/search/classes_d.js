@@ -10,7 +10,7 @@ var searchData=
   ['optdailystringgenerator_7',['OptDailyStringGenerator',['../classOptDailyStringGenerator.html',1,'']]],
   ['optimization_8',['Optimization',['../classAntares_1_1Window_1_1Options_1_1Optimization.html',1,'Antares::Window::Options']]],
   ['optimizationinfo_9',['OptimizationInfo',['../structBenchmarking_1_1OptimizationInfo.html',1,'Benchmarking']]],
-  ['optimizationoptions_10',['OptimizationOptions',['../structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html',1,'Antares::Solver::Optimization']]],
+  ['optimizationoptions_10',['OptimizationOptions',['../classAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html',1,'Antares::Solver::Optimization']]],
   ['optimizationstatistics_11',['OptimizationStatistics',['../classOptimizationStatistics.html',1,'']]],
   ['optimizationstatisticswriter_12',['OptimizationStatisticsWriter',['../classOptimizationStatisticsWriter.html',1,'']]],
   ['options_13',['Options',['../classAntares_1_1Data_1_1Sets_1_1Options.html',1,'Antares::Data::Sets']]],

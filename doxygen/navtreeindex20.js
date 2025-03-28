@@ -1,5 +1,10 @@
 var NAVTREEINDEX20 =
 {
+"classAreaBalance.html":[9,0,39],
+"classAreaBalance.html#acac223592c6c4c93365b0786b3a790a0":[9,0,39,0],
+"classAreaHydroLevel.html":[9,0,41],
+"classAreaHydroLevel.html#abbf1c0f06757373ddf69600149f67682":[9,0,41,0],
+"classAreaHydroLevelGroup.html":[9,0,43],
 "classBenchmarking_1_1DurationCollector.html":[9,0,2,0],
 "classBenchmarking_1_1FileContent.html":[9,0,2,1],
 "classBenchmarking_1_1SimulationInfoCollector.html":[9,0,2,3],
@@ -207,7 +212,7 @@ var NAVTREEINDEX20 =
 "classIProvider.html#afe23d5d59fdc13c722ec9e2db9854f01":[9,0,146,2],
 "classI__MPS__writer.html":[9,0,139],
 "classInMemoryStudyLoader.html":[9,0,142],
-"classInMemoryStudyLoader.html#a5e663efbfcb41b36292c7e837a514922":[9,0,142,0],
+"classInMemoryStudyLoader.html#ade9c98c2ad7c2da388d7586c7c734119":[9,0,142,0],
 "classInjectionCumulationConstraint.html":[9,0,141],
 "classIntegerIndex.html":[9,0,144],
 "classIntoUTF8ArgsTranslator.html":[9,0,145],
@@ -244,10 +249,5 @@ var NAVTREEINDEX20 =
 "classMatrix__load__bypass.html":[9,0,157],
 "classMatrix__load__bypass.html#a16d834acb541e57bdb4b81b7cec9f7d2":[9,0,157,0],
 "classMatrix__mock__load__to__buffer.html":[9,0,158],
-"classMaxHydroPower.html":[9,0,159],
-"classMaxHydroPower.html#a10a5b06ff8ca24c03b46a50f54181347":[9,0,159,0],
-"classMaxPumping.html":[9,0,161],
-"classMaxPumping.html#a6d8321813803c01b92d9b34095a0e7e0":[9,0,161,0],
-"classMaxPumpingGroup.html":[9,0,163],
-"classMinDownTime.html":[9,0,164]
+"classMaxHydroPower.html":[9,0,159]
 };
