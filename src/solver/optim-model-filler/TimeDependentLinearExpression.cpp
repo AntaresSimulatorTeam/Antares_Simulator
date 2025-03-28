@@ -154,12 +154,12 @@ TimeDependentLinearExpression TimeDependentLinearExpression::shiftLinearExpressi
     return TimeDependentLinearExpression(std::move(linearExpressions));
 }
 
-TimeDependentLinearExpression TimeDependentLinearExpression::operator[](int index) const
+TimeDependentLinearExpression TimeDependentLinearExpression::operator[](int timeStep) const
 {
     const Optimisation::LinearProblemApi::FillContext fillContext{
       linearExpressions_.begin()->first,
       linearExpressions_.rbegin()->first};
-    return TimeDependentLinearExpression(fillContext, linearExpressions_.at(index));
+    return TimeDependentLinearExpression(fillContext, linearExpressions_.at(timeStep));
 }
 
 TimeDependentLinearExpression TimeDependentLinearExpression::timeSumLinearExpressions(int from,

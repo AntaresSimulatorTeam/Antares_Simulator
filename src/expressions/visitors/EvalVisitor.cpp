@@ -52,7 +52,9 @@ EvaluationResult EvalVisitor::visit(const Nodes::SubtractionNode* node)
     return dispatch(node->left()) - dispatch(node->right());
 }
 
-EvaluationResult EvalVisitor::visit(const Nodes::MultiplicationNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::MultiplicationNode* node
+
+)
 {
     return dispatch(node->left()) * dispatch(node->right());
 }
@@ -104,7 +106,9 @@ EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::LiteralNode* node)
 {
-    return EvaluationResult{node->value()};
+    return
+
+      EvaluationResult{node->value()};
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::NegationNode* node)
@@ -210,7 +214,7 @@ EvaluationResult EvaluationResult::timeShift(int time_shift) const
 EvaluationResult EvaluationResult::timeSum(int from, int to) const
 {
     EvaluationResult ret(0.);
-    for (auto shift = from; shift <= to; ++shift)
+    for (int shift = from; shift <= to; ++shift)
     {
         ret += timeShift(shift);
     }

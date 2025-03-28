@@ -62,7 +62,7 @@ BOOST_FIXTURE_TEST_CASE(cloneVisitor_With_Add_Neg_ComponentVariableNode, Registr
     BOOST_CHECK_EQUAL(printed, printVisitor.dispatch(cloned));
 }
 
-BOOST_FIXTURE_TEST_CASE(clone_TimeShitNode, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(clone_TimeShiftNode, Registry<Node>)
 {
     LiteralNode literal_node(35.);
     LiteralNode literal_node2(-546.);
@@ -71,9 +71,9 @@ BOOST_FIXTURE_TEST_CASE(clone_TimeShitNode, Registry<Node>)
     CloneVisitor clone_visitor(*this);
     const auto clone = clone_visitor.dispatch(&node);
     const auto cloneTimeShift = dynamic_cast<TimeShiftNode*>(clone);
+    BOOST_REQUIRE(cloneTimeShift);
     BOOST_CHECK(dynamic_cast<LiteralNode*>(cloneTimeShift->right())->value() == -546);
 
-    BOOST_REQUIRE(cloneTimeShift);
     const auto cloneChild = dynamic_cast<LiteralNode*>(cloneTimeShift->left());
     BOOST_REQUIRE(cloneChild);
 

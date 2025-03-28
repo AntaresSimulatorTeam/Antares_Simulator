@@ -58,7 +58,7 @@ public:
     /// Multiply linear expression by -1
     TimeDependentLinearExpression operator-() const;
     TimeDependentLinearExpression shiftLinearExpressions(int shiftValue) const;
-    TimeDependentLinearExpression operator[](int index) const;
+    TimeDependentLinearExpression operator[](int timeStep) const;
     TimeDependentLinearExpression timeSumLinearExpressions(int from, int to) const;
     TimeDependentLinearExpression allTimeSumLinearExpressions() const;
 

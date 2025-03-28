@@ -132,8 +132,6 @@ BOOST_FIXTURE_TEST_CASE(visit_AllTimeSum, MyDummyFixture)
     // 5 + sum(param) -->
     // 5 +param.at(0) + param.at(1) + param.at(2)  --> 5 + 0 + 1  + 2  = 8
 
-    Node* from = create<LiteralNode>(-2.);
-    Node* to = create<LiteralNode>(1.);
     Node* sum = create<SumNode>(create<LiteralNode>(5.),
                                 create<AllTimeSumNode>(create<ParameterNode>("param")));
     MockLinearProblemData my_data;

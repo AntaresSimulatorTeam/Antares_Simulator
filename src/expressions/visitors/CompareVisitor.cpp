@@ -26,7 +26,7 @@ static bool compareParentNode(V& visitor,
                               const T* node,
                               const Antares::Expressions::Nodes::Node* other)
 {
-    if (const auto* other_node = dynamic_cast<const T*>(other))
+    if (const T* other_node = dynamic_cast<const T*>(other))
     {
         if (node->size() != other_node->size())
         {
