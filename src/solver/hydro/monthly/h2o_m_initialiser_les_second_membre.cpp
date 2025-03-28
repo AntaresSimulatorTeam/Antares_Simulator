@@ -22,53 +22,54 @@
 #include "antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h"
 #include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
 
-namespace DonneesOptimisationMensuelle {
-    void H2O_M_InitialiserLeSecondMembre(DONNEES_ANNUELLES& DonneesAnnuelles)
+namespace DonneesOptimisationMensuelle
+{
+void H2O_M_InitialiserLeSecondMembre(DONNEES_ANNUELLES& DonneesAnnuelles)
+{
+    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles.ProblemeHydraulique;
+    PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
+      = ProblemeHydraulique.ProblemeLineairePartieVariable;
+
+    double ChgmtSens = -1;
+    const int NbPdt = DonneesAnnuelles.NombreDePasDeTemps;
+    int Cnt = 0;
+
+    auto& TurbineCible = DonneesAnnuelles.TurbineCible;
+    auto& SecondMembre = ProblemeLineairePartieVariable.SecondMembre;
+
+    for (int Pdt = 1; Pdt < NbPdt; Pdt++)
     {
-        PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles.ProblemeHydraulique;
-        PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
-          = ProblemeHydraulique.ProblemeLineairePartieVariable;
+        SecondMembre[Cnt] = DonneesAnnuelles.Apport[Pdt - 1];
+        Cnt++;
+    }
 
-        double ChgmtSens = -1;
-        const int NbPdt = DonneesAnnuelles.NombreDePasDeTemps;
-        int Cnt = 0;
+    SecondMembre[Cnt] = DonneesAnnuelles.Volume[0] - DonneesAnnuelles.Apport[NbPdt - 1];
+    Cnt++;
 
-        auto& TurbineCible = DonneesAnnuelles.TurbineCible;
-        auto& SecondMembre = ProblemeLineairePartieVariable.SecondMembre;
-
-        for (int Pdt = 1; Pdt < NbPdt; Pdt++)
-        {
-            SecondMembre[Cnt] = DonneesAnnuelles.Apport[Pdt - 1];
-            Cnt++;
-        }
-
-        SecondMembre[Cnt] = DonneesAnnuelles.Volume[0] - DonneesAnnuelles.Apport[NbPdt - 1];
+    for (int Pdt = 1; Pdt < NbPdt; Pdt++)
+    {
+        SecondMembre[Cnt] = DonneesAnnuelles.VolumeMax[Pdt];
         Cnt++;
 
-        for (int Pdt = 1; Pdt < NbPdt; Pdt++)
-        {
-            SecondMembre[Cnt] = DonneesAnnuelles.VolumeMax[Pdt];
-            Cnt++;
-
-            SecondMembre[Cnt] = DonneesAnnuelles.VolumeMin[Pdt] * ChgmtSens;
-            Cnt++;
-        }
-
-        for (int Pdt = 1; Pdt < NbPdt; Pdt++)
-        {
-            SecondMembre[Cnt] = 0.;
-            Cnt++;
-        }
-
-        for (int Pdt = 0; Pdt < NbPdt; Pdt++)
-        {
-            SecondMembre[Cnt] = TurbineCible[Pdt];
-            Cnt++;
-
-            SecondMembre[Cnt] = 0.0 * ChgmtSens;
-            Cnt++;
-        }
-
-        return;
+        SecondMembre[Cnt] = DonneesAnnuelles.VolumeMin[Pdt] * ChgmtSens;
+        Cnt++;
     }
+
+    for (int Pdt = 1; Pdt < NbPdt; Pdt++)
+    {
+        SecondMembre[Cnt] = 0.;
+        Cnt++;
+    }
+
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        SecondMembre[Cnt] = TurbineCible[Pdt];
+        Cnt++;
+
+        SecondMembre[Cnt] = 0.0 * ChgmtSens;
+        Cnt++;
+    }
+
+    return;
 }
+} // namespace DonneesOptimisationMensuelle

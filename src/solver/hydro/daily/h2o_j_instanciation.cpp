@@ -24,9 +24,10 @@
 #include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily/h2o_j_fonctions.h"
 
-namespace DoneesOptimisationJournaliere {
-  DONNEES_MENSUELLES H2O_J_Instanciation()
-  {
+namespace DoneesOptimisationJournaliere
+{
+DONNEES_MENSUELLES H2O_J_Instanciation()
+{
     DONNEES_MENSUELLES DonneesMensuelles{};
 
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles.ProblemeHydraulique;
@@ -72,92 +73,92 @@ namespace DoneesOptimisationJournaliere {
 
     for (int i = 0; i < NombreDeProblemes; i++)
     {
-      const int NbPdt = NbJoursDUnProbleme[i];
+        const int NbPdt = NbJoursDUnProbleme[i];
 
-      CorrespondanceDesVariables[i].NumeroDeVariableTurbine.assign(NbPdt, 0);
-      CorrespondanceDesContraintes[i].NumeroDeContrainteSurXi.assign(NbPdt, 0);
+        CorrespondanceDesVariables[i].NumeroDeVariableTurbine.assign(NbPdt, 0);
+        CorrespondanceDesContraintes[i].NumeroDeContrainteSurXi.assign(NbPdt, 0);
 
-      PROBLEME_LINEAIRE_PARTIE_FIXE& PlFixe = ProblemeLineairePartieFixe[i];
+        PROBLEME_LINEAIRE_PARTIE_FIXE& PlFixe = ProblemeLineairePartieFixe[i];
 
-      int NombreDeVariables = 0;
-      NombreDeVariables += NbPdt;
-      NombreDeVariables += 1;
-      NombreDeVariables += 1;
+        int NombreDeVariables = 0;
+        NombreDeVariables += NbPdt;
+        NombreDeVariables += 1;
+        NombreDeVariables += 1;
 
-      PlFixe.NombreDeVariables = NombreDeVariables;
-      PlFixe.CoutLineaire.assign(NombreDeVariables, 0.);
-      PlFixe.TypeDeVariable.assign(NombreDeVariables, 0);
+        PlFixe.NombreDeVariables = NombreDeVariables;
+        PlFixe.CoutLineaire.assign(NombreDeVariables, 0.);
+        PlFixe.TypeDeVariable.assign(NombreDeVariables, 0);
 
-      int NombreDeContraintes = 0;
-      NombreDeContraintes += 1;
-      NombreDeContraintes += NbPdt;
+        int NombreDeContraintes = 0;
+        NombreDeContraintes += 1;
+        NombreDeContraintes += NbPdt;
 
-      PlFixe.NombreDeContraintes = NombreDeContraintes;
-      PlFixe.Sens.resize(NombreDeContraintes);
-      PlFixe.IndicesDebutDeLigne.assign(NombreDeContraintes, 0);
-      PlFixe.NombreDeTermesDesLignes.assign(NombreDeContraintes, 0);
+        PlFixe.NombreDeContraintes = NombreDeContraintes;
+        PlFixe.Sens.resize(NombreDeContraintes);
+        PlFixe.IndicesDebutDeLigne.assign(NombreDeContraintes, 0);
+        PlFixe.NombreDeTermesDesLignes.assign(NombreDeContraintes, 0);
 
-      int NombreDeTermesAlloues = 0;
-      NombreDeTermesAlloues += NbPdt;
-      NombreDeTermesAlloues += 1;
-      NombreDeTermesAlloues += (2 * NbPdt);
+        int NombreDeTermesAlloues = 0;
+        NombreDeTermesAlloues += NbPdt;
+        NombreDeTermesAlloues += 1;
+        NombreDeTermesAlloues += (2 * NbPdt);
 
-      PlFixe.NombreDeTermesAlloues = NombreDeTermesAlloues;
-      PlFixe.CoefficientsDeLaMatriceDesContraintes.assign(NombreDeTermesAlloues, 0.);
-      PlFixe.IndicesColonnes.assign(NombreDeTermesAlloues, 0);
+        PlFixe.NombreDeTermesAlloues = NombreDeTermesAlloues;
+        PlFixe.CoefficientsDeLaMatriceDesContraintes.assign(NombreDeTermesAlloues, 0.);
+        PlFixe.IndicesColonnes.assign(NombreDeTermesAlloues, 0);
 
-      PROBLEME_LINEAIRE_PARTIE_VARIABLE& PlVariable = ProblemeLineairePartieVariable[i];
+        PROBLEME_LINEAIRE_PARTIE_VARIABLE& PlVariable = ProblemeLineairePartieVariable[i];
 
-      PlVariable.Xmin.assign(NombreDeVariables, 0.);
-      PlVariable.Xmax.assign(NombreDeVariables, 0.);
-      PlVariable.SecondMembre.assign(NombreDeContraintes, 0.);
-      PlVariable.X.assign(NombreDeVariables, 0.);
+        PlVariable.Xmin.assign(NombreDeVariables, 0.);
+        PlVariable.Xmax.assign(NombreDeVariables, 0.);
+        PlVariable.SecondMembre.assign(NombreDeContraintes, 0.);
+        PlVariable.X.assign(NombreDeVariables, 0.);
 
-      PlVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees.assign(NombreDeVariables, nullptr);
+        PlVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees.assign(NombreDeVariables, nullptr);
 
-      PlVariable.PositionDeLaVariable.assign(NombreDeVariables, 0);
-      PlVariable.ComplementDeLaBase.assign(NombreDeContraintes, 0);
+        PlVariable.PositionDeLaVariable.assign(NombreDeVariables, 0);
+        PlVariable.ComplementDeLaBase.assign(NombreDeContraintes, 0);
 
-      PlVariable.CoutsReduits.assign(NombreDeVariables, 0.);
-      PlVariable.CoutsMarginauxDesContraintes.assign(NombreDeContraintes, 0.);
+        PlVariable.CoutsReduits.assign(NombreDeVariables, 0.);
+        PlVariable.CoutsMarginauxDesContraintes.assign(NombreDeContraintes, 0.);
     }
 
     for (int i = 0; i < NombreDeProblemes; i++)
     {
-      H2O_j_ConstruireLesVariables(
-        NbJoursDUnProbleme[i],
-        CorrespondanceDesVariables[i].NumeroDeVariableTurbine,
-        ProblemeLineairePartieVariable[i].Xmin,
-        ProblemeLineairePartieVariable[i].Xmax,
-        ProblemeLineairePartieFixe[i].TypeDeVariable,
-        ProblemeLineairePartieVariable[i].AdresseOuPlacerLaValeurDesVariablesOptimisees,
-        CorrespondanceDesVariables[i]);
+        H2O_j_ConstruireLesVariables(
+          NbJoursDUnProbleme[i],
+          CorrespondanceDesVariables[i].NumeroDeVariableTurbine,
+          ProblemeLineairePartieVariable[i].Xmin,
+          ProblemeLineairePartieVariable[i].Xmax,
+          ProblemeLineairePartieFixe[i].TypeDeVariable,
+          ProblemeLineairePartieVariable[i].AdresseOuPlacerLaValeurDesVariablesOptimisees,
+          CorrespondanceDesVariables[i]);
 
-      H2O_J_ConstruireLesContraintes(
-        NbJoursDUnProbleme[i],
-        CorrespondanceDesVariables[i].NumeroDeVariableTurbine,
-        CorrespondanceDesVariables[i].NumeroDeLaVariableMu,
-        CorrespondanceDesVariables[i].NumeroDeLaVariableXi,
-        ProblemeLineairePartieFixe[i].IndicesDebutDeLigne,
-        ProblemeLineairePartieFixe[i].Sens,
-        ProblemeLineairePartieFixe[i].NombreDeTermesDesLignes,
-        ProblemeLineairePartieFixe[i].CoefficientsDeLaMatriceDesContraintes,
-        ProblemeLineairePartieFixe[i].IndicesColonnes,
-        CorrespondanceDesContraintes[i]);
+        H2O_J_ConstruireLesContraintes(
+          NbJoursDUnProbleme[i],
+          CorrespondanceDesVariables[i].NumeroDeVariableTurbine,
+          CorrespondanceDesVariables[i].NumeroDeLaVariableMu,
+          CorrespondanceDesVariables[i].NumeroDeLaVariableXi,
+          ProblemeLineairePartieFixe[i].IndicesDebutDeLigne,
+          ProblemeLineairePartieFixe[i].Sens,
+          ProblemeLineairePartieFixe[i].NombreDeTermesDesLignes,
+          ProblemeLineairePartieFixe[i].CoefficientsDeLaMatriceDesContraintes,
+          ProblemeLineairePartieFixe[i].IndicesColonnes,
+          CorrespondanceDesContraintes[i]);
 
-      for (int j = 0; j < ProblemeLineairePartieFixe[i].NombreDeVariables; j++)
-      {
-        ProblemeLineairePartieFixe[i].CoutLineaire[j] = 0.0;
-      }
+        for (int j = 0; j < ProblemeLineairePartieFixe[i].NombreDeVariables; j++)
+        {
+            ProblemeLineairePartieFixe[i].CoutLineaire[j] = 0.0;
+        }
 
-      ProblemeLineairePartieFixe[i]
-        .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableMu]
-        = 1.0;
-      ProblemeLineairePartieFixe[i]
-        .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableXi]
-        = 1.0;
+        ProblemeLineairePartieFixe[i]
+          .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableMu]
+          = 1.0;
+        ProblemeLineairePartieFixe[i]
+          .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableXi]
+          = 1.0;
     }
 
     return DonneesMensuelles;
-  }
 }
+} // namespace DoneesOptimisationJournaliere

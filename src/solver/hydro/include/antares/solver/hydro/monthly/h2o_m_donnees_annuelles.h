@@ -36,10 +36,10 @@ struct DONNEES_ANNUELLES
     /* En entree: seules les donnees ci-dessous doivent etre renseignees par l'appelant apres
        avoir appele " H2O_M_Instanciation " */
     /* Commence a 0 pour le 1er janvier et se termine a 11 pour le 1er decembre */
-    double CoutDepassementVolume{0.};   /* A renseigner par l'appelant : 1 valeur */
-    double CoutViolMaxDuVolumeMin{0.};  // A renseigner par l'appelant : 1 valeur
-    double VolumeInitial{0.};           /* A renseigner par l'appelant : 1 valeur */
-    std::vector<double> TurbineMax; /* A renseigner par l'appelant : 1 valeur par mois */
+    double CoutDepassementVolume{0.};  /* A renseigner par l'appelant : 1 valeur */
+    double CoutViolMaxDuVolumeMin{0.}; // A renseigner par l'appelant : 1 valeur
+    double VolumeInitial{0.};          /* A renseigner par l'appelant : 1 valeur */
+    std::vector<double> TurbineMax;    /* A renseigner par l'appelant : 1 valeur par mois */
     std::vector<double> TurbineMin;
     std::vector<double> TurbineCible; /* A renseigner par l'appelant : 1 valeur par mois */
     std::vector<double> Apport;       /* A renseigner par l'appelant : 1 valeur par mois */
@@ -48,12 +48,12 @@ struct DONNEES_ANNUELLES
     std::vector<double> VolumeMax; /* A renseigner par l'appelant : 1 valeur par mois */
 
     /* Les resultats */
-    char
-      ResultatsValides{NON};          /* Vaut:
-                                    OUI si la solution est exploitable pour le reservoir
-                                    NON s'il y a eu un probleme dans la resolution
-                                                                                                                              EMERGENCY_SHUT_DOWN si la resolution du probleme a donne lieu a une erreur interne
-                                                                                                               */
+    char ResultatsValides{
+      NON};                      /* Vaut:
+                               OUI si la solution est exploitable pour le reservoir
+                               NON s'il y a eu un probleme dans la resolution
+                                                                                                                         EMERGENCY_SHUT_DOWN si la resolution du probleme a donne lieu a une erreur interne
+                                                                                                          */
     std::vector<double> Turbine; /* Resultat a recuperer par l'appelant */
     std::vector<double> Volume;  /* Resultat a recuperer par l'appelant */
 

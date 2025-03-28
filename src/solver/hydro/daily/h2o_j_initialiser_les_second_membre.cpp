@@ -22,31 +22,32 @@
 #include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily/h2o_j_fonctions.h"
 
-namespace DoneesOptimisationJournaliere {
-    void H2O_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES* DonneesMensuelles, int NumeroDeProbleme)
+namespace DoneesOptimisationJournaliere
+{
+void H2O_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES* DonneesMensuelles, int NumeroDeProbleme)
+{
+    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
+
+    CORRESPONDANCE_DES_CONTRAINTES& CorrespondanceDesContraintes = ProblemeHydraulique
+                                                                     .CorrespondanceDesContraintes
+                                                                       [NumeroDeProbleme];
+
+    int NumeroDeContrainteDEnergieMensuelle = CorrespondanceDesContraintes
+                                                .NumeroDeContrainteDEnergieMensuelle;
+
+    std::vector<double>& SecondMembre = ProblemeHydraulique
+                                          .ProblemeLineairePartieVariable[NumeroDeProbleme]
+                                          .SecondMembre;
+
+    SecondMembre[NumeroDeContrainteDEnergieMensuelle] = DonneesMensuelles->TurbineDuMois;
+
+    const int NbPdt = ProblemeHydraulique.NbJoursDUnProbleme[NumeroDeProbleme];
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
-
-        CORRESPONDANCE_DES_CONTRAINTES& CorrespondanceDesContraintes = ProblemeHydraulique
-                                                                         .CorrespondanceDesContraintes
-                                                                           [NumeroDeProbleme];
-
-        int NumeroDeContrainteDEnergieMensuelle = CorrespondanceDesContraintes
-                                                    .NumeroDeContrainteDEnergieMensuelle;
-
-        std::vector<double>& SecondMembre = ProblemeHydraulique
-                                              .ProblemeLineairePartieVariable[NumeroDeProbleme]
-                                              .SecondMembre;
-
-        SecondMembre[NumeroDeContrainteDEnergieMensuelle] = DonneesMensuelles->TurbineDuMois;
-
-        const int NbPdt = ProblemeHydraulique.NbJoursDUnProbleme[NumeroDeProbleme];
-        for (int Pdt = 0; Pdt < NbPdt; Pdt++)
-        {
-            int Cnt = CorrespondanceDesContraintes.NumeroDeContrainteSurXi[Pdt];
-            SecondMembre[Cnt] = DonneesMensuelles->TurbineCible[Pdt];
-        }
-
-        return;
+        int Cnt = CorrespondanceDesContraintes.NumeroDeContrainteSurXi[Pdt];
+        SecondMembre[Cnt] = DonneesMensuelles->TurbineCible[Pdt];
     }
+
+    return;
 }
+} // namespace DoneesOptimisationJournaliere
