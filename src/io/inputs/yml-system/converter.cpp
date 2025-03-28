@@ -122,6 +122,41 @@ static SystemModel::Component createComponent(const YmlSystem::Component& c,
     return component;
 }
 
+static const SystemModel::Component& findComponent(
+  const std::string& id,
+  const std::unordered_map<std::string, SystemModel::Component>& components)
+
+{
+    const auto& it = components.find(id);
+    if (it == components.end())
+    {
+        throw std::invalid_argument("Component with id '" + id + "' not found in system.");
+    }
+    return it->second;
+}
+
+static const SystemModel::Port& findPort(const SystemModel::Component& component,
+                                         const std::string& portId)
+{
+    const auto& ports = component.getModel()->Ports();
+    const auto& it = ports.find(portId);
+    if (it == ports.end())
+    {
+        throw std::invalid_argument("Port with id '" + portId + "' not found in component '"
+                                    + component.Id() + "'.");
+    }
+    return it->second;
+}
+
+static SystemModel::FieldRole ExposeFieldRole(const std::string& field,
+                                              const SystemModel::Component& component)
+{
+    const auto& portFieldDefinitions = component.getModel()->PortFieldDefinitions();
+
+    return (portFieldDefinitions.contains(field) ? SystemModel::FieldRole::Sender
+                                                 : SystemModel::FieldRole::Receiver);
+}
+
 /**
  * @brief Creates a SystemModel::Connection from a YmlSystem::Connection and a map of components.
  *
@@ -141,41 +176,9 @@ static SystemModel::Connection createConnection(
   const YmlSystem::Connection& connection,
   const std::unordered_map<std::string, SystemModel::Component>& components)
 {
-    auto findComponent = [&components](const std::string& id) -> const SystemModel::Component&
-    {
-        const auto& it = components.find(id);
-        if (it == components.end())
-        {
-            throw std::invalid_argument("Component with id '" + id + "' not found in system.");
-        }
-        return it->second;
-    };
-
-    auto findPort = [](const SystemModel::Component& component,
-                       const std::string& portId) -> const SystemModel::Port&
-    {
-        const auto& ports = component.getModel()->Ports();
-        const auto& it = ports.find(portId);
-        if (it == ports.end())
-        {
-            throw std::invalid_argument("Port with id '" + portId + "' not found in component '"
-                                        + component.Id() + "'.");
-        }
-        return it->second;
-    };
-
-    auto ExposeFieldRole = [](const std::string& field,
-                              const SystemModel::Component& component) -> SystemModel::FieldRole
-    {
-        const auto& portFieldDefinitions = component.getModel()->PortFieldDefinitions();
-
-        return (portFieldDefinitions.contains(field) ? SystemModel::FieldRole::Sender
-                                                     : SystemModel::FieldRole::Receiver);
-    };
-
-    const auto& first_component = findComponent(connection.firstEntry.componentId);
+    const auto& first_component = findComponent(connection.firstEntry.componentId, components);
     const auto& first_port = findPort(first_component, connection.firstEntry.portId);
-    const auto& second_component = findComponent(connection.secondEntry.componentId);
+    const auto& second_component = findComponent(connection.secondEntry.componentId, components);
     const auto& second_port = findPort(second_component, connection.secondEntry.portId);
     if (first_port.Type() != second_port.Type())
     {
