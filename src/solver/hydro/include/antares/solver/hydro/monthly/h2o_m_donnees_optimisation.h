@@ -33,8 +33,8 @@ extern "C"
 }
 #endif
 
-#include <vector>
 #include <memory>
+#include <vector>
 
 #define LINFINI 1.e+80
 
@@ -129,12 +129,15 @@ struct PROBLEME_HYDRAULIQUE
 
     struct LibererProbleme
     {
-        void operator()(PROBLEME_SPX* p) const {
+        void operator()(PROBLEME_SPX* p) const
+        {
             SPX_LibererProbleme(p);
             delete p;
         }
     };
-    std::vector<std::unique_ptr<PROBLEME_SPX, LibererProbleme>> ProblemeSpx; /* Il y en a 1 par reservoir */
+
+    std::vector<std::unique_ptr<PROBLEME_SPX, LibererProbleme>>
+      ProblemeSpx; /* Il y en a 1 par reservoir */
 
     double CoutDeLaSolution{0.};
     double CoutDeLaSolutionBruite{0.};
