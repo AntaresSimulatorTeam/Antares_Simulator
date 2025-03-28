@@ -34,6 +34,7 @@ extern "C"
 #endif
 
 #include <vector>
+#include <memory>
 
 #define LINFINI 1.e+80
 
@@ -126,18 +127,17 @@ struct PROBLEME_HYDRAULIQUE
     PROBLEME_LINEAIRE_PARTIE_FIXE ProblemeLineairePartieFixe{};
     PROBLEME_LINEAIRE_PARTIE_VARIABLE ProblemeLineairePartieVariable{};
 
-    std::vector<PROBLEME_SPX*> ProblemeSpx; /* Il y en a 1 par reservoir */
+    struct LibererProbleme
+    {
+        void operator()(PROBLEME_SPX* p) const {
+            SPX_LibererProbleme(p);
+            delete p;
+        }
+    };
+    std::vector<std::unique_ptr<PROBLEME_SPX, LibererProbleme>> ProblemeSpx; /* Il y en a 1 par reservoir */
 
     double CoutDeLaSolution{0.};
     double CoutDeLaSolutionBruite{0.};
-
-    ~PROBLEME_HYDRAULIQUE()
-    {
-        for (auto* problem: ProblemeSpx)
-        {
-            SPX_LibererProbleme(problem);
-        }
-    }
 };
 } // namespace DonneesOptimisationMensuelle
 #endif
