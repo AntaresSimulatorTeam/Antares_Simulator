@@ -65,6 +65,7 @@ public:
         predicate_(predicate)
     {
     }
+    virtual ~I_mtx_to_buffer_dumper() = default;
 
     void set_print_format(bool isDecimal, uint precision);
     virtual void run() = 0;
