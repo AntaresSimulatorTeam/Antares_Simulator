@@ -34,7 +34,7 @@ void OneVarFiller::addObjective(ILinearProblem& pb,
                                 [[maybe_unused]] ILinearProblemData& data,
                                 [[maybe_unused]] FillContext& ctx)
 {
-    auto* var = pb.getVariable(added_var_name_);
+    auto* var = pb.lookupVariable(added_var_name_);
     pb.setObjectiveCoefficient(var, 1);
 }
 
