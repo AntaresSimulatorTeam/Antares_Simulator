@@ -434,8 +434,9 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
             if (var >= 0)
             {
                 Xmin[var] = 0.0;
-                Xmax[var] = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                              .ApportNaturelHoraire[pdtHebdo];
+                Xmax[var] = std::max(
+                  0.,
+                  problemeHebdo->CaracteristiquesHydrauliques[pays].ApportNaturelHoraire[pdtHebdo]);
                 AdresseOuPlacerLaValeurDesCoutsReduits[var] = nullptr;
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = &problemeHebdo
                                                                         ->ResultatsHoraires[pays]
