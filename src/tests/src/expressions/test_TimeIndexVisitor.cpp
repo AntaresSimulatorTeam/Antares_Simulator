@@ -55,6 +55,7 @@ static std::ostream& operator<<(std::ostream& os, TimeIndex s)
 }
 } // namespace Antares::Expressions::Visitors
 BOOST_AUTO_TEST_SUITE(_TimeIndexVisitor_)
+
 struct BasicFixture: Registry<Node>
 {
     // LiteralNode --> constant in time and for all scenarios
@@ -68,8 +69,6 @@ struct BasicFixture: Registry<Node>
 
 BOOST_FIXTURE_TEST_CASE(simple_time_dependant_expression, BasicFixture)
 {
-
-
     BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(&literalNode),
                       TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
     BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(&parameterNode),
