@@ -138,13 +138,6 @@ TimeDependentLinearExpression TimeDependentLinearExpression::shiftLinearExpressi
     const Optimisation::LinearProblemApi::FillContext fillContext{
       linearExpressions_.begin()->first,
       linearExpressions_.rbegin()->first};
-    // unsigned int number_of_timestep = fillContext.getNumberOfTimestep();
-
-    // TODO
-    //  if (number_of_timestep == 0)
-    //  {
-    //      return TimeDependentLinearExpression(fillContext);
-    //  }
 
     LinearExpressionMap linearExpressions;
     for (const auto& timeStep: linearExpressions_ | std::views::keys)
