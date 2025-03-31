@@ -35,7 +35,6 @@ using namespace Yuni;
 using namespace Antares::Data;
 using namespace Antares::Solver::TimeSeriesNumbers;
 
-
 void initializeStudy(Study::Ptr study, unsigned int nbYears = 1)
 {
     study->parameters.derated = false;
@@ -101,7 +100,7 @@ BOOST_AUTO_TEST_CASE(detection_of_duplicate_thermal_clusters)
 
     auto cluster3 = addClusterToArea<ThermalCluster>(area_2, "th-cluster-1");
     auto cluster4 = addClusterToArea<ThermalCluster>(area_2, "th-cluster-2");
-    
+
     BOOST_CHECK_EQUAL(Antares::Check::checkForDuplicates(*study_1), false);
     BOOST_CHECK_EQUAL(Antares::Check::checkForDuplicates(*study_2), true);
 }
