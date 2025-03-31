@@ -17,7 +17,7 @@ var searchData=
   ['getnumberofcorespermode_14',['getNumberOfCoresPerMode',['../classAntares_1_1Data_1_1Study.html#a3ade1389d5a8c512a7d91c1e2d4d7de9',1,'Antares::Data::Study']]],
   ['getnumberrows_15',['GetNumberRows',['../classAntares_1_1Component_1_1Datagrid_1_1VGridHelper.html#ae03f779cb75379c307a45a2ddb97ffb7',1,'Antares::Component::Datagrid::VGridHelper']]],
   ['getnumericvalue_16',['GetNumericValue',['../classAntares_1_1Component_1_1Datagrid_1_1VGridHelper.html#adff625465fd783bf5964d68f25984d33',1,'Antares::Component::Datagrid::VGridHelper']]],
-  ['getoperands_17',['getOperands',['../classAntares_1_1Expressions_1_1Nodes_1_1SumNode.html#a96aa54be391cefbee1fae478b89ca3a6',1,'Antares::Expressions::Nodes::SumNode']]],
+  ['getoperands_17',['getOperands',['../classAntares_1_1Expressions_1_1Nodes_1_1ParentNode.html#a1a483a734b5fcf9a0d7748b7a2f0f267',1,'Antares::Expressions::Nodes::ParentNode']]],
   ['getportname_18',['getPortName',['../classAntares_1_1Expressions_1_1Nodes_1_1PortFieldNode.html#a6fe3cd67d180be37f2f8001e5a6aa39d',1,'Antares::Expressions::Nodes::PortFieldNode::getPortName()'],['../classAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode.html#ac3831b1df5be5e32a42c24f4f35652dc',1,'Antares::Expressions::Nodes::PortFieldSumNode::getPortName()']]],
   ['getrenderedmapimage_19',['getRenderedMapImage',['../classAntares_1_1Map_1_1Control.html#a3144fef969d2e546921f5bb9e447d04f',1,'Antares::Map::Control']]],
   ['getrowlabelvalue_20',['GetRowLabelValue',['../classAntares_1_1Component_1_1Datagrid_1_1VGridHelper.html#a05903d11d1560997ef75d69da744244d',1,'Antares::Component::Datagrid::VGridHelper']]],

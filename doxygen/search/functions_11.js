@@ -103,7 +103,6 @@ var searchData=
   ['suffixareaname_100',['SuffixAreaName',['../classAntares_1_1Action_1_1Settings_1_1SuffixAreaName.html#aa3897214f04157d489e660c9be9fe0f4',1,'Antares::Action::Settings::SuffixAreaName']]],
   ['suffixconstraintname_101',['SuffixConstraintName',['../classAntares_1_1Action_1_1Settings_1_1SuffixConstraintName.html#ade6212a85d1dfcc024c971df9abbc811',1,'Antares::Action::Settings::SuffixConstraintName']]],
   ['suffixplantname_102',['SuffixPlantName',['../classAntares_1_1Action_1_1Settings_1_1SuffixPlantName.html#a9f98e9c15ab09f91e2be50e6bd772ddf',1,'Antares::Action::Settings::SuffixPlantName']]],
-  ['sumnode_103',['SumNode',['../classAntares_1_1Expressions_1_1Nodes_1_1SumNode.html#a435fd36f95a0c2c59457dd500823a598',1,'Antares::Expressions::Nodes::SumNode::SumNode(const std::vector&lt; Node * &gt; &amp;operands)'],['../classAntares_1_1Expressions_1_1Nodes_1_1SumNode.html#a5c0919e774f62713948a4c03e3b5227a',1,'Antares::Expressions::Nodes::SumNode::SumNode(std::vector&lt; Node * &gt; &amp;&amp;operands)']]],
-  ['surveyresults_104',['SurveyResults',['../classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#ab7badf12c0f2c8bd9da330b602af896a',1,'Antares::Solver::Variable::SurveyResults']]],
-  ['swap_105',['swap',['../classAntares_1_1Matrix.html#a2b44e31fbab3f1dfc65197887e3e6a0c',1,'Antares::Matrix']]]
+  ['surveyresults_103',['SurveyResults',['../classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#ab7badf12c0f2c8bd9da330b602af896a',1,'Antares::Solver::Variable::SurveyResults']]],
+  ['swap_104',['swap',['../classAntares_1_1Matrix.html#a2b44e31fbab3f1dfc65197887e3e6a0c',1,'Antares::Matrix']]]
 ];

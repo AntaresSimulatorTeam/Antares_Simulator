@@ -911,29 +911,33 @@ var hierarchy =
           [ "Antares::Expressions::Nodes::ParameterNode", "classAntares_1_1Expressions_1_1Nodes_1_1ParameterNode.html", null ],
           [ "Antares::Expressions::Nodes::VariableNode", "classAntares_1_1Expressions_1_1Nodes_1_1VariableNode.html", null ]
         ] ],
-        [ "Antares::Expressions::Nodes::BinaryNode", "classAntares_1_1Expressions_1_1Nodes_1_1BinaryNode.html", [
-          [ "Antares::Expressions::Nodes::ComparisonNode", "classAntares_1_1Expressions_1_1Nodes_1_1ComparisonNode.html", [
-            [ "Antares::Expressions::Nodes::EqualNode", "classAntares_1_1Expressions_1_1Nodes_1_1EqualNode.html", null ],
-            [ "Antares::Expressions::Nodes::GreaterThanOrEqualNode", "classAntares_1_1Expressions_1_1Nodes_1_1GreaterThanOrEqualNode.html", null ],
-            [ "Antares::Expressions::Nodes::LessThanOrEqualNode", "classAntares_1_1Expressions_1_1Nodes_1_1LessThanOrEqualNode.html", null ]
-          ] ],
-          [ "Antares::Expressions::Nodes::DivisionNode", "classAntares_1_1Expressions_1_1Nodes_1_1DivisionNode.html", null ],
-          [ "Antares::Expressions::Nodes::MultiplicationNode", "classAntares_1_1Expressions_1_1Nodes_1_1MultiplicationNode.html", null ],
-          [ "Antares::Expressions::Nodes::SubtractionNode", "classAntares_1_1Expressions_1_1Nodes_1_1SubtractionNode.html", null ],
-          [ "Antares::Expressions::Nodes::TimeIndexNode", "classAntares_1_1Expressions_1_1Nodes_1_1TimeIndexNode.html", null ],
-          [ "Antares::Expressions::Nodes::TimeShiftNode", "classAntares_1_1Expressions_1_1Nodes_1_1TimeShiftNode.html", null ]
-        ] ],
         [ "Antares::Expressions::Nodes::ComponentNode", "classAntares_1_1Expressions_1_1Nodes_1_1ComponentNode.html", [
           [ "Antares::Expressions::Nodes::ComponentParameterNode", "classAntares_1_1Expressions_1_1Nodes_1_1ComponentParameterNode.html", null ],
           [ "Antares::Expressions::Nodes::ComponentVariableNode", "classAntares_1_1Expressions_1_1Nodes_1_1ComponentVariableNode.html", null ]
         ] ],
         [ "Antares::Expressions::Nodes::Leaf< T >", "classAntares_1_1Expressions_1_1Nodes_1_1Leaf.html", null ],
+        [ "Antares::Expressions::Nodes::ParentNode", "classAntares_1_1Expressions_1_1Nodes_1_1ParentNode.html", [
+          [ "Antares::Expressions::Nodes::BinaryNode", "classAntares_1_1Expressions_1_1Nodes_1_1BinaryNode.html", [
+            [ "Antares::Expressions::Nodes::ComparisonNode", "classAntares_1_1Expressions_1_1Nodes_1_1ComparisonNode.html", [
+              [ "Antares::Expressions::Nodes::EqualNode", "classAntares_1_1Expressions_1_1Nodes_1_1EqualNode.html", null ],
+              [ "Antares::Expressions::Nodes::GreaterThanOrEqualNode", "classAntares_1_1Expressions_1_1Nodes_1_1GreaterThanOrEqualNode.html", null ],
+              [ "Antares::Expressions::Nodes::LessThanOrEqualNode", "classAntares_1_1Expressions_1_1Nodes_1_1LessThanOrEqualNode.html", null ]
+            ] ],
+            [ "Antares::Expressions::Nodes::DivisionNode", "classAntares_1_1Expressions_1_1Nodes_1_1DivisionNode.html", null ],
+            [ "Antares::Expressions::Nodes::MultiplicationNode", "classAntares_1_1Expressions_1_1Nodes_1_1MultiplicationNode.html", null ],
+            [ "Antares::Expressions::Nodes::SubtractionNode", "classAntares_1_1Expressions_1_1Nodes_1_1SubtractionNode.html", null ],
+            [ "Antares::Expressions::Nodes::TimeIndexNode", "classAntares_1_1Expressions_1_1Nodes_1_1TimeIndexNode.html", null ],
+            [ "Antares::Expressions::Nodes::TimeShiftNode", "classAntares_1_1Expressions_1_1Nodes_1_1TimeShiftNode.html", null ]
+          ] ],
+          [ "Antares::Expressions::Nodes::SumNode", "classAntares_1_1Expressions_1_1Nodes_1_1SumNode.html", null ],
+          [ "Antares::Expressions::Nodes::TimeSumNode", "classAntares_1_1Expressions_1_1Nodes_1_1TimeSumNode.html", null ],
+          [ "Antares::Expressions::Nodes::UnaryNode", "classAntares_1_1Expressions_1_1Nodes_1_1UnaryNode.html", [
+            [ "Antares::Expressions::Nodes::AllTimeSumNode", "classAntares_1_1Expressions_1_1Nodes_1_1AllTimeSumNode.html", null ],
+            [ "Antares::Expressions::Nodes::NegationNode", "classAntares_1_1Expressions_1_1Nodes_1_1NegationNode.html", null ]
+          ] ]
+        ] ],
         [ "Antares::Expressions::Nodes::PortFieldNode", "classAntares_1_1Expressions_1_1Nodes_1_1PortFieldNode.html", null ],
-        [ "Antares::Expressions::Nodes::PortFieldSumNode", "classAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode.html", null ],
-        [ "Antares::Expressions::Nodes::SumNode", "classAntares_1_1Expressions_1_1Nodes_1_1SumNode.html", null ],
-        [ "Antares::Expressions::Nodes::UnaryNode", "classAntares_1_1Expressions_1_1Nodes_1_1UnaryNode.html", [
-          [ "Antares::Expressions::Nodes::NegationNode", "classAntares_1_1Expressions_1_1Nodes_1_1NegationNode.html", null ]
-        ] ]
+        [ "Antares::Expressions::Nodes::PortFieldSumNode", "classAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode.html", null ]
       ] ],
       [ "Antares::Expressions::Visitors::NodeVisitor< R, Args >", "classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor.html", null ]
     ] ],
@@ -1385,6 +1389,7 @@ var hierarchy =
     [ "Antares::Expressions::Registry< Base >", "classAntares_1_1Expressions_1_1Registry.html", null ],
     [ "Antares::Expressions::Registry< Antares::Expressions::Nodes::Node >", "classAntares_1_1Expressions_1_1Registry.html", null ],
     [ "Antares::Expressions::Registry< Node >", "classAntares_1_1Expressions_1_1Registry.html", [
+      [ "BasicFixture", "structBasicFixture.html", null ],
       [ "MyDummyFixture", "structMyDummyFixture.html", null ],
       [ "MyDummyFixture", "structMyDummyFixture.html", null ],
       [ "MyDummyFixture", "structMyDummyFixture.html", null ],

@@ -8,5 +8,6 @@ var dir_19ff128a63cbd20da0e3cb306cc82c00 =
     [ "IName.h", "IName_8h_source.html", null ],
     [ "NodeRegistry.h", "NodeRegistry_8h_source.html", null ],
     [ "Registry.hxx", "Registry_8hxx_source.html", null ],
+    [ "RotateIndex.h", "RotateIndex_8h_source.html", null ],
     [ "ShiftVector.h", "ShiftVector_8h_source.html", null ]
 ];

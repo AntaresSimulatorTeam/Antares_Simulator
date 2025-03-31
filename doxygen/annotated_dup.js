@@ -401,6 +401,7 @@ var annotated_dup =
       ] ],
       [ "Expressions", null, [
         [ "Nodes", null, [
+          [ "AllTimeSumNode", "classAntares_1_1Expressions_1_1Nodes_1_1AllTimeSumNode.html", "classAntares_1_1Expressions_1_1Nodes_1_1AllTimeSumNode" ],
           [ "AST", "classAntares_1_1Expressions_1_1Nodes_1_1AST.html", null ],
           [ "ASTPreOrderIterator", "classAntares_1_1Expressions_1_1Nodes_1_1ASTPreOrderIterator.html", null ],
           [ "BinaryNode", "classAntares_1_1Expressions_1_1Nodes_1_1BinaryNode.html", "classAntares_1_1Expressions_1_1Nodes_1_1BinaryNode" ],
@@ -418,12 +419,14 @@ var annotated_dup =
           [ "NegationNode", "classAntares_1_1Expressions_1_1Nodes_1_1NegationNode.html", "classAntares_1_1Expressions_1_1Nodes_1_1NegationNode" ],
           [ "Node", "classAntares_1_1Expressions_1_1Nodes_1_1Node.html", null ],
           [ "ParameterNode", "classAntares_1_1Expressions_1_1Nodes_1_1ParameterNode.html", null ],
+          [ "ParentNode", "classAntares_1_1Expressions_1_1Nodes_1_1ParentNode.html", "classAntares_1_1Expressions_1_1Nodes_1_1ParentNode" ],
           [ "PortFieldNode", "classAntares_1_1Expressions_1_1Nodes_1_1PortFieldNode.html", "classAntares_1_1Expressions_1_1Nodes_1_1PortFieldNode" ],
           [ "PortFieldSumNode", "classAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode.html", "classAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode" ],
           [ "SubtractionNode", "classAntares_1_1Expressions_1_1Nodes_1_1SubtractionNode.html", "classAntares_1_1Expressions_1_1Nodes_1_1SubtractionNode" ],
           [ "SumNode", "classAntares_1_1Expressions_1_1Nodes_1_1SumNode.html", "classAntares_1_1Expressions_1_1Nodes_1_1SumNode" ],
           [ "TimeIndexNode", "classAntares_1_1Expressions_1_1Nodes_1_1TimeIndexNode.html", "classAntares_1_1Expressions_1_1Nodes_1_1TimeIndexNode" ],
           [ "TimeShiftNode", "classAntares_1_1Expressions_1_1Nodes_1_1TimeShiftNode.html", "classAntares_1_1Expressions_1_1Nodes_1_1TimeShiftNode" ],
+          [ "TimeSumNode", "classAntares_1_1Expressions_1_1Nodes_1_1TimeSumNode.html", "classAntares_1_1Expressions_1_1Nodes_1_1TimeSumNode" ],
           [ "UnaryNode", "classAntares_1_1Expressions_1_1Nodes_1_1UnaryNode.html", "classAntares_1_1Expressions_1_1Nodes_1_1UnaryNode" ],
           [ "VariableNode", "classAntares_1_1Expressions_1_1Nodes_1_1VariableNode.html", null ]
         ] ],
@@ -1409,6 +1412,7 @@ var annotated_dup =
     [ "AreaHydroLevelData", "structAreaHydroLevelData.html", null ],
     [ "AreaHydroLevelGroup", "classAreaHydroLevelGroup.html", null ],
     [ "averageResults", "classaverageResults.html", null ],
+    [ "BasicFixture", "structBasicFixture.html", null ],
     [ "BB", "structBB.html", null ],
     [ "BindingConstraintData", "classBindingConstraintData.html", null ],
     [ "BindingConstraintDay", "classBindingConstraintDay.html", "classBindingConstraintDay" ],

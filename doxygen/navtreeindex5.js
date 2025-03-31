@@ -1,5 +1,9 @@
 var NAVTREEINDEX5 =
 {
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ThermalClusterSummarySingleArea.html#aa1bdbc4531b5dedd08b5c591f0ad4cf6":[9,0,0,2,0,0,74,6],
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ThermalClusterSummarySingleArea.html#ab8a97f9f597416b666f42f539ab0a328":[9,0,0,2,0,0,74,3],
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ThermalClusterSummarySingleArea.html#af78c574b08ed2fe88e75719bebaee429":[9,0,0,2,0,0,74,2],
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesCluster.html":[9,0,0,2,0,0,77],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesCluster.html#a0546bb4abe613326d8a7d536296a4e1f":[9,0,0,2,0,0,77,10],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesCluster.html#a0e62726a2a5da5b017ee1ebd68f70abb":[9,0,0,2,0,0,77,9],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesCluster.html#a402786422efbabd1f37c25ce15821688":[9,0,0,2,0,0,77,5],
@@ -245,9 +249,5 @@ var NAVTREEINDEX5 =
 "classAntares_1_1Component_1_1FrameShowData.html":[9,0,0,2,5],
 "classAntares_1_1Component_1_1Frame_1_1IFrame.html":[9,0,0,2,1,0],
 "classAntares_1_1Component_1_1Frame_1_1IFrame.html#a1475a1f5f1da44ad40724ac87beee11e":[9,0,0,2,1,0,2],
-"classAntares_1_1Component_1_1Frame_1_1IFrame.html#a59174853419e2923ff59ec291d93a655":[9,0,0,2,1,0,0],
-"classAntares_1_1Component_1_1Frame_1_1IFrame.html#ae13c97ffe28439abc8b829ebe493cd87":[9,0,0,2,1,0,1],
-"classAntares_1_1Component_1_1Frame_1_1WxLocalFrame.html":[9,0,0,2,1,1],
-"classAntares_1_1Component_1_1Frame_1_1WxLocalFrame.html#a25c20bfffa5592e01b31647f8ea8e54e":[9,0,0,2,1,1,1],
-"classAntares_1_1Component_1_1Frame_1_1WxLocalFrame.html#add95206018dd6ebf9633c0eb6a799161":[9,0,0,2,1,1,0]
+"classAntares_1_1Component_1_1Frame_1_1IFrame.html#a59174853419e2923ff59ec291d93a655":[9,0,0,2,1,0,0]
 };
