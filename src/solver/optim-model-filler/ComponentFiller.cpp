@@ -136,10 +136,11 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
       });
 }
 
-ComponentFiller::ComponentFiller(const Study::SystemModel::Component& component):
+ComponentFiller::ComponentFiller(const Study::SystemModel::Component& component,
+                                 const std::vector<Study::SystemModel::Connection>& connections):
     component_(component),
-    modelVariable_(component.getModel()->Variables())
-
+    modelVariable_(component.getModel()->Variables()),
+    connections_(connections)
 {
 }
 
@@ -247,7 +248,7 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
     Expressions::Visitors::EvaluationContext evaluationContext(component_.getParameterValues(),
                                                                {},
                                                                data);
-    ReadLinearConstraintVisitor visitor(evaluationContext, ctx, component_.Id());
+    ReadLinearConstraintVisitor visitor(evaluationContext, ctx, component_.Id(), connections_);
     for (const auto& constraint: component_.getModel()->getConstraints() | std::views::values)
     {
         auto* root_node = constraint.expression().RootNode();
@@ -280,7 +281,7 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
                                                                {},
                                                                data);
 
-    ReadLinearExpressionVisitor visitor(evaluationContext, ctx, component_.Id());
+    ReadLinearExpressionVisitor visitor(evaluationContext, ctx, component_.Id(), connections_);
 
     const auto timeDependentLinearExpression = visitor.dispatch(model->Objective().RootNode());
     const auto& linear_expressions = timeDependentLinearExpression.GetLinearExpressions();

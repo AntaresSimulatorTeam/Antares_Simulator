@@ -31,6 +31,7 @@
 #include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/study/system-model/component.h"
+#include "antares/study/system-model/connection.h"
 #include "antares/study/system-model/parameter.h"
 #include "antares/study/system-model/timeAndScenarioType.h"
 
@@ -74,6 +75,7 @@ struct LinearProblemBuildingFixture
     map<string, Model> models;
     Registry<Node> nodes;
     vector<Component> components;
+    std::vector<Connection> connections;
     unique_ptr<ILinearProblem> pb;
     LinearProblemData dummy_data_;
 
@@ -228,7 +230,7 @@ void LinearProblemBuildingFixture::buildLinearProblem(FillContext& time_scenario
     vector<LinearProblemFiller*> fillers_ptr;
     for (auto& component: components)
     {
-        auto cf = make_unique<ComponentFiller>(component);
+        auto cf = make_unique<ComponentFiller>(component, connections);
         fillers.push_back(move(cf));
     }
     for (auto& component_filler: fillers)

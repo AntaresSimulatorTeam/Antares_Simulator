@@ -23,6 +23,7 @@
 
 #include <antares/optimisation/linear-problem-api/linearProblemFiller.h>
 #include <antares/study/system-model/component.h>
+#include <antares/study/system-model/connection.h>
 #include "antares/expressions/visitors/EvaluationContext.h"
 #include "antares/solver/optim-model-filler/VariableDictionary.h"
 
@@ -52,7 +53,8 @@ public:
     ComponentFiller() = delete;
     ComponentFiller(ComponentFiller& other) = delete;
     /// Create a ComponentFiller for a Component
-    explicit ComponentFiller(const Study::SystemModel::Component& component);
+    explicit ComponentFiller(const Study::SystemModel::Component& component,
+                             const std::vector<Study::SystemModel::Connection>& connections);
 
     void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
@@ -80,6 +82,7 @@ private:
     static bool IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node);
 
     const Study::SystemModel::Component& component_;
+    const std::vector<Study::SystemModel::Connection>& connections_;
     const std::map<std::string, Study::SystemModel::Variable>& modelVariable_;
 };
 

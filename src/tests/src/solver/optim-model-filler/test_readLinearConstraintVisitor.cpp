@@ -29,6 +29,7 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h>
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
+#include "antares/study/system-model/connection.h"
 
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
@@ -43,7 +44,8 @@ struct MyDummyFixture: Registry<Node>
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
     EvaluationContext evaluationContext{{}, {}, data};
     std::string componentId = "compo";
-    ReadLinearConstraintVisitor visitor{evaluationContext, {0, 0}, componentId};
+    const std::vector<Antares::Study::SystemModel::Connection> connections;
+    ReadLinearConstraintVisitor visitor{evaluationContext, {0, 0}, componentId, connections};
 };
 
 BOOST_FIXTURE_TEST_CASE(test_name, MyDummyFixture)
@@ -69,7 +71,7 @@ BOOST_FIXTURE_TEST_CASE(test_visit_equal_node, MyDummyFixture)
                                 create<NegationNode>(create<ParameterNode>("param1")));
     Node* node = create<EqualNode>(lhs, rhs);
     EvaluationContext context({build_context_parameter_with("param1", "9.")}, {}, data);
-    ReadLinearConstraintVisitor visitor(context, {0, 0}, componentId);
+    ReadLinearConstraintVisitor visitor(context, {0, 0}, componentId, connections);
     auto constraint = visitor.dispatch(node)[0];
     BOOST_CHECK_EQUAL(constraint.lb, -14.);
     BOOST_CHECK_EQUAL(constraint.ub, -14.);
@@ -88,7 +90,7 @@ BOOST_FIXTURE_TEST_CASE(test_visit_less_than_or_equal_node, MyDummyFixture)
                                 create<NegationNode>(create<ParameterNode>("param1")));
     Node* node = create<LessThanOrEqualNode>(lhs, rhs);
     EvaluationContext context({build_context_parameter_with("param1", "10.")}, {}, data);
-    ReadLinearConstraintVisitor visitor(context, {0, 0}, componentId);
+    ReadLinearConstraintVisitor visitor(context, {0, 0}, componentId, connections);
     auto constraint = visitor.dispatch(node)[0];
     BOOST_CHECK_EQUAL(constraint.lb, -std::numeric_limits<double>::infinity());
     BOOST_CHECK_EQUAL(constraint.ub, -1.);
@@ -108,7 +110,7 @@ BOOST_FIXTURE_TEST_CASE(test_visit_greater_than_or_equal_node, MyDummyFixture)
                                 create<NegationNode>(create<ParameterNode>("param1")));
     Node* node = create<GreaterThanOrEqualNode>(lhs, rhs);
     EvaluationContext context({build_context_parameter_with("param1", "9.")}, {}, data);
-    ReadLinearConstraintVisitor visitor(context, {0, 0}, componentId);
+    ReadLinearConstraintVisitor visitor(context, {0, 0}, componentId, connections);
     auto constraint = visitor.dispatch(node)[0];
     BOOST_CHECK_EQUAL(constraint.lb, -14);
     BOOST_CHECK_EQUAL(constraint.ub, std::numeric_limits<double>::infinity());
