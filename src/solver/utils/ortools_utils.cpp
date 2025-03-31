@@ -363,10 +363,11 @@ std::list<std::string> getAvailableQuadraticSolverNames()
     std::list<std::string> result;
     // Sirius is supported, but not through mathopt
     result.push_back("sirius");
-    for (const auto& solverName: OrtoolsUtils::mathoptSolverMap)
+    // TODO: re-enable the following 3 lines when MathOpt is fixed
+    /*for (const auto& solverName: OrtoolsUtils::mathoptSolverMap)
     {
         result.push_back(solverName.first);
-    }
+    }*/
     return result;
 }
 
