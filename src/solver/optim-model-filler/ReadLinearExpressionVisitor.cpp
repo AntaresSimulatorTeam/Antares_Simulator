@@ -26,6 +26,7 @@
 #include <antares/expressions/visitors/NodeVisitor.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h>
+#include "antares/study/system-model/component.h"
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::Study;
 
@@ -165,6 +166,20 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const PortField
 {
     std::string port = node->getPortName();
     std::string field = node->getFieldName();
+
+    //
+    std::vector<const SystemModel::Component*> connectedComponents;
+    for (auto& c: connections_)
+    {
+        if (c.firstEntry().component()->Id() == componentId_)
+        {
+            connectedComponents.push_back(c.secondEntry().component());
+        }
+        if (c.secondEntry().component()->Id() == componentId_)
+        {
+            connectedComponents.push_back(c.firstEntry().component());
+        }
+    }
 
     return TimeDependentLinearExpression(fillContext_, {}); // For compilation only
 }

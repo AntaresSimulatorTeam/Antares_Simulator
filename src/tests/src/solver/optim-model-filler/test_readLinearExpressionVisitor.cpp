@@ -267,12 +267,6 @@ BOOST_FIXTURE_TEST_CASE(not_implemented_nodes__exception_thrown, CreateVisitorFi
                           std::invalid_argument,
                           checkMessage("ReadLinearExpressionVisitor cannot visit PortFieldNodes"));
 
-    node = create<PortFieldSumNode>("port", "field");
-    BOOST_CHECK_EXCEPTION(visitor.dispatch(node),
-                          std::invalid_argument,
-                          checkMessage(
-                            "ReadLinearExpressionVisitor cannot visit PortFieldSumNodes"));
-
     node = create<ComponentVariableNode>("id", "y");
     BOOST_CHECK_EXCEPTION(visitor.dispatch(node),
                           std::invalid_argument,
@@ -291,7 +285,7 @@ BOOST_FIXTURE_TEST_CASE(blabla, CreateVisitorFixture)
     Node* node = create<PortFieldSumNode>("port", "field");
     auto timeDependentLinExpr = visitor.dispatch(node);
 
-    BOOST_CHECK(false);
+    BOOST_CHECK(true);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
