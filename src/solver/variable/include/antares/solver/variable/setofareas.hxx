@@ -135,9 +135,7 @@ inline void SetsOfAreas<NextT>::yearEnd(uint /*year*/, uint /*numSpace*/)
 }
 
 template<class NextT>
-inline void SetsOfAreas<NextT>::computeSummary(
-  std::map<unsigned int, unsigned int>& /*numSpaceToYear*/,
-  unsigned int /* nbYearsForCurrentSummary */)
+inline void SetsOfAreas<NextT>::computeSummary(unsigned int /* year */, unsigned int /* numSpace */)
 {
     // Nothing to do here
 }

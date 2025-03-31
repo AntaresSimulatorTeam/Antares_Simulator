@@ -134,8 +134,7 @@ public:
 
     void yearEnd(uint year, uint numSpace);
 
-    void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
-                        unsigned int nbYearsForCurrentSummary);
+    void computeSummary(unsigned int year, unsigned int numSpace);
 
     void hourBegin(uint hourInTheYear);
 

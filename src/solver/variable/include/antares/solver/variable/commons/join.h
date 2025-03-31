@@ -203,11 +203,11 @@ public:
         RightType::yearEnd(year, numSpace);
     }
 
-    void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
-                        unsigned int nbYearsForCurrentSummary)
+    void computeSummary(unsigned int year, unsigned int numSpace)
     {
-        LeftType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
-        RightType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
+        // Next variable
+        LeftType::computeSummary(year, numSpace);
+        RightType::computeSummary(year, numSpace);
     }
 
     void weekBegin(State& state)

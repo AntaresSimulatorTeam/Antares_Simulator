@@ -230,23 +230,6 @@ public:
         NextType::yearEnd(year, numSpace);
     }
 
-    void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
-                        unsigned int nbYearsForCurrentSummary)
-    {
-        for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
-        {
-            for (unsigned int i = 0; i < pNbClustersOfArea; ++i)
-            {
-                // Merge all those values with the global results
-                AncestorType::pResults[i].merge(numSpaceToYear[numSpace],
-                                                pValuesForTheCurrentYear[numSpace][i]);
-            }
-        }
-
-        // Next variable
-        NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
-    }
-
     void hourBegin(unsigned int hourInTheYear)
     {
         // Next variable

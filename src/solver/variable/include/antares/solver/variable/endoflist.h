@@ -146,11 +146,10 @@ public:
     {
     }
 
-    static void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
-                               uint nbYearsForCurrentSummary)
+    static void computeSummary(unsigned int year, unsigned int numSpace)
     {
-        UNUSED_VARIABLE(numSpaceToYear);
-        UNUSED_VARIABLE(nbYearsForCurrentSummary);
+        UNUSED_VARIABLE(year);
+        UNUSED_VARIABLE(numSpace);
     }
 
     template<class V>

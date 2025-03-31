@@ -92,10 +92,9 @@ inline void List<NextT>::yearEnd(unsigned int year, unsigned int numSpace)
 }
 
 template<class NextT>
-inline void List<NextT>::computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
-                                        unsigned int nbYearsForCurrentSummary)
+inline void List<NextT>::computeSummary(unsigned int year, unsigned int numSpace)
 {
-    NextT::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
+    NextT::computeSummary(year, numSpace);
 }
 
 template<class NextT>

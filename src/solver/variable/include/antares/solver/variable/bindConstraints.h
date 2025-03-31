@@ -122,8 +122,7 @@ public:
 
     void initializeFromStudy(Data::Study& study);
 
-    void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
-                        unsigned int nbYearsForCurrentSummary);
+    void computeSummary(unsigned int year, unsigned int numSpace);
 
     void simulationBegin();
     void simulationEnd();

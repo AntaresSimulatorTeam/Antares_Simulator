@@ -168,13 +168,12 @@ void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
 }
 
 template<class NextT>
-void BindingConstraints<NextT>::computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
-                                               unsigned int nbYearsForCurrentSummary)
+void BindingConstraints<NextT>::computeSummary(unsigned int year, unsigned int numSpace)
 {
     for (uint i = 0; i != pBCcount; ++i)
     {
         // Broadcast to all constraints
-        pBindConstraints[i].computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
+        pBindConstraints[i].computeSummary(year, numSpace);
     }
 }
 
