@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -20,25 +20,16 @@
 */
 
 #pragma once
-#include <string>
 
-namespace Antares::Solver::Optimization
-{
+#include <antares/optimization-options/options.h>
+#include <antares/solver/optimisation/opt_structure_probleme_a_resoudre.h>
 
-class OptimizationOptions
-{
-public:
-    //! The solver used for linear problems, sirius is the default
-    std::string linearSolver = "sirius";
-    //! The solver used for quadratic problems, sirius is the default
-    std::string quadraticSolver = "sirius";
-    //! The linear solver parameters
-    std::string linearSolverParameters;
-    //! The quadratic solver parameters
-    std::string quadraticSolverParameters;
-    //! Enable solver logs
-    bool solverLogs = false;
-
-    OptimizationOptions& operator<<(const OptimizationOptions& options);
-};
-} // namespace Antares::Solver::Optimization
+/**
+ * This wrapper is an adapter that solves a QP stored in a PROBLEME_ANTARES_A_RESOUDRE
+ * using OR-Tools MathOpt API & solvers.
+ * Currently, QP support in MathOpt is implemented for Gurobi and SIP (though SCIP in OR-Tools
+ * has compilation issues), and under development for XPRESS.
+ */
+void SolveQuadraticProblemWithOrtools(
+  const Antares::Solver::Optimization::OptimizationOptions& options,
+  PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre);

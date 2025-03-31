@@ -31,7 +31,8 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(const AdqPatchParams& adqPatchP
                                                  AreaList& areas,
                                                  SheddingPolicy sheddingPolicy,
                                                  SimplexOptimization splxOptimization,
-                                                 Calendar& calendar):
+                                                 Calendar& calendar,
+                                                 const OptimizationOptions& solverOptions):
     interfacePostProcessList(problemeHebdo, numSpace)
 {
     post_process_list.push_back(
@@ -45,7 +46,8 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(const AdqPatchParams& adqPatchP
     post_process_list.push_back(std::make_unique<CurtailmentSharingPostProcessCmd>(adqPatchParams,
                                                                                    problemeHebdo_,
                                                                                    areas,
-                                                                                   numSpace_));
+                                                                                   numSpace_,
+                                                                                   solverOptions));
     post_process_list.push_back(
       std::make_unique<DTGnettingAfterCSRcmd>(problemeHebdo_, areas, numSpace));
     post_process_list.push_back(
