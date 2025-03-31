@@ -807,13 +807,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     // Related to annual costs statistics (printed in output into separate files)
     pAnnualStatistics.setNbPerformedYears(pNbYearsReallyPerformed);
 
-    // Container for random numbers of parallel years (to be executed or not)
-    randomNumbers randomForParallelYears(maxNbYearsPerformedInAset,
-                                         study.parameters.power.fluctuations);
-
-    // Allocating memory to store random numbers of all parallel years
-    allocateMemoryForRandomNumbers(randomForParallelYears);
-
     // Number of threads to perform the jobs waiting in the queue
     pQueueService->maximumThreadCount(pNbMaxPerformedYearsInParallel);
     HydroInputsChecker hydroInputsChecker(study);
@@ -839,10 +832,29 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     // refresh has been removed, assume year = 0
     regenerateTimeSeries(0);
 
-    // computeRandomNumbers(randomForParallelYears,
-    //                      batch.yearsIndices,
-    //                      batch.isYearPerformed,
-    //                      randomHydroGenerator);
+    std::vector<uint> yearsIndices;
+    std::map<unsigned int, bool> isYearPerformed;
+    int nbPerformedYears = 0;
+    for (int year = firstYear; year < endYear; year++)
+    {
+        isYearPerformed[year] = study.parameters.yearsFilter[year];
+        if (study.parameters.yearsFilter[year])
+        {
+            yearsIndices.push_back(year);
+            nbPerformedYears++;
+        }
+    }
+
+    // Container for random numbers of parallel years (to be executed or not)
+    randomNumbers randomForParallelYears(nbPerformedYears, study.parameters.power.fluctuations);
+
+    // Allocating memory to store random numbers of all parallel years
+    allocateMemoryForRandomNumbers(randomForParallelYears);
+
+    computeRandomNumbers(randomForParallelYears,
+                         yearsIndices,
+                         isYearPerformed,
+                         randomHydroGenerator);
 
     std::map<uint, bool> yearFailed;
     NumSpaceManager numspaceManager(pNbMaxPerformedYearsInParallel);
