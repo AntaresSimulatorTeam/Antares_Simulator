@@ -251,6 +251,34 @@ struct Fixture
 
 BOOST_AUTO_TEST_SUITE(s)
 
+// We only check the 1st element
+void checkSizeFirst(const std::vector<double>& in, double v)
+{
+    BOOST_CHECK_EQUAL(in.size(), HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(in[0], v);
+}
+
+BOOST_FIXTURE_TEST_CASE(check_empty, Fixture)
+{
+    createFileSeries(0); // Empty files
+    loadFromFolder(StudyVersion(9, 2));
+    series.fillDefaultSeriesIfEmpty();
+
+    // version<9.2
+    checkSizeFirst(series.maxInjectionModulation, 1.0);
+    checkSizeFirst(series.maxWithdrawalModulation, 1.0);
+    checkSizeFirst(series.inflows, 0.0);
+    checkSizeFirst(series.lowerRuleCurve, 0.0);
+    checkSizeFirst(series.upperRuleCurve, 1.0);
+
+    // version>=9.2
+    checkSizeFirst(series.costInjection, 0.0);
+    checkSizeFirst(series.costWithdrawal, 0.0);
+    checkSizeFirst(series.costLevel, 0.0);
+    checkSizeFirst(series.costVariationInjection, 0.0);
+    checkSizeFirst(series.costVariationWithdrawal, 0.0);
+}
+
 BOOST_FIXTURE_TEST_CASE(check_vector_sizes, Fixture)
 {
     resizeFillVectors(series, 0.0, 12);
