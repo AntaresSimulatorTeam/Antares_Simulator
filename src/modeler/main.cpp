@@ -52,7 +52,8 @@ public:
         std::vector<LinearProblemFiller*> fillers_ptr;
         for (const auto& [_, component]: system_.Components())
         {
-            auto cf = std::make_unique<Optimization::ComponentFiller>(component);
+            auto cf = std::make_unique<Optimization::ComponentFiller>(component,
+                                                                      system_.connections());
             fillers.push_back(std::move(cf));
         }
         for (auto& component_filler: fillers)
