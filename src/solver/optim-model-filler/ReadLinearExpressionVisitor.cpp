@@ -35,10 +35,10 @@ ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
   Expressions::Visitors::EvaluationContext context,
   Optimisation::LinearProblemApi::FillContext fillContext,
   const std::string& componentId):
-    context_(std::move(context)),
+    evalContext_(std::move(context)),
     fillContext_(std::move(fillContext)),
     componentId_(componentId),
-    evalVisitor_(context_, fillContext_)
+    evalVisitor_(evalContext_, fillContext_)
 {
 }
 
@@ -118,7 +118,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const VariableN
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const ParameterNode* node)
 {
-    const auto systemParameter = context_.getParameter(node->value());
+    const auto systemParameter = evalContext_.getParameter(node->value());
     if (node->timeIndex() == Expressions::Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
         && systemParameter.type != Expressions::Visitors::ParameterType::CONSTANT)
     {
@@ -130,7 +130,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Parameter
     {
         return TimeDependentLinearExpression(
           fillContext_,
-          LinearExpression(context_.getSystemParameterValueAsDouble(node->value()), {}));
+          LinearExpression(evalContext_.getSystemParameterValueAsDouble(node->value()), {}));
     }
     else // only dependent
     {
@@ -141,7 +141,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Parameter
              ++timeStep)
         {
             linearExpressions[timeStep] = LinearExpression(
-              context_.getParameterValue(node->value(), "", 0, timeStep),
+              evalContext_.getParameterValue(node->value(), "", 0, timeStep),
               {});
         }
         return TimeDependentLinearExpression(linearExpressions);
@@ -160,7 +160,10 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const PortField
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const PortFieldSumNode* node)
 {
-    throw std::invalid_argument("ReadLinearExpressionVisitor cannot visit PortFieldSumNodes");
+    std::string port = node->getPortName();
+    std::string field = node->getFieldName();
+    
+    return TimeDependentLinearExpression(fillContext_, {}); // For compilation only
 }
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const ComponentVariableNode* node)

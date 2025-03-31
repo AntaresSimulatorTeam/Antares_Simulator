@@ -49,7 +49,6 @@ public:
     std::string name() const override;
 
 private:
-    const Expressions::Visitors::EvaluationContext context_;
     TimeDependentLinearExpression visit(const Expressions::Nodes::SumNode* node) override;
     TimeDependentLinearExpression visit(const Expressions::Nodes::SubtractionNode* node) override;
     TimeDependentLinearExpression visit(
@@ -76,6 +75,7 @@ private:
     TimeDependentLinearExpression visit(const Expressions::Nodes::AllTimeSumNode* node) override;
 
     Optimisation::LinearProblemApi::FillContext fillContext_;
+    const Expressions::Visitors::EvaluationContext evalContext_;
     const std::string& componentId_;
     Expressions::Visitors::EvalVisitor evalVisitor_;
 };

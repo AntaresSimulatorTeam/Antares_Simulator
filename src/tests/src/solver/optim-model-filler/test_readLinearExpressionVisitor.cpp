@@ -38,7 +38,7 @@ using namespace Antares::Optimization;
 
 BOOST_AUTO_TEST_SUITE(_read_linear_expression_visitor_)
 
-struct MyDummyFixture: Registry<Node>
+struct CreateVisitorFixture: Registry<Node>
 {
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
     EvaluationContext evaluationContext{{}, {}, data};
@@ -46,12 +46,12 @@ struct MyDummyFixture: Registry<Node>
     ReadLinearExpressionVisitor visitor{evaluationContext, {0, 0}, componentId};
 };
 
-BOOST_FIXTURE_TEST_CASE(name, MyDummyFixture)
+BOOST_FIXTURE_TEST_CASE(name, CreateVisitorFixture)
 {
     BOOST_CHECK_EQUAL(visitor.name(), "ReadLinearExpressionVisitor");
 }
 
-BOOST_FIXTURE_TEST_CASE(visit_literal, MyDummyFixture)
+BOOST_FIXTURE_TEST_CASE(visit_literal, CreateVisitorFixture)
 {
     Node* node = create<LiteralNode>(5.);
     auto linear_expression = visitor.dispatch(node).GetLinearExpressions().at(0);
@@ -67,7 +67,7 @@ std::pair<std::string, ParameterTypeAndValue> build_context_parameter_with(
     return {id, {.id = id, .type = type, .value = value}};
 }
 
-BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param, MyDummyFixture)
+BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param, CreateVisitorFixture)
 {
     // 5 + param(3) = 8
     Node* sum = create<SumNode>(create<LiteralNode>(5.), create<ParameterNode>("param"));
@@ -78,7 +78,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param, MyDummyFixture)
     BOOST_CHECK(linear_expression.coefPerVar().empty());
 }
 
-BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var, MyDummyFixture)
+BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var, CreateVisitorFixture)
 {
     // 60 + param(-5) + 7 * var = { 55, {var : 7} }
     Node* product = create<MultiplicationNode>(create<LiteralNode>(7.),
@@ -105,7 +105,7 @@ struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearPr
     }
 };
 
-BOOST_FIXTURE_TEST_CASE(visit_timeSum, MyDummyFixture)
+BOOST_FIXTURE_TEST_CASE(visit_timeSum, CreateVisitorFixture)
 { // param  ={0,1,2}
     // 5 + sum( t-2 .. t+1, param) -->
     // t = 0 : 5 +param.at(-2) + param.at(-1) + param.at(0) + param.at(1) --> 5 +1 + 2 + 0 + 1 = 9
@@ -127,7 +127,7 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum, MyDummyFixture)
     BOOST_CHECK(linear_expressions.at(1).coefPerVar().empty());
 }
 
-BOOST_FIXTURE_TEST_CASE(visit_AllTimeSum, MyDummyFixture)
+BOOST_FIXTURE_TEST_CASE(visit_AllTimeSum, CreateVisitorFixture)
 { // param  ={0,1,2}
     // 5 + sum(param) -->
     // 5 +param.at(0) + param.at(1) + param.at(2)  --> 5 + 0 + 1  + 2  = 8
@@ -145,7 +145,7 @@ BOOST_FIXTURE_TEST_CASE(visit_AllTimeSum, MyDummyFixture)
     BOOST_CHECK(linear_expressions.at(0).coefPerVar().empty());
 }
 
-BOOST_FIXTURE_TEST_CASE(visit_literal_plus_time_dependent_param_plus_var, MyDummyFixture)
+BOOST_FIXTURE_TEST_CASE(visit_literal_plus_time_dependent_param_plus_var, CreateVisitorFixture)
 {
     // 60 + param_at_0 + 7 * var = { 60, {var : 7} }
     // 60 + param_at_1 + 7 * var = { 61, {var : 7} }
@@ -172,7 +172,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_time_dependent_param_plus_var, MyDumm
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_param_declared_const_in_library_but_time_dep_in_system,
-                        MyDummyFixture)
+                        CreateVisitorFixture)
 {
     ParameterNode p("param", TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
     EvaluationContext evaluation_context(
@@ -184,7 +184,7 @@ BOOST_FIXTURE_TEST_CASE(visit_param_declared_const_in_library_but_time_dep_in_sy
     BOOST_CHECK_THROW(visitor.dispatch(&p), std::invalid_argument);
 }
 
-BOOST_FIXTURE_TEST_CASE(visit_negate_literal_plus_var, MyDummyFixture)
+BOOST_FIXTURE_TEST_CASE(visit_negate_literal_plus_var, CreateVisitorFixture)
 {
     // -(60 + 7 * var) = { -60, {var : -7} }
     Node* product = create<MultiplicationNode>(create<LiteralNode>(7.),
@@ -197,7 +197,7 @@ BOOST_FIXTURE_TEST_CASE(visit_negate_literal_plus_var, MyDummyFixture)
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(FullKey(componentId, "var", 0, 0)), -7.);
 }
 
-BOOST_FIXTURE_TEST_CASE(visit_literal_minus_var, MyDummyFixture)
+BOOST_FIXTURE_TEST_CASE(visit_literal_minus_var, CreateVisitorFixture)
 {
     // 60 - 7 * var = { 60, {var : -7} }
     Node* product = create<MultiplicationNode>(create<LiteralNode>(7.),
@@ -209,7 +209,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_minus_var, MyDummyFixture)
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(FullKey(componentId, "var", 0, 0)), -7.);
 }
 
-BOOST_FIXTURE_TEST_CASE(visit_complex_expression, MyDummyFixture)
+BOOST_FIXTURE_TEST_CASE(visit_complex_expression, CreateVisitorFixture)
 {
     // 2 * (13 + 3 * param1(-2) + 14 * var1) / 7 + param2(8) + 6 * var2 = {10 ; {var1:4, var2:6}}
 
@@ -240,7 +240,7 @@ BOOST_FIXTURE_TEST_CASE(visit_complex_expression, MyDummyFixture)
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(FullKey(componentId, "var2", 0, 0)), 6.);
 }
 
-BOOST_FIXTURE_TEST_CASE(comparison_nodes__exception_thrown, MyDummyFixture)
+BOOST_FIXTURE_TEST_CASE(comparison_nodes__exception_thrown, CreateVisitorFixture)
 {
     Node* literal = create<LiteralNode>(5.);
     auto predicate = checkMessage("A linear expression can't contain comparison operators.");
@@ -255,7 +255,7 @@ BOOST_FIXTURE_TEST_CASE(comparison_nodes__exception_thrown, MyDummyFixture)
     BOOST_CHECK_EXCEPTION(visitor.dispatch(node), std::invalid_argument, predicate);
 }
 
-BOOST_FIXTURE_TEST_CASE(not_implemented_nodes__exception_thrown, MyDummyFixture)
+BOOST_FIXTURE_TEST_CASE(not_implemented_nodes__exception_thrown, CreateVisitorFixture)
 {
     Node* node = create<PortFieldNode>("port", "field");
     BOOST_CHECK_EXCEPTION(visitor.dispatch(node),
@@ -279,6 +279,14 @@ BOOST_FIXTURE_TEST_CASE(not_implemented_nodes__exception_thrown, MyDummyFixture)
                           std::invalid_argument,
                           checkMessage(
                             "ReadLinearExpressionVisitor cannot visit ComponentParameterNodes"));
+}
+
+BOOST_FIXTURE_TEST_CASE(blabla, CreateVisitorFixture)
+{
+    Node* node = create<PortFieldSumNode>("port", "field");
+    auto timeDependentLinExpr = visitor.dispatch(node);
+
+    BOOST_CHECK(false);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
