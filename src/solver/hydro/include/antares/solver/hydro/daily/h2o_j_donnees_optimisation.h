@@ -41,6 +41,7 @@ extern "C"
 #define JOURS_31 31
 #define NOMBRE_DE_TYPE_DE_MOIS 4
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -55,13 +56,13 @@ struct PROBLEME_LINEAIRE_PARTIE_FIXE
     int NombreDeVariables{0};
     std::vector<double> CoutLineaire;
     std::vector<int> TypeDeVariable; /* Indicateur du type de variable, il ne doit prendre que les
-                           suivantes (voir le fichier spx_constantes_externes.h mais ne jamais
-                           utiliser les valeurs explicites des constantes): VARIABLE_FIXE ,
-                            VARIABLE_BORNEE_DES_DEUX_COTES ,
-                            VARIABLE_BORNEE_INFERIEUREMENT ,
-                            VARIABLE_BORNEE_SUPERIEUREMENT ,
-                            VARIABLE_NON_BORNEE
-                                           */
+                       suivantes (voir le fichier spx_constantes_externes.h mais ne jamais
+                       utiliser les valeurs explicites des constantes): VARIABLE_FIXE ,
+                        VARIABLE_BORNEE_DES_DEUX_COTES ,
+                        VARIABLE_BORNEE_INFERIEUREMENT ,
+                        VARIABLE_BORNEE_SUPERIEUREMENT ,
+                        VARIABLE_NON_BORNEE
+                                       */
     /* La matrice des contraintes */
     int NombreDeContraintes{0};
     std::vector<char> Sens;
@@ -89,14 +90,14 @@ struct PROBLEME_LINEAIRE_PARTIE_VARIABLE
     std::vector<double> X;
     /* En Entree ou en Sortie */
     int ExistenceDUneSolution{NON_SPX}; /* En sortie, vaut :
-                                  OUI_SPX s'il y a une solution,
-                                                          NON_SPX s'il n'y a pas de solution
-                                  admissible SPX_ERREUR_INTERNE si probleme a l'execution
-                                  (saturation memoire par exemple), et dans ce cas il n'y a pas de
-                                  solution SPX_MATRICE_DE_BASE_SINGULIERE si on n'a pas pu
-                                  construire de matrice de base reguliere, et dans ce cas il n'y a
-                                  pas de solution
-                                                 */
+                              OUI_SPX s'il y a une solution,
+                                                      NON_SPX s'il n'y a pas de solution
+                              admissible SPX_ERREUR_INTERNE si probleme a l'execution
+                              (saturation memoire par exemple), et dans ce cas il n'y a pas de
+                              solution SPX_MATRICE_DE_BASE_SINGULIERE si on n'a pas pu
+                              construire de matrice de base reguliere, et dans ce cas il n'y a
+                              pas de solution
+                                             */
 
     std::vector<int>
       PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
@@ -105,7 +106,7 @@ struct PROBLEME_LINEAIRE_PARTIE_VARIABLE
     std::vector<double>
       CoutsReduits; /* Vecteur a passer au Simplexe pour recuperer les couts reduits */
     std::vector<double> CoutsMarginauxDesContraintes; /* Vecteur a passer au Simplexe pour recuperer
-                                             les couts marginaux */
+                                         les couts marginaux */
 };
 
 /* Les correspondances fixes des contraintes */
@@ -121,7 +122,7 @@ struct CORRESPONDANCE_DES_VARIABLES
     std::vector<int> NumeroDeVariableTurbine; /* Turbines */
     int NumeroDeLaVariableMu{0};              /* Variable de deversement (total sur la periode) */
     int NumeroDeLaVariableXi{0}; /* Variable decrivant l'ecart max au turbine cible quand le turbine
-                                 est inferieur au turbine cible */
+                             est inferieur au turbine cible */
 };
 
 /* Structure uniquement exploitee par l'optimisation (donc a ne pas acceder depuis l'exterieur) */
@@ -136,19 +137,17 @@ struct PROBLEME_HYDRAULIQUE
     std::vector<PROBLEME_LINEAIRE_PARTIE_FIXE> ProblemeLineairePartieFixe;
     std::vector<PROBLEME_LINEAIRE_PARTIE_VARIABLE> ProblemeLineairePartieVariable;
 
-    std::vector<PROBLEME_SPX*>
-      ProblemeSpx; /* Il y en a 1 par reservoir. Un probleme couvre 1 mois */
-
-    ~PROBLEME_HYDRAULIQUE()
+    struct LibererProbleme
     {
-        for (auto* problem: ProblemeSpx)
+        void operator()(PROBLEME_SPX* p) const
         {
-            if (problem)
-            {
-                SPX_LibererProbleme(problem);
-            }
+            SPX_LibererProbleme(p);
+            delete p;
         }
-    }
+    };
+
+    std::vector<std::unique_ptr<PROBLEME_SPX, LibererProbleme>>
+      ProblemeSpx; /* Il y en a 1 par reservoir. Un probleme couvre 1 mois */
 };
 } // namespace DoneesOptimisationJournaliere
 #endif
