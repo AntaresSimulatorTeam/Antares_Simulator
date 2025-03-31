@@ -55,7 +55,8 @@ public:
             bool pYearByYear,
             Benchmarking::DurationCollector& durationCollector,
             IResultWriter& resultWriter,
-            ISimulationObserver& simulationObserver):
+            ISimulationObserver& simulationObserver,
+            std::mutex& aggregationMutex):
         simulation_(simulation),
         y(pY),
         yearFailed(pYearFailed),
@@ -69,7 +70,8 @@ public:
         pDurationCollector(durationCollector),
         pResultWriter(resultWriter),
         simulationObserver_(simulationObserver),
-        hydroManagement(study.areas, study.parameters, study.calendar, resultWriter)
+        hydroManagement(study.areas, study.parameters, study.calendar, resultWriter),
+        aggregationMutex(aggregationMutex)
     {
     }
 
@@ -93,6 +95,7 @@ private:
     IResultWriter& pResultWriter;
     std::reference_wrapper<ISimulationObserver> simulationObserver_;
     HydroManagement hydroManagement;
+    std::mutex& aggregationMutex;
 
 private:
     /*
@@ -204,6 +207,14 @@ public:
                     simulation_->writeResults(false, y, numSpace); // false for synthesis
                 };
             }
+
+            // 10 - Synthesis results
+            // Computing the summary : adding the contribution of MC years
+            // previously computed in parallel
+            aggregationMutex.lock();
+            simulation_->variables.computeSummary(y, numSpace);
+            aggregationMutex.unlock();
+
             logs.debug() << "year " << y << " ended and returned numSpace " << numSpace;
             numspaceManager.freeNumSpace(numSpace);
         }
@@ -861,6 +872,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
 
     bool yearPerformed = false;
     Concurrency::FutureSet results;
+    std::mutex aggregationMutex;
     for (int year = firstYear; year < endYear; year++)
     {
         if (study.parameters.yearsFilter[year])
@@ -896,7 +908,8 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
               pYearByYear,
               pDurationCollector,
               pResultWriter,
-              simulationObserver_.get());
+              simulationObserver_.get(),
+              aggregationMutex);
             results.add(Concurrency::AddTask(*pQueueService, task));
         }
     }
@@ -919,11 +932,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
             throw FatalError(msg.str());
         }
     }
-    // Computing the summary : adding the contribution of MC years
-    // previously computed in parallel
-    // ImplementationType::variables.computeSummary(batch.spaceToPerformedYear,
-    //                                              batch.nbPerformedYears);
-
     // Computing summary of spatial aggregations
     // ImplementationType::variables.computeSpatialAggregatesSummary(ImplementationType::variables,
     //                                                               batch.spaceToPerformedYear,
