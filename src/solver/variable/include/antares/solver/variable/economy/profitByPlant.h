@@ -230,6 +230,19 @@ public:
         NextType::yearEnd(year, numSpace);
     }
 
+    void computeSummary(unsigned int year, unsigned int numSpace)
+    {
+        for (unsigned int clusterIndex = 0; clusterIndex < pNbClustersOfArea; ++clusterIndex)
+        {
+            // Merge all those values with the global results
+            AncestorType::pResults[clusterIndex]
+              .merge(year, pValuesForTheCurrentYear[numSpace][clusterIndex]);
+        }
+
+        // Next variable
+        NextType::computeSummary(year, numSpace);
+    }
+
     void hourBegin(unsigned int hourInTheYear)
     {
         // Next variable
