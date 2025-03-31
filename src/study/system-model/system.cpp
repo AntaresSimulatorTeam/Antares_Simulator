@@ -79,7 +79,7 @@ SystemBuilder& SystemBuilder::withComponents(
 
 SystemBuilder& SystemBuilder::withConnections(std::vector<Connection>&& connections)
 {
-    connections_ = connections;
+    connections_ = std::move(connections);
     return *this;
 }
 
