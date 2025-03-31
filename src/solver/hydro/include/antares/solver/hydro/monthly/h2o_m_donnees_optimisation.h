@@ -132,7 +132,6 @@ struct PROBLEME_HYDRAULIQUE
         void operator()(PROBLEME_SPX* p) const
         {
             SPX_LibererProbleme(p);
-            delete p;
         }
     };
 
