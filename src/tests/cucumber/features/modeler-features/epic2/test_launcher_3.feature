@@ -1,7 +1,7 @@
 Feature: 3 - Simple end-to-end tests to test temporal expression management : TimeShift
 
   Scenario: 3.1: One model with one load and two generators, two timesteps ; TimeShift operator in a constraint => generator1 should have a constant power
-    Given the study path is "Antares_Simulator_Tests_NR/epic-modeler/3_1"
+    Given the study path is "modeler/3_1"
     When I run antares modeler
     Then the simulation succeeds
     And the objective value is 840
@@ -12,7 +12,7 @@ Feature: 3 - Simple end-to-end tests to test temporal expression management : Ti
 
 
   Scenario: 3.2: One model with one load and two generators, three timesteps ; TimeShift operator in a constraint => gen1_p <= Min(Pmax[t], 1.5*Pmax[t-1])
-    Given the study path is "Antares_Simulator_Tests_NR/epic-modeler/3_2"
+    Given the study path is "modeler/3_2"
     When I run antares modeler
     Then the simulation succeeds
     And the objective value is 672.5
@@ -27,7 +27,7 @@ Feature: 3 - Simple end-to-end tests to test temporal expression management : Ti
 
 #TODO test input contains illegal expression, to be updated
   Scenario: 3.3: One model with one load and two generators, two timesteps ; TimeShift operator in a constraint => generator1 should have a constant power. The TimeShift operator is applied to an expression.
-    Given the study path is "Antares_Simulator_Tests_NR/epic-modeler/3_3"
+    Given the study path is "modeler/3_3"
     When I run antares modeler
     Then the simulation succeeds
     And the objective value is 840

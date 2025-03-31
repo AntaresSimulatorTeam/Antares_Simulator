@@ -86,7 +86,7 @@ struct SimplexResult
 MPSolver* convertToMPSolver(const Optimization::PROBLEME_SIMPLEXE_NOMME& pb,
                             const OptimizationOptions& options)
 {
-    LegacyOrtoolsLinearProblem ortoolsProblem(pb.isMIP(), options.ortoolsSolver);
+    LegacyOrtoolsLinearProblem ortoolsProblem(pb.isMIP(), options.linearSolver);
     LegacyFiller legacyOrtoolsFiller(&pb);
     std::vector<LinearProblemFiller*> fillersCollection = {&legacyOrtoolsFiller};
     LinearProblemData LP_Data;

@@ -293,24 +293,24 @@ BOOST_AUTO_TEST_CASE(EvaluationResult_invalid_index)
 BOOST_AUTO_TEST_CASE(ShiftResult_DoubleValue)
 {
     const EvaluationResult eval(4.0);
-    const EvaluationResult shiftedEval = eval.shiftResult(2);
-    BOOST_CHECK_THROW(eval.shiftResult(2).valuesAsVector(), EvaluationResult::EvalResultTypeError);
-    BOOST_CHECK_NO_THROW(eval.shiftResult(2).valueAsDouble());
+    const EvaluationResult shiftedEval = eval.timeShift(2);
+    BOOST_CHECK_THROW(eval.timeShift(2).valuesAsVector(), EvaluationResult::EvalResultTypeError);
+    BOOST_CHECK_NO_THROW(eval.timeShift(2).valueAsDouble());
 
-    BOOST_CHECK_EQUAL(eval.shiftResult(2).valueAsDouble(), 4.0);
-    BOOST_CHECK_EQUAL(eval.shiftResult(-2).valueAsDouble(), 4.0);
-    BOOST_CHECK_EQUAL(eval.shiftResult(0).valueAsDouble(), 4.0);
-    BOOST_CHECK_EQUAL(eval.shiftResult(-20).valueAsDouble(), 4.0);
-    BOOST_CHECK_EQUAL(eval.shiftResult(200).valueAsDouble(), 4.0);
+    BOOST_CHECK_EQUAL(eval.timeShift(2).valueAsDouble(), 4.0);
+    BOOST_CHECK_EQUAL(eval.timeShift(-2).valueAsDouble(), 4.0);
+    BOOST_CHECK_EQUAL(eval.timeShift(0).valueAsDouble(), 4.0);
+    BOOST_CHECK_EQUAL(eval.timeShift(-20).valueAsDouble(), 4.0);
+    BOOST_CHECK_EQUAL(eval.timeShift(200).valueAsDouble(), 4.0);
 }
 
 BOOST_AUTO_TEST_CASE(ShiftResult_VectorValue_PositiveShift)
 {
     EvaluationResult eval(std::vector<double>{1.0, 2.0, 3.0});
 
-    BOOST_CHECK_THROW(eval.shiftResult(2).valueAsDouble(), EvaluationResult::EvalResultTypeError);
-    BOOST_CHECK_NO_THROW(eval.shiftResult(2).valuesAsVector());
-    const auto res = eval.shiftResult(1).valuesAsVector();
+    BOOST_CHECK_THROW(eval.timeShift(2).valueAsDouble(), EvaluationResult::EvalResultTypeError);
+    BOOST_CHECK_NO_THROW(eval.timeShift(2).valuesAsVector());
+    const auto res = eval.timeShift(1).valuesAsVector();
     const std::vector<double> expected{2.0, 3.0, 1.0};
     BOOST_CHECK_EQUAL_COLLECTIONS(res.begin(), res.end(), expected.begin(), expected.end());
 }
@@ -318,7 +318,7 @@ BOOST_AUTO_TEST_CASE(ShiftResult_VectorValue_PositiveShift)
 BOOST_AUTO_TEST_CASE(ShiftResult_VectorValue_NegativeShift)
 {
     const EvaluationResult eval(std::vector<double>{1.0, 2.0, 3.0});
-    const auto res = eval.shiftResult(-1).valuesAsVector();
+    const auto res = eval.timeShift(-1).valuesAsVector();
     const std::vector<double> expected{3.0, 1.0, 2.0};
     BOOST_CHECK_EQUAL_COLLECTIONS(res.begin(), res.end(), expected.begin(), expected.end());
 }
@@ -327,7 +327,7 @@ BOOST_AUTO_TEST_CASE(ShiftResult_VectorValue_ZeroShift)
 {
     std::vector<double> vec{1.0, 2.0, 3.0};
     const EvaluationResult eval(vec);
-    const auto res = eval.shiftResult(0).valuesAsVector();
+    const auto res = eval.timeShift(0).valuesAsVector();
 
     BOOST_CHECK_EQUAL_COLLECTIONS(res.begin(), res.end(), vec.begin(), vec.end());
 }
@@ -336,8 +336,60 @@ BOOST_AUTO_TEST_CASE(ShiftResult_EmptyVector)
 {
     std::vector<double> emptyVec{};
     const EvaluationResult eval(emptyVec);
-    const auto res = eval.shiftResult(1).valuesAsVector();
+    const auto res = eval.timeShift(1).valuesAsVector();
     BOOST_CHECK_EQUAL_COLLECTIONS(res.begin(), res.end(), emptyVec.begin(), emptyVec.end());
+}
+
+BOOST_AUTO_TEST_CASE(TimeSum_DoubleValue)
+{
+    const EvaluationResult eval(4.0);
+    const EvaluationResult sum = eval.timeSum(-2, 2);
+    BOOST_CHECK_EQUAL(sum.valueAsDouble(), 20.0); // 4.0 * 5 = 20.0
+
+    BOOST_CHECK_THROW(eval.timeSum(-1, 0).valuesAsVector(), EvaluationResult::EvalResultTypeError);
+}
+
+BOOST_AUTO_TEST_CASE(TimeSum_VectorValue_PositiveShift)
+{
+    const EvaluationResult eval(std::vector<double>{1.0, 2.0, 3.0});
+    const auto sum = eval.timeSum(0, 2).valuesAsVector();
+    BOOST_CHECK_THROW(eval.timeSum(-1, 0).valueAsDouble(), EvaluationResult::EvalResultTypeError);
+    const std::vector<double> expected(3.0, 1.0 + 2.0 + 3.0);
+
+    BOOST_CHECK_EQUAL_COLLECTIONS(sum.begin(), sum.end(), expected.begin(), expected.end());
+}
+
+BOOST_AUTO_TEST_CASE(TimeSum_VectorValue_NegativeShift)
+{
+    const EvaluationResult eval(std::vector<double>{1.0, 2.0, 3.0});
+    const auto sum = eval.timeSum(-1, 0).valuesAsVector();
+    BOOST_CHECK_THROW(eval.timeSum(-1, 0).valueAsDouble(), EvaluationResult::EvalResultTypeError);
+
+    const std::vector<double> expected{3.0 + 1.0, 1.0 + 2.0, 2.0 + 3.0};
+
+    BOOST_CHECK_EQUAL_COLLECTIONS(sum.begin(), sum.end(), expected.begin(), expected.end());
+}
+
+BOOST_AUTO_TEST_CASE(AlltimeSum_DoubleValue)
+{
+    const EvaluationResult eval(4.0);
+    const EvaluationResult sum = eval.alltimeSum(5);
+    BOOST_CHECK_EQUAL(sum.valueAsDouble(), 20.0); // 4.0 * 5 = 20.0
+
+    BOOST_CHECK_THROW(sum.valuesAsVector(), EvaluationResult::EvalResultTypeError);
+}
+
+BOOST_AUTO_TEST_CASE(AlltimeSum_VectorValue)
+{
+    const EvaluationResult eval(std::vector<double>{1.0, 2.0, 3.0});
+    const EvaluationResult sum = eval.alltimeSum(3);
+    BOOST_CHECK_EQUAL(sum.valueAsDouble(), 6.0); // 1.0 + 2.0 + 3.0 = 6.0
+}
+
+BOOST_AUTO_TEST_CASE(AlltimeSum_VectorValue_OutOfRange)
+{
+    const EvaluationResult eval(std::vector<double>{1.0, 2.0, 3.0});
+    BOOST_CHECK_THROW(eval.alltimeSum(4), EvaluationResult::EvalResultTimeIndexOutOfRange);
 }
 
 struct MyDummyFixture: Registry<Node>
@@ -578,7 +630,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_shifted_literal, MyDummyFixture)
 }
 
 template<typename left, typename right>
-EvaluationResult CreateAndEvalutateTimeNode(const right& p)
+EvaluationResult CreateAndEvaluateTimeNode(const right& p)
 {
     ParameterNode param("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
     left root(&param, p);
@@ -598,7 +650,7 @@ EvaluationResult CreateAndEvalutateTimeNode(const right& p)
 BOOST_FIXTURE_TEST_CASE(evaluate_shifted_param, MyDummyFixture)
 {
     LiteralNode literal_node(-1.0);
-    const auto eval = CreateAndEvalutateTimeNode<TimeShiftNode, Node*>(&literal_node)
+    const auto eval = CreateAndEvaluateTimeNode<TimeShiftNode, Node*>(&literal_node)
                         .valuesAsVector();
     // from MockLinearProblemData  param TSdata is {0, 1, 2}
     // here we applied TimeShift t-1 {2, 0, 1}
@@ -610,11 +662,67 @@ BOOST_FIXTURE_TEST_CASE(evaluate_shifted_param, MyDummyFixture)
 BOOST_FIXTURE_TEST_CASE(evaluate_timeIndex_param, MyDummyFixture)
 {
     LiteralNode literal_node(1.0);
-    const auto eval = CreateAndEvalutateTimeNode<TimeIndexNode, Node*>(&literal_node)
+    const auto eval = CreateAndEvaluateTimeNode<TimeIndexNode, Node*>(&literal_node)
                         .valueAsDouble();
     // from MockLinearProblemData  param TSdata is {0, 1, 2}
     // here we applied TimeIndex[1]
     BOOST_CHECK_EQUAL(eval, 1); //
+}
+
+EvaluationResult CreateAndEvaluateTimeSumNode(Node* from, Node* to)
+{
+    ParameterNode param("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
+    TimeSumNode root(from, to, &param);
+    const std::string value = "dummy";
+    MockLinearProblemData dummy_data;
+    EvaluationContext context(
+      {build_context_parameter_with("my-param", value, ParameterType::TIMESERIE)},
+      {},
+      dummy_data);
+
+    unsigned first = 0;
+    unsigned last = 2;
+    EvalVisitor evalVisitor(context, {first, last /*three hours*/});
+    return evalVisitor.dispatch(&root);
+}
+
+BOOST_FIXTURE_TEST_CASE(evaluate_timeSum_param, MyDummyFixture)
+{
+    LiteralNode from(0.0);
+    LiteralNode to(1.0);
+    const auto eval = CreateAndEvaluateTimeSumNode(&from, &to).valuesAsVector();
+    // from MockLinearProblemData  param TSdata is {0, 1, 2}
+    // here we applied TimeSum from t+0 and to t+1
+    BOOST_CHECK_EQUAL(eval.at(0), 0 + 1); // add param.at(0)+param.at(1)
+    BOOST_CHECK_EQUAL(eval.at(1), 1 + 2); // add param.at(1)+param.at(2)
+    BOOST_CHECK_EQUAL(eval.at(2), 2 + 0); // add param.at(2)+param.at(0)
+}
+
+EvaluationResult CreateAndEvaluateAllTimeSumNode()
+{
+    ParameterNode param("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
+    AllTimeSumNode root(&param);
+    const std::string value = "dummy";
+    MockLinearProblemData dummy_data;
+    EvaluationContext context(
+      {build_context_parameter_with("my-param", value, ParameterType::TIMESERIE)},
+      {},
+      dummy_data);
+
+    unsigned first = 0;
+    unsigned last = 2;
+    EvalVisitor evalVisitor(context, {first, last /*three hours*/});
+    return evalVisitor.dispatch(&root);
+}
+
+BOOST_FIXTURE_TEST_CASE(evaluate_alltimeSum_param, MyDummyFixture)
+{
+    LiteralNode from(0.0);
+    LiteralNode to(1.0);
+    const auto eval = CreateAndEvaluateAllTimeSumNode().valueAsDouble();
+    // from MockLinearProblemData  param TSdata is {0, 1, 2}
+    // here we applied TimeSum from t+0 and to t+1
+    BOOST_CHECK_EQUAL(eval, 0 + 1 + 2); // add param.at(0)+param.at(1)
 }
 
 BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_multiplication, MyDummyFixture)
@@ -968,6 +1076,38 @@ BOOST_FIXTURE_TEST_CASE(PrintTimeShiftNode, MyDummyFixture)
     Node* negative_shift = create<TimeShiftNode>(literal1, literal3);
 
     BOOST_CHECK(printVisitor.dispatch(negative_shift) == "1.000000[ t -31.000000 ]");
+}
+
+BOOST_FIXTURE_TEST_CASE(PrintTimeSumNode, MyDummyFixture)
+{
+    Node* from = create<LiteralNode>(1.);
+    Node* to = create<LiteralNode>(23);
+    Node* expression = create<ParameterNode>("p");
+    PrintVisitor printVisitor;
+    // --
+    Node* positive_shift = create<TimeSumNode>(from, to, expression);
+    auto n = printVisitor.dispatch(positive_shift);
+    BOOST_CHECK(printVisitor.dispatch(positive_shift) == "sum(t+1.000000 .. t+23.000000, p)");
+    // --
+
+    Node* mfrom = create<LiteralNode>(-1.);
+    Node* mto = create<LiteralNode>(-23);
+    Node* negative_shift = create<TimeSumNode>(mfrom, mto, expression);
+    auto m = printVisitor.dispatch(negative_shift);
+
+    BOOST_CHECK(printVisitor.dispatch(negative_shift) == "sum(t-1.000000 .. t-23.000000, p)");
+}
+
+BOOST_FIXTURE_TEST_CASE(PrintAllTimeSumNode, MyDummyFixture)
+{
+    Node* num = create<LiteralNode>(1.);
+    Node* p = create<ParameterNode>("p");
+    Node* expression = create<MultiplicationNode>(p, num);
+    PrintVisitor printVisitor;
+    // --
+    Node* alltimesum = create<AllTimeSumNode>(expression);
+    BOOST_CHECK(printVisitor.dispatch(alltimesum) == "sum((p*1.000000))");
+    // --
 }
 
 BOOST_AUTO_TEST_CASE(testShiftEmptyVector)
