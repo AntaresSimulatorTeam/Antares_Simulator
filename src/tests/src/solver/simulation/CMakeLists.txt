@@ -22,6 +22,15 @@ add_boost_test(tests-ts-numbers
         model_antares
         antares-solver-simulation
         antares-solver-ts-generator)
+		
+add_boost_test(test-duplicates-detection
+        SRC test-duplicates-detection.cpp
+        INCLUDE
+        "${src_libs_antares_study}"
+        LIBS
+        Antares::utils
+        model_antares
+        antares-solver-simulation)
 
 
 # ===================================
