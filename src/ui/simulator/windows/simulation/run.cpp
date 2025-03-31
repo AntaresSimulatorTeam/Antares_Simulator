@@ -20,37 +20,37 @@
 */
 
 #include "run.h"
-#include <yuni/core/math.h>
-#include <yuni/core/system/memory.h>
-#include <yuni/io/directory/system.h>
-#include <yuni/core/system/process.h>
-#include <yuni/io/file.h>
-#include <antares/study/parameters.h>
 
-#include <wx/stattext.h>
+#include <ui/common/component/panel.h>
 #include <wx/button.h>
+#include <wx/checkbox.h>
 #include <wx/file.h>
 #include <wx/filename.h>
 #include <wx/statline.h>
+#include <wx/stattext.h>
 #include <wx/utils.h>
-#include <wx/checkbox.h>
 
-#include "../../toolbox/components/wizardheader.h"
-#include "../../toolbox/components/button.h"
-#include <ui/common/component/panel.h>
+#include <yuni/core/math.h>
+#include <yuni/core/system/memory.h>
+#include <yuni/core/system/process.h>
+#include <yuni/io/directory/system.h>
+#include <yuni/io/file.h>
 
-#include "../../toolbox/validator.h"
-#include "../../toolbox/create.h"
-#include "../../application/study.h"
-#include "../../application/main/main.h"
-#include "../../application/menus.h"
-#include "../../windows/message.h"
-#include "../../toolbox/system/diskfreespace.hxx"
 #include <antares/config/config.h>
+#include <antares/solver/utils/ortools_utils.h>
+#include <antares/study/parameters.h>
 #include "antares/antares/Enum.hpp"
 #include "antares/solver/utils/ortools_utils.h"
 
-#include <antares/solver/utils/ortools_utils.h>
+#include "../../application/main/main.h"
+#include "../../application/menus.h"
+#include "../../application/study.h"
+#include "../../toolbox/components/button.h"
+#include "../../toolbox/components/wizardheader.h"
+#include "../../toolbox/create.h"
+#include "../../toolbox/system/diskfreespace.hxx"
+#include "../../toolbox/validator.h"
+#include "../../windows/message.h"
 
 using namespace Yuni;
 
@@ -69,22 +69,36 @@ static const Solver::Feature featuresAlias[featuresCount] = {Solver::standard, S
 static wxString TimeSeriesToWxString(uint m)
 {
     if (!m)
+    {
         return wxT("none");
+    }
 
     wxString r;
     if (m & Data::timeSeriesLoad)
+    {
         r /*<< (r.empty() ? wxEmptyString : wxT(", "))*/ << wxT("load");
+    }
     if (m & Data::timeSeriesHydro)
+    {
         r << (r.empty() ? wxEmptyString : wxT(", ")) << wxT("hydro");
+    }
     if (m & Data::timeSeriesWind)
+    {
         r << (r.empty() ? wxEmptyString : wxT(", ")) << wxT("wind");
+    }
     if (m & Data::timeSeriesThermal)
+    {
         r << (r.empty() ? wxEmptyString : wxT(", ")) << wxT("thermal");
+    }
 
     if (r.empty())
+    {
         return wxT("none");
+    }
     else
+    {
         return r;
+    }
 }
 
 static inline void UpdateLabel(bool& guiUpdated, wxStaticText* label, const wxString& text)
@@ -96,19 +110,21 @@ static inline void UpdateLabel(bool& guiUpdated, wxStaticText* label, const wxSt
     }
 }
 
-class ResourcesInfoTimer final : public wxTimer
+class ResourcesInfoTimer final: public wxTimer
 {
 public:
-    ResourcesInfoTimer(Run& form) : wxTimer(), pForm(form)
+    ResourcesInfoTimer(Run& form):
+        wxTimer(),
+        pForm(form)
     {
     }
+
     virtual ~ResourcesInfoTimer()
     {
     }
 
     void Notify() override
     {
-
     }
 
 private:
@@ -127,8 +143,9 @@ void Run::gridAppend(wxFlexGridSizer& sizer,
     }
     else
     {
-        auto* t = Antares::Component::CreateLabel(
-          pBigDaddy, wxString(wxT("   ")) << title << wxT("       "), true);
+        auto* t = Antares::Component::CreateLabel(pBigDaddy,
+                                                  wxString(wxT("   ")) << title << wxT("       "),
+                                                  true);
         t->Enable(false);
         sizer.Add(t, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
     }
@@ -181,16 +198,16 @@ void Run::gridAppend(wxFlexGridSizer& sizer, const wxString& key, const wxString
     gridAppend(sizer, wxEmptyString, key, value);
 }
 
-Run::Run(wxWindow* parent, bool preproOnly) :
- wxDialog(parent, wxID_ANY, wxString(wxT("Simulation"))),
- pSimulationName(nullptr),
- pSimulationComments(nullptr),
- pIgnoreWarnings(nullptr),
- pTimer(nullptr),
- pWarnAboutMemoryLimit(false),
- pWarnAboutDiskLimit(false),
- pAlreadyWarnedNoMCYear(false),
- pFeatureIndex(0)
+Run::Run(wxWindow* parent, bool preproOnly):
+    wxDialog(parent, wxID_ANY, wxString(wxT("Simulation"))),
+    pSimulationName(nullptr),
+    pSimulationComments(nullptr),
+    pIgnoreWarnings(nullptr),
+    pTimer(nullptr),
+    pWarnAboutMemoryLimit(false),
+    pWarnAboutDiskLimit(false),
+    pAlreadyWarnedNoMCYear(false),
+    pFeatureIndex(0)
 {
     assert(parent);
 
@@ -223,8 +240,8 @@ Run::Run(wxWindow* parent, bool preproOnly) :
 
     // Informations about the INPUT
     {
-        auto* lblMode
-          = Antares::Component::CreateLabel(pBigDaddy, wxStringFromUTF8(study.header.caption));
+        auto* lblMode = Antares::Component::CreateLabel(pBigDaddy,
+                                                        wxStringFromUTF8(study.header.caption));
         wxFont f = lblMode->GetFont();
         f.SetWeight(wxFONTWEIGHT_BOLD);
         lblMode->SetFont(f);
@@ -232,7 +249,8 @@ Run::Run(wxWindow* parent, bool preproOnly) :
     }
     {
         auto* lblMode = Antares::Component::CreateLabel(
-          pBigDaddy, wxStringFromUTF8(Data::SimulationModeToCString(study.parameters.mode)));
+          pBigDaddy,
+          wxStringFromUTF8(Data::SimulationModeToCString(study.parameters.mode)));
         wxFont f = lblMode->GetFont();
         f.SetWeight(wxFONTWEIGHT_BOLD);
         lblMode->SetFont(f);
@@ -278,8 +296,9 @@ Run::Run(wxWindow* parent, bool preproOnly) :
     s->AddSpacer(2);
 #endif
 
-    pPreproOnly = new wxCheckBox(
-      pBigDaddy, wxID_ANY, wxString(wxT(" Run the time-series generators only  ")));
+    pPreproOnly = new wxCheckBox(pBigDaddy,
+                                 wxID_ANY,
+                                 wxString(wxT(" Run the time-series generators only  ")));
     pPreproOnly->SetValue(preproOnly);
     pPreproOnly->Connect(pPreproOnly->GetId(),
                          wxEVT_COMMAND_CHECKBOX_CLICKED,
@@ -310,12 +329,12 @@ Run::Run(wxWindow* parent, bool preproOnly) :
     // Ortools use
     {
         // Ortools solver selection
-        pTitleOrtoolsSolverCombox
-          = Antares::Component::CreateLabel(pBigDaddy, wxT("Ortools solver : "));
+        pTitleOrtoolsSolverCombox = Antares::Component::CreateLabel(pBigDaddy,
+                                                                    wxT("Ortools solver : "));
 
         pOrtoolsSolverCombox = new wxComboBox(pBigDaddy, wxID_ANY, "sirius");
-        std::list<std::string> solverList = getAvailableOrtoolsSolverName();
-        for (const std::string& solverName : solverList)
+        std::list<std::string> solverList = getAvailableLinearSolverNames();
+        for (const std::string& solverName: solverList)
         {
             pOrtoolsSolverCombox->Append(solverName);
         }
@@ -352,8 +371,10 @@ Run::Run(wxWindow* parent, bool preproOnly) :
         sizer = new wxBoxSizer(wxHORIZONTAL);
         title = Antares::Component::CreateLabel(pBigDaddy, wxT("Memory (estimation) : "));
         pLblEstimation = Antares::Component::CreateLabel(pBigDaddy, wxEmptyString);
-        pLblEstimationAvailable
-          = Antares::Component::CreateLabel(pBigDaddy, wxEmptyString, false, true);
+        pLblEstimationAvailable = Antares::Component::CreateLabel(pBigDaddy,
+                                                                  wxEmptyString,
+                                                                  false,
+                                                                  true);
         sizer->Add(pLblEstimation, 0, wxALL | wxEXPAND);
         sizer->AddSpacer(10);
         sizer->Add(pLblEstimationAvailable, 0, wxALL | wxEXPAND);
@@ -362,8 +383,10 @@ Run::Run(wxWindow* parent, bool preproOnly) :
         sizer = new wxBoxSizer(wxHORIZONTAL);
         title = Antares::Component::CreateLabel(pBigDaddy, wxT("Disk (estimation) : "));
         pLblDiskEstimation = Antares::Component::CreateLabel(pBigDaddy, wxEmptyString);
-        pLblDiskEstimationAvailable
-          = Antares::Component::CreateLabel(pBigDaddy, wxEmptyString, false, true);
+        pLblDiskEstimationAvailable = Antares::Component::CreateLabel(pBigDaddy,
+                                                                      wxEmptyString,
+                                                                      false,
+                                                                      true);
         sizer->Add(pLblDiskEstimation, 0, wxALL | wxEXPAND);
         sizer->AddSpacer(10);
         sizer->Add(pLblDiskEstimationAvailable, 0, wxALL | wxEXPAND);
@@ -413,9 +436,13 @@ Run::Run(wxWindow* parent, bool preproOnly) :
 Run::~Run()
 {
     if (pNbCores)
+    {
         delete pNbCores;
+    }
     if (pTitleSimCores)
+    {
         delete pTitleSimCores;
+    }
 
     if (pTimer)
     {
@@ -456,11 +483,15 @@ bool Run::createCommentsFile(String& filename) const
     filename.clear();
 
     if (not pSimulationComments)
+    {
         return false;
+    }
 
     wxString cmt = pSimulationComments->GetValue();
     if (cmt.empty())
+    {
         return false;
+    }
 
     String content;
     wxStringToString(cmt, content);
@@ -472,7 +503,9 @@ bool Run::createCommentsFile(String& filename) const
 
         String temporary;
         if (not IO::Directory::System::Temporary(temporary))
+        {
             return false;
+        }
 
         auto processID = ProcessID();
 
@@ -500,7 +533,9 @@ int Run::checkForLowResources()
 #endif
 
     if (not pWarnAboutMemoryLimit and not pWarnAboutDiskLimit)
+    {
         return 0;
+    }
 
     auto& mainFrm = *Forms::ApplWnd::Instance();
 
@@ -508,16 +543,25 @@ int Run::checkForLowResources()
     if (pWarnAboutMemoryLimit)
     {
         if (pWarnAboutDiskLimit)
+        {
             msg = wxT("Memory and Disk");
+        }
         else
+        {
             msg = wxT("Memory");
+        }
     }
     else
+    {
         msg = wxT("Disk");
+    }
     msg << wxT(" almost full");
 
-    Window::Message message(
-      &mainFrm, wxT("Simulation"), msg, wxT("Try anyway ?"), "images/misc/warning.png");
+    Window::Message message(&mainFrm,
+                            wxT("Simulation"),
+                            msg,
+                            wxT("Try anyway ?"),
+                            "images/misc/warning.png");
     message.add(Window::Message::btnContinue);
     message.add(Window::Message::btnCancel, true);
     if (message.showModal() != Window::Message::btnContinue)
@@ -531,7 +575,9 @@ int Run::checkForLowResources()
 void Run::onRun(void*)
 {
     if (not CurrentStudyIsValid())
+    {
         return;
+    }
 
     bool canNotifyUserForLowResources = true;
     switch (checkForLowResources())
@@ -568,13 +614,19 @@ void Run::onRun(void*)
     }
 
     if (canNotifyUserForLowResources and 1 == checkForLowResources())
+    {
         return;
+    }
 
     // Updating the display
     if (pTimer)
+    {
         pTimer->Stop();
+    }
     if (!(!pThread))
+    {
         pThread->stop();
+    }
     this->Enable(false);
 
     Refresh();
@@ -605,9 +657,13 @@ void Run::onRun(void*)
 
     String commentFile;
     if (not createCommentsFile(commentFile))
+    {
         commentFile.clear();
+    }
     else
+    {
         logs.debug() << "using comment file: " << commentFile;
+    }
 
     Hide();
 
@@ -701,7 +757,9 @@ void Run::updateNbCores()
             wxString s = wxT("");
             s << nbCoresRaw;
             if (minNbCores < nbCoresRaw)
+            {
                 s << L"  (smallest batch size : " << minNbCores << L")";
+            }
             pNbCores->SetLabel(s);
 
             pBtnRun->Enable(true);
@@ -734,12 +792,12 @@ void Run::prepareMenuSolverMode(Antares::Component::Button&, wxMenu& menu, void*
     for (uint i = 0; i != featuresCount; ++i)
     {
         const wxMenuItem* it = Menu::CreateItem(&menu,
-                                          wxID_ANY,
-                                          featuresNames[i],
-                                          "images/16x16/empty.png",
-                                          wxEmptyString,
-                                          wxITEM_NORMAL,
-                                          (i == 0));
+                                                wxID_ANY,
+                                                featuresNames[i],
+                                                "images/16x16/empty.png",
+                                                wxEmptyString,
+                                                wxITEM_NORMAL,
+                                                (i == 0));
 
         pMappingSolverMode[it->GetId()] = i;
         menu.Connect(it->GetId(),
@@ -754,7 +812,9 @@ void Run::onSelectMode(wxCommandEvent& evt)
 {
     pFeatureIndex = pMappingSolverMode[evt.GetId()];
     if (pFeatureIndex >= featuresCount)
+    {
         pFeatureIndex = 0;
+    }
 
     // In case of either default mode, MC years parallel computation is disabled (nb
     // of cores is set to 1)
@@ -796,5 +856,3 @@ void Run::onInternalMotion(wxMouseEvent&)
 }
 
 } // namespace Antares::Window::Simulation
-
-

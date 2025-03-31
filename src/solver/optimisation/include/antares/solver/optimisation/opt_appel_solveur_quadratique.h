@@ -18,9 +18,16 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
+#pragma once
 
-#define BOOST_TEST_MODULE test solver utils
+#include <antares/optimization-options/options.h>
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
-#define WIN32_LEAN_AND_MEAN
-
-#include <boost/test/unit_test.hpp>
+void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(PROBLEME_HEBDO*);
+void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO*, int);
+void OPT_InitialiserLeSecondMembreDuProblemeQuadratique(PROBLEME_HEBDO*, int);
+void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO*, int);
+bool OPT_AppelDuSolveurQuadratique(const Solver::Optimization::OptimizationOptions& options,
+                                   PROBLEME_ANTARES_A_RESOUDRE*);
+bool OPT_PilotageOptimisationQuadratique(const Solver::Optimization::OptimizationOptions& options,
+                                         PROBLEME_HEBDO*);

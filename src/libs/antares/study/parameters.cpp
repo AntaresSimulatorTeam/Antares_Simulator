@@ -1277,16 +1277,6 @@ bool Parameters::loadFromINI(const IniFile& ini, const StudyVersion& version)
     return true;
 }
 
-void Parameters::handleOptimizationOptions(const StudyLoadOptions& options)
-{
-    // Options only set from the command-line
-    optOptions.ortoolsSolver = options.optOptions.ortoolsSolver;
-    optOptions.solverParameters = options.optOptions.solverParameters;
-
-    // Options that can be set both in command-line and file
-    optOptions.solverLogs = options.optOptions.solverLogs || optOptions.solverLogs;
-}
-
 void Parameters::fixRefreshIntervals()
 {
     using T = std::tuple<uint& /* refreshInterval */,
@@ -1422,7 +1412,7 @@ void Parameters::validateOptions(const StudyLoadOptions& options)
 
     namedProblems = options.namedProblems;
 
-    handleOptimizationOptions(options);
+    optOptions << options.solverOptions;
 }
 
 void Parameters::resetYearsWeigth()
@@ -1777,8 +1767,11 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info() << "  :: ignoring solution export";
     }
 
-    logs.info() << "  :: solver " << options.optOptions.ortoolsSolver
-                << " is used for problem resolution";
+    logs.info() << "  :: solver " << options.solverOptions.linearSolver
+                << " is used for linear problem resolution";
+
+    logs.info() << "  :: solver " << options.solverOptions.quadraticSolver
+                << " is used for quadratic problem resolution";
 
     // indicated that Problems will be named
     if (namedProblems)
