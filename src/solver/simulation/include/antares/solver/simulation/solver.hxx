@@ -815,9 +815,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     // "pNbMaxPerformedYearsInParallel" years) and some others to skip.
     uint maxNbYearsPerformedInAset = pNbMaxPerformedYearsInParallel;
 
-    // Related to annual costs statistics (printed in output into separate files)
-    pAnnualStatistics.setNbPerformedYears(pNbYearsReallyPerformed);
-
     // Number of threads to perform the jobs waiting in the queue
     pQueueService->maximumThreadCount(pNbMaxPerformedYearsInParallel);
     HydroInputsChecker hydroInputsChecker(study);
@@ -845,19 +842,23 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
 
     std::vector<uint> yearsIndices;
     std::map<unsigned int, bool> isYearPerformed;
-    int nbPerformedYears = 0;
+    pNbYearsReallyPerformed = 0;
     for (int year = firstYear; year < endYear; year++)
     {
         isYearPerformed[year] = study.parameters.yearsFilter[year];
         if (study.parameters.yearsFilter[year])
         {
             yearsIndices.push_back(year);
-            nbPerformedYears++;
+            pNbYearsReallyPerformed++;
         }
     }
 
+    // Related to annual costs statistics (printed in output into separate files)
+    pAnnualStatistics.setNbPerformedYears(pNbYearsReallyPerformed);
+
     // Container for random numbers of parallel years (to be executed or not)
-    randomNumbers randomForParallelYears(nbPerformedYears, study.parameters.power.fluctuations);
+    randomNumbers randomForParallelYears(pNbYearsReallyPerformed,
+                                         study.parameters.power.fluctuations);
 
     // Allocating memory to store random numbers of all parallel years
     allocateMemoryForRandomNumbers(randomForParallelYears);
