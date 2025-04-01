@@ -172,14 +172,14 @@ public:
             std::list<uint> failedWeekList;
 
             OptimizationStatisticsWriter optWriter(pResultWriter, y);
-            yearFailed[y] = !simulation_->year(progression,
-                                               state,
-                                               numSpace,
-                                               randomForCurrentYear,
-                                               failedWeekList,
-                                               hydroManagement.ventilationResults(),
-                                               optWriter,
-                                               scratchmap);
+            bool yearFailed = !simulation_->year(progression,
+                                                 state,
+                                                 numSpace,
+                                                 randomForCurrentYear,
+                                                 failedWeekList,
+                                                 hydroManagement.ventilationResults(),
+                                                 optWriter,
+                                                 scratchmap);
 
             // Log failing weeks
             logFailedWeek(y, study, failedWeekList);
@@ -224,7 +224,7 @@ public:
 
             logs.info() << "  playlist: ignoring the year " << (y + 1);
 
-            yearFailed[y] = false;
+            // yearFailed[y] = false;
 
         } // End if(performCalculations)
     } // End of onExecute() method
