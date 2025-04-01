@@ -374,7 +374,7 @@ BOOST_FIXTURE_TEST_CASE(SystemWithSenderAndReceiverPort, PrepareYaml)
     YmlSystem::System systemObj = parserSystem.parse(system);
     auto systemModel = SystemConverter::convert(systemObj, libraries);
     const auto& connections = systemModel.connections();
-    BOOST_CHECK(connections.size(), 1);
+    BOOST_CHECK(connections.size() == 1);
     const auto& connection = connections.at(0);
     const auto& firstEntry = connection.firstEntry();
     BOOST_CHECK(firstEntry.component()->Id() == "N");
