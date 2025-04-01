@@ -148,13 +148,18 @@ static const SystemModel::Port& findPort(const SystemModel::Component& component
     return it->second;
 }
 
-static SystemModel::FieldRole ExposeFieldRole(const std::string& field,
-                                              const SystemModel::Component& component)
+static SystemModel::FieldRole ExposeFieldRole(const SystemModel::Component& component,
+                                              const std::string& portId,
+                                              const std::string& field)
 {
     const auto& portFieldDefinitions = component.getModel()->PortFieldDefinitions();
-
-    return (portFieldDefinitions.contains(field) ? SystemModel::FieldRole::Sender
-                                                 : SystemModel::FieldRole::Receiver);
+    const auto& it = portFieldDefinitions.find(
+      SystemModel::PortFieldKey{.portId = portId, .fieldId = field});
+    if (it == portFieldDefinitions.end())
+    {
+        return SystemModel::FieldRole::Receiver;
+    }
+    return SystemModel::FieldRole::Sender;
 }
 
 /**
@@ -176,13 +181,26 @@ static SystemModel::Connection createConnection(
   const YmlSystem::Connection& connection,
   const std::unordered_map<std::string, SystemModel::Component>& components)
 {
-    const auto& first_component = findComponent(connection.firstEntry.componentId, components);
-    const auto& first_port = findPort(first_component, connection.firstEntry.portId);
-    const auto& second_component = findComponent(connection.secondEntry.componentId, components);
-    const auto& second_port = findPort(second_component, connection.secondEntry.portId);
+    const auto firstComponentId = connection.firstEntry.componentId;
+    const auto firstPortId = connection.firstEntry.portId;
+    const auto secondComponentId = connection.secondEntry.componentId;
+    const auto secondPortId = connection.secondEntry.portId;
+
+    if (firstComponentId == secondComponentId && firstPortId == secondPortId)
+    {
+        std::ostringstream msg;
+        msg << "Can not connect Port '" << firstPortId << "' from component '" << firstComponentId
+            << "' to it self!";
+        throw ConnectingPortToItSelf("Can not connect Port '" + firstPortId + "' from component '"
+                                     + firstComponentId + "' to it self!");
+    }
+    const auto& first_component = findComponent(firstComponentId, components);
+    const auto& first_port = findPort(first_component, firstPortId);
+    const auto& second_component = findComponent(secondComponentId, components);
+    const auto& second_port = findPort(second_component, secondPortId);
     if (first_port.Type() != second_port.Type())
     {
-        throw std::invalid_argument("Ports '" + first_port.Id() + "' and '" + second_port.Id()
+        throw std::invalid_argument("Ports '" + firstPortId + "' and '" + secondPortId
                                     + "' are not of the same type!");
     }
 
@@ -190,15 +208,19 @@ static SystemModel::Connection createConnection(
     SystemModel::PortFieldsRole secondPortFieldsRole;
     for (const auto& field: first_port.Type().Fields())
     {
-        const auto firstPortFieldRole = ExposeFieldRole(field.Id(), first_component);
-        const auto secondPortFieldRole = ExposeFieldRole(field.Id(), second_component);
+        const auto firstPortFieldRole = ExposeFieldRole(first_component,
+                                                        first_port.Id(),
+                                                        field.Id());
+        const auto secondPortFieldRole = ExposeFieldRole(second_component,
+                                                         second_port.Id(),
+                                                         field.Id());
 
         if (firstPortFieldRole == secondPortFieldRole)
         {
             std::ostringstream msg;
             msg << "Field '" << field.Id() << "' is " << firstPortFieldRole << " in both ports '"
                 << first_port.Id() << "' and '" << second_port.Id() << "'";
-            throw std::invalid_argument(msg.str());
+            throw TwoFieldsOfSameRole(msg.str());
         }
         firstPortFieldsRole.emplace(field, firstPortFieldRole);
         secondPortFieldsRole.emplace(field, secondPortFieldRole);

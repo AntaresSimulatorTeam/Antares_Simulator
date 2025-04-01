@@ -41,7 +41,7 @@ public:
         return id_;
     }
 
-    PortType Type() const
+    const PortType& Type() const
     {
         return type_;
     }

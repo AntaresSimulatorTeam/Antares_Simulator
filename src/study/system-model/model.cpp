@@ -24,10 +24,19 @@
 #include <utility>
 #include <vector>
 
+#include <boost/container_hash/hash.hpp>
+
 #include <antares/study/system-model/model.h>
 
 namespace Antares::Study::SystemModel
 {
+std::size_t PortFieldKeyHash::operator()(const PortFieldKey& input) const
+{
+    std::size_t seed = 0;
+    boost::hash_combine(seed, input.portId);
+    boost::hash_combine(seed, input.fieldId);
+    return seed;
+}
 
 /**
  * \brief Builds and returns the Model object.
@@ -165,7 +174,9 @@ ModelBuilder& ModelBuilder::withPortFieldDefinitions(
                    [](/*Non const to prevent copy*/ PortFieldDefinition& pfd)
                    {
                        auto id = pfd.getPort().Id();
-                       return std::make_pair(id, std::move(pfd));
+                       auto fieldId = pfd.Field().Id();
+                       return std::make_pair(PortFieldKey{.portId = id, .fieldId = fieldId},
+                                             std::move(pfd));
                    });
     return *this;
 }
