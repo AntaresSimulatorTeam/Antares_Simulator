@@ -166,8 +166,10 @@ static void CheckPortsType(const SystemModel::Port& firstPort, const SystemModel
 {
     if (firstPort.Type() != secondPort.Type())
     {
-        throw std::invalid_argument("Ports '" + firstPort.Id() + "' and '" + secondPort.Id()
-                                    + "' are not of the same type!");
+        std::ostringstream msg;
+        msg << "Ports '" << firstPort.Id() << "' and '" << secondPort.Id()
+            << "' are not of the same type!";
+        throw std::invalid_argument(msg.str());
     }
 }
 
