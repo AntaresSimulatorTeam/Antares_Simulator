@@ -197,7 +197,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const PortField
                                             fillContext_,
                                             c->Id(),
                                             {});
-        
+
         const PortFieldNode* portFieldNode = c->getPortFieldNode(port + "." + field);
         portFieldSum += visitor.dispatch(portFieldNode);
     }
