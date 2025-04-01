@@ -166,6 +166,7 @@ BOOST_FIXTURE_TEST_CASE(bad_library_model_format, LibraryObjects)
 
     BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), std::runtime_error);
 }
+
 static const auto libraryYaml = R"(
         library:
           id: std
