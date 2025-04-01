@@ -23,6 +23,8 @@
 
 #include <antares/study/system-model/component.h>
 
+using namespace Antares::Expressions::Nodes;
+
 namespace Antares::Study::SystemModel
 {
 
@@ -62,6 +64,19 @@ Component::Component(const ComponentData& component_data)
 {
     checkComponentDataValidity(component_data);
     data_ = std::move(component_data);
+}
+
+const PortFieldNode* Component::getPortFieldNode(std::string portFieldId) const
+{
+    Node* nodeOfPortField = getModel()
+                              ->PortFieldDefinitions()
+                              .at(portFieldId)
+                              .Definition()
+                              .RootNode();
+    // We know for sure that the following dynamic_cast is not nullptr: checks were made
+    // when building port filed definitions.
+    const PortFieldNode* portFieldNode = dynamic_cast<PortFieldNode*>(nodeOfPortField);
+    return portFieldNode;
 }
 
 /**

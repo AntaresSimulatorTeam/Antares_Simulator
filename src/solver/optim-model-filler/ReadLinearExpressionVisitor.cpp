@@ -28,17 +28,18 @@
 #include <antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h>
 #include "antares/study/system-model/component.h"
 using namespace Antares::Expressions::Nodes;
+using namespace Antares::Expressions::Visitors;
 using namespace Antares::Study;
 
 namespace Antares::Optimization
 {
 
 ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
-  Expressions::Visitors::EvaluationContext context,
+  EvaluationContext evalContext,
   Optimisation::LinearProblemApi::FillContext fillContext,
   const std::string& componentId,
   const std::vector<SystemModel::Connection>& connections):
-    evalContext_(std::move(context)),
+    evalContext_(std::move(evalContext)),
     fillContext_(std::move(fillContext)),
     componentId_(componentId),
     connections_(connections),
@@ -49,6 +50,23 @@ ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
 std::string ReadLinearExpressionVisitor::name() const
 {
     return "ReadLinearExpressionVisitor";
+}
+
+std::vector<const SystemModel::Component*> ReadLinearExpressionVisitor::getConnectedComponents()
+{
+    std::vector<const SystemModel::Component*> connectedComponents;
+    for (auto& c: connections_)
+    {
+        if (c.firstEntry().component()->Id() == componentId_)
+        {
+            connectedComponents.push_back(c.secondEntry().component());
+        }
+        if (c.secondEntry().component()->Id() == componentId_)
+        {
+            connectedComponents.push_back(c.firstEntry().component());
+        }
+    }
+    return connectedComponents;
 }
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const SumNode* node)
@@ -98,7 +116,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const NegationN
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const VariableNode* node)
 {
-    if (node->timeIndex() == Expressions::Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
+    if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
     {
         return TimeDependentLinearExpression(
           fillContext_,
@@ -123,14 +141,14 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const VariableN
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const ParameterNode* node)
 {
     const auto systemParameter = evalContext_.getParameter(node->value());
-    if (node->timeIndex() == Expressions::Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
-        && systemParameter.type != Expressions::Visitors::ParameterType::CONSTANT)
+    if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
+        && systemParameter.type != ParameterType::CONSTANT)
     {
         throw std::invalid_argument(
           "Parameter " + node->value()
           + " is declared constant in time and scenario in library but not in system");
     }
-    else if (systemParameter.type == Expressions::Visitors::ParameterType::CONSTANT)
+    else if (systemParameter.type == ParameterType::CONSTANT)
     {
         return TimeDependentLinearExpression(
           fillContext_,
@@ -167,21 +185,24 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const PortField
     std::string port = node->getPortName();
     std::string field = node->getFieldName();
 
-    //
-    std::vector<const SystemModel::Component*> connectedComponents;
-    for (auto& c: connections_)
+    auto connectedComponents = getConnectedComponents();
+
+    TimeDependentLinearExpression portFieldSum(fillContext_, {});
+    for (const auto* c: connectedComponents)
     {
-        if (c.firstEntry().component()->Id() == componentId_)
-        {
-            connectedComponents.push_back(c.secondEntry().component());
-        }
-        if (c.secondEntry().component()->Id() == componentId_)
-        {
-            connectedComponents.push_back(c.firstEntry().component());
-        }
+        const EvaluationContext connectedComponentEvalContext(c->getParameterValues(),
+                                                              {},
+                                                              evalContext_.data());
+        ReadLinearExpressionVisitor visitor(connectedComponentEvalContext,
+                                            fillContext_,
+                                            c->Id(),
+                                            {});
+        
+        const PortFieldNode* portFieldNode = c->getPortFieldNode(port + "." + field);
+        portFieldSum += visitor.dispatch(portFieldNode);
     }
 
-    return TimeDependentLinearExpression(fillContext_, {}); // For compilation only
+    return portFieldSum;
 }
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const ComponentVariableNode* node)

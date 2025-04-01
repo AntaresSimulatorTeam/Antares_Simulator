@@ -43,7 +43,7 @@ class ReadLinearExpressionVisitor
 {
 public:
     explicit ReadLinearExpressionVisitor(
-      Expressions::Visitors::EvaluationContext context,
+      Expressions::Visitors::EvaluationContext evalContext,
       Optimisation::LinearProblemApi::FillContext fillContext,
       const std::string& componentId /* or vector ?*/,
       const std::vector<Antares::Study::SystemModel::Connection>& connections);
@@ -76,6 +76,8 @@ private:
     TimeDependentLinearExpression visit(const Expressions::Nodes::TimeIndexNode* node) override;
     TimeDependentLinearExpression visit(const Expressions::Nodes::TimeSumNode* node) override;
     TimeDependentLinearExpression visit(const Expressions::Nodes::AllTimeSumNode* node) override;
+
+    std::vector<const Antares::Study::SystemModel::Component*> getConnectedComponents();
 
     Optimisation::LinearProblemApi::FillContext fillContext_;
     const Expressions::Visitors::EvaluationContext evalContext_;

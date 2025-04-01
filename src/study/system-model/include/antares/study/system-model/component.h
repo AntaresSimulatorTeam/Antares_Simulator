@@ -22,6 +22,7 @@
 
 #include <map>
 
+#include <antares/expressions/nodes/PortFieldNode.h>
 #include <antares/expressions/visitors/EvaluationContext.h>
 
 #include "model.h"
@@ -89,6 +90,8 @@ public:
     {
         return data_.scenario_group_id;
     }
+
+    const Expressions::Nodes::PortFieldNode* getPortFieldNode(std::string portFieldId) const;
 
 private:
     // Only ComponentBuilder is allowed to build Component instances
