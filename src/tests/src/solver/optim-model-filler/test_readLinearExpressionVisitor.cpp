@@ -105,6 +105,46 @@ struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearPr
     }
 };
 
+BOOST_FIXTURE_TEST_CASE(visit_timeSum, MyDummyFixture)
+{ // param  ={0,1,2}
+    // 5 + sum( t-2 .. t+1, param) -->
+    // t = 0 : 5 +param.at(-2) + param.at(-1) + param.at(0) + param.at(1) --> 5 +1 + 2 + 0 + 1 = 9
+    // t = 1 : 5 +param.at(-1) + param.at(0) + param.at(1) + param.at(2) --> 5 + 2+0+1+2 = 10
+    Node* from = create<LiteralNode>(-2.);
+    Node* to = create<LiteralNode>(1.);
+    Node* sum = create<SumNode>(create<LiteralNode>(5.),
+                                create<TimeSumNode>(from, to, create<ParameterNode>("param")));
+    MockLinearProblemData my_data;
+    EvaluationContext evaluation_context(
+      {{build_context_parameter_with("param", "something", ParameterType::TIMESERIE)}},
+      {},
+      my_data);
+    ReadLinearExpressionVisitor visitor(evaluation_context, {0, 2}, componentId);
+    auto linear_expressions = visitor.dispatch(sum).GetLinearExpressions();
+    BOOST_CHECK_EQUAL(linear_expressions.at(0).offset(), 9.);
+    BOOST_CHECK(linear_expressions.at(0).coefPerVar().empty());
+    BOOST_CHECK_EQUAL(linear_expressions.at(1).offset(), 10.);
+    BOOST_CHECK(linear_expressions.at(1).coefPerVar().empty());
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_AllTimeSum, MyDummyFixture)
+{ // param  ={0,1,2}
+    // 5 + sum(param) -->
+    // 5 +param.at(0) + param.at(1) + param.at(2)  --> 5 + 0 + 1  + 2  = 8
+
+    Node* sum = create<SumNode>(create<LiteralNode>(5.),
+                                create<AllTimeSumNode>(create<ParameterNode>("param")));
+    MockLinearProblemData my_data;
+    EvaluationContext evaluation_context(
+      {{build_context_parameter_with("param", "something", ParameterType::TIMESERIE)}},
+      {},
+      my_data);
+    ReadLinearExpressionVisitor visitor(evaluation_context, {0, 2}, componentId);
+    auto linear_expressions = visitor.dispatch(sum).GetLinearExpressions();
+    BOOST_CHECK_EQUAL(linear_expressions.at(0).offset(), 8.);
+    BOOST_CHECK(linear_expressions.at(0).coefPerVar().empty());
+}
+
 BOOST_FIXTURE_TEST_CASE(visit_literal_plus_time_dependent_param_plus_var, MyDummyFixture)
 {
     // 60 + param_at_0 + 7 * var = { 60, {var : 7} }

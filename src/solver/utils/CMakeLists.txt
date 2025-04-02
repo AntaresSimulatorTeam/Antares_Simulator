@@ -1,6 +1,8 @@
 set(SRC
         include/antares/solver/utils/ortools_utils.h
         ortools_utils.cpp
+        include/antares/solver/utils/ortools_quadratic_wrapper.h
+        ortools_quadratic_wrapper.cpp
         include/antares/solver/utils/filename.h
         filename.cpp
         include/antares/solver/utils/named_problem.h
@@ -11,10 +13,10 @@ set(SRC
         name_translator.cpp
         include/antares/solver/utils/opt_period_string_generator.h
         opt_period_string_generator.cpp
-	basis_status.cpp
-	include/antares/solver/utils/basis_status.h
-    basis_status_impl.cpp
-    basis_status_impl.h
+        basis_status.cpp
+        include/antares/solver/utils/basis_status.h
+        basis_status_impl.cpp
+        basis_status_impl.h
 )
 
 add_library(utils ${SRC})
@@ -23,22 +25,21 @@ if (NOT MSVC)
     target_compile_options(utils
             PUBLIC
             "-Wno-unused-variable")
-else ()
-    #set(CMAKE_C_FLAGS_DEBUG   "${CMAKE_C_FLAGS} /wd 4101") # unused local variable
-    #set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS} /wd 4101") # unused local variable
 endif ()
 target_link_libraries(utils
         PUBLIC
-        ortools::ortools
+        # Until issue here is resolved, link the whole archive: https://github.com/google/or-tools/discussions/4538
+        # TODO: keep an eye out for bug resolution in future versions of ortools (> 9.12)
+        $<LINK_LIBRARY:WHOLE_ARCHIVE,ortools::ortools>
         sirius_solver
         Antares::study
-        Antares::result_writer #ortools_utils.h
+        Antares::result_writer
         Antares::optimization-options
-        antares-core #enum.h
+        antares-core
 )
 
 target_include_directories(utils
-            PUBLIC
+        PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 

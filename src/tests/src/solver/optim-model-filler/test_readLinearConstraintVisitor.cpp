@@ -133,7 +133,9 @@ BOOST_FIXTURE_TEST_CASE(test_visit_illegal_node, MyDummyFixture)
                                         create<ComponentVariableNode>("x", "y"),
                                         create<ComponentParameterNode>("x", "y"),
                                         create<TimeShiftNode>(lit, lit),
-                                        create<TimeIndexNode>(lit, lit)};
+                                        create<TimeIndexNode>(lit, lit),
+                                        create<TimeSumNode>(lit, lit, lit),
+                                        create<AllTimeSumNode>(lit)};
 
     for (Node* node: illegal_nodes)
     {
