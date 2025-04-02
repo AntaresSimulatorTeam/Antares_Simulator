@@ -241,10 +241,10 @@ static SystemModel::Connection createConnection(
   const YmlSystem::Connection& connection,
   const std::unordered_map<std::string, SystemModel::Component>& components)
 {
-    const auto firstComponentId = connection.firstEntry.componentId;
-    const auto firstPortId = connection.firstEntry.portId;
-    const auto secondComponentId = connection.secondEntry.componentId;
-    const auto secondPortId = connection.secondEntry.portId;
+    const auto& firstComponentId = connection.firstEntry.componentId;
+    const auto& firstPortId = connection.firstEntry.portId;
+    const auto& secondComponentId = connection.secondEntry.componentId;
+    const auto& secondPortId = connection.secondEntry.portId;
 
     CheckPortSelfConnection(firstComponentId, firstPortId, secondComponentId, secondPortId);
 

@@ -307,16 +307,16 @@ struct RawConnection
 
 void AddConnectionsToSystem(std::string& system, const std::vector<RawConnection>& connections)
 {
-    for (const auto& connection: connections)
+    for (const auto& [firstCompo, firstPort, secondCompo, secondPort]: connections)
     {
         system += "\n";
-        system += connectionFirstCompoMargin + "- component1: " + connection.firstCompo;
+        system += connectionFirstCompoMargin + "- component1: " + firstCompo;
         system += "\n";
-        system += connectionOtherFieldsMargin + "port_1: " + connection.firstPort;
+        system += connectionOtherFieldsMargin + "port_1: " + firstPort;
         system += "\n";
-        system += connectionOtherFieldsMargin + "component2: " + connection.secondCompo;
+        system += connectionOtherFieldsMargin + "component2: " + secondCompo;
         system += "\n";
-        system += connectionOtherFieldsMargin + "port_2: " + connection.secondPort;
+        system += connectionOtherFieldsMargin + "port_2: " + secondPort;
     }
 }
 
@@ -350,7 +350,7 @@ BOOST_FIXTURE_TEST_CASE(SystemWithAConnectionOfTwoSendingPorts, PrepareYaml)
                       SystemConverter::TwoFieldsOfSameRole);
 }
 
-BOOST_FIXTURE_TEST_CASE(TryConnectPortSelfConnection, PrepareYaml)
+BOOST_FIXTURE_TEST_CASE(TryPortSelfConnection, PrepareYaml)
 {
     AddConnectionsToSystem(system,
                            {{.firstCompo = "G",
