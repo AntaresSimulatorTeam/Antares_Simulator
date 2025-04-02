@@ -47,12 +47,12 @@ public:
         // std::find not available for std::vector<bool>
         std::unique_lock lk(mut);
         int idx = 0;
-        for (int idx = 0; idx < available.size(); idx++)
+        for (std::size_t idx = 0; idx < available.size(); idx++)
         {
             if (available[idx])
             {
                 available[idx] = false;
-                return idx;
+                return static_cast<int>(idx);
             }
         }
         return -1;

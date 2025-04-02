@@ -822,7 +822,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     logs.info() << " Doing hydro validation";
 
     // Loop over sets of parallel years to check hydro inputs
-    for (int year = firstYear; year < endYear; year++)
+    for (uint year = firstYear; year < endYear; year++)
     {
         if (study.parameters.yearsFilter[year])
         {
