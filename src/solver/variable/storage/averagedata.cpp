@@ -21,9 +21,12 @@
 
 #include "antares/solver/variable/storage/averagedata.h"
 
+#include <ranges>
+
 #include <yuni/yuni.h>
 
 #include "antares/solver/variable/storage/intermediate.h"
+#include "antares/solver/variable/variable.h"
 
 using namespace Yuni;
 
@@ -58,37 +61,61 @@ void AverageData::initializeFromStudy(Data::Study& study)
 
     yearsWeight = study.parameters.getYearsWeight();
     yearsWeightSum = study.parameters.getYearsWeightSum();
+    pPerformedYears = performedYears;
 }
 
-void AverageData::merge(unsigned int y, const IntermediateValues& rhs)
+void doMerge(AverageData& avg, unsigned int y, const IntermediateValues& rhs)
 {
     unsigned int i;
-
     // Ratio take into account MC year weight
-    double ratio = (double)yearsWeight[y] / (double)yearsWeightSum;
+    double ratio = (double)avg.yearsWeight[y] / (double)avg.yearsWeightSum;
 
     // Average value for each hour throughout all years
     for (i = 0; i != HOURS_PER_YEAR; ++i)
     {
-        hourly[i] += rhs.hour[i] * ratio;
+        avg.hourly[i] += rhs.hour[i] * ratio;
     }
     // Average value for each day throughout all years
     for (i = 0; i != DAYS_PER_YEAR; ++i)
     {
-        daily[i] += rhs.day[i] * ratio;
+        avg.daily[i] += rhs.day[i] * ratio;
     }
     // Average value for each week throughout all years
     for (i = 0; i != WEEKS_PER_YEAR; ++i)
     {
-        weekly[i] += rhs.week[i] * ratio;
+        avg.weekly[i] += rhs.week[i] * ratio;
     }
     // Average value for each month throughout all years
     for (i = 0; i != MONTHS_PER_YEAR; ++i)
     {
-        monthly[i] += rhs.month[i] * ratio;
+        avg.monthly[i] += rhs.month[i] * ratio;
     }
     // Average value throughout all years
-    year[y] += rhs.year * ratio;
+    avg.year[y] += rhs.year * ratio;
+}
+
+void AverageData::merge(unsigned int y, const IntermediateValues& rhs)
+{
+    if (!pPerformedYears.empty() && *pPerformedYears.begin() == y)
+    {
+        // Merge immediately if this is the next expected year
+        doMerge(*this, y, rhs);
+        pPerformedYears.erase(pPerformedYears.begin());
+
+        // Process any pending data that has now become the next expected year
+        while (!pPerformedYears.empty() && pendingData.contains(*pPerformedYears.begin()))
+        {
+            unsigned int nextYear = *pPerformedYears.begin();
+            doMerge(*this, nextYear, pendingData[nextYear]);
+            pendingData.erase(nextYear);
+            pPerformedYears.erase(pPerformedYears.begin());
+        }
+    }
+    else
+    {
+        // Store out-of-order data in the buffer
+        pendingData[y] = rhs;
+    }
 }
 
 } // namespace Antares::Solver::Variable::R::AllYears

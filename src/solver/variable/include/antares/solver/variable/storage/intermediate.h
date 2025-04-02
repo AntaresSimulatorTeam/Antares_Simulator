@@ -55,6 +55,9 @@ public:
     ** \brief Constructor
     */
     IntermediateValues();
+    IntermediateValues(const IntermediateValues&);
+    IntermediateValues& operator=(const IntermediateValues&);
+
     //! Destructor
     ~IntermediateValues();
     //@}
@@ -117,6 +120,7 @@ public:
     */
     Type& operator[](const uint index);
     const Type& operator[](const uint index) const;
+
     //@}
 
     //! Range

@@ -34,6 +34,7 @@
 #include "antares/solver/simulation/timeseries-numbers.h"
 #include "antares/solver/ts-generator/generator.h"
 #include "antares/solver/variable/print.h"
+#include "antares/solver/variable/variable.h"
 
 namespace Antares::Solver::Simulation
 {
@@ -852,6 +853,8 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
             pNbYearsReallyPerformed++;
         }
     }
+
+    performedYears = yearsIndices;
 
     // Related to annual costs statistics (printed in output into separate files)
     pAnnualStatistics.setNbPerformedYears(pNbYearsReallyPerformed);

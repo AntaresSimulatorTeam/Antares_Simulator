@@ -26,6 +26,8 @@
 #pragma warning(disable : 4503)
 #endif
 
+#include <vector>
+
 #include <yuni/yuni.h>
 #include <yuni/core/static/if.h>
 
@@ -36,6 +38,8 @@
 #include "storage/intermediate.h"
 #include "storage/results.h"
 #include "surveyresults.h"
+
+extern std::vector<unsigned int> performedYears;
 
 namespace Antares
 {
