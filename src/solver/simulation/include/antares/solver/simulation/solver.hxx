@@ -843,7 +843,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     std::vector<uint> yearsIndices;
     std::map<unsigned int, bool> isYearPerformed;
     pNbYearsReallyPerformed = 0;
-    for (int year = firstYear; year < endYear; year++)
+    for (uint year = firstYear; year < endYear; year++)
     {
         isYearPerformed[year] = study.parameters.yearsFilter[year];
         if (study.parameters.yearsFilter[year])
@@ -874,7 +874,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     bool yearPerformed = false;
     Concurrency::FutureSet results;
     std::mutex aggregationMutex;
-    for (int year = firstYear; year < endYear; year++)
+    for (uint year = firstYear; year < endYear; year++)
     {
         if (study.parameters.yearsFilter[year])
         {
