@@ -96,7 +96,6 @@ static SystemModel::Component createComponent(const YmlSystem::Component& c,
                                               const std::vector<SystemModel::Library>& libraries)
 {
     const auto [libraryId, modelId] = splitLibraryModelString(c.model);
-    SystemModel::ModelBuilder model_builder;
 
     const SystemModel::Model& model = getModel(libraries, libraryId, modelId);
 

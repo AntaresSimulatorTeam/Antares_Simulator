@@ -29,11 +29,13 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h>
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
+#include "antares/study/system-model/component.h"
 #include "antares/study/system-model/connection.h"
 
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::Expressions::Visitors;
+using namespace Antares::Study;
 
 using namespace Antares::Optimization;
 
@@ -44,7 +46,7 @@ struct CreateVisitorFixture: Registry<Node>
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
     EvaluationContext evaluationContext{{}, {}, data};
     std::string componentId = "compo";
-    const std::vector<Antares::Study::SystemModel::Connection> connections;
+    const std::vector<SystemModel::Connection> connections;
     ReadLinearExpressionVisitor visitor{evaluationContext, {0, 0}, componentId, connections};
 };
 
@@ -282,8 +284,72 @@ BOOST_FIXTURE_TEST_CASE(not_implemented_nodes__exception_thrown, CreateVisitorFi
 
 BOOST_FIXTURE_TEST_CASE(blabla, CreateVisitorFixture)
 {
-    Node* node = create<PortFieldSumNode>("port", "field");
-    auto timeDependentLinExpr = visitor.dispatch(node);
+    Registry<Node> registry;
+    SystemModel::ModelBuilder modelBuilder;
+    SystemModel::ComponentBuilder componentBuilder;
+
+    // ============================
+    // Model "generator" creation
+    // ============================
+    // Model variables
+    std::vector<SystemModel::Variable> variables;
+    // ... Variable : "generation"
+    Node* generation_node = registry.create<VariableNode>("generation");
+    NodeRegistry genNodeRegistry(generation_node, std::move(registry));
+    SystemModel::Expression generation_expr(generation_node->name(), std::move(genNodeRegistry));
+
+    // ... Add "generation" to model variables
+    variables.push_back({generation_node->name(), {}, {}, SystemModel::ValueType::FLOAT, {}, {}});
+
+    // Model ports
+    SystemModel::PortField flow("flow");
+    std::vector<SystemModel::PortField> portFields = {flow};
+    SystemModel::PortType portType("some-port-type", std::move(portFields));
+    SystemModel::Port injection_port("injection_port", portType);
+
+    // Model port field definition
+    SystemModel::PortFieldDefinition portFieldDefinition(injection_port,
+                                                         flow,
+                                                         std::move(generation_expr));
+
+    std::vector<SystemModel::PortFieldDefinition> portFieldDefinitions;
+    portFieldDefinitions.push_back(std::move(portFieldDefinition));
+
+    auto generatorModel = modelBuilder.withId("generator")
+                            .withVariables(std::move(variables))
+                            .withPorts({injection_port})
+                            .withPortFieldDefinitions(std::move(portFieldDefinitions))
+                            .build();
+
+    // ==========================
+    // Model "node" creation
+    // ==========================
+    // Binding constraint
+    // ... Building the AST associated to binding constraint
+    Node* sum_connections_node = registry.create<PortFieldSumNode>("injection_port", "flow");
+    Node* zero_node = registry.create<LiteralNode>(0.);
+    Node* equal_node = registry.create<EqualNode>(sum_connections_node, zero_node);
+    // ...  building a constraint from the previous AST
+    NodeRegistry equalNodeRegistry(equal_node, std::move(registry));
+    SystemModel::Expression balance_expr("balance", std::move(equalNodeRegistry));
+    SystemModel::Constraint balance_constraint("balance", std::move(balance_expr));
+
+    std::vector<SystemModel::Constraint> constraints;
+    constraints.push_back(std::move(balance_constraint));
+
+    auto nodeModel = modelBuilder.withId("node")
+                       .withPorts({injection_port})
+                       .withConstraints(std::move(constraints))
+                       .build();
+
+    // ======================
+    // Components creation
+    // ======================
+    auto generatorComponent = componentBuilder.withId("G").withModel(&generatorModel).build();
+    auto nodeComponent = componentBuilder.withId("N").withModel(&nodeModel).build();
+
+    //    Node* node = create<PortFieldSumNode>("port", "field");
+    //    auto timeDependentLinExpr = visitor.dispatch(node);
 
     BOOST_CHECK(true);
 }
