@@ -91,7 +91,8 @@ public:
         return data_.scenario_group_id;
     }
 
-    const Expressions::Nodes::PortFieldNode* getPortFieldNode(std::string portFieldId) const;
+    const Expressions::Nodes::PortFieldNode* getPortFieldNode(std::string portId,
+                                                              std::string fieldId) const;
 
 private:
     // Only ComponentBuilder is allowed to build Component instances
