@@ -36,7 +36,7 @@ using namespace Antares::Solver;
 using namespace Antares::Data;
 namespace fs = std::filesystem;
 
-void initializeStudy(Data::Study& study)
+void initializeStudy(Study& study)
 {
     study.parameters.derated = false;
 
@@ -56,7 +56,7 @@ class PublicStudy: public Study
 public:
     bool internalLoadBindingConstraints(const StudyLoadOptions& options) override
     {
-        return Data::Study::internalLoadBindingConstraints(options);
+        return Study::internalLoadBindingConstraints(options);
     }
 };
 

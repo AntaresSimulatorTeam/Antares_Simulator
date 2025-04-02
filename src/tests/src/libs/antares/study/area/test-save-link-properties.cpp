@@ -119,7 +119,7 @@ struct Fixture
     Fixture& operator=(const Fixture&& f) = delete;
 
     Fixture():
-        study(std::make_shared<Data::Study>())
+        study(std::make_shared<Study>())
     {
         area_1 = study->areaAdd("Area 1");
         area_2 = study->areaAdd("Area 2");
@@ -131,7 +131,7 @@ struct Fixture
         remove_files(filesToRemove);
     }
 
-    Data::Study::Ptr study;
+    Study::Ptr study;
     Area* area_1;
     Area* area_2;
 };

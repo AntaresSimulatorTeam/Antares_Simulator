@@ -47,7 +47,7 @@ struct CommonFixture
     CommonFixture():
         tmp(fs::temp_directory_path()),
         hydroIni(tmp / "hydro.ini"),
-        study(std::make_unique<Data::Study>())
+        study(std::make_unique<Study>())
     {
         east = new Area("east"); // freed by ~AreaList
         study->areas.add(east);
@@ -75,7 +75,7 @@ public:
 private:
     fs::path tmp;
     fs::path hydroIni;
-    std::unique_ptr<Data::Study> study;
+    std::unique_ptr<Study> study;
 };
 
 void CommonFixture::writeValidFile()

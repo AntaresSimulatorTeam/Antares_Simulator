@@ -124,12 +124,12 @@ struct FixtureFull: private ThermalIniFile
     ThermalClusterList clusterList;
     Area* area;
 
-    Data::Study::Ptr study = std::make_shared<Data::Study>();
+    Study::Ptr study = std::make_shared<Study>();
 };
 
 struct FixtureStudyOnly
 {
-    Data::Study::Ptr study = std::make_shared<Data::Study>();
+    Study::Ptr study = std::make_shared<Study>();
 };
 
 // ==================

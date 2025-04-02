@@ -114,7 +114,7 @@ struct commonFixture
 
     commonFixture()
     {
-        study = std::make_shared<Data::Study>();
+        study = std::make_shared<Study>();
         // Set study parameters
         study->parameters.nbYears = 20;
         study->parameters.timeSeriesToGenerate = 0; // No generated time-series, only ready made
@@ -197,7 +197,7 @@ struct commonFixture
     ~commonFixture() = default;
 
     // Data members
-    std::shared_ptr<Data::Study> study;
+    std::shared_ptr<Study> study;
     Area* area_1;
     Area* area_2;
     Area* area_3;

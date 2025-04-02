@@ -40,7 +40,7 @@ using namespace Antares::Solver;
 using namespace Antares::Data;
 namespace fs = std::filesystem;
 
-void initializeStudy(Data::Study& study)
+void initializeStudy(Study& study)
 {
     study.parameters.derated = false;
 
@@ -57,7 +57,7 @@ void initializeStudy(Data::Study& study)
 
 BOOST_AUTO_TEST_CASE(BC_group_TestGroup_has_output_file)
 {
-    auto study = std::make_shared<Data::Study>();
+    auto study = std::make_shared<Study>();
     study->parameters.storeTimeseriesNumbers = true;
 
     study->bindingConstraintsGroups.add("TestGroup");
@@ -82,7 +82,7 @@ BOOST_AUTO_TEST_CASE(BC_group_TestGroup_has_output_file)
 
 BOOST_AUTO_TEST_CASE(BC_output_ts_numbers_file_for_each_group)
 {
-    auto study = std::make_shared<Data::Study>();
+    auto study = std::make_shared<Study>();
     study->parameters.storeTimeseriesNumbers = true;
     study->bindingConstraintsGroups.add("test1");
     study->bindingConstraintsGroups.add("test2");
@@ -110,7 +110,7 @@ BOOST_AUTO_TEST_CASE(BC_output_ts_numbers_file_for_each_group)
 
 BOOST_AUTO_TEST_CASE(BC_timeseries_numbers_store_values)
 {
-    auto study = std::make_shared<Data::Study>();
+    auto study = std::make_shared<Study>();
     study->parameters.storeTimeseriesNumbers = true;
     auto group = study->bindingConstraintsGroups.add("test1");
     auto bc = std::make_shared<BindingConstraint>();

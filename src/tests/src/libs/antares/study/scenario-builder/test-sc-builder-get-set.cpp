@@ -59,7 +59,7 @@ class IntegerIndex
 {
 public:
     IntegerIndex():
-        study(std::make_unique<Data::Study>()),
+        study(std::make_unique<Study>()),
         area(study->areaAdd("area 1"))
     {
     }
@@ -88,7 +88,7 @@ public:
 
 private:
     TSData tsdata;
-    std::unique_ptr<Data::Study> study;
+    std::unique_ptr<Study> study;
     Area* area;
 };
 
@@ -100,7 +100,7 @@ public:
     virtual void attachArea() = 0;
 
     explicit StructureIndex():
-        study(std::make_unique<Data::Study>()),
+        study(std::make_unique<Study>()),
         area1(study->areaAdd("area 1")),
         area2(study->areaAdd("area 2")),
         link(AreaAddLinkBetweenAreas(area1, area2, false)),
@@ -139,7 +139,7 @@ public:
     }
 
 protected:
-    std::unique_ptr<Data::Study> study;
+    std::unique_ptr<Study> study;
     TSData tsdata;
     Area *area1, *area2;
     AreaLink* link;

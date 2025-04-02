@@ -42,7 +42,7 @@ BOOST_AUTO_TEST_SUITE(BindingConstraintTests)
 
 BOOST_AUTO_TEST_CASE(load_basic_attributes)
 {
-    auto study = std::make_shared<Data::Study>();
+    auto study = std::make_shared<Study>();
 
     StudyLoadOptions options;
     BindingConstraintsRepository bindingConstraints;
@@ -86,7 +86,7 @@ BOOST_AUTO_TEST_CASE(load_basic_attributes)
 
 BOOST_AUTO_TEST_CASE(BC_load_RHS)
 {
-    auto study = std::make_shared<Data::Study>();
+    auto study = std::make_shared<Study>();
     study->areaAdd("area1");
     study->areaAdd("area2");
     study->areaAdd("area3");
@@ -133,7 +133,7 @@ BOOST_AUTO_TEST_CASE(BC_load_RHS)
 
 BOOST_AUTO_TEST_CASE(BC_load_range_type)
 {
-    auto study = std::make_shared<Data::Study>();
+    auto study = std::make_shared<Study>();
     study->areaAdd("area1");
     study->areaAdd("area2");
     study->areaAdd("area3");
@@ -200,7 +200,7 @@ BOOST_AUTO_TEST_CASE(BC_load_range_type)
 
 BOOST_AUTO_TEST_CASE(BC_load_legacy)
 {
-    auto study = std::make_shared<Data::Study>();
+    auto study = std::make_shared<Study>();
     study->areaAdd("area1");
     study->areaAdd("area2");
     study->areaAdd("area3");
@@ -247,7 +247,7 @@ BOOST_AUTO_TEST_CASE(BC_load_legacy)
 
 BOOST_AUTO_TEST_CASE(BC_load_legacy_range)
 {
-    auto study = std::make_shared<Data::Study>();
+    auto study = std::make_shared<Study>();
     study->areaAdd("area1");
     study->areaAdd("area2");
     study->areaAdd("area3");
@@ -309,7 +309,7 @@ BOOST_AUTO_TEST_CASE(BC_load_legacy_range)
 
 BOOST_AUTO_TEST_CASE(BindingConstraint_clusterCount)
 {
-    auto study = std::make_unique<Data::Study>();
+    auto study = std::make_unique<Study>();
     auto area = study->areaAdd("area1");
     BindingConstraint bc;
     // Add a thermal cluster to area1 and bc

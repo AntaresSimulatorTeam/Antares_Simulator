@@ -79,7 +79,7 @@ namespace Antares
 {
 namespace Solver
 {
-static bool GenerateDeratedMode(Data::Study& study)
+static bool GenerateDeratedMode(Study& study)
 {
     logs.info() << "  :: using the `derated` mode";
     if (study.parameters.useCustomScenario)
@@ -182,7 +182,7 @@ class IntraModalConsistencyChecker
 public:
     IntraModalConsistencyChecker(const TimeSeriesType ts,
                                  AreaNumberOfTSretriever* tsCounter,
-                                 Data::Study& study):
+                                 Study& study):
         tsCounter_(tsCounter),
         study_(study)
     {
@@ -199,7 +199,7 @@ public:
 
 private:
     AreaNumberOfTSretriever* tsCounter_;
-    Data::Study& study_;
+    Study& study_;
     uint nbTimeseries_ = 0;
     string tsTitle_;
 };
@@ -229,7 +229,7 @@ bool IntraModalConsistencyChecker::checkTSconsistency()
 
 bool checkIntraModalConsistency(array<uint, timeSeriesCount>& nbTimeseriesByMode,
                                 const array<bool, timeSeriesCount>& isTSintramodal,
-                                Data::Study& study)
+                                Study& study)
 {
     // Initialization of a map associating a time-series to an object that retrieves
     // the number of time series inside an area
@@ -468,7 +468,7 @@ void storeTSnumbersForIntraModal(const array<uint32_t, timeSeriesCount>& intramo
 
 void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& isTSintramodal,
                                            uint year,
-                                           Data::Study& study)
+                                           Study& study)
 {
     study.areas.each(
       [&study, &isTSintramodal, year](Area& area)
@@ -741,7 +741,7 @@ bool TimeSeriesNumbers::CheckNumberOfColumns(const AreaList& areas)
     return performChecks(toCheck);
 }
 
-bool TimeSeriesNumbers::Generate(Data::Study& study)
+bool TimeSeriesNumbers::Generate(Study& study)
 {
     logs.info() << "Preparing time-series numbers...";
 
