@@ -91,6 +91,7 @@ static void fillModelerComponents(std::vector<std::unique_ptr<ComponentFiller>>&
 {
     if (!modelerSystem)
     {
+        logs.info() << "No modeler system found, optimization will only be done on legacy study";
         return;
     }
 
@@ -111,15 +112,13 @@ static void writeModelerSolutions(const operations_research::MPSolver* solver,
                                   IResultWriter& writer)
 {
     std::stringstream contentStream;
-    std::vector<MPVariable*> variables = solver->variables();
+    const auto& variables = solver->variables();
 
     // we want to only get modeler variables, they're added after legacy vars
-    std::span<MPVariable*> modelerVariables(variables.begin() + Probleme.NombreDeVariables,
-                                            variables.end());
-
-    for (auto v: modelerVariables)
+    auto start = variables.begin() + Probleme.NombreDeVariables;
+    for (auto v = start; v < variables.end(); v++)
     {
-        contentStream << v->name() << "\t" << v->solution_value() << std::endl;
+        contentStream << (*v)->name() << "\t" << (*v)->solution_value() << std::endl;
     }
 
     auto modelerSolutionFilename = createModelerSolutionsFilename(optPeriodStringGenerator,
