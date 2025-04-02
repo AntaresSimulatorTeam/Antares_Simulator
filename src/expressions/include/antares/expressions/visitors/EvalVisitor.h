@@ -120,7 +120,7 @@ public:
         using std::out_of_range::out_of_range;
     };
 
-    [[nodiscard]] double valueAsDouble() const
+    double valueAsDouble() const
     {
         if (!std::holds_alternative<double>(value_))
         {
