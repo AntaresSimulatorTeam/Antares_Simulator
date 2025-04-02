@@ -39,10 +39,10 @@ Antares::Modeler::Data loadAll(const std::filesystem::path& studyPath);
 
 ModelerParameters loadParameters(const std::filesystem::path& studyPath);
 
-std::vector<Study::SystemModel::Library> loadLibraries(const std::filesystem::path& studyPath);
+std::vector<ModelerStudy::SystemModel::Library> loadLibraries(const std::filesystem::path& studyPath);
 
-Study::SystemModel::System loadSystem(const std::filesystem::path& studyPath,
-                                      const std::vector<Study::SystemModel::Library>& libraries);
+ModelerStudy::SystemModel::System loadSystem(const std::filesystem::path& studyPath,
+                                      const std::vector<ModelerStudy::SystemModel::Library>& libraries);
 
 std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> loadDataSeries(
   const std::filesystem::path& studyPath);

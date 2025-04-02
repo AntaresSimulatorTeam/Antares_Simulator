@@ -624,7 +624,7 @@ public:
     */
     const bool usedByTheSolver;
 
-    Antares::Study::SystemModel::System* getModelerSystem() const
+    Antares::ModelerStudy::SystemModel::System* getModelerSystem() const
     {
         return modelerInput_.system.get();
     }

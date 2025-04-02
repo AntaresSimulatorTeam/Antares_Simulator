@@ -38,7 +38,7 @@ using namespace Antares::Optimisation::LinearProblemApi;
 class SystemLinearProblemBuilder
 {
 public:
-    explicit SystemLinearProblemBuilder(const Study::SystemModel::System* system):
+    explicit SystemLinearProblemBuilder(const ModelerStudy::SystemModel::System* system):
         system_(system)
     {
     }
@@ -67,7 +67,7 @@ public:
     }
 
 private:
-    const Study::SystemModel::System* system_;
+    const ModelerStudy::SystemModel::System* system_;
 };
 
 static void usage()
@@ -125,7 +125,7 @@ int main(int argc, const char** argv)
               return std::ranges::any_of(component.getModel()->Variables() | std::views::values,
                                          [](const auto& variable) {
                                              return variable.Type()
-                                                    != Study::SystemModel::ValueType::FLOAT;
+                                                    != ModelerStudy::SystemModel::ValueType::FLOAT;
                                          });
           });
         OrtoolsLinearProblem ortools_linear_problem(isMip, parameters.solver);

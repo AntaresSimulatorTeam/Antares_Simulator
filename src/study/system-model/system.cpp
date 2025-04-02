@@ -23,7 +23,7 @@
 
 #include <antares/study/system-model/system.h>
 
-namespace Antares::Study::SystemModel
+namespace Antares::ModelerStudy::SystemModel
 {
 System::System(const std::string_view id, std::vector<Component> components):
     id_(id)
@@ -86,4 +86,4 @@ System SystemBuilder::build() const
 {
     return System(id_, components_);
 }
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel

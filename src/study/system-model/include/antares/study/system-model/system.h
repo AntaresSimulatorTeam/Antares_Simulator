@@ -24,7 +24,7 @@
 
 #include "component.h"
 
-namespace Antares::Study::SystemModel
+namespace Antares::ModelerStudy::SystemModel
 {
 
 /**
@@ -77,4 +77,4 @@ private:
     std::vector<Component> components_;
 };
 
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel

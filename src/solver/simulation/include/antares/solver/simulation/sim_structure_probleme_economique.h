@@ -608,7 +608,7 @@ public:
     std::unique_ptr<PROBLEME_ANTARES_A_RESOUDRE> ProblemeAResoudre;
 
     // TODO: 1 study but several PROBLEME_HEBDO, may cause race conditions
-    const Study::SystemModel::System* modelerSystem;                          // for hybrid studies
+    const ModelerStudy::SystemModel::System* modelerSystem;                          // for hybrid studies
     Optimisation::LinearProblemApi::ILinearProblemData* linear_problem_data_; // for hybrid studies
 };
 #endif

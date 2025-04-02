@@ -32,8 +32,8 @@ namespace Antares::Modeler
 
 struct Data
 {
-    std::vector<Study::SystemModel::Library> libraries;
-    std::unique_ptr<Study::SystemModel::System> system;
+    std::vector<ModelerStudy::SystemModel::Library> libraries;
+    std::unique_ptr<ModelerStudy::SystemModel::System> system;
     std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> dataSeries;
 };
 
