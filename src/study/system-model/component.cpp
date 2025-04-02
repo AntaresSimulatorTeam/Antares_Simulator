@@ -66,15 +66,10 @@ Component::Component(const ComponentData& component_data)
     data_ = std::move(component_data);
 }
 
-const PortFieldNode* Component::getPortFieldNode(std::string portId, std::string fieldId) const
+const Node* Component::nodeAtPortField(std::string portId, std::string fieldId) const
 {
     PortFieldKey key(portId, fieldId);
-    Node* nodeOfPortField = getModel()->PortFieldDefinitions().at(key).Definition().RootNode();
-
-    // We know for sure that the following dynamic_cast is not nullptr: checks were
-    // made when building port filed definitions.
-    const PortFieldNode* portFieldNode = dynamic_cast<PortFieldNode*>(nodeOfPortField);
-    return portFieldNode;
+    return getModel()->PortFieldDefinitions().at(key).Definition().RootNode();
 }
 
 /**

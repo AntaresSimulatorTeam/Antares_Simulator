@@ -282,11 +282,14 @@ BOOST_FIXTURE_TEST_CASE(not_implemented_nodes__exception_thrown, CreateVisitorFi
                             "ReadLinearExpressionVisitor cannot visit ComponentParameterNodes"));
 }
 
-BOOST_FIXTURE_TEST_CASE(blabla, CreateVisitorFixture)
+BOOST_AUTO_TEST_CASE(blabla)
 {
     Registry<Node> registry;
     SystemModel::ModelBuilder modelBuilder;
     SystemModel::ComponentBuilder componentBuilder;
+
+    Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
+    EvaluationContext evaluationContext{{}, {}, data};
 
     // ============================
     // Model "generator" creation
@@ -296,10 +299,23 @@ BOOST_FIXTURE_TEST_CASE(blabla, CreateVisitorFixture)
     // ... Variable : "generation"
     Node* generation_node = registry.create<VariableNode>("generation");
     NodeRegistry genNodeRegistry(generation_node, std::move(registry));
-    SystemModel::Expression generation_expr(generation_node->name(), std::move(genNodeRegistry));
+    SystemModel::Expression generation_expr("generation", std::move(genNodeRegistry));
 
     // ... Add "generation" to model variables
-    variables.push_back({generation_node->name(), {}, {}, SystemModel::ValueType::FLOAT, {}, {}});
+    Node* ub_node = registry.create<LiteralNode>(1.);
+    NodeRegistry ubNodeRegistry(ub_node, std::move(registry));
+    SystemModel::Expression ub_expr("ub", std::move(ubNodeRegistry));
+
+    Node* lb_node = registry.create<LiteralNode>(0.);
+    NodeRegistry lbNodeRegistry(lb_node, std::move(registry));
+    SystemModel::Expression lb_expr("ub", std::move(lbNodeRegistry));
+
+    variables.push_back({"generation",
+                         std::move(lb_expr),
+                         std::move(ub_expr),
+                         SystemModel::ValueType::FLOAT,
+                         {},
+                         {}});
 
     // Model ports
     SystemModel::PortField flow("flow");
@@ -345,13 +361,32 @@ BOOST_FIXTURE_TEST_CASE(blabla, CreateVisitorFixture)
     // ======================
     // Components creation
     // ======================
-    auto generatorComponent = componentBuilder.withId("G").withModel(&generatorModel).build();
-    auto nodeComponent = componentBuilder.withId("N").withModel(&nodeModel).build();
+    auto generatorComponent = componentBuilder.withId("G")
+                                .withModel(&generatorModel)
+                                .withScenarioGroupId("scenario_group")
+                                .build();
+    auto nodeComponent = componentBuilder.withId("N")
+                           .withModel(&nodeModel)
+                           .withScenarioGroupId("scenario_group")
+                           .build();
 
-    //    Node* node = create<PortFieldSumNode>("port", "field");
-    //    auto timeDependentLinExpr = visitor.dispatch(node);
+    std::vector<SystemModel::Connection> connections;
+    SystemModel::ConnectionEntry connectionEntry_1(&generatorComponent, &injection_port, {});
+    SystemModel::ConnectionEntry connectionEntry_2(&nodeComponent, &injection_port, {});
+    SystemModel::Connection connection(connectionEntry_1, connectionEntry_2);
 
-    BOOST_CHECK(true);
+    connections.push_back(connection);
+
+    // Visitor associated to component named "N"
+    ReadLinearExpressionVisitor visitor{evaluationContext, {0, 0}, nodeComponent.Id(), connections};
+
+    auto timeDependentLinExpr = visitor.dispatch(sum_connections_node);
+    auto linear_expression = timeDependentLinExpr.GetLinearExpressions().at(0);
+    BOOST_CHECK_EQUAL(linear_expression.offset(), 0.);
+    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
+
+    FullKey fullKey(generatorComponent.Id(), "generation", 0, 0);
+    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(fullKey), 1.);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
