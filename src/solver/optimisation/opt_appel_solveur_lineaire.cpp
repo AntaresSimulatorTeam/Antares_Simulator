@@ -140,7 +140,7 @@ MPSolver* convertToMPSolver(const Optimization::PROBLEME_SIMPLEXE_NOMME& pb,
     fillModelerComponents(componentFillers, fillersCollection, problemeHebdo->modelerSystem);
 
     FillContext fillCtx(problemeHebdo->weekInTheYear * 168 + 0,
-            problemeHebdo->weekInTheYear * 168 + 167);
+                        problemeHebdo->weekInTheYear * 168 + 167);
     LinearProblemBuilder linearProblemBuilder(fillersCollection);
 
     // Note that the modeler is only called for the 1st simulation week,

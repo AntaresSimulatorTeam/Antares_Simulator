@@ -199,7 +199,8 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
               {
                   return pb.addVariable(lb.valueAsDouble(),
                                         ub.valueAsDouble(),
-                                        variable.Type() != ModelerStudy::SystemModel::ValueType::FLOAT,
+                                        variable.Type()
+                                          != ModelerStudy::SystemModel::ValueType::FLOAT,
                                         name);
               });
         }

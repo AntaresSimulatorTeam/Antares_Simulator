@@ -30,7 +30,8 @@
 namespace Antares::IO::Inputs::SystemConverter
 {
 
-ModelerStudy::SystemModel::System convert(const YmlSystem::System& ymlSystem,
-                                   const std::vector<ModelerStudy::SystemModel::Library>& libraries);
+ModelerStudy::SystemModel::System convert(
+  const YmlSystem::System& ymlSystem,
+  const std::vector<ModelerStudy::SystemModel::Library>& libraries);
 
 } // namespace Antares::IO::Inputs::SystemConverter
