@@ -184,8 +184,7 @@ static Model createModelWith2Ports2WayExchange()
       .build();
 }
 
-static Connection createConnection2Ports2WayExchange(const Component& comp1,
-                                                      const Component& comp2)
+static Connection createConnection2Ports2WayExchange(const Component& comp1, const Component& comp2)
 {
     auto& port1 = comp1.getModel()->Ports().at("port1");
     auto& port2 = comp2.getModel()->Ports().at("port2");
