@@ -127,6 +127,30 @@ static void writeModelerSolutions(const operations_research::MPSolver* solver,
     writer.addEntryFromBuffer(modelerSolutionFilename, content);
 }
 
+// Returns a non-owning pointer
+MPSolver* convertToMPSolver(const Optimization::PROBLEME_SIMPLEXE_NOMME& pb,
+                            PROBLEME_HEBDO* problemeHebdo,
+                            const OptimizationOptions& options)
+{
+    LegacyOrtoolsLinearProblem ortoolsProblem(pb.isMIP(), options.linearSolver);
+    LegacyFiller legacyOrtoolsFiller(&pb);
+    std::vector<LinearProblemFiller*> fillersCollection = {&legacyOrtoolsFiller};
+
+    std::vector<std::unique_ptr<ComponentFiller>> componentFillers;
+    fillModelerComponents(componentFillers, fillersCollection, problemeHebdo->modelerSystem);
+
+    FillContext fillCtx(problemeHebdo->weekInTheYear * 168 + 0,
+            problemeHebdo->weekInTheYear * 168 + 167);
+    LinearProblemBuilder linearProblemBuilder(fillersCollection);
+
+    // Note that the modeler is only called for the 1st simulation week,
+    // this limitation must be lifted later,
+    // when appropriate solvers (e.g with warm start) is integrated.
+    linearProblemBuilder.build(ortoolsProblem, *problemeHebdo->linear_problem_data_, fillCtx);
+
+    return ortoolsProblem.getMpSolver();
+}
+
 static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
                                           PROBLEME_HEBDO* problemeHebdo,
                                           Optimization::PROBLEME_SIMPLEXE_NOMME& Probleme,
@@ -238,23 +262,7 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
 
     if (solver == nullptr)
     {
-        auto ortoolsProblem = std::make_unique<LegacyOrtoolsLinearProblem>(Probleme.isMIP(),
-                                                                           options.ortoolsSolver);
-        auto legacyOrtoolsFiller = std::make_unique<LegacyFiller>(&Probleme);
-        std::vector<LinearProblemFiller*> fillersCollection = {legacyOrtoolsFiller.get()};
-        std::vector<std::unique_ptr<ComponentFiller>> componentFillers;
-
-        fillModelerComponents(componentFillers, fillersCollection, problemeHebdo->modelerSystem);
-
-        FillContext fillCtx(problemeHebdo->weekInTheYear * 168 + 0,
-                            problemeHebdo->weekInTheYear * 168 + 167);
-        LinearProblemBuilder linearProblemBuilder(fillersCollection);
-
-        // Note that the modeler is only called for the 1st simulation week,
-        // this limitation must be lifted later,
-        // when appropriate solvers (e.g with warm start) is integrated.
-        linearProblemBuilder.build(*ortoolsProblem, *problemeHebdo->linear_problem_data_, fillCtx);
-        solver = ortoolsProblem->getMpSolver();
+        solver = convertToMPSolver(Probleme, problemeHebdo, options);
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
@@ -409,23 +417,10 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
 
         Probleme.SetUseNamedProblems(true);
 
-        auto ortoolsProblem = std::make_unique<LegacyOrtoolsLinearProblem>(Probleme.isMIP(),
-                                                                           options.ortoolsSolver);
-        auto legacyOrtoolsFiller = std::make_unique<LegacyFiller>(&Probleme);
-        std::vector<LinearProblemFiller*> fillersCollection = {legacyOrtoolsFiller.get()};
-        std::vector<std::unique_ptr<ComponentFiller>> componentFillers;
-
-        fillModelerComponents(componentFillers, fillersCollection, problemeHebdo->modelerSystem);
-
-        FillContext fillCtx(problemeHebdo->weekInTheYear * 168 + 0,
-                            problemeHebdo->weekInTheYear * 168 + 167);
-        LinearProblemBuilder linearProblemBuilder(fillersCollection);
-
-        linearProblemBuilder.build(*ortoolsProblem, *problemeHebdo->linear_problem_data_, fillCtx);
-        auto* MPproblem = ortoolsProblem->getMpSolver();
+        std::unique_ptr<MPSolver> MPproblem(convertToMPSolver(Probleme, problemeHebdo, options));
 
         auto analyzer = makeUnfeasiblePbAnalyzer();
-        analyzer->run(MPproblem);
+        analyzer->run(MPproblem.get());
         analyzer->printReport();
 
         auto mps_writer_on_error = simplexResult.mps_writer_factory.createOnOptimizationError();

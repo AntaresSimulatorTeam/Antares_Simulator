@@ -21,9 +21,10 @@
 
 #include "antares/solver/optimisation/QuadraticProblemMatrix.h"
 #include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
-#include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/optimisation/opt_appel_solveur_quadratique.h"
 
-bool OPT_PilotageOptimisationQuadratique(PROBLEME_HEBDO* problemeHebdo)
+bool OPT_PilotageOptimisationQuadratique(const OptimizationOptions& options,
+                                         PROBLEME_HEBDO* problemeHebdo)
 {
     if (!problemeHebdo->LeProblemeADejaEteInstancie)
     {
@@ -51,8 +52,13 @@ bool OPT_PilotageOptimisationQuadratique(PROBLEME_HEBDO* problemeHebdo)
 
             OPT_InitialiserLesCoutsQuadratiques(problemeHebdo, pdtHebdo);
 
-            result = OPT_AppelDuSolveurQuadratique(problemeHebdo->ProblemeAResoudre.get(), pdtHebdo)
+            result = OPT_AppelDuSolveurQuadratique(options, problemeHebdo->ProblemeAResoudre.get())
                      && result;
+
+            if (!result)
+            {
+                logs.warning() << "Quadratic Optimisation: No solution, hour " << pdtHebdo;
+            }
         }
     }
 

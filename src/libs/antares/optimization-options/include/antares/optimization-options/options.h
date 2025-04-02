@@ -25,11 +25,20 @@
 namespace Antares::Solver::Optimization
 {
 
-struct OptimizationOptions
+class OptimizationOptions
 {
-    //! The solver name, sirius is the default
-    std::string ortoolsSolver = "sirius";
+public:
+    //! The solver used for linear problems, sirius is the default
+    std::string linearSolver = "sirius";
+    //! The solver used for quadratic problems, sirius is the default
+    std::string quadraticSolver = "sirius";
+    //! The linear solver parameters
+    std::string linearSolverParameters;
+    //! The quadratic solver parameters
+    std::string quadraticSolverParameters;
+    //! Enable solver logs
     bool solverLogs = false;
-    std::string solverParameters;
+
+    OptimizationOptions& operator<<(const OptimizationOptions& options);
 };
 } // namespace Antares::Solver::Optimization

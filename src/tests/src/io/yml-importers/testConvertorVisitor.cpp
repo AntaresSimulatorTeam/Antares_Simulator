@@ -325,3 +325,38 @@ BOOST_AUTO_TEST_CASE(TimeShiftExpressionMul)
     Visitors::CompareVisitor cmp;
     BOOST_CHECK(cmp.dispatch(expr.node, timeShiftNode));
 }
+
+BOOST_AUTO_TEST_CASE(TimeSumExpression)
+{
+    Registry<Nodes::Node> registry;
+
+    const auto [expression, div] = expected_expression(registry);
+    const auto expressionWithNumericalTimeIndex = "sum(t-89*param1 .. t+(param1/89)," + expression
+                                                  + ")";
+    auto expr = createMediumExpression().run(expressionWithNumericalTimeIndex);
+
+    auto* lit = registry.create<Nodes::LiteralNode>(89);
+    auto* neg = registry.create<Nodes::NegationNode>(lit);
+
+    auto* param = registry.create<Nodes::ParameterNode>("param1");
+    auto* from = registry.create<Nodes::MultiplicationNode>(neg, param);
+    auto* to = registry.create<Nodes::DivisionNode>(param, lit);
+    const auto* timeSumNode = registry.create<Nodes::TimeSumNode>(from, to, div);
+
+    Visitors::CompareVisitor cmp;
+    BOOST_CHECK(cmp.dispatch(expr.node, timeSumNode));
+}
+
+BOOST_AUTO_TEST_CASE(AlltimeSumExpression)
+{
+    Registry<Nodes::Node> registry;
+
+    const auto [expression, div] = expected_expression(registry);
+    const auto expressionWithNumericalTimeIndex = "sum(" + expression + ")";
+    auto expr = createMediumExpression().run(expressionWithNumericalTimeIndex);
+
+    const auto* timeSumNode = registry.create<Nodes::AllTimeSumNode>(div);
+
+    Visitors::CompareVisitor cmp;
+    BOOST_CHECK(cmp.dispatch(expr.node, timeSumNode));
+}

@@ -49,9 +49,8 @@ public:
     }
 
     template<class T, class ReadWriteT, class PredicateT>
-    I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>* get_dumper(const Matrix<T, ReadWriteT>* mtx,
-                                                                  std::string& data,
-                                                                  PredicateT& predicate);
+    std::unique_ptr<I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>>
+    get_dumper(const Matrix<T, ReadWriteT>* mtx, std::string& data, PredicateT& predicate);
 };
 
 template<class T, class ReadWriteT, class PredicateT>
@@ -63,24 +62,20 @@ public:
                            PredicateT& predicate):
         mtx_(mtx),
         buffer_(data),
-        predicate_(predicate),
-        format_(nullptr)
+        predicate_(predicate)
     {
     }
+
+    virtual ~I_mtx_to_buffer_dumper() = default;
 
     void set_print_format(bool isDecimal, uint precision);
     virtual void run() = 0;
-
-    ~I_mtx_to_buffer_dumper()
-    {
-        delete format_;
-    }
 
 protected:
     const Matrix<T, ReadWriteT>* mtx_;
     std::string& buffer_;
     PredicateT& predicate_;
-    const char* format_;
+    std::string format_;
 };
 
 template<class T, class ReadWriteT, class PredicateT>

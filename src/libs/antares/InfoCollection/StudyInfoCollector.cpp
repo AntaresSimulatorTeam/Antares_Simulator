@@ -145,8 +145,11 @@ void StudyInfoCollector::solverVersionToFileContent(FileContent& file_content)
 
 void StudyInfoCollector::ORToolsSolver(FileContent& file_content)
 {
-    std::string solverName = study_.parameters.optOptions.ortoolsSolver;
-    file_content.addItemToSection("study", "ortools solver", solverName);
+    std::string linearSolverName = study_.parameters.optOptions.linearSolver;
+    file_content.addItemToSection("study", "linear solver", linearSolverName);
+
+    std::string quadraticSolverName = study_.parameters.optOptions.quadraticSolver;
+    file_content.addItemToSection("study", "quadratic solver", quadraticSolverName);
 }
 
 // Collecting data optimization problem

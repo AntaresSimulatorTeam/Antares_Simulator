@@ -169,7 +169,7 @@ jobs:
         with:
           feature: "features/modeler-features"
 
-      
+
       - name: Run unfeasibility-related tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
         run: |
