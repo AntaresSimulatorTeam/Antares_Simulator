@@ -287,8 +287,10 @@ void StudyRuntimeInfos::initializeRandomNumberGenerators(const Parameters& param
     logs.info() << "Initializing random number generators...";
     for (uint i = 0; i != Data::seedMax; ++i)
     {
+#ifndef NDEBUG
         logs.debug() << "  random number generator: " << Data::SeedToCString((Data::SeedIndex)i)
                      << ", seed: " << parameters.seed[i];
+#endif
         random[i].reset(parameters.seed[i]);
     }
 }
