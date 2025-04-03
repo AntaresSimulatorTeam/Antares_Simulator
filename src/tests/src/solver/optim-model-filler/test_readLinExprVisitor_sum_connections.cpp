@@ -27,6 +27,7 @@
 
 #include <antares/expressions/Registry.hxx>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
+#include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h>
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/study/system-model/component.h"
@@ -63,10 +64,8 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_2_components_with_a_port_field,
     // ============================
     // Section variables
     // -----------------
-    // ... Variable : "generation"
-    Node* generation_node = registry.create<VariableNode>("generation");
-
-    // ... Define bounds for variable "generation"
+    // Variable : "generation"
+    // ... Define bounds
     Node* ub_node = registry.create<LiteralNode>(1.); // Arbitrary value
     Node* lb_node = registry.create<LiteralNode>(0.);
 
@@ -88,6 +87,7 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_2_components_with_a_port_field,
 
     // Section port-field-definitions
     // ------------------------------
+    Node* generation_node = registry.create<VariableNode>("generation");
     SystemModel::PortFieldDefinition portFieldDefinition(injection_port,
                                                          flow,
                                                          createExpression(generation_node,
@@ -138,9 +138,7 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_2_components_with_a_port_field,
     // ------------------
     SystemModel::ConnectionEntry connectionEntry_1(&generatorComponent, &injection_port, {});
     SystemModel::ConnectionEntry connectionEntry_2(&nodeComponent, &injection_port, {});
-    SystemModel::Connection connection(connectionEntry_1, connectionEntry_2);
-    std::vector<SystemModel::Connection> connections;
-    connections.push_back(connection);
+    std::vector<SystemModel::Connection> connections = {{connectionEntry_1, connectionEntry_2}};
 
     // Visitor associated to component named "N"
     ReadLinearExpressionVisitor visitor{evaluationContext, {0, 0}, nodeComponent.Id(), connections};
@@ -150,9 +148,129 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_2_components_with_a_port_field,
     auto linear_expression = timeDependentLinExpr.GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 0.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
+}
 
-    FullKey fullKey(generatorComponent.Id(), "generation", 0, 0);
-    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(fullKey), 1.);
+BOOST_FIXTURE_TEST_CASE(sum_conections_connects_3_components_with_a_port_field,
+                        test_context_builder)
+{
+    // =======================
+    // Model "generator"
+    // =======================
+    // Section variables
+    // -----------------
+    // Variable : "generation"
+    // ... Define bounds for variable "generation"
+    Node* ub_node = registry.create<LiteralNode>(1.);
+    Node* lb_node = registry.create<LiteralNode>(0.);
+
+    // ... Add variable "generation" to model's variables
+    std::vector<SystemModel::Variable> variables;
+    variables.push_back({"generation",
+                         createExpression(lb_node, "lb"),
+                         createExpression(ub_node, "ub"),
+                         SystemModel::ValueType::FLOAT,
+                         {},
+                         {}});
+
+    // Section ports
+    // -----------------
+    SystemModel::PortField flow("flow");
+    std::vector<SystemModel::PortField> portFields = {flow};
+    SystemModel::PortType portType("some-port-type", std::move(portFields));
+    SystemModel::Port injection_port("injection_port", portType);
+
+    // Section port-field-definitions
+    // ------------------------------
+    Node* generation_node = registry.create<VariableNode>("generation");
+    std::vector<SystemModel::PortFieldDefinition> generatorPortFieldDefs;
+    generatorPortFieldDefs.push_back(
+      {injection_port, flow, createExpression(generation_node, "generation")});
+
+    auto generatorModel = modelBuilder.withId("generator")
+                            .withVariables(std::move(variables))
+                            .withPorts({injection_port})
+                            .withPortFieldDefinitions(std::move(generatorPortFieldDefs))
+                            .build();
+
+    // ====================
+    // Model "node"
+    // ====================
+    // Section binding-constraints
+    // ... Building the AST associated to binding constraint
+    Node* sum_connections_node = registry.create<PortFieldSumNode>("injection_port", "flow");
+    Node* zero_node = registry.create<LiteralNode>(0.);
+    Node* equal_node = registry.create<EqualNode>(sum_connections_node, zero_node);
+    // ...  building a constraint from the previous AST
+    SystemModel::Constraint balance_constraint("balance", createExpression(equal_node, "balance"));
+
+    std::vector<SystemModel::Constraint> constraints;
+    constraints.push_back(std::move(balance_constraint));
+
+    auto nodeModel = modelBuilder.withId("node")
+                       .withPorts({injection_port})
+                       .withConstraints(std::move(constraints))
+                       .build();
+
+    // ====================
+    // Model "demand"
+    // ====================
+    // Section parameters
+    // -------------------
+    SystemModel::Parameter parameter("demand", {}, {});
+
+    // Section port-field-definitions
+    // ------------------------------
+    Node* demand_node = registry.create<ParameterNode>("demand");
+    Node* root = registry.create<NegationNode>(demand_node);
+
+    std::vector<SystemModel::PortFieldDefinition> demandPortFieldDefs;
+    demandPortFieldDefs.push_back({injection_port, flow, createExpression(root, "-demand")});
+
+    auto demandModel = modelBuilder.withId("demand")
+                         .withParameters({parameter})
+                         .withPorts({injection_port})
+                         .withPortFieldDefinitions(std::move(demandPortFieldDefs))
+                         .build();
+
+    // ======================
+    // System
+    // ======================
+    // Section components
+    // ------------------
+    auto generatorComponent = componentBuilder.withId("G")
+                                .withModel(&generatorModel)
+                                .withScenarioGroupId("scenario_group")
+                                .build();
+    auto nodeComponent = componentBuilder.withId("N")
+                           .withModel(&nodeModel)
+                           .withScenarioGroupId("scenario_group")
+                           .build();
+
+    auto demandComponent = componentBuilder.withId("D")
+                             .withModel(&demandModel)
+                             .withParameterValues(
+                               {{"demand", {"demand", ParameterType::CONSTANT, "5"}}})
+                             .withScenarioGroupId("scenario_group")
+                             .build();
+    // Section connexions
+    // ------------------
+    SystemModel::Connection connection_1({&generatorComponent, &injection_port, {}},
+                                         {&nodeComponent, &injection_port, {}});
+    SystemModel::Connection connection_2({&demandComponent, &injection_port, {}},
+                                         {&nodeComponent, &injection_port, {}});
+    std::vector<SystemModel::Connection> connections = {connection_1, connection_2};
+
+    // Visitor associated to component named "N"
+    ReadLinearExpressionVisitor visitor{evaluationContext, {0, 0}, nodeComponent.Id(), connections};
+
+    auto timeDependentLinExpr = visitor.dispatch(sum_connections_node);
+
+    auto linear_expression = timeDependentLinExpr.GetLinearExpressions().at(0);
+
+    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
+    FullKey generationKey(generatorComponent.Id(), "generation", 0, 0);
+    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(generationKey), 1.);
+    BOOST_CHECK_EQUAL(linear_expression.offset(), -5.);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
