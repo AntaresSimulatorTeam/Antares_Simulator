@@ -226,8 +226,8 @@ private:
         {
             for (unsigned int i = 0; i != Size; ++i)
             {
-                target[i] = squareRootChecked(
-                  array[i] - results.avgdata.hourly[i] * results.avgdata.hourly[i]);
+                auto v = results.avgdata.hourly[i].extract_double();
+                target[i] = squareRootChecked(array[i] - v * v);
             }
         }
         break;
@@ -235,8 +235,8 @@ private:
         {
             for (unsigned int i = 0; i != Size; ++i)
             {
-                target[i] = squareRootChecked(
-                  array[i] - results.avgdata.daily[i] * results.avgdata.daily[i]);
+                auto v = results.avgdata.hourly[i].extract_double();
+                target[i] = squareRootChecked(array[i] - v * v);
             }
         }
         break;

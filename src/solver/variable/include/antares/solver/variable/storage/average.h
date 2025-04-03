@@ -164,10 +164,10 @@ protected:
     template<template<class, int> class DecoratorT>
     Antares::Memory::Stored<double>::ConstReturnType hourlyValuesForSpatialAggregate() const
     {
-        if (Yuni::Static::Type::StrictlyEqual<DecoratorT<Empty, 0>, Average<Empty, 0>>::Yes)
-        {
-            return avgdata.hourly;
-        }
+        // if (Yuni::Static::Type::StrictlyEqual<DecoratorT<Empty, 0>, Average<Empty, 0>>::Yes)
+        // {
+        //     return avgdata.hourly;
+        // }
         return NextType::template hourlyValuesForSpatialAggregate<DecoratorT>();
     }
 
@@ -206,6 +206,52 @@ private:
             avgdata.allYears = target;
             break;
         }
+        default:
+            (void)::memcpy(report.values[report.data.columnIndex], array, sizeof(double) * Size);
+            break;
+        }
+
+        // Next column index
+        ++report.data.columnIndex;
+    }
+
+    template<uint Size, class VCardT, int PrecisionT>
+    void InternalExportValues(SurveyResults& report, const HighPrecision* array) const
+    {
+        assert(array);
+        assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
+
+        // Caption
+        report.captions[0][report.data.columnIndex] = report.variableCaption;
+        report.captions[1][report.data.columnIndex] = report.variableUnit;
+        report.captions[2][report.data.columnIndex] = (report.variableCaption == "LOLP") ? "values"
+                                                                                         : "EXP";
+        // Precision
+        report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<
+          VCardT::decimal>::Value();
+        // Non applicability
+        report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
+
+        // Values
+        switch (PrecisionT)
+        {
+        case Category::hourly:
+        {
+            for (uint h = 0; h < HOURS_PER_YEAR; h++)
+            {
+                report.values[report.data.columnIndex][h] = array[h].extract_double();
+            }
+            break;
+        }
+        case Category::daily:
+        {
+            for (uint h = 0; h < DAYS_PER_YEAR; h++)
+            {
+                report.values[report.data.columnIndex][h] = array[h].extract_double();
+            }
+            break;
+        }
+
         default:
             (void)::memcpy(report.values[report.data.columnIndex], array, sizeof(double) * Size);
             break;
