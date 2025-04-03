@@ -30,33 +30,6 @@ using namespace Yuni;
 
 namespace Antares::Solver::Variable
 {
-static void deepCopy(IntermediateValues& dest, const IntermediateValues& src)
-{
-    using Type = IntermediateValues::Type;
-    dest.pRange = src.pRange;
-    dest.calendar = src.calendar;
-    dest.year = src.year;
-    Antares::Memory::Allocate<Type>(dest.hour, HOURS_PER_YEAR);
-    ::memcpy(dest.hour, src.hour, sizeof(Type) * HOURS_PER_YEAR);
-    ::memcpy(dest.month, src.month, sizeof(Type) * MONTHS_PER_YEAR);
-    ::memcpy(dest.week, src.week, sizeof(Type) * WEEKS_PER_YEAR);
-    ::memcpy(dest.day, src.day, sizeof(Type) * DAYS_PER_YEAR);
-}
-
-IntermediateValues& IntermediateValues::operator=(const IntermediateValues& rhs)
-{
-    if (this != &rhs)
-    {
-        deepCopy(*this, rhs);
-    }
-    return *this;
-}
-
-IntermediateValues::IntermediateValues(const IntermediateValues& rhs)
-{
-    deepCopy(*this, rhs);
-}
-
 IntermediateValues::IntermediateValues():
     pRange(nullptr),
     calendar(nullptr),

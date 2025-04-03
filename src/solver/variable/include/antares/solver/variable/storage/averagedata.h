@@ -62,8 +62,7 @@ public:
     mutable double allYears; // FIX MEEE - Remove the mutable as soon as possible
     std::vector<float> yearsWeight;
     float yearsWeightSum;
-    std::map<unsigned int, IntermediateValues> pendingData;
-    std::vector<unsigned int> pPerformedYears;
+
 }; // class AverageData
 
 } // namespace AllYears
