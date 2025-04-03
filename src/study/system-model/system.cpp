@@ -41,10 +41,6 @@ System::System(const std::string_view id,
     {
         throw std::invalid_argument("A system must contain at least one component");
     }
-    // std::ranges::transform(components,
-    //                        std::inserter(components_, components_.end()),
-    //                        [this](/*Non const to prevent copy*/ Component& component)
-    //                        { return makeComponent(component); });
 }
 
 const std::vector<Connection>& System::connections() const
