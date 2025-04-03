@@ -98,7 +98,6 @@ public:
     void run(unsigned int week, unsigned int year);
 
 private:
-    const Solver::Optimization::OptimizationOptions& solverOptions_;
     void calculateCsrParameters();
 
     void buildProblemVariables();
@@ -143,6 +142,8 @@ public:
 
     PROBLEME_HEBDO* problemeHebdo_;
     PROBLEME_ANTARES_A_RESOUDRE problemeAResoudre_;
+
+    const Solver::Optimization::OptimizationOptions& solverOptions_;
 
     std::map<int, int> numberOfConstraintCsrEns;
     std::map<int, int> numberOfConstraintCsrFlowDissociation;
