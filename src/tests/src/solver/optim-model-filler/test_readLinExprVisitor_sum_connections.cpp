@@ -39,9 +39,9 @@ using namespace Antares::Expressions::Visitors;
 using namespace Antares::Study;
 using namespace Antares::Optimization;
 
-struct test_context_builder
+struct container_of_helpful_data_for_unit_tests
 {
-    SystemModel::Expression createExpression(Node* node, const std::string& value)
+    SystemModel::Expression toExpression(Node* node, const std::string& value)
     {
         NodeRegistry nodeRegistry(node, std::move(registry));
         return SystemModel::Expression(value, std::move(nodeRegistry));
@@ -57,7 +57,7 @@ struct test_context_builder
 BOOST_AUTO_TEST_SUITE(_running_the_read_linear_expression_visitor_on_a_sum_connections_)
 
 BOOST_FIXTURE_TEST_CASE(sum_conections_connects_2_components_with_a_port_field,
-                        test_context_builder)
+                        container_of_helpful_data_for_unit_tests)
 {
     // ============================
     // Model "generator" creation
@@ -79,18 +79,13 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_2_components_with_a_port_field,
     // Section port-field-definitions
     // ------------------------------
     Node* generation_node = registry.create<VariableNode>("generation");
-    SystemModel::PortFieldDefinition portFieldDefinition(injection_port,
-                                                         flow,
-                                                         createExpression(generation_node,
-                                                                          "generation"));
-
-    std::vector<SystemModel::PortFieldDefinition> portFieldDefinitions;
-    portFieldDefinitions.push_back(std::move(portFieldDefinition));
+    std::vector<SystemModel::PortFieldDefinition> portFieldDefs;
+    portFieldDefs.push_back({injection_port, flow, toExpression(generation_node, "generation")});
 
     auto generatorModel = modelBuilder.withId("generator")
                             .withVariables(std::move(variables))
                             .withPorts({injection_port})
-                            .withPortFieldDefinitions(std::move(portFieldDefinitions))
+                            .withPortFieldDefinitions(std::move(portFieldDefs))
                             .build();
 
     // ==========================
@@ -102,7 +97,7 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_2_components_with_a_port_field,
     Node* zero_node = registry.create<LiteralNode>(0.);
     Node* equal_node = registry.create<EqualNode>(sum_connections_node, zero_node);
     // ...  building a constraint from the previous AST
-    SystemModel::Constraint balance_constraint("balance", createExpression(equal_node, "balance"));
+    SystemModel::Constraint balance_constraint("balance", toExpression(equal_node, "balance"));
 
     std::vector<SystemModel::Constraint> constraints;
     constraints.push_back(std::move(balance_constraint));
@@ -127,9 +122,9 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_2_components_with_a_port_field,
                            .build();
     // Section connexions
     // ------------------
-    SystemModel::ConnectionEntry connectionEntry_1(&generatorComponent, &injection_port, {});
-    SystemModel::ConnectionEntry connectionEntry_2(&nodeComponent, &injection_port, {});
-    std::vector<SystemModel::Connection> connections = {{connectionEntry_1, connectionEntry_2}};
+    SystemModel::Connection connection({&generatorComponent, &injection_port, {}},
+                                       {&nodeComponent, &injection_port, {}});
+    std::vector<SystemModel::Connection> connections = {connection};
 
     // Visitor associated to component named "N"
     ReadLinearExpressionVisitor visitor{evaluationContext, {0, 0}, nodeComponent.Id(), connections};
@@ -142,7 +137,7 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_2_components_with_a_port_field,
 }
 
 BOOST_FIXTURE_TEST_CASE(sum_conections_connects_3_components_with_a_port_field,
-                        test_context_builder)
+                        container_of_helpful_data_for_unit_tests)
 {
     // =======================
     // Model "generator"
@@ -166,7 +161,7 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_3_components_with_a_port_field,
     Node* generation_node = registry.create<VariableNode>("generation");
     std::vector<SystemModel::PortFieldDefinition> generatorPortFieldDefs;
     generatorPortFieldDefs.push_back(
-      {injection_port, flow, createExpression(generation_node, "generation")});
+      {injection_port, flow, toExpression(generation_node, "generation")});
 
     auto generatorModel = modelBuilder.withId("generator")
                             .withVariables(std::move(variables))
@@ -183,7 +178,7 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_3_components_with_a_port_field,
     Node* zero_node = registry.create<LiteralNode>(0.);
     Node* equal_node = registry.create<EqualNode>(sum_connections_node, zero_node);
     // ...  building a constraint from the previous AST
-    SystemModel::Constraint balance_constraint("balance", createExpression(equal_node, "balance"));
+    SystemModel::Constraint balance_constraint("balance", toExpression(equal_node, "balance"));
 
     std::vector<SystemModel::Constraint> constraints;
     constraints.push_back(std::move(balance_constraint));
@@ -206,7 +201,7 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_3_components_with_a_port_field,
     Node* root = registry.create<NegationNode>(demand_node);
 
     std::vector<SystemModel::PortFieldDefinition> demandPortFieldDefs;
-    demandPortFieldDefs.push_back({injection_port, flow, createExpression(root, "-demand")});
+    demandPortFieldDefs.push_back({injection_port, flow, toExpression(root, "-demand")});
 
     auto demandModel = modelBuilder.withId("demand")
                          .withParameters({parameter})
