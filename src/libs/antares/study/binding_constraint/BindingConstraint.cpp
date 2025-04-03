@@ -137,12 +137,6 @@ const char* BindingConstraint::MathOperatorToCString(BindingConstraint::Operator
     return names[o];
 }
 
-BindingConstraint::~BindingConstraint()
-{
-    pName = "<INVALID>";
-    pID = "<INVALID>";
-}
-
 void BindingConstraint::name(const AnyString& newname)
 {
     pName = newname;
