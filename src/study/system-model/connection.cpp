@@ -61,10 +61,6 @@ Connection::Connection(const ConnectionEntry& firstEntry, const ConnectionEntry&
     firstEntry_(firstEntry),
     secondEntry_(secondEntry)
 {
-    // if (senderEntry.role() != FieldRole::Sender || receiverEntry.role() != FieldRole::Receiver)
-    // {
-    //     throw std::invalid_argument("Entries must have correct roles: Sender and Receiver");
-    // }
 }
 
 const ConnectionEntry& Connection::firstEntry() const
