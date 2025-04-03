@@ -312,11 +312,11 @@ void AddConnectionsToSystem(std::string& system, const std::vector<RawConnection
         system += "\n";
         system += connectionFirstCompoMargin + "- component1: " + firstCompo;
         system += "\n";
-        system += connectionOtherFieldsMargin + "port_1: " + firstPort;
+        system += connectionOtherFieldsMargin + "port1: " + firstPort;
         system += "\n";
         system += connectionOtherFieldsMargin + "component2: " + secondCompo;
         system += "\n";
-        system += connectionOtherFieldsMargin + "port_2: " + secondPort;
+        system += connectionOtherFieldsMargin + "port2: " + secondPort;
     }
 }
 

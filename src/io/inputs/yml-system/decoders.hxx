@@ -90,9 +90,9 @@ struct convert<Antares::IO::Inputs::YmlSystem::Connection>
             return false;
         }
         rhs.firstEntry.componentId = node["component1"].as<std::string>();
-        rhs.firstEntry.portId = node["port_1"].as<std::string>();
+        rhs.firstEntry.portId = node["port1"].as<std::string>();
         rhs.secondEntry.componentId = node["component2"].as<std::string>();
-        rhs.secondEntry.portId = node["port_2"].as<std::string>();
+        rhs.secondEntry.portId = node["port2"].as<std::string>();
         return true;
     }
 };

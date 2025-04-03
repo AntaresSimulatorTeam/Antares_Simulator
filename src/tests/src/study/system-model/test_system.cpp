@@ -176,7 +176,7 @@ static Model createModelWith2Ports2WayExchange()
                                       rice,
                                       Expression(var.id, std::move(nodeRegistryForVar)));
 
-    portFieldDefinitions.emplace_back(port2, corn, Expression(p.id, std::move(nodeRegistryForVar)));
+    portFieldDefinitions.emplace_back(port2, corn, Expression(p.id, std::move(nodeRegistryForP)));
 
     return model_builder.withId("model")
       .withPorts({port1, port2})
