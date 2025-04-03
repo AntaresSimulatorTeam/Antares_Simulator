@@ -65,18 +65,9 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_2_components_with_a_port_field,
     // Section variables
     // -----------------
     // Variable : "generation"
-    // ... Define bounds
-    Node* ub_node = registry.create<LiteralNode>(1.); // Arbitrary value
-    Node* lb_node = registry.create<LiteralNode>(0.);
-
     // ... Add variable "generation" to model's variables
     std::vector<SystemModel::Variable> variables;
-    variables.push_back({"generation",
-                         createExpression(lb_node, "lb"),
-                         createExpression(ub_node, "ub"),
-                         SystemModel::ValueType::FLOAT,
-                         {},
-                         {}});
+    variables.push_back({"generation", {}, {}, SystemModel::ValueType::FLOAT, {}, {}});
 
     // Section ports
     // -----------------
@@ -159,18 +150,9 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_3_components_with_a_port_field,
     // Section variables
     // -----------------
     // Variable : "generation"
-    // ... Define bounds for variable "generation"
-    Node* ub_node = registry.create<LiteralNode>(1.);
-    Node* lb_node = registry.create<LiteralNode>(0.);
-
     // ... Add variable "generation" to model's variables
     std::vector<SystemModel::Variable> variables;
-    variables.push_back({"generation",
-                         createExpression(lb_node, "lb"),
-                         createExpression(ub_node, "ub"),
-                         SystemModel::ValueType::FLOAT,
-                         {},
-                         {}});
+    variables.push_back({"generation", {}, {}, SystemModel::ValueType::FLOAT, {}, {}});
 
     // Section ports
     // -----------------
