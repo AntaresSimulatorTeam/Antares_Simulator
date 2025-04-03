@@ -4,9 +4,7 @@ add_boost_test(tests-solver-utils
         SRC
         test_main.cpp
         basis_status.cpp
-        # TODO: enable quadratic wrapper tests when ortools issue here is fixed:
-        # https://github.com/google/or-tools/discussions/4538
-        # test_ortools_quadratic_wrapper.cpp
+        test_ortools_quadratic_wrapper.cpp
         test_ortools_utils.cpp
         INCLUDE
         "${CMAKE_SOURCE_DIR}/solver/utils"
