@@ -129,7 +129,10 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
             throw Error::NoAreas();
         }
 
-        checkForDuplicates(study);
+        if (!checkForDuplicates(study))
+        {
+            throw Error::Duplicates();
+        }
 
         // no output ?
         study.parameters.noOutput = pSettings.noOutput;

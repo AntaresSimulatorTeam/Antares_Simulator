@@ -36,5 +36,5 @@ namespace Antares::Check
    - Binding constraints
    Return true if no duplicates, false if some duplicates
 */
-void checkForDuplicates(const Antares::Data::Study& study);
+bool checkForDuplicates(const Antares::Data::Study& study);
 } // namespace Antares::Check
