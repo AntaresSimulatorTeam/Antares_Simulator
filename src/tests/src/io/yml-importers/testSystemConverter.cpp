@@ -21,6 +21,8 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <unit_test_utils.h>
+
 #include <boost/test/unit_test.hpp>
 
 #include <antares/io/inputs/yml-system/converter.h>
@@ -382,4 +384,51 @@ BOOST_FIXTURE_TEST_CASE(SystemWithSenderAndReceiverPort, PrepareYaml)
     const auto& secondEntry = connection.secondEntry();
     BOOST_CHECK(secondEntry.component()->Id() == "D");
     BOOST_CHECK(secondEntry.port()->Id() == "injection_port");
+}
+
+BOOST_FIXTURE_TEST_CASE(TryToConnectWithUnknownCompo, PrepareYaml)
+{
+    AddConnectionsToSystem(system,
+                           {{.firstCompo = "N",
+                             .firstPort = "injection_port",
+                             .secondCompo = "DD",
+                             .secondPort = "injection_port"}});
+    YmlSystem::System systemObj = parserSystem.parse(system);
+    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), std::invalid_argument);
+}
+
+BOOST_FIXTURE_TEST_CASE(TryToConnectWithUnknownPort, PrepareYaml)
+{
+    AddConnectionsToSystem(system,
+                           {{.firstCompo = "N",
+                             .firstPort = "injection_port",
+                             .secondCompo = "D",
+                             .secondPort = "yosh!"}});
+    YmlSystem::System systemObj = parserSystem.parse(system);
+    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), std::invalid_argument);
+}
+
+BOOST_FIXTURE_TEST_CASE(DuplicatedCompo, PrepareYaml)
+{
+    const auto duplicatedCompo = R"(
+        system:
+          id: system1
+          description: basic description
+          model-libraries: [std, mylib]
+          components:
+            - id: N
+              model: std.node
+              scenario-group: group-234
+            - id: N
+              model: std.lib
+              scenario-group: group-234
+)";
+
+    YmlSystem::System systemObj = YmlSystem::Parser().parse(duplicatedCompo);
+    BOOST_CHECK_EXCEPTION(SystemConverter::convert(systemObj,
+                                                   {ModelConverter::convert(
+                                                     YmlModel::Parser().parse(libraryYaml))}),
+                          std::invalid_argument,
+                          checkMessage("System has at least two components with the same id "
+                                       "('component2'), this is not supported"));
 }

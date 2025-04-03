@@ -41,15 +41,7 @@ enum class FieldRole
  */
 inline std::ostream& operator<<(std::ostream& os, const FieldRole& role)
 {
-    switch (role)
-    {
-    case FieldRole::Sender:
-        return os << "Sender";
-    case FieldRole::Receiver:
-        return os << "Receiver";
-    default:
-        return os << "Unknown";
-    }
+    return role == FieldRole::Sender ? os << "Sender" : os << "Receiver";
 }
 
 using PortFieldsRole = std::map<PortField, FieldRole>;

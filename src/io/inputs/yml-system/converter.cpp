@@ -173,8 +173,7 @@ static void CheckPortsType(const SystemModel::Port& firstPort, const SystemModel
     }
 }
 
-static SystemModel::FieldRole ExposeFieldRole(const SystemModel::Component& component,
-                                              const std::string& portId,
+static SystemModel::FieldRole ExposeFieldRole(const std::string& portId,
                                               const std::string& field,
                                               const SystemModel::PortFieldMap& portFieldDefinitions)
 {
@@ -200,12 +199,8 @@ static std::pair<SystemModel::PortFieldsRole, SystemModel::PortFieldsRole> Resol
     const auto& secondPortDefs = secondComponent.getModel()->PortFieldDefinitions();
     for (const auto& field: firstPort.Type().Fields())
     {
-        const auto firstPortFieldRole = ExposeFieldRole(firstComponent,
-                                                        firstPort.Id(),
-                                                        field.Id(),
-                                                        firstPortDefs);
-        const auto secondPortFieldRole = ExposeFieldRole(secondComponent,
-                                                         secondPort.Id(),
+        const auto firstPortFieldRole = ExposeFieldRole(firstPort.Id(), field.Id(), firstPortDefs);
+        const auto secondPortFieldRole = ExposeFieldRole(secondPort.Id(),
                                                          field.Id(),
                                                          secondPortDefs);
 

@@ -261,18 +261,31 @@ BOOST_FIXTURE_TEST_CASE(fail_on_no_component2, SystemBuilderCreationFixture)
                           checkMessage("A system must contain at least one component"));
 }
 
-BOOST_FIXTURE_TEST_CASE(fail_on_components_with_same_id, SystemBuilderCreationFixture)
+BOOST_AUTO_TEST_CASE(PortFieldLessOperator)
 {
-    // TODO the check is done earlier in SystemModel::System convert(const YmlSystem::System&
-    // ymlSystem, const std::vector<SystemModel::Library>& libraries)
-    //  components = {createComponent("component1"),
-    //                createComponent("component2"),
-    //                createComponent("component2")};
-    //  system_builder.withId("system").withComponents({components});
-    //  BOOST_CHECK_EXCEPTION(system_builder.build(),
-    //                        std::invalid_argument,
-    //                        checkMessage("System has at least two components with the same id "
-    //                                     "('component2'), this is not supported"));
+    BOOST_CHECK(PortField("A") < PortField("B"));
+}
+
+BOOST_AUTO_TEST_CASE(PortFieldeEqualityOperator)
+{
+    BOOST_CHECK_EQUAL(PortField("A") == PortField("B"), false);
+    BOOST_CHECK(PortField("A") == PortField("A"));
+}
+
+BOOST_AUTO_TEST_CASE(PrintSenderFieldRole)
+{
+    constexpr auto role = FieldRole::Sender;
+    std::ostringstream os;
+    os << role;
+    BOOST_CHECK_EQUAL(os.str(), "Sender");
+}
+
+BOOST_AUTO_TEST_CASE(PrintReceiverFieldRole)
+{
+    constexpr auto role = FieldRole::Receiver;
+    std::ostringstream os;
+    os << role;
+    BOOST_CHECK_EQUAL(os.str(), "Receiver");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
