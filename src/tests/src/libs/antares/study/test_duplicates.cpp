@@ -75,10 +75,32 @@ BOOST_FIXTURE_TEST_CASE(single_area_two_duplicate_thermal_clusters, MessageHandl
     addCluster("cluster");
     addCluster("cluster");
 
-    BOOST_CHECK(!checkForDuplicates(*study));
-
+    checkForDuplicates(*study);
     BOOST_REQUIRE_EQUAL(errors.size(), 1);
     BOOST_CHECK(errors.contains("Duplicate thermal cluster `cluster` found in area `a`"));
+}
+
+BOOST_FIXTURE_TEST_CASE(single_area_four_duplicate_thermal_clusters, MessageHandler)
+{
+    auto study = std::make_unique<Study>();
+    const auto area = study->areaAdd("A");
+
+    auto addCluster = [&](const std::string& name)
+    {
+        auto c = std::make_shared<ThermalCluster>(area);
+        c->setName(name);
+        area->thermal.list.addToCompleteList(c);
+    };
+    addCluster("cluster");
+    addCluster("cluster");
+
+    addCluster("cluster_2");
+    addCluster("cluster_2");
+
+    checkForDuplicates(*study);
+    BOOST_REQUIRE_EQUAL(errors.size(), 2); // Stops after first error
+    BOOST_CHECK(errors.contains("Duplicate thermal cluster `cluster` found in area `a`"));
+    BOOST_CHECK(errors.contains("Duplicate thermal cluster `cluster_2` found in area `a`"));
 }
 
 BOOST_FIXTURE_TEST_CASE(single_area_two_thermal_clusters, MessageHandler)
@@ -96,8 +118,7 @@ BOOST_FIXTURE_TEST_CASE(single_area_two_thermal_clusters, MessageHandler)
     addCluster("cluster_1");
     addCluster("cluster_2");
 
-    BOOST_CHECK(checkForDuplicates(*study));
-
+    checkForDuplicates(*study);
     BOOST_REQUIRE_EQUAL(errors.size(), 0);
 }
 
@@ -117,8 +138,7 @@ BOOST_FIXTURE_TEST_CASE(two_areas_two_duplicate_thermal_clusters, MessageHandler
     addCluster("cluster");
     addCluster("cluster");
 
-    BOOST_CHECK(!checkForDuplicates(*study));
-
+    checkForDuplicates(*study);
     BOOST_REQUIRE_EQUAL(errors.size(), 1);
     BOOST_CHECK(errors.contains("Duplicate thermal cluster `cluster` found in area `b`"));
 }
@@ -136,12 +156,77 @@ BOOST_FIXTURE_TEST_CASE(two_areas_two_thermal_clusters, MessageHandler)
         areaB->thermal.list.addToCompleteList(c);
     };
 
+    checkForDuplicates(*study);
     addCluster("cluster_1");
     addCluster("cluster_2");
 
-    BOOST_CHECK(checkForDuplicates(*study));
-
     BOOST_REQUIRE_EQUAL(errors.size(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(two_areas_four_thermal_clusters, MessageHandler)
+{
+    auto study = std::make_unique<Study>();
+    const auto areaA = study->areaAdd("A");
+    const auto areaB = study->areaAdd("B");
+
+    auto addClusterA = [&](const std::string& name)
+    {
+        auto c = std::make_shared<ThermalCluster>(areaA);
+        c->setName(name);
+        areaA->thermal.list.addToCompleteList(c);
+    };
+
+    auto addClusterB = [&](const std::string& name)
+    {
+        auto c = std::make_shared<ThermalCluster>(areaB);
+        c->setName(name);
+        areaB->thermal.list.addToCompleteList(c);
+    };
+
+    addClusterA("cluster_1");
+    addClusterA("cluster_2");
+    addClusterB("cluster_1");
+    addClusterB("cluster_2");
+
+    checkForDuplicates(*study);
+    BOOST_REQUIRE_EQUAL(errors.size(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(two_areas_eight_duplicates_thermal_clusters, MessageHandler)
+{
+    auto study = std::make_unique<Study>();
+    const auto areaA = study->areaAdd("A");
+    const auto areaB = study->areaAdd("B");
+
+    auto addClusterA = [&](const std::string& name)
+    {
+        auto c = std::make_shared<ThermalCluster>(areaA);
+        c->setName(name);
+        areaA->thermal.list.addToCompleteList(c);
+    };
+
+    auto addClusterB = [&](const std::string& name)
+    {
+        auto c = std::make_shared<ThermalCluster>(areaB);
+        c->setName(name);
+        areaB->thermal.list.addToCompleteList(c);
+    };
+
+    addClusterA("cluster_1");
+    addClusterA("cluster_2");
+    addClusterB("cluster_1");
+    addClusterB("cluster_2");
+    addClusterA("cluster_1");
+    addClusterA("cluster_2");
+    addClusterB("cluster_1");
+    addClusterB("cluster_2");
+
+    checkForDuplicates(*study);
+    BOOST_REQUIRE_EQUAL(errors.size(), 4);
+    BOOST_CHECK(errors.contains("Duplicate thermal cluster `cluster_1` found in area `a`"));
+    BOOST_CHECK(errors.contains("Duplicate thermal cluster `cluster_2` found in area `a`"));
+    BOOST_CHECK(errors.contains("Duplicate thermal cluster `cluster_1` found in area `b`"));
+    BOOST_CHECK(errors.contains("Duplicate thermal cluster `cluster_2` found in area `b`"));
 }
 
 BOOST_FIXTURE_TEST_CASE(single_area_two_duplicate_renewable_clusters, MessageHandler)
@@ -158,10 +243,32 @@ BOOST_FIXTURE_TEST_CASE(single_area_two_duplicate_renewable_clusters, MessageHan
     addCluster("cluster");
     addCluster("cluster");
 
-    BOOST_CHECK(!checkForDuplicates(*study));
-
+    checkForDuplicates(*study);
     BOOST_REQUIRE_EQUAL(errors.size(), 1);
     BOOST_CHECK(errors.contains("Duplicate renewable cluster `cluster` found in area `a`"));
+}
+
+BOOST_FIXTURE_TEST_CASE(single_area_four_duplicate_renewable_clusters, MessageHandler)
+{
+    auto study = std::make_unique<Study>();
+    const auto area = study->areaAdd("A");
+
+    auto addCluster = [&](const std::string& name)
+    {
+        auto c = std::make_shared<RenewableCluster>(area);
+        c->setName(name);
+        area->renewable.list.addToCompleteList(c);
+    };
+    addCluster("cluster");
+    addCluster("cluster");
+
+    addCluster("cluster_2");
+    addCluster("cluster_2");
+
+    checkForDuplicates(*study);
+    BOOST_REQUIRE_EQUAL(errors.size(), 2);
+    BOOST_CHECK(errors.contains("Duplicate renewable cluster `cluster` found in area `a`"));
+    BOOST_CHECK(errors.contains("Duplicate renewable cluster `cluster_2` found in area `a`"));
 }
 
 BOOST_FIXTURE_TEST_CASE(single_area_two_renewable_clusters, MessageHandler)
@@ -178,8 +285,7 @@ BOOST_FIXTURE_TEST_CASE(single_area_two_renewable_clusters, MessageHandler)
     addCluster("cluster_1");
     addCluster("cluster_2");
 
-    BOOST_CHECK(checkForDuplicates(*study));
-
+    checkForDuplicates(*study);
     BOOST_REQUIRE_EQUAL(errors.size(), 0);
 }
 
@@ -197,10 +303,32 @@ BOOST_FIXTURE_TEST_CASE(single_area_two_duplicate_STS_clusters, MessageHandler)
     addCluster("cluster");
     addCluster("cluster");
 
-    BOOST_CHECK(!checkForDuplicates(*study));
-
+    checkForDuplicates(*study);
     BOOST_REQUIRE_EQUAL(errors.size(), 1);
     BOOST_CHECK(errors.contains("Duplicate short term storage `cluster` found in area `a`"));
+}
+
+BOOST_FIXTURE_TEST_CASE(single_area_four_duplicate_STS_clusters, MessageHandler)
+{
+    auto study = std::make_unique<Study>();
+    const auto area = study->areaAdd("A");
+
+    auto addCluster = [&](const std::string& name)
+    {
+        STStorageCluster cluster;
+        cluster.properties.name = name;
+        area->shortTermStorage.storagesByIndex.push_back(cluster);
+    };
+    addCluster("cluster");
+    addCluster("cluster");
+
+    addCluster("cluster_2");
+    addCluster("cluster_2");
+
+    checkForDuplicates(*study);
+    BOOST_REQUIRE_EQUAL(errors.size(), 2);
+    BOOST_CHECK(errors.contains("Duplicate short term storage `cluster` found in area `a`"));
+    BOOST_CHECK(errors.contains("Duplicate short term storage `cluster_2` found in area `a`"));
 }
 
 BOOST_FIXTURE_TEST_CASE(single_area_two_STS_clusters, MessageHandler)
@@ -217,7 +345,7 @@ BOOST_FIXTURE_TEST_CASE(single_area_two_STS_clusters, MessageHandler)
     addCluster("cluster_1");
     addCluster("cluster_2");
 
-    BOOST_CHECK(checkForDuplicates(*study));
+    checkForDuplicates(*study);
     BOOST_REQUIRE_EQUAL(errors.size(), 0);
 }
 
@@ -229,9 +357,26 @@ BOOST_FIXTURE_TEST_CASE(detection_of_duplicate_constraints, MessageHandler)
     auto bc_1 = study->bindingConstraints.add("dummy");
     auto bc_2 = study->bindingConstraints.add("dummy");
 
-    BOOST_CHECK(!checkForDuplicates(*study));
+    checkForDuplicates(*study);
     BOOST_REQUIRE_EQUAL(errors.size(), 1);
     BOOST_CHECK(errors.contains("Duplicate binding constraint `dummy` found in study"));
+}
+
+BOOST_FIXTURE_TEST_CASE(detection_of_more_duplicate_constraints, MessageHandler)
+{
+    // Creating studies
+    auto study = std::make_unique<Study>();
+
+    auto bc_1 = study->bindingConstraints.add("dummy");
+    auto bc_2 = study->bindingConstraints.add("dummy");
+
+    auto bc_3 = study->bindingConstraints.add("dummy_2");
+    auto bc_4 = study->bindingConstraints.add("dummy_2");
+
+    checkForDuplicates(*study);
+    BOOST_REQUIRE_EQUAL(errors.size(), 2);
+    BOOST_CHECK(errors.contains("Duplicate binding constraint `dummy` found in study"));
+    BOOST_CHECK(errors.contains("Duplicate binding constraint `dummy_2` found in study"));
 }
 
 BOOST_FIXTURE_TEST_CASE(detection_of_non_duplicate_constraints, MessageHandler)
@@ -242,7 +387,7 @@ BOOST_FIXTURE_TEST_CASE(detection_of_non_duplicate_constraints, MessageHandler)
     auto bc_1 = study->bindingConstraints.add("dummy_1");
     auto bc_2 = study->bindingConstraints.add("dummy_2");
 
-    BOOST_CHECK(checkForDuplicates(*study));
+    checkForDuplicates(*study);
     BOOST_REQUIRE_EQUAL(errors.size(), 0);
 }
 BOOST_AUTO_TEST_SUITE_END()

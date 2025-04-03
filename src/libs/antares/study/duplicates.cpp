@@ -40,7 +40,7 @@ std::string getName(const std::shared_ptr<T>& t)
 }
 
 template<class Container>
-bool check(const Container& c, const std::string& objectType, const std::string& context)
+void check(const Container& c, const std::string& objectType, const std::string& context)
 {
     std::set<std::string> names;
     for (const auto& it: c)
@@ -48,10 +48,8 @@ bool check(const Container& c, const std::string& objectType, const std::string&
         if (auto [name, inserted] = names.insert(getName(it)); !inserted)
         {
             logs.error() << "Duplicate " << objectType << " `" << *name << "` found in " << context;
-            return false;
         }
     }
-    return true;
 }
 
 std::string quoteArea(const std::string& name)
@@ -63,28 +61,23 @@ std::string quoteArea(const std::string& name)
 
 namespace Antares::Check
 {
-bool checkForDuplicates(const Antares::Data::Study& study)
+void checkForDuplicates(const Antares::Data::Study& study)
 {
-    bool ret = true;
-    ret = check(study.bindingConstraints, "binding constraint", "study") && ret;
+    check(study.bindingConstraints, "binding constraint", "study");
 
     for (const auto& [areaName, area]: study.areas)
     {
-        ret = check(area->thermal.list.all(), "thermal cluster", quoteArea(areaName)) && ret;
+        check(area->thermal.list.all(), "thermal cluster", quoteArea(areaName));
     }
 
     for (const auto& [areaName, area]: study.areas)
     {
-        ret = check(area->renewable.list.all(), "renewable cluster", quoteArea(areaName)) && ret;
+        check(area->renewable.list.all(), "renewable cluster", quoteArea(areaName));
     }
 
     for (const auto& [areaName, area]: study.areas)
     {
-        ret = check(area->shortTermStorage.storagesByIndex,
-                    "short term storage",
-                    quoteArea(areaName))
-              && ret;
+        check(area->shortTermStorage.storagesByIndex, "short term storage", quoteArea(areaName));
     }
-    return ret;
 }
 } // namespace Antares::Check
