@@ -6,6 +6,7 @@ add_boost_test(unit-tests-for-component-filler
         test_VariableDictionary.cpp
         test_linearExpression.cpp
         test_readLinearExpressionVisitor.cpp
+        test_readLinExprVisitor_sum_connections.cpp
         test_readLinearConstraintVisitor.cpp
         LIBS
         antares-study-system-model
