@@ -124,7 +124,7 @@ LinearStatus LinearityVisitor::visit(const Nodes::TimeSumNode* timeSumNode)
     return dispatch(timeSumNode->expression());
 }
 
-LinearStatus LinearityVisitor::visit(const Nodes::AllTimeSumNode* timeSumNode)
+LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::AllTimeSumNode* timeSumNode)
 {
     return LinearStatus::CONSTANT;
 }
