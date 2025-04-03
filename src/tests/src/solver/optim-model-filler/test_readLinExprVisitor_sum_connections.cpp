@@ -61,40 +61,37 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_2_components_with_a_port_field,
     // ============================
     // Model "generator" creation
     // ============================
-    // Model variables
-    std::vector<SystemModel::Variable> variables;
+    // Section variables
+    // -----------------
     // ... Variable : "generation"
     Node* generation_node = registry.create<VariableNode>("generation");
 
-    NodeRegistry genNodeRegistry(generation_node, std::move(registry));
-    SystemModel::Expression generation_expr = createExpression(generation_node, "generation");
-
-    // ... Add "generation" to model variables
-    Node* ub_node = registry.create<LiteralNode>(1.);
-    NodeRegistry ubNodeRegistry(ub_node, std::move(registry));
-    SystemModel::Expression ub_expr("ub", std::move(ubNodeRegistry));
-
+    // ... Define bounds for variable "generation"
+    Node* ub_node = registry.create<LiteralNode>(1.); // Arbitrary value
     Node* lb_node = registry.create<LiteralNode>(0.);
-    NodeRegistry lbNodeRegistry(lb_node, std::move(registry));
-    SystemModel::Expression lb_expr("ub", std::move(lbNodeRegistry));
 
+    // ... Add variable "generation" to model's variables
+    std::vector<SystemModel::Variable> variables;
     variables.push_back({"generation",
-                         std::move(lb_expr),
-                         std::move(ub_expr),
+                         createExpression(lb_node, "lb"),
+                         createExpression(ub_node, "ub"),
                          SystemModel::ValueType::FLOAT,
                          {},
                          {}});
 
-    // Model ports
+    // Section ports
+    // -----------------
     SystemModel::PortField flow("flow");
     std::vector<SystemModel::PortField> portFields = {flow};
     SystemModel::PortType portType("some-port-type", std::move(portFields));
     SystemModel::Port injection_port("injection_port", portType);
 
-    // Model port field definition
+    // Section port-field-definitions
+    // ------------------------------
     SystemModel::PortFieldDefinition portFieldDefinition(injection_port,
                                                          flow,
-                                                         std::move(generation_expr));
+                                                         createExpression(generation_node,
+                                                                          "generation"));
 
     std::vector<SystemModel::PortFieldDefinition> portFieldDefinitions;
     portFieldDefinitions.push_back(std::move(portFieldDefinition));
@@ -108,15 +105,13 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_2_components_with_a_port_field,
     // ==========================
     // Model "node" creation
     // ==========================
-    // Binding constraint
+    // Section binding-constraints
     // ... Building the AST associated to binding constraint
     Node* sum_connections_node = registry.create<PortFieldSumNode>("injection_port", "flow");
     Node* zero_node = registry.create<LiteralNode>(0.);
     Node* equal_node = registry.create<EqualNode>(sum_connections_node, zero_node);
     // ...  building a constraint from the previous AST
-    NodeRegistry equalNodeRegistry(equal_node, std::move(registry));
-    SystemModel::Expression balance_expr("balance", std::move(equalNodeRegistry));
-    SystemModel::Constraint balance_constraint("balance", std::move(balance_expr));
+    SystemModel::Constraint balance_constraint("balance", createExpression(equal_node, "balance"));
 
     std::vector<SystemModel::Constraint> constraints;
     constraints.push_back(std::move(balance_constraint));
@@ -127,8 +122,10 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_2_components_with_a_port_field,
                        .build();
 
     // ======================
-    // Components creation
+    // System creation
     // ======================
+    // Section components
+    // ------------------
     auto generatorComponent = componentBuilder.withId("G")
                                 .withModel(&generatorModel)
                                 .withScenarioGroupId("scenario_group")
@@ -137,12 +134,12 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_2_components_with_a_port_field,
                            .withModel(&nodeModel)
                            .withScenarioGroupId("scenario_group")
                            .build();
-
-    std::vector<SystemModel::Connection> connections;
+    // Section connexions
+    // ------------------
     SystemModel::ConnectionEntry connectionEntry_1(&generatorComponent, &injection_port, {});
     SystemModel::ConnectionEntry connectionEntry_2(&nodeComponent, &injection_port, {});
     SystemModel::Connection connection(connectionEntry_1, connectionEntry_2);
-
+    std::vector<SystemModel::Connection> connections;
     connections.push_back(connection);
 
     // Visitor associated to component named "N"
