@@ -430,5 +430,5 @@ BOOST_FIXTURE_TEST_CASE(DuplicatedCompo, PrepareYaml)
                                                      YmlModel::Parser().parse(libraryYaml))}),
                           std::invalid_argument,
                           checkMessage("System has at least two components with the same id "
-                                       "('component2'), this is not supported"));
+                                       "('N'), this is not supported"));
 }
