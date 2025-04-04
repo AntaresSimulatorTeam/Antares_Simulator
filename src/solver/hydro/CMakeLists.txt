@@ -61,12 +61,18 @@ set(SRC_MANAGEMENT
         management/finalLevelValidator.cpp
 )
 
+set(SRC_WRAPPER
+  probleme_spx_wrapper.cpp
+  include/antares/solver/hydro/probleme_spx_wrapper.h)
+
 
 add_library(antares-solver-hydro
         ${SRC_EXT_SOLVER_H2O_DAILY}
         ${SRC_EXT_SOLVER_H2O_MONTHLY}
         ${SRC_EXT_SOLVER_H2O2_DAILY}
-        ${SRC_MANAGEMENT})
+        ${SRC_MANAGEMENT}
+        ${SRC_WRAPPER}
+)
 
 add_library(Antares::hydro ALIAS antares-solver-hydro)
 
@@ -80,7 +86,6 @@ target_link_libraries(antares-solver-hydro
         sirius_solver
         Antares::date
         Antares::result_writer
-
 )
 
 target_include_directories(antares-solver-hydro

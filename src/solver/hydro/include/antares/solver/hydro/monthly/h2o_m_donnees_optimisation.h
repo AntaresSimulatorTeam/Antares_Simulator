@@ -21,13 +21,14 @@
 #ifndef __SOLVER_H2O_M_STRUCTURE_INTERNE__
 #define __SOLVER_H2O_M_STRUCTURE_INTERNE__
 
+#include <antares/solver/hydro/probleme_spx_wrapper.h>
+
 #ifdef __CPLUSPLUS
 extern "C"
 {
 #endif
 
 #include "spx_definition_arguments.h"
-#include "spx_fonctions.h"
 
 #ifdef __CPLUSPLUS
 }
@@ -127,16 +128,7 @@ struct PROBLEME_HYDRAULIQUE
     PROBLEME_LINEAIRE_PARTIE_FIXE ProblemeLineairePartieFixe{};
     PROBLEME_LINEAIRE_PARTIE_VARIABLE ProblemeLineairePartieVariable{};
 
-    struct LibererProbleme
-    {
-        void operator()(PROBLEME_SPX* p) const
-        {
-            SPX_LibererProbleme(p);
-        }
-    };
-
-    std::vector<std::unique_ptr<PROBLEME_SPX, LibererProbleme>>
-      ProblemeSpx; /* Il y en a 1 par reservoir */
+    std::vector<PROBLEME_SPX_WRAPPER> ProblemeSpx; /* Il y en a 1 par reservoir */
 
     double CoutDeLaSolution{0.};
     double CoutDeLaSolutionBruite{0.};

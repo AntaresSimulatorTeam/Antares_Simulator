@@ -27,7 +27,6 @@ extern "C"
 #endif
 
 #include "spx_definition_arguments.h"
-#include "spx_fonctions.h"
 
 #ifdef __CPLUSPLUS
 }
