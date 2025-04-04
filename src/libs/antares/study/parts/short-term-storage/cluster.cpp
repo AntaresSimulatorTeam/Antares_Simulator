@@ -64,11 +64,6 @@ bool STStorageCluster::enabled() const
     return properties.enabled;
 }
 
-std::string STStorageCluster::name() const
-{
-    return properties.name;
-}
-
 bool STStorageCluster::validate(StudyVersion studyVersion) const
 {
     if (!enabled())

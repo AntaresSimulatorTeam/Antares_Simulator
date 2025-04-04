@@ -30,7 +30,7 @@ namespace
 template<class T>
 std::string getName(const T& t)
 {
-    return t.name();
+    return t.properties.name;
 }
 
 template<class T>

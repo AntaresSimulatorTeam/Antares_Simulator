@@ -38,8 +38,6 @@ class STStorageCluster
 public:
     bool enabled() const;
 
-    std::string name() const;
-
     bool validate(StudyVersion studyVersion) const;
 
     bool loadFromSection(const IniFile::Section& section);
