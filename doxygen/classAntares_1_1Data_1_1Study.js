@@ -35,6 +35,7 @@ var classAntares_1_1Data_1_1Study =
     [ "internalLoadSets", "classAntares_1_1Data_1_1Study.html#a306bf1d3e755c73d785034b836b81468", null ],
     [ "linkDelete", "classAntares_1_1Data_1_1Study.html#a4484ea0f7cfcdda95fefcf775f1f4e96", null ],
     [ "loadFromFolder", "classAntares_1_1Data_1_1Study.html#a72d5a931861077820467c61e39136cbf", null ],
+    [ "loadModelerComponents", "classAntares_1_1Data_1_1Study.html#a78e93433f6b321a563b9942687fd4989", null ],
     [ "markAsModified", "classAntares_1_1Data_1_1Study.html#a92df811430c20bf487c90f0507a6871c", null ],
     [ "modifyAreaNameIfAlreadyTaken", "classAntares_1_1Data_1_1Study.html#a72747f33cee6845ff0ae1ab349614962", null ],
     [ "performTransformationsBeforeLaunchingSimulation", "classAntares_1_1Data_1_1Study.html#adbac27cdf3533a86aaf7e0b331b41f00", null ],

@@ -166,65 +166,66 @@ $(function(){initNavTree('study_2system-model_2include_2antares_2study_2system-m
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;component.h&quot;</span></div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">namespace </span>Antares::Study::SystemModel</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">namespace </span>Antares::ModelerStudy::SystemModel</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>{</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
 <div class="foldopen" id="foldopen00034" data-start="{" data-end="};">
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="structAntares_1_1Study_1_1SystemModel_1_1SystemData.html">   34</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structAntares_1_1Study_1_1SystemModel_1_1SystemData.html">SystemData</a></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="structAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemData.html">   34</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemData.html">SystemData</a></div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>{</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>};</div>
 </div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
 <div class="foldopen" id="foldopen00041" data-start="{" data-end="};">
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="classAntares_1_1Study_1_1SystemModel_1_1System.html">   41</a></span><span class="keyword">class </span><a class="code hl_class" href="classAntares_1_1Study_1_1SystemModel_1_1System.html">System</a></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1System.html">   41</a></span><span class="keyword">class </span><a class="code hl_class" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1System.html">System</a></div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>{</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="keyword">public</span>:</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="comment">// Only allowing one private constructor (see below) to forbid empty Systems</span></div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <a class="code hl_class" href="classAntares_1_1Study_1_1SystemModel_1_1System.html">System</a>() = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <a class="code hl_class" href="classAntares_1_1Study_1_1SystemModel_1_1System.html">System</a>(<a class="code hl_class" href="classAntares_1_1Study_1_1SystemModel_1_1System.html">System</a>&amp; other) = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keyword">const</span> std::string&amp; Id()<span class="keyword"> const</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        <span class="keywordflow">return</span> id_;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    }</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keyword">const</span> std::unordered_map&lt;std::string, Component&gt;&amp; Components()<span class="keyword"> const</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        <span class="keywordflow">return</span> components_;</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    }</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="comment">// Only SystemBuilder is allowed to build System instances</span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_class" href="classAntares_1_1Study_1_1SystemModel_1_1SystemBuilder.html">SystemBuilder</a>;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <a class="code hl_class" href="classAntares_1_1Study_1_1SystemModel_1_1System.html">System</a>(std::string_view <span class="keywordtype">id</span>, std::vector&lt;Component&gt; components);</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    std::string id_;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    std::unordered_map&lt;std::string, Component&gt; components_;</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    std::pair&lt;std::string, Component&gt; makeComponent(<a class="code hl_class" href="classAntares_1_1Study_1_1SystemModel_1_1Component.html">Component</a>&amp; component) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>};</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <a class="code hl_class" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1System.html">System</a>() = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <a class="code hl_class" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1System.html">System</a>(<a class="code hl_class" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1System.html">System</a>&amp; other) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <a class="code hl_class" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1System.html">System</a>(<a class="code hl_class" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1System.html">System</a>&amp;&amp; other) = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keyword">const</span> std::string&amp; Id()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="keyword">    </span>{</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        <span class="keywordflow">return</span> id_;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    }</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keyword">const</span> std::unordered_map&lt;std::string, Component&gt;&amp; Components()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="keyword">    </span>{</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        <span class="keywordflow">return</span> components_;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    }</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="comment">// Only SystemBuilder is allowed to build System instances</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_class" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemBuilder.html">SystemBuilder</a>;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <a class="code hl_class" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1System.html">System</a>(std::string_view <span class="keywordtype">id</span>, std::vector&lt;Component&gt; components);</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    std::string id_;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    std::unordered_map&lt;std::string, Component&gt; components_;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    std::pair&lt;std::string, Component&gt; makeComponent(<a class="code hl_class" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Component</a>&amp; component) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>};</div>
 </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
-<div class="foldopen" id="foldopen00067" data-start="{" data-end="};">
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno"><a class="line" href="classAntares_1_1Study_1_1SystemModel_1_1SystemBuilder.html">   67</a></span><span class="keyword">class </span><a class="code hl_class" href="classAntares_1_1Study_1_1SystemModel_1_1SystemBuilder.html">SystemBuilder</a></div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>{</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <a class="code hl_class" href="classAntares_1_1Study_1_1SystemModel_1_1SystemBuilder.html">SystemBuilder</a>&amp; <a class="code hl_function" href="classAntares_1_1Study_1_1SystemModel_1_1SystemBuilder.html#ab9121d77c90fcc7e497bee71c8a0db5b">withId</a>(std::string_view <span class="keywordtype">id</span>);</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <a class="code hl_class" href="classAntares_1_1Study_1_1SystemModel_1_1SystemBuilder.html">SystemBuilder</a>&amp; <a class="code hl_function" href="classAntares_1_1Study_1_1SystemModel_1_1SystemBuilder.html#a7c29f1d1006defe28237963ba379e73d">withComponents</a>(std::vector&lt;Component&gt;&amp; components);</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <a class="code hl_class" href="classAntares_1_1Study_1_1SystemModel_1_1System.html">System</a> <a class="code hl_function" href="classAntares_1_1Study_1_1SystemModel_1_1SystemBuilder.html#a0e71dfb5ce1c2921c83829d8254a51e8">build</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    std::string id_;</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    std::vector&lt;Component&gt; components_;</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>};</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
+<div class="foldopen" id="foldopen00068" data-start="{" data-end="};">
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno"><a class="line" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemBuilder.html">   68</a></span><span class="keyword">class </span><a class="code hl_class" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemBuilder.html">SystemBuilder</a></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>{</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <a class="code hl_class" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemBuilder.html">SystemBuilder</a>&amp; <a class="code hl_function" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemBuilder.html#a4194f3f48f378d238ea7cc7e3085b078">withId</a>(std::string_view <span class="keywordtype">id</span>);</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <a class="code hl_class" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemBuilder.html">SystemBuilder</a>&amp; <a class="code hl_function" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemBuilder.html#ad23e2cc54a36b53170ee97f49a8e2374">withComponents</a>(std::vector&lt;Component&gt;&amp; components);</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <a class="code hl_class" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1System.html">System</a> <a class="code hl_function" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemBuilder.html#a1437de2c0afdae6dc2ed5acacbc5f154">build</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    std::string id_;</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    std::vector&lt;Component&gt; components_;</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>};</div>
 </div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>} <span class="comment">// namespace Antares::Study::SystemModel</span></div>
-<div class="ttc" id="aclassAntares_1_1Study_1_1SystemModel_1_1Component_html"><div class="ttname"><a href="classAntares_1_1Study_1_1SystemModel_1_1Component.html">Antares::Study::SystemModel::Component</a></div><div class="ttdef"><b>Definition</b> component.h:57</div></div>
-<div class="ttc" id="aclassAntares_1_1Study_1_1SystemModel_1_1SystemBuilder_html"><div class="ttname"><a href="classAntares_1_1Study_1_1SystemModel_1_1SystemBuilder.html">Antares::Study::SystemModel::SystemBuilder</a></div><div class="ttdef"><b>Definition</b> system.h:68</div></div>
-<div class="ttc" id="aclassAntares_1_1Study_1_1SystemModel_1_1SystemBuilder_html_a0e71dfb5ce1c2921c83829d8254a51e8"><div class="ttname"><a href="classAntares_1_1Study_1_1SystemModel_1_1SystemBuilder.html#a0e71dfb5ce1c2921c83829d8254a51e8">Antares::Study::SystemModel::SystemBuilder::build</a></div><div class="ttdeci">System build() const</div><div class="ttdoc">Builds and returns the System object.</div><div class="ttdef"><b>Definition</b> system.cpp:85</div></div>
-<div class="ttc" id="aclassAntares_1_1Study_1_1SystemModel_1_1SystemBuilder_html_a7c29f1d1006defe28237963ba379e73d"><div class="ttname"><a href="classAntares_1_1Study_1_1SystemModel_1_1SystemBuilder.html#a7c29f1d1006defe28237963ba379e73d">Antares::Study::SystemModel::SystemBuilder::withComponents</a></div><div class="ttdeci">SystemBuilder &amp; withComponents(std::vector&lt; Component &gt; &amp;components)</div><div class="ttdoc">Sets the components of the system.</div><div class="ttdef"><b>Definition</b> system.cpp:74</div></div>
-<div class="ttc" id="aclassAntares_1_1Study_1_1SystemModel_1_1SystemBuilder_html_ab9121d77c90fcc7e497bee71c8a0db5b"><div class="ttname"><a href="classAntares_1_1Study_1_1SystemModel_1_1SystemBuilder.html#ab9121d77c90fcc7e497bee71c8a0db5b">Antares::Study::SystemModel::SystemBuilder::withId</a></div><div class="ttdeci">SystemBuilder &amp; withId(std::string_view id)</div><div class="ttdoc">Sets the ID of the system.</div><div class="ttdef"><b>Definition</b> system.cpp:62</div></div>
-<div class="ttc" id="aclassAntares_1_1Study_1_1SystemModel_1_1System_html"><div class="ttname"><a href="classAntares_1_1Study_1_1SystemModel_1_1System.html">Antares::Study::SystemModel::System</a></div><div class="ttdef"><b>Definition</b> system.h:42</div></div>
-<div class="ttc" id="astructAntares_1_1Study_1_1SystemModel_1_1SystemData_html"><div class="ttname"><a href="structAntares_1_1Study_1_1SystemModel_1_1SystemData.html">Antares::Study::SystemModel::SystemData</a></div><div class="ttdef"><b>Definition</b> system.h:35</div></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>} <span class="comment">// namespace Antares::ModelerStudy::SystemModel</span></div>
+<div class="ttc" id="aclassAntares_1_1ModelerStudy_1_1SystemModel_1_1Component_html"><div class="ttname"><a href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a></div><div class="ttdef"><b>Definition</b> component.h:57</div></div>
+<div class="ttc" id="aclassAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemBuilder_html"><div class="ttname"><a href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemBuilder.html">Antares::ModelerStudy::SystemModel::SystemBuilder</a></div><div class="ttdef"><b>Definition</b> system.h:69</div></div>
+<div class="ttc" id="aclassAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemBuilder_html_a1437de2c0afdae6dc2ed5acacbc5f154"><div class="ttname"><a href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemBuilder.html#a1437de2c0afdae6dc2ed5acacbc5f154">Antares::ModelerStudy::SystemModel::SystemBuilder::build</a></div><div class="ttdeci">System build() const</div><div class="ttdoc">Builds and returns the System object.</div><div class="ttdef"><b>Definition</b> system.cpp:85</div></div>
+<div class="ttc" id="aclassAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemBuilder_html_a4194f3f48f378d238ea7cc7e3085b078"><div class="ttname"><a href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemBuilder.html#a4194f3f48f378d238ea7cc7e3085b078">Antares::ModelerStudy::SystemModel::SystemBuilder::withId</a></div><div class="ttdeci">SystemBuilder &amp; withId(std::string_view id)</div><div class="ttdoc">Sets the ID of the system.</div><div class="ttdef"><b>Definition</b> system.cpp:62</div></div>
+<div class="ttc" id="aclassAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemBuilder_html_ad23e2cc54a36b53170ee97f49a8e2374"><div class="ttname"><a href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemBuilder.html#ad23e2cc54a36b53170ee97f49a8e2374">Antares::ModelerStudy::SystemModel::SystemBuilder::withComponents</a></div><div class="ttdeci">SystemBuilder &amp; withComponents(std::vector&lt; Component &gt; &amp;components)</div><div class="ttdoc">Sets the components of the system.</div><div class="ttdef"><b>Definition</b> system.cpp:74</div></div>
+<div class="ttc" id="aclassAntares_1_1ModelerStudy_1_1SystemModel_1_1System_html"><div class="ttname"><a href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1System.html">Antares::ModelerStudy::SystemModel::System</a></div><div class="ttdef"><b>Definition</b> system.h:42</div></div>
+<div class="ttc" id="astructAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemData_html"><div class="ttname"><a href="structAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemData.html">Antares::ModelerStudy::SystemModel::SystemData</a></div><div class="ttdef"><b>Definition</b> system.h:35</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

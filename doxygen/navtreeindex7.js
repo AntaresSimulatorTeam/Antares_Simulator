@@ -88,7 +88,7 @@ var NAVTREEINDEX7 =
 "classAntares_1_1Concurrency_1_1FutureSet.html#a1911ee50a617f632e1cdaccb6181083e":[9,0,0,3,1,0],
 "classAntares_1_1Concurrency_1_1FutureSet.html#a8cf68f6c1a66e76acaec9ce67cb20e5f":[9,0,0,3,1,1],
 "classAntares_1_1Cycle.html":[7,0,0,9],
-"classAntares_1_1Cycle.html":[9,0,0,28],
+"classAntares_1_1Cycle.html":[9,0,0,29],
 "classAntares_1_1Data_1_1AdequacyPatch_1_1CurtailmentSharing.html":[9,0,0,4,0,1],
 "classAntares_1_1Data_1_1AdequacyPatch_1_1CurtailmentSharing.html#a22af9ddf555d64580b310e8879fe30d7":[9,0,0,4,0,1,2],
 "classAntares_1_1Data_1_1AdequacyPatch_1_1CurtailmentSharing.html#a74bfb141b03961aeebbcd14201a33734":[9,0,0,4,0,1,3],

@@ -302,13 +302,13 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>importLogsToOutputFol
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a812bf983d4571be6cf61e824c8efa319" id="r_a812bf983d4571be6cf61e824c8efa319"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a812bf983d4571be6cf61e824c8efa319">TitleFromStudyFolder</a> (const AnyString &amp;folder, YString &amp;out, bool warnings=false)</td></tr>
+<tr class="memitem:a812bf983d4571be6cf61e824c8efa319" id="r_a812bf983d4571be6cf61e824c8efa319"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a812bf983d4571be6cf61e824c8efa319">TitleFromStudyFolder</a> (const AnyString &amp;<a class="el" href="#a04980e46140e38a240208669bb06dc3e">folder</a>, YString &amp;out, bool warnings=false)</td></tr>
 <tr class="memdesc:a812bf983d4571be6cf61e824c8efa319"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extract the title of a study.  <br /></td></tr>
 <tr class="separator:a812bf983d4571be6cf61e824c8efa319"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad43b7a846cf79eb0919a9684c0bfff5d" id="r_ad43b7a846cf79eb0919a9684c0bfff5d"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad43b7a846cf79eb0919a9684c0bfff5d">IsRootStudy</a> (const AnyString &amp;folder)</td></tr>
+<tr class="memitem:ad43b7a846cf79eb0919a9684c0bfff5d" id="r_ad43b7a846cf79eb0919a9684c0bfff5d"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad43b7a846cf79eb0919a9684c0bfff5d">IsRootStudy</a> (const AnyString &amp;<a class="el" href="#a04980e46140e38a240208669bb06dc3e">folder</a>)</td></tr>
 <tr class="memdesc:ad43b7a846cf79eb0919a9684c0bfff5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get if a folder if a study.  <br /></td></tr>
 <tr class="separator:ad43b7a846cf79eb0919a9684c0bfff5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1926ec8343adc8aab7d1890761005e79" id="r_a1926ec8343adc8aab7d1890761005e79"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1926ec8343adc8aab7d1890761005e79">IsRootStudy</a> (const AnyString &amp;folder, YString &amp;buffer)</td></tr>
+<tr class="memitem:a1926ec8343adc8aab7d1890761005e79" id="r_a1926ec8343adc8aab7d1890761005e79"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1926ec8343adc8aab7d1890761005e79">IsRootStudy</a> (const AnyString &amp;<a class="el" href="#a04980e46140e38a240208669bb06dc3e">folder</a>, YString &amp;<a class="el" href="#a5d8484658149415accffb74b279f891d">buffer</a>)</td></tr>
 <tr class="memdesc:a1926ec8343adc8aab7d1890761005e79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get if a folder if a study.  <br /></td></tr>
 <tr class="separator:a1926ec8343adc8aab7d1890761005e79"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa2e635b70b2b0d3c3cdcc983d6ee769e" id="r_aa2e635b70b2b0d3c3cdcc983d6ee769e"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa2e635b70b2b0d3c3cdcc983d6ee769e">IsInsideStudyFolder</a> (const AnyString &amp;path, YString &amp;location, YString &amp;title)</td></tr>
@@ -383,13 +383,6 @@ YString&#160;</td><td class="memItemRight" valign="bottom"><b>bufferLoadingTS</b
 std::shared_ptr&lt; Yuni::Job::QueueService &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>pQueueService</b></td></tr>
 <tr class="memdesc:ac649f129a5739fc31fb6e02b2c04a160"><td class="mdescLeft">&#160;</td><td class="mdescRight">The queue service that runs every set of parallel years. <br /></td></tr>
 <tr class="separator:ac649f129a5739fc31fb6e02b2c04a160"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr><td colspan="2"><div class="groupHeader">TS Generators</div></td></tr>
-<tr class="memitem:ac281be788c497684c273acbdfc6c20ba" id="r_ac281be788c497684c273acbdfc6c20ba"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac281be788c497684c273acbdfc6c20ba">cacheTSGenerator</a> [timeSeriesCount]</td></tr>
-<tr class="memdesc:ac281be788c497684c273acbdfc6c20ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Time-series generators used by the solver.  <br /></td></tr>
-<tr class="separator:ac281be788c497684c273acbdfc6c20ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af416e6cf886489dce4c7c1f8d6129a55" id="r_af416e6cf886489dce4c7c1f8d6129a55"><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af416e6cf886489dce4c7c1f8d6129a55">usedByTheSolver</a></td></tr>
-<tr class="memdesc:af416e6cf886489dce4c7c1f8d6129a55"><td class="mdescLeft">&#160;</td><td class="mdescRight">A non-zero value when the study will be used by the solver.  <br /></td></tr>
-<tr class="separator:af416e6cf886489dce4c7c1f8d6129a55"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_classAntares_1_1Data_1_1LayerData"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_attribs_classAntares_1_1Data_1_1LayerData')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classAntares_1_1Data_1_1LayerData.html">Antares::Data::LayerData</a></td></tr>
 <tr class="memitem:a192ed76c6be385639a7d727c3f652e55 inherit pub_attribs_classAntares_1_1Data_1_1LayerData" id="r_a192ed76c6be385639a7d727c3f652e55"><td class="memItemLeft" align="right" valign="top">
 std::map&lt; size_t, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>layers</b></td></tr>
@@ -410,7 +403,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>internalLoadFromFolde
 <tr class="memdesc:a2ec61ad09aa5e4dced3e798891032529"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load a study from a folder. <br /></td></tr>
 <tr class="separator:a2ec61ad09aa5e4dced3e798891032529"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aff52c2f1da54a05fda786a8c9b1b2851" id="r_aff52c2f1da54a05fda786a8c9b1b2851"><td class="memItemLeft" align="right" valign="top"><a id="aff52c2f1da54a05fda786a8c9b1b2851" name="aff52c2f1da54a05fda786a8c9b1b2851"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>internalLoadHeader</b> (const std::filesystem::path &amp;folder)</td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>internalLoadHeader</b> (const std::filesystem::path &amp;<a class="el" href="#a04980e46140e38a240208669bb06dc3e">folder</a>)</td></tr>
 <tr class="memdesc:aff52c2f1da54a05fda786a8c9b1b2851"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load the study header. <br /></td></tr>
 <tr class="separator:aff52c2f1da54a05fda786a8c9b1b2851"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a061814be61c2518c66f6c8944b1318a6" id="r_a061814be61c2518c66f6c8944b1318a6"><td class="memItemLeft" align="right" valign="top"><a id="a061814be61c2518c66f6c8944b1318a6" name="a061814be61c2518c66f6c8944b1318a6"></a>
@@ -427,14 +420,13 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>internalLoadSets</b> 
 <tr class="memitem:a6f7a763f57125f9ff76233a1efacbccf" id="r_a6f7a763f57125f9ff76233a1efacbccf"><td class="memItemLeft" align="right" valign="top"><a id="a6f7a763f57125f9ff76233a1efacbccf" name="a6f7a763f57125f9ff76233a1efacbccf"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>internalLoadIni</b> (const std::filesystem::path &amp;path, const <a class="el" href="classAntares_1_1Data_1_1StudyLoadOptions.html">StudyLoadOptions</a> &amp;options)</td></tr>
 <tr class="separator:a6f7a763f57125f9ff76233a1efacbccf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78e93433f6b321a563b9942687fd4989" id="r_a78e93433f6b321a563b9942687fd4989"><td class="memItemLeft" align="right" valign="top"><a id="a78e93433f6b321a563b9942687fd4989" name="a78e93433f6b321a563b9942687fd4989"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>loadModelerComponents</b> ()</td></tr>
+<tr class="memdesc:a78e93433f6b321a563b9942687fd4989"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load extra modeler components for hybrid studies. <br /></td></tr>
+<tr class="separator:a78e93433f6b321a563b9942687fd4989"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6269048ec4bd69e5ea9c6c1d64da2d3" id="r_ac6269048ec4bd69e5ea9c6c1d64da2d3"><td class="memItemLeft" align="right" valign="top"><a id="ac6269048ec4bd69e5ea9c6c1d64da2d3" name="ac6269048ec4bd69e5ea9c6c1d64da2d3"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>parameterFiller</b> (const <a class="el" href="classAntares_1_1Data_1_1StudyLoadOptions.html">StudyLoadOptions</a> &amp;options)</td></tr>
 <tr class="separator:ac6269048ec4bd69e5ea9c6c1d64da2d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr><td colspan="2"><div class="groupHeader">Misc</div></td></tr>
-<tr class="memitem:ae01e3f757080cc0d6fcaedd7b0dc059f" id="r_ae01e3f757080cc0d6fcaedd7b0dc059f"><td class="memItemLeft" align="right" valign="top"><a id="ae01e3f757080cc0d6fcaedd7b0dc059f" name="ae01e3f757080cc0d6fcaedd7b0dc059f"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>reduceMemoryUsage</b> ()</td></tr>
-<tr class="memdesc:ae01e3f757080cc0d6fcaedd7b0dc059f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release all unnecessary buffers. <br /></td></tr>
-<tr class="separator:ae01e3f757080cc0d6fcaedd7b0dc059f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classAntares_1_1Data_1_1LayerData"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_methods_classAntares_1_1Data_1_1LayerData')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classAntares_1_1Data_1_1LayerData.html">Antares::Data::LayerData</a></td></tr>
 <tr class="memitem:a288c899298c7cea88bec6a6b21327354 inherit pro_methods_classAntares_1_1Data_1_1LayerData" id="r_a288c899298c7cea88bec6a6b21327354"><td class="memItemLeft" align="right" valign="top">
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>saveLayers</b> (const AnyString &amp;filename)</td></tr>
@@ -563,6 +555,26 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>scenarioRulesCreate</
 void&#160;</td><td class="memItemRight" valign="bottom"><b>scenarioRulesDestroy</b> ()</td></tr>
 <tr class="memdesc:ad64c59f44620ab2636902f0fcc373a7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release the scenario builder. <br /></td></tr>
 <tr class="separator:ad64c59f44620ab2636902f0fcc373a7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader">TS Generators</h2></td></tr>
+<tr class="memitem:ac281be788c497684c273acbdfc6c20ba" id="r_ac281be788c497684c273acbdfc6c20ba"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac281be788c497684c273acbdfc6c20ba">cacheTSGenerator</a> [timeSeriesCount]</td></tr>
+<tr class="memdesc:ac281be788c497684c273acbdfc6c20ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Time-series generators used by the solver.  <br /></td></tr>
+<tr class="separator:ac281be788c497684c273acbdfc6c20ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af416e6cf886489dce4c7c1f8d6129a55" id="r_af416e6cf886489dce4c7c1f8d6129a55"><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af416e6cf886489dce4c7c1f8d6129a55">usedByTheSolver</a></td></tr>
+<tr class="memdesc:af416e6cf886489dce4c7c1f8d6129a55"><td class="mdescLeft">&#160;</td><td class="mdescRight">A non-zero value when the study will be used by the solver.  <br /></td></tr>
+<tr class="separator:af416e6cf886489dce4c7c1f8d6129a55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0bd48115f993fd8e923d84aa21899aa7" id="r_a0bd48115f993fd8e923d84aa21899aa7"><td class="memItemLeft" align="right" valign="top"><a id="a0bd48115f993fd8e923d84aa21899aa7" name="a0bd48115f993fd8e923d84aa21899aa7"></a>
+<a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1System.html">Antares::ModelerStudy::SystemModel::System</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getModelerSystem</b> () const</td></tr>
+<tr class="separator:a0bd48115f993fd8e923d84aa21899aa7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf57f5c75d6db292dc43542a3f38be66" id="r_aaf57f5c75d6db292dc43542a3f38be66"><td class="memItemLeft" align="right" valign="top"><a id="aaf57f5c75d6db292dc43542a3f38be66" name="aaf57f5c75d6db292dc43542a3f38be66"></a>
+<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">Optimisation::LinearProblemApi::ILinearProblemData</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getModelerData</b> () const</td></tr>
+<tr class="separator:aaf57f5c75d6db292dc43542a3f38be66"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader">Misc</h2></td></tr>
+<tr class="memitem:ae01e3f757080cc0d6fcaedd7b0dc059f" id="r_ae01e3f757080cc0d6fcaedd7b0dc059f"><td class="memItemLeft" align="right" valign="top"><a id="ae01e3f757080cc0d6fcaedd7b0dc059f" name="ae01e3f757080cc0d6fcaedd7b0dc059f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>reduceMemoryUsage</b> ()</td></tr>
+<tr class="memdesc:ae01e3f757080cc0d6fcaedd7b0dc059f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release all unnecessary buffers. <br /></td></tr>
+<tr class="separator:ae01e3f757080cc0d6fcaedd7b0dc059f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ac7be7a2a3105799743468871378ad4fd" name="ac7be7a2a3105799743468871378ad4fd"></a>

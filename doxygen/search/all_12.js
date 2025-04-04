@@ -366,12 +366,12 @@ var searchData=
   ['surveyresultsdata_363',['SurveyResultsData',['../classAntares_1_1Solver_1_1Variable_1_1Private_1_1SurveyResultsData.html',1,'Antares::Solver::Variable::Private']]],
   ['swap_364',['swap',['../classAntares_1_1Matrix.html#a2b44e31fbab3f1dfc65197887e3e6a0c',1,'Antares::Matrix']]],
   ['synthesis_365',['synthesis',['../classAntares_1_1Data_1_1Parameters.html#a58d06d92abdda6053d20b5627309ad62',1,'Antares::Data::Parameters']]],
-  ['system_366',['System',['../structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html',1,'Antares::IO::Inputs::YmlSystem::System'],['../classAntares_1_1Study_1_1SystemModel_1_1System.html',1,'Antares::Study::SystemModel::System']]],
+  ['system_366',['System',['../structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html',1,'Antares::IO::Inputs::YmlSystem::System'],['../classAntares_1_1ModelerStudy_1_1SystemModel_1_1System.html',1,'Antares::ModelerStudy::SystemModel::System']]],
   ['system_367',['Entry points to the automatic testing script system',['../md_src_2tests_2run-study-tests_2readme.html#autotoc_md17',1,'']]],
   ['system_20work_368',['How does the automatic testing script system work ?',['../md_src_2tests_2run-study-tests_2readme.html',1,'']]],
-  ['systembuilder_369',['SystemBuilder',['../classAntares_1_1Study_1_1SystemModel_1_1SystemBuilder.html',1,'Antares::Study::SystemModel']]],
+  ['systembuilder_369',['SystemBuilder',['../classAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemBuilder.html',1,'Antares::ModelerStudy::SystemModel']]],
   ['systembuildercreationfixture_370',['SystemBuilderCreationFixture',['../structSystemBuilderCreationFixture.html',1,'']]],
-  ['systemdata_371',['SystemData',['../structAntares_1_1Study_1_1SystemModel_1_1SystemData.html',1,'Antares::Study::SystemModel']]],
+  ['systemdata_371',['SystemData',['../structAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemData.html',1,'Antares::ModelerStudy::SystemModel']]],
   ['systemlinearproblembuilder_372',['SystemLinearProblemBuilder',['../classSystemLinearProblemBuilder.html',1,'']]],
   ['systemmemorylogger_373',['SystemMemoryLogger',['../classSystemMemoryLogger.html',1,'']]]
 ];
