@@ -44,9 +44,7 @@ static const Area* FindMappedAreaName(const AreaName& id,
 
 HydroAllocation::HydroAllocation()
 {
-#ifndef NDEBUG
     pMustUseValuesFromAreaID = false;
-#endif
 }
 
 HydroAllocation::~HydroAllocation()
@@ -150,18 +148,14 @@ void HydroAllocation::prepareForSolver(const AreaList& list)
     }
 
     pValues.clear();
-#ifndef NDEBUG
     pMustUseValuesFromAreaID = true;
-#endif
 }
 
 void HydroAllocation::clear()
 {
     pValues.clear();
     pValuesFromAreaID.clear();
-#ifndef NDEBUG
     pMustUseValuesFromAreaID = false;
-#endif
 }
 
 bool HydroAllocation::loadFromFile(const AreaName& referencearea, const fs::path& filename)
