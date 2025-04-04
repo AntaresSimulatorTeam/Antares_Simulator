@@ -23,9 +23,9 @@
 #include <functional>
 #include <map>
 #include <ranges>
-#include <stdexcept>
 
 #include <antares/solver/optim-model-filler/TimeDependentLinearExpression.h>
+#include "antares/expressions/RotateIndex.h"
 
 namespace Antares::Optimization
 {
@@ -125,71 +125,11 @@ size_t TimeDependentLinearExpression::getSize() const
     return linearExpressions_.size();
 }
 
-/**
- * @brief Computes a rotated index within a bounded range of timesteps.
- *
- * This function calculates the new index for a given key after applying a
- * cyclic shift within a specified range of timesteps. The shift is normalized
- * to ensure it falls within the bounds of the range size, and the resulting
- * index is computed using modulo arithmetic to handle wrap-around cases.
- *
- * @param key The original index or key for which the rotated index is computed.
- * @param shift The amount by which the index should be rotated. This value
- *              can be positive or negative.
- * @param fillContext A context object providing information about the range
- *                    of timesteps, including the total number of timesteps
- *                    and the first timestep.
- *
- * @return The new index after applying the rotation.
- *
- * @example
- * // Example usage with visual representation:
- * Optimisation::LinearProblemApi::FillContext fillContext;
- * fillContext.NumberOfTimestep = 5; // Range size is 5
- * fillContext.firstTimeStep = 10;   // First timestep is 10
- * // Timesteps range: {10, 11, 12, 13, 14}
- *
- * unsigned key = 12;
- * int shift = 2;
- * int newIndex = rotatedIndex(key, shift, fillContext);
- *
- * // Step-by-step calculation:
- * // 1. Normalize shift: shift = (2 % 5 + 5) % 5 = 2
- * // 2. Compute relative position of key: key - firstTimeStep = 12 - 10 = 2
- * // 3. Apply shift: (2 + 2) % 5 = 4
- * // 4. Convert back to original range: 10 + 4 = 14
- * // newIndex will be 14
- *
- * @example
- * // Example with negative shift and visual representation:
- * Optimisation::LinearProblemApi::FillContext fillContext;
- * fillContext.NumberOfTimestep = 5; // Range size is 5
- * fillContext.firstTimeStep = 10;   // First timestep is 10
- * // Timesteps range: {10, 11, 12, 13, 14}
- *
- * unsigned key = 12;
- * int shift = -2;
- * int newIndex = rotatedIndex(key, shift, fillContext);
- *
- * // Step-by-step calculation:
- * // 1. Normalize shift: shift = (-2 % 5 + 5) % 5 = 3
- * // 2. Compute relative position of key: key - firstTimeStep = 12 - 10 = 2
- * // 3. Apply shift: (2 + 3) % 5 = 0
- * // 4. Convert back to original range: 10 + 0 = 10
- * // newIndex will be 10
- */
-int rotatedIndex(unsigned key,
-                 int shift,
-                 const Optimisation::LinearProblemApi::FillContext& fillContext)
+TimeDependentLinearExpression& TimeDependentLinearExpression::operator+=(
+  const TimeDependentLinearExpression& other)
 {
-    unsigned rangeSize = fillContext.getNumberOfTimestep();
-
-    // Normalize shift within bounds (to prevent negative indexing)
-    shift = (shift % static_cast<int>(rangeSize) + rangeSize) % static_cast<int>(rangeSize);
-
-    // Compute which key's value should be assigned to `key`
-    return fillContext.getFirstTimeStep()
-           + (key - fillContext.getFirstTimeStep() + shift) % rangeSize;
+    linearExpressions_ = add_maps(linearExpressions_, other.GetLinearExpressions());
+    return *this;
 }
 
 TimeDependentLinearExpression TimeDependentLinearExpression::shiftLinearExpressions(
@@ -198,12 +138,6 @@ TimeDependentLinearExpression TimeDependentLinearExpression::shiftLinearExpressi
     const Optimisation::LinearProblemApi::FillContext fillContext{
       linearExpressions_.begin()->first,
       linearExpressions_.rbegin()->first};
-    unsigned int number_of_timestep = fillContext.getNumberOfTimestep();
-
-    if (number_of_timestep == 0)
-    {
-        return TimeDependentLinearExpression(fillContext);
-    }
 
     LinearExpressionMap linearExpressions;
     for (const auto& timeStep: linearExpressions_ | std::views::keys)
@@ -214,12 +148,41 @@ TimeDependentLinearExpression TimeDependentLinearExpression::shiftLinearExpressi
     return TimeDependentLinearExpression(std::move(linearExpressions));
 }
 
-TimeDependentLinearExpression TimeDependentLinearExpression::operator[](int index) const
+TimeDependentLinearExpression TimeDependentLinearExpression::operator[](int timeStep) const
 {
     const Optimisation::LinearProblemApi::FillContext fillContext{
       linearExpressions_.begin()->first,
       linearExpressions_.rbegin()->first};
-    return TimeDependentLinearExpression(fillContext, linearExpressions_.at(index));
+    return TimeDependentLinearExpression(fillContext, linearExpressions_.at(timeStep));
+}
+
+TimeDependentLinearExpression TimeDependentLinearExpression::timeSumLinearExpressions(int from,
+                                                                                      int to) const
+{
+    const Optimisation::LinearProblemApi::FillContext fillContext{
+      linearExpressions_.begin()->first,
+      linearExpressions_.rbegin()->first};
+    TimeDependentLinearExpression ret(fillContext);
+
+    for (auto shift = from; shift <= to; ++shift)
+    {
+        ret += shiftLinearExpressions(shift);
+    }
+    return ret;
+}
+
+TimeDependentLinearExpression TimeDependentLinearExpression::allTimeSumLinearExpressions() const
+{
+    const Optimisation::LinearProblemApi::FillContext fillContext{
+      linearExpressions_.begin()->first,
+      linearExpressions_.rbegin()->first};
+    TimeDependentLinearExpression ret(fillContext);
+    for (auto timeStep = fillContext.getFirstTimeStep(); timeStep <= fillContext.getLastTimeStep();
+         ++timeStep)
+    {
+        ret += operator[](timeStep);
+    }
+    return ret;
 }
 
 } // namespace Antares::Optimization

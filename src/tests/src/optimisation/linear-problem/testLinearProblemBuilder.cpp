@@ -69,7 +69,7 @@ BOOST_FIXTURE_TEST_CASE(one_var_filler___the_var_is_built, Fixture)
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 1);
     BOOST_CHECK_EQUAL(pb->constraintCount(), 0);
-    auto* var = pb->getVariable("var-by-OneVarFiller");
+    auto* var = pb->lookupVariable("var-by-OneVarFiller");
     BOOST_CHECK(var);
     BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(var), 1);
 }
@@ -84,7 +84,7 @@ BOOST_FIXTURE_TEST_CASE(one_constraint_filler___the_constraint_is_built, Fixture
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 0);
     BOOST_CHECK_EQUAL(pb->constraintCount(), 1);
-    BOOST_CHECK(pb->getConstraint("constraint-by-OneConstraintFiller"));
+    BOOST_CHECK(pb->lookupConstraint("constraint-by-OneConstraintFiller"));
 }
 
 BOOST_FIXTURE_TEST_CASE(two_fillers_given_to_builder___all_is_built, Fixture)
@@ -98,7 +98,7 @@ BOOST_FIXTURE_TEST_CASE(two_fillers_given_to_builder___all_is_built, Fixture)
     lpBuilder.build(*pb, LP_Data, ctx);
 
     BOOST_CHECK_EQUAL(pb->constraintCount(), 1);
-    BOOST_CHECK(pb->getConstraint("constraint-by-OneConstraintFiller"));
+    BOOST_CHECK(pb->lookupConstraint("constraint-by-OneConstraintFiller"));
     BOOST_CHECK_EQUAL(pb->variableCount(), 1);
 }
 
@@ -131,10 +131,10 @@ BOOST_FIXTURE_TEST_CASE(FillerWithContext, Fixture)
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 10); // 5 timestep * 2 scenario
 
-    auto var1 = pb->getVariable("variable-ts0-sc0");
+    auto var1 = pb->lookupVariable("variable-ts0-sc0");
     BOOST_CHECK_EQUAL(var1->getLb(), varFiller->timeseries[0][0]);
 
-    auto var2 = pb->getVariable("variable-ts3-sc2");
+    auto var2 = pb->lookupVariable("variable-ts3-sc2");
     BOOST_CHECK_EQUAL(var2->getLb(), varFiller->timeseries[3][2]);
 }
 

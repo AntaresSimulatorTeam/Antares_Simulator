@@ -28,10 +28,14 @@ def init_simu(context):
 
 def build_antares_solver_command(context):
     command = [context.config.userdata["antares-solver"], "-i", str(context.study_path)]
-    solver = "sirius"
-    if "solver" in context.config.userdata:
-        solver = context.config.userdata["solver"]
-    command.append('--solver=' + solver)
+    linearSolver = "sirius"
+    quadraticSolver = "sirius"
+    if "linear-solver" in context.config.userdata:
+        linearSolver = context.config.userdata["linear-solver"]
+    command.append('--linear-solver=' + linearSolver)
+    if "quadratic-solver" in context.config.userdata:
+        quadraticSolver = context.config.userdata["quadratic-solver"]
+    command.append('--quadratic-solver=' + quadraticSolver)
 
     if context.named_mps_problems:
         command.append('--named-mps-problems')

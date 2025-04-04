@@ -136,6 +136,8 @@ private:
     void visit(const Nodes::ComponentParameterNode* node, std::ostream& os) override;
     void visit(const Nodes::TimeShiftNode* node, std::ostream& os) override;
     void visit(const Nodes::TimeIndexNode* node, std::ostream& os) override;
+    void visit(const Nodes::TimeSumNode* node, std::ostream& os) override;
+    void visit(const Nodes::AllTimeSumNode* node, std::ostream& os) override;
 
     void computeNumberNodesPerType();
     void makeLegend(std::ostream& os);
@@ -177,25 +179,10 @@ private:
      * @param box_style The style to be applied to the node's box.
      * @param os The output stream to which the node representation is written.
      */
-    void processBinaryOperation(const Nodes::BinaryNode* node,
-                                const std::string& label,
-                                const BoxStyle& box_style,
-                                std::ostream& os);
-    /**
-     * @brief Processes a unary operation node.
-     *
-     * Handles the specific case of unary operation nodes by emitting the appropriate
-     * DOT representation.
-     *
-     * @param node The unary operation node to be processed.
-     * @param label The label to be used for the node.
-     * @param box_style The style to be applied to the node's box.
-     * @param os The output stream to which the node representation is written.
-     */
-    void processUnaryOperation(const Nodes::UnaryNode* node,
-                               const std::string& label,
-                               const BoxStyle& box_style,
-                               std::ostream& os);
+    void processParentNode(const Nodes::ParentNode* node,
+                           const std::string& label,
+                           const BoxStyle& box_style,
+                           std::ostream& os);
 
     /**
      * @brief A map of nodes to their unique IDs.

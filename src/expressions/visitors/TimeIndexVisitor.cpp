@@ -116,7 +116,18 @@ TimeIndex TimeIndexVisitor::visit(const Nodes::TimeShiftNode* timeShiftNode)
     return dispatch(timeShiftNode->left());
 }
 
-TimeIndex TimeIndexVisitor::visit(const Nodes::TimeIndexNode* timeIndexNode)
+TimeIndex TimeIndexVisitor::visit([[maybe_unused]] const Nodes::TimeIndexNode* timeIndexNode)
+{
+    return TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
+}
+
+TimeIndex TimeIndexVisitor::visit(const Nodes::TimeSumNode* timeSumNode)
+{
+    // TODO  case from = to
+    return dispatch(timeSumNode->expression());
+}
+
+TimeIndex TimeIndexVisitor::visit([[maybe_unused]] const Nodes::AllTimeSumNode* timeSumNode)
 {
     return TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
 }

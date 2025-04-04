@@ -169,7 +169,7 @@ jobs:
         with:
           feature: "features/modeler-features"
 
-      
+
       - name: Run unfeasibility-related tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
         run: |
@@ -324,6 +324,11 @@ jobs:
           batch-name: long-tests-3
           os: ${{ env.os }}
 
+
+      - name: Run cucumber on hybrid studies
+        uses: ./.github/workflows/cucumber-tests
+        with:
+          feature: "features/solver-features/hybrid_studies.feature"
 
       - name: Barrier
         if: ${{ !success() }}

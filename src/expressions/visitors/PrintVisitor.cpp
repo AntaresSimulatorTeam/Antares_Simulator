@@ -139,6 +139,17 @@ std::string PrintVisitor::visit(const Nodes::TimeIndexNode* node)
     return dispatch(node->left()) + "[ " + dispatch(node->right()) + " ]";
 }
 
+std::string PrintVisitor::visit(const Nodes::TimeSumNode* node)
+{
+    return "sum(t" + trimAndFormat(dispatch(node->from())) + " .. t"
+           + trimAndFormat(dispatch(node->to())) + ", " + dispatch(node->expression()) + ")";
+}
+
+std::string PrintVisitor::visit(const Nodes::AllTimeSumNode* node)
+{
+    return "sum(" + dispatch(node->child()) + ")";
+}
+
 std::string PrintVisitor::name() const
 {
     return "PrintVisitor";

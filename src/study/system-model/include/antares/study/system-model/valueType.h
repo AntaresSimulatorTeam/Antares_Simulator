@@ -22,7 +22,7 @@
 #include <iostream>
 #include <string>
 
-namespace Antares::Study::SystemModel
+namespace Antares::ModelerStudy::SystemModel
 {
 
 /// Type of value held by variables or parameters
@@ -33,4 +33,4 @@ enum class ValueType
     BOOL
 };
 
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel
