@@ -30,7 +30,7 @@ using namespace Antares::Solver;
 using namespace Antares::Solver::Simulation;
 using namespace Antares::Data::ScenarioBuilder;
 
-void initializeStudy(Study* study);
+void initializeStudy(Data::Study* study);
 void configureLinkCapacities(AreaLink* link);
 
 class TimeSeriesConfigurer
@@ -68,7 +68,7 @@ private:
 };
 
 std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& clusterName);
-void addScratchpadToEachArea(Study& study);
+void addScratchpadToEachArea(Data::Study& study);
 
 // -------------------------------
 // Simulation results retrieval
@@ -158,7 +158,7 @@ typename Variable::Storage<VCard>::ResultsType* OutputRetriever::retrieveResults
 class ScenarioBuilderRule
 {
 public:
-    ScenarioBuilderRule(Study& study);
+    ScenarioBuilderRule(Data::Study& study);
 
     loadTSNumberData& load()
     {
@@ -186,7 +186,7 @@ private:
 class SimulationHandler
 {
 public:
-    SimulationHandler(Study& study):
+    SimulationHandler(Data::Study& study):
         study_(study)
     {
     }
@@ -208,7 +208,7 @@ private:
     std::shared_ptr<ISimulation<Economy>> simulation_;
     Benchmarking::DurationCollector durationCollector_;
     Settings settings_;
-    Study& study_;
+    Data::Study& study_;
     NullResultWriter resultWriter_;
     NullSimulationObserver observer_;
 };
@@ -228,7 +228,7 @@ struct StudyBuilder
     void giveWeightToYear(float weight, unsigned int year);
 
     // Data members
-    std::unique_ptr<Study> study;
+    std::unique_ptr<Data::Study> study;
     std::shared_ptr<SimulationHandler> simulation;
 };
 

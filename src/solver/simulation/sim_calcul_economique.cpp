@@ -85,7 +85,7 @@ static void importShortTermStorages(
     }
 }
 
-void SIM_InitialisationProblemeHebdo(Data::Study& study,
+void SIM_InitialisationProblemeHebdo(Study& study,
                                      PROBLEME_HEBDO& problem,
                                      unsigned int NombreDePasDeTemps,
                                      uint numspace)
@@ -93,6 +93,10 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     int NombrePaliers;
 
     auto& parameters = study.parameters;
+
+    // For hybrid studies
+    problem.modelerSystem = study.getModelerSystem();
+    problem.linear_problem_data_ = study.getModelerData();
 
     problem.Expansion = (parameters.mode == Data::SimulationMode::Expansion);
     problem.firstWeekOfSimulation = false;

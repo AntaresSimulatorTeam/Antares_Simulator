@@ -26,7 +26,7 @@
 
 #include <antares/study/system-model/model.h>
 
-namespace Antares::Study::SystemModel
+namespace Antares::ModelerStudy::SystemModel
 {
 
 /**
@@ -170,4 +170,4 @@ ModelBuilder& ModelBuilder::withPortFieldDefinitions(
     return *this;
 }
 
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel

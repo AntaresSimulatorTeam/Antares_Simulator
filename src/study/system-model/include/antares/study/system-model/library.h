@@ -26,7 +26,7 @@
 #include "model.h"
 #include "portType.h"
 
-namespace Antares::Study::SystemModel
+namespace Antares::ModelerStudy::SystemModel
 {
 
 /// A library is a collection of models
@@ -86,4 +86,4 @@ private:
     Library library_;
 };
 
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel

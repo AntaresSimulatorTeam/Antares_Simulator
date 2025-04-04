@@ -23,7 +23,7 @@
 
 #include <antares/study/system-model/component.h>
 
-namespace Antares::Study::SystemModel
+namespace Antares::ModelerStudy::SystemModel
 {
 
 static void checkComponentDataValidity(const ComponentData& data)
@@ -126,4 +126,4 @@ Component ComponentBuilder::build()
     return component;
 }
 
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel

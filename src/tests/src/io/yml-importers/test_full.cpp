@@ -35,7 +35,7 @@
 
 using namespace std::string_literals;
 using namespace Antares::IO::Inputs;
-using namespace Antares::Study;
+using namespace Antares::ModelerStudy;
 
 void checkParameter(const SystemModel::Parameter& parameter,
                     const std::string& name,

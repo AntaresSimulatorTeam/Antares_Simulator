@@ -20,7 +20,7 @@
 */
 #pragma once
 
-namespace Antares::Study::SystemModel
+namespace Antares::ModelerStudy::SystemModel
 {
 /** Using enum class to avoid primitive obsession. Mainly prevent headhaches when reading
  * Parameter("Param", ValueType::FLOAT, false, true)
@@ -54,4 +54,4 @@ inline ScenarioDependent fromBool(bool in)
     return in ? ScenarioDependent::YES : ScenarioDependent::NO;
 }
 
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel

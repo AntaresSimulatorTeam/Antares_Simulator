@@ -32,7 +32,7 @@
 #include "enum_operators.h"
 
 using namespace Antares::IO::Inputs;
-using namespace Antares::Study;
+using namespace Antares::ModelerStudy;
 
 struct Fixture
 {

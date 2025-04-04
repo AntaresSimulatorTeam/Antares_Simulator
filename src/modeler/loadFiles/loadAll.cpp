@@ -19,19 +19,29 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#pragma once
+#include <antares/logs/logs.h>
+#include "antares/solver/modeler/loadFiles/data.h"
+#include "antares/solver/modeler/loadFiles/loadFiles.h"
 
-#include <antares/study/system-model/library.h>
-#include <antares/study/system-model/system.h>
-
-#include "../../../../../../yml-model/include/antares/io/inputs/yml-model/parser.h"
-#include "parser.h"
-
-namespace Antares::IO::Inputs::SystemConverter
+namespace Antares::Solver::LoadFiles
 {
 
-ModelerStudy::SystemModel::System convert(
-  const YmlSystem::System& ymlSystem,
-  const std::vector<ModelerStudy::SystemModel::Library>& libraries);
+Modeler::Data loadAll(const std::filesystem::path& studyPath)
+{
+    logs.info() << "Loading modeler files...";
+    Modeler::Data data;
 
-} // namespace Antares::IO::Inputs::SystemConverter
+    data.libraries = loadLibraries(studyPath);
+    logs.info() << "Libraries loaded";
+
+    data.system = std::make_unique<Antares::ModelerStudy::SystemModel::System>(
+      loadSystem(studyPath, data.libraries));
+    logs.info() << "System loaded";
+
+    data.dataSeries = loadDataSeries(studyPath);
+    logs.info() << "Timeseries loaded";
+
+    return data;
+}
+
+} // namespace Antares::Solver::LoadFiles

@@ -25,7 +25,7 @@
 
 #include "portField.h"
 
-namespace Antares::Study::SystemModel
+namespace Antares::ModelerStudy::SystemModel
 {
 
 class PortType
@@ -53,4 +53,4 @@ private:
     std::vector<PortField> fields_;
 };
 
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel

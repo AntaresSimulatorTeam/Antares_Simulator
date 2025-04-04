@@ -39,7 +39,7 @@ void LpsFromAntares::addWeeklyData(WeeklyProblemId id, const WeeklyDataFromAntar
 }
 
 const WeeklyDataFromAntares& LpsFromAntares::weeklyData(WeeklyProblemId id) const
-{
+
     auto it = weeklyProblems.find(id);
     if (it == weeklyProblems.end())
     {

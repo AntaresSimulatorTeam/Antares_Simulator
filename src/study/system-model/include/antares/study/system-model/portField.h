@@ -22,7 +22,7 @@
 
 #include <string>
 
-namespace Antares::Study::SystemModel
+namespace Antares::ModelerStudy::SystemModel
 {
 
 class PortField
@@ -42,4 +42,4 @@ private:
     std::string id_;
 };
 
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel

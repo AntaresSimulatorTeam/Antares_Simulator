@@ -33,8 +33,9 @@ namespace Antares::Solver::LoadFiles
 {
 using namespace IO::Inputs;
 
-Study::SystemModel::System loadSystem(const fs::path& studyPath,
-                                      const std::vector<Study::SystemModel::Library>& libraries)
+ModelerStudy::SystemModel::System loadSystem(
+  const fs::path& studyPath,
+  const std::vector<ModelerStudy::SystemModel::Library>& libraries)
 {
     std::string filename = "system.yml";
     std::string systemStr;

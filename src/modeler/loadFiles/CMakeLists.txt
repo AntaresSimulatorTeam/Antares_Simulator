@@ -1,4 +1,5 @@
 set(SOURCES
+        loadAll.cpp
         readSystem.cpp
         readLibraries.cpp
         readParameters.cpp
@@ -6,6 +7,7 @@ set(SOURCES
         handleErrors.cpp
 
         include/antares/solver/modeler/loadFiles/loadFiles.h
+        include/antares/solver/modeler/loadFiles/data.h
 )
 
 # Create the library
@@ -23,6 +25,7 @@ target_link_libraries(load-modeler-files
         PUBLIC
         Antares::antares-study-system-model
         Antares::linear-problem-api
+        Antares::linear-problem-data-impl
         PRIVATE
         Antares::io
         Antares::yml-system
@@ -30,7 +33,6 @@ target_link_libraries(load-modeler-files
         Antares::model-converter
         Antares::modeler-parameters
         Antares::data-series-csv-importer
-        Antares::linear-problem-data-impl
 )
 
 install(DIRECTORY include/antares
