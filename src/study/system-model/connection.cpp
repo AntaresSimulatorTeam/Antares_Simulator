@@ -72,4 +72,4 @@ const ConnectionEntry& Connection::secondEntry() const
 {
     return secondEntry_;
 }
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel
