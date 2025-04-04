@@ -62,6 +62,11 @@ struct DuplicateFixture: public Yuni::IEventObserver<DuplicateFixture, Yuni::Pol
     std::unique_ptr<Study> study = std::make_unique<Study>();
     Data::Area* areaA = study->areaAdd("A");
     Data::Area* areaB = study->areaAdd("B");
+
+    void addBindingConstraint(const std::string& name)
+    {
+        study->bindingConstraints.add(name);
+    }
 };
 
 void addThermalCluster(Data::Area* area, const std::string& name)
@@ -240,8 +245,8 @@ BOOST_FIXTURE_TEST_CASE(single_area_two_STS_clusters, DuplicateFixture)
 
 BOOST_FIXTURE_TEST_CASE(detection_of_duplicate_constraints, DuplicateFixture)
 {
-    study->bindingConstraints.add("dummy");
-    study->bindingConstraints.add("dummy");
+    addBindingConstraint("dummy");
+    addBindingConstraint("dummy");
 
     BOOST_CHECK(!checkForDuplicates(*study));
     BOOST_REQUIRE_EQUAL(errors.size(), 1);
@@ -250,11 +255,11 @@ BOOST_FIXTURE_TEST_CASE(detection_of_duplicate_constraints, DuplicateFixture)
 
 BOOST_FIXTURE_TEST_CASE(detection_of_more_duplicate_constraints, DuplicateFixture)
 {
-    study->bindingConstraints.add("dummy");
-    study->bindingConstraints.add("dummy");
+    addBindingConstraint("dummy");
+    addBindingConstraint("dummy");
 
-    study->bindingConstraints.add("dummy_2");
-    study->bindingConstraints.add("dummy_2");
+    addBindingConstraint("dummy_2");
+    addBindingConstraint("dummy_2");
 
     BOOST_CHECK(!checkForDuplicates(*study));
     BOOST_REQUIRE_EQUAL(errors.size(), 2);
@@ -264,12 +269,32 @@ BOOST_FIXTURE_TEST_CASE(detection_of_more_duplicate_constraints, DuplicateFixtur
 
 BOOST_FIXTURE_TEST_CASE(detection_of_non_duplicate_constraints, DuplicateFixture)
 {
-    study->bindingConstraints.add("dummy_1");
-    study->bindingConstraints.add("dummy_2");
+    addBindingConstraint("dummy_1");
+    addBindingConstraint("dummy_2");
 
     BOOST_CHECK(checkForDuplicates(*study));
     BOOST_REQUIRE(errors.empty());
 }
+
+BOOST_FIXTURE_TEST_CASE(many_duplicates, DuplicateFixture)
+{
+    for (int idx = 0; idx < 10; idx++)
+    {
+        addRenewableCluster(areaA, "renewable");
+        addThermalCluster(areaB, "thermal");
+        addShortTermStorage(areaA, "storage");
+        addBindingConstraint("binding_constraint");
+    }
+    BOOST_CHECK(!checkForDuplicates(*study));
+    // Check logs
+    BOOST_CHECK_EQUAL(errors.size(), 4);
+    BOOST_CHECK(errors.contains("Duplicate renewable cluster `renewable` found in area `a`"));
+    BOOST_CHECK(errors.contains("Duplicate thermal cluster `thermal` found in area `b`"));
+    BOOST_CHECK(errors.contains("Duplicate short term storage `storage` found in area `a`"));
+    BOOST_CHECK(
+      errors.contains("Duplicate binding constraint `binding_constraint` found in study"));
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(loading_error)
