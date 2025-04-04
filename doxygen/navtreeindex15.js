@@ -1,5 +1,6 @@
 var NAVTREEINDEX15 =
 {
+"classAntares_1_1Private_1_1Dispatcher_1_1JobSimpleDispatcher.html#a9e9344001c197ae53fd83cac8f47f840":[9,0,0,17,1,5,0],
 "classAntares_1_1Private_1_1OutputViewerData_1_1AreaLinkRenderer.html":[9,0,0,17,2,0],
 "classAntares_1_1Private_1_1OutputViewerData_1_1AreaLinkRenderer.html#a1c9cea039b3bd20bcbd4f3ad82e8289d":[9,0,0,17,2,0,14],
 "classAntares_1_1Private_1_1OutputViewerData_1_1AreaLinkRenderer.html#a1cb8548931d81a1958a50abd696774be":[9,0,0,17,2,0,10],
@@ -248,6 +249,5 @@ var NAVTREEINDEX15 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a3267d7c16bb35d1f456540d4d3910332":[9,0,0,18,5,4,5,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a9255c2251ec89a84fd409dab98ab13f6":[9,0,0,18,5,4,5,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#af8e3653448a186640c2663f094b7cfb7":[9,0,0,18,5,4,5,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html":[9,0,0,18,5,4,7],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html#a181d93dab11d270f44d088a0fb9e9794":[9,0,0,18,5,4,7,2]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html":[9,0,0,18,5,4,7]
 };

@@ -162,7 +162,7 @@ var NAVTREEINDEX0 =
 "TimeSumNode_8h_source.html":[10,0,0,3,1,0,0,1,23],
 "TwoVarsTwoConstraintsFiller_8h_source.html":[10,0,0,10,1,2,0,0,3],
 "UnaryNode_8h_source.html":[10,0,0,3,1,0,0,1,24],
-"UnfeasibleProblemBehavior_8hpp_source.html":[10,0,0,5,0,23,0,0,0,28],
+"UnfeasibleProblemBehavior_8hpp_source.html":[10,0,0,5,0,23,0,0,0,29],
 "UnfeasibleProblemError_8hpp_source.html":[10,0,0,5,0,7,0,0,0,3],
 "VariableDictionary_8h_source.html":[10,0,0,8,6,0,0,0,0,7],
 "VariableManagement_8h_source.html":[10,0,0,8,7,2,0],

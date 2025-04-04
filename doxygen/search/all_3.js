@@ -133,5 +133,7 @@ var searchData=
   ['dump_130',['dump',['../classAntares_1_1Action_1_1IAction.html#aa3ad7e4b772563d4f31ac598b6ff7bc3',1,'Antares::Action::IAction']]],
   ['dumptologs_131',['DumpToLogs',['../namespaceLocalPolicy.html#a5437ae904734d642b435bd37a8f38e03',1,'LocalPolicy']]],
   ['dumptostring_132',['DumpToString',['../namespaceLocalPolicy.html#a948cec0d64b3dccb1fb46a257c25ce24',1,'LocalPolicy']]],
-  ['durationcollector_133',['DurationCollector',['../classBenchmarking_1_1DurationCollector.html',1,'Benchmarking']]]
+  ['duplicatefixture_133',['DuplicateFixture',['../structDuplicateFixture.html',1,'']]],
+  ['duplicates_134',['Duplicates',['../classAntares_1_1Error_1_1Duplicates.html',1,'Antares::Error']]],
+  ['durationcollector_135',['DurationCollector',['../classBenchmarking_1_1DurationCollector.html',1,'Benchmarking']]]
 ];

@@ -43,5 +43,7 @@ var searchData=
   ['dsm_40',['DSM',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1DSM.html',1,'Antares::Component::Datagrid::Renderer']]],
   ['dtgmargincsr_41',['DtgMarginCsr',['../classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DtgMarginCsr.html',1,'Antares::Solver::Variable::Economy']]],
   ['dtgnettingaftercsrcmd_42',['DTGnettingAfterCSRcmd',['../classAntares_1_1Solver_1_1Simulation_1_1DTGnettingAfterCSRcmd.html',1,'Antares::Solver::Simulation']]],
-  ['durationcollector_43',['DurationCollector',['../classBenchmarking_1_1DurationCollector.html',1,'Benchmarking']]]
+  ['duplicatefixture_43',['DuplicateFixture',['../structDuplicateFixture.html',1,'']]],
+  ['duplicates_44',['Duplicates',['../classAntares_1_1Error_1_1Duplicates.html',1,'Antares::Error']]],
+  ['durationcollector_45',['DurationCollector',['../classBenchmarking_1_1DurationCollector.html',1,'Benchmarking']]]
 ];

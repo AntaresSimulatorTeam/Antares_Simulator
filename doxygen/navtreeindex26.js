@@ -1,5 +1,7 @@
 var NAVTREEINDEX26 =
 {
+"search-png_8hxx_source.html":[10,0,0,12,1,0,3,6],
+"searchtoken_8h_source.html":[10,0,0,12,1,0,3,7],
 "select-output_8h_source.html":[10,0,0,12,2,2,9,5,0],
 "select-variables_8h_source.html":[10,0,0,12,2,1,1,1,1,27],
 "selectionoperation_8h_source.html":[10,0,0,12,2,1,1,1,10],
@@ -247,7 +249,5 @@ var NAVTREEINDEX26 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Balance_1_1Statistics.html":[9,0,0,18,5,4,1,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost_1_1Statistics.html":[9,0,0,18,5,4,2,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeAbs_1_1Statistics.html":[9,0,0,18,5,4,4,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFee_1_1Statistics.html":[9,0,0,18,5,4,3,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability_1_1Statistics.html":[9,0,0,18,5,4,5,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin_1_1Statistics.html":[9,0,0,18,5,4,7,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFee_1_1Statistics.html":[9,0,0,18,5,4,3,0]
 };

@@ -1,5 +1,7 @@
 var NAVTREEINDEX27 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability_1_1Statistics.html":[9,0,0,18,5,4,5,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin_1_1Statistics.html":[9,0,0,18,5,4,7,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGeneration_1_1Statistics.html":[9,0,0,18,5,4,6,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1DomesticUnsuppliedEnergy_1_1Statistics.html":[9,0,0,18,5,4,8,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1DtgMarginCsr_1_1Statistics.html":[9,0,0,18,5,4,9,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX27 =
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData_1_1Data.html":[9,0,0,18,5,6,0,5,0],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Or.html":[9,0,0,18,5,6,0,6],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html":[9,0,0,18,5,6,0,7],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html#a64c7438e90a5a42aeda83c50f18216fb":[9,0,0,18,5,6,0,7,1],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw_1_1Data.html":[9,0,0,18,5,6,0,7,0],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html":[9,0,0,18,5,6,0,9]
+"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html#a64c7438e90a5a42aeda83c50f18216fb":[9,0,0,18,5,6,0,7,1]
 };

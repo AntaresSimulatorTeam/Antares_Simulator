@@ -371,6 +371,7 @@ var annotated_dup =
       ] ],
       [ "Error", null, [
         [ "CommandLineArguments", "classAntares_1_1Error_1_1CommandLineArguments.html", null ],
+        [ "Duplicates", "classAntares_1_1Error_1_1Duplicates.html", null ],
         [ "IncompatibleCO2CostColumns", "classAntares_1_1Error_1_1IncompatibleCO2CostColumns.html", null ],
         [ "IncompatibleDailyOptHeuristicForArea", "classAntares_1_1Error_1_1IncompatibleDailyOptHeuristicForArea.html", null ],
         [ "IncompatibleFuelCostColumns", "classAntares_1_1Error_1_1IncompatibleFuelCostColumns.html", null ],
@@ -1467,6 +1468,7 @@ var annotated_dup =
     [ "DONNEES_ANNUELLES", "structDONNEES__ANNUELLES.html", null ],
     [ "DONNEES_MENSUELLES", "structDONNEES__MENSUELLES.html", null ],
     [ "DONNEES_MENSUELLES_ETENDUES", "structDONNEES__MENSUELLES__ETENDUES.html", null ],
+    [ "DuplicateFixture", "structDuplicateFixture.html", null ],
     [ "ENERGIES_ET_PUISSANCES_HYDRAULIQUES", "structENERGIES__ET__PUISSANCES__HYDRAULIQUES.html", null ],
     [ "ExchangeBalance", "classExchangeBalance.html", null ],
     [ "ExchangeBalanceData", "structExchangeBalanceData.html", null ],

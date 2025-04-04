@@ -1,5 +1,6 @@
 var NAVTREEINDEX16 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html#a181d93dab11d270f44d088a0fb9e9794":[9,0,0,18,5,4,7,2],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html#a634edbe3320e40772496ee51a581e897":[9,0,0,18,5,4,7,1],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html#a6c9c1149a98493f0a6223b13b60a6828":[9,0,0,18,5,4,7,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html#a886fc0da21063b0bc5a42fadf4edcdf0":[9,0,0,18,5,4,7,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX16 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesLoad.html#aeed47d1777e1512d856e1cdee1f54ad6":[9,0,0,18,5,4,58,1],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesSolar.html":[9,0,0,18,5,4,59],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesSolar.html#aaa0438e7c886a1314bb36127f5ec2dd3":[9,0,0,18,5,4,59,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesSolar.html#abb73e0bdeec6d1362bb35a66b3df88c8":[9,0,0,18,5,4,59,3],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesSolar.html#aef2ed24958b525dd8c0e14a4eacaf259":[9,0,0,18,5,4,59,2]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesSolar.html#abb73e0bdeec6d1362bb35a66b3df88c8":[9,0,0,18,5,4,59,3]
 };

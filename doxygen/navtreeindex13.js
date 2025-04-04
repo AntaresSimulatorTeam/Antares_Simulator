@@ -1,5 +1,6 @@
 var NAVTREEINDEX13 =
 {
+"classAntares_1_1Map_1_1Item.html":[9,0,0,12,7],
 "classAntares_1_1Map_1_1Item.html#a168aa1f68902a34b43deebef7cf63c43":[9,0,0,12,7,10],
 "classAntares_1_1Map_1_1Item.html#a3d6c42b0c475ee522023e391f2b7f871":[9,0,0,12,7,2],
 "classAntares_1_1Map_1_1Item.html#a3f4af689af50b815b72d7063d78d67b5":[9,0,0,12,7,11],
@@ -248,6 +249,5 @@ var NAVTREEINDEX13 =
 "classAntares_1_1MatrixSubColumn.html":[7,0,0,23],
 "classAntares_1_1MatrixSubColumn.html":[9,0,0,43],
 "classAntares_1_1MatrixSubColumn_3_01Matrix_3_01double_01_4_1_1ColumnType_01_5_01_4.html":[7,0,0,24],
-"classAntares_1_1MatrixSubColumn_3_01Matrix_3_01double_01_4_1_1ColumnType_01_5_01_4.html":[9,0,0,44],
-"classAntares_1_1MatrixSubColumn_3_01Matrix_3_01float_01_4_1_1ColumnType_01_5_01_4.html":[7,0,0,25]
+"classAntares_1_1MatrixSubColumn_3_01Matrix_3_01double_01_4_1_1ColumnType_01_5_01_4.html":[9,0,0,44]
 };

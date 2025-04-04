@@ -1,5 +1,6 @@
 var NAVTREEINDEX23 =
 {
+"dir_870ff71a535e526e8b1632e04f8fa134.html":[10,0,0,4,1],
 "dir_87a455bccb09a92130c26a11a880c98a.html":[10,0,0,5],
 "dir_8800966d6e2f3869a7d508cb479c4102.html":[10,0,0,5,0,23,0,0,0,5,6],
 "dir_8882aa57d35cdd21adbc64495b286360.html":[10,0,0,1,0,0,0],
@@ -218,6 +219,7 @@ var NAVTREEINDEX23 =
 "drawingcontext_8h_source.html":[10,0,0,12,2,1,1,3,5],
 "dsm_8h_source.html":[10,0,0,12,2,1,1,1,1,1,3],
 "dtgMarginAfterCsr_8h_source.html":[10,0,0,8,12,0,0,0,0,2,8],
+"duplicates_8h_source.html":[10,0,0,5,0,23,0,0,0,13],
 "ecoInput_8h_source.html":[10,0,0,5,0,23,0,0,0,5,6,6],
 "economy_2overallCost_8h_source.html":[10,0,0,8,12,0,0,0,0,2,27],
 "economy_2spilledEnergy_8h_source.html":[10,0,0,8,12,0,0,0,0,2,38],
@@ -247,7 +249,5 @@ var NAVTREEINDEX23 =
 "files-helper_8h_source.html":[10,0,0,10,1,1,0,3,0,0],
 "files-system_8h_source.html":[10,0,0,10,1,3,0],
 "files.html":[10,0],
-"fill-matrix_8h_source.html":[10,0,0,10,1,1,0,0,0],
-"finalLevelValidator_8h_source.html":[10,0,0,8,2,0,0,0,0,2,0],
-"finder_2finder_8h_source.html":[10,0,0,5,0,23,0,0,0,3,0]
+"fill-matrix_8h_source.html":[10,0,0,10,1,1,0,0,0]
 };

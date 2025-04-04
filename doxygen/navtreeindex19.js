@@ -1,5 +1,6 @@
 var NAVTREEINDEX19 =
 {
+"classAntares_1_1Window_1_1Hydro_1_1Allocation.html#a56ac770b4d7bd82f4455af913dbae2b0":[9,0,0,23,0,0,1],
 "classAntares_1_1Window_1_1Hydro_1_1Dailypower.html":[9,0,0,23,0,1],
 "classAntares_1_1Window_1_1Hydro_1_1Dailypower.html#a4555df4ee23bf95d8fc43ba0814ecd4c":[9,0,0,23,0,1,0],
 "classAntares_1_1Window_1_1Hydro_1_1Dailypower.html#aff56fca69695ca0abe880fc8b821e178":[9,0,0,23,0,1,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX19 =
 "classAntares_1_1Window_1_1assetTypeButton.html":[9,0,0,23,11],
 "classAntares_1_1Window_1_1captionButton.html":[9,0,0,23,18],
 "classAntares_1_1Window_1_1hurdleCostsUsageButton.html":[9,0,0,23,29],
-"classAntares_1_1Window_1_1linkButton.html":[9,0,0,23,34],
-"classAntares_1_1Window_1_1linkGrid.html":[9,0,0,23,35]
+"classAntares_1_1Window_1_1linkButton.html":[9,0,0,23,34]
 };

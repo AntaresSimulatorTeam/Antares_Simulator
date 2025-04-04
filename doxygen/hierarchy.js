@@ -785,6 +785,7 @@ var hierarchy =
         [ "Antares::Window::hurdleCostsUsageButton", "classAntares_1_1Window_1_1hurdleCostsUsageButton.html", null ],
         [ "Antares::Window::ntcUsageButton", "classAntares_1_1Window_1_1ntcUsageButton.html", null ]
       ] ],
+      [ "DuplicateFixture", "structDuplicateFixture.html", null ],
       [ "IProvider", "classIProvider.html", [
         [ "NullProvider", "classNullProvider.html", null ]
       ] ]
@@ -1417,6 +1418,7 @@ var hierarchy =
       [ "Antares::Data::UnfeasibleProblemError", "classAntares_1_1Data_1_1UnfeasibleProblemError.html", null ],
       [ "Antares::Error::LoadingError", "classAntares_1_1Error_1_1LoadingError.html", [
         [ "Antares::Error::CommandLineArguments", "classAntares_1_1Error_1_1CommandLineArguments.html", null ],
+        [ "Antares::Error::Duplicates", "classAntares_1_1Error_1_1Duplicates.html", null ],
         [ "Antares::Error::IncompatibleCO2CostColumns", "classAntares_1_1Error_1_1IncompatibleCO2CostColumns.html", null ],
         [ "Antares::Error::IncompatibleDailyOptHeuristicForArea", "classAntares_1_1Error_1_1IncompatibleDailyOptHeuristicForArea.html", null ],
         [ "Antares::Error::IncompatibleFuelCostColumns", "classAntares_1_1Error_1_1IncompatibleFuelCostColumns.html", null ],

@@ -13,6 +13,7 @@ var dir_5e4647cf74155fd57847988678b744d8 =
     [ "cleaner.h", "cleaner_8h_source.html", null ],
     [ "constraint.h", "libs_2antares_2study_2include_2antares_2study_2constraint_8h_source.html", null ],
     [ "correlation-updater.hxx", "correlation-updater_8hxx_source.html", null ],
+    [ "duplicates.h", "duplicates_8h_source.html", null ],
     [ "filter.h", "libs_2antares_2study_2include_2antares_2study_2filter_8h_source.html", null ],
     [ "finder.h", "finder_8h_source.html", null ],
     [ "fwd.h", "libs_2antares_2study_2include_2antares_2study_2fwd_8h_source.html", null ],
