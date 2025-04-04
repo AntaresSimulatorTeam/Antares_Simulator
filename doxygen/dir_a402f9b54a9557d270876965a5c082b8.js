@@ -9,7 +9,7 @@ var dir_a402f9b54a9557d270876965a5c082b8 =
     [ "area.h", "ui_2simulator_2toolbox_2components_2datagrid_2renderer_2area_8h_source.html", null ],
     [ "cell.h", "cell_8h_source.html", null ],
     [ "column.h", "column_8h_source.html", null ],
-    [ "connection.h", "toolbox_2components_2datagrid_2renderer_2connection_8h_source.html", null ],
+    [ "connection.h", "ui_2simulator_2toolbox_2components_2datagrid_2renderer_2connection_8h_source.html", null ],
     [ "correlation.h", "ui_2simulator_2toolbox_2components_2datagrid_2renderer_2correlation_8h_source.html", null ],
     [ "geographic-trimming-grid.h", "geographic-trimming-grid_8h_source.html", null ],
     [ "layers.h", "layers_8h_source.html", null ],

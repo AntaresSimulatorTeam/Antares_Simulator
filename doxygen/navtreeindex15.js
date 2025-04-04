@@ -1,5 +1,14 @@
 var NAVTREEINDEX15 =
 {
+"classAntares_1_1Private_1_1Component_1_1CustomWxButton.html":[9,0,0,17,0,0],
+"classAntares_1_1Private_1_1Component_1_1CustomWxButton.html#a6104435ce815091591b0d6a260ca06a3":[9,0,0,17,0,0,1],
+"classAntares_1_1Private_1_1Component_1_1CustomWxButton.html#a639ab9ecaf68a998a93d9aa76eb4a9b0":[9,0,0,17,0,0,0],
+"classAntares_1_1Private_1_1Dispatcher_1_1JobLayout.html":[9,0,0,17,1,0],
+"classAntares_1_1Private_1_1Dispatcher_1_1JobRefresh.html":[9,0,0,17,1,1],
+"classAntares_1_1Private_1_1Dispatcher_1_1JobShow.html":[9,0,0,17,1,2],
+"classAntares_1_1Private_1_1Dispatcher_1_1JobShowForm.html":[9,0,0,17,1,3],
+"classAntares_1_1Private_1_1Dispatcher_1_1JobShowModalThenDestroy.html":[9,0,0,17,1,4],
+"classAntares_1_1Private_1_1Dispatcher_1_1JobSimpleDispatcher.html":[9,0,0,17,1,5],
 "classAntares_1_1Private_1_1Dispatcher_1_1JobSimpleDispatcher.html#a9e9344001c197ae53fd83cac8f47f840":[9,0,0,17,1,5,0],
 "classAntares_1_1Private_1_1OutputViewerData_1_1AreaLinkRenderer.html":[9,0,0,17,2,0],
 "classAntares_1_1Private_1_1OutputViewerData_1_1AreaLinkRenderer.html#a1c9cea039b3bd20bcbd4f3ad82e8289d":[9,0,0,17,2,0,14],
@@ -240,14 +249,5 @@ var NAVTREEINDEX15 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFee.html#ac434b5b7e367a12386f70f48c6421963":[9,0,0,18,5,4,3,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFee.html#ae280af44781717d14f288ed969f95a3b":[9,0,0,18,5,4,3,2],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeAbs.html":[9,0,0,18,5,4,4],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeAbs.html#a0ba9307891c16806b8e8e3446b2a02c7":[9,0,0,18,5,4,4,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeAbs.html#a461e1f940acce79e59e7fed173de88cb":[9,0,0,18,5,4,4,3],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeAbs.html#a4bad7d1046c53d26fb4f9b08bd8c4be4":[9,0,0,18,5,4,4,4],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeAbs.html#a9007019c641c344d72a68aec19dbaa3d":[9,0,0,18,5,4,4,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html":[9,0,0,18,5,4,5],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a157e9777808958dc4209f1f21bec79bc":[9,0,0,18,5,4,5,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a3267d7c16bb35d1f456540d4d3910332":[9,0,0,18,5,4,5,4],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a9255c2251ec89a84fd409dab98ab13f6":[9,0,0,18,5,4,5,3],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#af8e3653448a186640c2663f094b7cfb7":[9,0,0,18,5,4,5,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html":[9,0,0,18,5,4,7]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeAbs.html#a0ba9307891c16806b8e8e3446b2a02c7":[9,0,0,18,5,4,4,2]
 };

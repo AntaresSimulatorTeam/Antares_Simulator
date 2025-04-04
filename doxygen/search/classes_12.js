@@ -93,5 +93,6 @@ var searchData=
   ['tsmanagementrenewablecluster_90',['TSmanagementRenewableCluster',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TSmanagementRenewableCluster.html',1,'Antares::Component::Datagrid::Renderer']]],
   ['tsnumberdata_91',['TSNumberData',['../classAntares_1_1Data_1_1ScenarioBuilder_1_1TSNumberData.html',1,'Antares::Data::ScenarioBuilder']]],
   ['tsnumberspredicate_92',['TSNumbersPredicate',['../structTSNumbersPredicate.html',1,'']]],
-  ['twovarstwoconstraintsfiller_93',['TwoVarsTwoConstraintsFiller',['../classAntares_1_1Optimisation_1_1LinearProblemApi_1_1TwoVarsTwoConstraintsFiller.html',1,'Antares::Optimisation::LinearProblemApi']]]
+  ['twofieldsofsamerole_93',['TwoFieldsOfSameRole',['../structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1TwoFieldsOfSameRole.html',1,'Antares::IO::Inputs::SystemConverter']]],
+  ['twovarstwoconstraintsfiller_94',['TwoVarsTwoConstraintsFiller',['../classAntares_1_1Optimisation_1_1LinearProblemApi_1_1TwoVarsTwoConstraintsFiller.html',1,'Antares::Optimisation::LinearProblemApi']]]
 ];

@@ -1,5 +1,14 @@
 var NAVTREEINDEX17 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesHydro.html#accf6a130a56799d1d71036e675fc16c8":[9,0,0,18,5,4,57,2],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesLoad.html":[9,0,0,18,5,4,58],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesLoad.html#a7e45f57279dc3dcfad9fd53ed0663401":[9,0,0,18,5,4,58,2],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesLoad.html#a9cd29179d7b90ab1d2bbe178c1b4976f":[9,0,0,18,5,4,58,4],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesLoad.html#ab032e1f4d0bf29cba1d787a1c5c24c3e":[9,0,0,18,5,4,58,3],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesLoad.html#aeed47d1777e1512d856e1cdee1f54ad6":[9,0,0,18,5,4,58,1],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesSolar.html":[9,0,0,18,5,4,59],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesSolar.html#aaa0438e7c886a1314bb36127f5ec2dd3":[9,0,0,18,5,4,59,1],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesSolar.html#abb73e0bdeec6d1362bb35a66b3df88c8":[9,0,0,18,5,4,59,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesSolar.html#aef2ed24958b525dd8c0e14a4eacaf259":[9,0,0,18,5,4,59,2],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesSolar.html#af62534e3424f17aec59c284e0649550e":[9,0,0,18,5,4,59,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesWind.html":[9,0,0,18,5,4,60],
@@ -240,14 +249,5 @@ var NAVTREEINDEX17 =
 "classAntares_1_1Toolbox_1_1Filter_1_1AFilterBase.html#acb29a09ec50c9f4b26cb26c66f418ab1":[9,0,0,20,1,1,3],
 "classAntares_1_1Toolbox_1_1Filter_1_1AFilterBase.html#ae73af0df6cdfc26ab5b593e19ba5c62b":[9,0,0,20,1,1,0],
 "classAntares_1_1Toolbox_1_1Filter_1_1AFilterBase.html#af4471288fdbb2341415661fb94c20bb5":[9,0,0,20,1,1,2],
-"classAntares_1_1Toolbox_1_1Filter_1_1AFilterBase.html#afcadd3e52f0182a3d899dfbff8723761":[9,0,0,20,1,1,11],
-"classAntares_1_1Toolbox_1_1Filter_1_1Any.html":[9,0,0,20,1,2],
-"classAntares_1_1Toolbox_1_1Filter_1_1Any.html#a0af82c23ad6a8bf691827df3127e8a34":[9,0,0,20,1,2,1],
-"classAntares_1_1Toolbox_1_1Filter_1_1Any.html#a1ed425534e7c8378bbdf6b9a83214508":[9,0,0,20,1,2,0],
-"classAntares_1_1Toolbox_1_1Filter_1_1ColumnIndex.html":[9,0,0,20,1,3],
-"classAntares_1_1Toolbox_1_1Filter_1_1ColumnIndex.html#a625319476e9bc1124e6e20d3563539d0":[9,0,0,20,1,3,0],
-"classAntares_1_1Toolbox_1_1Filter_1_1ColumnIndex.html#aa50137b9bd27f87dab6c7a9e6112b449":[9,0,0,20,1,3,1],
-"classAntares_1_1Toolbox_1_1Filter_1_1Component.html":[9,0,0,20,1,4],
-"classAntares_1_1Toolbox_1_1Filter_1_1Component.html#a5be119405f80e743367308022ea89922":[9,0,0,20,1,4,3],
-"classAntares_1_1Toolbox_1_1Filter_1_1Component.html#a7bfb5c2e41d7ea932e135c3a01202099":[9,0,0,20,1,4,2]
+"classAntares_1_1Toolbox_1_1Filter_1_1AFilterBase.html#afcadd3e52f0182a3d899dfbff8723761":[9,0,0,20,1,1,11]
 };

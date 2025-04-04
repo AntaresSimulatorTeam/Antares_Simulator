@@ -1,5 +1,14 @@
 var NAVTREEINDEX16 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeAbs.html#a461e1f940acce79e59e7fed173de88cb":[9,0,0,18,5,4,4,3],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeAbs.html#a4bad7d1046c53d26fb4f9b08bd8c4be4":[9,0,0,18,5,4,4,4],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeAbs.html#a9007019c641c344d72a68aec19dbaa3d":[9,0,0,18,5,4,4,1],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html":[9,0,0,18,5,4,5],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a157e9777808958dc4209f1f21bec79bc":[9,0,0,18,5,4,5,1],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a3267d7c16bb35d1f456540d4d3910332":[9,0,0,18,5,4,5,4],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a9255c2251ec89a84fd409dab98ab13f6":[9,0,0,18,5,4,5,3],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#af8e3653448a186640c2663f094b7cfb7":[9,0,0,18,5,4,5,2],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html":[9,0,0,18,5,4,7],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html#a181d93dab11d270f44d088a0fb9e9794":[9,0,0,18,5,4,7,2],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html#a634edbe3320e40772496ee51a581e897":[9,0,0,18,5,4,7,1],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html#a6c9c1149a98493f0a6223b13b60a6828":[9,0,0,18,5,4,7,4],
@@ -240,14 +249,5 @@ var NAVTREEINDEX16 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesHydro.html":[9,0,0,18,5,4,57],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesHydro.html#a18895e2b7edfb6f883d0d1247ce04e88":[9,0,0,18,5,4,57,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesHydro.html#a5d016f8f0d7a8b805c571b79ff6f409e":[9,0,0,18,5,4,57,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesHydro.html#a9081c5ce5126bffe92f8746df523de1a":[9,0,0,18,5,4,57,3],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesHydro.html#accf6a130a56799d1d71036e675fc16c8":[9,0,0,18,5,4,57,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesLoad.html":[9,0,0,18,5,4,58],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesLoad.html#a7e45f57279dc3dcfad9fd53ed0663401":[9,0,0,18,5,4,58,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesLoad.html#a9cd29179d7b90ab1d2bbe178c1b4976f":[9,0,0,18,5,4,58,4],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesLoad.html#ab032e1f4d0bf29cba1d787a1c5c24c3e":[9,0,0,18,5,4,58,3],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesLoad.html#aeed47d1777e1512d856e1cdee1f54ad6":[9,0,0,18,5,4,58,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesSolar.html":[9,0,0,18,5,4,59],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesSolar.html#aaa0438e7c886a1314bb36127f5ec2dd3":[9,0,0,18,5,4,59,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesSolar.html#abb73e0bdeec6d1362bb35a66b3df88c8":[9,0,0,18,5,4,59,3]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesHydro.html#a9081c5ce5126bffe92f8746df523de1a":[9,0,0,18,5,4,57,3]
 };

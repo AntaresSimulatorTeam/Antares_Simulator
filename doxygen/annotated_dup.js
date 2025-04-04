@@ -505,9 +505,11 @@ var annotated_dup =
             [ "UnknownTypeException", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1UnknownTypeException.html", null ]
           ] ],
           [ "SystemConverter", null, [
+            [ "ConnectingPortToItSelf", "structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ConnectingPortToItSelf.html", null ],
             [ "ErrorWhileSplittingLibraryAndModel", "classAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ErrorWhileSplittingLibraryAndModel.html", null ],
             [ "LibraryNotFound", "classAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1LibraryNotFound.html", null ],
-            [ "ModelNotFound", "classAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ModelNotFound.html", null ]
+            [ "ModelNotFound", "classAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ModelNotFound.html", null ],
+            [ "TwoFieldsOfSameRole", "structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1TwoFieldsOfSameRole.html", null ]
           ] ],
           [ "YmlModel", null, [
             [ "Constraint", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Constraint.html", null ],
@@ -522,6 +524,8 @@ var annotated_dup =
           ] ],
           [ "YmlSystem", null, [
             [ "Component", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Component.html", null ],
+            [ "Connection", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Connection.html", null ],
+            [ "ConnectionEntry", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ConnectionEntry.html", null ],
             [ "Parameter", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parameter.html", null ],
             [ "Parser", "classAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parser.html", null ],
             [ "System", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html", null ]
@@ -558,6 +562,8 @@ var annotated_dup =
           [ "Component", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html", null ],
           [ "ComponentBuilder", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ComponentBuilder.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ComponentBuilder" ],
           [ "ComponentData", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ComponentData.html", null ],
+          [ "Connection", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Connection.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Connection" ],
+          [ "ConnectionEntry", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEntry.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEntry" ],
           [ "Constraint", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Constraint.html", null ],
           [ "Expression", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Expression.html", null ],
           [ "Library", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Library.html", null ],
@@ -568,6 +574,8 @@ var annotated_dup =
           [ "Port", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Port.html", null ],
           [ "PortField", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1PortField.html", null ],
           [ "PortFieldDefinition", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1PortFieldDefinition.html", null ],
+          [ "PortFieldKey", "structAntares_1_1ModelerStudy_1_1SystemModel_1_1PortFieldKey.html", null ],
+          [ "PortFieldKeyHash", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1PortFieldKeyHash.html", null ],
           [ "PortType", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1PortType.html", null ],
           [ "System", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1System.html", null ],
           [ "SystemBuilder", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemBuilder.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemBuilder" ],
@@ -1385,6 +1393,7 @@ var annotated_dup =
       [ "convert< Antares::IO::Inputs::YmlModel::ValueType >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1ValueType_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlModel::Variable >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlSystem::Component >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Component_01_4.html", null ],
+      [ "convert< Antares::IO::Inputs::YmlSystem::Connection >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Connection_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlSystem::Parameter >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parameter_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlSystem::System >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System_01_4.html", null ],
       [ "convert< Antares::Solver::ModelerParameters >", "structYAML_1_1convert_3_01Antares_1_1Solver_1_1ModelerParameters_01_4.html", null ],
@@ -1582,6 +1591,7 @@ var annotated_dup =
     [ "PMinMaxDispatchableGenerationGroup", "classPMinMaxDispatchableGenerationGroup.html", "classPMinMaxDispatchableGenerationGroup" ],
     [ "Power", "structPower.html", null ],
     [ "PredicateIdentity", "structPredicateIdentity.html", null ],
+    [ "PrepareYaml", "structPrepareYaml.html", null ],
     [ "ProblemConverter", "classProblemConverter.html", null ],
     [ "PROBLEME_ANTARES_A_RESOUDRE", "structPROBLEME__ANTARES__A__RESOUDRE.html", null ],
     [ "PROBLEME_HEBDO", "structPROBLEME__HEBDO.html", null ],
@@ -1598,6 +1608,7 @@ var annotated_dup =
     [ "PublicStudy", "classPublicStudy.html", "classPublicStudy" ],
     [ "QpFixture", "structQpFixture.html", null ],
     [ "QuadraticProblemMatrix", "classQuadraticProblemMatrix.html", null ],
+    [ "RawConnection", "structRawConnection.html", null ],
     [ "ReadFromStreamFixture", "structReadFromStreamFixture.html", null ],
     [ "RealName", "classRealName.html", null ],
     [ "referenceIniFile", "classreferenceIniFile.html", null ],
