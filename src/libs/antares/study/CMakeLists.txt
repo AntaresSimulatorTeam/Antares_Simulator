@@ -220,6 +220,8 @@ set(SRC_STUDY
         fwd.cpp
         include/antares/study/study.h
         study.cpp
+	duplicates.cpp
+        include/antares/study/duplicates.h
         include/antares/study/correlation-updater.hxx
         study.importprepro.cpp
         importlogs.cpp
