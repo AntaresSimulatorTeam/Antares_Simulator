@@ -126,7 +126,7 @@ jobs:
       - name: Build
         shell: bash
         run: |
-          cmake --build _build --config Release -j$(nproc)
+          cmake --build _build --config RelWithDebInfo -j$(nproc)
 
       - name: Read simtest version
         shell: bash
