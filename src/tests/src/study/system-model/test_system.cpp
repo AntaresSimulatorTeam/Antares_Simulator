@@ -274,17 +274,15 @@ BOOST_AUTO_TEST_CASE(PortFieldeEqualityOperator)
 
 BOOST_AUTO_TEST_CASE(PrintSenderFieldRole)
 {
-    constexpr auto role = FieldRole::Sender;
     std::ostringstream os;
-    os << role;
+    os << FieldRole::Sender;
     BOOST_CHECK_EQUAL(os.str(), "Sender");
 }
 
 BOOST_AUTO_TEST_CASE(PrintReceiverFieldRole)
 {
-    constexpr auto role = FieldRole::Receiver;
     std::ostringstream os;
-    os << role;
+    os << FieldRole::Receiver;
     BOOST_CHECK_EQUAL(os.str(), "Receiver");
 }
 
