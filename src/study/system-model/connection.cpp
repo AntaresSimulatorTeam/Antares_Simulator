@@ -22,7 +22,7 @@
 
 #include <antares/study/system-model/connection.h>
 
-namespace Antares::Study::SystemModel
+namespace Antares::ModelerStudy::SystemModel
 {
 ConnectionEntry::ConnectionEntry(const Component* component,
                                  const Port* port,

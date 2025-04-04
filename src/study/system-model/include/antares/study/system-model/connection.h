@@ -22,7 +22,7 @@
 #include "component.h"
 #include "port.h"
 
-namespace Antares::Study::SystemModel
+namespace Antares::ModelerStudy::SystemModel
 {
 
 // Define an enumeration for the role of a ConnectionEntry
