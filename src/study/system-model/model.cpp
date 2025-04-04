@@ -28,7 +28,7 @@
 
 #include <antares/study/system-model/model.h>
 
-namespace Antares::Study::SystemModel
+namespace Antares::ModelerStudy::SystemModel
 {
 std::size_t PortFieldKeyHash::operator()(const PortFieldKey& input) const
 {
@@ -181,4 +181,4 @@ ModelBuilder& ModelBuilder::withPortFieldDefinitions(
     return *this;
 }
 
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel

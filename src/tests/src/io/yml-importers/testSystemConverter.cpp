@@ -34,7 +34,7 @@
 
 using namespace std::string_literals;
 using namespace Antares::IO::Inputs;
-using namespace Antares::Study;
+using namespace Antares::ModelerStudy;
 
 struct LibraryObjects
 {

@@ -20,41 +20,21 @@
 */
 #pragma once
 
-#include "port.h"
-#include "portType.h"
+#include <vector>
 
-namespace Antares::ModelerStudy::SystemModel
+#include <antares/optimisation/linear-problem-data-impl/linearProblemData.h>
+#include <antares/solver/modeler/parameters/modelerParameters.h>
+#include <antares/study/system-model/library.h>
+#include <antares/study/system-model/system.h>
+
+namespace Antares::Modeler
 {
 
-class PortFieldDefinition
+struct Data
 {
-public:
-    PortFieldDefinition(Port port, PortField field, Expression definition):
-        port_(std::move(port)),
-        field_(std::move(field)),
-        definition_(std::move(definition))
-    {
-    }
-
-    const Port& getPort() const
-    {
-        return port_;
-    }
-
-    const PortField& Field() const
-    {
-        return field_;
-    }
-
-    const Expression& Definition() const
-    {
-        return definition_;
-    }
-
-private:
-    Port port_;
-    PortField field_;
-    Expression definition_;
+    std::vector<ModelerStudy::SystemModel::Library> libraries;
+    std::unique_ptr<ModelerStudy::SystemModel::System> system;
+    std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> dataSeries;
 };
 
-} // namespace Antares::ModelerStudy::SystemModel
+} // namespace Antares::Modeler

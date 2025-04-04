@@ -27,7 +27,7 @@
 
 #include "antares/study/system-model/component.h"
 
-using namespace Antares::Study::SystemModel;
+using namespace Antares::ModelerStudy::SystemModel;
 
 struct ComponentBuilderCreationFixture
 {

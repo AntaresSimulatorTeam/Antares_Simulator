@@ -23,7 +23,7 @@
 
 #include <antares/study/system-model/system.h>
 
-namespace Antares::Study::SystemModel
+namespace Antares::ModelerStudy::SystemModel
 {
 System::System(const std::string_view id,
                std::unordered_map<std::string, Component>&& components,
@@ -88,4 +88,4 @@ System SystemBuilder::build()
 {
     return System(id_, std::move(components_), std::move(connections_));
 }
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel

@@ -29,7 +29,7 @@
 #include "antares/io/inputs/yml-model/Library.h"
 #include "antares/study/system-model/system.h"
 
-using namespace Antares::Study::SystemModel;
+using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::IO::Inputs::ModelConverter;
 
 struct SystemBuilderCreationFixture

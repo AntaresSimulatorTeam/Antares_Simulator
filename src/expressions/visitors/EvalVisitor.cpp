@@ -238,7 +238,7 @@ EvaluationResult EvaluationResult::operator[](int timeIndex) const
         return *this;
     }
     const auto& vec = std::get<std::vector<double>>(value_);
-    if (timeIndex < 0 || timeIndex >= vec.size())
+    if (timeIndex < 0 || (unsigned)timeIndex >= vec.size())
     {
         throw EvalResultTimeIndexOutOfRange("timeIndex is out of range");
     }

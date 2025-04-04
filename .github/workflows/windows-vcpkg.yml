@@ -325,6 +325,11 @@ jobs:
           os: ${{ env.os }}
 
 
+      - name: Run cucumber on hybrid studies
+        uses: ./.github/workflows/cucumber-tests
+        with:
+          feature: "features/solver-features/hybrid_studies.feature"
+
       - name: Barrier
         if: ${{ !success() }}
         run: exit 1
