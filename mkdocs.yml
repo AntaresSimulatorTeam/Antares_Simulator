@@ -50,7 +50,7 @@ nav:
               - 'Multi-threading': 'user-guide/solver/optional-features/multi-threading.md'
               - 'Adequacy patch': 'user-guide/solver/optional-features/adequacy-patch.md'
               - 'Usage with FICO® Xpress Optimizer': 'user-guide/solver/optional-features/xpress.md'
-          - 'Appendix': 'user-guide/solver/03-appendix.md'
+          - 'Appendix': 'user-guide/solver/08-appendix.md'
       - 'Modeler':
           - 'Overview': 'user-guide/modeler/01-overview-modeler.md'
           - 'Input files': 'user-guide/modeler/02-inputs.md'
