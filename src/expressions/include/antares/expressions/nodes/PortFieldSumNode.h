@@ -39,6 +39,8 @@ public:
      * @param field_name The field name.
      */
     explicit PortFieldSumNode(const std::string& port_name, const std::string& field_name);
+    
+    explicit PortFieldSumNode(const Node* node);
 
     /**
      * @brief Retrieves the port name.

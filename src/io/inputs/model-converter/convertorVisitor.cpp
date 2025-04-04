@@ -58,6 +58,7 @@ public:
 
     std::any visitTimeSum(ExprParser::TimeSumContext* context) override;
     std::any visitAllTimeSum(ExprParser::AllTimeSumContext* context) override;
+    std::any visitPortFieldSum(ExprParser::PortFieldSumContext* context) override;
     std::any visitSignedAtom(ExprParser::SignedAtomContext* context) override;
     std::any visitUnsignedAtom(ExprParser::UnsignedAtomContext* context) override;
     std::any visitRightAtom(ExprParser::RightAtomContext* context) override;
@@ -315,6 +316,12 @@ std::any ConvertorVisitor::visitAllTimeSum([[maybe_unused]] ExprParser::AllTimeS
 {
     auto expr = std::any_cast<Node*>(context->expr()->accept(this));
     return static_cast<Node*>(registry_.create<AllTimeSumNode>(expr));
+}
+
+std::any ConvertorVisitor::visitPortFieldSum(ExprParser::PortFieldSumContext* context)
+{
+    auto expr = std::any_cast<Node*>(context->expr()->accept(this));
+    return static_cast<Node*>(registry_.create<PortFieldSumNode>(expr));
 }
 
 // shift related, not tested

@@ -25,13 +25,14 @@ expr
     | expr op=('/' | '*') expr                 # muldiv
     | expr op=('+' | '-') expr                 # addsub
     | expr COMPARISON expr                     # comparison
-    | 'sum' '(' expr ')'                    # allTimeSum
+    | 'sum' '(' expr ')'                       # allTimeSum
+    | 'sum_connections' '(' expr ')'           # portFieldSum
     | 'sum' '(' from=shift '..' to=shift ',' expr ')'  # timeSum
     | IDENTIFIER '(' expr ')'                  # function
     | IDENTIFIER '[' shift ']'                 # timeShift
     | IDENTIFIER '[' expr  ']'                 # timeIndex
     | '(' expr ')' '[' shift ']'               # timeShiftExpr
-    | '(' expr ')' '[' expr ']'               # timeIndexExpr
+    | '(' expr ')' '[' expr ']'                # timeIndexExpr
     ;
 
 atom

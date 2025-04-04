@@ -331,7 +331,7 @@ const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::mpSo
 
 // TODO: enable xpress when using ortools >= 9.12: {"xpress", math_opt::SolverType::kXpress}
 const std::map<std::string, math_opt::SolverType> OrtoolsUtils::mathoptSolverMap = {
-  {"pdlp", math_opt::SolverType::kPdlp},
+  /*{"pdlp", math_opt::SolverType::kPdlp},*/
   {"scip", math_opt::SolverType::kGscip}};
 
 std::list<std::string> getAvailableLinearSolverNames()

@@ -222,6 +222,22 @@ void ExprParser::ExprContext::copyFrom(ExprContext *ctx) {
   ParserRuleContext::copyFrom(ctx);
 }
 
+//----------------- PortFieldSumContext ------------------------------------------------------------------
+
+ExprParser::ExprContext* ExprParser::PortFieldSumContext::expr() {
+  return getRuleContext<ExprParser::ExprContext>(0);
+}
+
+ExprParser::PortFieldSumContext::PortFieldSumContext(ExprContext *ctx) { copyFrom(ctx); }
+
+
+std::any ExprParser::PortFieldSumContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<ExprVisitor*>(visitor))
+    return parserVisitor->visitPortFieldSum(this);
+  else
+    return visitor->visitChildren(this);
+}
+
 //----------------- NegationContext ------------------------------------------------------------------
 
 ExprParser::ExprContext* ExprParser::NegationContext::expr() {

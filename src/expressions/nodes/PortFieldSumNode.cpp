@@ -18,6 +18,9 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
+#include <stdexcept>
+
+#include <antares/expressions/nodes/PortFieldNode.h>
 #include <antares/expressions/nodes/PortFieldSumNode.h>
 
 namespace Antares::Expressions::Nodes
@@ -27,6 +30,20 @@ PortFieldSumNode::PortFieldSumNode(const std::string& port_name, const std::stri
     port_name_(port_name),
     field_name_(field_name)
 {
+}
+
+PortFieldSumNode::PortFieldSumNode(const Node* node):
+    Hashable(port_name_, field_name_)
+{
+    const PortFieldNode* portFieldNode = dynamic_cast<const PortFieldNode*>(node);
+    if (portFieldNode)
+    {
+        port_name_ = portFieldNode->getPortName();
+        field_name_ = portFieldNode->getFieldName();
+    }
+    std::string msg = "A PortFieldSumNode constructed with wrong Node type. ";
+    msg += "Should be PortFieldNode.";
+    throw std::invalid_argument(msg);
 }
 
 const std::string& PortFieldSumNode::getPortName() const
