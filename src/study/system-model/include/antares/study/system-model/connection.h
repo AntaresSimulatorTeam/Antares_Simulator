@@ -127,4 +127,4 @@ private:
     ConnectionEntry secondEntry_; ///< The second connection entry.
 };
 
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel
