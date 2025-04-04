@@ -41,6 +41,11 @@ NoAreas::NoAreas():
 {
 }
 
+Duplicates::Duplicates():
+    LoadingError("One or more duplicates found.")
+{
+}
+
 InvalidFileName::InvalidFileName():
     LoadingError("Invalid file names detected.")
 {
