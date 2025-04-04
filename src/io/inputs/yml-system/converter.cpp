@@ -26,7 +26,7 @@
 #include "antares/io/inputs/yml-system/system.h"
 #include "antares/study/system-model/system.h"
 
-using namespace Antares::Study;
+using namespace Antares::ModelerStudy;
 
 namespace Antares::IO::Inputs::SystemConverter
 {
