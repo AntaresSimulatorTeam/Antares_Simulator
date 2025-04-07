@@ -18,29 +18,43 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <antares/expressions/nodes/SumNode.h>
+#pragma once
+
+#include <antares/expressions/nodes/ParentNode.h>
 
 namespace Antares::Expressions::Nodes
 {
-
-SumNode::SumNode(const std::vector<Node*>& operands):
-    operands_(operands)
+class TimeSumNode: public ParentNode
 {
-}
+public:
+    /**
+     * @brief Constructs a Time Sum node with the specified 'from', 'to' and 'expression' operands.
+     *
+     * @param from The 'from' operand.
+     * @param to The 'to' operand.
+     * @param expression The 'expression' operand.
+     */
+    explicit TimeSumNode(Node* from, Node* to, Node* expression);
+    std::string name() const override;
 
-const std::vector<Node*>& SumNode::getOperands() const
-{
-    return operands_;
-}
+    /**
+     * @brief Retrieves a pointer to the right operand.
+     *
+     * @return A pointer to the right operand.
+     */
+    Node* from() const;
+    /**
+     * @brief Retrieves a pointer to the right operand.
+     *
+     * @return A pointer to the right operand.
+     */
 
-size_t SumNode::size() const
-{
-    return operands_.size();
-}
-
-Node* SumNode::operator[](std::size_t idx) const
-{
-    return operands_[idx];
-}
-
+    /**
+     * @brief Retrieves a pointer to the ' operand.
+     *
+     * @return A pointer to the left operand.
+     */
+    Node* to() const;
+    Node* expression() const;
+};
 } // namespace Antares::Expressions::Nodes

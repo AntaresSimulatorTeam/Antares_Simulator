@@ -30,6 +30,11 @@
 #include "SparseVector.hxx"
 #include "opt_constants.h"
 
+namespace operations_research
+{
+class MPSolver;
+}
+
 /*--------------------------------------------------------------------------------------*/
 
 /* Le probleme a resoudre */
@@ -90,7 +95,7 @@ struct PROBLEME_ANTARES_A_RESOUDRE
                                   matrice de base reguliere, et dans ce cas il n'y a pas de solution
                                 */
 
-    std::vector<void*> ProblemesSpx;
+    std::vector<operations_research::MPSolver*> ProblemesSpx;
 
     std::vector<int>
       PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */

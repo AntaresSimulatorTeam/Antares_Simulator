@@ -19,10 +19,6 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual std::any visitTimeSum(ExprParser::TimeSumContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
   virtual std::any visitNegation(ExprParser::NegationContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -35,10 +31,6 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual std::any visitTimeIndex(ExprParser::TimeIndexContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
   virtual std::any visitComparison(ExprParser::ComparisonContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -47,15 +39,15 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual std::any visitTimeShift(ExprParser::TimeShiftContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual std::any visitFunction(ExprParser::FunctionContext *ctx) override {
+  virtual std::any visitTimeIndexExpr(ExprParser::TimeIndexExprContext *ctx) override {
     return visitChildren(ctx);
   }
 
   virtual std::any visitAddsub(ExprParser::AddsubContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitTimeShiftExpr(ExprParser::TimeShiftExprContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -64,6 +56,22 @@ public:
   }
 
   virtual std::any visitMuldiv(ExprParser::MuldivContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitTimeSum(ExprParser::TimeSumContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitTimeIndex(ExprParser::TimeIndexContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitTimeShift(ExprParser::TimeShiftContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitFunction(ExprParser::FunctionContext *ctx) override {
     return visitChildren(ctx);
   }
 

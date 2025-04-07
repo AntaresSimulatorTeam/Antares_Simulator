@@ -20,14 +20,14 @@
 */
 #pragma once
 
-#include <antares/expressions/nodes/Node.h>
+#include <antares/expressions/nodes/ParentNode.h>
 
 namespace Antares::Expressions::Nodes
 {
 /**
  * @brief Represents a unary node in a syntax tree.
  */
-class UnaryNode: public Node
+class UnaryNode: public ParentNode
 {
 public:
     /**
@@ -42,11 +42,5 @@ public:
      * @return A pointer to the child node.
      */
     Node* child() const;
-
-private:
-    /**
-     * @brief A pointer to the child node.
-     */
-    Node* child_ = nullptr;
 };
 } // namespace Antares::Expressions::Nodes

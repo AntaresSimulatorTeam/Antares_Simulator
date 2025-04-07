@@ -81,6 +81,23 @@ struct convert<Antares::IO::Inputs::YmlSystem::Component>
 };
 
 template<>
+struct convert<Antares::IO::Inputs::YmlSystem::Connection>
+{
+    static bool decode(const Node& node, Antares::IO::Inputs::YmlSystem::Connection& rhs)
+    {
+        if (!node.IsMap() && node.size() != 4)
+        {
+            return false;
+        }
+        rhs.firstEntry.componentId = node["component1"].as<std::string>();
+        rhs.firstEntry.portId = node["port1"].as<std::string>();
+        rhs.secondEntry.componentId = node["component2"].as<std::string>();
+        rhs.secondEntry.portId = node["port2"].as<std::string>();
+        return true;
+    }
+};
+
+template<>
 struct convert<Antares::IO::Inputs::YmlSystem::System>
 {
     static bool decode(const Node& node, Antares::IO::Inputs::YmlSystem::System& rhs)
@@ -89,6 +106,8 @@ struct convert<Antares::IO::Inputs::YmlSystem::System>
         rhs.libraries = as_fallback_default<std::vector<std::string>>(node["model-libraries"]);
         rhs.components = as_fallback_default<
           std::vector<Antares::IO::Inputs::YmlSystem::Component>>(node["components"]);
+        rhs.connections = as_fallback_default<
+          std::vector<Antares::IO::Inputs::YmlSystem::Connection>>(node["connections"]);
         return true;
     }
 };

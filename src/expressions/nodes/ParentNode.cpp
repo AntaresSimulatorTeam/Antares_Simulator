@@ -18,34 +18,29 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
+#include <antares/expressions/nodes/ParentNode.h>
 
-#ifdef __CPLUSPLUS
-extern "C"
+namespace Antares::Expressions::Nodes
 {
-#endif
 
-#include "spx_definition_arguments.h"
-#include "spx_fonctions.h"
-
-#ifdef __CPLUSPLUS
-}
-#endif
-
-#include "antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h"
-#include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
-
-void H2O_M_Free(DONNEES_ANNUELLES& DonneesAnnuelles)
+ParentNode::ParentNode(const std::vector<Node*>& operands):
+    operands_(operands)
 {
-    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles.ProblemeHydraulique;
-
-    for (int i = 0; i < ProblemeHydraulique.NombreDeReservoirs; i++)
-    {
-        PROBLEME_SPX* ProbSpx = (PROBLEME_SPX*)ProblemeHydraulique.ProblemeSpx[i];
-        if (ProbSpx)
-        {
-            SPX_LibererProbleme(ProbSpx);
-        }
-    }
-
-    return;
 }
+
+const std::vector<Node*>& ParentNode::getOperands() const
+{
+    return operands_;
+}
+
+size_t ParentNode::size() const
+{
+    return operands_.size();
+}
+
+Node* ParentNode::operator[](std::size_t idx) const
+{
+    return operands_[idx];
+}
+
+} // namespace Antares::Expressions::Nodes

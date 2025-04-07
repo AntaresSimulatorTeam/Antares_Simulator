@@ -195,7 +195,6 @@ public:
         return static_cast<T>(value);
     }
 };
-
 } // anonymous namespace
 
 template<class T, class ReadWriteT>
@@ -577,26 +576,18 @@ void Matrix<T, ReadWriteT>::resize(uint w, uint h, bool fixedSize)
                 }
                 delete[] entry;
             }
-            if (!w and !h)
-            {
-                entry = nullptr;
-                width = 0;
-                height = 0;
-            }
-            else
-            {
-                // Assigning the new size
-                width = w;
-                height = h;
 
-                // Allocating the entry for the matrix
-                entry = new typename Antares::Memory::Stored<T>::Type[width + 1];
-                entry[width] = nullptr;
+            // Assigning the new size
+            width = w;
+            height = h;
 
-                for (uint i = 0; i != w; ++i)
-                {
-                    Antares::Memory::Allocate<T>(entry[i], height);
-                }
+            // Allocating the entry for the matrix
+            entry = new typename Antares::Memory::Stored<T>::Type[width + 1];
+            entry[width] = nullptr;
+
+            for (uint i = 0; i != w; ++i)
+            {
+                Antares::Memory::Allocate<T>(entry[i], height);
             }
         }
     }
@@ -667,7 +658,6 @@ static inline bool DetectEncoding(const AnyString& filename, const AnyString& da
     }
     return true;
 }
-
 } // anonymous namespace
 
 template<class T, class ReadWriteT>
@@ -680,9 +670,7 @@ bool Matrix<T, ReadWriteT>::loadFromBuffer(const AnyString& filename,
 {
     using namespace Yuni;
 
-#ifndef NDEBUG
     logs.debug() << "  :: loading `" << filename << "`";
-#endif
 
     // Detecting BOM
     // Antares currently only accepts ASCII and/or UTF-8 encodings.
@@ -792,9 +780,6 @@ bool Matrix<T, ReadWriteT>::loadFromBuffer(const AnyString& filename,
                 }
             }
             resize(((x < minWidth) ? minWidth : x), maxHeight);
-#ifndef NDEBUG
-// logs.debug() << "  :: (" << width << 'x' << height << ')';
-#endif
             if (!x)
             {
                 if (not(options & optQuiet) and not(options & optNoWarnIfEmpty))
@@ -998,7 +983,6 @@ bool Matrix<T, ReadWriteT>::loadFromBuffer(const AnyString& filename,
 
         // Go to the next line
         ++y;
-
     } // while (y ...)
 
     // Not enough lines to describe our matrix
@@ -1211,8 +1195,8 @@ void Matrix<T, ReadWriteT>::saveToBuffer(std::string& data,
 
     matrix_to_buffer_dumper_factory mtx_to_buffer_dumper_factory;
 
-    I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>* mtx_to_buffer_dpr
-      = mtx_to_buffer_dumper_factory.get_dumper<T, ReadWriteT, PredicateT>(this, data, predicate);
+    auto mtx_to_buffer_dpr = mtx_to_buffer_dumper_factory
+                               .get_dumper<T, ReadWriteT, PredicateT>(this, data, predicate);
 
     // Determining the string format to use according the given precision
     mtx_to_buffer_dpr->set_print_format(isDecimal, precision);
@@ -1279,11 +1263,9 @@ bool Matrix<T, ReadWriteT>::internalSaveCSVFile(const AnyString& filename,
         jit_mgr.load_matrix(this);
     }
 
-#ifndef NDEBUG
     // Attempt to open the file, and to write data
     // We have write access to the file
     logs.debug() << "  :: writing `" << filename << "' (" << width << 'x' << height << ')';
-#endif
 
     Yuni::IO::File::Stream file;
     if (not openFile(file, filename))
@@ -1301,11 +1283,9 @@ bool Matrix<T, ReadWriteT>::internalSaveCSVFile(const AnyString& filename,
         saveBufferToFile(buffer, file);
     }
 
-#ifndef NDEBUG
     // Attempt to open the file, and to write data
     // We have write access to the file
     logs.debug() << "  :: [end] writing `" << filename << "' (" << width << 'x' << height << ')';
-#endif
 
     jit_mgr.unload_matrix_properly_from_memory(this);
 
@@ -1765,7 +1745,6 @@ inline typename Matrix<T, ReadWriteT>::ColumnType& Matrix<T, ReadWriteT>::column
     assert(Memory::RawPointer(entry[n]));
     return entry[n];
 }
-
 } // namespace Antares
 
 #endif // __ANTARES_LIBS_ARRAY_MATRIX_HXX__

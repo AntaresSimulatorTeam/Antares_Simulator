@@ -618,20 +618,21 @@ unsigned int ThermalCluster::precision() const
 
 CostProvider& ThermalCluster::getCostProvider()
 {
-    if (!costProvider)
-    {
-        switch (costgeneration)
-        {
-        case Data::setManually:
-            costProvider = std::make_unique<ConstantCostProvider>(*this);
-            break;
-        case Data::useCostTimeseries:
-            costProvider = std::make_unique<ScenarizedCostProvider>(*this);
-            break;
-        default:
-            throw std::runtime_error("Invalid costgeneration parameter");
-        }
-    }
+    std::call_once(onceFlag,
+                   [&]
+                   {
+                       switch (costgeneration)
+                       {
+                       case Data::setManually:
+                           costProvider = std::make_unique<ConstantCostProvider>(*this);
+                           break;
+                       case Data::useCostTimeseries:
+                           costProvider = std::make_unique<ScenarizedCostProvider>(*this);
+                           break;
+                       default:
+                           throw std::runtime_error("Invalid costgeneration parameter");
+                       }
+                   });
     return *costProvider;
 }
 

@@ -18,34 +18,21 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
+#pragma once
 
-#ifdef __CPLUSPLUS
-extern "C"
+#include "antares/expressions/nodes/BinaryNode.h"
+
+namespace Antares::Expressions::Nodes
 {
-#endif
 
-#include "spx_definition_arguments.h"
-#include "spx_fonctions.h"
-
-#ifdef __CPLUSPLUS
-}
-#endif
-
-#include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
-#include "antares/solver/hydro/daily/h2o_j_fonctions.h"
-
-void H2O_J_Free(DONNEES_MENSUELLES* DonneesMensuelles)
+class TimeShiftNode: public BinaryNode
 {
-    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
+public:
+    using BinaryNode::BinaryNode;
 
-    for (int i = 0; i < ProblemeHydraulique.NombreDeProblemes; i++)
+    std::string name() const override
     {
-        PROBLEME_SPX* ProbSpx = (PROBLEME_SPX*)ProblemeHydraulique.ProblemeSpx[i];
-        if (ProbSpx)
-        {
-            SPX_LibererProbleme(ProbSpx);
-        }
+        return "TimeShiftNode";
     }
-
-    return;
-}
+};
+} // namespace Antares::Expressions::Nodes

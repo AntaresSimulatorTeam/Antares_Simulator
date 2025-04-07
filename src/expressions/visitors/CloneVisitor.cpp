@@ -120,6 +120,28 @@ Nodes::Node* CloneVisitor::visit(const Nodes::ComponentParameterNode* component_
       component_parameter_node->getComponentName());
 }
 
+Nodes::Node* CloneVisitor::visit(const Nodes::TimeShiftNode* node)
+{
+    return registry_.create<Nodes::TimeShiftNode>(dispatch(node->left()), node->right());
+}
+
+Nodes::Node* CloneVisitor::visit(const Nodes::TimeIndexNode* node)
+{
+    return registry_.create<Nodes::TimeIndexNode>(dispatch(node->left()), dispatch(node->right()));
+}
+
+Nodes::Node* CloneVisitor::visit(const Nodes::TimeSumNode* node)
+{
+    return registry_.create<Nodes::TimeSumNode>(dispatch(node->from()),
+                                                dispatch(node->to()),
+                                                dispatch(node->expression()));
+}
+
+Nodes::Node* CloneVisitor::visit(const Nodes::AllTimeSumNode* node)
+{
+    return registry_.create<Nodes::AllTimeSumNode>(dispatch(node->child()));
+}
+
 std::string CloneVisitor::name() const
 {
     return "CloneVisitor";
