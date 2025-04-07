@@ -97,21 +97,22 @@ using FullKeyMap = std::unordered_map<FullKey, double, FullKeyHash>;
  * ```
  */
 template<typename MapType, typename UnaryOp = std::identity>
-MapType add_maps(const MapType& left, const MapType& right, UnaryOp op = std::identity{})
+void add_maps(MapType& left, const MapType&& right, UnaryOp op = std::identity{})
 {
-    auto result(left);
-    for (auto [key, value]: right)
+    // auto result(left);
+    for (auto& [key, value]: right)
     {
-        if (result.contains(key))
+        if (left.find(key) != left.end())
         {
-            result[key] += op(value);
+            // Key exists in map1, add the values
+            left[key] += op(value);
         }
         else
         {
-            result[key] = op(value);
+            // Key does not exist in map1, insert the pair
+            left.emplace(key, op(value));
         }
     }
-    return result;
 }
 
 /**
@@ -135,8 +136,8 @@ class LinearExpression
 public:
     /// Build a linear expression with zero offset and zero coefficients
     LinearExpression() = default;
-    /// Build a linear expression with a given offset and a given map of non-zero coefficients per
-    /// variable ID
+    /// Build a linear expression with a given offset and a given map of non-zero coefficients
+    /// per variable ID
     LinearExpression(double offset, FullKeyMap coef_per_var);
     /// Sum two linear expressions
     LinearExpression operator+(const LinearExpression& other) const;
@@ -146,7 +147,8 @@ public:
     /// Only one can have non-zero coefficients, otherwise the result cannot be linear
     LinearExpression operator*(const LinearExpression& other) const;
     /// Divide two linear expressions
-    /// Only first expression can have non-zero coefficients, otherwise the result cannot be linear
+    /// Only first expression can have non-zero coefficients, otherwise the result cannot be
+    /// linear
     LinearExpression operator/(const LinearExpression& other) const;
     /// Multiply linear expression by -1
     LinearExpression operator-() const;
@@ -158,6 +160,7 @@ public:
     const FullKeyMap& coefPerVar() const;
 
     LinearExpression& operator+=(const LinearExpression& value);
+    // LinearExpression& operator-=(const LinearExpression& value);
 
 private:
     double offset_ = 0;

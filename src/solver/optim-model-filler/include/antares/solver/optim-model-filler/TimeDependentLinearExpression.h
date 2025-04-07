@@ -44,6 +44,25 @@ public:
       const Optimisation::LinearProblemApi::FillContext& fillContext,
       const LinearExpression& linearExpression);
     explicit TimeDependentLinearExpression(LinearExpressionMap linearExpressions);
+    // explicit TimeDependentLinearExpression(const LinearExpressionMap& linearExpressions);
+    explicit TimeDependentLinearExpression(
+      const TimeDependentLinearExpression& timeDependentLinearExpression);
+
+    // Move constructor
+    TimeDependentLinearExpression(TimeDependentLinearExpression&& other) noexcept:
+        linearExpressions_(std::move(other.linearExpressions_))
+    {
+    }
+
+    // Move assignment operator
+    TimeDependentLinearExpression& operator=(TimeDependentLinearExpression&& other) noexcept
+    {
+        if (this != &other)
+        {
+            linearExpressions_ = std::move(other.linearExpressions_);
+        }
+        return *this;
+    }
 
     /// Sum two linear expressions
     TimeDependentLinearExpression operator+(const TimeDependentLinearExpression& other) const;
@@ -65,6 +84,7 @@ public:
     const LinearExpressionMap& GetLinearExpressions() const;
     size_t getSize() const;
     TimeDependentLinearExpression& operator+=(const TimeDependentLinearExpression& other);
+    TimeDependentLinearExpression& operator-=(const TimeDependentLinearExpression& other);
 
 private:
     LinearExpressionMap linearExpressions_;

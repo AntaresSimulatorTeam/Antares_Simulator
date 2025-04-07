@@ -53,18 +53,40 @@ TimeDependentLinearExpression::TimeDependentLinearExpression(LinearExpressionMap
 {
 }
 
+TimeDependentLinearExpression::TimeDependentLinearExpression(
+  const TimeDependentLinearExpression& timeDependentLinearExpression):
+    linearExpressions_(timeDependentLinearExpression.linearExpressions_)
+{
+}
+
+TimeDependentLinearExpression& TimeDependentLinearExpression::operator+=(
+  const TimeDependentLinearExpression& other)
+{
+    add_maps(linearExpressions_, std::move(other.GetLinearExpressions()));
+    return *this;
+}
+
+// TimeDependentLinearExpression& TimeDependentLinearExpression::operator-=(
+//   const TimeDependentLinearExpression& other)
+// {
+//     add_maps(linearExpressions_, std::move(other.GetLinearExpressions()), std::negate<double>());
+//     return *this;
+// }
+
 TimeDependentLinearExpression TimeDependentLinearExpression::operator+(
   const TimeDependentLinearExpression& other) const
 {
-    return TimeDependentLinearExpression(
-      add_maps(GetLinearExpressions(), other.GetLinearExpressions()));
+    auto result(*this);
+    result += other;
+    return result;
 }
 
 TimeDependentLinearExpression TimeDependentLinearExpression::operator-(
   const TimeDependentLinearExpression& other) const
 {
-    return TimeDependentLinearExpression(
-      add_maps(GetLinearExpressions(), other.GetLinearExpressions(), std::negate<>()));
+    auto result(*this);
+    result += -other;
+    return result;
 }
 
 template<typename BinaryOperator>
@@ -122,13 +144,6 @@ const LinearExpressionMap& TimeDependentLinearExpression::GetLinearExpressions()
 size_t TimeDependentLinearExpression::getSize() const
 {
     return linearExpressions_.size();
-}
-
-TimeDependentLinearExpression& TimeDependentLinearExpression::operator+=(
-  const TimeDependentLinearExpression& other)
-{
-    linearExpressions_ = add_maps(linearExpressions_, other.GetLinearExpressions());
-    return *this;
 }
 
 TimeDependentLinearExpression TimeDependentLinearExpression::shiftLinearExpressions(
