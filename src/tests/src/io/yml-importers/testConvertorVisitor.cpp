@@ -214,6 +214,7 @@ BOOST_AUTO_TEST_CASE(portfield)
     expression = "port2.field1";
     BOOST_CHECK_THROW(converter.run(expression), std::runtime_error);
 }
+
 BOOST_AUTO_TEST_CASE(portfieldSum)
 {
     YmlModel::Model model{.id = "model0",
