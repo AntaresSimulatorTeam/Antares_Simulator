@@ -462,6 +462,8 @@ It includes 15 parameters (out of which 7 are booleans) presented hereafter:
 
   - "Pumping Efficiency Ratio": setting the value to r means that, for the purpose of storing 1 gravitational MWh, pumps will have to use (1/r) electrical MWh.
 
+  - "overflow spilled cost difference" : value of the overflow cost. The cost for the overflow variable is "cost of spillage + overflow spilled cost difference".
+
 ## Wind
 
 _[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/06-wind/)_
