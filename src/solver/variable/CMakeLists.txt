@@ -160,6 +160,7 @@ target_link_libraries(antares-solver-variable
         PRIVATE
         antares-core
         Antares::study
+	Boost::headers
 )
 
 
