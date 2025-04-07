@@ -157,8 +157,12 @@ Inheritance diagram for ExprBaseVisitor:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a841241a7202696ea3d1d3dd70c16dafc" id="r_a841241a7202696ea3d1d3dd70c16dafc"><td class="memItemLeft" align="right" valign="top">virtual std::any&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a841241a7202696ea3d1d3dd70c16dafc">visitPortFieldExpr</a> (<a class="el" href="classExprParser_1_1PortFieldExprContext.html">ExprParser::PortFieldExprContext</a> *ctx) override</td></tr>
+<tr class="separator:a841241a7202696ea3d1d3dd70c16dafc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3122023ab9aac9e7d597d11343a83194" id="r_a3122023ab9aac9e7d597d11343a83194"><td class="memItemLeft" align="right" valign="top">virtual std::any&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3122023ab9aac9e7d597d11343a83194">visitFullexpr</a> (<a class="el" href="classExprParser_1_1FullexprContext.html">ExprParser::FullexprContext</a> *ctx) override</td></tr>
 <tr class="separator:a3122023ab9aac9e7d597d11343a83194"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8670370ca3a763aa33f1596caf71cba6" id="r_a8670370ca3a763aa33f1596caf71cba6"><td class="memItemLeft" align="right" valign="top">virtual std::any&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8670370ca3a763aa33f1596caf71cba6">visitPortFieldSum</a> (<a class="el" href="classExprParser_1_1PortFieldSumContext.html">ExprParser::PortFieldSumContext</a> *ctx) override</td></tr>
+<tr class="separator:a8670370ca3a763aa33f1596caf71cba6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a793617666ba1c80285020eea0c9aabbb" id="r_a793617666ba1c80285020eea0c9aabbb"><td class="memItemLeft" align="right" valign="top">virtual std::any&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a793617666ba1c80285020eea0c9aabbb">visitNegation</a> (<a class="el" href="classExprParser_1_1NegationContext.html">ExprParser::NegationContext</a> *ctx) override</td></tr>
 <tr class="separator:a793617666ba1c80285020eea0c9aabbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a523180874f50d85dbbfa970ea98cd2fc" id="r_a523180874f50d85dbbfa970ea98cd2fc"><td class="memItemLeft" align="right" valign="top">virtual std::any&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a523180874f50d85dbbfa970ea98cd2fc">visitUnsignedAtom</a> (<a class="el" href="classExprParser_1_1UnsignedAtomContext.html">ExprParser::UnsignedAtomContext</a> *ctx) override</td></tr>
@@ -332,7 +336,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">virtual std::any ExprBaseVisitor::visitFullexpr </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classExprParser_1_1FullexprContext.html">ExprParser::FullexprContext</a> *</td>          <td class="paramname"><span class="paramname"><em>context</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classExprParser_1_1FullexprContext.html">ExprParser::FullexprContext</a> *</td>          <td class="paramname"><span class="paramname"><em>ctx</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -342,9 +346,8 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Visit parse trees produced by <a class="el" href="classExprParser.html">ExprParser</a>. </p>
 
-<p>Implements <a class="el" href="classExprVisitor.html#a7911ff65674e66c4c49cd1c572985b97">ExprVisitor</a>.</p>
+<p>Implements <a class="el" href="classExprVisitor.html">ExprVisitor</a>.</p>
 
 </div>
 </div>
@@ -496,6 +499,61 @@ Public Member Functions</h2></td></tr>
           <td class="memname">virtual std::any ExprBaseVisitor::visitPortField </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classExprParser_1_1PortFieldContext.html">ExprParser::PortFieldContext</a> *</td>          <td class="paramname"><span class="paramname"><em>ctx</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classExprVisitor.html">ExprVisitor</a>.</p>
+
+</div>
+</div>
+<a id="a841241a7202696ea3d1d3dd70c16dafc" name="a841241a7202696ea3d1d3dd70c16dafc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a841241a7202696ea3d1d3dd70c16dafc">&#9670;&#160;</a></span>visitPortFieldExpr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual std::any ExprBaseVisitor::visitPortFieldExpr </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classExprParser_1_1PortFieldExprContext.html">ExprParser::PortFieldExprContext</a> *</td>          <td class="paramname"><span class="paramname"><em>context</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Visit parse trees produced by <a class="el" href="classExprParser.html">ExprParser</a>. </p>
+
+<p>Implements <a class="el" href="classExprVisitor.html#a51f9b9466d14849a1a1f59349a8a37e8">ExprVisitor</a>.</p>
+
+</div>
+</div>
+<a id="a8670370ca3a763aa33f1596caf71cba6" name="a8670370ca3a763aa33f1596caf71cba6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8670370ca3a763aa33f1596caf71cba6">&#9670;&#160;</a></span>visitPortFieldSum()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual std::any ExprBaseVisitor::visitPortFieldSum </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classExprParser_1_1PortFieldSumContext.html">ExprParser::PortFieldSumContext</a> *</td>          <td class="paramname"><span class="paramname"><em>ctx</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>

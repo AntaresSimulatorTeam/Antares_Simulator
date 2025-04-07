@@ -1245,6 +1245,7 @@ var hierarchy =
         [ "ExprParser::MuldivContext", "classExprParser_1_1MuldivContext.html", null ],
         [ "ExprParser::NegationContext", "classExprParser_1_1NegationContext.html", null ],
         [ "ExprParser::PortFieldContext", "classExprParser_1_1PortFieldContext.html", null ],
+        [ "ExprParser::PortFieldSumContext", "classExprParser_1_1PortFieldSumContext.html", null ],
         [ "ExprParser::TimeIndexContext", "classExprParser_1_1TimeIndexContext.html", null ],
         [ "ExprParser::TimeIndexExprContext", "classExprParser_1_1TimeIndexExprContext.html", null ],
         [ "ExprParser::TimeShiftContext", "classExprParser_1_1TimeShiftContext.html", null ],
@@ -1253,6 +1254,7 @@ var hierarchy =
         [ "ExprParser::UnsignedAtomContext", "classExprParser_1_1UnsignedAtomContext.html", null ]
       ] ],
       [ "ExprParser::FullexprContext", "classExprParser_1_1FullexprContext.html", null ],
+      [ "ExprParser::PortFieldExprContext", "classExprParser_1_1PortFieldExprContext.html", null ],
       [ "ExprParser::Right_exprContext", "classExprParser_1_1Right__exprContext.html", [
         [ "ExprParser::RightAtomContext", "classExprParser_1_1RightAtomContext.html", null ],
         [ "ExprParser::RightExpressionContext", "classExprParser_1_1RightExpressionContext.html", null ],

@@ -1,5 +1,7 @@
 var NAVTREEINDEX29 =
 {
+"structRenewableClusterStudy.html":[9,0,230],
+"structSOLDE__MOYEN__DES__ECHANGES.html":[9,0,251],
 "structSavingToStreamFixture.html":[9,0,235],
 "structShortTermStorageCumulativeConstraintData.html":[9,0,246],
 "structShortTermStorageData.html":[9,0,247],

@@ -1,5 +1,7 @@
 var NAVTREEINDEX25 =
 {
+"linear-problem-api_2include_2antares_2optimisation_2linear-problem-api_2mipConstraint_8h_source.html":[10,0,0,7,0,0,0,0,0,6],
+"linear-problem-api_2include_2antares_2optimisation_2linear-problem-api_2mipSolution_8h_source.html":[10,0,0,7,0,0,0,0,0,7],
 "linear-problem-api_2include_2antares_2optimisation_2linear-problem-api_2mipVariable_8h_source.html":[10,0,0,7,0,0,0,0,0,8],
 "linear-problem-mpsolver-impl_2include_2antares_2optimisation_2linear-problem-mpsolver-impl_2linearProblem_8h_source.html":[10,0,0,7,2,0,0,0,0,0],
 "linear-problem-mpsolver-impl_2include_2antares_2optimisation_2linear-problem-mpsolver-impl_2mipConstraint_8h_source.html":[10,0,0,7,2,0,0,0,0,1],
@@ -247,7 +249,5 @@ var NAVTREEINDEX25 =
 "saveas_8hxx_source.html":[10,0,0,12,2,2,28],
 "scBuilderDataInterface_8h_source.html":[10,0,0,5,0,23,0,0,0,8,9],
 "scBuilderUtils_8h_source.html":[10,0,0,5,0,23,0,0,0,8,10],
-"scenario-builder-hydro-final-levels-renderer_8h_source.html":[10,0,0,12,2,1,1,1,1,17],
-"scenario-builder-hydro-levels-renderer_8h_source.html":[10,0,0,12,2,1,1,1,1,18],
-"scenario-builder-hydro-renderer_8h_source.html":[10,0,0,12,2,1,1,1,1,19]
+"scenario-builder-hydro-final-levels-renderer_8h_source.html":[10,0,0,12,2,1,1,1,1,17]
 };

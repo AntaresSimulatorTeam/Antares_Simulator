@@ -217,6 +217,10 @@ std::any&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (antlr4
 <tr class="separator:a85ad9d0d3f222ee5d5e123d090012530"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac5feb3505190c901b0bb0570e864014b" id="r_ac5feb3505190c901b0bb0570e864014b"><td class="memItemLeft" align="right" valign="top">std::any&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac5feb3505190c901b0bb0570e864014b">visitTimeIndexExpr</a> (<a class="el" href="classExprParser_1_1TimeIndexExprContext.html">ExprParser::TimeIndexExprContext</a> *context) override</td></tr>
 <tr class="separator:ac5feb3505190c901b0bb0570e864014b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6437e44a663cc8f92c4143ac6fd42ae5" id="r_a6437e44a663cc8f92c4143ac6fd42ae5"><td class="memItemLeft" align="right" valign="top">std::any&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6437e44a663cc8f92c4143ac6fd42ae5">visitPortFieldExpr</a> (<a class="el" href="classExprParser_1_1PortFieldExprContext.html">ExprParser::PortFieldExprContext</a> *context) override</td></tr>
+<tr class="separator:a6437e44a663cc8f92c4143ac6fd42ae5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13b18827819b57a7a6d5c83cf0c495b5" id="r_a13b18827819b57a7a6d5c83cf0c495b5"><td class="memItemLeft" align="right" valign="top">std::any&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a13b18827819b57a7a6d5c83cf0c495b5">visitPortFieldSum</a> (<a class="el" href="classExprParser_1_1PortFieldSumContext.html">ExprParser::PortFieldSumContext</a> *context) override</td></tr>
+<tr class="separator:a13b18827819b57a7a6d5c83cf0c495b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classExprVisitor"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classExprVisitor')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classExprVisitor.html">ExprVisitor</a></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -352,9 +356,8 @@ std::any&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (antlr4
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Visit parse trees produced by <a class="el" href="classExprParser.html">ExprParser</a>. </p>
 
-<p>Implements <a class="el" href="classExprVisitor.html#a7911ff65674e66c4c49cd1c572985b97">ExprVisitor</a>.</p>
+<p>Implements <a class="el" href="classExprVisitor.html">ExprVisitor</a>.</p>
 
 </div>
 </div>
@@ -506,6 +509,61 @@ std::any&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (antlr4
           <td class="memname">std::any Antares::IO::Inputs::ModelConverter::ConvertorVisitor::visitPortField </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classExprParser_1_1PortFieldContext.html">ExprParser::PortFieldContext</a> *</td>          <td class="paramname"><span class="paramname"><em>context</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classExprVisitor.html">ExprVisitor</a>.</p>
+
+</div>
+</div>
+<a id="a6437e44a663cc8f92c4143ac6fd42ae5" name="a6437e44a663cc8f92c4143ac6fd42ae5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6437e44a663cc8f92c4143ac6fd42ae5">&#9670;&#160;</a></span>visitPortFieldExpr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::any Antares::IO::Inputs::ModelConverter::ConvertorVisitor::visitPortFieldExpr </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classExprParser_1_1PortFieldExprContext.html">ExprParser::PortFieldExprContext</a> *</td>          <td class="paramname"><span class="paramname"><em>context</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Visit parse trees produced by <a class="el" href="classExprParser.html">ExprParser</a>. </p>
+
+<p>Implements <a class="el" href="classExprVisitor.html#a51f9b9466d14849a1a1f59349a8a37e8">ExprVisitor</a>.</p>
+
+</div>
+</div>
+<a id="a13b18827819b57a7a6d5c83cf0c495b5" name="a13b18827819b57a7a6d5c83cf0c495b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a13b18827819b57a7a6d5c83cf0c495b5">&#9670;&#160;</a></span>visitPortFieldSum()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::any Antares::IO::Inputs::ModelConverter::ConvertorVisitor::visitPortFieldSum </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classExprParser_1_1PortFieldSumContext.html">ExprParser::PortFieldSumContext</a> *</td>          <td class="paramname"><span class="paramname"><em>context</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>

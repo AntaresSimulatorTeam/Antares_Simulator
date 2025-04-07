@@ -1,5 +1,7 @@
 var NAVTREEINDEX26 =
 {
+"scenario-builder-hydro-levels-renderer_8h_source.html":[10,0,0,12,2,1,1,1,1,18],
+"scenario-builder-hydro-renderer_8h_source.html":[10,0,0,12,2,1,1,1,1,19],
 "scenario-builder-load-renderer_8h_source.html":[10,0,0,12,2,1,1,1,1,20],
 "scenario-builder-ntc-renderer_8h_source.html":[10,0,0,12,2,1,1,1,1,21],
 "scenario-builder-renderer-base_8h_source.html":[10,0,0,12,2,1,1,1,1,22],
@@ -247,7 +249,5 @@ var NAVTREEINDEX26 =
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#adb10ffc7d878851872fdd8b2e0c13116":[9,0,0,18,5,0,3,0],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#aee6d3ffba5f966e12ae027ba334058c4":[9,0,0,18,5,0,3,1],
 "structAntares_1_1Solver_1_1Variable_1_1Areas_1_1Statistics.html":[9,0,0,18,5,7,0],
-"structAntares_1_1Solver_1_1Variable_1_1BindingConstraints_1_1Statistics.html":[9,0,0,18,5,8,0],
-"structAntares_1_1Solver_1_1Variable_1_1Category_1_1NextLevel.html":[9,0,0,18,5,1,0],
-"structAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy.html":[9,0,0,18,5,2,0]
+"structAntares_1_1Solver_1_1Variable_1_1BindingConstraints_1_1Statistics.html":[9,0,0,18,5,8,0]
 };

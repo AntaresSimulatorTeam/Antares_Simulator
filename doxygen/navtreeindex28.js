@@ -1,5 +1,7 @@
 var NAVTREEINDEX28 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Links_1_1Statistics.html":[9,0,0,18,5,13,0],
+"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat.html":[9,0,0,18,5,14],
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_010_01_4.html":[9,0,0,18,5,15],
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_011_01_4.html":[9,0,0,18,5,16],
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_012_01_4.html":[9,0,0,18,5,17],
@@ -247,7 +249,5 @@ var NAVTREEINDEX28 =
 "structRESERVE__JMOINS1.html":[9,0,231],
 "structRESULTATS__HORAIRES.html":[9,0,232],
 "structRawConnection.html":[9,0,225],
-"structReadFromStreamFixture.html":[9,0,226],
-"structRenewableClusterStudy.html":[9,0,230],
-"structSOLDE__MOYEN__DES__ECHANGES.html":[9,0,251]
+"structReadFromStreamFixture.html":[9,0,226]
 };

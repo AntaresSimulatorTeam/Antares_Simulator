@@ -13,6 +13,8 @@ var classExprParser =
     [ "NegationContext", "classExprParser_1_1NegationContext.html", null ],
     [ "NumberContext", "classExprParser_1_1NumberContext.html", null ],
     [ "PortFieldContext", "classExprParser_1_1PortFieldContext.html", null ],
+    [ "PortFieldExprContext", "classExprParser_1_1PortFieldExprContext.html", null ],
+    [ "PortFieldSumContext", "classExprParser_1_1PortFieldSumContext.html", null ],
     [ "Right_exprContext", "classExprParser_1_1Right__exprContext.html", null ],
     [ "RightAtomContext", "classExprParser_1_1RightAtomContext.html", null ],
     [ "RightExpressionContext", "classExprParser_1_1RightExpressionContext.html", null ],
