@@ -7,7 +7,7 @@ toc_depth: 2
 *Antares Simulator* depends on some mandatory libraries.
 
 - [Sirius Solver](https://github.com/AntaresSimulatorTeam/sirius-solver/tree/Antares_VCPKG) (fork from [RTE](https://github.com/rte-france/sirius-solver/tree/Antares_VCPKG))
-- [OR-Tools](https://github.com/rte-france/or-tools-rte) (patches & builds [Google](https://github.com/google/or-tools))
+- [OR-Tools-RTE](https://github.com/rte-france/or-tools-rte) (patches & builds [Google OR-Tools](https://github.com/google/or-tools))
   (Only for the complete Antares Simulator solution with GUI)
 - [minizip](https://github.com/zlib-ng/minizip-ng) library, with its dependency zlib
 - [Boost](https://www.boost.org/) libraries: header libraries and boost-test library
