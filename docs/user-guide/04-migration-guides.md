@@ -31,9 +31,9 @@ the simulation will fail with a warning. We recommend removing these properties 
     - `efficiencywithdrawal` (double in [0, 1], default 1) short-term storages (file
       input/st-storage/clusters/<area id>/list.ini)
     - `penalize-variation-injection` boolean, default false (file
-      input/st-storage/series/<area id>/list.ini)
+      input/st-storage/clusters/<area id>/list.ini)
     - `penalize-variation-withdrawal` boolean, default false (file
-      input/st-storage/series/<area id>/list.ini)
+      input/st-storage/clusters/<area id>/list.ini)
 
 - Added 5 optional timeseries for each STS in existing directory `input/st-storage/series/<area id>/<ST id>/`
 	- `cost-injection.txt`
