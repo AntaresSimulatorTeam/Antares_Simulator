@@ -95,7 +95,7 @@ static const SystemModel::Model& getModel(const std::vector<SystemModel::Library
 }
 
 static SystemModel::Component createComponent(const YmlSystem::Component& c,
-                                              const std::vector<SystemModel::Library>& libraries)
+                                              const std::vector<SystemModel::Library>& libraries, int i)
 {
     const auto [libraryId, modelId] = splitLibraryModelString(c.model);
 
@@ -115,7 +115,7 @@ static SystemModel::Component createComponent(const YmlSystem::Component& c,
                                  .value = value});
     }
 
-    auto component = component_builder.withId(c.id)
+    auto component = component_builder.withId(c.id + "_" + std::to_string(i))
                        .withModel(&model)
                        .withScenarioGroupId(c.scenarioGroup)
                        .withParameterValues(parameters)
