@@ -199,7 +199,7 @@ BOOST_AUTO_TEST_CASE(portfield)
                           .description = "description",
                           .parameters = {},
                           .variables = {},
-                          .ports = {},
+                          .ports = {{.id = "port1", .type = "blue"}},
                           .port_field_definitions = {{"port1", "field1", ""}},
                           .constraints = {},
                           .binding_constraints = {},
@@ -210,6 +210,27 @@ BOOST_AUTO_TEST_CASE(portfield)
     auto expr = converter.run(expression);
 
     BOOST_CHECK_EQUAL(expr.node->name(), "PortFieldNode");
+
+    expression = "port2.field1";
+    BOOST_CHECK_THROW(converter.run(expression), std::runtime_error);
+}
+BOOST_AUTO_TEST_CASE(portfieldSum)
+{
+    YmlModel::Model model{.id = "model0",
+                          .description = "description",
+                          .parameters = {},
+                          .variables = {},
+                          .ports = {{.id = "port1", .type = "blue"}},
+                          .port_field_definitions = {{"port1", "field1", ""}},
+                          .constraints = {},
+                          .binding_constraints = {},
+                          .objective = "objectives"};
+
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+    std::string expression = "sum_connections(port1.field1)";
+    auto expr = converter.run(expression);
+
+    BOOST_CHECK_EQUAL(expr.node->name(), "PortFieldSumNode");
 
     expression = "port2.field1";
     BOOST_CHECK_THROW(converter.run(expression), std::runtime_error);

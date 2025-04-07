@@ -50,6 +50,7 @@ public:
     std::any visitExpression(ExprParser::ExpressionContext* context) override;
     std::any visitComparison(ExprParser::ComparisonContext* context) override;
     std::any visitAddsub(ExprParser::AddsubContext* context) override;
+    PortFieldNode* processPortRule(ExprParser::ExprParser::PortFieldExprContext* context);
     std::any visitPortField(ExprParser::PortFieldContext* context) override;
     std::any visitNumber(ExprParser::NumberContext* context) override;
     std::any visitTimeIndex(ExprParser::TimeIndexContext* context) override;
@@ -247,16 +248,21 @@ static bool isThePortIsRegistered(const std::string& portId,
     return false;
 }
 
-std::any ConvertorVisitor::visitPortField(ExprParser::PortFieldContext* context)
+PortFieldNode* ConvertorVisitor::processPortRule(ExprParser::PortFieldExprContext* context)
 {
     const auto [portId, portField] = std::any_cast<std::pair<std::string, std::string>>(
-      context->portFieldExpr()->accept(this));
+      context->accept(this));
 
     if (isThePortIsRegistered(portId, model_.ports))
     {
-        return static_cast<Node*>(registry_.create<PortFieldNode>(portId, portField));
+        return registry_.create<PortFieldNode>(portId, portField);
     }
     throw NoPortWithThisId(portId);
+}
+
+std::any ConvertorVisitor::visitPortField(ExprParser::PortFieldContext* context)
+{
+    return processPortRule(context->portFieldExpr());
 }
 
 std::any ConvertorVisitor::visitNumber(ExprParser::NumberContext* context)
@@ -303,7 +309,7 @@ std::any ConvertorVisitor::visitPortFieldExpr(ExprParser::PortFieldExprContext* 
 
 std::any ConvertorVisitor::visitPortFieldSum(ExprParser::PortFieldSumContext* context)
 {
-    const auto port = std::any_cast<PortFieldNode*>(visit(context->portFieldExpr()));
+    const auto port = processPortRule(context->portFieldExpr());
     const auto portName = port->getPortName();
     const auto fieldName = port->getFieldName();
 
