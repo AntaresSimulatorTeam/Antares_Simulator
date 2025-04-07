@@ -89,12 +89,6 @@ jobs:
           # Allows to restore a cache when deps have only partially changed (like adding a dependency)
           restore-keys: vcpkg-cache-windows-8-8
 
-      - name: Download pre-compiled librairies
-        uses: ./.github/workflows/download-extract-precompiled-libraries-zip
-        with:
-          os: windows-latest
-          ortools-url: ${{env.ORTOOLS_URL}}
-          ortools-dir: ${{env.ORTOOLS_DIR}}
 
       - name: Setup Python 3.12
         uses: actions/setup-python@v5
