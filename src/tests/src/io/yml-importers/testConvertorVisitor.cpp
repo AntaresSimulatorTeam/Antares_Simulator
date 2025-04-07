@@ -232,7 +232,10 @@ BOOST_AUTO_TEST_CASE(portfieldSum)
     auto expr = converter.run(expression);
 
     BOOST_CHECK_EQUAL(expr.node->name(), "PortFieldSumNode");
-
+    auto portFieldSumNode = dynamic_cast<Nodes::PortFieldSumNode*>(expr.node);
+    BOOST_REQUIRE(portFieldSumNode);
+    BOOST_CHECK_EQUAL(portFieldSumNode->getPortName(), "port1");
+    BOOST_CHECK_EQUAL(portFieldSumNode->getFieldName(), "field1");
     expression = "port2.field1";
     BOOST_CHECK_THROW(converter.run(expression), std::runtime_error);
 }
