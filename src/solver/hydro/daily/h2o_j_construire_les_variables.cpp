@@ -33,6 +33,8 @@ extern "C"
 #include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily/h2o_j_fonctions.h"
 
+namespace DoneesOptimisationJournaliere
+{
 void H2O_j_ConstruireLesVariables(
   int NbPdt,
   std::vector<int>& NumeroDeVariableTurbine,
@@ -69,3 +71,4 @@ void H2O_j_ConstruireLesVariables(
 
     return;
 }
+} // namespace DoneesOptimisationJournaliere

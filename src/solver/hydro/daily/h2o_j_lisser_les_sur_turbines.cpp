@@ -26,6 +26,8 @@
 
 #define ZERO 1.e-9
 
+namespace DoneesOptimisationJournaliere
+{
 void H2O_J_LisserLesSurTurbines(DONNEES_MENSUELLES* DonneesMensuelles, int NumeroDeProbleme)
 {
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
@@ -120,3 +122,4 @@ BoucleDeRepartition:
 
     return;
 }
+} // namespace DoneesOptimisationJournaliere
