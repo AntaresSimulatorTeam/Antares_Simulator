@@ -38,7 +38,7 @@
 
 using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::Optimisation::LinearProblemDataImpl;
-using namespace Antares::Study::SystemModel;
+using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::Optimization;
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;

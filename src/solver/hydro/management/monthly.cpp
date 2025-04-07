@@ -32,6 +32,8 @@ namespace fs = std::filesystem;
 
 namespace Antares
 {
+
+#ifndef NDEBUG
 static void CheckHydroAllocationProblem(Data::Area& area,
                                         DONNEES_ANNUELLES& problem,
                                         int initLevelMonth,
@@ -72,6 +74,7 @@ static void CheckHydroAllocationProblem(Data::Area& area,
         }
     }
 }
+#endif
 
 double HydroManagement::prepareMonthlyTargetGenerations(
   Data::Area& area,

@@ -299,7 +299,6 @@ BOOST_FIXTURE_TEST_CASE(LinearityVisitor_name, Registry<Node>)
 BOOST_FIXTURE_TEST_CASE(CheckTimeIndexNodeLinearity, Registry<Node>)
 {
     LinearityVisitor linearityVisitor;
-    CompareVisitor compareVisitor;
     Node* literal1 = create<LiteralNode>(1.);
     Node* param1 = create<ParameterNode>("value");
     Node* expr1 = create<TimeIndexNode>(literal1, param1);
@@ -309,7 +308,6 @@ BOOST_FIXTURE_TEST_CASE(CheckTimeIndexNodeLinearity, Registry<Node>)
 BOOST_FIXTURE_TEST_CASE(CheckTimeShiftOnLiteralLinearity, Registry<Node>)
 {
     LinearityVisitor linearityVisitor;
-    CompareVisitor compareVisitor;
     Node* literal1 = create<LiteralNode>(1.);
     Node* expr1 = create<TimeShiftNode>(literal1, literal1);
     BOOST_CHECK(linearityVisitor.dispatch(expr1)
@@ -319,12 +317,50 @@ BOOST_FIXTURE_TEST_CASE(CheckTimeShiftOnLiteralLinearity, Registry<Node>)
 BOOST_FIXTURE_TEST_CASE(CheckTimeShiftOnVariableLinearity, Registry<Node>)
 {
     LinearityVisitor linearityVisitor;
-    CompareVisitor compareVisitor;
     Node* var1 = create<VariableNode>("variable1");
     Node* lit1 = create<LiteralNode>(0);
     Node* expr1 = create<TimeShiftNode>(var1, lit1);
     BOOST_CHECK(linearityVisitor.dispatch(expr1)
                 == LinearStatus::LINEAR); // because literal1 is constant
+}
+
+BOOST_FIXTURE_TEST_CASE(CheckTimeSumOnLiteralLinearity, Registry<Node>)
+{
+    LinearityVisitor linearityVisitor;
+    Node* literal = create<LiteralNode>(1.);
+    Node* from = create<LiteralNode>(0.);
+    Node* to = create<LiteralNode>(1.);
+    Node* expr1 = create<TimeSumNode>(from, to, literal);
+    BOOST_CHECK(linearityVisitor.dispatch(expr1)
+                == LinearStatus::CONSTANT); // because literal1 is constant
+}
+
+BOOST_FIXTURE_TEST_CASE(CheckTimeSumOnVariableLinearity, Registry<Node>)
+{
+    LinearityVisitor linearityVisitor;
+    Node* var1 = create<VariableNode>("variable1");
+    Node* from = create<LiteralNode>(0.);
+    Node* to = create<LiteralNode>(1.);
+    Node* expr1 = create<TimeSumNode>(from, to, var1);
+    BOOST_CHECK(linearityVisitor.dispatch(expr1) == LinearStatus::LINEAR); // because var1 is linear
+}
+
+BOOST_FIXTURE_TEST_CASE(CheckAllTimeSumOnLiteralLinearity, Registry<Node>)
+{
+    LinearityVisitor linearityVisitor;
+    Node* literal1 = create<LiteralNode>(1.);
+    Node* expr1 = create<AllTimeSumNode>(literal1);
+    BOOST_CHECK(linearityVisitor.dispatch(expr1)
+                == LinearStatus::CONSTANT); // because literal1 is constant
+}
+
+BOOST_FIXTURE_TEST_CASE(CheckAllTimeSumOnVariableLinearity, Registry<Node>)
+{
+    LinearityVisitor linearityVisitor;
+    Node* var1 = create<VariableNode>("variable1");
+    Node* expr1 = create<AllTimeSumNode>(var1);
+    BOOST_CHECK(linearityVisitor.dispatch(expr1)
+                == LinearStatus::CONSTANT); // because var1 is linear
 }
 
 BOOST_FIXTURE_TEST_CASE(sum_node_cases, Registry<Node>)

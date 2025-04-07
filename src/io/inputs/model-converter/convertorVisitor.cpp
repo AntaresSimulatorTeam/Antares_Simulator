@@ -21,6 +21,7 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/io/inputs/model-converter/convertorVisitor.h>
+#include "antares/expressions/nodes/TimeSumNode.h"
 #include "antares/expressions/visitors/CompareVisitor.h"
 
 #include "ExprLexer.h"
@@ -73,6 +74,7 @@ private:
     const YmlModel::Model& model_;
 
     std::any buildShiftNode(Node* shifted_expr, ExprParser::ShiftContext* context);
+    Node* NodeFromShiftContext(ExprParser::Shift_exprContext* shift_expr);
 };
 
 Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
@@ -286,16 +288,33 @@ std::any ConvertorVisitor::visitFunction([[maybe_unused]] ExprParser::FunctionCo
     throw NotImplemented("Node function not implemented yet");
 }
 
-// TODO implement this
-std::any ConvertorVisitor::visitTimeSum([[maybe_unused]] ExprParser::TimeSumContext* context)
+Node* ConvertorVisitor::NodeFromShiftContext(ExprParser::Shift_exprContext* shift_expr)
 {
-    throw NotImplemented("Node time sum not implemented yet");
+    if (shift_expr)
+    {
+        return std::any_cast<Node*>(shift_expr->accept(this));
+    }
+    else
+    {
+        return registry_.create<LiteralNode>(0);
+    }
 }
 
-// TODO implement this
+std::any ConvertorVisitor::visitTimeSum([[maybe_unused]] ExprParser::TimeSumContext* context)
+{
+    auto* from = NodeFromShiftContext(context->from->shift_expr());
+
+    auto* to = NodeFromShiftContext(context->to->shift_expr());
+
+    auto* expr = std::any_cast<Node*>(context->expr()->accept(this));
+
+    return static_cast<Node*>(registry_.create<TimeSumNode>(from, to, expr));
+}
+
 std::any ConvertorVisitor::visitAllTimeSum([[maybe_unused]] ExprParser::AllTimeSumContext* context)
 {
-    throw NotImplemented("Node all time sum  not implemented yet");
+    auto expr = std::any_cast<Node*>(context->expr()->accept(this));
+    return static_cast<Node*>(registry_.create<AllTimeSumNode>(expr));
 }
 
 // shift related, not tested
@@ -357,7 +376,12 @@ std::any ConvertorVisitor::visitRightMuldiv(
 std::any ConvertorVisitor::visitSignedExpression(
   [[maybe_unused]] ExprParser::SignedExpressionContext* context)
 {
-    throw NotImplemented("Node signed expression not implemented yet");
+    auto a = context->expr()->accept(this);
+    if (context->op->getText() == "-")
+    {
+        return static_cast<Node*>(registry_.create<NegationNode>(std::any_cast<Node*>(a)));
+    }
+    return a;
 }
 
 std::any ConvertorVisitor::visitRightExpression(ExprParser::RightExpressionContext* context)

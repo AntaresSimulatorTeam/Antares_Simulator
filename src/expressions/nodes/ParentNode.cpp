@@ -18,27 +18,27 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <antares/expressions/nodes/SumNode.h>
+#include <antares/expressions/nodes/ParentNode.h>
 
 namespace Antares::Expressions::Nodes
 {
 
-SumNode::SumNode(const std::vector<Node*>& operands):
+ParentNode::ParentNode(const std::vector<Node*>& operands):
     operands_(operands)
 {
 }
 
-const std::vector<Node*>& SumNode::getOperands() const
+const std::vector<Node*>& ParentNode::getOperands() const
 {
     return operands_;
 }
 
-size_t SumNode::size() const
+size_t ParentNode::size() const
 {
     return operands_.size();
 }
 
-Node* SumNode::operator[](std::size_t idx) const
+Node* ParentNode::operator[](std::size_t idx) const
 {
     return operands_[idx];
 }

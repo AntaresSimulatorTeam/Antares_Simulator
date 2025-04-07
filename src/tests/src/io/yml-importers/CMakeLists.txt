@@ -15,4 +15,5 @@ add_boost_test(TestYmlModel
   Antares::yml-model
   Antares::yml-system
   Antares::antares-study-system-model
-  Antares::antlr-interface)
+        Antares::antlr-interface
+        test_utils_unit)

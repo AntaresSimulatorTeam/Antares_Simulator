@@ -26,7 +26,7 @@
 #include <utility>
 #include <vector>
 
-namespace Antares::Study::SystemModel
+namespace Antares::ModelerStudy::SystemModel
 {
 
 /**
@@ -98,4 +98,4 @@ const Library& LibraryBuilder::build() const
 {
     return library_;
 }
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel

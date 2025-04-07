@@ -31,8 +31,22 @@
 #include "portFieldDefinition.h"
 #include "variable.h"
 
-namespace Antares::Study::SystemModel
+namespace Antares::ModelerStudy::SystemModel
 {
+struct PortFieldKey
+{
+    std::string portId;
+    std::string fieldId;
+    auto operator<=>(const PortFieldKey&) const = default;
+};
+
+class PortFieldKeyHash
+{
+public:
+    std::size_t operator()(const PortFieldKey& input) const;
+};
+
+using PortFieldMap = std::unordered_map<PortFieldKey, PortFieldDefinition, PortFieldKeyHash>;
 
 /**
  * Defines a model that can be referenced by actual components.
@@ -81,7 +95,7 @@ public:
         return ports_;
     }
 
-    const std::map<std::string, PortFieldDefinition>& PortFieldDefinitions() const
+    const PortFieldMap& PortFieldDefinitions() const
     {
         return portFieldDefinitions_;
     }
@@ -95,7 +109,8 @@ private:
     std::map<std::string, Variable> variables_;
     std::map<std::string, Constraint> constraints_;
     std::map<std::string, Port> ports_;
-    std::map<std::string, PortFieldDefinition> portFieldDefinitions_;
+
+    PortFieldMap portFieldDefinitions_;
 };
 
 class ModelBuilder
@@ -115,4 +130,4 @@ private:
     Model model_;
 };
 
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel

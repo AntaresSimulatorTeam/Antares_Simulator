@@ -55,6 +55,12 @@ public:
         return evaluateBinaryOperation(right, std::plus<>());
     }
 
+    EvaluationResult operator+=(const EvaluationResult& right)
+    {
+        *this = *this + right;
+        return *this;
+    }
+
     EvaluationResult operator-(const EvaluationResult& right) const
     {
         return evaluateBinaryOperation(right, std::minus<>());
@@ -114,7 +120,7 @@ public:
         using std::out_of_range::out_of_range;
     };
 
-    [[nodiscard]] double valueAsDouble() const
+    double valueAsDouble() const
     {
         if (!std::holds_alternative<double>(value_))
         {
@@ -133,7 +139,9 @@ public:
     }
 
     EvaluationResult operator[](int timeIndex) const;
-    EvaluationResult shiftResult(int timeShift) const;
+    EvaluationResult timeShift(int time_shift) const;
+    EvaluationResult timeSum(int from, int to) const;
+    EvaluationResult alltimeSum(int numberOfTimeStep) const;
 
 private:
     std::variant<double, std::vector<double>> value_;
@@ -275,5 +283,7 @@ private:
     EvaluationResult visit(const Nodes::ComponentParameterNode* node) override;
     EvaluationResult visit(const Nodes::TimeShiftNode* node) override;
     EvaluationResult visit(const Nodes::TimeIndexNode* node) override;
+    EvaluationResult visit(const Nodes::TimeSumNode* node) override;
+    EvaluationResult visit(const Nodes::AllTimeSumNode* node) override;
 };
 } // namespace Antares::Expressions::Visitors
