@@ -11,6 +11,8 @@ cd Antares_Simulator/src/expressions/antlr-interface
 java -jar ~/Downloads/antlr-4.13.2-complete.jar -Dlanguage=Cpp -visitor -no-listener Expr.g4
 ```
 
+See [here](https://github.com/antlr/antlr4/blob/master/doc/getting-started.md) for some general documentation about generating C++ code from an ANTLR4 grammar.
+
 ## Formatting
 Please *DO NOT* format the generated code.
 
