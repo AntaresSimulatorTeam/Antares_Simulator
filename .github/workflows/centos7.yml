@@ -7,7 +7,6 @@ on:
     branches:
       - develop
       - dependabot/*
-      - fix/ortools_link
   schedule:
     - cron: '21 2 * * *'
   workflow_call:
