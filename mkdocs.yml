@@ -86,6 +86,7 @@ nav:
       - 'Development requirements': 'developer-guide/1-Development-requirements.md'
       - 'Dependencies install': 'developer-guide/2-Dependencies-install.md'
       - 'Build': 'developer-guide/3-Build.md'
+      - 'ANTLR4 code generation': 'developer-guide/7-antlr4.md'
       - 'Tests (user)': 'developer-guide/4-Tests-user.md'
       - 'Tests (developer)': 'developer-guide/4-Tests-dev.md'
       - 'Installer creation': 'developer-guide/5-Installer-creation.md'
