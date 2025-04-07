@@ -113,7 +113,6 @@ jobs:
         shell: bash
         run: |
           cmake -B _build -S src \
-          -DCMAKE_PREFIX_PATH="${{ env.ORTOOLS_DIR }}/install" \
           -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" \
           -DVCPKG_TARGET_TRIPLET=${{ env.triplet }} \
           -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake" \
