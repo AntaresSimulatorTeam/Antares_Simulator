@@ -22,7 +22,7 @@
 
 #include <string>
 
-namespace Antares::Study::SystemModel
+namespace Antares::ModelerStudy::SystemModel
 {
 
 class PortField
@@ -38,8 +38,15 @@ public:
         return id_;
     }
 
+    bool operator==(const PortField&) const = default;
+
+    bool operator<(const PortField& other) const
+    {
+        return id_ < other.id_;
+    }
+
 private:
     std::string id_;
 };
 
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel

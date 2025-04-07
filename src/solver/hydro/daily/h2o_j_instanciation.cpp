@@ -19,14 +19,18 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include <memory>
+
 #include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily/h2o_j_fonctions.h"
 
-DONNEES_MENSUELLES* H2O_J_Instanciation(void)
+namespace DoneesOptimisationJournaliere
 {
-    DONNEES_MENSUELLES* DonneesMensuelles = new DONNEES_MENSUELLES;
+DONNEES_MENSUELLES H2O_J_Instanciation()
+{
+    DONNEES_MENSUELLES DonneesMensuelles{};
 
-    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
+    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles.ProblemeHydraulique;
 
     ProblemeHydraulique.NombreDeProblemes = 4;
 
@@ -38,10 +42,10 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
     NbJoursDUnProbleme[2] = 30;
     NbJoursDUnProbleme[3] = 31;
 
-    DonneesMensuelles->TurbineMax.assign(NbJoursDUnProbleme[3], 0.);
-    DonneesMensuelles->TurbineMin.assign(NbJoursDUnProbleme[3], 0.);
-    DonneesMensuelles->TurbineCible.assign(NbJoursDUnProbleme[3], 0.);
-    DonneesMensuelles->Turbine.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuelles.TurbineMax.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuelles.TurbineMin.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuelles.TurbineCible.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuelles.Turbine.assign(NbJoursDUnProbleme[3], 0.);
 
     int NombreDeProblemes = ProblemeHydraulique.NombreDeProblemes;
 
@@ -53,7 +57,7 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
 
     ProblemeHydraulique.ProblemeLineairePartieVariable.resize(NombreDeProblemes);
 
-    ProblemeHydraulique.ProblemeSpx.assign(NombreDeProblemes, nullptr);
+    ProblemeHydraulique.ProblemeSpx.resize(NombreDeProblemes);
 
     std::vector<CORRESPONDANCE_DES_VARIABLES>& CorrespondanceDesVariables
       = ProblemeHydraulique.CorrespondanceDesVariables;
@@ -157,3 +161,4 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
 
     return DonneesMensuelles;
 }
+} // namespace DoneesOptimisationJournaliere

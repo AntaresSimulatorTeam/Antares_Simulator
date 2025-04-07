@@ -55,7 +55,7 @@ struct FixtureLoadFile
 BOOST_AUTO_TEST_CASE(files_not_existing)
 {
     fs::path studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
-    std::vector<Antares::Study::SystemModel::Library> libraries;
+    std::vector<Antares::ModelerStudy::SystemModel::Library> libraries;
 
     BOOST_CHECK_THROW(Antares::Solver::LoadFiles::loadLibraries(studyPath), std::runtime_error);
     BOOST_CHECK_THROW(Antares::Solver::LoadFiles::loadSystem(studyPath, libraries),

@@ -24,7 +24,7 @@
 
 #include "portType.h"
 
-namespace Antares::Study::SystemModel
+namespace Antares::ModelerStudy::SystemModel
 {
 
 class Port
@@ -41,7 +41,7 @@ public:
         return id_;
     }
 
-    PortType Type() const
+    const PortType& Type() const
     {
         return type_;
     }
@@ -51,4 +51,4 @@ private:
     PortType type_;
 };
 
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel
