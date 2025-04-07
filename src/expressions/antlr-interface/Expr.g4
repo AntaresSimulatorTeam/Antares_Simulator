@@ -13,25 +13,26 @@ This file is part of the Antares project.
 */
 
 grammar Expr;
-
+portFieldExpr : IDENTIFIER '.' IDENTIFIER;
 /* To match the whole input */
 fullexpr: expr EOF;
 
 expr
     : atom                                     # unsignedAtom
-    | IDENTIFIER '.' IDENTIFIER                # portField
+    | portFieldExpr                            # portField
     | '-' expr                                 # negation
     | '(' expr ')'                             # expression
     | expr op=('/' | '*') expr                 # muldiv
     | expr op=('+' | '-') expr                 # addsub
     | expr COMPARISON expr                     # comparison
-    | 'sum' '(' expr ')'                    # allTimeSum
+    | 'sum' '(' expr ')'                       # allTimeSum
+    | 'sum_connections' '(' portFieldExpr ')'           # portFieldSum
     | 'sum' '(' from=shift '..' to=shift ',' expr ')'  # timeSum
     | IDENTIFIER '(' expr ')'                  # function
     | IDENTIFIER '[' shift ']'                 # timeShift
     | IDENTIFIER '[' expr  ']'                 # timeIndex
     | '(' expr ')' '[' shift ']'               # timeShiftExpr
-    | '(' expr ')' '[' expr ']'               # timeIndexExpr
+    | '(' expr ')' '[' expr ']'                # timeIndexExpr
     ;
 
 atom

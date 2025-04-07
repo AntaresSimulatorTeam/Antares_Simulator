@@ -19,7 +19,11 @@ public:
   /**
    * Visit parse trees produced by ExprParser.
    */
+    virtual std::any visitPortFieldExpr(ExprParser::PortFieldExprContext *context) = 0;
+
     virtual std::any visitFullexpr(ExprParser::FullexprContext *context) = 0;
+
+    virtual std::any visitPortFieldSum(ExprParser::PortFieldSumContext *context) = 0;
 
     virtual std::any visitNegation(ExprParser::NegationContext *context) = 0;
 

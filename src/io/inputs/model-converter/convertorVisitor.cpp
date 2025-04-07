@@ -68,6 +68,8 @@ public:
     std::any visitRightExpression(ExprParser::RightExpressionContext* context) override;
     std::any visitTimeShiftExpr(ExprParser::TimeShiftExprContext* context) override;
     std::any visitTimeIndexExpr(ExprParser::TimeIndexExprContext* context) override;
+    std::any visitPortFieldExpr(ExprParser::PortFieldExprContext* context) override;
+    std::any visitPortFieldSum(ExprParser::PortFieldSumContext* context) override;
 
 private:
     Expressions::Registry<Node>& registry_;
@@ -232,17 +234,29 @@ public:
     using std::runtime_error::runtime_error;
 };
 
-std::any ConvertorVisitor::visitPortField(ExprParser::PortFieldContext* context)
+static bool isThePortIsRegistered(const std::string& portId,
+                                  const std::vector<YmlModel::Port>& ports)
 {
-    for (const auto& pfd: model_.port_field_definitions)
+    for (const auto& [id, _]: ports)
     {
-        if (pfd.port == context->IDENTIFIER()[0]->getText())
+        if (id == portId)
         {
-            return static_cast<Node*>(registry_.create<PortFieldNode>(pfd.port, pfd.field));
+            return true;
         }
     }
+    return false;
+}
 
-    throw NoPortWithThisId(context->IDENTIFIER()[0]->getText());
+std::any ConvertorVisitor::visitPortField(ExprParser::PortFieldContext* context)
+{
+    const auto [portId, portField] = std::any_cast<std::pair<std::string, std::string>>(
+      context->portFieldExpr()->accept(this));
+
+    if (isThePortIsRegistered(portId, model_.ports))
+    {
+        return static_cast<Node*>(registry_.create<PortFieldNode>(portId, portField));
+    }
+    throw NoPortWithThisId(portId);
 }
 
 std::any ConvertorVisitor::visitNumber(ExprParser::NumberContext* context)
@@ -280,6 +294,20 @@ std::any ConvertorVisitor::visitTimeIndexExpr(ExprParser::TimeIndexExprContext* 
     Node* left = std::any_cast<Node*>(visit(context->expr(0)));
     Node* right = std::any_cast<Node*>(visit(context->expr(1)));
     return static_cast<Node*>(registry_.create<TimeIndexNode>(left, right));
+}
+
+std::any ConvertorVisitor::visitPortFieldExpr(ExprParser::PortFieldExprContext* context)
+{
+    return std::make_pair(context->IDENTIFIER()[0]->getText(), context->IDENTIFIER()[1]->getText());
+}
+
+std::any ConvertorVisitor::visitPortFieldSum(ExprParser::PortFieldSumContext* context)
+{
+    const auto port = std::any_cast<PortFieldNode*>(visit(context->portFieldExpr()));
+    const auto portName = port->getPortName();
+    const auto fieldName = port->getFieldName();
+
+    return static_cast<Node*>(registry_.create<PortFieldSumNode>(portName, fieldName));
 }
 
 // TODO implement this
