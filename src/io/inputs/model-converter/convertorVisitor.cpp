@@ -50,7 +50,6 @@ public:
     std::any visitExpression(ExprParser::ExpressionContext* context) override;
     std::any visitComparison(ExprParser::ComparisonContext* context) override;
     std::any visitAddsub(ExprParser::AddsubContext* context) override;
-    PortFieldNode* processPortRule(ExprParser::ExprParser::PortFieldExprContext* context);
     std::any visitPortField(ExprParser::PortFieldContext* context) override;
     std::any visitNumber(ExprParser::NumberContext* context) override;
     std::any visitTimeIndex(ExprParser::TimeIndexContext* context) override;
@@ -78,7 +77,13 @@ private:
 
     std::any buildShiftNode(Node* shifted_expr, ExprParser::ShiftContext* context);
     Node* NodeFromShiftContext(ExprParser::Shift_exprContext* shift_expr);
+    PortFieldNode* processPortRule(ExprParser::PortFieldExprContext* context);
 };
+
+NoPortWithThisId::NoPortWithThisId(const std::string& name):
+    runtime_error("No port found for this identifier: " + name)
+{
+}
 
 Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
                                                   const YmlModel::Model& model)
@@ -116,15 +121,6 @@ class NoParameterOrVariableWithThisName: public std::runtime_error
 public:
     explicit NoParameterOrVariableWithThisName(const std::string& name):
         runtime_error("No parameter or variable found for this identifier: " + name)
-    {
-    }
-};
-
-class NoPortWithThisId: public std::runtime_error
-{
-public:
-    explicit NoPortWithThisId(const std::string& name):
-        runtime_error("No port found for this identifier: " + name)
     {
     }
 };
@@ -238,7 +234,7 @@ public:
 static bool isThePortIsRegistered(const std::string& portId,
                                   const std::vector<YmlModel::Port>& ports)
 {
-    for (const auto& [id, _]: ports)
+    for (const auto [id, _]: ports)
     {
         if (id == portId)
         {
@@ -262,7 +258,7 @@ PortFieldNode* ConvertorVisitor::processPortRule(ExprParser::PortFieldExprContex
 
 std::any ConvertorVisitor::visitPortField(ExprParser::PortFieldContext* context)
 {
-    return processPortRule(context->portFieldExpr());
+    return static_cast<Node*>(processPortRule(context->portFieldExpr()));
 }
 
 std::any ConvertorVisitor::visitNumber(ExprParser::NumberContext* context)
