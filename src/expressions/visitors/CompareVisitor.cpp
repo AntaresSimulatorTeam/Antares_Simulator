@@ -22,15 +22,24 @@
 #include <antares/expressions/visitors/CompareVisitor.h>
 
 template<class T, class V>
-static bool compareBinaryNode(V& visitor,
+static bool compareParentNode(V& visitor,
                               const T* node,
                               const Antares::Expressions::Nodes::Node* other)
 {
     if (const T* other_node = dynamic_cast<const T*>(other))
     {
-        bool left = visitor.dispatch(node->left(), other_node->left());
-        bool right = visitor.dispatch(node->right(), other_node->right());
-        return left && right;
+        if (node->size() != other_node->size())
+        {
+            return false;
+        }
+        for (std::size_t i = 0; i < node->size(); ++i)
+        {
+            if (!visitor.dispatch(node->getOperands()[i], other_node->getOperands()[i]))
+            {
+                return false;
+            }
+        }
+        return true;
     }
     return false;
 }
@@ -59,52 +68,37 @@ namespace Antares::Expressions::Visitors
 {
 bool CompareVisitor::visit(const Nodes::SumNode* node, const Nodes::Node* other)
 {
-    if (const auto* other_node = dynamic_cast<const Nodes::SumNode*>(other))
-    {
-        if (node->size() != other_node->size())
-        {
-            return false;
-        }
-        for (std::size_t i = 0; i < node->size(); ++i)
-        {
-            if (!dispatch(node->getOperands()[i], other_node->getOperands()[i]))
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-    return false;
+    return compareParentNode(*this, node, other);
 }
 
 bool CompareVisitor::visit(const Nodes::SubtractionNode* node, const Nodes::Node* other)
 {
-    return compareBinaryNode(*this, node, other);
+    return compareParentNode(*this, node, other);
 }
 
 bool CompareVisitor::visit(const Nodes::MultiplicationNode* node, const Nodes::Node* other)
 {
-    return compareBinaryNode(*this, node, other);
+    return compareParentNode(*this, node, other);
 }
 
 bool CompareVisitor::visit(const Nodes::DivisionNode* node, const Nodes::Node* other)
 {
-    return compareBinaryNode(*this, node, other);
+    return compareParentNode(*this, node, other);
 }
 
 bool CompareVisitor::visit(const Nodes::EqualNode* node, const Nodes::Node* other)
 {
-    return compareBinaryNode(*this, node, other);
+    return compareParentNode(*this, node, other);
 }
 
 bool CompareVisitor::visit(const Nodes::LessThanOrEqualNode* node, const Nodes::Node* other)
 {
-    return compareBinaryNode(*this, node, other);
+    return compareParentNode(*this, node, other);
 }
 
 bool CompareVisitor::visit(const Nodes::GreaterThanOrEqualNode* node, const Nodes::Node* other)
 {
-    return compareBinaryNode(*this, node, other);
+    return compareParentNode(*this, node, other);
 }
 
 bool CompareVisitor::visit(const Nodes::NegationNode* node, const Nodes::Node* other)
@@ -149,6 +143,26 @@ bool CompareVisitor::visit(const Nodes::ComponentVariableNode* node, const Nodes
 bool CompareVisitor::visit(const Nodes::ComponentParameterNode* node, const Nodes::Node* other)
 {
     return compareEqualOperator(node, other);
+}
+
+bool CompareVisitor::visit(const Nodes::TimeShiftNode* timeShiftNode, const Nodes::Node* other)
+{
+    return compareParentNode(*this, timeShiftNode, other);
+}
+
+bool CompareVisitor::visit(const Nodes::TimeIndexNode* timeIndexNode, const Nodes::Node* other)
+{
+    return compareParentNode(*this, timeIndexNode, other);
+}
+
+bool CompareVisitor::visit(const Nodes::TimeSumNode* timeSumNode, const Nodes::Node* other)
+{
+    return compareParentNode(*this, timeSumNode, other);
+}
+
+bool CompareVisitor::visit(const Nodes::AllTimeSumNode* alltimeSumNode, const Nodes::Node* other)
+{
+    return compareParentNode(*this, alltimeSumNode, other);
 }
 
 std::string CompareVisitor::name() const

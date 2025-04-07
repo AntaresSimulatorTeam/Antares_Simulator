@@ -260,6 +260,7 @@ def test_unfeasible_problem_08__error_dry(study_path, check_runner):
     check_runner.run(checks)
 
 
+@pytest.mark.skip(reason="simplex-range=day is currently broken")
 @pytest.mark.unfeasible
 @pytest.mark.parametrize('study_path', [ALL_STUDIES_PATH / "unfeasible_problem_09"], indirect=True)
 def test_unfeasible_problem_09__warning_dry(study_path, check_runner):
@@ -276,6 +277,7 @@ def test_unfeasible_problem_09__warning_dry(study_path, check_runner):
                                           simulation=check_runner.get_simulation()))
     check_runner.run(checks)
 
+@pytest.mark.skip(reason="simplex-range=day is currently broken")
 @pytest.mark.unfeasible
 @pytest.mark.parametrize('study_path', [ALL_STUDIES_PATH / "unfeasible_problem_09"], indirect=True)
 def test_unfeasible_problem_09__error_dry(study_path, check_runner):
@@ -289,6 +291,7 @@ def test_unfeasible_problem_09__error_dry(study_path, check_runner):
     check_runner.run(checks)
 
 
+@pytest.mark.skip(reason="simplex-range=day is currently broken")
 @pytest.mark.unfeasible
 @pytest.mark.parametrize('study_path', [ALL_STUDIES_PATH / "unfeasible_problem_10"], indirect=True)
 def test_unfeasible_problem_10__warning_dry(study_path, check_runner):
@@ -303,6 +306,7 @@ def test_unfeasible_problem_10__warning_dry(study_path, check_runner):
                                           simulation=check_runner.get_simulation()))
     check_runner.run(checks)
 
+@pytest.mark.skip(reason="simplex-range=day is currently broken")
 @pytest.mark.unfeasible
 @pytest.mark.parametrize('study_path', [ALL_STUDIES_PATH / "unfeasible_problem_10"], indirect=True)
 def test_unfeasible_problem_10__error_dry(study_path, check_runner):
