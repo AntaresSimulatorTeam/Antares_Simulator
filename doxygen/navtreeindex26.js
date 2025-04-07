@@ -1,5 +1,6 @@
 var NAVTREEINDEX26 =
 {
+"scenario-builder-load-renderer_8h_source.html":[10,0,0,12,2,1,1,1,1,20],
 "scenario-builder-ntc-renderer_8h_source.html":[10,0,0,12,2,1,1,1,1,21],
 "scenario-builder-renderer-base_8h_source.html":[10,0,0,12,2,1,1,1,1,22],
 "scenario-builder-renewable-renderer_8h_source.html":[10,0,0,12,2,1,1,1,1,23],
@@ -86,7 +87,7 @@ var NAVTREEINDEX26 =
 "stdDeviation_8h_source.html":[10,0,0,8,12,0,0,0,0,3,14],
 "store-timeseries-numbers_8h_source.html":[10,0,0,5,0,23,0,0,0,0,5],
 "store-timeseries-numbers_8hxx_source.html":[10,0,0,5,0,23,0,0,0,0,6],
-"structALL__MUST__RUN__GENERATION.html":[9,0,35],
+"structALL__MUST__RUN__GENERATION.html":[9,0,37],
 "structAntares_1_1API_1_1Error.html":[9,0,0,1,1],
 "structAntares_1_1API_1_1Error.html#ad5d0c6db0418afc065901a9827ab5d93":[9,0,0,1,1,0],
 "structAntares_1_1API_1_1SimulationResults.html":[9,0,0,1,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX26 =
 "structAntares_1_1Solver_1_1Variable_1_1Areas_1_1Statistics.html":[9,0,0,18,5,7,0],
 "structAntares_1_1Solver_1_1Variable_1_1BindingConstraints_1_1Statistics.html":[9,0,0,18,5,8,0],
 "structAntares_1_1Solver_1_1Variable_1_1Category_1_1NextLevel.html":[9,0,0,18,5,1,0],
-"structAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy.html":[9,0,0,18,5,2,0],
-"structAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy_3_010_00_01VCardT_01_4.html":[9,0,0,18,5,2,1]
+"structAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy.html":[9,0,0,18,5,2,0]
 };

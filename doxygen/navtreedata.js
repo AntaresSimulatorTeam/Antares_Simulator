@@ -120,10 +120,10 @@ var NAVTREEINDEX =
 "dir_8060b849091d032e6bd1ec519f08a094.html",
 "fatal-error_8h_source.html",
 "linear-problem-api_2include_2antares_2optimisation_2linear-problem-api_2mipVariable_8h_source.html",
-"scenario-builder-ntc-renderer_8h_source.html",
-"structAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy_3_011_00_01VCardT_01_4.html",
-"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_011_01_4.html",
-"structSolverTestData.html"
+"scenario-builder-load-renderer_8h_source.html",
+"structAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy_3_010_00_01VCardT_01_4.html",
+"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_010_01_4.html",
+"structSavingToStreamFixture.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

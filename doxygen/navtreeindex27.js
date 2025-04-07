@@ -1,5 +1,6 @@
 var NAVTREEINDEX27 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy_3_010_00_01VCardT_01_4.html":[9,0,0,18,5,2,1],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy_3_011_00_01VCardT_01_4.html":[9,0,0,18,5,2,2],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy_3_01Category_1_1dynamicColumns_00_01VCardT_01_4.html":[9,0,0,18,5,2,3],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate_1_1Statistics.html":[9,0,0,18,5,2,4,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX27 =
 "structAntares_1_1Solver_1_1Variable_1_1IVariable_1_1Statistics.html":[9,0,0,18,5,11,0],
 "structAntares_1_1Solver_1_1Variable_1_1Join_1_1Statistics.html":[9,0,0,18,5,12,0],
 "structAntares_1_1Solver_1_1Variable_1_1Links_1_1Statistics.html":[9,0,0,18,5,13,0],
-"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat.html":[9,0,0,18,5,14],
-"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_010_01_4.html":[9,0,0,18,5,15]
+"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat.html":[9,0,0,18,5,14]
 };

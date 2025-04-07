@@ -1302,6 +1302,20 @@ var annotated_dup =
     [ "compare_mps_files", null, [
       [ "compare_mps_files", "classcompare__mps__files_1_1compare__mps__files.html", null ]
     ] ],
+    [ "DoneesOptimisationJournaliere", null, [
+      [ "CORRESPONDANCE_DES_CONTRAINTES", "structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__CONTRAINTES.html", null ],
+      [ "CORRESPONDANCE_DES_VARIABLES", "structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__VARIABLES.html", null ],
+      [ "DONNEES_MENSUELLES", "structDoneesOptimisationJournaliere_1_1DONNEES__MENSUELLES.html", null ],
+      [ "PROBLEME_HYDRAULIQUE", "structDoneesOptimisationJournaliere_1_1PROBLEME__HYDRAULIQUE.html", null ],
+      [ "PROBLEME_LINEAIRE_PARTIE_FIXE", "structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html", null ],
+      [ "PROBLEME_LINEAIRE_PARTIE_VARIABLE", "structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html", null ]
+    ] ],
+    [ "DonneesOptimisationMensuelle", null, [
+      [ "CORRESPONDANCE_DES_VARIABLES", "structDonneesOptimisationMensuelle_1_1CORRESPONDANCE__DES__VARIABLES.html", null ],
+      [ "PROBLEME_HYDRAULIQUE", "structDonneesOptimisationMensuelle_1_1PROBLEME__HYDRAULIQUE.html", null ],
+      [ "PROBLEME_LINEAIRE_PARTIE_FIXE", "structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html", null ],
+      [ "PROBLEME_LINEAIRE_PARTIE_VARIABLE", "structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html", null ]
+    ] ],
     [ "find_output", null, [
       [ "output_folder_finder", "classfind__output_1_1output__folder__finder.html", null ]
     ] ],
@@ -1454,8 +1468,6 @@ var annotated_dup =
     [ "ConstraintGroup", "classConstraintGroup.html", null ],
     [ "ConstraintNamer", "classConstraintNamer.html", null ],
     [ "CONTRAINTES_COUPLANTES", "structCONTRAINTES__COUPLANTES.html", null ],
-    [ "CORRESPONDANCE_DES_CONTRAINTES", "structCORRESPONDANCE__DES__CONTRAINTES.html", null ],
-    [ "CORRESPONDANCE_DES_VARIABLES", "structCORRESPONDANCE__DES__VARIABLES.html", null ],
     [ "CORRESPONDANCE_DES_VARIABLES_PB_ETENDU", "structCORRESPONDANCE__DES__VARIABLES__PB__ETENDU.html", null ],
     [ "CORRESPONDANCES_DES_CONTRAINTES", "structCORRESPONDANCES__DES__CONTRAINTES.html", null ],
     [ "CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES", "structCORRESPONDANCES__DES__CONTRAINTES__HEBDOMADAIRES.html", null ],
@@ -1475,7 +1487,6 @@ var annotated_dup =
     [ "DEMAND_FLEX_UP_POOL", "structDEMAND__FLEX__UP__POOL.html", null ],
     [ "DEMAND_MARKET_POOL", "structDEMAND__MARKET__POOL.html", null ],
     [ "DONNEES_ANNUELLES", "structDONNEES__ANNUELLES.html", null ],
-    [ "DONNEES_MENSUELLES", "structDONNEES__MENSUELLES.html", null ],
     [ "DONNEES_MENSUELLES_ETENDUES", "structDONNEES__MENSUELLES__ETENDUES.html", null ],
     [ "DuplicateFixture", "structDuplicateFixture.html", null ],
     [ "ENERGIES_ET_PUISSANCES_HYDRAULIQUES", "structENERGIES__ET__PUISSANCES__HYDRAULIQUES.html", null ],
@@ -1533,6 +1544,7 @@ var annotated_dup =
     [ "JobFileReader", "classJobFileReader.html", "classJobFileReader" ],
     [ "LEVEL_FLEX_DOWN_NODE", "structLEVEL__FLEX__DOWN__NODE.html", null ],
     [ "LEVEL_FLEX_UP_NODE", "structLEVEL__FLEX__UP__NODE.html", null ],
+    [ "LibererProbleme", "structLibererProbleme.html", null ],
     [ "LibraryObjects", "structLibraryObjects.html", null ],
     [ "LinearProblemBuildingFixture", "structLinearProblemBuildingFixture.html", null ],
     [ "LinearProblemMatrix", "classLinearProblemMatrix.html", null ],
@@ -1595,12 +1607,9 @@ var annotated_dup =
     [ "ProblemConverter", "classProblemConverter.html", null ],
     [ "PROBLEME_ANTARES_A_RESOUDRE", "structPROBLEME__ANTARES__A__RESOUDRE.html", null ],
     [ "PROBLEME_HEBDO", "structPROBLEME__HEBDO.html", null ],
-    [ "PROBLEME_HYDRAULIQUE", "structPROBLEME__HYDRAULIQUE.html", null ],
     [ "PROBLEME_HYDRAULIQUE_ETENDU", "structPROBLEME__HYDRAULIQUE__ETENDU.html", null ],
     [ "PROBLEME_LINEAIRE_ETENDU_PARTIE_FIXE", "structPROBLEME__LINEAIRE__ETENDU__PARTIE__FIXE.html", null ],
     [ "PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE", "structPROBLEME__LINEAIRE__ETENDU__PARTIE__VARIABLE.html", null ],
-    [ "PROBLEME_LINEAIRE_PARTIE_FIXE", "structPROBLEME__LINEAIRE__PARTIE__FIXE.html", null ],
-    [ "PROBLEME_LINEAIRE_PARTIE_VARIABLE", "structPROBLEME__LINEAIRE__PARTIE__VARIABLE.html", null ],
     [ "ProblemMatrixEssential", "classProblemMatrixEssential.html", null ],
     [ "PRODUCTION_THERMIQUE", "structPRODUCTION__THERMIQUE.html", null ],
     [ "PRODUCTION_THERMIQUE_OPTIMALE", "structPRODUCTION__THERMIQUE__OPTIMALE.html", null ],

@@ -193,6 +193,7 @@ var NAVTREEINDEX25 =
 "price_8h_source.html":[10,0,0,8,12,0,0,0,0,2,30],
 "print_8h_source.html":[10,0,0,8,12,0,0,0,0,14],
 "private_8h_source.html":[10,0,0,12,2,2,8,1],
+"probleme__spx__wrapper_8h_source.html":[10,0,0,8,2,0,0,0,0,4],
 "productionByDispatchablePlant_8h_source.html":[10,0,0,8,12,0,0,0,0,2,32],
 "productionByRenewablePlant_8h_source.html":[10,0,0,8,12,0,0,0,0,2,33],
 "profitByPlant_8h_source.html":[10,0,0,8,12,0,0,0,0,2,34],
@@ -248,6 +249,5 @@ var NAVTREEINDEX25 =
 "scBuilderUtils_8h_source.html":[10,0,0,5,0,23,0,0,0,8,10],
 "scenario-builder-hydro-final-levels-renderer_8h_source.html":[10,0,0,12,2,1,1,1,1,17],
 "scenario-builder-hydro-levels-renderer_8h_source.html":[10,0,0,12,2,1,1,1,1,18],
-"scenario-builder-hydro-renderer_8h_source.html":[10,0,0,12,2,1,1,1,1,19],
-"scenario-builder-load-renderer_8h_source.html":[10,0,0,12,2,1,1,1,1,20]
+"scenario-builder-hydro-renderer_8h_source.html":[10,0,0,12,2,1,1,1,1,19]
 };

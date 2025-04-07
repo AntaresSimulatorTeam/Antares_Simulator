@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: CORRESPONDANCE_DES_CONTRAINTES Struct Reference</title>
+<title>Antares Simulator: DoneesOptimisationJournaliere::DONNEES_MENSUELLES Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -111,7 +111,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){initNavTree('structCORRESPONDANCE__DES__CONTRAINTES.html',''); initResizable(true); });
+$(function(){initNavTree('structDoneesOptimisationJournaliere_1_1DONNEES__MENSUELLES.html',''); initResizable(true); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -139,29 +139,63 @@ $(function(){initNavTree('structCORRESPONDANCE__DES__CONTRAINTES.html',''); init
 <div class="header">
   <div class="summary">
 <a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="structCORRESPONDANCE__DES__CONTRAINTES-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">CORRESPONDANCE_DES_CONTRAINTES Struct Reference</div></div>
+<a href="structDoneesOptimisationJournaliere_1_1DONNEES__MENSUELLES-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">DoneesOptimisationJournaliere::DONNEES_MENSUELLES Struct Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:ac3d7859137ebf77ddf2e87a8d3427e9e" id="r_ac3d7859137ebf77ddf2e87a8d3427e9e"><td class="memItemLeft" align="right" valign="top"><a id="ac3d7859137ebf77ddf2e87a8d3427e9e" name="ac3d7859137ebf77ddf2e87a8d3427e9e"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>NumeroDeContrainteDEnergieMensuelle</b></td></tr>
-<tr class="separator:ac3d7859137ebf77ddf2e87a8d3427e9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6c7202e0a9a1c854dc2ed0e130cab06f" id="r_a6c7202e0a9a1c854dc2ed0e130cab06f"><td class="memItemLeft" align="right" valign="top"><a id="a6c7202e0a9a1c854dc2ed0e130cab06f" name="a6c7202e0a9a1c854dc2ed0e130cab06f"></a>
-std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>NumeroDeContrainteSurXi</b></td></tr>
-<tr class="separator:a6c7202e0a9a1c854dc2ed0e130cab06f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a807df113e5154e0ae6409835468004cc" id="r_a807df113e5154e0ae6409835468004cc"><td class="memItemLeft" align="right" valign="top"><a id="a807df113e5154e0ae6409835468004cc" name="a807df113e5154e0ae6409835468004cc"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>NombreDeJoursDuMois</b> {0}</td></tr>
+<tr class="separator:a807df113e5154e0ae6409835468004cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b2cc213f6879c70a914e15fc553b8c0" id="r_a1b2cc213f6879c70a914e15fc553b8c0"><td class="memItemLeft" align="right" valign="top"><a id="a1b2cc213f6879c70a914e15fc553b8c0" name="a1b2cc213f6879c70a914e15fc553b8c0"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>TurbineDuMois</b> {0}</td></tr>
+<tr class="separator:a1b2cc213f6879c70a914e15fc553b8c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6775bb91f2c1591e303a4bd8f6b0562" id="r_ae6775bb91f2c1591e303a4bd8f6b0562"><td class="memItemLeft" align="right" valign="top"><a id="ae6775bb91f2c1591e303a4bd8f6b0562" name="ae6775bb91f2c1591e303a4bd8f6b0562"></a>
+std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>TurbineMax</b></td></tr>
+<tr class="separator:ae6775bb91f2c1591e303a4bd8f6b0562"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a51e0a263de19946e50dd840e71e2a1b9" id="r_a51e0a263de19946e50dd840e71e2a1b9"><td class="memItemLeft" align="right" valign="top"><a id="a51e0a263de19946e50dd840e71e2a1b9" name="a51e0a263de19946e50dd840e71e2a1b9"></a>
+std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>TurbineMin</b></td></tr>
+<tr class="separator:a51e0a263de19946e50dd840e71e2a1b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e69fd62b58fa0611d691cbac9104875" id="r_a6e69fd62b58fa0611d691cbac9104875"><td class="memItemLeft" align="right" valign="top"><a id="a6e69fd62b58fa0611d691cbac9104875" name="a6e69fd62b58fa0611d691cbac9104875"></a>
+std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>TurbineCible</b></td></tr>
+<tr class="separator:a6e69fd62b58fa0611d691cbac9104875"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace0d639bdeda3bf52323cde0d8a5abe9" id="r_ace0d639bdeda3bf52323cde0d8a5abe9"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ace0d639bdeda3bf52323cde0d8a5abe9">ResultatsValides</a></td></tr>
+<tr class="separator:ace0d639bdeda3bf52323cde0d8a5abe9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0da2be2c0770adb91f5dc40836b3318a" id="r_a0da2be2c0770adb91f5dc40836b3318a"><td class="memItemLeft" align="right" valign="top"><a id="a0da2be2c0770adb91f5dc40836b3318a" name="a0da2be2c0770adb91f5dc40836b3318a"></a>
+std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Turbine</b></td></tr>
+<tr class="separator:a0da2be2c0770adb91f5dc40836b3318a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1c222d7c223d579cfc5329c268d1bbf" id="r_ad1c222d7c223d579cfc5329c268d1bbf"><td class="memItemLeft" align="right" valign="top"><a id="ad1c222d7c223d579cfc5329c268d1bbf" name="ad1c222d7c223d579cfc5329c268d1bbf"></a>
+<a class="el" href="structDoneesOptimisationJournaliere_1_1PROBLEME__HYDRAULIQUE.html">PROBLEME_HYDRAULIQUE</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ProblemeHydraulique</b> {}</td></tr>
+<tr class="separator:ad1c222d7c223d579cfc5329c268d1bbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="ace0d639bdeda3bf52323cde0d8a5abe9" name="ace0d639bdeda3bf52323cde0d8a5abe9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ace0d639bdeda3bf52323cde0d8a5abe9">&#9670;&#160;</a></span>ResultatsValides</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char DoneesOptimisationJournaliere::DONNEES_MENSUELLES::ResultatsValides</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">{</div>
+<div class="line">      NON}</div>
+</div><!-- fragment -->
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>src/solver/hydro/include/antares/solver/hydro/daily/<a class="el" href="h2o__j__donnees__optimisation_8h_source.html">h2o_j_donnees_optimisation.h</a></li>
+<li>src/solver/hydro/include/antares/solver/hydro/daily/<a class="el" href="h2o__j__donnees__mensuelles_8h_source.html">h2o_j_donnees_mensuelles.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="structCORRESPONDANCE__DES__CONTRAINTES.html">CORRESPONDANCE_DES_CONTRAINTES</a></li>
+    <li class="navelem"><b>DoneesOptimisationJournaliere</b></li><li class="navelem"><a class="el" href="structDoneesOptimisationJournaliere_1_1DONNEES__MENSUELLES.html">DONNEES_MENSUELLES</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
