@@ -235,15 +235,22 @@ public:
 
 std::any ConvertorVisitor::visitPortField(ExprParser::PortFieldContext* context)
 {
-    for (const auto& pfd: model_.port_field_definitions)
-    {
-        if (pfd.port == context->IDENTIFIER()[0]->getText())
-        {
-            return static_cast<Node*>(registry_.create<PortFieldNode>(pfd.port, pfd.field));
-        }
-    }
+    //    for (const auto& pfd: model_.port_field_definitions)
+    //    {
+    //        if (pfd.port == context->IDENTIFIER()[0]->getText())
+    //        {
+    //            return static_cast<Node*>(registry_.create<PortFieldNode>(pfd.port, pfd.field));
+    //        }
+    //    }
+    //
+    //    throw NoPortWithThisId(context->IDENTIFIER()[0]->getText());
 
-    throw NoPortWithThisId(context->IDENTIFIER()[0]->getText());
+    // gp : we remove the previous check for port field existence :
+    // gp : the port field may not have been read yet and may not
+    // gp : be referenced by the Model yet.
+    std::string port = context->IDENTIFIER()[0]->getText();
+    std::string field = context->IDENTIFIER()[1]->getText();
+    return static_cast<Node*>(registry_.create<PortFieldNode>(port, field));
 }
 
 std::any ConvertorVisitor::visitNumber(ExprParser::NumberContext* context)

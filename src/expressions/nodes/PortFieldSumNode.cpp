@@ -36,14 +36,15 @@ PortFieldSumNode::PortFieldSumNode(const Node* node):
     Hashable(port_name_, field_name_)
 {
     const PortFieldNode* portFieldNode = dynamic_cast<const PortFieldNode*>(node);
-    if (portFieldNode)
+    if (!portFieldNode)
     {
-        port_name_ = portFieldNode->getPortName();
-        field_name_ = portFieldNode->getFieldName();
+        std::string msg = "A PortFieldSumNode constructed with wrong Node type. ";
+        msg += "Should be PortFieldNode.";
+        throw std::invalid_argument(msg);
     }
-    std::string msg = "A PortFieldSumNode constructed with wrong Node type. ";
-    msg += "Should be PortFieldNode.";
-    throw std::invalid_argument(msg);
+
+    port_name_ = portFieldNode->getPortName();
+    field_name_ = portFieldNode->getFieldName();
 }
 
 const std::string& PortFieldSumNode::getPortName() const
