@@ -25,7 +25,7 @@ OR-Tools may be installed in one of 2 ways:
 
 1. **As a pre-compiled dependency**
 
-    You can [download](https://github.com/rte-france/or-tools/releases) a precompiled OR-Tools archive that contains headers & static libraries.
+    You can [download](https://github.com/rte-france/or-tools-rte/releases) a precompiled OR-Tools archive that contains headers & static libraries.
 
     Please note that dynamic linking with OR-Tools is only supported in Linux.
 
