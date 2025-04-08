@@ -15,7 +15,15 @@
 class  ExprBaseVisitor : public ExprVisitor {
 public:
 
+  virtual std::any visitPortFieldExpr(ExprParser::PortFieldExprContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitFullexpr(ExprParser::FullexprContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitPortFieldSum(ExprParser::PortFieldSumContext *ctx) override {
     return visitChildren(ctx);
   }
 

@@ -68,6 +68,8 @@ public:
     std::any visitRightExpression(ExprParser::RightExpressionContext* context) override;
     std::any visitTimeShiftExpr(ExprParser::TimeShiftExprContext* context) override;
     std::any visitTimeIndexExpr(ExprParser::TimeIndexExprContext* context) override;
+    std::any visitPortFieldExpr(ExprParser::PortFieldExprContext* context) override;
+    std::any visitPortFieldSum(ExprParser::PortFieldSumContext* context) override;
 
 private:
     Expressions::Registry<Node>& registry_;
@@ -75,7 +77,13 @@ private:
 
     std::any buildShiftNode(Node* shifted_expr, ExprParser::ShiftContext* context);
     Node* NodeFromShiftContext(ExprParser::Shift_exprContext* shift_expr);
+    PortFieldNode* processPortRule(ExprParser::PortFieldExprContext* context);
 };
+
+NoPortWithThisId::NoPortWithThisId(const std::string& name):
+    runtime_error("No port found for this identifier: " + name)
+{
+}
 
 Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
                                                   const YmlModel::Model& model)
@@ -113,15 +121,6 @@ class NoParameterOrVariableWithThisName: public std::runtime_error
 public:
     explicit NoParameterOrVariableWithThisName(const std::string& name):
         runtime_error("No parameter or variable found for this identifier: " + name)
-    {
-    }
-};
-
-class NoPortWithThisId: public std::runtime_error
-{
-public:
-    explicit NoPortWithThisId(const std::string& name):
-        runtime_error("No port found for this identifier: " + name)
     {
     }
 };
@@ -232,17 +231,34 @@ public:
     using std::runtime_error::runtime_error;
 };
 
-std::any ConvertorVisitor::visitPortField(ExprParser::PortFieldContext* context)
+static bool isThePortIsRegistered(const std::string& portId,
+                                  const std::vector<YmlModel::Port>& ports)
 {
-    for (const auto& pfd: model_.port_field_definitions)
+    for (const auto [id, _]: ports)
     {
-        if (pfd.port == context->IDENTIFIER()[0]->getText())
+        if (id == portId)
         {
-            return static_cast<Node*>(registry_.create<PortFieldNode>(pfd.port, pfd.field));
+            return true;
         }
     }
+    return false;
+}
 
-    throw NoPortWithThisId(context->IDENTIFIER()[0]->getText());
+PortFieldNode* ConvertorVisitor::processPortRule(ExprParser::PortFieldExprContext* context)
+{
+    const auto [portId, portField] = std::any_cast<std::pair<std::string, std::string>>(
+      context->accept(this));
+
+    if (isThePortIsRegistered(portId, model_.ports))
+    {
+        return registry_.create<PortFieldNode>(portId, portField);
+    }
+    throw NoPortWithThisId(portId);
+}
+
+std::any ConvertorVisitor::visitPortField(ExprParser::PortFieldContext* context)
+{
+    return static_cast<Node*>(processPortRule(context->portFieldExpr()));
 }
 
 std::any ConvertorVisitor::visitNumber(ExprParser::NumberContext* context)
@@ -280,6 +296,20 @@ std::any ConvertorVisitor::visitTimeIndexExpr(ExprParser::TimeIndexExprContext* 
     Node* left = std::any_cast<Node*>(visit(context->expr(0)));
     Node* right = std::any_cast<Node*>(visit(context->expr(1)));
     return static_cast<Node*>(registry_.create<TimeIndexNode>(left, right));
+}
+
+std::any ConvertorVisitor::visitPortFieldExpr(ExprParser::PortFieldExprContext* context)
+{
+    return std::make_pair(context->IDENTIFIER()[0]->getText(), context->IDENTIFIER()[1]->getText());
+}
+
+std::any ConvertorVisitor::visitPortFieldSum(ExprParser::PortFieldSumContext* context)
+{
+    const auto port = processPortRule(context->portFieldExpr());
+    const auto portName = port->getPortName();
+    const auto fieldName = port->getFieldName();
+
+    return static_cast<Node*>(registry_.create<PortFieldSumNode>(portName, fieldName));
 }
 
 // TODO implement this
