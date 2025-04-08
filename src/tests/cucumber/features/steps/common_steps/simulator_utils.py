@@ -2,8 +2,8 @@
 
 import subprocess
 from pathlib import Path
-from common_steps.study_input_handler import study_input_handler
-from common_steps.study_output_handler import study_output_handler
+from common_steps.solver_input_handler import solver_input_handler
+from common_steps.solver_input_handler import solver_input_handler
 
 
 def run_simulation(context):
