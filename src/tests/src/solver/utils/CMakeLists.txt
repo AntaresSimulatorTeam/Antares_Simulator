@@ -9,8 +9,6 @@ add_boost_test(tests-solver-utils
         INCLUDE
         "${CMAKE_SOURCE_DIR}/solver/utils"
         LIBS
-        # Until issue here is resolved, link the whole archive: https://github.com/google/or-tools/discussions/4538
-        # TODO: keep an eye out for bug resolution in future versions of ortools (> 9.12)
-        $<LINK_LIBRARY:WHOLE_ARCHIVE,ortools::ortools>
+        ortools::ortools
         Antares::solverUtils
         test_utils_unit)

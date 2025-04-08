@@ -31,9 +31,9 @@ the simulation will fail with a warning. We recommend removing these properties 
     - `efficiencywithdrawal` (double in [0, 1], default 1) short-term storages (file
       input/st-storage/clusters/<area id>/list.ini)
     - `penalize-variation-injection` boolean, default false (file
-      input/st-storage/series/<area id>/list.ini)
+      input/st-storage/clusters/<area id>/list.ini)
     - `penalize-variation-withdrawal` boolean, default false (file
-      input/st-storage/series/<area id>/list.ini)
+      input/st-storage/clusters/<area id>/list.ini)
 
 - Added 5 optional timeseries for each STS in existing directory `input/st-storage/series/<area id>/<ST id>/`
 	- `cost-injection.txt`
@@ -211,7 +211,7 @@ bc,<group>,<MC Year> = <TS number>
 This line is not mandatory for every group & MC year. If absent, the TS number will be drawn randomly (usual behavior).
 
 - 0 &lt;= MC Year &lt; generaldata.ini/general.nbyears
-- 1 &lt;=TS number &lt;= number of columns for the group
+- 1 &lt;=TS number &lt;= index of the column for the group
 
 #### Thermal cluster new properties
 

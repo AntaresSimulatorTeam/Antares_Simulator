@@ -53,6 +53,32 @@ behave --tags @some-tag features/some_feature.feature
 ~~~
 Refer to the [behave documentation](https://behave.readthedocs.io/en/latest/) for more information.
 
+### The configuration file
+When you build antares-simulator, a file called `behave.ini` is automatically generated. This file contains the full 
+path to the built antares executables, as well as the test resources.  
+This file is used by behave to configure the tests: you may as well create it yourself. Here is the expected content:
+~~~ini
+[behave.userdata]
+antares-solver = /path/to/antares-solver
+antares-modeler = /path/to/antares-modeler
+resources-path = /path/to/resources
+linear-solver = coin
+quadratic-solver = sirius
+~~~
+With:
+- antares-solver (mandatory): the full path to the antares-solver executable you want to test (can be downloaded)
+- antares-modeler (mandatory): the full path to the antares-modeler executable you want to test (can be downloaded)
+- resources-path (mandatory): the full path to the test resources root
+- linear-solver (optional): the solver you want to use during tests, for linear optimizations
+- quadratic-solver (optional): the solver you want to use during tests, for quadratic optimizations
+
+Alternatively, you can pass these options to behave through the command line. Beware that command-line options take 
+precedence over options in the `behave.ini`file if both are defined. Example: 
+~~~bash
+behave -D antares-solver=/path/to/some/other/anatres-solver -D linear-solver=scip
+~~~
+
+
 ### In the CI
 Cucumber tests are run in the same way as the legacy tests in the Ubuntu & Windows CIs, except that they don't need the 
 reference values from the SimTest repository, since reference values are stored explicitly in the feature files.
