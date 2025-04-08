@@ -36,5 +36,5 @@ Source and binary forms of these programs are distributed along with Antares\_Si
   license: Apache 2.0	[https://spdx.org/licenses/Apache-2.0.html](https://spdx.org/licenses/Apache-2.0.html)
 
 - OR-Tools Copyright (c) 2010-2020 Google LLC
-  [https://github.com/rte-france/or-tools.git](https://github.com/rte-france/or-tools.git)
+  [https://github.com/google/or-tools.git](https://github.com/google/or-tools.git)
   license: Apache 2.0	[https://spdx.org/licenses/Apache-2.0.html](https://spdx.org/licenses/Apache-2.0.html)
