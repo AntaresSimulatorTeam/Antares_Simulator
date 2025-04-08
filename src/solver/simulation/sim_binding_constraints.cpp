@@ -67,7 +67,7 @@ TimeSeriesAndWeight getMustRunClusterTimeSeriesAndWeight(Data::BindingConstraint
     time_seriesAndWeight.reserve(std::distance(mustrun_clusters.begin(), mustrun_clusters.end()));
     std::ranges::transform(mustrun_clusters,
                            std::back_inserter(time_seriesAndWeight),
-                           [year = year](auto pair)
+                           [year](auto pair)
                            {
                                auto& [cluster, weight] = pair;
                                auto ts = std::span<const double>{cluster->series.getColumn(year),
@@ -114,7 +114,7 @@ namespace Simulation {
                                   const uint weekFirstDay,
                                   int pasDeTemps)
     {
-        auto activeConstraints = bindingConstraints.activeConstraints();
+        const auto activeConstraints = bindingConstraints.activeConstraints();
         const auto constraintCount = activeConstraints.size();
 
         for (unsigned constraintIndex = 0; constraintIndex != constraintCount; ++constraintIndex)
