@@ -29,11 +29,11 @@
 
 #include "ReadLinearConstraintVisitor.h"
 
-namespace Antares::Study::SystemModel
+namespace Antares::ModelerStudy::SystemModel
 {
 class Component;
 class Variable;
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel
 
 namespace Antares::Expressions::Visitors
 {
@@ -53,8 +53,8 @@ public:
     ComponentFiller() = delete;
     ComponentFiller(ComponentFiller& other) = delete;
     /// Create a ComponentFiller for a Component
-    explicit ComponentFiller(const Study::SystemModel::Component& component,
-                             const std::vector<Study::SystemModel::Connection>& connections);
+    explicit ComponentFiller(const ModelerStudy::SystemModel::Component& component,
+                             const std::vector<ModelerStudy::SystemModel::Connection>& connections);
 
     void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
@@ -81,9 +81,9 @@ private:
 
     static bool IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node);
 
-    const Study::SystemModel::Component& component_;
-    const std::vector<Study::SystemModel::Connection>& connections_;
-    const std::map<std::string, Study::SystemModel::Variable>& modelVariable_;
+    const ModelerStudy::SystemModel::Component& component_;
+    const std::vector<ModelerStudy::SystemModel::Connection>& connections_;
+    const std::map<std::string, ModelerStudy::SystemModel::Variable>& modelVariable_;
 };
 
 class VariablesBulkAddition

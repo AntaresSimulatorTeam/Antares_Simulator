@@ -31,7 +31,7 @@
 #include "portFieldDefinition.h"
 #include "variable.h"
 
-namespace Antares::Study::SystemModel
+namespace Antares::ModelerStudy::SystemModel
 {
 struct PortFieldKey
 {
@@ -130,4 +130,4 @@ private:
     Model model_;
 };
 
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel

@@ -23,7 +23,7 @@
 #include "port.h"
 #include "portType.h"
 
-namespace Antares::Study::SystemModel
+namespace Antares::ModelerStudy::SystemModel
 {
 
 class PortFieldDefinition
@@ -59,4 +59,4 @@ private:
     Expression definition_;
 };
 
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel

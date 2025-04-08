@@ -33,7 +33,7 @@ namespace Antares::Solver::LoadFiles
 {
 using namespace IO::Inputs;
 
-static Study::SystemModel::Library loadSingleLibrary(const fs::path& filePath)
+static ModelerStudy::SystemModel::Library loadSingleLibrary(const fs::path& filePath)
 {
     std::string libraryStr;
     try
@@ -71,9 +71,9 @@ static Study::SystemModel::Library loadSingleLibrary(const fs::path& filePath)
     }
 }
 
-std::vector<Study::SystemModel::Library> loadLibraries(const fs::path& studyPath)
+std::vector<ModelerStudy::SystemModel::Library> loadLibraries(const fs::path& studyPath)
 {
-    std::vector<Study::SystemModel::Library> libraries;
+    std::vector<ModelerStudy::SystemModel::Library> libraries;
 
     const fs::path directoryPath = studyPath / "input" / "model-libraries";
     for (const auto& entry: fs::directory_iterator(directoryPath))

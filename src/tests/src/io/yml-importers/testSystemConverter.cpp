@@ -21,6 +21,8 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <unit_test_utils.h>
+
 #include <boost/test/unit_test.hpp>
 
 #include <antares/io/inputs/yml-system/converter.h>
@@ -32,7 +34,7 @@
 
 using namespace std::string_literals;
 using namespace Antares::IO::Inputs;
-using namespace Antares::Study;
+using namespace Antares::ModelerStudy;
 
 struct LibraryObjects
 {
@@ -307,16 +309,16 @@ struct RawConnection
 
 void AddConnectionsToSystem(std::string& system, const std::vector<RawConnection>& connections)
 {
-    for (const auto& connection: connections)
+    for (const auto& [firstCompo, firstPort, secondCompo, secondPort]: connections)
     {
         system += "\n";
-        system += connectionFirstCompoMargin + "- component1: " + connection.firstCompo;
+        system += connectionFirstCompoMargin + "- component1: " + firstCompo;
         system += "\n";
-        system += connectionOtherFieldsMargin + "port_1: " + connection.firstPort;
+        system += connectionOtherFieldsMargin + "port1: " + firstPort;
         system += "\n";
-        system += connectionOtherFieldsMargin + "component2: " + connection.secondCompo;
+        system += connectionOtherFieldsMargin + "component2: " + secondCompo;
         system += "\n";
-        system += connectionOtherFieldsMargin + "port_2: " + connection.secondPort;
+        system += connectionOtherFieldsMargin + "port2: " + secondPort;
     }
 }
 
@@ -350,7 +352,7 @@ BOOST_FIXTURE_TEST_CASE(SystemWithAConnectionOfTwoSendingPorts, PrepareYaml)
                       SystemConverter::TwoFieldsOfSameRole);
 }
 
-BOOST_FIXTURE_TEST_CASE(TryConnectPortSelfConnection, PrepareYaml)
+BOOST_FIXTURE_TEST_CASE(TryPortSelfConnection, PrepareYaml)
 {
     AddConnectionsToSystem(system,
                            {{.firstCompo = "G",
@@ -382,4 +384,51 @@ BOOST_FIXTURE_TEST_CASE(SystemWithSenderAndReceiverPort, PrepareYaml)
     const auto& secondEntry = connection.secondEntry();
     BOOST_CHECK(secondEntry.component()->Id() == "D");
     BOOST_CHECK(secondEntry.port()->Id() == "injection_port");
+}
+
+BOOST_FIXTURE_TEST_CASE(TryToConnectWithUnknownCompo, PrepareYaml)
+{
+    AddConnectionsToSystem(system,
+                           {{.firstCompo = "N",
+                             .firstPort = "injection_port",
+                             .secondCompo = "DD",
+                             .secondPort = "injection_port"}});
+    YmlSystem::System systemObj = parserSystem.parse(system);
+    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), std::invalid_argument);
+}
+
+BOOST_FIXTURE_TEST_CASE(TryToConnectWithUnknownPort, PrepareYaml)
+{
+    AddConnectionsToSystem(system,
+                           {{.firstCompo = "N",
+                             .firstPort = "injection_port",
+                             .secondCompo = "D",
+                             .secondPort = "yosh!"}});
+    YmlSystem::System systemObj = parserSystem.parse(system);
+    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), std::invalid_argument);
+}
+
+BOOST_FIXTURE_TEST_CASE(DuplicatedCompo, PrepareYaml)
+{
+    const auto duplicatedCompo = R"(
+        system:
+          id: system1
+          description: basic description
+          model-libraries: [std, mylib]
+          components:
+            - id: N
+              model: std.node
+              scenario-group: group-234
+            - id: N
+              model: std.lib
+              scenario-group: group-234
+)";
+
+    YmlSystem::System systemObj = YmlSystem::Parser().parse(duplicatedCompo);
+    BOOST_CHECK_EXCEPTION(SystemConverter::convert(systemObj,
+                                                   {ModelConverter::convert(
+                                                     YmlModel::Parser().parse(libraryYaml))}),
+                          std::invalid_argument,
+                          checkMessage("System has at least two components with the same id "
+                                       "('N'), this is not supported"));
 }

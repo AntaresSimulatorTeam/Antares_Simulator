@@ -29,7 +29,7 @@
 #include "antares/study/system-model/component.h"
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::Expressions::Visitors;
-using namespace Antares::Study;
+using namespace Antares::ModelerStudy;
 
 namespace Antares::Optimization
 {

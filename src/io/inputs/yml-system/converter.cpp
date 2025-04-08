@@ -27,7 +27,7 @@
 #include "antares/io/inputs/yml-system/system.h"
 #include "antares/study/system-model/system.h"
 
-using namespace Antares::Study;
+using namespace Antares::ModelerStudy;
 
 namespace Antares::IO::Inputs::SystemConverter
 {
@@ -172,8 +172,7 @@ static void CheckPortsType(const SystemModel::Port& firstPort, const SystemModel
     }
 }
 
-static SystemModel::FieldRole ExposeFieldRole(const SystemModel::Component& component,
-                                              const std::string& portId,
+static SystemModel::FieldRole ExposeFieldRole(const std::string& portId,
                                               const std::string& field,
                                               const SystemModel::PortFieldMap& portFieldDefinitions)
 {
@@ -199,12 +198,8 @@ static std::pair<SystemModel::PortFieldsRole, SystemModel::PortFieldsRole> Resol
     const auto& secondPortDefs = secondComponent.getModel()->PortFieldDefinitions();
     for (const auto& field: firstPort.Type().Fields())
     {
-        const auto firstPortFieldRole = ExposeFieldRole(firstComponent,
-                                                        firstPort.Id(),
-                                                        field.Id(),
-                                                        firstPortDefs);
-        const auto secondPortFieldRole = ExposeFieldRole(secondComponent,
-                                                         secondPort.Id(),
+        const auto firstPortFieldRole = ExposeFieldRole(firstPort.Id(), field.Id(), firstPortDefs);
+        const auto secondPortFieldRole = ExposeFieldRole(secondPort.Id(),
                                                          field.Id(),
                                                          secondPortDefs);
 
@@ -240,10 +235,10 @@ static SystemModel::Connection createConnection(
   const YmlSystem::Connection& connection,
   const std::unordered_map<std::string, SystemModel::Component>& components)
 {
-    const auto firstComponentId = connection.firstEntry.componentId;
-    const auto firstPortId = connection.firstEntry.portId;
-    const auto secondComponentId = connection.secondEntry.componentId;
-    const auto secondPortId = connection.secondEntry.portId;
+    const auto& firstComponentId = connection.firstEntry.componentId;
+    const auto& firstPortId = connection.firstEntry.portId;
+    const auto& secondComponentId = connection.secondEntry.componentId;
+    const auto& secondPortId = connection.secondEntry.portId;
 
     CheckPortSelfConnection(firstComponentId, firstPortId, secondComponentId, secondPortId);
 

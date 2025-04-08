@@ -23,7 +23,7 @@
 
 #include <antares/study/system-model/system.h>
 
-namespace Antares::Study::SystemModel
+namespace Antares::ModelerStudy::SystemModel
 {
 System::System(const std::string_view id,
                std::unordered_map<std::string, Component>&& components,
@@ -41,10 +41,6 @@ System::System(const std::string_view id,
     {
         throw std::invalid_argument("A system must contain at least one component");
     }
-    // std::ranges::transform(components,
-    //                        std::inserter(components_, components_.end()),
-    //                        [this](/*Non const to prevent copy*/ Component& component)
-    //                        { return makeComponent(component); });
 }
 
 const std::vector<Connection>& System::connections() const
@@ -92,4 +88,4 @@ System SystemBuilder::build()
 {
     return System(id_, std::move(components_), std::move(connections_));
 }
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel

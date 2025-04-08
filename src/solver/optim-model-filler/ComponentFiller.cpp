@@ -136,8 +136,9 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
       });
 }
 
-ComponentFiller::ComponentFiller(const Study::SystemModel::Component& component,
-                                 const std::vector<Study::SystemModel::Connection>& connections):
+ComponentFiller::ComponentFiller(
+  const ModelerStudy::SystemModel::Component& component,
+  const std::vector<ModelerStudy::SystemModel::Connection>& connections):
     component_(component),
     modelVariable_(component.getModel()->Variables()),
     connections_(connections)
@@ -181,7 +182,7 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
                   VariablesBulkAddition(pb, variableDictionary)
                     .addVariable(lb_,
                                  ub_,
-                                 variable.Type() != Study::SystemModel::ValueType::FLOAT,
+                                 variable.Type() != ModelerStudy::SystemModel::ValueType::FLOAT,
                                  dim,
                                  key);
               },
@@ -200,7 +201,8 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
               {
                   return pb.addVariable(lb.valueAsDouble(),
                                         ub.valueAsDouble(),
-                                        variable.Type() != Study::SystemModel::ValueType::FLOAT,
+                                        variable.Type()
+                                          != ModelerStudy::SystemModel::ValueType::FLOAT,
                                         name);
               });
         }

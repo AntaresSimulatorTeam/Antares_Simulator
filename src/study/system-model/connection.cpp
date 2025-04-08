@@ -22,7 +22,7 @@
 
 #include <antares/study/system-model/connection.h>
 
-namespace Antares::Study::SystemModel
+namespace Antares::ModelerStudy::SystemModel
 {
 ConnectionEntry::ConnectionEntry(const Component* component,
                                  const Port* port,
@@ -61,10 +61,6 @@ Connection::Connection(const ConnectionEntry& firstEntry, const ConnectionEntry&
     firstEntry_(firstEntry),
     secondEntry_(secondEntry)
 {
-    // if (senderEntry.role() != FieldRole::Sender || receiverEntry.role() != FieldRole::Receiver)
-    // {
-    //     throw std::invalid_argument("Entries must have correct roles: Sender and Receiver");
-    // }
 }
 
 const ConnectionEntry& Connection::firstEntry() const
@@ -76,4 +72,4 @@ const ConnectionEntry& Connection::secondEntry() const
 {
     return secondEntry_;
 }
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel

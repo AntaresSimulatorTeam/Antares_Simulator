@@ -25,7 +25,7 @@
 #include "component.h"
 #include "connection.h"
 
-namespace Antares::Study::SystemModel
+namespace Antares::ModelerStudy::SystemModel
 {
 
 /**
@@ -45,6 +45,7 @@ public:
     // Only allowing one private constructor (see below) to forbid empty Systems
     System() = delete;
     System(System& other) = delete;
+    System(System&& other) = default;
 
     const std::string& Id() const
     {
@@ -83,4 +84,4 @@ private:
     std::vector<Connection> connections_;
 };
 
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel

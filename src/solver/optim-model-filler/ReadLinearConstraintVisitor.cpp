@@ -26,7 +26,7 @@
 #include "antares/expressions/ShiftVector.h"
 
 using namespace Antares::Expressions::Nodes;
-using namespace Antares::Study::SystemModel;
+using namespace Antares::ModelerStudy::SystemModel;
 
 namespace Antares::Optimization
 {

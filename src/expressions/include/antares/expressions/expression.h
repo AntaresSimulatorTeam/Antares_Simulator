@@ -29,7 +29,7 @@ namespace Antares::Expressions::Nodes
 class Node;
 }
 
-namespace Antares::Study::SystemModel
+namespace Antares::ModelerStudy::SystemModel
 {
 
 // TODO: add unit tests for this class
@@ -66,4 +66,4 @@ private:
     bool empty_ = true;
 };
 
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel

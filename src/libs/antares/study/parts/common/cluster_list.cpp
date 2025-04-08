@@ -115,10 +115,6 @@ bool ClusterList<ClusterT>::alreadyInAllClusters(std::string clusterId)
 template<class ClusterT>
 void ClusterList<ClusterT>::addToCompleteList(std::shared_ptr<ClusterT> cluster)
 {
-    if (alreadyInAllClusters(cluster->id()))
-    {
-        return;
-    }
     allClusters_.push_back(cluster);
     sortCompleteList();
     rebuildIndexes();

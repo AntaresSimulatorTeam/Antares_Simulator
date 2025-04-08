@@ -26,7 +26,7 @@
 
 namespace Antares
 {
-namespace Study::SystemModel
+namespace ModelerStudy::SystemModel
 {
 class Library;
 }
@@ -45,7 +45,7 @@ class Node;
 namespace Antares::IO::Inputs::ModelConverter
 {
 
-Study::SystemModel::Library convert(const YmlModel::Library& library);
+ModelerStudy::SystemModel::Library convert(const YmlModel::Library& library);
 
 // EXCEPTIONS
 class UnknownTypeException: public std::runtime_error
