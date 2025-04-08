@@ -35,7 +35,7 @@
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::Expressions::Visitors;
-using namespace Antares::Study;
+using namespace Antares::ModelerStudy;
 
 using namespace Antares::Optimization;
 

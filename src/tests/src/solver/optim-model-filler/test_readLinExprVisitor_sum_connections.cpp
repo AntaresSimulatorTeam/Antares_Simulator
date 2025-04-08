@@ -36,7 +36,7 @@
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::Expressions::Visitors;
-using namespace Antares::Study;
+using namespace Antares::ModelerStudy;
 using namespace Antares::Optimization;
 
 struct container_of_helpful_data_for_unit_tests

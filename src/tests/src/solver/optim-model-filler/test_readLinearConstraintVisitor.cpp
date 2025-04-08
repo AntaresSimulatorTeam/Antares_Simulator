@@ -44,7 +44,7 @@ struct MyDummyFixture: Registry<Node>
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
     EvaluationContext evaluationContext{{}, {}, data};
     std::string componentId = "compo";
-    const std::vector<Antares::Study::SystemModel::Connection> connections;
+    const std::vector<Antares::ModelerStudy::SystemModel::Connection> connections;
     ReadLinearConstraintVisitor visitor{evaluationContext, {0, 0}, componentId, connections};
 };
 
