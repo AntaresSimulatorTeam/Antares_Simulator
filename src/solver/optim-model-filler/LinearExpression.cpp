@@ -19,41 +19,14 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include <algorithm>
+#include <functional>
 #include <stdexcept>
 
 #include <antares/solver/optim-model-filler/LinearExpression.h>
 
 namespace Antares::Optimization
 {
-
-/**
- * Element-wise sum of two [string, double] maps, preceded an element-wise multiplication of the
- * right-hand-side map. Keys that do not exist in one of the two maps are considered to have a zero
- * value. For every key: value = left_value + rhs_multiplier * right_value
- * @param left The left hand side map
- * @param right The right hand side map
- * @param rhs_multiplier The multiplier to apply to the right hand side map
- * @return The map resulting from the operation
- */
-static std::map<std::string, double> add_maps(const std::map<std::string, double>& left,
-                                              const std::map<std::string, double>& right,
-                                              double rhs_multiplier)
-{
-    std::map result(left);
-    for (auto [key, value]: right)
-    {
-        if (result.contains(key))
-        {
-            result[key] += rhs_multiplier * value;
-        }
-        else
-        {
-            result[key] = rhs_multiplier * value;
-        }
-    }
-    return result;
-}
-
 /**
  * Element-wise multiplication of a map by a scale.
  * For every key: final_value = scale * initial_value
@@ -61,10 +34,9 @@ static std::map<std::string, double> add_maps(const std::map<std::string, double
  * @param scale The scale
  * @return The scaled map
  */
-static std::map<std::string, double> scale_map(const std::map<std::string, double>& map,
-                                               double scale)
+FullKeyMap scale_map(const FullKeyMap& map, double scale)
 {
-    std::map<std::string, double> result;
+    FullKeyMap result;
     for (auto [key, value]: map)
     {
         result[key] = scale * value;
@@ -72,7 +44,7 @@ static std::map<std::string, double> scale_map(const std::map<std::string, doubl
     return result;
 }
 
-LinearExpression::LinearExpression(double offset, std::map<std::string, double> coef_per_var):
+LinearExpression::LinearExpression(double offset, FullKeyMap coef_per_var):
     offset_(offset),
     coef_per_var_(std::move(coef_per_var))
 {
@@ -80,12 +52,25 @@ LinearExpression::LinearExpression(double offset, std::map<std::string, double> 
 
 LinearExpression LinearExpression::operator+(const LinearExpression& other) const
 {
-    return {offset_ + other.offset_, add_maps(coef_per_var_, other.coef_per_var_, 1)};
+    return {offset_ + other.offset_, add_maps(coef_per_var_, other.coef_per_var_)};
+}
+
+const FullKeyMap& LinearExpression::coefPerVar() const
+{
+    return coef_per_var_;
+}
+
+LinearExpression& LinearExpression::operator+=(const LinearExpression& other)
+{
+    this->offset_ += other.offset_;
+    this->coef_per_var_ = add_maps(coef_per_var_, other.coef_per_var_);
+    return *this;
 }
 
 LinearExpression LinearExpression::operator-(const LinearExpression& other) const
 {
-    return {offset_ - other.offset_, add_maps(coef_per_var_, other.coef_per_var_, -1)};
+    return {offset_ - other.offset_,
+            add_maps(coef_per_var_, other.coef_per_var_, std::negate<double>())};
 }
 
 LinearExpression LinearExpression::operator*(const LinearExpression& other) const
@@ -113,8 +98,14 @@ LinearExpression LinearExpression::operator/(const LinearExpression& other) cons
     return LinearExpression(offset_ / other.offset_, scale_map(coef_per_var_, 1 / other.offset_));
 }
 
-LinearExpression LinearExpression::negate() const
+LinearExpression LinearExpression::operator-() const
 {
     return {-offset_, scale_map(coef_per_var_, -1)};
 }
+
+double LinearExpression::offset() const
+{
+    return offset_;
+}
+
 } // namespace Antares::Optimization

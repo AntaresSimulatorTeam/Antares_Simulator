@@ -61,12 +61,14 @@ BOOST_FIXTURE_TEST_CASE(reset, Fixture)
     BOOST_CHECK_EQUAL(p.simulationDays.first, 0);
     BOOST_CHECK_EQUAL(p.nbTimeSeriesThermal, 1);
     BOOST_CHECK_EQUAL(p.synthesis, true);
-    BOOST_CHECK_EQUAL(p.optOptions.ortoolsSolver, "sirius");
+    BOOST_CHECK_EQUAL(p.optOptions.linearSolver, "sirius");
+    BOOST_CHECK_EQUAL(p.optOptions.quadraticSolver, "sirius");
 }
 
 BOOST_FIXTURE_TEST_CASE(loadValid, Fixture)
 {
-    options.optOptions.ortoolsSolver = "xpress";
+    options.solverOptions.linearSolver = "xpress";
+    options.solverOptions.quadraticSolver = "scip";
 
     writeValidFile();
     p.loadFromFile(path.string(), version);
@@ -76,7 +78,9 @@ BOOST_FIXTURE_TEST_CASE(loadValid, Fixture)
     BOOST_CHECK_EQUAL(p.nbYears, 5);
     BOOST_CHECK_EQUAL(p.seed[seedTsGenThermal], 5489);
     BOOST_CHECK_EQUAL(p.include.reserve.dayAhead, true);
-    BOOST_CHECK_EQUAL(p.optOptions.ortoolsSolver, "xpress");
+    BOOST_CHECK_EQUAL(p.optOptions.linearSolver, "xpress");
+    BOOST_CHECK_EQUAL(p.optOptions.quadraticSolver, "scip");
+    BOOST_CHECK_EQUAL(p.shedding.policy, shpAccurateShavePeaks);
 }
 
 BOOST_FIXTURE_TEST_CASE(fixBadValue, Fixture)
@@ -122,6 +126,26 @@ BOOST_FIXTURE_TEST_CASE(hydroPmax, Fixture)
     BOOST_CHECK(StringToCompatibilityHydroPmax(p.compatibility.hydroPmax, "daily"));
     BOOST_CHECK(!StringToCompatibilityHydroPmax(p.compatibility.hydroPmax, ""));
     BOOST_CHECK(!StringToCompatibilityHydroPmax(p.compatibility.hydroPmax, "abc"));
+}
+
+BOOST_AUTO_TEST_CASE(saveLoadGeneralData)
+{
+    IniFile ini;
+    Parameters parameters;
+    parameters.reset();
+    parameters.timeSeriesToGenerate = timeSeriesLoad | timeSeriesHydro | timeSeriesWind
+                                      | timeSeriesThermal | timeSeriesSolar | timeSeriesRenewable;
+
+    parameters.timeSeriesToRefresh = parameters.timeSeriesToGenerate;
+    parameters.resultFormat = zipArchive;
+
+    parameters.saveToINI(ini);
+
+    Parameters loaded;
+    loaded.loadFromINI(ini, StudyVersion::latest());
+    BOOST_CHECK_EQUAL(parameters.timeSeriesToGenerate, loaded.timeSeriesToGenerate);
+    BOOST_CHECK_EQUAL(parameters.timeSeriesToRefresh, loaded.timeSeriesToRefresh);
+    BOOST_CHECK_EQUAL(parameters.resultFormat, loaded.resultFormat);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -216,7 +240,7 @@ void Fixture::writeValidFile()
             hydro-heuristic-policy = accommodate rule curves
             hydro-pricing-mode = fast
             power-fluctuations = free modulations
-            shedding-policy = shave peaks
+            shedding-policy = accurate shave peaks
             unit-commitment-mode = fast
             number-of-cores-mode = medium
             renewable-generation-modelling = aggregated

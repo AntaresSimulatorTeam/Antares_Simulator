@@ -58,3 +58,4 @@ _build*
 # pytest
 __pycache__
 venv/
+vcpkg_installed

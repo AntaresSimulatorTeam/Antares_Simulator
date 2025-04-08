@@ -558,7 +558,11 @@ SurveyResults::SurveyResults(const Data::Study& s, const Yuni::String& o, IResul
     digestNonApplicableStatus = new bool*[digestSize];
     for (uint i = 0; i < digestSize; i++)
     {
-        digestNonApplicableStatus[i] = new bool[maxVariables]{false};
+        digestNonApplicableStatus[i] = new bool[maxVariables];
+        for (uint var = 0; var != maxVariables; ++var)
+        {
+            digestNonApplicableStatus[i][var] = false;
+        }
     }
 }
 

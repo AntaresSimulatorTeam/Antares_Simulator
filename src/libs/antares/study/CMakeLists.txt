@@ -220,6 +220,8 @@ set(SRC_STUDY
         fwd.cpp
         include/antares/study/study.h
         study.cpp
+	duplicates.cpp
+        include/antares/study/duplicates.h
         include/antares/study/correlation-updater.hxx
         study.importprepro.cpp
         importlogs.cpp
@@ -301,6 +303,11 @@ target_link_libraries(study
         antares-core
         antares-solver-simulation
         Antares::hydro
+        Antares::antares-study-system-model
+        linear-problem-api
+        Antares::load-modeler-files
+        Antares::modeler-parameters
+        PRIVATE
         Antares::exception
         PRIVATE
         Antares::benchmarking

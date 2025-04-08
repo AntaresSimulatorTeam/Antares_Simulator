@@ -80,9 +80,7 @@ void ntcTSNumberData::saveToINIFile(const Study& /* study */, Yuni::IO::File::St
     }
 }
 
-void ntcTSNumberData::setDataForLink(const Antares::Data::AreaLink* link,
-                                     const uint year,
-                                     uint value)
+void ntcTSNumberData::setTSnumber(const Antares::Data::AreaLink* link, const uint year, uint value)
 {
     assert(link != nullptr);
     if (year < pTSNumberRules.height && link->indexForArea < pTSNumberRules.width)

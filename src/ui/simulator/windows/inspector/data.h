@@ -77,7 +77,7 @@ public:
     //! All selected renewable clusters
     Data::RenewableCluster::Set RnClusters;
     //! All selected binding constraints
-    Data::BindingConstraintsRepository::Set constraints;
+    Data::BindingConstraint::Set constraints;
     //! All studies
     Data::Study::Set studies;
 

@@ -81,8 +81,8 @@ public:
     //! A non-zero value if the data will be used for a simulation
     bool usedByTheSolver;
 
-    //! All options related to optimization
-    Antares::Solver::Optimization::OptimizationOptions optOptions;
+    //! All options related to linear & quadratic optimization
+    Antares::Solver::Optimization::OptimizationOptions solverOptions;
 
     //! Temporary string for passing log message
     mutable Yuni::String logMessage;

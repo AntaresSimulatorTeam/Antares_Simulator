@@ -193,9 +193,12 @@ static bool AreaListSaveThermalDataToFile(const AreaList& list, const AnyString&
     return ini.save(filename);
 }
 
-static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const AnyString& folder)
+static bool AreaListSaveToFolderSingleArea(const Area& area,
+                                           const AnyString& folder,
+                                           const Parameters::Compatibility::HydroPmax hydroPmax)
 {
     bool ret = true;
+    Clob buffer;
 
     // A specific folder for general data
     buffer.clear() << folder << SEP << "input" << SEP << "areas" << SEP << area.id;
@@ -274,7 +277,7 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
         if (area.hydro.series) // Series
         {
             buffer.clear() << folder << SEP << "input" << SEP << "hydro" << SEP << "series";
-            ret = area.hydro.series->saveToFolder(area.id, buffer) && ret;
+            ret = area.hydro.series->saveToFolder(area.id, buffer, hydroPmax) && ret;
         }
     }
 
@@ -485,17 +488,13 @@ Area* AreaList::add(Area* a)
         // Indexing the area
         a->index = (uint)areas.size();
 
-// Adding the area in the list
-#ifndef NDEBUG
-        uint count = (uint)areas.size();
-#endif
+        [[maybe_unused]] unsigned count = (uint)areas.size(); // used for assert
 
+        // Adding the area in the list
         areas[a->id] = a;
         rebuildIndexes();
 
-#ifndef NDEBUG
         assert(areas.size() == (count + 1) and "Invalid count of areas in the map");
-#endif
     }
     return a;
 }
@@ -763,13 +762,16 @@ bool AreaList::saveToFolder(const AnyString& folder) const
       {
           logs.info() << "Exporting the area " << (area.index + 1) << '/' << areas.size() << ": "
                       << area.name;
-          ret = AreaListSaveToFolderSingleArea(area, buffer, folder) && ret;
+          ret = AreaListSaveToFolderSingleArea(area,
+                                               folder,
+                                               pStudy.parameters.compatibility.hydroPmax)
+                && ret;
       });
 
     // Hydro
     // The hydro files must be saved after the area has been invalidated
     buffer.clear() << folder << SEP << "input" << SEP << "hydro";
-    ret = PartHydro::SaveToFolder(*this, buffer) && ret;
+    ret = PartHydro::SaveToFolder(*this, buffer, pStudy.parameters.compatibility.hydroPmax) && ret;
 
     // update nameid set
     updateNameIDSet();
@@ -1035,8 +1037,8 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         fs::path seriesPath = study.folderInput / "st-storage" / "series"
                               / area.id.to<std::string>();
 
-        ret = area.shortTermStorage.loadSeriesFromFolder(seriesPath) && ret;
-        ret = area.shortTermStorage.validate() && ret;
+        ret = area.shortTermStorage.loadSeriesFromFolder(seriesPath, studyVersion) && ret;
+        ret = area.shortTermStorage.validate(studyVersion) && ret;
     }
 
     // Renewable cluster list
@@ -1220,9 +1222,13 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
                 fs::path cluster_folder = stsFolder / "clusters" / area->id.c_str();
                 ret = area->shortTermStorage.createSTStorageClustersFromIniFile(cluster_folder)
                       && ret;
-
-                const auto constraints_folder = stsFolder / "constraints" / area->id.c_str();
-                ret = area->shortTermStorage.loadAdditionalConstraints(constraints_folder) && ret;
+                // Additional constraints were added from version 9.2
+                if (studyVersion >= StudyVersion(9, 2))
+                {
+                    const auto constraints_folder = stsFolder / "constraints" / area->id.c_str();
+                    ret = area->shortTermStorage.loadAdditionalConstraints(constraints_folder)
+                          && ret;
+                }
             }
         }
         else
@@ -1498,9 +1504,7 @@ bool AreaList::renameArea(const AreaName& oldid, const AreaName& newid, const Ar
               return;
           }
 
-#ifndef NDEBUG
-          uint oldCount = (uint)a.links.size();
-#endif
+          [[maybe_unused]] unsigned oldCount = (uint)a.links.size(); // only used in assert
           // Renaming the entry
 
           link->forceReload(true);
@@ -1509,9 +1513,7 @@ bool AreaList::renameArea(const AreaName& oldid, const AreaName& newid, const Ar
           link->detach();
           a.links[link->with->id] = link;
 
-#ifndef NDEBUG
           assert(oldCount == a.links.size() && "We must have the same number of items in the list");
-#endif
       });
 
     area->buildLinksIndexes();

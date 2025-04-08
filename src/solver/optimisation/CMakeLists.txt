@@ -5,6 +5,7 @@ set(RTESOLVER_OPT
         opt_optimisation_lineaire.cpp
         opt_chainage_intercos.cpp
         include/antares/solver/optimisation/opt_fonctions.h
+        include/antares/solver/optimisation/opt_appel_solveur_quadratique.h
         include/antares/solver/optimisation/SparseVector.hxx
         opt_pilotage_optimisation_lineaire.cpp
         opt_pilotage_optimisation_quadratique.cpp
@@ -207,8 +208,11 @@ target_link_libraries(model_antares
         PRIVATE
         infeasible_problem_analysis
         Antares::linear-problem-api
-        linear-problem-data-impl
+        Antares::linear-problem-data-impl
         Antares::linear-problem-mpsolver-impl
+        # modeler
+        Antares::optim-model-filler
+        Antares::antares-study-system-model
 )
 
 target_include_directories(model_antares

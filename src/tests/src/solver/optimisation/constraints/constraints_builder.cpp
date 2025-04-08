@@ -71,9 +71,11 @@ struct BB
 
         for (auto i = 0; i < nombreDePasDeTempsPourUneOptimisation; i++)
         {
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
             CorrespondanceVarNativesVarOptim[i].SIM_ShortTermStorage = {
               .InjectionVariable = {0, 1, 4},
               .WithdrawalVariable = {2, 3, 5}};
+#pragma GCC diagnostic pop
         }
     }
 
@@ -132,6 +134,7 @@ struct BB
       .rhs = fill_rhs(),
       .constraints = addc3_netting_constraints};
 
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
     ::ShortTermStorage::PROPERTIES storage1 = {.additionalConstraints = {addc1_withdrawal},
                                                .clusterGlobalIndex = 0,
                                                .name = "cluster_1"};
@@ -143,6 +146,7 @@ struct BB
                                                .additionalConstraints = {addc3_netting},
                                                .clusterGlobalIndex = 2,
                                                .name = "cluster_3"};
+#pragma GCC diagnostic pop
 
     std::vector<CORRESPONDANCES_DES_CONTRAINTES> CorrespondanceCntNativesCntOptim;
     std::vector<::ShortTermStorage::AREA_INPUT> shortTermStorage = InitializeShortTermStorageData();
@@ -420,10 +424,12 @@ void SetupProblemHebdo(PROBLEME_HEBDO& problemeHebdo,
         corresp.ShortTermStorageLevelConstraint.resize(numberOfAreas, 0);
     }
     problemeHebdo.NumeroDeContrainteEnergieHydraulique.resize(numberOfAreas, -1);
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
     problemeHebdo.CaracteristiquesHydrauliques.resize(numberOfAreas,
                                                       {.TurbinageEntreBornes = false,
                                                        .SansHeuristique = false,
                                                        .SuiviNiveauHoraire = false});
+#pragma GCC diagnostic pop
 
     // Initialize other required vectors
     problemeHebdo.ConsommationsAbattues.resize(numberOfTimeSteps);

@@ -22,6 +22,8 @@
 #include "antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h"
 #include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
 
+namespace DonneesOptimisationMensuelle
+{
 void H2O_M_OptimiserUneAnnee(DONNEES_ANNUELLES& DonneesAnnuelles, int NumeroDeReservoir)
 {
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles.ProblemeHydraulique;
@@ -41,3 +43,4 @@ void H2O_M_OptimiserUneAnnee(DONNEES_ANNUELLES& DonneesAnnuelles, int NumeroDeRe
 
     return;
 }
+} // namespace DonneesOptimisationMensuelle
