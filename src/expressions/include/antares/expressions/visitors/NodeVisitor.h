@@ -124,7 +124,11 @@ public:
           Nodes::PortFieldNode,
           Nodes::PortFieldSumNode,
           Nodes::ComponentVariableNode,
-          Nodes::ComponentParameterNode>();
+          Nodes::ComponentParameterNode,
+          Nodes::TimeShiftNode,
+          Nodes::TimeIndexNode,
+          Nodes::TimeSumNode,
+          Nodes::AllTimeSumNode>();
 
         try
         {
@@ -282,6 +286,43 @@ public:
      * @return The result of processing the ComponentParameterNode.
      */
     virtual R visit(const Nodes::ComponentParameterNode*, Args... args) = 0;
+    /**
+     * @brief Visits a TimeShiftNode.
+     *
+     * @param node A pointer to the TimeShiftNode to be visited.
+     * @param args Additional arguments to be passed to the visitor's methods.
+     *
+     * @return The result of processing the TimeShiftNode.
+     */
+    virtual R visit(const Nodes::TimeShiftNode*, Args... args) = 0;
+
+    /**
+     * @brief Visits a TimeIndexNode.
+     *
+     * @param node A pointer to the TimeIndexNode to be visited.
+     * @param args Additional arguments to be passed to the visitor's methods.
+     *
+     * @return The result of processing the TimeIndexNode.
+     */
+    virtual R visit(const Nodes::TimeIndexNode*, Args... args) = 0;
+    /**
+     * @brief Visits a TimeIndexNode.
+     *
+     * @param node A pointer to the TimeSumNode to be visited.
+     * @param args Additional arguments to be passed to the visitor's methods.
+     *
+     * @return The result of processing the TimeSumNode.
+     */
+    virtual R visit(const Nodes::TimeSumNode*, Args... args) = 0;
+    /**
+     * @brief Visits a TimeIndexNode.
+     *
+     * @param node A pointer to the AllTimeSumNode to be visited.
+     * @param args Additional arguments to be passed to the visitor's methods.
+     *
+     * @return The result of processing the AllTimeSumNode.
+     */
+    virtual R visit(const Nodes::AllTimeSumNode*, Args... args) = 0;
 
 private:
     // we use LogSink because the inclusion of <antares/logs/logs.h> somehow results in the

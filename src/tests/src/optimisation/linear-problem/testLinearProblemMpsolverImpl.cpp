@@ -63,7 +63,7 @@ BOOST_AUTO_TEST_SUITE(tests_on_OrtoolsLinearProblem)
 BOOST_FIXTURE_TEST_CASE(add_int_variable_to_problem___check_var_exists, FixtureEmptyProblem)
 {
     pb->addIntVariable(5, 15, "var");
-    auto* var = pb->getVariable("var");
+    auto* var = pb->lookupVariable("var");
     BOOST_CHECK(var);
     BOOST_CHECK(var->isInteger());
     BOOST_CHECK_EQUAL(var->getLb(), 5);
@@ -73,7 +73,7 @@ BOOST_FIXTURE_TEST_CASE(add_int_variable_to_problem___check_var_exists, FixtureE
 BOOST_FIXTURE_TEST_CASE(add_num_variable_to_problem___check_var_exists, FixtureEmptyProblem)
 {
     pb->addNumVariable(2., 7., "var");
-    auto* var = pb->getVariable("var");
+    auto* var = pb->lookupVariable("var");
     BOOST_CHECK(var);
     BOOST_CHECK(!var->isInteger());
     BOOST_CHECK_EQUAL(var->getLb(), 2.);
@@ -83,7 +83,7 @@ BOOST_FIXTURE_TEST_CASE(add_num_variable_to_problem___check_var_exists, FixtureE
 BOOST_FIXTURE_TEST_CASE(add_constraint_to_problem___check_constraint_exists, FixtureEmptyProblem)
 {
     pb->addConstraint(3., 8., "constraint");
-    auto* constraint = pb->getConstraint("constraint");
+    auto* constraint = pb->lookupConstraint("constraint");
     BOOST_CHECK(constraint);
     BOOST_CHECK_EQUAL(constraint->getLb(), 3.);
     BOOST_CHECK_EQUAL(constraint->getUb(), 8.);
@@ -114,19 +114,6 @@ bool expectedMessage(const std::exception& ex)
 {
     BOOST_CHECK_EQUAL(ex.what(), std::string("Element name already exists in linear problem"));
     return true;
-}
-
-BOOST_FIXTURE_TEST_CASE(add_already_existing_var_to_problem_leads_to_exception, FixtureEmptyProblem)
-{
-    pb->addNumVariable(0, 1, "var");
-    BOOST_CHECK_EXCEPTION(pb->addNumVariable(0, 1, "var"), std::exception, expectedMessage);
-}
-
-BOOST_FIXTURE_TEST_CASE(add_already_existing_constaint_to_problem_leads_to_exception,
-                        FixtureEmptyProblem)
-{
-    pb->addConstraint(0, 1, "constraint");
-    BOOST_CHECK_EXCEPTION(pb->addConstraint(0, 1, "constraint"), std::exception, expectedMessage);
 }
 
 BOOST_FIXTURE_TEST_CASE(minimize_problem___check_minimize_status, FixtureEmptyProblem)
@@ -204,7 +191,7 @@ BOOST_FIXTURE_TEST_CASE(solve_infeasible_problem___check_any_var_is_zero, Fixtur
 {
     auto* solution = pb->solve(true);
 
-    auto* var = pb->getVariable("var");
+    auto* var = pb->lookupVariable("var");
     BOOST_CHECK(var); // searched variable is known by problem
     BOOST_CHECK_EQUAL(solution->getOptimalValue(var), 0);
 }

@@ -1,0 +1,44 @@
+system:
+  id: sys_example_3_2
+  description: >
+      A single component containing 2 generators and a consumption of 100MW, three timesteps
+      The generators have no Pmin constraint.
+      Generator 1 costs 0.5 €/MW and has a Pmax of 50 MW at t=0, and 100 MW at t=1,2. An additional ramping constraint prevents the generator to inject more than 150 % of the Pmax of the previous timestep
+      Generator 2 costs €6/MW and has a maximum output of 200 MW.
+
+      Solution :
+        node1.gen1_p[0] = 50
+        node1.gen2_p[0] = 50
+        node1.gen1_p[1] = 75
+        node1.gen2_p[1] = 25
+        node1.gen1_p[2] = 80
+        node1.gen2_p[2] = 20
+        Objective function value: 672,5
+        
+  model-libraries: lib_example_3_2
+
+  components:
+  - id: node1
+    model: lib_example_3_2.node_2gen_1load
+    scenario-group: sg
+    parameters:
+    - id: load
+      time-dependent: true
+      scenario-dependent: false
+      value: load_3_2
+    - id: gen1_max_p
+      time-dependent: true
+      scenario-dependent: false
+      value: gen1_max_p_3_2
+    - id: gen1_prop_cost
+      time-dependent: true
+      scenario-dependent: false
+      value: gen1_prop_cost_3_2
+    - id: gen2_max_p
+      time-dependent: true
+      scenario-dependent: false
+      value: gen2_max_p_3_2
+    - id: gen2_prop_cost
+      time-dependent: true
+      scenario-dependent: false
+      value: gen2_prop_cost_3_2

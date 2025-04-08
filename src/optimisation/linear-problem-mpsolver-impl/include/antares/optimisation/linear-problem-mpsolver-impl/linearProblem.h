@@ -51,12 +51,15 @@ public:
                                     bool integer,
                                     const std::string& name) override;
 
-    OrtoolsMipVariable* getVariable(const std::string& name) const override;
+    OrtoolsMipVariable* getVariable(std::size_t index) const override;
+    OrtoolsMipVariable* lookupVariable(const std::string& name) const override;
+
     int variableCount() const override;
 
     OrtoolsMipConstraint* addConstraint(double lb, double ub, const std::string& name) override;
 
-    OrtoolsMipConstraint* getConstraint(const std::string& name) const override;
+    OrtoolsMipConstraint* getConstraint(std::size_t index) const override;
+    OrtoolsMipConstraint* lookupConstraint(const std::string& name) const override;
     int constraintCount() const override;
 
     void setObjectiveCoefficient(LinearProblemApi::IMipVariable* var, double coefficient) override;
@@ -81,8 +84,8 @@ private:
     operations_research::MPObjective* objective_;
     operations_research::MPSolverParameters params_;
 
-    std::map<std::string, std::unique_ptr<OrtoolsMipVariable>> variables_;
-    std::map<std::string, std::unique_ptr<OrtoolsMipConstraint>> constraints_;
+    std::vector<std::unique_ptr<OrtoolsMipVariable>> variables_;
+    std::vector<std::unique_ptr<OrtoolsMipConstraint>> constraints_;
 
     std::unique_ptr<OrtoolsMipSolution> solution_;
 };

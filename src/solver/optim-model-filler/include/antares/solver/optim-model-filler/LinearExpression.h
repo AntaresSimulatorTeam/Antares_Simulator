@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include <functional>
 #include <string>
 #include <unordered_map>
 
@@ -29,33 +30,74 @@
 namespace Antares::Optimization
 {
 
-template<typename T>
-struct IdentityFunction
-{
-    const T& operator()(const T& t)
-    {
-        return t;
-    }
-};
-
 using FullKeyMap = std::unordered_map<FullKey, double, FullKeyHash>;
 
 /**
- * Element-wise sum of two [string, double] maps, preceded an element-wise multiplication of the
- * right-hand-side map. Keys that do not exist in one of the two maps are considered to have a zero
- * value. For every key: value = left_value + rhs_multiplier * right_value
- * @param left The left hand side map
- * @param right The right hand side map
- * @return The map resulting from the operation
+ * @brief Element-wise sum of two maps, with an optional transformation applied to the values of the
+ * right-hand-side map.
+ *
+ * This function performs an element-wise sum of two maps. For each key present in either map:
+ * - If the key exists in both maps, the value in the result map is computed as `left_value +
+ * op(right_value)`.
+ * - If the key exists only in the right map, the value in the result map is computed as
+ * `op(right_value)`.
+ * - If the key exists only in the left map, the value in the result map is copied from the left
+ * map.
+ *
+ * The function is generic and works with any map-like container that supports the following
+ * operations:
+ * - `contains(key)`: Checks if a key exists in the map.
+ * - `operator[](key)`: Accesses or inserts a value for a key.
+ * - `+=`: Adds the value to an existing value in the map (must be supported by the mapped type).
+ *
+ * @tparam MapType The type of the map (e.g., `std::map`, `std::unordered_map`).
+ * @tparam UnaryOp The type of the transformation function applied to the values of the
+ * right-hand-side map. Defaults to `std::identity`.
+ *
+ * @param left The left-hand-side map.
+ * @param right The right-hand-side map.
+ * @param op A unary operation to transform the values of the right-hand-side map before adding
+ * them. Defaults to the identity function.
+ * @return A new map containing the element-wise sum of the two input maps.
+ *
+ * @example
+ * Example 1: Using `std::unordered_map<FullKey, double, FullKeyHash>`
+ *
+ * ```cpp
+ *
+ * std::unordered_map<FullKey, double, FullKeyHash> map1 = {
+ *     {FullKey("component1", "variable1"), 1.0},
+ *     {FullKey("component2", "variable2"), 2.0}
+ * };
+ *
+ * std::unordered_map<FullKey, double, FullKeyHash> map2 = {
+ *     {FullKey("component1", "variable1"), 3.0},
+ *     {FullKey("component3", "variable3"), 4.0}
+ * };
+ *
+ * auto result = add_maps(map1, map2);
+ * ```
+ *
+ * @example
+ * Example 2: Using `std::map<unsigned int, LinearExpression>`
+ *
+ * ```cpp
+ *
+ * std::map<unsigned int, LinearExpression> map3 = {
+ *     {1, linearExpression1},
+ *     {2, linearExpression2}
+ * };
+ *
+ * std::map<unsigned int, LinearExpression> map4 = {
+ *     {1, linearExpression3},
+ *     {3, linearExpression4}
+ * };
+ *
+ * auto result = add_maps(map3, map4);
+ * ```
  */
-template<typename Key,
-         typename Value,
-         typename UnaryOp = IdentityFunction<Value>,
-         typename HashType = std::hash<Key>>
-std::unordered_map<Key, Value, HashType> add_maps(
-  const std::unordered_map<Key, Value, HashType>& left,
-  const std::unordered_map<Key, Value, HashType>& right,
-  UnaryOp op = IdentityFunction<Value>{})
+template<typename MapType, typename UnaryOp = std::identity>
+MapType add_maps(const MapType& left, const MapType& right, UnaryOp op = std::identity{})
 {
     auto result(left);
     for (auto [key, value]: right)

@@ -28,6 +28,7 @@
 #include <antares/infoCollection/StudyInfoCollector.h>
 #include <antares/logs/hostinfo.h>
 #include <antares/resources/resources.h>
+#include <antares/study/duplicates.h>
 #include <antares/sys/policy.h>
 #include <antares/writer/writer_factory.h>
 #include "antares/antares/version.h"
@@ -48,7 +49,8 @@ namespace
 {
 void printSolvers()
 {
-    std::cout << "Available solvers: " << availableOrToolsSolversString() << std::endl;
+    std::cout << "Available linear solvers: " << availableLinearSolversString() << std::endl;
+    std::cout << "Available quadratic solvers: " << availableQuadraticSolversString() << std::endl;
 }
 } // namespace
 
@@ -128,6 +130,11 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
             throw Error::NoAreas();
         }
 
+        if (!checkForDuplicates(study))
+        {
+            throw Error::Duplicates();
+        }
+
         // no output ?
         study.parameters.noOutput = pSettings.noOutput;
 
@@ -142,7 +149,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     }
 
     // For solver
-    study.parameters.optOptions = options.optOptions;
+    study.parameters.optOptions = options.solverOptions;
 
     // This settings can only be enabled from the solver
     // Prepare the output for the study
@@ -277,7 +284,7 @@ void Application::postParametersChecks() const
 { // Some more checks require the existence of pParameters, hence of a study.
     // Their execution is delayed up to this point.
     checkSolverMILPincompatibility(pParameters->unitCommitment.ucMode,
-                                   pParameters->optOptions.ortoolsSolver);
+                                   pParameters->optOptions.linearSolver);
 
     checkSimplexRangeHydroPricing(pParameters->simplexOptimizationRange,
                                   pParameters->hydroPricing.hpMode);

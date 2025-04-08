@@ -142,12 +142,6 @@ private:
     void checkThermalTSGeneration(Study& study);
 }; // struct StudyRuntimeInfos
 
-#ifdef NDEBUG
-inline void StudyRangeLimits::checkIntegrity() const
-{
-}
-#endif
-
 } // namespace Antares::Data
 
 #endif // __ANTARES_LIBS_STUDY_RUNTIME_RUNTIME_INFOS_H__
