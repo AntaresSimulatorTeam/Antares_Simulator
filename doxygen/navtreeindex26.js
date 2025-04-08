@@ -1,5 +1,7 @@
 var NAVTREEINDEX26 =
 {
+"scBuilderDataInterface_8h_source.html":[10,0,0,5,0,23,0,0,0,8,9],
+"scBuilderUtils_8h_source.html":[10,0,0,5,0,23,0,0,0,8,10],
 "scenario-builder-hydro-final-levels-renderer_8h_source.html":[10,0,0,12,2,1,1,1,1,17],
 "scenario-builder-hydro-levels-renderer_8h_source.html":[10,0,0,12,2,1,1,1,1,18],
 "scenario-builder-hydro-renderer_8h_source.html":[10,0,0,12,2,1,1,1,1,19],
@@ -90,7 +92,7 @@ var NAVTREEINDEX26 =
 "stdDeviation_8h_source.html":[10,0,0,8,12,0,0,0,0,3,14],
 "store-timeseries-numbers_8h_source.html":[10,0,0,5,0,23,0,0,0,0,5],
 "store-timeseries-numbers_8hxx_source.html":[10,0,0,5,0,23,0,0,0,0,6],
-"structALL__MUST__RUN__GENERATION.html":[9,0,37],
+"structALL__MUST__RUN__GENERATION.html":[9,0,39],
 "structAntares_1_1API_1_1Error.html":[9,0,0,1,1],
 "structAntares_1_1API_1_1Error.html#ad5d0c6db0418afc065901a9827ab5d93":[9,0,0,1,1,0],
 "structAntares_1_1API_1_1SimulationResults.html":[9,0,0,1,3],
@@ -247,7 +249,5 @@ var NAVTREEINDEX26 =
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#a2864da59787beb75c657c6bf08748aa7":[9,0,0,18,5,0,2,1],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#a7e9c560587310ed00281766fc89a91b3":[9,0,0,18,5,0,2,0],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html":[9,0,0,18,5,0,3],
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#adb10ffc7d878851872fdd8b2e0c13116":[9,0,0,18,5,0,3,0],
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#aee6d3ffba5f966e12ae027ba334058c4":[9,0,0,18,5,0,3,1],
-"structAntares_1_1Solver_1_1Variable_1_1Areas_1_1Statistics.html":[9,0,0,18,5,7,0]
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#adb10ffc7d878851872fdd8b2e0c13116":[9,0,0,18,5,0,3,0]
 };

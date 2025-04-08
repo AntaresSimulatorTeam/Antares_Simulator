@@ -248,6 +248,6 @@ var NAVTREEINDEX0 =
 "checkLoadedInputData_8h_source.html":[10,0,0,5,0,3,0,0,0,0],
 "cholesky_8h_source.html":[10,0,0,8,5,0,0,0,0,0],
 "cholesky_8hxx_source.html":[10,0,0,8,5,0,0,0,0,1],
-"classAbstractStartUpCostsGroup.html":[9,0,35],
-"classAdequacyPatchRuntimeData.html":[9,0,36]
+"classAbstractStartUpCostsGroup.html":[9,0,37],
+"classAdequacyPatchRuntimeData.html":[9,0,38]
 };

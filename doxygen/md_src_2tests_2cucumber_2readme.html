@@ -157,7 +157,7 @@ Features, scenarios and tags</h2>
 </ul>
 <h2><a class="anchor" id="autotoc_md7"></a>
 Steps structure</h2>
-<p>Currently, tests are being migrated from the <a href="../run-study-tests">legacy non-regression testing process</a>. Thus, they all begin by defining the path to the study to run and then call antares, through the following "steps": </p><div class="fragment"><div class="line">Given the study path is &quot;someFolder/someStudy&quot;</div>
+<p>Currently, tests are being migrated from the <a href="../run-study-tests">legacy non-regression testing process</a>. Thus, they all begin by defining the path to the study to run and then call antares, through the following "steps": </p><div class="fragment"><div class="line">Given the solver study path is &quot;someFolder/someStudy&quot;</div>
 <div class="line">When I run antares simulator</div>
 </div><!-- fragment --><p> The test will load the study, run antares-simulator, and hold on to its outputs. <br  />
  Next, assertion "steps" can be added. For example, this next assertion checks that the simulation time (as measured by antares-simulator and reported in its logs) is less than 15 seconds: </p><div class="fragment"><div class="line">Then the simulation takes less than 15 seconds</div>

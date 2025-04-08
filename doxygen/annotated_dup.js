@@ -1302,6 +1302,9 @@ var annotated_dup =
     [ "compare_mps_files", null, [
       [ "compare_mps_files", "classcompare__mps__files_1_1compare__mps__files.html", null ]
     ] ],
+    [ "cucumber_collector", null, [
+      [ "cucumberCollector", "classcucumber__collector_1_1cucumberCollector.html", null ]
+    ] ],
     [ "DoneesOptimisationJournaliere", null, [
       [ "CORRESPONDANCE_DES_CONTRAINTES", "structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__CONTRAINTES.html", null ],
       [ "CORRESPONDANCE_DES_VARIABLES", "structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__VARIABLES.html", null ],
@@ -1367,15 +1370,18 @@ var annotated_dup =
     [ "sim_return_code", null, [
       [ "simulation_success", "classsim__return__code_1_1simulation__success.html", null ]
     ] ],
+    [ "solver_input_handler", null, [
+      [ "solver_input_handler", "classsolver__input__handler_1_1solver__input__handler.html", null ]
+    ] ],
+    [ "solver_output_handler", null, [
+      [ "result_type", "classsolver__output__handler_1_1result__type.html", null ],
+      [ "solver_output_handler", "classsolver__output__handler_1_1solver__output__handler.html", null ]
+    ] ],
     [ "study_input_handler", null, [
       [ "study_input_handler", "classstudy__input__handler_1_1study__input__handler.html", null ]
     ] ],
     [ "study_modifier", null, [
       [ "study_modifier", "classstudy__modifier_1_1study__modifier.html", null ]
-    ] ],
-    [ "study_output_handler", null, [
-      [ "result_type", "classstudy__output__handler_1_1result__type.html", null ],
-      [ "study_output_handler", "classstudy__output__handler_1_1study__output__handler.html", null ]
     ] ],
     [ "study_run", null, [
       [ "study_run", "classstudy__run_1_1study__run.html", null ]

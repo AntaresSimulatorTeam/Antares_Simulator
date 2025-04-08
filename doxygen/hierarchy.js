@@ -259,6 +259,7 @@ var hierarchy =
     [ "CsrFlowDissociationData", "structCsrFlowDissociationData.html", null ],
     [ "Antares::Solver::Optimization::CsrQuadraticProblem", "classAntares_1_1Solver_1_1Optimization_1_1CsrQuadraticProblem.html", null ],
     [ "CsvCreationFixture", "structCsvCreationFixture.html", null ],
+    [ "cucumber_collector.cucumberCollector", "classcucumber__collector_1_1cucumberCollector.html", null ],
     [ "CumulationConstraint", "classCumulationConstraint.html", [
       [ "InjectionCumulationConstraint", "classInjectionCumulationConstraint.html", null ],
       [ "NettingCumulationConstraint", "classNettingCumulationConstraint.html", null ],
@@ -1520,6 +1521,8 @@ var hierarchy =
     [ "Antares::Data::ShortTermStorage::SingleAdditionalConstraint", "classAntares_1_1Data_1_1ShortTermStorage_1_1SingleAdditionalConstraint.html", null ],
     [ "Antares::TSGenerator::Predicate::Solar", "classAntares_1_1TSGenerator_1_1Predicate_1_1Solar.html", null ],
     [ "SOLDE_MOYEN_DES_ECHANGES", "structSOLDE__MOYEN__DES__ECHANGES.html", null ],
+    [ "solver_input_handler.solver_input_handler", "classsolver__input__handler_1_1solver__input__handler.html", null ],
+    [ "solver_output_handler.solver_output_handler", "classsolver__output__handler_1_1solver__output__handler.html", null ],
     [ "OrtoolsUtils::SolverNames", "structOrtoolsUtils_1_1SolverNames.html", null ],
     [ "SolverTestData", "structSolverTestData.html", null ],
     [ "Antares::Component::HTMLListbox::Datasource::SortAlphaOrder", "structAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1SortAlphaOrder.html", null ],
@@ -1697,7 +1700,6 @@ var hierarchy =
     [ "Antares::Data::ShortTermStorage::STStorageInput", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html", null ],
     [ "study_input_handler.study_input_handler", "classstudy__input__handler_1_1study__input__handler.html", null ],
     [ "study_modifier.study_modifier", "classstudy__modifier_1_1study__modifier.html", null ],
-    [ "study_output_handler.study_output_handler", "classstudy__output__handler_1_1study__output__handler.html", null ],
     [ "study_run.study_run", "classstudy__run_1_1study__run.html", null ],
     [ "StudyBuilder", "structStudyBuilder.html", [
       [ "HydroMaxPowerStudy", "structHydroMaxPowerStudy.html", null ],
@@ -2126,6 +2128,6 @@ var hierarchy =
       [ "unfeasible_problem.unfeasible_problem", "classunfeasible__problem_1_1unfeasible__problem.html", null ]
     ] ],
     [ "Enum", null, [
-      [ "study_output_handler.result_type", "classstudy__output__handler_1_1result__type.html", null ]
+      [ "solver_output_handler.result_type", "classsolver__output__handler_1_1result__type.html", null ]
     ] ]
 ];

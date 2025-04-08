@@ -49,7 +49,7 @@ var searchData=
   ['reservoirlevel_46',['ReservoirLevel',['../classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel.html',1,'Antares::Solver::Variable::Economy']]],
   ['reservoirlevels_47',['ReservoirLevels',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ReservoirLevels.html',1,'Antares::Component::Datagrid::Renderer']]],
   ['resourcesinfotimer_48',['ResourcesInfoTimer',['../classAntares_1_1Window_1_1Simulation_1_1ResourcesInfoTimer.html',1,'Antares::Window::Simulation']]],
-  ['result_5ftype_49',['result_type',['../classstudy__output__handler_1_1result__type.html',1,'study_output_handler']]],
+  ['result_5ftype_49',['result_type',['../classsolver__output__handler_1_1result__type.html',1,'solver_output_handler']]],
   ['resultats_5fhoraires_50',['RESULTATS_HORAIRES',['../structRESULTATS__HORAIRES.html',1,'']]],
   ['resultcaption_51',['ResultCaption',['../structAntares_1_1Toolbox_1_1Filter_1_1ResultCaption.html',1,'Antares::Toolbox::Filter']]],
   ['resultmatrix_52',['ResultMatrix',['../classResultMatrix.html',1,'']]],
