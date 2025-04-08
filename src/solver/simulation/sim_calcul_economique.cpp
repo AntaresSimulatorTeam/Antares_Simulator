@@ -463,7 +463,7 @@ void prepareBindingConstraint(PROBLEME_HEBDO& problem,
             {
                 auto dailyClusterMustRunProduction = getClusterDailyProduction(
 
-                PasDeTempsDebut,
+                  PasDeTempsDebut,
                   clusterMustRunTimeSeriesAndWeight,
                   day);
                 sndMember[day] = column[weekFirstDay + day] - dailyClusterMustRunProduction;
