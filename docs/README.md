@@ -82,6 +82,7 @@ root of the project and running:
 cd docs/pdf-doc-generation-with-sphinx
 bash create_pdf_doc.sh user-guide.pdf
 ```
+(You'll have to install these dependencies first: latexmk texlive-latex-recommended texlive-formats-extra).  
 Sphinx will create a `user-guide.pdf` file in `docs/pdf-doc-generation-with-sphinx`.
 
 ### Doxygen

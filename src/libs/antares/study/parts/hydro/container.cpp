@@ -69,6 +69,7 @@ void PartHydro::reset()
     powerToLevel = false;
     leewayLowerBound = 1.;
     leewayUpperBound = 1.;
+    overflowSpilledCostDifference = 1.;
 
     inflowPattern.reset(1, DAYS_PER_YEAR, true);
     inflowPattern.fillColumn(0, 1.0);
@@ -127,6 +128,114 @@ static bool loadProperties(Study& study,
             logs.warning() << filename << ": `" << id << "`: Unknown area";
             return false;
         }
+    }
+    return ret;
+}
+
+bool PartHydro::LoadIniFile(Study& study, const std::filesystem::path& folder)
+{
+    bool ret = true;
+    IniFile ini;
+    auto path = folder / "hydro.ini";
+    if (not ini.open(path))
+    {
+        return false;
+    }
+
+    if (IniFile::Section* section = ini.find("inter-daily-breakdown"))
+    {
+        ret = loadProperties(study, section->firstProperty, path, &PartHydro::interDailyBreakdown)
+              && ret;
+    }
+
+    if (IniFile::Section* section = ini.find("intra-daily-modulation"))
+    {
+        ret = loadProperties(study, section->firstProperty, path, &PartHydro::intraDailyModulation)
+              && ret;
+    }
+
+    if (IniFile::Section* section = ini.find("reservoir"))
+    {
+        ret = loadProperties(study, section->firstProperty, path, &PartHydro::reservoirManagement)
+              && ret;
+    }
+
+    if (IniFile::Section* section = ini.find("reservoir capacity"))
+    {
+        ret = loadProperties(study, section->firstProperty, path, &PartHydro::reservoirCapacity)
+              && ret;
+    }
+
+    if (IniFile::Section* section = ini.find("follow load"))
+    {
+        ret = loadProperties(study, section->firstProperty, path, &PartHydro::followLoadModulations)
+              && ret;
+    }
+
+    if (IniFile::Section* section = ini.find("use water"))
+    {
+        ret = loadProperties(study, section->firstProperty, path, &PartHydro::useWaterValue) && ret;
+    }
+
+    if (IniFile::Section* section = ini.find("hard bounds"))
+    {
+        ret = loadProperties(study,
+                             section->firstProperty,
+                             path,
+                             &PartHydro::hardBoundsOnRuleCurves)
+              && ret;
+    }
+
+    if (IniFile::Section* section = ini.find("use heuristic"))
+    {
+        ret = loadProperties(study, section->firstProperty, path, &PartHydro::useHeuristicTarget)
+              && ret;
+    }
+
+    if (IniFile::Section* section = ini.find("power to level"))
+    {
+        ret = loadProperties(study, section->firstProperty, path, &PartHydro::powerToLevel) && ret;
+    }
+
+    if (IniFile::Section* section = ini.find("initialize reservoir date"))
+    {
+        ret = loadProperties(study,
+                             section->firstProperty,
+                             path,
+                             &PartHydro::initializeReservoirLevelDate)
+              && ret;
+    }
+
+    if (IniFile::Section* section = ini.find("use leeway"))
+    {
+        ret = loadProperties(study, section->firstProperty, path, &PartHydro::useLeeway) && ret;
+    }
+
+    if (IniFile::Section* section = ini.find("leeway low"))
+    {
+        ret = loadProperties(study, section->firstProperty, path, &PartHydro::leewayLowerBound)
+              && ret;
+    }
+
+    if (IniFile::Section* section = ini.find("leeway up"))
+    {
+        ret = loadProperties(study, section->firstProperty, path, &PartHydro::leewayUpperBound)
+              && ret;
+    }
+
+    if (IniFile::Section* section = ini.find("pumping efficiency"))
+    {
+        ret = loadProperties(study, section->firstProperty, path, &PartHydro::pumpingEfficiency)
+              && ret;
+    }
+
+    if (IniFile::Section* section = ini.find("overflow spilled cost difference"))
+    {
+        ret = loadProperties(study,
+                             section->firstProperty,
+                             path,
+                             &PartHydro::overflowSpilledCostDifference)
+              && ret;
     }
     return ret;
 }
@@ -229,101 +338,7 @@ bool PartHydro::LoadFromFolder(Study& study, const fs::path& folder)
                                                          &study.dataBuffer)
                 && ret;
       });
-
-    IniFile ini;
-    auto path = folder / "hydro.ini";
-    if (not ini.open(path))
-    {
-        return false;
-    }
-
-    if (IniFile::Section* section = ini.find("inter-daily-breakdown"))
-    {
-        ret = loadProperties(study, section->firstProperty, path, &PartHydro::interDailyBreakdown)
-              && ret;
-    }
-
-    if (IniFile::Section* section = ini.find("intra-daily-modulation"))
-    {
-        ret = loadProperties(study, section->firstProperty, path, &PartHydro::intraDailyModulation)
-              && ret;
-    }
-
-    if (IniFile::Section* section = ini.find("reservoir"))
-    {
-        ret = loadProperties(study, section->firstProperty, path, &PartHydro::reservoirManagement)
-              && ret;
-    }
-
-    if (IniFile::Section* section = ini.find("reservoir capacity"))
-    {
-        ret = loadProperties(study, section->firstProperty, path, &PartHydro::reservoirCapacity)
-              && ret;
-    }
-
-    if (IniFile::Section* section = ini.find("follow load"))
-    {
-        ret = loadProperties(study, section->firstProperty, path, &PartHydro::followLoadModulations)
-              && ret;
-    }
-
-    if (IniFile::Section* section = ini.find("use water"))
-    {
-        ret = loadProperties(study, section->firstProperty, path, &PartHydro::useWaterValue) && ret;
-    }
-
-    if (IniFile::Section* section = ini.find("hard bounds"))
-    {
-        ret = loadProperties(study,
-                             section->firstProperty,
-                             path,
-                             &PartHydro::hardBoundsOnRuleCurves)
-              && ret;
-    }
-
-    if (IniFile::Section* section = ini.find("use heuristic"))
-    {
-        ret = loadProperties(study, section->firstProperty, path, &PartHydro::useHeuristicTarget)
-              && ret;
-    }
-
-    if (IniFile::Section* section = ini.find("power to level"))
-    {
-        ret = loadProperties(study, section->firstProperty, path, &PartHydro::powerToLevel) && ret;
-    }
-
-    if (IniFile::Section* section = ini.find("initialize reservoir date"))
-    {
-        ret = loadProperties(study,
-                             section->firstProperty,
-                             path,
-                             &PartHydro::initializeReservoirLevelDate)
-              && ret;
-    }
-
-    if (IniFile::Section* section = ini.find("use leeway"))
-    {
-        ret = loadProperties(study, section->firstProperty, path, &PartHydro::useLeeway) && ret;
-    }
-
-    if (IniFile::Section* section = ini.find("leeway low"))
-    {
-        ret = loadProperties(study, section->firstProperty, path, &PartHydro::leewayLowerBound)
-              && ret;
-    }
-
-    if (IniFile::Section* section = ini.find("leeway up"))
-    {
-        ret = loadProperties(study, section->firstProperty, path, &PartHydro::leewayUpperBound)
-              && ret;
-    }
-
-    if (IniFile::Section* section = ini.find("pumping efficiency"))
-    {
-        ret = loadProperties(study, section->firstProperty, path, &PartHydro::pumpingEfficiency)
-              && ret;
-    }
-
+    ret = PartHydro::LoadIniFile(study, folder) && ret;
     return ret;
 }
 
@@ -465,7 +480,9 @@ bool PartHydro::validate(Study& study)
     return checkProperties(study) && ret;
 }
 
-bool PartHydro::SaveToFolder(const AreaList& areas, const AnyString& folder)
+bool PartHydro::SaveToFolder(const AreaList& areas,
+                             const AnyString& folder,
+                             const Parameters::Compatibility::HydroPmax hydroPmax)
 {
     if (!folder)
     {
@@ -494,6 +511,7 @@ bool PartHydro::SaveToFolder(const AreaList& areas, const AnyString& folder)
         IniFile::Section* sLeewayLow;
         IniFile::Section* sLeewayUp;
         IniFile::Section* spumpingEfficiency;
+        IniFile::Section* sOverflowCost;
 
         AllSections(IniFile& ini):
             s(ini.addSection("inter-daily-breakdown")),
@@ -510,7 +528,8 @@ bool PartHydro::SaveToFolder(const AreaList& areas, const AnyString& folder)
             sPowerToLevel(ini.addSection("power to level")),
             sLeewayLow(ini.addSection("leeway low")),
             sLeewayUp(ini.addSection("leeway up")),
-            spumpingEfficiency(ini.addSection("pumping efficiency"))
+            spumpingEfficiency(ini.addSection("pumping efficiency")),
+            sOverflowCost(ini.addSection("overflow spilled cost difference"))
         {
         }
     };
@@ -524,7 +543,7 @@ bool PartHydro::SaveToFolder(const AreaList& areas, const AnyString& folder)
 
     // Add all alpha values for each area
     areas.each(
-      [&allSections, &buffer, &folder, &ret](const Data::Area& area)
+      [&allSections, &buffer, &folder, &hydroPmax, &ret](const Data::Area& area)
       {
           allSections.s->add(area.id, area.hydro.interDailyBreakdown);
           allSections.smod->add(area.id, area.hydro.intraDailyModulation);
@@ -567,14 +586,26 @@ bool PartHydro::SaveToFolder(const AreaList& areas, const AnyString& folder)
               allSections.sPowerToLevel->add(area.id, true);
           }
 
+          allSections.sOverflowCost->add(area.id, area.hydro.overflowSpilledCostDifference);
+
           // max hours gen
-          buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                         << "maxDailyGenEnergy_" << area.id << ".txt";
-          ret = area.hydro.dailyNbHoursAtGenPmax.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
-          // max hours pump
-          buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                         << "maxDailyPumpEnergy_" << area.id << ".txt";
-          ret = area.hydro.dailyNbHoursAtPumpPmax.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
+          if (hydroPmax == Parameters::Compatibility::HydroPmax::Hourly)
+          {
+              buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
+                             << "maxDailyGenEnergy_" << area.id << ".txt";
+              ret = area.hydro.dailyNbHoursAtGenPmax.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
+
+              buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
+                             << "maxDailyPumpEnergy_" << area.id << ".txt";
+              ret = area.hydro.dailyNbHoursAtPumpPmax.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
+          }
+          else
+          {
+              buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxpower_"
+                             << area.id << ".txt";
+              ret = area.hydro.dailyMaxPumpAndGen.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
+          }
+
           // credit modulations
           buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
                          << "creditmodulations_" << area.id << ".txt";

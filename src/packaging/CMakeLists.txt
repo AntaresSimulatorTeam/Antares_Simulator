@@ -90,6 +90,19 @@ set(TARGET_LIBS #No alias
 
         # executable
         antares-solver
+
+        # modeler libs
+        antlr-interface
+        antares-study-system-model
+        load-modeler-files
+        expressions
+        optim-model-filler
+        yml-system
+        yml-model
+        model-converter
+        modeler-parameters
+        data-series-csv-importer
+        expressions-iterators
 )
 
 install(TARGETS ${TARGET_LIBS}

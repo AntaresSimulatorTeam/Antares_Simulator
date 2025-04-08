@@ -3,6 +3,7 @@ add_boost_test(unit-tests-for-component-filler
         SRC
         test_main.cpp
         test_componentFiller.cpp
+	test_VariableDictionary.cpp
         test_linearExpression.cpp
         test_readLinearExpressionVisitor.cpp
         test_readLinearConstraintVisitor.cpp
@@ -10,6 +11,6 @@ add_boost_test(unit-tests-for-component-filler
         antares-study-system-model
         Antares::linear-problem-mpsolver-impl
         Antares::optim-model-filler
-        linear-problem-data-impl
+        Antares::linear-problem-data-impl
         test_utils_unit)
 

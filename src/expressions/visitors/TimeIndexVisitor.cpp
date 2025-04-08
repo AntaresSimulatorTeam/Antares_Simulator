@@ -111,6 +111,27 @@ TimeIndex TimeIndexVisitor::visit(const Nodes::ComponentParameterNode* component
     return context_.at(component_parameter_node);
 }
 
+TimeIndex TimeIndexVisitor::visit(const Nodes::TimeShiftNode* timeShiftNode)
+{
+    return dispatch(timeShiftNode->left());
+}
+
+TimeIndex TimeIndexVisitor::visit([[maybe_unused]] const Nodes::TimeIndexNode* timeIndexNode)
+{
+    return TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
+}
+
+TimeIndex TimeIndexVisitor::visit(const Nodes::TimeSumNode* timeSumNode)
+{
+    // TODO  case from = to
+    return dispatch(timeSumNode->expression());
+}
+
+TimeIndex TimeIndexVisitor::visit([[maybe_unused]] const Nodes::AllTimeSumNode* timeSumNode)
+{
+    return TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
+}
+
 TimeIndexVisitor::TimeIndexVisitor(std::unordered_map<const Nodes::Node*, TimeIndex> context):
     context_(std::move(context))
 {

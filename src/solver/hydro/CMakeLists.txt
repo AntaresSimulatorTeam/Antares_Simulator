@@ -6,7 +6,6 @@ set(SRC_EXT_SOLVER_H2O_DAILY
         include/antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h
         include/antares/solver/hydro/daily/h2o_j_donnees_optimisation.h
         include/antares/solver/hydro/daily/h2o_j_fonctions.h
-        daily/h2o_j_free.cpp
         daily/h2o_j_initialiser_les_bornes_des_variables.cpp
         daily/h2o_j_initialiser_les_second_membre.cpp
         daily/h2o_j_instanciation.cpp
@@ -22,7 +21,6 @@ set(SRC_EXT_SOLVER_H2O_MONTHLY
         include/antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h
         include/antares/solver/hydro/monthly/h2o_m_donnees_optimisation.h
         include/antares/solver/hydro/monthly/h2o_m_fonctions.h
-        monthly/h2o_m_free.cpp
         monthly/h2o_m_initialiser_les_bornes_des_variables.cpp
         monthly/h2o_m_initialiser_les_second_membre.cpp
         monthly/h2o_m_instanciation.cpp
@@ -37,7 +35,6 @@ set(SRC_EXT_SOLVER_H2O2_DAILY
         include/antares/solver/hydro/daily2/h2o2_j_donnees_mensuelles.h
         include/antares/solver/hydro/daily2/h2o2_j_donnees_optimisation.h
         include/antares/solver/hydro/daily2/h2o2_j_fonctions.h
-        daily2/h2o2_j_free.cpp
         daily2/h2o2_j_initialiser_les_bornes_des_variables.cpp
         daily2/h2o2_j_initialiser_les_second_membre.cpp
         daily2/h2o2_j_instanciation.cpp
@@ -64,12 +61,18 @@ set(SRC_MANAGEMENT
         management/finalLevelValidator.cpp
 )
 
+set(SRC_WRAPPER
+  probleme_spx_wrapper.cpp
+  include/antares/solver/hydro/probleme_spx_wrapper.h)
+
 
 add_library(antares-solver-hydro
         ${SRC_EXT_SOLVER_H2O_DAILY}
         ${SRC_EXT_SOLVER_H2O_MONTHLY}
         ${SRC_EXT_SOLVER_H2O2_DAILY}
-        ${SRC_MANAGEMENT})
+        ${SRC_MANAGEMENT}
+        ${SRC_WRAPPER}
+)
 
 add_library(Antares::hydro ALIAS antares-solver-hydro)
 
@@ -83,7 +86,6 @@ target_link_libraries(antares-solver-hydro
         sirius_solver
         Antares::date
         Antares::result_writer
-
 )
 
 target_include_directories(antares-solver-hydro

@@ -19,9 +19,11 @@ public:
   /**
    * Visit parse trees produced by ExprParser.
    */
+    virtual std::any visitPortFieldExpr(ExprParser::PortFieldExprContext *context) = 0;
+
     virtual std::any visitFullexpr(ExprParser::FullexprContext *context) = 0;
 
-    virtual std::any visitTimeSum(ExprParser::TimeSumContext *context) = 0;
+    virtual std::any visitPortFieldSum(ExprParser::PortFieldSumContext *context) = 0;
 
     virtual std::any visitNegation(ExprParser::NegationContext *context) = 0;
 
@@ -29,21 +31,27 @@ public:
 
     virtual std::any visitExpression(ExprParser::ExpressionContext *context) = 0;
 
-    virtual std::any visitTimeIndex(ExprParser::TimeIndexContext *context) = 0;
-
     virtual std::any visitComparison(ExprParser::ComparisonContext *context) = 0;
 
     virtual std::any visitAllTimeSum(ExprParser::AllTimeSumContext *context) = 0;
 
-    virtual std::any visitTimeShift(ExprParser::TimeShiftContext *context) = 0;
-
-    virtual std::any visitFunction(ExprParser::FunctionContext *context) = 0;
+    virtual std::any visitTimeIndexExpr(ExprParser::TimeIndexExprContext *context) = 0;
 
     virtual std::any visitAddsub(ExprParser::AddsubContext *context) = 0;
+
+    virtual std::any visitTimeShiftExpr(ExprParser::TimeShiftExprContext *context) = 0;
 
     virtual std::any visitPortField(ExprParser::PortFieldContext *context) = 0;
 
     virtual std::any visitMuldiv(ExprParser::MuldivContext *context) = 0;
+
+    virtual std::any visitTimeSum(ExprParser::TimeSumContext *context) = 0;
+
+    virtual std::any visitTimeIndex(ExprParser::TimeIndexContext *context) = 0;
+
+    virtual std::any visitTimeShift(ExprParser::TimeShiftContext *context) = 0;
+
+    virtual std::any visitFunction(ExprParser::FunctionContext *context) = 0;
 
     virtual std::any visitNumber(ExprParser::NumberContext *context) = 0;
 

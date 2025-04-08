@@ -30,8 +30,9 @@ namespace Antares::IO::Inputs::YmlSystem
 struct Parameter
 {
     std::string id;
-    std::string type;
-    double value;
+    bool time_dependent;
+    bool scenario_dependent;
+    std::string value;
 };
 
 struct Component
@@ -42,14 +43,24 @@ struct Component
     std::vector<Parameter> parameters;
 };
 
+struct ConnectionEntry
+{
+    std::string componentId;
+    std::string portId;
+};
+
+struct Connection
+{
+    ConnectionEntry firstEntry;
+    ConnectionEntry secondEntry;
+};
+
 struct System
 {
     std::string id;
     std::vector<std::string> libraries;
     std::vector<Component> components;
-
-    // will be implemented later
-    // std::vector<Connections> connections;
+    std::vector<Connection> connections;
 };
 
 } // namespace Antares::IO::Inputs::YmlSystem

@@ -18,7 +18,8 @@ class modeler_output_handler:
         return pd.read_csv(absolute_path, header=None, sep=' ', low_memory=False)
 
     def get_optimal_value(self, var : str) -> float:
+
         for row in self.results.iterrows():
             if row[1][0] == var:
                 return row[1][1]
-        raise ValueError("Variable not found")
+        raise ValueError(f"Variable '{var}' not found")

@@ -23,7 +23,7 @@
 
 #include <antares/study/system-model/component.h>
 
-namespace Antares::Study::SystemModel
+namespace Antares::ModelerStudy::SystemModel
 {
 
 static void checkComponentDataValidity(const ComponentData& data)
@@ -96,7 +96,7 @@ ComponentBuilder& ComponentBuilder::withModel(const Model* model)
  * \return Reference to the ComponentBuilder object.
  */
 ComponentBuilder& ComponentBuilder::withParameterValues(
-  std::map<std::string, double> parameter_values)
+  std::map<std::string, Expressions::Visitors::ParameterTypeAndValue> parameter_values)
 {
     data_.parameter_values = std::move(parameter_values);
     return *this;
@@ -126,4 +126,4 @@ Component ComponentBuilder::build()
     return component;
 }
 
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel

@@ -22,6 +22,8 @@
 #include "antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h"
 #include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
 
+namespace DonneesOptimisationMensuelle
+{
 void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES& DonneesAnnuelles)
 {
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles.ProblemeHydraulique;
@@ -93,3 +95,4 @@ void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES& DonneesAnnuel
     Var = CorrespondanceDesVariables.NumeroDeLaVariableXi;
     CoutLineaire[Var] = 1.0;
 }
+} // namespace DonneesOptimisationMensuelle

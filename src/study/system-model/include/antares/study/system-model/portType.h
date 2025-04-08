@@ -25,17 +25,14 @@
 
 #include "portField.h"
 
-namespace Antares::Study::SystemModel
+namespace Antares::ModelerStudy::SystemModel
 {
 
 class PortType
 {
 public:
-    PortType(const std::string& id,
-             const std::string& description,
-             std::vector<PortField>&& fields):
+    PortType(const std::string& id, std::vector<PortField>&& fields):
         id_(id),
-        description_(description),
         fields_(std::move(fields))
     {
     }
@@ -45,21 +42,17 @@ public:
         return id_;
     }
 
-    const std::string& Description() const
-    {
-        return description_;
-    }
-
     const std::vector<PortField>& Fields() const
     {
         return fields_;
     }
 
+    bool operator==(const PortType& other) const = default;
+
 private:
     std::string id_;
-    std::string description_;
 
     std::vector<PortField> fields_;
 };
 
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel

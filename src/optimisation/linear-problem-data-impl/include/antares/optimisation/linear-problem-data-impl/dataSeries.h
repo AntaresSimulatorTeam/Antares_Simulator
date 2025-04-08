@@ -2,6 +2,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 namespace Antares::Optimisation::LinearProblemDataImpl
 {

@@ -32,6 +32,8 @@ namespace fs = std::filesystem;
 
 namespace Antares
 {
+
+#ifndef NDEBUG
 static void CheckHydroAllocationProblem(Data::Area& area,
                                         DONNEES_ANNUELLES& problem,
                                         int initLevelMonth,
@@ -72,6 +74,7 @@ static void CheckHydroAllocationProblem(Data::Area& area,
         }
     }
 }
+#endif
 
 double HydroManagement::prepareMonthlyTargetGenerations(
   Data::Area& area,
@@ -169,7 +172,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_rese
 
           if (area.hydro.reservoirManagement)
           {
-              auto problem = H2O_M_Instanciation(1);
+              auto problem = DonneesOptimisationMensuelle::H2O_M_Instanciation(1);
 
               double totalInflowsYear = prepareMonthlyTargetGenerations(area, data, hydro_specific);
               assert(totalInflowsYear >= 0.);
@@ -193,7 +196,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_rese
                   problem.VolumeMax[month] = maxLvl[firstDay];
               }
 
-              H2O_M_OptimiserUneAnnee(problem, 0);
+              DonneesOptimisationMensuelle::H2O_M_OptimiserUneAnnee(problem, 0);
               switch (problem.ResultatsValides)
               {
               case OUI:
@@ -230,8 +233,6 @@ void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_rese
                   throw FatalError(msg.str());
               }
               }
-
-              H2O_M_Free(problem);
           }
 
           else
