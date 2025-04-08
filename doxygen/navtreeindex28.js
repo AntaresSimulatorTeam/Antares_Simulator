@@ -1,5 +1,6 @@
 var NAVTREEINDEX28 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Join_1_1Statistics.html":[9,0,0,18,5,12,0],
 "structAntares_1_1Solver_1_1Variable_1_1Links_1_1Statistics.html":[9,0,0,18,5,13,0],
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat.html":[9,0,0,18,5,14],
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_010_01_4.html":[9,0,0,18,5,15],
@@ -248,6 +249,5 @@ var NAVTREEINDEX28 =
 "structQpFixture.html":[9,0,223],
 "structRESERVE__JMOINS1.html":[9,0,231],
 "structRESULTATS__HORAIRES.html":[9,0,232],
-"structRawConnection.html":[9,0,225],
-"structReadFromStreamFixture.html":[9,0,226]
+"structRawConnection.html":[9,0,225]
 };

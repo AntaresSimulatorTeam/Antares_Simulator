@@ -1,5 +1,6 @@
 var NAVTREEINDEX29 =
 {
+"structReadFromStreamFixture.html":[9,0,226],
 "structRenewableClusterStudy.html":[9,0,230],
 "structSOLDE__MOYEN__DES__ECHANGES.html":[9,0,251],
 "structSavingToStreamFixture.html":[9,0,235],

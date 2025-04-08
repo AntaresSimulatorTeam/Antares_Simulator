@@ -173,15 +173,32 @@ On your PC</h2>
 </div><!-- fragment --><p> If you want to filter on a feature file and given tags, you can use: </p><div class="fragment"><div class="line">behave --tags @some-tag features/some_feature.feature</div>
 </div><!-- fragment --><p> Refer to the <a href="https://behave.readthedocs.io/en/latest/">behave documentation</a> for more information.</p>
 <h2><a class="anchor" id="autotoc_md10"></a>
+The configuration file</h2>
+<p>When you build antares-simulator, a file called <code>behave.ini</code> is automatically generated. This file contains the full path to the built antares executables, as well as the test resources. <br  />
+ This file is used by behave to configure the tests: you may as well create it yourself. Here is the expected content: </p><div class="fragment"><div class="line">[behave.userdata]</div>
+<div class="line">antares-solver = /path/to/antares-solver</div>
+<div class="line">antares-modeler = /path/to/antares-modeler</div>
+<div class="line">resources-path = /path/to/resources</div>
+<div class="line">linear-solver = coin</div>
+<div class="line">quadratic-solver = sirius</div>
+</div><!-- fragment --><p> With:</p><ul>
+<li>antares-solver (mandatory): the full path to the antares-solver executable you want to test (can be downloaded)</li>
+<li>antares-modeler (mandatory): the full path to the antares-modeler executable you want to test (can be downloaded)</li>
+<li>resources-path (mandatory): the full path to the test resources root</li>
+<li>linear-solver (optional): the solver you want to use during tests, for linear optimizations</li>
+<li>quadratic-solver (optional): the solver you want to use during tests, for quadratic optimizations</li>
+</ul>
+<p>Alternatively, you can pass these options to behave through the command line. Beware that command-line options take precedence over options in the <code>behave.ini</code>file if both are defined. Example: </p><div class="fragment"><div class="line">behave -D antares-solver=/path/to/some/other/anatres-solver -D linear-solver=scip</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md11"></a>
 In the CI</h2>
 <p>Cucumber tests are run in the same way as the legacy tests in the Ubuntu &amp; Windows CIs, except that they don't need the reference values from the SimTest repository, since reference values are stored explicitly in the feature files. Note that tests marked as "@flaky" are skipped by default. <br  />
  Workflow file: <a href="../../../.github/workflows/cucumber-tests/action.yml">here</a></p>
-<h1><a class="anchor" id="autotoc_md11"></a>
+<h1><a class="anchor" id="autotoc_md12"></a>
 Under the hood</h1>
-<h2><a class="anchor" id="autotoc_md12"></a>
+<h2><a class="anchor" id="autotoc_md13"></a>
 Test files</h2>
 <p>Tests are hosted in the <a href="https://github.com/AntaresSimulatorTeam/Antares_Simulator_Tests_NR">Antares_Simulator_Tests_NR submodule</a> into the <code>src/test/resources</code> folder. Adding or modifying a study should thus change contents of this submodule.</p>
-<h2><a class="anchor" id="autotoc_md13"></a>
+<h2><a class="anchor" id="autotoc_md14"></a>
 Code-behind</h2>
 <p>All Gherkin steps have a code-behind definition called "step definitions". These are defined in the python files under <a href="./features/steps">features/steps</a> and use the <a href="https://behave.readthedocs.io/en/latest/">behave</a> implementation of cucumber. Feel free to add extra steps for your tests. </p>
 </div></div><!-- contents -->
