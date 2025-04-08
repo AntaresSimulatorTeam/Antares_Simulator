@@ -21,18 +21,20 @@
 #pragma once
 #include "yuni/core/atomic/int.h"
 
-namespace Antares::Data {
-    class BindingConstraintGroupRepository;
-    class BindingConstraintsRepository;
-}
+namespace Antares::Data
+{
+class BindingConstraintGroupRepository;
+class BindingConstraintsRepository;
+} // namespace Antares::Data
 
 struct PROBLEME_HEBDO;
 
-namespace Simulation {
-    void prepareBindingConstraint(PROBLEME_HEBDO &problem,
-                                         int PasDeTempsDebut,
-                                         const Antares::Data::BindingConstraintsRepository &bindingConstraints,
-                                         const Antares::Data::BindingConstraintGroupRepository &bcgroups,
-                                         const uint weekFirstDay,
-                                         int pasDeTemps);
+namespace Simulation
+{
+void prepareBindingConstraint(PROBLEME_HEBDO& problem,
+                              int PasDeTempsDebut,
+                              const Antares::Data::BindingConstraintsRepository& bindingConstraints,
+                              const Antares::Data::BindingConstraintGroupRepository& bcgroups,
+                              const uint weekFirstDay,
+                              int pasDeTemps);
 }

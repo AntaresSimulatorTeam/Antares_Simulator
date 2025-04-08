@@ -25,9 +25,9 @@
 
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/study/binding_constraint/BindingConstraint.h"
-#include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 #include "antares/study/binding_constraint/BindingConstraintGroup.h"
 #include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
+#include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 
 namespace
 {
@@ -104,89 +104,90 @@ double getClusterDailyProduction(int PasDeTempsDebut,
     }
     return sum;
 }
-}
+} // namespace
 
-namespace Simulation {
-    void prepareBindingConstraint(PROBLEME_HEBDO& problem,
-                                  int PasDeTempsDebut,
-                                  const Data::BindingConstraintsRepository& bindingConstraints,
-                                  const Data::BindingConstraintGroupRepository& bcgroups,
-                                  const uint weekFirstDay,
-                                  int pasDeTemps)
+namespace Simulation
+{
+void prepareBindingConstraint(PROBLEME_HEBDO& problem,
+                              int PasDeTempsDebut,
+                              const Data::BindingConstraintsRepository& bindingConstraints,
+                              const Data::BindingConstraintGroupRepository& bcgroups,
+                              const uint weekFirstDay,
+                              int pasDeTemps)
+{
+    const auto activeConstraints = bindingConstraints.activeConstraints();
+    const auto constraintCount = activeConstraints.size();
+
+    for (unsigned constraintIndex = 0; constraintIndex != constraintCount; ++constraintIndex)
     {
-        const auto activeConstraints = bindingConstraints.activeConstraints();
-        const auto constraintCount = activeConstraints.size();
+        auto bc = activeConstraints[constraintIndex];
+        auto column = timeSeriesColumn(bc.get(), bcgroups, problem.year);
+        auto clusterMustRunTimeSeriesAndWeight = getMustRunClusterTimeSeriesAndWeight(bc.get(),
+                                                                                      problem.year);
 
-        for (unsigned constraintIndex = 0; constraintIndex != constraintCount; ++constraintIndex)
+        switch (bc->type())
         {
-            auto bc = activeConstraints[constraintIndex];
-            auto column = timeSeriesColumn(bc.get(), bcgroups, problem.year);
-            auto clusterMustRunTimeSeriesAndWeight = getMustRunClusterTimeSeriesAndWeight(bc.get(),
-                                                                                          problem.year);
+        case Data::BindingConstraint::typeHourly:
+        {
+            auto hourly_mustrun_production = getClustersHourlyProduction(
+              PasDeTempsDebut,
+              pasDeTemps,
+              clusterMustRunTimeSeriesAndWeight);
+            problem.MatriceDesContraintesCouplantes[constraintIndex]
+              .SecondMembreDeLaContrainteCouplante[pasDeTemps]
+              = column[PasDeTempsDebut + pasDeTemps] - hourly_mustrun_production;
+            break;
+        }
+        case Data::BindingConstraint::typeDaily:
+        {
+            assert(weekFirstDay + 6 < bc->RHSTimeSeries().height
+                   && "Invalid constraint data height");
 
-            switch (bc->type())
+            std::vector<double>& sndMember = problem
+                                               .MatriceDesContraintesCouplantes[constraintIndex]
+                                               .SecondMembreDeLaContrainteCouplante;
+
+            for (unsigned day = 0; day != 7; ++day)
             {
-                case Data::BindingConstraint::typeHourly:
-                {
-                    auto hourly_mustrun_production = getClustersHourlyProduction(
-                      PasDeTempsDebut,
-                      pasDeTemps,
-                      clusterMustRunTimeSeriesAndWeight);
-                    problem.MatriceDesContraintesCouplantes[constraintIndex]
-                      .SecondMembreDeLaContrainteCouplante[pasDeTemps]
-                      = column[PasDeTempsDebut + pasDeTemps] - hourly_mustrun_production;
-                    break;
-                }
-                case Data::BindingConstraint::typeDaily:
-                {
-                    assert(weekFirstDay + 6 < bc->RHSTimeSeries().height
-                           && "Invalid constraint data height");
+                auto dailyClusterMustRunProduction = getClusterDailyProduction(
 
-                    std::vector<double>& sndMember = problem
-                                                       .MatriceDesContraintesCouplantes[constraintIndex]
-                                                       .SecondMembreDeLaContrainteCouplante;
-
-                    for (unsigned day = 0; day != 7; ++day)
-                    {
-                        auto dailyClusterMustRunProduction = getClusterDailyProduction(
-
-                          PasDeTempsDebut,
-                          clusterMustRunTimeSeriesAndWeight,
-                          day);
-                        sndMember[day] = column[weekFirstDay + day] - dailyClusterMustRunProduction;
-                    }
-
-                    break;
-                }
-                case Data::BindingConstraint::typeWeekly:
-                {
-                    assert(weekFirstDay + 6 < bc->RHSTimeSeries().height
-                           && "Invalid constraint data height");
-
-                    double sum = 0;
-                    for (unsigned day = 0; day != 7; ++day)
-                    {
-                        auto mustrun_production = getClusterDailyProduction(
-                          PasDeTempsDebut,
-                          clusterMustRunTimeSeriesAndWeight,
-                          day);
-                        sum += column[weekFirstDay + day] - mustrun_production;
-                    }
-
-                    problem.MatriceDesContraintesCouplantes[constraintIndex]
-                      .SecondMembreDeLaContrainteCouplante[0]
-                      = sum;
-                    break;
-                }
-                case Data::BindingConstraint::typeUnknown:
-                case Data::BindingConstraint::typeMax:
-                default:
-                {
-                    logs.error() << "internal error. Please submit a full bug report";
-                    assert(false && "invalid constraint type");
-                    break;
-                }
+                  PasDeTempsDebut,
+                  clusterMustRunTimeSeriesAndWeight,
+                  day);
+                sndMember[day] = column[weekFirstDay + day] - dailyClusterMustRunProduction;
             }
+
+            break;
+        }
+        case Data::BindingConstraint::typeWeekly:
+        {
+            assert(weekFirstDay + 6 < bc->RHSTimeSeries().height
+                   && "Invalid constraint data height");
+
+            double sum = 0;
+            for (unsigned day = 0; day != 7; ++day)
+            {
+                auto mustrun_production = getClusterDailyProduction(
+                  PasDeTempsDebut,
+                  clusterMustRunTimeSeriesAndWeight,
+                  day);
+                sum += column[weekFirstDay + day] - mustrun_production;
+            }
+
+            problem.MatriceDesContraintesCouplantes[constraintIndex]
+              .SecondMembreDeLaContrainteCouplante[0]
+              = sum;
+            break;
+        }
+        case Data::BindingConstraint::typeUnknown:
+        case Data::BindingConstraint::typeMax:
+        default:
+        {
+            logs.error() << "internal error. Please submit a full bug report";
+            assert(false && "invalid constraint type");
+            break;
+        }
         }
     }
 }
+} // namespace Simulation

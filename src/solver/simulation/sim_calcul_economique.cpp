@@ -27,8 +27,8 @@
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
-#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/simulation/sim_binding_constraints.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/simulation/simulation.h"
 #include "antares/study/fwd.h"
 
@@ -541,11 +541,11 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
          ++hourInWeek, ++hourInYear)
     {
         Simulation::prepareBindingConstraint(problem,
-                                 PasDeTempsDebut,
-                                 study.bindingConstraints,
-                                 study.bindingConstraintsGroups,
-                                 weekFirstDay,
-                                 hourInWeek);
+                                             PasDeTempsDebut,
+                                             study.bindingConstraints,
+                                             study.bindingConstraintsGroups,
+                                             weekFirstDay,
+                                             hourInWeek);
 
         for (uint k = 0; k < nbPays; ++k)
         {
