@@ -58,19 +58,40 @@ jobs:
           files: |
             docker/AntaresDeps        
 
-      - name: Docker file push
-        id: docker_push
+      - name: check if DockerFiles has changed
+        run: |
+          # Check for changes in the target path
+          CHANGED_FILES=$(git diff --name-only HEAD^ HEAD -- ${{ env.DOCKERFILE }})
+          if [ -n "$CHANGED_FILES" ]; then
+            #echo "publish_image=true" >> $GITHUB_ENV
+            # Log in to Docker Hub
+            echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+            # Build and push the Docker image
+            IMAGE_NAME="13words/antaressystemdeps"
+            #IMAGE_NAME="antaresrte/antaressystemdeps"
+            TAG="latest"
+            docker build -t "$IMAGE_NAME:$TAG" -f ${{ env.DOCKERFILE }} ${{ env.DOCKERDIR }}
+            docker push "$IMAGE_NAME:$TAG"
+            echo "Docker image $IMAGE_NAME:$TAG built and pushed successfully."
+            docker logout
+          else
+            #echo "publish_image=false" >> $GITHUB_ENV
+            echo "No changes in DockerFiles, skipping image build and push."
+          fi
 
-        if: steps.changed-files.outputs.any_changed == 'true'
-        uses: elgohr/Publish-Docker-Github-Action@main
-        with:
-          name: antaresrte/antaressystemdeps
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          workdir: ${{ env.DOCKERDIR }}
-          dockerfile: ${{ env.DOCKERDIR }}/AntaresDeps
-          cache: false
-          tags: latest
+      # - name: Docker file push
+      #   id: docker_push
+
+        # if: ${{ env.publish_image }} == 'true'
+        # uses: elgohr/Publish-Docker-Github-Action@main
+        # with:
+        #   name: antaresrte/antaressystemdeps
+        #   username: ${{ secrets.DOCKER_USERNAME }}
+        #   password: ${{ secrets.DOCKER_PASSWORD }}
+        #   workdir: ${{ env.DOCKERDIR }}
+        #   dockerfile: ${{ env.DOCKERDIR }}/AntaresDeps
+        #   cache: false
+        #   tags: latest
 
       - name: create vcpkg cache dir
         run: |
