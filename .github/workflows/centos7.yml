@@ -7,6 +7,7 @@ on:
     branches:
       - develop
       - dependabot/*
+      - ff
   schedule:
     - cron: '21 2 * * *'
   workflow_call:
@@ -51,17 +52,17 @@ jobs:
 
 
 
-      - name: Get changed files
-        id: changed-files
-        uses: tj-actions/changed-files@v45
-        with:
-          files: |
-            docker/AntaresDeps        
+      # - name: Get changed files
+      #   id: changed-files
+      #   uses: tj-actions/changed-files@v45
+      #   with:
+      #     files: |
+      #       docker/AntaresDeps        
 
       - name: check if DockerFiles has changed
         run: |
           # Check for changes in the target path
-          CHANGED_FILES=$(git diff --name-only HEAD^ HEAD -- ${{ env.DOCKERFILE }})
+          CHANGED_FILES=$(git diff --name-only HEAD^ HEAD -- docker/AntaresDeps)
           if [ -n "$CHANGED_FILES" ]; then
             #echo "publish_image=true" >> $GITHUB_ENV
             # Log in to Docker Hub
