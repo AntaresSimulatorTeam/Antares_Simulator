@@ -98,11 +98,25 @@ jobs:
           # Allows to restore a cache when deps have only partially changed (like adding a dependency)
           restore-keys: vcpkg-cache-centos7-
 
-      - name: Setup ccache
-        uses: hendrikmuhs/ccache-action@v1.2
-        with:
-          key: centos7-on-${{ runner.os }}
 
+      - name: Install ccache
+        run: sudo apt-get install -y ccache
+
+      - name: Restore ccache cache
+        uses: actions/restore@v4
+        with:
+          path: ${{ github.workspace }}/.ccache
+          key: centos7-on-${{ runner.os }}-${{ hashFiles('docker/AntaresDeps') }}
+          restore-keys: |
+            centos7-on-${{ runner.os }}-   
+
+      - name: Configure ccache
+        run: |
+          ccache --set-config=cache_dir=${{ github.workspace }}/.ccache
+          ccache --set-config=max_size=500M
+          ccache --set-config=compression=true
+          ccache -p
+          ccache -z
 
       - name: Build the image and Antares
         run: |
@@ -157,4 +171,14 @@ jobs:
         with:
           path: ${{ github.workspace }}/vcpkg_cache
           key: vcpkg-cache-centos7-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+
+      - name: Display ccache statistics
+        run: ccache -s
+
+      - name: Save ccache cache
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ github.workspace }}/.ccache
+          key: centos7-on-${{ runner.os }}-${{ hashFiles('docker/AntaresDeps') }}
+
 
