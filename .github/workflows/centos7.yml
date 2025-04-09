@@ -181,4 +181,3 @@ jobs:
           path: ${{ github.workspace }}/.ccache
           key: centos7-on-${{ runner.os }}-${{ hashFiles('docker/AntaresDeps') }}
 
-
