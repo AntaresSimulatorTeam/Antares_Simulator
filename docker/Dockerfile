@@ -4,7 +4,7 @@ FROM 13words/antaressystemdeps:latest
 
 CMD ["/bin/bash"]
 
-RUN mkdir /workspace
+RUN mkdir -p /workspace
 
 RUN echo "source /opt/rh/devtoolset-11/enable" >> /etc/bashrc
 SHELL ["/bin/bash", "--login", "-c"]
