@@ -59,27 +59,46 @@ jobs:
       #     files: |
       #       docker/AntaresDeps        
 
+      
       - name: check if DockerFiles has changed
         run: |
           # Check for changes in the target path
           CHANGED_FILES=$(git diff --name-only HEAD^ HEAD -- docker/AntaresDeps)
           if [ -n "$CHANGED_FILES" ]; then
-            #echo "publish_image=true" >> $GITHUB_ENV
-            # Log in to Docker Hub
-            echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-            # Build and push the Docker image
-            IMAGE_NAME="13words/antaressystemdeps"
-            #IMAGE_NAME="antaresrte/antaressystemdeps"
-            TAG="latest"
-            docker build -t "$IMAGE_NAME:$TAG" -f ${{ env.DOCKERFILE }} ${{ env.DOCKERDIR }}
-            docker push "$IMAGE_NAME:$TAG"
-            echo "Docker image $IMAGE_NAME:$TAG built and pushed successfully."
-            docker logout
+            echo "publish_image=true" >> $GITHUB_ENV
+            # # Log in to Docker Hub
+            # echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+            # # Build and push the Docker image
+            # IMAGE_NAME="13words/antaressystemdeps"
+            # #IMAGE_NAME="antaresrte/antaressystemdeps"
+            # TAG="latest"
+            # docker build -t "$IMAGE_NAME:$TAG" -f ${{ env.DOCKERFILE }} ${{ env.DOCKERDIR }}
+            # docker push "$IMAGE_NAME:$TAG"
+            # echo "Docker image $IMAGE_NAME:$TAG built and pushed successfully."
+            # docker logout
           else
-            #echo "publish_image=false" >> $GITHUB_ENV
+            echo "publish_image=false" >> $GITHUB_ENV
             echo "No changes in DockerFiles, skipping image build and push."
           fi
+      - name: Log in to Docker Hub
+        if: ${{ env.publish_image }} == 'true'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Build and push Docker image
+        if: ${{ env.publish_image }} == 'true'
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ env.DOCKERDIR }}
+          file: ${{ env.DOCKERFILE }}
+          push: true
+          tags: 13words/antaressystemdeps:latest
+
+      - name: Log out from Docker Hub
+        if: ${{ env.publish_image }} == 'true'
+        run: docker logout
       # - name: Docker file push
       #   id: docker_push
 
