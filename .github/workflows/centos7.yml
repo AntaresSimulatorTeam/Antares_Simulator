@@ -76,7 +76,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ${{ env.DOCKERDIR }}
-          file: ${{ env.DOCKERFILE }}
+          file: ${{ env.DOCKERDIR }}/AntaresDeps
           push: true
           tags: 13words/antaressystemdeps:latest
 
