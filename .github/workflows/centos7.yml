@@ -66,7 +66,7 @@ jobs:
           if [ -n "$CHANGED_FILES" ]; then
             #echo "publish_image=true" >> $GITHUB_ENV
             # Log in to Docker Hub
-            echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+            echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
             # Build and push the Docker image
             IMAGE_NAME="13words/antaressystemdeps"
             #IMAGE_NAME="antaresrte/antaressystemdeps"

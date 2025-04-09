@@ -40,7 +40,7 @@ ARG CCACHE_DIR
 ARG CCACHE_KEY
 
 # Copy ccache directory into the container
-# COPY ${CCACHE_DIR:-/dev/null} /workspace/.ccache
+COPY ${CCACHE_DIR:-/dev/null} /workspace/.ccache
 
 # Configure ccache environment variables
 ENV CCACHE_DIR=/workspace/.ccache
