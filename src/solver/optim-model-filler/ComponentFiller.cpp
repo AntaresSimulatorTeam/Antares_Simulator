@@ -306,7 +306,7 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
 
 bool ComponentFiller::IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node)
 {
-    Expressions::Visitors::TimeIndexVisitor timeIndexVisitor;
+    Expressions::Visitors::TimeIndexVisitor timeIndexVisitor(component_.Id(), connections_);
     const auto ret = timeIndexVisitor.dispatch(node);
     return ret == Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY
            || ret == Expressions::Visitors::TimeIndex::VARYING_IN_TIME_AND_SCENARIO;

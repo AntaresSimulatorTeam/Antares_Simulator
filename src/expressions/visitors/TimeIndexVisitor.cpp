@@ -24,6 +24,8 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/TimeIndexVisitor.h>
 
+using namespace Antares::ModelerStudy::SystemModel;
+
 namespace Antares::Expressions::Visitors
 {
 
@@ -89,14 +91,23 @@ TimeIndex TimeIndexVisitor::visit(const Nodes::NegationNode* neg)
 
 TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldNode* port_field_node)
 {
-    // TODO FIXME
-    return context_.at(port_field_node);
+    throw std::invalid_argument("TimeIndexVisitor cannot visit PortFieldNodes");
 }
 
-TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldSumNode* port_field_node)
+TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldSumNode* node)
 {
-    // TODO FIXME
-    return context_.at(port_field_node);
+    std::string port = node->getPortName();
+    std::string field = node->getFieldName();
+
+    auto connectedComponents = getConnectedComponents();
+    TimeIndex to_return = TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
+    for (const auto* c: connectedComponents)
+    {
+        TimeIndexVisitor visitor(c->Id(), connections_);
+        const Nodes::Node* node = c->nodeAtPortField(port, field);
+        to_return = to_return | visitor.dispatch(node);
+    }
+    return to_return;
 }
 
 TimeIndex TimeIndexVisitor::visit(const Nodes::ComponentVariableNode* component_variable_node)
@@ -132,9 +143,37 @@ TimeIndex TimeIndexVisitor::visit([[maybe_unused]] const Nodes::AllTimeSumNode* 
     return TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
 }
 
-TimeIndexVisitor::TimeIndexVisitor(std::unordered_map<const Nodes::Node*, TimeIndex> context):
-    context_(std::move(context))
+TimeIndexVisitor::TimeIndexVisitor(std::unordered_map<const Nodes::Node*, TimeIndex> context,
+                                   const std::string& componentId,
+                                   const std::vector<Connection>& connections):
+    context_(std::move(context)),
+    componentId_(componentId),
+    connections_(connections)
 {
+}
+
+TimeIndexVisitor::TimeIndexVisitor(const std::string& componentId,
+                                   const std::vector<Connection>& connections):
+    componentId_(componentId),
+    connections_(connections)
+{
+}
+
+std::vector<const Component*> TimeIndexVisitor::getConnectedComponents()
+{
+    std::vector<const Component*> connectedComponents;
+    for (auto& c: connections_)
+    {
+        if (c.firstEntry().component()->Id() == componentId_)
+        {
+            connectedComponents.push_back(c.secondEntry().component());
+        }
+        if (c.secondEntry().component()->Id() == componentId_)
+        {
+            connectedComponents.push_back(c.firstEntry().component());
+        }
+    }
+    return connectedComponents;
 }
 
 std::string TimeIndexVisitor::name() const

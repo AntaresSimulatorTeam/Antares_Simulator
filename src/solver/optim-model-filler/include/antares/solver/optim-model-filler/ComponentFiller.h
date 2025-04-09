@@ -79,7 +79,7 @@ private:
                                      const std::vector<LinearConstraint>& linear_constraints,
                                      const std::string& constraint_id) const;
 
-    static bool IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node);
+    bool IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node);
 
     const ModelerStudy::SystemModel::Component& component_;
     const std::vector<ModelerStudy::SystemModel::Connection>& connections_;
