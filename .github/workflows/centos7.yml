@@ -7,7 +7,7 @@ on:
     branches:
       - develop
       - dependabot/*
-      - ff
+      - feature/remove-unofficial-actions
   schedule:
     - cron: '21 2 * * *'
   workflow_call:
@@ -69,7 +69,9 @@ jobs:
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          #TODO for security issues, create and use DOCKERHUB_TOKEN
+          #password: ${{ secrets.DOCKERHUB_TOKEN }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and push Docker image
         if: ${{ env.publish_image }} == 'true'
@@ -78,7 +80,7 @@ jobs:
           context: ${{ env.DOCKERDIR }}
           file: ${{ env.DOCKERDIR }}/AntaresDeps
           push: true
-          tags: 13words/antaressystemdeps:latest
+          tags: antaresrte/antaressystemdeps:latest
 
     
       - name: create vcpkg cache dir
