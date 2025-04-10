@@ -77,6 +77,9 @@ struct AreaDependantHydroManagementData
     std::array<double, 12> totalMonthMingen{};
     //! monthly total inflows
     std::array<double, 12> totalMonthInflows{};
+
+    //! monthly turbine max
+    std::array<double, 12> monthTurbineMax{};
     //! yearly total mingen
     double totalYearMingen = 0;
     //! yearly total inflows

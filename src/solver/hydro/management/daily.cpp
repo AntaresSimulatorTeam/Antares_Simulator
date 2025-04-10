@@ -396,6 +396,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
             for (uint day = firstDay; day != endDay; ++day)
             {
                 problem.TurbineMax[dayMonth] = maxP[day] * maxE[day];
+                data.monthTurbineMax[month] += problem.TurbineMax[dayMonth];
                 problem.TurbineMin[dayMonth] = data.dailyMinGen[day];
                 problem.TurbineCible[dayMonth] = dailyTargetGen[day];
                 dayMonth++;
@@ -472,6 +473,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
             for (uint day = firstDay; day != endDay; ++day)
             {
                 problem.TurbineMax[dayMonth] = maxP[day] * maxE[day] / reservoirCapacity;
+                data.monthTurbineMax[month] += problem.TurbineMax[dayMonth];
                 problem.TurbineMin[dayMonth] = data.dailyMinGen[day] / reservoirCapacity;
 
                 problem.TurbineCible[dayMonth] = (dailyTargetGen[day]
