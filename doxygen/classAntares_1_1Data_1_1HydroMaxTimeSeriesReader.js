@@ -5,5 +5,7 @@ var classAntares_1_1Data_1_1HydroMaxTimeSeriesReader =
       [ "genMaxE", "classAntares_1_1Data_1_1HydroMaxTimeSeriesReader.html#ab549c3a4826ca7160b6f30f4752ee47bab8690231241b1ae3736d9f5b564329c6", null ],
       [ "pumpMaxP", "classAntares_1_1Data_1_1HydroMaxTimeSeriesReader.html#ab549c3a4826ca7160b6f30f4752ee47bac04a081de5372f24625ce647fad044e7", null ],
       [ "pumpMaxE", "classAntares_1_1Data_1_1HydroMaxTimeSeriesReader.html#ab549c3a4826ca7160b6f30f4752ee47bace2b8f5f4676607971df73f034cf1a98", null ]
-    ] ]
+    ] ],
+    [ "HydroMaxTimeSeriesReader", "classAntares_1_1Data_1_1HydroMaxTimeSeriesReader.html#a600406c313622d1cd15d8f4484101553", null ],
+    [ "read", "classAntares_1_1Data_1_1HydroMaxTimeSeriesReader.html#a09c4929d5b5f10ed9e747e75452abca8", null ]
 ];

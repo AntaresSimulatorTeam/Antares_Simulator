@@ -1,6 +1,7 @@
 var classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter =
 [
     [ "Value", "structAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter_1_1Value.html", "structAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter_1_1Value" ],
+    [ "List", "classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter.html#a9200747369e944eca9bfca8ef05a06bc", null ],
     [ "Parameter", "classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter.html#aee19dac715d08e6fa29f2287c908d13a", null ],
     [ "Parameter", "classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter.html#a724993a23a33bb1e9aac1c78d64d938c", null ],
     [ "~Parameter", "classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter.html#abc3efd4e48bbbf19839b0dcf859dfb6d", null ],
@@ -11,6 +12,7 @@ var classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter =
     [ "presetModuloAddon", "classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter.html#afc40b6fad7ff9e503d703ee5dcc59df6", null ],
     [ "presetWeek", "classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter.html#a7a4d03f73b5208a189ff055bfab39615", null ],
     [ "presetWeekDay", "classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter.html#acd2e1574976867df4bbabae7680bb356", null ],
+    [ "refreshAttachedGrid", "classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter.html#a4de499bb13b2ce04ea055543294a7353", null ],
     [ "sizer", "classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter.html#ad94672f42892c6ae0d87bfee75fdc5be", null ],
     [ "caption", "classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter.html#a1cf74ab0f48c435f919283c97f675b8d", null ],
     [ "dataType", "classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter.html#af07a1a016c4a73a62c6b68eb3b533083", null ],

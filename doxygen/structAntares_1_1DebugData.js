@@ -1,0 +1,28 @@
+var structAntares_1_1DebugData =
+[
+    [ "MaxPowerType", "structAntares_1_1DebugData.html#af0006010003f36ea2549da62f94ae2a5", null ],
+    [ "ReservoirLevelType", "structAntares_1_1DebugData.html#a7f5350cd614ee895e10ba4a4081c84cc", null ],
+    [ "DebugData", "structAntares_1_1DebugData.html#a605bad25e8bebb1d17cff2d01af4119e", null ],
+    [ "writeDailyDebugData", "structAntares_1_1DebugData.html#aa5d7e64d98b9e18bc5e43d7d4270f89a", null ],
+    [ "writeTurb", "structAntares_1_1DebugData.html#a8c36bc034715666fcebfb3f27b28911d", null ],
+    [ "CoutTotal", "structAntares_1_1DebugData.html#afbb4737b8a6574e52d04fb82a2c8cce6", null ],
+    [ "DailyTargetGen", "structAntares_1_1DebugData.html#a06a88317bba1a0e30fbf6cc7dca729cb", null ],
+    [ "dailyTargetGen", "structAntares_1_1DebugData.html#af9eab29c11cf8f088af338fdf60dd29a", null ],
+    [ "data", "structAntares_1_1DebugData.html#a0fd1a9004b469319a93ff229e845906e", null ],
+    [ "DEV", "structAntares_1_1DebugData.html#a0b7a332cee3db8569de6400ba3015c23", null ],
+    [ "deviationMax", "structAntares_1_1DebugData.html#a0aaeeeb0f3406fcdb118a4687cb96b7a", null ],
+    [ "hydro_specific", "structAntares_1_1DebugData.html#ab042fc820c9b72dafce5191f8480acf6", null ],
+    [ "lowLevel", "structAntares_1_1DebugData.html#a91eb4ee47a3c9db2d1af7a323c571d34", null ],
+    [ "maxE", "structAntares_1_1DebugData.html#a402be91dfe3965af8d4979a9cb9954a4", null ],
+    [ "maxP", "structAntares_1_1DebugData.html#ad68e2d98afa1e0ecddbc96fce81124c5", null ],
+    [ "OPP", "structAntares_1_1DebugData.html#a89bb05bbaa00efbc24a02a06cea2f0ab", null ],
+    [ "OVF", "structAntares_1_1DebugData.html#acb9e4450ee009e74ae692eea1f823b09", null ],
+    [ "previousMonthWaste", "structAntares_1_1DebugData.html#ad7b05b74e5583b83da3f993fff6c2441", null ],
+    [ "pWriter", "structAntares_1_1DebugData.html#a1c1e6c515dbc1564b8612a99068dbceb", null ],
+    [ "reservoirCapacity", "structAntares_1_1DebugData.html#a02bc55683169d012e89e0b3f61adb3e7", null ],
+    [ "srcinflows", "structAntares_1_1DebugData.html#a08326154d2f98a7b832b484b7cd9895f", null ],
+    [ "ventilationResults", "structAntares_1_1DebugData.html#a4d6ce9c720f822d3e255801773e79607", null ],
+    [ "VIO", "structAntares_1_1DebugData.html#a43ebc0bc5c3b963df214dec565c289c2", null ],
+    [ "violationMax", "structAntares_1_1DebugData.html#a16dfa17140e67a83780575c2a2a5c022", null ],
+    [ "WASTE", "structAntares_1_1DebugData.html#aed31d73aebaa435279fc513e3c2fbbf2", null ]
+];

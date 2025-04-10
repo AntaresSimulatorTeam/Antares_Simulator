@@ -1,8 +1,26 @@
 var classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow =
 [
     [ "Statistics", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow_1_1Statistics.html", null ],
-    [ "AncestorType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#af3ebe58b07ee4295306a450d0c16fd5a", null ],
-    [ "NextType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#a2ac565971584facbedc94a1ba16ee4fe", null ],
-    [ "ResultsType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#a4260fba13e7953d11cb5db55df79ce95", null ],
-    [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#a348c7b06c91afbcd926c68bb0e3f1954", null ]
+    [ "AncestorType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#a3a6ae7cec72d56b4713d8a0722034ce9", null ],
+    [ "NextType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#a8714100589f7df5c94faeae73c9dd21d", null ],
+    [ "ResultsType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#a9fb046d5f5c945897191475368089a42", null ],
+    [ "VariableAccessorType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#ad6610381817c83cf14da8a674b84c40c", null ],
+    [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#aae96c160ba2c1b59ee95f57a44306c38", null ],
+    [ "~LoopFlow", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#a83572bee0c507e11b6aebd0e911095e1", null ],
+    [ "buildDigest", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#a66ccaaee482612633f39ad03d44d75d3", null ],
+    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#a6464fba90fe4cbf7854f8b7d855648df", null ],
+    [ "hourBegin", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#ac3546731dff92d3bba6a6e1f0a0d1ec7", null ],
+    [ "hourForEachArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#a1e4dc2f3fe2dcdaeffaf5de0228d7ab1", null ],
+    [ "hourForEachLink", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#a053d91fe61a24dee8ef2152f10267ca8", null ],
+    [ "initializeFromArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#a7dd43ff7749fc25142be4aecd2d0ec36", null ],
+    [ "initializeFromAreaLink", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#ae760eae5b8f8e9cfe1840c61154394c7", null ],
+    [ "initializeFromLink", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#a6623c348116572a3e5c6755015fb5b44", null ],
+    [ "initializeFromStudy", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#afe6d30341bfb1e075c44e57591b21174", null ],
+    [ "localBuildAnnualSurveyReport", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#a1e069f8c5fd22a494c6a408128963d25", null ],
+    [ "retrieveRawHourlyValuesForCurrentYear", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#af1be77bf40e6b982957416513916643b", null ],
+    [ "simulationBegin", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#a1f70e78abe6ac5f477069080224c4c2c", null ],
+    [ "simulationEnd", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#a3a79cff391a7798183b5d4bfe7140769", null ],
+    [ "yearBegin", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#af11c34b6f565f1ffb8d2d3b8f00df331", null ],
+    [ "yearEnd", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#a23e7be13e0b41760e5b3418083ce56fc", null ],
+    [ "yearEndBuild", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#ac111acd0aa94fb62e86460c5e6f52cde", null ]
 ];

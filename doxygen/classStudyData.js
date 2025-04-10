@@ -4,6 +4,8 @@ var classStudyData =
     [ "ShortString", "classStudyData.html#ab0cb4f587c6f86084f64d7a1fea90e9b", null ],
     [ "ShortString512", "classStudyData.html#ab8124828569c97b656cb24c380e88321", null ],
     [ "Vector", "classStudyData.html#a39dbd52c27f50e27fa292f8857146e41", null ],
+    [ "StudyData", "classStudyData.html#a811c5d6f8eb116c3653d0207de1ca805", null ],
+    [ "append", "classStudyData.html#a06069bd73fdc6a54cdac462fcccd3f06", null ],
     [ "index", "classStudyData.html#a8f6d4379748e859804f2ee469a056cf9", null ],
     [ "name", "classStudyData.html#ab71b327bb8c6a08357f9e4545e3c0e08", null ]
 ];

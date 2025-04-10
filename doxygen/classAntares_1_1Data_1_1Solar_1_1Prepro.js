@@ -4,6 +4,7 @@ var classAntares_1_1Data_1_1Solar_1_1Prepro =
     [ "~Prepro", "classAntares_1_1Data_1_1Solar_1_1Prepro.html#a7bff5ec56bf9b1207c2d826dcd378c72", null ],
     [ "forceReload", "classAntares_1_1Data_1_1Solar_1_1Prepro.html#a0afb0ed306c2c47dc108196a87766070", null ],
     [ "loadFromFolder", "classAntares_1_1Data_1_1Solar_1_1Prepro.html#a9c0ea0ddf94aa0cde4f6e168e2e7944c", null ],
+    [ "markAsModified", "classAntares_1_1Data_1_1Solar_1_1Prepro.html#aa1848260276ed93d10fad553f4334911", null ],
     [ "resetToDefault", "classAntares_1_1Data_1_1Solar_1_1Prepro.html#a8d83c6c617a55bc85c231bd223e6e71a", null ],
     [ "saveToFolder", "classAntares_1_1Data_1_1Solar_1_1Prepro.html#a907e356db7c8862e0850948ec8cff1ad", null ],
     [ "xcast", "classAntares_1_1Data_1_1Solar_1_1Prepro.html#a56b187c8d98fb8a4213641b72d9ac43a", null ]

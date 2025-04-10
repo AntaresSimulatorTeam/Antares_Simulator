@@ -4,7 +4,10 @@ var structAntares_1_1Data_1_1Parameters_1_1IncludeOptions =
     [ "Thermal", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions_1_1Thermal.html", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions_1_1Thermal" ],
     [ "constraints", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions.html#a9e5852bd63d85ffeaab67df71656e190", null ],
     [ "exportMPS", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions.html#a05e715f1eb29b68c61b1c7a716acfcfc", null ],
+    [ "exportSolutions", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions.html#ab3f60b1b9cafd6622bd05d4deb6121bf", null ],
     [ "exportStructure", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions.html#ad393903bec8bd807a8bd375b32b1d3ee", null ],
     [ "hurdleCosts", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions.html#a7d8a25ee0fb5862708223cac004f4acf", null ],
+    [ "reserve", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions.html#ab5aa63814d65c5f62b928000cfff24b6", null ],
+    [ "thermal", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions.html#ad43f4298444777e29348787f870449e8", null ],
     [ "unfeasibleProblemBehavior", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions.html#a8ab817b5425154ce88b258042b37522f", null ]
 ];

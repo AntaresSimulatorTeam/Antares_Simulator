@@ -1,8 +1,28 @@
 var classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate =
 [
     [ "Statistics", "structAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate_1_1Statistics.html", null ],
-    [ "AncestorType", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#ac95ce6ae9fc152f8dec92bb0b84629c6", null ],
-    [ "NextType", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a922da69d7dc2959ff824ff3ee0d20e7f", null ],
-    [ "ResultsType", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a945262f7b9a2b85594a5e139b3b25f5b", null ],
-    [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a12528428f2b8ef92b2b9ed1f28fe6752", null ]
+    [ "AncestorType", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a29e52771ee481ad5447ad7b7f0afc81a", null ],
+    [ "NextType", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#ac2ff9ac6d27414d47b6a099f06035eed", null ],
+    [ "ResultsType", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a08d4a1fb6a3c03612311113c28e45902", null ],
+    [ "VariableAccessorType", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a9cec350197983334681cfc1fd643023b", null ],
+    [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a7e791c49538cc666472a9eaa07dc88bb", null ],
+    [ "buildDigest", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a8e78b4509c8ab1b3f38e9d30c778d6f5", null ],
+    [ "computeSpatialAggregatesSummary", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a9f65232c92156bca84d2658f46fb87c4", null ],
+    [ "hourBegin", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a5cd5e9669343066716a256ff36524aed", null ],
+    [ "hourForEachArea", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a17655a4c5e55df73a1e66a951092ddd4", null ],
+    [ "initializeFromArea", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a19abac0866e70731df17d50beee74b1f", null ],
+    [ "initializeFromLink", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#af08885948ab0ec278e51c73b8a9010b2", null ],
+    [ "initializeFromStudy", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a43b844169b43a4597c71a3e96e73a2a0", null ],
+    [ "localBuildAnnualSurveyReport", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a06e958ea8caf99f7b2792240612e9ef7", null ],
+    [ "simulationBegin", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a03f3c63977a715f7fc01aeb892848529", null ],
+    [ "simulationEnd", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#acacd569836f03ca4ca0683560c81bc5b", null ],
+    [ "simulationEndSpatialAggregates", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a62e530766f43db31f82e0eb53296340e", null ],
+    [ "weekBegin", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a33398f4483f21052967379753104cec9", null ],
+    [ "weekEnd", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#ab426cc854dd8e961bb37195339a3de40", null ],
+    [ "yearBegin", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a8ef72b373ee7d5653e9abfd7c1372c98", null ],
+    [ "yearEnd", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a655a021717f9086fd7efdd6d6a1cddbb", null ],
+    [ "yearEndBuild", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a4ec883bd6db98cce01416ab448d7a5e4", null ],
+    [ "yearEndBuildForEachThermalCluster", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#af12c6234b9c4680235ea78fa1c26a3a8", null ],
+    [ "yearEndBuildPrepareDataForEachThermalCluster", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#aee557d9512634ec10c152753564128b4", null ],
+    [ "yearEndSpatialAggregates", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a2aec06fe00973e5a53229c006b05d331", null ]
 ];

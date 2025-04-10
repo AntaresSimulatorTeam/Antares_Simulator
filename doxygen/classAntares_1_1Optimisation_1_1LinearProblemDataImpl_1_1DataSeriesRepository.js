@@ -1,6 +1,8 @@
 var classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository =
 [
-    [ "DataSeriesAlreadyExists", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_1_1DataSeriesAlreadyExists.html", null ],
-    [ "DataSeriesNotExist", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_1_1DataSeriesNotExist.html", null ],
-    [ "Empty", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_1_1Empty.html", null ]
+    [ "DataSeriesAlreadyExists", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_1_1DataSeriesAlreadyExists.html", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_1_1DataSeriesAlreadyExists" ],
+    [ "DataSeriesNotExist", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_1_1DataSeriesNotExist.html", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_1_1DataSeriesNotExist" ],
+    [ "Empty", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_1_1Empty.html", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_1_1Empty" ],
+    [ "addDataSeries", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository.html#a79de889fd71b28234df317b5d6c2f86c", null ],
+    [ "getDataSeries", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository.html#a9826575aae19be2e91f555610a7013bd", null ]
 ];

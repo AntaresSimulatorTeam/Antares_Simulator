@@ -15,8 +15,14 @@ var classAntares_1_1IniFile =
     [ "find", "classAntares_1_1IniFile.html#ad2b2d1459bf3545705e69f6e4a2c81a4", null ],
     [ "find", "classAntares_1_1IniFile.html#afb8d1990a2c7c548ca069a2b49da2b82", null ],
     [ "loaded", "classAntares_1_1IniFile.html#af1efb516a657036643d5c55acca43c21", null ],
+    [ "open", "classAntares_1_1IniFile.html#a01aed3c0fb4625e725e5f7274ba997ec", null ],
     [ "open", "classAntares_1_1IniFile.html#a36b611ee4924c2e02d293ddd22f59bf0", null ],
     [ "properties", "classAntares_1_1IniFile.html#afe1b48ccf14331c37e3160ef7c985962", null ],
     [ "properties", "classAntares_1_1IniFile.html#ab48f0e4f03622da8a0d9c2ee5eab3575", null ],
-    [ "save", "classAntares_1_1IniFile.html#a00a4ab7ba3da35393f7d334396177126", null ]
+    [ "readStream", "classAntares_1_1IniFile.html#a9f3dd37a1c93bdb672c81bd311d4fef4", null ],
+    [ "save", "classAntares_1_1IniFile.html#a00a4ab7ba3da35393f7d334396177126", null ],
+    [ "saveToStream", "classAntares_1_1IniFile.html#a9f8634c7a8be5990c044a3763716d388", null ],
+    [ "toString", "classAntares_1_1IniFile.html#a06acf136758c4ce722cdc0afc88eb8cd", null ],
+    [ "firstSection", "classAntares_1_1IniFile.html#acbec56c31d50b7edc07af751a4e326d4", null ],
+    [ "lastSection", "classAntares_1_1IniFile.html#aabe71a281c9d2b95b0e3bcc001906a96", null ]
 ];

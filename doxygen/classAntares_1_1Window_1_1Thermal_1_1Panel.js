@@ -5,5 +5,7 @@ var classAntares_1_1Window_1_1Thermal_1_1Panel =
     [ "pageThermalClusterList", "classAntares_1_1Window_1_1Thermal_1_1Panel.html#a5a79fe69576a409ef1d24b3a7d3aed51", null ],
     [ "pageThermalCommon", "classAntares_1_1Window_1_1Thermal_1_1Panel.html#abbce6dda9f5e4cad48bae6dda251dd55", null ],
     [ "pageThermalPrepro", "classAntares_1_1Window_1_1Thermal_1_1Panel.html#a7892c2ccd6928bdd0b58d45c97703ac7", null ],
-    [ "pageThermalTimeSeries", "classAntares_1_1Window_1_1Thermal_1_1Panel.html#a2477c140141558a4bc867b4c1daf35c4", null ]
+    [ "pageThermalTimeSeries", "classAntares_1_1Window_1_1Thermal_1_1Panel.html#a2477c140141558a4bc867b4c1daf35c4", null ],
+    [ "pageThermalTimeSeriesCO2Cost", "classAntares_1_1Window_1_1Thermal_1_1Panel.html#a63695adf6b855c6f22bc25086bb1071b", null ],
+    [ "pageThermalTimeSeriesFuelCost", "classAntares_1_1Window_1_1Thermal_1_1Panel.html#a69eb510d6d4913ec3eb5e45138cf11dc", null ]
 ];

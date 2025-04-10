@@ -1,11 +1,30 @@
 var classAntares_1_1Data_1_1ClusterList =
 [
+    [ "SharedPtr", "classAntares_1_1Data_1_1ClusterList.html#aeb6a0146964ba3912c8ac291a74a61a2", null ],
+    [ "addToCompleteList", "classAntares_1_1Data_1_1ClusterList.html#a41275beda3d71e2000d6effa2133a6d6", null ],
+    [ "all", "classAntares_1_1Data_1_1ClusterList.html#ae8be8b32fe073a8d724a5f6c0446f0a2", null ],
+    [ "allClustersCount", "classAntares_1_1Data_1_1ClusterList.html#ab83887b82fb5e393d35155585beb6a1e", null ],
+    [ "clearAll", "classAntares_1_1Data_1_1ClusterList.html#aafb6b8144adb926d1dd5392526ea1623", null ],
+    [ "each_enabled", "classAntares_1_1Data_1_1ClusterList.html#aa7aa63e145a96eeca66a45f5afde4369", null ],
+    [ "empty", "classAntares_1_1Data_1_1ClusterList.html#a3da2332939cce887c0d1dfb0d6130049", null ],
+    [ "enabledClusterAt", "classAntares_1_1Data_1_1ClusterList.html#aa64e1edd769fb8509917a8845ab7033f", null ],
+    [ "enabledCount", "classAntares_1_1Data_1_1ClusterList.html#a5eb1f1eb8fc37dee0dcad93b08803401", null ],
     [ "exists", "classAntares_1_1Data_1_1ClusterList.html#a33ef5b2b0a26fa7ac9fd90fc00251932", null ],
     [ "findInAll", "classAntares_1_1Data_1_1ClusterList.html#ad0ccafba9922c3ea8b7d74a8c237b9d1", null ],
     [ "forceReload", "classAntares_1_1Data_1_1ClusterList.html#a98b187097df27060de3243eef91e82bc", null ],
+    [ "loadDataSeriesFromFolder", "classAntares_1_1Data_1_1ClusterList.html#a9b9d5385626a8d8a5ec3e3416bd62401", null ],
     [ "markAsModified", "classAntares_1_1Data_1_1ClusterList.html#a2ca6eedce55b9a8f79ae8406e74d205b", null ],
+    [ "operator[]", "classAntares_1_1Data_1_1ClusterList.html#a34ea5ccff46a89e40ec06196e67f8dca", null ],
+    [ "operator[]", "classAntares_1_1Data_1_1ClusterList.html#a02e539f84a702a19ec0db7d75a26c5c3", null ],
+    [ "rebuildIndexes", "classAntares_1_1Data_1_1ClusterList.html#a15e5fd0a7d059a7aab8312a64ecdc057", null ],
     [ "remove", "classAntares_1_1Data_1_1ClusterList.html#ae4b6287ad34a77daeec40dda0c8d22db", null ],
     [ "rename", "classAntares_1_1Data_1_1ClusterList.html#aff81c0c6a4a31ea871dfe6a99b6af7aa", null ],
     [ "resizeAllTimeseriesNumbers", "classAntares_1_1Data_1_1ClusterList.html#a2742ab55510a24092d9cb7105c73bd7e", null ],
-    [ "retrieveTotalCapacityAndUnitCount", "classAntares_1_1Data_1_1ClusterList.html#aebf4acf28c0d0becf175f69862cb49b6", null ]
+    [ "retrieveTotalCapacityAndUnitCount", "classAntares_1_1Data_1_1ClusterList.html#aebf4acf28c0d0becf175f69862cb49b6", null ],
+    [ "saveDataSeriesToFolder", "classAntares_1_1Data_1_1ClusterList.html#a6f13a4fb77ccb1889cc18f26537ca1bf", null ],
+    [ "saveToFolder", "classAntares_1_1Data_1_1ClusterList.html#a6568ac7e61f836c46ca9b28dac80cd03", null ],
+    [ "sortCompleteList", "classAntares_1_1Data_1_1ClusterList.html#a7dc77ef05e2f8f008efd950e74b2e0d5", null ],
+    [ "storeTimeseriesNumbers", "classAntares_1_1Data_1_1ClusterList.html#ae8a8b64ecc6febfe1df1ec900ff269be", null ],
+    [ "typeID", "classAntares_1_1Data_1_1ClusterList.html#a62f093580139d7e146f6e6a27959ea9d", null ],
+    [ "allClusters_", "classAntares_1_1Data_1_1ClusterList.html#a5ef6d4bf41805300660ad0986f8bda0e", null ]
 ];

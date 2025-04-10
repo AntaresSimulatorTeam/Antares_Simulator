@@ -1,0 +1,4 @@
+var classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_1_1DataSeriesNotExist =
+[
+    [ "DataSeriesNotExist", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_1_1DataSeriesNotExist.html#a74b250302d4ebed6a69a1bc2941b2e21", null ]
+];

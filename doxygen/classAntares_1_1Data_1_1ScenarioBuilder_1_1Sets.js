@@ -4,9 +4,13 @@ var classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets =
     [ "iterator", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#a9576fa3d5d7eee12fcf46a05090fd39d", null ],
     [ "Sets", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#a3ae7e79c0a016886f52430cff4eea808", null ],
     [ "~Sets", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#acbbd6dfe6a081824504c4491dc646314", null ],
+    [ "begin", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#a576446e16ffaf35159e8f0f3579a8dde", null ],
+    [ "begin", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#a7115b28c9d274eacba080e4ade687db1", null ],
     [ "clear", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#a6c4cd7f83ebdd90d2cf0acbf6e4668e7", null ],
     [ "createNew", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#a2433d2e541413c380bf7af616bc9c01e", null ],
     [ "empty", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#a4ae264d23ccfe814c1c02d73464ae3a9", null ],
+    [ "end", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#ab97c9eba0f4ba58cd01da37484b2812e", null ],
+    [ "end", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#a2c407150173015f2a02a19d69a9b2d78", null ],
     [ "exists", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#abeb5f8369686fffe0199fbd5f67aa2cf", null ],
     [ "find", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#aae17d586c40a8bc1db61eadbd83011a5", null ],
     [ "loadFromINIFile", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#a65525c03a9d41529a8bf54f8d3f298f6", null ],
@@ -14,6 +18,7 @@ var classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets =
     [ "remove", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#a60d7c7e23c54fbcf541d5b54deefeccc", null ],
     [ "rename", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#a17e31c98f6ab11bc83000f8b3e289a83", null ],
     [ "saveToINIFile", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#a5622f753df130c75c9f2c05716e60098", null ],
+    [ "setStudy", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#ac6a1d56ea54e0afca0e35e35a5d2e526", null ],
     [ "size", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#af0e04aa669f1aa7f2c2fa65d85678ce0", null ],
     [ "inUpdaterMode", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#a6db707f487d44b853f653a113a7db2ce", null ]
 ];

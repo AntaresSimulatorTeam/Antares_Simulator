@@ -1,5 +1,8 @@
 var structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDispatchableGenMargin =
 [
-    [ "ResultsType", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDispatchableGenMargin.html#a5c854a4a0fd7c48b97e49b4fcba13522", null ],
-    [ "VCardForSpatialAggregate", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDispatchableGenMargin.html#aff37168f38390e798668288dc8a32841", null ]
+    [ "IntermediateValuesBaseType", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDispatchableGenMargin.html#a68c5f04cdffeca83bfe4b6ee6127f315", null ],
+    [ "IntermediateValuesType", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDispatchableGenMargin.html#aea4a1453064a934c50f1256d54c390c3", null ],
+    [ "IntermediateValuesTypeForSpatialAg", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDispatchableGenMargin.html#ad398f9b966843d2dd72dbfdf9395dc6c", null ],
+    [ "ResultsType", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDispatchableGenMargin.html#adf3cbed622f2dda59ec2b8e7ddab9216", null ],
+    [ "VCardForSpatialAggregate", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDispatchableGenMargin.html#ad117138d22d955953875420f1389854d", null ]
 ];

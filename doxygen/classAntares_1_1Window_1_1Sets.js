@@ -1,5 +1,8 @@
 var classAntares_1_1Window_1_1Sets =
 [
+    [ "IDs", "classAntares_1_1Window_1_1Sets.html#acccb7bcf5781819a1263f2d1db42a99e", [
+      [ "mnIDUserNotes", "classAntares_1_1Window_1_1Sets.html#acccb7bcf5781819a1263f2d1db42a99ead7e4c0862d35e51f81a21755b5b00501", null ]
+    ] ],
     [ "Sets", "classAntares_1_1Window_1_1Sets.html#a34c31c447df8f97e1e354f258964b6d2", null ],
     [ "~Sets", "classAntares_1_1Window_1_1Sets.html#a2c6714d9a4af955f673a5a1b25489268", null ],
     [ "connectToNotification", "classAntares_1_1Window_1_1Sets.html#ae769264b4606f35bd83fb84e8f74e494", null ],

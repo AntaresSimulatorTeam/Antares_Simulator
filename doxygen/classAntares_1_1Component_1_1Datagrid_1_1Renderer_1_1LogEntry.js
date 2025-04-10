@@ -9,6 +9,9 @@ var classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1LogEntry =
       [ "vtError", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1LogEntry.html#ac3c71fe6fa8f726fbb8f15fbfb42b16cac29e51a43a3cd9316c5fbe673cb39b08", null ],
       [ "vtDebug", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1LogEntry.html#ac3c71fe6fa8f726fbb8f15fbfb42b16ca5125ad14853e2afd1fc40964dfbca13b", null ]
     ] ],
+    [ "LogEntry", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1LogEntry.html#add2811b732600a166c2ba808b71f8452", null ],
+    [ "assignVerbosity", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1LogEntry.html#a4c9c9255177dfd6e72872b095f2e6635", null ],
+    [ "isWarningError", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1LogEntry.html#a0afef996ee0240fcb6b356c9b663495b", null ],
     [ "application", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1LogEntry.html#a0c2c8c961a0178fe1582789b275276fd", null ],
     [ "date", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1LogEntry.html#a8e626a1efb174beeee8953f10401d91d", null ],
     [ "highlight", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1LogEntry.html#aac8b9104beb0fe2f311e2e65fbb368b5", null ],

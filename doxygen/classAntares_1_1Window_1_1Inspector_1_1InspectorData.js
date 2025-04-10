@@ -3,6 +3,8 @@ var classAntares_1_1Window_1_1Inspector_1_1InspectorData =
     [ "Ptr", "classAntares_1_1Window_1_1Inspector_1_1InspectorData.html#a0630a60c041fbd24493de4ac403ec0c6", null ],
     [ "InspectorData", "classAntares_1_1Window_1_1Inspector_1_1InspectorData.html#ac49d44eeb630dcc25d23b1e87620eacf", null ],
     [ "~InspectorData", "classAntares_1_1Window_1_1Inspector_1_1InspectorData.html#adba94d8248b0991744dc13bc15631b75", null ],
+    [ "clear", "classAntares_1_1Window_1_1Inspector_1_1InspectorData.html#a7c91a2f203df5185144e253de37eb205", null ],
+    [ "determineEmpty", "classAntares_1_1Window_1_1Inspector_1_1InspectorData.html#a0e41f9725114d4cc0802f022e76dc6c3", null ],
     [ "totalNbOfItems", "classAntares_1_1Window_1_1Inspector_1_1InspectorData.html#a37d6d3bb42651019eef89a7002d7b47c", null ],
     [ "areas", "classAntares_1_1Window_1_1Inspector_1_1InspectorData.html#a80d52139557db6e384e3e250cb785f77", null ],
     [ "constraints", "classAntares_1_1Window_1_1Inspector_1_1InspectorData.html#ae76b8b33cba6f5fa3d30c7b25c8fb8d6", null ],

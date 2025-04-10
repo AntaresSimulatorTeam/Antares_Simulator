@@ -1,5 +1,8 @@
 var structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroStorage =
 [
-    [ "ResultsType", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroStorage.html#a0c87118454e4b767d4ba52277ebf5eb8", null ],
-    [ "VCardForSpatialAggregate", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroStorage.html#a2b3c4b76f02fbd0a2c37359c94283420", null ]
+    [ "IntermediateValuesBaseType", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroStorage.html#a6242146d0172f6496f3d981271168e75", null ],
+    [ "IntermediateValuesType", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroStorage.html#a1dd8d79dfade7680606119dc4a8a77d2", null ],
+    [ "IntermediateValuesTypeForSpatialAg", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroStorage.html#ad3da2482bc0d7e8be44486a040a72d6c", null ],
+    [ "ResultsType", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroStorage.html#ad8828eab147d733abf1ab293a3ee1b24", null ],
+    [ "VCardForSpatialAggregate", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroStorage.html#a6b44a8759f01ee209b09cf5e7cb54721", null ]
 ];

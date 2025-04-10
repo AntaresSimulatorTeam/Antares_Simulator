@@ -9,8 +9,7 @@ var indexSectionsWithContent =
   6: "cdioprstvw",
   7: "abcdefghimnoprstw",
   8: "l",
-  9: "acdhlstw",
-  10: "a"
+  9: "aht"
 };
 
 var indexSectionNames =
@@ -24,8 +23,7 @@ var indexSectionNames =
   6: "enums",
   7: "enumvalues",
   8: "groups",
-  9: "pages",
-  10: "concepts"
+  9: "pages"
 };
 
 var indexSectionLabels =
@@ -39,7 +37,6 @@ var indexSectionLabels =
   6: "Enumerations",
   7: "Enumerator",
   8: "Modules",
-  9: "Pages",
-  10: "Concepts"
+  9: "Pages"
 };
 

@@ -1,0 +1,28 @@
+var structCORRESPONDANCES__DES__VARIABLES =
+[
+    [ "CORRESPONDANCES_DES_VARIABLES", "structCORRESPONDANCES__DES__VARIABLES.html#a5ba80b194b3c3ce5a73669126d02f996", null ],
+    [ "CORRESPONDANCES_DES_VARIABLES", "structCORRESPONDANCES__DES__VARIABLES.html#acbf3f7e9e32cc234c343a5c000303db1", null ],
+    [ "CORRESPONDANCES_DES_VARIABLES", "structCORRESPONDANCES__DES__VARIABLES.html#a3135d68a67057b48a35415ff63c84bb7", null ],
+    [ "CostVariationInjection", "structCORRESPONDANCES__DES__VARIABLES.html#a243f6a0e6a1df1a687e01ba0eee200a0", null ],
+    [ "CostVariationWithdrawal", "structCORRESPONDANCES__DES__VARIABLES.html#a9ba569d13f2c0b7ac1bd3047537983db", null ],
+    [ "InjectionVariable", "structCORRESPONDANCES__DES__VARIABLES.html#a43b5075de700f51ef4e9dcac4fee70fb", null ],
+    [ "LevelVariable", "structCORRESPONDANCES__DES__VARIABLES.html#aeef55e68412d729db7bdafbf9ea37433", null ],
+    [ "NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion", "structCORRESPONDANCES__DES__VARIABLES.html#a86ba7770ce8cfec6ebd09700722ea2b4", null ],
+    [ "NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion", "structCORRESPONDANCES__DES__VARIABLES.html#a6c2a7ee36ec91b0f5f5e96a733e39d7e", null ],
+    [ "NumeroDeVariableDefaillanceNegative", "structCORRESPONDANCES__DES__VARIABLES.html#aab139e1893b2db521ed763270d44b016", null ],
+    [ "NumeroDeVariableDefaillancePositive", "structCORRESPONDANCES__DES__VARIABLES.html#a4a77f9e4c6e414505599d8245153340f", null ],
+    [ "NumeroDeVariableDeLInterconnexion", "structCORRESPONDANCES__DES__VARIABLES.html#a065824648edf2a56ea664e0d97a33fd0", null ],
+    [ "NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique", "structCORRESPONDANCES__DES__VARIABLES.html#acb6ac41053144e3033b777d8470066db", null ],
+    [ "NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique", "structCORRESPONDANCES__DES__VARIABLES.html#a615c9810308ca1ac1db8c45f03d9fd03", null ],
+    [ "NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique", "structCORRESPONDANCES__DES__VARIABLES.html#a00cb40bdad3a911b40db8ec64ebc6c91", null ],
+    [ "NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique", "structCORRESPONDANCES__DES__VARIABLES.html#a3d8fe8d6809bd354b223247163ea31c4", null ],
+    [ "NumeroDeVariableDuPalierThermique", "structCORRESPONDANCES__DES__VARIABLES.html#a457254b93e9298f72e0505f8cf12edea", null ],
+    [ "NumeroDeVariablesDeDebordement", "structCORRESPONDANCES__DES__VARIABLES.html#a06ddc7eb12266d6f67784929bee25645", null ],
+    [ "NumeroDeVariablesDeLaProdHyd", "structCORRESPONDANCES__DES__VARIABLES.html#ab3dc58baaa3c035a863d2595b51d5107", null ],
+    [ "NumeroDeVariablesDeNiveau", "structCORRESPONDANCES__DES__VARIABLES.html#aeaa30b62d7f152607fad7c37b930ae44", null ],
+    [ "NumeroDeVariablesDePompage", "structCORRESPONDANCES__DES__VARIABLES.html#a2c801fac77a59d2b0b9b6277e9961683", null ],
+    [ "NumeroDeVariablesVariationHydALaBaisse", "structCORRESPONDANCES__DES__VARIABLES.html#abb5a9836d85a7ff725733d62112bede0", null ],
+    [ "NumeroDeVariablesVariationHydALaHausse", "structCORRESPONDANCES__DES__VARIABLES.html#a1a960a8738ad46f55a7caf69078cc256", null ],
+    [ "SIM_ShortTermStorage", "structCORRESPONDANCES__DES__VARIABLES.html#a577cee8923fd82ce0648f2150aec80e3", null ],
+    [ "WithdrawalVariable", "structCORRESPONDANCES__DES__VARIABLES.html#a67aea8d5c3d6be4abf25f005d0373aab", null ]
+];

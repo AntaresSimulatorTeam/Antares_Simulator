@@ -1,0 +1,28 @@
+var classVariableNamer =
+[
+    [ "AreaBalance", "classVariableNamer.html#abecc7f7240c9a221df7e91221e7a98d9", null ],
+    [ "DispatchableProduction", "classVariableNamer.html#aea5e64bfcedfa35ffff065c4e3ebebda", null ],
+    [ "FinalStorage", "classVariableNamer.html#abe85a978e7695fa3104c42511e32d9de", null ],
+    [ "HydProd", "classVariableNamer.html#a8982b16531f5c585d692d8a345d90647", null ],
+    [ "HydProdDown", "classVariableNamer.html#a029adcd0b6f7058b7b1245832324623b", null ],
+    [ "HydProdUp", "classVariableNamer.html#afb0f65ebbbfb4e0941addc38e320777b", null ],
+    [ "HydroLevel", "classVariableNamer.html#ae35db03ec3e122ee92c5183dbfa4bdf1", null ],
+    [ "IntercoDirectCost", "classVariableNamer.html#a5c6f31b62fc3ba3ef9e23deb188b9e1e", null ],
+    [ "IntercoIndirectCost", "classVariableNamer.html#a665b57fc3df311dc3495fde7ddd1d3b3", null ],
+    [ "LayerStorage", "classVariableNamer.html#aec3ba24122aa09d63bf0585c55c78fc3", null ],
+    [ "Namer", "classVariableNamer.html#ad2b209d3dfdae47de9cf9d05682ad76c", null ],
+    [ "NegativeUnsuppliedEnergy", "classVariableNamer.html#afc350e5d6b7fca70e91a134d52c9b0d7", null ],
+    [ "NODU", "classVariableNamer.html#aef0b0f6b0159b51c5d50c77cb3fa54f6", null ],
+    [ "NTCDirect", "classVariableNamer.html#ae3740b11bec7d4ada7d0f2177079be69", null ],
+    [ "NumberBreakingDownDispatchableUnits", "classVariableNamer.html#afa31237db54c588477310125107d1341", null ],
+    [ "NumberStartingDispatchableUnits", "classVariableNamer.html#a4d4c09d1697793ba655c40483f73bac7", null ],
+    [ "NumberStoppingDispatchableUnits", "classVariableNamer.html#adb3c6d86b0938424a1548f4c067191c7", null ],
+    [ "Overflow", "classVariableNamer.html#a732e68fd17e4a196651fb4dfa9297b21", null ],
+    [ "PositiveUnsuppliedEnergy", "classVariableNamer.html#a1a9db6f05dc7dcc87785a87fc6c0e6ae", null ],
+    [ "Pumping", "classVariableNamer.html#ac1df3ad3b47a43deb2604d75d6d4c439", null ],
+    [ "ShortTermStorageCostVariationInjection", "classVariableNamer.html#a40c238369e9807b2a2ebd0ec56a599d2", null ],
+    [ "ShortTermStorageCostVariationWithdrawal", "classVariableNamer.html#ab1d0717749c4f9d80c37e8bde083b270", null ],
+    [ "ShortTermStorageInjection", "classVariableNamer.html#ad3a13d808e418158caa243b809605080", null ],
+    [ "ShortTermStorageLevel", "classVariableNamer.html#abc867ccc9bc1da7c6842b80b2f5a2e5d", null ],
+    [ "ShortTermStorageWithdrawal", "classVariableNamer.html#a69b5ebe26acddd1473dfdcefc466e73e", null ]
+];

@@ -4,6 +4,7 @@ var classAntares_1_1Action_1_1AntaresStudy_1_1ThermalCluster_1_1Create =
     [ "ThreadingPolicy", "classAntares_1_1Action_1_1AntaresStudy_1_1ThermalCluster_1_1Create.html#a113ed554ab84c5c490595ecd01f586fa", null ],
     [ "Create", "classAntares_1_1Action_1_1AntaresStudy_1_1ThermalCluster_1_1Create.html#a33ad5f80e75248802b0c2ce55b2149ab", null ],
     [ "~Create", "classAntares_1_1Action_1_1AntaresStudy_1_1ThermalCluster_1_1Create.html#a3b161b45d30643f9c5b33bd32554009c", null ],
+    [ "allowUpdate", "classAntares_1_1Action_1_1AntaresStudy_1_1ThermalCluster_1_1Create.html#aa82175ec6cb2e12f78c836663c5606ed", null ],
     [ "performWL", "classAntares_1_1Action_1_1AntaresStudy_1_1ThermalCluster_1_1Create.html#ad8f61182ce0a256fb4fc436ce5d1c70d", null ],
     [ "prepareWL", "classAntares_1_1Action_1_1AntaresStudy_1_1ThermalCluster_1_1Create.html#a6fbba61791f08aa5ba6527448fd870f8", null ]
 ];

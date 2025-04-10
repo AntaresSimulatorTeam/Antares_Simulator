@@ -2,6 +2,7 @@ var classAntares_1_1Data_1_1PartThermal =
 [
     [ "PartThermal", "classAntares_1_1Data_1_1PartThermal.html#a4a27c6368f985a189badadba4efd68bc", null ],
     [ "~PartThermal", "classAntares_1_1Data_1_1PartThermal.html#a1c18730b9f86a28ab27654369543cd20", null ],
+    [ "checkAndCorrectAvailability", "classAntares_1_1Data_1_1PartThermal.html#aba05433d4d1245d009a8fd257341413e", null ],
     [ "forceReload", "classAntares_1_1Data_1_1PartThermal.html#af5e1cf78b05689eb07bdcaec2da06439", null ],
     [ "hasForcedNoTimeseriesGeneration", "classAntares_1_1Data_1_1PartThermal.html#a598c77bf8b9904b10dcc27500e6c31d4", null ],
     [ "hasForcedTimeseriesGeneration", "classAntares_1_1Data_1_1PartThermal.html#a677c89174341fbd5ba0e36bc94bd7bed", null ],

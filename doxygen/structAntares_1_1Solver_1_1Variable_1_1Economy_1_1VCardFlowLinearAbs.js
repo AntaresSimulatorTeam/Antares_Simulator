@@ -1,4 +1,6 @@
 var structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardFlowLinearAbs =
 [
-    [ "ResultsType", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardFlowLinearAbs.html#ac6c691879a68e7ca4ab12fa6c7e01a0e", null ]
+    [ "IntermediateValuesBaseType", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardFlowLinearAbs.html#ac147bdfeec5fc74b4933a4b782137185", null ],
+    [ "IntermediateValuesType", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardFlowLinearAbs.html#a479145fcc0366d93af69746a3db438a5", null ],
+    [ "ResultsType", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardFlowLinearAbs.html#a761db52469616c5052e4f2345eff88bf", null ]
 ];

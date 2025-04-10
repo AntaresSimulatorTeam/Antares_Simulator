@@ -6,6 +6,7 @@ var classAntares_1_1Action_1_1Text =
     [ "~Text", "classAntares_1_1Action_1_1Text.html#a2d49e5c280e205125b149f7777ae30c7", null ],
     [ "autoExpand", "classAntares_1_1Action_1_1Text.html#ad41704681ecbb592e31ddf2b67e889b9", null ],
     [ "bold", "classAntares_1_1Action_1_1Text.html#ac244b0baf967987b9c09157efc8d1159", null ],
+    [ "canDoSomething", "classAntares_1_1Action_1_1Text.html#a2c853053712bdc1390c024766a212b96", null ],
     [ "performWL", "classAntares_1_1Action_1_1Text.html#a21d887b7ad21fb0c87c890c4f273ce74", null ],
     [ "prepareWL", "classAntares_1_1Action_1_1Text.html#a878fc7b64ea2d664db3f9a468014ba7f", null ]
 ];

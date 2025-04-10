@@ -1,5 +1,6 @@
 var classAntares_1_1Component_1_1HTMLListbox_1_1Item_1_1ThermalClusterItem =
 [
+    [ "Ptr", "classAntares_1_1Component_1_1HTMLListbox_1_1Item_1_1ThermalClusterItem.html#a81fa21210cffd42f8c30d761d3df2040", null ],
     [ "ThermalClusterItem", "classAntares_1_1Component_1_1HTMLListbox_1_1Item_1_1ThermalClusterItem.html#ad9005222b71d2cfa20772a9d45626db1", null ],
     [ "ThermalClusterItem", "classAntares_1_1Component_1_1HTMLListbox_1_1Item_1_1ThermalClusterItem.html#aad107a1156e63871f1da96cf34763130", null ],
     [ "~ThermalClusterItem", "classAntares_1_1Component_1_1HTMLListbox_1_1Item_1_1ThermalClusterItem.html#a4a2bdb9acc8ecb4e35a9f1439539bafe", null ],

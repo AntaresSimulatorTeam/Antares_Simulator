@@ -1,4 +1,5 @@
 var structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardFlowQuad =
 [
-    [ "ResultsType", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardFlowQuad.html#a6fa88eb87ead82a77c9830a62970c555", null ]
+    [ "IntermediateValuesType", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardFlowQuad.html#a072a4eae8ce90b292ccd8d3f77ffb60b", null ],
+    [ "ResultsType", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardFlowQuad.html#a3468f69152d160910b06af999eea920f", null ]
 ];

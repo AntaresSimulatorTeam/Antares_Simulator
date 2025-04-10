@@ -1,8 +1,29 @@
 var classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost =
 [
     [ "Statistics", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost_1_1Statistics.html", null ],
-    [ "AncestorType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a3d4532e725f3dbd3d262ef1be8b3c819", null ],
-    [ "NextType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#aff4df0b34c820f6f86432ef2a19613dd", null ],
-    [ "ResultsType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a50c813167c9e211d5f9c2df3ccd43490", null ],
-    [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a403b2dd37ddaba050188f1d7d3787647", null ]
+    [ "AncestorType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a88733af0ff889e55c2e25165dd7b5967", null ],
+    [ "NextType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a2b42e6c167669c8a49f7a556e689792d", null ],
+    [ "ResultsType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#af318082574deeb1cff62a40b1a47ed0a", null ],
+    [ "VariableAccessorType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a5b39bfecac35e897fc820cb91d74edf7", null ],
+    [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a54e8dbd19271761a634f4989c5d5ad0b", null ],
+    [ "BindingConstMarginCost", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a97ab9661f733e6eae003ecd4f281483b", null ],
+    [ "beforeYearByYearExport", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a3f91680ff0e9c28d3f0075d048f39ca6", null ],
+    [ "buildDigest", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a60f3909a47880056dd4c6c8f7e3a9146", null ],
+    [ "buildSurveyReport", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a699b309cc9945c7e50e30fc55ad05c5b", null ],
+    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a2a8076392d3a810ecbf6af56a1e2e612", null ],
+    [ "getMaxNumberColumns", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a5623491d1c544edb7f74e30b63fc1c04", null ],
+    [ "hourBegin", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#af5cca34eca7b4e339dc3f931098dd737", null ],
+    [ "hourEnd", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a818f114652f59864ac04511de7ba8fb6", null ],
+    [ "hourForEachArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a379835d9ab9e7da6b4a89d5fb848fee0", null ],
+    [ "initializeFromStudy", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#aab4b81961289fbf45e360ee4b8195792", null ],
+    [ "localBuildAnnualSurveyReport", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a29ff605f45c21be58b31bdf9b4c0e4c9", null ],
+    [ "retrieveRawHourlyValuesForCurrentYear", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a5370641925b960f875d167aad35196d1", null ],
+    [ "setAssociatedBindConstraint", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a5acebf260c57e85d8b18cdb5e8321c9f", null ],
+    [ "setBindConstraintsCount", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a462757130d54b9357938de57f5866b37", null ],
+    [ "simulationBegin", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#aa545f3605c808e289d480b815db2276f", null ],
+    [ "simulationEnd", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#aa2986ad16c05e5cf9057309633bdb108", null ],
+    [ "weekBegin", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a62760c7474bb738acbf9ecf12d78ba90", null ],
+    [ "weekForEachArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a789085f53e80b147070465c6348f7ed9", null ],
+    [ "yearBegin", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a1fc77d590567494a5bdefed251019656", null ],
+    [ "yearEnd", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a4c63cc82ddcbda94c2d6c7b706c1545f", null ]
 ];

@@ -11,5 +11,6 @@ var classAntares_1_1Component_1_1ListboxPanel =
     [ "onMouseLeftUp", "classAntares_1_1Component_1_1ListboxPanel.html#a12dee0d31885fd3e43baa2ba2e3e4c79", null ],
     [ "onMouseMotion", "classAntares_1_1Component_1_1ListboxPanel.html#a0a9b42386614fc67a104dcf56f80a0e9", null ],
     [ "recomputeBoundsForLonguestGroupName", "classAntares_1_1Component_1_1ListboxPanel.html#aa43fa889eb508517d5172854e9991d37", null ],
-    [ "resetProvider", "classAntares_1_1Component_1_1ListboxPanel.html#a93eb93855695f5b918c590344fda6ecd", null ]
+    [ "resetProvider", "classAntares_1_1Component_1_1ListboxPanel.html#a93eb93855695f5b918c590344fda6ecd", null ],
+    [ "updateItems", "classAntares_1_1Component_1_1ListboxPanel.html#aff9900c977144d2c411ce4a498cbeeb2", null ]
 ];

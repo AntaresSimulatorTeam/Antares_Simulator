@@ -1,0 +1,22 @@
+var classsolver__output__handler_1_1solver__output__handler =
+[
+    [ "__init__", "classsolver__output__handler_1_1solver__output__handler.html#ac9724360a0d21fb89d3045b2c8b9e9bf", null ],
+    [ "details_hourly_for_cluster", "classsolver__output__handler_1_1solver__output__handler.html#a31881648801b8bcccf052246b9487ddd", null ],
+    [ "get_annual_system_cost", "classsolver__output__handler_1_1solver__output__handler.html#aba0b10896eb169c8210385dc0b518ef9", null ],
+    [ "get_balance_mwh", "classsolver__output__handler_1_1solver__output__handler.html#acdc6606112db090fc5393ae58ab01984", null ],
+    [ "get_hourly_n_dispatched_units", "classsolver__output__handler_1_1solver__output__handler.html#a5c6fcb22058b349e243d55b2ee470357", null ],
+    [ "get_hourly_prod_mwh", "classsolver__output__handler_1_1solver__output__handler.html#a8181cf9a3dc997dfa3dca5e3787c1c37", null ],
+    [ "get_hydro_production_mwh", "classsolver__output__handler_1_1solver__output__handler.html#a69bacabe308d035f91dfb961d961350a", null ],
+    [ "get_hydro_pumping_mwh", "classsolver__output__handler_1_1solver__output__handler.html#a8e89193d6bf918942ca8a71e30d165b0", null ],
+    [ "get_loss_of_load_duration_h", "classsolver__output__handler_1_1solver__output__handler.html#a2a455bfa6f7a553909145147e0369d4c", null ],
+    [ "get_non_proportional_cost", "classsolver__output__handler_1_1solver__output__handler.html#afec988d40cfc048c84c3b2102ca9b2d0", null ],
+    [ "get_simu_time", "classsolver__output__handler_1_1solver__output__handler.html#a7319c20c5a74833cc09615468fda3105", null ],
+    [ "get_specific_value", "classsolver__output__handler_1_1solver__output__handler.html#a072885a78978daa3fe848158d1109b78", null ],
+    [ "get_spilled_energy_mwh", "classsolver__output__handler_1_1solver__output__handler.html#ae97706775e5a4255375c1e64406a66cc", null ],
+    [ "get_unsupplied_energy_mwh", "classsolver__output__handler_1_1solver__output__handler.html#a9a43e30ff7fe3b9cb55ae3df06e15778", null ],
+    [ "min_gen_for_thermal_cluster", "classsolver__output__handler_1_1solver__output__handler.html#a349ff8172a994daafe120ce33b5b0350", null ],
+    [ "min_gen_for_thermal_cluster_at_hour", "classsolver__output__handler_1_1solver__output__handler.html#a71097eaf14a2dc95385eec9131f3a6dc", null ],
+    [ "annual_system_cost", "classsolver__output__handler_1_1solver__output__handler.html#a6e76d45643666c9ceff26d07685f18f1", null ],
+    [ "hourly_results", "classsolver__output__handler_1_1solver__output__handler.html#a5401bd41e404aa45e780091dfa721351", null ],
+    [ "study_output_path", "classsolver__output__handler_1_1solver__output__handler.html#af55c7a0aa8c88a86078aa61f1a5fa8e7", null ]
+];

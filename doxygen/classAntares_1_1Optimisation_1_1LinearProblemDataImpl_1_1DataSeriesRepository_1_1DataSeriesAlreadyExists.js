@@ -1,0 +1,4 @@
+var classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_1_1DataSeriesAlreadyExists =
+[
+    [ "DataSeriesAlreadyExists", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_1_1DataSeriesAlreadyExists.html#aa9633d22b551047078ab499d383ce03d", null ]
+];

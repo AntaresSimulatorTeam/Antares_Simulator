@@ -5,5 +5,7 @@ var classAntares_1_1Action_1_1AntaresStudy_1_1Constraint_1_1Offsets =
     [ "Offsets", "classAntares_1_1Action_1_1AntaresStudy_1_1Constraint_1_1Offsets.html#afd5be9859fd5819889183a4add1520c7", null ],
     [ "~Offsets", "classAntares_1_1Action_1_1AntaresStudy_1_1Constraint_1_1Offsets.html#af40be6a559697f7708391be966fbc217", null ],
     [ "performWL", "classAntares_1_1Action_1_1AntaresStudy_1_1Constraint_1_1Offsets.html#a18a5ee2fa08978d41562ef9b6c1a7903", null ],
-    [ "prepareWL", "classAntares_1_1Action_1_1AntaresStudy_1_1Constraint_1_1Offsets.html#aa7b96c6ee00dbab1a1fde2020e1f560d", null ]
+    [ "prepareWL", "classAntares_1_1Action_1_1AntaresStudy_1_1Constraint_1_1Offsets.html#aa7b96c6ee00dbab1a1fde2020e1f560d", null ],
+    [ "toLower", "classAntares_1_1Action_1_1AntaresStudy_1_1Constraint_1_1Offsets.html#a319acaafb3b3b57b96217116d1425d60", null ],
+    [ "translate", "classAntares_1_1Action_1_1AntaresStudy_1_1Constraint_1_1Offsets.html#a74b68c6d96ef5d6a7020c76948df2a6e", null ]
 ];

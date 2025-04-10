@@ -13,5 +13,7 @@ var classAntares_1_1Component_1_1Datagrid_1_1Component =
     [ "precision", "classAntares_1_1Component_1_1Datagrid_1_1Component.html#a260ff7a767fcd15fc34312bafe38e1d9", null ],
     [ "renderer", "classAntares_1_1Component_1_1Datagrid_1_1Component.html#a8e2e79525e79917e15d54168cd7b14fd", null ],
     [ "renderer", "classAntares_1_1Component_1_1Datagrid_1_1Component.html#a839c0b0a0acf3b479ccf3fa5255919ed", null ],
-    [ "scroll", "classAntares_1_1Component_1_1Datagrid_1_1Component.html#a215ca5c65491f2a9e553a65eafe02580", null ]
+    [ "scroll", "classAntares_1_1Component_1_1Datagrid_1_1Component.html#a215ca5c65491f2a9e553a65eafe02580", null ],
+    [ "setOtherGrid", "classAntares_1_1Component_1_1Datagrid_1_1Component.html#ae6c9d72327c206c0587337ed349d27ed", null ],
+    [ "InternalState", "classAntares_1_1Component_1_1Datagrid_1_1Component.html#a3dffadd8c84b01fa4a57ac3bcb2d896a", null ]
 ];

@@ -7,7 +7,10 @@ var classProgress =
       [ "stReading", "classProgress.html#ac4b5ef750872e2013c6925c203a35d4ca7e89615a1194832878ff1bff8ea78f07", null ],
       [ "stSilent", "classProgress.html#ac4b5ef750872e2013c6925c203a35d4ca12149aab1f8562aabc3dae8b5c4da061", null ]
     ] ],
+    [ "Progress", "classProgress.html#a01d83f02dc49939dd5d14057932a8a8d", null ],
+    [ "~Progress", "classProgress.html#abfa443f16958768636a59a560b625317", null ],
     [ "completed", "classProgress.html#a9fb8059107dd5f472299c0681b0634c8", null ],
     [ "message", "classProgress.html#ab83c4a201838038840b3b7cfbdb96d5f", null ],
+    [ "onInterval", "classProgress.html#a25a9b9a544ade923098c58491b322f73", null ],
     [ "state", "classProgress.html#ac871f3914f9fb67fa2da2783d5be9a0f", null ]
 ];

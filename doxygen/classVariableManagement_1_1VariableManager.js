@@ -1,0 +1,27 @@
+var classVariableManagement_1_1VariableManager =
+[
+    [ "VariableManager", "classVariableManagement_1_1VariableManager.html#a28c1fccfe6af867cc228e2de89267e7c", null ],
+    [ "DispatchableProduction", "classVariableManagement_1_1VariableManager.html#ad7b2c2ebef348bf49c76c338926710f3", null ],
+    [ "FinalStorage", "classVariableManagement_1_1VariableManager.html#ac5b7391512f247bce2166d33e779f256", null ],
+    [ "HydProd", "classVariableManagement_1_1VariableManager.html#a6339bf52361262365c5504a75ab45d80", null ],
+    [ "HydProdDown", "classVariableManagement_1_1VariableManager.html#a4aace37aaa3fdc7f20c7e04624ea4c26", null ],
+    [ "HydProdUp", "classVariableManagement_1_1VariableManager.html#a1ead16eaa1e6e072adadf6d8e0fe213c", null ],
+    [ "HydroLevel", "classVariableManagement_1_1VariableManager.html#a51d55a043da82061f31c58e73260a493", null ],
+    [ "IntercoDirectCost", "classVariableManagement_1_1VariableManager.html#a66e38ec7baf1dadf5d9830565b12358d", null ],
+    [ "IntercoIndirectCost", "classVariableManagement_1_1VariableManager.html#ac093cb6a2b38c602aa7e2ef997ad0e81", null ],
+    [ "LayerStorage", "classVariableManagement_1_1VariableManager.html#a95e7ed4852ffbdc52612d443afa1b734", null ],
+    [ "NegativeUnsuppliedEnergy", "classVariableManagement_1_1VariableManager.html#a7d5fc73eb1b0f5262fffc1b7f7568129", null ],
+    [ "NTCDirect", "classVariableManagement_1_1VariableManager.html#a58e9b00bf46f939ca4fff58d44d2c404", null ],
+    [ "NumberBreakingDownDispatchableUnits", "classVariableManagement_1_1VariableManager.html#a24c78f0d0da946b091210aaa8091912e", null ],
+    [ "NumberOfDispatchableUnits", "classVariableManagement_1_1VariableManager.html#ac01e708a7d5fc4c3ba92bfd40bea03a6", null ],
+    [ "NumberStartingDispatchableUnits", "classVariableManagement_1_1VariableManager.html#a2e80917f3fd697ea835dc060488c63d4", null ],
+    [ "NumberStoppingDispatchableUnits", "classVariableManagement_1_1VariableManager.html#abf705f60dc4920f6934849896c6aeecb", null ],
+    [ "Overflow", "classVariableManagement_1_1VariableManager.html#a9af0557fd0c30fd4dc8ad2056cd6d64a", null ],
+    [ "PositiveUnsuppliedEnergy", "classVariableManagement_1_1VariableManager.html#a0d5fa045a8d4ba18773ad76982f57353", null ],
+    [ "Pumping", "classVariableManagement_1_1VariableManager.html#a42d783d986b711e8df630b3abc2d144b", null ],
+    [ "ShortTermStorageCostVariationInjection", "classVariableManagement_1_1VariableManager.html#a3b8fd62c71c7458085f89e3ac8ce4770", null ],
+    [ "ShortTermStorageCostVariationWithdrawal", "classVariableManagement_1_1VariableManager.html#a2bc96efc19cc97f7f2ed7a076420ceb3", null ],
+    [ "ShortTermStorageInjection", "classVariableManagement_1_1VariableManager.html#a1478b8928aeae2b4ad9e20c565c92aa0", null ],
+    [ "ShortTermStorageLevel", "classVariableManagement_1_1VariableManager.html#ae05f4ae6e4c60a84a22a5ebc1b246573", null ],
+    [ "ShortTermStorageWithdrawal", "classVariableManagement_1_1VariableManager.html#a8ae2ecf25176c721838d8ccf5eb73f12", null ]
+];

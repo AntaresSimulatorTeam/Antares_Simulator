@@ -22,6 +22,7 @@ var classAntares_1_1Date_1_1Calendar =
     [ "hours", "classAntares_1_1Date_1_1Calendar.html#a68c6c680da98fc7cbbc856e0d7244b1c", null ],
     [ "hours", "classAntares_1_1Date_1_1Calendar.html#a8b221ce735b7c3dc680d94bdbb4397fe", null ],
     [ "hours", "classAntares_1_1Date_1_1Calendar.html#a27514840e5b34d4d3610906fce5cf194", null ],
+    [ "hours", "classAntares_1_1Date_1_1Calendar.html#ad5b7995e0ff1bd4c504e9d09fd95ad4f", null ],
     [ "mapping", "classAntares_1_1Date_1_1Calendar.html#a681c387be1e86c559e67d3a640bb1006", null ],
     [ "month", "classAntares_1_1Date_1_1Calendar.html#a51a53362671057cd8d70de4a5404ab0c", null ],
     [ "months", "classAntares_1_1Date_1_1Calendar.html#a91116e5130a664049f85bcbc839fabfe", null ],
@@ -36,5 +37,6 @@ var classAntares_1_1Date_1_1Calendar =
     [ "week", "classAntares_1_1Date_1_1Calendar.html#a98c969a6fbaf25e707622172255ed487", null ],
     [ "weekday", "classAntares_1_1Date_1_1Calendar.html#af597dd4a01cdc028c27c0da240cc4be0", null ],
     [ "weekdays", "classAntares_1_1Date_1_1Calendar.html#a1e8723a26ae2301b18e35b5da56db887", null ],
-    [ "weeks", "classAntares_1_1Date_1_1Calendar.html#a360c3f5cbdbb7d4294424edee091037f", null ]
+    [ "weeks", "classAntares_1_1Date_1_1Calendar.html#a360c3f5cbdbb7d4294424edee091037f", null ],
+    [ "wtext", "classAntares_1_1Date_1_1Calendar.html#ad004f6790e57f71e0c1453859cc45c1d", null ]
 ];

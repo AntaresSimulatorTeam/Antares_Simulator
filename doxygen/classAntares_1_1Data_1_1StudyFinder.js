@@ -12,5 +12,6 @@ var classAntares_1_1Data_1_1StudyFinder =
     [ "onStudyFound", "classAntares_1_1Data_1_1StudyFinder.html#ab3583deac750323084fcdc057545e48b", null ],
     [ "stop", "classAntares_1_1Data_1_1StudyFinder.html#a0384eb8c570c2812bf396366a0718472", null ],
     [ "wait", "classAntares_1_1Data_1_1StudyFinder.html#a86759e8b5914cf5b79bbdfda41872b83", null ],
-    [ "wait", "classAntares_1_1Data_1_1StudyFinder.html#aaf4495acd49d79228f266b9b8fd1302a", null ]
+    [ "wait", "classAntares_1_1Data_1_1StudyFinder.html#aaf4495acd49d79228f266b9b8fd1302a", null ],
+    [ "mutex", "classAntares_1_1Data_1_1StudyFinder.html#a6fbc7a5439d9078545978eab44961a48", null ]
 ];

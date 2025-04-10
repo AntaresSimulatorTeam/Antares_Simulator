@@ -1,5 +1,8 @@
 var structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel =
 [
-    [ "ResultsType", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html#a7c6f73ae3ac108ec8b4dfa746a333706", null ],
-    [ "VCardForSpatialAggregate", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html#a9b940738bf3c8ed1d22d15a9c5997601", null ]
+    [ "IntermediateValuesBaseType", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html#afa929b139bcabb9a98ad8715fc874a62", null ],
+    [ "IntermediateValuesType", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html#a1e29cf0432a1fa5caa74a0bbc30c1608", null ],
+    [ "IntermediateValuesTypeForSpatialAg", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html#a3c7ee4d4037bcc4811b04f70533e0a61", null ],
+    [ "ResultsType", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html#a086bcaae893ca7d144da9feac4125a59", null ],
+    [ "VCardForSpatialAggregate", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html#abaab8f85c1c1d704700538da35c39dd0", null ]
 ];

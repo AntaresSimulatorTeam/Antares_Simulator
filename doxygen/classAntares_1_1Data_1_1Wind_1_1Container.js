@@ -6,5 +6,6 @@ var classAntares_1_1Data_1_1Wind_1_1Container =
     [ "markAsModified", "classAntares_1_1Data_1_1Wind_1_1Container.html#a2c92349d1ce518e8535366307ce24955", null ],
     [ "resetToDefault", "classAntares_1_1Data_1_1Wind_1_1Container.html#aec1431a0fe4c0817a664d4c28324f230", null ],
     [ "prepro", "classAntares_1_1Data_1_1Wind_1_1Container.html#a1348b86c031ba2362400e7c7a8a0907d", null ],
-    [ "series", "classAntares_1_1Data_1_1Wind_1_1Container.html#ac1376c164f49776c865252cf7ebde715", null ]
+    [ "series", "classAntares_1_1Data_1_1Wind_1_1Container.html#ac1376c164f49776c865252cf7ebde715", null ],
+    [ "tsNumbers", "classAntares_1_1Data_1_1Wind_1_1Container.html#a524b5a90f4f99aa9661fac8ccd3d3bf4", null ]
 ];

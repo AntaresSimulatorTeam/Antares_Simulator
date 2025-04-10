@@ -1,5 +1,8 @@
 var structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy =
 [
-    [ "ResultsType", "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#adb10ffc7d878851872fdd8b2e0c13116", null ],
-    [ "VCardForSpatialAggregate", "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#aee6d3ffba5f966e12ae027ba334058c4", null ]
+    [ "IntermediateValuesBaseType", "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#a1d2dfffc8dbf3e6b2debbac2abef063d", null ],
+    [ "IntermediateValuesType", "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#a8cd0653f9b095636f0e5217a394d3762", null ],
+    [ "IntermediateValuesTypeForSpatialAg", "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#aaadcd1fe54e5af2b9ca85dfdc84e3a30", null ],
+    [ "ResultsType", "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#ae8243f6e44a2d7883fa25100f5315363", null ],
+    [ "VCardForSpatialAggregate", "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#a92399f65baa263b4d2a01a75ff21c3b0", null ]
 ];
