@@ -88,7 +88,7 @@ jobs:
           pip3 install -r src/tests/examples/requirements.txt
 
     - name: Install gh if needed
-      if: ${{ env.IS_RELEASE == 'true' || github.ref == 'refs/fix/oracle_cd'}}
+      if: ${{ env.IS_RELEASE == 'true' || github.ref == 'refs/heads/fix/oracle_cd'}}
       run: |
            dnf -y install 'dnf-command(config-manager)'
            dnf -y config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
@@ -158,7 +158,7 @@ jobs:
         gh release upload "$tag" _build/*.tar.gz _build/*.rpm
 
     - name: Update continuous-delivery release
-      if: github.ref == 'refs/fix/oracle_cd'
+      if: github.ref == 'refs/heads/fix/oracle_cd'
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
