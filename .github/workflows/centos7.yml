@@ -7,6 +7,7 @@ on:
     branches:
       - develop
       - dependabot/*
+      - feature/remove-unofficial-actions
   schedule:
     - cron: '21 2 * * *'
   workflow_call:
@@ -49,29 +50,39 @@ jobs:
           echo "DOCKERFILE=$(pwd)/docker/Dockerfile" >> $GITHUB_ENV
           echo "DOCKERDIR=$(pwd)/docker" >> $GITHUB_ENV
 
+  
 
+      
+      - name: check if DockerFiles has changed
+        run: |
+          # Check for changes in the target path
+          CHANGED_FILES=$(git diff --name-only HEAD^ HEAD -- docker/AntaresDeps)
+          if [ -n "$CHANGED_FILES" ]; then
+            echo "publish_image=true" >> $GITHUB_ENV
+          else
+            echo "publish_image=false" >> $GITHUB_ENV
+            echo "No changes in DockerFiles, skipping image build and push."
+          fi
 
-      - name: Get changed files
-        id: changed-files
-        uses: tj-actions/changed-files@v45
+      - name: Log in to Docker Hub
+        if: ${{ env.publish_image  == 'true' }}
+        uses: docker/login-action@v3
         with:
-          files: |
-            docker/AntaresDeps        
-
-      - name: Docker file push
-        id: docker_push
-
-        if: steps.changed-files.outputs.any_changed == 'true'
-        uses: elgohr/Publish-Docker-Github-Action@main
-        with:
-          name: antaresrte/antaressystemdeps
           username: ${{ secrets.DOCKER_USERNAME }}
+          #TODO for security issues, create and use DOCKERHUB_TOKEN
+          #password: ${{ secrets.DOCKERHUB_TOKEN }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          workdir: ${{ env.DOCKERDIR }}
-          dockerfile: ${{ env.DOCKERDIR }}/AntaresDeps
-          cache: false
-          tags: latest
 
+      - name: Build and push Docker image
+        if: ${{ env.publish_image  == 'true' }}
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ env.DOCKERDIR }}
+          file: ${{ env.DOCKERDIR }}/AntaresDeps
+          push: true
+          tags: antaresrte/antaressystemdeps:latest
+
+    
       - name: create vcpkg cache dir
         run: |
           echo "VCPKG_CACHE_DIR=$GITHUB_WORKSPACE/vcpkg_cache" >> $GITHUB_ENV
@@ -87,11 +98,25 @@ jobs:
           # Allows to restore a cache when deps have only partially changed (like adding a dependency)
           restore-keys: vcpkg-cache-centos7-
 
-      - name: Setup ccache
-        uses: hendrikmuhs/ccache-action@v1.2
-        with:
-          key: centos7-on-${{ runner.os }}
 
+      - name: Install ccache
+        run: sudo apt-get install -y ccache
+
+      - name: Restore ccache cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ github.workspace }}/.ccache
+          key: centos7-on-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            centos7-on-${{ runner.os }}-   
+
+      - name: Configure ccache
+        run: |
+          ccache --set-config=cache_dir=${{ github.workspace }}/.ccache
+          ccache --set-config=max_size=500M
+          ccache --set-config=compression=true
+          ccache -p
+          ccache -z
 
       - name: Build the image and Antares
         run: |
@@ -130,14 +155,13 @@ jobs:
           mv archive/antares-*-CentOS-7.9.2009.tar.gz archive/antares-cd-CentOS-7.9.2009.tar.gz
           mv archive/antares-*-CentOS-7.9.2009.rpm archive/antares-cd-CentOS-7.9.2009.rpm
 
+
+
       - name: Update continuous-delivery release
         if: github.ref == 'refs/heads/develop'
-        uses: pyTooling/Actions/releaser@main
-        with:
-          tag: continuous-delivery
-          rm: false
-          token: ${{ secrets.GITHUB_TOKEN }}
-          files: archive/*.tar.gz archive/*.rpm
+        run: |
+          TAG="continuous-delivery"
+          gh release upload "$TAG" archive/*.tar.gz archive/*.rpm --clobber
 
       - name: Cache vcpkg binary dir
         if: always()
@@ -146,4 +170,13 @@ jobs:
         with:
           path: ${{ github.workspace }}/vcpkg_cache
           key: vcpkg-cache-centos7-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+
+      - name: Display ccache statistics
+        run: ccache -s
+
+      - name: Save ccache cache
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ github.workspace }}/.ccache
+          key: centos7-on-${{ runner.os }}-${{ github.sha }}
 

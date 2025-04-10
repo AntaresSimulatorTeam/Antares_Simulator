@@ -62,10 +62,25 @@ jobs:
           # Allows to restore a cache when deps have only partially changed (like adding a dependency)
           restore-keys: vcpkg-cache-ubuntu-
 
-      - name: ccache
-        uses: hendrikmuhs/ccache-action@v1.2
+
+      - name: Install ccache
+        run: sudo apt-get install -y ccache
+
+      - name: Restore ccache cache
+        uses: actions/cache/restore@v4
         with:
-          key: ${{ env.os }}
+          path: ${{ github.workspace }}/.ccache
+          key: ${{ env.os }}-${{ github.sha }}
+          restore-keys: |
+            ${{ env.os }}-   
+
+      - name: Configure ccache
+        run: |
+          ccache --set-config=cache_dir=${{ github.workspace }}/.ccache
+          ccache --set-config=max_size=500M
+          ccache --set-config=compression=true
+          ccache -p
+          ccache -z
 
       - name: Install libraries
         run: |
@@ -166,7 +181,7 @@ jobs:
         uses: ./.github/workflows/cucumber-tests
         with:
           feature: "features/modeler-features"
-          
+
       - name: Run unfeasibility-related tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         run: |
@@ -379,14 +394,12 @@ jobs:
           mv _build/antares-*-Ubuntu-22.04.tar.gz _build/antares-cd-Ubuntu-22.04.tar.gz
           mv _build/antares-*-Ubuntu-22.04.deb _build/antares-cd-Ubuntu-22.04.deb
 
+
       - name: Update continuous-delivery release
         if: github.ref == 'refs/heads/develop'
-        uses: pyTooling/Actions/releaser@main
-        with:
-          tag: continuous-delivery
-          rm: false
-          token: ${{ secrets.GITHUB_TOKEN }}
-          files: _build/*.tar.gz _build/*.deb
+        run: |
+          TAG="continuous-delivery"
+          gh release upload "$TAG" _build/*.tar.gz _build/*.deb --clobber
 
       - name: Cache vcpkg binary dir
         if: always()
@@ -395,3 +408,12 @@ jobs:
         with:
           path: ${{ github.workspace }}/vcpkg_cache
           key: vcpkg-cache-ubuntu-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+
+      - name: Display ccache statistics
+        run: ccache -s
+
+      - name: Save ccache cache
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ github.workspace }}/.ccache
+          key: ${{ env.os }}-${{ github.sha }}

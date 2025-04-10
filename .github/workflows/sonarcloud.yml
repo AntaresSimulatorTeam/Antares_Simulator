@@ -58,10 +58,25 @@ jobs:
       - name: Install sonar-scanner and build-wrapper
         uses: SonarSource/sonarcloud-github-c-cpp@v3
 
-      - name: ccache
-        uses: hendrikmuhs/ccache-action@v1.2
+
+      - name: Install ccache
+        run: sudo apt-get install -y ccache
+
+      - name: Restore ccache cache
+        uses: actions/cache/restore@v4
         with:
-          key: sonarcloud-${{ env.SONAR_SCANNER_VERSION }}
+          path: ${{ github.workspace }}/.ccache
+          key: sonarcloud-${{ env.SONAR_SCANNER_VERSION }}-${{ github.sha }}
+          restore-keys: |
+            sonarcloud-${{ env.SONAR_SCANNER_VERSION }}- 
+
+      - name: Configure ccache
+        run: |
+          ccache --set-config=cache_dir=${{ github.workspace }}/.ccache
+          ccache --set-config=max_size=500M
+          ccache --set-config=compression=true
+          ccache -p
+          ccache -z
 
       - name: Install libraries
         run: |
@@ -228,3 +243,12 @@ jobs:
         with:
           path: ${{ github.workspace }}/vcpkg_cache
           key: vcpkg-cache-ubuntu-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+
+      - name: Display ccache statistics
+        run: ccache -s
+
+      - name: Save ccache cache
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ github.workspace }}/.ccache
+          key: sonarcloud-${{ env.SONAR_SCANNER_VERSION }}-${{ github.sha }}
