@@ -1,5 +1,8 @@
 # Hybrid studies
 
+_**This feature is under development**_   
+
+
 Antares-Solver now allows conducting "hybrid" (solver x [modeler](../modeler/01-overview-modeler.md)) studies.  
 This enables using [antares-solver studies](02-inputs.md), in which the simulated system is enriched with components 
 that are described in the [antares-modeler format](../modeler/05-model.md).
@@ -31,8 +34,9 @@ modifying its [balance constraint](05-model.md#balance-between-load-and-generati
 
 This is implemented in Antares thanks to the [ports](../modeler/05-model.md#ports-and-connections) concept.  
 In order to connect new components to existing areas, you must follow two steps:
-- In the system definition, connect a component port to an existing area
-- In the port definition, define which field of the port gets to connect to areas
+
+  - In the system definition, connect a component port to an existing area
+  - In the port definition, define which field of the port gets to connect to areas
 
 #### Defining the connections
 To connect a component to an area, you must define a connection in the **area-connections** section of the 
@@ -77,9 +81,10 @@ port-type:
 ~~~
 
 **area-connection** is the name of the optional section to use. It is mandatory if you want to use such a port type to 
-connect modeler components to solver areas.
-- **injection-field**: the field to use when adding the contribution of this port bearer to a connected area, were the 
-  component to be connected to an area
+connect modeler components to solver areas.  
+
+  - **injection-field**: the field to use when adding the contribution of this port bearer to a connected area, were the 
+    component to be connected to an area
 
 #### Optimization model
 The linear expression defined by the connected component's port field definition is simply added to the **left-hand side** 
