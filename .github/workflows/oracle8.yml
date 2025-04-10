@@ -162,14 +162,12 @@ jobs:
         mv _build/antares-*-OracleServer-8.10.tar.gz _build/antares-cd-OracleServer-8.10.tar.gz
         mv _build/antares-*-OracleServer-8.10.rpm _build/antares-cd-OracleServer-8.10.rpm
 
+
     - name: Update continuous-delivery release
       if: github.ref == 'refs/heads/develop'
-      uses: pyTooling/Actions/releaser@main
-      with:
-        tag: continuous-delivery
-        rm: false
-        token: ${{ secrets.GITHUB_TOKEN }}
-        files: _build/*.tar.gz _build/*.rpm
+      run: |
+        TAG="continuous-delivery"
+        gh release upload "$TAG" _build/*.tar.gz _build/*.rpm --clobber        
 
     - name: Cache vcpkg binary dir
       if: always()
