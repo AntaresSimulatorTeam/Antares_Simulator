@@ -374,7 +374,7 @@ jobs:
           gh release upload "$tag" _build/*.tar.gz _build/*.deb
 
       - name: Update continuous-delivery release
-        if: github.ref == 'refs/heads/feature/windows_cd'
+        if: github.ref == 'refs/heads/develop'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
