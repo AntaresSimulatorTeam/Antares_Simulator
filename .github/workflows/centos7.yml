@@ -155,14 +155,13 @@ jobs:
           mv archive/antares-*-CentOS-7.9.2009.tar.gz archive/antares-cd-CentOS-7.9.2009.tar.gz
           mv archive/antares-*-CentOS-7.9.2009.rpm archive/antares-cd-CentOS-7.9.2009.rpm
 
+
+
       - name: Update continuous-delivery release
         if: github.ref == 'refs/heads/develop'
-        uses: pyTooling/Actions/releaser@main
-        with:
-          tag: continuous-delivery
-          rm: false
-          token: ${{ secrets.GITHUB_TOKEN }}
-          files: archive/*.tar.gz archive/*.rpm
+        run: |
+          TAG="continuous-delivery"
+          gh release upload "$TAG" archive/*.tar.gz archive/*.rpm --clobber
 
       - name: Cache vcpkg binary dir
         if: always()
