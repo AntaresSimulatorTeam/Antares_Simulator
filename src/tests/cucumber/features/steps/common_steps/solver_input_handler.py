@@ -1,7 +1,8 @@
 import os
+from pathlib import Path
 
 
-class study_input_handler:
+class solver_input_handler:
     def __init__(self, study_root_directory):
         self.study_root_dir = study_root_directory
         self.name = os.path.basename(study_root_directory)
@@ -39,13 +40,14 @@ class study_input_handler:
                     if correct_section and line.strip().startswith(variable):
                         return line.split('=')[1].strip()
 
-    def set_value(self, variable, value, file_nick_name):
-        # File path
-        file = self.files_path[file_nick_name]
+    def set_parameter_value(self, variable, value, file_nick_name: str):
+        self.set_value(variable, value, self.files_path[file_nick_name])
+
+    def set_value(self, variable, value, file_path: Path):
         # Content to print in file (tmp content)
         content_out = []
         # Reading the file content (content in)
-        with open(file) as f:
+        with open(file_path) as f:
             # Searching variable and setting its value in a tmp content
             for line in f:
                 if line.strip().startswith(variable):
@@ -53,5 +55,5 @@ class study_input_handler:
                 else:
                     content_out.append(line)
         # Erasing file content with the tmp content (content out)
-        with open(file, "w") as f:
+        with open(file_path, "w") as f:
             f.writelines(content_out)
