@@ -11,7 +11,8 @@
 05-model.md
 06-hydro-heuristics.md
 07-thermal-heuristic.md
-08-appendix.md
-09-command-line.md
+08-hybrid-studies.md
+09-appendix.md
+10-command-line.md
 optional-features/00-index.md
 ```
