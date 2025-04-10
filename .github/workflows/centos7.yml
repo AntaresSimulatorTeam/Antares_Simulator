@@ -106,7 +106,7 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: ${{ github.workspace }}/.ccache
-          key: centos7-on-${{ runner.os }}-${{ hashFiles('docker/AntaresDeps') }}
+          key: centos7-on-${{ runner.os }}-${{ github.sha }}
           restore-keys: |
             centos7-on-${{ runner.os }}-   
 
@@ -178,5 +178,5 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: ${{ github.workspace }}/.ccache
-          key: centos7-on-${{ runner.os }}-${{ hashFiles('docker/AntaresDeps') }}
+          key: centos7-on-${{ runner.os }}-${{ github.sha }}
 

@@ -74,11 +74,23 @@ jobs:
           cp ccache/ccache.exe ccache/cl.exe
           echo "${GITHUB_WORKSPACE}/ccache" >> $GITHUB_PATH
 
-      - name: ccache
-        uses: hendrikmuhs/ccache-action@v1.2
-        with:
-          key: windows
 
+      - name: Restore ccache cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ github.workspace }}/.ccache
+          key: ${{ env.os }}-${{ github.sha }}
+          restore-keys: |
+            ${{ env.os }}-  
+
+      - name: Configure ccache
+        run: |
+          ccache --set-config=cache_dir=${{ github.workspace }}/.ccache
+          ccache --set-config=max_size=500M
+          ccache --set-config=compression=true
+          ccache -p
+          ccache -z            
+      
       - name: Install VCPKG
         shell: bash
         run: |
@@ -383,3 +395,12 @@ jobs:
         with:
           path: ${{ github.workspace }}/vcpkg_cache
           key: vcpkg-cache-windows-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+
+      - name: Display ccache statistics
+        run: ccache -s
+
+      - name: Save ccache cache
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ github.workspace }}/.ccache
+          key: ${{ env.os }}-${{ github.sha }}
