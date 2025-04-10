@@ -41,7 +41,7 @@ public:
     explicit Expression(const std::string& value, Expressions::NodeRegistry root):
         value_(value),
         root_(std::move(root)),
-        empty_(false)
+        empty_(!root_.node)
     {
     }
 

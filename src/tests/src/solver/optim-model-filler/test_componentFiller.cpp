@@ -228,9 +228,11 @@ void LinearProblemBuildingFixture::buildLinearProblem(FillContext& time_scenario
 {
     vector<unique_ptr<ComponentFiller>> fillers;
     vector<LinearProblemFiller*> fillers_ptr;
+    // All LP variables coordinates (component id, variable id, scenario, time step)
+    VariableDictionary variableDictionary;
     for (auto& component: components)
     {
-        auto cf = make_unique<ComponentFiller>(component, connections);
+        auto cf = make_unique<ComponentFiller>(component, connections, variableDictionary);
         fillers.push_back(move(cf));
     }
     for (auto& component_filler: fillers)
