@@ -175,28 +175,23 @@ bool Properties::validate()
 
     if (injectionEfficiency < 0)
     {
-        logs.warning() << "Property efficiency must be >= 0 " << "for short term storage " << name;
+        logs.warning() << "Property efficiency must be >= 0 for short term storage " << name;
         injectionEfficiency = 0;
-    }
-
-    if (injectionEfficiency > 1)
-    {
-        logs.warning() << "Property efficiency must be <= 1 " << "for short term storage " << name;
-        injectionEfficiency = 1;
     }
 
     if (withdrawalEfficiency < 0)
     {
-        logs.warning() << "Property efficiencyWithdrawal must be >= 0 " << "for short term storage "
+        logs.warning() << "Property efficiencyWithdrawal must be >= 0 for short term storage "
                        << name;
         withdrawalEfficiency = 0;
     }
 
-    if (withdrawalEfficiency > 1)
+    if (withdrawalEfficiency < injectionEfficiency)
     {
-        logs.warning() << "Property efficiencyWithdrawal must be <= 1 " << "for short term storage "
-                       << name;
-        withdrawalEfficiency = 1;
+        logs.warning()
+          << "Property efficiency must be <= efficiencyWithdrawal for short term storage " << name
+          << " in order to keep a injection/withdrawal ratio <= 1";
+        injectionEfficiency = withdrawalEfficiency;
     }
 
     if (initialLevel < 0)
