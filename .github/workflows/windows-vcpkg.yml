@@ -376,6 +376,15 @@ jobs:
           gh release upload "$tag" _build/*.zip _build/*.exe
         shell: bash
 
+      - name: Update continuous-delivery release
+        if: github.ref == 'refs/heads/feature/windows_cd'
+        uses: pyTooling/Actions/releaser@main
+        with:
+          tag: continuous-delivery
+          rm: false
+          token: ${{ secrets.GITHUB_TOKEN }}
+          files: _build/*.zip _build/*.exe
+
       - name: Cache vcpkg binary dir
         if: always()
         id: save-cache-vcpkg-binary
