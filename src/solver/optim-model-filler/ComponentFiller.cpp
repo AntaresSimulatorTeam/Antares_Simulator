@@ -138,10 +138,12 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
 
 ComponentFiller::ComponentFiller(
   const ModelerStudy::SystemModel::Component& component,
-  const std::vector<ModelerStudy::SystemModel::Connection>& connections):
+  const std::vector<ModelerStudy::SystemModel::Connection>& connections,
+  VariableDictionary& variableDictionary):
     component_(component),
     modelVariable_(component.getModel()->Variables()),
-    connections_(connections)
+    connections_(connections),
+    variableDictionary_(variableDictionary)
 {
 }
 
@@ -179,7 +181,7 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
             std::visit(
               [&pb, &variable, this, &key, &dim](const auto& lb_, const auto& ub_)
               {
-                  VariablesBulkAddition(pb, variableDictionary)
+                  VariablesBulkAddition(pb, variableDictionary_)
                     .addVariable(lb_,
                                  ub_,
                                  variable.Type() != ModelerStudy::SystemModel::ValueType::FLOAT,
@@ -194,7 +196,7 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
             // No time component
             const Dimensions dim({}, {});
 
-            variableDictionary.addVariable(
+            variableDictionary_.addVariable(
               dim,
               key,
               [&pb, &lb, &ub, &variable](const TimeAndScenario&, const std::string& name)
@@ -218,7 +220,7 @@ void ComponentFiller::addStaticConstraint(Optimisation::LinearProblemApi::ILinea
                                 component_.Id() + "." + constraint_id);
     for (const auto& [variableFullKey, coefficient]: linear_constraint.coef_per_var)
     {
-        auto* variable = variableDictionary(variableFullKey);
+        auto* variable = variableDictionary_(variableFullKey);
         ct->setCoefficient(variable, coefficient);
     }
 }
@@ -236,7 +238,7 @@ void ComponentFiller::addTimeDependentConstraints(
                                       + std::to_string(linear_constraint.timeStep));
         for (const auto& [variableFullKey, coefficient]: linear_constraint.coef_per_var)
         {
-            auto* variable = variableDictionary(variableFullKey);
+            auto* variable = variableDictionary_(variableFullKey);
 
             ct->setCoefficient(variable, coefficient);
         }
@@ -298,7 +300,7 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
     {
         for (const auto& [variableFullKey, coefficient]: linear_expression.coefPerVar())
         {
-            auto* variable = variableDictionary(variableFullKey);
+            auto* variable = variableDictionary_(variableFullKey);
             pb.setObjectiveCoefficient(variable, coefficient);
         }
     }
