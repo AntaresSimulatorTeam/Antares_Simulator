@@ -66,7 +66,7 @@ Component::Component(const ComponentData& component_data)
     data_ = std::move(component_data);
 }
 
-const Node* Component::nodeAtPortField(std::string portId, std::string fieldId) const
+const Node* Component::nodeAtPortField(const std::string& portId, const std::string& fieldId) const
 {
     PortFieldKey key(portId, fieldId);
     return getModel()->PortFieldDefinitions().at(key).Definition().RootNode();
