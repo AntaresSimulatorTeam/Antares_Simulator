@@ -91,7 +91,8 @@ TimeIndex TimeIndexVisitor::visit(const Nodes::NegationNode* neg)
 
 TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldNode* port_field_node)
 {
-    throw std::invalid_argument("TimeIndexVisitor cannot visit PortFieldNodes");
+    // TODO FIXME
+    return context_.at(port_field_node);
 }
 
 TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldSumNode* node)

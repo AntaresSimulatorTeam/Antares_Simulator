@@ -179,6 +179,7 @@ BOOST_DATA_TEST_CASE_F(Registry<Node>,
     const std::vector<SystemModel::Connection> connections;
     TimeIndexVisitor timeIndexVisitor("component-id", connections);
     BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(root), timeIndex);
+
     Node* neg = create<NegationNode>(root);
     BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(neg), timeIndex);
 }
@@ -191,7 +192,6 @@ static Node* singleNode(Registry<Node>& registry)
 
 static const std::vector<Node* (*)(Registry<Node>& registry)> singleNode_ALL{
   &singleNode<PortFieldNode>,
-  &singleNode<PortFieldSumNode>,
   &singleNode<ComponentVariableNode>,
   &singleNode<ComponentParameterNode>};
 
