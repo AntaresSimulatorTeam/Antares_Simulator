@@ -4,7 +4,7 @@ FROM antaresrte/antaressystemdeps:latest
 
 CMD ["/bin/bash"]
 
-RUN mkdir /workspace
+RUN mkdir -p /workspace
 
 RUN echo "source /opt/rh/devtoolset-11/enable" >> /etc/bashrc
 SHELL ["/bin/bash", "--login", "-c"]
@@ -16,7 +16,7 @@ COPY $VCPKG_CACHE_DIR /workspace/
 
 
 ARG BRANCH=develop
-RUN cd /workspace && \
+RUN cd /workspace && rm -rf Antares_Simulator && \
     git clone https://github.com/AntaresSimulatorTeam/Antares_Simulator.git --branch $BRANCH && \
     cd Antares_Simulator && \
     git submodule update --init vcpkg && ./vcpkg/bootstrap-vcpkg.sh -disableMetrics && \
