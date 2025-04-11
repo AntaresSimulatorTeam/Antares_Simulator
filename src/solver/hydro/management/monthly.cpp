@@ -18,12 +18,12 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <filesystem>
 #include <iomanip>
 #include <limits>
 #include <sstream>
 
 #include <antares/antares/fatal-error.h>
+#include <antares/study/area/scratchpad.h>
 #include "antares/solver/hydro/management/management.h"
 #include "antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h"
 #include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
@@ -147,11 +147,13 @@ double HydroManagement::prepareMonthlyTargetGenerations(
 
 void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_reservoir_level,
                                                        uint y,
+                                                       Antares::Data::Area::ScratchMap& scratchmap,
                                                        HydroSpecificMap& hydro_specific_map)
 {
     uint indexArea = 0;
     areas_.each(
-      [this, &random_reservoir_level, &y, &indexArea, &hydro_specific_map](Data::Area& area)
+      [this, &random_reservoir_level, &y, &indexArea, &hydro_specific_map, &scratchmap](
+        Data::Area& area)
       {
           auto& data = area.hydro.managementData[y];
           auto& hydro_specific = hydro_specific_map[&area];
@@ -186,7 +188,21 @@ void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_rese
                   uint realmonth = (initReservoirLvlMonth + month) % MONTHS_PER_YEAR;
 
                   uint simulationMonth = calendar_.mapping.months[realmonth];
-                  uint firstDay = calendar_.months[simulationMonth].daysYear.first;
+                  auto daysPerMonth = calendar_.months[simulationMonth].days;
+                  unsigned firstDay = calendar_.months[simulationMonth].daysYear.first;
+                  unsigned endDay = firstDay + daysPerMonth;
+                  auto& scratchpad = scratchmap.at(&area);
+                  const unsigned tsIndex = scratchpad.meanMaxDailyGenPower.getSeriesIndex(y);
+
+                  for (unsigned day = firstDay; day != endDay; ++day)
+                  {
+                      problem.TurbineMax[month] += scratchpad.meanMaxDailyGenPower[tsIndex][day]
+                                                   * area.hydro.dailyNbHoursAtGenPmax[0][day]
+                                                   / area.hydro.reservoirCapacity;
+                  }
+
+                  logs.notice() << "Month " << month << "   " << problem.TurbineMax[month];
+                  logs.notice() << "total inflow   " << totalInflowsYear;
 
                   problem.TurbineMax[month] = data.monthTurbineMax[month];
                   problem.TurbineMin[month] = data.mingens[realmonth];
