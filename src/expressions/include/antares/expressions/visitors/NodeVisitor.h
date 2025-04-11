@@ -306,7 +306,7 @@ public:
      */
     virtual R visit(const Nodes::TimeIndexNode*, Args... args) = 0;
     /**
-     * @brief Visits a TimeIndexNode.
+     * @brief Visits a TimeSumNode.
      *
      * @param node A pointer to the TimeSumNode to be visited.
      * @param args Additional arguments to be passed to the visitor's methods.
@@ -315,7 +315,7 @@ public:
      */
     virtual R visit(const Nodes::TimeSumNode*, Args... args) = 0;
     /**
-     * @brief Visits a TimeIndexNode.
+     * @brief Visits a AllTimeSumNode.
      *
      * @param node A pointer to the AllTimeSumNode to be visited.
      * @param args Additional arguments to be passed to the visitor's methods.

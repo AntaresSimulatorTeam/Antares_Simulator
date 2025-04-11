@@ -54,7 +54,8 @@ public:
     ComponentFiller(ComponentFiller& other) = delete;
     /// Create a ComponentFiller for a Component
     explicit ComponentFiller(const ModelerStudy::SystemModel::Component& component,
-                             const std::vector<ModelerStudy::SystemModel::Connection>& connections);
+                             const std::vector<ModelerStudy::SystemModel::Connection>& connections,
+                             VariableDictionary& variableDictionary);
 
     void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
@@ -68,8 +69,6 @@ public:
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
                       Optimisation::LinearProblemApi::FillContext& ctx) override;
 
-    VariableDictionary variableDictionary;
-
 private:
     void addStaticConstraint(Optimisation::LinearProblemApi::ILinearProblem& pb,
                              const LinearConstraint& linear_constraint,
@@ -79,11 +78,12 @@ private:
                                      const std::vector<LinearConstraint>& linear_constraints,
                                      const std::string& constraint_id) const;
 
-    static bool IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node);
+    bool IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node);
 
     const ModelerStudy::SystemModel::Component& component_;
     const std::vector<ModelerStudy::SystemModel::Connection>& connections_;
     const std::map<std::string, ModelerStudy::SystemModel::Variable>& modelVariable_;
+    VariableDictionary& variableDictionary_;
 };
 
 class VariablesBulkAddition

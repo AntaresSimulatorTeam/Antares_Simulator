@@ -22,6 +22,8 @@
 
 #include "antares/expressions/visitors/NodeVisitor.h"
 #include "antares/expressions/visitors/TimeIndex.h"
+#include "antares/study/system-model/component.h"
+#include "antares/study/system-model/connection.h"
 
 namespace Antares::Expressions::Visitors
 {
@@ -38,13 +40,18 @@ public:
      *
      * @param context The context containing the time index for each node.
      */
-    explicit TimeIndexVisitor(std::unordered_map<const Nodes::Node*, TimeIndex> context);
-    explicit TimeIndexVisitor() = default;
+    explicit TimeIndexVisitor(
+      std::unordered_map<const Nodes::Node*, TimeIndex> context,
+      const std::string& componentId,
+      const std::vector<ModelerStudy::SystemModel::Connection>& connections);
+
+    explicit TimeIndexVisitor(
+      const std::string& componentId,
+      const std::vector<ModelerStudy::SystemModel::Connection>& connections);
 
     std::string name() const override;
 
 private:
-    std::unordered_map<const Nodes::Node*, TimeIndex> context_;
     TimeIndex visit(const Nodes::SumNode* add) override;
     TimeIndex visit(const Nodes::SubtractionNode* add) override;
     TimeIndex visit(const Nodes::MultiplicationNode* add) override;
@@ -64,5 +71,11 @@ private:
     TimeIndex visit(const Nodes::TimeIndexNode* timeIndexNode) override;
     TimeIndex visit(const Nodes::TimeSumNode* timeSumNode) override;
     TimeIndex visit(const Nodes::AllTimeSumNode* timeSumNode) override;
+
+    std::vector<const Antares::ModelerStudy::SystemModel::Component*> getConnectedComponents();
+
+    std::unordered_map<const Nodes::Node*, TimeIndex> context_;
+    const std::string& componentId_;
+    const std::vector<Antares::ModelerStudy::SystemModel::Connection>& connections_;
 };
 } // namespace Antares::Expressions::Visitors

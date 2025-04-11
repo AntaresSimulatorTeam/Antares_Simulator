@@ -21,6 +21,8 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <string>
+
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
@@ -32,6 +34,7 @@
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::Expressions::Visitors;
+using namespace Antares::ModelerStudy;
 
 namespace bdata = boost::unit_test::data;
 
@@ -60,11 +63,15 @@ struct BasicFixture: Registry<Node>
 {
     // LiteralNode --> constant in time and for all scenarios
     LiteralNode literalNode{65.};
-
     ParameterNode parameterNode{"p1", TimeIndex::VARYING_IN_SCENARIO_ONLY};
-
     VariableNode variableNode{"v1", TimeIndex::VARYING_IN_TIME_ONLY};
+    const std::vector<SystemModel::Connection> connections;
     TimeIndexVisitor timeIndexVisitor;
+
+    BasicFixture():
+        timeIndexVisitor("component-id", connections)
+    {
+    }
 };
 
 BOOST_FIXTURE_TEST_CASE(simple_time_dependant_expression, BasicFixture)
@@ -113,8 +120,6 @@ BOOST_FIXTURE_TEST_CASE(timeIndexNode_expression, BasicFixture)
 
 BOOST_FIXTURE_TEST_CASE(timeSumNode_expression, BasicFixture)
 {
-    TimeIndexVisitor timeIndexVisitor;
-
     TimeSumNode t1(&literalNode, &parameterNode, &literalNode);
 
     BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(&t1), TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
@@ -171,8 +176,10 @@ BOOST_DATA_TEST_CASE_F(Registry<Node>,
                        binaryOperator)
 {
     auto [root, parameter] = binaryOperator(*this, timeIndex);
-    TimeIndexVisitor timeIndexVisitor;
+    const std::vector<SystemModel::Connection> connections;
+    TimeIndexVisitor timeIndexVisitor("component-id", connections);
     BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(root), timeIndex);
+
     Node* neg = create<NegationNode>(root);
     BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(neg), timeIndex);
 }
@@ -185,7 +192,6 @@ static Node* singleNode(Registry<Node>& registry)
 
 static const std::vector<Node* (*)(Registry<Node>& registry)> singleNode_ALL{
   &singleNode<PortFieldNode>,
-  &singleNode<PortFieldSumNode>,
   &singleNode<ComponentVariableNode>,
   &singleNode<ComponentParameterNode>};
 
@@ -198,7 +204,7 @@ BOOST_DATA_TEST_CASE_F(Registry<Node>,
     Node* root = singleNode(*this);
     std::unordered_map<const Node*, TimeIndex> context;
     context[root] = timeIndex;
-    TimeIndexVisitor timeIndexVisitor(context);
+    TimeIndexVisitor timeIndexVisitor(context, "", {});
     BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(root), timeIndex);
     Node* neg = create<NegationNode>(root);
     BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(neg), timeIndex);
@@ -251,8 +257,7 @@ BOOST_AUTO_TEST_CASE(test_time_index_logical_operator)
 
 BOOST_FIXTURE_TEST_CASE(TimeIndexVisitor_name, Registry<Node>)
 {
-    std::unordered_map<const Nodes::Node*, TimeIndex> context;
-    TimeIndexVisitor timeIndexVisitor(context);
+    TimeIndexVisitor timeIndexVisitor({}, {}, {});
     BOOST_CHECK_EQUAL(timeIndexVisitor.name(), "TimeIndexVisitor");
 }
 BOOST_AUTO_TEST_SUITE_END()
