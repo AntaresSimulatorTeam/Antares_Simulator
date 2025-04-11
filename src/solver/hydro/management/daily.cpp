@@ -469,11 +469,9 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
             problem.reservoirCapacity = reservoirCapacity;
 
             uint dayMonth = 0;
-            unsigned tmp = 0;
             for (uint day = firstDay; day != endDay; ++day)
             {
                 problem.TurbineMax[dayMonth] = maxP[day] * maxE[day] / reservoirCapacity;
-                tmp += problem.TurbineMax[dayMonth];
                 problem.TurbineMin[dayMonth] = data.dailyMinGen[day] / reservoirCapacity;
 
                 problem.TurbineCible[dayMonth] = (dailyTargetGen[day]
@@ -486,7 +484,6 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
                 dayMonth++;
             }
 
-            logs.notice() << "Month " << month << "   " << tmp;
             H2O2_J_OptimiserUnMois(problem);
 
             switch (problem.ResultatsValides)
