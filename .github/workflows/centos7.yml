@@ -83,16 +83,6 @@ jobs:
           tags: antaresrte/antaressystemdeps:latest
 
 
-      - name: Build and push Docker image
-        if: ${{ env.publish_image  == 'true' }}
-        uses: docker/build-push-action@v6
-        with:
-          context: ${{ env.DOCKERDIR }}
-          file: ${{ env.DOCKERDIR }}/AntaresDeps
-          push: true
-          tags: antaresrte/antaressystemdeps:latest
-
-
       - name: create vcpkg cache dir
         run: |
           echo "VCPKG_CACHE_DIR=$GITHUB_WORKSPACE/vcpkg_cache" >> $GITHUB_ENV
