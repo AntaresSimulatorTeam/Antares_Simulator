@@ -66,6 +66,18 @@ BOOST_FIXTURE_TEST_CASE(reset, Fixture)
     BOOST_CHECK_EQUAL(p.optOptions.quadraticOptimOptions.solverName, "sirius");
 }
 
+BOOST_FIXTURE_TEST_CASE(initializing_solvers_options_with_cmd_line_options, Fixture)
+{
+    options.solverOptions.linearSolver = "xpress";
+    options.solverOptions.quadraticSolver = "scip";
+
+    p.optOptions.initializeWith(options.solverOptions);
+
+    BOOST_CHECK_EQUAL(p.optOptions.firstOptimOptions.solverName, "xpress");
+    BOOST_CHECK_EQUAL(p.optOptions.secondOptimOptions.solverName, "xpress");
+    BOOST_CHECK_EQUAL(p.optOptions.quadraticOptimOptions.solverName, "scip");
+}
+
 BOOST_FIXTURE_TEST_CASE(loadValid, Fixture)
 {
     writeValidFile();
