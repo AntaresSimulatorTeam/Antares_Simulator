@@ -145,7 +145,7 @@ private:
     //! Monthly target generations
     // note: inflows may have two different types, if in swap mode or not
     // \return The total inflow for the whole year
-    double prepareMonthlyTargetGenerations(Data::Area& area, TmpDataByArea& data);
+    void prepareMonthlyTargetGenerations(Data::Area& area, TmpDataByArea& data);
 
     void prepareDailyOptimalGenerations(Solver::Variable::State& state,
                                         uint y,
