@@ -78,10 +78,10 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
                 "solver",
                 "Deprecated, use linear-solver instead.");
 
-    //--linear-solver-parameters
+    //--lp-solver-param
     parser->add(options.solverOptions.linearSolverParameters,
                 ' ',
-                "linear-solver-parameters",
+                "lp-solver-param",
                 "Linear solver-specific parameters, for instance \"THREADS 1 "
                 "PRESOLVE 1\""
                 " for XPRESS or \"parallel/maxnthreads 1, lp/presolving TRUE\" for "
@@ -127,10 +127,10 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
       "Solver used for quadratic optimizations during simulation. Available solver list : "
         + toString(availableQuadraticSolversList()));
 
-    //--quadratic-solver-parameters
+    //--quadratic-solver-param
     parser->add(options.solverOptions.quadraticSolverParameters,
                 ' ',
-                "quadratic-solver-parameters",
+                "quadratic-solver-param",
                 "Quadratic solver-specific parameters, for instance \"THREADS 8\""
                 " for XPRESS or \"parallel/maxnthreads 8\" for SCIP. "
                 "Syntax is solver-dependent.");
