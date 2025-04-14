@@ -169,6 +169,9 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
             double totalInflowsYear = prepareMonthlyTargetGenerations(area, data);
             assert(totalInflowsYear >= 0.);
 
+            auto const& maxP = area.hydro.maxPower[Data::PartHydro::genMaxP];
+            auto const& maxE = area.hydro.maxPower[Data::PartHydro::genMaxE];
+
             problem.CoutDepassementVolume = 1e2;
             problem.CoutViolMaxDuVolumeMin = 1e5;
             problem.VolumeInitial = lvi;
@@ -178,9 +181,15 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
                 uint realmonth = (initReservoirLvlMonth + month) % 12;
 
                 uint simulationMonth = calendar_.mapping.months[realmonth];
+                auto daysPerMonth = calendar_.months[simulationMonth].days;
                 uint firstDay = calendar_.months[simulationMonth].daysYear.first;
+                uint endDay = firstDay + daysPerMonth;
 
-                problem.TurbineMax[month] = totalInflowsYear;
+                for (uint day = firstDay; day != endDay; ++day)
+                {
+                    problem.TurbineMax[month] += maxP[day] * maxE[day];
+                }
+
                 problem.TurbineMin[month] = data.mingens[realmonth];
                 problem.TurbineCible[month] = data.MTG[realmonth];
                 problem.Apport[month] = data.inflows[realmonth];
