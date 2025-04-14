@@ -1,7 +1,5 @@
 #include "include/antares/checks/checksOnLPsolver.h"
 
-#include <boost/algorithm/string/join.hpp>
-
 #include <antares/exception/LoadingError.hpp>
 #include <antares/logs/logs.h>
 #include "antares/solver/utils/ortools_utils.h"

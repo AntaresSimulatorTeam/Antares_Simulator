@@ -64,6 +64,12 @@ public:
     NoAreas();
 };
 
+class Duplicates: public LoadingError
+{
+public:
+    Duplicates();
+};
+
 class InvalidFileName: public LoadingError
 {
 public:

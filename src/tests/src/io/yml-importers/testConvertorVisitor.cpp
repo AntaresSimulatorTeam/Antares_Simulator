@@ -199,7 +199,7 @@ BOOST_AUTO_TEST_CASE(portfield)
                           .description = "description",
                           .parameters = {},
                           .variables = {},
-                          .ports = {},
+                          .ports = {{.id = "port1", .type = "blue"}},
                           .port_field_definitions = {{"port1", "field1", ""}},
                           .constraints = {},
                           .binding_constraints = {},
@@ -215,7 +215,32 @@ BOOST_AUTO_TEST_CASE(portfield)
     BOOST_CHECK_THROW(converter.run(expression), std::runtime_error);
 }
 
-BOOST_AUTO_TEST_CASE(medium_expression)
+BOOST_AUTO_TEST_CASE(portfieldSum)
+{
+    YmlModel::Model model{.id = "model0",
+                          .description = "description",
+                          .parameters = {},
+                          .variables = {},
+                          .ports = {{.id = "port1", .type = "blue"}},
+                          .port_field_definitions = {{"port1", "field1", ""}},
+                          .constraints = {},
+                          .binding_constraints = {},
+                          .objective = "objectives"};
+
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+    std::string expression = "sum_connections(port1.field1)";
+    auto expr = converter.run(expression);
+
+    BOOST_CHECK_EQUAL(expr.node->name(), "PortFieldSumNode");
+    auto portFieldSumNode = dynamic_cast<Nodes::PortFieldSumNode*>(expr.node);
+    BOOST_REQUIRE(portFieldSumNode);
+    BOOST_CHECK_EQUAL(portFieldSumNode->getPortName(), "port1");
+    BOOST_CHECK_EQUAL(portFieldSumNode->getFieldName(), "field1");
+    expression = "port2.field1";
+    BOOST_CHECK_THROW(converter.run(expression), std::runtime_error);
+}
+
+ExpressionToNodeConvertorEmptyModel createMediumExpression()
 {
     YmlModel::Model model{
       .id = "model0",
@@ -228,12 +253,11 @@ BOOST_AUTO_TEST_CASE(medium_expression)
       .binding_constraints = {},
       .objective = "objectives"};
 
-    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
-    std::string expression = "(12 * (4 - 1) + param1) / -(42 + 3 + varP)";
-    auto expr = converter.run(expression);
+    return {std::move(model)};
+}
 
-    Registry<Nodes::Node> registry;
-
+std::pair<std::string, Nodes::Node*> expected_expression(Registry<Nodes::Node>& registry)
+{
     auto* param = registry.create<Nodes::ParameterNode>("param1");
     auto* var = registry.create<Nodes::VariableNode>("varP");
     auto* l3 = registry.create<Nodes::LiteralNode>(3);
@@ -248,7 +272,116 @@ BOOST_AUTO_TEST_CASE(medium_expression)
     auto* sum3 = registry.create<Nodes::SumNode>(sum2, var);
     auto* neg = registry.create<Nodes::NegationNode>(sum3);
     auto* div = registry.create<Nodes::DivisionNode>(sum1, neg);
+    return {"(12 * (4 - 1) + param1) / -(42 + 3 + varP)", div};
+}
+
+BOOST_AUTO_TEST_CASE(medium_expression)
+{
+    Registry<Nodes::Node> registry;
+
+    const auto [expression, div] = expected_expression(registry);
+    const auto expr = createMediumExpression().run(expression);
 
     Visitors::CompareVisitor cmp;
     BOOST_CHECK(cmp.dispatch(expr.node, div));
+}
+
+BOOST_AUTO_TEST_CASE(NumericalTimeIndexExpresion)
+{
+    Registry<Nodes::Node> registry;
+
+    const auto [expression, div] = expected_expression(registry);
+    const auto expressionWithNumericalTimeIndex = "(" + expression + ")" + "[12]";
+    auto expr = createMediumExpression().run(expressionWithNumericalTimeIndex);
+
+    auto* time_index = registry.create<Nodes::LiteralNode>(12);
+    auto* timeIndexNode = registry.create<Nodes::TimeIndexNode>(div, time_index);
+
+    Visitors::CompareVisitor cmp;
+    BOOST_CHECK(cmp.dispatch(expr.node, timeIndexNode));
+}
+
+BOOST_AUTO_TEST_CASE(TimeIndexExpresion)
+{
+    Registry<Nodes::Node> registry;
+
+    const auto [expression, div] = expected_expression(registry);
+    const auto expressionWithNumericalTimeIndex = "(" + expression + ")" + "[param1]";
+    auto expr = createMediumExpression().run(expressionWithNumericalTimeIndex);
+
+    auto* time_index = registry.create<Nodes::ParameterNode>("param1");
+    auto* timeIndexNode = registry.create<Nodes::TimeIndexNode>(div, time_index);
+
+    Visitors::CompareVisitor cmp;
+    BOOST_CHECK(cmp.dispatch(expr.node, timeIndexNode));
+}
+
+BOOST_AUTO_TEST_CASE(TimeShiftExpression)
+{
+    Registry<Nodes::Node> registry;
+
+    const auto [expression, div] = expected_expression(registry);
+    const auto expressionWithNumericalTimeIndex = "(" + expression + ")" + "[t-89]";
+    auto expr = createMediumExpression().run(expressionWithNumericalTimeIndex);
+
+    auto* lit = registry.create<Nodes::LiteralNode>(89);
+    auto* neg = registry.create<Nodes::NegationNode>(lit);
+    auto* timeShiftNode = registry.create<Nodes::TimeShiftNode>(div, neg);
+
+    Visitors::CompareVisitor cmp;
+    BOOST_CHECK(cmp.dispatch(expr.node, timeShiftNode));
+}
+
+BOOST_AUTO_TEST_CASE(TimeShiftExpressionMul)
+{
+    Registry<Nodes::Node> registry;
+
+    const auto [expression, div] = expected_expression(registry);
+    const auto expressionWithNumericalTimeIndex = "(" + expression + ")" + "[t-89*param1]";
+    auto expr = createMediumExpression().run(expressionWithNumericalTimeIndex);
+
+    auto* lit = registry.create<Nodes::LiteralNode>(89);
+    auto* neg = registry.create<Nodes::NegationNode>(lit);
+
+    auto* param = registry.create<Nodes::ParameterNode>("param1");
+    auto* mult = registry.create<Nodes::MultiplicationNode>(neg, param);
+    auto* timeShiftNode = registry.create<Nodes::TimeShiftNode>(div, mult);
+
+    Visitors::CompareVisitor cmp;
+    BOOST_CHECK(cmp.dispatch(expr.node, timeShiftNode));
+}
+
+BOOST_AUTO_TEST_CASE(TimeSumExpression)
+{
+    Registry<Nodes::Node> registry;
+
+    const auto [expression, div] = expected_expression(registry);
+    const auto expressionWithNumericalTimeIndex = "sum(t-89*param1 .. t+(param1/89)," + expression
+                                                  + ")";
+    auto expr = createMediumExpression().run(expressionWithNumericalTimeIndex);
+
+    auto* lit = registry.create<Nodes::LiteralNode>(89);
+    auto* neg = registry.create<Nodes::NegationNode>(lit);
+
+    auto* param = registry.create<Nodes::ParameterNode>("param1");
+    auto* from = registry.create<Nodes::MultiplicationNode>(neg, param);
+    auto* to = registry.create<Nodes::DivisionNode>(param, lit);
+    const auto* timeSumNode = registry.create<Nodes::TimeSumNode>(from, to, div);
+
+    Visitors::CompareVisitor cmp;
+    BOOST_CHECK(cmp.dispatch(expr.node, timeSumNode));
+}
+
+BOOST_AUTO_TEST_CASE(AlltimeSumExpression)
+{
+    Registry<Nodes::Node> registry;
+
+    const auto [expression, div] = expected_expression(registry);
+    const auto expressionWithNumericalTimeIndex = "sum(" + expression + ")";
+    auto expr = createMediumExpression().run(expressionWithNumericalTimeIndex);
+
+    const auto* timeSumNode = registry.create<Nodes::AllTimeSumNode>(div);
+
+    Visitors::CompareVisitor cmp;
+    BOOST_CHECK(cmp.dispatch(expr.node, timeSumNode));
 }

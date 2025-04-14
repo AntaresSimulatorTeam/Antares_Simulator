@@ -351,9 +351,6 @@ void Parameters::reset()
     nbCores.ncMode = ncAvg;
     renewableGeneration.rgModelling = rgAggregated;
 
-    // Misc
-    improveUnitsStartup = false;
-
     include.constraints = true;
     include.hurdleCosts = true;
     transmissionCapacities = GlobalTransmissionCapacities::localValuesForAllLinks;
@@ -513,7 +510,7 @@ static bool SGDIntLoadFamily_General(Parameters& d,
     }
     if (key == "improveunitsstartup")
     {
-        return true; // value.to<bool>(d.improveUnitsStartup);
+        return true;
     }
 
     if (key == "january.1st") // after 4.3
@@ -1767,6 +1764,9 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     {
         logs.info() << "  :: ignoring solution export";
     }
+
+    logs.info() << "  :: solver " << options.solverOptions.quadraticSolver
+                << " is used for quadratic problem resolution";
 
     // indicated that Problems will be named
     if (namedProblems)

@@ -501,8 +501,8 @@ bool InspectorGrid::onPropertyChanging_Constraint(wxPGProperty*,
     const InspectorData::Ptr& data = pCurrentSelection;
     if (!data)
         return false;
-    Data::BindingConstraintsRepository::Set::iterator end = data->constraints.end();
-    Data::BindingConstraintsRepository::Set::iterator i = data->constraints.begin();
+    Data::BindingConstraint::Set::iterator end = data->constraints.end();
+    Data::BindingConstraint::Set::iterator i = data->constraints.begin();
 
     if (name == "constraint.name")
     {

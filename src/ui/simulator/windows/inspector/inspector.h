@@ -161,7 +161,7 @@ void RemoveRenewableCluster(const Data::RenewableCluster* cluster);
 /*!
 ** \brief Add a set of binding constraints to the current selection
 */
-void AddBindingConstraints(const Data::BindingConstraintsRepository::Set& set);
+void AddBindingConstraints(const Data::BindingConstraint::Set& set);
 
 //! \name Misc
 //@{

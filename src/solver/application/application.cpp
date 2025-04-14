@@ -28,6 +28,7 @@
 #include <antares/infoCollection/StudyInfoCollector.h>
 #include <antares/logs/hostinfo.h>
 #include <antares/resources/resources.h>
+#include <antares/study/duplicates.h>
 #include <antares/sys/policy.h>
 #include <antares/writer/writer_factory.h>
 #include "antares/antares/version.h"
@@ -131,6 +132,11 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
             throw Error::NoAreas();
         }
 
+        if (!checkForDuplicates(study))
+        {
+            throw Error::Duplicates();
+        }
+
         // no output ?
         study.parameters.noOutput = pSettings.noOutput;
 
@@ -230,7 +236,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
 // TODO : this function is too long and has a bad name.
 // TODO : we should split it into (at least) 4 functions.
-// TODO : Naming will be easier.
+// TODO : As a consequence, naming will be easier.
 void Application::readStudy_makeChecks_and_printThings(Data::StudyLoadOptions& options)
 {
 // Starting !

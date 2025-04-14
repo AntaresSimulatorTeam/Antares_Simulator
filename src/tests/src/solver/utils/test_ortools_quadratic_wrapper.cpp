@@ -130,7 +130,7 @@ struct QpFixture
         int iStart = problemeAResoudre.CoefficientsDeLaMatriceDesContraintes.size();
         problemeAResoudre.IndicesDebutDeLigne.emplace_back(iStart);
         problemeAResoudre.NombreDeTermesDesLignes.emplace_back(coefs.size());
-        for (int i = 0; i < coefs.size(); ++i)
+        for (unsigned i = 0; i < coefs.size(); ++i)
         {
             problemeAResoudre.IndicesColonnes[iStart + i] = vars[i];
             problemeAResoudre.CoefficientsDeLaMatriceDesContraintes[iStart + i] = coefs[i];
@@ -169,7 +169,7 @@ struct QpFixture
 
     void checkAllNan(const std::vector<double>& actual)
     {
-        for (int i = 0; i < actual.size(); ++i)
+        for (unsigned i = 0; i < actual.size(); ++i)
         {
             BOOST_TEST(std::isnan(actual[i]));
         }
@@ -186,13 +186,6 @@ BOOST_AUTO_TEST_CASE(solver_not_supported)
       std::invalid_argument,
       checkMessage(
         "Solver sirius is not supported for quadratic problems optimization through MathOpt."));
-
-    options.solverName = "xpress";
-    BOOST_CHECK_EXCEPTION(
-      solve(),
-      std::invalid_argument,
-      checkMessage(
-        "Solver xpress is not supported for quadratic problems optimization through MathOpt."));
 }
 
 BOOST_AUTO_TEST_CASE(simple_qp_one_var)

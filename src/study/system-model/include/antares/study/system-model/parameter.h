@@ -25,7 +25,7 @@
 #include "timeAndScenarioType.h"
 #include "valueType.h"
 
-namespace Antares::Study::SystemModel
+namespace Antares::ModelerStudy::SystemModel
 {
 
 /**
@@ -66,4 +66,4 @@ private:
     ScenarioDependent scenarioDependent_ = ScenarioDependent::YES; // optional at construction
 };
 
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel

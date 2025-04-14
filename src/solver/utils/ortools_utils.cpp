@@ -53,10 +53,6 @@ static void checkSetSolverSpecificParameters(bool status,
     {
         throw Antares::Error::InvalidSolverSpecificParameters(solverName, specificParameters);
     }
-    else
-    {
-        Antares::logs.info() << "  Successfully set " + solverName + " solver specific parameters";
-    }
 }
 
 static void TuneSolverSpecificOptions(MPSolver* solver,
@@ -339,10 +335,10 @@ const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::mpSo
   {"highs", {"highs_lp", "highs"}},
   {"pdlp", {"pdlp", std::nullopt}}}; // PDLP only supports LPs
 
+// TODO: enable xpress when using ortools >= 9.12: {"xpress", math_opt::SolverType::kXpress}
 const std::map<std::string, math_opt::SolverType> OrtoolsUtils::mathoptSolverMap = {
   {"pdlp", math_opt::SolverType::kPdlp},
-  {"scip", math_opt::SolverType::kGscip},
-  {"xpress", math_opt::SolverType::kXpress}};
+  {"scip", math_opt::SolverType::kGscip}};
 
 std::list<std::string> availableLinearSolversList()
 {

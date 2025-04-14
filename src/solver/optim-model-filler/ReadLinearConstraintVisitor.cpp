@@ -23,6 +23,7 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h>
+#include "antares/expressions/ShiftVector.h"
 
 using namespace Antares::Expressions::Nodes;
 
@@ -158,6 +159,26 @@ std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const Component
 }
 
 std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const ComponentParameterNode* node)
+{
+    throw IllegalNodeException();
+}
+
+std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const TimeShiftNode* node)
+{
+    throw IllegalNodeException();
+}
+
+std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const TimeIndexNode* node)
+{
+    throw IllegalNodeException();
+}
+
+std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const TimeSumNode* node)
+{
+    throw IllegalNodeException();
+}
+
+std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const AllTimeSumNode* node)
 {
     throw IllegalNodeException();
 }

@@ -98,7 +98,6 @@ public:
     void run(unsigned int week, unsigned int year);
 
 private:
-    const Solver::Optimization::OptimizationOptions& solverOptions_;
     void calculateCsrParameters();
 
     void buildProblemVariables();
@@ -129,6 +128,8 @@ private:
     // Costs
     void setQuadraticCost();
     void setLinearCost();
+
+    const Solver::Optimization::OptimizationOptions& solverOptions_;
 
 public:
     // TODO [gp] : try to make these members private

@@ -43,15 +43,14 @@ public:
     }
 
     void add(const std::shared_ptr<BindingConstraint>& constraint);
-    [[nodiscard]] std::set<std::shared_ptr<BindingConstraint>> constraints() const;
+    [[nodiscard]] const BindingConstraint::Set& constraints() const;
     [[nodiscard]] unsigned numberOfTimeseries() const;
 
-public:
     // Public data members
     TimeSeriesNumbers timeseriesNumbers;
 
 private:
-    std::set<std::shared_ptr<BindingConstraint>> constraints_;
+    BindingConstraint::Set constraints_;
     std::string name_;
 };
 

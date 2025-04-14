@@ -25,6 +25,8 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
+#include "antares/expressions/RotateIndex.h"
+#include "antares/expressions/ShiftVector.h"
 
 namespace Antares::Expressions::Visitors
 {
@@ -41,7 +43,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::SumNode* node)
     return std::accumulate(std::begin(operands),
                            std::end(operands),
                            EvaluationResult{0.},
-                           [this](EvaluationResult sum, Nodes::Node* operand)
+                           [this](const EvaluationResult& sum, const Nodes::Node* operand)
                            { return sum + dispatch(operand); });
 }
 
@@ -50,7 +52,9 @@ EvaluationResult EvalVisitor::visit(const Nodes::SubtractionNode* node)
     return dispatch(node->left()) - dispatch(node->right());
 }
 
-EvaluationResult EvalVisitor::visit(const Nodes::MultiplicationNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::MultiplicationNode* node
+
+)
 {
     return dispatch(node->left()) * dispatch(node->right());
 }
@@ -102,7 +106,9 @@ EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::LiteralNode* node)
 {
-    return EvaluationResult{node->value()};
+    return
+
+      EvaluationResult{node->value()};
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::NegationNode* node)
@@ -128,6 +134,39 @@ EvaluationResult EvalVisitor::visit(const Nodes::ComponentVariableNode* node)
 EvaluationResult EvalVisitor::visit(const Nodes::ComponentParameterNode* node)
 {
     throw EvalVisitorNotImplemented(name(), node->name());
+}
+
+EvaluationResult EvalVisitor::visit(const Nodes::TimeShiftNode* node)
+{
+    const auto ret = dispatch(node->left());
+    // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
+    const auto timeShift = static_cast<int>(dispatch(node->right()).valueAsDouble());
+    return ret.timeShift(timeShift);
+}
+
+EvaluationResult EvalVisitor::visit(const Nodes::TimeIndexNode* node)
+{
+    const auto ret = dispatch(node->left());
+    // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
+    const auto timeIndex = static_cast<int>(dispatch(node->right()).valueAsDouble());
+    return ret[timeIndex];
+}
+
+EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
+{
+    const auto expression = dispatch(node->expression());
+    // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
+    const auto from = static_cast<int>(dispatch(node->from()).valueAsDouble());
+
+    // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
+    const auto to = static_cast<int>(dispatch(node->to()).valueAsDouble());
+    return expression.timeSum(from, to);
+}
+
+EvaluationResult EvalVisitor::visit(const Nodes::AllTimeSumNode* node)
+{
+    const EvaluationResult expression = dispatch(node->child());
+    return expression.alltimeSum(fillContext_.getNumberOfTimestep());
 }
 
 std::string EvalVisitor::name() const
@@ -162,6 +201,53 @@ EvaluationResult::EvaluationResult(const std::vector<double>& values):
 EvaluationResult::EvaluationResult(const std::variant<double, std::vector<double>>& value):
     value_(value)
 {
+}
+
+EvaluationResult EvaluationResult::timeShift(int time_shift) const
+{
+    return EvaluationResult(
+      std::visit([&time_shift](const auto& l) -> std::variant<double, std::vector<double>>
+                 { return shift(l, time_shift); },
+                 value_));
+}
+
+EvaluationResult EvaluationResult::timeSum(int from, int to) const
+{
+    EvaluationResult ret(0.);
+    for (int shift = from; shift <= to; ++shift)
+    {
+        ret += timeShift(shift);
+    }
+    return ret;
+}
+
+EvaluationResult EvaluationResult::alltimeSum(int numberOfTimeStep) const
+{
+    EvaluationResult ret(0.);
+    for (auto t = 0; t < numberOfTimeStep; ++t)
+    {
+        ret += operator[](t);
+    }
+    return ret;
+}
+
+EvaluationResult EvaluationResult::operator[](int timeIndex) const
+{
+    if (std::holds_alternative<double>(value_))
+    {
+        return *this;
+    }
+    const auto& vec = std::get<std::vector<double>>(value_);
+    if (timeIndex < 0 || (unsigned)timeIndex >= vec.size())
+    {
+        throw EvalResultTimeIndexOutOfRange("timeIndex is out of range");
+    }
+    return EvaluationResult(vec.at(timeIndex));
+}
+
+std::vector<double> EvaluationResult::shift(const std::vector<double>& values, int timeShift)
+{
+    return shiftVector(values, timeShift);
 }
 
 } // namespace Antares::Expressions::Visitors

@@ -165,7 +165,7 @@ void FillWithValues(std::vector<double>& destination, const std::vector<double>&
     {
         throw std::invalid_argument("Expected destination and origin to have the same size");
     }
-    for (auto i = 0; i < destination.size(); ++i)
+    for (unsigned i = 0; i < destination.size(); ++i)
     {
         destination[i] = origin[i];
     }
@@ -177,7 +177,7 @@ void FillWithValues(std::vector<double*>& destination, const std::vector<double>
     {
         throw std::invalid_argument("Expected destination and origin to have the same size");
     }
-    for (auto i = 0; i < destination.size(); ++i)
+    for (unsigned i = 0; i < destination.size(); ++i)
     {
         double* pt = destination[i];
         if (pt)
@@ -189,7 +189,7 @@ void FillWithValues(std::vector<double*>& destination, const std::vector<double>
 
 void FillWithNaN(std::vector<double>& vector)
 {
-    for (auto i = 0; i < vector.size(); ++i)
+    for (unsigned i = 0; i < vector.size(); ++i)
     {
         vector[i] = std::numeric_limits<double>::quiet_NaN();
     }
@@ -197,7 +197,7 @@ void FillWithNaN(std::vector<double>& vector)
 
 void FillWithNaN(std::vector<double*>& vector)
 {
-    for (auto i = 0; i < vector.size(); ++i)
+    for (unsigned i = 0; i < vector.size(); ++i)
     {
         double* pt = vector[i];
         if (pt)

@@ -84,5 +84,9 @@ private:
       const Expressions::Nodes::ComponentVariableNode* node) override;
     std::vector<LinearConstraint> visit(
       const Expressions::Nodes::ComponentParameterNode* node) override;
+    std::vector<LinearConstraint> visit(const Expressions::Nodes::TimeShiftNode* node) override;
+    std::vector<LinearConstraint> visit(const Expressions::Nodes::TimeIndexNode* node) override;
+    std::vector<LinearConstraint> visit(const Expressions::Nodes::TimeSumNode* node) override;
+    std::vector<LinearConstraint> visit(const Expressions::Nodes::AllTimeSumNode* node) override;
 };
 } // namespace Antares::Optimization
