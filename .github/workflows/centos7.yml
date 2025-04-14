@@ -52,7 +52,7 @@ jobs:
 
   
 
-      
+
       - name: check if DockerFiles has changed
         run: |
           # Check for changes in the target path
@@ -82,7 +82,17 @@ jobs:
           push: true
           tags: antaresrte/antaressystemdeps:latest
 
-    
+
+      - name: Build and push Docker image
+        if: ${{ env.publish_image  == 'true' }}
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ env.DOCKERDIR }}
+          file: ${{ env.DOCKERDIR }}/AntaresDeps
+          push: true
+          tags: antaresrte/antaressystemdeps:latest
+
+
       - name: create vcpkg cache dir
         run: |
           echo "VCPKG_CACHE_DIR=$GITHUB_WORKSPACE/vcpkg_cache" >> $GITHUB_ENV
@@ -149,19 +159,14 @@ jobs:
         run: |
           gh release upload "$tag" archive/*.tar.gz archive/*.rpm
 
-      - name: Rename assets for continuous-delivery release
+      - name: Update continuous-delivery release
         if: github.ref == 'refs/heads/develop'
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           mv archive/antares-*-CentOS-7.9.2009.tar.gz archive/antares-cd-CentOS-7.9.2009.tar.gz
           mv archive/antares-*-CentOS-7.9.2009.rpm archive/antares-cd-CentOS-7.9.2009.rpm
-
-
-
-      - name: Update continuous-delivery release
-        if: github.ref == 'refs/heads/develop'
-        run: |
-          TAG="continuous-delivery"
-          gh release upload "$TAG" archive/*.tar.gz archive/*.rpm --clobber
+          gh release upload --clobber continuous-delivery archive/*.tar.gz archive/*.rpm
 
       - name: Cache vcpkg binary dir
         if: always()

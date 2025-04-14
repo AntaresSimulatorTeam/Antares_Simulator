@@ -388,18 +388,14 @@ jobs:
         run: |
           gh release upload "$tag" _build/*.tar.gz _build/*.deb
 
-      - name: Rename assets for continuous-delivery release
+      - name: Update continuous-delivery release
         if: github.ref == 'refs/heads/develop'
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           mv _build/antares-*-Ubuntu-22.04.tar.gz _build/antares-cd-Ubuntu-22.04.tar.gz
           mv _build/antares-*-Ubuntu-22.04.deb _build/antares-cd-Ubuntu-22.04.deb
-
-
-      - name: Update continuous-delivery release
-        if: github.ref == 'refs/heads/develop'
-        run: |
-          TAG="continuous-delivery"
-          gh release upload "$TAG" _build/*.tar.gz _build/*.deb --clobber
+          gh release upload --clobber continuous-delivery _build/*.tar.gz _build/*.deb
 
       - name: Cache vcpkg binary dir
         if: always()

@@ -388,6 +388,15 @@ jobs:
           gh release upload "$tag" _build/*.zip _build/*.exe
         shell: bash
 
+      - name: Update continuous-delivery release
+        if: github.ref == 'refs/heads/develop'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mv _build/rte-antares-*-installer-64bits.exe _build/rte-antares-cd-installer-64bits.exe
+          mv _build/rte-antares-*-installer-64bits.zip _build/rte-antares-cd-installer-64bits.zip
+          gh release upload --clobber continuous-delivery _build/*.zip _build/*.exe
+
       - name: Cache vcpkg binary dir
         if: always()
         id: save-cache-vcpkg-binary
