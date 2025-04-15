@@ -118,6 +118,8 @@ var hierarchy =
       [ "Antares::Window::Inspector::ClusterUpdaterRenewable", "classAntares_1_1Window_1_1Inspector_1_1ClusterUpdaterRenewable.html", null ],
       [ "Antares::Window::Inspector::ClusterUpdaterThermal", "classAntares_1_1Window_1_1Inspector_1_1ClusterUpdaterThermal.html", null ]
     ] ],
+    [ "Antares::Solver::Optimization::CmdLineOptimOptions", "structAntares_1_1Solver_1_1Optimization_1_1CmdLineOptimOptions.html", null ],
+    [ "CmdLineOptionsFixture", "structCmdLineOptionsFixture.html", null ],
     [ "Antares::Window::Inspector::PAreaColor::Color", "structAntares_1_1Window_1_1Inspector_1_1PAreaColor_1_1Color.html", null ],
     [ "Antares::Window::Inspector::PLinkColor::Color", "structAntares_1_1Window_1_1Inspector_1_1PLinkColor_1_1Color.html", null ],
     [ "Antares::Component::Datagrid::Renderer::Column", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Column.html", [
@@ -126,10 +128,10 @@ var hierarchy =
       [ "Antares::Component::Datagrid::Renderer::classicColumn", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1classicColumn.html", null ],
       [ "Antares::Component::Datagrid::Renderer::thermalColumn", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1thermalColumn.html", null ]
     ] ],
+    [ "CommonFixture", "structCommonFixture.html", null ],
     [ "commonFixture", "structcommonFixture.html", [
       [ "saveFixture", "structsaveFixture.html", null ]
     ] ],
-    [ "CommonFixture", "structCommonFixture.html", null ],
     [ "Antares::Data::CompareAreaName", "structAntares_1_1Data_1_1CompareAreaName.html", null ],
     [ "Antares::Data::CompareBindingConstraintName", "structAntares_1_1Data_1_1CompareBindingConstraintName.html", null ],
     [ "Antares::Forms::CompareBySimulationMode", "structAntares_1_1Forms_1_1CompareBySimulationMode.html", null ],
@@ -1438,6 +1440,7 @@ var hierarchy =
         [ "Antares::Error::IncompatibleDailyOptHeuristicForArea", "classAntares_1_1Error_1_1IncompatibleDailyOptHeuristicForArea.html", null ],
         [ "Antares::Error::IncompatibleFuelCostColumns", "classAntares_1_1Error_1_1IncompatibleFuelCostColumns.html", null ],
         [ "Antares::Error::IncompatibleHurdleCostCSR", "classAntares_1_1Error_1_1IncompatibleHurdleCostCSR.html", null ],
+        [ "Antares::Error::IncompatibleLinearSolverParameters", "classAntares_1_1Error_1_1IncompatibleLinearSolverParameters.html", null ],
         [ "Antares::Error::IncompatibleMILPOrtoolsSolver", "classAntares_1_1Error_1_1IncompatibleMILPOrtoolsSolver.html", null ],
         [ "Antares::Error::IncompatibleMILPWithoutOrtools", "classAntares_1_1Error_1_1IncompatibleMILPWithoutOrtools.html", null ],
         [ "Antares::Error::IncompatibleOptRangeHydroPricing", "classAntares_1_1Error_1_1IncompatibleOptRangeHydroPricing.html", null ],
@@ -1459,6 +1462,7 @@ var hierarchy =
         [ "Antares::Error::ReadingStudy", "classAntares_1_1Error_1_1ReadingStudy.html", null ],
         [ "Antares::Error::RuntimeInfoInitialization", "classAntares_1_1Error_1_1RuntimeInfoInitialization.html", null ],
         [ "Antares::Error::StudyFolderDoesNotExist", "classAntares_1_1Error_1_1StudyFolderDoesNotExist.html", null ],
+        [ "Antares::Error::UseMILPsolverWithWrongOptions", "classAntares_1_1Error_1_1UseMILPsolverWithWrongOptions.html", null ],
         [ "Antares::Error::WritingPID", "classAntares_1_1Error_1_1WritingPID.html", null ]
       ] ],
       [ "Antares::Expressions::Visitors::EvalVisitorDivisionException", "classAntares_1_1Expressions_1_1Visitors_1_1EvalVisitorDivisionException.html", null ],
@@ -1514,6 +1518,7 @@ var hierarchy =
     [ "Antares::API::SimulationResults", "structAntares_1_1API_1_1SimulationResults.html", null ],
     [ "Antares::Private::OutputViewerData::Content::SimulationType", "classAntares_1_1Private_1_1OutputViewerData_1_1Content_1_1SimulationType.html", null ],
     [ "Antares::Data::ShortTermStorage::SingleAdditionalConstraint", "classAntares_1_1Data_1_1ShortTermStorage_1_1SingleAdditionalConstraint.html", null ],
+    [ "Antares::Solver::Optimization::SingleOptimOptions", "structAntares_1_1Solver_1_1Optimization_1_1SingleOptimOptions.html", null ],
     [ "Antares::TSGenerator::Predicate::Solar", "classAntares_1_1TSGenerator_1_1Predicate_1_1Solar.html", null ],
     [ "SOLDE_MOYEN_DES_ECHANGES", "structSOLDE__MOYEN__DES__ECHANGES.html", null ],
     [ "solver_input_handler.solver_input_handler", "classsolver__input__handler_1_1solver__input__handler.html", null ],

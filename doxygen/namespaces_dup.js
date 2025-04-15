@@ -92,7 +92,7 @@ var namespaces_dup =
         [ "checkSimplexRangeHydroHeuristic", "checkLoadedInputData_8cpp.html#a77358a218c8ac39380b4a633ffac4130", null ],
         [ "checkSimplexRangeHydroPricing", "checkLoadedInputData_8cpp.html#a24d8049dbc552aa79f64a3beb4c3aaa1", null ],
         [ "checkSimplexRangeUnitCommitmentMode", "checkLoadedInputData_8cpp.html#a978a237353f03f703f28d5344cf24898", null ],
-        [ "checkSolverMILPincompatibility", "checkLoadedInputData_8cpp.html#ad871e4aab26d123c4b4830ff257f035c", null ],
+        [ "checkSolverOptions", "checksOnLPsolver_8cpp.html#add0f44755ecd1bdff04f4c3ba9b2ac30", null ],
         [ "checkStudyVersion", "checkLoadedInputData_8cpp.html#a60bb78baac5d7b8592cf71eadb771d70", null ]
       ] ],
       [ "Component", null, [
@@ -857,12 +857,14 @@ var namespaces_dup =
         [ "IncompatibleParallelOptions", "classAntares_1_1Error_1_1IncompatibleParallelOptions.html", "classAntares_1_1Error_1_1IncompatibleParallelOptions" ],
         [ "IncompatibleMILPWithoutOrtools", "classAntares_1_1Error_1_1IncompatibleMILPWithoutOrtools.html", "classAntares_1_1Error_1_1IncompatibleMILPWithoutOrtools" ],
         [ "IncompatibleMILPOrtoolsSolver", "classAntares_1_1Error_1_1IncompatibleMILPOrtoolsSolver.html", "classAntares_1_1Error_1_1IncompatibleMILPOrtoolsSolver" ],
+        [ "UseMILPsolverWithWrongOptions", "classAntares_1_1Error_1_1UseMILPsolverWithWrongOptions.html", "classAntares_1_1Error_1_1UseMILPsolverWithWrongOptions" ],
         [ "IncompatibleOptRangeHydroPricing", "classAntares_1_1Error_1_1IncompatibleOptRangeHydroPricing.html", "classAntares_1_1Error_1_1IncompatibleOptRangeHydroPricing" ],
         [ "IncompatibleOptRangeUCMode", "classAntares_1_1Error_1_1IncompatibleOptRangeUCMode.html", "classAntares_1_1Error_1_1IncompatibleOptRangeUCMode" ],
         [ "InvalidOptimizationRange", "classAntares_1_1Error_1_1InvalidOptimizationRange.html", "classAntares_1_1Error_1_1InvalidOptimizationRange" ],
         [ "InvalidSimulationMode", "classAntares_1_1Error_1_1InvalidSimulationMode.html", "classAntares_1_1Error_1_1InvalidSimulationMode" ],
         [ "InvalidSolver", "classAntares_1_1Error_1_1InvalidSolver.html", "classAntares_1_1Error_1_1InvalidSolver" ],
         [ "InvalidSolverSpecificParameters", "classAntares_1_1Error_1_1InvalidSolverSpecificParameters.html", "classAntares_1_1Error_1_1InvalidSolverSpecificParameters" ],
+        [ "IncompatibleLinearSolverParameters", "classAntares_1_1Error_1_1IncompatibleLinearSolverParameters.html", "classAntares_1_1Error_1_1IncompatibleLinearSolverParameters" ],
         [ "InvalidStudy", "classAntares_1_1Error_1_1InvalidStudy.html", "classAntares_1_1Error_1_1InvalidStudy" ],
         [ "NoStudyProvided", "classAntares_1_1Error_1_1NoStudyProvided.html", "classAntares_1_1Error_1_1NoStudyProvided" ],
         [ "InvalidVersion", "classAntares_1_1Error_1_1InvalidVersion.html", "classAntares_1_1Error_1_1InvalidVersion" ],
@@ -1381,6 +1383,8 @@ var namespaces_dup =
           [ "parseModelerParameters", "parseModelerParameters_8h.html#aec770ce15d1ae94b5c46e6d8575f038f", null ]
         ] ],
         [ "Optimization", null, [
+          [ "SingleOptimOptions", "structAntares_1_1Solver_1_1Optimization_1_1SingleOptimOptions.html", "structAntares_1_1Solver_1_1Optimization_1_1SingleOptimOptions" ],
+          [ "CmdLineOptimOptions", "structAntares_1_1Solver_1_1Optimization_1_1CmdLineOptimOptions.html", "structAntares_1_1Solver_1_1Optimization_1_1CmdLineOptimOptions" ],
           [ "OptimizationOptions", "classAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html", "classAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions" ],
           [ "CsrQuadraticProblem", "classAntares_1_1Solver_1_1Optimization_1_1CsrQuadraticProblem.html", "classAntares_1_1Solver_1_1Optimization_1_1CsrQuadraticProblem" ],
           [ "WeeklyOptimization", "classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization.html", "classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization" ]
@@ -1425,7 +1429,6 @@ var namespaces_dup =
           [ "ComputeFlowQuad", "common-eco-adq_8cpp.html#a95d4ee7d313da8fda265079d92413916", null ],
           [ "ComputeFlowQuad", "common-eco-adq_8h.html#a2e52203941a89d09c9149d8a8d0a8543", null ],
           [ "computeTotalGenWithoutHydro", "common-hydro-remix_8cpp.html#aaf066e6de940aae3d01b1981676271ed", null ],
-          [ "createOptimizationOptions", "common-eco-adq_8cpp.html#a9c6996c285a942eb23c385fec5059011", null ],
           [ "extractHydroPmin", "common-hydro-remix_8cpp.html#ae655a881f86cb20dbb0e8b22f189675f", null ],
           [ "extractLoadForCurrentWeek", "common-hydro-remix_8cpp.html#a3ed2d0cad36894073e1a9fb8c8bcac75", null ],
           [ "finalizeOptimizationStatistics", "common-eco-adq_8cpp.html#a11dfb84267c82f2f802941ba9861c8a3", null ],

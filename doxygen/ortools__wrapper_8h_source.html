@@ -160,24 +160,23 @@ $(document).ready(function(){initNavTree('ortools__wrapper_8h_source.html',''); 
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;MPSolver* ORTOOLS_Simplexe(<a class="code" href="structAntares_1_1Optimization_1_1PROBLEME__SIMPLEXE__NOMME.html">Antares::Optimization::PROBLEME_SIMPLEXE_NOMME</a>* Probleme,</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;                           MPSolver* ProbSpx,</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;                           <span class="keywordtype">bool</span> keepBasis,</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;                           <span class="keyword">const</span> <a class="code" href="classAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html">Antares::Solver::Optimization::OptimizationOptions</a>&amp; options);</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keywordtype">void</span> ORTOOLS_ModifierLeVecteurCouts(MPSolver* ProbSpx, <span class="keyword">const</span> <span class="keywordtype">double</span>* costs, <span class="keywordtype">int</span> nbVar);</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keywordtype">void</span> ORTOOLS_ModifierLeVecteurSecondMembre(MPSolver* ProbSpx,</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;                                           <span class="keyword">const</span> <span class="keywordtype">double</span>* rhs,</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;                                           <span class="keyword">const</span> <span class="keywordtype">char</span>* sens,</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;                                           <span class="keywordtype">int</span> nbRow);</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keywordtype">void</span> ORTOOLS_CorrigerLesBornes(MPSolver* ProbSpx,</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;                               <span class="keyword">const</span> <span class="keywordtype">double</span>* bMin,</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;                               <span class="keyword">const</span> <span class="keywordtype">double</span>* bMax,</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;                               <span class="keyword">const</span> <span class="keywordtype">int</span>* typeVar,</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;                               <span class="keywordtype">int</span> nbVar);</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keywordtype">void</span> ORTOOLS_LibererProbleme(MPSolver* ProbSpx);</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html">Antares::Solver::Optimization::OptimizationOptions</a></div><div class="ttdef"><b>Definition:</b> options.h:29</div></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;                           <span class="keyword">const</span> <a class="code" href="structAntares_1_1Solver_1_1Optimization_1_1SingleOptimOptions.html">Antares::Solver::Optimization::SingleOptimOptions</a>&amp; options);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keywordtype">void</span> ORTOOLS_ModifierLeVecteurCouts(MPSolver* ProbSpx, <span class="keyword">const</span> <span class="keywordtype">double</span>* costs, <span class="keywordtype">int</span> nbVar);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keywordtype">void</span> ORTOOLS_ModifierLeVecteurSecondMembre(MPSolver* ProbSpx,</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;                                           <span class="keyword">const</span> <span class="keywordtype">double</span>* rhs,</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;                                           <span class="keyword">const</span> <span class="keywordtype">char</span>* sens,</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;                                           <span class="keywordtype">int</span> nbRow);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keywordtype">void</span> ORTOOLS_CorrigerLesBornes(MPSolver* ProbSpx,</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;                               <span class="keyword">const</span> <span class="keywordtype">double</span>* bMin,</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;                               <span class="keyword">const</span> <span class="keywordtype">double</span>* bMax,</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;                               <span class="keyword">const</span> <span class="keywordtype">int</span>* typeVar,</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;                               <span class="keywordtype">int</span> nbVar);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keywordtype">void</span> ORTOOLS_LibererProbleme(MPSolver* ProbSpx);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="astructAntares_1_1Optimization_1_1PROBLEME__SIMPLEXE__NOMME_html"><div class="ttname"><a href="structAntares_1_1Optimization_1_1PROBLEME__SIMPLEXE__NOMME.html">Antares::Optimization::PROBLEME_SIMPLEXE_NOMME</a></div><div class="ttdef"><b>Definition:</b> named_problem.h:38</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Optimization_1_1SingleOptimOptions_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Optimization_1_1SingleOptimOptions.html">Antares::Solver::Optimization::SingleOptimOptions</a></div><div class="ttdef"><b>Definition:</b> options.h:28</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

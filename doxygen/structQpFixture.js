@@ -9,7 +9,7 @@ var structQpFixture =
     [ "checkReducedCosts", "structQpFixture.html#a27edf43c3a0a086947e03528083b4b74", null ],
     [ "solve", "structQpFixture.html#a0f446b1ccef69042287691d802ed02f6", null ],
     [ "duals", "structQpFixture.html#a0b2a3325533a14b35f5f0b2f92c60860", null ],
-    [ "options", "structQpFixture.html#a78a9ddda082f5c892f5c78f9e9b0aa60", null ],
+    [ "options", "structQpFixture.html#a4ea4773c486d00f9089faac0c93ea5d5", null ],
     [ "primals", "structQpFixture.html#ad94f06446bb8b8acd014637643a1e312", null ],
     [ "problemeAResoudre", "structQpFixture.html#a4916a23d4f62bf22bfb194ae8cbbf514", null ],
     [ "reducedCosts", "structQpFixture.html#aacf8c2ad6350fef9144faa5d1c3161a6", null ]
