@@ -25,9 +25,7 @@ target_link_libraries(${PROJ}
         Antares::linear-problem-api
         Antares::logs
         Antares::solverUtils
-		# Until issue here is resolved, link the whole archive: https://github.com/google/or-tools/discussions/4538
-        # TODO: keep an eye out for bug resolution in future versions of ortools (> 9.12)
-        $<LINK_LIBRARY:WHOLE_ARCHIVE,ortools::ortools>
+        ortools::ortools
 )
 
 target_include_directories(${PROJ}

@@ -27,7 +27,7 @@
 #include <antares/solver/utils/ortools_quadratic_wrapper.h>
 #include <antares/solver/utils/ortools_utils.h>
 
-using Antares::Solver::Optimization::OptimizationOptions;
+using Antares::Solver::Optimization::SingleOptimOptions;
 using namespace operations_research::math_opt;
 
 constexpr double infinity = std::numeric_limits<double>::infinity();
@@ -40,18 +40,18 @@ void BuildConstraints(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre, Model& mod
 //     Probleme->UtiliserLaToleranceDeStationnariteParDefaut = OUI_PI;
 //     Probleme->UtiliserLaToleranceDeComplementariteParDefaut = OUI_PI;
 
-void checkOptions(const OptimizationOptions& options)
+void checkOptions(const SingleOptimOptions& options)
 {
-    auto availableSolversList = getAvailableQuadraticSolverNames();
-    bool solverFound = std::ranges::find(availableSolversList, options.quadraticSolver)
+    auto availableSolversList = availableQuadraticSolversList();
+    bool solverFound = std::ranges::find(availableSolversList, options.solverName)
                        != availableSolversList.end();
-    if (!solverFound || options.quadraticSolver.compare("sirius") == 0)
+    if (!solverFound || options.solverName.compare("sirius") == 0)
     {
         throw std::invalid_argument(
-          "Solver " + options.quadraticSolver
+          "Solver " + options.solverName
           + " is not supported for quadratic problems optimization through MathOpt.");
     }
-    if (!options.quadraticSolverParameters.empty())
+    if (!options.solverParameters.empty())
     {
         // TODO: handle these by mapping them to generic or solver-specific params in mathopt
         // TODO: or remove this for now?
@@ -64,7 +64,7 @@ void ProcessSolveResult(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                         Model& model,
                         absl::StatusOr<SolveResult> resultStatus);
 
-void SolveQuadraticProblemWithOrtools(const OptimizationOptions& options,
+void SolveQuadraticProblemWithOrtools(const SingleOptimOptions& options,
                                       PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
 {
     checkOptions(options);
@@ -76,7 +76,7 @@ void SolveQuadraticProblemWithOrtools(const OptimizationOptions& options,
     {
         args.parameters.enable_output = true;
     }
-    auto solverType = OrtoolsUtils::mathoptSolverMap.at(options.quadraticSolver);
+    auto solverType = OrtoolsUtils::mathoptSolverMap.at(options.solverName);
     auto resultStatus = Solve(model, solverType, args);
     ProcessSolveResult(ProblemeAResoudre, model, resultStatus);
 }

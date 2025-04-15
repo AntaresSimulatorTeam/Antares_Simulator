@@ -61,15 +61,25 @@ BOOST_FIXTURE_TEST_CASE(reset, Fixture)
     BOOST_CHECK_EQUAL(p.simulationDays.first, 0);
     BOOST_CHECK_EQUAL(p.nbTimeSeriesThermal, 1);
     BOOST_CHECK_EQUAL(p.synthesis, true);
-    BOOST_CHECK_EQUAL(p.optOptions.linearSolver, "sirius");
-    BOOST_CHECK_EQUAL(p.optOptions.quadraticSolver, "sirius");
+    BOOST_CHECK_EQUAL(p.optOptions.firstOptimOptions.solverName, "sirius");
+    BOOST_CHECK_EQUAL(p.optOptions.secondOptimOptions.solverName, "sirius");
+    BOOST_CHECK_EQUAL(p.optOptions.quadraticOptimOptions.solverName, "sirius");
 }
 
-BOOST_FIXTURE_TEST_CASE(loadValid, Fixture)
+BOOST_FIXTURE_TEST_CASE(initializing_solvers_options_with_cmd_line_options, Fixture)
 {
     options.solverOptions.linearSolver = "xpress";
     options.solverOptions.quadraticSolver = "scip";
 
+    p.optOptions.initializeWith(options.solverOptions);
+
+    BOOST_CHECK_EQUAL(p.optOptions.firstOptimOptions.solverName, "xpress");
+    BOOST_CHECK_EQUAL(p.optOptions.secondOptimOptions.solverName, "xpress");
+    BOOST_CHECK_EQUAL(p.optOptions.quadraticOptimOptions.solverName, "scip");
+}
+
+BOOST_FIXTURE_TEST_CASE(loadValid, Fixture)
+{
     writeValidFile();
     p.loadFromFile(path.string(), version);
     p.validateOptions(options);
@@ -78,8 +88,6 @@ BOOST_FIXTURE_TEST_CASE(loadValid, Fixture)
     BOOST_CHECK_EQUAL(p.nbYears, 5);
     BOOST_CHECK_EQUAL(p.seed[seedTsGenThermal], 5489);
     BOOST_CHECK_EQUAL(p.include.reserve.dayAhead, true);
-    BOOST_CHECK_EQUAL(p.optOptions.linearSolver, "xpress");
-    BOOST_CHECK_EQUAL(p.optOptions.quadraticSolver, "scip");
     BOOST_CHECK_EQUAL(p.shedding.policy, shpAccurateShavePeaks);
 }
 

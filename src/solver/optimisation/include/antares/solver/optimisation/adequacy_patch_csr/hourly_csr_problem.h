@@ -130,6 +130,8 @@ private:
     void setQuadraticCost();
     void setLinearCost();
 
+    const Solver::Optimization::OptimizationOptions& solverOptions_;
+
 public:
     // TODO [gp] : try to make these members private
     double belowThisThresholdSetToZero;

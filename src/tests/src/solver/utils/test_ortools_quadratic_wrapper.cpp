@@ -36,7 +36,7 @@ struct QpFixture
     QpFixture()
     {
         // We only support PDLP solver for now
-        options.quadraticSolver = "pdlp";
+        options.solverName = "pdlp";
         // Init empty problem
         problemeAResoudre.NombreDeVariables = 0;
         problemeAResoudre.NombreDeContraintes = 0;
@@ -49,7 +49,7 @@ struct QpFixture
     std::vector<double> primals;
     std::vector<double> duals;
     std::vector<double> reducedCosts;
-    Antares::Solver::Optimization::OptimizationOptions options;
+    Antares::Solver::Optimization::SingleOptimOptions options;
 
     void solve()
     {
@@ -180,7 +180,7 @@ BOOST_FIXTURE_TEST_SUITE(tests_on_ortools_quadratic_wrapper, QpFixture)
 
 BOOST_AUTO_TEST_CASE(solver_not_supported)
 {
-    options.quadraticSolver = "sirius";
+    options.solverName = "sirius";
     BOOST_CHECK_EXCEPTION(
       solve(),
       std::invalid_argument,
