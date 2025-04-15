@@ -190,24 +190,19 @@ static Node* singleNode(Registry<Node>& registry)
     return registry.create<T>("hello", "world");
 }
 
-static const std::vector<Node* (*)(Registry<Node>& registry)> singleNode_ALL{
+static const std::vector<Node* (*)(Registry<Node>& registry)> nodesNotHandledByTimeIndexVisitor{
   &singleNode<PortFieldNode>,
   &singleNode<ComponentVariableNode>,
   &singleNode<ComponentParameterNode>};
 
-BOOST_DATA_TEST_CASE_F(Registry<Node>,
-                       signe_node,
-                       bdata::make(TimeIndex_ALL) * bdata::make(singleNode_ALL),
-                       timeIndex,
-                       singleNode)
+BOOST_DATA_TEST_CASE_F(BasicFixture,
+                       catching_exceptions_when_visiting_not_handled_nodes,
+                       bdata::make(nodesNotHandledByTimeIndexVisitor),
+                       not_handled_node)
 {
-    Node* root = singleNode(*this);
-    std::unordered_map<const Node*, TimeIndex> context;
-    context[root] = timeIndex;
-    TimeIndexVisitor timeIndexVisitor(context, "", {});
-    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(root), timeIndex);
-    Node* neg = create<NegationNode>(root);
-    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(neg), timeIndex);
+    Node* nonHandldedNode = not_handled_node(*this);
+    TimeIndexVisitor timeIndexVisitor("", {});
+    BOOST_CHECK_THROW(timeIndexVisitor.dispatch(nonHandldedNode), std::invalid_argument);
 }
 
 BOOST_AUTO_TEST_CASE(test_time_index_logical_operator)
@@ -255,9 +250,4 @@ BOOST_AUTO_TEST_CASE(test_time_index_logical_operator)
                       TimeIndex::VARYING_IN_TIME_AND_SCENARIO);
 }
 
-BOOST_FIXTURE_TEST_CASE(TimeIndexVisitor_name, Registry<Node>)
-{
-    TimeIndexVisitor timeIndexVisitor({}, {}, {});
-    BOOST_CHECK_EQUAL(timeIndexVisitor.name(), "TimeIndexVisitor");
-}
 BOOST_AUTO_TEST_SUITE_END()

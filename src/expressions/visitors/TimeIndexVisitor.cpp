@@ -91,8 +91,7 @@ TimeIndex TimeIndexVisitor::visit(const Nodes::NegationNode* neg)
 
 TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldNode* port_field_node)
 {
-    // TODO FIXME
-    return context_.at(port_field_node);
+    throw std::invalid_argument("PortFieldNode not handled by visitor TimeIndexVisitor");
 }
 
 TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldSumNode* node)
@@ -113,14 +112,12 @@ TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldSumNode* node)
 
 TimeIndex TimeIndexVisitor::visit(const Nodes::ComponentVariableNode* component_variable_node)
 {
-    // TODO FIXME
-    return context_.at(component_variable_node);
+    throw std::invalid_argument("ComponentVariableNode not handled by visitor TimeIndexVisitor");
 }
 
 TimeIndex TimeIndexVisitor::visit(const Nodes::ComponentParameterNode* component_parameter_node)
 {
-    // TODO FIXME
-    return context_.at(component_parameter_node);
+    throw std::invalid_argument("ComponentParameterNode not handled by visitor TimeIndexVisitor");
 }
 
 TimeIndex TimeIndexVisitor::visit(const Nodes::TimeShiftNode* timeShiftNode)
@@ -142,15 +139,6 @@ TimeIndex TimeIndexVisitor::visit(const Nodes::TimeSumNode* timeSumNode)
 TimeIndex TimeIndexVisitor::visit([[maybe_unused]] const Nodes::AllTimeSumNode* timeSumNode)
 {
     return TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
-}
-
-TimeIndexVisitor::TimeIndexVisitor(std::unordered_map<const Nodes::Node*, TimeIndex> context,
-                                   const std::string& componentId,
-                                   const std::vector<Connection>& connections):
-    context_(std::move(context)),
-    componentId_(componentId),
-    connections_(connections)
-{
 }
 
 TimeIndexVisitor::TimeIndexVisitor(const std::string& componentId,

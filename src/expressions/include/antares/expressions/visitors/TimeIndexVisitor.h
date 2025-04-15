@@ -34,17 +34,6 @@ namespace Antares::Expressions::Visitors
 class TimeIndexVisitor: public NodeVisitor<TimeIndex>
 {
 public:
-    // TODO if Node contains time and scenario dependency,  do we need this ctor?
-    /**
-     * @brief Constructs a time index visitor with the specified context.
-     *
-     * @param context The context containing the time index for each node.
-     */
-    explicit TimeIndexVisitor(
-      std::unordered_map<const Nodes::Node*, TimeIndex> context,
-      const std::string& componentId,
-      const std::vector<ModelerStudy::SystemModel::Connection>& connections);
-
     explicit TimeIndexVisitor(
       const std::string& componentId,
       const std::vector<ModelerStudy::SystemModel::Connection>& connections);
@@ -74,7 +63,6 @@ private:
 
     std::vector<const Antares::ModelerStudy::SystemModel::Component*> getConnectedComponents();
 
-    std::unordered_map<const Nodes::Node*, TimeIndex> context_;
     const std::string& componentId_;
     const std::vector<Antares::ModelerStudy::SystemModel::Connection>& connections_;
 };
