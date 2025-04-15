@@ -62,7 +62,7 @@ private:
     TimeIndex visit(const Nodes::AllTimeSumNode* timeSumNode) override;
 
     std::vector<const Antares::ModelerStudy::SystemModel::Component*> getConnectedComponents();
-    
+
     const std::string& componentId_;
     const std::vector<Antares::ModelerStudy::SystemModel::Connection>& connections_;
 };
