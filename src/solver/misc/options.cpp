@@ -91,7 +91,7 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
     parser->add(options.solverOptions.linearSolverParameters,
                 ' ',
                 "solver-parameters",
-                "Deprecated, use linear-solver-parameters instead.");
+                "Deprecated, use lp-solver-param instead.");
 
     // --lp-solver-param-optim-1
     parser->add(options.solverOptions.lpSolverParamOptim1,

@@ -483,7 +483,7 @@ _**This section is under construction**_
 > _**Note:**_ You can find more information on this parameter [here](08-appendix.md#details-on-the-include-unfeasible-problem-behavior-parameter).
 
 ---
-#### linear-solver-parameters
+#### lp-solver-param
 - **Expected value:** a string
 - **Required:** **no**
 - **Default value:** empty
@@ -491,7 +491,7 @@ _**This section is under construction**_
   for XPRESS or `--lp-solver-param="parallel/maxnthreads 1, lp/presolving TRUE"` for SCIP. Syntax is solver-dependent, and only supported for SCIP & XPRESS.
 
 ---
-#### quadratic-solver-parameters
+#### quadratic-solver-param
 - **Expected value:** a string
 - **Required:** **no**
 - **Default value:** empty
