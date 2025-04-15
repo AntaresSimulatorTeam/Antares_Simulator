@@ -87,7 +87,7 @@ static void CheckHydroAllocationProblem(Data::Area& area,
 }
 
 
-void HydroManagement::prepareMonthlyTargetGenerations(Data::Area& area, TmpDataByArea& data)
+double HydroManagement::prepareMonthlyTargetGenerations(Data::Area& area, TmpDataByArea& data)
 {
     double total = 0;
 
@@ -99,7 +99,7 @@ void HydroManagement::prepareMonthlyTargetGenerations(Data::Area& area, TmpDataB
         for (uint realmonth = 0; realmonth != 12; ++realmonth)
             data.MTG[realmonth] = data.inflows[realmonth];
 
-        return;
+        return total;
     }
 
     double monthlyMaxDemand = -std::numeric_limits<double>::infinity();
@@ -138,6 +138,8 @@ void HydroManagement::prepareMonthlyTargetGenerations(Data::Area& area, TmpDataB
         for (uint realmonth = 0; realmonth != 12; ++realmonth)
             data.MTG[realmonth] = coeff;
     }
+
+    return total;
 }
 
 void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_level, uint y)
@@ -164,7 +166,8 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
         {
             auto problem = H2O_M_Instanciation(1);
 
-            prepareMonthlyTargetGenerations(area, data);
+            double totalInflowsYear = prepareMonthlyTargetGenerations(area, data);
+            assert(totalInflowsYear >= 0.);
 
             auto const& maxP = area.hydro.maxPower[Data::PartHydro::genMaxP];
             auto const& maxE = area.hydro.maxPower[Data::PartHydro::genMaxE];
