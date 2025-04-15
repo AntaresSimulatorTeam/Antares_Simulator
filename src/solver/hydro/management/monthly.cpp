@@ -190,6 +190,12 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
                     problem.TurbineMax[month] += maxP[day] * maxE[day];
                 }
 
+                if (problem.TurbineMax[month] == 0)
+                {
+                    problem.TurbineMax[month] = totalInflowsYear;
+                }
+
+
                 problem.TurbineMin[month] = data.mingens[realmonth];
                 problem.TurbineCible[month] = data.MTG[realmonth];
                 problem.Apport[month] = data.inflows[realmonth];
