@@ -201,6 +201,11 @@ void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_rese
                                                    / area.hydro.reservoirCapacity;
                   }
 
+                  if (problem.TurbineMax[month] == 0)
+                  {
+                      problem.TurbineMax[month] = totalInflowsYear;
+                  }
+
                   problem.TurbineMin[month] = data.mingens[realmonth];
                   problem.TurbineCible[month] = hydro_specific.monthly[realmonth].MTG;
                   problem.Apport[month] = data.inflows[realmonth];
