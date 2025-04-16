@@ -24,7 +24,6 @@
 #include <algorithm>
 
 #include <antares/logs/logs.h>
-#include "antares/solver/variable/area.h"
 #include "antares/study/scenario-builder/TSnumberData.h"
 #include "antares/study/scenario-builder/scBuilderUtils.h"
 #include "antares/study/study.h"
