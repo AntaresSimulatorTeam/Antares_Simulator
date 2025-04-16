@@ -65,6 +65,7 @@ private:
             boost::hash_combine(seed, k.cluster_name);
             boost::hash_combine(seed, k.constraint_name);
             // boost::hash_combine(seed, k.year);
+            return seed;
         }
     };
 
