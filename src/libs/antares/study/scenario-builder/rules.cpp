@@ -24,6 +24,7 @@
 #include <algorithm>
 
 #include <antares/logs/logs.h>
+#include "antares/solver/variable/area.h"
 #include "antares/study/scenario-builder/TSnumberData.h"
 #include "antares/study/scenario-builder/scBuilderUtils.h"
 #include "antares/study/study.h"
@@ -376,6 +377,70 @@ bool Rules::readBindingConstraints(const AreaName::Vector& splitKey, const Strin
     return true;
 }
 
+ShortTermStorage::STStorageCluster* Rules::getSTStorageCluster(
+  Area* area,
+  const std::string& stStorageClusterName)
+{
+    auto stStorageCluster = std::ranges::find_if(area->shortTermStorage.storagesByIndex,
+                                                 [&stStorageClusterName](
+                                                   const ShortTermStorage::STStorageCluster& s)
+                                                 { return s.id == stStorageClusterName; });
+    if (stStorageCluster == area->shortTermStorage.storagesByIndex.end())
+    {
+        logs.warning() << "[scenario-builder] In area '" << area->name
+                       << "' the short-term storage cluster '" << stStorageClusterName
+                       << "' does not exist";
+    }
+
+    return &*stStorageCluster;
+}
+
+ShortTermStorage::AdditionalConstraints* Rules::getAdditionnalConstraint(
+  std::vector<ShortTermStorage::AdditionalConstraints>& additionalConstraints,
+  const std::string& additionalConstraintName)
+{
+    auto additionalConstraint = std::ranges::find_if(
+      additionalConstraints,
+      [&additionalConstraintName](const ShortTermStorage::AdditionalConstraints& addConstr)
+      { return addConstr.name == additionalConstraintName; });
+
+    if (additionalConstraint == additionalConstraints.end())
+    {
+        logs.warning() << "[scenario-builder]
+                       << "' the short-term storage constraint '" << additionalConstraintName
+                       << "' does not exist";
+    }
+    return &*additionalConstraint;
+}
+
+bool Rules::readShortTermStorage(const AreaName::Vector& splitKey,
+                                 const String& value,
+                                 bool updaterMode)
+{
+    const AreaName& areaName = splitKey[1];
+
+    Data::Area* area = getArea(areaName, updaterMode);
+    if (!area)
+    {
+        return false;
+    }
+    const std::string stStorageClusterName = splitKey[2];
+    ShortTermStorage::STStorageCluster* stStorageCluster = getSTStorageCluster(
+      area,
+      stStorageClusterName);
+    const std::string additionalConstraintName = splitKey[3];
+    ShortTermStorage::AdditionalConstraints* additionalConstraints = getAdditionnalConstraint(
+      stStorageCluster->additionalConstraints,
+      additionalConstraintName);
+    const uint year = splitKey[4].to<uint>();
+    // TODO i can directly set the ts number here
+    shortTermStorage.setTSnumber(areaName,
+                                 stStorageClusterName,
+                                 additionalConstraintName,
+                                 year,
+                                 fromStringToTSnumber(value));
+}
+
 bool Rules::readLine(const AreaName::Vector& splitKey, const String& value, bool updaterMode)
 {
     if (splitKey.size() <= 2)
@@ -429,6 +494,11 @@ bool Rules::readLine(const AreaName::Vector& splitKey, const String& value, bool
     {
         return readBindingConstraints(splitKey, value);
     }
+    else if (kind_of_scenario == "st")
+    {
+        return readShortTermStorage(splitKey, value, updaterMode);
+    }
+
     return false;
 }
 
@@ -450,6 +520,7 @@ bool Rules::apply()
         returned_status = hydroInitialLevels.apply(study_) && returned_status;
         returned_status = hydroFinalLevels.apply(study_) && returned_status;
         returned_status = binding_constraints.apply(study_) && returned_status;
+        returned_status = shortTermStorage.apply(study_) && returned_status;
     }
     else
     {

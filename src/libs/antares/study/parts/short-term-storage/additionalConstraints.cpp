@@ -56,6 +56,11 @@ bool SingleAdditionalConstraint::isValidHoursRange() const
     return !hours.empty() && *hours.begin() >= 1 && *std::prev(hours.end()) <= 168;
 }
 
+AdditionalConstraints::AdditionalConstraints():
+    series(tsNumbers)
+{
+}
+
 bool AdditionalConstraints::isValidHours() const
 {
     return std::ranges::all_of(constraints,

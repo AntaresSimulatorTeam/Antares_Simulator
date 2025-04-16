@@ -24,6 +24,8 @@
 #include <string>
 #include <vector>
 
+#include "antares/series/series.h"
+
 namespace Antares::Data::ShortTermStorage
 {
 
@@ -36,8 +38,11 @@ public:
     bool isValidHoursRange() const;
 };
 
-struct AdditionalConstraints
+class AdditionalConstraints
 {
+
+public:
+    AdditionalConstraints();
     std::string name;
     std::string cluster_id;
     std::string variable;
@@ -57,6 +62,10 @@ struct AdditionalConstraints
     std::size_t enabledConstraints() const;
 
     ValidateResult validate() const;
+
+    TimeSeriesNumbers tsNumbers;
+    /*! Data for rhs time-series */
+    TimeSeries series;
 
 private:
     bool isValidVariable() const;

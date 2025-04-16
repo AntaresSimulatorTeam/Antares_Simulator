@@ -34,6 +34,18 @@ void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params)
           {
               area.load.series.timeSeries.reset(params.nbTimeSeriesLoad, HOURS_PER_YEAR);
           }
+          // short term storage
+          if (params.timeSeriesToGenerate & Data::timeSeriesShortTermStorage)
+          {
+              for (auto& cluster: area.shortTermStorage.storagesByIndex)
+              {
+                  for (auto& additionalConstraint: cluster.additionalConstraints)
+                  {
+                      additionalConstraint.series.timeSeries
+                        .reset(params.nbTimeSeriesShortTermStorage, HOURS_PER_YEAR);
+                  }
+              }
+          }
 
           // Wind
           if (params.timeSeriesToGenerate & Data::timeSeriesWind)
