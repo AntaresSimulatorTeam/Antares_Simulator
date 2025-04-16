@@ -111,11 +111,12 @@ public:
     [[nodiscard]] bool loadFromFolder(Data::Study& s,
                                       const Data::StudyLoadOptions& options,
                                       const std::filesystem::path& folder);
-
+#ifdef BUILD_UI
     /*!
     ** \brief Save all binding constraints into a folder
     */
     [[nodiscard]] bool saveToFolder(const AnyString& folder) const;
+#endif
 
     /*!
     ** \brief Reverse the sign of the weight for a given interconnection or thermal cluster

@@ -146,12 +146,14 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::Lo
     return loader.load(std::move(env));
 }
 
+#ifdef BUILD_UI
 bool BindingConstraintsRepository::saveToFolder(const AnyString& folder) const
 {
     BindingConstraintSaver::EnvForSaving env;
     env.folder = folder;
     return internalSaveToFolder(env);
 }
+#endif
 
 bool BindingConstraintsRepository::rename(BindingConstraint* bc, const AnyString& newname)
 {

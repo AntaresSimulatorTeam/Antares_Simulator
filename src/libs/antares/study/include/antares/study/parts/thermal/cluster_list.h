@@ -122,7 +122,9 @@ public:
     bool savePreproToFolder(const AnyString& folder) const;
     bool saveEconomicCosts(const AnyString& folder) const;
 
+#ifdef BUILD_UI
     bool saveToFolder(const AnyString& folder) const override;
+#endif
 
     unsigned int enabledAndMustRunCount() const;
     unsigned int enabledAndNotMustRunCount() const;

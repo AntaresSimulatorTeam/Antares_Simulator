@@ -98,6 +98,8 @@ public:
     bool loadFromFolder(Study& s, const std::string& areaID, const std::filesystem::path& folder);
 
     bool validate(const std::string& areaID);
+
+#ifdef BUILD_UI
     /*!
     ** \brief Save hydro settings for the prepro into a folder
     **
@@ -105,6 +107,7 @@ public:
     ** \return A non-zero value if the operation succeeded, 0 otherwise
     */
     bool saveToFolder(const AreaName& areaID, const char* folder);
+#endif
 
     bool forceReload(bool reload = false) const;
 

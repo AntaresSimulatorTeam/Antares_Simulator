@@ -11,10 +11,12 @@ set(SRC_LINK_PROPERTIES
 	files-helper.cpp
 	test-save-link-properties.cpp
 )
-add_boost_test(test-save-link-properties
-  SRC ${SRC_LINK_PROPERTIES}
-  INCLUDE "${src_libs_antares_study}/include"
-  LIBS model_antares)
+if(BUILD_UI)
+	add_boost_test(test-save-link-properties
+	  SRC ${SRC_LINK_PROPERTIES}
+	  INCLUDE "${src_libs_antares_study}/include"
+	  LIBS model_antares)
+endif()
 
 # ===================================
 # Tests on area's optimization.ini

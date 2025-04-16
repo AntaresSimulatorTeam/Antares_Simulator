@@ -490,6 +490,7 @@ BOOST_FIXTURE_TEST_CASE(check_container_properties_empty_file, Fixture)
     removeIniFile();
 }
 
+#ifdef BUILD_UI
 BOOST_FIXTURE_TEST_CASE(check_file_save, Fixture)
 {
     createIniFile(true);
@@ -515,6 +516,7 @@ BOOST_FIXTURE_TEST_CASE(check_series_save, Fixture)
     BOOST_CHECK(loadFromFolder(StudyVersion::latest()));
     BOOST_CHECK(series.validate("", StudyVersion::latest()));
 }
+#endif
 
 BOOST_AUTO_TEST_SUITE_END()
 

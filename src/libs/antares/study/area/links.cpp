@@ -680,6 +680,7 @@ bool saveAreaLinksTimeSeriesToFolder(const Area* area, const char* const folder)
     return success;
 }
 
+#ifdef BUILD_UI
 bool saveAreaLinksConfigurationFileToFolder(const Area* area, const char* const folder)
 {
     String filename;
@@ -741,6 +742,7 @@ bool AreaLinksSaveToFolder(const Area* area, const char* const folder)
 
     return true;
 }
+#endif
 
 void AreaLinkRemove(AreaLink* link)
 {

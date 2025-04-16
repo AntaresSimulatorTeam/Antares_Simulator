@@ -437,6 +437,7 @@ BOOST_FIXTURE_TEST_CASE(scenario_builder, HydroMaxPowerStudy)
                tt::tolerance(0.1));
 }
 
+#ifdef BUILD_UI
 BOOST_FIXTURE_TEST_CASE(saving_study, HydroMaxPowerStudy)
 {
     auto enabledCluster = std::make_shared<ThermalCluster>(area);
@@ -446,4 +447,6 @@ BOOST_FIXTURE_TEST_CASE(saving_study, HydroMaxPowerStudy)
 
     BOOST_CHECK(study->saveToFolder(std::filesystem::temp_directory_path().string()));
 }
+#endif
+
 BOOST_AUTO_TEST_SUITE_END()

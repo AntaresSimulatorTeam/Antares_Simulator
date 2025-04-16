@@ -383,6 +383,7 @@ void ThermalClusterList::ensureDataPrepro()
     }
 }
 
+#ifdef BUILD_UI
 bool ThermalClusterList::saveToFolder(const AnyString& folder) const
 {
     // Make sure the folder is created
@@ -538,6 +539,7 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
 
     return ret;
 }
+#endif
 
 bool ThermalClusterList::savePreproToFolder(const AnyString& folder) const
 {
