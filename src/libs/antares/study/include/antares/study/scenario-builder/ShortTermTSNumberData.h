@@ -54,6 +54,7 @@ private:
         std::string cluster_name;
         std::string constraint_name;
         // unsigned year;
+        bool operator==(const key&) const = default;
     };
 
     struct keyHasher

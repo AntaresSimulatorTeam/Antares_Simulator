@@ -109,5 +109,6 @@ bool ShortTermTSNumberData::reset(const Study& study)
             }
         }
     }
+    return true;
 }
 } // namespace Antares::Data::ScenarioBuilder
