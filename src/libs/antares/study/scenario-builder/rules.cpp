@@ -437,6 +437,8 @@ bool Rules::readShortTermStorage(const AreaName::Vector& splitKey,
                                  additionalConstraintName,
                                  year,
                                  fromStringToTSnumber(value));
+    //TODO
+    return true;
 }
 
 bool Rules::readLine(const AreaName::Vector& splitKey, const String& value, bool updaterMode)

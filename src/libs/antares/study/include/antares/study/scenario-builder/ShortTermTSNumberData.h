@@ -35,7 +35,11 @@ public:
     uint get_tsGenCount(const Study& study) const override;
 
     bool reset(const Study& study) override;
-    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const override;
+
+    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const override
+    {
+        // Todo
+    }
 
     void setTSnumber(const std::string& area_name,
                      const std::string& cluster_name,

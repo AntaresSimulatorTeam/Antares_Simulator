@@ -31,6 +31,32 @@
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
+static std::vector<double> fill_rhs()
+{
+    std::vector<double> ret(HOURS_PER_YEAR);
+    std::iota(ret.begin(), ret.end(), 0);
+    return ret;
+}
+
+//
+Data::ShortTermStorage::AdditionalConstraints getAdditionalConstraints(
+  const std::string& name,
+  const std::string& cluster_id,
+  const std::string& variable,
+  const std::string& operatorType,
+  const std::vector<Antares::Data::ShortTermStorage::SingleAdditionalConstraint>
+    single_additional_constraints)
+{
+    Antares::Data::ShortTermStorage::AdditionalConstraints cstrs;
+    cstrs.name = name;
+    cstrs.cluster_id = cluster_id;
+    cstrs.variable = variable;
+    cstrs.operatorType = operatorType;
+    cstrs.rhs = fill_rhs();
+    cstrs.constraints = single_additional_constraints;
+    return cstrs;
+}
+
 /*
  * this code is designed to:
  * Validate the addition of withdrawalSum, injectionSum, and netting constraints for various
@@ -105,34 +131,24 @@ struct BB
       addc3_netting_constraints = {{.hours = {9, 10}, .globalIndex = 4, .localIndex = 0},
                                    {.hours = {11, 12}, .globalIndex = 5, .localIndex = 1}};
 
-    std::vector<double> fill_rhs()
-    {
-        std::vector<double> ret(HOURS_PER_YEAR);
-        std::iota(ret.begin(), ret.end(), 0);
-        return ret;
-    }
-
-    Antares::Data::ShortTermStorage::AdditionalConstraints addc1_withdrawal = {
-      .name = "addc1_withdrawal",
-      .cluster_id = "cluster_1",
-      .variable = "withdrawal",
-      .operatorType = "less",
-      .rhs = fill_rhs(),
-      .constraints = addc1_withdrawal_constraints};
-    Antares::Data::ShortTermStorage::AdditionalConstraints addc2_injection = {
-      .name = "addc2_injection",
-      .cluster_id = "cluster_2",
-      .variable = "injection",
-      .operatorType = "greater",
-      .rhs = fill_rhs(),
-      .constraints = addc2_injection_constraints};
-    Antares::Data::ShortTermStorage::AdditionalConstraints addc3_netting = {
-      .name = "addc3_netting",
-      .cluster_id = "cluster_3",
-      .variable = "netting",
-      .operatorType = "equal",
-      .rhs = fill_rhs(),
-      .constraints = addc3_netting_constraints};
+    Antares::Data::ShortTermStorage::AdditionalConstraints addc1_withdrawal
+      = getAdditionalConstraints("addc1_withdrawal",
+                                 "cluster_1",
+                                 "withdrawal",
+                                 "less",
+                                 addc1_withdrawal_constraints);
+    Antares::Data::ShortTermStorage::AdditionalConstraints addc2_injection
+      = getAdditionalConstraints("addc2_injection",
+                                 "cluster_2",
+                                 "injection",
+                                 "greater",
+                                 addc2_injection_constraints);
+    Antares::Data::ShortTermStorage::AdditionalConstraints addc3_netting = getAdditionalConstraints(
+      "addc3_netting",
+      "cluster_3",
+      "netting",
+      "equal",
+      addc3_netting_constraints);
 
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
     ::ShortTermStorage::PROPERTIES storage1 = {.additionalConstraints = {addc1_withdrawal},
