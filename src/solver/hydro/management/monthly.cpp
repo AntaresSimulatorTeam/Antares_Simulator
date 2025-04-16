@@ -206,6 +206,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_rese
               problem.CoutViolMaxDuVolumeMin = 1e5;
               problem.VolumeInitial = lvi;
 
+              double capaciteTurbinageAnnuelle = 0;
               for (unsigned month = 0; month != MONTHS_PER_YEAR; ++month)
               {
                   uint realmonth = (initReservoirLvlMonth + month) % MONTHS_PER_YEAR;
@@ -218,16 +219,20 @@ void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_rese
                                                                      area,
                                                                      calendar_,
                                                                      scratchmap);
-                  if (problem.TurbineMax[month] == 0)
-                  {
-                      problem.TurbineMax[month] = totalInflowsYear;
-                  }
+
+                  capaciteTurbinageAnnuelle += problem.TurbineMax[month];
 
                   problem.TurbineMin[month] = data.mingens[realmonth];
                   problem.TurbineCible[month] = hydro_specific.monthly[realmonth].MTG;
                   problem.Apport[month] = data.inflows[realmonth];
                   problem.VolumeMin[month] = minLvl[firstDay];
                   problem.VolumeMax[month] = maxLvl[firstDay];
+              }
+
+              if (totalInflowsYear > capaciteTurbinageAnnuelle)
+              {
+                  logs.debug() << "Apports annuels > capacité turbinage annuelle";
+                  problem.TurbineMax.assign(12, totalInflowsYear);
               }
 
               DonneesOptimisationMensuelle::H2O_M_OptimiserUneAnnee(problem, 0);
