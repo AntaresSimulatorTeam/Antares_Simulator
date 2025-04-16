@@ -7,7 +7,6 @@ on:
     branches:
       - develop
       - dependabot/*
-      - feature/remove-unofficial-actions
   schedule:
     - cron: '21 2 * * *'
   workflow_call:
