@@ -406,9 +406,8 @@ ShortTermStorage::AdditionalConstraints* Rules::getAdditionnalConstraint(
 
     if (additionalConstraint == additionalConstraints.end())
     {
-        logs.warning() << "[scenario-builder]
-                       << "' the short-term storage constraint '" << additionalConstraintName
-                       << "' does not exist";
+        logs.warning() << "[scenario-builder] the short-term storage constraint '"
+                       << additionalConstraintName << "' does not exist";
     }
     return &*additionalConstraint;
 }

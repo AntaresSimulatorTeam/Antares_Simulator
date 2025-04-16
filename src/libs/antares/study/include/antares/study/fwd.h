@@ -21,6 +21,7 @@
 #ifndef __ANTARES_LIBS_STUDY_FWD_H__
 #define __ANTARES_LIBS_STUDY_FWD_H__
 
+#include <bit>
 #include <cmath>
 #include <concepts>
 #include <map>
