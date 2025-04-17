@@ -20,6 +20,7 @@
 */
 
 #include "antares/study/parts/short-term-storage/container.h"
+#include "antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h"
 
 #include <algorithm>
 #include <numeric>
@@ -138,6 +139,8 @@ static bool loadHours(std::string hoursStr, AdditionalConstraints& additionalCon
     return true;
 }
 
+
+
 static bool readRHS(AdditionalConstraints& additionalConstraints, const fs::path& rhsPath)
 {
     const auto ret = loadFile(rhsPath, additionalConstraints.rhs);
@@ -188,6 +191,20 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
             else if (key == "hours" && !loadHours(value.c_str(), additionalConstraints))
             {
                 return false;
+            }
+
+            else if (key == "hours")
+            {
+                try
+                {
+                    std::string hoursField = value.c_str();
+                    auto groupsOfHours = makeGroupsOfHours(hoursField);
+
+                }
+                catch(const std::invalid_argument& inv_arg)
+                {
+                    return false;
+                }
             }
         }
 

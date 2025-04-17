@@ -47,24 +47,24 @@ static std::vector<std::vector<std::string>> splitGroupsIntoHoursAsString(
     return to_return;
 }
 
-static std::vector<std::vector<unsigned>> toGroupsOfHours(
+static std::vector<std::set<int>> toGroupsOfHours(
   const std::vector<std::vector<std::string>>& groups)
 {
-    std::vector<std::vector<unsigned>> groupsOfHours;
+    std::vector<std::set<int>> groupsOfHours;
     for (const auto& group: groups)
     {
-        std::vector<unsigned> groupOfInts;
+        std::set<int> groupOfInts;
         for (const std::string& h: group)
         {
             int hour = std::stoi(h);
-            groupOfInts.push_back(hour);
+            groupOfInts.insert(hour);
         }
         groupsOfHours.push_back(groupOfInts);
     }
     return groupsOfHours;
 }
 
-std::vector<std::vector<unsigned>> makeGroupsOfHours(const std::string& hoursField)
+std::vector<std::set<int>> makeGroupsOfHours(const std::string& hoursField)
 {
     auto groups = splitIntoGroups(hoursField);
     auto groupsOfHoursAsStrings = splitGroupsIntoHoursAsString(groups);

@@ -36,7 +36,7 @@ BOOST_AUTO_TEST_CASE(first_quite_simple_hours_field)
 
     const auto groupsOfHours = makeGroupsOfHours(hoursField);
 
-    const std::vector<std::vector<unsigned>> expected_result = {{1, 2}, {3, 4}};
+    const std::vector<std::set<int>> expected_result = {{1, 2}, {3, 4}};
     BOOST_CHECK(groupsOfHours == expected_result);
 }
 
@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE(hours_field_has_spaces_inside_brackets__after_a_comma_separ
 
     const auto groupsOfHours = makeGroupsOfHours(hoursField);
 
-    const std::vector<std::vector<unsigned>> expected_result = {{5, 1}};
+    const std::vector<std::set<int>> expected_result = {{5, 1}};
     BOOST_CHECK(groupsOfHours == expected_result);
 }
 
@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE(hours_field_has_spaces_right_before_opening_bracket)
 
     const auto groupsOfHours = makeGroupsOfHours(hoursField);
 
-    const std::vector<std::vector<unsigned>> expected_result = {{7, 6}};
+    const std::vector<std::set<int>> expected_result = {{7, 6}};
     BOOST_CHECK(groupsOfHours == expected_result);
 }
 
@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_CASE(hours_field_has_spaces_right_before_closing_bracket)
 
     const auto groupsOfHours = makeGroupsOfHours(hoursField);
 
-    const std::vector<std::vector<unsigned>> expected_result = {{9, 0}};
+    const std::vector<std::set<int>> expected_result = {{9, 0}};
     BOOST_CHECK(groupsOfHours == expected_result);
 }
 
@@ -76,7 +76,7 @@ BOOST_AUTO_TEST_CASE(hours_field_has_spaces_between_groups)
 
     const auto groupsOfHours = makeGroupsOfHours(hoursField);
 
-    const std::vector<std::vector<unsigned>> expected_result = {{5, 1}, {8, 7}};
+    const std::vector<std::set<int>> expected_result = {{5, 1}, {8, 7}};
     BOOST_CHECK(groupsOfHours == expected_result);
 }
 
@@ -86,7 +86,7 @@ BOOST_AUTO_TEST_CASE(hours_field_has_spaces_before_a_group)
 
     const auto groupsOfHours = makeGroupsOfHours(hoursField);
 
-    const std::vector<std::vector<unsigned>> expected_result = {{5, 1}, {8, 7}};
+    const std::vector<std::set<int>> expected_result = {{5, 1}, {8, 7}};
     BOOST_CHECK(groupsOfHours == expected_result);
 }
 
@@ -96,7 +96,7 @@ BOOST_AUTO_TEST_CASE(hours_field_has_spaces_everywhere)
 
     const auto groupsOfHours = makeGroupsOfHours(hoursField);
 
-    const std::vector<std::vector<unsigned>> expected_result = {{5, 1}, {8, 7}};
+    const std::vector<std::set<int>> expected_result = {{5, 1}, {8, 7}};
     BOOST_CHECK(groupsOfHours == expected_result);
 }
 
@@ -106,7 +106,7 @@ BOOST_AUTO_TEST_CASE(hours_field_contains_groups_of_different_sizes)
 
     const auto groupsOfHours = makeGroupsOfHours(hoursField);
 
-    const std::vector<std::vector<unsigned>> expected_result = {{5, 1, 98}, {8, 79, 54, 32}, {109}};
+    const std::vector<std::set<int>> expected_result = {{5, 1, 98}, {8, 79, 54, 32}, {109}};
     BOOST_CHECK(groupsOfHours == expected_result);
 }
 
@@ -116,7 +116,7 @@ BOOST_AUTO_TEST_CASE(hours_field_contains_unwnated_but_ignored_chars_between_bra
 
     const auto groupsOfHours = makeGroupsOfHours(hoursField);
 
-    const std::vector<std::vector<unsigned>> expected_result = {{5, 1, 23}, {4, 19}};
+    const std::vector<std::set<int>> expected_result = {{5, 1, 23}, {4, 19}};
     BOOST_CHECK(groupsOfHours == expected_result);
 }
 
@@ -152,7 +152,7 @@ BOOST_AUTO_TEST_CASE(large_hours_field___can_happen_in_real_life)
 
     const auto groupsOfHours = makeGroupsOfHours(hoursField);
 
-    const std::vector<std::vector<unsigned>> expected_result = {
+    const std::vector<std::set<int>> expected_result = {
       {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24},
       {25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36,
        37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48},

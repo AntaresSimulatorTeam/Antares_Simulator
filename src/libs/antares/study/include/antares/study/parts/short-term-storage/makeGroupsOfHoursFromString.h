@@ -3,10 +3,11 @@
 
 #include <string>
 #include <vector>
+#include <set>
 
 namespace Antares::Data::ShortTermStorage
 {
 
-std::vector<std::vector<unsigned>> makeGroupsOfHours(const std::string& hoursField);
+std::vector<std::set<int>> makeGroupsOfHours(const std::string& hoursField);
 
 }
