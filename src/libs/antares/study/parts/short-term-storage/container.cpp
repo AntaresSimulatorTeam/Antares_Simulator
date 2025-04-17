@@ -151,10 +151,10 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
                 {
                     additionalConstraints.constraints = makeConstraints(value.c_str());
                 }
-                catch (const std::invalid_argument& inv_arg)
+                catch (const std::exception& e)
                 {
                     logs.error() << "Constraint " << additionalConstraints.name << " : "
-                                 << inv_arg.what() << '\n';
+                                 << e.what() << '\n';
                     return false;
                 }
             }

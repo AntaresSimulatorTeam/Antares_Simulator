@@ -22,6 +22,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
 #include "antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h"
@@ -110,14 +111,11 @@ BOOST_AUTO_TEST_CASE(hours_field_contains_groups_of_different_sizes)
     BOOST_CHECK(groupsOfHours == expected_result);
 }
 
-BOOST_AUTO_TEST_CASE(hours_field_contains_unwnated_but_ignored_chars_between_brackets)
+BOOST_AUTO_TEST_CASE(
+  hours_field_contains_unwnated_chars_outside_between_brackets___exception_raised)
 {
-    std::string hoursField = "[5, 1, 23], {I will be ignored}[4, 19]";
-
-    const auto groupsOfHours = makeGroupsOfHours(hoursField);
-
-    const std::vector<std::set<int>> expected_result = {{5, 1, 23}, {4, 19}};
-    BOOST_CHECK(groupsOfHours == expected_result);
+    std::string hoursField = "[5, 1, 23] {I'm not wanted}[4, 19]";
+    BOOST_CHECK_THROW(makeGroupsOfHours(hoursField), std::exception);
 }
 
 BOOST_AUTO_TEST_CASE(hours_field_with_group_contains_an_intruder_char__exception_raised)
@@ -128,11 +126,16 @@ BOOST_AUTO_TEST_CASE(hours_field_with_group_contains_an_intruder_char__exception
     BOOST_CHECK_THROW(makeGroupsOfHours(hoursField), std::invalid_argument);
 }
 
-BOOST_AUTO_TEST_CASE(hours_field_where_a_closing_bracket_was_forgotten__exception_raised)
+BOOST_AUTO_TEST_CASE(hours_field_where_2_brackets_are_opened__exception_raised)
 {
     std::string hoursField = "[5, 1, 23, [4, 19]";
-    // Here we have [expression], and the expression is not correct, as it contains other things
-    // than digits | commas | spaces
+
+    BOOST_CHECK_THROW(makeGroupsOfHours(hoursField), std::invalid_argument);
+}
+
+BOOST_AUTO_TEST_CASE(hours_field_contains_a_number_with_hole__exception_raised)
+{
+    std::string hoursField = "[1 2 3  , 11                       3]";
     BOOST_CHECK_THROW(makeGroupsOfHours(hoursField), std::invalid_argument);
 }
 
@@ -164,6 +167,44 @@ BOOST_AUTO_TEST_CASE(large_hours_field___can_happen_in_real_life)
        109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120}};
 
     BOOST_CHECK(groupsOfHours == expected_result);
+}
+
+namespace bdata = boost::unit_test::data;
+
+BOOST_DATA_TEST_CASE(hours_field_has_more_invalid_format,
+                     bdata::make({"",
+                                  "[]",
+                                  "[ ]",
+                                  "[\t]",
+                                  "[\r]",
+                                  "[\f]",
+                                  "[\v]",
+                                  "[1, nol]",
+                                  "[; 3,2,1]",
+                                  "[1, 12345678901]",
+                                  "[1, 12345",
+                                  "1]",
+                                  "[1,]",
+                                  "[1,,2]",
+                                  "[a]",
+                                  "[1, 2], , [3]"}),
+                     hoursField)
+{
+    BOOST_CHECK_THROW(makeGroupsOfHours(hoursField), std::exception);
+}
+
+BOOST_DATA_TEST_CASE(
+  hours_field_has_more_valid_format,
+  bdata::make(
+    {"[1],[1],[3,2,1]",
+     "[\r1,\t2]",
+     "[\v1\f,\t2],\f\v\t[4]",
+     "[\f\v1]\t\t",
+     "\t\v\t[1    ],    [    1,                           2,3]                               ",
+     "                         [4,5                                                        ]"}),
+  hoursField)
+{
+    BOOST_CHECK_NO_THROW(makeGroupsOfHours(hoursField));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
