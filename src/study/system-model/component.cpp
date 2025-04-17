@@ -48,7 +48,7 @@ static void checkComponentDataValidity(const ComponentData& data)
           "The component \"" + data.id + "\" has " + std::to_string(data.parameter_values.size())
           + " parameter(s), but its model has " + std::to_string(data.model->Parameters().size()));
     }
-    for (const auto param: data.model->Parameters() | std::views::keys)
+    for (const auto& param: data.model->Parameters() | std::views::keys)
     {
         if (!data.parameter_values.contains(param))
         {
