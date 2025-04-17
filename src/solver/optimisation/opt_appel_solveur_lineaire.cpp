@@ -27,7 +27,6 @@
 #include <antares/antares/fatal-error.h>
 #include <antares/logs/logs.h>
 #include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
-#include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimization-options/options.h"
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
@@ -45,7 +44,7 @@ using namespace Antares::Optimisation::LinearProblemDataImpl;
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 
 using Antares::Solver::IResultWriter;
-using Antares::Solver::Optimization::OptimizationOptions;
+using Antares::Solver::Optimization::SingleOptimOptions;
 
 class TimeMeasurement
 {
@@ -135,9 +134,9 @@ static void writeModelerSolutions(const operations_research::MPSolver* solver,
 // Returns a non-owning pointer
 MPSolver* convertToMPSolver(const Optimization::PROBLEME_SIMPLEXE_NOMME& pb,
                             PROBLEME_HEBDO* problemeHebdo,
-                            const OptimizationOptions& options)
+                            const SingleOptimOptions& options)
 {
-    LegacyOrtoolsLinearProblem ortoolsProblem(pb.isMIP(), options.linearSolver);
+    LegacyOrtoolsLinearProblem ortoolsProblem(pb.isMIP(), options.solverName);
     LegacyFiller legacyOrtoolsFiller(&pb);
     std::vector<LinearProblemFiller*> fillersCollection = {&legacyOrtoolsFiller};
 
@@ -156,7 +155,7 @@ MPSolver* convertToMPSolver(const Optimization::PROBLEME_SIMPLEXE_NOMME& pb,
     return ortoolsProblem.getMpSolver();
 }
 
-static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
+static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                           PROBLEME_HEBDO* problemeHebdo,
                                           Optimization::PROBLEME_SIMPLEXE_NOMME& Probleme,
                                           const int NumIntervalle,
@@ -281,8 +280,7 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     mps_writer->runIfNeeded(writer, filename);
 
     TimeMeasurement measure;
-    const bool keepBasis = (optimizationNumber == PREMIERE_OPTIMISATION);
-    solver = ORTOOLS_Simplexe(&Probleme, solver, keepBasis, options);
+    solver = ORTOOLS_Simplexe(&Probleme, solver, options);
     if (solver != nullptr)
     {
         ProblemeAResoudre->ProblemesSpx[NumIntervalle] = solver;
@@ -322,7 +320,7 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     return {.success = true, .timeMeasure = timeMeasure, .mps_writer_factory = mps_writer_factory};
 }
 
-bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
+bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                          PROBLEME_HEBDO* problemeHebdo,
                          int NumIntervalle,
                          const int optimizationNumber,

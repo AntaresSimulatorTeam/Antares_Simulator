@@ -121,14 +121,12 @@ private:
                        Benchmarking::DurationCollector& duration_collector);
 
     void writeComment(Data::Study& study);
-    void startSimulation(Data::StudyLoadOptions& options);
+    void readStudy_makeChecks_and_printThings(Data::StudyLoadOptions& options);
     // Return false if the user requested the version ,available solvers, etc, true otherwise
     bool handleOptions(const Data::StudyLoadOptions& options);
     // Return false if the user requested help, true otherwise
     bool parseCommandLine(Data::StudyLoadOptions& options);
-    void handleParserReturn(Yuni::GetOpt::Parser* parser);
     void postParametersChecks() const;
-
 }; // class Application
 
 } // namespace Antares::Solver
