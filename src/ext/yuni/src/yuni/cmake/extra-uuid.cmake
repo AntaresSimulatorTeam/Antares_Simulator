@@ -18,6 +18,7 @@ endif()
 
 if (UNIX)
 	#FIXME
+	find_package(libuuid REQUIRED)
 	find_path(UUID_INCLUDE_DIR NAMES uuid/uuid.h PATHS /usr/include /usr/local/include /opt/local/include /sw/include)
 	if(NOT UUID_INCLUDE_DIR)
 		set(YUNI_CMAKE_ERROR 1)
