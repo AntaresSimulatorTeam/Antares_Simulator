@@ -1,9 +1,9 @@
 
 #pragma once
 
+#include <set>
 #include <string>
 #include <vector>
-#include <set>
 
 namespace Antares::Data::ShortTermStorage
 {
