@@ -45,6 +45,7 @@ bool thermalTSNumberData::reset(const Study& study)
     return true;
 }
 
+#ifdef BUILD_UI
 void thermalTSNumberData::saveToINIFile(const Study& /* study */,
                                         Yuni::IO::File::Stream& file) const
 {
@@ -72,6 +73,7 @@ void thermalTSNumberData::saveToINIFile(const Study& /* study */,
         }
     }
 }
+#endif
 
 void thermalTSNumberData::setTSnumber(const Antares::Data::ThermalCluster* cluster,
                                       const uint year,

@@ -218,6 +218,7 @@ struct commonFixture
 // Scenario builder save fixture
 // ======================================
 
+#ifdef BUILD_UI
 struct saveFixture: public commonFixture
 {
     saveFixture():
@@ -245,6 +246,7 @@ saveFixture::~saveFixture()
     vector<string> filesToRemove = {path_to_generated_file, referenceFile.path()};
     remove_files(filesToRemove);
 }
+#endif
 
 // ==================
 // Tests section
@@ -255,6 +257,7 @@ BOOST_AUTO_TEST_SUITE(s)
 // ====================
 // Tests on Load
 // ====================
+#ifdef BUILD_UI
 BOOST_FIXTURE_TEST_CASE(
   LOAD__on_area2_and_year_11_chosen_ts_number_is_6__generated_and_ref_sc_buider_files_are_identical,
   saveFixture)
@@ -546,5 +549,6 @@ BOOST_FIXTURE_TEST_CASE(
 
     */
 }
+#endif
 
 BOOST_AUTO_TEST_SUITE_END()

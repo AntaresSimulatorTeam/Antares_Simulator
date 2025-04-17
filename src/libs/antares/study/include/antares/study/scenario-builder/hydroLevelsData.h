@@ -53,10 +53,12 @@ public:
     */
     bool reset(const Study& study) override;
 
+#ifdef BUILD_UI
     /*!
     ** \brief Export the data into a mere INI file
     */
     void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const override;
+#endif
 
     /*!
     ** \brief Assign a single value
@@ -81,8 +83,10 @@ public:
 private:
     //! Hydro levels overlay (0 if auto)
     MatrixType pHydroLevelsRules;
+#ifdef BUILD_UI
     // prefix to be added when calling saveToINIFileHydroLevel
     const std::string addToPrefix_;
+#endif
 
     std::function<void(Study&, MatrixType&)> applyToTarget_;
 

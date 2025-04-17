@@ -143,6 +143,7 @@ bool Sets::remove(const RulesScenarioName& lname)
     return true;
 }
 
+#ifdef BUILD_UI
 bool Sets::internalSaveToIniFile(const AnyString& filename) const
 {
     // Logs
@@ -178,6 +179,7 @@ bool Sets::internalSaveToIniFile(const AnyString& filename) const
     }
     return true;
 }
+#endif
 
 bool Sets::internalLoadFromINIFile(const AnyString& filename)
 {

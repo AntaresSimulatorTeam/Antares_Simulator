@@ -36,6 +36,7 @@ bool TSNumberData::reset(const Study& study)
     return true;
 }
 
+#ifdef BUILD_UI
 void TSNumberData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const
 {
     // Prefix
@@ -62,6 +63,7 @@ void TSNumberData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& fil
         }
     }
 }
+#endif
 
 void TSNumberData::setTSnumber(uint areaindex, uint year, uint value)
 {
