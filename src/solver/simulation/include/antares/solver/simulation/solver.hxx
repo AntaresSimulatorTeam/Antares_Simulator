@@ -215,6 +215,11 @@ public:
             simulation_->variables.computeSummary(y, numSpace);
             aggregationMutex.unlock();
 
+
+            // Computes statistics on annual (system and solution) costs, to be printed in output into
+            // separate files
+            simulation_->computeAnnualCostsStatistics(state);
+
             logs.debug() << "year " << y << " ended and returned numSpace " << numSpace;
             numspaceManager.freeNumSpace(numSpace);
         }
@@ -773,32 +778,25 @@ void ISimulation<ImplementationType>::computeRandomNumbers(
 } // End function
 
 template<class ImplementationType>
-void ISimulation<ImplementationType>::computeAnnualCostsStatistics(
-  std::vector<Variable::State>& state,
-  setOfParallelYears& batch)
+void ISimulation<ImplementationType>::computeAnnualCostsStatistics(Variable::State s)
 {
-    // Loop over years contained in the set
-    for (auto y: batch.yearsIndices)
-    {
-        if (batch.isYearPerformed[y])
-        {
-            // Get space number associated to the performed year
-            uint numSpace = batch.performedYearToSpace[y];
-            const Variable::State& s = state[numSpace];
-            pAnnualStatistics.systemCost.addCost(s.annualSystemCost);
-            pAnnualStatistics.criterionCost1.addCost(s.optimalSolutionCost1);
-            pAnnualStatistics.criterionCost2.addCost(s.optimalSolutionCost2);
-            pAnnualStatistics.optimizationTime1.addCost(s.averageOptimizationTime1);
-            pAnnualStatistics.optimizationTime2.addCost(s.averageOptimizationTime2);
-            pAnnualStatistics.updateTime.addCost(s.averageUpdateTime);
-        }
-    }
+    std::mutex annualStatisticsMutex;
+    annualStatisticsMutex.lock();
+
+    pAnnualStatistics.systemCost.addCost(s.annualSystemCost);
+    pAnnualStatistics.criterionCost1.addCost(s.optimalSolutionCost1);
+    pAnnualStatistics.criterionCost2.addCost(s.optimalSolutionCost2);
+    pAnnualStatistics.optimizationTime1.addCost(s.averageOptimizationTime1);
+    pAnnualStatistics.optimizationTime2.addCost(s.averageOptimizationTime2);
+    pAnnualStatistics.updateTime.addCost(s.averageUpdateTime);
+
+    annualStatisticsMutex.unlock();
 }
 
-template<class ImplementationType>
+    template<class ImplementationType>
 void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
-                                                       uint endYear,
-                                                       std::vector<Variable::State>& state)
+        uint endYear,
+        std::vector<Variable::State>& state)
 {
     assert(endYear <= study.parameters.nbYears);
 
@@ -858,7 +856,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
 
     // Container for random numbers of parallel years (to be executed or not)
     randomNumbers randomForParallelYears(pNbYearsReallyPerformed,
-                                         study.parameters.power.fluctuations);
+            study.parameters.power.fluctuations);
 
     // Allocating memory to store random numbers of all parallel years
     allocateMemoryForRandomNumbers(randomForParallelYears);
@@ -937,10 +935,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     // ImplementationType::variables.computeSpatialAggregatesSummary(ImplementationType::variables,
     //                                                               batch.spaceToPerformedYear,
     //                                                               batch.nbPerformedYears);
-
-    // Computes statistics on annual (system and solution) costs, to be printed in output into
-    // separate files
-    // computeAnnualCostsStatistics(state, batch);
 
     // Set to zero the random numbers of all parallel years
     randomForParallelYears.reset();

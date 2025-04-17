@@ -156,11 +156,11 @@ target_include_directories(antares-solver-variable
 )
 target_link_libraries(antares-solver-variable
         PUBLIC
+    	Boost::headers
         antares-solver-simulation
         PRIVATE
         antares-core
         Antares::study
-	Boost::headers
 )
 
 
