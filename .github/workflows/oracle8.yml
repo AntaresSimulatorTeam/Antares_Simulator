@@ -87,7 +87,7 @@ jobs:
           pip3 install -r src/tests/examples/requirements.txt
 
     - name: Install gh if needed
-      if: ${{ env.IS_RELEASE == 'true' }}
+      if: ${{ env.IS_RELEASE == 'true' || github.ref == 'refs/heads/develop'}}
       run: |
            dnf -y install 'dnf-command(config-manager)'
            dnf -y config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
@@ -156,20 +156,14 @@ jobs:
       run: |
         gh release upload "$tag" _build/*.tar.gz _build/*.rpm
 
-    - name: Rename assets for continuous-delivery release
+    - name: Update continuous-delivery release
       if: github.ref == 'refs/heads/develop'
+      env:
+        GH_TOKEN: ${{ github.token }}
       run: |
         mv _build/antares-*-OracleServer-8.10.tar.gz _build/antares-cd-OracleServer-8.10.tar.gz
         mv _build/antares-*-OracleServer-8.10.rpm _build/antares-cd-OracleServer-8.10.rpm
-
-    - name: Update continuous-delivery release
-      if: github.ref == 'refs/heads/develop'
-      uses: pyTooling/Actions/releaser@main
-      with:
-        tag: continuous-delivery
-        rm: false
-        token: ${{ secrets.GITHUB_TOKEN }}
-        files: _build/*.tar.gz _build/*.rpm
+        gh release upload --clobber continuous-delivery _build/*.tar.gz _build/*.rpm
 
     - name: Cache vcpkg binary dir
       if: always()

@@ -153,11 +153,9 @@ private:
     Coefficients pValues;
     //! Coefficients for other areas, ordered by the area id
     std::unordered_map<uint, double> pValuesFromAreaID;
-#ifndef NDEBUG
     //! Flag to prevent misuse of the bad container
     // TODO Find a more reliable way...
     bool pMustUseValuesFromAreaID;
-#endif
 
 }; // class HydroAllocation
 

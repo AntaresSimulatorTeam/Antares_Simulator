@@ -28,6 +28,11 @@
 
 namespace Antares::IO::Inputs::ModelConverter
 {
+class NoPortWithThisId final: public std::runtime_error
+{
+public:
+    explicit NoPortWithThisId(const std::string& name);
+};
 
 Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
                                                   const YmlModel::Model& model);

@@ -28,9 +28,7 @@ if (NOT MSVC)
 endif ()
 target_link_libraries(utils
         PUBLIC
-        # Until issue here is resolved, link the whole archive: https://github.com/google/or-tools/discussions/4538
-        # TODO: keep an eye out for bug resolution in future versions of ortools (> 9.12)
-        $<LINK_LIBRARY:WHOLE_ARCHIVE,ortools::ortools>
+        ortools::ortools
         sirius_solver
         Antares::study
         Antares::result_writer

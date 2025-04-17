@@ -83,3 +83,12 @@ std::string createReducedCostFilename(const OptPeriodStringGenerator& optPeriodS
 {
     return createOptimizationFilename("reduced-costs", optPeriodStringGenerator, optNumber, "txt");
 }
+
+std::string createModelerSolutionsFilename(const OptPeriodStringGenerator& optPeriodStringGenerator,
+                                           const unsigned int optNumber)
+{
+    return createOptimizationFilename("modeler-solutions",
+                                      optPeriodStringGenerator,
+                                      optNumber,
+                                      "txt");
+}

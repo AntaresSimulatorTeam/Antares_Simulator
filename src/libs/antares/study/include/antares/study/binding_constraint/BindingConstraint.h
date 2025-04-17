@@ -136,7 +136,7 @@ public:
     /*!
     ** \brief Destructor
     */
-    ~BindingConstraint();
+    ~BindingConstraint() = default;
     //@}
 
     //! \name / ID

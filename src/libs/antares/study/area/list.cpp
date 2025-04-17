@@ -487,17 +487,13 @@ Area* AreaList::add(Area* a)
         // Indexing the area
         a->index = (uint)areas.size();
 
-// Adding the area in the list
-#ifndef NDEBUG
-        uint count = (uint)areas.size();
-#endif
+        [[maybe_unused]] unsigned count = (uint)areas.size(); // used for assert
 
+        // Adding the area in the list
         areas[a->id] = a;
         rebuildIndexes();
 
-#ifndef NDEBUG
         assert(areas.size() == (count + 1) and "Invalid count of areas in the map");
-#endif
     }
     return a;
 }
@@ -1487,9 +1483,7 @@ bool AreaList::renameArea(const AreaName& oldid, const AreaName& newid, const Ar
               return;
           }
 
-#ifndef NDEBUG
-          uint oldCount = (uint)a.links.size();
-#endif
+          [[maybe_unused]] unsigned oldCount = (uint)a.links.size(); // only used in assert
           // Renaming the entry
 
           link->forceReload(true);
@@ -1498,9 +1492,7 @@ bool AreaList::renameArea(const AreaName& oldid, const AreaName& newid, const Ar
           link->detach();
           a.links[link->with->id] = link;
 
-#ifndef NDEBUG
           assert(oldCount == a.links.size() && "We must have the same number of items in the list");
-#endif
       });
 
     area->buildLinksIndexes();

@@ -670,9 +670,7 @@ bool Matrix<T, ReadWriteT>::loadFromBuffer(const AnyString& filename,
 {
     using namespace Yuni;
 
-#ifndef NDEBUG
     logs.debug() << "  :: loading `" << filename << "`";
-#endif
 
     // Detecting BOM
     // Antares currently only accepts ASCII and/or UTF-8 encodings.
@@ -782,9 +780,6 @@ bool Matrix<T, ReadWriteT>::loadFromBuffer(const AnyString& filename,
                 }
             }
             resize(((x < minWidth) ? minWidth : x), maxHeight);
-#ifndef NDEBUG
-            // logs.debug() << "  :: (" << width << 'x' << height << ')';
-#endif
             if (!x)
             {
                 if (not(options & optQuiet) and not(options & optNoWarnIfEmpty))
@@ -1268,11 +1263,9 @@ bool Matrix<T, ReadWriteT>::internalSaveCSVFile(const AnyString& filename,
         jit_mgr.load_matrix(this);
     }
 
-#ifndef NDEBUG
     // Attempt to open the file, and to write data
     // We have write access to the file
     logs.debug() << "  :: writing `" << filename << "' (" << width << 'x' << height << ')';
-#endif
 
     Yuni::IO::File::Stream file;
     if (not openFile(file, filename))
@@ -1290,11 +1283,9 @@ bool Matrix<T, ReadWriteT>::internalSaveCSVFile(const AnyString& filename,
         saveBufferToFile(buffer, file);
     }
 
-#ifndef NDEBUG
     // Attempt to open the file, and to write data
     // We have write access to the file
     logs.debug() << "  :: [end] writing `" << filename << "' (" << width << 'x' << height << ')';
-#endif
 
     jit_mgr.unload_matrix_properly_from_memory(this);
 

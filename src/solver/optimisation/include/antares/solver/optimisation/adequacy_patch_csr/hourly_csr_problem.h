@@ -129,6 +129,8 @@ private:
     void setQuadraticCost();
     void setLinearCost();
 
+    const Solver::Optimization::OptimizationOptions& solverOptions_;
+
 public:
     // TODO [gp] : try to make these members private
     double belowThisThresholdSetToZero;
@@ -142,8 +144,6 @@ public:
 
     PROBLEME_HEBDO* problemeHebdo_;
     PROBLEME_ANTARES_A_RESOUDRE problemeAResoudre_;
-
-    const Solver::Optimization::OptimizationOptions& solverOptions_;
 
     std::map<int, int> numberOfConstraintCsrEns;
     std::map<int, int> numberOfConstraintCsrFlowDissociation;

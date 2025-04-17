@@ -18,15 +18,10 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include "antares/optimization-options/options.h"
 #include "antares/study/fwd.h"
 
 namespace Antares::Check
 {
-
-void checkSolverMILPincompatibility(Antares::Data::UnitCommitmentMode ucMode,
-                                    const std::string& solverName);
-
 void checkStudyVersion(const AnyString& optStudyFolder);
 
 void checkSimplexRangeHydroPricing(Antares::Data::SimplexOptimization optRange,

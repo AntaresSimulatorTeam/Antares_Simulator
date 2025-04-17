@@ -27,7 +27,6 @@ extern "C"
 #endif
 
 #include "spx_definition_arguments.h"
-#include "spx_fonctions.h"
 
 #ifdef __CPLUSPLUS
 }
@@ -128,8 +127,6 @@ typedef struct
 /* Structure uniquement exploitee par l'optimisation (donc a ne pas acceder depuis l'exterieur) */
 typedef struct
 {
-    char LesCoutsOntEteInitialises; /* Vaut OUI ou NON */
-
     int NombreDeProblemes;
     std::vector<int> NbJoursDUnProbleme;
 
