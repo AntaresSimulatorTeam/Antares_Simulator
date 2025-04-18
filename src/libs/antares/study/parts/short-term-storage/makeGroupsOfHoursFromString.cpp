@@ -31,13 +31,13 @@ static bool oneCommaOutsideBrackets(const std::string& hoursField)
 static bool twoBracketsOpened(const std::string& hoursField)
 {
     const std::regex twoBracketsOpened(R"(\[[^\[\]]*\[)");
-    return !std::regex_search(hoursField, twoBracketsOpened);
+    return std::regex_search(hoursField, twoBracketsOpened);
 }
 
 static bool twoBracketsClosed(const std::string& hoursField)
 {
     const std::regex twoBracketsClosed(R"(\][^\[\]]*\])");
-    return !std::regex_search(hoursField, twoBracketsClosed);
+    return std::regex_search(hoursField, twoBracketsClosed);
 }
 
 static void checkNothingFancyOutsideBrackets(const std::string& hoursField)
@@ -49,8 +49,8 @@ static void checkNothingFancyOutsideBrackets(const std::string& hoursField)
 
 static void checkNoNestedSquareBrackets(const std::string& hoursField)
 {
-    throwExceptionWithMsg(!twoBracketsOpened(hoursField), "2 square brackets opened");
-    throwExceptionWithMsg(!twoBracketsClosed(hoursField), "2 square brackets closed");
+    throwExceptionWithMsg(twoBracketsOpened(hoursField), "2 square brackets opened");
+    throwExceptionWithMsg(twoBracketsClosed(hoursField), "2 square brackets closed");
 }
 
 static std::vector<std::string> splitIntoGroups(const std::string& hoursField)
