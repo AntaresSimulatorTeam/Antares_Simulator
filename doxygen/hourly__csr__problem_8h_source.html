@@ -202,13 +202,13 @@ $(document).ready(function(){initNavTree('hourly__csr__problem_8h_source.html','
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classHourlyCSRProblem.html">HourlyCSRProblem</a>(<span class="keyword">const</span> <a class="code" href="structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html">AdqPatchParams</a>&amp; adqPatchParams,</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;                              <a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>* p,</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;                              <span class="keyword">const</span> Solver::Optimization::OptimizationOptions&amp; solverOptions):</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        adqPatchParams_(adqPatchParams),</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        variableManager_(p-&gt;CorrespondanceVarNativesVarOptim,</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;                         p-&gt;NumeroDeVariableStockFinal,</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;                         p-&gt;NumeroDeVariableDeTrancheDeStock,</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;                         p-&gt;NombreDePasDeTempsPourUneOptimisation),</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        problemeHebdo_(p),</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        solverOptions_(solverOptions)</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        solverOptions_(solverOptions),</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        adqPatchParams_(adqPatchParams),</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        variableManager_(p-&gt;CorrespondanceVarNativesVarOptim,</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;                         p-&gt;NumeroDeVariableStockFinal,</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;                         p-&gt;NumeroDeVariableDeTrancheDeStock,</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;                         p-&gt;NombreDePasDeTempsPourUneOptimisation),</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        problemeHebdo_(p)</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    {</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="keywordtype">double</span> temp = pow(10, -adqPatchParams.curtailmentSharing.<a class="code" href="classAntares_1_1Data_1_1AdequacyPatch_1_1CurtailmentSharing.html#a8b1646ce954c0294367a8b4b39a73ba9">thresholdVarBoundsRelaxation</a>);</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        belowThisThresholdSetToZero = std::min(temp, 0.1);</div>
