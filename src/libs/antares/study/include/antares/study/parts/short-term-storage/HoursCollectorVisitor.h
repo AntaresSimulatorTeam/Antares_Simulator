@@ -26,7 +26,7 @@ class HoursCollectorVisitor: public HoursFieldBaseVisitor
 public:
     std::vector<std::set<int>> result;
 
-    antlrcpp::Any visitHoursField(HoursFieldParser::HoursFieldContext* ctx) override;
+    std::any visitHoursField(HoursFieldParser::HoursFieldContext* ctx) override;
 
-    antlrcpp::Any visitGroup(HoursFieldParser::GroupContext* ctx) override;
+    std::any visitGroup(HoursFieldParser::GroupContext* ctx) override;
 };

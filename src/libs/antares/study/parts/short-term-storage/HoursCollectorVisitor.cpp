@@ -21,7 +21,7 @@
 
 #include "antares/study/parts/short-term-storage/HoursCollectorVisitor.h"
 
-antlrcpp::Any HoursCollectorVisitor::visitHoursField(HoursFieldParser::HoursFieldContext* ctx)
+std::any HoursCollectorVisitor::visitHoursField(HoursFieldParser::HoursFieldContext* ctx)
 {
     for (auto groupCtx: ctx->group())
     {
@@ -30,7 +30,7 @@ antlrcpp::Any HoursCollectorVisitor::visitHoursField(HoursFieldParser::HoursFiel
     return result;
 }
 
-antlrcpp::Any HoursCollectorVisitor::visitGroup(HoursFieldParser::GroupContext* ctx)
+std::any HoursCollectorVisitor::visitGroup(HoursFieldParser::GroupContext* ctx)
 {
     std::set<int> hours;
     for (auto hourCtx: ctx->hour())
