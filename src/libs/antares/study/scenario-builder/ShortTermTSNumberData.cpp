@@ -51,8 +51,8 @@ bool ShortTermTSNumberData::apply(Study& study)
                                                                      cluster.id,
                                                                      additionalConstraints.name}];
                 logprefix.clear() << "Short Term Storage: Area '" << area->name << "', cluster '"
-                                  << cluster.id << "', constraint '" << "'"
-                                  << additionalConstraints.name << "' :";
+                                  << cluster.id << "', constraint '" << additionalConstraints.name
+                                  << "' :";
                 const MatrixType::ColumnType& col = rules_.at(
                   ShortTermTSNumberData::key{area->name,
                                              cluster.id,
