@@ -14,6 +14,11 @@ static bool onlyCommasOutsideBrackets(const std::string& hoursField)
     return !std::regex_search(hoursField, strange_char_outside_brackets);
 }
 
+static void throwExcWhen()
+{
+
+}
+
 static bool oneCommaOutsideBrackets(const std::string& hoursField)
 {
     std::regex two_or_more_commas_outside_brackets(R"(\][,]{2,}\[)");
@@ -109,7 +114,7 @@ static std::vector<std::set<int>> toGroupsOfHours(
     return groupsOfHours;
 }
 
-std::vector<std::set<int>> makeGroupsOfHours(std::string hoursField)
+std::vector<std::set<int>> makeGroupsOfHours(std::string& hoursField)
 {
     std::erase_if(hoursField, ::isspace); // Removing all spaces from hour field
     checkNothingFancyOutsideBrackets(hoursField);

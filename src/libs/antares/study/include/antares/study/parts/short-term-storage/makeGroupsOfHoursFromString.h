@@ -8,6 +8,6 @@
 namespace Antares::Data::ShortTermStorage
 {
 
-std::vector<std::set<int>> makeGroupsOfHours(std::string hoursField);
+std::vector<std::set<int>> makeGroupsOfHours(std::string& hoursField);
 
 }

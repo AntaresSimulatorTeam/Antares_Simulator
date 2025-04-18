@@ -149,7 +149,8 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
             {
                 try
                 {
-                    additionalConstraints.constraints = makeConstraints(value.c_str());
+                    std::string hoursField = value.c_str();
+                    additionalConstraints.constraints = makeConstraints(hoursField);
                 }
                 catch (const std::exception& e)
                 {
