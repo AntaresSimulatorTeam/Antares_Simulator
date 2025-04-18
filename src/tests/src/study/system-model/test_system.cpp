@@ -105,7 +105,6 @@ BOOST_FIXTURE_TEST_CASE(nominal_build, SystemBuilderCreationFixture)
     BOOST_CHECK_EQUAL(system.Components().size(), 2);
     BOOST_CHECK_EQUAL(system.Components().at("component1").Id(), "component1");
     BOOST_CHECK_EQUAL(system.Components().at("component2").Id(), "component2");
-    BOOST_CHECK(system.connections().empty());
 }
 
 std::pair<std::string, Component> compoBuildHelper(const std::string& id, const Model& model)
@@ -127,19 +126,12 @@ BOOST_FIXTURE_TEST_CASE(nominal_build_with_connections_two_ports_one_way_exchang
     components.emplace(id1, comp1);
     components.emplace(id2, comp2);
 
-    std::vector connections = {createConnection2PortsOneWayExchange(comp1, comp2)};
-
-    auto system = system_builder.withId("system")
-                    .withComponents(std::move(components))
-                    .withConnections(std::move(connections))
-                    .build();
+    auto system = system_builder.withId("system").withComponents(std::move(components)).build();
 
     BOOST_CHECK_EQUAL(system.Id(), "system");
     BOOST_CHECK_EQUAL(system.Components().size(), 2);
-    BOOST_CHECK_EQUAL(system.connections().size(), 1);
 
     // Verify connection contents
-    const auto& conn = system.connections()[0];
     BOOST_CHECK_EQUAL(conn.firstEntry().component()->Id(), "component1");
     BOOST_CHECK_EQUAL(conn.firstEntry().port()->Id(), "port1");
     const auto& firstRoles = conn.firstEntry().portFieldsRole();
@@ -210,19 +202,12 @@ BOOST_FIXTURE_TEST_CASE(nominal_build_with_connections_two_ports_two_way_exchang
     components.emplace(id1, comp1);
     components.emplace(id2, comp2);
 
-    std::vector connections = {createConnection2Ports2WayExchange(comp1, comp2)};
-
-    auto system = system_builder.withId("system")
-                    .withComponents(std::move(components))
-                    .withConnections(std::move(connections))
-                    .build();
+    auto system = system_builder.withId("system").withComponents(std::move(components)).build();
 
     BOOST_CHECK_EQUAL(system.Id(), "system");
     BOOST_CHECK_EQUAL(system.Components().size(), 2);
-    BOOST_CHECK_EQUAL(system.connections().size(), 1);
 
     // Verify connection contents
-    const auto& conn = system.connections()[0];
     BOOST_CHECK_EQUAL(conn.firstEntry().component()->Id(), "component1");
     BOOST_CHECK_EQUAL(conn.firstEntry().port()->Id(), "port1");
     const auto& firstRoles = conn.firstEntry().portFieldsRole();

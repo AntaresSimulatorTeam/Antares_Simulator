@@ -231,9 +231,8 @@ static std::pair<SystemModel::PortFieldsRole, SystemModel::PortFieldsRole> Resol
  * @throw std::invalid_argument if a component or port is not found, if the ports are not
  *        of the same type, or if fields are incorrectly configured for sending/receiving.
  */
-static SystemModel::Connection createConnection(
-  const YmlSystem::Connection& connection,
-  std::unordered_map<std::string, SystemModel::Component>& components)
+static void connectComponents(const YmlSystem::Connection& connection,
+                              std::unordered_map<std::string, SystemModel::Component>& components)
 {
     const auto& firstComponentId = connection.firstEntry.componentId;
     const auto& firstPortId = connection.firstEntry.portId;
@@ -242,9 +241,9 @@ static SystemModel::Connection createConnection(
 
     CheckPortSelfConnection(firstComponentId, firstPortId, secondComponentId, secondPortId);
 
-    SystemModel::Component& first_component = findComponent(firstComponentId, components);
+    auto& first_component = findComponent(firstComponentId, components);
     const auto& firstPort = findPort(first_component, firstPortId);
-    SystemModel::Component& secondComponent = findComponent(secondComponentId, components);
+    auto& secondComponent = findComponent(secondComponentId, components);
     const auto& secondPort = findPort(secondComponent, secondPortId);
     CheckPortsType(firstPort, secondPort);
 
@@ -256,10 +255,6 @@ static SystemModel::Connection createConnection(
     // TODO : Or should we rather consider the field role and connect just one to the other ?
     first_component.addConnection(&secondComponent);
     secondComponent.addConnection(&first_component);
-
-    return {
-      SystemModel::ConnectionEntry(&first_component, &firstPort, std::move(firstPortFieldsRole)),
-      SystemModel::ConnectionEntry(&secondComponent, &secondPort, std::move(secondPortFieldsRole))};
 }
 
 SystemModel::System convert(const YmlSystem::System& ymlSystem,
@@ -278,19 +273,14 @@ SystemModel::System convert(const YmlSystem::System& ymlSystem,
     }
 
     // Create connections from system
-    std::vector<SystemModel::Connection> connections;
-    connections.reserve(ymlSystem.connections.size());
     for (const auto& connection: ymlSystem.connections)
     {
-        connections.push_back(createConnection(connection, components));
+        connectComponents(connection, components);
     }
 
     // Build system from components and connections
     SystemModel::SystemBuilder builder;
-    return builder.withId(ymlSystem.id)
-      .withComponents(std::move(components))
-      .withConnections(std::move(connections))
-      .build();
+    return builder.withId(ymlSystem.id).withComponents(std::move(components)).build();
 }
 
 } // namespace Antares::IO::Inputs::SystemConverter
