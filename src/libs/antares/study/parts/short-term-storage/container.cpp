@@ -92,7 +92,7 @@ static std::vector<SingleAdditionalConstraint> toConstraints(
     return to_return;
 }
 
-static std::vector<SingleAdditionalConstraint> makeConstraints(std::string hoursField)
+static std::vector<SingleAdditionalConstraint> makeConstraints(std::string& hoursField)
 {
     auto groupsOfHours = makeGroupsOfHours(hoursField);
     return toConstraints(groupsOfHours);
@@ -153,8 +153,8 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
                 }
                 catch (const std::exception& e)
                 {
-                    logs.error() << "Constraint " << additionalConstraints.name << " : "
-                                 << e.what() << '\n';
+                    logs.error() << "Constraint " << additionalConstraints.name << " : " << e.what()
+                                 << '\n';
                     return false;
                 }
             }

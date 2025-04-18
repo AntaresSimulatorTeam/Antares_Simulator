@@ -1,44 +1,29 @@
 
 #include "antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h"
 
-#include <algorithm>
 #include <regex>
+
+#include <boost/algorithm/string.hpp>
 
 namespace Antares::Data::ShortTermStorage
 {
 
-static bool onlyCommasOrSpacesOutsideBrackets(const std::string& hoursField)
+static bool onlyCommasOutsideBrackets(const std::string& hoursField)
 {
-    std::regex spaces_but_no_comma_outside_brackets(R"(\][^\[\]]*[^,\s][^\[\]]*\[)");
-    auto matchBegin = std::sregex_iterator(hoursField.begin(),
-                                           hoursField.end(),
-                                           spaces_but_no_comma_outside_brackets);
-    return matchBegin == std::sregex_iterator();
+    const std::regex strange_char_outside_brackets(R"(\][^\[\]]*[^,][^\[\]]*\[)");
+    return !std::regex_search(hoursField, strange_char_outside_brackets);
 }
 
 static bool oneCommaOutsideBrackets(const std::string& hoursField)
 {
-    std::regex there_are_commas_outside_brackets(R"(\](,|\s)+\[)");
-    auto matchBegin = std::sregex_iterator(hoursField.begin(),
-                                           hoursField.end(),
-                                           there_are_commas_outside_brackets);
-    auto matchEnd = std::sregex_iterator();
-    for (auto it = matchBegin; it != matchEnd; ++it)
-    {
-        std::string match = (*it)[0].str();
-        auto count = std::ranges::count(match, ',');
-        if (count != 1)
-        {
-            return false;
-        }
-    }
-    return true;
+    std::regex two_or_more_commas_outside_brackets(R"(\][,]{2,}\[)");
+    return !std::regex_search(hoursField, two_or_more_commas_outside_brackets);
 }
 
 static void checkNothingFancyOutsideBrackets(const std::string& hoursField)
 {
     // Outside square brackets, we want only spaces and 1 comma, for ex : : "...] , [..."
-    if (!onlyCommasOrSpacesOutsideBrackets(hoursField))
+    if (!onlyCommasOutsideBrackets(hoursField))
     {
         throw std::invalid_argument("strange char outside square brackets");
     }
@@ -50,24 +35,16 @@ static void checkNothingFancyOutsideBrackets(const std::string& hoursField)
 
 static void checkNoNestedSquareBrackets(const std::string& hoursField)
 {
-
-
-    std::regex twoBracketsOpened(R"(\[[^\[\]]*\[)");
-    auto matchBegin = std::sregex_iterator(hoursField.begin(),
-                                           hoursField.end(),
-                                           twoBracketsOpened);
-    if (matchBegin != std::sregex_iterator())
+    const std::regex twoBracketsOpened(R"(\[[^\[\]]*\[)");
+    if (std::regex_search(hoursField, twoBracketsOpened))
     {
         throw std::invalid_argument("2 square brackets opened");
     }
 
-    std::regex twoBracketsClosed(R"(\][^\[\]]*\])");
-    matchBegin = std::sregex_iterator(hoursField.begin(),
-                                      hoursField.end(),
-                                      twoBracketsClosed);
-    if (matchBegin != std::sregex_iterator())
+    const std::regex twoBracketsClosed(R"(\][^\[\]]*\])");
+    if (std::regex_search(hoursField, twoBracketsClosed))
     {
-        throw std::invalid_argument("2 square brackets closed");
+        throw std::invalid_argument("2 square brackets opened");
     }
 }
 
@@ -94,21 +71,15 @@ static std::vector<std::vector<std::string>> splitGroupsIntoHoursAsString(
 {
     std::vector<std::vector<std::string>> to_return;
 
-    std::regex commaSeparatedDigits(R"(^\s*\d+\s*(,\s*\d+)*\s*$)");
-    for (const auto& s: groups)
+    std::regex commaSeparatedDigits(R"(^\d+(,\d+)*$)");
+    for (const auto& group: groups)
     {
-        if (!std::regex_match(s, commaSeparatedDigits))
+        if (!std::regex_match(group, commaSeparatedDigits))
         {
             throw std::invalid_argument("splitting each group into hours > wrong format");
         }
         std::vector<std::string> hoursAsStrings;
-        std::regex catchDigit(R"(\d+)");
-        auto matchBegin = std::sregex_iterator(s.begin(), s.end(), catchDigit);
-        auto matchEnd = std::sregex_iterator();
-        for (auto it = matchBegin; it != matchEnd; ++it)
-        {
-            hoursAsStrings.push_back((*it)[0].str());
-        }
+        boost::split(hoursAsStrings, group, boost::is_any_of(","));
         to_return.push_back(hoursAsStrings);
     }
     return to_return;
@@ -138,8 +109,9 @@ static std::vector<std::set<int>> toGroupsOfHours(
     return groupsOfHours;
 }
 
-std::vector<std::set<int>> makeGroupsOfHours(const std::string& hoursField)
+std::vector<std::set<int>> makeGroupsOfHours(std::string hoursField)
 {
+    std::erase_if(hoursField, ::isspace); // Removing all spaces from hour field
     checkNothingFancyOutsideBrackets(hoursField);
     checkNoNestedSquareBrackets(hoursField);
     auto groups = splitIntoGroups(hoursField);

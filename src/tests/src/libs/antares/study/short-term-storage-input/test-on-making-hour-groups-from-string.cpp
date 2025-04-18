@@ -114,7 +114,7 @@ BOOST_AUTO_TEST_CASE(hours_field_contains_groups_of_different_sizes)
 BOOST_AUTO_TEST_CASE(
   hours_field_contains_unwnated_chars_outside_between_brackets___exception_raised)
 {
-    std::string hoursField = "[5, 1, 23] {I'm not wanted}[4, 19]";
+    std::string hoursField = "[5, 1, 23] {I'm not wanted} [4, 19]";
     BOOST_CHECK_THROW(makeGroupsOfHours(hoursField), std::exception);
 }
 
@@ -133,9 +133,10 @@ BOOST_AUTO_TEST_CASE(hours_field_where_2_brackets_are_opened__exception_raised)
     BOOST_CHECK_THROW(makeGroupsOfHours(hoursField), std::invalid_argument);
 }
 
-BOOST_AUTO_TEST_CASE(hours_field_contains_a_number_with_hole__exception_raised)
+BOOST_AUTO_TEST_CASE(hours_field_where_2_brackets_are_closed__exception_raised)
 {
-    std::string hoursField = "[1 2 3  , 11                       3]";
+    std::string hoursField = "[5, 1, 23] 4, 19]";
+
     BOOST_CHECK_THROW(makeGroupsOfHours(hoursField), std::invalid_argument);
 }
 
@@ -193,16 +194,15 @@ BOOST_DATA_TEST_CASE(hours_field_has_more_invalid_format,
     BOOST_CHECK_THROW(makeGroupsOfHours(hoursField), std::exception);
 }
 
-BOOST_DATA_TEST_CASE(
-  hours_field_has_more_valid_format,
-  bdata::make(
-    {"[1],[1],[3,2,1]",
-     "[\r1,\t2]",
-     "[\v1\f,\t2],\f\v\t[4]",
-     "[\f\v1]\t\t",
-     "\t\v\t[1    ],    [    1,                           2,3]                               ",
-     "                         [4,5                                                        ]"}),
-  hoursField)
+BOOST_DATA_TEST_CASE(hours_field_has_more_valid_format,
+                     bdata::make({"[1],[1],[3,2,1]",
+                                  "[\r1,\t2]",
+                                  "[\v1\f,\t2],\f\v\t[4]",
+                                  "[\f\v1]\t\t",
+                                  "\t\v\t[1   ],    [   1,      2,3]    ",
+                                  "          [4,5          ]",
+                                  "[1 2 3  , 11      3]"}),
+                     hoursField)
 {
     BOOST_CHECK_NO_THROW(makeGroupsOfHours(hoursField));
 }
