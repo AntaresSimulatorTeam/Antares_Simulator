@@ -106,7 +106,7 @@ set(SRC_STUDY_PART_SHORT_TERM_STORAGE
         parts/short-term-storage/additionalConstraints.cpp
 		include/antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h
 		parts/short-term-storage/makeGroupsOfHoursFromString.cpp
-		include/antares/study/parts/short-term-storage/
+		include/antares/study/parts/short-term-storage/HoursCollectorVisitor.h
 		parts/short-term-storage/HoursCollectorVisitor.cpp
 )
 source_group("study\\part\\short-term-storage" FILES ${SRC_STUDY_PART_SHORT_TERM_SOTRAGE})
