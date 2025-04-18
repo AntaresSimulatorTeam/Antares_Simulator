@@ -40,6 +40,7 @@ RUN apt install -y --no-install-recommends --no-install-suggests \
     lsb-release wget software-properties-common gnupg \
     libexpat1-dev libipt-dev file \
     python3-distutils libstdc++-10-dev \
+    uuid-dev \
     valgrind
 
 #Cmake
