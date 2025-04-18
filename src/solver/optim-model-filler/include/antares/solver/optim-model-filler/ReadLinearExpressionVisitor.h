@@ -28,7 +28,6 @@
 #include <antares/solver/optim-model-filler/TimeDependentLinearExpression.h>
 #include "antares/expressions/visitors/EvalVisitor.h"
 #include "antares/study/system-model/component.h"
-#include "antares/study/system-model/connection.h"
 
 /**
  * Read Linear Expression Visitor

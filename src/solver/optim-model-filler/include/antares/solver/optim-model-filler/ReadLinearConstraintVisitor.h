@@ -25,7 +25,6 @@
 
 #include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/expressions/visitors/NodeVisitor.h>
-#include <antares/study/system-model/connection.h>
 
 #include "ReadLinearExpressionVisitor.h"
 
@@ -61,7 +60,7 @@ public:
       Expressions::Visitors::EvaluationContext context,
       const Optimisation::LinearProblemApi::FillContext& fillContext,
       const Antares::ModelerStudy::SystemModel::Component& component);
-    
+
     std::string name() const override;
 
 private:
