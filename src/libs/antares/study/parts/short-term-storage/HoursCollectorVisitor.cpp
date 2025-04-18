@@ -21,21 +21,21 @@
 
 #include "antares/study/parts/short-term-storage/HoursCollectorVisitor.h"
 
-std::any HoursCollectorVisitor::visitHoursField(HoursFieldParser::HoursFieldContext* ctx)
-{
-    for (auto groupCtx: ctx->group())
-    {
-        result.push_back(std::any_cast<std::set<int>>(visit(groupCtx)));
-    }
-    return result;
-}
+// std::any HoursCollectorVisitor::visitHoursField(HoursFieldParser::HoursFieldContext* ctx)
+// {
+//     for (auto groupCtx: ctx->group())
+//     {
+//         result.push_back(std::any_cast<std::set<int>>(visit(groupCtx)));
+//     }
+//     return result;
+// }
 
-std::any HoursCollectorVisitor::visitGroup(HoursFieldParser::GroupContext* ctx)
-{
-    std::set<int> hours;
-    for (auto hourCtx: ctx->hour())
-    {
-        hours.insert(std::stoi(hourCtx->getText()));
-    }
-    return hours;
-}
+// std::any HoursCollectorVisitor::visitGroup(HoursFieldParser::GroupContext* ctx)
+// {
+//     std::set<int> hours;
+//     for (auto hourCtx: ctx->hour())
+//     {
+//         hours.insert(std::stoi(hourCtx->getText()));
+//     }
+//     return hours;
+// }

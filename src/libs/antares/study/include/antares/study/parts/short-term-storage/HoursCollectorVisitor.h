@@ -26,7 +26,22 @@ class HoursCollectorVisitor: public HoursFieldBaseVisitor
 public:
     std::vector<std::set<int>> result;
 
-    std::any visitHoursField(HoursFieldParser::HoursFieldContext* ctx) override;
+    std::any visitHoursField(HoursFieldParser::HoursFieldContext* ctx) override
+    {
+        for (auto groupCtx: ctx->group())
+        {
+            result.push_back(std::any_cast<std::set<int>>(visit(groupCtx)));
+        }
+        return result;
+    }
 
-    std::any visitGroup(HoursFieldParser::GroupContext* ctx) override;
+    std::any visitGroup(HoursFieldParser::GroupContext* ctx) override
+    {
+        std::set<int> hours;
+        for (auto hourCtx: ctx->hour())
+        {
+            hours.insert(std::stoi(hourCtx->getText()));
+        }
+        return hours;
+    }
 };

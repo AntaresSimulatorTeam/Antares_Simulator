@@ -1,4 +1,3 @@
-
 #include "antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h"
 
 #include <regex>
