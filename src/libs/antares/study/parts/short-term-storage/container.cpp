@@ -140,6 +140,9 @@ static bool loadHours(std::string hoursStr, AdditionalConstraints& additionalCon
 
 static bool readRHS(AdditionalConstraints& additionalConstraints, const fs::path& rhsPath)
 {
+    // TODO
+    //  bool averageTs = (study.usedByTheSolver && study.parameters.derated);
+    additionalConstraints.series.loadFromFile(rhsPath, /*.average =*/false);
     const auto ret = loadFile(rhsPath, additionalConstraints.rhs);
     if (ret)
     {

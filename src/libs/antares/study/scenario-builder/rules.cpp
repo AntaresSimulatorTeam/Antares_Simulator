@@ -394,7 +394,7 @@ ShortTermStorage::STStorageCluster* Rules::getSTStorageCluster(
     return &*stStorageCluster;
 }
 
-ShortTermStorage::AdditionalConstraints* Rules::getAdditionnalConstraint(
+ShortTermStorage::AdditionalConstraints* Rules::getAdditionalConstraint(
   std::vector<ShortTermStorage::AdditionalConstraints>& additionalConstraints,
   const std::string& additionalConstraintName)
 {
@@ -427,7 +427,7 @@ bool Rules::readShortTermStorage(const AreaName::Vector& splitKey,
       area,
       stStorageClusterName);
     const std::string additionalConstraintName = splitKey[3];
-    ShortTermStorage::AdditionalConstraints* additionalConstraints = getAdditionnalConstraint(
+    ShortTermStorage::AdditionalConstraints* additionalConstraints = getAdditionalConstraint(
       stStorageCluster->additionalConstraints,
       additionalConstraintName);
     const uint year = splitKey[4].to<uint>();

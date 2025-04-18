@@ -152,7 +152,7 @@ private:
     bool readBindingConstraints(const AreaName::Vector& splitKey, const String& value);
     static ShortTermStorage::STStorageCluster* getSTStorageCluster(Area* area,
                                                                    const std::string& string);
-    static ShortTermStorage::AdditionalConstraints* getAdditionnalConstraint(
+    static ShortTermStorage::AdditionalConstraints* getAdditionalConstraint(
       std::vector<ShortTermStorage::AdditionalConstraints>& additionalConstraints,
       const std::string& additionalConstraintName);
     bool readShortTermStorage(const AreaName::Vector& splitKey,
