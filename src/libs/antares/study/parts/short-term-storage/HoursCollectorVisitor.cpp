@@ -25,7 +25,7 @@ antlrcpp::Any HoursCollectorVisitor::visitHoursField(HoursFieldParser::HoursFiel
 {
     for (auto groupCtx: ctx->group())
     {
-        result.push_back(visit(groupCtx).as<std::set<int>>());
+        result.push_back(std::any_cast<std::set<int>>(visit(groupCtx)));
     }
     return result;
 }
