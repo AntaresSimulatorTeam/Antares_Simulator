@@ -315,7 +315,7 @@ target_link_libraries(study
         Antares::exception
         Antares::benchmarking
         antares-solver-variable
-		additional-constraint-rhs-antlr-interface
+		Antares::additional-constraint-rhs-antlr-interface
 )
 
 target_include_directories(study

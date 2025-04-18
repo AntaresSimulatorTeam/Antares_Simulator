@@ -1,12 +1,13 @@
 
 #include "antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h"
 
-#include <HoursFieldLexer.h>
 #include <regex>
 
 #include <boost/algorithm/string.hpp>
 
 #include "antares/study/parts/short-term-storage/HoursCollectorVisitor.h"
+
+#include "HoursFieldLexer.h"
 
 namespace Antares::Data::ShortTermStorage
 {
