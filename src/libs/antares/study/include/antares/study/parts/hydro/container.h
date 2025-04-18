@@ -55,8 +55,8 @@ struct MonthlyGenerationTargetData
 //!  Hydro Management Data for a given area
 struct TimeDependantHydroManagementData
 {
-    std::array<DailyDemand, nbDaysInYear> daily{0};
-    std::array<MonthlyGenerationTargetData, 12> monthly{0};
+    std::array<DailyDemand, nbDaysInYear> daily{};
+    std::array<MonthlyGenerationTargetData, 12> monthly{};
 };
 
 //! Area Hydro Management Data for a given year
