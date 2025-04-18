@@ -140,11 +140,6 @@ add_library(yuni-static-core STATIC
 		core/getopt/parser.hxx
 		core/getopt.h
 		core/hash
-		core/hash/checksum/checksum.h
-		core/hash/checksum/checksum.hxx
-		core/hash/checksum/md5.cpp
-		core/hash/checksum/md5.h
-		core/hash/checksum/md5.hxx
 		core/hash/table/table.h
 		core/hash/table/table.hxx
 		core/hash/table.h
