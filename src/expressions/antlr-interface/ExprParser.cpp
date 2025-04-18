@@ -1422,7 +1422,7 @@ bool ExprParser::sempred(RuleContext *context, size_t ruleIndex, size_t predicat
   return true;
 }
 
-bool ExprParser::exprSempred(ExprContext *_localctx, size_t predicateIndex) {
+bool ExprParser::exprSempred([[maybe_unused]] ExprContext *_localctx, size_t predicateIndex) {
   switch (predicateIndex) {
     case 0: return precpred(_ctx, 11);
     case 1: return precpred(_ctx, 10);
@@ -1434,7 +1434,7 @@ bool ExprParser::exprSempred(ExprContext *_localctx, size_t predicateIndex) {
   return true;
 }
 
-bool ExprParser::shift_exprSempred(Shift_exprContext *_localctx, size_t predicateIndex) {
+bool ExprParser::shift_exprSempred([[maybe_unused]] Shift_exprContext *_localctx, size_t predicateIndex) {
   switch (predicateIndex) {
     case 3: return precpred(_ctx, 4);
     case 4: return precpred(_ctx, 3);
@@ -1445,7 +1445,7 @@ bool ExprParser::shift_exprSempred(Shift_exprContext *_localctx, size_t predicat
   return true;
 }
 
-bool ExprParser::right_exprSempred(Right_exprContext *_localctx, size_t predicateIndex) {
+bool ExprParser::right_exprSempred([[maybe_unused]] Right_exprContext *_localctx, size_t predicateIndex) {
   switch (predicateIndex) {
     case 5: return precpred(_ctx, 3);
 
