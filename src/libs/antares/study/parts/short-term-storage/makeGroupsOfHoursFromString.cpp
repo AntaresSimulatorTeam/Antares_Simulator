@@ -8,34 +8,37 @@
 namespace Antares::Data::ShortTermStorage
 {
 
-static bool onlyCommasOutsideBrackets(const std::string& hoursField)
+static void throwExceptionWhenRegexMatches(const std::regex& regex,
+                                           const std::string& hoursField,
+                                           const std::string& msg)
+{
+    if (std::regex_search(hoursField, regex))
+    {
+        throw std::invalid_argument(msg);
+    }
+}
+
+static void checkOnlyCommasOutsideBrackets(const std::string& hoursField)
 {
     const std::regex strange_char_outside_brackets(R"(\][^\[\]]*[^,][^\[\]]*\[)");
-    return !std::regex_search(hoursField, strange_char_outside_brackets);
+    throwExceptionWhenRegexMatches(strange_char_outside_brackets,
+                                   hoursField,
+                                   "strange char outside square brackets");
 }
 
-static void throwExcWhen()
-{
-
-}
-
-static bool oneCommaOutsideBrackets(const std::string& hoursField)
+static void checkOneCommaOutsideBrackets(const std::string& hoursField)
 {
     std::regex two_or_more_commas_outside_brackets(R"(\][,]{2,}\[)");
-    return !std::regex_search(hoursField, two_or_more_commas_outside_brackets);
+    throwExceptionWhenRegexMatches(two_or_more_commas_outside_brackets,
+                                   hoursField,
+                                   "multiple commas outside square brackets");
 }
 
 static void checkNothingFancyOutsideBrackets(const std::string& hoursField)
 {
-    // Outside square brackets, we want only spaces and 1 comma, for ex : : "...] , [..."
-    if (!onlyCommasOutsideBrackets(hoursField))
-    {
-        throw std::invalid_argument("strange char outside square brackets");
-    }
-    if (!oneCommaOutsideBrackets(hoursField))
-    {
-        throw std::invalid_argument("multiple commas outside square brackets");
-    }
+    // Outside square brackets, we want only 1 comma, for ex : : "...] , [..."
+    checkOnlyCommasOutsideBrackets(hoursField);
+    checkOneCommaOutsideBrackets(hoursField);
 }
 
 static void checkNoNestedSquareBrackets(const std::string& hoursField)
