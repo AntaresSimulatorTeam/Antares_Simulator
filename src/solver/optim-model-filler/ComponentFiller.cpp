@@ -141,7 +141,6 @@ ComponentFiller::ComponentFiller(
   const std::vector<ModelerStudy::SystemModel::Connection>& connections,
   VariableDictionary& variableDictionary):
     component_(component),
-    modelVariable_(component.getModel()->Variables()),
     connections_(connections),
     variableDictionary_(variableDictionary)
 {
@@ -252,7 +251,7 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
     Expressions::Visitors::EvaluationContext evaluationContext(component_.getParameterValues(),
                                                                {},
                                                                data);
-    ReadLinearConstraintVisitor visitor(evaluationContext, ctx, component_.Id(), connections_);
+    ReadLinearConstraintVisitor visitor(evaluationContext, ctx, component_);
     for (const auto& constraint: component_.getModel()->getConstraints() | std::views::values)
     {
         auto* root_node = constraint.expression().RootNode();
@@ -285,7 +284,7 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
                                                                {},
                                                                data);
 
-    ReadLinearExpressionVisitor visitor(evaluationContext, ctx, component_.Id(), connections_);
+    ReadLinearExpressionVisitor visitor(evaluationContext, ctx, component_);
 
     const auto timeDependentLinearExpression = visitor.dispatch(model->Objective().RootNode());
     const auto& linear_expressions = timeDependentLinearExpression.GetLinearExpressions();

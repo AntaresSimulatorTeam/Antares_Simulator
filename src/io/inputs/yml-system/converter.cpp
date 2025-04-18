@@ -121,12 +121,12 @@ static SystemModel::Component createComponent(const YmlSystem::Component& c,
     return component;
 }
 
-static const SystemModel::Component& findComponent(
+static SystemModel::Component& findComponent(
   const std::string& id,
-  const std::unordered_map<std::string, SystemModel::Component>& components)
+  std::unordered_map<std::string, SystemModel::Component>& components)
 
 {
-    const auto& it = components.find(id);
+    auto it = components.find(id);
     if (it == components.end())
     {
         throw std::invalid_argument("Component with id '" + id + "' not found in system.");
@@ -233,7 +233,7 @@ static std::pair<SystemModel::PortFieldsRole, SystemModel::PortFieldsRole> Resol
  */
 static SystemModel::Connection createConnection(
   const YmlSystem::Connection& connection,
-  const std::unordered_map<std::string, SystemModel::Component>& components)
+  std::unordered_map<std::string, SystemModel::Component>& components)
 {
     const auto& firstComponentId = connection.firstEntry.componentId;
     const auto& firstPortId = connection.firstEntry.portId;
@@ -242,9 +242,9 @@ static SystemModel::Connection createConnection(
 
     CheckPortSelfConnection(firstComponentId, firstPortId, secondComponentId, secondPortId);
 
-    const auto& first_component = findComponent(firstComponentId, components);
+    SystemModel::Component& first_component = findComponent(firstComponentId, components);
     const auto& firstPort = findPort(first_component, firstPortId);
-    const auto& secondComponent = findComponent(secondComponentId, components);
+    SystemModel::Component& secondComponent = findComponent(secondComponentId, components);
     const auto& secondPort = findPort(secondComponent, secondPortId);
     CheckPortsType(firstPort, secondPort);
 
@@ -252,6 +252,10 @@ static SystemModel::Connection createConnection(
                                                                                firstPort,
                                                                                secondComponent,
                                                                                secondPort);
+    // TODO : do we need to connect component one another ?
+    // TODO : Or should we rather consider the field role and connect just one to the other ?
+    first_component.addConnection(&secondComponent);
+    secondComponent.addConnection(&first_component);
 
     return {
       SystemModel::ConnectionEntry(&first_component, &firstPort, std::move(firstPortFieldsRole)),
@@ -261,6 +265,7 @@ static SystemModel::Connection createConnection(
 SystemModel::System convert(const YmlSystem::System& ymlSystem,
                             const std::vector<SystemModel::Library>& libraries)
 {
+    // Create components from system
     std::unordered_map<std::string, SystemModel::Component> components;
     for (const auto& c: ymlSystem.components)
     {
@@ -271,12 +276,16 @@ SystemModel::System convert(const YmlSystem::System& ymlSystem,
         }
         components.emplace(c.id, createComponent(c, libraries));
     }
+
+    // Create connections from system
     std::vector<SystemModel::Connection> connections;
     connections.reserve(ymlSystem.connections.size());
     for (const auto& connection: ymlSystem.connections)
     {
         connections.push_back(createConnection(connection, components));
     }
+
+    // Build system from components and connections
     SystemModel::SystemBuilder builder;
     return builder.withId(ymlSystem.id)
       .withComponents(std::move(components))

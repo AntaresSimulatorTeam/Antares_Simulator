@@ -60,8 +60,8 @@ public:
     explicit ReadLinearConstraintVisitor(
       Expressions::Visitors::EvaluationContext context,
       const Optimisation::LinearProblemApi::FillContext& fillContext,
-      const std::string& componentId /* or vector ?*/,
-      const std::vector<ModelerStudy::SystemModel::Connection>& connections);
+      const Antares::ModelerStudy::SystemModel::Component& component);
+    
     std::string name() const override;
 
 private:

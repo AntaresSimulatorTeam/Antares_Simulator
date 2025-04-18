@@ -37,12 +37,10 @@ namespace Antares::Optimization
 ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
   EvaluationContext evalContext,
   Optimisation::LinearProblemApi::FillContext fillContext,
-  const std::string& componentId,
-  const std::vector<SystemModel::Connection>& connections):
+  const SystemModel::Component& component):
     evalContext_(std::move(evalContext)),
     fillContext_(std::move(fillContext)),
-    componentId_(componentId),
-    connections_(connections),
+    component_(component),
     evalVisitor_(evalContext_, fillContext_)
 {
 }
@@ -50,23 +48,6 @@ ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
 std::string ReadLinearExpressionVisitor::name() const
 {
     return "ReadLinearExpressionVisitor";
-}
-
-std::vector<const SystemModel::Component*> ReadLinearExpressionVisitor::getConnectedComponents()
-{
-    std::vector<const SystemModel::Component*> connectedComponents;
-    for (auto& c: connections_)
-    {
-        if (c.firstEntry().component()->Id() == componentId_)
-        {
-            connectedComponents.push_back(c.secondEntry().component());
-        }
-        if (c.secondEntry().component()->Id() == componentId_)
-        {
-            connectedComponents.push_back(c.firstEntry().component());
-        }
-    }
-    return connectedComponents;
 }
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const SumNode* node)
@@ -120,7 +101,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const VariableN
     {
         return TimeDependentLinearExpression(
           fillContext_,
-          LinearExpression(0, {{FullKey(componentId_, node->value()), 1}}));
+          LinearExpression(0, {{FullKey(component_.Id(), node->value()), 1}}));
     }
     else // only dependent
     {
@@ -132,7 +113,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const VariableN
         {
             linearExpressions[timeStep] = LinearExpression(
               0,
-              {{FullKey(componentId_, node->value(), 0 /*TODO */, timeStep), 1}});
+              {{FullKey(component_.Id(), node->value(), 0 /*TODO */, timeStep), 1}});
         }
         return TimeDependentLinearExpression(linearExpressions);
     }
@@ -185,18 +166,13 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const PortField
     std::string port = node->getPortName();
     std::string field = node->getFieldName();
 
-    auto connectedComponents = getConnectedComponents();
-
     TimeDependentLinearExpression to_return(fillContext_, {});
-    for (const auto* c: connectedComponents)
+    for (const auto* c: component_.connections())
     {
         const EvaluationContext connectedComponentEvalContext(c->getParameterValues(),
                                                               {},
                                                               evalContext_.data());
-        ReadLinearExpressionVisitor visitor(connectedComponentEvalContext,
-                                            fillContext_,
-                                            c->Id(),
-                                            {});
+        ReadLinearExpressionVisitor visitor(connectedComponentEvalContext, fillContext_, *c);
 
         const Node* node = c->nodeAtPortField(port, field);
         to_return += visitor.dispatch(node);

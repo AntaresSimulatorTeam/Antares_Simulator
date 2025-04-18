@@ -82,7 +82,6 @@ private:
 
     const ModelerStudy::SystemModel::Component& component_;
     const std::vector<ModelerStudy::SystemModel::Connection>& connections_;
-    const std::map<std::string, ModelerStudy::SystemModel::Variable>& modelVariable_;
     VariableDictionary& variableDictionary_;
 };
 

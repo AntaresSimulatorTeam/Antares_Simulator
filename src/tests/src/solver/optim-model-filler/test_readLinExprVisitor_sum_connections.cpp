@@ -120,14 +120,14 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_2_components_with_a_port_field,
                            .withModel(&nodeModel)
                            .withScenarioGroupId("scenario_group")
                            .build();
+
     // Section connexions
     // ------------------
-    SystemModel::Connection connection({&generatorComponent, &injection_port, {}},
-                                       {&nodeComponent, &injection_port, {}});
-    std::vector<SystemModel::Connection> connections = {connection};
+    generatorComponent.addConnection(&nodeComponent);
+    nodeComponent.addConnection(&generatorComponent);
 
     // Visitor associated to component named "N"
-    ReadLinearExpressionVisitor visitor{evaluationContext, {0, 0}, nodeComponent.Id(), connections};
+    ReadLinearExpressionVisitor visitor{evaluationContext, {0, 0}, nodeComponent};
 
     auto timeDependentLinExpr = visitor.dispatch(sum_connections_node);
 
@@ -231,14 +231,14 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_3_components_with_a_port_field,
                              .build();
     // Section connexions
     // ------------------
-    SystemModel::Connection connection_1({&generatorComponent, &injection_port, {}},
-                                         {&nodeComponent, &injection_port, {}});
-    SystemModel::Connection connection_2({&demandComponent, &injection_port, {}},
-                                         {&nodeComponent, &injection_port, {}});
-    std::vector<SystemModel::Connection> connections = {connection_1, connection_2};
+    generatorComponent.addConnection(&nodeComponent);
+    nodeComponent.addConnection(&generatorComponent);
+
+    demandComponent.addConnection(&nodeComponent);
+    nodeComponent.addConnection(&demandComponent);
 
     // Visitor associated to component named "N"
-    ReadLinearExpressionVisitor visitor{evaluationContext, {0, 0}, nodeComponent.Id(), connections};
+    ReadLinearExpressionVisitor visitor{evaluationContext, {0, 0}, nodeComponent};
 
     auto timeDependentLinExpr = visitor.dispatch(sum_connections_node);
 

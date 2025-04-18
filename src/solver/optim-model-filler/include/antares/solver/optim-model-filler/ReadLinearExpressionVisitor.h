@@ -27,6 +27,7 @@
 #include <antares/solver/optim-model-filler/FullKey.h>
 #include <antares/solver/optim-model-filler/TimeDependentLinearExpression.h>
 #include "antares/expressions/visitors/EvalVisitor.h"
+#include "antares/study/system-model/component.h"
 #include "antares/study/system-model/connection.h"
 
 /**
@@ -45,8 +46,7 @@ public:
     explicit ReadLinearExpressionVisitor(
       Expressions::Visitors::EvaluationContext evalContext,
       Optimisation::LinearProblemApi::FillContext fillContext,
-      const std::string& componentId /* or vector ?*/,
-      const std::vector<Antares::ModelerStudy::SystemModel::Connection>& connections);
+      const Antares::ModelerStudy::SystemModel::Component& component);
 
     ReadLinearExpressionVisitor() = default;
     std::string name() const override;
@@ -77,12 +77,9 @@ private:
     TimeDependentLinearExpression visit(const Expressions::Nodes::TimeSumNode* node) override;
     TimeDependentLinearExpression visit(const Expressions::Nodes::AllTimeSumNode* node) override;
 
-    std::vector<const Antares::ModelerStudy::SystemModel::Component*> getConnectedComponents();
-
     Optimisation::LinearProblemApi::FillContext fillContext_;
     const Expressions::Visitors::EvaluationContext evalContext_;
-    const std::string& componentId_;
-    const std::vector<Antares::ModelerStudy::SystemModel::Connection>& connections_;
+    const Antares::ModelerStudy::SystemModel::Component& component_;
     Expressions::Visitors::EvalVisitor evalVisitor_;
 };
 } // namespace Antares::Optimization
