@@ -65,11 +65,16 @@ struct BasicFixture: Registry<Node>
     LiteralNode literalNode{65.};
     ParameterNode parameterNode{"p1", TimeIndex::VARYING_IN_SCENARIO_ONLY};
     VariableNode variableNode{"v1", TimeIndex::VARYING_IN_TIME_ONLY};
-    const std::vector<SystemModel::Connection> connections;
+    SystemModel::Model m;
+    SystemModel::ComponentBuilder componentBuilder;
+    const SystemModel::Component component = componentBuilder.withId("compo")
+                                               .withModel(&m)
+                                               .withScenarioGroupId("group")
+                                               .build();
     TimeIndexVisitor timeIndexVisitor;
 
     BasicFixture():
-        timeIndexVisitor("component-id", connections)
+        timeIndexVisitor(component)
     {
     }
 };
@@ -169,15 +174,14 @@ static const std::vector<std::pair<Node*, ParameterNode*> (*)(Registry<Node>& re
                &s_<LessThanOrEqualNode>,
                &s_<GreaterThanOrEqualNode>};
 
-BOOST_DATA_TEST_CASE_F(Registry<Node>,
+BOOST_DATA_TEST_CASE_F(BasicFixture,
                        simple_all,
                        bdata::make(TimeIndex_ALL) * bdata::make(operator_ALL),
                        timeIndex,
                        binaryOperator)
 {
     auto [root, parameter] = binaryOperator(*this, timeIndex);
-    const std::vector<SystemModel::Connection> connections;
-    TimeIndexVisitor timeIndexVisitor("component-id", connections);
+    TimeIndexVisitor timeIndexVisitor(component);
     BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(root), timeIndex);
 
     Node* neg = create<NegationNode>(root);
@@ -201,7 +205,7 @@ BOOST_DATA_TEST_CASE_F(BasicFixture,
                        not_handled_node)
 {
     Node* nonHandldedNode = not_handled_node(*this);
-    TimeIndexVisitor timeIndexVisitor("", {});
+    TimeIndexVisitor timeIndexVisitor(component);
     BOOST_CHECK_THROW(timeIndexVisitor.dispatch(nonHandldedNode), std::invalid_argument);
 }
 

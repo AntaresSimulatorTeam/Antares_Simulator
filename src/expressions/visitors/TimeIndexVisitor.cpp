@@ -98,12 +98,11 @@ TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldSumNode* node)
 {
     std::string port = node->getPortName();
     std::string field = node->getFieldName();
-
-    auto connectedComponents = getConnectedComponents();
+    
     TimeIndex to_return = TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
-    for (const auto* c: connectedComponents)
+    for (const auto* c: component_.connections())
     {
-        TimeIndexVisitor visitor(c->Id(), connections_);
+        TimeIndexVisitor visitor(*c);
         const Nodes::Node* node = c->nodeAtPortField(port, field);
         to_return = to_return | visitor.dispatch(node);
     }
@@ -141,28 +140,9 @@ TimeIndex TimeIndexVisitor::visit([[maybe_unused]] const Nodes::AllTimeSumNode* 
     return TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
 }
 
-TimeIndexVisitor::TimeIndexVisitor(const std::string& componentId,
-                                   const std::vector<Connection>& connections):
-    componentId_(componentId),
-    connections_(connections)
+TimeIndexVisitor::TimeIndexVisitor(const Component& component):
+    component_(component)
 {
-}
-
-std::vector<const Component*> TimeIndexVisitor::getConnectedComponents()
-{
-    std::vector<const Component*> connectedComponents;
-    for (auto& c: connections_)
-    {
-        if (c.firstEntry().component()->Id() == componentId_)
-        {
-            connectedComponents.push_back(c.secondEntry().component());
-        }
-        if (c.secondEntry().component()->Id() == componentId_)
-        {
-            connectedComponents.push_back(c.firstEntry().component());
-        }
-    }
-    return connectedComponents;
 }
 
 std::string TimeIndexVisitor::name() const

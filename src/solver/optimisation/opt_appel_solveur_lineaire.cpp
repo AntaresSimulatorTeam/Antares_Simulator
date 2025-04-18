@@ -96,9 +96,8 @@ static void fillModelerComponents(std::vector<std::unique_ptr<ComponentFiller>>&
 
     for (const auto& [_, component]: modelerSystem->Components())
     {
-        componentFillers.push_back(std::make_unique<ComponentFiller>(component,
-                                                                     modelerSystem->connections(),
-                                                                     variableDictionary));
+        componentFillers.push_back(
+          std::make_unique<ComponentFiller>(component, variableDictionary));
     }
     for (auto& component_filler: componentFillers)
     {

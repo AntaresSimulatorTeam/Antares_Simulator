@@ -30,7 +30,6 @@
 #include <antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h>
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/study/system-model/component.h"
-#include "antares/study/system-model/connection.h"
 
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;

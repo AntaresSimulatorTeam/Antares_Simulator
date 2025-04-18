@@ -58,7 +58,6 @@ public:
         for (const auto& [_, component]: system_->Components())
         {
             auto cf = std::make_unique<Optimization::ComponentFiller>(component,
-                                                                      system_->connections(),
                                                                       variableDictionary);
             fillers.push_back(std::move(cf));
         }

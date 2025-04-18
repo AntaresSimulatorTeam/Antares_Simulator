@@ -136,12 +136,9 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
       });
 }
 
-ComponentFiller::ComponentFiller(
-  const ModelerStudy::SystemModel::Component& component,
-  const std::vector<ModelerStudy::SystemModel::Connection>& connections,
-  VariableDictionary& variableDictionary):
+ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& component,
+                                 VariableDictionary& variableDictionary):
     component_(component),
-    connections_(connections),
     variableDictionary_(variableDictionary)
 {
 }
@@ -307,7 +304,7 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
 
 bool ComponentFiller::IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node)
 {
-    Expressions::Visitors::TimeIndexVisitor timeIndexVisitor(component_.Id(), connections_);
+    Expressions::Visitors::TimeIndexVisitor timeIndexVisitor(component_);
     const auto ret = timeIndexVisitor.dispatch(node);
     return ret == Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY
            || ret == Expressions::Visitors::TimeIndex::VARYING_IN_TIME_AND_SCENARIO;

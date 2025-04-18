@@ -29,7 +29,6 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h>
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
-#include "antares/study/system-model/connection.h"
 
 using namespace Antares::Expressions;
 using namespace Antares::ModelerStudy;

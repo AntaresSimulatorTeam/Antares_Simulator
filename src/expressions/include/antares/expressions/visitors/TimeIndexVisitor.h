@@ -23,7 +23,6 @@
 #include "antares/expressions/visitors/NodeVisitor.h"
 #include "antares/expressions/visitors/TimeIndex.h"
 #include "antares/study/system-model/component.h"
-#include "antares/study/system-model/connection.h"
 
 namespace Antares::Expressions::Visitors
 {
@@ -34,9 +33,7 @@ namespace Antares::Expressions::Visitors
 class TimeIndexVisitor: public NodeVisitor<TimeIndex>
 {
 public:
-    explicit TimeIndexVisitor(
-      const std::string& componentId,
-      const std::vector<ModelerStudy::SystemModel::Connection>& connections);
+    explicit TimeIndexVisitor(const Antares::ModelerStudy::SystemModel::Component& component);
 
     std::string name() const override;
 
@@ -63,7 +60,6 @@ private:
 
     std::vector<const Antares::ModelerStudy::SystemModel::Component*> getConnectedComponents();
 
-    const std::string& componentId_;
-    const std::vector<Antares::ModelerStudy::SystemModel::Connection>& connections_;
+    const Antares::ModelerStudy::SystemModel::Component& component_;
 };
 } // namespace Antares::Expressions::Visitors
