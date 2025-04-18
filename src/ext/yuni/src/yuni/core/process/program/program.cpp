@@ -46,13 +46,13 @@ public:
     bool spawnProcess();
 
 protected:
-    virtual bool onExecute() override;
+    bool onExecute() override;
 
-    virtual void onPause();
+    void onPause() override;
 
-    virtual void onStop();
+    void onStop() override;
 
-    virtual void onKill() override;
+    void onKill() override;
 
 private:
     void prepareCommandLineWL();
