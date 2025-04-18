@@ -153,7 +153,7 @@ include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/devpack-standard-imports.cmake")
 # Modules
 include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules.cmake")
 
-
+add_compile_options("-Werror")
 
 # Sub Directories
 add_subdirectory(yuni)

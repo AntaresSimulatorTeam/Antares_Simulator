@@ -139,10 +139,6 @@ add_library(yuni-static-core STATIC
 		core/getopt/parser.h
 		core/getopt/parser.hxx
 		core/getopt.h
-		core/hash
-		core/hash/table/table.h
-		core/hash/table/table.hxx
-		core/hash/table.h
 		core/iterator/iterator.h
 		core/iterator/iterator.hxx
 		core/iterator.h
