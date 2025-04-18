@@ -215,9 +215,8 @@ public:
             simulation_->variables.computeSummary(y, numSpace);
             aggregationMutex.unlock();
 
-
-            // Computes statistics on annual (system and solution) costs, to be printed in output into
-            // separate files
+            // Computes statistics on annual (system and solution) costs, to be printed in output
+            // into separate files
             simulation_->computeAnnualCostsStatistics(state);
 
             logs.debug() << "year " << y << " ended and returned numSpace " << numSpace;
@@ -793,10 +792,10 @@ void ISimulation<ImplementationType>::computeAnnualCostsStatistics(Variable::Sta
     annualStatisticsMutex.unlock();
 }
 
-    template<class ImplementationType>
+template<class ImplementationType>
 void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
-        uint endYear,
-        std::vector<Variable::State>& state)
+                                                       uint endYear,
+                                                       std::vector<Variable::State>& state)
 {
     assert(endYear <= study.parameters.nbYears);
 
@@ -856,7 +855,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
 
     // Container for random numbers of parallel years (to be executed or not)
     randomNumbers randomForParallelYears(pNbYearsReallyPerformed,
-            study.parameters.power.fluctuations);
+                                         study.parameters.power.fluctuations);
 
     // Allocating memory to store random numbers of all parallel years
     allocateMemoryForRandomNumbers(randomForParallelYears);
