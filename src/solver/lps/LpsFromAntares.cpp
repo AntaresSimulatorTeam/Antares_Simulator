@@ -43,7 +43,7 @@ const WeeklyDataFromAntares& LpsFromAntares::weeklyData(WeeklyProblemId id) cons
     auto it = weeklyProblems.find(id);
     if (it == weeklyProblems.end())
     {
-        return WeeklyDataFromAntares(); // TODO Better error handling
+        throw std::out_of_range("Weekly data not found for the given ID");
     }
     return it->second;
 }
