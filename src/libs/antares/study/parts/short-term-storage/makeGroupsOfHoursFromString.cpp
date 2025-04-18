@@ -1,9 +1,12 @@
 
 #include "antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h"
 
+#include <HoursFieldLexer.h>
 #include <regex>
 
 #include <boost/algorithm/string.hpp>
+
+#include "antares/study/parts/short-term-storage/HoursCollectorVisitor.h"
 
 namespace Antares::Data::ShortTermStorage
 {
@@ -114,17 +117,38 @@ static std::vector<std::set<int>> toGroupsOfHours(
     return groupsOfHours;
 }
 
+// std::vector<std::set<int>> makeGroupsOfHours(std::string& hoursField)
+// {
+//     std::erase_if(hoursField, ::isspace); // Removing all spaces from hour field
+//     checkNothingFancyOutsideBrackets(hoursField);
+//     checkNoNestedSquareBrackets(hoursField);
+//     auto groups = splitIntoGroups(hoursField);
+//     if (groups.empty())
+//     {
+//         throw std::invalid_argument("there are no group of hours");
+//     }
+//     auto groupsOfHoursAsStrings = splitGroupsIntoHoursAsString(groups);
+//     return toGroupsOfHours(groupsOfHoursAsStrings);
+// }
 std::vector<std::set<int>> makeGroupsOfHours(std::string& hoursField)
 {
-    std::erase_if(hoursField, ::isspace); // Removing all spaces from hour field
-    checkNothingFancyOutsideBrackets(hoursField);
-    checkNoNestedSquareBrackets(hoursField);
-    auto groups = splitIntoGroups(hoursField);
-    if (groups.empty())
-    {
-        throw std::invalid_argument("there are no group of hours");
-    }
-    auto groupsOfHoursAsStrings = splitGroupsIntoHoursAsString(groups);
-    return toGroupsOfHours(groupsOfHoursAsStrings);
+    antlr4::ANTLRInputStream stream(hoursField);
+    HoursFieldLexer lexer(&stream);
+    antlr4::CommonTokenStream tokens(&lexer);
+    HoursFieldParser parser(&tokens);
+
+    // parser.removeErrorListeners();
+    // parser.addErrorListener(new antlr4::BaseErrorListener{
+    //   [](antlr4::Recognizer*,
+    //      antlr4::Token*,
+    //      size_t,
+    //      size_t,
+    //      const std::string& msg,
+    //      std::exception_ptr)
+    //   { throw std::invalid_argument("Invalid hoursField format: " + msg); }});
+
+    auto* tree = parser.hoursField();
+    HoursCollectorVisitor visitor;
+    return std::any_cast<std::vector<std::set<int>>>(visitor.visit(tree));
 }
 } // namespace Antares::Data::ShortTermStorage

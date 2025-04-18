@@ -93,7 +93,7 @@ set(SRC_STUDY_PART_RENEWABLE
         parts/renewable/cluster_list.cpp
 )
 source_group("study\\part\\renewable" FILES ${SRC_STUDY_PART_RENEWABLE})
-
+add_subdirectory(parts/short-term-storage/additionalConstraintRhsExpression)
 set(SRC_STUDY_PART_SHORT_TERM_STORAGE
         include/antares/study/parts/short-term-storage/container.h
         parts/short-term-storage/container.cpp
@@ -107,6 +107,8 @@ set(SRC_STUDY_PART_SHORT_TERM_STORAGE
         parts/short-term-storage/additionalConstraints.cpp
 		include/antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h
 		parts/short-term-storage/makeGroupsOfHoursFromString.cpp
+		include/antares/study/parts/short-term-storage/
+		parts/short-term-storage/HoursCollectorVisitor.cpp
 )
 source_group("study\\part\\short-term-storage" FILES ${SRC_STUDY_PART_SHORT_TERM_SOTRAGE})
 
@@ -313,6 +315,7 @@ target_link_libraries(study
         Antares::exception
         Antares::benchmarking
         antares-solver-variable
+		additional-constraint-rhs-antlr-interface
 )
 
 target_include_directories(study
