@@ -93,7 +93,6 @@ set(SRC_STUDY_PART_RENEWABLE
         parts/renewable/cluster_list.cpp
 )
 source_group("study\\part\\renewable" FILES ${SRC_STUDY_PART_RENEWABLE})
-add_subdirectory(parts/short-term-storage/additionalConstraintRhsExpression)
 set(SRC_STUDY_PART_SHORT_TERM_STORAGE
         include/antares/study/parts/short-term-storage/container.h
         parts/short-term-storage/container.cpp
