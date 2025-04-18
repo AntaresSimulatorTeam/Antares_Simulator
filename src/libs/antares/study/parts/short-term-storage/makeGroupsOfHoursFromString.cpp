@@ -8,52 +8,49 @@
 namespace Antares::Data::ShortTermStorage
 {
 
-static void throwExceptionWhenRegexMatches(const std::regex& regex,
-                                           const std::string& hoursField,
-                                           const std::string& msg)
+static void throwExceptionWithMsg(const bool doWeThrow, const std::string& msg)
 {
-    if (std::regex_search(hoursField, regex))
+    if (doWeThrow)
     {
         throw std::invalid_argument(msg);
     }
 }
 
-static void checkOnlyCommasOutsideBrackets(const std::string& hoursField)
+static bool onlyCommasOutsideBrackets(const std::string& hoursField)
 {
     const std::regex strange_char_outside_brackets(R"(\][^\[\]]*[^,][^\[\]]*\[)");
-    throwExceptionWhenRegexMatches(strange_char_outside_brackets,
-                                   hoursField,
-                                   "strange char outside square brackets");
+    return !std::regex_search(hoursField, strange_char_outside_brackets);
 }
 
-static void checkOneCommaOutsideBrackets(const std::string& hoursField)
+static bool oneCommaOutsideBrackets(const std::string& hoursField)
 {
-    std::regex two_or_more_commas_outside_brackets(R"(\][,]{2,}\[)");
-    throwExceptionWhenRegexMatches(two_or_more_commas_outside_brackets,
-                                   hoursField,
-                                   "multiple commas outside square brackets");
+    const std::regex two_or_more_commas_outside_brackets(R"(\][,]{2,}\[)");
+    return !std::regex_search(hoursField, two_or_more_commas_outside_brackets);
+}
+
+static bool twoBracketsOpened(const std::string& hoursField)
+{
+    const std::regex twoBracketsOpened(R"(\[[^\[\]]*\[)");
+    return !std::regex_search(hoursField, twoBracketsOpened);
+}
+
+static bool twoBracketsClosed(const std::string& hoursField)
+{
+    const std::regex twoBracketsClosed(R"(\][^\[\]]*\])");
+    return !std::regex_search(hoursField, twoBracketsClosed);
 }
 
 static void checkNothingFancyOutsideBrackets(const std::string& hoursField)
 {
     // Outside square brackets, we want only 1 comma, for ex : : "...] , [..."
-    checkOnlyCommasOutsideBrackets(hoursField);
-    checkOneCommaOutsideBrackets(hoursField);
+    throwExceptionWithMsg(!onlyCommasOutsideBrackets(hoursField), "strange char outside brackets");
+    throwExceptionWithMsg(!oneCommaOutsideBrackets(hoursField), "multiple commas outside brackets");
 }
 
 static void checkNoNestedSquareBrackets(const std::string& hoursField)
 {
-    const std::regex twoBracketsOpened(R"(\[[^\[\]]*\[)");
-    if (std::regex_search(hoursField, twoBracketsOpened))
-    {
-        throw std::invalid_argument("2 square brackets opened");
-    }
-
-    const std::regex twoBracketsClosed(R"(\][^\[\]]*\])");
-    if (std::regex_search(hoursField, twoBracketsClosed))
-    {
-        throw std::invalid_argument("2 square brackets opened");
-    }
+    throwExceptionWithMsg(!twoBracketsOpened(hoursField), "2 square brackets opened");
+    throwExceptionWithMsg(!twoBracketsClosed(hoursField), "2 square brackets closed");
 }
 
 static std::vector<std::string> splitIntoGroups(const std::string& hoursField)
