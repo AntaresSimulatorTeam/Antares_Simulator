@@ -269,5 +269,3 @@ private:
 
 } // namespace Process
 } // namespace Yuni
-
-#include "program.hxx"
