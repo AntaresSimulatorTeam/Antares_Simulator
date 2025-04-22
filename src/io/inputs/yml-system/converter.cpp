@@ -251,7 +251,7 @@ static void connectComponents(const YmlSystem::Connection& connection,
                                                                                firstPort,
                                                                                secondComponent,
                                                                                secondPort);
-    // TODO : do we need to connect component one another ?
+    // TODO : do we need to connect both components to one another ?
     // TODO : Or should we rather consider the field role and connect just one to the other ?
     first_component.addConnection(&secondComponent);
     secondComponent.addConnection(&first_component);
