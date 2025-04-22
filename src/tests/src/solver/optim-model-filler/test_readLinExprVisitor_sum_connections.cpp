@@ -122,8 +122,8 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_2_components_with_a_port_field,
 
     // Section connexions
     // ------------------
-    generatorComponent.addConnection(&nodeComponent);
-    nodeComponent.addConnection(&generatorComponent);
+    generatorComponent.addConnection(&nodeComponent, injection_port.Id());
+    nodeComponent.addConnection(&generatorComponent, injection_port.Id());
 
     // Visitor associated to component named "N"
     ReadLinearExpressionVisitor visitor{evaluationContext, {0, 0}, nodeComponent};
@@ -230,11 +230,11 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_3_components_with_a_port_field,
                              .build();
     // Section connexions
     // ------------------
-    generatorComponent.addConnection(&nodeComponent);
-    nodeComponent.addConnection(&generatorComponent);
+    generatorComponent.addConnection(&nodeComponent, injection_port.Id());
+    nodeComponent.addConnection(&generatorComponent, injection_port.Id());
 
-    demandComponent.addConnection(&nodeComponent);
-    nodeComponent.addConnection(&demandComponent);
+    demandComponent.addConnection(&nodeComponent, injection_port.Id());
+    nodeComponent.addConnection(&demandComponent, injection_port.Id());
 
     // Visitor associated to component named "N"
     ReadLinearExpressionVisitor visitor{evaluationContext, {0, 0}, nodeComponent};

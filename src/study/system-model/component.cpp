@@ -66,14 +66,14 @@ Component::Component(const ComponentData& component_data)
     data_ = std::move(component_data);
 }
 
-void Component::addConnection(const Component* component)
+void Component::addConnection(const Component* component, const std::string& portId)
 {
-    connectedComponents_.push_back(component);
+    connectedComponents_[portId].push_back(component);
 }
 
-std::vector<const Component*> Component::connections() const
+std::vector<const Component*> Component::connectionsByPort(const std::string& portId) const
 {
-    return connectedComponents_;
+    return connectedComponents_.at(portId);
 }
 
 const Node* Component::nodeAtPortField(const std::string& portId, const std::string& fieldId) const

@@ -100,7 +100,7 @@ TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldSumNode* node)
     std::string field = node->getFieldName();
 
     TimeIndex to_return = TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
-    for (const auto* c: component_.connections())
+    for (const auto* c: component_.connectionsByPort(port))
     {
         TimeIndexVisitor visitor(*c);
         const Nodes::Node* node = c->nodeAtPortField(port, field);
