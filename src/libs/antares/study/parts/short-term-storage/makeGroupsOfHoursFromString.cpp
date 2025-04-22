@@ -11,7 +11,6 @@
 namespace Antares::Data::ShortTermStorage
 {
 
-
 void CustomErrorListener::syntaxError(antlr4::Recognizer* recognizer,
                                       antlr4::Token* offendingSymbol,
                                       size_t line,
