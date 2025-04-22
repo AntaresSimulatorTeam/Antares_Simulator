@@ -191,7 +191,6 @@ BOOST_DATA_TEST_CASE(hours_field_has_more_invalid_format,
                      string_value)
 {
     std::string hoursField = string_value;
-    const auto k = makeGroupsOfHours(hoursField);
     BOOST_CHECK_THROW(makeGroupsOfHours(hoursField), ShortTermStorageAdditionalConstraintsError);
 }
 

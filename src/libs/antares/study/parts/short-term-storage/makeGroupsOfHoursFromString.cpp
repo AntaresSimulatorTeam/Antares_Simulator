@@ -161,6 +161,15 @@ std::vector<std::set<int>> makeGroupsOfHours(std::string& hoursField)
 
     auto* tree = parser.hoursField();
     HoursCollectorVisitor visitor;
-    return std::any_cast<std::vector<std::set<int>>>(visitor.visit(tree));
+    try
+    {
+        return std::any_cast<std::vector<std::set<int>>>(visitor.visit(tree));
+    }
+    catch (std::exception& e)
+    {
+        std::ostringstream os;
+        os << "Exception occurred while parsing '" << hoursField << "' : " << e.what() << std::endl;
+        throw ShortTermStorageAdditionalConstraintsError(os.str());
+    }
 }
 } // namespace Antares::Data::ShortTermStorage
