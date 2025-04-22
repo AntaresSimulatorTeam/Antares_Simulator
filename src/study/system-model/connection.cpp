@@ -57,19 +57,4 @@ const Port* ConnectionEntry::port() const
     return port_;
 }
 
-Connection::Connection(const ConnectionEntry& firstEntry, const ConnectionEntry& secondEntry):
-    firstEntry_(firstEntry),
-    secondEntry_(secondEntry)
-{
-}
-
-const ConnectionEntry& Connection::firstEntry() const
-{
-    return firstEntry_;
-}
-
-const ConnectionEntry& Connection::secondEntry() const
-{
-    return secondEntry_;
-}
 } // namespace Antares::ModelerStudy::SystemModel

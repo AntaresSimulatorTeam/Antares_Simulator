@@ -90,41 +90,4 @@ private:
     PortFieldsRole portFieldsRole_;
 };
 
-/**
- * @class Connection
- * @brief Represents a connection between two ConnectionEntry objects.
- *
- * The Connection class is used to manage a connection between two entries,
- * each representing a component-port pair.
- */
-class Connection
-{
-public:
-    /**
-     * @brief Constructs a Connection with the specified first and second entries.
-     *
-     * @param firstEntry The connection entry for the sender.
-     * @param secondEntry The connection entry for the receiver.
-     */
-    Connection(const ConnectionEntry& firstEntry, const ConnectionEntry& secondEntry);
-
-    /**
-     * @brief Returns the first connection entry.
-     *
-     * @return A constant reference to the first connection entry.
-     */
-    [[nodiscard]] const ConnectionEntry& firstEntry() const;
-
-    /**
-     * @brief Returns the second connection entry.
-     *
-     * @return A constant reference to the second connection entry.
-     */
-    [[nodiscard]] const ConnectionEntry& secondEntry() const;
-
-private:
-    ConnectionEntry firstEntry_;  ///< The first connection entry.
-    ConnectionEntry secondEntry_; ///< The second connection entry.
-};
-
 } // namespace Antares::ModelerStudy::SystemModel
