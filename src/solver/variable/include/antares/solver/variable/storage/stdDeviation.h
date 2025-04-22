@@ -235,7 +235,7 @@ private:
         {
             for (unsigned int i = 0; i != Size; ++i)
             {
-                auto v = results.avgdata.hourly[i].extract_double();
+                auto v = results.avgdata.daily[i].extract_double();
                 target[i] = squareRootChecked(array[i] - v * v);
             }
         }
