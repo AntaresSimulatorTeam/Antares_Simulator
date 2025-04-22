@@ -43,6 +43,12 @@ static void setGenericParameters(MPSolverParameters& params)
 {
     params.SetIntegerParam(MPSolverParameters::SCALING, 0);
     params.SetIntegerParam(MPSolverParameters::PRESOLVE, 0);
+    // ortools default is 1e-7 for primal tolerance, but this may be too high as we manipulate large
+    // values in the problem. Then 1e-7 may be too hard to achieve and has lead to declare some
+    // problems infeasible whereas they were not (contraints were active but not violated). Sirius
+    // uses 1e-6 (and this cannot be changed with ortools), this has effect for all solvers except
+    // sirius
+    params.SetDoubleParam(MPSolverParameters::PRIMAL_TOLERANCE, 1e-6);
 }
 
 static void checkSetSolverSpecificParameters(bool status,
