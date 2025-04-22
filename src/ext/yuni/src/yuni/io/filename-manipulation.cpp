@@ -306,6 +306,57 @@ void parent_path_impl(Clob& out, const AnyString& path, bool systemDependant)
 }
 
 template<class StringT>
+static inline void ExtractFileNameImpl(StringT& out, const AnyString& path, bool systemDependant)
+{
+    AnyString::size_type pos = (systemDependant)
+                                 ? path.find_last_of(IO::Constant<char>::Separator)
+                                 : path.find_last_of(IO::Constant<char>::AllSeparators);
+    if (AnyString::npos == pos)
+        out.clear();
+    else
+        out.assign(path.c_str() + pos + 1);
+}
+
+void ExtractFileName(String& out, const AnyString& path, bool systemDependant)
+{
+    ExtractFileNameImpl(out, path, systemDependant);
+}
+
+void ExtractFileName(Clob& out, const AnyString& path, bool systemDependant)
+{
+    ExtractFileNameImpl(out, path, systemDependant);
+}
+
+template<class StringT>
+static inline void ExtractAbsoluteFilePathImpl(StringT& out,
+                                               const AnyString& path,
+                                               bool systemDependant)
+{
+    String tmp;
+    if (IsAbsolute(path))
+    {
+        parent_path(tmp, path, systemDependant);
+    }
+    else
+    {
+        String absolute;
+        MakeAbsolute(absolute, path);
+        parent_path(tmp, absolute, systemDependant);
+    }
+    Normalize(out, tmp);
+}
+
+void ExtractAbsoluteFilePath(String& out, const AnyString& path, bool systemDependant)
+{
+    ExtractAbsoluteFilePathImpl(out, path, systemDependant);
+}
+
+void ExtractAbsoluteFilePath(Clob& out, const AnyString& path, bool systemDependant)
+{
+    ExtractAbsoluteFilePathImpl(out, path, systemDependant);
+}
+
+template<class StringT>
 static inline void CanonicalizeImpl(StringT& out, const AnyString& in, const AnyString& rootpath)
 {
     if (IsAbsolute(in))
