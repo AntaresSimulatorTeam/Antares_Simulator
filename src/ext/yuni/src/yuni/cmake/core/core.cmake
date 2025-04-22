@@ -214,7 +214,6 @@ add_library(yuni-static-core STATIC
 		core/preprocessor/windows.h
 		core/process/program/program.cpp
 		core/process/program/program.h
-		core/process/program/program.hxx
 		core/process/program/process-info.h
 		core/process/program/process-info.hxx
 		core/process/program/windows.inc.hpp
