@@ -2,7 +2,7 @@ Feature: 5 - Simple end-to-end tests to test temporal expression management - Ti
   TODO
 
   Scenario: 5.1: One model with one load and two generators, 3 timesteps, temporal constraint on generator 1 linking consecutive timesteps sum(t..t+1,expr)
-    Given the study path is "modeler/5_1"
+    Given the modeler study path is "modeler/5_1"
     When I run antares modeler
     Then the simulation succeeds
     And the objective value is 715

@@ -86,6 +86,11 @@ InvalidSolver::InvalidSolver(const std::string& solver, const std::string& avail
 {
 }
 
+IncompatibleLinearSolverParameters::IncompatibleLinearSolverParameters():
+    LoadingError("You can't supply parameters for one particular and both optimizations")
+{
+}
+
 static std::string InvalidSolverParameterMessage(const std::string& solver,
                                                  const std::string& parameters)
 {
@@ -129,6 +134,11 @@ IncompatibleMILPWithoutOrtools::IncompatibleMILPWithoutOrtools():
 
 IncompatibleMILPOrtoolsSolver::IncompatibleMILPOrtoolsSolver():
     LoadingError("'milp' mode does not work with OR-Tools using Sirius solver")
+{
+}
+
+UseMILPsolverWithWrongOptions::UseMILPsolverWithWrongOptions():
+    LoadingError("'milp' solver cannot be used with options for optimization 1 or 2")
 {
 }
 

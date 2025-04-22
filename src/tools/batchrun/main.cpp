@@ -176,7 +176,7 @@ int main(int argc, const char* argv[])
                         // Wrap spaces around quotes, if any
                         // example
                         // antares-batchrun directory --solver xpress
-                        // --linear-solver-parameters "PRESOLVE 1"
+                        // --lp-solver-param "PRESOLVE 1"
                         cmd << " \"" << arg << "\"";
                     }
                 }
