@@ -31,4 +31,4 @@ public:
 
 std::vector<std::set<int>> makeGroupsOfHours(std::string& hoursField);
 
-}
+} // namespace Antares::Data::ShortTermStorage
