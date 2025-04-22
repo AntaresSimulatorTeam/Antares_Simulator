@@ -115,7 +115,7 @@ BOOST_AUTO_TEST_CASE(
   hours_field_contains_unwnated_chars_outside_between_brackets___exception_raised)
 {
     std::string hoursField = "[5, 1, 23] {I'm not wanted} [4, 19]";
-    BOOST_CHECK_THROW(makeGroupsOfHours(hoursField), std::exception);
+    BOOST_CHECK_THROW(makeGroupsOfHours(hoursField), ShortTermStorageAdditionalConstraintsError);
 }
 
 BOOST_AUTO_TEST_CASE(hours_field_with_group_contains_an_intruder_char__exception_raised)
@@ -123,21 +123,21 @@ BOOST_AUTO_TEST_CASE(hours_field_with_group_contains_an_intruder_char__exception
     // 'I' is the intruder
     std::string hoursField = "[5, 4, I 19]";
 
-    BOOST_CHECK_THROW(makeGroupsOfHours(hoursField), std::invalid_argument);
+    BOOST_CHECK_THROW(makeGroupsOfHours(hoursField), ShortTermStorageAdditionalConstraintsError);
 }
 
 BOOST_AUTO_TEST_CASE(hours_field_where_2_brackets_are_opened__exception_raised)
 {
     std::string hoursField = "[5, 1, 23, [4, 19]";
 
-    BOOST_CHECK_THROW(makeGroupsOfHours(hoursField), std::invalid_argument);
+    BOOST_CHECK_THROW(makeGroupsOfHours(hoursField), ShortTermStorageAdditionalConstraintsError);
 }
 
 BOOST_AUTO_TEST_CASE(hours_field_where_2_brackets_are_closed__exception_raised)
 {
     std::string hoursField = "[5, 1, 23] 4, 19]";
 
-    BOOST_CHECK_THROW(makeGroupsOfHours(hoursField), std::invalid_argument);
+    BOOST_CHECK_THROW(makeGroupsOfHours(hoursField), ShortTermStorageAdditionalConstraintsError);
 }
 
 BOOST_AUTO_TEST_CASE(large_hours_field___can_happen_in_real_life)
@@ -190,7 +190,7 @@ BOOST_DATA_TEST_CASE(hours_field_has_more_invalid_format,
                      string_value)
 {
     std::string hoursField = string_value;
-    BOOST_CHECK_THROW(makeGroupsOfHours(hoursField), std::exception);
+    BOOST_CHECK_THROW(makeGroupsOfHours(hoursField), ShortTermStorageAdditionalConstraintsError);
 }
 
 BOOST_DATA_TEST_CASE(hours_field_has_more_valid_format,

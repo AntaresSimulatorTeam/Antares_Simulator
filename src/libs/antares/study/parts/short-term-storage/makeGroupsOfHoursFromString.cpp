@@ -117,6 +117,22 @@ static std::vector<std::set<int>> toGroupsOfHours(
     return groupsOfHours;
 }
 
+void CustomErrorListener::syntaxError(antlr4::Recognizer* recognizer,
+                                      antlr4::Token* offendingSymbol,
+                                      size_t line,
+                                      size_t charPositionInLine,
+                                      const std::string& msg,
+                                      std::exception_ptr e)
+{
+    std::ostringstream os;
+    os << "Syntax error at line " << line << ":" << charPositionInLine << " - " << msg << std::endl;
+    if (offendingSymbol)
+    {
+        os << "Offending symbol: " << offendingSymbol->getText() << std::endl;
+    }
+    throw ShortTermStorageAdditionalConstraintsError(os.str());
+}
+
 // std::vector<std::set<int>> makeGroupsOfHours(std::string& hoursField)
 // {
 //     std::erase_if(hoursField, ::isspace); // Removing all spaces from hour field
@@ -137,15 +153,9 @@ std::vector<std::set<int>> makeGroupsOfHours(std::string& hoursField)
     antlr4::CommonTokenStream tokens(&lexer);
     HoursFieldParser parser(&tokens);
 
-    // parser.removeErrorListeners();
-    // parser.addErrorListener(new antlr4::BaseErrorListener{
-    //   [](antlr4::Recognizer*,
-    //      antlr4::Token*,
-    //      size_t,
-    //      size_t,
-    //      const std::string& msg,
-    //      std::exception_ptr)
-    //   { throw std::invalid_argument("Invalid hoursField format: " + msg); }});
+    parser.removeErrorListeners();
+    CustomErrorListener customErrorListener;
+    parser.addErrorListener(&customErrorListener);
 
     auto* tree = parser.hoursField();
     HoursCollectorVisitor visitor;
