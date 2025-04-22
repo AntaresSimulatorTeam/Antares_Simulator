@@ -375,15 +375,23 @@ BOOST_FIXTURE_TEST_CASE(SystemWithSenderAndReceiverPort, PrepareYaml)
 
     YmlSystem::System systemObj = parserSystem.parse(system);
     auto systemModel = SystemConverter::convert(systemObj, libraries);
-    const auto& connections = systemModel.connections();
-    BOOST_CHECK(connections.size() == 1);
-    const auto& connection = connections.at(0);
-    const auto& firstEntry = connection.firstEntry();
-    BOOST_CHECK(firstEntry.component()->Id() == "N");
-    BOOST_CHECK(firstEntry.port()->Id() == "injection_port");
-    const auto& secondEntry = connection.secondEntry();
-    BOOST_CHECK(secondEntry.component()->Id() == "D");
-    BOOST_CHECK(secondEntry.port()->Id() == "injection_port");
+
+    auto& components = systemModel.Components();
+
+    auto& component_N = components.at("N");
+    auto& component_G = components.at("G");
+    auto& component_D = components.at("D");
+
+    auto components_connected_to_N = component_N.connections();
+    auto components_connected_to_G = component_G.connections();
+    auto components_connected_to_D = component_D.connections();
+
+    BOOST_CHECK(components_connected_to_N.size() == 1);
+    BOOST_CHECK(components_connected_to_G.size() == 0);
+    BOOST_CHECK(components_connected_to_D.size() == 1);
+
+    BOOST_CHECK(components_connected_to_N[0]->Id() == "D");
+    BOOST_CHECK(components_connected_to_D[0]->Id() == "N");
 }
 
 BOOST_FIXTURE_TEST_CASE(TryToConnectWithUnknownCompo, PrepareYaml)
