@@ -58,7 +58,7 @@ public:
 
 public:
     double monthly[MONTHS_PER_YEAR];
-    double weekly[WEEKS_PER_YEAR];
+    HighPrecision weekly[WEEKS_PER_YEAR];
     HighPrecision hourly[HOURS_PER_YEAR];
     HighPrecision daily[DAYS_PER_YEAR];
     std::vector<double> year;

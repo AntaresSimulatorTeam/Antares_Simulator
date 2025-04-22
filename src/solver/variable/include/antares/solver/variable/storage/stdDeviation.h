@@ -244,8 +244,8 @@ private:
         {
             for (unsigned int i = 0; i != Size; ++i)
             {
-                target[i] = squareRootChecked(
-                  array[i] - results.avgdata.weekly[i] * results.avgdata.weekly[i]);
+                auto v = results.avgdata.weekly[i].extract_double();
+                target[i] = squareRootChecked(array[i] - v * v);
             }
         }
         break;
