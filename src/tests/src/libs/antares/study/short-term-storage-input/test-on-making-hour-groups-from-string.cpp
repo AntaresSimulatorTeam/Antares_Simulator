@@ -186,10 +186,12 @@ BOOST_DATA_TEST_CASE(hours_field_has_more_invalid_format,
                                                    "[1,]",
                                                    "[1,,2]",
                                                    "[a]",
-                                                   "[1, 2], , [3]"}),
+                                                   "[1, 2], , [3]",
+                                                   "[1 2 3  , 11      3]"}),
                      string_value)
 {
     std::string hoursField = string_value;
+    const auto k = makeGroupsOfHours(hoursField);
     BOOST_CHECK_THROW(makeGroupsOfHours(hoursField), ShortTermStorageAdditionalConstraintsError);
 }
 
@@ -199,8 +201,7 @@ BOOST_DATA_TEST_CASE(hours_field_has_more_valid_format,
                                                    "[\v1\f,\t2],\f\v\t[4]",
                                                    "[\f\v1]\t\t",
                                                    "\t\v\t[1   ],    [   1,      2,3]    ",
-                                                   "          [4,5          ]",
-                                                   "[1 2 3  , 11      3]"}),
+                                                   "          [4,5          ]"}),
                      string_value)
 {
     std::string hoursField = string_value;

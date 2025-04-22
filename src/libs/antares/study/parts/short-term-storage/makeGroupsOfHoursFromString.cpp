@@ -148,13 +148,15 @@ void CustomErrorListener::syntaxError(antlr4::Recognizer* recognizer,
 // }
 std::vector<std::set<int>> makeGroupsOfHours(std::string& hoursField)
 {
+    CustomErrorListener customErrorListener;
     antlr4::ANTLRInputStream stream(hoursField);
     HoursFieldLexer lexer(&stream);
+    lexer.removeErrorListeners();
+    lexer.addErrorListener(&customErrorListener);
     antlr4::CommonTokenStream tokens(&lexer);
     HoursFieldParser parser(&tokens);
 
     parser.removeErrorListeners();
-    CustomErrorListener customErrorListener;
     parser.addErrorListener(&customErrorListener);
 
     auto* tree = parser.hoursField();
