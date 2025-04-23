@@ -213,11 +213,11 @@ public:
             // previously computed in parallel
             aggregationMutex.lock();
             simulation_->variables.computeSummary(y, numSpace);
-            aggregationMutex.unlock();
 
             // Computes statistics on annual (system and solution) costs, to be printed in output
             // into separate files
             simulation_->computeAnnualCostsStatistics(state);
+            aggregationMutex.unlock();
 
             logs.debug() << "year " << y << " ended and returned numSpace " << numSpace;
             numspaceManager.freeNumSpace(numSpace);
@@ -779,17 +779,12 @@ void ISimulation<ImplementationType>::computeRandomNumbers(
 template<class ImplementationType>
 void ISimulation<ImplementationType>::computeAnnualCostsStatistics(Variable::State s)
 {
-    std::mutex annualStatisticsMutex;
-    annualStatisticsMutex.lock();
-
     pAnnualStatistics.systemCost.addCost(s.annualSystemCost);
     pAnnualStatistics.criterionCost1.addCost(s.optimalSolutionCost1);
     pAnnualStatistics.criterionCost2.addCost(s.optimalSolutionCost2);
     pAnnualStatistics.optimizationTime1.addCost(s.averageOptimizationTime1);
     pAnnualStatistics.optimizationTime2.addCost(s.averageOptimizationTime2);
     pAnnualStatistics.updateTime.addCost(s.averageUpdateTime);
-
-    annualStatisticsMutex.unlock();
 }
 
 template<class ImplementationType>
