@@ -153,10 +153,6 @@ include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/devpack-standard-imports.cmake")
 # Modules
 include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules.cmake")
 
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-	add_compile_options("-Werror")
-endif ()
-
 # Sub Directories
 add_subdirectory(yuni)
 
