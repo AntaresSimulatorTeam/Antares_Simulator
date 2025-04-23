@@ -20,6 +20,7 @@
  */
 
 #include "antares/solver/lps/LpsFromAntares.h"
+
 #include <stdexcept>
 
 namespace Antares::Solver
