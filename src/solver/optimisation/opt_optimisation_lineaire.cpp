@@ -112,13 +112,10 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
                                  writer))
             return false;
 
-        if (problemeHebdo->ExportMPS != Data::mpsExportStatus::NO_EXPORT)
-        {
-            double optimalSolutionCost
+        double optimalSolutionCost
               = OPT_ObjectiveFunctionResult(problemeHebdo, numeroDeLIntervalle, optimizationNumber);
-            OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
+        OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
               optimalSolutionCost, *optPeriodStringGenerator, optimizationNumber, writer);
-        }
     }
     return true;
 }
