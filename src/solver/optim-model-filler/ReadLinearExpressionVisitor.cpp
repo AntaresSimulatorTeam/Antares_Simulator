@@ -163,18 +163,23 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const PortField
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const PortFieldSumNode* node)
 {
-    std::string port = node->getPortName();
-    std::string field = node->getFieldName();
+    std::string portId = node->getPortName();
+    std::string fieldId = node->getFieldName();
 
-    TimeDependentLinearExpression to_return(fillContext_, {});
-    for (const auto* c: component_.connectionsByPort(port))
+    TimeDependentLinearExpression to_return(fillContext_);
+    for (const auto connexion: component_.connectionsByPort(portId))
     {
-        const EvaluationContext connectedComponentEvalContext(c->getParameterValues(),
+        auto* component = connexion.component();
+        auto* port = connexion.port();
+        
+        const EvaluationContext connectedComponentEvalContext(component->getParameterValues(),
                                                               {},
                                                               evalContext_.data());
-        ReadLinearExpressionVisitor visitor(connectedComponentEvalContext, fillContext_, *c);
+        ReadLinearExpressionVisitor visitor(connectedComponentEvalContext,
+                                            fillContext_,
+                                            *component);
 
-        const Node* node = c->nodeAtPortField(port, field);
+        const Node* node = component->nodeAtPortField(port->Id(), fieldId);
         to_return += visitor.dispatch(node);
     }
 

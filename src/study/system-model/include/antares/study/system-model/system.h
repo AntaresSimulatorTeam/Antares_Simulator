@@ -23,19 +23,9 @@
 #include <unordered_map>
 
 #include "component.h"
-#include "connection.h"
 
 namespace Antares::ModelerStudy::SystemModel
 {
-
-/**
- * Defines the attributes of the System class
- * Made into a struct to avoid duplication in SystemBuilder
- */
-struct SystemData
-{
-};
-
 /**
  * Defines the simulated system.
  */

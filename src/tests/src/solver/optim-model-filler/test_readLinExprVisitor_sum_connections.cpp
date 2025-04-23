@@ -31,6 +31,7 @@
 #include <antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h>
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/study/system-model/component.h"
+#include "antares/study/system-model/connection.h"
 
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
@@ -122,8 +123,11 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_2_components_with_a_port_field,
 
     // Section connexions
     // ------------------
-    generatorComponent.addConnection(&nodeComponent, injection_port.Id());
-    nodeComponent.addConnection(&generatorComponent, injection_port.Id());
+    const std::string portId = injection_port.Id();
+    generatorComponent.addConnection(portId,
+                                     SystemModel::Connection(&nodeComponent, &injection_port));
+    nodeComponent.addConnection(portId,
+                                SystemModel::Connection(&generatorComponent, &injection_port));
 
     // Visitor associated to component named "N"
     ReadLinearExpressionVisitor visitor{evaluationContext, {0, 0}, nodeComponent};
@@ -230,11 +234,14 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_3_components_with_a_port_field,
                              .build();
     // Section connexions
     // ------------------
-    generatorComponent.addConnection(&nodeComponent, injection_port.Id());
-    nodeComponent.addConnection(&generatorComponent, injection_port.Id());
+    const std::string portId = injection_port.Id();
+    generatorComponent.addConnection(portId,
+                                     SystemModel::Connection(&nodeComponent, &injection_port));
+    nodeComponent.addConnection(portId,
+                                SystemModel::Connection(&generatorComponent, &injection_port));
 
-    demandComponent.addConnection(&nodeComponent, injection_port.Id());
-    nodeComponent.addConnection(&demandComponent, injection_port.Id());
+    demandComponent.addConnection(portId, SystemModel::Connection(&nodeComponent, &injection_port));
+    nodeComponent.addConnection(portId, SystemModel::Connection(&demandComponent, &injection_port));
 
     // Visitor associated to component named "N"
     ReadLinearExpressionVisitor visitor{evaluationContext, {0, 0}, nodeComponent};

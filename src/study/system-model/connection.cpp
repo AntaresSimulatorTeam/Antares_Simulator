@@ -19,14 +19,13 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
+#include <stdexcept>
 
 #include <antares/study/system-model/connection.h>
 
 namespace Antares::ModelerStudy::SystemModel
 {
-ConnectionEntry::ConnectionEntry(const Component* component,
-                                 const Port* port,
-                                 const PortFieldsRole& portFieldsRole)
+Connection::Connection(Component* component, const Port* port)
 {
     if (component == nullptr)
     {
@@ -39,20 +38,14 @@ ConnectionEntry::ConnectionEntry(const Component* component,
 
     component_ = component;
     port_ = port;
-    portFieldsRole_ = portFieldsRole;
 }
 
-const PortFieldsRole& ConnectionEntry::portFieldsRole() const
-{
-    return portFieldsRole_;
-}
-
-const Component* ConnectionEntry::component() const
+const Component* Connection::component() const
 {
     return component_;
 }
 
-const Port* ConnectionEntry::port() const
+const Port* Connection::port() const
 {
     return port_;
 }

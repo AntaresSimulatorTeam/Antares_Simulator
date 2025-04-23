@@ -25,6 +25,7 @@
 #include <sstream>
 
 #include "antares/io/inputs/yml-system/system.h"
+#include "antares/study/system-model/connection.h"
 #include "antares/study/system-model/system.h"
 
 using namespace Antares::ModelerStudy;
@@ -185,6 +186,11 @@ static SystemModel::FieldRole ExposeFieldRole(const std::string& portId,
     return SystemModel::FieldRole::Sender;
 }
 
+std::ostream& operator<<(std::ostream& os, const SystemModel::FieldRole& role)
+{
+    return role == SystemModel::FieldRole::Sender ? os << "Sender" : os << "Receiver";
+}
+
 static std::pair<SystemModel::PortFieldsRole, SystemModel::PortFieldsRole> ResolveFieldsRole(
   const SystemModel::Component& firstComponent,
   const SystemModel::Port& firstPort,
@@ -251,10 +257,12 @@ static void connectComponents(const YmlSystem::Connection& connection,
                                                                                firstPort,
                                                                                secondComponent,
                                                                                secondPort);
-    // TODO : do we need to connect both components to one another ?
-    // TODO : Or should we rather consider the field role and connect just one to the other ?
-    first_component.addConnection(&secondComponent, secondPort.Id());
-    secondComponent.addConnection(&first_component, firstPort.Id());
+    // TODO : Do we need to connect both components to one another ?
+    // TODO : Or should we rather consider the field role and only connect receiver to the sender ?
+    first_component.addConnection(firstPort.Id(),
+                                  SystemModel::Connection(&secondComponent, &secondPort));
+    secondComponent.addConnection(secondPort.Id(),
+                                  SystemModel::Connection(&first_component, &firstPort));
 }
 
 SystemModel::System convert(const YmlSystem::System& ymlSystem,

@@ -24,6 +24,7 @@
 
 #include <antares/expressions/nodes/PortFieldNode.h>
 #include <antares/expressions/visitors/EvaluationContext.h>
+#include "antares/study/system-model/connection.h"
 
 #include "model.h"
 
@@ -91,8 +92,8 @@ public:
         return data_.scenario_group_id;
     }
 
-    void addConnection(const Component* component, const std::string& portId);
-    std::vector<const Component*> connectionsByPort(const std::string& portId) const;
+    void addConnection(const std::string localPortId, Connection&& connection);
+    std::vector<Connection> connectionsByPort(const std::string& portId) const;
 
     const Expressions::Nodes::Node* nodeAtPortField(const std::string& portId,
                                                     const std::string& fieldId) const;
@@ -102,7 +103,7 @@ private:
     friend class ComponentBuilder;
     explicit Component(const ComponentData& component_data);
     ComponentData data_;
-    std::map<std::string, std::vector<const Component*>> connectedComponents_;
+    std::map<std::string, std::vector<Connection>> connections_;
 };
 
 class ComponentBuilder

@@ -96,14 +96,17 @@ TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldNode* port_field_node)
 
 TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldSumNode* node)
 {
-    std::string port = node->getPortName();
-    std::string field = node->getFieldName();
+    std::string portId = node->getPortName();
+    std::string fieldId = node->getFieldName();
 
     TimeIndex to_return = TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
-    for (const auto* c: component_.connectionsByPort(port))
+    for (const auto connexion: component_.connectionsByPort(portId))
     {
-        TimeIndexVisitor visitor(*c);
-        const Nodes::Node* node = c->nodeAtPortField(port, field);
+        auto* component = connexion.component();
+        auto* port = connexion.port();
+
+        TimeIndexVisitor visitor(*component);
+        const Nodes::Node* node = component->nodeAtPortField(port->Id(), fieldId);
         to_return = to_return | visitor.dispatch(node);
     }
     return to_return;
