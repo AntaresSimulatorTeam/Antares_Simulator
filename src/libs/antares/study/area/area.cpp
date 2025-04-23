@@ -249,6 +249,7 @@ void Area::resizeAllTimeseriesNumbers(uint nbYears)
     }
     thermal.resizeAllTimeseriesNumbers(nbYears);
     renewable.resizeAllTimeseriesNumbers(nbYears);
+    shortTermStorage.resizeAdditionalConstraintRhsTimeseriesNumbers(nbYears);
 }
 
 bool Area::thermalClustersMinStablePowerValidity(std::vector<YString>& output) const

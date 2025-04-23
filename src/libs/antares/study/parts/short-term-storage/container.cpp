@@ -277,6 +277,17 @@ bool STStorageInput::saveDataSeriesToFolder(const std::string& folder) const
                                { return storage.saveSeries(folder + SEP + storage.id); });
 }
 
+void STStorageInput::resizeAdditionalConstraintRhsTimeseriesNumbers(unsigned int nbYears)
+{
+    for (auto& cluster: storagesByIndex)
+    {
+        for (auto& additionalConstraint: cluster.additionalConstraints)
+        {
+            additionalConstraint.series.timeseriesNumbers.reset(nbYears);
+        }
+    }
+}
+
 std::size_t STStorageInput::cumulativeConstraintCount() const
 {
     return std::accumulate(

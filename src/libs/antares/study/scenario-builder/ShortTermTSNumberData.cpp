@@ -49,17 +49,13 @@ bool ShortTermTSNumberData::apply(Study& study)
             {
                 if (additionalConstraints.enabled)
                 {
-                    auto& ts_numbers = rules_[ShortTermTSNumberData::key{
-                      area->name,
-                      cluster.id,
-                      additionalConstraints.name}];
                     logprefix.clear()
                       << "Short Term Storage: Area '" << area->name << "', cluster '" << cluster.id
                       << "', constraint '" << additionalConstraints.name << "' :";
-                    const MatrixType::ColumnType& col = rules_.at(
-                      ShortTermTSNumberData::key{area->id.c_str(),
-                                                 cluster.id,
-                                                 additionalConstraints.name})[0];
+                    auto mapped = rules_.at(ShortTermTSNumberData::key{area->id.c_str(),
+                                                                       cluster.id,
+                                                                       additionalConstraints.name});
+                    const MatrixType::ColumnType& col = mapped[0];
                     ret = ApplyToMatrix(errors,
                                         logprefix,
                                         additionalConstraints.series,
