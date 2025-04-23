@@ -1,3 +1,7 @@
+if(BUILD_UI)
+	add_compile_definitions(BUILD_UI)
+endif()
+
 set(SRC_STUDY_SCENARIO_BUILDER
         include/antares/study/scenario-builder/scBuilderDataInterface.h
         include/antares/study/scenario-builder/TSnumberData.h
