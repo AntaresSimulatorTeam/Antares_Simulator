@@ -57,7 +57,7 @@ bool ShortTermTSNumberData::apply(Study& study)
                       << "Short Term Storage: Area '" << area->name << "', cluster '" << cluster.id
                       << "', constraint '" << additionalConstraints.name << "' :";
                     const MatrixType::ColumnType& col = rules_.at(
-                      ShortTermTSNumberData::key{area->name,
+                      ShortTermTSNumberData::key{area->id.c_str(),
                                                  cluster.id,
                                                  additionalConstraints.name})[0];
                     ret = ApplyToMatrix(errors,
@@ -79,9 +79,8 @@ void ShortTermTSNumberData::setTSnumber(const std::string& area_name,
                                         unsigned year,
                                         unsigned value)
 {
-    if (auto& ts_numbers = rules_[ShortTermTSNumberData::key{area_name,
-                                                             cluster_name,
-                                                             constraintName}];
+    if (auto& ts_numbers = rules_.at(
+          ShortTermTSNumberData::key{area_name, cluster_name, constraintName});
         year < ts_numbers.height)
     {
         ts_numbers[0][year] = value;
@@ -106,7 +105,7 @@ bool ShortTermTSNumberData::reset(const Study& study)
         {
             for (const auto& additionalConstraints: cluster.additionalConstraints)
             {
-                auto& ts_numbers = rules_[ShortTermTSNumberData::key{area->name,
+                auto& ts_numbers = rules_[ShortTermTSNumberData::key{area->id.c_str(),
                                                                      cluster.id,
                                                                      additionalConstraints.name}];
                 ts_numbers.reset(1, nbYears);

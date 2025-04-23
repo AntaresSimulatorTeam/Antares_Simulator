@@ -433,7 +433,7 @@ bool Rules::readShortTermStorage(const AreaName::Vector& splitKey,
       additionalConstraintName);
     const uint year = splitKey[4].to<uint>();
     // TODO i can directly set the ts number here (additionalConstraints)
-    shortTermStorage.setTSnumber(areaName,
+    shortTermStorage.setTSnumber(area->id.c_str(),
                                  stStorageClusterName,
                                  additionalConstraintName,
                                  year,
