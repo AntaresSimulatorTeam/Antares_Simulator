@@ -73,6 +73,11 @@ void Component::addConnection(const Component* component, const std::string& por
 
 std::vector<const Component*> Component::connectionsByPort(const std::string& portId) const
 {
+    std::vector<const Component*> empty_vector;
+    if (!connectedComponents_.contains(portId))
+    {
+        return empty_vector;
+    }
     return connectedComponents_.at(portId);
 }
 

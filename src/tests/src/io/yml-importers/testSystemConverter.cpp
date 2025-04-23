@@ -367,11 +367,10 @@ BOOST_FIXTURE_TEST_CASE(TryPortSelfConnection, PrepareYaml)
 
 BOOST_FIXTURE_TEST_CASE(SystemWithSenderAndReceiverPort, PrepareYaml)
 {
-    AddConnectionsToSystem(system,
-                           {{.firstCompo = "N",
-                             .firstPort = "injection_port",
-                             .secondCompo = "D",
-                             .secondPort = "injection_port"}});
+    const std::string port_id = "injection_port";
+    AddConnectionsToSystem(
+      system,
+      {{.firstCompo = "N", .firstPort = port_id, .secondCompo = "D", .secondPort = port_id}});
 
     YmlSystem::System systemObj = parserSystem.parse(system);
     auto systemModel = SystemConverter::convert(systemObj, libraries);
@@ -382,9 +381,9 @@ BOOST_FIXTURE_TEST_CASE(SystemWithSenderAndReceiverPort, PrepareYaml)
     auto& component_G = components.at("G");
     auto& component_D = components.at("D");
 
-    auto components_connected_to_N = component_N.connections();
-    auto components_connected_to_G = component_G.connections();
-    auto components_connected_to_D = component_D.connections();
+    auto components_connected_to_N = component_N.connectionsByPort(port_id);
+    auto components_connected_to_G = component_G.connectionsByPort(port_id);
+    auto components_connected_to_D = component_D.connectionsByPort(port_id);
 
     BOOST_CHECK(components_connected_to_N.size() == 1);
     BOOST_CHECK(components_connected_to_G.size() == 0);
