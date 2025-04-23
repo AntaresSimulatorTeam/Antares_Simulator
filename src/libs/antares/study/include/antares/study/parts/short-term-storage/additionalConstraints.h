@@ -43,6 +43,70 @@ class AdditionalConstraints
 
 public:
     AdditionalConstraints();
+
+    AdditionalConstraints(const AdditionalConstraints& other):
+        name(other.name),
+        cluster_id(other.cluster_id),
+        variable(other.variable),
+        operatorType(other.operatorType),
+        enabled(other.enabled),
+        rhs(other.rhs),
+        constraints(other.constraints),
+        tsNumbers(other.tsNumbers),
+        series(tsNumbers)
+    {
+        series.timeSeries = other.series.timeSeries;
+    }
+
+    AdditionalConstraints(AdditionalConstraints&& other) noexcept:
+        name(std::move(other.name)),
+        cluster_id(std::move(other.cluster_id)),
+        variable(std::move(other.variable)),
+        operatorType(std::move(other.operatorType)),
+        enabled(other.enabled),
+        rhs(std::move(other.rhs)),
+        constraints(std::move(other.constraints)),
+        tsNumbers(std::move(other.tsNumbers)), // if movable
+        series(tsNumbers)                      // must rebind series to our tsNumbers
+    {
+        series.timeSeries = std::move(other.series.timeSeries);
+    }
+
+    AdditionalConstraints& operator=(const AdditionalConstraints& other)
+    {
+        if (this != &other)
+        {
+            name = other.name;
+            cluster_id = other.cluster_id;
+            variable = other.variable;
+            operatorType = other.operatorType;
+            enabled = other.enabled;
+            rhs = other.rhs;
+            constraints = other.constraints;
+            tsNumbers = other.tsNumbers;
+            series.timeSeries = other.series.timeSeries;
+        }
+        return *this;
+    }
+
+    AdditionalConstraints& operator=(AdditionalConstraints&& other) noexcept
+    {
+        if (this != &other)
+        {
+            name = std::move(other.name);
+            cluster_id = std::move(other.cluster_id);
+            variable = std::move(other.variable);
+            operatorType = std::move(other.operatorType);
+            enabled = other.enabled;
+            rhs = std::move(other.rhs);
+            constraints = std::move(other.constraints);
+            tsNumbers = std::move(other.tsNumbers);
+
+            series.timeSeries = std::move(other.series.timeSeries);
+        }
+        return *this;
+    }
+
     std::string name;
     std::string cluster_id;
     std::string variable;

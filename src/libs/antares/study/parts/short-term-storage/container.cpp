@@ -230,7 +230,7 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
         {
             logs.info() << "Loaded ST additional constraint " << additionalConstraints.cluster_id
                         << "/" << additionalConstraints.name;
-            it->additionalConstraints.push_back(additionalConstraints);
+            it->additionalConstraints.push_back(std::move(additionalConstraints));
         }
     }
 
