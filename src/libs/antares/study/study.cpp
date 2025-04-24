@@ -575,7 +575,6 @@ void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
     }
 }
 
-#ifdef BUILD_UI
 Area* Study::areaAdd(const AreaName& name, bool updateMode)
 {
     if (name.empty())
@@ -636,6 +635,7 @@ Area* Study::areaAdd(const AreaName& name, bool updateMode)
     return area;
 }
 
+#ifdef BUILD_UI
 // TODO VP: delete with GUI
 bool Study::areaDelete(Area* area)
 {
