@@ -126,7 +126,7 @@ RESOLUTION:
     {
         if (ProblemeLineairePartieVariable.ExistenceDUneSolution != SPX_ERREUR_INTERNE)
         {
-            SPX_LibererProbleme(ProbSpx);
+            ProblemeHydraulique.ProblemeSpx[NumeroDeReservoir].reset(nullptr);
 
             ProbSpx = nullptr;
             PremierPassage = false;

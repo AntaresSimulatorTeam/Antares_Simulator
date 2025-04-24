@@ -44,8 +44,9 @@ nav:
           - 'Optimization model': 'user-guide/solver/05-model.md'
           - 'Hydro heuristics': 'user-guide/solver/06-hydro-heuristics.md'
           - 'Thermal heuristics': 'user-guide/solver/07-thermal-heuristic.md'
-          - 'Appendix': 'user-guide/solver/08-appendix.md'
-          - 'Command-line interface': 'user-guide/solver/09-command-line.md'
+          - 'Hybrid studies': 'user-guide/solver/08-hybrid-studies.md'
+          - 'Appendix': 'user-guide/solver/09-appendix.md'
+          - 'Command-line interface': 'user-guide/solver/10-command-line.md'
           - 'Optional features':
               - 'Multi-threading': 'user-guide/solver/optional-features/multi-threading.md'
               - 'Adequacy patch': 'user-guide/solver/optional-features/adequacy-patch.md'
@@ -59,8 +60,7 @@ nav:
           - 'Optimization model': 'user-guide/modeler/05-model.md'
           - 'Heuristics': 'user-guide/modeler/06-heuristics.md'
           - 'Standard library': 'user-guide/modeler/07-standard-library.md'
-          - 'Hybrid studies': 'user-guide/modeler/08-hybrid-studies.md'
-          - 'Command-line interface': 'user-guide/modeler/09-command-line.md'
+          - 'Command-line interface': 'user-guide/modeler/08-command-line.md'
       - 'Time-series generation':
           - 'Overview': 'user-guide/ts-generator/01-overview-tsgenerator.md'
           - 'Input files': 'user-guide/ts-generator/02-inputs.md'

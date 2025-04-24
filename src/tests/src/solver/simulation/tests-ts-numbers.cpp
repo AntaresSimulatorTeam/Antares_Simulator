@@ -84,6 +84,13 @@ std::shared_ptr<ClusterType> addClusterToArea(Area* area, const std::string& clu
     return cluster;
 }
 
+BOOST_AUTO_TEST_CASE(all_one_OK)
+{
+    using namespace Antares::Solver::TimeSeriesNumbers;
+    std::vector<std::pair<unsigned, std::string>> list = {{1, ""}, {1, ""}, {1, ""}};
+    BOOST_CHECK(Utils::checkAllElementsIdenticalOrOne(list));
+}
+
 BOOST_AUTO_TEST_CASE(test_compare_function_identical_values_OK)
 {
     using namespace Antares::Solver::TimeSeriesNumbers;

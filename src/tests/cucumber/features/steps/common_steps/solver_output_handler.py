@@ -12,7 +12,7 @@ class result_type(Enum):
     DETAILS = "details"
 
 
-class study_output_handler:
+class solver_output_handler:
 
     def __init__(self, study_output_path):
         self.study_output_path = study_output_path
@@ -82,8 +82,23 @@ class study_output_handler:
     def get_loss_of_load_duration_h(self, area: str, year: int) -> int:
         return self.__get_values_hourly(area, year)["LOLD"]["Hours"].sum()
 
-    def get_unsupplied_energy_mwh(self, area: str, year: int, date: str) -> float:
-        return self.__get_values_hourly_for_specific_hour(area, year, date)["UNSP. ENRG"]["MWh"].sum()
+    def get_spilled_energy_mwh(self, area: str, year: int) -> int:
+        return self.__get_values_hourly(area, year)["SPIL. ENRG"]["MWh"].sum()
+
+    def get_hydro_production_mwh(self, area: str, year: int) -> int:
+        return self.__get_values_hourly(area, year)["H. STOR"]["MWh"].sum()
+
+    def get_hydro_pumping_mwh(self, area: str, year: int) -> int:
+        return self.__get_values_hourly(area, year)["H. PUMP"]["MWh"].sum()
+
+    def get_balance_mwh(self, area: str, year: int) -> int:
+        return self.__get_values_hourly(area, year)["BALANCE"]["MWh"].sum()
+
+    def get_unsupplied_energy_mwh(self, area: str, year: int, date: str = None) -> float:
+        if date is None:
+            return self.__get_values_hourly(area, year)["UNSP. ENRG"]["MWh"].sum()
+        else:
+            return self.__get_values_hourly_for_specific_hour(area, year, date)["UNSP. ENRG"]["MWh"].sum()
 
     def min_gen_for_thermal_cluster(self, area: str, year: int, cluster: str):
         return self.__get_details_hourly(area, year)[cluster]["MIN GEN - MWh"]
