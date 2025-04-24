@@ -169,23 +169,42 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
             double totalInflowsYear = prepareMonthlyTargetGenerations(area, data);
             assert(totalInflowsYear >= 0.);
 
+            auto const& maxP = area.hydro.maxPower[Data::PartHydro::genMaxP];
+            auto const& maxE = area.hydro.maxPower[Data::PartHydro::genMaxE];
+            auto reservoirCapacity = area.hydro.reservoirCapacity;
+
             problem.CoutDepassementVolume = 1e2;
             problem.CoutViolMaxDuVolumeMin = 1e5;
             problem.VolumeInitial = lvi;
+
+            double capaciteTurbinageAnnuelle = 0;
 
             for (unsigned month = 0; month != 12; ++month)
             {
                 uint realmonth = (initReservoirLvlMonth + month) % 12;
 
                 uint simulationMonth = calendar_.mapping.months[realmonth];
+                auto daysPerMonth = calendar_.months[simulationMonth].days;
                 uint firstDay = calendar_.months[simulationMonth].daysYear.first;
+                uint endDay = firstDay + daysPerMonth;
 
-                problem.TurbineMax[month] = totalInflowsYear;
+                for (uint day = firstDay; day != endDay; ++day)
+                {
+                    problem.TurbineMax[month] += maxP[day] * maxE[day] / reservoirCapacity;
+                    capaciteTurbinageAnnuelle += problem.TurbineMax[month];
+                }
+
                 problem.TurbineMin[month] = data.mingens[realmonth];
                 problem.TurbineCible[month] = data.MTG[realmonth];
                 problem.Apport[month] = data.inflows[realmonth];
                 problem.VolumeMin[month] = minLvl[firstDay];
                 problem.VolumeMax[month] = maxLvl[firstDay];
+            }
+
+            if (totalInflowsYear > capaciteTurbinageAnnuelle)
+            {
+                logs.debug() << "Apports annuels > capacité turbinage annuelle";
+                problem.TurbineMax.assign(12, totalInflowsYear);
             }
 
             H2O_M_OptimiserUneAnnee(problem, 0);
