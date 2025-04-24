@@ -50,7 +50,8 @@ static void shortTermStorageCumulationRHS(
   int numberOfAreas,
   std::vector<double>& SecondMembre,
   const CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES& CorrespondancesDesContraintesHebdomadaires,
-  int weekFirstHour)
+  int weekFirstHour,
+  unsigned int year)
 {
     for (int areaIndex = 0; areaIndex < numberOfAreas; areaIndex++)
     {
@@ -58,6 +59,7 @@ static void shortTermStorageCumulationRHS(
         {
             for (const auto& additionalConstraints: storage.additionalConstraints)
             {
+                const auto& rhs = additionalConstraints.series.getColumn(year);
                 for (const auto& constraint: additionalConstraints.constraints)
                 {
                     const int cnt = CorrespondancesDesContraintesHebdomadaires
@@ -67,8 +69,8 @@ static void shortTermStorageCumulationRHS(
                       constraint.hours.begin(),
                       constraint.hours.end(),
                       0.0,
-                      [weekFirstHour, &additionalConstraints](const double sum, const int hour)
-                      { return sum + additionalConstraints.rhs[weekFirstHour + hour - 1]; });
+                      [weekFirstHour, &rhs](const double sum, const int hour)
+                      { return sum + rhs[weekFirstHour + hour - 1]; });
                 }
             }
         }
@@ -411,7 +413,8 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
                                   problemeHebdo->NombreDePays,
                                   ProblemeAResoudre->SecondMembre,
                                   problemeHebdo->CorrespondanceCntNativesCntOptimHebdomadaires,
-                                  weekFirstHour);
+                                  weekFirstHour,
+                                  problemeHebdo->year);
     if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
     {
         OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(problemeHebdo,
