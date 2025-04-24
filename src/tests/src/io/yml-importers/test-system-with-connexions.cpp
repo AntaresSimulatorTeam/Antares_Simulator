@@ -108,7 +108,7 @@ BOOST_AUTO_TEST_CASE(two_components_connected_by_ports_of_same_type_but_differen
     const auto component_N = systemModel.Components().at("N");
 
     const std::string port_id = "injection_port";
-    auto connections_to_N = component_N.connectionsByPort(port_id);
+    auto connections_to_N = component_N.connexionsViaPort(port_id);
 
     BOOST_CHECK_EQUAL(connections_to_N.size(), 1);
     BOOST_CHECK_EQUAL(connections_to_N[0].port()->Id(), "some_other_port");
@@ -116,8 +116,8 @@ BOOST_AUTO_TEST_CASE(two_components_connected_by_ports_of_same_type_but_differen
 
     // Symmetrically, check connexions of NG
     const auto component_NG = systemModel.Components().at("NG");
-    auto connections_to_NG = component_NG.connectionsByPort("some_other_port");
-    
+    auto connections_to_NG = component_NG.connexionsViaPort("some_other_port");
+
     BOOST_CHECK_EQUAL(connections_to_NG.size(), 1);
     BOOST_CHECK_EQUAL(connections_to_NG[0].port()->Id(), "injection_port");
     BOOST_CHECK_EQUAL(connections_to_NG[0].component()->Id(), "N");

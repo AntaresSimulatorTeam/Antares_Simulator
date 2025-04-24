@@ -28,7 +28,7 @@
 namespace Antares::ModelerStudy::SystemModel
 {
 
-// Define an enumeration for the role of a ConnectionEntry
+// Define an enumeration for the role of a ConnectionEnd
 enum class FieldRole
 {
     Sender,
@@ -44,10 +44,10 @@ using PortFieldsRole = std::map<PortField, FieldRole>;
 
 class Component;
 
-class Connection
+class ConnexionEnd
 {
 public:
-    Connection(Component* component, const Port* port);
+    ConnexionEnd(Component* component, const Port* port);
     [[nodiscard]] const Component* component() const;
     [[nodiscard]] const Port* port() const;
 

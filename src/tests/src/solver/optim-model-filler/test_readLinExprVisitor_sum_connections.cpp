@@ -37,6 +37,7 @@ using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::Expressions::Visitors;
 using namespace Antares::ModelerStudy;
+using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::Optimization;
 
 struct container_of_helpful_data_for_unit_tests
@@ -124,10 +125,8 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_2_components_with_a_port_field,
     // Section connexions
     // ------------------
     const std::string portId = injection_port.Id();
-    generatorComponent.addConnection(portId,
-                                     SystemModel::Connection(&nodeComponent, &injection_port));
-    nodeComponent.addConnection(portId,
-                                SystemModel::Connection(&generatorComponent, &injection_port));
+    generatorComponent.addConnection(portId, ConnexionEnd(&nodeComponent, &injection_port));
+    nodeComponent.addConnection(portId, ConnexionEnd(&generatorComponent, &injection_port));
 
     // Visitor associated to component named "N"
     ReadLinearExpressionVisitor visitor{evaluationContext, {0, 0}, nodeComponent};
@@ -235,13 +234,11 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_3_components_with_a_port_field,
     // Section connexions
     // ------------------
     const std::string portId = injection_port.Id();
-    generatorComponent.addConnection(portId,
-                                     SystemModel::Connection(&nodeComponent, &injection_port));
-    nodeComponent.addConnection(portId,
-                                SystemModel::Connection(&generatorComponent, &injection_port));
+    generatorComponent.addConnection(portId, ConnexionEnd(&nodeComponent, &injection_port));
+    nodeComponent.addConnection(portId, ConnexionEnd(&generatorComponent, &injection_port));
 
-    demandComponent.addConnection(portId, SystemModel::Connection(&nodeComponent, &injection_port));
-    nodeComponent.addConnection(portId, SystemModel::Connection(&demandComponent, &injection_port));
+    demandComponent.addConnection(portId, ConnexionEnd(&nodeComponent, &injection_port));
+    nodeComponent.addConnection(portId, ConnexionEnd(&demandComponent, &injection_port));
 
     // Visitor associated to component named "N"
     ReadLinearExpressionVisitor visitor{evaluationContext, {0, 0}, nodeComponent};

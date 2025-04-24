@@ -92,8 +92,8 @@ public:
         return data_.scenario_group_id;
     }
 
-    void addConnection(const std::string localPortId, Connection&& connection);
-    std::vector<Connection> connectionsByPort(const std::string& portId) const;
+    void addConnection(const std::string localPortId, ConnexionEnd&& connection);
+    std::vector<ConnexionEnd> connexionsViaPort(const std::string& portId) const;
 
     const Expressions::Nodes::Node* nodeAtPortField(const std::string& portId,
                                                     const std::string& fieldId) const;
@@ -103,7 +103,7 @@ private:
     friend class ComponentBuilder;
     explicit Component(const ComponentData& component_data);
     ComponentData data_;
-    std::map<std::string, std::vector<Connection>> connections_;
+    std::map<std::string, std::vector<ConnexionEnd>> connectionEnds_;
 };
 
 class ComponentBuilder

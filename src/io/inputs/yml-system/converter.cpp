@@ -29,6 +29,7 @@
 #include "antares/study/system-model/system.h"
 
 using namespace Antares::ModelerStudy;
+using namespace Antares::ModelerStudy::SystemModel; // Mainly for type ConnexionEnd
 
 namespace Antares::IO::Inputs::SystemConverter
 {
@@ -218,16 +219,22 @@ static std::pair<SystemModel::PortFieldsRole, SystemModel::PortFieldsRole> Resol
 }
 
 /**
- * @brief Creates a SystemModel::Connection from a YmlSystem::Connection and a map of components.
+ * @brief Uses a YmlSystem::Connection to connect component via ports
  *
- * This function constructs a SystemModel::Connection by looking up components and ports
- * based on the IDs provided in the YmlSystem::Connection. It ensures that the ports are
- * of the same type and that fields are correctly configured for sending and receiving.
+ * A YmlSystem::Connection has two entries, which are the two ends of a connexion
+ * between components.
+ * Caution : components can be connected via ports which can be different (different id),
+ * but of the same type.
+ * So, from a YmlSystem::Connection, this function connects two components via ports :
+ * Each component receives a SystemModel::ConnexionEnd representing the connexion it has with
+ * the other component.
+ * Doing this, this function ensures that the connected ports are of the same type and that
+ * fields are correctly configured for sending and receiving.
  *
  * @param connection A YmlSystem::Connection object containing the connection details.
  * @param components An unordered map of component IDs to SystemModel::Component objects.
  *
- * @return A SystemModel::Connection object representing the created connection.
+ * @return void
  *
  * @throw std::invalid_argument if a component or port is not found, if the ports are not
  *        of the same type, or if fields are incorrectly configured for sending/receiving.
@@ -254,10 +261,8 @@ static void connectComponents(const YmlSystem::Connection& connection,
                                                                                secondPort);
     // TODO : Do we need to connect both components to one another ?
     // TODO : Or should we rather consider the field role and only connect receiver to the sender ?
-    first_component.addConnection(firstPort.Id(),
-                                  SystemModel::Connection(&secondComponent, &secondPort));
-    secondComponent.addConnection(secondPort.Id(),
-                                  SystemModel::Connection(&first_component, &firstPort));
+    first_component.addConnection(firstPort.Id(), ConnexionEnd(&secondComponent, &secondPort));
+    secondComponent.addConnection(secondPort.Id(), ConnexionEnd(&first_component, &firstPort));
 }
 
 SystemModel::System convert(const YmlSystem::System& ymlSystem,
