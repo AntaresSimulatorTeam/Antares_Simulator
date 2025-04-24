@@ -381,9 +381,10 @@ void Application::execute()
         return;
     }
 
-    // Save about-the-study files (comments, notes, etc.)
+// Save about-the-study files (comments, notes, etc.)
+#ifdef BUILD_UI
     pStudy->saveAboutTheStudy(*resultWriter);
-
+#endif
     SystemMemoryLogger memoryReport;
     memoryReport.interval(1000 * 60 * 5); // 5 minutes
     memoryReport.start();

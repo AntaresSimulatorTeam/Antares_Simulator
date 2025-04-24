@@ -575,6 +575,7 @@ void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
     }
 }
 
+#ifdef BUILD_UI
 Area* Study::areaAdd(const AreaName& name, bool updateMode)
 {
     if (name.empty())
@@ -856,6 +857,7 @@ bool Study::areaRename(Area* area, AreaName newName)
 }
 
 // TODO VP: delete with GUI
+
 bool Study::clusterRename(Cluster* cluster, ClusterName newName)
 {
     // A name must not be empty
@@ -955,6 +957,7 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
 
     return ret;
 }
+#endif // BUILD_UI
 
 void Study::destroyAllLoadTSGeneratorData()
 {

@@ -25,10 +25,13 @@ namespace Antares
 {
 namespace Data
 {
+
+#ifdef BUILD_UI
 inline bool Study::readonly() const
 {
     return (parameters.readonly);
 }
+#endif
 
 template<unsigned int TimeSeriesT>
 inline void Study::storeTimeSeriesNumbers(Solver::IResultWriter& resultWriter) const
