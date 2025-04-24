@@ -73,12 +73,11 @@ void Component::addConnection(const std::string localPortId, ConnexionEnd&& conn
 
 std::vector<ConnexionEnd> Component::connexionsViaPort(const std::string& portId) const
 {
-    std::vector<ConnexionEnd> empty_vector;
     if (auto it = connectionEnds_.find(portId); it != connectionEnds_.end())
     {
         return it->second;
     }
-    return empty_vector;
+    return {};
 }
 
 const Node* Component::nodeAtPortField(const std::string& portId, const std::string& fieldId) const
