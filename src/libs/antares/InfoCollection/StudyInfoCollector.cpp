@@ -145,10 +145,10 @@ void StudyInfoCollector::solverVersionToFileContent(FileContent& file_content)
 
 void StudyInfoCollector::ORToolsSolver(FileContent& file_content)
 {
-    std::string linearSolverName = study_.parameters.optOptions.linearSolver;
+    std::string linearSolverName = study_.parameters.optOptions.firstOptimOptions.solverName;
     file_content.addItemToSection("study", "linear solver", linearSolverName);
 
-    std::string quadraticSolverName = study_.parameters.optOptions.quadraticSolver;
+    std::string quadraticSolverName = study_.parameters.optOptions.quadraticOptimOptions.solverName;
     file_content.addItemToSection("study", "quadratic solver", quadraticSolverName);
 }
 

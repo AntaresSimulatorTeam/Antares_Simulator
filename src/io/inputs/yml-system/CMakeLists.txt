@@ -8,7 +8,7 @@ set(SOURCES
 )
 
 # Create the library
-add_library(yml-system STATIC ${SOURCES})
+add_library(yml-system ${SOURCES})
 add_library(Antares::yml-system ALIAS yml-system)
 
 # Specify include directories

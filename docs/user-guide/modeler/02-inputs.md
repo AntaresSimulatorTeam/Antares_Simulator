@@ -58,6 +58,8 @@ port-types:
 - **description** _(optional)_: a free description of your port type. Has no effect on the simulation.
 - **fields**: a collection of coherent fields that transit through this port type. A field holds a single floating number.
     - **id**: the ID of the field. Must be unique in the scope of the port type, and respect [these rules](#rules-for-ids).
+- **area-connection** _(optional)_: used only for hybrid (solver x modeler) studies, ignored by [antares-modeler](08-command-line.md). 
+  For more information on hybrid studies, [see the relevant documentation](../solver/08-hybrid-studies.md#selecting-the-area-connection-port-fields).
 
 ### Models
 The **models** collection lists all the [models](05-model.md#models) that can be instantiated using your library.  
@@ -335,6 +337,10 @@ connections:
 - **component1**, **component2**: the IDs of the components to connect together
 - **port1**, **port2**: the IDs of the respective ports to connect (as defined by the two models). Note that exactly one 
   of the two models must define the port (in the "port-field-definition" section).
+
+### Area connections
+The **area-connections** section is used only for hybrid (solver x modeler) studies, and is ignored by [antares-modeler](08-command-line.md).  
+For more information on hybrid studies, [see the relevant documentation](../solver/08-hybrid-studies.md#connecting-modeler-components-to-legacy-areas).
 
 ## Data series
 The **input/data-series** directory contains all data-series needed by the [system description](#system-file) to define 
