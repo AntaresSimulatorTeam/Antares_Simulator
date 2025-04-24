@@ -7,7 +7,6 @@ on:
     branches:
       - develop
       - dependabot/*
-      - fix/8_8_watervalues
   schedule:
     - cron: '21 2 * * *'
   workflow_call:
