@@ -25,6 +25,7 @@
 
 namespace Antares::ModelerStudy::SystemModel
 {
+
 Connection::Connection(Component* component, const Port* port)
 {
     if (component == nullptr)

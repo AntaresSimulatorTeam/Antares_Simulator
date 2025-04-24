@@ -19,7 +19,9 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
+
 #include <map>
+#include <sstream>
 
 #include "port.h"
 
@@ -32,6 +34,11 @@ enum class FieldRole
     Sender,
     Receiver
 };
+
+inline std::ostream& operator<<(std::ostream& os, const SystemModel::FieldRole& role)
+{
+    return role == SystemModel::FieldRole::Sender ? os << "Sender" : os << "Receiver";
+}
 
 using PortFieldsRole = std::map<PortField, FieldRole>;
 

@@ -186,11 +186,6 @@ static SystemModel::FieldRole ExposeFieldRole(const std::string& portId,
     return SystemModel::FieldRole::Sender;
 }
 
-std::ostream& operator<<(std::ostream& os, const SystemModel::FieldRole& role)
-{
-    return role == SystemModel::FieldRole::Sender ? os << "Sender" : os << "Receiver";
-}
-
 static std::pair<SystemModel::PortFieldsRole, SystemModel::PortFieldsRole> ResolveFieldsRole(
   const SystemModel::Component& firstComponent,
   const SystemModel::Port& firstPort,
