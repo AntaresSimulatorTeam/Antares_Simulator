@@ -31,13 +31,6 @@
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
-static std::vector<double> fill_rhs()
-{
-    std::vector<double> ret(HOURS_PER_YEAR);
-    std::iota(ret.begin(), ret.end(), 0);
-    return ret;
-}
-
 //
 Data::ShortTermStorage::AdditionalConstraints getAdditionalConstraints(
   const std::string& name,
@@ -52,7 +45,6 @@ Data::ShortTermStorage::AdditionalConstraints getAdditionalConstraints(
     cstrs.cluster_id = cluster_id;
     cstrs.variable = variable;
     cstrs.operatorType = operatorType;
-    cstrs.rhs = fill_rhs();
     cstrs.constraints = single_additional_constraints;
     return cstrs;
 }
@@ -490,6 +482,17 @@ struct ExpectedResult
     double rhs;
 };
 
+void initialize_additional_constraints_rhs(
+  Antares::Data::ShortTermStorage::AdditionalConstraints& additionalConstraint,
+  const std::vector<double>& values)
+{
+    additionalConstraint.series.resize(values.size(), 0.0); // Default series data
+    Antares::Matrix<double> matrix(1, values.size());
+    // double values[] = {12.0, 18.0, 24.0};
+    matrix.pasteToColumn(0, values.data());
+    additionalConstraint.series.timeSeries = matrix;
+}
+
 ExpectedResult SetupSingleStorageOneArea(PROBLEME_HEBDO& problemeHebdo)
 {
     // Setup a single storage in one area
@@ -497,7 +500,7 @@ ExpectedResult SetupSingleStorageOneArea(PROBLEME_HEBDO& problemeHebdo)
     area0.resize(1);
 
     Antares::Data::ShortTermStorage::AdditionalConstraints additionalConstraint;
-    additionalConstraint.rhs = {12.0, 18.0, 24.0}; // RHS values for first hours
+    initialize_additional_constraints_rhs(additionalConstraint, {12.0, 18.0, 24.0});
 
     Antares::Data::ShortTermStorage::SingleAdditionalConstraint constraint;
     constraint.globalIndex = 0;
@@ -538,8 +541,7 @@ std::vector<ExpectedResult> SetupMultipleStoragesDifferentAreas(PROBLEME_HEBDO& 
     ShortTermStorage::AREA_INPUT& area0 = problemeHebdo.ShortTermStorage[0];
     area0.resize(1);
     Antares::Data::ShortTermStorage::AdditionalConstraints additionalConstraint0;
-    additionalConstraint0.rhs = {10.0, 15.0, 20.0, 25.0}; // RHS values for the first few hours
-
+    initialize_additional_constraints_rhs(additionalConstraint0, {10.0, 15.0, 20.0, 25.0});
     Antares::Data::ShortTermStorage::SingleAdditionalConstraint constraint0;
     constraint0.globalIndex = 1;
     constraint0.hours = {1, 2, 3}; // First three hours
@@ -556,8 +558,9 @@ std::vector<ExpectedResult> SetupMultipleStoragesDifferentAreas(PROBLEME_HEBDO& 
     ShortTermStorage::AREA_INPUT& area1 = problemeHebdo.ShortTermStorage[1];
     area1.resize(1);
     Data::ShortTermStorage::AdditionalConstraints additionalConstraint1;
-    additionalConstraint1.rhs = {5.0, 8.0, 12.0, 15.0}; // RHS values for the first few hours
-
+    initialize_additional_constraints_rhs(
+      additionalConstraint1,
+      {5.0, 8.0, 12.0, 15.0} /*RHS values for the first few hours*/);
     Data::ShortTermStorage::SingleAdditionalConstraint constraint1;
     constraint1.globalIndex = 2;
     constraint1.hours = {1, 2}; // First two hours
@@ -630,7 +633,7 @@ std::vector<ExpectedResult> SetupMultipleStoragesSameArea(PROBLEME_HEBDO& proble
 
     // First storage
     Antares::Data::ShortTermStorage::AdditionalConstraints additionalConstraint1;
-    additionalConstraint1.rhs = {10.0, 15.0}; // First two hours
+    initialize_additional_constraints_rhs(additionalConstraint1, {10.0, 15.0});
     Antares::Data::ShortTermStorage::SingleAdditionalConstraint constraint1;
     constraint1.globalIndex = 0;
     constraint1.hours = {1, 2};
@@ -643,7 +646,7 @@ std::vector<ExpectedResult> SetupMultipleStoragesSameArea(PROBLEME_HEBDO& proble
 
     // Second storage
     Antares::Data::ShortTermStorage::AdditionalConstraints additionalConstraint2;
-    additionalConstraint2.rhs = {5.0, 7.0}; // First two hours
+    initialize_additional_constraints_rhs(additionalConstraint2, {5.0, 7.0});
     Antares::Data::ShortTermStorage::SingleAdditionalConstraint constraint2;
     constraint2.globalIndex = 1;
     constraint2.hours = {1, 2};
