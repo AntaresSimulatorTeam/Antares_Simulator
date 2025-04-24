@@ -36,8 +36,8 @@ public:
     {
     }
 
-    // gp : camelCase different depending on functions : getPort and Field()
-    // gp : We should have port() and field()
+    // TODO : camelCase different depending on functions : getPort and Field()
+    // TODO : We should have port() and field()
     const Port& getPort() const
     {
         return port_;
