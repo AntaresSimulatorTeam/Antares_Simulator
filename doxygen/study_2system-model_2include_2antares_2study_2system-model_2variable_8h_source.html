@@ -172,8 +172,8 @@ $(document).ready(function(){initNavTree('study_2system-model_2include_2antares_
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        type_(type),</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        lowerBound_(std::move(lower_bound)),</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        upperBound_(std::move(upper_bound)),</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        timeDependent(timeDependent),</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        scenarioDependent(scenarioDependent)</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        timeDependent_(timeDependent),</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        scenarioDependent_(scenarioDependent)</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    {</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    }</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
@@ -199,12 +199,12 @@ $(document).ready(function(){initNavTree('study_2system-model_2include_2antares_
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    [[nodiscard]] <span class="keywordtype">bool</span> isTimeDependent()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="keywordflow">return</span> timeDependent == TimeDependent::YES;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="keywordflow">return</span> timeDependent_ == TimeDependent::YES;</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    }</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    [[nodiscard]] <span class="keywordtype">bool</span> IsScenarioDependent()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="keywordflow">return</span> scenarioDependent == ScenarioDependent::YES;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="keywordflow">return</span> scenarioDependent_ == ScenarioDependent::YES;</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    }</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="keyword">private</span>:</div>
@@ -212,8 +212,8 @@ $(document).ready(function(){initNavTree('study_2system-model_2include_2antares_
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    ValueType type_;</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Expression.html">Expression</a> lowerBound_;</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Expression.html">Expression</a> upperBound_;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    TimeDependent timeDependent = TimeDependent::YES;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    ScenarioDependent scenarioDependent = ScenarioDependent::YES;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    TimeDependent timeDependent_ = TimeDependent::YES;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    ScenarioDependent scenarioDependent_ = ScenarioDependent::YES;</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;};</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;} <span class="comment">// namespace Antares::ModelerStudy::SystemModel</span></div>

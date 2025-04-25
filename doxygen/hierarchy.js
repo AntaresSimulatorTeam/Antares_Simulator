@@ -128,10 +128,10 @@ var hierarchy =
       [ "Antares::Component::Datagrid::Renderer::classicColumn", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1classicColumn.html", null ],
       [ "Antares::Component::Datagrid::Renderer::thermalColumn", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1thermalColumn.html", null ]
     ] ],
-    [ "CommonFixture", "structCommonFixture.html", null ],
     [ "commonFixture", "structcommonFixture.html", [
       [ "saveFixture", "structsaveFixture.html", null ]
     ] ],
+    [ "CommonFixture", "structCommonFixture.html", null ],
     [ "Antares::Data::CompareAreaName", "structAntares_1_1Data_1_1CompareAreaName.html", null ],
     [ "Antares::Data::CompareBindingConstraintName", "structAntares_1_1Data_1_1CompareBindingConstraintName.html", null ],
     [ "Antares::Forms::CompareBySimulationMode", "structAntares_1_1Forms_1_1CompareBySimulationMode.html", null ],
@@ -154,9 +154,8 @@ var hierarchy =
       [ "Antares::Component::Datagrid::Component", "classAntares_1_1Component_1_1Datagrid_1_1Component.html", null ]
     ] ],
     [ "Antares::IO::Inputs::YmlSystem::Connection", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Connection.html", null ],
-    [ "Antares::ModelerStudy::SystemModel::Connection", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Connection.html", null ],
     [ "Antares::IO::Inputs::YmlSystem::ConnectionEntry", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ConnectionEntry.html", null ],
-    [ "Antares::ModelerStudy::SystemModel::ConnectionEntry", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEntry.html", null ],
+    [ "Antares::ModelerStudy::SystemModel::ConnexionEnd", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnexionEnd.html", null ],
     [ "CONSOMMATIONS_ABATTUES", "structCONSOMMATIONS__ABATTUES.html", null ],
     [ "Antares::Solver::ConstantDataFromAntares", "structAntares_1_1Solver_1_1ConstantDataFromAntares.html", null ],
     [ "Antares::IO::Inputs::YmlModel::Constraint", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Constraint.html", null ],
@@ -222,6 +221,7 @@ var hierarchy =
     [ "Antares::Optimization::ConstraintsFactory", "classAntares_1_1Optimization_1_1ConstraintsFactory.html", null ],
     [ "Antares::Data::Solar::Container", "classAntares_1_1Data_1_1Solar_1_1Container.html", null ],
     [ "Antares::Data::Wind::Container", "classAntares_1_1Data_1_1Wind_1_1Container.html", null ],
+    [ "container_of_helpful_data_for_unit_tests", "structcontainer__of__helpful__data__for__unit__tests.html", null ],
     [ "Antares::Private::OutputViewerData::Content", "classAntares_1_1Private_1_1OutputViewerData_1_1Content.html", null ],
     [ "Antares::Action::Context", "classAntares_1_1Action_1_1Context.html", null ],
     [ "CONTRAINTES_COUPLANTES", "structCONTRAINTES__COUPLANTES.html", null ],
@@ -1409,7 +1409,7 @@ var hierarchy =
     [ "Antares::Expressions::Registry< Antares::Expressions::Nodes::Node >", "classAntares_1_1Expressions_1_1Registry.html", null ],
     [ "Antares::Expressions::Registry< Node >", "classAntares_1_1Expressions_1_1Registry.html", [
       [ "BasicFixture", "structBasicFixture.html", null ],
-      [ "MyDummyFixture", "structMyDummyFixture.html", null ],
+      [ "CreateVisitorFixture", "structCreateVisitorFixture.html", null ],
       [ "MyDummyFixture", "structMyDummyFixture.html", null ],
       [ "MyDummyFixture", "structMyDummyFixture.html", null ],
       [ "MyDummyFixture", "structMyDummyFixture.html", null ],
@@ -1732,7 +1732,6 @@ var hierarchy =
     [ "Antares::ModelerStudy::SystemModel::System", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1System.html", null ],
     [ "Antares::ModelerStudy::SystemModel::SystemBuilder", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemBuilder.html", null ],
     [ "SystemBuilderCreationFixture", "structSystemBuilderCreationFixture.html", null ],
-    [ "Antares::ModelerStudy::SystemModel::SystemData", "structAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemData.html", null ],
     [ "SystemLinearProblemBuilder", "classSystemLinearProblemBuilder.html", null ],
     [ "T", null, [
       [ "Antares::Expressions::Visitors::EvaluationContext::CouldNotEvaluateConstantParameter< T >", "structAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext_1_1CouldNotEvaluateConstantParameter.html", null ]

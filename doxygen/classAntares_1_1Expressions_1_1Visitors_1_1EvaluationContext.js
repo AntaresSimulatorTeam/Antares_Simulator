@@ -2,6 +2,7 @@ var classAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext =
 [
     [ "CouldNotEvaluateConstantParameter", "structAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext_1_1CouldNotEvaluateConstantParameter.html", null ],
     [ "EvaluationContext", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext.html#a9e58b0df45dde086de8f653c4edf744c", null ],
+    [ "data", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext.html#acef1902ad56e691b612808c83a7f26c0", null ],
     [ "getParameter", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext.html#af55c17111ca6a5e91c02822bae9069cb", null ],
     [ "getParameterType", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext.html#a44e0bd5c9c01f4f364f6e0e5b0b00061", null ],
     [ "getParameterValue", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext.html#a14f040526788a3cb5d5477391b037b42", null ],

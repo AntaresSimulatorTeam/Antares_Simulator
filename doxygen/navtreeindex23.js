@@ -1,12 +1,5 @@
 var NAVTREEINDEX23 =
 {
-"classAntares_1_1Optimization_1_1FictitiousLoad.html":[8,0,0,16,10],
-"classAntares_1_1Optimization_1_1FictitiousLoad.html#a3df8f1a76f1361f5d0f0d3d4f950f2e0":[8,0,0,16,10,0],
-"classAntares_1_1Optimization_1_1FictitiousLoad.html#a8b0d5b42c6fd4a8aae21d9d959c07283":[8,0,0,16,10,2],
-"classAntares_1_1Optimization_1_1FictitiousLoad.html#acc13a7dbba09ac4b7e728c3a5757c63f":[8,0,0,16,10,1],
-"classAntares_1_1Optimization_1_1FullKey.html":[8,0,0,16,17],
-"classAntares_1_1Optimization_1_1FullKey.html#a0971c556fdac0629c489c2af96b19f86":[8,0,0,16,17,4],
-"classAntares_1_1Optimization_1_1FullKey.html#a1dda66ba015de8625cb923ebc026b9fe":[8,0,0,16,17,6],
 "classAntares_1_1Optimization_1_1FullKey.html#a1fcd869065eed0574184dd722056ab5c":[8,0,0,16,17,2],
 "classAntares_1_1Optimization_1_1FullKey.html#a224826729e1d301885781024a9115046":[8,0,0,16,17,3],
 "classAntares_1_1Optimization_1_1FullKey.html#a2c568e635b152d32f6223f8e69aef6fb":[8,0,0,16,17,1],
@@ -65,12 +58,12 @@ var NAVTREEINDEX23 =
 "classAntares_1_1Optimization_1_1PartialKeyHash.html":[8,0,0,16,21],
 "classAntares_1_1Optimization_1_1PartialKeyHash.html#aa056d77f7a47647359396f2fe12cbc8c":[8,0,0,16,21,0],
 "classAntares_1_1Optimization_1_1ReadLinearConstraintVisitor.html":[8,0,0,16,23],
-"classAntares_1_1Optimization_1_1ReadLinearConstraintVisitor.html#a22ed4ac68506cc303057f0266dd4b108":[8,0,0,16,23,1],
+"classAntares_1_1Optimization_1_1ReadLinearConstraintVisitor.html#a2632c29a6e8853208e6825e784ee47f2":[8,0,0,16,23,1],
 "classAntares_1_1Optimization_1_1ReadLinearConstraintVisitor.html#a80c35c676665a831926fc1087c86d6e6":[8,0,0,16,23,2],
 "classAntares_1_1Optimization_1_1ReadLinearConstraintVisitor.html#aebbf426f95cbf003909a981447cbfa8e":[8,0,0,16,23,0],
 "classAntares_1_1Optimization_1_1ReadLinearExpressionVisitor.html":[8,0,0,16,24],
+"classAntares_1_1Optimization_1_1ReadLinearExpressionVisitor.html#a119c8f47fd7211f2f4ee7f52a2548bcd":[8,0,0,16,24,0],
 "classAntares_1_1Optimization_1_1ReadLinearExpressionVisitor.html#a3d4b59ec23824725d5bda8ecfee96a41":[8,0,0,16,24,1],
-"classAntares_1_1Optimization_1_1ReadLinearExpressionVisitor.html#abefdf2add3fb4106b3afc82384b50851":[8,0,0,16,24,0],
 "classAntares_1_1Optimization_1_1ReadLinearExpressionVisitor.html#af753fb78f06ffbfa1424af76dc0ad507":[8,0,0,16,24,2],
 "classAntares_1_1Optimization_1_1STS.html":[8,0,0,16,12],
 "classAntares_1_1Optimization_1_1STS.html#a1d70039b56e08af3948d24e2368bf77e":[8,0,0,16,12,1],
@@ -249,5 +242,12 @@ var NAVTREEINDEX23 =
 "classAntares_1_1Private_1_1OutputViewerData_1_1Panel.html#ab465c1db3d9a877e3ab9a8333ff122e6":[8,0,0,17,2,4,15],
 "classAntares_1_1Private_1_1OutputViewerData_1_1Panel.html#ab8b3f5bab70dd351b875527895047284":[8,0,0,17,2,4,17],
 "classAntares_1_1Private_1_1OutputViewerData_1_1Panel.html#ac0d4132b99db0024012e4c49ad753a70":[8,0,0,17,2,4,6],
-"classAntares_1_1Private_1_1OutputViewerData_1_1Panel.html#acc4488b0f3b9f1d51a8ed61ef568c9a4":[8,0,0,17,2,4,2]
+"classAntares_1_1Private_1_1OutputViewerData_1_1Panel.html#acc4488b0f3b9f1d51a8ed61ef568c9a4":[8,0,0,17,2,4,2],
+"classAntares_1_1Private_1_1OutputViewerData_1_1Panel.html#ae6d760e7e9832e754f22eea556840ac3":[8,0,0,17,2,4,10],
+"classAntares_1_1Private_1_1OutputViewerData_1_1Panel.html#ae88a26ff00d64b5bcff23e92380c3338":[8,0,0,17,2,4,5],
+"classAntares_1_1Private_1_1OutputViewerData_1_1Panel_1_1IData.html":[8,0,0,17,2,4,0],
+"classAntares_1_1Private_1_1OutputViewerData_1_1Panel_1_1IData.html#a0b700684a884b3aa654072f51fd178c0":[8,0,0,17,2,4,0,1],
+"classAntares_1_1Private_1_1OutputViewerData_1_1Panel_1_1IData.html#aa35db16d0be4f41d59d6eb9cd3446751":[8,0,0,17,2,4,0,0],
+"classAntares_1_1Private_1_1OutputViewerData_1_1SpotlightMiniFrame.html":[8,0,0,17,2,2],
+"classAntares_1_1Private_1_1OutputViewerData_1_1SpotlightMiniFrame.html#a03b8ce8c0dbc49c3c65279ac9f6d42be":[8,0,0,17,2,2,0]
 };

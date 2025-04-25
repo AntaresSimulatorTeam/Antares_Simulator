@@ -1240,8 +1240,7 @@ var namespaces_dup =
           [ "ComponentData", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ComponentData.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ComponentData" ],
           [ "Component", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component" ],
           [ "ComponentBuilder", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ComponentBuilder.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ComponentBuilder" ],
-          [ "ConnectionEntry", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEntry.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEntry" ],
-          [ "Connection", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Connection.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Connection" ],
+          [ "ConnexionEnd", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnexionEnd.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnexionEnd" ],
           [ "Constraint", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Constraint.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Constraint" ],
           [ "Library", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Library.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Library" ],
           [ "LibraryBuilder", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1LibraryBuilder.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1LibraryBuilder" ],
@@ -1254,7 +1253,6 @@ var namespaces_dup =
           [ "PortField", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1PortField.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1PortField" ],
           [ "PortFieldDefinition", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1PortFieldDefinition.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1PortFieldDefinition" ],
           [ "PortType", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1PortType.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1PortType" ],
-          [ "SystemData", "structAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemData.html", null ],
           [ "System", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1System.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1System" ],
           [ "SystemBuilder", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemBuilder.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemBuilder" ],
           [ "Variable", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Variable.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Variable" ],
@@ -1279,7 +1277,7 @@ var namespaces_dup =
           ] ],
           [ "fromBool", "timeAndScenarioType_8h.html#acb58641e2e58b26c41533b310a8b6e53", null ],
           [ "fromBool", "timeAndScenarioType_8h.html#a1ec198537ff13af974a5dac7cd20ee8d", null ],
-          [ "operator<<", "study_2system-model_2include_2antares_2study_2system-model_2connection_8h.html#a9d3b4ea4f9cccc3ff8534f9a505f4cca", null ],
+          [ "operator<<", "study_2system-model_2include_2antares_2study_2system-model_2connection_8h.html#a4abb4fd7c458500f26ff69554f194304", null ],
           [ "operator<<", "enum__operators_8h.html#a5b42803d363465d2075144cd54313270", null ]
         ] ]
       ] ],

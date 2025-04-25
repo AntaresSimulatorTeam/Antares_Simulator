@@ -1,13 +1,5 @@
 var NAVTREEINDEX55 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase.html#ae2365d7bca004e568a6ffd501c6dbd04":[8,0,0,18,5,6,0,7,7],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase.html#af0ef05582a75d159fa6275c7154377d1":[8,0,0,18,5,6,0,7,1],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase.html#afca9f4cec3fedada86f41910e660877a":[8,0,0,18,5,6,0,7,6],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData_1_1Data.html":[8,0,0,18,5,6,0,4,0],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData_1_1Data.html#a7799c77dd8f384e8e7a4aea388ed2fd7":[8,0,0,18,5,6,0,4,0,0],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData_1_1Data.html#aebfd326dd1bd085ff9019049125fdbdf":[8,0,0,18,5,6,0,4,0,1],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Or.html":[8,0,0,18,5,6,0,3],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html":[8,0,0,18,5,6,0,2],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html#a06f92fef5a903bbfec0bf20584cae17c":[8,0,0,18,5,6,0,2,10],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html#a5044c56add1086ac0ec56685036da3c8":[8,0,0,18,5,6,0,2,2],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html#a64a09e4897a39e1a1a14ffb548c91e4b":[8,0,0,18,5,6,0,2,1],
@@ -249,5 +241,13 @@ var NAVTREEINDEX55 =
 "structAntares_1_1Window_1_1Inspector_1_1PLinkWidth.html":[8,0,0,23,1,28],
 "structAntares_1_1Window_1_1Inspector_1_1PLinkWidth.html#a9d10a532c819630e8eae206c1ab72c69":[8,0,0,23,1,28,0],
 "structAntares_1_1Window_1_1Inspector_1_1PRnClusterTSMode.html":[8,0,0,23,1,65],
-"structAntares_1_1Window_1_1Inspector_1_1PRnClusterTSMode.html#a8aa9a4de78bf8650b7db5ec7ca027802":[8,0,0,23,1,65,0]
+"structAntares_1_1Window_1_1Inspector_1_1PRnClusterTSMode.html#a8aa9a4de78bf8650b7db5ec7ca027802":[8,0,0,23,1,65,0],
+"structAntares_1_1Window_1_1Inspector_1_1PSimulationMode.html":[8,0,0,23,1,5],
+"structAntares_1_1Window_1_1Inspector_1_1PSimulationMode.html#a1c1b815a65bbcca83a00b7a8e48afe8c":[8,0,0,23,1,5,0],
+"structAntares_1_1Window_1_1Inspector_1_1PStudy1stJanuary.html":[8,0,0,23,1,20],
+"structAntares_1_1Window_1_1Inspector_1_1PStudy1stJanuary.html#a50d675c2ee4734779c140798021ac57c":[8,0,0,23,1,20,0],
+"structAntares_1_1Window_1_1Inspector_1_1PStudyBuildingMode.html":[8,0,0,23,1,6],
+"structAntares_1_1Window_1_1Inspector_1_1PStudyBuildingMode.html#a787e326822f365e2419e9773fa01f577":[8,0,0,23,1,6,0],
+"structAntares_1_1Window_1_1Inspector_1_1PStudyCalBegin.html":[8,0,0,23,1,16],
+"structAntares_1_1Window_1_1Inspector_1_1PStudyCalBegin.html#a2e32ac7f07d59d75e5f97feccebfaa18":[8,0,0,23,1,16,0]
 };

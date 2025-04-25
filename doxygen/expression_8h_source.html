@@ -170,7 +170,7 @@ $(document).ready(function(){initNavTree('expression_8h_source.html',''); initRe
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Expression.html">Expression</a>(<span class="keyword">const</span> std::string&amp; value, <a class="code" href="classAntares_1_1Expressions_1_1NodeRegistry.html">Expressions::NodeRegistry</a> root):</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        value_(value),</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        root_(std::move(root)),</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        empty_(<span class="keyword">false</span>)</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        empty_(!root_.node)</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    {</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    }</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>

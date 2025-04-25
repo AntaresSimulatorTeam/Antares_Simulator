@@ -148,69 +148,46 @@ $(document).ready(function(){initNavTree('study_2system-model_2include_2antares_
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">** along with Antares_Simulator. If not, see &lt;https://opensource.org/license/mpl-2-0/&gt;.</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">*/</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &quot;component.h&quot;</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &quot;port.h&quot;</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keyword">namespace </span>Antares::ModelerStudy::SystemModel</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;{</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;map&gt;</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;sstream&gt;</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;port.h&quot;</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// Define an enumeration for the role of a ConnectionEntry</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">enum class</span> FieldRole</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;{</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    Sender,</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    Receiver</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;};</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keyword">inline</span> std::ostream&amp; operator&lt;&lt;(std::ostream&amp; os, <span class="keyword">const</span> FieldRole&amp; role)</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;{</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordflow">return</span> role == FieldRole::Sender ? os &lt;&lt; <span class="stringliteral">&quot;Sender&quot;</span> : os &lt;&lt; <span class="stringliteral">&quot;Receiver&quot;</span>;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;}</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">namespace </span>Antares::ModelerStudy::SystemModel</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;{</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">// Define an enumeration for the role of a ConnectionEnd</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">enum class</span> FieldRole</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    Sender,</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    Receiver</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;};</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">inline</span> std::ostream&amp; operator&lt;&lt;(std::ostream&amp; os, <span class="keyword">const</span> SystemModel::FieldRole&amp; role)</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;{</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordflow">return</span> role == SystemModel::FieldRole::Sender ? os &lt;&lt; <span class="stringliteral">&quot;Sender&quot;</span> : os &lt;&lt; <span class="stringliteral">&quot;Receiver&quot;</span>;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;}</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keyword">using</span> PortFieldsRole = std::map&lt;PortField, FieldRole&gt;;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">class </span>Component;</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">using</span> PortFieldsRole = std::map&lt;PortField, FieldRole&gt;;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
-<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEntry.html">   56</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEntry.html">ConnectionEntry</a></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;{</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEntry.html#ac918cc1d3bc2235e75804561a543d059">ConnectionEntry</a>(<span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Component</a>* <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEntry.html#aabaa4e2e81b10acfce365c72343196e6">component</a>,</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;                    <span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Port.html">Port</a>* port,</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;                    <span class="keyword">const</span> PortFieldsRole&amp; <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEntry.html#ac5a4652c846306f70d4bd94629798924">portFieldsRole</a>);</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    [[nodiscard]] <span class="keyword">const</span> PortFieldsRole&amp; <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEntry.html#ac5a4652c846306f70d4bd94629798924">portFieldsRole</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    [[nodiscard]] <span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Component</a>* <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEntry.html#aabaa4e2e81b10acfce365c72343196e6">component</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    [[nodiscard]] <span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Port.html">Port</a>* port() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Component</a>* component_; </div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Port.html">Port</a>* port_;           </div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    PortFieldsRole portFieldsRole_;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;};</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
-<div class="line"><a name="l00100"></a><span class="lineno"><a class="line" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Connection.html">  100</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Connection.html">Connection</a></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;{</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Connection.html#ae41c95c3117059bb0fa1e16781c2891c">Connection</a>(<span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEntry.html">ConnectionEntry</a>&amp; <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Connection.html#ad107e9489b32c48e5dcc055ce0b7b1d4">firstEntry</a>, <span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEntry.html">ConnectionEntry</a>&amp; <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Connection.html#a81b4e66347a7b4982382da0e15b24e0a">secondEntry</a>);</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    [[nodiscard]] <span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEntry.html">ConnectionEntry</a>&amp; <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Connection.html#ad107e9489b32c48e5dcc055ce0b7b1d4">firstEntry</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    [[nodiscard]] <span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEntry.html">ConnectionEntry</a>&amp; <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Connection.html#a81b4e66347a7b4982382da0e15b24e0a">secondEntry</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160; </div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEntry.html">ConnectionEntry</a> firstEntry_;  </div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEntry.html">ConnectionEntry</a> secondEntry_; </div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;};</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160; </div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;} <span class="comment">// namespace Antares::ModelerStudy::SystemModel</span></div>
-<div class="ttc" id="aclassAntares_1_1ModelerStudy_1_1SystemModel_1_1Component_html"><div class="ttname"><a href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a></div><div class="ttdef"><b>Definition:</b> component.h:57</div></div>
-<div class="ttc" id="aclassAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEntry_html"><div class="ttname"><a href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEntry.html">Antares::ModelerStudy::SystemModel::ConnectionEntry</a></div><div class="ttdoc">Represents an entry in a connection, associating a component with a port.</div><div class="ttdef"><b>Definition:</b> connection.h:57</div></div>
-<div class="ttc" id="aclassAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEntry_html_aabaa4e2e81b10acfce365c72343196e6"><div class="ttname"><a href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEntry.html#aabaa4e2e81b10acfce365c72343196e6">Antares::ModelerStudy::SystemModel::ConnectionEntry::component</a></div><div class="ttdeci">const Component * component() const</div><div class="ttdoc">Returns the component associated with this connection entry.</div><div class="ttdef"><b>Definition:</b> connection.cpp:49</div></div>
-<div class="ttc" id="aclassAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEntry_html_ac5a4652c846306f70d4bd94629798924"><div class="ttname"><a href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEntry.html#ac5a4652c846306f70d4bd94629798924">Antares::ModelerStudy::SystemModel::ConnectionEntry::portFieldsRole</a></div><div class="ttdeci">const PortFieldsRole &amp; portFieldsRole() const</div><div class="ttdoc">Returns the portFieldsRole associated with this connection entry.</div><div class="ttdef"><b>Definition:</b> connection.cpp:44</div></div>
-<div class="ttc" id="aclassAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEntry_html_ac918cc1d3bc2235e75804561a543d059"><div class="ttname"><a href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEntry.html#ac918cc1d3bc2235e75804561a543d059">Antares::ModelerStudy::SystemModel::ConnectionEntry::ConnectionEntry</a></div><div class="ttdeci">ConnectionEntry(const Component *component, const Port *port, const PortFieldsRole &amp;portFieldsRole)</div><div class="ttdoc">Constructs a ConnectionEntry with the specified component and port.</div><div class="ttdef"><b>Definition:</b> connection.cpp:26</div></div>
-<div class="ttc" id="aclassAntares_1_1ModelerStudy_1_1SystemModel_1_1Connection_html"><div class="ttname"><a href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Connection.html">Antares::ModelerStudy::SystemModel::Connection</a></div><div class="ttdoc">Represents a connection between two ConnectionEntry objects.</div><div class="ttdef"><b>Definition:</b> connection.h:101</div></div>
-<div class="ttc" id="aclassAntares_1_1ModelerStudy_1_1SystemModel_1_1Connection_html_a81b4e66347a7b4982382da0e15b24e0a"><div class="ttname"><a href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Connection.html#a81b4e66347a7b4982382da0e15b24e0a">Antares::ModelerStudy::SystemModel::Connection::secondEntry</a></div><div class="ttdeci">const ConnectionEntry &amp; secondEntry() const</div><div class="ttdoc">Returns the second connection entry.</div><div class="ttdef"><b>Definition:</b> connection.cpp:70</div></div>
-<div class="ttc" id="aclassAntares_1_1ModelerStudy_1_1SystemModel_1_1Connection_html_ad107e9489b32c48e5dcc055ce0b7b1d4"><div class="ttname"><a href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Connection.html#ad107e9489b32c48e5dcc055ce0b7b1d4">Antares::ModelerStudy::SystemModel::Connection::firstEntry</a></div><div class="ttdeci">const ConnectionEntry &amp; firstEntry() const</div><div class="ttdoc">Returns the first connection entry.</div><div class="ttdef"><b>Definition:</b> connection.cpp:65</div></div>
-<div class="ttc" id="aclassAntares_1_1ModelerStudy_1_1SystemModel_1_1Connection_html_ae41c95c3117059bb0fa1e16781c2891c"><div class="ttname"><a href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Connection.html#ae41c95c3117059bb0fa1e16781c2891c">Antares::ModelerStudy::SystemModel::Connection::Connection</a></div><div class="ttdeci">Connection(const ConnectionEntry &amp;firstEntry, const ConnectionEntry &amp;secondEntry)</div><div class="ttdoc">Constructs a Connection with the specified first and second entries.</div><div class="ttdef"><b>Definition:</b> connection.cpp:59</div></div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnexionEnd.html">   47</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnexionEnd.html">ConnexionEnd</a></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;{</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnexionEnd.html">ConnexionEnd</a>(<a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Component</a>* component, <span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Port.html">Port</a>* port);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    [[nodiscard]] <span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Component</a>* component() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    [[nodiscard]] <span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Port.html">Port</a>* port() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Component</a>* component_;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Port.html">Port</a>* port_;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;};</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;} <span class="comment">// namespace Antares::ModelerStudy::SystemModel</span></div>
+<div class="ttc" id="aclassAntares_1_1ModelerStudy_1_1SystemModel_1_1Component_html"><div class="ttname"><a href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a></div><div class="ttdef"><b>Definition:</b> component.h:59</div></div>
+<div class="ttc" id="aclassAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnexionEnd_html"><div class="ttname"><a href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnexionEnd.html">Antares::ModelerStudy::SystemModel::ConnexionEnd</a></div><div class="ttdef"><b>Definition:</b> connection.h:48</div></div>
 <div class="ttc" id="aclassAntares_1_1ModelerStudy_1_1SystemModel_1_1Port_html"><div class="ttname"><a href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Port.html">Antares::ModelerStudy::SystemModel::Port</a></div><div class="ttdef"><b>Definition:</b> port.h:31</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
