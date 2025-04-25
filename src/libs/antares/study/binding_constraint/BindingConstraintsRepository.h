@@ -15,8 +15,6 @@ class BindingConstraintsRepository final : public Yuni::NonCopyable<BindingConst
 public:
     //! Vector of binding constraints
     using Vector = std::vector<std::shared_ptr<BindingConstraint>>;
-    //! Ordered Set of binding constraints
-    using Set = std::set<std::shared_ptr<BindingConstraint>, CompareBindingConstraintName>;
 
     using iterator = Vector::iterator;
     using const_iterator = Vector::const_iterator;
@@ -76,8 +74,8 @@ public:
     [[nodiscard]] std::shared_ptr<const Data::BindingConstraint> find(const AnyString& id) const;
 
     /*!
-** \brief Try to find a constraint from its name
-*/
+     ** \brief Try to find a constraint from its name
+     */
     [[nodiscard]] Data::BindingConstraint* findByName(const AnyString& name);
 
     /*!
@@ -88,7 +86,9 @@ public:
     /*!
     ** \brief Load all binding constraints from a folder
     */
-    [[nodiscard]] bool loadFromFolder(Data::Study& s, const Data::StudyLoadOptions& options, const AnyString& folder);
+    [[nodiscard]] bool loadFromFolder(Data::Study& s,
+                                      const Data::StudyLoadOptions& options,
+                                      const AnyString& folder);
 
     /*!
     ** \brief Save all binding constraints into a folder
@@ -148,26 +148,25 @@ public:
     */
     void markAsModified() const;
 
-    static std::vector<std::shared_ptr<BindingConstraint>> LoadBindingConstraint(EnvForLoading env);
+    static Vector LoadBindingConstraint(EnvForLoading env);
 
-    [[nodiscard]] std::vector<std::shared_ptr<BindingConstraint>> activeContraints() const;
+    [[nodiscard]] Vector activeContraints() const;
 
     [[nodiscard]] std::vector<uint> getIndicesForInequalityBindingConstraints() const;
-
 
 private:
     bool internalSaveToFolder(Data::BindingConstraintSaver::EnvForSaving& env) const;
 
     //! All constraints
-    Data::BindingConstraintsRepository::Vector constraints_;
+    Vector constraints_;
 
-    mutable std::optional<std::vector<std::shared_ptr<BindingConstraint>>> activeConstraints_;
+    mutable Vector activeConstraints_;
 };
 
 struct WhoseNameContains final
 {
 public:
-    explicit WhoseNameContains(AnyString  filter) : pFilter(std::move(filter))
+    explicit WhoseNameContains(AnyString filter) : pFilter(std::move(filter))
     {
     }
     bool operator()(const std::shared_ptr<BindingConstraint>& s) const
@@ -178,5 +177,5 @@ public:
 private:
     AnyString pFilter;
 };
-}
+} // namespace Antares::Data
 #include "BindingConstraintsRepository.hxx"

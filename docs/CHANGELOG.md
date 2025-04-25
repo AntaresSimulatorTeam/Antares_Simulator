@@ -1,9 +1,19 @@
 Antares Changelog
 =================
 
+8.8.15 (04/2025)
+--------------------
+## Bugfix
+- Correct turbine max formula 8.8 [ANT-3095] (#2764)
+- Allow empty series files for STS [ANT-3053] (#2731)
+- Fix undefined behavior in BCs [ANT-2994] (#2708)
+
+## Misc
+- Drop support for Ubuntu 20.04, add support for Ubuntu 22.04
+
 8.8.14 (03/2025)
 --------------------
-## New features
+## Enhancements
 - Increase precision for `LOLD[CSR]` and `MRG PRICE[CSR]` [ANT-2443] (#2613)
 
 ## Bugfix

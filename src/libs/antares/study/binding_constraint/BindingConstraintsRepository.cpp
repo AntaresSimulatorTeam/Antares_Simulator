@@ -16,45 +16,57 @@
 void Data::BindingConstraintsRepository::clear()
 {
     constraints_.clear();
-    activeConstraints_.reset();
+    activeConstraints_.clear();
 }
 
-namespace Antares::Data {
-std::shared_ptr<Data::BindingConstraint> BindingConstraintsRepository::find(const AnyString &id) {
-    for (auto const &i: constraints_) {
+namespace Antares::Data
+{
+std::shared_ptr<Data::BindingConstraint> BindingConstraintsRepository::find(const AnyString& id)
+{
+    for (auto const& i : constraints_)
+    {
         if (i->id() == id)
             return i;
     }
     return nullptr;
 }
 
-std::shared_ptr<const Data::BindingConstraint> BindingConstraintsRepository::find(const AnyString &id) const {
-    for (const auto & i : constraints_) {
+std::shared_ptr<const Data::BindingConstraint> BindingConstraintsRepository::find(
+  const AnyString& id) const
+{
+    for (const auto& i : constraints_)
+    {
         if (i->id() == id)
             return i;
     }
     return nullptr;
 }
 
-BindingConstraint *BindingConstraintsRepository::findByName(const AnyString &name) {
-    for (auto const & i : constraints_) {
+BindingConstraint* BindingConstraintsRepository::findByName(const AnyString& name)
+{
+    for (auto const& i : constraints_)
+    {
         if (i->name() == name)
             return i.get();
     }
     return nullptr;
 }
 
-const BindingConstraint *BindingConstraintsRepository::findByName(const AnyString &name) const {
-    for (const auto & i : constraints_) {
+const BindingConstraint* BindingConstraintsRepository::findByName(const AnyString& name) const
+{
+    for (const auto& i : constraints_)
+    {
         if (i->name() == name)
             return i.get();
     }
     return nullptr;
 }
 
-void BindingConstraintsRepository::removeConstraintsWhoseNameConstains(const AnyString &filter) {
+void BindingConstraintsRepository::removeConstraintsWhoseNameConstains(const AnyString& filter)
+{
     WhoseNameContains pred(filter);
-    constraints_.erase(std::remove_if(constraints_.begin(), constraints_.end(), pred), constraints_.end());
+    constraints_.erase(std::remove_if(constraints_.begin(), constraints_.end(), pred),
+                       constraints_.end());
 }
 
 static int valueForSort(BindingConstraint::Operator op)
@@ -87,7 +99,7 @@ bool compareConstraints(const std::shared_ptr<BindingConstraint>& s1,
     }
 }
 
-std::shared_ptr<BindingConstraint> BindingConstraintsRepository::add(const AnyString &name)
+std::shared_ptr<BindingConstraint> BindingConstraintsRepository::add(const AnyString& name)
 {
     auto bc = std::make_shared<BindingConstraint>();
     bc->name(name);
@@ -97,19 +109,22 @@ std::shared_ptr<BindingConstraint> BindingConstraintsRepository::add(const AnySt
     return bc;
 }
 
-std::vector<std::shared_ptr<BindingConstraint>>
-BindingConstraintsRepository::LoadBindingConstraint(EnvForLoading env) {
+std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::LoadBindingConstraint(
+  EnvForLoading env)
+{
     BindingConstraintLoader loader;
     return loader.load(std::move(env));
 }
 
-bool BindingConstraintsRepository::saveToFolder(const AnyString &folder) const {
+bool BindingConstraintsRepository::saveToFolder(const AnyString& folder) const
+{
     BindingConstraintSaver::EnvForSaving env;
     env.folder = folder;
     return internalSaveToFolder(env);
 }
 
-bool BindingConstraintsRepository::rename(BindingConstraint *bc, const AnyString &newname) {
+bool BindingConstraintsRepository::rename(BindingConstraint* bc, const AnyString& newname)
+{
     // Copy of the name
     ConstraintName name;
     name = newname;
@@ -283,7 +298,7 @@ void BindingConstraintsRepository::remove(const Area* area)
     RemovePredicate<Area> predicate(area);
     auto e = std::remove_if(constraints_.begin(), constraints_.end(), predicate);
     constraints_.erase(e, constraints_.end());
-    activeConstraints_.reset();
+    activeConstraints_.clear();
 }
 
 void BindingConstraintsRepository::remove(const AreaLink* lnk)
@@ -291,7 +306,7 @@ void BindingConstraintsRepository::remove(const AreaLink* lnk)
     RemovePredicate<AreaLink> predicate(lnk);
     auto e = std::remove_if(constraints_.begin(), constraints_.end(), predicate);
     constraints_.erase(e, constraints_.end());
-    activeConstraints_.reset();
+    activeConstraints_.clear();
 }
 
 void BindingConstraintsRepository::remove(const BindingConstraint* bc)
@@ -299,9 +314,8 @@ void BindingConstraintsRepository::remove(const BindingConstraint* bc)
     RemovePredicate<BindingConstraint> predicate(bc);
     auto e = std::remove_if(constraints_.begin(), constraints_.end(), predicate);
     constraints_.erase(e, constraints_.end());
-    activeConstraints_.reset();
+    activeConstraints_.clear();
 }
-
 
 BindingConstraintsRepository::iterator BindingConstraintsRepository::begin()
 {
@@ -330,8 +344,8 @@ void BindingConstraintsRepository::markAsModified() const
 }
 
 std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::activeContraints() const {
-    if (activeConstraints_) {
-        return activeConstraints_.value();
+    if (!activeConstraints_.empty()) {
+        return activeConstraints_;
     } else {
         std::vector<std::shared_ptr<BindingConstraint>> out;
         std::copy_if(constraints_.begin(), constraints_.end(), std::back_inserter(out),
@@ -339,7 +353,7 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::ac
                          return bc->isActive();
                      });
         activeConstraints_ = std::move(out);
-        return activeConstraints_.value();
+        return activeConstraints_;
     }
 }
 

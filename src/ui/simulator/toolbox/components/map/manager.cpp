@@ -473,7 +473,7 @@ void Manager::selectOnly(Item* item)
                 // building list of selected links
                 const Data::AreaLink::Set& linklist = Window::Inspector::getLinks();
 
-                Data::BindingConstraintsRepository::Set constraintlist;
+                Data::BindingConstraint::Set constraintlist;
 
                 const auto cEnd = pStudy->bindingConstraints.end();
                 for (auto i = pStudy->bindingConstraints.begin();
@@ -530,7 +530,7 @@ void Manager::changeItemSelectionState(Item* item)
             // building list of selected links
             Data::AreaLink::Set linklist = Window::Inspector::getLinks();
 
-            Data::BindingConstraintsRepository::Set constraintlist;
+            Data::BindingConstraint::Set constraintlist;
 
             const auto cEnd = pStudy->bindingConstraints.end();
             for (auto i = pStudy->bindingConstraints.begin(); i != cEnd;
@@ -739,7 +739,7 @@ void Manager::selectFromBoundingBox(const wxPoint& a, const wxPoint& b, const si
         Data::Area::Set arealist;
         Data::AreaLink::Set linklist;
         Data::ThermalCluster::Vector clusterlist;
-        Data::BindingConstraintsRepository::Set constraintlist;
+        Data::BindingConstraint::Set constraintlist;
 
         {
             NodeByZPosition::const_iterator end = pAllNodes.end();

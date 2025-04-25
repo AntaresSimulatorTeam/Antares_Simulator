@@ -84,6 +84,8 @@ public:
         columnMax,
     };
 
+    //! Ordered Set of binding constraints
+    using Set = std::set<std::shared_ptr<BindingConstraint>, CompareBindingConstraintName>;
     //! Map of weight (for links)
     using linkWeightMap = std::map<const AreaLink*, double, CompareLinkName>;
     //! Iterator

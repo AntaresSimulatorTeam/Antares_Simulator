@@ -3,6 +3,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <antares/constants.h>
 #include <boost/test/unit_test.hpp>
 #include <yuni/io/file.h>
 #include <filesystem>
@@ -165,6 +166,26 @@ struct Fixture
 // ==================
 
 BOOST_AUTO_TEST_SUITE(s)
+
+// We only check the 1st element
+void checkSizeFirst(const std::vector<double>& in, double v)
+{
+    BOOST_CHECK_EQUAL(in.size(), HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(in[0], v);
+}
+
+BOOST_FIXTURE_TEST_CASE(check_empty, Fixture)
+{
+    createFileSeries(0); // Empty files
+    series.loadFromFolder(getFolder());
+    series.fillDefaultSeriesIfEmpty();
+
+    checkSizeFirst(series.maxInjectionModulation, 1.0);
+    checkSizeFirst(series.maxWithdrawalModulation, 1.0);
+    checkSizeFirst(series.inflows, 0.0);
+    checkSizeFirst(series.lowerRuleCurve, 0.0);
+    checkSizeFirst(series.upperRuleCurve, 1.0);
+}
 
 BOOST_FIXTURE_TEST_CASE(check_vector_sizes, Fixture)
 {

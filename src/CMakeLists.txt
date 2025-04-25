@@ -9,7 +9,7 @@ set(ANTARES_VERSION_REVISION  15)
 set(ANTARES_BETA 0)
 set(ANTARES_RC 0)
 
-set(ANTARES_VERSION_YEAR      202)
+set(ANTARES_VERSION_YEAR      2025)
 
 project(antares
         VERSION ${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION})
@@ -219,13 +219,14 @@ find_package(gflags)
 find_package(ortools)
 if(NOT ortools_FOUND OR BUILD_ORTOOLS)
 message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
-  FetchContent_Declare(ortools
-    GIT_REPOSITORY "https://github.com/rte-france/or-tools"
+    FetchContent_Declare(ortools-rte
+            GIT_REPOSITORY "https://github.com/rte-france/or-tools-rte.git"
     GIT_TAG ${ORTOOLS_TAG}
     GIT_SHALLOW TRUE
     )
 
   # Pass options to OR-Tools's CMake
+  set(BUILD_DEPS "ON" CACHE INTERNAL "")
   set(BUILD_SAMPLES "OFF" CACHE INTERNAL "")
   set(BUILD_FLATZINC "OFF" CACHE INTERNAL "")
   set(BUILD_EXAMPLES "OFF" CACHE INTERNAL "")
@@ -237,8 +238,11 @@ message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   # In mode optimization error analysis, we call Sirius through or-tools
   # So we need to activate Sirius in or-tools configuration (OFF by default)
   set(USE_SIRIUS "ON" CACHE INTERNAL "")
+    set(ortools_REPO "https://github.com/google/or-tools.git")
+    string(REGEX MATCH "^[^-]+" OFFICIAL_TAG ${ORTOOLS_TAG})
+    set(ortools_REF ${OFFICIAL_TAG})
 
-  FetchContent_MakeAvailable(ortools)
+    FetchContent_MakeAvailable(ortools-rte)
 endif()
 
 find_package(minizip)

@@ -6,15 +6,18 @@
 
 #include <memory>
 #include "BindingConstraint.h"
-namespace Antares::Data {
+namespace Antares::Data
+{
 
-class BindingConstraintGroup {
+class BindingConstraintGroup
+{
 public:
     explicit BindingConstraintGroup(std::string name);
 
-    [[nodiscard]] std::string name() { return name_; }
+    [[nodiscard]] std::string name();
+
     void add(const std::shared_ptr<BindingConstraint>& constraint);
-    [[nodiscard]] std::set<std::shared_ptr<BindingConstraint>> constraints() const;
+    [[nodiscard]] const BindingConstraint::Set& constraints() const;
     [[nodiscard]] unsigned numberOfTimeseries() const;
 
 public:
@@ -22,8 +25,8 @@ public:
     Matrix<uint32_t> timeseriesNumbers;
 
 private:
-    std::set<std::shared_ptr<BindingConstraint>> constraints_;
+    BindingConstraint::Set constraints_;
     std::string name_;
 };
 
-} // Data
+} // namespace Antares::Data
