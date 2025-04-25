@@ -1,6 +1,8 @@
 #include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 
+using namespace Antares::Optimisation::LinearProblemApi;
+
 namespace Antares::Expressions::Visitors
 {
 EvaluationContext::EvaluationContext(std::map<std::string, ParameterTypeAndValue> system_parameters,
@@ -67,5 +69,10 @@ ParameterType EvaluationContext::getParameterType(const std::string& key) const
 ParameterTypeAndValue EvaluationContext::getParameter(const std::string& key) const
 {
     return parameters_types_and_values_.at(key);
+}
+
+ILinearProblemData& EvaluationContext::data() const
+{
+    return data_;
 }
 } // namespace Antares::Expressions::Visitors

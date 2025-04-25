@@ -32,7 +32,7 @@
 using namespace std::string_literals;
 
 // Test empty library
-BOOST_AUTO_TEST_CASE(EmpyLibrary_is_valid)
+BOOST_AUTO_TEST_CASE(EmptyLibrary_is_valid)
 {
     Antares::IO::Inputs::YmlModel::Parser parser;
     const auto library = R"(

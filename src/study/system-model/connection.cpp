@@ -18,14 +18,14 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
+#include <stdexcept>
 
 #include <antares/study/system-model/connection.h>
 
 namespace Antares::ModelerStudy::SystemModel
 {
-ConnectionEntry::ConnectionEntry(const Component* component,
-                                 const Port* port,
-                                 const PortFieldsRole& portFieldsRole)
+
+ConnexionEnd::ConnexionEnd(Component* component, const Port* port)
 {
     if (component == nullptr)
     {
@@ -38,37 +38,16 @@ ConnectionEntry::ConnectionEntry(const Component* component,
 
     component_ = component;
     port_ = port;
-    portFieldsRole_ = portFieldsRole;
 }
 
-const PortFieldsRole& ConnectionEntry::portFieldsRole() const
-{
-    return portFieldsRole_;
-}
-
-const Component* ConnectionEntry::component() const
+const Component* ConnexionEnd::component() const
 {
     return component_;
 }
 
-const Port* ConnectionEntry::port() const
+const Port* ConnexionEnd::port() const
 {
     return port_;
 }
 
-Connection::Connection(const ConnectionEntry& firstEntry, const ConnectionEntry& secondEntry):
-    firstEntry_(firstEntry),
-    secondEntry_(secondEntry)
-{
-}
-
-const ConnectionEntry& Connection::firstEntry() const
-{
-    return firstEntry_;
-}
-
-const ConnectionEntry& Connection::secondEntry() const
-{
-    return secondEntry_;
-}
 } // namespace Antares::ModelerStudy::SystemModel

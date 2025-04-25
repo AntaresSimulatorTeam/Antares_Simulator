@@ -26,8 +26,6 @@
 #include <boost/test/unit_test.hpp>
 
 #include <antares/io/inputs/yml-system/converter.h>
-#include <antares/io/inputs/yml-system/parser.h>
-#include <antares/study/system-model/system.h>
 #include "antares/io/inputs/model-converter/modelConverter.h"
 #include "antares/io/inputs/yml-model/parser.h"
 #include "antares/study/system-model/library.h"
@@ -169,7 +167,7 @@ BOOST_FIXTURE_TEST_CASE(bad_library_model_format, LibraryObjects)
     BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), std::runtime_error);
 }
 
-static const auto libraryYaml = R"(
+static const auto libraryYaml_1 = R"(
         library:
           id: std
           description: Standard library
@@ -209,7 +207,7 @@ static const auto libraryYaml = R"(
                   type: flow
     )"s;
 
-static const auto libraryYaml2 = R"(
+static const auto libraryYaml_2 = R"(
         library:
           id: mylib
           description: Extra library
@@ -275,8 +273,8 @@ BOOST_AUTO_TEST_CASE(Full_system_test)
     YmlSystem::Parser parserSystem;
 
     std::vector<SystemModel::Library> libraries;
-    libraries.push_back(ModelConverter::convert(parserModel.parse(libraryYaml)));
-    libraries.push_back(ModelConverter::convert(parserModel.parse(libraryYaml2)));
+    libraries.push_back(ModelConverter::convert(parserModel.parse(libraryYaml_1)));
+    libraries.push_back(ModelConverter::convert(parserModel.parse(libraryYaml_2)));
 
     YmlSystem::System systemObj = parserSystem.parse(systemYaml);
     auto systemModel = SystemConverter::convert(systemObj, libraries);
@@ -334,8 +332,8 @@ struct PrepareYaml
     {
         system += "\n";
         system += std::string(componentsPos, ' ') + "connections:";
-        libraries.push_back(ModelConverter::convert(parserModel.parse(libraryYaml)));
-        libraries.push_back(ModelConverter::convert(parserModel.parse(libraryYaml2)));
+        libraries.push_back(ModelConverter::convert(parserModel.parse(libraryYaml_1)));
+        libraries.push_back(ModelConverter::convert(parserModel.parse(libraryYaml_2)));
     }
 };
 
@@ -367,23 +365,30 @@ BOOST_FIXTURE_TEST_CASE(TryPortSelfConnection, PrepareYaml)
 
 BOOST_FIXTURE_TEST_CASE(SystemWithSenderAndReceiverPort, PrepareYaml)
 {
-    AddConnectionsToSystem(system,
-                           {{.firstCompo = "N",
-                             .firstPort = "injection_port",
-                             .secondCompo = "D",
-                             .secondPort = "injection_port"}});
+    const std::string port_id = "injection_port";
+    AddConnectionsToSystem(
+      system,
+      {{.firstCompo = "N", .firstPort = port_id, .secondCompo = "D", .secondPort = port_id}});
 
     YmlSystem::System systemObj = parserSystem.parse(system);
     auto systemModel = SystemConverter::convert(systemObj, libraries);
-    const auto& connections = systemModel.connections();
-    BOOST_CHECK(connections.size() == 1);
-    const auto& connection = connections.at(0);
-    const auto& firstEntry = connection.firstEntry();
-    BOOST_CHECK(firstEntry.component()->Id() == "N");
-    BOOST_CHECK(firstEntry.port()->Id() == "injection_port");
-    const auto& secondEntry = connection.secondEntry();
-    BOOST_CHECK(secondEntry.component()->Id() == "D");
-    BOOST_CHECK(secondEntry.port()->Id() == "injection_port");
+
+    auto& components = systemModel.Components();
+
+    auto& component_N = components.at("N");
+    auto& component_G = components.at("G");
+    auto& component_D = components.at("D");
+
+    auto connections_to_N = component_N.connexionsViaPort(port_id);
+    auto connections_to_G = component_G.connexionsViaPort(port_id);
+    auto connections_to_D = component_D.connexionsViaPort(port_id);
+
+    BOOST_CHECK(connections_to_N.size() == 1);
+    BOOST_CHECK(connections_to_G.size() == 0);
+    BOOST_CHECK(connections_to_D.size() == 1);
+
+    BOOST_CHECK(connections_to_N[0].component()->Id() == "D");
+    BOOST_CHECK(connections_to_D[0].component()->Id() == "N");
 }
 
 BOOST_FIXTURE_TEST_CASE(TryToConnectWithUnknownCompo, PrepareYaml)
@@ -427,7 +432,7 @@ BOOST_FIXTURE_TEST_CASE(DuplicatedCompo, PrepareYaml)
     YmlSystem::System systemObj = YmlSystem::Parser().parse(duplicatedCompo);
     BOOST_CHECK_EXCEPTION(SystemConverter::convert(systemObj,
                                                    {ModelConverter::convert(
-                                                     YmlModel::Parser().parse(libraryYaml))}),
+                                                     YmlModel::Parser().parse(libraryYaml_1))}),
                           std::invalid_argument,
                           checkMessage("System has at least two components with the same id "
                                        "('N'), this is not supported"));
