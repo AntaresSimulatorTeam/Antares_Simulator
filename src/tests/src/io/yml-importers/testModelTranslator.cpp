@@ -388,8 +388,8 @@ BOOST_FIXTURE_TEST_CASE(model_port_field_definitions_properly_translated, Fixtur
     auto& model = lib.Models().at("model1");
     auto& pfd1 = model.PortFieldDefinitions().at(
       SystemModel::PortFieldKey{.portId = "port1", .fieldId = "field1"});
-    BOOST_CHECK_EQUAL(pfd1.getPort().Id(), "port1");
-    BOOST_CHECK_EQUAL(pfd1.Field().Id(), "field1");
+    BOOST_CHECK_EQUAL(pfd1.port().Id(), "port1");
+    BOOST_CHECK_EQUAL(pfd1.field().Id(), "field1");
     BOOST_CHECK_EQUAL(pfd1.Definition().Value(), "param1");
 }
 

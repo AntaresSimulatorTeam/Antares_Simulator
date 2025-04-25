@@ -35,15 +35,13 @@ public:
         definition_(std::move(definition))
     {
     }
-
-    // TODO : camelCase different depending on functions : getPort and Field()
-    // TODO : We should have port() and field()
-    const Port& getPort() const
+    
+    const Port& port() const
     {
         return port_;
     }
 
-    const PortField& Field() const
+    const PortField& field() const
     {
         return field_;
     }
