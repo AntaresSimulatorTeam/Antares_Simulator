@@ -65,6 +65,45 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
                 "force-parallel",
                 "Override the max number of years computed simultaneously");
 
+    parser->addParagraph("\nParameters");
+    // --name
+    parser->add(settings.simulationName, 'n', "name", "Name of the current simulation");
+    // --generators-only
+    parser->addFlag(settings.tsGeneratorsOnly,
+                    'g',
+                    "generators-only",
+                    "Run the time-series generators only");
+
+    // --comment-file
+    parser->add(settings.commentFile,
+                'c',
+                "comment-file",
+                "Specify the file to copy as comments of the simulation");
+    // --force
+    parser->addFlag(settings.ignoreWarningsErrors, 'f', "force", "Ignore all warnings at loading");
+    // --no-output
+    parser->addFlag(settings.noOutput,
+                    ' ',
+                    "no-output",
+                    "Do not write the results in the output folder");
+    // --year
+    parser->add(options.nbYears, 'y', "year", "Override the number of MC years");
+    // --year-by-year
+    parser->addFlag(options.forceYearByYear,
+                    ' ',
+                    "year-by-year",
+                    "Force the writing the result output for each year (economy only)");
+    // --derated
+    parser->addFlag(options.forceDerated, ' ', "derated", "Force the derated mode");
+
+    // --output-force-zip
+    parser->addFlag(settings.forceZipOutput,
+                    'z',
+                    "zip-output",
+                    "Force the write output into a single zip archive");
+
+    parser->addParagraph("\nOptimization");
+
     //--linear-solver
     parser->add(options.solverOptions.linearSolver,
                 ' ',
@@ -76,7 +115,7 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
     parser->add(options.solverOptions.linearSolver,
                 ' ',
                 "solver",
-                "Deprecated, use linear-solver instead.");
+                "Deprecated, use --linear-solver instead.");
 
     //--linear-solver-param
     parser->add(options.solverOptions.linearSolverParameters,
@@ -91,7 +130,7 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
     parser->add(options.solverOptions.linearSolverParameters,
                 ' ',
                 "solver-parameters",
-                "Deprecated, use linear-solver-param instead.");
+                "Deprecated, use --linear-solver-param instead.");
 
     // --linear-solver-param-optim-1
     parser->add(options.solverOptions.lpSolverParamOptim1,
@@ -134,45 +173,6 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
                 "Quadratic solver-specific parameters, for instance \"THREADS 8\""
                 " for XPRESS or \"parallel/maxnthreads 8\" for SCIP. "
                 "Syntax is solver-dependent.");
-
-    parser->addParagraph("\nParameters");
-    // --name
-    parser->add(settings.simulationName, 'n', "name", "Name of the current simulation");
-    // --generators-only
-    parser->addFlag(settings.tsGeneratorsOnly,
-                    'g',
-                    "generators-only",
-                    "Run the time-series generators only");
-
-    // --comment-file
-    parser->add(settings.commentFile,
-                'c',
-                "comment-file",
-                "Specify the file to copy as comments of the simulation");
-    // --force
-    parser->addFlag(settings.ignoreWarningsErrors, 'f', "force", "Ignore all warnings at loading");
-    // --no-output
-    parser->addFlag(settings.noOutput,
-                    ' ',
-                    "no-output",
-                    "Do not write the results in the output folder");
-    // --year
-    parser->add(options.nbYears, 'y', "year", "Override the number of MC years");
-    // --year-by-year
-    parser->addFlag(options.forceYearByYear,
-                    ' ',
-                    "year-by-year",
-                    "Force the writing the result output for each year (economy only)");
-    // --derated
-    parser->addFlag(options.forceDerated, ' ', "derated", "Force the derated mode");
-
-    // --output-force-zip
-    parser->addFlag(settings.forceZipOutput,
-                    'z',
-                    "zip-output",
-                    "Force the write output into a single zip archive");
-
-    parser->addParagraph("\nOptimization");
 
     // --optimization-range
     parser->addFlag(settings.simplexOptimRange,
