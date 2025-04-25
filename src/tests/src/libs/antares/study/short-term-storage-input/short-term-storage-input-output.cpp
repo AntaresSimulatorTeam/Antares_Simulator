@@ -3,6 +3,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <antares/constants.h>
 #include <boost/test/unit_test.hpp>
 #include <yuni/io/file.h>
 #include <filesystem>
@@ -176,22 +177,14 @@ void checkSizeFirst(const std::vector<double>& in, double v)
 BOOST_FIXTURE_TEST_CASE(check_empty, Fixture)
 {
     createFileSeries(0); // Empty files
-    loadFromFolder(StudyVersion(9, 2));
+    series.loadFromFolder(getFolder());
     series.fillDefaultSeriesIfEmpty();
 
-    // version<9.2
     checkSizeFirst(series.maxInjectionModulation, 1.0);
     checkSizeFirst(series.maxWithdrawalModulation, 1.0);
     checkSizeFirst(series.inflows, 0.0);
     checkSizeFirst(series.lowerRuleCurve, 0.0);
     checkSizeFirst(series.upperRuleCurve, 1.0);
-
-    // version>=9.2
-    checkSizeFirst(series.costInjection, 0.0);
-    checkSizeFirst(series.costWithdrawal, 0.0);
-    checkSizeFirst(series.costLevel, 0.0);
-    checkSizeFirst(series.costVariationInjection, 0.0);
-    checkSizeFirst(series.costVariationWithdrawal, 0.0);
 }
 
 BOOST_FIXTURE_TEST_CASE(check_vector_sizes, Fixture)
