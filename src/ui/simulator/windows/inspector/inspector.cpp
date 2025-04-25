@@ -312,7 +312,7 @@ const Data::AreaLink::Set& getLinks()
     return gData->links;
 }
 
-void AddBindingConstraints(const Data::BindingConstraintsRepository::Set& list)
+void AddBindingConstraints(const Data::BindingConstraint::Set& list)
 {
     if (list.empty())
         return;

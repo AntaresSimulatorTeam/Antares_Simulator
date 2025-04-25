@@ -7,25 +7,39 @@
 #include <algorithm>
 #include <utility>
 
-namespace Antares::Data {
+namespace Antares::Data
+{
 
-    void BindingConstraintGroup::add(const std::shared_ptr<BindingConstraint> &constraint) {
-        constraints_.insert(constraint);
+void BindingConstraintGroup::add(const std::shared_ptr<BindingConstraint>& constraint)
+{
+    constraints_.insert(constraint);
+}
+
+BindingConstraintGroup::BindingConstraintGroup(std::string name) : name_(std::move(name))
+{
+}
+
+const BindingConstraint::Set& BindingConstraintGroup::constraints() const
+{
+    return constraints_;
+}
+
+unsigned BindingConstraintGroup::numberOfTimeseries() const
+{
+    // Assume all BC in a group have the same width
+    if (constraints_.empty())
+    {
+        return 0;
     }
+    auto it
+      = std::ranges::max_element(constraints_,
+                                 [](const auto& a, const auto& b)
+                                 { return a->RHSTimeSeries().width < b->RHSTimeSeries().width; });
+    return (*it)->RHSTimeSeries().width;
+}
 
-    BindingConstraintGroup::BindingConstraintGroup(std::string name) :
-            name_(std::move(name)) {
-
-    }
-
-    std::set<std::shared_ptr<BindingConstraint>> BindingConstraintGroup::constraints() const {
-        return constraints_;
-    }
-
-    unsigned BindingConstraintGroup::numberOfTimeseries() const {
-        //Assume all BC in a group have the same width
-        if (constraints_.empty()) return 0;
-        return (*constraints_.begin())->RHSTimeSeries().width;
-    }
-
-} // Data
+std::string BindingConstraintGroup::name()
+{
+    return name_;
+}
+} // namespace Antares::Data
