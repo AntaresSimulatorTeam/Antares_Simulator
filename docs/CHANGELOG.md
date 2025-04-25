@@ -1,9 +1,17 @@
 Antares Changelog
 =================
 
+8.8.15 (04/2025)
+--------------------
+## Bugfix
+- Correct turbine max formula 8.8 [ANT-3095] (#2764)
+
+## Misc
+- Drop support for Ubuntu 20.04, add support for Ubuntu 22.04
+
 8.8.14 (03/2025)
 --------------------
-## New features
+## Enhancements
 - Increase precision for `LOLD[CSR]` and `MRG PRICE[CSR]` [ANT-2443] (#2613)
 
 ## Bugfix
