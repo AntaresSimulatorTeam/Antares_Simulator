@@ -132,9 +132,9 @@ bool BindingConstraintsRepository::rename(BindingConstraint* bc, const AnyString
         return true;
     ConstraintName id;
     Antares::TransformNameIntoID(name, id);
-    if (std::any_of(constraints_.begin(),
-                    constraints_.end(),
-                    [&id](auto constraint) { return constraint->id() == id; }))
+    if (std::any_of(constraints_.begin(), constraints_.end(), [&id](auto constraint) {
+            return constraint->id() == id;
+        }))
     {
         return false;
     }
@@ -144,10 +144,9 @@ bool BindingConstraintsRepository::rename(BindingConstraint* bc, const AnyString
     return true;
 }
 
-bool BindingConstraintsRepository::loadFromFolder(Study& study,
-                                                  const StudyLoadOptions& options,
-                                                  const AnyString& folder)
-{
+bool BindingConstraintsRepository::loadFromFolder(Study &study,
+                                                  const StudyLoadOptions &options,
+                                                  const AnyString &folder) {
     // Log entries
     logs.info(); // space for beauty
     logs.info() << "Loading constraints...";
@@ -155,15 +154,12 @@ bool BindingConstraintsRepository::loadFromFolder(Study& study,
     // Cleaning
     clear();
 
-    if (study.usedByTheSolver)
-    {
-        if (options.ignoreConstraints)
-        {
+    if (study.usedByTheSolver) {
+        if (options.ignoreConstraints) {
             logs.info() << "  The constraints have been disabled by the user";
             return true;
         }
-        if (!study.parameters.include.constraints)
-        {
+        if (!study.parameters.include.constraints) {
             logs.info() << "  The constraints shall be ignored due to the optimization preferences";
             return true;
         }
@@ -174,19 +170,15 @@ bool BindingConstraintsRepository::loadFromFolder(Study& study,
 
     env.iniFilename << env.folder << Yuni::IO::Separator << "bindingconstraints.ini";
     IniFile ini;
-    if (!ini.open(env.iniFilename))
-    {
+    if (!ini.open(env.iniFilename)) {
         return false;
     }
 
     // For each section
-    if (ini.firstSection)
-    {
-        for (env.section = ini.firstSection; env.section; env.section = env.section->next)
-        {
-            if (env.section->firstProperty)
-            {
-                auto new_bc = LoadBindingConstraint(env);
+    if (ini.firstSection) {
+        for (env.section = ini.firstSection; env.section; env.section = env.section->next) {
+            if (env.section->firstProperty) {
+               auto new_bc = LoadBindingConstraint(env);
                 std::copy(new_bc.begin(), new_bc.end(), std::back_inserter(constraints_));
             }
         }
@@ -207,8 +199,7 @@ bool BindingConstraintsRepository::loadFromFolder(Study& study,
 
     // When ran from the solver and if the simplex is in `weekly` mode,
     // all weekly constraints will become daily ones.
-    if (study.usedByTheSolver && sorDay == study.parameters.simplexOptimizationRange)
-    {
+    if (study.usedByTheSolver && sorDay == study.parameters.simplexOptimizationRange) {
         changeConstraintsWeeklyToDaily();
     }
 
@@ -217,20 +208,17 @@ bool BindingConstraintsRepository::loadFromFolder(Study& study,
 
 void BindingConstraintsRepository::changeConstraintsWeeklyToDaily()
 {
-    each(
-      [](BindingConstraint& constraint)
-      {
-          if (constraint.type() == BindingConstraint::typeWeekly)
-          {
-              logs.info() << "  The type of the constraint '" << constraint.name()
-                          << "' is now 'daily'";
-              constraint.setTimeGranularity(BindingConstraint::typeDaily);
-          }
-      });
+    each([](BindingConstraint &constraint) {
+        if (constraint.type() == BindingConstraint::typeWeekly)
+        {
+            logs.info() << "  The type of the constraint '" << constraint.name()
+                        << "' is now 'daily'";
+            constraint.setTimeGranularity(BindingConstraint::typeDaily);
+        }
+    });
 }
 
-bool BindingConstraintsRepository::internalSaveToFolder(
-  BindingConstraintSaver::EnvForSaving& env) const
+bool BindingConstraintsRepository::internalSaveToFolder(BindingConstraintSaver::EnvForSaving& env) const
 {
     if (constraints_.empty())
     {
@@ -267,41 +255,41 @@ bool BindingConstraintsRepository::internalSaveToFolder(
 
 void BindingConstraintsRepository::reverseWeightSign(const AreaLink* lnk)
 {
-    each([&lnk](BindingConstraint& constraint) { constraint.reverseWeightSign(lnk); });
+    each([&lnk](BindingConstraint &constraint) { constraint.reverseWeightSign(lnk); });
 }
 
 uint64_t BindingConstraintsRepository::memoryUsage() const
 {
     uint64_t m = sizeof(BindingConstraintsRepository);
-    for (const auto& i : constraints_)
+    for (const auto & i : constraints_)
         m += i->memoryUsage();
     return m;
 }
 
 namespace // anonymous
 {
-template<class T>
-class RemovePredicate final
-{
-public:
-    explicit RemovePredicate(const T* u) : pItem(u)
+    template<class T>
+    class RemovePredicate final
     {
-    }
-
-    bool operator()(const std::shared_ptr<BindingConstraint>& bc) const
-    {
-        assert(bc);
-        if (bc->contains(pItem))
+    public:
+        explicit RemovePredicate(const T* u) : pItem(u)
         {
-            logs.info() << "destroying the binding constraint " << bc->name();
-            return true;
         }
-        return false;
-    }
 
-private:
-    const T* pItem;
-};
+        bool operator()(const std::shared_ptr<BindingConstraint>& bc) const
+        {
+            assert(bc);
+            if (bc->contains(pItem))
+            {
+                logs.info() << "destroying the binding constraint " << bc->name();
+                return true;
+            }
+            return false;
+        }
+
+    private:
+        const T *pItem;
+    };
 
 } // anonymous namespace
 
@@ -351,33 +339,27 @@ BindingConstraintsRepository::const_iterator BindingConstraintsRepository::end()
 
 void BindingConstraintsRepository::markAsModified() const
 {
-    for (const auto& i : constraints_)
+    for (const auto & i : constraints_)
         i->markAsModified();
 }
 
-std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::activeContraints()
-  const
-{
-    if (!activeConstraints_.empty())
-    {
-        return activeConstraints_;
-    }
-    else
-    {
+std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::activeContraints() const {
+    if (activeConstraints_) {
+        return activeConstraints_.value();
+    } else {
         std::vector<std::shared_ptr<BindingConstraint>> out;
-        std::copy_if(constraints_.begin(),
-                     constraints_.end(),
-                     std::back_inserter(out),
-                     [](const auto& bc) { return bc->isActive(); });
+        std::copy_if(constraints_.begin(), constraints_.end(), std::back_inserter(out),
+                     [](const auto &bc) {
+                         return bc->isActive();
+                     });
         activeConstraints_ = std::move(out);
-        return activeConstraints_;
+        return activeConstraints_.value();
     }
 }
 
 static bool isBindingConstraintTypeInequality(const Data::BindingConstraint& bc)
 {
-    return bc.operatorType() == BindingConstraint::opLess
-           || bc.operatorType() == BindingConstraint::opGreater;
+    return bc.operatorType() == BindingConstraint::opLess || bc.operatorType() == BindingConstraint::opGreater;
 }
 
 std::vector<uint> BindingConstraintsRepository::getIndicesForInequalityBindingConstraints() const
@@ -402,9 +384,9 @@ void BindingConstraintsRepository::forceReload(bool reload) const
 {
     if (!constraints_.empty())
     {
-        for (const auto& i : constraints_)
+        for (const auto & i : constraints_)
             i->forceReload(reload);
     }
 }
 
-} // namespace Antares::Data
+}

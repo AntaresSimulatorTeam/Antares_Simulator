@@ -9,8 +9,7 @@
 #include "BindingConstraint.h"
 #include "BindingConstraintSaver.h"
 
-namespace Antares::Data
-{
+namespace Antares::Data {
 class BindingConstraintsRepository final : public Yuni::NonCopyable<BindingConstraintsRepository>
 {
 public:
