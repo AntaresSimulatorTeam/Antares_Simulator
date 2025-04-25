@@ -344,8 +344,8 @@ void BindingConstraintsRepository::markAsModified() const
 }
 
 std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::activeContraints() const {
-    if (activeConstraints_) {
-        return activeConstraints_.value();
+    if (!activeConstraints_.empty()) {
+        return activeConstraints_;
     } else {
         std::vector<std::shared_ptr<BindingConstraint>> out;
         std::copy_if(constraints_.begin(), constraints_.end(), std::back_inserter(out),
@@ -353,7 +353,7 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::ac
                          return bc->isActive();
                      });
         activeConstraints_ = std::move(out);
-        return activeConstraints_.value();
+        return activeConstraints_;
     }
 }
 
