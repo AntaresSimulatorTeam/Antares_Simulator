@@ -35,7 +35,7 @@ public:
         definition_(std::move(definition))
     {
     }
-    
+
     const Port& port() const
     {
         return port_;
