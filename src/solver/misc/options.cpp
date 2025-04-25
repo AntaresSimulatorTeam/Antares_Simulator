@@ -78,10 +78,10 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
                 "solver",
                 "Deprecated, use linear-solver instead.");
 
-    //--lp-solver-param
+    //--linear-solver-param
     parser->add(options.solverOptions.linearSolverParameters,
                 ' ',
-                "lp-solver-param",
+                "linear-solver-param",
                 "Linear solver-specific parameters, for instance \"THREADS 1 "
                 "PRESOLVE 1\""
                 " for XPRESS or \"parallel/maxnthreads 1, lp/presolving TRUE\" for "
@@ -91,19 +91,19 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
     parser->add(options.solverOptions.linearSolverParameters,
                 ' ',
                 "solver-parameters",
-                "Deprecated, use lp-solver-param instead.");
+                "Deprecated, use linear-solver-param instead.");
 
-    // --lp-solver-param-optim-1
+    // --linear-solver-param-optim-1
     parser->add(options.solverOptions.lpSolverParamOptim1,
                 ' ',
-                "lp-solver-param-optim-1",
+                "linear-solver-param-optim-1",
                 "Linear solver-specific parameters for first optimization."
                 " Only supported for SCIP & XPRESS.");
 
-    // --lp-solver-param-optim-2
+    // --linear-solver-param-optim-2
     parser->add(options.solverOptions.lpSolverParamOptim2,
                 ' ',
-                "lp-solver-param-optim-2",
+                "linear-solver-param-optim-2",
                 "Linear solver-specific parameters for second optimization."
                 " Only supported for SCIP & XPRESS.");
 
