@@ -87,6 +87,7 @@ private:
     //! Monthly Optimal generations
     void prepareMonthlyOptimalGenerations(const double* random_reservoir_level,
                                           uint y,
+                                          Antares::Data::Area::ScratchMap& scratchmap,
                                           HydroSpecificMap& hydro_specific_map);
 
     //! Monthly target generations
