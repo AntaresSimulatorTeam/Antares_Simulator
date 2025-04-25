@@ -5,6 +5,8 @@ Antares Changelog
 --------------------
 ## Bugfix
 - Correct turbine max formula 8.8 [ANT-3095] (#2764)
+- Allow empty series files for STS [ANT-3053] (#2731)
+- Fix undefined behavior in BCs [ANT-2994] (#2708)
 
 ## Misc
 - Drop support for Ubuntu 20.04, add support for Ubuntu 22.04
