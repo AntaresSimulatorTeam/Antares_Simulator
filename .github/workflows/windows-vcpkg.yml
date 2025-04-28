@@ -144,6 +144,10 @@ jobs:
         run: |
           cmake --build _build --config Release -j$(nproc)
 
+
+      - name: Add OR-Tools to PATH
+        run: echo "D:\a\Antares_Simulator\Antares_Simulator/or-tools/install/bin" | Out-File -Append -Encoding ascii $env:GITHUB_PATH
+      
       - name: Read simtest version
         shell: bash
         run: |
