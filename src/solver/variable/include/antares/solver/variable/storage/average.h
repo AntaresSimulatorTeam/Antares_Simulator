@@ -245,9 +245,18 @@ private:
         }
         case Category::daily:
         {
-            for (uint h = 0; h < DAYS_PER_YEAR; h++)
+            for (uint d = 0; d < DAYS_PER_YEAR; d++)
             {
-                report.values[report.data.columnIndex][h] = array[h].extract_double();
+                report.values[report.data.columnIndex][d] = array[d].extract_double();
+            }
+            break;
+        }
+
+        case Category::weekly:
+        {
+            for (uint w = 0; w < WEEKS_PER_YEAR; w++)
+            {
+                report.values[report.data.columnIndex][w] = array[w].extract_double();
             }
             break;
         }
