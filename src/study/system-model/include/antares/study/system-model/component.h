@@ -92,18 +92,23 @@ public:
         return data_.scenario_group_id;
     }
 
-    void addConnection(const std::string localPortId, ConnexionEnd&& connection);
-    std::vector<ConnexionEnd> connexionsViaPort(const std::string& portId) const;
+    void addComponentConnection(const std::string localPortId, ConnectionEnd&& connection);
+    std::vector<ConnectionEnd> componentConnectionsViaPort(const std::string& portId) const;
 
     const Expressions::Nodes::Node* nodeAtPortField(const std::string& portId,
                                                     const std::string& fieldId) const;
+
+    void addAreaConnection(const std::string& localPortId, const std::string& areaId);
+
+    std::optional<std::string> areaConnectedToPort(const std::string& portId) const;
 
 private:
     // Only ComponentBuilder is allowed to build Component instances
     friend class ComponentBuilder;
     explicit Component(const ComponentData& component_data);
     ComponentData data_;
-    std::map<std::string, std::vector<ConnexionEnd>> connectionEnds_;
+    std::map<std::string, std::vector<ConnectionEnd>> componentConnectionEnds_;
+    std::map<std::string, std::string> areaConnections_;
 };
 
 class ComponentBuilder

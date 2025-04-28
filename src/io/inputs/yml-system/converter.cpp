@@ -261,8 +261,29 @@ static void connectComponents(const YmlSystem::Connection& connection,
                                                                                secondPort);
     // TODO : Do we need to connect both components to one another ?
     // TODO : Or should we rather consider the field role and only connect receiver to the sender ?
-    firstComponent.addConnection(firstPort.Id(), ConnexionEnd(&secondComponent, &secondPort));
-    secondComponent.addConnection(secondPort.Id(), ConnexionEnd(&firstComponent, &firstPort));
+    firstComponent.addComponentConnection(firstPort.Id(),
+                                          ConnectionEnd(&secondComponent, &secondPort));
+    secondComponent.addComponentConnection(secondPort.Id(),
+                                           ConnectionEnd(&firstComponent, &firstPort));
+}
+
+/**
+ * @brief Uses a YmlSystem::AreaConnection to connect areas and components via ports
+ *
+ * @param connection A YmlSystem::AreaConnection object containing the connection details.
+ * @param components An unordered map of component IDs to SystemModel::Component objects.
+ *
+ * @return void
+ *
+ * @throw std::invalid_argument if a component is not found, or if the connection could not be
+ * established
+ */
+static void connectAreas(const YmlSystem::AreaConnection& connection,
+                         std::unordered_map<std::string, SystemModel::Component>& components)
+{
+    // TODO : check that area exists in legacy study? seems complicated here
+    auto& component = findComponent(connection.componentId, components);
+    component.addAreaConnection(connection.portId, connection.areaId);
 }
 
 SystemModel::System convert(const YmlSystem::System& ymlSystem,
@@ -284,6 +305,12 @@ SystemModel::System convert(const YmlSystem::System& ymlSystem,
     for (const auto& connection: ymlSystem.connections)
     {
         connectComponents(connection, components);
+    }
+
+    // Create area connections from system
+    for (const auto& connection: ymlSystem.areaConnections)
+    {
+        connectAreas(connection, components);
     }
 
     // Build system from components and connections

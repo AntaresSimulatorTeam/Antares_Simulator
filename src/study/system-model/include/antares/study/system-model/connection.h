@@ -44,10 +44,10 @@ using PortFieldsRole = std::map<PortField, FieldRole>;
 
 class Component;
 
-class ConnexionEnd
+class ConnectionEnd
 {
 public:
-    ConnexionEnd(Component* component, const Port* port);
+    ConnectionEnd(Component* component, const Port* port);
     [[nodiscard]] const Component* component() const;
     [[nodiscard]] const Port* port() const;
 
