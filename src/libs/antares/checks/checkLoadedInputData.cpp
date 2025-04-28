@@ -20,7 +20,6 @@
 */
 
 #include <antares/checks/checkLoadedInputData.h>
-#include <antares/exception/InitializationError.hpp>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/series/series.h>
 #include <antares/study/area/area.h>
@@ -29,15 +28,6 @@
 
 namespace Antares::Check
 {
-void checkSolverMILPincompatibility(Antares::Data::UnitCommitmentMode ucMode,
-                                    const std::string& solverName)
-{
-    using namespace Antares::Data;
-    if (ucMode == UnitCommitmentMode::ucMILP && solverName == "sirius")
-    {
-        throw Error::IncompatibleMILPOrtoolsSolver();
-    }
-}
 
 void checkStudyVersion(const AnyString& optStudyFolder)
 {

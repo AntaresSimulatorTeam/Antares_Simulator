@@ -182,6 +182,11 @@ bool checkAllElementsIdenticalOrOne(std::vector<std::pair<unsigned, std::string>
 {
     // Erase 1 from the vector
     std::erase_if(p, [](const auto& pair) { return pair.first == 1; });
+    if (p.empty())
+    {
+        return true;
+    }
+
     auto width = p.begin()->first;
     for (const auto& [w, msg]: p)
     {

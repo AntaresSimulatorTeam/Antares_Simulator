@@ -135,7 +135,7 @@ typedef struct
     std::vector<PROBLEME_LINEAIRE_ETENDU_PARTIE_FIXE> ProblemeLineaireEtenduPartieFixe;
     std::vector<PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE> ProblemeLineaireEtenduPartieVariable;
 
-    std::vector<PROBLEME_SPX*>
+    std::vector<PROBLEME_SPX_WRAPPER>
       ProblemeSpx; /* Il y en a 1 par reservoir. Un probleme couvre 1 mois */
 } PROBLEME_HYDRAULIQUE_ETENDU;
 

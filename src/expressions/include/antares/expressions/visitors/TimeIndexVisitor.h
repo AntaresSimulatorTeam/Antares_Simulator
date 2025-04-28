@@ -22,6 +22,7 @@
 
 #include "antares/expressions/visitors/NodeVisitor.h"
 #include "antares/expressions/visitors/TimeIndex.h"
+#include "antares/study/system-model/component.h"
 
 namespace Antares::Expressions::Visitors
 {
@@ -32,19 +33,11 @@ namespace Antares::Expressions::Visitors
 class TimeIndexVisitor: public NodeVisitor<TimeIndex>
 {
 public:
-    // TODO if Node contains time and scenario dependency,  do we need this ctor?
-    /**
-     * @brief Constructs a time index visitor with the specified context.
-     *
-     * @param context The context containing the time index for each node.
-     */
-    explicit TimeIndexVisitor(std::unordered_map<const Nodes::Node*, TimeIndex> context);
-    explicit TimeIndexVisitor() = default;
+    explicit TimeIndexVisitor(const Antares::ModelerStudy::SystemModel::Component& component);
 
     std::string name() const override;
 
 private:
-    std::unordered_map<const Nodes::Node*, TimeIndex> context_;
     TimeIndex visit(const Nodes::SumNode* add) override;
     TimeIndex visit(const Nodes::SubtractionNode* add) override;
     TimeIndex visit(const Nodes::MultiplicationNode* add) override;
@@ -64,5 +57,9 @@ private:
     TimeIndex visit(const Nodes::TimeIndexNode* timeIndexNode) override;
     TimeIndex visit(const Nodes::TimeSumNode* timeSumNode) override;
     TimeIndex visit(const Nodes::AllTimeSumNode* timeSumNode) override;
+
+    std::vector<const Antares::ModelerStudy::SystemModel::Component*> getConnectedComponents();
+
+    const Antares::ModelerStudy::SystemModel::Component& component_;
 };
 } // namespace Antares::Expressions::Visitors

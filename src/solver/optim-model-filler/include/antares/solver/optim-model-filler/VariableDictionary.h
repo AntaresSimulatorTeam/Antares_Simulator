@@ -115,7 +115,7 @@ class VariableDictionary
     using TwoIndexVector = std::vector<VectorWithOffset>;
     using HashMapVector = std::unordered_map<PartialKey, TwoIndexVector, PartialKeyHash>;
 
-    HashMapVector hmv;
+    HashMapVector storageOfAddedMipVariables_;
     const TwoIndexVector& operator[](const PartialKey& k) const;
 
 public:

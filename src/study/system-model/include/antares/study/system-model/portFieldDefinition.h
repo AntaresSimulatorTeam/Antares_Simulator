@@ -36,12 +36,12 @@ public:
     {
     }
 
-    const Port& getPort() const
+    const Port& port() const
     {
         return port_;
     }
 
-    const PortField& Field() const
+    const PortField& field() const
     {
         return field_;
     }

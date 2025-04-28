@@ -19,16 +19,41 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include "antares/optimization-options/options.h"
-using namespace Antares::Solver::Optimization;
 
-OptimizationOptions& OptimizationOptions::operator<<(const OptimizationOptions& options)
+namespace Antares::Solver::Optimization
 {
-    // Overrides all attributes, but applies a logical OR for activating logs
-    // (Option that can be set both in command-line and file)
-    this->linearSolver = options.linearSolver;
-    this->quadraticSolver = options.quadraticSolver;
-    this->linearSolverParameters = options.linearSolverParameters;
-    this->quadraticSolverParameters = options.quadraticSolverParameters;
-    this->solverLogs = options.solverLogs || this->solverLogs;
-    return *this;
+void OptimizationOptions::initializeWith(const CmdLineOptimOptions& cmdLineOptimOptions)
+{
+    // Do solvers log their own messaqes
+    solverLogs = cmdLineOptimOptions.solverLogs || solverLogs;
+    firstOptimOptions.solverLogs = solverLogs;
+    secondOptimOptions.solverLogs = solverLogs;
+    quadraticOptimOptions.solverLogs = solverLogs;
+
+    // Solver names
+    firstOptimOptions.solverName = cmdLineOptimOptions.linearSolver;
+    secondOptimOptions.solverName = cmdLineOptimOptions.linearSolver;
+    quadraticOptimOptions.solverName = cmdLineOptimOptions.quadraticSolver;
+
+    // Storing basis or giving solver a basis, depending on optimization (first or second)
+    firstOptimOptions.solverUsesBasis = cmdLineOptimOptions.useOptim1BasisInNextWeek;
+    firstOptimOptions.solverExportsBasis = cmdLineOptimOptions.useOptim1BasisInNextWeek
+                                           || cmdLineOptimOptions.useOptim1BasisInOptim2;
+    secondOptimOptions.solverUsesBasis = cmdLineOptimOptions.useOptim1BasisInOptim2;
+
+    // Linear solver parameters
+    if (cmdLineOptimOptions.linearSolverParameters.empty())
+    {
+        firstOptimOptions.solverParameters = cmdLineOptimOptions.lpSolverParamOptim1;
+        secondOptimOptions.solverParameters = cmdLineOptimOptions.lpSolverParamOptim2;
+    }
+    else
+    {
+        firstOptimOptions.solverParameters = cmdLineOptimOptions.linearSolverParameters;
+        secondOptimOptions.solverParameters = cmdLineOptimOptions.linearSolverParameters;
+    }
+
+    // Quadratic solver parameters
+    quadraticOptimOptions.solverParameters = cmdLineOptimOptions.quadraticSolverParameters;
 }
+} // namespace Antares::Solver::Optimization

@@ -136,10 +136,10 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
       });
 }
 
-ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& component):
+ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& component,
+                                 VariableDictionary& variableDictionary):
     component_(component),
-    modelVariable_(component.getModel()->Variables())
-
+    variableDictionary_(variableDictionary)
 {
 }
 
@@ -177,7 +177,7 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
             std::visit(
               [&pb, &variable, this, &key, &dim](const auto& lb_, const auto& ub_)
               {
-                  VariablesBulkAddition(pb, variableDictionary)
+                  VariablesBulkAddition(pb, variableDictionary_)
                     .addVariable(lb_,
                                  ub_,
                                  variable.Type() != ModelerStudy::SystemModel::ValueType::FLOAT,
@@ -192,7 +192,7 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
             // No time component
             const Dimensions dim({}, {});
 
-            variableDictionary.addVariable(
+            variableDictionary_.addVariable(
               dim,
               key,
               [&pb, &lb, &ub, &variable](const TimeAndScenario&, const std::string& name)
@@ -216,7 +216,7 @@ void ComponentFiller::addStaticConstraint(Optimisation::LinearProblemApi::ILinea
                                 component_.Id() + "." + constraint_id);
     for (const auto& [variableFullKey, coefficient]: linear_constraint.coef_per_var)
     {
-        auto* variable = variableDictionary(variableFullKey);
+        auto* variable = variableDictionary_(variableFullKey);
         ct->setCoefficient(variable, coefficient);
     }
 }
@@ -234,7 +234,7 @@ void ComponentFiller::addTimeDependentConstraints(
                                       + std::to_string(linear_constraint.timeStep));
         for (const auto& [variableFullKey, coefficient]: linear_constraint.coef_per_var)
         {
-            auto* variable = variableDictionary(variableFullKey);
+            auto* variable = variableDictionary_(variableFullKey);
 
             ct->setCoefficient(variable, coefficient);
         }
@@ -248,7 +248,7 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
     Expressions::Visitors::EvaluationContext evaluationContext(component_.getParameterValues(),
                                                                {},
                                                                data);
-    ReadLinearConstraintVisitor visitor(evaluationContext, ctx, component_.Id());
+    ReadLinearConstraintVisitor visitor(evaluationContext, ctx, component_);
     for (const auto& constraint: component_.getModel()->getConstraints() | std::views::values)
     {
         auto* root_node = constraint.expression().RootNode();
@@ -281,7 +281,7 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
                                                                {},
                                                                data);
 
-    ReadLinearExpressionVisitor visitor(evaluationContext, ctx, component_.Id());
+    ReadLinearExpressionVisitor visitor(evaluationContext, ctx, component_);
 
     const auto timeDependentLinearExpression = visitor.dispatch(model->Objective().RootNode());
     const auto& linear_expressions = timeDependentLinearExpression.GetLinearExpressions();
@@ -296,7 +296,7 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
     {
         for (const auto& [variableFullKey, coefficient]: linear_expression.coefPerVar())
         {
-            auto* variable = variableDictionary(variableFullKey);
+            auto* variable = variableDictionary_(variableFullKey);
             pb.setObjectiveCoefficient(variable, coefficient);
         }
     }
@@ -304,7 +304,7 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
 
 bool ComponentFiller::IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node)
 {
-    Expressions::Visitors::TimeIndexVisitor timeIndexVisitor;
+    Expressions::Visitors::TimeIndexVisitor timeIndexVisitor(component_);
     const auto ret = timeIndexVisitor.dispatch(node);
     return ret == Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY
            || ret == Expressions::Visitors::TimeIndex::VARYING_IN_TIME_AND_SCENARIO;
