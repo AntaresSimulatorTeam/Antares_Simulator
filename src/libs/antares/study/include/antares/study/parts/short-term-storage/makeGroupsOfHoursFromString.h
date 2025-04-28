@@ -29,6 +29,6 @@ public:
                      std::exception_ptr e) override;
 };
 
-std::vector<std::set<int>> makeGroupsOfHours(std::string& hoursField);
+std::vector<std::set<int>> makeGroupsOfHours(const std::string& hoursField);
 
 } // namespace Antares::Data::ShortTermStorage

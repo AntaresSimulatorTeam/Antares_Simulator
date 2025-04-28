@@ -27,20 +27,40 @@ void CustomErrorListener::syntaxError(antlr4::Recognizer* recognizer,
     throw ShortTermStorageAdditionalConstraintsError(os.str());
 }
 
-std::vector<std::set<int>> makeGroupsOfHours(std::string& hoursField)
+class GroupsHours
 {
-    CustomErrorListener customErrorListener;
-    antlr4::ANTLRInputStream stream(hoursField);
-    HoursFieldLexer lexer(&stream);
-    lexer.removeErrorListeners();
-    lexer.addErrorListener(&customErrorListener);
-    antlr4::CommonTokenStream tokens(&lexer);
-    HoursFieldParser parser(&tokens);
+public:
+    explicit GroupsHours(const std::string& hoursField):
+        hoursField_(hoursField),
+        stream_(hoursField_),
+        lexer_(&stream_),
+        tokens_(&lexer_),
+        parser_(&tokens_)
+    {
+        lexer_.removeErrorListeners();
+        lexer_.addErrorListener(&customErrorListener_);
+        parser_.removeErrorListeners();
+        parser_.addErrorListener(&customErrorListener_);
+    }
 
-    parser.removeErrorListeners();
-    parser.addErrorListener(&customErrorListener);
+    auto* hoursField()
+    {
+        return parser_.hoursField();
+    }
 
-    auto* tree = parser.hoursField();
+private:
+    std::string hoursField_;
+    CustomErrorListener customErrorListener_;
+    antlr4::ANTLRInputStream stream_;
+    HoursFieldLexer lexer_;
+    antlr4::CommonTokenStream tokens_;
+    HoursFieldParser parser_;
+};
+
+std::vector<std::set<int>> makeGroupsOfHours(const std::string& hoursField)
+{
+    GroupsHours groupsHours(hoursField);
+    auto* tree = groupsHours.hoursField();
     try
     {
         HoursCollectorVisitor visitor;
