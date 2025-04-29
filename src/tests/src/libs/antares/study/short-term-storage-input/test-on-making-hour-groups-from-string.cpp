@@ -169,6 +169,26 @@ BOOST_AUTO_TEST_CASE(large_hours_field___can_happen_in_real_life)
 
     BOOST_CHECK(groupsOfHours == expected_result);
 }
+BOOST_AUTO_TEST_CASE(very_large_hours_field___can_happen_in_real_life)
+{
+    std::string hoursField;
+    int i = 0;
+    std::set<int> expected_rhs;
+    hoursField += "[" + std::to_string(i);
+    expected_rhs.insert(i);
+    while (i < 100000)
+    {
+        hoursField += "," + std::to_string(i);
+        expected_rhs.insert(i);
+        ++i;
+    }
+    hoursField += "]";
+    const auto groupsOfHours = makeGroupsOfHours(hoursField);
+
+    const std::vector expected_result = {expected_rhs};
+
+    BOOST_CHECK(groupsOfHours == expected_result);
+}
 
 BOOST_DATA_TEST_CASE(hours_field_has_more_invalid_format,
                      boost::unit_test::data::make({"",
