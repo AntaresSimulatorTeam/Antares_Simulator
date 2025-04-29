@@ -1,8 +1,10 @@
 var classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component =
 [
     [ "Component", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#abf7f681293e73b1fca4ade3a18799b50", null ],
-    [ "addConnection", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#a10ac293f8f17d98246ffd8011f8cf722", null ],
-    [ "connexionsViaPort", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#a7f02a65b92d003a53caa83466b4e7657", null ],
+    [ "addAreaConnection", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#aa9aeff46a6ef78aab76b4fa6ce7d70f5", null ],
+    [ "addComponentConnection", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#ad75b4891d16f01ada62d0e527bbfa6d0", null ],
+    [ "areaConnectedToPort", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#adf8d8937a96e84a5e572b8b2199749fc", null ],
+    [ "componentConnectionsViaPort", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#afeafffd5f0a1cbd18c383b7280040700", null ],
     [ "getModel", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#a0ca3fa1600733161bb0c3b02a06c6fff", null ],
     [ "getParameterValue", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#a5798fc09fc5cc4fa621c1dde18878f82", null ],
     [ "getParameterValues", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#a1b9b86ded1317512d014ff836d83086d", null ],

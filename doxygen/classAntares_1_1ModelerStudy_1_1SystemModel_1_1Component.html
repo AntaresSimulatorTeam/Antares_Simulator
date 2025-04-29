@@ -151,15 +151,21 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>getParameterVa
 <tr class="memitem:a3d7034f0ce696f43fe697ffb4eca0eda"><td class="memItemLeft" align="right" valign="top"><a id="a3d7034f0ce696f43fe697ffb4eca0eda"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>getScenarioGroupId</b> () const</td></tr>
 <tr class="separator:a3d7034f0ce696f43fe697ffb4eca0eda"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a10ac293f8f17d98246ffd8011f8cf722"><td class="memItemLeft" align="right" valign="top"><a id="a10ac293f8f17d98246ffd8011f8cf722"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addConnection</b> (const std::string localPortId, <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnexionEnd.html">ConnexionEnd</a> &amp;&amp;connection)</td></tr>
-<tr class="separator:a10ac293f8f17d98246ffd8011f8cf722"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7f02a65b92d003a53caa83466b4e7657"><td class="memItemLeft" align="right" valign="top"><a id="a7f02a65b92d003a53caa83466b4e7657"></a>
-std::vector&lt; <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnexionEnd.html">ConnexionEnd</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>connexionsViaPort</b> (const std::string &amp;portId) const</td></tr>
-<tr class="separator:a7f02a65b92d003a53caa83466b4e7657"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad75b4891d16f01ada62d0e527bbfa6d0"><td class="memItemLeft" align="right" valign="top"><a id="ad75b4891d16f01ada62d0e527bbfa6d0"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addComponentConnection</b> (const std::string localPortId, <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEnd.html">ConnectionEnd</a> &amp;&amp;connection)</td></tr>
+<tr class="separator:ad75b4891d16f01ada62d0e527bbfa6d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afeafffd5f0a1cbd18c383b7280040700"><td class="memItemLeft" align="right" valign="top"><a id="afeafffd5f0a1cbd18c383b7280040700"></a>
+std::vector&lt; <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEnd.html">ConnectionEnd</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>componentConnectionsViaPort</b> (const std::string &amp;portId) const</td></tr>
+<tr class="separator:afeafffd5f0a1cbd18c383b7280040700"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad8c68f3da3bfa5af228281db269adbb"><td class="memItemLeft" align="right" valign="top"><a id="aad8c68f3da3bfa5af228281db269adbb"></a>
 const <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Expressions::Nodes::Node</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>nodeAtPortField</b> (const std::string &amp;portId, const std::string &amp;fieldId) const</td></tr>
 <tr class="separator:aad8c68f3da3bfa5af228281db269adbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9aeff46a6ef78aab76b4fa6ce7d70f5"><td class="memItemLeft" align="right" valign="top"><a id="aa9aeff46a6ef78aab76b4fa6ce7d70f5"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addAreaConnection</b> (const std::string &amp;localPortId, const std::string &amp;areaId)</td></tr>
+<tr class="separator:aa9aeff46a6ef78aab76b4fa6ce7d70f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf8d8937a96e84a5e572b8b2199749fc"><td class="memItemLeft" align="right" valign="top"><a id="adf8d8937a96e84a5e572b8b2199749fc"></a>
+std::optional&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>areaConnectedToPort</b> (const std::string &amp;portId) const</td></tr>
+<tr class="separator:adf8d8937a96e84a5e572b8b2199749fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>

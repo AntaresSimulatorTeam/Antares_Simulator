@@ -1182,6 +1182,7 @@ var namespaces_dup =
             [ "Component", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Component.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Component" ],
             [ "ConnectionEntry", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ConnectionEntry.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ConnectionEntry" ],
             [ "Connection", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Connection.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Connection" ],
+            [ "AreaConnection", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1AreaConnection.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1AreaConnection" ],
             [ "System", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System" ]
           ] ]
         ] ],
@@ -1240,7 +1241,7 @@ var namespaces_dup =
           [ "ComponentData", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ComponentData.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ComponentData" ],
           [ "Component", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component" ],
           [ "ComponentBuilder", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ComponentBuilder.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ComponentBuilder" ],
-          [ "ConnexionEnd", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnexionEnd.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnexionEnd" ],
+          [ "ConnectionEnd", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEnd.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEnd" ],
           [ "Constraint", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Constraint.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Constraint" ],
           [ "Library", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Library.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Library" ],
           [ "LibraryBuilder", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1LibraryBuilder.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1LibraryBuilder" ],
@@ -2796,6 +2797,7 @@ var namespaces_dup =
       [ "convert< Antares::IO::Inputs::YmlSystem::Parameter >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parameter_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlSystem::Component >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Component_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlSystem::Connection >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Connection_01_4.html", null ],
+      [ "convert< Antares::IO::Inputs::YmlSystem::AreaConnection >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1AreaConnection_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlSystem::System >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System_01_4.html", null ],
       [ "convert< Antares::Solver::ModelerParameters >", "structYAML_1_1convert_3_01Antares_1_1Solver_1_1ModelerParameters_01_4.html", null ],
       [ "convert< Vec3 >", "structYAML_1_1convert_3_01Vec3_01_4.html", null ],
