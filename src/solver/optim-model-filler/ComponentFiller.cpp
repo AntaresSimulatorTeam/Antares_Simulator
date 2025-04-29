@@ -143,21 +143,10 @@ ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& com
 {
 }
 
-bool checkTimeSteps(Optimisation::LinearProblemApi::FillContext& ctx)
-{
-    return ctx.getFirstTimeStep() <= ctx.getLastTimeStep();
-}
-
 void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
                                    Optimisation::LinearProblemApi::ILinearProblemData& data,
                                    Optimisation::LinearProblemApi::FillContext& ctx)
 {
-    if (!checkTimeSteps(ctx))
-    {
-        // exception?
-        return;
-    }
-
     Expressions::Visitors::EvaluationContext evaluationContext(component_.getParameterValues(),
                                                                {},
                                                                data);
@@ -253,17 +242,14 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
     {
         auto* root_node = constraint.expression().RootNode();
         auto linear_constraints = visitor.dispatch(root_node);
-        if (checkTimeSteps(ctx))
-        {
-            if (IsThisConstraintTimeDependent(root_node))
+        if (IsThisConstraintTimeDependent(root_node))
 
-            {
-                addTimeDependentConstraints(pb, linear_constraints, constraint.Id());
-            }
-            else
-            {
-                addStaticConstraint(pb, linear_constraints[0], constraint.Id());
-            }
+        {
+            addTimeDependentConstraints(pb, linear_constraints, constraint.Id());
+        }
+        else
+        {
+            addStaticConstraint(pb, linear_constraints[0], constraint.Id());
         }
     }
 }

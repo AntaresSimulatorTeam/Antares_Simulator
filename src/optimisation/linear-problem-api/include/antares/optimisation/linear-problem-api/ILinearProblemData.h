@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -13,6 +14,10 @@ public:
         firstTimeStep(first),
         lastTimeStep(last)
     {
+        if (firstTimeStep > lastTimeStep)
+        {
+            throw std::invalid_argument("First time step > last time step");
+        }
     }
 
     unsigned getFirstTimeStep() const
