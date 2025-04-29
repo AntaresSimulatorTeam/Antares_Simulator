@@ -89,6 +89,9 @@ void BuildVariablesAndObjective(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre, 
         double lb, ub;
         switch (ProblemeAResoudre->TypeDeVariable[i])
         {
+        case VARIABLE_FIXE:
+            lb = ub = 0.5 * (ProblemeAResoudre->Xmax[i] + ProblemeAResoudre->Xmin[i]);
+            break;
         case VARIABLE_BORNEE_DES_DEUX_COTES:
             lb = ProblemeAResoudre->Xmin[i];
             ub = ProblemeAResoudre->Xmax[i];
