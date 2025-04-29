@@ -84,7 +84,7 @@ void SolveQuadraticProblemWithOrtools(const SingleOptimOptions& options,
 void BuildVariablesAndObjective(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre, Model& model)
 {
     QuadraticExpression objective(0);
-    for (auto i = 0; i < ProblemeAResoudre->NombreDeVariables; ++i)
+    for (size_t i = 0; i < ProblemeAResoudre->NombreDeVariables; ++i)
     {
         double lb, ub;
         switch (ProblemeAResoudre->TypeDeVariable[i])
