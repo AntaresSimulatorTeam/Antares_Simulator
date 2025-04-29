@@ -85,14 +85,7 @@ struct QpFixture
         int type = VARIABLE_NON_BORNEE;
         if (std::isfinite(lb) && std::isfinite(ub))
         {
-            if (std::abs(lb - ub) <= 1e-3)
-            {
-                type = VARIABLE_FIXE;
-            }
-            else
-            {
-                type = VARIABLE_BORNEE_DES_DEUX_COTES;
-            }
+            type = ub - lb < 1e-3 ? VARIABLE_FIXE : VARIABLE_BORNEE_DES_DEUX_COTES;
         }
         else if (std::isfinite(lb))
         {
