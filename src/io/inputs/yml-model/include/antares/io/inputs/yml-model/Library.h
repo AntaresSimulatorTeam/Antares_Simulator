@@ -107,6 +107,8 @@ struct PortType
     // Small optimization: we only need the name of the fields
     // No need for an intermediate struct "field" with just a string "name" member
     std::vector<std::string> fields;
+    // Also, we only need the injection-field of the area-connection
+    std::string area_connection_injection_field;
 };
 
 struct Library

@@ -23,12 +23,12 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <filesystem>
+#include <unit_test_utils.h>
 
 #include <boost/test/unit_test.hpp>
 
 #include <antares/antares/fatal-error.h>
 
-#include "../../src/utils/unit_test_utils.h"
 #include "API.h"
 #include "in-memory-study.h"
 

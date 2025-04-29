@@ -173,8 +173,8 @@ ModelBuilder& ModelBuilder::withPortFieldDefinitions(
                    std::inserter(model_.portFieldDefinitions_, model_.portFieldDefinitions_.end()),
                    [](/*Non const to prevent copy*/ PortFieldDefinition& pfd)
                    {
-                       auto id = pfd.getPort().Id();
-                       auto fieldId = pfd.Field().Id();
+                       auto id = pfd.port().Id();
+                       auto fieldId = pfd.field().Id();
                        return std::make_pair(PortFieldKey{.portId = id, .fieldId = fieldId},
                                              std::move(pfd));
                    });

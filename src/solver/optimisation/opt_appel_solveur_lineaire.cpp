@@ -40,7 +40,6 @@
 
 using namespace operations_research;
 using namespace Antares::Optimisation::LinearProblemApi;
-using namespace Antares::Optimisation::LinearProblemDataImpl;
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 
 using Antares::Solver::IResultWriter;
@@ -86,7 +85,8 @@ struct SimplexResult
 
 static void fillModelerComponents(std::vector<std::unique_ptr<ComponentFiller>>& componentFillers,
                                   std::vector<LinearProblemFiller*>& fillersCollection,
-                                  const Antares::ModelerStudy::SystemModel::System* modelerSystem)
+                                  const Antares::ModelerStudy::SystemModel::System* modelerSystem,
+                                  VariableDictionary& variableDictionary)
 {
     if (!modelerSystem)
     {
@@ -96,7 +96,8 @@ static void fillModelerComponents(std::vector<std::unique_ptr<ComponentFiller>>&
 
     for (const auto& [_, component]: modelerSystem->Components())
     {
-        componentFillers.push_back(std::make_unique<ComponentFiller>(component));
+        componentFillers.push_back(
+          std::make_unique<ComponentFiller>(component, variableDictionary));
     }
     for (auto& component_filler: componentFillers)
     {
@@ -141,7 +142,12 @@ MPSolver* convertToMPSolver(const Optimization::PROBLEME_SIMPLEXE_NOMME& pb,
     std::vector<LinearProblemFiller*> fillersCollection = {&legacyOrtoolsFiller};
 
     std::vector<std::unique_ptr<ComponentFiller>> componentFillers;
-    fillModelerComponents(componentFillers, fillersCollection, problemeHebdo->modelerSystem);
+    // All LP variables coordinates (component id, variable id, scenario, time step)
+    VariableDictionary variableDictionary;
+    fillModelerComponents(componentFillers,
+                          fillersCollection,
+                          problemeHebdo->modelerSystem,
+                          variableDictionary);
 
     FillContext fillCtx(problemeHebdo->weekInTheYear * 168 + 0,
                         problemeHebdo->weekInTheYear * 168 + 167);
