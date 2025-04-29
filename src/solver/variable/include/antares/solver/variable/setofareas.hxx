@@ -281,17 +281,14 @@ void SetsOfAreas<NextT>::yearEndSpatialAggregates(V& allVars, uint year, uint nu
 
 template<class NextT>
 template<class V>
-void SetsOfAreas<NextT>::computeSpatialAggregatesSummary(
-  V& allVars,
-  std::map<unsigned int, unsigned int>& numSpaceToYear,
-  unsigned int nbYearsForCurrentSummary)
+void SetsOfAreas<NextT>::computeSpatialAggregatesSummary(V& allVars,
+                                                         unsigned int year,
+                                                         unsigned int numSpace)
 {
     for (uint setindex = 0; setindex != pSetsOfAreas.size(); ++setindex)
     {
         assert(setindex < pOriginalSets.size());
-        pSetsOfAreas[setindex]->computeSpatialAggregatesSummary(allVars,
-                                                                numSpaceToYear,
-                                                                nbYearsForCurrentSummary);
+        pSetsOfAreas[setindex]->computeSpatialAggregatesSummary(allVars, year, numSpace);
     }
 }
 

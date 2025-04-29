@@ -167,9 +167,7 @@ public:
     void yearEndSpatialAggregates(V& allVars, unsigned int year, unsigned int numSpace);
 
     template<class V>
-    void computeSpatialAggregatesSummary(V& allVars,
-                                         std::map<unsigned int, unsigned int>& numSpaceToYear,
-                                         unsigned int);
+    void computeSpatialAggregatesSummary(V& allVars, unsigned int year, unsigned int numSpace);
 
     template<class V>
     void simulationEndSpatialAggregates(V& allVars);
