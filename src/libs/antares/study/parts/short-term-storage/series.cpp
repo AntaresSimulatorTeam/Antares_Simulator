@@ -41,7 +41,9 @@ bool Series::loadFromFolder(const fs::path& folder, StudyVersion studyVersion)
 
     ret = loadFile(folder / "PMAX-injection.txt", maxInjectionModulation) && ret;
     ret = loadFile(folder / "PMAX-withdrawal.txt", maxWithdrawalModulation) && ret;
-    ret = loadFile(folder / "inflows.txt", inflows) && ret;
+    // TODO
+    bool average = false;
+    ret = inflows.series.loadFromFile(folder / "inflows.txt", average) && ret;
     ret = loadFile(folder / "lower-rule-curve.txt", lowerRuleCurve) && ret;
     ret = loadFile(folder / "upper-rule-curve.txt", upperRuleCurve) && ret;
     if (studyVersion >= StudyVersion(9, 2))
@@ -123,7 +125,8 @@ void Series::fillDefaultSeriesIfEmpty()
 {
     fillIfEmpty(maxInjectionModulation, 1.0);
     fillIfEmpty(maxWithdrawalModulation, 1.0);
-    fillIfEmpty(inflows, 0.0);
+    // TODO done in
+    // fillIfEmpty(inflows, 0.0);
     fillIfEmpty(lowerRuleCurve, 0.0);
     fillIfEmpty(upperRuleCurve, 1.0);
 
@@ -152,7 +155,7 @@ bool Series::saveToFolder(const std::string& folder) const
 
     checkWrite("PMAX-injection.txt", maxInjectionModulation);
     checkWrite("PMAX-withdrawal.txt", maxWithdrawalModulation);
-    checkWrite("inflows.txt", inflows);
+    inflows.series.saveToFile(folder + SEP + "inflows.txt", true);
     checkWrite("lower-rule-curve.txt", lowerRuleCurve);
     checkWrite("upper-rule-curve.txt", upperRuleCurve);
 
@@ -221,11 +224,28 @@ static bool checkSize(const std::string& seriesFilename,
     return true;
 }
 
+static bool checkSize(const std::string& seriesFilename, const std::string& id, const TimeSeries& v)
+{
+    // for (auto col = 0; col < v.numberOfColumns(); ++col)
+    // {
+    if (v.timeSeries.height != HOURS_PER_YEAR)
+    {
+        logs.warning() << "Short-term storage " << id
+                       << " Invalid size for file: " << seriesFilename << ". Got "
+                       << v.timeSeries.height << " lines, expected " << HOURS_PER_YEAR;
+        return false;
+    }
+    // }
+
+    return true;
+}
+
 bool Series::validateSizes(const std::string& id, StudyVersion studyVersion) const
 {
     bool ret = checkSize("PMAX-injection.txt", id, maxInjectionModulation)
                && checkSize("PMAX-withdrawal.txt", id, maxWithdrawalModulation)
-               && checkSize("inflows.txt", id, inflows)
+               // TODO not needed
+               //    && checkSize("inflows.txt", id, inflows.series)
                && checkSize("lower-rule-curve.txt", id, lowerRuleCurve)
                && checkSize("upper-rule-curve.txt", id, upperRuleCurve);
     // Some elements were introduced in version 9.2.0

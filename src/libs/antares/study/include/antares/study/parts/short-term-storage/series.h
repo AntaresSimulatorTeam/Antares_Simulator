@@ -25,6 +25,7 @@
 #include <vector>
 
 #include <antares/study/version.h>
+#include "antares/study/parts/short-term-storage/ManagedTimeSeries.h"
 
 namespace Antares::Data::ShortTermStorage
 {
@@ -44,7 +45,7 @@ public:
 
     std::vector<double> maxInjectionModulation;
     std::vector<double> maxWithdrawalModulation;
-    std::vector<double> inflows;
+    ManagedTimeSeries inflows;
     std::vector<double> lowerRuleCurve;
     std::vector<double> upperRuleCurve;
 

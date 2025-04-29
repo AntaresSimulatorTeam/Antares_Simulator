@@ -31,7 +31,8 @@ static void shortTermStorageLevelsRHS(
   int numberOfAreas,
   std::vector<double>& SecondMembre,
   const CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim,
-  int hourInTheYear)
+  int hourInTheYear,
+  unsigned int year)
 {
     for (int areaIndex = 0; areaIndex < numberOfAreas; areaIndex++)
     {
@@ -40,7 +41,8 @@ static void shortTermStorageLevelsRHS(
             const int clusterGlobalIndex = storage.clusterGlobalIndex;
             int cnt = CorrespondanceCntNativesCntOptim
                         .ShortTermStorageLevelConstraint[clusterGlobalIndex];
-            SecondMembre[cnt] = storage.series->inflows[hourInTheYear];
+            const auto* inflows = storage.series->inflows.series.getColumn(year);
+            SecondMembre[cnt] = inflows[hourInTheYear];
         }
     }
 }
@@ -178,7 +180,8 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
                                   problemeHebdo->NombreDePays,
                                   ProblemeAResoudre->SecondMembre,
                                   CorrespondanceCntNativesCntOptim,
-                                  hourInTheYear);
+                                  hourInTheYear,
+                                  problemeHebdo->year);
         for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {
             if (const COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];

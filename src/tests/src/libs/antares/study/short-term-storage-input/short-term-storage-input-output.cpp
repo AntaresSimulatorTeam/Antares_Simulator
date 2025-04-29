@@ -57,7 +57,7 @@ void resizeFillVectors(ShortTermStorage::Series& series, double value, unsigned 
 {
     series.maxInjectionModulation.resize(size, value);
     series.maxWithdrawalModulation.resize(size, value);
-    series.inflows.resize(size, value);
+    series.inflows.series.reset(size, value);
     series.lowerRuleCurve.resize(size, value);
     series.upperRuleCurve.resize(size, value);
 
@@ -258,6 +258,12 @@ void checkSizeFirst(const std::vector<double>& in, double v)
     BOOST_CHECK_EQUAL(in[0], v);
 }
 
+void checkSizeFirst(const TimeSeries& series, double value)
+{
+    BOOST_CHECK_EQUAL(series.timeSeries.height, HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(series.getCoefficient(0, 0), value);
+}
+
 BOOST_FIXTURE_TEST_CASE(check_empty, Fixture)
 {
     createFileSeries(0); // Empty files
@@ -267,7 +273,7 @@ BOOST_FIXTURE_TEST_CASE(check_empty, Fixture)
     // version<9.2
     checkSizeFirst(series.maxInjectionModulation, 1.0);
     checkSizeFirst(series.maxWithdrawalModulation, 1.0);
-    checkSizeFirst(series.inflows, 0.0);
+    checkSizeFirst(series.inflows.series, 0.0);
     checkSizeFirst(series.lowerRuleCurve, 0.0);
     checkSizeFirst(series.upperRuleCurve, 1.0);
 
@@ -294,9 +300,9 @@ BOOST_FIXTURE_TEST_CASE(check_series_folder_loading, Fixture)
 
     BOOST_CHECK(loadFromFolder(StudyVersion::latest()));
     BOOST_CHECK(series.validate("", StudyVersion::latest()));
-    BOOST_CHECK(series.inflows[0] == 1 && series.maxInjectionModulation[8759] == 1
-                && series.upperRuleCurve[1343] == 1 && series.costVariationInjection[0] == 1
-                && series.costVariationWithdrawal[0] == 1);
+    BOOST_CHECK(series.inflows.series.getCoefficient(0, 0) == 1
+                && series.maxInjectionModulation[8759] == 1 && series.upperRuleCurve[1343] == 1
+                && series.costVariationInjection[0] == 1 && series.costVariationWithdrawal[0] == 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_880, Fixture)
@@ -305,8 +311,8 @@ BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_880, Fixture)
 
     BOOST_CHECK(loadFromFolder(StudyVersion(8, 8)));
     BOOST_CHECK(series.validate("", StudyVersion(8, 8)));
-    BOOST_CHECK(series.inflows[0] == 1 && series.maxInjectionModulation[8759] == 1
-                && series.upperRuleCurve[1343]);
+    BOOST_CHECK(series.inflows.series.getCoefficient(0, 0) == 1
+                && series.maxInjectionModulation[8759] == 1 && series.upperRuleCurve[1343]);
 
     // New elements should NOT be loaded if the study version is < 9.2
     BOOST_CHECK(series.costVariationInjection.empty());
@@ -386,7 +392,7 @@ BOOST_FIXTURE_TEST_CASE(check_cluster_series_load_vector, Fixture)
     BOOST_CHECK(cluster.loadSeries(folder, StudyVersion::latest()));
     BOOST_CHECK(cluster.series->validate("", StudyVersion::latest()));
     BOOST_CHECK(cluster.series->maxWithdrawalModulation[0] == 0.5
-                && cluster.series->inflows[2756] == 0.5
+                && series.inflows.series.getCoefficient(0, 2756) == 0.5
                 && cluster.series->lowerRuleCurve[6392] == 0.5
                 && cluster.series->costVariationInjection[15] == 0.5
                 && cluster.series->costVariationWithdrawal[756] == 0.5);
