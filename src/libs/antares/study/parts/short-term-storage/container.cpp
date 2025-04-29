@@ -142,7 +142,7 @@ static bool readRHS(AdditionalConstraints& additionalConstraints, const fs::path
 {
     // TODO
     //  bool averageTs = (study.usedByTheSolver && study.parameters.derated);
-    additionalConstraints.series.loadFromFile(rhsPath, /*.average =*/false);
+    additionalConstraints.series().loadFromFile(rhsPath, /*.average =*/false);
     const auto ret = loadFile(rhsPath, additionalConstraints.rhs);
     if (ret)
     {
@@ -283,7 +283,7 @@ void STStorageInput::resizeAdditionalConstraintRhsTimeseriesNumbers(unsigned int
     {
         for (auto& additionalConstraint: cluster.additionalConstraints)
         {
-            additionalConstraint.series.timeseriesNumbers.reset(nbYears);
+            additionalConstraint.series().timeseriesNumbers.reset(nbYears);
         }
     }
 }

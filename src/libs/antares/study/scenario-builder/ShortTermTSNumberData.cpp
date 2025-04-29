@@ -58,7 +58,7 @@ bool ShortTermTSNumberData::apply(Study& study)
                     const MatrixType::ColumnType& col = mapped[0];
                     ret = ApplyToMatrix(errors,
                                         logprefix,
-                                        additionalConstraints.series,
+                                        additionalConstraints.series(),
                                         col,
                                         get_tsGenCount(study))
                           && ret;

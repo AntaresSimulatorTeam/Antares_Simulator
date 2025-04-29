@@ -59,7 +59,7 @@ static void shortTermStorageCumulationRHS(
         {
             for (const auto& additionalConstraints: storage.additionalConstraints)
             {
-                const auto& rhs = additionalConstraints.series.getColumn(year);
+                const auto& rhs = additionalConstraints.series().getColumn(year);
                 for (const auto& constraint: additionalConstraints.constraints)
                 {
                     const int cnt = CorrespondancesDesContraintesHebdomadaires

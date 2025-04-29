@@ -486,11 +486,10 @@ void initialize_additional_constraints_rhs(
   Antares::Data::ShortTermStorage::AdditionalConstraints& additionalConstraint,
   const std::vector<double>& values)
 {
-    additionalConstraint.series.resize(values.size(), 0.0); // Default series data
-    Antares::Matrix<double> matrix(1, values.size());
-    // double values[] = {12.0, 18.0, 24.0};
+    additionalConstraint.series().resize(values.size(), 0.0); // Default series data
+    Matrix matrix(1, values.size());
     matrix.pasteToColumn(0, values.data());
-    additionalConstraint.series.timeSeries = matrix;
+    additionalConstraint.series().timeSeries = matrix;
 }
 
 ExpectedResult SetupSingleStorageOneArea(PROBLEME_HEBDO& problemeHebdo)

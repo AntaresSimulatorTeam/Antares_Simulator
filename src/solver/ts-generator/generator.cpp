@@ -41,8 +41,8 @@ void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params)
               {
                   for (auto& additionalConstraint: cluster.additionalConstraints)
                   {
-                      additionalConstraint.series.timeSeries
-                        .reset(params.nbTimeSeriesShortTermStorage, HOURS_PER_YEAR);
+                      additionalConstraint.series()
+                        .timeSeries.reset(params.nbTimeSeriesShortTermStorage, HOURS_PER_YEAR);
                   }
               }
           }

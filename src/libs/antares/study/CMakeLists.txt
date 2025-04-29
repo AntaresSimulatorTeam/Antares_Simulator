@@ -104,8 +104,10 @@ set(SRC_STUDY_PART_SHORT_TERM_STORAGE
         parts/short-term-storage/series.cpp
         include/antares/study/parts/short-term-storage/series.h
         include/antares/study/parts/short-term-storage/cluster.h
+		include/antares/study/parts/short-term-storage/ManagedTimeSeries.h
         include/antares/study/parts/short-term-storage/additionalConstraints.h
         parts/short-term-storage/cluster.cpp
+		parts/short-term-storage/ManagedTimeSeries.cpp
         parts/short-term-storage/additionalConstraints.cpp
 )
 source_group("study\\part\\short-term-storage" FILES ${SRC_STUDY_PART_SHORT_TERM_SOTRAGE})
