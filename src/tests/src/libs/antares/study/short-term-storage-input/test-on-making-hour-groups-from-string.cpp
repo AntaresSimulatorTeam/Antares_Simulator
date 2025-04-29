@@ -169,6 +169,7 @@ BOOST_AUTO_TEST_CASE(large_hours_field___can_happen_in_real_life)
 
     BOOST_CHECK(groupsOfHours == expected_result);
 }
+
 BOOST_AUTO_TEST_CASE(very_large_hours_field___can_happen_in_real_life)
 {
     std::string hoursField;
