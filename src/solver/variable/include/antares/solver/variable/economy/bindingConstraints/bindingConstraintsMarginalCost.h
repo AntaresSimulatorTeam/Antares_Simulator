@@ -309,14 +309,11 @@ public:
     }
 
     template<class V>
-    static void computeSpatialAggregatesSummary(
-      V& allVars,
-      std::map<unsigned int, unsigned int>& numSpaceToYear,
-      unsigned int nbYearsForCurrentSummary)
+    static void computeSpatialAggregatesSummary(V& allVars,
+                                                unsigned int year,
+                                                unsigned int numSpace)
     {
-        NextType::template computeSpatialAggregatesSummary<V>(allVars,
-                                                              numSpaceToYear,
-                                                              nbYearsForCurrentSummary);
+        NextType::template computeSpatialAggregatesSummary<V>(allVars, year, numSpace);
     }
 
     void beforeYearByYearExport(uint year, uint numSpace)
