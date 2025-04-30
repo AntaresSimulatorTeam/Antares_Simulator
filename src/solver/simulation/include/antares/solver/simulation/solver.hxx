@@ -214,6 +214,11 @@ public:
             aggregationMutex.lock();
             simulation_->variables.computeSummary(y, numSpace);
 
+            // Computing summary of spatial aggregations
+            /* simulation_->variables.computeSpatialAggregatesSummary(simulation_->variables, */
+            /*                                                        y, */
+            /*                                                        numSpace); */
+
             // Computes statistics on annual (system and solution) costs, to be printed in output
             // into separate files
             simulation_->computeAnnualCostsStatistics(state);
@@ -925,10 +930,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
             throw FatalError(msg.str());
         }
     }
-    // Computing summary of spatial aggregations
-    // ImplementationType::variables.computeSpatialAggregatesSummary(ImplementationType::variables,
-    //                                                               batch.spaceToPerformedYear,
-    //                                                               batch.nbPerformedYears);
 
     // Set to zero the random numbers of all parallel years
     randomForParallelYears.reset();

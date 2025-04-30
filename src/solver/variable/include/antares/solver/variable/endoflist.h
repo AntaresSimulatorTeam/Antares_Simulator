@@ -164,9 +164,7 @@ public:
     }
 
     template<class V>
-    static void computeSpatialAggregatesSummary(V&,
-                                                std::map<unsigned int, unsigned int>&,
-                                                unsigned int)
+    static void computeSpatialAggregatesSummary(V&, unsigned int, unsigned int)
     {
     }
 
