@@ -83,17 +83,17 @@ public:
 
     double hour(unsigned int hour)
     {
-        return averageResults_.hourly[hour];
+        return averageResults_.hourly[hour].extract_double();
     }
 
     double day(unsigned int day)
     {
-        return averageResults_.daily[day];
+        return averageResults_.daily[day].extract_double();
     }
 
     double week(unsigned int week)
     {
-        return averageResults_.weekly[week];
+        return averageResults_.weekly[week].extract_double();
     }
 
 private:
