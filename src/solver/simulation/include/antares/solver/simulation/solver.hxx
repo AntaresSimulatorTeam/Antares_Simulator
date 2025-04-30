@@ -215,9 +215,9 @@ public:
             simulation_->variables.computeSummary(y, numSpace);
 
             // Computing summary of spatial aggregations
-            /* simulation_->variables.computeSpatialAggregatesSummary(simulation_->variables, */
-            /*                                                        y, */
-            /*                                                        numSpace); */
+            simulation_->variables.computeSpatialAggregatesSummary(simulation_->variables,
+                                                                   y,
+                                                                   numSpace);
 
             // Computes statistics on annual (system and solution) costs, to be printed in output
             // into separate files
