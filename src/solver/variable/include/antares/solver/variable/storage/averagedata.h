@@ -26,7 +26,7 @@
 #include <antares/study/study.h>
 #include "antares/solver/variable/storage/intermediate.h"
 
-using HighPrecision = boost::multiprecision::cpp_dec_float<30>;
+using HighPrecision = boost::multiprecision::cpp_dec_float<32>;
 
 namespace Antares
 {
