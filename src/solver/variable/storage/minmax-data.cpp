@@ -47,9 +47,10 @@ static void mergeArray(bool opInferior,
 
         if (opInferior)
         {
-            if (data.indices.empty() || values[i] < data.value - eps)
+            if (data.indices.empty() || values[i] < data.value)
             {
                 data.value = values[i];
+                data.indices.clear();
                 data.indices = {year + 1};
             }
             else if (values[i] == data.value)
@@ -59,9 +60,10 @@ static void mergeArray(bool opInferior,
         }
         else
         {
-            if (data.indices.empty() || values[i] > data.value + eps)
+            if (data.indices.empty() || values[i] > data.value)
             {
                 data.value = values[i];
+                data.indices.clear();
                 data.indices = {year + 1}; // The year is zero-based
             }
             else if (values[i] == data.value)
