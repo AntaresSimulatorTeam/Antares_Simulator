@@ -438,7 +438,7 @@ bool Rules::readShortTermStorage(const AreaName::Vector& splitKey,
                                  additionalConstraintName,
                                  year,
                                  fromStringToTSnumber(value));
-    // TODO
+    // TODO set inflows ts number series
     return true;
 }
 
