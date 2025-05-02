@@ -261,8 +261,16 @@ private:
             break;
         }
 
+        case Category::monthly:
+        {
+            for (uint m = 0; m < MONTHS_PER_YEAR; m++)
+            {
+                report.values[report.data.columnIndex][m] = array[m].extract_double();
+            }
+            break;
+        }
         default:
-            (void)::memcpy(report.values[report.data.columnIndex], array, sizeof(double) * Size);
+            logs.warning() << "Category not found for variable: " << report.variableCaption;
             break;
         }
 

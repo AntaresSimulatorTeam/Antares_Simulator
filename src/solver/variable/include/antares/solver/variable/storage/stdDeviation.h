@@ -253,8 +253,8 @@ private:
         {
             for (unsigned int i = 0; i != Size; ++i)
             {
-                target[i] = squareRootChecked(
-                  array[i] - results.avgdata.monthly[i] * results.avgdata.monthly[i]);
+                auto v = results.avgdata.monthly[i].extract_double();
+                target[i] = squareRootChecked(array[i] - v * v);
             }
         }
         break;

@@ -57,7 +57,7 @@ public:
     void merge(unsigned int year, const IntermediateValues& rhs);
 
 public:
-    double monthly[MONTHS_PER_YEAR];
+    HighPrecision monthly[MONTHS_PER_YEAR];
     HighPrecision weekly[WEEKS_PER_YEAR];
     HighPrecision hourly[HOURS_PER_YEAR];
     HighPrecision daily[DAYS_PER_YEAR];

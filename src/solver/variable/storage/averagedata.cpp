@@ -51,7 +51,10 @@ void AverageData::reset()
     {
         weekly[h] = 0.0;
     }
-    (void)::memset(monthly, 0, sizeof(double) * MONTHS_PER_YEAR);
+    for (uint m = 0; m < MONTHS_PER_YEAR; ++m)
+    {
+        monthly[m] = 0.0;
+    }
     year.assign(nbYearsCapacity, 0);
 }
 
