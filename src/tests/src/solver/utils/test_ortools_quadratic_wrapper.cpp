@@ -85,7 +85,7 @@ struct QpFixture
         int type = VARIABLE_NON_BORNEE;
         if (std::isfinite(lb) && std::isfinite(ub))
         {
-            type = VARIABLE_BORNEE_DES_DEUX_COTES;
+            type = ub - lb < 1e-3 ? VARIABLE_FIXE : VARIABLE_BORNEE_DES_DEUX_COTES;
         }
         else if (std::isfinite(lb))
         {
@@ -199,6 +199,18 @@ BOOST_AUTO_TEST_CASE(simple_qp_one_var)
     checkPrimalSolution({0.25});
     checkDualSolution({});
     checkReducedCosts({0});
+}
+
+BOOST_AUTO_TEST_CASE(simple_qp_one_var_fixed)
+{
+    // minimize(x * x - 0.5 * x)
+    // such that 0.24 <= x <= 0.2408
+    // although optimal value of x would be 0.25, the wrapper's handling of case VARIABLE_FIXE
+    // would set lb = ub = 0.5 * (0.24 + 0.2408) = 0.2404
+    addVar("x", 0.24, 0.2408, -0.5, 1);
+    solve();
+    BOOST_CHECK_EQUAL(OUI_PI, problemeAResoudre.ExistenceDUneSolution);
+    checkPrimalSolution({0.2404});
 }
 
 BOOST_AUTO_TEST_CASE(simple_qp_two_vars_1)
