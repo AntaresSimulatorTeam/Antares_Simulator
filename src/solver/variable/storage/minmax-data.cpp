@@ -25,8 +25,6 @@
 
 namespace Antares::Solver::Variable::R::AllYears
 {
-constexpr double eps = 1.e-7;
-
 static void initArray(bool opInferior, std::vector<MinMaxData::Data>& array)
 {
     for (auto& data: array)
@@ -50,7 +48,6 @@ static void mergeArray(bool opInferior,
             if (data.indices.empty() || values[i] < data.value)
             {
                 data.value = values[i];
-                data.indices.clear();
                 data.indices = {year + 1};
             }
             else if (values[i] == data.value)
@@ -63,7 +60,6 @@ static void mergeArray(bool opInferior,
             if (data.indices.empty() || values[i] > data.value)
             {
                 data.value = values[i];
-                data.indices.clear();
                 data.indices = {year + 1}; // The year is zero-based
             }
             else if (values[i] == data.value)
