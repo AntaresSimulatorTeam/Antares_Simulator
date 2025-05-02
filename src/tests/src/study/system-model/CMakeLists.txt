@@ -4,6 +4,7 @@ add_boost_test(test-system-model
   test_main.cpp
   test_component.cpp
   test_system.cpp
+  test_library.cpp
   LIBS
   Boost::unit_test_framework
         Antares::expressions
@@ -12,4 +13,4 @@ add_boost_test(test-system-model
         Antares::yml-system
         Antares::antares-study-system-model
         Antares::antlr-interface
-  test_utils_unit)
+        test_utils_unit)

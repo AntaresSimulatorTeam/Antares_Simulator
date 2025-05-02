@@ -32,6 +32,7 @@
 
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares;
+using namespace Antares::Optimization;
 using namespace Antares::Solver;
 using namespace Antares::Optimisation::LinearProblemApi;
 
@@ -51,9 +52,13 @@ public:
     {
         std::vector<std::unique_ptr<Optimization::ComponentFiller>> fillers;
         std::vector<LinearProblemFiller*> fillers_ptr;
+        // All LP variables coordinates (component id, variable id, scenario, time step)
+        VariableDictionary variableDictionary;
+
         for (const auto& [_, component]: system_->Components())
         {
-            auto cf = std::make_unique<Optimization::ComponentFiller>(component);
+            auto cf = std::make_unique<Optimization::ComponentFiller>(component,
+                                                                      variableDictionary);
             fillers.push_back(std::move(cf));
         }
         for (auto& component_filler: fillers)

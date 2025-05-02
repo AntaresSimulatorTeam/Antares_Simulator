@@ -43,6 +43,12 @@ static void setGenericParameters(MPSolverParameters& params)
 {
     params.SetIntegerParam(MPSolverParameters::SCALING, 0);
     params.SetIntegerParam(MPSolverParameters::PRESOLVE, 0);
+    // ortools default is 1e-7 for primal tolerance, but this may be too high as we manipulate large
+    // values in the problem. Then 1e-7 may be too hard to achieve and has lead to declare some
+    // problems infeasible whereas they were not (contraints were active but not violated). Sirius
+    // uses 1e-6 (and this cannot be changed with ortools), this has effect for all solvers except
+    // sirius
+    params.SetDoubleParam(MPSolverParameters::PRIMAL_TOLERANCE, 1e-6);
 }
 
 static void checkSetSolverSpecificParameters(bool status,
@@ -335,10 +341,10 @@ const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::mpSo
   {"highs", {"highs_lp", "highs"}},
   {"pdlp", {"pdlp", std::nullopt}}}; // PDLP only supports LPs
 
-// TODO: enable xpress when using ortools >= 9.12: {"xpress", math_opt::SolverType::kXpress}
 const std::map<std::string, math_opt::SolverType> OrtoolsUtils::mathoptSolverMap = {
   {"pdlp", math_opt::SolverType::kPdlp},
-  {"scip", math_opt::SolverType::kGscip}};
+  {"scip", math_opt::SolverType::kGscip},
+  {"xpress", math_opt::SolverType::kXpress}};
 
 std::list<std::string> availableLinearSolversList()
 {

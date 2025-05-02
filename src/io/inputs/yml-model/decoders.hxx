@@ -203,6 +203,18 @@ struct convert<Antares::IO::Inputs::YmlModel::PortType>
         {
             rhs.fields.push_back(field["id"].as<std::string>());
         }
+        if (node["area-connection"].IsDefined())
+        {
+            if (node["area-connection"].size() != 1)
+            {
+                // Must have exactly one area connection field definition
+                return false;
+            }
+            for (const auto& field: node["area-connection"])
+            {
+                rhs.area_connection_injection_field = field["injection-field"].as<std::string>("");
+            }
+        }
         return true;
     }
 };

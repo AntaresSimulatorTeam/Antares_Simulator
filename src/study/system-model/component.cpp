@@ -23,6 +23,8 @@
 
 #include <antares/study/system-model/component.h>
 
+using namespace Antares::Expressions::Nodes;
+
 namespace Antares::ModelerStudy::SystemModel
 {
 
@@ -48,7 +50,7 @@ static void checkComponentDataValidity(const ComponentData& data)
           "The component \"" + data.id + "\" has " + std::to_string(data.parameter_values.size())
           + " parameter(s), but its model has " + std::to_string(data.model->Parameters().size()));
     }
-    for (const auto param: data.model->Parameters() | std::views::keys)
+    for (const auto& param: data.model->Parameters() | std::views::keys)
     {
         if (!data.parameter_values.contains(param))
         {
@@ -62,6 +64,63 @@ Component::Component(const ComponentData& component_data)
 {
     checkComponentDataValidity(component_data);
     data_ = std::move(component_data);
+}
+
+void Component::addComponentConnection(const std::string localPortId, ConnectionEnd&& connexionEnd)
+{
+    componentConnectionEnds_[localPortId].push_back(std::move(connexionEnd));
+}
+
+std::vector<ConnectionEnd> Component::componentConnectionsViaPort(const std::string& portId) const
+{
+    if (auto it = componentConnectionEnds_.find(portId); it != componentConnectionEnds_.end())
+    {
+        return it->second;
+    }
+    return {};
+}
+
+const Node* Component::nodeAtPortField(const std::string& portId, const std::string& fieldId) const
+{
+    PortFieldKey key(portId, fieldId);
+    return getModel()->PortFieldDefinitions().at(key).Definition().RootNode();
+}
+
+void Component::addAreaConnection(const std::string& localPortId, const std::string& areaId)
+{
+    std::string exceptionPrefix = "Cannot connect area \"" + areaId + "\" to port \"" + localPortId
+                                  + "\" of component \"" + data_.id + "\": ";
+    if (!data_.model->Ports().contains(localPortId))
+    {
+        throw std::invalid_argument(exceptionPrefix
+                                    + "port does not exist in the component's model \""
+                                    + data_.model->Id() + "\"");
+    }
+    Port port = getModel()->Ports().at(localPortId);
+    if (!port.Type().AreaConnectionFieldId().has_value())
+    {
+        throw std::invalid_argument(exceptionPrefix + "port type \"" + port.Type().Id()
+                                    + "\" has no area-connection field ID defined");
+    }
+    PortFieldKey key(localPortId, port.Type().AreaConnectionFieldId().value());
+    if (!data_.model->PortFieldDefinitions().contains(key))
+    {
+        throw std::invalid_argument(
+          exceptionPrefix + "port field \"" + port.Type().AreaConnectionFieldId().value()
+          + "\" is not defined in the component's model \"" + data_.model->Id() + "\"");
+    }
+    if (areaConnections_.contains(localPortId))
+    {
+        throw std::invalid_argument(exceptionPrefix + "port is already connected to \""
+                                    + areaConnections_.at(localPortId) + "\"");
+    }
+    areaConnections_[localPortId] = areaId;
+}
+
+std::optional<std::string> Component::areaConnectedToPort(const std::string& portId) const
+{
+    return areaConnections_.contains(portId) ? std::optional(areaConnections_.at(portId))
+                                             : std::nullopt;
 }
 
 /**
