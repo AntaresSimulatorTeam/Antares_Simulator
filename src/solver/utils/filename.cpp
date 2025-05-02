@@ -87,7 +87,8 @@ std::string createReducedCostFilename(const OptPeriodStringGenerator& optPeriodS
 std::string createModelerSolutionsFilename(const OptPeriodStringGenerator& optPeriodStringGenerator,
                                            const unsigned int optNumber)
 {
-    return createOptimizationFilename("modeler-solutions",
+    // TODO : better definition of "modeler" subfolder?
+    return createOptimizationFilename("modeler/modeler-solutions",
                                       optPeriodStringGenerator,
                                       optNumber,
                                       "txt");

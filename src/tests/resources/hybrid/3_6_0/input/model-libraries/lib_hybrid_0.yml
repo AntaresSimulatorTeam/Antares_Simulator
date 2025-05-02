@@ -1,0 +1,49 @@
+library:
+  id: lib_hybrid_0
+  description: library with load and generator that can be connected to legacy area
+
+  port-types:
+    - id: flow
+      description: A port which transfers power flow value
+      fields:
+        - id: flow_field
+      area-connection:
+        - injection-field: flow_field
+
+  models:
+    - id: generator
+      description: A simple generator
+      parameters:
+        - id: max_p
+          time-dependent: false
+          scenario-dependent: false
+        - id: prop_cost
+          time-dependent: false
+          scenario-dependent: false
+      variables:
+        - id: p
+          lower-bound: 0
+          upper-bound: max_p
+          variable-type: continuous
+      ports:
+        - id: generation
+          type: flow
+      port-field-definitions:
+        - port: generation
+          field: flow_field
+          definition: p
+      objective: p * prop_cost
+
+    - id: load
+      description: A simple load
+      parameters:
+        - id: load_value
+          time-dependent: false
+          scenario-dependent: false
+      ports:
+        - id: consumption
+          type: flow
+      port-field-definitions:
+        - port: consumption
+          field: flow_field
+          definition: -load_value

@@ -123,6 +123,11 @@ std::optional<std::string> Component::areaConnectedToPort(const std::string& por
                                              : std::nullopt;
 }
 
+const std::map<std::string, std::string>& Component::areaConnectionPerPort() const
+{
+    return areaConnections_;
+}
+
 /**
  * \brief Sets the ID of the component.
  *

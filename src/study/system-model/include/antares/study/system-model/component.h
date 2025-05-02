@@ -103,6 +103,8 @@ public:
 
     std::optional<std::string> areaConnectedToPort(const std::string& portId) const;
 
+    const std::map<std::string, std::string>& areaConnectionPerPort() const;
+
 private:
     // Only ComponentBuilder is allowed to build Component instances
     friend class ComponentBuilder;

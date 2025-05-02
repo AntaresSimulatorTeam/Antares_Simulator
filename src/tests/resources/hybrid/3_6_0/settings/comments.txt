@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<richtext version="1.0.0.0" xmlns="http://www.wxwidgets.org">
+  <paragraphlayout textcolor="#000000" fontsize="8" fontstyle="90" fontweight="90" fontunderlined="0" fontface="MS Shell Dlg 2" alignment="1" parspacingafter="10" parspacingbefore="0" linespacing="10">
+    <paragraph>
+      <text fontweight="92">A system made of one single passive node, with no load and no generation of any kind</text>
+    </paragraph>
+    <paragraph>
+      <text></text>
+    </paragraph>
+    <paragraph>
+      <text>General simulation settings can be set on the Simulation sheet (quick access bar on the left)</text>
+    </paragraph>
+    <paragraph>
+      <text>The system can be simulated using Run/Run a Monte Carlo simulation</text>
+    </paragraph>
+    <paragraph>
+      <text>Output can be seen in Output/Name_of_the_simulation</text>
+    </paragraph>
+    <paragraph>
+      <text></text>
+    </paragraph>
+    <paragraph>
+      <text>All adequacy and economic simulations give zero value for LOLP,LOLE, generation cost, etc.</text>
+    </paragraph>
+  </paragraphlayout>
+</richtext>

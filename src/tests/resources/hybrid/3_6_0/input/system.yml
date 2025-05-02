@@ -1,0 +1,37 @@
+system:
+  id: sys_hybrid_3_6_0
+  description: >
+    A hybrid system with a generator and a load connected to a passive area "NODE"
+
+  model-libraries: lib_hybrid_0
+
+  components:
+  - id: gen1
+    model: lib_hybrid_0.generator
+    scenario-group: sg
+    parameters:
+    - id: max_p
+      time-dependent: false
+      scenario-dependent: false
+      value: 200
+    - id: prop_cost
+      time-dependent: false
+      scenario-dependent: false
+      value: 0.3
+
+  - id: load1
+    model: lib_hybrid_0.load
+    scenario-group: sg
+    parameters:
+    - id: load_value
+      time-dependent: false
+      scenario-dependent: false
+      value: 100
+
+  area-connections:
+    - component: gen1
+      port: generation
+      area: node
+    - component: load1
+      port: consumption
+      area: node

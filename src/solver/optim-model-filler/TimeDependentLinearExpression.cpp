@@ -108,9 +108,9 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator-() const
 {
     const auto& linear_expressions = GetLinearExpressions();
     LinearExpressionMap result;
-    for (size_t i = 0; i < linear_expressions.size(); ++i)
+    for (const auto& timeStep: linear_expressions | std::views::keys)
     {
-        result[i] = -linear_expressions.at(i);
+        result[timeStep] = -linear_expressions.at(timeStep);
     }
     return TimeDependentLinearExpression(std::move(result));
 }
