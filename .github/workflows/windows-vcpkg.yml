@@ -136,6 +136,7 @@ jobs:
           -DCMAKE_BUILD_TYPE=Release \
           -DBUILD_TESTING=ON  \
           -DBUILD_TOOLS=ON \
+          -DBUILD_UI=OFF \
           -DPython3_EXECUTABLE="${{ env.Python3_ROOT_DIR }}/python.exe" \
           -DCMAKE_VS_GLOBALS="CLToolExe=cl.exe;CLToolPath=${GITHUB_WORKSPACE}/ccache;TrackFileAccess=false;UseMultiToolTask=true;DebugInformationFormat=OldStyle"
 
