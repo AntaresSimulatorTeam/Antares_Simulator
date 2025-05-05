@@ -23,7 +23,10 @@
 
 #include <cmath>
 #include <float.h>
-#include <limits>
+
+#include <boost/multiprecision/cpp_dec_float.hpp>
+
+using HighPrecision = boost::multiprecision::cpp_dec_float<32>;
 
 namespace Antares
 {
@@ -62,22 +65,13 @@ public:
         return "std deviation";
     }
 
-public:
-    StdDeviation()
-    {
-        using namespace Yuni;
-        stdDeviationHourly = nullptr;
-    }
-
-    ~StdDeviation()
-    {
-        Antares::Memory::Release(stdDeviationHourly);
-    }
-
 protected:
     void initializeFromStudy(Antares::Data::Study& study)
     {
-        Antares::Memory::Allocate<double>(stdDeviationHourly, HOURS_PER_YEAR);
+        stdDeviationHourly.assign(HOURS_PER_YEAR, 0);
+        stdDeviationDaily.assign(HOURS_PER_YEAR, 0);
+        stdDeviationWeekly.assign(HOURS_PER_YEAR, 0);
+        stdDeviationMonthly.assign(HOURS_PER_YEAR, 0);
         // Next
         NextType::initializeFromStudy(study);
 
@@ -88,10 +82,10 @@ protected:
     void reset()
     {
         // Reset
-        (void)::memset(stdDeviationMonthly, 0, sizeof(double) * MONTHS_PER_YEAR);
-        (void)::memset(stdDeviationWeekly, 0, sizeof(double) * WEEKS_PER_YEAR);
-        (void)::memset(stdDeviationDaily, 0, sizeof(double) * DAYS_PER_YEAR);
-        Antares::Memory::Zero(HOURS_PER_YEAR, stdDeviationHourly);
+        stdDeviationHourly.assign(HOURS_PER_YEAR, 0);
+        stdDeviationDaily.assign(HOURS_PER_YEAR, 0);
+        stdDeviationWeekly.assign(HOURS_PER_YEAR, 0);
+        stdDeviationMonthly.assign(HOURS_PER_YEAR, 0);
         stdDeviationYear = 0.;
         // Next
         NextType::reset();
@@ -145,24 +139,25 @@ protected:
                 InternalExportValues<S, HOURS_PER_YEAR, VCardT, Category::hourly>(
                   report,
                   results,
-                  Memory::RawPointer(stdDeviationHourly));
+                  stdDeviationHourly.data());
                 break;
             case Category::daily:
-                InternalExportValues<S, DAYS_PER_YEAR, VCardT, Category::daily>(report,
-                                                                                results,
-                                                                                stdDeviationDaily);
+                InternalExportValues<S, DAYS_PER_YEAR, VCardT, Category::daily>(
+                  report,
+                  results,
+                  stdDeviationDaily.data());
                 break;
             case Category::weekly:
                 InternalExportValues<S, WEEKS_PER_YEAR, VCardT, Category::weekly>(
                   report,
                   results,
-                  stdDeviationWeekly);
+                  stdDeviationWeekly.data());
                 break;
             case Category::monthly:
                 InternalExportValues<S, MONTHS_PER_YEAR, VCardT, Category::monthly>(
                   report,
                   results,
-                  stdDeviationMonthly);
+                  stdDeviationMonthly.data());
                 break;
             case Category::annual:
                 InternalExportValues<S, 1, VCardT, Category::annual>(report,
@@ -182,23 +177,26 @@ protected:
     template<template<class, int> class DecoratorT>
     Antares::Memory::Stored<double>::ConstReturnType hourlyValuesForSpatialAggregate() const
     {
-        if (Yuni::Static::Type::StrictlyEqual<DecoratorT<Empty, 0>, StdDeviation<Empty, 0>>::Yes)
-        {
-            return stdDeviationHourly;
-        }
+        /* if (Yuni::Static::Type::StrictlyEqual<DecoratorT<Empty, 0>, StdDeviation<Empty, 0>>::Yes)
+         */
+        /* { */
+        /*     return stdDeviationHourly.data(); */
+        /* } */
         return NextType::template hourlyValuesForSpatialAggregate<DecoratorT>();
     }
 
 public:
-    double stdDeviationMonthly[MONTHS_PER_YEAR];
-    double stdDeviationWeekly[WEEKS_PER_YEAR];
-    double stdDeviationDaily[DAYS_PER_YEAR];
-    Antares::Memory::Stored<double>::Type stdDeviationHourly;
-    double stdDeviationYear;
+    std::vector<HighPrecision> stdDeviationMonthly;
+    std::vector<HighPrecision> stdDeviationWeekly;
+    std::vector<HighPrecision> stdDeviationDaily;
+    std::vector<HighPrecision> stdDeviationHourly;
+    HighPrecision stdDeviationYear = 0;
 
 private:
-    template<class S, unsigned int Size, class VCardT, int PrecisionT, class A>
-    void InternalExportValues(SurveyResults& report, const S& results, const A& array) const
+    template<class S, unsigned int Size, class VCardT, int PrecisionT>
+    void InternalExportValues(SurveyResults& report,
+                              const S& results,
+                              const HighPrecision* array) const
     {
         assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
 
@@ -227,7 +225,7 @@ private:
             for (unsigned int i = 0; i != Size; ++i)
             {
                 auto v = results.avgdata.hourly[i].extract_double();
-                target[i] = squareRootChecked(array[i] - v * v);
+                target[i] = squareRootChecked(array[i].extract_double() - v * v);
             }
         }
         break;
@@ -236,7 +234,7 @@ private:
             for (unsigned int i = 0; i != Size; ++i)
             {
                 auto v = results.avgdata.daily[i].extract_double();
-                target[i] = squareRootChecked(array[i] - v * v);
+                target[i] = squareRootChecked(array[i].extract_double() - v * v);
             }
         }
         break;
@@ -245,7 +243,7 @@ private:
             for (unsigned int i = 0; i != Size; ++i)
             {
                 auto v = results.avgdata.weekly[i].extract_double();
-                target[i] = squareRootChecked(array[i] - v * v);
+                target[i] = squareRootChecked(array[i].extract_double() - v * v);
             }
         }
         break;
@@ -254,13 +252,14 @@ private:
             for (unsigned int i = 0; i != Size; ++i)
             {
                 auto v = results.avgdata.monthly[i].extract_double();
-                target[i] = squareRootChecked(array[i] - v * v);
+                target[i] = squareRootChecked(array[i].extract_double() - v * v);
             }
         }
         break;
         case Category::annual:
         {
-            const double d = *array - results.avgdata.allYears * results.avgdata.allYears;
+            const double d = array->extract_double()
+                             - results.avgdata.allYears * results.avgdata.allYears;
             *target = squareRootChecked(d);
         }
         break;
