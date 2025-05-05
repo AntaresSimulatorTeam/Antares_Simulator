@@ -31,9 +31,13 @@
 
 #include <antares/correlation/correlation.h>
 #include <antares/date/date.h>
+#include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/study/runtime/runtime.h>
+#include <antares/study/system-model/library.h>
+#include <antares/study/system-model/system.h>
 #include <antares/writer/i_writer.h>
 #include "antares/antares/antares.h"
+#include "antares/solver/modeler/loadFiles/data.h"
 #include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
 #include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 
@@ -72,7 +76,6 @@ public:
     //! Extension filename
     using FileExtension = std::string;
 
-public:
     /*!
     ** \brief Extract the title of a study
     **
@@ -114,7 +117,6 @@ public:
     */
     static bool IsInsideStudyFolder(const AnyString& path, YString& location, YString& title);
 
-public:
     //! \name Constructor & Destructor
     //@{
     /*!
@@ -428,11 +430,6 @@ public:
     */
     void ensureDataAreLoadedForAllBindingConstraints();
 
-    /*!
-    ** \brief Get the amound of memory consummed by the study (in bytes)
-    */
-    uint64_t memoryUsage() const;
-
     //! \name Logs
     //@{
     /*!
@@ -467,6 +464,7 @@ public:
     //! \name Simulation
     //@{
     //! The current Simulation
+    // TODO VP: remove with GUI
     SimulationComments simulationComments;
 
     int64_t pStartTime;
@@ -609,7 +607,6 @@ public:
     //! The queue service that runs every set of parallel years
     std::shared_ptr<Yuni::Job::QueueService> pQueueService;
 
-public:
     //! \name TS Generators
     //@{
     /*!
@@ -626,6 +623,16 @@ public:
     ** must be done.
     */
     const bool usedByTheSolver;
+
+    Antares::ModelerStudy::SystemModel::System* getModelerSystem() const
+    {
+        return modelerInput_.system.get();
+    }
+
+    Optimisation::LinearProblemApi::ILinearProblemData* getModelerData() const
+    {
+        return modelerInput_.dataSeries.get();
+    }
 
 protected:
     //! \name Loading
@@ -644,6 +651,9 @@ protected:
 
     bool internalLoadIni(const std::filesystem::path& path, const StudyLoadOptions& options);
 
+    //! Load extra modeler components for hybrid studies
+    void loadModelerComponents();
+
     void parameterFiller(const StudyLoadOptions& options);
 
     //! \name Misc
@@ -652,6 +662,8 @@ protected:
     void reduceMemoryUsage();
     //@}
 
+private:
+    Antares::Modeler::Data modelerInput_;
 }; // class Study
 
 /*!

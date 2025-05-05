@@ -19,6 +19,8 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include <numeric>
+
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO*, int, uint);
@@ -36,9 +38,39 @@ static void shortTermStorageLevelsRHS(
         for (auto& storage: shortTermStorageInput[areaIndex])
         {
             const int clusterGlobalIndex = storage.clusterGlobalIndex;
-            const int cnt = CorrespondanceCntNativesCntOptim
-                              .ShortTermStorageLevelConstraint[clusterGlobalIndex];
+            int cnt = CorrespondanceCntNativesCntOptim
+                        .ShortTermStorageLevelConstraint[clusterGlobalIndex];
             SecondMembre[cnt] = storage.series->inflows[hourInTheYear];
+        }
+    }
+}
+
+static void shortTermStorageCumulationRHS(
+  const std::vector<::ShortTermStorage::AREA_INPUT>& shortTermStorageInput,
+  int numberOfAreas,
+  std::vector<double>& SecondMembre,
+  const CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES& CorrespondancesDesContraintesHebdomadaires,
+  int weekFirstHour)
+{
+    for (int areaIndex = 0; areaIndex < numberOfAreas; areaIndex++)
+    {
+        for (auto& storage: shortTermStorageInput[areaIndex])
+        {
+            for (const auto& additionalConstraints: storage.additionalConstraints)
+            {
+                for (const auto& constraint: additionalConstraints.constraints)
+                {
+                    const int cnt = CorrespondancesDesContraintesHebdomadaires
+                                      .ShortTermStorageCumulation[constraint.globalIndex];
+
+                    SecondMembre[cnt] = std::accumulate(
+                      constraint.hours.begin(),
+                      constraint.hours.end(),
+                      0.0,
+                      [weekFirstHour, &additionalConstraints](const double sum, const int hour)
+                      { return sum + additionalConstraints.rhs[weekFirstHour + hour - 1]; });
+                }
+            }
         }
     }
 }
@@ -145,7 +177,6 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
                                   ProblemeAResoudre->SecondMembre,
                                   CorrespondanceCntNativesCntOptim,
                                   hourInTheYear);
-
         for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {
             if (const COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
@@ -376,7 +407,11 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
             }
         }
     }
-
+    shortTermStorageCumulationRHS(problemeHebdo->ShortTermStorage,
+                                  problemeHebdo->NombreDePays,
+                                  ProblemeAResoudre->SecondMembre,
+                                  problemeHebdo->CorrespondanceCntNativesCntOptimHebdomadaires,
+                                  weekFirstHour);
     if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
     {
         OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(problemeHebdo,

@@ -46,7 +46,6 @@ Benchmarking::OptimizationInfo Adequacy::getOptimizationInfo() const
 
     optInfo.nbVariables = Pb->NombreDeVariables;
     optInfo.nbConstraints = Pb->NombreDeContraintes;
-    optInfo.nbNonZeroCoeffs = Pb->NombreDeTermesAllouesDansLaMatriceDesContraintes;
     return optInfo;
 }
 
@@ -209,12 +208,10 @@ bool Adequacy::year(Progression::Task& progression,
 
             try
             {
-                OPT_OptimisationHebdomadaire(createOptimizationOptions(study),
+                OPT_OptimisationHebdomadaire(study.parameters.optOptions,
                                              &currentProblem,
                                              resultWriter,
                                              simulationObserver_.get());
-
-                computingHydroLevels(study.areas, currentProblem, false);
 
                 RemixHydroForAllAreas(study.areas,
                                       currentProblem,
@@ -222,8 +219,6 @@ bool Adequacy::year(Progression::Task& progression,
                                       study.parameters.simplexOptimizationRange,
                                       numSpace,
                                       hourInTheYear);
-
-                computingHydroLevels(study.areas, currentProblem, true);
             }
             catch (Data::AssertionError& ex)
             {
@@ -328,8 +323,6 @@ bool Adequacy::year(Progression::Task& progression,
                                                  .ConsommationAbattueDuPays[k];
                 }
             }
-
-            computingHydroLevels(study.areas, currentProblem, false, true);
         }
 
         interpolateWaterValue(study.areas, currentProblem, study.calendar, hourInTheYear);

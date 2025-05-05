@@ -21,10 +21,6 @@ If not, see [https://opensource.org/license/mpl-2-0/](https://opensource.org/lic
 **Antares\_Simulator 8.3 uses external libraries and makes extensive use of the following persons' or companies code. 
 Source and binary forms of these programs are distributed along with Antares\_Simulator with NO WARRANTY:**
 
-- Wxwidgets 3.1.3 Copyright (c) 1998-2017 The wxWidget Team
-  [https://github.com/wxWidgets/wxWidgets.git](https://github.com/wxWidgets/wxWidgets.git)
-  license: wxWindows Library License,V3.1 [https://spdx.org/licenses/wxWindows.html](https://spdx.org/licenses/wxWindows.html)
-
 - libYuni 1.1.0 [https://github.com/libyuni](https://github.com/libyuni)
   license: Mozilla Public License 2.0 [https://spdx.org/licenses/MPL-2.0.html](https://spdx.org/licenses/MPL-2.0.html)
 
@@ -40,5 +36,5 @@ Source and binary forms of these programs are distributed along with Antares\_Si
   license: Apache 2.0	[https://spdx.org/licenses/Apache-2.0.html](https://spdx.org/licenses/Apache-2.0.html)
 
 - OR-Tools Copyright (c) 2010-2020 Google LLC
-  [https://github.com/rte-france/or-tools.git](https://github.com/rte-france/or-tools.git)
+  [https://github.com/google/or-tools.git](https://github.com/google/or-tools.git)
   license: Apache 2.0	[https://spdx.org/licenses/Apache-2.0.html](https://spdx.org/licenses/Apache-2.0.html)

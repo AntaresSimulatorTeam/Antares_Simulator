@@ -79,7 +79,7 @@ struct VCardBindingConstMarginCost
     static constexpr uint8_t isPossiblyNonApplicable = 1;
 
     typedef IntermediateValues IntermediateValuesBaseType;
-    typedef IntermediateValues* IntermediateValuesType;
+    typedef std::vector<IntermediateValues> IntermediateValuesType;
 
 }; // class VCard
 
@@ -129,14 +129,6 @@ public:
 public:
     BindingConstMarginCost() = default;
 
-    ~BindingConstMarginCost()
-    {
-        if (pValuesForTheCurrentYear)
-        {
-            delete[] pValuesForTheCurrentYear;
-        }
-    }
-
     void simulationBegin()
     {
         NextType::simulationBegin();
@@ -155,7 +147,7 @@ public:
         InitializeResultsFromStudy(AncestorType::pResults, study);
 
         // Intermediate values
-        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
+        pValuesForTheCurrentYear.resize(pNbYearsParallel);
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
         {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
@@ -469,7 +461,7 @@ private:
     // Private data mambers
     // ----------------------
     //! Intermediate values for each year
-    typename VCardType::IntermediateValuesType pValuesForTheCurrentYear = nullptr;
+    typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel = 0;
     std::shared_ptr<Data::BindingConstraint> associatedBC_ = nullptr;
     uint nbCount_ = 0; // Number of inequality BCs

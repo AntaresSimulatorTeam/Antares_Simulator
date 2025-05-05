@@ -96,11 +96,6 @@ public:
     bool saveToFolder(const AnyString& folder) const;
 
     /*!
-    ** \brief Get the amount of memory used by the class
-    */
-    uint64_t memoryUsage() const;
-
-    /*!
     ** \brief Normalize NPO max and check for consistency
     **
     ** This method should only be used by the solver

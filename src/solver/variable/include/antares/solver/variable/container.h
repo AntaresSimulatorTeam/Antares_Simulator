@@ -44,9 +44,9 @@ class List: public NextT
 {
 public:
     //! Type of the next static variable
-    typedef NextT NextType;
+    using NextType = NextT;
     //! The full type of the class
-    typedef List<NextT> ListType;
+    using ListType = List<NextT>;
 
     enum
     {
@@ -55,18 +55,6 @@ public:
     };
 
 public:
-    //! \name Constructor & Destructor
-    //@{
-    /*!
-    ** \brief Default Constructor
-    */
-    List();
-    /*!
-    ** \brief Destructor
-    */
-    ~List();
-    //@}
-
     //! \name Variable initialization
     //@{
     /*!
@@ -218,12 +206,6 @@ public:
     ** \brief Ask to all variables to fullfil the digest
     */
     void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const;
-    //@}
-
-    //! \name Memory management
-    //@{
-    //! Get the amount of memory currently used by the class
-    uint64_t memoryUsage() const;
     //@}
 
 private:

@@ -75,13 +75,13 @@ bool ATSP::computeMonthlyCorrelations()
 
     // Initialize mapping, to skip areas which has been disabled
     // the real number of items is `realAreaCount`
-    uint* mapping = new uint[pArea.size()];
+    std::vector<uint> mapping(pArea.size());
     {
         uint z = 0;
         for (uint i = 0; i != pArea.size(); ++i)
         {
             mapping[i] = (uint)-1;
-            if (pArea[i]->enabled)
+            if (pArea[i].enabled)
             {
                 mapping[z] = i;
                 ++z;
@@ -168,8 +168,8 @@ bool ATSP::computeMonthlyCorrelations()
 
                 logs.info() << "Correlation: month: " << Antares::Date::MonthToString(m)
                             << ", area " << (1 + iZ) << '/' << realAreaCount << ": "
-                            << pArea[i]->name << " with area " << (1 + jZ) << '/' << realAreaCount
-                            << ": " << pArea[j]->name;
+                            << pArea[i].name << " with area " << (1 + jZ) << '/' << realAreaCount
+                            << ": " << pArea[j].name;
 
                 if (!cacheFetch(j, SERIE_P))
                 {
@@ -442,7 +442,6 @@ bool ATSP::computeMonthlyCorrelations()
     moments_centr_net.clear();
     moments_centr_raw.clear();
     hidden_hours.clear();
-    cacheDestroy();
 
     // Rounding annual correlation coefficients -zero excluded
     for (uint i = 1; i < CORR_YNP.width; ++i)
@@ -614,7 +613,7 @@ bool ATSP::computeMonthlyCorrelations()
                     if (!Utils::isZero(col[jZ]))
                     {
                         const uint j = mapping[jZ];
-                        f << pArea[i]->name << '%' << pArea[j]->name << " = " << col[jZ] << '\n';
+                        f << pArea[i].name << '%' << pArea[j].name << " = " << col[jZ] << '\n';
                     }
                 }
             }
@@ -650,8 +649,7 @@ bool ATSP::computeMonthlyCorrelations()
                         if (!Utils::isZero(col[jZ]))
                         {
                             const uint j = mapping[jZ];
-                            f << pArea[i]->name << '%' << pArea[j]->name << " = " << col[jZ]
-                              << '\n';
+                            f << pArea[i].name << '%' << pArea[j].name << " = " << col[jZ] << '\n';
                         }
                     }
                 }
@@ -669,7 +667,7 @@ bool ATSP::computeMonthlyCorrelations()
             for (uint iZ = 0; iZ != realAreaCount; ++iZ)
             {
                 const uint i = mapping[iZ];
-                f << pArea[i]->name << '\n';
+                f << pArea[i].name << '\n';
             }
         }
         else
@@ -677,9 +675,6 @@ bool ATSP::computeMonthlyCorrelations()
             logs.error() << "Impossible to create " << pStr;
         }
     }
-
-    // removing the mapping list
-    delete[] mapping;
 
     return true;
 }

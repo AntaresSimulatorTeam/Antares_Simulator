@@ -191,7 +191,28 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                                      * storage.series->upperRuleCurve[hourInTheYear];
                 }
                 AddressForVars[varLevel] = &STSResult.level[storageIndex];
+                // 4. Cost Variation Injection
 
+                // is this necessary?
+                if (storage.penalizeVariationInjection)
+                {
+                    int varCostVariationInjection = variableManager
+                                                      .ShortTermStorageCostVariationInjection(
+                                                        clusterGlobalIndex,
+                                                        pdtJour);
+
+                    Xmin[varCostVariationInjection] = 0.;
+                }
+                // 5. Cost Variation Withdrawal
+                // is this necessary?
+                if (storage.penalizeVariationWithdrawal)
+                {
+                    int varCostVariationWithdrawal = variableManager
+                                                       .ShortTermStorageCostVariationWithdrawal(
+                                                         clusterGlobalIndex,
+                                                         pdtJour);
+                    Xmin[varCostVariationWithdrawal] = 0.;
+                }
                 storageIndex++;
             }
         }
@@ -410,15 +431,17 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
             }
 
             var = variableManager.Overflow(pays, pdtJour);
-
-            problemeHebdo->ResultatsHoraires[pays].debordementsHoraires[pdtHebdo] = 0.;
             if (var >= 0)
             {
                 Xmin[var] = 0.0;
-                Xmax[var] = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                              .ApportNaturelHoraire[pdtHebdo];
+                Xmax[var] = std::max(
+                  0.,
+                  problemeHebdo->CaracteristiquesHydrauliques[pays].ApportNaturelHoraire[pdtHebdo]);
                 AdresseOuPlacerLaValeurDesCoutsReduits[var] = nullptr;
-                AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
+                AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = &problemeHebdo
+                                                                        ->ResultatsHoraires[pays]
+                                                                        .debordementsHoraires
+                                                                          [pdtHebdo];
             }
 
             var = variableManager.HydroLevel(pays, pdtJour);

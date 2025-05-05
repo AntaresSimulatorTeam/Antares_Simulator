@@ -22,11 +22,14 @@
 #include "antares/study/parts/short-term-storage/container.h"
 
 #include <algorithm>
+#include <numeric>
+#include <regex>
 #include <string>
 
 #include <yuni/io/file.h>
 
 #include <antares/logs/logs.h>
+#include <antares/utils/utils.h>
 
 #define SEP Yuni::IO::Separator
 
@@ -34,9 +37,11 @@ namespace fs = std::filesystem;
 
 namespace Antares::Data::ShortTermStorage
 {
-bool STStorageInput::validate() const
+bool STStorageInput::validate(StudyVersion studyVersion) const
 {
-    return std::ranges::all_of(storagesByIndex, [](auto& cluster) { return cluster.validate(); });
+    return std::ranges::all_of(storagesByIndex,
+                               [&studyVersion](auto& cluster)
+                               { return cluster.validate(studyVersion); });
 }
 
 bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path& path)
@@ -73,7 +78,163 @@ bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path& path)
     return true;
 }
 
-bool STStorageInput::loadSeriesFromFolder(const fs::path& folder) const
+static bool loadHours(std::string hoursStr, AdditionalConstraints& additionalConstraints)
+{
+    std::erase_if(hoursStr, ::isspace);
+    // Validate the entire string format
+    if (std::regex fullFormatRegex(R"(^(\[\d+(,\d+)*\])(,(\[\d+(,\d+)*\]))*$)");
+        !std::regex_match(hoursStr, fullFormatRegex))
+    {
+        logs.error() << "In constraint " << additionalConstraints.name
+                     << ": Input string does not match the required format: " << hoursStr << '\n';
+        return false;
+    }
+    // Split the `hours` field into multiple groups
+    std::regex groupRegex(R"(\[(.*?)\])");
+    // Match each group enclosed in square brackets
+    auto groupsBegin = std::sregex_iterator(hoursStr.begin(), hoursStr.end(), groupRegex);
+    auto groupsEnd = std::sregex_iterator();
+    unsigned int localIndex = 0;
+    for (auto it = groupsBegin; it != groupsEnd; ++it)
+    {
+        // Extract the contents of the square brackets
+        std::string group = (*it)[1].str();
+        std::stringstream ss(group);
+        std::string hour;
+        std::set<int> hourSet;
+        int hourVal;
+        while (std::getline(ss, hour, ','))
+        {
+            try
+            {
+                hourVal = std::stoi(hour);
+                hourSet.insert(hourVal);
+            }
+
+            catch (const std::invalid_argument& ex)
+            {
+                logs.error() << "In constraint " << additionalConstraints.name
+                             << " Hours sets contains invalid values: " << hour
+                             << "\n exception thrown: " << ex.what() << '\n';
+
+                return false;
+            }
+            catch (const std::out_of_range& ex)
+            {
+                logs.error() << "In constraint " << additionalConstraints.name
+                             << " Hours sets contains out of range values: " << hour
+                             << "\n exception thrown: " << ex.what() << '\n';
+                return false;
+            }
+        }
+        if (!hourSet.empty())
+        {
+            // Add this group to the `hours` vec
+            additionalConstraints.constraints.push_back(
+              {.hours = hourSet, .localIndex = localIndex});
+            ++localIndex;
+        }
+    }
+    return true;
+}
+
+static bool readRHS(AdditionalConstraints& additionalConstraints, const fs::path& rhsPath)
+{
+    const auto ret = loadFile(rhsPath, additionalConstraints.rhs);
+    if (ret)
+    {
+        fillIfEmpty(additionalConstraints.rhs, 0.0);
+    }
+    return ret;
+}
+
+bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
+{
+    IniFile ini;
+    const auto pathIni = parentPath / "additional-constraints.ini";
+    if (!ini.open(pathIni, false))
+    {
+        logs.info() << "There is no: " << pathIni;
+        return true;
+    }
+
+    for (auto* section = ini.firstSection; section; section = section->next)
+    {
+        AdditionalConstraints additionalConstraints;
+        additionalConstraints.name = section->name.c_str();
+        for (auto* property = section->firstProperty; property; property = property->next)
+        {
+            const std::string key = property->key;
+            const auto value = property->value;
+
+            if (key == "cluster")
+            {
+                std::string clusterName;
+                value.to<std::string>(clusterName);
+                additionalConstraints.cluster_id = transformNameIntoID(clusterName);
+            }
+            else if (key == "enabled")
+            {
+                value.to<bool>(additionalConstraints.enabled);
+            }
+            else if (key == "variable")
+            {
+                value.to<std::string>(additionalConstraints.variable);
+            }
+            else if (key == "operator")
+            {
+                value.to<std::string>(additionalConstraints.operatorType);
+            }
+            else if (key == "hours" && !loadHours(value.c_str(), additionalConstraints))
+            {
+                return false;
+            }
+        }
+
+        // We don't want load RHS and link the STS time if the constraint is disabled
+        if (!additionalConstraints.enabled)
+        {
+            logs.info() << "Additional constraints disabled for ST "
+                        << additionalConstraints.cluster_id;
+            return true;
+        }
+
+        if (const auto rhsPath = parentPath / ("rhs_" + additionalConstraints.name + ".txt");
+            !readRHS(additionalConstraints, rhsPath))
+        {
+            logs.error() << "Error while reading rhs file: " << rhsPath;
+            return false;
+        }
+
+        if (auto [ok, error_msg] = additionalConstraints.validate(); !ok)
+        {
+            logs.error() << "Invalid constraint in section: " << section->name;
+            logs.error() << error_msg;
+            return false;
+        }
+
+        auto it = std::ranges::find_if(storagesByIndex,
+                                       [&additionalConstraints](const STStorageCluster& cluster)
+                                       { return cluster.id == additionalConstraints.cluster_id; });
+        if (it == storagesByIndex.end())
+        {
+            logs.warning() << " from file " << pathIni;
+            logs.warning() << "Constraint " << section->name
+                           << " does not reference an existing cluster";
+            return false;
+        }
+        else
+        {
+            logs.info() << "Loaded ST additional constraint " << additionalConstraints.cluster_id
+                        << "/" << additionalConstraints.name;
+            it->additionalConstraints.push_back(additionalConstraints);
+        }
+    }
+
+    return true;
+}
+
+bool STStorageInput::loadSeriesFromFolder(const fs::path& folder, StudyVersion studyVersion) const
 {
     if (folder.empty())
     {
@@ -85,7 +246,7 @@ bool STStorageInput::loadSeriesFromFolder(const fs::path& folder) const
     for (auto& cluster: storagesByIndex)
     {
         fs::path seriesFolder = folder / cluster.id;
-        ret = cluster.loadSeries(seriesFolder) && ret;
+        ret = cluster.loadSeries(seriesFolder, studyVersion) && ret;
     }
 
     return ret;
@@ -113,6 +274,24 @@ bool STStorageInput::saveDataSeriesToFolder(const std::string& folder) const
                                { return storage.saveSeries(folder + SEP + storage.id); });
 }
 
+std::size_t STStorageInput::cumulativeConstraintCount() const
+{
+    return std::accumulate(
+      storagesByIndex.begin(),
+      storagesByIndex.end(),
+      0,
+      [](size_t outer_constraint_count, const auto& cluster)
+      {
+          return outer_constraint_count
+                 + std::accumulate(
+                   cluster.additionalConstraints.begin(),
+                   cluster.additionalConstraints.end(),
+                   0,
+                   [](size_t inner_constraint_count, const auto& additionalConstraints)
+                   { return inner_constraint_count + additionalConstraints.enabledConstraints(); });
+      });
+}
+
 std::size_t STStorageInput::count() const
 {
     return std::ranges::count_if(storagesByIndex,
@@ -123,5 +302,4 @@ uint STStorageInput::removeDisabledClusters()
 {
     return std::erase_if(storagesByIndex, [](const auto& c) { return !c.enabled(); });
 }
-
 } // namespace Antares::Data::ShortTermStorage

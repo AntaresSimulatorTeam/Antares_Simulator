@@ -31,8 +31,6 @@ class AssertionError: public std::runtime_error
 {
 public:
     explicit AssertionError(const std::string& message);
-
-    ~AssertionError() noexcept override = default;
 };
 
 } // namespace Data

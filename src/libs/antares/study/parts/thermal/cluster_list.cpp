@@ -63,14 +63,6 @@ std::string ThermalClusterList::typeID() const
     return "thermal";
 }
 
-uint64_t ThermalClusterList::memoryUsage() const
-{
-    uint64_t ret = sizeof(ThermalClusterList) + (2 * sizeof(void*)) * enabledAndMustRunCount();
-    std::ranges::for_each(each_enabled_and_not_mustrun(),
-                          [&ret](const auto c) { ret += c->memoryUsage(); });
-    return ret;
-}
-
 static bool ThermalClusterLoadFromSection(const AnyString& filename,
                                           ThermalCluster& cluster,
                                           const IniFile::Section& section);
@@ -630,7 +622,6 @@ bool ThermalClusterList::loadEconomicCosts(Study& study, const fs::path& folder)
                                    auto filePath = folder / c->parentArea->id.c_str() / c->id();
 
                                    bool result = c->ecoInput.loadFromFolder(study, filePath);
-                                   c->ComputeCostTimeSeries();
                                    return result;
                                });
 }

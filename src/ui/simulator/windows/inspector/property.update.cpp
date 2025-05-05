@@ -501,8 +501,8 @@ bool InspectorGrid::onPropertyChanging_Constraint(wxPGProperty*,
     const InspectorData::Ptr& data = pCurrentSelection;
     if (!data)
         return false;
-    Data::BindingConstraintsRepository::Set::iterator end = data->constraints.end();
-    Data::BindingConstraintsRepository::Set::iterator i = data->constraints.begin();
+    Data::BindingConstraint::Set::iterator end = data->constraints.end();
+    Data::BindingConstraint::Set::iterator i = data->constraints.begin();
 
     if (name == "constraint.name")
     {
@@ -724,7 +724,6 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
             for (; i != end; ++i)
             {
                 (*i)->fuelEfficiency = d;
-                (*i)->ComputeCostTimeSeries();
             } // update
         }
         OnStudyThermalClusterCommonSettingsChanged();
@@ -750,7 +749,6 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         for (; i != end; ++i)
         {
             (*i)->costgeneration = costgeneration;
-            (*i)->ComputeCostTimeSeries(); // update
         }
         AccumulatorCheck<PClusterMarginalCostEnable>::ApplyGreyColor(
           pFrame.pPGThClusterMarginalCost,
@@ -796,7 +794,6 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         for (; i != end; ++i)
         {
             (*i)->marginalCost = d;
-            (*i)->ComputeCostTimeSeries(); // update
         }
 
         pFrame.delayApply();
@@ -879,7 +876,6 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         for (; i != end; ++i)
         {
             (*i)->marketBidCost = d;
-            (*i)->ComputeCostTimeSeries();
         }
         pFrame.delayApply();
 
@@ -922,7 +918,6 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
             for (; i != end; ++i)
             {
                 (*i)->variableomcost = d;
-                (*i)->ComputeCostTimeSeries(); // update
             }
         }
         OnStudyThermalClusterCommonSettingsChanged();

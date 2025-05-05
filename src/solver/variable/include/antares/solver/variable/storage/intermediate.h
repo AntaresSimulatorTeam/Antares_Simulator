@@ -49,11 +49,6 @@ public:
     typedef double Type;
 
 public:
-    //! Get the dynamic amount of memory consummed by a simulation
-    // \note This method assumes that you've already have gathered the size
-    //   of this class
-    static uint64_t MemoryUsage();
-
     //! \name Constructor & Destructor
     //@{
     /*!
@@ -124,7 +119,6 @@ public:
     const Type& operator[](const uint index) const;
     //@}
 
-public:
     //! Range
     Antares::Data::StudyRangeLimits* pRange;
     //! Calendar, from the study, but dedicated to the output (with leap year)
@@ -142,17 +136,6 @@ public:
     mutable Antares::Memory::Stored<Type>::Type hour;
     //! Year
     Type year;
-
-private:
-    // non copyable
-    IntermediateValues(const IntermediateValues&)
-    {
-    }
-
-    IntermediateValues& operator=(const IntermediateValues&)
-    {
-        return *this;
-    }
 
     template<uint Size, class VCardT, class A>
     void internalExportAnnualValues(SurveyResults& report, const A& array, bool annual) const;

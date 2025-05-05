@@ -73,11 +73,6 @@ public:
     */
     bool saveToFolder(const AnyString& folder) const;
 
-    /*!
-    ** \brief Get the amount of memory used by the class
-    */
-    uint64_t memoryUsage() const;
-
     //! All {FO,PO}{Duration,Rate} annual values
     // max x DAYS_PER_YEAR
     TimeSeries::TS fuelcost;

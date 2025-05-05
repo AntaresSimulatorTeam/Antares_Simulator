@@ -21,21 +21,15 @@
 #include <fstream>
 
 #include <antares/benchmarking/DurationCollector.h>
+#include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include "antares/study/scenario-builder/sets.h"
 #include "antares/study/study.h"
 #include "antares/study/ui-runtimeinfos.h"
 #include "antares/study/version.h"
 
-using namespace Yuni;
-using Antares::Constants::nbHoursInAWeek;
-
 namespace fs = std::filesystem;
 
-#define SEP IO::Separator
-
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 bool Study::internalLoadHeader(const fs::path& path)
 {
@@ -82,8 +76,8 @@ bool Study::internalLoadIni(const fs::path& path, const StudyLoadOptions& option
         }
     }
     // Load the general data
-    buffer.clear() << folderSettings << SEP << "generaldata.ini";
-    bool errorWhileLoading = !parameters.loadFromFile(buffer, header.version);
+    fs::path generalDataPath = folderSettings / "generaldata.ini";
+    bool errorWhileLoading = !parameters.loadFromFile(generalDataPath, header.version);
 
     parameters.validateOptions(options);
 
@@ -98,8 +92,8 @@ bool Study::internalLoadIni(const fs::path& path, const StudyLoadOptions& option
     }
 
     // Load the layer data
-    buffer.clear() << path << SEP << "layers" << SEP << "layers.ini";
-    loadLayers(buffer);
+    fs::path layersPath = path / "layers" / "layers.ini";
+    loadLayers(layersPath);
 
     return true;
 }
@@ -223,7 +217,29 @@ bool Study::internalLoadFromFolder(const fs::path& path, const StudyLoadOptions&
     ret = internalLoadSets() && ret;
 
     parameterFiller(options);
+
+    // Modeler components for hybrid studies
+    loadModelerComponents();
+
     return ret;
+}
+
+void Study::loadModelerComponents()
+{
+    try
+    {
+        modelerInput_ = Solver::LoadFiles::loadAll(folder);
+    }
+    catch (const std::exception& e)
+    {
+        logs.info() << "No modeler inputs were loaded";
+        logs.info() << "Modeler inputs error: " << e.what();
+    }
+
+    if (fs::exists(folder / "parameters.yml"))
+    {
+        logs.warning() << "parameters.yml ignored, use command line to set solver parameters";
+    }
 }
 
 bool Study::internalLoadCorrelationMatrices(const StudyLoadOptions& options)
@@ -231,37 +247,29 @@ bool Study::internalLoadCorrelationMatrices(const StudyLoadOptions& options)
     // Load
     if (!options.loadOnlyNeeded || timeSeriesLoad & parameters.timeSeriesToGenerate)
     {
-        buffer.clear() << folderInput << SEP << "load" << SEP << "prepro" << SEP
-                       << "correlation.ini";
-        preproLoadCorrelation.loadFromFile(*this, buffer);
+        fs::path loadPath = folderInput / "load" / "prepro" / "correlation.ini";
+        preproLoadCorrelation.loadFromFile(*this, loadPath.string());
     }
 
     // Solar
     if (!options.loadOnlyNeeded || timeSeriesSolar & parameters.timeSeriesToGenerate)
     {
-        buffer.clear() << folderInput << SEP << "solar" << SEP << "prepro" << SEP
-                       << "correlation.ini";
-        preproSolarCorrelation.loadFromFile(*this, buffer);
+        fs::path solarPath = folderInput / "solar" / "prepro" / "correlation.ini";
+        preproSolarCorrelation.loadFromFile(*this, solarPath.string());
     }
 
     // Wind
+    if (!options.loadOnlyNeeded || timeSeriesWind & parameters.timeSeriesToGenerate)
     {
-        if (!options.loadOnlyNeeded || timeSeriesWind & parameters.timeSeriesToGenerate)
-        {
-            buffer.clear() << folderInput << SEP << "wind" << SEP << "prepro" << SEP
-                           << "correlation.ini";
-            preproWindCorrelation.loadFromFile(*this, buffer);
-        }
+        fs::path windPath = folderInput / "wind" / "prepro" / "correlation.ini";
+        preproWindCorrelation.loadFromFile(*this, windPath.string());
     }
 
     // Hydro
+    if (!options.loadOnlyNeeded || timeSeriesHydro & parameters.timeSeriesToGenerate)
     {
-        if (!options.loadOnlyNeeded || timeSeriesHydro & parameters.timeSeriesToGenerate)
-        {
-            buffer.clear() << folderInput << SEP << "hydro" << SEP << "prepro" << SEP
-                           << "correlation.ini";
-            preproHydroCorrelation.loadFromFile(*this, buffer);
-        }
+        fs::path hydroPath = folderInput / "hydro" / "prepro" / "correlation.ini";
+        preproHydroCorrelation.loadFromFile(*this, hydroPath.string());
     }
     return true;
 }
@@ -270,8 +278,8 @@ bool Study::internalLoadBindingConstraints(const StudyLoadOptions& options)
 {
     // All checks are performed in 'loadFromFolder'
     // (actually internalLoadFromFolder)
-    buffer.clear() << folderInput << SEP << "bindingconstraints";
-    bool r = bindingConstraints.loadFromFolder(*this, options, buffer);
+    fs::path constraintPath = folderInput / "bindingconstraints";
+    bool r = bindingConstraints.loadFromFolder(*this, options, constraintPath);
     if (r)
     {
         r &= bindingConstraintsGroups.buildFrom(bindingConstraints);
@@ -281,16 +289,15 @@ bool Study::internalLoadBindingConstraints(const StudyLoadOptions& options)
 
 bool Study::internalLoadSets()
 {
-    const fs::path path = fs::path(folderInput.c_str()) / "areas" / "sets.ini";
     // Set of areas
     logs.info();
     logs.info() << "Loading sets of areas...";
 
     // filename
-    buffer.clear() << folderInput << SEP << "areas" << SEP << "sets.ini";
+    const fs::path setPath = folderInput / "areas" / "sets.ini";
 
     // Load the rules
-    if (setsOfAreas.loadFromFile(path))
+    if (setsOfAreas.loadFromFile(setPath))
     {
         // Apply the rules
         SetHandlerAreas handler(areas);
@@ -311,6 +318,7 @@ void Study::reloadCorrelation()
     internalLoadCorrelationMatrices(options);
 }
 
+// TODO remove with GUI
 bool Study::reloadXCastData()
 {
     // if changes are required, please update AreaListLoadFromFolderSingleArea()
@@ -323,17 +331,16 @@ bool Study::reloadXCastData()
           assert(area.wind.prepro);
 
           // Load
-          buffer.clear() << folderInput << SEP << "load" << SEP << "prepro" << SEP << area.id;
-          ret = area.load.prepro->loadFromFolder(buffer) && ret;
+          fs::path loadPath = folderInput / "load" / "prepro" / area.id.to<std::string>();
+          ret = area.load.prepro->loadFromFolder(loadPath.string()) && ret;
           // Solar
-          buffer.clear() << folderInput << SEP << "solar" << SEP << "prepro" << SEP << area.id;
-          ret = area.solar.prepro->loadFromFolder(buffer) && ret;
+          fs::path solarPath = folderInput / "solar" / "prepro" / area.id.to<std::string>();
+          ret = area.solar.prepro->loadFromFolder(solarPath.string()) && ret;
           // Wind
-          buffer.clear() << folderInput << SEP << "wind" << SEP << "prepro" << SEP << area.id;
-          ret = area.wind.prepro->loadFromFolder(buffer) && ret;
+          fs::path windPath = folderInput / "wind" / "prepro" / area.id.to<std::string>();
+          ret = area.wind.prepro->loadFromFolder(windPath.string()) && ret;
       });
     return ret;
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data

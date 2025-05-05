@@ -69,6 +69,8 @@ struct CORRESPONDANCES_DES_VARIABLES
         std::vector<int> InjectionVariable;
         std::vector<int> WithdrawalVariable;
         std::vector<int> LevelVariable;
+        std::vector<int> CostVariationInjection;
+        std::vector<int> CostVariationWithdrawal;
     } SIM_ShortTermStorage;
 };
 
@@ -95,6 +97,10 @@ struct CORRESPONDANCES_DES_CONTRAINTES
     std::vector<int> NumeroDeContrainteDesNiveauxPays;
 
     std::vector<int> ShortTermStorageLevelConstraint;
+    std::vector<int> ShortTermStorageCostVariationInjectionForward;
+    std::vector<int> ShortTermStorageCostVariationInjectionBackward;
+    std::vector<int> ShortTermStorageCostVariationWithdrawalForward;
+    std::vector<int> ShortTermStorageCostVariationWithdrawalBackward;
 };
 
 struct CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES
@@ -105,6 +111,7 @@ struct CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES
 struct CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES
 {
     std::vector<int> NumeroDeContrainteDesContraintesCouplantes;
+    std::vector<int> ShortTermStorageCumulation;
 };
 
 struct VALEURS_DE_NTC_ET_RESISTANCES
@@ -172,9 +179,11 @@ struct PROPERTIES
     double withdrawalEfficiency;
     double initialLevel;
     bool initialLevelOptim;
+    bool penalizeVariationWithdrawal;
+    bool penalizeVariationInjection;
 
     std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
-
+    std::vector<Antares::Data::ShortTermStorage::AdditionalConstraints> additionalConstraints;
     int clusterGlobalIndex;
     std::string name;
 };
@@ -324,73 +333,6 @@ struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
                                       bounding constraint on final level*/
 };
 
-class computeTimeStepLevel
-{
-private:
-    int step;
-    double level;
-
-    double capacity;
-    std::vector<double>& inflows;
-    std::vector<double>& ovf;
-    std::vector<double>& turb;
-    double pumpRatio;
-    std::vector<double>& pump;
-    double excessDown;
-
-public:
-    computeTimeStepLevel(const double& startLvl,
-                         std::vector<double>& infl,
-                         std::vector<double>& overfl,
-                         std::vector<double>& H,
-                         double pumpEff,
-                         std::vector<double>& Pump,
-                         double rc):
-        step(0),
-        level(startLvl),
-        capacity(rc),
-        inflows(infl),
-        ovf(overfl),
-        turb(H),
-        pumpRatio(pumpEff),
-        pump(Pump),
-        excessDown(0.)
-    {
-    }
-
-    void run()
-    {
-        excessDown = 0.;
-
-        level = level + inflows[step] - turb[step] + pumpRatio * pump[step];
-
-        if (level > capacity)
-        {
-            ovf[step] = level - capacity;
-            level = capacity;
-        }
-
-        if (level < 0)
-        {
-            excessDown = -level;
-            level = 0.;
-            inflows[step] += excessDown;
-        }
-    }
-
-    void prepareNextStep()
-    {
-        step++;
-
-        inflows[step] -= excessDown;
-    }
-
-    double getLevel()
-    {
-        return level;
-    }
-};
-
 struct RESERVE_JMOINS1
 {
     std::vector<double> ReserveHoraireJMoins1;
@@ -427,6 +369,7 @@ struct RESULTATS_HORAIRES
     std::vector<double> debordementsHoraires;
 
     std::vector<double> CoutsMarginauxHoraires;
+    std::vector<double> CoutsMarginauxHorairesCSR;
     std::vector<PRODUCTION_THERMIQUE_OPTIMALE> ProductionThermique; // index is pdtHebdo
 
     std::vector<::ShortTermStorage::RESULTS> ShortTermStorage;
@@ -494,6 +437,8 @@ struct PROBLEME_HEBDO
     std::vector<double> CoutDeDefaillancePositive;
     std::vector<double> CoutDeDefaillanceNegative;
 
+    std::vector<double> CoutDeDebordement;
+
     std::vector<PALIERS_THERMIQUES> PaliersThermiquesDuPays;
     std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;
 
@@ -502,7 +447,6 @@ struct PROBLEME_HEBDO
     std::vector<::ShortTermStorage::AREA_INPUT> ShortTermStorage;
 
     /* Optimization problem */
-    uint32_t NbTermesContraintesPourLesCoutsDeDemarrage = 0;
     std::vector<bool> DefaillanceNegativeUtiliserPMinThermique;
     std::vector<bool> DefaillanceNegativeUtiliserHydro;
     std::vector<bool> DefaillanceNegativeUtiliserConsoAbattue;
@@ -524,6 +468,7 @@ struct PROBLEME_HEBDO
     bool exportMPSOnError = false;
     bool ExportStructure = false;
     bool NamedProblems = false;
+    bool exportSolutions = false;
 
     uint32_t HeureDansLAnnee = 0;
     bool LeProblemeADejaEteInstancie = false;
@@ -662,6 +607,8 @@ public:
 
     std::unique_ptr<PROBLEME_ANTARES_A_RESOUDRE> ProblemeAResoudre;
 
-    double maxPminThermiqueByDay[366];
+    // TODO: 1 study but several PROBLEME_HEBDO, may cause race conditions
+    const ModelerStudy::SystemModel::System* modelerSystem;                   // for hybrid studies
+    Optimisation::LinearProblemApi::ILinearProblemData* linear_problem_data_; // for hybrid studies
 };
 #endif

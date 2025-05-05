@@ -23,6 +23,7 @@
 
 #include <antares/array/matrix.h>
 #include <antares/series/series.h>
+#include <antares/study/parameters.h>
 #include <antares/study/version.h>
 
 #include "../../fwd.h"
@@ -76,7 +77,7 @@ public:
                           StudyVersion version);
 
     // Loading hydro max generation and mqx pumping TS's
-    bool LoadMaxPower(const AreaName& areaID, const std::filesystem::path& folder);
+    bool LoadMaxPower(const std::string& areaID, const std::filesystem::path& folder);
 
     void buildHourlyMaxPowerFromDailyTS(const Matrix<double>::ColumnType& DailyMaxGenPower,
                                         const Matrix<double>::ColumnType& DailyMaxPumpPower);
@@ -90,19 +91,9 @@ public:
     ** \param folder The target folder
     ** \return A non-zero value if the operation succeeded, 0 otherwise
     */
-    bool saveToFolder(const AreaName& areaID, const AnyString& folder) const;
-    //@}
-
-    //! \name Memory
-    //@{
-    /*!
-    ** \brief Get the size (bytes) in memory occupied by a `DataSeriesHydro` structure
-    */
-    uint64_t memoryUsage() const;
-    /*!
-    ** \brief Try to estimate the amount of memory required for launching a simulation
-    */
-
+    bool saveToFolder(const AreaName& areaID,
+                      const AnyString& folder,
+                      Parameters::Compatibility::HydroPmax hydroPmax) const;
     //@}
 
     TimeSeriesNumbers timeseriesNumbers;
@@ -149,7 +140,10 @@ public:
     uint TScount() const;
 
     // Setting TS's when derated mode is on
-    void resizeTSinDeratedMode(bool derated, StudyVersion version, bool useBySolver);
+    void resizeTSinDeratedMode(bool derated,
+                               StudyVersion version,
+                               Parameters::Compatibility::HydroPmax hydroPmax,
+                               bool useBySolver);
 }; // class DataSeriesHydro
 } // namespace Data
 } // namespace Antares

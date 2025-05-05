@@ -54,7 +54,7 @@ void NbDispUnitsMinBoundSinceMinUpTime::add(int pays, int index, int pdt)
         builder.greaterThan();
         if (builder.NumberOfVariables() > 1)
         {
-            data.CorrespondanceCntNativesCntOptim[pays]
+            data.CorrespondanceCntNativesCntOptim[pdt]
               .NumeroDeContrainteDesContraintesDeDureeMinDeMarche[cluster]
               = builder.data.nombreDeContraintes;
 
@@ -70,8 +70,6 @@ void NbDispUnitsMinBoundSinceMinUpTime::add(int pays, int index, int pdt)
     }
     else
     {
-        builder.data.NbTermesContraintesPourLesCoutsDeDemarrage
-          += 1 + 2 * DureeMinimaleDeMarcheDUnGroupeDuPalierThermique;
         builder.data.nombreDeContraintes++;
     }
 }

@@ -51,7 +51,6 @@ Benchmarking::OptimizationInfo Economy::getOptimizationInfo() const
 
     optInfo.nbVariables = Pb->NombreDeVariables;
     optInfo.nbConstraints = Pb->NombreDeContraintes;
-    optInfo.nbNonZeroCoeffs = Pb->NombreDeTermesAllouesDansLaMatriceDesContraintes;
     return optInfo;
 }
 
@@ -81,9 +80,7 @@ bool Economy::simulationBegin()
                                             nbHoursInAWeek,
                                             numSpace);
 
-            auto options = createOptimizationOptions(study);
-
-            weeklyOptProblems_.emplace_back(options,
+            weeklyOptProblems_.emplace_back(study.parameters.optOptions,
                                             &pProblemesHebdo[numSpace],
                                             resultWriter,
                                             simulationObserver_.get());
@@ -95,7 +92,8 @@ bool Economy::simulationBegin()
               study.areas,
               study.parameters.shedding.policy,
               study.parameters.simplexOptimizationRange,
-              study.calendar);
+              study.calendar,
+              study.parameters.optOptions);
         }
     }
 

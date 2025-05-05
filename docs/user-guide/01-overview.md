@@ -34,7 +34,7 @@ the random factors that may affect the balance between load and generation. Econ
 as much a critical role as they do in the other kinds of studies since the stakes are mainly to know if and
 when supply security is likely to be jeopardized (detailed costs incurred in more ordinary conditions are of
 comparatively lower importance). In these studies, the default *Antares* option to use is the
-[`adequacy`](18-parameters.md#mode) simulation mode.
+[`adequacy`](solver/04-parameters.md#mode) simulation mode.
 
 ### Transmission project profitability
 [//]: # (TODO: explain what "fair and perfect market" means)
@@ -45,7 +45,7 @@ and/or improvement of the security of supply (reduction of the loss-of-load expe
 In these studies, economic parameters and the physical modeling of the dynamic constraints bearing on
 the generating units are of paramount importance. Though a thorough survey of many "Monte-Carlo years"
 is still required, the number of scenarios to simulate is not as large as in generation adequacy studies.
-In these studies, the default *Antares* option to use is the [`economy`](18-parameters.md#mode) simulation mode.
+In these studies, the default *Antares* option to use is the [`economy`](solver/04-parameters.md#mode) simulation mode.
 
 ## Performance considerations
 Typically, *Antares* has to solve a least-cost hydro-thermal power schedule and unit commitment problem, with an hourly 

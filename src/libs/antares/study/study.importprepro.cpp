@@ -29,6 +29,8 @@ using namespace Yuni;
 
 namespace Antares::Data
 {
+
+// TODO VP: remove with time series TS generation before solver execution
 bool Study::importTimeseriesIntoInput()
 {
     // Special case: some thermal clusters may force TS generation
@@ -80,7 +82,10 @@ bool Study::importTimeseriesIntoInput()
             {
                 logs.info() << "Importing hydro timeseries : " << areaName;
                 buffer.clear() << folderInput << SEP << "hydro" << SEP << "series";
-                ret = area->hydro.series->saveToFolder(area->id, buffer) && ret;
+                ret = area->hydro.series->saveToFolder(area->id,
+                                                       buffer,
+                                                       parameters.compatibility.hydroPmax)
+                      && ret;
                 ++progression;
             }
         }

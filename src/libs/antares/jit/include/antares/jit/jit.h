@@ -134,9 +134,6 @@ public:
         */
         void markAsModified();
 
-        //! Get the amount of memory currently used
-        uint64_t memoryUsage() const;
-
     public:
         //! Filename/folder to consider if some data should be loaded
         YString sourceFilename;

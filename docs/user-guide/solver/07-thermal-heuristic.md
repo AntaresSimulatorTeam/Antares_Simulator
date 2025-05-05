@@ -35,7 +35,7 @@ The way steps 1 and 2 are performed depends on a parameter set by the user in th
 
 ### Fast mode
 #### Step 1: first problem resolution
-The general idea of the fast mode is to completely remove the constraints and costs involving integers (the $M_\theta$, $M_\theta^+$ and $M_\theta^-$ variables) in step 1. This means that the first resolution of the weekly problem does not consider constraints (17) to (23) in the [optimisation problem formulation](01-modeling.md). Constraint (16) related to the minimum/maximum output of the thermal cluster is kept. In addition, costs related to integer variables (start-up and hourly fixed costs) are not included in the objective function.
+The general idea of the fast mode is to completely remove the constraints and costs involving integers (the $M_\theta$, $M_\theta^+$ and $M_\theta^-$ variables) in step 1. This means that the first resolution of the weekly problem does not consider constraints (17) to (23) in the [optimisation problem formulation](05-model.md). Constraint (16) related to the minimum/maximum output of the thermal cluster is kept. In addition, costs related to integer variables (start-up and hourly fixed costs) are not included in the objective function.
 
 The first resolution of the problem is then run, and provides hourly power outputs for each thermal cluster $P_{\theta,t}^{optim1}$. At each hour, an initial value of the NODU of each cluster in then calculated: $M_{\theta,t}^{guide}$ = $ceil(\frac{P_{\theta,t}^{optim1}}{\overline{P_{\theta} } }) $.
 
@@ -46,22 +46,22 @@ In step 2, for each cluster, a parameter $\Delta_{adjust,\theta} = max(\Delta_\t
 <p style="text-align: center;"><em>Illustration of step 2 of the fast mode, with $\Delta_{adjust,\theta}$ equal to 2. Here, both solutions are acceptable as they involve 3 NODU adjustments.</em></p>
 
 #### Step 3: second resolution
-Finally, the result of the heuristic $M_{\theta,t}^{heuristic}$ is converted into a lower bound of the power output of each thermal cluster in step 3: $P_{\theta,t}^{min}=\underline{P_\theta}*M_{\theta,t}^{heuristic}$. The second resolution of the problem is then run considering this lower bound, and still excluding integer variables and constraints (17) to (23) of the [optimisation problem formulation](01-modeling.md). In particular, this means that startup and fixed costs are not considered in the formulation of the optimisation problem in any of the two resolutions. However, they are added ex-post and visible in the output variables.
+Finally, the result of the heuristic $M_{\theta,t}^{heuristic}$ is converted into a lower bound of the power output of each thermal cluster in step 3: $P_{\theta,t}^{min}=\underline{P_\theta}*M_{\theta,t}^{heuristic}$. The second resolution of the problem is then run considering this lower bound, and still excluding integer variables and constraints (17) to (23) of the [optimisation problem formulation](05-model.md). In particular, this means that startup and fixed costs are not considered in the formulation of the optimisation problem in any of the two resolutions. However, they are added ex-post and visible in the output variables.
 
 ### Accurate mode
 
 #### Step 1: first problem resolution
-The accurate mode aims at taking into account integer variables in both resolutions of the optimisation problem (steps 1 and 3), but considering them as continuous variables in step 1, and fixing them as parameters in step 3. Contrary to the fast mode, constraints (17) to (23) of the [optimisation problem formulation](01-modeling.md) are taken into account in both resolutions, as well as the start-up and fixed costs in the objective function, but the integer variables $M_\theta$ are considered continuous.
+The accurate mode aims at taking into account integer variables in both resolutions of the optimisation problem (steps 1 and 3), but considering them as continuous variables in step 1, and fixing them as parameters in step 3. Contrary to the fast mode, constraints (17) to (23) of the [optimisation problem formulation](05-model.md) are taken into account in both resolutions, as well as the start-up and fixed costs in the objective function, but the integer variables $M_\theta$ are considered continuous.
 
 The first resolution of the problem is then run. As an output, the integer NODU for each thermal cluster is calculed by rounding up the continuous NODUs which are the output of this resolution: $M_{\theta,t}^{guide}=ceil(M_{\theta,t}^{optim1})$. The variables counting the number of units being started-up or shut-down at any time step $M_{\theta,t}^{+}$ and $M_{\theta,t}^{-}$ are also calculated at that stage.
 
 #### Step 2: accurate mode heuristic
-Step 2 of the accurate mode starts by checking for each cluster and for each week whether any constraint of minimum time up or down (constraints (22) and (23) of the [weekly optimisation problem](01-modeling.md)) is violated. If no constraint is violated for a given thermal cluster at a given week, no further action is performed and the output variable of this step $M_{\theta,t}^{heuristic}=M_{\theta,t}^{guide}$.
+Step 2 of the accurate mode starts by checking for each cluster and for each week whether any constraint of minimum time up or down (constraints (22) and (23) of the [weekly optimisation problem](05-model.md)) is violated. If no constraint is violated for a given thermal cluster at a given week, no further action is performed and the output variable of this step $M_{\theta,t}^{heuristic}=M_{\theta,t}^{guide}$.
 
 For a given cluster and a given week, if any of these constraints is violated, a small optimisation problem is run, which aims at minimizing the changes to the NODU of the cluster while respecting constraints (22) and (23). The output of this optimisation problem is then $M_{\theta,t}^{heuristic}$.
 
 #### Step 3: second resolution
-Finally, the output of step 2 $M_{\theta,t}^{heuristic}$ is converted into a lower bound of the NODU of each thermal cluster for the second resolution: $M_{\theta,t} \geq M_{\theta,t}^{heuristic}$. The second resolution of the problem is then run considering this lower bound, and still including integer variables (as continuous variables) and constraints (17) to (23) of the [optimisation problem formulation](01-modeling.md), and start-up and fixed costs in the objective function.
+Finally, the output of step 2 $M_{\theta,t}^{heuristic}$ is converted into a lower bound of the NODU of each thermal cluster for the second resolution: $M_{\theta,t} \geq M_{\theta,t}^{heuristic}$. The second resolution of the problem is then run considering this lower bound, and still including integer variables (as continuous variables) and constraints (17) to (23) of the [optimisation problem formulation](05-model.md), and start-up and fixed costs in the objective function.
 
 ## Annual smoothing heuristic (step 4)
 
@@ -80,4 +80,4 @@ The smoothing heuristic may then choose to increase the NODU in certain clusters
 ![Step 4: smoothing heuristic](img/thermal_smoothing_heuristic.png).
 
 
-[^1]: The formulation of the weekly optimization problem is described in the ["Formulation of the optimisation problems"](01-modeling.md) section.
+[^1]: The formulation of the weekly optimization problem is described in the ["Formulation of the optimisation problems"](05-model.md) section.

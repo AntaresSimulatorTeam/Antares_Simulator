@@ -208,6 +208,39 @@ const char* SimulationModeToCString(SimulationMode mode)
     }
 }
 
+const char* CompatibilityHydroPmaxToCString(const Parameters::Compatibility::HydroPmax mode)
+{
+    switch (mode)
+    {
+    case Parameters::Compatibility::HydroPmax::Daily:
+        return "daily";
+    case Parameters::Compatibility::HydroPmax::Hourly:
+        return "hourly";
+    default:
+        return "Unknown";
+    }
+}
+
+bool StringToCompatibilityHydroPmax(Parameters::Compatibility::HydroPmax& mode,
+                                    const std::string& text)
+{
+    if (text.empty())
+    {
+        return false;
+    }
+    if (text == "daily")
+    {
+        mode = Parameters::Compatibility::HydroPmax::Daily;
+        return true;
+    }
+    if (text == "hourly")
+    {
+        mode = Parameters::Compatibility::HydroPmax::Hourly;
+        return true;
+    }
+    return false;
+}
+
 bool Parameters::economy() const
 {
     return mode == SimulationMode::Economy;
@@ -311,9 +344,6 @@ void Parameters::reset()
     nbCores.ncMode = ncAvg;
     renewableGeneration.rgModelling = rgAggregated;
 
-    // Misc
-    improveUnitsStartup = false;
-
     include.constraints = true;
     include.hurdleCosts = true;
     transmissionCapacities = GlobalTransmissionCapacities::localValuesForAllLinks;
@@ -328,6 +358,7 @@ void Parameters::reset()
 
     include.exportMPS = mpsExportStatus::NO_EXPORT;
     include.exportStructure = false;
+    include.exportSolutions = false;
     namedProblems = false;
 
     include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
@@ -472,7 +503,7 @@ static bool SGDIntLoadFamily_General(Parameters& d,
     }
     if (key == "improveunitsstartup")
     {
-        return true; // value.to<bool>(d.improveUnitsStartup);
+        return true;
     }
 
     if (key == "january.1st") // after 4.3
@@ -653,6 +684,11 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
             return false;
         }
         return true;
+    }
+
+    if (key == "include-export-solutions")
+    {
+        return value.to<bool>(d.include.exportSolutions);
     }
 
     if (key == "include-exportstructure")
@@ -1020,6 +1056,19 @@ static bool SGDIntLoadFamily_SeedsMersenneTwister(Parameters& d,
     return false;
 }
 
+static bool SGDIntLoadFamily_Compatibility(Parameters& d,
+                                           const String& key,
+                                           const String& value,
+                                           const String&)
+{
+    if (key == "hydro-pmax")
+    {
+        return StringToCompatibilityHydroPmax(d.compatibility.hydroPmax, value);
+    }
+
+    return false;
+}
+
 static bool SGDIntLoadFamily_Legacy(Parameters& d,
                                     const String& key,
                                     const String& value,
@@ -1145,7 +1194,8 @@ bool Parameters::loadFromINI(const IniFile& ini, const StudyVersion& version)
       {"advanced parameters", &SGDIntLoadFamily_AdvancedParameters},
       {"playlist", &SGDIntLoadFamily_Playlist},
       {"variables selection", &SGDIntLoadFamily_VariablesSelection},
-      {"seeds - mersenne twister", &SGDIntLoadFamily_SeedsMersenneTwister}};
+      {"seeds - mersenne twister", &SGDIntLoadFamily_SeedsMersenneTwister},
+      {"compatibility", &SGDIntLoadFamily_Compatibility}};
 
     Callback handleAllKeysInSection;
     // Foreach section on the ini file...
@@ -1198,17 +1248,6 @@ bool Parameters::loadFromINI(const IniFile& ini, const StudyVersion& version)
     // We currently always returns true to not block any loading process
     // Anyway we already have reported all problems
     return true;
-}
-
-void Parameters::handleOptimizationOptions(const StudyLoadOptions& options)
-{
-    // Options only set from the command-line
-    optOptions.ortoolsUsed = options.optOptions.ortoolsUsed;
-    optOptions.ortoolsSolver = options.optOptions.ortoolsSolver;
-    optOptions.solverParameters = options.optOptions.solverParameters;
-
-    // Options that can be set both in command-line and file
-    optOptions.solverLogs = options.optOptions.solverLogs || optOptions.solverLogs;
 }
 
 void Parameters::fixGenRefreshForNTC()
@@ -1316,14 +1355,6 @@ void Parameters::validateOptions(const StudyLoadOptions& options)
     }
 
     namedProblems = options.namedProblems;
-
-    handleOptimizationOptions(options);
-}
-
-uint64_t Parameters::memoryUsage() const
-{
-    return sizeof(Parameters) + yearsWeight.size() * sizeof(double)
-           + yearsFilter.size(); // vector of bools, 1 bit per coefficient
 }
 
 void Parameters::resetYearsWeigth()
@@ -1615,21 +1646,19 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     {
         logs.info() << "  :: ignoring hurdle costs";
     }
-
-    // Indicate ortools solver used
-    if (options.optOptions.ortoolsUsed)
+    if (!include.exportSolutions)
     {
-        logs.info() << "  :: ortools solver " << options.optOptions.ortoolsSolver
-                    << " used for problem resolution";
+        logs.info() << "  :: ignoring solution export";
     }
+
+    logs.info() << "  :: solver " << options.solverOptions.quadraticSolver
+                << " is used for quadratic problem resolution";
 
     // indicated that Problems will be named
     if (namedProblems)
     {
         logs.info() << "  :: The problems will contain named variables and constraints";
     }
-    // indicated whether solver logs will be printed
-    logs.info() << "  :: Printing solver logs : " << (optOptions.solverLogs ? "True" : "False");
 }
 
 void Parameters::resetPlaylist(uint nbOfYears)
@@ -1732,7 +1761,9 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("include-primaryreserve", include.reserve.primary);
 
         section->add("include-exportmps", mpsExportStatusToString(include.exportMPS));
+
         section->add("include-exportstructure", include.exportStructure);
+        section->add("include-export-solutions", include.exportSolutions);
 
         // Unfeasible problem behavior
         section->add("include-unfeasible-problem-behavior",
@@ -1858,9 +1889,13 @@ void Parameters::saveToINI(IniFile& ini) const
             section->add(SeedToID((SeedIndex)sd), seed[sd]);
         }
     }
+    {
+        auto* section = ini.addSection("compatibility");
+        section->add("hydro-pmax", CompatibilityHydroPmaxToCString(compatibility.hydroPmax));
+    }
 }
 
-bool Parameters::loadFromFile(const AnyString& filename, const StudyVersion& version)
+bool Parameters::loadFromFile(const std::filesystem::path& filename, const StudyVersion& version)
 {
     // Loading the INI file
     IniFile ini;

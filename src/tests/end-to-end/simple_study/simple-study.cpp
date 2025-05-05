@@ -201,8 +201,8 @@ BOOST_FIXTURE_TEST_CASE(milp_two_mc_single_unit_single_scenario, StudyFixture)
     // Use OR-Tools / COIN for MILP
     auto& p = study->parameters;
     p.unitCommitment.ucMode = ucMILP;
-    p.optOptions.ortoolsUsed = true;
-    p.optOptions.ortoolsSolver = "coin";
+    p.optOptions.firstOptimOptions.solverName = "coin";
+    p.optOptions.secondOptimOptions.solverName = "coin";
 
     simulation->create();
     simulation->run();
@@ -230,8 +230,8 @@ BOOST_FIXTURE_TEST_CASE(milp_two_mc_two_unit_single_scenario, StudyFixture)
     // Use OR-Tools / COIN for MILP
     auto& p = study->parameters;
     p.unitCommitment.ucMode = ucMILP;
-    p.optOptions.ortoolsUsed = true;
-    p.optOptions.ortoolsSolver = "coin";
+    p.optOptions.firstOptimOptions.solverName = "coin";
+    p.optOptions.secondOptimOptions.solverName = "coin";
 
     simulation->create();
     simulation->run();
@@ -439,4 +439,13 @@ BOOST_FIXTURE_TEST_CASE(scenario_builder, HydroMaxPowerStudy)
                tt::tolerance(0.1));
 }
 
+BOOST_FIXTURE_TEST_CASE(saving_study, HydroMaxPowerStudy)
+{
+    auto enabledCluster = std::make_shared<ThermalCluster>(area);
+    enabledCluster->setName("Cluster1");
+    enabledCluster->enabled = true;
+    area->thermal.list.addToCompleteList(enabledCluster);
+
+    BOOST_CHECK(study->saveToFolder(std::filesystem::temp_directory_path().string()));
+}
 BOOST_AUTO_TEST_SUITE_END()

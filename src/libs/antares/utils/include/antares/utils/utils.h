@@ -53,8 +53,15 @@ std::vector<std::pair<std::string, std::string>> splitStringIntoPairs(const std:
 
 namespace Utils
 {
+
 bool isZero(double d);
 double round(double d, unsigned precision);
+double ceilDiv(double numerator, double denominator);
+double floorDiv(double numerator, double denominator);
+
+bool checkAllElementsIdenticalOrOne(std::vector<unsigned> w);
+bool checkAllElementsIdenticalOrOne(std::vector<std::pair<unsigned, std::string>>& p);
+
 } // namespace Utils
 } // namespace Antares
 

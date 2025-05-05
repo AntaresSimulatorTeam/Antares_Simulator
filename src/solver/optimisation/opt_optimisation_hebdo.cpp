@@ -27,14 +27,15 @@
 
 using namespace Antares::Data;
 
-using Antares::Solver::Optimization::OptimizationOptions;
+using Solver::Optimization::OptimizationOptions;
+using Solver::Optimization::SingleOptimOptions;
 
 bool OPT_PilotageOptimisationLineaire(const OptimizationOptions&,
                                       PROBLEME_HEBDO*,
                                       Solver::IResultWriter&,
                                       Solver::Simulation::ISimulationObserver&);
-bool OPT_PilotageOptimisationQuadratique(PROBLEME_HEBDO*);
-void OPT_LiberationProblemesSimplexe(const OptimizationOptions&, const PROBLEME_HEBDO*);
+bool OPT_PilotageOptimisationQuadratique(const SingleOptimOptions&, PROBLEME_HEBDO*);
+void OPT_LiberationProblemesSimplexe(const PROBLEME_HEBDO*);
 
 void OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
                                   PROBLEME_HEBDO* pProblemeHebdo,
@@ -51,8 +52,8 @@ void OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
     }
     else if (pProblemeHebdo->TypeDOptimisation == OPTIMISATION_QUADRATIQUE)
     {
-        OPT_LiberationProblemesSimplexe(options, pProblemeHebdo);
-        if (!OPT_PilotageOptimisationQuadratique(pProblemeHebdo))
+        OPT_LiberationProblemesSimplexe(pProblemeHebdo);
+        if (!OPT_PilotageOptimisationQuadratique(options.quadraticOptimOptions, pProblemeHebdo))
         {
             logs.error() << "Quadratic optimization failed";
             throw UnfeasibleProblemError("Quadratic optimization failed");

@@ -62,11 +62,6 @@ public:
     */
     void markAsModified() const;
 
-    /*!
-    ** \brief Get the amount of memory currently used by the class
-    */
-    uint64_t memoryUsage() const;
-
     //! Data for the pre-processor
     std::unique_ptr<Data::Load::Prepro> prepro;
 

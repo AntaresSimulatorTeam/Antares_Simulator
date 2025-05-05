@@ -23,13 +23,16 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <filesystem>
+#include <unit_test_utils.h>
 
 #include <boost/test/unit_test.hpp>
+
+#include <antares/antares/fatal-error.h>
 
 #include "API.h"
 #include "in-memory-study.h"
 
-class InMemoryStudyLoader: public Antares::IStudyLoader
+class InMemoryStudyLoader: public IStudyLoader
 {
 public:
     explicit InMemoryStudyLoader(bool success = true):
@@ -37,7 +40,7 @@ public:
     {
     }
 
-    [[nodiscard]] std::unique_ptr<Antares::Data::Study> load() const override
+    [[nodiscard]] std::unique_ptr<Data::Study> load() const override
     {
         if (!success_)
         {
@@ -49,28 +52,17 @@ public:
         builder.study->initializeRuntimeInfos();
         builder.setNumberMCyears(1);
         builder.study->parameters.resultFormat = ResultFormat::inMemory;
-        builder.study->prepareOutput();
         return std::move(builder.study);
     }
 
     bool success_ = true;
 };
 
-BOOST_AUTO_TEST_CASE(simulation_path_points_to_results)
-{
-    Antares::API::APIInternal api;
-    auto study_loader = std::make_unique<InMemoryStudyLoader>();
-    auto results = api.run(*study_loader.get());
-    BOOST_CHECK_EQUAL(results.simulationPath, std::filesystem::path{"no_output"});
-    // Testing for "no_output" is a bit weird, but it's the only way to test this without actually
-    // running the simulation
-}
-
 BOOST_AUTO_TEST_CASE(api_run_contains_antares_problem)
 {
-    Antares::API::APIInternal api;
+    API::APIInternal api;
     auto study_loader = std::make_unique<InMemoryStudyLoader>();
-    auto results = api.run(*study_loader.get());
+    auto results = api.run(*study_loader, {}, {});
 
     BOOST_CHECK(!results.antares_problems.empty());
     BOOST_CHECK(!results.error);
@@ -78,9 +70,9 @@ BOOST_AUTO_TEST_CASE(api_run_contains_antares_problem)
 
 BOOST_AUTO_TEST_CASE(result_failure_when_study_is_null)
 {
-    Antares::API::APIInternal api;
+    API::APIInternal api;
     auto study_loader = std::make_unique<InMemoryStudyLoader>(false);
-    auto results = api.run(*study_loader.get());
+    auto results = api.run(*study_loader, {}, {});
 
     BOOST_CHECK(results.error);
 }
@@ -88,11 +80,40 @@ BOOST_AUTO_TEST_CASE(result_failure_when_study_is_null)
 // Test where data in problems are consistant with data in study
 BOOST_AUTO_TEST_CASE(result_contains_problems)
 {
-    Antares::API::APIInternal api;
+    API::APIInternal api;
     auto study_loader = std::make_unique<InMemoryStudyLoader>();
-    auto results = api.run(*study_loader.get());
+    auto results = api.run(*study_loader, {}, {});
 
     BOOST_CHECK(!results.antares_problems.empty());
     BOOST_CHECK(!results.error);
     BOOST_CHECK_EQUAL(results.antares_problems.weeklyProblems.size(), 52);
+}
+
+// Test where data in problems are consistent with data in study
+BOOST_AUTO_TEST_CASE(result_with_ortools_coin)
+{
+    API::APIInternal api;
+    auto study_loader = std::make_unique<InMemoryStudyLoader>();
+    const Solver::Optimization::OptimizationOptions opt;
+
+    auto results = api.run(*study_loader, {}, opt);
+
+    BOOST_CHECK(!results.antares_problems.empty());
+    BOOST_CHECK(!results.error);
+    BOOST_CHECK_EQUAL(results.antares_problems.weeklyProblems.size(), 52);
+}
+
+// Test where we use an invalid OR-Tools solver
+BOOST_AUTO_TEST_CASE(invalid_ortools_linear_solver)
+{
+    API::APIInternal api;
+    auto study_loader = std::make_unique<InMemoryStudyLoader>();
+    Solver::Optimization::OptimizationOptions opt;
+    opt.firstOptimOptions.solverName = "this-solver-does-not-exist";
+
+    auto shouldThrow = [&api, &study_loader, &opt] { return api.run(*study_loader, {}, opt); };
+    BOOST_CHECK_EXCEPTION(shouldThrow(),
+                          std::invalid_argument,
+                          checkMessage("Solver this-solver-does-not-exist is not supported by "
+                                       "Antares or does not support LP problems."));
 }

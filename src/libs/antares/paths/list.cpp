@@ -41,23 +41,6 @@ void PathList::clear()
     item.clear();
 }
 
-size_t PathList::internalSizeOnDisk() const
-{
-    size_t size = 0;
-    Clob buffer;
-
-    const ItemList::const_iterator end = item.end();
-    for (ItemList::const_iterator i = item.begin(); i != end; ++i)
-    {
-        if (!(i->second.options & pathListOptFolder))
-        {
-            buffer.clear() << pTmp << SEP << i->first;
-            size += (size_t)IO::File::Size(pTmp);
-        }
-    }
-    return size;
-}
-
 size_t PathList::totalSizeInBytes() const
 {
     size_t size = 0;
@@ -70,6 +53,7 @@ size_t PathList::totalSizeInBytes() const
     return size;
 }
 
+// TODO VP: remove with tools
 uint PathList::internalDeleteAllEmptyFolders()
 {
     if (!pTmp || item.empty())

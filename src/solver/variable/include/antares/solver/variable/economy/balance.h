@@ -86,7 +86,7 @@ struct VCardBalance
     static constexpr uint8_t isPossiblyNonApplicable = 0;
 
     typedef IntermediateValues IntermediateValuesBaseType;
-    typedef IntermediateValues* IntermediateValuesType;
+    typedef std::vector<IntermediateValues> IntermediateValuesType;
 
     typedef IntermediateValuesBaseType* IntermediateValuesTypeForSpatialAg;
 
@@ -131,12 +131,7 @@ public:
     };
 
 public:
-    ~Balance()
-    {
-        delete[] pValuesForTheCurrentYear;
-        delete[] bilanPays;
-        delete[] pInterco;
-    }
+    ~Balance() = default;
 
     void initializeFromStudy(Data::Study& study)
     {
@@ -144,20 +139,10 @@ public:
 
         InitializeResultsFromStudy(AncestorType::pResults, study);
 
-        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
+        pValuesForTheCurrentYear.resize(pNbYearsParallel);
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
         {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
-        }
-
-        bilanPays = nullptr;
-        pInterco = nullptr;
-        bilanPays = new double[pNbYearsParallel];
-        pInterco = new long[pNbYearsParallel];
-        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-        {
-            bilanPays[numSpace] = 0.;
-            pInterco[numSpace] = 0;
         }
 
         // Next
@@ -238,23 +223,23 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        bilanPays[numSpace] = 0.;
-        pInterco[numSpace] = state.problemeHebdo->IndexDebutIntercoOrigine[state.area->index];
-        while (pInterco[numSpace] >= 0)
+        double bilanPays = 0.;
+        int Interco = state.problemeHebdo->IndexDebutIntercoOrigine[state.area->index];
+        while (Interco >= 0)
         {
-            bilanPays[numSpace] += state.ntc.ValeurDuFlux[pInterco[numSpace]];
-            pInterco[numSpace] = state.problemeHebdo
-                                   ->IndexSuivantIntercoOrigine[pInterco[numSpace]];
+            bilanPays += state.ntc.ValeurDuFlux[static_cast<std::size_t>(Interco)];
+            Interco = state.problemeHebdo
+                        ->IndexSuivantIntercoOrigine[static_cast<std::size_t>(Interco)];
         }
-        pInterco[numSpace] = state.problemeHebdo->IndexDebutIntercoExtremite[state.area->index];
-        while (pInterco[numSpace] >= 0)
+        Interco = state.problemeHebdo->IndexDebutIntercoExtremite[state.area->index];
+        while (Interco >= 0)
         {
-            bilanPays[numSpace] -= state.ntc.ValeurDuFlux[pInterco[numSpace]];
-            pInterco[numSpace] = state.problemeHebdo
-                                   ->IndexSuivantIntercoExtremite[pInterco[numSpace]];
+            bilanPays -= state.ntc.ValeurDuFlux[static_cast<std::size_t>(Interco)];
+            Interco = state.problemeHebdo
+                        ->IndexSuivantIntercoExtremite[static_cast<std::size_t>(Interco)];
         }
 
-        pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = bilanPays[numSpace];
+        pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = bilanPays;
         // Next variable
         NextType::hourForEachArea(state, numSpace);
     }
@@ -285,9 +270,6 @@ public:
     }
 
 private:
-    double* bilanPays;
-    long* pInterco;
-
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel;

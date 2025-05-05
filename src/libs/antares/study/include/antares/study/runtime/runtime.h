@@ -110,6 +110,7 @@ public:
     uint thermalPlantTotalCountMustRun;
 
     uint shortTermStorageCount = 0;
+    uint shortTermStorageCumulativeConstraintCount = 0;
 
     //! Override enable/disable TS generation per cluster
     bool thermalTSRefresh = false;
@@ -140,12 +141,6 @@ private:
     void disableAllFilters(Study& study);
     void checkThermalTSGeneration(Study& study);
 }; // struct StudyRuntimeInfos
-
-#ifdef NDEBUG
-inline void StudyRangeLimits::checkIntegrity() const
-{
-}
-#endif
 
 } // namespace Antares::Data
 

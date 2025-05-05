@@ -45,7 +45,6 @@ void StudyInfoCollector::toFileContent(FileContent& file_content)
     unitCommitmentModeToFileContent(file_content);
     maxNbYearsInParallelToFileContent(file_content);
     solverVersionToFileContent(file_content);
-    ORToolsUsed(file_content);
     ORToolsSolver(file_content);
 }
 
@@ -144,21 +143,13 @@ void StudyInfoCollector::solverVersionToFileContent(FileContent& file_content)
     file_content.addItemToSection("study", "antares version", version);
 }
 
-void StudyInfoCollector::ORToolsUsed(FileContent& file_content)
-{
-    const bool& ortoolsUsed = study_.parameters.optOptions.ortoolsUsed;
-    file_content.addItemToSection("study", "ortools used", ortoolsUsed ? "true" : "false");
-}
-
 void StudyInfoCollector::ORToolsSolver(FileContent& file_content)
 {
-    const bool& ortoolsUsed = study_.parameters.optOptions.ortoolsUsed;
-    std::string ortoolsSolver = "none";
-    if (ortoolsUsed)
-    {
-        ortoolsSolver = study_.parameters.optOptions.ortoolsSolver;
-    }
-    file_content.addItemToSection("study", "ortools solver", ortoolsSolver);
+    std::string linearSolverName = study_.parameters.optOptions.firstOptimOptions.solverName;
+    file_content.addItemToSection("study", "linear solver", linearSolverName);
+
+    std::string quadraticSolverName = study_.parameters.optOptions.quadraticOptimOptions.solverName;
+    file_content.addItemToSection("study", "quadratic solver", quadraticSolverName);
 }
 
 // Collecting data optimization problem
@@ -167,9 +158,6 @@ void SimulationInfoCollector::toFileContent(FileContent& file_content)
 {
     file_content.addItemToSection("optimization problem", "variables", opt_info_.nbVariables);
     file_content.addItemToSection("optimization problem", "constraints", opt_info_.nbConstraints);
-    file_content.addItemToSection("optimization problem",
-                                  "non-zero coefficients",
-                                  opt_info_.nbNonZeroCoeffs);
 }
 
 } // namespace Benchmarking

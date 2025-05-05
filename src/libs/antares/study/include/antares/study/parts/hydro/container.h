@@ -108,13 +108,15 @@ public:
         pumpMod,
     };
 
+    static bool LoadIniFile(Study& study, const std::filesystem::path& folder);
+
     /*!
     ** \brief Load data for hydro container from a folder
     **
     ** \param folder The targer folder
     ** \return A non-zero value if the operation succeeded, 0 otherwise
     */
-    static bool LoadFromFolder(Study& study, const AnyString& folder);
+    static bool LoadFromFolder(Study& study, const std::filesystem::path& folder);
 
     /*!
     ** \brief Check and validate the loaded datas
@@ -131,7 +133,9 @@ public:
     ** \param folder The targer folder
     ** \return A non-zero value if the operation succeeded, 0 otherwise
     */
-    static bool SaveToFolder(const AreaList& areas, const AnyString& folder);
+    static bool SaveToFolder(const AreaList& areas,
+                             const AnyString& folder,
+                             const Parameters::Compatibility::HydroPmax hydroPmax);
 
     /*!
     ** \brief Default Constructor
@@ -157,7 +161,7 @@ public:
     /*!
     ** \brief Load daily max energy
     */
-    bool LoadDailyMaxEnergy(const AnyString& folder, const AnyString& areaid);
+    bool LoadDailyMaxEnergy(const std::filesystem::path& folder, const std::string& areaid);
 
     bool CheckDailyMaxEnergy(const AnyString& areaName);
 
@@ -195,6 +199,9 @@ public:
     double leewayUpperBound;
     //! Puming efficiency
     double pumpingEfficiency;
+    //! Daily max power ({generating max Power, generating max energy, pumping max power, pumping
+    //! max energy}x365)
+    Matrix<double, double> dailyMaxPumpAndGen;
     //! Credit Modulation (default 0, 101 * 2)
     Matrix<double, double> creditModulation;
 
@@ -223,6 +230,8 @@ public:
     std::unordered_map<uint, AreaDependantHydroManagementData> managementData;
 
     std::vector<std::optional<double>> deltaBetweenFinalAndInitialLevels;
+
+    double overflowSpilledCostDifference = 1.;
 
 private:
     static bool checkReservoirLevels(const Study& study);

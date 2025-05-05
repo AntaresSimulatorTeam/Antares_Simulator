@@ -84,6 +84,8 @@ public:
         columnMax,
     };
 
+    //! Ordered Set of binding constraints
+    using Set = std::set<std::shared_ptr<BindingConstraint>, CompareBindingConstraintName>;
     //! Map of weight (for links)
     using linkWeightMap = std::map<const AreaLink*, double, CompareLinkName>;
     //! Iterator
@@ -134,7 +136,7 @@ public:
     /*!
     ** \brief Destructor
     */
-    ~BindingConstraint();
+    ~BindingConstraint() = default;
     //@}
 
     //! \name / ID
@@ -337,14 +339,6 @@ public:
     ** \brief Mark the constraint as modified
     */
     void markAsModified() const;
-
-    //! \name Memory Usage
-    //@{
-    /*!
-    ** \brief Get the memory usage
-    */
-    uint64_t memoryUsage() const;
-    //@}
 
     /*!
     ** \brief Reverse the sign of the weight for a given interconnection or thermal cluster

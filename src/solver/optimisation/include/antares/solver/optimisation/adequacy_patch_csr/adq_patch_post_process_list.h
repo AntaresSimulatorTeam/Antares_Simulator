@@ -34,11 +34,12 @@ class AdqPatchPostProcessList: public interfacePostProcessList
 public:
     AdqPatchPostProcessList(const AdqPatchParams& adqPatchParams,
                             PROBLEME_HEBDO* problemeHebdo,
-                            uint thread_number,
+                            uint numSpace,
                             AreaList& areas,
                             SheddingPolicy sheddingPolicy,
                             SimplexOptimization splxOptimization,
-                            Calendar& calendar);
+                            Calendar& calendar,
+                            const OptimizationOptions& solverOptions);
 
     virtual ~AdqPatchPostProcessList() = default;
 };

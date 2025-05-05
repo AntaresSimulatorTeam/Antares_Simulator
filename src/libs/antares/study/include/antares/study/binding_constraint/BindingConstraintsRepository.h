@@ -37,8 +37,6 @@ class BindingConstraintsRepository final: public Yuni::NonCopyable<BindingConstr
 public:
     //! Vector of binding constraints
     using Vector = std::vector<std::shared_ptr<BindingConstraint>>;
-    //! Ordered Set of binding constraints
-    using Set = std::set<std::shared_ptr<BindingConstraint>, CompareBindingConstraintName>;
 
     using iterator = Vector::iterator;
     using const_iterator = Vector::const_iterator;
@@ -112,7 +110,7 @@ public:
     */
     [[nodiscard]] bool loadFromFolder(Data::Study& s,
                                       const Data::StudyLoadOptions& options,
-                                      const AnyString& folder);
+                                      const std::filesystem::path& folder);
 
     /*!
     ** \brief Save all binding constraints into a folder
@@ -158,11 +156,6 @@ public:
     void changeConstraintsWeeklyToDaily();
 
     /*!
-    ** \brief Get the memory usage
-    */
-    [[nodiscard]] uint64_t memoryUsage() const;
-
-    /*!
     ** \brief Invalidate all matrices of all binding constraints
     */
     void forceReload(bool reload = false) const;
@@ -172,9 +165,9 @@ public:
     */
     void markAsModified() const;
 
-    static std::vector<std::shared_ptr<BindingConstraint>> LoadBindingConstraint(EnvForLoading env);
+    static Vector LoadBindingConstraint(EnvForLoading env);
 
-    [[nodiscard]] std::vector<std::shared_ptr<BindingConstraint>> activeConstraints() const;
+    [[nodiscard]] Vector activeConstraints() const;
 
     [[nodiscard]] Vector getPtrForInequalityBindingConstraints() const;
 
@@ -182,9 +175,9 @@ private:
     bool internalSaveToFolder(Data::BindingConstraintSaver::EnvForSaving& env) const;
 
     //! All constraints
-    Data::BindingConstraintsRepository::Vector constraints_;
+    Vector constraints_;
 
-    mutable std::vector<std::shared_ptr<BindingConstraint>> activeConstraints_;
+    mutable Vector activeConstraints_;
 };
 
 struct WhoseNameContains final

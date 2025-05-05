@@ -137,13 +137,11 @@ public:
 
     uint visibleLinksCount(uint layerID);
 
-    uint64_t memoryUsage() const;
-
 public:
     //! Areas ordered by their name + links ordered by their name
     Area::LinkMap orderedAreasAndLinks;
     //! Binding constraints ordered by their name
-    BindingConstraintsRepository::Set orderedConstraint;
+    BindingConstraint::Set orderedConstraint;
     //! All binding constraints according their operator (<, > and = only)
     ByOperatorAndType byOperator;
     //! Vector of pointers to links, in lexicographic order

@@ -57,6 +57,9 @@ public:
     /// cluster name
     std::string name;
 
+    bool penalizeVariationWithdrawal = false;
+    bool penalizeVariationInjection = false;
+
     /// Enabled ?
     bool enabled = true;
 

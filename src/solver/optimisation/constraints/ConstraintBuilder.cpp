@@ -97,15 +97,23 @@ ConstraintBuilder& ConstraintBuilder::IntercoIndirectCost(unsigned int index, do
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::ShortTermStorageInjection(unsigned int index, double coeff)
+ConstraintBuilder& ConstraintBuilder::ShortTermStorageInjection(unsigned int index,
+                                                                double coeff,
+                                                                int offset,
+                                                                int delta)
 {
-    AddVariable(variableManager_.ShortTermStorageInjection(index, hourInWeek_), coeff);
+    AddVariable(variableManager_.ShortTermStorageInjection(index, hourInWeek_, offset, delta),
+                coeff);
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::ShortTermStorageWithdrawal(unsigned int index, double coeff)
+ConstraintBuilder& ConstraintBuilder::ShortTermStorageWithdrawal(unsigned int index,
+                                                                 double coeff,
+                                                                 int offset,
+                                                                 int delta)
 {
-    AddVariable(variableManager_.ShortTermStorageWithdrawal(index, hourInWeek_), coeff);
+    AddVariable(variableManager_.ShortTermStorageWithdrawal(index, hourInWeek_, offset, delta),
+                coeff);
     return *this;
 }
 
@@ -115,6 +123,28 @@ ConstraintBuilder& ConstraintBuilder::ShortTermStorageLevel(unsigned int index,
                                                             int delta)
 {
     AddVariable(variableManager_.ShortTermStorageLevel(index, hourInWeek_, offset, delta), coeff);
+    return *this;
+}
+
+ConstraintBuilder& ConstraintBuilder::ShortTermCostVariationInjection(unsigned int index,
+                                                                      double coeff,
+                                                                      int offset,
+                                                                      int delta)
+{
+    AddVariable(
+      variableManager_.ShortTermStorageCostVariationInjection(index, hourInWeek_, offset, delta),
+      coeff);
+    return *this;
+}
+
+ConstraintBuilder& ConstraintBuilder::ShortTermCostVariationWithdrawal(unsigned int index,
+                                                                       double coeff,
+                                                                       int offset,
+                                                                       int delta)
+{
+    AddVariable(
+      variableManager_.ShortTermStorageCostVariationWithdrawal(index, hourInWeek_, offset, delta),
+      coeff);
     return *this;
 }
 
@@ -188,11 +218,6 @@ void ConstraintBuilder::OPT_ChargerLaContrainteDansLaMatriceDesContraintes()
           = data.Pi[i];
         data.IndicesColonnes[data.nombreDeTermesDansLaMatriceDeContrainte] = data.Colonne[i];
         data.nombreDeTermesDansLaMatriceDeContrainte++;
-        if (data.nombreDeTermesDansLaMatriceDeContrainte
-            == data.NombreDeTermesAllouesDansLaMatriceDesContraintes)
-        {
-            OPT_AugmenterLaTailleDeLaMatriceDesContraintes();
-        }
     }
     data.NombreDeTermesDesLignes[data.nombreDeContraintes] = nombreDeTermes_;
 
@@ -200,21 +225,4 @@ void ConstraintBuilder::OPT_ChargerLaContrainteDansLaMatriceDesContraintes()
     data.nombreDeContraintes++;
 
     return;
-}
-
-void ConstraintBuilder::OPT_AugmenterLaTailleDeLaMatriceDesContraintes()
-{
-    int NbTermes = data.NombreDeTermesAllouesDansLaMatriceDesContraintes;
-    NbTermes += data.IncrementDAllocationMatriceDesContraintes;
-
-    logs.info();
-    logs.info() << " Expected Number of Non-zero terms in Problem Matrix : increased to : "
-                << NbTermes;
-    logs.info();
-
-    data.CoefficientsDeLaMatriceDesContraintes.resize(NbTermes);
-
-    data.IndicesColonnes.resize(NbTermes);
-
-    data.NombreDeTermesAllouesDansLaMatriceDesContraintes = NbTermes;
 }

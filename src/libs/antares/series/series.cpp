@@ -31,10 +31,6 @@
 
 #include <antares/antares/constants.h>
 
-using namespace Yuni;
-
-#define SEP IO::Separator
-
 namespace Antares::Data
 {
 void TimeSeriesNumbers::registerSeries(const TimeSeries* s, std::string label)
@@ -135,8 +131,8 @@ int TimeSeries::saveToFolder(const std::string& areaID,
                              const std::string& folder,
                              const std::string& prefix) const
 {
-    Clob buffer;
-    buffer.clear() << folder << SEP << prefix << areaID << ".txt";
+    Yuni::Clob buffer;
+    buffer.clear() << folder << Yuni::IO::Separator << prefix << areaID << ".txt";
     return timeSeries.saveToCSVFile(buffer, 0);
 }
 
@@ -225,8 +221,4 @@ void TimeSeries::markAsModified() const
     timeSeries.markAsModified();
 }
 
-uint64_t TimeSeries::memoryUsage() const
-{
-    return timeSeries.memoryUsage();
-}
 } // namespace Antares::Data

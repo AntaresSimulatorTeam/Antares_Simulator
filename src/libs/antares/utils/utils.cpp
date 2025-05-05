@@ -99,8 +99,14 @@ void BeautifyName(std::string& out, const std::string& oldname)
 std::tm getCurrentTime()
 {
     using namespace std::chrono;
-    auto time = system_clock::to_time_t(system_clock::now());
-    return *std::localtime(&time);
+    auto now = system_clock::to_time_t(system_clock::now());
+    std::tm local_time;
+#ifdef _WIN32
+    localtime_s(&local_time, &now); // Windows
+#else
+    localtime_r(&now, &local_time); // POSIX
+#endif
+    return local_time;
 }
 
 std::string formatTime(const std::tm& localTime, const std::string& format)
@@ -152,6 +158,47 @@ double round(double d, unsigned precision)
 {
     auto factor = std::pow(10, precision);
     return std::round(d * factor) / factor;
+}
+
+static constexpr double largeValue = 1000000;
+
+double ceilDiv(double numerator, double denominator)
+{
+    return std::ceil(std::round(numerator / denominator * largeValue) / largeValue);
+}
+
+double floorDiv(double numerator, double denominator)
+{
+    return std::floor(std::round(numerator / denominator * largeValue) / largeValue);
+}
+
+bool checkAllElementsIdenticalOrOne(std::vector<unsigned> w)
+{
+    auto first_one = std::remove(w.begin(), w.end(), 1); // Reject all 1 to the end
+    return std::adjacent_find(w.begin(), first_one, std::not_equal_to<unsigned>()) == first_one;
+}
+
+bool checkAllElementsIdenticalOrOne(std::vector<std::pair<unsigned, std::string>>& p)
+{
+    // Erase 1 from the vector
+    std::erase_if(p, [](const auto& pair) { return pair.first == 1; });
+    if (p.empty())
+    {
+        return true;
+    }
+
+    auto width = p.begin()->first;
+    for (const auto& [w, msg]: p)
+    {
+        if (w != width)
+        {
+            logs.error() << "Inconsitent time series width, found: " << w << " Previous was "
+                         << width << " for " << msg;
+
+            return false;
+        }
+    }
+    return true;
 }
 
 } // namespace Utils

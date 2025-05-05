@@ -27,7 +27,13 @@
 
 #include <antares/solver/utils/basis_status.h>
 
+#include "SparseVector.hxx"
 #include "opt_constants.h"
+
+namespace operations_research
+{
+class MPSolver;
+}
 
 /*--------------------------------------------------------------------------------------*/
 
@@ -45,9 +51,8 @@ struct PROBLEME_ANTARES_A_RESOUDRE
     std::string Sens;
     std::vector<int> IndicesDebutDeLigne;
     std::vector<int> NombreDeTermesDesLignes;
-    std::vector<double> CoefficientsDeLaMatriceDesContraintes;
-    std::vector<int> IndicesColonnes;
-    int NombreDeTermesAllouesDansLaMatriceDesContraintes;
+    SparseVector<double> CoefficientsDeLaMatriceDesContraintes;
+    SparseVector<int> IndicesColonnes;
     int IncrementDAllocationMatriceDesContraintes;
     int NombreDeTermesDansLaMatriceDesContraintes;
     /* Donnees variables de la matrice des contraintes */
@@ -90,7 +95,7 @@ struct PROBLEME_ANTARES_A_RESOUDRE
                                   matrice de base reguliere, et dans ce cas il n'y a pas de solution
                                 */
 
-    std::vector<void*> ProblemesSpx;
+    std::vector<operations_research::MPSolver*> ProblemesSpx;
 
     std::vector<int>
       PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */

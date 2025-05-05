@@ -30,6 +30,8 @@ constexpr double noiseAmplitude = 1e-3;
 constexpr unsigned int seed = 0x79686d64; // "hydm" in hexa
 } // namespace Constants
 
+namespace DonneesOptimisationMensuelle
+{
 void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES& DonneesAnnuelles)
 {
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles.ProblemeHydraulique;
@@ -42,7 +44,7 @@ void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES& DonneesAnnuelles)
 
     Antares::MersenneTwister noiseGenerator;
     noiseGenerator.reset(Constants::seed); // Arbitrary seed, hard-coded since we don't really want
-                                           // the user to change it
+    // the user to change it
     const std::vector<const std::vector<int>*> monthlyVariables = {
       &CorrespondanceDesVariables.NumeroDeVariableVolume,
       &CorrespondanceDesVariables.NumeroDeVariableTurbine,
@@ -65,3 +67,4 @@ void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES& DonneesAnnuelles)
     Var = CorrespondanceDesVariables.NumeroDeLaVariableXi;
     CoutLineaireBruite[Var] = CoutLineaire[Var] + noiseGenerator() * Constants::noiseAmplitude;
 }
+} // namespace DonneesOptimisationMensuelle

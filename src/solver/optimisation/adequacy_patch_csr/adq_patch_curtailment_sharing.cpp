@@ -25,8 +25,9 @@
 
 #include "antares/solver/optimisation/adequacy_patch_csr/count_constraints_variables.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/csr_quadratic_problem.h"
-#include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
+
+#include "solve_problem.h"
 
 using namespace Yuni;
 
@@ -141,13 +142,9 @@ void HourlyCSRProblem::calculateCsrParameters()
 void HourlyCSRProblem::allocateProblem()
 {
     using namespace Antares::Data::AdequacyPatch;
-    int nbConst;
-
     problemeAResoudre_.NombreDeVariables = countVariables(problemeHebdo_);
-    nbConst = problemeAResoudre_.NombreDeContraintes = countConstraints(problemeHebdo_);
-    int nbTerms = 3 * nbConst; // This is a rough estimate, reallocations may happen later if it's
-                               // too low
-    OPT_AllocateFromNumberOfVariableConstraints(&problemeAResoudre_, nbTerms);
+    problemeAResoudre_.NombreDeContraintes = countConstraints(problemeHebdo_);
+    OPT_AllocateFromNumberOfVariableConstraints(&problemeAResoudre_);
 }
 
 void HourlyCSRProblem::buildProblemVariables()
@@ -201,9 +198,14 @@ void HourlyCSRProblem::setProblemCost()
     }
 }
 
-void HourlyCSRProblem::solveProblem(uint week, int year)
+void HourlyCSRProblem::solveProblem(uint week, int year, const OptimizationOptions& options)
 {
-    ADQ_PATCH_CSR(problemeAResoudre_, *this, adqPatchParams_, week, year);
+    ADQ_PATCH_CSR(options.quadraticOptimOptions,
+                  problemeAResoudre_,
+                  *this,
+                  adqPatchParams_,
+                  week,
+                  year);
 }
 
 void HourlyCSRProblem::run(uint week, uint year)
@@ -214,5 +216,5 @@ void HourlyCSRProblem::run(uint week, uint year)
     setVariableBounds();
     buildProblemConstraintsRHS();
     setProblemCost();
-    solveProblem(week, year);
+    solveProblem(week, year, solverOptions_);
 }

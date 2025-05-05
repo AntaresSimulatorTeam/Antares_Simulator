@@ -85,9 +85,9 @@ public:
     ** We assume here that the variables related to an area
     ** are properly initialized.
     **
-    ** \param areaWideIndex Index of the thermal cluster for the current area
+    ** \param clusterEnabledIndex Index of the thermal cluster for the current area
     */
-    void initFromThermalClusterIndex(const unsigned int areaWideIndex);
+    void initFromThermalClusterIndex(const unsigned int clusterEnabledIndex);
 
     /*!
     ** \brief End the year by smoothing the thermal units run
@@ -95,10 +95,10 @@ public:
     ** We assume here that the variables related to an area
     ** are properly initialized.
     **
-    ** \param areaWideIndex Index of the thermal cluster for the current area
+    ** \param clusterEnabledIndex Index of the thermal cluster for the current area
     */
 
-    void yearEndBuildFromThermalClusterIndex(const unsigned int areaWideIndex);
+    void yearEndBuildFromThermalClusterIndex(const unsigned int clusterEnabledIndex);
 
 private:
     /*!
@@ -106,9 +106,9 @@ private:
     **
     ** Called in initFromAreaIndex to split code
     **
-    ** \param areaWideIndex Index of the thermal cluster for the current area
+    ** \param clusterEnabledIndex Index of the thermal cluster for the current area
     */
-    void initFromThermalClusterIndexProduction(const unsigned int areaWideIndex);
+    void initFromThermalClusterIndexProduction(const unsigned int clusterEnabledIndex);
 
     void yearEndBuildThermalClusterCalculateStartupCosts(
       const uint& maxDurationON,
@@ -125,9 +125,9 @@ private:
     ** \brief Smooth the thermal units run after resolutions
     ** using heuristics
     **
-    ** \param areaWideIndex Index of the thermal cluster for the current area
+    ** \param clusterEnabledIndex Index of the thermal cluster for the current area
     */
-    void yearEndSmoothDispatchedUnitsCount(const unsigned int areaWideIndex, uint numSpace);
+    void yearEndSmoothDispatchedUnitsCount(const unsigned int clusterEnabledIndex, uint numSpace);
 
 public:
     /*!

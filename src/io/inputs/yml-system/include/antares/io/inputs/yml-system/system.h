@@ -1,0 +1,74 @@
+/*
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+#pragma once
+
+#include <string>
+#include <vector>
+
+namespace Antares::IO::Inputs::YmlSystem
+{
+
+struct Parameter
+{
+    std::string id;
+    bool time_dependent;
+    bool scenario_dependent;
+    std::string value;
+};
+
+struct Component
+{
+    std::string id;
+    std::string model;
+    std::string scenarioGroup;
+    std::vector<Parameter> parameters;
+};
+
+struct ConnectionEntry
+{
+    std::string componentId;
+    std::string portId;
+};
+
+struct Connection
+{
+    ConnectionEntry firstEntry;
+    ConnectionEntry secondEntry;
+};
+
+struct AreaConnection
+{
+    std::string componentId;
+    std::string portId;
+    std::string areaId;
+};
+
+struct System
+{
+    std::string id;
+    std::vector<std::string> libraries;
+    std::vector<Component> components;
+    std::vector<Connection> connections;
+    std::vector<AreaConnection> areaConnections;
+};
+
+} // namespace Antares::IO::Inputs::YmlSystem

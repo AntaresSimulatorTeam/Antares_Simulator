@@ -5,12 +5,11 @@ set(ANTARES_VERSION_HI	      9)
 set(ANTARES_VERSION_LO	      2)
 set(ANTARES_VERSION_REVISION  0)
 
-
 # Beta release
 set(ANTARES_BETA 0)
-set(ANTARES_RC 4)
+set(ANTARES_RC 0)
 
-set(ANTARES_VERSION_YEAR      2024)
+set(ANTARES_VERSION_YEAR      2025)
 
 project(antares
         VERSION ${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION})
@@ -183,9 +182,6 @@ message(STATUS "Build antares tools: ${BUILD_TOOLS}")
 option(BUILD_ORTOOLS "Build OR-Tools" OFF)
 message(STATUS "Build OR-Tools: ${BUILD_ORTOOLS}")
 
-option(WITH_ANTLR4 "With antlr4" OFF)
-message(STATUS "With antlr4: ${WITH_ANTLR4}")
-
 option(BUILD_MERSENNE_TWISTER_PYBIND11 "Build pybind11 bindings for Mersenne-Twister" OFF)
 if (${BUILD_MERSENNE_TWISTER_PYBIND11})
     find_package(pybind11 REQUIRED)
@@ -193,6 +189,9 @@ endif()
 
 #Boost header libraries
 find_package(Boost REQUIRED)
+
+find_package(antlr4-runtime REQUIRED)
+find_package(yaml-cpp REQUIRED)
 
 #Sirius solver
 if(POLICY CMP0074)
@@ -265,14 +264,19 @@ OMESSAGE("") # empty line
 
 # Sub Directories
 add_subdirectory(api)
+add_subdirectory(io)
 add_subdirectory(libs) 		#antares-core fswalker
 
 if(BUILD_UI)
 	add_subdirectory(ui)		#all antares ui libs + antares simulator
 endif()
 
-add_subdirectory(solver)	#antares solver and all associated libs
-add_subdirectory(analyzer)	#antares analyser
+add_subdirectory(expressions)   #modeler expressions (AST)
+add_subdirectory(optimisation)  #optimisation APIs
+add_subdirectory(study)	        #antares study model
+add_subdirectory(solver)	    #antares solver and all associated libs
+add_subdirectory(analyzer)      #antares analyser
+add_subdirectory(modeler)       #antares modeler
 
 # Tools
 if (BUILD_TOOLS)

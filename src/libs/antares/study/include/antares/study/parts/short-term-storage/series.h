@@ -24,16 +24,20 @@
 #include <string>
 #include <vector>
 
+#include <antares/study/version.h>
+
 namespace Antares::Data::ShortTermStorage
 {
+
 class Series
 {
 public:
+    Series() = default;
     // check if series values are valid
-    bool validate(const std::string& id = "") const;
+    bool validate(const std::string& id, StudyVersion studyVersion) const;
 
     // load all series files with folder path
-    bool loadFromFolder(const std::filesystem::path& folder);
+    bool loadFromFolder(const std::filesystem::path& folder, StudyVersion studyVersion);
     void fillDefaultSeriesIfEmpty();
 
     bool saveToFolder(const std::string& folder) const;
@@ -47,9 +51,11 @@ public:
     std::vector<double> costInjection;
     std::vector<double> costWithdrawal;
     std::vector<double> costLevel;
+    std::vector<double> costVariationInjection;
+    std::vector<double> costVariationWithdrawal;
 
 private:
-    bool validateSizes(const std::string&) const;
+    bool validateSizes(const std::string&, StudyVersion studyVersion) const;
     bool validateMaxInjection(const std::string&) const;
     bool validateMaxWithdrawal(const std::string&) const;
     bool validateRuleCurves(const std::string&) const;
@@ -59,5 +65,5 @@ private:
 
 bool loadFile(const std::filesystem::path& folder, std::vector<double>& vect);
 bool writeVectorToFile(const std::string& path, const std::vector<double>& vect);
-
+void fillIfEmpty(std::vector<double>& v, double value);
 } // namespace Antares::Data::ShortTermStorage

@@ -12,7 +12,6 @@ add_subdirectory(date)
 add_subdirectory(exception)
 add_subdirectory(file-tree-study-loader)
 add_subdirectory(inifile)
-add_subdirectory(io)
 add_subdirectory(jit)
 add_subdirectory(locale)
 add_subdirectory(locator)
@@ -28,9 +27,6 @@ add_subdirectory(study-loader)
 add_subdirectory(sys)
 add_subdirectory(utils)
 add_subdirectory(writer)
-if(WITH_ANTLR4)
-  add_subdirectory(antlr-interface)
-endif()
 
 add_subdirectory(optimization-options)
 
@@ -55,18 +51,18 @@ add_library(antares-core
 
 target_include_directories(antares-core
         PUBLIC
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         PRIVATE
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/libs>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/libs>
 )
 
 target_link_libraries(antares-core
         PUBLIC
-            yuni-static-core
-            Antares::logs
-            Antares::exception
-            Antares::study
-            Antares::config
+        yuni-static-core
+        Antares::logs
+        Antares::exception
+        Antares::study
+        Antares::config
 )
 
 import_std_libs(antares-core)

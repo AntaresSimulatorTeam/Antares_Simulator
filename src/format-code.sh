@@ -3,7 +3,7 @@
 if [ $# -eq 0 ]
 then
     # No arguments: format all
-    SOURCE_DIRS="analyzer/ libs/ solver/ tools/ config/ tests/ packaging/"
+    SOURCE_DIRS="analyzer/ libs/ solver/ tools/ config/ tests/ packaging/ api/ io/ optimisation/ expressions/ study/ modeler/"
     SOURCE_FILES=$(find $SOURCE_DIRS -regextype egrep -regex ".*/*\.(c|cxx|cpp|cc|h|hxx|hpp)$" ! -path '*/antlr-interface/*')
 else
     # Format files provided as arguments
@@ -20,5 +20,5 @@ fi
 if ! [ -x "$(command -v clang-format)" ]; then
     echo 'Warning: clang-format is not installed. Skipping' >&2
 else
-    echo "$SOURCE_FILES" | xargs clang-format -i --verbose
+    echo "$SOURCE_FILES" | xargs clang-format  -style=file:../.clang-format -i --verbose
 fi

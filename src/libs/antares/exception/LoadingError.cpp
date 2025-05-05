@@ -41,6 +41,11 @@ NoAreas::NoAreas():
 {
 }
 
+Duplicates::Duplicates():
+    LoadingError("One or more duplicates found.")
+{
+}
+
 InvalidFileName::InvalidFileName():
     LoadingError("Invalid file names detected.")
 {
@@ -81,25 +86,28 @@ InvalidSolver::InvalidSolver(const std::string& solver, const std::string& avail
 {
 }
 
-static std::string InvalidSolverSpecificParametersHelper(const std::string& solver,
-                                                         const std::string& specificParameters)
+IncompatibleLinearSolverParameters::IncompatibleLinearSolverParameters():
+    LoadingError("You can't supply parameters for one particular and both optimizations")
+{
+}
+
+static std::string InvalidSolverParameterMessage(const std::string& solver,
+                                                 const std::string& parameters)
 {
     std::ostringstream message;
-    message << "Specific parameters '" << specificParameters
+    message << "Specific parameters '" << parameters
             << "' are not valid or not supported for solver " << solver;
     return message.str();
 }
 
-InvalidSolverSpecificParameters::InvalidSolverSpecificParameters(
-  const std::string& solver,
-  const std::string& specificParameters):
-    LoadingError(InvalidSolverSpecificParametersHelper(solver, specificParameters))
+InvalidSolverSpecificParameters::InvalidSolverSpecificParameters(const std::string& solver,
+                                                                 const std::string& parameters):
+    LoadingError(InvalidSolverParameterMessage(solver, parameters))
 {
 }
 
-InvalidStudy::InvalidStudy(const Yuni::String& study):
-    LoadingError(std::string("The folder `") + study.c_str()
-                 + "` does not seem to be a valid study")
+InvalidStudy::InvalidStudy(const std::string& study):
+    LoadingError(std::string("The folder `") + study + "` does not seem to be a valid study")
 {
 }
 
@@ -126,6 +134,11 @@ IncompatibleMILPWithoutOrtools::IncompatibleMILPWithoutOrtools():
 
 IncompatibleMILPOrtoolsSolver::IncompatibleMILPOrtoolsSolver():
     LoadingError("'milp' mode does not work with OR-Tools using Sirius solver")
+{
+}
+
+UseMILPsolverWithWrongOptions::UseMILPsolverWithWrongOptions():
+    LoadingError("'milp' solver cannot be used with options for optimization 1 or 2")
 {
 }
 

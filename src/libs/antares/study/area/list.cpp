@@ -44,7 +44,7 @@ namespace Antares::Data
 {
 namespace // anonymous
 {
-static bool AreaListLoadThermalDataFromFile(AreaList& list, const Clob& filename)
+static bool AreaListLoadThermalDataFromFile(AreaList& list, const fs::path& filename)
 {
     // Reset to 0
     list.each(
@@ -192,9 +192,12 @@ static bool AreaListSaveThermalDataToFile(const AreaList& list, const AnyString&
     return ini.save(filename);
 }
 
-static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const AnyString& folder)
+static bool AreaListSaveToFolderSingleArea(const Area& area,
+                                           const AnyString& folder,
+                                           const Parameters::Compatibility::HydroPmax hydroPmax)
 {
     bool ret = true;
+    Clob buffer;
 
     // A specific folder for general data
     buffer.clear() << folder << SEP << "input" << SEP << "areas" << SEP << area.id;
@@ -273,7 +276,7 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
         if (area.hydro.series) // Series
         {
             buffer.clear() << folder << SEP << "input" << SEP << "hydro" << SEP << "series";
-            ret = area.hydro.series->saveToFolder(area.id, buffer) && ret;
+            ret = area.hydro.series->saveToFolder(area.id, buffer, hydroPmax) && ret;
         }
     }
 
@@ -484,17 +487,13 @@ Area* AreaList::add(Area* a)
         // Indexing the area
         a->index = (uint)areas.size();
 
-// Adding the area in the list
-#ifndef NDEBUG
-        uint count = (uint)areas.size();
-#endif
+        [[maybe_unused]] unsigned count = (uint)areas.size(); // used for assert
 
+        // Adding the area in the list
         areas[a->id] = a;
         rebuildIndexes();
 
-#ifndef NDEBUG
         assert(areas.size() == (count + 1) and "Invalid count of areas in the map");
-#endif
     }
     return a;
 }
@@ -762,13 +761,16 @@ bool AreaList::saveToFolder(const AnyString& folder) const
       {
           logs.info() << "Exporting the area " << (area.index + 1) << '/' << areas.size() << ": "
                       << area.name;
-          ret = AreaListSaveToFolderSingleArea(area, buffer, folder) && ret;
+          ret = AreaListSaveToFolderSingleArea(area,
+                                               folder,
+                                               pStudy.parameters.compatibility.hydroPmax)
+                && ret;
       });
 
     // Hydro
     // The hydro files must be saved after the area has been invalidated
     buffer.clear() << folder << SEP << "input" << SEP << "hydro";
-    ret = PartHydro::SaveToFolder(*this, buffer) && ret;
+    ret = PartHydro::SaveToFolder(*this, buffer, pStudy.parameters.compatibility.hydroPmax) && ret;
 
     // update nameid set
     updateNameIDSet();
@@ -776,38 +778,39 @@ bool AreaList::saveToFolder(const AnyString& folder) const
     return ret;
 }
 
-template<class StringT>
-static void readAdqPatchMode(Study& study, Area& area, StringT& buffer)
+static void readAdqPatchMode(Study& study, Area& area)
 {
-    if (study.header.version >= StudyVersion(8, 3))
+    if (study.header.version < StudyVersion(8, 3))
     {
-        buffer.clear() << study.folderInput << SEP << "areas" << SEP << area.id << SEP
-                       << "adequacy_patch.ini";
-        IniFile ini;
-        if (ini.open(buffer))
-        {
-            auto* section = ini.find("adequacy-patch");
-            for (auto* p = section->firstProperty; p; p = p->next)
-            {
-                CString<30, false> tmp;
-                tmp = p->key;
-                tmp.toLower();
-                if (tmp == "adequacy-patch-mode")
-                {
-                    auto value = (p->value).toLower();
+        return;
+    }
 
-                    if (value == "virtual")
-                    {
-                        area.adequacyPatchMode = Data::AdequacyPatch::virtualArea;
-                    }
-                    else if (value == "inside")
-                    {
-                        area.adequacyPatchMode = Data::AdequacyPatch::physicalAreaInsideAdqPatch;
-                    }
-                    else
-                    {
-                        area.adequacyPatchMode = Data::AdequacyPatch::physicalAreaOutsideAdqPatch;
-                    }
+    fs::path adqPath = study.folderInput / "areas" / area.id.to<std::string>()
+                       / "adequacy_patch.ini";
+    IniFile ini;
+    if (ini.open(adqPath))
+    {
+        auto* section = ini.find("adequacy-patch");
+        for (auto* p = section->firstProperty; p; p = p->next)
+        {
+            CString<30, false> tmp;
+            tmp = p->key;
+            tmp.toLower();
+            if (tmp == "adequacy-patch-mode")
+            {
+                auto value = (p->value).toLower();
+
+                if (value == "virtual")
+                {
+                    area.adequacyPatchMode = Data::AdequacyPatch::virtualArea;
+                }
+                else if (value == "inside")
+                {
+                    area.adequacyPatchMode = Data::AdequacyPatch::physicalAreaInsideAdqPatch;
+                }
+                else
+                {
+                    area.adequacyPatchMode = Data::AdequacyPatch::physicalAreaOutsideAdqPatch;
                 }
             }
         }
@@ -885,7 +888,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     {
         if (!area.ui)
         {
-            area.ui = new AreaUI();
+            area.ui = std::make_unique<AreaUI>();
         }
 
         buffer.clear() << study.folderInput << SEP << "areas" << SEP << area.id << SEP << "ui.ini";
@@ -899,7 +902,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         {
             // if changes are required, please update reloadXCastData()
             fs::path loadPath = study.folderInput / "load" / "prepro" / area.id.to<std::string>();
-            ret = area.load.prepro->loadFromFolder(loadPath.string()) && ret;
+            ret = area.load.prepro->loadFromFolder(loadPath) && ret;
         }
         if (!options.loadOnlyNeeded || !area.load.prepro) // Series
         {
@@ -916,7 +919,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         {
             // if changes are required, please update reloadXCastData()
             fs::path solarPath = study.folderInput / "solar" / "prepro" / area.id.to<std::string>();
-            ret = area.solar.prepro->loadFromFolder(solarPath.string()) && ret;
+            ret = area.solar.prepro->loadFromFolder(solarPath) && ret;
         }
         if (!options.loadOnlyNeeded || !area.solar.prepro) // Series
         {
@@ -940,7 +943,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         {
             // if changes are required, please update reloadXCastData()
             fs::path hydroPrepro = pathHydro / "prepro";
-            ret = area.hydro.prepro->loadFromFolder(study, area.id, hydroPrepro.string()) && ret;
+            ret = area.hydro.prepro->loadFromFolder(study, area.id, hydroPrepro) && ret;
             ret = area.hydro.prepro->validate(area.id) && ret;
         }
 
@@ -949,20 +952,29 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             ret = area.hydro.series->loadGenerationTS(area.id, hydroSeries, studyVersion) && ret;
         }
 
-        if (studyVersion < StudyVersion(9, 1))
+        switch (study.parameters.compatibility.hydroPmax)
+        {
+        case Parameters::Compatibility::HydroPmax::Daily:
         {
             HydroMaxTimeSeriesReader reader(area.hydro,
                                             area.id.to<std::string>(),
                                             area.name.to<std::string>());
             ret = reader.read(pathHydro.string(), study.usedByTheSolver) && ret;
+            break;
         }
-        else
+        case Parameters::Compatibility::HydroPmax::Hourly:
         {
             ret = area.hydro.series->LoadMaxPower(area.id, hydroSeries) && ret;
+            break;
+        }
+        default:
+            throw std::invalid_argument(
+              "Value not supported for study.parameters.compatibility.hydroPmax");
         }
 
         area.hydro.series->resizeTSinDeratedMode(study.parameters.derated,
                                                  studyVersion,
+                                                 study.parameters.compatibility.hydroPmax,
                                                  study.usedByTheSolver);
     }
 
@@ -972,7 +984,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         {
             // if changes are required, please update reloadXCastData()
             fs::path windPath = study.folderInput / "wind" / "prepro" / area.id.to<std::string>();
-            ret = area.wind.prepro->loadFromFolder(windPath.string()) && ret;
+            ret = area.wind.prepro->loadFromFolder(windPath) && ret;
         }
         if (!options.loadOnlyNeeded || !area.wind.prepro) // Series
         {
@@ -1004,8 +1016,8 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         fs::path seriesPath = study.folderInput / "st-storage" / "series"
                               / area.id.to<std::string>();
 
-        ret = area.shortTermStorage.loadSeriesFromFolder(seriesPath) && ret;
-        ret = area.shortTermStorage.validate() && ret;
+        ret = area.shortTermStorage.loadSeriesFromFolder(seriesPath, studyVersion) && ret;
+        ret = area.shortTermStorage.validate(studyVersion) && ret;
     }
 
     // Renewable cluster list
@@ -1016,7 +1028,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     }
 
     // Adequacy patch
-    readAdqPatchMode(study, area, buffer);
+    readAdqPatchMode(study, area);
 
     // Nodal Optimization
     fs::path nodalPath = study.folderInput / "areas" / area.id.to<std::string>()
@@ -1160,21 +1172,18 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     // Thermal data, specific to areas
     {
         logs.info() << "Loading thermal clusters...";
-        buffer.clear() << pStudy.folderInput << SEP << "thermal" << SEP << "areas.ini";
-        ret = AreaListLoadThermalDataFromFile(*this, buffer) && ret;
+        fs::path thermalPath = pStudy.folderInput / "thermal";
+        fs::path areaIniPath = thermalPath / "areas.ini";
+        ret = AreaListLoadThermalDataFromFile(*this, areaIniPath) && ret;
 
-        // The cluster list must be loaded before the method
-        // ensureDataIsInitialized is called
+        // The cluster list must be loaded before the method ensureDataIsInitialized is called
         // in order to allocate data with all thermal clusters.
-        CString<30, false> thermalPlant;
-        thermalPlant << SEP << "thermal" << SEP << "clusters" << SEP;
-
         auto end = areas.end();
         for (auto i = areas.begin(); i != end; ++i)
         {
             Area& area = *(i->second);
-            buffer.clear() << pStudy.folderInput << thermalPlant << area.id;
-            ret = area.thermal.list.loadFromFolder(pStudy, buffer.c_str(), &area) && ret;
+            fs::path areaPath = thermalPath / "clusters" / area.id.to<std::string>();
+            ret = area.thermal.list.loadFromFolder(pStudy, areaPath, &area) && ret;
             ret = area.thermal.list.validateClusters(pStudy.parameters) && ret;
         }
     }
@@ -1187,11 +1196,18 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
 
         if (fs::exists(stsFolder))
         {
-            for (const auto& [id, area]: areas)
+            for (const auto& area: areas | std::views::values)
             {
-                fs::path folder = stsFolder / "clusters" / area->id.c_str();
-
-                ret = area->shortTermStorage.createSTStorageClustersFromIniFile(folder) && ret;
+                fs::path cluster_folder = stsFolder / "clusters" / area->id.c_str();
+                ret = area->shortTermStorage.createSTStorageClustersFromIniFile(cluster_folder)
+                      && ret;
+                // Additional constraints were added from version 9.2
+                if (studyVersion >= StudyVersion(9, 2))
+                {
+                    const auto constraints_folder = stsFolder / "constraints" / area->id.c_str();
+                    ret = area->shortTermStorage.loadAdditionalConstraints(constraints_folder)
+                          && ret;
+                }
             }
         }
         else
@@ -1203,18 +1219,16 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     // Renewable data, specific to areas
     if (studyVersion >= StudyVersion(8, 1))
     {
-        // The cluster list must be loaded before the method
-        // ensureDataIsInitialized is called
+        // The cluster list must be loaded before the method ensureDataIsInitialized is called
         // in order to allocate data with all renewable clusters.
-        CString<30, false> renewablePlant;
-        renewablePlant << SEP << "renewables" << SEP << "clusters" << SEP;
+        fs::path renewClusterPath = pStudy.folderInput / "renewables" / "clusters";
 
         auto end = areas.end();
         for (auto i = areas.begin(); i != end; ++i)
         {
             Area& area = *(i->second);
-            buffer.clear() << pStudy.folderInput << renewablePlant << area.id;
-            ret = area.renewable.list.loadFromFolder(buffer.c_str(), &area) && ret;
+            fs::path areaPath = renewClusterPath / area.id.to<std::string>();
+            ret = area.renewable.list.loadFromFolder(areaPath, &area) && ret;
             ret = area.renewable.list.validateClusters() && ret;
         }
     }
@@ -1394,13 +1408,6 @@ void AreaListEnsureDataThermalPrepro(AreaList* l)
     l->each([](Data::Area& area) { area.thermal.list.ensureDataPrepro(); });
 }
 
-uint64_t AreaList::memoryUsage() const
-{
-    uint64_t ret = sizeof(AreaList) + sizeof(Area**) * areas.size();
-    each([&ret](const Data::Area& area) { ret += area.memoryUsage(); });
-    return ret;
-}
-
 uint AreaList::areaLinkCount() const
 {
     uint ret = 0;
@@ -1476,9 +1483,7 @@ bool AreaList::renameArea(const AreaName& oldid, const AreaName& newid, const Ar
               return;
           }
 
-#ifndef NDEBUG
-          uint oldCount = (uint)a.links.size();
-#endif
+          [[maybe_unused]] unsigned oldCount = (uint)a.links.size(); // only used in assert
           // Renaming the entry
 
           link->forceReload(true);
@@ -1487,9 +1492,7 @@ bool AreaList::renameArea(const AreaName& oldid, const AreaName& newid, const Ar
           link->detach();
           a.links[link->with->id] = link;
 
-#ifndef NDEBUG
           assert(oldCount == a.links.size() && "We must have the same number of items in the list");
-#endif
       });
 
     area->buildLinksIndexes();

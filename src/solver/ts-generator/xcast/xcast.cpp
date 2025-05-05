@@ -25,16 +25,12 @@
 #include <sstream>
 #include <string>
 
-#include <yuni/yuni.h>
-
 #include <antares/antares/fatal-error.h>
 #include <antares/logs/logs.h>
 #include <antares/study/study.h>
 #include "antares/solver/ts-generator/xcast/predicate.hxx"
 
-using namespace Yuni;
-
-#define SEP (IO::Separator)
+namespace fs = std::filesystem;
 
 namespace Antares::TSGenerator::XCast
 {
@@ -71,20 +67,18 @@ void XCast::exportTimeSeriesToTheOutput(Progression::Task& progression, Predicat
         logs.info() << "Exporting " << predicate.timeSeriesName()
                     << " time-series into the output (year:" << year << ')';
 
-        String output;
-        String filename;
-
-        output << "ts-generator" << SEP << predicate.timeSeriesName() << SEP << "mc-" << year;
-        filename.reserve(output.size() + 80);
+        fs::path output = "ts-generator";
+        output /= fs::path(predicate.timeSeriesName()) / std::string("mc-" + year);
 
         study.areas.each(
-          [this, &filename, &progression, &predicate, &output](Data::Area& area)
+          [this, &progression, &predicate, &output](Data::Area& area)
           {
-              filename.clear() << output << SEP << area.id << ".txt";
+              std::string areaId = area.id + "txt";
+              fs::path filename = output / areaId;
               std::string buffer;
               predicate.matrix(area).saveToBuffer(buffer);
 
-              pWriter.addEntryFromBuffer(filename.c_str(), buffer);
+              pWriter.addEntryFromBuffer(filename, buffer);
 
               ++progression;
           });

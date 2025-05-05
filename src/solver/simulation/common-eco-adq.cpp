@@ -92,7 +92,7 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
     {
         NullResultWriter resultWriter;
         NullSimulationObserver simulationObserver;
-        OPT_OptimisationHebdomadaire(createOptimizationOptions(study),
+        OPT_OptimisationHebdomadaire(study.parameters.optOptions,
                                      &problem,
                                      resultWriter,
                                      simulationObserver);
@@ -257,6 +257,8 @@ void PrepareRandomNumbers(Data::Study& study,
           //-----------------------------
           for (auto& cluster: area.thermal.list.each_enabled())
           {
+              // we use the areaWideIndex because the thermal noises are randomly calculated
+              // for every cluster to avoid different results if a cluster is deactivated
               uint clusterIndex = cluster->areaWideIndex;
               double& rnd = randomForYear.pThermalNoisesByArea[indexArea][clusterIndex];
               double randomClusterProdCost(0.);
@@ -378,7 +380,7 @@ void BuildThermalPartOfWeeklyProblem(Data::Study& study,
                              .PuissanceDisponibleEtCout[cluster->index];
 
                 Pt.CoutHoraireDeProductionDuPalierThermique[hourInWeek]
-                  = cluster->getMarketBidCost(hourInYear, year)
+                  = cluster->getCostProvider().getMarketBidCost(hourInYear, year)
                     + thermalNoises[areaIdx][cluster->areaWideIndex];
 
                 Pt.PuissanceDisponibleDuPalierThermique[hourInWeek] = cluster->series
@@ -469,11 +471,6 @@ void finalizeOptimizationStatistics(PROBLEME_HEBDO& problem,
 
     firstOptStat.reset();
     secondOptStat.reset();
-}
-
-OptimizationOptions createOptimizationOptions(const Data::Study& study)
-{
-    return study.parameters.optOptions;
 }
 
 } // namespace Antares::Solver::Simulation

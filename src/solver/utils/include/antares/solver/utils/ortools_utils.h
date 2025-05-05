@@ -33,6 +33,11 @@
 
 #include "ortools_wrapper.h"
 
+namespace operations_research::math_opt
+{
+enum class SolverType;
+}
+
 using namespace operations_research;
 
 void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
@@ -40,26 +45,32 @@ void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
                                                    const std::string& filename);
 
 /*!
- *  \brief Return list of available ortools solver name on our side
+ *  \brief Returns a comma-seperated-list of available ortools linear solver names on our side
  *
- *  \return List of available ortools solver name
+ *  \return Comma-seperated-list of available ortools linear solver names
  */
-std::list<std::string> getAvailableOrtoolsSolverName();
+std::string toString(const std::list<std::string>& solverList);
 
 /*!
- *  \brief Return a single string containing all solvers available, separated by a ", " and ending
- * with a ".".
+ *  \brief Returns a list of available ortools linear solver names on our side
  *
+ *  \return List of available ortools linear solver names
  */
-std::string availableOrToolsSolversString();
+std::list<std::string> availableLinearSolversList();
+
+/*!
+ *  \brief Returns a list of available ortools quadratic solver names on our side
+ *
+ *  \return List of available ortools quadratic solver names
+ */
+std::list<std::string> availableQuadraticSolversList();
 
 /*!
  *  \brief Create a MPSolver with correct linear or mixed variant
  *
  *  \return MPSolver
  */
-MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* probleme,
-                          const std::string& solverName);
+MPSolver* MPSolverFactory(const bool isMip, const std::string& solverName);
 
 std::string generateTempPath(const std::string& filename);
 void removeTemporaryFile(const std::string& tmpPath);
@@ -69,65 +80,9 @@ class OrtoolsUtils
 public:
     struct SolverNames
     {
-        std::string LPSolverName, MIPSolverName;
+        std::optional<std::string> LPSolverName, MIPSolverName;
     };
-    static const std::map<std::string, struct SolverNames> solverMap;
+
+    static const std::map<std::string, SolverNames> mpSolverMap;
+    static const std::map<std::string, math_opt::SolverType> mathoptSolverMap;
 };
-
-namespace Antares
-{
-namespace Optimization
-{
-
-class Nomenclature
-{
-public:
-    Nomenclature() = delete;
-
-    explicit Nomenclature(char prefix):
-        prefix_(prefix)
-    {
-    }
-
-    void SetTarget(const std::vector<std::string>& target)
-    {
-        target_ = &target;
-    }
-
-    std::string GetName(unsigned index) const
-    {
-        if (target_ == nullptr || target_->at(index).empty())
-        {
-            return prefix_ + std::to_string(index);
-        }
-        return target_->at(index);
-    }
-
-private:
-    const std::vector<std::string>* target_ = nullptr;
-    char prefix_;
-};
-
-class ProblemSimplexeNommeConverter
-{
-public:
-    explicit ProblemSimplexeNommeConverter(
-      const std::string& solverName,
-      const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
-
-    MPSolver* Convert();
-
-private:
-    const std::string& solverName_;
-    const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe_;
-    Nomenclature variableNameManager_ = Nomenclature('x');
-    Nomenclature constraintNameManager_ = Nomenclature('c');
-
-    void CreateVariable(unsigned idxVar, MPSolver* solver, MPObjective* const objective) const;
-    void CopyVariables(MPSolver* solver) const;
-    void UpdateContraints(unsigned idxRow, MPSolver* solver) const;
-    void CopyRows(MPSolver* solver) const;
-    void CopyMatrix(const MPSolver* solver) const;
-};
-} // namespace Optimization
-} // namespace Antares

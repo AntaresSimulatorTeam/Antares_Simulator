@@ -173,11 +173,11 @@ bool ATSP::loadFromINIFile(const String& filename)
             }
             else
             {
-                AreaInfo* info = new AreaInfo();
-                info->name = section->name;
-                info->name.toLower();
-                info->enabled = true;
-                info->distribution = Data::XCast::dtBeta;
+                AreaInfo info;
+                info.name = section->name;
+                info.name.toLower();
+                info.enabled = true;
+                info.distribution = Data::XCast::dtBeta;
 
                 IniFile::Property* p = section->firstProperty;
                 for (; p; p = p->next)
@@ -187,30 +187,30 @@ bool ATSP::loadFromINIFile(const String& filename)
 
                     if (key == "file")
                     {
-                        info->filename = p->value;
+                        info.filename = p->value;
                         continue;
                     }
                     if (key == "data")
                     {
                         key = p->value;
                         key.toLower();
-                        info->rawData = (key == "raw");
+                        info.rawData = (key == "raw");
                         continue;
                     }
                     if (key == "distribution")
                     {
-                        info->distribution = Data::XCast::StringToDistribution(p->value);
-                        if (info->distribution == Data::XCast::dtNone)
+                        info.distribution = Data::XCast::StringToDistribution(p->value);
+                        if (info.distribution == Data::XCast::dtNone)
                         {
                             logs.error() << "invalid distribution for " << section->name
                                          << " ('beta' will be used)";
-                            info->distribution = Data::XCast::dtBeta;
+                            info.distribution = Data::XCast::dtBeta;
                         }
                         continue;
                     }
                 }
 
-                pArea.push_back(info);
+                pArea.push_back(std::move(info));
             }
         }
 

@@ -99,6 +99,10 @@ public:
     void ShortTermStorageInjection(unsigned int variable, const std::string& shortTermStorageName);
     void ShortTermStorageWithdrawal(unsigned int variable, const std::string& shortTermStorageName);
     void ShortTermStorageLevel(unsigned int variable, const std::string& shortTermStorageName);
+    void ShortTermStorageCostVariationInjection(unsigned int variable,
+                                                const std::string& shortTermStorageName);
+    void ShortTermStorageCostVariationWithdrawal(unsigned int variable,
+                                                 const std::string& shortTermStorageName);
     void HydProd(unsigned int variable);
     void HydProdDown(unsigned int variable);
     void HydProdUp(unsigned int variable);
@@ -158,6 +162,15 @@ public:
     void CsrAreaBalance(unsigned int constraint);
     void CsrBindingConstraintHour(unsigned int constraint, const std::string& name);
 
+    void ShortTermStorageCostVariation(const std::string& constraint_name,
+                                       unsigned int constraint,
+                                       const std::string& short_term_name);
+
+    void ShortTermStorageCumulation(const std::string& constraint_type,
+                                    unsigned int constraint,
+                                    const std::string& short_term_name,
+                                    const std::string& constraint_name);
+
 private:
     void nameWithTimeGranularity(unsigned int constraint,
                                  const std::string& name,
@@ -167,6 +180,11 @@ private:
 inline std::string TimeIdentifier(unsigned int timeStep, const std::string& timeStepType)
 {
     return timeStepType + "<" + std::to_string(timeStep) + ">";
+}
+
+inline std::string ShortTermStorageCumulationIdentifier(const std::string& name)
+{
+    return "Constraint<" + name + ">";
 }
 
 inline std::string LocationIdentifier(const std::string& location, const std::string& locationType)

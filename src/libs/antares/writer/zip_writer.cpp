@@ -157,7 +157,7 @@ void ZipWriter::addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& ent
     addEntryFromBufferHelper<Yuni::Clob>(entryPath, entryContent);
 }
 
-void ZipWriter::addEntryFromBuffer(const std::string& entryPath, std::string& entryContent)
+void ZipWriter::addEntryFromBuffer(const fs::path& entryPath, std::string& entryContent)
 {
     addEntryFromBufferHelper<std::string>(entryPath, entryContent);
 }

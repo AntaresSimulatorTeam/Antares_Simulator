@@ -34,8 +34,6 @@
 
 using namespace Antares;
 
-#define SEP IO::Separator
-
 #ifdef _MSC_VER
 #define SNPRINTF sprintf_s
 #else
@@ -139,14 +137,6 @@ const char* BindingConstraint::MathOperatorToCString(BindingConstraint::Operator
     return names[o];
 }
 
-BindingConstraint::~BindingConstraint()
-{
-#ifndef NDEBUG
-    pName = "<INVALID>";
-    pID = "<INVALID>";
-#endif
-}
-
 void BindingConstraint::name(const AnyString& newname)
 {
     pName = newname;
@@ -179,7 +169,7 @@ void BindingConstraint::weight(const AreaLink* lnk, double w)
 
 void BindingConstraint::weight(const ThermalCluster* cluster, double w)
 {
-    if (cluster && cluster->isActive())
+    if (cluster)
     {
         if (Utils::isZero(w))
         {
@@ -223,7 +213,7 @@ void BindingConstraint::offset(const AreaLink* lnk, int o)
 
 void BindingConstraint::offset(const ThermalCluster* cluster, int o)
 {
-    if (cluster && cluster->isActive())
+    if (cluster)
     {
         if (Utils::isZero(o))
         {
@@ -506,23 +496,6 @@ void BindingConstraint::buildFormula(Yuni::String& s) const
     }
 }
 
-uint64_t BindingConstraint::memoryUsage() const
-{
-    return sizeof(BindingConstraint)
-           // comments
-           + pComments.capacity()
-           // Values
-           + RHSTimeSeries().memoryUsage()
-           // Estimation
-           + pLinkWeights.size() * (sizeof(double) + 3 * sizeof(void*))
-           // Estimation
-           + pLinkOffsets.size() * (sizeof(int) + 3 * sizeof(void*))
-           // Estimation
-           + pClusterWeights.size() * (sizeof(double) + 3 * sizeof(void*))
-           // Estimation
-           + pClusterOffsets.size() * (sizeof(int) + 3 * sizeof(void*));
-}
-
 bool BindingConstraint::contains(const BindingConstraint* bc) const
 {
     return (this == bc);
@@ -628,9 +601,9 @@ int BindingConstraint::offset(const AreaLink* lnk) const
     return (i != pLinkOffsets.end()) ? i->second : 0;
 }
 
-int BindingConstraint::offset(const ThermalCluster* lnk) const
+int BindingConstraint::offset(const ThermalCluster* cluster) const
 {
-    auto i = pClusterOffsets.find(lnk);
+    auto i = pClusterOffsets.find(cluster);
     return (i != pClusterOffsets.end()) ? i->second : 0;
 }
 

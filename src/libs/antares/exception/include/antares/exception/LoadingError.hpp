@@ -64,6 +64,12 @@ public:
     NoAreas();
 };
 
+class Duplicates: public LoadingError
+{
+public:
+    Duplicates();
+};
+
 class InvalidFileName: public LoadingError
 {
 public:
@@ -98,6 +104,12 @@ class IncompatibleMILPOrtoolsSolver: public LoadingError
 {
 public:
     IncompatibleMILPOrtoolsSolver();
+};
+
+class UseMILPsolverWithWrongOptions: public LoadingError
+{
+public:
+    UseMILPsolverWithWrongOptions();
 };
 
 class IncompatibleOptRangeHydroPricing: public LoadingError
@@ -137,10 +149,16 @@ public:
                                              const std::string& specificParameters);
 };
 
+class IncompatibleLinearSolverParameters: public LoadingError
+{
+public:
+    IncompatibleLinearSolverParameters();
+};
+
 class InvalidStudy: public LoadingError
 {
 public:
-    explicit InvalidStudy(const Yuni::String& study);
+    explicit InvalidStudy(const std::string& study);
 };
 
 class NoStudyProvided: public LoadingError

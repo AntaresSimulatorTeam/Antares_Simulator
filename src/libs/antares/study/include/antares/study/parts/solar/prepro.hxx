@@ -23,11 +23,6 @@
 
 namespace Antares::Data::Solar
 {
-inline uint64_t Prepro::memoryUsage() const
-{
-    return xcast.memoryUsage();
-}
-
 inline bool Prepro::forceReload(bool reload) const
 {
     return xcast.forceReload(reload);

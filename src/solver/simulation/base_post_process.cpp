@@ -36,33 +36,35 @@ basePostProcessCommand::basePostProcessCommand(PROBLEME_HEBDO* problemeHebdo):
 
 interfacePostProcessList::interfacePostProcessList(PROBLEME_HEBDO* problemesHebdo, uint numSpace):
     problemeHebdo_(problemesHebdo),
-    thread_number_(numSpace)
+    numSpace_(numSpace)
 {
 }
 
 std::unique_ptr<interfacePostProcessList> interfacePostProcessList::create(
   AdqPatchParams& adqPatchParams,
   PROBLEME_HEBDO* problemeHebdo,
-  uint thread_number,
+  uint numSpace,
   AreaList& areas,
   SheddingPolicy sheddingPolicy,
   SimplexOptimization splxOptimization,
-  Calendar& calendar)
+  Calendar& calendar,
+  const OptimizationOptions& solverOptions)
 {
     if (adqPatchParams.enabled)
     {
         return std::make_unique<AdqPatchPostProcessList>(adqPatchParams,
                                                          problemeHebdo,
-                                                         thread_number,
+                                                         numSpace,
                                                          areas,
                                                          sheddingPolicy,
                                                          splxOptimization,
-                                                         calendar);
+                                                         calendar,
+                                                         solverOptions);
     }
     else
     {
         return std::make_unique<OptPostProcessList>(problemeHebdo,
-                                                    thread_number,
+                                                    numSpace,
                                                     areas,
                                                     sheddingPolicy,
                                                     splxOptimization,
