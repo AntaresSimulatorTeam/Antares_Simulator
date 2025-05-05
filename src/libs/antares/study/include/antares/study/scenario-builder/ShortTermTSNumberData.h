@@ -43,12 +43,10 @@ public:
 
     void setTSnumber(const std::string& area_name,
                      const std::string& cluster_name,
-                     const std::string& constraintName,
                      unsigned year,
                      unsigned value);
     unsigned get_value(const std::string& area_name,
                        const std::string& cluster_name,
-                       const std::string& constraintName,
                        unsigned year) const;
 
 private:
@@ -56,7 +54,6 @@ private:
     {
         std::string area_name;
         std::string cluster_name;
-        std::string constraint_name;
         // unsigned year;
         bool operator==(const key&) const = default;
     };
@@ -68,7 +65,6 @@ private:
             std::size_t seed = 0;
             boost::hash_combine(seed, k.area_name);
             boost::hash_combine(seed, k.cluster_name);
-            boost::hash_combine(seed, k.constraint_name);
             // boost::hash_combine(seed, k.year);
             return seed;
         }

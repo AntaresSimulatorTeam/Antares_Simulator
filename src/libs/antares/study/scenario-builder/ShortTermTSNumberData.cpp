@@ -33,34 +33,57 @@ uint ShortTermTSNumberData::get_tsGenCount(const Study& study) const
     const bool tsGenSt = (0 != (parameters.timeSeriesToGenerate & timeSeriesShortTermStorage));
     return tsGenSt ? parameters.nbTimeSeriesShortTermStorage : 0u;
 }
+static bool ApplyToAdditionalConstraintsRhs(
+
+  const Antares::Data::Area* area,
+  const std::string& cluster_id,
+  ShortTermStorage::AdditionalConstraints& additionalConstraints,
+  const Matrix<uint32_t>& col,
+  uint tsGenMax)
+{
+    // Errors
+    uint errors = 0;
+    CString<512, false> logprefix;
+    logprefix.clear() << "Short Term Storage: Area '" << area->name << "', cluster '" << cluster_id
+                      << "', constraint '" << additionalConstraints.name << "' :";
+
+    return ApplyToMatrix(errors, logprefix, additionalConstraints.series(), col[0], tsGenMax);
+}
+
+static bool ApplyToClusterInflows(const Antares::Data::Area* area,
+                                  ShortTermStorage::STStorageCluster& cluster,
+                                  const Matrix<uint32_t>& col,
+                                  uint tsGenMax)
+{
+    // Errors
+    uint errors = 0;
+    CString<512, false> logprefix;
+    logprefix.clear() << "Short Term Storage: Area '" << area->name << "', cluster '" << cluster.id
+                      << "' inflows:";
+    return ApplyToMatrix(errors, logprefix, cluster.series->inflows.series, col[0], tsGenMax);
+}
 
 bool ShortTermTSNumberData::apply(Study& study)
 {
     bool ret = true;
-    CString<512, false> logprefix;
-    // Errors
-    uint errors = 0;
-
+    auto tsGenMax = get_tsGenCount(study);
     for (const auto& area: study.areas | std::views::values)
     {
-        for (const auto& cluster: area->shortTermStorage.storagesByIndex)
+        for (auto& cluster: area->shortTermStorage.storagesByIndex)
         {
-            for (const auto& additionalConstraints: cluster.additionalConstraints)
+            Matrix<uint32_t>& mapped = rules_.at(
+              ShortTermTSNumberData::key{area->id.c_str(), cluster.id});
+            // const MatrixType::ColumnType& col = mapped[0];
+            ret = ApplyToClusterInflows(area, cluster, mapped, tsGenMax) && ret;
+            for (auto& additionalConstraints: cluster.additionalConstraints)
             {
                 if (additionalConstraints.enabled)
                 {
-                    logprefix.clear()
-                      << "Short Term Storage: Area '" << area->name << "', cluster '" << cluster.id
-                      << "', constraint '" << additionalConstraints.name << "' :";
-                    auto mapped = rules_.at(ShortTermTSNumberData::key{area->id.c_str(),
-                                                                       cluster.id,
-                                                                       additionalConstraints.name});
-                    const MatrixType::ColumnType& col = mapped[0];
-                    ret = ApplyToMatrix(errors,
-                                        logprefix,
-                                        additionalConstraints.series(),
-                                        col,
-                                        get_tsGenCount(study))
+                    ret = ApplyToAdditionalConstraintsRhs(area,
+                                                          cluster.id,
+                                                          additionalConstraints,
+                                                          mapped,
+                                                          tsGenMax)
                           && ret;
                 }
             }
@@ -71,12 +94,10 @@ bool ShortTermTSNumberData::apply(Study& study)
 
 void ShortTermTSNumberData::setTSnumber(const std::string& area_name,
                                         const std::string& cluster_name,
-                                        const std::string& constraintName,
                                         unsigned year,
                                         unsigned value)
 {
-    if (auto& ts_numbers = rules_.at(
-          ShortTermTSNumberData::key{area_name, cluster_name, constraintName});
+    if (auto& ts_numbers = rules_.at(ShortTermTSNumberData::key{area_name, cluster_name});
         year < ts_numbers.height)
     {
         ts_numbers[0][year] = value;
@@ -85,11 +106,10 @@ void ShortTermTSNumberData::setTSnumber(const std::string& area_name,
 
 unsigned ShortTermTSNumberData::get_value(const std::string& area_name,
                                           const std::string& cluster_name,
-                                          const std::string& constraintName,
                                           unsigned year) const
 {
     // TODO check
-    return rules_.at(ShortTermTSNumberData::key{area_name, cluster_name, constraintName})[0][year];
+    return rules_.at(ShortTermTSNumberData::key{area_name, cluster_name})[0][year];
 }
 
 bool ShortTermTSNumberData::reset(const Study& study)
@@ -99,13 +119,8 @@ bool ShortTermTSNumberData::reset(const Study& study)
     {
         for (const auto& cluster: area->shortTermStorage.storagesByIndex)
         {
-            for (const auto& additionalConstraints: cluster.additionalConstraints)
-            {
-                auto& ts_numbers = rules_[ShortTermTSNumberData::key{area->id.c_str(),
-                                                                     cluster.id,
-                                                                     additionalConstraints.name}];
-                ts_numbers.reset(1, nbYears);
-            }
+            auto& ts_numbers = rules_[ShortTermTSNumberData::key{area->id.c_str(), cluster.id}];
+            ts_numbers.reset(1, nbYears);
         }
     }
     return true;

@@ -744,12 +744,10 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_ValidRhs)
     bool result = storageInput.loadAdditionalConstraints(testPath);
 
     BOOST_CHECK_EQUAL(result, true);
-    BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints[0].rhs.size(),
-                      HOURS_PER_YEAR);
-    BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints[0].rhs[0], 0.0);
-    BOOST_CHECK_EQUAL(
-      storageInput.storagesByIndex[0].additionalConstraints[0].rhs[HOURS_PER_YEAR - 1],
-      HOURS_PER_YEAR - 1);
+    const auto& constraint1Rhs = storageInput.storagesByIndex[0].additionalConstraints[0].series();
+    BOOST_CHECK_EQUAL(constraint1Rhs.timeSeries.height, HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(constraint1Rhs.getCoefficient(0, 0), 0.0);
+    BOOST_CHECK_EQUAL(constraint1Rhs.getCoefficient(0, HOURS_PER_YEAR - 1), HOURS_PER_YEAR - 1);
 
     std::filesystem::remove_all(testPath);
 }
@@ -795,9 +793,11 @@ BOOST_AUTO_TEST_CASE(Load2ConstraintsFromIniFile)
     BOOST_CHECK_EQUAL(constraint1.operatorType, "less");
     BOOST_CHECK_EQUAL(constraint1.variable, "injection");
     BOOST_CHECK_EQUAL(constraint1.cluster_id, cluster.id);
-    BOOST_CHECK_EQUAL(constraint1.rhs.size(), HOURS_PER_YEAR);
-    BOOST_CHECK_EQUAL(constraint1.rhs[0], 0.0);
-    BOOST_CHECK_EQUAL(constraint1.rhs[HOURS_PER_YEAR - 1], HOURS_PER_YEAR - 1);
+
+    const auto& constraint1Rhs = constraint1.series();
+    BOOST_CHECK_EQUAL(constraint1Rhs.timeSeries.height, HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(constraint1Rhs.getCoefficient(0, 0), 0.0);
+    BOOST_CHECK_EQUAL(constraint1Rhs.getCoefficient(0, HOURS_PER_YEAR - 1), HOURS_PER_YEAR - 1);
 
     //------- constraint2 ----------
 
@@ -807,9 +807,10 @@ BOOST_AUTO_TEST_CASE(Load2ConstraintsFromIniFile)
     BOOST_CHECK_EQUAL(constraint2.variable, "withdrawal");
     BOOST_CHECK_EQUAL(constraint2.cluster_id, cluster.id);
 
-    BOOST_CHECK_EQUAL(constraint2.rhs.size(), HOURS_PER_YEAR);
-    BOOST_CHECK_EQUAL(constraint2.rhs[0], 0.0);
-    BOOST_CHECK_EQUAL(constraint2.rhs[HOURS_PER_YEAR - 1], 0.0);
+    const auto& constraint2Rhs = constraint2.series();
+    BOOST_CHECK_EQUAL(constraint2Rhs.timeSeries.height, HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(constraint2Rhs.getCoefficient(0, 0), 0.0);
+    BOOST_CHECK_EQUAL(constraint2Rhs.getCoefficient(0, HOURS_PER_YEAR - 1), HOURS_PER_YEAR - 1);
 
     std::filesystem::remove_all(testPath);
 }
@@ -835,9 +836,9 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MissingRhsFile)
     bool result = storageInput.loadAdditionalConstraints(testPath);
 
     BOOST_CHECK_EQUAL(result, true);
-    BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints[0].rhs.size(),
-                      HOURS_PER_YEAR);
-    BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints[0].rhs[0], 0.0);
+    const auto& constraintRhs = storageInput.storagesByIndex[0].additionalConstraints[0].series();
+    BOOST_CHECK_EQUAL(constraintRhs.timeSeries.height, HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(constraintRhs.getCoefficient(0, 0), 0.0);
 
     std::filesystem::remove_all(testPath);
 }
@@ -978,12 +979,13 @@ BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinationsFromFile,
     // Check variable, operator type, and rhs values
     BOOST_CHECK_EQUAL(loadedConstraint.variable, variable);
     BOOST_CHECK_EQUAL(loadedConstraint.operatorType, op);
-    BOOST_REQUIRE_EQUAL(loadedConstraint.rhs.size(), HOURS_PER_YEAR);
+    const auto& rhs = loadedConstraint.series();
+    BOOST_REQUIRE_EQUAL(rhs.timeSeries.height, HOURS_PER_YEAR);
 
     unsigned int i = 0;
     do
     {
-        BOOST_CHECK_CLOSE(loadedConstraint.rhs[i], i * 1.0, 0.001);
+        BOOST_CHECK_CLOSE(rhs.getCoefficient(0, i), i * 1.0, 0.001);
         // Check rhs values within a tolerance
 
         i += HOURS_PER_YEAR / 5;

@@ -142,13 +142,7 @@ static bool readRHS(AdditionalConstraints& additionalConstraints, const fs::path
 {
     // TODO
     //  bool averageTs = (study.usedByTheSolver && study.parameters.derated);
-    additionalConstraints.series().loadFromFile(rhsPath, /*.average =*/false);
-    const auto ret = loadFile(rhsPath, additionalConstraints.rhs);
-    if (ret)
-    {
-        fillIfEmpty(additionalConstraints.rhs, 0.0);
-    }
-    return ret;
+    return additionalConstraints.series().loadFromFile(rhsPath, /*.average =*/false);
 }
 
 bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
@@ -277,10 +271,11 @@ bool STStorageInput::saveDataSeriesToFolder(const std::string& folder) const
                                { return storage.saveSeries(folder + SEP + storage.id); });
 }
 
-void STStorageInput::resizeAdditionalConstraintRhsTimeseriesNumbers(unsigned int nbYears)
+void STStorageInput::resizeTimeseriesNumbers(unsigned int nbYears)
 {
     for (auto& cluster: storagesByIndex)
     {
+        cluster.series->inflows.series.timeseriesNumbers.reset(nbYears);
         for (auto& additionalConstraint: cluster.additionalConstraints)
         {
             additionalConstraint.series().timeseriesNumbers.reset(nbYears);

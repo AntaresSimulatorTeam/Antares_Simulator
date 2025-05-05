@@ -377,9 +377,7 @@ bool Rules::readBindingConstraints(const AreaName::Vector& splitKey, const Strin
     return true;
 }
 
-ShortTermStorage::STStorageCluster* Rules::getSTStorageCluster(
-  Area* area,
-  const std::string& stStorageClusterName)
+bool Rules::IsSTStorageClusterExists(Area* area, const std::string& stStorageClusterName)
 {
     auto stStorageCluster = std::ranges::find_if(area->shortTermStorage.storagesByIndex,
                                                  [&stStorageClusterName](
@@ -390,27 +388,12 @@ ShortTermStorage::STStorageCluster* Rules::getSTStorageCluster(
         logs.warning() << "[scenario-builder] In area '" << area->name
                        << "' the short-term storage cluster '" << stStorageClusterName
                        << "' does not exist";
+        return false;
     }
 
-    return &*stStorageCluster;
+    return true;
 }
 
-ShortTermStorage::AdditionalConstraints* Rules::getAdditionalConstraint(
-  std::vector<ShortTermStorage::AdditionalConstraints>& additionalConstraints,
-  const std::string& additionalConstraintName)
-{
-    auto additionalConstraint = std::ranges::find_if(
-      additionalConstraints,
-      [&additionalConstraintName](const ShortTermStorage::AdditionalConstraints& addConstr)
-      { return addConstr.name == additionalConstraintName; });
-
-    if (additionalConstraint == additionalConstraints.end())
-    {
-        logs.warning() << "[scenario-builder] the short-term storage constraint '"
-                       << additionalConstraintName << "' does not exist";
-    }
-    return &*additionalConstraint;
-}
 
 bool Rules::readShortTermStorage(const AreaName::Vector& splitKey,
                                  const String& value,
@@ -424,18 +407,14 @@ bool Rules::readShortTermStorage(const AreaName::Vector& splitKey,
         return false;
     }
     const std::string stStorageClusterName = splitKey[2];
-    ShortTermStorage::STStorageCluster* stStorageCluster = getSTStorageCluster(
-      area,
-      stStorageClusterName);
-    const std::string additionalConstraintName = splitKey[3];
-    ShortTermStorage::AdditionalConstraints* additionalConstraints = getAdditionalConstraint(
-      stStorageCluster->additionalConstraints,
-      additionalConstraintName);
+    if (!IsSTStorageClusterExists(area, stStorageClusterName))
+    {
+        return false;
+    }
     const uint year = splitKey[4].to<uint>();
     // TODO i can directly set the ts number here (additionalConstraints)
     shortTermStorage.setTSnumber(area->id.c_str(),
                                  stStorageClusterName,
-                                 additionalConstraintName,
                                  year,
                                  fromStringToTSnumber(value));
     // TODO set inflows ts number series

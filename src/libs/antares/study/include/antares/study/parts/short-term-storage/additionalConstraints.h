@@ -55,8 +55,6 @@ public:
     std::string variable;
     std::string operatorType;
     bool enabled = true;
-    std::vector<double> rhs;
-
     std::vector<SingleAdditionalConstraint> constraints;
 
     struct ValidateResult

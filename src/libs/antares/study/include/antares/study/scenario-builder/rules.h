@@ -150,11 +150,8 @@ private:
                               bool updaterMode);
     bool readLink(const AreaName::Vector& instrs, const String& value, bool updaterMode);
     bool readBindingConstraints(const AreaName::Vector& splitKey, const String& value);
-    static ShortTermStorage::STStorageCluster* getSTStorageCluster(Area* area,
-                                                                   const std::string& string);
-    static ShortTermStorage::AdditionalConstraints* getAdditionalConstraint(
-      std::vector<ShortTermStorage::AdditionalConstraints>& additionalConstraints,
-      const std::string& additionalConstraintName);
+    static bool IsSTStorageClusterExists(Area* area, const std::string& string);
+
     bool readShortTermStorage(const AreaName::Vector& splitKey,
                               const String& value,
                               bool updaterMode);
