@@ -33,6 +33,7 @@ uint ShortTermTSNumberData::get_tsGenCount(const Study& study) const
     const bool tsGenSt = (0 != (parameters.timeSeriesToGenerate & timeSeriesShortTermStorage));
     return tsGenSt ? parameters.nbTimeSeriesShortTermStorage : 0u;
 }
+
 static bool ApplyToAdditionalConstraintsRhs(
 
   const Antares::Data::Area* area,

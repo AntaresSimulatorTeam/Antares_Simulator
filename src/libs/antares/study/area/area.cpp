@@ -229,7 +229,7 @@ void Area::resetToDefaultValues()
     miscGen.reset(fhhMax, HOURS_PER_YEAR, true);
     // reserves
     reserves.reset(fhrMax, HOURS_PER_YEAR, true);
-// TODO
+    // TODO
     //  invalidate the whole area
     invalidateJIT = true;
 }

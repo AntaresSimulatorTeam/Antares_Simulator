@@ -394,7 +394,6 @@ bool Rules::IsSTStorageClusterExists(Area* area, const std::string& stStorageClu
     return true;
 }
 
-
 bool Rules::readShortTermStorage(const AreaName::Vector& splitKey,
                                  const String& value,
                                  bool updaterMode)
