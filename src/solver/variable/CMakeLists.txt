@@ -128,6 +128,7 @@ set(SRC_VARIABLE_ECONOMY
 		economy/lold.h
 		economy/loldCsr.h
 		economy/lolp.h
+		economy/nearPriceCap.h
 		economy/lolpCsr.h
 		economy/avail-dispatchable-generation.h
 		economy/dispatchable-generation-margin.h
