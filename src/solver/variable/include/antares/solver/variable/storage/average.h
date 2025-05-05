@@ -166,46 +166,6 @@ public:
 
 private:
     template<uint Size, class VCardT, int PrecisionT>
-    void InternalExportValues(SurveyResults& report, const double* array) const
-    {
-        assert(array);
-        assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
-
-        // Caption
-        report.captions[0][report.data.columnIndex] = report.variableCaption;
-        report.captions[1][report.data.columnIndex] = report.variableUnit;
-        report.captions[2][report.data.columnIndex] = (report.variableCaption == "LOLP") ? "values"
-                                                                                         : "EXP";
-        // Precision
-        report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<
-          VCardT::decimal>::Value();
-        // Non applicability
-        report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
-
-        // Values
-        switch (PrecisionT)
-        {
-        case Category::annual:
-        {
-            double& target = *(report.values[report.data.columnIndex]);
-            target = 0;
-            for (uint i = 0; i != avgdata.nbYearsCapacity; ++i)
-            {
-                target += array[i];
-            }
-            avgdata.allYears = target;
-            break;
-        }
-        default:
-            (void)::memcpy(report.values[report.data.columnIndex], array, sizeof(double) * Size);
-            break;
-        }
-
-        // Next column index
-        ++report.data.columnIndex;
-    }
-
-    template<uint Size, class VCardT, int PrecisionT>
     void InternalExportValues(SurveyResults& report, const HighPrecision* array) const
     {
         assert(array);

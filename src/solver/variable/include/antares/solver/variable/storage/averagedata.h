@@ -61,7 +61,7 @@ public:
     HighPrecision weekly[WEEKS_PER_YEAR];
     HighPrecision hourly[HOURS_PER_YEAR];
     HighPrecision daily[DAYS_PER_YEAR];
-    std::vector<double> year;
+    std::vector<HighPrecision> year;
     unsigned int nbYearsCapacity;
     mutable double allYears; // FIX MEEE - Remove the mutable as soon as possible
     std::vector<float> yearsWeight;
