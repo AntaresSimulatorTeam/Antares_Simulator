@@ -219,6 +219,18 @@ private:
             }
             break;
         }
+        case Category::annual:
+        {
+            double& target = *(report.values[report.data.columnIndex]);
+            target = 0;
+            for (uint i = 0; i != avgdata.nbYearsCapacity; ++i)
+            {
+                target += array[i].extract_double();
+            }
+            avgdata.allYears = target;
+            break;
+        }
+
         default:
             logs.warning() << "Category not found for variable: " << report.variableCaption;
             break;
