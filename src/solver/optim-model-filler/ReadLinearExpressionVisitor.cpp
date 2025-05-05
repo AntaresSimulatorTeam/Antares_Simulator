@@ -167,7 +167,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const PortField
     std::string fieldId = node->getFieldName();
 
     TimeDependentLinearExpression to_return(fillContext_);
-    for (const auto connexion_end: component_.connexionsViaPort(portId))
+    for (const auto connexion_end: component_.componentConnectionsViaPort(portId))
     {
         auto* component = connexion_end.component();
         auto* port = connexion_end.port();
