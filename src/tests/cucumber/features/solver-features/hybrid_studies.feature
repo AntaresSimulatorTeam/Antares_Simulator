@@ -22,13 +22,12 @@ Feature: hybrid (simulator+modeler) studies
     Then the simulation succeeds
     And the simulation takes less than 5 seconds
     # 100MW @ 0.3€/MW/h, for 1 week = 5040 €
-    #    And the annual system cost is 5040
-    #    And the optimal values of the variables are
-    #      | component | variable | timestep | value |
-    #      | gen1      | p        | 0-8735   | 100   |
+    # for now, modeler costs does not figure in system cost txt
+    And the annual system cost is 0
+    And in area "NODE", during year 1, loss of load lasts 0 hours
 
   @fast @short
-  Scenario: Legacy node with one legacy load (up to 5952 MW), and one generator component (max_p=6200) (168h simplex)
+  Scenario: Legacy node with one legacy load (up to 5952 MW) and wind, and one generator component (max_p=6200) (168h simplex)
     # copy of short test 002, with no legacy thermal cluster, replaced by one component
     Given the solver study path is "hybrid/3_6_1"
     When I run antares simulator
@@ -39,8 +38,8 @@ Feature: hybrid (simulator+modeler) studies
     And in area "AREA", during year 1, loss of load lasts 0 hours
 
   @fast @short
-  Scenario: Legacy node with one legacy load (up to 5952 MW), and one generator component (max_p=5900) (168h simplex)
-    # copy of previous case, with reduced max_p on generator
+  Scenario: Legacy node with one legacy load (up to 5952 MW) and wind, and one generator component (max_p=5900) (168h simplex)
+    # copy of previous case, with reduced max_p on generator => loss of load of 52MW on 1 hour
     Given the solver study path is "hybrid/3_6_2"
     When I run antares simulator
     Then the simulation succeeds
@@ -48,3 +47,15 @@ Feature: hybrid (simulator+modeler) studies
     # for now, modeler costs does not figure in system cost txt
     And the annual system cost is 520000
     And in area "AREA", during year 1, loss of load lasts 1 hours
+    And in area "AREA", during year 1, total unsupplied energy is 52 MWh
+
+  @fast @short
+  Scenario: Legacy node with one legacy thermal cluster, and one load component (constant load of 3000 MW)
+    Given the solver study path is "hybrid/3_6_3"
+    When I run antares simulator
+    Then the simulation succeeds
+    And the simulation takes less than 5 seconds
+    # for now, modeler costs does not figure in system cost txt
+    And the annual system cost is 17640000.0
+    And in area "AREA", during year 1, loss of load lasts 0 hours
+    And in area "AREA", during year 1, hourly production of "base" is always equal to 3000 MWh

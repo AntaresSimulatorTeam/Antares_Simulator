@@ -1,0 +1,94 @@
+[2025-05-05 13:58:17][solver][check] Antares Solver v9.2.0 (754538e-dirty)
+[2025-05-05 13:58:17][solver][infos]   :: built for 64-bit architectures, GNU/Linux, 20 cpu(s)
+[2025-05-05 13:58:17][solver][infos]   :: hostname = localhost
+[2025-05-05 13:58:17][solver][infos]   :: command: /home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/cmake-build-debug/solver/antares-solver -i /home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/tests/resources/hybrid/8_1 --quadratic-solver xpress --linear-solver xpress --named-mps-problems
+[2025-05-05 13:58:17][solver][infos]   :: log filename: /home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/tests/resources/hybrid/8_1/logs/solver-20250505-135817.log
+[2025-05-05 13:58:17][solver][infos] 
+[2025-05-05 13:58:17][solver][notic] Preparing Without electrolyser...
+[2025-05-05 13:58:17][solver][infos]   detected study version: 8.6
+[2025-05-05 13:58:17][solver][infos]   from `/home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/tests/resources/hybrid/8_1`
+[2025-05-05 13:58:17][solver][infos] 
+[2025-05-05 13:58:17][solver][warns] Parameter enable-first-step is deprecated, please remove it from the study
+[2025-05-05 13:58:17][solver][infos]   simulation mode: Economy
+[2025-05-05 13:58:17][solver][infos]   simplex optimization range: week
+[2025-05-05 13:58:17][solver][infos]   1 year in the user's playlist
+[2025-05-05 13:58:17][solver][infos] Aggregate renewables were chosen. Output will be disabled for renewable clusters.
+[2025-05-05 13:58:17][solver][infos]   :: enabling the 'year-by-year' mode
+[2025-05-05 13:58:17][solver][infos]   :: enabling the user playlist
+[2025-05-05 13:58:17][solver][infos]   :: enabling the custom build mode
+[2025-05-05 13:58:17][solver][infos]   :: ignoring export mps
+[2025-05-05 13:58:17][solver][infos]   :: ignoring adequacy patch
+[2025-05-05 13:58:17][solver][infos]   :: ignoring export structure
+[2025-05-05 13:58:17][solver][infos]   :: ignoring solution export
+[2025-05-05 13:58:17][solver][infos]   :: solver xpress is used for quadratic problem resolution
+[2025-05-05 13:58:17][solver][infos] Loading the list of areas...
+[2025-05-05 13:58:17][solver][infos]   Loading the area list from `/home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/tests/resources/hybrid/8_1/input/areas/list.txt`
+[2025-05-05 13:58:17][solver][infos]   2 areas found
+[2025-05-05 13:58:17][solver][infos] Loading global hydro data...
+[2025-05-05 13:58:17][solver][debug]   :: loading `/home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/tests/resources/hybrid/8_1/input/hydro/common/capacity/creditmodulations_west.txt`
+[2025-05-05 13:58:17][solver][debug]   :: loading `/home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/tests/resources/hybrid/8_1/input/hydro/common/capacity/reservoir_west.txt`
+[2025-05-05 13:58:17][solver][debug]   :: loading `/home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/tests/resources/hybrid/8_1/input/hydro/common/capacity/inflowPattern_west.txt`
+[2025-05-05 13:58:17][solver][debug]   :: loading `/home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/tests/resources/hybrid/8_1/input/hydro/common/capacity/creditmodulations_west-h2.txt`
+[2025-05-05 13:58:17][solver][debug]   :: loading `/home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/tests/resources/hybrid/8_1/input/hydro/common/capacity/reservoir_west-h2.txt`
+[2025-05-05 13:58:17][solver][debug]   :: loading `/home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/tests/resources/hybrid/8_1/input/hydro/common/capacity/inflowPattern_west-h2.txt`
+[2025-05-05 13:58:17][solver][infos] Loading thermal clusters...
+[2025-05-05 13:58:17][solver][infos] Loading thermal configuration for the area west
+[2025-05-05 13:58:17][solver][debug]   :: loading `/home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/tests/resources/hybrid/8_1/input/thermal/prepro/west/b/modulation.txt`
+[2025-05-05 13:58:17][solver][debug]   :: loading `/home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/tests/resources/hybrid/8_1/input/thermal/prepro/west/p/modulation.txt`
+[2025-05-05 13:58:17][solver][debug]   :: loading `/home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/tests/resources/hybrid/8_1/input/thermal/prepro/west/sb/modulation.txt`
+[2025-05-05 13:58:17][solver][infos] Loading thermal configuration for the area west-H2
+[2025-05-05 13:58:17][solver][debug]   :: loading `/home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/tests/resources/hybrid/8_1/input/thermal/prepro/west-h2/smr/modulation.txt`
+[2025-05-05 13:58:17][solver][infos] Loading short term storage clusters...
+[2025-05-05 13:58:17][solver][infos] Loading renewable configuration for the area west
+[2025-05-05 13:58:17][solver][infos] Loading renewable configuration for the area west-H2
+[2025-05-05 13:58:17][solver][infos] Loading the area 1/2: west
+[2025-05-05 13:58:17][solver][debug] Checking : Misc Gen: `west`
+[2025-05-05 13:58:17][solver][debug]   :: loading `/home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/tests/resources/hybrid/8_1/input/load/series/load_west.txt`
+[2025-05-05 13:58:17][solver][debug]   :: loading `/home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/tests/resources/hybrid/8_1/input/hydro/common/capacity/maxpower_west.txt`
+[2025-05-05 13:58:17][solver][debug]   :: loading `/home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/tests/resources/hybrid/8_1/input/wind/series/wind_west.txt`
+[2025-05-05 13:58:17][solver][debug]   :: loading `/home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/tests/resources/hybrid/8_1/input/thermal/prepro/west/b/data.txt`
+[2025-05-05 13:58:17][solver][debug]   :: loading `/home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/tests/resources/hybrid/8_1/input/thermal/prepro/west/p/data.txt`
+[2025-05-05 13:58:17][solver][debug]   :: loading `/home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/tests/resources/hybrid/8_1/input/thermal/prepro/west/sb/data.txt`
+[2025-05-05 13:58:17][solver][debug]   :: loading `/home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/tests/resources/hybrid/8_1/input/thermal/series/west/b/series.txt`
+[2025-05-05 13:58:18][solver][debug]   :: loading `/home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/tests/resources/hybrid/8_1/input/thermal/series/west/p/series.txt`
+[2025-05-05 13:58:18][solver][debug]   :: loading `/home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/tests/resources/hybrid/8_1/input/thermal/series/west/sb/series.txt`
+[2025-05-05 13:58:18][solver][infos] Loading the area 2/2: west-H2
+[2025-05-05 13:58:18][solver][debug]   :: loading `/home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/tests/resources/hybrid/8_1/input/reserves/west-h2.txt`
+[2025-05-05 13:58:18][solver][debug]   :: loading `/home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/tests/resources/hybrid/8_1/input/misc-gen/miscgen-west-h2.txt`
+[2025-05-05 13:58:18][solver][debug] Checking : Misc Gen: `west-h2`
+[2025-05-05 13:58:18][solver][debug]   :: loading `/home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/tests/resources/hybrid/8_1/input/load/series/load_west-h2.txt`
+[2025-05-05 13:58:18][solver][debug]   :: loading `/home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/tests/resources/hybrid/8_1/input/solar/series/solar_west-h2.txt`
+[2025-05-05 13:58:18][solver][debug]   :: loading `/home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/tests/resources/hybrid/8_1/input/hydro/common/capacity/maxpower_west-h2.txt`
+[2025-05-05 13:58:18][solver][debug]   :: loading `/home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/tests/resources/hybrid/8_1/input/wind/series/wind_west-h2.txt`
+[2025-05-05 13:58:18][solver][debug]   :: loading `/home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/tests/resources/hybrid/8_1/input/thermal/prepro/west-h2/smr/data.txt`
+[2025-05-05 13:58:18][solver][debug]   :: loading `/home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/tests/resources/hybrid/8_1/input/thermal/series/west-h2/smr/series.txt`
+[2025-05-05 13:58:18][solver][infos] Loading correlation matrices...
+[2025-05-05 13:58:18][solver][infos] 
+[2025-05-05 13:58:18][solver][infos] Loading constraints...
+[2025-05-05 13:58:18][solver][infos] No binding constraint found
+[2025-05-05 13:58:18][solver][infos] 
+[2025-05-05 13:58:18][solver][infos] Loading sets of areas...
+[2025-05-05 13:58:18][solver][debug]   > set :: All areas: applying 1 rules, got 2 items
+[2025-05-05 13:58:18][solver][infos]    found `all areas` (2 items)
+[2025-05-05 13:58:18][solver][infos] Stochastic TS stored in input parametrized. Disabling Store in input because study is not at latest version. This prevents writing data in unsupported format at the study version
+[2025-05-05 13:58:18][solver][infos]   Output folder : /home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/tests/resources/hybrid/8_1/output/20250505-1358eco
+[2025-05-05 13:58:18][solver][debug]   reset calendar, month : January, january 1rst : Monday, first weekday : Monday
+[2025-05-05 13:58:18][solver][debug]   reset calendar, month : January, january 1rst : Monday, first weekday : Monday
+[2025-05-05 13:58:18][solver][infos] Loading modeler files...
+[2025-05-05 13:58:18][solver][infos] Library loaded: andromede-v1-models-weo-hybrid
+[2025-05-05 13:58:18][solver][infos] Libraries loaded
+[2025-05-05 13:58:18][solver][error] Error while parsing the yaml file: system.yml
+[2025-05-05 13:58:18][solver][error] invalid node; first invalid key: "id"
+[2025-05-05 13:58:18][solver][infos] No modeler inputs were loaded
+[2025-05-05 13:58:18][solver][infos] Modeler inputs error: invalid node; first invalid key: "id"
+[2025-05-05 13:58:18][solver][infos] [statistics] disk: read: 41028 ko, written: 0 ko
+[2025-05-05 13:58:18][solver][infos] [statistics] network: read: 0 ko, written: 0 ko
+[2025-05-05 13:58:18][solver][infos]   Output folder : /home/mitripet/Projects/ANTARES/WS1/Antares_Simulator/src/tests/resources/hybrid/8_1/output/20250505-1358eco
+[2025-05-05 13:58:18][solver][infos] 
+[2025-05-05 13:58:18][solver][error] Found 2 errors and 1 warning: The simulation must stop.
+[2025-05-05 13:58:18][solver][infos] [UI] Quitting the solver gracefully
+[2025-05-05 13:58:18][solver][debug]   :: destroying area west
+[2025-05-05 13:58:18][solver][debug]   :: destroying area west-H2
+[2025-05-05 13:58:18][solver][debug] Releasing runtime data
+[2025-05-05 13:58:18][solver][fatal] The simulation must stop.
+[2025-05-05 13:58:18][solver][error] Aborting now. See logs for more details
