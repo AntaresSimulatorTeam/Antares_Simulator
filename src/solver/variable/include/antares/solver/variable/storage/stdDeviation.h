@@ -69,9 +69,9 @@ protected:
     void initializeFromStudy(Antares::Data::Study& study)
     {
         stdDeviationHourly.assign(HOURS_PER_YEAR, 0);
-        stdDeviationDaily.assign(HOURS_PER_YEAR, 0);
-        stdDeviationWeekly.assign(HOURS_PER_YEAR, 0);
-        stdDeviationMonthly.assign(HOURS_PER_YEAR, 0);
+        stdDeviationDaily.assign(DAYS_PER_YEAR, 0);
+        stdDeviationWeekly.assign(WEEKS_PER_YEAR, 0);
+        stdDeviationMonthly.assign(MONTHS_PER_YEAR, 0);
         // Next
         NextType::initializeFromStudy(study);
 
@@ -83,9 +83,9 @@ protected:
     {
         // Reset
         stdDeviationHourly.assign(HOURS_PER_YEAR, 0);
-        stdDeviationDaily.assign(HOURS_PER_YEAR, 0);
-        stdDeviationWeekly.assign(HOURS_PER_YEAR, 0);
-        stdDeviationMonthly.assign(HOURS_PER_YEAR, 0);
+        stdDeviationDaily.assign(DAYS_PER_YEAR, 0);
+        stdDeviationWeekly.assign(WEEKS_PER_YEAR, 0);
+        stdDeviationMonthly.assign(MONTHS_PER_YEAR, 0);
         stdDeviationYear = 0.;
         // Next
         NextType::reset();
