@@ -182,8 +182,7 @@ MPSolver* convertToMPSolver(const PROBLEME_SIMPLEXE_NOMME& pb,
                               variableDictionary);
 
         // Add compatibility filler that connects components to areas
-        // !! Must be the last one in the list, because it uses constraints & objectives defined
-        // by the other fillers !!
+        // Must be the last one, because it uses constraints defined by the other fillers !!
         fillersCollection.push_back(&compatibilityFiller);
     }
 
@@ -194,7 +193,6 @@ MPSolver* convertToMPSolver(const PROBLEME_SIMPLEXE_NOMME& pb,
     // this limitation must be lifted later,
     // when appropriate solvers (e.g with warm start) is integrated.
     linearProblemBuilder.build(ortoolsProblem, *problemeHebdo->linear_problem_data_, fillCtx);
-    ortoolsProblem.getMpSolver()->Write("/home/mitripet/prob.lp");
 
     return ortoolsProblem.getMpSolver();
 }

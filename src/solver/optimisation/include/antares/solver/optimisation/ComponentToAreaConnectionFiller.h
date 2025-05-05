@@ -52,10 +52,6 @@ private:
     std::map<std::pair<std::string, unsigned int>, std::string>
       balanceConstraintPerAreaAndTimestamp_;
     unsigned int nTimestampsInProblem_;
-    std::map<std::pair<std::string, unsigned int>,
-             std::vector<Optimisation::LinearProblemApi::IMipVariable*>>
-      areaVariables_;
-    std::map<Optimisation::LinearProblemApi::IMipVariable*, double> areaVariablesLinearObjective_;
     void parseConstraintIds(const PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
     Optimisation::LinearProblemApi::IMipConstraint* getBalanceConstraint(
       Optimisation::LinearProblemApi::ILinearProblem& pb,

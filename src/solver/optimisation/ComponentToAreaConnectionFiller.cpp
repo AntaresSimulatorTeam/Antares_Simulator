@@ -111,21 +111,6 @@ IMipConstraint* ComponentToAreaConnectionFiller::getBalanceConstraint(ILinearPro
                              + std::to_string(ts));
 }
 
-void ComponentToAreaConnectionFiller::addToAreaVariablesMap(const std::string& areaId,
-                                                            std::add_const<const unsigned>::type ts,
-                                                            IMipVariable* var)
-{
-    auto areaTsKey = std::make_pair(areaId, ts);
-    if (!areaVariables_.contains(areaTsKey))
-    {
-        areaVariables_[areaTsKey] = {var};
-    }
-    else
-    {
-        areaVariables_.at(areaTsKey).emplace_back(var);
-    }
-}
-
 void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
   ILinearProblem& pb,
   ILinearProblemData& data,
@@ -172,19 +157,7 @@ void ComponentToAreaConnectionFiller::addObjective(ILinearProblem& pb,
                                                    ILinearProblemData& data,
                                                    FillContext& ctx)
 {
-    // nothing to do but fetch & stor linear objectives of variables, for later use
-    for (auto varVector: areaVariables_ | std::ranges::views::values)
-    {
-        for (auto var: varVector)
-        {
-            areaVariablesLinearObjective_[var] = pb.getObjectiveCoefficient(var);
-        }
-    }
+    // nothing to do
 }
-
-// void ComponentToAreaConnectionFiller::ExportLegacyAreaResults(PROBLEME_HEBDO* probleme,
-//                                                               IMipSolution* mipSolution)
-// {
-// }
 
 } // namespace Antares::Optimization
