@@ -410,13 +410,11 @@ bool Rules::readShortTermStorage(const AreaName::Vector& splitKey,
     {
         return false;
     }
-    const uint year = splitKey[4].to<uint>();
-    // TODO i can directly set the ts number here (additionalConstraints)
+    const uint year = splitKey[3].to<uint>();
     shortTermStorage.setTSnumber(area->id.c_str(),
                                  stStorageClusterName,
                                  year,
                                  fromStringToTSnumber(value));
-    // TODO set inflows ts number series
     return true;
 }
 
