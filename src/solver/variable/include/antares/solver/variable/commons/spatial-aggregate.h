@@ -474,10 +474,10 @@ private:
 
     void internalSpatialAggregateForParallelYears(unsigned int year, unsigned int numSpace)
     {
-            // Merge all those values with the global results
-            VariableAccessorType::ComputeSummary(pValuesForTheCurrentYear[numSpace],
-                                                 AncestorType::pResults,
-                                                 year);
+        // Merge all those values with the global results
+        VariableAccessorType::ComputeSummary(pValuesForTheCurrentYear[numSpace],
+                                             AncestorType::pResults,
+                                             year);
     }
 
 private:
