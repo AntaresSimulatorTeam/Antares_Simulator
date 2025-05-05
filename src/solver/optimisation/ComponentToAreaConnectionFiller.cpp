@@ -133,7 +133,6 @@ void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
         {
             auto var = modelerVariableDictionary_[varKey];
             areaBalanceConstraint->setCoefficient(var, coef);
-            addToAreaVariablesMap(areaId, ts, var);
         }
         areaBalanceConstraint->setBounds(areaBalanceConstraint->getLb() - expression.offset(),
                                          areaBalanceConstraint->getUb() - expression.offset());

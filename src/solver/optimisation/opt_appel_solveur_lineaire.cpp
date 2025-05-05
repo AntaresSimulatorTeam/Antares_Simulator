@@ -414,12 +414,9 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
 
         double* pt;
         double optimizationCost = simplexResult.objectiveValue;
-        double modelerOptimizationCost = optimizationCost;
 
         for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; i++)
         {
-            modelerOptimizationCost -= ProblemeAResoudre->CoutLineaire[i] * ProblemeAResoudre->X[i];
-
             pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i];
             if (pt != nullptr)
             {

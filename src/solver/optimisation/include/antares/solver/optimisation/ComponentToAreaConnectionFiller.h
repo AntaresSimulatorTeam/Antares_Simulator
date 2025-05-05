@@ -57,9 +57,6 @@ private:
       Optimisation::LinearProblemApi::ILinearProblem& pb,
       const std::string& areaId,
       unsigned ts) const;
-    void addToAreaVariablesMap(const std::string& areaId,
-                               std::add_const<const unsigned>::type ts,
-                               Optimisation::LinearProblemApi::IMipVariable* var);
     void addComponentPortContributionToArea(
       Optimisation::LinearProblemApi::ILinearProblem& pb,
       Optimisation::LinearProblemApi::ILinearProblemData& data,

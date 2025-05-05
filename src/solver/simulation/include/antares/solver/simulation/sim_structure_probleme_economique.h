@@ -350,13 +350,6 @@ struct PRODUCTION_THERMIQUE_OPTIMALE
     std::vector<double> NombreDeGroupesQuiTombentEnPanneDuPalier;
 };
 
-struct MODELER_VARIABLES
-{
-    std::vector<std::string> VariableName;
-    std::vector<double> VariableValue;
-    std::vector<double> VariableLinearObjectiveCoefficient;
-};
-
 struct RESULTATS_HORAIRES
 {
     std::vector<double> ValeursHorairesDeDefaillancePositive;
@@ -378,7 +371,6 @@ struct RESULTATS_HORAIRES
     std::vector<double> CoutsMarginauxHoraires;
     std::vector<double> CoutsMarginauxHorairesCSR;
     std::vector<PRODUCTION_THERMIQUE_OPTIMALE> ProductionThermique; // index is pdtHebdo
-    std::vector<MODELER_VARIABLES> ModelerVariables; // index is pdtHebdo
 
     std::vector<::ShortTermStorage::RESULTS> ShortTermStorage;
 };

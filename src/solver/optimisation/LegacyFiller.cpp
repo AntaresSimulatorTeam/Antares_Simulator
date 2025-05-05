@@ -21,8 +21,6 @@
 
 #include "antares/solver/optimisation/LegacyFiller.h"
 
-#include <iostream>
-
 using namespace Antares::Optimisation::LinearProblemApi;
 
 namespace Antares::Optimization
