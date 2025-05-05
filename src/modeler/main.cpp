@@ -163,7 +163,7 @@ int main(int argc, const char** argv)
                         << std::endl;
                 for (const auto& [name, value]: solution->getOptimalValues())
                 {
-                    sol_out << std::setprecision(15) << name << " " << value << std::endl;
+                    sol_out << name << " " << value << std::endl;
                 }
             }
             break;
