@@ -161,16 +161,6 @@ protected:
         NextType::template buildDigest<VCardT>(report, digestLevel, dataLevel);
     }
 
-    template<template<class, int> class DecoratorT>
-    Antares::Memory::Stored<double>::ConstReturnType hourlyValuesForSpatialAggregate() const
-    {
-        // if (Yuni::Static::Type::StrictlyEqual<DecoratorT<Empty, 0>, Average<Empty, 0>>::Yes)
-        // {
-        //     return avgdata.hourly;
-        // }
-        return NextType::template hourlyValuesForSpatialAggregate<DecoratorT>();
-    }
-
 public:
     AverageData avgdata;
 

@@ -174,17 +174,6 @@ protected:
                                                         precision);
     }
 
-    template<template<class, int> class DecoratorT>
-    Antares::Memory::Stored<double>::ConstReturnType hourlyValuesForSpatialAggregate() const
-    {
-        /* if (Yuni::Static::Type::StrictlyEqual<DecoratorT<Empty, 0>, StdDeviation<Empty, 0>>::Yes)
-         */
-        /* { */
-        /*     return stdDeviationHourly.data(); */
-        /* } */
-        return NextType::template hourlyValuesForSpatialAggregate<DecoratorT>();
-    }
-
 public:
     std::vector<HighPrecision> stdDeviationMonthly;
     std::vector<HighPrecision> stdDeviationWeekly;
