@@ -1,0 +1,21 @@
+system:
+  id: sys_hybrid_3_6_3
+  description: >
+    A hybrid system with a legacy thermal cluster and a load connected to a passive area "AREA"
+
+  model-libraries: lib_hybrid_0
+
+  components:
+  - id: load1
+    model: lib_hybrid_0.load
+    scenario-group: sg
+    parameters:
+    - id: load_value
+      time-dependent: false
+      scenario-dependent: false
+      value: 3000
+
+  area-connections:
+    - component: load1
+      port: consumption
+      area: AREA
