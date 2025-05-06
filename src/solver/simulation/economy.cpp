@@ -80,9 +80,7 @@ bool Economy::simulationBegin()
                                             nbHoursInAWeek,
                                             numSpace);
 
-            auto options = createOptimizationOptions(study);
-
-            weeklyOptProblems_.emplace_back(options,
+            weeklyOptProblems_.emplace_back(study.parameters.optOptions,
                                             &pProblemesHebdo[numSpace],
                                             resultWriter,
                                             simulationObserver_.get());

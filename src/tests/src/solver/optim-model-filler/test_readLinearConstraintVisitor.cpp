@@ -31,6 +31,7 @@
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 
 using namespace Antares::Expressions;
+using namespace Antares::ModelerStudy;
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::Expressions::Visitors;
 
@@ -42,8 +43,13 @@ struct MyDummyFixture: Registry<Node>
 {
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
     EvaluationContext evaluationContext{{}, {}, data};
-    std::string componentId = "compo";
-    ReadLinearConstraintVisitor visitor{evaluationContext, {0, 0}, componentId};
+    SystemModel::Model m;
+    SystemModel::ComponentBuilder componentBuilder;
+    const SystemModel::Component component = componentBuilder.withId("compo")
+                                               .withModel(&m)
+                                               .withScenarioGroupId("group")
+                                               .build();
+    ReadLinearConstraintVisitor visitor{evaluationContext, {0, 0}, component};
 };
 
 BOOST_FIXTURE_TEST_CASE(test_name, MyDummyFixture)
@@ -69,13 +75,13 @@ BOOST_FIXTURE_TEST_CASE(test_visit_equal_node, MyDummyFixture)
                                 create<NegationNode>(create<ParameterNode>("param1")));
     Node* node = create<EqualNode>(lhs, rhs);
     EvaluationContext context({build_context_parameter_with("param1", "9.")}, {}, data);
-    ReadLinearConstraintVisitor visitor(context, {0, 0}, componentId);
+    ReadLinearConstraintVisitor visitor(context, {0, 0}, component);
     auto constraint = visitor.dispatch(node)[0];
     BOOST_CHECK_EQUAL(constraint.lb, -14.);
     BOOST_CHECK_EQUAL(constraint.ub, -14.);
     BOOST_CHECK_EQUAL(constraint.coef_per_var.size(), 2);
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(FullKey(componentId, "var1", 0, 0)), -2);
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(FullKey(componentId, "var2", 0, 0)), -1);
+    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(FullKey(component.Id(), "var1", 0, 0)), -2);
+    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(FullKey(component.Id(), "var2", 0, 0)), -1);
 }
 
 BOOST_FIXTURE_TEST_CASE(test_visit_less_than_or_equal_node, MyDummyFixture)
@@ -88,14 +94,14 @@ BOOST_FIXTURE_TEST_CASE(test_visit_less_than_or_equal_node, MyDummyFixture)
                                 create<NegationNode>(create<ParameterNode>("param1")));
     Node* node = create<LessThanOrEqualNode>(lhs, rhs);
     EvaluationContext context({build_context_parameter_with("param1", "10.")}, {}, data);
-    ReadLinearConstraintVisitor visitor(context, {0, 0}, componentId);
+    ReadLinearConstraintVisitor visitor(context, {0, 0}, component);
     auto constraint = visitor.dispatch(node)[0];
     BOOST_CHECK_EQUAL(constraint.lb, -std::numeric_limits<double>::infinity());
     BOOST_CHECK_EQUAL(constraint.ub, -1.);
     BOOST_CHECK_EQUAL(constraint.coef_per_var.size(), 3);
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(FullKey(componentId, "var1", 0, 0)), -1);
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(FullKey(componentId, "var2", 0, 0)), -5);
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(FullKey(componentId, "var3", 0, 0)), 1);
+    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(FullKey(component.Id(), "var1", 0, 0)), -1);
+    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(FullKey(component.Id(), "var2", 0, 0)), -5);
+    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(FullKey(component.Id(), "var3", 0, 0)), 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(test_visit_greater_than_or_equal_node, MyDummyFixture)
@@ -108,13 +114,13 @@ BOOST_FIXTURE_TEST_CASE(test_visit_greater_than_or_equal_node, MyDummyFixture)
                                 create<NegationNode>(create<ParameterNode>("param1")));
     Node* node = create<GreaterThanOrEqualNode>(lhs, rhs);
     EvaluationContext context({build_context_parameter_with("param1", "9.")}, {}, data);
-    ReadLinearConstraintVisitor visitor(context, {0, 0}, componentId);
+    ReadLinearConstraintVisitor visitor(context, {0, 0}, component);
     auto constraint = visitor.dispatch(node)[0];
     BOOST_CHECK_EQUAL(constraint.lb, -14);
     BOOST_CHECK_EQUAL(constraint.ub, std::numeric_limits<double>::infinity());
     BOOST_CHECK_EQUAL(constraint.coef_per_var.size(), 2);
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(FullKey(componentId, "var1", 0, 0)), -2);
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(FullKey(componentId, "var2", 0, 0)), -1);
+    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(FullKey(component.Id(), "var1", 0, 0)), -2);
+    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(FullKey(component.Id(), "var2", 0, 0)), -1);
 }
 
 BOOST_FIXTURE_TEST_CASE(test_visit_illegal_node, MyDummyFixture)

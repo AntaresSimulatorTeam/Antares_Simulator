@@ -162,14 +162,14 @@ double round(double d, unsigned precision)
 
 static constexpr double largeValue = 1000000;
 
-double ceilDiv(double numerator, double denominator)
+double ceil(double d)
 {
-    return std::ceil(std::round(numerator / denominator * largeValue) / largeValue);
+    return std::ceil(std::round(d * largeValue) / largeValue);
 }
 
-double floorDiv(double numerator, double denominator)
+double floor(double d)
 {
-    return std::floor(std::round(numerator / denominator * largeValue) / largeValue);
+    return std::floor(std::round(d * largeValue) / largeValue);
 }
 
 bool checkAllElementsIdenticalOrOne(std::vector<unsigned> w)
@@ -182,6 +182,11 @@ bool checkAllElementsIdenticalOrOne(std::vector<std::pair<unsigned, std::string>
 {
     // Erase 1 from the vector
     std::erase_if(p, [](const auto& pair) { return pair.first == 1; });
+    if (p.empty())
+    {
+        return true;
+    }
+
     auto width = p.begin()->first;
     for (const auto& [w, msg]: p)
     {

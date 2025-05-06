@@ -260,9 +260,9 @@ void handleInteriorPointError([[maybe_unused]] PROBLEME_ANTARES_A_RESOUDRE& Prob
 #endif
 }
 
-bool Solve(const OptimizationOptions& options, PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre);
+bool Solve(const SingleOptimOptions& options, PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre);
 
-bool ADQ_PATCH_CSR(const OptimizationOptions& options,
+bool ADQ_PATCH_CSR(const SingleOptimOptions& options,
                    PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
                    HourlyCSRProblem& hourlyCsrProblem,
                    const AdqPatchParams& adqPatchParams,
@@ -291,10 +291,12 @@ bool ADQ_PATCH_CSR(const OptimizationOptions& options,
     }
 }
 
-bool SolveWithSirius(const OptimizationOptions& options,
+// TODO : there are 2 SolveWithSirius(...) solving a quadratic problem by interior point.
+// TODO : we should try to avoid code duplications.
+bool SolveWithSirius(const SingleOptimOptions& options,
                      PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre)
 {
-    if (!options.quadraticSolverParameters.empty())
+    if (!options.solverParameters.empty())
     {
         logs.warning()
           << "Quadratic solver parameters are not supported by SIRIUS; they will be ignored.";
@@ -304,16 +306,16 @@ bool SolveWithSirius(const OptimizationOptions& options,
     return interiorPointProblem->ExistenceDUneSolution == OUI_PI;
 }
 
-bool SolveWithOrtools(const OptimizationOptions& options,
+bool SolveWithOrtools(const SingleOptimOptions& options,
                       PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre)
 {
     SolveQuadraticProblemWithOrtools(options, &ProblemeAResoudre);
     return ProblemeAResoudre.ExistenceDUneSolution == OUI_PI;
 }
 
-bool Solve(const OptimizationOptions& options, PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre)
+bool Solve(const SingleOptimOptions& options, PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre)
 {
-    if (options.quadraticSolver.compare("sirius") == 0)
+    if (options.solverName.compare("sirius") == 0)
     {
         return SolveWithSirius(options, ProblemeAResoudre);
     }

@@ -108,7 +108,9 @@ std::vector<ModelerStudy::SystemModel::PortType> convertTypes(
             throw PortTypeWithThisIdAlreadyExists(portType.id);
         }
 
-        ModelerStudy::SystemModel::PortType portTypeModel(portType.id, std::move(fields));
+        ModelerStudy::SystemModel::PortType portTypeModel(portType.id,
+                                                          std::move(fields),
+                                                          portType.area_connection_injection_field);
         out.emplace_back(std::move(portTypeModel));
     }
     return out;

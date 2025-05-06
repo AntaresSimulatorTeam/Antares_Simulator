@@ -98,6 +98,22 @@ struct convert<Antares::IO::Inputs::YmlSystem::Connection>
 };
 
 template<>
+struct convert<Antares::IO::Inputs::YmlSystem::AreaConnection>
+{
+    static bool decode(const Node& node, Antares::IO::Inputs::YmlSystem::AreaConnection& rhs)
+    {
+        if (!node.IsMap() && node.size() != 4)
+        {
+            return false;
+        }
+        rhs.componentId = node["component"].as<std::string>();
+        rhs.portId = node["port"].as<std::string>();
+        rhs.areaId = node["area"].as<std::string>();
+        return true;
+    }
+};
+
+template<>
 struct convert<Antares::IO::Inputs::YmlSystem::System>
 {
     static bool decode(const Node& node, Antares::IO::Inputs::YmlSystem::System& rhs)
@@ -108,6 +124,8 @@ struct convert<Antares::IO::Inputs::YmlSystem::System>
           std::vector<Antares::IO::Inputs::YmlSystem::Component>>(node["components"]);
         rhs.connections = as_fallback_default<
           std::vector<Antares::IO::Inputs::YmlSystem::Connection>>(node["connections"]);
+        rhs.areaConnections = as_fallback_default<
+          std::vector<Antares::IO::Inputs::YmlSystem::AreaConnection>>(node["area-connections"]);
         return true;
     }
 };

@@ -103,6 +103,7 @@ set(TARGET_LIBS #No alias
         modeler-parameters
         data-series-csv-importer
         expressions-iterators
+        additional-constraint-rhs-antlr-interface
 )
 
 install(TARGETS ${TARGET_LIBS}
