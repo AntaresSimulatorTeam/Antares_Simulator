@@ -138,11 +138,16 @@ static bool loadHours(std::string hoursStr, AdditionalConstraints& additionalCon
     return true;
 }
 
-static bool readRHS(AdditionalConstraints& additionalConstraints, const fs::path& rhsPath)
+static bool readRHS(const fs::path& rhsPath, TimeSeries& rhsSeries)
 {
     // TODO
     //  bool averageTs = (study.usedByTheSolver && study.parameters.derated);
-    return additionalConstraints.series().loadFromFile(rhsPath, /*.average =*/false);
+    const bool ret = loadFile(rhsPath, rhsSeries, /*.average =*/false);
+    if (ret)
+    {
+        fillIfEmpty(rhsSeries, 0.0);
+    }
+    return ret;
 }
 
 bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
@@ -197,7 +202,7 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
         }
 
         if (const auto rhsPath = parentPath / ("rhs_" + additionalConstraints.name + ".txt");
-            !readRHS(additionalConstraints, rhsPath))
+            !readRHS(rhsPath, additionalConstraints.series()))
         {
             logs.error() << "Error while reading rhs file: " << rhsPath;
             return false;
