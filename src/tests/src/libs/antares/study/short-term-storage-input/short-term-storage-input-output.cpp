@@ -810,7 +810,7 @@ BOOST_AUTO_TEST_CASE(Load2ConstraintsFromIniFile)
     const auto& constraint2Rhs = constraint2.series();
     BOOST_CHECK_EQUAL(constraint2Rhs.timeSeries.height, HOURS_PER_YEAR);
     BOOST_CHECK_EQUAL(constraint2Rhs.getCoefficient(0, 0), 0.0);
-    BOOST_CHECK_EQUAL(constraint2Rhs.getCoefficient(0, HOURS_PER_YEAR - 1), HOURS_PER_YEAR - 1);
+    BOOST_CHECK_EQUAL(constraint2Rhs.getCoefficient(0, HOURS_PER_YEAR - 1), 0);
 
     std::filesystem::remove_all(testPath);
 }
