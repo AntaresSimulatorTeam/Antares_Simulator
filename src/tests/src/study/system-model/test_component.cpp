@@ -25,6 +25,7 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include "antares/expressions/nodes/LiteralNode.h"
 #include "antares/study/system-model/component.h"
 
 using namespace Antares::ModelerStudy::SystemModel;
@@ -239,6 +240,109 @@ BOOST_AUTO_TEST_CASE(fail_on_too_many_params2)
                           std::invalid_argument,
                           checkMessage(
                             "The component \"component\" has 1 parameter(s), but its model has 0"));
+}
+
+BOOST_AUTO_TEST_CASE(fail_when_connecting_area_to_unexisting_port)
+{
+    ModelBuilder model_builder;
+    auto model = model_builder.withId("myModel").build();
+
+    auto component = component_builder.withId("myComponent")
+                       .withModel(&model)
+                       .withScenarioGroupId("sg")
+                       .build();
+
+    // Fail if trying to connect an area to an unexisting port
+    BOOST_CHECK_EXCEPTION(
+      component.addAreaConnection("wrongPort", "area1"),
+      std::invalid_argument,
+      checkMessage("Cannot connect area \"area1\" to port \"wrongPort\" of component "
+                   "\"myComponent\": port does not exist in the component's model \"myModel\""));
+}
+
+BOOST_AUTO_TEST_CASE(fail_when_connecting_area_to_port_with_no_area_connection_field_id)
+{
+    PortField field1("field1");
+    std::vector portFields1 = {field1};
+    PortType portTypeWithoutAreaConnection("portType1", std::move(portFields1), "");
+
+    Port portNoAC("portNoAC", portTypeWithoutAreaConnection);
+    ModelBuilder model_builder;
+    auto model = model_builder.withId("myModel").withPorts({portNoAC}).build();
+
+    auto component = component_builder.withId("myComponent")
+                       .withModel(&model)
+                       .withScenarioGroupId("sg")
+                       .build();
+
+    BOOST_CHECK_EQUAL(component.areaConnectedToPort("portNoAC").has_value(), false);
+    BOOST_CHECK_EXCEPTION(
+      component.addAreaConnection("portNoAC", "area1"),
+      std::invalid_argument,
+      checkMessage(
+        "Cannot connect area \"area1\" to port \"portNoAC\" of component \"myComponent\": port "
+        "type \"portType1\" has no area-connection field ID defined"));
+    BOOST_CHECK_EQUAL(component.areaConnectedToPort("portNoAC").has_value(), false);
+}
+
+BOOST_AUTO_TEST_CASE(fail_when_connecting_area_to_undefined_field)
+{
+    PortField field2("field2");
+    std::vector portFields2 = {field2};
+    PortType portTypeWithAreaConnection("portType2", std::move(portFields2), "field2");
+
+    Port portACNoDef("portACNoDef", portTypeWithAreaConnection);
+    ModelBuilder model_builder;
+    auto model = model_builder.withId("myModel").withPorts({portACNoDef}).build();
+
+    auto component = component_builder.withId("myComponent")
+                       .withModel(&model)
+                       .withScenarioGroupId("sg")
+                       .build();
+
+    BOOST_CHECK_EQUAL(component.areaConnectedToPort("portACNoDef").has_value(), false);
+    BOOST_CHECK_EXCEPTION(
+      component.addAreaConnection("portACNoDef", "area1"),
+      std::invalid_argument,
+      checkMessage(
+        "Cannot connect area \"area1\" to port \"portACNoDef\" of component \"myComponent\": "
+        "port field \"field2\" is not defined in the component's model \"myModel\""));
+    BOOST_CHECK_EQUAL(component.areaConnectedToPort("portACNoDef").has_value(), false);
+}
+
+BOOST_AUTO_TEST_CASE(successfully_connect_area_to_port)
+{
+    PortField field2("field2");
+    std::vector portFields2 = {field2};
+    PortType portTypeWithAreaConnection("portType2", std::move(portFields2), "field2");
+
+    Port portACDef("portACDef", portTypeWithAreaConnection);
+    Antares::Expressions::NodeRegistry nodeRegistry;
+    std::vector<PortFieldDefinition> portFieldDefs;
+    portFieldDefs.emplace_back(portACDef, field2, Expression());
+
+    ModelBuilder model_builder;
+    auto model = model_builder.withId("myModel")
+                   .withPorts({portACDef})
+                   .withPortFieldDefinitions(std::move(portFieldDefs))
+                   .build();
+
+    auto component = component_builder.withId("myComponent")
+                       .withModel(&model)
+                       .withScenarioGroupId("sg")
+                       .build();
+
+    BOOST_CHECK_EQUAL(component.areaConnectedToPort("portACDef").has_value(), false);
+    component.addAreaConnection("portACDef", "area1");
+    BOOST_CHECK_EQUAL(component.areaConnectedToPort("portACDef").has_value(), true);
+    BOOST_CHECK_EQUAL(component.areaConnectedToPort("portACDef").value(), "area1");
+    BOOST_CHECK_EXCEPTION(component.addAreaConnection("portACDef", "area2"),
+                          std::invalid_argument,
+                          checkMessage(
+                            "Cannot connect area \"area2\" to port \"portACDef\" of component "
+                            "\"myComponent\": port is already connected to \"area1\""));
+    BOOST_CHECK_EQUAL(component.areaConnectedToPort("portACDef").has_value(), true);
+    BOOST_CHECK_EQUAL(component.areaConnectedToPort("portACDef").value(), "area1");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

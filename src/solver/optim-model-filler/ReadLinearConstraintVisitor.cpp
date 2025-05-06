@@ -26,6 +26,7 @@
 #include "antares/expressions/ShiftVector.h"
 
 using namespace Antares::Expressions::Nodes;
+using namespace Antares::ModelerStudy::SystemModel;
 
 namespace Antares::Optimization
 {
@@ -33,8 +34,8 @@ namespace Antares::Optimization
 ReadLinearConstraintVisitor::ReadLinearConstraintVisitor(
   Expressions::Visitors::EvaluationContext context,
   const Optimisation::LinearProblemApi::FillContext& fillContext,
-  const std::string& componentId /* or vector ?*/):
-    linear_expression_visitor_(std::move(context), fillContext, componentId)
+  const Antares::ModelerStudy::SystemModel::Component& component):
+    linear_expression_visitor_(std::move(context), fillContext, component)
 {
 }
 
