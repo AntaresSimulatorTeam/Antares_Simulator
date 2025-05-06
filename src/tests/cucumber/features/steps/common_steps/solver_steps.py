@@ -221,7 +221,6 @@ def build_antares_solver_command(context):
         command.append('--named-mps-problems')
     if context.parallel:
         command.append('--force-parallel=4')
-    command.append("--named-mps-problems")
     return command
 
 
