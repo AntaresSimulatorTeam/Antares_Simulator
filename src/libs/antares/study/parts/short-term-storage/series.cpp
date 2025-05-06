@@ -43,7 +43,7 @@ bool Series::loadFromFolder(const fs::path& folder, StudyVersion studyVersion)
     ret = loadFile(folder / "PMAX-withdrawal.txt", maxWithdrawalModulation) && ret;
     // TODO
     bool average = false;
-    ret = inflows.series.loadFromFile(folder / "inflows.txt", average) && ret;
+    ret = loadFile(folder / "inflows.txt", inflows.series, average) && ret;
     ret = loadFile(folder / "lower-rule-curve.txt", lowerRuleCurve) && ret;
     ret = loadFile(folder / "upper-rule-curve.txt", upperRuleCurve) && ret;
     if (studyVersion >= StudyVersion(9, 2))
@@ -110,6 +110,17 @@ bool loadFile(const fs::path& path, std::vector<double>& vect)
         return false;
     }
 
+    return true;
+}
+
+bool loadFile(const std::filesystem::path& file, TimeSeries& series, const bool average)
+{
+    logs.debug() << "  :: loading file " << file;
+    if (std::filesystem::is_regular_file(file))
+    {
+        return series.loadFromFile(file, average);
+    }
+    logs.info() << "Optional file not found: " << file << ", default values will be used if needed";
     return true;
 }
 
