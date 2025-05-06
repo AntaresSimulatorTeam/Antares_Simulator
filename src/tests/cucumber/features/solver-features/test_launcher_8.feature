@@ -4,9 +4,5 @@ Feature: 8 - End-to-end tests for Andromede V1 models - hybrid mode
     Given the solver study path is "hybrid/8_1"
     When I run antares simulator
     Then the simulation succeeds
-    # for now, modeler costs does not figure in system cost txt
-    # And the objective value is 13466443
-
-
-
+    And the annual system cost is 13466443
  

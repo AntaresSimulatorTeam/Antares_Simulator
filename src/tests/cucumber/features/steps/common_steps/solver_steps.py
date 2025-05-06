@@ -83,10 +83,10 @@ def check_annual_cost(context):
 
 @then('the annual system cost is {one_year_value:g}')
 def check_annual_cost(context, one_year_value):
-    assert_double_close(one_year_value, context.soh.get_annual_system_cost()["EXP"], 0.001)
-    assert_double_close(0, context.soh.get_annual_system_cost()["STD"], 0.001)
-    assert_double_close(one_year_value, context.soh.get_annual_system_cost()["MIN"], 0.001)
-    assert_double_close(one_year_value, context.soh.get_annual_system_cost()["MAX"], 0.001)
+    assert_double_close(one_year_value, context.soh.get_annual_system_cost()["EXP"], 0.00001)
+    assert_double_close(0, context.soh.get_annual_system_cost()["STD"], 0.00001)
+    assert_double_close(one_year_value, context.soh.get_annual_system_cost()["MIN"], 0.00001)
+    assert_double_close(one_year_value, context.soh.get_annual_system_cost()["MAX"], 0.00001)
 
 
 @then('the simulation takes less than {seconds:g} seconds')
@@ -221,6 +221,7 @@ def build_antares_solver_command(context):
         command.append('--named-mps-problems')
     if context.parallel:
         command.append('--force-parallel=4')
+    command.append("--named-mps-problems")
     return command
 
 
