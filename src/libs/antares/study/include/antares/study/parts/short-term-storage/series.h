@@ -68,4 +68,5 @@ bool loadFile(const std::filesystem::path& folder, std::vector<double>& vect);
 bool loadFile(const std::filesystem::path& file, TimeSeries& series, bool average);
 bool writeVectorToFile(const std::string& path, const std::vector<double>& vect);
 void fillIfEmpty(std::vector<double>& v, double value);
+void fillIfEmpty(TimeSeries& series, double value);
 } // namespace Antares::Data::ShortTermStorage

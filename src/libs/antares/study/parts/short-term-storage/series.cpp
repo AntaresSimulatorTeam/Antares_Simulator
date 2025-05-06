@@ -20,6 +20,7 @@
 */
 #include "antares/study/parts/short-term-storage/series.h"
 
+#include <absl/strings/str_format.h>
 #include <fstream>
 #include <iomanip>
 
@@ -121,7 +122,6 @@ bool loadFile(const std::filesystem::path& file, TimeSeries& series, const bool 
         return series.loadFromFile(file, average);
     }
     logs.info() << "Optional file not found: " << file << ", default values will be used if needed";
-    series.reset(1, HOURS_PER_YEAR);
     return true;
 }
 
@@ -133,12 +133,19 @@ void fillIfEmpty(std::vector<double>& v, double value)
     }
 }
 
+void fillIfEmpty(TimeSeries& series, double value)
+{
+    if (series.timeSeries.empty())
+    {
+        series.reset(1, HOURS_PER_YEAR);
+    }
+}
+
 void Series::fillDefaultSeriesIfEmpty()
 {
     fillIfEmpty(maxInjectionModulation, 1.0);
     fillIfEmpty(maxWithdrawalModulation, 1.0);
-    // TODO done in
-    // fillIfEmpty(inflows, 0.0);
+    fillIfEmpty(inflows.series, 0.0);
     fillIfEmpty(lowerRuleCurve, 0.0);
     fillIfEmpty(upperRuleCurve, 1.0);
 
