@@ -123,10 +123,10 @@ BOOST_AUTO_TEST_CASE(round)
 BOOST_AUTO_TEST_CASE(ceil)
 {
     BOOST_TEST(Antares::Utils::ceil(2.4) == 3, tt::tolerance(1e-9));
-    BOOST_TEST(Antares::Utils::ceil(2.4/ 10) == 1, tt::tolerance(1e-9));
+    BOOST_TEST(Antares::Utils::ceil(2.4 / 10) == 1, tt::tolerance(1e-9));
 
     BOOST_TEST(Antares::Utils::ceil(2.6) == 3, tt::tolerance(1e-9));
-    BOOST_TEST(Antares::Utils::ceil(2.6/10) == 1, tt::tolerance(1e-9));
+    BOOST_TEST(Antares::Utils::ceil(2.6 / 10) == 1, tt::tolerance(1e-9));
 }
 
 BOOST_AUTO_TEST_CASE(floor)
