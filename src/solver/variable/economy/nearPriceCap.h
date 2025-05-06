@@ -40,7 +40,7 @@ struct VCardNearPriceCap
 
     static std::string Unit()
     {
-        return "%";
+        return "boolean";
     }
 
     static std::string Description()
@@ -139,7 +139,6 @@ public:
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
 
-        // Next
         NextType::initializeFromStudy(study);
     }
 
@@ -151,13 +150,13 @@ public:
 
     void initializeFromArea(Data::Study* study, Data::Area* area)
     {
-        // Next
+        unsuppliedEnergyCost = area->thermal.unsuppliedEnergyCost;
+
         NextType::initializeFromArea(study, area);
     }
 
     void initializeFromLink(Data::Study* study, Data::AreaLink* link)
     {
-        // Next
         NextType::initializeFromAreaLink(study, link);
     }
 
@@ -165,7 +164,7 @@ public:
     {
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
             pValuesForTheCurrentYear[numSpace].reset();
-        // Next
+
         NextType::simulationBegin();
     }
 
@@ -179,13 +178,11 @@ public:
         // Reset the values for the current year
         pValuesForTheCurrentYear[numSpace].reset();
 
-        // Next variable
         NextType::yearBegin(year, numSpace);
     }
 
     void yearEndBuild(State& state, unsigned int year)
     {
-        // Next variable
         NextType::yearEndBuild(state, year);
     }
 
@@ -194,7 +191,6 @@ public:
         // Compute all statistics for the current year (daily,weekly,monthly)
         pValuesForTheCurrentYear[numSpace].computeStatisticsOrForTheCurrentYear();
 
-        // Next variable
         NextType::yearEnd(year, numSpace);
     }
 
@@ -208,26 +204,21 @@ public:
                                          pValuesForTheCurrentYear[numSpace]);
         }
 
-        // Next variable
         NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
     }
 
     void hourBegin(unsigned int hourInTheYear)
     {
-        // Next variable
         NextType::hourBegin(hourInTheYear);
     }
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        double unsupEnergy
-          = state.hourlyResults->ValeursHorairesDeDefaillancePositive[state.hourInTheWeek];
         double mrgPrice = -state.hourlyResults->CoutsMarginauxHoraires[state.hourInTheWeek];
 
-        if (mrgPrice > unsupEnergy - threshold + eps)
+        if (mrgPrice > unsuppliedEnergyCost - threshold + eps)
             pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = 1.;
 
-        // Next variable
         NextType::hourForEachArea(state, numSpace);
     }
 
@@ -260,8 +251,9 @@ private:
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel;
-    const double eps = 1e-6;
+    const double eps = 1e-2;
     const double threshold = 5.;
+    double unsuppliedEnergyCost = 0.;
 
 }; // class NearPriceCap
 
