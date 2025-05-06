@@ -121,6 +121,7 @@ bool loadFile(const std::filesystem::path& file, TimeSeries& series, const bool 
         return series.loadFromFile(file, average);
     }
     logs.info() << "Optional file not found: " << file << ", default values will be used if needed";
+    series.reset(1, HOURS_PER_YEAR);
     return true;
 }
 
