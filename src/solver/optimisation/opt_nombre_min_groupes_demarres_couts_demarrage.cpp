@@ -154,8 +154,7 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* pro
                           PmaxDUnGroupeDuPalierThermique);
                     }
 
-                    NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo] = (int)ceil(
-                      std::round(X * 1000000) / 1000000);
+                    NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo] = (int)Utils::ceil(X);
                 }
 
                 if (!problemeHebdo->OptimisationAvecVariablesEntieres)
