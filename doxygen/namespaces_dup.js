@@ -390,11 +390,15 @@ var namespaces_dup =
           [ "AdditionalConstraints", "structAntares_1_1Data_1_1ShortTermStorage_1_1AdditionalConstraints.html", "structAntares_1_1Data_1_1ShortTermStorage_1_1AdditionalConstraints" ],
           [ "STStorageCluster", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster" ],
           [ "STStorageInput", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput" ],
+          [ "ShortTermStorageAdditionalConstraintsError", "structAntares_1_1Data_1_1ShortTermStorage_1_1ShortTermStorageAdditionalConstraintsError.html", null ],
+          [ "CustomErrorListener", "classAntares_1_1Data_1_1ShortTermStorage_1_1CustomErrorListener.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1CustomErrorListener" ],
           [ "Properties", "classAntares_1_1Data_1_1ShortTermStorage_1_1Properties.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1Properties" ],
           [ "Series", "classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1Series" ],
+          [ "GroupsHours", "classAntares_1_1Data_1_1ShortTermStorage_1_1GroupsHours.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1GroupsHours" ],
           [ "fillIfEmpty", "libs_2antares_2study_2include_2antares_2study_2parts_2short-term-storage_2series_8h.html#a6a9536353d101348d6e0cea9a3042855", null ],
           [ "loadFile", "libs_2antares_2study_2parts_2short-term-storage_2series_8cpp.html#a4962670e8610fc649842fa6e24047379", null ],
           [ "loadFile", "libs_2antares_2study_2include_2antares_2study_2parts_2short-term-storage_2series_8h.html#a480972f3cf5982323a75cd699eecc883", null ],
+          [ "makeGroupsOfHours", "makeGroupsOfHoursFromString_8h.html#a7b2bda6a6499c17a8307745c24191347", null ],
           [ "writeVectorToFile", "libs_2antares_2study_2include_2antares_2study_2parts_2short-term-storage_2series_8h.html#aeb138d0608f278cb40944db7441933fe", null ]
         ] ],
         [ "Solar", null, [

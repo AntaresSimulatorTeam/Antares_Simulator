@@ -10,6 +10,11 @@ var hierarchy =
       [ "ExprVisitor", "classExprVisitor.html", [
         [ "Antares::IO::Inputs::ModelConverter::ConvertorVisitor", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ConvertorVisitor.html", null ],
         [ "ExprBaseVisitor", "classExprBaseVisitor.html", null ]
+      ] ],
+      [ "HoursFieldVisitor", "classHoursFieldVisitor.html", [
+        [ "HoursFieldBaseVisitor", "classHoursFieldBaseVisitor.html", [
+          [ "HoursCollectorVisitor", "classHoursCollectorVisitor.html", null ]
+        ] ]
       ] ]
     ] ],
     [ "Antares::Window::Inspector::Accumulator< PredicateT, TraitsT >", "structAntares_1_1Window_1_1Inspector_1_1Accumulator.html", null ],
@@ -64,6 +69,9 @@ var hierarchy =
     [ "Antares::TSGenerator::AvailabilityTSGeneratorData", "classAntares_1_1TSGenerator_1_1AvailabilityTSGeneratorData.html", null ],
     [ "Antares::Solver::Variable::R::AllYears::AverageData", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData.html", null ],
     [ "averageResults", "classaverageResults.html", null ],
+    [ "antlr4::BaseErrorListener", null, [
+      [ "Antares::Data::ShortTermStorage::CustomErrorListener", "classAntares_1_1Data_1_1ShortTermStorage_1_1CustomErrorListener.html", null ]
+    ] ],
     [ "Antares::Solver::Simulation::basePostProcessCommand", "classAntares_1_1Solver_1_1Simulation_1_1basePostProcessCommand.html", [
       [ "Antares::Solver::Simulation::CurtailmentSharingPostProcessCmd", "classAntares_1_1Solver_1_1Simulation_1_1CurtailmentSharingPostProcessCmd.html", null ],
       [ "Antares::Solver::Simulation::DTGnettingAfterCSRcmd", "classAntares_1_1Solver_1_1Simulation_1_1DTGnettingAfterCSRcmd.html", null ],
@@ -555,6 +563,7 @@ var hierarchy =
     [ "global_JIT_manager", "classglobal__JIT__manager.html", null ],
     [ "Antares::Graph::Grid< NodeT >", "classAntares_1_1Graph_1_1Grid.html", null ],
     [ "Antares::Graph::Grid< Antares::Data::Area >", "classAntares_1_1Graph_1_1Grid.html", null ],
+    [ "Antares::Data::ShortTermStorage::GroupsHours", "classAntares_1_1Data_1_1ShortTermStorage_1_1GroupsHours.html", null ],
     [ "Antares::GUILocker", "classAntares_1_1GUILocker.html", null ],
     [ "boost::hash< Antares::Optimization::PartialKey >", "structboost_1_1hash_3_01Antares_1_1Optimization_1_1PartialKey_01_4.html", null ],
     [ "Antares::Expressions::Hashable", "classAntares_1_1Expressions_1_1Hashable.html", [
@@ -960,6 +969,7 @@ var hierarchy =
     [ "IntoUTF8ArgsTranslator", "classIntoUTF8ArgsTranslator.html", null ],
     [ "Antares::Solver::IntraModalConsistencyChecker", "classAntares_1_1Solver_1_1IntraModalConsistencyChecker.html", null ],
     [ "std::invalid_argument", null, [
+      [ "Antares::Data::ShortTermStorage::ShortTermStorageAdditionalConstraintsError", "structAntares_1_1Data_1_1ShortTermStorage_1_1ShortTermStorageAdditionalConstraintsError.html", null ],
       [ "Antares::Expressions::Visitors::EvalVisitorNotImplemented", "classAntares_1_1Expressions_1_1Visitors_1_1EvalVisitorNotImplemented.html", null ],
       [ "Antares::Expressions::Visitors::InvalidNode", "classAntares_1_1Expressions_1_1Visitors_1_1InvalidNode.html", null ],
       [ "Antares::IO::Inputs::SystemConverter::ConnectingPortToItSelf", "structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ConnectingPortToItSelf.html", null ],
@@ -1042,7 +1052,8 @@ var hierarchy =
     [ "LEVEL_FLEX_DOWN_NODE", "structLEVEL__FLEX__DOWN__NODE.html", null ],
     [ "LEVEL_FLEX_UP_NODE", "structLEVEL__FLEX__UP__NODE.html", null ],
     [ "antlr4::Lexer", null, [
-      [ "ExprLexer", "classExprLexer.html", null ]
+      [ "ExprLexer", "classExprLexer.html", null ],
+      [ "HoursFieldLexer", "classHoursFieldLexer.html", null ]
     ] ],
     [ "LibererProbleme", "structLibererProbleme.html", null ],
     [ "Antares::IO::Inputs::YmlModel::Library", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library.html", null ],
@@ -1230,7 +1241,8 @@ var hierarchy =
     [ "Antares::IO::Inputs::YmlModel::Parser", "classAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parser.html", null ],
     [ "Antares::IO::Inputs::YmlSystem::Parser", "classAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parser.html", null ],
     [ "antlr4::Parser", null, [
-      [ "ExprParser", "classExprParser.html", null ]
+      [ "ExprParser", "classExprParser.html", null ],
+      [ "HoursFieldParser", "classHoursFieldParser.html", null ]
     ] ],
     [ "antlr4::ParserRuleContext", null, [
       [ "ExprParser::AtomContext", "classExprParser_1_1AtomContext.html", [
@@ -1267,7 +1279,10 @@ var hierarchy =
         [ "ExprParser::ShiftMuldivContext", "classExprParser_1_1ShiftMuldivContext.html", null ],
         [ "ExprParser::SignedAtomContext", "classExprParser_1_1SignedAtomContext.html", null ],
         [ "ExprParser::SignedExpressionContext", "classExprParser_1_1SignedExpressionContext.html", null ]
-      ] ]
+      ] ],
+      [ "HoursFieldParser::GroupContext", "classHoursFieldParser_1_1GroupContext.html", null ],
+      [ "HoursFieldParser::HourContext", "classHoursFieldParser_1_1HourContext.html", null ],
+      [ "HoursFieldParser::HoursFieldContext", "classHoursFieldParser_1_1HoursFieldContext.html", null ]
     ] ],
     [ "Antares::Toolbox::Jobs::Part", "classAntares_1_1Toolbox_1_1Jobs_1_1Part.html", null ],
     [ "Antares::Data::PartHydro", "classAntares_1_1Data_1_1PartHydro.html", null ],

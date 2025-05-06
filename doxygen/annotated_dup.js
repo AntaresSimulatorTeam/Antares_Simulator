@@ -273,8 +273,11 @@ var annotated_dup =
           [ "AdditionalConstraints", "structAntares_1_1Data_1_1ShortTermStorage_1_1AdditionalConstraints.html", "structAntares_1_1Data_1_1ShortTermStorage_1_1AdditionalConstraints" ],
           [ "STStorageCluster", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster" ],
           [ "STStorageInput", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput" ],
+          [ "ShortTermStorageAdditionalConstraintsError", "structAntares_1_1Data_1_1ShortTermStorage_1_1ShortTermStorageAdditionalConstraintsError.html", null ],
+          [ "CustomErrorListener", "classAntares_1_1Data_1_1ShortTermStorage_1_1CustomErrorListener.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1CustomErrorListener" ],
           [ "Properties", "classAntares_1_1Data_1_1ShortTermStorage_1_1Properties.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1Properties" ],
-          [ "Series", "classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1Series" ]
+          [ "Series", "classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1Series" ],
+          [ "GroupsHours", "classAntares_1_1Data_1_1ShortTermStorage_1_1GroupsHours.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1GroupsHours" ]
         ] ],
         [ "Solar", null, [
           [ "Container", "classAntares_1_1Data_1_1Solar_1_1Container.html", "classAntares_1_1Data_1_1Solar_1_1Container" ],
@@ -1530,6 +1533,11 @@ var annotated_dup =
     [ "global_JIT_manager", "classglobal__JIT__manager.html", "classglobal__JIT__manager" ],
     [ "Group1", "classGroup1.html", "classGroup1" ],
     [ "HourlyCSRProblem", "classHourlyCSRProblem.html", "classHourlyCSRProblem" ],
+    [ "HoursCollectorVisitor", "classHoursCollectorVisitor.html", "classHoursCollectorVisitor" ],
+    [ "HoursFieldBaseVisitor", "classHoursFieldBaseVisitor.html", "classHoursFieldBaseVisitor" ],
+    [ "HoursFieldLexer", "classHoursFieldLexer.html", "classHoursFieldLexer" ],
+    [ "HoursFieldParser", "classHoursFieldParser.html", "classHoursFieldParser" ],
+    [ "HoursFieldVisitor", "classHoursFieldVisitor.html", "classHoursFieldVisitor" ],
     [ "HydraulicSmoothingGroup", "classHydraulicSmoothingGroup.html", "classHydraulicSmoothingGroup" ],
     [ "Hydro_problem_costs", "classHydro__problem__costs.html", "classHydro__problem__costs" ],
     [ "HydroMaxPowerStudy", "structHydroMaxPowerStudy.html", "structHydroMaxPowerStudy" ],
