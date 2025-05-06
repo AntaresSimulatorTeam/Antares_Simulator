@@ -1940,10 +1940,10 @@ var namespaces_dup =
         [ "fakeLogger", "classAntares_1_1UnitTests_1_1fakeLogger.html", "classAntares_1_1UnitTests_1_1fakeLogger" ]
       ] ],
       [ "Utils", null, [
-        [ "ceilDiv", "utils_8h.html#ad141037d2fee824adca85285e3a311b2", null ],
+        [ "ceil", "utils_8h.html#a85a087be35e2e1b888638717aaf71cab", null ],
         [ "checkAllElementsIdenticalOrOne", "utils_8h.html#ad7848a35534130d9e658b91eef55321d", null ],
         [ "checkAllElementsIdenticalOrOne", "utils_8h.html#a5c195397128b4459eacc09d2d83e24f3", null ],
-        [ "floorDiv", "utils_8h.html#a93f0fbb54fafe08e3c28c108df379bc0", null ],
+        [ "floor", "utils_8h.html#a28e4efa05d04724ebaabf457c1d64271", null ],
         [ "isZero", "utils_8h.html#a3820d7fc44841c7455de7b7250042677", null ],
         [ "round", "utils_8h.html#a55cc90c1c1261f10fd4ebd6c24086b2f", null ]
       ] ],
