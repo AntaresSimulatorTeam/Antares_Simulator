@@ -392,7 +392,7 @@ BOOST_FIXTURE_TEST_CASE(check_cluster_series_load_vector, Fixture)
     BOOST_CHECK(cluster.loadSeries(folder, StudyVersion::latest()));
     BOOST_CHECK(cluster.series->validate("", StudyVersion::latest()));
     BOOST_CHECK(cluster.series->maxWithdrawalModulation[0] == 0.5
-                && series.inflows.series.getCoefficient(0, 2756) == 0.5
+                && cluster.series->inflows.series.getCoefficient(0, 2756) == 0.5
                 && cluster.series->lowerRuleCurve[6392] == 0.5
                 && cluster.series->costVariationInjection[15] == 0.5
                 && cluster.series->costVariationWithdrawal[756] == 0.5);

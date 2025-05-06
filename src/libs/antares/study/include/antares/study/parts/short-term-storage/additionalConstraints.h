@@ -41,7 +41,6 @@ public:
 
 class AdditionalConstraints
 {
-
 public:
     //
     AdditionalConstraints() = default;
