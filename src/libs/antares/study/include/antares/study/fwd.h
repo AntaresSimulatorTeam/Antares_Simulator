@@ -214,22 +214,20 @@ enum TimeSeriesType : unsigned int
     timeSeriesRenewable = 1u << 5,
     //! TimeSeries : Renewable
     timeSeriesTransmissionCapacities = 1u << 6,
-    //! TimeSeries : Short Term Storage
-    timeSeriesShortTermStorage = 1u << 7,
     // ***********************************************************************
     // Please update the constant allTimeSeriesMask if you add / remove an item
     // ***********************************************************************
 }; // enum TimeSeries
 
 // Automatically count the number of time series by OR-ing them together:
-constexpr uint32_t allTimeSeriesMask = static_cast<uint32_t>(timeSeriesLoad)
-                                       | static_cast<uint32_t>(timeSeriesHydro)
-                                       | static_cast<uint32_t>(timeSeriesWind)
-                                       | static_cast<uint32_t>(timeSeriesThermal)
-                                       | static_cast<uint32_t>(timeSeriesSolar)
-                                       | static_cast<uint32_t>(timeSeriesRenewable)
-                                       | static_cast<uint32_t>(timeSeriesTransmissionCapacities)
-                                       | static_cast<uint32_t>(timeSeriesShortTermStorage);
+constexpr unsigned int allTimeSeriesMask = static_cast<unsigned int>(timeSeriesLoad)
+                                           | static_cast<unsigned int>(timeSeriesHydro)
+                                           | static_cast<unsigned int>(timeSeriesWind)
+                                           | static_cast<unsigned int>(timeSeriesThermal)
+                                           | static_cast<unsigned int>(timeSeriesSolar)
+                                           | static_cast<unsigned int>(timeSeriesRenewable)
+                                           | static_cast<unsigned int>(
+                                             timeSeriesTransmissionCapacities);
 /*!
 ** \brief Types of timeSeries
 **

@@ -41,8 +41,7 @@ static void shortTermStorageLevelsRHS(
             const int clusterGlobalIndex = storage.clusterGlobalIndex;
             int cnt = CorrespondanceCntNativesCntOptim
                         .ShortTermStorageLevelConstraint[clusterGlobalIndex];
-            const auto* inflows = storage.series->inflows.series.getColumn(year);
-            SecondMembre[cnt] = inflows[hourInTheYear];
+            SecondMembre[cnt] = storage.series->inflows.series.getCoefficient(year, hourInTheYear);
         }
     }
 }

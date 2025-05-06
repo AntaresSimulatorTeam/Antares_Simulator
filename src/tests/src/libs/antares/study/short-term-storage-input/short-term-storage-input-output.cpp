@@ -57,7 +57,8 @@ void resizeFillVectors(ShortTermStorage::Series& series, double value, unsigned 
 {
     series.maxInjectionModulation.resize(size, value);
     series.maxWithdrawalModulation.resize(size, value);
-    series.inflows.series.reset(size, value);
+    series.inflows.series.reset(1, size);
+    series.inflows.series.fill(value);
     series.lowerRuleCurve.resize(size, value);
     series.upperRuleCurve.resize(size, value);
 

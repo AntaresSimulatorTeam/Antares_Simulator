@@ -245,8 +245,6 @@ static bool checkSize(const std::string& seriesFilename,
 
 static bool checkSize(const std::string& seriesFilename, const std::string& id, const TimeSeries& v)
 {
-    // for (auto col = 0; col < v.numberOfColumns(); ++col)
-    // {
     if (v.timeSeries.height != HOURS_PER_YEAR)
     {
         logs.warning() << "Short-term storage " << id
@@ -254,7 +252,6 @@ static bool checkSize(const std::string& seriesFilename, const std::string& id, 
                        << v.timeSeries.height << " lines, expected " << HOURS_PER_YEAR;
         return false;
     }
-    // }
 
     return true;
 }
@@ -263,8 +260,7 @@ bool Series::validateSizes(const std::string& id, StudyVersion studyVersion) con
 {
     bool ret = checkSize("PMAX-injection.txt", id, maxInjectionModulation)
                && checkSize("PMAX-withdrawal.txt", id, maxWithdrawalModulation)
-               // TODO not needed
-               //    && checkSize("inflows.txt", id, inflows.series)
+               && checkSize("inflows.txt", id, inflows.series)
                && checkSize("lower-rule-curve.txt", id, lowerRuleCurve)
                && checkSize("upper-rule-curve.txt", id, upperRuleCurve);
     // Some elements were introduced in version 9.2.0

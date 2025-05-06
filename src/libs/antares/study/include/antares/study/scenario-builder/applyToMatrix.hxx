@@ -72,15 +72,6 @@ inline bool CheckValidity<BindingConstraintGroup>(uint value,
     return value < group.numberOfTimeseries();
 }
 
-// TODO
-//  template<>
-//  inline bool CheckValidity<>(uint value,
-//                              const ShortTermStorage::AdditionalConstraints& add_constr,
-//                              uint)
-//  {
-//      return value < add_constr.series.timeSeries.width;
-//  }
-
 template<class StringT, class D>
 bool ApplyToMatrix(uint& errors,
                    StringT& logprefix,

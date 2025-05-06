@@ -377,7 +377,7 @@ bool Rules::readBindingConstraints(const AreaName::Vector& splitKey, const Strin
     return true;
 }
 
-bool Rules::IsSTStorageClusterExists(Area* area, const std::string& stStorageClusterName)
+bool Rules::DoesSTStorageClusterExist(Area* area, const std::string& stStorageClusterName)
 {
     auto stStorageCluster = std::ranges::find_if(area->shortTermStorage.storagesByIndex,
                                                  [&stStorageClusterName](
@@ -406,7 +406,7 @@ bool Rules::readShortTermStorage(const AreaName::Vector& splitKey,
         return false;
     }
     const std::string stStorageClusterName = splitKey[2];
-    if (!IsSTStorageClusterExists(area, stStorageClusterName))
+    if (!DoesSTStorageClusterExist(area, stStorageClusterName))
     {
         return false;
     }

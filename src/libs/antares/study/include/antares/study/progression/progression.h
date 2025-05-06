@@ -55,7 +55,6 @@ public:
         sectTSGHydro,
         sectTSGThermal,
         sectImportTS,
-        sectTSShortTermStorage,
         sectMax
     };
 

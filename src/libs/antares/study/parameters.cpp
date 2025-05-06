@@ -1351,10 +1351,6 @@ void Parameters::fixBadValues()
     {
         nbTimeSeriesSolar = 1;
     }
-    if (!nbTimeSeriesShortTermStorage)
-    {
-        nbTimeSeriesShortTermStorage = 1;
-    }
 
     if (simulationDays.first == 0)
     {
@@ -1830,7 +1826,6 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("nbTimeSeriesWind", nbTimeSeriesWind);
         section->add("nbTimeSeriesThermal", nbTimeSeriesThermal);
         section->add("nbTimeSeriesSolar", nbTimeSeriesSolar);
-        section->add("nbTimeSeriesShortTermStorage", nbTimeSeriesShortTermStorage);
 
         // Refresh
         ParametersSaveTimeSeries(section, "refreshTimeSeries", timeSeriesToRefresh);

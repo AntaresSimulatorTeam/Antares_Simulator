@@ -60,14 +60,7 @@ private:
 
     struct keyHasher
     {
-        size_t operator()(const key& k) const
-        {
-            std::size_t seed = 0;
-            boost::hash_combine(seed, k.area_name);
-            boost::hash_combine(seed, k.cluster_name);
-            // boost::hash_combine(seed, k.year);
-            return seed;
-        }
+        size_t operator()(const key& k) const;
     };
 
     std::unordered_map<key, MatrixType, keyHasher> rules_;

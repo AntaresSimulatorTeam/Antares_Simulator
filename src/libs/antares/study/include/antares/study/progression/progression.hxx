@@ -69,8 +69,7 @@ inline const char* Progression::SectionToCStr(Section section)
                                                   "wind",
                                                   "hydro",
                                                   "thermal",
-                                                  "import timeseries",
-                                                  "short term storage"};
+                                                  "import timeseries"};
     assert((uint)section < (uint)sectMax);
     return sectName[section];
 }

@@ -1088,16 +1088,6 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
             }
             progression.add(y, Solver::Progression::sectTSGThermal, n);
         }
-        if (TS<timeSeriesShortTermStorage>::IsNeeded(*this, y))
-        {
-            n = parameters.nbTimeSeriesShortTermStorage * areas.size() * 365;
-            if (0 != (timeSeriesShortTermStorage & parameters.timeSeriesToArchive))
-            {
-                n += areas.size();
-            }
-            progression.add(y, Solver::Progression::sectTSShortTermStorage, n);
-        }
-
         progression.add(y, Solver::Progression::sectYear, ticksPerYear);
 
         if (parameters.yearByYear)

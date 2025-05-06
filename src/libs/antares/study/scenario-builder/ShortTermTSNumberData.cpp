@@ -27,11 +27,7 @@ namespace Antares::Data::ScenarioBuilder
 {
 uint ShortTermTSNumberData::get_tsGenCount(const Study& study) const
 {
-    // General data
-    auto& parameters = study.parameters;
-
-    const bool tsGenSt = (0 != (parameters.timeSeriesToGenerate & timeSeriesShortTermStorage));
-    return tsGenSt ? parameters.nbTimeSeriesShortTermStorage : 0u;
+    return 0;
 }
 
 static bool ApplyToAdditionalConstraintsRhs(
@@ -111,6 +107,15 @@ unsigned ShortTermTSNumberData::get_value(const std::string& area_name,
 {
     // TODO check
     return rules_.at(ShortTermTSNumberData::key{area_name, cluster_name})[0][year];
+}
+
+size_t ShortTermTSNumberData::keyHasher::operator()(const key& k) const
+{
+    std::size_t seed = 0;
+    boost::hash_combine(seed, k.area_name);
+    boost::hash_combine(seed, k.cluster_name);
+    // boost::hash_combine(seed, k.year);
+    return seed;
 }
 
 bool ShortTermTSNumberData::reset(const Study& study)

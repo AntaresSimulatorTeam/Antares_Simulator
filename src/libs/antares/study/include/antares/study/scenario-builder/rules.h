@@ -150,7 +150,7 @@ private:
                               bool updaterMode);
     bool readLink(const AreaName::Vector& instrs, const String& value, bool updaterMode);
     bool readBindingConstraints(const AreaName::Vector& splitKey, const String& value);
-    static bool IsSTStorageClusterExists(Area* area, const std::string& string);
+    static bool DoesSTStorageClusterExist(Area* area, const std::string& string);
 
     bool readShortTermStorage(const AreaName::Vector& splitKey,
                               const String& value,
