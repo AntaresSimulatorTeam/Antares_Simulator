@@ -91,6 +91,6 @@ The linear expression defined by the connected component's port field definition
 of the area's [balance constraint](05-model.md#balance-between-load-and-generation).  
 The current convention of this constraint is:
 - Load contributions to the balance should be **positive**
-- Generation contributions to the balance should be **positive**  
+- Generation contributions to the balance should be **negative**  
 
 Take this into account when defining the connection port value.
