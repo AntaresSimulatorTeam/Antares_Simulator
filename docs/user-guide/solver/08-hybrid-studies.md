@@ -61,7 +61,7 @@ area-connections:
 - **component1**: the IDs of the component to connect to the area, as defined in the [components section](../modeler/02-inputs.md#components)
 - **port**: the ID of the component's port to connect to the area (as defined by the model of the component). This port 
   must be of a type that defines an area-connection injection field (see [next paragraph](#selecting-the-area-connection-port-fields))
-- **area**: the ID of the area to connect the component to, as defined in the [antares-solver input files](02-inputs.md). **Must be lowercase**.
+- **area**: the ID of the area to connect the component to, as defined in the [antares-solver input files](02-inputs.md).
 
 
 #### Selecting the area-connection port fields

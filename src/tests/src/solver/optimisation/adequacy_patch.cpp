@@ -2,7 +2,6 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <adequacy_patch_runtime_data.h>
 #include <fstream>
 #include <tuple>
 #include <vector>
@@ -10,13 +9,9 @@
 #include <boost/test/unit_test.hpp>
 
 #include <antares/exception/LoadingError.hpp>
+#include <antares/solver/simulation/adequacy_patch_runtime_data.h>
+#include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include "antares/study/parameters/adq-patch-params.h"
-
-#include "adequacy_patch_csr/adq_patch_curtailment_sharing.h"
-#include "adequacy_patch_local_matching/adq_patch_local_matching.h"
-
-static double origineExtremite = -1;
-static double extremiteOrigine = 5;
 
 using namespace Antares::Data::AdequacyPatch;
 namespace tt = boost::test_tools;
@@ -56,8 +51,6 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
     problem.IndexDebutIntercoExtremite = std::vector<int>(1);
 
     // input values
-    adqPatchParams.localMatching.setToZeroOutsideInsideLinks
-      = !includeFlowsOutsideAdqPatchToDensNew;
     problem.ResultatsHoraires[Area].ValeursHorairesDeDefaillancePositive[hour] = ensInit;
     int Interco = 1;
     problem.IndexDebutIntercoOrigine[Area] = Interco;
@@ -76,7 +69,7 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
     double densNew;
     std::tie(netPositionInit, densNew, std::ignore) = calculateAreaFlowBalance(
       &problem,
-      adqPatchParams.localMatching.setToZeroOutsideInsideLinks,
+      !includeFlowsOutsideAdqPatchToDensNew,
       Area,
       hour);
 

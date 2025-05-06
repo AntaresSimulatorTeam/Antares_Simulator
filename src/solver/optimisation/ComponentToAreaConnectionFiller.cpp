@@ -125,9 +125,12 @@ void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
     ReadLinearExpressionVisitor visitor(connectedComponentEvalContext, ctx, component);
     auto timeDependentLinearExpression = visitor.dispatch(
       component.nodeAtPortField(portId, fieldId));
+    // Transform areaId to lower case
+    std::string lowerAreaId = areaId;
+    std::transform(lowerAreaId.begin(), lowerAreaId.end(), lowerAreaId.begin(), ::tolower);
     for (const auto& [ts, expression]: timeDependentLinearExpression.GetLinearExpressions())
     {
-        IMipConstraint* areaBalanceConstraint = getBalanceConstraint(pb, areaId, ts);
+        IMipConstraint* areaBalanceConstraint = getBalanceConstraint(pb, lowerAreaId, ts);
         // Contribution is added to the left-hand side of the constraint
         for (const auto& [varKey, coef]: expression.coefPerVar())
         {
