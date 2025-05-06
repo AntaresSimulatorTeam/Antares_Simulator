@@ -90,6 +90,8 @@ set(TARGET_LIBS #No alias
 
         # executable
         antares-solver
+
+        additional-constraint-rhs-antlr-interface
 )
 
 install(TARGETS ${TARGET_LIBS}
