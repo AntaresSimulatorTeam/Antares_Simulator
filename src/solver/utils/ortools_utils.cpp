@@ -8,6 +8,7 @@
 #include <antares/exception/AssertionError.hpp>
 #include <antares/Enum.hpp>
 #include <filesystem>
+#include "../optimisation/opt_constants.h"
 
 using namespace operations_research;
 
@@ -17,10 +18,14 @@ const std::string SCIP_PARAMS = "parallel/maxnthreads 1";
 using Antares::Solver::Optimization::OptimizationOptions;
 
 // MPSolverParameters's copy constructor is private
-static void setGenericParameters(MPSolverParameters& params)
+static void setGenericParameters(MPSolverParameters& params, int optimizationNumber)
 {
     params.SetIntegerParam(MPSolverParameters::SCALING, 0);
     params.SetIntegerParam(MPSolverParameters::PRESOLVE, 0);
+    if (optimizationNumber == PREMIERE_OPTIMISATION)
+    {
+        params.SetIntegerParam(MPSolverParameters::LP_ALGORITHM, MPSolverParameters::BARRIER);
+    }
 }
 
 static void checkSetSolverSpecificParameters(bool status,
@@ -37,8 +42,7 @@ static void checkSetSolverSpecificParameters(bool status,
     }
 }
 
-static void TuneSolverSpecificOptions(
-  MPSolver* solver,
+static void TuneSolverSpecificOptions(MPSolver* solver,
   const std::string& solverName,
   const std::string& solverParameters)
 {
@@ -338,11 +342,13 @@ static void transferBasis(std::vector<operations_research::MPSolver::BasisStatus
 MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
                            MPSolver* solver,
                            bool keepBasis,
-                           const OptimizationOptions& options)
+                           const OptimizationOptions& options,
+                           int optimizationNumber)
 {
     MPSolverParameters params;
     setGenericParameters(
-      params);              // Keep generic params for default settings working for all solvers
+      params,
+      optimizationNumber);  // Keep generic params for default settings working for all solvers
     if (options.solverLogs) // May be overriden by log level if set as specific parameters
     {
         solver->EnableOutput();
