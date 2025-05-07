@@ -56,8 +56,8 @@ namespace Utils
 
 bool isZero(double d);
 double round(double d, unsigned precision);
-double ceilDiv(double numerator, double denominator);
-double floorDiv(double numerator, double denominator);
+double ceil(double d);
+double floor(double d);
 
 bool checkAllElementsIdenticalOrOne(std::vector<unsigned> w);
 bool checkAllElementsIdenticalOrOne(std::vector<std::pair<unsigned, std::string>>& p);
