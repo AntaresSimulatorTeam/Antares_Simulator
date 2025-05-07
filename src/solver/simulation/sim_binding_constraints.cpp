@@ -56,7 +56,7 @@ TimeSerie timeSeriesColumn(Data::BindingConstraint* bc,
 
 TimeSeriesAndWeight getMustRunClusterTimeSeriesAndWeight(Data::BindingConstraint* bc, int year)
 {
-    auto mustrun_clusters = bc->clusters()
+    auto mustrun_clusters = bc->clustersAndWeights()
                             | std::ranges::views::filter(
                               [](auto pair)
                               {

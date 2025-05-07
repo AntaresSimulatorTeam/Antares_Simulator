@@ -678,7 +678,7 @@ BindingConstraintStructures BindingConstraint::initLinkArrays() const
     };
 }
 
-const BindingConstraint::clusterWeightMap& BindingConstraint::clusters() const
+const BindingConstraint::clusterWeightMap& BindingConstraint::clustersAndWeights() const
 {
     return pClusterWeights;
 }
