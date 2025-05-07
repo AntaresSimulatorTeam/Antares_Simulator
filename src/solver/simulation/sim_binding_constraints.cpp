@@ -31,11 +31,11 @@
 
 namespace
 {
-using Time_serie = std::span<const double>;
+using TimeSerie = std::span<const double>;
 using Weight = double;
-using TimeSeriesAndWeight = std::vector<std::pair<Time_serie, Weight>>;
+using TimeSeriesAndWeight = std::vector<std::pair<TimeSerie, Weight>>;
 
-Time_serie timeSeriesColumn(Data::BindingConstraint* bc,
+TimeSerie timeSeriesColumn(Data::BindingConstraint* bc,
                             const Data::BindingConstraintGroupRepository& bcgroups,
                             int year)
 {
