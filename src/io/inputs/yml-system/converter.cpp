@@ -25,9 +25,11 @@
 #include <sstream>
 
 #include "antares/io/inputs/yml-system/system.h"
+#include "antares/study/system-model/connection.h"
 #include "antares/study/system-model/system.h"
 
 using namespace Antares::ModelerStudy;
+using namespace Antares::ModelerStudy::SystemModel; // Mainly for type ConnexionEnd
 
 namespace Antares::IO::Inputs::SystemConverter
 {
@@ -96,7 +98,6 @@ static SystemModel::Component createComponent(const YmlSystem::Component& c,
                                               const std::vector<SystemModel::Library>& libraries)
 {
     const auto [libraryId, modelId] = splitLibraryModelString(c.model);
-    SystemModel::ModelBuilder model_builder;
 
     const SystemModel::Model& model = getModel(libraries, libraryId, modelId);
 
@@ -122,12 +123,12 @@ static SystemModel::Component createComponent(const YmlSystem::Component& c,
     return component;
 }
 
-static const SystemModel::Component& findComponent(
+static SystemModel::Component& findComponent(
   const std::string& id,
-  const std::unordered_map<std::string, SystemModel::Component>& components)
+  std::unordered_map<std::string, SystemModel::Component>& components)
 
 {
-    const auto& it = components.find(id);
+    auto it = components.find(id);
     if (it == components.end())
     {
         throw std::invalid_argument("Component with id '" + id + "' not found in system.");
@@ -218,23 +219,28 @@ static std::pair<SystemModel::PortFieldsRole, SystemModel::PortFieldsRole> Resol
 }
 
 /**
- * @brief Creates a SystemModel::Connection from a YmlSystem::Connection and a map of components.
+ * @brief Uses a YmlSystem::Connection to connect component via ports
  *
- * This function constructs a SystemModel::Connection by looking up components and ports
- * based on the IDs provided in the YmlSystem::Connection. It ensures that the ports are
- * of the same type and that fields are correctly configured for sending and receiving.
+ * A YmlSystem::Connection has two entries, which are the two ends of a connexion
+ * between components.
+ * Caution : components can be connected via ports which can be different (different id),
+ * but of the same type.
+ * So, from a YmlSystem::Connection, this function connects two components via ports :
+ * Each component receives a SystemModel::ConnexionEnd representing the connexion it has with
+ * the other component.
+ * Doing this, this function ensures that the connected ports are of the same type and that
+ * fields are correctly configured for sending and receiving.
  *
  * @param connection A YmlSystem::Connection object containing the connection details.
  * @param components An unordered map of component IDs to SystemModel::Component objects.
  *
- * @return A SystemModel::Connection object representing the created connection.
+ * @return void
  *
  * @throw std::invalid_argument if a component or port is not found, if the ports are not
  *        of the same type, or if fields are incorrectly configured for sending/receiving.
  */
-static SystemModel::Connection createConnection(
-  const YmlSystem::Connection& connection,
-  const std::unordered_map<std::string, SystemModel::Component>& components)
+static void connectComponents(const YmlSystem::Connection& connection,
+                              std::unordered_map<std::string, SystemModel::Component>& components)
 {
     const auto& firstComponentId = connection.firstEntry.componentId;
     const auto& firstPortId = connection.firstEntry.portId;
@@ -243,25 +249,26 @@ static SystemModel::Connection createConnection(
 
     CheckPortSelfConnection(firstComponentId, firstPortId, secondComponentId, secondPortId);
 
-    const auto& first_component = findComponent(firstComponentId, components);
-    const auto& firstPort = findPort(first_component, firstPortId);
-    const auto& secondComponent = findComponent(secondComponentId, components);
+    auto& firstComponent = findComponent(firstComponentId, components);
+    const auto& firstPort = findPort(firstComponent, firstPortId);
+    auto& secondComponent = findComponent(secondComponentId, components);
     const auto& secondPort = findPort(secondComponent, secondPortId);
     CheckPortsType(firstPort, secondPort);
 
-    const auto [firstPortFieldsRole, secondPortFieldsRole] = ResolveFieldsRole(first_component,
+    const auto [firstPortFieldsRole, secondPortFieldsRole] = ResolveFieldsRole(firstComponent,
                                                                                firstPort,
                                                                                secondComponent,
                                                                                secondPort);
-
-    return {
-      SystemModel::ConnectionEntry(&first_component, &firstPort, std::move(firstPortFieldsRole)),
-      SystemModel::ConnectionEntry(&secondComponent, &secondPort, std::move(secondPortFieldsRole))};
+    // TODO : Do we need to connect both components to one another ?
+    // TODO : Or should we rather consider the field role and only connect receiver to the sender ?
+    firstComponent.addConnection(firstPort.Id(), ConnexionEnd(&secondComponent, &secondPort));
+    secondComponent.addConnection(secondPort.Id(), ConnexionEnd(&firstComponent, &firstPort));
 }
 
 SystemModel::System convert(const YmlSystem::System& ymlSystem,
                             const std::vector<SystemModel::Library>& libraries)
 {
+    // Create components from system
     std::unordered_map<std::string, SystemModel::Component> components;
     for (const auto& c: ymlSystem.components)
     {
@@ -272,17 +279,16 @@ SystemModel::System convert(const YmlSystem::System& ymlSystem,
         }
         components.emplace(c.id, createComponent(c, libraries));
     }
-    std::vector<SystemModel::Connection> connections;
-    connections.reserve(ymlSystem.connections.size());
+
+    // Create connections from system
     for (const auto& connection: ymlSystem.connections)
     {
-        connections.push_back(createConnection(connection, components));
+        connectComponents(connection, components);
     }
+
+    // Build system from components and connections
     SystemModel::SystemBuilder builder;
-    return builder.withId(ymlSystem.id)
-      .withComponents(std::move(components))
-      .withConnections(std::move(connections))
-      .build();
+    return builder.withId(ymlSystem.id).withComponents(std::move(components)).build();
 }
 
 } // namespace Antares::IO::Inputs::SystemConverter

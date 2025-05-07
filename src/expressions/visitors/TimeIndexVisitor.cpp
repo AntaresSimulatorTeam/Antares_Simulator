@@ -24,6 +24,8 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/TimeIndexVisitor.h>
 
+using namespace Antares::ModelerStudy::SystemModel;
+
 namespace Antares::Expressions::Visitors
 {
 
@@ -89,26 +91,35 @@ TimeIndex TimeIndexVisitor::visit(const Nodes::NegationNode* neg)
 
 TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldNode* port_field_node)
 {
-    // TODO FIXME
-    return context_.at(port_field_node);
+    throw std::invalid_argument("PortFieldNode not handled by visitor TimeIndexVisitor");
 }
 
-TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldSumNode* port_field_node)
+TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldSumNode* node)
 {
-    // TODO FIXME
-    return context_.at(port_field_node);
+    std::string portId = node->getPortName();
+    std::string fieldId = node->getFieldName();
+
+    TimeIndex to_return = TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
+    for (const auto connexion_end: component_.connexionsViaPort(portId))
+    {
+        auto* component = connexion_end.component();
+        auto* port = connexion_end.port();
+
+        TimeIndexVisitor visitor(*component);
+        const Nodes::Node* node = component->nodeAtPortField(port->Id(), fieldId);
+        to_return = to_return | visitor.dispatch(node);
+    }
+    return to_return;
 }
 
 TimeIndex TimeIndexVisitor::visit(const Nodes::ComponentVariableNode* component_variable_node)
 {
-    // TODO FIXME
-    return context_.at(component_variable_node);
+    throw std::invalid_argument("ComponentVariableNode not handled by visitor TimeIndexVisitor");
 }
 
 TimeIndex TimeIndexVisitor::visit(const Nodes::ComponentParameterNode* component_parameter_node)
 {
-    // TODO FIXME
-    return context_.at(component_parameter_node);
+    throw std::invalid_argument("ComponentParameterNode not handled by visitor TimeIndexVisitor");
 }
 
 TimeIndex TimeIndexVisitor::visit(const Nodes::TimeShiftNode* timeShiftNode)
@@ -132,8 +143,8 @@ TimeIndex TimeIndexVisitor::visit([[maybe_unused]] const Nodes::AllTimeSumNode* 
     return TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
 }
 
-TimeIndexVisitor::TimeIndexVisitor(std::unordered_map<const Nodes::Node*, TimeIndex> context):
-    context_(std::move(context))
+TimeIndexVisitor::TimeIndexVisitor(const Component& component):
+    component_(component)
 {
 }
 

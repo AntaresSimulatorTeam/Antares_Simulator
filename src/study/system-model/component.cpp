@@ -23,6 +23,8 @@
 
 #include <antares/study/system-model/component.h>
 
+using namespace Antares::Expressions::Nodes;
+
 namespace Antares::ModelerStudy::SystemModel
 {
 
@@ -48,7 +50,7 @@ static void checkComponentDataValidity(const ComponentData& data)
           "The component \"" + data.id + "\" has " + std::to_string(data.parameter_values.size())
           + " parameter(s), but its model has " + std::to_string(data.model->Parameters().size()));
     }
-    for (const auto param: data.model->Parameters() | std::views::keys)
+    for (const auto& param: data.model->Parameters() | std::views::keys)
     {
         if (!data.parameter_values.contains(param))
         {
@@ -62,6 +64,26 @@ Component::Component(const ComponentData& component_data)
 {
     checkComponentDataValidity(component_data);
     data_ = std::move(component_data);
+}
+
+void Component::addConnection(const std::string localPortId, ConnexionEnd&& connexionEnd)
+{
+    connectionEnds_[localPortId].push_back(std::move(connexionEnd));
+}
+
+std::vector<ConnexionEnd> Component::connexionsViaPort(const std::string& portId) const
+{
+    if (auto it = connectionEnds_.find(portId); it != connectionEnds_.end())
+    {
+        return it->second;
+    }
+    return {};
+}
+
+const Node* Component::nodeAtPortField(const std::string& portId, const std::string& fieldId) const
+{
+    PortFieldKey key(portId, fieldId);
+    return getModel()->PortFieldDefinitions().at(key).Definition().RootNode();
 }
 
 /**

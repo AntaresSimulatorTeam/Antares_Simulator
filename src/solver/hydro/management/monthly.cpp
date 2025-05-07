@@ -18,12 +18,12 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <filesystem>
 #include <iomanip>
 #include <limits>
 #include <sstream>
 
 #include <antares/antares/fatal-error.h>
+#include <antares/study/area/scratchpad.h>
 #include "antares/solver/hydro/management/management.h"
 #include "antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h"
 #include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
@@ -145,13 +145,38 @@ double HydroManagement::prepareMonthlyTargetGenerations(
     return total;
 }
 
+static double calcTurbineMaxForMonth(unsigned simulationMonth,
+                                     unsigned y,
+                                     Data::Area& area,
+                                     const Date::Calendar& calendar,
+                                     Antares::Data::Area::ScratchMap& scratchmap)
+{
+    double turbine = 0;
+
+    auto daysPerMonth = calendar.months[simulationMonth].days;
+    unsigned firstDay = calendar.months[simulationMonth].daysYear.first;
+    unsigned endDay = firstDay + daysPerMonth;
+    auto& scratchpad = scratchmap.at(&area);
+    const unsigned tsIndex = scratchpad.meanMaxDailyGenPower.getSeriesIndex(y);
+
+    for (unsigned day = firstDay; day != endDay; ++day)
+    {
+        turbine += scratchpad.meanMaxDailyGenPower[tsIndex][day]
+                   * area.hydro.dailyNbHoursAtGenPmax[0][day] / area.hydro.reservoirCapacity;
+    }
+
+    return turbine;
+}
+
 void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_reservoir_level,
                                                        uint y,
+                                                       Antares::Data::Area::ScratchMap& scratchmap,
                                                        HydroSpecificMap& hydro_specific_map)
 {
     uint indexArea = 0;
     areas_.each(
-      [this, &random_reservoir_level, &y, &indexArea, &hydro_specific_map](Data::Area& area)
+      [this, &random_reservoir_level, &y, &indexArea, &hydro_specific_map, &scratchmap](
+        Data::Area& area)
       {
           auto& data = area.hydro.managementData[y];
           auto& hydro_specific = hydro_specific_map[&area];
@@ -181,19 +206,33 @@ void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_rese
               problem.CoutViolMaxDuVolumeMin = 1e5;
               problem.VolumeInitial = lvi;
 
+              double yearlyMaxGeneration = 0;
               for (unsigned month = 0; month != MONTHS_PER_YEAR; ++month)
               {
                   uint realmonth = (initReservoirLvlMonth + month) % MONTHS_PER_YEAR;
 
-                  uint simulationMonth = calendar_.mapping.months[realmonth];
-                  uint firstDay = calendar_.months[simulationMonth].daysYear.first;
+                  unsigned simulationMonth = calendar_.mapping.months[realmonth];
+                  unsigned firstDay = calendar_.months[simulationMonth].daysYear.first;
 
-                  problem.TurbineMax[month] = totalInflowsYear;
+                  problem.TurbineMax[month] = calcTurbineMaxForMonth(simulationMonth,
+                                                                     y,
+                                                                     area,
+                                                                     calendar_,
+                                                                     scratchmap);
+
+                  yearlyMaxGeneration += problem.TurbineMax[month];
+
                   problem.TurbineMin[month] = data.mingens[realmonth];
                   problem.TurbineCible[month] = hydro_specific.monthly[realmonth].MTG;
                   problem.Apport[month] = data.inflows[realmonth];
                   problem.VolumeMin[month] = minLvl[firstDay];
                   problem.VolumeMax[month] = maxLvl[firstDay];
+              }
+
+              if (totalInflowsYear > yearlyMaxGeneration)
+              {
+                  logs.debug() << "Apports annuels > capacité turbinage annuelle";
+                  problem.TurbineMax.assign(12, totalInflowsYear);
               }
 
               DonneesOptimisationMensuelle::H2O_M_OptimiserUneAnnee(problem, 0);

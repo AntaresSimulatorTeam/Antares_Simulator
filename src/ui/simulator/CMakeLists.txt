@@ -1,7 +1,3 @@
-if(BUILD_UI)
-	add_compile_definitions(BUILD_UI)
-endif()
-
 #Define executable name
 set(execname "antares-ui-simulator")
 

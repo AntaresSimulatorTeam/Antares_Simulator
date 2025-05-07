@@ -234,7 +234,7 @@ public:
 static bool isThePortIsRegistered(const std::string& portId,
                                   const std::vector<YmlModel::Port>& ports)
 {
-    for (const auto [id, _]: ports)
+    for (const auto& [id, _]: ports)
     {
         if (id == portId)
         {

@@ -45,32 +45,25 @@ void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
                                                    const std::string& filename);
 
 /*!
- *  \brief Returns a list of available ortools linear solver names on our side
- *
- *  \return List of available ortools linear solver names
- */
-std::list<std::string> getAvailableLinearSolverNames();
-
-/*!
  *  \brief Returns a comma-seperated-list of available ortools linear solver names on our side
  *
  *  \return Comma-seperated-list of available ortools linear solver names
  */
-std::string availableLinearSolversString();
+std::string toString(const std::list<std::string>& solverList);
+
+/*!
+ *  \brief Returns a list of available ortools linear solver names on our side
+ *
+ *  \return List of available ortools linear solver names
+ */
+std::list<std::string> availableLinearSolversList();
 
 /*!
  *  \brief Returns a list of available ortools quadratic solver names on our side
  *
  *  \return List of available ortools quadratic solver names
  */
-std::list<std::string> getAvailableQuadraticSolverNames();
-
-/*!
- *  \brief Returns a comma-seperated-list of available ortools linear solver names on our side
- *
- *  \return Comma-seperated-list of available ortools linear solver names
- */
-std::string availableQuadraticSolversString();
+std::list<std::string> availableQuadraticSolversList();
 
 /*!
  *  \brief Create a MPSolver with correct linear or mixed variant
