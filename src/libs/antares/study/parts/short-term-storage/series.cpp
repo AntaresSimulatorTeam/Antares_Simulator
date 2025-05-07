@@ -20,7 +20,6 @@
 */
 #include "antares/study/parts/short-term-storage/series.h"
 
-#include <absl/strings/str_format.h>
 #include <fstream>
 #include <iomanip>
 
