@@ -50,7 +50,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO* p
         {
             ProblemeAResoudre->X[var] = 0.5
                                         * (ProblemeAResoudre->Xmax[var]
-                                           - ProblemeAResoudre->Xmin[var]);
+                                           + ProblemeAResoudre->Xmin[var]);
             ProblemeAResoudre->TypeDeVariable[var] = VARIABLE_FIXE;
         }
         else

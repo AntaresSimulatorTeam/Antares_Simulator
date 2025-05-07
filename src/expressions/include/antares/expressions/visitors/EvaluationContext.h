@@ -71,6 +71,7 @@ public:
 
     ParameterType getParameterType(const std::string& key) const;
     ParameterTypeAndValue getParameter(const std::string& key) const;
+    Optimisation::LinearProblemApi::ILinearProblemData& data() const;
 
     template<class T>
     struct CouldNotEvaluateConstantParameter: T

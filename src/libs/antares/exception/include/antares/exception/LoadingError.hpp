@@ -106,6 +106,12 @@ public:
     IncompatibleMILPOrtoolsSolver();
 };
 
+class UseMILPsolverWithWrongOptions: public LoadingError
+{
+public:
+    UseMILPsolverWithWrongOptions();
+};
+
 class IncompatibleOptRangeHydroPricing: public LoadingError
 {
 public:
@@ -141,6 +147,12 @@ class InvalidSolverSpecificParameters: public LoadingError
 public:
     explicit InvalidSolverSpecificParameters(const std::string& solver,
                                              const std::string& specificParameters);
+};
+
+class IncompatibleLinearSolverParameters: public LoadingError
+{
+public:
+    IncompatibleLinearSolverParameters();
 };
 
 class InvalidStudy: public LoadingError

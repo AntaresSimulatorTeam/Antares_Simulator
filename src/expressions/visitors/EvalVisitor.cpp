@@ -86,7 +86,15 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
 {
-    if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
+    const auto systemParameter = context_.getParameter(node->value());
+    if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
+        && systemParameter.type != ParameterType::CONSTANT)
+    {
+        std::string msg = "Parameter " + node->value() + " is declared constant in time and"
+                          + " scenario in library but not in system";
+        throw std::invalid_argument(msg);
+    }
+    else if (systemParameter.type == ParameterType::CONSTANT)
     {
         return EvaluationResult{context_.getSystemParameterValueAsDouble(node->value())};
     }
