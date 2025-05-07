@@ -569,8 +569,6 @@ BOOST_FIXTURE_TEST_CASE(short_term_storage_valid_cluster_and_year__reading_OK, F
                       tsNumber.to<uint>());
 
     BOOST_CHECK(my_rule.apply());
-    // Verify the TS number was properly applied to the storage cluster
-    // (Assuming you have a way to access the timeseries numbers for short-term storage)
 }
 
 BOOST_FIXTURE_TEST_CASE(short_term_storage_nonexistent_cluster, Fixture)
