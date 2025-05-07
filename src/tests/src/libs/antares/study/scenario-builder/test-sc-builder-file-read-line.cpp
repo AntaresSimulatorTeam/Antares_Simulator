@@ -148,6 +148,23 @@ struct Fixture
         study->bindingConstraintsGroups.resizeAllTimeseriesNumbers(study->parameters.nbYears);
         bc->RHSTimeSeries().resize(7, 1);
 
+        stCluster1.id = "st-cluster-1";
+        stCluster1.series->inflows.series.resize(12, 12);
+        add1.series().resize(12, 12);
+        stCluster1.additionalConstraints.push_back(add1);
+        area_1->shortTermStorage.storagesByIndex.push_back(stCluster1);
+
+        stCluster2.id = "st-cluster-2";
+        stCluster2.series->inflows.series.resize(12, 12);
+        add2.series().resize(12, 12);
+        stCluster2.additionalConstraints.push_back(add2);
+        area_2->shortTermStorage.storagesByIndex.push_back(stCluster2);
+
+        // Prepare time series numbers storage
+        area_1->shortTermStorage.resizeTimeseriesNumbers(10);
+        area_2->shortTermStorage.resizeTimeseriesNumbers(11);
+        area_3->shortTermStorage.resizeTimeseriesNumbers(12);
+
         BOOST_CHECK(my_rule.reset());
     }
 
@@ -166,6 +183,11 @@ struct Fixture
     std::shared_ptr<RenewableCluster> rnCluster_21;
     std::shared_ptr<RenewableCluster> rnCluster_31;
     std::shared_ptr<RenewableCluster> rnCluster_32;
+    // Setup short-term storage for testing
+    ShortTermStorage::STStorageCluster stCluster1;
+    ShortTermStorage::STStorageCluster stCluster2;
+    ShortTermStorage::AdditionalConstraints add1;
+    ShortTermStorage::AdditionalConstraints add2;
 
     ScenarioBuilder::Rules my_rule;
 };
@@ -528,6 +550,54 @@ BOOST_FIXTURE_TEST_CASE(thermalTSNumberData, Fixture)
 
     BOOST_CHECK_EQUAL(thCluster_12->series.timeseriesNumbers[2], 21);
     BOOST_CHECK_EQUAL(thCluster_12->series.timeseriesNumbers[5], 0);
+}
+
+// ========================
+// Tests on Short-Term Storage
+// ========================
+
+BOOST_FIXTURE_TEST_CASE(short_term_storage_valid_cluster_and_year__reading_OK, Fixture)
+{
+    AreaName yearNumber = "5";
+    String tsNumber = "3";
+    AreaName::Vector splitKey = {"st", "area 1", "st-cluster-1", yearNumber};
+
+    BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
+    BOOST_CHECK_EQUAL(my_rule.shortTermStorage.get_value("area 1",
+                                                         "st-cluster-1",
+                                                         yearNumber.to<uint>()),
+                      tsNumber.to<uint>());
+
+    BOOST_CHECK(my_rule.apply());
+    // Verify the TS number was properly applied to the storage cluster
+    // (Assuming you have a way to access the timeseries numbers for short-term storage)
+}
+
+BOOST_FIXTURE_TEST_CASE(short_term_storage_nonexistent_cluster, Fixture)
+{
+    AreaName yearNumber = "3";
+    String tsNumber = "2";
+    AreaName::Vector splitKey = {"st", "area 2", "nonexistent-cluster", yearNumber};
+    BOOST_CHECK(!my_rule.readLine(splitKey, tsNumber));
+}
+
+BOOST_FIXTURE_TEST_CASE(short_term_storage_nonexistent_area, Fixture)
+{
+    AreaName yearNumber = "7";
+    String tsNumber = "1";
+    AreaName::Vector splitKey = {"st", "nonexistent area", "any-cluster", yearNumber};
+    BOOST_CHECK(!my_rule.readLine(splitKey, tsNumber));
+}
+
+BOOST_FIXTURE_TEST_CASE(short_term_storage_large_ts_number__handled_gracefully, Fixture)
+{
+    // Add a short-term storage cluster to area 3
+
+    AreaName yearNumber = "10";
+    String veryLarge = "100000000"; // take maxTSnumber := 10'000
+    AreaName::Vector splitKey = {"st", "area 1", "st-cluster-1", yearNumber};
+
+    BOOST_CHECK(my_rule.readLine(splitKey, veryLarge));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
