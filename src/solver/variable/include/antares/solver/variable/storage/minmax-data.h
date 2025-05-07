@@ -33,7 +33,7 @@ public:
     struct Data
     {
         double value;
-        std::set<uint32_t> indices;
+        uint32_t indices;
     };
 
     MinMaxData() = default;

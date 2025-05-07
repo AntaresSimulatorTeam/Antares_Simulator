@@ -101,8 +101,7 @@ void MinMaxBase<OpInferior, NextT>::InternalExportIndices(SurveyResults& report,
     double* v = report.values[report.data.columnIndex];
     for (uint i = 0; i != Size; ++i)
     {
-        v[i] = array[i].indices.empty() ? std::numeric_limits<double>::quiet_NaN()
-                                        : static_cast<double>(*array[i].indices.begin());
+        v[i] = array[i].indices;
     }
 
     // Next column index
