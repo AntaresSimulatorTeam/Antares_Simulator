@@ -168,19 +168,19 @@ struct ComponentToAreaConnectionFillerFixture
         }
     }
 
-    void addEmptyConstraints(std::vector<std::string>& names)
+    void addEmptyConstraints(std::vector<std::string>& names, double rhs)
     {
         for (const auto& name: names)
         {
-            linearProblem.addConstraint(0, 0, name);
+            linearProblem.addConstraint(rhs, rhs, name);
         }
     }
 
-    void setUpLegacyLp(std::vector<std::string>& constraintNames, bool useNamedProblems)
+    void setUpLegacyLp(std::vector<std::string>& constraintNames, bool useNamedProblems, double rhs)
     {
         if (useNamedProblems)
         {
-            addEmptyConstraints(constraintNames);
+            addEmptyConstraints(constraintNames, rhs);
         }
         else
         {
@@ -189,7 +189,7 @@ struct ComponentToAreaConnectionFillerFixture
             {
                 lpConstraintNames.push_back("c" + std::to_string(i));
             }
-            addEmptyConstraints(lpConstraintNames);
+            addEmptyConstraints(lpConstraintNames, rhs);
         }
         BasisStatus bs;
         std::vector<std::string> variables;
@@ -230,7 +230,7 @@ BOOST_AUTO_TEST_CASE(add_one_term_to_balance_constraint_named)
 {
     setUpModelerVariables(0, 0);
     std::vector<std::string> constraints({"whatever", "AreaBalance::area<area1>::hour<0>"});
-    setUpLegacyLp(constraints, true);
+    setUpLegacyLp(constraints, true, 10);
     fillProblem(0, 0, {4.0});
 
     auto balance_ct = linearProblem.lookupConstraint("AreaBalance::area<area1>::hour<0>");
@@ -239,12 +239,12 @@ BOOST_AUTO_TEST_CASE(add_one_term_to_balance_constraint_named)
                       0);
     BOOST_CHECK_EQUAL(balance_ct->getCoefficient(
                         linearProblem.lookupVariable("connected_component_var.connected_var_1_t0")),
-                      5);
+                      -5);
     BOOST_CHECK_EQUAL(balance_ct->getCoefficient(
                         linearProblem.lookupVariable("connected_component_var.connected_var_2_t0")),
-                      -37);
-    BOOST_CHECK_EQUAL(balance_ct->getLb(), -(2 * 4 - 6));
-    BOOST_CHECK_EQUAL(balance_ct->getUb(), -(2 * 4 - 6));
+                      37);
+    BOOST_CHECK_EQUAL(balance_ct->getLb(), 10 + 2 * 4 - 6);
+    BOOST_CHECK_EQUAL(balance_ct->getUb(), 10 + 2 * 4 - 6);
 
     auto other_ct = linearProblem.lookupConstraint("whatever");
     BOOST_CHECK_EQUAL(other_ct->getCoefficient(linearProblem.lookupVariable(
@@ -256,8 +256,8 @@ BOOST_AUTO_TEST_CASE(add_one_term_to_balance_constraint_named)
     BOOST_CHECK_EQUAL(other_ct->getCoefficient(
                         linearProblem.lookupVariable("connected_component_var.connected_var_2_t0")),
                       0);
-    BOOST_CHECK_EQUAL(other_ct->getLb(), 0);
-    BOOST_CHECK_EQUAL(other_ct->getUb(), 0);
+    BOOST_CHECK_EQUAL(other_ct->getLb(), 10);
+    BOOST_CHECK_EQUAL(other_ct->getUb(), 10);
 }
 
 BOOST_AUTO_TEST_CASE(add_two_terms_to_balance_constraint_not_named)
@@ -266,7 +266,7 @@ BOOST_AUTO_TEST_CASE(add_two_terms_to_balance_constraint_not_named)
     // Legacy indexing of TS always starts at 1
     std::vector<std::string> constraints(
       {"whatever", "AreaBalance::area<area1>::hour<0>", "AreaBalance::area<area1>::hour<1>"});
-    setUpLegacyLp(constraints, false);
+    setUpLegacyLp(constraints, false, -100);
     fillProblem(10, 11, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -51.0, 8.3});
 
     auto balance_ct_t10 = linearProblem.lookupConstraint("c1");
@@ -277,10 +277,10 @@ BOOST_AUTO_TEST_CASE(add_two_terms_to_balance_constraint_not_named)
                       0);
     BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(linearProblem.lookupVariable(
                         "connected_component_var.connected_var_1_t10")),
-                      5);
+                      -5);
     BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(linearProblem.lookupVariable(
                         "connected_component_var.connected_var_2_t10")),
-                      -37);
+                      37);
     BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(linearProblem.lookupVariable(
                         "connected_component_var.not_connected_var_t11")),
                       0);
@@ -290,8 +290,8 @@ BOOST_AUTO_TEST_CASE(add_two_terms_to_balance_constraint_not_named)
     BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(linearProblem.lookupVariable(
                         "connected_component_var.connected_var_2_t11")),
                       0);
-    BOOST_CHECK_EQUAL(balance_ct_t10->getLb(), -(2 * -51 - 6));
-    BOOST_CHECK_EQUAL(balance_ct_t10->getUb(), -(2 * -51 - 6));
+    BOOST_CHECK_EQUAL(balance_ct_t10->getLb(), -100 + 2 * -51 - 6);
+    BOOST_CHECK_EQUAL(balance_ct_t10->getUb(), -100 + 2 * -51 - 6);
     ;
 
     BOOST_CHECK_EQUAL(balance_ct_t11->getCoefficient(linearProblem.lookupVariable(
@@ -308,19 +308,19 @@ BOOST_AUTO_TEST_CASE(add_two_terms_to_balance_constraint_not_named)
                       0);
     BOOST_CHECK_EQUAL(balance_ct_t11->getCoefficient(linearProblem.lookupVariable(
                         "connected_component_var.connected_var_1_t11")),
-                      5);
+                      -5);
     BOOST_CHECK_EQUAL(balance_ct_t11->getCoefficient(linearProblem.lookupVariable(
                         "connected_component_var.connected_var_2_t11")),
-                      -37);
-    BOOST_CHECK_EQUAL(balance_ct_t11->getLb(), -(2 * 8.3 - 6));
-    BOOST_CHECK_EQUAL(balance_ct_t11->getUb(), -(2 * 8.3 - 6));
+                      37);
+    BOOST_CHECK_EQUAL(balance_ct_t11->getLb(), -100 + 2 * 8.3 - 6);
+    BOOST_CHECK_EQUAL(balance_ct_t11->getUb(), -100 + 2 * 8.3 - 6);
 }
 
 BOOST_AUTO_TEST_CASE(fail_if_constraint_not_defined)
 {
     setUpModelerVariables(0, 0);
     std::vector<std::string> constraints({"whatever"});
-    setUpLegacyLp(constraints, true);
+    setUpLegacyLp(constraints, true, 0);
     BOOST_CHECK_EXCEPTION(fillProblem(0, 0, {4.0}),
                           std::runtime_error,
                           checkMessage("A component is connected to area \"area1\", that does not "

@@ -66,7 +66,7 @@ library:
       port-field-definitions:
         - port: power_port
           field: flow
-          definition: power
+          definition: -power
         - port: hydrogen_port
           field: flow
-          definition: -efficiency * power
+          definition: efficiency * power

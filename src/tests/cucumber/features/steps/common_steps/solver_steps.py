@@ -89,6 +89,28 @@ def check_annual_cost(context, one_year_value):
     assert_double_close(one_year_value, context.soh.get_annual_system_cost()["MAX"], 0.00001)
 
 
+@then('the annual system cost is {one_year_value1:g} with the linear solver {solver1} and {one_year_value2:g} with the others')
+def check_annual_cost_depending_on_solver(context, one_year_value1, solver1, one_year_value2):
+    if solver1 == get_linear_solver(context):
+        check_annual_cost(context, one_year_value1)
+    else:
+        check_annual_cost(context, one_year_value2)
+
+
+def get_linear_solver(context) -> str:
+    if "linear-solver" in context.config.userdata:
+        return context.config.userdata["linear-solver"]
+    else:
+        return "sirius"
+
+
+def get_quadratic_solver(context) -> str:
+    if "quadratic-solver" in context.config.userdata:
+        return context.config.userdata["quadratic-solver"]
+    else:
+        return "sirius"
+
+
 @then('the simulation takes less than {seconds:g} seconds')
 def check_simu_time(context, seconds):
     assert context.soh.get_simu_time() <= seconds
@@ -208,14 +230,8 @@ def init_simulation(context):
 
 def build_antares_solver_command(context):
     command = [context.config.userdata["antares-solver"], "-i", str(context.study_path)]
-    linearSolver = "sirius"
-    quadraticSolver = "sirius"
-    if "linear-solver" in context.config.userdata:
-        linearSolver = context.config.userdata["linear-solver"]
-    command.append('--linear-solver=' + linearSolver)
-    if "quadratic-solver" in context.config.userdata:
-        quadraticSolver = context.config.userdata["quadratic-solver"]
-    command.append('--quadratic-solver=' + quadraticSolver)
+    command.append('--linear-solver=' + get_linear_solver(context))
+    command.append('--quadratic-solver=' + get_quadratic_solver(context))
 
     if context.named_mps_problems:
         command.append('--named-mps-problems')

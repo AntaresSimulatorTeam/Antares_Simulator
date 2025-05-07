@@ -132,13 +132,15 @@ void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
     {
         IMipConstraint* areaBalanceConstraint = getBalanceConstraint(pb, lowerAreaId, ts);
         // Contribution is added to the left-hand side of the constraint
+        // We invert the sign bc modeler is in "gen>0, load<0" convention
+        // legacy constraint is in "gen<0, load>0" convention
         for (const auto& [varKey, coef]: expression.coefPerVar())
         {
             auto var = modelerVariableDictionary_[varKey];
-            areaBalanceConstraint->setCoefficient(var, coef);
+            areaBalanceConstraint->setCoefficient(var, -coef);
         }
-        areaBalanceConstraint->setBounds(areaBalanceConstraint->getLb() - expression.offset(),
-                                         areaBalanceConstraint->getUb() - expression.offset());
+        areaBalanceConstraint->setBounds(areaBalanceConstraint->getLb() + expression.offset(),
+                                         areaBalanceConstraint->getUb() + expression.offset());
     }
 }
 

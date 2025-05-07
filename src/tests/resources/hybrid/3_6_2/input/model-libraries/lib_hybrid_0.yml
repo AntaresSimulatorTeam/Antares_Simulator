@@ -31,7 +31,7 @@ library:
       port-field-definitions:
         - port: generation
           field: flow_field
-          definition: -p
+          definition: p
       objective: p * prop_cost
 
     - id: load
@@ -46,4 +46,4 @@ library:
       port-field-definitions:
         - port: consumption
           field: flow_field
-          definition: load_value
+          definition: -load_value
