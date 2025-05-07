@@ -36,8 +36,8 @@ using Weight = double;
 using TimeSeriesAndWeight = std::vector<std::pair<TimeSerie, Weight>>;
 
 TimeSerie timeSeriesColumn(Data::BindingConstraint* bc,
-                            const Data::BindingConstraintGroupRepository& bcgroups,
-                            int year)
+                           const Data::BindingConstraintGroupRepository& bcgroups,
+                           int year)
 {
     assert(bc->RHSTimeSeries().width && "Invalid constraint data width");
 
