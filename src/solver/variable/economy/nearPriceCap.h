@@ -194,7 +194,7 @@ public:
     {
         double mrgPrice = -state.hourlyResults->CoutsMarginauxHoraires[state.hourInTheWeek];
 
-        if (mrgPrice > unsuppliedEnergyCost - threshold + eps)
+        if (mrgPrice > unsuppliedEnergyCost - margin + eps)
             pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = 1.;
 
         NextType::hourForEachArea(state, numSpace);
@@ -230,9 +230,8 @@ private:
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel;
     const double eps = 1e-2;
-    const double threshold = 5.;
+    const double margin = 5.;
     double unsuppliedEnergyCost = 0.;
-
 }; // class NearPriceCap
 
 } // namespace Antares::Solver::Variable::Economy
