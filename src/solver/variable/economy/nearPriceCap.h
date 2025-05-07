@@ -132,20 +132,13 @@ public:
     {
         pNbYearsParallel = study.maxNbYearsInParallel;
 
-        // Intermediate values
-        InitializeResultsFromStudy(AncestorType::pResults, study);
+        AncestorType::InitializeResultsFromStudy(AncestorType::pResults, study);
 
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
 
         NextType::initializeFromStudy(study);
-    }
-
-    template<class R>
-    static void InitializeResultsFromStudy(R& results, Data::Study& study)
-    {
-        VariableAccessorType::InitializeAndReset(results, study);
     }
 
     void initializeFromArea(Data::Study* study, Data::Area* area)
@@ -155,22 +148,12 @@ public:
         NextType::initializeFromArea(study, area);
     }
 
-    void initializeFromLink(Data::Study* study, Data::AreaLink* link)
-    {
-        NextType::initializeFromAreaLink(study, link);
-    }
-
     void simulationBegin()
     {
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
             pValuesForTheCurrentYear[numSpace].reset();
 
         NextType::simulationBegin();
-    }
-
-    void simulationEnd()
-    {
-        NextType::simulationEnd();
     }
 
     void yearBegin(unsigned int year, unsigned int numSpace)
@@ -205,11 +188,6 @@ public:
         }
 
         NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
-    }
-
-    void hourBegin(unsigned int hourInTheYear)
-    {
-        NextType::hourBegin(hourInTheYear);
     }
 
     void hourForEachArea(State& state, unsigned int numSpace)
