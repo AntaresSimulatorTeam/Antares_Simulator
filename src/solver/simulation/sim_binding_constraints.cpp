@@ -150,7 +150,6 @@ void prepareBindingConstraint(PROBLEME_HEBDO& problem,
             for (unsigned day = 0; day != 7; ++day)
             {
                 auto dailyClusterMustRunProduction = getClusterDailyProduction(
-
                   PasDeTempsDebut,
                   clusterMustRunTimeSeriesAndWeight,
                   day);
