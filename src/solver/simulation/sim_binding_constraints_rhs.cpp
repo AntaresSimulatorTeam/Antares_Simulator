@@ -19,14 +19,56 @@
 
 #include "antares/solver/simulation/sim_binding_constraints_rhs.h"
 
+#include "antares/study/binding_constraint/BindingConstraintsRepository.h"
+
+static void setRHSforHourlyBC()
+{
+}
+
+static void setRHSforDailyBC()
+{
+}
+
+static void setRHSforWeeklyBC()
+{
+}
+
 namespace Simulation
 {
 void setBindingConstraintsRHS(PROBLEME_HEBDO& problem,
                               const Antares::Data::BindingConstraintsRepository& bindingConstraints,
-                              const Antares::Data::BindingConstraintGroupRepository& bcgroups,
+                              const Antares::Data::BindingConstraintGroupRepository& bcGroups,
                               const unsigned PasDeTempsDebut,
                               const unsigned NombreDePasDeTemps,
                               const unsigned weekFirstDay)
 {
+    unsigned bcIndex = 0;
+    for (const auto& bc: bindingConstraints.activeConstraints())
+    {
+        switch (bc->type())
+        {
+        case Data::BindingConstraint::typeHourly:
+        {
+            setRHSforHourlyBC();
+        }
+        case Data::BindingConstraint::typeDaily:
+        {
+            setRHSforDailyBC();
+        }
+        case Data::BindingConstraint::typeWeekly:
+        {
+            setRHSforWeeklyBC();
+        }
+        case Data::BindingConstraint::typeUnknown:
+        case Data::BindingConstraint::typeMax:
+        default:
+        {
+            logs.error() << "internal error. Please submit a full bug report";
+            assert(false && "invalid constraint type");
+            break;
+        }
+        }
+        bcIndex++;
+    }
 }
 } // namespace Simulation
