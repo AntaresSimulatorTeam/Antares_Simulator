@@ -52,6 +52,14 @@ def run_modeler(context):
     print(f"Running command: {command}")
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = process.communicate()
+    if out:
+        context.logs_out = out.decode("utf-8")
+    else:
+        context.logs_out = ""
+    if err:
+        context.logs_err = err.decode("utf-8")
+    else:
+        context.logs_err = ""
 
     if process.returncode != 0:
         print("*********************** Begin stdout ***********************")
