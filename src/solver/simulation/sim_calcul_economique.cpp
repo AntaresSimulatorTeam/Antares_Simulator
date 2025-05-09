@@ -253,9 +253,6 @@ void SIM_InitialisationProblemeHebdo(Study& study,
         PtMat.bindingConstraint = bc;
         PtMat.NombreDInterconnexionsDansLaContrainteCouplante = bc->linkCount();
         PtMat.NombreDePaliersDispatchDansLaContrainteCouplante = bc->clusterCount();
-        PtMat.NombreDElementsDansLaContrainteCouplante
-          = PtMat.NombreDInterconnexionsDansLaContrainteCouplante
-            + PtMat.NombreDePaliersDispatchDansLaContrainteCouplante;
         PtMat.NomDeLaContrainteCouplante = bc->name().c_str();
         switch (bc->type())
         {
