@@ -23,11 +23,4 @@ Feature: 7 - End-to-end tests for electrolyser model
     When I run antares modeler
     Then the simulation succeeds
     And the objective value is greater than 14515576 and lower than 14515676
-
-
-
-
-
-
-
- 
+    
