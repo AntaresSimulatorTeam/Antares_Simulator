@@ -28,6 +28,7 @@
 #include <antares/utils/utils.h>
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/sim_binding_constraints.h"
+#include "antares/solver/simulation/sim_binding_constraints_rhs.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/simulation/simulation.h"
 #include "antares/study/fwd.h"
@@ -532,6 +533,13 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             ntc.ValeurDeLoopFlowOrigineVersExtremite[k] = lnk.parameters[fhlLoopFlow][hourInYear];
         }
     }
+
+    Simulation::setBindingConstraintsRHS(problem,
+                                         study.bindingConstraints,
+                                         study.bindingConstraintsGroups,
+                                         PasDeTempsDebut,
+                                         problem.NombreDePasDeTemps,
+                                         weekFirstDay);
 
     int hourInYear = PasDeTempsDebut;
     for (unsigned hourInWeek = 0; hourInWeek < problem.NombreDePasDeTemps;
