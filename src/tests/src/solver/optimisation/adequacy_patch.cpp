@@ -1,5 +1,3 @@
-#define BOOST_TEST_MODULE test adequacy patch functions
-
 #define WIN32_LEAN_AND_MEAN
 
 #include <fstream>
@@ -85,6 +83,8 @@ AdqPatchParams createParams()
 
     return p;
 }
+
+BOOST_AUTO_TEST_SUITE(_AdequacyPatch_)
 
 // Area 0 is physical area inside adq-patch connected to two areas:
 // Area1 virtual-area, and Area2-virtual area
@@ -377,3 +377,5 @@ BOOST_AUTO_TEST_CASE(check_adq_param_wrong_hurdle_cost)
     auto p = createParams();
     BOOST_CHECK_THROW(p.checkAdqPatchIncludeHurdleCost(false), Error::IncompatibleHurdleCostCSR);
 }
+
+BOOST_AUTO_TEST_SUITE_END()

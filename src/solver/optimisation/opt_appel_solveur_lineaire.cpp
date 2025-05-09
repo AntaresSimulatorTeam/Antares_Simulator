@@ -139,19 +139,22 @@ FillContext buildFillContext(PROBLEME_HEBDO* problemeHebdo, const int NumInterva
     unsigned firstTimestamp, lastTimestamp;
     if (problemeHebdo->OptimisationAuPasHebdomadaire)
     {
-        firstTimestamp = problemeHebdo->weekInTheYear * problemeHebdo->NombreDePasDeTempsDUneJournee
+        firstTimestamp = problemeHebdo->weekInTheYear
+                         * static_cast<unsigned int>(problemeHebdo->NombreDePasDeTempsDUneJournee)
                          * problemeHebdo->NombreDeJours;
         lastTimestamp = firstTimestamp
-                        + problemeHebdo->NombreDePasDeTempsDUneJournee
+                        + static_cast<unsigned int>(problemeHebdo->NombreDePasDeTempsDUneJournee)
                             * problemeHebdo->NombreDeJours
                         - 1;
     }
     else
     {
         firstTimestamp = (problemeHebdo->weekInTheYear * problemeHebdo->NombreDeJours
-                          + NumIntervalle)
-                         * problemeHebdo->NombreDePasDeTempsDUneJournee;
-        lastTimestamp = firstTimestamp + problemeHebdo->NombreDePasDeTempsDUneJournee - 1;
+                          + static_cast<unsigned int>(NumIntervalle))
+                         * static_cast<unsigned int>(problemeHebdo->NombreDePasDeTempsDUneJournee);
+        lastTimestamp = firstTimestamp
+                        + static_cast<unsigned int>(problemeHebdo->NombreDePasDeTempsDUneJournee)
+                        - 1;
     }
     return FillContext(firstTimestamp, lastTimestamp);
 }
@@ -351,11 +354,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                     .mps_writer_factory = mps_writer_factory,
                     .objectiveValue = 0};
         }
-
-        else
-        {
-            throw FatalError("Internal error: insufficient memory");
-        }
+        throw FatalError("Internal error: insufficient memory");
     }
 
     writeModelerSolutions(solver, Probleme, optimizationNumber, optPeriodStringGenerator, writer);
@@ -363,7 +362,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     return {.success = true,
             .timeMeasure = timeMeasure,
             .mps_writer_factory = mps_writer_factory,
-            .objectiveValue = solver->Objective().Value()};
+            .objectiveValue = solver != nullptr ? solver->Objective().Value() : 0};
 }
 
 bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
@@ -439,11 +438,13 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         // TODO remove this if..else
         if (optimizationNumber == PREMIERE_OPTIMISATION)
         {
-            problemeHebdo->coutOptimalSolution1[NumIntervalle] = optimizationCost;
+            problemeHebdo->coutOptimalSolution1[static_cast<unsigned int>(NumIntervalle)]
+              = optimizationCost;
         }
         else
         {
-            problemeHebdo->coutOptimalSolution2[NumIntervalle] = optimizationCost;
+            problemeHebdo->coutOptimalSolution2[static_cast<unsigned int>(NumIntervalle)]
+              = optimizationCost;
         }
         for (int Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
         {

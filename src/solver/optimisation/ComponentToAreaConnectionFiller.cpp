@@ -24,6 +24,7 @@
 #include <regex>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
+#include "antares/exception/RuntimeError.hpp"
 #include "antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
@@ -37,9 +38,9 @@ ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
   const unsigned int nTimestampsInProblem,
   const ModelerStudy::SystemModel::System* modelerSystem,
   const VariableDictionary& modelerVariableDictionary):
-    nTimestampsInProblem_(nTimestampsInProblem),
     modelerSystem_(modelerSystem),
-    modelerVariableDictionary_(modelerVariableDictionary)
+    modelerVariableDictionary_(modelerVariableDictionary),
+    nTimestampsInProblem_(nTimestampsInProblem)
 {
     parseConstraintIds(problemeSimplexe);
 }
@@ -59,7 +60,7 @@ static std::string getLegacyConstraintName(const PROBLEME_SIMPLEXE_NOMME* proble
 void ComponentToAreaConnectionFiller::parseConstraintIds(
   const PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
 {
-    for (unsigned int idxRow = 0; idxRow < problemeSimplexe->NombreDeContraintes; ++idxRow)
+    for (int idxRow = 0; idxRow < problemeSimplexe->NombreDeContraintes; ++idxRow)
     {
         std::regex pattern(R"(AreaBalance::area<(.+)>::hour<(\d+)>)");
         std::smatch matches;
@@ -86,9 +87,9 @@ static std::string getConnectionFieldId(const ModelerStudy::SystemModel::Compone
     auto optionalField = component.getModel()->Ports().at(portId).Type().AreaConnectionFieldId();
     if (!optionalField.has_value())
     {
-        throw std::runtime_error("Component \"" + component.Id()
-                                 + "\" is connected to an area using a port type that has no "
-                                   "area-connection field defined.");
+        throw Error::RuntimeError("Component \"" + component.Id()
+                                  + "\" is connected to an area using a port type that has no "
+                                    "area-connection field defined.");
     }
     return optionalField.value();
 }
@@ -106,9 +107,9 @@ IMipConstraint* ComponentToAreaConnectionFiller::getBalanceConstraint(ILinearPro
             return ct;
         }
     }
-    throw std::runtime_error("A component is connected to area \"" + areaId
-                             + "\", that does not have a balance constraint defined for timestamp "
-                             + std::to_string(ts));
+    throw Error::RuntimeError("A component is connected to area \"" + areaId
+                              + "\", that does not have a balance constraint defined for timestamp "
+                              + std::to_string(ts));
 }
 
 void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
@@ -136,7 +137,7 @@ void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
         // legacy constraint is in "gen<0, load>0" convention
         for (const auto& [varKey, coef]: expression.coefPerVar())
         {
-            auto var = modelerVariableDictionary_[varKey];
+            auto* var = modelerVariableDictionary_[varKey];
             areaBalanceConstraint->setCoefficient(var, -coef);
         }
         areaBalanceConstraint->setBounds(areaBalanceConstraint->getLb() + expression.offset(),
