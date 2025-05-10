@@ -545,12 +545,12 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
     for (unsigned hourInWeek = 0; hourInWeek < problem.NombreDePasDeTemps;
          ++hourInWeek, ++hourInYear)
     {
-        Simulation::prepareBindingConstraint(problem,
-                                             PasDeTempsDebut,
-                                             study.bindingConstraints,
-                                             study.bindingConstraintsGroups,
-                                             weekFirstDay,
-                                             hourInWeek);
+        //        Simulation::prepareBindingConstraint(problem,
+        //                                             PasDeTempsDebut,
+        //                                             study.bindingConstraints,
+        //                                             study.bindingConstraintsGroups,
+        //                                             weekFirstDay,
+        //                                             hourInWeek);
 
         for (uint k = 0; k < nbPays; ++k)
         {
