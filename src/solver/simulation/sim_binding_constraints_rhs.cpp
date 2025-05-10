@@ -19,7 +19,94 @@
 
 #include "antares/solver/simulation/sim_binding_constraints_rhs.h"
 
+#include <numeric>
+#include <span>
+
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include "antares/study/binding_constraint/BindingConstraint.h"
 #include "antares/study/binding_constraint/BindingConstraintsRepository.h"
+
+using namespace Antares::Data;
+using clusterWeightMap = Antares::Data::BindingConstraint::clusterWeightMap;
+using TimeSerie = std::span<const double>;
+
+TimeSerie fetchBindingConstraintRHS(const BindingConstraint* bc,
+                                    const BindingConstraintGroupRepository& bcGroups,
+                                    int year)
+{
+    assert(bc->RHSTimeSeries().width && "Invalid constraint data width");
+
+    uint tsIndexForBc = 0;
+    if (auto* group = bcGroups[bc->group()])
+    {
+        tsIndexForBc = group->timeseriesNumbers[year];
+    }
+
+    // If there is only one TS, always select it.
+    const auto ts_number = bc->RHSTimeSeries().width == 1 ? 0 : tsIndexForBc;
+    auto& timeSeries = bc->RHSTimeSeries();
+    const double* column = timeSeries[ts_number];
+    return {column, timeSeries.height};
+}
+
+auto filterByMustrunCluster(const clusterWeightMap& map)
+{
+    return map
+           | std::ranges::views::filter(
+             [](auto pair) { return pair.first->isEnabled() && pair.first->isMustRun(); });
+}
+
+std::array<double, 7>& operator*(std::array<double, 7>& left, const double& scalar)
+{
+    for (unsigned i = 0; i < 7; i++)
+    {
+        left[i] *= scalar;
+    }
+    return left;
+}
+
+std::array<double, 7>& operator+=(std::array<double, 7>& left, const std::array<double, 7>& right)
+{
+    for (unsigned i = 0; i < 7; i++)
+    {
+        left[i] += right[i];
+    }
+    return left;
+}
+
+std::array<double, 7> accumulateByDay(const TimeSerie& ts)
+{
+    if (ts.size() != HOURS_PER_WEEK) // ts has to be an hourly TS, covering a week
+    {
+        throw std::invalid_argument("Trying to make a daily TS of a non 168 values TS");
+    }
+    std::array<double, 7> to_return;
+    std::ranges::fill(to_return, 0.); // std::array initialization
+    for (unsigned i = 0; i < 7; i++)
+    {
+        to_return[i] = std::accumulate(ts.begin() + i * HOURS_PER_DAY,
+                                       ts.begin() + (i + 1) * HOURS_PER_DAY,
+                                       0.);
+    }
+    return to_return;
+}
+
+std::array<double, 7> computeMustrunDailyTerms(const BindingConstraint* bc,
+                                               const unsigned year,
+                                               const unsigned PasDeTempsDebut)
+{
+    std::array<double, 7> to_return;
+    std::ranges::fill(to_return, 0.); // std::array initialization
+    auto mustrunClustersWeigths = filterByMustrunCluster(bc->clustersAndWeights());
+    for (auto& [cluster, weight]: mustrunClustersWeigths)
+    {
+        auto hourlyProductionTS = TimeSerie{cluster->series.getColumn(year) + PasDeTempsDebut,
+                                            HOURS_PER_WEEK};
+        std::array<double, 7> dailyProductionTS = accumulateByDay(hourlyProductionTS);
+        to_return += dailyProductionTS * weight;
+    }
+    return to_return;
+}
 
 static void setRHSforHourlyBC()
 {
@@ -29,15 +116,33 @@ static void setRHSforDailyBC()
 {
 }
 
-static void setRHSforWeeklyBC()
+static void setRHSforWeeklyBC(PROBLEME_HEBDO& problem,
+                              const BindingConstraint* bc,
+                              const BindingConstraintGroupRepository& bcGroups,
+                              const unsigned PasDeTempsDebut,
+                              const unsigned weekFirstDay,
+                              const unsigned bcIndex)
 {
+    assert(weekFirstDay + 6 < bc->RHSTimeSeries().height && "Invalid constraint data height");
+
+    TimeSerie dailyBCrhs = fetchBindingConstraintRHS(bc, bcGroups, problem.year);
+    std::array<double, 7> mustrunDailyTerms = computeMustrunDailyTerms(bc,
+                                                                       problem.year,
+                                                                       PasDeTempsDebut);
+
+    double sum = 0.;
+    for (unsigned day = 0; day != 7; ++day)
+    {
+        sum += dailyBCrhs[weekFirstDay + day] - mustrunDailyTerms[day];
+    }
+    problem.MatriceDesContraintesCouplantes[bcIndex].SecondMembreDeLaContrainteCouplante[0] = sum;
 }
 
 namespace Simulation
 {
 void setBindingConstraintsRHS(PROBLEME_HEBDO& problem,
-                              const Antares::Data::BindingConstraintsRepository& bindingConstraints,
-                              const Antares::Data::BindingConstraintGroupRepository& bcGroups,
+                              const BindingConstraintsRepository& bindingConstraints,
+                              const BindingConstraintGroupRepository& bcGroups,
                               const unsigned PasDeTempsDebut,
                               const unsigned NombreDePasDeTemps,
                               const unsigned weekFirstDay)
@@ -50,14 +155,17 @@ void setBindingConstraintsRHS(PROBLEME_HEBDO& problem,
         case Data::BindingConstraint::typeHourly:
         {
             setRHSforHourlyBC();
+            break;
         }
         case Data::BindingConstraint::typeDaily:
         {
             setRHSforDailyBC();
+            break;
         }
         case Data::BindingConstraint::typeWeekly:
         {
-            setRHSforWeeklyBC();
+            setRHSforWeeklyBC(problem, bc.get(), bcGroups, PasDeTempsDebut, weekFirstDay, bcIndex);
+            break;
         }
         case Data::BindingConstraint::typeUnknown:
         case Data::BindingConstraint::typeMax:
