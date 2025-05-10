@@ -36,17 +36,15 @@ TimeSerie fetchBindingConstraintRHS(const BindingConstraint* bc,
 {
     assert(bc->RHSTimeSeries().width && "Invalid constraint data width");
 
-    uint tsIndexForBc = 0;
+    unsigned ts_number = 0;
     if (auto* group = bcGroups[bc->group()])
     {
-        tsIndexForBc = group->timeseriesNumbers[year];
+        // If there is only one TS, always select it.
+        ts_number = bc->RHSTimeSeries().width == 1 ? 0 : group->timeseriesNumbers[year];
     }
 
-    // If there is only one TS, always select it.
-    const auto ts_number = bc->RHSTimeSeries().width == 1 ? 0 : tsIndexForBc;
-    auto& timeSeries = bc->RHSTimeSeries();
-    const double* column = timeSeries[ts_number];
-    return {column, timeSeries.height};
+    const double* TS = bc->RHSTimeSeries()[ts_number];
+    return {TS, bc->RHSTimeSeries().height};
 }
 
 auto filterByMustrunCluster(const clusterWeightMap& map)
@@ -112,8 +110,15 @@ static void setRHSforHourlyBC()
 {
 }
 
-static void setRHSforDailyBC()
+static void setRHSforDailyBC(PROBLEME_HEBDO& problem,
+                             const BindingConstraint* bc,
+                             const BindingConstraintGroupRepository& bcGroups,
+                             const unsigned PasDeTempsDebut,
+                             const unsigned weekFirstDay,
+                             const unsigned bcIndex)
 {
+    std::vector<double>& rhs = problem.MatriceDesContraintesCouplantes[bcIndex]
+                                 .SecondMembreDeLaContrainteCouplante;
 }
 
 static void setRHSforWeeklyBC(PROBLEME_HEBDO& problem,
@@ -159,7 +164,7 @@ void setBindingConstraintsRHS(PROBLEME_HEBDO& problem,
         }
         case Data::BindingConstraint::typeDaily:
         {
-            setRHSforDailyBC();
+            setRHSforDailyBC(problem, bc.get(), bcGroups, PasDeTempsDebut, weekFirstDay, bcIndex);
             break;
         }
         case Data::BindingConstraint::typeWeekly:
