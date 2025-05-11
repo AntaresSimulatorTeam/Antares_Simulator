@@ -34,6 +34,5 @@ void setBindingConstraintsRHS(PROBLEME_HEBDO& problem,
                               const Antares::Data::BindingConstraintsRepository& bindingConstraints,
                               const Antares::Data::BindingConstraintGroupRepository& bcgroups,
                               const unsigned PasDeTempsDebut,
-                              const unsigned NombreDePasDeTemps,
                               const unsigned weekFirstDay);
 } // namespace Simulation

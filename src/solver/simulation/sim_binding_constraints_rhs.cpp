@@ -37,10 +37,10 @@ TimeSerie fetchBindingConstraintRHS(const BindingConstraint* bc,
     assert(bc->RHSTimeSeries().width && "Invalid constraint data width");
 
     unsigned ts_number = 0;
-    if (auto* group = bcGroups[bc->group()])
+    auto* group = bcGroups[bc->group()];
+    if (!group && bc->RHSTimeSeries().width != 1)
     {
-        // If there is only one TS, always select it.
-        ts_number = bc->RHSTimeSeries().width == 1 ? 0 : group->timeseriesNumbers[year];
+        ts_number = group->timeseriesNumbers[year];
     }
 
     const double* TS = bc->RHSTimeSeries()[ts_number];
@@ -74,12 +74,14 @@ std::array<double, 7>& operator+=(std::array<double, 7>& left, const std::array<
 
 std::array<double, 7> accumulateByDay(const TimeSerie& ts)
 {
-    if (ts.size() != HOURS_PER_WEEK) // ts has to be an hourly TS, covering a week
+    if (ts.size() != Constants::nbHoursInAWeek) // ts must be an hourly TS, covering a week
     {
         throw std::invalid_argument("Trying to make a daily TS of a non 168 values TS");
     }
+
     std::array<double, 7> to_return;
     std::ranges::fill(to_return, 0.); // std::array initialization
+
     for (unsigned i = 0; i < 7; i++)
     {
         to_return[i] = std::accumulate(ts.begin() + i * HOURS_PER_DAY,
@@ -95,11 +97,12 @@ std::array<double, 7> computeMustrunDailyTerms(const BindingConstraint* bc,
 {
     std::array<double, 7> to_return;
     std::ranges::fill(to_return, 0.); // std::array initialization
+
     auto mustrunClustersWeigths = filterByMustrunCluster(bc->clustersAndWeights());
     for (auto& [cluster, weight]: mustrunClustersWeigths)
     {
         auto hourlyProductionTS = TimeSerie{cluster->series.getColumn(year) + PasDeTempsDebut,
-                                            HOURS_PER_WEEK};
+                                            Constants::nbHoursInAWeek};
         std::array<double, 7> dailyProductionTS = accumulateByDay(hourlyProductionTS);
         to_return += dailyProductionTS * weight;
     }
@@ -117,8 +120,19 @@ static void setRHSforDailyBC(PROBLEME_HEBDO& problem,
                              const unsigned weekFirstDay,
                              const unsigned bcIndex)
 {
+    assert(weekFirstDay + 6 < bc->RHSTimeSeries().height && "Invalid constraint data height");
+
+    TimeSerie dailyBCrhs = fetchBindingConstraintRHS(bc, bcGroups, problem.year);
+    std::array<double, 7> mustrunDailyTerms = computeMustrunDailyTerms(bc,
+                                                                       problem.year,
+                                                                       PasDeTempsDebut);
     std::vector<double>& rhs = problem.MatriceDesContraintesCouplantes[bcIndex]
                                  .SecondMembreDeLaContrainteCouplante;
+
+    for (unsigned day = 0; day != 7; ++day)
+    {
+        rhs[day] = dailyBCrhs[weekFirstDay + day] - mustrunDailyTerms[day];
+    }
 }
 
 static void setRHSforWeeklyBC(PROBLEME_HEBDO& problem,
@@ -149,7 +163,6 @@ void setBindingConstraintsRHS(PROBLEME_HEBDO& problem,
                               const BindingConstraintsRepository& bindingConstraints,
                               const BindingConstraintGroupRepository& bcGroups,
                               const unsigned PasDeTempsDebut,
-                              const unsigned NombreDePasDeTemps,
                               const unsigned weekFirstDay)
 {
     unsigned bcIndex = 0;

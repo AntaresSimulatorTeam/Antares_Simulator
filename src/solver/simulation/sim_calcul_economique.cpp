@@ -538,7 +538,6 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                                          study.bindingConstraints,
                                          study.bindingConstraintsGroups,
                                          PasDeTempsDebut,
-                                         problem.NombreDePasDeTemps,
                                          weekFirstDay);
 
     int hourInYear = PasDeTempsDebut;
