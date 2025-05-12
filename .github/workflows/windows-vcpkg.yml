@@ -375,7 +375,7 @@ jobs:
       - name: .zip creation
         run: |
           cd _build
-          cpack -G ZIP -D CPACK_INSTALLED_DIRECTORIES="${{ env.ORTOOLS_DIR }}/install;bin"
+          cpack -G ZIP -D CPACK_INSTALLED_DIRECTORIES="${{ env.ORTOOLS_DIR }}/install/lib;bin"
 
       - name: Installer upload
         uses: actions/upload-artifact@v4

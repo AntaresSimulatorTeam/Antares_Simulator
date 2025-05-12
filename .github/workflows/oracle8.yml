@@ -119,7 +119,7 @@ jobs:
       - name: Installer .rpm creation
         run: |
           cd _build
-          cpack -G RPM -D CPACK_INSTALLED_DIRECTORIES="${{ env.ORTOOLS_DIR }}/install;bin"
+          cpack -G RPM -D CPACK_INSTALLED_DIRECTORIES="${{ env.ORTOOLS_DIR }}/install/lib;bin"
 
       - name: Solver archive creation
         run: |
@@ -134,7 +134,7 @@ jobs:
       - name: .tar.gz creation
         run: |
           cd _build
-          cpack -G TGZ -D CPACK_INSTALLED_DIRECTORIES="${{ env.ORTOOLS_DIR }}/install;bin"
+          cpack -G TGZ -D CPACK_INSTALLED_DIRECTORIES="${{ env.ORTOOLS_DIR }}/install/lib;bin"
 
       - name: Installer TGZ push
         uses: actions/upload-artifact@v4

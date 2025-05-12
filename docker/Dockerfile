@@ -71,11 +71,11 @@ RUN  source /opt/rh/devtoolset-11/enable && \
 
 #Installer .rpm creation
 RUN cd _build && \
-    cpack -G RPM -D CPACK_INSTALLED_DIRECTORIES="/ortools/install;bin"
+    cpack -G RPM -D CPACK_INSTALLED_DIRECTORIES="/ortools/install/lib;bin"
 
 #Solver archive creation
 RUN cd _build && \
-     cpack -G RPM -D CPACK_INSTALLED_DIRECTORIES="/ortools/install;bin"
+     cpack -G RPM -D CPACK_INSTALLED_DIRECTORIES="/ortools/install/lib;bin"
 
 RUN cd _build && \
     cmake --install . --prefix install && \
