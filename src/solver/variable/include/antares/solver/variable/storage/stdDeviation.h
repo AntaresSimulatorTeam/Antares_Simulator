@@ -26,7 +26,7 @@
 
 #include <boost/multiprecision/cpp_dec_float.hpp>
 
-using HighPrecision = boost::multiprecision::cpp_dec_float<4>;
+using HighPrecision = boost::multiprecision::cpp_dec_float<32>;
 
 namespace Antares
 {
@@ -100,25 +100,25 @@ protected:
         // StdDeviation value for each hour throughout all years
         for (i = 0; i != HOURS_PER_YEAR; ++i)
         {
-            stdDeviationHourly[i] = std::fma(rhs.hour[i], rhs.hour[i] * pRatio, stdDeviationHourly[i]);
+            stdDeviationHourly[i] += rhs.hour[i] * rhs.hour[i] * pRatio;
         }
         // StdDeviation value for each day throughout all years
         for (i = 0; i != DAYS_PER_YEAR; ++i)
         {
-            stdDeviationDaily[i] = std::fma(rhs.day[i], rhs.day[i] * pRatio, stdDeviationDaily[i]);
+            stdDeviationDaily[i] += rhs.day[i] * rhs.day[i] * pRatio;
         }
         // StdDeviation value for each week throughout all years
         for (i = 0; i != WEEKS_PER_YEAR; ++i)
         {
-            stdDeviationWeekly[i] = std::fma(rhs.week[i], rhs.week[i] * pRatio, stdDeviationWeekly[i]);
+            stdDeviationWeekly[i] += rhs.week[i] * rhs.week[i] * pRatio;
         }
         // StdDeviation value for each month throughout all years
         for (i = 0; i != MONTHS_PER_YEAR; ++i)
         {
-            stdDeviationMonthly[i] = std::fma(rhs.month[i], rhs.month[i] * pRatio, stdDeviationMonthly[i]);
+            stdDeviationMonthly[i] += rhs.month[i] * rhs.month[i] * pRatio;
         }
         // StdDeviation value throughout all years
-        stdDeviationYear = std::fma(rhs.year, rhs.year * pRatio, stdDeviationYear);
+        stdDeviationYear += rhs.year * rhs.year * pRatio;
 
         // Next
         NextType::merge(year, rhs);
@@ -175,17 +175,17 @@ protected:
     }
 
 public:
-    std::vector<double> stdDeviationMonthly;
-    std::vector<double> stdDeviationWeekly;
-    std::vector<double> stdDeviationDaily;
-    std::vector<double> stdDeviationHourly;
-    double stdDeviationYear = 0;
+    std::vector<HighPrecision> stdDeviationMonthly;
+    std::vector<HighPrecision> stdDeviationWeekly;
+    std::vector<HighPrecision> stdDeviationDaily;
+    std::vector<HighPrecision> stdDeviationHourly;
+    HighPrecision stdDeviationYear = 0;
 
 private:
     template<class S, unsigned int Size, class VCardT, int PrecisionT>
     void InternalExportValues(SurveyResults& report,
                               const S& results,
-                              const double* array) const
+                              const HighPrecision* array) const
     {
         assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
 
@@ -213,8 +213,8 @@ private:
         {
             for (unsigned int i = 0; i != Size; ++i)
             {
-                auto v = results.avgdata.hourly[i];
-                target[i] = squareRootChecked(array[i] - v * v);
+                auto v = results.avgdata.hourly[i].extract_double();
+                target[i] = squareRootChecked(array[i].extract_double() - v * v);
             }
         }
         break;
@@ -222,8 +222,8 @@ private:
         {
             for (unsigned int i = 0; i != Size; ++i)
             {
-                auto v = results.avgdata.daily[i];
-                target[i] = squareRootChecked(array[i] - v * v);
+                auto v = results.avgdata.daily[i].extract_double();
+                target[i] = squareRootChecked(array[i].extract_double() - v * v);
             }
         }
         break;
@@ -231,8 +231,8 @@ private:
         {
             for (unsigned int i = 0; i != Size; ++i)
             {
-                auto v = results.avgdata.weekly[i];
-                target[i] = squareRootChecked(array[i] - v * v);
+                auto v = results.avgdata.weekly[i].extract_double();
+                target[i] = squareRootChecked(array[i].extract_double() - v * v);
             }
         }
         break;
@@ -240,14 +240,15 @@ private:
         {
             for (unsigned int i = 0; i != Size; ++i)
             {
-                auto v = results.avgdata.monthly[i];
-                target[i] = squareRootChecked(array[i] - v * v);
+                auto v = results.avgdata.monthly[i].extract_double();
+                target[i] = squareRootChecked(array[i].extract_double() - v * v);
             }
         }
         break;
         case Category::annual:
         {
-            const double d = *array - results.avgdata.allYears * results.avgdata.allYears;
+            const double d = array->extract_double()
+                             - results.avgdata.allYears * results.avgdata.allYears;
             *target = squareRootChecked(d);
         }
         break;
