@@ -77,25 +77,25 @@ void AverageData::merge(unsigned int y, const IntermediateValues& rhs)
     // Average value for each hour throughout all years
     for (i = 0; i != HOURS_PER_YEAR; ++i)
     {
-        hourly[i] += rhs.hour[i] * ratio;
+        hourly[i] = std::fma(rhs.hour[i], ratio, hourly[i]);
     }
     // Average value for each day throughout all years
     for (i = 0; i != DAYS_PER_YEAR; ++i)
     {
-        daily[i] += rhs.day[i] * ratio;
+        daily[i] = std::fma(rhs.day[i], ratio, daily[i]);
     }
     // Average value for each week throughout all years
     for (i = 0; i != WEEKS_PER_YEAR; ++i)
     {
-        weekly[i] += rhs.week[i] * ratio;
+        weekly[i] = std::fma(rhs.week[i], ratio, weekly[i]);
     }
     // Average value for each month throughout all years
     for (i = 0; i != MONTHS_PER_YEAR; ++i)
     {
-        monthly[i] += rhs.month[i] * ratio;
+        monthly[i] = std::fma(rhs.month[i], ratio, monthly[i]);
     }
     // Average value throughout all years
-    year[y] += rhs.year * ratio;
+    year[y] = std::fma(rhs.year, ratio, year[y]);
 }
 
 } // namespace Antares::Solver::Variable::R::AllYears

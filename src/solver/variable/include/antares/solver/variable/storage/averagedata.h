@@ -26,8 +26,6 @@
 #include <antares/study/study.h>
 #include "antares/solver/variable/storage/intermediate.h"
 
-using HighPrecision = boost::multiprecision::cpp_dec_float<32>;
-
 namespace Antares
 {
 namespace Solver
@@ -57,11 +55,11 @@ public:
     void merge(unsigned int year, const IntermediateValues& rhs);
 
 public:
-    HighPrecision monthly[MONTHS_PER_YEAR];
-    HighPrecision weekly[WEEKS_PER_YEAR];
-    HighPrecision hourly[HOURS_PER_YEAR];
-    HighPrecision daily[DAYS_PER_YEAR];
-    std::vector<HighPrecision> year;
+    double monthly[MONTHS_PER_YEAR];
+    double weekly[WEEKS_PER_YEAR];
+    double hourly[HOURS_PER_YEAR];
+    double daily[DAYS_PER_YEAR];
+    std::vector<double> year;
     unsigned int nbYearsCapacity;
     mutable double allYears; // FIX MEEE - Remove the mutable as soon as possible
     std::vector<float> yearsWeight;
