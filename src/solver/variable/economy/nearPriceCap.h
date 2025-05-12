@@ -35,7 +35,7 @@ struct VCardNearPriceCap
 {
     static std::string Caption()
     {
-        return "NPCAP";
+        return "NPCAP HOURS";
     }
 
     static std::string Unit()
@@ -171,8 +171,9 @@ public:
 
     void yearEnd(unsigned int year, unsigned int numSpace)
     {
-        // Compute all statistics for the current year (daily,weekly,monthly)
-        pValuesForTheCurrentYear[numSpace].computeStatisticsOrForTheCurrentYear();
+        // Time related aggregations to daily, weekly, monthly,and annual results
+        // are computed by summing hourly results
+        pValuesForTheCurrentYear[numSpace].computeStatisticsForTheCurrentYear();
 
         NextType::yearEnd(year, numSpace);
     }
