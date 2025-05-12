@@ -40,7 +40,7 @@ struct VCardNearPriceCap
 
     static std::string Unit()
     {
-        return "boolean";
+        return "Hours";
     }
 
     static std::string Description()
@@ -49,7 +49,12 @@ struct VCardNearPriceCap
     }
 
     //! The synthesis results type
-    typedef Results<R::AllYears::Average<>> ResultsType;
+    typedef Results<R::AllYears::Average< // The average values throughout all years
+      R::AllYears::StdDeviation<          // The standard deviation values throughout all years
+        R::AllYears::Min<                 // The minimum values throughout all years
+          R::AllYears::Max<               // The maximum values throughout all years
+            >>>>>
+      ResultsType;
 
     //! The VCard to look when computing spatial aggregates
     typedef VCardNearPriceCap VCardForSpatialAggregate;
@@ -65,11 +70,11 @@ struct VCardNearPriceCap
         //! Indentation (GUI)
         nodeDepthForGUI = +0,
         //! Decimal precision
-        decimal = 2,
+        decimal = 4,
         //! Number of columns used by the variable (One ResultsType per column)
         columnCount = 1,
         //! The Spatial aggregation
-        spatialAggregate = Category::spatialAggregateOr,
+        spatialAggregate = Category::spatialAggregateSumThen1IfPositive,
         spatialAggregateMode = Category::spatialAggregateEachYear,
         spatialAggregatePostProcessing = 0,
         //! Intermediate values
