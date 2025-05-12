@@ -38,7 +38,7 @@ TimeSerie fetchBindingConstraintRHS(const BindingConstraint* bc,
 
     unsigned ts_number = 0;
     auto* group = bcGroups[bc->group()];
-    if (!group && bc->RHSTimeSeries().width != 1)
+    if (group && bc->RHSTimeSeries().width != 1)
     {
         ts_number = group->timeseriesNumbers[year];
     }

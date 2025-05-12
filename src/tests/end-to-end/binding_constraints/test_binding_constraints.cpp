@@ -50,7 +50,6 @@ StudyForBCTest::StudyForBCTest()
     Area* area2 = addAreaToStudy("Area 2");
 
     TimeSeriesConfigurer(area1->load.series.timeSeries).setColumnCount(1).fillColumnWith(0, 0);
-
     TimeSeriesConfigurer(area2->load.series.timeSeries).setColumnCount(1).fillColumnWith(0, 100);
 
     link = AreaAddLinkBetweenAreas(area1, area2);
