@@ -127,7 +127,7 @@ BOOST_FIXTURE_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50, StudyWit
     BC->operatorType(BindingConstraint::opEquality);
 
     double rhsValue = 50.;
-    TimeSeriesConfigurer(BC->RHSTimeSeries()).setDimensions(1).fillColumnWith(0, rhsValue);
+    TimeSeriesConfigurer(BC->RHSTimeSeries()).setDimensions(1, 366).fillColumnWith(0, rhsValue);
 
     simulation->create();
     simulation->run();
@@ -145,7 +145,7 @@ BOOST_FIXTURE_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60, StudyWith
     BC->operatorType(BindingConstraint::opEquality);
 
     double rhsValue = 60.;
-    TimeSeriesConfigurer(BC->RHSTimeSeries()).setDimensions(1).fillColumnWith(0, rhsValue);
+    TimeSeriesConfigurer(BC->RHSTimeSeries()).setDimensions(1, 366).fillColumnWith(0, rhsValue);
 
     simulation->create();
     simulation->run();
@@ -180,7 +180,7 @@ BOOST_FIXTURE_TEST_CASE(Daily_BC_restricts_link_direct_capacity_to_greater_than_
     BC->operatorType(BindingConstraint::opGreater);
 
     double rhsValue = 80.;
-    TimeSeriesConfigurer(BC->RHSTimeSeries()).setDimensions(1).fillColumnWith(0, rhsValue);
+    TimeSeriesConfigurer(BC->RHSTimeSeries()).setDimensions(1, 366).fillColumnWith(0, rhsValue);
 
     simulation->create();
     simulation->run();
