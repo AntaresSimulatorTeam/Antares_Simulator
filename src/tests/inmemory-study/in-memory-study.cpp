@@ -61,9 +61,8 @@ void addScratchpadToEachArea(Study& study)
     }
 }
 
-// Name should be changed to setTSSize
-TimeSeriesConfigurer& TimeSeriesConfigurer::setColumnCount(unsigned int columnCount,
-                                                           unsigned rowCount)
+TimeSeriesConfigurer& TimeSeriesConfigurer::setDimensions(unsigned int columnCount,
+                                                          unsigned rowCount)
 {
     ts_->resize(columnCount, rowCount);
     return *this;
@@ -102,7 +101,7 @@ ThermalClusterConfig& ThermalClusterConfig::setCosts(double cost)
 
 ThermalClusterConfig& ThermalClusterConfig::setAvailablePowerNumberOfTS(unsigned int columnCount)
 {
-    tsAvailablePowerConfig_.setColumnCount(columnCount);
+    tsAvailablePowerConfig_.setDimensions(columnCount);
     return *this;
 }
 

@@ -46,7 +46,7 @@ StudyWithTwoClusters::StudyWithTwoClusters()
 
     Area* area = addAreaToStudy("some area");
 
-    TimeSeriesConfigurer(area->load.series.timeSeries).setColumnCount(1).fillColumnWith(0, 1000.);
+    TimeSeriesConfigurer(area->load.series.timeSeries).setDimensions(1).fillColumnWith(0, 1000.);
 
     // Adding a dispatchable cluster to the previous area
     cluster_dispatch = addClusterToArea(area, "dispatch-cluster");
@@ -70,7 +70,7 @@ StudyWithTwoClusters::StudyWithTwoClusters()
 
 BOOST_AUTO_TEST_SUITE(TESTS_BINDING_CONSTRAINTS_WITH_MUSTRUN_CLUSTERS)
 
-BOOST_FIXTURE_TEST_CASE(very_simple_hourly_BC_restricts_dispatchable_production_to_900,
+BOOST_FIXTURE_TEST_CASE(hourly_BC_whoose_weights_are_1_restricts_dispatchable_production,
                         StudyWithTwoClusters)
 {
     // Creating the binding constraint :
@@ -79,7 +79,7 @@ BOOST_FIXTURE_TEST_CASE(very_simple_hourly_BC_restricts_dispatchable_production_
     auto BC = addBindingConstraints(*study, "some BC", "some scenario group");
     BC->setTimeGranularity(BindingConstraint::typeHourly);
     BC->operatorType(BindingConstraint::opLess);
-    TimeSeriesConfigurer(BC->RHSTimeSeries()).setColumnCount(1).fillColumnWith(0, 1000.);
+    TimeSeriesConfigurer(BC->RHSTimeSeries()).setDimensions(1).fillColumnWith(0, 1000.);
     BC->weight(cluster_dispatch.get(), 1);
     BC->weight(cluster_mustrun.get(), 1);
     BC->enabled(true);
@@ -94,7 +94,8 @@ BOOST_FIXTURE_TEST_CASE(very_simple_hourly_BC_restricts_dispatchable_production_
     BOOST_TEST(std::ranges::equal(dispatch_prod, expected_values));
 }
 
-BOOST_FIXTURE_TEST_CASE(hourly_BC_restricts_dispatchable_production_to_450, StudyWithTwoClusters)
+BOOST_FIXTURE_TEST_CASE(hourly_BC_whose_weignts_are_2and_3_restricts_dispatchable_production,
+                        StudyWithTwoClusters)
 {
     // Creating the binding constraint :
     // ===============================
@@ -102,7 +103,7 @@ BOOST_FIXTURE_TEST_CASE(hourly_BC_restricts_dispatchable_production_to_450, Stud
     auto BC = addBindingConstraints(*study, "some BC", "some scenario group");
     BC->setTimeGranularity(BindingConstraint::typeHourly);
     BC->operatorType(BindingConstraint::opLess);
-    TimeSeriesConfigurer(BC->RHSTimeSeries()).setColumnCount(1).fillColumnWith(0, 1200.);
+    TimeSeriesConfigurer(BC->RHSTimeSeries()).setDimensions(1).fillColumnWith(0, 1200.);
     BC->weight(cluster_dispatch.get(), 2);
     BC->weight(cluster_mustrun.get(), 3);
     BC->enabled(true);

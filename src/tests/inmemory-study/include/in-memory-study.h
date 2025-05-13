@@ -42,9 +42,9 @@ public:
         ts_(&matrix)
     {
     }
-
-    TimeSeriesConfigurer& setColumnCount(unsigned int columnCount,
-                                         unsigned rowCount = HOURS_PER_YEAR);
+    
+    TimeSeriesConfigurer& setDimensions(unsigned int columnCount,
+                                        unsigned rowCount = HOURS_PER_YEAR);
     TimeSeriesConfigurer& fillColumnWith(unsigned int column, double value);
 
 private:
