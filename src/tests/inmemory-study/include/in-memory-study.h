@@ -42,10 +42,9 @@ public:
         ts_(&matrix)
     {
     }
-    
-    TimeSeriesConfigurer& setDimensions(unsigned int columnCount,
-                                        unsigned rowCount = HOURS_PER_YEAR);
-    TimeSeriesConfigurer& fillColumnWith(unsigned int column, double value);
+
+    TimeSeriesConfigurer& setDimensions(unsigned columnCount, unsigned rowCount = HOURS_PER_YEAR);
+    TimeSeriesConfigurer& fillColumnWith(unsigned column, double value);
 
 private:
     Matrix<>* ts_ = nullptr;
@@ -57,10 +56,10 @@ public:
     ThermalClusterConfig() = default;
     ThermalClusterConfig(ThermalCluster* cluster);
     ThermalClusterConfig& setNominalCapacity(double nominalCapacity);
-    ThermalClusterConfig& setUnitCount(unsigned int unitCount);
+    ThermalClusterConfig& setUnitCount(unsigned unitCount);
     ThermalClusterConfig& setCosts(double cost);
-    ThermalClusterConfig& setAvailablePowerNumberOfTS(unsigned int columnCount);
-    ThermalClusterConfig& setAvailablePower(unsigned int column, double value);
+    ThermalClusterConfig& setAvailablePowerNumberOfTS(unsigned columnCount);
+    ThermalClusterConfig& setAvailablePower(unsigned column, double value);
 
 private:
     ThermalCluster* cluster_ = nullptr;
@@ -86,17 +85,17 @@ public:
         return averageResults_.hourly;
     }
 
-    double hour(unsigned int hour)
+    double hour(unsigned hour)
     {
         return averageResults_.hourly[hour];
     }
 
-    double day(unsigned int day)
+    double day(unsigned day)
     {
         return averageResults_.daily[day];
     }
 
-    double week(unsigned int week)
+    double week(unsigned week)
     {
         return averageResults_.weekly[week];
     }
@@ -114,7 +113,7 @@ public:
     }
 
     averageResults overallCost(Area* area);
-    averageResults levelForSTSgroup(Area* area, unsigned int groupNb);
+    averageResults levelForSTSgroup(Area* area, unsigned groupNb);
     averageResults load(Area* area);
     averageResults hydroStorage(Area* area);
     averageResults flow(AreaLink* link);
@@ -226,11 +225,11 @@ struct StudyBuilder
 {
     StudyBuilder();
 
-    void simulationBetweenDays(const unsigned int firstDay, const unsigned int lastDay);
+    void simulationBetweenDays(const unsigned firstDay, const unsigned lastDay);
     Area* addAreaToStudy(const std::string& areaName);
-    void setNumberMCyears(unsigned int nbYears);
-    void playOnlyYear(unsigned int year);
-    void giveWeightToYear(float weight, unsigned int year);
+    void setNumberMCyears(unsigned nbYears);
+    void playOnlyYear(unsigned year);
+    void giveWeightToYear(float weight, unsigned year);
 
     // Data members
     std::unique_ptr<Data::Study> study;
