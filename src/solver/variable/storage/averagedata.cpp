@@ -39,23 +39,11 @@ AverageData::~AverageData() = default;
 
 void AverageData::reset()
 {
-    for (uint h = 0; h < HOURS_PER_YEAR; ++h)
-    {
-        hourly[h] = 0.0;
-    }
-    for (uint h = 0; h < DAYS_PER_YEAR; ++h)
-    {
-        daily[h] = 0.0;
-    }
-    for (uint h = 0; h < WEEKS_PER_YEAR; ++h)
-    {
-        weekly[h] = 0.0;
-    }
-    for (uint m = 0; m < MONTHS_PER_YEAR; ++m)
-    {
-        monthly[m] = 0.0;
-    }
     year.assign(nbYearsCapacity, 0);
+    monthly.assign(MONTHS_PER_YEAR, 0);
+    weekly.assign(WEEKS_PER_YEAR, 0);
+    daily.assign(DAYS_PER_YEAR, 0);
+    hourly.assign(HOURS_PER_YEAR, 0);
 }
 
 void AverageData::initializeFromStudy(Data::Study& study)

@@ -21,6 +21,7 @@
 #ifndef __SOLVER_VARIABLE_STORAGE_AVERAGE_H__
 #define __SOLVER_VARIABLE_STORAGE_AVERAGE_H__
 
+#include <vector>
 #include "averagedata.h"
 
 namespace Antares
@@ -101,8 +102,7 @@ protected:
             {
             case Category::hourly:
                 InternalExportValues<HOURS_PER_YEAR, VCardT, Category::hourly>(report,
-                                                                               Memory::RawPointer(
-                                                                                 avgdata.hourly));
+                                                                                 avgdata.hourly);
                 break;
             case Category::daily:
                 InternalExportValues<DAYS_PER_YEAR, VCardT, Category::daily>(report, avgdata.daily);
@@ -116,7 +116,7 @@ protected:
                                                                                  avgdata.monthly);
                 break;
             case Category::annual:
-                InternalExportValues<1, VCardT, Category::annual>(report, avgdata.year.data());
+                InternalExportValues<1, VCardT, Category::annual>(report, avgdata.year);
                 break;
             }
         }
@@ -166,7 +166,7 @@ public:
 
 private:
     template<uint Size, class VCardT, int PrecisionT>
-    void InternalExportValues(SurveyResults& report, const HighPrecision* array) const
+    void InternalExportValues(SurveyResults& report, const std::vector<HighPrecision>& array) const
     {
         assert(array);
         assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
