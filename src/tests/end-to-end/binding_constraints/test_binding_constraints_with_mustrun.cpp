@@ -21,7 +21,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <algorithm>
+#include <algorithm> // std::ranges::equal(...)
 #include <span>
 
 #include <boost/test/unit_test.hpp>
@@ -70,13 +70,13 @@ StudyWithTwoClusters::StudyWithTwoClusters()
 
 BOOST_AUTO_TEST_SUITE(TESTS_BINDING_CONSTRAINTS_WITH_MUSTRUN_CLUSTERS)
 
-BOOST_FIXTURE_TEST_CASE(hourly_BC_whoose_weights_are_1_restricts_dispatchable_production,
+BOOST_FIXTURE_TEST_CASE(in_hourly_BC__weights_are_1__it_restricts_dispatchable_production,
                         StudyWithTwoClusters)
 {
-    // Creating the binding constraint :
-    // ===============================
+    // Creating the hourly BC :
+    // ======================
     // cluster_disp + cluster_mustrun < 1000 <==> ... <==> cluster_disp < 900
-    auto BC = addBindingConstraints(*study, "some BC", "some scenario group");
+    auto BC = addBindingConstraints(*study, "some hourly BC", "some scenario group");
     BC->setTimeGranularity(BindingConstraint::typeHourly);
     BC->operatorType(BindingConstraint::opLess);
     TimeSeriesConfigurer(BC->RHSTimeSeries()).setDimensions(1).fillColumnWith(0, 1000.);
@@ -94,13 +94,13 @@ BOOST_FIXTURE_TEST_CASE(hourly_BC_whoose_weights_are_1_restricts_dispatchable_pr
     BOOST_TEST(std::ranges::equal(dispatch_prod, expected_values));
 }
 
-BOOST_FIXTURE_TEST_CASE(hourly_BC_whose_weignts_are_2and_3_restricts_dispatchable_production,
+BOOST_FIXTURE_TEST_CASE(in_hourly_BC__weights_are_2_and_3__it_restricts_dispatchable_production,
                         StudyWithTwoClusters)
 {
-    // Creating the binding constraint :
-    // ===============================
+    // Creating the hourly BC :
+    // ======================
     // 2 * cluster_disp + 3 * cluster_mustrun < 1200 <==> ... <==> cluster_disp < 450
-    auto BC = addBindingConstraints(*study, "some BC", "some scenario group");
+    auto BC = addBindingConstraints(*study, "some hourly BC", "some scenario group");
     BC->setTimeGranularity(BindingConstraint::typeHourly);
     BC->operatorType(BindingConstraint::opLess);
     TimeSeriesConfigurer(BC->RHSTimeSeries()).setDimensions(1).fillColumnWith(0, 1200.);
@@ -116,6 +116,60 @@ BOOST_FIXTURE_TEST_CASE(hourly_BC_whose_weignts_are_2and_3_restricts_dispatchabl
                                            Constants::nbHoursInAWeek};
     std::vector<double> expected_values(Constants::nbHoursInAWeek, 450.);
     BOOST_TEST(std::ranges::equal(dispatch_prod, expected_values));
+}
+
+BOOST_FIXTURE_TEST_CASE(in_daily_BC__weights_are_2_and_3__it_restricts_dispatchable_production,
+                        StudyWithTwoClusters)
+{
+    // Creating the daily BC :
+    // =====================
+    // 2 * cluster_disp + 3 * cluster_mustrun < 30000
+    // As cluster_mustrun generates 2400 MWh a day, we have :
+    // cluster_disp < 11400
+    auto BC = addBindingConstraints(*study, "some daily BC", "some scenario group");
+    BC->setTimeGranularity(BindingConstraint::typeDaily);
+    BC->operatorType(BindingConstraint::opLess);
+    TimeSeriesConfigurer(BC->RHSTimeSeries()).setDimensions(1, 366).fillColumnWith(0, 30000.);
+    BC->weight(cluster_dispatch.get(), 2);
+    BC->weight(cluster_mustrun.get(), 3);
+    BC->enabled(true);
+
+    simulation->create();
+    simulation->run();
+
+    OutputRetriever output(simulation->rawSimu());
+    auto dispatch_prod = std::span<double>{output.thermalGeneration(cluster_dispatch.get()).days(),
+                                           7};
+    std::vector<double> expected_values(7, 11400.);
+    BOOST_TEST(std::ranges::equal(dispatch_prod, expected_values));
+}
+
+BOOST_FIXTURE_TEST_CASE(in_weekly_BC__weights_are_3_and_4__it_restricts_dispatchable_production,
+                        StudyWithTwoClusters)
+{
+    // Creating the weekly BC :
+    // ======================
+    // 3 * cluster_disp + 4 * cluster_mustrun < 120000
+    // As cluster_mustrun generates 16800 MWh a week, we have :
+    // 3 * cluster_disp + 4 * 16800 < 120000
+    // 3 * cluster_disp < 120000 - 67200
+    // 3 * cluster_disp < 55800
+    // cluster_disp < 17600
+    auto BC = addBindingConstraints(*study, "some daily BC", "some scenario group");
+    BC->setTimeGranularity(BindingConstraint::typeDaily);
+    BC->operatorType(BindingConstraint::opLess);
+    const double dailyRHS = 120000. / 7; // For a weekly BC, RHS is still a daily TS.
+    TimeSeriesConfigurer(BC->RHSTimeSeries()).setDimensions(1, 366).fillColumnWith(0, dailyRHS);
+    BC->weight(cluster_dispatch.get(), 3);
+    BC->weight(cluster_mustrun.get(), 4);
+    BC->enabled(true);
+
+    simulation->create();
+    simulation->run();
+
+    OutputRetriever output(simulation->rawSimu());
+    double* dispatch_prod = output.thermalGeneration(cluster_dispatch.get()).weeks();
+    BOOST_TEST(dispatch_prod[0] == 17600., tt::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

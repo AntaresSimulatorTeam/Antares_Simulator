@@ -90,9 +90,19 @@ public:
         return averageResults_.hourly[hour];
     }
 
+    double* days()
+    {
+        return averageResults_.daily;
+    }
+
     double day(unsigned day)
     {
         return averageResults_.daily[day];
+    }
+
+    double* weeks()
+    {
+        return averageResults_.weekly;
     }
 
     double week(unsigned week)
