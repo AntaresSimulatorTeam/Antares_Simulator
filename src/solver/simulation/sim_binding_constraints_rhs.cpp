@@ -78,11 +78,11 @@ std::vector<double> accumulateByDay(const TimeSerie& ts)
     }
 
     std::vector<double> to_return(7, 0.);
-    for (unsigned i = 0; i < 7; i++)
+    for (unsigned day = 0; day < 7; day++)
     {
-        to_return[i] = std::accumulate(ts.begin() + i * HOURS_PER_DAY,
-                                       ts.begin() + (i + 1) * HOURS_PER_DAY,
-                                       0.);
+        to_return[day] = std::accumulate(ts.begin() + day * HOURS_PER_DAY,
+                                         ts.begin() + (day + 1) * HOURS_PER_DAY,
+                                         0.);
     }
     return to_return;
 }
