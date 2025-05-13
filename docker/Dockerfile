@@ -81,6 +81,14 @@ RUN cd _build && \
     cmake --install . --prefix install && \
     pushd . && \
     cd install/bin && \
+    ls / \
+    ls "-----------" \
+    ls /ortools/install/ \
+    ls "-----------" \
+    ls /ortools/install/lib/ \
+    ls "-----------" \
+    ls /ortools/install/lib/*.so* \
+    ls "-----------" \
     tar czf ../../antares-solver_centos7.tar.gz antares-solver libsirius_solver.so /ortools/install/lib/*.so* && \
     popd && \
     rm -rf install
