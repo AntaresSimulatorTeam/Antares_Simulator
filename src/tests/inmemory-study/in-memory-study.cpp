@@ -73,6 +73,13 @@ TimeSeriesConfigurer& TimeSeriesConfigurer::fillColumnWith(unsigned column, doub
     return *this;
 }
 
+TimeSeriesConfigurer& TimeSeriesConfigurer::fillColumnWith(unsigned column,
+                                                           const std::vector<double>& values)
+{
+    ts_->pasteToColumn(column, values.data());
+    return *this;
+}
+
 ThermalClusterConfig::ThermalClusterConfig(ThermalCluster* cluster):
     cluster_(cluster),
     tsAvailablePowerConfig_(cluster_->series.timeSeries)

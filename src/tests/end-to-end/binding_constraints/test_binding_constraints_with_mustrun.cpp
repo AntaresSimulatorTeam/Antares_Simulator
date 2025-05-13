@@ -137,11 +137,46 @@ BOOST_FIXTURE_TEST_CASE(in_daily_BC__weights_are_2_and_3__it_restricts_dispatcha
     simulation->create();
     simulation->run();
 
-    OutputRetriever output(simulation->rawSimu());
-    auto dispatch_prod = std::span<double>{output.thermalGeneration(cluster_dispatch.get()).days(),
-                                           7};
+    OutputRetriever out(simulation->rawSimu());
+    auto dispatch_prod = std::span<double>{out.thermalGeneration(cluster_dispatch.get()).days(), 7};
     std::vector<double> expected_values(7, 11400.);
     BOOST_TEST(std::ranges::equal(dispatch_prod, expected_values));
+}
+
+BOOST_FIXTURE_TEST_CASE(simulation_2_weeks_long__daily_BC_RHS_changes_on_2nd_week,
+                        StudyWithTwoClusters)
+{
+    simulationBetweenDays(0, 14); // Siluation is 2 weeks long
+
+    // Creating the hourly BC :
+    // ======================
+    // - week 1 : cluster_disp + cluster_mustrun < 20000 <==> cluster_disp < 17600
+    // - week 2 : cluster_disp + cluster_mustrun < 17000 <==> cluster_disp < 14600
+    //
+    auto BC = addBindingConstraints(*study, "some hourly BC", "some scenario group");
+    BC->setTimeGranularity(BindingConstraint::typeDaily);
+    BC->operatorType(BindingConstraint::opLess);
+    std::vector<double> rhs(366, 0.);
+    std::fill(rhs.begin(), rhs.begin() + 7, 20000.);
+    std::fill(rhs.begin() + 7, rhs.begin() + 14, 17000.);
+    TimeSeriesConfigurer(BC->RHSTimeSeries()).setDimensions(1, 366).fillColumnWith(0, rhs);
+    BC->weight(cluster_dispatch.get(), 1);
+    BC->weight(cluster_mustrun.get(), 1);
+    BC->enabled(true);
+
+    simulation->create();
+    simulation->run();
+
+    OutputRetriever out(simulation->rawSimu());
+    // Week 1
+    auto dispatch_prod = std::span<double>{out.thermalGeneration(cluster_dispatch.get()).days(), 7};
+    std::vector<double> expected_values_week_1(7, 17600.);
+    BOOST_TEST(std::ranges::equal(dispatch_prod, expected_values_week_1));
+
+    // Week 2
+    dispatch_prod = std::span<double>{out.thermalGeneration(cluster_dispatch.get()).days() + 7, 7};
+    std::vector<double> expected_values_week_2(7, 14600.);
+    BOOST_TEST(std::ranges::equal(dispatch_prod, expected_values_week_2));
 }
 
 BOOST_FIXTURE_TEST_CASE(in_weekly_BC__weights_are_3_and_4__it_restricts_dispatchable_production,

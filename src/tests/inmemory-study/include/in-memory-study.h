@@ -45,6 +45,7 @@ public:
 
     TimeSeriesConfigurer& setDimensions(unsigned columnCount, unsigned rowCount = HOURS_PER_YEAR);
     TimeSeriesConfigurer& fillColumnWith(unsigned column, double value);
+    TimeSeriesConfigurer& fillColumnWith(unsigned column, const std::vector<double>& values);
 
 private:
     Matrix<>* ts_ = nullptr;
