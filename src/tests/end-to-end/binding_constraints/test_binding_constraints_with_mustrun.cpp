@@ -21,6 +21,9 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <algorithm>
+#include <span>
+
 #include <boost/test/unit_test.hpp>
 
 #include "in-memory-study.h"
@@ -35,7 +38,6 @@ struct StudyWithTwoClusters: public StudyBuilder
     // Data members
     std::shared_ptr<ThermalCluster> cluster_dispatch;
     std::shared_ptr<ThermalCluster> cluster_mustrun;
-    std::shared_ptr<BindingConstraint> BC;
 };
 
 StudyWithTwoClusters::StudyWithTwoClusters()
@@ -62,6 +64,8 @@ StudyWithTwoClusters::StudyWithTwoClusters()
       .setAvailablePower(0, 100.)
       .setCosts(10.)
       .setUnitCount(1);
+
+    setNumberMCyears(1); // Can cause a crash if moved up
 }
 
 BOOST_AUTO_TEST_SUITE(TESTS_BINDING_CONSTRAINTS_WITH_MUSTRUN_CLUSTERS)
@@ -69,12 +73,10 @@ BOOST_AUTO_TEST_SUITE(TESTS_BINDING_CONSTRAINTS_WITH_MUSTRUN_CLUSTERS)
 BOOST_FIXTURE_TEST_CASE(very_simple_hourly_BC_restricts_dispatchable_production_to_900,
                         StudyWithTwoClusters)
 {
-    setNumberMCyears(1);
-
     // Creating the binding constraint :
     // ===============================
     // cluster_disp + cluster_mustrun < 1000 <==> ... <==> cluster_disp < 900
-    BC = addBindingConstraints(*study, "some BC", "some scenario group");
+    auto BC = addBindingConstraints(*study, "some BC", "some scenario group");
     BC->setTimeGranularity(BindingConstraint::typeHourly);
     BC->operatorType(BindingConstraint::opLess);
     TimeSeriesConfigurer(BC->RHSTimeSeries()).setColumnCount(1).fillColumnWith(0, 1000.);
@@ -86,18 +88,18 @@ BOOST_FIXTURE_TEST_CASE(very_simple_hourly_BC_restricts_dispatchable_production_
     simulation->run();
 
     OutputRetriever output(simulation->rawSimu());
-    BOOST_TEST(output.thermalGeneration(cluster_dispatch.get()).hour(10) == 900.,
-               tt::tolerance(0.001));
+    auto dispatch_prod = std::span<double>{output.thermalGeneration(cluster_dispatch.get()).hours(),
+                                           Constants::nbHoursInAWeek};
+    std::vector<double> expected_values(Constants::nbHoursInAWeek, 900.);
+    BOOST_TEST(std::ranges::equal(dispatch_prod, expected_values));
 }
 
 BOOST_FIXTURE_TEST_CASE(hourly_BC_restricts_dispatchable_production_to_450, StudyWithTwoClusters)
 {
-    setNumberMCyears(1);
-
     // Creating the binding constraint :
     // ===============================
     // 2 * cluster_disp + 3 * cluster_mustrun < 1200 <==> ... <==> cluster_disp < 450
-    BC = addBindingConstraints(*study, "some BC", "some scenario group");
+    auto BC = addBindingConstraints(*study, "some BC", "some scenario group");
     BC->setTimeGranularity(BindingConstraint::typeHourly);
     BC->operatorType(BindingConstraint::opLess);
     TimeSeriesConfigurer(BC->RHSTimeSeries()).setColumnCount(1).fillColumnWith(0, 1200.);
@@ -109,8 +111,10 @@ BOOST_FIXTURE_TEST_CASE(hourly_BC_restricts_dispatchable_production_to_450, Stud
     simulation->run();
 
     OutputRetriever output(simulation->rawSimu());
-    BOOST_TEST(output.thermalGeneration(cluster_dispatch.get()).hour(10) == 450.,
-               tt::tolerance(0.001));
+    auto dispatch_prod = std::span<double>{output.thermalGeneration(cluster_dispatch.get()).hours(),
+                                           Constants::nbHoursInAWeek};
+    std::vector<double> expected_values(Constants::nbHoursInAWeek, 450.);
+    BOOST_TEST(std::ranges::equal(dispatch_prod, expected_values));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
