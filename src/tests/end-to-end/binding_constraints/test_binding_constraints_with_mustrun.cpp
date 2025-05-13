@@ -28,8 +28,6 @@
 
 #include "in-memory-study.h"
 
-namespace tt = boost::test_tools;
-
 struct StudyWithTwoClusters: public StudyBuilder
 {
     using StudyBuilder::StudyBuilder;
@@ -204,7 +202,7 @@ BOOST_FIXTURE_TEST_CASE(in_weekly_BC__weights_are_3_and_4__it_restricts_dispatch
 
     OutputRetriever output(simulation->rawSimu());
     double* dispatch_prod = output.thermalGeneration(cluster_dispatch.get()).weeks();
-    BOOST_TEST(dispatch_prod[0] == 17600., tt::tolerance(0.001));
+    BOOST_TEST(dispatch_prod[0] == 17600., boost::test_tools::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
