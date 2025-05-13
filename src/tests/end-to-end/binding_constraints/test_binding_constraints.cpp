@@ -85,20 +85,6 @@ StudyWithBConLink::StudyWithBConLink()
 // Study fixture containing a BC on the thermal cluster
 // =======================================================
 
-// TODO :  StudyWithBConCluster useless ==> to be removed
-struct StudyWithBConCluster: public StudyForBCTest
-{
-    using StudyForBCTest::StudyForBCTest;
-    StudyWithBConCluster();
-};
-
-StudyWithBConCluster::StudyWithBConCluster()
-{
-    BC = addBindingConstraints(*study, "BC1", "Group1");
-    BC->weight(cluster.get(), 1);
-    BC->enabled(true);
-}
-
 BOOST_AUTO_TEST_SUITE(TESTS_BINDING_CONSTRAINTS_ON_A_LINK)
 
 BOOST_FIXTURE_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90, StudyWithBConLink)
