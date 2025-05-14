@@ -158,7 +158,6 @@ target_link_libraries(antares-solver-variable
         PUBLIC
     	Boost::headers
         antares-solver-simulation
-        PkgConfig::gmp
         PRIVATE
         antares-core
         Antares::study
