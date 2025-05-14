@@ -19,7 +19,6 @@
 // along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 
 #pragma once
-#include "yuni/core/atomic/int.h"
 
 namespace Antares::Data
 {
@@ -31,10 +30,9 @@ struct PROBLEME_HEBDO;
 
 namespace Simulation
 {
-void prepareBindingConstraint(PROBLEME_HEBDO& problem,
-                              int PasDeTempsDebut,
+void setBindingConstraintsRHS(PROBLEME_HEBDO& problem,
                               const Antares::Data::BindingConstraintsRepository& bindingConstraints,
                               const Antares::Data::BindingConstraintGroupRepository& bcgroups,
-                              const uint weekFirstDay,
-                              int pasDeTemps);
-}
+                              const unsigned PasDeTempsDebut,
+                              const unsigned weekFirstDay);
+} // namespace Simulation
