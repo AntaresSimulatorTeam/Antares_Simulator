@@ -31,6 +31,9 @@
 namespace Antares::Solver::Variable::Economy
 {
 
+constexpr double eps = 1e-2;
+constexpr double margin = 5.;
+
 struct VCardNearPriceCap
 {
     static std::string Caption()
@@ -235,8 +238,6 @@ private:
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel;
-    const double eps = 1e-2;
-    const double margin = 5.;
     double unsuppliedEnergyCost = 0.;
 }; // class NearPriceCap
 
