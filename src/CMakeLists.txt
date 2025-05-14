@@ -193,9 +193,6 @@ find_package(Boost REQUIRED)
 find_package(antlr4-runtime REQUIRED)
 find_package(yaml-cpp REQUIRED)
 
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(gmp REQUIRED IMPORTED_TARGET gmp)
-
 #Sirius solver
 if(POLICY CMP0074)
 	cmake_policy(SET CMP0074 NEW)
