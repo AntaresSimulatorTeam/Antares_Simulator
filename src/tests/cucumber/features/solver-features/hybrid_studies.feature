@@ -17,7 +17,7 @@ Feature: hybrid (simulator+modeler) studies
 
   @fast @short
   Scenario: Empty legacy node with one generator component and one load component (24h simplex)
-    Given the solver study path is "hybrid/3_6_0"
+    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_6_0"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 5 seconds
@@ -29,7 +29,7 @@ Feature: hybrid (simulator+modeler) studies
   @fast @short
   Scenario: Legacy node with one legacy load (up to 5952 MW) and wind, and one generator component (max_p=6200) (168h simplex)
     # copy of short test 002, with no legacy thermal cluster, replaced by one component
-    Given the solver study path is "hybrid/3_6_1"
+    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_6_1"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 5 seconds
@@ -40,7 +40,7 @@ Feature: hybrid (simulator+modeler) studies
   @fast @short
   Scenario: Legacy node with one legacy load (up to 5952 MW) and wind, and one generator component (max_p=5900) (168h simplex)
     # copy of previous case, with reduced max_p on generator => loss of load of 52MW on 1 hour
-    Given the solver study path is "hybrid/3_6_2"
+    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_6_2"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 5 seconds
@@ -51,7 +51,7 @@ Feature: hybrid (simulator+modeler) studies
 
   @fast @short
   Scenario: Legacy node with one legacy thermal cluster, and one load component (constant load of 3000 MW)
-    Given the solver study path is "hybrid/3_6_3"
+    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_6_3"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 5 seconds
