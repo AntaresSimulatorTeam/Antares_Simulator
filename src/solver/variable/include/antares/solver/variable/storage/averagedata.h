@@ -22,12 +22,11 @@
 #define __SOLVER_VARIABLE_STORAGE_AVERAGE_DATA_H__
 
 #include <boost/multiprecision/cpp_dec_float.hpp>
-#include "../fixed.hpp"
 
 #include <antares/study/study.h>
 #include "antares/solver/variable/storage/intermediate.h"
 
-using HighPrecision = fpm::fixed<std::int64_t, __int128_t, 20>;
+using HighPrecision = boost::multiprecision::cpp_dec_float<32>;
 
 namespace Antares
 {

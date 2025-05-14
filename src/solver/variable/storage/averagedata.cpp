@@ -39,11 +39,11 @@ AverageData::~AverageData() = default;
 
 void AverageData::reset()
 {
-    year.assign(nbYearsCapacity, (HighPrecision)0);
-    monthly.assign(MONTHS_PER_YEAR, (HighPrecision)0);
-    weekly.assign(WEEKS_PER_YEAR, (HighPrecision)0);
-    daily.assign(DAYS_PER_YEAR, (HighPrecision)0);
-    hourly.assign(HOURS_PER_YEAR, (HighPrecision)0);
+    year.assign(nbYearsCapacity, 0);
+    monthly.assign(MONTHS_PER_YEAR, 0);
+    weekly.assign(WEEKS_PER_YEAR, 0);
+    daily.assign(DAYS_PER_YEAR, 0);
+    hourly.assign(HOURS_PER_YEAR, 0);
 }
 
 void AverageData::initializeFromStudy(Data::Study& study)
@@ -60,30 +60,30 @@ void AverageData::merge(unsigned int y, const IntermediateValues& rhs)
     unsigned int i;
 
     // Ratio take into account MC year weight
-    HighPrecision ratio = (HighPrecision)yearsWeight[y] / (HighPrecision)yearsWeightSum;
+    double ratio = (double)yearsWeight[y] / (double)yearsWeightSum;
 
     // Average value for each hour throughout all years
     for (i = 0; i != HOURS_PER_YEAR; ++i)
     {
-        hourly[i] += (HighPrecision)rhs.hour[i] * ratio;
+        hourly[i] += rhs.hour[i] * ratio;
     }
     // Average value for each day throughout all years
     for (i = 0; i != DAYS_PER_YEAR; ++i)
     {
-        daily[i] += (HighPrecision)rhs.day[i] * ratio;
+        daily[i] += rhs.day[i] * ratio;
     }
     // Average value for each week throughout all years
     for (i = 0; i != WEEKS_PER_YEAR; ++i)
     {
-        weekly[i] += (HighPrecision)rhs.week[i] * ratio;
+        weekly[i] += rhs.week[i] * ratio;
     }
     // Average value for each month throughout all years
     for (i = 0; i != MONTHS_PER_YEAR; ++i)
     {
-        monthly[i] += (HighPrecision)rhs.month[i] * ratio;
+        monthly[i] += rhs.month[i] * ratio;
     }
     // Average value throughout all years
-    year[y] += (HighPrecision)rhs.year * ratio;
+    year[y] += rhs.year * ratio;
 }
 
 } // namespace Antares::Solver::Variable::R::AllYears
