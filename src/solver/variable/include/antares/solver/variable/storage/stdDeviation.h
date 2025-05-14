@@ -26,7 +26,7 @@
 
 #include <boost/multiprecision/cpp_dec_float.hpp>
 
-using HighPrecision = boost::multiprecision::cpp_dec_float<32>;
+using HighPrecision = long double;
 
 namespace Antares
 {
@@ -213,8 +213,8 @@ private:
         {
             for (unsigned int i = 0; i != Size; ++i)
             {
-                auto v = results.avgdata.hourly[i].extract_double();
-                target[i] = squareRootChecked(array[i].extract_double() - v * v);
+                auto v = results.avgdata.hourly[i];
+                target[i] = squareRootChecked(array[i] - v * v);
             }
         }
         break;
@@ -222,8 +222,8 @@ private:
         {
             for (unsigned int i = 0; i != Size; ++i)
             {
-                auto v = results.avgdata.daily[i].extract_double();
-                target[i] = squareRootChecked(array[i].extract_double() - v * v);
+                auto v = results.avgdata.daily[i];
+                target[i] = squareRootChecked(array[i] - v * v);
             }
         }
         break;
@@ -231,8 +231,8 @@ private:
         {
             for (unsigned int i = 0; i != Size; ++i)
             {
-                auto v = results.avgdata.weekly[i].extract_double();
-                target[i] = squareRootChecked(array[i].extract_double() - v * v);
+                auto v = results.avgdata.weekly[i];
+                target[i] = squareRootChecked(array[i] - v * v);
             }
         }
         break;
@@ -240,14 +240,14 @@ private:
         {
             for (unsigned int i = 0; i != Size; ++i)
             {
-                auto v = results.avgdata.monthly[i].extract_double();
-                target[i] = squareRootChecked(array[i].extract_double() - v * v);
+                auto v = results.avgdata.monthly[i];
+                target[i] = squareRootChecked(array[i] - v * v);
             }
         }
         break;
         case Category::annual:
         {
-            const double d = array->extract_double()
+            const double d = *array
                              - results.avgdata.allYears * results.avgdata.allYears;
             *target = squareRootChecked(d);
         }

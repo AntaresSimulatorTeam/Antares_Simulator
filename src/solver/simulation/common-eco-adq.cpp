@@ -49,8 +49,7 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
             {
                 problem.SoldeMoyenHoraire[i].SoldeMoyenDuPays[j] = balance[j]
                                                                      ->avgdata
-                                                                     .hourly[decalPasDeTemps]
-                                                                     .extract_double();
+                                                                     .hourly[decalPasDeTemps];
             }
             else
             {
