@@ -26,7 +26,7 @@
 
 #include <boost/multiprecision/cpp_dec_float.hpp>
 
-using HighPrecision = boost::multiprecision::cpp_dec_float<32>;
+/* using HighPrecision = boost::multiprecision::cpp_dec_float<32>; */
 
 namespace Antares
 {
@@ -38,6 +38,9 @@ namespace R
 {
 namespace AllYears
 {
+
+struct HighPrecision;
+
 template<class NextT = Empty, int FileFilter = Variable::Category::FileLevel::allFile>
 struct StdDeviation: public NextT
 {
@@ -68,10 +71,10 @@ public:
 protected:
     void initializeFromStudy(Antares::Data::Study& study)
     {
-        stdDeviationHourly.assign(HOURS_PER_YEAR, 0);
-        stdDeviationDaily.assign(DAYS_PER_YEAR, 0);
-        stdDeviationWeekly.assign(WEEKS_PER_YEAR, 0);
-        stdDeviationMonthly.assign(MONTHS_PER_YEAR, 0);
+        stdDeviationHourly.assign(HOURS_PER_YEAR, {0});
+        stdDeviationDaily.assign(DAYS_PER_YEAR, {0});
+        stdDeviationWeekly.assign(WEEKS_PER_YEAR, {0});
+        stdDeviationMonthly.assign(MONTHS_PER_YEAR, {0});
         // Next
         NextType::initializeFromStudy(study);
 
@@ -82,11 +85,11 @@ protected:
     void reset()
     {
         // Reset
-        stdDeviationHourly.assign(HOURS_PER_YEAR, 0);
-        stdDeviationDaily.assign(DAYS_PER_YEAR, 0);
-        stdDeviationWeekly.assign(WEEKS_PER_YEAR, 0);
-        stdDeviationMonthly.assign(MONTHS_PER_YEAR, 0);
-        stdDeviationYear = 0.;
+        stdDeviationHourly.assign(HOURS_PER_YEAR, {0});
+        stdDeviationDaily.assign(DAYS_PER_YEAR, {0});
+        stdDeviationWeekly.assign(WEEKS_PER_YEAR, {0});
+        stdDeviationMonthly.assign(MONTHS_PER_YEAR, {0});
+        stdDeviationYear = HighPrecision(0);
         // Next
         NextType::reset();
     }
@@ -100,25 +103,25 @@ protected:
         // StdDeviation value for each hour throughout all years
         for (i = 0; i != HOURS_PER_YEAR; ++i)
         {
-            stdDeviationHourly[i] += rhs.hour[i] * rhs.hour[i] * pRatio;
+            stdDeviationHourly[i].addDouble(rhs.hour[i] * rhs.hour[i] * pRatio);
         }
         // StdDeviation value for each day throughout all years
         for (i = 0; i != DAYS_PER_YEAR; ++i)
         {
-            stdDeviationDaily[i] += rhs.day[i] * rhs.day[i] * pRatio;
+            stdDeviationDaily[i].addDouble(rhs.day[i] * rhs.day[i] * pRatio);
         }
         // StdDeviation value for each week throughout all years
         for (i = 0; i != WEEKS_PER_YEAR; ++i)
         {
-            stdDeviationWeekly[i] += rhs.week[i] * rhs.week[i] * pRatio;
+            stdDeviationWeekly[i].addDouble(rhs.week[i] * rhs.week[i] * pRatio);
         }
         // StdDeviation value for each month throughout all years
         for (i = 0; i != MONTHS_PER_YEAR; ++i)
         {
-            stdDeviationMonthly[i] += rhs.month[i] * rhs.month[i] * pRatio;
+            stdDeviationMonthly[i].addDouble(rhs.month[i] * rhs.month[i] * pRatio);
         }
         // StdDeviation value throughout all years
-        stdDeviationYear += rhs.year * rhs.year * pRatio;
+        stdDeviationYear.addDouble(rhs.year * rhs.year * pRatio);
 
         // Next
         NextType::merge(year, rhs);
@@ -213,8 +216,8 @@ private:
         {
             for (unsigned int i = 0; i != Size; ++i)
             {
-                auto v = results.avgdata.hourly[i].extract_double();
-                target[i] = squareRootChecked(array[i].extract_double() - v * v);
+                auto v = results.avgdata.hourly[i].getSum();
+                target[i] = squareRootChecked(array[i].getSum() - v * v);
             }
         }
         break;
@@ -222,8 +225,8 @@ private:
         {
             for (unsigned int i = 0; i != Size; ++i)
             {
-                auto v = results.avgdata.daily[i].extract_double();
-                target[i] = squareRootChecked(array[i].extract_double() - v * v);
+                auto v = results.avgdata.daily[i].getSum();
+                target[i] = squareRootChecked(array[i].getSum() - v * v);
             }
         }
         break;
@@ -231,8 +234,8 @@ private:
         {
             for (unsigned int i = 0; i != Size; ++i)
             {
-                auto v = results.avgdata.weekly[i].extract_double();
-                target[i] = squareRootChecked(array[i].extract_double() - v * v);
+                auto v = results.avgdata.weekly[i].getSum();
+                target[i] = squareRootChecked(array[i].getSum() - v * v);
             }
         }
         break;
@@ -240,14 +243,14 @@ private:
         {
             for (unsigned int i = 0; i != Size; ++i)
             {
-                auto v = results.avgdata.monthly[i].extract_double();
-                target[i] = squareRootChecked(array[i].extract_double() - v * v);
+                auto v = results.avgdata.monthly[i].getSum();
+                target[i] = squareRootChecked(array[i].getSum() - v * v);
             }
         }
         break;
         case Category::annual:
         {
-            const double d = array->extract_double()
+            const double d = array->getSum()
                              - results.avgdata.allYears * results.avgdata.allYears;
             *target = squareRootChecked(d);
         }
