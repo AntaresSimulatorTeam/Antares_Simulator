@@ -168,7 +168,7 @@ private:
     template<uint Size, class VCardT, int PrecisionT>
     void InternalExportValues(SurveyResults& report, const std::vector<HighPrecision>& array) const
     {
-        assert(array);
+        assert(!array.empty());
         assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
 
         // Caption
@@ -189,7 +189,7 @@ private:
         {
             for (uint h = 0; h < HOURS_PER_YEAR; h++)
             {
-                report.values[report.data.columnIndex][h] = array[h].extract_double();
+                report.values[report.data.columnIndex][h] = static_cast<double>(array[h]);
             }
             break;
         }
@@ -197,7 +197,7 @@ private:
         {
             for (uint d = 0; d < DAYS_PER_YEAR; d++)
             {
-                report.values[report.data.columnIndex][d] = array[d].extract_double();
+                report.values[report.data.columnIndex][d] = static_cast<double>(array[d]);
             }
             break;
         }
@@ -206,7 +206,7 @@ private:
         {
             for (uint w = 0; w < WEEKS_PER_YEAR; w++)
             {
-                report.values[report.data.columnIndex][w] = array[w].extract_double();
+                report.values[report.data.columnIndex][w] = static_cast<double>(array[w]);
             }
             break;
         }
@@ -215,7 +215,7 @@ private:
         {
             for (uint m = 0; m < MONTHS_PER_YEAR; m++)
             {
-                report.values[report.data.columnIndex][m] = array[m].extract_double();
+                report.values[report.data.columnIndex][m] = static_cast<double>(array[m]);
             }
             break;
         }
@@ -225,7 +225,7 @@ private:
             target = 0;
             for (uint i = 0; i != avgdata.nbYearsCapacity; ++i)
             {
-                target += array[i].extract_double();
+                target += static_cast<double>(array[i]);
             }
             avgdata.allYears = target;
             break;

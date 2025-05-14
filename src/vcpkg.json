@@ -31,6 +31,10 @@
       ]
     },
     {
+      "name": "gmp",
+      "version>=": "6.3.0"
+    },
+    {
       "name": "yaml-cpp"
     },
     {

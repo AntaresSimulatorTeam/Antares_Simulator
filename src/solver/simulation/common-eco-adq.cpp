@@ -47,10 +47,9 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
             assert(balance[j] && "Impossible to find the variable");
             if (balance[j])
             {
-                problem.SoldeMoyenHoraire[i].SoldeMoyenDuPays[j] = balance[j]
+                problem.SoldeMoyenHoraire[i].SoldeMoyenDuPays[j] = static_cast<double>(balance[j]
                                                                      ->avgdata
-                                                                     .hourly[decalPasDeTemps]
-                                                                     .extract_double();
+                                                                     .hourly[decalPasDeTemps]);
             }
             else
             {
