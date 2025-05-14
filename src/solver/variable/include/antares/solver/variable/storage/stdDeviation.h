@@ -26,7 +26,9 @@
 
 #include <boost/multiprecision/cpp_dec_float.hpp>
 
-using HighPrecision = boost::multiprecision::cpp_dec_float<32>;
+#include "../fixed.hpp"
+
+using HighPrecision = fpm::fixed<std::int64_t, __int128_t, 20>;
 
 namespace Antares
 {
@@ -68,10 +70,10 @@ public:
 protected:
     void initializeFromStudy(Antares::Data::Study& study)
     {
-        stdDeviationHourly.assign(HOURS_PER_YEAR, 0);
-        stdDeviationDaily.assign(DAYS_PER_YEAR, 0);
-        stdDeviationWeekly.assign(WEEKS_PER_YEAR, 0);
-        stdDeviationMonthly.assign(MONTHS_PER_YEAR, 0);
+        stdDeviationHourly.assign(HOURS_PER_YEAR, (HighPrecision)0);
+        stdDeviationDaily.assign(DAYS_PER_YEAR, (HighPrecision)0);
+        stdDeviationWeekly.assign(WEEKS_PER_YEAR, (HighPrecision)0);
+        stdDeviationMonthly.assign(MONTHS_PER_YEAR, (HighPrecision)0);
         // Next
         NextType::initializeFromStudy(study);
 
@@ -82,11 +84,11 @@ protected:
     void reset()
     {
         // Reset
-        stdDeviationHourly.assign(HOURS_PER_YEAR, 0);
-        stdDeviationDaily.assign(DAYS_PER_YEAR, 0);
-        stdDeviationWeekly.assign(WEEKS_PER_YEAR, 0);
-        stdDeviationMonthly.assign(MONTHS_PER_YEAR, 0);
-        stdDeviationYear = 0.;
+        stdDeviationHourly.assign(HOURS_PER_YEAR, (HighPrecision)0);
+        stdDeviationDaily.assign(DAYS_PER_YEAR, (HighPrecision)0);
+        stdDeviationWeekly.assign(WEEKS_PER_YEAR, (HighPrecision)0);
+        stdDeviationMonthly.assign(MONTHS_PER_YEAR, (HighPrecision)0);
+        stdDeviationYear = (HighPrecision)0.;
         // Next
         NextType::reset();
     }
@@ -94,31 +96,31 @@ protected:
     void merge(unsigned int year, const IntermediateValues& rhs)
     {
         // Ratio take into account MC year weight
-        double pRatio = (double)yearsWeight[year] / (double)yearsWeightSum;
+        HighPrecision pRatio = (HighPrecision)yearsWeight[year] / (HighPrecision)yearsWeightSum;
 
         unsigned int i;
         // StdDeviation value for each hour throughout all years
         for (i = 0; i != HOURS_PER_YEAR; ++i)
         {
-            stdDeviationHourly[i] += rhs.hour[i] * rhs.hour[i] * pRatio;
+            stdDeviationHourly[i] += (HighPrecision)(rhs.hour[i] * rhs.hour[i]) * pRatio;
         }
         // StdDeviation value for each day throughout all years
         for (i = 0; i != DAYS_PER_YEAR; ++i)
         {
-            stdDeviationDaily[i] += rhs.day[i] * rhs.day[i] * pRatio;
+            stdDeviationDaily[i] += (HighPrecision)(rhs.day[i] * rhs.day[i]) * pRatio;
         }
         // StdDeviation value for each week throughout all years
         for (i = 0; i != WEEKS_PER_YEAR; ++i)
         {
-            stdDeviationWeekly[i] += rhs.week[i] * rhs.week[i] * pRatio;
+            stdDeviationWeekly[i] += (HighPrecision)(rhs.week[i] * rhs.week[i]) * pRatio;
         }
         // StdDeviation value for each month throughout all years
         for (i = 0; i != MONTHS_PER_YEAR; ++i)
         {
-            stdDeviationMonthly[i] += rhs.month[i] * rhs.month[i] * pRatio;
+            stdDeviationMonthly[i] += (HighPrecision)(rhs.month[i] * rhs.month[i]) * pRatio;
         }
         // StdDeviation value throughout all years
-        stdDeviationYear += rhs.year * rhs.year * pRatio;
+        stdDeviationYear += (HighPrecision)(rhs.year * rhs.year) * pRatio;
 
         // Next
         NextType::merge(year, rhs);
@@ -179,7 +181,7 @@ public:
     std::vector<HighPrecision> stdDeviationWeekly;
     std::vector<HighPrecision> stdDeviationDaily;
     std::vector<HighPrecision> stdDeviationHourly;
-    HighPrecision stdDeviationYear = 0;
+    HighPrecision stdDeviationYear {0};
 
 private:
     template<class S, unsigned int Size, class VCardT, int PrecisionT>
@@ -213,8 +215,8 @@ private:
         {
             for (unsigned int i = 0; i != Size; ++i)
             {
-                auto v = results.avgdata.hourly[i].extract_double();
-                target[i] = squareRootChecked(array[i].extract_double() - v * v);
+                double v = static_cast<double>(results.avgdata.hourly[i]);
+                target[i] = squareRootChecked(static_cast<double>(array[i]) - v * v);
             }
         }
         break;
@@ -222,8 +224,8 @@ private:
         {
             for (unsigned int i = 0; i != Size; ++i)
             {
-                auto v = results.avgdata.daily[i].extract_double();
-                target[i] = squareRootChecked(array[i].extract_double() - v * v);
+                double v = static_cast<double>(results.avgdata.daily[i]);
+                target[i] = squareRootChecked(static_cast<double>(array[i]) - v * v);
             }
         }
         break;
@@ -231,8 +233,8 @@ private:
         {
             for (unsigned int i = 0; i != Size; ++i)
             {
-                auto v = results.avgdata.weekly[i].extract_double();
-                target[i] = squareRootChecked(array[i].extract_double() - v * v);
+                double v = static_cast<double>(results.avgdata.weekly[i]);
+                target[i] = squareRootChecked(static_cast<double>(array[i]) - v * v);
             }
         }
         break;
@@ -240,15 +242,14 @@ private:
         {
             for (unsigned int i = 0; i != Size; ++i)
             {
-                auto v = results.avgdata.monthly[i].extract_double();
-                target[i] = squareRootChecked(array[i].extract_double() - v * v);
+                double v = static_cast<double>(results.avgdata.monthly[i]);
+                target[i] = squareRootChecked(static_cast<double>(array[i]) - v * v);
             }
         }
         break;
         case Category::annual:
         {
-            const double d = array->extract_double()
-                             - results.avgdata.allYears * results.avgdata.allYears;
+            const double d = static_cast<double>(*array) - results.avgdata.allYears * results.avgdata.allYears;
             *target = squareRootChecked(d);
         }
         break;
