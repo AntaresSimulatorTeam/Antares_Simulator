@@ -39,16 +39,11 @@ AverageData::~AverageData() = default;
 
 void AverageData::reset()
 {
-    year.clear();
-    monthly.clear();
-    weekly.clear();
-    daily.clear();
-    hourly.clear();
-    year.resize(nbYearsCapacity);
-    monthly.resize(MONTHS_PER_YEAR);
-    weekly.resize(WEEKS_PER_YEAR);
-    daily.resize(DAYS_PER_YEAR);
-    hourly.resize(HOURS_PER_YEAR);
+    year.assign(nbYearsCapacity, 0);
+    monthly.assign(MONTHS_PER_YEAR, 0);
+    weekly.assign(WEEKS_PER_YEAR, 0);
+    daily.assign(DAYS_PER_YEAR, 0);
+    hourly.assign(HOURS_PER_YEAR, 0);
 }
 
 void AverageData::initializeFromStudy(Data::Study& study)
@@ -70,25 +65,25 @@ void AverageData::merge(unsigned int y, const IntermediateValues& rhs)
     // Average value for each hour throughout all years
     for (i = 0; i != HOURS_PER_YEAR; ++i)
     {
-        hourly[i].addDouble(rhs.hour[i] * ratio);
+        hourly[i] += rhs.hour[i] * ratio;
     }
     // Average value for each day throughout all years
     for (i = 0; i != DAYS_PER_YEAR; ++i)
     {
-        daily[i].addDouble(rhs.day[i] * ratio);
+        daily[i] += rhs.day[i] * ratio;
     }
     // Average value for each week throughout all years
     for (i = 0; i != WEEKS_PER_YEAR; ++i)
     {
-        weekly[i].addDouble(rhs.week[i] * ratio);
+        weekly[i] += rhs.week[i] * ratio;
     }
     // Average value for each month throughout all years
     for (i = 0; i != MONTHS_PER_YEAR; ++i)
     {
-        monthly[i].addDouble(rhs.month[i] * ratio);
+        monthly[i] += rhs.month[i] * ratio;
     }
     // Average value throughout all years
-    year[y].addDouble(rhs.year * ratio);
+    year[y] += rhs.year * ratio;
 }
 
 } // namespace Antares::Solver::Variable::R::AllYears

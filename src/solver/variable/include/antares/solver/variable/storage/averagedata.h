@@ -26,7 +26,7 @@
 #include <antares/study/study.h>
 #include "antares/solver/variable/storage/intermediate.h"
 
-/* using HighPrecision = boost::multiprecision::cpp_dec_float<32>; */
+using HighPrecision = boost::multiprecision::cpp_dec_float<32>;
 
 namespace Antares
 {
@@ -38,34 +38,6 @@ namespace R
 {
 namespace AllYears
 {
-
-struct HighPrecision
-{
-public:
-    HighPrecision(double s = 0.0)
-        : sum(s)
-        , c(0.0)
-    {
-    }
-    void addDouble(double value)
-    {
-        double y = value - c;
-
-        double t = sum + y;
-        c = (t - sum) - y;
-        sum = t;
-    }
-
-    double getSum() const
-    {
-        return sum;
-    }
-
-private:
-    double sum = 0.0;
-    double c = 0.0;
-};
-
 class AverageData
 {
 public:
