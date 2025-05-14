@@ -75,7 +75,7 @@ RUN cd _build && \
 
 #Solver archive creation
 RUN cd _build && \
-     cpack -G RPM -D CPACK_INSTALLED_DIRECTORIES="/ortools/install/lib64;bin"
+     cpack -G TGZ -D CPACK_INSTALLED_DIRECTORIES="/ortools/install/lib64;bin"
 
 RUN cd _build && \
     cmake --install . --prefix install && \
