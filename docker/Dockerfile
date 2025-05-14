@@ -71,25 +71,17 @@ RUN  source /opt/rh/devtoolset-11/enable && \
 
 #Installer .rpm creation
 RUN cd _build && \
-    cpack -G RPM -D CPACK_INSTALLED_DIRECTORIES="/ortools/install/lib;bin"
+    cpack -G RPM -D CPACK_INSTALLED_DIRECTORIES="/ortools/install/lib64;bin"
 
 #Solver archive creation
 RUN cd _build && \
-     cpack -G RPM -D CPACK_INSTALLED_DIRECTORIES="/ortools/install/lib;bin"
+     cpack -G RPM -D CPACK_INSTALLED_DIRECTORIES="/ortools/install/lib64;bin"
 
 RUN cd _build && \
     cmake --install . --prefix install && \
     pushd . && \
     cd install/bin && \
-    ls / && \
-    echo "-----------" && \
-    ls /ortools/install/ && \
-    echo "-----------" && \
-    ls /ortools/install/lib/ && \
-    echo "-----------" && \
-    ls /ortools/install/lib/*.so* && \
-    echo "-----------" && \
-    tar czf ../../antares-solver_centos7.tar.gz antares-solver libsirius_solver.so /ortools/install/lib/*.so* && \
+    tar czf ../../antares-solver_centos7.tar.gz antares-solver libsirius_solver.so /ortools/install/lib64/*.so* && \
     popd && \
     rm -rf install
 
