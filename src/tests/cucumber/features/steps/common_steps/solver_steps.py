@@ -54,7 +54,7 @@ def simu_success(context):
 
 @then('the simulation fails')
 def simu_success(context):
-    assert context.return_code != 0
+    assert context.return_code != 0, f"Process ended with return code {context.return_code}: \nSTDOUT: \n{context.logs_out} \n STDERR: \n{context.logs_err}"
 
 
 @then('the expected value of the annual system cost is {value:g}')
