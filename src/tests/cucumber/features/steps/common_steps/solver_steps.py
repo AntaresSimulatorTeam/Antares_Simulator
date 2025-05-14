@@ -49,12 +49,12 @@ def run_antares(context):
 
 @then('the simulation succeeds')
 def simu_success(context):
-    assert context.return_code == 0
+    assert context.return_code == 0, f"Process failed with return code {context.return_code}: \nSTDOUT: \n{context.logs_out} \n STDERR: \n{context.logs_err}"
 
 
 @then('the simulation fails')
 def simu_success(context):
-    assert context.return_code != 0
+    assert context.return_code != 0, f"Process ended with return code {context.return_code}: \nSTDOUT: \n{context.logs_out} \n STDERR: \n{context.logs_err}"
 
 
 @then('the expected value of the annual system cost is {value:g}')
@@ -191,6 +191,14 @@ def run_simulation(context):
     print(f"Running command: {command}")
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
     out, err = process.communicate()
+    if out:
+        context.logs_out = out.decode("utf-8")
+    else:
+        context.logs_out = ""
+    if err:
+        context.logs_err = err.decode("utf-8")
+    else:
+        context.logs_err = ""
     context.output_path = parse_output_folder_from_logs(out)
     context.return_code = process.returncode
     context.soh = solver_output_handler(context.output_path)
