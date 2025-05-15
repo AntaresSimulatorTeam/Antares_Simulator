@@ -122,8 +122,6 @@ bool TimeSeries::loadFromFile(const std::filesystem::path& path, const bool aver
         timeSeries.averageTimeseries();
     }
 
-    timeseriesNumbers.clear();
-
     return ret;
 }
 
