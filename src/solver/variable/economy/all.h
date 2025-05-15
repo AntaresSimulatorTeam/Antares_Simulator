@@ -71,6 +71,7 @@
 #include "lold.h"
 #include "loldCsr.h"
 #include "lolp.h"
+#include "nearPriceCap.h"
 #include "lolpCsr.h"
 #include "max-mrg.h"
 #include "max-mrg-csr.h"
@@ -168,90 +169,93 @@ typedef                               // Prices
                                  <DomesticUnsuppliedEnergy // Domestic Unsupplied Energy
                                   <LMRViolations           // LMR Violations
                                    <SpilledEnergy          // Spilled Energy
-                                    <LOLD                  // LOLD
+                                    <LOLD                  // Loss Of Load Duration
                                      <LOLD_CSR<
-                                       LOLP // LOLP
-                                       <LOLP_CSR<AvailableDispatchGen<DispatchableGenMargin<
-                                         DtgMarginCsr // DTG MRG CSR
-                                         <Marge<MaxMrgCsr<NonProportionalCost<
-                                           NonProportionalCostByDispatchablePlant // Startup cost +
-                                                                                  // Fixed cost per
-                                                                                  // thermal plant
-                                                                                  // detail
-                                           <NbOfDispatchedUnits // Number of Units Dispatched
-                                            <NbOfDispatchedUnitsByPlant // Number of Units
-                                                                        // Dispatched by plant
-                                             <ProfitByPlant
-                                              // Links
-                                              <Variable::Economy::Links // All links
-                                               >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                       LOLP // Loss Of Load Probability
+                                       <NearPriceCap<
+                                         LOLP_CSR<AvailableDispatchGen<DispatchableGenMargin<
+                                           DtgMarginCsr // DTG MRG CSR
+                                           <Marge<MaxMrgCsr<NonProportionalCost<
+                                             NonProportionalCostByDispatchablePlant // Startup cost
+                                                                                    // + Fixed cost
+                                                                                    // per thermal
+                                                                                    // plant detail
+                                             <NbOfDispatchedUnits // Number of Units Dispatched
+                                              <NbOfDispatchedUnitsByPlant // Number of Units
+                                                                          // Dispatched by plant
+                                               <ProfitByPlant
+                                                // Links
+                                                <Variable::Economy::Links // All links
+                                                 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!
 ** \brief All variables for a single set of areas (economy)
 */
 typedef // Prices
+  Common::SpatialAggregate
+  < OverallCost,
   Common::SpatialAggregate<
-    OverallCost,
+    OperatingCost,
     Common::SpatialAggregate<
-      OperatingCost,
+      Price,
+      // Thermal pollutants
       Common::SpatialAggregate<
-        Price,
-        // Thermal pollutants
+        ThermalAirPollutantEmissions,
+        // Production by thermal cluster
         Common::SpatialAggregate<
-          ThermalAirPollutantEmissions,
-          // Production by thermal cluster
+          Balance,
+          // Misc Gen.
           Common::SpatialAggregate<
-            Balance,
-            // Misc Gen.
+            RowBalance,
             Common::SpatialAggregate<
-              RowBalance,
+              PSP,
               Common::SpatialAggregate<
-                PSP,
+                MiscGenMinusRowPSP,
+                // Time series
                 Common::SpatialAggregate<
-                  MiscGenMinusRowPSP,
-                  // Time series
+                  TimeSeriesValuesLoad,
                   Common::SpatialAggregate<
-                    TimeSeriesValuesLoad,
+                    TimeSeriesValuesHydro,
                     Common::SpatialAggregate<
-                      TimeSeriesValuesHydro,
+                      TimeSeriesValuesWind,
                       Common::SpatialAggregate<
-                        TimeSeriesValuesWind,
+                        TimeSeriesValuesSolar,
+                        // Other
                         Common::SpatialAggregate<
-                          TimeSeriesValuesSolar,
-                          // Other
+                          DispatchableGeneration,
                           Common::SpatialAggregate<
-                            DispatchableGeneration,
+                            RenewableGeneration,
                             Common::SpatialAggregate<
-                              RenewableGeneration,
+                              HydroStorage,
                               Common::SpatialAggregate<
-                                HydroStorage,
+                                Pumping,
                                 Common::SpatialAggregate<
-                                  Pumping,
+                                  ReservoirLevel,
                                   Common::SpatialAggregate<
-                                    ReservoirLevel,
+                                    Inflows,
                                     Common::SpatialAggregate<
-                                      Inflows,
+                                      Overflows,
                                       Common::SpatialAggregate<
-                                        Overflows,
+                                        WaterValue,
                                         Common::SpatialAggregate<
-                                          WaterValue,
+                                          HydroCost,
                                           Common::SpatialAggregate<
-                                            HydroCost,
+                                            ShortTermStorageByGroup,
                                             Common::SpatialAggregate<
-                                              ShortTermStorageByGroup,
+                                              UnsupliedEnergy,
                                               Common::SpatialAggregate<
-                                                UnsupliedEnergy,
+                                                DomesticUnsuppliedEnergy,
                                                 Common::SpatialAggregate<
-                                                  DomesticUnsuppliedEnergy,
+                                                  LMRViolations,
                                                   Common::SpatialAggregate<
-                                                    LMRViolations,
+                                                    SpilledEnergy,
                                                     Common::SpatialAggregate<
-                                                      SpilledEnergy,
+                                                      LOLD,
                                                       Common::SpatialAggregate<
-                                                        LOLD,
+                                                        LOLP,
                                                         Common::SpatialAggregate<
-                                                          LOLP,
+                                                          NearPriceCap,
                                                           Common::SpatialAggregate<
                                                             AvailableDispatchGen,
                                                             Common::SpatialAggregate<
@@ -276,7 +280,7 @@ typedef // Prices
                                                                                           // -
                                                                                           // refs:
                                                                                           // #55
-                                                                      >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                                                      >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
 typedef BindingConstMarginCost< // Marginal cost for a binding constraint
