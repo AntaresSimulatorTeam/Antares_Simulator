@@ -50,20 +50,7 @@ public:
                        unsigned year) const;
 
 private:
-    struct key
-    {
-        std::string area_name;
-        std::string cluster_name;
-        // unsigned year;
-        bool operator==(const key&) const = default;
-    };
-
-    struct keyHasher
-    {
-        size_t operator()(const key& k) const;
-    };
-
-    std::unordered_map<key, MatrixType, keyHasher> rules_;
+    std::map<std::pair<std::string, std::string>, MatrixType> rules_;
 };
 
 inline CString<512, false> ShortTermTSNumberData::get_prefix() const

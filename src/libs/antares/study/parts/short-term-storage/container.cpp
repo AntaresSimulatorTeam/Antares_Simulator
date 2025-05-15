@@ -238,10 +238,10 @@ bool STStorageInput::loadSeriesFromFolder(const fs::path& folder, StudyVersion s
 
     bool ret = true;
 
-    for (auto& cluster: storagesByIndex)
+    for (auto& sts: storagesByIndex)
     {
-        fs::path seriesFolder = folder / cluster.id;
-        ret = cluster.loadSeries(seriesFolder, studyVersion) && ret;
+        fs::path seriesFolder = folder / sts.id;
+        ret = sts.loadSeries(seriesFolder, studyVersion) && ret;
     }
 
     return ret;
@@ -271,9 +271,9 @@ bool STStorageInput::saveDataSeriesToFolder(const std::string& folder) const
 
 void STStorageInput::resizeTimeseriesNumbers(unsigned int nbYears)
 {
-    for (auto& cluster: storagesByIndex)
+    for (auto& sts: storagesByIndex)
     {
-        cluster.tsNumbers.reset(nbYears);
+        sts.tsNumbers.reset(nbYears);
     }
 }
 
@@ -283,12 +283,12 @@ std::size_t STStorageInput::cumulativeConstraintCount() const
       storagesByIndex.begin(),
       storagesByIndex.end(),
       0,
-      [](size_t outer_constraint_count, const auto& cluster)
+      [](size_t outer_constraint_count, const auto& sts)
       {
           return outer_constraint_count
                  + std::accumulate(
-                   cluster.additionalConstraints.begin(),
-                   cluster.additionalConstraints.end(),
+                   sts.additionalConstraints.begin(),
+                   sts.additionalConstraints.end(),
                    0,
                    [](size_t inner_constraint_count, const auto& additionalConstraints)
                    { return inner_constraint_count + additionalConstraints.enabledConstraints(); });

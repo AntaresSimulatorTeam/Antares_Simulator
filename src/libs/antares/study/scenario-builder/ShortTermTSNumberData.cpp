@@ -37,13 +37,11 @@ bool ShortTermTSNumberData::apply(Study& study)
     uint errors = 0;
     for (const auto& area: study.areas | std::views::values)
     {
-        for (auto& cluster: area->shortTermStorage.storagesByIndex)
+        for (auto& sts: area->shortTermStorage.storagesByIndex)
         {
-            Matrix<uint32_t>& mapped = rules_.at(
-              ShortTermTSNumberData::key{area->id.c_str(), cluster.id});
+            Matrix<uint32_t>& mapped = rules_.at({area->id.c_str(), sts.id});
             std::string logprefix;
-            ret = ApplyToMatrix(errors, logprefix, cluster.series->inflows, mapped[0], tsGenMax)
-                  && ret;
+            ret = ApplyToMatrix(errors, logprefix, sts.series->inflows, mapped[0], tsGenMax) && ret;
         }
     }
     return ret;
@@ -54,8 +52,8 @@ void ShortTermTSNumberData::setTSnumber(const std::string& area_name,
                                         unsigned year,
                                         unsigned value)
 {
-    if (auto& ts_numbers = rules_.at(ShortTermTSNumberData::key{area_name, cluster_name});
-        year < ts_numbers.height)
+    auto& ts_numbers = rules_.at({area_name, cluster_name});
+    if (year < ts_numbers.height)
     {
         ts_numbers[0][year] = value;
     }
@@ -65,17 +63,7 @@ unsigned ShortTermTSNumberData::get_value(const std::string& area_name,
                                           const std::string& cluster_name,
                                           unsigned year) const
 {
-    // TODO check
-    return rules_.at(ShortTermTSNumberData::key{area_name, cluster_name})[0][year];
-}
-
-size_t ShortTermTSNumberData::keyHasher::operator()(const key& k) const
-{
-    std::size_t seed = 0;
-    boost::hash_combine(seed, k.area_name);
-    boost::hash_combine(seed, k.cluster_name);
-    // boost::hash_combine(seed, k.year);
-    return seed;
+    return rules_.at({area_name, cluster_name})[0][year];
 }
 
 bool ShortTermTSNumberData::reset(const Study& study)
@@ -83,9 +71,9 @@ bool ShortTermTSNumberData::reset(const Study& study)
     const uint nbYears = study.parameters.nbYears;
     for (const auto& area: study.areas | std::views::values)
     {
-        for (const auto& cluster: area->shortTermStorage.storagesByIndex)
+        for (const auto& sts: area->shortTermStorage.storagesByIndex)
         {
-            auto& ts_numbers = rules_[ShortTermTSNumberData::key{area->id.c_str(), cluster.id}];
+            auto& ts_numbers = rules_[{area->id.c_str(), sts.id}];
             ts_numbers.reset(1, nbYears);
         }
     }

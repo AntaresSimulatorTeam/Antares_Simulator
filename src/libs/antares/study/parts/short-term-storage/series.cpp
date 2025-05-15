@@ -151,6 +151,7 @@ void fillIfEmpty(TimeSeries& series, double value)
     if (series.timeSeries.empty())
     {
         series.reset(1, HOURS_PER_YEAR);
+        series.fill(value);
     }
 }
 
