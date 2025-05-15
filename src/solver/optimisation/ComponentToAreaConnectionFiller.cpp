@@ -21,7 +21,7 @@
 
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
 
-#include <regex>
+#include <boost/regex.hpp>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include "antares/exception/RuntimeError.hpp"
@@ -35,7 +35,7 @@ namespace Antares::Optimization
 
 ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
   const PROBLEME_SIMPLEXE_NOMME* problemeSimplexe,
-  const unsigned int nTimestampsInProblem,
+  unsigned int nTimestampsInProblem,
   const ModelerStudy::SystemModel::System* modelerSystem,
   const VariableDictionary& modelerVariableDictionary):
     modelerSystem_(modelerSystem),
@@ -62,9 +62,9 @@ void ComponentToAreaConnectionFiller::parseConstraintIds(
 {
     for (int idxRow = 0; idxRow < problemeSimplexe->NombreDeContraintes; ++idxRow)
     {
-        std::regex pattern(R"(AreaBalance::area<(.+)>::hour<(\d+)>)");
-        std::smatch matches;
-        if (std::regex_match(problemeSimplexe->ConstraintNames().at(idxRow), matches, pattern))
+        boost::regex pattern(R"(AreaBalance::area<(.+)>::hour<(\d+)>)");
+        boost::smatch matches;
+        if (boost::regex_match(problemeSimplexe->ConstraintNames().at(idxRow), matches, pattern))
         {
             std::string areaId = matches[1].str();
             unsigned int ts = std::stoul(matches[2].str());

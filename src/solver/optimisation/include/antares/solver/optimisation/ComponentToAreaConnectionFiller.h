@@ -33,7 +33,7 @@ class ComponentToAreaConnectionFiller: public Optimisation::LinearProblemApi::Li
 {
 public:
     explicit ComponentToAreaConnectionFiller(const PROBLEME_SIMPLEXE_NOMME* problemeSimplexe,
-                                             const unsigned int nTimestampsInProblem,
+                                             unsigned int nTimestampsInProblem,
                                              const ModelerStudy::SystemModel::System* modelerSystem,
                                              const VariableDictionary& modelerVariableDictionary);
     void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
@@ -47,11 +47,16 @@ public:
                       Optimisation::LinearProblemApi::FillContext& ctx) override;
 
 private:
+    using AreaId = std::string;
+    using Timestamp = unsigned int;
+    using AreaAndTimestamp = std::pair<AreaId, Timestamp>;
+    using BalanceConstraintId = std::string;
+
     const ModelerStudy::SystemModel::System* modelerSystem_;
     const VariableDictionary& modelerVariableDictionary_;
-    std::map<std::pair<std::string, unsigned int>, std::string>
-      balanceConstraintPerAreaAndTimestamp_;
-    unsigned int nTimestampsInProblem_;
+    std::map<AreaAndTimestamp, BalanceConstraintId> balanceConstraintPerAreaAndTimestamp_;
+    const unsigned int nTimestampsInProblem_;
+
     void parseConstraintIds(const PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
     Optimisation::LinearProblemApi::IMipConstraint* getBalanceConstraint(
       Optimisation::LinearProblemApi::ILinearProblem& pb,

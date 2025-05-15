@@ -134,27 +134,21 @@ static void writeModelerSolutions(const operations_research::MPSolver* solver,
     writer.addEntryFromBuffer(modelerSolutionFilename, content);
 }
 
-FillContext buildFillContext(PROBLEME_HEBDO* problemeHebdo, const int NumIntervalle)
+FillContext buildFillContext(PROBLEME_HEBDO* problemeHebdo, int NumIntervalle)
 {
     unsigned firstTimestamp, lastTimestamp;
+    auto nTsInDay = static_cast<unsigned int>(problemeHebdo->NombreDePasDeTempsDUneJournee);
     if (problemeHebdo->OptimisationAuPasHebdomadaire)
     {
-        firstTimestamp = problemeHebdo->weekInTheYear
-                         * static_cast<unsigned int>(problemeHebdo->NombreDePasDeTempsDUneJournee)
-                         * problemeHebdo->NombreDeJours;
-        lastTimestamp = firstTimestamp
-                        + static_cast<unsigned int>(problemeHebdo->NombreDePasDeTempsDUneJournee)
-                            * problemeHebdo->NombreDeJours
-                        - 1;
+        firstTimestamp = problemeHebdo->weekInTheYear * nTsInDay * problemeHebdo->NombreDeJours;
+        lastTimestamp = firstTimestamp + nTsInDay * problemeHebdo->NombreDeJours - 1;
     }
     else
     {
         firstTimestamp = (problemeHebdo->weekInTheYear * problemeHebdo->NombreDeJours
                           + static_cast<unsigned int>(NumIntervalle))
-                         * static_cast<unsigned int>(problemeHebdo->NombreDePasDeTempsDUneJournee);
-        lastTimestamp = firstTimestamp
-                        + static_cast<unsigned int>(problemeHebdo->NombreDePasDeTempsDUneJournee)
-                        - 1;
+                         * nTsInDay;
+        lastTimestamp = firstTimestamp + nTsInDay - 1;
     }
     return FillContext(firstTimestamp, lastTimestamp);
 }
