@@ -40,7 +40,8 @@ bool ShortTermTSNumberData::apply(Study& study)
         for (auto& sts: area->shortTermStorage.storagesByIndex)
         {
             Matrix<uint32_t>& mapped = rules_.at({area->id.c_str(), sts.id});
-            std::string logprefix;
+            std::string logprefix = "Short term storage: area '" + area.name + "', sts: '"
+                                    + sts->name() + "': ";
             ret = ApplyToMatrix(errors, logprefix, sts.series->inflows, mapped[0], tsGenMax) && ret;
         }
     }
