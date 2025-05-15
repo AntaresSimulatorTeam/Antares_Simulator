@@ -1,5 +1,7 @@
 var NAVTREEINDEX27 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a60f3909a47880056dd4c6c8f7e3a9146":[8,0,0,18,5,4,19,8],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a62760c7474bb738acbf9ecf12d78ba90":[8,0,0,18,5,4,19,22],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a699b309cc9945c7e50e30fc55ad05c5b":[8,0,0,18,5,4,19,9],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a789085f53e80b147070465c6348f7ed9":[8,0,0,18,5,4,19,23],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a818f114652f59864ac04511de7ba8fb6":[8,0,0,18,5,4,19,13],
@@ -247,7 +249,5 @@ var NAVTREEINDEX27 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost.html#a38c2b8b3b97f8175ad180d0509c6bb75":[8,0,0,18,5,4,29,16],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost.html#a4419c936568fe8f75b88d908cd5c0532":[8,0,0,18,5,4,29,14],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost.html#a5272ce001ef10d961f9ae776bb6eb836":[8,0,0,18,5,4,29,8],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost.html#a5f42c300dd7d9fd34acbbcc9efa3f31f":[8,0,0,18,5,4,29,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost.html#a890bd3d434fa217fe305c0d74f3cecfb":[8,0,0,18,5,4,29,7],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost.html#a95d30ebc66944f64d781055e50fa57f7":[8,0,0,18,5,4,29,1]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost.html#a5f42c300dd7d9fd34acbbcc9efa3f31f":[8,0,0,18,5,4,29,2]
 };

@@ -1,5 +1,13 @@
 var NAVTREEINDEX53 =
 {
+"structAntares_1_1Data_1_1ThermalCluster_1_1DivModulation.html":[8,0,0,4,64,0],
+"structAntares_1_1Data_1_1ThermalCluster_1_1DivModulation.html#a6e836e62cb70a05a1bdc8664e17839f6":[8,0,0,4,64,0,0],
+"structAntares_1_1Data_1_1ThermalCluster_1_1DivModulation.html#a90dd24750f941d6aa1117b62dbe3f4ca":[8,0,0,4,64,0,1],
+"structAntares_1_1Data_1_1ThermalCluster_1_1DivModulation.html#aa955a40716989149d8e85a7e643593bb":[8,0,0,4,64,0,3],
+"structAntares_1_1Data_1_1ThermalCluster_1_1DivModulation.html#ac2048d6ef7a6dae8da316661b86bd74f":[8,0,0,4,64,0,5],
+"structAntares_1_1Data_1_1ThermalCluster_1_1DivModulation.html#ac5de8b05124179e8ea30be55d6e0db8e":[8,0,0,4,64,0,4],
+"structAntares_1_1Data_1_1ThermalCluster_1_1DivModulation.html#af1c5e142cf72167cf4717d4b5c71be8a":[8,0,0,4,64,0,2],
+"structAntares_1_1Data_1_1TimeDependantHydroManagementData.html":[8,0,0,4,55],
 "structAntares_1_1Data_1_1TimeDependantHydroManagementData.html#a90db94cb0b2348a27744244885a9e3e4":[8,0,0,4,55,0],
 "structAntares_1_1Data_1_1TimeDependantHydroManagementData.html#ad5c7884b30e88094fb3e10fdda37875f":[8,0,0,4,55,1],
 "structAntares_1_1Data_1_1TimeSeriesBitPatternIntoIndex.html":[8,0,0,4,30],
@@ -241,13 +249,5 @@ var NAVTREEINDEX53 =
 "structAntares_1_1Solver_1_1Optimization_1_1CmdLineOptimOptions.html#a6c5441a4c9b0f39bbee2164171ec9b3a":[8,0,0,18,2,1,4],
 "structAntares_1_1Solver_1_1Optimization_1_1CmdLineOptimOptions.html#a7c381c4ad16a4c77a7c22f530c7b0460":[8,0,0,18,2,1,2],
 "structAntares_1_1Solver_1_1Optimization_1_1CmdLineOptimOptions.html#a89603d96ebc1a20b41b2e138873e834c":[8,0,0,18,2,1,6],
-"structAntares_1_1Solver_1_1Optimization_1_1CmdLineOptimOptions.html#a8e706f01c6f2b6f46e6a84554b0d5322":[8,0,0,18,2,1,3],
-"structAntares_1_1Solver_1_1Optimization_1_1CmdLineOptimOptions.html#a9ae72eaedde14ccf4022854afe54b00d":[8,0,0,18,2,1,8],
-"structAntares_1_1Solver_1_1Optimization_1_1CmdLineOptimOptions.html#ad0f6c30958d360cd93f61d9ee355a481":[8,0,0,18,2,1,5],
-"structAntares_1_1Solver_1_1Optimization_1_1CmdLineOptimOptions.html#aee97654ba691fd26e9c63c5699b09854":[8,0,0,18,2,1,0],
-"structAntares_1_1Solver_1_1Optimization_1_1SingleOptimOptions.html":[8,0,0,18,2,0],
-"structAntares_1_1Solver_1_1Optimization_1_1SingleOptimOptions.html#a09432f4964e5b56f5ef2ed9801373270":[8,0,0,18,2,0,0],
-"structAntares_1_1Solver_1_1Optimization_1_1SingleOptimOptions.html#a14b04b8dd02dafcb92859cbb4b9db8f3":[8,0,0,18,2,0,2],
-"structAntares_1_1Solver_1_1Optimization_1_1SingleOptimOptions.html#a93d2c48ed55ac673143b260338120723":[8,0,0,18,2,0,4],
-"structAntares_1_1Solver_1_1Optimization_1_1SingleOptimOptions.html#addaad5577e3a035c13a6b104c40d24b1":[8,0,0,18,2,0,1]
+"structAntares_1_1Solver_1_1Optimization_1_1CmdLineOptimOptions.html#a8e706f01c6f2b6f46e6a84554b0d5322":[8,0,0,18,2,1,3]
 };

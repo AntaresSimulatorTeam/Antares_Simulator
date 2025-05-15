@@ -1,5 +1,6 @@
 var NAVTREEINDEX1 =
 {
+"FinalStockEquivalent_8h_source.html":[9,0,0,8,7,1,0,0,0,1,17],
 "FinalStockExpression_8h_source.html":[9,0,0,8,7,1,0,0,0,1,18],
 "FinalStockGroup_8h_source.html":[9,0,0,8,7,1,0,0,0,1,19],
 "FlowDissociation_8h_source.html":[9,0,0,8,7,1,0,0,0,1,20],
@@ -154,8 +155,8 @@ var NAVTREEINDEX1 =
 "WindTSNumberData_8h_source.html":[9,0,0,5,0,24,0,0,0,8,17],
 "_2home_2runner_2work_2Antares_Simulator_2Antares_Simulator_2src_2expressions_2include_2antares_2dfad3c59aa4a83a6873970d713bdd5fa.html":[10,0],
 "_2home_2runner_2work_2Antares_Simulator_2Antares_Simulator_2src_2solver_2optim-model-filler_2incded944f66be02da26cbf01c7e1339e09.html":[10,1],
-"____init_____8py.html#a63c51c45c497c2004c9efa3ec81c1471":[7,0,41,2],
-"____init_____8py.html#aca15ed5364a22a57acfdbc3d1159eb79":[7,0,41,1],
+"____init_____8py.html#a63c51c45c497c2004c9efa3ec81c1471":[7,0,42,2],
+"____init_____8py.html#aca15ed5364a22a57acfdbc3d1159eb79":[7,0,42,1],
 "about_2aboutbox_8h_source.html":[9,0,0,12,2,2,0,0],
 "aboutbox_8h_source.html":[9,0,0,12,2,2,17],
 "accumulator_8hxx_source.html":[9,0,0,12,2,2,7,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX1 =
 "balance_8h_source.html":[9,0,0,8,12,0,0,0,0,2,4],
 "base__post__process_8h_source.html":[9,0,0,8,9,0,0,0,0,3],
 "basis__status_8h_source.html":[9,0,0,8,11,0,0,0,0,0],
-"basis__status__impl_8h_source.html":[9,0,0,8,11,1],
-"behavior_8cpp.html#ad3596083c8dda87eba2665cc4c0322c0":[7,0,0,0,10]
+"basis__status__impl_8h_source.html":[9,0,0,8,11,1]
 };

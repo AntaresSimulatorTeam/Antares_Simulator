@@ -1722,9 +1722,9 @@ var hierarchy =
       [ "HydroMaxPowerStudy", "structHydroMaxPowerStudy.html", null ],
       [ "StudyFixture< FirstDay, LastDay >", "structStudyFixture.html", null ],
       [ "StudyForBCTest", "structStudyForBCTest.html", [
-        [ "StudyWithBConCluster", "structStudyWithBConCluster.html", null ],
         [ "StudyWithBConLink", "structStudyWithBConLink.html", null ]
-      ] ]
+      ] ],
+      [ "StudyWithTwoClusters", "structStudyWithTwoClusters.html", null ]
     ] ],
     [ "Antares::Data::StudyCleaningInfos", "classAntares_1_1Data_1_1StudyCleaningInfos.html", null ],
     [ "Antares::TSGenerator::XCast::StudyData", "classAntares_1_1TSGenerator_1_1XCast_1_1StudyData.html", null ],

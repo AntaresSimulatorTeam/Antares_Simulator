@@ -1,5 +1,13 @@
 var NAVTREEINDEX55 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLoopFlow.html#ae680bf17aeda71c56f5b574be0424e90":[8,0,0,18,5,4,48,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMARGE.html":[8,0,0,18,5,4,68],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMARGE.html#a4019160075dc84b31846c1b89546b0d0":[8,0,0,18,5,4,68,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMARGE.html#a5cb4c597576b00691ce461250e7d7611":[8,0,0,18,5,4,68,4],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMARGE.html#a97cc3a535e07459c3fae1e4b327c4f6f":[8,0,0,18,5,4,68,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMARGE.html#aa2bc74a0fdda4c40ab632cbcc7e68126":[8,0,0,18,5,4,68,3],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMARGE.html#ada5e7a10140b46c96ad66e0037a9f84b":[8,0,0,18,5,4,68,2],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMAX__MRG__CSR.html":[8,0,0,18,5,4,62],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMAX__MRG__CSR.html#a012ae43d90b05ebc12375f4b3bd88349":[8,0,0,18,5,4,62,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMAX__MRG__CSR.html#a3524b4edd69e5215a302a2822385fad8":[8,0,0,18,5,4,62,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMAX__MRG__CSR.html#a8e78abb773ac0495e6faea3812f3f77d":[8,0,0,18,5,4,62,4],
@@ -241,13 +249,5 @@ var NAVTREEINDEX55 =
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average_1_1Data.html":[8,0,0,18,5,6,0,0,0],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average_1_1Data.html#a337e28e6ea6c1cb43e5d7f5080825453":[8,0,0,18,5,6,0,0,0,1],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average_1_1Data.html#a590af165dcf299c657329b6c03829997":[8,0,0,18,5,6,0,0,0,0],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase.html":[8,0,0,18,5,6,0,7],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase.html#a0edd2b31a986b6d2fbeee6d58146920a":[8,0,0,18,5,6,0,7,4],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase.html#a1c382b0dd9afc94923794ada794ad246":[8,0,0,18,5,6,0,7,5],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase.html#a22867a4b6e6809f5c815050b22a524ca":[8,0,0,18,5,6,0,7,0],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase.html#a418f8d371d12518c98eca46ed383479c":[8,0,0,18,5,6,0,7,2],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase.html#aab5d03132587c0d90bb0f04cbe5e2b2e":[8,0,0,18,5,6,0,7,8],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase.html#acc42a788b9a0cb8767802cc2013dc538":[8,0,0,18,5,6,0,7,3],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase.html#ae2365d7bca004e568a6ffd501c6dbd04":[8,0,0,18,5,6,0,7,7],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase.html#af0ef05582a75d159fa6275c7154377d1":[8,0,0,18,5,6,0,7,1]
+"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase.html":[8,0,0,18,5,6,0,7]
 };

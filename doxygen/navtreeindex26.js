@@ -1,5 +1,7 @@
 var NAVTREEINDEX26 =
 {
+"classAntares_1_1Solver_1_1Simulation_1_1yearJob.html#ae7690e3e431957b28603854d09107991":[8,0,0,18,4,19,1],
+"classAntares_1_1Solver_1_1Simulation_1_1yearRandomNumbers.html":[8,0,0,18,4,24],
 "classAntares_1_1Solver_1_1Simulation_1_1yearRandomNumbers.html#a0646d116d55fcb6440e6e7dd042ce7fa":[8,0,0,18,4,24,8],
 "classAntares_1_1Solver_1_1Simulation_1_1yearRandomNumbers.html#a272e0c231c238e3264178709ceaa4932":[8,0,0,18,4,24,11],
 "classAntares_1_1Solver_1_1Simulation_1_1yearRandomNumbers.html#a2f3c1d265d752ccab4befc85acab3236":[8,0,0,18,4,24,10],
@@ -247,7 +249,5 @@ var NAVTREEINDEX26 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a54e8dbd19271761a634f4989c5d5ad0b":[8,0,0,18,5,4,19,5],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a5623491d1c544edb7f74e30b63fc1c04":[8,0,0,18,5,4,19,11],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a5acebf260c57e85d8b18cdb5e8321c9f":[8,0,0,18,5,4,19,18],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a5b39bfecac35e897fc820cb91d74edf7":[8,0,0,18,5,4,19,4],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a60f3909a47880056dd4c6c8f7e3a9146":[8,0,0,18,5,4,19,8],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a62760c7474bb738acbf9ecf12d78ba90":[8,0,0,18,5,4,19,22]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a5b39bfecac35e897fc820cb91d74edf7":[8,0,0,18,5,4,19,4]
 };

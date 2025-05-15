@@ -1,5 +1,7 @@
 var NAVTREEINDEX23 =
 {
+"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#ad8fffacff9bf7f5bb7212c9ef3e5e222":[8,0,0,15,0,4,4],
+"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#af4093d6dd854e4e013623803f16a8afa":[8,0,0,15,0,4,17],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html":[8,0,0,15,0,3],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html#a0d49e1a8e22ad4c03ce443b0a80d95d1":[8,0,0,15,0,3,0],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html":[8,0,0,15,0,7],
@@ -247,7 +249,5 @@ var NAVTREEINDEX23 =
 "classAntares_1_1Optimization_1_1ReadLinearConstraintVisitor.html#a2632c29a6e8853208e6825e784ee47f2":[8,0,0,16,23,1],
 "classAntares_1_1Optimization_1_1ReadLinearConstraintVisitor.html#a80c35c676665a831926fc1087c86d6e6":[8,0,0,16,23,2],
 "classAntares_1_1Optimization_1_1ReadLinearConstraintVisitor.html#aebbf426f95cbf003909a981447cbfa8e":[8,0,0,16,23,0],
-"classAntares_1_1Optimization_1_1ReadLinearExpressionVisitor.html":[8,0,0,16,24],
-"classAntares_1_1Optimization_1_1ReadLinearExpressionVisitor.html#a119c8f47fd7211f2f4ee7f52a2548bcd":[8,0,0,16,24,0],
-"classAntares_1_1Optimization_1_1ReadLinearExpressionVisitor.html#a3d4b59ec23824725d5bda8ecfee96a41":[8,0,0,16,24,1]
+"classAntares_1_1Optimization_1_1ReadLinearExpressionVisitor.html":[8,0,0,16,24]
 };

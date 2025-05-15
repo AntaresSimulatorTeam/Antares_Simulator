@@ -34,6 +34,7 @@ var classAntares_1_1Data_1_1BindingConstraint =
     [ "buildFormula", "classAntares_1_1Data_1_1BindingConstraint.html#aa74d5c2231c04052a1b3ad6353a76853", null ],
     [ "clearAndReset", "classAntares_1_1Data_1_1BindingConstraint.html#ae7b81bd95dd971d94fa234e2343a45b8", null ],
     [ "clusterCount", "classAntares_1_1Data_1_1BindingConstraint.html#a387bb2cd8536b6b6ee8d173fdfa1b299", null ],
+    [ "clustersAndWeights", "classAntares_1_1Data_1_1BindingConstraint.html#a535edb9f07c60e0fed2b0bb535123050", null ],
     [ "comments", "classAntares_1_1Data_1_1BindingConstraint.html#a009bd29e4ba5b4243884f9fabe2525c8", null ],
     [ "comments", "classAntares_1_1Data_1_1BindingConstraint.html#a4b4a5d8102ff5e28b9a16c5f38077abf", null ],
     [ "contains", "classAntares_1_1Data_1_1BindingConstraint.html#a04762c683b6b5be17a8f4748eb36338d", null ],

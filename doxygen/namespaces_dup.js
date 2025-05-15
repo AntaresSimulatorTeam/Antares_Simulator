@@ -2641,6 +2641,9 @@ var namespaces_dup =
     [ "sim_return_code", null, [
       [ "simulation_success", "classsim__return__code_1_1simulation__success.html", "classsim__return__code_1_1simulation__success" ]
     ] ],
+    [ "Simulation", null, [
+      [ "setBindingConstraintsRHS", "sim__binding__constraints__rhs_8h.html#afad00fb25244815afedc70fe7775be9a", null ]
+    ] ],
     [ "solver_input_handler", null, [
       [ "solver_input_handler", "classsolver__input__handler_1_1solver__input__handler.html", "classsolver__input__handler_1_1solver__input__handler" ]
     ] ],

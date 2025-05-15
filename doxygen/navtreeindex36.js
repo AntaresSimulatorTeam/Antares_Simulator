@@ -1,5 +1,7 @@
 var NAVTREEINDEX36 =
 {
+"classAntares_1_1Window_1_1Inspector_1_1Frame.html#aaa94f8dab84326e6e15f2b68e71b0b99":[8,0,0,23,1,72,2],
+"classAntares_1_1Window_1_1Inspector_1_1Frame.html#aadfa40283bcf6dcd54dc78e3b3329f23":[8,0,0,23,1,72,27],
 "classAntares_1_1Window_1_1Inspector_1_1Frame.html#abd16286a1b706158556141a1cc70034a":[8,0,0,23,1,72,1],
 "classAntares_1_1Window_1_1Inspector_1_1Frame.html#ac24e95818bfec3522c3fe0a7efee2671":[8,0,0,23,1,72,10],
 "classAntares_1_1Window_1_1Inspector_1_1Frame.html#acdd045bbe778b6e5afcf92b4a853cffb":[8,0,0,23,1,72,6],
@@ -247,7 +249,5 @@ var NAVTREEINDEX36 =
 "classAntares_1_1Window_1_1OutputViewer_1_1SpotlightProviderGlobalSelection.html#a6d2c3731de2c9aa7eb921066c0cdda06":[8,0,0,23,3,4,15],
 "classAntares_1_1Window_1_1OutputViewer_1_1SpotlightProviderGlobalSelection.html#a6fae37bc42b528fb11100d6c3f5db36d":[8,0,0,23,3,4,9],
 "classAntares_1_1Window_1_1OutputViewer_1_1SpotlightProviderGlobalSelection.html#a81316a7bbc764abfdf85ed1aac169f6e":[8,0,0,23,3,4,3],
-"classAntares_1_1Window_1_1OutputViewer_1_1SpotlightProviderGlobalSelection.html#a8b587effbbe4dfe135754692e9d0249f":[8,0,0,23,3,4,4],
-"classAntares_1_1Window_1_1OutputViewer_1_1SpotlightProviderGlobalSelection.html#a9662e3454936c4b3f53d8073c76a6b47":[8,0,0,23,3,4,11],
-"classAntares_1_1Window_1_1OutputViewer_1_1SpotlightProviderGlobalSelection.html#aac036b014c6bddea7f88178c136cf1c6":[8,0,0,23,3,4,8]
+"classAntares_1_1Window_1_1OutputViewer_1_1SpotlightProviderGlobalSelection.html#a8b587effbbe4dfe135754692e9d0249f":[8,0,0,23,3,4,4]
 };
