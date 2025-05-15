@@ -30,60 +30,20 @@ uint ShortTermTSNumberData::get_tsGenCount(const Study& study) const
     return 0;
 }
 
-static bool ApplyToAdditionalConstraintsRhs(
-
-  const Antares::Data::Area* area,
-  const std::string& cluster_id,
-  ShortTermStorage::AdditionalConstraints& additionalConstraints,
-  const Matrix<uint32_t>& col,
-  uint tsGenMax)
-{
-    // Errors
-    uint errors = 0;
-    CString<512, false> logprefix;
-    logprefix.clear() << "Short Term Storage: Area '" << area->name << "', cluster '" << cluster_id
-                      << "', constraint '" << additionalConstraints.name << "' :";
-
-    return ApplyToMatrix(errors, logprefix, additionalConstraints.series(), col[0], tsGenMax);
-}
-
-static bool ApplyToClusterInflows(const Antares::Data::Area* area,
-                                  ShortTermStorage::STStorageCluster& cluster,
-                                  const Matrix<uint32_t>& col,
-                                  uint tsGenMax)
-{
-    // Errors
-    uint errors = 0;
-    CString<512, false> logprefix;
-    logprefix.clear() << "Short Term Storage: Area '" << area->name << "', cluster '" << cluster.id
-                      << "' inflows:";
-    return ApplyToMatrix(errors, logprefix, cluster.series->inflows.series, col[0], tsGenMax);
-}
-
 bool ShortTermTSNumberData::apply(Study& study)
 {
     bool ret = true;
     auto tsGenMax = get_tsGenCount(study);
+    uint errors = 0;
     for (const auto& area: study.areas | std::views::values)
     {
         for (auto& cluster: area->shortTermStorage.storagesByIndex)
         {
             Matrix<uint32_t>& mapped = rules_.at(
               ShortTermTSNumberData::key{area->id.c_str(), cluster.id});
-            // const MatrixType::ColumnType& col = mapped[0];
-            ret = ApplyToClusterInflows(area, cluster, mapped, tsGenMax) && ret;
-            for (auto& additionalConstraints: cluster.additionalConstraints)
-            {
-                if (additionalConstraints.enabled)
-                {
-                    ret = ApplyToAdditionalConstraintsRhs(area,
-                                                          cluster.id,
-                                                          additionalConstraints,
-                                                          mapped,
-                                                          tsGenMax)
-                          && ret;
-                }
-            }
+            std::string logprefix;
+            ret = ApplyToMatrix(errors, logprefix, cluster.series->inflows, mapped[0], tsGenMax)
+                  && ret;
         }
     }
     return ret;

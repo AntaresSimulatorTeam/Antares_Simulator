@@ -24,16 +24,15 @@
 #include <string>
 #include <vector>
 
+#include <antares/series/series.h>
 #include <antares/study/version.h>
-#include "antares/study/parts/short-term-storage/ManagedTimeSeries.h"
 
 namespace Antares::Data::ShortTermStorage
 {
-
 class Series
 {
 public:
-    Series() = default;
+    Series(TimeSeriesNumbers& tsNumbers);
     // check if series values are valid
     bool validate(const std::string& id, StudyVersion studyVersion) const;
 
@@ -43,9 +42,13 @@ public:
 
     bool saveToFolder(const std::string& folder) const;
 
+private:
+    TimeSeriesNumbers& tsNumbers;
+
+public:
     std::vector<double> maxInjectionModulation;
     std::vector<double> maxWithdrawalModulation;
-    ManagedTimeSeries inflows;
+    TimeSeries inflows;
     std::vector<double> lowerRuleCurve;
     std::vector<double> upperRuleCurve;
 

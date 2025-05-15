@@ -25,7 +25,6 @@
 #include <vector>
 
 #include "antares/series/series.h"
-#include "antares/study/parts/short-term-storage/ManagedTimeSeries.h"
 
 namespace Antares::Data::ShortTermStorage
 {
@@ -42,8 +41,15 @@ public:
 class AdditionalConstraints
 {
 public:
-    //
-    AdditionalConstraints() = default;
+    AdditionalConstraints() = delete;
+    AdditionalConstraints(std::string name,
+                          std::string cluster_id,
+                          std::string variable,
+                          std::string operatorType,
+                          bool enabled,
+                          std::vector<SingleAdditionalConstraint> constraints,
+                          TimeSeriesNumbers& tsNumbers);
+
     AdditionalConstraints(const AdditionalConstraints& other) = default;
     AdditionalConstraints(AdditionalConstraints&& other) noexcept = default;
     AdditionalConstraints& operator=(const AdditionalConstraints& other) = default;
@@ -67,16 +73,16 @@ public:
 
     ValidateResult validate() const;
 
-    ManagedTimeSeries ts; ///< contains both tsNumbers and series
+    TimeSeries ts; ///< contains both tsNumbers and series
 
-    TimeSeries& series()
+    TimeSeries& rhs()
     {
-        return ts.series;
+        return ts;
     }
 
-    const TimeSeries& series() const
+    const TimeSeries& rhs() const
     {
-        return ts.series;
+        return ts;
     }
 
 private:

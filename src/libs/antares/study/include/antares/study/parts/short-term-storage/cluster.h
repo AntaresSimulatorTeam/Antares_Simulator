@@ -21,6 +21,7 @@
 
 #pragma once
 #include <filesystem>
+#include <list>
 #include <memory>
 #include <string>
 
@@ -50,8 +51,9 @@ public:
 
     std::string id;
 
-    std::shared_ptr<Series> series = std::make_shared<Series>();
+    TimeSeriesNumbers tsNumbers;
+    std::shared_ptr<Series> series = std::make_shared<Series>(tsNumbers);
     mutable Properties properties;
-    std::vector<AdditionalConstraints> additionalConstraints;
+    std::list<AdditionalConstraints> additionalConstraints;
 };
 } // namespace Antares::Data::ShortTermStorage

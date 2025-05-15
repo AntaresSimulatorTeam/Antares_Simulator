@@ -31,7 +31,8 @@
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
-//
+static Antares::Data::TimeSeriesNumbers tsNumbers;
+
 Data::ShortTermStorage::AdditionalConstraints getAdditionalConstraints(
   const std::string& name,
   const std::string& cluster_id,
@@ -40,12 +41,13 @@ Data::ShortTermStorage::AdditionalConstraints getAdditionalConstraints(
   const std::vector<Antares::Data::ShortTermStorage::SingleAdditionalConstraint>
     single_additional_constraints)
 {
-    Antares::Data::ShortTermStorage::AdditionalConstraints cstrs;
-    cstrs.name = name;
-    cstrs.cluster_id = cluster_id;
-    cstrs.variable = variable;
-    cstrs.operatorType = operatorType;
-    cstrs.constraints = single_additional_constraints;
+    Antares::Data::ShortTermStorage::AdditionalConstraints cstrs(name,
+                                                                 cluster_id,
+                                                                 variable,
+                                                                 operatorType,
+                                                                 true,
+                                                                 single_additional_constraints,
+                                                                 tsNumbers);
     return cstrs;
 }
 
@@ -486,10 +488,10 @@ void initialize_additional_constraints_rhs(
   Antares::Data::ShortTermStorage::AdditionalConstraints& additionalConstraint,
   const std::vector<double>& values)
 {
-    additionalConstraint.series().resize(values.size(), 0.0); // Default series data
+    additionalConstraint.rhs().resize(values.size(), 0.0); // Default series data
     Matrix matrix(1, values.size());
     matrix.pasteToColumn(0, values.data());
-    additionalConstraint.series().timeSeries = matrix;
+    additionalConstraint.rhs().timeSeries = matrix;
 }
 
 ExpectedResult SetupSingleStorageOneArea(PROBLEME_HEBDO& problemeHebdo)
@@ -498,7 +500,8 @@ ExpectedResult SetupSingleStorageOneArea(PROBLEME_HEBDO& problemeHebdo)
     ShortTermStorage::AREA_INPUT& area0 = problemeHebdo.ShortTermStorage[0];
     area0.resize(1);
 
-    Antares::Data::ShortTermStorage::AdditionalConstraints additionalConstraint;
+    Antares::Data::ShortTermStorage::AdditionalConstraints
+      additionalConstraint("name", "cluster1", "withdrawal", "less", true, {}, tsNumbers);
     initialize_additional_constraints_rhs(additionalConstraint, {12.0, 18.0, 24.0});
 
     Antares::Data::ShortTermStorage::SingleAdditionalConstraint constraint;
@@ -507,9 +510,9 @@ ExpectedResult SetupSingleStorageOneArea(PROBLEME_HEBDO& problemeHebdo)
     additionalConstraint.constraints.push_back(constraint);
 
     auto& storage_area0 = area0[0];
-    storage_area0.series = std::make_shared<Antares::Data::ShortTermStorage::Series>();
-    storage_area0.series->inflows.series.reset(1, HOURS_PER_YEAR);
-    storage_area0.series->inflows.series.fill(5.0); // Default inflow value
+    storage_area0.series = std::make_shared<Antares::Data::ShortTermStorage::Series>(tsNumbers);
+    storage_area0.series->inflows.reset(1, HOURS_PER_YEAR);
+    storage_area0.series->inflows.fill(5.0); // Default inflow value
     storage_area0.additionalConstraints.push_back(additionalConstraint);
 
     // Expected result: Sum of 12.0 + 18.0 + 24.0 = 54.0
@@ -540,17 +543,18 @@ std::vector<ExpectedResult> SetupMultipleStoragesDifferentAreas(PROBLEME_HEBDO& 
     // Area 0 setup
     ShortTermStorage::AREA_INPUT& area0 = problemeHebdo.ShortTermStorage[0];
     area0.resize(1);
-    Antares::Data::ShortTermStorage::AdditionalConstraints additionalConstraint0;
+    Antares::Data::ShortTermStorage::AdditionalConstraints
+      additionalConstraint0("name", "cluster1", "withdrawal", "less", true, {}, tsNumbers);
     initialize_additional_constraints_rhs(additionalConstraint0, {10.0, 15.0, 20.0, 25.0});
     Antares::Data::ShortTermStorage::SingleAdditionalConstraint constraint0;
     constraint0.globalIndex = 1;
     constraint0.hours = {1, 2, 3}; // First three hours
     additionalConstraint0.constraints.push_back(constraint0);
     auto& storage0_area0 = area0[0];
-    storage0_area0.series = std::make_shared<Antares::Data::ShortTermStorage::Series>();
+    storage0_area0.series = std::make_shared<Antares::Data::ShortTermStorage::Series>(tsNumbers);
     // Initialize series data for the full year
-    storage0_area0.series->inflows.series.reset(1, HOURS_PER_YEAR);
-    storage0_area0.series->inflows.series.fill(10.0); // Default inflow value
+    storage0_area0.series->inflows.reset(1, HOURS_PER_YEAR);
+    storage0_area0.series->inflows.fill(10.0); // Default inflow value
     storage0_area0.series->maxInjectionModulation.resize(HOURS_PER_YEAR, 100.0);
     storage0_area0.series->maxWithdrawalModulation.resize(HOURS_PER_YEAR, 100.0);
     storage0_area0.additionalConstraints.push_back(additionalConstraint0);
@@ -558,7 +562,8 @@ std::vector<ExpectedResult> SetupMultipleStoragesDifferentAreas(PROBLEME_HEBDO& 
     // Area 1 setup
     ShortTermStorage::AREA_INPUT& area1 = problemeHebdo.ShortTermStorage[1];
     area1.resize(1);
-    Data::ShortTermStorage::AdditionalConstraints additionalConstraint1;
+    Data::ShortTermStorage::AdditionalConstraints
+      additionalConstraint1("name", "cluster1", "withdrawal", "less", true, {}, tsNumbers);
     initialize_additional_constraints_rhs(
       additionalConstraint1,
       {5.0, 8.0, 12.0, 15.0} /*RHS values for the first few hours*/);
@@ -568,11 +573,11 @@ std::vector<ExpectedResult> SetupMultipleStoragesDifferentAreas(PROBLEME_HEBDO& 
     additionalConstraint1.constraints.push_back(constraint1);
 
     auto& storage1_area1 = area1[0];
-    storage1_area1.series = std::make_shared<Data::ShortTermStorage::Series>();
+    storage1_area1.series = std::make_shared<Data::ShortTermStorage::Series>(tsNumbers);
 
     // Initialize series data for the full year
-    storage1_area1.series->inflows.series.reset(1, HOURS_PER_YEAR);
-    storage1_area1.series->inflows.series.fill(0.0); // Default inflow value
+    storage1_area1.series->inflows.reset(1, HOURS_PER_YEAR);
+    storage1_area1.series->inflows.fill(0.0); // Default inflow value
 
     storage1_area1.series->maxInjectionModulation.resize(HOURS_PER_YEAR, 0.0);
     storage1_area1.series->maxWithdrawalModulation.resize(HOURS_PER_YEAR, 0.0);
@@ -635,7 +640,8 @@ std::vector<ExpectedResult> SetupMultipleStoragesSameArea(PROBLEME_HEBDO& proble
     area0.resize(2);
 
     // First storage
-    Antares::Data::ShortTermStorage::AdditionalConstraints additionalConstraint1;
+    Antares::Data::ShortTermStorage::AdditionalConstraints
+      additionalConstraint1("name", "cluster1", "withdrawal", "less", true, {}, tsNumbers);
     initialize_additional_constraints_rhs(additionalConstraint1, {10.0, 15.0});
     Antares::Data::ShortTermStorage::SingleAdditionalConstraint constraint1;
     constraint1.globalIndex = 0;
@@ -643,13 +649,14 @@ std::vector<ExpectedResult> SetupMultipleStoragesSameArea(PROBLEME_HEBDO& proble
     additionalConstraint1.constraints.push_back(constraint1);
 
     auto& storage1 = area0[0];
-    storage1.series = std::make_shared<Antares::Data::ShortTermStorage::Series>();
-    storage1.series->inflows.series.reset(1, HOURS_PER_YEAR);
-    storage1.series->inflows.series.fill(0.0); // Default inflow value
+    storage1.series = std::make_shared<Antares::Data::ShortTermStorage::Series>(tsNumbers);
+    storage1.series->inflows.reset(1, HOURS_PER_YEAR);
+    storage1.series->inflows.fill(0.0); // Default inflow value
     storage1.additionalConstraints.push_back(additionalConstraint1);
 
     // Second storage
-    Antares::Data::ShortTermStorage::AdditionalConstraints additionalConstraint2;
+    Antares::Data::ShortTermStorage::AdditionalConstraints
+      additionalConstraint2("name", "cluster1", "withdrawal", "less", true, {}, tsNumbers);
     initialize_additional_constraints_rhs(additionalConstraint2, {5.0, 7.0});
     Antares::Data::ShortTermStorage::SingleAdditionalConstraint constraint2;
     constraint2.globalIndex = 1;
@@ -657,9 +664,9 @@ std::vector<ExpectedResult> SetupMultipleStoragesSameArea(PROBLEME_HEBDO& proble
     additionalConstraint2.constraints.push_back(constraint2);
 
     auto& storage2 = area0[1];
-    storage2.series = std::make_shared<Antares::Data::ShortTermStorage::Series>();
-    storage2.series->inflows.series.reset(1, HOURS_PER_YEAR);
-    storage2.series->inflows.series.fill(0.0); // Default inflow value
+    storage2.series = std::make_shared<Antares::Data::ShortTermStorage::Series>(tsNumbers);
+    storage2.series->inflows.reset(1, HOURS_PER_YEAR);
+    storage2.series->inflows.fill(0.0); // Default inflow value
     storage2.additionalConstraints.push_back(additionalConstraint2);
 
     // Expected sum for :

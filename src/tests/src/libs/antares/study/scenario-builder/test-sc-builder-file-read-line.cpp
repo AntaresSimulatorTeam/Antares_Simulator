@@ -148,15 +148,21 @@ struct Fixture
         study->bindingConstraintsGroups.resizeAllTimeseriesNumbers(study->parameters.nbYears);
         bc->RHSTimeSeries().resize(7, 1);
 
+        ShortTermStorage::AdditionalConstraints
+          add1("name", "st-cluster-1", "withdrawal", "less", true, {}, stCluster1.tsNumbers);
+
         stCluster1.id = "st-cluster-1";
-        stCluster1.series->inflows.series.resize(12, 12);
-        add1.series().resize(12, 12);
+        stCluster1.series->inflows.resize(12, 12);
+        add1.rhs().resize(12, 12);
         stCluster1.additionalConstraints.push_back(add1);
         area_1->shortTermStorage.storagesByIndex.push_back(stCluster1);
 
+        ShortTermStorage::AdditionalConstraints
+          add2("name", "st-cluster-2", "withdrawal", "less", true, {}, stCluster2.tsNumbers);
+
         stCluster2.id = "st-cluster-2";
-        stCluster2.series->inflows.series.resize(12, 12);
-        add2.series().resize(12, 12);
+        stCluster2.series->inflows.resize(12, 12);
+        add2.rhs().resize(12, 12);
         stCluster2.additionalConstraints.push_back(add2);
         area_2->shortTermStorage.storagesByIndex.push_back(stCluster2);
 
@@ -186,8 +192,6 @@ struct Fixture
     // Setup short-term storage for testing
     ShortTermStorage::STStorageCluster stCluster1;
     ShortTermStorage::STStorageCluster stCluster2;
-    ShortTermStorage::AdditionalConstraints add1;
-    ShortTermStorage::AdditionalConstraints add2;
 
     ScenarioBuilder::Rules my_rule;
 };

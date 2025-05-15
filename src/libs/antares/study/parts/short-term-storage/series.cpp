@@ -35,15 +35,29 @@ namespace Antares::Data::ShortTermStorage
 
 namespace fs = std::filesystem;
 
+Series::Series(TimeSeriesNumbers& tsNumbers):
+    tsNumbers(tsNumbers),
+    inflows(tsNumbers)
+{
+}
+
 bool Series::loadFromFolder(const fs::path& folder, StudyVersion studyVersion)
 {
     bool ret = true;
 
     ret = loadFile(folder / "PMAX-injection.txt", maxInjectionModulation) && ret;
     ret = loadFile(folder / "PMAX-withdrawal.txt", maxWithdrawalModulation) && ret;
-    // TODO
-    bool average = false;
-    ret = loadFile(folder / "inflows.txt", inflows.series, average) && ret;
+
+    if (auto path = folder / "inflows.txt"; std::filesystem::exists(path))
+    {
+        ret = inflows.loadFromFile(path, false) && ret;
+    }
+    else
+    {
+        logs.info() << "Optional file not found: " << path
+                    << ", default values will be used if needed";
+    }
+
     ret = loadFile(folder / "lower-rule-curve.txt", lowerRuleCurve) && ret;
     ret = loadFile(folder / "upper-rule-curve.txt", upperRuleCurve) && ret;
     if (studyVersion >= StudyVersion(9, 2))
@@ -144,7 +158,7 @@ void Series::fillDefaultSeriesIfEmpty()
 {
     fillIfEmpty(maxInjectionModulation, 1.0);
     fillIfEmpty(maxWithdrawalModulation, 1.0);
-    fillIfEmpty(inflows.series, 0.0);
+    fillIfEmpty(inflows, 0.0);
     fillIfEmpty(lowerRuleCurve, 0.0);
     fillIfEmpty(upperRuleCurve, 1.0);
 
@@ -173,7 +187,7 @@ bool Series::saveToFolder(const std::string& folder) const
 
     checkWrite("PMAX-injection.txt", maxInjectionModulation);
     checkWrite("PMAX-withdrawal.txt", maxWithdrawalModulation);
-    inflows.series.saveToFile(folder + SEP + "inflows.txt", true);
+    inflows.saveToFile(folder + SEP + "inflows.txt", true);
     checkWrite("lower-rule-curve.txt", lowerRuleCurve);
     checkWrite("upper-rule-curve.txt", upperRuleCurve);
 
@@ -259,7 +273,7 @@ bool Series::validateSizes(const std::string& id, StudyVersion studyVersion) con
 {
     bool ret = checkSize("PMAX-injection.txt", id, maxInjectionModulation)
                && checkSize("PMAX-withdrawal.txt", id, maxWithdrawalModulation)
-               && checkSize("inflows.txt", id, inflows.series)
+               && checkSize("inflows.txt", id, inflows)
                && checkSize("lower-rule-curve.txt", id, lowerRuleCurve)
                && checkSize("upper-rule-curve.txt", id, upperRuleCurve);
     // Some elements were introduced in version 9.2.0

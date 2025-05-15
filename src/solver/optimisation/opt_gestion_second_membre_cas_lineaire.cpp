@@ -41,7 +41,7 @@ static void shortTermStorageLevelsRHS(
             const int clusterGlobalIndex = storage.clusterGlobalIndex;
             int cnt = CorrespondanceCntNativesCntOptim
                         .ShortTermStorageLevelConstraint[clusterGlobalIndex];
-            SecondMembre[cnt] = storage.series->inflows.series.getCoefficient(year, hourInTheYear);
+            SecondMembre[cnt] = storage.series->inflows.getCoefficient(year, hourInTheYear);
         }
     }
 }
@@ -60,7 +60,7 @@ static void shortTermStorageCumulationRHS(
         {
             for (const auto& additionalConstraints: storage.additionalConstraints)
             {
-                const auto& rhs = additionalConstraints.series().getColumn(year);
+                const auto& rhs = additionalConstraints.rhs().getColumn(year);
                 for (const auto& constraint: additionalConstraints.constraints)
                 {
                     const int cnt = CorrespondancesDesContraintesHebdomadaires
