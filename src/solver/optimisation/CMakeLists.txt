@@ -200,8 +200,6 @@ else ()
     #set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS} /wd 4101") # unused local variable
 endif ()
 
-find_package(Boost REQUIRED COMPONENTS regex)
-
 target_link_libraries(model_antares
         PUBLIC
         Antares::solverUtils
@@ -210,6 +208,7 @@ target_link_libraries(model_antares
         Antares::benchmarking
         Antares::optimization-options
         Antares::lps
+        Boost::headers
         PRIVATE
         infeasible_problem_analysis
         Antares::linear-problem-api
@@ -218,7 +217,6 @@ target_link_libraries(model_antares
         # modeler
         Antares::optim-model-filler
         Antares::antares-study-system-model
-        Boost::regex
 )
 
 target_include_directories(model_antares
