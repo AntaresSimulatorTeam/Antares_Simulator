@@ -678,6 +678,11 @@ BindingConstraintStructures BindingConstraint::initLinkArrays() const
     };
 }
 
+const BindingConstraint::clusterWeightMap& BindingConstraint::clustersAndWeights() const
+{
+    return pClusterWeights;
+}
+
 bool BindingConstraint::forceReload(bool reload) const
 {
     return RHSTimeSeries().forceReload(reload);

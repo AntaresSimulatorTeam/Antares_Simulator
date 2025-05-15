@@ -53,6 +53,7 @@ Currently, CI is run only for specific branch names:
 - `release/*`
 - `issue-*`
 - `doc/*`
+- `tests/`
 
 If you create a branch with a different name, no CI will be run, but you will receive a notification indicating that your branch name is incorrect.
 
