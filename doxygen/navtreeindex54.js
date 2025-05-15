@@ -1,5 +1,6 @@
 var NAVTREEINDEX54 =
 {
+"structAntares_1_1Solver_1_1Optimization_1_1SingleOptimOptions.html#ae05de17a4aac5cb0ed952370193b46f0":[8,0,0,18,2,0,3],
 "structAntares_1_1Solver_1_1Simulation_1_1RemixHydroOutput.html":[8,0,0,18,4,18],
 "structAntares_1_1Solver_1_1Simulation_1_1RemixHydroOutput.html#a19dd9fd7a8e9aa41d6d1efdfe93d9724":[8,0,0,18,4,18,0],
 "structAntares_1_1Solver_1_1Simulation_1_1RemixHydroOutput.html#a830fb8a02f87032ab4dcad577b707d28":[8,0,0,18,4,18,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX54 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMARGE.html#a97cc3a535e07459c3fae1e4b327c4f6f":[8,0,0,18,5,4,68,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMARGE.html#aa2bc74a0fdda4c40ab632cbcc7e68126":[8,0,0,18,5,4,68,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMARGE.html#ada5e7a10140b46c96ad66e0037a9f84b":[8,0,0,18,5,4,68,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMAX__MRG__CSR.html":[8,0,0,18,5,4,62],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMAX__MRG__CSR.html#a012ae43d90b05ebc12375f4b3bd88349":[8,0,0,18,5,4,62,3]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMAX__MRG__CSR.html":[8,0,0,18,5,4,62]
 };

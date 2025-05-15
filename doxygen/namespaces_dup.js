@@ -2603,6 +2603,7 @@ var namespaces_dup =
     [ "modeler_steps", null, [
       [ "build_antares_modeler_command", "modeler__steps_8py.html#a41ab8fa06f009156a60e170d983cb11e", null ],
       [ "get_value", "modeler__steps_8py.html#a109b1ad3dda0bf646d91b54fd231db86", null ],
+      [ "modeler_obj_value", "modeler__steps_8py.html#af5e8a8caff7e09da270cd93877f5bbaa", null ],
       [ "modeler_obj_value", "modeler__steps_8py.html#a68ec571e892067af4f648b84600afd3a", null ],
       [ "modeler_study_path_is", "modeler__steps_8py.html#a4b60789db78871ca85f1563bc7f0070b", null ],
       [ "modeler_var_optimal_value", "modeler__steps_8py.html#a687ddc88f0f79945181da8e8d0d0b359", null ],

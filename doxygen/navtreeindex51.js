@@ -1,5 +1,6 @@
 var NAVTREEINDEX51 =
 {
+"namespaceLocalPolicy.html#ae48d9a3da78c07bbf43d0d97e68f5606":[7,0,26,2],
 "namespaceLocalPolicy.html#aeee1fcbcea6a68643d0eb7929e246933":[7,0,26,6],
 "namespacemembers.html":[7,1,0],
 "namespacemembers_func.html":[7,1,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX51 =
 "solver_2hydro_2include_2antares_2solver_2hydro_2management_2management_8h.html#a2329aa8a66fd92377df919c542d3ea59":[7,0,0,66],
 "solver_2hydro_2include_2antares_2solver_2hydro_2management_2management_8h.html#a61fe8e29c1c9060a07d6e3a496d50908":[7,0,0,25,57],
 "solver_2hydro_2include_2antares_2solver_2hydro_2management_2management_8h.html#a6a2aa5ae8c8abb3498ef81ebdfb17dd9":[7,0,0,25,52],
-"solver_2hydro_2include_2antares_2solver_2hydro_2management_2management_8h.html#a98e9ba37267ba8e7700de5e6d01cf618":[7,0,0,25,39],
-"solver_2hydro_2include_2antares_2solver_2hydro_2management_2management_8h_source.html":[9,0,0,8,2,0,0,0,0,2,3]
+"solver_2hydro_2include_2antares_2solver_2hydro_2management_2management_8h.html#a98e9ba37267ba8e7700de5e6d01cf618":[7,0,0,25,39]
 };

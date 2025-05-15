@@ -1,5 +1,6 @@
 var NAVTREEINDEX57 =
 {
+"structAntares_1_1Window_1_1Inspector_1_1PStudy1stJanuary.html":[8,0,0,23,1,20],
 "structAntares_1_1Window_1_1Inspector_1_1PStudy1stJanuary.html#a50d675c2ee4734779c140798021ac57c":[8,0,0,23,1,20,0],
 "structAntares_1_1Window_1_1Inspector_1_1PStudyBuildingMode.html":[8,0,0,23,1,6],
 "structAntares_1_1Window_1_1Inspector_1_1PStudyBuildingMode.html#a787e326822f365e2419e9773fa01f577":[8,0,0,23,1,6,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX57 =
 "structCreateVisitorFixture.html#aa7b2585f3a6d8f0d94e04d2b1573de24":[8,0,85,1],
 "structCsrAreaBalanceData.html":[8,0,87],
 "structCsrAreaBalanceData.html#a27786ba43b335d9c2b2171ebae954d17":[8,0,87,11],
-"structCsrAreaBalanceData.html#a2a49dbec2b5eb3207723ecf3a4ca9c1a":[8,0,87,1],
-"structCsrAreaBalanceData.html#a464acb00ebb39a9398ce26552cda554f":[8,0,87,4]
+"structCsrAreaBalanceData.html#a2a49dbec2b5eb3207723ecf3a4ca9c1a":[8,0,87,1]
 };

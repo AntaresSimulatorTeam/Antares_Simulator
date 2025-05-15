@@ -1,5 +1,6 @@
 var NAVTREEINDEX52 =
 {
+"solver_2hydro_2include_2antares_2solver_2hydro_2management_2management_8h_source.html":[9,0,0,8,2,0,0,0,0,2,3],
 "solver_2misc_2include_2antares_2solver_2misc_2options_8h_source.html":[9,0,0,8,5,0,0,0,0,4],
 "solver_2signal-handling_2common_8cpp.html#ae2fed9f7d2e4e0ab70cbc200785b5a36":[7,0,0,25,60],
 "solver_2signal-handling_2include_2antares_2signal-handling_2common_8h_source.html":[9,0,0,8,8,0,0,0,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX52 =
 "structAntares_1_1Data_1_1ThermalCluster_1_1DivModulation.html#ac2048d6ef7a6dae8da316661b86bd74f":[8,0,0,4,64,0,5],
 "structAntares_1_1Data_1_1ThermalCluster_1_1DivModulation.html#ac5de8b05124179e8ea30be55d6e0db8e":[8,0,0,4,64,0,4],
 "structAntares_1_1Data_1_1ThermalCluster_1_1DivModulation.html#af1c5e142cf72167cf4717d4b5c71be8a":[8,0,0,4,64,0,2],
-"structAntares_1_1Data_1_1TimeDependantHydroManagementData.html":[8,0,0,4,55],
-"structAntares_1_1Data_1_1TimeDependantHydroManagementData.html#a90db94cb0b2348a27744244885a9e3e4":[8,0,0,4,55,0]
+"structAntares_1_1Data_1_1TimeDependantHydroManagementData.html":[8,0,0,4,55]
 };

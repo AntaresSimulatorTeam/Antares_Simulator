@@ -1,5 +1,6 @@
 var NAVTREEINDEX53 =
 {
+"structAntares_1_1Data_1_1TimeDependantHydroManagementData.html#a90db94cb0b2348a27744244885a9e3e4":[8,0,0,4,55,0],
 "structAntares_1_1Data_1_1TimeDependantHydroManagementData.html#ad5c7884b30e88094fb3e10fdda37875f":[8,0,0,4,55,1],
 "structAntares_1_1Data_1_1TimeSeriesBitPatternIntoIndex.html":[8,0,0,4,30],
 "structAntares_1_1Data_1_1TimeSeriesBitPatternIntoIndex_3_0116_01_4.html":[8,0,0,4,35],
@@ -248,6 +249,5 @@ var NAVTREEINDEX53 =
 "structAntares_1_1Solver_1_1Optimization_1_1SingleOptimOptions.html#a09432f4964e5b56f5ef2ed9801373270":[8,0,0,18,2,0,0],
 "structAntares_1_1Solver_1_1Optimization_1_1SingleOptimOptions.html#a14b04b8dd02dafcb92859cbb4b9db8f3":[8,0,0,18,2,0,2],
 "structAntares_1_1Solver_1_1Optimization_1_1SingleOptimOptions.html#a93d2c48ed55ac673143b260338120723":[8,0,0,18,2,0,4],
-"structAntares_1_1Solver_1_1Optimization_1_1SingleOptimOptions.html#addaad5577e3a035c13a6b104c40d24b1":[8,0,0,18,2,0,1],
-"structAntares_1_1Solver_1_1Optimization_1_1SingleOptimOptions.html#ae05de17a4aac5cb0ed952370193b46f0":[8,0,0,18,2,0,3]
+"structAntares_1_1Solver_1_1Optimization_1_1SingleOptimOptions.html#addaad5577e3a035c13a6b104c40d24b1":[8,0,0,18,2,0,1]
 };

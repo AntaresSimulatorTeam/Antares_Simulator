@@ -1,5 +1,6 @@
 var NAVTREEINDEX58 =
 {
+"structCsrAreaBalanceData.html#a464acb00ebb39a9398ce26552cda554f":[8,0,87,4],
 "structCsrAreaBalanceData.html#a6b6845f005447c2dc53aeee36490e640":[8,0,87,9],
 "structCsrAreaBalanceData.html#ab959fe88abafd7f8c2303f38d7cfdc82":[8,0,87,0],
 "structCsrAreaBalanceData.html#acb32d5b74eeaa83c759ae184f97098af":[8,0,87,7],
@@ -248,6 +249,5 @@ var NAVTREEINDEX58 =
 "structFixture_1_1Link.html#a7c093b966b7b2389166b2a7da7a1a156":[8,0,119,1,0],
 "structFixture_1_1Link.html#af0b5f8052ca2570165cbad0885f467a9":[8,0,119,1,1],
 "structFixture_1_1Renewable.html":[8,0,119,2],
-"structFixture_1_1Renewable.html#a164aa89da7dc27649540bc1876d68a0c":[8,0,119,2,1],
-"structFixture_1_1Renewable.html#a8f6e9698637c7c2faa3dcc29aada526d":[8,0,119,2,0]
+"structFixture_1_1Renewable.html#a164aa89da7dc27649540bc1876d68a0c":[8,0,119,2,1]
 };

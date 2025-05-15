@@ -1,5 +1,6 @@
 var NAVTREEINDEX56 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase.html#afca9f4cec3fedada86f41910e660877a":[8,0,0,18,5,6,0,7,6],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData_1_1Data.html":[8,0,0,18,5,6,0,4,0],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData_1_1Data.html#a7799c77dd8f384e8e7a4aea388ed2fd7":[8,0,0,18,5,6,0,4,0,0],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData_1_1Data.html#aebfd326dd1bd085ff9019049125fdbdf":[8,0,0,18,5,6,0,4,0,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX56 =
 "structAntares_1_1Window_1_1Inspector_1_1PRnClusterTSMode.html":[8,0,0,23,1,65],
 "structAntares_1_1Window_1_1Inspector_1_1PRnClusterTSMode.html#a8aa9a4de78bf8650b7db5ec7ca027802":[8,0,0,23,1,65,0],
 "structAntares_1_1Window_1_1Inspector_1_1PSimulationMode.html":[8,0,0,23,1,5],
-"structAntares_1_1Window_1_1Inspector_1_1PSimulationMode.html#a1c1b815a65bbcca83a00b7a8e48afe8c":[8,0,0,23,1,5,0],
-"structAntares_1_1Window_1_1Inspector_1_1PStudy1stJanuary.html":[8,0,0,23,1,20]
+"structAntares_1_1Window_1_1Inspector_1_1PSimulationMode.html#a1c1b815a65bbcca83a00b7a8e48afe8c":[8,0,0,23,1,5,0]
 };
