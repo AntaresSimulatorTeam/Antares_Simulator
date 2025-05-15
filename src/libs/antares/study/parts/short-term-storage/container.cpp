@@ -110,7 +110,7 @@ static bool readRHS(const fs::path& rhsPath, TimeSeries& rhsSeries)
     return ret;
 }
 
-struct Load
+struct LoadedData
 {
     std::string clusterName;
     std::string cluster_id;
@@ -120,9 +120,9 @@ struct Load
     std::vector<SingleAdditionalConstraint> constraints;
 };
 
-static Load load(IniFile::Property* first)
+static LoadedData load(IniFile::Property* first)
 {
-    Load ret;
+    LoadedData ret;
     for (auto* property = first; property; property = property->next)
     {
         const std::string key = property->key;
@@ -168,7 +168,7 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
     {
         // AdditionalConstraints additionalConstraints;
         std::string name = section->name.c_str();
-        Load loaded;
+        LoadedData loaded;
         try
         {
             loaded = load(section->firstProperty);
