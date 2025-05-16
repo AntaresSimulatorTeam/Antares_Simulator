@@ -363,7 +363,8 @@ jobs:
           cmake --install . --prefix install
           pushd .
           cd install/bin
-          tar czf ../../antares-solver_ubuntu22.04.tar.gz antares-solver libsirius_solver.so ${{ env.ORTOOLS_DIR }}/install/lib/*.so*
+          cp ${{ env.ORTOOLS_DIR }}/install/lib/*.so* .
+          tar czf ../../antares-solver_ubuntu22.04.tar.gz antares-solver libsirius_solver.so *.so*
           popd
           rm -rf install
 
