@@ -148,8 +148,9 @@ struct Fixture
         study->bindingConstraintsGroups.resizeAllTimeseriesNumbers(study->parameters.nbYears);
         bc->RHSTimeSeries().resize(7, 1);
 
+        TimeSeriesNumbers tsNumbers;
         ShortTermStorage::AdditionalConstraints
-          add1("name", "st-cluster-1", "withdrawal", "less", true, {}, stCluster1.tsNumbers);
+          add1("name", "st-cluster-1", "withdrawal", "less", true, {}, tsNumbers);
 
         stCluster1.id = "st-cluster-1";
         stCluster1.series->inflows.resize(12, 12);
@@ -158,7 +159,7 @@ struct Fixture
         area_1->shortTermStorage.storagesByIndex.push_back(stCluster1);
 
         ShortTermStorage::AdditionalConstraints
-          add2("name", "st-cluster-2", "withdrawal", "less", true, {}, stCluster2.tsNumbers);
+          add2("name", "st-cluster-2", "withdrawal", "less", true, {}, tsNumbers);
 
         stCluster2.id = "st-cluster-2";
         stCluster2.series->inflows.resize(12, 12);
@@ -567,9 +568,7 @@ BOOST_FIXTURE_TEST_CASE(short_term_storage_valid_cluster_and_year__reading_OK, F
     AreaName::Vector splitKey = {"st", "area 1", "st-cluster-1", yearNumber};
 
     BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
-    BOOST_CHECK_EQUAL(my_rule.shortTermStorage.get_value("area 1",
-                                                         "st-cluster-1",
-                                                         yearNumber.to<uint>()),
+    BOOST_CHECK_EQUAL(my_rule.shortTermStorage[0].get_value("st-cluster-1", yearNumber.to<uint>()),
                       tsNumber.to<uint>());
 
     BOOST_CHECK(my_rule.apply());

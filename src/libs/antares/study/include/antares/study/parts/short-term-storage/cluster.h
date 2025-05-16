@@ -51,9 +51,9 @@ public:
 
     std::string id;
 
-    TimeSeriesNumbers tsNumbers;
-    std::shared_ptr<Series> series = std::make_shared<Series>(tsNumbers);
+    std::shared_ptr<Series> series = std::make_shared<Series>();
     mutable Properties properties;
+    TimeSeriesNumbers timeseriesNumbers;
     std::list<AdditionalConstraints> additionalConstraints;
 };
 } // namespace Antares::Data::ShortTermStorage

@@ -36,21 +36,22 @@ public:
 
     bool reset(const Study& study) override;
 
-    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const override
+    void attachArea(const Area* area)
     {
-        // Todo
+        pArea = area;
     }
 
-    void setTSnumber(const std::string& area_name,
-                     const std::string& cluster_name,
-                     unsigned year,
-                     unsigned value);
-    unsigned get_value(const std::string& area_name,
-                       const std::string& cluster_name,
-                       unsigned year) const;
+    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const override
+    {
+        // TODO
+    }
+
+    void setTSnumber(const std::string& cluster_name, unsigned year, unsigned value);
+    unsigned get_value(const std::string& cluster_name, unsigned year) const;
 
 private:
-    std::map<std::pair<std::string, std::string>, MatrixType> rules_;
+    std::map<std::string, MatrixType> rules_;
+    const Area* pArea;
 };
 
 inline CString<512, false> ShortTermTSNumberData::get_prefix() const

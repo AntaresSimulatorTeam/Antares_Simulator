@@ -130,7 +130,7 @@ public:
 
     BindingConstraintsTSNumberData binding_constraints;
 
-    ShortTermTSNumberData shortTermStorage;
+    std::vector<ShortTermTSNumberData> shortTermStorage;
 
 private:
     // Member methods

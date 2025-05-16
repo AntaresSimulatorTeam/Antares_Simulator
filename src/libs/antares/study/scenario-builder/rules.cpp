@@ -110,7 +110,15 @@ bool Rules::reset()
     }
 
     binding_constraints.reset(study_);
-    shortTermStorage.reset(study_);
+
+    shortTermStorage.clear();
+    shortTermStorage.resize(pAreaCount);
+    for (uint i = 0; i != pAreaCount; ++i)
+    {
+        shortTermStorage[i].attachArea(study_.areas.byIndex[i]);
+        shortTermStorage[i].reset(study_);
+    }
+
     return true;
 }
 
@@ -411,10 +419,9 @@ bool Rules::readShortTermStorage(const AreaName::Vector& splitKey,
         return false;
     }
     const uint year = splitKey[3].to<uint>();
-    shortTermStorage.setTSnumber(area->id.c_str(),
-                                 stStorageClusterName,
-                                 year,
-                                 fromStringToTSnumber(value));
+    shortTermStorage[area->index].setTSnumber(stStorageClusterName,
+                                              year,
+                                              fromStringToTSnumber(value));
     return true;
 }
 
@@ -493,11 +500,11 @@ bool Rules::apply()
             returned_status = thermal[i].apply(study_) && returned_status;
             returned_status = renewable[i].apply(study_) && returned_status;
             returned_status = linksNTC[i].apply(study_) && returned_status;
+            returned_status = shortTermStorage[i].apply(study_) && returned_status;
         }
         returned_status = hydroInitialLevels.apply(study_) && returned_status;
         returned_status = hydroFinalLevels.apply(study_) && returned_status;
         returned_status = binding_constraints.apply(study_) && returned_status;
-        returned_status = shortTermStorage.apply(study_) && returned_status;
     }
     else
     {

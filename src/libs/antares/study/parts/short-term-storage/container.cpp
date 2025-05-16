@@ -204,7 +204,7 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
                                                         loaded.operatorType,
                                                         loaded.enabled,
                                                         loaded.constraints,
-                                                        it->tsNumbers);
+                                                        it->timeseriesNumbers);
 
             if (const auto rhsPath = parentPath / ("rhs_" + name + ".txt");
                 !readRHS(rhsPath, additionalConstraints.rhs()))
@@ -273,7 +273,8 @@ void STStorageInput::resizeTimeseriesNumbers(unsigned int nbYears)
 {
     for (auto& sts: storagesByIndex)
     {
-        sts.tsNumbers.reset(nbYears);
+        sts.series->inflowsTSNumbers.reset(nbYears);
+        sts.timeseriesNumbers.reset(nbYears);
     }
 }
 

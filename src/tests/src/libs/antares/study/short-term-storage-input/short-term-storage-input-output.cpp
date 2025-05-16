@@ -238,7 +238,7 @@ struct Fixture
 
     fs::path folder = getFolder();
     TimeSeriesNumbers tsNumbers;
-    ShortTermStorage::Series series{tsNumbers};
+    ShortTermStorage::Series series;
     ShortTermStorage::Properties properties;
     ShortTermStorage::STStorageCluster cluster;
     ShortTermStorage::STStorageInput container;

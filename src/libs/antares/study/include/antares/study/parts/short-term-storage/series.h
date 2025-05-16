@@ -32,7 +32,7 @@ namespace Antares::Data::ShortTermStorage
 class Series
 {
 public:
-    Series(TimeSeriesNumbers& tsNumbers);
+    Series();
     // check if series values are valid
     bool validate(const std::string& id, StudyVersion studyVersion) const;
 
@@ -42,12 +42,10 @@ public:
 
     bool saveToFolder(const std::string& folder) const;
 
-private:
-    TimeSeriesNumbers& tsNumbers;
-
 public:
     std::vector<double> maxInjectionModulation;
     std::vector<double> maxWithdrawalModulation;
+    TimeSeriesNumbers inflowsTSNumbers;
     TimeSeries inflows;
     std::vector<double> lowerRuleCurve;
     std::vector<double> upperRuleCurve;

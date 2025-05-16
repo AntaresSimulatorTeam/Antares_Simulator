@@ -35,9 +35,8 @@ namespace Antares::Data::ShortTermStorage
 
 namespace fs = std::filesystem;
 
-Series::Series(TimeSeriesNumbers& tsNumbers):
-    tsNumbers(tsNumbers),
-    inflows(tsNumbers)
+Series::Series():
+    inflows(inflowsTSNumbers)
 {
 }
 
