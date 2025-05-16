@@ -123,14 +123,80 @@ Feature: short tests
     # And in area "AREA", unit "peak" respects a minimum up duration of 2 hours, and a minimum down duration of 2 hours
 
   @fast @short
-  Scenario: 021 Four areas - DC law
-    Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/021 Four areas - DC law"
+  Scenario: 009 TS generation - Thermal power
+    Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/009 TS generation - Thermal power"
     When I run antares simulator
     Then the simulation succeeds
-    And the simulation takes less than 25 seconds
-    And the annual system cost is
-      | EXP       | STD       | MIN       | MAX       |
-      | 7.972e+10 | 2.258e+10 | 5.613e+10 | 1.082e+11 |
+    And the simulation takes less than 5 seconds
+    And the annual system cost is 671736000
+    And in area "THER NODE", during year 1, loss of load lasts 0 hours
+    And in area "THER NODE", during year 1, "base" produces 11341200 MWh
+    And in area "THER NODE", during year 1, "semi" produces 3634800 MWh
+    And in area "THER NODE", during year 1, "peak" produces 0 MWh
+
+  @fast @short
+  Scenario: 010 TS generation - Wind speed
+    Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/010 TS generation - Wind speed"
+    When I run antares simulator
+    Then the simulation succeeds
+    And the simulation takes less than 5 seconds
+    And the annual system cost is 0
+    And in area "WIND SPEED NODE 1", during year 1, loss of load lasts 8736 hours
+    And in area "WIND SPEED NODE 1", during year 1, total unsupplied energy is 14283143 MWh
+    And in area "WIND SPEED NODE-2", during year 1, loss of load lasts 8736 hours
+    And in area "WIND SPEED NODE-2", during year 1, total unsupplied energy is 14298218 MWh
+    And in area "WIND SPEED NODE-3", during year 1, loss of load lasts 8736 hours
+    And in area "WIND SPEED NODE-3", during year 1, total unsupplied energy is 14250852 MWh
+
+  @fast @short
+  Scenario: 011 TS generation - Wind power - small scale
+    Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/011 TS generation - Wind power - small scale"
+    When I run antares simulator
+    Then the simulation succeeds
+    And the simulation takes less than 5 seconds
+    And the annual system cost is 0
+    And in area "WIND POWER 1", during year 1, loss of load lasts 8736 hours
+    And in area "WIND POWER 1", during year 1, total unsupplied energy is 14693668 MWh
+    And in area "WIND POWER-2", during year 1, loss of load lasts 8736 hours
+    And in area "WIND POWER-2", during year 1, total unsupplied energy is 14677959 MWh
+    And in area "WIND POWER-3", during year 1, loss of load lasts 8736 hours
+    And in area "WIND POWER-3", during year 1, total unsupplied energy is 14655040 MWh
+
+  @fast @short
+  Scenario: 012 TS Generation - Wind power - large scale
+    Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/012 TS Generation - Wind power - large scale"
+    When I run antares simulator
+    Then the simulation succeeds
+    And the simulation takes less than 5 seconds
+    And the annual system cost is 0
+    And in area "WIND POWER 1", during year 1, loss of load lasts 4346 hours
+    And in area "WIND POWER 1", during year 1, total unsupplied energy is 5478455 MWh
+    And in area "WIND POWER-2", during year 1, loss of load lasts 3968 hours
+    And in area "WIND POWER-2", during year 1, total unsupplied energy is 5105365 MWh
+    And in area "WIND POWER-3", during year 1, loss of load lasts 3876 hours
+    And in area "WIND POWER-3", during year 1, total unsupplied energy is 4833574 MWh
+
+  @fast @short
+  Scenario: 013 TS Generation - Solar power
+    Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/013 TS Generation - Solar power"
+    When I run antares simulator
+    Then the simulation succeeds
+    And the simulation takes less than 5 seconds
+    And the annual system cost is 0
+    And in area "SOLAR GEN NODE", during year 1, loss of load lasts 8736 hours
+    And in area "SOLAR GEN NODE", during year 1, total unsupplied energy is 14827003 MWh
+    And in area "SOLAR GEN NODE", during year 1, "default" produces 0 MWh
+
+  @fast @short
+  Scenario: 014 TS generation - Load
+    Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/014 TS generation - Load"
+    When I run antares simulator
+    Then the simulation succeeds
+    And the simulation takes less than 5 seconds
+    And the annual system cost is 399828000000
+    And in area "LOAD NODE", during year 1, loss of load lasts 8736 hours
+    And in area "LOAD NODE", during year 1, total unsupplied energy is 399828376 MWh
+    And in area "LOAD NODE", during year 1, "default" produces 0 MWh
 
   @fast @short @hydro @storage
   Scenario: 015 TS generation - Hydro power
@@ -144,6 +210,108 @@ Feature: short tests
       | hydro node 1 | 1    | 29423845         | 0             | 0       | 67243352       | 0                 |
       | hydro node-2 | 1    | 26758144         | 0             | 0       | 63506522       | 0                 |
       | hydro node-3 | 1    | 35188296         | 0             | 0       | 80265517       | 0                 |
+    And in area "HYDRO NODE 1", during year 1, "default" produces 0 MWh
+    And in area "HYDRO NODE-2", during year 1, "default" produces 0 MWh
+    And in area "HYDRO NODE-2", during year 1, "default-2" produces 0 MWh
+    And in area "HYDRO NODE-3", during year 1, "default" produces 0 MWh
+
+  @fast @short
+  Scenario: 016 Probabilistic vs deterministic - 1
+    Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/016 Probabilistic vs deterministic - 1"
+    When I run antares simulator
+    Then the simulation succeeds
+    And the simulation takes less than 5 seconds
+    And the expected value of the annual system cost is 24408000000
+    And in area "EAST", during year 1, total balance is 2493028 MWh
+    And in area "EAST", during year 1, loss of load lasts 0 hours
+    And in area "EAST", during year 1, total unsupplied energy is 0 MWh
+    And in area "EAST", during year 1, "b" produces 266438392 MWh
+    And in area "EAST", during year 1, "sb" produces 74085064 MWh
+    And in area "EAST", during year 1, "p" produces 4205107 MWh
+    And in area "WEST", during year 1, total balance is -2493028 MWh
+    And in area "WEST", during year 1, loss of load lasts 13 hours
+    And in area "WEST", during year 1, total unsupplied energy is 13476 MWh
+    And in area "WEST", during year 1, "b" produces 265610554 MWh
+    And in area "WEST", during year 1, "sb" produces 78481024 MWh
+    And in area "WEST", during year 1, "p" produces 11023939 MWh
+
+  @fast @short
+  Scenario: 018 Probabilistic vs deterministic - 3
+    Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/018 Probabilistic vs deterministic - 3"
+    When I run antares simulator
+    Then the simulation succeeds
+    And the simulation takes less than 5 seconds
+    And the expected value of the annual system cost is 24499800000
+    And in area "EAST", during year 1, total balance is 122220 MWh
+    And in area "EAST", during year 1, loss of load lasts 0 hours
+    And in area "EAST", during year 1, total unsupplied energy is 0 MWh
+    And in area "EAST", during year 1, "b" produces 267640248 MWh
+    And in area "EAST", during year 1, "sb" produces 79240298 MWh
+    And in area "EAST", during year 1, "p" produces 6738289 MWh
+    And in area "WEST", during year 1, total balance is -122220 MWh
+    And in area "WEST", during year 1, loss of load lasts 0 hours
+    And in area "WEST", during year 1, total unsupplied energy is 0 MWh
+    And in area "WEST", during year 1, "b" produces 270584616 MWh
+    And in area "WEST", during year 1, "sb" produces 78248945 MWh
+    And in area "WEST", during year 1, "p" produces 8014052 MWh
+
+  @fast @short
+  Scenario: 020 Single mesh - DC law
+    Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/020 Single mesh - DC law"
+    When I run antares simulator
+    Then the simulation succeeds
+    And the simulation takes less than 30 seconds
+    And the expected value of the annual system cost is 2278870000
+    # Year 1
+    And in area "NODE 1", during year 1, total balance is 4282640 MWh
+    And in area "NODE 1", during year 1, loss of load lasts 203 hours
+    And in area "NODE 1", during year 1, total unsupplied energy is 30818 MWh
+    And in area "NODE 1", during year 1, "aggregate 1" produces 2297944 MWh
+    And in area "NODE 1", during year 1, "aggregate 2" produces 2152250 MWh
+    And in area "NODE 1", during year 1, "aggregate 3" produces 1999683 MWh
+    And in area "NODE 1", during year 1, "aggregate 4" produces 1664021 MWh
+    And in area "NODE 1", during year 1, "aggregate 5" produces 1474884 MWh
+    And in area "NODE 1", during year 1, "aggregate 6" produces 1053176 MWh
+    And in area "NODE 2", during year 1, total balance is -302569 MWh
+    And in area "NODE 2", during year 1, loss of load lasts 0 hours
+    And in area "NODE 2", during year 1, total unsupplied energy is 0 MWh
+    And in area "NODE 2", during year 1, "ther 1" produces 9517886 MWh
+    And in area "NODE 3", during year 1, total balance is -3980074 MWh
+    And in area "NODE 3", during year 1, loss of load lasts 2042 hours
+    And in area "NODE 3", during year 1, total unsupplied energy is 1096455 MWh
+    And in area "NODE 3", during year 1, "aggregate 1" produces 6294438 MWh
+    And in area "NODE 3", during year 1, "aggregate 2" produces 4286418 MWh
+    And in area "NODE 3", during year 1, "aggregate 3" produces 2193247 MWh
+    # Year 2
+    And in area "NODE 1", during year 2, total balance is 4490071 MWh
+    And in area "NODE 1", during year 2, loss of load lasts 590 hours
+    And in area "NODE 1", during year 2, total unsupplied energy is 169257 MWh
+    And in area "NODE 1", during year 2, "aggregate 1" produces 2321507 MWh
+    And in area "NODE 1", during year 2, "aggregate 2" produces 2198175 MWh
+    And in area "NODE 1", during year 2, "aggregate 3" produces 1912077 MWh
+    And in area "NODE 1", during year 2, "aggregate 4" produces 1682688 MWh
+    And in area "NODE 1", during year 2, "aggregate 5" produces 1508627 MWh
+    And in area "NODE 1", during year 2, "aggregate 6" produces 1090488 MWh
+    And in area "NODE 2", during year 2, total balance is 393074 MWh
+    And in area "NODE 2", during year 2, loss of load lasts 2164 hours
+    And in area "NODE 2", during year 2, total unsupplied energy is 1034763 MWh
+    And in area "NODE 2", during year 2, "ther 1" produces 9184905 MWh
+    And in area "NODE 3", during year 2, total balance is -4883187 MWh
+    And in area "NODE 3", during year 2, loss of load lasts 18 hours
+    And in area "NODE 3", during year 2, total unsupplied energy is 1053 MWh
+    And in area "NODE 3", during year 2, "aggregate 1" produces 6124886 MWh
+    And in area "NODE 3", during year 2, "aggregate 2" produces 4436285 MWh
+    And in area "NODE 3", during year 2, "aggregate 3" produces 2405222 MWh
+
+  @fast @short
+  Scenario: 021 Four areas - DC law
+    Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/021 Four areas - DC law"
+    When I run antares simulator
+    Then the simulation succeeds
+    And the simulation takes less than 25 seconds
+    And the annual system cost is
+      | EXP       | STD       | MIN       | MAX       |
+      | 7.972e+10 | 2.258e+10 | 5.613e+10 | 1.082e+11 |
 
   @fast @short @useless
   Scenario: 053 System Map Editor - 1
