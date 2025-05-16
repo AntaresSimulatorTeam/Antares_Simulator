@@ -27,6 +27,7 @@
 
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
+#include <antares/utils/utils.h>
 #include "state.h"
 
 using namespace Yuni;
@@ -303,10 +304,10 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
                                         Math::Ceil(thermalClusterAvailableProduction
                                             / currentCluster->nominalCapacityWithSpinning))),
                                 static_cast<uint>(
-                                    Math::Ceil(thermalClusterProduction / currentCluster->nominalCapacityWithSpinning)));
+                                    Utils::ceil(thermalClusterProduction / currentCluster->nominalCapacityWithSpinning)));
                     }
                     else
-                        ON_min[h] = static_cast<uint>(Math::Ceil(
+                        ON_min[h] = static_cast<uint>(Utils::ceil(
                                     thermalClusterProduction / currentCluster->nominalCapacityWithSpinning));
                     break;
                 }
@@ -314,7 +315,7 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
             case Antares::Data::UnitCommitmentMode::ucHeuristicAccurate:
                 {
                     ON_min[h] = Math::Max(
-                            static_cast<uint>(Math::Ceil(thermalClusterProduction / currentCluster->nominalCapacityWithSpinning)),
+                            static_cast<uint>(Utils::ceil(thermalClusterProduction / currentCluster->nominalCapacityWithSpinning)),
                             thermalClusterDispatchedUnitsCountForYear[h]); // eq. to thermalClusterON for
                     // that hour
 
@@ -333,7 +334,7 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
         if (currentCluster->minStablePower > 0.)
         {
             maxUnitNeeded = static_cast<uint>(
-                    Math::Floor(thermalClusterProduction / currentCluster->minStablePower));
+                    Utils::floor(thermalClusterProduction / currentCluster->minStablePower));
             if (ON_max[h] > maxUnitNeeded)
                 ON_max[h] = maxUnitNeeded;
         }
