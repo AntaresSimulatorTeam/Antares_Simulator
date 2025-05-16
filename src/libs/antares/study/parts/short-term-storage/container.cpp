@@ -100,8 +100,6 @@ static std::vector<SingleAdditionalConstraint> makeConstraints(std::string& hour
 
 static bool readRHS(const fs::path& rhsPath, TimeSeries& rhsSeries)
 {
-    // TODO
-    //  bool averageTs = (study.usedByTheSolver && study.parameters.derated);
     const bool ret = loadFile(rhsPath, rhsSeries, /*.average =*/false);
     if (ret)
     {
@@ -166,7 +164,6 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
 
     for (auto* section = ini.firstSection; section; section = section->next)
     {
-        // AdditionalConstraints additionalConstraints;
         std::string name = section->name.c_str();
         LoadedData loaded;
         try
