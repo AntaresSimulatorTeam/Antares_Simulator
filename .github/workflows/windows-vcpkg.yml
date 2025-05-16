@@ -354,7 +354,8 @@ jobs:
         shell: bash
         run: |
           cd _build
-          zip -r antares-solver_windows.zip solver/Release/antares-solver.exe solver/Release/*.dll ${ env.ORTOOLS_DIR//\\// }/install/lib/*.dll*
+          ODIR=${{ env.ORTOOLS_DIR }}
+          zip -r antares-solver_windows.zip solver/Release/antares-solver.exe solver/Release/*.dll ${ODIR//\\//}/install/lib/*.dll*
 
       - name: NSIS Installer creation
         shell: bash
