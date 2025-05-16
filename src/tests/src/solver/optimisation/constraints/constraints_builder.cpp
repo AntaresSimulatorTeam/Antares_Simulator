@@ -33,24 +33,6 @@
 
 static Antares::Data::TimeSeriesNumbers tsNumbers;
 
-Data::ShortTermStorage::AdditionalConstraints getAdditionalConstraints(
-  const std::string& name,
-  const std::string& cluster_id,
-  const std::string& variable,
-  const std::string& operatorType,
-  const std::vector<Antares::Data::ShortTermStorage::SingleAdditionalConstraint>
-    single_additional_constraints)
-{
-    Antares::Data::ShortTermStorage::AdditionalConstraints cstrs(name,
-                                                                 cluster_id,
-                                                                 variable,
-                                                                 operatorType,
-                                                                 true,
-                                                                 single_additional_constraints,
-                                                                 tsNumbers);
-    return cstrs;
-}
-
 /*
  * this code is designed to:
  * Validate the addition of withdrawalSum, injectionSum, and netting constraints for various
@@ -61,6 +43,40 @@ Data::ShortTermStorage::AdditionalConstraints getAdditionalConstraints(
 
 struct BB
 {
+    BB():
+
+        addc1_withdrawal_constraints({{.hours = {1, 2}, .globalIndex = 0, .localIndex = 0},
+                                      {.hours = {3, 4}, .globalIndex = 1, .localIndex = 1}}),
+
+        addc2_injection_constraints({{.hours = {5, 6}, .globalIndex = 2, .localIndex = 0},
+                                     {.hours = {7, 8}, .globalIndex = 3, .localIndex = 1}}),
+
+        addc3_netting_constraints({{.hours = {9, 10}, .globalIndex = 4, .localIndex = 0},
+                                   {.hours = {11, 12}, .globalIndex = 5, .localIndex = 1}}),
+        addc1_withdrawal("addc1_withdrawal",
+                         "cluster_1",
+                         "withdrawal",
+                         "less",
+                         true,
+                         addc1_withdrawal_constraints,
+                         tsNumbers),
+        addc2_injection("addc2_injection",
+                        "cluster_2",
+                        "injection",
+                        "greater",
+                        true,
+                        addc2_injection_constraints,
+                        tsNumbers),
+        addc3_netting("addc3_netting",
+                      "cluster_3",
+                      "netting",
+                      "equal",
+                      true,
+                      addc3_netting_constraints,
+                      tsNumbers)
+    {
+    }
+
     int nombreDePasDeTempsPourUneOptimisation = 50;
 
     std::vector<double> Pi = std::vector(2 * nombreDePasDeTempsPourUneOptimisation, 0.0);
@@ -125,24 +141,9 @@ struct BB
       addc3_netting_constraints = {{.hours = {9, 10}, .globalIndex = 4, .localIndex = 0},
                                    {.hours = {11, 12}, .globalIndex = 5, .localIndex = 1}};
 
-    Antares::Data::ShortTermStorage::AdditionalConstraints addc1_withdrawal
-      = getAdditionalConstraints("addc1_withdrawal",
-                                 "cluster_1",
-                                 "withdrawal",
-                                 "less",
-                                 addc1_withdrawal_constraints);
-    Antares::Data::ShortTermStorage::AdditionalConstraints addc2_injection
-      = getAdditionalConstraints("addc2_injection",
-                                 "cluster_2",
-                                 "injection",
-                                 "greater",
-                                 addc2_injection_constraints);
-    Antares::Data::ShortTermStorage::AdditionalConstraints addc3_netting = getAdditionalConstraints(
-      "addc3_netting",
-      "cluster_3",
-      "netting",
-      "equal",
-      addc3_netting_constraints);
+    Antares::Data::ShortTermStorage::AdditionalConstraints addc1_withdrawal;
+    Antares::Data::ShortTermStorage::AdditionalConstraints addc2_injection;
+    Antares::Data::ShortTermStorage::AdditionalConstraints addc3_netting;
 
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
     ::ShortTermStorage::PROPERTIES storage1 = {.additionalConstraints = {addc1_withdrawal},
