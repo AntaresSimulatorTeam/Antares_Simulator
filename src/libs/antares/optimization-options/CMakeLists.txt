@@ -1,9 +1,14 @@
 set(PROJ optimization-options)
 
-add_library(${PROJ} INTERFACE)
+set(SRC
+    include/antares/optimization-options/options.h
+    options.cpp
+)
+
+add_library(${PROJ} ${SRC})
 
 target_include_directories(${PROJ}
-        INTERFACE
+        PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 

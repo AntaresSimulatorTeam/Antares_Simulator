@@ -32,13 +32,13 @@ void LegacyFiller::CopyMatrix(ILinearProblem& pb) const
 {
     for (int idxRow = 0; idxRow < problemeSimplexe_->NombreDeContraintes; ++idxRow)
     {
-        auto* ct = pb.getConstraint(GetConstraintName(idxRow));
+        auto* ct = pb.getConstraint(idxRow);
         int debutLigne = problemeSimplexe_->IndicesDebutDeLigne[idxRow];
         for (int idxCoef = 0; idxCoef < problemeSimplexe_->NombreDeTermesDesLignes[idxRow];
              ++idxCoef)
         {
             int pos = debutLigne + idxCoef;
-            auto* var = pb.getVariable(GetVariableName(problemeSimplexe_->IndicesColonnes[pos]));
+            auto* var = pb.getVariable(problemeSimplexe_->IndicesColonnes[pos]);
             ct->setCoefficient(var, problemeSimplexe_->CoefficientsDeLaMatriceDesContraintes[pos]);
         }
     }

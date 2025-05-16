@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -19,33 +19,17 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#ifdef __CPLUSPLUS
-extern "C"
-{
-#endif
+#pragma once
 
-#include "spx_definition_arguments.h"
-#include "spx_fonctions.h"
+#include <antares/optimization-options/options.h>
+#include <antares/solver/optimisation/opt_structure_probleme_a_resoudre.h>
 
-#ifdef __CPLUSPLUS
-}
-#endif
-
-#include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
-#include "antares/solver/hydro/daily/h2o_j_fonctions.h"
-
-void H2O_J_Free(DONNEES_MENSUELLES* DonneesMensuelles)
-{
-    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
-
-    for (int i = 0; i < ProblemeHydraulique.NombreDeProblemes; i++)
-    {
-        PROBLEME_SPX* ProbSpx = (PROBLEME_SPX*)ProblemeHydraulique.ProblemeSpx[i];
-        if (ProbSpx)
-        {
-            SPX_LibererProbleme(ProbSpx);
-        }
-    }
-
-    return;
-}
+/**
+ * This wrapper is an adapter that solves a QP stored in a PROBLEME_ANTARES_A_RESOUDRE
+ * using OR-Tools MathOpt API & solvers.
+ * Currently, QP support in MathOpt is implemented for Gurobi and SIP (though SCIP in OR-Tools
+ * has compilation issues), and under development for XPRESS.
+ */
+void SolveQuadraticProblemWithOrtools(
+  const Antares::Solver::Optimization::SingleOptimOptions& options,
+  PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre);

@@ -121,18 +121,22 @@ struct MatrixScalar<float>
 } // anonymous namespace
 
 template<class T, class ReadWriteT, class PredicateT>
-I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>* matrix_to_buffer_dumper_factory::get_dumper(
-  const Matrix<T, ReadWriteT>* mtx,
-  std::string& data,
-  PredicateT& predicate)
+std::unique_ptr<I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>>
+matrix_to_buffer_dumper_factory::get_dumper(const Matrix<T, ReadWriteT>* mtx,
+                                            std::string& data,
+                                            PredicateT& predicate)
 {
     if (mtx->width == 1)
     {
-        return new one_column__dumper<T, ReadWriteT, PredicateT>(mtx, data, predicate);
+        return std::make_unique<one_column__dumper<T, ReadWriteT, PredicateT>>(mtx,
+                                                                               data,
+                                                                               predicate);
     }
     else
     {
-        return new multiple_columns__dumper<T, ReadWriteT, PredicateT>(mtx, data, predicate);
+        return std::make_unique<multiple_columns__dumper<T, ReadWriteT, PredicateT>>(mtx,
+                                                                                     data,
+                                                                                     predicate);
     }
 }
 
@@ -176,7 +180,7 @@ void one_column__dumper<T, ReadWriteT, PredicateT>::run()
     {
         MatrixScalar<ReadWriteT>::Append(this->buffer_,
                                          (ReadWriteT)this->predicate_((this->mtx_)->entry[0][y]),
-                                         this->format_);
+                                         this->format_.c_str());
         this->buffer_ += '\n';
     }
 }
@@ -188,14 +192,14 @@ void multiple_columns__dumper<T, ReadWriteT, PredicateT>::run()
     {
         MatrixScalar<ReadWriteT>::Append(this->buffer_,
                                          (ReadWriteT)this->predicate_((this->mtx_)->entry[0][y]),
-                                         this->format_);
+                                         this->format_.c_str());
         for (uint x = 1; x < (this->mtx_)->width; ++x)
         {
             this->buffer_ += '\t';
             MatrixScalar<ReadWriteT>::Append(this->buffer_,
                                              (ReadWriteT)this->predicate_(
                                                (this->mtx_)->entry[x][y]),
-                                             this->format_);
+                                             this->format_.c_str());
         }
         this->buffer_ += '\n';
     }

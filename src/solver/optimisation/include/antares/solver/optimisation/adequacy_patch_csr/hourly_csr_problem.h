@@ -70,13 +70,16 @@ class HourlyCSRProblem
     using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
 
 public:
-    explicit HourlyCSRProblem(const AdqPatchParams& adqPatchParams, PROBLEME_HEBDO* p):
+    explicit HourlyCSRProblem(const AdqPatchParams& adqPatchParams,
+                              PROBLEME_HEBDO* p,
+                              const Solver::Optimization::OptimizationOptions& solverOptions):
         adqPatchParams_(adqPatchParams),
         variableManager_(p->CorrespondanceVarNativesVarOptim,
                          p->NumeroDeVariableStockFinal,
                          p->NumeroDeVariableDeTrancheDeStock,
                          p->NombreDePasDeTempsPourUneOptimisation),
-        problemeHebdo_(p)
+        problemeHebdo_(p),
+        solverOptions_(solverOptions)
     {
         double temp = pow(10, -adqPatchParams.curtailmentSharing.thresholdVarBoundsRelaxation);
         belowThisThresholdSetToZero = std::min(temp, 0.1);
@@ -92,9 +95,10 @@ public:
         triggeredHour = hour;
     }
 
-    void run(uint week, uint year);
+    void run(unsigned int week, unsigned int year);
 
 private:
+    const Solver::Optimization::OptimizationOptions& solverOptions_;
     void calculateCsrParameters();
 
     void buildProblemVariables();
@@ -102,7 +106,9 @@ private:
     void buildProblemConstraintsLHS();
     void buildProblemConstraintsRHS();
     void setProblemCost();
-    void solveProblem(uint week, int year);
+    void solveProblem(unsigned int week,
+                      int year,
+                      const Antares::Solver::Optimization::OptimizationOptions& options);
     void allocateProblem();
 
     // variable construction

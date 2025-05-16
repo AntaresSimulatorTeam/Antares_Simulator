@@ -234,11 +234,13 @@ CurtailmentSharingPostProcessCmd::CurtailmentSharingPostProcessCmd(
   const AdqPatchParams& adqPatchParams,
   PROBLEME_HEBDO* problemeHebdo,
   AreaList& areas,
-  unsigned int numSpace):
+  unsigned int numSpace,
+  const OptimizationOptions& solverOptions):
     basePostProcessCommand(problemeHebdo),
     area_list_(areas),
     adqPatchParams_(adqPatchParams),
-    numSpace_(numSpace)
+    numSpace_(numSpace),
+    solverOptions_(solverOptions)
 {
 }
 
@@ -251,7 +253,7 @@ void CurtailmentSharingPostProcessCmd::execute(const optRuntimeData& opt_runtime
     logs.info() << "[adq-patch] Year:" << year + 1 << " Week:" << week + 1
                 << ".Total LMR violation:" << totalLmrViolation;
     const std::set<int> hoursRequiringCurtailmentSharing = getHoursRequiringCurtailmentSharing();
-    HourlyCSRProblem hourlyCsrProblem(adqPatchParams_, problemeHebdo_);
+    HourlyCSRProblem hourlyCsrProblem(adqPatchParams_, problemeHebdo_, solverOptions_);
     for (int hourInWeek: hoursRequiringCurtailmentSharing)
     {
         logs.info() << "[adq-patch] CSR triggered for Year:" << year + 1

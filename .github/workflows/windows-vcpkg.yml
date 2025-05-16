@@ -74,10 +74,22 @@ jobs:
           cp ccache/ccache.exe ccache/cl.exe
           echo "${GITHUB_WORKSPACE}/ccache" >> $GITHUB_PATH
 
-      - name: ccache
-        uses: hendrikmuhs/ccache-action@v1.2
+
+      - name: Restore ccache cache
+        uses: actions/cache/restore@v4
         with:
-          key: windows
+          path: ${{ github.workspace }}/.ccache
+          key: ${{ env.os }}-${{ github.sha }}
+          restore-keys: |
+            ${{ env.os }}-  
+
+      - name: Configure ccache
+        run: |
+          ccache --set-config=cache_dir=${{ github.workspace }}/.ccache
+          ccache --set-config=max_size=500M
+          ccache --set-config=compression=true
+          ccache -p
+          ccache -z            
 
       - name: Install VCPKG
         shell: bash
@@ -132,6 +144,10 @@ jobs:
         run: |
           cmake --build _build --config Release -j$(nproc)
 
+
+      - name: Add OR-Tools to PATH
+        run: echo "D:\a\Antares_Simulator\Antares_Simulator/or-tools/install/bin" | Out-File -Append -Encoding ascii $env:GITHUB_PATH
+
       - name: Read simtest version
         shell: bash
         run: |
@@ -169,7 +185,7 @@ jobs:
         with:
           feature: "features/modeler-features"
 
-      
+
       - name: Run unfeasibility-related tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
         run: |
@@ -325,6 +341,11 @@ jobs:
           os: ${{ env.os }}
 
 
+      - name: Run cucumber on hybrid studies
+        uses: ./.github/workflows/cucumber-tests
+        with:
+          feature: "features/solver-features/hybrid_studies.feature"
+
       - name: Barrier
         if: ${{ !success() }}
         run: exit 1
@@ -333,7 +354,7 @@ jobs:
         shell: bash
         run: |
           cd _build
-          zip -r antares-solver_windows.zip solver/Release/antares-solver.exe solver/Release/*.dll
+          zip -r antares-solver_windows.zip solver/Release/antares-solver.exe solver/Release/*.dll ${{ env.ORTOOLS_DIR }}/install/lib/*.dll*
 
       - name: NSIS Installer creation
         shell: bash
@@ -354,7 +375,7 @@ jobs:
       - name: .zip creation
         run: |
           cd _build
-          cpack -G ZIP
+          cpack -G ZIP -D CPACK_INSTALLED_DIRECTORIES="${{ env.ORTOOLS_DIR }}/install/lib;bin"
 
       - name: Installer upload
         uses: actions/upload-artifact@v4
@@ -378,3 +399,12 @@ jobs:
         with:
           path: ${{ github.workspace }}/vcpkg_cache
           key: vcpkg-cache-windows-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+
+      - name: Display ccache statistics
+        run: ccache -s
+
+      - name: Save ccache cache
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ github.workspace }}/.ccache
+          key: ${{ env.os }}-${{ github.sha }}

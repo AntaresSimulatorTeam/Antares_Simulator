@@ -44,3 +44,6 @@ std::string createMarginalCostFilename(const OptPeriodStringGenerator& optPeriod
 
 std::string createReducedCostFilename(const OptPeriodStringGenerator& optPeriodStringGenerator,
                                       const unsigned int optNumber);
+
+std::string createModelerSolutionsFilename(const OptPeriodStringGenerator& optPeriodStringGenerator,
+                                           const unsigned int optNumber);

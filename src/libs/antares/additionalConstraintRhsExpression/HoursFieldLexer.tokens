@@ -1,0 +1,8 @@
+LBRACK=1
+RBRACK=2
+COMMA=3
+INT=4
+WS=5
+'['=1
+']'=2
+','=3

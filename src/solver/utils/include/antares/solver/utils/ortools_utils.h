@@ -33,6 +33,11 @@
 
 #include "ortools_wrapper.h"
 
+namespace operations_research::math_opt
+{
+enum class SolverType;
+}
+
 using namespace operations_research;
 
 void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
@@ -40,18 +45,25 @@ void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
                                                    const std::string& filename);
 
 /*!
- *  \brief Return list of available ortools solver name on our side
+ *  \brief Returns a comma-seperated-list of available ortools linear solver names on our side
  *
- *  \return List of available ortools solver name
+ *  \return Comma-seperated-list of available ortools linear solver names
  */
-std::list<std::string> getAvailableOrtoolsSolverName();
+std::string toString(const std::list<std::string>& solverList);
 
 /*!
- *  \brief Return a single string containing all solvers available, separated by a ", " and ending
- * with a ".".
+ *  \brief Returns a list of available ortools linear solver names on our side
  *
+ *  \return List of available ortools linear solver names
  */
-std::string availableOrToolsSolversString();
+std::list<std::string> availableLinearSolversList();
+
+/*!
+ *  \brief Returns a list of available ortools quadratic solver names on our side
+ *
+ *  \return List of available ortools quadratic solver names
+ */
+std::list<std::string> availableQuadraticSolversList();
 
 /*!
  *  \brief Create a MPSolver with correct linear or mixed variant
@@ -70,5 +82,7 @@ public:
     {
         std::optional<std::string> LPSolverName, MIPSolverName;
     };
-    static const std::map<std::string, struct SolverNames> solverMap;
+
+    static const std::map<std::string, SolverNames> mpSolverMap;
+    static const std::map<std::string, math_opt::SolverType> mathoptSolverMap;
 };

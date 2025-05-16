@@ -18,35 +18,23 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
+#pragma once
 
-#ifdef __CPLUSPLUS
-extern "C"
+#include <vector>
+
+#include <antares/optimisation/linear-problem-data-impl/linearProblemData.h>
+#include <antares/solver/modeler/parameters/modelerParameters.h>
+#include <antares/study/system-model/library.h>
+#include <antares/study/system-model/system.h>
+
+namespace Antares::Modeler
 {
-#endif
 
-#include "spx_definition_arguments.h"
-#include "spx_fonctions.h"
-
-#ifdef __CPLUSPLUS
-}
-#endif
-
-#include "antares/solver/hydro/daily2/h2o2_j_donnees_mensuelles.h"
-#include "antares/solver/hydro/daily2/h2o2_j_fonctions.h"
-
-void H2O2_J_Free(DONNEES_MENSUELLES_ETENDUES& DonneesMensuelles)
+struct Data
 {
-    auto& ProblemeHydrauliqueEtendu = DonneesMensuelles.ProblemeHydrauliqueEtendu;
-    int NombreDeProblemes = ProblemeHydrauliqueEtendu.NombreDeProblemes;
+    std::vector<ModelerStudy::SystemModel::Library> libraries;
+    std::unique_ptr<ModelerStudy::SystemModel::System> system;
+    std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> dataSeries;
+};
 
-    for (int i = 0; i < NombreDeProblemes; i++)
-    {
-        auto ProbSpx = ProblemeHydrauliqueEtendu.ProblemeSpx[i];
-        if (ProbSpx)
-        {
-            SPX_LibererProbleme(ProbSpx);
-        }
-    }
-
-    return;
-}
+} // namespace Antares::Modeler

@@ -30,6 +30,7 @@
 
 #include <antares/logs/logs.h>
 #include <antares/utils/utils.h>
+#include "antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h"
 
 #define SEP Yuni::IO::Separator
 
@@ -78,64 +79,23 @@ bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path& path)
     return true;
 }
 
-static bool loadHours(std::string hoursStr, AdditionalConstraints& additionalConstraints)
+static std::vector<SingleAdditionalConstraint> toConstraints(
+  const std::vector<std::set<int>>& groups)
 {
-    std::erase_if(hoursStr, ::isspace);
-    // Validate the entire string format
-    if (std::regex fullFormatRegex(R"(^(\[\d+(,\d+)*\])(,(\[\d+(,\d+)*\]))*$)");
-        !std::regex_match(hoursStr, fullFormatRegex))
+    std::vector<SingleAdditionalConstraint> to_return;
+    unsigned int counter = 0;
+    for (const auto& group: groups)
     {
-        logs.error() << "In constraint " << additionalConstraints.name
-                     << ": Input string does not match the required format: " << hoursStr << '\n';
-        return false;
+        to_return.push_back({.hours = group, .localIndex = counter});
+        counter++;
     }
-    // Split the `hours` field into multiple groups
-    std::regex groupRegex(R"(\[(.*?)\])");
-    // Match each group enclosed in square brackets
-    auto groupsBegin = std::sregex_iterator(hoursStr.begin(), hoursStr.end(), groupRegex);
-    auto groupsEnd = std::sregex_iterator();
-    unsigned int localIndex = 0;
-    for (auto it = groupsBegin; it != groupsEnd; ++it)
-    {
-        // Extract the contents of the square brackets
-        std::string group = (*it)[1].str();
-        std::stringstream ss(group);
-        std::string hour;
-        std::set<int> hourSet;
-        int hourVal;
-        while (std::getline(ss, hour, ','))
-        {
-            try
-            {
-                hourVal = std::stoi(hour);
-                hourSet.insert(hourVal);
-            }
+    return to_return;
+}
 
-            catch (const std::invalid_argument& ex)
-            {
-                logs.error() << "In constraint " << additionalConstraints.name
-                             << " Hours sets contains invalid values: " << hour
-                             << "\n exception thrown: " << ex.what() << '\n';
-
-                return false;
-            }
-            catch (const std::out_of_range& ex)
-            {
-                logs.error() << "In constraint " << additionalConstraints.name
-                             << " Hours sets contains out of range values: " << hour
-                             << "\n exception thrown: " << ex.what() << '\n';
-                return false;
-            }
-        }
-        if (!hourSet.empty())
-        {
-            // Add this group to the `hours` vec
-            additionalConstraints.constraints.push_back(
-              {.hours = hourSet, .localIndex = localIndex});
-            ++localIndex;
-        }
-    }
-    return true;
+static std::vector<SingleAdditionalConstraint> makeConstraints(std::string& hoursField)
+{
+    auto groupsOfHours = makeGroupsOfHours(hoursField);
+    return toConstraints(groupsOfHours);
 }
 
 static bool readRHS(AdditionalConstraints& additionalConstraints, const fs::path& rhsPath)
@@ -185,9 +145,19 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
             {
                 value.to<std::string>(additionalConstraints.operatorType);
             }
-            else if (key == "hours" && !loadHours(value.c_str(), additionalConstraints))
+            else if (key == "hours")
             {
-                return false;
+                try
+                {
+                    std::string hoursField = value.c_str();
+                    additionalConstraints.constraints = makeConstraints(hoursField);
+                }
+                catch (const std::exception& e)
+                {
+                    logs.error() << "Constraint " << additionalConstraints.name << " : " << e.what()
+                                 << '\n';
+                    return false;
+                }
             }
         }
 

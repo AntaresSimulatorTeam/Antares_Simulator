@@ -55,13 +55,26 @@ jobs:
         run: |
             echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_ubuntu-22.04_static_sirius.zip" >> $GITHUB_ENV
 
-      - name: Install sonar-scanner and build-wrapper
-        uses: SonarSource/sonarcloud-github-c-cpp@v3
 
-      - name: ccache
-        uses: hendrikmuhs/ccache-action@v1.2
+
+      - name: Install ccache
+        run: sudo apt-get install -y ccache
+
+      - name: Restore ccache cache
+        uses: actions/cache/restore@v4
         with:
-          key: sonarcloud-${{ env.SONAR_SCANNER_VERSION }}
+          path: ${{ github.workspace }}/.ccache
+          key: sonarcloud-${{ github.sha }}
+          restore-keys: |
+            sonarcloud- 
+
+      - name: Configure ccache
+        run: |
+          ccache --set-config=cache_dir=${{ github.workspace }}/.ccache
+          ccache --set-config=max_size=500M
+          ccache --set-config=compression=true
+          ccache -p
+          ccache -z
 
       - name: Install libraries
         run: |
@@ -121,6 +134,9 @@ jobs:
           -DMZ_CODE_COVERAGE=ON \
           -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
           -DPython3_EXECUTABLE='${{ steps.setup-python.outputs.python-path }}'
+
+      - name: Install Build Wrapper
+        uses: SonarSource/sonarqube-scan-action/install-build-wrapper@v5
 
       - name: Build
         run: |
@@ -201,6 +217,12 @@ jobs:
         with:
           feature: "features/modeler-features"
 
+      - name: Run cucumber on hybrid studies
+        if: ${{ !cancelled() }}
+        uses: ./.github/workflows/cucumber-tests
+        with:
+          feature: "features/solver-features/hybrid_studies.feature"
+
       - name: Barrier
         if: ${{ !success() }}
         run: exit 1
@@ -209,11 +231,15 @@ jobs:
         run: |
           gcovr --sonarqube --output coverage.xml
 
-      - name: Run sonar-scanner
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: sonar-scanner --define sonar.host.url="${{ env.SONAR_SERVER_URL }}" --define sonar.cfamily.compile-commands="${{ env.BUILD_WRAPPER_OUT_DIR }}/compile_commands.json"
+        with:
+          args: >
+            --define sonar.host.url="${{ env.SONAR_SERVER_URL }}" --define sonar.cfamily.compile-commands="${{ env.BUILD_WRAPPER_OUT_DIR }}/compile_commands.json"
 
       - name: Cache vcpkg binary dir
         if: always()
@@ -222,3 +248,12 @@ jobs:
         with:
           path: ${{ github.workspace }}/vcpkg_cache
           key: vcpkg-cache-ubuntu-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+
+      - name: Display ccache statistics
+        run: ccache -s
+
+      - name: Save ccache cache
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ github.workspace }}/.ccache
+          key: sonarcloud-${{ github.sha }}

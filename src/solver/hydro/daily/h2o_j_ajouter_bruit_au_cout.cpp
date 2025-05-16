@@ -28,6 +28,8 @@ constexpr double noiseAmplitude = 1e-3;
 constexpr unsigned int seed = 0x79686a64; // "hydj" in hexa
 } // namespace Constants
 
+namespace DoneesOptimisationJournaliere
+{
 void H2O_J_AjouterBruitAuCout(DONNEES_MENSUELLES& donnesMensuelles)
 {
     auto& ProblemeHydraulique = donnesMensuelles.ProblemeHydraulique;
@@ -36,7 +38,7 @@ void H2O_J_AjouterBruitAuCout(DONNEES_MENSUELLES& donnesMensuelles)
     auto NombreDeProblemes = ProblemeHydraulique.NombreDeProblemes;
     Antares::MersenneTwister noiseGenerator;
     noiseGenerator.reset(Constants::seed); // Arbitrary seed, hard-coded since we don't really want
-                                           // the user to change it
+    // the user to change it
 
     for (int i = 0; i < NombreDeProblemes; i++)
     {
@@ -54,3 +56,4 @@ void H2O_J_AjouterBruitAuCout(DONNEES_MENSUELLES& donnesMensuelles)
           += noiseGenerator() * Constants::noiseAmplitude;
     }
 }
+} // namespace DoneesOptimisationJournaliere

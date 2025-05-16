@@ -103,4 +103,10 @@ BOOST_AUTO_TEST_CASE(test_scip_support)
     BOOST_CHECK_EQUAL(SolverType::SCIP_MIXED_INTEGER_PROGRAMMING, mipSolver->ProblemType());
 }
 
+BOOST_AUTO_TEST_CASE(test_quad_solvers_list)
+{
+    std::list<std::string> expected = {"sirius", "pdlp", "scip", "xpress"};
+    BOOST_CHECK(availableQuadraticSolversList() == expected);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

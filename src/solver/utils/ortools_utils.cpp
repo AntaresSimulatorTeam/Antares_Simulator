@@ -22,6 +22,9 @@
 
 #include <filesystem>
 #include <optional>
+#include <ortools/math_opt/cpp/parameters.h>
+
+#include <boost/algorithm/string/join.hpp>
 
 #include <antares/exception/LoadingError.hpp>
 #include <antares/logs/logs.h>
@@ -33,7 +36,7 @@ using namespace operations_research;
 const std::string XPRESS_PARAMS = "THREADS 1";
 const std::string SCIP_PARAMS = "parallel/maxnthreads 1";
 
-using Antares::Solver::Optimization::OptimizationOptions;
+using Antares::Solver::Optimization::SingleOptimOptions;
 
 // MPSolverParameters's copy constructor is private
 static void setGenericParameters(MPSolverParameters& params)
@@ -224,22 +227,33 @@ bool solveAndManageStatus(MPSolver* solver, int& resultStatus, const MPSolverPar
     return resultStatus == OUI_SPX;
 }
 
+static bool doWeGiveBasisToSolver(const SingleOptimOptions& options,
+                                  const MPSolver* solver,
+                                  const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme)
+{
+    return solverSupportsWarmStart(solver->ProblemType()) && Probleme->basisExists()
+           && options.solverUsesBasis;
+}
+
+static bool doWeStoreSolverBasis(const SingleOptimOptions& options, const MPSolver* solver)
+{
+    return solverSupportsWarmStart(solver->ProblemType()) && options.solverExportsBasis;
+}
+
 MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
                            MPSolver* solver,
-                           bool keepBasis,
-                           const OptimizationOptions& options)
+                           const SingleOptimOptions& options)
 {
     MPSolverParameters params;
-    setGenericParameters(
-      params);              // Keep generic params for default settings working for all solvers
+    // Keep generic params for default settings working for all solvers
+    setGenericParameters(params);
     if (options.solverLogs) // May be overriden by log level if set as specific parameters
     {
         solver->EnableOutput();
     }
-    TuneSolverSpecificOptions(solver, options.ortoolsSolver, options.solverParameters);
-    const bool warmStart = solverSupportsWarmStart(solver->ProblemType());
-    // Provide an initial simplex basis, if any
-    if (warmStart && Probleme->basisExists())
+    TuneSolverSpecificOptions(solver, options.solverName, options.solverParameters);
+
+    if (doWeGiveBasisToSolver(options, solver, Probleme))
     {
         Probleme->basisStatus.setStartingBasis(solver);
     }
@@ -247,8 +261,7 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
     if (solveAndManageStatus(solver, Probleme->ExistenceDUneSolution, params))
     {
         extract_from_MPSolver(solver, Probleme);
-        // Save the final simplex basis for next resolutions
-        if (warmStart && keepBasis)
+        if (doWeStoreSolverBasis(options, solver))
         {
             Probleme->basisStatus.extractBasis(solver);
         }
@@ -317,7 +330,7 @@ void ORTOOLS_LibererProbleme(MPSolver* solver)
     delete solver;
 }
 
-const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::solverMap = {
+const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::mpSolverMap = {
   {"xpress", {"xpress_lp", "xpress"}},
   {"sirius", {"sirius_lp", std::nullopt}}, // only allowed in LP (MIP only supports binaries)
   {"coin", {"clp", "cbc"}},
@@ -326,11 +339,16 @@ const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::solv
   {"highs", {"highs_lp", "highs"}},
   {"pdlp", {"pdlp", std::nullopt}}}; // PDLP only supports LPs
 
-std::list<std::string> getAvailableOrtoolsSolverName()
+const std::map<std::string, math_opt::SolverType> OrtoolsUtils::mathoptSolverMap = {
+  {"pdlp", math_opt::SolverType::kPdlp},
+  {"scip", math_opt::SolverType::kGscip},
+  {"xpress", math_opt::SolverType::kXpress}};
+
+std::list<std::string> availableLinearSolversList()
 {
     std::list<std::string> result;
 
-    for (const auto& solverName: OrtoolsUtils::solverMap)
+    for (const auto& solverName: OrtoolsUtils::mpSolverMap)
     {
         MPSolver::OptimizationProblemType solverType;
         if (solverName.second.LPSolverName.has_value())
@@ -350,26 +368,30 @@ std::list<std::string> getAvailableOrtoolsSolverName()
     return result;
 }
 
-std::string availableOrToolsSolversString()
+std::list<std::string> availableQuadraticSolversList()
 {
-    const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
-    std::ostringstream solvers;
-    for (const std::string& avail: availableSolverList)
+    std::list<std::string> result;
+    // Sirius is supported, but not through mathopt
+    result.push_back("sirius");
+    for (const auto& solverName: OrtoolsUtils::mathoptSolverMap)
     {
-        bool last = &avail == &availableSolverList.back();
-        std::string sep = last ? "." : ", ";
-        solvers << avail << sep;
+        result.push_back(solverName.first);
     }
-    return solvers.str();
+    return result;
+}
+
+std::string toString(const std::list<std::string>& solverList)
+{
+    return boost::algorithm::join(solverList, ",") + ".";
 }
 
 static std::optional<std::string> translateSolverName(const std::string& solverName, bool isMip)
 {
-    if (!OrtoolsUtils::solverMap.contains(solverName))
+    if (!OrtoolsUtils::mpSolverMap.contains(solverName))
     {
         return {};
     }
-    auto names = OrtoolsUtils::solverMap.at(solverName);
+    auto names = OrtoolsUtils::mpSolverMap.at(solverName);
     if (isMip)
     {
         return names.MIPSolverName;
@@ -382,6 +404,10 @@ static std::optional<std::string> translateSolverName(const std::string& solverN
 
 MPSolver* MPSolverFactory(const bool isMip, const std::string& solverName)
 {
+    const std::string notFound = "Solver " + solverName
+                                 + " not supported for linear problems optimization.";
+    const std::invalid_argument except(notFound);
+
     auto internalSolverName = translateSolverName(solverName, isMip);
     if (!internalSolverName.has_value())
     {

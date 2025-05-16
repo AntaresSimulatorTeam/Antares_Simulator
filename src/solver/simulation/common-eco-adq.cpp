@@ -92,7 +92,7 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
     {
         NullResultWriter resultWriter;
         NullSimulationObserver simulationObserver;
-        OPT_OptimisationHebdomadaire(createOptimizationOptions(study),
+        OPT_OptimisationHebdomadaire(study.parameters.optOptions,
                                      &problem,
                                      resultWriter,
                                      simulationObserver);
@@ -471,11 +471,6 @@ void finalizeOptimizationStatistics(PROBLEME_HEBDO& problem,
 
     firstOptStat.reset();
     secondOptStat.reset();
-}
-
-OptimizationOptions createOptimizationOptions(const Data::Study& study)
-{
-    return study.parameters.optOptions;
 }
 
 } // namespace Antares::Solver::Simulation

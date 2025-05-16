@@ -84,7 +84,7 @@ bool loadFile(const fs::path& path, std::vector<double>& vect)
             vect.push_back(d);
             lineCount++;
         }
-        if (lineCount < HOURS_PER_YEAR)
+        if (lineCount > 0 && lineCount < HOURS_PER_YEAR)
         {
             logs.warning() << "File too small: " << path;
             return false;
@@ -107,6 +107,7 @@ bool loadFile(const fs::path& path, std::vector<double>& vect)
                      << lineCount + 1 << "  value: " << line;
         return false;
     }
+
     return true;
 }
 

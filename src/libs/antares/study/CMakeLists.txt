@@ -93,7 +93,6 @@ set(SRC_STUDY_PART_RENEWABLE
         parts/renewable/cluster_list.cpp
 )
 source_group("study\\part\\renewable" FILES ${SRC_STUDY_PART_RENEWABLE})
-
 set(SRC_STUDY_PART_SHORT_TERM_STORAGE
         include/antares/study/parts/short-term-storage/container.h
         parts/short-term-storage/container.cpp
@@ -105,6 +104,9 @@ set(SRC_STUDY_PART_SHORT_TERM_STORAGE
         include/antares/study/parts/short-term-storage/additionalConstraints.h
         parts/short-term-storage/cluster.cpp
         parts/short-term-storage/additionalConstraints.cpp
+		include/antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h
+		parts/short-term-storage/makeGroupsOfHoursFromString.cpp
+		include/antares/study/parts/short-term-storage/HoursCollectorVisitor.h
 )
 source_group("study\\part\\short-term-storage" FILES ${SRC_STUDY_PART_SHORT_TERM_SOTRAGE})
 
@@ -220,6 +222,8 @@ set(SRC_STUDY
         fwd.cpp
         include/antares/study/study.h
         study.cpp
+	duplicates.cpp
+        include/antares/study/duplicates.h
         include/antares/study/correlation-updater.hxx
         study.importprepro.cpp
         importlogs.cpp
@@ -301,10 +305,15 @@ target_link_libraries(study
         antares-core
         antares-solver-simulation
         Antares::hydro
+        Antares::antares-study-system-model
+        linear-problem-api
+        Antares::load-modeler-files
+        Antares::modeler-parameters
         PRIVATE
         Antares::exception
         Antares::benchmarking
         antares-solver-variable
+		Antares::additional-constraint-rhs-antlr-interface
 )
 
 target_include_directories(study

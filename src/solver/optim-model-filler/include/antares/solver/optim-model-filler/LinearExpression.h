@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include <functional>
 #include <string>
 #include <unordered_map>
 
@@ -28,15 +29,6 @@
 
 namespace Antares::Optimization
 {
-
-template<typename T>
-struct IdentityFunction
-{
-    const T& operator()(const T& t)
-    {
-        return t;
-    }
-};
 
 using FullKeyMap = std::unordered_map<FullKey, double, FullKeyHash>;
 
@@ -60,7 +52,7 @@ using FullKeyMap = std::unordered_map<FullKey, double, FullKeyHash>;
  *
  * @tparam MapType The type of the map (e.g., `std::map`, `std::unordered_map`).
  * @tparam UnaryOp The type of the transformation function applied to the values of the
- * right-hand-side map. Defaults to `IdentityFunction`.
+ * right-hand-side map. Defaults to `std::identity`.
  *
  * @param left The left-hand-side map.
  * @param right The right-hand-side map.
@@ -104,10 +96,8 @@ using FullKeyMap = std::unordered_map<FullKey, double, FullKeyHash>;
  * auto result = add_maps(map3, map4);
  * ```
  */
-template<typename MapType, typename UnaryOp = IdentityFunction<typename MapType::mapped_type>>
-MapType add_maps(const MapType& left,
-                 const MapType& right,
-                 UnaryOp op = IdentityFunction<typename MapType::mapped_type>{})
+template<typename MapType, typename UnaryOp = std::identity>
+MapType add_maps(const MapType& left, const MapType& right, UnaryOp op = std::identity{})
 {
     auto result(left);
     for (auto [key, value]: right)

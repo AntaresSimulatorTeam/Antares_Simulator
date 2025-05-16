@@ -251,6 +251,34 @@ struct Fixture
 
 BOOST_AUTO_TEST_SUITE(s)
 
+// We only check the 1st element
+void checkSizeFirst(const std::vector<double>& in, double v)
+{
+    BOOST_CHECK_EQUAL(in.size(), HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(in[0], v);
+}
+
+BOOST_FIXTURE_TEST_CASE(check_empty, Fixture)
+{
+    createFileSeries(0); // Empty files
+    loadFromFolder(StudyVersion(9, 2));
+    series.fillDefaultSeriesIfEmpty();
+
+    // version<9.2
+    checkSizeFirst(series.maxInjectionModulation, 1.0);
+    checkSizeFirst(series.maxWithdrawalModulation, 1.0);
+    checkSizeFirst(series.inflows, 0.0);
+    checkSizeFirst(series.lowerRuleCurve, 0.0);
+    checkSizeFirst(series.upperRuleCurve, 1.0);
+
+    // version>=9.2
+    checkSizeFirst(series.costInjection, 0.0);
+    checkSizeFirst(series.costWithdrawal, 0.0);
+    checkSizeFirst(series.costLevel, 0.0);
+    checkSizeFirst(series.costVariationInjection, 0.0);
+    checkSizeFirst(series.costVariationWithdrawal, 0.0);
+}
+
 BOOST_FIXTURE_TEST_CASE(check_vector_sizes, Fixture)
 {
     resizeFillVectors(series, 0.0, 12);
@@ -987,81 +1015,6 @@ BOOST_AUTO_TEST_CASE(Load_disabled)
     // Validate loaded constraints
     auto& built_cluster = storageInput.storagesByIndex[0];
     BOOST_REQUIRE_EQUAL(built_cluster.additionalConstraints.size(), 0);
-}
-
-BOOST_DATA_TEST_CASE(loadAdditionalConstraints_InvalidHoursFormat,
-                     bdata::make({"",
-                                  "[]",
-                                  "[ ]",
-                                  "[\t]",
-                                  "[\r]",
-                                  "[\f]",
-                                  "[\v]",
-                                  "[1, nol]",
-                                  "[; 3,2,1]",
-                                  "[1, 12345678901]",
-                                  "[1, 12345",
-                                  "1]",
-                                  "[1,]",
-                                  "[1,,2]",
-                                  "[a]",
-                                  "[1, 2], , [3]"}),
-                     hours)
-{
-    std::filesystem::path testPath = getFolder() / "test_data";
-    std::filesystem::create_directory(testPath);
-
-    std::ofstream iniFile(testPath / "additional-constraints.ini");
-    iniFile << "[constraint1]\n";
-    iniFile << "cluster=cluster1\n";
-    iniFile << "variable=injection\n";
-    iniFile << "operator=less\n";
-    iniFile << "hours=" << hours << "\n"; // Invalid formats
-    iniFile.close();
-
-    ShortTermStorage::STStorageInput storageInput;
-    ShortTermStorage::STStorageCluster cluster;
-    cluster.id = "cluster1";
-    storageInput.storagesByIndex.push_back(cluster);
-
-    bool result = storageInput.loadAdditionalConstraints(testPath);
-    BOOST_CHECK_EQUAL(result, false);
-
-    std::filesystem::remove_all(testPath);
-}
-
-BOOST_DATA_TEST_CASE(
-  loadAdditionalConstraints_ValidHoursFormats,
-  bdata::make(
-    {"[1],[1],[3,2,1]",
-     "[\r1,\t2]",
-     "[\v1\f,\t2],\f\v\t[4]",
-     "[\f\v1]\t\t",
-     "\t\v\t[1    ],    [    1,                           2,3]                               ",
-     "                         [4,5                                                        ]",
-     "[1 2 3  , 11                       3]"}),
-  hours)
-{
-    std::filesystem::path testPath = getFolder() / "test_data";
-    std::filesystem::create_directory(testPath);
-
-    std::ofstream iniFile(testPath / "additional-constraints.ini");
-    iniFile << "[constraint1]\n";
-    iniFile << "cluster=cluster1\n";
-    iniFile << "variable=injection\n";
-    iniFile << "operator=less\n";
-    iniFile << "hours=" << hours << "\n"; // Valid formats
-    iniFile.close();
-
-    ShortTermStorage::STStorageInput storageInput;
-    ShortTermStorage::STStorageCluster cluster;
-    cluster.id = "cluster1";
-    storageInput.storagesByIndex.push_back(cluster);
-
-    bool result = storageInput.loadAdditionalConstraints(testPath);
-    BOOST_CHECK_EQUAL(result, true);
-
-    std::filesystem::remove_all(testPath);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

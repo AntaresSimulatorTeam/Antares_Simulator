@@ -18,34 +18,29 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
+#pragma once
+#include <HoursFieldBaseVisitor.h>
 
-#ifdef __CPLUSPLUS
-extern "C"
+class HoursCollectorVisitor: public HoursFieldBaseVisitor
 {
-#endif
-
-#include "spx_definition_arguments.h"
-#include "spx_fonctions.h"
-
-#ifdef __CPLUSPLUS
-}
-#endif
-
-#include "antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h"
-#include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
-
-void H2O_M_Free(DONNEES_ANNUELLES& DonneesAnnuelles)
-{
-    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles.ProblemeHydraulique;
-
-    for (int i = 0; i < ProblemeHydraulique.NombreDeReservoirs; i++)
+public:
+    std::any visitHoursField(HoursFieldParser::HoursFieldContext* ctx) override
     {
-        PROBLEME_SPX* ProbSpx = (PROBLEME_SPX*)ProblemeHydraulique.ProblemeSpx[i];
-        if (ProbSpx)
+        std::vector<std::set<int>> result;
+        for (auto groupCtx: ctx->group())
         {
-            SPX_LibererProbleme(ProbSpx);
+            result.push_back(std::any_cast<std::set<int>>(visit(groupCtx)));
         }
+        return result;
     }
 
-    return;
-}
+    std::any visitGroup(HoursFieldParser::GroupContext* ctx) override
+    {
+        std::set<int> hours;
+        for (auto hourCtx: ctx->hour())
+        {
+            hours.insert(std::stoi(hourCtx->getText()));
+        }
+        return hours;
+    }
+};

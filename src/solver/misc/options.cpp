@@ -21,19 +21,9 @@
 
 #include "antares/solver/misc/options.h"
 
-#include <algorithm>
-#include <cassert>
 #include <fstream>
-#include <limits>
-#include <string.h>
 
-#include <yuni/yuni.h>
-
-#include <antares/antares/constants.h>
 #include <antares/exception/LoadingError.hpp>
-#include <antares/logs/logs.h>
-#include <antares/study/study.h>
-#include "antares/antares/Enum.hpp"
 #include "antares/config/config.h"
 #include "antares/solver/utils/ortools_utils.h"
 
@@ -75,28 +65,79 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
                 "force-parallel",
                 "Override the max number of years computed simultaneously");
 
+    //--linear-solver
+    parser->add(options.solverOptions.linearSolver,
+                ' ',
+                "linear-solver",
+                "Solver used for linear optimizations during simulation. Available solver list : "
+                  + toString(availableLinearSolversList()));
+
     //--solver
-    parser->add(options.optOptions.ortoolsSolver,
+    parser->add(options.solverOptions.linearSolver,
                 ' ',
                 "solver",
-                "Solver used for simulation\nAvailable solver list : "
-                  + availableOrToolsSolversString());
+                "Deprecated, use linear-solver instead.");
+
+    //--lp-solver-param
+    parser->add(options.solverOptions.linearSolverParameters,
+                ' ',
+                "lp-solver-param",
+                "Linear solver-specific parameters, for instance \"THREADS 1 "
+                "PRESOLVE 1\""
+                " for XPRESS or \"parallel/maxnthreads 1, lp/presolving TRUE\" for "
+                "SCIP. Syntax is solver-dependent, and only supported for SCIP & XPRESS.");
 
     //--solver-parameters
+    parser->add(options.solverOptions.linearSolverParameters,
+                ' ',
+                "solver-parameters",
+                "Deprecated, use lp-solver-param instead.");
+
+    // --lp-solver-param-optim-1
+    parser->add(options.solverOptions.lpSolverParamOptim1,
+                ' ',
+                "lp-solver-param-optim-1",
+                "Linear solver-specific parameters for first optimization."
+                " Only supported for SCIP & XPRESS.");
+
+    // --lp-solver-param-optim-2
+    parser->add(options.solverOptions.lpSolverParamOptim2,
+                ' ',
+                "lp-solver-param-optim-2",
+                "Linear solver-specific parameters for second optimization."
+                " Only supported for SCIP & XPRESS.");
+
+    // --use-optim-1-basis-next-week
+    parser->addFlag(options.solverOptions.useOptim1BasisInNextWeek,
+                    ' ',
+                    "use-optim-1-basis-next-week",
+                    "Use basis of first optimization in next week's first optimization");
+
+    // --use-optim-1-basis-optim-2
+    parser->addFlag(options.solverOptions.useOptim1BasisInOptim2,
+                    ' ',
+                    "use-optim-1-basis-optim-2",
+                    "Use basis of first optimization in second optimization");
+
+    //--quadratic-solver
     parser->add(
-      options.optOptions.solverParameters,
+      options.solverOptions.quadraticSolver,
       ' ',
-      "solver-parameters",
-      "Set solver-specific parameters, for instance --solver-parameters=\"THREADS 1 PRESOLVE 1\""
-      "for XPRESS or --solver-parameters=\"parallel/maxnthreads 1, lp/presolving TRUE\" for SCIP."
-      "Syntax is solver-dependent, and only supported for SCIP & XPRESS.");
+      "quadratic-solver",
+      "Solver used for quadratic optimizations during simulation. Available solver list : "
+        + toString(availableQuadraticSolversList()));
+
+    //--quadratic-solver-param
+    parser->add(options.solverOptions.quadraticSolverParameters,
+                ' ',
+                "quadratic-solver-param",
+                "Quadratic solver-specific parameters, for instance \"THREADS 8\""
+                " for XPRESS or \"parallel/maxnthreads 8\" for SCIP. "
+                "Syntax is solver-dependent.");
 
     parser->addParagraph("\nParameters");
     // --name
-    parser->add(settings.simulationName,
-                'n',
-                "name",
-                "Set the name of the new simulation to VALUE");
+    parser->add(settings.simulationName, 'n', "name", "Name of the current simulation");
     // --generators-only
     parser->addFlag(settings.tsGeneratorsOnly,
                     'g',
@@ -162,7 +203,7 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
                     "Export named constraints and variables in mps (both optim).");
 
     // --solver-logs
-    parser->addFlag(options.optOptions.solverLogs, ' ', "solver-logs", "Print solver logs.");
+    parser->addFlag(options.solverOptions.solverLogs, ' ', "solver-logs", "Print solver logs.");
 
     parser->addParagraph("\nMisc.");
     // --progress
@@ -246,25 +287,11 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
     }
 
     options.checkForceSimulationMode();
-    checkOrtoolsSolver(options.optOptions);
 
     // no-output and force-zip-output
     if (settings.noOutput && settings.forceZipOutput)
     {
         throw Error::IncompatibleOutputOptions("no-output and zip-output options are incompatible");
-    }
-}
-
-void checkOrtoolsSolver(const Antares::Solver::Optimization::OptimizationOptions& optOptions)
-{
-    const std::string& solverName = optOptions.ortoolsSolver;
-    const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
-
-    // Check if solver is available
-    bool found = (std::ranges::find(availableSolverList, solverName) != availableSolverList.end());
-    if (!found)
-    {
-        throw Error::InvalidSolver(optOptions.ortoolsSolver, availableOrToolsSolversString());
     }
 }
 
