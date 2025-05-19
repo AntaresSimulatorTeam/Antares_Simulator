@@ -46,20 +46,20 @@ bool ShortTermTSNumberData::apply(Study& study)
     return ret;
 }
 
-void ShortTermTSNumberData::setTSnumber(const std::string& cluster_name,
+void ShortTermTSNumberData::setTSnumber(const std::string& cluster_id,
                                         unsigned year,
                                         unsigned value)
 {
-    auto& ts_numbers = rules_[cluster_name];
+    auto& ts_numbers = rules_[cluster_id];
     if (year < ts_numbers.height)
     {
         ts_numbers[0][year] = value;
     }
 }
 
-unsigned ShortTermTSNumberData::get_value(const std::string& cluster_name, unsigned year) const
+unsigned ShortTermTSNumberData::get_value(const std::string& cluster_id, unsigned year) const
 {
-    return rules_.at(cluster_name)[0][year];
+    return rules_.at(cluster_id)[0][year];
 }
 
 bool ShortTermTSNumberData::reset(const Study& study)
@@ -73,4 +73,32 @@ bool ShortTermTSNumberData::reset(const Study& study)
 
     return true;
 }
+
+void ShortTermTSNumberData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const
+{
+    // Prefix
+    CString<512, false> prefix;
+    prefix += get_prefix();
+
+    if (!pArea)
+    {
+        return;
+    }
+
+    for (const auto& sts: pArea->shortTermStorage.storagesByIndex)
+    {
+        for (uint year = 0; year < sts.series->inflows.timeseriesNumbers.height(); ++year)
+        {
+            const uint val = get_value(sts.id, year);
+
+            // Equals to zero means 'auto', which is the default mode
+            if (!val)
+            {
+                continue;
+            }
+            file << prefix << pArea->id << "," << year << ',' << sts.id << " = " << val << '\n';
+        }
+    }
+}
+
 } // namespace Antares::Data::ScenarioBuilder

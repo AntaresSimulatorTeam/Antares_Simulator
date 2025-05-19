@@ -41,10 +41,7 @@ public:
         pArea = area;
     }
 
-    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const override
-    {
-        // TODO
-    }
+    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const override;
 
     void setTSnumber(const std::string& cluster_name, unsigned year, unsigned value);
     unsigned get_value(const std::string& cluster_name, unsigned year) const;
