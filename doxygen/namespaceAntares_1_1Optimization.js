@@ -30,6 +30,7 @@ var namespaceAntares_1_1Optimization =
     [ "Dimensions", "classAntares_1_1Optimization_1_1Dimensions.html", "classAntares_1_1Optimization_1_1Dimensions" ],
     [ "TimeAndScenario", "structAntares_1_1Optimization_1_1TimeAndScenario.html", "structAntares_1_1Optimization_1_1TimeAndScenario" ],
     [ "VariableDictionary", "classAntares_1_1Optimization_1_1VariableDictionary.html", "classAntares_1_1Optimization_1_1VariableDictionary" ],
+    [ "ComponentToAreaConnectionFiller", "classAntares_1_1Optimization_1_1ComponentToAreaConnectionFiller.html", "classAntares_1_1Optimization_1_1ComponentToAreaConnectionFiller" ],
     [ "LegacyFiller", "classAntares_1_1Optimization_1_1LegacyFiller.html", "classAntares_1_1Optimization_1_1LegacyFiller" ],
     [ "LegacyOrtoolsLinearProblem", "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html", "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem" ],
     [ "BasisStatusImpl", "classAntares_1_1Optimization_1_1BasisStatusImpl.html", "classAntares_1_1Optimization_1_1BasisStatusImpl" ],

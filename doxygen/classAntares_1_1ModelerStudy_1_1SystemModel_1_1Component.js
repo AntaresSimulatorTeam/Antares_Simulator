@@ -11,5 +11,6 @@ var classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component =
     [ "getScenarioGroupId", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#a3d7034f0ce696f43fe697ffb4eca0eda", null ],
     [ "Id", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#ac2d42d7a1b82ae71ed292f82c23a621b", null ],
     [ "nodeAtPortField", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#aad8c68f3da3bfa5af228281db269adbb", null ],
+    [ "portToAreaConnections", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#a434594ac7de2a71fd06048a864e18f13", null ],
     [ "ComponentBuilder", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#a352938aacebb94060db85218d879f90d", null ]
 ];

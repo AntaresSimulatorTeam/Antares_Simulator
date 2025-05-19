@@ -880,7 +880,8 @@ var namespaces_dup =
         [ "IncompatibleHurdleCostCSR", "classAntares_1_1Error_1_1IncompatibleHurdleCostCSR.html", "classAntares_1_1Error_1_1IncompatibleHurdleCostCSR" ],
         [ "IncompatibleOutputOptions", "classAntares_1_1Error_1_1IncompatibleOutputOptions.html", "classAntares_1_1Error_1_1IncompatibleOutputOptions" ],
         [ "IncompatibleCO2CostColumns", "classAntares_1_1Error_1_1IncompatibleCO2CostColumns.html", "classAntares_1_1Error_1_1IncompatibleCO2CostColumns" ],
-        [ "IncompatibleFuelCostColumns", "classAntares_1_1Error_1_1IncompatibleFuelCostColumns.html", "classAntares_1_1Error_1_1IncompatibleFuelCostColumns" ]
+        [ "IncompatibleFuelCostColumns", "classAntares_1_1Error_1_1IncompatibleFuelCostColumns.html", "classAntares_1_1Error_1_1IncompatibleFuelCostColumns" ],
+        [ "RuntimeError", "classAntares_1_1Error_1_1RuntimeError.html", null ]
       ] ],
       [ "Expressions", null, [
         [ "Nodes", null, [
@@ -2656,6 +2657,7 @@ var namespaces_dup =
       [ "change_transmission_capacities", "solver__steps_8py.html#a75aefd730b0e676f29cf59b3916d7548", null ],
       [ "check_annual_cost", "solver__steps_8py.html#a2d8a7702c62809e8037e987f6b3a00ca", null ],
       [ "check_annual_cost", "solver__steps_8py.html#a39d9e7518bcf7f9b7b2c7502e491a599", null ],
+      [ "check_annual_cost_depending_on_solver", "solver__steps_8py.html#a8397c561d5d9a21b01dfcf697e8fbb30", null ],
       [ "check_annual_cost_expected", "solver__steps_8py.html#a248d32cc87fa83837d240226e387be8c", null ],
       [ "check_annual_cost_max", "solver__steps_8py.html#acbc3259be88f3e952f738f4e2a564d09", null ],
       [ "check_annual_cost_min", "solver__steps_8py.html#ab8b411558d94bc450b7b4e597139d88d", null ],
@@ -2678,6 +2680,8 @@ var namespaces_dup =
       [ "check_week_ts_has_daily_values", "solver__steps_8py.html#ae7a40bd76bfc797c61586fa7d8b15152", null ],
       [ "create_temporary_copy", "solver__steps_8py.html#a4ab3e50370fefa91f351c1f9b700dccf", null ],
       [ "extract_week_ts", "solver__steps_8py.html#aab856c02ada388cf7223cdfae48aa6ad", null ],
+      [ "get_linear_solver", "solver__steps_8py.html#aaa5700945636174fda3c68c92e2ada80", null ],
+      [ "get_quadratic_solver", "solver__steps_8py.html#ad6dc4924ed005d05b2eb6a323cc98387", null ],
       [ "init_simulation", "solver__steps_8py.html#ab2230b1b6c17b656b40b98f95b8e24b6", null ],
       [ "make_daily_values_from_a_string", "solver__steps_8py.html#a295d1b406ada0604a0a775c3f0dfd9cf", null ],
       [ "parse_output_folder_from_logs", "solver__steps_8py.html#a3e4ae8358376dec656f4144e8e6e4c05", null ],

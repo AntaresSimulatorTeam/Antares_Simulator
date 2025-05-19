@@ -162,6 +162,7 @@ var hierarchy =
     [ "Antares::Component::Datagrid::ComponentRefresh", "classAntares_1_1Component_1_1Datagrid_1_1ComponentRefresh.html", [
       [ "Antares::Component::Datagrid::Component", "classAntares_1_1Component_1_1Datagrid_1_1Component.html", null ]
     ] ],
+    [ "ComponentToAreaConnectionFillerFixture", "structComponentToAreaConnectionFillerFixture.html", null ],
     [ "Antares::IO::Inputs::YmlSystem::Connection", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Connection.html", null ],
     [ "Antares::ModelerStudy::SystemModel::ConnectionEnd", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEnd.html", null ],
     [ "Antares::IO::Inputs::YmlSystem::ConnectionEntry", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ConnectionEntry.html", null ],
@@ -1070,6 +1071,7 @@ var hierarchy =
       [ "Antares::Optimisation::LinearProblemApi::TwoVarsTwoConstraintsFiller", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1TwoVarsTwoConstraintsFiller.html", null ],
       [ "Antares::Optimisation::LinearProblemApi::VarFillerContext", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1VarFillerContext.html", null ],
       [ "Antares::Optimization::ComponentFiller", "classAntares_1_1Optimization_1_1ComponentFiller.html", null ],
+      [ "Antares::Optimization::ComponentToAreaConnectionFiller", "classAntares_1_1Optimization_1_1ComponentToAreaConnectionFiller.html", null ],
       [ "Antares::Optimization::LegacyFiller", "classAntares_1_1Optimization_1_1LegacyFiller.html", null ]
     ] ],
     [ "Antares::Window::linkGrid", "classAntares_1_1Window_1_1linkGrid.html", [
@@ -1482,6 +1484,7 @@ var hierarchy =
         [ "Antares::Error::UseMILPsolverWithWrongOptions", "classAntares_1_1Error_1_1UseMILPsolverWithWrongOptions.html", null ],
         [ "Antares::Error::WritingPID", "classAntares_1_1Error_1_1WritingPID.html", null ]
       ] ],
+      [ "Antares::Error::RuntimeError", "classAntares_1_1Error_1_1RuntimeError.html", null ],
       [ "Antares::Expressions::Visitors::EvalVisitorDivisionException", "classAntares_1_1Expressions_1_1Visitors_1_1EvalVisitorDivisionException.html", null ],
       [ "Antares::Expressions::Visitors::EvaluationResult::EvalResultTypeError", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult_1_1EvalResultTypeError.html", null ],
       [ "Antares::Expressions::Visitors::VectorsMismatchSize", "classAntares_1_1Expressions_1_1Visitors_1_1VectorsMismatchSize.html", null ],

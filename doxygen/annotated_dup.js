@@ -403,7 +403,8 @@ var annotated_dup =
         [ "IncompatibleHurdleCostCSR", "classAntares_1_1Error_1_1IncompatibleHurdleCostCSR.html", "classAntares_1_1Error_1_1IncompatibleHurdleCostCSR" ],
         [ "IncompatibleOutputOptions", "classAntares_1_1Error_1_1IncompatibleOutputOptions.html", "classAntares_1_1Error_1_1IncompatibleOutputOptions" ],
         [ "IncompatibleCO2CostColumns", "classAntares_1_1Error_1_1IncompatibleCO2CostColumns.html", "classAntares_1_1Error_1_1IncompatibleCO2CostColumns" ],
-        [ "IncompatibleFuelCostColumns", "classAntares_1_1Error_1_1IncompatibleFuelCostColumns.html", "classAntares_1_1Error_1_1IncompatibleFuelCostColumns" ]
+        [ "IncompatibleFuelCostColumns", "classAntares_1_1Error_1_1IncompatibleFuelCostColumns.html", "classAntares_1_1Error_1_1IncompatibleFuelCostColumns" ],
+        [ "RuntimeError", "classAntares_1_1Error_1_1RuntimeError.html", null ]
       ] ],
       [ "Expressions", null, [
         [ "Nodes", null, [
@@ -649,6 +650,7 @@ var annotated_dup =
         [ "Dimensions", "classAntares_1_1Optimization_1_1Dimensions.html", "classAntares_1_1Optimization_1_1Dimensions" ],
         [ "TimeAndScenario", "structAntares_1_1Optimization_1_1TimeAndScenario.html", "structAntares_1_1Optimization_1_1TimeAndScenario" ],
         [ "VariableDictionary", "classAntares_1_1Optimization_1_1VariableDictionary.html", "classAntares_1_1Optimization_1_1VariableDictionary" ],
+        [ "ComponentToAreaConnectionFiller", "classAntares_1_1Optimization_1_1ComponentToAreaConnectionFiller.html", "classAntares_1_1Optimization_1_1ComponentToAreaConnectionFiller" ],
         [ "LegacyFiller", "classAntares_1_1Optimization_1_1LegacyFiller.html", "classAntares_1_1Optimization_1_1LegacyFiller" ],
         [ "LegacyOrtoolsLinearProblem", "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html", "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem" ],
         [ "BasisStatusImpl", "classAntares_1_1Optimization_1_1BasisStatusImpl.html", "classAntares_1_1Optimization_1_1BasisStatusImpl" ],
@@ -1466,6 +1468,7 @@ var annotated_dup =
     [ "CommonFixture", "structCommonFixture.html", "structCommonFixture" ],
     [ "ComparisonFixture", "structComparisonFixture.html", "structComparisonFixture" ],
     [ "ComponentBuilderCreationFixture", "structComponentBuilderCreationFixture.html", "structComponentBuilderCreationFixture" ],
+    [ "ComponentToAreaConnectionFillerFixture", "structComponentToAreaConnectionFillerFixture.html", "structComponentToAreaConnectionFillerFixture" ],
     [ "ConsistenceNumberOfDispatchableUnits", "classConsistenceNumberOfDispatchableUnits.html", "classConsistenceNumberOfDispatchableUnits" ],
     [ "ConsistenceNumberOfDispatchableUnitsGroup", "classConsistenceNumberOfDispatchableUnitsGroup.html", "classConsistenceNumberOfDispatchableUnitsGroup" ],
     [ "CONSOMMATIONS_ABATTUES", "structCONSOMMATIONS__ABATTUES.html", "structCONSOMMATIONS__ABATTUES" ],

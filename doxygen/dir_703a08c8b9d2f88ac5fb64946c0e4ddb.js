@@ -2,6 +2,7 @@ var dir_703a08c8b9d2f88ac5fb64946c0e4ddb =
 [
     [ "adequacy_patch_csr", "dir_d15e8aa5f3eb877dcfbcbd8563789717.html", "dir_d15e8aa5f3eb877dcfbcbd8563789717" ],
     [ "constraints", "dir_673a42b4d32adff6df2ecb8198a5dc4a.html", "dir_673a42b4d32adff6df2ecb8198a5dc4a" ],
+    [ "ComponentToAreaConnectionFiller.h", "ComponentToAreaConnectionFiller_8h_source.html", null ],
     [ "HebdoProblemToLpsTranslator.h", "HebdoProblemToLpsTranslator_8h_source.html", null ],
     [ "LegacyFiller.h", "LegacyFiller_8h_source.html", null ],
     [ "LegacyOrtoolsLinearProblem.h", "LegacyOrtoolsLinearProblem_8h_source.html", null ],
