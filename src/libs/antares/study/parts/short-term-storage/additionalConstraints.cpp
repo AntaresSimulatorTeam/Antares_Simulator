@@ -25,6 +25,11 @@
 
 namespace Antares::Data::ShortTermStorage
 {
+AdditionalConstraints::AdditionalConstraints():
+    rhs_(tsNumbers)
+{
+}
+
 AdditionalConstraints::AdditionalConstraints(std::string name,
                                              std::string cluster_id,
                                              std::string variable,

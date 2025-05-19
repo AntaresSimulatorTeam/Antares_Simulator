@@ -148,9 +148,12 @@ struct Fixture
         study->bindingConstraintsGroups.resizeAllTimeseriesNumbers(study->parameters.nbYears);
         bc->RHSTimeSeries().resize(7, 1);
 
-        TimeSeriesNumbers tsNumbers;
-        ShortTermStorage::AdditionalConstraints
-          add1("name", "st-cluster-1", "withdrawal", "less", true, {}, tsNumbers);
+        ShortTermStorage::AdditionalConstraints add1("name",
+                                                     "st-cluster-1",
+                                                     "withdrawal",
+                                                     "less",
+                                                     true,
+                                                     {});
 
         stCluster1.id = "st-cluster-1";
         stCluster1.series->inflows.resize(12, 12);
@@ -158,8 +161,12 @@ struct Fixture
         stCluster1.additionalConstraints.push_back(add1);
         area_1->shortTermStorage.storagesByIndex.push_back(stCluster1);
 
-        ShortTermStorage::AdditionalConstraints
-          add2("name", "st-cluster-2", "withdrawal", "less", true, {}, tsNumbers);
+        ShortTermStorage::AdditionalConstraints add2("name",
+                                                     "st-cluster-2",
+                                                     "withdrawal",
+                                                     "less",
+                                                     true,
+                                                     {});
 
         stCluster2.id = "st-cluster-2";
         stCluster2.series->inflows.resize(12, 12);

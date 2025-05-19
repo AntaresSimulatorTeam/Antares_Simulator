@@ -31,8 +31,6 @@
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
-static Antares::Data::TimeSeriesNumbers tsNumbers;
-
 /*
  * this code is designed to:
  * Validate the addition of withdrawalSum, injectionSum, and netting constraints for various
@@ -58,22 +56,19 @@ struct BB
                          "withdrawal",
                          "less",
                          true,
-                         addc1_withdrawal_constraints,
-                         tsNumbers),
+                         addc1_withdrawal_constraints),
         addc2_injection("addc2_injection",
                         "cluster_2",
                         "injection",
                         "greater",
                         true,
-                        addc2_injection_constraints,
-                        tsNumbers),
+                        addc2_injection_constraints),
         addc3_netting("addc3_netting",
                       "cluster_3",
                       "netting",
                       "equal",
                       true,
-                      addc3_netting_constraints,
-                      tsNumbers)
+                      addc3_netting_constraints)
     {
     }
 
@@ -501,8 +496,12 @@ ExpectedResult SetupSingleStorageOneArea(PROBLEME_HEBDO& problemeHebdo)
     ShortTermStorage::AREA_INPUT& area0 = problemeHebdo.ShortTermStorage[0];
     area0.resize(1);
 
-    Antares::Data::ShortTermStorage::AdditionalConstraints
-      additionalConstraint("name", "cluster1", "withdrawal", "less", true, {}, tsNumbers);
+    Antares::Data::ShortTermStorage::AdditionalConstraints additionalConstraint("name",
+                                                                                "cluster1",
+                                                                                "withdrawal",
+                                                                                "less",
+                                                                                true,
+                                                                                {});
     initialize_additional_constraints_rhs(additionalConstraint, {12.0, 18.0, 24.0});
 
     Antares::Data::ShortTermStorage::SingleAdditionalConstraint constraint;
@@ -544,8 +543,12 @@ std::vector<ExpectedResult> SetupMultipleStoragesDifferentAreas(PROBLEME_HEBDO& 
     // Area 0 setup
     ShortTermStorage::AREA_INPUT& area0 = problemeHebdo.ShortTermStorage[0];
     area0.resize(1);
-    Antares::Data::ShortTermStorage::AdditionalConstraints
-      additionalConstraint0("name", "cluster1", "withdrawal", "less", true, {}, tsNumbers);
+    Antares::Data::ShortTermStorage::AdditionalConstraints additionalConstraint0("name",
+                                                                                 "cluster1",
+                                                                                 "withdrawal",
+                                                                                 "less",
+                                                                                 true,
+                                                                                 {});
     initialize_additional_constraints_rhs(additionalConstraint0, {10.0, 15.0, 20.0, 25.0});
     Antares::Data::ShortTermStorage::SingleAdditionalConstraint constraint0;
     constraint0.globalIndex = 1;
@@ -563,8 +566,12 @@ std::vector<ExpectedResult> SetupMultipleStoragesDifferentAreas(PROBLEME_HEBDO& 
     // Area 1 setup
     ShortTermStorage::AREA_INPUT& area1 = problemeHebdo.ShortTermStorage[1];
     area1.resize(1);
-    Data::ShortTermStorage::AdditionalConstraints
-      additionalConstraint1("name", "cluster1", "withdrawal", "less", true, {}, tsNumbers);
+    Data::ShortTermStorage::AdditionalConstraints additionalConstraint1("name",
+                                                                        "cluster1",
+                                                                        "withdrawal",
+                                                                        "less",
+                                                                        true,
+                                                                        {});
     initialize_additional_constraints_rhs(
       additionalConstraint1,
       {5.0, 8.0, 12.0, 15.0} /*RHS values for the first few hours*/);
@@ -641,8 +648,12 @@ std::vector<ExpectedResult> SetupMultipleStoragesSameArea(PROBLEME_HEBDO& proble
     area0.resize(2);
 
     // First storage
-    Antares::Data::ShortTermStorage::AdditionalConstraints
-      additionalConstraint1("name", "cluster1", "withdrawal", "less", true, {}, tsNumbers);
+    Antares::Data::ShortTermStorage::AdditionalConstraints additionalConstraint1("name",
+                                                                                 "cluster1",
+                                                                                 "withdrawal",
+                                                                                 "less",
+                                                                                 true,
+                                                                                 {});
     initialize_additional_constraints_rhs(additionalConstraint1, {10.0, 15.0});
     Antares::Data::ShortTermStorage::SingleAdditionalConstraint constraint1;
     constraint1.globalIndex = 0;
@@ -656,8 +667,12 @@ std::vector<ExpectedResult> SetupMultipleStoragesSameArea(PROBLEME_HEBDO& proble
     storage1.additionalConstraints.push_back(additionalConstraint1);
 
     // Second storage
-    Antares::Data::ShortTermStorage::AdditionalConstraints
-      additionalConstraint2("name", "cluster1", "withdrawal", "less", true, {}, tsNumbers);
+    Antares::Data::ShortTermStorage::AdditionalConstraints additionalConstraint2("name",
+                                                                                 "cluster1",
+                                                                                 "withdrawal",
+                                                                                 "less",
+                                                                                 true,
+                                                                                 {});
     initialize_additional_constraints_rhs(additionalConstraint2, {5.0, 7.0});
     Antares::Data::ShortTermStorage::SingleAdditionalConstraint constraint2;
     constraint2.globalIndex = 1;

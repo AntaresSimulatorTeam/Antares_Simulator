@@ -574,7 +574,7 @@ BOOST_AUTO_TEST_CASE(Validate_InvalidHours_Empty)
                                                         "injection",
                                                         "less",
                                                         true,
-                                                        constraint);
+                                                        {constraint});
 
     auto [ok, error_msg] = constraints.validate();
     BOOST_CHECK_EQUAL(ok, false);
