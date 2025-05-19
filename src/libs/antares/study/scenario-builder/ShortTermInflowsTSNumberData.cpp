@@ -19,18 +19,18 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/study/scenario-builder/ShortTermTSNumberData.h"
+#include "antares/study/scenario-builder/ShortTermInflowsTSNumberData.h"
 
 #include "antares/study/scenario-builder/applyToMatrix.hxx"
 
 namespace Antares::Data::ScenarioBuilder
 {
-uint ShortTermTSNumberData::get_tsGenCount(const Study& study) const
+uint ShortTermInflowsTSNumberData::get_tsGenCount(const Study& study) const
 {
     return 0;
 }
 
-bool ShortTermTSNumberData::apply(Study& study)
+bool ShortTermInflowsTSNumberData::apply(Study& study)
 {
     bool ret = true;
     auto tsGenMax = get_tsGenCount(study);
@@ -46,9 +46,9 @@ bool ShortTermTSNumberData::apply(Study& study)
     return ret;
 }
 
-void ShortTermTSNumberData::setTSnumber(const std::string& cluster_id,
-                                        unsigned year,
-                                        unsigned value)
+void ShortTermInflowsTSNumberData::setTSnumber(const std::string& cluster_id,
+                                               unsigned year,
+                                               unsigned value)
 {
     auto& ts_numbers = rules_[cluster_id];
     if (year < ts_numbers.height)
@@ -57,12 +57,12 @@ void ShortTermTSNumberData::setTSnumber(const std::string& cluster_id,
     }
 }
 
-unsigned ShortTermTSNumberData::get_value(const std::string& cluster_id, unsigned year) const
+unsigned ShortTermInflowsTSNumberData::get_value(const std::string& cluster_id, unsigned year) const
 {
     return rules_.at(cluster_id)[0][year];
 }
 
-bool ShortTermTSNumberData::reset(const Study& study)
+bool ShortTermInflowsTSNumberData::reset(const Study& study)
 {
     const uint nbYears = study.parameters.nbYears;
     for (const auto& sts: pArea->shortTermStorage.storagesByIndex)

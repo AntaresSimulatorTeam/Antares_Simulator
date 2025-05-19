@@ -27,7 +27,7 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-class ShortTermTSNumberData: public TSNumberData
+class ShortTermInflowsTSNumberData: public TSNumberData
 {
 public:
     bool apply(Study& study) override;
@@ -51,7 +51,7 @@ private:
     const Area* pArea;
 };
 
-inline CString<512, false> ShortTermTSNumberData::get_prefix() const
+inline CString<512, false> ShortTermInflowsTSNumberData::get_prefix() const
 {
     return "st,";
 }

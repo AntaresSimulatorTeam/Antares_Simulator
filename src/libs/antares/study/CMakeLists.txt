@@ -28,9 +28,9 @@ set(SRC_STUDY_SCENARIO_BUILDER
         include/antares/study/scenario-builder/WindTSNumberData.h
         scenario-builder/WindTSNumberData.cpp
         include/antares/study/scenario-builder/LoadTSNumberData.h
-		include/antares/study/scenario-builder/ShortTermTSNumberData.h
+	include/antares/study/scenario-builder/ShortTermInflowsTSNumberData.h
         scenario-builder/LoadTSNumberData.cpp
-		scenario-builder/ShortTermTSNumberData.cpp
+	scenario-builder/ShortTermInflowsTSNumberData.cpp
         include/antares/study/scenario-builder/applyToMatrix.hxx
 )
 source_group("study\\scenario builder" FILES ${SRC_MATRIX})

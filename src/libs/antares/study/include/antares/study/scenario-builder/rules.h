@@ -33,7 +33,7 @@
 #include "LoadTSNumberData.h"
 #include "NTCTSNumberData.h"
 #include "RenewableTSNumberData.h"
-#include "ShortTermTSNumberData.h"
+#include "ShortTermInflowsTSNumberData.h"
 #include "TSnumberData.h"
 #include "ThermalTSNumberData.h"
 #include "WindTSNumberData.h"
@@ -130,7 +130,7 @@ public:
 
     BindingConstraintsTSNumberData binding_constraints;
 
-    std::vector<ShortTermTSNumberData> shortTermStorage;
+    std::vector<ShortTermInflowsTSNumberData> shortTermStorage;
 
 private:
     // Member methods
