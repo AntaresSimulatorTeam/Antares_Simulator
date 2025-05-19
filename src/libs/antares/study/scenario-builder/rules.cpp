@@ -57,6 +57,7 @@ void Rules::saveToINIFile(Yuni::IO::File::Stream& file) const
             thermal[i].saveToINIFile(study_, file);
             renewable[i].saveToINIFile(study_, file);
             linksNTC[i].saveToINIFile(study_, file);
+            shortTermStorage[i].saveToINIFile(file);
         }
         // hydro levels
         hydroInitialLevels.saveToINIFile(study_, file);

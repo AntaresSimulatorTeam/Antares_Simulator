@@ -102,7 +102,7 @@ void BindingConstraintsTSNumberData::saveToINIFile(const Study&, Yuni::IO::File:
             auto value = ts_numbers[0][year];
             if (value != 0)
             {
-                file << get_prefix() << group_name << "," << year << "=" << value << "\n";
+                file << get_prefix() << group_name << "," << year << " = " << value << "\n";
             }
         }
     }
