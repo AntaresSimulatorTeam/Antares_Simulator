@@ -30,15 +30,14 @@ AdditionalConstraints::AdditionalConstraints(std::string name,
                                              std::string variable,
                                              std::string operatorType,
                                              bool enabled,
-                                             std::vector<SingleAdditionalConstraint> constraints,
-                                             TimeSeriesNumbers& tsNumbers):
+                                             std::vector<SingleAdditionalConstraint> constraints):
     name(name),
     cluster_id(cluster_id),
     variable(variable),
     operatorType(operatorType),
     enabled(enabled),
     constraints(constraints),
-    ts(tsNumbers)
+    rhs_(tsNumbers)
 {
 }
 

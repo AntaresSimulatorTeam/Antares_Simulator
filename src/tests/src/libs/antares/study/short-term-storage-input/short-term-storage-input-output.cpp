@@ -237,7 +237,6 @@ struct Fixture
     }
 
     fs::path folder = getFolder();
-    TimeSeriesNumbers tsNumbers;
     ShortTermStorage::Series series;
     ShortTermStorage::Properties properties;
     ShortTermStorage::STStorageCluster cluster;
@@ -529,102 +528,118 @@ BOOST_AUTO_TEST_SUITE(AdditionalConstraintsTests)
 
 BOOST_AUTO_TEST_CASE(Validate_ClusterIdEmpty)
 {
-    TimeSeriesNumbers tsNumbers;
-    ShortTermStorage::AdditionalConstraints
-      constraints("name", "", "injection", "less", true, {}, tsNumbers);
+    ShortTermStorage::AdditionalConstraints constraints("name", "", "injection", "less", true, {});
+
     auto [ok, error_msg] = constraints.validate();
-    BOOST_CHECK(!ok);
+    BOOST_CHECK_EQUAL(ok, false);
     BOOST_CHECK_EQUAL(error_msg, "Cluster ID is empty.");
 }
 
 BOOST_AUTO_TEST_CASE(Validate_InvalidVariable)
 {
-    TimeSeriesNumbers tsNumbers;
-    ShortTermStorage::AdditionalConstraints
-      constraints("name", "clusterA", "invalid", "less", true, {}, tsNumbers);
+    ShortTermStorage::AdditionalConstraints constraints("name",
+                                                        "ClusterA",
+                                                        "invalid",
+                                                        "less",
+                                                        true,
+                                                        {});
     auto [ok, error_msg] = constraints.validate();
-    BOOST_CHECK(!ok);
+    BOOST_CHECK_EQUAL(ok, false);
     BOOST_CHECK_EQUAL(error_msg,
                       "Invalid variable type. Must be 'injection', 'withdrawal', or 'netting'.");
 }
 
 BOOST_AUTO_TEST_CASE(Validate_InvalidOperatorType)
 {
-    TimeSeriesNumbers tsNumbers;
-    ShortTermStorage::AdditionalConstraints
-      constraints("name", "clusterA", "injection", "invalid", true, {}, tsNumbers);
+    ShortTermStorage::AdditionalConstraints constraints("name",
+                                                        "ClusterA",
+                                                        "injection",
+                                                        "invalid",
+                                                        true,
+                                                        {});
 
     auto [ok, error_msg] = constraints.validate();
-    BOOST_CHECK(!ok);
+    BOOST_CHECK_EQUAL(ok, false);
     BOOST_CHECK_EQUAL(error_msg, "Invalid operator type. Must be 'less', 'equal', or 'greater'.");
 }
 
 BOOST_AUTO_TEST_CASE(Validate_InvalidHours_Empty)
 {
-    TimeSeriesNumbers tsNumbers;
     ShortTermStorage::SingleAdditionalConstraint constraint;
-    ShortTermStorage::AdditionalConstraints
-      constraints("name", "clusterA", "injection", "less", true, {constraint}, tsNumbers);
+    // Case : Empty hours
+    constraint.hours = {}; // Invalid: empty
+
+    ShortTermStorage::AdditionalConstraints constraints("name",
+                                                        "ClusterA",
+                                                        "injection",
+                                                        "less",
+                                                        true,
+                                                        constraint);
+
     auto [ok, error_msg] = constraints.validate();
     BOOST_CHECK_EQUAL(ok, false);
     BOOST_CHECK_EQUAL(error_msg, "Hours sets contains invalid values. Must be between 1 and 168.");
 }
 
-// BOOST_AUTO_TEST_CASE(Validate_InvalidHours_Out_of_range)
-// {
-//     ShortTermStorage::AdditionalConstraints constraints;
-//     constraints.cluster_id = "ClusterA";
-//     constraints.variable = "injection";
-//     constraints.operatorType = "less";
+BOOST_AUTO_TEST_CASE(Validate_InvalidHours_Out_of_range)
+{
+    ShortTermStorage::AdditionalConstraints constraints("name",
+                                                        "ClusterA",
+                                                        "injection",
+                                                        "less",
+                                                        true,
+                                                        {});
 
-//     // Case: Out of range
-//     ShortTermStorage::SingleAdditionalConstraint constraint;
-//     constraint.hours = {120, 169}; // Invalid: out of range
-//     constraints.constraints.push_back(constraint);
+    // Case: Out of range
+    ShortTermStorage::SingleAdditionalConstraint constraint;
+    constraint.hours = {120, 169}; // Invalid: out of range
+    constraints.constraints.push_back(constraint);
 
-//     auto [ok, error_msg] = constraints.validate();
-//     BOOST_CHECK_EQUAL(ok, false);
-//     BOOST_CHECK_EQUAL(error_msg, "Hours sets contains invalid values. Must be between 1 and
-//     168.");
-// }
+    auto [ok, error_msg] = constraints.validate();
+    BOOST_CHECK_EQUAL(ok, false);
+    BOOST_CHECK_EQUAL(error_msg, "Hours sets contains invalid values. Must be between 1 and 168.");
+}
 
-// BOOST_AUTO_TEST_CASE(Validate_InvalidHours_Below_minimum)
-// {
-//     ShortTermStorage::AdditionalConstraints constraints;
-//     constraints.cluster_id = "ClusterA";
-//     constraints.variable = "injection";
-//     constraints.operatorType = "less";
+BOOST_AUTO_TEST_CASE(Validate_InvalidHours_Below_minimum)
+{
+    ShortTermStorage::AdditionalConstraints constraints("name",
+                                                        "ClusterA",
+                                                        "injection",
+                                                        "less",
+                                                        true,
+                                                        {});
 
-//     // Case : Below minimum
-//     ShortTermStorage::SingleAdditionalConstraint constraint;
-//     constraint.hours = {0, 1}; // Invalid: below minimum
-//     constraints.constraints.push_back(constraint);
+    // Case : Below minimum
+    ShortTermStorage::SingleAdditionalConstraint constraint;
+    constraint.hours = {0, 1}; // Invalid: below minimum
+    constraints.constraints.push_back(constraint);
 
-//     auto [ok, error_msg] = constraints.validate();
-//     BOOST_CHECK_EQUAL(ok, false);
-//     BOOST_CHECK_EQUAL(error_msg, "Hours sets contains invalid values. Must be between 1 and
-//     168.");
-// }
+    auto [ok, error_msg] = constraints.validate();
+    BOOST_CHECK_EQUAL(ok, false);
+    BOOST_CHECK_EQUAL(error_msg, "Hours sets contains invalid values. Must be between 1 and 168.");
+}
 
-// BOOST_AUTO_TEST_CASE(Validate_ValidConstraints)
-// {
-//     ShortTermStorage::AdditionalConstraints constraints;
-//     constraints.cluster_id = "ClusterA";
-//     constraints.variable = "injection";
-//     constraints.operatorType = "less";
+BOOST_AUTO_TEST_CASE(Validate_ValidConstraints)
+{
+    ShortTermStorage::AdditionalConstraints constraints("name",
+                                                        "ClusterA",
+                                                        "injection",
+                                                        "less",
+                                                        true,
+                                                        {});
 
-//     ShortTermStorage::SingleAdditionalConstraint constraint1;
-//     constraint1.hours = {1, 2, 3}; // Valid hours
+    ShortTermStorage::SingleAdditionalConstraint constraint1;
+    constraint1.hours = {1, 2, 3}; // Valid hours
 
-//     ShortTermStorage::SingleAdditionalConstraint constraint2;
-//     constraint2.hours = {100, 150, 168}; // Valid hours
+    ShortTermStorage::SingleAdditionalConstraint constraint2;
+    constraint2.hours = {100, 150, 168}; // Valid hours
 
-//     constraints.constraints = {constraint1, constraint2};
+    constraints.constraints = {constraint1, constraint2};
 
-//     auto [ok, error_msg] = constraints.validate();
-//     BOOST_CHECK_EQUAL(ok, true);
-//     BOOST_CHECK(error_msg.empty());
-// }
+    auto [ok, error_msg] = constraints.validate();
+    BOOST_CHECK_EQUAL(ok, true);
+    BOOST_CHECK(error_msg.empty());
+}
 
 BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_ValidFile)
 {
@@ -910,9 +925,7 @@ BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinations,
                      variable,
                      op)
 {
-    TimeSeriesNumbers tsNumbers;
-    ShortTermStorage::AdditionalConstraints
-      constraints("name", "clusterA", variable, op, true, {}, tsNumbers);
+    ShortTermStorage::AdditionalConstraints constraints("name", "clusterA", variable, op, true, {});
 
     // Create constraints with valid hours
     constraints.constraints.push_back(ShortTermStorage::SingleAdditionalConstraint{{1, 2, 3}});

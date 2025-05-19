@@ -108,19 +108,9 @@ static bool readRHS(const fs::path& rhsPath, TimeSeries& rhsSeries)
     return ret;
 }
 
-struct LoadedData
+static AdditionalConstraintProperties loadProperties(IniFile::Property* first)
 {
-    std::string clusterName;
-    std::string cluster_id;
-    bool enabled = true;
-    std::string variable;
-    std::string operatorType;
-    std::vector<SingleAdditionalConstraint> constraints;
-};
-
-static LoadedData load(IniFile::Property* first)
-{
-    LoadedData ret;
+    AdditionalConstraintProperties ret;
     for (auto* property = first; property; property = property->next)
     {
         const std::string key = property->key;
@@ -165,10 +155,10 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
     for (auto* section = ini.firstSection; section; section = section->next)
     {
         std::string name = section->name.c_str();
-        LoadedData loaded;
+        AdditionalConstraintProperties properties;
         try
         {
-            loaded = load(section->firstProperty);
+            properties = loadProperties(section->firstProperty);
         }
         catch (const std::exception& e)
         {
@@ -177,15 +167,15 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
         }
 
         // We don't want load RHS and link the STS time if the constraint is disabled
-        if (!loaded.enabled)
+        if (!properties.enabled)
         {
-            logs.info() << "Additional constraints disabled for ST " << loaded.cluster_id;
+            logs.info() << "Additional constraints disabled for ST " << properties.cluster_id;
             continue;
         }
 
         auto it = std::ranges::find_if(storagesByIndex,
-                                       [&loaded](const STStorageCluster& cluster)
-                                       { return cluster.id == loaded.cluster_id; });
+                                       [&properties](const STStorageCluster& cluster)
+                                       { return cluster.id == properties.cluster_id; });
         if (it == storagesByIndex.end())
         {
             logs.warning() << " from file " << pathIni;
@@ -196,15 +186,15 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
         else
         {
             AdditionalConstraints additionalConstraints(name,
-                                                        loaded.cluster_id,
-                                                        loaded.variable,
-                                                        loaded.operatorType,
-                                                        loaded.enabled,
-                                                        loaded.constraints,
+                                                        properties.cluster_id,
+                                                        properties.variable,
+                                                        properties.operatorType,
+                                                        properties.enabled,
+                                                        properties.constraints,
                                                         it->timeseriesNumbers);
 
-            if (const auto rhsPath = parentPath / ("rhs_" + name + ".txt");
-                !readRHS(rhsPath, additionalConstraints.rhs()))
+            const auto rhsPath = parentPath / ("rhs_" + name + ".txt");
+            if (!readRHS(rhsPath, additionalConstraints.rhs()))
             {
                 logs.error() << "Error while reading rhs file: " << rhsPath;
                 return false;

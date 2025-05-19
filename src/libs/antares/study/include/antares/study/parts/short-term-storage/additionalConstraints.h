@@ -38,6 +38,16 @@ public:
     bool isValidHoursRange() const;
 };
 
+struct AdditionalConstraintProperties
+{
+    std::string clusterName;
+    std::string cluster_id;
+    bool enabled = true;
+    std::string variable;
+    std::string operatorType;
+    std::vector<SingleAdditionalConstraint> constraints;
+};
+
 class AdditionalConstraints
 {
 public:
@@ -47,8 +57,7 @@ public:
                           std::string variable,
                           std::string operatorType,
                           bool enabled,
-                          std::vector<SingleAdditionalConstraint> constraints,
-                          TimeSeriesNumbers& tsNumbers);
+                          std::vector<SingleAdditionalConstraint> constraints);
 
     AdditionalConstraints(const AdditionalConstraints& other) = default;
     AdditionalConstraints(AdditionalConstraints&& other) noexcept = default;
@@ -63,6 +72,7 @@ public:
     std::vector<SingleAdditionalConstraint> constraints;
 
     struct ValidateResult
+
     {
         bool ok;
         std::string error_msg;
@@ -73,19 +83,19 @@ public:
 
     ValidateResult validate() const;
 
-    TimeSeries ts; ///< contains both tsNumbers and series
-
     TimeSeries& rhs()
     {
-        return ts;
+        return rhs_;
     }
 
     const TimeSeries& rhs() const
     {
-        return ts;
+        return rhs_;
     }
 
 private:
+    TimeSeriesNumbers tsNumbers;
+    TimeSeries rhs_; ///< contains both tsNumbers and series
     bool isValidVariable() const;
     bool isValidOperatorType() const;
 
