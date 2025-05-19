@@ -53,7 +53,7 @@ private:
 
 inline CString<512, false> ShortTermInflowsTSNumberData::get_prefix() const
 {
-    return "st,";
+    return "sts,";
 }
 
 } // namespace Antares::Data::ScenarioBuilder
