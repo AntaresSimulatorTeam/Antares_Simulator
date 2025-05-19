@@ -367,11 +367,11 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     PROBLEME_SIMPLEXE_NOMME Probleme(ProblemeAResoudre->NomDesVariables,
-                                                   ProblemeAResoudre->NomDesContraintes,
-                                                   ProblemeAResoudre->VariablesEntieres,
-                                                   ProblemeAResoudre->basisStatus,
-                                                   problemeHebdo->NamedProblems,
-                                                   options.solverLogs);
+                                     ProblemeAResoudre->NomDesContraintes,
+                                     ProblemeAResoudre->VariablesEntieres,
+                                     ProblemeAResoudre->basisStatus,
+                                     problemeHebdo->NamedProblems,
+                                     options.solverLogs);
 
     bool PremierPassage = true;
 
