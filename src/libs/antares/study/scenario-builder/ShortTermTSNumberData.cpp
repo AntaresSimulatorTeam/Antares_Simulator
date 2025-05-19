@@ -41,13 +41,6 @@ bool ShortTermTSNumberData::apply(Study& study)
         std::string logprefix = "Short term storage: area '" + pArea->name + "', sts: '" + sts.id
                                 + "': ";
         ret = ApplyToMatrix(errors, logprefix, sts.series->inflows, rule[0], tsGenMax) && ret;
-
-        ret = ApplyToMatrix(errors,
-                            logprefix,
-                            const_cast<ShortTermStorage::STStorageCluster&>(sts),
-                            rule[0],
-                            tsGenMax)
-              && ret;
     }
 
     return ret;
