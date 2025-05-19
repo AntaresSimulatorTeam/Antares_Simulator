@@ -74,7 +74,7 @@ bool ShortTermInflowsTSNumberData::reset(const Study& study)
     return true;
 }
 
-void ShortTermTSNumberData::saveToINIFile(Yuni::IO::File::Stream& file) const
+void ShortTermInflowsTSNumberData::saveToINIFile(Yuni::IO::File::Stream& file) const
 {
     // Prefix
     CString<512, false> prefix;
