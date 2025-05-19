@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -87,7 +87,7 @@ struct SimplexResult
 
 static void fillModelerComponents(std::vector<std::unique_ptr<ComponentFiller>>& componentFillers,
                                   std::vector<LinearProblemFiller*>& fillersCollection,
-                                  const Antares::ModelerStudy::SystemModel::System* modelerSystem,
+                                  const ModelerStudy::SystemModel::System* modelerSystem,
                                   VariableDictionary& variableDictionary)
 {
     if (!modelerSystem)
@@ -107,8 +107,8 @@ static void fillModelerComponents(std::vector<std::unique_ptr<ComponentFiller>>&
     }
 }
 
-static void writeModelerSolutions(const operations_research::MPSolver* solver,
-                                  Optimization::PROBLEME_SIMPLEXE_NOMME& Probleme,
+static void writeModelerSolutions(const MPSolver* solver,
+                                  PROBLEME_SIMPLEXE_NOMME& Probleme,
                                   const int optimizationNumber,
                                   const OptPeriodStringGenerator& optPeriodStringGenerator,
                                   IResultWriter& writer)
@@ -196,7 +196,7 @@ MPSolver* convertToMPSolver(const PROBLEME_SIMPLEXE_NOMME& pb,
 
 static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                           PROBLEME_HEBDO* problemeHebdo,
-                                          Optimization::PROBLEME_SIMPLEXE_NOMME& Probleme,
+                                          PROBLEME_SIMPLEXE_NOMME& Probleme,
                                           const int NumIntervalle,
                                           const int optimizationNumber,
                                           const OptPeriodStringGenerator& optPeriodStringGenerator,
@@ -319,7 +319,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     mps_writer->runIfNeeded(writer, filename);
 
     TimeMeasurement measure;
-    solver = ORTOOLS_Simplexe(&Probleme, ProblemeAResoudre.get(), solver, options);
+    solver = ORTOOLS_Simplexe(ProblemeAResoudre.get(), solver, options);
     if (solver != nullptr)
     {
         ProblemeAResoudre->ProblemesSpx[NumIntervalle] = solver;
@@ -366,7 +366,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                          IResultWriter& writer)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
-    Optimization::PROBLEME_SIMPLEXE_NOMME Probleme(ProblemeAResoudre->NomDesVariables,
+    PROBLEME_SIMPLEXE_NOMME Probleme(ProblemeAResoudre->NomDesVariables,
                                                    ProblemeAResoudre->NomDesContraintes,
                                                    ProblemeAResoudre->VariablesEntieres,
                                                    ProblemeAResoudre->basisStatus,

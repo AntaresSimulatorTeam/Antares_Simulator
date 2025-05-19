@@ -20,14 +20,12 @@
 */
 #pragma once
 
-#include <memory>
 #include <string>
 #include <vector>
 
 #include <antares/solver/utils/basis_status.h>
 
 #include "SparseVector.hxx"
-#include "opt_constants.h"
 
 namespace operations_research
 {
