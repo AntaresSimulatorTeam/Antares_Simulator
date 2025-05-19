@@ -119,8 +119,9 @@ void Component::addAreaConnection(const std::string& localPortId, const std::str
 
 std::optional<std::string> Component::areaConnectedToPort(const std::string& portId) const
 {
-    return portToAreaConnections_.contains(portId) ? std::optional(portToAreaConnections_.at(portId))
-                                             : std::nullopt;
+    return portToAreaConnections_.contains(portId)
+             ? std::optional(portToAreaConnections_.at(portId))
+             : std::nullopt;
 }
 
 const std::map<std::string, std::string>& Component::portToAreaConnections() const
