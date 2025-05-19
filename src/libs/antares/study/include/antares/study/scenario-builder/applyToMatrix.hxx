@@ -79,7 +79,7 @@ inline bool CheckValidity<ShortTermStorage::STStorageCluster>(
   const ShortTermStorage::STStorageCluster& sts,
   uint)
 {
-    return value == 1 || value < sts.series->inflows.numberOfColumns();
+    return value < sts.series->inflows.numberOfColumns();
 }
 
 template<class StringT, class D>
