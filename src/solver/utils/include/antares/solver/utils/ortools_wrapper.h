@@ -24,12 +24,14 @@
 #include <string>
 
 #include <antares/optimization-options/options.h>
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 #include "named_problem.h"
 
 using namespace operations_research;
 
 MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
+                           PROBLEME_ANTARES_A_RESOUDRE* problemeHebdo,
                            MPSolver* ProbSpx,
                            const Antares::Solver::Optimization::SingleOptimOptions& options);
 

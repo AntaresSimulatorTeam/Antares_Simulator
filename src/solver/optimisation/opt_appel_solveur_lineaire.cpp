@@ -319,7 +319,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     mps_writer->runIfNeeded(writer, filename);
 
     TimeMeasurement measure;
-    solver = ORTOOLS_Simplexe(&Probleme, solver, options);
+    solver = ORTOOLS_Simplexe(&Probleme, ProblemeAResoudre.get(), solver, options);
     if (solver != nullptr)
     {
         ProblemeAResoudre->ProblemesSpx[NumIntervalle] = solver;
@@ -329,7 +329,6 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     timeMeasure.solveTime = measure.duration_ms();
     optimizationStatistics.addSolveTime(timeMeasure.solveTime);
 
-    ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
     if (ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX && PremierPassage)
     {
         if (ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE)

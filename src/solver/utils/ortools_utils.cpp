@@ -29,6 +29,7 @@
 #include <antares/exception/LoadingError.hpp>
 #include <antares/logs/logs.h>
 #include "antares/antares/Enum.hpp"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/utils/basis_status.h"
 
 using namespace operations_research;
@@ -108,62 +109,62 @@ static bool solverSupportsWarmStart(const MPSolver::OptimizationProblemType solv
 }
 
 static void extractSolutionValues(const std::vector<MPVariable*>& variables,
-                                  Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
+                                  PROBLEME_ANTARES_A_RESOUDRE* problemeAResoudre)
 {
-    int nbVar = problemeSimplexe->NombreDeVariables;
+    int nbVar = problemeAResoudre->NombreDeVariables;
     for (int idxVar = 0; idxVar < nbVar; ++idxVar)
     {
         const MPVariable* var = variables[idxVar];
-        problemeSimplexe->X[idxVar] = var->solution_value();
+        problemeAResoudre->X[idxVar] = var->solution_value();
     }
 }
 
 static void extractReducedCosts(const std::vector<MPVariable*>& variables,
-                                Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
+                                PROBLEME_ANTARES_A_RESOUDRE* problemeAResoudre)
 {
-    int nbVar = problemeSimplexe->NombreDeVariables;
+    int nbVar = problemeAResoudre->NombreDeVariables;
     for (int idxVar = 0; idxVar < nbVar; ++idxVar)
     {
         const MPVariable* var = variables[idxVar];
-        problemeSimplexe->CoutsReduits[idxVar] = var->reduced_cost();
+        problemeAResoudre->CoutsReduits[idxVar] = var->reduced_cost();
     }
 }
 
 static void extractDualValues(const std::vector<MPConstraint*>& constraints,
-                              Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
+                              PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
 {
-    int nbRows = problemeSimplexe->NombreDeContraintes;
+    int nbRows = ProblemeAResoudre->NombreDeContraintes;
     for (int idxRow = 0; idxRow < nbRows; ++idxRow)
     {
         const MPConstraint* row = constraints[idxRow];
-        problemeSimplexe->CoutsMarginauxDesContraintes[idxRow] = row->dual_value();
+        ProblemeAResoudre->CoutsMarginauxDesContraintes[idxRow] = row->dual_value();
     }
 }
 
 static void extract_from_MPSolver(const MPSolver* solver,
-                                  Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
+                                  PROBLEME_ANTARES_A_RESOUDRE* problemeAResoudre)
 {
     assert(solver);
-    assert(problemeSimplexe);
+    assert(problemeAResoudre);
 
-    const bool isMIP = problemeSimplexe->isMIP();
+    const bool isMIP = problemeAResoudre->isMIP();
 
-    extractSolutionValues(solver->variables(), problemeSimplexe);
+    extractSolutionValues(solver->variables(), problemeAResoudre);
 
     if (isMIP)
     {
         // TODO extract dual values & marginal costs from LP with fixed integer variables
-        const int nbVar = problemeSimplexe->NombreDeVariables;
-        std::fill(problemeSimplexe->CoutsReduits, problemeSimplexe->CoutsReduits + nbVar, 0.);
-        const int nbRows = problemeSimplexe->NombreDeContraintes;
-        std::fill(problemeSimplexe->CoutsMarginauxDesContraintes,
-                  problemeSimplexe->CoutsMarginauxDesContraintes + nbRows,
+        const int nbVar = problemeAResoudre->NombreDeVariables;
+        std::fill(problemeAResoudre->CoutsReduits.data(), problemeAResoudre->CoutsReduits.data() + nbVar, 0.);
+        const int nbRows = problemeAResoudre->NombreDeContraintes;
+        std::fill(problemeAResoudre->CoutsMarginauxDesContraintes.data(),
+                  problemeAResoudre->CoutsMarginauxDesContraintes.data() + nbRows,
                   0.);
     }
     else
     {
-        extractReducedCosts(solver->variables(), problemeSimplexe);
-        extractDualValues(solver->constraints(), problemeSimplexe);
+        extractReducedCosts(solver->variables(), problemeAResoudre);
+        extractDualValues(solver->constraints(), problemeAResoudre);
     }
 }
 
@@ -243,6 +244,7 @@ static bool doWeStoreSolverBasis(const SingleOptimOptions& options, const MPSolv
 }
 
 MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
+                           PROBLEME_ANTARES_A_RESOUDRE* problemeAResoudre,
                            MPSolver* solver,
                            const SingleOptimOptions& options)
 {
@@ -260,9 +262,9 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
         Probleme->basisStatus.setStartingBasis(solver);
     }
 
-    if (solveAndManageStatus(solver, Probleme->ExistenceDUneSolution, params))
+    if (solveAndManageStatus(solver, problemeAResoudre->ExistenceDUneSolution, params))
     {
-        extract_from_MPSolver(solver, Probleme);
+        extract_from_MPSolver(solver, problemeAResoudre);
         if (doWeStoreSolverBasis(options, solver))
         {
             Probleme->basisStatus.extractBasis(solver);
