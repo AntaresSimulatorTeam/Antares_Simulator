@@ -413,12 +413,13 @@ bool Rules::readShortTermStorage(const AreaName::Vector& splitKey,
     {
         return false;
     }
-    const std::string stStorageClusterName = splitKey[2];
+    const uint year = splitKey[2].to<uint>();
+
+    const std::string stStorageClusterName = splitKey[3];
     if (!DoesSTStorageClusterExist(area, stStorageClusterName))
     {
         return false;
     }
-    const uint year = splitKey[3].to<uint>();
     shortTermStorage[area->index].setTSnumber(stStorageClusterName,
                                               year,
                                               fromStringToTSnumber(value));
