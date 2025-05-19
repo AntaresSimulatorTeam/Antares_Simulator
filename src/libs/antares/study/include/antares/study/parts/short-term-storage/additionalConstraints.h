@@ -84,7 +84,7 @@ public:
     }
 
 private:
-    TimeSeriesNumbers tsNumbers;
+    TimeSeriesNumbers tsNumbers_;
     TimeSeries rhs_; ///< contains both tsNumbers and series
     bool isValidVariable() const;
     bool isValidOperatorType() const;

@@ -26,7 +26,7 @@
 namespace Antares::Data::ShortTermStorage
 {
 AdditionalConstraints::AdditionalConstraints():
-    rhs_(tsNumbers)
+    rhs_(tsNumbers_)
 {
 }
 
@@ -42,7 +42,7 @@ AdditionalConstraints::AdditionalConstraints(std::string name,
     operatorType(operatorType),
     enabled(enabled),
     constraints(constraints),
-    rhs_(tsNumbers)
+    rhs_(tsNumbers_)
 {
 }
 
