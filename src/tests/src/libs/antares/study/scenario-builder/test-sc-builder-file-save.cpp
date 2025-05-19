@@ -503,10 +503,10 @@ BOOST_FIXTURE_TEST_CASE(
     saveScenarioBuilder();
     // Build reference scenario builder file
     referenceFile.append("[my rule name]");
-    referenceFile.append("bc,group1,5=20");
-    referenceFile.append("bc,group2,19=1");
-    referenceFile.append("bc,group3,5=43");
-    referenceFile.append("bc,group3,10=6");
+    referenceFile.append("bc,group1,5 = 20");
+    referenceFile.append("bc,group2,19 = 1");
+    referenceFile.append("bc,group3,5 = 43");
+    referenceFile.append("bc,group3,10 = 6");
 
     referenceFile.write();
     BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));

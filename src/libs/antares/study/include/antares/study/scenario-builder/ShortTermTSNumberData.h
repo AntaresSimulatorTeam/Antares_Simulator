@@ -41,7 +41,7 @@ public:
         pArea = area;
     }
 
-    void saveToINIFile(Yuni::IO::File::Stream& file) const override;
+    void saveToINIFile(Yuni::IO::File::Stream& file) const;
 
     void setTSnumber(const std::string& cluster_name, unsigned year, unsigned value);
     unsigned get_value(const std::string& cluster_name, unsigned year) const;
