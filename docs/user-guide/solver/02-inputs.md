@@ -80,7 +80,7 @@ bc,group,year = TS number
 | Links                | ntc    |
 | Thermal cluster      | t      |
 | Renewable cluster    | r      |
-| Short-term storage   | st     |
+| Short-term storage   | sts    |
 | Binding constraints  | bc     |
 
 ## Definition of regional districts
