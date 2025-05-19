@@ -136,21 +136,21 @@ static void writeModelerSolutions(const operations_research::MPSolver* solver,
 
 FillContext buildFillContext(PROBLEME_HEBDO* problemeHebdo, int NumIntervalle)
 {
-    unsigned firstTimestamp, lastTimestamp;
-    auto nTsInDay = static_cast<unsigned int>(problemeHebdo->NombreDePasDeTempsDUneJournee);
+    unsigned firstTimestep, lastTimestep;
+    auto nTsInDay = static_cast<unsigned>(problemeHebdo->NombreDePasDeTempsDUneJournee);
     if (problemeHebdo->OptimisationAuPasHebdomadaire)
     {
-        firstTimestamp = problemeHebdo->weekInTheYear * nTsInDay * problemeHebdo->NombreDeJours;
-        lastTimestamp = firstTimestamp + nTsInDay * problemeHebdo->NombreDeJours - 1;
+        firstTimestep = problemeHebdo->weekInTheYear * nTsInDay * problemeHebdo->NombreDeJours;
+        lastTimestep = firstTimestep + nTsInDay * problemeHebdo->NombreDeJours - 1;
     }
     else
     {
-        firstTimestamp = (problemeHebdo->weekInTheYear * problemeHebdo->NombreDeJours
-                          + static_cast<unsigned int>(NumIntervalle))
-                         * nTsInDay;
-        lastTimestamp = firstTimestamp + nTsInDay - 1;
+        firstTimestep = (problemeHebdo->weekInTheYear * problemeHebdo->NombreDeJours
+                         + static_cast<unsigned>(NumIntervalle))
+                        * nTsInDay;
+        lastTimestep = firstTimestep + nTsInDay - 1;
     }
-    return FillContext(firstTimestamp, lastTimestamp);
+    return FillContext(firstTimestep, lastTimestep);
 }
 
 // Returns a non-owning pointer
@@ -165,7 +165,7 @@ MPSolver* convertToMPSolver(const PROBLEME_SIMPLEXE_NOMME& pb,
 
     std::vector<std::unique_ptr<ComponentFiller>> componentFillers;
     VariableDictionary variableDictionary;
-    ComponentToAreaConnectionFiller compatibilityFiller(
+    ComponentToAreaConnectionFiller componentToAreaConnectionFiller(
       &pb,
       problemeHebdo->NombreDePasDeTempsPourUneOptimisation,
       problemeHebdo->modelerSystem,
@@ -180,7 +180,7 @@ MPSolver* convertToMPSolver(const PROBLEME_SIMPLEXE_NOMME& pb,
 
         // Add compatibility filler that connects components to areas
         // Must be the last one, because it uses constraints defined by the other fillers !!
-        fillersCollection.push_back(&compatibilityFiller);
+        fillersCollection.push_back(&componentToAreaConnectionFiller);
     }
 
     FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);

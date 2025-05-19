@@ -103,7 +103,7 @@ public:
 
     std::optional<std::string> areaConnectedToPort(const std::string& portId) const;
 
-    const std::map<std::string, std::string>& areaConnectionPerPort() const;
+    const std::map<std::string, std::string>& portToAreaConnections() const;
 
 private:
     // Only ComponentBuilder is allowed to build Component instances
@@ -111,7 +111,7 @@ private:
     explicit Component(const ComponentData& component_data);
     ComponentData data_;
     std::map<std::string, std::vector<ConnectionEnd>> componentConnectionEnds_;
-    std::map<std::string, std::string> areaConnections_;
+    std::map<std::string, std::string> portToAreaConnections_;
 };
 
 class ComponentBuilder

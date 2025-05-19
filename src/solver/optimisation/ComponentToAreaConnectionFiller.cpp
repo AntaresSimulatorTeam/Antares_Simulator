@@ -21,6 +21,7 @@
 
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
 
+#include <boost/algorithm/string/case_conv.hpp>
 #include <boost/regex.hpp>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
@@ -35,12 +36,12 @@ namespace Antares::Optimization
 
 ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
   const PROBLEME_SIMPLEXE_NOMME* problemeSimplexe,
-  unsigned int nTimestampsInProblem,
+  unsigned int nTimestepsInProblem,
   const ModelerStudy::SystemModel::System* modelerSystem,
   const VariableDictionary& modelerVariableDictionary):
     modelerSystem_(modelerSystem),
     modelerVariableDictionary_(modelerVariableDictionary),
-    nTimestampsInProblem_(nTimestampsInProblem)
+    nTimestepsInProblem_(nTimestepsInProblem)
 {
     parseConstraintIds(problemeSimplexe);
 }
@@ -69,7 +70,7 @@ void ComponentToAreaConnectionFiller::parseConstraintIds(
             std::string areaId = matches[1].str();
             unsigned int ts = std::stoul(matches[2].str());
             auto id = getLegacyConstraintName(problemeSimplexe, idxRow);
-            balanceConstraintPerAreaAndTimestamp_.emplace(std::make_pair(areaId, ts), id);
+            balanceConstraintPerAreaAndTimestep_.emplace(std::make_pair(areaId, ts), id);
         }
     }
 }
@@ -84,32 +85,48 @@ void ComponentToAreaConnectionFiller::addVariables(ILinearProblem& pb,
 static std::string getConnectionFieldId(const ModelerStudy::SystemModel::Component& component,
                                         const std::string& portId)
 {
-    auto optionalField = component.getModel()->Ports().at(portId).Type().AreaConnectionFieldId();
-    if (!optionalField.has_value())
+    auto field = component.getModel()->Ports().at(portId).Type().AreaConnectionFieldId();
+    if (!field.has_value())
     {
         throw Error::RuntimeError("Component \"" + component.Id()
                                   + "\" is connected to an area using a port type that has no "
                                     "area-connection field defined.");
     }
-    return optionalField.value();
+    return field.value();
 }
 
 IMipConstraint* ComponentToAreaConnectionFiller::getBalanceConstraint(ILinearProblem& pb,
                                                                       const std::string& areaId,
                                                                       unsigned ts) const
 {
-    auto key = std::make_pair(areaId, ts % nTimestampsInProblem_);
-    if (balanceConstraintPerAreaAndTimestamp_.contains(key))
+    auto key = std::make_pair(areaId, ts % nTimestepsInProblem_);
+    if (const auto it = balanceConstraintPerAreaAndTimestep_.find(key);
+        it != balanceConstraintPerAreaAndTimestep_.end())
     {
-        const auto id = balanceConstraintPerAreaAndTimestamp_.at(key);
-        if (auto* ct = pb.lookupConstraint(id))
+        if (auto* ct = pb.lookupConstraint(it->second))
         {
             return ct;
         }
     }
     throw Error::RuntimeError("A component is connected to area \"" + areaId
-                              + "\", that does not have a balance constraint defined for timestamp "
+                              + "\", that does not have a balance constraint defined for timestep "
                               + std::to_string(ts));
+}
+
+void ComponentToAreaConnectionFiller::addExpressionToConstraint(
+  const LinearExpression& expression,
+  IMipConstraint* areaBalanceConstraint) const
+{
+    // Contribution is added to the left-hand side of the constraint
+    // We invert the sign bc modeler is in "gen>0, load<0" convention
+    // legacy constraint is in "gen<0, load>0" convention
+    for (const auto& [varKey, coef]: expression.coefPerVar())
+    {
+        auto* var = modelerVariableDictionary_[varKey];
+        areaBalanceConstraint->setCoefficient(var, -coef);
+    }
+    areaBalanceConstraint->setBounds(areaBalanceConstraint->getLb() + expression.offset(),
+                                     areaBalanceConstraint->getUb() + expression.offset());
 }
 
 void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
@@ -120,28 +137,18 @@ void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
   const std::string& portId,
   const std::string& areaId)
 {
-    std::string fieldId = getConnectionFieldId(component, portId);
+    std::string injectionFieldId = getConnectionFieldId(component, portId);
     const Expressions::Visitors::EvaluationContext
       connectedComponentEvalContext(component.getParameterValues(), {}, data);
     ReadLinearExpressionVisitor visitor(connectedComponentEvalContext, ctx, component);
     auto timeDependentLinearExpression = visitor.dispatch(
-      component.nodeAtPortField(portId, fieldId));
-    // Transform areaId to lower case
+      component.nodeAtPortField(portId, injectionFieldId));
     std::string lowerAreaId = areaId;
-    std::transform(lowerAreaId.begin(), lowerAreaId.end(), lowerAreaId.begin(), ::tolower);
+    boost::algorithm::to_lower(lowerAreaId);
     for (const auto& [ts, expression]: timeDependentLinearExpression.GetLinearExpressions())
     {
         IMipConstraint* areaBalanceConstraint = getBalanceConstraint(pb, lowerAreaId, ts);
-        // Contribution is added to the left-hand side of the constraint
-        // We invert the sign bc modeler is in "gen>0, load<0" convention
-        // legacy constraint is in "gen<0, load>0" convention
-        for (const auto& [varKey, coef]: expression.coefPerVar())
-        {
-            auto* var = modelerVariableDictionary_[varKey];
-            areaBalanceConstraint->setCoefficient(var, -coef);
-        }
-        areaBalanceConstraint->setBounds(areaBalanceConstraint->getLb() + expression.offset(),
-                                         areaBalanceConstraint->getUb() + expression.offset());
+        addExpressionToConstraint(expression, areaBalanceConstraint);
     }
 }
 
@@ -151,7 +158,7 @@ void ComponentToAreaConnectionFiller::addConstraints(ILinearProblem& pb,
 {
     for (auto component: modelerSystem_->Components() | std::ranges::views::values)
     {
-        for (const auto& [portId, areaId]: component.areaConnectionPerPort())
+        for (const auto& [portId, areaId]: component.portToAreaConnections())
         {
             addComponentPortContributionToArea(pb, data, ctx, component, portId, areaId);
         }

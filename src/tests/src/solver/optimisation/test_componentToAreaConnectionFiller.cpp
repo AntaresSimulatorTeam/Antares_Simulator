@@ -129,7 +129,6 @@ system:
 struct ComponentToAreaConnectionFillerFixture
 {
     std::unique_ptr<PROBLEME_SIMPLEXE_NOMME> problemeSimplexe;
-    unsigned int nTimestampsInProblem{};
     VariableDictionary modelerVariableDictionary;
     std::unique_ptr<System> modelerSystem;
     std::vector<Library> libraries;
@@ -324,7 +323,7 @@ BOOST_AUTO_TEST_CASE(fail_if_constraint_not_defined)
     BOOST_CHECK_EXCEPTION(fillProblem(0, 0, {4.0}),
                           std::runtime_error,
                           checkMessage("A component is connected to area \"area1\", that does not "
-                                       "have a balance constraint defined for timestamp 0"));
+                                       "have a balance constraint defined for timestep 0"));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

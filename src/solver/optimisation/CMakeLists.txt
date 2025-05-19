@@ -208,7 +208,6 @@ target_link_libraries(model_antares
         Antares::benchmarking
         Antares::optimization-options
         Antares::lps
-        Boost::headers
         PRIVATE
         infeasible_problem_analysis
         Antares::linear-problem-api
@@ -217,6 +216,7 @@ target_link_libraries(model_antares
         # modeler
         Antares::optim-model-filler
         Antares::antares-study-system-model
+        Boost::headers
 )
 
 target_include_directories(model_antares

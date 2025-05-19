@@ -22,6 +22,7 @@
 #pragma once
 
 #include "antares/optimisation/linear-problem-api/linearProblemFiller.h"
+#include "antares/solver/optim-model-filler/LinearExpression.h"
 #include "antares/solver/optim-model-filler/VariableDictionary.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/utils/named_problem.h"
@@ -33,7 +34,7 @@ class ComponentToAreaConnectionFiller: public Optimisation::LinearProblemApi::Li
 {
 public:
     explicit ComponentToAreaConnectionFiller(const PROBLEME_SIMPLEXE_NOMME* problemeSimplexe,
-                                             unsigned int nTimestampsInProblem,
+                                             unsigned int nTimestepsInProblem,
                                              const ModelerStudy::SystemModel::System* modelerSystem,
                                              const VariableDictionary& modelerVariableDictionary);
     void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
@@ -48,20 +49,23 @@ public:
 
 private:
     using AreaId = std::string;
-    using Timestamp = unsigned int;
-    using AreaAndTimestamp = std::pair<AreaId, Timestamp>;
+    using Timestep = unsigned int;
+    using AreaAndTimestep = std::pair<AreaId, Timestep>;
     using BalanceConstraintId = std::string;
 
     const ModelerStudy::SystemModel::System* modelerSystem_;
     const VariableDictionary& modelerVariableDictionary_;
-    std::map<AreaAndTimestamp, BalanceConstraintId> balanceConstraintPerAreaAndTimestamp_;
-    const unsigned int nTimestampsInProblem_;
+    std::map<AreaAndTimestep, BalanceConstraintId> balanceConstraintPerAreaAndTimestep_;
+    const unsigned int nTimestepsInProblem_;
 
     void parseConstraintIds(const PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
     Optimisation::LinearProblemApi::IMipConstraint* getBalanceConstraint(
       Optimisation::LinearProblemApi::ILinearProblem& pb,
       const std::string& areaId,
       unsigned ts) const;
+    void addExpressionToConstraint(
+      const LinearExpression& expression,
+      Optimisation::LinearProblemApi::IMipConstraint* areaBalanceConstraint) const;
     void addComponentPortContributionToArea(
       Optimisation::LinearProblemApi::ILinearProblem& pb,
       Optimisation::LinearProblemApi::ILinearProblemData& data,
