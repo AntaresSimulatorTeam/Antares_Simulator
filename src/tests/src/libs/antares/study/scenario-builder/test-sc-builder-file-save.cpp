@@ -545,7 +545,7 @@ BOOST_FIXTURE_TEST_CASE(
     referenceFile.append("w,area 3,19 = 17");
     referenceFile.append("t,area 1,19,th-cluster-11 = 8");
     referenceFile.append("ntc,area 1,area 3,19 = 8");
-    referenceFile.append("st,area 1,0,sts-1 = 5");
+    referenceFile.append("sts,area 1,0,sts-1 = 5");
     referenceFile.append("ntc,area 2,area 3,2 = 4");
     referenceFile.append("t,area 3,5,th-cluster-31 = 13");
     referenceFile.append("r,area 3,5,rn-cluster-32 = 13");
