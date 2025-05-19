@@ -175,7 +175,9 @@ struct ComponentToAreaConnectionFillerFixture
         }
     }
 
-    void setUpLegacyLp(std::vector<std::string>& constraintNames, bool useNamedProblems, double rhs)
+    void addEmptyConstraints(std::vector<std::string>& constraintNames,
+                             bool useNamedProblems,
+                             double rhs)
     {
         if (useNamedProblems)
         {
@@ -190,6 +192,11 @@ struct ComponentToAreaConnectionFillerFixture
             }
             addEmptyConstraints(lpConstraintNames, rhs);
         }
+    }
+
+    void setUpLegacyLp(std::vector<std::string>& constraintNames, bool useNamedProblems, double rhs)
+    {
+        addEmptyConstraints(constraintNames, useNamedProblems, rhs);
         BasisStatus bs;
         std::vector<std::string> variables;
         std::vector<bool> binaries;
