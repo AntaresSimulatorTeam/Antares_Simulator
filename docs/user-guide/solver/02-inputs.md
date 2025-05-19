@@ -42,14 +42,14 @@ Indices for TS numbers start at **1**. Indices for years start at **0**.
 Wind, solar, load, hydro objects are unique in their area. Implicitely, they are referred to with a prefix and an area identifier.
 
 ```
-prefix, area, year = TS number
+prefix,area,year = TS number
 ```
 
 ### Links
 For links, the format is
 
 ```
-ntc, area1, area2, year = TS number
+ntc,area1,area2,year = TS number
 ```
 For best results, `area1 < area2` in lexicographic order.
 
@@ -58,14 +58,14 @@ For best results, `area1 < area2` in lexicographic order.
 For Thermal clusters, renewable clusters and short-term storage inflows, the format is as follows
 
 ```
-prefix, area, year, object = TS number
+prefix,area,year,object = TS number
 ```
 
 ### Binding constraints
 The case of binding constraints is a bit specific. Each binding constraint has a group, which is used exclusively to scenarize the RHS of all the constraints in the group.
 
 ```
-bc, group, year = TS number
+bc,group,year = TS number
 ```
 
 ### List of prefixes
