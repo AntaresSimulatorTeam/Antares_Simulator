@@ -355,6 +355,8 @@ jobs:
         run: |
           cd _build
           ODIR=${{ env.ORTOOLS_DIR }}
+          set -x
+          ls ${ODIR//\\//}/install/lib/*.dll*
           zip -r antares-solver_windows.zip solver/Release/antares-solver.exe solver/Release/*.dll ${ODIR//\\//}/install/lib/*.dll*
 
       - name: NSIS Installer creation
