@@ -38,16 +38,6 @@ public:
     bool isValidHoursRange() const;
 };
 
-struct AdditionalConstraintProperties
-{
-    std::string clusterName;
-    std::string cluster_id;
-    bool enabled = true;
-    std::string variable;
-    std::string operatorType;
-    std::vector<SingleAdditionalConstraint> constraints;
-};
-
 class AdditionalConstraints
 {
 public:
