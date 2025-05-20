@@ -14,7 +14,7 @@ Feature: short tests
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 5 seconds
-    And the annual system cost is 2.729e+7
+    And the annual system cost is 27288600
     And in area "AREA", during year 1, loss of load lasts 1 hours
     And in area "AREA", unsupplied energy on "2 JAN 09:00" of year 1 is of 52 MW
 
@@ -24,7 +24,7 @@ Feature: short tests
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 5 seconds
-    And the annual system cost is 2.751e+7
+    And the annual system cost is 27514500
     And in area "AREA", during year 1, loss of load lasts 1 hours
     And in area "AREA", unsupplied energy on "2 JAN 09:00" of year 1 is of 52 MW
     And in area "AREA", during year 1, hourly production of "non-dispatchable semi base" is always equal to 300 MWh
@@ -35,7 +35,7 @@ Feature: short tests
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 5 seconds
-    And the annual system cost is 2.751e+7
+    And the annual system cost is 27514500
     And in area "AREA", during year 1, loss of load lasts 1 hours
     And in area "AREA", unsupplied energy on "2 JAN 09:00" of year 1 is of 52 MW
     And in area "AREA", during year 1, hourly production of "semi base" is always greater than 300 MWh
@@ -46,7 +46,7 @@ Feature: short tests
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 5 seconds
-    And the annual system cost is 2.75816e+07
+    And the annual system cost is 27581600
     And in area "AREA", the units of "base" produce between 400 and 900 MWh hourly
     And in area "AREA", the units of "semi base" produce between 100 and 300 MWh hourly
     And in area "AREA", the units of "peak" produce between 10 and 100 MWh hourly
@@ -108,7 +108,9 @@ Feature: short tests
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 5 seconds
-    And the annual system cost is 2.97339e+07
+    # Because of NODU optimal values after optim-nb-1 that are different between solvers,
+    # heuristic results and optim-nb-2 results can differ. This is under investigation
+    And the annual system cost is 2.97339e+07 with the linear solver sirius and 2.97336e+07 with the others
     And in area "AREA", during year 1, total non-proportional cost is 1680900
     And in area "AREA", the units of "base" produce between 400 and 900 MWh hourly
     And in area "AREA", the units of "semi base" produce between 100 and 300 MWh hourly

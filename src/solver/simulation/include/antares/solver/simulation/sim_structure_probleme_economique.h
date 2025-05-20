@@ -149,7 +149,6 @@ struct CONTRAINTES_COUPLANTES
 
     std::vector<double> SecondMembreDeLaContrainteCouplante;
 
-    int NombreDElementsDansLaContrainteCouplante;
     int NombreDInterconnexionsDansLaContrainteCouplante;
 
     std::vector<double> PoidsDeLInterconnexion;

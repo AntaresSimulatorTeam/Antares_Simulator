@@ -30,6 +30,7 @@
 #include "antares/optimization-options/options.h"
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
+#include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
 #include "antares/solver/optimisation/LegacyFiller.h"
 #include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
@@ -81,6 +82,7 @@ struct SimplexResult
     bool success = false;
     TIME_MEASURE timeMeasure;
     mpsWriterFactory mps_writer_factory;
+    double objectiveValue;
 };
 
 static void fillModelerComponents(std::vector<std::unique_ptr<ComponentFiller>>& componentFillers,
@@ -132,9 +134,29 @@ static void writeModelerSolutions(const operations_research::MPSolver* solver,
     writer.addEntryFromBuffer(modelerSolutionFilename, content);
 }
 
+FillContext buildFillContext(PROBLEME_HEBDO* problemeHebdo, int NumIntervalle)
+{
+    unsigned firstTimestep, lastTimestep;
+    auto nTsInDay = static_cast<unsigned>(problemeHebdo->NombreDePasDeTempsDUneJournee);
+    if (problemeHebdo->OptimisationAuPasHebdomadaire)
+    {
+        firstTimestep = problemeHebdo->weekInTheYear * nTsInDay * problemeHebdo->NombreDeJours;
+        lastTimestep = firstTimestep + nTsInDay * problemeHebdo->NombreDeJours - 1;
+    }
+    else
+    {
+        firstTimestep = (problemeHebdo->weekInTheYear * problemeHebdo->NombreDeJours
+                         + static_cast<unsigned>(NumIntervalle))
+                        * nTsInDay;
+        lastTimestep = firstTimestep + nTsInDay - 1;
+    }
+    return FillContext(firstTimestep, lastTimestep);
+}
+
 // Returns a non-owning pointer
-MPSolver* convertToMPSolver(const Optimization::PROBLEME_SIMPLEXE_NOMME& pb,
+MPSolver* convertToMPSolver(const PROBLEME_SIMPLEXE_NOMME& pb,
                             PROBLEME_HEBDO* problemeHebdo,
+                            const int NumIntervalle,
                             const SingleOptimOptions& options)
 {
     LegacyOrtoolsLinearProblem ortoolsProblem(pb.isMIP(), options.solverName);
@@ -142,15 +164,26 @@ MPSolver* convertToMPSolver(const Optimization::PROBLEME_SIMPLEXE_NOMME& pb,
     std::vector<LinearProblemFiller*> fillersCollection = {&legacyOrtoolsFiller};
 
     std::vector<std::unique_ptr<ComponentFiller>> componentFillers;
-    // All LP variables coordinates (component id, variable id, scenario, time step)
     VariableDictionary variableDictionary;
-    fillModelerComponents(componentFillers,
-                          fillersCollection,
-                          problemeHebdo->modelerSystem,
-                          variableDictionary);
+    ComponentToAreaConnectionFiller componentToAreaConnectionFiller(
+      &pb,
+      problemeHebdo->NombreDePasDeTempsPourUneOptimisation,
+      problemeHebdo->modelerSystem,
+      variableDictionary);
+    if (problemeHebdo->modelerSystem)
+    {
+        // All LP variables coordinates (component id, variable id, scenario, time step)
+        fillModelerComponents(componentFillers,
+                              fillersCollection,
+                              problemeHebdo->modelerSystem,
+                              variableDictionary);
 
-    FillContext fillCtx(problemeHebdo->weekInTheYear * 168 + 0,
-                        problemeHebdo->weekInTheYear * 168 + 167);
+        // Add compatibility filler that connects components to areas
+        // Must be the last one, because it uses constraints defined by the other fillers !!
+        fillersCollection.push_back(&componentToAreaConnectionFiller);
+    }
+
+    FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
     LinearProblemBuilder linearProblemBuilder(fillersCollection);
 
     // Note that the modeler is only called for the 1st simulation week,
@@ -272,7 +305,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
 
     if (solver == nullptr)
     {
-        solver = convertToMPSolver(Probleme, problemeHebdo, options);
+        solver = convertToMPSolver(Probleme, problemeHebdo, NumIntervalle, options);
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
@@ -312,18 +345,18 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
 
             return {.success = false,
                     .timeMeasure = timeMeasure,
-                    .mps_writer_factory = mps_writer_factory};
+                    .mps_writer_factory = mps_writer_factory,
+                    .objectiveValue = 0};
         }
-
-        else
-        {
-            throw FatalError("Internal error: insufficient memory");
-        }
+        throw FatalError("Internal error: insufficient memory");
     }
 
     writeModelerSolutions(solver, Probleme, optimizationNumber, optPeriodStringGenerator, writer);
 
-    return {.success = true, .timeMeasure = timeMeasure, .mps_writer_factory = mps_writer_factory};
+    return {.success = true,
+            .timeMeasure = timeMeasure,
+            .mps_writer_factory = mps_writer_factory,
+            .objectiveValue = solver != nullptr ? solver->Objective().Value() : 0};
 }
 
 bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
@@ -373,12 +406,10 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         }
 
         double* pt;
-        double CoutOpt = 0.0;
+        double optimizationCost = simplexResult.objectiveValue;
 
         for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; i++)
         {
-            CoutOpt += ProblemeAResoudre->CoutLineaire[i] * ProblemeAResoudre->X[i];
-
             pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i];
             if (pt != nullptr)
             {
@@ -401,11 +432,13 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         // TODO remove this if..else
         if (optimizationNumber == PREMIERE_OPTIMISATION)
         {
-            problemeHebdo->coutOptimalSolution1[NumIntervalle] = CoutOpt;
+            problemeHebdo->coutOptimalSolution1[static_cast<unsigned int>(NumIntervalle)]
+              = optimizationCost;
         }
         else
         {
-            problemeHebdo->coutOptimalSolution2[NumIntervalle] = CoutOpt;
+            problemeHebdo->coutOptimalSolution2[static_cast<unsigned int>(NumIntervalle)]
+              = optimizationCost;
         }
         for (int Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
         {
@@ -426,7 +459,8 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
 
         Probleme.SetUseNamedProblems(true);
 
-        std::unique_ptr<MPSolver> MPproblem(convertToMPSolver(Probleme, problemeHebdo, options));
+        std::unique_ptr<MPSolver> MPproblem(
+          convertToMPSolver(Probleme, problemeHebdo, NumIntervalle, options));
 
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());
