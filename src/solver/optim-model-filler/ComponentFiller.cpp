@@ -163,10 +163,18 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
                                                                data);
 
     Expressions::Visitors::EvalVisitor evaluator(evaluationContext, ctx);
+    auto valueOrDefault = [&evaluator](const auto& node, double defaultValue)
+    {
+        if (node.Empty())
+        {
+            return Expressions::Visitors::EvaluationResult(defaultValue);
+        }
+        return evaluator.dispatch(node.RootNode());
+    };
     for (const auto& variable: component_.getModel()->Variables() | std::views::values)
     {
-        const auto& lb = evaluator.dispatch(variable.LowerBound().RootNode());
-        const auto& ub = evaluator.dispatch(variable.UpperBound().RootNode());
+        const auto& lb = valueOrDefault(variable.LowerBound(), -std::numeric_limits<double>::infinity());
+        const auto& ub = valueOrDefault(variable.UpperBound(), std::numeric_limits<double>::infinity());
         const PartialKey key(component_.Id(), variable.Id());
         if (variable.isTimeDependent())
         {
