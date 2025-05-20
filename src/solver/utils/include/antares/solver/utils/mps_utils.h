@@ -45,7 +45,7 @@ public:
     virtual ~I_MPS_writer() = default;
     virtual void runIfNeeded(Solver::IResultWriter& writer,
                              const std::string& filename,
-                             bool forceNamedProblems = false)
+                             bool forceNamedProblems)
       = 0;
 
 protected:
@@ -61,7 +61,7 @@ public:
     fullMPSwriter(PROBLEME_HEBDO* problemeHebdo, uint currentOptimNumber);
     void runIfNeeded(Solver::IResultWriter& writer,
                      const std::string& filename,
-                     bool forceNamedProblems = false) override;
+                     bool forceNamedProblems) override;
 
 private:
     PROBLEME_HEBDO* problemeHebdo_ = nullptr;
@@ -74,7 +74,7 @@ public:
     fullOrToolsMPSwriter(MPSolver* solver, uint currentOptimNumber);
     void runIfNeeded(Solver::IResultWriter& writer,
                      const std::string& filename,
-                     bool forceNamedProblems = false) override;
+                     bool forceNamedProblems) override;
 
 private:
     MPSolver* solver_ = nullptr;
@@ -88,7 +88,7 @@ public:
 
     void runIfNeeded(Solver::IResultWriter& /*writer*/,
                      const std::string& /*filename*/,
-                     bool forceNamedProblems = false) override
+                     bool forceNamedProblems) override
     {
         // Does nothing
     }
@@ -98,7 +98,10 @@ class mpsWriterFactory
 {
 public:
     virtual ~mpsWriterFactory() = default;
-    mpsWriterFactory(PROBLEME_HEBDO* problemeHebdo, int current_optim_number, MPSolver* solver);
+    mpsWriterFactory(Data::mpsExportStatus exportMPS,
+                     bool exportMPSOnError,
+                     int current_optim_number,
+                     MPSolver* solver);
 
     std::unique_ptr<I_MPS_writer> create();
     std::unique_ptr<I_MPS_writer> createOnOptimizationError();
@@ -109,7 +112,6 @@ private:
     bool doWeExportMPS();
 
     // Member data...
-    PROBLEME_HEBDO* problemeHebdo_ = nullptr;
     Data::mpsExportStatus export_mps_;
     bool export_mps_on_error_;
     MPSolver* solver_ = nullptr;

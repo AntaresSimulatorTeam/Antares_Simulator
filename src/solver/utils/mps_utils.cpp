@@ -168,12 +168,12 @@ void fullOrToolsMPSwriter::runIfNeeded(Solver::IResultWriter& writer,
     ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver_, writer, filename);
 }
 
-mpsWriterFactory::mpsWriterFactory(PROBLEME_HEBDO* problemeHebdo,
+mpsWriterFactory::mpsWriterFactory(Data::mpsExportStatus exportMPS,
+                                   bool exportMPSOnError,
                                    const int current_optim_number,
                                    MPSolver* solver):
-    problemeHebdo_(problemeHebdo),
-    export_mps_(problemeHebdo->ExportMPS),
-    export_mps_on_error_(problemeHebdo->exportMPSOnError),
+    export_mps_(exportMPS),
+    export_mps_on_error_(exportMPSOnError),
     solver_(solver),
     current_optim_number_(current_optim_number)
 {

@@ -251,10 +251,13 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
-    mpsWriterFactory mps_writer_factory(problemeHebdo, optimizationNumber, solver);
+    mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
+                                        problemeHebdo->exportMPSOnError,
+                                        optimizationNumber,
+                                        solver);
 
     auto mps_writer = mps_writer_factory.create();
-    mps_writer->runIfNeeded(writer, filename);
+    mps_writer->runIfNeeded(writer, filename, false);
 
     TimeMeasurement measure;
     solver = ORTOOLS_Simplexe(ProblemeAResoudre.get(), solver, options);
