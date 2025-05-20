@@ -25,12 +25,12 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-class STStorageCluster;
+class AdditionalConstraints;
 }
 
 namespace Antares::Data::ScenarioBuilder
 {
-class ShortTermInflowsTSNumberData: public TSNumberData
+class ShortTermAdditionalConstraintsTSNumberData: public TSNumberData
 {
 public:
     bool apply(Study& study) override;
@@ -39,24 +39,26 @@ public:
 
     bool reset(const Study& study) override;
 
-    void attachArea(const Area* area)
+    void attachArea(Area* area)
     {
         pArea = area;
     }
 
     void saveToINIFile(Yuni::IO::File::Stream& file) const;
 
-    void setTSnumber(const ShortTermStorage::STStorageCluster* sts, unsigned year, unsigned value);
-    unsigned get_value(const ShortTermStorage::STStorageCluster* sts, unsigned year) const;
+    void setTSnumber(const ShortTermStorage::AdditionalConstraints* ct,
+                     unsigned year,
+                     unsigned value);
+    unsigned get_value(const ShortTermStorage::AdditionalConstraints* ct, unsigned year) const;
 
 private:
-    std::map<const ShortTermStorage::STStorageCluster*, MatrixType> rules_;
-    const Area* pArea;
+    std::map<const ShortTermStorage::AdditionalConstraints*, MatrixType> rules_;
+    Area* pArea;
 };
 
-inline CString<512, false> ShortTermInflowsTSNumberData::get_prefix() const
+inline CString<512, false> ShortTermAdditionalConstraintsTSNumberData::get_prefix() const
 {
-    return "sts,";
+    return "sta,";
 }
 
 } // namespace Antares::Data::ScenarioBuilder

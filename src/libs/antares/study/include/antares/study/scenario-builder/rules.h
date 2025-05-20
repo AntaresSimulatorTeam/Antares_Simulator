@@ -153,9 +153,13 @@ private:
     bool readLink(const AreaName::Vector& instrs, const String& value, bool updaterMode);
     bool readBindingConstraints(const AreaName::Vector& splitKey, const String& value);
 
-    bool readShortTermStorage(const AreaName::Vector& splitKey,
-                              const String& value,
-                              bool updaterMode);
+    bool readShortTermStorageInflows(const AreaName::Vector& splitKey,
+                                     const String& value,
+                                     bool updaterMode);
+
+    bool readShortTermStorageAdditionalConstraints(const AreaName::Vector& splitKey,
+                                                   const String& value,
+                                                   bool updaterMode);
 
     Data::Area* getArea(const AreaName& areaname, bool updaterMode);
     Data::AreaLink* getLink(const AreaName& fromAreaName,

@@ -399,11 +399,16 @@ ShortTermStorage::AdditionalConstraints* getShortTermStorageAdditionalConstraint
   ShortTermStorage::STStorageCluster* sts,
   const std::string& constraintName)
 {
-    auto constraint = std::ranges::find_if(sts.additionalConstraints,
+    if (!sts)
+    {
+        logs.warning() << "[scenario-builder] Short-term storage does not exist";
+        return nullptr;
+    }
+    auto constraint = std::ranges::find_if(sts->additionalConstraints,
                                            [&constraintName](
                                              const ShortTermStorage::AdditionalConstraints& c)
                                            { return c.name == constraintName; });
-    if (constraint.name == constraintName)
+    if (constraint == sts->additionalConstraints.end())
     {
         logs.warning() << "[scenario-builder] In short-term storage '" << sts->id
                        << "' the additional constraint '" << constraintName << "' does not exist";
@@ -413,9 +418,9 @@ ShortTermStorage::AdditionalConstraints* getShortTermStorageAdditionalConstraint
     return &(*constraint);
 }
 
-bool Rules::readShortTermStorage(const AreaName::Vector& splitKey,
-                                 const String& value,
-                                 bool updaterMode)
+bool Rules::readShortTermStorageInflows(const AreaName::Vector& splitKey,
+                                        const String& value,
+                                        bool updaterMode)
 {
     const AreaName& areaName = splitKey[1];
 
@@ -431,6 +436,33 @@ bool Rules::readShortTermStorage(const AreaName::Vector& splitKey,
     {
         shortTermStorageInflows[area->index].setTSnumber(sts, year, fromStringToTSnumber(value));
         return true;
+    }
+    return false;
+}
+
+bool Rules::readShortTermStorageAdditionalConstraints(const AreaName::Vector& splitKey,
+                                                      const String& value,
+                                                      bool updaterMode)
+{
+    const AreaName& areaName = splitKey[1];
+
+    Data::Area* area = getArea(areaName, updaterMode);
+    if (!area)
+    {
+        return false;
+    }
+    const uint year = splitKey[2].to<uint>();
+
+    const std::string stStorageClusterName = splitKey[3];
+    if (auto* sts = getShortTermStorage(area, stStorageClusterName))
+    {
+        const std::string constraintName = splitKey[4];
+        if (auto* ct = getShortTermStorageAdditionalConstraint(sts, constraintName))
+        {
+            shortTermStorageAdditionalConstraints[area->index]
+              .setTSnumber(ct, year, fromStringToTSnumber(value));
+            return true;
+        }
     }
     return false;
 }
@@ -488,9 +520,13 @@ bool Rules::readLine(const AreaName::Vector& splitKey, const String& value, bool
     {
         return readBindingConstraints(splitKey, value);
     }
-    else if (kind_of_scenario == "st")
+    else if (kind_of_scenario == "sts")
     {
-        return readShortTermStorage(splitKey, value, updaterMode);
+        return readShortTermStorageInflows(splitKey, value, updaterMode);
+    }
+    else if (kind_of_scenario == "sta")
+    {
+        return readShortTermStorageAdditionalConstraints(splitKey, value, updaterMode);
     }
 
     return false;
