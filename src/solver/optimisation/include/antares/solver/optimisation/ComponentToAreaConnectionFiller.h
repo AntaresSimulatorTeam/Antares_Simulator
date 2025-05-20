@@ -25,7 +25,6 @@
 #include "antares/solver/optim-model-filler/LinearExpression.h"
 #include "antares/solver/optim-model-filler/VariableDictionary.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
-#include "antares/solver/utils/named_problem.h"
 #include "antares/study/system-model/system.h"
 
 namespace Antares::Optimization
@@ -36,7 +35,7 @@ public:
     explicit ComponentToAreaConnectionFiller(const PROBLEME_HEBDO* problemeHebdo,
                                              const VariableDictionary& modelerVariableDictionary);
     std::string getLegacyConstraintName(const PROBLEME_ANTARES_A_RESOUDRE* problemeAResoudre,
-                                        unsigned int index);
+                                        unsigned index) const;
     void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
                       Optimisation::LinearProblemApi::FillContext& ctx) override;
@@ -49,7 +48,7 @@ public:
 
 private:
     using AreaId = std::string;
-    using Timestep = unsigned int;
+    using Timestep = unsigned;
     using AreaAndTimestep = std::pair<AreaId, Timestep>;
     using BalanceConstraintId = std::string;
 

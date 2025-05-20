@@ -47,7 +47,7 @@ ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
 
 std::string ComponentToAreaConnectionFiller::getLegacyConstraintName(
   const PROBLEME_ANTARES_A_RESOUDRE* problemeAResoudre,
-  unsigned int index)
+  unsigned index) const
 {
     // This should be in sync with LegacyFiller::GetConstraintName
     if (!useNamedProblems_ || problemeAResoudre->NomDesContraintes[index].empty())
