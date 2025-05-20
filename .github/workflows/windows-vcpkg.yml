@@ -354,7 +354,6 @@ jobs:
         shell: bash
         run: |
           cd _build
-          set -x
           FIXED_PATH=${ORTOOLS_DIR//\\//}
           cp ${FIXED_PATH}/install/bin/*.dll* solver/Release
           zip -r antares-solver_windows.zip solver/Release/antares-solver.exe solver/Release/*.dll
