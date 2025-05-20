@@ -28,7 +28,9 @@ set(SRC_STUDY_SCENARIO_BUILDER
         include/antares/study/scenario-builder/WindTSNumberData.h
         scenario-builder/WindTSNumberData.cpp
         include/antares/study/scenario-builder/LoadTSNumberData.h
+		include/antares/study/scenario-builder/ShortTermTSNumberData.h
         scenario-builder/LoadTSNumberData.cpp
+		scenario-builder/ShortTermTSNumberData.cpp
         include/antares/study/scenario-builder/applyToMatrix.hxx
 )
 source_group("study\\scenario builder" FILES ${SRC_MATRIX})
@@ -104,9 +106,9 @@ set(SRC_STUDY_PART_SHORT_TERM_STORAGE
         include/antares/study/parts/short-term-storage/additionalConstraints.h
         parts/short-term-storage/cluster.cpp
         parts/short-term-storage/additionalConstraints.cpp
-		include/antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h
-		parts/short-term-storage/makeGroupsOfHoursFromString.cpp
-		include/antares/study/parts/short-term-storage/HoursCollectorVisitor.h
+	include/antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h
+	parts/short-term-storage/makeGroupsOfHoursFromString.cpp
+	include/antares/study/parts/short-term-storage/HoursCollectorVisitor.h
 )
 source_group("study\\part\\short-term-storage" FILES ${SRC_STUDY_PART_SHORT_TERM_SOTRAGE})
 

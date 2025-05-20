@@ -57,6 +57,7 @@ void Rules::saveToINIFile(Yuni::IO::File::Stream& file) const
             thermal[i].saveToINIFile(study_, file);
             renewable[i].saveToINIFile(study_, file);
             linksNTC[i].saveToINIFile(study_, file);
+            shortTermStorage[i].saveToINIFile(file);
         }
         // hydro levels
         hydroInitialLevels.saveToINIFile(study_, file);
@@ -110,6 +111,15 @@ bool Rules::reset()
     }
 
     binding_constraints.reset(study_);
+
+    shortTermStorage.clear();
+    shortTermStorage.resize(pAreaCount);
+    for (uint i = 0; i != pAreaCount; ++i)
+    {
+        shortTermStorage[i].attachArea(study_.areas.byIndex[i]);
+        shortTermStorage[i].reset(study_);
+    }
+
     return true;
 }
 
@@ -376,6 +386,47 @@ bool Rules::readBindingConstraints(const AreaName::Vector& splitKey, const Strin
     return true;
 }
 
+bool Rules::DoesSTStorageClusterExist(Area* area, const std::string& stStorageClusterName)
+{
+    auto stStorageCluster = std::ranges::find_if(area->shortTermStorage.storagesByIndex,
+                                                 [&stStorageClusterName](
+                                                   const ShortTermStorage::STStorageCluster& s)
+                                                 { return s.id == stStorageClusterName; });
+    if (stStorageCluster == area->shortTermStorage.storagesByIndex.end())
+    {
+        logs.warning() << "[scenario-builder] In area '" << area->name
+                       << "' the short-term storage cluster '" << stStorageClusterName
+                       << "' does not exist";
+        return false;
+    }
+
+    return true;
+}
+
+bool Rules::readShortTermStorage(const AreaName::Vector& splitKey,
+                                 const String& value,
+                                 bool updaterMode)
+{
+    const AreaName& areaName = splitKey[1];
+
+    Data::Area* area = getArea(areaName, updaterMode);
+    if (!area)
+    {
+        return false;
+    }
+    const uint year = splitKey[2].to<uint>();
+
+    const std::string stStorageClusterName = splitKey[3];
+    if (!DoesSTStorageClusterExist(area, stStorageClusterName))
+    {
+        return false;
+    }
+    shortTermStorage[area->index].setTSnumber(stStorageClusterName,
+                                              year,
+                                              fromStringToTSnumber(value));
+    return true;
+}
+
 bool Rules::readLine(const AreaName::Vector& splitKey, const String& value, bool updaterMode)
 {
     if (splitKey.size() <= 2)
@@ -429,6 +480,11 @@ bool Rules::readLine(const AreaName::Vector& splitKey, const String& value, bool
     {
         return readBindingConstraints(splitKey, value);
     }
+    else if (kind_of_scenario == "st")
+    {
+        return readShortTermStorage(splitKey, value, updaterMode);
+    }
+
     return false;
 }
 
@@ -446,6 +502,7 @@ bool Rules::apply()
             returned_status = thermal[i].apply(study_) && returned_status;
             returned_status = renewable[i].apply(study_) && returned_status;
             returned_status = linksNTC[i].apply(study_) && returned_status;
+            returned_status = shortTermStorage[i].apply(study_) && returned_status;
         }
         returned_status = hydroInitialLevels.apply(study_) && returned_status;
         returned_status = hydroFinalLevels.apply(study_) && returned_status;

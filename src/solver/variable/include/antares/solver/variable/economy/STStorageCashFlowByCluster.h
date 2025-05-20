@@ -259,10 +259,10 @@ public:
 
             // Write the data for the current year
             uint clusterIndex = 0;
-            for (const auto& cluster: shortTermStorage.storagesByIndex)
+            for (const auto& sts: shortTermStorage.storagesByIndex)
             {
                 // Write the data for the current year
-                results.variableCaption = cluster.properties.name;
+                results.variableCaption = sts.properties.name;
                 results.variableUnit = VCardType::Unit();
                 pValuesForTheCurrentYear[numSpace][clusterIndex]
                   .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);

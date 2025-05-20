@@ -57,7 +57,8 @@ void resizeFillVectors(ShortTermStorage::Series& series, double value, unsigned 
 {
     series.maxInjectionModulation.resize(size, value);
     series.maxWithdrawalModulation.resize(size, value);
-    series.inflows.resize(size, value);
+    series.inflows.reset(1, size);
+    series.inflows.fill(value);
     series.lowerRuleCurve.resize(size, value);
     series.upperRuleCurve.resize(size, value);
 
@@ -236,7 +237,6 @@ struct Fixture
     }
 
     fs::path folder = getFolder();
-
     ShortTermStorage::Series series;
     ShortTermStorage::Properties properties;
     ShortTermStorage::STStorageCluster cluster;
@@ -256,6 +256,12 @@ void checkSizeFirst(const std::vector<double>& in, double v)
 {
     BOOST_CHECK_EQUAL(in.size(), HOURS_PER_YEAR);
     BOOST_CHECK_EQUAL(in[0], v);
+}
+
+void checkSizeFirst(const TimeSeries& series, double value)
+{
+    BOOST_CHECK_EQUAL(series.timeSeries.height, HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(series.getCoefficient(0, 0), value);
 }
 
 BOOST_FIXTURE_TEST_CASE(check_empty, Fixture)
@@ -294,7 +300,7 @@ BOOST_FIXTURE_TEST_CASE(check_series_folder_loading, Fixture)
 
     BOOST_CHECK(loadFromFolder(StudyVersion::latest()));
     BOOST_CHECK(series.validate("", StudyVersion::latest()));
-    BOOST_CHECK(series.inflows[0] == 1 && series.maxInjectionModulation[8759] == 1
+    BOOST_CHECK(series.inflows.getCoefficient(0, 0) == 1 && series.maxInjectionModulation[8759] == 1
                 && series.upperRuleCurve[1343] == 1 && series.costVariationInjection[0] == 1
                 && series.costVariationWithdrawal[0] == 1);
 }
@@ -305,7 +311,7 @@ BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_880, Fixture)
 
     BOOST_CHECK(loadFromFolder(StudyVersion(8, 8)));
     BOOST_CHECK(series.validate("", StudyVersion(8, 8)));
-    BOOST_CHECK(series.inflows[0] == 1 && series.maxInjectionModulation[8759] == 1
+    BOOST_CHECK(series.inflows.getCoefficient(0, 0) == 1 && series.maxInjectionModulation[8759] == 1
                 && series.upperRuleCurve[1343]);
 
     // New elements should NOT be loaded if the study version is < 9.2
@@ -386,7 +392,7 @@ BOOST_FIXTURE_TEST_CASE(check_cluster_series_load_vector, Fixture)
     BOOST_CHECK(cluster.loadSeries(folder, StudyVersion::latest()));
     BOOST_CHECK(cluster.series->validate("", StudyVersion::latest()));
     BOOST_CHECK(cluster.series->maxWithdrawalModulation[0] == 0.5
-                && cluster.series->inflows[2756] == 0.5
+                && cluster.series->inflows.getCoefficient(0, 2756) == 0.5
                 && cluster.series->lowerRuleCurve[6392] == 0.5
                 && cluster.series->costVariationInjection[15] == 0.5
                 && cluster.series->costVariationWithdrawal[756] == 0.5);
@@ -522,10 +528,7 @@ BOOST_AUTO_TEST_SUITE(AdditionalConstraintsTests)
 
 BOOST_AUTO_TEST_CASE(Validate_ClusterIdEmpty)
 {
-    ShortTermStorage::AdditionalConstraints constraints;
-    constraints.cluster_id = ""; // Cluster ID is empty
-    constraints.variable = "injection";
-    constraints.operatorType = "less";
+    ShortTermStorage::AdditionalConstraints constraints("name", "", "injection", "less", true, {});
 
     auto [ok, error_msg] = constraints.validate();
     BOOST_CHECK_EQUAL(ok, false);
@@ -534,11 +537,12 @@ BOOST_AUTO_TEST_CASE(Validate_ClusterIdEmpty)
 
 BOOST_AUTO_TEST_CASE(Validate_InvalidVariable)
 {
-    ShortTermStorage::AdditionalConstraints constraints;
-    constraints.cluster_id = "ClusterA";
-    constraints.variable = "invalid"; // Invalid variable type
-    constraints.operatorType = "less";
-
+    ShortTermStorage::AdditionalConstraints constraints("name",
+                                                        "ClusterA",
+                                                        "invalid",
+                                                        "less",
+                                                        true,
+                                                        {});
     auto [ok, error_msg] = constraints.validate();
     BOOST_CHECK_EQUAL(ok, false);
     BOOST_CHECK_EQUAL(error_msg,
@@ -547,10 +551,12 @@ BOOST_AUTO_TEST_CASE(Validate_InvalidVariable)
 
 BOOST_AUTO_TEST_CASE(Validate_InvalidOperatorType)
 {
-    ShortTermStorage::AdditionalConstraints constraints;
-    constraints.cluster_id = "ClusterA";
-    constraints.variable = "injection";
-    constraints.operatorType = "invalid"; // Invalid operator type
+    ShortTermStorage::AdditionalConstraints constraints("name",
+                                                        "ClusterA",
+                                                        "injection",
+                                                        "invalid",
+                                                        true,
+                                                        {});
 
     auto [ok, error_msg] = constraints.validate();
     BOOST_CHECK_EQUAL(ok, false);
@@ -559,15 +565,16 @@ BOOST_AUTO_TEST_CASE(Validate_InvalidOperatorType)
 
 BOOST_AUTO_TEST_CASE(Validate_InvalidHours_Empty)
 {
-    ShortTermStorage::AdditionalConstraints constraints;
-    constraints.cluster_id = "ClusterA";
-    constraints.variable = "injection";
-    constraints.operatorType = "less";
-
-    // Case : Empty hours
     ShortTermStorage::SingleAdditionalConstraint constraint;
+    // Case : Empty hours
     constraint.hours = {}; // Invalid: empty
-    constraints.constraints.push_back(constraint);
+
+    ShortTermStorage::AdditionalConstraints constraints("name",
+                                                        "ClusterA",
+                                                        "injection",
+                                                        "less",
+                                                        true,
+                                                        {constraint});
 
     auto [ok, error_msg] = constraints.validate();
     BOOST_CHECK_EQUAL(ok, false);
@@ -576,10 +583,12 @@ BOOST_AUTO_TEST_CASE(Validate_InvalidHours_Empty)
 
 BOOST_AUTO_TEST_CASE(Validate_InvalidHours_Out_of_range)
 {
-    ShortTermStorage::AdditionalConstraints constraints;
-    constraints.cluster_id = "ClusterA";
-    constraints.variable = "injection";
-    constraints.operatorType = "less";
+    ShortTermStorage::AdditionalConstraints constraints("name",
+                                                        "ClusterA",
+                                                        "injection",
+                                                        "less",
+                                                        true,
+                                                        {});
 
     // Case: Out of range
     ShortTermStorage::SingleAdditionalConstraint constraint;
@@ -593,10 +602,12 @@ BOOST_AUTO_TEST_CASE(Validate_InvalidHours_Out_of_range)
 
 BOOST_AUTO_TEST_CASE(Validate_InvalidHours_Below_minimum)
 {
-    ShortTermStorage::AdditionalConstraints constraints;
-    constraints.cluster_id = "ClusterA";
-    constraints.variable = "injection";
-    constraints.operatorType = "less";
+    ShortTermStorage::AdditionalConstraints constraints("name",
+                                                        "ClusterA",
+                                                        "injection",
+                                                        "less",
+                                                        true,
+                                                        {});
 
     // Case : Below minimum
     ShortTermStorage::SingleAdditionalConstraint constraint;
@@ -610,10 +621,12 @@ BOOST_AUTO_TEST_CASE(Validate_InvalidHours_Below_minimum)
 
 BOOST_AUTO_TEST_CASE(Validate_ValidConstraints)
 {
-    ShortTermStorage::AdditionalConstraints constraints;
-    constraints.cluster_id = "ClusterA";
-    constraints.variable = "injection";
-    constraints.operatorType = "less";
+    ShortTermStorage::AdditionalConstraints constraints("name",
+                                                        "ClusterA",
+                                                        "injection",
+                                                        "less",
+                                                        true,
+                                                        {});
 
     ShortTermStorage::SingleAdditionalConstraint constraint1;
     constraint1.hours = {1, 2, 3}; // Valid hours
@@ -738,12 +751,10 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_ValidRhs)
     bool result = storageInput.loadAdditionalConstraints(testPath);
 
     BOOST_CHECK_EQUAL(result, true);
-    BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints[0].rhs.size(),
-                      HOURS_PER_YEAR);
-    BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints[0].rhs[0], 0.0);
-    BOOST_CHECK_EQUAL(
-      storageInput.storagesByIndex[0].additionalConstraints[0].rhs[HOURS_PER_YEAR - 1],
-      HOURS_PER_YEAR - 1);
+    const auto& constraint1Rhs = storageInput.storagesByIndex[0].additionalConstraints[0].rhs();
+    BOOST_CHECK_EQUAL(constraint1Rhs.timeSeries.height, HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(constraint1Rhs.getCoefficient(0, 0), 0.0);
+    BOOST_CHECK_EQUAL(constraint1Rhs.getCoefficient(0, HOURS_PER_YEAR - 1), HOURS_PER_YEAR - 1);
 
     std::filesystem::remove_all(testPath);
 }
@@ -789,9 +800,11 @@ BOOST_AUTO_TEST_CASE(Load2ConstraintsFromIniFile)
     BOOST_CHECK_EQUAL(constraint1.operatorType, "less");
     BOOST_CHECK_EQUAL(constraint1.variable, "injection");
     BOOST_CHECK_EQUAL(constraint1.cluster_id, cluster.id);
-    BOOST_CHECK_EQUAL(constraint1.rhs.size(), HOURS_PER_YEAR);
-    BOOST_CHECK_EQUAL(constraint1.rhs[0], 0.0);
-    BOOST_CHECK_EQUAL(constraint1.rhs[HOURS_PER_YEAR - 1], HOURS_PER_YEAR - 1);
+
+    const auto& constraint1Rhs = constraint1.rhs();
+    BOOST_CHECK_EQUAL(constraint1Rhs.timeSeries.height, HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(constraint1Rhs.getCoefficient(0, 0), 0.0);
+    BOOST_CHECK_EQUAL(constraint1Rhs.getCoefficient(0, HOURS_PER_YEAR - 1), HOURS_PER_YEAR - 1);
 
     //------- constraint2 ----------
 
@@ -801,9 +814,10 @@ BOOST_AUTO_TEST_CASE(Load2ConstraintsFromIniFile)
     BOOST_CHECK_EQUAL(constraint2.variable, "withdrawal");
     BOOST_CHECK_EQUAL(constraint2.cluster_id, cluster.id);
 
-    BOOST_CHECK_EQUAL(constraint2.rhs.size(), HOURS_PER_YEAR);
-    BOOST_CHECK_EQUAL(constraint2.rhs[0], 0.0);
-    BOOST_CHECK_EQUAL(constraint2.rhs[HOURS_PER_YEAR - 1], 0.0);
+    const auto& constraint2Rhs = constraint2.rhs();
+    BOOST_CHECK_EQUAL(constraint2Rhs.timeSeries.height, HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(constraint2Rhs.getCoefficient(0, 0), 0.0);
+    BOOST_CHECK_EQUAL(constraint2Rhs.getCoefficient(0, HOURS_PER_YEAR - 1), 0);
 
     std::filesystem::remove_all(testPath);
 }
@@ -829,9 +843,9 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MissingRhsFile)
     bool result = storageInput.loadAdditionalConstraints(testPath);
 
     BOOST_CHECK_EQUAL(result, true);
-    BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints[0].rhs.size(),
-                      HOURS_PER_YEAR);
-    BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints[0].rhs[0], 0.0);
+    const auto& constraintRhs = storageInput.storagesByIndex[0].additionalConstraints[0].rhs();
+    BOOST_CHECK_EQUAL(constraintRhs.timeSeries.height, HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(constraintRhs.getCoefficient(0, 0), 0.0);
 
     std::filesystem::remove_all(testPath);
 }
@@ -906,10 +920,7 @@ BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinations,
                      variable,
                      op)
 {
-    ShortTermStorage::AdditionalConstraints constraints;
-    constraints.cluster_id = "ClusterA";
-    constraints.variable = variable;
-    constraints.operatorType = op;
+    ShortTermStorage::AdditionalConstraints constraints("name", "clusterA", variable, op, true, {});
 
     // Create constraints with valid hours
     constraints.constraints.push_back(ShortTermStorage::SingleAdditionalConstraint{{1, 2, 3}});
@@ -972,12 +983,13 @@ BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinationsFromFile,
     // Check variable, operator type, and rhs values
     BOOST_CHECK_EQUAL(loadedConstraint.variable, variable);
     BOOST_CHECK_EQUAL(loadedConstraint.operatorType, op);
-    BOOST_REQUIRE_EQUAL(loadedConstraint.rhs.size(), HOURS_PER_YEAR);
+    const auto& rhs = loadedConstraint.rhs();
+    BOOST_REQUIRE_EQUAL(rhs.timeSeries.height, HOURS_PER_YEAR);
 
     unsigned int i = 0;
     do
     {
-        BOOST_CHECK_CLOSE(loadedConstraint.rhs[i], i * 1.0, 0.001);
+        BOOST_CHECK_CLOSE(rhs.getCoefficient(0, i), i * 1.0, 0.001);
         // Check rhs values within a tolerance
 
         i += HOURS_PER_YEAR / 5;

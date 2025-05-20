@@ -30,6 +30,7 @@
 
 #include "antares/study/binding_constraint/BindingConstraintGroup.h"
 #include "antares/study/parts/hydro/series.h"
+#include "antares/study/parts/short-term-storage/cluster.h"
 #include "antares/study/scenario-builder/TSnumberData.h"
 
 namespace Antares::Data::ScenarioBuilder
@@ -70,6 +71,15 @@ inline bool CheckValidity<BindingConstraintGroup>(uint value,
                                                   uint)
 {
     return value < group.numberOfTimeseries();
+}
+
+template<>
+inline bool CheckValidity<ShortTermStorage::STStorageCluster>(
+  uint value,
+  const ShortTermStorage::STStorageCluster& sts,
+  uint)
+{
+    return value < sts.series->inflows.numberOfColumns();
 }
 
 template<class StringT, class D>

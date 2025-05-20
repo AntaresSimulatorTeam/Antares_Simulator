@@ -68,6 +68,7 @@ static void importShortTermStorages(
                 if (constraint.enabled)
                 {
                     auto newConstraint = constraint;
+
                     for (auto& c: newConstraint.constraints)
                     {
                         c.globalIndex = constraintGlobalIndex;
@@ -76,7 +77,6 @@ static void importShortTermStorages(
                     toInsert.additionalConstraints.push_back(std::move(newConstraint));
                 }
             }
-
             toInsert.series = st.series;
 
             // TODO add missing properties, or use the same struct

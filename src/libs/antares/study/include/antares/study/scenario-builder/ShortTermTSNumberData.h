@@ -20,39 +20,40 @@
  */
 
 #pragma once
-#include <filesystem>
-#include <list>
-#include <memory>
-#include <string>
 
-#include <antares/inifile/inifile.h>
-#include <antares/study/version.h>
+#include <boost/container_hash/hash.hpp>
 
-#include "additionalConstraints.h"
-#include "properties.h"
-#include "series.h"
+#include "TSnumberData.h"
 
-namespace Antares::Data::ShortTermStorage
+namespace Antares::Data::ScenarioBuilder
 {
-class STStorageCluster
+class ShortTermTSNumberData: public TSNumberData
 {
 public:
-    bool enabled() const;
+    bool apply(Study& study) override;
+    CString<512, false> get_prefix() const override;
+    uint get_tsGenCount(const Study& study) const override;
 
-    bool validate(StudyVersion studyVersion) const;
+    bool reset(const Study& study) override;
 
-    bool loadFromSection(const IniFile::Section& section);
+    void attachArea(const Area* area)
+    {
+        pArea = area;
+    }
 
-    bool loadSeries(const std::filesystem::path& folder, StudyVersion studyVersion) const;
+    void saveToINIFile(Yuni::IO::File::Stream& file) const;
 
-    void saveProperties(IniFile& ini) const;
+    void setTSnumber(const std::string& cluster_name, unsigned year, unsigned value);
+    unsigned get_value(const std::string& cluster_name, unsigned year) const;
 
-    bool saveSeries(const std::string& path) const;
-
-    std::string id;
-
-    std::shared_ptr<Series> series = std::make_shared<Series>();
-    mutable Properties properties;
-    std::vector<AdditionalConstraints> additionalConstraints;
+private:
+    std::map<std::string, MatrixType> rules_;
+    const Area* pArea;
 };
-} // namespace Antares::Data::ShortTermStorage
+
+inline CString<512, false> ShortTermTSNumberData::get_prefix() const
+{
+    return "sts,";
+}
+
+} // namespace Antares::Data::ScenarioBuilder
