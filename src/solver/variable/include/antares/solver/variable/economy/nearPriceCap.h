@@ -143,6 +143,12 @@ public:
         NextType::initializeFromStudy(study);
     }
 
+    template<class R>
+    static void InitializeResultsFromStudy(R& results, Data::Study& study)
+    {
+        VariableAccessorType::InitializeAndReset(results, study);
+    }
+
     void initializeFromArea(Data::Study* study, Data::Area* area)
     {
         unsuppliedEnergyCost = area->thermal.unsuppliedEnergyCost;
