@@ -37,29 +37,30 @@ bool ShortTermInflowsTSNumberData::apply(Study& study)
     uint errors = 0;
     for (auto& sts: pArea->shortTermStorage.storagesByIndex)
     {
-        auto& rule = rules_[sts.id];
-        std::string logprefix = "Short term storage: area '" + pArea->name + "', sts: '" + sts.id
-                                + "': ";
+        auto& rule = rules_[&sts];
+        std::string logprefix = "Short term storage inflows: area '" + pArea->name + "', sts: '"
+                                + sts.id + "': ";
         ret = ApplyToMatrix(errors, logprefix, sts.series->inflows, rule[0], tsGenMax) && ret;
     }
 
     return ret;
 }
 
-void ShortTermInflowsTSNumberData::setTSnumber(const std::string& cluster_id,
+void ShortTermInflowsTSNumberData::setTSnumber(const ShortTermStorage::STStorageCluster* sts,
                                                unsigned year,
                                                unsigned value)
 {
-    auto& ts_numbers = rules_[cluster_id];
+    auto& ts_numbers = rules_[sts];
     if (year < ts_numbers.height)
     {
         ts_numbers[0][year] = value;
     }
 }
 
-unsigned ShortTermInflowsTSNumberData::get_value(const std::string& cluster_id, unsigned year) const
+unsigned ShortTermInflowsTSNumberData::get_value(const ShortTermStorage::STStorageCluster* sts,
+                                                 unsigned year) const
 {
-    return rules_.at(cluster_id)[0][year];
+    return rules_.at(sts)[0][year];
 }
 
 bool ShortTermInflowsTSNumberData::reset(const Study& study)
@@ -67,7 +68,7 @@ bool ShortTermInflowsTSNumberData::reset(const Study& study)
     const uint nbYears = study.parameters.nbYears;
     for (const auto& sts: pArea->shortTermStorage.storagesByIndex)
     {
-        auto& ts_numbers = rules_[sts.id];
+        auto& ts_numbers = rules_[&sts];
         ts_numbers.reset(1, nbYears);
     }
 
@@ -89,7 +90,7 @@ void ShortTermInflowsTSNumberData::saveToINIFile(Yuni::IO::File::Stream& file) c
     {
         for (uint year = 0; year < sts.series->inflows.timeseriesNumbers.height(); ++year)
         {
-            const uint val = get_value(sts.id, year);
+            const uint val = get_value(&sts, year);
 
             // Equals to zero means 'auto', which is the default mode
             if (!val)

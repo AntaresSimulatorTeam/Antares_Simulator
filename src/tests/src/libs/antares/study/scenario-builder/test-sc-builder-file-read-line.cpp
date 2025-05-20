@@ -575,8 +575,10 @@ BOOST_FIXTURE_TEST_CASE(short_term_storage_valid_cluster_and_year__reading_OK, F
     AreaName::Vector splitKey = {"st", "area 1", yearNumber, "st-cluster-1"};
 
     BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
-    BOOST_CHECK_EQUAL(my_rule.shortTermStorage[0].get_value("st-cluster-1", yearNumber.to<uint>()),
-                      tsNumber.to<uint>());
+    BOOST_CHECK_EQUAL(
+      my_rule.shortTermStorageInflows[0].get_value(&area_1->shortTermStorage.storagesByIndex.back(),
+                                                   yearNumber.to<uint>()),
+      tsNumber.to<uint>());
 
     BOOST_CHECK(my_rule.apply());
 }

@@ -21,15 +21,19 @@
 
 #pragma once
 
-#include <boost/container_hash/hash.hpp>
-
 #include "TSnumberData.h"
+
+namespace Antares::Data::ShortTermStorage
+{
+class STStorageCluster;
+}
 
 namespace Antares::Data::ScenarioBuilder
 {
 class ShortTermInflowsTSNumberData: public TSNumberData
 {
 public:
+    using Key = const ShortTermStorage::STStorageCluster*;
     bool apply(Study& study) override;
     CString<512, false> get_prefix() const override;
     uint get_tsGenCount(const Study& study) const override;
@@ -43,11 +47,11 @@ public:
 
     void saveToINIFile(Yuni::IO::File::Stream& file) const;
 
-    void setTSnumber(const std::string& cluster_name, unsigned year, unsigned value);
-    unsigned get_value(const std::string& cluster_name, unsigned year) const;
+    void setTSnumber(const ShortTermStorage::STStorageCluster* sts, unsigned year, unsigned value);
+    unsigned get_value(const ShortTermStorage::STStorageCluster* sts, unsigned year) const;
 
 private:
-    std::map<std::string, MatrixType> rules_;
+    std::map<const ShortTermStorage::STStorageCluster*, MatrixType> rules_;
     const Area* pArea;
 };
 

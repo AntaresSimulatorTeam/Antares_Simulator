@@ -91,9 +91,12 @@ void addClusterToAreaList(Area* area, std::shared_ptr<RenewableCluster> cluster)
     area->renewable.list.addToCompleteList(cluster);
 }
 
-void addSTSToArea(Area* area, ShortTermStorage::STStorageCluster sts)
+ShortTermStorage::STStorageCluster* addSTSToArea(Area* area, const std::string& id)
 {
+    ShortTermStorage::STStorageCluster sts;
+    sts.id = id;
     area->shortTermStorage.storagesByIndex.push_back(sts);
+    return &area->shortTermStorage.storagesByIndex.back();
 }
 
 template<class ClusterType>
@@ -180,9 +183,7 @@ struct commonFixture
         rnCluster_32->series.timeSeries.resize(9, 1);
 
         // Add short-term storage to area_1
-        ShortTermStorage::STStorageCluster sts;
-        sts.id = "sts-1";
-        addSTSToArea(area_1, sts);
+        sts = addSTSToArea(area_1, "sts-1");
         area_1->shortTermStorage.storagesByIndex[0].series->inflows.resize(9, 1);
 
         // Resize all TS numbers storage (1 column x nbYears lines)
@@ -221,7 +222,7 @@ struct commonFixture
     std::shared_ptr<RenewableCluster> rnCluster_21;
     std::shared_ptr<RenewableCluster> rnCluster_31;
     std::shared_ptr<RenewableCluster> rnCluster_32;
-
+    ShortTermStorage::STStorageCluster* sts;
     ScenarioBuilder::Rules::Ptr my_rule;
 };
 
@@ -532,7 +533,7 @@ BOOST_FIXTURE_TEST_CASE(
     my_rule->linksNTC[area_2->index].setTSnumber(link_23, 2, 4);
     my_rule->hydroInitialLevels.setTSnumber(area_1->index, 5, 8);
     my_rule->binding_constraints.setTSnumber("group3", 10, 6);
-    my_rule->shortTermStorage[area_1->index].setTSnumber("sts-1", 0, 5);
+    my_rule->shortTermStorageInflows[area_1->index].setTSnumber(sts, 0, 5);
     saveScenarioBuilder();
 
     // Build reference scenario builder file

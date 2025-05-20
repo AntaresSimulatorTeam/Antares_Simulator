@@ -75,17 +75,18 @@ public:
 
     TimeSeries& rhs()
     {
-        return rhs_;
+        return timeSeries;
     }
 
     const TimeSeries& rhs() const
     {
-        return rhs_;
+        return timeSeries;
     }
 
+    TimeSeriesNumbers timeseriesNumbers;
+    TimeSeries timeSeries;
+
 private:
-    TimeSeriesNumbers tsNumbers_;
-    TimeSeries rhs_; ///< contains both tsNumbers and series
     bool isValidVariable() const;
     bool isValidOperatorType() const;
 
