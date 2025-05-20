@@ -1,6 +1,6 @@
 var classAntares_1_1Data_1_1ShortTermStorage_1_1Series =
 [
-    [ "Series", "classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html#acf58a4ba6c4bb06db1bd24043aceb4a1", null ],
+    [ "Series", "classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html#a63a30f3b718652d55b02f1e6cef097dc", null ],
     [ "fillDefaultSeriesIfEmpty", "classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html#a19dcd50b1ec52a15d6612d19fe9f9420", null ],
     [ "loadFromFolder", "classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html#ac3b2b3f6d56e34a258a7c11f29a7c3cb", null ],
     [ "saveToFolder", "classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html#ab1aca3a787d4cfd11df94ed0dfa11b9b", null ],
@@ -10,7 +10,8 @@ var classAntares_1_1Data_1_1ShortTermStorage_1_1Series =
     [ "costVariationInjection", "classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html#a391f109110f020672492ad0d4229b080", null ],
     [ "costVariationWithdrawal", "classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html#a333dd8185d41f3f5d3f2ccfe36f14a63", null ],
     [ "costWithdrawal", "classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html#aca4b8889e48d1ef3cde8618943ae2a56", null ],
-    [ "inflows", "classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html#aef3cb98fee9ac03d15641ff473cb7c74", null ],
+    [ "inflows", "classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html#a52294322f3df1d7bf9082d02e7c0f92b", null ],
+    [ "inflowsTSNumbers", "classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html#abe9c7e42a82cdb8fb5f8a5d809d82106", null ],
     [ "lowerRuleCurve", "classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html#a65d5dceccf328abb0715ab4ad5da0d68", null ],
     [ "maxInjectionModulation", "classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html#a7ff378095b1b02a865d962f5a1527ae3", null ],
     [ "maxWithdrawalModulation", "classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html#a8d199dd3dd06ca505653121da158ad26", null ],

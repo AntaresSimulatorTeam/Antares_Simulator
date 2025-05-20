@@ -153,15 +153,15 @@ $(document).ready(function(){initNavTree('libs_2antares_2study_2include_2antares
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;antares/study/version.h&gt;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">namespace </span>Antares::Data::ShortTermStorage</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;{</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;antares/series/series.h&gt;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &lt;antares/study/version.h&gt;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">namespace </span>Antares::Data::ShortTermStorage</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;{</div>
 <div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html">   32</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html">Series</a></div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html">Series</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html">Series</a>();</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="comment">// check if series values are valid</span></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordtype">bool</span> validate(<span class="keyword">const</span> std::string&amp; <span class="keywordtype">id</span>, <a class="code" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a> studyVersion) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
@@ -171,33 +171,39 @@ $(document).ready(function(){initNavTree('libs_2antares_2study_2include_2antares
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordtype">bool</span> saveToFolder(<span class="keyword">const</span> std::string&amp; folder) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    std::vector&lt;double&gt; maxInjectionModulation;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    std::vector&lt;double&gt; maxWithdrawalModulation;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    std::vector&lt;double&gt; inflows;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    std::vector&lt;double&gt; lowerRuleCurve;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    std::vector&lt;double&gt; upperRuleCurve;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    std::vector&lt;double&gt; costInjection;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    std::vector&lt;double&gt; costWithdrawal;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    std::vector&lt;double&gt; costLevel;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    std::vector&lt;double&gt; costVariationInjection;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    std::vector&lt;double&gt; costVariationWithdrawal;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordtype">bool</span> validateSizes(<span class="keyword">const</span> std::string&amp;, <a class="code" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a> studyVersion) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordtype">bool</span> validateMaxInjection(<span class="keyword">const</span> std::string&amp;) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordtype">bool</span> validateMaxWithdrawal(<span class="keyword">const</span> std::string&amp;) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordtype">bool</span> validateRuleCurves(<span class="keyword">const</span> std::string&amp;) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordtype">bool</span> validateUpperRuleCurve(<span class="keyword">const</span> std::string&amp;) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordtype">bool</span> validateLowerRuleCurve(<span class="keyword">const</span> std::string&amp;) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;};</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="keywordtype">bool</span> loadFile(<span class="keyword">const</span> std::filesystem::path&amp; folder, std::vector&lt;double&gt;&amp; vect);</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="keywordtype">bool</span> writeVectorToFile(<span class="keyword">const</span> std::string&amp; path, <span class="keyword">const</span> std::vector&lt;double&gt;&amp; vect);</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keywordtype">void</span> fillIfEmpty(std::vector&lt;double&gt;&amp; v, <span class="keywordtype">double</span> value);</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;} <span class="comment">// namespace Antares::Data::ShortTermStorage</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    std::vector&lt;double&gt; maxInjectionModulation;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    std::vector&lt;double&gt; maxWithdrawalModulation;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1TimeSeriesNumbers.html">TimeSeriesNumbers</a> inflowsTSNumbers;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1TimeSeries.html">TimeSeries</a> inflows;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    std::vector&lt;double&gt; lowerRuleCurve;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    std::vector&lt;double&gt; upperRuleCurve;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    std::vector&lt;double&gt; costInjection;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    std::vector&lt;double&gt; costWithdrawal;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    std::vector&lt;double&gt; costLevel;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    std::vector&lt;double&gt; costVariationInjection;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    std::vector&lt;double&gt; costVariationWithdrawal;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordtype">bool</span> validateSizes(<span class="keyword">const</span> std::string&amp;, <a class="code" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a> studyVersion) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordtype">bool</span> validateMaxInjection(<span class="keyword">const</span> std::string&amp;) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordtype">bool</span> validateMaxWithdrawal(<span class="keyword">const</span> std::string&amp;) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordtype">bool</span> validateRuleCurves(<span class="keyword">const</span> std::string&amp;) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordtype">bool</span> validateUpperRuleCurve(<span class="keyword">const</span> std::string&amp;) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordtype">bool</span> validateLowerRuleCurve(<span class="keyword">const</span> std::string&amp;) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;};</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keywordtype">bool</span> loadFile(<span class="keyword">const</span> std::filesystem::path&amp; folder, std::vector&lt;double&gt;&amp; vect);</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="keywordtype">bool</span> loadFile(<span class="keyword">const</span> std::filesystem::path&amp; file, <a class="code" href="classAntares_1_1Data_1_1TimeSeries.html">TimeSeries</a>&amp; series, <span class="keywordtype">bool</span> average);</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keywordtype">bool</span> writeVectorToFile(<span class="keyword">const</span> std::string&amp; path, <span class="keyword">const</span> std::vector&lt;double&gt;&amp; vect);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keywordtype">void</span> fillIfEmpty(std::vector&lt;double&gt;&amp; v, <span class="keywordtype">double</span> value);</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="keywordtype">void</span> fillIfEmpty(<a class="code" href="classAntares_1_1Data_1_1TimeSeries.html">TimeSeries</a>&amp; series, <span class="keywordtype">double</span> value);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;} <span class="comment">// namespace Antares::Data::ShortTermStorage</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1ShortTermStorage_1_1Series_html"><div class="ttname"><a href="classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html">Antares::Data::ShortTermStorage::Series</a></div><div class="ttdef"><b>Definition:</b> series.h:33</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1StudyVersion_html"><div class="ttname"><a href="classAntares_1_1Data_1_1StudyVersion.html">Antares::Data::StudyVersion</a></div><div class="ttdoc">Version of a study.</div><div class="ttdef"><b>Definition:</b> version.h:36</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1TimeSeriesNumbers_html"><div class="ttname"><a href="classAntares_1_1Data_1_1TimeSeriesNumbers.html">Antares::Data::TimeSeriesNumbers</a></div><div class="ttdef"><b>Definition:</b> series.h:42</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1TimeSeries_html"><div class="ttname"><a href="classAntares_1_1Data_1_1TimeSeries.html">Antares::Data::TimeSeries</a></div><div class="ttdoc">This class is used to represent the generic time series.</div><div class="ttdef"><b>Definition:</b> series.h:65</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

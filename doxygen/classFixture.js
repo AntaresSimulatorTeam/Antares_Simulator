@@ -120,6 +120,8 @@ var classFixture =
     [ "rnCluster_32", "classFixture.html#a5cfc03357fd7323adc9bbbe1071ef9c9", null ],
     [ "series", "classFixture.html#a5348b3ef9f116f907dcabfe5bdb3f515", null ],
     [ "series_folder", "classFixture.html#a87dbdae913c906c0d4a63885528a724a", null ],
+    [ "stCluster1", "classFixture.html#adaaed92ec95a7968dc2e72f129506bbe", null ],
+    [ "stCluster2", "classFixture.html#a8df44dc1acfb0fc526ae2039debb23e7", null ],
     [ "study", "classFixture.html#a9fc401c8ce3e1ad722642afe89db65e0", null ],
     [ "study", "classFixture.html#aac492a9009b94bd3eda90094b8338054", null ],
     [ "study", "classFixture.html#a0b698d79c7a096098b925bc8c4a3ce0c", null ],

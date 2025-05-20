@@ -22,7 +22,7 @@ var hierarchy =
     [ "Antares::Action::ActionInformations", "classAntares_1_1Action_1_1ActionInformations.html", null ],
     [ "Antares::Window::Inspector::Add", "structAntares_1_1Window_1_1Inspector_1_1Add.html", null ],
     [ "Antares::Map::Private::AddingToolsHelper", "classAntares_1_1Map_1_1Private_1_1AddingToolsHelper.html", null ],
-    [ "Antares::Data::ShortTermStorage::AdditionalConstraints", "structAntares_1_1Data_1_1ShortTermStorage_1_1AdditionalConstraints.html", null ],
+    [ "Antares::Data::ShortTermStorage::AdditionalConstraints", "classAntares_1_1Data_1_1ShortTermStorage_1_1AdditionalConstraints.html", null ],
     [ "Antares::Graph::Edge< NodeT >::addpWeight", "structAntares_1_1Graph_1_1Edge_1_1addpWeight.html", null ],
     [ "Antares::linkInfo::addpWeight", "structAntares_1_1linkInfo_1_1addpWeight.html", null ],
     [ "Antares::linkInfo::addpWeightWithImpedance", "structAntares_1_1linkInfo_1_1addpWeightWithImpedance.html", null ],
@@ -293,6 +293,7 @@ var hierarchy =
     [ "Antares::Data::ScenarioBuilder::dataInterface", "classAntares_1_1Data_1_1ScenarioBuilder_1_1dataInterface.html", [
       [ "Antares::Data::ScenarioBuilder::TSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1TSNumberData.html", [
         [ "Antares::Data::ScenarioBuilder::BindingConstraintsTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1BindingConstraintsTSNumberData.html", null ],
+        [ "Antares::Data::ScenarioBuilder::ShortTermTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ShortTermTSNumberData.html", null ],
         [ "Antares::Data::ScenarioBuilder::hydroTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroTSNumberData.html", null ],
         [ "Antares::Data::ScenarioBuilder::loadTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1loadTSNumberData.html", null ],
         [ "Antares::Data::ScenarioBuilder::ntcTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ntcTSNumberData.html", null ],
@@ -1781,13 +1782,6 @@ var hierarchy =
       [ "SystemMemoryLogger", "classSystemMemoryLogger.html", null ]
     ] ],
     [ "Antares::Data::TimeSeries", "classAntares_1_1Data_1_1TimeSeries.html", null ],
-    [ "Antares::Data::TimeSeriesBitPatternIntoIndex< T >", "structAntares_1_1Data_1_1TimeSeriesBitPatternIntoIndex.html", null ],
-    [ "Antares::Data::TimeSeriesBitPatternIntoIndex< 1 >", "structAntares_1_1Data_1_1TimeSeriesBitPatternIntoIndex_3_011_01_4.html", null ],
-    [ "Antares::Data::TimeSeriesBitPatternIntoIndex< 16 >", "structAntares_1_1Data_1_1TimeSeriesBitPatternIntoIndex_3_0116_01_4.html", null ],
-    [ "Antares::Data::TimeSeriesBitPatternIntoIndex< 2 >", "structAntares_1_1Data_1_1TimeSeriesBitPatternIntoIndex_3_012_01_4.html", null ],
-    [ "Antares::Data::TimeSeriesBitPatternIntoIndex< 32 >", "structAntares_1_1Data_1_1TimeSeriesBitPatternIntoIndex_3_0132_01_4.html", null ],
-    [ "Antares::Data::TimeSeriesBitPatternIntoIndex< 4 >", "structAntares_1_1Data_1_1TimeSeriesBitPatternIntoIndex_3_014_01_4.html", null ],
-    [ "Antares::Data::TimeSeriesBitPatternIntoIndex< 8 >", "structAntares_1_1Data_1_1TimeSeriesBitPatternIntoIndex_3_018_01_4.html", null ],
     [ "TimeSeriesConfigurer", "classTimeSeriesConfigurer.html", null ],
     [ "TimeSeriesFile", "structTimeSeriesFile.html", null ],
     [ "Antares::Data::TimeSeriesNumbers", "classAntares_1_1Data_1_1TimeSeriesNumbers.html", null ],
