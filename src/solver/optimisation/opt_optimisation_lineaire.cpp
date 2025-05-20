@@ -29,7 +29,7 @@
 #include "antares/solver/utils/filename.h"
 
 using namespace Antares::Solver;
-using Optimization::OptimizationOptions;
+using Antares::Solver::Optimization::OptimizationOptions;
 
 namespace
 {

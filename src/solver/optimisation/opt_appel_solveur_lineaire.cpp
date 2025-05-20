@@ -37,6 +37,8 @@
 #include "antares/solver/utils/mps_utils.h"
 #include "antares/study/system-model/system.h"
 
+#include "spx_constantes_externes.h"
+
 using namespace operations_research;
 using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
