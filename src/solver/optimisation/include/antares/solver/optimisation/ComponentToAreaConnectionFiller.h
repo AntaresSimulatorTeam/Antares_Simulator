@@ -33,10 +33,10 @@ namespace Antares::Optimization
 class ComponentToAreaConnectionFiller: public Optimisation::LinearProblemApi::LinearProblemFiller
 {
 public:
-    explicit ComponentToAreaConnectionFiller(const PROBLEME_SIMPLEXE_NOMME* problemeSimplexe,
-                                             unsigned int nTimestepsInProblem,
-                                             const ModelerStudy::SystemModel::System* modelerSystem,
+    explicit ComponentToAreaConnectionFiller(const PROBLEME_HEBDO* problemeHebdo,
                                              const VariableDictionary& modelerVariableDictionary);
+    std::string getLegacyConstraintName(const PROBLEME_ANTARES_A_RESOUDRE* problemeAResoudre,
+                                        unsigned int index);
     void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
                       Optimisation::LinearProblemApi::FillContext& ctx) override;
@@ -57,8 +57,9 @@ private:
     const VariableDictionary& modelerVariableDictionary_;
     std::map<AreaAndTimestep, BalanceConstraintId> balanceConstraintPerAreaAndTimestep_;
     const unsigned int nTimestepsInProblem_;
+    const bool useNamedProblems_;
 
-    void parseConstraintIds(const PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
+    void parseConstraintIds(const PROBLEME_ANTARES_A_RESOUDRE* problemeAResoudre);
     Optimisation::LinearProblemApi::IMipConstraint* getBalanceConstraint(
       Optimisation::LinearProblemApi::ILinearProblem& pb,
       const std::string& areaId,

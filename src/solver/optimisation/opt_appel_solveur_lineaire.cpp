@@ -154,22 +154,19 @@ FillContext buildFillContext(PROBLEME_HEBDO* problemeHebdo, int NumIntervalle)
 }
 
 // Returns a non-owning pointer
-MPSolver* convertToMPSolver(const PROBLEME_SIMPLEXE_NOMME& pb,
-                            PROBLEME_HEBDO* problemeHebdo,
+MPSolver* convertToMPSolver(PROBLEME_HEBDO* problemeHebdo,
                             const int NumIntervalle,
                             const SingleOptimOptions& options)
 {
-    LegacyOrtoolsLinearProblem ortoolsProblem(pb.isMIP(), options.solverName);
-    LegacyFiller legacyOrtoolsFiller(&pb);
+    LegacyOrtoolsLinearProblem ortoolsProblem(problemeHebdo->ProblemeAResoudre->isMIP(),
+                                              options.solverName);
+    LegacyFiller legacyOrtoolsFiller(problemeHebdo);
     std::vector<LinearProblemFiller*> fillersCollection = {&legacyOrtoolsFiller};
 
     std::vector<std::unique_ptr<ComponentFiller>> componentFillers;
     VariableDictionary variableDictionary;
-    ComponentToAreaConnectionFiller componentToAreaConnectionFiller(
-      &pb,
-      problemeHebdo->NombreDePasDeTempsPourUneOptimisation,
-      problemeHebdo->modelerSystem,
-      variableDictionary);
+    ComponentToAreaConnectionFiller componentToAreaConnectionFiller(problemeHebdo,
+                                                                    variableDictionary);
     if (problemeHebdo->modelerSystem)
     {
         // All LP variables coordinates (component id, variable id, scenario, time step)
@@ -305,7 +302,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
 
     if (solver == nullptr)
     {
-        solver = convertToMPSolver(Probleme, problemeHebdo, NumIntervalle, options);
+        solver = convertToMPSolver(problemeHebdo, NumIntervalle, options);
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
@@ -459,7 +456,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         Probleme.SetUseNamedProblems(true);
 
         std::unique_ptr<MPSolver> MPproblem(
-          convertToMPSolver(Probleme, problemeHebdo, NumIntervalle, options));
+          convertToMPSolver(problemeHebdo, NumIntervalle, options));
 
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());

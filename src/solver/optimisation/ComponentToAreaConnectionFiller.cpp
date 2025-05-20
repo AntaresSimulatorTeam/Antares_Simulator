@@ -35,41 +35,40 @@ namespace Antares::Optimization
 {
 
 ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
-  const PROBLEME_SIMPLEXE_NOMME* problemeSimplexe,
-  unsigned int nTimestepsInProblem,
-  const ModelerStudy::SystemModel::System* modelerSystem,
+  const PROBLEME_HEBDO* problemeHebdo,
   const VariableDictionary& modelerVariableDictionary):
-    modelerSystem_(modelerSystem),
+    modelerSystem_(problemeHebdo->modelerSystem),
     modelerVariableDictionary_(modelerVariableDictionary),
-    nTimestepsInProblem_(nTimestepsInProblem)
+    nTimestepsInProblem_(problemeHebdo->NombreDePasDeTempsPourUneOptimisation),
+    useNamedProblems_(problemeHebdo->NamedProblems)
 {
-    parseConstraintIds(problemeSimplexe);
+    parseConstraintIds(problemeHebdo->ProblemeAResoudre.get());
 }
 
-static std::string getLegacyConstraintName(const PROBLEME_SIMPLEXE_NOMME* problemeSimplexe,
-                                           unsigned int index)
+std::string ComponentToAreaConnectionFiller::getLegacyConstraintName(
+  const PROBLEME_ANTARES_A_RESOUDRE* problemeAResoudre,
+  unsigned int index)
 {
     // This should be in sync with LegacyFiller::GetConstraintName
-    if (!problemeSimplexe->UseNamedProblems()
-        || problemeSimplexe->ConstraintNames().at(index).empty())
+    if (!useNamedProblems_ || problemeAResoudre->NomDesContraintes[index].empty())
     {
         return 'c' + std::to_string(index);
     }
-    return problemeSimplexe->ConstraintNames().at(index);
+    return problemeAResoudre->NomDesContraintes[index];
 }
 
 void ComponentToAreaConnectionFiller::parseConstraintIds(
-  const PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
+  const PROBLEME_ANTARES_A_RESOUDRE* problemeAResoudre)
 {
-    for (int idxRow = 0; idxRow < problemeSimplexe->NombreDeContraintes; ++idxRow)
+    for (int idxRow = 0; idxRow < problemeAResoudre->NombreDeContraintes; ++idxRow)
     {
         boost::regex pattern(R"(AreaBalance::area<(.+)>::hour<(\d+)>)");
         boost::smatch matches;
-        if (boost::regex_match(problemeSimplexe->ConstraintNames().at(idxRow), matches, pattern))
+        if (boost::regex_match(problemeAResoudre->NomDesContraintes[idxRow], matches, pattern))
         {
             std::string areaId = matches[1].str();
             unsigned int ts = std::stoul(matches[2].str());
-            auto id = getLegacyConstraintName(problemeSimplexe, idxRow);
+            auto id = getLegacyConstraintName(problemeAResoudre, idxRow);
             balanceConstraintPerAreaAndTimestep_.emplace(std::make_pair(areaId, ts), id);
         }
     }
