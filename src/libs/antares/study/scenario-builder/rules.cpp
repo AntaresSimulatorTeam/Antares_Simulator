@@ -75,6 +75,7 @@ void Rules::saveToINIFile(Yuni::IO::File::Stream& file) const
             renewable[i].saveToINIFile(study_, file);
             linksNTC[i].saveToINIFile(study_, file);
             shortTermStorageInflows[i].saveToINIFile(file);
+            shortTermStorageAdditionalConstraints[i].saveToINIFile(file);
         }
         // hydro levels
         hydroInitialLevels.saveToINIFile(study_, file);
@@ -404,10 +405,10 @@ ShortTermStorage::AdditionalConstraints* getShortTermStorageAdditionalConstraint
         logs.warning() << "[scenario-builder] Short-term storage does not exist";
         return nullptr;
     }
-    auto constraint = std::ranges::find_if(sts->additionalConstraints,
-                                           [&constraintName](
-                                             const ShortTermStorage::AdditionalConstraints& c)
-                                           { return c.name == constraintName; });
+    auto constraint = std::ranges::find_if(
+      sts->additionalConstraints,
+      [&constraintName](std::shared_ptr<ShortTermStorage::AdditionalConstraints> c)
+      { return c->name == constraintName; });
     if (constraint == sts->additionalConstraints.end())
     {
         logs.warning() << "[scenario-builder] In short-term storage '" << sts->id
@@ -415,7 +416,7 @@ ShortTermStorage::AdditionalConstraints* getShortTermStorageAdditionalConstraint
         return nullptr;
     }
     // iterator -> raw pointer
-    return &(*constraint);
+    return constraint->get();
 }
 
 bool Rules::readShortTermStorageInflows(const AreaName::Vector& splitKey,
@@ -547,6 +548,8 @@ bool Rules::apply()
             returned_status = renewable[i].apply(study_) && returned_status;
             returned_status = linksNTC[i].apply(study_) && returned_status;
             returned_status = shortTermStorageInflows[i].apply(study_) && returned_status;
+            returned_status = shortTermStorageAdditionalConstraints[i].apply(study_)
+                              && returned_status;
         }
         returned_status = hydroInitialLevels.apply(study_) && returned_status;
         returned_status = hydroFinalLevels.apply(study_) && returned_status;

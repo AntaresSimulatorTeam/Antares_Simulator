@@ -60,8 +60,8 @@ static void shortTermStorageCumulationRHS(
         {
             for (const auto& additionalConstraints: storage.additionalConstraints)
             {
-                const auto& rhs = additionalConstraints.rhs().getColumn(year);
-                for (const auto& constraint: additionalConstraints.constraints)
+                const auto& rhs = additionalConstraints->rhs().getColumn(year);
+                for (const auto& constraint: additionalConstraints->constraints)
                 {
                     const int cnt = CorrespondancesDesContraintesHebdomadaires
                                       .ShortTermStorageCumulation[constraint.globalIndex];

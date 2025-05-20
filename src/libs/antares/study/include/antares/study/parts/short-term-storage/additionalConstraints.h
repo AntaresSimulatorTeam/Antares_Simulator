@@ -20,6 +20,7 @@
  */
 
 #pragma once
+#include <memory>
 #include <set>
 #include <string>
 #include <vector>
@@ -49,10 +50,13 @@ public:
                           bool enabled,
                           std::vector<SingleAdditionalConstraint> constraints);
 
-    AdditionalConstraints(const AdditionalConstraints& other) = default;
-    AdditionalConstraints(AdditionalConstraints&& other) noexcept = default;
-    AdditionalConstraints& operator=(const AdditionalConstraints& other) = default;
-    AdditionalConstraints& operator=(AdditionalConstraints&& other) noexcept = default;
+    AdditionalConstraints(const AdditionalConstraints&) = delete;
+    AdditionalConstraints& operator=(const AdditionalConstraints&) = delete;
+
+    AdditionalConstraints(AdditionalConstraints&& other) noexcept = delete;
+    AdditionalConstraints& operator=(AdditionalConstraints&& other) noexcept = delete;
+
+    ~AdditionalConstraints() = default;
 
     std::string name;
     std::string cluster_id;
@@ -92,4 +96,5 @@ private:
 
     bool isValidHours() const;
 };
+
 } // namespace Antares::Data::ShortTermStorage

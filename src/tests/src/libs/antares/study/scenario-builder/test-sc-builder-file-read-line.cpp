@@ -148,29 +148,31 @@ struct Fixture
         study->bindingConstraintsGroups.resizeAllTimeseriesNumbers(study->parameters.nbYears);
         bc->RHSTimeSeries().resize(7, 1);
 
-        ShortTermStorage::AdditionalConstraints add1("name",
-                                                     "st-cluster-1",
-                                                     "withdrawal",
-                                                     "less",
-                                                     true,
-                                                     {});
+        auto add1 = std::make_shared<ShortTermStorage::AdditionalConstraints>(
+          "name",
+          "st-cluster-1",
+          "withdrawal",
+          "less",
+          true,
+          std::vector<Antares::Data::ShortTermStorage::SingleAdditionalConstraint>{});
 
         stCluster1.id = "st-cluster-1";
         stCluster1.series->inflows.resize(12, 12);
-        add1.rhs().resize(12, 12);
+        add1->rhs().resize(12, 12);
         stCluster1.additionalConstraints.push_back(add1);
         area_1->shortTermStorage.storagesByIndex.push_back(stCluster1);
 
-        ShortTermStorage::AdditionalConstraints add2("name",
-                                                     "st-cluster-2",
-                                                     "withdrawal",
-                                                     "less",
-                                                     true,
-                                                     {});
+        auto add2 = std::make_shared<ShortTermStorage::AdditionalConstraints>(
+          "name",
+          "st-cluster-2",
+          "withdrawal",
+          "less",
+          true,
+          std::vector<Antares::Data::ShortTermStorage::SingleAdditionalConstraint>{});
 
         stCluster2.id = "st-cluster-2";
         stCluster2.series->inflows.resize(12, 12);
-        add2.rhs().resize(12, 12);
+        add2->rhs().resize(12, 12);
         stCluster2.additionalConstraints.push_back(add2);
         area_2->shortTermStorage.storagesByIndex.push_back(stCluster2);
 

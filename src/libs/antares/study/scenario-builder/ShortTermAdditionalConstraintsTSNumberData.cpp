@@ -39,11 +39,11 @@ bool ShortTermAdditionalConstraintsTSNumberData::apply(Study& study)
     {
         for (auto& ct: sts.additionalConstraints)
         {
-            auto& rule = rules_[&ct];
+            auto& rule = rules_[ct.get()];
 
             std::string logprefix = "Short term storage additional constraints: area '"
                                     + pArea->name + "', sts: '" + sts.id + "': ";
-            ret = ApplyToMatrix(errors, logprefix, ct, rule[0], tsGenMax) && ret;
+            ret = ApplyToMatrix(errors, logprefix, *ct, rule[0], tsGenMax) && ret;
         }
     }
     return ret;
@@ -75,7 +75,7 @@ bool ShortTermAdditionalConstraintsTSNumberData::reset(const Study& study)
     {
         for (const auto& c: sts.additionalConstraints)
         {
-            auto& ts_numbers = rules_[&c];
+            auto& ts_numbers = rules_[c.get()];
             ts_numbers.reset(1, nbYears);
         }
     }
@@ -98,16 +98,16 @@ void ShortTermAdditionalConstraintsTSNumberData::saveToINIFile(Yuni::IO::File::S
     {
         for (const auto& c: sts.additionalConstraints)
         {
-            for (uint year = 0; year < sts.series->inflows.timeseriesNumbers.height(); ++year)
+            for (uint year = 0; year < c->timeseriesNumbers.height(); ++year)
             {
-                const uint val = get_value(&c, year);
+                const uint val = get_value(c.get(), year);
 
                 // Equals to zero means 'auto', which is the default mode
                 if (!val)
                 {
                     continue;
                 }
-                file << prefix << pArea->id << "," << year << ',' << sts.id << ',' << c.name
+                file << prefix << pArea->id << "," << year << ',' << sts.id << ',' << c->name
                      << " = " << val << '\n';
             }
         }
