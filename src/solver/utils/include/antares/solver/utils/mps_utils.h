@@ -20,14 +20,6 @@
 */
 #pragma once
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
-
-extern "C"
-{
-#include "spx_definition_arguments.h"
-#include "spx_fonctions.h"
-#include "srs_api.h"
-}
-
 #include "antares/study/fwd.h"
 
 #include "ortools_utils.h"
@@ -51,7 +43,10 @@ public:
 
     I_MPS_writer() = default;
     virtual ~I_MPS_writer() = default;
-    virtual void runIfNeeded(Solver::IResultWriter& writer, const std::string& filename) = 0;
+    virtual void runIfNeeded(Solver::IResultWriter& writer,
+                             const std::string& filename,
+                             bool forceNamedProblems = false)
+      = 0;
 
 protected:
     uint current_optim_number_ = 0;
@@ -64,7 +59,9 @@ class fullMPSwriter final: public I_MPS_writer
 {
 public:
     fullMPSwriter(PROBLEME_HEBDO* problemeHebdo, uint currentOptimNumber);
-    void runIfNeeded(Solver::IResultWriter& writer, const std::string& filename) override;
+    void runIfNeeded(Solver::IResultWriter& writer,
+                     const std::string& filename,
+                     bool forceNamedProblems = false) override;
 
 private:
     PROBLEME_HEBDO* problemeHebdo_ = nullptr;
@@ -75,7 +72,9 @@ class fullOrToolsMPSwriter: public I_MPS_writer
 public:
     virtual ~fullOrToolsMPSwriter() = default;
     fullOrToolsMPSwriter(MPSolver* solver, uint currentOptimNumber);
-    void runIfNeeded(Solver::IResultWriter& writer, const std::string& filename) override;
+    void runIfNeeded(Solver::IResultWriter& writer,
+                     const std::string& filename,
+                     bool forceNamedProblems = false) override;
 
 private:
     MPSolver* solver_ = nullptr;
@@ -87,7 +86,9 @@ public:
     virtual ~nullMPSwriter() = default;
     using I_MPS_writer::I_MPS_writer;
 
-    void runIfNeeded(Solver::IResultWriter& /*writer*/, const std::string& /*filename*/) override
+    void runIfNeeded(Solver::IResultWriter& /*writer*/,
+                     const std::string& /*filename*/,
+                     bool forceNamedProblems = false) override
     {
         // Does nothing
     }

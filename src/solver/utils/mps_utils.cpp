@@ -22,7 +22,6 @@
 
 #include <antares/study/study.h>
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
-#include "antares/solver/simulation/simulation.h"
 #include "antares/solver/utils/ortools_utils.h"
 
 using namespace Antares;
@@ -54,14 +53,17 @@ using namespace Antares::Data;
 **
 ** SPDX-License-Identifier: MPL-2.0
 */
-#include <algorithm>
 #include <string>
 #include <vector>
 
-#include <antares/study/study.h>
 #include "antares/solver/optimisation/opt_constants.h"
-#include "antares/solver/utils/filename.h"
 #include "antares/solver/utils/name_translator.h"
+extern "C"
+{
+#include "spx_definition_arguments.h"
+#include "spx_fonctions.h"
+#include "srs_api.h"
+}
 
 class ProblemConverter
 {
@@ -113,7 +115,8 @@ private:
 
 void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(PROBLEME_HEBDO* Prob,
                                                Solver::IResultWriter& writer,
-                                               const std::string& filename)
+                                               const std::string& filename,
+                                               bool forceNamedProblems)
 {
     logs.info() << "Solver MPS File: `" << filename << "'";
 
@@ -121,7 +124,7 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(PROBLEME_HEBDO* Prob,
 
     auto mps = std::make_shared<PROBLEME_MPS>();
     {
-        auto translator = NameTranslator::create(Prob->NamedProblems);
+        auto translator = NameTranslator::create(Prob->NamedProblems || forceNamedProblems);
         ProblemConverter
           converter; // This object must not be destroyed until SRSwritempsprob has been run
         converter.copyProbSimplexeToProbMps(mps.get(), Prob->ProblemeAResoudre.get(), *translator);
@@ -142,9 +145,11 @@ fullMPSwriter::fullMPSwriter(PROBLEME_HEBDO* problemeHebdo, uint optNumber):
 {
 }
 
-void fullMPSwriter::runIfNeeded(Solver::IResultWriter& writer, const std::string& filename)
+void fullMPSwriter::runIfNeeded(Solver::IResultWriter& writer,
+                                const std::string& filename,
+                                bool forceNamedProblems)
 {
-    OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(problemeHebdo_, writer, filename);
+    OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(problemeHebdo_, writer, filename, forceNamedProblems);
 }
 
 // ---------------------------------
@@ -156,7 +161,9 @@ fullOrToolsMPSwriter::fullOrToolsMPSwriter(MPSolver* solver, uint optNumber):
 {
 }
 
-void fullOrToolsMPSwriter::runIfNeeded(Solver::IResultWriter& writer, const std::string& filename)
+void fullOrToolsMPSwriter::runIfNeeded(Solver::IResultWriter& writer,
+                                       const std::string& filename,
+                                       bool forceNamedProblems)
 {
     ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver_, writer, filename);
 }

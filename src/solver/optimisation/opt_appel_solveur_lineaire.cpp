@@ -21,8 +21,6 @@
 
 #include <chrono>
 #include <span>
-#include <spx_definition_arguments.h>
-#include <spx_fonctions.h>
 
 #include <antares/antares/fatal-error.h>
 #include <antares/logs/logs.h>
@@ -37,7 +35,6 @@
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/utils/filename.h"
 #include "antares/solver/utils/mps_utils.h"
-#include "antares/solver/utils/named_problem.h"
 #include "antares/study/system-model/system.h"
 
 using namespace operations_research;
@@ -125,7 +122,7 @@ static void writeModelerSolutions(const MPSolver* solver,
         logs.debug() << "No modeler solutions, skip writing files";
         return;
     }
-    for (auto v = start; v < variables.end(); v++)
+    for (auto v = start; v < variables.end(); ++v)
     {
         contentStream << (*v)->name() << "\t" << (*v)->solution_value() << std::endl;
     }
@@ -136,7 +133,7 @@ static void writeModelerSolutions(const MPSolver* solver,
     writer.addEntryFromBuffer(modelerSolutionFilename, content);
 }
 
-FillContext buildFillContext(PROBLEME_HEBDO* problemeHebdo, int NumIntervalle)
+FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumIntervalle)
 {
     unsigned firstTimestep, lastTimestep;
     auto nTsInDay = static_cast<unsigned>(problemeHebdo->NombreDePasDeTempsDUneJournee);
@@ -152,11 +149,11 @@ FillContext buildFillContext(PROBLEME_HEBDO* problemeHebdo, int NumIntervalle)
                         * nTsInDay;
         lastTimestep = firstTimestep + nTsInDay - 1;
     }
-    return FillContext(firstTimestep, lastTimestep);
+    return {firstTimestep, lastTimestep};
 }
 
 // Returns a non-owning pointer
-MPSolver* convertToMPSolver(PROBLEME_HEBDO* problemeHebdo,
+MPSolver* convertToMPSolver(const PROBLEME_HEBDO* problemeHebdo,
                             const int NumIntervalle,
                             const SingleOptimOptions& options)
 {
@@ -195,7 +192,6 @@ MPSolver* convertToMPSolver(PROBLEME_HEBDO* problemeHebdo,
 
 static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                           PROBLEME_HEBDO* problemeHebdo,
-                                          PROBLEME_SIMPLEXE_NOMME& Probleme,
                                           const int NumIntervalle,
                                           const int optimizationNumber,
                                           const OptPeriodStringGenerator& optPeriodStringGenerator,
@@ -214,31 +210,18 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         solver = nullptr;
     }
 
-    if (solver == nullptr)
-    {
-        Probleme.Contexte = SIMPLEXE_SEUL;
-        Probleme.BaseDeDepartFournie = NON_SPX;
-    }
-    else
+    if (solver)
     {
         if (problemeHebdo->ReinitOptimisation)
         {
-            if (solver)
-            {
-                ORTOOLS_LibererProbleme(solver);
-            }
+            ORTOOLS_LibererProbleme(solver);
 
             ProblemeAResoudre->ProblemesSpx[NumIntervalle] = nullptr;
 
             solver = nullptr;
-            Probleme.Contexte = SIMPLEXE_SEUL;
-            Probleme.BaseDeDepartFournie = NON_SPX;
         }
         else
         {
-            Probleme.Contexte = BRANCH_AND_BOUND_OU_CUT_NOEUD;
-            Probleme.BaseDeDepartFournie = UTILISER_LA_BASE_DU_PROBLEME_SPX;
-
             TimeMeasurement updateMeasure;
 
             ORTOOLS_ModifierLeVecteurCouts(solver,
@@ -259,48 +242,6 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
             optimizationStatistics.addUpdateTime(timeMeasure.updateTime);
         }
     }
-
-    Probleme.NombreMaxDIterations = -1;
-    Probleme.DureeMaxDuCalcul = -1.;
-
-    Probleme.CoutLineaire = ProblemeAResoudre->CoutLineaire.data();
-    Probleme.X = ProblemeAResoudre->X.data();
-    Probleme.Xmin = ProblemeAResoudre->Xmin.data();
-    Probleme.Xmax = ProblemeAResoudre->Xmax.data();
-    Probleme.NombreDeVariables = ProblemeAResoudre->NombreDeVariables;
-    Probleme.TypeDeVariable = ProblemeAResoudre->TypeDeVariable.data();
-
-    Probleme.NombreDeContraintes = ProblemeAResoudre->NombreDeContraintes;
-    Probleme.IndicesDebutDeLigne = ProblemeAResoudre->IndicesDebutDeLigne.data();
-    Probleme.NombreDeTermesDesLignes = ProblemeAResoudre->NombreDeTermesDesLignes.data();
-    Probleme.IndicesColonnes = ProblemeAResoudre->IndicesColonnes.data();
-    Probleme.CoefficientsDeLaMatriceDesContraintes = ProblemeAResoudre
-                                                       ->CoefficientsDeLaMatriceDesContraintes
-                                                       .data();
-    Probleme.Sens = ProblemeAResoudre->Sens.data();
-    Probleme.SecondMembre = ProblemeAResoudre->SecondMembre.data();
-
-    Probleme.ChoixDeLAlgorithme = SPX_DUAL;
-
-    Probleme.TypeDePricing = PRICING_STEEPEST_EDGE;
-
-    Probleme.FaireDuScaling = (PremierPassage ? OUI_SPX : NON_SPX);
-
-    Probleme.StrategieAntiDegenerescence = AGRESSIF;
-
-    Probleme.PositionDeLaVariable = ProblemeAResoudre->PositionDeLaVariable.data();
-    Probleme.NbVarDeBaseComplementaires = 0;
-    Probleme.ComplementDeLaBase = ProblemeAResoudre->ComplementDeLaBase.data();
-
-    Probleme.LibererMemoireALaFin = NON_SPX;
-
-    Probleme.UtiliserCoutMax = NON_SPX;
-    Probleme.CoutMax = 0.0;
-
-    Probleme.CoutsMarginauxDesContraintes = ProblemeAResoudre->CoutsMarginauxDesContraintes.data();
-    Probleme.CoutsReduits = ProblemeAResoudre->CoutsReduits.data();
-
-    Probleme.NombreDeContraintesCoupes = 0;
 
     if (solver == nullptr)
     {
@@ -365,18 +306,11 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                          IResultWriter& writer)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
-    PROBLEME_SIMPLEXE_NOMME Probleme(ProblemeAResoudre->NomDesVariables,
-                                     ProblemeAResoudre->NomDesContraintes,
-                                     ProblemeAResoudre->VariablesEntieres,
-                                     ProblemeAResoudre->basisStatus,
-                                     problemeHebdo->NamedProblems,
-                                     options.solverLogs);
 
     bool PremierPassage = true;
 
     SimplexResult simplexResult = OPT_TryToCallSimplex(options,
                                                        problemeHebdo,
-                                                       Probleme,
                                                        NumIntervalle,
                                                        optimizationNumber,
                                                        optPeriodStringGenerator,
@@ -388,7 +322,6 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         PremierPassage = false;
         simplexResult = OPT_TryToCallSimplex(options,
                                              problemeHebdo,
-                                             Probleme,
                                              NumIntervalle,
                                              optimizationNumber,
                                              optPeriodStringGenerator,
@@ -455,8 +388,6 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
             logs.info() << " Solver: Safe resolution failed";
         }
 
-        Probleme.SetUseNamedProblems(true);
-
         std::unique_ptr<MPSolver> MPproblem(
           convertToMPSolver(problemeHebdo, NumIntervalle, options));
 
@@ -467,7 +398,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         auto mps_writer_on_error = simplexResult.mps_writer_factory.createOnOptimizationError();
         const std::string filename = createMPSfilename(optPeriodStringGenerator,
                                                        optimizationNumber);
-        mps_writer_on_error->runIfNeeded(writer, filename);
+        mps_writer_on_error->runIfNeeded(writer, filename, true);
 
         return false;
     }
