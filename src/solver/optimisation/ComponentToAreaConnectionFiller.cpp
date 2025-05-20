@@ -37,40 +37,14 @@ namespace Antares::Optimization
 ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
   const PROBLEME_HEBDO* problemeHebdo,
   const VariableDictionary& modelerVariableDictionary):
+    problemeHebdo_(problemeHebdo),
     modelerSystem_(problemeHebdo->modelerSystem),
-    modelerVariableDictionary_(modelerVariableDictionary),
-    nTimestepsInProblem_(problemeHebdo->NombreDePasDeTempsPourUneOptimisation),
-    useNamedProblems_(problemeHebdo->NamedProblems)
+    modelerVariableDictionary_(modelerVariableDictionary)
 {
-    parseConstraintIds(problemeHebdo->ProblemeAResoudre.get());
-}
-
-std::string ComponentToAreaConnectionFiller::getLegacyConstraintName(
-  const PROBLEME_ANTARES_A_RESOUDRE* problemeAResoudre,
-  unsigned index) const
-{
-    // This should be in sync with LegacyFiller::GetConstraintName
-    if (!useNamedProblems_ || problemeAResoudre->NomDesContraintes[index].empty())
+    int i = 0;
+    for (auto name: problemeHebdo_->NomsDesPays)
     {
-        return 'c' + std::to_string(index);
-    }
-    return problemeAResoudre->NomDesContraintes[index];
-}
-
-void ComponentToAreaConnectionFiller::parseConstraintIds(
-  const PROBLEME_ANTARES_A_RESOUDRE* problemeAResoudre)
-{
-    for (int idxRow = 0; idxRow < problemeAResoudre->NombreDeContraintes; ++idxRow)
-    {
-        boost::regex pattern(R"(AreaBalance::area<(.+)>::hour<(\d+)>)");
-        boost::smatch matches;
-        if (boost::regex_match(problemeAResoudre->NomDesContraintes[idxRow], matches, pattern))
-        {
-            std::string areaId = matches[1].str();
-            unsigned int ts = std::stoul(matches[2].str());
-            auto id = getLegacyConstraintName(problemeAResoudre, idxRow);
-            balanceConstraintPerAreaAndTimestep_.emplace(std::make_pair(areaId, ts), id);
-        }
+        areaIndices_[name] = i++;
     }
 }
 
@@ -98,11 +72,12 @@ IMipConstraint* ComponentToAreaConnectionFiller::getBalanceConstraint(ILinearPro
                                                                       const std::string& areaId,
                                                                       unsigned ts) const
 {
-    auto key = std::make_pair(areaId, ts % nTimestepsInProblem_);
-    if (const auto it = balanceConstraintPerAreaAndTimestep_.find(key);
-        it != balanceConstraintPerAreaAndTimestep_.end())
+    auto pdt = ts % problemeHebdo_->NombreDePasDeTempsPourUneOptimisation;
+    if (const auto it = areaIndices_.find(areaId); it != areaIndices_.end())
     {
-        if (auto* ct = pb.lookupConstraint(it->second))
+        auto contraintIndex = problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt]
+                                .NumeroDeContrainteDesBilansPays[it->second];
+        if (auto* ct = pb.getConstraint(contraintIndex))
         {
             return ct;
         }

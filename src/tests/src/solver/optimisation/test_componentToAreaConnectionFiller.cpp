@@ -231,6 +231,9 @@ BOOST_AUTO_TEST_CASE(add_one_term_to_balance_constraint_named)
     setUpModelerVariables(0, 0);
     std::vector<std::string> constraints({"whatever", "AreaBalance::area<area1>::hour<0>"});
     setUpLegacyLp(constraints, true, 10);
+    problemeHebdo->NomsDesPays.push_back("area1");
+    problemeHebdo->CorrespondanceCntNativesCntOptim.push_back({});
+    problemeHebdo->CorrespondanceCntNativesCntOptim[0].NumeroDeContrainteDesBilansPays.push_back(1);
     fillProblem(0, 0, {4.0});
 
     auto balance_ct = linearProblem.lookupConstraint("AreaBalance::area<area1>::hour<0>");
@@ -267,6 +270,11 @@ BOOST_AUTO_TEST_CASE(add_two_terms_to_balance_constraint_not_named)
     std::vector<std::string> constraints(
       {"whatever", "AreaBalance::area<area1>::hour<0>", "AreaBalance::area<area1>::hour<1>"});
     setUpLegacyLp(constraints, false, -100);
+    problemeHebdo->NomsDesPays.push_back("area1");
+    problemeHebdo->CorrespondanceCntNativesCntOptim.push_back({});
+    problemeHebdo->CorrespondanceCntNativesCntOptim[0].NumeroDeContrainteDesBilansPays.push_back(1);
+    problemeHebdo->CorrespondanceCntNativesCntOptim.push_back({});
+    problemeHebdo->CorrespondanceCntNativesCntOptim[1].NumeroDeContrainteDesBilansPays.push_back(2);
     fillProblem(10, 11, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -51.0, 8.3});
 
     auto balance_ct_t10 = linearProblem.lookupConstraint("c1");

@@ -47,18 +47,12 @@ public:
                       Optimisation::LinearProblemApi::FillContext& ctx) override;
 
 private:
-    using AreaId = std::string;
-    using Timestep = unsigned;
-    using AreaAndTimestep = std::pair<AreaId, Timestep>;
-    using BalanceConstraintId = std::string;
-
+    const PROBLEME_HEBDO* problemeHebdo_;
     const ModelerStudy::SystemModel::System* modelerSystem_;
     const VariableDictionary& modelerVariableDictionary_;
-    std::map<AreaAndTimestep, BalanceConstraintId> balanceConstraintPerAreaAndTimestep_;
-    const unsigned int nTimestepsInProblem_;
-    const bool useNamedProblems_;
 
-    void parseConstraintIds(const PROBLEME_ANTARES_A_RESOUDRE* problemeAResoudre);
+    std::map<std::string, unsigned> areaIndices_;
+
     Optimisation::LinearProblemApi::IMipConstraint* getBalanceConstraint(
       Optimisation::LinearProblemApi::ILinearProblem& pb,
       const std::string& areaId,
