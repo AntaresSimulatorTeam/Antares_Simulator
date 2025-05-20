@@ -19,6 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 extern "C"
 {
@@ -29,7 +30,6 @@ extern "C"
 
 #include "antares/study/fwd.h"
 
-#include "named_problem.h"
 #include "ortools_utils.h"
 
 using namespace Antares;
@@ -63,11 +63,11 @@ protected:
 class fullMPSwriter final: public I_MPS_writer
 {
 public:
-    fullMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem, uint currentOptimNumber);
+    fullMPSwriter(PROBLEME_HEBDO* problemeHebdo, uint currentOptimNumber);
     void runIfNeeded(Solver::IResultWriter& writer, const std::string& filename) override;
 
 private:
-    PROBLEME_SIMPLEXE_NOMME* named_splx_problem_ = nullptr;
+    PROBLEME_HEBDO* problemeHebdo_ = nullptr;
 };
 
 class fullOrToolsMPSwriter: public I_MPS_writer
@@ -97,11 +97,7 @@ class mpsWriterFactory
 {
 public:
     virtual ~mpsWriterFactory() = default;
-    mpsWriterFactory(Data::mpsExportStatus exportMPS,
-                     bool exportMPSOnError,
-                     const int current_optim_number,
-                     PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
-                     MPSolver* solver);
+    mpsWriterFactory(PROBLEME_HEBDO* problemeHebdo, int current_optim_number, MPSolver* solver);
 
     std::unique_ptr<I_MPS_writer> create();
     std::unique_ptr<I_MPS_writer> createOnOptimizationError();
@@ -112,9 +108,9 @@ private:
     bool doWeExportMPS();
 
     // Member data...
+    PROBLEME_HEBDO* problemeHebdo_ = nullptr;
     Data::mpsExportStatus export_mps_;
     bool export_mps_on_error_;
-    PROBLEME_SIMPLEXE_NOMME* named_splx_problem_ = nullptr;
     MPSolver* solver_ = nullptr;
     uint current_optim_number_;
 };

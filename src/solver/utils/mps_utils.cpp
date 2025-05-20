@@ -21,6 +21,7 @@
 #include "antares/solver/utils/mps_utils.h"
 
 #include <antares/study/study.h>
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/simulation/simulation.h"
 #include "antares/solver/utils/ortools_utils.h"
 
@@ -66,7 +67,7 @@ class ProblemConverter
 {
 public:
     void copyProbSimplexeToProbMps(PROBLEME_MPS* dest,
-                                   PROBLEME_SIMPLEXE_NOMME* src,
+                                   PROBLEME_ANTARES_A_RESOUDRE* src,
                                    NameTranslator& nameTranslator)
     {
         // Variables
@@ -79,27 +80,28 @@ public:
         }
 
         dest->TypeDeVariable = mVariableType.data();
-        dest->TypeDeBorneDeLaVariable = src->TypeDeVariable; // VARIABLE_BORNEE_DES_DEUX_COTES,
-                                                             // VARIABLE_BORNEE_INFERIEUREMENT, etc.
+        dest->TypeDeBorneDeLaVariable = src->TypeDeVariable
+                                          .data(); // VARIABLE_BORNEE_DES_DEUX_COTES,
+                                                   // VARIABLE_BORNEE_INFERIEUREMENT, etc.
 
-        dest->Umax = src->Xmax;
-        dest->Umin = src->Xmin;
+        dest->Umax = src->Xmax.data();
+        dest->Umin = src->Xmin.data();
 
         // Objective function
-        dest->L = src->CoutLineaire;
+        dest->L = src->CoutLineaire.data();
 
         // Constraints (sparse)
         dest->NbCnt = src->NombreDeContraintes;
-        dest->Mdeb = src->IndicesDebutDeLigne;
-        dest->A = src->CoefficientsDeLaMatriceDesContraintes;
-        dest->Nuvar = src->IndicesColonnes;
-        dest->NbTerm = src->NombreDeTermesDesLignes;
-        dest->B = src->SecondMembre;
-        dest->SensDeLaContrainte = src->Sens;
+        dest->Mdeb = src->IndicesDebutDeLigne.data();
+        dest->A = src->CoefficientsDeLaMatriceDesContraintes.data();
+        dest->Nuvar = src->IndicesColonnes.data();
+        dest->NbTerm = src->NombreDeTermesDesLignes.data();
+        dest->B = src->SecondMembre.data();
+        dest->SensDeLaContrainte = src->Sens.data();
 
         // Names
-        dest->LabelDeLaVariable = nameTranslator.translate(src->VariableNames(), mVariableNames);
-        dest->LabelDeLaContrainte = nameTranslator.translate(src->ConstraintNames(),
+        dest->LabelDeLaVariable = nameTranslator.translate(src->NomDesVariables, mVariableNames);
+        dest->LabelDeLaContrainte = nameTranslator.translate(src->NomDesContraintes,
                                                              mConstraintNames);
     }
 
@@ -109,7 +111,7 @@ private:
     std::vector<char*> mConstraintNames;
 };
 
-void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(PROBLEME_SIMPLEXE_NOMME* Prob,
+void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(PROBLEME_HEBDO* Prob,
                                                Solver::IResultWriter& writer,
                                                const std::string& filename)
 {
@@ -119,10 +121,10 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(PROBLEME_SIMPLEXE_NOMME* Prob,
 
     auto mps = std::make_shared<PROBLEME_MPS>();
     {
-        auto translator = NameTranslator::create(Prob->UseNamedProblems());
+        auto translator = NameTranslator::create(Prob->NamedProblems);
         ProblemConverter
           converter; // This object must not be destroyed until SRSwritempsprob has been run
-        converter.copyProbSimplexeToProbMps(mps.get(), Prob, *translator);
+        converter.copyProbSimplexeToProbMps(mps.get(), Prob->ProblemeAResoudre.get(), *translator);
         SRSwritempsprob(mps.get(), tmpPath.c_str());
     }
 
@@ -134,15 +136,15 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(PROBLEME_SIMPLEXE_NOMME* Prob,
 // --------------------
 // Full mps writing
 // --------------------
-fullMPSwriter::fullMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem, uint optNumber):
+fullMPSwriter::fullMPSwriter(PROBLEME_HEBDO* problemeHebdo, uint optNumber):
     I_MPS_writer(optNumber),
-    named_splx_problem_(named_splx_problem)
+    problemeHebdo_(problemeHebdo)
 {
 }
 
 void fullMPSwriter::runIfNeeded(Solver::IResultWriter& writer, const std::string& filename)
 {
-    OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(named_splx_problem_, writer, filename);
+    OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(problemeHebdo_, writer, filename);
 }
 
 // ---------------------------------
@@ -159,14 +161,12 @@ void fullOrToolsMPSwriter::runIfNeeded(Solver::IResultWriter& writer, const std:
     ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver_, writer, filename);
 }
 
-mpsWriterFactory::mpsWriterFactory(Data::mpsExportStatus exportMPS,
-                                   bool exportMPSOnError,
+mpsWriterFactory::mpsWriterFactory(PROBLEME_HEBDO* problemeHebdo,
                                    const int current_optim_number,
-                                   PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
                                    MPSolver* solver):
-    export_mps_(exportMPS),
-    export_mps_on_error_(exportMPSOnError),
-    named_splx_problem_(named_splx_problem),
+    problemeHebdo_(problemeHebdo),
+    export_mps_(problemeHebdo->ExportMPS),
+    export_mps_on_error_(problemeHebdo->exportMPSOnError),
     solver_(solver),
     current_optim_number_(current_optim_number)
 {

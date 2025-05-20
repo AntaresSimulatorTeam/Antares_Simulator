@@ -37,6 +37,7 @@
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/utils/filename.h"
 #include "antares/solver/utils/mps_utils.h"
+#include "antares/solver/utils/named_problem.h"
 #include "antares/study/system-model/system.h"
 
 using namespace operations_research;
@@ -108,7 +109,7 @@ static void fillModelerComponents(std::vector<std::unique_ptr<ComponentFiller>>&
 }
 
 static void writeModelerSolutions(const MPSolver* solver,
-                                  PROBLEME_SIMPLEXE_NOMME& Probleme,
+                                  unsigned nLegacyVariables,
                                   const int optimizationNumber,
                                   const OptPeriodStringGenerator& optPeriodStringGenerator,
                                   IResultWriter& writer)
@@ -117,7 +118,8 @@ static void writeModelerSolutions(const MPSolver* solver,
     const auto& variables = solver->variables();
 
     // we want to only get modeler variables, they're added after legacy vars
-    auto start = variables.begin() + Probleme.NombreDeVariables;
+    // TODO make this cleaner (what happens if order changes? use modeler var dictionary instead?)
+    auto start = variables.begin() + nLegacyVariables;
     if (start == variables.end())
     {
         logs.debug() << "No modeler solutions, skip writing files";
@@ -306,11 +308,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
-    mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
-                                        problemeHebdo->exportMPSOnError,
-                                        optimizationNumber,
-                                        &Probleme,
-                                        solver);
+    mpsWriterFactory mps_writer_factory(problemeHebdo, optimizationNumber, solver);
 
     auto mps_writer = mps_writer_factory.create();
     mps_writer->runIfNeeded(writer, filename);
@@ -347,7 +345,11 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         throw FatalError("Internal error: insufficient memory");
     }
 
-    writeModelerSolutions(solver, Probleme, optimizationNumber, optPeriodStringGenerator, writer);
+    writeModelerSolutions(solver,
+                          ProblemeAResoudre->NombreDeVariables,
+                          optimizationNumber,
+                          optPeriodStringGenerator,
+                          writer);
 
     return {.success = true,
             .timeMeasure = timeMeasure,
