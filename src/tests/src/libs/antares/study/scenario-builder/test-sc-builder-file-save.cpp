@@ -553,10 +553,6 @@ BOOST_FIXTURE_TEST_CASE(
     referenceFile.append("bc,group3,10 = 6");
     referenceFile.write();
 
-    std::ofstream ref("/tmp/ref");
-    std::ofstream out("/tmp/out");
-    ref << referenceFile.path();
-    out << path_to_generated_file;
     BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
     /*
 

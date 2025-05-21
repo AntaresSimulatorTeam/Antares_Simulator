@@ -480,7 +480,7 @@ bool Rules::readLine(const AreaName::Vector& splitKey, const String& value, bool
     {
         return readBindingConstraints(splitKey, value);
     }
-    else if (kind_of_scenario == "st")
+    else if (kind_of_scenario == "sts")
     {
         return readShortTermStorage(splitKey, value, updaterMode);
     }

@@ -572,7 +572,7 @@ BOOST_FIXTURE_TEST_CASE(short_term_storage_valid_cluster_and_year__reading_OK, F
 {
     AreaName yearNumber = "5";
     String tsNumber = "3";
-    AreaName::Vector splitKey = {"st", "area 1", yearNumber, "st-cluster-1"};
+    AreaName::Vector splitKey = {"sts", "area 1", yearNumber, "st-cluster-1"};
 
     BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
     BOOST_CHECK_EQUAL(my_rule.shortTermStorage[0].get_value("st-cluster-1", yearNumber.to<uint>()),
@@ -585,7 +585,7 @@ BOOST_FIXTURE_TEST_CASE(short_term_storage_nonexistent_cluster, Fixture)
 {
     AreaName yearNumber = "3";
     String tsNumber = "2";
-    AreaName::Vector splitKey = {"st", "area 2", yearNumber, "nonexistent-cluster"};
+    AreaName::Vector splitKey = {"sts", "area 2", yearNumber, "nonexistent-cluster"};
     BOOST_CHECK(!my_rule.readLine(splitKey, tsNumber));
 }
 
@@ -593,7 +593,7 @@ BOOST_FIXTURE_TEST_CASE(short_term_storage_nonexistent_area, Fixture)
 {
     AreaName yearNumber = "7";
     String tsNumber = "1";
-    AreaName::Vector splitKey = {"st", "nonexistent area", yearNumber, "any-cluster"};
+    AreaName::Vector splitKey = {"sts", "nonexistent area", yearNumber, "any-cluster"};
     BOOST_CHECK(!my_rule.readLine(splitKey, tsNumber));
 }
 
@@ -603,7 +603,7 @@ BOOST_FIXTURE_TEST_CASE(short_term_storage_large_ts_number__handled_gracefully, 
 
     AreaName yearNumber = "10";
     String veryLarge = "100000000"; // take maxTSnumber := 10'000
-    AreaName::Vector splitKey = {"st", "area 1", yearNumber, "st-cluster-1"};
+    AreaName::Vector splitKey = {"sts", "area 1", yearNumber, "st-cluster-1"};
 
     BOOST_CHECK(my_rule.readLine(splitKey, veryLarge));
 }
