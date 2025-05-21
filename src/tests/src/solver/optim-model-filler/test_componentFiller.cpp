@@ -332,6 +332,19 @@ BOOST_AUTO_TEST_CASE(var_with_empty_lower_bound_default_to_minus_infinity) {
     BOOST_CHECK_EQUAL(var->getUb(), 10);
 }
 
+BOOST_AUTO_TEST_CASE(var_BOOLEAN_with_empty_lower_bound_default_to_0) {
+    createModel("my-model",
+            {},
+            {{"variableB", ValueType::BOOL, nullptr, literal(1)}},
+            {});
+    createComponent("my-model", "component");
+    buildLinearProblem();
+    auto* var = pb->lookupVariable("component.variableB_t" + to_string(0));
+    BOOST_REQUIRE(var);
+    BOOST_CHECK_EQUAL(var->getLb(), 0);
+    BOOST_CHECK_EQUAL(var->getUb(), 1);
+}
+
 BOOST_AUTO_TEST_CASE(two_variables_given_to_different_fillers__LP_contains_the_two_variables)
 {
     createModelWithOneFloatVar("m1", {}, "var1", literal(-1), literal(6), {});

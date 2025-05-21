@@ -173,8 +173,9 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
     };
     for (const auto& variable: component_.getModel()->Variables() | std::views::values)
     {
-        const auto& lb = valueOrDefault(variable.LowerBound(), -std::numeric_limits<double>::infinity());
-        const auto& ub = valueOrDefault(variable.UpperBound(), std::numeric_limits<double>::infinity());
+        namespace SM = ModelerStudy::SystemModel;
+        const auto& lb = valueOrDefault(variable.LowerBound(), variable.Type() == SM::ValueType::BOOL ? 0 : -std::numeric_limits<double>::infinity());
+        const auto& ub = valueOrDefault(variable.UpperBound(), variable.Type() == SM::ValueType::BOOL ? 1 :std::numeric_limits<double>::infinity());
         const PartialKey key(component_.Id(), variable.Id());
         if (variable.isTimeDependent())
         {
