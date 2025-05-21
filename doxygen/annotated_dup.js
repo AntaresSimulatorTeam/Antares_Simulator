@@ -648,8 +648,7 @@ var annotated_dup =
         [ "LegacyFiller", "classAntares_1_1Optimization_1_1LegacyFiller.html", "classAntares_1_1Optimization_1_1LegacyFiller" ],
         [ "LegacyOrtoolsLinearProblem", "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html", "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem" ],
         [ "BasisStatusImpl", "classAntares_1_1Optimization_1_1BasisStatusImpl.html", "classAntares_1_1Optimization_1_1BasisStatusImpl" ],
-        [ "BasisStatus", "classAntares_1_1Optimization_1_1BasisStatus.html", "classAntares_1_1Optimization_1_1BasisStatus" ],
-        [ "PROBLEME_SIMPLEXE_NOMME", "structAntares_1_1Optimization_1_1PROBLEME__SIMPLEXE__NOMME.html", "structAntares_1_1Optimization_1_1PROBLEME__SIMPLEXE__NOMME" ]
+        [ "BasisStatus", "classAntares_1_1Optimization_1_1BasisStatus.html", "classAntares_1_1Optimization_1_1BasisStatus" ]
       ] ],
       [ "Private", null, [
         [ "Component", null, [
@@ -1525,7 +1524,6 @@ var annotated_dup =
     [ "FlowDissociation", "classFlowDissociation.html", "classFlowDissociation" ],
     [ "FlowDissociationData", "structFlowDissociationData.html", "structFlowDissociationData" ],
     [ "FolderRemover", "classFolderRemover.html", "classFolderRemover" ],
-    [ "fullMPSwriter", "classfullMPSwriter.html", "classfullMPSwriter" ],
     [ "fullOrToolsMPSwriter", "classfullOrToolsMPSwriter.html", "classfullOrToolsMPSwriter" ],
     [ "global_JIT_manager", "classglobal__JIT__manager.html", "classglobal__JIT__manager" ],
     [ "Group1", "classGroup1.html", "classGroup1" ],
@@ -1585,7 +1583,6 @@ var annotated_dup =
     [ "MyDummyFixture", "structMyDummyFixture.html", "structMyDummyFixture" ],
     [ "MyStudyFinder", "classMyStudyFinder.html", "classMyStudyFinder" ],
     [ "Namer", "classNamer.html", "classNamer" ],
-    [ "NameTranslator", "classNameTranslator.html", "classNameTranslator" ],
     [ "NbDispUnitsMinBoundSinceMinUpTime", "classNbDispUnitsMinBoundSinceMinUpTime.html", "classNbDispUnitsMinBoundSinceMinUpTime" ],
     [ "NbDispUnitsMinBoundSinceMinUpTimeData", "structNbDispUnitsMinBoundSinceMinUpTimeData.html", "structNbDispUnitsMinBoundSinceMinUpTimeData" ],
     [ "NbDispUnitsMinBoundSinceMinUpTimeGroup", "classNbDispUnitsMinBoundSinceMinUpTimeGroup.html", "classNbDispUnitsMinBoundSinceMinUpTimeGroup" ],
@@ -1595,7 +1592,6 @@ var annotated_dup =
     [ "NettingCumulationConstraint", "classNettingCumulationConstraint.html", "classNettingCumulationConstraint" ],
     [ "NonCopyableFunctionObject", "structNonCopyableFunctionObject.html", "structNonCopyableFunctionObject" ],
     [ "nullMPSwriter", "classnullMPSwriter.html", "classnullMPSwriter" ],
-    [ "NullName", "classNullName.html", "classNullName" ],
     [ "NullProvider", "classNullProvider.html", "classNullProvider" ],
     [ "OneAreaStudy", "structOneAreaStudy.html", "structOneAreaStudy" ],
     [ "OptDailyStringGenerator", "classOptDailyStringGenerator.html", "classOptDailyStringGenerator" ],
@@ -1616,8 +1612,7 @@ var annotated_dup =
     [ "Power", "structPower.html", "structPower" ],
     [ "PredicateIdentity", "structPredicateIdentity.html", "structPredicateIdentity" ],
     [ "PrepareYaml", "structPrepareYaml.html", "structPrepareYaml" ],
-    [ "ProblemConverter", "classProblemConverter.html", "classProblemConverter" ],
-    [ "PROBLEME_ANTARES_A_RESOUDRE", "structPROBLEME__ANTARES__A__RESOUDRE.html", "structPROBLEME__ANTARES__A__RESOUDRE" ],
+    [ "PROBLEME_ANTARES_A_RESOUDRE", "classPROBLEME__ANTARES__A__RESOUDRE.html", "classPROBLEME__ANTARES__A__RESOUDRE" ],
     [ "PROBLEME_HEBDO", "structPROBLEME__HEBDO.html", "structPROBLEME__HEBDO" ],
     [ "PROBLEME_HYDRAULIQUE_ETENDU", "structPROBLEME__HYDRAULIQUE__ETENDU.html", "structPROBLEME__HYDRAULIQUE__ETENDU" ],
     [ "PROBLEME_LINEAIRE_ETENDU_PARTIE_FIXE", "structPROBLEME__LINEAIRE__ETENDU__PARTIE__FIXE.html", "structPROBLEME__LINEAIRE__ETENDU__PARTIE__FIXE" ],
@@ -1631,7 +1626,6 @@ var annotated_dup =
     [ "QuadraticProblemMatrix", "classQuadraticProblemMatrix.html", "classQuadraticProblemMatrix" ],
     [ "RawConnection", "structRawConnection.html", "structRawConnection" ],
     [ "ReadFromStreamFixture", "structReadFromStreamFixture.html", "structReadFromStreamFixture" ],
-    [ "RealName", "classRealName.html", "classRealName" ],
     [ "referenceIniFile", "classreferenceIniFile.html", "classreferenceIniFile" ],
     [ "referenceScBuilderFile", "classreferenceScBuilderFile.html", "classreferenceScBuilderFile" ],
     [ "RenewableClusterStudy", "structRenewableClusterStudy.html", "structRenewableClusterStudy" ],

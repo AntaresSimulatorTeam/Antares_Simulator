@@ -35,7 +35,6 @@ var namespaceAntares_1_1Optimization =
     [ "LegacyOrtoolsLinearProblem", "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html", "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem" ],
     [ "BasisStatusImpl", "classAntares_1_1Optimization_1_1BasisStatusImpl.html", "classAntares_1_1Optimization_1_1BasisStatusImpl" ],
     [ "BasisStatus", "classAntares_1_1Optimization_1_1BasisStatus.html", "classAntares_1_1Optimization_1_1BasisStatus" ],
-    [ "PROBLEME_SIMPLEXE_NOMME", "structAntares_1_1Optimization_1_1PROBLEME__SIMPLEXE__NOMME.html", "structAntares_1_1Optimization_1_1PROBLEME__SIMPLEXE__NOMME" ],
     [ "FullKeyMap", "namespaceAntares_1_1Optimization.html#ab781095ca93efa828787e247dc75ac6f", null ],
     [ "LinearExpressionMap", "namespaceAntares_1_1Optimization.html#a381a6f88b0e7939894e8dfc6001069b3", null ],
     [ "add_maps", "namespaceAntares_1_1Optimization.html#a5883ed16372622a37ab368363396eb3a", null ],

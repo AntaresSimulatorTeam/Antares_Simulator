@@ -584,7 +584,6 @@ var hierarchy =
     [ "Antares::Data::HydroMaxTimeSeriesReader", "classAntares_1_1Data_1_1HydroMaxTimeSeriesReader.html", null ],
     [ "HydroPowerData", "structHydroPowerData.html", null ],
     [ "I_MPS_writer", "classI__MPS__writer.html", [
-      [ "fullMPSwriter", "classfullMPSwriter.html", null ],
       [ "fullOrToolsMPSwriter", "classfullOrToolsMPSwriter.html", null ],
       [ "nullMPSwriter", "classnullMPSwriter.html", null ]
     ] ],
@@ -1153,10 +1152,6 @@ var hierarchy =
       [ "ConstraintNamer", "classConstraintNamer.html", null ],
       [ "VariableNamer", "classVariableNamer.html", null ]
     ] ],
-    [ "NameTranslator", "classNameTranslator.html", [
-      [ "NullName", "classNullName.html", null ],
-      [ "RealName", "classRealName.html", null ]
-    ] ],
     [ "NbDispUnitsMinBoundSinceMinUpTimeData", "structNbDispUnitsMinBoundSinceMinUpTimeData.html", null ],
     [ "NbUnitsOutageLessThanNbUnitsStopData", "structNbUnitsOutageLessThanNbUnitsStopData.html", null ],
     [ "Antares::Solver::Variable::Category::NextLevel< Index, Limit >", "structAntares_1_1Solver_1_1Variable_1_1Category_1_1NextLevel.html", null ],
@@ -1371,8 +1366,7 @@ var hierarchy =
     [ "Antares::Data::PreproHydro", "classAntares_1_1Data_1_1PreproHydro.html", null ],
     [ "Antares::Solver::Variable::PrintInfosStdCout", "classAntares_1_1Solver_1_1Variable_1_1PrintInfosStdCout.html", null ],
     [ "Antares::Window::Inspector::PRnClusterTSMode", "structAntares_1_1Window_1_1Inspector_1_1PRnClusterTSMode.html", null ],
-    [ "ProblemConverter", "classProblemConverter.html", null ],
-    [ "PROBLEME_ANTARES_A_RESOUDRE", "structPROBLEME__ANTARES__A__RESOUDRE.html", null ],
+    [ "PROBLEME_ANTARES_A_RESOUDRE", "classPROBLEME__ANTARES__A__RESOUDRE.html", null ],
     [ "PROBLEME_HEBDO", "structPROBLEME__HEBDO.html", null ],
     [ "DoneesOptimisationJournaliere::PROBLEME_HYDRAULIQUE", "structDoneesOptimisationJournaliere_1_1PROBLEME__HYDRAULIQUE.html", null ],
     [ "DonneesOptimisationMensuelle::PROBLEME_HYDRAULIQUE", "structDonneesOptimisationMensuelle_1_1PROBLEME__HYDRAULIQUE.html", null ],
@@ -1383,9 +1377,6 @@ var hierarchy =
     [ "DonneesOptimisationMensuelle::PROBLEME_LINEAIRE_PARTIE_FIXE", "structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html", null ],
     [ "DoneesOptimisationJournaliere::PROBLEME_LINEAIRE_PARTIE_VARIABLE", "structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html", null ],
     [ "DonneesOptimisationMensuelle::PROBLEME_LINEAIRE_PARTIE_VARIABLE", "structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html", null ],
-    [ "PROBLEME_SIMPLEXE", null, [
-      [ "Antares::Optimization::PROBLEME_SIMPLEXE_NOMME", "structAntares_1_1Optimization_1_1PROBLEME__SIMPLEXE__NOMME.html", null ]
-    ] ],
     [ "ProblemMatrixEssential", "classProblemMatrixEssential.html", [
       [ "LinearProblemMatrix", "classLinearProblemMatrix.html", null ],
       [ "LinearProblemMatrixStartUpCosts", "classLinearProblemMatrixStartUpCosts.html", null ],

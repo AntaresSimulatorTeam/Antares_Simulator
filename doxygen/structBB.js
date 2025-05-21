@@ -21,7 +21,6 @@ var structBB =
     [ "IncrementDAllocationMatriceDesContraintes", "structBB.html#a286f70c90846140d2ac9485ea35e361b", null ],
     [ "IndicesColonnes", "structBB.html#a32726715530dab039846fd3cd1e33bd4", null ],
     [ "IndicesDebutDeLigne", "structBB.html#a170689f7ab46978b9b81f3c1cb8b14c1", null ],
-    [ "NamedProblems", "structBB.html#af61f9e3d2388d39aeb3310b51622e6cf", null ],
     [ "nombreDeContraintes", "structBB.html#a4cf4f5868c1dd52e6a7f91280d4bd092", null ],
     [ "NombreDePasDeTemps", "structBB.html#a885cf9d49b7680238ceef02ca4c54d75", null ],
     [ "nombreDePasDeTempsPourUneOptimisation", "structBB.html#a8b92f8dfb10f6a9898a62667782f3288", null ],

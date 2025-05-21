@@ -2,7 +2,7 @@ var structComponentToAreaConnectionFillerFixture =
 [
     [ "ComponentToAreaConnectionFillerFixture", "structComponentToAreaConnectionFillerFixture.html#aa5f8b0f4b80dab7aaf225af5679921cc", null ],
     [ "addEmptyConstraints", "structComponentToAreaConnectionFillerFixture.html#afe7c5c0dca31614fd935d57216d9008f", null ],
-    [ "addEmptyConstraints", "structComponentToAreaConnectionFillerFixture.html#a8713b891a5112efefc684df81feb323e", null ],
+    [ "addEmptyConstraintsToLinearProblem", "structComponentToAreaConnectionFillerFixture.html#ac184dd7bdb22f1bfd0c04699d425b5ce", null ],
     [ "fillProblem", "structComponentToAreaConnectionFillerFixture.html#a500115b4a4f585bf959bb0ae59352796", null ],
     [ "setUpLegacyLp", "structComponentToAreaConnectionFillerFixture.html#a83fe9a1fd25d582a4e03350455053f51", null ],
     [ "setUpModelerSystem", "structComponentToAreaConnectionFillerFixture.html#a4f29778fa2665a006a4017a5e3140631", null ],
@@ -11,5 +11,5 @@ var structComponentToAreaConnectionFillerFixture =
     [ "linearProblem", "structComponentToAreaConnectionFillerFixture.html#ae456599d2ae1b88b4c454b4227bc36c3", null ],
     [ "modelerSystem", "structComponentToAreaConnectionFillerFixture.html#a6994bbdc982bbc621a370f36464ed9e2", null ],
     [ "modelerVariableDictionary", "structComponentToAreaConnectionFillerFixture.html#a44adfa5caa650230b94dd4c4cda5ffde", null ],
-    [ "problemeSimplexe", "structComponentToAreaConnectionFillerFixture.html#a161dde1afe7149171ec7dca152049883", null ]
+    [ "problemeHebdo", "structComponentToAreaConnectionFillerFixture.html#a536168e56f7d23bace96ae4c600d897d", null ]
 ];
