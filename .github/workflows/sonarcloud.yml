@@ -64,9 +64,9 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: ${{ github.workspace }}/.ccache
-          key: sonarcloud-${{ env.SONAR_SCANNER_VERSION }}-${{ github.sha }}
+          key: abcd
           restore-keys: |
-            sonarcloud-${{ env.SONAR_SCANNER_VERSION }}- 
+            abcd-${{ env.SONAR_SCANNER_VERSION }}- 
 
       - name: Configure ccache
         run: |
