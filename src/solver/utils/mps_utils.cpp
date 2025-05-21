@@ -21,7 +21,6 @@
 #include "antares/solver/utils/mps_utils.h"
 
 #include <antares/study/study.h>
-#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/utils/ortools_utils.h"
 
 using namespace Antares;
@@ -54,64 +53,8 @@ using namespace Antares::Data;
 ** SPDX-License-Identifier: MPL-2.0
 */
 #include <string>
-#include <vector>
 
 #include "antares/solver/optimisation/opt_constants.h"
-#include "antares/solver/utils/name_translator.h"
-extern "C"
-{
-#include "spx_definition_arguments.h"
-#include "spx_fonctions.h"
-#include "srs_api.h"
-}
-
-class ProblemConverter
-{
-public:
-    void copyProbSimplexeToProbMps(PROBLEME_MPS* dest,
-                                   PROBLEME_ANTARES_A_RESOUDRE* src,
-                                   NameTranslator& nameTranslator)
-    {
-        // Variables
-        dest->NbVar = src->NombreDeVariables;
-
-        mVariableType.resize(src->NombreDeVariables);
-        for (int var = 0; var < src->NombreDeVariables; var++)
-        {
-            mVariableType[var] = src->VariablesEntieres[var] ? SRS_INTEGER_VAR : SRS_CONTINUOUS_VAR;
-        }
-
-        dest->TypeDeVariable = mVariableType.data();
-        dest->TypeDeBorneDeLaVariable = src->TypeDeVariable
-                                          .data(); // VARIABLE_BORNEE_DES_DEUX_COTES,
-                                                   // VARIABLE_BORNEE_INFERIEUREMENT, etc.
-
-        dest->Umax = src->Xmax.data();
-        dest->Umin = src->Xmin.data();
-
-        // Objective function
-        dest->L = src->CoutLineaire.data();
-
-        // Constraints (sparse)
-        dest->NbCnt = src->NombreDeContraintes;
-        dest->Mdeb = src->IndicesDebutDeLigne.data();
-        dest->A = src->CoefficientsDeLaMatriceDesContraintes.data();
-        dest->Nuvar = src->IndicesColonnes.data();
-        dest->NbTerm = src->NombreDeTermesDesLignes.data();
-        dest->B = src->SecondMembre.data();
-        dest->SensDeLaContrainte = src->Sens.data();
-
-        // Names
-        dest->LabelDeLaVariable = nameTranslator.translate(src->NomDesVariables, mVariableNames);
-        dest->LabelDeLaContrainte = nameTranslator.translate(src->NomDesContraintes,
-                                                             mConstraintNames);
-    }
-
-private:
-    std::vector<int> mVariableType;
-    std::vector<char*> mVariableNames;
-    std::vector<char*> mConstraintNames;
-};
 
 // ---------------------------------
 // Full mps writing by or-tools
