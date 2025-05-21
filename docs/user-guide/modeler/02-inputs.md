@@ -139,7 +139,7 @@ models:
     - **id**: an ID for the variable. Must be unique inside the scope of the model, and
       respect [these rules](#rules-for-ids).
     - **variable-type**: `continuous`, `integer`, or `binary`
-    - **lower-bound**: an [expression](#expressions) representing the lower bound of the variable. Must use scalars
+    - **lower-bound** _(optional)_: an [expression](#expressions) representing the lower bound of the variable. Must use scalars
       and/or parameters only. If missing, defaults to -inf for continuous and integer types, or 0 for binary.
     - **upper-bound**: an [expression](#expressions) representing the upper bound of the variable. Must use scalars
       and/or parameters only. If missing default to +inf for continuous and integer type or 1 for binary.
