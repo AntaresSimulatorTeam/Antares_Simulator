@@ -61,7 +61,7 @@ void ShortTermAdditionalConstraintsTSNumberData::setTSnumber(
     }
 }
 
-unsigned ShortTermAdditionalConstraintsTSNumberData::get_value(
+unsigned ShortTermAdditionalConstraintsTSNumberData::get(
   const ShortTermStorage::AdditionalConstraints* sts,
   unsigned year) const
 {
@@ -100,7 +100,7 @@ void ShortTermAdditionalConstraintsTSNumberData::saveToINIFile(Yuni::IO::File::S
         {
             for (uint year = 0; year < c->timeseriesNumbers.height(); ++year)
             {
-                const uint val = get_value(c.get(), year);
+                const uint val = get(c.get(), year);
 
                 // Equals to zero means 'auto', which is the default mode
                 if (!val)

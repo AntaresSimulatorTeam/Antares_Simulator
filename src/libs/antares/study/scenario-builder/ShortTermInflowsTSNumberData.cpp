@@ -57,8 +57,8 @@ void ShortTermInflowsTSNumberData::setTSnumber(const ShortTermStorage::STStorage
     }
 }
 
-unsigned ShortTermInflowsTSNumberData::get_value(const ShortTermStorage::STStorageCluster* sts,
-                                                 unsigned year) const
+unsigned ShortTermInflowsTSNumberData::get(const ShortTermStorage::STStorageCluster* sts,
+                                           unsigned year) const
 {
     return rules_.at(sts)[0][year];
 }
@@ -90,7 +90,7 @@ void ShortTermInflowsTSNumberData::saveToINIFile(Yuni::IO::File::Stream& file) c
     {
         for (uint year = 0; year < sts.series->inflows.timeseriesNumbers.height(); ++year)
         {
-            const uint val = get_value(&sts, year);
+            const uint val = get(&sts, year);
 
             // Equals to zero means 'auto', which is the default mode
             if (!val)

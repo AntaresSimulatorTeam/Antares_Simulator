@@ -110,7 +110,10 @@ public:
     {
         area1->thermal.list.addToCompleteList(thcluster);
         area1->renewable.list.addToCompleteList(rencluster);
-
+        area1->shortTermStorage.storagesByIndex.push_back({});
+        sts = &(area1->shortTermStorage.storagesByIndex.back());
+        sts->additionalConstraints.push_back(
+          std::make_shared<ShortTermStorage::AdditionalConstraints>());
         bc->group("my-group");
     }
 
@@ -146,6 +149,8 @@ protected:
     std::shared_ptr<ThermalCluster> thcluster;
     std::shared_ptr<RenewableCluster> rencluster;
     std::shared_ptr<BindingConstraint> bc;
+    ShortTermStorage::STStorageCluster* sts;
+    const ShortTermStorage::AdditionalConstraints* adc;
 };
 
 namespace Fixture
@@ -210,6 +215,39 @@ struct BindingConstraint: public StructureIndex<BindingConstraintsTSNumberData, 
     void attachArea() override
     {
         // No area is attached to a binding constraint
+    }
+};
+
+struct STSInflows
+    : public StructureIndex<ShortTermInflowsTSNumberData, const ShortTermStorage::STStorageCluster*>
+{
+    STSInflows() = default;
+
+    const ShortTermStorage::STStorageCluster* getObject() const override
+    {
+        return sts;
+    }
+
+    void attachArea() override
+    {
+        tsdata.attachArea(area1);
+    }
+};
+
+struct STSAdditionalConstraints
+    : public StructureIndex<ShortTermAdditionalConstraintsTSNumberData,
+                            const ShortTermStorage::AdditionalConstraints*>
+{
+    STSAdditionalConstraints() = default;
+
+    const ShortTermStorage::AdditionalConstraints* getObject() const override
+    {
+        return sts->additionalConstraints[0].get();
+    }
+
+    void attachArea() override
+    {
+        tsdata.attachArea(area1);
     }
 };
 
@@ -280,6 +318,23 @@ BOOST_FIXTURE_TEST_CASE(binding_constraint, Fixture::BindingConstraint)
 
     check();
 }
+
+BOOST_FIXTURE_TEST_CASE(sts_inflows, Fixture::STSInflows)
+{
+    setNumberOfYears(5);
+    initializeTSNumbers(5);
+
+    check();
+}
+
+BOOST_FIXTURE_TEST_CASE(sts_additional_constraints, Fixture::STSAdditionalConstraints)
+{
+    setNumberOfYears(5);
+    initializeTSNumbers(5);
+
+    check();
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(sc_too_many_years)

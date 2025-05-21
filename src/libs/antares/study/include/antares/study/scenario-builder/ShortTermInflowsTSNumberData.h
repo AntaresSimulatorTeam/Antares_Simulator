@@ -47,7 +47,7 @@ public:
     void saveToINIFile(Yuni::IO::File::Stream& file) const;
 
     void setTSnumber(const ShortTermStorage::STStorageCluster* sts, unsigned year, unsigned value);
-    unsigned get_value(const ShortTermStorage::STStorageCluster* sts, unsigned year) const;
+    unsigned get(const ShortTermStorage::STStorageCluster* sts, unsigned year) const;
 
 private:
     std::map<const ShortTermStorage::STStorageCluster*, MatrixType> rules_;

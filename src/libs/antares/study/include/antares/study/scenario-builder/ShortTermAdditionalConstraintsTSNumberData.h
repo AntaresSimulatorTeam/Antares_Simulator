@@ -49,7 +49,7 @@ public:
     void setTSnumber(const ShortTermStorage::AdditionalConstraints* ct,
                      unsigned year,
                      unsigned value);
-    unsigned get_value(const ShortTermStorage::AdditionalConstraints* ct, unsigned year) const;
+    unsigned get(const ShortTermStorage::AdditionalConstraints* ct, unsigned year) const;
 
 private:
     std::map<const ShortTermStorage::AdditionalConstraints*, MatrixType> rules_;
