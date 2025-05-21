@@ -118,7 +118,6 @@ struct BB
       10,
       std::vector<int>(5, -1));
     std::vector<std::string> NomDesContraintes = std::vector<std::string>(100, "");
-    const bool NamedProblems = true;
     const std::vector<const char*> NomsDesPays = {"CountryA", "CountryB", "CountryC"};
     const uint32_t weekInTheYear = 1;        // Example week
     const uint32_t NombreDePasDeTemps = 168; // Example number of time steps in a week
