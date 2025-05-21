@@ -49,7 +49,6 @@ public:
     std::vector<int>& NumeroDeVariableStockFinal;
     std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock;
     std::vector<std::string>& NomDesContraintes;
-    const bool& NamedProblems;
     const std::vector<const char*>& NomsDesPays;
     const uint32_t& weekInTheYear;
     const uint32_t& NombreDePasDeTemps;

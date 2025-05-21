@@ -203,7 +203,6 @@ struct BB
                 NumeroDeVariableStockFinal,
                 NumeroDeVariableDeTrancheDeStock,
                 NomDesContraintes,
-                NamedProblems,
                 NomsDesPays,
                 weekInTheYear,
                 NombreDePasDeTemps};

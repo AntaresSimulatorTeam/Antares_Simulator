@@ -40,7 +40,6 @@ ConstraintBuilderData NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre
             problemeHebdo->NumeroDeVariableStockFinal,
             problemeHebdo->NumeroDeVariableDeTrancheDeStock,
             ProblemeAResoudre.NomDesContraintes,
-            problemeHebdo->NamedProblems,
             problemeHebdo->NomsDesPays,
             problemeHebdo->weekInTheYear,
             problemeHebdo->NombreDePasDeTemps};
