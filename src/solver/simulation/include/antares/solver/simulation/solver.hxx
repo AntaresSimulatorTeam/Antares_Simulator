@@ -148,7 +148,8 @@ public:
             auto randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
 
             int numSpace = numspaceManager.getAvailableNumSpace();
-            logs.debug() << "year " << y << " started and received numSpace " << numSpace;
+            logs.info() << "Year " << y + 1 << " started";
+            logs.debug() << "year " << y + 1 << " received numSpace " << numSpace;
             assert(numSpace >= 0);
 
             // Getting the scratchMap associated to the current year
