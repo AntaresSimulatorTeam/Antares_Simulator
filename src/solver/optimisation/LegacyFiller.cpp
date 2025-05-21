@@ -123,6 +123,10 @@ void LegacyFiller::CopyRows(ILinearProblem& pb) const
     }
 }
 
+// TODO: in the following code, we hide variable & constraint names from MPSolver only to
+// workaround MPSolver.Write when we want lighter MPS. In the future (maybe through MathOpt), this
+// shouldn't be done here
+
 std::string LegacyFiller::GetVariableName(unsigned int index) const
 {
     if (!useNamedProblems_ || problemeAResoudre_->NomDesVariables[index].empty())
