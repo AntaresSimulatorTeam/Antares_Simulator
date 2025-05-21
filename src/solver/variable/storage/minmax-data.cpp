@@ -30,9 +30,10 @@ static void initArray(bool opInferior, std::vector<MinMaxData::Data>& array)
     for (auto& data: array)
     {
         data.value = opInferior ? DBL_MAX : -DBL_MAX; // +inf or -inf
-        data.indices = 0;
+        data.indices = (uint32_t)-1;
     }
 }
+constexpr double eps = 1.e-7;
 
 static void mergeArray(bool opInferior,
                        unsigned year,

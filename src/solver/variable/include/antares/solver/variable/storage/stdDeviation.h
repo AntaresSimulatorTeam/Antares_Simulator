@@ -24,8 +24,6 @@
 #include <cmath>
 #include <float.h>
 
-#include <boost/multiprecision/cpp_dec_float.hpp>
-
 using HighPrecision = long double;
 
 namespace Antares

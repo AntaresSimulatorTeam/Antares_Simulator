@@ -21,8 +21,6 @@
 #ifndef __SOLVER_VARIABLE_STORAGE_AVERAGE_DATA_H__
 #define __SOLVER_VARIABLE_STORAGE_AVERAGE_DATA_H__
 
-#include <boost/multiprecision/cpp_dec_float.hpp>
-
 #include <antares/study/study.h>
 #include "antares/solver/variable/storage/intermediate.h"
 
