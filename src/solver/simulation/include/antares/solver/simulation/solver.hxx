@@ -225,7 +225,7 @@ public:
             simulation_->computeAnnualCostsStatistics(state);
             aggregationMutex.unlock();
 
-            logs.debug() << "year " << y << " ended and returned numSpace " << numSpace;
+            logs.debug() << "year " << y + 1 << " ended and returned numSpace " << numSpace;
             numspaceManager.freeNumSpace(numSpace);
         }
         else
