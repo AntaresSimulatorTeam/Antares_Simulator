@@ -34,8 +34,6 @@ class ComponentToAreaConnectionFiller: public Optimisation::LinearProblemApi::Li
 public:
     explicit ComponentToAreaConnectionFiller(const PROBLEME_HEBDO* problemeHebdo,
                                              const VariableDictionary& modelerVariableDictionary);
-    std::string getLegacyConstraintName(const PROBLEME_ANTARES_A_RESOUDRE* problemeAResoudre,
-                                        unsigned index) const;
     void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
                       Optimisation::LinearProblemApi::FillContext& ctx) override;
