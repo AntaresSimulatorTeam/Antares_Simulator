@@ -379,6 +379,9 @@ var hierarchy =
       [ "Antares::Solver::Variable::IVariable< DispatchableGenMargin< Container::EndOfList >, Container::EndOfList, VCardDispatchableGenMargin >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::DispatchableGenMargin< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html", null ]
       ] ],
+      [ "Antares::Solver::Variable::IVariable< NearPriceCap< Container::EndOfList >, Container::EndOfList, VCardNearPriceCap >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::NearPriceCap< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NearPriceCap.html", null ]
+      ] ],
       [ "Antares::Solver::Variable::IVariable< SpatialAggregate< VarT, Container::EndOfList >, Container::EndOfList, VCardProxy< VarT > >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Common::SpatialAggregate< VarT, NextT >", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html", null ]
       ] ],
@@ -1594,6 +1597,7 @@ var hierarchy =
     [ "Antares::Solver::Variable::Economy::MiscGenMinusRowPSP< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MiscGenMinusRowPSP_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::NbOfDispatchedUnits< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::NbOfDispatchedUnitsByPlant< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant_1_1Statistics.html", null ],
+    [ "Antares::Solver::Variable::Economy::NearPriceCap< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NearPriceCap_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::NonProportionalCost< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCost_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::NonProportionalCostByDispatchablePlant< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispatchablePlant_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::OperatingCost< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCost_1_1Statistics.html", null ],
@@ -1661,6 +1665,7 @@ var hierarchy =
     [ "Antares::Solver::Variable::Storage< VCardMiscGenMinusRowPSP >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardNbOfDispatchedUnits >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardNbOfDispatchedUnitsByPlant >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
+    [ "Antares::Solver::Variable::Storage< VCardNearPriceCap >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardNonProportionalCost >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardNonProportionalCostByDispatchablePlant >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardOperatingCost >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
@@ -1899,6 +1904,7 @@ var hierarchy =
     [ "Antares::Solver::Variable::Economy::VCardMiscGenMinusRowPSP", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMiscGenMinusRowPSP.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardNbOfDispatchedUnits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnits.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardNbOfDispatchedUnitsByPlant", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html", null ],
+    [ "Antares::Solver::Variable::Economy::VCardNearPriceCap", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardNonProportionalCost", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNonProportionalCost.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardNonProportionalCostByDispatchablePlant", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNonProportionalCostByDispatchablePlant.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardOperatingCost", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOperatingCost.html", null ],

@@ -827,6 +827,8 @@ var annotated_dup =
             [ "NbOfDispatchedUnits", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits.html", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits" ],
             [ "VCardNbOfDispatchedUnitsByPlant", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant" ],
             [ "NbOfDispatchedUnitsByPlant", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant.html", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant" ],
+            [ "VCardNearPriceCap", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap" ],
+            [ "NearPriceCap", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NearPriceCap.html", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NearPriceCap" ],
             [ "VCardNonProportionalCost", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNonProportionalCost.html", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNonProportionalCost" ],
             [ "NonProportionalCost", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCost.html", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCost" ],
             [ "VCardNonProportionalCostByDispatchablePlant", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNonProportionalCostByDispatchablePlant.html", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNonProportionalCostByDispatchablePlant" ],

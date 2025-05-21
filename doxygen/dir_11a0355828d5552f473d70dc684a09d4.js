@@ -24,6 +24,7 @@ var dir_11a0355828d5552f473d70dc684a09d4 =
     [ "minDispatchableGenByPlant.h", "minDispatchableGenByPlant_8h_source.html", null ],
     [ "nbOfDispatchedUnits.h", "nbOfDispatchedUnits_8h_source.html", null ],
     [ "nbOfDispatchedUnitsByPlant.h", "nbOfDispatchedUnitsByPlant_8h_source.html", null ],
+    [ "nearPriceCap.h", "nearPriceCap_8h_source.html", null ],
     [ "nonProportionalCost.h", "nonProportionalCost_8h_source.html", null ],
     [ "npCostByDispatchablePlant.h", "npCostByDispatchablePlant_8h_source.html", null ],
     [ "operatingCost.h", "operatingCost_8h_source.html", null ],

@@ -1617,6 +1617,8 @@ var namespaces_dup =
             [ "NbOfDispatchedUnits", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits.html", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits" ],
             [ "VCardNbOfDispatchedUnitsByPlant", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant" ],
             [ "NbOfDispatchedUnitsByPlant", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant.html", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant" ],
+            [ "VCardNearPriceCap", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap" ],
+            [ "NearPriceCap", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NearPriceCap.html", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NearPriceCap" ],
             [ "VCardNonProportionalCost", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNonProportionalCost.html", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNonProportionalCost" ],
             [ "NonProportionalCost", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCost.html", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCost" ],
             [ "VCardNonProportionalCostByDispatchablePlant", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNonProportionalCostByDispatchablePlant.html", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNonProportionalCostByDispatchablePlant" ],
@@ -1669,11 +1671,13 @@ var namespaces_dup =
             [ "ItemList", "solver_2variable_2include_2antares_2solver_2variable_2economy_2all_8h.html#aa4aad598d0e0f49745c15bbadccb78df", null ],
             [ "Links", "solver_2variable_2include_2antares_2solver_2variable_2economy_2links_8h.html#ad946441842cca3fb5eda101be73c6a90", null ],
             [ "VariablePerLink", "solver_2variable_2include_2antares_2solver_2variable_2economy_2links_8h.html#a44aafe2a340f8ea798f90fa7c9aa6f30", null ],
-            [ "VariablesPerArea", "solver_2variable_2include_2antares_2solver_2variable_2economy_2all_8h.html#a2c2ad678d1116cc1115231c5262e58b5", null ],
+            [ "VariablesPerArea", "solver_2variable_2include_2antares_2solver_2variable_2economy_2all_8h.html#a33d9e91e2b55c44855f707b198b9378b", null ],
             [ "VariablesPerBindingConstraints", "solver_2variable_2include_2antares_2solver_2variable_2economy_2all_8h.html#a005042f761a476e46844d1dd486d074d", null ],
-            [ "VariablesPerSetOfAreas", "solver_2variable_2include_2antares_2solver_2variable_2economy_2all_8h.html#a27edd4a9e717d90b334dd5310d532fa1", null ],
+            [ "VariablesPerSetOfAreas", "solver_2variable_2include_2antares_2solver_2variable_2economy_2all_8h.html#a1b1a1a934ac1c2c2fcda84dc95a6bfa4", null ],
             [ "computeMaxMRG", "max-mrg-utils_8h.html#a964d979b2dc91a2d4faf60efad135bf6", null ],
-            [ "PrepareMaxMRGFor", "max-mrg-csr_8h.html#a73110ea53bb5d333201e2eda76f48970", null ]
+            [ "PrepareMaxMRGFor", "max-mrg-csr_8h.html#a73110ea53bb5d333201e2eda76f48970", null ],
+            [ "eps", "nearPriceCap_8h.html#ae4c312a5614cd3dabec99918aab0459c", null ],
+            [ "margin", "nearPriceCap_8h.html#a9bc81019a96355ed256af3134ff28fc3", null ]
           ] ],
           [ "Private", null, [
             [ "SurveyResultsData", "classAntares_1_1Solver_1_1Variable_1_1Private_1_1SurveyResultsData.html", "classAntares_1_1Solver_1_1Variable_1_1Private_1_1SurveyResultsData" ],
