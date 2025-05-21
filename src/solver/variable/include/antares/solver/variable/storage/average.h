@@ -22,6 +22,7 @@
 #define __SOLVER_VARIABLE_STORAGE_AVERAGE_H__
 
 #include <vector>
+
 #include "averagedata.h"
 
 namespace Antares
@@ -102,7 +103,7 @@ protected:
             {
             case Category::hourly:
                 InternalExportValues<HOURS_PER_YEAR, VCardT, Category::hourly>(report,
-                                                                                 avgdata.hourly);
+                                                                               avgdata.hourly);
                 break;
             case Category::daily:
                 InternalExportValues<DAYS_PER_YEAR, VCardT, Category::daily>(report, avgdata.daily);

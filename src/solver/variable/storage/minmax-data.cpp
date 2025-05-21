@@ -33,6 +33,7 @@ static void initArray(bool opInferior, std::vector<MinMaxData::Data>& array)
         data.indices = (uint32_t)-1;
     }
 }
+
 constexpr double eps = 1.e-7;
 
 static void mergeArray(bool opInferior,
