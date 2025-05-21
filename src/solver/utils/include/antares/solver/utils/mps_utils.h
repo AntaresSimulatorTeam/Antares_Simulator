@@ -43,28 +43,10 @@ public:
 
     I_MPS_writer() = default;
     virtual ~I_MPS_writer() = default;
-    virtual void runIfNeeded(Solver::IResultWriter& writer,
-                             const std::string& filename,
-                             bool forceNamedProblems)
-      = 0;
+    virtual void runIfNeeded(Solver::IResultWriter& writer, const std::string& filename) = 0;
 
 protected:
     uint current_optim_number_ = 0;
-};
-
-// Caution : this class should be removed if we want Sirius behind or-tools
-// But we want to keep the way we write MPS files for a named problem,
-// so we keep it for now.
-class fullMPSwriter final: public I_MPS_writer
-{
-public:
-    fullMPSwriter(PROBLEME_HEBDO* problemeHebdo, uint currentOptimNumber);
-    void runIfNeeded(Solver::IResultWriter& writer,
-                     const std::string& filename,
-                     bool forceNamedProblems) override;
-
-private:
-    PROBLEME_HEBDO* problemeHebdo_ = nullptr;
 };
 
 class fullOrToolsMPSwriter: public I_MPS_writer
@@ -72,9 +54,7 @@ class fullOrToolsMPSwriter: public I_MPS_writer
 public:
     virtual ~fullOrToolsMPSwriter() = default;
     fullOrToolsMPSwriter(MPSolver* solver, uint currentOptimNumber);
-    void runIfNeeded(Solver::IResultWriter& writer,
-                     const std::string& filename,
-                     bool forceNamedProblems) override;
+    void runIfNeeded(Solver::IResultWriter& writer, const std::string& filename) override;
 
 private:
     MPSolver* solver_ = nullptr;
@@ -86,9 +66,7 @@ public:
     virtual ~nullMPSwriter() = default;
     using I_MPS_writer::I_MPS_writer;
 
-    void runIfNeeded(Solver::IResultWriter& /*writer*/,
-                     const std::string& /*filename*/,
-                     bool forceNamedProblems) override
+    void runIfNeeded(Solver::IResultWriter& /*writer*/, const std::string& /*filename*/) override
     {
         // Does nothing
     }

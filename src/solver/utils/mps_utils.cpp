@@ -113,45 +113,6 @@ private:
     std::vector<char*> mConstraintNames;
 };
 
-void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(PROBLEME_HEBDO* Prob,
-                                               Solver::IResultWriter& writer,
-                                               const std::string& filename,
-                                               bool forceNamedProblems)
-{
-    logs.info() << "Solver MPS File: `" << filename << "'";
-
-    const auto tmpPath = generateTempPath(filename);
-
-    auto mps = std::make_shared<PROBLEME_MPS>();
-    {
-        auto translator = NameTranslator::create(Prob->NamedProblems || forceNamedProblems);
-        ProblemConverter
-          converter; // This object must not be destroyed until SRSwritempsprob has been run
-        converter.copyProbSimplexeToProbMps(mps.get(), Prob->ProblemeAResoudre.get(), *translator);
-        SRSwritempsprob(mps.get(), tmpPath.c_str());
-    }
-
-    writer.addEntryFromFile(filename, tmpPath);
-
-    removeTemporaryFile(tmpPath);
-}
-
-// --------------------
-// Full mps writing
-// --------------------
-fullMPSwriter::fullMPSwriter(PROBLEME_HEBDO* problemeHebdo, uint optNumber):
-    I_MPS_writer(optNumber),
-    problemeHebdo_(problemeHebdo)
-{
-}
-
-void fullMPSwriter::runIfNeeded(Solver::IResultWriter& writer,
-                                const std::string& filename,
-                                bool forceNamedProblems)
-{
-    OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(problemeHebdo_, writer, filename, forceNamedProblems);
-}
-
 // ---------------------------------
 // Full mps writing by or-tools
 // ---------------------------------
@@ -161,9 +122,7 @@ fullOrToolsMPSwriter::fullOrToolsMPSwriter(MPSolver* solver, uint optNumber):
 {
 }
 
-void fullOrToolsMPSwriter::runIfNeeded(Solver::IResultWriter& writer,
-                                       const std::string& filename,
-                                       bool forceNamedProblems)
+void fullOrToolsMPSwriter::runIfNeeded(Solver::IResultWriter& writer, const std::string& filename)
 {
     ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver_, writer, filename);
 }

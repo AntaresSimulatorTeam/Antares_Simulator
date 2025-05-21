@@ -257,7 +257,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                         solver);
 
     auto mps_writer = mps_writer_factory.create();
-    mps_writer->runIfNeeded(writer, filename, false);
+    mps_writer->runIfNeeded(writer, filename);
 
     TimeMeasurement measure;
     solver = ORTOOLS_Simplexe(ProblemeAResoudre.get(), solver, options);
@@ -403,7 +403,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         auto mps_writer_on_error = simplexResult.mps_writer_factory.createOnOptimizationError();
         const std::string filename = createMPSfilename(optPeriodStringGenerator,
                                                        optimizationNumber);
-        mps_writer_on_error->runIfNeeded(writer, filename, true);
+        mps_writer_on_error->runIfNeeded(writer, filename);
 
         return false;
     }
