@@ -149,7 +149,7 @@ struct Fixture
         bc->RHSTimeSeries().resize(7, 1);
 
         auto add1 = std::make_shared<ShortTermStorage::AdditionalConstraints>(
-          "name",
+          "add1",
           "st-cluster-1",
           "withdrawal",
           "less",
@@ -163,7 +163,7 @@ struct Fixture
         area_1->shortTermStorage.storagesByIndex.push_back(stCluster1);
 
         auto add2 = std::make_shared<ShortTermStorage::AdditionalConstraints>(
-          "name",
+          "add2",
           "st-cluster-2",
           "withdrawal",
           "less",
@@ -577,10 +577,20 @@ BOOST_FIXTURE_TEST_CASE(short_term_storage_valid_cluster_and_year__reading_OK, F
     AreaName::Vector splitKey = {"sts", "area 1", yearNumber, "st-cluster-1"};
 
     BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
+
+    splitKey = {"sta", "area 1", yearNumber, "st-cluster-1", "add1"};
+
+    BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
+
     BOOST_CHECK_EQUAL(
       my_rule.shortTermStorageInflows[0].get(&area_1->shortTermStorage.storagesByIndex.back(),
                                              yearNumber.to<uint>()),
       tsNumber.to<uint>());
+
+    auto* addc = area_1->shortTermStorage.storagesByIndex.back().additionalConstraints[0].get();
+    BOOST_CHECK_EQUAL(my_rule.shortTermStorageAdditionalConstraints[0].get(addc,
+                                                                           yearNumber.to<uint>()),
+                      tsNumber.to<uint>());
 
     BOOST_CHECK(my_rule.apply());
 }
