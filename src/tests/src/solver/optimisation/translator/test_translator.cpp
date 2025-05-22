@@ -115,6 +115,7 @@ BOOST_AUTO_TEST_CASE(empty_problem_empty_const_data)
 template<class T>
 static void fillVector(T& v, int idxMax)
 {
+    v.resize(idxMax);
     for (int idx = 0; idx < idxMax; idx++)
     {
         v[idx] = idx;
