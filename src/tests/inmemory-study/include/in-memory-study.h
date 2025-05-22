@@ -81,11 +81,6 @@ public:
     {
     }
 
-    double* hours()
-    {
-        return averageResults_.hourly;
-    }
-
     double hour(unsigned hour)
     {
         return averageResults_.hourly[hour];
