@@ -11,6 +11,7 @@ on:
       - release/*
       - doc/*
       - dependabot/*
+      - tests/*
   schedule:
     - cron: '21 2 * * *'
   workflow_call:
@@ -354,7 +355,9 @@ jobs:
         shell: bash
         run: |
           cd _build
-          zip -r antares-solver_windows.zip solver/Release/antares-solver.exe solver/Release/*.dll ${{ env.ORTOOLS_DIR }}/install/lib/*.dll*
+          FIXED_PATH=${ORTOOLS_DIR//\\//}
+          cp ${FIXED_PATH}/install/bin/*.dll* solver/Release
+          zip -r antares-solver_windows.zip solver/Release/antares-solver.exe solver/Release/*.dll
 
       - name: NSIS Installer creation
         shell: bash
@@ -391,6 +394,15 @@ jobs:
         run: |
           gh release upload "$tag" _build/*.zip _build/*.exe
         shell: bash
+
+      - name: Update continuous-delivery release
+        if: github.ref == 'refs/heads/develop'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mv _build/rte-antares-*-installer-64bits.exe _build/rte-antares-cd-installer-64bits.exe
+          mv _build/rte-antares-*-installer-64bits.zip _build/rte-antares-cd-installer-64bits.zip
+          gh release upload --clobber continuous-delivery _build/*.zip _build/*.exe
 
       - name: Cache vcpkg binary dir
         if: always()

@@ -77,19 +77,17 @@ RUN cd _build && \
 RUN cd _build && \
      cpack -G TGZ -D CPACK_INSTALLED_DIRECTORIES="/ortools/install/lib64;bin"
 
-RUN cd _build && \
-    cmake --install . --prefix install && \
-    pushd . && \
-    cd install/bin && \
-    tar czf ../../antares-solver_centos7.tar.gz antares-solver libsirius_solver.so /ortools/install/lib64/*.so* && \
-    popd && \
-    rm -rf install
-
-#.tar.gz creation
-RUN cd _build && \
-    cpack -G TGZ
 #mv .rpm and .tar.gz
 RUN cd _build && \
     mkdir archive && \
     mv *.tar.gz archive && \
     mv *.rpm archive
+
+RUN cd _build && \
+    cmake --install . --prefix install && \
+    pushd . && \
+    cd install/bin && \
+    cp /ortools/install/lib64/*.so* . && \
+    tar czf ../../antares-solver_centos7.tar.gz antares-solver libsirius_solver.so *.so* && \
+    popd && \
+    rm -rf install
