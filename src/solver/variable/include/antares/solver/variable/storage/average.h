@@ -169,7 +169,6 @@ private:
     template<uint Size, class VCardT, int PrecisionT>
     void InternalExportValues(SurveyResults& report, const std::vector<HighPrecision>& array) const
     {
-        assert(array);
         assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
 
         // Caption

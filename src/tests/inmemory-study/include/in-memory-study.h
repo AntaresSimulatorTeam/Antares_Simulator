@@ -81,14 +81,19 @@ public:
     {
     }
 
+    long double* hours()
+    {
+        return averageResults_.hourly.data();
+    }
+
     double hour(unsigned hour)
     {
         return averageResults_.hourly[hour];
     }
 
-    double* days()
+    long double* days()
     {
-        return averageResults_.daily;
+        return averageResults_.daily.data();
     }
 
     double day(unsigned day)
@@ -96,9 +101,9 @@ public:
         return averageResults_.daily[day];
     }
 
-    double* weeks()
+    long double* weeks()
     {
-        return averageResults_.weekly;
+        return averageResults_.weekly.data();
     }
 
     double week(unsigned week)
