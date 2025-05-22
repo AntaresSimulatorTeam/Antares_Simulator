@@ -888,53 +888,6 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
 
     for (uint y = 0; y != years; ++y)
     {
-        if (TS<timeSeriesLoad>::IsNeeded(*this, y))
-        {
-            n = parameters.nbTimeSeriesLoad * areas.size() * 365;
-            if (0 != (timeSeriesLoad & parameters.timeSeriesToArchive))
-            {
-                n += areas.size();
-            }
-            progression.add(y, Solver::Progression::sectTSGLoad, n);
-        }
-        if (TS<timeSeriesSolar>::IsNeeded(*this, y))
-        {
-            n = parameters.nbTimeSeriesSolar * areas.size() * 365;
-            if (0 != (timeSeriesSolar & parameters.timeSeriesToArchive))
-            {
-                n += areas.size();
-            }
-            progression.add(y, Solver::Progression::sectTSGSolar, n);
-        }
-        if (TS<timeSeriesWind>::IsNeeded(*this, y))
-        {
-            n = parameters.nbTimeSeriesWind * areas.size() * 365;
-            if (0 != (timeSeriesWind & parameters.timeSeriesToArchive))
-            {
-                n += areas.size();
-            }
-            progression.add(y, Solver::Progression::sectTSGWind, n);
-        }
-        if (TS<timeSeriesHydro>::IsNeeded(*this, y))
-        {
-            // n += parameters.nbTimeSeriesHydro * areas.size() * 12;
-            n = parameters.nbTimeSeriesHydro;
-            if (0 != (timeSeriesHydro & parameters.timeSeriesToArchive))
-            {
-                n += areas.size();
-            }
-            progression.add(y, Solver::Progression::sectTSGHydro, n);
-        }
-        if (TS<timeSeriesThermal>::IsNeeded(*this, y))
-        {
-            n = runtime.thermalPlantTotalCount;
-            if (0 != (timeSeriesThermal & parameters.timeSeriesToArchive))
-            {
-                n += runtime.thermalPlantTotalCount;
-                n += runtime.thermalPlantTotalCountMustRun;
-            }
-            progression.add(y, Solver::Progression::sectTSGThermal, n);
-        }
         progression.add(y, Solver::Progression::sectYear, ticksPerYear);
 
         if (parameters.yearByYear)
