@@ -44,7 +44,7 @@ class yearJob
 public:
     yearJob(ISimulation<Impl>* simulation,
             unsigned int pY,
-            std::map<uint, bool>& pYearFailed,
+            std::map<uint, bool>& pYearsFailed,
             // std::map<uint, bool>& pIsFirstPerformedYearOfASet,
             // unsigned int pNumSpace,
             NumSpaceManager& numspaceManager,
@@ -59,7 +59,7 @@ public:
             std::mutex& aggregationMutex):
         simulation_(simulation),
         y(pY),
-        yearFailed(pYearFailed),
+        yearsFailed(pYearsFailed),
         numspaceManager(numspaceManager),
         // numSpace(pNumSpace),
         randomForParallelYears(pRandomForParallelYears),
@@ -82,7 +82,7 @@ public:
 private:
     ISimulation<Impl>* simulation_;
     unsigned int y;
-    std::map<uint, bool>& yearFailed;
+    std::map<uint, bool>& yearsFailed;
     // std::map<uint, bool>& isFirstPerformedYearOfASet;
     // unsigned int numSpace;
     NumSpaceManager& numspaceManager;
@@ -213,6 +213,8 @@ public:
             // Computing the summary : adding the contribution of MC years
             // previously computed in parallel
             aggregationMutex.lock();
+            yearsFailed[y] = yearFailed;
+
             simulation_->variables.computeSummary(y, numSpace);
 
             // Computing summary of spatial aggregations
@@ -234,7 +236,7 @@ public:
 
             logs.info() << "  playlist: ignoring the year " << (y + 1);
 
-            // yearFailed[y] = false;
+            // yearsFailed[y] = false;
 
         } // End if(performCalculations)
     } // End of onExecute() method
@@ -866,7 +868,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
                          isYearPerformed,
                          randomHydroGenerator);
 
-    std::map<uint, bool> yearFailed;
+    std::map<uint, bool> yearsFailed;
     NumSpaceManager numspaceManager(pNbMaxPerformedYearsInParallel);
 
     bool yearPerformed = false;
@@ -890,13 +892,13 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
 
             // If the year has not to be rerun, we skip the computation of the year.
             // Note that, when we enter for the first time in the "for" loop, all years of the set
-            // have to be rerun (meaning : they must be run once). if(!batch.yearFailed[y])
+            // have to be rerun (meaning : they must be run once). if(!batch.yearsFailed[y])
             // continue;
 
             auto task = std::make_shared<yearJob<ImplementationType>>(
               this,
               year,
-              yearFailed,
+              yearsFailed,
               // batch.isFirstPerformedYearOfASet,
               numspaceManager,
               // numSpace,
@@ -921,7 +923,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     pResultWriter.flush();
 
     // On regarde si au moins une année du lot n'a pas trouvé de solution
-    for (auto& [year, failed]: yearFailed)
+    for (auto& [year, failed]: yearsFailed)
     {
         // Si une année du lot d'années n'a pas trouvé de solution, on arrête tout
         if (failed)
