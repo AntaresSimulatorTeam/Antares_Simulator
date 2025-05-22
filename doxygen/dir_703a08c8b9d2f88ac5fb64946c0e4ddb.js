@@ -18,6 +18,5 @@ var dir_703a08c8b9d2f88ac5fb64946c0e4ddb =
     [ "post_process_commands.h", "post__process__commands_8h_source.html", null ],
     [ "ProblemMatrixEssential.h", "ProblemMatrixEssential_8h_source.html", null ],
     [ "QuadraticProblemMatrix.h", "QuadraticProblemMatrix_8h_source.html", null ],
-    [ "SparseVector.hxx", "SparseVector_8hxx_source.html", null ],
     [ "weekly_optimization.h", "weekly__optimization_8h_source.html", null ]
 ];

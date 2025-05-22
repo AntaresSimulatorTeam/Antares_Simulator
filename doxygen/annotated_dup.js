@@ -1653,7 +1653,6 @@ var annotated_dup =
     [ "SimulationHandler", "classSimulationHandler.html", "classSimulationHandler" ],
     [ "SOLDE_MOYEN_DES_ECHANGES", "structSOLDE__MOYEN__DES__ECHANGES.html", "structSOLDE__MOYEN__DES__ECHANGES" ],
     [ "SolverTestData", "structSolverTestData.html", "structSolverTestData" ],
-    [ "SparseVector", "classSparseVector.html", "classSparseVector" ],
     [ "StartUpCostsData", "structStartUpCostsData.html", "structStartUpCostsData" ],
     [ "StringIsNotWellFormated", "classStringIsNotWellFormated.html", "classStringIsNotWellFormated" ],
     [ "StructureIndex", "classStructureIndex.html", "classStructureIndex" ],
