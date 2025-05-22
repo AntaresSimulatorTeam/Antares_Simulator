@@ -2,7 +2,7 @@ name: Oracle 8 CI (push and/or release)
 
 on:
   release:
-    types: [ created ]
+    types: [created]
   push:
     branches:
       - develop

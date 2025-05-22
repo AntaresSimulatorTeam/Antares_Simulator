@@ -5,6 +5,8 @@ on:
     types: [ created ]
   push:
     branches:
+      - develop
+      - dependabot/*
   schedule:
     - cron: '21 2 * * *'
   workflow_call:
@@ -47,7 +49,7 @@ jobs:
           echo "DOCKERFILE=$(pwd)/docker/Dockerfile" >> $GITHUB_ENV
           echo "DOCKERDIR=$(pwd)/docker" >> $GITHUB_ENV
 
-
+  
 
 
       - name: check if DockerFiles has changed
