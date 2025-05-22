@@ -71,7 +71,7 @@ RUN  source /opt/rh/devtoolset-11/enable && \
 
 RUN echo "DEBUG" && \
     ls / && \
-    echo "------------------------------------------" &&
+    echo "------------------------------------------" && \
     ls /ortools && \
     echo "------------------------------------------" && \
     ls /ortools/install && \
