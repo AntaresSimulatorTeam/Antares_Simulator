@@ -69,6 +69,16 @@ RUN  source /opt/rh/devtoolset-11/enable && \
      cmake --build _build --config Release -j${NPROC} &&\
      ccache -s
 
+RUN echo "DEBUG" && \
+    ls / && \
+    echo "------------------------------------------" &&
+    ls /ortools && \
+    echo "------------------------------------------" && \
+    ls /ortools/install && \
+    echo "------------------------------------------" && \
+    ls /ortools/install/lib64
+
+
 #Installer .rpm creation
 RUN cd _build && \
     cpack -G RPM -D CPACK_INSTALLED_DIRECTORIES="/ortools/install/lib64;bin"
