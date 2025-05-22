@@ -224,10 +224,12 @@ jobs:
           feature: "features/solver-features/hybrid_studies.feature"
 
       - name: Collect coverage into one XML report
+        if: ${{ !cancelled() }}
         run: |
           gcovr --sonarqube --output coverage.xml
 
       - name: SonarQube Scan
+        if: ${{ !cancelled() }}
         uses: SonarSource/sonarqube-scan-action@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
