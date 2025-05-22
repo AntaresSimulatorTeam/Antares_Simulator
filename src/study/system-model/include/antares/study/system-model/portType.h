@@ -40,11 +40,7 @@ public:
         id_(id),
         fields_(std::move(fields))
     {
-        if (areaConnectionFieldId.empty())
-        {
-            areaConnectionFieldId_ = std::nullopt;
-        }
-        else
+        if (!areaConnectionFieldId.empty())
         {
             if (!std::ranges::any_of(fields_,
                                      [areaConnectionFieldId](const auto& field)

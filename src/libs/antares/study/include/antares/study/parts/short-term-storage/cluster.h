@@ -21,6 +21,7 @@
 
 #pragma once
 #include <filesystem>
+#include <list>
 #include <memory>
 #include <string>
 

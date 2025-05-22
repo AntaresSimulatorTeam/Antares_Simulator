@@ -32,6 +32,57 @@ _**This section is under construction**_
     - Fields requiring to be filled out with: "Raw" ,"Detrended"," Beta", "Normal", "Uniform", " Gamma", " Weibull" can alternatively accept: "R", "D", " B", "N", "U", "G", "W"
 
 
+## Definition of custom scenarios
+A file defining a list of custom scenarios is present under `settings/scenariobuilder.dat`. 
+Note that this file is used only if `custom-scenario = true` in file `settigns/generaldata.ini`.
+
+Indices for TS numbers start at **1**. Indices for years start at **0**.
+
+### Wind, solar, load, hydro
+Wind, solar, load, hydro objects are unique in their area. Implicitely, they are referred to with a prefix and an area identifier.
+
+```
+prefix,area,year = TS number
+```
+
+### Links
+For links, the format is
+
+```
+ntc,area1,area2,year = TS number
+```
+For best results, `area1 < area2` in lexicographic order.
+
+
+### Thermal clusters, renewable clusters and short-term storage inflows
+For Thermal clusters, renewable clusters and short-term storage inflows, the format is as follows
+
+```
+prefix,area,year,object = TS number
+```
+
+### Binding constraints
+The case of binding constraints is a bit specific. Each binding constraint has a group, which is used exclusively to scenarize the RHS of all the constraints in the group.
+
+```
+bc,group,year = TS number
+```
+
+### List of prefixes
+| Object               | Prefix |
+|----------------------|--------|
+| Solar                | s      |
+| Wind                 | w      |
+| Load                 | l      |
+| Hydro                | h      |
+| Hydro initial levels | hl     |
+| Hydro final levels   | hfl    |
+| Links                | ntc    |
+| Thermal cluster      | t      |
+| Renewable cluster    | r      |
+| Short-term storage   | sts    |
+| Binding constraints  | bc     |
+
 ## Definition of regional districts
 
 Typical uses of the "district" feature are:

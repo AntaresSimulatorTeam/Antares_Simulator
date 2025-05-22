@@ -13,19 +13,21 @@ target_include_directories(shave-peaks-by-remix-hydro
 # Simulation
 #
 set(SRC_SIMULATION
-        sim_alloc_probleme_hebdo.cpp
+        apply-scenario.cpp
+        include/antares/solver/simulation/apply-scenario.h
         include/antares/solver/simulation/sim_alloc_probleme_hebdo.h
-        sim_calcul_economique.cpp
+        include/antares/solver/simulation/sim_binding_constraints_rhs.h
+        include/antares/solver/simulation/sim_constants.h
         include/antares/solver/simulation/sim_structure_donnees.h
         include/antares/solver/simulation/sim_structure_probleme_economique.h
-        include/antares/solver/simulation/sim_constants.h
         include/antares/solver/simulation/simulation.h
         include/antares/solver/simulation/solver.h
         include/antares/solver/simulation/solver.hxx
         include/antares/solver/simulation/timeseries-numbers.h
+        sim_alloc_probleme_hebdo.cpp
+        sim_binding_constraints_rhs.cpp
+        sim_calcul_economique.cpp
         timeseries-numbers.cpp
-        include/antares/solver/simulation/apply-scenario.h
-        apply-scenario.cpp
 
 
         # Solver

@@ -278,9 +278,9 @@ public:
         const auto& shortTermStorage = state.area->shortTermStorage;
 
         uint clusterIndex = 0;
-        for (const auto& cluster: shortTermStorage.storagesByIndex)
+        for (const auto& sts: shortTermStorage.storagesByIndex)
         {
-            unsigned int groupNumber = groupToNumbers_[cluster.properties.groupName];
+            unsigned int groupNumber = groupToNumbers_[sts.properties.groupName];
             const auto& result = state.hourlyResults->ShortTermStorage[state.hourInTheWeek];
             // Injection
             pValuesForTheCurrentYear[numSpace][NB_COLS_PER_GROUP * groupNumber

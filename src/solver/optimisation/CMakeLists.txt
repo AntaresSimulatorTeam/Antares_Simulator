@@ -181,6 +181,8 @@ set(RTESOLVER_OPT
         include/antares/solver/optimisation/LegacyOrtoolsLinearProblem.h
         include/antares/solver/optimisation/LegacyFiller.h
         LegacyFiller.cpp
+        include/antares/solver/optimisation/ComponentToAreaConnectionFiller.h
+        ComponentToAreaConnectionFiller.cpp
 )
 
 
@@ -197,6 +199,7 @@ else ()
     #set(CMAKE_C_FLAGS_DEBUG   "${CMAKE_C_FLAGS} /wd 4101") # unused local variable
     #set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS} /wd 4101") # unused local variable
 endif ()
+
 target_link_libraries(model_antares
         PUBLIC
         Antares::solverUtils
@@ -213,6 +216,7 @@ target_link_libraries(model_antares
         # modeler
         Antares::optim-model-filler
         Antares::antares-study-system-model
+        Boost::headers
 )
 
 target_include_directories(model_antares

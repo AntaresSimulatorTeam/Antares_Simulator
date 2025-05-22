@@ -24,6 +24,8 @@
 #include <string>
 #include <vector>
 
+#include "antares/series/series.h"
+
 namespace Antares::Data::ShortTermStorage
 {
 
@@ -36,18 +38,31 @@ public:
     bool isValidHoursRange() const;
 };
 
-struct AdditionalConstraints
+class AdditionalConstraints
 {
+public:
+    AdditionalConstraints();
+    AdditionalConstraints(std::string name,
+                          std::string cluster_id,
+                          std::string variable,
+                          std::string operatorType,
+                          bool enabled,
+                          std::vector<SingleAdditionalConstraint> constraints);
+
+    AdditionalConstraints(const AdditionalConstraints& other) = default;
+    AdditionalConstraints(AdditionalConstraints&& other) noexcept = default;
+    AdditionalConstraints& operator=(const AdditionalConstraints& other) = default;
+    AdditionalConstraints& operator=(AdditionalConstraints&& other) noexcept = default;
+
     std::string name;
     std::string cluster_id;
     std::string variable;
     std::string operatorType;
     bool enabled = true;
-    std::vector<double> rhs;
-
     std::vector<SingleAdditionalConstraint> constraints;
 
     struct ValidateResult
+
     {
         bool ok;
         std::string error_msg;
@@ -58,7 +73,19 @@ struct AdditionalConstraints
 
     ValidateResult validate() const;
 
+    TimeSeries& rhs()
+    {
+        return rhs_;
+    }
+
+    const TimeSeries& rhs() const
+    {
+        return rhs_;
+    }
+
 private:
+    TimeSeriesNumbers tsNumbers;
+    TimeSeries rhs_; ///< contains both tsNumbers and series
     bool isValidVariable() const;
     bool isValidOperatorType() const;
 

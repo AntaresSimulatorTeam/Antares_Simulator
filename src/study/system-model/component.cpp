@@ -109,18 +109,24 @@ void Component::addAreaConnection(const std::string& localPortId, const std::str
           exceptionPrefix + "port field \"" + port.Type().AreaConnectionFieldId().value()
           + "\" is not defined in the component's model \"" + data_.model->Id() + "\"");
     }
-    if (areaConnections_.contains(localPortId))
+    if (portToAreaConnections_.contains(localPortId))
     {
         throw std::invalid_argument(exceptionPrefix + "port is already connected to \""
-                                    + areaConnections_.at(localPortId) + "\"");
+                                    + portToAreaConnections_.at(localPortId) + "\"");
     }
-    areaConnections_[localPortId] = areaId;
+    portToAreaConnections_[localPortId] = areaId;
 }
 
 std::optional<std::string> Component::areaConnectedToPort(const std::string& portId) const
 {
-    return areaConnections_.contains(portId) ? std::optional(areaConnections_.at(portId))
-                                             : std::nullopt;
+    return portToAreaConnections_.contains(portId)
+             ? std::optional(portToAreaConnections_.at(portId))
+             : std::nullopt;
+}
+
+const std::map<std::string, std::string>& Component::portToAreaConnections() const
+{
+    return portToAreaConnections_;
 }
 
 /**
