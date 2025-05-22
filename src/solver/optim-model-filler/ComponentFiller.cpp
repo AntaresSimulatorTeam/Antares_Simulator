@@ -27,6 +27,7 @@
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
 #include <antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h>
 #include <antares/study/system-model/variable.h>
+
 #include "antares/expressions/visitors/TimeIndexVisitor.h"
 
 namespace Antares::Optimization
@@ -177,11 +178,11 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
         const auto& lb = valueOrDefault(variable.LowerBound(),
                                         variable.Type() == SM::ValueType::BOOL
                                           ? 0
-                                          : -std::numeric_limits<double>::infinity());
+                                          : -pb.infinity() );
         const auto& ub = valueOrDefault(variable.UpperBound(),
                                         variable.Type() == SM::ValueType::BOOL
                                           ? 1
-                                          : std::numeric_limits<double>::infinity());
+                                          : pb.infinity());
         const PartialKey key(component_.Id(), variable.Id());
         if (variable.isTimeDependent())
         {
