@@ -65,76 +65,6 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
                 "force-parallel",
                 "Override the max number of years computed simultaneously");
 
-    //--linear-solver
-    parser->add(options.solverOptions.linearSolver,
-                ' ',
-                "linear-solver",
-                "Solver used for linear optimizations during simulation. Available solver list : "
-                  + toString(availableLinearSolversList()));
-
-    //--solver
-    parser->add(options.solverOptions.linearSolver,
-                ' ',
-                "solver",
-                "Deprecated, use linear-solver instead.");
-
-    //--lp-solver-param
-    parser->add(options.solverOptions.linearSolverParameters,
-                ' ',
-                "lp-solver-param",
-                "Linear solver-specific parameters, for instance \"THREADS 1 "
-                "PRESOLVE 1\""
-                " for XPRESS or \"parallel/maxnthreads 1, lp/presolving TRUE\" for "
-                "SCIP. Syntax is solver-dependent, and only supported for SCIP & XPRESS.");
-
-    //--solver-parameters
-    parser->add(options.solverOptions.linearSolverParameters,
-                ' ',
-                "solver-parameters",
-                "Deprecated, use lp-solver-param instead.");
-
-    // --lp-solver-param-optim-1
-    parser->add(options.solverOptions.lpSolverParamOptim1,
-                ' ',
-                "lp-solver-param-optim-1",
-                "Linear solver-specific parameters for first optimization."
-                " Only supported for SCIP & XPRESS.");
-
-    // --lp-solver-param-optim-2
-    parser->add(options.solverOptions.lpSolverParamOptim2,
-                ' ',
-                "lp-solver-param-optim-2",
-                "Linear solver-specific parameters for second optimization."
-                " Only supported for SCIP & XPRESS.");
-
-    // --use-optim-1-basis-next-week
-    parser->addFlag(options.solverOptions.useOptim1BasisInNextWeek,
-                    ' ',
-                    "use-optim-1-basis-next-week",
-                    "Use basis of first optimization in next week's first optimization");
-
-    // --use-optim-1-basis-optim-2
-    parser->addFlag(options.solverOptions.useOptim1BasisInOptim2,
-                    ' ',
-                    "use-optim-1-basis-optim-2",
-                    "Use basis of first optimization in second optimization");
-
-    //--quadratic-solver
-    parser->add(
-      options.solverOptions.quadraticSolver,
-      ' ',
-      "quadratic-solver",
-      "Solver used for quadratic optimizations during simulation. Available solver list : "
-        + toString(availableQuadraticSolversList()));
-
-    //--quadratic-solver-param
-    parser->add(options.solverOptions.quadraticSolverParameters,
-                ' ',
-                "quadratic-solver-param",
-                "Quadratic solver-specific parameters, for instance \"THREADS 8\""
-                " for XPRESS or \"parallel/maxnthreads 8\" for SCIP. "
-                "Syntax is solver-dependent.");
-
     parser->addParagraph("\nParameters");
     // --name
     parser->add(settings.simulationName, 'n', "name", "Name of the current simulation");
@@ -173,6 +103,76 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
                     "Force the write output into a single zip archive");
 
     parser->addParagraph("\nOptimization");
+
+    //--linear-solver
+    parser->add(options.solverOptions.linearSolver,
+                ' ',
+                "linear-solver",
+                "Solver used for linear optimizations during simulation. Available solver list : "
+                  + toString(availableLinearSolversList()));
+
+    //--solver
+    parser->add(options.solverOptions.linearSolver,
+                ' ',
+                "solver",
+                "Deprecated, use --linear-solver instead.");
+
+    //--linear-solver-param
+    parser->add(options.solverOptions.linearSolverParameters,
+                ' ',
+                "linear-solver-param",
+                "Linear solver-specific parameters, for instance \"THREADS 1 "
+                "PRESOLVE 1\""
+                " for XPRESS or \"parallel/maxnthreads 1, lp/presolving TRUE\" for "
+                "SCIP. Syntax is solver-dependent, and only supported for SCIP & XPRESS.");
+
+    //--solver-parameters
+    parser->add(options.solverOptions.linearSolverParameters,
+                ' ',
+                "solver-parameters",
+                "Deprecated, use --linear-solver-param instead.");
+
+    // --linear-solver-param-optim-1
+    parser->add(options.solverOptions.lpSolverParamOptim1,
+                ' ',
+                "linear-solver-param-optim-1",
+                "Linear solver-specific parameters for first optimization."
+                " Only supported for SCIP & XPRESS.");
+
+    // --linear-solver-param-optim-2
+    parser->add(options.solverOptions.lpSolverParamOptim2,
+                ' ',
+                "linear-solver-param-optim-2",
+                "Linear solver-specific parameters for second optimization."
+                " Only supported for SCIP & XPRESS.");
+
+    // --use-optim-1-basis-next-week
+    parser->addFlag(options.solverOptions.useOptim1BasisInNextWeek,
+                    ' ',
+                    "use-optim-1-basis-next-week",
+                    "Use basis of first optimization in next week's first optimization");
+
+    // --use-optim-1-basis-optim-2
+    parser->addFlag(options.solverOptions.useOptim1BasisInOptim2,
+                    ' ',
+                    "use-optim-1-basis-optim-2",
+                    "Use basis of first optimization in second optimization");
+
+    //--quadratic-solver
+    parser->add(
+      options.solverOptions.quadraticSolver,
+      ' ',
+      "quadratic-solver",
+      "Solver used for quadratic optimizations during simulation. Available solver list : "
+        + toString(availableQuadraticSolversList()));
+
+    //--quadratic-solver-param
+    parser->add(options.solverOptions.quadraticSolverParameters,
+                ' ',
+                "quadratic-solver-param",
+                "Quadratic solver-specific parameters, for instance \"THREADS 8\""
+                " for XPRESS or \"parallel/maxnthreads 8\" for SCIP. "
+                "Syntax is solver-dependent.");
 
     // --optimization-range
     parser->addFlag(settings.simplexOptimRange,

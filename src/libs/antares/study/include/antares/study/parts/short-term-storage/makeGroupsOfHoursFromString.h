@@ -18,35 +18,37 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
+
 #pragma once
 
-#include <memory>
+#include <BaseErrorListener.h>
+#include <set>
 #include <string>
 #include <vector>
 
-class NameTranslator
+namespace antlr4
 {
-public:
-    virtual ~NameTranslator() = default;
-    virtual char** translate(const std::vector<std::string>& src, std::vector<char*>& pointerVec)
-      = 0;
-    static std::unique_ptr<NameTranslator> create(bool useRealNames);
+class Recognizer;
+}
+
+namespace Antares::Data::ShortTermStorage
+{
+struct ShortTermStorageAdditionalConstraintsError final: std::invalid_argument
+{
+    using std::invalid_argument::invalid_argument;
 };
 
-class RealName: public NameTranslator
+class CustomErrorListener: public antlr4::BaseErrorListener
 {
 public:
-    ~RealName() override = default;
-
-private:
-    char** translate(const std::vector<std::string>& src, std::vector<char*>& pointerVec) override;
+    void syntaxError(antlr4::Recognizer* recognizer,
+                     antlr4::Token* offendingSymbol,
+                     size_t line,
+                     size_t charPositionInLine,
+                     const std::string& msg,
+                     std::exception_ptr e) override;
 };
 
-class NullName: public NameTranslator
-{
-public:
-    ~NullName() override = default;
+std::vector<std::set<int>> makeGroupsOfHours(const std::string& hoursField);
 
-private:
-    char** translate(const std::vector<std::string>& src, std::vector<char*>& pointerVec) override;
-};
+} // namespace Antares::Data::ShortTermStorage

@@ -18,17 +18,15 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#ifndef __SOLVER_OPTIMISATION_STRUCTURE_PROBLEME_A_RESOUDRE_H__
-#define __SOLVER_OPTIMISATION_STRUCTURE_PROBLEME_A_RESOUDRE_H__
+#pragma once
 
-#include <memory>
+#include <algorithm>
 #include <string>
 #include <vector>
 
 #include <antares/solver/utils/basis_status.h>
 
 #include "SparseVector.hxx"
-#include "opt_constants.h"
 
 namespace operations_research
 {
@@ -38,8 +36,9 @@ class MPSolver;
 /*--------------------------------------------------------------------------------------*/
 
 /* Le probleme a resoudre */
-struct PROBLEME_ANTARES_A_RESOUDRE
+class PROBLEME_ANTARES_A_RESOUDRE
 {
+public:
     /* La matrice des contraintes */
     int NombreDeVariables;
     int NombreDeContraintes; /* Il est egal a :
@@ -114,6 +113,11 @@ struct PROBLEME_ANTARES_A_RESOUDRE
 
     // PIMPL is used to break dependency to OR-Tools' linear_solver.h (big header)
     Antares::Optimization::BasisStatus basisStatus;
-};
 
-#endif /* __SOLVER_OPTIMISATION_STRUCTURE_PROBLEME_A_RESOUDRE_H__ */
+    bool isMIP() const
+    {
+        return std::any_of(VariablesEntieres.cbegin(),
+                           VariablesEntieres.cend(),
+                           [](bool x) { return x; });
+    }
+};

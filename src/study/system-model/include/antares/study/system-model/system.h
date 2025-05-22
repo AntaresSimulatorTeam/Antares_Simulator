@@ -23,19 +23,9 @@
 #include <unordered_map>
 
 #include "component.h"
-#include "connection.h"
 
 namespace Antares::ModelerStudy::SystemModel
 {
-
-/**
- * Defines the attributes of the System class
- * Made into a struct to avoid duplication in SystemBuilder
- */
-struct SystemData
-{
-};
-
 /**
  * Defines the simulated system.
  */
@@ -57,17 +47,12 @@ public:
         return components_;
     }
 
-    [[nodiscard]] const std::vector<Connection>& connections() const;
-
 private:
     // Only SystemBuilder is allowed to build System instances
     friend class SystemBuilder;
-    System(std::string_view id,
-           std::unordered_map<std::string, Component>&& components,
-           std::vector<Connection>&& connections);
+    System(std::string_view id, std::unordered_map<std::string, Component>&& components);
     std::string id_;
     std::unordered_map<std::string, Component> components_;
-    std::vector<Connection> connections_;
 };
 
 class SystemBuilder
@@ -75,13 +60,11 @@ class SystemBuilder
 public:
     SystemBuilder& withId(std::string_view id);
     SystemBuilder& withComponents(std::unordered_map<std::string, Component>&& components);
-    SystemBuilder& withConnections(std::vector<Connection>&& connections);
     System build();
 
 private:
     std::string id_;
     std::unordered_map<std::string, Component> components_;
-    std::vector<Connection> connections_;
 };
 
 } // namespace Antares::ModelerStudy::SystemModel

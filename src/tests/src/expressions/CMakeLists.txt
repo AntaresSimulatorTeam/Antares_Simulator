@@ -1,18 +1,19 @@
 include(${CMAKE_SOURCE_DIR}/tests/macros.cmake)
 add_boost_test(test-expressions
-  SRC
-  test_main.cpp
-  test_nodes.cpp
-  test_PrintAndEvalNodes.cpp
-  test_TimeIndexVisitor.cpp
-  test_SubstitutionVisitor.cpp
-  test_LinearVisitor.cpp
-  test_CompareVisitor.cpp
-  test_CloneVisitor.cpp
-  test_DeepWideTrees.cpp
-  test_Iterators.cpp
-  test_AstDOTStyleVisitor.cpp
-  LIBS
+        SRC
+        test_main.cpp
+        test_nodes.cpp
+        test_PrintAndEvalNodes.cpp
+        test_TimeIndexVisitor.cpp
+        test_SubstitutionVisitor.cpp
+        test_LinearVisitor.cpp
+        test_CompareVisitor.cpp
+        test_CloneVisitor.cpp
+        test_DeepWideTrees.cpp
+        test_Iterators.cpp
+        test_AstDOTStyleVisitor.cpp
+        LIBS
         expressions
         expressions-iterators
-        linear-problem-data-impl)
+        linear-problem-data-impl
+        Antares::antares-study-system-model)

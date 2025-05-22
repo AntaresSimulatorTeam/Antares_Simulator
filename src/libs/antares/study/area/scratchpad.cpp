@@ -23,7 +23,6 @@
 
 #include <limits>
 
-#include "antares/antares/antares.h"
 #include "antares/study/study.h"
 
 using namespace Yuni;

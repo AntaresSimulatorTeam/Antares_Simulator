@@ -1088,7 +1088,6 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
             }
             progression.add(y, Solver::Progression::sectTSGThermal, n);
         }
-
         progression.add(y, Solver::Progression::sectYear, ticksPerYear);
 
         if (parameters.yearByYear)

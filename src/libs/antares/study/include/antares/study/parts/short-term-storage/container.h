@@ -53,6 +53,7 @@ public:
     bool saveDataSeriesToFolder(const std::string& folder) const;
 
     std::vector<STStorageCluster> storagesByIndex;
+    void resizeTimeseriesNumbers(unsigned int nbYears);
 
     /// Number cumulative - constraint
     std::size_t cumulativeConstraintCount() const;

@@ -49,12 +49,12 @@ def run_antares(context):
 
 @then('the simulation succeeds')
 def simu_success(context):
-    assert context.return_code == 0
+    assert context.return_code == 0, f"Process failed with return code {context.return_code}: \nSTDOUT: \n{context.logs_out} \n STDERR: \n{context.logs_err}"
 
 
 @then('the simulation fails')
 def simu_success(context):
-    assert context.return_code != 0
+    assert context.return_code != 0, f"Process ended with return code {context.return_code}: \nSTDOUT: \n{context.logs_out} \n STDERR: \n{context.logs_err}"
 
 
 @then('the expected value of the annual system cost is {value:g}')
@@ -83,10 +83,32 @@ def check_annual_cost(context):
 
 @then('the annual system cost is {one_year_value:g}')
 def check_annual_cost(context, one_year_value):
-    assert_double_close(one_year_value, context.soh.get_annual_system_cost()["EXP"], 0.001)
-    assert_double_close(0, context.soh.get_annual_system_cost()["STD"], 0.001)
-    assert_double_close(one_year_value, context.soh.get_annual_system_cost()["MIN"], 0.001)
-    assert_double_close(one_year_value, context.soh.get_annual_system_cost()["MAX"], 0.001)
+    assert_double_close(one_year_value, context.soh.get_annual_system_cost()["EXP"], 0.00001)
+    assert_double_close(0, context.soh.get_annual_system_cost()["STD"], 0.00001)
+    assert_double_close(one_year_value, context.soh.get_annual_system_cost()["MIN"], 0.00001)
+    assert_double_close(one_year_value, context.soh.get_annual_system_cost()["MAX"], 0.00001)
+
+
+@then('the annual system cost is {one_year_value1:g} with the linear solver {solver1} and {one_year_value2:g} with the others')
+def check_annual_cost_depending_on_solver(context, one_year_value1, solver1, one_year_value2):
+    if solver1 == get_linear_solver(context):
+        check_annual_cost(context, one_year_value1)
+    else:
+        check_annual_cost(context, one_year_value2)
+
+
+def get_linear_solver(context) -> str:
+    if "linear-solver" in context.config.userdata:
+        return context.config.userdata["linear-solver"]
+    else:
+        return "sirius"
+
+
+def get_quadratic_solver(context) -> str:
+    if "quadratic-solver" in context.config.userdata:
+        return context.config.userdata["quadratic-solver"]
+    else:
+        return "sirius"
 
 
 @then('the simulation takes less than {seconds:g} seconds')
@@ -128,6 +150,12 @@ def check_hydro_pumping_value(context, area, year, value):
 @then('in area "{area}", during year {year:d}, total balance is {value:g} MWh')
 def check_balance_value(context, area, year, value):
     assert_double_close(value, context.soh.get_balance_mwh(area, year), 0.001, "Balance")
+
+
+@then('in area "{area}", during year {year:d}, "{prod_name}" produces {value:g} MWh')
+def check_production_value(context, area, year, prod_name, value):
+    actual_prod = np.sum(context.soh.get_hourly_prod_mwh(area, year, prod_name))
+    assert_double_close(value, actual_prod, 0.001, "Production")
 
 
 @then(
@@ -191,15 +219,24 @@ def run_simulation(context):
     print(f"Running command: {command}")
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
     out, err = process.communicate()
+    if out:
+        context.logs_out = out.decode("utf-8")
+    else:
+        context.logs_out = ""
+    if err:
+        context.logs_err = err.decode("utf-8")
+    else:
+        context.logs_err = ""
     context.output_path = parse_output_folder_from_logs(out)
     context.return_code = process.returncode
-    context.soh = solver_output_handler(context.output_path)
+    context.soh = solver_output_handler(context.output_path, context.mode)
 
 
 def init_simulation(context):
     sih = solver_input_handler(context.study_path)
     # read metadata
     context.nbyears = int(sih.get_value(variable="nbyears", file_nick_name="general"))
+    context.mode = sih.get_value(variable="mode", file_nick_name="general").lower()
     # activate year-by-year results  # TODO : remove this and update studies instead
     sih.set_parameter_value(variable="synthesis", value="true", file_nick_name="general")
     sih.set_parameter_value(variable="year-by-year", value="true", file_nick_name="general")
@@ -208,14 +245,8 @@ def init_simulation(context):
 
 def build_antares_solver_command(context):
     command = [context.config.userdata["antares-solver"], "-i", str(context.study_path)]
-    linearSolver = "sirius"
-    quadraticSolver = "sirius"
-    if "linear-solver" in context.config.userdata:
-        linearSolver = context.config.userdata["linear-solver"]
-    command.append('--linear-solver=' + linearSolver)
-    if "quadratic-solver" in context.config.userdata:
-        quadraticSolver = context.config.userdata["quadratic-solver"]
-    command.append('--quadratic-solver=' + quadraticSolver)
+    command.append('--linear-solver=' + get_linear_solver(context))
+    command.append('--quadratic-solver=' + get_quadratic_solver(context))
 
     if context.named_mps_problems:
         command.append('--named-mps-problems')

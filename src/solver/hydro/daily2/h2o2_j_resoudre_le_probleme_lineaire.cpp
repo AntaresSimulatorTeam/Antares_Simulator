@@ -33,7 +33,7 @@ void H2O2_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES_ETENDUES& DonneesMensu
     auto& ProblemeLineaireEtenduPartieFixe = ProblemeHydrauliqueEtendu
                                                .ProblemeLineaireEtenduPartieFixe[NumeroDeProbleme];
 
-    PROBLEME_SPX* ProbSpx = ProblemeHydrauliqueEtendu.ProblemeSpx[NumeroDeProbleme];
+    PROBLEME_SPX* ProbSpx = ProblemeHydrauliqueEtendu.ProblemeSpx[NumeroDeProbleme].get();
     auto Probleme = std::make_unique<PROBLEME_SIMPLEXE>();
 
     bool premierPassage = true;
@@ -117,7 +117,7 @@ RESOLUTION:
 
     if (ProbSpx)
     {
-        ProblemeHydrauliqueEtendu.ProblemeSpx[NumeroDeProbleme] = ProbSpx;
+        ProblemeHydrauliqueEtendu.ProblemeSpx[NumeroDeProbleme].reset(ProbSpx);
     }
 
     ProblemeLineaireEtenduPartieVariable.ExistenceDUneSolution = Probleme->ExistenceDUneSolution;
@@ -127,7 +127,7 @@ RESOLUTION:
     {
         if (ProblemeLineaireEtenduPartieVariable.ExistenceDUneSolution != SPX_ERREUR_INTERNE)
         {
-            SPX_LibererProbleme(ProbSpx);
+            ProblemeHydrauliqueEtendu.ProblemeSpx[NumeroDeProbleme].reset(nullptr);
 
             ProbSpx = nullptr;
             premierPassage = false;

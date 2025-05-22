@@ -140,7 +140,7 @@ void VariableDictionary::addVariable(
   const PartialKey& key,
   std::function<Value(const TimeAndScenario&, const std::string&)>&& func)
 {
-    auto& m = hmv[key];
+    auto& m = storageOfAddedMipVariables_[key];
     const auto scenarios = dimensions.getScenarioIndices();
     const auto time_interval = dimensions.getTimesteps();
     const auto offset = *time_interval.begin();
@@ -160,31 +160,33 @@ void VariableDictionary::addVariable(
 
 VariableDictionary::Value VariableDictionary::operator[](const FullKey& k) const
 {
-    return hmv.at(k.getPartialKey())
+    return storageOfAddedMipVariables_.at(k.getPartialKey())
       .at(k.getScenario().value_or(0))
       .at(k.getTimestep().value_or(0));
 }
 
 VariableDictionary::Value& VariableDictionary::operator[](const FullKey& k)
 {
-    return hmv[k.getPartialKey()].at(k.getScenario().value_or(0)).at(k.getTimestep().value_or(0));
+    return storageOfAddedMipVariables_[k.getPartialKey()]
+      .at(k.getScenario().value_or(0))
+      .at(k.getTimestep().value_or(0));
 }
 
 const VariableDictionary::TwoIndexVector& VariableDictionary::operator[](const PartialKey& k) const
 {
-    return hmv.at(k);
+    return storageOfAddedMipVariables_.at(k);
 }
 
 VariableDictionary::Value VariableDictionary::operator()(const std::string& component,
                                                          const std::string& variable) const
 {
-    return hmv.at(PartialKey(component, variable)).at(0).at(0);
+    return storageOfAddedMipVariables_.at(PartialKey(component, variable)).at(0).at(0);
 }
 
 VariableDictionary::Value& VariableDictionary::operator()(const std::string& component,
                                                           const std::string& variable)
 {
-    return hmv.at(PartialKey(component, variable)).at(0).at(0);
+    return storageOfAddedMipVariables_.at(PartialKey(component, variable)).at(0).at(0);
 }
 
 VariableDictionary::Value VariableDictionary::operator()(const std::string& component,
@@ -192,7 +194,9 @@ VariableDictionary::Value VariableDictionary::operator()(const std::string& comp
                                                          unsigned int scenario,
                                                          unsigned int timestep) const
 {
-    return hmv.at(PartialKey(component, variable)).at(scenario).at(timestep);
+    return storageOfAddedMipVariables_.at(PartialKey(component, variable))
+      .at(scenario)
+      .at(timestep);
 }
 
 VariableDictionary::Value& VariableDictionary::operator()(const std::string& component,
@@ -200,7 +204,7 @@ VariableDictionary::Value& VariableDictionary::operator()(const std::string& com
                                                           unsigned int scenario,
                                                           unsigned int timestep)
 {
-    return hmv[PartialKey(component, variable)].at(scenario).at(timestep);
+    return storageOfAddedMipVariables_[PartialKey(component, variable)].at(scenario).at(timestep);
 }
 
 VariableDictionary::Value VariableDictionary::operator()(const FullKey& fullKey) const

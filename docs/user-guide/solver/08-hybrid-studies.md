@@ -1,14 +1,12 @@
 # Hybrid studies
 
-_**This feature is under development**_   
 
-
-Antares-Solver now allows conducting "hybrid" (solver x [modeler](../modeler/01-overview-modeler.md)) studies.  
+Antares-Solver allows conducting "hybrid" (solver x [modeler](../modeler/01-overview-modeler.md)) studies.  
 This enables using [antares-solver studies](02-inputs.md), in which the simulated system is enriched with components 
 that are described in the [antares-modeler format](../modeler/05-model.md).
 
 ## Input structure
-To define a hybrid study, define a [solver study](02-inputs.md), and simply add the modeler [files and directories](../modeler/02-inputs.md) 
+To define a hybrid study, define a [solver study](02-inputs.md), and simply add the [modeler files and directories](../modeler/02-inputs.md) 
 to the input directory.    
 The parameter.yml file from modeler studies is not needed (if it exists, it will be ignored). The [solver parameters](04-parameters.md) 
 are used, since hybrid studies are conducted using [antares-solver](10-command-line.md).  
@@ -61,7 +59,7 @@ area-connections:
 - **component1**: the IDs of the component to connect to the area, as defined in the [components section](../modeler/02-inputs.md#components)
 - **port**: the ID of the component's port to connect to the area (as defined by the model of the component). This port 
   must be of a type that defines an area-connection injection field (see [next paragraph](#selecting-the-area-connection-port-fields))
-- **area**: the ID of the area to connect the component to, as defined in the [antares-solver input files](02-inputs.md)
+- **area**: the ID of the area to connect the component to, as defined in the [antares-solver input files](02-inputs.md).
 
 
 #### Selecting the area-connection port fields
@@ -88,4 +86,16 @@ connect modeler components to solver areas.
 
 #### Optimization model
 The linear expression defined by the connected component's port field definition is simply added to the **left-hand side** 
-of the area's [balance constraint](05-model.md#balance-between-load-and-generation).
+of the area's [balance constraint](05-model.md#balance-between-load-and-generation).  
+
+???+ warning
+    
+    The current convention of this constraint is:  
+      - Generation contributions to the balance should be **positive**  
+      - Load contributions to the balance should be **negative**  
+    Take this into account when defining the connection port value.
+
+## Troubleshooting
+
+### Your model does not behave as expected
+Check that your model respects the internal optimization model's injection [convention](#optimization-model).

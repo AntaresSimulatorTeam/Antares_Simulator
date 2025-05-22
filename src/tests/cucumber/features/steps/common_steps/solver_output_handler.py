@@ -14,8 +14,9 @@ class result_type(Enum):
 
 class solver_output_handler:
 
-    def __init__(self, study_output_path):
+    def __init__(self, study_output_path, mode):
         self.study_output_path = study_output_path
+        self.mode = mode
         self.annual_system_cost = None
         self.hourly_results = {result_type.VALUES: None, result_type.DETAILS: None}
 
@@ -53,7 +54,7 @@ class solver_output_handler:
         if year not in self.hourly_results[rs][area]:
             # parse file
             self.hourly_results[rs][area][year] = self.__read_csv(
-                f"economy/mc-ind/{year:05d}/areas/{area}/{file_name}")
+                f"{self.mode}/mc-ind/{year:05d}/areas/{area}/{file_name}")
             # add datetime column by concatenating unnamed columns 2 (day), 3 (month), 4 (hour)
             cols = ['Unnamed: 2_level_0', 'Unnamed: 3_level_0', 'Unnamed: 4_level_0']
             self.hourly_results[rs][area][year]["datetime"] = self.hourly_results[rs][area][year][cols].apply(

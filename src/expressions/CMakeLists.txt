@@ -96,6 +96,8 @@ target_link_libraries(expressions
         Antares::logs
         #TODO i need LinearProblemData
         linear-problem-api
+        PRIVATE
+        Antares::antares-study-system-model
 )
 
 

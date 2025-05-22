@@ -18,35 +18,29 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include "antares/solver/utils/name_translator.h"
+#pragma once
+#include <HoursFieldBaseVisitor.h>
 
-#include <algorithm>
-#include <iterator>
-
-char** RealName::translate(const std::vector<std::string>& src, std::vector<char*>& pointerVec)
+class HoursCollectorVisitor: public HoursFieldBaseVisitor
 {
-    std::transform(src.begin(),
-                   src.end(),
-                   std::back_inserter(pointerVec),
-                   [](const std::string& str)
-                   { return str.empty() ? nullptr : const_cast<char*>(str.data()); });
-    return pointerVec.data();
-}
-
-char** NullName::translate(const std::vector<std::string>& src, std::vector<char*>& pointerVec)
-{
-    pointerVec.assign(src.size(), nullptr);
-    return pointerVec.data();
-}
-
-std::unique_ptr<NameTranslator> NameTranslator::create(bool useRealNames)
-{
-    if (useRealNames)
+public:
+    std::any visitHoursField(HoursFieldParser::HoursFieldContext* ctx) override
     {
-        return std::make_unique<RealName>();
+        std::vector<std::set<int>> result;
+        for (auto groupCtx: ctx->group())
+        {
+            result.push_back(std::any_cast<std::set<int>>(visit(groupCtx)));
+        }
+        return result;
     }
-    else
+
+    std::any visitGroup(HoursFieldParser::GroupContext* ctx) override
     {
-        return std::make_unique<NullName>();
+        std::set<int> hours;
+        for (auto hourCtx: ctx->hour())
+        {
+            hours.insert(std::stoi(hourCtx->getText()));
+        }
+        return hours;
     }
-}
+};

@@ -31,6 +31,7 @@
 
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::IO::Inputs::ModelConverter;
+using namespace Antares::IO::Inputs;
 
 struct SystemBuilderCreationFixture
 {
@@ -68,15 +69,15 @@ static Model createModelWith2PortsOneWayExchange()
 
     Port port1("port1", PortType("type", {port_field}));
     Port port2("port2", PortType("type", {port_field}));
-    const auto v = GiveMeOneVar();
-    Antares::IO::Inputs::YmlModel::Model ymlmodel = {.variables = {v},
-                                                     .port_field_definitions = {
-                                                       {"port1", "field", v.id}}};
+    const auto var = GiveMeOneVar();
+    YmlModel::Model ymlmodel = {.variables = {var},
+                                .port_field_definitions = {{"port1", "field", var.id}}};
 
-    auto nodeRegistry = Antares::IO::Inputs::ModelConverter::convertExpressionToNode(v.id,
-                                                                                     ymlmodel);
+    auto nodeRegistry = convertExpressionToNode(var.id, ymlmodel);
     std::vector<PortFieldDefinition> portFieldDefinitions;
-    portFieldDefinitions.emplace_back(port1, port_field, Expression(v.id, std::move(nodeRegistry)));
+    portFieldDefinitions.emplace_back(port1,
+                                      port_field,
+                                      Expression(var.id, std::move(nodeRegistry)));
 
     return model_builder.withId("model")
       .withPorts({port1, port2})
@@ -84,16 +85,6 @@ static Model createModelWith2PortsOneWayExchange()
       .build();
 }
 
-static Connection createConnection2PortsOneWayExchange(const Component& comp1,
-                                                       const Component& comp2)
-{
-    auto& port1 = comp1.getModel()->Ports().at("port1");
-    auto& port2 = comp2.getModel()->Ports().at("port2");
-
-    ConnectionEntry entry1(&comp1, &port1, {{PortField{"field"}, FieldRole::Sender}});
-    ConnectionEntry entry2(&comp2, &port2, {{PortField{"field"}, FieldRole::Receiver}});
-    return Connection(entry1, entry2);
-}
 BOOST_AUTO_TEST_SUITE(_System_)
 
 BOOST_FIXTURE_TEST_CASE(nominal_build, SystemBuilderCreationFixture)
@@ -104,51 +95,31 @@ BOOST_FIXTURE_TEST_CASE(nominal_build, SystemBuilderCreationFixture)
     BOOST_CHECK_EQUAL(system.Components().size(), 2);
     BOOST_CHECK_EQUAL(system.Components().at("component1").Id(), "component1");
     BOOST_CHECK_EQUAL(system.Components().at("component2").Id(), "component2");
-    BOOST_CHECK(system.connections().empty());
 }
 
-std::pair<std::string, Component> compoBuildHelper(const std::string& id, const Model& model)
+Component buildComponent(const std::string& id, const Model& model)
 {
     ComponentBuilder component_builder;
     auto component = component_builder.withId(id)
                        .withModel(&model)
                        .withScenarioGroupId("scenario_group")
                        .build();
-    return {id, component};
+    return component;
 }
 
 BOOST_FIXTURE_TEST_CASE(nominal_build_with_connections_two_ports_one_way_exchange,
                         SystemBuilderCreationFixture)
 {
     auto model = createModelWith2PortsOneWayExchange();
-    auto [id1, comp1] = compoBuildHelper("component1", model);
-    auto [id2, comp2] = compoBuildHelper("component2", model);
-    components.emplace(id1, comp1);
-    components.emplace(id2, comp2);
+    auto comp1 = buildComponent("component1", model);
+    auto comp2 = buildComponent("component2", model);
+    components.emplace(comp1.Id(), comp1);
+    components.emplace(comp2.Id(), comp2);
 
-    std::vector connections = {createConnection2PortsOneWayExchange(comp1, comp2)};
-
-    auto system = system_builder.withId("system")
-                    .withComponents(std::move(components))
-                    .withConnections(std::move(connections))
-                    .build();
+    auto system = system_builder.withId("system").withComponents(std::move(components)).build();
 
     BOOST_CHECK_EQUAL(system.Id(), "system");
     BOOST_CHECK_EQUAL(system.Components().size(), 2);
-    BOOST_CHECK_EQUAL(system.connections().size(), 1);
-
-    // Verify connection contents
-    const auto& conn = system.connections()[0];
-    BOOST_CHECK_EQUAL(conn.firstEntry().component()->Id(), "component1");
-    BOOST_CHECK_EQUAL(conn.firstEntry().port()->Id(), "port1");
-    const auto& firstRoles = conn.firstEntry().portFieldsRole();
-    BOOST_CHECK_EQUAL(firstRoles.size(), 1);
-    BOOST_CHECK_EQUAL(firstRoles.at(PortField("field")), FieldRole::Sender);
-    BOOST_CHECK_EQUAL(conn.secondEntry().component()->Id(), "component2");
-    BOOST_CHECK_EQUAL(conn.secondEntry().port()->Id(), "port2");
-    const auto& secondRoles = conn.secondEntry().portFieldsRole();
-    BOOST_CHECK_EQUAL(secondRoles.size(), 1);
-    BOOST_CHECK_EQUAL(secondRoles.at(PortField("field")), FieldRole::Receiver);
 }
 
 // one port1 sends 'rice' and receives 'corn', port2 does the opposite
@@ -184,56 +155,19 @@ static Model createModelWith2Ports2WayExchange()
       .build();
 }
 
-static Connection createConnection2Ports2WayExchange(const Component& comp1, const Component& comp2)
-{
-    auto& port1 = comp1.getModel()->Ports().at("port1");
-    auto& port2 = comp2.getModel()->Ports().at("port2");
-
-    ConnectionEntry entry1(&comp1,
-                           &port1,
-                           {{PortField{"rice"}, FieldRole::Sender},
-                            {PortField{"corn"}, FieldRole::Receiver}});
-    ConnectionEntry entry2(&comp2,
-                           &port2,
-                           {{PortField{"rice"}, FieldRole::Receiver},
-                            {PortField{"corn"}, FieldRole::Sender}});
-    return Connection(entry1, entry2);
-}
-
 BOOST_FIXTURE_TEST_CASE(nominal_build_with_connections_two_ports_two_way_exchange,
                         SystemBuilderCreationFixture)
 {
     auto model = createModelWith2Ports2WayExchange();
-    auto [id1, comp1] = compoBuildHelper("component1", model);
-    auto [id2, comp2] = compoBuildHelper("component2", model);
-    components.emplace(id1, comp1);
-    components.emplace(id2, comp2);
+    auto comp1 = buildComponent("component1", model);
+    auto comp2 = buildComponent("component2", model);
+    components.emplace(comp1.Id(), comp1);
+    components.emplace(comp2.Id(), comp2);
 
-    std::vector connections = {createConnection2Ports2WayExchange(comp1, comp2)};
-
-    auto system = system_builder.withId("system")
-                    .withComponents(std::move(components))
-                    .withConnections(std::move(connections))
-                    .build();
+    auto system = system_builder.withId("system").withComponents(std::move(components)).build();
 
     BOOST_CHECK_EQUAL(system.Id(), "system");
     BOOST_CHECK_EQUAL(system.Components().size(), 2);
-    BOOST_CHECK_EQUAL(system.connections().size(), 1);
-
-    // Verify connection contents
-    const auto& conn = system.connections()[0];
-    BOOST_CHECK_EQUAL(conn.firstEntry().component()->Id(), "component1");
-    BOOST_CHECK_EQUAL(conn.firstEntry().port()->Id(), "port1");
-    const auto& firstRoles = conn.firstEntry().portFieldsRole();
-    BOOST_CHECK_EQUAL(firstRoles.size(), 2);
-    BOOST_CHECK_EQUAL(firstRoles.at(PortField("rice")), FieldRole::Sender);
-    BOOST_CHECK_EQUAL(firstRoles.at(PortField("corn")), FieldRole::Receiver);
-    BOOST_CHECK_EQUAL(conn.secondEntry().component()->Id(), "component2");
-    BOOST_CHECK_EQUAL(conn.secondEntry().port()->Id(), "port2");
-    const auto& secondRoles = conn.secondEntry().portFieldsRole();
-    BOOST_CHECK_EQUAL(secondRoles.size(), 2);
-    BOOST_CHECK_EQUAL(secondRoles.at(PortField("rice")), FieldRole::Receiver);
-    BOOST_CHECK_EQUAL(secondRoles.at(PortField("corn")), FieldRole::Sender);
 }
 
 BOOST_FIXTURE_TEST_CASE(fail_on_no_id, SystemBuilderCreationFixture)

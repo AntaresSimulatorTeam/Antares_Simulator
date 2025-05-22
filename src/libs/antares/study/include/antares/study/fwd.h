@@ -21,6 +21,9 @@
 #ifndef __ANTARES_LIBS_STUDY_FWD_H__
 #define __ANTARES_LIBS_STUDY_FWD_H__
 
+#include <bit>
+#include <cmath>
+#include <concepts>
 #include <map>
 
 #include <yuni/yuni.h>
@@ -195,89 +198,48 @@ enum StyleType
 
 std::string styleToString(const StyleType& style);
 
+enum TimeSeriesType : unsigned int
+{
+    //! TimeSeries : Load
+    timeSeriesLoad = 1u << 0,
+    //! TimeSeries : Hydro
+    timeSeriesHydro = 1u << 1,
+    //! TimeSeries : Wind
+    timeSeriesWind = 1u << 2,
+    //! TimeSeries : Thermal
+    timeSeriesThermal = 1u << 3,
+    //! TimeSeries : Solar
+    timeSeriesSolar = 1u << 4,
+    //! TimeSeries : Renewable
+    timeSeriesRenewable = 1u << 5,
+    //! TimeSeries : Renewable
+    timeSeriesTransmissionCapacities = 1u << 6,
+    // ***********************************************************************
+    // Please update the constant allTimeSeriesMask if you add / remove an item
+    // ***********************************************************************
+}; // enum TimeSeries
+
+// Automatically count the number of time series by OR-ing them together:
+constexpr unsigned int allTimeSeriesMask = static_cast<unsigned int>(timeSeriesLoad)
+                                           | static_cast<unsigned int>(timeSeriesHydro)
+                                           | static_cast<unsigned int>(timeSeriesWind)
+                                           | static_cast<unsigned int>(timeSeriesThermal)
+                                           | static_cast<unsigned int>(timeSeriesSolar)
+                                           | static_cast<unsigned int>(timeSeriesRenewable)
+                                           | static_cast<unsigned int>(
+                                             timeSeriesTransmissionCapacities);
 /*!
 ** \brief Types of timeSeries
 **
 ** These values are mainly used for mask bits
 */
-static const unsigned int timeSeriesCount = 7;
+constexpr unsigned int timeSeriesCount = std::popcount(allTimeSeriesMask);
 
-enum TimeSeriesType : unsigned int
+template<unsigned int T>
+requires(T > 0 && (T & (T - 1)) == 0) // T must be power of two
+struct TimeSeriesBitPatternIntoIndex
 {
-    //! TimeSeries : Load
-    timeSeriesLoad = 1,
-    //! TimeSeries : Hydro
-    timeSeriesHydro = 2,
-    //! TimeSeries : Wind
-    timeSeriesWind = 4,
-    //! TimeSeries : Thermal
-    timeSeriesThermal = 8,
-    //! TimeSeries : Solar
-    timeSeriesSolar = 16,
-    //! TimeSeries : Renewable
-    timeSeriesRenewable = 32,
-    //! TimeSeries : Renewable
-    timeSeriesTransmissionCapacities = 64,
-    // ***********************************************************************
-    // Please update the constant timeSeriesCount if you add / remove an item
-    // ***********************************************************************
-}; // enum TimeSeries
-
-template<int T>
-struct TimeSeriesBitPatternIntoIndex;
-
-template<>
-struct TimeSeriesBitPatternIntoIndex<1>
-{
-    enum
-    {
-        value = 0
-    };
-};
-
-template<>
-struct TimeSeriesBitPatternIntoIndex<2>
-{
-    enum
-    {
-        value = 1
-    };
-};
-
-template<>
-struct TimeSeriesBitPatternIntoIndex<4>
-{
-    enum
-    {
-        value = 2
-    };
-};
-
-template<>
-struct TimeSeriesBitPatternIntoIndex<8>
-{
-    enum
-    {
-        value = 3
-    };
-};
-
-template<>
-struct TimeSeriesBitPatternIntoIndex<16>
-{
-    enum
-    {
-        value = 4
-    };
-};
-
-template<>
-struct TimeSeriesBitPatternIntoIndex<32>
-{
-    enum
-    {
-        value = 5
-    };
+    static constexpr int value = std::countr_zero(T);
 };
 
 template<int T>
