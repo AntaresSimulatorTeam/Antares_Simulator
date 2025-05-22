@@ -49,7 +49,7 @@ jobs:
           echo "DOCKERFILE=$(pwd)/docker/Dockerfile" >> $GITHUB_ENV
           echo "DOCKERDIR=$(pwd)/docker" >> $GITHUB_ENV
 
-  
+
 
 
       - name: check if DockerFiles has changed
