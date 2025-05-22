@@ -37,17 +37,16 @@
 class NumSpaceManager
 {
 public:
-    NumSpaceManager(int N):
+    explicit NumSpaceManager(unsigned N):
         available(N, true)
     {
     }
 
-    inline int getAvailableNumSpace()
+    int getAvailableNumSpace()
     {
         // std::find not available for std::vector<bool>
         std::unique_lock lk(mut);
-        int idx = 0;
-        for (std::size_t idx = 0; idx < available.size(); idx++)
+        for (std::size_t idx = 0; idx < available.size(); ++idx)
         {
             if (available[idx])
             {
@@ -58,7 +57,7 @@ public:
         return -1;
     }
 
-    inline void freeNumSpace(int numSpace)
+    void freeNumSpace(unsigned numSpace)
     {
         std::unique_lock lk(mut);
         available[numSpace] = true;

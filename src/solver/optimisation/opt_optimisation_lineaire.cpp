@@ -263,7 +263,7 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                    problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
     if (problemeHebdo->ExportStructure)
     {
-        std::call_once(export_once, [&]() { OPT_ExportStructures(problemeHebdo, writer); });
+        std::call_once(export_once, [&problemeHebdo, &writer]() { OPT_ExportStructures(problemeHebdo, writer); });
     }
 
     bool ret = runWeeklyOptimization(options.firstOptimOptions,
