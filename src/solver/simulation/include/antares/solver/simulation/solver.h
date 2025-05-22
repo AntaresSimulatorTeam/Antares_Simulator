@@ -21,6 +21,7 @@
 #ifndef __SOLVER_SIMULATION_SOLVER_H__
 #define __SOLVER_SIMULATION_SOLVER_H__
 
+#include <stdexcept>
 #include <yuni/job/queue/service.h>
 
 #include <antares/benchmarking/DurationCollector.h>
@@ -42,19 +43,19 @@ public:
     {
     }
 
-    int getAvailableNumSpace()
+    unsigned getAvailableNumSpace()
     {
         // std::find not available for std::vector<bool>
         std::unique_lock lk(mut);
-        for (std::size_t idx = 0; idx < available.size(); ++idx)
+        for (unsigned idx = 0; idx < available.size(); ++idx)
         {
             if (available[idx])
             {
                 available[idx] = false;
-                return static_cast<int>(idx);
+                return static_cast<unsigned>(idx);
             }
         }
-        return -1;
+        throw std::runtime_error("No numspaces could be allocated, aborting");
     }
 
     void freeNumSpace(unsigned numSpace)

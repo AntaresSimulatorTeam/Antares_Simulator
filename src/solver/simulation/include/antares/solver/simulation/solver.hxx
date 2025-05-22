@@ -147,10 +147,9 @@ public:
             // 1 - Applying random levels for current year
             auto randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
 
-            int numSpace = numspaceManager.getAvailableNumSpace();
+            unsigned numSpace = numspaceManager.getAvailableNumSpace();
             logs.info() << "Year " << y + 1 << " started";
             logs.debug() << "year " << y + 1 << " received numSpace " << numSpace;
-            assert(numSpace >= 0);
 
             // Getting the scratchMap associated to the current year
             Antares::Data::Area::ScratchMap scratchmap = study.areas.buildScratchMap(numSpace);
