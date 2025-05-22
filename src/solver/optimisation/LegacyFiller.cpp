@@ -21,13 +21,16 @@
 
 #include "antares/solver/optimisation/LegacyFiller.h"
 
+#include <spx_constantes_externes.h>
+
 using namespace Antares::Optimisation::LinearProblemApi;
 
 namespace Antares::Optimization
 {
 
-LegacyFiller::LegacyFiller(const PROBLEME_SIMPLEXE_NOMME* problemeSimplexe):
-    problemeSimplexe_(problemeSimplexe)
+LegacyFiller::LegacyFiller(const PROBLEME_HEBDO* problemeHebdo):
+    problemeAResoudre_(problemeHebdo->ProblemeAResoudre.get()),
+    useNamedProblems_(problemeHebdo->NamedProblems)
 {
 }
 
@@ -51,25 +54,25 @@ void LegacyFiller::addObjective(ILinearProblem& pb, ILinearProblemData& data, Fi
 
 void LegacyFiller::CopyMatrix(ILinearProblem& pb) const
 {
-    for (int idxRow = 0; idxRow < problemeSimplexe_->NombreDeContraintes; ++idxRow)
+    for (int idxRow = 0; idxRow < problemeAResoudre_->NombreDeContraintes; ++idxRow)
     {
         auto* ct = pb.getConstraint(idxRow);
-        int debutLigne = problemeSimplexe_->IndicesDebutDeLigne[idxRow];
-        for (int idxCoef = 0; idxCoef < problemeSimplexe_->NombreDeTermesDesLignes[idxRow];
+        int debutLigne = problemeAResoudre_->IndicesDebutDeLigne[idxRow];
+        for (int idxCoef = 0; idxCoef < problemeAResoudre_->NombreDeTermesDesLignes[idxRow];
              ++idxCoef)
         {
             int pos = debutLigne + idxCoef;
-            auto* var = pb.getVariable(problemeSimplexe_->IndicesColonnes[pos]);
-            ct->setCoefficient(var, problemeSimplexe_->CoefficientsDeLaMatriceDesContraintes[pos]);
+            auto* var = pb.getVariable(problemeAResoudre_->IndicesColonnes[pos]);
+            ct->setCoefficient(var, problemeAResoudre_->CoefficientsDeLaMatriceDesContraintes[pos]);
         }
     }
 }
 
 void LegacyFiller::CreateVariable(unsigned idxVar, ILinearProblem& pb) const
 {
-    const double bMin = problemeSimplexe_->Xmin[idxVar];
-    const double bMax = problemeSimplexe_->Xmax[idxVar];
-    const int typeVar = problemeSimplexe_->TypeDeVariable[idxVar];
+    const double bMin = problemeAResoudre_->Xmin[idxVar];
+    const double bMax = problemeAResoudre_->Xmax[idxVar];
+    const int typeVar = problemeAResoudre_->TypeDeVariable[idxVar];
 
     double min_l = (typeVar == VARIABLE_NON_BORNEE || typeVar == VARIABLE_BORNEE_SUPERIEUREMENT)
                      ? -pb.infinity()
@@ -77,15 +80,15 @@ void LegacyFiller::CreateVariable(unsigned idxVar, ILinearProblem& pb) const
     double max_l = (typeVar == VARIABLE_NON_BORNEE || typeVar == VARIABLE_BORNEE_INFERIEUREMENT)
                      ? pb.infinity()
                      : bMax;
-    const bool isIntegerVariable = problemeSimplexe_->IntegerVariable(idxVar);
+    const bool isIntegerVariable = problemeAResoudre_->VariablesEntieres[idxVar];
 
     auto* var = pb.addVariable(min_l, max_l, isIntegerVariable, GetVariableName(idxVar));
-    pb.setObjectiveCoefficient(var, problemeSimplexe_->CoutLineaire[idxVar]);
+    pb.setObjectiveCoefficient(var, problemeAResoudre_->CoutLineaire[idxVar]);
 }
 
 void LegacyFiller::CopyVariables(ILinearProblem& pb) const
 {
-    for (int idxVar = 0; idxVar < problemeSimplexe_->NombreDeVariables; ++idxVar)
+    for (int idxVar = 0; idxVar < problemeAResoudre_->NombreDeVariables; ++idxVar)
     {
         CreateVariable(idxVar, pb);
     }
@@ -94,16 +97,16 @@ void LegacyFiller::CopyVariables(ILinearProblem& pb) const
 void LegacyFiller::UpdateContraints(unsigned idxRow, ILinearProblem& pb) const
 {
     double bMin = -pb.infinity(), bMax = pb.infinity();
-    switch (problemeSimplexe_->Sens[idxRow])
+    switch (problemeAResoudre_->Sens[idxRow])
     {
     case '=':
-        bMin = bMax = problemeSimplexe_->SecondMembre[idxRow];
+        bMin = bMax = problemeAResoudre_->SecondMembre[idxRow];
         break;
     case '<':
-        bMax = problemeSimplexe_->SecondMembre[idxRow];
+        bMax = problemeAResoudre_->SecondMembre[idxRow];
         break;
     case '>':
-        bMin = problemeSimplexe_->SecondMembre[idxRow];
+        bMin = problemeAResoudre_->SecondMembre[idxRow];
         break;
     }
 
@@ -112,29 +115,31 @@ void LegacyFiller::UpdateContraints(unsigned idxRow, ILinearProblem& pb) const
 
 void LegacyFiller::CopyRows(ILinearProblem& pb) const
 {
-    for (int idxRow = 0; idxRow < problemeSimplexe_->NombreDeContraintes; ++idxRow)
+    for (int idxRow = 0; idxRow < problemeAResoudre_->NombreDeContraintes; ++idxRow)
     {
         UpdateContraints(idxRow, pb);
     }
 }
 
+// TODO: in the following code, we hide variable & constraint names from MPSolver only to
+// workaround MPSolver.Write when we want lighter MPS. In the future (maybe through MathOpt), this
+// shouldn't be done here
+
 std::string LegacyFiller::GetVariableName(unsigned int index) const
 {
-    if (!problemeSimplexe_->UseNamedProblems()
-        || problemeSimplexe_->VariableNames().at(index).empty())
+    if (!useNamedProblems_ || problemeAResoudre_->NomDesVariables[index].empty())
     {
         return 'x' + std::to_string(index);
     }
-    return problemeSimplexe_->VariableNames().at(index);
+    return problemeAResoudre_->NomDesVariables[index];
 }
 
 std::string LegacyFiller::GetConstraintName(unsigned int index) const
 {
-    if (!problemeSimplexe_->UseNamedProblems()
-        || problemeSimplexe_->ConstraintNames().at(index).empty())
+    if (!useNamedProblems_ || problemeAResoudre_->NomDesContraintes[index].empty())
     {
         return 'c' + std::to_string(index);
     }
-    return problemeSimplexe_->ConstraintNames().at(index);
+    return problemeAResoudre_->NomDesContraintes[index];
 }
 } // namespace Antares::Optimization

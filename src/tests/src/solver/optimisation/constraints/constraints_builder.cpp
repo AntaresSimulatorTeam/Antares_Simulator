@@ -84,9 +84,9 @@ struct BB
     int nombreDeContraintes = 0;
     int nombreDeTermesDansLaMatriceDeContrainte = 0;
     std::vector<int> IndicesDebutDeLigne = std::vector(4, 0);
-    SparseVector<double> CoefficientsDeLaMatriceDesContraintes;
+    std::vector<double> CoefficientsDeLaMatriceDesContraintes;
     //= std::vector(100, 0.0); // Plain vector
-    SparseVector<int> IndicesColonnes;
+    std::vector<int> IndicesColonnes;
     //= std::vector<int> (100, 0); // Plain vector for column indices
     std::vector<int> NombreDeTermesDesLignes = std::vector<int>(4, 0);
     std::string Sens = std::string(4, '='); // Placeholder for constraint senses
@@ -121,7 +121,6 @@ struct BB
       10,
       std::vector<int>(5, -1));
     std::vector<std::string> NomDesContraintes = std::vector<std::string>(100, "");
-    const bool NamedProblems = true;
     const std::vector<const char*> NomsDesPays = {"CountryA", "CountryB", "CountryC"};
     const uint32_t weekInTheYear = 1;        // Example week
     const uint32_t NombreDePasDeTemps = 168; // Example number of time steps in a week
@@ -203,7 +202,6 @@ struct BB
                 NumeroDeVariableStockFinal,
                 NumeroDeVariableDeTrancheDeStock,
                 NomDesContraintes,
-                NamedProblems,
                 NomsDesPays,
                 weekInTheYear,
                 NombreDePasDeTemps};

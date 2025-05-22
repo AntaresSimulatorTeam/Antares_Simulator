@@ -16,5 +16,4 @@ add_boost_test(unit-tests-for-solver-optimisation
 
 add_subdirectory(adequacy_patch)
 add_subdirectory(translator)
-add_subdirectory(name-translator)
 add_subdirectory(constraints)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -21,8 +21,6 @@
 
 #include <chrono>
 #include <span>
-#include <spx_definition_arguments.h>
-#include <spx_fonctions.h>
 
 #include <antares/antares/fatal-error.h>
 #include <antares/logs/logs.h>
@@ -38,6 +36,8 @@
 #include "antares/solver/utils/filename.h"
 #include "antares/solver/utils/mps_utils.h"
 #include "antares/study/system-model/system.h"
+
+#include "spx_constantes_externes.h"
 
 using namespace operations_research;
 using namespace Antares::Optimisation::LinearProblemApi;
@@ -87,7 +87,7 @@ struct SimplexResult
 
 static void fillModelerComponents(std::vector<std::unique_ptr<ComponentFiller>>& componentFillers,
                                   std::vector<LinearProblemFiller*>& fillersCollection,
-                                  const Antares::ModelerStudy::SystemModel::System* modelerSystem,
+                                  const ModelerStudy::SystemModel::System* modelerSystem,
                                   VariableDictionary& variableDictionary)
 {
     if (!modelerSystem)
@@ -107,8 +107,8 @@ static void fillModelerComponents(std::vector<std::unique_ptr<ComponentFiller>>&
     }
 }
 
-static void writeModelerSolutions(const operations_research::MPSolver* solver,
-                                  Optimization::PROBLEME_SIMPLEXE_NOMME& Probleme,
+static void writeModelerSolutions(const MPSolver* solver,
+                                  unsigned nLegacyVariables,
                                   const int optimizationNumber,
                                   const OptPeriodStringGenerator& optPeriodStringGenerator,
                                   IResultWriter& writer)
@@ -117,13 +117,14 @@ static void writeModelerSolutions(const operations_research::MPSolver* solver,
     const auto& variables = solver->variables();
 
     // we want to only get modeler variables, they're added after legacy vars
-    auto start = variables.begin() + Probleme.NombreDeVariables;
+    // TODO make this cleaner (what happens if order changes? use modeler var dictionary instead?)
+    auto start = variables.begin() + nLegacyVariables;
     if (start == variables.end())
     {
         logs.debug() << "No modeler solutions, skip writing files";
         return;
     }
-    for (auto v = start; v < variables.end(); v++)
+    for (auto v = start; v < variables.end(); ++v)
     {
         contentStream << (*v)->name() << "\t" << (*v)->solution_value() << std::endl;
     }
@@ -134,7 +135,7 @@ static void writeModelerSolutions(const operations_research::MPSolver* solver,
     writer.addEntryFromBuffer(modelerSolutionFilename, content);
 }
 
-FillContext buildFillContext(PROBLEME_HEBDO* problemeHebdo, int NumIntervalle)
+FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumIntervalle)
 {
     unsigned firstTimestep, lastTimestep;
     auto nTsInDay = static_cast<unsigned>(problemeHebdo->NombreDePasDeTempsDUneJournee);
@@ -150,26 +151,23 @@ FillContext buildFillContext(PROBLEME_HEBDO* problemeHebdo, int NumIntervalle)
                         * nTsInDay;
         lastTimestep = firstTimestep + nTsInDay - 1;
     }
-    return FillContext(firstTimestep, lastTimestep);
+    return {firstTimestep, lastTimestep};
 }
 
 // Returns a non-owning pointer
-MPSolver* convertToMPSolver(const PROBLEME_SIMPLEXE_NOMME& pb,
-                            PROBLEME_HEBDO* problemeHebdo,
+MPSolver* convertToMPSolver(const PROBLEME_HEBDO* problemeHebdo,
                             const int NumIntervalle,
                             const SingleOptimOptions& options)
 {
-    LegacyOrtoolsLinearProblem ortoolsProblem(pb.isMIP(), options.solverName);
-    LegacyFiller legacyOrtoolsFiller(&pb);
+    LegacyOrtoolsLinearProblem ortoolsProblem(problemeHebdo->ProblemeAResoudre->isMIP(),
+                                              options.solverName);
+    LegacyFiller legacyOrtoolsFiller(problemeHebdo);
     std::vector<LinearProblemFiller*> fillersCollection = {&legacyOrtoolsFiller};
 
     std::vector<std::unique_ptr<ComponentFiller>> componentFillers;
     VariableDictionary variableDictionary;
-    ComponentToAreaConnectionFiller componentToAreaConnectionFiller(
-      &pb,
-      problemeHebdo->NombreDePasDeTempsPourUneOptimisation,
-      problemeHebdo->modelerSystem,
-      variableDictionary);
+    ComponentToAreaConnectionFiller componentToAreaConnectionFiller(problemeHebdo,
+                                                                    variableDictionary);
     if (problemeHebdo->modelerSystem)
     {
         // All LP variables coordinates (component id, variable id, scenario, time step)
@@ -196,7 +194,6 @@ MPSolver* convertToMPSolver(const PROBLEME_SIMPLEXE_NOMME& pb,
 
 static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                           PROBLEME_HEBDO* problemeHebdo,
-                                          Optimization::PROBLEME_SIMPLEXE_NOMME& Probleme,
                                           const int NumIntervalle,
                                           const int optimizationNumber,
                                           const OptPeriodStringGenerator& optPeriodStringGenerator,
@@ -215,31 +212,18 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         solver = nullptr;
     }
 
-    if (solver == nullptr)
-    {
-        Probleme.Contexte = SIMPLEXE_SEUL;
-        Probleme.BaseDeDepartFournie = NON_SPX;
-    }
-    else
+    if (solver)
     {
         if (problemeHebdo->ReinitOptimisation)
         {
-            if (solver)
-            {
-                ORTOOLS_LibererProbleme(solver);
-            }
+            ORTOOLS_LibererProbleme(solver);
 
             ProblemeAResoudre->ProblemesSpx[NumIntervalle] = nullptr;
 
             solver = nullptr;
-            Probleme.Contexte = SIMPLEXE_SEUL;
-            Probleme.BaseDeDepartFournie = NON_SPX;
         }
         else
         {
-            Probleme.Contexte = BRANCH_AND_BOUND_OU_CUT_NOEUD;
-            Probleme.BaseDeDepartFournie = UTILISER_LA_BASE_DU_PROBLEME_SPX;
-
             TimeMeasurement updateMeasure;
 
             ORTOOLS_ModifierLeVecteurCouts(solver,
@@ -261,65 +245,22 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         }
     }
 
-    Probleme.NombreMaxDIterations = -1;
-    Probleme.DureeMaxDuCalcul = -1.;
-
-    Probleme.CoutLineaire = ProblemeAResoudre->CoutLineaire.data();
-    Probleme.X = ProblemeAResoudre->X.data();
-    Probleme.Xmin = ProblemeAResoudre->Xmin.data();
-    Probleme.Xmax = ProblemeAResoudre->Xmax.data();
-    Probleme.NombreDeVariables = ProblemeAResoudre->NombreDeVariables;
-    Probleme.TypeDeVariable = ProblemeAResoudre->TypeDeVariable.data();
-
-    Probleme.NombreDeContraintes = ProblemeAResoudre->NombreDeContraintes;
-    Probleme.IndicesDebutDeLigne = ProblemeAResoudre->IndicesDebutDeLigne.data();
-    Probleme.NombreDeTermesDesLignes = ProblemeAResoudre->NombreDeTermesDesLignes.data();
-    Probleme.IndicesColonnes = ProblemeAResoudre->IndicesColonnes.data();
-    Probleme.CoefficientsDeLaMatriceDesContraintes = ProblemeAResoudre
-                                                       ->CoefficientsDeLaMatriceDesContraintes
-                                                       .data();
-    Probleme.Sens = ProblemeAResoudre->Sens.data();
-    Probleme.SecondMembre = ProblemeAResoudre->SecondMembre.data();
-
-    Probleme.ChoixDeLAlgorithme = SPX_DUAL;
-
-    Probleme.TypeDePricing = PRICING_STEEPEST_EDGE;
-
-    Probleme.FaireDuScaling = (PremierPassage ? OUI_SPX : NON_SPX);
-
-    Probleme.StrategieAntiDegenerescence = AGRESSIF;
-
-    Probleme.PositionDeLaVariable = ProblemeAResoudre->PositionDeLaVariable.data();
-    Probleme.NbVarDeBaseComplementaires = 0;
-    Probleme.ComplementDeLaBase = ProblemeAResoudre->ComplementDeLaBase.data();
-
-    Probleme.LibererMemoireALaFin = NON_SPX;
-
-    Probleme.UtiliserCoutMax = NON_SPX;
-    Probleme.CoutMax = 0.0;
-
-    Probleme.CoutsMarginauxDesContraintes = ProblemeAResoudre->CoutsMarginauxDesContraintes.data();
-    Probleme.CoutsReduits = ProblemeAResoudre->CoutsReduits.data();
-
-    Probleme.NombreDeContraintesCoupes = 0;
-
     if (solver == nullptr)
     {
-        solver = convertToMPSolver(Probleme, problemeHebdo, NumIntervalle, options);
+        solver = convertToMPSolver(problemeHebdo, NumIntervalle, options);
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
     mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
                                         problemeHebdo->exportMPSOnError,
                                         optimizationNumber,
-                                        &Probleme,
                                         solver);
 
     auto mps_writer = mps_writer_factory.create();
     mps_writer->runIfNeeded(writer, filename);
 
     TimeMeasurement measure;
-    solver = ORTOOLS_Simplexe(&Probleme, solver, options);
+    solver = ORTOOLS_Simplexe(ProblemeAResoudre.get(), solver, options);
     if (solver != nullptr)
     {
         ProblemeAResoudre->ProblemesSpx[NumIntervalle] = solver;
@@ -329,7 +270,6 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     timeMeasure.solveTime = measure.duration_ms();
     optimizationStatistics.addSolveTime(timeMeasure.solveTime);
 
-    ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
     if (ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX && PremierPassage)
     {
         if (ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE)
@@ -351,7 +291,11 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         throw FatalError("Internal error: insufficient memory");
     }
 
-    writeModelerSolutions(solver, Probleme, optimizationNumber, optPeriodStringGenerator, writer);
+    writeModelerSolutions(solver,
+                          ProblemeAResoudre->NombreDeVariables,
+                          optimizationNumber,
+                          optPeriodStringGenerator,
+                          writer);
 
     return {.success = true,
             .timeMeasure = timeMeasure,
@@ -367,18 +311,11 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                          IResultWriter& writer)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
-    Optimization::PROBLEME_SIMPLEXE_NOMME Probleme(ProblemeAResoudre->NomDesVariables,
-                                                   ProblemeAResoudre->NomDesContraintes,
-                                                   ProblemeAResoudre->VariablesEntieres,
-                                                   ProblemeAResoudre->basisStatus,
-                                                   problemeHebdo->NamedProblems,
-                                                   options.solverLogs);
 
     bool PremierPassage = true;
 
     SimplexResult simplexResult = OPT_TryToCallSimplex(options,
                                                        problemeHebdo,
-                                                       Probleme,
                                                        NumIntervalle,
                                                        optimizationNumber,
                                                        optPeriodStringGenerator,
@@ -390,7 +327,6 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         PremierPassage = false;
         simplexResult = OPT_TryToCallSimplex(options,
                                              problemeHebdo,
-                                             Probleme,
                                              NumIntervalle,
                                              optimizationNumber,
                                              optPeriodStringGenerator,
@@ -457,10 +393,8 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
             logs.info() << " Solver: Safe resolution failed";
         }
 
-        Probleme.SetUseNamedProblems(true);
-
         std::unique_ptr<MPSolver> MPproblem(
-          convertToMPSolver(Probleme, problemeHebdo, NumIntervalle, options));
+          convertToMPSolver(problemeHebdo, NumIntervalle, options));
 
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());

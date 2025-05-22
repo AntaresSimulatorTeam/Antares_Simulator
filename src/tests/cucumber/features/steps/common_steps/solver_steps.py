@@ -152,6 +152,12 @@ def check_balance_value(context, area, year, value):
     assert_double_close(value, context.soh.get_balance_mwh(area, year), 0.001, "Balance")
 
 
+@then('in area "{area}", during year {year:d}, "{prod_name}" produces {value:g} MWh')
+def check_production_value(context, area, year, prod_name, value):
+    actual_prod = np.sum(context.soh.get_hourly_prod_mwh(area, year, prod_name))
+    assert_double_close(value, actual_prod, 0.001, "Production")
+
+
 @then(
     'in area "{area}", during year {year:d}, hourly production of "{prod_name}" is always {comparator_and_hourly_prod} MWh')
 def check_prod_for_specific_year(context, area, year, prod_name, comparator_and_hourly_prod):
@@ -223,13 +229,14 @@ def run_simulation(context):
         context.logs_err = ""
     context.output_path = parse_output_folder_from_logs(out)
     context.return_code = process.returncode
-    context.soh = solver_output_handler(context.output_path)
+    context.soh = solver_output_handler(context.output_path, context.mode)
 
 
 def init_simulation(context):
     sih = solver_input_handler(context.study_path)
     # read metadata
     context.nbyears = int(sih.get_value(variable="nbyears", file_nick_name="general"))
+    context.mode = sih.get_value(variable="mode", file_nick_name="general").lower()
     # activate year-by-year results  # TODO : remove this and update studies instead
     sih.set_parameter_value(variable="synthesis", value="true", file_nick_name="general")
     sih.set_parameter_value(variable="year-by-year", value="true", file_nick_name="general")

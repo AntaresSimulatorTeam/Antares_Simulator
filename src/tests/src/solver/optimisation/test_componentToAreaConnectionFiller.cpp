@@ -128,7 +128,7 @@ system:
 
 struct ComponentToAreaConnectionFillerFixture
 {
-    std::unique_ptr<PROBLEME_SIMPLEXE_NOMME> problemeSimplexe;
+    std::unique_ptr<PROBLEME_HEBDO> problemeHebdo;
     VariableDictionary modelerVariableDictionary;
     std::unique_ptr<System> modelerSystem;
     std::vector<Library> libraries;
@@ -137,6 +137,8 @@ struct ComponentToAreaConnectionFillerFixture
     ComponentToAreaConnectionFillerFixture():
         linearProblem(true, "scip")
     {
+        problemeHebdo = std::make_unique<PROBLEME_HEBDO>();
+        problemeHebdo->ProblemeAResoudre = std::make_unique<PROBLEME_ANTARES_A_RESOUDRE>();
         setUpModelerSystem();
     }
 
@@ -148,6 +150,7 @@ struct ComponentToAreaConnectionFillerFixture
         auto ymlSystem = parserSystem.parse(systemYaml);
         auto system = IO::Inputs::SystemConverter::convert(ymlSystem, libraries);
         modelerSystem = std::make_unique<System>(std::move(system));
+        problemeHebdo->modelerSystem = modelerSystem.get();
     }
 
     void setUpModelerVariables(unsigned int ts_start, unsigned int ts_end)
@@ -167,7 +170,7 @@ struct ComponentToAreaConnectionFillerFixture
         }
     }
 
-    void addEmptyConstraints(std::vector<std::string>& names, double rhs)
+    void addEmptyConstraintsToLinearProblem(std::vector<std::string>& names, double rhs)
     {
         for (const auto& name: names)
         {
@@ -179,9 +182,11 @@ struct ComponentToAreaConnectionFillerFixture
                              bool useNamedProblems,
                              double rhs)
     {
+        problemeHebdo->ProblemeAResoudre->NomDesContraintes = constraintNames;
+        problemeHebdo->ProblemeAResoudre->NombreDeContraintes = constraintNames.size();
         if (useNamedProblems)
         {
-            addEmptyConstraints(constraintNames, rhs);
+            addEmptyConstraintsToLinearProblem(constraintNames, rhs);
         }
         else
         {
@@ -190,40 +195,29 @@ struct ComponentToAreaConnectionFillerFixture
             {
                 lpConstraintNames.push_back("c" + std::to_string(i));
             }
-            addEmptyConstraints(lpConstraintNames, rhs);
+            addEmptyConstraintsToLinearProblem(lpConstraintNames, rhs);
         }
     }
 
     void setUpLegacyLp(std::vector<std::string>& constraintNames, bool useNamedProblems, double rhs)
     {
+        problemeHebdo->NamedProblems = useNamedProblems;
+        problemeHebdo->modelerSystem = modelerSystem.get();
         addEmptyConstraints(constraintNames, useNamedProblems, rhs);
-        BasisStatus bs;
-        std::vector<std::string> variables;
-        std::vector<bool> binaries;
-        problemeSimplexe = std::make_unique<PROBLEME_SIMPLEXE_NOMME>(variables,
-                                                                     constraintNames,
-                                                                     binaries,
-                                                                     bs,
-                                                                     useNamedProblems,
-                                                                     false);
-        problemeSimplexe->NombreDeContraintes = constraintNames.size();
     }
 
     void fillProblem(unsigned int ts_start,
                      unsigned int ts_end,
                      std::vector<double> some_param_value)
     {
+        problemeHebdo->NombreDePasDeTempsPourUneOptimisation = ts_end - ts_start + 1;
         FillContext fillCtx(ts_start, ts_end);
         auto tss = std::make_unique<TimeSeriesSet>("some_param_value", some_param_value.size());
         tss->add(some_param_value);
         DataSeriesRepository ds;
         ds.addDataSeries(std::move(tss));
         LinearProblemData data(std::move(ds));
-
-        ComponentToAreaConnectionFiller filler(problemeSimplexe.get(),
-                                               ts_end - ts_start + 1,
-                                               modelerSystem.get(),
-                                               modelerVariableDictionary);
+        ComponentToAreaConnectionFiller filler(problemeHebdo.get(), modelerVariableDictionary);
         filler.addVariables(linearProblem, data, fillCtx);
         filler.addConstraints(linearProblem, data, fillCtx);
         filler.addObjective(linearProblem, data, fillCtx);
@@ -237,6 +231,9 @@ BOOST_AUTO_TEST_CASE(add_one_term_to_balance_constraint_named)
     setUpModelerVariables(0, 0);
     std::vector<std::string> constraints({"whatever", "AreaBalance::area<area1>::hour<0>"});
     setUpLegacyLp(constraints, true, 10);
+    problemeHebdo->NomsDesPays.push_back("area1");
+    problemeHebdo->CorrespondanceCntNativesCntOptim.push_back({});
+    problemeHebdo->CorrespondanceCntNativesCntOptim[0].NumeroDeContrainteDesBilansPays.push_back(1);
     fillProblem(0, 0, {4.0});
 
     auto balance_ct = linearProblem.lookupConstraint("AreaBalance::area<area1>::hour<0>");
@@ -273,6 +270,11 @@ BOOST_AUTO_TEST_CASE(add_two_terms_to_balance_constraint_not_named)
     std::vector<std::string> constraints(
       {"whatever", "AreaBalance::area<area1>::hour<0>", "AreaBalance::area<area1>::hour<1>"});
     setUpLegacyLp(constraints, false, -100);
+    problemeHebdo->NomsDesPays.push_back("area1");
+    problemeHebdo->CorrespondanceCntNativesCntOptim.push_back({});
+    problemeHebdo->CorrespondanceCntNativesCntOptim[0].NumeroDeContrainteDesBilansPays.push_back(1);
+    problemeHebdo->CorrespondanceCntNativesCntOptim.push_back({});
+    problemeHebdo->CorrespondanceCntNativesCntOptim[1].NumeroDeContrainteDesBilansPays.push_back(2);
     fillProblem(10, 11, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -51.0, 8.3});
 
     auto balance_ct_t10 = linearProblem.lookupConstraint("c1");

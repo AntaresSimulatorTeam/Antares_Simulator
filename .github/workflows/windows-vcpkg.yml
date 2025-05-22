@@ -91,7 +91,7 @@ jobs:
           ccache --set-config=compression=true
           ccache -p
           ccache -z            
-      
+
       - name: Install VCPKG
         shell: bash
         run: |
@@ -148,7 +148,7 @@ jobs:
 
       - name: Add OR-Tools to PATH
         run: echo "D:\a\Antares_Simulator\Antares_Simulator/or-tools/install/bin" | Out-File -Append -Encoding ascii $env:GITHUB_PATH
-      
+
       - name: Read simtest version
         shell: bash
         run: |
@@ -355,6 +355,8 @@ jobs:
         shell: bash
         run: |
           cd _build
+          FIXED_PATH=${ORTOOLS_DIR//\\//}
+          cp ${FIXED_PATH}/install/bin/*.dll* solver/Release
           zip -r antares-solver_windows.zip solver/Release/antares-solver.exe solver/Release/*.dll
 
       - name: NSIS Installer creation
@@ -376,7 +378,7 @@ jobs:
       - name: .zip creation
         run: |
           cd _build
-          cpack -G ZIP
+          cpack -G ZIP -D CPACK_INSTALLED_DIRECTORIES="${{ env.ORTOOLS_DIR }}/install/lib;bin"
 
       - name: Installer upload
         uses: actions/upload-artifact@v4

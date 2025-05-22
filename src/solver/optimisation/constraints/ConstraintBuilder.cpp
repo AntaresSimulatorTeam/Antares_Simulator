@@ -210,13 +210,16 @@ ConstraintBuilder& ConstraintBuilder::LayerStorage(unsigned area, unsigned layer
 
 void ConstraintBuilder::OPT_ChargerLaContrainteDansLaMatriceDesContraintes()
 {
-    data.IndicesDebutDeLigne[data.nombreDeContraintes] = data
-                                                           .nombreDeTermesDansLaMatriceDeContrainte;
+    auto& term = data.nombreDeTermesDansLaMatriceDeContrainte;
+
+    data.IndicesDebutDeLigne[data.nombreDeContraintes] = term;
+    data.CoefficientsDeLaMatriceDesContraintes.resize(term + nombreDeTermes_);
+    data.IndicesColonnes.resize(term + nombreDeTermes_);
+
     for (int i = 0; i < nombreDeTermes_; i++)
     {
-        data.CoefficientsDeLaMatriceDesContraintes[data.nombreDeTermesDansLaMatriceDeContrainte]
-          = data.Pi[i];
-        data.IndicesColonnes[data.nombreDeTermesDansLaMatriceDeContrainte] = data.Colonne[i];
+        data.CoefficientsDeLaMatriceDesContraintes[term] = data.Pi[i];
+        data.IndicesColonnes[term] = data.Colonne[i];
         data.nombreDeTermesDansLaMatriceDeContrainte++;
     }
     data.NombreDeTermesDesLignes[data.nombreDeContraintes] = nombreDeTermes_;

@@ -130,6 +130,9 @@ struct QpFixture
         int iStart = problemeAResoudre.CoefficientsDeLaMatriceDesContraintes.size();
         problemeAResoudre.IndicesDebutDeLigne.emplace_back(iStart);
         problemeAResoudre.NombreDeTermesDesLignes.emplace_back(coefs.size());
+
+        problemeAResoudre.IndicesColonnes.resize(coefs.size() + iStart);
+        problemeAResoudre.CoefficientsDeLaMatriceDesContraintes.resize(coefs.size() + iStart);
         for (unsigned i = 0; i < coefs.size(); ++i)
         {
             problemeAResoudre.IndicesColonnes[iStart + i] = vars[i];

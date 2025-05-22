@@ -25,7 +25,6 @@
 #include "antares/solver/optim-model-filler/LinearExpression.h"
 #include "antares/solver/optim-model-filler/VariableDictionary.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
-#include "antares/solver/utils/named_problem.h"
 #include "antares/study/system-model/system.h"
 
 namespace Antares::Optimization
@@ -33,9 +32,7 @@ namespace Antares::Optimization
 class ComponentToAreaConnectionFiller: public Optimisation::LinearProblemApi::LinearProblemFiller
 {
 public:
-    explicit ComponentToAreaConnectionFiller(const PROBLEME_SIMPLEXE_NOMME* problemeSimplexe,
-                                             unsigned int nTimestepsInProblem,
-                                             const ModelerStudy::SystemModel::System* modelerSystem,
+    explicit ComponentToAreaConnectionFiller(const PROBLEME_HEBDO* problemeHebdo,
                                              const VariableDictionary& modelerVariableDictionary);
     void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
@@ -48,17 +45,12 @@ public:
                       Optimisation::LinearProblemApi::FillContext& ctx) override;
 
 private:
-    using AreaId = std::string;
-    using Timestep = unsigned int;
-    using AreaAndTimestep = std::pair<AreaId, Timestep>;
-    using BalanceConstraintId = std::string;
-
+    const PROBLEME_HEBDO* problemeHebdo_;
     const ModelerStudy::SystemModel::System* modelerSystem_;
     const VariableDictionary& modelerVariableDictionary_;
-    std::map<AreaAndTimestep, BalanceConstraintId> balanceConstraintPerAreaAndTimestep_;
-    const unsigned int nTimestepsInProblem_;
 
-    void parseConstraintIds(const PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
+    std::map<std::string, unsigned> areaIndices_;
+
     Optimisation::LinearProblemApi::IMipConstraint* getBalanceConstraint(
       Optimisation::LinearProblemApi::ILinearProblem& pb,
       const std::string& areaId,
