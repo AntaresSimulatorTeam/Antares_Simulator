@@ -67,14 +67,12 @@ static void importShortTermStorages(
             {
                 if (constraint->enabled)
                 {
-                    auto newConstraint = constraint;
-
-                    for (auto& c: newConstraint->constraints)
+                    for (auto& c: constraint->constraints)
                     {
                         c.globalIndex = constraintGlobalIndex;
                         ++constraintGlobalIndex;
                     }
-                    toInsert.additionalConstraints.push_back(newConstraint);
+                    toInsert.additionalConstraints.push_back(constraint);
                 }
             }
             toInsert.series = st.series;

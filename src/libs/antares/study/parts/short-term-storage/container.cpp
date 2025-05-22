@@ -258,22 +258,22 @@ void STStorageInput::resizeTimeseriesNumbers(unsigned int nbYears)
 
 std::size_t STStorageInput::cumulativeConstraintCount() const
 {
-    return std::accumulate(storagesByIndex.begin(),
-                           storagesByIndex.end(),
-                           0,
-                           [](size_t outer_constraint_count, const auto& sts)
-                           {
-                               return outer_constraint_count
-                                      + std::accumulate(
-                                        sts.additionalConstraints.begin(),
-                                        sts.additionalConstraints.end(),
-                                        0,
-                                        [](size_t inner_constraint_count,
-                                           const auto& additionalConstraints) {
-                                            return inner_constraint_count
-                                                   + additionalConstraints->enabledConstraints();
-                                        });
-                           });
+    return std::accumulate(
+      storagesByIndex.begin(),
+      storagesByIndex.end(),
+      0,
+      [](size_t outer_constraint_count, const auto& sts)
+      {
+          return outer_constraint_count
+                 + std::accumulate(sts.additionalConstraints.begin(),
+                                   sts.additionalConstraints.end(),
+                                   0,
+                                   [](size_t inner_constraint_count,
+                                      const auto& additionalConstraints) {
+                                       return inner_constraint_count
+                                              + additionalConstraints->enabledConstraintsCount();
+                                   });
+      });
 }
 
 std::size_t STStorageInput::count() const

@@ -94,7 +94,7 @@ bool AdditionalConstraints::isValidOperatorType() const
     return operatorType == "less" || operatorType == "equal" || operatorType == "greater";
 }
 
-std::size_t AdditionalConstraints::enabledConstraints() const
+std::size_t AdditionalConstraints::enabledConstraintsCount() const
 {
     return enabled ? constraints.size() : 0;
 }

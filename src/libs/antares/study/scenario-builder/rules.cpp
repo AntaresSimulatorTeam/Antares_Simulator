@@ -30,7 +30,7 @@
 
 using namespace Yuni;
 
-namespace Internal
+namespace
 {
 template<class T>
 static void reset(T& v, Antares::Data::Study& study)
@@ -45,7 +45,7 @@ static void reset(T& v, Antares::Data::Study& study)
         v[i].reset(study);
     }
 }
-} // namespace Internal
+} // namespace
 
 namespace Antares::Data::ScenarioBuilder
 {
@@ -96,21 +96,21 @@ bool Rules::reset()
     wind.reset(study_);
 
     // Thermal
-    Internal::reset(thermal, study_);
+    ::reset(thermal, study_);
 
     // Renewable
-    Internal::reset(renewable, study_);
+    ::reset(renewable, study_);
 
     hydroInitialLevels.reset(study_);
     hydroFinalLevels.reset(study_);
 
     // links NTC
-    Internal::reset(linksNTC, study_);
+    ::reset(linksNTC, study_);
 
     binding_constraints.reset(study_);
 
-    Internal::reset(shortTermStorageInflows, study_);
-    Internal::reset(shortTermStorageAdditionalConstraints, study_);
+    ::reset(shortTermStorageInflows, study_);
+    ::reset(shortTermStorageAdditionalConstraints, study_);
 
     return true;
 }

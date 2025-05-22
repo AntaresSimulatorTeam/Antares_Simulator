@@ -73,7 +73,7 @@ public:
     };
 
     // Number of enabled constraints
-    std::size_t enabledConstraints() const;
+    std::size_t enabledConstraintsCount() const;
 
     ValidateResult validate() const;
 
