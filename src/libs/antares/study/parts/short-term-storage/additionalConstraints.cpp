@@ -46,24 +46,24 @@ AdditionalConstraints::AdditionalConstraints(std::string name,
 {
 }
 
-AdditionalConstraints::ValidateResult AdditionalConstraints::validate() const
+ValidateResult validate(const AdditionalConstraints& adc)
 {
-    if (cluster_id.empty())
+    if (adc.cluster_id.empty())
     {
         return {false, "Cluster ID is empty."};
     }
 
-    if (!isValidVariable())
+    if (!adc.isValidVariable())
     {
         return {false, "Invalid variable type. Must be 'injection', 'withdrawal', or 'netting'."};
     }
 
-    if (!isValidOperatorType())
+    if (!adc.isValidOperatorType())
     {
         return {false, "Invalid operator type. Must be 'less', 'equal', or 'greater'."};
     }
 
-    if (!isValidHours())
+    if (!adc.isValidHours())
     {
         return {false, "Hours sets contains invalid values. Must be between 1 and 168."};
     }

@@ -176,7 +176,7 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
             return false;
         }
 
-        if (auto [ok, error_msg] = additionalConstraints->validate(); !ok)
+        if (auto [ok, error_msg] = ShortTermStorage::validate(*additionalConstraints); !ok)
         {
             logs.error() << "Invalid constraint in section: " << section->name;
             logs.error() << error_msg;

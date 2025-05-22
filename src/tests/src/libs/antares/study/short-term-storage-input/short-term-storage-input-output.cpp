@@ -530,7 +530,7 @@ BOOST_AUTO_TEST_CASE(Validate_ClusterIdEmpty)
 {
     ShortTermStorage::AdditionalConstraints constraints("name", "", "injection", "less", true, {});
 
-    auto [ok, error_msg] = constraints.validate();
+    auto [ok, error_msg] = validate(constraints);
     BOOST_CHECK_EQUAL(ok, false);
     BOOST_CHECK_EQUAL(error_msg, "Cluster ID is empty.");
 }
@@ -543,7 +543,7 @@ BOOST_AUTO_TEST_CASE(Validate_InvalidVariable)
                                                         "less",
                                                         true,
                                                         {});
-    auto [ok, error_msg] = constraints.validate();
+    auto [ok, error_msg] = validate(constraints);
     BOOST_CHECK_EQUAL(ok, false);
     BOOST_CHECK_EQUAL(error_msg,
                       "Invalid variable type. Must be 'injection', 'withdrawal', or 'netting'.");
@@ -558,7 +558,7 @@ BOOST_AUTO_TEST_CASE(Validate_InvalidOperatorType)
                                                         true,
                                                         {});
 
-    auto [ok, error_msg] = constraints.validate();
+    auto [ok, error_msg] = validate(constraints);
     BOOST_CHECK_EQUAL(ok, false);
     BOOST_CHECK_EQUAL(error_msg, "Invalid operator type. Must be 'less', 'equal', or 'greater'.");
 }
@@ -576,7 +576,7 @@ BOOST_AUTO_TEST_CASE(Validate_InvalidHours_Empty)
                                                         true,
                                                         {constraint});
 
-    auto [ok, error_msg] = constraints.validate();
+    auto [ok, error_msg] = validate(constraints);
     BOOST_CHECK_EQUAL(ok, false);
     BOOST_CHECK_EQUAL(error_msg, "Hours sets contains invalid values. Must be between 1 and 168.");
 }
@@ -595,7 +595,7 @@ BOOST_AUTO_TEST_CASE(Validate_InvalidHours_Out_of_range)
     constraint.hours = {120, 169}; // Invalid: out of range
     constraints.constraints.push_back(constraint);
 
-    auto [ok, error_msg] = constraints.validate();
+    auto [ok, error_msg] = validate(constraints);
     BOOST_CHECK_EQUAL(ok, false);
     BOOST_CHECK_EQUAL(error_msg, "Hours sets contains invalid values. Must be between 1 and 168.");
 }
@@ -614,7 +614,7 @@ BOOST_AUTO_TEST_CASE(Validate_InvalidHours_Below_minimum)
     constraint.hours = {0, 1}; // Invalid: below minimum
     constraints.constraints.push_back(constraint);
 
-    auto [ok, error_msg] = constraints.validate();
+    auto [ok, error_msg] = validate(constraints);
     BOOST_CHECK_EQUAL(ok, false);
     BOOST_CHECK_EQUAL(error_msg, "Hours sets contains invalid values. Must be between 1 and 168.");
 }
@@ -636,7 +636,7 @@ BOOST_AUTO_TEST_CASE(Validate_ValidConstraints)
 
     constraints.constraints = {constraint1, constraint2};
 
-    auto [ok, error_msg] = constraints.validate();
+    auto [ok, error_msg] = validate(constraints);
     BOOST_CHECK_EQUAL(ok, true);
     BOOST_CHECK(error_msg.empty());
 }
@@ -927,7 +927,7 @@ BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinations,
       ShortTermStorage::SingleAdditionalConstraint{{120, 121, 122}});
 
     // Validate the constraints
-    auto [ok, error_msg] = constraints.validate();
+    auto [ok, error_msg] = validate(constraints);
     BOOST_CHECK_EQUAL(ok, true);
     BOOST_CHECK(error_msg.empty());
 }

@@ -39,6 +39,13 @@ public:
     bool isValidHoursRange() const;
 };
 
+struct ValidateResult
+
+{
+    bool ok;
+    std::string error_msg;
+};
+
 class AdditionalConstraints
 {
 public:
@@ -65,17 +72,8 @@ public:
     bool enabled = true;
     std::vector<SingleAdditionalConstraint> constraints;
 
-    struct ValidateResult
-
-    {
-        bool ok;
-        std::string error_msg;
-    };
-
     // Number of enabled constraints
     std::size_t enabledConstraintsCount() const;
-
-    ValidateResult validate() const;
 
     TimeSeries& rhs()
     {
@@ -90,11 +88,15 @@ public:
     TimeSeriesNumbers timeseriesNumbers;
     TimeSeries timeSeries;
 
+    friend ValidateResult validate(const AdditionalConstraints&);
+
 private:
     bool isValidVariable() const;
     bool isValidOperatorType() const;
 
     bool isValidHours() const;
 };
+
+ValidateResult validate(const AdditionalConstraints&);
 
 } // namespace Antares::Data::ShortTermStorage
