@@ -1,5 +1,7 @@
 var NAVTREEINDEX61 =
 {
+"structTRANSFER__BOUND__AND__LEVEL__FLEX__UP__EDGE.html":[8,0,287],
+"structTRANSFER__BOUND__AND__LEVEL__FLEX__UP__EDGE.html#a1dc723cf1140523d5c38d0af69c78abe":[8,0,287,1],
 "structTRANSFER__BOUND__AND__LEVEL__FLEX__UP__EDGE.html#a3841ddd787b8d011337929558cf5ac69":[8,0,287,0],
 "structTRANSFER__BOUND__AND__LEVEL__MARKET__EDGE.html":[8,0,288],
 "structTRANSFER__BOUND__AND__LEVEL__MARKET__EDGE.html#a29b87335b7701e568f0c1070ad1363c6":[8,0,288,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX61 =
 "ui-runtimeinfos_8h_source.html":[9,0,0,5,0,24,0,0,0,28],
 "ui_2action_2handler_2antares-study_2area_2correlation_8h_source.html":[9,0,0,12,0,0,0,0,6],
 "ui_2action_2handler_2antares-study_2constraint_2data_8h_source.html":[9,0,0,12,0,0,0,1,2],
-"ui_2action_2handler_2antares-study_2thermal-cluster_2common_8h_source.html":[9,0,0,12,0,0,0,3,0],
-"ui_2action_2include_2action_2fwd_8h.html#a6158ce6a21ad89a50cc56efd9e637873":[7,0,0,0,6],
-"ui_2action_2include_2action_2fwd_8h.html#ad5ae5350dd5ca35b38dddc9465c5afce":[7,0,0,0,8]
+"ui_2action_2handler_2antares-study_2thermal-cluster_2common_8h_source.html":[9,0,0,12,0,0,0,3,0]
 };

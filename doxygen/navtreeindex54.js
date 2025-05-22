@@ -1,5 +1,7 @@
 var NAVTREEINDEX54 =
 {
+"structAntares_1_1Map_1_1MapRenderOptions.html#ab2739f06dd1cecb1518d851d614cdcea":[8,0,0,12,12,4],
+"structAntares_1_1Map_1_1MapRenderOptions.html#abfcf66a6421788277f02a11e230447e5":[8,0,0,12,12,1],
 "structAntares_1_1Matrix_1_1PredicateIdentity.html":[8,0,0,26,0],
 "structAntares_1_1Matrix_1_1PredicateIdentity.html#ac2895b6f73f741d1a52115a0c5549089":[8,0,0,26,0,0],
 "structAntares_1_1Memory_1_1Stored.html":[8,0,0,38,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX54 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDtgMarginCsr.html#ace71c098e57b64ae01b8be5aa3704c1b":[8,0,0,18,5,4,26,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDtgMarginCsr.html#af0a63c26c3f8c6ffee2a43aad413d5e5":[8,0,0,18,5,4,26,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardFlowLinear.html":[8,0,0,18,5,4,40],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardFlowLinear.html#a0d559fe23e4c2b0cb132834f822f8120":[8,0,0,18,5,4,40,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardFlowLinear.html#a8ffc894a3208647cb2d021531b7d1b3a":[8,0,0,18,5,4,40,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardFlowLinear.html#aded26e9d29d79b1a4e50e420d9e56896":[8,0,0,18,5,4,40,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardFlowLinear.html#a0d559fe23e4c2b0cb132834f822f8120":[8,0,0,18,5,4,40,2]
 };

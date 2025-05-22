@@ -1,5 +1,7 @@
 var NAVTREEINDEX57 =
 {
+"structAntares_1_1Window_1_1Inspector_1_1PClusterGroup.html":[8,0,0,23,1,40],
+"structAntares_1_1Window_1_1Inspector_1_1PClusterGroup.html#aee83c89af96cf3778dd5a6aba5e4cbca":[8,0,0,23,1,40,0],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterInstalled.html":[8,0,0,23,1,39],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterInstalled.html#ae0897fdcff5bdd4712ad93915e3b3fff":[8,0,0,23,1,39,0],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterLawForced.html":[8,0,0,23,1,62],
@@ -247,7 +249,5 @@ var NAVTREEINDEX57 =
 "structCORRESPONDANCES__DES__CONTRAINTES__HEBDOMADAIRES.html#a3df090be1a2a227aa57b1f714805f73c":[8,0,82,0],
 "structCORRESPONDANCES__DES__CONTRAINTES__HEBDOMADAIRES.html#a4524fc13bb1fd2c4310cafe7502dc518":[8,0,82,1],
 "structCORRESPONDANCES__DES__CONTRAINTES__JOURNALIERES.html":[8,0,83],
-"structCORRESPONDANCES__DES__CONTRAINTES__JOURNALIERES.html#a618fdd41f518837b255cec2d854276f9":[8,0,83,0],
-"structCORRESPONDANCES__DES__VARIABLES.html":[8,0,84],
-"structCORRESPONDANCES__DES__VARIABLES.html#a00cb40bdad3a911b40db8ec64ebc6c91":[8,0,84,14]
+"structCORRESPONDANCES__DES__CONTRAINTES__JOURNALIERES.html#a618fdd41f518837b255cec2d854276f9":[8,0,83,0]
 };

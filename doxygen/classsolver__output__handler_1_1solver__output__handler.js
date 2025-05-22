@@ -1,6 +1,6 @@
 var classsolver__output__handler_1_1solver__output__handler =
 [
-    [ "__init__", "classsolver__output__handler_1_1solver__output__handler.html#ac9724360a0d21fb89d3045b2c8b9e9bf", null ],
+    [ "__init__", "classsolver__output__handler_1_1solver__output__handler.html#a25c8cd845e2d48d5ef77feb13917a1b7", null ],
     [ "details_hourly_for_cluster", "classsolver__output__handler_1_1solver__output__handler.html#a31881648801b8bcccf052246b9487ddd", null ],
     [ "get_annual_system_cost", "classsolver__output__handler_1_1solver__output__handler.html#aba0b10896eb169c8210385dc0b518ef9", null ],
     [ "get_balance_mwh", "classsolver__output__handler_1_1solver__output__handler.html#acdc6606112db090fc5393ae58ab01984", null ],
@@ -18,5 +18,6 @@ var classsolver__output__handler_1_1solver__output__handler =
     [ "min_gen_for_thermal_cluster_at_hour", "classsolver__output__handler_1_1solver__output__handler.html#a71097eaf14a2dc95385eec9131f3a6dc", null ],
     [ "annual_system_cost", "classsolver__output__handler_1_1solver__output__handler.html#a6e76d45643666c9ceff26d07685f18f1", null ],
     [ "hourly_results", "classsolver__output__handler_1_1solver__output__handler.html#a5401bd41e404aa45e780091dfa721351", null ],
+    [ "mode", "classsolver__output__handler_1_1solver__output__handler.html#a2de3fec535ac01c71a8e4f9a67487ab5", null ],
     [ "study_output_path", "classsolver__output__handler_1_1solver__output__handler.html#af55c7a0aa8c88a86078aa61f1a5fa8e7", null ]
 ];

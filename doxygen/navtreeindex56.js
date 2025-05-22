@@ -1,5 +1,7 @@
 var NAVTREEINDEX56 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesHydro.html#a045418da0462c6b770999baa14afcb1b":[8,0,0,18,5,4,0,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesHydro.html#a3e41be3327c02f1e166cdde73e0cebac":[8,0,0,18,5,4,0,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesHydro.html#a72dcb8ce6f01f1d9008d68bb3b34bf7a":[8,0,0,18,5,4,0,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesHydro.html#a74a5c5cf2d1e1e0287dd38edd347333c":[8,0,0,18,5,4,0,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesHydro.html#a998646f4c3544ae0bb5b6a695eaf710d":[8,0,0,18,5,4,0,4],
@@ -247,7 +249,5 @@ var NAVTREEINDEX56 =
 "structAntares_1_1Window_1_1Inspector_1_1PClusterEnabled.html":[8,0,0,23,1,36],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterEnabled.html#a636027a40a61e8a199de0ab27a4fba76":[8,0,0,23,1,36,0],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterFixedCost.html":[8,0,0,23,1,56],
-"structAntares_1_1Window_1_1Inspector_1_1PClusterFixedCost.html#af44392e23e35d220b9c87ba576256ecc":[8,0,0,23,1,56,0],
-"structAntares_1_1Window_1_1Inspector_1_1PClusterGroup.html":[8,0,0,23,1,40],
-"structAntares_1_1Window_1_1Inspector_1_1PClusterGroup.html#aee83c89af96cf3778dd5a6aba5e4cbca":[8,0,0,23,1,40,0]
+"structAntares_1_1Window_1_1Inspector_1_1PClusterFixedCost.html#af44392e23e35d220b9c87ba576256ecc":[8,0,0,23,1,56,0]
 };

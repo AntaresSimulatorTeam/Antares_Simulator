@@ -1,5 +1,7 @@
 var NAVTREEINDEX63 =
 {
+"watervalues_8h_source.html":[9,0,0,12,2,1,1,1,1,1,15],
+"week_8h_source.html":[9,0,0,12,2,1,1,1,0,0,7],
 "weekday_8h_source.html":[9,0,0,12,2,1,1,1,0,0,8],
 "weekly__optimization_8h_source.html":[9,0,0,8,7,1,0,0,0,19],
 "wind_2prepro_8hxx_source.html":[9,0,0,5,0,24,0,0,0,5,7,2],

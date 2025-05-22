@@ -1,5 +1,7 @@
 var NAVTREEINDEX58 =
 {
+"structCORRESPONDANCES__DES__VARIABLES.html":[8,0,84],
+"structCORRESPONDANCES__DES__VARIABLES.html#a00cb40bdad3a911b40db8ec64ebc6c91":[8,0,84,14],
 "structCORRESPONDANCES__DES__VARIABLES.html#a065824648edf2a56ea664e0d97a33fd0":[8,0,84,11],
 "structCORRESPONDANCES__DES__VARIABLES.html#a06ddc7eb12266d6f67784929bee25645":[8,0,84,17],
 "structCORRESPONDANCES__DES__VARIABLES.html#a1a960a8738ad46f55a7caf69078cc256":[8,0,84,22],
@@ -247,7 +249,5 @@ var NAVTREEINDEX58 =
 "structDuplicateFixture.html#a22e5f0db2b26e5866695644eaa63fd88":[8,0,101,5],
 "structDuplicateFixture.html#a375eae1de96674e22744186c8c24584c":[8,0,101,4],
 "structDuplicateFixture.html#a50aee4778ac03349fab321a691f258c6":[8,0,101,1],
-"structDuplicateFixture.html#ab67ef716eded6212157df0a7cd14371f":[8,0,101,0],
-"structDuplicateFixture.html#abedd513dfea71c417c328105a13c0308":[8,0,101,3],
-"structDuplicateFixture.html#ae7559560d779c7c85eadbafc56e957da":[8,0,101,2]
+"structDuplicateFixture.html#ab67ef716eded6212157df0a7cd14371f":[8,0,101,0]
 };

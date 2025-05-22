@@ -1,5 +1,7 @@
 var NAVTREEINDEX53 =
 {
+"structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html#ad95b1c8da4d3568b9ae35959953bb640":[8,0,0,4,0,1,5],
+"structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html#adf3aec2e8493edf02744f625a41953d5":[8,0,0,4,0,1,1],
 "structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html#afd5e5c9b27ebca21863963a6fac44732":[8,0,0,4,0,1,10],
 "structAntares_1_1Data_1_1AreaDependantHydroManagementData.html":[8,0,0,4,49],
 "structAntares_1_1Data_1_1AreaDependantHydroManagementData.html#a57155e6320664236bdb1210e12adbec4":[8,0,0,4,49,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX53 =
 "structAntares_1_1Map_1_1MapRenderOptions.html#a16f79f13bab10a29edc7e7ae9ed03dff":[8,0,0,12,12,2],
 "structAntares_1_1Map_1_1MapRenderOptions.html#a1e0f64c04e8e3cf1f3d5b0303b38bc44":[8,0,0,12,12,5],
 "structAntares_1_1Map_1_1MapRenderOptions.html#a60e4a5a7da21c568e2c30f2f9dc85c8a":[8,0,0,12,12,3],
-"structAntares_1_1Map_1_1MapRenderOptions.html#a6691001fb1df99f5e7a526282ae53955":[8,0,0,12,12,0],
-"structAntares_1_1Map_1_1MapRenderOptions.html#ab2739f06dd1cecb1518d851d614cdcea":[8,0,0,12,12,4],
-"structAntares_1_1Map_1_1MapRenderOptions.html#abfcf66a6421788277f02a11e230447e5":[8,0,0,12,12,1]
+"structAntares_1_1Map_1_1MapRenderOptions.html#a6691001fb1df99f5e7a526282ae53955":[8,0,0,12,12,0]
 };
