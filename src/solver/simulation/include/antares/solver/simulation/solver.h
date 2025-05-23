@@ -22,6 +22,7 @@
 #define __SOLVER_SIMULATION_SOLVER_H__
 
 #include <stdexcept>
+
 #include <yuni/job/queue/service.h>
 
 #include <antares/benchmarking/DurationCollector.h>
