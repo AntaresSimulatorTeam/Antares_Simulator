@@ -21,9 +21,6 @@
 #ifndef __SOLVER_VARIABLE_STORAGE_MIN_HXX__
 #define __SOLVER_VARIABLE_STORAGE_MIN_HXX__
 
-#include <limits>
-#include <type_traits>
-
 namespace Antares
 {
 namespace Solver
