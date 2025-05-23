@@ -27,6 +27,7 @@
 
 #include <antares/logs/logs.h>
 #include "antares/study/version.h"
+#include "yuni/core/system/username.h"
 
 using namespace Yuni;
 
@@ -54,7 +55,9 @@ void StudyHeader::reset()
     dateCreated = ::time(nullptr);
     dateLastSave = dateCreated;
     // Author
-    author = STUDYHEADER_DEFAULT_AUTHOR;
+    String username;
+    System::Username(username);
+    author = username;
 }
 
 void StudyHeader::CopySettingsToIni(IniFile& ini, bool upgradeVersion)
