@@ -123,6 +123,7 @@ public:
 
     //! Author
     Yuni::String author;
+    Yuni::String editor;
 
 private:
     //! Load settings from an INI file

@@ -152,6 +152,25 @@ void ApplWnd::evtOnSetStudyInfos(wxCommandEvent& evt)
         }
         break;
     }
+        case mnIDStudyEditEditor:
+    {
+        wxTextEntryDialog dialog(this,
+                                 wxT("Please enter the new editor(s) of the study :"),
+                                 wxT("Editor(s) of the study"),
+                                 wxStringFromUTF8(study->header.editor),
+                                 wxOK | wxCANCEL);
+
+        if (dialog.ShowModal() == wxID_OK)
+        {
+            MarkTheStudyAsModified();
+            pMainPanel->editor(dialog.GetValue());
+            String stdText;
+            wxStringToString(dialog.GetValue(), stdText);
+            logs.info() << "Renamed the study's editor to '" << stdText << "'";
+            study->header.editor = stdText;
+        }
+        break;
+    }
     }
 }
 

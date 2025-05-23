@@ -58,6 +58,7 @@ void StudyHeader::reset()
     String username;
     System::Username(username);
     author = username;
+    editor = username;
 }
 
 void StudyHeader::CopySettingsToIni(IniFile& ini, bool upgradeVersion)
@@ -86,6 +87,7 @@ void StudyHeader::CopySettingsToIni(IniFile& ini, bool upgradeVersion)
 
     // The author
     sect->add("author", author);
+    sect->add("editor", editor);
 }
 
 bool StudyHeader::internalFindVersionFromFile(const IniFile& ini, std::string& version)
@@ -127,6 +129,8 @@ bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
                 author = p->value;
                 continue;
             }
+            //We don't load editor it is the current user
+
             // Version
             if (p->key == "version")
             {
