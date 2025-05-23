@@ -39,11 +39,11 @@ AverageData::~AverageData() = default;
 
 void AverageData::reset()
 {
-    year.assign(nbYearsCapacity, 0);
-    monthly.assign(MONTHS_PER_YEAR, 0);
-    weekly.assign(WEEKS_PER_YEAR, 0);
-    daily.assign(DAYS_PER_YEAR, 0);
-    hourly.assign(HOURS_PER_YEAR, 0);
+    year.assign(nbYearsCapacity, 0.);
+    monthly.assign(MONTHS_PER_YEAR, 0.);
+    weekly.assign(WEEKS_PER_YEAR, 0.);
+    daily.assign(DAYS_PER_YEAR, 0.);
+    hourly.assign(HOURS_PER_YEAR, 0.);
 }
 
 void AverageData::initializeFromStudy(Data::Study& study)

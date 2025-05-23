@@ -66,10 +66,10 @@ public:
 protected:
     void initializeFromStudy(Antares::Data::Study& study)
     {
-        stdDeviationHourly.assign(HOURS_PER_YEAR, 0);
-        stdDeviationDaily.assign(DAYS_PER_YEAR, 0);
-        stdDeviationWeekly.assign(WEEKS_PER_YEAR, 0);
-        stdDeviationMonthly.assign(MONTHS_PER_YEAR, 0);
+        stdDeviationHourly.assign(HOURS_PER_YEAR, 0.);
+        stdDeviationDaily.assign(DAYS_PER_YEAR, 0.);
+        stdDeviationWeekly.assign(WEEKS_PER_YEAR, 0.);
+        stdDeviationMonthly.assign(MONTHS_PER_YEAR, 0.);
         // Next
         NextType::initializeFromStudy(study);
 
@@ -80,10 +80,10 @@ protected:
     void reset()
     {
         // Reset
-        stdDeviationHourly.assign(HOURS_PER_YEAR, 0);
-        stdDeviationDaily.assign(DAYS_PER_YEAR, 0);
-        stdDeviationWeekly.assign(WEEKS_PER_YEAR, 0);
-        stdDeviationMonthly.assign(MONTHS_PER_YEAR, 0);
+        stdDeviationHourly.assign(HOURS_PER_YEAR, 0.);
+        stdDeviationDaily.assign(DAYS_PER_YEAR, 0.);
+        stdDeviationWeekly.assign(WEEKS_PER_YEAR, 0.);
+        stdDeviationMonthly.assign(MONTHS_PER_YEAR, 0.);
         stdDeviationYear = 0.;
         // Next
         NextType::reset();
@@ -211,7 +211,7 @@ private:
         {
             for (unsigned int i = 0; i != Size; ++i)
             {
-                auto v = results.avgdata.hourly[i];
+                double v = results.avgdata.hourly[i];
                 target[i] = squareRootChecked(array[i] - v * v);
             }
         }
@@ -220,7 +220,7 @@ private:
         {
             for (unsigned int i = 0; i != Size; ++i)
             {
-                auto v = results.avgdata.daily[i];
+                double v = results.avgdata.daily[i];
                 target[i] = squareRootChecked(array[i] - v * v);
             }
         }
@@ -229,7 +229,7 @@ private:
         {
             for (unsigned int i = 0; i != Size; ++i)
             {
-                auto v = results.avgdata.weekly[i];
+                double v = results.avgdata.weekly[i];
                 target[i] = squareRootChecked(array[i] - v * v);
             }
         }
@@ -238,7 +238,7 @@ private:
         {
             for (unsigned int i = 0; i != Size; ++i)
             {
-                auto v = results.avgdata.monthly[i];
+                double v = results.avgdata.monthly[i];
                 target[i] = squareRootChecked(array[i] - v * v);
             }
         }
