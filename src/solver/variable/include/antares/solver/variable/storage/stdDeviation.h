@@ -212,7 +212,8 @@ private:
             for (unsigned int i = 0; i != Size; ++i)
             {
                 double v = results.avgdata.hourly[i];
-                target[i] = squareRootChecked(array[i] - v * v);
+                double a = array[i];
+                target[i] = squareRootChecked(a - v * v);
             }
         }
         break;
@@ -221,7 +222,8 @@ private:
             for (unsigned int i = 0; i != Size; ++i)
             {
                 double v = results.avgdata.daily[i];
-                target[i] = squareRootChecked(array[i] - v * v);
+                double a = array[i];
+                target[i] = squareRootChecked(a - v * v);
             }
         }
         break;
@@ -230,7 +232,8 @@ private:
             for (unsigned int i = 0; i != Size; ++i)
             {
                 double v = results.avgdata.weekly[i];
-                target[i] = squareRootChecked(array[i] - v * v);
+                double a = array[i];
+                target[i] = squareRootChecked(a - v * v);
             }
         }
         break;
@@ -239,7 +242,8 @@ private:
             for (unsigned int i = 0; i != Size; ++i)
             {
                 double v = results.avgdata.monthly[i];
-                target[i] = squareRootChecked(array[i] - v * v);
+                double a = array[i];
+                target[i] = squareRootChecked(a - v * v);
             }
         }
         break;
