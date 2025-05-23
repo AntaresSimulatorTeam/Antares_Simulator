@@ -95,7 +95,7 @@ void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES& DonneesAnnuelles)
     IndicesColonnes[il] = NumeroDeVariableTurbine[nbMonths - 1];
     il++;
 
-    CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+    CoefficientsDeLaMatriceDesContraintes[il] = -1.0;
     IndicesColonnes[il] = NumeroDeVariableOverflow[nbMonths - 1];
     il++;
 

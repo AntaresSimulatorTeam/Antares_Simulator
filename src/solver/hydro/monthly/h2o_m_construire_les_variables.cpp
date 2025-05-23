@@ -86,7 +86,7 @@ void H2O_M_ConstruireLesVariables(DONNEES_ANNUELLES& DonneesAnnuelles)
         CorrespondanceDesVariables.NumeroDeVariableOverflow[Pdt] = Var;
         ProblemeLineairePartieVariable.Xmin[Var] = 0.0;
         ProblemeLineairePartieVariable.Xmax[Var] = LINFINI;
-        ProblemeLineairePartieFixe.TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
+        ProblemeLineairePartieFixe.TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
         ProblemeLineairePartieVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
           = &(DonneesAnnuelles.overflow[Pdt]);
         Var++;

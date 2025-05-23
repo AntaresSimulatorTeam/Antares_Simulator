@@ -202,11 +202,11 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
                   problem.VolumeMax[month] = maxLvl[firstDay];
               }
 
-              if (totalInflowsYear > capaciteTurbinageAnnuelle)
-              {
-                  logs.debug() << "Apports annuels > capacité turbinage annuelle";
-                  problem.TurbineMax.assign(12, totalInflowsYear);
-              }
+              // if (totalInflowsYear > capaciteTurbinageAnnuelle)
+              // {
+              //     logs.debug() << "Apports annuels > capacité turbinage annuelle";
+              //     problem.TurbineMax.assign(12, totalInflowsYear);
+              // }
 
               H2O_M_OptimiserUneAnnee(problem, 0);
               switch (problem.ResultatsValides)
