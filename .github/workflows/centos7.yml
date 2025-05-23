@@ -50,8 +50,6 @@ jobs:
           echo "DOCKERFILE=$(pwd)/docker/Dockerfile" >> $GITHUB_ENV
           echo "DOCKERDIR=$(pwd)/docker" >> $GITHUB_ENV
 
-  
-
 
       - name: check if DockerFiles has changed
         run: |
@@ -140,7 +138,7 @@ jobs:
           ls -la .ccache
           docker rm $container_id
 
-      - name: Upload artifacts
+      - name: Push artifacts
         uses: actions/upload-artifact@v4
         with:
           name: targz

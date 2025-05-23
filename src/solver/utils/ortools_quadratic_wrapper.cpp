@@ -131,10 +131,10 @@ void BuildConstraints(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre, Model& mod
         LinearExpression linear_expression(0);
         for (auto iCoef = 0; iCoef < ProblemeAResoudre->NombreDeTermesDesLignes[iCt]; ++iCoef)
         {
-            int iVar = ProblemeAResoudre->IndicesColonnes
-                         .data()[ProblemeAResoudre->IndicesDebutDeLigne[iCt] + iCoef];
+            int iVar = ProblemeAResoudre
+                         ->IndicesColonnes[ProblemeAResoudre->IndicesDebutDeLigne[iCt] + iCoef];
             auto coef = ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes
-                          .data()[ProblemeAResoudre->IndicesDebutDeLigne[iCt] + iCoef];
+                          [ProblemeAResoudre->IndicesDebutDeLigne[iCt] + iCoef];
             linear_expression += model.variable(iVar) * coef;
         }
         double lb = -infinity;
