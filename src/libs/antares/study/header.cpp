@@ -25,9 +25,10 @@
 #include <cstdlib>
 #include <ctime>
 
+#include "yuni/core/system/username.h"
+
 #include <antares/logs/logs.h>
 #include "antares/study/version.h"
-#include "yuni/core/system/username.h"
 
 using namespace Yuni;
 
@@ -129,7 +130,7 @@ bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
                 author = p->value;
                 continue;
             }
-            //We don't load editor it is the current user
+            // We don't load editor it is the current user
 
             // Version
             if (p->key == "version")
