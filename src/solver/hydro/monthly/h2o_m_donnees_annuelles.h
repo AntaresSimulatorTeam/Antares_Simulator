@@ -36,37 +36,40 @@ constexpr unsigned nbMonths = 12;
 
 #include "h2o_m_donnees_optimisation.h"
 
-/*************************************************************************************************/
-/*                    Structure contenant les champs a renseigner par l'appelant */
-
 typedef struct
 {
-    /* En entree: seules les donnees ci-dessous doivent etre renseignees par l'appelant apres
-       avoir appele " H2O_M_Instanciation " */
-    /* Commence a 0 pour le 1er janvier et se termine a 11 pour le 1er decembre */
-    double CoutDepassementVolume;  /* A renseigner par l'appelant : 1 valeur */
-    double CoutViolMaxDuVolumeMin; // A renseigner par l'appelant : 1 valeur
-    double VolumeInitial;          /* A renseigner par l'appelant : 1 valeur */
-    std::vector<double> TurbineMax;            /* A renseigner par l'appelant : 1 valeur par mois */
+    // ==========================================
+    // En entree:
+    //      seules les donnees ci-dessous doivent etre renseignees par l'appelant apres
+    //      avoir appele " H2O_M_Instanciation "
+    // ==========================================
+    // Commence a 0 pour le 1er janvier et se termine a 11 pour le 1er decembre
+    double CoutDepassementVolume;
+    double CoutViolMaxDuVolumeMin;
+    double VolumeInitial;
+    std::vector<double> TurbineMax;
     std::vector<double> TurbineMin;
-    std::vector<double> TurbineCible;          /* A renseigner par l'appelant : 1 valeur par mois */
-    std::vector<double> Apport;                /* A renseigner par l'appelant : 1 valeur par mois */
-    /* Pour decrire la bande de volumes permise */
-    std::vector<double> VolumeMin; /* A renseigner par l'appelant : 1 valeur par mois */
-    std::vector<double> VolumeMax; /* A renseigner par l'appelant : 1 valeur par mois */
+    std::vector<double> TurbineCible;
+    std::vector<double> Apport;
+    // Pour decrire la bande de volumes permise
+    std::vector<double> VolumeMin;
+    std::vector<double> VolumeMax;
 
-    /* Les resultats */
-    char
-      ResultatsValides; /* Vaut:
-                           OUI si la solution est exploitable pour le reservoir
-                           NON s'il y a eu un probleme dans la resolution
-                                                                                                                     EMERGENCY_SHUT_DOWN si la resolution du probleme a donne lieu a une erreur interne
-                                                                                                      */
-    std::vector<double> Turbine;    /* Resultat a recuperer par l'appelant */
-    std::vector<double> Volume;     /* Resultat a recuperer par l'appelant */
+    // =============================================
+    // Les resultats : a recuperer par l'appelant
+    // // =============================================
+    char ResultatsValides; /* Vaut:
+                              OUI si la solution est exploitable pour le reservoir
+                              NON s'il y a eu un probleme dans la resolution
+                              EMERGENCY_SHUT_DOWN si la resolution du probleme a donne lieu
+                              a une erreur interne
+                           */
+    std::vector<double> Turbine;
+    std::vector<double> Volume;
+    std::vector<double> overflow;
 
-    /******************************************************************************************/
-    /* Problemes internes (utilise uniquement par l'optimisation) */
+    // *****************************************************************************************
+    // Problemes internes (utilise uniquement par l'optimisation)
     PROBLEME_HYDRAULIQUE ProblemeHydraulique;
 } DONNEES_ANNUELLES;
 
