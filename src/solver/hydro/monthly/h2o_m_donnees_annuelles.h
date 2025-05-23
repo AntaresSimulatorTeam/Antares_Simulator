@@ -32,6 +32,8 @@
 #define NON 0
 #define EMERGENCY_SHUT_DOWN 2
 
+constexpr unsigned nbMonths = 12;
+
 #include "h2o_m_donnees_optimisation.h"
 
 /*************************************************************************************************/
@@ -66,7 +68,6 @@ typedef struct
     /******************************************************************************************/
     /* Problemes internes (utilise uniquement par l'optimisation) */
     PROBLEME_HYDRAULIQUE ProblemeHydraulique;
-    int NombreDePasDeTemps; /* 12 */
 } DONNEES_ANNUELLES;
 
 #endif
