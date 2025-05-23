@@ -32,9 +32,9 @@ void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES& DonneesAnnuelles)
 {
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles.ProblemeHydraulique;
     CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables
-        = ProblemeHydraulique.CorrespondanceDesVariables;
+      = ProblemeHydraulique.CorrespondanceDesVariables;
     PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe
-        = ProblemeHydraulique.ProblemeLineairePartieFixe;
+      = ProblemeHydraulique.ProblemeLineairePartieFixe;
 
     auto& CoefficientsDeLaMatriceDesContraintes
       = ProblemeLineairePartieFixe.CoefficientsDeLaMatriceDesContraintes;
@@ -45,6 +45,7 @@ void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES& DonneesAnnuelles)
 
     auto& NumeroDeVariableVolume = CorrespondanceDesVariables.NumeroDeVariableVolume;
     auto& NumeroDeVariableTurbine = CorrespondanceDesVariables.NumeroDeVariableTurbine;
+    auto& NumeroDeVariableOverflow = CorrespondanceDesVariables.NumeroDeVariableOverflow;
     auto& NumeroDeVariableDepassementVolumeMax
       = CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMax;
     auto& NumeroDeVariableDepassementVolumeMin
@@ -75,6 +76,10 @@ void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES& DonneesAnnuelles)
         IndicesColonnes[il] = NumeroDeVariableTurbine[Pdt - 1];
         il++;
 
+        CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+        IndicesColonnes[il] = NumeroDeVariableOverflow[Pdt - 1];
+        il++;
+
         Sens[NombreDeContraintes] = '=';
         NombreDeTermesDesLignes[NombreDeContraintes] = 3;
         NombreDeContraintes++;
@@ -88,6 +93,10 @@ void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES& DonneesAnnuelles)
 
     CoefficientsDeLaMatriceDesContraintes[il] = -1.0;
     IndicesColonnes[il] = NumeroDeVariableTurbine[nbMonths - 1];
+    il++;
+
+    CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+    IndicesColonnes[il] = NumeroDeVariableOverflow[nbMonths - 1];
     il++;
 
     Sens[NombreDeContraintes] = '=';

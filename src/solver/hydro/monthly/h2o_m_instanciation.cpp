@@ -36,6 +36,7 @@ DONNEES_ANNUELLES H2O_M_Instanciation(int NombreDeReservoirs)
     DonneesAnnuelles.TurbineMin.assign(nbMonths, 0.);
     DonneesAnnuelles.TurbineCible.assign(nbMonths, 0.);
     DonneesAnnuelles.Turbine.assign(nbMonths, 0.);
+    DonneesAnnuelles.overflow.assign(nbMonths, 0.);
 
     DonneesAnnuelles.Apport.assign(nbMonths, 0.);
 
@@ -50,20 +51,22 @@ DONNEES_ANNUELLES H2O_M_Instanciation(int NombreDeReservoirs)
     ProblemeHydraulique.ProblemeSpx.assign(NombreDeReservoirs, nullptr);
 
     CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables
-        = ProblemeHydraulique.CorrespondanceDesVariables;
+      = ProblemeHydraulique.CorrespondanceDesVariables;
     PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe
-        = ProblemeHydraulique.ProblemeLineairePartieFixe;
+      = ProblemeHydraulique.ProblemeLineairePartieFixe;
     PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
-        = ProblemeHydraulique.ProblemeLineairePartieVariable;
+      = ProblemeHydraulique.ProblemeLineairePartieVariable;
 
     CorrespondanceDesVariables.NumeroDeVariableVolume.assign(nbMonths, 0);
     CorrespondanceDesVariables.NumeroDeVariableTurbine.assign(nbMonths, 0);
+    CorrespondanceDesVariables.NumeroDeVariableOverflow.assign(nbMonths, 0);
     CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMin.assign(nbMonths, 0);
     CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMax.assign(nbMonths, 0);
     CorrespondanceDesVariables.NumeroDeVariableDEcartPositifAuTurbineCible.assign(nbMonths, 0);
     CorrespondanceDesVariables.NumeroDeVariableDEcartNegatifAuTurbineCible.assign(nbMonths, 0);
 
     int NombreDeVariables = 0;
+    NombreDeVariables += nbMonths;
     NombreDeVariables += nbMonths;
     NombreDeVariables += nbMonths;
     NombreDeVariables += nbMonths;
@@ -97,6 +100,7 @@ DONNEES_ANNUELLES H2O_M_Instanciation(int NombreDeReservoirs)
 
     int NombreDeTermesAlloues = 0;
     NombreDeTermesAlloues += 3 * nbMonths;
+    NombreDeTermesAlloues += nbMonths; // For overflow
     NombreDeTermesAlloues += 2;
     NombreDeTermesAlloues += 2 * nbMonths;
     NombreDeTermesAlloues += 2 * nbMonths;
@@ -106,8 +110,8 @@ DONNEES_ANNUELLES H2O_M_Instanciation(int NombreDeReservoirs)
 
     ProblemeLineairePartieFixe.NombreDeTermesAlloues = NombreDeTermesAlloues;
 
-    ProblemeLineairePartieFixe.CoefficientsDeLaMatriceDesContraintes
-        .assign(NombreDeTermesAlloues, 0.);
+    ProblemeLineairePartieFixe.CoefficientsDeLaMatriceDesContraintes.assign(NombreDeTermesAlloues,
+                                                                            0.);
 
     ProblemeLineairePartieFixe.IndicesColonnes.assign(NombreDeTermesAlloues, 0);
 
@@ -115,11 +119,10 @@ DONNEES_ANNUELLES H2O_M_Instanciation(int NombreDeReservoirs)
     ProblemeLineairePartieVariable.Xmax.assign(NombreDeVariables, 0.);
     ProblemeLineairePartieVariable.SecondMembre.assign(NombreDeContraintes, 0.);
 
-    ProblemeLineairePartieVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees
-        .assign(NombreDeVariables, nullptr);
+    ProblemeLineairePartieVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees.assign(
+      NombreDeVariables, nullptr);
 
     ProblemeLineairePartieVariable.X.assign(NombreDeVariables, 0.);
-
 
     ProblemeLineairePartieVariable.PositionDeLaVariable.assign(NombreDeVariables, 0);
     ProblemeLineairePartieVariable.ComplementDeLaBase.assign(NombreDeContraintes, 0);

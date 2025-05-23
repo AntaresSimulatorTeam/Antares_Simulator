@@ -42,16 +42,18 @@ struct DONNEES_ANNUELLES
     //      seules les donnees ci-dessous doivent etre renseignees par l'appelant apres
     //      avoir appele " H2O_M_Instanciation "
     // ==========================================
-    // Commence a 0 pour le 1er janvier et se termine a 11 pour le 1er decembre
     double CoutDepassementVolume;
     double CoutViolMaxDuVolumeMin;
     double overflowfCost;
 
     double VolumeInitial;
+
+    // Commence a 0 pour le 1er janvier et se termine a 11 pour le 1er decembre
     std::vector<double> TurbineMax;
     std::vector<double> TurbineMin;
     std::vector<double> TurbineCible;
     std::vector<double> Apport;
+    
     // Pour decrire la bande de volumes permise
     std::vector<double> VolumeMin;
     std::vector<double> VolumeMax;

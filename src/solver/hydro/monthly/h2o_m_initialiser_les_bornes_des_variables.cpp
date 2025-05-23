@@ -32,15 +32,16 @@ void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES& DonneesAnnuel
 {
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles.ProblemeHydraulique;
     PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
-        = ProblemeHydraulique.ProblemeLineairePartieVariable;
+      = ProblemeHydraulique.ProblemeLineairePartieVariable;
     const CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables
-        = ProblemeHydraulique.CorrespondanceDesVariables;
+      = ProblemeHydraulique.CorrespondanceDesVariables;
     PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe
-        = ProblemeHydraulique.ProblemeLineairePartieFixe;
+      = ProblemeHydraulique.ProblemeLineairePartieFixe;
 
     DonneesAnnuelles.Volume[0] = DonneesAnnuelles.VolumeInitial;
 
     double CoutDepassementVolume = DonneesAnnuelles.CoutDepassementVolume;
+    double overflowfCost = DonneesAnnuelles.overflowfCost;
     auto& TurbineMax = DonneesAnnuelles.TurbineMax;
     const auto& TurbineMin = DonneesAnnuelles.TurbineMin;
 
@@ -66,6 +67,12 @@ void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES& DonneesAnnuel
         Xmax[Var] = TurbineMax[Pdt];
         Xmin[Var] = TurbineMin[Pdt];
         CoutLineaire[Var] = 0.0;
+    }
+
+    for (int Pdt = 0; Pdt < nbMonths; Pdt++)
+    {
+        Var = CorrespondanceDesVariables.NumeroDeVariableOverflow[Pdt];
+        CoutLineaire[Var] = overflowfCost;
     }
 
     for (int Pdt = 0; Pdt < nbMonths; Pdt++)
