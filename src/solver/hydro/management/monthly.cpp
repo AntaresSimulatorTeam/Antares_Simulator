@@ -86,7 +86,6 @@ static void CheckHydroAllocationProblem(Data::Area& area,
     }
 }
 
-
 double HydroManagement::prepareMonthlyTargetGenerations(Data::Area& area, TmpDataByArea& data)
 {
     double total = 0;
@@ -145,170 +144,178 @@ double HydroManagement::prepareMonthlyTargetGenerations(Data::Area& area, TmpDat
 void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_level, uint y)
 {
     uint indexArea = 0;
-    areas_.each([&](Data::Area& area) {
-        auto& data = tmpDataByArea_[&area];
+    areas_.each(
+      [&](Data::Area& area)
+      {
+          auto& data = tmpDataByArea_[&area];
 
-        auto& minLvl = area.hydro.reservoirLevel[Data::PartHydro::minimum];
-        auto& maxLvl = area.hydro.reservoirLevel[Data::PartHydro::maximum];
+          auto& minLvl = area.hydro.reservoirLevel[Data::PartHydro::minimum];
+          auto& maxLvl = area.hydro.reservoirLevel[Data::PartHydro::maximum];
 
-        int initReservoirLvlMonth = area.hydro.initializeReservoirLevelDate;
+          int initReservoirLvlMonth = area.hydro.initializeReservoirLevelDate;
 
-        double lvi = -1.;
-        if (area.hydro.reservoirManagement)
-            lvi = random_reservoir_level[indexArea];
+          double lvi = -1.;
+          if (area.hydro.reservoirManagement)
+              lvi = random_reservoir_level[indexArea];
 
-        indexArea++;
+          indexArea++;
 
-        double solutionCost = 0.;
-        double solutionCostNoised = 0.;
+          double solutionCost = 0.;
+          double solutionCostNoised = 0.;
 
-        if (area.hydro.reservoirManagement)
-        {
-            auto problem = H2O_M_Instanciation(1);
+          if (area.hydro.reservoirManagement)
+          {
+              auto problem = H2O_M_Instanciation(1);
 
-            double totalInflowsYear = prepareMonthlyTargetGenerations(area, data);
-            assert(totalInflowsYear >= 0.);
+              double totalInflowsYear = prepareMonthlyTargetGenerations(area, data);
+              assert(totalInflowsYear >= 0.);
 
-            auto const& maxP = area.hydro.maxPower[Data::PartHydro::genMaxP];
-            auto const& maxE = area.hydro.maxPower[Data::PartHydro::genMaxE];
-            auto reservoirCapacity = area.hydro.reservoirCapacity;
+              auto const& maxP = area.hydro.maxPower[Data::PartHydro::genMaxP];
+              auto const& maxE = area.hydro.maxPower[Data::PartHydro::genMaxE];
+              auto reservoirCapacity = area.hydro.reservoirCapacity;
 
-            problem.CoutDepassementVolume = 1e2;
-            problem.CoutViolMaxDuVolumeMin = 1e5;
-            problem.VolumeInitial = lvi;
+              problem.CoutDepassementVolume = 1e2;
+              problem.CoutViolMaxDuVolumeMin = 1e5;
+              problem.overflowfCost = 1e5;
+              problem.VolumeInitial = lvi;
 
-            double capaciteTurbinageAnnuelle = 0;
+              double capaciteTurbinageAnnuelle = 0;
 
-            for (unsigned month = 0; month != 12; ++month)
-            {
-                uint realmonth = (initReservoirLvlMonth + month) % 12;
+              for (unsigned month = 0; month != 12; ++month)
+              {
+                  uint realmonth = (initReservoirLvlMonth + month) % 12;
 
-                uint simulationMonth = calendar_.mapping.months[realmonth];
-                auto daysPerMonth = calendar_.months[simulationMonth].days;
-                uint firstDay = calendar_.months[simulationMonth].daysYear.first;
-                uint endDay = firstDay + daysPerMonth;
+                  uint simulationMonth = calendar_.mapping.months[realmonth];
+                  auto daysPerMonth = calendar_.months[simulationMonth].days;
+                  uint firstDay = calendar_.months[simulationMonth].daysYear.first;
+                  uint endDay = firstDay + daysPerMonth;
 
-                for (uint day = firstDay; day != endDay; ++day)
-                {
-                    problem.TurbineMax[month] += maxP[day] * maxE[day] / reservoirCapacity; 
-                }
-                capaciteTurbinageAnnuelle += problem.TurbineMax[month];
-                problem.TurbineMin[month] = data.mingens[realmonth];
-                problem.TurbineCible[month] = data.MTG[realmonth];
-                problem.Apport[month] = data.inflows[realmonth];
-                problem.VolumeMin[month] = minLvl[firstDay];
-                problem.VolumeMax[month] = maxLvl[firstDay];
-            }
+                  for (uint day = firstDay; day != endDay; ++day)
+                  {
+                      problem.TurbineMax[month] += maxP[day] * maxE[day] / reservoirCapacity;
+                  }
+                  capaciteTurbinageAnnuelle += problem.TurbineMax[month];
+                  problem.TurbineMin[month] = data.mingens[realmonth];
+                  problem.TurbineCible[month] = data.MTG[realmonth];
+                  problem.Apport[month] = data.inflows[realmonth];
+                  problem.VolumeMin[month] = minLvl[firstDay];
+                  problem.VolumeMax[month] = maxLvl[firstDay];
+              }
 
-            if (totalInflowsYear > capaciteTurbinageAnnuelle)
-            {
-                logs.debug() << "Apports annuels > capacité turbinage annuelle";
-                problem.TurbineMax.assign(12, totalInflowsYear);
-            }
+              if (totalInflowsYear > capaciteTurbinageAnnuelle)
+              {
+                  logs.debug() << "Apports annuels > capacité turbinage annuelle";
+                  problem.TurbineMax.assign(12, totalInflowsYear);
+              }
 
-            H2O_M_OptimiserUneAnnee(problem, 0);
-            switch (problem.ResultatsValides) {
-                case OUI: {
-                    if (Logs::Verbosity::Debug::enabled)
-                        CheckHydroAllocationProblem(area, problem, initReservoirLvlMonth, lvi);
+              H2O_M_OptimiserUneAnnee(problem, 0);
+              switch (problem.ResultatsValides)
+              {
+              case OUI:
+              {
+                  if (Logs::Verbosity::Debug::enabled)
+                      CheckHydroAllocationProblem(area, problem, initReservoirLvlMonth, lvi);
 
-                    for (uint month = 0; month != 12; ++month) {
-                        uint realmonth = (initReservoirLvlMonth + month) % 12;
+                  for (uint month = 0; month != 12; ++month)
+                  {
+                      uint realmonth = (initReservoirLvlMonth + month) % 12;
 
-                        data.MOG[realmonth] = problem.Turbine[month] * area.hydro.reservoirCapacity;
-                        data.MOL[realmonth] = problem.Volume[month];
-                    }
-                    data.MOL[initReservoirLvlMonth] = lvi;
-                    solutionCost = problem.ProblemeHydraulique.CoutDeLaSolution;
-                    solutionCostNoised = problem.ProblemeHydraulique.CoutDeLaSolutionBruite;
+                      data.MOG[realmonth] = problem.Turbine[month] * area.hydro.reservoirCapacity;
+                      data.MOL[realmonth] = problem.Volume[month];
+                  }
+                  data.MOL[initReservoirLvlMonth] = lvi;
+                  solutionCost = problem.ProblemeHydraulique.CoutDeLaSolution;
+                  solutionCostNoised = problem.ProblemeHydraulique.CoutDeLaSolutionBruite;
 
-                    break;
-                }
-                case NON: {
-                    std::ostringstream msg;
-                    msg << "Year : " << y + 1 << " - hydro: " << area.name
-                        << " [month] no solution found";
-                    throw FatalError(msg.str());
-                }
-                case EMERGENCY_SHUT_DOWN: {
-                    std::ostringstream msg;
-                    msg << "Year : " << y + 1 << " - hydro: " << area.name
-                        << " [month] fatal error";
-                    throw FatalError(msg.str());
-                }
-            }
+                  break;
+              }
+              case NON:
+              {
+                  std::ostringstream msg;
+                  msg << "Year : " << y + 1 << " - hydro: " << area.name
+                      << " [month] no solution found";
+                  throw FatalError(msg.str());
+              }
+              case EMERGENCY_SHUT_DOWN:
+              {
+                  std::ostringstream msg;
+                  msg << "Year : " << y + 1 << " - hydro: " << area.name << " [month] fatal error";
+                  throw FatalError(msg.str());
+              }
+              }
 
-            H2O_M_Free(problem);
-        }
+              H2O_M_Free(problem);
+          }
 
-        else
-        {
-            auto& reservoirLevel = area.hydro.reservoirLevel[Data::PartHydro::average];
+          else
+          {
+              auto& reservoirLevel = area.hydro.reservoirLevel[Data::PartHydro::average];
 
-            for (uint realmonth = 0; realmonth != 12; ++realmonth)
-            {
-                data.MOG[realmonth] = data.inflows[realmonth];
-                data.MOL[realmonth] = reservoirLevel[realmonth];
-            }
-        }
+              for (uint realmonth = 0; realmonth != 12; ++realmonth)
+              {
+                  data.MOG[realmonth] = data.inflows[realmonth];
+                  data.MOL[realmonth] = reservoirLevel[realmonth];
+              }
+          }
 
 #ifndef NDEBUG
-        for (uint realmonth = 0; realmonth != 12; ++realmonth)
-        {
-            assert(!Math::NaN(data.MOG[realmonth]) && "nan value detected for MOG");
-            assert(!Math::NaN(data.MOL[realmonth]) && "nan value detected for MOL");
-            assert(!Math::Infinite(data.MOG[realmonth]) && "infinite value detected for MOG");
-            assert(!Math::Infinite(data.MOL[realmonth]) && "infinite value detected for MOL");
-        }
+          for (uint realmonth = 0; realmonth != 12; ++realmonth)
+          {
+              assert(!Math::NaN(data.MOG[realmonth]) && "nan value detected for MOG");
+              assert(!Math::NaN(data.MOL[realmonth]) && "nan value detected for MOL");
+              assert(!Math::Infinite(data.MOG[realmonth]) && "infinite value detected for MOG");
+              assert(!Math::Infinite(data.MOL[realmonth]) && "infinite value detected for MOL");
+          }
 #endif
-        if (parameters_.hydroDebug)
-        {
-            std::ostringstream buffer, path;
-            path << "debug" << SEP << "solver" << SEP << (1 + y) << SEP << "monthly." << area.name
-                 << ".txt";
+          if (parameters_.hydroDebug)
+          {
+              std::ostringstream buffer, path;
+              path << "debug" << SEP << "solver" << SEP << (1 + y) << SEP << "monthly." << area.name
+                   << ".txt";
 
-            if (area.hydro.reservoirManagement)
-                buffer << "Initial Reservoir Level\t" << lvi << "\n";
-            else
-                buffer << "Initial Reservoir Level : unrelevant (no reservoir mgmt)\n";
-            buffer << "\n";
+              if (area.hydro.reservoirManagement)
+                  buffer << "Initial Reservoir Level\t" << lvi << "\n";
+              else
+                  buffer << "Initial Reservoir Level : unrelevant (no reservoir mgmt)\n";
+              buffer << "\n";
 
-            auto writeSolutionCost = [&buffer](const std::string& caption, double cost) {
-                auto precision = buffer.precision();
-                buffer << caption << std::fixed << std::setprecision(13) << cost;
-                buffer << std::setprecision(precision) << std::defaultfloat;
-            };
-            writeSolutionCost("Solution cost : ", solutionCost);
-            writeSolutionCost("Solution cost (noised) : ", solutionCostNoised);
-            buffer << "\n\n";
+              auto writeSolutionCost = [&buffer](const std::string& caption, double cost)
+              {
+                  auto precision = buffer.precision();
+                  buffer << caption << std::fixed << std::setprecision(13) << cost;
+                  buffer << std::setprecision(precision) << std::defaultfloat;
+              };
+              writeSolutionCost("Solution cost : ", solutionCost);
+              writeSolutionCost("Solution cost (noised) : ", solutionCostNoised);
+              buffer << "\n\n";
 
-            buffer << '\t' << "\tInflows" << '\t' << "\tTarget Gen."
-                   << "\tTurbined"
-                   << "\tLevels" << '\t' << "\tLvl min" << '\t' << "\tLvl max\n";
-            for (uint month = 0; month != 12; ++month)
-            {
-                uint realmonth = (initReservoirLvlMonth + month) % 12;
+              buffer << '\t' << "\tInflows" << '\t' << "\tTarget Gen."
+                     << "\tTurbined"
+                     << "\tLevels" << '\t' << "\tLvl min" << '\t' << "\tLvl max\n";
+              for (uint month = 0; month != 12; ++month)
+              {
+                  uint realmonth = (initReservoirLvlMonth + month) % 12;
 
-                uint simulationMonth = calendar_.mapping.months[realmonth];
+                  uint simulationMonth = calendar_.mapping.months[realmonth];
 
-                uint firstDay = calendar_.months[simulationMonth].daysYear.first;
+                  uint firstDay = calendar_.months[simulationMonth].daysYear.first;
 
-                auto monthName = calendar_.text.months[simulationMonth].name;
+                  auto monthName = calendar_.text.months[simulationMonth].name;
 
-                buffer << monthName[0] << monthName[1] << monthName[2] << '\t';
-                buffer << '\t';
-                buffer << data.inflows[realmonth] << '\t';
-                buffer << data.MTG[realmonth] << '\t';
-                buffer << data.MOG[realmonth] / area.hydro.reservoirCapacity << '\t';
-                buffer << data.MOL[realmonth] << '\t';
-                buffer << minLvl[firstDay] << '\t';
-                buffer << maxLvl[firstDay] << '\t';
-                buffer << '\n';
-            }
-            auto content = buffer.str();
-            resultWriter_.addEntryFromBuffer(path.str(), content);
-        }
-    });
+                  buffer << monthName[0] << monthName[1] << monthName[2] << '\t';
+                  buffer << '\t';
+                  buffer << data.inflows[realmonth] << '\t';
+                  buffer << data.MTG[realmonth] << '\t';
+                  buffer << data.MOG[realmonth] / area.hydro.reservoirCapacity << '\t';
+                  buffer << data.MOL[realmonth] << '\t';
+                  buffer << minLvl[firstDay] << '\t';
+                  buffer << maxLvl[firstDay] << '\t';
+                  buffer << '\n';
+              }
+              auto content = buffer.str();
+              resultWriter_.addEntryFromBuffer(path.str(), content);
+          }
+      });
 }
 
 } // namespace Antares

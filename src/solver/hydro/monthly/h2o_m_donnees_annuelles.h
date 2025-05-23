@@ -25,8 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#ifndef __SOLVER_H2O_M_DONNEES_ANNEE__
-#define __SOLVER_H2O_M_DONNEES_ANNEE__
+#pragma once
 
 #define OUI 1
 #define NON 0
@@ -36,7 +35,7 @@ constexpr unsigned nbMonths = 12;
 
 #include "h2o_m_donnees_optimisation.h"
 
-typedef struct
+struct DONNEES_ANNUELLES
 {
     // ==========================================
     // En entree:
@@ -46,6 +45,8 @@ typedef struct
     // Commence a 0 pour le 1er janvier et se termine a 11 pour le 1er decembre
     double CoutDepassementVolume;
     double CoutViolMaxDuVolumeMin;
+    double overflowfCost;
+
     double VolumeInitial;
     std::vector<double> TurbineMax;
     std::vector<double> TurbineMin;
@@ -71,6 +72,4 @@ typedef struct
     // *****************************************************************************************
     // Problemes internes (utilise uniquement par l'optimisation)
     PROBLEME_HYDRAULIQUE ProblemeHydraulique;
-} DONNEES_ANNUELLES;
-
-#endif
+};
