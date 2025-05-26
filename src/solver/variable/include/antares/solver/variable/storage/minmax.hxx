@@ -98,7 +98,7 @@ void MinMaxBase<OpInferior, NextT>::InternalExportIndices(SurveyResults& report,
     double* v = report.values[report.data.columnIndex];
     for (uint i = 0; i != Size; ++i)
     {
-        v[i] = array[i].indices;
+        v[i] = array[i].index;
     }
 
     // Next column index

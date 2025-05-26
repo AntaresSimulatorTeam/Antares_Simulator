@@ -30,7 +30,7 @@ static void initArray(bool opInferior, std::vector<MinMaxData::Data>& array)
     for (auto& data: array)
     {
         data.value = opInferior ? DBL_MAX : -DBL_MAX; // +inf or -inf
-        data.indices = static_cast<uint32_t>(-1);
+        data.index = static_cast<uint32_t>(-1);
     }
 }
 
@@ -48,11 +48,11 @@ static void mergeArray(bool opInferior,
             if (values[i] < data.value)
             {
                 data.value = values[i];
-                data.indices = year + 1;
+                data.index = year + 1;
             }
-            else if (values[i] == data.value && data.indices > year + 1)
+            else if (values[i] == data.value && data.index > year + 1)
             {
-                data.indices = year + 1;
+                data.index = year + 1;
             }
         }
         else
@@ -60,11 +60,11 @@ static void mergeArray(bool opInferior,
             if (values[i] > data.value)
             {
                 data.value = values[i];
-                data.indices = year + 1; // The year is zero-based
+                data.index = year + 1; // The year is zero-based
             }
-            else if (values[i] == data.value && data.indices > year + 1)
+            else if (values[i] == data.value && data.index > year + 1)
             {
-                data.indices = year + 1;
+                data.index = year + 1;
             }
         }
     }
