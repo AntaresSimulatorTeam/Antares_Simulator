@@ -36,39 +36,6 @@
 #include "antares/solver/simulation/solver_utils.h"
 #include "antares/solver/variable/state.h"
 
-class NumSpaceManager
-{
-public:
-    explicit NumSpaceManager(unsigned N):
-        available(N, true)
-    {
-    }
-
-    unsigned getAvailableNumSpace()
-    {
-        // std::find not available for std::vector<bool>
-        std::unique_lock lk(mut);
-        for (unsigned idx = 0; idx < available.size(); ++idx)
-        {
-            if (available[idx])
-            {
-                available[idx] = false;
-                return static_cast<unsigned>(idx);
-            }
-        }
-        throw std::runtime_error("No numspaces could be allocated, aborting");
-    }
-
-    void freeNumSpace(unsigned numSpace)
-    {
-        std::unique_lock lk(mut);
-        available[numSpace] = true;
-    }
-
-    std::mutex mut;
-    std::vector<bool> available;
-};
-
 namespace Antares::Solver::Simulation
 {
 

@@ -63,3 +63,9 @@ add_boost_test(tests-on-hydro-remix
         LIBS
 	test_utils_unit
 	solver-lib)
+
+add_boost_test(test-numspace-manager
+	SRC
+	numspace_manager.cpp
+	LIBS
+	solver-lib)
