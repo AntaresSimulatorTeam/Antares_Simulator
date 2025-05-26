@@ -81,7 +81,7 @@ void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES& DonneesAnnuelles)
         il++;
 
         Sens[NombreDeContraintes] = '=';
-        NombreDeTermesDesLignes[NombreDeContraintes] = 3;
+        NombreDeTermesDesLignes[NombreDeContraintes] = 4;
         NombreDeContraintes++;
     }
 
@@ -100,7 +100,7 @@ void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES& DonneesAnnuelles)
     il++;
 
     Sens[NombreDeContraintes] = '=';
-    NombreDeTermesDesLignes[NombreDeContraintes] = 2;
+    NombreDeTermesDesLignes[NombreDeContraintes] = 3;
     NombreDeContraintes++;
 
     for (int Pdt = 1; Pdt < nbMonths; Pdt++)

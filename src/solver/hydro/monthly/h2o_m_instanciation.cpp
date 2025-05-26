@@ -70,7 +70,7 @@ DONNEES_ANNUELLES H2O_M_Instanciation(int NombreDeReservoirs)
     NombreDeVariables += nbMonths;
     NombreDeVariables += nbMonths;
     NombreDeVariables += nbMonths;
-    NombreDeVariables += nbMonths;
+    NombreDeVariables += nbMonths; // For overflows
     NombreDeVariables += 1;
     NombreDeVariables += nbMonths;
     NombreDeVariables += nbMonths;
@@ -100,7 +100,7 @@ DONNEES_ANNUELLES H2O_M_Instanciation(int NombreDeReservoirs)
 
     int NombreDeTermesAlloues = 0;
     NombreDeTermesAlloues += 3 * nbMonths;
-    NombreDeTermesAlloues += nbMonths; // For overflow
+    NombreDeTermesAlloues += nbMonths; // For overflows
     NombreDeTermesAlloues += 2;
     NombreDeTermesAlloues += 2 * nbMonths;
     NombreDeTermesAlloues += 2 * nbMonths;
