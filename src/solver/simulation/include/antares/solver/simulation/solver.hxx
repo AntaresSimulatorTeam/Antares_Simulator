@@ -845,9 +845,9 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     for (uint year = firstYear; year < endYear; year++)
     {
         isYearPerformed[year] = study.parameters.yearsFilter[year];
+        yearsIndices.push_back(year);
         if (study.parameters.yearsFilter[year])
         {
-            yearsIndices.push_back(year);
             pNbYearsReallyPerformed++;
         }
     }
