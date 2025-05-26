@@ -100,7 +100,8 @@ void VariableNamer::DispatchableProduction(unsigned int variable, const std::str
     SetThermalClusterElementName(variable, "DispatchableProduction", clusterName);
 }
 
-void VariableNamer::ProductionIncreaseAboveMin(unsigned int variable, const std::string& clusterName)
+void VariableNamer::ProductionIncreaseAboveMin(unsigned int variable,
+                                               const std::string& clusterName)
 {
     SetThermalClusterElementName(variable, "ProductionIncreaseAboveMin", clusterName);
 }
@@ -110,7 +111,6 @@ void VariableNamer::ProductionDecreaseAboveMin(unsigned int variable,
 {
     SetThermalClusterElementName(variable, "ProductionDecreaseAboveMin", clusterName);
 }
-
 
 void VariableNamer::NODU(unsigned int variable, const std::string& clusterName)
 {
@@ -381,8 +381,7 @@ void ConstraintNamer::PMinDispatchableGeneration(unsigned int constraint,
     SetThermalClusterElementName(constraint, "PMinDispatchableGeneration", clusterName);
 }
 
-void ConstraintNamer::RampingIncreaseRate(unsigned int constraint,
-                                                 const std::string& clusterName)
+void ConstraintNamer::RampingIncreaseRate(unsigned int constraint, const std::string& clusterName)
 {
     SetThermalClusterElementName(constraint, "RampingIncreaseRate", clusterName);
 }
@@ -393,7 +392,7 @@ void ConstraintNamer::RampingDecreaseRate(unsigned int constraint, const std::st
 }
 
 void ConstraintNamer::ProductionOutputVariation(unsigned int constraint,
-                                                 const std::string& clusterName)
+                                                const std::string& clusterName)
 {
     SetThermalClusterElementName(constraint, "ProductionOutputVariation", clusterName);
 }
