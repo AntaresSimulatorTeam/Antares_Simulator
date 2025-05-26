@@ -3,6 +3,7 @@ add_subdirectory(writer)
 add_subdirectory(study)
 add_subdirectory(benchmarking)
 add_subdirectory(inifile)
+add_subdirectory(scenarioBuilderExpression)
 
 add_subdirectory(yaml-parser)
 add_subdirectory(antlr4-interface)
