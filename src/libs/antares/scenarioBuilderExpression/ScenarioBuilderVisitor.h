@@ -21,15 +21,13 @@ public:
    */
     virtual std::any visitRules(ScenarioBuilderParser::RulesContext *context) = 0;
 
-    virtual std::any visitRule(ScenarioBuilderParser::RuleContext *context) = 0;
+    virtual std::any visitLine(ScenarioBuilderParser::LineContext *context) = 0;
 
     virtual std::any visitGroup(ScenarioBuilderParser::GroupContext *context) = 0;
 
     virtual std::any visitYear(ScenarioBuilderParser::YearContext *context) = 0;
 
     virtual std::any visitScenario(ScenarioBuilderParser::ScenarioContext *context) = 0;
-
-    virtual std::any visitHour(ScenarioBuilderParser::HourContext *context) = 0;
 
 
 };

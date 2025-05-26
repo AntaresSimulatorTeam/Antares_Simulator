@@ -19,7 +19,7 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual std::any visitRule(ScenarioBuilderParser::RuleContext *ctx) override {
+  virtual std::any visitLine(ScenarioBuilderParser::LineContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -32,10 +32,6 @@ public:
   }
 
   virtual std::any visitScenario(ScenarioBuilderParser::ScenarioContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual std::any visitHour(ScenarioBuilderParser::HourContext *ctx) override {
     return visitChildren(ctx);
   }
 

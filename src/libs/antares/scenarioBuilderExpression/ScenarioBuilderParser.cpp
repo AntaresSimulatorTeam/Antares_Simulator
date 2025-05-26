@@ -52,7 +52,7 @@ void scenariobuilderParserInitialize() {
 #endif
   auto staticData = std::make_unique<ScenarioBuilderParserStaticData>(
     std::vector<std::string>{
-      "rules", "rule", "group", "year", "scenario", "hour"
+      "rules", "line", "group", "year", "scenario"
     },
     std::vector<std::string>{
       "", "','", "", "", "", "'='"
@@ -62,15 +62,14 @@ void scenariobuilderParserInitialize() {
     }
   );
   static const int32_t serializedATNSegment[] = {
-  	4,1,5,34,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,1,0,4,0,14,8,
-  	0,11,0,12,0,15,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,2,1,2,1,3,1,3,1,4,1,
-  	4,1,5,1,5,1,5,0,0,6,0,2,4,6,8,10,0,0,28,0,13,1,0,0,0,2,19,1,0,0,0,4,25,
-  	1,0,0,0,6,27,1,0,0,0,8,29,1,0,0,0,10,31,1,0,0,0,12,14,3,2,1,0,13,12,1,
-  	0,0,0,14,15,1,0,0,0,15,13,1,0,0,0,15,16,1,0,0,0,16,17,1,0,0,0,17,18,5,
-  	0,0,1,18,1,1,0,0,0,19,20,3,4,2,0,20,21,5,1,0,0,21,22,3,6,3,0,22,23,5,
-  	5,0,0,23,24,3,8,4,0,24,3,1,0,0,0,25,26,5,4,0,0,26,5,1,0,0,0,27,28,5,2,
-  	0,0,28,7,1,0,0,0,29,30,5,2,0,0,30,9,1,0,0,0,31,32,5,2,0,0,32,11,1,0,0,
-  	0,1,15
+  	4,1,5,30,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,1,0,4,0,12,8,0,11,0,
+  	12,0,13,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,2,1,2,1,3,1,3,1,4,1,4,1,4,0,
+  	0,5,0,2,4,6,8,0,0,25,0,11,1,0,0,0,2,17,1,0,0,0,4,23,1,0,0,0,6,25,1,0,
+  	0,0,8,27,1,0,0,0,10,12,3,2,1,0,11,10,1,0,0,0,12,13,1,0,0,0,13,11,1,0,
+  	0,0,13,14,1,0,0,0,14,15,1,0,0,0,15,16,5,0,0,1,16,1,1,0,0,0,17,18,3,4,
+  	2,0,18,19,5,1,0,0,19,20,3,6,3,0,20,21,5,5,0,0,21,22,3,8,4,0,22,3,1,0,
+  	0,0,23,24,5,4,0,0,24,5,1,0,0,0,25,26,5,2,0,0,26,7,1,0,0,0,27,28,5,2,0,
+  	0,28,9,1,0,0,0,1,13
   };
   staticData->serializedATN = antlr4::atn::SerializedATNView(serializedATNSegment, sizeof(serializedATNSegment) / sizeof(serializedATNSegment[0]));
 
@@ -129,12 +128,12 @@ tree::TerminalNode* ScenarioBuilderParser::RulesContext::EOF() {
   return getToken(ScenarioBuilderParser::EOF, 0);
 }
 
-std::vector<ScenarioBuilderParser::RuleContext *> ScenarioBuilderParser::RulesContext::rule_() {
-  return getRuleContexts<ScenarioBuilderParser::RuleContext>();
+std::vector<ScenarioBuilderParser::LineContext *> ScenarioBuilderParser::RulesContext::line() {
+  return getRuleContexts<ScenarioBuilderParser::LineContext>();
 }
 
-ScenarioBuilderParser::RuleContext* ScenarioBuilderParser::RulesContext::rule_(size_t i) {
-  return getRuleContext<ScenarioBuilderParser::RuleContext>(i);
+ScenarioBuilderParser::LineContext* ScenarioBuilderParser::RulesContext::line(size_t i) {
+  return getRuleContext<ScenarioBuilderParser::LineContext>(i);
 }
 
 
@@ -164,17 +163,17 @@ ScenarioBuilderParser::RulesContext* ScenarioBuilderParser::rules() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(13); 
+    setState(11); 
     _errHandler->sync(this);
     _la = _input->LA(1);
     do {
-      setState(12);
-      rule_();
-      setState(15); 
+      setState(10);
+      line();
+      setState(13); 
       _errHandler->sync(this);
       _la = _input->LA(1);
     } while (_la == ScenarioBuilderParser::IDENTIFIER);
-    setState(17);
+    setState(15);
     match(ScenarioBuilderParser::EOF);
    
   }
@@ -187,48 +186,48 @@ ScenarioBuilderParser::RulesContext* ScenarioBuilderParser::rules() {
   return _localctx;
 }
 
-//----------------- RuleContext ------------------------------------------------------------------
+//----------------- LineContext ------------------------------------------------------------------
 
-ScenarioBuilderParser::RuleContext::RuleContext(ParserRuleContext *parent, size_t invokingState)
+ScenarioBuilderParser::LineContext::LineContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-ScenarioBuilderParser::GroupContext* ScenarioBuilderParser::RuleContext::group() {
+ScenarioBuilderParser::GroupContext* ScenarioBuilderParser::LineContext::group() {
   return getRuleContext<ScenarioBuilderParser::GroupContext>(0);
 }
 
-tree::TerminalNode* ScenarioBuilderParser::RuleContext::COMMA() {
+tree::TerminalNode* ScenarioBuilderParser::LineContext::COMMA() {
   return getToken(ScenarioBuilderParser::COMMA, 0);
 }
 
-ScenarioBuilderParser::YearContext* ScenarioBuilderParser::RuleContext::year() {
+ScenarioBuilderParser::YearContext* ScenarioBuilderParser::LineContext::year() {
   return getRuleContext<ScenarioBuilderParser::YearContext>(0);
 }
 
-tree::TerminalNode* ScenarioBuilderParser::RuleContext::EQUALS() {
+tree::TerminalNode* ScenarioBuilderParser::LineContext::EQUALS() {
   return getToken(ScenarioBuilderParser::EQUALS, 0);
 }
 
-ScenarioBuilderParser::ScenarioContext* ScenarioBuilderParser::RuleContext::scenario() {
+ScenarioBuilderParser::ScenarioContext* ScenarioBuilderParser::LineContext::scenario() {
   return getRuleContext<ScenarioBuilderParser::ScenarioContext>(0);
 }
 
 
-size_t ScenarioBuilderParser::RuleContext::getRuleIndex() const {
-  return ScenarioBuilderParser::RuleRule;
+size_t ScenarioBuilderParser::LineContext::getRuleIndex() const {
+  return ScenarioBuilderParser::RuleLine;
 }
 
 
-std::any ScenarioBuilderParser::RuleContext::accept(tree::ParseTreeVisitor *visitor) {
+std::any ScenarioBuilderParser::LineContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<ScenarioBuilderVisitor*>(visitor))
-    return parserVisitor->visitRule(this);
+    return parserVisitor->visitLine(this);
   else
     return visitor->visitChildren(this);
 }
 
-ScenarioBuilderParser::RuleContext* ScenarioBuilderParser::rule_() {
-  RuleContext *_localctx = _tracker.createInstance<RuleContext>(_ctx, getState());
-  enterRule(_localctx, 2, ScenarioBuilderParser::RuleRule);
+ScenarioBuilderParser::LineContext* ScenarioBuilderParser::line() {
+  LineContext *_localctx = _tracker.createInstance<LineContext>(_ctx, getState());
+  enterRule(_localctx, 2, ScenarioBuilderParser::RuleLine);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -239,15 +238,15 @@ ScenarioBuilderParser::RuleContext* ScenarioBuilderParser::rule_() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(19);
+    setState(17);
     group();
-    setState(20);
+    setState(18);
     match(ScenarioBuilderParser::COMMA);
-    setState(21);
+    setState(19);
     year();
-    setState(22);
+    setState(20);
     match(ScenarioBuilderParser::EQUALS);
-    setState(23);
+    setState(21);
     scenario();
    
   }
@@ -296,7 +295,7 @@ ScenarioBuilderParser::GroupContext* ScenarioBuilderParser::group() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(25);
+    setState(23);
     match(ScenarioBuilderParser::IDENTIFIER);
    
   }
@@ -345,7 +344,7 @@ ScenarioBuilderParser::YearContext* ScenarioBuilderParser::year() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(27);
+    setState(25);
     match(ScenarioBuilderParser::INT);
    
   }
@@ -394,56 +393,7 @@ ScenarioBuilderParser::ScenarioContext* ScenarioBuilderParser::scenario() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(29);
-    match(ScenarioBuilderParser::INT);
-   
-  }
-  catch (RecognitionException &e) {
-    _errHandler->reportError(this, e);
-    _localctx->exception = std::current_exception();
-    _errHandler->recover(this, _localctx->exception);
-  }
-
-  return _localctx;
-}
-
-//----------------- HourContext ------------------------------------------------------------------
-
-ScenarioBuilderParser::HourContext::HourContext(ParserRuleContext *parent, size_t invokingState)
-  : ParserRuleContext(parent, invokingState) {
-}
-
-tree::TerminalNode* ScenarioBuilderParser::HourContext::INT() {
-  return getToken(ScenarioBuilderParser::INT, 0);
-}
-
-
-size_t ScenarioBuilderParser::HourContext::getRuleIndex() const {
-  return ScenarioBuilderParser::RuleHour;
-}
-
-
-std::any ScenarioBuilderParser::HourContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (auto parserVisitor = dynamic_cast<ScenarioBuilderVisitor*>(visitor))
-    return parserVisitor->visitHour(this);
-  else
-    return visitor->visitChildren(this);
-}
-
-ScenarioBuilderParser::HourContext* ScenarioBuilderParser::hour() {
-  HourContext *_localctx = _tracker.createInstance<HourContext>(_ctx, getState());
-  enterRule(_localctx, 10, ScenarioBuilderParser::RuleHour);
-
-#if __cplusplus > 201703L
-  auto onExit = finally([=, this] {
-#else
-  auto onExit = finally([=] {
-#endif
-    exitRule();
-  });
-  try {
-    enterOuterAlt(_localctx, 1);
-    setState(31);
+    setState(27);
     match(ScenarioBuilderParser::INT);
    
   }

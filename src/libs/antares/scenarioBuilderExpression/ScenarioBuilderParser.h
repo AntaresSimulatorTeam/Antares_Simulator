@@ -16,8 +16,7 @@ public:
   };
 
   enum {
-    RuleRules = 0, RuleRule = 1, RuleGroup = 2, RuleYear = 3, RuleScenario = 4, 
-    RuleHour = 5
+    RuleRules = 0, RuleLine = 1, RuleGroup = 2, RuleYear = 3, RuleScenario = 4
   };
 
   explicit ScenarioBuilderParser(antlr4::TokenStream *input);
@@ -38,19 +37,18 @@ public:
 
 
   class RulesContext;
-  class RuleContext;
+  class LineContext;
   class GroupContext;
   class YearContext;
-  class ScenarioContext;
-  class HourContext; 
+  class ScenarioContext; 
 
   class  RulesContext : public antlr4::ParserRuleContext {
   public:
     RulesContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *EOF();
-    std::vector<RuleContext *> rule_();
-    RuleContext* rule_(size_t i);
+    std::vector<LineContext *> line();
+    LineContext* line(size_t i);
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -59,9 +57,9 @@ public:
 
   RulesContext* rules();
 
-  class  RuleContext : public antlr4::ParserRuleContext {
+  class  LineContext : public antlr4::ParserRuleContext {
   public:
-    RuleContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    LineContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     GroupContext *group();
     antlr4::tree::TerminalNode *COMMA();
@@ -74,7 +72,7 @@ public:
    
   };
 
-  RuleContext* rule_();
+  LineContext* line();
 
   class  GroupContext : public antlr4::ParserRuleContext {
   public:
@@ -114,19 +112,6 @@ public:
   };
 
   ScenarioContext* scenario();
-
-  class  HourContext : public antlr4::ParserRuleContext {
-  public:
-    HourContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *INT();
-
-
-    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-   
-  };
-
-  HourContext* hour();
 
 
   // By default the static state used to implement the parser is lazily initialized during the first

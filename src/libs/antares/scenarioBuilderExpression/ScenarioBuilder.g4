@@ -21,12 +21,11 @@
 
 grammar ScenarioBuilder;
 
-rules       : rule+ EOF ;
-rule        : group COMMA year EQUALS scenario ;
+rules       : line+ EOF ;
+line        : group COMMA year EQUALS scenario ;
 group       : IDENTIFIER ;
 year        : INT ;
 scenario    : INT ;
-hour       : INT ;
 
 COMMA      : ',' ;
 INT        : [0-9]+ ;
