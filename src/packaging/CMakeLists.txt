@@ -78,9 +78,9 @@ set(TARGET_LIBS #No alias
 
         # model_antares
         infeasible_problem_analysis
-        modeler_api
-        data-series-lib
-        modeler-ortools-impl
+        linear-problem-api
+        linear-problem-data-impl
+        linear-problem-mpsolver-impl
 
         # solver-lib
         args_helper
@@ -90,6 +90,20 @@ set(TARGET_LIBS #No alias
 
         # executable
         antares-solver
+
+        # modeler libs
+        antlr-interface
+        antares-study-system-model
+        load-modeler-files
+        expressions
+        optim-model-filler
+        yml-system
+        yml-model
+        model-converter
+        modeler-parameters
+        data-series-csv-importer
+        expressions-iterators
+        additional-constraint-rhs-antlr-interface
 )
 
 install(TARGETS ${TARGET_LIBS}

@@ -24,17 +24,8 @@
 
 #include "component.h"
 
-namespace Antares::Study::SystemModel
+namespace Antares::ModelerStudy::SystemModel
 {
-
-/**
- * Defines the attributes of the System class
- * Made into a struct to avoid duplication in SystemBuilder
- */
-struct SystemData
-{
-};
-
 /**
  * Defines the simulated system.
  */
@@ -44,6 +35,7 @@ public:
     // Only allowing one private constructor (see below) to forbid empty Systems
     System() = delete;
     System(System& other) = delete;
+    System(System&& other) = default;
 
     const std::string& Id() const
     {
@@ -58,22 +50,21 @@ public:
 private:
     // Only SystemBuilder is allowed to build System instances
     friend class SystemBuilder;
-    System(std::string_view id, std::vector<Component> components);
+    System(std::string_view id, std::unordered_map<std::string, Component>&& components);
     std::string id_;
     std::unordered_map<std::string, Component> components_;
-    std::pair<std::string, Component> makeComponent(Component& component) const;
 };
 
 class SystemBuilder
 {
 public:
     SystemBuilder& withId(std::string_view id);
-    SystemBuilder& withComponents(std::vector<Component>& components);
-    System build() const;
+    SystemBuilder& withComponents(std::unordered_map<std::string, Component>&& components);
+    System build();
 
 private:
     std::string id_;
-    std::vector<Component> components_;
+    std::unordered_map<std::string, Component> components_;
 };
 
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel

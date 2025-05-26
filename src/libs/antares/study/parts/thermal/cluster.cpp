@@ -131,6 +131,7 @@ uint ThermalCluster::groupId() const
     return groupID;
 }
 
+// TODO VP: delete with GUI
 void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
 {
     // Note: In this method, only the data can be copied (and not the name or
@@ -634,20 +635,21 @@ unsigned int ThermalCluster::precision() const
 
 CostProvider& ThermalCluster::getCostProvider()
 {
-    if (!costProvider)
-    {
-        switch (costgeneration)
-        {
-        case Data::setManually:
-            costProvider = std::make_unique<ConstantCostProvider>(*this);
-            break;
-        case Data::useCostTimeseries:
-            costProvider = std::make_unique<ScenarizedCostProvider>(*this);
-            break;
-        default:
-            throw std::runtime_error("Invalid costgeneration parameter");
-        }
-    }
+    std::call_once(onceFlag,
+                   [&]
+                   {
+                       switch (costgeneration)
+                       {
+                       case Data::setManually:
+                           costProvider = std::make_unique<ConstantCostProvider>(*this);
+                           break;
+                       case Data::useCostTimeseries:
+                           costProvider = std::make_unique<ScenarizedCostProvider>(*this);
+                           break;
+                       default:
+                           throw std::runtime_error("Invalid costgeneration parameter");
+                       }
+                   });
     return *costProvider;
 }
 

@@ -1,0 +1,36 @@
+library:
+  id: lib_example_1_1
+  description: test model library
+
+  models:
+    - id: node_2gen_1load
+      description: A simple node with two generators and one load, two timesteps
+      parameters:
+        - id: load
+          time-dependent: true
+          scenario-dependent: false
+        - id: gen1_max_p
+          time-dependent: true
+          scenario-dependent: false
+        - id: gen1_prop_cost
+          time-dependent: true
+          scenario-dependent: false
+        - id: gen2_max_p
+          time-dependent: true
+          scenario-dependent: false
+        - id: gen2_prop_cost
+          time-dependent: true
+          scenario-dependent: false
+      variables:
+        - id: gen1_p
+          lower-bound: 0
+          upper-bound: gen1_max_p
+          variable-type: continuous
+        - id: gen2_p
+          lower-bound: 0
+          upper-bound: gen2_max_p
+          variable-type: continuous
+      constraints:
+        - id: balance
+          expression: gen1_p + gen2_p - load = 0
+      objective: gen1_p * gen1_prop_cost + gen2_p * gen2_prop_cost

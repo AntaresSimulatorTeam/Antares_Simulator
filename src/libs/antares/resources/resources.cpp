@@ -45,6 +45,7 @@ namespace Antares
 {
 namespace Resources
 {
+// TODO VP: delete with GUI
 bool FindFile(Yuni::String& out, const AnyString& filename)
 {
     if (not filename.empty())
@@ -67,11 +68,13 @@ bool FindFile(Yuni::String& out, const AnyString& filename)
     return false;
 }
 
+// TODO VP: delete with GUI
 void GetRootFolder(Yuni::String& out)
 {
     out = RootFolder;
 }
 
+// TODO VP: delete with GUI
 bool FindExampleFolder(Yuni::String& folder)
 {
     // Temporary string
@@ -184,6 +187,7 @@ void Initialize(int argc, const char** argv, bool initializeSearchPath)
     }
 }
 
+// TODO VP: delete with GUI
 bool FindFirstOf(String& out, const char* const* const list)
 {
     String tmp;

@@ -27,7 +27,7 @@ Here is a description of workflows with their associated status.
 | `install-cmake-328/action.yml`                          | Installs cmake 3.28 using devtoolset 10                                                                           |                                              |
 | `run-tests/action.yml`                                  | Runs tests on the simulator using reference study batches [here](https://github.com/AntaresSimulatorTeam/SimTest) |                                              |
 | `clang-format.yml`                                      | Check formatting using clang-format 18.1.3 through bash script src/format-code.sh[^2]                                      |                                     |
-[^1]: all branch names must start with `feature/`, `features/`, `fix/`, `release/`, `doc/`, `issue-`, or `dependabot/`; otherwise the workflows are not run
+[^1]: all branch names must start with `feature/`, `features/`, `fix/`, `release/`, `doc/`, `issue-`, `dependabot/`, or `tests/`; otherwise the workflows are not run
 [^2]: please note that this job must succeed in order to merge PRs
 
 [ubuntu_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Ubuntu%20CI%20(push%20and/or%20release)/badge.svg

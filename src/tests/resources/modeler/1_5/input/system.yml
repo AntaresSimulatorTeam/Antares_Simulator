@@ -1,0 +1,30 @@
+system:
+  id: sys_example_1_5
+  description: System supposed to raise an error since gen1_prop_cost is declared as time-dependant = false but a timeseries is given.
+  model-libraries: lib_example_1_5
+
+  components:
+  - id: node1
+    model: lib_example_1_5.node_2gen_1load
+    scenario-group: sg
+    parameters:
+    - id: load
+      time-dependent: false
+      scenario-dependent: false
+      value: 100
+    - id: gen1_max_p
+      time-dependent: false
+      scenario-dependent: false
+      value: 80
+    - id: gen1_prop_cost
+      time-dependent: false
+      scenario-dependent: false
+      value: gen1_prop_cost_1_5
+    - id: gen2_max_p
+      time-dependent: true
+      scenario-dependent: false
+      value: gen2_max_p_1_5
+    - id: gen2_prop_cost
+      time-dependent: false
+      scenario-dependent: false
+      value: 6.0

@@ -70,7 +70,10 @@ class HourlyCSRProblem
     using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
 
 public:
-    explicit HourlyCSRProblem(const AdqPatchParams& adqPatchParams, PROBLEME_HEBDO* p):
+    explicit HourlyCSRProblem(const AdqPatchParams& adqPatchParams,
+                              PROBLEME_HEBDO* p,
+                              const Solver::Optimization::OptimizationOptions& solverOptions):
+        solverOptions_(solverOptions),
         adqPatchParams_(adqPatchParams),
         variableManager_(p->CorrespondanceVarNativesVarOptim,
                          p->NumeroDeVariableStockFinal,
@@ -92,7 +95,7 @@ public:
         triggeredHour = hour;
     }
 
-    void run(uint week, uint year);
+    void run(unsigned int week, unsigned int year);
 
 private:
     void calculateCsrParameters();
@@ -102,7 +105,9 @@ private:
     void buildProblemConstraintsLHS();
     void buildProblemConstraintsRHS();
     void setProblemCost();
-    void solveProblem(uint week, int year);
+    void solveProblem(unsigned int week,
+                      int year,
+                      const Antares::Solver::Optimization::OptimizationOptions& options);
     void allocateProblem();
 
     // variable construction
@@ -123,6 +128,8 @@ private:
     // Costs
     void setQuadraticCost();
     void setLinearCost();
+
+    const Solver::Optimization::OptimizationOptions& solverOptions_;
 
 public:
     // TODO [gp] : try to make these members private

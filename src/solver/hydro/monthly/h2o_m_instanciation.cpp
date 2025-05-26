@@ -22,6 +22,8 @@
 #include "antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h"
 #include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
 
+namespace DonneesOptimisationMensuelle
+{
 DONNEES_ANNUELLES H2O_M_Instanciation(int NombreDeReservoirs)
 {
     DONNEES_ANNUELLES DonneesAnnuelles{};
@@ -44,7 +46,7 @@ DONNEES_ANNUELLES H2O_M_Instanciation(int NombreDeReservoirs)
 
     ProblemeHydraulique.NombreDeReservoirs = NombreDeReservoirs;
 
-    ProblemeHydraulique.ProblemeSpx.assign(NombreDeReservoirs, nullptr);
+    ProblemeHydraulique.ProblemeSpx.resize(NombreDeReservoirs);
 
     CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables = ProblemeHydraulique
                                                                  .CorrespondanceDesVariables;
@@ -129,3 +131,4 @@ DONNEES_ANNUELLES H2O_M_Instanciation(int NombreDeReservoirs)
 
     return DonneesAnnuelles;
 }
+} // namespace DonneesOptimisationMensuelle

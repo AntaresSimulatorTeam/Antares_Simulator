@@ -72,7 +72,7 @@ public:
             ++i;
             for (; i != end; ++i)
             {
-                if (!TraitsT::template Apply(value, PredicateT::Value(*i)))
+                if (!TraitsT::Apply(value, PredicateT::Value(*i)))
                 {
                     property->SetValueToUnspecified();
                     return;

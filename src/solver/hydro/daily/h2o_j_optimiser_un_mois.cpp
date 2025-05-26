@@ -22,6 +22,8 @@
 #include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily/h2o_j_fonctions.h"
 
+namespace DoneesOptimisationJournaliere
+{
 void H2O_J_OptimiserUnMois(DONNEES_MENSUELLES* DonneesMensuelles)
 {
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
@@ -50,3 +52,4 @@ void H2O_J_OptimiserUnMois(DONNEES_MENSUELLES* DonneesMensuelles)
 
     return;
 }
+} // namespace DoneesOptimisationJournaliere

@@ -23,7 +23,9 @@
 
 #include <antares/study/system-model/component.h>
 
-namespace Antares::Study::SystemModel
+using namespace Antares::Expressions::Nodes;
+
+namespace Antares::ModelerStudy::SystemModel
 {
 
 static void checkComponentDataValidity(const ComponentData& data)
@@ -48,11 +50,12 @@ static void checkComponentDataValidity(const ComponentData& data)
           "The component \"" + data.id + "\" has " + std::to_string(data.parameter_values.size())
           + " parameter(s), but its model has " + std::to_string(data.model->Parameters().size()));
     }
-    for (const auto param: data.model->Parameters() | std::views::keys)
+    for (const auto& param: data.model->Parameters() | std::views::keys)
     {
         if (!data.parameter_values.contains(param))
         {
-            throw std::invalid_argument("The component \"" + data.id + "\" has no value for parameter '" + param + "'");
+            throw std::invalid_argument("The component \"" + data.id
+                                        + "\" has no value for parameter '" + param + "'");
         }
     }
 }
@@ -61,6 +64,69 @@ Component::Component(const ComponentData& component_data)
 {
     checkComponentDataValidity(component_data);
     data_ = std::move(component_data);
+}
+
+void Component::addComponentConnection(const std::string localPortId, ConnectionEnd&& connexionEnd)
+{
+    componentConnectionEnds_[localPortId].push_back(std::move(connexionEnd));
+}
+
+std::vector<ConnectionEnd> Component::componentConnectionsViaPort(const std::string& portId) const
+{
+    if (auto it = componentConnectionEnds_.find(portId); it != componentConnectionEnds_.end())
+    {
+        return it->second;
+    }
+    return {};
+}
+
+const Node* Component::nodeAtPortField(const std::string& portId, const std::string& fieldId) const
+{
+    PortFieldKey key(portId, fieldId);
+    return getModel()->PortFieldDefinitions().at(key).Definition().RootNode();
+}
+
+void Component::addAreaConnection(const std::string& localPortId, const std::string& areaId)
+{
+    std::string exceptionPrefix = "Cannot connect area \"" + areaId + "\" to port \"" + localPortId
+                                  + "\" of component \"" + data_.id + "\": ";
+    if (!data_.model->Ports().contains(localPortId))
+    {
+        throw std::invalid_argument(exceptionPrefix
+                                    + "port does not exist in the component's model \""
+                                    + data_.model->Id() + "\"");
+    }
+    Port port = getModel()->Ports().at(localPortId);
+    if (!port.Type().AreaConnectionFieldId().has_value())
+    {
+        throw std::invalid_argument(exceptionPrefix + "port type \"" + port.Type().Id()
+                                    + "\" has no area-connection field ID defined");
+    }
+    PortFieldKey key(localPortId, port.Type().AreaConnectionFieldId().value());
+    if (!data_.model->PortFieldDefinitions().contains(key))
+    {
+        throw std::invalid_argument(
+          exceptionPrefix + "port field \"" + port.Type().AreaConnectionFieldId().value()
+          + "\" is not defined in the component's model \"" + data_.model->Id() + "\"");
+    }
+    if (portToAreaConnections_.contains(localPortId))
+    {
+        throw std::invalid_argument(exceptionPrefix + "port is already connected to \""
+                                    + portToAreaConnections_.at(localPortId) + "\"");
+    }
+    portToAreaConnections_[localPortId] = areaId;
+}
+
+std::optional<std::string> Component::areaConnectedToPort(const std::string& portId) const
+{
+    return portToAreaConnections_.contains(portId)
+             ? std::optional(portToAreaConnections_.at(portId))
+             : std::nullopt;
+}
+
+const std::map<std::string, std::string>& Component::portToAreaConnections() const
+{
+    return portToAreaConnections_;
 }
 
 /**
@@ -95,7 +161,7 @@ ComponentBuilder& ComponentBuilder::withModel(const Model* model)
  * \return Reference to the ComponentBuilder object.
  */
 ComponentBuilder& ComponentBuilder::withParameterValues(
-  std::map<std::string, double> parameter_values)
+  std::map<std::string, Expressions::Visitors::ParameterTypeAndValue> parameter_values)
 {
     data_.parameter_values = std::move(parameter_values);
     return *this;
@@ -125,4 +191,4 @@ Component ComponentBuilder::build()
     return component;
 }
 
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel

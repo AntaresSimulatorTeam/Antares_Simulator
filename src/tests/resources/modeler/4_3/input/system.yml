@@ -1,0 +1,39 @@
+system:
+  id: sys_example_4_3
+  description: >
+    A single component containing 2 generators and a consumption of 100MW.
+    The generators have no Pmin constraint.
+    Generator 1 costs 0.5 €/MW and has a Pmax of 80 MW.
+    Generator 2 costs €6/MW and has a maximum output of 200 MW.
+          NB: idem case 1_1, but operator sum in the objective function
+    Solution : node1.gen1_p = 80
+               node1.gen2_p = 20
+              Valeur fonction objectif : 160
+  
+  model-libraries: lib_example_4_3
+
+  components:
+  - id: node1
+    model: lib_example_4_3.node_2gen_1load
+    scenario-group: sg
+    parameters:
+    - id: load
+      time-dependent: false
+      scenario-dependent: false
+      value: 100.0
+    - id: gen1_max_p
+      time-dependent: false
+      scenario-dependent: false
+      value: 80
+    - id: gen1_prop_cost
+      time-dependent: false
+      scenario-dependent: false
+      value: 0.5
+    - id: gen2_max_p
+      time-dependent: false
+      scenario-dependent: false
+      value: 200
+    - id: gen2_prop_cost
+      time-dependent: false
+      scenario-dependent: false
+      value: 6

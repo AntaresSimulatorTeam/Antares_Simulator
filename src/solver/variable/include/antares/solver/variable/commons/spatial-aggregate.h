@@ -309,7 +309,7 @@ public:
         }
 
         // Next variable
-        NextType::template yearEndSpatialAggregates(allVars, year, set, numSpace);
+        NextType::yearEndSpatialAggregates(allVars, year, set, numSpace);
     }
 
     template<class V>
@@ -337,7 +337,7 @@ public:
         }
 
         // Next variable
-        NextType::template simulationEndSpatialAggregates(allVars, set);
+        NextType::simulationEndSpatialAggregates(allVars, set);
     }
 
     inline void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const

@@ -85,6 +85,8 @@ void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
     problem.CoutDeDefaillancePositive.assign(nbPays, 0);
     problem.CoutDeDefaillanceNegative.assign(nbPays, 0);
 
+    problem.CoutDeDebordement.assign(nbPays, 0);
+
     problem.NumeroDeContrainteEnergieHydraulique.assign(nbPays, 0);
     problem.NumeroDeContrainteMinEnergieHydraulique.assign(nbPays, 0);
     problem.NumeroDeContrainteMaxEnergieHydraulique.assign(nbPays, 0);
@@ -285,21 +287,23 @@ void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
         problem.MatriceDesContraintesCouplantes[constraintIndex]
           .SecondMembreDeLaContrainteCouplante.assign(NombreDePasDeTemps, 0.);
 
+        auto linkCount = bc->linkCount();
         problem.MatriceDesContraintesCouplantes[constraintIndex]
-          .NumeroDeLInterconnexion.assign(bc->linkCount(), 0);
+          .NumeroDeLInterconnexion.assign(linkCount, 0);
         problem.MatriceDesContraintesCouplantes[constraintIndex]
-          .PoidsDeLInterconnexion.assign(bc->linkCount(), 0.);
+          .PoidsDeLInterconnexion.assign(linkCount, 0.);
         problem.MatriceDesContraintesCouplantes[constraintIndex]
-          .OffsetTemporelSurLInterco.assign(bc->linkCount(), 0);
+          .OffsetTemporelSurLInterco.assign(linkCount, 0);
 
+        auto clusterCount = bc->clusterCount();
         problem.MatriceDesContraintesCouplantes[constraintIndex]
-          .NumeroDuPalierDispatch.assign(bc->clusterCount(), 0);
+          .NumeroDuPalierDispatch.assign(clusterCount, 0);
         problem.MatriceDesContraintesCouplantes[constraintIndex]
-          .PoidsDuPalierDispatch.assign(bc->clusterCount(), 0.);
+          .PoidsDuPalierDispatch.assign(clusterCount, 0.);
         problem.MatriceDesContraintesCouplantes[constraintIndex]
-          .OffsetTemporelSurLePalierDispatch.assign(bc->clusterCount(), 0);
+          .OffsetTemporelSurLePalierDispatch.assign(clusterCount, 0);
         problem.MatriceDesContraintesCouplantes[constraintIndex]
-          .PaysDuPalierDispatch.assign(bc->clusterCount(), 0);
+          .PaysDuPalierDispatch.assign(clusterCount, 0);
 
         // TODO : create a numberOfTimeSteps method in class of runtime.bindingConstraint
         unsigned int nbTimeSteps;

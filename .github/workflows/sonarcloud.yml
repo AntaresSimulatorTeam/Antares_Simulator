@@ -9,11 +9,11 @@ on:
 jobs:
   sonarcloud:
     name: SonarCloud
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-22.04
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     strategy:
       matrix:
-        os: [ ubuntu-20.04 ]
+        os: [ ubuntu-22.04 ]
 
     env:
       SONAR_SERVER_URL: "https://sonarcloud.io"
@@ -53,15 +53,28 @@ jobs:
 
       - name: Config OR-Tools URL
         run: |
-            echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
+            echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_ubuntu-22.04_static_sirius.zip" >> $GITHUB_ENV
 
-      - name: Install sonar-scanner and build-wrapper
-        uses: SonarSource/sonarcloud-github-c-cpp@v3
 
-      - name: ccache
-        uses: hendrikmuhs/ccache-action@v1.2
+
+      - name: Install ccache
+        run: sudo apt-get install -y ccache
+
+      - name: Restore ccache cache
+        uses: actions/cache/restore@v4
         with:
-          key: sonarcloud-${{ env.SONAR_SCANNER_VERSION }}
+          path: ${{ github.workspace }}/.ccache
+          key: sonarcloud-${{ github.sha }}
+          restore-keys: |
+            sonarcloud- 
+
+      - name: Configure ccache
+        run: |
+          ccache --set-config=cache_dir=${{ github.workspace }}/.ccache
+          ccache --set-config=max_size=500M
+          ccache --set-config=compression=true
+          ccache -p
+          ccache -z
 
       - name: Install libraries
         run: |
@@ -103,7 +116,7 @@ jobs:
 
       - name: Init submodule
         run: |
-          git submodule update --init --remote src/tests/resources/Antares_Simulator_Tests
+          git submodule update --init --remote src/tests/resources/Antares_Simulator_Tests_NR
 
       - name: Configure
         run: |
@@ -122,33 +135,111 @@ jobs:
           -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
           -DPython3_EXECUTABLE='${{ steps.setup-python.outputs.python-path }}'
 
+      - name: Install Build Wrapper
+        uses: SonarSource/sonarqube-scan-action/install-build-wrapper@v5
+
       - name: Build
         run: |
           build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build _build --config Release -j$(nproc)
 
       - name: Test and generate coverage
-        continue-on-error: true
+        if: ${{ !cancelled() }}
         run: |
           cd $GITHUB_WORKSPACE/_build
-          ctest -C Release --output-on-failure -L "unit"
+          ctest -C Release --output-on-failure -L "unit|end-to-end"
+
+      - name: Run unfeasibility-related tests
+        if: ${{ !cancelled() }}
+        run: |
+          cd _build
+          ctest -C Release --output-on-failure -R "^unfeasible$"
 
       - name: Run short-tests
-        continue-on-error: true
+        if: ${{ !cancelled() }}
         uses: ./.github/workflows/run-tests
         with:
           simtest-tag: ${{ env.SIMTEST }}
           batch-name: short-tests
           os: ${{ matrix.os }}
 
+      - name: Run tests on adequacy patch (CSR)
+        if: ${{ !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: adequacy-patch-CSR
+          os: ${{ matrix.os }}
+
+      - name: Run tests introduced in 8.6.0
+        if: ${{ !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: valid-v860
+          os: ${{ matrix.os }}
+
+      - name: Run tests introduced in 8.7.0
+        if: ${{ !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: valid-v870
+          os: ${{ matrix.os }}
+
+      - name: Run tests introduced in 9.1.0
+        if: ${{ !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: valid-v910
+          os: ${{ matrix.os }}
+
+      - name: Run tests introduced in 9.2.0
+        if: ${{ !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: valid-v920
+          os: ${{ matrix.os }}
+
+      - name: Run named mps tests
+        if: ${{ !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: valid-named-mps
+          os: ${{ matrix.os }}
+          variant: "named-mps"
+
+      - name: Run cucumber on modeler
+        if: ${{ !cancelled() }}
+        uses: ./.github/workflows/cucumber-tests
+        with:
+          feature: "features/modeler-features"
+
+      - name: Run cucumber on hybrid studies
+        if: ${{ !cancelled() }}
+        uses: ./.github/workflows/cucumber-tests
+        with:
+          feature: "features/solver-features/hybrid_studies.feature"
+
+      - name: Barrier
+        if: ${{ !success() }}
+        run: exit 1
+
       - name: Collect coverage into one XML report
         run: |
           gcovr --sonarqube --output coverage.xml
 
-      - name: Run sonar-scanner
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: sonar-scanner --define sonar.host.url="${{ env.SONAR_SERVER_URL }}" --define sonar.cfamily.compile-commands="${{ env.BUILD_WRAPPER_OUT_DIR }}/compile_commands.json"
+        with:
+          args: >
+            --define sonar.host.url="${{ env.SONAR_SERVER_URL }}" --define sonar.cfamily.compile-commands="${{ env.BUILD_WRAPPER_OUT_DIR }}/compile_commands.json"
 
       - name: Cache vcpkg binary dir
         if: always()
@@ -157,3 +248,12 @@ jobs:
         with:
           path: ${{ github.workspace }}/vcpkg_cache
           key: vcpkg-cache-ubuntu-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+
+      - name: Display ccache statistics
+        run: ccache -s
+
+      - name: Save ccache cache
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ github.workspace }}/.ccache
+          key: sonarcloud-${{ github.sha }}

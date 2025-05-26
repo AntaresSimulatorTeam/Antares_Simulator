@@ -1,9 +1,13 @@
 #include "include/antares/solver/simulation/shave-peaks-by-remix-hydro.h"
 
 #include <algorithm>
+#include <numeric>
 #include <ranges>
+#include <span>
 #include <stdexcept>
 #include <vector>
+
+constexpr double RESERVOIR_LEVEL_TOLERANCE = 1.e-6;
 
 namespace Antares::Solver::Simulation
 {
@@ -57,41 +61,44 @@ int find_max_index(const std::vector<double>& TotalGen,
     return max_hour;
 }
 
-static bool operator<=(const std::vector<double>& a, const std::vector<double>& b)
+namespace
+{
+bool operator<=(const std::vector<double>& a, const std::vector<double>& b)
 {
     return a.size() == b.size()
            && std::ranges::all_of(std::views::iota(size_t{0}, a.size()),
                                   [&](size_t i) { return a[i] <= b[i]; });
 }
 
-static bool operator<=(const std::vector<double>& v, const double c)
+bool operator<=(const std::vector<double>& v, const double c)
 {
-    return std::ranges::all_of(v, [&c](const double& e) { return e <= c; });
+    return std::ranges::all_of(v, [&c](double e) { return e <= c; });
 }
 
-static bool operator>=(const std::vector<double>& v, const double c)
+bool operator>=(const std::vector<double>& v, const double c)
 {
-    return std::ranges::all_of(v, [&c](const double& e) { return e >= c; });
+    return std::ranges::all_of(v, [&c](double e) { return e >= c; });
 }
 
-static void checkInputCorrectness(const std::vector<double>& DispatchGen,
-                                  const std::vector<double>& HydroGen,
-                                  const std::vector<double>& UnsupE,
-                                  const std::vector<double>& levels,
-                                  const std::vector<double>& HydroPmax,
-                                  const std::vector<double>& HydroPmin,
-                                  double initial_level,
-                                  double capacity,
-                                  const std::vector<double>& inflows,
-                                  const std::vector<double>& overflow,
-                                  const std::vector<double>& pump,
-                                  const std::vector<double>& Spillage,
-                                  const std::vector<double>& DTG_MRG)
+void checkInputCorrectness(const std::vector<double>& DispatchGen,
+                           const std::vector<double>& HydroGen,
+                           const std::vector<double>& UnsupE,
+                           const std::vector<double>& levels,
+                           const std::vector<double>& HydroPmax,
+                           const std::vector<double>& HydroPmin,
+                           double initialLevel,
+                           double reservoirCapacity,
+                           bool reservoirManagement,
+                           const std::vector<double>& inflows,
+                           const std::vector<double>& overflow,
+                           const std::vector<double>& pump,
+                           const std::vector<double>& Spillage,
+                           const std::vector<double>& DTG_MRG)
 {
     std::string msg_prefix = "Remix hydro input : ";
 
     // Initial level smaller than capacity
-    if (initial_level > capacity)
+    if (initialLevel >= reservoirCapacity + RESERVOIR_LEVEL_TOLERANCE)
     {
         throw std::invalid_argument(msg_prefix + "initial level > reservoir capacity");
     }
@@ -133,20 +140,27 @@ static void checkInputCorrectness(const std::vector<double>& DispatchGen,
                                     + "Hydro generation not greater than Pmin everywhere");
     }
 
-    if (!(levels <= capacity) || !(levels >= 0.))
+    if (reservoirManagement)
     {
-        throw std::invalid_argument(msg_prefix
-                                    + "levels computed from input don't respect reservoir bounds");
+        if (!(levels <= reservoirCapacity + RESERVOIR_LEVEL_TOLERANCE)
+            || !(levels >= -RESERVOIR_LEVEL_TOLERANCE))
+        {
+            throw std::invalid_argument(
+              msg_prefix + "levels computed from input don't respect reservoir bounds");
+        }
     }
 }
+} // namespace
 
 RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGen,
                                            const std::vector<double>& HydroGen,
                                            const std::vector<double>& UnsupE,
                                            const std::vector<double>& HydroPmax,
                                            const std::vector<double>& HydroPmin,
-                                           double initial_level,
-                                           double capa,
+                                           double initialLevel,
+                                           double reservoirCapacity,
+                                           double pumpingEfficiency,
+                                           bool reservoirManagement,
                                            const std::vector<double>& inflows,
                                            const std::vector<double>& overflow,
                                            const std::vector<double>& pump,
@@ -154,12 +168,14 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
                                            const std::vector<double>& DTG_MRG)
 {
     std::vector<double> levels(DispatchGen.size());
-    if (!levels.empty())
+    if (!levels.empty() && reservoirManagement)
     {
-        levels[0] = initial_level + inflows[0] - overflow[0] + pump[0] - HydroGen[0];
+        levels[0] = initialLevel + inflows[0] - overflow[0] + pumpingEfficiency * pump[0]
+                    - HydroGen[0];
         for (size_t h = 1; h < levels.size(); ++h)
         {
-            levels[h] = levels[h - 1] + inflows[h] - overflow[h] + pump[h] - HydroGen[h];
+            levels[h] = levels[h - 1] + inflows[h] - overflow[h] + pumpingEfficiency * pump[h]
+                        - HydroGen[h];
         }
     }
 
@@ -169,8 +185,9 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
                           levels,
                           HydroPmax,
                           HydroPmin,
-                          initial_level,
-                          capa,
+                          initialLevel,
+                          reservoirCapacity,
+                          reservoirManagement,
                           inflows,
                           overflow,
                           pump,
@@ -235,24 +252,30 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
                 {
                     break;
                 }
-
-                std::vector<double> intermediate_level(levels.begin()
-                                                         + std::min(hourBottom, hourPeak),
-                                                       levels.begin()
-                                                         + std::max(hourBottom, hourPeak));
                 double max_pic, max_creux;
-                if (hourBottom < hourPeak)
+
+                if (reservoirManagement)
                 {
-                    max_pic = capa;
-                    max_creux = *std::min_element(intermediate_level.begin(),
-                                                  intermediate_level.end());
+                    std::span<double> intermediate_level(levels.begin()
+                                                           + std::min(hourBottom, hourPeak),
+                                                         levels.begin()
+                                                           + std::max(hourBottom, hourPeak));
+
+                    if (hourBottom < hourPeak)
+                    {
+                        max_pic = reservoirCapacity;
+                        max_creux = *std::ranges::min_element(intermediate_level);
+                    }
+                    else
+                    {
+                        max_pic = reservoirCapacity - *std::ranges::max_element(intermediate_level);
+                        max_creux = reservoirCapacity;
+                    }
                 }
                 else
                 {
-                    max_pic = capa
-                              - *std::max_element(intermediate_level.begin(),
-                                                  intermediate_level.end());
-                    max_creux = capa;
+                    max_pic = std::numeric_limits<double>::max();
+                    max_creux = std::numeric_limits<double>::max();
                 }
 
                 max_pic = std::min(OutHydroGen[hourPeak] - HydroPmin[hourPeak], max_pic);
@@ -263,6 +286,11 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
                 double dif_pic_creux = std::max(TotalGen[hourPeak] - TotalGen[hourBottom], 0.);
 
                 delta = std::max(std::min({max_pic, max_creux, dif_pic_creux / 2.}), 0.);
+
+                if (delta <= eps)
+                {
+                    delta = 0;
+                }
 
                 if (delta > 0)
                 {
@@ -297,10 +325,15 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
                        OutHydroGen.begin(),
                        TotalGen.begin(),
                        std::plus<>());
-        levels[0] = initial_level + inflows[0] - overflow[0] + pump[0] - OutHydroGen[0];
-        for (size_t h = 1; h < levels.size(); ++h)
+        if (reservoirManagement)
         {
-            levels[h] = levels[h - 1] + inflows[h] - overflow[h] + pump[h] - OutHydroGen[h];
+            levels[0] = initialLevel + inflows[0] - overflow[0] + pumpingEfficiency * pump[0]
+                        - OutHydroGen[0];
+            for (size_t h = 1; h < levels.size(); ++h)
+            {
+                levels[h] = levels[h - 1] + inflows[h] - overflow[h] + pumpingEfficiency * pump[h]
+                            - OutHydroGen[h];
+            }
         }
     }
     return {OutHydroGen, OutUnsupE, levels};

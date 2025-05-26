@@ -91,6 +91,11 @@ void addClusterToAreaList(Area* area, std::shared_ptr<RenewableCluster> cluster)
     area->renewable.list.addToCompleteList(cluster);
 }
 
+void addSTSToArea(Area* area, ShortTermStorage::STStorageCluster sts)
+{
+    area->shortTermStorage.storagesByIndex.push_back(sts);
+}
+
 template<class ClusterType>
 std::shared_ptr<ClusterType> addClusterToArea(Area* area, const std::string& clusterName)
 {
@@ -173,6 +178,12 @@ struct commonFixture
         rnCluster_21->series.timeSeries.resize(9, 1);
         rnCluster_31->series.timeSeries.resize(9, 1);
         rnCluster_32->series.timeSeries.resize(9, 1);
+
+        // Add short-term storage to area_1
+        ShortTermStorage::STStorageCluster sts;
+        sts.id = "sts-1";
+        addSTSToArea(area_1, sts);
+        area_1->shortTermStorage.storagesByIndex[0].series->inflows.resize(9, 1);
 
         // Resize all TS numbers storage (1 column x nbYears lines)
         area_1->resizeAllTimeseriesNumbers(study->parameters.nbYears);
@@ -463,9 +474,9 @@ BOOST_FIXTURE_TEST_CASE(
   LINKS_NTC__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical,
   saveFixture)
 {
-    my_rule->linksNTC[area_1->index].setDataForLink(link_12, 5, 13);
-    my_rule->linksNTC[area_1->index].setDataForLink(link_13, 19, 8);
-    my_rule->linksNTC[area_2->index].setDataForLink(link_23, 2, 4);
+    my_rule->linksNTC[area_1->index].setTSnumber(link_12, 5, 13);
+    my_rule->linksNTC[area_1->index].setTSnumber(link_13, 19, 8);
+    my_rule->linksNTC[area_2->index].setTSnumber(link_23, 2, 4);
 
     saveScenarioBuilder();
 
@@ -492,10 +503,10 @@ BOOST_FIXTURE_TEST_CASE(
     saveScenarioBuilder();
     // Build reference scenario builder file
     referenceFile.append("[my rule name]");
-    referenceFile.append("bc,group1,5=20");
-    referenceFile.append("bc,group2,19=1");
-    referenceFile.append("bc,group3,5=43");
-    referenceFile.append("bc,group3,10=6");
+    referenceFile.append("bc,group1,5 = 20");
+    referenceFile.append("bc,group2,19 = 1");
+    referenceFile.append("bc,group3,5 = 43");
+    referenceFile.append("bc,group3,10 = 6");
 
     referenceFile.write();
     BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
@@ -517,11 +528,11 @@ BOOST_FIXTURE_TEST_CASE(
     my_rule->thermal[area_3->index].setTSnumber(thCluster_31.get(), 5, 13);
     my_rule->thermal[area_1->index].setTSnumber(thCluster_11.get(), 19, 8);
     my_rule->renewable[area_3->index].setTSnumber(rnCluster_32.get(), 5, 13);
-    my_rule->linksNTC[area_1->index].setDataForLink(link_13, 19, 8);
-    my_rule->linksNTC[area_2->index].setDataForLink(link_23, 2, 4);
+    my_rule->linksNTC[area_1->index].setTSnumber(link_13, 19, 8);
+    my_rule->linksNTC[area_2->index].setTSnumber(link_23, 2, 4);
     my_rule->hydroInitialLevels.setTSnumber(area_1->index, 5, 8);
     my_rule->binding_constraints.setTSnumber("group3", 10, 6);
-
+    my_rule->shortTermStorage[area_1->index].setTSnumber("sts-1", 0, 5);
     saveScenarioBuilder();
 
     // Build reference scenario builder file
@@ -534,11 +545,12 @@ BOOST_FIXTURE_TEST_CASE(
     referenceFile.append("w,area 3,19 = 17");
     referenceFile.append("t,area 1,19,th-cluster-11 = 8");
     referenceFile.append("ntc,area 1,area 3,19 = 8");
+    referenceFile.append("sts,area 1,0,sts-1 = 5");
     referenceFile.append("ntc,area 2,area 3,2 = 4");
     referenceFile.append("t,area 3,5,th-cluster-31 = 13");
     referenceFile.append("r,area 3,5,rn-cluster-32 = 13");
     referenceFile.append("hl,area 1,5 = 8");
-    referenceFile.append("bc,group3,10=6");
+    referenceFile.append("bc,group3,10 = 6");
     referenceFile.write();
 
     BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));

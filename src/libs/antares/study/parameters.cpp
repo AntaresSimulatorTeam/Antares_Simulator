@@ -208,7 +208,7 @@ const char* SimulationModeToCString(SimulationMode mode)
     }
 }
 
-const char* CompatibilityHydroPmaxToCString(Parameters::Compatibility::HydroPmax mode)
+const char* CompatibilityHydroPmaxToCString(const Parameters::Compatibility::HydroPmax mode)
 {
     switch (mode)
     {
@@ -384,9 +384,6 @@ void Parameters::reset()
     nbCores.ncMode = ncAvg;
     renewableGeneration.rgModelling = rgAggregated;
 
-    // Misc
-    improveUnitsStartup = false;
-
     include.constraints = true;
     include.hurdleCosts = true;
     transmissionCapacities = GlobalTransmissionCapacities::localValuesForAllLinks;
@@ -546,7 +543,7 @@ static bool SGDIntLoadFamily_General(Parameters& d,
     }
     if (key == "improveunitsstartup")
     {
-        return true; // value.to<bool>(d.improveUnitsStartup);
+        return true;
     }
 
     if (key == "january.1st") // after 4.3
@@ -1318,16 +1315,6 @@ bool Parameters::loadFromINI(const IniFile& ini, const StudyVersion& version)
     return true;
 }
 
-void Parameters::handleOptimizationOptions(const StudyLoadOptions& options)
-{
-    // Options only set from the command-line
-    optOptions.ortoolsSolver = options.optOptions.ortoolsSolver;
-    optOptions.solverParameters = options.optOptions.solverParameters;
-
-    // Options that can be set both in command-line and file
-    optOptions.solverLogs = options.optOptions.solverLogs || optOptions.solverLogs;
-}
-
 void Parameters::fixRefreshIntervals()
 {
     using T = std::tuple<uint& /* refreshInterval */,
@@ -1462,8 +1449,6 @@ void Parameters::validateOptions(const StudyLoadOptions& options)
     }
 
     namedProblems = options.namedProblems;
-
-    handleOptimizationOptions(options);
 }
 
 void Parameters::resetYearsWeigth()
@@ -1818,16 +1803,14 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info() << "  :: ignoring solution export";
     }
 
-    logs.info() << "  :: solver " << options.optOptions.ortoolsSolver
-                << " is used for problem resolution";
+    logs.info() << "  :: solver " << options.solverOptions.quadraticSolver
+                << " is used for quadratic problem resolution";
 
     // indicated that Problems will be named
     if (namedProblems)
     {
         logs.info() << "  :: The problems will contain named variables and constraints";
     }
-    // indicated whether solver logs will be printed
-    logs.info() << "  :: Printing solver logs : " << (optOptions.solverLogs ? "True" : "False");
 }
 
 void Parameters::resetPlaylist(uint nbOfYears)

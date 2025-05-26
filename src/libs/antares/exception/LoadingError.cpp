@@ -41,6 +41,11 @@ NoAreas::NoAreas():
 {
 }
 
+Duplicates::Duplicates():
+    LoadingError("One or more duplicates found.")
+{
+}
+
 InvalidFileName::InvalidFileName():
     LoadingError("Invalid file names detected.")
 {
@@ -78,6 +83,11 @@ static std::string InvalidSolverHelper(const std::string& solver,
 
 InvalidSolver::InvalidSolver(const std::string& solver, const std::string& availableSolvers):
     LoadingError(InvalidSolverHelper(solver, availableSolvers))
+{
+}
+
+IncompatibleLinearSolverParameters::IncompatibleLinearSolverParameters():
+    LoadingError("You can't supply parameters for one particular and both optimizations")
 {
 }
 
@@ -124,6 +134,11 @@ IncompatibleMILPWithoutOrtools::IncompatibleMILPWithoutOrtools():
 
 IncompatibleMILPOrtoolsSolver::IncompatibleMILPOrtoolsSolver():
     LoadingError("'milp' mode does not work with OR-Tools using Sirius solver")
+{
+}
+
+UseMILPsolverWithWrongOptions::UseMILPsolverWithWrongOptions():
+    LoadingError("'milp' solver cannot be used with options for optimization 1 or 2")
 {
 }
 

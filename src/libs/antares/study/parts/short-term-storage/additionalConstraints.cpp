@@ -25,6 +25,27 @@
 
 namespace Antares::Data::ShortTermStorage
 {
+AdditionalConstraints::AdditionalConstraints():
+    rhs_(tsNumbers)
+{
+}
+
+AdditionalConstraints::AdditionalConstraints(std::string name,
+                                             std::string cluster_id,
+                                             std::string variable,
+                                             std::string operatorType,
+                                             bool enabled,
+                                             std::vector<SingleAdditionalConstraint> constraints):
+    name(name),
+    cluster_id(cluster_id),
+    variable(variable),
+    operatorType(operatorType),
+    enabled(enabled),
+    constraints(constraints),
+    rhs_(tsNumbers)
+{
+}
+
 AdditionalConstraints::ValidateResult AdditionalConstraints::validate() const
 {
     if (cluster_id.empty())

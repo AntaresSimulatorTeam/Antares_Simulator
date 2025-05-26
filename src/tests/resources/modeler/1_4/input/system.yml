@@ -1,0 +1,44 @@
+system:
+  id: sys_example_1_4
+  description: >
+    test system with one load (100 MW) and two generators in the same node (with Pmax_1 = 80 MW & Pmax_2 = 200 MW) ; gen1 has a fixed cost. Two time steps.
+    t=0 : gen1_prop_cost = 0.5 €/MW, gen1_fixed_cost = 5 €, gen1_prop_cost = 6 €/MW
+    t = 1 : gen1_prop_cost = 0.5 €/MW, gen1_fixed_cost = 1000 €, gen1_prop_cost = 6 €/MW
+    
+    Solutions
+    t = 0, gen1_p = 80, gen2_p = 20, on_off_gen1_p = 1
+    t = 1, gen1_p = 0, gen2_p = 100, on_off_gen1_p = 0
+    
+    Objective function : 765
+
+  model-libraries: lib_example_1_4
+
+  components:
+  - id: node1
+    model: lib_example_1_4.node_2gen_1load
+    scenario-group: sg
+    parameters:
+    - id: load
+      time-dependent: false
+      scenario-dependent: false
+      value: 100
+    - id: gen1_max_p
+      time-dependent: false
+      scenario-dependent: false
+      value: 80
+    - id: gen1_prop_cost
+      time-dependent: true
+      scenario-dependent: false
+      value: gen1_prop_cost_1_4
+    - id: gen_1_fixed_cost
+      time-dependent: true
+      scenario-dependent: false
+      value : gen_1_fixed_cost_1_4
+    - id: gen2_max_p
+      time-dependent: true
+      scenario-dependent: false
+      value: gen2_max_p_1_4
+    - id: gen2_prop_cost
+      time-dependent: false
+      scenario-dependent: false
+      value: 6.0

@@ -19,17 +19,9 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
-
-extern "C"
-{
-#include "spx_definition_arguments.h"
-#include "spx_fonctions.h"
-#include "srs_api.h"
-}
-
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/study/fwd.h"
 
-#include "named_problem.h"
 #include "ortools_utils.h"
 
 using namespace Antares;
@@ -55,19 +47,6 @@ public:
 
 protected:
     uint current_optim_number_ = 0;
-};
-
-// Caution : this class should be removed if we want Sirius behind or-tools
-// But we want to keep the way we write MPS files for a named problem,
-// so we keep it for now.
-class fullMPSwriter final: public I_MPS_writer
-{
-public:
-    fullMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem, uint currentOptimNumber);
-    void runIfNeeded(Solver::IResultWriter& writer, const std::string& filename) override;
-
-private:
-    PROBLEME_SIMPLEXE_NOMME* named_splx_problem_ = nullptr;
 };
 
 class fullOrToolsMPSwriter: public I_MPS_writer
@@ -99,8 +78,7 @@ public:
     virtual ~mpsWriterFactory() = default;
     mpsWriterFactory(Data::mpsExportStatus exportMPS,
                      bool exportMPSOnError,
-                     const int current_optim_number,
-                     PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
+                     int current_optim_number,
                      MPSolver* solver);
 
     std::unique_ptr<I_MPS_writer> create();
@@ -114,7 +92,6 @@ private:
     // Member data...
     Data::mpsExportStatus export_mps_;
     bool export_mps_on_error_;
-    PROBLEME_SIMPLEXE_NOMME* named_splx_problem_ = nullptr;
     MPSolver* solver_ = nullptr;
     uint current_optim_number_;
 };

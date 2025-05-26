@@ -54,24 +54,29 @@ void addScratchpadToEachArea(Study& study)
 {
     for (auto& [_, area]: study.areas)
     {
-        for (unsigned int i = 0; i < study.maxNbYearsInParallel; ++i)
+        for (unsigned i = 0; i < study.maxNbYearsInParallel; ++i)
         {
             area->scratchpad.emplace_back(study.runtime, *area);
         }
     }
 }
 
-// Name should be changed to setTSSize
-TimeSeriesConfigurer& TimeSeriesConfigurer::setColumnCount(unsigned int columnCount,
-                                                           unsigned rowCount)
+TimeSeriesConfigurer& TimeSeriesConfigurer::setDimensions(unsigned columnCount, unsigned rowCount)
 {
     ts_->resize(columnCount, rowCount);
     return *this;
 }
 
-TimeSeriesConfigurer& TimeSeriesConfigurer::fillColumnWith(unsigned int column, double value)
+TimeSeriesConfigurer& TimeSeriesConfigurer::fillColumnWith(unsigned column, double value)
 {
     ts_->fillColumn(column, value);
+    return *this;
+}
+
+TimeSeriesConfigurer& TimeSeriesConfigurer::fillColumnWith(unsigned column,
+                                                           const std::vector<double>& values)
+{
+    ts_->pasteToColumn(column, values.data());
     return *this;
 }
 
@@ -87,7 +92,7 @@ ThermalClusterConfig& ThermalClusterConfig::setNominalCapacity(double nominalCap
     return *this;
 }
 
-ThermalClusterConfig& ThermalClusterConfig::setUnitCount(unsigned int unitCount)
+ThermalClusterConfig& ThermalClusterConfig::setUnitCount(unsigned unitCount)
 {
     cluster_->unitCount = unitCount;
     return *this;
@@ -100,13 +105,13 @@ ThermalClusterConfig& ThermalClusterConfig::setCosts(double cost)
     return *this;
 }
 
-ThermalClusterConfig& ThermalClusterConfig::setAvailablePowerNumberOfTS(unsigned int columnCount)
+ThermalClusterConfig& ThermalClusterConfig::setAvailablePowerNumberOfTS(unsigned columnCount)
 {
-    tsAvailablePowerConfig_.setColumnCount(columnCount);
+    tsAvailablePowerConfig_.setDimensions(columnCount);
     return *this;
 }
 
-ThermalClusterConfig& ThermalClusterConfig::setAvailablePower(unsigned int column, double value)
+ThermalClusterConfig& ThermalClusterConfig::setAvailablePower(unsigned column, double value)
 {
     tsAvailablePowerConfig_.fillColumnWith(column, value);
     return *this;
@@ -121,10 +126,10 @@ averageResults OutputRetriever::overallCost(Area* area)
     return averageResults(result->avgdata);
 }
 
-averageResults OutputRetriever::levelForSTSgroup(Area* area, unsigned int groupNb)
+averageResults OutputRetriever::levelForSTSgroup(Area* area, unsigned groupNb)
 {
     auto result = retrieveAreaResults<Variable::Economy::VCardSTSbyGroup>(area);
-    unsigned int levelIndex = groupNb * 3 + 2;
+    unsigned levelIndex = groupNb * 3 + 2;
     return result[area->index][levelIndex].avgdata;
 }
 
@@ -212,13 +217,13 @@ StudyBuilder::StudyBuilder()
     initializeStudy(study.get());
 }
 
-void StudyBuilder::simulationBetweenDays(const unsigned int firstDay, const unsigned int lastDay)
+void StudyBuilder::simulationBetweenDays(const unsigned firstDay, const unsigned lastDay)
 {
     study->parameters.simulationDays.first = firstDay;
     study->parameters.simulationDays.end = lastDay;
 }
 
-void StudyBuilder::setNumberMCyears(unsigned int nbYears)
+void StudyBuilder::setNumberMCyears(unsigned nbYears)
 {
     study->parameters.resetPlaylist(nbYears);
     study->areas.resizeAllTimeseriesNumbers(nbYears);
@@ -226,7 +231,7 @@ void StudyBuilder::setNumberMCyears(unsigned int nbYears)
                       { area.hydro.deltaBetweenFinalAndInitialLevels.resize(nbYears); });
 }
 
-void StudyBuilder::playOnlyYear(unsigned int year)
+void StudyBuilder::playOnlyYear(unsigned year)
 {
     auto& params = study->parameters;
 
@@ -235,7 +240,7 @@ void StudyBuilder::playOnlyYear(unsigned int year)
     params.yearsFilter[year] = true;
 }
 
-void StudyBuilder::giveWeightToYear(float weight, unsigned int year)
+void StudyBuilder::giveWeightToYear(float weight, unsigned year)
 {
     study->parameters.setYearWeight(year, weight);
 

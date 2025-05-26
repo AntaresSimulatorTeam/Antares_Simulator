@@ -333,9 +333,7 @@ Correlation::Correlation():
 
 bool Correlation::loadFromFile(Study& study, const AnyString& filename, bool warnings)
 {
-#ifndef NDEBUG
     Antares::logs.debug() << "  " << correlationName << ": loading " << filename;
-#endif
     IniFile ini;
     return (ini.open(filename)) ? internalLoadFromINI(study, ini, warnings) : false;
 }

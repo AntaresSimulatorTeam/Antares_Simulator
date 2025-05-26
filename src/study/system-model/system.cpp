@@ -23,34 +23,21 @@
 
 #include <antares/study/system-model/system.h>
 
-namespace Antares::Study::SystemModel
+namespace Antares::ModelerStudy::SystemModel
 {
-System::System(const std::string_view id, std::vector<Component> components):
-    id_(id)
+System::System(const std::string_view id, std::unordered_map<std::string, Component>&& components):
+    id_(id),
+    components_(std::move(components))
 {
     // Check that mandatory attributes are not empty
     if (id.empty())
     {
         throw std::invalid_argument("A system can't have an empty id");
     }
-    if (components.empty())
+    if (components_.empty())
     {
         throw std::invalid_argument("A system must contain at least one component");
     }
-    std::ranges::transform(components,
-                           std::inserter(components_, components_.end()),
-                           [this](/*Non const to prevent copy*/ Component& component)
-                           { return makeComponent(component); });
-}
-
-std::pair<std::string, Component> System::makeComponent(Component& component) const
-{
-    if (components_.contains(component.Id()))
-    {
-        throw std::invalid_argument("System has at least two components with the same id ('"
-                                    + component.Id() + "'), this is not supported");
-    }
-    return std::make_pair(component.Id(), std::move(component));
 }
 
 /**
@@ -71,7 +58,8 @@ SystemBuilder& SystemBuilder::withId(std::string_view id)
  * \param components A vector of components to set.
  * \return Reference to the SystemBuilder object.
  */
-SystemBuilder& SystemBuilder::withComponents(std::vector<Component>& components)
+SystemBuilder& SystemBuilder::withComponents(
+  std::unordered_map<std::string, Component>&& components)
 {
     components_ = std::move(components);
     return *this;
@@ -82,8 +70,8 @@ SystemBuilder& SystemBuilder::withComponents(std::vector<Component>& components)
  *
  * \return The constructed System object.
  */
-System SystemBuilder::build() const
+System SystemBuilder::build()
 {
-    return System(id_, components_);
+    return System(id_, std::move(components_));
 }
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel

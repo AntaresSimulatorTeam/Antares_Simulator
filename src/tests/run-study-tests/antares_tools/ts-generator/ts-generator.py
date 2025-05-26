@@ -44,7 +44,7 @@ def run_and_compare(exe, path):
 
 # main: get studies and iterate on them
 ROOT_FOLDER = Path('../resources/batches').resolve()
-study_paths = look_for_studies(ROOT_FOLDER)
+study_paths = look_for_studies(ROOT_FOLDER, [])
 
 @pytest.mark.tsgenerator
 def test_ts_generator(tsgenerator_path):

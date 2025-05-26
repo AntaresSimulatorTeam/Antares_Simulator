@@ -22,11 +22,12 @@
 
 #include <string>
 
-#include "expression.h"
-#include "valueType.h"
-#include "timeAndScenarioType.h"
+#include <antares/expressions/expression.h>
 
-namespace Antares::Study::SystemModel
+#include "timeAndScenarioType.h"
+#include "valueType.h"
+
+namespace Antares::ModelerStudy::SystemModel
 {
 
 /// A decision variable of the model
@@ -38,12 +39,13 @@ public:
              Expression upper_bound,
              ValueType type,
              TimeDependent timeDependent,
-             ScenarioDependent scenarioDependent): id_(std::move(id)),
-                                                   type_(type),
-                                                   lowerBound_(std::move(lower_bound)),
-                                                   upperBound_(std::move(upper_bound)),
-                                                   timeDependent(timeDependent),
-                                                   scenarioDependent(scenarioDependent)
+             ScenarioDependent scenarioDependent):
+        id_(std::move(id)),
+        type_(type),
+        lowerBound_(std::move(lower_bound)),
+        upperBound_(std::move(upper_bound)),
+        timeDependent_(timeDependent),
+        scenarioDependent_(scenarioDependent)
     {
     }
 
@@ -69,12 +71,12 @@ public:
 
     [[nodiscard]] bool isTimeDependent() const
     {
-        return timeDependent == TimeDependent::YES;
+        return timeDependent_ == TimeDependent::YES;
     }
 
     [[nodiscard]] bool IsScenarioDependent() const
     {
-        return scenarioDependent == ScenarioDependent::YES;
+        return scenarioDependent_ == ScenarioDependent::YES;
     }
 
 private:
@@ -82,8 +84,8 @@ private:
     ValueType type_;
     Expression lowerBound_;
     Expression upperBound_;
-    TimeDependent timeDependent = TimeDependent::YES;
-    ScenarioDependent scenarioDependent = ScenarioDependent::YES;
+    TimeDependent timeDependent_ = TimeDependent::YES;
+    ScenarioDependent scenarioDependent_ = ScenarioDependent::YES;
 };
 
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel

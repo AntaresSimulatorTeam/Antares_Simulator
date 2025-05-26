@@ -35,23 +35,40 @@ namespace Antares::Data::ShortTermStorage
 
 namespace fs = std::filesystem;
 
-bool Series::loadFromFolder(const fs::path& folder)
+Series::Series():
+    inflows(inflowsTSNumbers)
+{
+}
+
+bool Series::loadFromFolder(const fs::path& folder, StudyVersion studyVersion)
 {
     bool ret = true;
 
     ret = loadFile(folder / "PMAX-injection.txt", maxInjectionModulation) && ret;
     ret = loadFile(folder / "PMAX-withdrawal.txt", maxWithdrawalModulation) && ret;
-    ret = loadFile(folder / "inflows.txt", inflows) && ret;
+
+    if (auto path = folder / "inflows.txt"; std::filesystem::exists(path))
+    {
+        ret = inflows.loadFromFile(path, false) && ret;
+    }
+    else
+    {
+        logs.info() << "Optional file not found: " << path
+                    << ", default values will be used if needed";
+    }
+
     ret = loadFile(folder / "lower-rule-curve.txt", lowerRuleCurve) && ret;
     ret = loadFile(folder / "upper-rule-curve.txt", upperRuleCurve) && ret;
+    if (studyVersion >= StudyVersion(9, 2))
+    {
+        ret = loadFile(folder / "cost-injection.txt", costInjection) && ret;
+        ret = loadFile(folder / "cost-withdrawal.txt", costWithdrawal) && ret;
+        ret = loadFile(folder / "cost-level.txt", costLevel) && ret;
 
-    ret = loadFile(folder / "cost-injection.txt", costInjection) && ret;
-    ret = loadFile(folder / "cost-withdrawal.txt", costWithdrawal) && ret;
-    ret = loadFile(folder / "cost-level.txt", costLevel) && ret;
+        ret = loadFile(folder / "cost-variation-injection.txt", costVariationInjection) && ret;
 
-    ret = loadFile(folder / "cost-variation-injection.txt", costVariationInjection) && ret;
-
-    ret = loadFile(folder / "cost-variation-withdrawal.txt", costVariationWithdrawal) && ret;
+        ret = loadFile(folder / "cost-variation-withdrawal.txt", costVariationWithdrawal) && ret;
+    }
 
     return ret;
 }
@@ -67,7 +84,8 @@ bool loadFile(const fs::path& path, std::vector<double>& vect)
 
     if (!file.is_open())
     {
-        logs.debug() << "File not found: " << path;
+        logs.info() << "Optional file not found: " << path
+                    << ", default values will be used if needed";
         return true;
     }
 
@@ -81,7 +99,7 @@ bool loadFile(const fs::path& path, std::vector<double>& vect)
             vect.push_back(d);
             lineCount++;
         }
-        if (lineCount < HOURS_PER_YEAR)
+        if (lineCount > 0 && lineCount < HOURS_PER_YEAR)
         {
             logs.warning() << "File too small: " << path;
             return false;
@@ -104,6 +122,18 @@ bool loadFile(const fs::path& path, std::vector<double>& vect)
                      << lineCount + 1 << "  value: " << line;
         return false;
     }
+
+    return true;
+}
+
+bool loadFile(const std::filesystem::path& file, TimeSeries& series, const bool average)
+{
+    logs.debug() << "  :: loading file " << file;
+    if (std::filesystem::is_regular_file(file))
+    {
+        return series.loadFromFile(file, average);
+    }
+    logs.info() << "Optional file not found: " << file << ", default values will be used if needed";
     return true;
 }
 
@@ -112,6 +142,15 @@ void fillIfEmpty(std::vector<double>& v, double value)
     if (v.empty())
     {
         v.resize(HOURS_PER_YEAR, value);
+    }
+}
+
+void fillIfEmpty(TimeSeries& series, double value)
+{
+    if (series.timeSeries.empty())
+    {
+        series.reset(1, HOURS_PER_YEAR);
+        series.fill(value);
     }
 }
 
@@ -148,7 +187,7 @@ bool Series::saveToFolder(const std::string& folder) const
 
     checkWrite("PMAX-injection.txt", maxInjectionModulation);
     checkWrite("PMAX-withdrawal.txt", maxWithdrawalModulation);
-    checkWrite("inflows.txt", inflows);
+    inflows.saveToFile(folder + SEP + "inflows.txt", true);
     checkWrite("lower-rule-curve.txt", lowerRuleCurve);
     checkWrite("upper-rule-curve.txt", upperRuleCurve);
 
@@ -183,9 +222,9 @@ bool writeVectorToFile(const std::string& path, const std::vector<double>& vect)
     return true;
 }
 
-bool Series::validate(const std::string& id) const
+bool Series::validate(const std::string& id, StudyVersion studyVersion) const
 {
-    return validateSizes(id) && validateMaxInjection(id) && validateMaxWithdrawal(id)
+    return validateSizes(id, studyVersion) && validateMaxInjection(id) && validateMaxWithdrawal(id)
            && validateRuleCurves(id);
 }
 
@@ -217,18 +256,36 @@ static bool checkSize(const std::string& seriesFilename,
     return true;
 }
 
-bool Series::validateSizes(const std::string& id) const
+static bool checkSize(const std::string& seriesFilename, const std::string& id, const TimeSeries& v)
 {
-    return checkSize("PMAX-injection.txt", id, maxInjectionModulation)
-           && checkSize("PMAX-withdrawal.txt", id, maxWithdrawalModulation)
-           && checkSize("inflows.txt", id, inflows)
-           && checkSize("lower-rule-curve.txt", id, lowerRuleCurve)
-           && checkSize("upper-rule-curve.txt", id, upperRuleCurve)
-           && checkSize("cost-injection.txt", id, costInjection)
-           && checkSize("cost-withdrawal.txt", id, costWithdrawal)
-           && checkSize("cost-level.txt", id, costLevel)
-           && checkSize("cost-variation-injection.txt", id, costVariationInjection)
-           && checkSize("cost-variation-withdrawal.txt", id, costVariationWithdrawal);
+    if (v.timeSeries.height != HOURS_PER_YEAR)
+    {
+        logs.warning() << "Short-term storage " << id
+                       << " Invalid size for file: " << seriesFilename << ". Got "
+                       << v.timeSeries.height << " lines, expected " << HOURS_PER_YEAR;
+        return false;
+    }
+
+    return true;
+}
+
+bool Series::validateSizes(const std::string& id, StudyVersion studyVersion) const
+{
+    bool ret = checkSize("PMAX-injection.txt", id, maxInjectionModulation)
+               && checkSize("PMAX-withdrawal.txt", id, maxWithdrawalModulation)
+               && checkSize("inflows.txt", id, inflows)
+               && checkSize("lower-rule-curve.txt", id, lowerRuleCurve)
+               && checkSize("upper-rule-curve.txt", id, upperRuleCurve);
+    // Some elements were introduced in version 9.2.0
+    if (studyVersion >= StudyVersion(9, 2))
+    {
+        ret = checkSize("cost-injection.txt", id, costInjection)
+              && checkSize("cost-withdrawal.txt", id, costWithdrawal)
+              && checkSize("cost-level.txt", id, costLevel)
+              && checkSize("cost-variation-injection.txt", id, costVariationInjection)
+              && checkSize("cost-variation-withdrawal.txt", id, costVariationWithdrawal) && ret;
+    }
+    return ret;
 }
 
 bool Series::validateMaxInjection(const std::string& id) const

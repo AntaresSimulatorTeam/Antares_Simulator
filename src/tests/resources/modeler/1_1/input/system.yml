@@ -1,0 +1,42 @@
+system:
+  id: sys_example_1_1
+  description: >
+    A single component containing 2 generators and a consumption of 100MW, two timesteps
+    The generators have no Pmin constraint.
+    Generator 1 costs 0.5 €/MW and has a Pmax of 80 MW.
+    Generator 2 costs €6/MW and has a maximum output of 200 MW.
+    
+    Solution :
+      node1.gen1_p[0] = 80
+      node1.gen2_p[0] = 20
+      node1.gen1_p[1] = 80
+      node1.gen2_p[1] = 20
+      Objective function value: 320
+
+  model-libraries: lib_example_1_1
+
+  components:
+  - id: node1
+    model: lib_example_1_1.node_2gen_1load
+    scenario-group: sg
+    parameters:
+    - id: load
+      time-dependent: true
+      scenario-dependent: false
+      value: load_1_1
+    - id: gen1_max_p
+      time-dependent: true
+      scenario-dependent: false
+      value: gen1_max_p_1_1
+    - id: gen1_prop_cost
+      time-dependent: true
+      scenario-dependent: false
+      value: gen1_prop_cost_1_1
+    - id: gen2_max_p
+      time-dependent: true
+      scenario-dependent: false
+      value: gen2_max_p_1_1
+    - id: gen2_prop_cost
+      time-dependent: true
+      scenario-dependent: false
+      value: gen2_prop_cost_1_1

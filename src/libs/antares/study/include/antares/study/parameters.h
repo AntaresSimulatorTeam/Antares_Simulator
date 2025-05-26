@@ -77,6 +77,9 @@ public:
     */
     bool loadFromFile(const std::filesystem::path& filename, const StudyVersion& version);
 
+    //! Load data from an INI file
+    bool loadFromINI(const IniFile& ini, const StudyVersion& version);
+
     /*!
     ** \brief Prepare all settings for a simulation
     **
@@ -124,11 +127,6 @@ public:
     ** \brief Reset to default all adequacy patch values
     */
     void resetAdqPatchParameters();
-
-    /*!
-    ** \brief Handle priority between command-line option and configuration file
-    */
-    void handleOptimizationOptions(const StudyLoadOptions& options);
 
     /*!
     ** \brief Try to detect then fix any bad value
@@ -344,14 +342,6 @@ public:
     //! Write the simulation synthesis into the output
     bool synthesis;
 
-    //! \name Optimization
-    //@{
-    //! Spillage bound
-    bool spillageBound;
-
-    //! Improve units startup
-    bool improveUnitsStartup;
-
     //! Accuracy on correlation
     uint timeSeriesAccuracyOnCorrelation;
 
@@ -510,13 +500,10 @@ public:
     // Naming constraints and variables in problems
     bool namedProblems;
 
-    // All options related to optimization
+    // All options related to linear & quadratic optimization
     Antares::Solver::Optimization::OptimizationOptions optOptions;
 
 private:
-    //! Load data from an INI file
-    bool loadFromINI(const IniFile& ini, const StudyVersion& version);
-
     void resetPlayedYears(uint nbOfYears);
 
     //! MC year weight for MC synthesis
@@ -538,7 +525,7 @@ const char* SimulationModeToCString(SimulationMode mode);
 */
 bool StringToSimulationMode(SimulationMode& mode, Yuni::CString<20, false> text);
 
-const char* CompatibilityHydroPmaxToCString(Parameters::Compatibility::HydroPmax);
+const char* CompatibilityHydroPmaxToCString(const Parameters::Compatibility::HydroPmax);
 bool StringToCompatibilityHydroPmax(Parameters::Compatibility::HydroPmax&, const std::string& text);
 
 } // namespace Antares::Data

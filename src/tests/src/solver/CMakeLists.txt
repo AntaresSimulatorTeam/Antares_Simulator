@@ -1,8 +1,5 @@
-add_subdirectory(expressions)
 add_subdirectory(infeasible-problem-analysis)
 add_subdirectory(lps)
-add_subdirectory(modelParser)
-add_subdirectory(modeler)
 add_subdirectory(optimisation)
 add_subdirectory(optim-model-filler)
 add_subdirectory(simulation)

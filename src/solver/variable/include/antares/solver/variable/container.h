@@ -44,9 +44,9 @@ class List: public NextT
 {
 public:
     //! Type of the next static variable
-    typedef NextT NextType;
+    using NextType = NextT;
     //! The full type of the class
-    typedef List<NextT> ListType;
+    using ListType = List<NextT>;
 
     enum
     {

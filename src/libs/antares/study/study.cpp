@@ -380,12 +380,10 @@ bool Study::initializeRuntimeInfos()
 
 void Study::performTransformationsBeforeLaunchingSimulation()
 {
-// Those computations are also made from the TS-Generator (ts-generator/xcast/xcast.cpp)
-#ifndef NDEBUG
+    // Those computations are also made from the TS-Generator (ts-generator/xcast/xcast.cpp)
     logs.debug();
     logs.debug() << "applying transformations required by the simulation...";
     logs.debug() << "  > adding DSM values";
-#endif
 
     // ForEach area
     areas.each(
@@ -1090,7 +1088,6 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
             }
             progression.add(y, Solver::Progression::sectTSGThermal, n);
         }
-
         progression.add(y, Solver::Progression::sectYear, ticksPerYear);
 
         if (parameters.yearByYear)
@@ -1422,12 +1419,12 @@ void Study::computePThetaInfForThermalClusters() const
         // Alias de la zone courant
         const auto& area = *(this->areas.byIndex[i]);
 
-        for (auto& cluster: area.thermal.list.each_enabled_and_not_mustrun())
+        for (auto& c: area.thermal.list.each_enabled_and_not_mustrun())
         {
             for (uint k = 0; k < HOURS_PER_YEAR; k++)
             {
-                cluster->PthetaInf[k] = cluster->modulation[Data::thermalMinGenModulation][k]
-                                        * cluster->unitCount * cluster->nominalCapacity;
+                c->PthetaInf[k] = c->modulation[Data::thermalMinGenModulation][k] * c->unitCount
+                                  * c->nominalCapacity;
             }
         }
     }
