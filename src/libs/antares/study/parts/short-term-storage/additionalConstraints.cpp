@@ -53,17 +53,17 @@ ValidateResult validate(const AdditionalConstraints& adc)
         return {false, "Cluster ID is empty."};
     }
 
-    if (!adc.isValidVariable())
+    if (!hasValidVariable(adc))
     {
         return {false, "Invalid variable type. Must be 'injection', 'withdrawal', or 'netting'."};
     }
 
-    if (!adc.isValidOperatorType())
+    if (!hasValidOperatorType(adc))
     {
         return {false, "Invalid operator type. Must be 'less', 'equal', or 'greater'."};
     }
 
-    if (!adc.isValidHours())
+    if (!hasValidHours(adc))
     {
         return {false, "Hours sets contains invalid values. Must be between 1 and 168."};
     }
@@ -71,27 +71,27 @@ ValidateResult validate(const AdditionalConstraints& adc)
     return {true, ""};
 }
 
-bool SingleAdditionalConstraint::isValidHoursRange() const
+bool SingleAdditionalConstraint::hasValidHoursRange() const
 {
     // `hours` is a sorted set; begin() gives the smallest and prev(end()) gives the largest.
     return !hours.empty() && *hours.begin() >= 1 && *std::prev(hours.end()) <= 168;
 }
 
-bool AdditionalConstraints::isValidHours() const
+bool hasValidHours(const AdditionalConstraints& ct)
 {
-    return std::ranges::all_of(constraints,
+    return std::ranges::all_of(ct.constraints,
                                [](const auto& constraint)
-                               { return constraint.isValidHoursRange(); });
+                               { return constraint.hasValidHoursRange(); });
 }
 
-bool AdditionalConstraints::isValidVariable() const
+bool hasValidVariable(const AdditionalConstraints& ct)
 {
-    return variable == "injection" || variable == "withdrawal" || variable == "netting";
+    return ct.variable == "injection" || ct.variable == "withdrawal" || ct.variable == "netting";
 }
 
-bool AdditionalConstraints::isValidOperatorType() const
+bool hasValidOperatorType(const AdditionalConstraints& ct)
 {
-    return operatorType == "less" || operatorType == "equal" || operatorType == "greater";
+    return ct.operatorType == "less" || ct.operatorType == "equal" || ct.operatorType == "greater";
 }
 
 std::size_t AdditionalConstraints::enabledConstraintsCount() const

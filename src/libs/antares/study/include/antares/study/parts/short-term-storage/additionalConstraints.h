@@ -36,7 +36,7 @@ public:
     std::set<int> hours;
     unsigned int globalIndex = 0;
     unsigned int localIndex = 0;
-    bool isValidHoursRange() const;
+    bool hasValidHoursRange() const;
 };
 
 struct ValidateResult
@@ -87,15 +87,11 @@ public:
 
     TimeSeriesNumbers timeseriesNumbers;
     TimeSeries timeSeries;
-
-    friend ValidateResult validate(const AdditionalConstraints&);
-
-private:
-    bool isValidVariable() const;
-    bool isValidOperatorType() const;
-
-    bool isValidHours() const;
 };
+
+bool hasValidVariable(const AdditionalConstraints&);
+bool hasValidOperatorType(const AdditionalConstraints&);
+bool hasValidHours(const AdditionalConstraints&);
 
 ValidateResult validate(const AdditionalConstraints&);
 
