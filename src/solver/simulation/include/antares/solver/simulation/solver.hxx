@@ -552,16 +552,14 @@ void ISimulation<ImplementationType>::allocateMemoryForRandomNumbers(
 template<class ImplementationType>
 void ISimulation<ImplementationType>::computeRandomNumbers(
   randomNumbers& randomForYears,
-  std::vector<uint>& years,
+  unsigned nbYears,
   std::map<unsigned int, bool>& isYearPerformed,
   MersenneTwister& randomHydroGenerator)
 {
     uint indexYear = 0;
-    std::vector<unsigned int>::iterator ity;
 
-    for (ity = years.begin(); ity != years.end(); ++ity)
+    for (unsigned y = 0; y < nbYears; ++y)
     {
-        uint y = *ity;
         bool isPerformed = isYearPerformed[y];
         if (isPerformed)
         {
@@ -839,13 +837,11 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     // refresh has been removed, assume year = 0
     regenerateTimeSeries(0);
 
-    std::vector<uint> yearsIndices;
     std::map<unsigned int, bool> isYearPerformed;
     pNbYearsReallyPerformed = 0;
     for (uint year = firstYear; year < endYear; year++)
     {
         isYearPerformed[year] = study.parameters.yearsFilter[year];
-        yearsIndices.push_back(year);
         if (study.parameters.yearsFilter[year])
         {
             pNbYearsReallyPerformed++;
@@ -863,7 +859,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     allocateMemoryForRandomNumbers(randomForParallelYears);
 
     computeRandomNumbers(randomForParallelYears,
-                         yearsIndices,
+                         endYear,
                          isYearPerformed,
                          randomHydroGenerator);
 

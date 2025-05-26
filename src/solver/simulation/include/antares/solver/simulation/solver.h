@@ -146,7 +146,7 @@ private:
     ** \param	years			List of years
     */
     void computeRandomNumbers(randomNumbers& randomForYears,
-                              std::vector<uint>& years,
+                              unsigned years,
                               std::map<unsigned int, bool>& isYearPerformed,
                               MersenneTwister& randomHydro);
 
