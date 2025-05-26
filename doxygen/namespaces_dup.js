@@ -1055,6 +1055,7 @@ var namespaces_dup =
           [ "mnIDStudyEditMapReverseSelection", "internal-ids_8h.html#a9e9b814398d8f3dfd614e67481b6a5d0ae28cd5f9d593c08d280a64a724cf10e7", null ],
           [ "mnIDStudyEditTitle", "internal-ids_8h.html#a9e9b814398d8f3dfd614e67481b6a5d0ae44066b3da9dd36aa78ee3d619816b81", null ],
           [ "mnIDStudyEditAuthors", "internal-ids_8h.html#a9e9b814398d8f3dfd614e67481b6a5d0a13f2633ffa60cc84059a0e9fa50c7a44", null ],
+          [ "mnIDStudyEditEditor", "internal-ids_8h.html#a9e9b814398d8f3dfd614e67481b6a5d0a4d920748ce77abdbd37b964ecc29ccad", null ],
           [ "mnIDStudyEditCopy", "internal-ids_8h.html#a9e9b814398d8f3dfd614e67481b6a5d0af727da0128fc2572dcb3d84a918bce61", null ],
           [ "mnIDStudyEditPaste", "internal-ids_8h.html#a9e9b814398d8f3dfd614e67481b6a5d0aec0bd3d617d5a47fecf2b32bcfe345e7", null ],
           [ "mnIDStudyEditPasteSpecial", "internal-ids_8h.html#a9e9b814398d8f3dfd614e67481b6a5d0ac1d492f9816f877f6228403f085afff5", null ],

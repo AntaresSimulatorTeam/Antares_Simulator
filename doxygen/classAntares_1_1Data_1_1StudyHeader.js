@@ -11,5 +11,6 @@ var classAntares_1_1Data_1_1StudyHeader =
     [ "caption", "classAntares_1_1Data_1_1StudyHeader.html#a3d4729a38cdfe5de876e24895a9a6dc5", null ],
     [ "dateCreated", "classAntares_1_1Data_1_1StudyHeader.html#a6f1c434bd68f75553be139879e83aefd", null ],
     [ "dateLastSave", "classAntares_1_1Data_1_1StudyHeader.html#a8d9ab20eaa07dc52ff21f23c39d8c8f9", null ],
+    [ "editor", "classAntares_1_1Data_1_1StudyHeader.html#a77ceb9046d6ae075e15dbe3c1fe36364", null ],
     [ "version", "classAntares_1_1Data_1_1StudyHeader.html#ab5ace17c779306b4e256beb53281c88f", null ]
 ];
