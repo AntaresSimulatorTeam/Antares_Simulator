@@ -7,7 +7,6 @@ on:
     branches:
       - develop
       - dependabot/*
-      - feature/scenarize-additional-constraints
   schedule:
     - cron: '21 2 * * *'
   workflow_call:
