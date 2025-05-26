@@ -89,10 +89,6 @@ public:
     TimeSeries timeSeries;
 };
 
-bool hasValidVariable(const AdditionalConstraints&);
-bool hasValidOperatorType(const AdditionalConstraints&);
-bool hasValidHours(const AdditionalConstraints&);
-
 ValidateResult validate(const AdditionalConstraints&);
 
 } // namespace Antares::Data::ShortTermStorage

@@ -46,6 +46,26 @@ AdditionalConstraints::AdditionalConstraints(std::string name,
 {
 }
 
+namespace
+{
+bool hasValidHours(const AdditionalConstraints& ct)
+{
+    return std::ranges::all_of(ct.constraints,
+                               [](const auto& constraint)
+                               { return constraint.hasValidHoursRange(); });
+}
+
+bool hasValidVariable(const AdditionalConstraints& ct)
+{
+    return ct.variable == "injection" || ct.variable == "withdrawal" || ct.variable == "netting";
+}
+
+bool hasValidOperatorType(const AdditionalConstraints& ct)
+{
+    return ct.operatorType == "less" || ct.operatorType == "equal" || ct.operatorType == "greater";
+}
+} // namespace
+
 ValidateResult validate(const AdditionalConstraints& adc)
 {
     if (adc.cluster_id.empty())
@@ -75,23 +95,6 @@ bool SingleAdditionalConstraint::hasValidHoursRange() const
 {
     // `hours` is a sorted set; begin() gives the smallest and prev(end()) gives the largest.
     return !hours.empty() && *hours.begin() >= 1 && *std::prev(hours.end()) <= 168;
-}
-
-bool hasValidHours(const AdditionalConstraints& ct)
-{
-    return std::ranges::all_of(ct.constraints,
-                               [](const auto& constraint)
-                               { return constraint.hasValidHoursRange(); });
-}
-
-bool hasValidVariable(const AdditionalConstraints& ct)
-{
-    return ct.variable == "injection" || ct.variable == "withdrawal" || ct.variable == "netting";
-}
-
-bool hasValidOperatorType(const AdditionalConstraints& ct)
-{
-    return ct.operatorType == "less" || ct.operatorType == "equal" || ct.operatorType == "greater";
 }
 
 std::size_t AdditionalConstraints::enabledConstraintsCount() const
