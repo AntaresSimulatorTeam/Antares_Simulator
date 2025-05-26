@@ -23,12 +23,11 @@ using namespace Antares::Data;
 
 LinearProblemMatrixRamping::LinearProblemMatrixRamping(PROBLEME_HEBDO* problemeHebdo,
                                                        bool Simulation,
-                                                       ConstraintBuilder& builder) :
- ProblemMatrixEssential(problemeHebdo),
- simulation_(Simulation),
- rampingIncreaseDecreaseRateGroup_(problemeHebdo, simulation_, builder),
- powerOutputVariationGroup_(problemeHebdo, simulation_, builder)
+                                                       ConstraintBuilder& builder):
+    ProblemMatrixEssential(problemeHebdo),
+    simulation_(Simulation),
+    rampingIncreaseDecreaseRateGroup_(problemeHebdo, simulation_, builder),
+    powerOutputVariationGroup_(problemeHebdo, simulation_, builder)
 {
-    constraintgroups_
-      = {&rampingIncreaseDecreaseRateGroup_, &powerOutputVariationGroup_};
+    constraintgroups_ = {&rampingIncreaseDecreaseRateGroup_, &powerOutputVariationGroup_};
 }

@@ -34,7 +34,7 @@ set(RTESOLVER_OPT
         opt_gestion_des_bornes_couts_demarrage.cpp
         opt_gestion_des_couts_couts_demarrage.cpp
         opt_gestion_second_membre_couts_demarrage.cpp
-        opt_gestion_second_membre_couts_demarrage.cpp
+        opt_gestion_second_membre_rampes_thermiques.cpp
         opt_decompte_variables_et_contraintes_couts_demarrage.cpp
         opt_init_minmax_groupes_couts_demarrage.cpp
         opt_nombre_min_groupes_demarres_couts_demarrage.cpp

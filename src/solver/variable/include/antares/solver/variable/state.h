@@ -100,7 +100,6 @@ public:
 
     void yearEndBuildFromThermalClusterIndex(const unsigned int clusterEnabledIndex);
 
-
 private:
     /*!
     ** \brief Initialize some variable according a thermal cluster index
@@ -117,11 +116,10 @@ private:
       const std::array<uint, HOURS_PER_YEAR>& ON_opt,
       const Data::ThermalCluster* currentCluster);
 
-    void yearEndBuildCalculateRampingCosts(
-      const uint& maxDurationON,
-      const std::array<uint, HOURS_PER_YEAR>& ON_min,
-      const std::array<uint, HOURS_PER_YEAR>& ON_opt,
-      const Data::ThermalCluster* currentCluster);
+    void yearEndBuildCalculateRampingCosts(const uint& maxDurationON,
+                                           const std::array<uint, HOURS_PER_YEAR>& ON_min,
+                                           const std::array<uint, HOURS_PER_YEAR>& ON_opt,
+                                           const Data::ThermalCluster* currentCluster);
 
     std::array<uint, HOURS_PER_YEAR> computeEconomicallyOptimalNbClustersONforEachHour(
 

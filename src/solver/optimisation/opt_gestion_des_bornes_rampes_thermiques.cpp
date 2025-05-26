@@ -25,17 +25,19 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/simulation/sim_structure_donnees.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include "antares/solver/simulation/simulation.h"
 
 #include "variables/VariableManagement.h"
 #include "variables/VariableManagerUtils.h"
-#include "antares/solver/simulation/simulation.h"
-#include "antares/solver/simulation/sim_structure_donnees.h"
-#include "antares/solver/simulation/sim_structure_probleme_economique.h"
-#include "antares/solver/optimisation/opt_fonctions.h"
 
-
-void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireRampesThermiques(PROBLEME_HEBDO* problemeHebdo, const int PremierPdtDeLIntervalle, const int DernierPdtDeLIntervalle)
+void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireRampesThermiques(
+  PROBLEME_HEBDO* problemeHebdo,
+  const int PremierPdtDeLIntervalle,
+  const int DernierPdtDeLIntervalle)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     std::vector<double>& Xmin = ProblemeAResoudre->Xmin;
@@ -44,11 +46,13 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireRampesThermiques(PROB
     for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdtJour++)
     {
-        const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
+        const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
+          = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
 
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
+            const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo
+                                                                  ->PaliersThermiquesDuPays[pays];
             int maxThermalPlant = PaliersThermiquesDuPays.NombreDePaliersThermiques;
 
             for (int index = 0; index < maxThermalPlant; index++)
@@ -62,11 +66,9 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireRampesThermiques(PROB
                     Xmin[var] = 0;
                     Xmax[var] = LINFINI_ANTARES;
 
-
                     var = CorrespondanceVarNativesVarOptim.powerRampingIncreaseIndex[palier];
                     Xmin[var] = 0;
                     Xmax[var] = LINFINI_ANTARES;
-
                 }
             }
         }

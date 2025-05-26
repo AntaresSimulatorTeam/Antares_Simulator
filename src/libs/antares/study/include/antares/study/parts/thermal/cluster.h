@@ -346,11 +346,11 @@ public:
         //! Maximum hourly downward power ramping rate (MW/hour)
         double maxDownwardPowerRampingRate;
 
-        Ramping() :
-         powerIncreaseCost(0.),
-         powerDecreaseCost(0.),
-         maxUpwardPowerRampingRate(0.),
-         maxDownwardPowerRampingRate(0.)
+        Ramping():
+            powerIncreaseCost(0.),
+            powerDecreaseCost(0.),
+            maxUpwardPowerRampingRate(0.),
+            maxDownwardPowerRampingRate(0.)
         {
         }
 
@@ -358,6 +358,7 @@ public:
         bool checkValidity(Area* area, Data::ClusterName clusterName);
         friend std::ostream& operator<<(std::ostream&, const Ramping& ramping);
     };
+
     std::optional<Ramping> ramping;
 
     //@}

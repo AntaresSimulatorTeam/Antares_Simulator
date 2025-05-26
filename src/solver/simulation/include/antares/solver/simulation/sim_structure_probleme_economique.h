@@ -45,11 +45,13 @@ struct CORRESPONDANCES_DES_VARIABLES
     std::vector<int> NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion;
 
     std::vector<int> NumeroDeVariableDuPalierThermique;
-    //! index of the variables for the power output hourly increases (MW above P_min,between t and t+1) 
-    // for the thermal clusters 
+    //! index of the variables for the power output hourly increases (MW above P_min,between t and
+    //! t+1)
+    // for the thermal clusters
     std::vector<int> powerRampingIncreaseIndex;
-    //! index of the variables for the power output hourly dereases (MW above P_min,between t and t+1)
-    // for the thermal clusters 
+    //! index of the variables for the power output hourly dereases (MW above P_min,between t and
+    //! t+1)
+    // for the thermal clusters
     std::vector<int> powerRampingDecreaseIndex;
 
     std::vector<int> NumeroDeVariablesDeLaProdHyd;
@@ -271,7 +273,7 @@ struct PDISP_ET_COUTS_HORAIRES_PAR_PALIER
 
 struct PALIERS_THERMIQUES
 {
-    int NombreDePaliersThermiques; 
+    int NombreDePaliersThermiques;
 
     std::vector<int> minUpDownTime;
 
@@ -294,9 +296,9 @@ struct PALIERS_THERMIQUES
     std::vector<double> maxUpwardPowerRampingRate;
     //! maximum hourly downward power ramping rate for a thermal unit (MW/hour)
     std::vector<double> maxDownwardPowerRampingRate;
-    //! cost of 1 MW power increase for the thermal cluster (above minimum stable level) 
+    //! cost of 1 MW power increase for the thermal cluster (above minimum stable level)
     std::vector<double> upwardRampingCost;
-    //! cost of 1 MW power decrease for the thermal cluster 
+    //! cost of 1 MW power decrease for the thermal cluster
     std::vector<double> downwardRampingCost;
 };
 

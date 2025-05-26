@@ -113,7 +113,6 @@ void OPT_InitialiserLesCoutsLineaireRampesThermiques(PROBLEME_HEBDO* problemeHeb
                                                      const int PremierPdtDeLIntervalle,
                                                      const int DernierPdtDeLIntervalle);
 
-
 double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO*, int, uint);
 
 #endif /* __SOLVER_OPTIMISATION_FUNCTIONS_H__ */

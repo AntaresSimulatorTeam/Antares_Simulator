@@ -19,20 +19,18 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
+#include <antares/study/study.h>
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
-#include "constraints/ConstraintGroup.h"
-#include "ProblemMatrixEssential.h"
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
+#include "ProblemMatrixEssential.h"
+#include "constraints/ConstraintGroup.h"
 #include "constraints/PowerOutputVariationGroup.h"
 #include "constraints/RampingIncreaseDecreaseRateGroup.h"
 
-#include <antares/study/study.h>
-
 using namespace Antares::Data;
 
-class LinearProblemMatrixRamping : public ProblemMatrixEssential
+class LinearProblemMatrixRamping: public ProblemMatrixEssential
 {
 public:
     explicit LinearProblemMatrixRamping(PROBLEME_HEBDO* problemeHebdo,

@@ -1,37 +1,40 @@
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/optimisation/opt_rename_problem.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
 #include "spx_constantes_externes.h"
 #include "variables/VariableManagerUtils.h"
 
-
-void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireRampesThermiques(PROBLEME_HEBDO* problemeHebdo, bool Simulation)
+void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireRampesThermiques(
+  PROBLEME_HEBDO* problemeHebdo,
+  bool Simulation)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
-    int NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+    int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
+                                                  ->NombreDePasDeTempsPourUneOptimisation;
     int& NombreDeVariables = ProblemeAResoudre->NombreDeVariables;
     VariableNamer variableNamer(ProblemeAResoudre->NomDesVariables);
 
     for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
     {
         variableNamer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-        auto& CorrespondanceVarNativesVarOptim = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
+        auto& CorrespondanceVarNativesVarOptim = problemeHebdo
+                                                   ->CorrespondanceVarNativesVarOptim[pdt];
 
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
+            const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo
+                                                                  ->PaliersThermiquesDuPays[pays];
             variableNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
             for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
             {
-                if (PaliersThermiquesDuPays.maxUpwardPowerRampingRate[index] >= 0 )
+                if (PaliersThermiquesDuPays.maxUpwardPowerRampingRate[index] >= 0)
                 {
                     const int palier = PaliersThermiquesDuPays
                                          .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
-                    const auto& clusterName
-                      = PaliersThermiquesDuPays.NomsDesPaliersThermiques[index];
+                    const auto& clusterName = PaliersThermiquesDuPays
+                                                .NomsDesPaliersThermiques[index];
 
                     if (!Simulation)
                     {

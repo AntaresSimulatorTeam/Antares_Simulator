@@ -22,12 +22,12 @@
 #include <cmath>
 #include <spx_constantes_externes.h>
 
+#include <antares/solver/optimisation/opt_fonctions.h>
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 #include "variables/VariableManagement.h"
 #include "variables/VariableManagerUtils.h"
-#include <antares/solver/optimisation/opt_fonctions.h>
 
 void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*,
                                                                             const int,
@@ -519,7 +519,13 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
 
     if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
     {
-        OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
-        OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireRampesThermiques(problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
+        OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
+          problemeHebdo,
+          PremierPdtDeLIntervalle,
+          DernierPdtDeLIntervalle);
+        OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireRampesThermiques(
+          problemeHebdo,
+          PremierPdtDeLIntervalle,
+          DernierPdtDeLIntervalle);
     }
 }

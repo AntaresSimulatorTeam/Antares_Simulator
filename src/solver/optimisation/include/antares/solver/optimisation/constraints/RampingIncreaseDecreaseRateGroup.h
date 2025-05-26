@@ -22,14 +22,14 @@
 #pragma once
 #include "AbstractStartUpCostsGroup.h"
 #include "ConstraintGroup.h"
-#include "RampingIncreaseRate.h"
 #include "RampingDecreaseRate.h"
+#include "RampingIncreaseRate.h"
 
 /**
  * @brief Group of RampingIncrease/DecreaseRateGroup constraints
  *
  */
-class RampingIncreaseDecreaseRateGroup : public AbstractStartUpCostsGroup
+class RampingIncreaseDecreaseRateGroup: public AbstractStartUpCostsGroup
 {
 public:
     using AbstractStartUpCostsGroup::AbstractStartUpCostsGroup;

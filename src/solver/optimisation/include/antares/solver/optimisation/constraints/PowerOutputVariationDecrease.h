@@ -4,11 +4,12 @@
 /*!
  * represent 'RampingIncreaseRate' Constraint type
  */
-class PowerOutputVariationDecrease : private ConstraintFactory
+class PowerOutputVariationDecrease: private ConstraintFactory
 {
 public:
-    PowerOutputVariationDecrease(ConstraintBuilder& builder, StartUpCostsData& data) :
-     ConstraintFactory(builder), data(data)
+    PowerOutputVariationDecrease(ConstraintBuilder& builder, StartUpCostsData& data):
+        ConstraintFactory(builder),
+        data(data)
     {
     }
 

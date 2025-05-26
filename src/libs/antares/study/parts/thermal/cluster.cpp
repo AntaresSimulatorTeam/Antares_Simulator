@@ -499,7 +499,7 @@ bool Data::ThermalCluster::integrityCheck()
     {
         // if the ramping model is ill defined, then we disable the ramping model for this cluster
         bool ramping_ret = ramping.value().checkValidity(parentArea, pName);
-        if(!ramping_ret)
+        if (!ramping_ret)
         {
             ramping.reset();
         }
@@ -735,10 +735,8 @@ bool ThermalCluster::Ramping::checkValidity(Area* parentArea, Data::ClusterName 
 
 std::ostream& operator<<(std::ostream& os, const ThermalCluster::Ramping& r)
 {
-    return os << r.powerIncreaseCost << '\t'
-              << r.powerDecreaseCost << '\t'
-              << r.maxUpwardPowerRampingRate << '\t'
-              << r.maxDownwardPowerRampingRate;
+    return os << r.powerIncreaseCost << '\t' << r.powerDecreaseCost << '\t'
+              << r.maxUpwardPowerRampingRate << '\t' << r.maxDownwardPowerRampingRate;
 }
 
 } // namespace Data

@@ -22,14 +22,14 @@
 #pragma once
 #include "AbstractStartUpCostsGroup.h"
 #include "ConstraintGroup.h"
-#include "PowerOutputVariationIncrease.h"
 #include "PowerOutputVariationDecrease.h"
+#include "PowerOutputVariationIncrease.h"
 
 /**
  * @brief Group of PowerOutputVariationGroup constraints
  *
  */
-class PowerOutputVariationGroup : public AbstractStartUpCostsGroup
+class PowerOutputVariationGroup: public AbstractStartUpCostsGroup
 {
 public:
     using AbstractStartUpCostsGroup::AbstractStartUpCostsGroup;

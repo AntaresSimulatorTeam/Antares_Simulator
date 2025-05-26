@@ -48,7 +48,6 @@
 #include "hydrostorage.h"
 #include "inflow.h"
 #include "localMatchingRuleViolations.h"
-#include "rampingCosts.h"
 #include "lold.h"
 #include "loldCsr.h"
 #include "lolp.h"
@@ -65,6 +64,7 @@
 #include "overflow.h"
 #include "priceCSR.h"
 #include "pumping.h"
+#include "rampingCosts.h"
 #include "renewableGeneration.h"
 #include "reservoirlevel.h"
 #include "spilledEnergy.h"
@@ -250,13 +250,12 @@ typedef // Prices
                                                                     // Number Of Dispatched Units
                                                                     Common::SpatialAggregate<
                                                                       NbOfDispatchedUnits, // MBO
-                                                                                          // 25/02/2016
-                                                                                          // -
-                                                                                          // refs:
-                                                                                          // #55
-                                                                       Common::SpatialAggregate<
-                                                                        RampingCost
-                                                                        >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                                                                           // 25/02/2016
+                                                                                           // -
+                                                                                           // refs:
+                                                                                           // #55
+                                                                      Common::SpatialAggregate<
+                                                                        RampingCost>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
 typedef BindingConstMarginCost< // Marginal cost for a binding constraint

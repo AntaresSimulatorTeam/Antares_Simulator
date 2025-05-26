@@ -4,14 +4,14 @@
 /*!
  * represent 'RampingIncreaseRate' Constraint type
  */
-class PowerOutputVariationIncrease : private ConstraintFactory
+class PowerOutputVariationIncrease: private ConstraintFactory
 {
 public:
-    PowerOutputVariationIncrease(ConstraintBuilder& builder, StartUpCostsData& data) :
-     ConstraintFactory(builder), data(data)
+    PowerOutputVariationIncrease(ConstraintBuilder& builder, StartUpCostsData& data):
+        ConstraintFactory(builder),
+        data(data)
     {
     }
-
 
     /*!
      * @brief Add variables to the constraint and update constraints Matrix

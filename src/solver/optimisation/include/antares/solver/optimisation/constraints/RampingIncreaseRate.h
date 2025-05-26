@@ -4,13 +4,14 @@
 /*!
  * represent 'RampingIncreaseRate' Constraint type
  */
-class RampingIncreaseRate : private ConstraintFactory
+class RampingIncreaseRate: private ConstraintFactory
 {
 public:
 
-    public:
-    RampingIncreaseRate(ConstraintBuilder& builder, StartUpCostsData& data) :
-     ConstraintFactory(builder), data(data)
+public:
+    RampingIncreaseRate(ConstraintBuilder& builder, StartUpCostsData& data):
+        ConstraintFactory(builder),
+        data(data)
     {
     }
 

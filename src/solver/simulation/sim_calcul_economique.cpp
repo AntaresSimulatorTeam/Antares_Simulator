@@ -326,14 +326,14 @@ void SIM_InitialisationProblemeHebdo(Study& study,
             // ramping (if enabled)
             if (cluster->ramping)
             {
-                pbPalier.upwardRampingCost[cluster->index]
-                  = cluster->ramping.value().powerIncreaseCost;
-                pbPalier.downwardRampingCost[cluster->index]
-                  = cluster->ramping.value().powerDecreaseCost;
+                pbPalier.upwardRampingCost[cluster->index] = cluster->ramping.value()
+                                                               .powerIncreaseCost;
+                pbPalier.downwardRampingCost[cluster->index] = cluster->ramping.value()
+                                                                 .powerDecreaseCost;
                 pbPalier.maxDownwardPowerRampingRate[cluster->index]
                   = cluster->ramping.value().maxDownwardPowerRampingRate;
-                pbPalier.maxUpwardPowerRampingRate[cluster->index]
-                  = cluster->ramping.value().maxUpwardPowerRampingRate;
+                pbPalier.maxUpwardPowerRampingRate[cluster->index] = cluster->ramping.value()
+                                                                       .maxUpwardPowerRampingRate;
             }
 
             pbPalier.PmaxDUnGroupeDuPalierThermique[cluster->index]

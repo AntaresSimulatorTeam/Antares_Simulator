@@ -118,14 +118,11 @@ bool ThermalClusterList::loadFromFolder(Study& study, const fs::path& folder, Ar
         }
 
         auto cluster = std::make_shared<ThermalCluster>(area);
-        
+
         // Load data of a thermal cluster from a ini file section
         bool rampesEnabled = study.parameters.compatibility.rampes
                              == Parameters::Compatibility::Rampes::Enabled;
-        if (!ThermalClusterLoadFromSection(study.buffer,
-                                           *cluster,
-                                           *section, 
-                                           rampesEnabled))
+        if (!ThermalClusterLoadFromSection(study.buffer, *cluster, *section, rampesEnabled))
         {
             continue;
         }
@@ -297,20 +294,32 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
 
     // initialize the ramping attributes only if ramping is enabled, else ignore these properties
     if (p->key == "power-increase-cost")
-        return (cluster.ramping)? p->value.to<double>(cluster.ramping.value().powerIncreaseCost) : true;
+    {
+        return (cluster.ramping) ? p->value.to<double>(cluster.ramping.value().powerIncreaseCost)
+                                 : true;
+    }
     if (p->key == "power-decrease-cost")
+    {
         return (cluster.ramping) ? p->value.to<double>(cluster.ramping.value().powerDecreaseCost)
                                  : true;
+    }
     if (p->key == "max-upward-power-ramping-rate")
+    {
         return (cluster.ramping)
                  ? p->value.to<double>(cluster.ramping.value().maxUpwardPowerRampingRate)
                  : true;
+    }
     if (p->key == "max-downward-power-ramping-rate")
+    {
         return (cluster.ramping)
-          ? p->value.to<double>(cluster.ramping.value().maxDownwardPowerRampingRate) : true;
+                 ? p->value.to<double>(cluster.ramping.value().maxDownwardPowerRampingRate)
+                 : true;
+    }
     // we ignore this property as it was already handled in ThermalClusterLoadFromSection
     if (p->key == "ramping-enabled")
+    {
         return true;
+    }
 
     if (p->key == "unitcount")
     {
@@ -364,7 +373,6 @@ bool ThermalClusterLoadFromSection(const AnyString& filename,
             }
         }
     }
-   
 
     if (section.firstProperty)
     {
@@ -552,18 +560,26 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
 
         // ramping (only if ramping is enabled)
         if (c->ramping && c->ramping.value().powerIncreaseCost != 0)
+        {
             s->add("power-increase-cost", Math::Round(c->ramping.value().powerIncreaseCost, 3));
+        }
         if (c->ramping && c->ramping.value().powerDecreaseCost != 0)
+        {
             s->add("power-decrease-cost", Math::Round(c->ramping.value().powerDecreaseCost, 3));
+        }
         if (c->ramping && c->ramping.value().maxUpwardPowerRampingRate != 0)
+        {
             s->add("max-upward-power-ramping-rate",
                    Math::Round(c->ramping.value().maxUpwardPowerRampingRate, 3));
+        }
         if (c->ramping && c->ramping.value().maxDownwardPowerRampingRate != 0)
+        {
             s->add("max-downward-power-ramping-rate",
                    Math::Round(c->ramping.value().maxDownwardPowerRampingRate, 3));
+        }
 
-        //pollutant factor
-        for (auto const& [key, val] : Pollutant::namesToEnum)
+        // pollutant factor
+        for (const auto& [key, val]: Pollutant::namesToEnum)
         {
             s->add(key, c->emissions.factors[val]);
         }

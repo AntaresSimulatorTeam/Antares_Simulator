@@ -254,8 +254,7 @@ const char* CompatibilityRampesToCString(Parameters::Compatibility::Rampes mode)
     }
 }
 
-bool StringToCompatibilityRampes(Parameters::Compatibility::Rampes& mode,
-                                   const std::string& text)
+bool StringToCompatibilityRampes(Parameters::Compatibility::Rampes& mode, const std::string& text)
 {
     if (text.empty())
     {

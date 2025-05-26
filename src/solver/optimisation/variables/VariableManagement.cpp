@@ -61,7 +61,6 @@ int& VariableManager::ProductionDecreaseAboveMin(unsigned int index,
     return CorrespondanceVarNativesVarOptim_[pdt].powerRampingDecreaseIndex[index];
 }
 
-
 int& VariableManager::NumberOfDispatchableUnits(unsigned int index,
                                                 unsigned int hourInWeek,
                                                 int offset,

@@ -21,7 +21,7 @@ public:
                                 int offset = 0,
                                 int delta = 0);
 
-    int& ProductionIncreaseAboveMin(unsigned int index, 
+    int& ProductionIncreaseAboveMin(unsigned int index,
                                     unsigned int hourInWeek,
                                     int offset = 0,
                                     int delta = 0);

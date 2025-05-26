@@ -44,6 +44,7 @@ struct VCardRampingCost
     {
         return "RAMP COST";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -76,7 +77,8 @@ struct VCardRampingCost
         //! Data Level
         categoryDataLevel = Category::DataLevel::area,
         //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile & (Category::FileLevel::id | Category::FileLevel::va),
+        categoryFileLevel = ResultsType::categoryFile
+                            & (Category::FileLevel::id | Category::FileLevel::va),
         //! Precision (views)
         precision = Category::all,
         //! Indentation (GUI)
@@ -107,8 +109,7 @@ struct VCardRampingCost
 **   the thermal dispatchable clusters
 */
 template<class NextT = Container::EndOfList>
-class RampingCost
- : public Variable::IVariable<RampingCost<NextT>, NextT, VCardRampingCost>
+class RampingCost: public Variable::IVariable<RampingCost<NextT>, NextT, VCardRampingCost>
 {
 public:
     //! Type of the next static variable
@@ -134,11 +135,11 @@ public:
     {
         enum
         {
-            count
-            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count
-                    + VCardType::columnCount * ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel
+                      && VCardType::categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + VCardType::columnCount * ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -156,7 +157,9 @@ public:
 
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
+        }
 
         // Next
         NextType::initializeFromStudy(study);
@@ -206,8 +209,7 @@ public:
              i <= state.study.runtime.rangeLimits.hour[Data::rangeEnd];
              ++i)
         {
-            pValuesForTheCurrentYear[numSpace][i]
-              += state.thermalClusterRampingCostForYear[i];
+            pValuesForTheCurrentYear[numSpace][i] += state.thermalClusterRampingCostForYear[i];
         }
 
         // Next variable
@@ -275,8 +277,8 @@ public:
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
             results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
-              results, fileLevel, precision);
+            pValuesForTheCurrentYear[numSpace]
+              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 

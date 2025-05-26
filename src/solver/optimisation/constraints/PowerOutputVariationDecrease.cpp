@@ -6,13 +6,15 @@ void PowerOutputVariationDecrease::add(int pays, int index, int pdt)
     {
         int cluster = data.PaliersThermiquesDuPays[pays]
                         .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
-        double pmaxDUnGroupeDuPalierThermique
-          = data.PaliersThermiquesDuPays[pays].PmaxDUnGroupeDuPalierThermique[index];
+        double pmaxDUnGroupeDuPalierThermique = data.PaliersThermiquesDuPays[pays]
+                                                  .PmaxDUnGroupeDuPalierThermique[index];
         // constraint : P(t) - P(t-1) + P^- + u * M^-(t) >= 0
         builder.updateHourWithinWeek(pdt)
           .DispatchableProduction(cluster, 1.0)
-          .DispatchableProduction(
-            cluster, -1.0, -1, builder.data.NombreDePasDeTempsPourUneOptimisation)
+          .DispatchableProduction(cluster,
+                                  -1.0,
+                                  -1,
+                                  builder.data.NombreDePasDeTempsPourUneOptimisation)
           .ProductionDecreaseAboveMin(cluster, 1.0)
           .NumberStoppingDispatchableUnits(cluster, pmaxDUnGroupeDuPalierThermique)
           .greaterThan();

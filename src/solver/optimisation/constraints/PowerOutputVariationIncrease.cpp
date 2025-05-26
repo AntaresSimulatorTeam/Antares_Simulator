@@ -4,17 +4,21 @@ void PowerOutputVariationIncrease::add(int pays, int index, int pdt)
 {
     if (!data.Simulation)
     {
-        int cluster = data.PaliersThermiquesDuPays[pays].NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
-        double pmaxDUnGroupeDuPalierThermique
-          = data.PaliersThermiquesDuPays[pays].PmaxDUnGroupeDuPalierThermique[index];
+        int cluster = data.PaliersThermiquesDuPays[pays]
+                        .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+        double pmaxDUnGroupeDuPalierThermique = data.PaliersThermiquesDuPays[pays]
+                                                  .PmaxDUnGroupeDuPalierThermique[index];
         // constraint : P(t) - P(t-1) - u * M^+(t) - P^+ <= 0
         builder.updateHourWithinWeek(pdt)
-            .DispatchableProduction(cluster, 1.0)
-            .DispatchableProduction(cluster, -1.0, -1, builder.data.NombreDePasDeTempsPourUneOptimisation)
+          .DispatchableProduction(cluster, 1.0)
+          .DispatchableProduction(cluster,
+                                  -1.0,
+                                  -1,
+                                  builder.data.NombreDePasDeTempsPourUneOptimisation)
           .NumberStartingDispatchableUnits(cluster, -pmaxDUnGroupeDuPalierThermique)
-            .ProductionIncreaseAboveMin(cluster, -1.0)
-            .lessThan();
-   
+          .ProductionIncreaseAboveMin(cluster, -1.0)
+          .lessThan();
+
         if (builder.NumberOfVariables() > 0)
         {
             ConstraintNamer namer(builder.data.NomDesContraintes);

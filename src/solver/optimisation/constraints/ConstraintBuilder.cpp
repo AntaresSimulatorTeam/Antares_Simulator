@@ -54,7 +54,8 @@ ConstraintBuilder& ConstraintBuilder::ProductionDecreaseAboveMin(unsigned int in
                                                                  int offset,
                                                                  int delta)
 {
-    AddVariable(variableManager_.ProductionDecreaseAboveMin(index, hourInWeek_, offset, delta), coeff);
+    AddVariable(variableManager_.ProductionDecreaseAboveMin(index, hourInWeek_, offset, delta),
+                coeff);
     return *this;
 }
 
@@ -63,7 +64,8 @@ ConstraintBuilder& ConstraintBuilder::ProductionIncreaseAboveMin(unsigned int in
                                                                  int offset,
                                                                  int delta)
 {
-    AddVariable(variableManager_.ProductionIncreaseAboveMin(index, hourInWeek_, offset, delta), coeff);
+    AddVariable(variableManager_.ProductionIncreaseAboveMin(index, hourInWeek_, offset, delta),
+                coeff);
     return *this;
 }
 

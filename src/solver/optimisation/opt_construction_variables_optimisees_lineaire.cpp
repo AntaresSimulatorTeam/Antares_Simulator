@@ -20,11 +20,11 @@
  */
 #include <spx_constantes_externes.h>
 
+#include <antares/solver/optimisation/opt_fonctions.h>
 #include "antares/solver/optimisation/opt_rename_problem.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 #include "variables/VariableManagerUtils.h"
-#include <antares/solver/optimisation/opt_fonctions.h>
 
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*,
                                                                                    bool);
@@ -273,8 +273,10 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
 
     if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
     {
-        OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(problemeHebdo, false);
-        OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireRampesThermiques(problemeHebdo, false);
+        OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(problemeHebdo,
+                                                                                      false);
+        OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireRampesThermiques(problemeHebdo,
+                                                                                      false);
     }
 
     return;

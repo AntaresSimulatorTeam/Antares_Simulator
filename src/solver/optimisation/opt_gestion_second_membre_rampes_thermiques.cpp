@@ -25,14 +25,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "opt_structure_probleme_a_resoudre.h"
-
-#include "../simulation/sim_structure_donnees.h"
-#include "../simulation/sim_extern_variables_globales.h"
-
-#include "opt_fonctions.h"
-
 #include <antares/study/study.h>
+
+#include "../simulation/sim_extern_variables_globales.h"
+#include "../simulation/sim_structure_donnees.h"
+#include "opt_fonctions.h"
+#include "opt_structure_probleme_a_resoudre.h"
 
 using namespace Antares;
 using namespace Antares::Data;
@@ -49,18 +47,18 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireRampesThermiques(PROBLEME_HE
         const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
         std::vector<double>& SecondMembre = ProblemeAResoudre->SecondMembre;
 
-        int NombreDePasDeTempsPourUneOptimisation
-          = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+        int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
+                                                      ->NombreDePasDeTempsPourUneOptimisation;
 
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-              = problemeHebdo->PaliersThermiquesDuPays[pays];
+            const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo
+                                                                  ->PaliersThermiquesDuPays[pays];
 
             for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
             {
-                const int palier
-                  = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+                const int palier = PaliersThermiquesDuPays
+                                     .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
                 const CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
                   = problemeHebdo->CorrespondanceCntNativesCntOptim[0];
@@ -91,5 +89,4 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireRampesThermiques(PROBLEME_HE
             }
         }
     }
-
 }
