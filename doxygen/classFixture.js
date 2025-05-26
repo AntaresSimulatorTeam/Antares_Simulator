@@ -3,6 +3,8 @@ var classFixture =
     [ "BindingConstraint", "structFixture_1_1BindingConstraint.html", "structFixture_1_1BindingConstraint" ],
     [ "Link", "structFixture_1_1Link.html", "structFixture_1_1Link" ],
     [ "Renewable", "structFixture_1_1Renewable.html", "structFixture_1_1Renewable" ],
+    [ "STSAdditionalConstraints", "structFixture_1_1STSAdditionalConstraints.html", "structFixture_1_1STSAdditionalConstraints" ],
+    [ "STSInflows", "structFixture_1_1STSInflows.html", "structFixture_1_1STSInflows" ],
     [ "Thermal", "structFixture_1_1Thermal.html", "structFixture_1_1Thermal" ],
     [ "Hydro", "classFixture.html#aabde9240df50306f617714a85529d410", null ],
     [ "Load", "classFixture.html#a4fb4c2d381ae7379f28f6194d906182a", null ],

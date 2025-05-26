@@ -293,7 +293,8 @@ var hierarchy =
     [ "Antares::Data::ScenarioBuilder::dataInterface", "classAntares_1_1Data_1_1ScenarioBuilder_1_1dataInterface.html", [
       [ "Antares::Data::ScenarioBuilder::TSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1TSNumberData.html", [
         [ "Antares::Data::ScenarioBuilder::BindingConstraintsTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1BindingConstraintsTSNumberData.html", null ],
-        [ "Antares::Data::ScenarioBuilder::ShortTermTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ShortTermTSNumberData.html", null ],
+        [ "Antares::Data::ScenarioBuilder::ShortTermAdditionalConstraintsTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ShortTermAdditionalConstraintsTSNumberData.html", null ],
+        [ "Antares::Data::ScenarioBuilder::ShortTermInflowsTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ShortTermInflowsTSNumberData.html", null ],
         [ "Antares::Data::ScenarioBuilder::hydroTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroTSNumberData.html", null ],
         [ "Antares::Data::ScenarioBuilder::loadTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1loadTSNumberData.html", null ],
         [ "Antares::Data::ScenarioBuilder::ntcTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ntcTSNumberData.html", null ],
@@ -1707,6 +1708,12 @@ var hierarchy =
     [ "StructureIndex< renewableTSNumberData, const RenewableCluster * >", "classStructureIndex.html", [
       [ "Fixture::Renewable", "structFixture_1_1Renewable.html", null ]
     ] ],
+    [ "StructureIndex< ShortTermAdditionalConstraintsTSNumberData, const ShortTermStorage::AdditionalConstraints * >", "classStructureIndex.html", [
+      [ "Fixture::STSAdditionalConstraints", "structFixture_1_1STSAdditionalConstraints.html", null ]
+    ] ],
+    [ "StructureIndex< ShortTermInflowsTSNumberData, const ShortTermStorage::STStorageCluster * >", "classStructureIndex.html", [
+      [ "Fixture::STSInflows", "structFixture_1_1STSInflows.html", null ]
+    ] ],
     [ "StructureIndex< thermalTSNumberData, const ThermalCluster * >", "classStructureIndex.html", [
       [ "Fixture::Thermal", "structFixture_1_1Thermal.html", null ]
     ] ],
@@ -1848,7 +1855,7 @@ var hierarchy =
     [ "Antares::Window::Inspector::Unique", "structAntares_1_1Window_1_1Inspector_1_1Unique.html", null ],
     [ "Antares::Statistics::Updater", "classAntares_1_1Statistics_1_1Updater.html", null ],
     [ "VALEURS_DE_NTC_ET_RESISTANCES", "structVALEURS__DE__NTC__ET__RESISTANCES.html", null ],
-    [ "Antares::Data::ShortTermStorage::AdditionalConstraints::ValidateResult", "structAntares_1_1Data_1_1ShortTermStorage_1_1AdditionalConstraints_1_1ValidateResult.html", null ],
+    [ "Antares::Data::ShortTermStorage::ValidateResult", "structAntares_1_1Data_1_1ShortTermStorage_1_1ValidateResult.html", null ],
     [ "Antares::Toolbox::Filter::Operator::Parameter::Value", "structAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter_1_1Value.html", null ],
     [ "Antares::IO::Inputs::YmlModel::Variable", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable.html", null ],
     [ "Antares::ModelerStudy::SystemModel::Variable", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Variable.html", null ],

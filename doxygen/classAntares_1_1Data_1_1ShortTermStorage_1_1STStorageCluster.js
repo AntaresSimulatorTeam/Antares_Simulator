@@ -6,7 +6,7 @@ var classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster =
     [ "saveProperties", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html#a4a5c5f56f302860b43b5751abd351511", null ],
     [ "saveSeries", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html#a40df04bfd8f572bce7656ace15284bd1", null ],
     [ "validate", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html#a877d5499d461d574b8aabd4830f62eef", null ],
-    [ "additionalConstraints", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html#ad55fc7f2352638030475487887689c6a", null ],
+    [ "additionalConstraints", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html#a3bd7ae5ee73613842e8e5baee6380879", null ],
     [ "id", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html#a444411121e89bed72cd162bf738ca358", null ],
     [ "properties", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html#ae34a2c2c4db2bf7a425dd10a6b91c4e8", null ],
     [ "series", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html#accc0e4fdb01d2da2bef7ebe045447164", null ]

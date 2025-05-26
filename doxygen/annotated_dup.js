@@ -263,7 +263,8 @@ var annotated_dup =
           [ "Rules", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules" ],
           [ "dataInterface", "classAntares_1_1Data_1_1ScenarioBuilder_1_1dataInterface.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1dataInterface" ],
           [ "Sets", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets" ],
-          [ "ShortTermTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ShortTermTSNumberData.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ShortTermTSNumberData" ],
+          [ "ShortTermAdditionalConstraintsTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ShortTermAdditionalConstraintsTSNumberData.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ShortTermAdditionalConstraintsTSNumberData" ],
+          [ "ShortTermInflowsTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ShortTermInflowsTSNumberData.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ShortTermInflowsTSNumberData" ],
           [ "solarTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1solarTSNumberData.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1solarTSNumberData" ],
           [ "thermalTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1thermalTSNumberData.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1thermalTSNumberData" ],
           [ "TSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1TSNumberData.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1TSNumberData" ],
@@ -271,6 +272,7 @@ var annotated_dup =
         ] ],
         [ "ShortTermStorage", null, [
           [ "SingleAdditionalConstraint", "classAntares_1_1Data_1_1ShortTermStorage_1_1SingleAdditionalConstraint.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1SingleAdditionalConstraint" ],
+          [ "ValidateResult", "structAntares_1_1Data_1_1ShortTermStorage_1_1ValidateResult.html", "structAntares_1_1Data_1_1ShortTermStorage_1_1ValidateResult" ],
           [ "AdditionalConstraints", "classAntares_1_1Data_1_1ShortTermStorage_1_1AdditionalConstraints.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1AdditionalConstraints" ],
           [ "STStorageCluster", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster" ],
           [ "STStorageInput", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput" ],

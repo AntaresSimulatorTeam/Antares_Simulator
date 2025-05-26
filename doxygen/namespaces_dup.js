@@ -371,7 +371,8 @@ var namespaces_dup =
           [ "Rules", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules" ],
           [ "dataInterface", "classAntares_1_1Data_1_1ScenarioBuilder_1_1dataInterface.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1dataInterface" ],
           [ "Sets", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets" ],
-          [ "ShortTermTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ShortTermTSNumberData.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ShortTermTSNumberData" ],
+          [ "ShortTermAdditionalConstraintsTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ShortTermAdditionalConstraintsTSNumberData.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ShortTermAdditionalConstraintsTSNumberData" ],
+          [ "ShortTermInflowsTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ShortTermInflowsTSNumberData.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ShortTermInflowsTSNumberData" ],
           [ "solarTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1solarTSNumberData.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1solarTSNumberData" ],
           [ "thermalTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1thermalTSNumberData.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1thermalTSNumberData" ],
           [ "TSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1TSNumberData.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1TSNumberData" ],
@@ -380,15 +381,19 @@ var namespaces_dup =
           [ "CheckValidity< BindingConstraintGroup >", "applyToMatrix_8hxx.html#ae6a7dbf6b9e472a482b531444d8c6f16", null ],
           [ "CheckValidity< Data::AreaLink >", "applyToMatrix_8hxx.html#af30e747f971738c4736da604c8cccbcb", null ],
           [ "CheckValidity< Data::DataSeriesHydro >", "applyToMatrix_8hxx.html#a08217ea100ad38869ef81de455e225d9", null ],
+          [ "CheckValidity< ShortTermStorage::AdditionalConstraints >", "applyToMatrix_8hxx.html#a3bfa89e4582f8d2c2d506f17f8b70b93", null ],
           [ "CheckValidity< ShortTermStorage::STStorageCluster >", "applyToMatrix_8hxx.html#aade774eb2c5fcbee497c3c689fa08b6c", null ],
           [ "finalLevelApply", "hydroLevelsData_8h.html#a0cdd801ac45d582e9ee10dea4de0fb2f", null ],
           [ "fromHydroLevelToString", "scBuilderUtils_8h.html#a525bf59f524da5f8c9173f1cbaa700d9", null ],
           [ "fromStringToHydroLevel", "scBuilderUtils_8h.html#a51df4aa73747876518a36e10251a703f", null ],
           [ "fromStringToTSnumber", "scBuilderUtils_8h.html#ab6de8b3d3bbd3aa6f1d07bea5a7415e2", null ],
+          [ "getShortTermStorage", "rules_8cpp.html#a633f7294f7e6edaf28234ed508cb8c0c", null ],
+          [ "getShortTermStorageAdditionalConstraint", "rules_8cpp.html#a6e15fbd168b962e2beb025dda6b11544", null ],
           [ "initLevelApply", "hydroLevelsData_8h.html#a0a410d7a47fdae804e85708ce15a4dfd", null ]
         ] ],
         [ "ShortTermStorage", null, [
           [ "SingleAdditionalConstraint", "classAntares_1_1Data_1_1ShortTermStorage_1_1SingleAdditionalConstraint.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1SingleAdditionalConstraint" ],
+          [ "ValidateResult", "structAntares_1_1Data_1_1ShortTermStorage_1_1ValidateResult.html", "structAntares_1_1Data_1_1ShortTermStorage_1_1ValidateResult" ],
           [ "AdditionalConstraints", "classAntares_1_1Data_1_1ShortTermStorage_1_1AdditionalConstraints.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1AdditionalConstraints" ],
           [ "STStorageCluster", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster" ],
           [ "STStorageInput", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput" ],
@@ -403,6 +408,7 @@ var namespaces_dup =
           [ "loadFile", "libs_2antares_2study_2include_2antares_2study_2parts_2short-term-storage_2series_8h.html#a268d69b2741f80354b516dc298b51a1f", null ],
           [ "loadFile", "libs_2antares_2study_2include_2antares_2study_2parts_2short-term-storage_2series_8h.html#a480972f3cf5982323a75cd699eecc883", null ],
           [ "makeGroupsOfHours", "makeGroupsOfHoursFromString_8h.html#a7b2bda6a6499c17a8307745c24191347", null ],
+          [ "validate", "additionalConstraints_8h.html#a90b7bb23c7be952dd66742310df027f5", null ],
           [ "writeVectorToFile", "libs_2antares_2study_2include_2antares_2study_2parts_2short-term-storage_2series_8h.html#aeb138d0608f278cb40944db7441933fe", null ]
         ] ],
         [ "Solar", null, [
