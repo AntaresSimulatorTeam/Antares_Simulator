@@ -858,10 +858,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     // Allocating memory to store random numbers of all parallel years
     allocateMemoryForRandomNumbers(randomForParallelYears);
 
-    computeRandomNumbers(randomForParallelYears,
-                         endYear,
-                         isYearPerformed,
-                         randomHydroGenerator);
+    computeRandomNumbers(randomForParallelYears, endYear, isYearPerformed, randomHydroGenerator);
 
     std::map<uint, bool> yearsFailed;
     NumSpaceManager numspaceManager(pNbMaxPerformedYearsInParallel);
