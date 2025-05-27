@@ -29,7 +29,7 @@
 
 using namespace Antares::Optimisation::LinearProblemDataImpl;
 
-BOOST_AUTO_TEST_CASE(adding_to_a_TS_set_a_TS_with_the_wrong_size___exception_raised)
+BOOST_AUTO_TEST_CASE(adding_to_a_TS_set_a_TS_with_the_wrong_size_throw_exception)
 {
     TimeSeriesSet timeSeriesSet("my-TS-set", 5);
 
@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE(adding_to_a_TS_set_a_TS_with_the_wrong_size___exception_rai
                           checkMessage(expected_err_msg));
 }
 
-BOOST_AUTO_TEST_CASE(ask_a_value_to_empty_TS_set___exception_raised)
+BOOST_AUTO_TEST_CASE(ask_a_value_to_empty_TS_set_exception_raised)
 {
     TimeSeriesSet timeSeriesSet("my-TS-set", 5);
 
@@ -49,7 +49,7 @@ BOOST_AUTO_TEST_CASE(ask_a_value_to_empty_TS_set___exception_raised)
                           checkMessage(expected_err_msg));
 }
 
-BOOST_AUTO_TEST_CASE(ask_to_a_TS_set_for_an_out_of_range_TS_rank___exception_raised)
+BOOST_AUTO_TEST_CASE(ask_to_a_TS_set_for_an_out_of_range_TS_rank_exception_raised)
 {
     TimeSeriesSet timeSeriesSet("my-TS-set", 3);
     timeSeriesSet.add({1., 2., 3.});
@@ -60,7 +60,7 @@ BOOST_AUTO_TEST_CASE(ask_to_a_TS_set_for_an_out_of_range_TS_rank___exception_rai
                           checkMessage(expected_err_msg));
 }
 
-BOOST_AUTO_TEST_CASE(ask_a_TS_set_for_an_out_of_range_hour___exception_raised)
+BOOST_AUTO_TEST_CASE(ask_a_TS_set_for_an_out_of_range_hour_exception_raised)
 {
     TimeSeriesSet timeSeriesSet("my-TS-set", 3);
     timeSeriesSet.add({1., 2., 3.});
@@ -71,7 +71,7 @@ BOOST_AUTO_TEST_CASE(ask_a_TS_set_for_an_out_of_range_hour___exception_raised)
                           checkMessage(expected_err_msg));
 }
 
-BOOST_AUTO_TEST_CASE(ask_an_admissible_value_to_a_very_simple_TS_set__answer_is_correct)
+BOOST_AUTO_TEST_CASE(ask_an_admissible_value_to_a_very_simple_TS_set_answer_is_correct)
 {
     TimeSeriesSet timeSeriesSet("my-time-series-set", 5);
     timeSeriesSet.add({1., 2., 3., 4., 5});
@@ -80,7 +80,7 @@ BOOST_AUTO_TEST_CASE(ask_an_admissible_value_to_a_very_simple_TS_set__answer_is_
     BOOST_CHECK_EQUAL(timeSeriesSet.getData(rank, hour), 5.);
 }
 
-BOOST_AUTO_TEST_CASE(ask_an_admissible_value_to_a_more_complex_TS_set__answer_is_correct)
+BOOST_AUTO_TEST_CASE(ask_an_admissible_value_to_a_more_complex_TS_set_answer_is_correct)
 {
     TimeSeriesSet timeSeriesSet("my-time-series-set", 5);
     timeSeriesSet.add({1., 2., 3., 4., 5});
