@@ -176,7 +176,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
 
               problem.CoutDepassementVolume = 1e2;
               problem.CoutViolMaxDuVolumeMin = 1e5;
-              problem.overflowfCost = 1e5;
+              problem.overflowfCost = 1e6;
               problem.VolumeInitial = lvi;
 
               double capaciteTurbinageAnnuelle = 0;
