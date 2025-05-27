@@ -187,7 +187,7 @@ private:
         {
         case Category::hourly:
         {
-            for (uint h = 0; h < HOURS_PER_YEAR; h++)
+            for (uint h = 0; h < HOURS_PER_YEAR; ++h)
             {
                 report.values[report.data.columnIndex][h] = array[h];
             }
@@ -195,7 +195,7 @@ private:
         }
         case Category::daily:
         {
-            for (uint d = 0; d < DAYS_PER_YEAR; d++)
+            for (uint d = 0; d < DAYS_PER_YEAR; ++d)
             {
                 report.values[report.data.columnIndex][d] = array[d];
             }
@@ -204,7 +204,7 @@ private:
 
         case Category::weekly:
         {
-            for (uint w = 0; w < WEEKS_PER_YEAR; w++)
+            for (uint w = 0; w < WEEKS_PER_YEAR; ++w)
             {
                 report.values[report.data.columnIndex][w] = array[w];
             }
@@ -213,7 +213,7 @@ private:
 
         case Category::monthly:
         {
-            for (uint m = 0; m < MONTHS_PER_YEAR; m++)
+            for (uint m = 0; m < MONTHS_PER_YEAR; ++m)
             {
                 report.values[report.data.columnIndex][m] = array[m];
             }
