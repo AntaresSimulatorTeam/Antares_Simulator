@@ -39,7 +39,7 @@ static void mergeArray(bool opInferior,
                        std::vector<MinMaxData::Data>& results,
                        const double* values)
 {
-    for (unsigned i = 0; i != results.size(); ++i)
+    for (unsigned i = 0; i < results.size(); ++i)
     {
         MinMaxData::Data& data = results[i];
 
