@@ -25,7 +25,6 @@ void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES& DonneesAnnuelles)
     const std::vector<const std::vector<int>*> monthlyVariables
       = {&CorrespondanceDesVariables.NumeroDeVariableVolume,
          &CorrespondanceDesVariables.NumeroDeVariableTurbine,
-         &CorrespondanceDesVariables.NumeroDeVariableOverflow,
          &CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMax,
          &CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMin,
          &CorrespondanceDesVariables.NumeroDeVariableDEcartPositifAuTurbineCible,
@@ -44,4 +43,16 @@ void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES& DonneesAnnuelles)
 
     Var = CorrespondanceDesVariables.NumeroDeLaVariableXi;
     CoutLineaireBruite[Var] = CoutLineaire[Var] + noiseGenerator() * Constants::noiseAmplitude;
+
+    const std::vector<const std::vector<int>*> monthlyVariables
+      = {&CorrespondanceDesVariables.NumeroDeVariableVolume};
+
+    for (const auto& variable : monthlyVariables)
+    {
+        for (int Var : *variable)
+        {
+            CoutLineaireBruite[Var]
+              = CoutLineaire[Var] + noiseGenerator() * Constants::noiseAmplitude;
+        }
+    }
 }
