@@ -36,6 +36,7 @@
 
 #include "inmemory-modeler.h"
 #include "unit_test_utils.h"
+#include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 
 using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::Optimisation::LinearProblemDataImpl;
@@ -488,20 +489,24 @@ BOOST_AUTO_TEST_CASE(get_chronicle_for_given_year) {
       {build_context_parameter_with("bounds", "bounds", Visitors::ParameterType::TIMESERIE)});
 
     const vector<unsigned int> timeSteps{1, 2};
-    FillContext ctx{timeSteps.at(0), timeSteps.at(1), 3, "groupName"};
+    FillContext ctx{timeSteps.at(0), timeSteps.at(1), 3, "groupeName"};
 
     auto bounds_time_series = std::make_unique<TimeSeriesSet>("bounds", 3);
     // setting 3 hours (including h 1 and 2)
-    bounds_time_series->add({1. * timeSteps.at(0), 1. * timeSteps.at(0), 1. * timeSteps.at(1)});
-    bounds_time_series->add({2. * timeSteps.at(0), 2. * timeSteps.at(0), 2. * timeSteps.at(1)});
-    bounds_time_series->add({3. * timeSteps.at(0), 3. * timeSteps.at(0), 3. * timeSteps.at(1)});
-    bounds_time_series->add({4. * timeSteps.at(0), 4. * timeSteps.at(0), 4. * timeSteps.at(1)});
+    bounds_time_series->add({1., 1. , 1.});
+    bounds_time_series->add({10., 10. , 10.}); //<--- on voudra ça
+    bounds_time_series->add({3., 3. , 3.});
+    bounds_time_series->add({4., 4. , 4.});
+
+    auto scenario = std::make_unique<Scenario>("groupeName");
+    scenario->setChronicle(0, 10);
+    scenario->setChronicle(1, 11);
+    scenario->setChronicle(2, 12);
+    scenario->setChronicle(3, 1); // <--- on voudra ça
 
     LinearProblemData data;
     data.addDataSeries(std::move(bounds_time_series));
-    data.addScenarioGroup("groupName", {1,5});
-    data.addScenarioGroup("groupName", {2,42});
-    data.addScenarioGroup("groupName", {3,4});
+    data.addScenario("groupeName", std::move(scenario));
 
     buildLinearProblem(ctx, data);
     const auto nb_var = ctx.getNumberOfTimestep(); // = 2
@@ -519,8 +524,8 @@ BOOST_AUTO_TEST_CASE(get_chronicle_for_given_year) {
         BOOST_REQUIRE(var);
         BOOST_CHECK(var->isInteger());
         BOOST_CHECK_EQUAL(ct->getCoefficient(var), -1);
-        BOOST_CHECK_EQUAL(var->getLb(), t);
-        BOOST_CHECK_EQUAL(var->getUb(), t);
+        BOOST_CHECK_EQUAL(var->getLb(), 10);
+        BOOST_CHECK_EQUAL(var->getUb(), 10);
     }
 }
 

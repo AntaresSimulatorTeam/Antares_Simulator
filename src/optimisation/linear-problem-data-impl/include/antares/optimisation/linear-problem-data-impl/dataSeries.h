@@ -2,7 +2,6 @@
 #pragma once
 
 #include <string>
-#include <vector>
 
 namespace Antares::Optimisation::LinearProblemDataImpl
 {
@@ -19,7 +18,7 @@ public:
 
     virtual double getData(unsigned int rank, unsigned int hour) const = 0;
 
-    std::string name() const
+    [[nodiscard]] std::string name() const
     {
         return name_;
     }

@@ -90,7 +90,7 @@ BOOST_AUTO_TEST_CASE(empty_group_id_returns_default_rank)
     ScenarioGroupRepository scenarioGroupRepo;
     unsigned scenario = 10;
     unsigned dataRank = 15;
-    scenarioGroupRepo.addPairScenarioRankToGroup("some group", {scenario, dataRank});
+    scenarioGroupRepo.addScenario("some group", {scenario, dataRank});
 
     BOOST_CHECK_EQUAL(scenarioGroupRepo.getDataRank("", scenario), 0);
 }
