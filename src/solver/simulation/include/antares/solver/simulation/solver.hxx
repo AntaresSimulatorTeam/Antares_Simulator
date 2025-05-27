@@ -788,38 +788,23 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
 
     // Number of threads to perform the jobs waiting in the queue
     pQueueService->maximumThreadCount(pNbMaxPerformedYearsInParallel);
-    HydroInputsChecker hydroInputsChecker(study);
 
-    logs.info() << " Doing hydro validation";
-
-    // Loop over sets of parallel years to check hydro inputs
-    for (uint year = firstYear; year < endYear; year++)
-    {
-        if (study.parameters.yearsFilter[year])
-        {
-            hydroInputsChecker.Execute(year);
-        }
-    }
-
-    hydroInputsChecker.CheckForErrors();
-
-    logs.info() << " Starting the simulation";
-
-    // Loop over sets of parallel years to run the simulation
-    // 1 - We may want to regenerate the time-series this year.
-    // This is the case when the preprocessors are enabled from the
-    // refresh has been removed, assume year = 0
     regenerateTimeSeries(0);
 
+    HydroInputsChecker hydroInputsChecker(study);
+    logs.info() << " Doing hydro validation";
+
+    // Loop over sets of parallel years to check hydro inputs and playlist
     std::map<unsigned, bool> yearsFailed;
     std::map<unsigned, bool> isYearPerformed;
     pNbYearsReallyPerformed = 0;
-    for (uint year = firstYear; year < endYear; year++)
+    for (uint year = firstYear; year < endYear; ++year)
     {
         isYearPerformed[year] = study.parameters.yearsFilter[year];
         if (study.parameters.yearsFilter[year])
         {
-            pNbYearsReallyPerformed++;
+            hydroInputsChecker.Execute(year);
+            ++pNbYearsReallyPerformed;
         }
         else
         {
@@ -827,6 +812,10 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
             yearsFailed[year] = false;
         }
     }
+
+    hydroInputsChecker.CheckForErrors();
+
+    logs.info() << " Starting the simulation";
 
     // Related to annual costs statistics (printed in output into separate files)
     pAnnualStatistics.setNbPerformedYears(pNbYearsReallyPerformed);
@@ -842,10 +831,9 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
 
     NumSpaceManager numspaceManager(pNbMaxPerformedYearsInParallel);
 
-    bool yearPerformed = false;
     Concurrency::FutureSet results;
     std::mutex aggregationMutex;
-    for (uint year = firstYear; year < endYear; year++)
+    for (uint year = firstYear; year < endYear; ++year)
     {
         if (study.parameters.yearsFilter[year])
         {
