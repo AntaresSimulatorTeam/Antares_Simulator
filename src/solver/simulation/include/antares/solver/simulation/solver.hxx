@@ -190,7 +190,7 @@ public:
         // 9 - Write results for the current year
         if (yearByYear)
         {
-            pDurationCollector("yby_export") << [&]
+            pDurationCollector("yby_export") << [this, &numSpace]
             {
                 // Before writing, some variable may require minor modifications
                 simulation_->variables.beforeYearByYearExport(y, numSpace);
@@ -786,12 +786,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     // List of parallel years sets
     std::vector<setOfParallelYears> setsOfParallelYears;
 
-    // Gets information on each set of parallel years and returns the max number of years performed
-    // in a set The variable "maxNbYearsPerformedInAset" is the maximum numbers of years to be
-    // actually executed in a set. A set contains some years to be actually executed (at most
-    // "pNbMaxPerformedYearsInParallel" years) and some others to skip.
-    uint maxNbYearsPerformedInAset = pNbMaxPerformedYearsInParallel;
-
     // Number of threads to perform the jobs waiting in the queue
     pQueueService->maximumThreadCount(pNbMaxPerformedYearsInParallel);
     HydroInputsChecker hydroInputsChecker(study);
@@ -817,8 +811,8 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     // refresh has been removed, assume year = 0
     regenerateTimeSeries(0);
 
-    std::map<uint, bool> yearsFailed;
-    std::map<unsigned int, bool> isYearPerformed;
+    std::map<unsigned, bool> yearsFailed;
+    std::map<unsigned, bool> isYearPerformed;
     pNbYearsReallyPerformed = 0;
     for (uint year = firstYear; year < endYear; year++)
     {
@@ -829,7 +823,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
         }
         else
         {
-            logs.info() << "Ignoring year " << (year + 1) << ": not in the playlist";
+            logs.debug() << "Ignoring year " << year + 1 << ": not in the playlist";
             yearsFailed[year] = false;
         }
     }
