@@ -2,6 +2,7 @@ set(PROJ linear-problem-data-impl)
 
 set(SRC_DATA_SERIES
         include/antares/optimisation/linear-problem-data-impl/dataSeries.h
+        include/antares/optimisation/linear-problem-data-impl/IScenario.h
 
         include/antares/optimisation/linear-problem-data-impl/timeSeriesSet.h
         timeSeriesSet.cpp
