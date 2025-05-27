@@ -54,10 +54,9 @@ BOOST_AUTO_TEST_CASE(ask_a_repo_a_rank_it_cannot_find_exception_raised)
     auto scenarioPtr = std::make_unique<Scenario>("some group");
     scenarioGroupRepo.addScenario("some group", std::move(scenarioPtr));
 
-    std::string expectedErrMsg = "In scenario group 'some group', time serie for year 0 does not "
-                                 "exist.";
+    std::string expectedErrMsg = "In scenario group 'some group', chronicle for year 0 does not exist.";
     BOOST_CHECK_EXCEPTION(scenarioGroupRepo.scenario("some group").getData(0),
-                          Antares::Error::RuntimeError,
+                          Scenario::ScenarioNotExist,
                           checkMessage(expectedErrMsg));
 }
 
@@ -90,7 +89,9 @@ BOOST_AUTO_TEST_CASE(empty_group_id_returns_default_rank)
     ScenarioGroupRepository scenarioGroupRepo;
     unsigned scenario = 10;
     unsigned dataRank = 15;
-    scenarioGroupRepo.addScenario("some group", {scenario, dataRank});
+    auto scenarioPtr = std::make_unique<Scenario>("some group");
+    scenarioPtr->setChronicle(scenario, dataRank);
+    scenarioGroupRepo.addScenario("some group", std::move(scenarioPtr));
 
-    BOOST_CHECK_EQUAL(scenarioGroupRepo.getDataRank("", scenario), 0);
+    BOOST_CHECK_EQUAL(scenarioGroupRepo.scenario("").getData(scenario), 0);
 }

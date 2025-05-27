@@ -23,7 +23,7 @@ BOOST_AUTO_TEST_CASE(ask_to_a_simple_linearProblemData_data_it_contains_answer_o
     LinearProblemData linearProblemData;
 
     // Adding a scenario group to the linear problem data
-    const unsigned year = 0;
+    const unsigned year = 1;
     const unsigned rank = 0;
     const std::string groupName = "group 1";
 

@@ -398,7 +398,7 @@ struct MyDummyFixture: Registry<Node>
 {
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
     EvaluationContext evaluationContext{{}, {}, data};
-    Antares::Optimisation::LinearProblemApi::FillContext fillContext{0, 0};
+    Antares::Optimisation::LinearProblemApi::FillContext fillContext{0, 0, 0, ""};
     EvalVisitor evalVisitor{evaluationContext, fillContext};
 };
 
@@ -625,7 +625,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_param, MyDummyFixture)
 
     unsigned hour_0 = 0;
     unsigned hour_1 = 1;
-    EvalVisitor evalVisitor(context, {hour_0, hour_1 /*two hours*/});
+    EvalVisitor evalVisitor(context, {hour_0, hour_1 /*two hours*/, 0, ""});
     const auto eval = evalVisitor.dispatch(&root).valuesAsVector();
 
     BOOST_CHECK_EQUAL(eval[0], hour_0);
@@ -655,7 +655,7 @@ EvaluationResult CreateAndEvaluateTimeNode(const right& p)
 
     unsigned first = 0;
     unsigned last = 2;
-    EvalVisitor evalVisitor(context, {first, last /*three hours*/});
+    EvalVisitor evalVisitor(context, {first, last /*three hours*/, 0, ""});
     return evalVisitor.dispatch(&root);
 }
 
@@ -694,7 +694,7 @@ EvaluationResult CreateAndEvaluateTimeSumNode(Node* from, Node* to)
 
     unsigned first = 0;
     unsigned last = 2;
-    EvalVisitor evalVisitor(context, {first, last /*three hours*/});
+    EvalVisitor evalVisitor(context, {first, last /*three hours*/, 0, ""});
     return evalVisitor.dispatch(&root);
 }
 
@@ -723,7 +723,7 @@ EvaluationResult CreateAndEvaluateAllTimeSumNode()
 
     unsigned first = 0;
     unsigned last = 2;
-    EvalVisitor evalVisitor(context, {first, last /*three hours*/});
+    EvalVisitor evalVisitor(context, {first, last /*three hours*/, 0, ""});
     return evalVisitor.dispatch(&root);
 }
 
@@ -751,7 +751,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_multiplication, MyDummyFixture)
 
     unsigned hour_0 = 0;
     unsigned hour_1 = 1;
-    EvalVisitor evalVisitor(context, {hour_0, hour_1 /*two hours*/});
+    EvalVisitor evalVisitor(context, {hour_0, hour_1 /*two hours*/, 0, ""});
     const auto eval = evalVisitor.dispatch(&root).valuesAsVector();
 
     BOOST_CHECK_EQUAL(eval[0], hour_0 * literal.value());
@@ -802,7 +802,7 @@ void evaluate_time_dependent_operation()
       dummy_data);
     unsigned hour_0 = 0;
     unsigned hour_1 = 1;
-    EvalVisitor evalVisitor(context, {hour_0, hour_1 /*two hours*/});
+    EvalVisitor evalVisitor(context, {hour_0, hour_1 /*two hours*/, 0, ""});
     const auto eval = evalVisitor.dispatch(&root).valuesAsVector();
 
     BOOST_CHECK_EQUAL(eval[0], evalExpected<BinaryNode>(hour_0, literal.value()));
@@ -828,7 +828,7 @@ void evaluate_time_dependent_operation_on_TimeShiftNode(Node* timeShift)
 
     std::vector<unsigned int> hours = {0, 1};
 
-    EvalVisitor evalVisitor(context, {hours.at(0), hours.at(1) /*two hours*/});
+    EvalVisitor evalVisitor(context, {hours.at(0), hours.at(1) /*two hours*/, 0, ""});
     const auto eval = evalVisitor.dispatch(&root).valuesAsVector();
 
     std::vector<double> result_before_timeShift = {evalExpected<BinaryNode>(hours.at(0),
@@ -862,7 +862,7 @@ void evaluate_time_dependent_operation_on_TimeIndexNode(Node* timeIndex)
 
     std::vector<unsigned int> hours = {0, 1};
 
-    EvalVisitor evalVisitor(context, {hours.at(0), hours.at(1) /*two hours*/});
+    EvalVisitor evalVisitor(context, {hours.at(0), hours.at(1) /*two hours*/, 0, ""});
     const auto eval = evalVisitor.dispatch(&root).valueAsDouble();
 
     std::vector<double> result_before_timeIndex = {evalExpected<BinaryNode>(hours.at(0),
