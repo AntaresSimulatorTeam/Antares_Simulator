@@ -145,7 +145,8 @@ TimeDependentLinearExpression TimeDependentLinearExpression::shiftLinearExpressi
 {
     const Optimisation::LinearProblemApi::FillContext fillContext{
       linearExpressions_.begin()->first,
-      linearExpressions_.rbegin()->first};
+      linearExpressions_.rbegin()->first,
+    0, ""};
 
     LinearExpressionMap linearExpressions;
     for (const auto& timeStep: linearExpressions_ | std::views::keys)
@@ -160,7 +161,8 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator[](int time
 {
     const Optimisation::LinearProblemApi::FillContext fillContext{
       linearExpressions_.begin()->first,
-      linearExpressions_.rbegin()->first};
+      linearExpressions_.rbegin()->first,
+    0, ""};
     return TimeDependentLinearExpression(fillContext, linearExpressions_.at(timeStep));
 }
 
@@ -169,7 +171,7 @@ TimeDependentLinearExpression TimeDependentLinearExpression::timeSumLinearExpres
 {
     const Optimisation::LinearProblemApi::FillContext fillContext{
       linearExpressions_.begin()->first,
-      linearExpressions_.rbegin()->first};
+      linearExpressions_.rbegin()->first, 0, ""};
     TimeDependentLinearExpression ret(fillContext);
 
     for (auto shift = from; shift <= to; ++shift)
@@ -183,7 +185,7 @@ TimeDependentLinearExpression TimeDependentLinearExpression::allTimeSumLinearExp
 {
     const Optimisation::LinearProblemApi::FillContext fillContext{
       linearExpressions_.begin()->first,
-      linearExpressions_.rbegin()->first};
+      linearExpressions_.rbegin()->first, 0, ""};
     TimeDependentLinearExpression ret(fillContext);
     for (auto timeStep = fillContext.getFirstTimeStep(); timeStep <= fillContext.getLastTimeStep();
          ++timeStep)

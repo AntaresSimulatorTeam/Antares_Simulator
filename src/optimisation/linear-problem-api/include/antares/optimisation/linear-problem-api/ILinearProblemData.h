@@ -9,9 +9,11 @@ namespace Antares::Optimisation::LinearProblemApi
 class FillContext
 {
 public:
-    FillContext(unsigned first, unsigned last):
+    FillContext(unsigned first, unsigned last, unsigned year, std::string group):
         firstTimeStep(first),
-        lastTimeStep(last)
+        lastTimeStep(last),
+    year_{year},
+    group_{std::move(group)}
     {
     }
 
@@ -40,8 +42,18 @@ public:
         selectedScenario.push_back(scenario);
     }
 
+    [[nodiscard]] std::string getGroup() const {
+        return group_;
+    }
+
+    [[nodiscard]] unsigned getYear() const {
+        return year_;
+    }
+
 private:
     std::vector<unsigned> selectedScenario;
+    std::string group_{};
+    unsigned year_{0};
 
     unsigned firstTimeStep = 0;
     unsigned lastTimeStep = 0;

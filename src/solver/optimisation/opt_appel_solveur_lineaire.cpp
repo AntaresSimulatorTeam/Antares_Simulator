@@ -152,7 +152,7 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
                         * nTsInDay;
         lastTimestep = firstTimestep + nTsInDay - 1;
     }
-    return {firstTimestep, lastTimestep};
+    return {firstTimestep, lastTimestep, 0, ""};
 }
 
 // Returns a non-owning pointer

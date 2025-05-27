@@ -84,3 +84,13 @@ BOOST_AUTO_TEST_CASE(set_should_fail_if_timeserie_exists)
                           Antares::Error::RuntimeError,
                           checkMessage("Time serie number for year 10 already exists."));
 }
+
+BOOST_AUTO_TEST_CASE(empty_group_id_returns_default_rank)
+{
+    ScenarioGroupRepository scenarioGroupRepo;
+    unsigned scenario = 10;
+    unsigned dataRank = 15;
+    scenarioGroupRepo.addPairScenarioRankToGroup("some group", {scenario, dataRank});
+
+    BOOST_CHECK_EQUAL(scenarioGroupRepo.getDataRank("", scenario), 0);
+}

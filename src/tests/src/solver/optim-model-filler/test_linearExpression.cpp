@@ -188,7 +188,7 @@ BOOST_AUTO_TEST_CASE(negate_linear_expression)
 // Test default constructor
 BOOST_AUTO_TEST_CASE(DefaultConstructor)
 {
-    Antares::Optimisation::LinearProblemApi::FillContext context(0, 2);
+    Antares::Optimisation::LinearProblemApi::FillContext context(0, 2, 0, "");
     TimeDependentLinearExpression expr(context);
     BOOST_TEST(expr.getSize() == 3); // Should create expressions for 3 timesteps
 }
@@ -198,7 +198,7 @@ BOOST_AUTO_TEST_CASE(ConstructorWithLinearExpression)
 {
     auto component = "compo";
 
-    Antares::Optimisation::LinearProblemApi::FillContext context(0, 2);
+    Antares::Optimisation::LinearProblemApi::FillContext context(0, 2, 0, "");
     LinearExpression le(5.0, {{FullKey(component, "x"), 2.0}});
     TimeDependentLinearExpression expr(context, le);
 

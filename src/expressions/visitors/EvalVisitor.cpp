@@ -103,7 +103,8 @@ EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
          timeStep <= fillContext_.getLastTimeStep();
          ++timeStep)
     {
-        params.emplace_back(context_.getParameterValue(node->value(), "", 0, timeStep));
+            //TODO: pass scenario
+            params.emplace_back(context_.getParameterValue(node->value(), fillContext_.getGroup(), fillContext_.getYear(), timeStep));
     }
     return EvaluationResult{params};
 }

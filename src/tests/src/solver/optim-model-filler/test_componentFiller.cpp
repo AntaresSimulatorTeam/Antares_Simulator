@@ -76,7 +76,7 @@ BOOST_AUTO_TEST_CASE(ten_timesteps_var_with_literal_bounds_to_filler__problem_co
                                true);
     createComponent("some_model", "some_component");
     constexpr unsigned int last_time_step = 9;
-    FillContext ctx{0, last_time_step};
+    FillContext ctx{0, last_time_step, 0, ""};
     buildLinearProblem(ctx);
     const auto nb_var = ctx.getNumberOfTimestep(); // = 10
     BOOST_CHECK_EQUAL(pb->variableCount(), nb_var);
@@ -215,7 +215,7 @@ BOOST_AUTO_TEST_CASE(
     createComponent("m1", "component_1");
     createComponent("m2", "component_2");
     constexpr unsigned int last_time_step = 9;
-    FillContext ctx{0, last_time_step};
+    FillContext ctx{0, last_time_step, 0, ""};
     buildLinearProblem(ctx);
     const auto nb_var = ctx.getNumberOfTimestep(); // = 10
 
@@ -366,7 +366,7 @@ BOOST_AUTO_TEST_CASE(ct_with_ten_vars__pb_contains_ten_ct)
     constexpr unsigned int last_time_step = 9;
     std::vector<unsigned int> timeSteps(last_time_step + 1);
     std::ranges::generate(timeSteps, [i = 0]() mutable { return i++; });
-    FillContext ctx{0, last_time_step};
+    FillContext ctx{0, last_time_step, 0, ""};
     buildLinearProblem(ctx);
     const auto nb_var = ctx.getNumberOfTimestep(); // = 10
 
@@ -434,7 +434,7 @@ BOOST_AUTO_TEST_CASE(ct_with_time_series_variable_bounds)
       {build_context_parameter_with("bounds", "bounds", Visitors::ParameterType::TIMESERIE)});
 
     const vector<unsigned int> timeSteps{1, 2};
-    FillContext ctx{timeSteps.at(0), timeSteps.at(1)};
+    FillContext ctx{timeSteps.at(0), timeSteps.at(1), 0, ""};
 
     auto bounds_time_series = std::make_unique<TimeSeriesSet>("bounds", 3);
     // setting 3 hours (including h 1 and 2)
@@ -463,7 +463,68 @@ BOOST_AUTO_TEST_CASE(ct_with_time_series_variable_bounds)
     }
 }
 
-BOOST_AUTO_TEST_CASE(ct_one_var_with_coef__pb_contains_the_ct)
+BOOST_AUTO_TEST_CASE(get_chronicle_for_given_year) {
+        auto var_node = variable("var1",
+                             Antares::Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY);
+    auto three = literal(3);
+    auto ct_node = nodes.create<LessThanOrEqualNode>(nodes.create<SubtractionNode>(literal(5),
+                                                                                   var_node),
+                                                     three);
+
+    createModelWithSystemModelParameter(
+      "model",
+      {Parameter{"bounds", TimeDependent::YES, ScenarioDependent::NO}},
+      {{"var1",
+        ValueType::BOOL,
+        parameter("bounds", Visitors::TimeIndex::VARYING_IN_TIME_ONLY),
+        parameter("bounds", Visitors::TimeIndex::VARYING_IN_TIME_ONLY),
+        true,
+        false}},
+      {{"ct1", ct_node}});
+
+    createComponent(
+      "model",
+      "componentToto",
+      {build_context_parameter_with("bounds", "bounds", Visitors::ParameterType::TIMESERIE)});
+
+    const vector<unsigned int> timeSteps{1, 2};
+    FillContext ctx{timeSteps.at(0), timeSteps.at(1), 3, "groupName"};
+
+    auto bounds_time_series = std::make_unique<TimeSeriesSet>("bounds", 3);
+    // setting 3 hours (including h 1 and 2)
+    bounds_time_series->add({1. * timeSteps.at(0), 1. * timeSteps.at(0), 1. * timeSteps.at(1)});
+    bounds_time_series->add({2. * timeSteps.at(0), 2. * timeSteps.at(0), 2. * timeSteps.at(1)});
+    bounds_time_series->add({3. * timeSteps.at(0), 3. * timeSteps.at(0), 3. * timeSteps.at(1)});
+    bounds_time_series->add({4. * timeSteps.at(0), 4. * timeSteps.at(0), 4. * timeSteps.at(1)});
+
+    LinearProblemData data;
+    data.addDataSeries(std::move(bounds_time_series));
+    data.addScenarioGroup("groupName", {1,5});
+    data.addScenarioGroup("groupName", {2,42});
+    data.addScenarioGroup("groupName", {3,4});
+
+    buildLinearProblem(ctx, data);
+    const auto nb_var = ctx.getNumberOfTimestep(); // = 2
+
+    BOOST_CHECK_EQUAL(pb->variableCount(), 2);
+    BOOST_CHECK_EQUAL(pb->constraintCount(), 2);
+
+    for (const auto t: timeSteps)
+    {
+        auto ct = pb->lookupConstraint("componentToto.ct1_" + to_string(t));
+        BOOST_REQUIRE(ct);
+        BOOST_CHECK_EQUAL(ct->getLb(), -pb->infinity());
+        BOOST_CHECK_EQUAL(ct->getUb(), -5 + 3);
+        auto var = pb->lookupVariable("componentToto.var1_t" + to_string(t));
+        BOOST_REQUIRE(var);
+        BOOST_CHECK(var->isInteger());
+        BOOST_CHECK_EQUAL(ct->getCoefficient(var), -1);
+        BOOST_CHECK_EQUAL(var->getLb(), t);
+        BOOST_CHECK_EQUAL(var->getUb(), t);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(ct_one_var_with_coef_pb_contains_the_ct)
 {
     // 3 * var1 >= 5 * var1 + 5
     // simplified to : -2 * var1 >= 5
@@ -634,7 +695,7 @@ BOOST_AUTO_TEST_CASE(one_time_dependent_var_with_objective)
     createComponent("model", "componentA", {});
 
     constexpr unsigned int last_time_step = 9;
-    FillContext ctx{0, last_time_step};
+    FillContext ctx{0, last_time_step, 0, ""};
     buildLinearProblem(ctx);
     const auto nb_var = ctx.getNumberOfTimestep(); // = 10
 

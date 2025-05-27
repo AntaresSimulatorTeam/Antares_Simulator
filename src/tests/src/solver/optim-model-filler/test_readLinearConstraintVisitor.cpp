@@ -49,7 +49,7 @@ struct MyDummyFixture: Registry<Node>
                                                .withModel(&m)
                                                .withScenarioGroupId("group")
                                                .build();
-    ReadLinearConstraintVisitor visitor{evaluationContext, {0, 0}, component};
+    ReadLinearConstraintVisitor visitor{evaluationContext, {0, 0, 0, ""}, component};
 };
 
 BOOST_FIXTURE_TEST_CASE(test_name, MyDummyFixture)
@@ -75,7 +75,7 @@ BOOST_FIXTURE_TEST_CASE(test_visit_equal_node, MyDummyFixture)
                                 create<NegationNode>(create<ParameterNode>("param1")));
     Node* node = create<EqualNode>(lhs, rhs);
     EvaluationContext context({build_context_parameter_with("param1", "9.")}, {}, data);
-    ReadLinearConstraintVisitor visitor(context, {0, 0}, component);
+    ReadLinearConstraintVisitor visitor(context, {0, 0, 0, ""}, component);
     auto constraint = visitor.dispatch(node)[0];
     BOOST_CHECK_EQUAL(constraint.lb, -14.);
     BOOST_CHECK_EQUAL(constraint.ub, -14.);
@@ -94,7 +94,7 @@ BOOST_FIXTURE_TEST_CASE(test_visit_less_than_or_equal_node, MyDummyFixture)
                                 create<NegationNode>(create<ParameterNode>("param1")));
     Node* node = create<LessThanOrEqualNode>(lhs, rhs);
     EvaluationContext context({build_context_parameter_with("param1", "10.")}, {}, data);
-    ReadLinearConstraintVisitor visitor(context, {0, 0}, component);
+    ReadLinearConstraintVisitor visitor(context, {0, 0, 0, ""}, component);
     auto constraint = visitor.dispatch(node)[0];
     BOOST_CHECK_EQUAL(constraint.lb, -std::numeric_limits<double>::infinity());
     BOOST_CHECK_EQUAL(constraint.ub, -1.);
@@ -114,7 +114,7 @@ BOOST_FIXTURE_TEST_CASE(test_visit_greater_than_or_equal_node, MyDummyFixture)
                                 create<NegationNode>(create<ParameterNode>("param1")));
     Node* node = create<GreaterThanOrEqualNode>(lhs, rhs);
     EvaluationContext context({build_context_parameter_with("param1", "9.")}, {}, data);
-    ReadLinearConstraintVisitor visitor(context, {0, 0}, component);
+    ReadLinearConstraintVisitor visitor(context, {0, 0, 0, ""}, component);
     auto constraint = visitor.dispatch(node)[0];
     BOOST_CHECK_EQUAL(constraint.lb, -14);
     BOOST_CHECK_EQUAL(constraint.ub, std::numeric_limits<double>::infinity());
