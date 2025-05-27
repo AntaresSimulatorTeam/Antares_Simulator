@@ -13,9 +13,9 @@ void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES& DonneesAnnuelles)
 {
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles.ProblemeHydraulique;
     PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe
-        = ProblemeHydraulique.ProblemeLineairePartieFixe;
+      = ProblemeHydraulique.ProblemeLineairePartieFixe;
     CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables
-        = ProblemeHydraulique.CorrespondanceDesVariables;
+      = ProblemeHydraulique.CorrespondanceDesVariables;
     auto& CoutLineaireBruite = ProblemeLineairePartieFixe.CoutLineaireBruite;
     const auto& CoutLineaire = ProblemeLineairePartieFixe.CoutLineaire;
 
@@ -25,6 +25,7 @@ void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES& DonneesAnnuelles)
     const std::vector<const std::vector<int>*> monthlyVariables
       = {&CorrespondanceDesVariables.NumeroDeVariableVolume,
          &CorrespondanceDesVariables.NumeroDeVariableTurbine,
+         &CorrespondanceDesVariables.NumeroDeVariableOverflow,
          &CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMax,
          &CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMin,
          &CorrespondanceDesVariables.NumeroDeVariableDEcartPositifAuTurbineCible,
