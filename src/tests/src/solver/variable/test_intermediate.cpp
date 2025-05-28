@@ -34,20 +34,32 @@
 constexpr double TOLERANCE = 1.e-6;
 using Antares::Constants::nbHoursInAWeek;
 
+std::unique_ptr<Antares::Data::Study> studyHelper(unsigned FirstDay, unsigned LastDay)
+{
+    auto study = std::make_unique<Antares::Data::Study>();
+    study->parameters.simulationDays.first = FirstDay;
+    study->parameters.simulationDays.end = LastDay;
+    study->parameters.nbYears = 5;
+    study->maxNbYearsInParallel = 5;
+    study->initializeRuntimeInfos();
+    return study;
+}
+
 template<unsigned FirstDay, unsigned LastDay>
 struct StudyFixture
 {
     StudyFixture():
-        study(std::make_unique<Antares::Data::Study>())
+        study(studyHelper(FirstDay, LastDay)),
+        writer(durationCollector),
+        survey(*study, "out", writer)
     {
-        study->parameters.simulationDays.first = FirstDay;
-        study->parameters.simulationDays.end = LastDay;
-        study->parameters.nbYears = 5;
-        study->maxNbYearsInParallel = 5;
-        study->initializeRuntimeInfos();
     }
 
+    Benchmarking::DurationCollector durationCollector;
+
     std::unique_ptr<Antares::Data::Study> study;
+    Antares::Solver::InMemoryWriter writer;
+    Antares::Solver::Variable::SurveyResults survey;
 };
 
 using FullYearStudyFixture = StudyFixture<0, 365>;
