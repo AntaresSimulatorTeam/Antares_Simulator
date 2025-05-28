@@ -17,21 +17,26 @@
 // You should have received a copy of the Mozilla Public Licence 2.0
 // along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 
+#include "antares/solver/modeler/loadFiles/Fileloader.h"
 
 #include <utility>
 
-#include "antares/solver/modeler/loadFiles/Fileloader.h"
 #include "antares/solver/modeler/loadFiles/loadFiles.h"
 
-namespace Antares::Solver::LoadFiles {
-    FileLoader::FileLoader(std::filesystem::path studyPath): studyPath_(std::move(studyPath)) {
-    }
-
-    ModelerParameters FileLoader::loadParameters() {
-        return LoadFiles::loadParameters(studyPath_);
-    }
-
-    Antares::Modeler::Data FileLoader::loadAll() {
-        return LoadFiles::loadAll(studyPath_);
-    }
+namespace Antares::Solver::LoadFiles
+{
+FileLoader::FileLoader(std::filesystem::path studyPath):
+    studyPath_(std::move(studyPath))
+{
 }
+
+ModelerParameters FileLoader::loadParameters()
+{
+    return LoadFiles::loadParameters(studyPath_);
+}
+
+Antares::Modeler::Data FileLoader::loadAll()
+{
+    return LoadFiles::loadAll(studyPath_);
+}
+} // namespace Antares::Solver::LoadFiles

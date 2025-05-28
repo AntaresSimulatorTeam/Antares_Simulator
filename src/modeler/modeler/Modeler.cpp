@@ -21,6 +21,7 @@
 #include "antares/solver/modeler/Modeler.h"
 
 #include <fstream>
+
 #include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 #include <antares/optimisation/linear-problem-api/linearProblemBuilder.h>
@@ -28,7 +29,6 @@
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include <antares/solver/modeler/parameters/parseModelerParameters.h>
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
-
 #include "antares/solver/modeler/ILoader.h"
 #include "antares/solver/modeler/IWriter.h"
 
@@ -38,57 +38,58 @@ using namespace Antares::Optimization;
 using namespace Antares::Solver;
 using namespace Antares::Optimisation::LinearProblemApi;
 
-namespace Antares::Solver {
+namespace Antares::Solver
+{
 
-    Modeler::Modeler(ILoader &loader, IWriter &writer)
-        : loader_{loader}
-    , writer_{writer}
+Modeler::Modeler(ILoader& loader, IWriter& writer):
+    loader_{loader},
+    writer_{writer}
+{
+}
+
+class SystemLinearProblemBuilder
+{
+public:
+    explicit SystemLinearProblemBuilder(const ModelerStudy::SystemModel::System* system):
+        system_(system)
     {
-
     }
 
-    class SystemLinearProblemBuilder
+    ~SystemLinearProblemBuilder() = default;
+
+    void Provide(ILinearProblem& pb,
+                 const ModelerParameters& parameters,
+                 ILinearProblemData* dataSeries)
     {
-    public:
-        explicit SystemLinearProblemBuilder(const ModelerStudy::SystemModel::System* system):
-            system_(system)
+        std::vector<std::unique_ptr<Optimization::ComponentFiller>> fillers;
+        std::vector<LinearProblemFiller*> fillers_ptr;
+        // All LP variables coordinates (component id, variable id, scenario, time step)
+        VariableDictionary variableDictionary;
+
+        for (const auto& [_, component]: system_->Components())
         {
+            auto cf = std::make_unique<Optimization::ComponentFiller>(component,
+                                                                      variableDictionary);
+            fillers.push_back(std::move(cf));
+        }
+        for (auto& component_filler: fillers)
+        {
+            fillers_ptr.push_back(component_filler.get());
         }
 
-        ~SystemLinearProblemBuilder() = default;
+        LinearProblemBuilder linear_problem_builder(fillers_ptr);
+        // Todo: scenario
+        FillContext dummy_time_scenario_ctx = {parameters.firstTimeStep, parameters.lastTimeStep};
+        linear_problem_builder.build(pb, *dataSeries, dummy_time_scenario_ctx);
+    }
 
-        void Provide(ILinearProblem& pb,
-                     const ModelerParameters& parameters,
-                     ILinearProblemData* dataSeries)
-        {
-            std::vector<std::unique_ptr<Optimization::ComponentFiller>> fillers;
-            std::vector<LinearProblemFiller*> fillers_ptr;
-            // All LP variables coordinates (component id, variable id, scenario, time step)
-            VariableDictionary variableDictionary;
+private:
+    const ModelerStudy::SystemModel::System* system_;
+};
 
-            for (const auto& [_, component]: system_->Components())
-            {
-                auto cf = std::make_unique<Optimization::ComponentFiller>(component,
-                                                                          variableDictionary);
-                fillers.push_back(std::move(cf));
-            }
-            for (auto& component_filler: fillers)
-            {
-                fillers_ptr.push_back(component_filler.get());
-            }
-
-            LinearProblemBuilder linear_problem_builder(fillers_ptr);
-            // Todo: scenario
-            FillContext dummy_time_scenario_ctx = {parameters.firstTimeStep, parameters.lastTimeStep};
-            linear_problem_builder.build(pb, *dataSeries, dummy_time_scenario_ctx);
-        }
-
-    private:
-        const ModelerStudy::SystemModel::System* system_;
-    };
-
-    void Modeler::solve() const {
-        try
+void Modeler::solve() const
+{
+    try
     {
         const auto parameters = loader_.loadParameters();
         logs.info() << "Parameters loaded";
@@ -137,5 +138,5 @@ namespace Antares::Solver {
     {
         throw Antares::Solver::Modeler::Error("Error while loading files, exiting");
     }
-    }
 }
+} // namespace Antares::Solver

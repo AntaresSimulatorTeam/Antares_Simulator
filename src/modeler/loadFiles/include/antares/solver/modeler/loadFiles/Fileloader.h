@@ -19,18 +19,21 @@
 // along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 
 #pragma once
-#include <antares/solver/modeler/ILoader.h>
 #include <filesystem>
 
-namespace Antares::Solver::LoadFiles {
-    class FileLoader : public ILoader {
-    public:
-        explicit FileLoader(std::filesystem::path  studyPath);
+#include <antares/solver/modeler/ILoader.h>
 
-        ModelerParameters loadParameters() override;
+namespace Antares::Solver::LoadFiles
+{
+class FileLoader: public ILoader
+{
+public:
+    explicit FileLoader(std::filesystem::path studyPath);
 
-        Antares::Modeler::Data loadAll() override;
+    ModelerParameters loadParameters() override;
 
-        std::filesystem::path studyPath_;
-    };
-}
+    Antares::Modeler::Data loadAll() override;
+
+    std::filesystem::path studyPath_;
+};
+} // namespace Antares::Solver::LoadFiles

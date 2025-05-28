@@ -23,10 +23,10 @@
 
 #include <antares/logs/logs.h>
 #include <antares/solver/modeler/Modeler.h>
-
-#include "FileWriter.h"
 #include "antares/solver/modeler/loadFiles/Fileloader.h"
 #include "antares/solver/simulation/solver.h"
+
+#include "FileWriter.h"
 
 using namespace Antares;
 
@@ -62,7 +62,8 @@ int main(int argc, const char** argv)
         Antares::Solver::Modeler modeler(loader, writer);
         modeler.solve();
     }
-    catch (const Antares::Solver::Modeler::Error& e) {
+    catch (const Antares::Solver::Modeler::Error& e)
+    {
         logs.error() << "Modeler error: " << e.what();
         logs.error() << "Exiting simulation";
         return EXIT_FAILURE;

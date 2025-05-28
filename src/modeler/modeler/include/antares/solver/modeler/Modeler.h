@@ -20,25 +20,27 @@
 #pragma once
 #include <filesystem>
 
-namespace Antares::Solver {
-    class ILoader;
-    class IWriter;
+namespace Antares::Solver
+{
+class ILoader;
+class IWriter;
 
-    class Modeler {
+class Modeler
+{
+public:
+    Modeler(ILoader& loader, IWriter& writer);
+    void solve() const;
+
+    class Error: public std::runtime_error
+    {
     public:
-        Modeler(ILoader& loader, IWriter& writer);
-        void solve() const;
-
-        class Error: public std::runtime_error
+        explicit Error(const std::string& s):
+            runtime_error(s)
         {
-        public:
-            explicit Error(const std::string& s):
-                runtime_error(s)
-            {
-            }
-        };
-
-        ILoader& loader_;
-        IWriter& writer_;
+        }
     };
-}
+
+    ILoader& loader_;
+    IWriter& writer_;
+};
+} // namespace Antares::Solver

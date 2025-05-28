@@ -20,16 +20,17 @@
 
 #pragma once
 #include <antares/solver/modeler/parameters/modelerParameters.h>
-
 #include "antares/solver/modeler/data.h"
 
-namespace Antares::Solver {
-    class ILoader {
-    public:
-        virtual ~ILoader() = default;
+namespace Antares::Solver
+{
+class ILoader
+{
+public:
+    virtual ~ILoader() = default;
 
-        virtual ModelerParameters loadParameters() = 0;
+    virtual ModelerParameters loadParameters() = 0;
 
-        virtual Antares::Modeler::Data loadAll() = 0;
-    };
-}
+    virtual Antares::Modeler::Data loadAll() = 0;
+};
+} // namespace Antares::Solver

@@ -22,51 +22,59 @@
 
 #include <fstream>
 
-#include "modeler/include/antares/solver/modeler/Modeler.h"
-#include <antares/optimisation/linear-problem-mpsolver-impl/mipSolution.h>
-#include <antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h>
 #include <antares/logs/logs.h>
+#include <antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h>
+#include <antares/optimisation/linear-problem-mpsolver-impl/mipSolution.h>
 
-namespace Antares::Modeler {
-    void FileWriter::init() {
-        outputPath_ = studyPath_ / "output";
-        if (!noOutput_)
-        {
-            logs.info() << "Output folder : " << outputPath_;
-            if (!std::filesystem::is_directory(outputPath_)
-                && !std::filesystem::create_directory(outputPath_))
-            {
-                throw Antares::Solver::Modeler::Error("Failed to create output directory. Exiting simulation.");
-            }
-        }
-    }
+#include "modeler/include/antares/solver/modeler/Modeler.h"
 
-    void FileWriter::writeSolution(const Optimisation::LinearProblemMpsolverImpl::OrtoolsMipSolution& solution) {
-        if (!noOutput_)
-        {
-            logs.info() << "Writing objective & variable values...";
-            std::ofstream sol_out(outputPath_ / "solution.csv");
-            sol_out << std::setprecision(15) << "objective " << solution.getObjectiveValue()
-                    << std::endl;
-            for (const auto& [name, value]: solution.getOptimalValues())
-            {
-                sol_out << name << " " << value << std::endl;
-            }
-        }
-    }
-
-    FileWriter::FileWriter(std::filesystem::path path, bool noOutput)
-        : studyPath_(std::move(path))
-    , noOutput_(noOutput)
+namespace Antares::Modeler
+{
+void FileWriter::init()
+{
+    outputPath_ = studyPath_ / "output";
+    if (!noOutput_)
     {
-    }
-
-    void FileWriter::writeProblem(const Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem& problem) {
-        if (!noOutput_)
+        logs.info() << "Output folder : " << outputPath_;
+        if (!std::filesystem::is_directory(outputPath_)
+            && !std::filesystem::create_directory(outputPath_))
         {
-            logs.info() << "Writing problem.lp...";
-            const auto lp_path = outputPath_ / "problem.lp";
-            problem.WriteLP(lp_path.string());
+            throw Antares::Solver::Modeler::Error(
+              "Failed to create output directory. Exiting simulation.");
         }
     }
 }
+
+void FileWriter::writeSolution(
+  const Optimisation::LinearProblemMpsolverImpl::OrtoolsMipSolution& solution)
+{
+    if (!noOutput_)
+    {
+        logs.info() << "Writing objective & variable values...";
+        std::ofstream sol_out(outputPath_ / "solution.csv");
+        sol_out << std::setprecision(15) << "objective " << solution.getObjectiveValue()
+                << std::endl;
+        for (const auto& [name, value]: solution.getOptimalValues())
+        {
+            sol_out << name << " " << value << std::endl;
+        }
+    }
+}
+
+FileWriter::FileWriter(std::filesystem::path path, bool noOutput):
+    studyPath_(std::move(path)),
+    noOutput_(noOutput)
+{
+}
+
+void FileWriter::writeProblem(
+  const Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem& problem)
+{
+    if (!noOutput_)
+    {
+        logs.info() << "Writing problem.lp...";
+        const auto lp_path = outputPath_ / "problem.lp";
+        problem.WriteLP(lp_path.string());
+    }
+}
+} // namespace Antares::Modeler
