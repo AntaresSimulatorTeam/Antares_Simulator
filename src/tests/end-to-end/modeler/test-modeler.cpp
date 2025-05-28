@@ -106,6 +106,8 @@ public:
 
     std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component> components;
     Fixture fixture;
+private:
+        Antares::ModelerStudy::SystemModel::Model model;
 };
 
 class StubWriter: public Antares::Solver::IWriter
