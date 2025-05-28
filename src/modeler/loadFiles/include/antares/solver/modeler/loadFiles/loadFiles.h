@@ -29,7 +29,7 @@
 #include <antares/study/system-model/library.h>
 #include <antares/study/system-model/system.h>
 
-#include "data.h"
+#include "../../../../../../modeler/include/antares/solver/modeler/data.h"
 
 namespace Antares::Solver::LoadFiles
 {

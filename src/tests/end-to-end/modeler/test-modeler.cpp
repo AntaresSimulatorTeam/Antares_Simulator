@@ -17,4 +17,51 @@
 // You should have received a copy of the Mozilla Public Licence 2.0
 // along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 
+#define BOOST_TEST_MODULE testE2EModeler
+#include <boost/test/unit_test.hpp>
+#include <antares/solver/modeler/Modeler.h>
+#include <antares/solver/modeler/ILoader.h>
 
+#include "antares/solver/modeler/IWriter.h"
+
+class EmptyDataSeries : public Antares::Optimisation::LinearProblemApi::ILinearProblemData {
+public:
+    double getData(const std::string &dataSetId, const std::string &scenarioGroup, unsigned year,
+        unsigned hour) override { return 0.; };
+};
+
+class InMemoryLoader : public Antares::Solver::ILoader {
+public:
+    Antares::Solver::ModelerParameters loadParameters() override {
+        return {.solver = "DUMMY", .solverLogs = false, .solverParameters = "DUMMY", .noOutput = true, .firstTimeStep = 0, .lastTimeStep = 0};
+    }
+
+    Antares::Modeler::Data loadAll() override {
+        Antares::ModelerStudy::SystemModel::SystemBuilder builder;
+        auto system = builder
+            .withId("dummy-system")
+            .build();
+        return {.libraries = {}, .system = std::make_unique<Antares::ModelerStudy::SystemModel::System>(std::move(system)), .dataSeries = std::make_unique<EmptyDataSeries>()};
+    };
+};
+
+class InMemoryWriter : public Antares::Solver::IWriter {
+    public:
+    void init() override {
+        // No initialization needed for in-memory writer
+    }
+    void writeSolution([[maybe_unused]] const Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsMipSolution& solution) override {
+        // No output to write for in-memory writer
+    }
+
+    void writeProblem([[maybe_unused]] const Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem &problem) override {
+
+    };
+};
+
+BOOST_AUTO_TEST_CASE(dummy) {
+    InMemoryLoader inMemoryLoader;
+    InMemoryWriter inMemoryWriter;
+    Antares::Solver::Modeler modeler(inMemoryLoader, inMemoryWriter);
+    modeler.solve();
+}
