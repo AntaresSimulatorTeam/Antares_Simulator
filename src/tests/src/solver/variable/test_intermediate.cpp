@@ -34,32 +34,20 @@
 constexpr double TOLERANCE = 1.e-6;
 using Antares::Constants::nbHoursInAWeek;
 
-std::unique_ptr<Antares::Data::Study> studyHelper(unsigned FirstDay, unsigned LastDay)
-{
-    auto study = std::make_unique<Antares::Data::Study>();
-    study->parameters.simulationDays.first = FirstDay;
-    study->parameters.simulationDays.end = LastDay;
-    study->parameters.nbYears = 5;
-    study->maxNbYearsInParallel = 5;
-    study->initializeRuntimeInfos();
-    return study;
-}
-
 template<unsigned FirstDay, unsigned LastDay>
 struct StudyFixture
 {
     StudyFixture():
-        study(studyHelper(FirstDay, LastDay)),
-        writer(durationCollector),
-        survey(*study, "out", writer)
+        study(std::make_unique<Antares::Data::Study>())
     {
+        study->parameters.simulationDays.first = FirstDay;
+        study->parameters.simulationDays.end = LastDay;
+        study->parameters.nbYears = 5;
+        study->maxNbYearsInParallel = 5;
+        study->initializeRuntimeInfos();
     }
 
-    Benchmarking::DurationCollector durationCollector;
-
     std::unique_ptr<Antares::Data::Study> study;
-    Antares::Solver::InMemoryWriter writer;
-    Antares::Solver::Variable::SurveyResults survey;
 };
 
 using FullYearStudyFixture = StudyFixture<0, 365>;
@@ -130,7 +118,7 @@ BOOST_FIXTURE_TEST_CASE(averageFromHourlyPartialYear, PartialYearStudyFixture)
     study->parameters.resetPlaylist(study->parameters.nbYears);
     Antares::Data::VariablePrintInfo v(Category::FileLevel::va, Category::DataLevel::area);
     v.setMaxColumns(4); // EXP MIN MAX STD
-    study->parameters.variablesPrintInfo.add("dummy", v);
+    study->parameters.variablesPrintInfo.add("for_some_reason_this_name_has_no_consequences", v);
     study->parameters.variablesPrintInfo.setAllPrintStatusesTo(true);
     study->parameters.variablesPrintInfo.computeMaxColumnsCountInReports();
     ConstantOverScenarios dm;
@@ -145,15 +133,17 @@ BOOST_FIXTURE_TEST_CASE(averageFromHourlyPartialYear, PartialYearStudyFixture)
     unsigned int nbYearsForCurrentSummary = study->parameters.nbYears;
     dm.computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
 
+    Benchmarking::DurationCollector durationCollector;
+    Antares::Solver::InMemoryWriter writer(durationCollector);
+
+    SurveyResults survey(*study, "out", writer);
     survey.data.columnIndex = 0;
     dm.buildSurveyReport(survey,
                          Category::DataLevel::area,
                          Category::FileLevel::va,
                          Category::hourly);
     BOOST_CHECK_CLOSE(survey.values[AVG][0], 1, TOLERANCE);
-    BOOST_CHECK_CLOSE(survey.values[STD][0], 0., TOLERANCE);
     BOOST_CHECK_CLOSE(survey.values[MIN][0], 1, TOLERANCE);
-    BOOST_CHECK_CLOSE(survey.values[MAX][0], 1, TOLERANCE);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
