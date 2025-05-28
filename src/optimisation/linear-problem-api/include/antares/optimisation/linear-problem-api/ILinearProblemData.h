@@ -50,6 +50,8 @@ private:
 class ILinearProblemData
 {
 public:
+    virtual ~ILinearProblemData() = default;
+
     virtual double getData(const std::string& dataSetId,
                            const std::string& scenarioGroup,
                            const unsigned scenario,
