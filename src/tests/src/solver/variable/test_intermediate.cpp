@@ -26,26 +26,46 @@
 
 #include "antares/antares/constants.h"
 #include "antares/solver/variable/storage/intermediate.h"
+#include "antares/solver/variable/surveyresults.h"
+#include "antares/writer/in_memory_writer.h"
+
+#include "dummyVariable.h"
 
 constexpr double TOLERANCE = 1.e-6;
 using Antares::Constants::nbHoursInAWeek;
+
+std::unique_ptr<Antares::Data::Study> studyHelper(unsigned FirstDay, unsigned LastDay)
+{
+    auto study = std::make_unique<Antares::Data::Study>();
+    study->parameters.simulationDays.first = FirstDay;
+    study->parameters.simulationDays.end = LastDay;
+    study->parameters.nbYears = 5;
+    study->maxNbYearsInParallel = 5;
+    study->initializeRuntimeInfos();
+    return study;
+}
 
 template<unsigned FirstDay, unsigned LastDay>
 struct StudyFixture
 {
     StudyFixture():
-        study(std::make_unique<Antares::Data::Study>())
+        study(studyHelper(FirstDay, LastDay)),
+        writer(durationCollector),
+        survey(*study, "out", writer)
     {
-        study->parameters.simulationDays.first = FirstDay;
-        study->parameters.simulationDays.end = LastDay;
-        study->initializeRuntimeInfos();
     }
 
+    Benchmarking::DurationCollector durationCollector;
+
     std::unique_ptr<Antares::Data::Study> study;
+    Antares::Solver::InMemoryWriter writer;
+    Antares::Solver::Variable::SurveyResults survey;
 };
 
-BOOST_AUTO_TEST_SUITE(intermediate_suite)
 using FullYearStudyFixture = StudyFixture<0, 365>;
+using PartialYearStudyFixture = StudyFixture<0, 192>;
+
+BOOST_AUTO_TEST_SUITE(intermediate_suite)
 
 BOOST_FIXTURE_TEST_CASE(averageFromHourlyFullYear, FullYearStudyFixture)
 {
@@ -64,8 +84,6 @@ BOOST_FIXTURE_TEST_CASE(averageFromHourlyFullYear, FullYearStudyFixture)
     BOOST_CHECK_CLOSE(intermediate.day[0], (10. + 20.) / 24, TOLERANCE);
 }
 
-using PartialYearStudyFixture = StudyFixture<0, 192>;
-
 BOOST_FIXTURE_TEST_CASE(averageFromHourlyPartialYear, PartialYearStudyFixture)
 {
     Antares::Solver::Variable::IntermediateValues intermediate;
@@ -83,6 +101,59 @@ BOOST_FIXTURE_TEST_CASE(averageFromHourlyPartialYear, PartialYearStudyFixture)
     BOOST_CHECK_CLOSE(intermediate.week[0], (10. + 20.) / nbHoursInAWeek, TOLERANCE);
     BOOST_CHECK_CLOSE(intermediate.month[0], (10. + 20.) / (31 * 24), TOLERANCE);
     BOOST_CHECK_CLOSE(intermediate.day[0], (10. + 20.) / 24, TOLERANCE);
+}
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(aggregation)
+
+class ConstantOverScenarios: public Antares::Solver::Variable::DummyVariable<>
+{
+public:
+    double hourlyValue(unsigned int year, unsigned int hour)
+    {
+        return hour + 1;
+    }
+};
+
+enum
+{
+    AVG = 0,
+    STD = 1,
+    MIN = 2,
+    MAX = 3
+};
+
+BOOST_FIXTURE_TEST_CASE(averageFromHourlyPartialYear, PartialYearStudyFixture)
+
+{
+    using namespace Antares::Solver::Variable;
+    study->parameters.resetPlaylist(study->parameters.nbYears);
+    Antares::Data::VariablePrintInfo v(Category::FileLevel::va, Category::DataLevel::area);
+    v.setMaxColumns(4); // EXP MIN MAX STD
+    study->parameters.variablesPrintInfo.add("dummy", v);
+    study->parameters.variablesPrintInfo.setAllPrintStatusesTo(true);
+    study->parameters.variablesPrintInfo.computeMaxColumnsCountInReports();
+    ConstantOverScenarios dm;
+    dm.initializeFromStudy(*study);
+
+    std::map<unsigned int, unsigned int> numSpaceToYear{{0, 0}, {1, 1}, {2, 2}, {3, 3}, {4, 4}};
+
+    for (auto [numSpace, year]: numSpaceToYear)
+    {
+        dm.yearBegin(year, numSpace);
+    }
+    unsigned int nbYearsForCurrentSummary = study->parameters.nbYears;
+    dm.computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
+
+    survey.data.columnIndex = 0;
+    dm.buildSurveyReport(survey,
+                         Category::DataLevel::area,
+                         Category::FileLevel::va,
+                         Category::hourly);
+    BOOST_CHECK_CLOSE(survey.values[AVG][0], 1, TOLERANCE);
+    BOOST_CHECK_CLOSE(survey.values[STD][0], 0., TOLERANCE);
+    BOOST_CHECK_CLOSE(survey.values[MIN][0], 1, TOLERANCE);
+    BOOST_CHECK_CLOSE(survey.values[MAX][0], 1, TOLERANCE);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
