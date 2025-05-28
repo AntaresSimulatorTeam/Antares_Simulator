@@ -42,6 +42,19 @@ std::unique_ptr<Antares::Data::Study> studyHelper(unsigned FirstDay, unsigned La
     study->parameters.nbYears = 5;
     study->maxNbYearsInParallel = 5;
     study->initializeRuntimeInfos();
+
+    study->parameters.resetPlaylist(study->parameters.nbYears);
+    {
+        using namespace Antares::Solver::Variable;
+        Antares::Data::VariablePrintInfo v(Category::FileLevel::va, Category::DataLevel::area);
+        v.setMaxColumns(4); // EXP STD MIN MAX
+        study->parameters.variablesPrintInfo.add("for_some_reason_this_name_has_no_consequences",
+                                                 v);
+    }
+
+    study->parameters.variablesPrintInfo.setAllPrintStatusesTo(true);
+    study->parameters.variablesPrintInfo.computeMaxColumnsCountInReports();
+
     return study;
 }
 
@@ -53,6 +66,27 @@ struct StudyFixture
         writer(durationCollector),
         survey(*study, "out", writer)
     {
+    }
+
+    void run(Antares::Solver::Variable::DummyVariable& variable)
+    {
+        variable.initializeFromStudy(*study);
+
+        std::map<unsigned int, unsigned int> numSpaceToYear{{0, 0}, {1, 1}, {2, 2}, {3, 3}, {4, 4}};
+
+        for (auto [numSpace, year]: numSpaceToYear)
+        {
+            variable.yearBegin(year, numSpace);
+        }
+        unsigned int nbYearsForCurrentSummary = study->parameters.nbYears;
+        variable.computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
+
+        survey.data.columnIndex = 0;
+        using namespace Antares::Solver::Variable;
+        variable.buildSurveyReport(survey,
+                                   Category::DataLevel::area,
+                                   Category::FileLevel::va,
+                                   Category::hourly);
     }
 
     Benchmarking::DurationCollector durationCollector;
@@ -106,10 +140,10 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(aggregation)
 
-class ConstantOverScenarios: public Antares::Solver::Variable::DummyVariable<>
+class ConstantOverScenarios: public Antares::Solver::Variable::DummyVariable
 {
 public:
-    double hourlyValue(unsigned int year, unsigned int hour)
+    double hourlyValue(unsigned int /*year*/, unsigned int hour)
     {
         return hour + 1;
     }
@@ -117,45 +151,54 @@ public:
 
 enum
 {
-    AVG = 0,
+    EXP = 0,
     STD = 1,
     MIN = 2,
     MAX = 3
 };
 
-BOOST_FIXTURE_TEST_CASE(averageFromHourlyPartialYear, PartialYearStudyFixture)
-
+BOOST_FIXTURE_TEST_CASE(constant_over_scenarios, FullYearStudyFixture)
 {
-    using namespace Antares::Solver::Variable;
-    study->parameters.resetPlaylist(study->parameters.nbYears);
-    Antares::Data::VariablePrintInfo v(Category::FileLevel::va, Category::DataLevel::area);
-    v.setMaxColumns(4); // EXP MIN MAX STD
-    study->parameters.variablesPrintInfo.add("for_some_reason_this_name_has_no_consequences", v);
-    study->parameters.variablesPrintInfo.setAllPrintStatusesTo(true);
-    study->parameters.variablesPrintInfo.computeMaxColumnsCountInReports();
-    ConstantOverScenarios dm;
-    dm.initializeFromStudy(*study);
-
-    std::map<unsigned int, unsigned int> numSpaceToYear{{0, 0}, {1, 1}, {2, 2}, {3, 3}, {4, 4}};
-
-    for (auto [numSpace, year]: numSpaceToYear)
-    {
-        dm.yearBegin(year, numSpace);
-    }
-    unsigned int nbYearsForCurrentSummary = study->parameters.nbYears;
-    dm.computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
-
-    Benchmarking::DurationCollector durationCollector;
-    Antares::Solver::InMemoryWriter writer(durationCollector);
-
-    SurveyResults survey(*study, "out", writer);
-    survey.data.columnIndex = 0;
-    dm.buildSurveyReport(survey,
-                         Category::DataLevel::area,
-                         Category::FileLevel::va,
-                         Category::hourly);
-    BOOST_CHECK_CLOSE(survey.values[AVG][0], 1, TOLERANCE);
+    ConstantOverScenarios variable;
+    run(variable);
+    BOOST_CHECK_CLOSE(survey.values[EXP][0], 1, TOLERANCE);
+    BOOST_CHECK_CLOSE(survey.values[STD][0], 0, TOLERANCE);
     BOOST_CHECK_CLOSE(survey.values[MIN][0], 1, TOLERANCE);
+    BOOST_CHECK_CLOSE(survey.values[MAX][0], 1, TOLERANCE);
+}
+
+class LargeValues: public Antares::Solver::Variable::DummyVariable
+{
+public:
+    double hourlyValue(unsigned int year, unsigned int /*hour*/)
+    {
+        switch (year)
+        {
+        case 0:
+            return 959327997.543667;
+        case 1:
+            return 959327998.410129;
+        case 2:
+            return 959327998.437623;
+        case 3:
+            return 959328000.311142;
+        case 4:
+            return 959327999.911116;
+        default:
+            return 0;
+        }
+    }
+};
+
+BOOST_FIXTURE_TEST_CASE(large_different_values, FullYearStudyFixture)
+{
+    LargeValues variable;
+    run(variable);
+    BOOST_CHECK_CLOSE(survey.values[EXP][0], 959327998.922736, TOLERANCE);
+    // This value is WRONG, the std dev should be approx 1.02999981662262445
+    BOOST_CHECK_CLOSE(survey.values[STD][0], 0., TOLERANCE);
+    BOOST_CHECK_CLOSE(survey.values[MIN][0], 959327997.543667, TOLERANCE);
+    BOOST_CHECK_CLOSE(survey.values[MAX][0], 959328000.311142, TOLERANCE);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
