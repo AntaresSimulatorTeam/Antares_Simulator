@@ -33,8 +33,8 @@
 #include "antares/study/system-model/component.h"
 #include "antares/study/system-model/parameter.h"
 #include "antares/study/system-model/timeAndScenarioType.h"
-#include "inmemory-modeler.h"
 
+#include "inmemory-modeler.h"
 #include "unit_test_utils.h"
 
 using namespace Antares::Optimisation::LinearProblemApi;
