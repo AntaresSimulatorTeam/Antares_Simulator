@@ -138,11 +138,11 @@ public:
         // 1 - Applying random levels for current year
         auto randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
 
+        // 2 - Getting the numpspace and scratchMap associated to the current year
         unsigned numSpace = numspaceManager.getAvailableNumSpace();
         logs.info() << "Year " << y + 1 << " started";
         logs.debug() << "year " << y + 1 << " received numSpace " << numSpace;
 
-        // Getting the scratchMap associated to the current year
         Antares::Data::Area::ScratchMap scratchmap = study.areas.buildScratchMap(numSpace);
 
         // 3 - Preparing data related to Clusters in 'must-run' mode
@@ -213,11 +213,12 @@ public:
         // Computes statistics on annual (system and solution) costs, to be printed in output
         // into separate files
         simulation_->computeAnnualCostsStatistics(state);
-        aggregationMutex.unlock();
 
         logs.debug() << "year " << y + 1 << " ended and returned numSpace " << numSpace;
         numspaceManager.freeNumSpace(numSpace);
         simulation_->incrementProgression(progression);
+
+        aggregationMutex.unlock();
 
     } // End of onExecute() method
 };
@@ -830,9 +831,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     randomNumbers randomForParallelYears(pNbYearsReallyPerformed,
                                          study.parameters.power.fluctuations);
 
-    // Allocating memory to store random numbers of all parallel years
     allocateMemoryForRandomNumbers(randomForParallelYears);
-
     computeRandomNumbers(randomForParallelYears, endYear, isYearPerformed, randomHydroGenerator);
 
     NumSpaceManager numspaceManager(pNbMaxPerformedYearsInParallel);
@@ -843,11 +842,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     {
         if (study.parameters.yearsFilter[year])
         {
-            // for each year not handled earlier
-            // FOM remove ?
-            hydroInputsChecker.Execute(year);
-            hydroInputsChecker.CheckForErrors();
-
             // If the year has not to be rerun, we skip the computation of the year.
             // Note that, when we enter for the first time in the "for" loop, all years of the set
             // have to be rerun (meaning : they must be run once). if(!batch.yearsFailed[y])
