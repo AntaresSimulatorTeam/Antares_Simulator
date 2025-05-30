@@ -23,7 +23,7 @@
 #include <antares/solver/modeler/ILoader.h>
 #include <antares/solver/modeler/Modeler.h>
 
-#include "../../inmemory-modeler/include/inmemory-modeler.h"
+#include "inmemory-modeler.h"
 #include "antares/solver/modeler/IWriter.h"
 
 class EmptyDataSeries : public Antares::Optimisation::LinearProblemApi::ILinearProblemData {
