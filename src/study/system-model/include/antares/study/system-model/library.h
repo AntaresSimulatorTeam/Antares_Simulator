@@ -79,6 +79,7 @@ public:
     LibraryBuilder& withDescription(const std::string& description);
     LibraryBuilder& withPortTypes(std::vector<PortType>&& portTypes);
     LibraryBuilder& withModels(std::vector<Model>&& models);
+    LibraryBuilder& withModels2(std::unordered_map<std::string, Model>&& models);
 
     const Library& build() const;
 

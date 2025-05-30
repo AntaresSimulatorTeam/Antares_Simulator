@@ -6,4 +6,5 @@ add_boost_test(tests-modeler
         Antares::tests::in-memory-study
         Antares::logs
         Antares::modeler-lib
+        Antares::tests::inmemory-modeler
 )
