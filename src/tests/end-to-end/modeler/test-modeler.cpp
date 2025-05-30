@@ -104,6 +104,12 @@ public:
         }
     }
 
+    void setModels(Models&& map)
+    {
+        models = std::move(map);
+    }
+
+    Models models;
     std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component> components;
     Fixture fixture;
 private:
