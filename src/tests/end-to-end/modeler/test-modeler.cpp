@@ -77,7 +77,10 @@ public:
         Antares::ModelerStudy::SystemModel::LibraryBuilder library_builder;
         auto&& library = library_builder.withId("dummy-library")
                            .withDescription("")
-                           .withModelsMap(std::move(fixture.models))
+        //We should set models in the library
+        //However doing so will move the model, reseting the fixture.models
+        //Also invaliding the component reference to the model
+                           //.withModelsMap(std::move(fixture.models))
                            .build();
         fixture.createComponent("some_model", "some_component");
         setComponents(fixture.components); // Component model may not be the system model
