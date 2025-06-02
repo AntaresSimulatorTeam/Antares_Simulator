@@ -25,6 +25,7 @@
 #include "antares/solver/modeler/IWriter.h"
 
 #include "inmemory-modeler.h"
+#include "antares/expressions/nodes/GreaterThanOrEqualNode.h"
 
 class EmptyDataSeries: public Antares::Optimisation::LinearProblemApi::ILinearProblemData
 {
@@ -67,12 +68,15 @@ public:
 
     Antares::Modeler::Data loadAll() override
     {
+        auto var_node = fixture.variable("var1");
+        auto zero = fixture.literal(0);
+        auto ct_node = fixture.nodes.template create<Antares::Expressions::Nodes::GreaterThanOrEqualNode>(var_node, zero);
         fixture.createModelWithOneFloatVar("some_model",
                                            {},
                                            "var1",
                                            fixture.literal(-5),
                                            fixture.literal(10),
-                                           {});
+                                           {{"ct1", ct_node}});
 
         Antares::ModelerStudy::SystemModel::LibraryBuilder library_builder;
         auto&& library = library_builder.withId("dummy-library")
