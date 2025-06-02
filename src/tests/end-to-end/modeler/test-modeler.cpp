@@ -125,9 +125,9 @@ public:
     }
 
     void writeSolution(
-      [[maybe_unused]] const Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsMipSolution&
-        solution) override
-    {
+        const Antares::Optimisation::LinearProblemApi::IMipSolution &
+        solution) override {
+        solution_ = &solution;
         // No output to write for in-memory writer
     }
 
@@ -143,4 +143,5 @@ BOOST_AUTO_TEST_CASE(dummy)
 
     const Antares::Solver::Modeler modeler(inMemoryLoader, inMemoryWriter);
     modeler.solve();
+    BOOST_CHECK_EQUAL(inMemoryWriter.solution_->getObjectiveValue(), 100);
 }
