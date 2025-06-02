@@ -22,10 +22,10 @@
 
 #include <antares/solver/modeler/ILoader.h>
 #include <antares/solver/modeler/Modeler.h>
+#include "antares/expressions/nodes/GreaterThanOrEqualNode.h"
 #include "antares/solver/modeler/IWriter.h"
 
 #include "inmemory-modeler.h"
-#include "antares/expressions/nodes/GreaterThanOrEqualNode.h"
 
 class EmptyDataSeries: public Antares::Optimisation::LinearProblemApi::ILinearProblemData
 {
@@ -70,7 +70,8 @@ public:
     {
         auto var_node = fixture.variable("var1");
         auto zero = fixture.literal(0);
-        auto ct_node = fixture.nodes.template create<Antares::Expressions::Nodes::GreaterThanOrEqualNode>(var_node, zero);
+        auto ct_node = fixture.nodes.template create<
+          Antares::Expressions::Nodes::GreaterThanOrEqualNode>(var_node, zero);
         fixture.createModelWithOneFloatVar("some_model",
                                            {},
                                            "var1",
@@ -81,9 +82,9 @@ public:
         Antares::ModelerStudy::SystemModel::LibraryBuilder library_builder;
         auto&& library = library_builder.withId("dummy-library")
                            .withDescription("")
-        //We should set models in the library
-        //However doing so will move the model, reseting the fixture.models
-        //Also invaliding the component reference to the model
+                           // We should set models in the library
+                           // However doing so will move the model, reseting the fixture.models
+                           // Also invaliding the component reference to the model
                            //.withModelsMap(std::move(fixture.models))
                            .build();
         fixture.createComponent("some_model", "some_component");
