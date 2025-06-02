@@ -137,10 +137,10 @@ var hierarchy =
       [ "Antares::Component::Datagrid::Renderer::classicColumn", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1classicColumn.html", null ],
       [ "Antares::Component::Datagrid::Renderer::thermalColumn", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1thermalColumn.html", null ]
     ] ],
+    [ "CommonFixture", "structCommonFixture.html", null ],
     [ "commonFixture", "structcommonFixture.html", [
       [ "saveFixture", "structsaveFixture.html", null ]
     ] ],
-    [ "CommonFixture", "structCommonFixture.html", null ],
     [ "Antares::Data::CompareAreaName", "structAntares_1_1Data_1_1CompareAreaName.html", null ],
     [ "Antares::Data::CompareBindingConstraintName", "structAntares_1_1Data_1_1CompareBindingConstraintName.html", null ],
     [ "Antares::Forms::CompareBySimulationMode", "structAntares_1_1Forms_1_1CompareBySimulationMode.html", null ],
@@ -450,6 +450,12 @@ var hierarchy =
       ] ],
       [ "Antares::Solver::Variable::IVariable< DtgMarginCsr< Container::EndOfList >, Container::EndOfList, VCardDtgMarginCsr >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::DtgMarginCsr< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DtgMarginCsr.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< DummyVariable, Container::EndOfList, VCardDummyVariable >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::DummyVariable", "classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html", [
+          [ "ConstantOverScenarios", "classConstantOverScenarios.html", null ],
+          [ "LargeValues", "classLargeValues.html", null ]
+        ] ]
       ] ],
       [ "Antares::Solver::Variable::IVariable< UnsupliedEnergyCSR< Container::EndOfList >, Container::EndOfList, VCardUnsupliedEnergyCSR >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::UnsupliedEnergyCSR< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html", null ]
@@ -1565,6 +1571,7 @@ var hierarchy =
     [ "Antares::Solver::Variable::BindingConstraints< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1BindingConstraints_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Common::SpatialAggregate< VarT, NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Container::EndOfList::Statistics< CategoryDataLevel, CategoryFile >", "structAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList_1_1Statistics.html", null ],
+    [ "Antares::Solver::Variable::DummyVariable::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1DummyVariable_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::AvailableDispatchGen< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1AvailableDispatchGen_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::Balance< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Balance_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::BindingConstMarginCost< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost_1_1Statistics.html", null ],
@@ -1642,6 +1649,7 @@ var hierarchy =
     [ "Antares::Solver::Variable::Storage< VCardDispatchableGenMargin >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardDomesticUnsuppliedEnergy >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardDtgMarginCsr >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
+    [ "Antares::Solver::Variable::Storage< VCardDummyVariable >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardFlowLinear >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardFlowLinearAbs >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardFlowQuad >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
@@ -1887,6 +1895,7 @@ var hierarchy =
     [ "Antares::Solver::Variable::Economy::VCardDispatchableGenMargin", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDispatchableGenMargin.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardDomesticUnsuppliedEnergy", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDomesticUnsuppliedEnergy.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardDtgMarginCsr", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDtgMarginCsr.html", null ],
+    [ "Antares::Solver::Variable::VCardDummyVariable", "structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardFlowLinear", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardFlowLinear.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardFlowLinearAbs", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardFlowLinearAbs.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardFlowQuad", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardFlowQuad.html", null ],

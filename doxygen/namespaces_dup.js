@@ -1745,7 +1745,9 @@ var namespaces_dup =
           [ "IntermediateValues", "classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html", "classAntares_1_1Solver_1_1Variable_1_1IntermediateValues" ],
           [ "Results", "classAntares_1_1Solver_1_1Variable_1_1Results.html", "classAntares_1_1Solver_1_1Variable_1_1Results" ],
           [ "SurveyResults", "classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html", "classAntares_1_1Solver_1_1Variable_1_1SurveyResults" ],
-          [ "IVariable", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", "classAntares_1_1Solver_1_1Variable_1_1IVariable" ]
+          [ "IVariable", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", "classAntares_1_1Solver_1_1Variable_1_1IVariable" ],
+          [ "VCardDummyVariable", "structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html", "structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable" ],
+          [ "DummyVariable", "classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html", "classAntares_1_1Solver_1_1Variable_1_1DummyVariable" ]
         ] ],
         [ "Progression", "classAntares_1_1Solver_1_1Progression.html", "classAntares_1_1Solver_1_1Progression" ],
         [ "IResultWriter", "classAntares_1_1Solver_1_1IResultWriter.html", "classAntares_1_1Solver_1_1IResultWriter" ],
