@@ -795,7 +795,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     HydroInputsChecker hydroInputsChecker(study);
     logs.info() << " Doing hydro validation";
 
-    // Loop over sets of parallel years to check hydro inputs and playlist
+    // Selecting the years to be performed
     std::map<unsigned, bool> yearsFailed;
     std::map<unsigned, bool> isYearPerformed;
     pNbYearsReallyPerformed = 0;
@@ -804,7 +804,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
         isYearPerformed[year] = study.parameters.yearsFilter[year];
         if (study.parameters.yearsFilter[year])
         {
-            hydroInputsChecker.Execute(year);
             ++pNbYearsReallyPerformed;
         }
         else
@@ -820,8 +819,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
                     << " years to be performed out of " << endYear << " years.";
     }
 
-    hydroInputsChecker.CheckForErrors();
-
     logs.info() << " Starting the simulation";
 
     // Related to annual costs statistics (printed in output into separate files)
@@ -833,6 +830,16 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
 
     allocateMemoryForRandomNumbers(randomForParallelYears);
     computeRandomNumbers(randomForParallelYears, endYear, isYearPerformed, randomHydroGenerator);
+
+    // hydro checks
+    for (uint year = firstYear; year < endYear; ++year)
+    {
+        if (study.parameters.yearsFilter[year])
+        {
+            hydroInputsChecker.Execute(year);
+        }
+    }
+    hydroInputsChecker.CheckForErrors();
 
     NumSpaceManager numspaceManager(pNbMaxPerformedYearsInParallel);
 
