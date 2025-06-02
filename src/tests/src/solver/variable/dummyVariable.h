@@ -199,12 +199,11 @@ public:
         NextType::yearEnd(year, numSpace);
     }
 
-    void computeSummary(unsigned int year,
-                        unsigned int nbYearsForCurrentSummary)
+    void computeSummary(unsigned int year, unsigned int nbYearsForCurrentSummary)
     {
-            VariableAccessorType::ComputeSummary(pValuesForTheCurrentYear[year],
-                                                 AncestorType::pResults,
-                                                 year);
+        VariableAccessorType::ComputeSummary(pValuesForTheCurrentYear[year],
+                                             AncestorType::pResults,
+                                             year);
         // Next variable
         NextType::computeSummary(year, nbYearsForCurrentSummary);
     }
