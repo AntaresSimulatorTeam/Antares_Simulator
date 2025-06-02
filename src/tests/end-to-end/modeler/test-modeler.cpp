@@ -87,7 +87,7 @@ public:
         auto ct_node = fixture.nodes.template create<
           Antares::Expressions::Nodes::GreaterThanOrEqualNode>(var_node, zero);
         fixture.createModelWithOneFloatVar("some_model",
-                                           {"a"},
+                                           parameterIds,
                                            "x",
                                            lower_bound,
                                            fixture.literal(10),
@@ -103,7 +103,7 @@ public:
                            // Also invaliding the component reference to the model
                            //.withModelsMap(std::move(fixture.models))
                            .build();
-        fixture.createComponent("some_model", "some_component", {Test::Modeler::build_context_parameter_with("a", "a", Antares::Expressions::Visitors::ParameterType::TIMESERIE)});
+        fixture.createComponent("some_model", "some_component", parameters);
         setComponents(fixture.components); // Component model may not be the system model
         Antares::ModelerStudy::SystemModel::SystemBuilder builder;
         auto system = builder.withId("dummy-system").withComponents(std::move(components)).build();
@@ -131,12 +131,19 @@ public:
         lower_bound = fixture.parameter(parameterId, Antares::Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY);
     }
 
+    void addParameter(const std::string& str, Antares::Expressions::Visitors::TimeIndex time_index) {
+        parameters.emplace(Test::Modeler::build_context_parameter_with("a", "a", Antares::Expressions::Visitors::ParameterType::TIMESERIE));
+        parameterIds.push_back(str);
+    }
+
     Models models;
     std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component> components;
     Fixture fixture;
     std::unique_ptr<Antares::Optimisation::LinearProblemApi::ILinearProblemData> data = std::make_unique<EmptyDataSeries>();
     Antares::Expressions::Nodes::Node *lower_bound = fixture.literal(0.0);
     bool timeDependent{false};
+    std::map<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue> parameters{};
+    std::vector<std::string> parameterIds{};
 };
 
 struct Solution {
@@ -179,6 +186,7 @@ BOOST_AUTO_TEST_CASE(system_with_one_constant_serie_value_10) {
     InMemoryLoader<Test::Modeler::LinearProblemBuildingFixture> inMemoryLoader;
     inMemoryLoader.timeDependent = true;
     inMemoryLoader.setLowerBoundToParameter("a");
+    inMemoryLoader.addParameter("a", Antares::Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY);
 
 
     inMemoryLoader.data = std::make_unique<ConstantDataSeries>(5);
