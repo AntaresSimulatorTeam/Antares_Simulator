@@ -27,80 +27,78 @@
 
 #include "inmemory-modeler.h"
 
-class EmptyDataSeries: public Antares::Optimisation::LinearProblemApi::ILinearProblemData
-{
+class EmptyDataSeries : public Antares::Optimisation::LinearProblemApi::ILinearProblemData {
 public:
-    double getData([[maybe_unused]] const std::string& dataSetId,
-                   [[maybe_unused]] const std::string& scenarioGroup,
+    double getData([[maybe_unused]] const std::string &dataSetId,
+                   [[maybe_unused]] const std::string &scenarioGroup,
                    [[maybe_unused]] unsigned year,
-                   [[maybe_unused]] unsigned hour) override
-    {
+                   [[maybe_unused]] unsigned hour) override {
         return 0.;
     }
 };
 
 Antares::ModelerStudy::SystemModel::Component copyComponent(
-  Antares::ModelerStudy::SystemModel::Component c)
-{
+    const Antares::ModelerStudy::SystemModel::Component &c) {
     Antares::ModelerStudy::SystemModel::ComponentBuilder builder;
     return builder.withId(c.Id())
-      .withModel(c.getModel())
-      .withScenarioGroupId(c.getScenarioGroupId())
-      .withParameterValues(c.getParameterValues())
-      .build();
+            .withModel(c.getModel())
+            .withScenarioGroupId(c.getScenarioGroupId())
+            .withParameterValues(c.getParameterValues())
+            .build();
 }
 
 using Models = std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Model>;
 
 template<class Fixture>
-class InMemoryLoader: public Antares::Solver::ILoader
-{
+class InMemoryLoader : public Antares::Solver::ILoader {
 public:
-    Antares::Solver::ModelerParameters loadParameters() override
-    {
-        return {.solver = "sirius",
-                .solverLogs = false,
-                .solverParameters = "DUMMY",
-                .noOutput = true,
-                .firstTimeStep = 0,
-                .lastTimeStep = 0};
+    Antares::Solver::ModelerParameters loadParameters() override {
+        return {
+            .solver = "xpress",
+            .solverLogs = false,
+            .solverParameters = "DUMMY",
+            .noOutput = true,
+            .firstTimeStep = 0,
+            .lastTimeStep = 0
+        };
     }
 
-    Antares::Modeler::Data loadAll() override
-    {
+    Antares::Modeler::Data loadAll() override {
         auto var_node = fixture.variable("var1");
         auto zero = fixture.literal(0);
         auto ct_node = fixture.nodes.template create<
           Antares::Expressions::Nodes::GreaterThanOrEqualNode>(var_node, zero);
+        auto objective = fixture.variable("x");
         fixture.createModelWithOneFloatVar("some_model",
                                            {},
-                                           "var1",
-                                           fixture.literal(-5),
+                                           "x",
+                                           fixture.literal(0),
                                            fixture.literal(10),
-                                           {{"ct1", ct_node}});
+                                           { {"ct1", ct_node} },
+                                           objective);
 
         Antares::ModelerStudy::SystemModel::LibraryBuilder library_builder;
-        auto&& library = library_builder.withId("dummy-library")
-                           .withDescription("")
+        auto &&library = library_builder.withId("dummy-library")
+                .withDescription("")
                            // We should set models in the library
                            // However doing so will move the model, reseting the fixture.models
                            // Also invaliding the component reference to the model
                            //.withModelsMap(std::move(fixture.models))
-                           .build();
+                .build();
         fixture.createComponent("some_model", "some_component");
         setComponents(fixture.components); // Component model may not be the system model
         Antares::ModelerStudy::SystemModel::SystemBuilder builder;
         auto system = builder.withId("dummy-system").withComponents(std::move(components)).build();
-        return {.libraries = {library},
-                .system = std::make_unique<Antares::ModelerStudy::SystemModel::System>(
-                  std::move(system)),
-                .dataSeries = std::make_unique<EmptyDataSeries>()};
+        return {
+            .libraries = {library},
+            .system = std::make_unique<Antares::ModelerStudy::SystemModel::System>(
+                std::move(system)),
+            .dataSeries = std::make_unique<EmptyDataSeries>()
+        };
     }
 
-    void setComponents(const std::span<Antares::ModelerStudy::SystemModel::Component>& vector)
-    {
-        for (const auto& component: vector)
-        {
+    void setComponents(const std::span<Antares::ModelerStudy::SystemModel::Component> &vector) {
+        for (const auto &component: vector) {
             components.emplace(component.Id(), copyComponent(component));
         }
     }
@@ -109,31 +107,37 @@ public:
     Fixture fixture;
 };
 
-class InMemoryWriter: public Antares::Solver::IWriter
-{
+struct Solution {
+    double objectiveValue{0.0};
+};
+
+class InMemoryWriter : public Antares::Solver::IWriter {
 public:
-    void init() override
-    {
+    Solution solution_{};
+
+    void init() override {
         // No initialization needed for in-memory writer
     }
 
     void writeSolution(
-      [[maybe_unused]] const Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsMipSolution&
-        solution) override
-    {
+        const Antares::Optimisation::LinearProblemApi::IMipSolution &
+        solution) override {
+        solution_.objectiveValue = solution.getObjectiveValue();
         // No output to write for in-memory writer
     }
 
     void writeProblem(
-      [[maybe_unused]] const Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem&
-        problem) override {};
+        [[maybe_unused]] const Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem &
+        problem) override {
+        problem.WriteLP("dummy.lp");
+    };
 };
 
-BOOST_AUTO_TEST_CASE(dummy)
-{
+BOOST_AUTO_TEST_CASE(dummy) {
     InMemoryLoader<Test::Modeler::LinearProblemBuildingFixture> inMemoryLoader;
     InMemoryWriter inMemoryWriter;
 
     const Antares::Solver::Modeler modeler(inMemoryLoader, inMemoryWriter);
     modeler.solve();
+    BOOST_CHECK_EQUAL(inMemoryWriter.solution_.objectiveValue, 0);
 }
