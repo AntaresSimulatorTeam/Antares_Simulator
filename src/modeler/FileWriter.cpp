@@ -47,7 +47,7 @@ void FileWriter::init(bool setOutput)
 }
 
 void FileWriter::writeSolution(
-  const Optimisation::LinearProblemMpsolverImpl::OrtoolsMipSolution& solution)
+  const Optimisation::LinearProblemApi::IMipSolution& solution)
 {
     if (output)
     {

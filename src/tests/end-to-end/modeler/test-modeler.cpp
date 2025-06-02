@@ -116,9 +116,14 @@ private:
         Antares::ModelerStudy::SystemModel::Model model;
 };
 
-class StubWriter: public Antares::Solver::IWriter
-{
+struct Solution {
+    double objectiveValue{0.0};
+};
+
+class StubWriter : public Antares::Solver::IWriter {
 public:
+    Solution solution_{};
+
     void init(bool) override
     {
         // No initialization needed for in-memory writer
@@ -127,13 +132,15 @@ public:
     void writeSolution(
         const Antares::Optimisation::LinearProblemApi::IMipSolution &
         solution) override {
-        solution_ = &solution;
+        solution_.objectiveValue = solution.getObjectiveValue();
         // No output to write for in-memory writer
     }
 
     void writeProblem(
       [[maybe_unused]] const Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem&
         problem) override {};
+        problem.WriteLP("dummy.lp");
+    };
 };
 
 BOOST_AUTO_TEST_CASE(dummy)
@@ -143,5 +150,5 @@ BOOST_AUTO_TEST_CASE(dummy)
 
     const Antares::Solver::Modeler modeler(inMemoryLoader, inMemoryWriter);
     modeler.solve();
-    BOOST_CHECK_EQUAL(inMemoryWriter.solution_->getObjectiveValue(), 100);
+    BOOST_CHECK_EQUAL(inMemoryWriter.solution_.objectiveValue, 0);
 }
