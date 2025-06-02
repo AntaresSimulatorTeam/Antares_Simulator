@@ -40,6 +40,8 @@ namespace ScenarioBuilder
 class dataInterface
 {
 public:
+    virtual ~dataInterface() = default;
+
     //! \name Data manupulation
     //@{
     /*!
