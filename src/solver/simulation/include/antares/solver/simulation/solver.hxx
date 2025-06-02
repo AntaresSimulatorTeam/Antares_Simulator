@@ -805,7 +805,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
         if (study.parameters.yearsFilter[year])
         {
             hydroInputsChecker.Execute(year);
-            hydroInputsChecker.CheckForErrors();
             ++pNbYearsReallyPerformed;
         }
         else
@@ -820,6 +819,8 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
         logs.info() << "Playlist detected, " << pNbYearsReallyPerformed
                     << " years to be performed out of " << endYear << " years.";
     }
+
+    hydroInputsChecker.CheckForErrors();
 
     logs.info() << " Starting the simulation";
 
