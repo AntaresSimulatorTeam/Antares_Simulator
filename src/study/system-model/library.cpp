@@ -89,7 +89,7 @@ LibraryBuilder& LibraryBuilder::withModels(std::vector<Model>&& models)
     return *this;
 }
 
-LibraryBuilder& LibraryBuilder::withModels2(std::unordered_map<std::string, Model>&& models)
+LibraryBuilder& LibraryBuilder::withModelsMap(std::unordered_map<std::string, Model>&& models)
 {
     for (auto&& pair: models)
     {

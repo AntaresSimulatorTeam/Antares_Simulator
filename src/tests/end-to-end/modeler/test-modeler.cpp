@@ -77,7 +77,7 @@ public:
         Antares::ModelerStudy::SystemModel::LibraryBuilder library_builder;
         auto&& library = library_builder.withId("dummy-library")
                            .withDescription("")
-                           .withModels2(std::move(models))
+                           .withModelsMap(std::move(fixture.models))
                            .build();
         fixture.createComponent("some_model", "some_component");
         setComponents(fixture.components); // Component model may not be the system model
@@ -97,12 +97,6 @@ public:
         }
     }
 
-    void setModels(Models&& map)
-    {
-        models = std::move(map);
-    }
-
-    Models models;
     std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component> components;
     Fixture fixture;
 };
