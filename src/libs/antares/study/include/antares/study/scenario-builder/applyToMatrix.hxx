@@ -82,6 +82,15 @@ inline bool CheckValidity<ShortTermStorage::STStorageCluster>(
     return value < sts.series->inflows.numberOfColumns();
 }
 
+template<>
+inline bool CheckValidity<ShortTermStorage::AdditionalConstraints>(
+  uint value,
+  const ShortTermStorage::AdditionalConstraints& ct,
+  uint)
+{
+    return value < ct.timeSeries.numberOfColumns();
+}
+
 template<class StringT, class D>
 bool ApplyToMatrix(uint& errors,
                    StringT& logprefix,

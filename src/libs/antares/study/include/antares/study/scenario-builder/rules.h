@@ -33,7 +33,8 @@
 #include "LoadTSNumberData.h"
 #include "NTCTSNumberData.h"
 #include "RenewableTSNumberData.h"
-#include "ShortTermTSNumberData.h"
+#include "ShortTermAdditionalConstraintsTSNumberData.h"
+#include "ShortTermInflowsTSNumberData.h"
 #include "TSnumberData.h"
 #include "ThermalTSNumberData.h"
 #include "WindTSNumberData.h"
@@ -130,7 +131,8 @@ public:
 
     BindingConstraintsTSNumberData binding_constraints;
 
-    std::vector<ShortTermTSNumberData> shortTermStorage;
+    std::vector<ShortTermInflowsTSNumberData> shortTermStorageInflows;
+    std::vector<ShortTermAdditionalConstraintsTSNumberData> shortTermStorageAdditionalConstraints;
 
 private:
     // Member methods
@@ -150,11 +152,14 @@ private:
                               bool updaterMode);
     bool readLink(const AreaName::Vector& instrs, const String& value, bool updaterMode);
     bool readBindingConstraints(const AreaName::Vector& splitKey, const String& value);
-    static bool DoesSTStorageClusterExist(Area* area, const std::string& string);
 
-    bool readShortTermStorage(const AreaName::Vector& splitKey,
-                              const String& value,
-                              bool updaterMode);
+    bool readShortTermStorageInflows(const AreaName::Vector& splitKey,
+                                     const String& value,
+                                     bool updaterMode);
+
+    bool readShortTermStorageAdditionalConstraints(const AreaName::Vector& splitKey,
+                                                   const String& value,
+                                                   bool updaterMode);
 
     Data::Area* getArea(const AreaName& areaname, bool updaterMode);
     Data::AreaLink* getLink(const AreaName& fromAreaName,

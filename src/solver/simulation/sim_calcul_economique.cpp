@@ -65,16 +65,14 @@ static void importShortTermStorages(
             toInsert.name = st.properties.name;
             for (const auto& constraint: st.additionalConstraints)
             {
-                if (constraint.enabled)
+                if (constraint->enabled)
                 {
-                    auto newConstraint = constraint;
-
-                    for (auto& c: newConstraint.constraints)
+                    for (auto& c: constraint->constraints)
                     {
                         c.globalIndex = constraintGlobalIndex;
                         ++constraintGlobalIndex;
                     }
-                    toInsert.additionalConstraints.push_back(std::move(newConstraint));
+                    toInsert.additionalConstraints.push_back(constraint);
                 }
             }
             toInsert.series = st.series;

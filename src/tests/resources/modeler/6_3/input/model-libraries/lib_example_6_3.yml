@@ -37,8 +37,6 @@ library:
           upper-bound: gen_max_p
           variable-type: continuous
         - id: on_off_gen
-          lower-bound: 0
-          upper-bound: 1
           variable-type: boolean
         
       constraints:

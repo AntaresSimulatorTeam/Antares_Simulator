@@ -61,6 +61,13 @@ For Thermal clusters, renewable clusters and short-term storage inflows, the for
 prefix,area,year,object = TS number
 ```
 
+### Short-term storage additional constraints
+For short-term storage additional constraints, the format is
+```
+sta,area,year,storage,constraint = TS number
+```
+
+
 ### Binding constraints
 The case of binding constraints is a bit specific. Each binding constraint has a group, which is used exclusively to scenarize the RHS of all the constraints in the group.
 
@@ -69,19 +76,20 @@ bc,group,year = TS number
 ```
 
 ### List of prefixes
-| Object               | Prefix |
-|----------------------|--------|
-| Solar                | s      |
-| Wind                 | w      |
-| Load                 | l      |
-| Hydro                | h      |
-| Hydro initial levels | hl     |
-| Hydro final levels   | hfl    |
-| Links                | ntc    |
-| Thermal cluster      | t      |
-| Renewable cluster    | r      |
-| Short-term storage   | sts    |
-| Binding constraints  | bc     |
+| Object                                    | Prefix |
+|-------------------------------------------|--------|
+| Solar                                     | s      |
+| Wind                                      | w      |
+| Load                                      | l      |
+| Hydro                                     | h      |
+| Hydro initial levels                      | hl     |
+| Hydro final levels                        | hfl    |
+| Links                                     | ntc    |
+| Thermal cluster                           | t      |
+| Renewable cluster                         | r      |
+| Short-term storage inflows                | sts    |
+| Short-term storage additional constraints | sta    |
+| Binding constraints                       | bc     |
 
 ## Definition of regional districts
 

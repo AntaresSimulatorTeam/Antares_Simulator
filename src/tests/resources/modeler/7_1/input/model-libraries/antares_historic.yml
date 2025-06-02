@@ -28,11 +28,9 @@ library:
       variables:
         - id: spillage
           lower-bound: 0
-          upper-bound: 1000000
           variable-type: continuous
         - id: unsupplied_energy
           lower-bound: 0
-          upper-bound: 1000000
           variable-type: continuous
       ports:
         - id: balance_port
