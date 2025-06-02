@@ -143,7 +143,7 @@ BOOST_AUTO_TEST_SUITE(aggregation)
 class ConstantOverScenarios: public Antares::Solver::Variable::DummyVariable
 {
 public:
-    double hourlyValue(unsigned int /*year*/, unsigned int hour)
+    double hourlyValue(unsigned int /*year*/, unsigned int hour) override
     {
         return hour + 1;
     }
@@ -170,7 +170,7 @@ BOOST_FIXTURE_TEST_CASE(constant_over_scenarios, FullYearStudyFixture)
 class LargeValues: public Antares::Solver::Variable::DummyVariable
 {
 public:
-    double hourlyValue(unsigned int year, unsigned int /*hour*/)
+    double hourlyValue(unsigned int year, unsigned int /*hour*/) override
     {
         switch (year)
         {
