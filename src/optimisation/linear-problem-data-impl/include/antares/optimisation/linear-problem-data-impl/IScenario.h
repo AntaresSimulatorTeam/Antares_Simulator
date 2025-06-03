@@ -16,7 +16,7 @@ public:
     {
     }
 
-    virtual Chronicle getData(Year year) = 0;
+    virtual Chronicle getData(Year year) const = 0;
 
     [[nodiscard]] std::string group() const
     {
