@@ -28,6 +28,10 @@
 
 #include "ReadLinearConstraintVisitor.h"
 
+namespace Antares::Optimisation::LinearProblemDataImpl {
+    class ScenarioGroupRepository;
+}
+
 namespace Antares::ModelerStudy::SystemModel
 {
 class Component;

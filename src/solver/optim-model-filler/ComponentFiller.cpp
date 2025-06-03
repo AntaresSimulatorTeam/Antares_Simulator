@@ -27,6 +27,8 @@
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
 #include <antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h>
 #include <antares/study/system-model/variable.h>
+
+#include "../../optimisation/linear-problem-data-impl/include/antares/optimisation/linear-problem-data-impl/scenarioGroupRepo.h"
 #include "antares/expressions/visitors/TimeIndexVisitor.h"
 
 namespace Antares::Optimization
@@ -182,6 +184,8 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
         const PartialKey key(component_.Id(), variable.Id());
         if (variable.isTimeDependent())
         {
+            //const auto& scenario = scenarioGroupRepository_.scenario(component_.getScenarioGroupId());
+            //IScenario::Year year = ctx.getYear();
             const Dimensions dim({},
                                  IntegerInterval(ctx.getFirstTimeStep(), ctx.getLastTimeStep()));
             // std::visit to handle the 4 cases: double/double, vector/double,

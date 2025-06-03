@@ -143,6 +143,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Parameter
          timeStep <= fillContext_.getLastTimeStep();
          ++timeStep)
     {
+            //TODO: pass scenario
         linearExpressions[timeStep] = LinearExpression(
           evalContext_.getParameterValue(node->value(), "", 0, timeStep),
           {});
