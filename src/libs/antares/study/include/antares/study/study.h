@@ -42,6 +42,7 @@
 #include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
 #include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 
+#include "../../../../../../modeler/modeler/include/antares/solver/modeler/data.h"
 #include "area/store-timeseries-numbers.h"
 #include "binding_constraint/BindingConstraint.h"
 #include "fwd.h"
