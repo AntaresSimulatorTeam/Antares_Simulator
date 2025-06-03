@@ -26,6 +26,7 @@
 #include "antares/expressions/nodes/ExpressionsNodes.h"
 #include "antares/expressions/visitors/TimeIndex.h"
 #include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
+#include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
@@ -36,7 +37,6 @@
 
 #include "inmemory-modeler.h"
 #include "unit_test_utils.h"
-#include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 
 using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::Optimisation::LinearProblemDataImpl;
@@ -464,8 +464,9 @@ BOOST_AUTO_TEST_CASE(ct_with_time_series_variable_bounds)
     }
 }
 
-BOOST_AUTO_TEST_CASE(get_chronicle_for_given_year) {
-        auto var_node = variable("var1",
+BOOST_AUTO_TEST_CASE(get_chronicle_for_given_year)
+{
+    auto var_node = variable("var1",
                              Antares::Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY);
     auto three = literal(3);
     auto ct_node = nodes.create<LessThanOrEqualNode>(nodes.create<SubtractionNode>(literal(5),
@@ -493,10 +494,10 @@ BOOST_AUTO_TEST_CASE(get_chronicle_for_given_year) {
 
     auto bounds_time_series = std::make_unique<TimeSeriesSet>("bounds", 3);
     // setting 3 hours (including h 1 and 2)
-    bounds_time_series->add({1., 1. , 1.});
-    bounds_time_series->add({10., 10. , 10.}); //<--- on voudra ça
-    bounds_time_series->add({3., 3. , 3.});
-    bounds_time_series->add({4., 4. , 4.});
+    bounds_time_series->add({1., 1., 1.});
+    bounds_time_series->add({10., 10., 10.}); //<--- on voudra ça
+    bounds_time_series->add({3., 3., 3.});
+    bounds_time_series->add({4., 4., 4.});
 
     auto scenario = std::make_unique<Scenario>("groupeName");
     scenario->setChronicle(0, 10);

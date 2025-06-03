@@ -12,8 +12,8 @@ public:
     FillContext(unsigned first, unsigned last, unsigned year, std::string group):
         firstTimeStep(first),
         lastTimeStep(last),
-    year_{year},
-    group_{std::move(group)}
+        year_{year},
+        group_{std::move(group)}
     {
     }
 
@@ -42,11 +42,13 @@ public:
         selectedScenario.push_back(scenario);
     }
 
-    [[nodiscard]] std::string getGroup() const {
+    [[nodiscard]] std::string getGroup() const
+    {
         return group_;
     }
 
-    [[nodiscard]] unsigned getYear() const {
+    [[nodiscard]] unsigned getYear() const
+    {
         return year_;
     }
 

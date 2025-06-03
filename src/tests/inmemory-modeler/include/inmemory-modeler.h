@@ -66,10 +66,10 @@ struct LinearProblemBuildingFixture
     std::unique_ptr<Antares::Optimisation::LinearProblemApi::ILinearProblem> pb;
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData dummy_data_;
 
-    void createModel(const std::string &modelId,
+    void createModel(const std::string& modelId,
                      const std::vector<std::string>& parameterIds,
-                     const std::vector<VariableData> &variablesData,
-                     const std::vector<ConstraintData> &constraintsData,
+                     const std::vector<VariableData>& variablesData,
+                     const std::vector<ConstraintData>& constraintsData,
                      Antares::Expressions::Nodes::Node* objective = nullptr);
 
     void createModelWithSystemModelParameter(

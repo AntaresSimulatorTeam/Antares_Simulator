@@ -79,8 +79,10 @@ public:
 
         LinearProblemBuilder linear_problem_builder(fillers_ptr);
         // Todo: scenario
-        FillContext dummy_time_scenario_ctx = {parameters.firstTimeStep, parameters.lastTimeStep};
-        linear_problem_builder.build(pb, *dataSeries, dummy_time_scenario_ctx);
+        FillContext time_scenario_ctx = {parameters.firstTimeStep,
+                                               parameters.lastTimeStep,
+                                               0};
+        linear_problem_builder.build(pb, *dataSeries, time_scenario_ctx);
     }
 
 private:

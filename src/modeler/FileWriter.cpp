@@ -46,8 +46,7 @@ void FileWriter::init(bool setOutput)
     }
 }
 
-void FileWriter::writeSolution(
-  const Optimisation::LinearProblemApi::IMipSolution& solution)
+void FileWriter::writeSolution(const Optimisation::LinearProblemApi::IMipSolution& solution)
 {
     if (output)
     {
