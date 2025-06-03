@@ -66,7 +66,7 @@ public:
 
     [[nodiscard]] double getParameterValue(const std::string& key,
                                            const std::string& scenarioGroup,
-                                           unsigned scenario,
+                                           const unsigned year,
                                            unsigned int hour) const;
 
     [[nodiscard]] ParameterType getParameterType(const std::string& key) const;

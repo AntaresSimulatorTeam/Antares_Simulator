@@ -139,9 +139,11 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
 }
 
 ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& component,
-                                 VariableDictionary& variableDictionary):
+                                 VariableDictionary& variableDictionary,
+                                 const Optimisation::LinearProblemDataImpl::ScenarioGroupRepository& scenarioGroupRepository):
     component_(component),
-    variableDictionary_(variableDictionary)
+    variableDictionary_(variableDictionary),
+    scenarioGroupRepository_(scenarioGroupRepository)
 {
 }
 
@@ -184,9 +186,9 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
         const PartialKey key(component_.Id(), variable.Id());
         if (variable.isTimeDependent())
         {
-            //const auto& scenario = scenarioGroupRepository_.scenario(component_.getScenarioGroupId());
-            //IScenario::Year year = ctx.getYear();
-            const Dimensions dim({},
+            const auto& scenario = scenarioGroupRepository_.scenario(component_.getScenarioGroupId());
+            Optimisation::LinearProblemDataImpl::IScenario::Chronicle chronicle = scenario.getData(ctx.getYear());
+            const Dimensions dim(IntegerInterval{chronicle, chronicle},
                                  IntegerInterval(ctx.getFirstTimeStep(), ctx.getLastTimeStep()));
             // std::visit to handle the 4 cases: double/double, vector/double,
             // double/vector and vector/vector.

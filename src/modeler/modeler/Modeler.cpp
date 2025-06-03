@@ -59,7 +59,8 @@ public:
 
     void Provide(ILinearProblem& pb,
                  const ModelerParameters& parameters,
-                 ILinearProblemData* dataSeries)
+                 ILinearProblemData* dataSeries,
+                 const Optimisation::LinearProblemDataImpl::ScenarioGroupRepository& scenario_group_repository)
     {
         std::vector<std::unique_ptr<Optimization::ComponentFiller>> fillers;
         std::vector<LinearProblemFiller*> fillers_ptr;
@@ -69,7 +70,7 @@ public:
         for (const auto& [_, component]: system_->Components())
         {
             auto cf = std::make_unique<Optimization::ComponentFiller>(component,
-                                                                      variableDictionary);
+                                                                      variableDictionary, scenario_group_repository);
             fillers.push_back(std::move(cf));
         }
         for (auto& component_filler: fillers)
@@ -115,7 +116,7 @@ void Modeler::solve() const
           });
         OrtoolsLinearProblem ortools_linear_problem(isMip, parameters.solver);
 
-        system_linear_problem.Provide(ortools_linear_problem, parameters, data.dataSeries.get());
+        system_linear_problem.Provide(ortools_linear_problem, parameters, data.dataSeries.get(), data.scenario_group_repository);
 
         logs.info() << "Linear problem provided";
 

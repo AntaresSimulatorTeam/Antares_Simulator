@@ -57,7 +57,8 @@ public:
     ComponentFiller(ComponentFiller& other) = delete;
     /// Create a ComponentFiller for a Component
     explicit ComponentFiller(const ModelerStudy::SystemModel::Component& component,
-                             VariableDictionary& variableDictionary);
+                             VariableDictionary& variableDictionary,
+                             const Optimisation::LinearProblemDataImpl::ScenarioGroupRepository& scenarioGroupRepository);
 
     void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
@@ -84,6 +85,7 @@ private:
 
     const ModelerStudy::SystemModel::Component& component_;
     VariableDictionary& variableDictionary_;
+    const Optimisation::LinearProblemDataImpl::ScenarioGroupRepository& scenarioGroupRepository_;
 };
 
 class VariablesBulkAddition

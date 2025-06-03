@@ -86,6 +86,11 @@ struct SimplexResult
     double objectiveValue;
 };
 
+class EmptyScenarioGroupRepository: public Antares::Optimisation::LinearProblemDataImpl::ScenarioGroupRepository
+{
+
+};
+
 static void fillModelerComponents(std::vector<std::unique_ptr<ComponentFiller>>& componentFillers,
                                   std::vector<LinearProblemFiller*>& fillersCollection,
                                   const ModelerStudy::SystemModel::System* modelerSystem,
@@ -97,10 +102,11 @@ static void fillModelerComponents(std::vector<std::unique_ptr<ComponentFiller>>&
         return;
     }
 
+    static const EmptyScenarioGroupRepository emptyScenarioGroupRepository;
     for (const auto& [_, component]: modelerSystem->Components())
     {
         componentFillers.push_back(
-          std::make_unique<ComponentFiller>(component, variableDictionary));
+          std::make_unique<ComponentFiller>(component, variableDictionary, emptyScenarioGroupRepository));
     }
     for (auto& component_filler: componentFillers)
     {
@@ -152,7 +158,7 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
                         * nTsInDay;
         lastTimestep = firstTimestep + nTsInDay - 1;
     }
-    return {firstTimestep, lastTimestep, 0, ""};
+    return {firstTimestep, lastTimestep, 0};
 }
 
 // Returns a non-owning pointer
