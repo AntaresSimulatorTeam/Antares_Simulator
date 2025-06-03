@@ -33,6 +33,7 @@ public:
     void loadInflows(uint year);
     //! prepare data for Final reservoir level
     void changeInflowsToAccommodateFinalLevels(uint year);
+
 private:
     Data::AreaList& areas_;
     const Date::Calendar& calendar_;
