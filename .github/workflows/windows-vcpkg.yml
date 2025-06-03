@@ -376,6 +376,7 @@ jobs:
           path: _build/_CPack_Packages/win64/NSIS/NSISOutput.log
 
       - name: .zip creation
+        shell: bash
         run: |
           cd _build
           FIXED_PATH=${ORTOOLS_DIR//\\//}
