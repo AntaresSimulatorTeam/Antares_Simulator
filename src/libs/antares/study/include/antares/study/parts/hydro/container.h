@@ -50,8 +50,6 @@ struct MonthlyGenerationTargetData
     double MOG = 0.;
     //! Monthly optimal level
     double MOL = 0.;
-    //! Monthly target generations
-    double MTG = 0.;
 };
 
 //!  Hydro Management Data for a given area
