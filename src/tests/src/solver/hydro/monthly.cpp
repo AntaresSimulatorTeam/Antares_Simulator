@@ -36,4 +36,21 @@ BOOST_AUTO_TEST_CASE(TestInitialization)
     Var = data.ProblemeHydraulique.CorrespondanceDesVariables.NumeroDeLaVariableViolMaxVolumeMin;
     BOOST_CHECK_EQUAL(CoutLineaire[Var], data.CoutViolMaxDuVolumeMin);
 }
+
+
+BOOST_AUTO_TEST_CASE(Test_shut_down)
+{
+    DONNEES_ANNUELLES data = H2O_M_Instanciation(1);
+
+    // invalid reservoir number, should return without resolving the problem
+    H2O_M_OptimiserUneAnnee(data, -1);
+    H2O_M_OptimiserUneAnnee(data, 2);
+
+    BOOST_CHECK(data.ProblemeHydraulique.ProblemeSpx[0] == nullptr);
+
+    // valid reservoir number, should resolve the problem
+    H2O_M_OptimiserUneAnnee(data, 0);
+    BOOST_CHECK(data.ProblemeHydraulique.ProblemeSpx[0] != nullptr);
+}
+
 } // namespace DonneesOptimisationMensuelle
