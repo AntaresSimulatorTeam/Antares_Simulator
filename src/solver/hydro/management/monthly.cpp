@@ -167,6 +167,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
           double solutionCost = 0.;
           double solutionCostNoised = 0.;
           std::array<double, 12> MTG = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+          std::array<double, 12> OVF = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
           if (area.hydro.reservoirManagement)
           {
@@ -217,6 +218,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
 
                       data.MOG[realmonth] = problem.Turbine[month] * area.hydro.reservoirCapacity;
                       data.MOL[realmonth] = problem.Volume[month];
+                      OVF[realmonth] = problem.overflow[month];
                   }
                   data.MOL[initReservoirLvlMonth] = lvi;
                   solutionCost = problem.ProblemeHydraulique.CoutDeLaSolution;
@@ -286,6 +288,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
 
               buffer << '\t' << "\tInflows" << '\t' << "\tTarget Gen."
                      << "\tTurbined"
+                     << "\tOVF"
                      << "\tLevels" << '\t' << "\tLvl min" << '\t' << "\tLvl max\n";
               for (uint month = 0; month != 12; ++month)
               {
@@ -302,6 +305,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
                   buffer << data.inflows[realmonth] << '\t';
                   buffer << MTG[realmonth] << '\t';
                   buffer << data.MOG[realmonth] / area.hydro.reservoirCapacity << '\t';
+                  buffer << OVF[realmonth] << '\t';
                   buffer << data.MOL[realmonth] << '\t';
                   buffer << minLvl[firstDay] << '\t';
                   buffer << maxLvl[firstDay] << '\t';
