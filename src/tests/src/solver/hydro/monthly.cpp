@@ -15,17 +15,14 @@ BOOST_AUTO_TEST_CASE(TestInitialization)
 
     H2O_M_InitialiserBornesEtCoutsDesVariables(data);
 
-    // Check if the initial volume is set correctly
     BOOST_CHECK_EQUAL(data.Volume[0], data.VolumeInitial);
 
-    // Check if the Xmin and Xmax for the initial volume are set correctly
     auto& Xmin = data.ProblemeHydraulique.ProblemeLineairePartieVariable.Xmin;
     auto& Xmax = data.ProblemeHydraulique.ProblemeLineairePartieVariable.Xmax;
     int Var = data.ProblemeHydraulique.CorrespondanceDesVariables.NumeroDeVariableVolume[0];
     BOOST_CHECK_EQUAL(Xmin[Var], data.VolumeInitial);
     BOOST_CHECK_EQUAL(Xmax[Var], data.VolumeInitial);
 
-    // Check if the cost for exceeding the maximum volume is set correctly
     auto& CoutLineaire = data.ProblemeHydraulique.ProblemeLineairePartieFixe.CoutLineaire;
     for (int Pdt = 0; Pdt < data.NombreDePasDeTemps; Pdt++)
     {
@@ -34,12 +31,11 @@ BOOST_AUTO_TEST_CASE(TestInitialization)
         BOOST_CHECK_EQUAL(CoutLineaire[Var], data.CoutDepassementVolume);
     }
 
-    // Check if the cost for violating the minimum volume is set correctly
     Var = data.ProblemeHydraulique.CorrespondanceDesVariables.NumeroDeLaVariableViolMaxVolumeMin;
     BOOST_CHECK_EQUAL(CoutLineaire[Var], data.CoutViolMaxDuVolumeMin);
 }
 
-BOOST_AUTO_TEST_CASE(Test_shut_down)
+BOOST_AUTO_TEST_CASE(Test_optimiser_une_annee)
 {
     DONNEES_ANNUELLES data = H2O_M_Instanciation(1);
 
