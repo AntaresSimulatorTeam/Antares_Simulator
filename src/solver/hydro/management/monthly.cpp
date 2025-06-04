@@ -86,7 +86,10 @@ static void CheckHydroAllocationProblem(Data::Area& area,
     }
 }
 
-double HydroManagement::prepareMonthlyTargetGenerations(Data::Area& area, TmpDataByArea& data)
+//! Monthly target generations
+// note: inflows may have two different types, if in swap mode or not
+// \return The total inflow for the whole year
+static double prepareMonthlyTargetGenerations(Data::Area& area, TmpDataByArea& data)
 {
     double total = 0;
 
