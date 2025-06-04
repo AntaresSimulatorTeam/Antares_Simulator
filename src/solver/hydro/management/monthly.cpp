@@ -86,22 +86,23 @@ static void CheckHydroAllocationProblem(Data::Area& area,
     }
 }
 
-//! Monthly target generations
-// note: inflows may have two different types, if in swap mode or not
-// \return The total inflow for the whole year
-static double prepareMonthlyTargetGenerations(Data::Area& area, TmpDataByArea& data)
+double computeYearInflows(TmpDataByArea& data)
 {
-    double total = 0;
-
+    double yearInflows = 0;
     for (uint realmonth = 0; realmonth != 12; ++realmonth)
-        total += data.inflows[realmonth];
+        yearInflows += data.inflows[realmonth];
+    return yearInflows;
+}
+
+static void computeMonthlyTargetGenerations(Data::Area& area, TmpDataByArea& data)
+{
+    double yearInflows = computeYearInflows(data);
 
     if (not area.hydro.followLoadModulations)
     {
         for (uint realmonth = 0; realmonth != 12; ++realmonth)
             data.MTG[realmonth] = data.inflows[realmonth];
-
-        return total;
+        return;
     }
 
     double monthlyMaxDemand = -std::numeric_limits<double>::infinity();
@@ -123,7 +124,7 @@ static double prepareMonthlyTargetGenerations(Data::Area& area, TmpDataByArea& d
         }
 
         if (!Math::Zero(coeff))
-            coeff = total / coeff;
+            coeff = yearInflows / coeff;
 
         for (uint realmonth = 0; realmonth != 12; ++realmonth)
         {
@@ -135,13 +136,11 @@ static double prepareMonthlyTargetGenerations(Data::Area& area, TmpDataByArea& d
     }
     else
     {
-        double coeff = total / 12.;
+        double coeff = yearInflows / 12.;
 
         for (uint realmonth = 0; realmonth != 12; ++realmonth)
             data.MTG[realmonth] = coeff;
     }
-
-    return total;
 }
 
 void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_level, uint y)
@@ -170,8 +169,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
           {
               auto problem = H2O_M_Instanciation(1);
 
-              double totalInflowsYear = prepareMonthlyTargetGenerations(area, data);
-              assert(totalInflowsYear >= 0.);
+              computeMonthlyTargetGenerations(area, data);
 
               auto const& maxP = area.hydro.maxPower[Data::PartHydro::genMaxP];
               auto const& maxE = area.hydro.maxPower[Data::PartHydro::genMaxE];
