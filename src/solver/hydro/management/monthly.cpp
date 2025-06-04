@@ -96,7 +96,7 @@ double computeYearInflows(TmpDataByArea& data)
 
 static std::array<double, 12> computeMonthlyTargetGenerations(Data::Area& area, TmpDataByArea& data)
 {
-    std::array<double, 12> MTG = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    std::array<double, 12> MTG{0};
 
     double yearInflows = computeYearInflows(data);
     if (not area.hydro.followLoadModulations)
@@ -166,8 +166,8 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
 
           double solutionCost = 0.;
           double solutionCostNoised = 0.;
-          std::array<double, 12> MTG = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-          std::array<double, 12> OVF = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+          std::array<double, 12> MTG{0};
+          std::array<double, 12> OVF{0};
 
           if (area.hydro.reservoirManagement)
           {
