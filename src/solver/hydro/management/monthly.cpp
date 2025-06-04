@@ -183,8 +183,6 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
               problem.overflowfCost = 1e6;
               problem.VolumeInitial = lvi;
 
-              double capaciteTurbinageAnnuelle = 0;
-
               for (unsigned month = 0; month != 12; ++month)
               {
                   uint realmonth = (initReservoirLvlMonth + month) % 12;
@@ -198,19 +196,12 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
                   {
                       problem.TurbineMax[month] += maxP[day] * maxE[day] / reservoirCapacity;
                   }
-                  capaciteTurbinageAnnuelle += problem.TurbineMax[month];
                   problem.TurbineMin[month] = data.mingens[realmonth];
                   problem.TurbineCible[month] = MTG[realmonth];
                   problem.Apport[month] = data.inflows[realmonth];
                   problem.VolumeMin[month] = minLvl[firstDay];
                   problem.VolumeMax[month] = maxLvl[firstDay];
               }
-
-              // if (totalInflowsYear > capaciteTurbinageAnnuelle)
-              // {
-              //     logs.debug() << "Apports annuels > capacité turbinage annuelle";
-              //     problem.TurbineMax.assign(12, totalInflowsYear);
-              // }
 
               H2O_M_OptimiserUneAnnee(problem, 0);
               switch (problem.ResultatsValides)
