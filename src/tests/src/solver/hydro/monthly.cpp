@@ -1,0 +1,39 @@
+#include <memory>
+#define BOOST_TEST_MODULE hydro monthly
+#include <boost/test/unit_test.hpp>
+
+#include <antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h>
+#include <antares/solver/hydro/monthly/h2o_m_fonctions.h>
+#include <antares/solver/hydro/probleme_spx_wrapper.h>
+
+namespace DonneesOptimisationMensuelle
+{
+
+BOOST_AUTO_TEST_CASE(TestInitialization)
+{
+    DONNEES_ANNUELLES data = H2O_M_Instanciation(1);
+
+    H2O_M_InitialiserBornesEtCoutsDesVariables(data);
+
+    // Check if the initial volume is set correctly
+    BOOST_CHECK_EQUAL(data.Volume[0], data.VolumeInitial);
+
+    // Check if the Xmin and Xmax for the initial volume are set correctly
+    auto& Xmin = data.ProblemeHydraulique.ProblemeLineairePartieVariable.Xmin;
+    auto& Xmax = data.ProblemeHydraulique.ProblemeLineairePartieVariable.Xmax;
+    int Var = data.ProblemeHydraulique.CorrespondanceDesVariables.NumeroDeVariableVolume[0];
+    BOOST_CHECK_EQUAL(Xmin[Var], data.VolumeInitial);
+    BOOST_CHECK_EQUAL(Xmax[Var], data.VolumeInitial);
+
+    // Check if the cost for exceeding the maximum volume is set correctly
+    auto& CoutLineaire = data.ProblemeHydraulique.ProblemeLineairePartieFixe.CoutLineaire;
+    for (int Pdt = 0; Pdt < data.NombreDePasDeTemps; Pdt++) {
+        Var = data.ProblemeHydraulique.CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMax[Pdt];
+        BOOST_CHECK_EQUAL(CoutLineaire[Var], data.CoutDepassementVolume);
+    }
+
+    // Check if the cost for violating the minimum volume is set correctly
+    Var = data.ProblemeHydraulique.CorrespondanceDesVariables.NumeroDeLaVariableViolMaxVolumeMin;
+    BOOST_CHECK_EQUAL(CoutLineaire[Var], data.CoutViolMaxDuVolumeMin);
+}
+} // namespace DonneesOptimisationMensuelle
