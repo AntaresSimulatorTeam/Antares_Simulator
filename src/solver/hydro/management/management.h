@@ -63,13 +63,10 @@ struct TmpDataByArea
     double MOG[12];
     //! Monthly optimal level
     double MOL[12];
-    //! Monthly target generations
-    double MTG[12];
     //! inflows
     double inflows[12];
     //! monthly minimal generation
     std::array<double, 12> mingens;
-
     //! Net demand, for each day of the year, for each area
     double DLN[dayYearCount];
     //! Daily local effective load
@@ -143,7 +140,7 @@ private:
     void prepareEffectiveDemand();
     //! Monthly Optimal generations
     void prepareMonthlyOptimalGenerations(double* random_reservoir_level, uint y);
-    
+
     void prepareDailyOptimalGenerations(Solver::Variable::State& state, uint y, uint numSpace);
 
     void prepareDailyOptimalGenerations(Solver::Variable::State& state,
