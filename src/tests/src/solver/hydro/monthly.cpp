@@ -27,8 +27,10 @@ BOOST_AUTO_TEST_CASE(TestInitialization)
 
     // Check if the cost for exceeding the maximum volume is set correctly
     auto& CoutLineaire = data.ProblemeHydraulique.ProblemeLineairePartieFixe.CoutLineaire;
-    for (int Pdt = 0; Pdt < data.NombreDePasDeTemps; Pdt++) {
-        Var = data.ProblemeHydraulique.CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMax[Pdt];
+    for (int Pdt = 0; Pdt < data.NombreDePasDeTemps; Pdt++)
+    {
+        Var = data.ProblemeHydraulique.CorrespondanceDesVariables
+                .NumeroDeVariableDepassementVolumeMax[Pdt];
         BOOST_CHECK_EQUAL(CoutLineaire[Var], data.CoutDepassementVolume);
     }
 
@@ -36,7 +38,6 @@ BOOST_AUTO_TEST_CASE(TestInitialization)
     Var = data.ProblemeHydraulique.CorrespondanceDesVariables.NumeroDeLaVariableViolMaxVolumeMin;
     BOOST_CHECK_EQUAL(CoutLineaire[Var], data.CoutViolMaxDuVolumeMin);
 }
-
 
 BOOST_AUTO_TEST_CASE(Test_shut_down)
 {
