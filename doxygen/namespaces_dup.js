@@ -2525,6 +2525,8 @@ var namespaces_dup =
       [ "PROBLEME_LINEAIRE_PARTIE_VARIABLE", "structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html", "structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE" ],
       [ "CORRESPONDANCE_DES_VARIABLES", "structDonneesOptimisationMensuelle_1_1CORRESPONDANCE__DES__VARIABLES.html", "structDonneesOptimisationMensuelle_1_1CORRESPONDANCE__DES__VARIABLES" ],
       [ "PROBLEME_HYDRAULIQUE", "structDonneesOptimisationMensuelle_1_1PROBLEME__HYDRAULIQUE.html", "structDonneesOptimisationMensuelle_1_1PROBLEME__HYDRAULIQUE" ],
+      [ "BOOST_AUTO_TEST_CASE", "tests_2src_2solver_2hydro_2monthly_8cpp.html#a0be944081ab92009f3606b96f6361d4a", null ],
+      [ "BOOST_AUTO_TEST_CASE", "tests_2src_2solver_2hydro_2monthly_8cpp.html#ad7ed9889fdbed519508a8a60603f2dd9", null ],
       [ "H2O_M_AjouterBruitAuCout", "h2o__m__fonctions_8h.html#a80152f7e99435e3d824e3fe4b77366bb", null ],
       [ "H2O_M_ConstruireLesContraintes", "h2o__m__fonctions_8h.html#abcbea479b2478dfd8af42862787e3a5e", null ],
       [ "H2O_M_ConstruireLesVariables", "h2o__m__fonctions_8h.html#ae5bb144edda1f6de7e87e035cec7808f", null ],
