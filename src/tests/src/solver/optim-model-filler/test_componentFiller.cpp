@@ -313,6 +313,76 @@ BOOST_AUTO_TEST_CASE(var_with_wrong_variable_ub__exception_is_raised)
     BOOST_CHECK_THROW(buildLinearProblem(), out_of_range);
 }
 
+BOOST_AUTO_TEST_CASE(var_with_empty_lower_bound_default_to_minus_infinity)
+{
+    createModel("my-model",
+                {},
+                {{"variableF", ValueType::FLOAT, nullptr, literal(10)},
+                 {"variableI", ValueType::INTEGER, nullptr, literal(10)}},
+                {});
+    createComponent("my-model", "component");
+    buildLinearProblem();
+    auto* var = pb->lookupVariable("component.variableF_t" + to_string(0));
+    BOOST_REQUIRE(var);
+    BOOST_CHECK_EQUAL(var->getLb(), -std::numeric_limits<double>::infinity());
+    BOOST_CHECK_EQUAL(var->getUb(), 10);
+
+    var = pb->lookupVariable("component.variableI_t" + to_string(0));
+    BOOST_REQUIRE(var);
+    BOOST_CHECK_EQUAL(var->getLb(), -std::numeric_limits<double>::infinity());
+    BOOST_CHECK_EQUAL(var->getUb(), 10);
+}
+
+BOOST_AUTO_TEST_CASE(var_with_empty_upper_bound_default_to_infinity)
+{
+    createModel("my-model",
+                {},
+                {{"variableF", ValueType::FLOAT, literal(10), nullptr},
+                 {"variableI", ValueType::INTEGER, literal(10), nullptr}},
+                {});
+    createComponent("my-model", "component");
+    buildLinearProblem();
+    auto* var = pb->lookupVariable("component.variableF_t" + to_string(0));
+    BOOST_REQUIRE(var);
+    BOOST_CHECK_EQUAL(var->getLb(), 10);
+    BOOST_CHECK_EQUAL(var->getUb(), std::numeric_limits<double>::infinity());
+
+    var = pb->lookupVariable("component.variableI_t" + to_string(0));
+    BOOST_REQUIRE(var);
+    BOOST_CHECK_EQUAL(var->getLb(), 10);
+    BOOST_CHECK_EQUAL(var->getUb(), std::numeric_limits<double>::infinity());
+}
+
+BOOST_AUTO_TEST_CASE(var_BOOLEAN_with_empty_lower_bound_default_to_0)
+{
+    createModel("my-model", {}, {{"variableB", ValueType::BOOL, nullptr, literal(1)}}, {});
+    createComponent("my-model", "component");
+    buildLinearProblem();
+    auto* var = pb->lookupVariable("component.variableB_t" + to_string(0));
+    BOOST_REQUIRE(var);
+    BOOST_CHECK_EQUAL(var->getLb(), 0);
+    BOOST_CHECK_EQUAL(var->getUb(), 1);
+}
+
+BOOST_AUTO_TEST_CASE(var_BOOLEAN_with_empty_upper_bound_default_to_1)
+{
+    createModel("my-model",
+                {},
+                {{
+                  "variableB",
+                  ValueType::BOOL,
+                  literal(0),
+                  nullptr,
+                }},
+                {});
+    createComponent("my-model", "component");
+    buildLinearProblem();
+    auto* var = pb->lookupVariable("component.variableB_t" + to_string(0));
+    BOOST_REQUIRE(var);
+    BOOST_CHECK_EQUAL(var->getLb(), 0);
+    BOOST_CHECK_EQUAL(var->getUb(), 1);
+}
+
 BOOST_AUTO_TEST_CASE(two_variables_given_to_different_fillers__LP_contains_the_two_variables)
 {
     createModelWithOneFloatVar("m1", {}, "var1", literal(-1), literal(6), {});

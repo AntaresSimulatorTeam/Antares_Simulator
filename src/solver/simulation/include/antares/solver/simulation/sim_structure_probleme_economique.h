@@ -165,7 +165,7 @@ struct CONTRAINTES_COUPLANTES
 
     const char* NomDeLaContrainteCouplante;
 
-    std::shared_ptr<Data::BindingConstraint> bindingConstraint;
+    std::shared_ptr<Antares::Data::BindingConstraint> bindingConstraint;
 };
 
 namespace ShortTermStorage
@@ -183,7 +183,8 @@ struct PROPERTIES
     bool penalizeVariationInjection;
 
     std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
-    std::vector<Antares::Data::ShortTermStorage::AdditionalConstraints> additionalConstraints;
+    std::vector<std::shared_ptr<Antares::Data::ShortTermStorage::AdditionalConstraints>>
+      additionalConstraints;
     int clusterGlobalIndex;
     std::string name;
 };

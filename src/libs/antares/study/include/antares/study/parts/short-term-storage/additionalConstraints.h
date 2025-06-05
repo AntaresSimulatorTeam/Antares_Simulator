@@ -20,6 +20,7 @@
  */
 
 #pragma once
+#include <memory>
 #include <set>
 #include <string>
 #include <vector>
@@ -35,7 +36,14 @@ public:
     std::set<int> hours;
     unsigned int globalIndex = 0;
     unsigned int localIndex = 0;
-    bool isValidHoursRange() const;
+    bool hasValidHoursRange() const;
+};
+
+struct ValidateResult
+
+{
+    bool ok;
+    std::string error_msg;
 };
 
 class AdditionalConstraints
@@ -49,10 +57,13 @@ public:
                           bool enabled,
                           std::vector<SingleAdditionalConstraint> constraints);
 
-    AdditionalConstraints(const AdditionalConstraints& other) = default;
-    AdditionalConstraints(AdditionalConstraints&& other) noexcept = default;
-    AdditionalConstraints& operator=(const AdditionalConstraints& other) = default;
-    AdditionalConstraints& operator=(AdditionalConstraints&& other) noexcept = default;
+    AdditionalConstraints(const AdditionalConstraints&) = delete;
+    AdditionalConstraints& operator=(const AdditionalConstraints&) = delete;
+
+    AdditionalConstraints(AdditionalConstraints&& other) noexcept = delete;
+    AdditionalConstraints& operator=(AdditionalConstraints&& other) noexcept = delete;
+
+    ~AdditionalConstraints() = default;
 
     std::string name;
     std::string cluster_id;
@@ -61,34 +72,23 @@ public:
     bool enabled = true;
     std::vector<SingleAdditionalConstraint> constraints;
 
-    struct ValidateResult
-
-    {
-        bool ok;
-        std::string error_msg;
-    };
-
     // Number of enabled constraints
-    std::size_t enabledConstraints() const;
-
-    ValidateResult validate() const;
+    std::size_t enabledConstraintsCount() const;
 
     TimeSeries& rhs()
     {
-        return rhs_;
+        return timeSeries;
     }
 
     const TimeSeries& rhs() const
     {
-        return rhs_;
+        return timeSeries;
     }
 
-private:
-    TimeSeriesNumbers tsNumbers;
-    TimeSeries rhs_; ///< contains both tsNumbers and series
-    bool isValidVariable() const;
-    bool isValidOperatorType() const;
-
-    bool isValidHours() const;
+    TimeSeriesNumbers timeseriesNumbers;
+    TimeSeries timeSeries;
 };
+
+ValidateResult validate(const AdditionalConstraints&);
+
 } // namespace Antares::Data::ShortTermStorage

@@ -26,8 +26,6 @@
 
 #include <antares/solver/utils/basis_status.h>
 
-#include "SparseVector.hxx"
-
 namespace operations_research
 {
 class MPSolver;
@@ -50,8 +48,8 @@ public:
     std::string Sens;
     std::vector<int> IndicesDebutDeLigne;
     std::vector<int> NombreDeTermesDesLignes;
-    SparseVector<double> CoefficientsDeLaMatriceDesContraintes;
-    SparseVector<int> IndicesColonnes;
+    std::vector<double> CoefficientsDeLaMatriceDesContraintes;
+    std::vector<int> IndicesColonnes;
     int IncrementDAllocationMatriceDesContraintes;
     int NombreDeTermesDansLaMatriceDesContraintes;
     /* Donnees variables de la matrice des contraintes */

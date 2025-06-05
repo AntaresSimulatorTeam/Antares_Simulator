@@ -25,6 +25,8 @@
 #include <cstdlib>
 #include <ctime>
 
+#include "yuni/core/system/username.h"
+
 #include <antares/logs/logs.h>
 #include "antares/study/version.h"
 
@@ -54,7 +56,10 @@ void StudyHeader::reset()
     dateCreated = ::time(nullptr);
     dateLastSave = dateCreated;
     // Author
-    author = STUDYHEADER_DEFAULT_AUTHOR;
+    String username;
+    System::Username(username);
+    author = username;
+    editor = username;
 }
 
 void StudyHeader::CopySettingsToIni(IniFile& ini, bool upgradeVersion)
@@ -83,6 +88,7 @@ void StudyHeader::CopySettingsToIni(IniFile& ini, bool upgradeVersion)
 
     // The author
     sect->add("author", author);
+    sect->add("editor", editor);
 }
 
 bool StudyHeader::internalFindVersionFromFile(const IniFile& ini, std::string& version)
@@ -124,6 +130,8 @@ bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
                 author = p->value;
                 continue;
             }
+            // We don't load editor it is the current user
+
             // Version
             if (p->key == "version")
             {

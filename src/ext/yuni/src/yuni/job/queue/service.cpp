@@ -32,8 +32,6 @@ static inline uint OptimalCPUCount()
     uint count = System::CPU::Count();
     if (count < 1)
         return 1;
-    if (count > 2)
-        return count - 1;
     return count;
 }
 

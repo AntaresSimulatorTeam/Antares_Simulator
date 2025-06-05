@@ -39,8 +39,8 @@ public:
     int& nombreDeContraintes;
     int& nombreDeTermesDansLaMatriceDeContrainte;
     std::vector<int>& IndicesDebutDeLigne;
-    SparseVector<double>& CoefficientsDeLaMatriceDesContraintes;
-    SparseVector<int>& IndicesColonnes;
+    std::vector<double>& CoefficientsDeLaMatriceDesContraintes;
+    std::vector<int>& IndicesColonnes;
     std::vector<int>& NombreDeTermesDesLignes;
     std::string& Sens;
     int& IncrementDAllocationMatriceDesContraintes;

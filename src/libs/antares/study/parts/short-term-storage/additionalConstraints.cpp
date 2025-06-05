@@ -26,7 +26,7 @@
 namespace Antares::Data::ShortTermStorage
 {
 AdditionalConstraints::AdditionalConstraints():
-    rhs_(tsNumbers)
+    timeSeries(timeseriesNumbers)
 {
 }
 
@@ -42,28 +42,48 @@ AdditionalConstraints::AdditionalConstraints(std::string name,
     operatorType(operatorType),
     enabled(enabled),
     constraints(constraints),
-    rhs_(tsNumbers)
+    timeSeries(timeseriesNumbers)
 {
 }
 
-AdditionalConstraints::ValidateResult AdditionalConstraints::validate() const
+namespace
 {
-    if (cluster_id.empty())
+bool hasValidHours(const AdditionalConstraints& ct)
+{
+    return std::ranges::all_of(ct.constraints,
+                               [](const auto& constraint)
+                               { return constraint.hasValidHoursRange(); });
+}
+
+bool hasValidVariable(const AdditionalConstraints& ct)
+{
+    return ct.variable == "injection" || ct.variable == "withdrawal" || ct.variable == "netting";
+}
+
+bool hasValidOperatorType(const AdditionalConstraints& ct)
+{
+    return ct.operatorType == "less" || ct.operatorType == "equal" || ct.operatorType == "greater";
+}
+} // namespace
+
+ValidateResult validate(const AdditionalConstraints& adc)
+{
+    if (adc.cluster_id.empty())
     {
         return {false, "Cluster ID is empty."};
     }
 
-    if (!isValidVariable())
+    if (!hasValidVariable(adc))
     {
         return {false, "Invalid variable type. Must be 'injection', 'withdrawal', or 'netting'."};
     }
 
-    if (!isValidOperatorType())
+    if (!hasValidOperatorType(adc))
     {
         return {false, "Invalid operator type. Must be 'less', 'equal', or 'greater'."};
     }
 
-    if (!isValidHours())
+    if (!hasValidHours(adc))
     {
         return {false, "Hours sets contains invalid values. Must be between 1 and 168."};
     }
@@ -71,30 +91,13 @@ AdditionalConstraints::ValidateResult AdditionalConstraints::validate() const
     return {true, ""};
 }
 
-bool SingleAdditionalConstraint::isValidHoursRange() const
+bool SingleAdditionalConstraint::hasValidHoursRange() const
 {
     // `hours` is a sorted set; begin() gives the smallest and prev(end()) gives the largest.
     return !hours.empty() && *hours.begin() >= 1 && *std::prev(hours.end()) <= 168;
 }
 
-bool AdditionalConstraints::isValidHours() const
-{
-    return std::ranges::all_of(constraints,
-                               [](const auto& constraint)
-                               { return constraint.isValidHoursRange(); });
-}
-
-bool AdditionalConstraints::isValidVariable() const
-{
-    return variable == "injection" || variable == "withdrawal" || variable == "netting";
-}
-
-bool AdditionalConstraints::isValidOperatorType() const
-{
-    return operatorType == "less" || operatorType == "equal" || operatorType == "greater";
-}
-
-std::size_t AdditionalConstraints::enabledConstraints() const
+std::size_t AdditionalConstraints::enabledConstraintsCount() const
 {
     return enabled ? constraints.size() : 0;
 }

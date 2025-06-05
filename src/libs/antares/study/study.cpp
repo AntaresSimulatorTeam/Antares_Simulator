@@ -124,6 +124,7 @@ void Study::clear()
     // no folder
     ClearAndShrink(header.caption);
     ClearAndShrink(header.author);
+    ClearAndShrink(header.editor);
     folder.clear();
     folderInput.clear();
     folderOutput.clear();

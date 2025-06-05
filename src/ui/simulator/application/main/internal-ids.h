@@ -91,6 +91,7 @@ enum MenusID
     mnIDStudyEditMapReverseSelection,
     mnIDStudyEditTitle,
     mnIDStudyEditAuthors,
+    mnIDStudyEditEditor,
     mnIDStudyEditCopy,
     mnIDStudyEditPaste,
     mnIDStudyEditPasteSpecial,

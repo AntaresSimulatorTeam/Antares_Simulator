@@ -1,7 +1,7 @@
 include(${CMAKE_SOURCE_DIR}/tests/macros.cmake)
 
 add_boost_test(test-intermediate
-  SRC test_intermediate.cpp
+  SRC test_intermediate.cpp dummyVariable.h
   LIBS antares-solver-variable)
 
 add_boost_test(test-surveyresults

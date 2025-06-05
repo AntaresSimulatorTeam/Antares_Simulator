@@ -167,7 +167,8 @@ bool runWeeklyOptimization(const SingleOptimOptions& options,
             return false;
         }
 
-        if (problemeHebdo->ExportMPS != Data::mpsExportStatus::NO_EXPORT)
+        if (problemeHebdo->ExportMPS != Data::mpsExportStatus::NO_EXPORT
+            || problemeHebdo->Expansion)
         {
             double optimalSolutionCost = OPT_ObjectiveFunctionResult(problemeHebdo,
                                                                      numeroDeLIntervalle,

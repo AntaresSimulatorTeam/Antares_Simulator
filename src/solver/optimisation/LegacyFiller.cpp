@@ -62,10 +62,8 @@ void LegacyFiller::CopyMatrix(ILinearProblem& pb) const
              ++idxCoef)
         {
             int pos = debutLigne + idxCoef;
-            auto* var = pb.getVariable(problemeAResoudre_->IndicesColonnes.data()[pos]);
-            ct->setCoefficient(
-              var,
-              problemeAResoudre_->CoefficientsDeLaMatriceDesContraintes.data()[pos]);
+            auto* var = pb.getVariable(problemeAResoudre_->IndicesColonnes[pos]);
+            ct->setCoefficient(var, problemeAResoudre_->CoefficientsDeLaMatriceDesContraintes[pos]);
         }
     }
 }
