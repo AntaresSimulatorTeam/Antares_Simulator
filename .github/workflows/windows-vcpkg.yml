@@ -3,7 +3,6 @@ name: Windows CI (VCPKG and pre-compiled)
 on:
   push:
     branches:
-      - develop
       - feature/*
       - features/*
       - fix/*
@@ -12,8 +11,6 @@ on:
       - doc/*
       - dependabot/*
       - tests/*
-  schedule:
-    - cron: '21 2 * * *'
   workflow_call:
     inputs:
       run-tests:
@@ -22,12 +19,15 @@ on:
       target_branch:
         required: true
         type: string
+      category:
+        required: true
+        type: string
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
-  IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
+  IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' && inputs.category == 'release' }}
   RUN_SIMPLE_TESTS: ${{ github.event_name == 'push' || inputs.run-tests == 'true' }}
-  RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || inputs.run-tests == 'true' }}
+  RUN_EXTENDED_TESTS: ${{ inputs.run-tests == 'true' }}
   REF: ${{ inputs.target_branch =='' && github.ref || inputs.target_branch}}
 
 
@@ -396,13 +396,14 @@ jobs:
         shell: bash
 
       - name: Update continuous-delivery release
-        if: github.ref == 'refs/heads/develop'
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.category == 'continuous-delivery' }}
         env:
           GH_TOKEN: ${{ github.token }}
+          tag: ${{ github.event.inputs.release_tag }}
         run: |
           mv _build/rte-antares-*-installer-64bits.exe _build/rte-antares-cd-installer-64bits.exe
           mv _build/rte-antares-*-installer-64bits.zip _build/rte-antares-cd-installer-64bits.zip
-          gh release upload --clobber continuous-delivery _build/*.zip _build/*.exe
+          gh release upload --clobber "$tag" _build/*.zip _build/*.exe
 
       - name: Cache vcpkg binary dir
         if: always()

@@ -3,7 +3,6 @@ name: Ubuntu CI (push and/or release)
 on:
   push:
     branches:
-      - develop
       - feature/*
       - features/*
       - fix/*
@@ -12,8 +11,6 @@ on:
       - doc/*
       - dependabot/*
       - tests/*
-  schedule:
-    - cron: '21 2 * * *'
   workflow_call:
     inputs:
       run-tests:
@@ -22,12 +19,15 @@ on:
       target_branch:
         required: true
         type: string
+      category:
+        required: true
+        type: string
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
-  IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
+  IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' && inputs.category == 'release' }}
   RUN_SIMPLE_TESTS: ${{ github.event_name == 'push' || inputs.run-tests == 'true' }}
-  RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || inputs.run-tests == 'true' }}
+  RUN_EXTENDED_TESTS: ${{ inputs.run-tests == 'true' }}
   REF: ${{ inputs.target_branch =='' && github.ref || inputs.target_branch}}
   VCPKG_ROOT: ${{ github.workspace }}/vcpkg
   triplet: x64-linux
@@ -391,13 +391,14 @@ jobs:
           gh release upload "$tag" _build/*.tar.gz _build/*.deb
 
       - name: Update continuous-delivery release
-        if: github.ref == 'refs/heads/develop'
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.category == 'continuous-delivery' }}
         env:
           GH_TOKEN: ${{ github.token }}
+          tag: ${{ github.event.inputs.release_tag }}
         run: |
           mv _build/antares-*-Ubuntu-22.04.tar.gz _build/antares-cd-Ubuntu-22.04.tar.gz
           mv _build/antares-*-Ubuntu-22.04.deb _build/antares-cd-Ubuntu-22.04.deb
-          gh release upload --clobber continuous-delivery _build/*.tar.gz _build/*.deb
+          gh release upload --clobber "$tag" _build/*.tar.gz _build/*.deb
 
       - name: Cache vcpkg binary dir
         if: always()

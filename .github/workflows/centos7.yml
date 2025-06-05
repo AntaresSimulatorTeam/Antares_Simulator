@@ -5,10 +5,7 @@ on:
     types: [ created ]
   push:
     branches:
-      - develop
       - dependabot/*
-  schedule:
-    - cron: '21 2 * * *'
   workflow_call:
     inputs:
       run-tests:
@@ -17,10 +14,13 @@ on:
       target_branch:
         required: true
         type: string
+      category:
+        required: true
+        type: string
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
-  IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
+  IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' && inputs.category == 'release' }}
   IS_PUSH: ${{ github.event_name == 'push' }}
   REF: ${{ inputs.target_branch =='' && github.ref_name || inputs.target_branch}}
   ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
@@ -154,7 +154,7 @@ jobs:
           gh release upload "$tag" archive/*.tar.gz archive/*.rpm
 
       - name: Update continuous-delivery release
-        if: github.ref == 'refs/heads/develop'
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.category == 'continuous-delivery' }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
