@@ -6,6 +6,11 @@ on:
       - develop
   schedule:
     - cron: '21 2 * * *'
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+  
 jobs:
   release:
     name: Release pushed tag
