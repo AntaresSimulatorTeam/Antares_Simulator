@@ -208,6 +208,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_rese
 
               problem.CoutDepassementVolume = 1e2;
               problem.CoutViolMaxDuVolumeMin = 1e5;
+              problem.overflowfCost = 1e6;
               problem.VolumeInitial = lvi;
 
               for (unsigned month = 0; month != MONTHS_PER_YEAR; ++month)
@@ -245,6 +246,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_rese
                       areaMonthlyData[realmonth].MOG = problem.Turbine[month]
                                                        * area.hydro.reservoirCapacity;
                       areaMonthlyData[realmonth].MOL = problem.Volume[month];
+                      OVF[realmonth] = problem.overflow[month];
                   }
                   areaMonthlyData[initReservoirLvlMonth].MOL = lvi;
                   solutionCost = problem.ProblemeHydraulique.CoutDeLaSolution;
@@ -292,29 +294,31 @@ void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_rese
 #endif
           if (parameters_.hydroDebug)
           {
-              std::ostringstream buffer;
-              auto path = fs::path("debug") / "solver" / std::to_string(1 + y) / "monthly."
-                          / area.name.c_str() / ".txt";
+              std::ostringstream filename;
+              filename << "monthly." << area.name.c_str() << ".txt";
+              auto path = fs::path("debug") / "solver" / std::to_string(1 + y) / filename.str();
 
+              std::ostringstream fileContent;
               if (area.hydro.reservoirManagement)
-                  buffer << "Initial Reservoir Level\t" << lvi << "\n";
+                  fileContent << "Initial Reservoir Level\t" << lvi << "\n";
               else
-                  buffer << "Initial Reservoir Level : unrelevant (no reservoir mgmt)\n";
-              buffer << "\n";
+                  fileContent << "Initial Reservoir Level : unrelevant (no reservoir mgmt)\n";
+              fileContent << "\n";
 
-              auto writeSolutionCost = [&buffer](const std::string& caption, double cost)
+              auto writeSolutionCost = [&fileContent](const std::string& caption, double cost)
               {
-                  auto precision = buffer.precision();
-                  buffer << caption << std::fixed << std::setprecision(13) << cost;
-                  buffer << std::setprecision(precision) << std::defaultfloat;
+                  auto precision = fileContent.precision();
+                  fileContent << caption << std::fixed << std::setprecision(13) << cost;
+                  fileContent << std::setprecision(precision) << std::defaultfloat;
               };
               writeSolutionCost("Solution cost : ", solutionCost);
               writeSolutionCost("Solution cost (noised) : ", solutionCostNoised);
-              buffer << "\n\n";
+              fileContent << "\n\n";
 
-              buffer << '\t' << "\tInflows" << '\t' << "\tTarget Gen."
-                     << "\tTurbined"
-                     << "\tLevels" << '\t' << "\tLvl min" << '\t' << "\tLvl max\n";
+              fileContent << '\t' << "\tInflows" << '\t' << "\tTarget Gen."
+                          << "\tTurbined"
+                          << "\tOVF"
+                          << "\tLevels" << '\t' << "\tLvl min" << '\t' << "\tLvl max\n";
               for (uint month = 0; month != MONTHS_PER_YEAR; ++month)
               {
                   uint realmonth = (initReservoirLvlMonth + month) % MONTHS_PER_YEAR;
@@ -325,17 +329,19 @@ void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_rese
 
                   auto monthName = calendar_.text.months[simulationMonth].name;
 
-                  buffer << monthName[0] << monthName[1] << monthName[2] << '\t';
-                  buffer << '\t';
-                  buffer << data.inflows[realmonth] << '\t';
-                  buffer << MTG[realmonth] << '\t';
-                  buffer << areaMonthlyData[realmonth].MOG / area.hydro.reservoirCapacity << '\t';
-                  buffer << areaMonthlyData[realmonth].MOL << '\t';
-                  buffer << minLvl[firstDay] << '\t';
-                  buffer << maxLvl[firstDay] << '\t';
-                  buffer << '\n';
+                  fileContent << monthName[0] << monthName[1] << monthName[2] << '\t';
+                  fileContent << '\t';
+                  fileContent << data.inflows[realmonth] << '\t';
+                  fileContent << MTG[realmonth] << '\t';
+                  fileContent << areaMonthlyData[realmonth].MOG / area.hydro.reservoirCapacity
+                              << '\t';
+                  fileContent << OVF[realmonth] << '\t';
+                  fileContent << areaMonthlyData[realmonth].MOL << '\t';
+                  fileContent << minLvl[firstDay] << '\t';
+                  fileContent << maxLvl[firstDay] << '\t';
+                  fileContent << '\n';
               }
-              auto content = buffer.str();
+              auto content = fileContent.str();
               resultWriter_.addEntryFromBuffer(path, content);
           }
           indexArea++;
