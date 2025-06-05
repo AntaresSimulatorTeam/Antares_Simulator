@@ -89,7 +89,7 @@ private:
                                           uint y,
                                           Antares::Data::Area::ScratchMap& scratchmap,
                                           HydroSpecificMap& hydro_specific_map);
-    
+
     void prepareDailyOptimalGenerations(uint y,
                                         Antares::Data::Area::ScratchMap& scratchmap,
                                         HydroSpecificMap& hydro_specific_map);
