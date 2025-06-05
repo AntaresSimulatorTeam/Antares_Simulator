@@ -21,12 +21,8 @@
 #include "antares/study/parameters.h"
 
 #include <algorithm>
-#include <cctype>
-#include <climits>
-#include <cstdio>
-#include <list>    // std::list
 #include <sstream> // std::stringstream
-#include <tuple>   // std::tuple
+#include <string>
 
 #include <boost/algorithm/string/case_conv.hpp>
 
@@ -588,6 +584,21 @@ static bool SGDIntLoadFamily_General(Parameters& d,
         return value.to<bool>(d.yearByYear);
     }
 
+    if (key == "refreshtimeseries")
+    {
+        String trimmed = rawvalue;
+        trimmed.trim();
+        if (!trimmed.empty())
+        {
+            logs.error() << "This version does not support timeseries refresh, please remove "
+                            "refreshtimeseries";
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
     return false;
 }
 
@@ -1156,7 +1167,7 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
     }
 
     // ignored since 9.3
-    if (key == "refreshtimeseries" || key == "refreshintervalload" || key == "refreshintervalhydro"
+    if (key == "refreshintervalload" || key == "refreshintervalhydro"
         || key == "refreshintervalwind" || key == "refreshintervalthermal"
         || key == "refreshintervalsolar")
     {
