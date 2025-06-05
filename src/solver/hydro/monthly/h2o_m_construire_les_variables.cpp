@@ -78,7 +78,7 @@ void H2O_M_ConstruireLesVariables(DONNEES_ANNUELLES& DonneesAnnuelles)
           DonneesAnnuelles.overflow[Pdt]);
         Var++;
     }
-    
+
     for (int Pdt = 0; Pdt < nbMonths; Pdt++)
     {
         CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMax[Pdt] = Var;
