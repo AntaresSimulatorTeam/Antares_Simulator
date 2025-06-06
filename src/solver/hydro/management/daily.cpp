@@ -149,9 +149,8 @@ struct DebugData
                              uint y,
                              const Data::AreaName& areaName) const
     {
-        std::ostringstream filename;
-        filename << "daily." << areaName.c_str() << ".txt";
-        auto path = fs::path("debug") / "solver" / std::to_string(1 + y) / filename.str();
+        auto path = fs::path("debug") / "solver" / std::to_string(1 + y)
+                    / ("daily." + areaName + ".txt").c_str();
 
         std::ostringstream fileContent;
         fileContent << "\tNiveau init : " << hydro_specific.monthly[initReservoirLvlMonth].MOL

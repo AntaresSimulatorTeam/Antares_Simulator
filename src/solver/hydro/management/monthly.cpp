@@ -291,9 +291,8 @@ void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_rese
 #endif
           if (parameters_.hydroDebug)
           {
-              std::ostringstream filename;
-              filename << "monthly." << area.name.c_str() << ".txt";
-              auto path = fs::path("debug") / "solver" / std::to_string(1 + y) / filename.str();
+              auto path = fs::path("debug") / "solver" / std::to_string(1 + y)
+                          / ("monthly." + area.name + ".txt").c_str();
 
               std::ostringstream fileContent;
               if (area.hydro.reservoirManagement)
@@ -312,8 +311,10 @@ void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_rese
               writeSolutionCost("Solution cost (noised) : ", solutionCostNoised);
               fileContent << "\n\n";
 
-              fileContent << '\t' << "\tInflows" << '\t' << "\tTarget Gen." << "\tTurbined"
-                          << "\tOVF" << "\tLevels" << '\t' << "\tLvl min" << '\t' << "\tLvl max\n";
+              fileContent << '\t' << "\tInflows" << '\t' << "\tTarget Gen."
+                          << "\tTurbined"
+                          << "\tOVF"
+                          << "\tLevels" << '\t' << "\tLvl min" << '\t' << "\tLvl max\n";
               for (uint month = 0; month != MONTHS_PER_YEAR; ++month)
               {
                   uint realmonth = (initReservoirLvlMonth + month) % MONTHS_PER_YEAR;
