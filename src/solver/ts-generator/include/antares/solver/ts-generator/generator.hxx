@@ -77,7 +77,7 @@ bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter& writer)
     // Run the generation of the time-series
     bool r = xcast->run();
     // Destroy if required the TS Generator
-    Destroy<T>(study, year);
+    Destroy<T>(study);
     return r;
 }
 

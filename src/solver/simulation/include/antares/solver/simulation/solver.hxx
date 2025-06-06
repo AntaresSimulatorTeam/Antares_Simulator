@@ -286,6 +286,8 @@ void ISimulation<ImplementationType>::run()
 
     ImplementationType::setNbPerformedYearsInParallel(pNbMaxPerformedYearsInParallel);
 
+    regenerateTimeSeries(0);
+
     // Export ts-numbers into output
     TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(study, pResultWriter);
 
@@ -384,6 +386,66 @@ void ISimulation<ImplementationType>::writeResults(bool synthesis, uint year, ui
                                                           numSpace,
                                                           pResultWriter);
     }
+}
+
+template<class ImplementationType>
+void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
+{
+    // A preprocessor can be launched for several reasons:
+    // * The option "Preprocessor" is checked in the interface _and_ year == 0
+    // * Both options "Preprocessor" and "Refresh" are checked in the interface
+    //   _and_ the refresh must be done for the given year (always done for the first year).
+    using namespace TSGenerator;
+
+    const Data::Parameters& p = study.parameters;
+    // Load
+    if (Data::timeSeriesLoad & p.timeSeriesToGenerate)
+    {
+        pDurationCollector("tsgen_load")
+          << [year, this] { GenerateTimeSeries<Data::timeSeriesLoad>(study, year, pResultWriter); };
+    }
+    // Solar
+    if (Data::timeSeriesSolar & p.timeSeriesToGenerate)
+    {
+        pDurationCollector("tsgen_solar") << [year, this]
+        { GenerateTimeSeries<Data::timeSeriesSolar>(study, year, pResultWriter); };
+    }
+    // Wind
+    if (Data::timeSeriesWind & p.timeSeriesToGenerate)
+    {
+        pDurationCollector("tsgen_wind")
+          << [year, this] { GenerateTimeSeries<Data::timeSeriesWind>(study, year, pResultWriter); };
+    }
+    // Hydro
+    if (Data::timeSeriesHydro & p.timeSeriesToGenerate)
+    {
+        pDurationCollector("tsgen_hydro") << [year, this]
+        { GenerateTimeSeries<Data::timeSeriesHydro>(study, year, pResultWriter); };
+    }
+
+    pDurationCollector("tsgen_thermal") << [&p, &year, this]
+    {
+        bool globalThermalTSgeneration = Data::timeSeriesThermal & p.timeSeriesToGenerate;
+        auto clusters = getAllClustersToGen(study.areas, globalThermalTSgeneration);
+        generateThermalTimeSeries(study,
+                clusters,
+                study.runtime.random[Data::seedTsGenThermal]);
+
+        bool archive = study.parameters.timeSeriesToArchive & Data::timeSeriesThermal;
+        bool doWeWrite = archive && !study.parameters.noOutput;
+        if (doWeWrite)
+        {
+            fs::path savePath = study.folderOutput / "ts-generator" / "thermal" / "mc-"
+                / std::to_string(year);
+            writeThermalTimeSeries(clusters, savePath);
+        }
+
+        // apply the spinning if we generated some in memory clusters
+        for (auto* cluster: clusters)
+        {
+            cluster->calculationOfSpinning();
+        }
+    };
 }
 
 template<class ImplementationType>
