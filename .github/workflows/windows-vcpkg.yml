@@ -380,9 +380,6 @@ jobs:
         run: |
           cd _build
           FIXED_PATH=${ORTOOLS_DIR//\\//}
-          ls $FIXED_PATH
-          ls $FIXED_PATH/install
-          ls $FIXED_PATH/install/lib
           cpack -G ZIP -D CPACK_INSTALLED_DIRECTORIES="${FIXED_PATH}/install/lib;bin"
 
       - name: Installer upload
@@ -390,6 +387,12 @@ jobs:
         with:
           name: installer
           path: _build/${{env.NSIS_NAME}}
+
+      - name: Zip upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: zip
+          path: _build/*.zip
 
       - name: Publish assets
         if: ${{ env.IS_RELEASE == 'true' }}
