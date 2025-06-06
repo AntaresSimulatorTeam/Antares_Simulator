@@ -425,7 +425,7 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
 
     pDurationCollector("tsgen_thermal") << [&p, &year, this]
     {
-        bool globalThermalTSgeneration = Data::timeSeriesThermal & p.timeSeriesToGenerate;
+        bool globalThermalTSgeneration = study.runtime.thermalTSRefresh;
         auto clusters = getAllClustersToGen(study.areas, globalThermalTSgeneration);
         generateThermalTimeSeries(study, clusters, study.runtime.random[Data::seedTsGenThermal]);
 
