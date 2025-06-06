@@ -427,16 +427,14 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
     {
         bool globalThermalTSgeneration = Data::timeSeriesThermal & p.timeSeriesToGenerate;
         auto clusters = getAllClustersToGen(study.areas, globalThermalTSgeneration);
-        generateThermalTimeSeries(study,
-                clusters,
-                study.runtime.random[Data::seedTsGenThermal]);
+        generateThermalTimeSeries(study, clusters, study.runtime.random[Data::seedTsGenThermal]);
 
         bool archive = study.parameters.timeSeriesToArchive & Data::timeSeriesThermal;
         bool doWeWrite = archive && !study.parameters.noOutput;
         if (doWeWrite)
         {
             fs::path savePath = study.folderOutput / "ts-generator" / "thermal" / "mc-"
-                / std::to_string(year);
+                                / std::to_string(year);
             writeThermalTimeSeries(clusters, savePath);
         }
 
