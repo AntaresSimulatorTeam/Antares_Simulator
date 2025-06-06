@@ -86,9 +86,9 @@ struct SimplexResult
     double objectiveValue;
 };
 
-class EmptyScenarioGroupRepository: public Antares::Optimisation::LinearProblemDataImpl::ScenarioGroupRepository
+class EmptyScenarioGroupRepository
+    : public Antares::Optimisation::LinearProblemDataImpl::ScenarioGroupRepository
 {
-
 };
 
 static void fillModelerComponents(std::vector<std::unique_ptr<ComponentFiller>>& componentFillers,
@@ -105,8 +105,9 @@ static void fillModelerComponents(std::vector<std::unique_ptr<ComponentFiller>>&
     static const EmptyScenarioGroupRepository emptyScenarioGroupRepository;
     for (const auto& [_, component]: modelerSystem->Components())
     {
-        componentFillers.push_back(
-          std::make_unique<ComponentFiller>(component, variableDictionary, emptyScenarioGroupRepository));
+        componentFillers.push_back(std::make_unique<ComponentFiller>(component,
+                                                                     variableDictionary,
+                                                                     emptyScenarioGroupRepository));
     }
     for (auto& component_filler: componentFillers)
     {

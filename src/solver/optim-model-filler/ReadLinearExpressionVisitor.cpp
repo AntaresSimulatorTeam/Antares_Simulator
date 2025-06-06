@@ -143,9 +143,9 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Parameter
          timeStep <= fillContext_.getLastTimeStep();
          ++timeStep)
     {
-            //TODO: pass scenario
+            // TODO: pass year
         linearExpressions[timeStep] = LinearExpression(
-          evalContext_.getParameterValue(node->value(), "", 0, timeStep),
+              evalContext_.getParameterValue(node->value(), 0, timeStep),
           {});
     }
     return TimeDependentLinearExpression(linearExpressions);
@@ -174,7 +174,8 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const PortField
 
         const EvaluationContext connectedComponentEvalContext(component->getParameterValues(),
                                                               {},
-                                                              evalContext_.data());
+                                                              evalContext_.data(),
+                                                              evalContext_.scenario());
         ReadLinearExpressionVisitor visitor(connectedComponentEvalContext,
                                             fillContext_,
                                             *component);

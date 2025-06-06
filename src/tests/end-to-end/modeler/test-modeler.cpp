@@ -28,7 +28,6 @@
 #include "antares/solver/modeler/IWriter.h"
 
 #include "inmemory-modeler.h"
-#include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
 
 class ConstantDataSeries: public Antares::Optimisation::LinearProblemApi::ILinearProblemData
 {
@@ -39,13 +38,8 @@ public:
     }
 
     double getData([[maybe_unused]] const std::string& dataSetId,
-                   [[maybe_unused]] unsigned timeSeriesNumber,
-                   [[maybe_unused]] unsigned hour) const override
-    {
-        return 0.;
-                   [[maybe_unused]] const std::string& scenarioGroup,
                    [[maybe_unused]] unsigned year,
-                   [[maybe_unused]] unsigned hour) override
+                   [[maybe_unused]] unsigned hour) const override
     {
         return value_;
     }
@@ -123,7 +117,8 @@ public:
         return {.libraries = {library},
                 .system = std::make_unique<Antares::ModelerStudy::SystemModel::System>(
                   std::move(system)),
-                .dataSeries = std::move(data)};
+                .dataSeries = std::move(data),
+        .scenario_group_repository = Antares::Optimisation::LinearProblemDataImpl::ScenarioGroupRepository()};
     }
 
     void setComponents(const std::span<Antares::ModelerStudy::SystemModel::Component>& vector)
@@ -229,7 +224,8 @@ struct TSDimensions
     int nCols{1};
 };
 
-Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet constantTimeSeriesSets(const std::string& id, std::span<double> values, unsigned int nRows = 1)
+Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet
+constantTimeSeriesSets(const std::string& id, std::span<double> values, unsigned int nRows = 1)
 {
     int nTimesteps = nRows;
     Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet timeSeriesSet(id, nTimesteps);
@@ -251,7 +247,8 @@ Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet constantTimeSeriesSe
     return timeSeriesSet;
 }
 
-Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet constantTimeSeriesSet(const std::string& id, double value = 0., TSDimensions dims = {1, 1})
+Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet
+constantTimeSeriesSet(const std::string& id, double value = 0., TSDimensions dims = {1, 1})
 {
     std::vector<double> values(dims.nCols, value);
     return constantTimeSeriesSets(id, values, dims.nRows);
@@ -267,8 +264,12 @@ BOOST_AUTO_TEST_CASE(system_with_two_time_series_use_default_first_all_2)
 
     Antares::Optimisation::LinearProblemDataImpl::DataSeriesRepository data_series_repository;
     std::vector<double> values = {2, 3, 4};
-    data_series_repository.addDataSeries(std::make_unique<Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet>(constantTimeSeriesSets("a", values, 1)));
-    inMemoryLoader.data = std::make_unique<Antares::Optimisation::LinearProblemDataImpl::LinearProblemData>(std::move(data_series_repository));
+    data_series_repository.addDataSeries(
+      std::make_unique<Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet>(
+        constantTimeSeriesSets("a", values, 1)));
+    inMemoryLoader.data = std::make_unique<
+      Antares::Optimisation::LinearProblemDataImpl::LinearProblemData>(
+      std::move(data_series_repository));
 
     InMemoryWriter inMemoryWriter;
 
@@ -287,8 +288,12 @@ BOOST_AUTO_TEST_CASE(system_with_two_time_series_use_second_one_all_3)
 
     Antares::Optimisation::LinearProblemDataImpl::DataSeriesRepository data_series_repository;
     std::vector<double> values = {2, 3, 4};
-    data_series_repository.addDataSeries(std::make_unique<Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet>(constantTimeSeriesSets("a", values, 1)));
-    inMemoryLoader.data = std::make_unique<Antares::Optimisation::LinearProblemDataImpl::LinearProblemData>(std::move(data_series_repository));
+    data_series_repository.addDataSeries(
+      std::make_unique<Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet>(
+        constantTimeSeriesSets("a", values, 1)));
+    inMemoryLoader.data = std::make_unique<
+      Antares::Optimisation::LinearProblemDataImpl::LinearProblemData>(
+      std::move(data_series_repository));
 
     InMemoryWriter inMemoryWriter;
 

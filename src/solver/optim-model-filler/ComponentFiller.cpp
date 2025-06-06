@@ -27,9 +27,9 @@
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
 #include <antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h>
 #include <antares/study/system-model/variable.h>
-
-#include "../../optimisation/linear-problem-data-impl/include/antares/optimisation/linear-problem-data-impl/scenarioGroupRepo.h"
 #include "antares/expressions/visitors/TimeIndexVisitor.h"
+
+#include "include/antares/solver/optim-model-filler/scenarioGroupRepo.h"
 
 namespace Antares::Optimization
 {
@@ -138,9 +138,10 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
       });
 }
 
-ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& component,
-                                 VariableDictionary& variableDictionary,
-                                 const Optimisation::LinearProblemDataImpl::ScenarioGroupRepository& scenarioGroupRepository):
+ComponentFiller::ComponentFiller(
+  const ModelerStudy::SystemModel::Component& component,
+  VariableDictionary& variableDictionary,
+  const Optimisation::LinearProblemDataImpl::ScenarioGroupRepository& scenarioGroupRepository):
     component_(component),
     variableDictionary_(variableDictionary),
     scenarioGroupRepository_(scenarioGroupRepository)
@@ -162,9 +163,11 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
         return;
     }
 
+    const auto& scenario = scenarioGroupRepository_.scenario(component_.getScenarioGroupId());
     Expressions::Visitors::EvaluationContext evaluationContext(component_.getParameterValues(),
                                                                {},
-                                                               data);
+                                                               data,
+                                                               scenario);
 
     Expressions::Visitors::EvalVisitor evaluator(evaluationContext, ctx);
     auto valueOrDefault = [&evaluator](const auto& node, double defaultValue)
@@ -186,8 +189,8 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
         const PartialKey key(component_.Id(), variable.Id());
         if (variable.isTimeDependent())
         {
-            const auto& scenario = scenarioGroupRepository_.scenario(component_.getScenarioGroupId());
-            Optimisation::LinearProblemDataImpl::IScenario::Chronicle chronicle = scenario.getData(ctx.getYear());
+            Optimisation::LinearProblemApi::IScenario::Chronicle chronicle = scenario.getData(
+              ctx.getYear());
             const Dimensions dim(IntegerInterval{chronicle, chronicle},
                                  IntegerInterval(ctx.getFirstTimeStep(), ctx.getLastTimeStep()));
             // std::visit to handle the 4 cases: double/double, vector/double,
@@ -263,9 +266,11 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
                                      Optimisation::LinearProblemApi::ILinearProblemData& data,
                                      Optimisation::LinearProblemApi::FillContext& ctx)
 {
+    const auto& scenario = scenarioGroupRepository_.scenario(component_.getScenarioGroupId());
     Expressions::Visitors::EvaluationContext evaluationContext(component_.getParameterValues(),
                                                                {},
-                                                               data);
+                                                               data,
+                                                               scenario);
     ReadLinearConstraintVisitor visitor(evaluationContext, ctx, component_);
     for (const auto& constraint: component_.getModel()->getConstraints() | std::views::values)
     {
@@ -295,9 +300,11 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
     {
         return;
     }
+    const auto& scenario = scenarioGroupRepository_.scenario(component_.getScenarioGroupId());
     Expressions::Visitors::EvaluationContext evaluationContext(component_.getParameterValues(),
                                                                {},
-                                                               data);
+                                                               data,
+                                                               scenario);
 
     ReadLinearExpressionVisitor visitor(evaluationContext, ctx, component_);
 

@@ -1,16 +1,20 @@
 #include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 
+#include "antares/optimisation/linear-problem-api/IScenario.h"
+
 using namespace Antares::Optimisation::LinearProblemApi;
 
 namespace Antares::Expressions::Visitors
 {
 EvaluationContext::EvaluationContext(std::map<std::string, ParameterTypeAndValue> system_parameters,
                                      std::map<std::string, double> variables,
-                                     ILinearProblemData& data):
+                                     const ILinearProblemData& data,
+                                     const IScenario& scenario):
     parameters_types_and_values_(std::move(system_parameters)),
     variables_(std::move(variables)),
-    data_(data)
+    data_(data),
+    scenario_(scenario)
 {
 }
 
@@ -54,11 +58,11 @@ std::string EvaluationContext::getSystemParameterValue(const std::string& key) c
 }
 
 double EvaluationContext::getParameterValue(const std::string& key,
-                                            const std::string& scenarioGroup,
-                                            const unsigned scenario,
+                                            unsigned int year,
                                             unsigned int hour) const
 {
-    return data_.getData(parameters_types_and_values_.at(key).value, scenario, hour);
+    IScenario::TimeSeriesNumber chronicle = scenario_.getData(year);
+    return data_.getData(parameters_types_and_values_.at(key).value, chronicle, hour);
 }
 
 ParameterType EvaluationContext::getParameterType(const std::string& key) const
@@ -71,8 +75,13 @@ ParameterTypeAndValue EvaluationContext::getParameter(const std::string& key) co
     return parameters_types_and_values_.at(key);
 }
 
-ILinearProblemData& EvaluationContext::data() const
+const ILinearProblemData& EvaluationContext::data() const
 {
     return data_;
+}
+
+const Optimisation::LinearProblemApi::IScenario& EvaluationContext::scenario() const
+{
+    return scenario_;
 }
 } // namespace Antares::Expressions::Visitors

@@ -27,4 +27,14 @@ public:
 private:
     std::string group_;
 };
+
+    class EmptyScenario : public IScenario {
+    public:
+        EmptyScenario(): IScenario("empty") {
+        }
+
+        [[nodiscard]] TimeSeriesNumber getData(Year) const override {
+            return 0; // No data available in an empty scenario
+        }
+    };
 } // namespace Antares::Optimisation::LinearProblemApi
