@@ -382,9 +382,9 @@ jobs:
           FIXED_PATH=${ORTOOLS_DIR//\\//}
           ls ${FIXED_PATH}
           echo "---"
-          ls ${FIXED_PATH}/install/lib
+          ls ${FIXED_PATH}/install/bin
           echo "---"
-          cpack -G ZIP -D CPACK_INSTALLED_DIRECTORIES="${FIXED_PATH}/install/lib;bin"
+          cpack -G ZIP -D CPACK_INSTALLED_DIRECTORIES="${FIXED_PATH}/install/bin;bin"
           ls
 
       - name: Installer upload
