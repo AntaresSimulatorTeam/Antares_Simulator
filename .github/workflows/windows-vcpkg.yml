@@ -380,7 +380,12 @@ jobs:
         run: |
           cd _build
           FIXED_PATH=${ORTOOLS_DIR//\\//}
+          ls ${FIXED_PATH}
+          echo "---"
+          ls ${FIXED_PATH}/install/lib
+          echo "---"
           cpack -G ZIP -D CPACK_INSTALLED_DIRECTORIES="${FIXED_PATH}/install/lib;bin"
+          ls
 
       - name: Installer upload
         uses: actions/upload-artifact@v4
