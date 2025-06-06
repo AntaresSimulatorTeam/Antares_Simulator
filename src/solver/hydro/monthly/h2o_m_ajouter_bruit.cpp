@@ -44,15 +44,8 @@ void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES& DonneesAnnuelles)
     Var = CorrespondanceDesVariables.NumeroDeLaVariableXi;
     CoutLineaireBruite[Var] = CoutLineaire[Var] + noiseGenerator() * Constants::noiseAmplitude;
 
-    const std::vector<const std::vector<int>*> overflowVariables
-      = {&CorrespondanceDesVariables.NumeroDeVariableOverflow};
-
-    for (const auto& variable : overflowVariables)
+    for (int Var : CorrespondanceDesVariables.NumeroDeVariableOverflow)
     {
-        for (int Var : *variable)
-        {
-            CoutLineaireBruite[Var]
-              = CoutLineaire[Var] + noiseGenerator() * Constants::noiseAmplitude;
-        }
+        CoutLineaireBruite[Var] = CoutLineaire[Var] + noiseGenerator() * Constants::noiseAmplitude;
     }
 }
