@@ -286,53 +286,67 @@ void ISimulation<ImplementationType>::run()
 
     ImplementationType::setNbPerformedYearsInParallel(pNbMaxPerformedYearsInParallel);
 
-    regenerateTimeSeries(0);
-
-    // Export ts-numbers into output
-    TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(study, pResultWriter);
-
-    if (not ImplementationType::simulationBegin())
+    if (settings.tsGeneratorsOnly)
     {
-        return;
+        // Only the preprocessors can be used
+        // We only have to regenerate time-series according the settings
+        // in general data of the study.
+        logs.info() << " Only the preprocessors are enabled.";
+
+        regenerateTimeSeries(0);
+
+        // Destroy the TS Generators if any
+        // It will export the time-series into the output in the same time
+        TSGenerator::DestroyAll(study);
     }
-    // Allocating the memory
-    ImplementationType::variables.simulationBegin();
-
-    // For beauty
-    logs.info();
-
-    // Launching the simulation for all years
-    logs.info() << "MC-Years : [" << (study.runtime.rangeLimits.year[Data::rangeBegin] + 1)
-                << " .. " << (1 + study.runtime.rangeLimits.year[Data::rangeEnd])
-                << "], total: " << study.runtime.rangeLimits.year[Data::rangeCount];
-
-    // Current state
-    std::vector<Variable::State> state(pNbMaxPerformedYearsInParallel, Variable::State(study));
-    // Initializing states for parallel actually performed years
-    for (uint numSpace = 0; numSpace != pNbMaxPerformedYearsInParallel; ++numSpace)
+    else
     {
-        ImplementationType::initializeState(state[numSpace], numSpace);
+        // Export ts-numbers into output
+        TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(study, pResultWriter);
+
+        if (not ImplementationType::simulationBegin())
+        {
+            return;
+        }
+        // Allocating the memory
+        ImplementationType::variables.simulationBegin();
+
+        // For beauty
+        logs.info();
+
+        // Launching the simulation for all years
+        logs.info() << "MC-Years : [" << (study.runtime.rangeLimits.year[Data::rangeBegin] + 1)
+                    << " .. " << (1 + study.runtime.rangeLimits.year[Data::rangeEnd])
+                    << "], total: " << study.runtime.rangeLimits.year[Data::rangeCount];
+
+        // Current state
+        std::vector<Variable::State> state(pNbMaxPerformedYearsInParallel, Variable::State(study));
+        // Initializing states for parallel actually performed years
+        for (uint numSpace = 0; numSpace != pNbMaxPerformedYearsInParallel; ++numSpace)
+        {
+            ImplementationType::initializeState(state[numSpace], numSpace);
+        }
+
+        uint finalYear = 1 + study.runtime.rangeLimits.year[Data::rangeEnd];
+        {
+            pDurationCollector("mc_years")
+              << [finalYear, &state, this] { loopThroughYears(0, finalYear, state); };
+        }
+        // Destroy the TS Generators if any
+        // It will export the time-series into the output in the same time
+        TSGenerator::DestroyAll(study);
+
+        // Post operations
+        pDurationCollector("post_processing") << [this] { ImplementationType::simulationEnd(); };
+
+        ImplementationType::variables.simulationEnd();
+
+        // Spatial clusters
+        // Notifying all variables to perform the final spatial clusters.
+        // This must be done only when all variables have finished to compute their
+        // own data.
+        ImplementationType::variables.simulationEndSpatialAggregates(ImplementationType::variables);
     }
-
-    uint finalYear = 1 + study.runtime.rangeLimits.year[Data::rangeEnd];
-    {
-        pDurationCollector("mc_years")
-          << [finalYear, &state, this] { loopThroughYears(0, finalYear, state); };
-    }
-    // Destroy the TS Generators if any
-    // It will export the time-series into the output in the same time
-    TSGenerator::DestroyAll(study);
-
-    // Post operations
-    pDurationCollector("post_processing") << [this] { ImplementationType::simulationEnd(); };
-
-    ImplementationType::variables.simulationEnd();
-
-    // Spatial clusters
-    // Notifying all variables to perform the final spatial clusters.
-    // This must be done only when all variables have finished to compute their
-    // own data.
-    ImplementationType::variables.simulationEndSpatialAggregates(ImplementationType::variables);
 }
 
 template<class ImplementationType>
@@ -423,9 +437,10 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
         { GenerateTimeSeries<Data::timeSeriesHydro>(study, year, pResultWriter); };
     }
 
-    pDurationCollector("tsgen_thermal") << [&p, &year, this]
+    pDurationCollector("tsgen_thermal") << [&year, this]
     {
-        bool globalThermalTSgeneration = study.runtime.thermalTSRefresh;
+        bool globalThermalTSgeneration = study.parameters.timeSeriesToGenerate
+                                         & Data::timeSeriesThermal;
         auto clusters = getAllClustersToGen(study.areas, globalThermalTSgeneration);
         generateThermalTimeSeries(study, clusters, study.runtime.random[Data::seedTsGenThermal]);
 
@@ -905,6 +920,8 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     HydroInputsChecker hydroInputsChecker(study);
 
     logs.info() << " Doing hydro validation";
+
+    regenerateTimeSeries(0);
 
     // Loop over sets of parallel years to check hydro inputs
     for (const auto& batch: setsOfParallelYears)
