@@ -108,7 +108,7 @@ class DefaultScenario: public IScenario
 public:
     using IScenario::IScenario;
 
-    [[nodiscard]] Chronicle getData(Year year) const override
+    [[nodiscard]] Chronicle getData(Year) const override
     {
         return 0; // Default rank for empty groupId
     }

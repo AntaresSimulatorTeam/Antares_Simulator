@@ -29,7 +29,7 @@
 #include <antares/study/system-model/variable.h>
 #include "antares/expressions/visitors/TimeIndexVisitor.h"
 
-#include "include/antares/solver/optim-model-filler/scenarioGroupRepo.h"
+#include "antares/solver/optim-model-filler/scenarioGroupRepo.h"
 
 namespace Antares::Optimization
 {
@@ -141,7 +141,7 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
 ComponentFiller::ComponentFiller(
   const ModelerStudy::SystemModel::Component& component,
   VariableDictionary& variableDictionary,
-  const Optimisation::LinearProblemDataImpl::ScenarioGroupRepository& scenarioGroupRepository):
+  const ScenarioGroupRepository& scenarioGroupRepository):
     component_(component),
     variableDictionary_(variableDictionary),
     scenarioGroupRepository_(scenarioGroupRepository)

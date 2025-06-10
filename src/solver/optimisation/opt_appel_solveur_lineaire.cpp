@@ -87,7 +87,7 @@ struct SimplexResult
 };
 
 class EmptyScenarioGroupRepository
-    : public Antares::Optimisation::LinearProblemDataImpl::ScenarioGroupRepository
+    : public Optimization::ScenarioGroupRepository
 {
 };
 

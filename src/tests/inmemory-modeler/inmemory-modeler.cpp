@@ -25,6 +25,7 @@
 #include "antares/expressions/nodes/ExpressionsNodes.h"
 #include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
+#include "antares/solver/optim-model-filler/scenarioGroupRepo.h"
 #include "antares/study/system-model/component.h"
 #include "antares/study/system-model/parameter.h"
 
@@ -48,7 +49,7 @@ void LinearProblemBuildingFixture::buildLinearProblem(
     std::vector<Antares::Optimisation::LinearProblemApi::LinearProblemFiller*> fillers_ptr;
     // All LP variables coordinates (component id, variable id, scenario, time step)
     Antares::Optimization::VariableDictionary variableDictionary;
-    Antares::Optimisation::LinearProblemDataImpl::ScenarioGroupRepository scenario_group_repository;
+    Antares::Optimization::ScenarioGroupRepository scenario_group_repository;
     for (auto& component: components)
     {
         auto cf = std::make_unique<Antares::Optimization::ComponentFiller>(
@@ -85,12 +86,13 @@ void LinearProblemBuildingFixture::buildLinearProblem()
 void LinearProblemBuildingFixture::createComponent(
   const std::string& modelId,
   const std::string& componentId,
-  std::map<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue> parameterValues)
+  std::map<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue> parameterValues,
+  std::string scenarioGroupId)
 {
     ComponentBuilder component_builder;
     auto component = component_builder.withId(componentId)
                        .withModel(&models.at(modelId))
-                       .withScenarioGroupId("scenario_group")
+                       .withScenarioGroupId(scenarioGroupId)
                        .withParameterValues(move(parameterValues))
                        .build();
     components.push_back(std::move(component));

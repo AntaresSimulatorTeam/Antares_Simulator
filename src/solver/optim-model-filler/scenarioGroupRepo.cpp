@@ -31,7 +31,7 @@ void ScenarioGroupRepository::addScenario(const std::string& groupId,
     scenarioGroups_[groupId] = std::move(scenario);
 }
 
-class DefaultScenario: public LinearProblemApi::IScenario
+class DefaultScenario: public Optimisation::LinearProblemApi::IScenario
 {
 public:
     using IScenario::IScenario;

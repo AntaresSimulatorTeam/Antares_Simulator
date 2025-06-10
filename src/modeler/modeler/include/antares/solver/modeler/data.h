@@ -25,6 +25,8 @@
 #include <antares/study/system-model/library.h>
 #include <antares/study/system-model/system.h>
 
+#include "antares/solver/optim-model-filler/scenarioGroupRepo.h"
+
 namespace Antares::Modeler
 {
 

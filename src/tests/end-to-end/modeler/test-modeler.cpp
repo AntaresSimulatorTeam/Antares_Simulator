@@ -70,6 +70,17 @@ Antares::ModelerStudy::SystemModel::Component copyComponent(
       .build();
 }
 
+class DefaultScenario: public Antares::Optimisation::LinearProblemApi::IScenario
+{
+public:
+    using IScenario::IScenario;
+
+    [[nodiscard]] Chronicle getData(Year) const override
+    {
+        return 0; // Default rank for empty groupId
+    }
+};
+
 using Models = std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Model>;
 
 template<class Fixture>
@@ -118,7 +129,7 @@ public:
                 .system = std::make_unique<Antares::ModelerStudy::SystemModel::System>(
                   std::move(system)),
                 .dataSeries = std::move(data),
-        .scenario_group_repository = Antares::Optimisation::LinearProblemDataImpl::ScenarioGroupRepository()};
+        .scenario_group_repository = std::move(scenarioGroupRepository)};
     }
 
     void setComponents(const std::span<Antares::ModelerStudy::SystemModel::Component>& vector)
@@ -141,7 +152,7 @@ public:
           Antares::Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY);
     }
 
-    void addParameter(const std::string& str, Antares::Expressions::Visitors::TimeIndex time_index)
+    void addParameter(const std::string& str, Antares::Expressions::Visitors::TimeIndex)
     {
         parameters.emplace(Test::Modeler::build_context_parameter_with(
           "a",
@@ -159,6 +170,7 @@ public:
     bool timeDependent{false};
     std::map<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue> parameters{};
     std::vector<std::string> parameterIds{};
+    Antares::Optimization::ScenarioGroupRepository scenarioGroupRepository{};
 };
 
 struct Solution

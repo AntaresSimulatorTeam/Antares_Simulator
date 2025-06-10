@@ -84,7 +84,7 @@ BOOST_AUTO_TEST_CASE(ten_timesteps_var_with_literal_bounds_to_filler__problem_co
     BOOST_CHECK_EQUAL(pb->constraintCount(), 0);
     for (unsigned int i = 0; i < nb_var; i++)
     {
-        auto* var = pb->lookupVariable("some_component.var1_t" + to_string(i));
+        auto* var = pb->lookupVariable("some_component.var1_s0_t" + to_string(i));
         BOOST_REQUIRE(var);
         BOOST_CHECK_EQUAL(var->getLb(), -5);
         BOOST_CHECK_EQUAL(var->getUb(), 10);
@@ -223,13 +223,13 @@ BOOST_AUTO_TEST_CASE(
     BOOST_CHECK_EQUAL(pb->variableCount(), 2 * 10);
     for (auto i = 0; i < nb_var; i++)
     {
-        auto* var1 = pb->lookupVariable("component_1.var1_t" + to_string(i));
+        auto* var1 = pb->lookupVariable("component_1.var1_s0_t" + to_string(i));
         BOOST_REQUIRE(var1);
         BOOST_CHECK(!var1->isInteger());
         BOOST_CHECK_EQUAL(var1->getLb(), -1.);
         BOOST_CHECK_EQUAL(var1->getUb(), 6.);
 
-        auto* var2 = pb->lookupVariable("component_2.var2_t" + to_string(i));
+        auto* var2 = pb->lookupVariable("component_2.var2_s0_t" + to_string(i));
         BOOST_REQUIRE(var2);
         BOOST_CHECK(!var2->isInteger());
         BOOST_CHECK_EQUAL(var2->getLb(), -3.);
@@ -380,7 +380,7 @@ BOOST_AUTO_TEST_CASE(ct_with_ten_vars__pb_contains_ten_ct)
         BOOST_REQUIRE(ct);
         BOOST_CHECK_EQUAL(ct->getLb(), -pb->infinity());
         BOOST_CHECK_EQUAL(ct->getUb(), 3);
-        auto var = pb->lookupVariable("componentToto.var1_t" + to_string(i));
+        auto var = pb->lookupVariable("componentToto.var1_s0_t" + to_string(i));
         BOOST_REQUIRE(var);
         BOOST_CHECK(var->isInteger());
         BOOST_CHECK_EQUAL(ct->getCoefficient(var), 1);
@@ -455,7 +455,7 @@ BOOST_AUTO_TEST_CASE(ct_with_time_series_variable_bounds)
         BOOST_REQUIRE(ct);
         BOOST_CHECK_EQUAL(ct->getLb(), -pb->infinity());
         BOOST_CHECK_EQUAL(ct->getUb(), -5 + 3);
-        auto var = pb->lookupVariable("componentToto.var1_t" + to_string(t));
+        auto var = pb->lookupVariable("componentToto.var1_s0_t" + to_string(t));
         BOOST_REQUIRE(var);
         BOOST_CHECK(var->isInteger());
         BOOST_CHECK_EQUAL(ct->getCoefficient(var), -1);
@@ -507,7 +507,6 @@ BOOST_AUTO_TEST_CASE(get_chronicle_for_given_year)
 
     LinearProblemData data;
     data.addDataSeries(std::move(bounds_time_series));
-    data.addScenario("groupeName", std::move(scenario));
 
     buildLinearProblem(ctx, data);
     const auto nb_var = ctx.getNumberOfTimestep(); // = 2
@@ -521,7 +520,7 @@ BOOST_AUTO_TEST_CASE(get_chronicle_for_given_year)
         BOOST_REQUIRE(ct);
         BOOST_CHECK_EQUAL(ct->getLb(), -pb->infinity());
         BOOST_CHECK_EQUAL(ct->getUb(), -5 + 3);
-        auto var = pb->lookupVariable("componentToto.var1_t" + to_string(t));
+        auto var = pb->lookupVariable("componentToto.var1_s0_t" + to_string(t));
         BOOST_REQUIRE(var);
         BOOST_CHECK(var->isInteger());
         BOOST_CHECK_EQUAL(ct->getCoefficient(var), -1);
@@ -708,7 +707,7 @@ BOOST_AUTO_TEST_CASE(one_time_dependent_var_with_objective)
     BOOST_CHECK_EQUAL(pb->variableCount(), nb_var);
     for (auto i = 0; i < nb_var; i++)
     {
-        const auto var_name = "componentA.x_t" + to_string(i);
+        const auto var_name = "componentA.x_s0_t" + to_string(i);
         BOOST_CHECK_NO_THROW(pb->lookupVariable(var_name));
         BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(pb->lookupVariable(var_name)), 1);
     }
@@ -858,17 +857,17 @@ public:
         return static_cast<int>(variables_.size());
     }
 
-    IMipConstraint* addConstraint(double lb, double ub, const std::string& name) override
+    IMipConstraint* addConstraint(double, double, const std::string&) override
     {
         return nullptr;
     }
 
-    IMipConstraint* lookupConstraint(const std::string& name) const override
+    IMipConstraint* lookupConstraint(const std::string&) const override
     {
         return nullptr;
     }
 
-    IMipConstraint* getConstraint(std::size_t idx) const override
+    IMipConstraint* getConstraint(std::size_t) const override
     {
         return nullptr;
     }
@@ -878,11 +877,11 @@ public:
         return 0;
     }
 
-    void setObjectiveCoefficient(IMipVariable* var, double coefficient) override
+    void setObjectiveCoefficient(IMipVariable*, double) override
     {
     }
 
-    double getObjectiveCoefficient(const IMipVariable* var) const override
+    double getObjectiveCoefficient(const IMipVariable*) const override
     {
         return 0.0;
     }
@@ -905,12 +904,12 @@ public:
         return false;
     }
 
-    IMipSolution* solve(bool verboseSolver) override
+    IMipSolution* solve(bool) override
     {
         return nullptr;
     }
 
-    void WriteLP(const std::string& filename) const override
+    void WriteLP(const std::string&) const override
     {
     }
 

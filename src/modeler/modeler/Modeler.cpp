@@ -61,7 +61,7 @@ public:
       ILinearProblem& pb,
       const ModelerParameters& parameters,
       ILinearProblemData* dataSeries,
-      const Optimisation::LinearProblemDataImpl::ScenarioGroupRepository& scenario_group_repository)
+      const Optimization::ScenarioGroupRepository& scenario_group_repository)
     {
         std::vector<std::unique_ptr<Optimization::ComponentFiller>> fillers;
         std::vector<LinearProblemFiller*> fillers_ptr;

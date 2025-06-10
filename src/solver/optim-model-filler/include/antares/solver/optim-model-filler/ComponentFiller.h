@@ -28,11 +28,6 @@
 
 #include "ReadLinearConstraintVisitor.h"
 
-namespace Antares::Optimisation::LinearProblemDataImpl
-{
-class ScenarioGroupRepository;
-}
-
 namespace Antares::ModelerStudy::SystemModel
 {
 class Component;
@@ -46,6 +41,7 @@ class EvalVisitor;
 
 namespace Antares::Optimization
 {
+    class ScenarioGroupRepository;
 /**
  * Component filler
  * Implements LinearProblemFiller interface.
@@ -60,7 +56,7 @@ public:
     explicit ComponentFiller(
       const ModelerStudy::SystemModel::Component& component,
       VariableDictionary& variableDictionary,
-      const Optimisation::LinearProblemDataImpl::ScenarioGroupRepository& scenarioGroupRepository);
+      const ScenarioGroupRepository& scenarioGroupRepository);
 
     void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
@@ -87,7 +83,7 @@ private:
 
     const ModelerStudy::SystemModel::Component& component_;
     VariableDictionary& variableDictionary_;
-    const Optimisation::LinearProblemDataImpl::ScenarioGroupRepository& scenarioGroupRepository_;
+    const ScenarioGroupRepository& scenarioGroupRepository_;
 };
 
 class VariablesBulkAddition
