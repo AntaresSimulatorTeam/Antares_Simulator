@@ -33,7 +33,7 @@ public:
       const Optimisation::LinearProblemMpsolverImpl::OrtoolsMipSolution& solution) override;
     explicit FileWriter(std::filesystem::path path, bool noOutput = false);
 
-    void writeProblem(const Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem&
+    void writeProblem(const Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem&
                         problem) override;
 
 private:
