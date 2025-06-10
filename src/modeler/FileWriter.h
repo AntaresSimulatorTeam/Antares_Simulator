@@ -33,8 +33,8 @@ public:
       const Optimisation::LinearProblemMpsolverImpl::OrtoolsMipSolution& solution) override;
     explicit FileWriter(std::filesystem::path path);
 
-    void writeProblem(const Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem&
-                        problem) override;
+    void writeProblem(
+      const Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem& problem) override;
 
 private:
     const std::filesystem::path studyPath_;
