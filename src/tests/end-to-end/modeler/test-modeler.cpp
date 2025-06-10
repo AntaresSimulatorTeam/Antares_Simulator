@@ -40,7 +40,7 @@ public:
 };
 
 Antares::ModelerStudy::SystemModel::Component copyComponent(
-  Antares::ModelerStudy::SystemModel::Component c)
+  const Antares::ModelerStudy::SystemModel::Component& c)
 {
     Antares::ModelerStudy::SystemModel::ComponentBuilder builder;
     return builder.withId(c.Id())
@@ -109,7 +109,7 @@ public:
     Fixture fixture;
 };
 
-class InMemoryWriter: public Antares::Solver::IWriter
+class StubWriter: public Antares::Solver::IWriter
 {
 public:
     void init() override
@@ -132,7 +132,7 @@ public:
 BOOST_AUTO_TEST_CASE(dummy)
 {
     InMemoryLoader<Test::Modeler::LinearProblemBuildingFixture> inMemoryLoader;
-    InMemoryWriter inMemoryWriter;
+    StubWriter inMemoryWriter;
 
     const Antares::Solver::Modeler modeler(inMemoryLoader, inMemoryWriter);
     modeler.solve();
