@@ -376,9 +376,11 @@ jobs:
           path: _build/_CPack_Packages/win64/NSIS/NSISOutput.log
 
       - name: .zip creation
+        shell: bash
         run: |
           cd _build
-          cpack -G ZIP -D CPACK_INSTALLED_DIRECTORIES="${{ env.ORTOOLS_DIR }}/install/lib;bin"
+          FIXED_PATH=${ORTOOLS_DIR//\\//}
+          cpack -G ZIP -D CPACK_INSTALLED_DIRECTORIES="${FIXED_PATH}/install/bin;bin"
 
       - name: Installer upload
         uses: actions/upload-artifact@v4
