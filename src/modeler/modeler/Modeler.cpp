@@ -97,7 +97,7 @@ void Modeler::solve() const
 
         SystemLinearProblemBuilder system_linear_problem(data.system.get());
 
-        writer_.init();
+        writer_.init(!parameters.noOutput);
 
         logs.info() << "linear problem of System loaded";
         // Problem is MIP if any variable of any component is not continuous

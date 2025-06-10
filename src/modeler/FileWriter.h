@@ -27,11 +27,11 @@ namespace Antares::Modeler
 class FileWriter: public Solver::IWriter
 {
 public:
-    void init() override;
+    void init(bool setOutput = true) override;
 
     void writeSolution(
       const Optimisation::LinearProblemMpsolverImpl::OrtoolsMipSolution& solution) override;
-    explicit FileWriter(std::filesystem::path path, bool noOutput = false);
+    explicit FileWriter(std::filesystem::path path);
 
     void writeProblem(const Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem&
                         problem) override;
@@ -39,6 +39,6 @@ public:
 private:
     const std::filesystem::path studyPath_;
     std::filesystem::path outputPath_;
-    const bool noOutput_;
+    bool output{false};
 };
 } // namespace Antares::Modeler

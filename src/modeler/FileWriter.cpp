@@ -30,10 +30,11 @@
 
 namespace Antares::Modeler
 {
-void FileWriter::init()
+void FileWriter::init(bool setOutput)
 {
+    output = setOutput;
     outputPath_ = studyPath_ / "output";
-    if (!noOutput_)
+    if (output)
     {
         logs.info() << "Output folder : " << outputPath_;
         if (!std::filesystem::is_directory(outputPath_)
@@ -48,7 +49,7 @@ void FileWriter::init()
 void FileWriter::writeSolution(
   const Optimisation::LinearProblemMpsolverImpl::OrtoolsMipSolution& solution)
 {
-    if (!noOutput_)
+    if (output)
     {
         logs.info() << "Writing objective & variable values...";
         std::ofstream sol_out(outputPath_ / "solution.csv");
@@ -61,16 +62,15 @@ void FileWriter::writeSolution(
     }
 }
 
-FileWriter::FileWriter(std::filesystem::path path, bool noOutput):
-    studyPath_(std::move(path)),
-    noOutput_(noOutput)
+FileWriter::FileWriter(std::filesystem::path path):
+    studyPath_(std::move(path))
 {
 }
 
 void FileWriter::writeProblem(
-  const Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem& problem)
+  const Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem& problem)
 {
-    if (!noOutput_)
+    if (output)
     {
         logs.info() << "Writing problem.lp...";
         const auto lp_path = outputPath_ / "problem.lp";
