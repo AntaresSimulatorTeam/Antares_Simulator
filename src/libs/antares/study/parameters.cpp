@@ -583,22 +583,6 @@ static bool SGDIntLoadFamily_General(Parameters& d,
     {
         return value.to<bool>(d.yearByYear);
     }
-
-    if (key == "refreshtimeseries")
-    {
-        String trimmed = rawvalue;
-        trimmed.trim();
-        if (!trimmed.empty())
-        {
-            logs.error() << "This version does not support timeseries refresh, please remove "
-                            "refreshtimeseries";
-            return false;
-        }
-        else
-        {
-            return true;
-        }
-    }
     return false;
 }
 
@@ -1080,10 +1064,17 @@ static bool SGDIntLoadFamily_Compatibility(Parameters& d,
     return false;
 }
 
+static void logNotSupported(const String& key, const StudyVersion& version)
+{
+    logs.warning() << "In generaldata.ini, parameter `" << key
+                   << "` is no longer supported since version " << version.toString()
+                   << ", consider removing it " << "from the study";
+}
+
 static bool SGDIntLoadFamily_Legacy(Parameters& d,
                                     const String& key,
                                     const String& value,
-                                    const String&,
+                                    const String& rawvalue,
                                     const StudyVersion& version)
 {
     // Comparisons kept for compatibility reasons
@@ -1140,8 +1131,7 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
     {
         if (value == "hot start")
         {
-            logs.warning()
-              << "Option initial-reservoir-levels is deprecated, please remove it from the study";
+            logNotSupported(key, StudyVersion(9, 2));
         }
         return true;
     }
@@ -1150,8 +1140,7 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
     {
         if (value == "false")
         {
-            logs.warning() << "Parameter set-to-null-ntc-between-physical-out-for-first-step "
-                              " is deprecated, please remove it from the study";
+            logNotSupported(key, StudyVersion(9, 2));
         }
         return true;
     }
@@ -1160,8 +1149,7 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
     {
         if (value == "true")
         {
-            logs.warning() << "Parameter enable-first-step is deprecated, please remove it from"
-                              " the study";
+            logNotSupported(key, StudyVersion(9, 2));
         }
         return true;
     }
@@ -1171,6 +1159,18 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
         || key == "refreshintervalwind" || key == "refreshintervalthermal"
         || key == "refreshintervalsolar")
     {
+        return true;
+    }
+
+    // ignored since 9.3
+    if (key == "refreshtimeseries")
+    {
+        String trimmed = rawvalue;
+        trimmed.trim();
+        if (!trimmed.empty())
+        {
+            logNotSupported(key, StudyVersion(9, 3));
+        }
         return true;
     }
 
