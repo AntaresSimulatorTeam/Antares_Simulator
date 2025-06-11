@@ -63,8 +63,7 @@ variable = netting
 operator = less
 hours = [1, 168]
 ```
-For each constraint, the corresponding RHS time-series must be located at `input/st-storage/constraints/area/rhs_<constraint id>.txt`.
-
+For each constraint, the corresponding RHS time-series must be located at `input/st-storage/constraints/area/rhs_<constraint id>.txt`. The time-series must contain a single column and 8760 rows, empty files are also accepted.
 
 ####  Hydro final levels / scenario-builder
 
