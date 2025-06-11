@@ -115,6 +115,10 @@ static void writeModelerSolutions(const operations_research::MPSolver* solver,
 
     // we want to only get modeler variables, they're added after legacy vars
     auto start = variables.begin() + Probleme.NombreDeVariables;
+    if (start == variables.end())
+    {
+        return;
+    }
     for (auto v = start; v < variables.end(); v++)
     {
         contentStream << (*v)->name() << "\t" << (*v)->solution_value() << std::endl;
