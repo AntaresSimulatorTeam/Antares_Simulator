@@ -93,8 +93,9 @@ public:
                 .solverLogs = false,
                 .solverParameters = "DUMMY",
                 .noOutput = true,
-                .firstTimeStep = 0,
-                .lastTimeStep = 0};
+                .firstTimeStep = timeSteps.first,
+                .lastTimeStep = timeSteps.second
+        };
     }
 
     Antares::Modeler::Data loadAll() override
@@ -184,6 +185,7 @@ public:
     std::vector<std::string> parameterIds{};
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepository{};
     std::unordered_map<std::string, std::string> groupes;
+    std::pair<int,int> timeSteps{0,0};
 };
 
 struct Solution
@@ -252,21 +254,15 @@ struct TSDimensions
 Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet
 constantTimeSeriesSets(const std::string& id, std::span<double> values, unsigned int nRows = 1)
 {
-    int nTimesteps = nRows;
-    Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet timeSeriesSet(id, nTimesteps);
-    for (unsigned int i = 0; i < values.size(); ++i)
+    Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet timeSeriesSet(id, nRows);
+    for (double value : values)
     {
-        if (nTimesteps == 0)
+        if (nRows == 0)
         {
             return timeSeriesSet;
         }
-        int nSets = values.size();
-        for (int v = 0; v < nSets; ++v)
-        {
-            double value = values[v];
-            std::vector<double> set(nTimesteps, value);
-            timeSeriesSet.add(set);
-        }
+        std::vector<double> set(nRows, value);
+        timeSeriesSet.add(set);
     }
 
     return timeSeriesSet;

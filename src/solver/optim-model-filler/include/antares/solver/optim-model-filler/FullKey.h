@@ -42,6 +42,7 @@ class FullKey
 {
 public:
     FullKey(const std::string& component, const std::string& variable);
+    FullKey(const std::string& component, const std::string& variable, unsigned int scenario);
     FullKey(const std::string& component,
             const std::string& variable,
             unsigned int scenario,

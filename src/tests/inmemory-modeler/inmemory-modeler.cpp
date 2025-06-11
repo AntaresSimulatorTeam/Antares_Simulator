@@ -43,13 +43,20 @@ build_context_parameter_with(const std::string& id,
 
 void LinearProblemBuildingFixture::buildLinearProblem(
   Antares::Optimisation::LinearProblemApi::FillContext& time_scenario_ctx,
-  Antares::Optimisation::LinearProblemDataImpl::LinearProblemData& dummy_data)
+  Antares::Optimisation::LinearProblemDataImpl::LinearProblemData& dummy_data,
+  std::vector<std::unique_ptr<Antares::Optimisation::LinearProblemApi::IScenario>>& scenarios
+  )
 {
     std::vector<std::unique_ptr<Antares::Optimization::ComponentFiller>> fillers;
     std::vector<Antares::Optimisation::LinearProblemApi::LinearProblemFiller*> fillers_ptr;
     // All LP variables coordinates (component id, variable id, scenario, time step)
     Antares::Optimization::VariableDictionary variableDictionary;
     Antares::Optimization::ScenarioGroupRepository scenario_group_repository;
+    for (auto& scenario: scenarios)
+    {
+        auto name = scenario->group();
+        scenario_group_repository.addScenario(name, std::move(scenario));
+    }
     for (auto& component: components)
     {
         auto cf = std::make_unique<Antares::Optimization::ComponentFiller>(
@@ -74,7 +81,8 @@ void LinearProblemBuildingFixture::buildLinearProblem(
 void LinearProblemBuildingFixture::buildLinearProblem(
   Antares::Optimisation::LinearProblemApi::FillContext& time_scenario_ctx)
 {
-    buildLinearProblem(time_scenario_ctx, dummy_data_);
+    std::vector<std::unique_ptr<Antares::Optimisation::LinearProblemApi::IScenario>> scenarios;
+    buildLinearProblem(time_scenario_ctx, dummy_data_, scenarios);
 }
 
 void LinearProblemBuildingFixture::buildLinearProblem()

@@ -114,7 +114,8 @@ struct LinearProblemBuildingFixture
 
     void buildLinearProblem(
       Antares::Optimisation::LinearProblemApi::FillContext& time_scenario_ctx,
-      Antares::Optimisation::LinearProblemDataImpl::LinearProblemData& dummy_data);
+      Antares::Optimisation::LinearProblemDataImpl::LinearProblemData& dummy_data,
+      std::vector<std::unique_ptr<Antares::Optimisation::LinearProblemApi::IScenario>>& scenarios);
 
     void buildLinearProblem(
       Antares::Optimisation::LinearProblemApi::FillContext& time_scenario_ctx);

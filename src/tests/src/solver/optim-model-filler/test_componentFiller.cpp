@@ -443,7 +443,8 @@ BOOST_AUTO_TEST_CASE(ct_with_time_series_variable_bounds)
     LinearProblemData data;
     data.addDataSeries(std::move(bounds_time_series));
 
-    buildLinearProblem(ctx, data);
+    std::vector<std::unique_ptr<IScenario>> scenarios;
+    buildLinearProblem(ctx, data, scenarios);
     const auto nb_var = ctx.getNumberOfTimestep(); // = 2
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 2);
@@ -487,7 +488,8 @@ BOOST_AUTO_TEST_CASE(get_chronicle_for_given_year)
     createComponent(
       "model",
       "componentToto",
-      {build_context_parameter_with("bounds", "bounds", Visitors::ParameterType::TIMESERIE)});
+      {build_context_parameter_with("bounds", "bounds", Visitors::ParameterType::TIMESERIE)},
+      "groupeName");
 
     const vector<unsigned int> timeSteps{1, 2};
     FillContext ctx{timeSteps.at(0), timeSteps.at(1), 3};
@@ -508,7 +510,9 @@ BOOST_AUTO_TEST_CASE(get_chronicle_for_given_year)
     LinearProblemData data;
     data.addDataSeries(std::move(bounds_time_series));
 
-    buildLinearProblem(ctx, data);
+    std::vector<std::unique_ptr<IScenario>> scenarios;
+    scenarios.emplace_back(std::move(scenario));
+    buildLinearProblem(ctx, data, scenarios);
     const auto nb_var = ctx.getNumberOfTimestep(); // = 2
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 2);
@@ -520,7 +524,7 @@ BOOST_AUTO_TEST_CASE(get_chronicle_for_given_year)
         BOOST_REQUIRE(ct);
         BOOST_CHECK_EQUAL(ct->getLb(), -pb->infinity());
         BOOST_CHECK_EQUAL(ct->getUb(), -5 + 3);
-        const auto* var = pb->lookupVariable("componentToto.var1_s0_t" + to_string(t));
+        const auto* var = pb->lookupVariable("componentToto.var1_s1_t" + to_string(t));
         BOOST_REQUIRE(var);
         BOOST_CHECK(var->isInteger());
         BOOST_CHECK_EQUAL(ct->getCoefficient(var), -1);

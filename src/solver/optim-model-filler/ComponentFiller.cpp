@@ -191,7 +191,7 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
         {
             Optimisation::LinearProblemApi::IScenario::Chronicle chronicle = scenario.getData(
               ctx.getYear());
-            const Dimensions dim(IntegerInterval{chronicle, chronicle},
+            const Dimensions dim(IntegerInterval{chronicle, chronicle}, /*TODO Handle range of chronicle ? */
                                  IntegerInterval(ctx.getFirstTimeStep(), ctx.getLastTimeStep()));
             // std::visit to handle the 4 cases: double/double, vector/double,
             // double/vector and vector/vector.

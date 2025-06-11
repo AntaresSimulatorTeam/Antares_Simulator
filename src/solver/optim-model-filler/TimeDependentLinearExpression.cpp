@@ -23,6 +23,7 @@
 #include <functional>
 #include <map>
 #include <ranges>
+#include <utility>
 
 #include <antares/solver/optim-model-filler/TimeDependentLinearExpression.h>
 #include "antares/expressions/RotateIndex.h"

@@ -104,7 +104,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const VariableN
     {
         return TimeDependentLinearExpression(
           fillContext_,
-          LinearExpression(0, {{FullKey(component_.Id(), node->value()), 1}}));
+          LinearExpression(0, {{FullKey(component_.Id(), node->value(), evalContext_.scenario().getData(fillContext_.getYear())), 1}}));
     }
     // only dependent
     LinearExpressionMap linearExpressions;
