@@ -46,6 +46,25 @@ It is possible to provide only k of these time-series, for k=0..5. However, if p
 
 Note that in order for time-series `cost-variation-injection.txt` and `cost-variation-withdrawal.txt` to be taken into account, the user needs to set `penalize-variation-injection = true` (resp. `penalize-variation-withdrawal = true`). If not, these files will be ignored.
 
+#### Short-term storages / additional constraints
+For each area, add optional file `input/st-storage/constraints/<area id>/additional-constraints.ini`
+
+For example
+```ini
+[withdrawal-1]
+cluster = cluster-11
+variable = withdrawal
+operator = equal
+hours = [1,3,5], [120,121,122,123,124,125,126,127,128]
+
+[netting-1]
+cluster = cluster-11
+variable = netting
+operator = less
+hours = [1, 168]
+```
+For each constraint, the corresponding RHS time-series must be located at `input/st-storage/constraints/area/rhs_<constraint id>.txt`. The time-series must contain a single column and 8760 rows, empty files are also accepted.
+
 ####  Hydro final levels / scenario-builder
 
 - Added optional key type "hfl" (hydro final level) in the scenario builder. The syntax is equivalent to existing
