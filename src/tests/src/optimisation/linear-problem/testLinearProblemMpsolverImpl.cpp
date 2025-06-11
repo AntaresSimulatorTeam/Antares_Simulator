@@ -143,6 +143,11 @@ BOOST_FIXTURE_TEST_CASE(give_bounds_to_var___check_bounds_exist, FixtureEmptyPro
     BOOST_CHECK_EQUAL(var->getUb(), 13);
 }
 
+BOOST_FIXTURE_TEST_CASE(variable_invalid_bounds, FixtureEmptyProblem)
+{
+    BOOST_CHECK_THROW(pb->addNumVariable(80, 8, "var"), std::invalid_argument);
+}
+
 BOOST_FIXTURE_TEST_CASE(give_bounds_to_constraint___check_bounds_exist, FixtureEmptyProblem)
 {
     auto* constraint = pb->addConstraint(0, 1, "var");
