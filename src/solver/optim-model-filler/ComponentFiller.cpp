@@ -28,7 +28,6 @@
 #include <antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h>
 #include <antares/study/system-model/variable.h>
 #include "antares/expressions/visitors/TimeIndexVisitor.h"
-
 #include "antares/solver/optim-model-filler/scenarioGroupRepo.h"
 
 namespace Antares::Optimization
@@ -138,10 +137,9 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
       });
 }
 
-ComponentFiller::ComponentFiller(
-  const ModelerStudy::SystemModel::Component& component,
-  VariableDictionary& variableDictionary,
-  const ScenarioGroupRepository& scenarioGroupRepository):
+ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& component,
+                                 VariableDictionary& variableDictionary,
+                                 const ScenarioGroupRepository& scenarioGroupRepository):
     component_(component),
     variableDictionary_(variableDictionary),
     scenarioGroupRepository_(scenarioGroupRepository)
@@ -191,7 +189,8 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
         {
             Optimisation::LinearProblemApi::IScenario::Chronicle chronicle = scenario.getData(
               ctx.getYear());
-            const Dimensions dim(IntegerInterval{chronicle, chronicle}, /*TODO Handle range of chronicle ? */
+            const Dimensions dim(IntegerInterval{chronicle,
+                                                 chronicle}, /*TODO Handle range of chronicle ? */
                                  IntegerInterval(ctx.getFirstTimeStep(), ctx.getLastTimeStep()));
             // std::visit to handle the 4 cases: double/double, vector/double,
             // double/vector and vector/vector.

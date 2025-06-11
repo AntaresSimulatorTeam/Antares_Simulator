@@ -41,7 +41,8 @@ class EvalVisitor;
 
 namespace Antares::Optimization
 {
-    class ScenarioGroupRepository;
+class ScenarioGroupRepository;
+
 /**
  * Component filler
  * Implements LinearProblemFiller interface.
@@ -53,10 +54,9 @@ public:
     ComponentFiller() = delete;
     ComponentFiller(ComponentFiller& other) = delete;
     /// Create a ComponentFiller for a Component
-    explicit ComponentFiller(
-      const ModelerStudy::SystemModel::Component& component,
-      VariableDictionary& variableDictionary,
-      const ScenarioGroupRepository& scenarioGroupRepository);
+    explicit ComponentFiller(const ModelerStudy::SystemModel::Component& component,
+                             VariableDictionary& variableDictionary,
+                             const ScenarioGroupRepository& scenarioGroupRepository);
 
     void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
                       Optimisation::LinearProblemApi::ILinearProblemData& data,

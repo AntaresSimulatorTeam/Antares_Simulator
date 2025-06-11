@@ -79,7 +79,10 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param, CreateVisitorFixture)
 {
     // 5 + param(3) = 8
     Node* sum = create<SumNode>(create<LiteralNode>(5.), create<ParameterNode>("param"));
-    EvaluationContext evaluation_context({{build_context_parameter_with("param", "3.")}}, {}, data, emptyScenario);
+    EvaluationContext evaluation_context({{build_context_parameter_with("param", "3.")}},
+                                         {},
+                                         data,
+                                         emptyScenario);
     ReadLinearExpressionVisitor visitor(evaluation_context, {0, 0, 0}, component);
     auto linear_expression = visitor.dispatch(sum).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 8.);
@@ -94,7 +97,8 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var, CreateVisitorFixture)
     Node* sum = create<SumNode>(create<LiteralNode>(60.), create<ParameterNode>("param"), product);
     EvaluationContext evaluation_context({{build_context_parameter_with("param", "-5.")}},
                                          {},
-                                         data, emptyScenario);
+                                         data,
+                                         emptyScenario);
     ReadLinearExpressionVisitor visitor(evaluation_context, {0, 0, 0}, component);
     auto linear_expression = visitor.dispatch(sum).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 55.);
@@ -104,9 +108,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var, CreateVisitorFixture)
 
 struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearProblemData
 {
-    [[nodiscard]] double getData(const std::string&,
-                   unsigned,
-                                 unsigned hour) const override
+    [[nodiscard]] double getData(const std::string&, unsigned, unsigned hour) const override
     {
         return hour; // for test
     }
@@ -244,7 +246,8 @@ BOOST_FIXTURE_TEST_CASE(visit_complex_expression, CreateVisitorFixture)
     EvaluationContext evaluation_context({build_context_parameter_with("param1", "-2."),
                                           build_context_parameter_with("param2", "8.")},
                                          {},
-                                         data, emptyScenario);
+                                         data,
+                                         emptyScenario);
     ReadLinearExpressionVisitor visitor(evaluation_context, {0, 0, 0}, component);
     auto linear_expression = visitor.dispatch(big_sum).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 10.);

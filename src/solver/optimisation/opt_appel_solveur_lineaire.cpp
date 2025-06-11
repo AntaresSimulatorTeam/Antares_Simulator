@@ -86,8 +86,7 @@ struct SimplexResult
     double objectiveValue;
 };
 
-class EmptyScenarioGroupRepository
-    : public Optimization::ScenarioGroupRepository
+class EmptyScenarioGroupRepository: public Optimization::ScenarioGroupRepository
 {
 };
 

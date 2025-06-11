@@ -52,7 +52,6 @@ private:
     unsigned firstTimeStep = 0;
     unsigned lastTimeStep = 0;
     unsigned year_{0}; // TODO est-ce que la notion d'année à du sens ici ?
-
 };
 
 class ILinearProblemData

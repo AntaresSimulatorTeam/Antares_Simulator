@@ -44,8 +44,7 @@ build_context_parameter_with(const std::string& id,
 void LinearProblemBuildingFixture::buildLinearProblem(
   Antares::Optimisation::LinearProblemApi::FillContext& time_scenario_ctx,
   Antares::Optimisation::LinearProblemDataImpl::LinearProblemData& dummy_data,
-  std::vector<std::unique_ptr<Antares::Optimisation::LinearProblemApi::IScenario>>& scenarios
-  )
+  std::vector<std::unique_ptr<Antares::Optimisation::LinearProblemApi::IScenario>>& scenarios)
 {
     std::vector<std::unique_ptr<Antares::Optimization::ComponentFiller>> fillers;
     std::vector<Antares::Optimisation::LinearProblemApi::LinearProblemFiller*> fillers_ptr;

@@ -62,7 +62,6 @@ public:
     const Expression& LowerBound() const
     {
         return lowerBound_;
-
     }
 
     const Expression& UpperBound() const

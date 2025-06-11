@@ -57,11 +57,10 @@ public:
 
     ~SystemLinearProblemBuilder() = default;
 
-    void Provide(
-      ILinearProblem& pb,
-      const ModelerParameters& parameters,
-      ILinearProblemData* dataSeries,
-      const Optimization::ScenarioGroupRepository& scenario_group_repository)
+    void Provide(ILinearProblem& pb,
+                 const ModelerParameters& parameters,
+                 ILinearProblemData* dataSeries,
+                 const Optimization::ScenarioGroupRepository& scenario_group_repository)
     {
         std::vector<std::unique_ptr<Optimization::ComponentFiller>> fillers;
         std::vector<LinearProblemFiller*> fillers_ptr;

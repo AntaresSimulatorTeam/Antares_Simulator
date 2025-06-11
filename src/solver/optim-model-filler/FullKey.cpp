@@ -40,11 +40,10 @@ FullKey::FullKey(const std::string& component, const std::string& variable):
 {
 }
 
-FullKey::FullKey(const std::string &component, const std::string &variable, unsigned int scenario):
+FullKey::FullKey(const std::string& component, const std::string& variable, unsigned int scenario):
     pk(component, variable),
     scenario(scenario)
-    {
-
+{
 }
 
 const PartialKey& FullKey::getPartialKey() const

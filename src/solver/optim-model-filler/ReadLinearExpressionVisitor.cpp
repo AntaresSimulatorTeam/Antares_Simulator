@@ -115,7 +115,11 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const VariableN
         {
         linearExpressions[timeStep] = LinearExpression(
           0,
-              {{FullKey(component_.Id(), node->value(), 0 /*TODO */, timeStep), 1}});
+              {{FullKey(component_.Id(),
+                        node->value(),
+                        evalContext_.scenario().getData(fillContext_.getYear()),
+                        timeStep),
+                1}});
     }
     return TimeDependentLinearExpression(linearExpressions);
 }
