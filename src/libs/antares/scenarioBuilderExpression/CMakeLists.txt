@@ -4,6 +4,7 @@ set(HEADERS
         ScenarioBuilderLexer.h
         ScenarioBuilderParser.h
         ScenarioBuilderVisitor.h
+        ScenarioGroupParser.h
 )
 
 Set(SRCS
@@ -11,6 +12,7 @@ Set(SRCS
         ScenarioBuilderLexer.cpp
         ScenarioBuilderParser.cpp
         ScenarioBuilderVisitor.cpp
+        ScenarioGroupParser.cpp
 )
 
 add_library(${PROJ} ${SRCS})
