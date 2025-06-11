@@ -24,12 +24,13 @@ namespace Antares::Solver
 {
 class ILoader;
 class IWriter;
+struct ModelerParameters;
 
 class Modeler
 {
 public:
     Modeler(ILoader& loader, IWriter& writer);
-    void solve() const;
+    void solve(const ModelerParameters& parameters) const;
 
     class Error: public std::runtime_error
     {

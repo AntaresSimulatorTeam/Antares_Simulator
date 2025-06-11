@@ -30,35 +30,27 @@
 
 namespace Antares::Modeler
 {
-void FileWriter::init(bool setOutput)
+void FileWriter::init()
 {
-    output = setOutput;
     outputPath_ = studyPath_ / "output";
-    if (output)
+    logs.info() << "Output folder : " << outputPath_;
+    if (!std::filesystem::is_directory(outputPath_)
+        && !std::filesystem::create_directory(outputPath_))
     {
-        logs.info() << "Output folder : " << outputPath_;
-        if (!std::filesystem::is_directory(outputPath_)
-            && !std::filesystem::create_directory(outputPath_))
-        {
-            throw Antares::Solver::Modeler::Error(
-              "Failed to create output directory. Exiting simulation.");
-        }
+        throw Antares::Solver::Modeler::Error(
+          "Failed to create output directory. Exiting simulation.");
     }
 }
 
 void FileWriter::writeSolution(
   const Optimisation::LinearProblemMpsolverImpl::OrtoolsMipSolution& solution)
 {
-    if (output)
+    logs.info() << "Writing objective & variable values...";
+    std::ofstream sol_out(outputPath_ / "solution.csv");
+    sol_out << std::setprecision(15) << "objective " << solution.getObjectiveValue() << std::endl;
+    for (const auto& [name, value]: solution.getOptimalValues())
     {
-        logs.info() << "Writing objective & variable values...";
-        std::ofstream sol_out(outputPath_ / "solution.csv");
-        sol_out << std::setprecision(15) << "objective " << solution.getObjectiveValue()
-                << std::endl;
-        for (const auto& [name, value]: solution.getOptimalValues())
-        {
-            sol_out << name << " " << value << std::endl;
-        }
+        sol_out << name << " " << value << std::endl;
     }
 }
 
@@ -70,11 +62,8 @@ FileWriter::FileWriter(std::filesystem::path path):
 void FileWriter::writeProblem(
   const Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem& problem)
 {
-    if (output)
-    {
-        logs.info() << "Writing problem.lp...";
-        const auto lp_path = outputPath_ / "problem.lp";
-        problem.WriteLP(lp_path.string());
-    }
+    logs.info() << "Writing problem.lp...";
+    const auto lp_path = outputPath_ / "problem.lp";
+    problem.WriteLP(lp_path.string());
 }
 } // namespace Antares::Modeler

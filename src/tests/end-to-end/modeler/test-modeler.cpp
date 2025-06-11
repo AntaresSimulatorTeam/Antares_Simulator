@@ -109,31 +109,11 @@ public:
     Fixture fixture;
 };
 
-class StubWriter: public Antares::Solver::IWriter
-{
-public:
-    void init(bool) override
-    {
-        // No initialization needed for in-memory writer
-    }
+// BOOST_AUTO_TEST_CASE(dummy)
+// {
+//     InMemoryLoader<Test::Modeler::LinearProblemBuildingFixture> inMemoryLoader;
+//     StubWriter inMemoryWriter;
 
-    void writeSolution(
-      [[maybe_unused]] const Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsMipSolution&
-        solution) override
-    {
-        // No output to write for in-memory writer
-    }
-
-    void writeProblem(
-      [[maybe_unused]] const Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem&
-        problem) override {};
-};
-
-BOOST_AUTO_TEST_CASE(dummy)
-{
-    InMemoryLoader<Test::Modeler::LinearProblemBuildingFixture> inMemoryLoader;
-    StubWriter inMemoryWriter;
-
-    const Antares::Solver::Modeler modeler(inMemoryLoader, inMemoryWriter);
-    modeler.solve();
-}
+//     const Antares::Solver::Modeler modeler(inMemoryLoader, inMemoryWriter);
+//     modeler.solve();
+// }

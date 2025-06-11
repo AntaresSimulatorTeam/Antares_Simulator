@@ -23,6 +23,7 @@
 
 #include <antares/logs/logs.h>
 #include <antares/solver/modeler/Modeler.h>
+#include "antares/solver/modeler/IWriter.h"
 #include "antares/solver/modeler/loadFiles/Fileloader.h"
 #include "antares/solver/simulation/solver.h"
 
@@ -35,6 +36,26 @@ static void usage()
     std::cout << "Usage:\n"
               << "antares-modeler <path/to/study>\n";
 }
+
+class NullWriter: public Antares::Solver::IWriter
+{
+public:
+    void init() override
+    {
+        // No initialization needed for in-memory writer
+    }
+
+    void writeSolution(
+      [[maybe_unused]] const Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsMipSolution&
+        solution) override
+    {
+        // No output to write for in-memory writer
+    }
+
+    void writeProblem(
+      [[maybe_unused]] const Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem&
+        problem) override {};
+};
 
 int main(int argc, const char** argv)
 {
@@ -58,9 +79,21 @@ int main(int argc, const char** argv)
     try
     {
         LoadFiles::FileLoader loader(studyPath);
-        Antares::Modeler::FileWriter writer(studyPath);
-        Antares::Solver::Modeler modeler(loader, writer);
-        modeler.solve();
+        const auto parameters = loader.loadParameters();
+        logs.info() << "Parameters loaded";
+
+        std::unique_ptr<Antares::Solver::IWriter> writer;
+        if (parameters.noOutput)
+        {
+            writer = std::make_unique<NullWriter>();
+        }
+        else
+        {
+            writer = std::make_unique<Antares::Modeler::FileWriter>(studyPath);
+        }
+
+        Antares::Solver::Modeler modeler(loader, *writer);
+        modeler.solve(parameters);
     }
     catch (const Antares::Solver::Modeler::Error& e)
     {

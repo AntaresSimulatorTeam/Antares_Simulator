@@ -87,17 +87,15 @@ private:
     const ModelerStudy::SystemModel::System* system_;
 };
 
-void Modeler::solve() const
+void Modeler::solve(const ModelerParameters& parameters) const
 {
     try
     {
-        const auto parameters = loader_.loadParameters();
-        logs.info() << "Parameters loaded";
         const auto data = loader_.loadAll();
 
         SystemLinearProblemBuilder system_linear_problem(data.system.get());
 
-        writer_.init(!parameters.noOutput);
+        writer_.init();
 
         logs.info() << "linear problem of System loaded";
         // Problem is MIP if any variable of any component is not continuous
