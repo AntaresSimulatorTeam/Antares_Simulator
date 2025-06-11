@@ -117,7 +117,6 @@ static void writeModelerSolutions(const operations_research::MPSolver* solver,
     auto start = variables.begin() + Probleme.NombreDeVariables;
     if (start == variables.end())
     {
-        logs.debug() << "No modeler solutions, skip writing files";
         return;
     }
     for (auto v = start; v < variables.end(); v++)
