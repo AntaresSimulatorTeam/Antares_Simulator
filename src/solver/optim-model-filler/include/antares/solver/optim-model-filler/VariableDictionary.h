@@ -112,7 +112,8 @@ class VariableDictionary
         unsigned int offset_ = 0;
     };
 
-    using TwoIndexVector = std::vector<VectorWithOffset>;
+    using TimeSeriesNumber = unsigned int;
+    using TwoIndexVector = std::unordered_map<TimeSeriesNumber, VectorWithOffset>;
     using HashMapVector = std::unordered_map<PartialKey, TwoIndexVector, PartialKeyHash>;
 
     HashMapVector storageOfAddedMipVariables_;

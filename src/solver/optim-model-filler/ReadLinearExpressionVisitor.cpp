@@ -111,11 +111,11 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const VariableN
 
     for (unsigned int timeStep = fillContext_.getFirstTimeStep();
          timeStep <= fillContext_.getLastTimeStep();
-         ++timeStep)
-    {
+             ++timeStep)
+        {
         linearExpressions[timeStep] = LinearExpression(
           0,
-          {{FullKey(component_.Id(), node->value(), 0 /*TODO */, timeStep), 1}});
+              {{FullKey(component_.Id(), node->value(), 0 /*TODO */, timeStep), 1}});
     }
     return TimeDependentLinearExpression(linearExpressions);
 }
@@ -141,8 +141,8 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Parameter
 
     for (auto timeStep = fillContext_.getFirstTimeStep();
          timeStep <= fillContext_.getLastTimeStep();
-         ++timeStep)
-    {
+             ++timeStep)
+        {
             // TODO: pass year
         linearExpressions[timeStep] = LinearExpression(
               evalContext_.getParameterValue(node->value(), 0, timeStep),

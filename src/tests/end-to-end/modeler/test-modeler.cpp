@@ -121,7 +121,13 @@ public:
                            // Also invaliding the component reference to the model
                            //.withModelsMap(std::move(fixture.models))
                            .build();
+        auto groupIt = groupes.find("some_component");
+        if (groupIt != groupes.end())
+        {
+            fixture.createComponent("some_model", "some_component", parameters, groupIt->second);
+        } else {
         fixture.createComponent("some_model", "some_component", parameters);
+        }
         setComponents(fixture.components); // Component model may not be the system model
         Antares::ModelerStudy::SystemModel::SystemBuilder builder;
         auto system = builder.withId("dummy-system").withComponents(std::move(components)).build();
@@ -161,6 +167,12 @@ public:
         parameterIds.push_back(str);
     }
 
+    void addScenario(const std::string& str, int year, int chronicle) {
+        auto scenario = std::make_unique<Antares::Optimisation::LinearProblemDataImpl::Scenario>(str);
+        scenario->setChronicle(year, chronicle);
+        scenarioGroupRepository.addScenario(str, std::move(scenario));
+    }
+
     Models models;
     std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component> components;
     Fixture fixture;
@@ -170,7 +182,8 @@ public:
     bool timeDependent{false};
     std::map<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue> parameters{};
     std::vector<std::string> parameterIds{};
-    Antares::Optimization::ScenarioGroupRepository scenarioGroupRepository{};
+    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepository{};
+    std::unordered_map<std::string, std::string> groupes;
 };
 
 struct Solution
@@ -306,6 +319,9 @@ BOOST_AUTO_TEST_CASE(system_with_two_time_series_use_second_one_all_3)
     inMemoryLoader.data = std::make_unique<
       Antares::Optimisation::LinearProblemDataImpl::LinearProblemData>(
       std::move(data_series_repository));
+
+    inMemoryLoader.addScenario("GroupA", 0, 1); //Year 0, chronicle 1
+    inMemoryLoader.groupes["some_component"] = "GroupA";
 
     InMemoryWriter inMemoryWriter;
 
