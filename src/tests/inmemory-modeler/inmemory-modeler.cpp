@@ -32,9 +32,10 @@ using namespace Antares::ModelerStudy::SystemModel;
 
 namespace Test::Modeler
 {
-std::pair<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue> build_context_parameter_with(const std::string& id,
-                                  const std::string& value,
-                                  const Antares::Expressions::Visitors::ParameterType& type)
+std::pair<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue>
+build_context_parameter_with(const std::string& id,
+                             const std::string& value,
+                             const Antares::Expressions::Visitors::ParameterType& type)
 {
     return {id, {.id = id, .type = type, .value = value}};
 }
