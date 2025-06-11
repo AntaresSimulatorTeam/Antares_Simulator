@@ -296,7 +296,7 @@ void ISimulation<ImplementationType>::run()
         regenerateTimeSeries();
 
         // Destroy the TS Generators if any
-        // It will export the time-series into the output in the same time
+        // It will export the time-series into the output at the same time
         TSGenerator::DestroyAll(study);
     }
     else
