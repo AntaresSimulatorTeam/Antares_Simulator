@@ -31,8 +31,7 @@ namespace Antares::TSGenerator
 bool GenerateHydroTimeSeries(Data::Study& study, IResultWriter& writer);
 
 template<>
-inline bool GenerateTimeSeries<Data::timeSeriesHydro>(Data::Study& study,
-                                                      IResultWriter& writer)
+inline bool GenerateTimeSeries<Data::timeSeriesHydro>(Data::Study& study, IResultWriter& writer)
 {
     return GenerateHydroTimeSeries(study, writer);
 }

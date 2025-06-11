@@ -421,8 +421,8 @@ void ISimulation<ImplementationType>::regenerateTimeSeries()
     // Solar
     if (Data::timeSeriesSolar & p.timeSeriesToGenerate)
     {
-        pDurationCollector("tsgen_solar") << [this]
-        { GenerateTimeSeries<Data::timeSeriesSolar>(study, pResultWriter); };
+        pDurationCollector("tsgen_solar")
+          << [this] { GenerateTimeSeries<Data::timeSeriesSolar>(study, pResultWriter); };
     }
     // Wind
     if (Data::timeSeriesWind & p.timeSeriesToGenerate)
@@ -433,8 +433,8 @@ void ISimulation<ImplementationType>::regenerateTimeSeries()
     // Hydro
     if (Data::timeSeriesHydro & p.timeSeriesToGenerate)
     {
-        pDurationCollector("tsgen_hydro") << [this]
-        { GenerateTimeSeries<Data::timeSeriesHydro>(study, pResultWriter); };
+        pDurationCollector("tsgen_hydro")
+          << [this] { GenerateTimeSeries<Data::timeSeriesHydro>(study, pResultWriter); };
     }
 
     pDurationCollector("tsgen_thermal") << [this]
