@@ -293,7 +293,7 @@ void ISimulation<ImplementationType>::run()
         // in general data of the study.
         logs.info() << " Only the preprocessors are enabled.";
 
-        regenerateTimeSeries(0);
+        regenerateTimeSeries();
 
         // Destroy the TS Generators if any
         // It will export the time-series into the output in the same time
@@ -403,7 +403,7 @@ void ISimulation<ImplementationType>::writeResults(bool synthesis, uint year, ui
 }
 
 template<class ImplementationType>
-void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
+void ISimulation<ImplementationType>::regenerateTimeSeries()
 {
     // A preprocessor can be launched for several reasons:
     // * The option "Preprocessor" is checked in the interface _and_ year == 0
@@ -416,28 +416,28 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
     if (Data::timeSeriesLoad & p.timeSeriesToGenerate)
     {
         pDurationCollector("tsgen_load")
-          << [year, this] { GenerateTimeSeries<Data::timeSeriesLoad>(study, year, pResultWriter); };
+          << [this] { GenerateTimeSeries<Data::timeSeriesLoad>(study, pResultWriter); };
     }
     // Solar
     if (Data::timeSeriesSolar & p.timeSeriesToGenerate)
     {
-        pDurationCollector("tsgen_solar") << [year, this]
-        { GenerateTimeSeries<Data::timeSeriesSolar>(study, year, pResultWriter); };
+        pDurationCollector("tsgen_solar") << [this]
+        { GenerateTimeSeries<Data::timeSeriesSolar>(study, pResultWriter); };
     }
     // Wind
     if (Data::timeSeriesWind & p.timeSeriesToGenerate)
     {
         pDurationCollector("tsgen_wind")
-          << [year, this] { GenerateTimeSeries<Data::timeSeriesWind>(study, year, pResultWriter); };
+          << [this] { GenerateTimeSeries<Data::timeSeriesWind>(study, pResultWriter); };
     }
     // Hydro
     if (Data::timeSeriesHydro & p.timeSeriesToGenerate)
     {
-        pDurationCollector("tsgen_hydro") << [year, this]
-        { GenerateTimeSeries<Data::timeSeriesHydro>(study, year, pResultWriter); };
+        pDurationCollector("tsgen_hydro") << [this]
+        { GenerateTimeSeries<Data::timeSeriesHydro>(study, pResultWriter); };
     }
 
-    pDurationCollector("tsgen_thermal") << [&year, this]
+    pDurationCollector("tsgen_thermal") << [this]
     {
         bool globalThermalTSgeneration = study.parameters.timeSeriesToGenerate
                                          & Data::timeSeriesThermal;
@@ -448,8 +448,7 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
         bool doWeWrite = archive && !study.parameters.noOutput;
         if (doWeWrite)
         {
-            fs::path savePath = study.folderOutput / "ts-generator" / "thermal" / "mc-"
-                                / std::to_string(year);
+            fs::path savePath = study.folderOutput / "ts-generator" / "thermal" / "mc-" / "0";
             writeThermalTimeSeries(clusters, savePath);
         }
 
@@ -921,7 +920,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
 
     logs.info() << " Doing hydro validation";
 
-    regenerateTimeSeries(0);
+    regenerateTimeSeries();
 
     // Loop over sets of parallel years to check hydro inputs
     for (const auto& batch: setsOfParallelYears)

@@ -85,7 +85,7 @@ private:
     /*!
     ** \brief Regenerate time-series if required for a given year
     */
-    void regenerateTimeSeries(uint year);
+    void regenerateTimeSeries();
     /*!
     ** \brief Builds sets of parallel years
     **

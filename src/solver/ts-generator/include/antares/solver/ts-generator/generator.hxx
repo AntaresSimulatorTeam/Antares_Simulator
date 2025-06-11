@@ -28,19 +28,18 @@ namespace Antares::TSGenerator
 
 // forward declaration
 // Hydro - see hydro.cpp
-bool GenerateHydroTimeSeries(Data::Study& study, uint year, IResultWriter& writer);
+bool GenerateHydroTimeSeries(Data::Study& study, IResultWriter& writer);
 
 template<>
 inline bool GenerateTimeSeries<Data::timeSeriesHydro>(Data::Study& study,
-                                                      uint year,
                                                       IResultWriter& writer)
 {
-    return GenerateHydroTimeSeries(study, year, writer);
+    return GenerateHydroTimeSeries(study, writer);
 }
 
 // --- TS Generators using XCast ---
 template<enum Data::TimeSeriesType T>
-bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter& writer)
+bool GenerateTimeSeries(Data::Study& study, IResultWriter& writer)
 {
     auto* xcast = reinterpret_cast<XCast::XCast*>(
       study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value]);
@@ -53,7 +52,7 @@ bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter& writer)
     }
 
     // The current year
-    xcast->year = year;
+    xcast->year = 0;
 
     switch (T)
     {
