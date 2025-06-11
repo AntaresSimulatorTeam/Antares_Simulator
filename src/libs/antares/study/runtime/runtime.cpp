@@ -78,7 +78,8 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
         }
 
         // Spinning - Economic Only - If no prepro
-        area.thermal.list.calculationOfSpinning();
+        if (!(timeSeriesThermal & study.parameters.timeSeriesToGenerate))
+            area.thermal.list.calculationOfSpinning();
 
         area.scratchpad.reserve(nbYearsInParallel);
         for (uint numSpace = 0; numSpace < nbYearsInParallel; numSpace++)
