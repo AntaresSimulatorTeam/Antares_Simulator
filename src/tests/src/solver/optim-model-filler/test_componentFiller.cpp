@@ -516,11 +516,11 @@ BOOST_AUTO_TEST_CASE(get_chronicle_for_given_year)
 
     for (const auto t: timeSteps)
     {
-        auto ct = pb->lookupConstraint("componentToto.ct1_" + to_string(t));
+        const auto* ct = pb->lookupConstraint("componentToto.ct1_" + to_string(t));
         BOOST_REQUIRE(ct);
         BOOST_CHECK_EQUAL(ct->getLb(), -pb->infinity());
         BOOST_CHECK_EQUAL(ct->getUb(), -5 + 3);
-        auto var = pb->lookupVariable("componentToto.var1_s0_t" + to_string(t));
+        const auto* var = pb->lookupVariable("componentToto.var1_s0_t" + to_string(t));
         BOOST_REQUIRE(var);
         BOOST_CHECK(var->isInteger());
         BOOST_CHECK_EQUAL(ct->getCoefficient(var), -1);
