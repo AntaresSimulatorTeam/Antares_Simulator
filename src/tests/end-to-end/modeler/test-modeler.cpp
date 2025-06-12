@@ -58,7 +58,7 @@ class InMemoryLoader: public Antares::Solver::ILoader
 public:
     Antares::Solver::ModelerParameters loadParameters() override
     {
-        return {.solver = "xpress",
+        return {.solver = "sirius",
                 .solverLogs = false,
                 .solverParameters = "DUMMY",
                 .noOutput = true,
