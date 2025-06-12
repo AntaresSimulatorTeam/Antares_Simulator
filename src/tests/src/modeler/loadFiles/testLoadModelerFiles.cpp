@@ -217,7 +217,8 @@ BOOST_FIXTURE_TEST_CASE(read_invalid_system_file, FixtureLoadFile)
                       std::runtime_error);
 }
 
-BOOST_FIXTURE_TEST_CASE(scenario_group_is_optional, FixtureLoadFile) {
+BOOST_FIXTURE_TEST_CASE(scenario_group_is_optional, FixtureLoadFile)
+{
     std::ofstream libStream(libraryDirPath / "simple.yml");
     libStream << R"(
         library:
