@@ -123,7 +123,7 @@ void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
   const std::string& areaId)
 {
     std::string injectionFieldId = getConnectionFieldId(component, portId);
-    DefaultScenario defaultScenario("empty");
+    DefaultScenario defaultScenario("empty"); //TODO default ?
     const Expressions::Visitors::EvaluationContext
       connectedComponentEvalContext(component.getParameterValues(), {}, data, defaultScenario);
     ReadLinearExpressionVisitor visitor(connectedComponentEvalContext, ctx, component);
