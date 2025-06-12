@@ -33,8 +33,10 @@ class IWriter
 {
 public:
     virtual ~IWriter() = default;
-    virtual void init() = 0;
-    virtual void writeSolution(const Optimisation::LinearProblemApi::IMipSolution& solution) = 0;
+    virtual void init(bool) = 0;
+    virtual void writeSolution(
+      const Optimisation::LinearProblemMpsolverImpl::OrtoolsMipSolution& solution)
+      = 0;
 
     virtual void writeProblem(
       const Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem& problem)

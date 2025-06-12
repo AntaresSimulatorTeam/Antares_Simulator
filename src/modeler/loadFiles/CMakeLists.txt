@@ -8,6 +8,7 @@ set(SOURCES
         FileLoader.cpp
 
         include/antares/solver/modeler/loadFiles/loadFiles.h
+        include/antares/solver/modeler/loadFiles/Fileloader.h
 )
 
 # Create the library
