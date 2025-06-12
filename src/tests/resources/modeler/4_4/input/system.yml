@@ -19,7 +19,7 @@ system:
   components:
     - id: node1
       model: lib_example_4_4.node_2gen_1load
-      scenario-group: sg
+      scenario-group: generators
       parameters:
         - id: load
           time-dependent: false

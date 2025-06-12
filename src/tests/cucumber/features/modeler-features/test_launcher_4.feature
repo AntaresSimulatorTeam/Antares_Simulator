@@ -36,15 +36,15 @@ Feature: 4 - Simple end-to-end tests to test temporal expression management
       | node1     | gen2_p   | 0     | 20    |
 
   Scenario: 4.4: One model with one load and two generators, two timesteps, two chronicles for gen1, use second one
-    Given the modeler study path is "modeler/4_2"
+    Given the modeler study path is "modeler/4_4"
     When I run antares modeler
     Then the simulation succeeds
-    And the objective value is 480
+    And the objective value is 420
     And the optimal values of the variables are
-      | component | variable | timestep | value |
-      | node1     | gen1_p   | 0     | 80    |
-      | node1     | gen2_p   | 0     | 0    |
-      | node1     | gen1_p   | 1     | 0    |
-      | node1     | gen2_p   | 1     | 80    |
+      | component | variable | timestep | value | chronicle |
+      | node1     | gen1_p   | 0     | 80    | 1            |
+      | node1     | gen2_p   | 0     | 0    | 1             |
+      | node1     | gen1_p   | 1     | 20    | 1            |
+      | node1     | gen2_p   | 1     | 60    | 1            |
 
  

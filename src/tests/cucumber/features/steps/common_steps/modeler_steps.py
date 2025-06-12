@@ -12,6 +12,7 @@ from common_steps.modeler_output_handler import modeler_output_handler
 def modeler_study_path_is(context, string):
     context.study_path = os.path.join(context.config.userdata["resources-path"], string.replace("/", os.sep))
 
+
 @when("I run antares modeler")
 def run_antares_modeler(context):
     run_modeler(context)
@@ -29,18 +30,29 @@ def modeler_obj_value(context, value):
 
 @step('the objective value is greater than {lb:g} and lower than {ub:g}')
 def modeler_obj_value(context, lb, ub):
-    assert lb <= context.moh.get_optimal_value("objective") <= ub, f"Objective value is not inside expected range: {context.moh.get_optimal_value('objective')}"
+    assert lb <= context.moh.get_optimal_value(
+        "objective") <= ub, f"Objective value is not inside expected range: {context.moh.get_optimal_value('objective')}"
 
 
 @step('the optimal values of the variables are')
 def modeler_var_optimal_value(context):
     for row in context.table:
+        print("Processing row:", row)
         ts_array = row["timestep"].split("-")
         ts_start = int(ts_array[0])
-        ts_end =  int(ts_array[1]) if len(ts_array) == 2 else ts_start
-        for ts in range(ts_start, ts_end + 1):
-            var_id = row["component"] + "." + row["variable"] + "_t" + str(ts)
-            assert_double_close(get_value(row, ts), context.moh.get_optimal_value(var_id), 1e-6)
+        ts_end = int(ts_array[1]) if len(ts_array) == 2 else ts_start
+        if "chronicle" not in context.table.headings:
+            print("No chronicle specified, using default values")
+            chronicle_start = 0
+            chronicle_end = 0
+        else:
+            chronicle_array = row["chronicle"].split("-")
+            chronicle_start = int(chronicle_array[0])
+            chronicle_end = int(chronicle_array[1]) if len(chronicle_array) == 2 else chronicle_start
+        for chronicle in range(chronicle_start, chronicle_end + 1):
+            for ts in range(ts_start, ts_end + 1):
+                var_id = row["component"] + "." + row["variable"] + "_s" + str(chronicle) + "_t" + str(ts)
+                assert_double_close(get_value(row, ts), context.moh.get_optimal_value(var_id), 1e-6)
 
 
 def get_value(row, ts):
