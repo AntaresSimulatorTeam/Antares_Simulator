@@ -14,27 +14,27 @@ system:
   model-libraries: lib_example_1_2
 
   components:
-  - id: node1
-    model: lib_example_1_2.node_2gen_1load
-    scenario-group: sg
-    parameters:
-    - id: load
-      time-dependent: false
-      scenario-dependent: false
-      value: 100
-    - id: gen1_max_p
-      time-dependent: false
-      scenario-dependent: false
-      value: 80
-    - id: gen1_prop_cost
-      time-dependent: true
-      scenario-dependent: false
-      value: gen1_prop_cost_1_2
-    - id: gen2_max_p
-      time-dependent: true
-      scenario-dependent: false
-      value: gen2_max_p_1_2
-    - id: gen2_prop_cost
-      time-dependent: false
-      scenario-dependent: false
-      value: 6.0
+    - id: node1
+      model: lib_example_1_2.node_2gen_1load
+
+      parameters:
+        - id: load
+          time-dependent: false
+          scenario-dependent: false
+          value: 100
+        - id: gen1_max_p
+          time-dependent: false
+          scenario-dependent: false
+          value: 80
+        - id: gen1_prop_cost
+          time-dependent: true
+          scenario-dependent: false
+          value: gen1_prop_cost_1_2
+        - id: gen2_max_p
+          time-dependent: true
+          scenario-dependent: false
+          value: gen2_max_p_1_2
+        - id: gen2_prop_cost
+          time-dependent: false
+          scenario-dependent: false
+          value: 6.0
