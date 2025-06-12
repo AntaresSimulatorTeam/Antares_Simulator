@@ -310,23 +310,45 @@ toc_depth: 2
 
 ## Branch 8.8.x (end of support 12/2025)
 
+### 8.8.17 (06/2025)
+#### Bugfixes
+* Bump OR-Tools v9.13-rte1.0 [ANT-3350]
+* Remove limit on CPU cores when requested threads == nproc (#2833)
+* Create criterion files in `Expansion` mode (#2822) [ANT-3137]
+* Fix monthly hydro heuristic infeasibilities [ANT-3236]
+
+### 8.8.16 (05/2025)
+#### Bugfixes
+* Ceiling error with xpress and accurate [ANT-3167] #2785
+* Output variable : near price cap [ANT-3038] (#2793)
+* Fix monthly generating capacity [ANT-3095] (#2806)
+
+### 8.8.15 (04/2025)
+#### Bugfixes
+* Change the formula for the hydro daily max generation [ANT-3095] (#2764)
+* Allow empty series files for STS [ANT-3053] (#2731)
+* Fix undefined behavior in BCs [ANT-2994] (#2708)
+
+#### For developers
+* Fix OR-Tools URL for FetchContent (used when no OR-Tools install is found in the prefix path)
+
 ### 8.8.14 (03/2025)
 
 #### Improvements
-- Increase precision for `LOLD[CSR]` and `MRG PRICE[CSR]` [ANT-2443] (#2613)
+* Increase precision for `LOLD[CSR]` and `MRG PRICE[CSR]` [ANT-2443] (#2613)
 
 #### Bugfix
-- Segfault related to **scenariobuilder.dat** [ANT-2890] (#2675)
-- Fix function `ThermalCluster::getMarketBidCost` [ANT-2527] (#2605) (backport) 
+* Segfault related to **scenariobuilder.dat** [ANT-2890] (#2675)
+* Fix function `ThermalCluster::getMarketBidCost` [ANT-2527] (#2605)
 
 #### Legacy GUI bugs
-- Binding constraints TS loading in 8.8 [ANT-2746] (#2635) 
-- Correct cluster count, load constraints even for disabled clusters [ANT-2754] (#2659) 
+* Binding constraints TS loading in 8.8 [ANT-2746] (#2635)
+* Correct cluster count, load constraints even for disabled clusters [ANT-2754] (#2659)
 
 ### 8.8.13 (01/2025)
 
 #### Bugfix
-- Backport bug on annual aggregation [ANT-2630] (#2585)
+* Backport bug on annual aggregation [ANT-2630] (#2585)
 
 ### 8.8.12 (01/2025)
 
