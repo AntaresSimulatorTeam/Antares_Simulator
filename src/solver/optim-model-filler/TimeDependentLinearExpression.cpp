@@ -47,8 +47,7 @@ TimeDependentLinearExpression::TimeDependentLinearExpression(
 {
 }
 
-TimeDependentLinearExpression::TimeDependentLinearExpression(
-  LinearExpressionMap linearExpressions):
+TimeDependentLinearExpression::TimeDependentLinearExpression(LinearExpressionMap linearExpressions):
     linearExpressions_(std::move(linearExpressions))
 
 {

@@ -56,7 +56,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const SumNode* 
     return std::accumulate(std::begin(operands),
                            std::end(operands),
                            TimeDependentLinearExpression(fillContext_),
-                           [this](const TimeDependentLinearExpression& sum,const Node* operand)
+                           [this](const TimeDependentLinearExpression& sum, const Node* operand)
                            { return sum + dispatch(operand); });
 }
 
@@ -111,8 +111,8 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const VariableN
          ++timeStep)
     {
         linearExpressions[timeStep] = LinearExpression(
-            0,
-            {{FullKey(component_.Id(), node->value(), 0 /*TODO */, timeStep), 1}});
+          0,
+          {{FullKey(component_.Id(), node->value(), 0 /*TODO */, timeStep), 1}});
     }
     return TimeDependentLinearExpression(linearExpressions);
 }
@@ -130,8 +130,8 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Parameter
     if (systemParameter.type == ParameterType::CONSTANT)
     {
         return TimeDependentLinearExpression(
-            fillContext_,
-            LinearExpression(evalContext_.getSystemParameterValueAsDouble(node->value()), {}));
+          fillContext_,
+          LinearExpression(evalContext_.getSystemParameterValueAsDouble(node->value()), {}));
     }
     // only dependent
     LinearExpressionMap linearExpressions;
@@ -141,8 +141,8 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Parameter
          ++timeStep)
     {
         linearExpressions[timeStep] = LinearExpression(
-            evalContext_.getParameterValue(node->value(), "", 0, timeStep),
-            {});
+          evalContext_.getParameterValue(node->value(), "", 0, timeStep),
+          {});
     }
     return TimeDependentLinearExpression(linearExpressions);
 }

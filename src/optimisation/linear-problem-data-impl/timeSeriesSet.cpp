@@ -20,7 +20,8 @@ void TimeSeriesSet::add(const std::vector<double>& ts)
     tsSet_.push_back(std::move(ts));
 }
 
-double TimeSeriesSet::getData(unsigned rank, unsigned hour) const {
+double TimeSeriesSet::getData(unsigned rank, unsigned hour) const
+{
     if (tsSet_.empty())
     {
         throw Empty(name());

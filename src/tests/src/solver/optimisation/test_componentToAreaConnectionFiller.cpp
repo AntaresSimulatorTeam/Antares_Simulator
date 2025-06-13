@@ -238,26 +238,26 @@ BOOST_AUTO_TEST_CASE(add_one_term_to_balance_constraint_named)
 
     auto balance_ct = linearProblem.lookupConstraint("AreaBalance::area<area1>::hour<0>");
     BOOST_CHECK_EQUAL(balance_ct->getCoefficient(linearProblem.lookupVariable(
-                          "connected_component_var.not_connected_var_t0")),
+                        "connected_component_var.not_connected_var_t0")),
                       0);
     BOOST_CHECK_EQUAL(balance_ct->getCoefficient(
-                            linearProblem.lookupVariable("connected_component_var.connected_var_1_t0")),
+                        linearProblem.lookupVariable("connected_component_var.connected_var_1_t0")),
                       -5);
     BOOST_CHECK_EQUAL(balance_ct->getCoefficient(
-                            linearProblem.lookupVariable("connected_component_var.connected_var_2_t0")),
+                        linearProblem.lookupVariable("connected_component_var.connected_var_2_t0")),
                       37);
     BOOST_CHECK_EQUAL(balance_ct->getLb(), 10 + 2 * 4 - 6);
     BOOST_CHECK_EQUAL(balance_ct->getUb(), 10 + 2 * 4 - 6);
 
     auto other_ct = linearProblem.lookupConstraint("whatever");
     BOOST_CHECK_EQUAL(other_ct->getCoefficient(linearProblem.lookupVariable(
-                          "connected_component_var.not_connected_var_t0")),
+                        "connected_component_var.not_connected_var_t0")),
                       0);
     BOOST_CHECK_EQUAL(other_ct->getCoefficient(
-                            linearProblem.lookupVariable("connected_component_var.connected_var_1_t0")),
+                        linearProblem.lookupVariable("connected_component_var.connected_var_1_t0")),
                       0);
     BOOST_CHECK_EQUAL(other_ct->getCoefficient(
-                            linearProblem.lookupVariable("connected_component_var.connected_var_2_t0")),
+                        linearProblem.lookupVariable("connected_component_var.connected_var_2_t0")),
                       0);
     BOOST_CHECK_EQUAL(other_ct->getLb(), 10);
     BOOST_CHECK_EQUAL(other_ct->getUb(), 10);
@@ -281,44 +281,44 @@ BOOST_AUTO_TEST_CASE(add_two_terms_to_balance_constraint_not_named)
     auto balance_ct_t11 = linearProblem.lookupConstraint("c2");
 
     BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(linearProblem.lookupVariable(
-                          "connected_component_var.not_connected_var_t10")),
+                        "connected_component_var.not_connected_var_t10")),
                       0);
     BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(linearProblem.lookupVariable(
-                          "connected_component_var.connected_var_1_t10")),
+                        "connected_component_var.connected_var_1_t10")),
                       -5);
     BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(linearProblem.lookupVariable(
-                          "connected_component_var.connected_var_2_t10")),
+                        "connected_component_var.connected_var_2_t10")),
                       37);
     BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(linearProblem.lookupVariable(
-                          "connected_component_var.not_connected_var_t11")),
+                        "connected_component_var.not_connected_var_t11")),
                       0);
     BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(linearProblem.lookupVariable(
-                          "connected_component_var.connected_var_1_t11")),
+                        "connected_component_var.connected_var_1_t11")),
                       0);
     BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(linearProblem.lookupVariable(
-                          "connected_component_var.connected_var_2_t11")),
+                        "connected_component_var.connected_var_2_t11")),
                       0);
     BOOST_CHECK_EQUAL(balance_ct_t10->getLb(), -100 + 2 * -51 - 6);
     BOOST_CHECK_EQUAL(balance_ct_t10->getUb(), -100 + 2 * -51 - 6);
     ;
 
     BOOST_CHECK_EQUAL(balance_ct_t11->getCoefficient(linearProblem.lookupVariable(
-                          "connected_component_var.not_connected_var_t10")),
+                        "connected_component_var.not_connected_var_t10")),
                       0);
     BOOST_CHECK_EQUAL(balance_ct_t11->getCoefficient(linearProblem.lookupVariable(
-                          "connected_component_var.connected_var_1_t10")),
+                        "connected_component_var.connected_var_1_t10")),
                       0);
     BOOST_CHECK_EQUAL(balance_ct_t11->getCoefficient(linearProblem.lookupVariable(
-                          "connected_component_var.connected_var_2_t10")),
+                        "connected_component_var.connected_var_2_t10")),
                       0);
     BOOST_CHECK_EQUAL(balance_ct_t11->getCoefficient(linearProblem.lookupVariable(
-                          "connected_component_var.not_connected_var_t11")),
+                        "connected_component_var.not_connected_var_t11")),
                       0);
     BOOST_CHECK_EQUAL(balance_ct_t11->getCoefficient(linearProblem.lookupVariable(
-                          "connected_component_var.connected_var_1_t11")),
+                        "connected_component_var.connected_var_1_t11")),
                       -5);
     BOOST_CHECK_EQUAL(balance_ct_t11->getCoefficient(linearProblem.lookupVariable(
-                          "connected_component_var.connected_var_2_t11")),
+                        "connected_component_var.connected_var_2_t11")),
                       37);
     BOOST_CHECK_EQUAL(balance_ct_t11->getLb(), -100 + 2 * 8.3 - 6);
     BOOST_CHECK_EQUAL(balance_ct_t11->getUb(), -100 + 2 * 8.3 - 6);

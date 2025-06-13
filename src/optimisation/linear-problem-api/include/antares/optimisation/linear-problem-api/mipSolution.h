@@ -52,7 +52,8 @@ public:
     [[nodiscard]] virtual MipStatus getStatus() const = 0;
     [[nodiscard]] virtual double getObjectiveValue() const = 0;
     [[nodiscard]] virtual double getOptimalValue(const IMipVariable* var) const = 0;
-    [[nodiscard]] virtual std::vector<double> getOptimalValues(const std::vector<IMipVariable*>& vars) const = 0;
+    [[nodiscard]] virtual std::vector<double>
+    getOptimalValues(const std::vector<IMipVariable*>& vars) const = 0;
     [[nodiscard]] virtual const std::map<std::string, double>& getOptimalValues() const = 0;
 };
 

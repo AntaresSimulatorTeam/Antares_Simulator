@@ -43,7 +43,7 @@ public:
     [[nodiscard]] double getLb() const override;
     [[nodiscard]] double getUb() const override;
 
-    [[nodiscard]] double getCoefficient(const LinearProblemApi::IMipVariable *var) const override;
+    [[nodiscard]] double getCoefficient(const LinearProblemApi::IMipVariable* var) const override;
 
     [[nodiscard]] const std::string& getName() const override;
 
