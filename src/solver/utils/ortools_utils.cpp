@@ -59,10 +59,6 @@ static void checkSetSolverSpecificParameters(bool status,
     {
         throw Antares::Error::InvalidSolverSpecificParameters(solverName, specificParameters);
     }
-    else
-    {
-        Antares::logs.info() << "  Successfully set " + solverName + " solver specific parameters";
-    }
 }
 
 static void TuneSolverSpecificOptions(MPSolver* solver,
