@@ -20,9 +20,7 @@
 */
 #pragma once
 #include <functional>
-#include <optional>
 #include <typeindex>
-#include <vector>
 
 #include <antares/expressions/IName.h>
 #include <antares/expressions/nodes/Node.h>
@@ -86,7 +84,7 @@ template<class R, class... Args>
 class NodeVisitor: public IName
 {
 public:
-    virtual ~NodeVisitor() = default;
+    ~NodeVisitor() override = default;
 
     /**
      * Dispatches a node to an appropriate visitor function based on its type.
@@ -134,9 +132,10 @@ public:
         {
             return nodeVisitList.at(typeid(*node))(node, *this, args...);
         }
-        catch (std::exception&)
+        catch (std::exception& e)
         {
-            log_.error("Antares::Expressions::Visitor: could not visit the node!");
+            using namespace std::string_literals;
+            log_.error("Antares::Expressions::Visitor: could not visit the node! "s + e.what());
             throw;
         }
     }

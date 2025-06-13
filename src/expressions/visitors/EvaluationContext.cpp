@@ -7,7 +7,7 @@ namespace Antares::Expressions::Visitors
 {
 EvaluationContext::EvaluationContext(std::map<std::string, ParameterTypeAndValue> system_parameters,
                                      std::map<std::string, double> variables,
-                                     Optimisation::LinearProblemApi::ILinearProblemData& data):
+                                     ILinearProblemData& data):
     parameters_types_and_values_(std::move(system_parameters)),
     variables_(std::move(variables)),
     data_(data)
