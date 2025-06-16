@@ -35,7 +35,7 @@ target_link_libraries(load-modeler-files
         Antares::model-converter
         Antares::modeler-parameters
         Antares::data-series-csv-importer
-        Antares::scenario-builder-antlr
+        Antares::scenario-group-parser
         fmt::fmt
 )
 

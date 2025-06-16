@@ -1,10 +1,10 @@
+# Antl4 parser
 set(PROJ scenario-builder-antlr)
 set(HEADERS
         ScenarioBuilderBaseVisitor.h
         ScenarioBuilderLexer.h
         ScenarioBuilderParser.h
         ScenarioBuilderVisitor.h
-        ScenarioGroupParser.h
 )
 
 Set(SRCS
@@ -12,7 +12,6 @@ Set(SRCS
         ScenarioBuilderLexer.cpp
         ScenarioBuilderParser.cpp
         ScenarioBuilderVisitor.cpp
-        ScenarioGroupParser.cpp
 )
 
 add_library(${PROJ} ${SRCS})

@@ -25,8 +25,7 @@
 #include <antares/logs/logs.h>
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
-
-#include "ScenarioGroupParser.h"
+#include "antares/scenarioGroupParser/ScenarioGroupParser.h"
 
 namespace Antares::Solver::LoadFiles
 {
