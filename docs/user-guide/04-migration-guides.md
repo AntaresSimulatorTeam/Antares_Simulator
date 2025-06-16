@@ -3,6 +3,23 @@
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to
 lower the costs of changing existing interfaces, both GUI and scripts.
 
+## v9.3.0
+
+### Input
+
+#### Removed properties
+
+The following properties were removed from **settings/generaldata.ini**.
+
+- `refreshtimeseries`
+- `refreshintervalload`
+- `refreshintervalhydro`
+- `refreshintervalwind`
+- `refreshintervalthermal`
+- `refreshintervalsolar`
+
+If the user provides a value for key refreshtimeseries the simulation will fail with a warning. Values for the refresh intervals will be ignored.
+
 ## v9.2.0
 
 ### Input
