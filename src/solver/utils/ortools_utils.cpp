@@ -341,12 +341,14 @@ const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::mpSo
   {"glpk", {"glpk_lp", "glpk"}},
   {"scip", {std::nullopt, "scip"}}, // SCIP only supports MIPs
   {"highs", {"highs_lp", "highs"}},
-  {"pdlp", {"pdlp", std::nullopt}}}; // PDLP only supports LPs
+  {"pdlp", {"pdlp", std::nullopt}}, // PDLP only supports LPs
+  {"gurobi", {"gurobi_lp", "gurobi"}}};
 
 const std::map<std::string, math_opt::SolverType> OrtoolsUtils::mathoptSolverMap = {
   {"pdlp", math_opt::SolverType::kPdlp},
   {"scip", math_opt::SolverType::kGscip},
-  {"xpress", math_opt::SolverType::kXpress}};
+  {"xpress", math_opt::SolverType::kXpress},
+  {"gurobi", math_opt::SolverType::kGurobi}};
 
 std::list<std::string> availableLinearSolversList()
 {
