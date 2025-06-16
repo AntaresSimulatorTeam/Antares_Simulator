@@ -607,9 +607,7 @@ BOOST_FIXTURE_TEST_CASE(parameter_constant_at_creation_but_not_in_eval_context__
 
 struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearProblemData
 {
-    double getData(const std::string& dataSetId,
-                   unsigned scenario,
-                   unsigned hour) const override
+    double getData(const std::string& dataSetId, unsigned scenario, unsigned hour) const override
     {
         return hour; // for test
     }

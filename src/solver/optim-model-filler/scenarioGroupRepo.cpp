@@ -40,7 +40,7 @@ public:
     [[nodiscard]] Chronicle getData(Year) const override
     {
         return 0; // Default rank for empty groupId
-        //0 or year ? TODO: check
+        // 0 or year ? TODO: check
     }
 };
 
