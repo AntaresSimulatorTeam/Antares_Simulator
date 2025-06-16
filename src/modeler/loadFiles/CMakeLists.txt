@@ -1,13 +1,13 @@
 set(SOURCES
+        handleErrors.cpp
         loadAll.cpp
-        readSystem.cpp
+        readDataSeries.cpp
         readLibraries.cpp
         readParameters.cpp
-        readDataSeries.cpp
-        handleErrors.cpp
+        readScenarioGroup.cpp
+        readSystem.cpp
 
         include/antares/solver/modeler/loadFiles/loadFiles.h
-        include/antares/solver/modeler/loadFiles/data.h
 )
 
 # Create the library
@@ -20,12 +20,14 @@ target_include_directories(load-modeler-files
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
+find_package(fmt  REQUIRED)
 # Link dependencies (if any)
 target_link_libraries(load-modeler-files
         PUBLIC
         Antares::antares-study-system-model
         Antares::linear-problem-api
         Antares::linear-problem-data-impl
+        Antares::modeler-lib-2
         PRIVATE
         Antares::io
         Antares::yml-system
@@ -33,6 +35,8 @@ target_link_libraries(load-modeler-files
         Antares::model-converter
         Antares::modeler-parameters
         Antares::data-series-csv-importer
+        Antares::scenario-builder-antlr
+        fmt::fmt
 )
 
 install(DIRECTORY include/antares

@@ -37,10 +37,10 @@
 #include <antares/study/system-model/system.h>
 #include <antares/writer/i_writer.h>
 #include "antares/antares/antares.h"
-#include "antares/solver/modeler/loadFiles/data.h"
 #include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
 #include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 
+#include "antares/solver/modeler/data.h"
 #include "area/store-timeseries-numbers.h"
 #include "binding_constraint/BindingConstraint.h"
 #include "fwd.h"

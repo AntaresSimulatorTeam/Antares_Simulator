@@ -27,7 +27,6 @@ BOOST_AUTO_TEST_CASE(ask_to_a_simple_linearProblemData_data_it_contains___answer
     const unsigned year = 0;
     const unsigned rank = 0;
     const std::string groupName = "group 1";
-    linearProblemData.addScenarioGroup(groupName, {year, rank});
 
     // Adding a data set to the linear problem data
     const std::string dataSetName = "my-TS-set";
@@ -37,5 +36,5 @@ BOOST_AUTO_TEST_CASE(ask_to_a_simple_linearProblemData_data_it_contains___answer
     linearProblemData.addDataSeries(std::move(timeSeriesSet));
 
     const unsigned hour = 3;
-    BOOST_CHECK_EQUAL(linearProblemData.getData(dataSetName, groupName, year, hour), 40.);
+    BOOST_CHECK_EQUAL(linearProblemData.getData(dataSetName, year, hour), 40.);
 }

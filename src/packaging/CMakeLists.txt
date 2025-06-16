@@ -104,6 +104,8 @@ set(TARGET_LIBS #No alias
         data-series-csv-importer
         expressions-iterators
         additional-constraint-rhs-antlr-interface
+        scenario-builder-antlr
+        modeler-lib-2
 )
 
 install(TARGETS ${TARGET_LIBS}

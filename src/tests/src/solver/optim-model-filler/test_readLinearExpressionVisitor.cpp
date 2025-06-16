@@ -104,9 +104,8 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var, CreateVisitorFixture)
 struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearProblemData
 {
     double getData(const std::string& dataSetId,
-                   const std::string& scenarioGroup,
                    unsigned scenario,
-                   unsigned hour) override
+                   unsigned hour) const override
     {
         return hour; // for test
     }

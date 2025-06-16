@@ -28,12 +28,10 @@
 #include <antares/solver/modeler/parameters/modelerParameters.h>
 #include <antares/study/system-model/library.h>
 #include <antares/study/system-model/system.h>
-
-#include "data.h"
+#include "antares/solver/modeler/data.h"
 
 namespace Antares::Solver::LoadFiles
 {
-
 /// Load the libraries, system and dataseries
 Antares::Modeler::Data loadAll(const std::filesystem::path& studyPath);
 
@@ -49,6 +47,8 @@ ModelerStudy::SystemModel::System loadSystem(
 std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> loadDataSeries(
   const std::filesystem::path& studyPath);
 
+Optimization::ScenarioGroupRepository loadScenarioGroupRepository(const std::string& studyPath);
+
 void handleYamlError(const YAML::Exception& e, const std::string& context);
 
 /// Generic error class for all loading errors to catch in the main
@@ -60,5 +60,4 @@ public:
     {
     }
 };
-
 } // namespace Antares::Solver::LoadFiles

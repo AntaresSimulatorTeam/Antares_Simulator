@@ -1,15 +1,16 @@
 set(PROJ linear-problem-api)
 
 set(SRC_API
-        include/antares/optimisation/linear-problem-api/mipVariable.h
-        include/antares/optimisation/linear-problem-api/mipSolution.h
-        include/antares/optimisation/linear-problem-api/mipConstraint.h
+        include/antares/optimisation/linear-problem-api/ILinearProblemData.h
+        include/antares/optimisation/linear-problem-api/IScenario.h
         include/antares/optimisation/linear-problem-api/hasBounds.h
         include/antares/optimisation/linear-problem-api/hasName.h
-        include/antares/optimisation/linear-problem-api/ILinearProblemData.h
         include/antares/optimisation/linear-problem-api/linearProblem.h
-        include/antares/optimisation/linear-problem-api/linearProblemFiller.h
         include/antares/optimisation/linear-problem-api/linearProblemBuilder.h
+        include/antares/optimisation/linear-problem-api/linearProblemFiller.h
+        include/antares/optimisation/linear-problem-api/mipConstraint.h
+        include/antares/optimisation/linear-problem-api/mipSolution.h
+        include/antares/optimisation/linear-problem-api/mipVariable.h
         linearProblemBuilder.cpp
 )
 
