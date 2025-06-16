@@ -9,6 +9,8 @@ follows:
     - **input**: a directory that contains all input files
         - **model-libraries**: a directory that contains all [model libraries](#model-libraries) needed by the study
         - **data-series**: a directory that contains all [data series](#data-series) needed by the study
+            - Contains **modeler-scenariobuilder.dat** file, which is used to map scenarios to data series
+        - **system.yml**: the [system file](#system-file) describing the simulated energy system
         - **system.yml**: the [system file](#system-file) describing the simulated energy system
     - **parameters.yml**: the [parameters](04-parameters.md) file
 
@@ -139,9 +141,11 @@ models:
     - **id**: an ID for the variable. Must be unique inside the scope of the model, and
       respect [these rules](#rules-for-ids).
     - **variable-type**: `continuous`, `integer`, or `binary`
-    - **lower-bound** _(optional)_: an [expression](#expressions) representing the lower bound of the variable. Must use scalars
+    - **lower-bound** _(optional)_: an [expression](#expressions) representing the lower bound of the variable. Must use
+      scalars
       and/or parameters only. If missing, defaults to -inf for continuous and integer types, or 0 for binary.
-    - **upper-bound** _(optional)_: an [expression](#expressions) representing the upper bound of the variable. Must use scalars
+    - **upper-bound** _(optional)_: an [expression](#expressions) representing the upper bound of the variable. Must use
+      scalars
       and/or parameters only. If missing, defaults to +inf for continuous and integer types, or 1 for binary.
 - **constraints** _(optional)_: a collection of "internal" optimization constraints set by the model
     - **id**: an ID for the constraint. Must be unique inside the scope of the model, and
@@ -480,12 +484,28 @@ All IDs in the model library and system file must respect the following:
 - All other characters are prohibited
 - Only lower-case is allowed
 
-## Scenario builder
+### Scenario builder
 
-_**This feature is under development**_  
-This feature allows you to map, for different scenario groups of components, all scenarios to a limited number of data
-sets. This prevents duplication of data when some data-series are "less" scenario-dependent than others.  
-For now, "scenario-groups" are ignored and scenario indices map to data set indices.
+The **modeler-scenariobuilder.dat** file is used to map scenarios to data series.
+Each line consists of the association of a groupe name and Monte-carlo year -refered as _year_- to a data series ID
+-refered as _chronicle_-.
+
+Example:
+
+~~~
+thermal_group, 1 = 1
+thermal_group, 2 = 5
+hydro_group, 3 = 7
+~~~
+
+* For thermal_group the year 1 is associated with the chronicle 1 whereas the year 2 is associated with the chronicle 5.
+* For hydro_group the year 3 is associated with the chronicle 7.
+
+
+* A _year_ is a number starting at 1.
+* A _chronicle_ is a number starting at 0, and refers to the zero-based colonne number in the coresponding data
+  series file for a group.
+* Groupe ID is the file name without the extension of the data series file.
 
 ## Full examples
 
