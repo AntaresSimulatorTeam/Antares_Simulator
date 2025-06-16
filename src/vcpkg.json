@@ -1,6 +1,6 @@
 {
   "name": "antares-simulator",
-  "version-string": "8.8.11",
+  "version-string": "8.8.17",
   "builtin-baseline": "b322364f06308bdd24823f9d8f03fe0cc86fd46f",
   "vcpkg-configuration": {
     "overlay-ports": [
@@ -13,7 +13,7 @@
   "dependencies": [
     {
       "name": "sirius-solver",
-      "version>=": "1.5"
+      "version>=": "1.8"
     },
     {
       "name": "wxwidgets",
