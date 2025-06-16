@@ -41,10 +41,10 @@ public:
     {
     }
 
-    double getData(const std::string& dataSetId,
-                   const std::string& scenarioGroup,
-                   const unsigned scenario,
-                   const unsigned hour) override;
+    [[nodiscard]] double getData(const std::string& dataSetId,
+                                 const std::string& scenarioGroup,
+                                 unsigned scenario,
+                                 unsigned hour) override;
 
     void addScenarioGroup(const std::string& groupId, std::pair<unsigned, unsigned> scenarioToRank);
     void addDataSeries(std::unique_ptr<IDataSeries> dataSeries);

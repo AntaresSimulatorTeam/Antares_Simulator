@@ -25,7 +25,7 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-uint ShortTermAdditionalConstraintsTSNumberData::get_tsGenCount(const Study& study) const
+uint ShortTermAdditionalConstraintsTSNumberData::get_tsGenCount(const Study&) const
 {
     return 0;
 }

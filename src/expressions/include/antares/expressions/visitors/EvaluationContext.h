@@ -52,7 +52,7 @@ public:
      * @return The value of the variable.
      * @throws std::out_of_range If the variable is not found.
      */
-    double getVariableValue(const std::string& key) const;
+    [[nodiscard]] double getVariableValue(const std::string& key) const;
 
     /**
      * @brief Retrieves the value of a parameter.
@@ -61,17 +61,17 @@ public:
      * @return The value of the parameter.
      * @throws std::out_of_range If the parameter is not found.
      */
-    double getSystemParameterValueAsDouble(const std::string& key) const;
-    std::string getSystemParameterValue(const std::string& key) const;
+    [[nodiscard]] double getSystemParameterValueAsDouble(const std::string& key) const;
+    [[nodiscard]] std::string getSystemParameterValue(const std::string& key) const;
 
-    double getParameterValue(const std::string& key,
-                             const std::string& scenarioGroup,
-                             const unsigned scenario,
-                             unsigned int hour) const;
+    [[nodiscard]] double getParameterValue(const std::string& key,
+                                           const std::string& scenarioGroup,
+                                           unsigned scenario,
+                                           unsigned int hour) const;
 
-    ParameterType getParameterType(const std::string& key) const;
-    ParameterTypeAndValue getParameter(const std::string& key) const;
-    Optimisation::LinearProblemApi::ILinearProblemData& data() const;
+    [[nodiscard]] ParameterType getParameterType(const std::string& key) const;
+    [[nodiscard]] ParameterTypeAndValue getParameter(const std::string& key) const;
+    [[nodiscard]] Optimisation::LinearProblemApi::ILinearProblemData& data() const;
 
     template<class T>
     struct CouldNotEvaluateConstantParameter: T
