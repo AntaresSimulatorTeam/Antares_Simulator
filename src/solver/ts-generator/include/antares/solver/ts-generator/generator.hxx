@@ -90,9 +90,6 @@ void Destroy(Data::Study& study)
         return;
     }
 
-    // releasing
-    auto& parameters = study.parameters;
-
     logs.info() << "  Releasing the " << Data::TimeSeriesToCStr<T>::Value() << " TS Generator";
     study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value] = nullptr;
     study.destroyTSGeneratorData<T>();
