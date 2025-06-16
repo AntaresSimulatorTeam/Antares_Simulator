@@ -13,6 +13,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 find_package(antlr4-runtime REQUIRED)
 find_package(yaml-cpp REQUIRED)
+find_package(fmt REQUIRED)
 
 
 add_subdirectory(src)
