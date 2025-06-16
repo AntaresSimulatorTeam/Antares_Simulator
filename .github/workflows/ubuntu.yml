@@ -372,7 +372,7 @@ jobs:
       - name: Installer archive upload push
         uses: actions/upload-artifact@v4
         with:
-          name: targz
+          name: ubuntu
           path: _build/*.tar.gz
 
       - name: Installer deb upload push

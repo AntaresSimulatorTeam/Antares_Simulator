@@ -140,7 +140,7 @@ jobs:
       - name: Installer TGZ push
         uses: actions/upload-artifact@v4
         with:
-          name: oracle-targz
+          name: oracle
           path: _build/*.tar.gz
 
       - name: Installer RPM push

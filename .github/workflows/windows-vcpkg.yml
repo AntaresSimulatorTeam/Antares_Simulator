@@ -385,7 +385,7 @@ jobs:
       - name: Installer upload
         uses: actions/upload-artifact@v4
         with:
-          name: installer
+          name: windows
           path: _build/${{env.NSIS_NAME}}
 
       - name: Publish assets
