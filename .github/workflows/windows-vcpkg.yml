@@ -143,6 +143,9 @@ jobs:
       - name: Add OR-Tools to PATH
         run: echo "D:\a\Antares_Simulator\Antares_Simulator/or-tools/install/bin" | Out-File -Append -Encoding ascii $env:GITHUB_PATH
 
+      - name: Add sirius to PATH
+        run: echo "D:\a\Antares_Simulator\Antares_Simulator/_build/solver/Release" | Out-File -Append -Encoding ascii $env:GITHUB_PATH
+
       - name: Init submodule Antares_Simulator_Tests
         run: |
           git submodule update --init --remote src/tests/resources/Antares_Simulator_Tests
@@ -161,10 +164,6 @@ jobs:
         run: |
           cd _build
           ctest -C Release --output-on-failure -R "^unfeasible$"
-
-      - name: Setup tmate session
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
-        uses: mxschmitt/action-tmate@v3
 
       - name: Run unit and end-to-end tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
