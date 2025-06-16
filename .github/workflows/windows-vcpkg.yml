@@ -162,6 +162,10 @@ jobs:
           cd _build
           ctest -C Release --output-on-failure -R "^unfeasible$"
 
+      - name: Setup tmate session
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
+        uses: mxschmitt/action-tmate@v3
+
       - name: Run unit and end-to-end tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
         run: |
