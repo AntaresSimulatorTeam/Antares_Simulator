@@ -6,6 +6,41 @@ toc_depth: 2
 
 ## Branch 9.2.x
 
+### 9.2.1
+#### New features
+* Add new near price cap hours variable (NPCAP HOURS) [ANT-3038] (#2815)
+
+#### Modeler features/improvements
+* 3.3: Hydrid studies without connections [ANT-2898] (#2699)
+* Do not create modeler solution files if study has no modeler components (#2849)
+
+#### Numerical issues fixes
+* Set primal tolerance to 1e-6 in ortools_utils [ANT-3122] (#2850)
+* Fix unfeasible problems with <0 hydro infows [ANT-3043] (#2732)
+* Ceiling error with xpress and accurate [ANT-3167] (#2785)
+* Hydro monthly heuristic : add a new overflow optimization variable for v9.2.x [ANT-3236] (#2845)
+
+#### Short-term storage fixes/improvements
+* Use ANTLR4 to handle STS additional constraints, allowing the parsing of larger "hours" field for additional constraints [ANT-3091] (#2777)
+* Fix check for STS injection/withdrawal efficiency [ANT-3100] (#2749)
+* Allow empty series files for STS [ANT-3053] (#2731)
+
+#### Other bugfix
+* The use of OR-Tools v9.13-rte1.0 allows fixing multiple minor bugs with XPRESS [ANT-3348]
+  - non-reproducibility
+  - unsafe "locale" modification
+  - performance issues
+* Fix memory leak in hydro (#2736)
+* Don't rebuild optimization problem at every simplex resolution (performance issues with XPRESS) [ANT-3044] (#2722)
+* Fix missing DLL / .so by packaging OR-Tools shared libs [ANT-3227] (#2803)
+* Remove limit on max threads when requested threads == nproc (#2834)
+* Use `std::call_once` to avoid race conditions in `ThermalCluster::getCostProvider` (#2725)
+
+#### Other improvements
+* Use OR-Tools/MathOpt for quadratic problem resolution [ANT-2546] (#2574)
+* Force the export for criterion files in Expansion mode [ANT-3137] (#2823)
+* Check for duplicates on study objects (thermal, renewable clusters, short-term storages) [ANT-2127] (#2733)
+
 ### 9.2.0
 #### New features
 * Short term storage: withdrawal efficiency [ANT-1862] (#2223)
