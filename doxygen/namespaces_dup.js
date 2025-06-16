@@ -785,8 +785,8 @@ var namespaces_dup =
         [ "allTimeSeriesMask", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#afd2917ad5e73189d9de08a4af138c02a", null ],
         [ "antaresSeedDefaultValue", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a3244a44273ecadf23d5147801d42085d", null ],
         [ "antaresSeedIncrement", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#af048e5d54a0e2e783c87ac14c5f84e8b", null ],
-        [ "dayYearCount", "libs_2antares_2study_2include_2antares_2study_2parts_2hydro_2container_8h.html#a274a5cc4b065a29fde9d4afe0b7387e5", null ],
         [ "groupToName", "libs_2antares_2study_2parts_2renewable_2cluster_8cpp.html#ac17fee9e9a5789c57f1a743f458899da", null ],
+        [ "nbDaysInYear", "libs_2antares_2study_2include_2antares_2study_2parts_2hydro_2container_8h.html#a099af11532655dd2964f55a9f3002449", null ],
         [ "StudyIconFile", "libs_2antares_2study_2include_2antares_2study_2study_8h.html#ac41bcb9b3dd859f34b0b2dc6ffcc5a74", null ],
         [ "timeSeriesCount", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#affa3d918be92f1016e56794f61026a5a", null ]
       ] ],
@@ -2320,6 +2320,7 @@ var namespaces_dup =
       [ "CanPerformMemoryFlush", "ui_2simulator_2application_2study_8cpp.html#a8dfa4100ac0cd8bcd977f61dd96e6deb", null ],
       [ "CheckIfInsideAStudyFolder", "ui_2simulator_2application_2study_8cpp.html#aed1d264ff223658aa48df7ef05a7c80f", null ],
       [ "CloseTheStudy", "ui_2simulator_2application_2study_8cpp.html#aeb08bb4fbb12c199925617235507bb9b", null ],
+      [ "computeYearInflows", "solver_2hydro_2management_2monthly_8cpp.html#aca5e481dc01d20ffb6fd9baf8eb61458", null ],
       [ "CurrentStudyIsValid", "ui_2simulator_2application_2study_8cpp.html#a76d5c4fd454350b94dddea78a73b9793", null ],
       [ "EnableRefreshForAllDatagrid", "toolbox_2components_2refresh_8cpp.html#a4e4d820668dc055ece04d62a975cdb16", null ],
       [ "ExportMap", "ui_2simulator_2application_2study_8cpp.html#aed786c0419523bd692ee8fef4931db54", null ],
