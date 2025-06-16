@@ -1,5 +1,8 @@
 var NAVTREEINDEX41 =
 {
+"classHoursFieldLexer.html#aa0940ba913c91d80d3ee1907b1fa378c":[8,0,138,4],
+"classHoursFieldLexer.html#aab89cb4b7a2b507bae0ee8245b6bd8f9":[8,0,138,6],
+"classHoursFieldLexer.html#accd1b775f7d005de583b7422bccbb436":[8,0,138,8],
 "classHoursFieldLexer.html#ad0792aa0558aaa17ccf8696f2b56153a":[8,0,138,1],
 "classHoursFieldLexer.html#ae0f9a45eee62a71db27f9bc3dfe55300":[8,0,138,2],
 "classHoursFieldLexer.html#afb7074e0726ad60fc27149dfbcc66e3a":[8,0,138,5],
@@ -246,8 +249,5 @@ var NAVTREEINDEX41 =
 "classMinDownTime.html#afe857bfb3d11b980e0f053d00e7ee66f":[8,0,177,1],
 "classMinDownTimeGroup.html":[8,0,179],
 "classMinDownTimeGroup.html#a0640a47d12fe6575ac78e2ce18ac85cd":[8,0,179,0],
-"classMinDownTimeGroup.html#acf4b43dec12c15af25d3b74cd7ec99cd":[8,0,179,1],
-"classMinHydroPower.html":[8,0,180],
-"classMinHydroPower.html#aa9c54a207ba58ba047a01db66f9de271":[8,0,180,1],
-"classMinHydroPower.html#afebb7f05d3fd82fb503083c2570efd4e":[8,0,180,0]
+"classMinDownTimeGroup.html#acf4b43dec12c15af25d3b74cd7ec99cd":[8,0,179,1]
 };

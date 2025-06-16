@@ -1,9 +1,13 @@
 var NAVTREEINDEX42 =
 {
+"classMinHydroPower.html":[8,0,180],
+"classMinHydroPower.html#aa9c54a207ba58ba047a01db66f9de271":[8,0,180,1],
+"classMinHydroPower.html#afebb7f05d3fd82fb503083c2570efd4e":[8,0,180,0],
 "classMinMaxHydroPowerGroup.html":[8,0,182],
 "classMinMaxHydroPowerGroup.html#ac9db82c7aac3be9810ea1c2497267abf":[8,0,182,0],
 "classMinMaxHydroPowerGroup.html#aedd8f967c204c600ed992ac73b69bf13":[8,0,182,1],
 "classMockLinearProblem.html":[8,0,183],
+"classMockLinearProblem.html#a22de937cb360e86e8b52ad8b35e440a2":[8,0,183,18],
 "classMockLinearProblem.html#a278425f71e237e9bdf318631d60543fc":[8,0,183,14],
 "classMockLinearProblem.html#a3dc317b4890672fab2ecc502a365b6b8":[8,0,183,12],
 "classMockLinearProblem.html#a4451c97ad588818b1120ef4a26b5d78c":[8,0,183,5],
@@ -21,7 +25,6 @@ var NAVTREEINDEX42 =
 "classMockLinearProblem.html#ac8995cf8176cf34aeccdea065ae3b7b4":[8,0,183,4],
 "classMockLinearProblem.html#acdec83f2d1a48f515cfc2c96c49f96cc":[8,0,183,3],
 "classMockLinearProblem.html#ad9a34eeb9f490b2b53e1525dfde46e75":[8,0,183,16],
-"classMockLinearProblem.html#ae668c15f497c4b8e9efb1d5d71659212":[8,0,183,18],
 "classMockLinearProblem.html#ae920d2fbdb93c8aef5643c517f17d1c7":[8,0,183,10],
 "classMockLinearProblem.html#af78b0d69d93e854f1a5542806176d54a":[8,0,183,17],
 "classMockMipVariable.html":[8,0,185],
@@ -241,13 +244,10 @@ var NAVTREEINDEX42 =
 "classProgress.html#ac4b5ef750872e2013c6925c203a35d4cadfe3149fcd3440053bcdf797ab68efc8":[8,0,229,1,0],
 "classProgress.html#ac871f3914f9fb67fa2da2783d5be9a0f":[8,0,229,7],
 "classPublicStudy.html":[8,0,230],
-"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[8,0,230,1],
 "classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[8,0,230,0],
+"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[8,0,230,1],
 "classQuadraticProblemMatrix.html":[8,0,232],
 "classQuadraticProblemMatrix.html#a125f854b3137ecb3e79b501a8530ced2":[8,0,232,1],
 "classQuadraticProblemMatrix.html#a7722642ba2cc688ff94a834baa6c1ffc":[8,0,232,0],
-"classResultMatrix.html":[8,0,240],
-"classResultMatrix.html#a0d28646f3d8929398765214d4b27d0f7":[8,0,240,3],
-"classResultMatrix.html#a0ebd6169199f31ef26dcf8b3ac389084":[8,0,240,4],
-"classResultMatrix.html#a1704cdc155238f241dcea82d3475a34d":[8,0,240,0]
+"classResultMatrix.html":[8,0,240]
 };

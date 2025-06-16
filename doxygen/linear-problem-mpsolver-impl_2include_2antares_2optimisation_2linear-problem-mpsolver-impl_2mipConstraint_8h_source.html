@@ -169,12 +169,12 @@ $(document).ready(function(){initNavTree('linear-problem-mpsolver-impl_2include_
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordtype">void</span> setBounds(<span class="keywordtype">double</span> lb, <span class="keywordtype">double</span> ub) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordtype">void</span> setCoefficient(<a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">LinearProblemApi::IMipVariable</a>* var, <span class="keywordtype">double</span> coefficient) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordtype">double</span> getLb() <span class="keyword">const override</span>;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordtype">double</span> getUb() <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    [[nodiscard]] <span class="keywordtype">double</span> getLb() <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    [[nodiscard]] <span class="keywordtype">double</span> getUb() <span class="keyword">const override</span>;</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordtype">double</span> getCoefficient(<a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">LinearProblemApi::IMipVariable</a>* var) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    [[nodiscard]] <span class="keywordtype">double</span> getCoefficient(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">LinearProblemApi::IMipVariable</a>* var) <span class="keyword">const override</span>;</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">const</span> std::string&amp; getName() <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    [[nodiscard]] <span class="keyword">const</span> std::string&amp; getName() <span class="keyword">const override</span>;</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    ~<a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipConstraint.html">OrtoolsMipConstraint</a>() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>

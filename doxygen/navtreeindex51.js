@@ -1,5 +1,8 @@
 var NAVTREEINDEX51 =
 {
+"matrix-dp-make_8h.html#a974a844fb3ae602605d9249096df967b":[7,0,0,25,56],
+"matrix-dp-make_8h_source.html":[9,0,0,8,5,0,0,0,0,2],
+"matrix-dp-make_8hxx.html#a0ba3dc459a637b4d4c17d0b7867fe889":[7,0,0,25,55],
 "matrix-dp-make_8hxx_source.html":[9,0,0,8,5,0,0,0,0,3],
 "matrix-to-buffer_8h.html#af3366095ac651f09f5dd4a4f3f80b67c":[7,0,0,80],
 "matrix-to-buffer_8h_source.html":[9,0,0,5,0,2,0,0,0,0],
@@ -246,8 +249,5 @@ var NAVTREEINDEX51 =
 "recentfiles_8h.html#aef32d8da24d8bb21109c3aea9dbce327":[7,0,0,23,1],
 "recentfiles_8h_source.html":[9,0,0,12,2,0,5],
 "refresh_8h_source.html":[9,0,0,12,2,1,1,9],
-"registry_8cpp.html#a4e0118bd2003ed16500fdfc08d0a9fec":[7,0,0,3,1,0,1],
-"registry_8cpp.html#a590273b76deb4183c0f07fecadf8656d":[7,0,0,3,1,0,4],
-"registry_8cpp.html#a5943417899f3ca0a4878cc2b0845c12b":[7,0,0,3,1,0,5],
-"registry_8cpp.html#a9a1e4cf42682be4dc51675e3e9337ef4":[7,0,0,3,1,0,3]
+"registry_8cpp.html#a4e0118bd2003ed16500fdfc08d0a9fec":[7,0,0,3,1,0,1]
 };

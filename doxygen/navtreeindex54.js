@@ -1,5 +1,8 @@
 var NAVTREEINDEX54 =
 {
+"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortFieldDefinition.html#a73cf3fa2e03f8981e1a626d5eade4c0c":[8,0,0,11,0,3,3,1],
+"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortFieldDefinition.html#adc3f0df41692e9972d1c987c5a1c5a87":[8,0,0,11,0,3,3,2],
+"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType.html":[8,0,0,11,0,3,6],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType.html#a7a562f7314121fcd04b3fa6daa38f12a":[8,0,0,11,0,3,6,0],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType.html#a865eba3b61b4b2be2cc94922a42f1f02":[8,0,0,11,0,3,6,3],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType.html#a91f19c42361e39bf30b40b79dee92da0":[8,0,0,11,0,3,6,1],
@@ -246,8 +249,5 @@ var NAVTREEINDEX54 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardAvailableDispatchGen.html#a8551e9d199d322a2fd5e5ca52e419115":[8,0,0,18,5,4,14,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardAvailableDispatchGen.html#af60874f41f7e0a843c9435aec0548fc8":[8,0,0,18,5,4,14,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBalance.html":[8,0,0,18,5,4,16],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBalance.html#a00e6d267218f6c6e412c15ce46e6927f":[8,0,0,18,5,4,16,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBalance.html#a063dac8c7805983bb7f3a708669c5600":[8,0,0,18,5,4,16,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBalance.html#a4da935b39adf02d85c2fca62c8987271":[8,0,0,18,5,4,16,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBalance.html#a619922888a16b56c3b24fb072c63aee7":[8,0,0,18,5,4,16,4]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBalance.html#a00e6d267218f6c6e412c15ce46e6927f":[8,0,0,18,5,4,16,2]
 };
