@@ -26,7 +26,7 @@
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 
-#include "../../libs/antares/scenarioBuilderExpression/ScenarioGroupParser.h"
+#include "ScenarioGroupParser.h"
 
 namespace Antares::Solver::LoadFiles
 {
