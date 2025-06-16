@@ -68,7 +68,7 @@ jobs:
       - name: Install ccache
         shell: bash
         run: |
-          wget https://github.com/ccache/ccache/releases/download/v4.8.3/ccache-4.8.3-windows-x86_64.zip -O ccache.zip
+          wget https://github.com/ccache/ccache/releases/download/v4.11.3/ccache-4.11.3-windows-x86_64.zip -O ccache.zip
           unzip ccache.zip
           rm ccache.zip
           mv ccache-4.8.3-windows-x86_64 ccache
