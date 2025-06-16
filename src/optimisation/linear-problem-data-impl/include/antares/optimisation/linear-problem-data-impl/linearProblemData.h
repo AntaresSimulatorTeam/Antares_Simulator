@@ -42,14 +42,8 @@ public:
     }
 
     [[nodiscard]] double getData(const std::string& dataSetId,
-<<<<<<< feature/4.3_load_scenario_builder -- Incoming Change
                                  LinearProblemApi::IScenario::Chronicle chronicle,
                                  unsigned hour) const override;
-=======
-                                 const std::string& scenarioGroup,
-                                 unsigned scenario,
-                                 unsigned hour) override;
->>>>>>> develop -- Current Change
 
     void addDataSeries(std::unique_ptr<IDataSeries> dataSeries);
 
