@@ -1042,7 +1042,7 @@ public:
         return nullptr;
     }
 
-    void WriteLP(const std::string& filename) override
+    void WriteLP(const std::string& filename) const override
     {
     }
 

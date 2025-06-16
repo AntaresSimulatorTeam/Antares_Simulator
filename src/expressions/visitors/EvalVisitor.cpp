@@ -25,7 +25,6 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
-#include "antares/expressions/RotateIndex.h"
 #include "antares/expressions/ShiftVector.h"
 
 namespace Antares::Expressions::Visitors
@@ -94,22 +93,19 @@ EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
                           + " scenario in library but not in system";
         throw std::invalid_argument(msg);
     }
-    else if (systemParameter.type == ParameterType::CONSTANT)
+    if (systemParameter.type == ParameterType::CONSTANT)
     {
         return EvaluationResult{context_.getSystemParameterValueAsDouble(node->value())};
     }
-    else
+    std::vector<double> params;
+    params.reserve(fillContext_.getNumberOfTimestep());
+    for (auto timeStep = fillContext_.getFirstTimeStep();
+         timeStep <= fillContext_.getLastTimeStep();
+         ++timeStep)
     {
-        std::vector<double> params;
-        params.reserve(fillContext_.getNumberOfTimestep());
-        for (auto timeStep = fillContext_.getFirstTimeStep();
-             timeStep <= fillContext_.getLastTimeStep();
-             ++timeStep)
-        {
-            params.emplace_back(context_.getParameterValue(node->value(), "", 0, timeStep));
-        }
-        return EvaluationResult{params};
+        params.emplace_back(context_.getParameterValue(node->value(), "", 0, timeStep));
     }
+    return EvaluationResult{params};
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::LiteralNode* node)

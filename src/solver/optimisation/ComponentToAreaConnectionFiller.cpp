@@ -48,9 +48,9 @@ ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
     }
 }
 
-void ComponentToAreaConnectionFiller::addVariables(ILinearProblem& pb,
-                                                   ILinearProblemData& data,
-                                                   FillContext& ctx)
+void ComponentToAreaConnectionFiller::addVariables(ILinearProblem&,
+                                                   ILinearProblemData&,
+                                                   FillContext&)
 {
     // nothing to do
 }
@@ -139,9 +139,9 @@ void ComponentToAreaConnectionFiller::addConstraints(ILinearProblem& pb,
     }
 }
 
-void ComponentToAreaConnectionFiller::addObjective(ILinearProblem& pb,
-                                                   ILinearProblemData& data,
-                                                   FillContext& ctx)
+void ComponentToAreaConnectionFiller::addObjective(ILinearProblem&,
+                                                   ILinearProblemData&,
+                                                   FillContext&)
 {
     // nothing to do
 }
