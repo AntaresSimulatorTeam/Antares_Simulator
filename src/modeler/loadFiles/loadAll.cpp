@@ -19,8 +19,7 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include <fmt/format.h>
-#include <fstream>
+#include <filesystem>
 
 #include <antares/logs/logs.h>
 #include "antares/solver/modeler/data.h"
