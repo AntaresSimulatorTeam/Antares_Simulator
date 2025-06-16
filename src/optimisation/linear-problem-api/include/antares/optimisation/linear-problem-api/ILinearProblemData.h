@@ -52,9 +52,16 @@ class ILinearProblemData
 public:
     virtual ~ILinearProblemData() = default;
 
+<<<<<<< feature/4.3_load_scenario_builder -- Incoming Change
     [[nodiscard]] virtual double getData(const std::string& dataSetId,
                                          unsigned chronicle,
                                          unsigned hour) const
+=======
+    virtual double getData(const std::string& dataSetId,
+                           const std::string& scenarioGroup,
+                           unsigned scenario,
+                           unsigned hour)
+>>>>>>> develop -- Current Change
       = 0;
 };
 
