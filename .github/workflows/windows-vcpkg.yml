@@ -52,6 +52,9 @@ jobs:
           echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_windows-latest_static_sirius_Release.zip" >> $GITHUB_ENV
         shell: bash
 
+      - name: Add OR-Tools to PATH
+        run: echo "D:\a\Antares_Simulator\Antares_Simulator/or-tools/install/bin" | Out-File -Append -Encoding ascii $env:GITHUB_PATH
+
       - name: Pre-requisites
         shell: cmd
         run: |
