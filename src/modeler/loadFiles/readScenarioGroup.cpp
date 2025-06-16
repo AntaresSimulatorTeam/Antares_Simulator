@@ -34,7 +34,8 @@ namespace
 const std::filesystem::path SCENARIO_BUILDER_PATH = "input/data-series/modeler-scenariobuilder.dat";
 }
 
-Optimization::ScenarioGroupRepository loadScenarioGroupRepository(const std::string& studyPath)
+Optimization::ScenarioGroupRepository loadScenarioGroupRepository(
+  const std::filesystem::path& studyPath)
 {
     try
     {

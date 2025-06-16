@@ -47,7 +47,8 @@ ModelerStudy::SystemModel::System loadSystem(
 std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> loadDataSeries(
   const std::filesystem::path& studyPath);
 
-Optimization::ScenarioGroupRepository loadScenarioGroupRepository(const std::string& studyPath);
+Optimization::ScenarioGroupRepository loadScenarioGroupRepository(
+  const std::filesystem::path& studyPath);
 
 void handleYamlError(const YAML::Exception& e, const std::string& context);
 
