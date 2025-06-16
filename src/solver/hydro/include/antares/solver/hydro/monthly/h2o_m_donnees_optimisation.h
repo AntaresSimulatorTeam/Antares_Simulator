@@ -18,8 +18,7 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#ifndef __SOLVER_H2O_M_STRUCTURE_INTERNE__
-#define __SOLVER_H2O_M_STRUCTURE_INTERNE__
+#pragma once
 
 #include <antares/solver/hydro/probleme_spx_wrapper.h>
 
@@ -49,16 +48,10 @@ struct PROBLEME_LINEAIRE_PARTIE_FIXE
 {
     int NombreDeVariables{0};
     std::vector<double> CoutLineaire;
-    std::vector<double> CoutLineaireBruite; /* Ajout de bruit pour forcer l'unicité des solutions */
-    std::vector<int> TypeDeVariable; /* Indicateur du type de variable, il ne doit prendre que les
-                           suivantes (voir le fichier spx_constantes_externes.h mais ne jamais
-                           utiliser les valeurs explicites des constantes): VARIABLE_FIXE ,
-                            VARIABLE_BORNEE_DES_DEUX_COTES ,
-                            VARIABLE_BORNEE_INFERIEUREMENT ,
-                            VARIABLE_BORNEE_SUPERIEUREMENT ,
-                            VARIABLE_NON_BORNEE
-                                           */
-    /* La matrice des contraintes */
+    std::vector<double> CoutLineaireBruite; // Ajout de bruit pour forcer l'unicité des solutions
+    std::vector<int> TypeDeVariable;
+
+    // La matrice des contraintes
     int NombreDeContraintes{0};
     std::vector<char> Sens;
     std::vector<int> IndicesDebutDeLigne;
@@ -81,42 +74,41 @@ struct PROBLEME_LINEAIRE_PARTIE_VARIABLE
        de renseigner directement les structures de description du reseau avec les
        resultats contenus dans X */
     std::vector<double*> AdresseOuPlacerLaValeurDesVariablesOptimisees;
-    /* Resultat */
+    // Resultats
     std::vector<double> X;
     /* En Entree ou en Sortie */
-    int ExistenceDUneSolution{0}; /* En sortie, vaut :
-                                  OUI_SPX s'il y a une solution,
-                                                          NON_SPX s'il n'y a pas de solution
-                                  admissible SPX_ERREUR_INTERNE si probleme a l'execution
-                                  (saturation memoire par exemple), et dans ce cas il n'y a pas de
-                                  solution SPX_MATRICE_DE_BASE_SINGULIERE si on n'a pas pu
-                                  construire de matrice de base reguliere, et dans ce cas il n'y a
-                                  pas de solution
-                                                 */
 
-    std::vector<int>
-      PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
-    std::vector<int>
-      ComplementDeLaBase; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
-    std::vector<double>
-      CoutsReduits; /* Vecteur a passer au Simplexe pour recuperer les couts reduits */
-    std::vector<double> CoutsMarginauxDesContraintes; /* Vecteur a passer au Simplexe pour recuperer
-                                             les couts marginaux */
+    // Existence d'une solution vaut :
+    //  OUI_SPX s'il y a une solution,
+    //  NON_SPX s'il n'y a pas de solution admissible
+    //  SPX_ERREUR_INTERNE si :
+    //      + probleme a l'execution (saturation memoire par exemple),
+    //        et dans ce cas il n'y a pas de solution SPX_MATRICE_DE_BASE_SINGULIERE
+    //      + on n'a pas pu construire de matrice de base reguliere, et dans ce cas il n'y a
+    //        pas de solution
+    int ExistenceDUneSolution{0};
+
+    // Vecteurs a passer au Simplexe pour recuperer la base optimale
+    std::vector<int> PositionDeLaVariable;
+    std::vector<int> ComplementDeLaBase;
+    // Vecteur a passer au Simplexe pour recuperer les couts reduits
+    std::vector<double> CoutsReduits;
+    // Vecteur a passer au Simplexe pour recuperer les couts marginaux
+    std::vector<double> CoutsMarginauxDesContraintes;
 };
 
 /* Les correspondances des variables */
 struct CORRESPONDANCE_DES_VARIABLES
 {
-    std::vector<int> NumeroDeVariableVolume;               /* Volumes */
-    std::vector<int> NumeroDeVariableTurbine;              /* Turbines */
-    std::vector<int> NumeroDeVariableDepassementVolumeMax; /* Depassement du volume max */
-    std::vector<int> NumeroDeVariableDepassementVolumeMin; /* Depassement du volume min */
-    int NumeroDeLaVariableViolMaxVolumeMin{0};             // Depassement max du volume min
-    std::vector<int>
-      NumeroDeVariableDEcartPositifAuTurbineCible; /* Ecart positif au volume cible */
-    std::vector<int>
-      NumeroDeVariableDEcartNegatifAuTurbineCible; /* Ecart negatif au volume cible */
-    int NumeroDeLaVariableXi{0}; /* Variable decrivant l'ecart max au turbine cible */
+    std::vector<int> NumeroDeVariableVolume;
+    std::vector<int> NumeroDeVariableTurbine;
+    std::vector<int> NumeroDeVariableOverflow;
+    std::vector<int> NumeroDeVariableDepassementVolumeMax;
+    std::vector<int> NumeroDeVariableDepassementVolumeMin;
+    int NumeroDeLaVariableViolMaxVolumeMin{0};
+    std::vector<int> NumeroDeVariableDEcartPositifAuTurbineCible;
+    std::vector<int> NumeroDeVariableDEcartNegatifAuTurbineCible;
+    int NumeroDeLaVariableXi{0};
 };
 
 /* Structure uniquement exploitee par l'optimisation (donc a ne pas acceder depuis l'exterieur) */
@@ -134,4 +126,3 @@ struct PROBLEME_HYDRAULIQUE
     double CoutDeLaSolutionBruite{0.};
 };
 } // namespace DonneesOptimisationMensuelle
-#endif
