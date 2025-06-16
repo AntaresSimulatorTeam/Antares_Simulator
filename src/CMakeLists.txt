@@ -201,15 +201,14 @@ if(POLICY CMP0074)
 	cmake_policy(SET CMP0074 NEW)
 endif()
 
+find_package(sirius_solver)
+if (NOT sirius_solver_FOUND)
+	message (FATAL_ERROR "Sirius solver not found. You can specify a dependency install directory with -DCMAKE_PREFIX_PATH")
+endif()
+
 if (VCPKG_TOOLCHAIN)
 	list(APPEND CMAKE_PREFIX_PATH "${sirius_solver_ROOT}")
 	list(APPEND CMAKE_PREFIX_PATH "${ortools_ROOT}")
-endif()
-
-find_package(sirius_solver)
-
-if (NOT sirius_solver_FOUND)
-	message (FATAL_ERROR "Sirius solver not found. You can specify a dependency install directory with -DCMAKE_PREFIX_PATH")
 endif()
 
 #gflags needed for ortools
