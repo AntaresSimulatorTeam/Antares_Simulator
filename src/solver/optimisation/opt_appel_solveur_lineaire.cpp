@@ -245,10 +245,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         }
     }
 
-    if (solver == nullptr)
-    {
-        solver = convertToMPSolver(problemeHebdo, NumIntervalle, options);
-    }
+    solver = convertToMPSolver(problemeHebdo, NumIntervalle, options);
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
     mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
