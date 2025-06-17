@@ -63,6 +63,12 @@ variable = netting
 operator = less
 hours = [1, 168]
 ```
+
+Possible values
+- `variable`: `withdrawal`, `injection`, `netting`
+- `operator`: `less`, `equal`, `greater`
+- `hours`: not empty, any number of lists `[h_1, ..., h_n]` with n>=1, and coefficients from 1 to 168 included.
+
 For each constraint, the corresponding RHS time-series must be located at `input/st-storage/constraints/area/rhs_<constraint id>.txt`. The time-series must contain a single column and 8760 rows, empty files are also accepted.
 
 ####  Hydro final levels / scenario-builder
