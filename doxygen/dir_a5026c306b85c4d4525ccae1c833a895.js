@@ -18,7 +18,6 @@ var dir_a5026c306b85c4d4525ccae1c833a895 =
     [ "sim_structure_probleme_economique.h", "sim__structure__probleme__economique_8h_source.html", null ],
     [ "simulation-run.h", "simulation-run_8h_source.html", null ],
     [ "simulation.h", "solver_2simulation_2include_2antares_2solver_2simulation_2simulation_8h_source.html", null ],
-    [ "solver.data.h", "solver_8data_8h_source.html", null ],
     [ "solver.h", "solver_2simulation_2include_2antares_2solver_2simulation_2solver_8h_source.html", null ],
     [ "solver.hxx", "solver_8hxx_source.html", null ],
     [ "solver_utils.h", "solver__utils_8h_source.html", null ],

@@ -102,7 +102,6 @@ var hierarchy =
     [ "Antares::Expressions::Visitors::BoxStyle", "structAntares_1_1Expressions_1_1Visitors_1_1BoxStyle.html", null ],
     [ "Antares::UnitTests::Buffer", "classAntares_1_1UnitTests_1_1Buffer.html", null ],
     [ "Antares::ExtSource::Handler::BuildContext", "classAntares_1_1ExtSource_1_1Handler_1_1BuildContext.html", null ],
-    [ "Antares::Solver::Private::Simulation::CacheData", "classAntares_1_1Solver_1_1Private_1_1Simulation_1_1CacheData.html", null ],
     [ "Antares::Date::Calendar", "classAntares_1_1Date_1_1Calendar.html", null ],
     [ "Antares::CBuilder", "classAntares_1_1CBuilder.html", null ],
     [ "CellColumnData", "classCellColumnData.html", null ],

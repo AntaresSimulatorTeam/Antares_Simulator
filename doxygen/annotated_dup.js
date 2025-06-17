@@ -695,11 +695,6 @@ var annotated_dup =
           [ "CsrQuadraticProblem", "classAntares_1_1Solver_1_1Optimization_1_1CsrQuadraticProblem.html", "classAntares_1_1Solver_1_1Optimization_1_1CsrQuadraticProblem" ],
           [ "WeeklyOptimization", "classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization.html", "classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization" ]
         ] ],
-        [ "Private", null, [
-          [ "Simulation", null, [
-            [ "CacheData", "classAntares_1_1Solver_1_1Private_1_1Simulation_1_1CacheData.html", "classAntares_1_1Solver_1_1Private_1_1Simulation_1_1CacheData" ]
-          ] ]
-        ] ],
         [ "Simulation", null, [
           [ "AdqPatchPostProcessList", "classAntares_1_1Solver_1_1Simulation_1_1AdqPatchPostProcessList.html", "classAntares_1_1Solver_1_1Simulation_1_1AdqPatchPostProcessList" ],
           [ "OptPostProcessList", "classAntares_1_1Solver_1_1Simulation_1_1OptPostProcessList.html", "classAntares_1_1Solver_1_1Simulation_1_1OptPostProcessList" ],

@@ -1400,11 +1400,6 @@ var namespaces_dup =
           [ "CsrQuadraticProblem", "classAntares_1_1Solver_1_1Optimization_1_1CsrQuadraticProblem.html", "classAntares_1_1Solver_1_1Optimization_1_1CsrQuadraticProblem" ],
           [ "WeeklyOptimization", "classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization.html", "classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization" ]
         ] ],
-        [ "Private", null, [
-          [ "Simulation", null, [
-            [ "CacheData", "classAntares_1_1Solver_1_1Private_1_1Simulation_1_1CacheData.html", "classAntares_1_1Solver_1_1Private_1_1Simulation_1_1CacheData" ]
-          ] ]
-        ] ],
         [ "Simulation", null, [
           [ "AdqPatchPostProcessList", "classAntares_1_1Solver_1_1Simulation_1_1AdqPatchPostProcessList.html", "classAntares_1_1Solver_1_1Simulation_1_1AdqPatchPostProcessList" ],
           [ "OptPostProcessList", "classAntares_1_1Solver_1_1Simulation_1_1OptPostProcessList.html", "classAntares_1_1Solver_1_1Simulation_1_1OptPostProcessList" ],
@@ -1919,17 +1914,17 @@ var namespaces_dup =
         [ "checkOptions", "tsGenerationOptions_8h.html#a62f914414c92946b770434f2962ef5c3", null ],
         [ "CreateLinkList", "linksTSgenerator_8cpp.html#a4767f627b495c48cc05508639521b487", null ],
         [ "createTsGeneratorParser", "tsGenerationOptions_8h.html#a33eaf930f40712e6447731f496fb9e54", null ],
-        [ "Destroy", "generator_8h.html#ad2d11d0e24543a1f81ebff19ea377efc", null ],
+        [ "Destroy", "generator_8h.html#acd9b71e1425f457bd8778b23759a0ea4", null ],
         [ "DestroyAll", "generator_8cpp.html#a376d0117e2a60cd9d1db26b398025056", null ],
         [ "extractTargetAreas", "linksTSgenerator_8cpp.html#a7db3be59663c31ce6edd03fd2488b560", null ],
         [ "findLinkInList", "linksTSgenerator_8cpp.html#a50fc23a601f5b5958ed3e79914c2063a", null ],
-        [ "GenerateHydroTimeSeries", "solver_2ts-generator_2hydro_8cpp.html#a5fabf052aa42370a04cd5218e8354fb6", null ],
-        [ "GenerateHydroTimeSeries", "generator_8hxx.html#ab2a209e48e85bd4eeaec0dcc7eb5a63e", null ],
+        [ "GenerateHydroTimeSeries", "generator_8hxx.html#a165b57fb5cb5a9468d1a9d965e24fa97", null ],
+        [ "GenerateHydroTimeSeries", "solver_2ts-generator_2hydro_8cpp.html#a3f5a55066990f8dd175afb8a7c864625", null ],
         [ "generateLinkTimeSeries", "availability_8cpp.html#aff622e3098b1794af9d0a9980ebabd08", null ],
         [ "generateThermalTimeSeries", "availability_8cpp.html#aa30390df1cab09cfc69c1e5d3f5059e5", null ],
-        [ "GenerateTimeSeries", "generator_8h.html#abad845003770c9a8a5f43688f1828284", null ],
-        [ "GenerateTimeSeries", "generator_8hxx.html#abad845003770c9a8a5f43688f1828284", null ],
-        [ "GenerateTimeSeries< Data::timeSeriesHydro >", "generator_8hxx.html#ad385e35171eb97b943791940b192400c", null ],
+        [ "GenerateTimeSeries", "generator_8h.html#af9618dd6d3446b4ddc5f0592e5fc476c", null ],
+        [ "GenerateTimeSeries", "generator_8hxx.html#af9618dd6d3446b4ddc5f0592e5fc476c", null ],
+        [ "GenerateTimeSeries< Data::timeSeriesHydro >", "generator_8hxx.html#a66826706bf3300441a828129cb068bca", null ],
         [ "getAllClustersToGen", "availability_8cpp.html#a6931dc8e4802e8792c952569484a6a6a", null ],
         [ "getMatchingPairInCollection", "linksTSgenerator_8cpp.html#a1bbf299a57d34d8e028508d1d331db1e", null ],
         [ "linkTSrequired", "tsGenerationOptions_8h.html#afa5f5f1b4c23f40c11bda9c7b7d6d055", null ],
