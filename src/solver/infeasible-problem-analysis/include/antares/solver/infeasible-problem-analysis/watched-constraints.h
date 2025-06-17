@@ -135,13 +135,14 @@ using STSNettingSum = STSAdditionalConstraint<NETTING>;
 class ConstraintsFactory
 {
 public:
-    explicit ConstraintsFactory();
+    explicit ConstraintsFactory() = default;
     std::unique_ptr<WatchedConstraint> create(const std::string&, double) const;
     std::regex constraintsFilter();
 
 private:
-    std::map<std::string,
-             std::function<std::unique_ptr<WatchedConstraint>(const std::string&, double)>>
+    static const std::map<
+      std::string,
+      std::function<std::unique_ptr<WatchedConstraint>(const std::string&, double)>>
       regex_to_ctypes_;
 };
 

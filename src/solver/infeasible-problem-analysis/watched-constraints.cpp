@@ -161,22 +161,20 @@ std::string HydroProduction::infeasibilityCause()
 }
 
 // --- Constraints factory ---
-ConstraintsFactory::ConstraintsFactory()
-{
-    regex_to_ctypes_ = {
-      {"::hourly::", std::make_unique<HourlyBC, const std::string&, double>},
-      {"::daily::", std::make_unique<DailyBC, const std::string&, double>},
-      {"::weekly::", std::make_unique<WeeklyBC, const std::string&, double>},
-      {"^FictiveLoads::", std::make_unique<FictitiousLoad, const std::string&, double>},
-      {"^AreaHydroLevel::", std::make_unique<HydroLevel, const std::string&, double>},
-      {"^Level::", std::make_unique<STS, const std::string&, double>},
-      {"^HydroPower::", std::make_unique<HydroProduction, const std::string&, double>},
-      {"^WithdrawalSum::", std::make_unique<STSWithdrawalSum, const std::string&, double>},
-      {"^InjectionSum::", std::make_unique<STSInjectionSum, const std::string&, double>},
-      {"^NettingSum::",
-       std::make_unique<STSNettingSum, const std::string&, double>}}; // namespace
-                                                                      // Antares::Optimization
-}
+
+const std::map<std::string,
+               std::function<std::unique_ptr<WatchedConstraint>(const std::string&, double)>>
+  ConstraintsFactory::regex_to_ctypes_ = {
+    {"::hourly::", std::make_unique<HourlyBC, const std::string&, double>},
+    {"::daily::", std::make_unique<DailyBC, const std::string&, double>},
+    {"::weekly::", std::make_unique<WeeklyBC, const std::string&, double>},
+    {"^FictiveLoads::", std::make_unique<FictitiousLoad, const std::string&, double>},
+    {"^AreaHydroLevel::", std::make_unique<HydroLevel, const std::string&, double>},
+    {"^Level::", std::make_unique<STS, const std::string&, double>},
+    {"^HydroPower::", std::make_unique<HydroProduction, const std::string&, double>},
+    {"^WithdrawalSum::", std::make_unique<STSWithdrawalSum, const std::string&, double>},
+    {"^InjectionSum::", std::make_unique<STSInjectionSum, const std::string&, double>},
+    {"^NettingSum::", std::make_unique<STSNettingSum, const std::string&, double>}};
 
 std::unique_ptr<WatchedConstraint> ConstraintsFactory::create(const std::string& name,
                                                               double value) const
