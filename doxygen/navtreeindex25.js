@@ -1,5 +1,9 @@
 var NAVTREEINDEX25 =
 {
+"classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#a9cd1b34a95fa35817100794ce25d48f8":[8,0,0,18,3,9,6],
+"classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#aa2610ad198fe8b749e943d2ad1762513":[8,0,0,18,3,9,10],
+"classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#ab99b63d0c859922e5835a7c9562f7114":[8,0,0,18,3,9,7],
+"classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#acc70a60813365e67941864367f9083dd":[8,0,0,18,3,9,5],
 "classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#ad4eff07d31b9efb821a5ef5474480c3d":[8,0,0,18,3,9,3],
 "classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#ad63fd15dc25922ff20ae6b11c9f2322b":[8,0,0,18,3,9,9],
 "classAntares_1_1Solver_1_1Simulation_1_1AdqPatchPostProcessList.html":[8,0,0,18,3,0],
@@ -245,9 +249,5 @@ var NAVTREEINDEX25 =
 "classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html#ae251d02ed48897b8aded225691a9531f":[8,0,0,18,4,10,31],
 "classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html#aebe64ada182bf1d4908f189b82e88f95":[8,0,0,18,4,10,13],
 "classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html#af853180605d96275b91ee00a86d3ab8a":[8,0,0,18,4,10,26],
-"classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html":[8,0,0,18,4,2,5],
-"classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a03f3c63977a715f7fc01aeb892848529":[8,0,0,18,4,2,5,14],
-"classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a06e958ea8caf99f7b2792240612e9ef7":[8,0,0,18,4,2,5,13],
-"classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a08d4a1fb6a3c03612311113c28e45902":[8,0,0,18,4,2,5,3],
-"classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a17655a4c5e55df73a1e66a951092ddd4":[8,0,0,18,4,2,5,9]
+"classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html":[8,0,0,18,4,2,5]
 };

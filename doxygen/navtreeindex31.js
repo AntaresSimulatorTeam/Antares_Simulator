@@ -1,5 +1,9 @@
 var NAVTREEINDEX31 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html#a5bb5eed8599e4801e4fe089103cf65e4":[8,0,0,18,4,4,123,12],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html#a5daa6c0aac4dcec5a4721acdba67adf5":[8,0,0,18,4,4,123,2],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html#a77711bcd11f6b149abf196df12003f73":[8,0,0,18,4,4,123,17],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html#a8493d303c268e758fa769029549a1d61":[8,0,0,18,4,4,123,14],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html#aa30701999e87cc04f9c26b46db9d1ba1":[8,0,0,18,4,4,123,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html#ab68b203e07721b0dd705cfaa5ad2b484":[8,0,0,18,4,4,123,7],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html#abf1e5104d2ca6779769e6f6071f989b8":[8,0,0,18,4,4,123,4],
@@ -245,9 +249,5 @@ var NAVTREEINDEX31 =
 "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData.html#a8f2d409fc0874f1f599d69e89e6c658a":[8,0,0,18,4,6,0,4,1],
 "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData.html#a967a698802a948a13a5e71b6f80eb408":[8,0,0,18,4,6,0,4,11],
 "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData.html#ab19a782333ec92485a5bf393232e425b":[8,0,0,18,4,6,0,4,5],
-"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData.html#af29ebb7e4b1e13cd7d3512f700c2b240":[8,0,0,18,4,6,0,4,10],
-"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html":[8,0,0,18,4,6,0,8],
-"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html#a02fc26267153c8dd7a1d55d4f2d63e9b":[8,0,0,18,4,6,0,8,0],
-"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html#a1d0af1e1218712154eb85c46d84c3166":[8,0,0,18,4,6,0,8,4],
-"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html#a1d26895c86cf3ef4f419075a4cbf0709":[8,0,0,18,4,6,0,8,8]
+"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData.html#af29ebb7e4b1e13cd7d3512f700c2b240":[8,0,0,18,4,6,0,4,10]
 };

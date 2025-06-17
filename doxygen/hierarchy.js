@@ -1962,6 +1962,7 @@ var hierarchy =
       [ "Antares::Optimization::HydroLevel", "classAntares_1_1Optimization_1_1HydroLevel.html", null ],
       [ "Antares::Optimization::HydroProduction", "classAntares_1_1Optimization_1_1HydroProduction.html", null ],
       [ "Antares::Optimization::STS", "classAntares_1_1Optimization_1_1STS.html", null ],
+      [ "Antares::Optimization::STSAdditionalConstraint< ConstraintType >", "classAntares_1_1Optimization_1_1STSAdditionalConstraint.html", null ],
       [ "Antares::Optimization::WeeklyBC", "classAntares_1_1Optimization_1_1WeeklyBC.html", null ]
     ] ],
     [ "Antares::Solver::WeeklyDataFromAntares", "structAntares_1_1Solver_1_1WeeklyDataFromAntares.html", null ],

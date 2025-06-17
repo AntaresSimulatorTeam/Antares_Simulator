@@ -1,5 +1,16 @@
 var NAVTREEINDEX56 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1VCardAllSetsOfAreas.html":[8,0,0,18,4,39],
+"structAntares_1_1Solver_1_1Variable_1_1VCardAllSetsOfAreas.html#acca4aa42deec49483901806cb9437aec":[8,0,0,18,4,39,0],
+"structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html":[8,0,0,18,4,48],
+"structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html#a30e2bce7bf8725e4faeb6bff1d278fa7":[8,0,0,18,4,48,4],
+"structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html#a3750a1b71293c6ea6b191d6880fba1d7":[8,0,0,18,4,48,1],
+"structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html#a61f234773186606b5c626e7f37c03940":[8,0,0,18,4,48,0],
+"structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html#a8817632e67a3dc61be90415e4c72bb21":[8,0,0,18,4,48,3],
+"structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html#a917b284a02cc1fc8d2e8f5ddab25b130":[8,0,0,18,4,48,2],
+"structAntares_1_1Solver_1_1Variable_1_1VCardJoin.html":[8,0,0,18,4,11],
+"structAntares_1_1Solver_1_1Variable_1_1VCardJoin.html#a905e8a24356cb52316233560ff56c213":[8,0,0,18,4,11,0],
+"structAntares_1_1Solver_1_1Variable_1_1VariableAccessor.html":[8,0,0,18,4,20],
 "structAntares_1_1Solver_1_1Variable_1_1VariableAccessor.html#a196f76979862b0dfe282eed48220f590":[8,0,0,18,4,20,0],
 "structAntares_1_1Solver_1_1Variable_1_1VariableAccessor.html#a79c00dea9d991ccaf846ca2741d7fd31":[8,0,0,18,4,20,1],
 "structAntares_1_1Solver_1_1Variable_1_1VariableAccessor_3_01ResultsT_00_01Category_1_1dynamicColumns_01_4.html":[8,0,0,18,4,21],
@@ -238,16 +249,5 @@ var NAVTREEINDEX56 =
 "structAreaHydroLevelData.html":[8,0,45],
 "structAreaHydroLevelData.html#a60dfa4b1e0ae400a70a631828f5299a1":[8,0,45,0],
 "structAreaHydroLevelData.html#ab24ec75f870f2e34d7233909364cc9dd":[8,0,45,1],
-"structBB.html":[8,0,49],
-"structBB.html#a170689f7ab46978b9b81f3c1cb8b14c1":[8,0,49,20],
-"structBB.html#a192573242b0f34cf91638ad794c66477":[8,0,49,33],
-"structBB.html#a2208e22dcad511eed0775bd650aae29b":[8,0,49,35],
-"structBB.html#a240065f3da95ae7003d2d7c81fd28766":[8,0,49,14],
-"structBB.html#a286f70c90846140d2ac9485ea35e361b":[8,0,49,18],
-"structBB.html#a2a4045c7f1088d63abbd3d54dbe985d5":[8,0,49,0],
-"structBB.html#a2a6e7f93f940affcc5e286efc509a521":[8,0,49,13],
-"structBB.html#a2a75cae64fc7c0eca4a6928cd8978073":[8,0,49,28],
-"structBB.html#a2d57d5351767259313ce5cc663313888":[8,0,49,11],
-"structBB.html#a3ba6defb103145f000c6ec8cc06da580":[8,0,49,4],
-"structBB.html#a3e573a2d737785b0ff35242873b113ec":[8,0,49,17]
+"structBB.html":[8,0,49]
 };

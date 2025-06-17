@@ -1,5 +1,9 @@
 var NAVTREEINDEX29 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCost.html#a28b4cad1a6bd98ad934c5275be8f715f":[8,0,0,18,4,4,83,13],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCost.html#a2d924ff925da5d586d5db5d809516346":[8,0,0,18,4,4,83,19],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCost.html#a332486fef8e94a24f18407c86a3e0758":[8,0,0,18,4,4,83,3],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCost.html#a3a1f4fe2108bee1b08b0a3128fdb1281":[8,0,0,18,4,4,83,17],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCost.html#a51513a19b87815497a86ffa8c5bd35d9":[8,0,0,18,4,4,83,8],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCost.html#a51e0c70f5ba0c1bad380b2f2a94b8f39":[8,0,0,18,4,4,83,2],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCost.html#a600c3f47e63bb1cf6ffaff855f4b6078":[8,0,0,18,4,4,83,4],
@@ -245,9 +249,5 @@ var NAVTREEINDEX29 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel.html#aa4858e9f2b392c36f4ee083be250db16":[8,0,0,18,4,4,105,10],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel.html#aaf8510c3073a6f1d1bc43ad59d6f142c":[8,0,0,18,4,4,105,1],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel.html#ab4f7459e92b2e1fad3cde8861b7b7707":[8,0,0,18,4,4,105,11],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel.html#adc74a1b71450d847fc5f5f26f989274e":[8,0,0,18,4,4,105,13],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel.html#ae30bd3c7bb7230369f03a93cd91dc007":[8,0,0,18,4,4,105,5],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel.html#ae84b881562a15fb9e4324b5edf8e9506":[8,0,0,18,4,4,105,9],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance.html":[8,0,0,18,4,4,9],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance.html#a112f442105659660745301bc554ea3db":[8,0,0,18,4,4,9,11]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel.html#adc74a1b71450d847fc5f5f26f989274e":[8,0,0,18,4,4,105,13]
 };

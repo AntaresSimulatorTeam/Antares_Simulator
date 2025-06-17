@@ -1,5 +1,16 @@
 var NAVTREEINDEX55 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOverallCostCsr.html#ac33979505e4f6859f01279307d98334b":[8,0,0,18,4,4,86,2],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOverallCostCsr.html#acd7e0b4b417098ff043e985b8b976b11":[8,0,0,18,4,4,86,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOverflow.html":[8,0,0,18,4,4,88],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOverflow.html#a10e67cd9969e4ed4ecefc8e52ac06056":[8,0,0,18,4,4,88,4],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOverflow.html#a11afc4c4d79af58f9b0f3201acd99090":[8,0,0,18,4,4,88,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOverflow.html#a757942cbfedce326a6f6b2864e080d8b":[8,0,0,18,4,4,88,2],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOverflow.html#ab6abbf03ff1e6f956c1da13bfd9fe657":[8,0,0,18,4,4,88,3],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOverflow.html#ae2078b7f86680893cf5707cf037e6866":[8,0,0,18,4,4,88,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPSP.html":[8,0,0,18,4,4,6],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPSP.html#a131cef324d11d9880f71aa83616a151c":[8,0,0,18,4,4,6,3],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPSP.html#a5f575b5a2f6bfda59418cca7a4e4da10":[8,0,0,18,4,4,6,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPSP.html#a62c72c3cd032522b9b408b9b7fd056e4":[8,0,0,18,4,4,6,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPSP.html#a8f191a16115a23507ffc4fae82ab40b5":[8,0,0,18,4,4,6,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPSP.html#adbca1497b750785315490d938a62d0f2":[8,0,0,18,4,4,6,4],
@@ -238,16 +249,5 @@ var NAVTREEINDEX55 =
 "structAntares_1_1Solver_1_1Variable_1_1VCardAllBindingConstraints.html":[8,0,0,18,4,9],
 "structAntares_1_1Solver_1_1Variable_1_1VCardAllBindingConstraints.html#a80b76513868365980887db3ebdb0c8f1":[8,0,0,18,4,9,0],
 "structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html":[8,0,0,18,4,13],
-"structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#a3fb862fe2eabfef1fd6705a593943529":[8,0,0,18,4,13,0],
-"structAntares_1_1Solver_1_1Variable_1_1VCardAllSetsOfAreas.html":[8,0,0,18,4,39],
-"structAntares_1_1Solver_1_1Variable_1_1VCardAllSetsOfAreas.html#acca4aa42deec49483901806cb9437aec":[8,0,0,18,4,39,0],
-"structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html":[8,0,0,18,4,48],
-"structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html#a30e2bce7bf8725e4faeb6bff1d278fa7":[8,0,0,18,4,48,4],
-"structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html#a3750a1b71293c6ea6b191d6880fba1d7":[8,0,0,18,4,48,1],
-"structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html#a61f234773186606b5c626e7f37c03940":[8,0,0,18,4,48,0],
-"structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html#a8817632e67a3dc61be90415e4c72bb21":[8,0,0,18,4,48,3],
-"structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html#a917b284a02cc1fc8d2e8f5ddab25b130":[8,0,0,18,4,48,2],
-"structAntares_1_1Solver_1_1Variable_1_1VCardJoin.html":[8,0,0,18,4,11],
-"structAntares_1_1Solver_1_1Variable_1_1VCardJoin.html#a905e8a24356cb52316233560ff56c213":[8,0,0,18,4,11,0],
-"structAntares_1_1Solver_1_1Variable_1_1VariableAccessor.html":[8,0,0,18,4,20]
+"structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#a3fb862fe2eabfef1fd6705a593943529":[8,0,0,18,4,13,0]
 };

@@ -1,5 +1,9 @@
 var NAVTREEINDEX30 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel.html#ae30bd3c7bb7230369f03a93cd91dc007":[8,0,0,18,4,4,105,5],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel.html#ae84b881562a15fb9e4324b5edf8e9506":[8,0,0,18,4,4,105,9],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance.html":[8,0,0,18,4,4,9],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance.html#a112f442105659660745301bc554ea3db":[8,0,0,18,4,4,9,11],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance.html#a36ff8dcac7538d2d0ffe87d882a251be":[8,0,0,18,4,4,9,15],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance.html#a3fc7f9d2af10c04beb5c68f9fe72882c":[8,0,0,18,4,4,9,18],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance.html#a4afcde98ed114dca8be1e001a457087b":[8,0,0,18,4,4,9,12],
@@ -245,9 +249,5 @@ var NAVTREEINDEX30 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html#a250bdc5094b0936786e370d695d6afb2":[8,0,0,18,4,4,123,11],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html#a2d5c4cbeb328699560cb5775d3ff7731":[8,0,0,18,4,4,123,18],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html#a47564e119e8f0da31aa6bcab98f370ad":[8,0,0,18,4,4,123,8],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html#a4b8bf1c589aba49def986643bae432ff":[8,0,0,18,4,4,123,13],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html#a5bb5eed8599e4801e4fe089103cf65e4":[8,0,0,18,4,4,123,12],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html#a5daa6c0aac4dcec5a4721acdba67adf5":[8,0,0,18,4,4,123,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html#a77711bcd11f6b149abf196df12003f73":[8,0,0,18,4,4,123,17],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html#a8493d303c268e758fa769029549a1d61":[8,0,0,18,4,4,123,14]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html#a4b8bf1c589aba49def986643bae432ff":[8,0,0,18,4,4,123,13]
 };

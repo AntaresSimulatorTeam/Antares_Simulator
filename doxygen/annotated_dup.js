@@ -630,6 +630,7 @@ var annotated_dup =
         [ "HydroLevel", "classAntares_1_1Optimization_1_1HydroLevel.html", "classAntares_1_1Optimization_1_1HydroLevel" ],
         [ "STS", "classAntares_1_1Optimization_1_1STS.html", "classAntares_1_1Optimization_1_1STS" ],
         [ "HydroProduction", "classAntares_1_1Optimization_1_1HydroProduction.html", "classAntares_1_1Optimization_1_1HydroProduction" ],
+        [ "STSAdditionalConstraint", "classAntares_1_1Optimization_1_1STSAdditionalConstraint.html", "classAntares_1_1Optimization_1_1STSAdditionalConstraint" ],
         [ "ConstraintsFactory", "classAntares_1_1Optimization_1_1ConstraintsFactory.html", "classAntares_1_1Optimization_1_1ConstraintsFactory" ],
         [ "ComponentFiller", "classAntares_1_1Optimization_1_1ComponentFiller.html", "classAntares_1_1Optimization_1_1ComponentFiller" ],
         [ "VariablesBulkAddition", "classAntares_1_1Optimization_1_1VariablesBulkAddition.html", "classAntares_1_1Optimization_1_1VariablesBulkAddition" ],

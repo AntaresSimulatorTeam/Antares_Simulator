@@ -126,7 +126,8 @@ $(document).ready(function(){initNavTree('namespaceAntares_1_1Optimization.html'
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">Antares::Optimization Namespace Reference</div>  </div>
 </div><!--header-->
@@ -161,6 +162,8 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Optimization_1_1STS.html">STS</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Optimization_1_1HydroProduction.html">HydroProduction</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Optimization_1_1STSAdditionalConstraint.html">STSAdditionalConstraint</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Optimization_1_1ConstraintsFactory.html">ConstraintsFactory</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -207,6 +210,15 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
+<tr class="memitem:aac13d5895b888127d4d62045556476ba"><td class="memItemLeft" align="right" valign="top"><a id="aac13d5895b888127d4d62045556476ba"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>STSWithdrawalSum</b> = <a class="el" href="classAntares_1_1Optimization_1_1STSAdditionalConstraint.html">STSAdditionalConstraint</a>&lt; WITHDRAWAL &gt;</td></tr>
+<tr class="separator:aac13d5895b888127d4d62045556476ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a512aba669c091827c6b436d0b3408192"><td class="memItemLeft" align="right" valign="top"><a id="a512aba669c091827c6b436d0b3408192"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>STSInjectionSum</b> = <a class="el" href="classAntares_1_1Optimization_1_1STSAdditionalConstraint.html">STSAdditionalConstraint</a>&lt; INJECTION &gt;</td></tr>
+<tr class="separator:a512aba669c091827c6b436d0b3408192"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92ecfd5cfe8111fcc5761687e57227fa"><td class="memItemLeft" align="right" valign="top"><a id="a92ecfd5cfe8111fcc5761687e57227fa"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>STSNettingSum</b> = <a class="el" href="classAntares_1_1Optimization_1_1STSAdditionalConstraint.html">STSAdditionalConstraint</a>&lt; NETTING &gt;</td></tr>
+<tr class="separator:a92ecfd5cfe8111fcc5761687e57227fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab781095ca93efa828787e247dc75ac6f"><td class="memItemLeft" align="right" valign="top"><a id="ab781095ca93efa828787e247dc75ac6f"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>FullKeyMap</b> = std::unordered_map&lt; <a class="el" href="classAntares_1_1Optimization_1_1FullKey.html">FullKey</a>, double, <a class="el" href="classAntares_1_1Optimization_1_1FullKeyHash.html">FullKeyHash</a> &gt;</td></tr>
 <tr class="separator:ab781095ca93efa828787e247dc75ac6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -228,6 +240,10 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>sameType</b> (const s
 <tr class="memitem:afca59b8c35ac2975defa738d1098f969"><td class="memItemLeft" align="right" valign="top"><a id="afca59b8c35ac2975defa738d1098f969"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>greaterValue</b> (const std::shared_ptr&lt; <a class="el" href="classAntares_1_1Optimization_1_1WatchedConstraint.html">WatchedConstraint</a> &gt; a, std::shared_ptr&lt; <a class="el" href="classAntares_1_1Optimization_1_1WatchedConstraint.html">WatchedConstraint</a> &gt; b)</td></tr>
 <tr class="separator:afca59b8c35ac2975defa738d1098f969"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9957d3cc982e75341f07ae9e56c1e0e5"><td class="memTemplParams" colspan="2"><a id="a9957d3cc982e75341f07ae9e56c1e0e5"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a9957d3cc982e75341f07ae9e56c1e0e5"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::pair&lt; std::string, std::pair&lt; std::regex, std::function&lt; std::unique_ptr&lt; T &gt;const std::string &amp;, double)&gt; &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Helper</b> (const std::string &amp;pattern)</td></tr>
+<tr class="separator:a9957d3cc982e75341f07ae9e56c1e0e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae0584e4fd68915bb875f24b8a87d74f1"><td class="memItemLeft" align="right" valign="top"><a id="ae0584e4fd68915bb875f24b8a87d74f1"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>checkTimeSteps</b> (<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Optimisation::LinearProblemApi::FillContext</a> &amp;ctx)</td></tr>
 <tr class="separator:ae0584e4fd68915bb875f24b8a87d74f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -244,6 +260,18 @@ template&lt;typename BinaryOperator &gt; </td></tr>
 <tr class="memitem:a15f493edc83431c605a3638f1c9c7110"><td class="memItemLeft" align="right" valign="top"><a id="a15f493edc83431c605a3638f1c9c7110"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>buildVariableName</b> (const <a class="el" href="classAntares_1_1Optimization_1_1PartialKey.html">PartialKey</a> &amp;key, std::optional&lt; unsigned int &gt; scenario, std::optional&lt; unsigned int &gt; timestep)</td></tr>
 <tr class="separator:a15f493edc83431c605a3638f1c9c7110"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a49826da5a72d4e5d0264543dea5727c0"><td class="memItemLeft" align="right" valign="top"><a id="a49826da5a72d4e5d0264543dea5727c0"></a>
+constexpr char&#160;</td><td class="memItemRight" valign="bottom"><b>WITHDRAWAL</b> [] = &quot;withdrawal&quot;</td></tr>
+<tr class="separator:a49826da5a72d4e5d0264543dea5727c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a520b3b8184f58d9c8cb41588b5514d8c"><td class="memItemLeft" align="right" valign="top"><a id="a520b3b8184f58d9c8cb41588b5514d8c"></a>
+constexpr char&#160;</td><td class="memItemRight" valign="bottom"><b>INJECTION</b> [] = &quot;injection&quot;</td></tr>
+<tr class="separator:a520b3b8184f58d9c8cb41588b5514d8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5afa496b079694f802024e34366de8a7"><td class="memItemLeft" align="right" valign="top"><a id="a5afa496b079694f802024e34366de8a7"></a>
+constexpr char&#160;</td><td class="memItemRight" valign="bottom"><b>NETTING</b> [] = &quot;netting&quot;</td></tr>
+<tr class="separator:a5afa496b079694f802024e34366de8a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Read Linear Constraint Visitor Visits a Node and produces a Linear Constraint (defined by its Linear Expression and bounds). The root node is expected to be a comparison node.</p>
