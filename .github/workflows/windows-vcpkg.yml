@@ -150,10 +150,6 @@ jobs:
         run: |
           git submodule update --init --remote src/tests/resources/Antares_Simulator_Tests
 
-      - name: Setup tmate session
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
-        uses: mxschmitt/action-tmate@v3
-
       - name: Run named mps tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
         uses: ./.github/workflows/run-tests
@@ -288,7 +284,7 @@ jobs:
         shell: bash
         run: |
           cd _build
-          zip -r antares-solver_windows.zip solver/Release/antares-8.8-solver.exe solver/Release/*.dll
+          zip -r antares-solver_windows.zip solver/Release/antares-8.8-solver.exe solver/Release/*.dll ../or-tools/install/bin/ortools.dll
 
       - name: NSIS Installer creation
         shell: bash
@@ -318,6 +314,10 @@ jobs:
         with:
           name: installer
           path: _build/${{env.NSIS_NAME}}
+
+      - name: Setup tmate session
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
+        uses: mxschmitt/action-tmate@v3
 
       - name: Publish assets
         if: ${{ env.IS_RELEASE == 'true' }}
