@@ -142,7 +142,8 @@ public:
 private:
     static const std::map<
       std::string,
-      std::function<std::unique_ptr<WatchedConstraint>(const std::string&, double)>>
+      std::pair<std::regex,
+                std::function<std::unique_ptr<WatchedConstraint>(const std::string&, double)>>>
       regex_to_ctypes_;
 };
 

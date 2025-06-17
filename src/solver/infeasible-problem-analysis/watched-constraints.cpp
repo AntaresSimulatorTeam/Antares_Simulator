@@ -162,29 +162,39 @@ std::string HydroProduction::infeasibilityCause()
 
 // --- Constraints factory ---
 
-const std::map<std::string,
-               std::function<std::unique_ptr<WatchedConstraint>(const std::string&, double)>>
-  ConstraintsFactory::regex_to_ctypes_ = {
-    {"::hourly::", std::make_unique<HourlyBC, const std::string&, double>},
-    {"::daily::", std::make_unique<DailyBC, const std::string&, double>},
-    {"::weekly::", std::make_unique<WeeklyBC, const std::string&, double>},
-    {"^FictiveLoads::", std::make_unique<FictitiousLoad, const std::string&, double>},
-    {"^AreaHydroLevel::", std::make_unique<HydroLevel, const std::string&, double>},
-    {"^Level::", std::make_unique<STS, const std::string&, double>},
-    {"^HydroPower::", std::make_unique<HydroProduction, const std::string&, double>},
-    {"^WithdrawalSum::", std::make_unique<STSWithdrawalSum, const std::string&, double>},
-    {"^InjectionSum::", std::make_unique<STSInjectionSum, const std::string&, double>},
-    {"^NettingSum::", std::make_unique<STSNettingSum, const std::string&, double>}};
+template<class T>
+constexpr std::pair<
+  std::string,
+  std::pair<std::regex, std::function<std::unique_ptr<T>(const std::string&, double)>>>
+Helper(const std::string& pattern)
+{
+    return {pattern, {std::regex(pattern), std::make_unique<T, const std::string&, double>}};
+}
+
+const std::map<
+  std::string,
+  std::pair<std::regex,
+            std::function<std::unique_ptr<WatchedConstraint>(const std::string&, double)>>>
+  ConstraintsFactory::regex_to_ctypes_ = {Helper<HourlyBC>("::hourly::"),
+                                          Helper<DailyBC>("::daily::"),
+                                          Helper<WeeklyBC>("::weekly::"),
+                                          Helper<FictitiousLoad>("^FictiveLoads::"),
+                                          Helper<HydroLevel>("^AreaHydroLevel::"),
+                                          Helper<STS>("^Level::"),
+                                          Helper<HydroProduction>("^HydroPower::"),
+                                          Helper<STSWithdrawalSum>("^WithdrawalSum::"),
+                                          Helper<STSInjectionSum>("^InjectionSum::"),
+                                          Helper<STSNettingSum>("^NettingSum::")};
 
 std::unique_ptr<WatchedConstraint> ConstraintsFactory::create(const std::string& name,
                                                               double value) const
 {
     auto it = std::ranges::find_if(regex_to_ctypes_,
                                    [&name](auto& pair)
-                                   { return std::regex_search(name, std::regex(pair.first)); });
+                                   { return std::regex_search(name, pair.second.first); });
     if (it != regex_to_ctypes_.end())
     {
-        return it->second(name, value);
+        return it->second.second(name, value);
     }
     return nullptr;
 }
