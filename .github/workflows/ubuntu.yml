@@ -274,7 +274,7 @@ jobs:
           pushd .
           cd install/bin
           cp ${{ env.ORTOOLS_DIR }}/install/lib/*.so* .
-          tar czf ../../antares-solver_ubuntu22.04.tar.gz antares-8.8-solver libsirius_solver.so *.so*
+          tar czf ../../antares-solver_ubuntu22.04.tar.gz antares-8.8-solver *.so*
           popd
           rm -rf install
 

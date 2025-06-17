@@ -82,7 +82,7 @@ RUN cd _build && \
     pushd . && \
     cd install/bin && \
     cp /ortools/install/lib64/*.so* . && \
-    tar czf ../../antares-solver_centos7.tar.gz antares-8.8-solver libsirius_solver.so *.so* && \
+    tar czf ../../antares-solver_centos7.tar.gz antares-8.8-solver *.so* && \
     popd && \
     rm -rf install
 
