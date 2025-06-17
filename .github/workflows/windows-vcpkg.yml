@@ -284,6 +284,8 @@ jobs:
         shell: bash
         run: |
           cd _build
+          FIXED_PATH=${ORTOOLS_DIR//\\//}
+          cp ${FIXED_PATH}/install/bin/*.dll* solver/Release
           zip -r antares-solver_windows.zip solver/Release/antares-8.8-solver.exe solver/Release/*.dll
 
       - name: NSIS Installer creation
