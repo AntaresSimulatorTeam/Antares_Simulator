@@ -43,8 +43,8 @@ class State;
 }
 
 double randomReservoirLevel(double min, double avg, double max, MersenneTwister& random);
-double BetaVariable(double a, double b, MersenneTwister &random);
-double GammaVariable(double a, MersenneTwister &random);
+double BetaVariable(double a, double b, MersenneTwister& random);
+double GammaVariable(double a, MersenneTwister& random);
 
 } // namespace Solver
 
@@ -63,13 +63,10 @@ struct TmpDataByArea
     double MOG[12];
     //! Monthly optimal level
     double MOL[12];
-    //! Monthly target generations
-    double MTG[12];
     //! inflows
     double inflows[12];
     //! monthly minimal generation
     std::array<double, 12> mingens;
-
     //! Net demand, for each day of the year, for each area
     double DLN[dayYearCount];
     //! Daily local effective load
@@ -94,14 +91,13 @@ struct TmpDataByArea
 typedef struct
 {
     std::vector<double> HydrauliqueModulableQuotidien; /* indice par jour */
-    std::vector<double> NiveauxReservoirsDebutJours;   //Niveaux (quotidiens) du reservoir de début
-    //de jour (en cas de gestion des reservoirs).
-    std::vector<double> NiveauxReservoirsFinJours; //Niveaux (quotidiens) du reservoir de fin
-    //de jour (en cas de gestion des reservoirs).
+    std::vector<double> NiveauxReservoirsDebutJours; // Niveaux (quotidiens) du reservoir de début
+    // de jour (en cas de gestion des reservoirs).
+    std::vector<double> NiveauxReservoirsFinJours; // Niveaux (quotidiens) du reservoir de fin
+    // de jour (en cas de gestion des reservoirs).
 } VENTILATION_HYDRO_RESULTS_BY_AREA;
 
 using HYDRO_VENTILATION_RESULTS = std::vector<VENTILATION_HYDRO_RESULTS_BY_AREA>;
-
 
 class HydroManagement final
 {
@@ -118,7 +114,10 @@ public:
                          uint y,
                          uint numSpace);
 
-    const HYDRO_VENTILATION_RESULTS& ventilationResults() { return ventilationResults_; }
+    const HYDRO_VENTILATION_RESULTS& ventilationResults()
+    {
+        return ventilationResults_;
+    }
 
 private:
     //! Prepare inflows scaling for each area
@@ -142,20 +141,12 @@ private:
     //! Monthly Optimal generations
     void prepareMonthlyOptimalGenerations(double* random_reservoir_level, uint y);
 
-    //! Monthly target generations
-    // note: inflows may have two different types, if in swap mode or not
-    // \return The total inflow for the whole year
-    double prepareMonthlyTargetGenerations(Data::Area& area, TmpDataByArea& data);
-
-    void prepareDailyOptimalGenerations(Solver::Variable::State& state,
-                                        uint y,
-                                        uint numSpace);
+    void prepareDailyOptimalGenerations(Solver::Variable::State& state, uint y, uint numSpace);
 
     void prepareDailyOptimalGenerations(Solver::Variable::State& state,
                                         Data::Area& area,
                                         uint y,
                                         uint numSpace);
-
 
 private:
     std::unordered_map<const Data::Area*, TmpDataByArea> tmpDataByArea_;
