@@ -90,14 +90,6 @@ private:
                                           Antares::Data::Area::ScratchMap& scratchmap,
                                           HydroSpecificMap& hydro_specific_map);
 
-    //! Monthly target generations
-    // note: inflows may have two different types, if in swap mode or not
-    // \return The total inflow for the whole year
-    double prepareMonthlyTargetGenerations(
-      Data::Area& area,
-      Antares::Data::AreaDependantHydroManagementData& data,
-      Antares::Data::TimeDependantHydroManagementData& hydro_specific);
-
     void prepareDailyOptimalGenerations(uint y,
                                         Antares::Data::Area::ScratchMap& scratchmap,
                                         HydroSpecificMap& hydro_specific_map);

@@ -24,7 +24,7 @@ BOOST_AUTO_TEST_CASE(TestInitialization)
     BOOST_CHECK_EQUAL(Xmax[Var], data.VolumeInitial);
 
     auto& CoutLineaire = data.ProblemeHydraulique.ProblemeLineairePartieFixe.CoutLineaire;
-    for (int Pdt = 0; Pdt < data.NombreDePasDeTemps; Pdt++)
+    for (int Pdt = 0; Pdt < nbMonths; Pdt++)
     {
         Var = data.ProblemeHydraulique.CorrespondanceDesVariables
                 .NumeroDeVariableDepassementVolumeMax[Pdt];

@@ -3,6 +3,23 @@
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to
 lower the costs of changing existing interfaces, both GUI and scripts.
 
+## v9.3.0
+
+### Input
+
+#### Removed properties
+
+The following properties were removed from **settings/generaldata.ini**.
+
+- `refreshtimeseries`
+- `refreshintervalload`
+- `refreshintervalhydro`
+- `refreshintervalwind`
+- `refreshintervalthermal`
+- `refreshintervalsolar`
+
+If the user provides a value for key refreshtimeseries the simulation will fail with a warning. Values for the refresh intervals will be ignored.
+
 ## v9.2.0
 
 ### Input
@@ -63,7 +80,16 @@ variable = netting
 operator = less
 hours = [1, 168]
 ```
-For each constraint, the corresponding RHS time-series must be located at `input/st-storage/constraints/area/rhs_<constraint id>.txt`. The time-series must contain a single column and 8760 rows, empty files are also accepted.
+
+Possible values
+- `cluster`: ID of the short-term storage in the same area
+- `variable`: `withdrawal`, `injection`, `netting`
+- `operator`: `less`, `equal`, `greater`
+- `hours`: not empty, any number of lists `[h_1, ..., h_n]` with n>=1, and coefficients from 1 to 168 included.
+
+Note that all fields are mandatory.
+
+For each constraint, the corresponding RHS time-series must be located at `input/st-storage/constraints/<area id>/rhs_<constraint id>.txt`. The time-series must contain a single column and 8760 rows, empty files are also accepted.
 
 ####  Hydro final levels / scenario-builder
 

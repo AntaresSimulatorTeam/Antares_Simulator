@@ -72,7 +72,7 @@ void TSNumberData::setTSnumber(uint areaindex, uint year, uint value)
     }
 }
 
-void TSNumberData::set_value(uint x, uint y, uint value)
+void TSNumberData::set_value(uint x, uint y, uint value) const
 {
     pTSNumberRules.entry[y][x] = value;
 }

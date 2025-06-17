@@ -63,7 +63,7 @@ public:
     uint height() const override;
 
     double get_value(uint x, uint y) const;
-    void set_value(uint x, uint y, uint value);
+    void set_value(uint x, uint y, uint value) const;
 
 protected:
     virtual CString<512, false> get_prefix() const = 0;

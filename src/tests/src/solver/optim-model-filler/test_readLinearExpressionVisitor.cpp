@@ -105,8 +105,8 @@ struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearPr
 {
     double getData(const std::string& dataSetId,
                    const std::string& scenarioGroup,
-                   const unsigned scenario,
-                   const unsigned hour) override
+                   unsigned scenario,
+                   unsigned hour) override
     {
         return hour; // for test
     }

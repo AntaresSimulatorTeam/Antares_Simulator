@@ -21,7 +21,6 @@
 
 #pragma once
 
-#include <map>
 #include <string>
 
 #include "mipConstraint.h"
@@ -53,17 +52,17 @@ public:
       = 0;
 
     // Variables observers
-    virtual IMipVariable* getVariable(std::size_t index) const = 0;
-    virtual IMipVariable* lookupVariable(const std::string& name) const = 0;
-    virtual int variableCount() const = 0;
+    [[nodiscard]] virtual IMipVariable* getVariable(std::size_t index) const = 0;
+    [[nodiscard]] virtual IMipVariable* lookupVariable(const std::string& name) const = 0;
+    [[nodiscard]] virtual int variableCount() const = 0;
 
     /// Add a bounded constraint to the problem
     virtual IMipConstraint* addConstraint(double lb, double ub, const std::string& name) = 0;
 
     // Constraints observers
-    virtual IMipConstraint* getConstraint(std::size_t index) const = 0;
-    virtual IMipConstraint* lookupConstraint(const std::string& name) const = 0;
-    virtual int constraintCount() const = 0;
+    [[nodiscard]] virtual IMipConstraint* getConstraint(std::size_t index) const = 0;
+    [[nodiscard]] virtual IMipConstraint* lookupConstraint(const std::string& name) const = 0;
+    [[nodiscard]] virtual int constraintCount() const = 0;
 
     /// Set the objective coefficient for a given variable
     virtual void setObjectiveCoefficient(IMipVariable* var, double coefficient) = 0;
@@ -74,16 +73,16 @@ public:
     /// Sets the optimization direction to maximize
     virtual void setMaximization() = 0;
 
-    virtual bool isMinimization() const = 0;
-    virtual bool isMaximization() const = 0;
+    [[nodiscard]] virtual bool isMinimization() const = 0;
+    [[nodiscard]] virtual bool isMaximization() const = 0;
 
     /// Solve the problem, returns a IMipSolution
     virtual IMipSolution* solve(bool verboseSolver) = 0;
 
-    virtual void WriteLP(const std::string& filename) = 0;
+    virtual void WriteLP(const std::string& filename) const = 0;
 
     // Definition of infinity
-    virtual double infinity() const = 0;
+    [[nodiscard]] virtual double infinity() const = 0;
 };
 
 } // namespace Antares::Optimisation::LinearProblemApi

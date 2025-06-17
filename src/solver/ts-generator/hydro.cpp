@@ -57,11 +57,11 @@ static void PreproRoundAllEntriesPlusDerated(Data::Study& study)
       });
 }
 
-bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResultWriter& writer)
+bool GenerateHydroTimeSeries(Data::Study& study, Solver::IResultWriter& writer)
 {
     logs.info() << "Generating the hydro time-series";
 
-    Solver::Progression::Task progression(study, currentYear, Solver::Progression::sectTSGHydro);
+    Solver::Progression::Task progression(study, 0, Solver::Progression::sectTSGHydro);
 
     auto& studyRTI = study.runtime;
     auto& calendar = study.calendar;
@@ -281,10 +281,10 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
         {
             logs.info() << "Archiving the hydro time-series";
             study.areas.each(
-              [&currentYear, &writer, &progression](const Data::Area& area)
+              [&writer, &progression](const Data::Area& area)
               {
                   const int precision = 0;
-                  std::string mcYear = "mc-" + currentYear;
+                  std::string mcYear = "mc-" + 0;
                   fs::path outputFolder = fs::path("ts-generator") / "hydro" / mcYear
                                           / area.id.to<std::string>();
 
