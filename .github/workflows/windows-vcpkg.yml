@@ -317,10 +317,6 @@ jobs:
           name: installer
           path: _build/${{env.NSIS_NAME}}
 
-      - name: Setup tmate session
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
-        uses: mxschmitt/action-tmate@v3
-
       - name: Publish assets
         if: ${{ env.IS_RELEASE == 'true' }}
         env:
