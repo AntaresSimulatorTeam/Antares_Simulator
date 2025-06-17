@@ -781,7 +781,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     // Number of threads to perform the jobs waiting in the queue
     pQueueService->maximumThreadCount(pNbMaxPerformedYearsInParallel);
 
-    regenerateTimeSeries(0);
+    regenerateTimeSeries();
 
     HydroInputsChecker hydroInputsChecker(study);
     logs.info() << " Doing hydro validation";
