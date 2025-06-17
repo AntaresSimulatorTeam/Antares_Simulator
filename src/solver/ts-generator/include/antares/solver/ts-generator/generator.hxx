@@ -28,19 +28,17 @@ namespace Antares::TSGenerator
 
 // forward declaration
 // Hydro - see hydro.cpp
-bool GenerateHydroTimeSeries(Data::Study& study, uint year, IResultWriter& writer);
+bool GenerateHydroTimeSeries(Data::Study& study, IResultWriter& writer);
 
 template<>
-inline bool GenerateTimeSeries<Data::timeSeriesHydro>(Data::Study& study,
-                                                      uint year,
-                                                      IResultWriter& writer)
+inline bool GenerateTimeSeries<Data::timeSeriesHydro>(Data::Study& study, IResultWriter& writer)
 {
-    return GenerateHydroTimeSeries(study, year, writer);
+    return GenerateHydroTimeSeries(study, writer);
 }
 
 // --- TS Generators using XCast ---
 template<enum Data::TimeSeriesType T>
-bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter& writer)
+bool GenerateTimeSeries(Data::Study& study, IResultWriter& writer)
 {
     auto* xcast = reinterpret_cast<XCast::XCast*>(
       study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value]);
@@ -53,7 +51,7 @@ bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter& writer)
     }
 
     // The current year
-    xcast->year = year;
+    xcast->year = 0;
 
     switch (T)
     {
@@ -77,12 +75,13 @@ bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter& writer)
     // Run the generation of the time-series
     bool r = xcast->run();
     // Destroy if required the TS Generator
-    Destroy<T>(study, year);
+    Destroy<T>(study);
     return r;
 }
 
+// TODO REMOVE
 template<enum Data::TimeSeriesType T>
-void Destroy(Data::Study& study, uint year)
+void Destroy(Data::Study& study)
 {
     auto* xcast = reinterpret_cast<XCast::XCast*>(
       study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value]);
@@ -91,54 +90,11 @@ void Destroy(Data::Study& study, uint year)
         return;
     }
 
-    // releasing
-    auto& parameters = study.parameters;
-
-    bool shouldDestroy;
-    switch (T)
-    {
-    case Data::timeSeriesLoad:
-    {
-        shouldDestroy = (parameters.refreshIntervalLoad > parameters.nbYears)
-                        || year + parameters.refreshIntervalLoad > parameters.nbYears;
-        break;
-    }
-    case Data::timeSeriesSolar:
-    {
-        shouldDestroy = (parameters.refreshIntervalSolar > parameters.nbYears)
-                        || year + parameters.refreshIntervalSolar > parameters.nbYears;
-        break;
-    }
-    case Data::timeSeriesHydro:
-    {
-        shouldDestroy = (parameters.refreshIntervalHydro > parameters.nbYears)
-                        || year + parameters.refreshIntervalHydro > parameters.nbYears;
-        break;
-    }
-    case Data::timeSeriesWind:
-    {
-        shouldDestroy = (parameters.refreshIntervalWind > parameters.nbYears)
-                        || year + parameters.refreshIntervalWind > parameters.nbYears;
-        break;
-    }
-    case Data::timeSeriesThermal:
-    {
-        shouldDestroy = (parameters.refreshIntervalThermal > parameters.nbYears)
-                        || year + parameters.refreshIntervalThermal > parameters.nbYears;
-        break;
-    }
-    default:
-        shouldDestroy = true;
-    }
-
-    if (shouldDestroy)
-    {
-        logs.info() << "  Releasing the " << Data::TimeSeriesToCStr<T>::Value() << " TS Generator";
-        study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value] = nullptr;
-        study.destroyTSGeneratorData<T>();
-        delete xcast;
-        xcast = nullptr;
-    }
+    logs.info() << "  Releasing the " << Data::TimeSeriesToCStr<T>::Value() << " TS Generator";
+    study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value] = nullptr;
+    study.destroyTSGeneratorData<T>();
+    delete xcast;
+    xcast = nullptr;
 }
 
 } // namespace Antares::TSGenerator
