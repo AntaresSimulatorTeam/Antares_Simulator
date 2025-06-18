@@ -69,14 +69,6 @@ RUN  source /opt/rh/devtoolset-11/enable && \
      cmake --build _build --config Release -j${NPROC} &&\
      ccache -s
 
-#Installer .rpm creation
-RUN cd _build && \
-    cpack -G RPM -D CPACK_INSTALLED_DIRECTORIES="/ortools/install/lib64;bin"
-
-#Solver archive creation
-RUN cd _build && \
-    cpack -G TGZ -D CPACK_INSTALLED_DIRECTORIES="/ortools/install/lib64;bin"
-
 RUN cd _build && \
     cmake --install . --prefix install && \
     pushd . && \
@@ -86,9 +78,14 @@ RUN cd _build && \
     popd && \
     rm -rf install
 
-#.tar.gz creation
+#Installer .rpm creation
 RUN cd _build && \
-    cpack -G TGZ
+    cpack -G RPM -D CPACK_INSTALLED_DIRECTORIES="/ortools/install/lib64;bin"
+
+#Solver archive creation
+RUN cd _build && \
+    cpack -G TGZ -D CPACK_INSTALLED_DIRECTORIES="/ortools/install/lib64;bin"
+
 #mv .rpm and .tar.gz
 RUN cd _build && \
     mkdir archive && \
