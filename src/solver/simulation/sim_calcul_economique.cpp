@@ -412,9 +412,6 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir
               = problem.previousSimulationFinalLevel[k];
 
-            problem.CaracteristiquesHydrauliques[k].LevelForTimeInterval
-              = problem.CaracteristiquesHydrauliques[k]
-                  .NiveauInitialReservoir; /*for first 24-hour optim*/
             double nivInit = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
             if (nivInit < -LEVEL_TOLERANCE_MWH)
             {

@@ -64,7 +64,7 @@ void interpolateWaterValue(const Data::AreaList& areas,
 
         double reservoirCapacity = area->hydro.reservoirCapacity;
 
-        std::vector<double>& niv = weeklyResults.niveauxHoraires;
+        const std::vector<double>& niv = weeklyResults.niveauxHoraires;
 
         waterVal[0] = Data::getWaterValue(100 * problem.previousSimulationFinalLevel[index]
                                             / reservoirCapacity,

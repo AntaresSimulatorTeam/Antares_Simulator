@@ -326,8 +326,7 @@ struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
     double WeeklyGeneratingModulation;
     double WeeklyPumpingModulation;
     bool DirectLevelAccess; /*  determines the type of constraints bearing on the final stok level*/
-    bool AccurateWaterValue;     /*  determines the type of modelling used for water budget*/
-    double LevelForTimeInterval; /*  value computed by the simulator in water-value based modes*/
+    bool AccurateWaterValue; /*  determines the type of modelling used for water budget*/
     std::vector<double> WaterLayerValues;      /*  reference costs for the last time step (caution :
                                       dimension set to      100, should be made dynamic)*/
     std::vector<double> InflowForTimeInterval; /*  Energy input to the reservoir, used to in the
