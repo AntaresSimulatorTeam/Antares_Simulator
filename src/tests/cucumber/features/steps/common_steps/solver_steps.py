@@ -285,6 +285,16 @@ def check_thermal_cluster_min_gen_for_week(context, area, week, year, cluster, d
     week_ts = extract_week_ts(ts, week)
     check_week_ts_has_daily_values(week_ts, list_daily_values)
 
+@then('in area "{area}", year {year:d} and hour {hour:d}, withdrawal for short-term storage "{sts}" is {withdrawal:d}')
+def check_withdrawal(context, area, sts, year, hour, withdrawal):
+    actual = context.soh.withdrawal_for_sts(area, year, sts)[hour]
+    assert withdrawal == actual
+
+@then('in area "{area}", year {year:d} and hour {hour:d}, injection for short-term storage "{sts}" is {injection:d}')
+def check_injection(context, area, sts, year, hour, injection):
+    actual = context.soh.injection_for_sts(area, year, sts)[hour]
+    assert injection == actual
+
 @then('in area "{area}", year {year:d}, no mingens for cluster "{cluster}"')
 def check_no_mingen_column_for_cluster(context, area, year, cluster):
     column_names = list(context.soh.details_hourly_for_cluster(area, year, cluster).columns)
