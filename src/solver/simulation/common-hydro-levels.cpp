@@ -94,6 +94,15 @@ void updatingWeeklyFinalHydroLevel(const Data::AreaList& areas, PROBLEME_HEBDO& 
         const std::vector<double>& niv = weeklyResults.niveauxHoraires;
 
         problem.previousSimulationFinalLevel[index] = niv[nbHoursInAWeek - 1];
+
+        // Tiny numerical errors (for instance when using solver Xpress) can lead
+        // to a final level slightly above reservoir capacity.
+        // This causes an infeasibility when solving weekly optimization associated to
+        // week next to the current one. We make sure that final level remains correct.
+        if (problem.previousSimulationFinalLevel[index] > area->hydro.reservoirCapacity)
+        {
+            problem.previousSimulationFinalLevel[index] = area->hydro.reservoirCapacity;
+        }
     }
 }
 
