@@ -132,7 +132,6 @@ bool Adequacy::year(Progression::Task& progression,
     currentProblem.year = state.year;
 
     PrepareRandomNumbers(study, currentProblem, randomForYear);
-    SetInitialHydroLevel(study, currentProblem, hydroVentilationResults);
 
     state.startANewYear();
 
@@ -326,8 +325,6 @@ bool Adequacy::year(Progression::Task& progression,
         }
 
         interpolateWaterValue(study.areas, currentProblem, study.calendar, hourInTheYear);
-
-        updatingWeeklyFinalHydroLevel(study.areas, currentProblem);
 
         variables.weekBegin(state);
         uint previousHourInTheYear = state.hourInTheYear;

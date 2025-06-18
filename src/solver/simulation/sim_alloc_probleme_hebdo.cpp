@@ -114,7 +114,6 @@ void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
     problem.MatriceDesContraintesCouplantes.resize(activeConstraints.size());
     problem.PaliersThermiquesDuPays.resize(nbPays);
     problem.CaracteristiquesHydrauliques.resize(nbPays);
-    problem.previousSimulationFinalLevel.assign(nbPays, 0.);
 
     problem.ShortTermStorage.resize(nbPays);
 

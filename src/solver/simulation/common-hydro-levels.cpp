@@ -63,11 +63,10 @@ void interpolateWaterValue(const Data::AreaList& areas,
         }
 
         double reservoirCapacity = area->hydro.reservoirCapacity;
-
+        double weekInitLevel = problem.CaracteristiquesHydrauliques[index].NiveauInitialReservoir;
         const std::vector<double>& niv = weeklyResults.niveauxHoraires;
 
-        waterVal[0] = Data::getWaterValue(100 * problem.previousSimulationFinalLevel[index]
-                                            / reservoirCapacity,
+        waterVal[0] = Data::getWaterValue(100 * weekInitLevel / reservoirCapacity,
                                           area->hydro.waterValues,
                                           weekFirstDay);
 
@@ -76,36 +75,6 @@ void interpolateWaterValue(const Data::AreaList& areas,
             waterVal[h] = Data::getWaterValue(100 * niv[h - 1] / reservoirCapacity,
                                               area->hydro.waterValues,
                                               daysOfWeek[h / 24]);
-        }
-    }
-}
-
-void updatingWeeklyFinalHydroLevel(const Data::AreaList& areas, PROBLEME_HEBDO& problem)
-{
-    for (const auto& [_, area]: areas)
-    {
-        if (!area->hydro.reservoirManagement)
-        {
-            continue;
-        }
-
-        uint index = area->index;
-        const RESULTATS_HORAIRES& weeklyResults = problem.ResultatsHoraires[index];
-        const std::vector<double>& niv = weeklyResults.niveauxHoraires;
-
-        problem.previousSimulationFinalLevel[index] = niv[nbHoursInAWeek - 1];
-
-        // Tiny numerical errors (for instance when using solver Xpress) can lead
-        // to a final level slightly above reservoir capacity or under zero.
-        // This causes an infeasibility when solving weekly optimization associated to
-        // week next to the current one. We make sure that final level remains correct.
-        if (problem.previousSimulationFinalLevel[index] > area->hydro.reservoirCapacity)
-        {
-            problem.previousSimulationFinalLevel[index] = area->hydro.reservoirCapacity;
-        }
-        if (problem.previousSimulationFinalLevel[index] < .0)
-        {
-            problem.previousSimulationFinalLevel[index] = 0.;
         }
     }
 }

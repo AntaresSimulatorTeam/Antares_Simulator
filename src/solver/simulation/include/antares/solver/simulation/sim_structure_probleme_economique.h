@@ -512,7 +512,6 @@ struct PROBLEME_HEBDO
 
     /* Hydro management */
     std::vector<double> CoefficientEcretementPMaxHydraulique;
-    std::vector<double> previousSimulationFinalLevel;
 
     /* Results */
     std::vector<RESULTATS_HORAIRES> ResultatsHoraires;
