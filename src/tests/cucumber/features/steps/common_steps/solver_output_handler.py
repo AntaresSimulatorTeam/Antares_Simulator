@@ -82,6 +82,9 @@ class solver_output_handler:
     def withdrawal_for_sts(self, area: str, year: int, sts: str):
         return self.details_hourly_for_sts(area, year)[sts]['P-withdrawal - MW']
 
+    def level_for_sts(self, area: str, year: int, sts: str):
+        return self.details_hourly_for_sts(area, year)[sts]['Levels - MWh']
+
     def __get_details_hourly(self, area: str, year: int):
         return self.__if_none_then_parse(result_type.DETAILS, area.lower(), year, "details-hourly.txt")
 
