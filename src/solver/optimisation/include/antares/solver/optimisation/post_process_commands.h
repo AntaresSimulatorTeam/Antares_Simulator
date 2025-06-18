@@ -92,17 +92,6 @@ private:
     const Date::Calendar& calendar_;
 };
 
-class HydroLevelsFinalUpdatePostProcessCmd: public basePostProcessCommand
-{
-public:
-    HydroLevelsFinalUpdatePostProcessCmd(PROBLEME_HEBDO* problemeHebdo, AreaList& areas);
-
-    void execute(const optRuntimeData& opt_runtime_data) override;
-
-private:
-    const AreaList& area_list_;
-};
-
 class CurtailmentSharingPostProcessCmd: public basePostProcessCommand
 {
 public:

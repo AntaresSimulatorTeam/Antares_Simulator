@@ -54,8 +54,6 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(const AdqPatchParams& adqPatchP
       std::make_unique<UpdateMrgPriceAfterCSRcmd>(problemeHebdo_, areas, numSpace));
     post_process_list.push_back(
       std::make_unique<InterpolateWaterValuePostProcessCmd>(problemeHebdo_, areas, calendar));
-    post_process_list.push_back(
-      std::make_unique<HydroLevelsFinalUpdatePostProcessCmd>(problemeHebdo_, areas));
 }
 
 } // namespace Antares::Solver::Simulation

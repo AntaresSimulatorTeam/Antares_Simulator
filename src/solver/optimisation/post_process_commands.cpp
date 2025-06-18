@@ -209,21 +209,6 @@ void InterpolateWaterValuePostProcessCmd::execute(const optRuntimeData& opt_runt
     interpolateWaterValue(area_list_, *problemeHebdo_, calendar_, hourInYear);
 }
 
-// -----------------------------
-//  Hydro Levels Final Update
-// -----------------------------
-HydroLevelsFinalUpdatePostProcessCmd::HydroLevelsFinalUpdatePostProcessCmd(
-  PROBLEME_HEBDO* problemeHebdo,
-  AreaList& areas):
-    basePostProcessCommand(problemeHebdo),
-    area_list_(areas)
-{
-}
-
-void HydroLevelsFinalUpdatePostProcessCmd::execute(const optRuntimeData&)
-{
-}
-
 // --------------------------------------
 //  Curtailment sharing for adq patch
 // --------------------------------------
