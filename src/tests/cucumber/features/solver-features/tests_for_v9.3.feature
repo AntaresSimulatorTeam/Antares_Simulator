@@ -1,6 +1,6 @@
 Feature: tests for v9.3
 
-  @fast @short @9.3
+  @fast @short
   Scenario: scenarized STS additional constraints
   Given the solver study path is "Antares_Simulator_Tests_NR/valid-v930/ST-additional-constraints-scenarized"
   When I run antares simulator

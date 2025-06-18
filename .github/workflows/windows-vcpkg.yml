@@ -174,11 +174,11 @@ jobs:
           os: ${{ env.os }}
           variant: "named-mps"
 
-      - name: Run cucumber on short-tests
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
+      - name: Run fast cucumber
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/cucumber-tests
         with:
-          feature: "features/solver-features/short_tests.feature"
+          tags: "fast"
 
       - name: Run cucumber on modeler
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
