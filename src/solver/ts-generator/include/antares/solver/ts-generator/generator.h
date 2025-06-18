@@ -102,7 +102,7 @@ void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params);
 ** \brief Regenerate the time-series
 */
 template<enum Data::TimeSeriesType T>
-bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter& writer);
+bool GenerateTimeSeries(Data::Study& study, IResultWriter& writer);
 
 bool generateThermalTimeSeries(Data::Study& study,
                                const std::vector<Data::ThermalCluster*>& clusters,
@@ -127,7 +127,7 @@ void DestroyAll(Data::Study& study);
 ** \brief Destroy a TS generator if it exists and no longer needed
 */
 template<enum Data::TimeSeriesType T>
-void Destroy(Data::Study& study, uint year);
+void Destroy(Data::Study& study);
 
 } // namespace Antares::TSGenerator
 

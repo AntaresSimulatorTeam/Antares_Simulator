@@ -105,7 +105,7 @@ BOOST_AUTO_TEST_CASE(test_scip_support)
 
 BOOST_AUTO_TEST_CASE(test_quad_solvers_list)
 {
-    std::list<std::string> expected = {"sirius", "pdlp", "scip", "xpress"};
+    std::list<std::string> expected = {"sirius", "gurobi", "pdlp", "scip", "xpress"};
     BOOST_CHECK(availableQuadraticSolversList() == expected);
 }
 

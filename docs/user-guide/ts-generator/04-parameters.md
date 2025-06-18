@@ -64,18 +64,6 @@ These parameters are listed under the `[general]` section in the `.ini` file.
   time-series to generate.
 
 ---
-#### refreshtimeseries
-[//]: # (TODO: verify usage)
-- **Expected value:** comma-seperated list of 0 to N elements among the following (case-insensitive):
-  `load`, `wind`, `hydro`, `thermal`, `solar`, `renewables`, `max-power`
-- **Required:** no
-- **Default value:** empty
-- **Usage:** if some time-series are [automatically generated](#generate), this parameter selects those of them that have
-  to be periodically renewed in run-time
-
-> _**WARNING:**_ time-series refresh is not available for transmission capacities (NTC)
-
----
 #### intra-modal
 [//]: # (TODO: verify usage)
 - **Expected value:** comma-seperated list of 0 to N elements among the following (case-insensitive):
@@ -102,56 +90,6 @@ _**This section is under construction**_
 > "intramodal" and "intermodal" for all but the `thermal` kind of time-series. The availability of an underlying
 > comprehensive multidimensional meteorological database of ready-made time-series is the crux of the matter when it
 > comes to using this configuration.
-
----
-#### improveunitsstartup
-[//]: # (TODO: document this parameter -seems deprecated-)
-_**This section is under construction**_  
-- **Expected value:** 
-- **Required:** **yes** 
-- **Default value:** 
-- **Usage:**
-
----
-#### refreshintervalload
-- **Expected value:** strictly positive integer
-- **Required:** no
-- **Default value:** 100
-- **Usage:** if `load` time-series are automatically [generated](#generate) and [refreshed](#refreshtimeseries), this
-  parameter sets their refresh interval (in number of Monte-Carlo years).
-
----
-#### refreshintervalhydro
-- **Expected value:** strictly positive integer
-- **Required:** no
-- **Default value:** 100
-- **Usage:** if `hydro` time-series are automatically [generated](#generate) and [refreshed](#refreshtimeseries), this
-  parameter sets their refresh interval (in number of Monte-Carlo years).
-
----
-#### refreshintervalwind
-- **Expected value:** strictly positive integer
-- **Required:** no
-- **Default value:** 100
-- **Usage:** if `wind` time-series are automatically [generated](#generate) and [refreshed](#refreshtimeseries), this
-  parameter sets their refresh interval (in number of Monte-Carlo years).
-
----
-#### refreshintervalthermal
-- **Expected value:** strictly positive integer
-- **Required:** no
-- **Default value:** 100
-- **Usage:** if `thermal` time-series are automatically [generated](#generate) and [refreshed](#refreshtimeseries), this
-  parameter sets their refresh interval (in number of Monte-Carlo years).
-
----
-#### refreshintervalsolar
-- **Expected value:** strictly positive integer
-- **Required:** no
-- **Default value:** 100
-- **Usage:** if `solar` time-series are automatically [generated](#generate) and [refreshed](#refreshtimeseries), this
-  parameter sets their refresh interval (in number of Monte-Carlo years).
-
 
 ---
 ## Input parameters

@@ -69,9 +69,9 @@ struct convert<Vec3>
             return false;
         }
 
-        rhs.x = node[0].as<double>();
-        rhs.y = node[1].as<double>();
-        rhs.z = node[2].as<double>();
+        rhs.x = node[0].as<float>();
+        rhs.y = node[1].as<float>();
+        rhs.z = node[2].as<float>();
         return true;
     }
 };

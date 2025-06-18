@@ -212,13 +212,6 @@ public:
             VariableAccessorType::InitializeAndReset(pValuesForTheCurrentYear[numSpace], study);
         }
 
-        auto& limits = study.runtime.rangeLimits;
-
-        pRatioYear = 100. / (double)limits.year[Data::rangeCount];
-        pRatioDay = 100. / (double)limits.day[Data::rangeCount];
-        pRatioMonth = 100. / (double)limits.month[Data::rangeCount];
-        pRatioWeek = 100. / (double)limits.week[Data::rangeCount];
-
         // Next
         NextType::initializeFromStudy(study);
     }
@@ -493,10 +486,6 @@ private:
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesTypeForSpatialAg pValuesForTheCurrentYear;
 
-    double pRatioYear;
-    double pRatioDay;
-    double pRatioMonth;
-    double pRatioWeek;
     unsigned int pNbYearsParallel;
 
 }; // class SpatialAggregate

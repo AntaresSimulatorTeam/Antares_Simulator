@@ -73,7 +73,7 @@ struct convert<Antares::IO::Inputs::YmlSystem::Component>
         }
         rhs.id = node["id"].as<std::string>();
         rhs.model = node["model"].as<std::string>();
-        rhs.scenarioGroup = node["scenario-group"].as<std::string>();
+        rhs.scenarioGroup = node["scenario-group"].as<std::string>("default");
         rhs.parameters = as_fallback_default<
           std::vector<Antares::IO::Inputs::YmlSystem::Parameter>>(node["parameters"]);
         return true;

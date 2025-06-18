@@ -28,20 +28,6 @@ following table, which shows the CPU allowances granted in the different configu
 |:---------:|:---------:|:---------:|:----------:|:---------:|
 |     1     | Ceil(S/4) | Ceil(S/2) | Ceil(3S/4) |     S     |
 
-**Note**: The number of independent threads actually launched by Antares in parallel mode may appear smaller than that shown in the table above. In this case, the resources monitor menu and the dashboard displayed on starting the simulation indicates:
-
-simulation cores: **nn** reduced to **pp**
-
-**nn** is the regular allowance and **pp** is the practical value that the solver has to work with. Allowance reduction may occur if the built-in Time-Series generators are activated, their "refresh" status is set to "Yes" and the values given to the "refresh span" parameters are not appropriate (parallel execution demand that refresh operations do not take place within a bundle of parallel years). Optimal use of the "parallel" execution mode is obtained when all activated built-in time –series generators are set up in either of the two following ways:
-- Refresh status : **No**
-- Refresh status : **Yes**, refresh span = **Ki \* (CPU allowance)** , with **Ki &gt;= 1**
-
-Examples of reduction from an initial allowance of 12 cores are given hereafter. The reduced allowance is the size of the **smallest** bundle of parallel years between two consecutive "refresh" (it indicates the slowest point of the simulation [^23]). Note that RAM requirements displayed in the resources monitor are, contrariwise, assessed on the basis on the **largest** bundle of parallel years encountered in the simulation).
-
-![Reduced_Allowance](Reduced_Allowance.png)
-
-The Table indicates either the refresh status (No) or the refresh span (the associated refresh status "yes" is implicit).
-
 ## Formula for CPU cores
 
 Starting from 9.2 we changed the formula for the number of cores to simplify. Here's the old values and the new ones.

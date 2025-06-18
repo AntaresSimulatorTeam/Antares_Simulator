@@ -144,7 +144,6 @@ BOOST_AUTO_TEST_CASE(saveLoadGeneralData)
     parameters.timeSeriesToGenerate = timeSeriesLoad | timeSeriesHydro | timeSeriesWind
                                       | timeSeriesThermal | timeSeriesSolar | timeSeriesRenewable;
 
-    parameters.timeSeriesToRefresh = parameters.timeSeriesToGenerate;
     parameters.resultFormat = zipArchive;
 
     parameters.saveToINI(ini);
@@ -152,7 +151,6 @@ BOOST_AUTO_TEST_CASE(saveLoadGeneralData)
     Parameters loaded;
     loaded.loadFromINI(ini, StudyVersion::latest());
     BOOST_CHECK_EQUAL(parameters.timeSeriesToGenerate, loaded.timeSeriesToGenerate);
-    BOOST_CHECK_EQUAL(parameters.timeSeriesToRefresh, loaded.timeSeriesToRefresh);
     BOOST_CHECK_EQUAL(parameters.resultFormat, loaded.resultFormat);
 }
 
@@ -198,14 +196,8 @@ void Fixture::writeValidFile()
             nbtimeserieswind = 1
             nbtimeseriesthermal = 1
             nbtimeseriessolar = 1
-            refreshtimeseries =
             intra-modal =
             inter-modal =
-            refreshintervalload = 0
-            refreshintervalhydro = 5
-            refreshintervalwind = 5
-            refreshintervalthermal = 5
-            refreshintervalsolar = 0
             readonly = false
 
             [input]
