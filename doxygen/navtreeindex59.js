@@ -1,5 +1,12 @@
 var NAVTREEINDEX59 =
 {
+"structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html#aefbff0859fe19c8a06460ae81ace9325":[8,0,11,2,7],
+"structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html#afbeb93c6845bd6ce1778f79283bc057a":[8,0,11,2,2],
+"structDonneesOptimisationMensuelle_1_1CORRESPONDANCE__DES__VARIABLES.html":[8,0,12,2],
+"structDonneesOptimisationMensuelle_1_1CORRESPONDANCE__DES__VARIABLES.html#a0e768ab50742661c6149b3fabc9d7f48":[8,0,12,2,7],
+"structDonneesOptimisationMensuelle_1_1CORRESPONDANCE__DES__VARIABLES.html#a2cc9f0f5f51500c96852fb41c7c793ee":[8,0,12,2,6],
+"structDonneesOptimisationMensuelle_1_1CORRESPONDANCE__DES__VARIABLES.html#a4ad5e6336937db444c58607c5ef861b0":[8,0,12,2,5],
+"structDonneesOptimisationMensuelle_1_1CORRESPONDANCE__DES__VARIABLES.html#a4c663ae5b906a0590ae157a4bae5df4a":[8,0,12,2,2],
 "structDonneesOptimisationMensuelle_1_1CORRESPONDANCE__DES__VARIABLES.html#a5b53546fc164ef89003a09bc48d27f20":[8,0,12,2,3],
 "structDonneesOptimisationMensuelle_1_1CORRESPONDANCE__DES__VARIABLES.html#a72996c82231344e5a44e57d427f4b1f7":[8,0,12,2,4],
 "structDonneesOptimisationMensuelle_1_1CORRESPONDANCE__DES__VARIABLES.html#a977e825fb2fd56401e24a80b33a0b450":[8,0,12,2,0],
@@ -224,8 +231,8 @@ var NAVTREEINDEX59 =
 "structMinHydroPowerData.html#ae608d18b4923971be95eacb3b4d1802e":[8,0,181,0],
 "structMinHydroPowerData.html#af66d42ef2021b6be1733e1bd218fb62d":[8,0,181,1],
 "structMockLinearProblemData.html":[8,0,184],
-"structMockLinearProblemData.html#ae091e3a9e1d074bc66644d8f80dc688f":[8,0,184,1],
 "structMockLinearProblemData.html#ae091e3a9e1d074bc66644d8f80dc688f":[8,0,184,0],
+"structMockLinearProblemData.html#ae091e3a9e1d074bc66644d8f80dc688f":[8,0,184,1],
 "structMonster.html":[8,0,187],
 "structMonster.html#a2cf0e4c676ca221634781990cdba9647":[8,0,187,1],
 "structMonster.html#aad1d7dd3820b1dad18b04d2a67c13164":[8,0,187,2],
@@ -242,12 +249,5 @@ var NAVTREEINDEX59 =
 "structNbDispUnitsMinBoundSinceMinUpTimeData.html":[8,0,193],
 "structNbDispUnitsMinBoundSinceMinUpTimeData.html#a02f32d864d1d9fdf2addf08fdb2b3e5e":[8,0,193,2],
 "structNbDispUnitsMinBoundSinceMinUpTimeData.html#a7192fbd2b41e5a691cbd746431279147":[8,0,193,1],
-"structNbDispUnitsMinBoundSinceMinUpTimeData.html#a9bea088101603f5d94e925de2a6a74e0":[8,0,193,0],
-"structNbUnitsOutageLessThanNbUnitsStopData.html":[8,0,196],
-"structNbUnitsOutageLessThanNbUnitsStopData.html#a1b844496f8b91a9b7b32e136d2de92c5":[8,0,196,0],
-"structNbUnitsOutageLessThanNbUnitsStopData.html#a4f4c1de286c15a23e233f373c838d238":[8,0,196,1],
-"structNbUnitsOutageLessThanNbUnitsStopData.html#a8fb1511290c4decd9d7af5c5a9f37935":[8,0,196,2],
-"structNonCopyableFunctionObject.html":[8,0,199],
-"structNonCopyableFunctionObject.html#a09ec21db0503f5b8737056e8c70ea385":[8,0,199,0],
-"structNonCopyableFunctionObject.html#a27e916ea965bb2c3ca5a00d24b6e7bae":[8,0,199,1]
+"structNbDispUnitsMinBoundSinceMinUpTimeData.html#a9bea088101603f5d94e925de2a6a74e0":[8,0,193,0]
 };

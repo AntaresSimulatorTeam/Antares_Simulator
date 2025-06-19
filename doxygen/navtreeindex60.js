@@ -1,5 +1,12 @@
 var NAVTREEINDEX60 =
 {
+"structNbUnitsOutageLessThanNbUnitsStopData.html":[8,0,196],
+"structNbUnitsOutageLessThanNbUnitsStopData.html#a1b844496f8b91a9b7b32e136d2de92c5":[8,0,196,0],
+"structNbUnitsOutageLessThanNbUnitsStopData.html#a4f4c1de286c15a23e233f373c838d238":[8,0,196,1],
+"structNbUnitsOutageLessThanNbUnitsStopData.html#a8fb1511290c4decd9d7af5c5a9f37935":[8,0,196,2],
+"structNonCopyableFunctionObject.html":[8,0,199],
+"structNonCopyableFunctionObject.html#a09ec21db0503f5b8737056e8c70ea385":[8,0,199,0],
+"structNonCopyableFunctionObject.html#a27e916ea965bb2c3ca5a00d24b6e7bae":[8,0,199,1],
 "structNonCopyableFunctionObject.html#a286a8f665b5befe32365051fc4bb6885":[8,0,199,4],
 "structNonCopyableFunctionObject.html#a35fa3f7e0f96e1086f9c00191be0d6a8":[8,0,199,3],
 "structNonCopyableFunctionObject.html#aa18532dfa1e22ea3c65ecbd3a55cfa49":[8,0,199,2],
@@ -242,12 +249,5 @@ var NAVTREEINDEX60 =
 "structShortTermStorage_1_1PROPERTIES.html#afe7cf8944bd6b8975da7a6bfbbdee2d6":[8,0,23,0,7],
 "structShortTermStorage_1_1RESULTS.html":[8,0,23,1],
 "structShortTermStorage_1_1RESULTS.html#a9e0e4559873e637284c91f573b35c7c3":[8,0,23,1,1],
-"structShortTermStorage_1_1RESULTS.html#a9e2b39aa9c61e45f8e549dcec81f9c30":[8,0,23,1,2],
-"structShortTermStorage_1_1RESULTS.html#af7822c1da057b24e6b9769dd6ed212ee":[8,0,23,1,0],
-"structSimplexResult.html":[8,0,256],
-"structSimplexResult.html#a3051359a084532ad1f383e5bc06f14ef":[8,0,256,1],
-"structSimplexResult.html#a36a5249f89877996cf5563cbe300500c":[8,0,256,2],
-"structSimplexResult.html#acf4a05c766974c6b0277062646b2c9a6":[8,0,256,3],
-"structSimplexResult.html#aefb6b73a0db6c749d9b324c5fffa5af5":[8,0,256,0],
-"structSolverTestData.html":[8,0,259]
+"structShortTermStorage_1_1RESULTS.html#a9e2b39aa9c61e45f8e549dcec81f9c30":[8,0,23,1,2]
 };

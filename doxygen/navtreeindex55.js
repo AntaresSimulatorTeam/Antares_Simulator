@@ -1,5 +1,12 @@
 var NAVTREEINDEX55 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost.html#ab829a8c7c8e037d4362a6ba356d33d43":[8,0,0,18,4,4,18,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost.html#ad5c23c20b5d9315b10689448b7310251":[8,0,0,18,4,4,18,2],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionFee.html":[8,0,0,18,4,4,34],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionFee.html#aae81673728f2211748e192c815b12e77":[8,0,0,18,4,4,34,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionFee.html#ab104766e003e9658b8dd9a368dab3c09":[8,0,0,18,4,4,34,2],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionFee.html#ab1ae6de95f8ac5895b968012331f8fcf":[8,0,0,18,4,4,34,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionFeeAbs.html":[8,0,0,18,4,4,36],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionFeeAbs.html#a19131fca284bf51dc32ffe2373f0892e":[8,0,0,18,4,4,36,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionFeeAbs.html#a3cded9a6d6411a0f7f3dca37e172ed7b":[8,0,0,18,4,4,36,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionFeeAbs.html#ab99e83542726369da03946e9f25cf63d":[8,0,0,18,4,4,36,0],
@@ -242,12 +249,5 @@ var NAVTREEINDEX55 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRowBalance.html#aadfb87da0cbdf847bd5c14a18ee0b06e":[8,0,0,18,4,4,8,4],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRowBalance.html#abf30e7cc5168d6d23d47f54809e786d3":[8,0,0,18,4,4,8,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTSbyGroup.html":[8,0,0,18,4,4,108],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTSbyGroup.html#a00b1dfea6c453001a0d3cbd6fc1472ef":[8,0,0,18,4,4,108,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTSbyGroup.html#a277c4b2d9171cdb220f4f020d869a607":[8,0,0,18,4,4,108,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTSbyGroup.html#a2f63c70b0beb9c4342e6aac984392d17":[8,0,0,18,4,4,108,4],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTSbyGroup.html#a6dbc9e5ee43d230432bf4c946ff1b11e":[8,0,0,18,4,4,108,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTSbyGroup.html#ac7cc9bade436eb72571a588770de550f":[8,0,0,18,4,4,108,3],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageCashFlowByCluster.html":[8,0,0,18,4,4,110],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageCashFlowByCluster.html#a3b83549a6de741ea97f53569778c3dd4":[8,0,0,18,4,4,110,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageCashFlowByCluster.html#a5fbe715de4f738c8b1f0a3dbd8187a26":[8,0,0,18,4,4,110,2]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTSbyGroup.html#a00b1dfea6c453001a0d3cbd6fc1472ef":[8,0,0,18,4,4,108,1]
 };
