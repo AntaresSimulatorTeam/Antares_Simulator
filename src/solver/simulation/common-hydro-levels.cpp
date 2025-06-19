@@ -57,11 +57,6 @@ void interpolateWaterValue(const Data::AreaList& areas,
             return;
         }
 
-        if (!area->hydro.useWaterValue)
-        {
-            return;
-        }
-
         double reservoirCapacity = area->hydro.reservoirCapacity;
 
         const std::vector<double>& niv = weeklyResults.niveauxHoraires;
