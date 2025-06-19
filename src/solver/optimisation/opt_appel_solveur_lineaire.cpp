@@ -214,35 +214,8 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
 
     if (solver)
     {
-        if (problemeHebdo->ReinitOptimisation)
-        {
-            ORTOOLS_LibererProbleme(solver);
-
-            ProblemeAResoudre->ProblemesSpx[NumIntervalle] = nullptr;
-
-            solver = nullptr;
-        }
-        else
-        {
-            TimeMeasurement updateMeasure;
-
-            ORTOOLS_ModifierLeVecteurCouts(solver,
-                                           ProblemeAResoudre->CoutLineaire.data(),
-                                           ProblemeAResoudre->NombreDeVariables);
-            ORTOOLS_ModifierLeVecteurSecondMembre(solver,
-                                                  ProblemeAResoudre->SecondMembre.data(),
-                                                  ProblemeAResoudre->Sens.data(),
-                                                  ProblemeAResoudre->NombreDeContraintes);
-            ORTOOLS_CorrigerLesBornes(solver,
-                                      ProblemeAResoudre->Xmin.data(),
-                                      ProblemeAResoudre->Xmax.data(),
-                                      ProblemeAResoudre->TypeDeVariable.data(),
-                                      ProblemeAResoudre->NombreDeVariables);
-
-            updateMeasure.tick();
-            timeMeasure.updateTime = updateMeasure.duration_ms();
-            optimizationStatistics.addUpdateTime(timeMeasure.updateTime);
-        }
+        ORTOOLS_LibererProbleme(solver);
+        ProblemeAResoudre->ProblemesSpx[NumIntervalle] = nullptr;
     }
 
     solver = convertToMPSolver(problemeHebdo, NumIntervalle, options);
