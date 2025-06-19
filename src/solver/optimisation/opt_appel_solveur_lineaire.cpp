@@ -220,25 +220,6 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
 
     solver = convertToMPSolver(problemeHebdo, NumIntervalle, options);
 
-    TimeMeasurement updateMeasure;
-
-    ORTOOLS_ModifierLeVecteurCouts(solver,
-                                   ProblemeAResoudre->CoutLineaire.data(),
-                                   ProblemeAResoudre->NombreDeVariables);
-    ORTOOLS_ModifierLeVecteurSecondMembre(solver,
-                                          ProblemeAResoudre->SecondMembre.data(),
-                                          ProblemeAResoudre->Sens.data(),
-                                          ProblemeAResoudre->NombreDeContraintes);
-    ORTOOLS_CorrigerLesBornes(solver,
-                              ProblemeAResoudre->Xmin.data(),
-                              ProblemeAResoudre->Xmax.data(),
-                              ProblemeAResoudre->TypeDeVariable.data(),
-                              ProblemeAResoudre->NombreDeVariables);
-
-    updateMeasure.tick();
-    timeMeasure.updateTime = updateMeasure.duration_ms();
-    optimizationStatistics.addUpdateTime(timeMeasure.updateTime);
-
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
     mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
