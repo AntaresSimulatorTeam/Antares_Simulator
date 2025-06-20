@@ -381,8 +381,6 @@ var namespaces_dup =
           [ "CheckValidity< BindingConstraintGroup >", "applyToMatrix_8hxx.html#ae6a7dbf6b9e472a482b531444d8c6f16", null ],
           [ "CheckValidity< Data::AreaLink >", "applyToMatrix_8hxx.html#af30e747f971738c4736da604c8cccbcb", null ],
           [ "CheckValidity< Data::DataSeriesHydro >", "applyToMatrix_8hxx.html#a08217ea100ad38869ef81de455e225d9", null ],
-          [ "CheckValidity< ShortTermStorage::AdditionalConstraints >", "applyToMatrix_8hxx.html#a3bfa89e4582f8d2c2d506f17f8b70b93", null ],
-          [ "CheckValidity< ShortTermStorage::STStorageCluster >", "applyToMatrix_8hxx.html#aade774eb2c5fcbee497c3c689fa08b6c", null ],
           [ "finalLevelApply", "hydroLevelsData_8h.html#a0cdd801ac45d582e9ee10dea4de0fb2f", null ],
           [ "fromHydroLevelToString", "scBuilderUtils_8h.html#a525bf59f524da5f8c9173f1cbaa700d9", null ],
           [ "fromStringToHydroLevel", "scBuilderUtils_8h.html#a51df4aa73747876518a36e10251a703f", null ],
