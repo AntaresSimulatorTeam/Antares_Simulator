@@ -342,7 +342,9 @@ public:
     ** \brief Destroy all data of the TS generator '@TS'
     */
     template<enum TimeSeriesType TS>
-    void destroyTSGeneratorData();
+    void destroyTSGeneratorData()
+    {
+    }
 
     /*!
     ** \brief Import all time-series into the input folder
