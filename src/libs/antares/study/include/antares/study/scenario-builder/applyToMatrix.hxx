@@ -73,14 +73,6 @@ inline bool CheckValidity<BindingConstraintGroup>(uint value,
     return value < group.numberOfTimeseries();
 }
 
-template<>
-inline bool CheckValidity<ShortTermStorage::STStorageCluster>(
-  uint value,
-  const ShortTermStorage::STStorageCluster& sts,
-  uint)
-{
-    return value < sts.series->inflows.numberOfColumns();
-}
 
 template<>
 inline bool CheckValidity<ShortTermStorage::AdditionalConstraints>(
