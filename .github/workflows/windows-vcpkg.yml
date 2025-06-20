@@ -153,19 +153,20 @@ jobs:
           FIXED_PATH=${ORTOOLS_DIR//\\//}
           cpack -G ZIP -D CPACK_INSTALLED_DIRECTORIES="${FIXED_PATH}/install/bin;bin"
           
-      - name: get .zip name
-        if: ${{ success() }}
-        shell: bash
-        run: |
-          cd _build
-          export ZIP_ARCHIVE_NAME=$(ls -1 *.zip)   
+      # - name: get .zip name
+      #   if: ${{ success() }}
+      #   shell: bash
+      #   run: |
+      #     cd _build
+      #     export ZIP_ARCHIVE_NAME=$(ls -1 *.zip)
+      #     echo "ZIP_ARCHIVE_NAME=$ZIP_ARCHIVE_NAME" >> $GITHUB_ENV         
 
       - name: Upload .zip
         if: ${{ success() }}
         uses: actions/upload-artifact@v4
         with:
-          name: ${{env.ZIP_ARCHIVE_NAME}}
-          path: _build/${{env.ZIP_ARCHIVE_NAME}}
+          name: basename $(ls -1 _build *.zip)
+          path: $(ls -1 _build *.zip)
 
       - name: Add OR-Tools to PATH
         run: echo "D:\a\Antares_Simulator\Antares_Simulator/or-tools/install/bin" | Out-File -Append -Encoding ascii $env:GITHUB_PATH
