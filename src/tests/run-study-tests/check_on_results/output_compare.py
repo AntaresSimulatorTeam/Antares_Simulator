@@ -31,7 +31,7 @@ class output_compare(check_interface):
         ref_simulation_folder = find_simulation_folder(self.ref_folder)
 
         tolerance = self.tol
-        if (ref_simulation_folder.parent().name == "valid-parallel" and sys.platform == "win32"):
+        if (ref_simulation_folder.parent.name == "valid-parallel" and sys.platform == "win32"):
             # Results are non deterministic on windows, so we use a higher tolerance
             tolerance = 2
 
