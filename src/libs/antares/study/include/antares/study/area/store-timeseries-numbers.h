@@ -26,11 +26,16 @@
 
 namespace Antares::Data
 {
-template<int TimeSeriesT>
+template<TimeSeriesType TimeSeriesT>
 void singleAreaStoreTimeseriesNumbers(Solver::IResultWriter& writer, const Area& area);
 
-template<int TimeSeriesT>
-void storeTimeseriesNumbers(Solver::IResultWriter& writer, const AreaList& area);
+template<TimeSeriesType TimeSeriesT>
+void storeTimeseriesNumbers(Solver::IResultWriter& writer, const AreaList& area)
+{
+    // Each area in the list
+    area.each([&writer](const Area& a)
+              { singleAreaStoreTimeseriesNumbers<TimeSeriesT>(writer, a); });
+}
 
 // Store time-series numbers
 void storeTimeseriesNumbersForLoad(Solver::IResultWriter& writer, const Area& area);
@@ -44,5 +49,3 @@ void storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter& writ
 void storeTimeseriesNumbersForHydroMaxPower(Solver::IResultWriter& writer, const Area& area);
 
 } // namespace Antares::Data
-
-#include "store-timeseries-numbers.hxx"

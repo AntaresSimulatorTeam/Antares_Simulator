@@ -36,27 +36,62 @@ inline void Study::storeTimeSeriesNumbers(Solver::IResultWriter& resultWriter) c
     storeTimeseriesNumbers<TimeSeriesT>(resultWriter, areas);
 }
 
-template<enum TimeSeriesType TS>
-inline void Study::destroyTSGeneratorData()
+template<TimeSeriesType TS>
+void Study::destroyTSGeneratorData();
+  // {
+  //     switch (TS)
+  //     {
+  //     case TimeSeriesType::timeSeriesShortTermInflows:
+  //         // TODO
+  //         destroyAllHydroTSGeneratorData();
+  //         break;
+  //     case TimeSeriesType::timeSeriesShortTermAdditionalConstraints:
+  //         // TODO
+  //         destroyAllHydroTSGeneratorData();
+  //         break;
+  //     default:
+  //         break;
+  //     }
+  // }
+
+  template<>
+  void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesLoad>()
+
 {
-    switch (TS)
-    {
-    case TimeSeriesType::timeSeriesLoad:
-        destroyAllLoadTSGeneratorData();
-        break;
-    case TimeSeriesType::timeSeriesSolar:
-        destroyAllSolarTSGeneratorData();
-        break;
-    case TimeSeriesType::timeSeriesWind:
-        destroyAllWindTSGeneratorData();
-        break;
-    case TimeSeriesType::timeSeriesHydro:
-        destroyAllHydroTSGeneratorData();
-        break;
-    default:
-        break;
-    }
+    areas.each([](Data::Area& area) { area.load.prepro.reset(); });
 }
+
+template<>
+void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesSolar>()
+{
+    areas.each([](Data::Area& area) { area.solar.prepro.reset(); });
+}
+
+template<>
+void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesWind>()
+{
+    areas.each([](Data::Area& area) { area.wind.prepro.reset(); });
+}
+
+template<>
+void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesHydro>()
+{
+    areas.each([](Data::Area& area) { area.hydro.prepro.reset(); });
+}
+
+//
+// template<>
+// void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesShortTermInflows>()
+// {
+//     areas.each(
+//       [](Data::Area& area)
+//       {
+//           for (auto& sts: area.shortTermStorage.storagesByIndex)
+//           {
+//               sts.series->inflowsTSNumbers.reset();
+//           }
+//       });
+// }
 
 } // namespace Data
 } // namespace Antares

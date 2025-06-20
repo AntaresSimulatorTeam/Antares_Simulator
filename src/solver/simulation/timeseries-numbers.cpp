@@ -847,6 +847,7 @@ void TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(Data::Study& study,
         study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesRenewable>(resultWriter);
         study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesTransmissionCapacities>(
           resultWriter);
+        study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesShortTermInflows>(resultWriter);
 
         Simulation::BindingConstraintsTimeSeriesNumbersWriter ts_writer(resultWriter);
         ts_writer.write(study.bindingConstraintsGroups);

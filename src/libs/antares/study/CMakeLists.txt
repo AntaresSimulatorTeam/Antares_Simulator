@@ -48,7 +48,6 @@ set(SRC_AREAS
         include/antares/study/area/links.h
         area/store-timeseries-numbers.cpp
         include/antares/study/area/store-timeseries-numbers.h
-        include/antares/study/area/store-timeseries-numbers.hxx
         area/list.cpp
 )
 source_group("study\\area" FILES ${SRC_AREAS})

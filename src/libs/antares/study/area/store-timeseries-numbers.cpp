@@ -43,38 +43,56 @@ static void storeTSnumbers(Solver::IResultWriter& writer,
     writer.addEntryFromBuffer(path, buffer);
 }
 
-void storeTimeseriesNumbersForLoad(Solver::IResultWriter& writer, const Area& area)
+template<>
+void singleAreaStoreTimeseriesNumbers<TimeSeriesType::timeSeriesLoad>(Solver::IResultWriter& writer,
+                                                                      const Area& area)
 {
     storeTSnumbers(writer, area.load.series.timeseriesNumbers, area.id, "load");
 }
 
-void storeTimeseriesNumbersForSolar(Solver::IResultWriter& writer, const Area& area)
+template<>
+void singleAreaStoreTimeseriesNumbers<TimeSeriesType::timeSeriesSolar>(
+  Solver::IResultWriter& writer,
+  const Area& area)
 {
     storeTSnumbers(writer, area.solar.series.timeseriesNumbers, area.id, "solar");
 }
 
-void storeTimeseriesNumbersForHydro(Solver::IResultWriter& writer, const Area& area)
+template<>
+void singleAreaStoreTimeseriesNumbers<TimeSeriesType::timeSeriesHydro>(
+  Solver::IResultWriter& writer,
+  const Area& area)
 {
     storeTSnumbers(writer, area.hydro.series->timeseriesNumbers, area.id, "hydro");
 }
 
-void storeTimeseriesNumbersForWind(Solver::IResultWriter& writer, const Area& area)
+template<>
+void singleAreaStoreTimeseriesNumbers<TimeSeriesType::timeSeriesWind>(Solver::IResultWriter& writer,
+                                                                      const Area& area)
 {
     storeTSnumbers(writer, area.wind.series.timeseriesNumbers, area.id, "wind");
 }
 
-void storeTimeseriesNumbersForThermal(Solver::IResultWriter& writer, const Area& area)
+template<>
+void singleAreaStoreTimeseriesNumbers<TimeSeriesType::timeSeriesThermal>(
+  Solver::IResultWriter& writer,
+  const Area& area)
 {
     area.thermal.list.storeTimeseriesNumbers(writer);
 }
 
-void storeTimeseriesNumbersForRenewable(Solver::IResultWriter& writer, const Area& area)
+template<>
+void singleAreaStoreTimeseriesNumbers<TimeSeriesType::timeSeriesRenewable>(
+  Solver::IResultWriter& writer,
+  const Area& area)
 {
     area.renewable.list.storeTimeseriesNumbers(writer);
 }
 
-void storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter& writer,
-                                                     const Area& area)
+template<>
+void singleAreaStoreTimeseriesNumbers<TimeSeriesType::timeSeriesTransmissionCapacities>(
+  Solver::IResultWriter& writer,
+  const Area& area)
 {
     // No links originating from this area
     // do not create an empty directory
@@ -96,4 +114,29 @@ void storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter& writ
         }
     }
 }
+template<>
+void singleAreaStoreTimeseriesNumbers<TimeSeriesType::timeSeriesShortTermInflows>(
+  Solver::IResultWriter& writer,
+  const Area& area)
+{
+    for (auto& sts: area.shortTermStorage.storagesByIndex)
+    {
+        storeTSnumbers(writer, sts.series->inflowsTSNumbers, sts.id, "inflows");
+    }
+}
+
+template<>
+void singleAreaStoreTimeseriesNumbers<TimeSeriesType::timeSeriesShortTermAdditionalConstraints>(
+  Solver::IResultWriter& writer,
+  const Area& area)
+{
+    for (auto& sts: area.shortTermStorage.storagesByIndex)
+    {
+        for (auto& ct: sts.additionalConstraints)
+        {
+            storeTSnumbers(writer, ct->timeseriesNumbers, ct->name, "additionalConstraints");
+        }
+    }
+}
+
 } // namespace Antares::Data
