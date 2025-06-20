@@ -415,6 +415,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             {
                 nivInit = hydroVentilationResults[k].NiveauxReservoirsDebutJours[weekFirstDay]
                           * area.hydro.reservoirCapacity;
+                problem.previousSimulationFinalLevel[k] = nivInit;
             }
 
             if (nivInit < -LEVEL_TOLERANCE_MWH)
