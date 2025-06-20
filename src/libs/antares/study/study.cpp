@@ -852,26 +852,26 @@ void Study::ensureDataAreLoadedForAllBindingConstraints()
 }
 
 template<>
-void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesLoad>()
+inline void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesLoad>()
 
 {
     areas.each([](Data::Area& area) { area.load.prepro.reset(); });
 }
 
 template<>
-void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesSolar>()
+inline void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesSolar>()
 {
     areas.each([](Data::Area& area) { area.solar.prepro.reset(); });
 }
 
 template<>
-void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesWind>()
+inline void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesWind>()
 {
     areas.each([](Data::Area& area) { area.wind.prepro.reset(); });
 }
 
 template<>
-void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesHydro>()
+inline void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesHydro>()
 {
     areas.each([](Data::Area& area) { area.hydro.prepro.reset(); });
 }
