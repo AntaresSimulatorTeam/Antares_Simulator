@@ -39,7 +39,7 @@ std::vector<T> shiftVector(const std::vector<T>& values, int shiftValue)
     auto shiftedValues = values;
 
     // Use std::rotate to perform the shift (left shift for positive values)
-    std::rotate(shiftedValues.begin(), shiftedValues.begin() + shiftValue, shiftedValues.end());
+    std::rotate(shiftedValues.begin(), shiftedValues.end() - shiftValue, shiftedValues.end());
 
     return shiftedValues;
 }
