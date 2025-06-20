@@ -70,14 +70,14 @@ jobs:
       - name: Restore ccache cache
         uses: actions/cache/restore@v4
         with:
-          path: ${{ github.workspace }}/.ccache
-          key: ${{ env.os }}-${{ github.sha }}
+          path: ${{ github.workspace }}/.ccache_ubuntu
+          key: ${{ env.os }}-${{ github.ref_name }}
           restore-keys: |
-            ${{ env.os }}-   
+            ${{ env.os }}-  
 
       - name: Configure ccache
         run: |
-          ccache --set-config=cache_dir=${{ github.workspace }}/.ccache
+          ccache --set-config=cache_dir=${{ github.workspace }}/.ccache_ubuntu
           ccache --set-config=max_size=500M
           ccache --set-config=compression=true
           ccache -p
@@ -143,7 +143,7 @@ jobs:
            -DBUILD_TESTING=ON \
            -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake \
            -DVCPKG_TARGET_TRIPLET=x64-linux-release \
-           -DCMAKE_PREFIX_PATH="${{github.workspace}}/rte-antares-deps-Release;${{github.workspace}}/install;${{ env.ORTOOLS_DIR }}/install;${{github.workspace}}/antares_install;${{github.workspace}}/rte-antares-deps-Release;${{github.workspace}}/_build/vcpkg_installed/x64-linux-release"
+           -DCMAKE_PREFIX_PATH="${{github.workspace}}/_build/vcpkg_installed/x64-linux-release;${{github.workspace}}/install;${{ env.ORTOOLS_DIR }}/install;${{github.workspace}}/antares_install"
            cmake --build _build -j$(nproc)
            cd _build
            ctest -C Release --output-on-failure
@@ -171,11 +171,11 @@ jobs:
           os: ${{ env.os }}
           variant: "named-mps"
 
-      - name: Run cucumber on short-tests
+      - name: Run fast cucumber
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/cucumber-tests
         with:
-          feature: "features/solver-features/short_tests.feature"
+          tags: "fast"
 
       - name: Run cucumber on modeler
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
@@ -404,5 +404,5 @@ jobs:
       - name: Save ccache cache
         uses: actions/cache/save@v4
         with:
-          path: ${{ github.workspace }}/.ccache
-          key: ${{ env.os }}-${{ github.sha }}
+          path: ${{ github.workspace }}/.ccache_ubuntu
+          key: ${{ env.os }}-${{ github.ref_name }}
