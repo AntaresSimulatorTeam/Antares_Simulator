@@ -114,6 +114,7 @@ void singleAreaStoreTimeseriesNumbers<TimeSeriesType::timeSeriesTransmissionCapa
         }
     }
 }
+
 template<>
 void singleAreaStoreTimeseriesNumbers<TimeSeriesType::timeSeriesShortTermInflows>(
   Solver::IResultWriter& writer,

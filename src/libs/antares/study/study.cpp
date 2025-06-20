@@ -840,9 +840,6 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
     return ret;
 }
 
-
-
-
 void Study::ensureDataAreLoadedForAllBindingConstraints()
 {
     for (const auto& constraint: bindingConstraints)
