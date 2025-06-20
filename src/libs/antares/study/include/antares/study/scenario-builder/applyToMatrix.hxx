@@ -73,7 +73,6 @@ inline bool CheckValidity<BindingConstraintGroup>(uint value,
     return value < group.numberOfTimeseries();
 }
 
-
 template<>
 inline bool CheckValidity<ShortTermStorage::AdditionalConstraints>(
   uint value,
