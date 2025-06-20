@@ -40,7 +40,7 @@ bool ShortTermInflowsTSNumberData::apply(Study& study)
         auto& rule = rules_[&sts];
         std::string logprefix = "Short term storage inflows: area '" + pArea->name + "', sts: '"
                                 + sts.id + "': ";
-        ret = ApplyToMatrix(errors, logprefix, sts.series->inflows, rule[0], tsGenMax) && ret;
+        ret = ApplyToMatrix(errors, logprefix, sts, rule[0], tsGenMax) && ret;
     }
 
     return ret;
