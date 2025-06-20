@@ -30,54 +30,21 @@ inline bool Study::readonly() const
     return (parameters.readonly);
 }
 
-template<unsigned int TimeSeriesT>
-inline void Study::storeTimeSeriesNumbers(Solver::IResultWriter& resultWriter) const
-{
-    storeTimeseriesNumbers<TimeSeriesT>(resultWriter, areas);
-}
-
-template<TimeSeriesType TS>
-void Study::destroyTSGeneratorData();
-  // {
-  //     switch (TS)
-  //     {
-  //     case TimeSeriesType::timeSeriesShortTermInflows:
-  //         // TODO
-  //         destroyAllHydroTSGeneratorData();
-  //         break;
-  //     case TimeSeriesType::timeSeriesShortTermAdditionalConstraints:
-  //         // TODO
-  //         destroyAllHydroTSGeneratorData();
-  //         break;
-  //     default:
-  //         break;
-  //     }
-  // }
-
-  template<>
-  void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesLoad>()
-
-{
-    areas.each([](Data::Area& area) { area.load.prepro.reset(); });
-}
-
-template<>
-void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesSolar>()
-{
-    areas.each([](Data::Area& area) { area.solar.prepro.reset(); });
-}
-
-template<>
-void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesWind>()
-{
-    areas.each([](Data::Area& area) { area.wind.prepro.reset(); });
-}
-
-template<>
-void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesHydro>()
-{
-    areas.each([](Data::Area& area) { area.hydro.prepro.reset(); });
-}
+// {
+//     switch (TS)
+//     {
+//     case TimeSeriesType::timeSeriesShortTermInflows:
+//         // TODO
+//         destroyAllHydroTSGeneratorData();
+//         break;
+//     case TimeSeriesType::timeSeriesShortTermAdditionalConstraints:
+//         // TODO
+//         destroyAllHydroTSGeneratorData();
+//         break;
+//     default:
+//         break;
+//     }
+// }
 
 //
 // template<>

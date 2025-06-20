@@ -300,8 +300,12 @@ public:
     ** \tparam TimeSeriesT The time-series set to store
     ** \return True if the operation succeeded (the file have been written), false otherwise
     */
-    template<unsigned int TimeSeriesT>
-    void storeTimeSeriesNumbers(Solver::IResultWriter& resultWriter) const;
+    template<TimeSeriesType TimeSeriesT>
+    void storeTimeSeriesNumbers(Solver::IResultWriter& resultWriter) const
+    {
+        storeTimeseriesNumbers<TimeSeriesT>(resultWriter, areas);
+    }
+
     //@}
 
     //! \name Simulation
@@ -339,15 +343,6 @@ public:
     */
     template<enum TimeSeriesType TS>
     void destroyTSGeneratorData();
-
-    //! Destroy all data of the load TS generator
-    void destroyAllLoadTSGeneratorData();
-    //! Destroy all data of the solar TS generator
-    void destroyAllSolarTSGeneratorData();
-    //! Destroy all data of the wind TS generator
-    void destroyAllWindTSGeneratorData();
-    //! Destroy all data of the hydro TS generator
-    void destroyAllHydroTSGeneratorData();
 
     /*!
     ** \brief Import all time-series into the input folder

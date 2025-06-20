@@ -851,6 +851,31 @@ void Study::ensureDataAreLoadedForAllBindingConstraints()
     }
 }
 
+template<>
+void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesLoad>()
+
+{
+    areas.each([](Data::Area& area) { area.load.prepro.reset(); });
+}
+
+template<>
+void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesSolar>()
+{
+    areas.each([](Data::Area& area) { area.solar.prepro.reset(); });
+}
+
+template<>
+void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesWind>()
+{
+    areas.each([](Data::Area& area) { area.wind.prepro.reset(); });
+}
+
+template<>
+void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesHydro>()
+{
+    areas.each([](Data::Area& area) { area.hydro.prepro.reset(); });
+}
+
 void Study::initializeProgressMeter(bool tsGeneratorOnly)
 {
     uint years = tsGeneratorOnly ? 1 : (runtime.rangeLimits.year[rangeEnd] + 1);
