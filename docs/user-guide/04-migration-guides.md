@@ -24,6 +24,21 @@ Antares-Simulator will read hydro reservoir levels from mentioned files, data fr
 
 The number of time series for the reservoir levels must match the number of time series used for the other hydro components (run of river, minimum generation etc.), ensuring that scenarized reservoir level data is fully integrated within the same Scenario Builder framework as the rest of the hydro time series. However, number of hydro reservoir levels times series can indeed be 1 for each type, min, avg and max.
 
+
+#### Removed properties
+
+The following properties were removed from **settings/generaldata.ini**.
+
+- `refreshtimeseries`
+- `refreshintervalload`
+- `refreshintervalhydro`
+- `refreshintervalwind`
+- `refreshintervalthermal`
+- `refreshintervalsolar`
+
+If the user provides a value for key refreshtimeseries the simulation will fail with a warning. Values for the refresh intervals will be ignored.
+
+
 ## v9.2.0
 
 ### Input
@@ -66,6 +81,34 @@ the simulation will fail with a warning. We recommend removing these properties 
 It is possible to provide only k of these time-series, for k=0..5. However, if present each file must contain either no value (same behavior as no file), or HOURS_PER_YEAR = 8760 coefficients in one column. These timeseries are located along existing series (rule-curves.txt, etc.).
 
 Note that in order for time-series `cost-variation-injection.txt` and `cost-variation-withdrawal.txt` to be taken into account, the user needs to set `penalize-variation-injection = true` (resp. `penalize-variation-withdrawal = true`). If not, these files will be ignored.
+
+#### Short-term storages / additional constraints
+For each area, add optional file `input/st-storage/constraints/<area id>/additional-constraints.ini`
+
+For example
+```ini
+[withdrawal-1]
+cluster = cluster-11
+variable = withdrawal
+operator = equal
+hours = [1,3,5], [120,121,122,123,124,125,126,127,128]
+
+[netting-1]
+cluster = cluster-11
+variable = netting
+operator = less
+hours = [1, 168]
+```
+
+Possible values
+- `cluster`: ID of the short-term storage in the same area
+- `variable`: `withdrawal`, `injection`, `netting`
+- `operator`: `less`, `equal`, `greater`
+- `hours`: not empty, any number of lists `[h_1, ..., h_n]` with n>=1, and coefficients from 1 to 168 included.
+
+Note that all fields are mandatory.
+
+For each constraint, the corresponding RHS time-series must be located at `input/st-storage/constraints/<area id>/rhs_<constraint id>.txt`. The time-series must contain a single column and 8760 rows, empty files are also accepted.
 
 ####  Hydro final levels / scenario-builder
 

@@ -43,7 +43,7 @@ public:
     explicit TimeDependentLinearExpression(
       const Optimisation::LinearProblemApi::FillContext& fillContext,
       const LinearExpression& linearExpression);
-    explicit TimeDependentLinearExpression(const LinearExpressionMap& linearExpressions);
+    explicit TimeDependentLinearExpression(LinearExpressionMap linearExpressions);
 
     /// Sum two linear expressions
     TimeDependentLinearExpression operator+(const TimeDependentLinearExpression& other) const;

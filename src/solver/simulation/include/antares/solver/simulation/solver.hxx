@@ -284,10 +284,6 @@ void ISimulation<ImplementationType>::run()
         ImplementationType::variables.template provideInformations<Variable::PrintInfosStdCout>(c);
     }
 
-    // Preprocessors
-    // Determine if we have to use the preprocessors at least one time.
-    pData.initialize(study.parameters);
-
     ImplementationType::setNbPerformedYearsInParallel(pNbMaxPerformedYearsInParallel);
 
     if (settings.tsGeneratorsOnly)
@@ -297,10 +293,10 @@ void ISimulation<ImplementationType>::run()
         // in general data of the study.
         logs.info() << " Only the preprocessors are enabled.";
 
-        regenerateTimeSeries(0);
+        regenerateTimeSeries();
 
         // Destroy the TS Generators if any
-        // It will export the time-series into the output in the same time
+        // It will export the time-series into the output at the same time
         TSGenerator::DestroyAll(study);
     }
     else
@@ -407,64 +403,59 @@ void ISimulation<ImplementationType>::writeResults(bool synthesis, uint year, ui
 }
 
 template<class ImplementationType>
-void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
+void ISimulation<ImplementationType>::regenerateTimeSeries()
 {
     // A preprocessor can be launched for several reasons:
     // * The option "Preprocessor" is checked in the interface _and_ year == 0
     // * Both options "Preprocessor" and "Refresh" are checked in the interface
     //   _and_ the refresh must be done for the given year (always done for the first year).
     using namespace TSGenerator;
+
+    const Data::Parameters& p = study.parameters;
     // Load
-    if (pData.haveToRefreshTSLoad && (year % pData.refreshIntervalLoad == 0))
+    if (Data::timeSeriesLoad & p.timeSeriesToGenerate)
     {
         pDurationCollector("tsgen_load")
-          << [year, this] { GenerateTimeSeries<Data::timeSeriesLoad>(study, year, pResultWriter); };
+          << [this] { GenerateTimeSeries<Data::timeSeriesLoad>(study, pResultWriter); };
     }
     // Solar
-    if (pData.haveToRefreshTSSolar && (year % pData.refreshIntervalSolar == 0))
+    if (Data::timeSeriesSolar & p.timeSeriesToGenerate)
     {
-        pDurationCollector("tsgen_solar") << [year, this]
-        { GenerateTimeSeries<Data::timeSeriesSolar>(study, year, pResultWriter); };
+        pDurationCollector("tsgen_solar")
+          << [this] { GenerateTimeSeries<Data::timeSeriesSolar>(study, pResultWriter); };
     }
     // Wind
-    if (pData.haveToRefreshTSWind && (year % pData.refreshIntervalWind == 0))
+    if (Data::timeSeriesWind & p.timeSeriesToGenerate)
     {
         pDurationCollector("tsgen_wind")
-          << [year, this] { GenerateTimeSeries<Data::timeSeriesWind>(study, year, pResultWriter); };
+          << [this] { GenerateTimeSeries<Data::timeSeriesWind>(study, pResultWriter); };
     }
     // Hydro
-    if (pData.haveToRefreshTSHydro && (year % pData.refreshIntervalHydro == 0))
+    if (Data::timeSeriesHydro & p.timeSeriesToGenerate)
     {
-        pDurationCollector("tsgen_hydro") << [year, this]
-        { GenerateTimeSeries<Data::timeSeriesHydro>(study, year, pResultWriter); };
+        pDurationCollector("tsgen_hydro")
+          << [this] { GenerateTimeSeries<Data::timeSeriesHydro>(study, pResultWriter); };
     }
 
-    // Thermal
-    const bool refreshTSonCurrentYear = (year % pData.refreshIntervalThermal == 0);
-
-    pDurationCollector("tsgen_thermal") << [refreshTSonCurrentYear, year, this]
+    pDurationCollector("tsgen_thermal") << [this]
     {
-        if (refreshTSonCurrentYear)
+        bool globalThermalTSgeneration = study.parameters.timeSeriesToGenerate
+                                         & Data::timeSeriesThermal;
+        auto clusters = getAllClustersToGen(study.areas, globalThermalTSgeneration);
+        generateThermalTimeSeries(study, clusters, study.runtime.random[Data::seedTsGenThermal]);
+
+        bool archive = study.parameters.timeSeriesToArchive & Data::timeSeriesThermal;
+        bool doWeWrite = archive && !study.parameters.noOutput;
+        if (doWeWrite)
         {
-            auto clusters = getAllClustersToGen(study.areas, pData.haveToRefreshTSThermal);
-            generateThermalTimeSeries(study,
-                                      clusters,
-                                      study.runtime.random[Data::seedTsGenThermal]);
+            fs::path savePath = study.folderOutput / "ts-generator" / "thermal" / "mc-" / "0";
+            writeThermalTimeSeries(clusters, savePath);
+        }
 
-            bool archive = study.parameters.timeSeriesToArchive & Data::timeSeriesThermal;
-            bool doWeWrite = archive && !study.parameters.noOutput;
-            if (doWeWrite)
-            {
-                fs::path savePath = study.folderOutput / "ts-generator" / "thermal" / "mc-"
-                                    / std::to_string(year);
-                writeThermalTimeSeries(clusters, savePath);
-            }
-
-            // apply the spinning if we generated some in memory clusters
-            for (auto* cluster: clusters)
-            {
-                cluster->calculationOfSpinning();
-            }
+        // apply the spinning if we generated some in memory clusters
+        for (auto* cluster: clusters)
+        {
+            cluster->calculationOfSpinning();
         }
     };
 }
@@ -491,31 +482,10 @@ uint ISimulation<ImplementationType>::buildSetsOfParallelYears(
         unsigned int indexSpace = 999999;
         bool performCalculations = yearsFilter[y];
 
-        // Do we refresh just before this year ? If yes a new set of parallel years has to be
-        // created
-        bool refreshing = false;
-        refreshing = pData.haveToRefreshTSLoad && (y % pData.refreshIntervalLoad == 0);
-        refreshing = refreshing
-                     || (pData.haveToRefreshTSSolar && (y % pData.refreshIntervalSolar == 0));
-        refreshing = refreshing
-                     || (pData.haveToRefreshTSWind && (y % pData.refreshIntervalWind == 0));
-        refreshing = refreshing
-                     || (pData.haveToRefreshTSHydro && (y % pData.refreshIntervalHydro == 0));
-
-        // Some thermal clusters may override the global parameter.
-        // Therefore, we may want to refresh TS even if pData.haveToRefreshTSThermal == false
-        bool haveToRefreshTSThermal = pData.haveToRefreshTSThermal
-                                      || study.runtime.thermalTSRefresh;
-        refreshing = refreshing
-                     || (haveToRefreshTSThermal && (y % pData.refreshIntervalThermal == 0));
-
         // We build a new set of parallel years if one of these conditions is fulfilled :
-        //	- We have to refresh (or regenerate) some or all time series before running the
-        //    current year
         //	- This is the first year (to be executed or not) after the previous set is full with
         //    years to be executed. That is : in the previous set filled, the max number of
         //    years to be actually run is reached.
-        buildNewSet = buildNewSet || refreshing;
 
         if (buildNewSet)
         {
@@ -526,16 +496,6 @@ uint ISimulation<ImplementationType>::buildSetsOfParallelYears(
             // Initializations
             set->nbPerformedYears = 0;
             set->nbYears = 0;
-            set->regenerateTS = false;
-            set->yearForTSgeneration = 999999;
-
-            // In case we have to regenerate times series before run the current set of parallel
-            // years
-            if (refreshing)
-            {
-                set->regenerateTS = true;
-                set->yearForTSgeneration = y;
-            }
         }
 
         set->yearsIndices.push_back(y);
@@ -960,13 +920,11 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
 
     logs.info() << " Doing hydro validation";
 
+    regenerateTimeSeries();
+
     // Loop over sets of parallel years to check hydro inputs
     for (const auto& batch: setsOfParallelYears)
     {
-        if (batch.regenerateTS)
-        {
-            break;
-        }
         for (auto year: batch.yearsIndices)
         {
             hydroInputsChecker.Execute(year);
@@ -979,13 +937,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     // Loop over sets of parallel years to run the simulation
     for (auto& batch: setsOfParallelYears)
     {
-        // 1 - We may want to regenerate the time-series this year.
-        // This is the case when the preprocessors are enabled from the
-        // interface and/or the refresh is enabled.
-        if (batch.regenerateTS)
-        {
-            regenerateTimeSeries(batch.yearForTSgeneration);
-        }
         computeRandomNumbers(randomForParallelYears,
                              batch.yearsIndices,
                              batch.isYearPerformed,

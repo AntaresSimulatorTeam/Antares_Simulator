@@ -32,7 +32,7 @@ namespace Antares::Data
 {
 
 //! The maximum number of days in a year
-constexpr size_t dayYearCount = 366;
+constexpr size_t nbDaysInYear = 366;
 
 struct DailyDemand
 {
@@ -50,14 +50,12 @@ struct MonthlyGenerationTargetData
     double MOG = 0.;
     //! Monthly optimal level
     double MOL = 0.;
-    //! Monthly target generations
-    double MTG = 0.;
 };
 
 //!  Hydro Management Data for a given area
 struct TimeDependantHydroManagementData
 {
-    std::array<DailyDemand, dayYearCount> daily{0};
+    std::array<DailyDemand, nbDaysInYear> daily{0};
     std::array<MonthlyGenerationTargetData, 12> monthly{0};
 };
 
@@ -68,10 +66,8 @@ struct AreaDependantHydroManagementData
     std::array<double, 12> inflows{};
     //! monthly minimal generation
     std::array<double, 12> mingens{};
-
     //! daily minimal generation
-    std::array<double, dayYearCount> dailyMinGen{};
-
+    std::array<double, nbDaysInYear> dailyMinGen{};
     // Data for minGen<->inflows preChecks
     //! monthly total mingen
     std::array<double, 12> totalMonthMingen{};
@@ -81,7 +77,6 @@ struct AreaDependantHydroManagementData
     double totalYearMingen = 0;
     //! yearly total inflows
     double totalYearInflows = 0;
-
 }; // struct AreaDependantHydroManagementData
 
 /*!

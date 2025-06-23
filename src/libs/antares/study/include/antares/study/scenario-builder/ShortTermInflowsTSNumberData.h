@@ -51,7 +51,7 @@ public:
 
 private:
     std::map<const ShortTermStorage::STStorageCluster*, MatrixType> rules_;
-    const Area* pArea;
+    const Area* pArea{nullptr};
 };
 
 inline CString<512, false> ShortTermInflowsTSNumberData::get_prefix() const
