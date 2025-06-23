@@ -167,7 +167,7 @@ jobs:
           gh release upload --clobber continuous-delivery _build/*.tar.gz _build/*.rpm
 
       - name: Cache vcpkg binary dir
-        if: always()
+        if: ${{ !cancelled() }}
         id: save-cache-vcpkg-binary
         uses: actions/cache/save@v4
         with:

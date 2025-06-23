@@ -411,6 +411,7 @@ jobs:
         run: ccache -s
 
       - name: Save ccache cache
+        if: ${{ !cancelled() }}
         uses: actions/cache/save@v4
         with:
           path: ${{ github.workspace }}/.ccache_windows
