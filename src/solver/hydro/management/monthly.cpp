@@ -277,7 +277,6 @@ void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_rese
               {
                   areaMonthlyData[realmonth].MOG = data.inflows[realmonth];
                   areaMonthlyData[realmonth].MOL = ruleCurves[realmonth];
-
               }
           }
 

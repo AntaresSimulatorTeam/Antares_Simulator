@@ -438,7 +438,8 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_reservoir_levels_missing_max_file, Fixture)
 {
     bool ret = true;
 
-    study->parameters.compatibility.hydroRuleCurves = Parameters::Compatibility::HydroRuleCurves::Scenarized;
+    study->parameters.compatibility.hydroRuleCurves = Parameters::Compatibility::HydroRuleCurves::
+      Scenarized;
 
     auto& maxDailyRuleCurves = area_1->hydro.series->ruleCurves.max.timeSeries;
     auto& minDailyRuleCurves = area_1->hydro.series->ruleCurves.min.timeSeries;
@@ -476,7 +477,8 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_reservoir_levels_missing_min_file, Fixture)
 {
     bool ret = true;
 
-    study->parameters.compatibility.hydroRuleCurves = Parameters::Compatibility::HydroRuleCurves::Scenarized;
+    study->parameters.compatibility.hydroRuleCurves = Parameters::Compatibility::HydroRuleCurves::
+      Scenarized;
 
     auto& maxDailyRuleCurves = area_1->hydro.series->ruleCurves.max.timeSeries;
     auto& minDailyRuleCurves = area_1->hydro.series->ruleCurves.min.timeSeries;
@@ -514,7 +516,8 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_reservoir_levels_missing_avg_file, Fixture)
 {
     bool ret = true;
 
-    study->parameters.compatibility.hydroRuleCurves = Parameters::Compatibility::HydroRuleCurves::Scenarized;
+    study->parameters.compatibility.hydroRuleCurves = Parameters::Compatibility::HydroRuleCurves::
+      Scenarized;
 
     auto& maxDailyRuleCurves = area_1->hydro.series->ruleCurves.max.timeSeries;
     auto& minDailyRuleCurves = area_1->hydro.series->ruleCurves.min.timeSeries;
