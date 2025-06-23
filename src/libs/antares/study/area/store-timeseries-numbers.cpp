@@ -122,7 +122,8 @@ void singleAreaStoreTimeseriesNumbers<TimeSeriesType::timeSeriesShortTermInflows
 {
     for (auto& sts: area.shortTermStorage.storagesByIndex)
     {
-        storeTSnumbers(writer, sts.series->inflowsTSNumbers, sts.id, "inflows");
+        const auto area_sts = fs::path("st-storage") / area.id.c_str() / sts.id;
+        storeTSnumbers(writer, sts.series->inflowsTSNumbers, "inflows", area_sts.string());
     }
 }
 
@@ -135,7 +136,8 @@ void singleAreaStoreTimeseriesNumbers<TimeSeriesType::timeSeriesShortTermAdditio
     {
         for (auto& ct: sts.additionalConstraints)
         {
-            storeTSnumbers(writer, ct->timeseriesNumbers, ct->name, "additionalConstraints");
+            const auto area_sts = fs::path("st-storage") / area.id.c_str() / sts.id;
+            storeTSnumbers(writer, ct->timeseriesNumbers, ct->name, area_sts.string());
         }
     }
 }
