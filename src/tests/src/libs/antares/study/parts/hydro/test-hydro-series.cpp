@@ -50,10 +50,14 @@ struct Fixture
     {
         // Create studies
         study = std::make_shared<Study>(true);
+        study_UI = std::make_shared<Study>(false);
 
         // Add areas to studies
         area_1 = study->areaAdd("Area1");
         study->areas.rebuildIndexes();
+
+        area_2 = study_UI->areaAdd("Area2");
+        study_UI->areas.rebuildIndexes();
 
         // Create necessary folders and files for these two areas
         createFoldersAndFiles();
@@ -88,6 +92,10 @@ struct Fixture
         pathToReservoirLevels_file.clear();
         pathToReservoirLevels_file = base_folder + SEP + common_folder + SEP + capacity_folder + SEP
                                      + "reservoir_" + area_1->id + ".txt";
+
+        pathToReservoirLevels_file_area2.clear();
+        pathToReservoirLevels_file_area2 = base_folder + SEP + common_folder + SEP + capacity_folder
+                                           + SEP + "reservoir_" + area_2->id + ".txt";
 
         pathToSeriesFolder.clear();
         pathToSeriesFolder = base_folder + SEP + series_folder;
@@ -128,11 +136,15 @@ struct Fixture
         buffer.clear();
         buffer = base_folder + SEP + common_folder + SEP + capacity_folder;
         std::string file_name = "reservoir_" + area_1->id + ".txt";
+        std::string file_name_area2 = "reservoir_" + area_2->id + ".txt";
         createFile(buffer, file_name);
+        createFile(buffer, file_name_area2);
     }
 
     std::shared_ptr<Study> study;
     Area* area_1;
+    std::shared_ptr<Study> study_UI;
+    Area* area_2;
     std::string base_folder = fs::temp_directory_path().string();
     std::string series_folder = "series";
     std::string common_folder = "common";
@@ -148,6 +160,7 @@ struct Fixture
     std::string pathToMinDailyReservoirLevels_file;
     std::string pathToAvgDailyReservoirLevels_file;
     std::string pathToReservoirLevels_file;
+    std::string pathToReservoirLevels_file_area2;
     std::string pathToCommonCapacityFolder;
     std::string pathToSeriesFolder;
 
@@ -419,6 +432,44 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_reservoir_levels_from_common_capacity_folde
     BOOST_CHECK(maxDailyRuleCurves[0][0] == 0.9 && maxDailyRuleCurves[0][DAYS_PER_YEAR - 1] == 0.8);
     BOOST_CHECK(avgDailyRuleCurves[0][0] == 0.5 && avgDailyRuleCurves[0][DAYS_PER_YEAR - 1] == 0.6);
     BOOST_CHECK(minDailyRuleCurves[0][0] == 0.1 && minDailyRuleCurves[0][DAYS_PER_YEAR - 1] == 0.2);
+}
+
+BOOST_FIXTURE_TEST_CASE(Testing_load_reservoir_levels_from_common_capacity_folder_UI, Fixture)
+{
+    bool ret = true;
+
+    study_UI->parameters.compatibility.hydroRuleCurves = Parameters::Compatibility::
+      HydroRuleCurves::Single;
+
+    auto& ruleCurves = area_2->hydro.series->ruleCurves.standardRuleCurvesGUI;
+
+    ruleCurves.reset(3, DAYS_PER_YEAR, true);
+
+    ruleCurves.fillColumn(RuleCurves::maximum, 1.);
+    ruleCurves.fillColumn(RuleCurves::average, 0.5);
+
+    ruleCurves[RuleCurves::maximum][0] = 0.9;
+    ruleCurves[RuleCurves::maximum][DAYS_PER_YEAR - 1] = 0.8;
+
+    ruleCurves[RuleCurves::average][0] = 0.5;
+    ruleCurves[RuleCurves::average][DAYS_PER_YEAR - 1] = 0.6;
+
+    ruleCurves[RuleCurves::minimum][0] = 0.1;
+    ruleCurves[RuleCurves::minimum][DAYS_PER_YEAR - 1] = 0.2;
+
+    ret = ruleCurves.saveToCSVFile(pathToReservoirLevels_file_area2, 2) && ret;
+
+    ruleCurves.reset(3, DAYS_PER_YEAR, true);
+
+    RuleCurvesLoaderService ruleCurvesLoaderService(area_2->hydro.series->ruleCurves);
+
+    ret = ruleCurvesLoaderService.LoadFromFolder(area_2->id,
+                                                 base_folder,
+                                                 study_UI->usedByTheSolver,
+                                                 study_UI->parameters.compatibility.hydroRuleCurves)
+          && ret;
+
+    BOOST_CHECK(ret);
 }
 
 BOOST_FIXTURE_TEST_CASE(Testing_load_reservoir_levels_invalid_mode, Fixture)
