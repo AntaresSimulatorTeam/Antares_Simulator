@@ -142,6 +142,7 @@ BOOST_AUTO_TEST_CASE(BC_timeseries_numbers_store_values)
     BOOST_CHECK_EQUAL(tsNumbers[0] + 1, out[0][0]);
     BOOST_CHECK_EQUAL(tsNumbers[1] + 1, out[0][1]);
 }
+
 BOOST_AUTO_TEST_CASE(sts_area_cluster_inflow_timeseries_numbers_store_values)
 {
     auto study = std::make_shared<Study>();
