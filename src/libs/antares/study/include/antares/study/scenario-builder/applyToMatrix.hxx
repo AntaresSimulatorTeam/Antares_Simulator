@@ -73,24 +73,6 @@ inline bool CheckValidity<BindingConstraintGroup>(uint value,
     return value < group.numberOfTimeseries();
 }
 
-template<>
-inline bool CheckValidity<ShortTermStorage::STStorageCluster>(
-  uint value,
-  const ShortTermStorage::STStorageCluster& sts,
-  uint)
-{
-    return value < sts.series->inflows.numberOfColumns();
-}
-
-template<>
-inline bool CheckValidity<ShortTermStorage::AdditionalConstraints>(
-  uint value,
-  const ShortTermStorage::AdditionalConstraints& ct,
-  uint)
-{
-    return value < ct.timeSeries.numberOfColumns();
-}
-
 template<class StringT, class D>
 bool ApplyToMatrix(uint& errors,
                    StringT& logprefix,
