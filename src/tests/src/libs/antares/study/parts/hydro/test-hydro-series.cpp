@@ -554,32 +554,32 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_reservoir_levels_missing_avg_file, Fixture)
 BOOST_FIXTURE_TEST_CASE(Testing_load_reservoir_levels_missing_reservoir_file, Fixture)
 {
     bool ret = true;
- 
+
     study->parameters.compatibility.hydroRuleCurves = Parameters::Compatibility::HydroRuleCurves::
       Single;
- 
+
     auto& ruleCurves = area_1->hydro.series->ruleCurves.standardRuleCurvesGUI;
- 
+
     ruleCurves.reset(3, DAYS_PER_YEAR, true);
- 
+
     ruleCurves.fillColumn(RuleCurves::maximum, 1.);
     ruleCurves.fillColumn(RuleCurves::average, 0.5);
     ruleCurves[RuleCurves::minimum][0] = 0.1;
- 
+
     ret = ruleCurves.saveToCSVFile(pathToReservoirLevels_file, 2) && ret;
- 
+
     fs::remove(pathToReservoirLevels_file);
- 
+
     ruleCurves.reset(3, DAYS_PER_YEAR, true);
- 
+
     RuleCurvesLoaderService ruleCurvesLoaderService(area_1->hydro.series->ruleCurves);
- 
+
     ret = ruleCurvesLoaderService.LoadFromFolder(area_1->id,
                                                  base_folder,
                                                  study->usedByTheSolver,
                                                  study->parameters.compatibility.hydroRuleCurves)
           && ret;
- 
+
     BOOST_CHECK(!ret);
 }
 
