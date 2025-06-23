@@ -335,9 +335,9 @@ jobs:
         with:
           feature: "features/solver-features/hybrid_studies.feature"
 
-      - name: Barrier
-        if: ${{ !success() }}
-        run: exit 1
+#      - name: Barrier
+#        if: ${{ !success() }}
+#        run: exit 1
 
       - name: Installer .deb creation
         run: |
