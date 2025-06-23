@@ -57,10 +57,6 @@ StudyVersion legacyVersionIntToVersion(unsigned version)
     // The list should remain ordered in the reverse order for performance reasons
     switch (version)
     {
-    case 910:
-        return StudyVersion(9, 1);
-    case 900:
-        return StudyVersion(9, 0);
     case 880:
         return StudyVersion(8, 8);
     case 870:
