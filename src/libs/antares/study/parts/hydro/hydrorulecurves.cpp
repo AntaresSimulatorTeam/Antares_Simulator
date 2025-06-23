@@ -75,13 +75,10 @@ void RuleCurves::markAsModified() const
 
 bool RuleCurves::saveToFolder(const std::string& areaID, const std::string& folder) const
 {
-    bool ret = true;
     std::string buffer;
     buffer = folder + "/" + "common" + "/" + "capacity" + "/" + "reservoir_" + areaID + ".txt";
 
-    ret = standardRuleCurvesGUI.saveToCSVFile(buffer, /*decimal*/ 3) && ret;
-
-    return ret;
+    return standardRuleCurvesGUI.saveToCSVFile(buffer, /*decimal*/ 3);
 }
 
 void RuleCurves::averageTimeSeries()
@@ -99,11 +96,11 @@ bool ScenarizedRuleCurvesLoader::load()
     bool ret = true;
 
     fs::path filePath = path / "maxDailyReservoirLevels.txt";
-    ret = max_.timeSeries.loadFromCSVFile(filePath.string(), 1, DAYS_PER_YEAR, &fileContent) && ret;
+    ret &= max_.timeSeries.loadFromCSVFile(filePath.string(), 1, DAYS_PER_YEAR, &fileContent);
     filePath = path / "minDailyReservoirLevels.txt";
-    ret = min_.timeSeries.loadFromCSVFile(filePath.string(), 1, DAYS_PER_YEAR, &fileContent) && ret;
+    ret &= min_.timeSeries.loadFromCSVFile(filePath.string(), 1, DAYS_PER_YEAR, &fileContent);
     filePath = path / "avgDailyReservoirLevels.txt";
-    ret = avg_.timeSeries.loadFromCSVFile(filePath.string(), 1, DAYS_PER_YEAR, &fileContent) && ret;
+    ret &= avg_.timeSeries.loadFromCSVFile(filePath.string(), 1, DAYS_PER_YEAR, &fileContent);
 
     return ret;
 }
@@ -119,8 +116,8 @@ bool StandardRuleCurvesLoader::load()
                                                        3,
                                                        DAYS_PER_YEAR,
                                                        Matrix<>::optFixedSize,
-                                                       &fileContent)
-          && ret;
+                                                       &fileContent);
+
     copyRuleCurvesFromBuffer();
 
     return ret;
@@ -191,8 +188,7 @@ bool RuleCurvesLoaderService::LoadFromFolder(
                                                                 3,
                                                                 DAYS_PER_YEAR,
                                                                 Matrix<>::optFixedSize,
-                                                                &fileContent)
-              && ret;
+                                                                &fileContent);
 
         if (enabledModeIsChanged)
         {
@@ -208,7 +204,7 @@ bool RuleCurvesLoaderService::LoadFromFolder(
                                              ruleCurves_.max,
                                              ruleCurves_.avg,
                                              ruleCurves_.min);
-        ret = loader->load() && ret;
+        ret = loader->load();
     }
     return ret;
 }
