@@ -108,22 +108,7 @@ bool HydroInputsChecker::checkRuleCurves(uint year)
           const auto& avgRuleCurves = area.hydro.series->ruleCurves.avg.getColumn(year);
           const auto& maxRuleCurves = area.hydro.series->ruleCurves.max.getColumn(year);
 
-          const auto& tsIndexMin = area.hydro.series->ruleCurves.min.getSeriesIndex(year);
-          const auto& tsIndexAvg = area.hydro.series->ruleCurves.avg.getSeriesIndex(year);
-          const auto& tsIndexMax = area.hydro.series->ruleCurves.max.getSeriesIndex(year);
-
-          uint32_t tsIndex = 0;
-
-          if ((tsIndexMin == tsIndexAvg) && (tsIndexAvg == tsIndexMax))
-          {
-              tsIndex = tsIndexMin;
-          }
-          else
-          {
-              errorCollector_(area.name)
-                << "Reservoir levels Time-Series indexes in area: " << area.id
-                << " for year: " << year << " are not equal. Something went wrong!";
-          }
+          const auto& tsIndex = area.hydro.series->ruleCurves.timeseriesNumbers[year];
 
           for (unsigned int day = 0; day < DAYS_PER_YEAR; day++)
           {
