@@ -44,11 +44,11 @@ RuleCurves::RuleCurves(TimeSeriesNumbers& timeseriesNumbers):
     timeseriesNumbers.registerSeries(&min, "min-reservoir-level");
     timeseriesNumbers.registerSeries(&avg, "avg-reservoir-level");
 
-    max.reset(1L, DAYS_PER_YEAR);
+    max.reset(1U, DAYS_PER_YEAR);
     max.fill(1.0);
-    avg.reset(1L, DAYS_PER_YEAR);
+    avg.reset(1U, DAYS_PER_YEAR);
     avg.fill(0.5);
-    min.reset(1L, DAYS_PER_YEAR);
+    min.reset(1U, DAYS_PER_YEAR);
     standardRuleCurvesGUI.reset(3L, DAYS_PER_YEAR, true);
     standardRuleCurvesGUI.fillColumn(RuleCurves::maximum, 1.);
     standardRuleCurvesGUI.fillColumn(RuleCurves::average, 0.5);
