@@ -33,10 +33,7 @@ class output_compare(check_interface):
 
         tolerance = self.tol
         if (ref_simulation_folder.parent.parent.parent.parent.name == "valid-parallel" and sys.platform == "win32"):
-            tolerance.RTOL = {}
-            tolerance.ATOL = {}
-            tolerance.default_abs_tol = 2
-            tolerance.default_rel_tol = 2
+            tolerance.reset_with_loose_default()
 
         # Folder of results (of which content is compared to content of reference folder)
         # ... of form yyyymmdd-hhmm<mode> (ex : 20230105-0944eco)
