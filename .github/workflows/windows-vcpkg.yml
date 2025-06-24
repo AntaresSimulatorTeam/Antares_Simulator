@@ -57,7 +57,15 @@ jobs:
           echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_windows-latest_static_sirius_Release.zip" >> $GITHUB_ENV
         shell: bash
 
+      - name: "Cache chocolatey and installed utilities"
+        uses: actions/cache@v4
+        id: chococache
+        with:
+          path: C:\ProgramData\chocolatey
+          key: chocolatey-cache
+
       - name: Pre-requisites
+        if: steps.chococache.outputs.cache-hit != 'true'
         shell: cmd
         run: |
           choco install wget unzip zip --no-progress
