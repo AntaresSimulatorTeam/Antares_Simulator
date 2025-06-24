@@ -57,7 +57,15 @@ jobs:
           echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_windows-latest_static_sirius_Release.zip" >> $GITHUB_ENV
         shell: bash
 
+      - name: "Cache chocolatey and installed utilities"
+        uses: actions/cache@v4
+        id: chococache
+        with:
+          path: C:\ProgramData\chocolatey
+          key: chocolatey-cache
+
       - name: Pre-requisites
+        if: steps.chococache.outputs.cache-hit != 'true'
         shell: cmd
         run: |
           choco install wget unzip zip --no-progress
@@ -68,10 +76,12 @@ jobs:
       - name: Install ccache
         shell: bash
         run: |
-          wget https://github.com/ccache/ccache/releases/download/v4.8.3/ccache-4.8.3-windows-x86_64.zip -O ccache.zip
+          ccacheVersion=4.11.3
+          ccacheFile=ccache-$ccacheVersion-windows-x86_64
+          wget https://github.com/ccache/ccache/releases/download/v$ccacheVersion/$ccacheFile.zip -O ccache.zip
           unzip ccache.zip
           rm ccache.zip
-          mv ccache-4.8.3-windows-x86_64 ccache
+          mv $ccacheFile ccache
           cp ccache/ccache.exe ccache/cl.exe
           echo "${GITHUB_WORKSPACE}/ccache" >> $GITHUB_PATH
 
@@ -79,14 +89,14 @@ jobs:
       - name: Restore ccache cache
         uses: actions/cache/restore@v4
         with:
-          path: ${{ github.workspace }}/.ccache
-          key: ${{ env.os }}-${{ github.sha }}
+          path: ${{ github.workspace }}/.ccache_windows
+          key: ${{ env.os }}-${{ github.ref_name }}
           restore-keys: |
             ${{ env.os }}-  
 
       - name: Configure ccache
         run: |
-          ccache --set-config=cache_dir=${{ github.workspace }}/.ccache
+          ccache --set-config=cache_dir=${{ github.workspace }}/.ccache_windows
           ccache --set-config=max_size=500M
           ccache --set-config=compression=true
           ccache -p
@@ -409,7 +419,8 @@ jobs:
         run: ccache -s
 
       - name: Save ccache cache
+        if: ${{ !cancelled() }}
         uses: actions/cache/save@v4
         with:
-          path: ${{ github.workspace }}/.ccache
-          key: ${{ env.os }}-${{ github.sha }}
+          path: ${{ github.workspace }}/.ccache_windows
+          key: ${{ env.os }}-${{ github.ref_name }}

@@ -171,10 +171,11 @@ static double calcTurbineMaxForMonth(unsigned simulationMonth,
     return turbine;
 }
 
-void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_reservoir_level,
-                                                       uint y,
-                                                       Antares::Data::Area::ScratchMap& scratchmap,
-                                                       HydroSpecificMap& hydro_specific_map)
+void HydroManagement::prepareMonthlyOptimalGenerations(
+  const std::vector<double>& random_reservoir_level,
+  uint y,
+  Antares::Data::Area::ScratchMap& scratchmap,
+  HydroSpecificMap& hydro_specific_map)
 {
     uint indexArea = 0;
     areas_.each(

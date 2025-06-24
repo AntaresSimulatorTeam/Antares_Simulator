@@ -103,7 +103,7 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: ${{ github.workspace }}/.ccache
-          key: centos7-on-${{ runner.os }}-${{ github.sha }}
+          key: centos7-on-${{ runner.os }}-${{ github.ref_name }}
           restore-keys: |
             centos7-on-${{ runner.os }}-   
 
@@ -175,5 +175,5 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: ${{ github.workspace }}/.ccache
-          key: centos7-on-${{ runner.os }}-${{ github.sha }}
+          key: centos7-on-${{ runner.os }}-${{ github.ref_name }}
 
