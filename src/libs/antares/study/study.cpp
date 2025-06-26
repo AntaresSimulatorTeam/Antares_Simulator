@@ -840,24 +840,9 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
     return ret;
 }
 
-void Study::destroyAllLoadTSGeneratorData()
+bool Study::readonly() const
 {
-    areas.each([](Data::Area& area) { area.load.prepro.reset(); });
-}
-
-void Study::destroyAllSolarTSGeneratorData()
-{
-    areas.each([](Data::Area& area) { area.solar.prepro.reset(); });
-}
-
-void Study::destroyAllHydroTSGeneratorData()
-{
-    areas.each([](Data::Area& area) { area.hydro.prepro.reset(); });
-}
-
-void Study::destroyAllWindTSGeneratorData()
-{
-    areas.each([](Data::Area& area) { area.wind.prepro.reset(); });
+    return (parameters.readonly);
 }
 
 void Study::ensureDataAreLoadedForAllBindingConstraints()
@@ -869,6 +854,31 @@ void Study::ensureDataAreLoadedForAllBindingConstraints()
             constraint->forceReload(true);
         }
     }
+}
+
+template<>
+inline void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesLoad>()
+
+{
+    areas.each([](Data::Area& area) { area.load.prepro.reset(); });
+}
+
+template<>
+inline void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesSolar>()
+{
+    areas.each([](Data::Area& area) { area.solar.prepro.reset(); });
+}
+
+template<>
+inline void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesWind>()
+{
+    areas.each([](Data::Area& area) { area.wind.prepro.reset(); });
+}
+
+template<>
+inline void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesHydro>()
+{
+    areas.each([](Data::Area& area) { area.hydro.prepro.reset(); });
 }
 
 void Study::initializeProgressMeter(bool tsGeneratorOnly)
