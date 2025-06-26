@@ -335,6 +335,7 @@ public:
     ** \brief Initialize the progress meter
     */
     void initializeProgressMeter(bool tsGeneratorOnly);
+
     //@}
 
     //! \name Time-series Generators
