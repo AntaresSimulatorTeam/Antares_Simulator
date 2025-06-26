@@ -120,7 +120,7 @@ void singleAreaStoreTimeseriesNumbers<TimeSeriesType::timeSeriesShortTermInflows
   Solver::IResultWriter& writer,
   const Area& area)
 {
-    for (auto& sts: area.shortTermStorage.storagesByIndex)
+    for (const auto& sts: area.shortTermStorage.storagesByIndex)
     {
         const auto area_sts = fs::path("st-storage") / area.id.c_str() / sts.id;
         storeTSnumbers(writer, sts.series->inflowsTSNumbers, "inflows", area_sts.string());
@@ -132,9 +132,9 @@ void singleAreaStoreTimeseriesNumbers<TimeSeriesType::timeSeriesShortTermAdditio
   Solver::IResultWriter& writer,
   const Area& area)
 {
-    for (auto& sts: area.shortTermStorage.storagesByIndex)
+    for (const auto& sts: area.shortTermStorage.storagesByIndex)
     {
-        for (auto& ct: sts.additionalConstraints)
+        for (const auto& ct: sts.additionalConstraints)
         {
             const auto area_sts = fs::path("st-storage") / area.id.c_str() / sts.id;
             storeTSnumbers(writer, ct->timeseriesNumbers, ct->name, area_sts.string());
