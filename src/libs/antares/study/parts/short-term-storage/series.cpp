@@ -49,7 +49,8 @@ bool Series::loadFromFolder(const fs::path& folder, StudyVersion studyVersion)
 
     if (auto path = folder / "inflows.txt"; std::filesystem::exists(path))
     {
-        ret = inflows.loadFromFile(path, false) && ret;
+        unsigned options = Matrix<double>::Options::optImmediate;
+        ret = inflows.loadFromFile(path, false, options) && ret;
     }
     else
     {

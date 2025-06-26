@@ -75,6 +75,7 @@ public:
      ** \return A non-zero value if the operation succeeded, 0 otherwise
      */
     bool loadFromFile(const std::filesystem::path& path, const bool average);
+    bool loadFromFile(const std::filesystem::path& path, const bool average, uint options);
     /*!
      ** \brief Save time series to a file
      **
