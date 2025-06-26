@@ -220,7 +220,6 @@ set(SRC_STUDY
         runtime/runtime.cpp
         include/antares/study/runtime.h
         include/antares/study/study.h
-        include/antares/study/study.hxx
         include/antares/study/fwd.h
         fwd.cpp
         include/antares/study/study.h

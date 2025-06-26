@@ -283,6 +283,7 @@ public:
     ** \brief Get if the study is in readonly mode
     */
     bool readonly() const;
+
     //@}
 
     //! \name Time-series
@@ -674,7 +675,5 @@ std::filesystem::path StudyCreateOutputPath(SimulationMode mode,
                                             const std::string& label,
                                             const std::tm& startTime);
 } // namespace Antares::Data
-
-#include "study.hxx"
 
 #endif /* __ANTARES_LIBS_STUDY_STUDY_H__ */
