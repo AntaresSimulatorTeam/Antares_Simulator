@@ -27,7 +27,6 @@ var dir_5e4647cf74155fd57847988678b744d8 =
     [ "sets.h", "libs_2antares_2study_2include_2antares_2study_2sets_8h_source.html", null ],
     [ "simulation.h", "libs_2antares_2study_2include_2antares_2study_2simulation_8h_source.html", null ],
     [ "study.h", "libs_2antares_2study_2include_2antares_2study_2study_8h_source.html", null ],
-    [ "study.hxx", "study_8hxx_source.html", null ],
     [ "ui-runtimeinfos.h", "ui-runtimeinfos_8h_source.html", null ],
     [ "UnfeasibleProblemBehavior.hpp", "UnfeasibleProblemBehavior_8hpp_source.html", null ],
     [ "variable-print-info.h", "variable-print-info_8h_source.html", null ],

@@ -155,26 +155,29 @@ $(document).ready(function(){initNavTree('store-timeseries-numbers_8h_source.htm
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">namespace </span>Antares::Data</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;{</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">template</span>&lt;<span class="keywordtype">int</span> TimeSeriesT&gt;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">template</span>&lt;TimeSeriesType TimeSeriesT&gt;</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keywordtype">void</span> singleAreaStoreTimeseriesNumbers(<a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; writer, <span class="keyword">const</span> Area&amp; area);</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">template</span>&lt;<span class="keywordtype">int</span> TimeSeriesT&gt;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keywordtype">void</span> storeTimeseriesNumbers(<a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; writer, <span class="keyword">const</span> AreaList&amp; area);</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">// Store time-series numbers</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keywordtype">void</span> storeTimeseriesNumbersForLoad(<a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; writer, <span class="keyword">const</span> Area&amp; area);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keywordtype">void</span> storeTimeseriesNumbersForSolar(<a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; writer, <span class="keyword">const</span> Area&amp; area);</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keywordtype">void</span> storeTimeseriesNumbersForWind(<a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; writer, <span class="keyword">const</span> Area&amp; area);</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keywordtype">void</span> storeTimeseriesNumbersForHydro(<a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; writer, <span class="keyword">const</span> Area&amp; area);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keywordtype">void</span> storeTimeseriesNumbersForThermal(<a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; writer, <span class="keyword">const</span> Area&amp; area);</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keywordtype">void</span> storeTimeseriesNumbersForRenewable(<a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; writer, <span class="keyword">const</span> Area&amp; area);</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keywordtype">void</span> storeTimeseriesNumbersForTransmissionCapacities(<a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; writer,</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;                                                     <span class="keyword">const</span> Area&amp; area);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keywordtype">void</span> storeTimeseriesNumbersForHydroMaxPower(<a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; writer, <span class="keyword">const</span> Area&amp; area);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;} <span class="comment">// namespace Antares::Data</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#include &quot;store-timeseries-numbers.hxx&quot;</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">template</span>&lt;TimeSeriesType TimeSeriesT&gt;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keywordtype">void</span> storeTimeseriesNumbers(<a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; writer, <span class="keyword">const</span> AreaList&amp; area)</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;{</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="comment">// Each area in the list</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    area.each([&amp;writer](<span class="keyword">const</span> Area&amp; a)</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;              { singleAreaStoreTimeseriesNumbers&lt;TimeSeriesT&gt;(writer, a); });</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;}</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">// Store time-series numbers</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keywordtype">void</span> storeTimeseriesNumbersForLoad(<a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; writer, <span class="keyword">const</span> Area&amp; area);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keywordtype">void</span> storeTimeseriesNumbersForSolar(<a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; writer, <span class="keyword">const</span> Area&amp; area);</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keywordtype">void</span> storeTimeseriesNumbersForWind(<a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; writer, <span class="keyword">const</span> Area&amp; area);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keywordtype">void</span> storeTimeseriesNumbersForHydro(<a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; writer, <span class="keyword">const</span> Area&amp; area);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keywordtype">void</span> storeTimeseriesNumbersForThermal(<a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; writer, <span class="keyword">const</span> Area&amp; area);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keywordtype">void</span> storeTimeseriesNumbersForRenewable(<a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; writer, <span class="keyword">const</span> Area&amp; area);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keywordtype">void</span> storeTimeseriesNumbersForTransmissionCapacities(<a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; writer,</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;                                                     <span class="keyword">const</span> Area&amp; area);</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keywordtype">void</span> storeTimeseriesNumbersForHydroMaxPower(<a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; writer, <span class="keyword">const</span> Area&amp; area);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;} <span class="comment">// namespace Antares::Data</span></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1IResultWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a></div><div class="ttdef"><b>Definition:</b> i_writer.h:34</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
