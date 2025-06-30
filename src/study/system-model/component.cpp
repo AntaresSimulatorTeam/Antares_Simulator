@@ -83,7 +83,7 @@ std::vector<ConnectionEnd> Component::componentConnectionsViaPort(const std::str
 const Node* Component::nodeAtPortField(const std::string& portId, const std::string& fieldId) const
 {
     PortFieldKey key(portId, fieldId);
-    return getModel()->PortFieldDefinitions().at(key).Definition().RootNode();
+    return nullptr;
 }
 
 void Component::addAreaConnection(const std::string& localPortId, const std::string& areaId)
