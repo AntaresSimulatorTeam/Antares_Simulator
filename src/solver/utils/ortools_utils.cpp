@@ -44,10 +44,11 @@ double getObjectiveValue(const MPSolver* solver)
 {
     double ret = 0;
     const auto& objective = solver->Objective();
-    for (auto* variable: solver->variables())
+    for (const auto* variable: solver->variables())
     {
         ret += variable->solution_value() * objective.GetCoefficient(variable);
     }
+    ret += objective.offset();
     return ret;
 }
 
