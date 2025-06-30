@@ -90,9 +90,8 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: ${{ github.workspace }}/.ccache_windows
-          key: ${{ env.os }}-${{ github.ref_name }}
-          restore-keys: |
-            ${{ env.os }}-  
+          key: notfound
+          restore-keys: notfound
 
       - name: Configure ccache
         run: |
