@@ -10,7 +10,7 @@ if (NOT WIN32)
 	set(COMMON_GCC_FLAGS "${COMMON_GCC_FLAGS} -pipe -msse -msse2 -Wunused-but-set-variable -Wunused-but-set-parameter")
 	set(COMMON_GCC_FLAGS "${COMMON_GCC_FLAGS} -Werror=return-type")
 endif()
-set(COMMON_MSVC_FLAGS "/W3 /MP4 /Od /EHsc")
+set(COMMON_MSVC_FLAGS "/W3 /MP4")
 set(COMMON_MSVC_FLAGS "${COMMON_MSVC_FLAGS} /we4715 /we4716") #adding no return or no return for all code paths as errors
 set(ADDITIONAL_C_FLAGS " -Wconversion -Wmissing-prototypes -Wstrict-prototypes")
 set(ADDITIONAL_C_FLAGS "${ADDITIONAL_C_FLAGS} -Wmissing-noreturn -Wpacked -Wredundant-decls -Wbad-function-cast -W -Wcast-align -Wcast-qual -Wsign-compare -fno-exceptions -Wdeclaration-after-statement")
@@ -116,6 +116,26 @@ if(MSVC)
 
 	# RELEASE
 	set(CMAKE_EXE_LINKER_FLAGS_RELEASE)
+	set(MSVC_RELEASE_FLAGS)
+	# O2x: optimization
+	set(MSVC_RELEASE_FLAGS "${MSVC_RELEASE_FLAGS} /O2")
+	# Prefer speed instead of size
+	set(MSVC_RELEASE_FLAGS "${MSVC_RELEASE_FLAGS} /Ot")
+	# Omit frame pointer
+	set(MSVC_RELEASE_FLAGS "${MSVC_RELEASE_FLAGS} /Oy")
+	# Any suitable inlining
+	set(MSVC_RELEASE_FLAGS "${MSVC_RELEASE_FLAGS} /Ob2")
+	# Fiber-safe optimizations
+	set(MSVC_RELEASE_FLAGS "${MSVC_RELEASE_FLAGS} /GT")
+	# whole program / requires "Link time code generation"
+	#set(MSVC_RELEASE_FLAGS "${MSVC_RELEASE_FLAGS} /GL")
+	# No buffer security check
+	set(MSVC_RELEASE_FLAGS "${MSVC_RELEASE_FLAGS} /GS-")
+	# Intrinsic functions
+	set(MSVC_RELEASE_FLAGS "${MSVC_RELEASE_FLAGS} /Oi")
+	# C runtime library
+	set(MSVC_RELEASE_FLAGS "${MSVC_RELEASE_FLAGS} ${CRT_LIBRARY_RELEASE}")
+
 
 	# linker: Link time code generation
 	#set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /LTCG")
@@ -123,12 +143,17 @@ if(MSVC)
 		#message(STATUS "{antares} using 64bits architecture")
 		set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /MACHINE:X64")
 		set(CMAKE_EXE_LINKER_FLAGS_DEBUG   "${CMAKE_EXE_LINKER_FLAGS_DEBUG} /MACHINE:X64")
+	else()
+		# SSE2
+		set(MSVC_RELEASE_FLAGS "${MSVC_RELEASE_FLAGS} /arch:SSE2")
 	endif()
 	# Release
 	set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /RELEASE")
 	# Remove symbols
 	set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /OPT:REF")
 
+	set(CMAKE_CXX_FLAGS_RELEASE "${MSVC_RELEASE_FLAGS} /EHsc")
+	set(CMAKE_C_FLAGS_RELEASE "${MSVC_RELEASE_FLAGS} /EHsc")
 
 
 	#SET(CMAKE_EXE_LINKER_FLAGS_DEBUG   "/debug /VERSION:${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}")
