@@ -104,7 +104,9 @@ TimeSeries::TimeSeries(TimeSeriesNumbers& tsNumbers):
 {
 }
 
-bool TimeSeries::loadFromFile(const std::filesystem::path& path, const bool average, unsigned options)
+bool TimeSeries::loadFromFile(const std::filesystem::path& path,
+                              const bool average,
+                              unsigned options)
 {
     bool ret = true;
     Matrix<>::BufferType dataBuffer;
