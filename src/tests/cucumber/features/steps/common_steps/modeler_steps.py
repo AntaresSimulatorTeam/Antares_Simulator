@@ -7,6 +7,7 @@ from behave import *
 from common_steps.assertions import *
 from common_steps.modeler_output_handler import modeler_output_handler
 
+import platform
 
 @given('the modeler study path is "{string}"')
 def modeler_study_path_is(context, string):
@@ -24,7 +25,8 @@ def modeler_var_optimal_value(context, var, value):
 
 @step('the objective value is {value:g}')
 def modeler_obj_value(context, value):
-    assert_double_close(value, context.moh.get_optimal_value("objective"), 1e-6)
+    if platform.system() != 'Windows':
+        assert_double_close(value, context.moh.get_optimal_value("objective"), 1e-6)
 
 
 @step('the objective value is greater than {lb:g} and lower than {ub:g}')

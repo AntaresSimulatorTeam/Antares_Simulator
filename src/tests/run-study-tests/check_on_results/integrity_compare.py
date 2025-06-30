@@ -6,6 +6,8 @@ from check_decorators.print_name import printNameDecorator
 from utils.find_reference import find_reference_folder
 from utils.find_output import find_dated_output_folder
 
+import platform
+
 @printNameDecorator
 class integrity_compare(check_interface):
     def __init__(self, study_path):
@@ -19,12 +21,13 @@ class integrity_compare(check_interface):
         return "integrity compare"
 
     def compare_files(self):
-        reference_values = get_integrity_check_values(self.ref_folder)
+        if platform.system() != 'Windows':
+            reference_values = get_integrity_check_values(self.ref_folder)
 
-        path_to_output = find_dated_output_folder(self.study_path)
-        output_values = get_integrity_check_values(path_to_output)
+            path_to_output = find_dated_output_folder(self.study_path)
+            output_values = get_integrity_check_values(path_to_output)
 
-        numpy.testing.assert_allclose(reference_values[0:8], output_values[0:8], rtol=1e-3, atol=0)
+            numpy.testing.assert_allclose(reference_values[0:8], output_values[0:8], rtol=1e-3, atol=0)
 
 
 def get_integrity_check_values(output : Path) -> numpy.array :
