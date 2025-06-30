@@ -214,6 +214,10 @@ enum TimeSeriesType : unsigned int
     timeSeriesRenewable = 1u << 5,
     //! TimeSeries : Renewable
     timeSeriesTransmissionCapacities = 1u << 6,
+    //! TimeSeries : Renewable
+    timeSeriesShortTermInflows = 1u << 7,
+    //! TimeSeries : Renewable
+    timeSeriesShortTermAdditionalConstraints = 1u << 8,
     // ***********************************************************************
     // Please update the constant allTimeSeriesMask if you add / remove an item
     // ***********************************************************************
@@ -227,7 +231,10 @@ constexpr unsigned int allTimeSeriesMask = static_cast<unsigned int>(timeSeriesL
                                            | static_cast<unsigned int>(timeSeriesSolar)
                                            | static_cast<unsigned int>(timeSeriesRenewable)
                                            | static_cast<unsigned int>(
-                                             timeSeriesTransmissionCapacities);
+                                             timeSeriesTransmissionCapacities)
+                                           | static_cast<unsigned int>(timeSeriesShortTermInflows)
+                                           | static_cast<unsigned int>(
+                                             timeSeriesShortTermAdditionalConstraints);
 /*!
 ** \brief Types of timeSeries
 **
