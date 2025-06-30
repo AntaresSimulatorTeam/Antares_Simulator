@@ -8,7 +8,7 @@ var classAntares_1_1Data_1_1TimeSeries =
     [ "getCoefficient", "classAntares_1_1Data_1_1TimeSeries.html#a1c52ab185c2a179ee967cdfc0205c640", null ],
     [ "getColumn", "classAntares_1_1Data_1_1TimeSeries.html#a8d66ce53c741ebd34a0ecf96b8f129fa", null ],
     [ "getSeriesIndex", "classAntares_1_1Data_1_1TimeSeries.html#a72ccf0c9ef57ff5465cce951b07954a9", null ],
-    [ "loadFromFile", "classAntares_1_1Data_1_1TimeSeries.html#a4fc38d73c4271c992d9dcffef6bcecb8", null ],
+    [ "loadFromFile", "classAntares_1_1Data_1_1TimeSeries.html#a7931812d2df4c13ed27db8d6f93e8a4b", null ],
     [ "markAsModified", "classAntares_1_1Data_1_1TimeSeries.html#a7a2a220685b0c2c2c63ffcfcd3c3339e", null ],
     [ "numberOfColumns", "classAntares_1_1Data_1_1TimeSeries.html#a979a48a707d1f6cf03004b5ab338ea6f", null ],
     [ "operator[]", "classAntares_1_1Data_1_1TimeSeries.html#aabe9084264b4cee564dec8088008c95d", null ],
