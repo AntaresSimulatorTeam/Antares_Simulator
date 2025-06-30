@@ -44,7 +44,7 @@ jobs:
       # Caching strategy of VCPKG dependencies
       VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg_cache,readwrite"
 
-    runs-on: windows-2019
+    runs-on: windows-latest
 
     steps:
 
@@ -90,8 +90,9 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: ${{ github.workspace }}/.ccache_windows
-          key: notfound
-          restore-keys: notfound
+          key: ${{ env.os }}-${{ github.ref_name }}
+          restore-keys: |
+            ${{ env.os }}-  
 
       - name: Configure ccache
         run: |
