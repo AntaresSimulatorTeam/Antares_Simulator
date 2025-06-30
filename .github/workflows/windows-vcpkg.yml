@@ -52,6 +52,11 @@ jobs:
         with:
           ref: ${{ env.REF }}
 
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v2
+        with:
+          vs-version: '17.13.35825.156'
+
       - name: Config OR-Tools URL
         run: |
           echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_windows-latest_static_sirius_Release.zip" >> $GITHUB_ENV
