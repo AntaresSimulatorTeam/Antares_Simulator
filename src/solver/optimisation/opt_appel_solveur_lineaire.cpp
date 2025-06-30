@@ -24,6 +24,7 @@
 
 #include <antares/antares/fatal-error.h>
 #include <antares/logs/logs.h>
+#include <antares/solver/utils/ortools_utils.h>
 #include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
 #include "antares/optimization-options/options.h"
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
@@ -300,7 +301,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     return {.success = true,
             .timeMeasure = timeMeasure,
             .mps_writer_factory = mps_writer_factory,
-            .objectiveValue = solver != nullptr ? solver->Objective().Value() : 0};
+            .objectiveValue = solver != nullptr ? getObjectiveValue(solver) : 0};
 }
 
 bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
