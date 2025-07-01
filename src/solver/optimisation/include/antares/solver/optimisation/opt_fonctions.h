@@ -33,6 +33,7 @@
 
 using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
 using OptimizationOptions = Antares::Solver::Optimization::OptimizationOptions;
+using SingleOptimOptions = Antares::Solver::Optimization::SingleOptimOptions;
 
 void OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
                                   PROBLEME_HEBDO* pProblemeHebdo,
@@ -62,7 +63,7 @@ void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO*);
 **
 ** \return True si l'operation s'est bien deroulee, false si le probleme n'a pas de solution
 */
-bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
+bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                          PROBLEME_HEBDO*,
                          int,
                          const int,

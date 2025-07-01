@@ -11,6 +11,7 @@ on:
       - release/*
       - doc/*
       - dependabot/*
+      - tests/*
   schedule:
     - cron: '21 2 * * *'
   workflow_call:
@@ -62,10 +63,25 @@ jobs:
           # Allows to restore a cache when deps have only partially changed (like adding a dependency)
           restore-keys: vcpkg-cache-ubuntu-
 
-      - name: ccache
-        uses: hendrikmuhs/ccache-action@v1.2
+
+      - name: Install ccache
+        run: sudo apt-get install -y ccache
+
+      - name: Restore ccache cache
+        uses: actions/cache/restore@v4
         with:
-          key: ${{ env.os }}
+          path: ${{ github.workspace }}/.ccache_ubuntu
+          key: ${{ env.os }}-${{ github.ref_name }}
+          restore-keys: |
+            ${{ env.os }}-  
+
+      - name: Configure ccache
+        run: |
+          ccache --set-config=cache_dir=${{ github.workspace }}/.ccache_ubuntu
+          ccache --set-config=max_size=500M
+          ccache --set-config=compression=true
+          ccache -p
+          ccache -z
 
       - name: Install libraries
         run: |
@@ -127,7 +143,7 @@ jobs:
            -DBUILD_TESTING=ON \
            -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake \
            -DVCPKG_TARGET_TRIPLET=x64-linux-release \
-           -DCMAKE_PREFIX_PATH="${{github.workspace}}/rte-antares-deps-Release;${{github.workspace}}/install;${{ env.ORTOOLS_DIR }}/install;${{github.workspace}}/antares_install;${{github.workspace}}/rte-antares-deps-Release;${{github.workspace}}/_build/vcpkg_installed/x64-linux-release"
+           -DCMAKE_PREFIX_PATH="${{github.workspace}}/_build/vcpkg_installed/x64-linux-release;${{github.workspace}}/install;${{ env.ORTOOLS_DIR }}/install;${{github.workspace}}/antares_install"
            cmake --build _build -j$(nproc)
            cd _build
            ctest -C Release --output-on-failure
@@ -155,18 +171,18 @@ jobs:
           os: ${{ env.os }}
           variant: "named-mps"
 
-      - name: Run cucumber on short-tests
+      - name: Run fast cucumber
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/cucumber-tests
         with:
-          feature: "features/solver-features/short_tests.feature"
+          tags: "fast"
 
       - name: Run cucumber on modeler
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/cucumber-tests
         with:
           feature: "features/modeler-features"
-          
+
       - name: Run unfeasibility-related tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         run: |
@@ -276,15 +292,6 @@ jobs:
           os: ${{ env.os }}
           variant: "parallel"
 
-      - name: Run tests for time series generator tool
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-        uses: ./.github/workflows/run-tests
-        with:
-          simtest-tag: ${{ env.SIMTEST }}
-          batch-name: ts-generator
-          os: ${{ env.os }}
-          variant: "tsgenerator"
-
       - name: Run medium-tests
         if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
@@ -336,12 +343,12 @@ jobs:
       - name: Installer .deb creation
         run: |
           cd _build
-          cpack -G DEB
+          cpack -G DEB -D CPACK_INSTALLED_DIRECTORIES="${{ env.ORTOOLS_DIR }}/install/lib;bin"
 
       - name: .tar.gz creation
         run: |
           cd _build
-          cpack -G TGZ
+          cpack -G TGZ -D CPACK_INSTALLED_DIRECTORIES="${{ env.ORTOOLS_DIR }}/install/lib;bin"
 
       - name: Solver archive creation
         run: |
@@ -349,7 +356,8 @@ jobs:
           cmake --install . --prefix install
           pushd .
           cd install/bin
-          tar czf ../../antares-solver_ubuntu22.04.tar.gz antares-solver libsirius_solver.so
+          cp ${{ env.ORTOOLS_DIR }}/install/lib/*.so* .
+          tar czf ../../antares-solver_ubuntu22.04.tar.gz antares-solver libsirius_solver.so *.so*
           popd
           rm -rf install
 
@@ -374,20 +382,14 @@ jobs:
         run: |
           gh release upload "$tag" _build/*.tar.gz _build/*.deb
 
-      - name: Rename assets for continuous-delivery release
+      - name: Update continuous-delivery release
         if: github.ref == 'refs/heads/develop'
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           mv _build/antares-*-Ubuntu-22.04.tar.gz _build/antares-cd-Ubuntu-22.04.tar.gz
           mv _build/antares-*-Ubuntu-22.04.deb _build/antares-cd-Ubuntu-22.04.deb
-
-      - name: Update continuous-delivery release
-        if: github.ref == 'refs/heads/develop'
-        uses: pyTooling/Actions/releaser@main
-        with:
-          tag: continuous-delivery
-          rm: false
-          token: ${{ secrets.GITHUB_TOKEN }}
-          files: _build/*.tar.gz _build/*.deb
+          gh release upload --clobber continuous-delivery _build/*.tar.gz _build/*.deb
 
       - name: Cache vcpkg binary dir
         if: always()
@@ -396,3 +398,13 @@ jobs:
         with:
           path: ${{ github.workspace }}/vcpkg_cache
           key: vcpkg-cache-ubuntu-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+
+      - name: Display ccache statistics
+        run: ccache -s
+
+      - name: Save ccache cache
+        if: ${{ !cancelled() }}
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ github.workspace }}/.ccache_ubuntu
+          key: ${{ env.os }}-${{ github.ref_name }}

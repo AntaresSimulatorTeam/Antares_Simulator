@@ -40,12 +40,12 @@ public:
     void setBounds(double lb, double ub) override;
     void setCoefficient(LinearProblemApi::IMipVariable* var, double coefficient) override;
 
-    double getLb() const override;
-    double getUb() const override;
+    [[nodiscard]] double getLb() const override;
+    [[nodiscard]] double getUb() const override;
 
-    double getCoefficient(LinearProblemApi::IMipVariable* var) override;
+    [[nodiscard]] double getCoefficient(const LinearProblemApi::IMipVariable* var) const override;
 
-    const std::string& getName() const override;
+    [[nodiscard]] const std::string& getName() const override;
 
     ~OrtoolsMipConstraint() override = default;
 

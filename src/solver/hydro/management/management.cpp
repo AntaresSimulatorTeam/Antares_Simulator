@@ -266,7 +266,7 @@ void HydroManagement::prepareEffectiveDemand(uint year, HydroSpecificMap& hydro_
       });
 }
 
-void HydroManagement::makeVentilation(double* randomReservoirLevel,
+void HydroManagement::makeVentilation(const std::vector<double>& randomReservoirLevel,
                                       uint y,
                                       Antares::Data::Area::ScratchMap& scratchmap)
 {
@@ -274,7 +274,7 @@ void HydroManagement::makeVentilation(double* randomReservoirLevel,
     prepareNetDemand(y, parameters_.mode, scratchmap, hydro_specific_map);
     prepareEffectiveDemand(y, hydro_specific_map);
 
-    prepareMonthlyOptimalGenerations(randomReservoirLevel, y, hydro_specific_map);
+    prepareMonthlyOptimalGenerations(randomReservoirLevel, y, scratchmap, hydro_specific_map);
     prepareDailyOptimalGenerations(y, scratchmap, hydro_specific_map);
 }
 

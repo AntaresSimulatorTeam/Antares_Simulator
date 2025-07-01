@@ -55,12 +55,20 @@ struct Connection
     ConnectionEntry secondEntry;
 };
 
+struct AreaConnection
+{
+    std::string componentId;
+    std::string portId;
+    std::string areaId;
+};
+
 struct System
 {
     std::string id;
     std::vector<std::string> libraries;
     std::vector<Component> components;
     std::vector<Connection> connections;
+    std::vector<AreaConnection> areaConnections;
 };
 
 } // namespace Antares::IO::Inputs::YmlSystem

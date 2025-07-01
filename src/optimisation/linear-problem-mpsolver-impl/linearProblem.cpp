@@ -171,7 +171,7 @@ bool OrtoolsLinearProblem::isMaximization() const
     return objective_->maximization();
 }
 
-void OrtoolsLinearProblem::WriteLP(const std::string& filename)
+void OrtoolsLinearProblem::WriteLP(const std::string& filename) const
 {
     std::string out;
     mpSolver_->ExportModelAsLpFormat(false, &out);

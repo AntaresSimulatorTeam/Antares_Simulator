@@ -333,7 +333,7 @@ Run::Run(wxWindow* parent, bool preproOnly):
                                                                     wxT("Ortools solver : "));
 
         pOrtoolsSolverCombox = new wxComboBox(pBigDaddy, wxID_ANY, "sirius");
-        std::list<std::string> solverList = getAvailableLinearSolverNames();
+        std::list<std::string> solverList = availableLinearSolversList();
         for (const std::string& solverName: solverList)
         {
             pOrtoolsSolverCombox->Append(solverName);

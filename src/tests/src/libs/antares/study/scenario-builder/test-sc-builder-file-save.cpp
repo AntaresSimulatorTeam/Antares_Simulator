@@ -91,6 +91,23 @@ void addClusterToAreaList(Area* area, std::shared_ptr<RenewableCluster> cluster)
     area->renewable.list.addToCompleteList(cluster);
 }
 
+ShortTermStorage::STStorageCluster* addSTSToArea(Area* area, const std::string& id)
+{
+    ShortTermStorage::STStorageCluster sts;
+    sts.id = id;
+    area->shortTermStorage.storagesByIndex.push_back(sts);
+    return &area->shortTermStorage.storagesByIndex.back();
+}
+
+ShortTermStorage::AdditionalConstraints* addConstraint(ShortTermStorage::STStorageCluster* sts,
+                                                       const std::string& name)
+{
+    sts->additionalConstraints.push_back(
+      std::make_shared<ShortTermStorage::AdditionalConstraints>());
+    sts->additionalConstraints.back()->name = name;
+    return sts->additionalConstraints.back().get();
+}
+
 template<class ClusterType>
 std::shared_ptr<ClusterType> addClusterToArea(Area* area, const std::string& clusterName)
 {
@@ -174,6 +191,11 @@ struct commonFixture
         rnCluster_31->series.timeSeries.resize(9, 1);
         rnCluster_32->series.timeSeries.resize(9, 1);
 
+        // Add short-term storage to area_1
+        sts = addSTSToArea(area_1, "sts-1");
+        addc = addConstraint(sts, "addc1");
+        area_1->shortTermStorage.storagesByIndex[0].series->inflows.resize(9, 1);
+
         // Resize all TS numbers storage (1 column x nbYears lines)
         area_1->resizeAllTimeseriesNumbers(study->parameters.nbYears);
         area_2->resizeAllTimeseriesNumbers(study->parameters.nbYears);
@@ -210,7 +232,8 @@ struct commonFixture
     std::shared_ptr<RenewableCluster> rnCluster_21;
     std::shared_ptr<RenewableCluster> rnCluster_31;
     std::shared_ptr<RenewableCluster> rnCluster_32;
-
+    ShortTermStorage::STStorageCluster* sts;
+    ShortTermStorage::AdditionalConstraints* addc;
     ScenarioBuilder::Rules::Ptr my_rule;
 };
 
@@ -492,10 +515,10 @@ BOOST_FIXTURE_TEST_CASE(
     saveScenarioBuilder();
     // Build reference scenario builder file
     referenceFile.append("[my rule name]");
-    referenceFile.append("bc,group1,5=20");
-    referenceFile.append("bc,group2,19=1");
-    referenceFile.append("bc,group3,5=43");
-    referenceFile.append("bc,group3,10=6");
+    referenceFile.append("bc,group1,5 = 20");
+    referenceFile.append("bc,group2,19 = 1");
+    referenceFile.append("bc,group3,5 = 43");
+    referenceFile.append("bc,group3,10 = 6");
 
     referenceFile.write();
     BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
@@ -521,7 +544,8 @@ BOOST_FIXTURE_TEST_CASE(
     my_rule->linksNTC[area_2->index].setTSnumber(link_23, 2, 4);
     my_rule->hydroInitialLevels.setTSnumber(area_1->index, 5, 8);
     my_rule->binding_constraints.setTSnumber("group3", 10, 6);
-
+    my_rule->shortTermStorageInflows[area_1->index].setTSnumber(sts, 0, 5);
+    my_rule->shortTermStorageAdditionalConstraints[area_1->index].setTSnumber(addc, 0, 5);
     saveScenarioBuilder();
 
     // Build reference scenario builder file
@@ -534,11 +558,13 @@ BOOST_FIXTURE_TEST_CASE(
     referenceFile.append("w,area 3,19 = 17");
     referenceFile.append("t,area 1,19,th-cluster-11 = 8");
     referenceFile.append("ntc,area 1,area 3,19 = 8");
+    referenceFile.append("sts,area 1,0,sts-1 = 5");
+    referenceFile.append("sta,area 1,0,sts-1,addc1 = 5");
     referenceFile.append("ntc,area 2,area 3,2 = 4");
     referenceFile.append("t,area 3,5,th-cluster-31 = 13");
     referenceFile.append("r,area 3,5,rn-cluster-32 = 13");
     referenceFile.append("hl,area 1,5 = 8");
-    referenceFile.append("bc,group3,10=6");
+    referenceFile.append("bc,group3,10 = 6");
     referenceFile.write();
 
     BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));

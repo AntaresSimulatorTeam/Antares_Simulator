@@ -11,7 +11,7 @@ set(SOURCES
 )
 
 # Create the library
-add_library(load-modeler-files STATIC ${SOURCES})
+add_library(load-modeler-files ${SOURCES})
 add_library(Antares::load-modeler-files ALIAS load-modeler-files)
 
 # Specify include directories

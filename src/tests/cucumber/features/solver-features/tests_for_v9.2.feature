@@ -2,7 +2,7 @@ Feature: tests for v9.2
   
   @fast @short
   Scenario: min gen for thermal clusters
-  Given the study path is "Antares_Simulator_Tests_NR/valid-v920/min-gen-for-thermal"
+  Given the solver study path is "Antares_Simulator_Tests_NR/valid-v920/min-gen-for-thermal"
   When I run antares simulator
   Then the simulation takes less than 5 seconds
   And the simulation succeeds

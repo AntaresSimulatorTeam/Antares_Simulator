@@ -28,45 +28,41 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
-{
-namespace ScenarioBuilder
+namespace Antares::Data::ScenarioBuilder
 {
 /*!
-** \brief Interface for scenario builder data (time series, hydro levels, ...)
-*/
+ ** \brief Interface for scenario builder data (time series, hydro levels, ...)
+ */
 class dataInterface
 {
 public:
+    virtual ~dataInterface() = default;
+
     //! \name Data manupulation
     //@{
     /*!
-    ** \brief Reset data from the study
-    */
+     ** \brief Reset data from the study
+     */
     virtual bool reset(const Study& study) = 0;
 
     /*!
-    ** \brief Export the data into a mere INI file
-    */
+     ** \brief Export the data into a mere INI file
+     */
     virtual void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const = 0;
 
-    virtual uint width() const = 0;
+    [[nodiscard]] virtual uint width() const = 0;
 
-    virtual uint height() const = 0;
+    [[nodiscard]] virtual uint height() const = 0;
 
     /*!
-    ** \brief Apply the changes to the study corresponding data (time series, hydro levels, ...)
-    **
-    ** This method is only useful when launched from the solver.
-    */
+     ** \brief Apply the changes to the study corresponding data (time series, hydro levels, ...)
+     **
+     ** This method is only useful when launched from the solver.
+     */
     virtual bool apply(Study& study) = 0;
 
 }; // class dataInterface
 
-} // namespace ScenarioBuilder
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data::ScenarioBuilder
 
 #endif // __LIBS_STUDY_SCENARIO_BUILDER_DATA_INTERFACE_H__

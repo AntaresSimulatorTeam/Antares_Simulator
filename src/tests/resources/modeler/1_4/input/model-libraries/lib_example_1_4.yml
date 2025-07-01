@@ -30,8 +30,6 @@ library:
           upper-bound: gen1_max_p
           variable-type: continuous
         - id: on_off_gen1_p
-          lower-bound: 0
-          upper-bound: 1
           variable-type: boolean
         - id: gen2_p
           lower-bound: 0

@@ -52,12 +52,22 @@ public:
     ComponentFiller() = delete;
     ComponentFiller(ComponentFiller& other) = delete;
     /// Create a ComponentFiller for a Component
-    explicit ComponentFiller(const ModelerStudy::SystemModel::Component& component);
+    explicit ComponentFiller(const ModelerStudy::SystemModel::Component& component,
+                             VariableDictionary& variableDictionary);
 
     void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
                       Optimisation::LinearProblemApi::FillContext& ctx) override;
 
+    void addConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
+                        Optimisation::LinearProblemApi::ILinearProblemData& data,
+                        Optimisation::LinearProblemApi::FillContext& ctx) override;
+
+    void addObjective(Optimisation::LinearProblemApi::ILinearProblem& pb,
+                      Optimisation::LinearProblemApi::ILinearProblemData& data,
+                      Optimisation::LinearProblemApi::FillContext& ctx) override;
+
+private:
     void addStaticConstraint(Optimisation::LinearProblemApi::ILinearProblem& pb,
                              const LinearConstraint& linear_constraint,
                              const std::string& constraint_id) const;
@@ -66,20 +76,10 @@ public:
                                      const std::vector<LinearConstraint>& linear_constraints,
                                      const std::string& constraint_id) const;
 
-    void addConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                        Optimisation::LinearProblemApi::ILinearProblemData& data,
-                        Optimisation::LinearProblemApi::FillContext& ctx) override;
-    void addObjective(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                      Optimisation::LinearProblemApi::ILinearProblemData& data,
-                      Optimisation::LinearProblemApi::FillContext& ctx) override;
-
-    VariableDictionary variableDictionary;
-
-private:
-    static bool IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node);
+    bool IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node);
 
     const ModelerStudy::SystemModel::Component& component_;
-    const std::map<std::string, ModelerStudy::SystemModel::Variable>& modelVariable_;
+    VariableDictionary& variableDictionary_;
 };
 
 class VariablesBulkAddition

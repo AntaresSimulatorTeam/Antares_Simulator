@@ -254,6 +254,13 @@ bool InspectorGrid::onPropertyChanging_C(wxPGProperty*,
         mainFrm.mainPanel()->refreshFromStudy();
         return true;
     }
+    if (name == "common.study.editor")
+    {
+        wxStringToString(value.GetString(), study->header.editor);
+        auto& mainFrm = *Antares::Forms::ApplWnd::Instance();
+        mainFrm.mainPanel()->refreshFromStudy();
+        return true;
+    }
     return false;
 }
 

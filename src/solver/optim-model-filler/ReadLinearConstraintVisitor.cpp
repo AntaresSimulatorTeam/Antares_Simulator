@@ -26,6 +26,7 @@
 #include "antares/expressions/ShiftVector.h"
 
 using namespace Antares::Expressions::Nodes;
+using namespace Antares::ModelerStudy::SystemModel;
 
 namespace Antares::Optimization
 {
@@ -33,8 +34,8 @@ namespace Antares::Optimization
 ReadLinearConstraintVisitor::ReadLinearConstraintVisitor(
   Expressions::Visitors::EvaluationContext context,
   const Optimisation::LinearProblemApi::FillContext& fillContext,
-  const std::string& componentId /* or vector ?*/):
-    linear_expression_visitor_(std::move(context), fillContext, componentId)
+  const Antares::ModelerStudy::SystemModel::Component& component):
+    linear_expression_visitor_(std::move(context), fillContext, component)
 {
 }
 
@@ -103,82 +104,82 @@ static std::invalid_argument IllegalNodeException()
     return std::invalid_argument("Root node of a constraint must be a comparator.");
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const SumNode* sum_node)
+std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const SumNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const SubtractionNode* node)
+std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const SubtractionNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const MultiplicationNode* node)
+std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const MultiplicationNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const DivisionNode* node)
+std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const DivisionNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const NegationNode* node)
+std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const NegationNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const VariableNode* node)
+std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const VariableNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const ParameterNode* node)
+std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const ParameterNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const LiteralNode* node)
+std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const LiteralNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const PortFieldNode* node)
+std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const PortFieldNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const PortFieldSumNode* node)
+std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const PortFieldSumNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const ComponentVariableNode* node)
+std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const ComponentVariableNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const ComponentParameterNode* node)
+std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const ComponentParameterNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const TimeShiftNode* node)
+std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const TimeShiftNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const TimeIndexNode* node)
+std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const TimeIndexNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const TimeSumNode* node)
+std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const TimeSumNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const AllTimeSumNode* node)
+std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const AllTimeSumNode*)
 {
     throw IllegalNodeException();
 }

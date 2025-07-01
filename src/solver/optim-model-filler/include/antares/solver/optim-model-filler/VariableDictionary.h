@@ -103,8 +103,8 @@ class VariableDictionary
         VectorWithOffset() = default;
         void resize(size_t initial_size, unsigned offset);
         Value& operator[](unsigned int index);
-        const Value& operator[](unsigned int index) const;
-        const Value& at(unsigned int index) const;
+        [[nodiscard]] const Value& operator[](unsigned int index) const;
+        [[nodiscard]] const Value& at(unsigned int index) const;
         Value& at(unsigned int index);
 
     private:
@@ -115,7 +115,7 @@ class VariableDictionary
     using TwoIndexVector = std::vector<VectorWithOffset>;
     using HashMapVector = std::unordered_map<PartialKey, TwoIndexVector, PartialKeyHash>;
 
-    HashMapVector hmv;
+    HashMapVector storageOfAddedMipVariables_;
     const TwoIndexVector& operator[](const PartialKey& k) const;
 
 public:

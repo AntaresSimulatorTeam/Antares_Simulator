@@ -20,9 +20,7 @@
 */
 #pragma once
 #include <functional>
-#include <optional>
 #include <typeindex>
-#include <vector>
 
 #include <antares/expressions/IName.h>
 #include <antares/expressions/nodes/Node.h>
@@ -86,7 +84,7 @@ template<class R, class... Args>
 class NodeVisitor: public IName
 {
 public:
-    virtual ~NodeVisitor() = default;
+    ~NodeVisitor() override = default;
 
     /**
      * Dispatches a node to an appropriate visitor function based on its type.
@@ -134,9 +132,10 @@ public:
         {
             return nodeVisitList.at(typeid(*node))(node, *this, args...);
         }
-        catch (std::exception&)
+        catch (std::exception& e)
         {
-            log_.error("Antares::Expressions::Visitor: could not visit the node!");
+            using namespace std::string_literals;
+            log_.error("Antares::Expressions::Visitor: could not visit the node! "s + e.what());
             throw;
         }
     }
@@ -306,7 +305,7 @@ public:
      */
     virtual R visit(const Nodes::TimeIndexNode*, Args... args) = 0;
     /**
-     * @brief Visits a TimeIndexNode.
+     * @brief Visits a TimeSumNode.
      *
      * @param node A pointer to the TimeSumNode to be visited.
      * @param args Additional arguments to be passed to the visitor's methods.
@@ -315,7 +314,7 @@ public:
      */
     virtual R visit(const Nodes::TimeSumNode*, Args... args) = 0;
     /**
-     * @brief Visits a TimeIndexNode.
+     * @brief Visits a AllTimeSumNode.
      *
      * @param node A pointer to the AllTimeSumNode to be visited.
      * @param args Additional arguments to be passed to the visitor's methods.

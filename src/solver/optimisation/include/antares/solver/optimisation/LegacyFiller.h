@@ -1,14 +1,16 @@
 #pragma once
 
 #include "antares/optimisation/linear-problem-api/linearProblemFiller.h"
-#include "antares/solver/utils/named_problem.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
+
+#include "opt_structure_probleme_a_resoudre.h"
 
 namespace Antares::Optimization
 {
 class LegacyFiller: public Optimisation::LinearProblemApi::LinearProblemFiller
 {
 public:
-    explicit LegacyFiller(const PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
+    explicit LegacyFiller(const PROBLEME_HEBDO* problemeHebdo);
     void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
                       Optimisation::LinearProblemApi::FillContext& ctx) override;
@@ -20,7 +22,8 @@ public:
                       Optimisation::LinearProblemApi::FillContext& ctx) override;
 
 private:
-    const PROBLEME_SIMPLEXE_NOMME* problemeSimplexe_;
+    const PROBLEME_ANTARES_A_RESOUDRE* problemeAResoudre_;
+    const bool useNamedProblems_;
 
     void CreateVariable(unsigned idxVar, Optimisation::LinearProblemApi::ILinearProblem& pb) const;
     void CopyVariables(Optimisation::LinearProblemApi::ILinearProblem& pb) const;

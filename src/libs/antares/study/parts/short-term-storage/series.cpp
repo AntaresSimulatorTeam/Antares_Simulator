@@ -35,13 +35,28 @@ namespace Antares::Data::ShortTermStorage
 
 namespace fs = std::filesystem;
 
+Series::Series():
+    inflows(inflowsTSNumbers)
+{
+}
+
 bool Series::loadFromFolder(const fs::path& folder, StudyVersion studyVersion)
 {
     bool ret = true;
 
     ret = loadFile(folder / "PMAX-injection.txt", maxInjectionModulation) && ret;
     ret = loadFile(folder / "PMAX-withdrawal.txt", maxWithdrawalModulation) && ret;
-    ret = loadFile(folder / "inflows.txt", inflows) && ret;
+
+    if (auto path = folder / "inflows.txt"; std::filesystem::exists(path))
+    {
+        ret = inflows.loadFromFile(path, false, Matrix<>::optImmediate) && ret;
+    }
+    else
+    {
+        logs.info() << "Optional file not found: " << path
+                    << ", default values will be used if needed";
+    }
+
     ret = loadFile(folder / "lower-rule-curve.txt", lowerRuleCurve) && ret;
     ret = loadFile(folder / "upper-rule-curve.txt", upperRuleCurve) && ret;
     if (studyVersion >= StudyVersion(9, 2))
@@ -111,11 +126,31 @@ bool loadFile(const fs::path& path, std::vector<double>& vect)
     return true;
 }
 
+bool loadFile(const std::filesystem::path& file, TimeSeries& series, const bool average)
+{
+    logs.debug() << "  :: loading file " << file;
+    if (std::filesystem::is_regular_file(file))
+    {
+        return series.loadFromFile(file, average);
+    }
+    logs.info() << "Optional file not found: " << file << ", default values will be used if needed";
+    return true;
+}
+
 void fillIfEmpty(std::vector<double>& v, double value)
 {
     if (v.empty())
     {
         v.resize(HOURS_PER_YEAR, value);
+    }
+}
+
+void fillIfEmpty(TimeSeries& series, double value)
+{
+    if (series.timeSeries.empty())
+    {
+        series.reset(1, HOURS_PER_YEAR);
+        series.fill(value);
     }
 }
 
@@ -152,7 +187,7 @@ bool Series::saveToFolder(const std::string& folder) const
 
     checkWrite("PMAX-injection.txt", maxInjectionModulation);
     checkWrite("PMAX-withdrawal.txt", maxWithdrawalModulation);
-    checkWrite("inflows.txt", inflows);
+    inflows.saveToFile(folder + SEP + "inflows.txt", true);
     checkWrite("lower-rule-curve.txt", lowerRuleCurve);
     checkWrite("upper-rule-curve.txt", upperRuleCurve);
 
@@ -215,6 +250,19 @@ static bool checkSize(const std::string& seriesFilename,
         logs.warning() << "Short-term storage " << id
                        << " Invalid size for file: " << seriesFilename << ". Got " << v.size()
                        << " lines, expected " << HOURS_PER_YEAR;
+        return false;
+    }
+
+    return true;
+}
+
+static bool checkSize(const std::string& seriesFilename, const std::string& id, const TimeSeries& v)
+{
+    if (v.timeSeries.height != HOURS_PER_YEAR)
+    {
+        logs.warning() << "Short-term storage " << id
+                       << " Invalid size for file: " << seriesFilename << ". Got "
+                       << v.timeSeries.height << " lines, expected " << HOURS_PER_YEAR;
         return false;
     }
 

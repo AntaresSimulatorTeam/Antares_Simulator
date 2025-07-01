@@ -39,8 +39,8 @@ public:
     int& nombreDeContraintes;
     int& nombreDeTermesDansLaMatriceDeContrainte;
     std::vector<int>& IndicesDebutDeLigne;
-    SparseVector<double>& CoefficientsDeLaMatriceDesContraintes;
-    SparseVector<int>& IndicesColonnes;
+    std::vector<double>& CoefficientsDeLaMatriceDesContraintes;
+    std::vector<int>& IndicesColonnes;
     std::vector<int>& NombreDeTermesDesLignes;
     std::string& Sens;
     int& IncrementDAllocationMatriceDesContraintes;
@@ -49,7 +49,6 @@ public:
     std::vector<int>& NumeroDeVariableStockFinal;
     std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock;
     std::vector<std::string>& NomDesContraintes;
-    const bool& NamedProblems;
     const std::vector<const char*>& NomsDesPays;
     const uint32_t& weekInTheYear;
     const uint32_t& NombreDePasDeTemps;

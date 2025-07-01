@@ -59,11 +59,11 @@ public:
     explicit ReadLinearConstraintVisitor(
       Expressions::Visitors::EvaluationContext context,
       const Optimisation::LinearProblemApi::FillContext& fillContext,
-      const std::string& componentId /* or vector ?*/);
+      const Antares::ModelerStudy::SystemModel::Component& component);
+
     std::string name() const override;
 
 private:
-    ReadLinearExpressionVisitor linear_expression_visitor_;
     std::vector<LinearConstraint> visit(const Expressions::Nodes::SumNode* node) override;
     std::vector<LinearConstraint> visit(const Expressions::Nodes::SubtractionNode* node) override;
     std::vector<LinearConstraint> visit(
@@ -88,5 +88,7 @@ private:
     std::vector<LinearConstraint> visit(const Expressions::Nodes::TimeIndexNode* node) override;
     std::vector<LinearConstraint> visit(const Expressions::Nodes::TimeSumNode* node) override;
     std::vector<LinearConstraint> visit(const Expressions::Nodes::AllTimeSumNode* node) override;
+
+    ReadLinearExpressionVisitor linear_expression_visitor_;
 };
 } // namespace Antares::Optimization

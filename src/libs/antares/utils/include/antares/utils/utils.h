@@ -57,8 +57,8 @@ namespace Utils
 
 bool isZero(double d);
 double round(double d, unsigned precision);
-double ceilDiv(double numerator, double denominator);
-double floorDiv(double numerator, double denominator);
+double ceil(double d);
+double floor(double d);
 
 std::map<std::string, unsigned> giveNumbersToStrings(const std::vector<std::string>& strs);
 bool checkAllElementsIdenticalOrOne(std::vector<unsigned> w);

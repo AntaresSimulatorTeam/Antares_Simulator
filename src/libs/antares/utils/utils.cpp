@@ -162,14 +162,14 @@ double round(double d, unsigned precision)
 
 static constexpr double largeValue = 1000000;
 
-double ceilDiv(double numerator, double denominator)
+double ceil(double d)
 {
-    return std::ceil(std::round(numerator / denominator * largeValue) / largeValue);
+    return std::ceil(std::round(d * largeValue) / largeValue);
 }
 
-double floorDiv(double numerator, double denominator)
+double floor(double d)
 {
-    return std::floor(std::round(numerator / denominator * largeValue) / largeValue);
+    return std::floor(std::round(d * largeValue) / largeValue);
 }
 
 std::map<std::string, unsigned> giveNumbersToStrings(const std::vector<std::string>& strs)
@@ -181,6 +181,8 @@ std::map<std::string, unsigned> giveNumbersToStrings(const std::vector<std::stri
         strToNumber[s] = strNb++;
     }
     return strToNumber;
+}
+
 bool checkAllElementsIdenticalOrOne(std::vector<unsigned> w)
 {
     auto first_one = std::remove(w.begin(), w.end(), 1); // Reject all 1 to the end
@@ -191,6 +193,11 @@ bool checkAllElementsIdenticalOrOne(std::vector<std::pair<unsigned, std::string>
 {
     // Erase 1 from the vector
     std::erase_if(p, [](const auto& pair) { return pair.first == 1; });
+    if (p.empty())
+    {
+        return true;
+    }
+
     auto width = p.begin()->first;
     for (const auto& [w, msg]: p)
     {

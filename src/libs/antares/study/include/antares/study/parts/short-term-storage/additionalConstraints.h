@@ -20,9 +20,12 @@
  */
 
 #pragma once
+#include <memory>
 #include <set>
 #include <string>
 #include <vector>
+
+#include "antares/series/series.h"
 
 namespace Antares::Data::ShortTermStorage
 {
@@ -33,35 +36,59 @@ public:
     std::set<int> hours;
     unsigned int globalIndex = 0;
     unsigned int localIndex = 0;
-    bool isValidHoursRange() const;
+    bool hasValidHoursRange() const;
 };
 
-struct AdditionalConstraints
+struct ValidateResult
+
 {
+    bool ok;
+    std::string error_msg;
+};
+
+class AdditionalConstraints
+{
+public:
+    AdditionalConstraints();
+    AdditionalConstraints(std::string name,
+                          std::string cluster_id,
+                          std::string variable,
+                          std::string operatorType,
+                          bool enabled,
+                          std::vector<SingleAdditionalConstraint> constraints);
+
+    AdditionalConstraints(const AdditionalConstraints&) = delete;
+    AdditionalConstraints& operator=(const AdditionalConstraints&) = delete;
+
+    AdditionalConstraints(AdditionalConstraints&& other) noexcept = delete;
+    AdditionalConstraints& operator=(AdditionalConstraints&& other) noexcept = delete;
+
+    ~AdditionalConstraints() = default;
+
     std::string name;
     std::string cluster_id;
     std::string variable;
     std::string operatorType;
     bool enabled = true;
-    std::vector<double> rhs;
-
     std::vector<SingleAdditionalConstraint> constraints;
 
-    struct ValidateResult
-    {
-        bool ok;
-        std::string error_msg;
-    };
-
     // Number of enabled constraints
-    std::size_t enabledConstraints() const;
+    std::size_t enabledConstraintsCount() const;
 
-    ValidateResult validate() const;
+    TimeSeries& rhs()
+    {
+        return timeSeries;
+    }
 
-private:
-    bool isValidVariable() const;
-    bool isValidOperatorType() const;
+    const TimeSeries& rhs() const
+    {
+        return timeSeries;
+    }
 
-    bool isValidHours() const;
+    TimeSeriesNumbers timeseriesNumbers;
+    TimeSeries timeSeries;
 };
+
+ValidateResult validate(const AdditionalConstraints&);
+
 } // namespace Antares::Data::ShortTermStorage

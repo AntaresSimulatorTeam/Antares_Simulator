@@ -95,6 +95,12 @@ library:
       description: A port which transfers power flow
       fields:
         - id: flow
+    - id: flow_with_area_connection
+      description: A port which transfers power flow
+      fields:
+        - id: flow
+      area-connection:
+        - injection-field: flow
 
   models:
     - id: generator
@@ -112,7 +118,7 @@ library:
           upper-bound: p_max
       ports:
         - id: injection_port
-          type: flow
+          type: flow_with_area_connection
       port-field-definitions:
         - port: injection_port
           field: flow
@@ -268,13 +274,22 @@ library:
         BOOST_CHECK_EQUAL(lib.Id(), "basic");
         BOOST_CHECK_EQUAL(lib.Description(), "Basic library");
 
-        BOOST_REQUIRE_EQUAL(lib.PortTypes().size(), 1);
+        BOOST_REQUIRE_EQUAL(lib.PortTypes().size(), 2);
+
         auto& portType = lib.PortTypes().at("flow");
         BOOST_CHECK_EQUAL(portType.Id(), "flow");
-
         BOOST_REQUIRE_EQUAL(portType.Fields().size(), 1);
         auto& portTypeField = portType.Fields().at(0);
         BOOST_CHECK_EQUAL(portTypeField.Id(), "flow");
+        BOOST_CHECK_EQUAL(portType.AreaConnectionFieldId().has_value(), false);
+
+        auto& portType2 = lib.PortTypes().at("flow_with_area_connection");
+        BOOST_CHECK_EQUAL(portType2.Id(), "flow_with_area_connection");
+        BOOST_REQUIRE_EQUAL(portType2.Fields().size(), 1);
+        auto& portTypeField2 = portType2.Fields().at(0);
+        BOOST_CHECK_EQUAL(portTypeField2.Id(), "flow");
+        BOOST_REQUIRE_EQUAL(portType2.AreaConnectionFieldId().has_value(), true);
+        BOOST_CHECK_EQUAL(portType2.AreaConnectionFieldId().value(), "flow");
 
         BOOST_REQUIRE_EQUAL(lib.Models().size(), 7);
         auto& model0 = lib.Models().at("generator");
@@ -284,8 +299,10 @@ library:
         BOOST_REQUIRE_EQUAL(model0.getConstraints().size(), 1);
         BOOST_REQUIRE_EQUAL(model0.Parameters().size(), 2);
         BOOST_REQUIRE_EQUAL(model0.Variables().size(), 1);
-        // BOOST_REQUIRE_EQUAL(model0.Ports().size(), 1); Unsuported
-        //  BOOST_REQUIRE_EQUAL(model0.PortFieldDefinitions().size(), 1); Unsuported
+        BOOST_REQUIRE_EQUAL(model0.Ports().size(), 1);
+        BOOST_CHECK_EQUAL(model0.Ports().at("injection_port").Type().Id(),
+                          "flow_with_area_connection");
+        BOOST_REQUIRE_EQUAL(model0.PortFieldDefinitions().size(), 1);
 
         checkParameter(model0.Parameters().at("cost"), "cost", false, false);
         checkParameter(model0.Parameters().at("p_max"), "p_max", false, false);
@@ -298,25 +315,21 @@ library:
                       SystemModel::TimeDependent::YES,
                       SystemModel::ScenarioDependent::YES);
 
-        // auto& port = model0.Ports().at("injection_port");
-        // BOOST_CHECK_EQUAL(port.Id(), "injection_port");
-        //  other properties
-
         auto& model1 = lib.Models().at("node");
         BOOST_CHECK_EQUAL(model1.Id(), "node");
-        // BOOST_REQUIRE_EQUAL(model1.getConstraints().size(), 1);
+        BOOST_REQUIRE_EQUAL(model1.getConstraints().size(), 0);
         BOOST_REQUIRE_EQUAL(model1.Parameters().size(), 0);
         BOOST_REQUIRE_EQUAL(model1.Variables().size(), 0);
-        // BOOST_REQUIRE_EQUAL(model1.Ports().size(), 1); Unsuported
-        //  BOOST_REQUIRE_EQUAL(model1.PortFieldDefinitions().size(), 0); Unsuported
+        BOOST_REQUIRE_EQUAL(model1.Ports().size(), 1);
+        BOOST_REQUIRE_EQUAL(model1.PortFieldDefinitions().size(), 0);
 
         auto& model2 = lib.Models().at("spillage");
         BOOST_CHECK_EQUAL(model2.Id(), "spillage");
         BOOST_REQUIRE_EQUAL(model2.getConstraints().size(), 0);
         BOOST_REQUIRE_EQUAL(model2.Parameters().size(), 1);
         BOOST_REQUIRE_EQUAL(model2.Variables().size(), 1);
-        // BOOST_REQUIRE_EQUAL(model2.Ports().size(), 1); Unsuported
-        //  BOOST_REQUIRE_EQUAL(model2.PortFieldDefinitions().size(), 1); Unsuported
+        BOOST_REQUIRE_EQUAL(model2.Ports().size(), 1);
+        BOOST_REQUIRE_EQUAL(model2.PortFieldDefinitions().size(), 1);
 
         checkParameter(model2.Parameters().at("cost"), "cost", false, false);
         checkVariable(model2.Variables().at("spillage"),
@@ -332,8 +345,8 @@ library:
         BOOST_REQUIRE_EQUAL(model3.getConstraints().size(), 0);
         BOOST_REQUIRE_EQUAL(model3.Parameters().size(), 1);
         BOOST_REQUIRE_EQUAL(model3.Variables().size(), 1);
-        // BOOST_REQUIRE_EQUAL(model3.Ports().size(), 1); Unsuported
-        //  BOOST_REQUIRE_EQUAL(model3.PortFieldDefinitions().size(), 1); Unsuported
+        BOOST_REQUIRE_EQUAL(model3.Ports().size(), 1);
+        BOOST_REQUIRE_EQUAL(model3.PortFieldDefinitions().size(), 1);
         checkParameter(model3.Parameters().at("cost"), "cost", false, false);
         checkVariable(model3.Variables().at("unsupplied_energy"),
                       "unsupplied_energy",
@@ -348,8 +361,8 @@ library:
         BOOST_REQUIRE_EQUAL(model4.getConstraints().size(), 0);
         BOOST_REQUIRE_EQUAL(model4.Parameters().size(), 1);
         BOOST_REQUIRE_EQUAL(model4.Variables().size(), 0);
-        // BOOST_REQUIRE_EQUAL(model4.Ports().size(), 1); Unsuported
-        //  BOOST_REQUIRE_EQUAL(model4.PortFieldDefinitions().size(), 1); Unsuported
+        BOOST_REQUIRE_EQUAL(model4.Ports().size(), 1);
+        BOOST_REQUIRE_EQUAL(model4.PortFieldDefinitions().size(), 1);
         checkParameter(model4.Parameters().at("demand"), "demand", true, true);
 
         auto& model5 = lib.Models().at("short-term-storage");
@@ -357,8 +370,8 @@ library:
         BOOST_REQUIRE_EQUAL(model5.getConstraints().size(), 1);
         BOOST_REQUIRE_EQUAL(model5.Parameters().size(), 6);
         BOOST_REQUIRE_EQUAL(model5.Variables().size(), 3);
-        // BOOST_REQUIRE_EQUAL(model5.Ports().size(), 1); Unsuported
-        //  BOOST_REQUIRE_EQUAL(model5.PortFieldDefinitions().size(), 1); Unsuported
+        BOOST_REQUIRE_EQUAL(model5.Ports().size(), 1);
+        BOOST_REQUIRE_EQUAL(model5.PortFieldDefinitions().size(), 1);
         checkParameter(model5.Parameters().at("efficiency"), "efficiency", true, true);
         checkParameter(model5.Parameters().at("level_min"), "level_min", true, true);
         checkParameter(model5.Parameters().at("level_max"), "level_max", true, true);
@@ -395,8 +408,8 @@ library:
         BOOST_REQUIRE_EQUAL(model6.getConstraints().size(), 5);
         BOOST_REQUIRE_EQUAL(model6.Parameters().size(), 7);
         BOOST_REQUIRE_EQUAL(model6.Variables().size(), 4);
-        // BOOST_REQUIRE_EQUAL(model6.Ports().size(), 1); Unsuported
-        //  BOOST_REQUIRE_EQUAL(model6.PortFieldDefinitions().size(), 1); Unsuported
+        BOOST_REQUIRE_EQUAL(model6.Ports().size(), 1);
+        BOOST_REQUIRE_EQUAL(model6.PortFieldDefinitions().size(), 1);
         checkParameter(model6.Parameters().at("cost"), "cost", true, true);
         checkParameter(model6.Parameters().at("p_min"), "p_min", true, true);
         checkParameter(model6.Parameters().at("p_max"), "p_max", true, true);

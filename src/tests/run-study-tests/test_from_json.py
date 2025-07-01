@@ -2,15 +2,19 @@ from fixtures import *
 from parse_studies.look_for_studies import look_for_studies
 from parse_studies.json_collector import jsonCollector
 from check_on_results.create_checks import create_checks
-
+from parse_studies.cucumber_collector import cucumberCollector
 
 ROOT_FOLDER = Path('../resources/batches').resolve()
 
+# Collect names of tests that were migrated to cucumber
+cucumber_collector = cucumberCollector(Path('../cucumber').resolve())
+cucumber_studies = cucumber_collector.collect()
 
 # Search for studies inside directory ROOT_FOLDER and collects all their paths.
 # Each study is supposed to hold a check-config.json file, containing
 # all data to make particular checks on the associated study.
-study_paths = look_for_studies(ROOT_FOLDER)
+# Skip studies already migrated to cucumber.
+study_paths = look_for_studies(ROOT_FOLDER, cucumber_studies)
 
 # Collects json files in each study and retrieves the checks data from each of them.
 json_collector = jsonCollector(study_paths)

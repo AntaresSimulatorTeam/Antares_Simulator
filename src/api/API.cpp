@@ -68,10 +68,10 @@ SimulationResults APIInternal::execute(
         return {.antares_problems{}, .error = err};
     }
 
-    Settings settings;
     auto& parameters = study_->parameters;
     parameters.optOptions = optOptions;
 
+    Settings settings;
     Benchmarking::DurationCollector durationCollector;
     Benchmarking::OptimizationInfo optimizationInfo;
     auto ioQueueService = std::make_shared<Yuni::Job::QueueService>();

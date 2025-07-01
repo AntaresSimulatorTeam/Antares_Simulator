@@ -198,7 +198,7 @@ These files contain, for each kind of time-series, the number drawn (randomly or
 |                              | /Solar[^agg] | /batch number/area names/... |
 
 
-These files contain, for each kind of Antares-generated time-series, copies of the whole set of time-series generated. Batch numbers depend on the values set for the "refresh span" parameters of the stochastic generators (files are present if "store in output" was set to "true").
+These files contain, for each kind of Antares-generated time-series, copies of the whole set of time-series generated.
 
 ## Miscellaneous
 

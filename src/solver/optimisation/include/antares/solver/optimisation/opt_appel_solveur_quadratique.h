@@ -27,7 +27,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(PROBLEME_H
 void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO*, int);
 void OPT_InitialiserLeSecondMembreDuProblemeQuadratique(PROBLEME_HEBDO*, int);
 void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO*, int);
-bool OPT_AppelDuSolveurQuadratique(const Solver::Optimization::OptimizationOptions& options,
+bool OPT_AppelDuSolveurQuadratique(const Solver::Optimization::SingleOptimOptions& options,
                                    PROBLEME_ANTARES_A_RESOUDRE*);
-bool OPT_PilotageOptimisationQuadratique(const Solver::Optimization::OptimizationOptions& options,
+bool OPT_PilotageOptimisationQuadratique(const Solver::Optimization::SingleOptimOptions& options,
                                          PROBLEME_HEBDO*);

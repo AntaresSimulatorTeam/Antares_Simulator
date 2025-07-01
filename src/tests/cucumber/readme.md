@@ -20,7 +20,7 @@ scenarios later. The tags currently used in Antares are:
 Currently, tests are being migrated from the [legacy non-regression testing process](../run-study-tests). Thus, they 
 all begin by defining the path to the study to run and then call antares, through the following "steps":
 ~~~gherkin
-Given the study path is "someFolder/someStudy"
+Given the solver study path is "someFolder/someStudy"
 When I run antares simulator
 ~~~
 The test will load the study, run antares-simulator, and hold on to its outputs.  
