@@ -64,7 +64,7 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: ${{ github.workspace }}/.ccache
-          key: sonarcloud-${{ github.sha }}
+          key: sonarcloud-${{ github.ref_name }}
           restore-keys: |
             sonarcloud- 
 
@@ -253,7 +253,8 @@ jobs:
         run: ccache -s
 
       - name: Save ccache cache
+        if: ${{ !cancelled() }}
         uses: actions/cache/save@v4
         with:
           path: ${{ github.workspace }}/.ccache
-          key: sonarcloud-${{ github.sha }}
+          key: ${{ env.os }}-${{ github.ref_name }}
