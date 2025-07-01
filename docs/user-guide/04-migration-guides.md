@@ -18,7 +18,8 @@ The following properties were removed from **settings/generaldata.ini**.
 - `refreshintervalthermal`
 - `refreshintervalsolar`
 
-If the user provides a value for key refreshtimeseries the simulation will fail with a warning. Values for the refresh intervals will be ignored.
+If the user provides a value for key refreshtimeseries the simulation will fail with a warning.
+Values for the refresh intervals will be ignored.
 
 ## v9.2.0
 
@@ -32,10 +33,12 @@ The following properties were removed from **settings/generaldata.ini**.
 - `adequacy patch/set-to-null-ntc-between-physical-out-for-first-step`
 - `other preferences/initial-reservoir-levels`
 
-If the user provides any of the key/values below
+If the user provides any of the key/values below:
+
 - `adequacy patch/enable-first-step = true`
 - `adequacy patch/set-to-null-ntc-between-physical-out-for-first-step = false`
 - `other preferences/initial-reservoir-levels = hot start`
+- 
 the simulation will fail with a warning. We recommend removing these properties from `settings/generaldata.ini`. Other values (e.g `adequacy patch/enable-first-step = false`) will be ignored.
 
 #### Hydraulic reservoirs / long-term storage
@@ -81,7 +84,8 @@ operator = less
 hours = [1, 168]
 ```
 
-Possible values
+Possible values:
+
 - `cluster`: ID of the short-term storage in the same area
 - `variable`: `withdrawal`, `injection`, `netting`
 - `operator`: `less`, `equal`, `greater`
@@ -105,6 +109,7 @@ By convention, `year` start at 0 and `value` must be in interval [0, 1].
 #### Compatibility flag for hydro maximal power
 
 In file settings/generaldata.ini, in new section `compatibility`, add new property `hydro-pmax` with possible values
+
 - `daily` (default, legacy) 
 - `hourly` (new).
 
