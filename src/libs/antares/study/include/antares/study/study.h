@@ -283,6 +283,7 @@ public:
     ** \brief Get if the study is in readonly mode
     */
     bool readonly() const;
+
     //@}
 
     //! \name Time-series
@@ -300,8 +301,12 @@ public:
     ** \tparam TimeSeriesT The time-series set to store
     ** \return True if the operation succeeded (the file have been written), false otherwise
     */
-    template<unsigned int TimeSeriesT>
-    void storeTimeSeriesNumbers(Solver::IResultWriter& resultWriter) const;
+    template<TimeSeriesType TimeSeriesT>
+    void storeTimeSeriesNumbers(Solver::IResultWriter& resultWriter) const
+    {
+        storeTimeseriesNumbers<TimeSeriesT>(resultWriter, areas);
+    }
+
     //@}
 
     //! \name Simulation
@@ -330,6 +335,7 @@ public:
     ** \brief Initialize the progress meter
     */
     void initializeProgressMeter(bool tsGeneratorOnly);
+
     //@}
 
     //! \name Time-series Generators
@@ -337,17 +343,10 @@ public:
     /*!
     ** \brief Destroy all data of the TS generator '@TS'
     */
-    template<enum TimeSeriesType TS>
-    void destroyTSGeneratorData();
-
-    //! Destroy all data of the load TS generator
-    void destroyAllLoadTSGeneratorData();
-    //! Destroy all data of the solar TS generator
-    void destroyAllSolarTSGeneratorData();
-    //! Destroy all data of the wind TS generator
-    void destroyAllWindTSGeneratorData();
-    //! Destroy all data of the hydro TS generator
-    void destroyAllHydroTSGeneratorData();
+    template<TimeSeriesType TS>
+    inline void destroyTSGeneratorData()
+    {
+    }
 
     /*!
     ** \brief Import all time-series into the input folder
@@ -677,7 +676,5 @@ std::filesystem::path StudyCreateOutputPath(SimulationMode mode,
                                             const std::string& label,
                                             const std::tm& startTime);
 } // namespace Antares::Data
-
-#include "study.hxx"
 
 #endif /* __ANTARES_LIBS_STUDY_STUDY_H__ */

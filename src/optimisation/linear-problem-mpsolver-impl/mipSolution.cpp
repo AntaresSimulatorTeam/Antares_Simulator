@@ -21,6 +21,7 @@
 
 #include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/mipSolution.h>
+#include <antares/solver/utils/ortools_utils.h>
 
 namespace Antares::Optimisation::LinearProblemMpsolverImpl
 {
@@ -57,7 +58,7 @@ LinearProblemApi::MipStatus OrtoolsMipSolution::getStatus() const
 
 double OrtoolsMipSolution::getObjectiveValue() const
 {
-    return mpSolver_->Objective().Value();
+    return ::getObjectiveValue(mpSolver_);
 }
 
 double OrtoolsMipSolution::getOptimalValue(const LinearProblemApi::IMipVariable* var) const

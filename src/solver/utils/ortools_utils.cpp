@@ -38,6 +38,20 @@ const std::string SCIP_PARAMS = "parallel/maxnthreads 1";
 
 using Antares::Solver::Optimization::SingleOptimOptions;
 
+// TODO use Objective().Value() instead
+// This is a temporary workaround for Windows
+double getObjectiveValue(const MPSolver* solver)
+{
+    double ret = 0;
+    const auto& objective = solver->Objective();
+    for (const auto* variable: solver->variables())
+    {
+        ret += variable->solution_value() * objective.GetCoefficient(variable);
+    }
+    ret += objective.offset();
+    return ret;
+}
+
 // MPSolverParameters's copy constructor is private
 static void setGenericParameters(MPSolverParameters& params)
 {
