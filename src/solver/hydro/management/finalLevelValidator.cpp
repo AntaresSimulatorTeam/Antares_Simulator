@@ -31,7 +31,7 @@ namespace Antares::Solver
 {
 
 FinalLevelValidator::FinalLevelValidator(
-  Antares::Data::PartHydro& hydro,
+  const Antares::Data::PartHydro& hydro,
   unsigned int areaIndex,
   const Antares::Data::AreaName areaName, // gp : to std::string
   double initialLevel,

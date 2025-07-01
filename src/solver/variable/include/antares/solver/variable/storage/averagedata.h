@@ -24,6 +24,8 @@
 #include <antares/study/study.h>
 #include "antares/solver/variable/storage/intermediate.h"
 
+using HighPrecision = long double;
+
 namespace Antares
 {
 namespace Solver
@@ -53,11 +55,11 @@ public:
     void merge(unsigned int year, const IntermediateValues& rhs);
 
 public:
-    double monthly[MONTHS_PER_YEAR];
-    double weekly[WEEKS_PER_YEAR];
-    double daily[DAYS_PER_YEAR];
-    Antares::Memory::Stored<double>::Type hourly;
-    std::vector<double> year;
+    std::vector<HighPrecision> year;
+    std::vector<HighPrecision> monthly{MONTHS_PER_YEAR};
+    std::vector<HighPrecision> weekly{WEEKS_PER_YEAR};
+    std::vector<HighPrecision> daily{DAYS_PER_YEAR};
+    std::vector<HighPrecision> hourly{HOURS_PER_YEAR};
     unsigned int nbYearsCapacity;
     mutable double allYears; // FIX MEEE - Remove the mutable as soon as possible
     std::vector<float> yearsWeight;

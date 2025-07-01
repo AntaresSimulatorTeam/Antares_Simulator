@@ -223,16 +223,13 @@ jobs:
         with:
           feature: "features/solver-features/hybrid_studies.feature"
 
-      - name: Barrier
-        if: ${{ !success() }}
-        run: exit 1
-
       - name: Collect coverage into one XML report
+        if: ${{ !cancelled() }}
         run: |
           gcovr --sonarqube --output coverage.xml
 
-
       - name: SonarQube Scan
+        if: ${{ !cancelled() }}
         uses: SonarSource/sonarqube-scan-action@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -240,6 +237,10 @@ jobs:
         with:
           args: >
             --define sonar.host.url="${{ env.SONAR_SERVER_URL }}" --define sonar.cfamily.compile-commands="${{ env.BUILD_WRAPPER_OUT_DIR }}/compile_commands.json"
+
+      - name: Barrier
+        if: ${{ !success() }}
+        run: exit 1
 
       - name: Cache vcpkg binary dir
         if: always()
@@ -258,3 +259,4 @@ jobs:
         with:
           path: ${{ github.workspace }}/.ccache
           key: ${{ env.os }}-${{ github.ref_name }}
+
