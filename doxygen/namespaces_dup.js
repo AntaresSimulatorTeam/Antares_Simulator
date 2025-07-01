@@ -1432,6 +1432,7 @@ var namespaces_dup =
           [ "ISimulationObserver", "classAntares_1_1Solver_1_1Simulation_1_1ISimulationObserver.html", "classAntares_1_1Solver_1_1Simulation_1_1ISimulationObserver" ],
           [ "NullSimulationObserver", "classAntares_1_1Solver_1_1Simulation_1_1NullSimulationObserver.html", "classAntares_1_1Solver_1_1Simulation_1_1NullSimulationObserver" ],
           [ "ITimeSeriesNumbersWriter", "classAntares_1_1Solver_1_1Simulation_1_1ITimeSeriesNumbersWriter.html", "classAntares_1_1Solver_1_1Simulation_1_1ITimeSeriesNumbersWriter" ],
+          [ "NumSpaceManager", "classAntares_1_1Solver_1_1Simulation_1_1NumSpaceManager.html", "classAntares_1_1Solver_1_1Simulation_1_1NumSpaceManager" ],
           [ "RemixHydroOutput", "structAntares_1_1Solver_1_1Simulation_1_1RemixHydroOutput.html", "structAntares_1_1Solver_1_1Simulation_1_1RemixHydroOutput" ],
           [ "yearJob", "classAntares_1_1Solver_1_1Simulation_1_1yearJob.html", "classAntares_1_1Solver_1_1Simulation_1_1yearJob" ],
           [ "ISimulation", "classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html", "classAntares_1_1Solver_1_1Simulation_1_1ISimulation" ],
@@ -1709,8 +1710,7 @@ var namespaces_dup =
               [ "Max", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Max.html", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Max" ],
               [ "MinMaxBase", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase.html", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase" ],
               [ "RawData", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData" ],
-              [ "StdDeviation", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation" ],
-              [ "eps", "minmax-data_8cpp.html#ab1f5bee97e8ac9f3da1dd427e422384f", null ]
+              [ "StdDeviation", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation" ]
             ] ]
           ] ],
           [ "VCardAllAreas", "structAntares_1_1Solver_1_1Variable_1_1VCardAllAreas.html", "structAntares_1_1Solver_1_1Variable_1_1VCardAllAreas" ],

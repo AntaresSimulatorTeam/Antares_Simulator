@@ -6,7 +6,7 @@ var classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DomesticUnsuppliedEnergy =
     [ "ResultsType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DomesticUnsuppliedEnergy.html#a1caa0f74bcd1850320a427ba3c8ca0f3", null ],
     [ "VariableAccessorType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DomesticUnsuppliedEnergy.html#ad51e6cf2af3cb1e7d1fab14bdffdd53e", null ],
     [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DomesticUnsuppliedEnergy.html#a6723cbb048ef2686352b505a471dc3af", null ],
-    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DomesticUnsuppliedEnergy.html#a713b3af6b379c3d03c9ab07bd2310592", null ],
+    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DomesticUnsuppliedEnergy.html#a32bb438870413184633f0e685949fce4", null ],
     [ "hourBegin", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DomesticUnsuppliedEnergy.html#abf1a5d5cab003b37d67b5cf60938e85e", null ],
     [ "hourForEachArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DomesticUnsuppliedEnergy.html#a7eea58f62860e7ee0299e432ea5e2e94", null ],
     [ "initializeFromArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DomesticUnsuppliedEnergy.html#acc350d4bac15242e5a2f872af1940186", null ],

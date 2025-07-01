@@ -9,7 +9,7 @@ var classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByDispatchablePla
     [ "ProductionByDispatchablePlant", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByDispatchablePlant.html#ac2938dcf650a4904895f44304356d68a", null ],
     [ "~ProductionByDispatchablePlant", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByDispatchablePlant.html#aad16a1218246fbf2c25e69f73b331cc2", null ],
     [ "buildDigest", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByDispatchablePlant.html#a6e2ef28c9ffe62d7b3ad79daa7551468", null ],
-    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByDispatchablePlant.html#a5a202a37fed652634c2d5191800b898f", null ],
+    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByDispatchablePlant.html#a386fc2722ed493d22ac725591d9928f1", null ],
     [ "getMaxNumberColumns", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByDispatchablePlant.html#a27ec48e8b90dd3743f58ec93807ad0d7", null ],
     [ "hourBegin", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByDispatchablePlant.html#a36b8c23f4be4628a65b7f4719a76dc79", null ],
     [ "hourForEachArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByDispatchablePlant.html#aa4e96d56747be9f4f5528f508257cba9", null ],

@@ -7,7 +7,7 @@ var classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost =
     [ "VariableAccessorType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#a1aa649caed83a850570bd767053ed604", null ],
     [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#aa59d396c1182277deeef0b8f7f4cd2a4", null ],
     [ "buildDigest", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#a54da654d329136f4452f82c396c137eb", null ],
-    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#ad23a9618a78eac43679215bf3104fa69", null ],
+    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#ad4185b7daa6eedec87f69f9b678fd75b", null ],
     [ "hourBegin", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#a94a11c3e812d152a5c7d0c9fb2635610", null ],
     [ "hourForEachArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#a4251ac908c34cff9869580d3d59469dc", null ],
     [ "hourForEachLink", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#ac35ec915b2a6ca5f5ec77d16aebd9b06", null ],

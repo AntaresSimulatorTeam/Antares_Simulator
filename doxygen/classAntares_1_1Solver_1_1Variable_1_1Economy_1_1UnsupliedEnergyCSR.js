@@ -6,7 +6,7 @@ var classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR =
     [ "ResultsType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html#aa30701999e87cc04f9c26b46db9d1ba1", null ],
     [ "VariableAccessorType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html#abf1e5104d2ca6779769e6f6071f989b8", null ],
     [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html#ac33968c0f9cfa0512057812c18f52d3d", null ],
-    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html#ad9b10ccff79b6934328ebd1026e11055", null ],
+    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html#ad77129fb474f0799176bceb45be68161", null ],
     [ "hourBegin", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html#ab68b203e07721b0dd705cfaa5ad2b484", null ],
     [ "hourForEachArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html#a47564e119e8f0da31aa6bcab98f370ad", null ],
     [ "initializeFromArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html#a0a0d8fd5523978d5e86e0ed1aa43cdbc", null ],

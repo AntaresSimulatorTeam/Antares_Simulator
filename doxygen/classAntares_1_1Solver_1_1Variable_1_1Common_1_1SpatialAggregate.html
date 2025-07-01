@@ -250,10 +250,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>hourForEachArea</b> (
 template&lt;class V , class SetT &gt; </td></tr>
 <tr class="memitem:a2aec06fe00973e5a53229c006b05d331"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>yearEndSpatialAggregates</b> (V &amp;allVars, uint year, const SetT &amp;set, uint numSpace)</td></tr>
 <tr class="separator:a2aec06fe00973e5a53229c006b05d331"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9f65232c92156bca84d2658f46fb87c4"><td class="memTemplParams" colspan="2"><a id="a9f65232c92156bca84d2658f46fb87c4"></a>
+<tr class="memitem:a1756a2fa7522408b5a6987d00c0b757f"><td class="memTemplParams" colspan="2"><a id="a1756a2fa7522408b5a6987d00c0b757f"></a>
 template&lt;class V &gt; </td></tr>
-<tr class="memitem:a9f65232c92156bca84d2658f46fb87c4"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>computeSpatialAggregatesSummary</b> (V &amp;allVars, std::map&lt; unsigned int, unsigned int &gt; &amp;numSpaceToYear, uint nbYearsForCurrentSummary)</td></tr>
-<tr class="separator:a9f65232c92156bca84d2658f46fb87c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1756a2fa7522408b5a6987d00c0b757f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>computeSpatialAggregatesSummary</b> (V &amp;allVars, unsigned int year, unsigned int numSpace)</td></tr>
+<tr class="separator:a1756a2fa7522408b5a6987d00c0b757f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a62e530766f43db31f82e0eb53296340e"><td class="memTemplParams" colspan="2"><a id="a62e530766f43db31f82e0eb53296340e"></a>
 template&lt;class V , class SetT &gt; </td></tr>
 <tr class="memitem:a62e530766f43db31f82e0eb53296340e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>simulationEndSpatialAggregates</b> (V &amp;allVars, const SetT &amp;set)</td></tr>
@@ -499,13 +499,13 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>yearEndBuild</
 <tr class="memitem:ae658ca39cb6528f676aafd415c2c26c1 inherit pro_static_methods_classAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList"><td class="memItemLeft" align="right" valign="top"><a id="ae658ca39cb6528f676aafd415c2c26c1"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>yearEnd</b> (unsigned int, unsigned int)</td></tr>
 <tr class="separator:ae658ca39cb6528f676aafd415c2c26c1 inherit pro_static_methods_classAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a627a2219ef3910a13e97184f0de1df69 inherit pro_static_methods_classAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList"><td class="memItemLeft" align="right" valign="top"><a id="a627a2219ef3910a13e97184f0de1df69"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>computeSummary</b> (std::map&lt; unsigned int, unsigned int &gt; &amp;numSpaceToYear, uint nbYearsForCurrentSummary)</td></tr>
-<tr class="separator:a627a2219ef3910a13e97184f0de1df69 inherit pro_static_methods_classAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a34b4501dbb1d7b0eb381d7c47c0c04d5 inherit pro_static_methods_classAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList"><td class="memTemplParams" colspan="2"><a id="a34b4501dbb1d7b0eb381d7c47c0c04d5"></a>
+<tr class="memitem:ad7fb4d5a42abb12544504814cc755a4a inherit pro_static_methods_classAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList"><td class="memItemLeft" align="right" valign="top"><a id="ad7fb4d5a42abb12544504814cc755a4a"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>computeSummary</b> (unsigned int year, unsigned int numSpace)</td></tr>
+<tr class="separator:ad7fb4d5a42abb12544504814cc755a4a inherit pro_static_methods_classAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2d046c20b8efc5cc1718fdbcee20795 inherit pro_static_methods_classAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList"><td class="memTemplParams" colspan="2"><a id="ad2d046c20b8efc5cc1718fdbcee20795"></a>
 template&lt;class V &gt; </td></tr>
-<tr class="memitem:a34b4501dbb1d7b0eb381d7c47c0c04d5 inherit pro_static_methods_classAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>computeSpatialAggregatesSummary</b> (V &amp;, std::map&lt; unsigned int, unsigned int &gt; &amp;, unsigned int)</td></tr>
-<tr class="separator:a34b4501dbb1d7b0eb381d7c47c0c04d5 inherit pro_static_methods_classAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2d046c20b8efc5cc1718fdbcee20795 inherit pro_static_methods_classAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>computeSpatialAggregatesSummary</b> (V &amp;, unsigned int, unsigned int)</td></tr>
+<tr class="separator:ad2d046c20b8efc5cc1718fdbcee20795 inherit pro_static_methods_classAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1813d6a40cf59a5153887858b010b299 inherit pro_static_methods_classAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList"><td class="memTemplParams" colspan="2"><a id="a1813d6a40cf59a5153887858b010b299"></a>
 template&lt;class V &gt; </td></tr>
 <tr class="memitem:a1813d6a40cf59a5153887858b010b299 inherit pro_static_methods_classAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>simulationEndSpatialAggregates</b> (V &amp;)</td></tr>

@@ -10,7 +10,7 @@ var classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost =
     [ "beforeYearByYearExport", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a3f91680ff0e9c28d3f0075d048f39ca6", null ],
     [ "buildDigest", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a60f3909a47880056dd4c6c8f7e3a9146", null ],
     [ "buildSurveyReport", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a699b309cc9945c7e50e30fc55ad05c5b", null ],
-    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a2a8076392d3a810ecbf6af56a1e2e612", null ],
+    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a5f7dfbb3beed7e66b2fdb8492e19c54d", null ],
     [ "getMaxNumberColumns", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a5623491d1c544edb7f74e30b63fc1c04", null ],
     [ "hourBegin", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#af5cca34eca7b4e339dc3f931098dd737", null ],
     [ "hourEnd", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a818f114652f59864ac04511de7ba8fb6", null ],

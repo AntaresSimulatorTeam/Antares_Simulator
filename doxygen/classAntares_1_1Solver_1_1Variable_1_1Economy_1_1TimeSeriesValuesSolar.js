@@ -6,7 +6,7 @@ var classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesSolar =
     [ "ResultsType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesSolar.html#aeb1f98c514e1d3c7111275d588cd1561", null ],
     [ "VariableAccessorType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesSolar.html#a5670b1ad555b63d166dd24c44b957c4f", null ],
     [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesSolar.html#a5470ab7b289767fabd37904039974137", null ],
-    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesSolar.html#aa249c89f3e65653af5e083070ef76522", null ],
+    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesSolar.html#a42fc011b71450fab61c292b465d9eb77", null ],
     [ "hourBegin", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesSolar.html#aad7c7e2132ca6d79552f4eb71074c857", null ],
     [ "hourEnd", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesSolar.html#acf0e6fa7687316e90ec311ced1e9e4b0", null ],
     [ "hourForEachArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesSolar.html#a550e3818e317ae49b2e4da275d44c407", null ],

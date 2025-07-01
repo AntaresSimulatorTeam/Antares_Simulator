@@ -6,7 +6,7 @@ var classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost =
     [ "ResultsType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost.html#a0e1dd3e54d3cd21ff8f1c97094525b87", null ],
     [ "VariableAccessorType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost.html#aeb8a4896a21091e3a8b8dcc6613704f6", null ],
     [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost.html#a34ea43df961d4e91d7afd1422bc52a86", null ],
-    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost.html#a18502d316292e2344cae0ac32571fc3b", null ],
+    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost.html#ac47e66174b4c29d303bd2d9bea965b7c", null ],
     [ "hourBegin", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost.html#a890bd3d434fa217fe305c0d74f3cecfb", null ],
     [ "hourForEachArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost.html#a5272ce001ef10d961f9ae776bb6eb836", null ],
     [ "initializeFromArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost.html#aae4d31441091e0e0f9b6ec3e6c5778ba", null ],

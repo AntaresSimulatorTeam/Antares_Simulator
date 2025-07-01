@@ -6,7 +6,7 @@ var classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin =
     [ "ResultsType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html#af36bf39360b65d3a1309d63903678acb", null ],
     [ "VariableAccessorType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html#a476bcd1c0db02869da2a523e4fae369e", null ],
     [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html#ad86b1ec08e9d2776b9672ab341964936", null ],
-    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html#a484417cd951c51c9efe7e90d535dcf2b", null ],
+    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html#abd6debdd9b2f869d8b798e60fe2128c6", null ],
     [ "hourBegin", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html#a9e3958e587d0cb8ea00c23c5a45a7430", null ],
     [ "hourForEachArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html#a11aaa96a98fedf0d76737e837609142a", null ],
     [ "initializeFromArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html#a5397f78b97407b03027b5415ab0dffa7", null ],

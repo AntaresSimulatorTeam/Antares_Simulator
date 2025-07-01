@@ -8,7 +8,7 @@ var classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowQuad =
     [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowQuad.html#ab137c0e3af3d476329c0e095f495ac8e", null ],
     [ "~FlowQuad", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowQuad.html#a1b16f32565207a8c66334ca0ae63ba32", null ],
     [ "buildDigest", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowQuad.html#a5e7cb063f386124b1cc03bca9db24852", null ],
-    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowQuad.html#abff740fd7a3301cac56719eb70fe83a1", null ],
+    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowQuad.html#af7be9fa5a52f89817168204fdb9dca1b", null ],
     [ "hourBegin", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowQuad.html#a9ceecea25c86403949bb409d81a7cd54", null ],
     [ "hourForEachArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowQuad.html#a8088ed16fbde8e3fb74c68e832121267", null ],
     [ "hourForEachLink", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowQuad.html#a24398322dd1b7124a0b7712d4e83349f", null ],

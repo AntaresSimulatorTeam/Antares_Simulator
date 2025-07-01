@@ -7,7 +7,7 @@ var classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts =
     [ "VariableAccessorType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#a39d268ad831edd9ce25efda2fe9066db", null ],
     [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#a71a08683a3f7070953435de24af39260", null ],
     [ "buildDigest", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#a1b39751b93451c2080847b7a776fe80b", null ],
-    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#a2655820eec76acf80948433acc116a48", null ],
+    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#a12ccff3afbe078dcdeb4196b59bcd4d2", null ],
     [ "hourForEachArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#a2abe983705d4bc378af030d1462327a7", null ],
     [ "hourForEachLink", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#aa6af065e7c94ddc69ad539b5e5f7d0bd", null ],
     [ "initializeFromArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#ad059ddae5d6235533cb95fdf92400a39", null ],

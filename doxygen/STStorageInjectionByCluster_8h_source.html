@@ -295,93 +295,88 @@ $(document).ready(function(){initNavTree('STStorageInjectionByCluster_8h_source.
 <div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;        NextType::yearEnd(year, numSpace);</div>
 <div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    }</div>
 <div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160; </div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;    <span class="keywordtype">void</span> computeSummary(std::map&lt;unsigned int, unsigned int&gt;&amp; numSpaceToYear,</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;                        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> nbYearsForCurrentSummary)</div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    {</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace = 0; numSpace &lt; nbYearsForCurrentSummary; ++numSpace)</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;        {</div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;            <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> clusterIndex = 0; clusterIndex &lt; nbClusters_; ++clusterIndex)</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;            {</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;                <span class="comment">// Merge all those values with the global results</span></div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;                <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a5c927574a94a005bd28a3522d2176334">AncestorType::pResults</a>[clusterIndex].merge(</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;                  numSpaceToYear[numSpace],</div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;                  pValuesForTheCurrentYear[numSpace][clusterIndex]);</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;            }</div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;        }</div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160; </div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;        <span class="comment">// Next variable</span></div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;        NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);</div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;    }</div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160; </div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;    <span class="keywordtype">void</span> hourBegin(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> hourInTheYear)</div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;    {</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;        <span class="comment">// Next variable</span></div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;        NextType::hourBegin(hourInTheYear);</div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;    }</div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160; </div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;    <span class="keywordtype">void</span> hourForEachArea(<a class="code" href="classAntares_1_1State.html">State</a>&amp; state, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;    {</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;        <span class="keywordflow">for</span> (uint clusterIndex = 0; clusterIndex != state.area-&gt;shortTermStorage.count();</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;             ++clusterIndex)</div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;        {</div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;            <span class="comment">// ST storage injection for the current cluster and this hour</span></div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;            pValuesForTheCurrentYear[numSpace][clusterIndex].hour[state.hourInTheYear]</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;              = state.hourlyResults-&gt;ShortTermStorage[state.hourInTheWeek].injection[clusterIndex];</div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;        }</div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160; </div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;        <span class="comment">// Next variable</span></div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;        NextType::hourForEachArea(state, numSpace);</div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;    }</div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160; </div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">void</span> buildDigest(SurveyResults&amp; <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>, <span class="keywordtype">int</span> digestLevel, <span class="keywordtype">int</span> dataLevel)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;        <span class="comment">// Ask to build the digest to the next variable</span></div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;        NextType::buildDigest(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>, digestLevel, dataLevel);</div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;    }</div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160; </div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;    Antares::Memory::Stored&lt;double&gt;::ConstReturnType retrieveRawHourlyValuesForCurrentYear(</div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;      <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> column,</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;      <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;        <span class="keywordflow">return</span> pValuesForTheCurrentYear[numSpace][column].hour;</div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;    }</div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160; </div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;    <span class="keywordtype">void</span> localBuildAnnualSurveyReport(SurveyResults&amp; <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>,</div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;                                      <span class="keywordtype">int</span> fileLevel,</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;                                      <span class="keywordtype">int</span> precision,</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;                                      <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;        <span class="comment">// Initializing external pointer on current variable non applicable status</span></div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;        <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.isCurrentVarNA = AncestorType::isNonApplicable;</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;    <span class="keywordtype">void</span> computeSummary(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> year, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;    {</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> clusterIndex = 0; clusterIndex &lt; nbClusters_; ++clusterIndex)</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;        {</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;            <span class="comment">// Merge all those values with the global results</span></div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;            <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a5c927574a94a005bd28a3522d2176334">AncestorType::pResults</a>[clusterIndex]</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;              .merge(year, pValuesForTheCurrentYear[numSpace][clusterIndex]);</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;        }</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160; </div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;        <span class="comment">// Next variable</span></div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;        NextType::computeSummary(year, numSpace);</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;    }</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160; </div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;    <span class="keywordtype">void</span> hourBegin(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> hourInTheYear)</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    {</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;        <span class="comment">// Next variable</span></div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;        NextType::hourBegin(hourInTheYear);</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    }</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160; </div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;    <span class="keywordtype">void</span> hourForEachArea(<a class="code" href="classAntares_1_1State.html">State</a>&amp; state, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;    {</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;        <span class="keywordflow">for</span> (uint clusterIndex = 0; clusterIndex != state.area-&gt;shortTermStorage.count();</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;             ++clusterIndex)</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;        {</div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;            <span class="comment">// ST storage injection for the current cluster and this hour</span></div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;            pValuesForTheCurrentYear[numSpace][clusterIndex].hour[state.hourInTheYear]</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;              = state.hourlyResults-&gt;ShortTermStorage[state.hourInTheWeek].injection[clusterIndex];</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;        }</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160; </div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;        <span class="comment">// Next variable</span></div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;        NextType::hourForEachArea(state, numSpace);</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;    }</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160; </div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">void</span> buildDigest(SurveyResults&amp; <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>, <span class="keywordtype">int</span> digestLevel, <span class="keywordtype">int</span> dataLevel)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;        <span class="comment">// Ask to build the digest to the next variable</span></div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;        NextType::buildDigest(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>, digestLevel, dataLevel);</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;    }</div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160; </div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;    Antares::Memory::Stored&lt;double&gt;::ConstReturnType retrieveRawHourlyValuesForCurrentYear(</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;      <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> column,</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;      <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;        <span class="keywordflow">return</span> pValuesForTheCurrentYear[numSpace][column].hour;</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;    }</div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160; </div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;    <span class="keywordtype">void</span> localBuildAnnualSurveyReport(SurveyResults&amp; <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>,</div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;                                      <span class="keywordtype">int</span> fileLevel,</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;                                      <span class="keywordtype">int</span> precision,</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;                                      <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;        <span class="comment">// Initializing external pointer on current variable non applicable status</span></div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;        <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.isCurrentVarNA = AncestorType::isNonApplicable;</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160; </div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;        <span class="keywordflow">if</span> (AncestorType::isPrinted[0])</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;        {</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;            assert(NULL != <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.data.area);</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;            <span class="keyword">const</span> <span class="keyword">auto</span>&amp; shortTermStorage = <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.data.area-&gt;shortTermStorage;</div>
 <div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160; </div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;        <span class="keywordflow">if</span> (AncestorType::isPrinted[0])</div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;        {</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;            assert(NULL != <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.data.area);</div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;            <span class="keyword">const</span> <span class="keyword">auto</span>&amp; shortTermStorage = <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.data.area-&gt;shortTermStorage;</div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160; </div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;            <span class="comment">// Write the data for the current year</span></div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;            uint clusterIndex = 0;</div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; sts: shortTermStorage.storagesByIndex)</div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;            {</div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;                <span class="comment">// Write the data for the current year</span></div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;                <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.variableCaption = sts.properties.name;</div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;                <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.variableUnit = <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageInjectionByCluster.html#ad2cc8c689f4ab5b9fb06c25fa6d31cda">VCardType::Unit</a>();</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;                pValuesForTheCurrentYear[numSpace][clusterIndex]</div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;                  .template buildAnnualSurveyReport&lt;VCardType&gt;(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>, fileLevel, precision);</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;            <span class="comment">// Write the data for the current year</span></div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;            uint clusterIndex = 0;</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; sts: shortTermStorage.storagesByIndex)</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;            {</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;                <span class="comment">// Write the data for the current year</span></div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;                <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.variableCaption = sts.properties.name;</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;                <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.variableUnit = <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageInjectionByCluster.html#ad2cc8c689f4ab5b9fb06c25fa6d31cda">VCardType::Unit</a>();</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;                pValuesForTheCurrentYear[numSpace][clusterIndex]</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;                  .template buildAnnualSurveyReport&lt;VCardType&gt;(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>, fileLevel, precision);</div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160; </div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;                clusterIndex++;</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;            }</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;        }</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;    }</div>
 <div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160; </div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;                clusterIndex++;</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;            }</div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;        }</div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;    }</div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160; </div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;    <span class="keyword">typename</span> VCardType::IntermediateValuesType pValuesForTheCurrentYear;</div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;    <span class="keywordtype">size_t</span> nbClusters_;</div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> pNbYearsParallel;</div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160; </div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;}; <span class="comment">// class STstorageInjectionByCluster</span></div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160; </div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;} <span class="comment">// End namespace Antares::Solver::Variable::Economy</span></div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;    <span class="keyword">typename</span> VCardType::IntermediateValuesType pValuesForTheCurrentYear;</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;    <span class="keywordtype">size_t</span> nbClusters_;</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> pNbYearsParallel;</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160; </div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;}; <span class="comment">// class STstorageInjectionByCluster</span></div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160; </div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;} <span class="comment">// End namespace Antares::Solver::Variable::Economy</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Area_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Area.html">Antares::Data::Area</a></div><div class="ttdoc">Definition for a single area.</div><div class="ttdef"><b>Definition:</b> area.h:52</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdef"><b>Definition:</b> study.h:65</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageInjectionByCluster_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageInjectionByCluster.html">Antares::Solver::Variable::Economy::STstorageInjectionByCluster</a></div><div class="ttdoc">Energy generated by short term storage clusters.</div><div class="ttdef"><b>Definition:</b> STStorageInjectionByCluster.h:90</div></div>
@@ -413,7 +408,7 @@ $(document).ready(function(){initNavTree('STStorageInjectionByCluster_8h_source.
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageInjectionByCluster_html_ad2cc8c689f4ab5b9fb06c25fa6d31cda"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageInjectionByCluster.html#ad2cc8c689f4ab5b9fb06c25fa6d31cda">Antares::Solver::Variable::Economy::VCardSTstorageInjectionByCluster::Unit</a></div><div class="ttdeci">static std::string Unit()</div><div class="ttdoc">Unit.</div><div class="ttdef"><b>Definition:</b> STStorageInjectionByCluster.h:36</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageInjectionByCluster_html_ae542f01632c9f357e2367483a4d9b690"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageInjectionByCluster.html#ae542f01632c9f357e2367483a4d9b690">Antares::Solver::Variable::Economy::VCardSTstorageInjectionByCluster::precision</a></div><div class="ttdeci">static constexpr uint8_t precision</div><div class="ttdoc">Precision (views)</div><div class="ttdef"><b>Definition:</b> STStorageInjectionByCluster.h:61</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageInjectionByCluster_html_aeade749afc34270f34f3c9047ea89984"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageInjectionByCluster.html#aeade749afc34270f34f3c9047ea89984">Antares::Solver::Variable::Economy::VCardSTstorageInjectionByCluster::spatialAggregate</a></div><div class="ttdeci">static constexpr uint8_t spatialAggregate</div><div class="ttdoc">The Spatial aggregation.</div><div class="ttdef"><b>Definition:</b> STStorageInjectionByCluster.h:69</div></div>
-<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html">Antares::Solver::Variable::R::AllYears::Average</a></div><div class="ttdef"><b>Definition:</b> average.h:38</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html">Antares::Solver::Variable::R::AllYears::Average</a></div><div class="ttdef"><b>Definition:</b> average.h:40</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1VariableAccessor_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1VariableAccessor.html">Antares::Solver::Variable::VariableAccessor</a></div><div class="ttdef"><b>Definition:</b> info.h:67</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

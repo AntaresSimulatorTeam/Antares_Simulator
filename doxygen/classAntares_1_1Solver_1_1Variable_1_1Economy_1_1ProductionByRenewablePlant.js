@@ -8,7 +8,7 @@ var classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant 
     [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant.html#a9869b6961e7376f6670802fed92104be", null ],
     [ "ProductionByRenewablePlant", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant.html#ae783d0e67c23772f8066b781c574b7c8", null ],
     [ "buildDigest", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant.html#a718600a3eef91a6ff41566cb98d4414b", null ],
-    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant.html#ab1bf997a4fde9fb5c670cfa71e219ec6", null ],
+    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant.html#a1f1869ba44349a733183aa2df4fbf8f2", null ],
     [ "getMaxNumberColumns", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant.html#a7c7033714188b075b76683247deed787", null ],
     [ "hourBegin", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant.html#a1241ef86f108556fab2a8ee12ba142bc", null ],
     [ "hourForEachArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant.html#a6fb3742b1531dda961c4f4eb5c7abade", null ],

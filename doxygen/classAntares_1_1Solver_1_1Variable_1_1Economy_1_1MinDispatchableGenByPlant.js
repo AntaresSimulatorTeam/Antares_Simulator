@@ -9,7 +9,7 @@ var classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlant =
     [ "MinDispatchableGenByPlant", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlant.html#a61c97c54d79b49c78c30b985cb98e212", null ],
     [ "~MinDispatchableGenByPlant", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlant.html#a1ea8763d626fdbfb489ae1f313b09c22", null ],
     [ "buildDigest", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlant.html#a55078d897ddd81c11fa6c089a358a5f0", null ],
-    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlant.html#a4cc344a542d53af9645d47e66f68ddee", null ],
+    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlant.html#a9d45dda38da40683da04987b658a79dc", null ],
     [ "getMaxNumberColumns", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlant.html#aa38f0d8447cab39fc7429d8a1ff91a44", null ],
     [ "hourForEachArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlant.html#aff4ed0e6c90d679297fdd3085c882cfd", null ],
     [ "initializeFromArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlant.html#ae812ff996d6bb69fc38468ab9ebbe741", null ],

@@ -7,7 +7,7 @@ var classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant =
     [ "VariableAccessorType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#a55086957b44eb4513016dee9b59dc824", null ],
     [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#a51e384092f5e6524864eaccfd1c4471a", null ],
     [ "ProfitByPlant", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#af6b7ec3d18d3119d3b3575235b15aa2b", null ],
-    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#acce14be1ebf03d70243c83f9bccc16ba", null ],
+    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#a22208b46a9f2bc1c01d275a875e8e78b", null ],
     [ "getMaxNumberColumns", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#a69f065ab5058bee9c0fbc20ceadca0d0", null ],
     [ "hourBegin", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#a35ec22f3720e136cf86514d96b3fee46", null ],
     [ "hourForEachArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#acf1fe41e75a02c7fcfe26670c45b38f6", null ],

@@ -6,7 +6,7 @@ var classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy =
     [ "ResultsType", "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy.html#a9c61bb5bb8c7d22740c9416c56dbeb2d", null ],
     [ "VariableAccessorType", "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy.html#ab2a857bf20f9161d0a94ad4178733386", null ],
     [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy.html#add1a5f82fa1a893861378c2ae711ff4d", null ],
-    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy.html#a6acb0ef013948c17185aa1b9db2b9e17", null ],
+    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy.html#aeac1ce92ea2b149c5c96416996160431", null ],
     [ "hourBegin", "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy.html#af0cdf485f9dfef6904b0a68f399a2341", null ],
     [ "hourForEachArea", "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy.html#a7b9d1c76bf612fc526732a4cd2ea57f2", null ],
     [ "initializeFromArea", "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy.html#a98c7474a21880b36bee347e76d31b640", null ],

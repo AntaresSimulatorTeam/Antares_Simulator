@@ -7,7 +7,7 @@ var classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate =
     [ "VariableAccessorType", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a9cec350197983334681cfc1fd643023b", null ],
     [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a7e791c49538cc666472a9eaa07dc88bb", null ],
     [ "buildDigest", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a8e78b4509c8ab1b3f38e9d30c778d6f5", null ],
-    [ "computeSpatialAggregatesSummary", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a9f65232c92156bca84d2658f46fb87c4", null ],
+    [ "computeSpatialAggregatesSummary", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a1756a2fa7522408b5a6987d00c0b757f", null ],
     [ "hourBegin", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a5cd5e9669343066716a256ff36524aed", null ],
     [ "hourForEachArea", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a17655a4c5e55df73a1e66a951092ddd4", null ],
     [ "initializeFromArea", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a19abac0866e70731df17d50beee74b1f", null ],

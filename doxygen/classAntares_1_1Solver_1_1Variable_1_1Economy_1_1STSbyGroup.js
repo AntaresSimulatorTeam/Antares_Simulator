@@ -9,7 +9,7 @@ var classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STSbyGroup =
     [ "buildDigest", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STSbyGroup.html#a47fe7f315798bb241a909f8d0adf09fe", null ],
     [ "buildSurveyReport", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STSbyGroup.html#a252355643ccab0bad1caad0470f55f36", null ],
     [ "caption", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STSbyGroup.html#a8fd3695997419c9277ba98357d424dc7", null ],
-    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STSbyGroup.html#ae259edd71ac2c317be084d67f5672ae3", null ],
+    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STSbyGroup.html#a80ddafb758008bc143eafe57ebfb8fc3", null ],
     [ "getMaxNumberColumns", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STSbyGroup.html#ad6299b8829435bfcfd40e84423a9eefa", null ],
     [ "hourBegin", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STSbyGroup.html#a74a3fcbda3ef741ea499468d542f1e78", null ],
     [ "hourForEachArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STSbyGroup.html#a8fe2e53dc1bec25868254e70f4d4a932", null ],

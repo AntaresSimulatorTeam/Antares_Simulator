@@ -6,7 +6,7 @@ var classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCsr =
     [ "ResultsType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCsr.html#aad999ad9b894cb9e68fd2b93cd4c9473", null ],
     [ "VariableAccessorType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCsr.html#a9bef7db958e9fad3b1560484d21ec0dc", null ],
     [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCsr.html#a1d27b13b40c30eea8a03959bf21c710f", null ],
-    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCsr.html#abcf1e72848215c0087fbb5686562e45d", null ],
+    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCsr.html#a98d74d82be80bdc4415b8cc0c6eb974f", null ],
     [ "initializeFromStudy", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCsr.html#a9b3cd402908b46e995021d1455a2860a", null ],
     [ "localBuildAnnualSurveyReport", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCsr.html#aeb2dc8b74d9583d918bf55a3ac12518d", null ],
     [ "retrieveRawHourlyValuesForCurrentYear", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCsr.html#a432b5d8be411a1daa823a10c1fd86455", null ],

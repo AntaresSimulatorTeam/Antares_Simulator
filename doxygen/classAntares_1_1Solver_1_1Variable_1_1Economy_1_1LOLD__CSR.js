@@ -6,7 +6,7 @@ var classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__CSR =
     [ "ResultsType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__CSR.html#ae41a0bf5e526b001d17f15a339a0972f", null ],
     [ "VariableAccessorType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__CSR.html#a94b1897659867c4b8f4001385888d561", null ],
     [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__CSR.html#acd281a8e1abe3f400edad20231948e67", null ],
-    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__CSR.html#a1d71ebbdcf539f9ee89adcc9cd745ffa", null ],
+    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__CSR.html#a295725f7506d4c4f9661d6170328a3a0", null ],
     [ "hourForEachArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__CSR.html#a58057e4d66b2a1985711aae6c80ee577", null ],
     [ "initializeFromStudy", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__CSR.html#ac2a6eefb17157d9a1802793f7db3195f", null ],
     [ "localBuildAnnualSurveyReport", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__CSR.html#a96517a847a4e60ec1d27065cf9c70050", null ],

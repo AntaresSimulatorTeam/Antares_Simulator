@@ -251,94 +251,93 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160; </div>
 <div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    <span class="keywordtype">void</span> yearEnd(uint year, uint numSpace);</div>
 <div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160; </div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <span class="keywordtype">void</span> computeSummary(std::map&lt;unsigned int, unsigned int&gt;&amp; numSpaceToYear,</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;                        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> nbYearsForCurrentSummary);</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160; </div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    <span class="keywordtype">void</span> weekBegin(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a>&amp; state);</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160; </div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    <span class="keywordtype">void</span> weekForEachArea(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a>&amp; state, uint numSpace);</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    <span class="keywordtype">void</span> weekEnd(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a>&amp; state);</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160; </div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    <span class="keywordtype">void</span> hourBegin(uint hourInTheYear);</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    <span class="keywordtype">void</span> hourForEachArea(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a>&amp; state, uint numSpace);</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <span class="keywordtype">void</span> hourForEachLink(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a>&amp; state, uint numSpace);</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160; </div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    <span class="keywordtype">void</span> hourEnd(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a>&amp; state, uint hourInTheYear);</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160; </div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    <span class="keywordtype">void</span> buildSurveyReport(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a>&amp; results,</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;                           <span class="keywordtype">int</span> dataLevel,</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;                           <span class="keywordtype">int</span> fileLevel,</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;                           <span class="keywordtype">int</span> precision) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160; </div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    <span class="keywordtype">void</span> buildAnnualSurveyReport(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a>&amp; results,</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;                                 <span class="keywordtype">int</span> dataLevel,</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;                                 <span class="keywordtype">int</span> fileLevel,</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;                                 <span class="keywordtype">int</span> precision,</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;                                 uint numSpace) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160; </div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    <span class="keywordtype">void</span> beforeYearByYearExport(uint year, uint numSpace);</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160; </div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    <span class="keywordtype">void</span> buildDigest(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a>&amp; results, <span class="keywordtype">int</span> digestLevel, <span class="keywordtype">int</span> dataLevel) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160; </div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> I&gt;</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> provideInformations(I&amp; infos);</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160; </div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> VCardToFindT&gt;</div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    <span class="keyword">inline</span> <span class="keyword">const</span> <span class="keywordtype">double</span>* retrieveHourlyResultsForCurrentYear(uint)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    }</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160; </div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> VCardToFindT&gt;</div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    <span class="keywordtype">void</span> retrieveResultsForArea(<a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Storage&lt;VCardToFindT&gt;::ResultsType</a>** result, <span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>*)</div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;    {</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;        *result = NULL;</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;    }</div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160; </div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> VCardToFindT&gt;</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;    <span class="keywordtype">void</span> retrieveResultsForThermalCluster(<a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Storage&lt;VCardToFindT&gt;::ResultsType</a>** result,</div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;                                          <span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1ThermalCluster.html">Data::ThermalCluster</a>*)</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;    {</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;        *result = NULL;</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;    }</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160; </div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> VCardToFindT&gt;</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;    <span class="keywordtype">void</span> retrieveResultsForLink(<a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Storage&lt;VCardToFindT&gt;::ResultsType</a>** result,</div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;                                <span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1AreaLink.html">Data::AreaLink</a>* link)</div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;    {</div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;        <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Links.html#ae177822aebc0962abb39c8813c96db4a">pLinks</a>[link-&gt;indexForArea].template retrieveResultsForLink&lt;VCardToFindT&gt;(result, link);</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;    }</div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160; </div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> SearchVCardT, <span class="keyword">class</span> O&gt;</div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;    <span class="keywordtype">void</span> computeSpatialAggregateWith(O&amp;, uint)</div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;    {</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;        <span class="comment">// Do nothing</span></div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;    }</div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160; </div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00216"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Variable_1_1Links.html#ae177822aebc0962abb39c8813c96db4a">  216</a></span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Links.html#adf6481292678776dcb1a194c1eaf290b">NextType</a>* <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Links.html#ae177822aebc0962abb39c8813c96db4a">pLinks</a>;</div>
-<div class="line"><a name="l00218"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Variable_1_1Links.html#a20e87659088d39b4e7abd6a8f8a60287">  218</a></span>&#160;    uint <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Links.html#a20e87659088d39b4e7abd6a8f8a60287">pLinkCount</a>;</div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160; </div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;}; <span class="comment">// class Links</span></div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160; </div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;} <span class="comment">// namespace Variable</span></div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;} <span class="comment">// namespace Solver</span></div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;} <span class="comment">// namespace Antares</span></div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160; </div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;<span class="preprocessor">#include &quot;links.hxx&quot;</span></div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160; </div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __SOLVER_VARIABLE_INC_LINK_H__</span></div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <span class="keywordtype">void</span> computeSummary(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> year, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace);</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160; </div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    <span class="keywordtype">void</span> weekBegin(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a>&amp; state);</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160; </div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    <span class="keywordtype">void</span> weekForEachArea(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a>&amp; state, uint numSpace);</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    <span class="keywordtype">void</span> weekEnd(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a>&amp; state);</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160; </div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    <span class="keywordtype">void</span> hourBegin(uint hourInTheYear);</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    <span class="keywordtype">void</span> hourForEachArea(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a>&amp; state, uint numSpace);</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    <span class="keywordtype">void</span> hourForEachLink(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a>&amp; state, uint numSpace);</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160; </div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    <span class="keywordtype">void</span> hourEnd(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a>&amp; state, uint hourInTheYear);</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160; </div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    <span class="keywordtype">void</span> buildSurveyReport(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a>&amp; results,</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;                           <span class="keywordtype">int</span> dataLevel,</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;                           <span class="keywordtype">int</span> fileLevel,</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;                           <span class="keywordtype">int</span> precision) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160; </div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    <span class="keywordtype">void</span> buildAnnualSurveyReport(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a>&amp; results,</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;                                 <span class="keywordtype">int</span> dataLevel,</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;                                 <span class="keywordtype">int</span> fileLevel,</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;                                 <span class="keywordtype">int</span> precision,</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;                                 uint numSpace) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160; </div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    <span class="keywordtype">void</span> beforeYearByYearExport(uint year, uint numSpace);</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160; </div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    <span class="keywordtype">void</span> buildDigest(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a>&amp; results, <span class="keywordtype">int</span> digestLevel, <span class="keywordtype">int</span> dataLevel) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160; </div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> I&gt;</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> provideInformations(I&amp; infos);</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160; </div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> VCardToFindT&gt;</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    <span class="keyword">inline</span> <span class="keyword">const</span> <span class="keywordtype">double</span>* retrieveHourlyResultsForCurrentYear(uint)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    }</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160; </div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> VCardToFindT&gt;</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    <span class="keywordtype">void</span> retrieveResultsForArea(<a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Storage&lt;VCardToFindT&gt;::ResultsType</a>** result, <span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>*)</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    {</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;        *result = NULL;</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;    }</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160; </div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> VCardToFindT&gt;</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    <span class="keywordtype">void</span> retrieveResultsForThermalCluster(<a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Storage&lt;VCardToFindT&gt;::ResultsType</a>** result,</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;                                          <span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1ThermalCluster.html">Data::ThermalCluster</a>*)</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    {</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;        *result = NULL;</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    }</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160; </div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> VCardToFindT&gt;</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;    <span class="keywordtype">void</span> retrieveResultsForLink(<a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Storage&lt;VCardToFindT&gt;::ResultsType</a>** result,</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;                                <span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1AreaLink.html">Data::AreaLink</a>* link)</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;    {</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;        <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Links.html#ae177822aebc0962abb39c8813c96db4a">pLinks</a>[link-&gt;indexForArea].template retrieveResultsForLink&lt;VCardToFindT&gt;(result, link);</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    }</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160; </div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> SearchVCardT, <span class="keyword">class</span> O&gt;</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    <span class="keywordtype">void</span> computeSpatialAggregateWith(O&amp;, uint)</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;    {</div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;        <span class="comment">// Do nothing</span></div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;    }</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160; </div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00215"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Variable_1_1Links.html#ae177822aebc0962abb39c8813c96db4a">  215</a></span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Links.html#adf6481292678776dcb1a194c1eaf290b">NextType</a>* <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Links.html#ae177822aebc0962abb39c8813c96db4a">pLinks</a>;</div>
+<div class="line"><a name="l00217"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Variable_1_1Links.html#a20e87659088d39b4e7abd6a8f8a60287">  217</a></span>&#160;    uint <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Links.html#a20e87659088d39b4e7abd6a8f8a60287">pLinkCount</a>;</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160; </div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;}; <span class="comment">// class Links</span></div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160; </div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;} <span class="comment">// namespace Variable</span></div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;} <span class="comment">// namespace Solver</span></div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;} <span class="comment">// namespace Antares</span></div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160; </div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;<span class="preprocessor">#include &quot;links.hxx&quot;</span></div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160; </div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __SOLVER_VARIABLE_INC_LINK_H__</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1AreaLink_html"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaLink.html">Antares::Data::AreaLink</a></div><div class="ttdoc">Definition of a link between two areas (Interconnection)</div><div class="ttdef"><b>Definition:</b> links.h:50</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Area_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Area.html">Antares::Data::Area</a></div><div class="ttdoc">Definition for a single area.</div><div class="ttdef"><b>Definition:</b> area.h:52</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdef"><b>Definition:</b> study.h:65</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1ThermalCluster_html"><div class="ttname"><a href="classAntares_1_1Data_1_1ThermalCluster.html">Antares::Data::ThermalCluster</a></div><div class="ttdoc">A single thermal cluster.</div><div class="ttdef"><b>Definition:</b> cluster.h:79</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Links_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Links.html">Antares::Solver::Variable::Links</a></div><div class="ttdef"><b>Definition:</b> links.h:81</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Links_html_a1b86cac2cd55a6df8c5d5b1f513f495ea79f349cd9c7df17b5b8428c9098f9f82"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Links.html#a1b86cac2cd55a6df8c5d5b1f513f495ea79f349cd9c7df17b5b8428c9098f9f82">Antares::Solver::Variable::Links::count</a></div><div class="ttdeci">@ count</div><div class="ttdoc">How many items have we got.</div><div class="ttdef"><b>Definition:</b> links.h:96</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Links_html_a20e87659088d39b4e7abd6a8f8a60287"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Links.html#a20e87659088d39b4e7abd6a8f8a60287">Antares::Solver::Variable::Links::pLinkCount</a></div><div class="ttdeci">uint pLinkCount</div><div class="ttdoc">The total number of links.</div><div class="ttdef"><b>Definition:</b> links.h:218</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Links_html_a52dc723fbf86261a56eab535fa268499"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Links.html#a52dc723fbf86261a56eab535fa268499">Antares::Solver::Variable::Links::RetrieveVariableList</a></div><div class="ttdeci">static void RetrieveVariableList(PredicateT &amp;predicate)</div><div class="ttdoc">Retrieve the list of all individual variables.</div><div class="ttdef"><b>Definition:</b> links.hxx:346</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Links_html_ad00057fdb22e614a1679000da26d9c81"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Links.html#ad00057fdb22e614a1679000da26d9c81">Antares::Solver::Variable::Links::~Links</a></div><div class="ttdeci">~Links()</div><div class="ttdoc">Destructor.</div><div class="ttdef"><b>Definition:</b> links.hxx:352</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Links_html_a20e87659088d39b4e7abd6a8f8a60287"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Links.html#a20e87659088d39b4e7abd6a8f8a60287">Antares::Solver::Variable::Links::pLinkCount</a></div><div class="ttdeci">uint pLinkCount</div><div class="ttdoc">The total number of links.</div><div class="ttdef"><b>Definition:</b> links.h:217</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Links_html_a52dc723fbf86261a56eab535fa268499"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Links.html#a52dc723fbf86261a56eab535fa268499">Antares::Solver::Variable::Links::RetrieveVariableList</a></div><div class="ttdeci">static void RetrieveVariableList(PredicateT &amp;predicate)</div><div class="ttdoc">Retrieve the list of all individual variables.</div><div class="ttdef"><b>Definition:</b> links.hxx:344</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Links_html_ad00057fdb22e614a1679000da26d9c81"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Links.html#ad00057fdb22e614a1679000da26d9c81">Antares::Solver::Variable::Links::~Links</a></div><div class="ttdeci">~Links()</div><div class="ttdoc">Destructor.</div><div class="ttdef"><b>Definition:</b> links.hxx:350</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Links_html_adf6481292678776dcb1a194c1eaf290b"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Links.html#adf6481292678776dcb1a194c1eaf290b">Antares::Solver::Variable::Links::NextType</a></div><div class="ttdeci">VariablePerLink NextType</div><div class="ttdoc">Type of the next static variable.</div><div class="ttdef"><b>Definition:</b> links.h:84</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Links_html_ae177822aebc0962abb39c8813c96db4a"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Links.html#ae177822aebc0962abb39c8813c96db4a">Antares::Solver::Variable::Links::pLinks</a></div><div class="ttdeci">NextType * pLinks</div><div class="ttdoc">Area list.</div><div class="ttdef"><b>Definition:</b> links.h:216</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Links_html_ae177822aebc0962abb39c8813c96db4a"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Links.html#ae177822aebc0962abb39c8813c96db4a">Antares::Solver::Variable::Links::pLinks</a></div><div class="ttdeci">NextType * pLinks</div><div class="ttdoc">Area list.</div><div class="ttdef"><b>Definition:</b> links.h:215</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Links_html_afeb8ccbc484446dd48456a49c5e8d46c"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Links.html#afeb8ccbc484446dd48456a49c5e8d46c">Antares::Solver::Variable::Links::Links</a></div><div class="ttdeci">Links()</div><div class="ttdoc">Default constructor.</div><div class="ttdef"><b>Definition:</b> links.hxx:35</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Results_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Results.html">Antares::Solver::Variable::Results</a></div><div class="ttdef"><b>Definition:</b> results.h:48</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1State_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1State.html">Antares::Solver::Variable::State</a></div><div class="ttdef"><b>Definition:</b> state.h:71</div></div>

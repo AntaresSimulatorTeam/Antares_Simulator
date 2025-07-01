@@ -6,7 +6,7 @@ var classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NearPriceCap =
     [ "ResultsType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NearPriceCap.html#a49c682ba268767b27a79a919213ab8c5", null ],
     [ "VariableAccessorType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NearPriceCap.html#a95b11453df12c9df3ffcdf3a840b9846", null ],
     [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NearPriceCap.html#a9b9cef05e4bd9124ecdaebcdf4624276", null ],
-    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NearPriceCap.html#a83802a7ade7cdc588c35c288e6b18352", null ],
+    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NearPriceCap.html#ac881bf98436058fd371537364fd14213", null ],
     [ "hourForEachArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NearPriceCap.html#a2ef77c023c544b9a5813ba7caac9bade", null ],
     [ "initializeFromArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NearPriceCap.html#a30e9fa188e2ab14ba4cf78b7e3a2aa59", null ],
     [ "initializeFromStudy", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NearPriceCap.html#a16dec32641161127129abefd203ba2c8", null ],

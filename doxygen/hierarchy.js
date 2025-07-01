@@ -136,10 +136,10 @@ var hierarchy =
       [ "Antares::Component::Datagrid::Renderer::classicColumn", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1classicColumn.html", null ],
       [ "Antares::Component::Datagrid::Renderer::thermalColumn", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1thermalColumn.html", null ]
     ] ],
-    [ "CommonFixture", "structCommonFixture.html", null ],
     [ "commonFixture", "structcommonFixture.html", [
       [ "saveFixture", "structsaveFixture.html", null ]
     ] ],
+    [ "CommonFixture", "structCommonFixture.html", null ],
     [ "Antares::Data::CompareAreaName", "structAntares_1_1Data_1_1CompareAreaName.html", null ],
     [ "Antares::Data::CompareBindingConstraintName", "structAntares_1_1Data_1_1CompareBindingConstraintName.html", null ],
     [ "Antares::Forms::CompareBySimulationMode", "structAntares_1_1Forms_1_1CompareBySimulationMode.html", null ],
@@ -1197,6 +1197,7 @@ var hierarchy =
       [ "UserData", "classUserData.html", null ]
     ] ],
     [ "NonCopyableFunctionObject", "structNonCopyableFunctionObject.html", null ],
+    [ "Antares::Solver::Simulation::NumSpaceManager", "classAntares_1_1Solver_1_1Simulation_1_1NumSpaceManager.html", null ],
     [ "object", null, [
       [ "benchmark.StudyList", "classbenchmark_1_1StudyList.html", null ],
       [ "kirchhoff_pytest.StudyReference", "classkirchhoff__pytest_1_1StudyReference.html", null ]

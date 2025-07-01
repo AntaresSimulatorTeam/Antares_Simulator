@@ -287,71 +287,67 @@ $(document).ready(function(){initNavTree('overallCostCsr_8h_source.html',''); in
 <div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;        NextType::yearEnd(year, numSpace);</div>
 <div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    }</div>
 <div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160; </div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    <span class="keywordtype">void</span> computeSummary(std::map&lt;unsigned int, unsigned int&gt;&amp; numSpaceToYear,</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;                        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> nbYearsForCurrentSummary)</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    {</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace = 0; numSpace &lt; nbYearsForCurrentSummary; ++numSpace)</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;        {</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;            <span class="comment">// Merge all those values with the global results</span></div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;            <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a5c927574a94a005bd28a3522d2176334">AncestorType::pResults</a>.merge(numSpaceToYear[numSpace] <span class="comment">/*year*/</span>,</div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;                                         pValuesForTheCurrentYear[numSpace]);</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;        }</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160; </div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;        NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    }</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160; </div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    <span class="keywordtype">void</span> hourForEachArea(<a class="code" href="classAntares_1_1State.html">State</a>&amp; state, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;    {</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">double</span> costForSpilledOrUnsuppliedEnergyCSR =</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;          <span class="comment">// Total UnsupliedEnergy emissions</span></div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;          (state.hourlyResults-&gt;ValeursHorairesDeDefaillancePositiveCSR[state.hourInTheWeek]</div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;           * state.area-&gt;thermal.unsuppliedEnergyCost)</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;          + (state.hourlyResults-&gt;ValeursHorairesDeDefaillanceNegative[state.hourInTheWeek]</div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;             * state.area-&gt;thermal.spilledEnergyCost)</div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;          <span class="comment">// Current hydro storage and pumping generation costs</span></div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;          + (state.hourlyResults-&gt;valeurH2oHoraire[state.hourInTheWeek]</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;             * (state.hourlyResults-&gt;TurbinageHoraire[state.hourInTheWeek]</div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;                - state.area-&gt;hydro.pumpingEfficiency</div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;                    * state.hourlyResults-&gt;PompageHoraire[state.hourInTheWeek]));</div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160; </div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;        pValuesForTheCurrentYear[numSpace][state.hourInTheYear]</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;          += costForSpilledOrUnsuppliedEnergyCSR;</div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160; </div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;        NextType::hourForEachArea(state, numSpace);</div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;    }</div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160; </div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;    Antares::Memory::Stored&lt;double&gt;::ConstReturnType retrieveRawHourlyValuesForCurrentYear(</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;      <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>,</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;      <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;        <span class="keywordflow">return</span> pValuesForTheCurrentYear[numSpace].hour;</div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;    }</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160; </div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;    <span class="keywordtype">void</span> localBuildAnnualSurveyReport(SurveyResults&amp; <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>,</div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;                                      <span class="keywordtype">int</span> fileLevel,</div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;                                      <span class="keywordtype">int</span> precision,</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;                                      <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;        <span class="comment">// Initializing external pointer on current variable non applicable status</span></div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;        <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.isCurrentVarNA = AncestorType::isNonApplicable;</div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160; </div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;        <span class="keywordflow">if</span> (AncestorType::isPrinted[0])</div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;        {</div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;            <span class="comment">// Write the data for the current year</span></div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;            <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.variableCaption = <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOverallCostCsr.html#a6e75c8efab1e84f2418d2d6af182e4d6">VCardType::Caption</a>();</div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;            <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.variableUnit = <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOverallCostCsr.html#ae2d4a879b336aa7ad330abd5f4dc88f1">VCardType::Unit</a>();</div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;            pValuesForTheCurrentYear[numSpace]</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;              .template buildAnnualSurveyReport&lt;VCardType&gt;(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>, fileLevel, precision);</div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;        }</div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;    }</div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160; </div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;    <span class="keyword">typename</span> VCardType::IntermediateValuesType pValuesForTheCurrentYear;</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> pNbYearsParallel;</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160; </div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;}; <span class="comment">// class OverallCostCsr</span></div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160; </div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;} <span class="comment">// namespace Antares::Solver::Variable::Economy</span></div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    <span class="keywordtype">void</span> computeSummary(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> year, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    {</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;        <span class="comment">// Merge all those values with the global results</span></div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;        <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a5c927574a94a005bd28a3522d2176334">AncestorType::pResults</a>.merge(year, pValuesForTheCurrentYear[numSpace]);</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160; </div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;        <span class="comment">// Next variable</span></div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;        NextType::computeSummary(year, numSpace);</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;    }</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160; </div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;    <span class="keywordtype">void</span> hourForEachArea(<a class="code" href="classAntares_1_1State.html">State</a>&amp; state, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    {</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">double</span> costForSpilledOrUnsuppliedEnergyCSR =</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;          <span class="comment">// Total UnsupliedEnergy emissions</span></div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;          (state.hourlyResults-&gt;ValeursHorairesDeDefaillancePositiveCSR[state.hourInTheWeek]</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;           * state.area-&gt;thermal.unsuppliedEnergyCost)</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;          + (state.hourlyResults-&gt;ValeursHorairesDeDefaillanceNegative[state.hourInTheWeek]</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;             * state.area-&gt;thermal.spilledEnergyCost)</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;          <span class="comment">// Current hydro storage and pumping generation costs</span></div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;          + (state.hourlyResults-&gt;valeurH2oHoraire[state.hourInTheWeek]</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;             * (state.hourlyResults-&gt;TurbinageHoraire[state.hourInTheWeek]</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;                - state.area-&gt;hydro.pumpingEfficiency</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;                    * state.hourlyResults-&gt;PompageHoraire[state.hourInTheWeek]));</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160; </div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;        pValuesForTheCurrentYear[numSpace][state.hourInTheYear]</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;          += costForSpilledOrUnsuppliedEnergyCSR;</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160; </div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;        NextType::hourForEachArea(state, numSpace);</div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;    }</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160; </div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;    Antares::Memory::Stored&lt;double&gt;::ConstReturnType retrieveRawHourlyValuesForCurrentYear(</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;      <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>,</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;      <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;        <span class="keywordflow">return</span> pValuesForTheCurrentYear[numSpace].hour;</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;    }</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160; </div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    <span class="keywordtype">void</span> localBuildAnnualSurveyReport(SurveyResults&amp; <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>,</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;                                      <span class="keywordtype">int</span> fileLevel,</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;                                      <span class="keywordtype">int</span> precision,</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;                                      <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;        <span class="comment">// Initializing external pointer on current variable non applicable status</span></div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;        <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.isCurrentVarNA = AncestorType::isNonApplicable;</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160; </div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;        <span class="keywordflow">if</span> (AncestorType::isPrinted[0])</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;        {</div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;            <span class="comment">// Write the data for the current year</span></div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;            <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.variableCaption = <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOverallCostCsr.html#a6e75c8efab1e84f2418d2d6af182e4d6">VCardType::Caption</a>();</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;            <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.variableUnit = <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOverallCostCsr.html#ae2d4a879b336aa7ad330abd5f4dc88f1">VCardType::Unit</a>();</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;            pValuesForTheCurrentYear[numSpace]</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;              .template buildAnnualSurveyReport&lt;VCardType&gt;(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>, fileLevel, precision);</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;        }</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;    }</div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160; </div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;    <span class="keyword">typename</span> VCardType::IntermediateValuesType pValuesForTheCurrentYear;</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> pNbYearsParallel;</div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160; </div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;}; <span class="comment">// class OverallCostCsr</span></div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160; </div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;} <span class="comment">// namespace Antares::Solver::Variable::Economy</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdef"><b>Definition:</b> study.h:65</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostCsr_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostCsr.html">Antares::Solver::Variable::Economy::OverallCostCsr</a></div><div class="ttdoc">C02 Average value of the overall OverallCostCsr emissions expected from all the thermal dispatchable ...</div><div class="ttdef"><b>Definition:</b> overallCostCsr.h:98</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostCsr_html_a2fa3eefe4627b4f2a2fe3cece7da1a16"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostCsr.html#a2fa3eefe4627b4f2a2fe3cece7da1a16">Antares::Solver::Variable::Economy::OverallCostCsr::VCardType</a></div><div class="ttdeci">VCardOverallCostCsr VCardType</div><div class="ttdoc">VCard.</div><div class="ttdef"><b>Definition:</b> overallCostCsr.h:103</div></div>
@@ -381,7 +377,7 @@ $(document).ready(function(){initNavTree('overallCostCsr_8h_source.html',''); in
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOverallCostCsr_html_af2ccc13afc98568aa778c0cfbc88bd98"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOverallCostCsr.html#af2ccc13afc98568aa778c0cfbc88bd98">Antares::Solver::Variable::Economy::VCardOverallCostCsr::nodeDepthForGUI</a></div><div class="ttdeci">static constexpr uint8_t nodeDepthForGUI</div><div class="ttdoc">Indentation (GUI)</div><div class="ttdef"><b>Definition:</b> overallCostCsr.h:71</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOverallCostCsr_html_afaa49d0da7b1d9b6e4f7ccaa91e55dbc"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOverallCostCsr.html#afaa49d0da7b1d9b6e4f7ccaa91e55dbc">Antares::Solver::Variable::Economy::VCardOverallCostCsr::columnCount</a></div><div class="ttdeci">static constexpr int columnCount</div><div class="ttdoc">Number of columns used by the variable (One ResultsType per column)</div><div class="ttdef"><b>Definition:</b> overallCostCsr.h:75</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOverallCostCsr_html_afec15eb5fb84c26dbdf4cc45203291af"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOverallCostCsr.html#afec15eb5fb84c26dbdf4cc45203291af">Antares::Solver::Variable::Economy::VCardOverallCostCsr::decimal</a></div><div class="ttdeci">static constexpr uint8_t decimal</div><div class="ttdoc">Decimal precision.</div><div class="ttdef"><b>Definition:</b> overallCostCsr.h:73</div></div>
-<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html">Antares::Solver::Variable::R::AllYears::Average</a></div><div class="ttdef"><b>Definition:</b> average.h:38</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html">Antares::Solver::Variable::R::AllYears::Average</a></div><div class="ttdef"><b>Definition:</b> average.h:40</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1VariableAccessor_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1VariableAccessor.html">Antares::Solver::Variable::VariableAccessor</a></div><div class="ttdef"><b>Definition:</b> info.h:67</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

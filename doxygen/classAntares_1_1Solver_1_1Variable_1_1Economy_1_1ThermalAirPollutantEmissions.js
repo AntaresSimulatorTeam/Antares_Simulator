@@ -7,7 +7,7 @@ var classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ThermalAirPollutantEmission
     [ "VariableAccessorType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ThermalAirPollutantEmissions.html#a12825671ea919925fbbb7cf2ed47ea1f", null ],
     [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ThermalAirPollutantEmissions.html#ad8b8d0d5fd21301341eb30f4696baecd", null ],
     [ "~ThermalAirPollutantEmissions", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ThermalAirPollutantEmissions.html#a0131f5275a3268f064470c02b3f5dad6", null ],
-    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ThermalAirPollutantEmissions.html#a4f5bd534b4556e5f46a69015011eed48", null ],
+    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ThermalAirPollutantEmissions.html#ac0aa54ab2168adb02bb95c1bce199a11", null ],
     [ "hourBegin", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ThermalAirPollutantEmissions.html#ac7ed21a8b75db782d0577cdb6f1c991b", null ],
     [ "hourForEachArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ThermalAirPollutantEmissions.html#a946ab8be3af5ceeefec13d63788e5562", null ],
     [ "initializeFromArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ThermalAirPollutantEmissions.html#a68b8cd3f418b6f3d77c29ce550b565c0", null ],

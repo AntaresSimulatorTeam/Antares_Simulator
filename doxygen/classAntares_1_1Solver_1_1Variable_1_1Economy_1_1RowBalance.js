@@ -7,7 +7,7 @@ var classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance =
     [ "VariableAccessorType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance.html#af8d34a4b892c48b6e7cbaff1c5853905", null ],
     [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance.html#ab3fa5e5b340c6f320c715443c2df7eee", null ],
     [ "~RowBalance", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance.html#af5258a2887dd7ce0d7677fdea3221c2d", null ],
-    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance.html#ab4c3831f9667e631fe724ad72cdeea3f", null ],
+    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance.html#a807a6bba2b9632ea507e7526b6cd39fd", null ],
     [ "hourBegin", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance.html#a9a65e0872265ce86dce714871d0639ed", null ],
     [ "hourForEachArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance.html#abcc8dacaa8ec167040113e36d345da58", null ],
     [ "initializeFromArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance.html#a4c80572a9a8ee19adfe3cef9777613e7", null ],

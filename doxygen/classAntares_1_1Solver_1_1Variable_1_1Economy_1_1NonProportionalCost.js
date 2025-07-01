@@ -6,7 +6,7 @@ var classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCost =
     [ "ResultsType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCost.html#a0622e22912f800599ea22596de9c24c5", null ],
     [ "VariableAccessorType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCost.html#a5c59de1ba2cda45417482b7cbc404030", null ],
     [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCost.html#ae36bcf8cc7cf2a2a7673afbd5cbdddc8", null ],
-    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCost.html#a3b0c4c44b28622f92f68c292835d58d1", null ],
+    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCost.html#a1c58f270e26bc6ebd2075431d3f69355", null ],
     [ "hourBegin", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCost.html#add329759b0d4cc1ad1a99fabc8b3f80a", null ],
     [ "hourForEachArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCost.html#a2492707d8dba42898d92f1b31bd6593b", null ],
     [ "initializeFromArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCost.html#aa019a94dcc4108f186c5a0c1cfbb6d3f", null ],

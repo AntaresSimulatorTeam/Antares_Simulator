@@ -7,7 +7,7 @@ var classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispat
     [ "VariableAccessorType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispatchablePlant.html#a986ae1c2798fe38a2390023f3e460e34", null ],
     [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispatchablePlant.html#ae1e32c8c628019e8d034b769926a1339", null ],
     [ "NonProportionalCostByDispatchablePlant", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispatchablePlant.html#ae7a5908063de113cf2ce39500bb46da3", null ],
-    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispatchablePlant.html#aba70218e945ea12dcc43f0f8e625e28b", null ],
+    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispatchablePlant.html#a435fcb4ec8beb0319d0ef1b63a84cc5b", null ],
     [ "getMaxNumberColumns", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispatchablePlant.html#a36cd7926646031991ca608fc623d605b", null ],
     [ "hourBegin", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispatchablePlant.html#a6616ada864fe8a47490279072aa71869", null ],
     [ "hourForEachArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispatchablePlant.html#a3ff66c6d2089967c373f83f8e0c3b095", null ],

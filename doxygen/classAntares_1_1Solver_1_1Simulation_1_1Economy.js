@@ -9,7 +9,7 @@ var classAntares_1_1Solver_1_1Simulation_1_1Economy =
     [ "setNbPerformedYearsInParallel", "classAntares_1_1Solver_1_1Simulation_1_1Economy.html#a01a545b939c3b90f89e2dadcb216a8a5", null ],
     [ "simulationBegin", "classAntares_1_1Solver_1_1Simulation_1_1Economy.html#a169e1a766a858a74052dfe064ba7d689", null ],
     [ "simulationEnd", "classAntares_1_1Solver_1_1Simulation_1_1Economy.html#a0f832938831c7dda1aaa30eee88916fe", null ],
-    [ "year", "classAntares_1_1Solver_1_1Simulation_1_1Economy.html#a6a99631c84ab1c665c54ac0c25a2bbb4", null ],
+    [ "year", "classAntares_1_1Solver_1_1Simulation_1_1Economy.html#a945d15fadb307a0bbb9dae2e67d4c719", null ],
     [ "preproOnly", "classAntares_1_1Solver_1_1Simulation_1_1Economy.html#a34410d819e9c53fb9bc777ad1180a386", null ],
     [ "study", "classAntares_1_1Solver_1_1Simulation_1_1Economy.html#a0235b9e54867b888aff232361a93b7ce", null ],
     [ "variables", "classAntares_1_1Solver_1_1Simulation_1_1Economy.html#ae8579c3987404bac0d3dc19669bd03a0", null ]

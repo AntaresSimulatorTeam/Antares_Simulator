@@ -12,7 +12,7 @@ var classAntares_1_1Solver_1_1Variable_1_1Links =
     [ "buildDigest", "classAntares_1_1Solver_1_1Variable_1_1Links.html#a71135b6703673e587e682fdcf73a41ea", null ],
     [ "buildSurveyReport", "classAntares_1_1Solver_1_1Variable_1_1Links.html#aa87e51be1e8e422748a62ce38cee24df", null ],
     [ "computeSpatialAggregateWith", "classAntares_1_1Solver_1_1Variable_1_1Links.html#ab8d959f378f2c67f45b6b9dd14306a07", null ],
-    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Links.html#a1eed3115797d3f6e0a176e1aaaa15f5c", null ],
+    [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Links.html#a4b73e8d1a1391f3131628ed622d393f7", null ],
     [ "getPrintStatusFromStudy", "classAntares_1_1Solver_1_1Variable_1_1Links.html#a74191166b6a43e67c00d22b47c8f61c1", null ],
     [ "hourBegin", "classAntares_1_1Solver_1_1Variable_1_1Links.html#a49e21ce819d5832d310e9665ea04bdf3", null ],
     [ "hourEnd", "classAntares_1_1Solver_1_1Variable_1_1Links.html#a33de31e823b5e3dfc73c59eb3c24eba8", null ],

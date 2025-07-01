@@ -174,21 +174,21 @@ static const char *&#160;</td><td class="memItemRight" valign="bottom"><a class=
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a1d5f175248d5f237e90574ef32c636ed"><td class="memItemLeft" align="right" valign="top"><a id="a1d5f175248d5f237e90574ef32c636ed"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>stdDeviationMonthly</b> [MONTHS_PER_YEAR]</td></tr>
-<tr class="separator:a1d5f175248d5f237e90574ef32c636ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1a1b894546cf49843480a49bb9c4eac6"><td class="memItemLeft" align="right" valign="top"><a id="a1a1b894546cf49843480a49bb9c4eac6"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>stdDeviationWeekly</b> [WEEKS_PER_YEAR]</td></tr>
-<tr class="separator:a1a1b894546cf49843480a49bb9c4eac6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afcb9427d23960abb0203fd4137a49299"><td class="memItemLeft" align="right" valign="top"><a id="afcb9427d23960abb0203fd4137a49299"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>stdDeviationDaily</b> [DAYS_PER_YEAR]</td></tr>
-<tr class="separator:afcb9427d23960abb0203fd4137a49299"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a29372b64bd144aae9c3a1b7b634ccc38"><td class="memItemLeft" align="right" valign="top"><a id="a29372b64bd144aae9c3a1b7b634ccc38"></a>
-<a class="el" href="structAntares_1_1Memory_1_1Stored.html">Antares::Memory::Stored</a>&lt; double &gt;::Type&#160;</td><td class="memItemRight" valign="bottom"><b>stdDeviationHourly</b></td></tr>
-<tr class="separator:a29372b64bd144aae9c3a1b7b634ccc38"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad386196e650118e4a3c1d4ce4d97f268"><td class="memItemLeft" align="right" valign="top"><a id="ad386196e650118e4a3c1d4ce4d97f268"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>stdDeviationYear</b></td></tr>
-<tr class="separator:ad386196e650118e4a3c1d4ce4d97f268"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a020057f73f46233b224a00499c7f32ab"><td class="memItemLeft" align="right" valign="top"><a id="a020057f73f46233b224a00499c7f32ab"></a>
+std::vector&lt; HighPrecision &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>stdDeviationMonthly</b></td></tr>
+<tr class="separator:a020057f73f46233b224a00499c7f32ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd0753b91b382df30b7c6e028d8684a5"><td class="memItemLeft" align="right" valign="top"><a id="abd0753b91b382df30b7c6e028d8684a5"></a>
+std::vector&lt; HighPrecision &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>stdDeviationWeekly</b></td></tr>
+<tr class="separator:abd0753b91b382df30b7c6e028d8684a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed37a620f52b81f5ed215d2f4b3bd18a"><td class="memItemLeft" align="right" valign="top"><a id="aed37a620f52b81f5ed215d2f4b3bd18a"></a>
+std::vector&lt; HighPrecision &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>stdDeviationDaily</b></td></tr>
+<tr class="separator:aed37a620f52b81f5ed215d2f4b3bd18a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a010d69528b95fd6e9d32611d597f605d"><td class="memItemLeft" align="right" valign="top"><a id="a010d69528b95fd6e9d32611d597f605d"></a>
+std::vector&lt; HighPrecision &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>stdDeviationHourly</b></td></tr>
+<tr class="separator:a010d69528b95fd6e9d32611d597f605d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7eced0a5c80c17d3b3fd318d40662509"><td class="memItemLeft" align="right" valign="top"><a id="a7eced0a5c80c17d3b3fd318d40662509"></a>
+HighPrecision&#160;</td><td class="memItemRight" valign="bottom"><b>stdDeviationYear</b> = 0</td></tr>
+<tr class="separator:a7eced0a5c80c17d3b3fd318d40662509"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -205,10 +205,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>merge</b> (unsigned i
 template&lt;class S , class VCardT &gt; </td></tr>
 <tr class="memitem:ae3ac30a527c9f15bc40503e58added6b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>buildSurveyReport</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a> &amp;report, const S &amp;results, int dataLevel, int fileLevel, int precision) const</td></tr>
 <tr class="separator:ae3ac30a527c9f15bc40503e58added6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af3aa2b1b5d6c2e991fdb628d9fb5c230"><td class="memTemplParams" colspan="2"><a id="af3aa2b1b5d6c2e991fdb628d9fb5c230"></a>
-template&lt;template&lt; class, int &gt; class DecoratorT&gt; </td></tr>
-<tr class="memitem:af3aa2b1b5d6c2e991fdb628d9fb5c230"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structAntares_1_1Memory_1_1Stored.html">Antares::Memory::Stored</a>&lt; double &gt;::ConstReturnType&#160;</td><td class="memTemplItemRight" valign="bottom"><b>hourlyValuesForSpatialAggregate</b> () const</td></tr>
-<tr class="separator:af3aa2b1b5d6c2e991fdb628d9fb5c230"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
