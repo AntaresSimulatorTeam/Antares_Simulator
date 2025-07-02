@@ -57,15 +57,7 @@ jobs:
           echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_windows-latest_static_sirius_Release.zip" >> $GITHUB_ENV
         shell: bash
 
-      - name: "Cache chocolatey and installed utilities"
-        uses: actions/cache@v4
-        id: chococache
-        with:
-          path: C:\ProgramData\chocolatey
-          key: chocolatey-cache
-
       - name: Pre-requisites
-        if: steps.chococache.outputs.cache-hit != 'true'
         shell: cmd
         run: |
           choco install wget unzip zip --no-progress
@@ -155,6 +147,22 @@ jobs:
         run: |
           cmake --build _build --config Release -j$(nproc)
 
+      - name: .zip creation
+        if: ${{ success() }}
+        shell: bash
+        run: |
+          cd _build
+          FIXED_PATH=${ORTOOLS_DIR//\\//}
+          cpack -G ZIP -D CPACK_INSTALLED_DIRECTORIES="${FIXED_PATH}/install/bin;bin"
+          export ZIP_ARCHIVE_NAME=$(ls -1 *.zip)
+          echo "ZIP_ARCHIVE_NAME=$ZIP_ARCHIVE_NAME" >> $GITHUB_ENV
+
+      - name: Upload .zip
+        if: ${{ success() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{env.ZIP_ARCHIVE_NAME}}
+          path: _build/${{env.ZIP_ARCHIVE_NAME}}
 
       - name: Add OR-Tools to PATH
         run: echo "D:\a\Antares_Simulator\Antares_Simulator/or-tools/install/bin" | Out-File -Append -Encoding ascii $env:GITHUB_PATH
@@ -375,13 +383,6 @@ jobs:
         with:
           name: NSISError.log
           path: _build/_CPack_Packages/win64/NSIS/NSISOutput.log
-
-      - name: .zip creation
-        shell: bash
-        run: |
-          cd _build
-          FIXED_PATH=${ORTOOLS_DIR//\\//}
-          cpack -G ZIP -D CPACK_INSTALLED_DIRECTORIES="${FIXED_PATH}/install/bin;bin"
 
       - name: Installer upload
         uses: actions/upload-artifact@v4
