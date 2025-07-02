@@ -21,8 +21,6 @@
 #ifndef __SOLVER_VARIABLE_STORAGE_MIN_HXX__
 #define __SOLVER_VARIABLE_STORAGE_MIN_HXX__
 
-#include <limits>
-
 namespace Antares
 {
 namespace Solver
@@ -100,7 +98,7 @@ void MinMaxBase<OpInferior, NextT>::InternalExportIndices(SurveyResults& report,
     double* v = report.values[report.data.columnIndex];
     for (uint i = 0; i != Size; ++i)
     {
-        v[i] = (double)array[i].indice;
+        v[i] = array[i].index;
     }
 
     // Next column index

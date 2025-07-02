@@ -122,8 +122,7 @@ public:
 
     void initializeFromStudy(Data::Study& study);
 
-    void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
-                        unsigned int nbYearsForCurrentSummary);
+    void computeSummary(unsigned int year, unsigned int numSpace);
 
     void simulationBegin();
     void simulationEnd();
@@ -179,9 +178,7 @@ public:
     template<class VCardSearchT, class O>
     void computeSpatialAggregateWith(O& out, const Data::Area* area, uint numSpace);
     template<class V>
-    void computeSpatialAggregatesSummary(V& allVars,
-                                         std::map<unsigned int, unsigned int>& numSpaceToYear,
-                                         unsigned int);
+    void computeSpatialAggregatesSummary(V& allVars, unsigned int year, unsigned int numSpace);
 
     void beforeYearByYearExport(uint year, uint numSpace);
 

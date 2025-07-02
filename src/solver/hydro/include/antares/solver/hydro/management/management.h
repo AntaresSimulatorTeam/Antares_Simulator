@@ -67,7 +67,7 @@ public:
                     Solver::IResultWriter& resultWriter);
 
     //! Perform the hydro ventilation
-    void makeVentilation(double* randomReservoirLevel,
+    void makeVentilation(const std::vector<double>& randomReservoirLevel,
                          uint y,
                          Antares::Data::Area::ScratchMap& scratchmap);
 
@@ -85,18 +85,10 @@ private:
     //! Prepare the effective demand for each area
     void prepareEffectiveDemand(uint year, HydroSpecificMap& hydro_specific_map) const;
     //! Monthly Optimal generations
-    void prepareMonthlyOptimalGenerations(const double* random_reservoir_level,
+    void prepareMonthlyOptimalGenerations(const std::vector<double>& random_reservoir_level,
                                           uint y,
                                           Antares::Data::Area::ScratchMap& scratchmap,
                                           HydroSpecificMap& hydro_specific_map);
-
-    //! Monthly target generations
-    // note: inflows may have two different types, if in swap mode or not
-    // \return The total inflow for the whole year
-    double prepareMonthlyTargetGenerations(
-      Data::Area& area,
-      Antares::Data::AreaDependantHydroManagementData& data,
-      Antares::Data::TimeDependantHydroManagementData& hydro_specific);
 
     void prepareDailyOptimalGenerations(uint y,
                                         Antares::Data::Area::ScratchMap& scratchmap,

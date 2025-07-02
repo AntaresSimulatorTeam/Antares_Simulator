@@ -193,24 +193,20 @@ public:
         NextType::yearEnd(year, numSpace);
     }
 
-    void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
-                        unsigned int nbYearsForCurrentSummary)
+    void computeSummary(unsigned int year, unsigned int numSpace)
     {
-        for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
+        for (unsigned int i = 0; i < nbClusters_; ++i)
         {
-            for (unsigned int i = 0; i < nbClusters_; ++i)
-            {
-                // Merge all those values with the global results
-                AncestorType::pResults[i].merge(numSpaceToYear[numSpace],
-                                                pValuesForTheCurrentYear[numSpace][i]);
-            }
+            // Merge all those values with the global results
+            AncestorType::pResults[i].merge(year, pValuesForTheCurrentYear[numSpace][i]);
         }
 
         // Next variable
-        NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
+        NextType::computeSummary(year, numSpace);
     }
 
     void hourForEachArea(State& state, unsigned int numSpace)
+
     {
         auto& area = state.area;
         auto& thermal = state.thermal;

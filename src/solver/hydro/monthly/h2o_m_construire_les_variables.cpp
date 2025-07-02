@@ -44,11 +44,9 @@ void H2O_M_ConstruireLesVariables(DONNEES_ANNUELLES& DonneesAnnuelles)
                                                                   .ProblemeLineairePartieFixe;
     CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables = ProblemeHydraulique
                                                                  .CorrespondanceDesVariables;
-
-    const int NbPdt = DonneesAnnuelles.NombreDePasDeTemps;
     int Var = 0;
 
-    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < nbMonths; Pdt++)
     {
         CorrespondanceDesVariables.NumeroDeVariableVolume[Pdt] = Var;
         ProblemeLineairePartieVariable.Xmin[Var] = 0.0;
@@ -59,7 +57,7 @@ void H2O_M_ConstruireLesVariables(DONNEES_ANNUELLES& DonneesAnnuelles)
         Var++;
     }
 
-    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < nbMonths; Pdt++)
     {
         CorrespondanceDesVariables.NumeroDeVariableTurbine[Pdt] = Var;
         ProblemeLineairePartieVariable.Xmin[Var] = 0.0;
@@ -70,7 +68,18 @@ void H2O_M_ConstruireLesVariables(DONNEES_ANNUELLES& DonneesAnnuelles)
         Var++;
     }
 
-    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < nbMonths; Pdt++)
+    {
+        CorrespondanceDesVariables.NumeroDeVariableOverflow[Pdt] = Var;
+        ProblemeLineairePartieVariable.Xmin[Var] = 0.0;
+        ProblemeLineairePartieVariable.Xmax[Var] = LINFINI;
+        ProblemeLineairePartieFixe.TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+        ProblemeLineairePartieVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = &(
+          DonneesAnnuelles.overflow[Pdt]);
+        Var++;
+    }
+
+    for (int Pdt = 0; Pdt < nbMonths; Pdt++)
     {
         CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMax[Pdt] = Var;
         ProblemeLineairePartieVariable.Xmin[Var] = 0.0;
@@ -79,7 +88,7 @@ void H2O_M_ConstruireLesVariables(DONNEES_ANNUELLES& DonneesAnnuelles)
         Var++;
     }
 
-    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < nbMonths; Pdt++)
     {
         CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMin[Pdt] = Var;
         ProblemeLineairePartieVariable.Xmin[Var] = 0.0;
@@ -94,7 +103,7 @@ void H2O_M_ConstruireLesVariables(DONNEES_ANNUELLES& DonneesAnnuelles)
     ProblemeLineairePartieFixe.TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
     Var++;
 
-    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < nbMonths; Pdt++)
     {
         CorrespondanceDesVariables.NumeroDeVariableDEcartPositifAuTurbineCible[Pdt] = Var;
         ProblemeLineairePartieVariable.Xmin[Var] = 0.0;
@@ -103,7 +112,7 @@ void H2O_M_ConstruireLesVariables(DONNEES_ANNUELLES& DonneesAnnuelles)
         Var++;
     }
 
-    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < nbMonths; Pdt++)
     {
         CorrespondanceDesVariables.NumeroDeVariableDEcartNegatifAuTurbineCible[Pdt] = Var;
         ProblemeLineairePartieVariable.Xmin[Var] = 0.0;
