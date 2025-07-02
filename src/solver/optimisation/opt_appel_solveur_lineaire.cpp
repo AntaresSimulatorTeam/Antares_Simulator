@@ -393,7 +393,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         {
             logs.info() << " Solver: Safe resolution failed";
         }
-
+        problemeHebdo->NamedProblems = true;
         std::unique_ptr<MPSolver> MPproblem(
           convertToMPSolver(problemeHebdo, NumIntervalle, options));
 
