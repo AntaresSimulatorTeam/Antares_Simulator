@@ -44,7 +44,7 @@ HydroInputsChecker::HydroInputsChecker(Antares::Data::Study& study):
 
 void HydroInputsChecker::Execute(uint year)
 {
-    prepareInflows_.Run(year);
+    prepareInflows_.loadInflows(year);
     minGenerationScaling_.Run(year);
     if (!checksOnGenerationPowerBounds(year))
     {
@@ -54,6 +54,7 @@ void HydroInputsChecker::Execute(uint year)
     {
         CheckFinalReservoirLevelsConfiguration(year);
     }
+    prepareInflows_.changeInflowsToAccommodateFinalLevels(year);
 }
 
 bool HydroInputsChecker::checksOnGenerationPowerBounds(uint year)

@@ -30,29 +30,24 @@ using namespace Yuni;
 namespace Antares::Solver::Variable::R::AllYears
 {
 AverageData::AverageData():
-    hourly(nullptr),
     nbYearsCapacity(0),
     allYears(0.)
 {
 }
 
-AverageData::~AverageData()
-{
-    Antares::Memory::Release(hourly);
-}
+AverageData::~AverageData() = default;
 
 void AverageData::reset()
 {
-    Antares::Memory::Zero(HOURS_PER_YEAR, hourly);
-    (void)::memset(monthly, 0, sizeof(double) * MONTHS_PER_YEAR);
-    (void)::memset(weekly, 0, sizeof(double) * WEEKS_PER_YEAR);
-    (void)::memset(daily, 0, sizeof(double) * DAYS_PER_YEAR);
-    year.assign(nbYearsCapacity, 0);
+    year.assign(nbYearsCapacity, 0.);
+    monthly.assign(MONTHS_PER_YEAR, 0.);
+    weekly.assign(WEEKS_PER_YEAR, 0.);
+    daily.assign(DAYS_PER_YEAR, 0.);
+    hourly.assign(HOURS_PER_YEAR, 0.);
 }
 
 void AverageData::initializeFromStudy(Data::Study& study)
 {
-    Antares::Memory::Allocate<double>(hourly, HOURS_PER_YEAR);
     nbYearsCapacity = study.runtime.rangeLimits.year[Data::rangeEnd] + 1;
     year.resize(nbYearsCapacity);
 

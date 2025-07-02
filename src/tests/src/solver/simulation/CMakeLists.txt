@@ -18,10 +18,8 @@ add_boost_test(tests-ts-numbers
         "${src_solver_simulation}"
         "${src_libs_antares_study}"
         LIBS
-        Antares::utils
-        model_antares
-        antares-solver-simulation
-        antares-solver-ts-generator)
+        test_utils_unit
+	solver-lib)
 
 
 # ===================================
@@ -31,9 +29,7 @@ add_boost_test(test-store-timeseries-number
         SRC test-store-timeseries-number.cpp
         LIBS
         test_utils_unit
-        antares-solver-simulation
-        Antares::study
-        Antares::result_writer)
+	solver-lib)
 
 # ===================================
 # Tests on time series
@@ -42,8 +38,7 @@ add_boost_test(test-time_series
         SRC test-time_series.cpp
         LIBS
         test_utils_unit
-        antares-solver-simulation
-        Antares::study)
+	solver-lib)
 
 # ===================================
 # Tests on hydro final reservoir level functions
@@ -56,9 +51,8 @@ add_boost_test(test-hydro_final
         "${src_libs_antares_study}"
         "${src_solver_hydro}"
         LIBS
-        Antares::study
-        antares-solver-simulation
-        Antares::array)
+        test_utils_unit
+	solver-lib)
 
 # ===================================
 # Tests on hydro remix algorithm
@@ -67,5 +61,11 @@ add_boost_test(tests-on-hydro-remix
         SRC
         test-hydro-remix.cpp
         LIBS
-        shave-peaks-by-remix-hydro
-        test_utils_unit)
+	test_utils_unit
+	solver-lib)
+
+add_boost_test(test-numspace-manager
+	SRC
+	numspace_manager.cpp
+	LIBS
+	solver-lib)

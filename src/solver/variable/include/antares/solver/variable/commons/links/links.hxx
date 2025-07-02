@@ -135,13 +135,11 @@ inline void Links<VariablePerLink>::yearEnd(uint year, uint numSpace)
 }
 
 template<class VariablePerLink>
-inline void Links<VariablePerLink>::computeSummary(
-  std::map<unsigned int, unsigned int>& numSpaceToYear,
-  unsigned int nbYearsForCurrentSummary)
+inline void Links<VariablePerLink>::computeSummary(unsigned int year, unsigned int numSpace)
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {
-        pLinks[i].computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
+        pLinks[i].computeSummary(year, numSpace);
     }
 }
 

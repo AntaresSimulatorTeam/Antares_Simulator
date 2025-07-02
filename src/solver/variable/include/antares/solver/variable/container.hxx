@@ -92,10 +92,9 @@ inline void List<NextT>::yearEnd(unsigned int year, unsigned int numSpace)
 }
 
 template<class NextT>
-inline void List<NextT>::computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
-                                        unsigned int nbYearsForCurrentSummary)
+inline void List<NextT>::computeSummary(unsigned int year, unsigned int numSpace)
 {
-    NextT::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
+    NextT::computeSummary(year, numSpace);
 }
 
 template<class NextT>
@@ -118,13 +117,12 @@ inline void List<NextT>::yearEndSpatialAggregates(V& allVars, unsigned int year,
 
 template<class NextT>
 template<class V>
-inline void List<NextT>::computeSpatialAggregatesSummary(
-  V& allVars,
-  std::map<unsigned int, unsigned int>& numSpaceToYear,
-  unsigned int nbYearsForCurrentSummary)
+inline void List<NextT>::computeSpatialAggregatesSummary(V& allVars,
+                                                         unsigned int year,
+                                                         unsigned int numSpace)
 {
     // Next variable
-    NextT::computeSpatialAggregatesSummary(allVars, numSpaceToYear, nbYearsForCurrentSummary);
+    NextT::computeSpatialAggregatesSummary(allVars, year, numSpace);
 }
 
 template<class NextT>
