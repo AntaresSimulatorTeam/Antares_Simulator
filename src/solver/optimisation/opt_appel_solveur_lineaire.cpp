@@ -213,6 +213,12 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         solver = nullptr;
     }
 
+    auto actual_stdout = fdopen(dup(fileno(stderr)), "w");
+    if(!std::freopen("log.txt", "w", stderr))
+    {
+        logs.error() << "Failed to redirect stdout to log.txt";
+    }
+
     if (solver)
     {
         if (problemeHebdo->ReinitOptimisation)
@@ -266,6 +272,9 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     {
         ProblemeAResoudre->ProblemesSpx[NumIntervalle] = solver;
     }
+
+    std::fclose(stderr);
+    freopen("/dev/tty", "w", stderr);
 
     measure.tick();
     timeMeasure.solveTime = measure.duration_ms();
