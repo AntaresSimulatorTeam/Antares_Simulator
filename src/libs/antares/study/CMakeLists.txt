@@ -212,6 +212,8 @@ set(SRC_STUDY
         include/antares/study/parts/solar/prepro.hxx
 
         # Study
+        include/antares/study/normalize_paths.h
+        normalize_paths.cpp
         include/antares/study/header.h
         header.cpp
         include/antares/study/load-options.h

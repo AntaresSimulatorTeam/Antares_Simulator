@@ -1057,9 +1057,6 @@ void OpenStudyFromFolder(wxString folder)
 
     // Getting the version of the study
     String studyfolder;
-    // const std::string s = studyfolder;
-    // std::wstring ws(s.begin(), s.end());
-
     wxStringToString(folder, studyfolder);
 
     auto version = Data::StudyHeader::tryToFindTheVersion(studyfolder);
