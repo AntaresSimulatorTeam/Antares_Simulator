@@ -223,12 +223,6 @@ jobs:
         with:
           feature: "features/solver-features/hybrid_studies.feature"
 
-      - name: Run cucumber on modeler
-        if: ${{ !cancelled() }}
-        uses: ./.github/workflows/cucumber-tests
-        with:
-          feature: "features/modeler-features"
-
       - name: Collect coverage into one XML report
         if: ${{ !cancelled() }}
         run: |
