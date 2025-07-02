@@ -92,17 +92,15 @@ bool areasThermalClustersMinStablePowerValidity(const Antares::Data::AreaList& a
 {
     YString areaname = "";
     bool resultat = true;
-    auto endarea = areas.end();
     int count = 0;
-
-    for (auto areait = areas.begin(); areait != endarea; areait++)
+    for (const auto& [_, area]: areas)
     {
-        areaname = areait->second->name;
+        areaname = area->name;
         logs.debug() << "areaname : " << areaname;
 
         std::vector<YString> clusternames;
 
-        if (!areait->second->thermalClustersMinStablePowerValidity(clusternames))
+        if (!area->thermalClustersMinStablePowerValidity(clusternames))
         {
             for (auto it = clusternames.begin(); it != clusternames.end(); it++)
             {
