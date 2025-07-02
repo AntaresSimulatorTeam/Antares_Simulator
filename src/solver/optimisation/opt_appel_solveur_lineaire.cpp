@@ -213,10 +213,9 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         solver = nullptr;
     }
 
-    auto actual_stdout = fdopen(dup(fileno(stderr)), "w");
     if(!std::freopen("log.txt", "w", stderr))
     {
-        logs.error() << "Failed to redirect stdout to log.txt";
+        logs.error() << "Failed to redirect stderr to log.txt";
     }
 
     if (solver)
