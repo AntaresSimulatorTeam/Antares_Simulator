@@ -33,7 +33,7 @@ public:
     struct Data
     {
         double value;
-        uint32_t indice;
+        uint32_t index;
     };
 
     MinMaxData() = default;

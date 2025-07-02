@@ -266,7 +266,7 @@ void HydroManagement::prepareEffectiveDemand(uint year, HydroSpecificMap& hydro_
       });
 }
 
-void HydroManagement::makeVentilation(double* randomReservoirLevel,
+void HydroManagement::makeVentilation(const std::vector<double>& randomReservoirLevel,
                                       uint y,
                                       Antares::Data::Area::ScratchMap& scratchmap)
 {

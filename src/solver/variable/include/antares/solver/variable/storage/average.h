@@ -21,6 +21,8 @@
 #ifndef __SOLVER_VARIABLE_STORAGE_AVERAGE_H__
 #define __SOLVER_VARIABLE_STORAGE_AVERAGE_H__
 
+#include <vector>
+
 #include "averagedata.h"
 
 namespace Antares
@@ -101,8 +103,7 @@ protected:
             {
             case Category::hourly:
                 InternalExportValues<HOURS_PER_YEAR, VCardT, Category::hourly>(report,
-                                                                               Memory::RawPointer(
-                                                                                 avgdata.hourly));
+                                                                               avgdata.hourly);
                 break;
             case Category::daily:
                 InternalExportValues<DAYS_PER_YEAR, VCardT, Category::daily>(report, avgdata.daily);
@@ -116,7 +117,7 @@ protected:
                                                                                  avgdata.monthly);
                 break;
             case Category::annual:
-                InternalExportValues<1, VCardT, Category::annual>(report, avgdata.year.data());
+                InternalExportValues<1, VCardT, Category::annual>(report, avgdata.year);
                 break;
             }
         }
@@ -161,24 +162,13 @@ protected:
         NextType::template buildDigest<VCardT>(report, digestLevel, dataLevel);
     }
 
-    template<template<class, int> class DecoratorT>
-    Antares::Memory::Stored<double>::ConstReturnType hourlyValuesForSpatialAggregate() const
-    {
-        if (Yuni::Static::Type::StrictlyEqual<DecoratorT<Empty, 0>, Average<Empty, 0>>::Yes)
-        {
-            return avgdata.hourly;
-        }
-        return NextType::template hourlyValuesForSpatialAggregate<DecoratorT>();
-    }
-
 public:
     AverageData avgdata;
 
 private:
     template<uint Size, class VCardT, int PrecisionT>
-    void InternalExportValues(SurveyResults& report, const double* array) const
+    void InternalExportValues(SurveyResults& report, const std::vector<HighPrecision>& array) const
     {
-        assert(array);
         assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
 
         // Caption
@@ -195,6 +185,40 @@ private:
         // Values
         switch (PrecisionT)
         {
+        case Category::hourly:
+        {
+            for (uint h = 0; h < HOURS_PER_YEAR; ++h)
+            {
+                report.values[report.data.columnIndex][h] = array[h];
+            }
+            break;
+        }
+        case Category::daily:
+        {
+            for (uint d = 0; d < DAYS_PER_YEAR; ++d)
+            {
+                report.values[report.data.columnIndex][d] = array[d];
+            }
+            break;
+        }
+
+        case Category::weekly:
+        {
+            for (uint w = 0; w < WEEKS_PER_YEAR; ++w)
+            {
+                report.values[report.data.columnIndex][w] = array[w];
+            }
+            break;
+        }
+
+        case Category::monthly:
+        {
+            for (uint m = 0; m < MONTHS_PER_YEAR; ++m)
+            {
+                report.values[report.data.columnIndex][m] = array[m];
+            }
+            break;
+        }
         case Category::annual:
         {
             double& target = *(report.values[report.data.columnIndex]);
@@ -206,8 +230,9 @@ private:
             avgdata.allYears = target;
             break;
         }
+
         default:
-            (void)::memcpy(report.values[report.data.columnIndex], array, sizeof(double) * Size);
+            logs.warning() << "Category not found for variable: " << report.variableCaption;
             break;
         }
 

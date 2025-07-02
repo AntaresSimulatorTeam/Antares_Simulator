@@ -10,7 +10,7 @@ from pathlib import Path
 class result_type(Enum):
     VALUES = "values"
     DETAILS = "details"
-
+    DETAILS_STS = "details-STstorage"
 
 class solver_output_handler:
 
@@ -18,7 +18,9 @@ class solver_output_handler:
         self.study_output_path = study_output_path
         self.mode = mode
         self.annual_system_cost = None
-        self.hourly_results = {result_type.VALUES: None, result_type.DETAILS: None}
+        self.hourly_results = {result_type.VALUES: None,
+                               result_type.DETAILS: None,
+                               result_type.DETAILS_STS: None}
 
     def get_annual_system_cost(self):
         if self.annual_system_cost is None:
@@ -67,6 +69,21 @@ class solver_output_handler:
     def __get_values_hourly_for_specific_hour(self, area: str, year: int, datetime: str):
         df = self.__get_values_hourly(area, year)
         return df.loc[df['datetime'] == datetime]
+
+    def __get_sts_details_hourly(self, area: str, year: int):
+        return self.__if_none_then_parse(result_type.DETAILS_STS, area.lower(), year, "details-STstorage-hourly.txt")
+
+    def details_hourly_for_sts(self, area: str, year: int):
+        return self.__get_sts_details_hourly(area, year)
+
+    def injection_for_sts(self, area: str, year: int, sts: str):
+        return self.details_hourly_for_sts(area, year)[sts]['P-injection - MW']
+
+    def withdrawal_for_sts(self, area: str, year: int, sts: str):
+        return self.details_hourly_for_sts(area, year)[sts]['P-withdrawal - MW']
+
+    def level_for_sts(self, area: str, year: int, sts: str):
+        return self.details_hourly_for_sts(area, year)[sts]['Levels - MWh']
 
     def __get_details_hourly(self, area: str, year: int):
         return self.__if_none_then_parse(result_type.DETAILS, area.lower(), year, "details-hourly.txt")

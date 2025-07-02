@@ -40,6 +40,10 @@ enum class SolverType;
 
 using namespace operations_research;
 
+// TODO use Objective().Value() instead
+// This is a temporary workaround for Windows
+double getObjectiveValue(const MPSolver* solver);
+
 void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
                                                    Antares::Solver::IResultWriter& writer,
                                                    const std::string& filename);

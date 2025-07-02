@@ -25,14 +25,12 @@
 
 namespace Antares::Solver::Variable::R::AllYears
 {
-constexpr double eps = 1.e-7;
-
 static void initArray(bool opInferior, std::vector<MinMaxData::Data>& array)
 {
     for (auto& data: array)
     {
         data.value = opInferior ? DBL_MAX : -DBL_MAX; // +inf or -inf
-        data.indice = (uint32_t)(-1);                 // invalid indice
+        data.index = static_cast<uint32_t>(-1);
     }
 }
 
@@ -41,24 +39,32 @@ static void mergeArray(bool opInferior,
                        std::vector<MinMaxData::Data>& results,
                        const double* values)
 {
-    for (unsigned i = 0; i != results.size(); ++i)
+    for (unsigned i = 0; i < results.size(); ++i)
     {
         MinMaxData::Data& data = results[i];
 
         if (opInferior)
         {
-            if (values[i] < data.value - eps)
+            if (values[i] < data.value)
             {
                 data.value = values[i];
-                data.indice = year + 1; // The year is zero-based
+                data.index = year + 1;
+            }
+            else if (values[i] == data.value && data.index > year + 1)
+            {
+                data.index = year + 1;
             }
         }
         else
         {
-            if (values[i] > data.value + eps)
+            if (values[i] > data.value)
             {
                 data.value = values[i];
-                data.indice = year + 1; // The year is zero-based
+                data.index = year + 1; // The year is zero-based
+            }
+            else if (values[i] == data.value && data.index > year + 1)
+            {
+                data.index = year + 1;
             }
         }
     }

@@ -21,7 +21,6 @@
 
 #include "antares/solver/variable/surveyresults/surveyresults.h"
 
-#include <algorithm>
 #include <cmath>
 
 #include <yuni/yuni.h>

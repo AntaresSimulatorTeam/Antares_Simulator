@@ -86,9 +86,10 @@ BOOST_FIXTURE_TEST_CASE(in_hourly_BC__weights_are_1__it_restricts_dispatchable_p
     simulation->run();
 
     OutputRetriever output(simulation->rawSimu());
-    auto dispatch_prod = std::span<double>{output.thermalGeneration(cluster_dispatch.get()).hours(),
-                                           Constants::nbHoursInAWeek};
-    std::vector<double> expected_values(Constants::nbHoursInAWeek, 900.);
+    auto dispatch_prod = std::span<long double>{
+      output.thermalGeneration(cluster_dispatch.get()).hours(),
+      Constants::nbHoursInAWeek};
+    std::vector<long double> expected_values(Constants::nbHoursInAWeek, 900.);
     BOOST_TEST(std::ranges::equal(dispatch_prod, expected_values));
 }
 
@@ -110,9 +111,10 @@ BOOST_FIXTURE_TEST_CASE(in_hourly_BC__weights_are_2_and_3__it_restricts_dispatch
     simulation->run();
 
     OutputRetriever output(simulation->rawSimu());
-    auto dispatch_prod = std::span<double>{output.thermalGeneration(cluster_dispatch.get()).hours(),
-                                           Constants::nbHoursInAWeek};
-    std::vector<double> expected_values(Constants::nbHoursInAWeek, 450.);
+    auto dispatch_prod = std::span<long double>{
+      output.thermalGeneration(cluster_dispatch.get()).hours(),
+      Constants::nbHoursInAWeek};
+    std::vector<long double> expected_values(Constants::nbHoursInAWeek, 450.);
     BOOST_TEST(std::ranges::equal(dispatch_prod, expected_values));
 }
 
@@ -136,8 +138,10 @@ BOOST_FIXTURE_TEST_CASE(in_daily_BC__weights_are_2_and_3__it_restricts_dispatcha
     simulation->run();
 
     OutputRetriever out(simulation->rawSimu());
-    auto dispatch_prod = std::span<double>{out.thermalGeneration(cluster_dispatch.get()).days(), 7};
-    std::vector<double> expected_values(7, 11400.);
+    auto dispatch_prod = std::span<long double>{
+      out.thermalGeneration(cluster_dispatch.get()).days(),
+      7};
+    std::vector<long double> expected_values(7, 11400.);
     BOOST_TEST(std::ranges::equal(dispatch_prod, expected_values));
 }
 
@@ -167,13 +171,16 @@ BOOST_FIXTURE_TEST_CASE(simulation_2_weeks_long__daily_BC_RHS_changes_on_2nd_wee
 
     OutputRetriever out(simulation->rawSimu());
     // Week 1
-    auto dispatch_prod = std::span<double>{out.thermalGeneration(cluster_dispatch.get()).days(), 7};
-    std::vector<double> expected_values_week_1(7, 17600.);
+    auto dispatch_prod = std::span<long double>{
+      out.thermalGeneration(cluster_dispatch.get()).days(),
+      7};
+    std::vector<long double> expected_values_week_1(7, 17600.);
     BOOST_TEST(std::ranges::equal(dispatch_prod, expected_values_week_1));
 
     // Week 2
-    dispatch_prod = std::span<double>{out.thermalGeneration(cluster_dispatch.get()).days() + 7, 7};
-    std::vector<double> expected_values_week_2(7, 14600.);
+    dispatch_prod = std::span<long double>{out.thermalGeneration(cluster_dispatch.get()).days() + 7,
+                                           7};
+    std::vector<long double> expected_values_week_2(7, 14600.);
     BOOST_TEST(std::ranges::equal(dispatch_prod, expected_values_week_2));
 }
 
@@ -201,8 +208,8 @@ BOOST_FIXTURE_TEST_CASE(in_weekly_BC__weights_are_3_and_4__it_restricts_dispatch
     simulation->run();
 
     OutputRetriever output(simulation->rawSimu());
-    double* dispatch_prod = output.thermalGeneration(cluster_dispatch.get()).weeks();
-    BOOST_TEST(dispatch_prod[0] == 17600., boost::test_tools::tolerance(0.001));
+    double dispatch_prod = output.thermalGeneration(cluster_dispatch.get()).week(0);
+    BOOST_TEST(dispatch_prod == 17600., boost::test_tools::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -80,7 +80,7 @@ bool GenerateTimeSeries(Data::Study& study, IResultWriter& writer)
 }
 
 // TODO REMOVE
-template<enum Data::TimeSeriesType T>
+template<Data::TimeSeriesType T>
 void Destroy(Data::Study& study)
 {
     auto* xcast = reinterpret_cast<XCast::XCast*>(
