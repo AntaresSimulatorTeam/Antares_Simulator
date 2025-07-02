@@ -400,10 +400,16 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());
         analyzer->printReport();
-
-        auto mps_writer_on_error = simplexResult.mps_writer_factory.createOnOptimizationError();
+        mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
+                                            problemeHebdo->exportMPSOnError,
+                                            optimizationNumber,
+                                            MPproblem.get());
+        // Since MpProblem must have named vars and constraints in case of infeasibility, we must
+        // use the updated MPSolver
+        auto mps_writer_on_error = mps_writer_factory.createOnOptimizationError();
         const std::string filename = createMPSfilename(optPeriodStringGenerator,
                                                        optimizationNumber);
+        logs.info() << "MPproblem->variable(0)->name(): " << MPproblem->variable(0)->name() << "\n";
         mps_writer_on_error->runIfNeeded(writer, filename);
 
         return false;
