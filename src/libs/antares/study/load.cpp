@@ -50,9 +50,20 @@ bool Study::internalLoadHeader(const fs::path& path)
     return true;
 }
 
+#include <windows.h> // For MultiByteToWideChar
+
+static std::wstring utf8_to_wstring(const std::string& utf8)
+{
+    int size_needed = MultiByteToWideChar(CP_UTF8, 0, utf8.c_str(), (int)utf8.size(), NULL, 0);
+    std::wstring wstrTo(size_needed, 0);
+    MultiByteToWideChar(CP_UTF8, 0, utf8.c_str(), (int)utf8.size(), &wstrTo[0], size_needed);
+    return wstrTo;
+}
+
 bool Study::loadFromFolder(const std::string& path, const StudyLoadOptions& options)
 {
-    fs::path normPath = path;
+    // fs::path normPath = path;
+    fs::path normPath = utf8_to_wstring(path);
     normPath = normPath.lexically_normal();
     return internalLoadFromFolder(normPath, options);
 }

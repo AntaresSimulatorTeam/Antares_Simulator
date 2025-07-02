@@ -27,7 +27,7 @@ namespace Antares
 namespace Error
 {
 StudyFolderDoesNotExist::StudyFolderDoesNotExist(const Yuni::String& folder):
-    LoadingError(std::string("Study folder") + folder.c_str() + " does not exist.")
+    LoadingError(std::string("Study folder '") + folder.c_str() + "' does not exist.")
 {
 }
 

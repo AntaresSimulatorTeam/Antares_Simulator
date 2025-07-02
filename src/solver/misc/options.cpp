@@ -295,6 +295,16 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
     }
 }
 
+#include <windows.h> // For MultiByteToWideChar
+
+static std::wstring utf8_to_wstring(const std::string& utf8)
+{
+    int size_needed = MultiByteToWideChar(CP_UTF8, 0, utf8.c_str(), (int)utf8.size(), NULL, 0);
+    std::wstring wstrTo(size_needed, 0);
+    MultiByteToWideChar(CP_UTF8, 0, utf8.c_str(), (int)utf8.size(), &wstrTo[0], size_needed);
+    return wstrTo;
+}
+
 void Settings::checkAndSetStudyFolder(const std::string& folder)
 {
     // The study folder
@@ -306,6 +316,7 @@ void Settings::checkAndSetStudyFolder(const std::string& folder)
     // Making the path absolute
     std::filesystem::path abspath = std::filesystem::absolute(folder);
     abspath = abspath.lexically_normal();
+    abspath = utf8_to_wstring(abspath.string());
 
     // Checking if the path exists
     if (!std::filesystem::exists(abspath))

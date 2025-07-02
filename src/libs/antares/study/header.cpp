@@ -94,6 +94,7 @@ void StudyHeader::CopySettingsToIni(IniFile& ini, bool upgradeVersion)
 bool StudyHeader::internalFindVersionFromFile(const IniFile& ini, std::string& version)
 {
     const IniFile::Section* sect = ini.find("antares");
+    logs.info() << "internalFindVersionFromFile > sect : " << sect;
     if (sect)
     {
         for (const IniFile::Property* p = sect->firstProperty; p; p = p->next)
@@ -204,6 +205,16 @@ bool StudyHeader::saveToFile(const AnyString& filename, bool upgradeVersion)
     return ini.save(filename);
 }
 
+#include <windows.h> // For MultiByteToWideChar
+
+static std::wstring utf8_to_wstring(const std::string& utf8)
+{
+    int size_needed = MultiByteToWideChar(CP_UTF8, 0, utf8.c_str(), (int)utf8.size(), NULL, 0);
+    std::wstring wstrTo(size_needed, 0);
+    MultiByteToWideChar(CP_UTF8, 0, utf8.c_str(), (int)utf8.size(), &wstrTo[0], size_needed);
+    return wstrTo;
+}
+
 StudyVersion StudyHeader::tryToFindTheVersion(const std::string& folder)
 {
     if (folder.empty()) // trivial check
@@ -213,7 +224,12 @@ StudyVersion StudyHeader::tryToFindTheVersion(const std::string& folder)
 
     // folder normalization
     fs::path abspath = fs::absolute(folder);
+    logs.info() << "tryToFindTheVersion > abspath : " << abspath.string();
     abspath = abspath.lexically_normal();
+    logs.info() << "tryToFindTheVersion > abspath lexically normal : " << abspath.string();
+    logs.info() << "tryToFindTheVersion > abspath exists : " << fs::exists(abspath);
+
+    abspath = utf8_to_wstring(abspath.string());
 
     if (fs::exists(abspath))
     {
@@ -224,6 +240,7 @@ StudyVersion StudyHeader::tryToFindTheVersion(const std::string& folder)
             std::string versionStr;
             if (!readVersionFromFile(abspath, versionStr))
             {
+                logs.info() << "tryToFindTheVersion : can't read abspath";
                 return StudyVersion::unknown();
             }
 
@@ -232,6 +249,7 @@ StudyVersion StudyHeader::tryToFindTheVersion(const std::string& folder)
             return v;
         }
     }
+    logs.info() << "tryToFindTheVersion : abspath does not exist";
     return StudyVersion::unknown();
 }
 
