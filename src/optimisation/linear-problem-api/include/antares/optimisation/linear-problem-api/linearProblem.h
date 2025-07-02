@@ -21,7 +21,6 @@
 
 #pragma once
 
-#include <map>
 #include <string>
 
 #include "mipConstraint.h"
@@ -45,50 +44,25 @@ public:
     /// Create a continuous variable
     virtual IMipVariable* addNumVariable(double lb, double ub, const std::string& name) = 0;
 
-    /// Create range of continuous variables
-    virtual std::vector<IMipVariable*> addNumVariable(double lb,
-                                                      double ub,
-                                                      const std::string& name,
-                                                      unsigned int number_new_variables)
-      = 0;
-
     /// Create a integer variable
     virtual IMipVariable* addIntVariable(double lb, double ub, const std::string& name) = 0;
-
-    /// Create range of integer variables
-    virtual std::vector<IMipVariable*> addIntVariable(double lb,
-                                                      double ub,
-                                                      const std::string& name,
-                                                      unsigned int number_new_variables)
-      = 0;
 
     /// Create a continuous or integer variable
     virtual IMipVariable* addVariable(double lb, double ub, bool integer, const std::string& name)
       = 0;
 
-    /// Create range continuous or integer variables
-    virtual std::vector<IMipVariable*> addVariable(double lb,
-                                                   double ub,
-                                                   bool integer,
-                                                   const std::string& name,
-                                                   unsigned int number_new_variables)
-      = 0;
-
-    virtual IMipVariable* getVariable(const std::string& name) const = 0;
-    virtual int variableCount() const = 0;
+    // Variables observers
+    [[nodiscard]] virtual IMipVariable* getVariable(std::size_t index) const = 0;
+    [[nodiscard]] virtual IMipVariable* lookupVariable(const std::string& name) const = 0;
+    [[nodiscard]] virtual int variableCount() const = 0;
 
     /// Add a bounded constraint to the problem
     virtual IMipConstraint* addConstraint(double lb, double ub, const std::string& name) = 0;
 
-    /// Add range of bounded constraints to the problem
-    virtual std::vector<IMipConstraint*> addConstraint(double lb,
-                                                       double ub,
-                                                       const std::string& name,
-                                                       unsigned int number_new_constraints)
-      = 0;
-
-    virtual IMipConstraint* getConstraint(const std::string& name) const = 0;
-    virtual int constraintCount() const = 0;
+    // Constraints observers
+    [[nodiscard]] virtual IMipConstraint* getConstraint(std::size_t index) const = 0;
+    [[nodiscard]] virtual IMipConstraint* lookupConstraint(const std::string& name) const = 0;
+    [[nodiscard]] virtual int constraintCount() const = 0;
 
     /// Set the objective coefficient for a given variable
     virtual void setObjectiveCoefficient(IMipVariable* var, double coefficient) = 0;
@@ -99,16 +73,16 @@ public:
     /// Sets the optimization direction to maximize
     virtual void setMaximization() = 0;
 
-    virtual bool isMinimization() const = 0;
-    virtual bool isMaximization() const = 0;
+    [[nodiscard]] virtual bool isMinimization() const = 0;
+    [[nodiscard]] virtual bool isMaximization() const = 0;
 
     /// Solve the problem, returns a IMipSolution
     virtual IMipSolution* solve(bool verboseSolver) = 0;
 
-    virtual void WriteLP(const std::string& filename) = 0;
+    virtual void WriteLP(const std::string& filename) const = 0;
 
     // Definition of infinity
-    virtual double infinity() const = 0;
+    [[nodiscard]] virtual double infinity() const = 0;
 };
 
 } // namespace Antares::Optimisation::LinearProblemApi

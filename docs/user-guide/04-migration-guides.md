@@ -3,6 +3,24 @@
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to
 lower the costs of changing existing interfaces, both GUI and scripts.
 
+## v9.3.0
+
+### Input
+
+#### Removed properties
+
+The following properties were removed from **settings/generaldata.ini**.
+
+- `refreshtimeseries`
+- `refreshintervalload`
+- `refreshintervalhydro`
+- `refreshintervalwind`
+- `refreshintervalthermal`
+- `refreshintervalsolar`
+
+If the user provides a value for key refreshtimeseries the simulation will fail with a warning.
+Values for the refresh intervals will be ignored.
+
 ## v9.2.0
 
 ### Input
@@ -15,22 +33,69 @@ The following properties were removed from **settings/generaldata.ini**.
 - `adequacy patch/set-to-null-ntc-between-physical-out-for-first-step`
 - `other preferences/initial-reservoir-levels`
 
+If the user provides any of the key/values below:
+
+- `adequacy patch/enable-first-step = true`
+- `adequacy patch/set-to-null-ntc-between-physical-out-for-first-step = false`
+- `other preferences/initial-reservoir-levels = hot start`
+- 
+the simulation will fail with a warning. We recommend removing these properties from `settings/generaldata.ini`. Other values (e.g `adequacy patch/enable-first-step = false`) will be ignored.
+
+#### Hydraulic reservoirs / long-term storage
+- In existing file `input/hydro/hydro.ini`, add property `overflow spilled cost difference` for each area (double, default value = 1.). This value describes the additionnal cost of overflow relative to the cost of spillage for the area.
+- In file `settings/generaldata.ini`, for property `other-preferences/shedding-policy`, add value `accurate shave peaks`. This new value becomes the default value (previously `shave peaks`).
+
 #### Short-term storages
 
 - Added properties:
     - `efficiencywithdrawal` (double in [0, 1], default 1) short-term storages (file
       input/st-storage/clusters/<area id>/list.ini)
     - `penalize-variation-injection` boolean, default false (file
-      input/st-storage/series/<area id>/list.ini)
+      input/st-storage/clusters/<area id>/list.ini)
     - `penalize-variation-withdrawal` boolean, default false (file
-      input/st-storage/series/<area id>/list.ini)
+      input/st-storage/clusters/<area id>/list.ini)
 
-- Added timeseries cost-injection.txt, cost-withdrawal.txt, cost-level.txt, cost-variation-injection.txt and
-  cost-variation-withdrawal.txt. These files are optional. If present, they must contain either no value (same behavior
-  as no file), or HOURS_PER_YEAR = 8760 coefficients in one column. Each of these timeseries is located in directory
-  input/st-storage/series/<area id>/<ST id>/, along existing series (rule-curves.txt, etc.).
+- Added 5 optional timeseries for each STS in existing directory `input/st-storage/series/<area id>/<ST id>/`
+	- `cost-injection.txt`
+	- `cost-withdrawal.txt`
+	- `cost-level.txt`
+	- `cost-variation-injection.txt`
+	- `cost-variation-withdrawal.txt`
 
-#### Final levels / scenario-builder
+It is possible to provide only k of these time-series, for k=0..5. However, if present each file must contain either no value (same behavior as no file), or HOURS_PER_YEAR = 8760 coefficients in one column. These timeseries are located along existing series (rule-curves.txt, etc.).
+
+Note that in order for time-series `cost-variation-injection.txt` and `cost-variation-withdrawal.txt` to be taken into account, the user needs to set `penalize-variation-injection = true` (resp. `penalize-variation-withdrawal = true`). If not, these files will be ignored.
+
+#### Short-term storages / additional constraints
+For each area, add optional file `input/st-storage/constraints/<area id>/additional-constraints.ini`
+
+For example
+```ini
+[withdrawal-1]
+cluster = cluster-11
+variable = withdrawal
+operator = equal
+hours = [1,3,5], [120,121,122,123,124,125,126,127,128]
+
+[netting-1]
+cluster = cluster-11
+variable = netting
+operator = less
+hours = [1, 168]
+```
+
+Possible values:
+
+- `cluster`: ID of the short-term storage in the same area
+- `variable`: `withdrawal`, `injection`, `netting`
+- `operator`: `less`, `equal`, `greater`
+- `hours`: not empty, any number of lists `[h_1, ..., h_n]` with n>=1, and coefficients from 1 to 168 included.
+
+Note that all fields are mandatory.
+
+For each constraint, the corresponding RHS time-series must be located at `input/st-storage/constraints/<area id>/rhs_<constraint id>.txt`. The time-series must contain a single column and 8760 rows, empty files are also accepted.
+
+####  Hydro final levels / scenario-builder
 
 - Added optional key type "hfl" (hydro final level) in the scenario builder. The syntax is equivalent to existing
   prefix "hl" (hydro initial level), that is
@@ -41,41 +106,14 @@ hl,area,<year> = <value>
 
 By convention, `year` start at 0 and `value` must be in interval [0, 1].
 
-#### Compatibility flag for hydro pmax coefficients
+#### Compatibility flag for hydro maximal power
 
-In file settings/generaldata.ini, in section `other preferences`, add property `hydro-pmax-format` with possible values
-`daily` (default, legacy) and `hourly` (new).
+In file settings/generaldata.ini, in new section `compatibility`, add new property `hydro-pmax` with possible values
 
-Note: This flag allows to bypass the breaking change that took place in version 9.1 for hydro max powers. It is possible
-to support only the `legacy` file format.
+- `daily` (default, legacy) 
+- `hourly` (new).
 
-### (TS-generator only) TS generation for link capacities
-
-In files input/links/<link1>/properties.ini, add the following properties
-
-- unitcount (unsigned int, default 1)
-- nominalcapacity (float, default 0)
-- law.planned (string "uniform"/"geometric", default "uniform")
-- law.forced (same)
-- volatility.planned (double in [0,1], default 0)
-- volatility.forced (same)
-- force-no-generation (true/false, default true)
-
-- "prepro" timeseries => input/links/<link 1>/prepro/<link 2>_{direct, indirect}.txt, 365x6 values, respectively "forced
-  outage duration", "planned outage duration", "forced outage rate", "planned outage rate", "minimum of groups in
-  maintenance", "maximum of groups in maintenance".
-- "modulation" timeseries => input/links/<link 1>/prepro/<link 2>_mod_{direct, indirect}.txt, 8760x1 values each
-  in [0, 1]
-- number of TS to generate => generaldata.ini/General/nbtimeserieslinks (unsigned int, default value 1)
-
-### Input
-
-#### Hydro Final Reservoir Level
-
-In the existing file **settings/scenariobuilder.dat**, under **&lt;ruleset&gt;** section following properties added (if
-final reservoir level specified, different from `init`):
-
-* **hfl,&lt;area&gt;,&lt;year&gt; = &lt;hfl-value&gt;**
+Note: This flag allows to bypass the breaking change that was introduced in version 9.1 the representation of max hydro power (daily -> hourly, see below). If flag is not specified or given value `daily`, the 8.8 format will be used for hydro pmax time-series. For reference, this format consists of a single file with 4 columns and 365 rows located in `input/hydro/common/capacity/maxpower_<area id>.txt`.
 
 ### Output
 
@@ -223,7 +261,7 @@ bc,<group>,<MC Year> = <TS number>
 This line is not mandatory for every group & MC year. If absent, the TS number will be drawn randomly (usual behavior).
 
 - 0 &lt;= MC Year &lt; generaldata.ini/general.nbyears
-- 1 &lt;=TS number &lt;= number of columns for the group
+- 1 &lt;=TS number &lt;= index of the column for the group
 
 #### Thermal cluster new properties
 

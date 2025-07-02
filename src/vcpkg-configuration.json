@@ -1,0 +1,20 @@
+{
+  "overlay-triplets": [
+    "./triplets"
+  ],
+  "default-registry": {
+    "kind": "git",
+    "baseline": "b322364f06308bdd24823f9d8f03fe0cc86fd46f",
+    "repository": "https://github.com/microsoft/vcpkg"
+  },
+  "registries": [
+    {
+      "kind": "git",
+      "repository": "https://github.com/AntaresSimulatorTeam/antares-vcpkg-registry",
+      "baseline": "9b4a8e17c594af44915fdd75b9affb5ff3be4cc8",
+      "packages": [
+        "sirius-solver"
+      ]
+    }
+  ]
+}

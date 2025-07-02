@@ -1,3 +1,5 @@
+set(PROJ linear-problem-data-impl)
+
 set(SRC_DATA_SERIES
         include/antares/optimisation/linear-problem-data-impl/dataSeries.h
 
@@ -17,15 +19,16 @@ set(SRC_DATA_SERIES
         linearProblemData.cpp
 )
 
-add_library(linear-problem-data-impl ${SRC_DATA_SERIES})
-set_target_properties(linear-problem-data-impl PROPERTIES LINKER_LANGUAGE CXX)
+add_library(${PROJ} ${SRC_DATA_SERIES})
+add_library(Antares::${PROJ} ALIAS ${PROJ})
 
-target_link_libraries(linear-problem-data-impl
+
+target_link_libraries(${PROJ}
         PUBLIC
         linear-problem-api
 )
 
-target_include_directories(linear-problem-data-impl
+target_include_directories(${PROJ}
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )

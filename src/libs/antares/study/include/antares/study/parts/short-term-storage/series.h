@@ -24,25 +24,29 @@
 #include <string>
 #include <vector>
 
+#include <antares/series/series.h>
+#include <antares/study/version.h>
+
 namespace Antares::Data::ShortTermStorage
 {
-
 class Series
 {
 public:
-    Series() = default;
+    Series();
     // check if series values are valid
-    bool validate(const std::string& id = "") const;
+    bool validate(const std::string& id, StudyVersion studyVersion) const;
 
     // load all series files with folder path
-    bool loadFromFolder(const std::filesystem::path& folder);
+    bool loadFromFolder(const std::filesystem::path& folder, StudyVersion studyVersion);
     void fillDefaultSeriesIfEmpty();
 
     bool saveToFolder(const std::string& folder) const;
 
+public:
     std::vector<double> maxInjectionModulation;
     std::vector<double> maxWithdrawalModulation;
-    std::vector<double> inflows;
+    TimeSeriesNumbers inflowsTSNumbers;
+    TimeSeries inflows;
     std::vector<double> lowerRuleCurve;
     std::vector<double> upperRuleCurve;
 
@@ -53,7 +57,7 @@ public:
     std::vector<double> costVariationWithdrawal;
 
 private:
-    bool validateSizes(const std::string&) const;
+    bool validateSizes(const std::string&, StudyVersion studyVersion) const;
     bool validateMaxInjection(const std::string&) const;
     bool validateMaxWithdrawal(const std::string&) const;
     bool validateRuleCurves(const std::string&) const;
@@ -62,6 +66,8 @@ private:
 };
 
 bool loadFile(const std::filesystem::path& folder, std::vector<double>& vect);
+bool loadFile(const std::filesystem::path& file, TimeSeries& series, bool average);
 bool writeVectorToFile(const std::string& path, const std::vector<double>& vect);
 void fillIfEmpty(std::vector<double>& v, double value);
+void fillIfEmpty(TimeSeries& series, double value);
 } // namespace Antares::Data::ShortTermStorage

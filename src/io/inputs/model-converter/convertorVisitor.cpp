@@ -21,6 +21,8 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/io/inputs/model-converter/convertorVisitor.h>
+#include "antares/expressions/nodes/TimeSumNode.h"
+#include "antares/expressions/visitors/CompareVisitor.h"
 
 #include "ExprLexer.h"
 #include "ExprParser.h"
@@ -39,6 +41,7 @@ public:
 
     std::any visit(antlr4::tree::ParseTree* tree) override;
 
+    Node* convertIdentifier(const std::string& identifier) const;
     std::any visitIdentifier(ExprParser::IdentifierContext* context) override;
     std::any visitMuldiv(ExprParser::MuldivContext* context) override;
     std::any visitFullexpr(ExprParser::FullexprContext* context) override;
@@ -63,11 +66,24 @@ public:
     std::any visitShiftMuldiv(ExprParser::ShiftMuldivContext* context) override;
     std::any visitRightMuldiv(ExprParser::RightMuldivContext* context) override;
     std::any visitRightExpression(ExprParser::RightExpressionContext* context) override;
+    std::any visitTimeShiftExpr(ExprParser::TimeShiftExprContext* context) override;
+    std::any visitTimeIndexExpr(ExprParser::TimeIndexExprContext* context) override;
+    std::any visitPortFieldExpr(ExprParser::PortFieldExprContext* context) override;
+    std::any visitPortFieldSum(ExprParser::PortFieldSumContext* context) override;
 
 private:
     Expressions::Registry<Node>& registry_;
     const YmlModel::Model& model_;
+
+    std::any buildShiftNode(Node* shifted_expr, ExprParser::ShiftContext* context);
+    Node* NodeFromShiftContext(ExprParser::Shift_exprContext* shift_expr);
+    PortFieldNode* processPortRule(ExprParser::PortFieldExprContext* context);
 };
+
+NoPortWithThisId::NoPortWithThisId(const std::string& name):
+    runtime_error("No port found for this identifier: " + name)
+{
+}
 
 Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
                                                   const YmlModel::Model& model)
@@ -122,11 +138,11 @@ static constexpr Expressions::Visitors::TimeIndex convertToTimeIndex(bool timede
                                                          | convertBool(timedependent));
 }
 
-std::any ConvertorVisitor::visitIdentifier(ExprParser::IdentifierContext* context)
+Node* ConvertorVisitor::convertIdentifier(const std::string& identifier) const
 {
     for (const auto& param: model_.parameters)
     {
-        if (param.id == context->IDENTIFIER()->getText())
+        if (param.id == identifier)
         {
             return static_cast<Node*>(
               registry_.create<ParameterNode>(param.id,
@@ -137,7 +153,7 @@ std::any ConvertorVisitor::visitIdentifier(ExprParser::IdentifierContext* contex
 
     for (const auto& var: model_.variables)
     {
-        if (var.id == context->getText())
+        if (var.id == identifier)
         {
             return static_cast<Node*>(
               registry_.create<VariableNode>(var.id,
@@ -145,8 +161,12 @@ std::any ConvertorVisitor::visitIdentifier(ExprParser::IdentifierContext* contex
                                                                 var.scenario_dependent)));
         }
     }
+    throw NoParameterOrVariableWithThisName(identifier);
+}
 
-    throw NoParameterOrVariableWithThisName(context->getText());
+std::any ConvertorVisitor::visitIdentifier(ExprParser::IdentifierContext* context)
+{
+    return convertIdentifier(context->getText());
 }
 
 std::any ConvertorVisitor::visitMuldiv(ExprParser::MuldivContext* context)
@@ -211,10 +231,34 @@ public:
     using std::runtime_error::runtime_error;
 };
 
-// TODO implement this
-std::any ConvertorVisitor::visitPortField([[maybe_unused]] ExprParser::PortFieldContext* context)
+static bool isThePortIsRegistered(const std::string& portId,
+                                  const std::vector<YmlModel::Port>& ports)
 {
-    throw NotImplemented("Node portfield not implemented yet");
+    for (const auto& [id, _]: ports)
+    {
+        if (id == portId)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+PortFieldNode* ConvertorVisitor::processPortRule(ExprParser::PortFieldExprContext* context)
+{
+    const auto [portId, portField] = std::any_cast<std::pair<std::string, std::string>>(
+      context->accept(this));
+
+    if (isThePortIsRegistered(portId, model_.ports))
+    {
+        return registry_.create<PortFieldNode>(portId, portField);
+    }
+    throw NoPortWithThisId(portId);
+}
+
+std::any ConvertorVisitor::visitPortField(ExprParser::PortFieldContext* context)
+{
+    return static_cast<Node*>(processPortRule(context->portFieldExpr()));
 }
 
 std::any ConvertorVisitor::visitNumber(ExprParser::NumberContext* context)
@@ -223,16 +267,49 @@ std::any ConvertorVisitor::visitNumber(ExprParser::NumberContext* context)
     return static_cast<Node*>(registry_.create<LiteralNode>(d));
 }
 
-// TODO implement this
 std::any ConvertorVisitor::visitTimeIndex([[maybe_unused]] ExprParser::TimeIndexContext* context)
 {
-    throw NotImplemented("Node time index not implemented yet");
+    Node* expr = convertIdentifier(context->IDENTIFIER()->getText());
+    auto* index = registry_.create<LiteralNode>(std::stoi(context->expr()->getText()));
+    return static_cast<Node*>(registry_.create<TimeIndexNode>(expr, index));
 }
 
-// TODO implement this
+std::any ConvertorVisitor::buildShiftNode(Node* shifted_expr, ExprParser::ShiftContext* context)
+{
+    auto* time_shift = std::any_cast<Node*>(context->shift_expr()->accept(this));
+
+    return static_cast<Node*>(registry_.create<TimeShiftNode>(shifted_expr, time_shift));
+}
+
 std::any ConvertorVisitor::visitTimeShift([[maybe_unused]] ExprParser::TimeShiftContext* context)
 {
-    throw NotImplemented("Node time shift not implemented yet");
+    return buildShiftNode(convertIdentifier(context->IDENTIFIER()->getText()), context->shift());
+}
+
+std::any ConvertorVisitor::visitTimeShiftExpr(ExprParser::TimeShiftExprContext* context)
+{
+    return buildShiftNode(std::any_cast<Node*>(context->expr()->accept(this)), context->shift());
+}
+
+std::any ConvertorVisitor::visitTimeIndexExpr(ExprParser::TimeIndexExprContext* context)
+{
+    Node* left = std::any_cast<Node*>(visit(context->expr(0)));
+    Node* right = std::any_cast<Node*>(visit(context->expr(1)));
+    return static_cast<Node*>(registry_.create<TimeIndexNode>(left, right));
+}
+
+std::any ConvertorVisitor::visitPortFieldExpr(ExprParser::PortFieldExprContext* context)
+{
+    return std::make_pair(context->IDENTIFIER()[0]->getText(), context->IDENTIFIER()[1]->getText());
+}
+
+std::any ConvertorVisitor::visitPortFieldSum(ExprParser::PortFieldSumContext* context)
+{
+    const auto port = processPortRule(context->portFieldExpr());
+    const auto portName = port->getPortName();
+    const auto fieldName = port->getFieldName();
+
+    return static_cast<Node*>(registry_.create<PortFieldSumNode>(portName, fieldName));
 }
 
 // TODO implement this
@@ -241,16 +318,33 @@ std::any ConvertorVisitor::visitFunction([[maybe_unused]] ExprParser::FunctionCo
     throw NotImplemented("Node function not implemented yet");
 }
 
-// TODO implement this
-std::any ConvertorVisitor::visitTimeSum([[maybe_unused]] ExprParser::TimeSumContext* context)
+Node* ConvertorVisitor::NodeFromShiftContext(ExprParser::Shift_exprContext* shift_expr)
 {
-    throw NotImplemented("Node time sum not implemented yet");
+    if (shift_expr)
+    {
+        return std::any_cast<Node*>(shift_expr->accept(this));
+    }
+    else
+    {
+        return registry_.create<LiteralNode>(0);
+    }
 }
 
-// TODO implement this
+std::any ConvertorVisitor::visitTimeSum([[maybe_unused]] ExprParser::TimeSumContext* context)
+{
+    auto* from = NodeFromShiftContext(context->from->shift_expr());
+
+    auto* to = NodeFromShiftContext(context->to->shift_expr());
+
+    auto* expr = std::any_cast<Node*>(context->expr()->accept(this));
+
+    return static_cast<Node*>(registry_.create<TimeSumNode>(from, to, expr));
+}
+
 std::any ConvertorVisitor::visitAllTimeSum([[maybe_unused]] ExprParser::AllTimeSumContext* context)
 {
-    throw NotImplemented("Node all time sum  not implemented yet");
+    auto expr = std::any_cast<Node*>(context->expr()->accept(this));
+    return static_cast<Node*>(registry_.create<AllTimeSumNode>(expr));
 }
 
 // shift related, not tested
@@ -272,27 +366,33 @@ std::any ConvertorVisitor::visitUnsignedAtom(ExprParser::UnsignedAtomContext* co
 // TODO implement this
 std::any ConvertorVisitor::visitRightAtom([[maybe_unused]] ExprParser::RightAtomContext* context)
 {
-    throw NotImplemented("Node right atom not implemented yet");
+    return context->atom()->accept(this);
 }
 
-// TODO implement this
 std::any ConvertorVisitor::visitShift([[maybe_unused]] ExprParser::ShiftContext* context)
 {
-    throw NotImplemented("Node shift not implemented yet");
+    return std::any_cast<Node*>(visit(context->shift_expr()));
 }
 
-// TODO implement this
 std::any ConvertorVisitor::visitShiftAddsub(
   [[maybe_unused]] ExprParser::ShiftAddsubContext* context)
 {
-    throw NotImplemented("Node shift add sub not implemented yet");
+    Node* left = std::any_cast<Node*>(visit(context->shift_expr()));
+    Node* right = std::any_cast<Node*>(visit(context->right_expr()));
+    const auto op = context->op->getText();
+    return (op == "+") ? static_cast<Node*>(registry_.create<SumNode>(left, right))
+                       : static_cast<Node*>(registry_.create<SubtractionNode>(left, right));
 }
 
 // TODO implement this
 std::any ConvertorVisitor::visitShiftMuldiv(
   [[maybe_unused]] ExprParser::ShiftMuldivContext* context)
 {
-    throw NotImplemented("Node shift mul div not implemented yet");
+    Node* left = std::any_cast<Node*>(visit(context->shift_expr()));
+    Node* right = std::any_cast<Node*>(visit(context->right_expr()));
+    const auto op = context->op->getText();
+    return (op == "*") ? static_cast<Node*>(registry_.create<MultiplicationNode>(left, right))
+                       : static_cast<Node*>(registry_.create<DivisionNode>(left, right));
 }
 
 // TODO implement this
@@ -306,7 +406,12 @@ std::any ConvertorVisitor::visitRightMuldiv(
 std::any ConvertorVisitor::visitSignedExpression(
   [[maybe_unused]] ExprParser::SignedExpressionContext* context)
 {
-    throw NotImplemented("Node signed expression not implemented yet");
+    auto a = context->expr()->accept(this);
+    if (context->op->getText() == "-")
+    {
+        return static_cast<Node*>(registry_.create<NegationNode>(std::any_cast<Node*>(a)));
+    }
+    return a;
 }
 
 std::any ConvertorVisitor::visitRightExpression(ExprParser::RightExpressionContext* context)

@@ -5,6 +5,7 @@ set(SRC_model
         model.cpp
         component.cpp
         system.cpp
+        connection.cpp
         include/antares/study/system-model/library.h
         include/antares/study/system-model/model.h
         include/antares/study/system-model/parameter.h
@@ -18,6 +19,7 @@ set(SRC_model
         include/antares/study/system-model/component.h
         include/antares/study/system-model/system.h
         include/antares/study/system-model/timeAndScenarioType.h
+        include/antares/study/system-model/connection.h
 )
 
 source_group("SystemModel" FILES ${SRC_model})

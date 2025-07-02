@@ -333,9 +333,7 @@ Correlation::Correlation():
 
 bool Correlation::loadFromFile(Study& study, const AnyString& filename, bool warnings)
 {
-#ifndef NDEBUG
     Antares::logs.debug() << "  " << correlationName << ": loading " << filename;
-#endif
     IniFile ini;
     return (ini.open(filename)) ? internalLoadFromINI(study, ini, warnings) : false;
 }
@@ -608,12 +606,11 @@ static void CopyFromSingleMatrix(const Matrix<>& mxsrc,
 {
     // for (uint x = 0; x <= areaSource; ++x)
     // We MUST take the original area list, and not the current one
-    auto end = studySource.areas.nameidSet.end();
-    for (auto i = studySource.areas.nameidSet.begin(); i != end; ++i)
+    for (const auto& i: studySource.areas.nameidSet)
     {
         uint x;
         {
-            auto* a = studySource.areas.find(*i);
+            auto* a = studySource.areas.find(i);
             if (!a)
             {
                 continue;

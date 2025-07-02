@@ -20,11 +20,11 @@
 */
 #pragma once
 
-#include <antares/expressions/nodes/Node.h>
+#include <antares/expressions/nodes/ParentNode.h>
 
 namespace Antares::Expressions::Nodes
 {
-class BinaryNode: public Node
+class BinaryNode: public ParentNode
 {
 public:
     /**
@@ -49,16 +49,5 @@ public:
      * @return A pointer to the right operand.
      */
     Node* right() const;
-
-private:
-    /**
-     * @brief A pointer to the left operand.
-     */
-    Node* leftOperand_ = nullptr;
-
-    /**
-     * @brief A pointer to the right operand.
-     */
-    Node* rightOperand_ = nullptr;
 };
 } // namespace Antares::Expressions::Nodes

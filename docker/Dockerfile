@@ -4,7 +4,7 @@ FROM antaresrte/antaressystemdeps:latest
 
 CMD ["/bin/bash"]
 
-RUN mkdir /workspace
+RUN mkdir -p /workspace
 
 RUN echo "source /opt/rh/devtoolset-11/enable" >> /etc/bashrc
 SHELL ["/bin/bash", "--login", "-c"]
@@ -16,7 +16,7 @@ COPY $VCPKG_CACHE_DIR /workspace/
 
 
 ARG BRANCH=develop
-RUN cd /workspace && \
+RUN cd /workspace && rm -rf Antares_Simulator && \
     git clone https://github.com/AntaresSimulatorTeam/Antares_Simulator.git --branch $BRANCH && \
     cd Antares_Simulator && \
     git submodule update --init vcpkg && ./vcpkg/bootstrap-vcpkg.sh -disableMetrics && \
@@ -71,25 +71,23 @@ RUN  source /opt/rh/devtoolset-11/enable && \
 
 #Installer .rpm creation
 RUN cd _build && \
-    cpack -G RPM
+    cpack -G RPM -D CPACK_INSTALLED_DIRECTORIES="/ortools/install/lib64;bin"
 
 #Solver archive creation
 RUN cd _build && \
-     cpack -G RPM
+     cpack -G TGZ -D CPACK_INSTALLED_DIRECTORIES="/ortools/install/lib64;bin"
 
-RUN cd _build && \
-    cmake --install . --prefix install && \
-    pushd . && \
-    cd install/bin && \
-    tar czf ../../antares-solver_centos7.tar.gz antares-solver libsirius_solver.so && \
-    popd && \
-    rm -rf install
-
-#.tar.gz creation
-RUN cd _build && \
-    cpack -G TGZ
 #mv .rpm and .tar.gz
 RUN cd _build && \
     mkdir archive && \
     mv *.tar.gz archive && \
     mv *.rpm archive
+
+RUN cd _build && \
+    cmake --install . --prefix install && \
+    pushd . && \
+    cd install/bin && \
+    cp /ortools/install/lib64/*.so* . && \
+    tar czf ../../antares-solver_centos7.tar.gz antares-solver libsirius_solver.so *.so* && \
+    popd && \
+    rm -rf install

@@ -1,7 +1,7 @@
 # Dynamic modeler architecture
 
 ## Models
-(for details about these concepts, see [this page](../../user-guide/solver/dynamic-modeler/05-model.md))
+(for details about these concepts, see [this page](../../user-guide/modeler/05-model.md))
 
 ```plantuml
 @startuml
@@ -85,7 +85,7 @@ ModelLibraryRepository "1" *-- "0:N" ModelLibrary
 ```
 
 ## Components
-(for details about these concepts, see [this page](../../user-guide/solver/dynamic-modeler/05-model.md))
+(for details about these concepts, see [this page](../../user-guide/modeler/05-model.md))
 
 ```plantuml
 @startuml

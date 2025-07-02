@@ -11,6 +11,7 @@ on:
       - release/*
       - doc/*
       - dependabot/*
+      - tests/*
   schedule:
     - cron: '21 2 * * *'
   workflow_call:
@@ -38,11 +39,11 @@ jobs:
     name: Build
     env:
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
-      os: ubuntu-20.04
+      os: ubuntu-22.04
       # Caching strategy of VCPKG dependencies
       VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg_cache,readwrite"
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
 
     steps:
@@ -62,10 +63,25 @@ jobs:
           # Allows to restore a cache when deps have only partially changed (like adding a dependency)
           restore-keys: vcpkg-cache-ubuntu-
 
-      - name: ccache
-        uses: hendrikmuhs/ccache-action@v1.2
+
+      - name: Install ccache
+        run: sudo apt-get install -y ccache
+
+      - name: Restore ccache cache
+        uses: actions/cache/restore@v4
         with:
-          key: ${{ env.os }}
+          path: ${{ github.workspace }}/.ccache_ubuntu
+          key: ${{ env.os }}-${{ github.ref_name }}
+          restore-keys: |
+            ${{ env.os }}-  
+
+      - name: Configure ccache
+        run: |
+          ccache --set-config=cache_dir=${{ github.workspace }}/.ccache_ubuntu
+          ccache --set-config=max_size=500M
+          ccache --set-config=compression=true
+          ccache -p
+          ccache -z
 
       - name: Install libraries
         run: |
@@ -75,7 +91,7 @@ jobs:
 
       - name: Config OR-Tools URL
         run: |
-          echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
+          echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_ubuntu-22.04_static_sirius.zip" >> $GITHUB_ENV
 
       - name: Download pre-compiled librairies
         uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
@@ -114,6 +130,31 @@ jobs:
         run: |
           cmake --build _build -j$(nproc)
 
+      - name: Creation of complete .tar.gz archive
+        if: ${{ success() }}
+        run: |
+          cd _build
+          cpack -G TGZ -D CPACK_INSTALLED_DIRECTORIES="${{ env.ORTOOLS_DIR }}/install/lib;bin"
+
+      - name: Creation of solver only .tar.gz archive
+        if: ${{ success() }}
+        run: |
+          cd _build
+          cmake --install . --prefix install
+          pushd .
+          cd install/bin
+          cp ${{ env.ORTOOLS_DIR }}/install/lib/*.so* .
+          tar czf ../../antares-solver_ubuntu22.04.tar.gz antares-solver libsirius_solver.so *.so*
+          popd
+          rm -rf install
+
+      - name: Both previous archives upload
+        if: ${{ success() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: targz
+          path: _build/*.tar.gz
+
       - name: Run API tests
         run: |
           cmake --install _build --prefix antares_install
@@ -127,7 +168,7 @@ jobs:
            -DBUILD_TESTING=ON \
            -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake \
            -DVCPKG_TARGET_TRIPLET=x64-linux-release \
-           -DCMAKE_PREFIX_PATH="${{github.workspace}}/rte-antares-deps-Release;${{github.workspace}}/install;${{ env.ORTOOLS_DIR }}/install;${{github.workspace}}/antares_install;${{github.workspace}}/rte-antares-deps-Release;${{github.workspace}}/_build/vcpkg_installed/x64-linux-release"
+           -DCMAKE_PREFIX_PATH="${{github.workspace}}/_build/vcpkg_installed/x64-linux-release;${{github.workspace}}/install;${{ env.ORTOOLS_DIR }}/install;${{github.workspace}}/antares_install"
            cmake --build _build -j$(nproc)
            cd _build
            ctest -C Release --output-on-failure
@@ -142,10 +183,6 @@ jobs:
         run: |
           echo "SIMTEST=${{ fromJson(env.SIMTEST_JSON).version }}" >> $GITHUB_ENV
 
-      - name: Init submodule Antares_Simulator_Tests
-        run: |
-          git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests
-
       - name: Init submodule Antares_Simulator_Tests_NR
         run: |
           git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests_NR
@@ -158,6 +195,18 @@ jobs:
           batch-name: valid-named-mps
           os: ${{ env.os }}
           variant: "named-mps"
+
+      - name: Run fast cucumber
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/cucumber-tests
+        with:
+          tags: "fast"
+
+      - name: Run cucumber on modeler
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/cucumber-tests
+        with:
+          feature: "features/modeler-features"
 
       - name: Run unfeasibility-related tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
@@ -244,11 +293,12 @@ jobs:
           batch-name: short-tests
           os: ${{ env.os }}
 
-      - name: Run cucumber on short-tests
+
+      - name: Run cucumber on v9.2 tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/cucumber-tests
         with:
-          feature: "features/solver-features/short_tests.feature"
+          feature: "features/solver-features/tests_for_v9.2.feature"
 
       - name: Run mps tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
@@ -266,15 +316,6 @@ jobs:
           batch-name: valid-parallel
           os: ${{ env.os }}
           variant: "parallel"
-
-      - name: Run tests for time series generator tool
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-        uses: ./.github/workflows/run-tests
-        with:
-          simtest-tag: ${{ env.SIMTEST }}
-          batch-name: ts-generator
-          os: ${{ env.os }}
-          variant: "tsgenerator"
 
       - name: Run medium-tests
         if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
@@ -314,10 +355,11 @@ jobs:
           batch-name: long-tests-3
           os: ${{ env.os }}
 
-      - name: Run cucumber on modeler
+
+      - name: Run cucumber on hybrid studies
         uses: ./.github/workflows/cucumber-tests
         with:
-          feature: "features/modeler-features"
+          feature: "features/solver-features/hybrid_studies.feature"
 
       - name: Barrier
         if: ${{ !success() }}
@@ -326,28 +368,7 @@ jobs:
       - name: Installer .deb creation
         run: |
           cd _build
-          cpack -G DEB
-
-      - name: .tar.gz creation
-        run: |
-          cd _build
-          cpack -G TGZ
-
-      - name: Solver archive creation
-        run: |
-          cd _build
-          cmake --install . --prefix install
-          pushd .
-          cd install/bin
-          tar czf ../../antares-solver_ubuntu20.04.tar.gz antares-solver libsirius_solver.so
-          popd
-          rm -rf install
-
-      - name: Installer archive upload push
-        uses: actions/upload-artifact@v4
-        with:
-          name: targz
-          path: _build/*.tar.gz
+          cpack -G DEB -D CPACK_INSTALLED_DIRECTORIES="${{ env.ORTOOLS_DIR }}/install/lib;bin"
 
       - name: Installer deb upload push
         uses: actions/upload-artifact@v4
@@ -364,6 +385,15 @@ jobs:
         run: |
           gh release upload "$tag" _build/*.tar.gz _build/*.deb
 
+      - name: Update continuous-delivery release
+        if: github.ref == 'refs/heads/develop'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mv _build/antares-*-Ubuntu-22.04.tar.gz _build/antares-cd-Ubuntu-22.04.tar.gz
+          mv _build/antares-*-Ubuntu-22.04.deb _build/antares-cd-Ubuntu-22.04.deb
+          gh release upload --clobber continuous-delivery _build/*.tar.gz _build/*.deb
+
       - name: Cache vcpkg binary dir
         if: always()
         id: save-cache-vcpkg-binary
@@ -371,3 +401,13 @@ jobs:
         with:
           path: ${{ github.workspace }}/vcpkg_cache
           key: vcpkg-cache-ubuntu-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+
+      - name: Display ccache statistics
+        run: ccache -s
+
+      - name: Save ccache cache
+        if: ${{ !cancelled() }}
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ github.workspace }}/.ccache_ubuntu
+          key: ${{ env.os }}-${{ github.ref_name }}

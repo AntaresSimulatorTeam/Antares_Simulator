@@ -8,7 +8,7 @@ set(SOURCES
 )
 
 # Create the library
-add_library(model-converter STATIC ${SOURCES})
+add_library(model-converter ${SOURCES})
 add_library(Antares::model-converter ALIAS model-converter)
 
 # Specify include directories
@@ -24,6 +24,7 @@ target_link_libraries(model-converter
         Antares::yml-model
         Antares::antlr-interface
         Antares::expressions
+        Antares::expressions-iterators
 )
 
 install(DIRECTORY include/antares

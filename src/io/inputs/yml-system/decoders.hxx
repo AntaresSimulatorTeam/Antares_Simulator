@@ -55,8 +55,9 @@ struct convert<Antares::IO::Inputs::YmlSystem::Parameter>
             return false;
         }
         rhs.id = node["id"].as<std::string>();
-        rhs.type = node["type"].as<std::string>();
-        rhs.value = node["value"].as<double>();
+        rhs.time_dependent = node["time-dependent"].as<bool>();
+        rhs.scenario_dependent = node["scenario-dependent"].as<bool>();
+        rhs.value = node["value"].as<std::string>();
         return true;
     }
 };
@@ -72,9 +73,42 @@ struct convert<Antares::IO::Inputs::YmlSystem::Component>
         }
         rhs.id = node["id"].as<std::string>();
         rhs.model = node["model"].as<std::string>();
-        rhs.scenarioGroup = node["scenario-group"].as<std::string>();
+        rhs.scenarioGroup = node["scenario-group"].as<std::string>("default");
         rhs.parameters = as_fallback_default<
           std::vector<Antares::IO::Inputs::YmlSystem::Parameter>>(node["parameters"]);
+        return true;
+    }
+};
+
+template<>
+struct convert<Antares::IO::Inputs::YmlSystem::Connection>
+{
+    static bool decode(const Node& node, Antares::IO::Inputs::YmlSystem::Connection& rhs)
+    {
+        if (!node.IsMap() && node.size() != 4)
+        {
+            return false;
+        }
+        rhs.firstEntry.componentId = node["component1"].as<std::string>();
+        rhs.firstEntry.portId = node["port1"].as<std::string>();
+        rhs.secondEntry.componentId = node["component2"].as<std::string>();
+        rhs.secondEntry.portId = node["port2"].as<std::string>();
+        return true;
+    }
+};
+
+template<>
+struct convert<Antares::IO::Inputs::YmlSystem::AreaConnection>
+{
+    static bool decode(const Node& node, Antares::IO::Inputs::YmlSystem::AreaConnection& rhs)
+    {
+        if (!node.IsMap() && node.size() != 4)
+        {
+            return false;
+        }
+        rhs.componentId = node["component"].as<std::string>();
+        rhs.portId = node["port"].as<std::string>();
+        rhs.areaId = node["area"].as<std::string>();
         return true;
     }
 };
@@ -88,6 +122,10 @@ struct convert<Antares::IO::Inputs::YmlSystem::System>
         rhs.libraries = as_fallback_default<std::vector<std::string>>(node["model-libraries"]);
         rhs.components = as_fallback_default<
           std::vector<Antares::IO::Inputs::YmlSystem::Component>>(node["components"]);
+        rhs.connections = as_fallback_default<
+          std::vector<Antares::IO::Inputs::YmlSystem::Connection>>(node["connections"]);
+        rhs.areaConnections = as_fallback_default<
+          std::vector<Antares::IO::Inputs::YmlSystem::AreaConnection>>(node["area-connections"]);
         return true;
     }
 };

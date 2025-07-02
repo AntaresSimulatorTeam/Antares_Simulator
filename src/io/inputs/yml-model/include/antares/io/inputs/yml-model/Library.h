@@ -96,6 +96,7 @@ struct Model
     std::vector<Port> ports;
     std::vector<PortFieldDefinition> port_field_definitions;
     std::vector<Constraint> constraints;
+    std::vector<Constraint> binding_constraints;
     std::string objective;
 };
 
@@ -106,6 +107,8 @@ struct PortType
     // Small optimization: we only need the name of the fields
     // No need for an intermediate struct "field" with just a string "name" member
     std::vector<std::string> fields;
+    // Also, we only need the injection-field of the area-connection
+    std::string area_connection_injection_field;
 };
 
 struct Library

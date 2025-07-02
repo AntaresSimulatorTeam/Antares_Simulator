@@ -71,9 +71,9 @@ void OrtoolsMipConstraint::setCoefficient(LinearProblemApi::IMipVariable* var, d
     mpConstraint_->SetCoefficient(mpvar->getMpVar(), coefficient);
 }
 
-double OrtoolsMipConstraint::getCoefficient(LinearProblemApi::IMipVariable* var)
+double OrtoolsMipConstraint::getCoefficient(const LinearProblemApi::IMipVariable* var) const
 {
-    auto* mpvar = dynamic_cast<OrtoolsMipVariable*>(var);
+    const auto* mpvar = dynamic_cast<const OrtoolsMipVariable*>(var);
     if (!mpvar)
     {
         logs.error()

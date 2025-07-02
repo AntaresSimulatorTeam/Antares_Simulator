@@ -59,22 +59,11 @@ private:
         pBuffer.resize(1 + pBuffer.size() + pIndent * 4, " ");
         pBuffer += (IsNodeT ? "+ " : "  ");
         pBuffer += VCardT::Caption();
-        pBuffer.resize(29, " ");
+        pBuffer.resize(35, " ");
         pBuffer += VCardT::Unit();
-        pBuffer.resize(37, " ");
+        pBuffer.resize(50, " ");
         pBuffer += VCardT::Description();
         Antares::logs.info() << pBuffer;
-    }
-
-    void printIndent()
-    {
-        if (pIndent)
-        {
-            for (uint i = 0; i != pIndent; ++i)
-            {
-                pBuffer += "    ";
-            }
-        }
     }
 
 private:

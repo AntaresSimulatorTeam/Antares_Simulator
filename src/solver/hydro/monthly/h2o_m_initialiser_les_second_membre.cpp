@@ -22,6 +22,8 @@
 #include "antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h"
 #include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
 
+namespace DonneesOptimisationMensuelle
+{
 void H2O_M_InitialiserLeSecondMembre(DONNEES_ANNUELLES& DonneesAnnuelles)
 {
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles.ProblemeHydraulique;
@@ -29,22 +31,21 @@ void H2O_M_InitialiserLeSecondMembre(DONNEES_ANNUELLES& DonneesAnnuelles)
       = ProblemeHydraulique.ProblemeLineairePartieVariable;
 
     double ChgmtSens = -1;
-    const int NbPdt = DonneesAnnuelles.NombreDePasDeTemps;
     int Cnt = 0;
 
     auto& TurbineCible = DonneesAnnuelles.TurbineCible;
     auto& SecondMembre = ProblemeLineairePartieVariable.SecondMembre;
 
-    for (int Pdt = 1; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 1; Pdt < nbMonths; Pdt++)
     {
         SecondMembre[Cnt] = DonneesAnnuelles.Apport[Pdt - 1];
         Cnt++;
     }
 
-    SecondMembre[Cnt] = DonneesAnnuelles.Volume[0] - DonneesAnnuelles.Apport[NbPdt - 1];
+    SecondMembre[Cnt] = DonneesAnnuelles.Volume[0] - DonneesAnnuelles.Apport[nbMonths - 1];
     Cnt++;
 
-    for (int Pdt = 1; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 1; Pdt < nbMonths; Pdt++)
     {
         SecondMembre[Cnt] = DonneesAnnuelles.VolumeMax[Pdt];
         Cnt++;
@@ -53,13 +54,13 @@ void H2O_M_InitialiserLeSecondMembre(DONNEES_ANNUELLES& DonneesAnnuelles)
         Cnt++;
     }
 
-    for (int Pdt = 1; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 1; Pdt < nbMonths; Pdt++)
     {
         SecondMembre[Cnt] = 0.;
         Cnt++;
     }
 
-    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < nbMonths; Pdt++)
     {
         SecondMembre[Cnt] = TurbineCible[Pdt];
         Cnt++;
@@ -67,6 +68,5 @@ void H2O_M_InitialiserLeSecondMembre(DONNEES_ANNUELLES& DonneesAnnuelles)
         SecondMembre[Cnt] = 0.0 * ChgmtSens;
         Cnt++;
     }
-
-    return;
 }
+} // namespace DonneesOptimisationMensuelle

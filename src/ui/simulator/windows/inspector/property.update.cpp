@@ -254,6 +254,13 @@ bool InspectorGrid::onPropertyChanging_C(wxPGProperty*,
         mainFrm.mainPanel()->refreshFromStudy();
         return true;
     }
+    if (name == "common.study.editor")
+    {
+        wxStringToString(value.GetString(), study->header.editor);
+        auto& mainFrm = *Antares::Forms::ApplWnd::Instance();
+        mainFrm.mainPanel()->refreshFromStudy();
+        return true;
+    }
     return false;
 }
 
@@ -501,8 +508,8 @@ bool InspectorGrid::onPropertyChanging_Constraint(wxPGProperty*,
     const InspectorData::Ptr& data = pCurrentSelection;
     if (!data)
         return false;
-    Data::BindingConstraintsRepository::Set::iterator end = data->constraints.end();
-    Data::BindingConstraintsRepository::Set::iterator i = data->constraints.begin();
+    Data::BindingConstraint::Set::iterator end = data->constraints.end();
+    Data::BindingConstraint::Set::iterator i = data->constraints.begin();
 
     if (name == "constraint.name")
     {

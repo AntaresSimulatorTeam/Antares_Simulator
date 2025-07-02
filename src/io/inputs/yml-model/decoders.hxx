@@ -134,6 +134,7 @@ struct convert<Antares::IO::Inputs::YmlModel::PortFieldDefinition>
     {
         if (!node.IsMap())
         {
+            // return true to avoid error ? port field definition not mandatory
             return false;
         }
         rhs.port = node["port"].as<std::string>();
@@ -180,6 +181,8 @@ struct convert<Antares::IO::Inputs::YmlModel::Model>
           node["port-field-definitions"]);
         rhs.constraints = as_fallback_default<
           std::vector<Antares::IO::Inputs::YmlModel::Constraint>>(node["constraints"]);
+        rhs.binding_constraints = as_fallback_default<
+          std::vector<Antares::IO::Inputs::YmlModel::Constraint>>(node["binding-constraints"]);
         rhs.objective = node["objective"].as<std::string>("");
         return true;
     }
@@ -199,6 +202,18 @@ struct convert<Antares::IO::Inputs::YmlModel::PortType>
         for (const auto& field: node["fields"])
         {
             rhs.fields.push_back(field["id"].as<std::string>());
+        }
+        if (node["area-connection"].IsDefined())
+        {
+            if (node["area-connection"].size() != 1)
+            {
+                // Must have exactly one area connection field definition
+                return false;
+            }
+            for (const auto& field: node["area-connection"])
+            {
+                rhs.area_connection_injection_field = field["injection-field"].as<std::string>("");
+            }
         }
         return true;
     }

@@ -21,6 +21,8 @@
 #ifndef __SOLVER_SIMULATION_SOLVER_H__
 #define __SOLVER_SIMULATION_SOLVER_H__
 
+#include <stdexcept>
+
 #include <yuni/job/queue/service.h>
 
 #include <antares/benchmarking/DurationCollector.h>
@@ -30,7 +32,6 @@
 #include <antares/writer/writer_factory.h>
 #include "antares/solver/hydro/management/management.h"
 #include "antares/solver/misc/options.h"
-#include "antares/solver/simulation/solver.data.h"
 #include "antares/solver/simulation/solver_utils.h"
 #include "antares/solver/variable/state.h"
 
@@ -86,8 +87,7 @@ private:
     /*!
     ** \brief Regenerate time-series if required for a given year
     */
-    void regenerateTimeSeries(uint year);
-
+    void regenerateTimeSeries();
     /*!
     ** \brief Builds sets of parallel years
     **
@@ -111,7 +111,7 @@ private:
     ** \param	years			List of years
     */
     void computeRandomNumbers(randomNumbers& randomForYears,
-                              std::vector<uint>& years,
+                              unsigned years,
                               std::map<unsigned int, bool>& isYearPerformed,
                               MersenneTwister& randomHydro);
 
@@ -125,8 +125,7 @@ private:
     ** Same thing for min and max costs over all years.
     ** Storing these costs to compute std deviation later.
     */
-    void computeAnnualCostsStatistics(std::vector<Variable::State>& state,
-                                      setOfParallelYears& batch);
+    void computeAnnualCostsStatistics(Variable::State state);
 
     /*!
     ** \brief Iterate through all MC years
@@ -136,16 +135,12 @@ private:
     */
     void loopThroughYears(uint firstYear, uint endYear, std::vector<Variable::State>& state);
 
-    //! Some temporary to avoid performing useless complex checks
-    Solver::Private::Simulation::CacheData pData;
     //!
     uint pNbYearsReallyPerformed;
     //! Max number of years performed in parallel
     uint pNbMaxPerformedYearsInParallel;
     //! Year by year output results
     bool pYearByYear;
-    //! The first set of parallel year(s) with a performed year was already run ?
-    bool pFirstSetParallelWithAPerformedYearWasRun;
 
     //! Statistics about annual (system and solution) costs
     annualCostsStatistics pAnnualStatistics;

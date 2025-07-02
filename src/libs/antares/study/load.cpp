@@ -21,6 +21,7 @@
 #include <fstream>
 
 #include <antares/benchmarking/DurationCollector.h>
+#include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include "antares/study/scenario-builder/sets.h"
 #include "antares/study/study.h"
 #include "antares/study/ui-runtimeinfos.h"
@@ -106,12 +107,6 @@ void Study::parameterFiller(const StudyLoadOptions& options)
         parameters.timeSeriesToArchive = 0;
         parameters.storeTimeseriesNumbers = false;
         parameters.synthesis = false;
-    }
-
-    if (options.loadOnlyNeeded && !parameters.timeSeriesToGenerate)
-    {
-        // Nothing to refresh
-        parameters.timeSeriesToRefresh = 0;
     }
 
     // We can not run the simulation if the study folder is not in the latest
@@ -222,38 +217,56 @@ bool Study::internalLoadFromFolder(const fs::path& path, const StudyLoadOptions&
     ret = internalLoadSets() && ret;
 
     parameterFiller(options);
+
+    // Modeler components for hybrid studies
+    loadModelerComponents();
+
     return ret;
+}
+
+void Study::loadModelerComponents()
+{
+    try
+    {
+        modelerInput_ = Solver::LoadFiles::loadAll(folder);
+    }
+    catch (const std::exception& e)
+    {
+        logs.info() << "No modeler inputs were loaded";
+        logs.info() << "Modeler inputs error: " << e.what();
+    }
+
+    if (fs::exists(folder / "parameters.yml"))
+    {
+        logs.warning() << "parameters.yml ignored, use command line to set solver parameters";
+    }
 }
 
 bool Study::internalLoadCorrelationMatrices(const StudyLoadOptions& options)
 {
     // Load
-    if (!options.loadOnlyNeeded || timeSeriesLoad & parameters.timeSeriesToRefresh
-        || timeSeriesLoad & parameters.timeSeriesToGenerate)
+    if (!options.loadOnlyNeeded || timeSeriesLoad & parameters.timeSeriesToGenerate)
     {
         fs::path loadPath = folderInput / "load" / "prepro" / "correlation.ini";
         preproLoadCorrelation.loadFromFile(*this, loadPath.string());
     }
 
     // Solar
-    if (!options.loadOnlyNeeded || timeSeriesSolar & parameters.timeSeriesToRefresh
-        || timeSeriesSolar & parameters.timeSeriesToGenerate)
+    if (!options.loadOnlyNeeded || timeSeriesSolar & parameters.timeSeriesToGenerate)
     {
         fs::path solarPath = folderInput / "solar" / "prepro" / "correlation.ini";
         preproSolarCorrelation.loadFromFile(*this, solarPath.string());
     }
 
     // Wind
-    if (!options.loadOnlyNeeded || timeSeriesWind & parameters.timeSeriesToRefresh
-        || timeSeriesWind & parameters.timeSeriesToGenerate)
+    if (!options.loadOnlyNeeded || timeSeriesWind & parameters.timeSeriesToGenerate)
     {
         fs::path windPath = folderInput / "wind" / "prepro" / "correlation.ini";
         preproWindCorrelation.loadFromFile(*this, windPath.string());
     }
 
     // Hydro
-    if (!options.loadOnlyNeeded || (timeSeriesHydro & parameters.timeSeriesToRefresh)
-        || (timeSeriesHydro & parameters.timeSeriesToGenerate))
+    if (!options.loadOnlyNeeded || timeSeriesHydro & parameters.timeSeriesToGenerate)
     {
         fs::path hydroPath = folderInput / "hydro" / "prepro" / "correlation.ini";
         preproHydroCorrelation.loadFromFile(*this, hydroPath.string());

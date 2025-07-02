@@ -20,24 +20,39 @@
 */
 #pragma once
 
+#include <algorithm>
+#include <optional>
+#include <ranges>
 #include <string>
 #include <vector>
 
 #include "portField.h"
 
-namespace Antares::Study::SystemModel
+namespace Antares::ModelerStudy::SystemModel
 {
 
 class PortType
 {
 public:
     PortType(const std::string& id,
-             const std::string& description,
-             std::vector<PortField>&& fields):
+             std::vector<PortField>&& fields,
+             const std::string& areaConnectionFieldId = ""):
         id_(id),
-        description_(description),
         fields_(std::move(fields))
     {
+        if (!areaConnectionFieldId.empty())
+        {
+            if (!std::ranges::any_of(fields_,
+                                     [areaConnectionFieldId](const auto& field)
+                                     { return field.Id() == areaConnectionFieldId; }))
+            {
+                throw std::invalid_argument(
+                  "Field \"" + areaConnectionFieldId
+                  + "\" selected for area connections was not defined in PortType \"" + id_
+                  + "\".");
+            }
+            areaConnectionFieldId_ = std::optional(areaConnectionFieldId);
+        }
     }
 
     const std::string& Id() const
@@ -45,21 +60,24 @@ public:
         return id_;
     }
 
-    const std::string& Description() const
-    {
-        return description_;
-    }
-
     const std::vector<PortField>& Fields() const
     {
         return fields_;
     }
 
+    const std::optional<std::string>& AreaConnectionFieldId() const
+    {
+        return areaConnectionFieldId_;
+    }
+
+    bool operator==(const PortType& other) const = default;
+
 private:
     std::string id_;
-    std::string description_;
 
     std::vector<PortField> fields_;
+
+    std::optional<std::string> areaConnectionFieldId_;
 };
 
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel

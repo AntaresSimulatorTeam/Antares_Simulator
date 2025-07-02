@@ -13,6 +13,8 @@ else ()
 endif ()
 find_dependency(ortools REQUIRED)
 find_dependency(sirius_solver REQUIRED)
+find_dependency(yaml-cpp REQUIRED)
+find_dependency(antlr4-runtime REQUIRED)
 
 include("${CMAKE_CURRENT_LIST_DIR}/AntaresTargets.cmake")
 

@@ -87,7 +87,7 @@ Python 3.x is used for end-to-end test.
 
 Required python modules can be installed with:
 ```
-pip install -r requirements-tests.txt
+pip install -r src/tests/examples/requirements.txt 
 ```
 
 ## Git version

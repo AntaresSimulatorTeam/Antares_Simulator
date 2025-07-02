@@ -73,7 +73,7 @@ struct VCardPrice
     //! Indentation (GUI)
     static constexpr uint8_t nodeDepthForGUI = +0;
     //! Decimal precision
-    static constexpr uint8_t decimal = 2;
+    static constexpr uint8_t decimal = 4;
     //! Number of columns used by the variable (One ResultsType per column)
     static constexpr int columnCount = 1;
     //! The Spatial aggregation
@@ -202,18 +202,13 @@ public:
         NextType::yearEnd(year, numSpace);
     }
 
-    void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
-                        unsigned int nbYearsForCurrentSummary)
+    void computeSummary(unsigned int year, unsigned int numSpace)
     {
-        for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
-        {
-            // Merge all those values with the global results
-            AncestorType::pResults.merge(numSpaceToYear[numSpace] /*year*/,
-                                         pValuesForTheCurrentYear[numSpace]);
-        }
+        // Merge all those values with the global results
+        AncestorType::pResults.merge(year, pValuesForTheCurrentYear[numSpace]);
 
         // Next variable
-        NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
+        NextType::computeSummary(year, numSpace);
     }
 
     void hourBegin(uint hourInTheYear)

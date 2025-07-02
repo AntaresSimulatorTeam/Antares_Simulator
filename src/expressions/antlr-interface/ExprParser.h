@@ -13,13 +13,13 @@ class  ExprParser : public antlr4::Parser {
 public:
   enum {
     T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, 
-    T__7 = 8, T__8 = 9, T__9 = 10, T__10 = 11, T__11 = 12, NUMBER = 13, 
-    TIME = 14, IDENTIFIER = 15, COMPARISON = 16, WS = 17
+    T__7 = 8, T__8 = 9, T__9 = 10, T__10 = 11, T__11 = 12, T__12 = 13, NUMBER = 14, 
+    TIME = 15, IDENTIFIER = 16, COMPARISON = 17, WS = 18
   };
 
   enum {
-    RuleFullexpr = 0, RuleExpr = 1, RuleAtom = 2, RuleShift = 3, RuleShift_expr = 4, 
-    RuleRight_expr = 5
+    RulePortFieldExpr = 0, RuleFullexpr = 1, RuleExpr = 2, RuleAtom = 3, 
+    RuleShift = 4, RuleShift_expr = 5, RuleRight_expr = 6
   };
 
   explicit ExprParser(antlr4::TokenStream *input);
@@ -39,12 +39,27 @@ public:
   antlr4::atn::SerializedATNView getSerializedATN() const override;
 
 
+  class PortFieldExprContext;
   class FullexprContext;
   class ExprContext;
   class AtomContext;
   class ShiftContext;
   class Shift_exprContext;
   class Right_exprContext; 
+
+  class  PortFieldExprContext : public antlr4::ParserRuleContext {
+  public:
+    PortFieldExprContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    std::vector<antlr4::tree::TerminalNode *> IDENTIFIER();
+    antlr4::tree::TerminalNode* IDENTIFIER(size_t i);
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  PortFieldExprContext* portFieldExpr();
 
   class  FullexprContext : public antlr4::ParserRuleContext {
   public:
@@ -73,15 +88,11 @@ public:
    
   };
 
-  class  TimeSumContext : public ExprContext {
+  class  PortFieldSumContext : public ExprContext {
   public:
-    TimeSumContext(ExprContext *ctx);
+    PortFieldSumContext(ExprContext *ctx);
 
-    ExprParser::ShiftContext *from = nullptr;
-    ExprParser::ShiftContext *to = nullptr;
-    ExprContext *expr();
-    std::vector<ShiftContext *> shift();
-    ShiftContext* shift(size_t i);
+    PortFieldExprContext *portFieldExpr();
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
@@ -113,16 +124,6 @@ public:
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
-  class  TimeIndexContext : public ExprContext {
-  public:
-    TimeIndexContext(ExprContext *ctx);
-
-    antlr4::tree::TerminalNode *IDENTIFIER();
-    ExprContext *expr();
-
-    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-  };
-
   class  ComparisonContext : public ExprContext {
   public:
     ComparisonContext(ExprContext *ctx);
@@ -138,6 +139,80 @@ public:
   public:
     AllTimeSumContext(ExprContext *ctx);
 
+    ExprContext *expr();
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  TimeIndexExprContext : public ExprContext {
+  public:
+    TimeIndexExprContext(ExprContext *ctx);
+
+    std::vector<ExprContext *> expr();
+    ExprContext* expr(size_t i);
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  AddsubContext : public ExprContext {
+  public:
+    AddsubContext(ExprContext *ctx);
+
+    antlr4::Token *op = nullptr;
+    std::vector<ExprContext *> expr();
+    ExprContext* expr(size_t i);
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  TimeShiftExprContext : public ExprContext {
+  public:
+    TimeShiftExprContext(ExprContext *ctx);
+
+    ExprContext *expr();
+    ShiftContext *shift();
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  PortFieldContext : public ExprContext {
+  public:
+    PortFieldContext(ExprContext *ctx);
+
+    PortFieldExprContext *portFieldExpr();
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  MuldivContext : public ExprContext {
+  public:
+    MuldivContext(ExprContext *ctx);
+
+    antlr4::Token *op = nullptr;
+    std::vector<ExprContext *> expr();
+    ExprContext* expr(size_t i);
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  TimeSumContext : public ExprContext {
+  public:
+    TimeSumContext(ExprContext *ctx);
+
+    ExprParser::ShiftContext *from = nullptr;
+    ExprParser::ShiftContext *to = nullptr;
+    ExprContext *expr();
+    std::vector<ShiftContext *> shift();
+    ShiftContext* shift(size_t i);
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  TimeIndexContext : public ExprContext {
+  public:
+    TimeIndexContext(ExprContext *ctx);
+
+    antlr4::tree::TerminalNode *IDENTIFIER();
     ExprContext *expr();
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -159,38 +234,6 @@ public:
 
     antlr4::tree::TerminalNode *IDENTIFIER();
     ExprContext *expr();
-
-    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-  };
-
-  class  AddsubContext : public ExprContext {
-  public:
-    AddsubContext(ExprContext *ctx);
-
-    antlr4::Token *op = nullptr;
-    std::vector<ExprContext *> expr();
-    ExprContext* expr(size_t i);
-
-    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-  };
-
-  class  PortFieldContext : public ExprContext {
-  public:
-    PortFieldContext(ExprContext *ctx);
-
-    std::vector<antlr4::tree::TerminalNode *> IDENTIFIER();
-    antlr4::tree::TerminalNode* IDENTIFIER(size_t i);
-
-    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-  };
-
-  class  MuldivContext : public ExprContext {
-  public:
-    MuldivContext(ExprContext *ctx);
-
-    antlr4::Token *op = nullptr;
-    std::vector<ExprContext *> expr();
-    ExprContext* expr(size_t i);
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };

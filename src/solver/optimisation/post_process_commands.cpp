@@ -70,25 +70,6 @@ void DispatchableMarginPostProcessCmd::execute(const optRuntimeData& opt_runtime
 }
 
 // -----------------------------
-//  Hydro levels update
-// -----------------------------
-HydroLevelsUpdatePostProcessCmd::HydroLevelsUpdatePostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
-                                                                 AreaList& areas,
-                                                                 bool remixWasRun,
-                                                                 bool computeAnyway):
-    basePostProcessCommand(problemeHebdo),
-    area_list_(areas),
-    remixWasRun_(remixWasRun),
-    computeAnyway_(computeAnyway)
-{
-}
-
-void HydroLevelsUpdatePostProcessCmd::execute(const optRuntimeData&)
-{
-    computingHydroLevels(area_list_, *problemeHebdo_, remixWasRun_, computeAnyway_);
-}
-
-// -----------------------------
 //  Remix Hydro
 // -----------------------------
 RemixHydroPostProcessCmd::RemixHydroPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
@@ -212,7 +193,6 @@ void DTGnettingAfterCSRcmd::execute(const optRuntimeData&)
 // -----------------------------
 //  Interpolate Water Values
 // -----------------------------
-
 InterpolateWaterValuePostProcessCmd::InterpolateWaterValuePostProcessCmd(
   PROBLEME_HEBDO* problemeHebdo,
   AreaList& areas,
@@ -232,7 +212,6 @@ void InterpolateWaterValuePostProcessCmd::execute(const optRuntimeData& opt_runt
 // -----------------------------
 //  Hydro Levels Final Update
 // -----------------------------
-// HydroLevelsFinalUpdatePostProcessCmd
 HydroLevelsFinalUpdatePostProcessCmd::HydroLevelsFinalUpdatePostProcessCmd(
   PROBLEME_HEBDO* problemeHebdo,
   AreaList& areas):
@@ -253,11 +232,13 @@ CurtailmentSharingPostProcessCmd::CurtailmentSharingPostProcessCmd(
   const AdqPatchParams& adqPatchParams,
   PROBLEME_HEBDO* problemeHebdo,
   AreaList& areas,
-  unsigned int numSpace):
+  unsigned int numSpace,
+  const OptimizationOptions& solverOptions):
     basePostProcessCommand(problemeHebdo),
     area_list_(areas),
     adqPatchParams_(adqPatchParams),
-    numSpace_(numSpace)
+    numSpace_(numSpace),
+    solverOptions_(solverOptions)
 {
 }
 
@@ -270,7 +251,7 @@ void CurtailmentSharingPostProcessCmd::execute(const optRuntimeData& opt_runtime
     logs.info() << "[adq-patch] Year:" << year + 1 << " Week:" << week + 1
                 << ".Total LMR violation:" << totalLmrViolation;
     const std::set<int> hoursRequiringCurtailmentSharing = getHoursRequiringCurtailmentSharing();
-    HourlyCSRProblem hourlyCsrProblem(adqPatchParams_, problemeHebdo_);
+    HourlyCSRProblem hourlyCsrProblem(adqPatchParams_, problemeHebdo_, solverOptions_);
     for (int hourInWeek: hoursRequiringCurtailmentSharing)
     {
         logs.info() << "[adq-patch] CSR triggered for Year:" << year + 1

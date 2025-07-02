@@ -77,6 +77,9 @@ public:
     */
     bool loadFromFile(const std::filesystem::path& filename, const StudyVersion& version);
 
+    //! Load data from an INI file
+    bool loadFromINI(const IniFile& ini, const StudyVersion& version);
+
     /*!
     ** \brief Prepare all settings for a simulation
     **
@@ -126,21 +129,11 @@ public:
     void resetAdqPatchParameters();
 
     /*!
-    ** \brief Handle priority between command-line option and configuration file
-    */
-    void handleOptimizationOptions(const StudyLoadOptions& options);
-
-    /*!
     ** \brief Try to detect then fix any bad value
     */
     void fixBadValues();
 
     void validateOptions(const StudyLoadOptions&);
-
-    /*!
-    ** \brief Try to detect then fix refresh intervals
-    */
-    void fixRefreshIntervals();
 
     /*!
     ** \brief Try to detect then fix TS generation/refresh parameters
@@ -253,28 +246,6 @@ public:
     uint nbTimeSeriesSolar;
     //@}
 
-    //! \name Time-series refresh
-    //@{
-    /*!
-    ** \brief Time series to refresh on-line
-    **
-    ** This value is a mask bits for timeSeries
-    ** \see TimeSeries
-    */
-    uint timeSeriesToRefresh;
-
-    //! Refresh interval (in years) for timeSeries : Load
-    uint refreshIntervalLoad;
-    //! Refresh interval (in years) for timeSeries : Hydro
-    uint refreshIntervalHydro;
-    //! Refresh interval (in years) for timeSeries : Wind
-    uint refreshIntervalWind;
-    //! Refresh interval (in years) for timeSeries : Thermal
-    uint refreshIntervalThermal;
-    //! Refresh interval (in years) for timeSeries : Solar
-    uint refreshIntervalSolar;
-    //@}
-
     //! \name Archives
     //@{
     /*!
@@ -343,14 +314,6 @@ public:
 
     //! Write the simulation synthesis into the output
     bool synthesis;
-
-    //! \name Optimization
-    //@{
-    //! Spillage bound
-    bool spillageBound;
-
-    //! Improve units startup
-    bool improveUnitsStartup;
 
     //! Accuracy on correlation
     uint timeSeriesAccuracyOnCorrelation;
@@ -503,13 +466,10 @@ public:
     // Naming constraints and variables in problems
     bool namedProblems;
 
-    // All options related to optimization
+    // All options related to linear & quadratic optimization
     Antares::Solver::Optimization::OptimizationOptions optOptions;
 
 private:
-    //! Load data from an INI file
-    bool loadFromINI(const IniFile& ini, const StudyVersion& version);
-
     void resetPlayedYears(uint nbOfYears);
 
     //! MC year weight for MC synthesis
@@ -531,7 +491,7 @@ const char* SimulationModeToCString(SimulationMode mode);
 */
 bool StringToSimulationMode(SimulationMode& mode, Yuni::CString<20, false> text);
 
-const char* CompatibilityHydroPmaxToCString(Parameters::Compatibility::HydroPmax);
+const char* CompatibilityHydroPmaxToCString(const Parameters::Compatibility::HydroPmax);
 bool StringToCompatibilityHydroPmax(Parameters::Compatibility::HydroPmax&, const std::string& text);
 
 } // namespace Antares::Data

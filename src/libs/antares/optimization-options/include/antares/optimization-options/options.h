@@ -24,12 +24,40 @@
 
 namespace Antares::Solver::Optimization
 {
-
-struct OptimizationOptions
+struct SingleOptimOptions
 {
-    //! The solver name, sirius is the default
-    std::string ortoolsSolver = "sirius";
-    bool solverLogs = false;
+    std::string solverName = "sirius";
     std::string solverParameters;
+
+    // Reusing basis of first optimization (in case we have 2 weekly
+    // linear optimizations [not MILP])
+    bool solverUsesBasis = false;
+    bool solverExportsBasis = false;
+
+    bool solverLogs = false;
+};
+
+struct CmdLineOptimOptions
+{
+    std::string linearSolver = "sirius";
+    std::string linearSolverParameters;
+    std::string lpSolverParamOptim1;
+    std::string lpSolverParamOptim2;
+    bool useOptim1BasisInNextWeek = true;
+    bool useOptim1BasisInOptim2 = true;
+    std::string quadraticSolver = "sirius";
+    std::string quadraticSolverParameters;
+    bool solverLogs = false;
+};
+
+class OptimizationOptions
+{
+public:
+    void initializeWith(const CmdLineOptimOptions& cmdLineOptimOptions);
+
+    SingleOptimOptions firstOptimOptions;
+    SingleOptimOptions secondOptimOptions;
+    SingleOptimOptions quadraticOptimOptions;
+    bool solverLogs = false;
 };
 } // namespace Antares::Solver::Optimization

@@ -1,0 +1,457 @@
+# Copyright (c) 2024, RTE (https://www.rte-france.com)
+#
+# See AUTHORS.txt
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# SPDX-License-Identifier: MPL-2.0
+#
+# This file is part of the Antares project.
+
+# Study 028b B-D-E - V8.6
+# Small test case with two nodes
+#### 1 one electric node :  3 thermal clusters, 1 load, 1 wind, 1 short term storage, 1 demand-side response
+#### 1 H2 node :  1 electrolyser, 1 H2 load, 1 H2 back-up production
+
+system:
+  id: system
+  components:
+    
+    ############################# H2 zone #############################
+
+    - id: hydrogen_zone
+      model: antares-historic-weo.area
+      
+      parameters:
+        - id: spillage_cost
+          time-dependent: false
+          scenario-dependent: false
+          value: 0
+        - id: ens_cost
+          time-dependent: false
+          scenario-dependent: false
+          value: 1000
+
+    - id: hydrogen_backup
+      
+      model: antares-historic-weo.thermal
+      parameters:
+        - id: p_min_cluster
+          scenario-dependent: false
+          time-dependent: false
+          value: 0
+        - id: p_max_cluster # timeseries that takes outages into account
+          scenario-dependent: false
+          time-dependent: false
+          value: 200
+        - id: p_min_unit
+          scenario-dependent: false
+          time-dependent: false
+          value: 0
+        - id: p_max_unit
+          scenario-dependent: false
+          time-dependent: false
+          value: 200
+        - id: generation_cost
+          scenario-dependent: false
+          time-dependent: false
+          value: 61
+        - id: startup_cost
+          scenario-dependent: false
+          time-dependent: false
+          value: 0
+        - id: fixed_cost
+          scenario-dependent: false
+          time-dependent: false
+          value: 0
+        - id: d_min_up
+          scenario-dependent: false
+          time-dependent: false
+          value: 1
+        - id: d_min_down
+          scenario-dependent: false
+          time-dependent: false
+          value: 1
+        - id: nb_units_min # Equals to ceil(p_min_cluster/p_max_unit), to be done in preprocessing
+          scenario-dependent: false
+          time-dependent: false
+          value: 0
+        - id: nb_units_max # Equals to ceil(p_max_cluster/p_max_unit), to be done in preprocessing
+          scenario-dependent: false
+          time-dependent: false
+          value: 1
+        - id: nb_units_max_variation_forward
+          scenario-dependent: false
+          time-dependent: false
+          value: 1
+        - id: nb_units_max_variation_backward
+          scenario-dependent: false
+          time-dependent: false
+          value: 1
+
+    - id: electrolyser
+      
+      model: andromede-v1-models-weo.electrolyser
+      parameters:
+        - id: p_max
+          scenario-dependent: false
+          time-dependent: false
+          value: 300
+        - id: efficiency
+          scenario-dependent: false
+          time-dependent: false
+          value: 0.7
+
+    - id: hydrogen_load
+      model: antares-historic-weo.load
+
+      parameters:
+        - id: load
+          time-dependent: false
+          scenario-dependent: false
+          value: 220
+    ############################# Electricity zone #############################
+    - id: base_zone
+      model: antares-historic-weo.area
+      
+      parameters:
+        - id: spillage_cost
+          time-dependent: false
+          scenario-dependent: false
+          value: 0
+        - id: ens_cost
+          time-dependent: false
+          scenario-dependent: false
+          value: 20000
+
+    - id: load_base_zone
+      model: antares-historic-weo.load
+
+      parameters:
+        - id: load
+          time-dependent: true
+          scenario-dependent: true
+          value: load_ts_base028
+
+    - id: dsr_base_zone
+      
+      model: andromede-v1-models-weo.dsr
+      parameters:
+
+        - id: max_load
+          time-dependent: false
+          scenario-dependent: false
+          value: 300
+        - id: curtailment_price
+          time-dependent: false
+          scenario-dependent: false
+          value: 42.7
+
+    - id: wind_base_zone
+      model: antares-historic-weo.renewable
+      
+      parameters:
+        - id: nominal_capacity
+          time-dependent: false
+          scenario-dependent: false
+          value: 9000
+        - id: unit_count
+          time-dependent: false
+          scenario-dependent: false
+          value: 1
+        - id: generation
+          time-dependent: true
+          scenario-dependent: true
+          value: wind_ts_base028
+
+    - id: gas_base_zone
+      
+      model: antares-historic-weo.thermal
+      parameters:
+        - id: p_min_cluster
+          scenario-dependent: false
+          time-dependent: false
+          value: 0
+        - id: p_max_cluster # timeseries that takes outages into account
+          scenario-dependent: false
+          time-dependent: false
+          value: 2500
+        - id: p_min_unit
+          scenario-dependent: false
+          time-dependent: false
+          value: 0
+        - id: p_max_unit
+          scenario-dependent: false
+          time-dependent: false
+          value: 500
+        - id: generation_cost
+          scenario-dependent: false
+          time-dependent: false
+          value: 50
+        - id: startup_cost
+          scenario-dependent: false
+          time-dependent: false
+          value: 0
+        - id: fixed_cost
+          scenario-dependent: false
+          time-dependent: false
+          value: 0
+        - id: d_min_up
+          scenario-dependent: false
+          time-dependent: false
+          value: 1
+        - id: d_min_down
+          scenario-dependent: false
+          time-dependent: false
+          value: 1
+        - id: nb_units_min # Equals to ceil(p_min_cluster/p_max_unit), to be done in preprocessing
+          scenario-dependent: false
+          time-dependent: false
+          value: 0
+        - id: nb_units_max # Equals to ceil(p_max_cluster/p_max_unit), to be done in preprocessing
+          scenario-dependent: false
+          time-dependent: false
+          value: 5
+        - id: nb_units_max_variation_forward
+          scenario-dependent: false
+          time-dependent: false
+          value: 0
+        - id: nb_units_max_variation_backward
+          scenario-dependent: false
+          time-dependent: false
+          value: 0
+
+    - id: oil_base_zone
+      
+      model: antares-historic-weo.thermal
+      parameters:
+        - id: p_min_cluster
+          scenario-dependent: false
+          time-dependent: false
+          value: 0
+        - id: p_max_cluster # timeseries that takes outages into account
+          scenario-dependent: false
+          time-dependent: false
+          value: 1000
+        - id: p_min_unit
+          scenario-dependent: false
+          time-dependent: false
+          value: 0
+        - id: p_max_unit
+          scenario-dependent: false
+          time-dependent: false
+          value: 200
+        - id: generation_cost
+          scenario-dependent: false
+          time-dependent: false
+          value: 80
+        - id: startup_cost
+          scenario-dependent: false
+          time-dependent: false
+          value: 0
+        - id: fixed_cost
+          scenario-dependent: false
+          time-dependent: false
+          value: 0
+        - id: d_min_up
+          scenario-dependent: false
+          time-dependent: false
+          value: 1
+        - id: d_min_down
+          scenario-dependent: false
+          time-dependent: false
+          value: 1
+        - id: nb_units_min # Equals to ceil(p_min_cluster/p_max_unit), to be done in preprocessing
+          scenario-dependent: false
+          time-dependent: false
+          value: 0
+        - id: nb_units_max # Equals to ceil(p_max_cluster/p_max_unit), to be done in preprocessing
+          scenario-dependent: false
+          time-dependent: false
+          value: 5
+        - id: nb_units_max_variation_forward
+          scenario-dependent: false
+          time-dependent: false
+          value: 0
+        - id: nb_units_max_variation_backward
+          scenario-dependent: false
+          time-dependent: false
+          value: 0
+
+    - id: storage_base_zone
+      
+      model: antares-historic-weo.short-term-storage
+      parameters:
+        - id: reservoir_capacity
+          time-dependent: false
+          scenario-dependent: false
+          value: 1200
+        - id: injection_nominal_capacity
+          time-dependent: false
+          scenario-dependent: false
+          value: 300
+        - id: withdrawal_nominal_capacity
+          time-dependent: false
+          scenario-dependent: false
+          value: 300
+        - id: efficiency_injection
+          time-dependent: false
+          scenario-dependent: false
+          value: 0.9
+        - id: efficiency_withdrawal
+          time-dependent: false
+          scenario-dependent: false
+          value: 1.0
+        - id: lower_rule_curve
+          time-dependent: false
+          scenario-dependent: false
+          value: 0.0
+        - id: upper_rule_curve
+          time-dependent: false
+          scenario-dependent: false
+          value: 1.0
+        - id: p_max_injection_modulation  # Read in p_max_injection
+          time-dependent: false
+          scenario-dependent: false
+          value: 1.0
+        - id: p_max_withdrawal_modulation # Read in p_max_withdrawal
+          time-dependent: false
+          scenario-dependent: false
+          value: 1.0
+        - id: inflows
+          time-dependent: false
+          scenario-dependent: false
+          value: 0.0
+        - id: initial_level
+          time-dependent: false
+          scenario-dependent: false
+          value: 0.5
+
+    - id: coal_base_zone
+      
+      model: antares-historic-weo.thermal
+      parameters:
+        - id: p_min_cluster
+          scenario-dependent: false
+          time-dependent: false
+          value: 0
+        - id: p_max_cluster # timeseries that takes outages into account
+          scenario-dependent: false
+          time-dependent: false
+          value: 6000
+        - id: p_min_unit
+          scenario-dependent: false
+          time-dependent: false
+          value: 0
+        - id: p_max_unit
+          scenario-dependent: false
+          time-dependent: false
+          value: 1000
+        - id: generation_cost
+          scenario-dependent: false
+          time-dependent: false
+          value: 30
+        - id: startup_cost
+          scenario-dependent: false
+          time-dependent: false
+          value: 0
+        - id: fixed_cost
+          scenario-dependent: false
+          time-dependent: false
+          value: 0
+        - id: d_min_up
+          scenario-dependent: false
+          time-dependent: false
+          value: 1
+        - id: d_min_down
+          scenario-dependent: false
+          time-dependent: false
+          value: 1
+        - id: nb_units_min # Equals to ceil(p_min_cluster/p_max_unit), to be done in preprocessing
+          scenario-dependent: false
+          time-dependent: false
+          value: 0
+        - id: nb_units_max # Equals to ceil(p_max_cluster/p_max_unit), to be done in preprocessing
+          scenario-dependent: false
+          time-dependent: false
+          value: 6
+        - id: nb_units_max_variation_forward
+          scenario-dependent: false
+          time-dependent: false
+          value: 0
+        - id: nb_units_max_variation_backward
+          scenario-dependent: false
+          time-dependent: false
+          value: 0
+
+
+  connections:
+
+    ############################# H2 zone #############################
+
+    - component1: hydrogen_zone
+      port1: balance_port
+      component2: hydrogen_load
+      port2: balance_port
+
+    - component1: hydrogen_zone
+      port1: balance_port
+      component2: hydrogen_backup
+      port2: balance_port
+
+    - component1: hydrogen_zone
+      port1: balance_port
+      component2: electrolyser
+      port2: hydrogen_port
+
+    ############################# Electricity zone #############################
+    - component1: base_zone
+      port1: balance_port
+      component2: load_base_zone
+      port2: balance_port
+
+    - component1: base_zone
+      port1: balance_port
+      component2: wind_base_zone
+      port2: balance_port
+
+    - component1: base_zone
+      port1: balance_port
+      component2: gas_base_zone
+      port2: balance_port
+
+    - component1: base_zone
+      port1: balance_port
+      component2: oil_base_zone
+      port2: balance_port
+
+    - component1: base_zone
+      port1: balance_port
+      component2: coal_base_zone
+      port2: balance_port
+
+    - component1: base_zone
+      port1: balance_port
+      component2: dsr_base_zone
+      port2: balance_port
+
+    - component1: base_zone
+      port1: balance_port
+      component2: storage_base_zone
+      port2: injection_port
+
+
+
+
+    ############################# H2-Electricity connection #############################
+
+    - component1: base_zone
+      port1: balance_port
+      component2: electrolyser
+      port2: power_port
+
+
+
+ 

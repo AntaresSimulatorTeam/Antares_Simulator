@@ -32,7 +32,7 @@ namespace Antares::Data
 {
 
 //! The maximum number of days in a year
-constexpr size_t dayYearCount = 366;
+constexpr size_t nbDaysInYear = 366;
 
 struct DailyDemand
 {
@@ -50,14 +50,12 @@ struct MonthlyGenerationTargetData
     double MOG = 0.;
     //! Monthly optimal level
     double MOL = 0.;
-    //! Monthly target generations
-    double MTG = 0.;
 };
 
 //!  Hydro Management Data for a given area
 struct TimeDependantHydroManagementData
 {
-    std::array<DailyDemand, dayYearCount> daily{0};
+    std::array<DailyDemand, nbDaysInYear> daily{0};
     std::array<MonthlyGenerationTargetData, 12> monthly{0};
 };
 
@@ -68,10 +66,8 @@ struct AreaDependantHydroManagementData
     std::array<double, 12> inflows{};
     //! monthly minimal generation
     std::array<double, 12> mingens{};
-
     //! daily minimal generation
-    std::array<double, dayYearCount> dailyMinGen{};
-
+    std::array<double, nbDaysInYear> dailyMinGen{};
     // Data for minGen<->inflows preChecks
     //! monthly total mingen
     std::array<double, 12> totalMonthMingen{};
@@ -81,7 +77,6 @@ struct AreaDependantHydroManagementData
     double totalYearMingen = 0;
     //! yearly total inflows
     double totalYearInflows = 0;
-
 }; // struct AreaDependantHydroManagementData
 
 /*!
@@ -108,6 +103,8 @@ public:
         pumpMod,
     };
 
+    static bool LoadIniFile(Study& study, const std::filesystem::path& folder);
+
     /*!
     ** \brief Load data for hydro container from a folder
     **
@@ -131,7 +128,9 @@ public:
     ** \param folder The targer folder
     ** \return A non-zero value if the operation succeeded, 0 otherwise
     */
-    static bool SaveToFolder(const AreaList& areas, const AnyString& folder);
+    static bool SaveToFolder(const AreaList& areas,
+                             const AnyString& folder,
+                             const Parameters::Compatibility::HydroPmax hydroPmax);
 
     /*!
     ** \brief Default Constructor
@@ -195,6 +194,9 @@ public:
     double leewayUpperBound;
     //! Puming efficiency
     double pumpingEfficiency;
+    //! Daily max power ({generating max Power, generating max energy, pumping max power, pumping
+    //! max energy}x365)
+    Matrix<double, double> dailyMaxPumpAndGen;
     //! Credit Modulation (default 0, 101 * 2)
     Matrix<double, double> creditModulation;
 
@@ -223,6 +225,8 @@ public:
     std::unordered_map<uint, AreaDependantHydroManagementData> managementData;
 
     std::vector<std::optional<double>> deltaBetweenFinalAndInitialLevels;
+
+    double overflowSpilledCostDifference = 1.;
 
 private:
     static bool checkReservoirLevels(const Study& study);

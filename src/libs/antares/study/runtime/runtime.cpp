@@ -78,7 +78,7 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
         }
 
         // Spinning - Economic Only - If no prepro
-        if (!(timeSeriesThermal & study.parameters.timeSeriesToRefresh))
+        if (!(timeSeriesThermal & study.parameters.timeSeriesToGenerate))
         {
             area.thermal.list.calculationOfSpinning();
         }
@@ -437,7 +437,6 @@ StudyRuntimeInfos::~StudyRuntimeInfos()
     logs.debug() << "Releasing runtime data";
 }
 
-#ifndef NDEBUG
 void StudyRangeLimits::checkIntegrity() const
 {
     assert(hour[rangeBegin] <= hour[rangeEnd]);
@@ -447,7 +446,6 @@ void StudyRangeLimits::checkIntegrity() const
     assert(day[rangeBegin] < 367);
     assert(day[rangeEnd] < 367);
 }
-#endif
 
 void StudyRuntimeInfos::disableAllFilters(Study& study)
 {

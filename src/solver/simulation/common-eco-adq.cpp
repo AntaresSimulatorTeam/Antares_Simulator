@@ -92,7 +92,7 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
     {
         NullResultWriter resultWriter;
         NullSimulationObserver simulationObserver;
-        OPT_OptimisationHebdomadaire(createOptimizationOptions(study),
+        OPT_OptimisationHebdomadaire(study.parameters.optOptions,
                                      &problem,
                                      resultWriter,
                                      simulationObserver);
@@ -349,7 +349,9 @@ void SetInitialHydroLevel(Data::Study& study,
     study.areas.each(
       [&problem, &firstDaySimu, &hydroVentilationResults](const Data::Area& area)
       {
-          if (area.hydro.reservoirManagement)
+          bool updatePreviousLevel = area.hydro.reservoirManagement
+                                     && (!area.hydro.useHeuristicTarget || area.hydro.useLeeway);
+          if (updatePreviousLevel)
           {
               double capacity = area.hydro.reservoirCapacity;
               problem.previousSimulationFinalLevel[area.index] = hydroVentilationResults[area.index]
@@ -471,11 +473,6 @@ void finalizeOptimizationStatistics(PROBLEME_HEBDO& problem,
 
     firstOptStat.reset();
     secondOptStat.reset();
-}
-
-OptimizationOptions createOptimizationOptions(const Data::Study& study)
-{
-    return study.parameters.optOptions;
 }
 
 } // namespace Antares::Solver::Simulation

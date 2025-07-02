@@ -24,6 +24,8 @@
 #include "antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h"
 #include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
 
+namespace DonneesOptimisationMensuelle
+{
 void H2O_M_ResoudreLeProblemeLineaire(DONNEES_ANNUELLES& DonneesAnnuelles, int NumeroDeReservoir)
 {
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles.ProblemeHydraulique;
@@ -32,7 +34,7 @@ void H2O_M_ResoudreLeProblemeLineaire(DONNEES_ANNUELLES& DonneesAnnuelles, int N
     PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe = ProblemeHydraulique
                                                                   .ProblemeLineairePartieFixe;
 
-    PROBLEME_SPX* ProbSpx = ProblemeHydraulique.ProblemeSpx[NumeroDeReservoir];
+    PROBLEME_SPX* ProbSpx = ProblemeHydraulique.ProblemeSpx[NumeroDeReservoir].get();
     std::unique_ptr<PROBLEME_SIMPLEXE> Probleme = std::make_unique<PROBLEME_SIMPLEXE>();
 
     bool PremierPassage = true;
@@ -114,7 +116,7 @@ RESOLUTION:
 
     if (ProbSpx)
     {
-        ProblemeHydraulique.ProblemeSpx[NumeroDeReservoir] = ProbSpx;
+        ProblemeHydraulique.ProblemeSpx[NumeroDeReservoir].reset(ProbSpx);
     }
 
     ProblemeLineairePartieVariable.ExistenceDUneSolution = Probleme->ExistenceDUneSolution;
@@ -124,7 +126,7 @@ RESOLUTION:
     {
         if (ProblemeLineairePartieVariable.ExistenceDUneSolution != SPX_ERREUR_INTERNE)
         {
-            SPX_LibererProbleme(ProbSpx);
+            ProblemeHydraulique.ProblemeSpx[NumeroDeReservoir].reset(nullptr);
 
             ProbSpx = nullptr;
             PremierPassage = false;
@@ -174,3 +176,4 @@ RESOLUTION:
 
     return;
 }
+} // namespace DonneesOptimisationMensuelle

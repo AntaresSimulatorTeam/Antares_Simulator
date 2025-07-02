@@ -22,7 +22,11 @@
 #ifndef __SOLVER_H2O_J_FONCTIONS__
 #define __SOLVER_H2O_J_FONCTIONS__
 
-DONNEES_MENSUELLES* H2O_J_Instanciation(void);
+#include <memory>
+
+namespace DoneesOptimisationJournaliere
+{
+DONNEES_MENSUELLES H2O_J_Instanciation(void);
 
 void H2O_J_OptimiserUnMois(DONNEES_MENSUELLES*);
 void H2O_J_Free(DONNEES_MENSUELLES*);
@@ -48,5 +52,5 @@ void H2O_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES*, int);
 void H2O_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES*, int);
 void H2O_J_LisserLesSurTurbines(DONNEES_MENSUELLES*, int);
 void H2O_J_AjouterBruitAuCout(DONNEES_MENSUELLES&);
-
+} // namespace DoneesOptimisationJournaliere
 #endif /* __SOLVER_H2O_J_FONCTIONS__ */

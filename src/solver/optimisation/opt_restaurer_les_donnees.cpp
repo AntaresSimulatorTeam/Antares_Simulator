@@ -111,6 +111,9 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* problemeHebdo)
                 PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermique[pdt]
                   = PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermiqueRef[pdt];
 
+                // gp : how is this case possible (after what's in
+                // gp : BuildThermalPartOfWeeklyProblem(...)) ??
+                // gp : In other words, do we have dead code here ?
                 if (PuissanceDisponibleEtCout.PuissanceMinDuPalierThermique[pdt]
                     > PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermique[pdt])
                 {

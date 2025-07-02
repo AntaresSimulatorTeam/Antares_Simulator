@@ -22,7 +22,6 @@
 
 #include <map>
 #include <ostream>
-#include <utility>
 
 #include "antares/expressions/visitors/NodeVisitor.h"
 
@@ -90,7 +89,7 @@ public:
      * @param os The output stream to which the DOT representation is written.
      * @param tree_name The name of the tree graph. Defaults to "ExpressionTree".
      */
-    void NewTreeGraph(std::ostream& os, const std::string& tree_name = "ExpressionTree");
+    static void NewTreeGraph(std::ostream& os, const std::string& tree_name = "ExpressionTree");
 
     /**
      * @brief Ends the current tree graph.
@@ -135,6 +134,10 @@ private:
     void visit(const Nodes::PortFieldSumNode* node, std::ostream& os) override;
     void visit(const Nodes::ComponentVariableNode* node, std::ostream& os) override;
     void visit(const Nodes::ComponentParameterNode* node, std::ostream& os) override;
+    void visit(const Nodes::TimeShiftNode* node, std::ostream& os) override;
+    void visit(const Nodes::TimeIndexNode* node, std::ostream& os) override;
+    void visit(const Nodes::TimeSumNode* node, std::ostream& os) override;
+    void visit(const Nodes::AllTimeSumNode* node, std::ostream& os) override;
 
     void computeNumberNodesPerType();
     void makeLegend(std::ostream& os);
@@ -160,10 +163,10 @@ private:
      * @param box_style The style to be applied to the node's box.
      * @param os The output stream to which the node representation is written.
      */
-    void emitNode(unsigned int id,
-                  const std::string& label,
-                  const BoxStyle& box_style,
-                  std::ostream& os);
+    static void emitNode(unsigned int id,
+                         const std::string& label,
+                         const BoxStyle& box_style,
+                         std::ostream& os);
 
     /**
      * @brief Processes a binary operation node.
@@ -176,10 +179,10 @@ private:
      * @param box_style The style to be applied to the node's box.
      * @param os The output stream to which the node representation is written.
      */
-    void processBinaryOperation(const Nodes::BinaryNode* node,
-                                const std::string& label,
-                                const BoxStyle& box_style,
-                                std::ostream& os);
+    void processParentNode(const Nodes::ParentNode* node,
+                           const std::string& label,
+                           const BoxStyle& box_style,
+                           std::ostream& os);
 
     /**
      * @brief A map of nodes to their unique IDs.

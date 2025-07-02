@@ -24,7 +24,7 @@ class integrity_compare(check_interface):
         path_to_output = find_dated_output_folder(self.study_path)
         output_values = get_integrity_check_values(path_to_output)
 
-        numpy.testing.assert_allclose(reference_values[0:8], output_values[0:8], rtol=1e-3, atol=0)
+        numpy.testing.assert_allclose(output_values[0:8], reference_values[0:8], rtol=1e-3, atol=0)
 
 
 def get_integrity_check_values(output : Path) -> numpy.array :

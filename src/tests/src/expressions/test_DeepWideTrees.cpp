@@ -27,6 +27,7 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/CloneVisitor.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
+#include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
@@ -44,20 +45,25 @@ static Node* deepNegationTree(Registry<Node>& registry, double litValue, size_t 
     return node;
 }
 
-BOOST_FIXTURE_TEST_CASE(deep_tree_even, Registry<Node>)
+struct MyDummyFixture: Registry<Node>
+{
+    Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
+    EvaluationContext evaluationContext{{}, {}, data};
+    EvalVisitor evalVisitor{evaluationContext, {0, 0}};
+};
+
+BOOST_FIXTURE_TEST_CASE(deep_tree_even, MyDummyFixture)
 {
     Node* node = deepNegationTree(*this, 42., 1000);
-    EvalVisitor evalVisitor;
     // (-1)^1000 = 1
-    BOOST_CHECK_EQUAL(evalVisitor.dispatch(node), 42.);
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(node).valueAsDouble(), 42.);
 }
 
-BOOST_FIXTURE_TEST_CASE(deep_tree_odd, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(deep_tree_odd, MyDummyFixture)
 {
     Node* node = deepNegationTree(*this, 42., 1001);
-    EvalVisitor evalVisitor;
     // (-1)^1001 = -1
-    BOOST_CHECK_EQUAL(evalVisitor.dispatch(node), -42.);
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(node).valueAsDouble(), -42.);
 }
 
 static Node* deepAddTree(Registry<Node>& registry, SumNode* root, int depth)
@@ -74,17 +80,16 @@ static Node* deepAddTree(Registry<Node>& registry, SumNode* root, int depth)
     }
 }
 
-BOOST_FIXTURE_TEST_CASE(binary_tree, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(binary_tree, MyDummyFixture)
 {
     // SumNode's children are not mutable, so we'll replace this empty root with an actual one
     SumNode* root = create<SumNode>(nullptr, nullptr);
     Node* node = deepAddTree(*this, root, 10);
-    EvalVisitor evalVisitor;
     // We expect 1024 = 2^10 literal nodes, each carrying value 42.
-    BOOST_CHECK_EQUAL(evalVisitor.dispatch(node), 42. * 1024);
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(node).valueAsDouble(), 42. * 1024);
 }
 
-BOOST_FIXTURE_TEST_CASE(wide_sum_tree, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(wide_sum_tree, MyDummyFixture)
 {
     const int nb_operands = 1'000;
     std::vector<Node*> operands(nb_operands);
@@ -93,8 +98,7 @@ BOOST_FIXTURE_TEST_CASE(wide_sum_tree, Registry<Node>)
         op = create<LiteralNode>(1.);
     }
     SumNode root(std::move(operands));
-    EvalVisitor evalVisitor;
-    BOOST_CHECK_EQUAL(evalVisitor.dispatch(&root), nb_operands * 1.);
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(&root).valueAsDouble(), nb_operands * 1.);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

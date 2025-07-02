@@ -23,6 +23,7 @@
 #include <algorithm>
 
 #include "antares/expressions/nodes/ExpressionsNodes.h"
+#include "antares/expressions/visitors/EvalVisitor.h"
 
 namespace Antares::Expressions::Visitors
 {
@@ -38,6 +39,8 @@ static constexpr BoxStyle ParameterStyle{"wheat", "box", "filled, solid"};
 static constexpr BoxStyle ComponentParameterStyle{"springgreen", "octagon", "filled, solid"};
 static constexpr BoxStyle ComponentVariableStyle{"goldenrod", "octagon", "filled, solid"};
 static constexpr BoxStyle PortFieldStyle{"olive", "component", "filled, solid"};
+static constexpr BoxStyle TimeIndexStyle{"gold", "diamond", "filled"};
+static constexpr BoxStyle TimeShiftStyle{"aqua", "hexagon", "filled, solid"};
 } // namespace NodeStyle
 
 void makeLegendTitle(std::ostream& os)
@@ -91,32 +94,32 @@ void AstDOTStyleVisitor::visit(const Nodes::SumNode* node, std::ostream& os)
 
 void AstDOTStyleVisitor::visit(const Nodes::SubtractionNode* node, std::ostream& os)
 {
-    processBinaryOperation(node, "-", NodeStyle::BinaryStyle, os);
+    processParentNode(node, "-", NodeStyle::BinaryStyle, os);
 }
 
 void AstDOTStyleVisitor::visit(const Nodes::MultiplicationNode* node, std::ostream& os)
 {
-    processBinaryOperation(node, "*", NodeStyle::BinaryStyle, os);
+    processParentNode(node, "*", NodeStyle::BinaryStyle, os);
 }
 
 void AstDOTStyleVisitor::visit(const Nodes::DivisionNode* node, std::ostream& os)
 {
-    processBinaryOperation(node, "/", NodeStyle::BinaryStyle, os);
+    processParentNode(node, "/", NodeStyle::BinaryStyle, os);
 }
 
 void AstDOTStyleVisitor::visit(const Nodes::EqualNode* node, std::ostream& os)
 {
-    processBinaryOperation(node, "==", NodeStyle::ComparisonStyle, os);
+    processParentNode(node, "==", NodeStyle::ComparisonStyle, os);
 }
 
 void AstDOTStyleVisitor::visit(const Nodes::LessThanOrEqualNode* node, std::ostream& os)
 {
-    processBinaryOperation(node, "<=", NodeStyle::ComparisonStyle, os);
+    processParentNode(node, "<=", NodeStyle::ComparisonStyle, os);
 }
 
 void AstDOTStyleVisitor::visit(const Nodes::GreaterThanOrEqualNode* node, std::ostream& os)
 {
-    processBinaryOperation(node, ">=", NodeStyle::ComparisonStyle, os);
+    processParentNode(node, ">=", NodeStyle::ComparisonStyle, os);
 }
 
 void AstDOTStyleVisitor::visit(const Nodes::VariableNode* node, std::ostream& os)
@@ -139,11 +142,7 @@ void AstDOTStyleVisitor::visit(const Nodes::LiteralNode* node, std::ostream& os)
 
 void AstDOTStyleVisitor::visit(const Nodes::NegationNode* node, std::ostream& os)
 {
-    auto id = getNodeID(node);
-    emitNode(id, "-", NodeStyle::NegationStyle, os);
-    auto childId = getNodeID(node->child());
-    os << "  " << id << " -> " << childId << ";\n";
-    dispatch(node->child(), os);
+    processParentNode(node, "-", NodeStyle::NegationStyle, os);
 }
 
 void AstDOTStyleVisitor::visit(const Nodes::PortFieldNode* node, std::ostream& os)
@@ -182,6 +181,26 @@ void AstDOTStyleVisitor::visit(const Nodes::ComponentParameterNode* node, std::o
              os);
 }
 
+void AstDOTStyleVisitor::visit(const Nodes::TimeShiftNode* node, std::ostream& os)
+{
+    processParentNode(node, "[t]", NodeStyle::TimeShiftStyle, os);
+}
+
+void AstDOTStyleVisitor::visit(const Nodes::TimeIndexNode* node, std::ostream& os)
+{
+    processParentNode(node, "[]", NodeStyle::TimeIndexStyle, os);
+}
+
+void AstDOTStyleVisitor::visit(const Nodes::TimeSumNode* node, std::ostream& os)
+{
+    processParentNode(node, "sum[t]", NodeStyle::TimeShiftStyle, os);
+}
+
+void AstDOTStyleVisitor::visit(const Nodes::AllTimeSumNode* node, std::ostream& os)
+{
+    processParentNode(node, "sum[]", NodeStyle::TimeIndexStyle, os);
+}
+
 std::string AstDOTStyleVisitor::name() const
 {
     return "AstDOTStyleVisitor";
@@ -213,26 +232,22 @@ void AstDOTStyleVisitor::emitNode(unsigned int id,
        << box_style.style << "\", color=\"" << box_style.color << "\"];\n";
 }
 
-// Process binary operation nodes like Add, Subtract, etc.
-void AstDOTStyleVisitor::processBinaryOperation(const Nodes::BinaryNode* node,
-                                                const std::string& label,
-                                                const BoxStyle& box_style,
-                                                std::ostream& os)
+// Process ParentNode operation nodes like Add, Subtract, etc.
+
+void AstDOTStyleVisitor::processParentNode(const Nodes::ParentNode* node,
+                                           const std::string& label,
+                                           const BoxStyle& box_style,
+                                           std::ostream& os)
 {
     auto id = getNodeID(node);
     emitNode(id, label, box_style, os);
 
-    const Nodes::Node* left = node->left();
-    const Nodes::Node* right = node->right();
-
-    auto leftId = getNodeID(left);
-    auto rightId = getNodeID(right);
-
-    os << "  " << id << " -> " << leftId << ";\n";
-    os << "  " << id << " -> " << rightId << ";\n";
-
-    dispatch(left, os);
-    dispatch(right, os);
+    for (const auto* operand: node->getOperands())
+    {
+        const auto operandId = getNodeID(operand);
+        os << "  " << id << " -> " << operandId << ";\n";
+        dispatch(operand, os);
+    }
 }
 
 void AstDOTStyleVisitor::NewTreeGraph(std::ostream& os, const std::string& tree_name)

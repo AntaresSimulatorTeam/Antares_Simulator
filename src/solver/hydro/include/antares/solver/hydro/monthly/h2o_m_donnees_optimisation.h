@@ -18,8 +18,9 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#ifndef __SOLVER_H2O_M_STRUCTURE_INTERNE__
-#define __SOLVER_H2O_M_STRUCTURE_INTERNE__
+#pragma once
+
+#include <antares/solver/hydro/probleme_spx_wrapper.h>
 
 #ifdef __CPLUSPLUS
 extern "C"
@@ -27,45 +28,41 @@ extern "C"
 #endif
 
 #include "spx_definition_arguments.h"
-#include "spx_fonctions.h"
 
 #ifdef __CPLUSPLUS
 }
 #endif
 
+#include <memory>
 #include <vector>
 
 #define LINFINI 1.e+80
 
+namespace DonneesOptimisationMensuelle
+{
 /*--------------------------------------------------------------------------------------*/
 /* Matrice des contraintes: il y aura une seule instance pour tous les reservoirs */
 /* Dans ce struct il n'y a que des donnees qui sont lues et surtout pas ecrites   */
 /* Ce struct est instancie une seule fois                                         */
-typedef struct
+struct PROBLEME_LINEAIRE_PARTIE_FIXE
 {
-    int NombreDeVariables;
+    int NombreDeVariables{0};
     std::vector<double> CoutLineaire;
-    std::vector<double> CoutLineaireBruite; /* Ajout de bruit pour forcer l'unicité des solutions */
-    std::vector<int> TypeDeVariable; /* Indicateur du type de variable, il ne doit prendre que les
-                           suivantes (voir le fichier spx_constantes_externes.h mais ne jamais
-                           utiliser les valeurs explicites des constantes): VARIABLE_FIXE ,
-                            VARIABLE_BORNEE_DES_DEUX_COTES ,
-                            VARIABLE_BORNEE_INFERIEUREMENT ,
-                            VARIABLE_BORNEE_SUPERIEUREMENT ,
-                            VARIABLE_NON_BORNEE
-                                           */
-    /* La matrice des contraintes */
-    int NombreDeContraintes;
+    std::vector<double> CoutLineaireBruite; // Ajout de bruit pour forcer l'unicité des solutions
+    std::vector<int> TypeDeVariable;
+
+    // La matrice des contraintes
+    int NombreDeContraintes{0};
     std::vector<char> Sens;
     std::vector<int> IndicesDebutDeLigne;
     std::vector<int> NombreDeTermesDesLignes;
     std::vector<double> CoefficientsDeLaMatriceDesContraintes;
     std::vector<int> IndicesColonnes;
-    int NombreDeTermesAlloues;
-} PROBLEME_LINEAIRE_PARTIE_FIXE;
+    int NombreDeTermesAlloues{0};
+};
 
 /* Partie variable renseignee avant le lancement de l'optimisation de chaque reservoir */
-typedef struct
+struct PROBLEME_LINEAIRE_PARTIE_VARIABLE
 {
     /* Donnees variables de la matrice des contraintes */
     /* On met quand-meme les bornes dans la partie variable pour le cas ou on voudrait avoir
@@ -77,60 +74,55 @@ typedef struct
        de renseigner directement les structures de description du reseau avec les
        resultats contenus dans X */
     std::vector<double*> AdresseOuPlacerLaValeurDesVariablesOptimisees;
-    /* Resultat */
+    // Resultats
     std::vector<double> X;
     /* En Entree ou en Sortie */
-    int ExistenceDUneSolution; /* En sortie, vaut :
-                                  OUI_SPX s'il y a une solution,
-                                                          NON_SPX s'il n'y a pas de solution
-                                  admissible SPX_ERREUR_INTERNE si probleme a l'execution
-                                  (saturation memoire par exemple), et dans ce cas il n'y a pas de
-                                  solution SPX_MATRICE_DE_BASE_SINGULIERE si on n'a pas pu
-                                  construire de matrice de base reguliere, et dans ce cas il n'y a
-                                  pas de solution
-                                                 */
 
-    std::vector<int>
-      PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
-    std::vector<int>
-      ComplementDeLaBase; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
-    std::vector<double>
-      CoutsReduits; /* Vecteur a passer au Simplexe pour recuperer les couts reduits */
-    std::vector<double> CoutsMarginauxDesContraintes; /* Vecteur a passer au Simplexe pour recuperer
-                                             les couts marginaux */
-} PROBLEME_LINEAIRE_PARTIE_VARIABLE;
+    // Existence d'une solution vaut :
+    //  OUI_SPX s'il y a une solution,
+    //  NON_SPX s'il n'y a pas de solution admissible
+    //  SPX_ERREUR_INTERNE si :
+    //      + probleme a l'execution (saturation memoire par exemple),
+    //        et dans ce cas il n'y a pas de solution SPX_MATRICE_DE_BASE_SINGULIERE
+    //      + on n'a pas pu construire de matrice de base reguliere, et dans ce cas il n'y a
+    //        pas de solution
+    int ExistenceDUneSolution{0};
+
+    // Vecteurs a passer au Simplexe pour recuperer la base optimale
+    std::vector<int> PositionDeLaVariable;
+    std::vector<int> ComplementDeLaBase;
+    // Vecteur a passer au Simplexe pour recuperer les couts reduits
+    std::vector<double> CoutsReduits;
+    // Vecteur a passer au Simplexe pour recuperer les couts marginaux
+    std::vector<double> CoutsMarginauxDesContraintes;
+};
 
 /* Les correspondances des variables */
-typedef struct
+struct CORRESPONDANCE_DES_VARIABLES
 {
-    std::vector<int> NumeroDeVariableVolume;               /* Volumes */
-    std::vector<int> NumeroDeVariableTurbine;              /* Turbines */
-    std::vector<int> NumeroDeVariableDepassementVolumeMax; /* Depassement du volume max */
-    std::vector<int> NumeroDeVariableDepassementVolumeMin; /* Depassement du volume min */
-    int NumeroDeLaVariableViolMaxVolumeMin;                // Depassement max du volume min
-    std::vector<int>
-      NumeroDeVariableDEcartPositifAuTurbineCible; /* Ecart positif au volume cible */
-    std::vector<int>
-      NumeroDeVariableDEcartNegatifAuTurbineCible; /* Ecart negatif au volume cible */
-    int NumeroDeLaVariableXi; /* Variable decrivant l'ecart max au turbine cible */
-} CORRESPONDANCE_DES_VARIABLES;
+    std::vector<int> NumeroDeVariableVolume;
+    std::vector<int> NumeroDeVariableTurbine;
+    std::vector<int> NumeroDeVariableOverflow;
+    std::vector<int> NumeroDeVariableDepassementVolumeMax;
+    std::vector<int> NumeroDeVariableDepassementVolumeMin;
+    int NumeroDeLaVariableViolMaxVolumeMin{0};
+    std::vector<int> NumeroDeVariableDEcartPositifAuTurbineCible;
+    std::vector<int> NumeroDeVariableDEcartNegatifAuTurbineCible;
+    int NumeroDeLaVariableXi{0};
+};
 
 /* Structure uniquement exploitee par l'optimisation (donc a ne pas acceder depuis l'exterieur) */
-typedef struct
+struct PROBLEME_HYDRAULIQUE
 {
-    int NombreDeReservoirs;
-    char LesCoutsOntEteInitialises; /* Vaut OUI ou NON */
+    int NombreDeReservoirs{0};
+    CORRESPONDANCE_DES_VARIABLES CorrespondanceDesVariables{};
 
-    CORRESPONDANCE_DES_VARIABLES CorrespondanceDesVariables;
+    PROBLEME_LINEAIRE_PARTIE_FIXE ProblemeLineairePartieFixe{};
+    PROBLEME_LINEAIRE_PARTIE_VARIABLE ProblemeLineairePartieVariable{};
 
-    PROBLEME_LINEAIRE_PARTIE_FIXE ProblemeLineairePartieFixe;
-    PROBLEME_LINEAIRE_PARTIE_VARIABLE ProblemeLineairePartieVariable;
+    std::vector<PROBLEME_SPX_WRAPPER> ProblemeSpx; /* Il y en a 1 par reservoir */
 
-    std::vector<PROBLEME_SPX*> ProblemeSpx; /* Il y en a 1 par reservoir */
-
-    double CoutDeLaSolution;
-    double CoutDeLaSolutionBruite;
-
-} PROBLEME_HYDRAULIQUE;
-
-#endif
+    double CoutDeLaSolution{0.};
+    double CoutDeLaSolutionBruite{0.};
+};
+} // namespace DonneesOptimisationMensuelle

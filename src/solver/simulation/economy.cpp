@@ -80,9 +80,7 @@ bool Economy::simulationBegin()
                                             nbHoursInAWeek,
                                             numSpace);
 
-            auto options = createOptimizationOptions(study);
-
-            weeklyOptProblems_.emplace_back(options,
+            weeklyOptProblems_.emplace_back(study.parameters.optOptions,
                                             &pProblemesHebdo[numSpace],
                                             resultWriter,
                                             simulationObserver_.get());
@@ -94,7 +92,8 @@ bool Economy::simulationBegin()
               study.areas,
               study.parameters.shedding.policy,
               study.parameters.simplexOptimizationRange,
-              study.calendar);
+              study.calendar,
+              study.parameters.optOptions);
         }
     }
 
@@ -113,7 +112,6 @@ bool Economy::year(Progression::Task& progression,
                    uint numSpace,
                    yearRandomNumbers& randomForYear,
                    std::list<uint>& failedWeekList,
-                   bool isFirstPerformedYearOfSimulation,
                    const HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
                    OptimizationStatisticsWriter& optWriter,
                    const Antares::Data::Area::ScratchMap& scratchmap)
@@ -129,10 +127,6 @@ bool Economy::year(Progression::Task& progression,
     state.startANewYear();
 
     int hourInTheYear = pStartTime;
-    if (isFirstPerformedYearOfSimulation)
-    {
-        currentProblem.firstWeekOfSimulation = true;
-    }
     bool reinitOptim = true;
 
     for (uint w = 0; w != pNbWeeks; ++w)
@@ -222,8 +216,6 @@ bool Economy::year(Progression::Task& progression,
         }
 
         hourInTheYear += nbHoursInAWeek;
-
-        currentProblem.firstWeekOfSimulation = false;
 
         ++progression;
     }

@@ -65,7 +65,10 @@ Node* ComparisonFixture::createComplexExpression()
     Node* cmp = registry_.create<GreaterThanOrEqualNode>(sub, add);
     Node* pf = registry_.create<PortFieldNode>("port", "field");
     Node* pfsum = registry_.create<PortFieldSumNode>("port", "sum");
-    Node* addf = registry_.create<SumNode>(pf, pfsum, cmp);
+    Node* equalNode = registry_.create<EqualNode>(pf, pfsum);
+    Node* lessThan = registry_.create<LessThanOrEqualNode>(equalNode, pfsum);
+    Node* compVar = registry_.create<ComponentVariableNode>("compo", "var");
+    Node* addf = registry_.create<SumNode>(equalNode, lessThan, cmp, compVar);
     return addf;
 }
 
@@ -189,5 +192,30 @@ BOOST_FIXTURE_TEST_CASE(compare_sum_to_literal, ComparisonFixture)
     Node* literal1 = registry_.create<LiteralNode>(1.);
     Node* expr1 = registry_.create<SumNode>(literal1);
     BOOST_CHECK(!compareVisitor.dispatch(expr1, literal1));
+}
+
+BOOST_FIXTURE_TEST_CASE(compare_TimeIndex, ComparisonFixture)
+{
+    CompareVisitor compareVisitor;
+    Node* literal1 = registry_.create<LiteralNode>(1.);
+    Node* param1 = registry_.create<ParameterNode>("value");
+    Node* expr1 = registry_.create<TimeIndexNode>(literal1, param1);
+    BOOST_CHECK(!compareVisitor.dispatch(expr1, literal1));
+
+    CloneVisitor clone_visitor(registry_);
+    const auto clone = clone_visitor.dispatch(expr1);
+    BOOST_CHECK(compareVisitor.dispatch(expr1, clone));
+}
+
+BOOST_FIXTURE_TEST_CASE(compare_TimeShift, ComparisonFixture)
+{
+    CompareVisitor compareVisitor;
+    Node* literal1 = registry_.create<LiteralNode>(1.);
+    Node* literal2 = registry_.create<LiteralNode>(-65);
+    Node* expr1 = registry_.create<TimeShiftNode>(literal1, literal2);
+
+    CloneVisitor clone_visitor(registry_);
+    const auto clone = clone_visitor.dispatch(expr1);
+    BOOST_CHECK(compareVisitor.dispatch(expr1, clone));
 }
 BOOST_AUTO_TEST_SUITE_END()

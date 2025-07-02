@@ -15,7 +15,7 @@ public:
     NodeRegistry(NodeRegistry&&) = default;
     NodeRegistry& operator=(NodeRegistry&&) = default;
 
-    Nodes::Node* node;
+    Nodes::Node* node = nullptr;
     Registry<Nodes::Node> registry;
 };
 } // namespace Antares::Expressions

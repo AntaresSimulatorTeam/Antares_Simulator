@@ -34,10 +34,17 @@ namespace Antares::Optimisation::LinearProblemDataImpl
 class LinearProblemData: public LinearProblemApi::ILinearProblemData
 {
 public:
-    double getData(const std::string& dataSetId,
-                   const std::string& scenarioGroup,
-                   const unsigned scenario,
-                   const unsigned hour) override;
+    LinearProblemData() = default;
+
+    explicit LinearProblemData(DataSeriesRepository data_series_repository):
+        dataSeriesRepository_(std::move(data_series_repository))
+    {
+    }
+
+    [[nodiscard]] double getData(const std::string& dataSetId,
+                                 const std::string& scenarioGroup,
+                                 unsigned scenario,
+                                 unsigned hour) override;
 
     void addScenarioGroup(const std::string& groupId, std::pair<unsigned, unsigned> scenarioToRank);
     void addDataSeries(std::unique_ptr<IDataSeries> dataSeries);

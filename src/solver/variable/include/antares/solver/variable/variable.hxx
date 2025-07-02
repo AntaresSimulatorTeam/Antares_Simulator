@@ -161,7 +161,7 @@ inline void IVariable<ChildT, NextT, VCardT>::yearEndSpatialAggregates(V& allVar
                                                                        unsigned int numSpace)
 {
     // Next variable
-    NextType::template yearEndSpatialAggregates(allVars, year, numSpace);
+    NextType::yearEndSpatialAggregates(allVars, year, numSpace);
 }
 
 template<class ChildT, class NextT, class VCardT>
@@ -171,7 +171,7 @@ inline void IVariable<ChildT, NextT, VCardT>::yearEndSpatialAggregates(V& allVar
                                                                        const SetT& set)
 {
     // Next variable
-    NextType::template yearEndSpatialAggregates(allVars, year, set);
+    NextType::yearEndSpatialAggregates(allVars, year, set);
 }
 
 template<class ChildT, class NextT, class VCardT>
@@ -189,7 +189,7 @@ template<class V>
 inline void IVariable<ChildT, NextT, VCardT>::simulationEndSpatialAggregates(V& allVars)
 {
     // Next variable
-    NextType::template simulationEndSpatialAggregates(allVars);
+    NextType::simulationEndSpatialAggregates(allVars);
 }
 
 template<class ChildT, class NextT, class VCardT>
@@ -198,7 +198,7 @@ inline void IVariable<ChildT, NextT, VCardT>::simulationEndSpatialAggregates(V& 
                                                                              const SetT& set)
 {
     // Next variable
-    NextType::template simulationEndSpatialAggregates(allVars, set);
+    NextType::simulationEndSpatialAggregates(allVars, set);
 }
 
 template<class ChildT, class NextT, class VCardT>

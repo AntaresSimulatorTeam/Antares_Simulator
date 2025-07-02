@@ -37,10 +37,12 @@ void LinearProblemData::addDataSeries(std::unique_ptr<IDataSeries> dataSeries)
 
 double LinearProblemData::getData(const std::string& dataSetId,
                                   const std::string& scenarioGroup,
-                                  const unsigned scenario,
-                                  const unsigned hour)
+                                  unsigned scenario,
+                                  unsigned hour)
 {
-    unsigned rank = groupRepository_.getDataRank(scenarioGroup, scenario);
+    // TODO: use the following line to add scenario group support
+    // unsigned rank = groupRepository_.getDataRank(scenarioGroup, scenario);
+    unsigned rank = scenario;
     return dataSeriesRepository_.getDataSeries(dataSetId).getData(rank, hour);
 }
 

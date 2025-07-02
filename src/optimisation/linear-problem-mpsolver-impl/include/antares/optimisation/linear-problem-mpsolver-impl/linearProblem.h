@@ -44,44 +44,22 @@ public:
 
     OrtoolsMipVariable* addNumVariable(double lb, double ub, const std::string& name) override;
 
-    std::vector<LinearProblemApi::IMipVariable*> addNumVariable(
-      double lb,
-      double ub,
-      const std::string& name,
-      unsigned int number_new_variables) override;
-
     OrtoolsMipVariable* addIntVariable(double lb, double ub, const std::string& name) override;
-
-    std::vector<LinearProblemApi::IMipVariable*> addIntVariable(
-      double lb,
-      double ub,
-      const std::string& name,
-      unsigned int number_new_variables) override;
 
     OrtoolsMipVariable* addVariable(double lb,
                                     double ub,
                                     bool integer,
                                     const std::string& name) override;
 
-    std::vector<LinearProblemApi::IMipVariable*> addVariable(
-      double lb,
-      double ub,
-      bool integer,
-      const std::string& name,
-      unsigned int number_new_variables) override;
+    OrtoolsMipVariable* getVariable(std::size_t index) const override;
+    OrtoolsMipVariable* lookupVariable(const std::string& name) const override;
 
-    OrtoolsMipVariable* getVariable(const std::string& name) const override;
     int variableCount() const override;
 
     OrtoolsMipConstraint* addConstraint(double lb, double ub, const std::string& name) override;
 
-    std::vector<LinearProblemApi::IMipConstraint*> addConstraint(
-      double lb,
-      double ub,
-      const std::string& name,
-      unsigned int number_new_constraints) override;
-
-    OrtoolsMipConstraint* getConstraint(const std::string& name) const override;
+    OrtoolsMipConstraint* getConstraint(std::size_t index) const override;
+    OrtoolsMipConstraint* lookupConstraint(const std::string& name) const override;
     int constraintCount() const override;
 
     void setObjectiveCoefficient(LinearProblemApi::IMipVariable* var, double coefficient) override;
@@ -94,7 +72,7 @@ public:
     bool isMaximization() const override;
 
     OrtoolsMipSolution* solve(bool verboseSolver) override;
-    void WriteLP(const std::string& filename) override;
+    void WriteLP(const std::string& filename) const override;
 
     double infinity() const override;
 
@@ -106,8 +84,8 @@ private:
     operations_research::MPObjective* objective_;
     operations_research::MPSolverParameters params_;
 
-    std::map<std::string, std::unique_ptr<OrtoolsMipVariable>> variables_;
-    std::map<std::string, std::unique_ptr<OrtoolsMipConstraint>> constraints_;
+    std::vector<std::unique_ptr<OrtoolsMipVariable>> variables_;
+    std::vector<std::unique_ptr<OrtoolsMipConstraint>> constraints_;
 
     std::unique_ptr<OrtoolsMipSolution> solution_;
 };

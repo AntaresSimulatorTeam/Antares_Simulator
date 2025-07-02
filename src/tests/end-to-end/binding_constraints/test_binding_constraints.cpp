@@ -18,9 +18,8 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-#define BOOST_TEST_MODULE test - end - to - end tests_binding_constraints
+#define BOOST_TEST_MODULE test end to end binding constraints
 #define WIN32_LEAN_AND_MEAN
-#include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
 #include "in-memory-study.h"
@@ -49,9 +48,8 @@ StudyForBCTest::StudyForBCTest()
     Area* area1 = addAreaToStudy("Area 1");
     Area* area2 = addAreaToStudy("Area 2");
 
-    TimeSeriesConfigurer(area1->load.series.timeSeries).setColumnCount(1).fillColumnWith(0, 0);
-
-    TimeSeriesConfigurer(area2->load.series.timeSeries).setColumnCount(1).fillColumnWith(0, 100);
+    TimeSeriesConfigurer(area1->load.series.timeSeries).setDimensions(1).fillColumnWith(0, 0);
+    TimeSeriesConfigurer(area2->load.series.timeSeries).setDimensions(1).fillColumnWith(0, 100);
 
     link = AreaAddLinkBetweenAreas(area1, area2);
 
@@ -87,19 +85,6 @@ StudyWithBConLink::StudyWithBConLink()
 // Study fixture containing a BC on the thermal cluster
 // =======================================================
 
-struct StudyWithBConCluster: public StudyForBCTest
-{
-    using StudyForBCTest::StudyForBCTest;
-    StudyWithBConCluster();
-};
-
-StudyWithBConCluster::StudyWithBConCluster()
-{
-    BC = addBindingConstraints(*study, "BC1", "Group1");
-    BC->weight(cluster.get(), 1);
-    BC->enabled(true);
-}
-
 BOOST_AUTO_TEST_SUITE(TESTS_BINDING_CONSTRAINTS_ON_A_LINK)
 
 BOOST_FIXTURE_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90, StudyWithBConLink)
@@ -110,7 +95,7 @@ BOOST_FIXTURE_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90, StudyWit
     BC->operatorType(BindingConstraint::opEquality);
 
     double rhsValue = 90.;
-    TimeSeriesConfigurer(BC->RHSTimeSeries()).setColumnCount(1).fillColumnWith(0, rhsValue);
+    TimeSeriesConfigurer(BC->RHSTimeSeries()).setDimensions(1).fillColumnWith(0, rhsValue);
 
     simulation->create();
     simulation->run();
@@ -128,7 +113,7 @@ BOOST_FIXTURE_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50, StudyWit
     BC->operatorType(BindingConstraint::opEquality);
 
     double rhsValue = 50.;
-    TimeSeriesConfigurer(BC->RHSTimeSeries()).setColumnCount(1).fillColumnWith(0, rhsValue);
+    TimeSeriesConfigurer(BC->RHSTimeSeries()).setDimensions(1, 366).fillColumnWith(0, rhsValue);
 
     simulation->create();
     simulation->run();
@@ -146,7 +131,7 @@ BOOST_FIXTURE_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60, StudyWith
     BC->operatorType(BindingConstraint::opEquality);
 
     double rhsValue = 60.;
-    TimeSeriesConfigurer(BC->RHSTimeSeries()).setColumnCount(1).fillColumnWith(0, rhsValue);
+    TimeSeriesConfigurer(BC->RHSTimeSeries()).setDimensions(1, 366).fillColumnWith(0, rhsValue);
 
     simulation->create();
     simulation->run();
@@ -163,7 +148,7 @@ BOOST_FIXTURE_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90
     BC->operatorType(BindingConstraint::opLess);
 
     double rhsValue = 90.;
-    TimeSeriesConfigurer(BC->RHSTimeSeries()).setColumnCount(1).fillColumnWith(0, rhsValue);
+    TimeSeriesConfigurer(BC->RHSTimeSeries()).setDimensions(1).fillColumnWith(0, rhsValue);
 
     simulation->create();
     simulation->run();
@@ -181,7 +166,7 @@ BOOST_FIXTURE_TEST_CASE(Daily_BC_restricts_link_direct_capacity_to_greater_than_
     BC->operatorType(BindingConstraint::opGreater);
 
     double rhsValue = 80.;
-    TimeSeriesConfigurer(BC->RHSTimeSeries()).setColumnCount(1).fillColumnWith(0, rhsValue);
+    TimeSeriesConfigurer(BC->RHSTimeSeries()).setDimensions(1, 366).fillColumnWith(0, rhsValue);
 
     simulation->create();
     simulation->run();
@@ -202,7 +187,7 @@ BOOST_FIXTURE_TEST_CASE(Hourly_BC_restricts_cluster_generation_to_90, StudyWithB
     BC->operatorType(BindingConstraint::opEquality);
 
     double rhsValue = 90.;
-    TimeSeriesConfigurer(BC->RHSTimeSeries()).setColumnCount(1).fillColumnWith(0, rhsValue);
+    TimeSeriesConfigurer(BC->RHSTimeSeries()).setDimensions(1).fillColumnWith(0, rhsValue);
 
     simulation->create();
     simulation->run();
@@ -225,7 +210,7 @@ BOOST_FIXTURE_TEST_CASE(On_year_2__RHS_TS_number_2_is_taken_into_account, StudyW
     double bcGroupRHS1 = 90.;
     double bcGroupRHS2 = 70.;
     TimeSeriesConfigurer(BC->RHSTimeSeries())
-      .setColumnCount(2)
+      .setDimensions(2)
       .fillColumnWith(0, bcGroupRHS1)
       .fillColumnWith(1, bcGroupRHS2);
 
@@ -249,7 +234,7 @@ BOOST_FIXTURE_TEST_CASE(On_year_9__RHS_TS_number_4_is_taken_into_account, StudyW
     BC->operatorType(BindingConstraint::opEquality);
 
     TimeSeriesConfigurer(BC->RHSTimeSeries())
-      .setColumnCount(7)
+      .setDimensions(7)
       .fillColumnWith(0, 10.)
       .fillColumnWith(1, 20.)
       .fillColumnWith(2, 30.)
@@ -286,7 +271,7 @@ BOOST_FIXTURE_TEST_CASE(On_year_9__RHS_TS_number_4_out_of_bound_use_random_fallb
     BC->setTimeGranularity(BindingConstraint::typeHourly);
     BC->operatorType(BindingConstraint::opEquality);
 
-    TimeSeriesConfigurer(BC->RHSTimeSeries()).setColumnCount(1).fillColumnWith(0, 0.);
+    TimeSeriesConfigurer(BC->RHSTimeSeries()).setDimensions(1).fillColumnWith(0, 0.);
 
     ScenarioBuilderRule scenarioBuilderRule(*study);
     scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 0, 1);

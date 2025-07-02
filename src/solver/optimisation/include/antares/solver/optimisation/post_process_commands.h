@@ -37,21 +37,6 @@ private:
     const AreaList& area_list_;
 };
 
-class HydroLevelsUpdatePostProcessCmd: public basePostProcessCommand
-{
-public:
-    HydroLevelsUpdatePostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
-                                    AreaList& areas,
-                                    bool remixWasRun,
-                                    bool computeAnyway);
-    void execute(const optRuntimeData& opt_runtime_data) override;
-
-private:
-    const AreaList& area_list_;
-    bool remixWasRun_ = false;
-    bool computeAnyway_ = false;
-};
-
 class RemixHydroPostProcessCmd: public basePostProcessCommand
 {
 public:
@@ -124,7 +109,8 @@ public:
     CurtailmentSharingPostProcessCmd(const AdqPatchParams& adqPatchParams,
                                      PROBLEME_HEBDO* problemeHebdo,
                                      AreaList& areas,
-                                     unsigned int numSpace);
+                                     unsigned int numSpace,
+                                     const OptimizationOptions& solverOptions);
 
     void execute(const optRuntimeData& opt_runtime_data) override;
 
@@ -138,6 +124,7 @@ private:
     const AreaList& area_list_;
     const AdqPatchParams& adqPatchParams_;
     unsigned int numSpace_ = 0;
+    const OptimizationOptions& solverOptions_;
 };
 
 } // namespace Antares::Solver::Simulation

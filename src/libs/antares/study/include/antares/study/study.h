@@ -31,9 +31,13 @@
 
 #include <antares/correlation/correlation.h>
 #include <antares/date/date.h>
+#include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/study/runtime/runtime.h>
+#include <antares/study/system-model/library.h>
+#include <antares/study/system-model/system.h>
 #include <antares/writer/i_writer.h>
 #include "antares/antares/antares.h"
+#include "antares/solver/modeler/loadFiles/data.h"
 #include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
 #include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 
@@ -72,7 +76,6 @@ public:
     //! Extension filename
     using FileExtension = std::string;
 
-public:
     /*!
     ** \brief Extract the title of a study
     **
@@ -114,7 +117,6 @@ public:
     */
     static bool IsInsideStudyFolder(const AnyString& path, YString& location, YString& title);
 
-public:
     //! \name Constructor & Destructor
     //@{
     /*!
@@ -281,6 +283,7 @@ public:
     ** \brief Get if the study is in readonly mode
     */
     bool readonly() const;
+
     //@}
 
     //! \name Time-series
@@ -298,8 +301,12 @@ public:
     ** \tparam TimeSeriesT The time-series set to store
     ** \return True if the operation succeeded (the file have been written), false otherwise
     */
-    template<unsigned int TimeSeriesT>
-    void storeTimeSeriesNumbers(Solver::IResultWriter& resultWriter) const;
+    template<TimeSeriesType TimeSeriesT>
+    void storeTimeSeriesNumbers(Solver::IResultWriter& resultWriter) const
+    {
+        storeTimeseriesNumbers<TimeSeriesT>(resultWriter, areas);
+    }
+
     //@}
 
     //! \name Simulation
@@ -328,6 +335,7 @@ public:
     ** \brief Initialize the progress meter
     */
     void initializeProgressMeter(bool tsGeneratorOnly);
+
     //@}
 
     //! \name Time-series Generators
@@ -335,17 +343,10 @@ public:
     /*!
     ** \brief Destroy all data of the TS generator '@TS'
     */
-    template<enum TimeSeriesType TS>
-    void destroyTSGeneratorData();
-
-    //! Destroy all data of the load TS generator
-    void destroyAllLoadTSGeneratorData();
-    //! Destroy all data of the solar TS generator
-    void destroyAllSolarTSGeneratorData();
-    //! Destroy all data of the wind TS generator
-    void destroyAllWindTSGeneratorData();
-    //! Destroy all data of the hydro TS generator
-    void destroyAllHydroTSGeneratorData();
+    template<TimeSeriesType TS>
+    inline void destroyTSGeneratorData()
+    {
+    }
 
     /*!
     ** \brief Import all time-series into the input folder
@@ -605,7 +606,6 @@ public:
     //! The queue service that runs every set of parallel years
     std::shared_ptr<Yuni::Job::QueueService> pQueueService;
 
-public:
     //! \name TS Generators
     //@{
     /*!
@@ -622,6 +622,16 @@ public:
     ** must be done.
     */
     const bool usedByTheSolver;
+
+    Antares::ModelerStudy::SystemModel::System* getModelerSystem() const
+    {
+        return modelerInput_.system.get();
+    }
+
+    Optimisation::LinearProblemApi::ILinearProblemData* getModelerData() const
+    {
+        return modelerInput_.dataSeries.get();
+    }
 
 protected:
     //! \name Loading
@@ -640,6 +650,9 @@ protected:
 
     bool internalLoadIni(const std::filesystem::path& path, const StudyLoadOptions& options);
 
+    //! Load extra modeler components for hybrid studies
+    void loadModelerComponents();
+
     void parameterFiller(const StudyLoadOptions& options);
 
     //! \name Misc
@@ -648,6 +661,8 @@ protected:
     void reduceMemoryUsage();
     //@}
 
+private:
+    Antares::Modeler::Data modelerInput_;
 }; // class Study
 
 /*!
@@ -661,7 +676,5 @@ std::filesystem::path StudyCreateOutputPath(SimulationMode mode,
                                             const std::string& label,
                                             const std::tm& startTime);
 } // namespace Antares::Data
-
-#include "study.hxx"
 
 #endif /* __ANTARES_LIBS_STUDY_STUDY_H__ */

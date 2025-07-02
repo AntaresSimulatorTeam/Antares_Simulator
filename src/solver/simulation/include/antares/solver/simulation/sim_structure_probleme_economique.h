@@ -25,6 +25,7 @@
 #include <memory>
 #include <vector>
 
+#include "antares/solver/optimisation/opt_constants.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/utils/optimization_statistics.h"
 #include "antares/study/fwd.h"
@@ -149,7 +150,6 @@ struct CONTRAINTES_COUPLANTES
 
     std::vector<double> SecondMembreDeLaContrainteCouplante;
 
-    int NombreDElementsDansLaContrainteCouplante;
     int NombreDInterconnexionsDansLaContrainteCouplante;
 
     std::vector<double> PoidsDeLInterconnexion;
@@ -165,7 +165,7 @@ struct CONTRAINTES_COUPLANTES
 
     const char* NomDeLaContrainteCouplante;
 
-    std::shared_ptr<Data::BindingConstraint> bindingConstraint;
+    std::shared_ptr<Antares::Data::BindingConstraint> bindingConstraint;
 };
 
 namespace ShortTermStorage
@@ -183,7 +183,8 @@ struct PROPERTIES
     bool penalizeVariationInjection;
 
     std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
-    std::vector<Antares::Data::ShortTermStorage::AdditionalConstraints> additionalConstraints;
+    std::vector<std::shared_ptr<Antares::Data::ShortTermStorage::AdditionalConstraints>>
+      additionalConstraints;
     int clusterGlobalIndex;
     std::string name;
 };
@@ -325,79 +326,11 @@ struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
     double WeeklyGeneratingModulation;
     double WeeklyPumpingModulation;
     bool DirectLevelAccess; /*  determines the type of constraints bearing on the final stok level*/
-    bool AccurateWaterValue;     /*  determines the type of modelling used for water budget*/
-    double LevelForTimeInterval; /*  value computed by the simulator in water-value based modes*/
+    bool AccurateWaterValue; /*  determines the type of modelling used for water budget*/
     std::vector<double> WaterLayerValues;      /*  reference costs for the last time step (caution :
                                       dimension set to      100, should be made dynamic)*/
     std::vector<double> InflowForTimeInterval; /*  Energy input to the reservoir, used to in the
                                       bounding constraint on final level*/
-};
-
-class computeTimeStepLevel
-{
-private:
-    int step;
-    double level;
-
-    double capacity;
-    std::vector<double>& inflows;
-    std::vector<double>& ovf;
-    const std::vector<double>& turb;
-    double pumpRatio;
-    const std::vector<double>& pump;
-    double excessDown;
-
-public:
-    computeTimeStepLevel(const double& startLvl,
-                         std::vector<double>& infl,
-                         std::vector<double>& overfl,
-                         const std::vector<double>& H,
-                         double pumpEff,
-                         const std::vector<double>& Pump,
-                         double rc):
-        step(0),
-        level(startLvl),
-        capacity(rc),
-        inflows(infl),
-        ovf(overfl),
-        turb(H),
-        pumpRatio(pumpEff),
-        pump(Pump),
-        excessDown(0.)
-    {
-    }
-
-    void run()
-    {
-        excessDown = 0.;
-
-        level = level + inflows[step] - turb[step] + pumpRatio * pump[step];
-
-        if (level > capacity)
-        {
-            ovf[step] = level - capacity;
-            level = capacity;
-        }
-
-        if (level < 0)
-        {
-            excessDown = -level;
-            level = 0.;
-            inflows[step] += excessDown;
-        }
-    }
-
-    void prepareNextStep()
-    {
-        step++;
-
-        inflows[step] -= excessDown;
-    }
-
-    double getLevel()
-    {
-        return level;
-    }
 };
 
 struct RESERVE_JMOINS1
@@ -504,6 +437,8 @@ struct PROBLEME_HEBDO
     std::vector<double> CoutDeDefaillancePositive;
     std::vector<double> CoutDeDefaillanceNegative;
 
+    std::vector<double> CoutDeDebordement;
+
     std::vector<PALIERS_THERMIQUES> PaliersThermiquesDuPays;
     std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;
 
@@ -537,7 +472,6 @@ struct PROBLEME_HEBDO
 
     uint32_t HeureDansLAnnee = 0;
     bool LeProblemeADejaEteInstancie = false;
-    bool firstWeekOfSimulation = false;
 
     std::vector<CORRESPONDANCES_DES_VARIABLES> CorrespondanceVarNativesVarOptim;
     std::vector<CORRESPONDANCES_DES_CONTRAINTES> CorrespondanceCntNativesCntOptim;
@@ -672,6 +606,8 @@ public:
 
     std::unique_ptr<PROBLEME_ANTARES_A_RESOUDRE> ProblemeAResoudre;
 
-    double maxPminThermiqueByDay[366];
+    // TODO: 1 study but several PROBLEME_HEBDO, may cause race conditions
+    const ModelerStudy::SystemModel::System* modelerSystem;                   // for hybrid studies
+    Optimisation::LinearProblemApi::ILinearProblemData* linear_problem_data_; // for hybrid studies
 };
 #endif

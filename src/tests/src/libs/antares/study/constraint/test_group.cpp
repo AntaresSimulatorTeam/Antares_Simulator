@@ -137,4 +137,52 @@ BOOST_FIXTURE_TEST_CASE(WhenLoadingsConstraints_AllGroupsNonEmpty, Fixture)
                             [](const auto& group) { return !group->constraints().empty(); }));
 }
 
+BOOST_AUTO_TEST_CASE(group_numberOfTimeseries_empty)
+{
+    BindingConstraintGroup group("group");
+    BOOST_CHECK_EQUAL(group.numberOfTimeseries(), 0);
+}
+
+void addToGroup(BindingConstraintGroup& group, const std::string& name, unsigned int width)
+{
+    auto c = std::make_shared<BindingConstraint>();
+    c->RHSTimeSeries().reset(width, /*height = */ 1);
+    c->name(name);
+    group.add(c);
+}
+
+BOOST_AUTO_TEST_CASE(group_numberOfTimeseries_all_equal)
+{
+    BindingConstraintGroup group("group");
+    addToGroup(group, "bc-1", 5);
+    addToGroup(group, "bc-2", 5);
+    BOOST_CHECK_EQUAL(group.numberOfTimeseries(), 5);
+}
+
+BOOST_AUTO_TEST_CASE(group_numberOfTimeseries_some_one)
+{
+    BindingConstraintGroup group("group");
+    addToGroup(group, "bc-1", 1);
+    addToGroup(group, "bc-2", 5);
+    BOOST_CHECK_EQUAL(group.numberOfTimeseries(), 5);
+}
+
+BOOST_AUTO_TEST_CASE(group_numberOfTimeseries_some_one_mixed)
+{
+    BindingConstraintGroup group("group");
+    addToGroup(group, "bc-1", 1);
+    addToGroup(group, "bc-2", 5);
+    addToGroup(group, "bc-3", 1);
+    BOOST_CHECK_EQUAL(group.numberOfTimeseries(), 5);
+}
+
+BOOST_AUTO_TEST_CASE(group_numberOfTimeseries_same_name)
+{
+    BindingConstraintGroup group("group");
+    addToGroup(group, "bc-1", 1);
+    addToGroup(group, "bc-1", 5); // Name collision, not added to group
+    addToGroup(group, "bc-3", 1);
+    BOOST_CHECK_EQUAL(group.numberOfTimeseries(), 1);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

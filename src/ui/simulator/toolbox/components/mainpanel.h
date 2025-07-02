@@ -60,9 +60,16 @@ public:
     {
         return pAuthor;
     }
+
+    const wxString& editor() const
+    {
+        return pEditor;
+    }
     //! Set the author
     void author(const wxString& s);
     //@}
+    void editor(const wxString& s);
+
 
     void refreshFromStudy();
 
@@ -100,6 +107,7 @@ private:
     wxString pStudyCaption;
     //! Author
     wxString pAuthor;
+    wxString pEditor; //TODO
     //! The best height for the panel
     int pCachedSizeY;
     //! Beta image

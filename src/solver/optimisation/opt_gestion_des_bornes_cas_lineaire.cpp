@@ -431,15 +431,17 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
             }
 
             var = variableManager.Overflow(pays, pdtJour);
-
-            problemeHebdo->ResultatsHoraires[pays].debordementsHoraires[pdtHebdo] = 0.;
             if (var >= 0)
             {
                 Xmin[var] = 0.0;
-                Xmax[var] = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                              .ApportNaturelHoraire[pdtHebdo];
+                Xmax[var] = std::max(
+                  0.,
+                  problemeHebdo->CaracteristiquesHydrauliques[pays].ApportNaturelHoraire[pdtHebdo]);
                 AdresseOuPlacerLaValeurDesCoutsReduits[var] = nullptr;
-                AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
+                AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = &problemeHebdo
+                                                                        ->ResultatsHoraires[pays]
+                                                                        .debordementsHoraires
+                                                                          [pdtHebdo];
             }
 
             var = variableManager.HydroLevel(pays, pdtJour);
@@ -490,12 +492,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                 Xmax[var] = LINFINI_ANTARES;
 
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
-
-                //	Note: if there were a single optimization run instead of two; the following
-                // could be used: 	adresseDuResultat =
-                //&(problemeHebdo->CaracteristiquesHydrauliques[pays].LevelForTimeInterval);
-                //	AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
-
                 AdresseOuPlacerLaValeurDesCoutsReduits[var] = nullptr;
             }
             for (uint nblayer = 0; nblayer < 100; nblayer++)

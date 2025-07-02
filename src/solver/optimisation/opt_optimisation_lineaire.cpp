@@ -19,6 +19,8 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include <mutex>
+
 #include <antares/logs/logs.h>
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
 #include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
@@ -30,6 +32,8 @@
 
 using namespace Antares::Solver;
 using Antares::Solver::Optimization::OptimizationOptions;
+
+std::once_flag export_once;
 
 namespace
 {
@@ -112,7 +116,7 @@ void notifyProblemHebdo(const PROBLEME_HEBDO* problemeHebdo,
 }
 } // namespace
 
-bool runWeeklyOptimization(const OptimizationOptions& options,
+bool runWeeklyOptimization(const SingleOptimOptions& options,
                            PROBLEME_HEBDO* problemeHebdo,
                            Solver::IResultWriter& writer,
                            int optimizationNumber,
@@ -167,7 +171,8 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
             return false;
         }
 
-        if (problemeHebdo->ExportMPS != Data::mpsExportStatus::NO_EXPORT)
+        if (problemeHebdo->ExportMPS != Data::mpsExportStatus::NO_EXPORT
+            || problemeHebdo->Expansion)
         {
             double optimalSolutionCost = OPT_ObjectiveFunctionResult(problemeHebdo,
                                                                      numeroDeLIntervalle,
@@ -257,12 +262,14 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
     resizeProbleme(problemeHebdo->ProblemeAResoudre.get(),
                    problemeHebdo->ProblemeAResoudre->NombreDeVariables,
                    problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
-    if (problemeHebdo->ExportStructure && problemeHebdo->firstWeekOfSimulation)
+    if (problemeHebdo->ExportStructure)
     {
-        OPT_ExportStructures(problemeHebdo, writer);
+        std::call_once(export_once,
+                       [&problemeHebdo, &writer]()
+                       { OPT_ExportStructures(problemeHebdo, writer); });
     }
 
-    bool ret = runWeeklyOptimization(options,
+    bool ret = runWeeklyOptimization(options.firstOptimOptions,
                                      problemeHebdo,
                                      writer,
                                      PREMIERE_OPTIMISATION,
@@ -275,7 +282,7 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
     {
         // We need to adjust some stuff before running the 2nd optimisation
         runThermalHeuristic(problemeHebdo);
-        return runWeeklyOptimization(options,
+        return runWeeklyOptimization(options.secondOptimOptions,
                                      problemeHebdo,
                                      writer,
                                      DEUXIEME_OPTIMISATION,

@@ -18,8 +18,10 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
+#include <algorithm>
 #include <iostream>
 #include <numeric>
+#include <ranges>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/PrintVisitor.h>
@@ -109,6 +111,43 @@ std::string PrintVisitor::visit(const Nodes::ComponentVariableNode* node)
 std::string PrintVisitor::visit(const Nodes::ComponentParameterNode* node)
 {
     return node->getComponentId() + "." + node->getComponentName();
+}
+
+std::string PrintVisitor::trimAndFormat(const std::string& in)
+{
+    auto s = in;
+    // Trim left (remove leading whitespace)
+    auto it = std::ranges::find_if_not(s, [](unsigned char ch) { return std::isspace(ch); });
+    s.erase(s.begin(), it);
+
+    // Ensure it starts with '+' or '-'
+    if (!s.empty() && (s.front() != '-' && s.front() != '+'))
+    {
+        s.insert(s.begin(), '+');
+    }
+    return s;
+}
+
+std::string PrintVisitor::visit(const Nodes::TimeShiftNode* node)
+{
+    auto formatedShift = trimAndFormat(dispatch(node->right()));
+    return dispatch(node->left()) + "[ t " + formatedShift + " ]";
+}
+
+std::string PrintVisitor::visit(const Nodes::TimeIndexNode* node)
+{
+    return dispatch(node->left()) + "[ " + dispatch(node->right()) + " ]";
+}
+
+std::string PrintVisitor::visit(const Nodes::TimeSumNode* node)
+{
+    return "sum(t" + trimAndFormat(dispatch(node->from())) + " .. t"
+           + trimAndFormat(dispatch(node->to())) + ", " + dispatch(node->expression()) + ")";
+}
+
+std::string PrintVisitor::visit(const Nodes::AllTimeSumNode* node)
+{
+    return "sum(" + dispatch(node->child()) + ")";
 }
 
 std::string PrintVisitor::name() const

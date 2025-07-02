@@ -34,16 +34,12 @@ library:
           variable-type: continuous
         - id: gen1_up
           variable-type: boolean
-          lower-bound: 0
-          upper-bound: 1
         - id: gen2_p
           lower-bound: 0
           upper-bound: gen2_max_p
           variable-type: continuous
         - id: gen2_up
           variable-type: boolean
-          lower-bound: 0
-          upper-bound: 1
       constraints:
         - id: balance
           expression: gen1_p + gen2_p - load = 0

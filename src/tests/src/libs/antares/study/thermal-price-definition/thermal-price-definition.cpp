@@ -218,6 +218,18 @@ BOOST_FIXTURE_TEST_CASE(checkFuelAndCo2_checkColumnNumber_OK, FixtureFull)
     BOOST_CHECK_NO_THROW(Antares::Check::checkCO2CostColumnNumber(study->areas));
 }
 
+// Arbitrary non-constant function, with values in [0, 1]
+double marketBidModulation(uint hour)
+{
+    return hour / 10000;
+}
+
+// Arbitrary non-constant function, with values in [0, 1]
+double marginalCostModulation(uint hour)
+{
+    return hour / 20000;
+}
+
 BOOST_FIXTURE_TEST_CASE(ThermalCluster_costGenManualCalculationOfMarketBidAndMarginalCostPerHour,
                         FixtureFull)
 {
@@ -225,13 +237,22 @@ BOOST_FIXTURE_TEST_CASE(ThermalCluster_costGenManualCalculationOfMarketBidAndMar
     auto cluster = clusterList.findInAll("some cluster");
 
     cluster->modulation.resize(thermalModulationMax, HOURS_PER_YEAR);
-    cluster->modulation.fill(1.);
-
     cluster->costgeneration = Data::setManually;
 
     auto& cp = cluster->getCostProvider();
-    BOOST_CHECK_EQUAL(cp.getMarketBidCost(2637, 0), 35);
-    BOOST_CHECK_EQUAL(cp.getMarginalCost(6737, 0), 23);
+    for (uint hour = 0; hour < HOURS_PER_YEAR; hour++)
+    {
+        cluster->modulation[thermalModulationMarketBid][hour] = marketBidModulation(hour);
+        cluster->modulation[thermalModulationCost][hour] = marginalCostModulation(hour);
+    }
+
+    for (uint hour = 0; hour < HOURS_PER_YEAR; hour++)
+    {
+        BOOST_CHECK_EQUAL(cp.getMarketBidCost(hour, 0),
+                          cluster->marketBidCost * marketBidModulation(hour));
+        BOOST_CHECK_EQUAL(cp.getMarginalCost(hour, 0),
+                          cluster->marginalCost * marginalCostModulation(hour));
+    }
 }
 
 BOOST_FIXTURE_TEST_CASE(

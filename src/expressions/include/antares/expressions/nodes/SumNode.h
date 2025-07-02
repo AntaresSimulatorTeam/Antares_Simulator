@@ -22,67 +22,19 @@
 
 #include <vector>
 
-#include "antares/expressions/nodes/Node.h"
+#include "antares/expressions/nodes/ParentNode.h"
 
 namespace Antares::Expressions::Nodes
 {
 
-template<typename T>
-concept NodePtr = std::same_as<T, Node*>;
-
-template<typename T, typename... Args>
-requires(std::convertible_to<Args, T> && ...)
-std::vector<T> createVector(T first, Args... args)
-{
-    return std::vector<T>{first, args...};
-}
-
-class SumNode: public Node
+class SumNode: public ParentNode
 {
 public:
-    template<typename... NodePtr>
-    explicit SumNode(NodePtr... operands)
-    {
-        if constexpr (sizeof...(NodePtr))
-        {
-            operands_ = createVector(static_cast<Node*>(operands)...);
-        }
-    }
-
-    /**
-     * @brief Constructs a sum node with the specified operands.
-     *
-     * @param operands The operands, collected in a vector
-     */
-    explicit SumNode(const std::vector<Node*>& operands);
-
-    /**
-     * @brief Constructs a sum node with the specified operands. Vector is moved.
-     *
-     * @param operands The operands, collected in a vector
-     */
-    explicit SumNode(std::vector<Node*>&& operands):
-        operands_(std::move(operands))
-    {
-    }
-
-    /**
-     * @brief Retrieves the operands of the sum.
-     *
-     * @return A vector of pointers to the operands of the sum.
-     */
-    const std::vector<Node*>& getOperands() const;
-
-    Node* operator[](std::size_t idx) const;
-
-    size_t size() const;
+    using ParentNode::ParentNode;
 
     std::string name() const override
     {
         return "SumNode";
     }
-
-private:
-    std::vector<Node*> operands_ = {};
 };
 } // namespace Antares::Expressions::Nodes

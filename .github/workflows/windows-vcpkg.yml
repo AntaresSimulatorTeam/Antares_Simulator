@@ -11,6 +11,7 @@ on:
       - release/*
       - doc/*
       - dependabot/*
+      - tests/*
   schedule:
     - cron: '21 2 * * *'
   workflow_call:
@@ -53,7 +54,7 @@ jobs:
 
       - name: Config OR-Tools URL
         run: |
-          echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_windows-latest_static_sirius.zip" >> $GITHUB_ENV
+          echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_windows-latest_static_sirius_Release.zip" >> $GITHUB_ENV
         shell: bash
 
       - name: Pre-requisites
@@ -67,17 +68,31 @@ jobs:
       - name: Install ccache
         shell: bash
         run: |
-          wget https://github.com/ccache/ccache/releases/download/v4.8.3/ccache-4.8.3-windows-x86_64.zip -O ccache.zip
+          ccacheVersion=4.11.3
+          ccacheFile=ccache-$ccacheVersion-windows-x86_64
+          wget https://github.com/ccache/ccache/releases/download/v$ccacheVersion/$ccacheFile.zip -O ccache.zip
           unzip ccache.zip
           rm ccache.zip
-          mv ccache-4.8.3-windows-x86_64 ccache
+          mv $ccacheFile ccache
           cp ccache/ccache.exe ccache/cl.exe
           echo "${GITHUB_WORKSPACE}/ccache" >> $GITHUB_PATH
 
-      - name: ccache
-        uses: hendrikmuhs/ccache-action@v1.2
+
+      - name: Restore ccache cache
+        uses: actions/cache/restore@v4
         with:
-          key: windows
+          path: ${{ github.workspace }}/.ccache_windows
+          key: ${{ env.os }}-${{ github.ref_name }}
+          restore-keys: |
+            ${{ env.os }}-  
+
+      - name: Configure ccache
+        run: |
+          ccache --set-config=cache_dir=${{ github.workspace }}/.ccache_windows
+          ccache --set-config=max_size=500M
+          ccache --set-config=compression=true
+          ccache -p
+          ccache -z            
 
       - name: Install VCPKG
         shell: bash
@@ -132,6 +147,26 @@ jobs:
         run: |
           cmake --build _build --config Release -j$(nproc)
 
+      - name: .zip creation
+        if: ${{ success() }}
+        shell: bash
+        run: |
+          cd _build
+          FIXED_PATH=${ORTOOLS_DIR//\\//}
+          cpack -G ZIP -D CPACK_INSTALLED_DIRECTORIES="${FIXED_PATH}/install/bin;bin"
+          export ZIP_ARCHIVE_NAME=$(ls -1 *.zip)
+          echo "ZIP_ARCHIVE_NAME=$ZIP_ARCHIVE_NAME" >> $GITHUB_ENV
+
+      - name: Upload .zip
+        if: ${{ success() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{env.ZIP_ARCHIVE_NAME}}
+          path: _build/${{env.ZIP_ARCHIVE_NAME}}
+
+      - name: Add OR-Tools to PATH
+        run: echo "D:\a\Antares_Simulator\Antares_Simulator/or-tools/install/bin" | Out-File -Append -Encoding ascii $env:GITHUB_PATH
+
       - name: Read simtest version
         shell: bash
         run: |
@@ -143,10 +178,6 @@ jobs:
         shell: bash
         run: |
           echo "SIMTEST=${{ fromJson(env.SIMTEST_JSON).version }}" >> $GITHUB_ENV
-
-      - name: Init submodule Antares_Simulator_Tests
-        run: |
-          git submodule update --init --remote src/tests/resources/Antares_Simulator_Tests
 
       - name: Init submodule Antares_Simulator_Tests_NR
         run: |
@@ -160,6 +191,19 @@ jobs:
           batch-name: valid-named-mps
           os: ${{ env.os }}
           variant: "named-mps"
+
+      - name: Run fast cucumber
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/cucumber-tests
+        with:
+          tags: "fast"
+
+      - name: Run cucumber on modeler
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/cucumber-tests
+        with:
+          feature: "features/modeler-features"
+
 
       - name: Run unfeasibility-related tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
@@ -245,11 +289,12 @@ jobs:
           batch-name: short-tests
           os: ${{ env.os }}
 
-      - name: Run cucumber on short-tests
+
+      - name: Run cucumber on v9.2 tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/cucumber-tests
         with:
-          feature: "features/solver-features/short_tests.feature"
+          feature: "features/solver-features/tests_for_v9.2.feature"
 
       - name: Run mps tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
@@ -267,15 +312,6 @@ jobs:
           batch-name: valid-parallel
           os: ${{ env.os }}
           variant: "parallel"
-
-      - name: Run tests for time series generator tool
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-        uses: ./.github/workflows/run-tests
-        with:
-          simtest-tag: ${{ env.SIMTEST }}
-          batch-name: ts-generator
-          os: ${{ env.os }}
-          variant: "tsgenerator"
 
       - name: Run medium-tests
         if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
@@ -315,10 +351,11 @@ jobs:
           batch-name: long-tests-3
           os: ${{ env.os }}
 
-      - name: Run cucumber on modeler
+
+      - name: Run cucumber on hybrid studies
         uses: ./.github/workflows/cucumber-tests
         with:
-          feature: "features/modeler-features"
+          feature: "features/solver-features/hybrid_studies.feature"
 
       - name: Barrier
         if: ${{ !success() }}
@@ -328,6 +365,8 @@ jobs:
         shell: bash
         run: |
           cd _build
+          FIXED_PATH=${ORTOOLS_DIR//\\//}
+          cp ${FIXED_PATH}/install/bin/*.dll* solver/Release
           zip -r antares-solver_windows.zip solver/Release/antares-solver.exe solver/Release/*.dll
 
       - name: NSIS Installer creation
@@ -346,11 +385,6 @@ jobs:
           name: NSISError.log
           path: _build/_CPack_Packages/win64/NSIS/NSISOutput.log
 
-      - name: .zip creation
-        run: |
-          cd _build
-          cpack -G ZIP
-
       - name: Installer upload
         uses: actions/upload-artifact@v4
         with:
@@ -366,6 +400,15 @@ jobs:
           gh release upload "$tag" _build/*.zip _build/*.exe
         shell: bash
 
+      - name: Update continuous-delivery release
+        if: github.ref == 'refs/heads/develop'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mv _build/rte-antares-*-installer-64bits.exe _build/rte-antares-cd-installer-64bits.exe
+          mv _build/rte-antares-*-installer-64bits.zip _build/rte-antares-cd-installer-64bits.zip
+          gh release upload --clobber continuous-delivery _build/*.zip _build/*.exe
+
       - name: Cache vcpkg binary dir
         if: always()
         id: save-cache-vcpkg-binary
@@ -373,3 +416,13 @@ jobs:
         with:
           path: ${{ github.workspace }}/vcpkg_cache
           key: vcpkg-cache-windows-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+
+      - name: Display ccache statistics
+        run: ccache -s
+
+      - name: Save ccache cache
+        if: ${{ !cancelled() }}
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ github.workspace }}/.ccache_windows
+          key: ${{ env.os }}-${{ github.ref_name }}

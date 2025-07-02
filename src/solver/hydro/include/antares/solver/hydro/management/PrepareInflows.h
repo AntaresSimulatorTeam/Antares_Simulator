@@ -30,12 +30,11 @@ class PrepareInflows
 {
 public:
     PrepareInflows(Data::AreaList& areas, const Date::Calendar& calendar);
-    void Run(uint year);
+    void loadInflows(uint year);
+    //! prepare data for Final reservoir level
+    void changeInflowsToAccommodateFinalLevels(uint year);
 
 private:
-    void LoadInflows(uint year);
-    //! prepare data for Final reservoir level
-    void ChangeInflowsToAccommodateFinalLevels(uint year);
     Data::AreaList& areas_;
     const Date::Calendar& calendar_;
 };

@@ -3,12 +3,20 @@ set(PROJ optim-model-filler)
 set(SRC_optim_model_filler
         include/antares/solver/optim-model-filler/ComponentFiller.h
         include/antares/solver/optim-model-filler/LinearExpression.h
+        include/antares/solver/optim-model-filler/TimeDependentLinearExpression.h
         include/antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h
         include/antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h
+        include/antares/solver/optim-model-filler/VariableDictionary.h
+        include/antares/solver/optim-model-filler/PartialKey.h
+        include/antares/solver/optim-model-filler/FullKey.h
         ComponentFiller.cpp
         LinearExpression.cpp
+        TimeDependentLinearExpression.cpp
         ReadLinearConstraintVisitor.cpp
         ReadLinearExpressionVisitor.cpp
+        VariableDictionary.cpp
+        PartialKey.cpp
+        FullKey.cpp
 )
 
 add_library(${PROJ} ${SRC_optim_model_filler})

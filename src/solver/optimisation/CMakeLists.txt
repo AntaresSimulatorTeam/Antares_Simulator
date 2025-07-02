@@ -5,7 +5,7 @@ set(RTESOLVER_OPT
         opt_optimisation_lineaire.cpp
         opt_chainage_intercos.cpp
         include/antares/solver/optimisation/opt_fonctions.h
-        include/antares/solver/optimisation/SparseVector.hxx
+        include/antares/solver/optimisation/opt_appel_solveur_quadratique.h
         opt_pilotage_optimisation_lineaire.cpp
         opt_pilotage_optimisation_quadratique.cpp
         include/antares/solver/optimisation/opt_structure_probleme_a_resoudre.h
@@ -180,6 +180,8 @@ set(RTESOLVER_OPT
         include/antares/solver/optimisation/LegacyOrtoolsLinearProblem.h
         include/antares/solver/optimisation/LegacyFiller.h
         LegacyFiller.cpp
+        include/antares/solver/optimisation/ComponentToAreaConnectionFiller.h
+        ComponentToAreaConnectionFiller.cpp
 )
 
 
@@ -196,6 +198,7 @@ else ()
     #set(CMAKE_C_FLAGS_DEBUG   "${CMAKE_C_FLAGS} /wd 4101") # unused local variable
     #set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS} /wd 4101") # unused local variable
 endif ()
+
 target_link_libraries(model_antares
         PUBLIC
         Antares::solverUtils
@@ -207,8 +210,12 @@ target_link_libraries(model_antares
         PRIVATE
         infeasible_problem_analysis
         Antares::linear-problem-api
-        linear-problem-data-impl
+        Antares::linear-problem-data-impl
         Antares::linear-problem-mpsolver-impl
+        # modeler
+        Antares::optim-model-filler
+        Antares::antares-study-system-model
+        Boost::headers
 )
 
 target_include_directories(model_antares

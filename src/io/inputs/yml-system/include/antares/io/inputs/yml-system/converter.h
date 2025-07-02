@@ -30,7 +30,18 @@
 namespace Antares::IO::Inputs::SystemConverter
 {
 
-Study::SystemModel::System convert(const YmlSystem::System& ymlSystem,
-                                   const std::vector<Study::SystemModel::Library>& libraries);
+struct TwoFieldsOfSameRole final: std::invalid_argument
+{
+    using std::invalid_argument::invalid_argument;
+};
+
+struct ConnectingPortToItSelf final: std::invalid_argument
+{
+    using std::invalid_argument::invalid_argument;
+};
+
+ModelerStudy::SystemModel::System convert(
+  const YmlSystem::System& ymlSystem,
+  const std::vector<ModelerStudy::SystemModel::Library>& libraries);
 
 } // namespace Antares::IO::Inputs::SystemConverter

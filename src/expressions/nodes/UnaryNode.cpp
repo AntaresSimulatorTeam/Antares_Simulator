@@ -22,13 +22,13 @@
 
 namespace Antares::Expressions::Nodes
 {
-UnaryNode::UnaryNode(Node* n):
-    child_(n)
+UnaryNode::UnaryNode(Node* child):
+    ParentNode(child)
 {
 }
 
 Node* UnaryNode::child() const
 {
-    return child_;
+    return operator[](0);
 }
 } // namespace Antares::Expressions::Nodes

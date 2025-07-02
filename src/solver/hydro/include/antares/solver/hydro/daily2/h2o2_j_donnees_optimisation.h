@@ -27,7 +27,6 @@ extern "C"
 #endif
 
 #include "spx_definition_arguments.h"
-#include "spx_fonctions.h"
 
 #ifdef __CPLUSPLUS
 }
@@ -128,8 +127,6 @@ typedef struct
 /* Structure uniquement exploitee par l'optimisation (donc a ne pas acceder depuis l'exterieur) */
 typedef struct
 {
-    char LesCoutsOntEteInitialises; /* Vaut OUI ou NON */
-
     int NombreDeProblemes;
     std::vector<int> NbJoursDUnProbleme;
 
@@ -138,7 +135,7 @@ typedef struct
     std::vector<PROBLEME_LINEAIRE_ETENDU_PARTIE_FIXE> ProblemeLineaireEtenduPartieFixe;
     std::vector<PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE> ProblemeLineaireEtenduPartieVariable;
 
-    std::vector<PROBLEME_SPX*>
+    std::vector<PROBLEME_SPX_WRAPPER>
       ProblemeSpx; /* Il y en a 1 par reservoir. Un probleme couvre 1 mois */
 } PROBLEME_HYDRAULIQUE_ETENDU;
 

@@ -29,7 +29,7 @@ namespace Antares::Expressions::Nodes
 class Node;
 }
 
-namespace Antares::Study::SystemModel
+namespace Antares::ModelerStudy::SystemModel
 {
 
 // TODO: add unit tests for this class
@@ -41,7 +41,7 @@ public:
     explicit Expression(const std::string& value, Expressions::NodeRegistry root):
         value_(value),
         root_(std::move(root)),
-        empty_(false)
+        empty_(!root_.node)
     {
     }
 
@@ -66,4 +66,4 @@ private:
     bool empty_ = true;
 };
 
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel

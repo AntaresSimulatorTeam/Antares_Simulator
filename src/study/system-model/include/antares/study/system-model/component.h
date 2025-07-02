@@ -21,10 +21,15 @@
 #pragma once
 
 #include <map>
+#include <optional>
+
+#include <antares/expressions/nodes/PortFieldNode.h>
+#include <antares/expressions/visitors/EvaluationContext.h>
+#include "antares/study/system-model/connection.h"
 
 #include "model.h"
 
-namespace Antares::Study::SystemModel
+namespace Antares::ModelerStudy::SystemModel
 {
 
 /**
@@ -36,7 +41,7 @@ class ComponentData
 public:
     std::string id;
     const Model* model = nullptr;
-    std::map<std::string, double> parameter_values;
+    std::map<std::string, Expressions::Visitors::ParameterTypeAndValue> parameter_values;
     std::string scenario_group_id;
 
     void reset()
@@ -67,19 +72,20 @@ public:
         return data_.model;
     }
 
-    const std::map<std::string, double>& getParameterValues() const
+    const std::map<std::string, Expressions::Visitors::ParameterTypeAndValue>& getParameterValues()
+      const
     {
         return data_.parameter_values;
     }
 
-    double getParameterValue(const std::string& parameter_id) const
+    std::string getParameterValue(const std::string& parameter_id) const
     {
         if (!data_.parameter_values.contains(parameter_id))
         {
             throw std::invalid_argument("Parameter '" + parameter_id + "' not found in component '"
                                         + data_.id + "'");
         }
-        return data_.parameter_values.at(parameter_id);
+        return data_.parameter_values.at(parameter_id).value;
     }
 
     std::string getScenarioGroupId() const
@@ -87,11 +93,25 @@ public:
         return data_.scenario_group_id;
     }
 
+    void addComponentConnection(const std::string localPortId, ConnectionEnd&& connection);
+    std::vector<ConnectionEnd> componentConnectionsViaPort(const std::string& portId) const;
+
+    const Expressions::Nodes::Node* nodeAtPortField(const std::string& portId,
+                                                    const std::string& fieldId) const;
+
+    void addAreaConnection(const std::string& localPortId, const std::string& areaId);
+
+    std::optional<std::string> areaConnectedToPort(const std::string& portId) const;
+
+    const std::map<std::string, std::string>& portToAreaConnections() const;
+
 private:
     // Only ComponentBuilder is allowed to build Component instances
     friend class ComponentBuilder;
     explicit Component(const ComponentData& component_data);
     ComponentData data_;
+    std::map<std::string, std::vector<ConnectionEnd>> componentConnectionEnds_;
+    std::map<std::string, std::string> portToAreaConnections_;
 };
 
 class ComponentBuilder
@@ -99,7 +119,8 @@ class ComponentBuilder
 public:
     ComponentBuilder& withId(std::string_view id);
     ComponentBuilder& withModel(const Model* model);
-    ComponentBuilder& withParameterValues(std::map<std::string, double> parameter_values);
+    ComponentBuilder& withParameterValues(
+      std::map<std::string, Expressions::Visitors::ParameterTypeAndValue> parameter_values);
     ComponentBuilder& withScenarioGroupId(const std::string& scenario_group_id);
     Component build();
 
@@ -107,4 +128,4 @@ private:
     ComponentData data_;
 };
 
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel

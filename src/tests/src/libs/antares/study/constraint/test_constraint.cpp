@@ -307,4 +307,105 @@ BOOST_AUTO_TEST_CASE(BC_load_legacy_range)
     BOOST_CHECK_CLOSE((*bc_gt)->RHSTimeSeries()[0][8783], 0.4, 0.0001);
 }
 
+BOOST_AUTO_TEST_CASE(BindingConstraint_clusterCount)
+{
+    auto study = std::make_unique<Study>();
+    auto area = study->areaAdd("area1");
+    BindingConstraint bc;
+    // Add a thermal cluster to area1 and bc
+    // return the number of clusters of bc
+    const auto addClusterCountClusters = [&area, &bc](bool enabled, bool mustrun)
+    {
+        auto cluster = std::make_shared<ThermalCluster>(area);
+        cluster->enabled = enabled;
+        cluster->mustrun = mustrun;
+        area->thermal.list.addToCompleteList(cluster);
+        bc.weight(cluster.get(), 5);
+        return bc.clusterCount();
+    };
+
+    // enabled, not mustrun, should be counted
+    BOOST_CHECK_EQUAL(addClusterCountClusters(true, false), 1);
+    // enabled, mustrun should not be counted
+    BOOST_CHECK_EQUAL(addClusterCountClusters(true, true), 1);
+    // disabled, mustrun should not be counted
+    BOOST_CHECK_EQUAL(addClusterCountClusters(false, true), 1);
+    // disabled, not mustrun should not be counted
+    BOOST_CHECK_EQUAL(addClusterCountClusters(false, false), 1);
+}
+
+struct BindingConstraintGroupRepositoryFixture
+{
+    BindingConstraintsRepository bcRepo;
+    BindingConstraintGroupRepository groupRepo;
+
+    void addConstraint(const std::string& name, const std::string& group, uint TSwidth)
+    {
+        auto bc = bcRepo.add(name);
+        bc->group(group);
+        bc->RHSTimeSeries().resize(/*width*/ TSwidth, /*height, arbitrary*/ 3);
+    }
+};
+
+BOOST_FIXTURE_TEST_CASE(buildFrom_Empty, BindingConstraintGroupRepositoryFixture)
+{
+    BOOST_CHECK_EQUAL(bcRepo.size(), 0);
+    BOOST_CHECK_EQUAL(groupRepo.size(), 0);
+    BOOST_CHECK(groupRepo.buildFrom(bcRepo));
+}
+
+BOOST_FIXTURE_TEST_CASE(buildFrom_Single, BindingConstraintGroupRepositoryFixture)
+{
+    addConstraint("my-binding-constraint", "group1", 1);
+    BOOST_CHECK(groupRepo.buildFrom(bcRepo));
+}
+
+BOOST_FIXTURE_TEST_CASE(buildFrom_TwoSameWidth, BindingConstraintGroupRepositoryFixture)
+{
+    addConstraint("my-binding-constraint", "group1", 10);
+    addConstraint("other-binding-constraint", "group1", 10);
+    BOOST_CHECK(groupRepo.buildFrom(bcRepo));
+}
+
+BOOST_FIXTURE_TEST_CASE(buildFrom_TwoBCDifferentWidth_One, BindingConstraintGroupRepositoryFixture)
+{
+    addConstraint("my-binding-constraint", "group1", 10);
+    addConstraint("other-binding-constraint", "group1", 1);
+    BOOST_CHECK(groupRepo.buildFrom(bcRepo));
+}
+
+BOOST_FIXTURE_TEST_CASE(buildFrom_TwoBCDifferentWidth, BindingConstraintGroupRepositoryFixture)
+{
+    addConstraint("my-binding-constraint", "group1", 10);
+    addConstraint("other-binding-constraint", "group1", 20);
+    BOOST_CHECK(!groupRepo.buildFrom(bcRepo));
+}
+
+BOOST_FIXTURE_TEST_CASE(buildFrom_ThreeBCDifferentWidth_One,
+                        BindingConstraintGroupRepositoryFixture)
+{
+    addConstraint("my-binding-constraint", "group1", 10);
+    addConstraint("other-bc", "group1", 1);
+    addConstraint("another-bc", "group1", 10);
+    BOOST_CHECK(groupRepo.buildFrom(bcRepo));
+}
+
+BOOST_FIXTURE_TEST_CASE(buildFrom_MultipleGroups, BindingConstraintGroupRepositoryFixture)
+{
+    addConstraint("my-binding-constraint", "group1", 10);
+    addConstraint("other-bc", "group1", 10);
+    addConstraint("another-bc", "group2", 20);
+    BOOST_CHECK(groupRepo.buildFrom(bcRepo));
+}
+
+BOOST_FIXTURE_TEST_CASE(buildFrom_MultipleGroupsDifferentWidth,
+                        BindingConstraintGroupRepositoryFixture)
+{
+    addConstraint("my-binding-constraint", "group1", 10);
+    addConstraint("other-bc", "group1", 10);
+    addConstraint("another-bc", "group2", 20);
+    addConstraint("another-bc2", "group2", 25);
+    BOOST_CHECK(!groupRepo.buildFrom(bcRepo));
+}
+
 BOOST_AUTO_TEST_SUITE_END()

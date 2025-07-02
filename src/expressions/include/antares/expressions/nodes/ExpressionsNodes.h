@@ -19,6 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
+#include <antares/expressions/nodes/AllTimeSumNode.h>
 #include <antares/expressions/nodes/ComponentNode.h>
 #include <antares/expressions/nodes/DivisionNode.h>
 #include <antares/expressions/nodes/EqualNode.h>
@@ -33,4 +34,7 @@
 #include <antares/expressions/nodes/PortFieldSumNode.h>
 #include <antares/expressions/nodes/SubtractionNode.h>
 #include <antares/expressions/nodes/SumNode.h>
+#include <antares/expressions/nodes/TimeIndexNode.h>
+#include <antares/expressions/nodes/TimeShiftNode.h>
+#include <antares/expressions/nodes/TimeSumNode.h>
 #include <antares/expressions/nodes/VariableNode.h>

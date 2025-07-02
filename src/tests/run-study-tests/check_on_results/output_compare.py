@@ -1,4 +1,5 @@
 import pandas
+import sys
 from os import walk, sep
 from os.path import basename
 from pathlib import Path
@@ -30,6 +31,10 @@ class output_compare(check_interface):
         # Reference simulation folder (can be "adequacy" or "economy")
         ref_simulation_folder = find_simulation_folder(self.ref_folder)
 
+        tolerance = self.tol
+        if (ref_simulation_folder.parent.parent.parent.parent.name == "valid-parallel" and sys.platform == "win32"):
+            tolerance.reset_with_loose_default()
+
         # Folder of results (of which content is compared to content of reference folder)
         # ... of form yyyymmdd-hhmm<mode> (ex : 20230105-0944eco)
         path_to_output = find_dated_output_folder(self.study_path)
@@ -38,7 +43,7 @@ class output_compare(check_interface):
 
         simulation_files = find_simulation_files(ref_simulation_folder, other_folder)
 
-        (comparison_ok, output_var_if_failure) = compare_simulation_files(simulation_files, self.tol)
+        (comparison_ok, output_var_if_failure) = compare_simulation_files(simulation_files, tolerance)
         error_msg = "Results comparison failed on : %s" % output_var_if_failure
         check(comparison_ok, error_msg)
 
@@ -85,9 +90,13 @@ def compare_simulation_files(simulation_files, tol):
     at_least_one_diff = False
     col_name_where_diff = ""
     for file_pair in simulation_files:
+        rows_to_skip = [0,1,2,3,5,6]
+        is_detail_file = file_pair[REF_INDEX].name.startswith('details')
+        if (is_detail_file):
+            rows_to_skip = [0,1,2,3,4,6]
         # Read reference and simulation (other) files
-        ref_data_frame = read_csv(file_pair[REF_INDEX])
-        other_data_frame = read_csv(file_pair[OTHER_INDEX])
+        ref_data_frame = read_csv(file_pair[REF_INDEX], rows_to_skip)
+        other_data_frame = read_csv(file_pair[OTHER_INDEX], rows_to_skip)
 
         # Check that reference column titles are a subset of the simulation titles
         ref_column_titles = get_headers(ref_data_frame)

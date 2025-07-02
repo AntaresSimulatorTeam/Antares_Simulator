@@ -32,7 +32,7 @@ namespace Antares::Expressions::Visitors
 enum class TimeIndex : unsigned int;
 }
 
-namespace Antares::Study::SystemModel
+namespace Antares::ModelerStudy::SystemModel
 {
 
 /// A constraint linking variables and parameters of a model together
@@ -60,4 +60,4 @@ private:
     Expression expression_;
 };
 
-} // namespace Antares::Study::SystemModel
+} // namespace Antares::ModelerStudy::SystemModel

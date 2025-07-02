@@ -23,19 +23,18 @@
 namespace Antares::Expressions::Nodes
 {
 BinaryNode::BinaryNode(Node* left, Node* right):
-    leftOperand_(left),
-    rightOperand_(right)
+    ParentNode(left, right)
 {
 }
 
 Node* BinaryNode::right() const
 {
-    return rightOperand_;
+    return operator[](1);
 }
 
 Node* BinaryNode::left() const
 {
-    return leftOperand_;
+    return operator[](0);
 }
 
 } // namespace Antares::Expressions::Nodes

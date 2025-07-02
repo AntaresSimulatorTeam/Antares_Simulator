@@ -48,7 +48,6 @@ void initializeStudy(Study& study)
 
     study.parameters.intraModal = 0;
     study.parameters.interModal = 0;
-    study.parameters.timeSeriesToRefresh = 0;
 }
 
 class PublicStudy: public Study

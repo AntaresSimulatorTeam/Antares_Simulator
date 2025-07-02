@@ -25,17 +25,21 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include "antares/io/inputs/model-converter/convertorVisitor.h"
+#include "antares/io/inputs/yml-model/Library.h"
 #include "antares/study/system-model/system.h"
 
-using namespace Antares::Study::SystemModel;
+using namespace Antares::ModelerStudy::SystemModel;
+using namespace Antares::IO::Inputs::ModelConverter;
+using namespace Antares::IO::Inputs;
 
 struct SystemBuilderCreationFixture
 {
     SystemBuilder system_builder;
-    std::vector<Component> components;
+    std::unordered_map<std::string, Component> components;
 };
 
-static Component createComponent(std::string id)
+static std::pair<std::string, Component> createComponent(std::string id)
 {
     ModelBuilder model_builder;
     auto model = model_builder.withId("model").build();
@@ -44,7 +48,41 @@ static Component createComponent(std::string id)
                        .withModel(&model)
                        .withScenarioGroupId("scenario_group")
                        .build();
-    return component;
+    return {id, component};
+}
+
+static Antares::IO::Inputs::YmlModel::Variable GiveMeOneVar()
+{
+    return {.id = "x",
+            .lower_bound = "2",
+            .upper_bound = "4",
+            .variable_type = Antares::IO::Inputs::YmlModel::ValueType::CONTINUOUS,
+            .time_dependent = true,
+            .scenario_dependent = true};
+}
+
+// port1 sends and port2 receives
+static Model createModelWith2PortsOneWayExchange()
+{
+    ModelBuilder model_builder;
+    PortField port_field("field");
+
+    Port port1("port1", PortType("type", {port_field}));
+    Port port2("port2", PortType("type", {port_field}));
+    const auto var = GiveMeOneVar();
+    YmlModel::Model ymlmodel = {.variables = {var},
+                                .port_field_definitions = {{"port1", "field", var.id}}};
+
+    auto nodeRegistry = convertExpressionToNode(var.id, ymlmodel);
+    std::vector<PortFieldDefinition> portFieldDefinitions;
+    portFieldDefinitions.emplace_back(port1,
+                                      port_field,
+                                      Expression(var.id, std::move(nodeRegistry)));
+
+    return model_builder.withId("model")
+      .withPorts({port1, port2})
+      .withPortFieldDefinitions(std::move(portFieldDefinitions))
+      .build();
 }
 
 BOOST_AUTO_TEST_SUITE(_System_)
@@ -52,17 +90,90 @@ BOOST_AUTO_TEST_SUITE(_System_)
 BOOST_FIXTURE_TEST_CASE(nominal_build, SystemBuilderCreationFixture)
 {
     components = {createComponent("component1"), createComponent("component2")};
-    auto system = system_builder.withId("system").withComponents(components).build();
+    auto system = system_builder.withId("system").withComponents(std::move(components)).build();
     BOOST_CHECK_EQUAL(system.Id(), "system");
     BOOST_CHECK_EQUAL(system.Components().size(), 2);
     BOOST_CHECK_EQUAL(system.Components().at("component1").Id(), "component1");
     BOOST_CHECK_EQUAL(system.Components().at("component2").Id(), "component2");
 }
 
+Component buildComponent(const std::string& id, const Model& model)
+{
+    ComponentBuilder component_builder;
+    auto component = component_builder.withId(id)
+                       .withModel(&model)
+                       .withScenarioGroupId("scenario_group")
+                       .build();
+    return component;
+}
+
+BOOST_FIXTURE_TEST_CASE(nominal_build_with_connections_two_ports_one_way_exchange,
+                        SystemBuilderCreationFixture)
+{
+    auto model = createModelWith2PortsOneWayExchange();
+    auto comp1 = buildComponent("component1", model);
+    auto comp2 = buildComponent("component2", model);
+    components.emplace(comp1.Id(), comp1);
+    components.emplace(comp2.Id(), comp2);
+
+    auto system = system_builder.withId("system").withComponents(std::move(components)).build();
+
+    BOOST_CHECK_EQUAL(system.Id(), "system");
+    BOOST_CHECK_EQUAL(system.Components().size(), 2);
+}
+
+// one port1 sends 'rice' and receives 'corn', port2 does the opposite
+static Model createModelWith2Ports2WayExchange()
+{
+    ModelBuilder model_builder;
+    PortField rice("rice");
+    PortField corn("corn");
+
+    Port port1("port1", PortType("type", {rice, corn}));
+    Port port2("port2", PortType("type", {rice, corn}));
+    const auto var = GiveMeOneVar();
+    const Antares::IO::Inputs::YmlModel::Parameter p{.id = "corn_price",
+                                                     .time_dependent = false,
+                                                     .scenario_dependent = false};
+    Antares::IO::Inputs::YmlModel::Model ymlmodel = {
+      .parameters = {p},
+      .variables = {var},
+      .port_field_definitions = {{"port1", "rice", var.id}, {"port2", "corn", p.id}}};
+
+    auto nodeRegistryForVar = convertExpressionToNode(var.id, ymlmodel);
+    auto nodeRegistryForP = convertExpressionToNode(p.id, ymlmodel);
+    std::vector<PortFieldDefinition> portFieldDefinitions;
+    portFieldDefinitions.emplace_back(port1,
+                                      rice,
+                                      Expression(var.id, std::move(nodeRegistryForVar)));
+
+    portFieldDefinitions.emplace_back(port2, corn, Expression(p.id, std::move(nodeRegistryForP)));
+
+    return model_builder.withId("model")
+      .withPorts({port1, port2})
+      .withPortFieldDefinitions(std::move(portFieldDefinitions))
+      .build();
+}
+
+BOOST_FIXTURE_TEST_CASE(nominal_build_with_connections_two_ports_two_way_exchange,
+                        SystemBuilderCreationFixture)
+{
+    auto model = createModelWith2Ports2WayExchange();
+    auto comp1 = buildComponent("component1", model);
+    auto comp2 = buildComponent("component2", model);
+    components.emplace(comp1.Id(), comp1);
+    components.emplace(comp2.Id(), comp2);
+
+    auto system = system_builder.withId("system").withComponents(std::move(components)).build();
+
+    BOOST_CHECK_EQUAL(system.Id(), "system");
+    BOOST_CHECK_EQUAL(system.Components().size(), 2);
+}
+
 BOOST_FIXTURE_TEST_CASE(fail_on_no_id, SystemBuilderCreationFixture)
 {
     components = {createComponent("component1"), createComponent("component2")};
-    system_builder.withComponents(components);
+    system_builder.withComponents(std::move(components));
     BOOST_CHECK_EXCEPTION(system_builder.build(),
                           std::invalid_argument,
                           checkMessage("A system can't have an empty id"));
@@ -78,22 +189,35 @@ BOOST_FIXTURE_TEST_CASE(fail_on_no_component1, SystemBuilderCreationFixture)
 
 BOOST_FIXTURE_TEST_CASE(fail_on_no_component2, SystemBuilderCreationFixture)
 {
-    system_builder.withId("system").withComponents(components);
+    system_builder.withId("system").withComponents(std::move(components));
     BOOST_CHECK_EXCEPTION(system_builder.build(),
                           std::invalid_argument,
                           checkMessage("A system must contain at least one component"));
 }
 
-BOOST_FIXTURE_TEST_CASE(fail_on_components_with_same_id, SystemBuilderCreationFixture)
+BOOST_AUTO_TEST_CASE(PortFieldLessOperator)
 {
-    components = {createComponent("component1"),
-                  createComponent("component2"),
-                  createComponent("component2")};
-    system_builder.withId("system").withComponents({components});
-    BOOST_CHECK_EXCEPTION(system_builder.build(),
-                          std::invalid_argument,
-                          checkMessage("System has at least two components with the same id "
-                                       "('component2'), this is not supported"));
+    BOOST_CHECK(PortField("A") < PortField("B"));
+}
+
+BOOST_AUTO_TEST_CASE(PortFieldeEqualityOperator)
+{
+    BOOST_CHECK_EQUAL(PortField("A") == PortField("B"), false);
+    BOOST_CHECK(PortField("A") == PortField("A"));
+}
+
+BOOST_AUTO_TEST_CASE(PrintSenderFieldRole)
+{
+    std::ostringstream os;
+    os << FieldRole::Sender;
+    BOOST_CHECK_EQUAL(os.str(), "Sender");
+}
+
+BOOST_AUTO_TEST_CASE(PrintReceiverFieldRole)
+{
+    std::ostringstream os;
+    os << FieldRole::Receiver;
+    BOOST_CHECK_EQUAL(os.str(), "Receiver");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

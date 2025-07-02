@@ -30,6 +30,23 @@
 
 using namespace Yuni;
 
+namespace
+{
+template<class T>
+static void reset(T& v, Antares::Data::Study& study)
+{
+    const uint areaCount = study.areas.size();
+
+    v.clear();
+    v.resize(areaCount);
+    for (uint i = 0; i != areaCount; ++i)
+    {
+        v[i].attachArea(study.areas.byIndex[i]);
+        v[i].reset(study);
+    }
+}
+} // namespace
+
 namespace Antares::Data::ScenarioBuilder
 {
 Rules::Rules(Study& study):
@@ -57,6 +74,8 @@ void Rules::saveToINIFile(Yuni::IO::File::Stream& file) const
             thermal[i].saveToINIFile(study_, file);
             renewable[i].saveToINIFile(study_, file);
             linksNTC[i].saveToINIFile(study_, file);
+            shortTermStorageInflows[i].saveToINIFile(file);
+            shortTermStorageAdditionalConstraints[i].saveToINIFile(file);
         }
         // hydro levels
         hydroInitialLevels.saveToINIFile(study_, file);
@@ -77,39 +96,22 @@ bool Rules::reset()
     wind.reset(study_);
 
     // Thermal
-    thermal.clear();
-    thermal.resize(pAreaCount);
-
-    for (uint i = 0; i != pAreaCount; ++i)
-    {
-        thermal[i].attachArea(study_.areas.byIndex[i]);
-        thermal[i].reset(study_);
-    }
+    ::reset(thermal, study_);
 
     // Renewable
-    renewable.clear();
-    renewable.resize(pAreaCount);
-
-    for (uint i = 0; i != pAreaCount; ++i)
-    {
-        renewable[i].attachArea(study_.areas.byIndex[i]);
-        renewable[i].reset(study_);
-    }
+    ::reset(renewable, study_);
 
     hydroInitialLevels.reset(study_);
     hydroFinalLevels.reset(study_);
 
     // links NTC
-    linksNTC.clear();
-    linksNTC.resize(pAreaCount);
-
-    for (uint i = 0; i != pAreaCount; ++i)
-    {
-        linksNTC[i].attachArea(study_.areas.byIndex[i]);
-        linksNTC[i].reset(study_);
-    }
+    ::reset(linksNTC, study_);
 
     binding_constraints.reset(study_);
+
+    ::reset(shortTermStorageInflows, study_);
+    ::reset(shortTermStorageAdditionalConstraints, study_);
+
     return true;
 }
 
@@ -124,7 +126,9 @@ Data::Area* Rules::getArea(const AreaName& areaname, bool updaterMode)
     return area;
 }
 
-bool Rules::readThermalCluster(const AreaName::Vector& splitKey, String value, bool updaterMode)
+bool Rules::readThermalCluster(const AreaName::Vector& splitKey,
+                               const String& value,
+                               bool updaterMode)
 {
     const AreaName& areaname = splitKey[1];
     const uint year = splitKey[2].to<uint>();
@@ -159,7 +163,9 @@ bool Rules::readThermalCluster(const AreaName::Vector& splitKey, String value, b
     return true;
 }
 
-bool Rules::readRenewableCluster(const AreaName::Vector& splitKey, String value, bool updaterMode)
+bool Rules::readRenewableCluster(const AreaName::Vector& splitKey,
+                                 const String& value,
+                                 bool updaterMode)
 {
     const AreaName& areaname = splitKey[1];
     const uint year = splitKey[2].to<uint>();
@@ -201,7 +207,7 @@ bool Rules::readRenewableCluster(const AreaName::Vector& splitKey, String value,
     return true;
 }
 
-bool Rules::readLoad(const AreaName::Vector& splitKey, String value, bool updaterMode)
+bool Rules::readLoad(const AreaName::Vector& splitKey, const String& value, bool updaterMode)
 {
     const AreaName& areaname = splitKey[1];
     const uint year = splitKey[2].to<uint>();
@@ -217,7 +223,7 @@ bool Rules::readLoad(const AreaName::Vector& splitKey, String value, bool update
     return true;
 }
 
-bool Rules::readWind(const AreaName::Vector& splitKey, String value, bool updaterMode)
+bool Rules::readWind(const AreaName::Vector& splitKey, const String& value, bool updaterMode)
 {
     const uint year = splitKey[2].to<uint>();
     const AreaName& areaname = splitKey[1];
@@ -233,7 +239,7 @@ bool Rules::readWind(const AreaName::Vector& splitKey, String value, bool update
     return true;
 }
 
-bool Rules::readHydro(const AreaName::Vector& splitKey, String value, bool updaterMode)
+bool Rules::readHydro(const AreaName::Vector& splitKey, const String& value, bool updaterMode)
 {
     const uint year = splitKey[2].to<uint>();
     const AreaName& areaname = splitKey[1];
@@ -249,7 +255,7 @@ bool Rules::readHydro(const AreaName::Vector& splitKey, String value, bool updat
     return true;
 }
 
-bool Rules::readSolar(const AreaName::Vector& splitKey, String value, bool updaterMode)
+bool Rules::readSolar(const AreaName::Vector& splitKey, const String& value, bool updaterMode)
 {
     const uint year = splitKey[2].to<uint>();
     const AreaName& areaname = splitKey[1];
@@ -265,7 +271,9 @@ bool Rules::readSolar(const AreaName::Vector& splitKey, String value, bool updat
     return true;
 }
 
-bool Rules::readInitialHydroLevels(const AreaName::Vector& splitKey, String value, bool updaterMode)
+bool Rules::readInitialHydroLevels(const AreaName::Vector& splitKey,
+                                   const String& value,
+                                   bool updaterMode)
 {
     const uint year = splitKey[2].to<uint>();
     const AreaName& areaname = splitKey[1];
@@ -281,7 +289,9 @@ bool Rules::readInitialHydroLevels(const AreaName::Vector& splitKey, String valu
     return true;
 }
 
-bool Rules::readFinalHydroLevels(const AreaName::Vector& splitKey, String value, bool updaterMode)
+bool Rules::readFinalHydroLevels(const AreaName::Vector& splitKey,
+                                 const String& value,
+                                 bool updaterMode)
 {
     const uint year = splitKey[2].to<uint>();
     const AreaName& areaname = splitKey[1];
@@ -311,7 +321,7 @@ Data::AreaLink* Rules::getLink(const AreaName& fromAreaName,
     return link;
 }
 
-bool Rules::readLink(const AreaName::Vector& splitKey, String value, bool updaterMode)
+bool Rules::readLink(const AreaName::Vector& splitKey, const String& value, bool updaterMode)
 {
     const AreaName& fromAreaName = splitKey[1];
     const AreaName& toAreaName = splitKey[2];
@@ -337,7 +347,7 @@ bool Rules::readLink(const AreaName::Vector& splitKey, String value, bool update
 
     uint val = fromStringToTSnumber(value);
     fromArea = link->from;
-    linksNTC[fromArea->index].setDataForLink(link, year, val);
+    linksNTC[fromArea->index].setTSnumber(link, year, val);
     return true;
 }
 
@@ -353,7 +363,7 @@ bool Rules::checkGroupExists(const std::string& groupName) const
     return true;
 }
 
-bool Rules::readBindingConstraints(const AreaName::Vector& splitKey, String value)
+bool Rules::readBindingConstraints(const AreaName::Vector& splitKey, const String& value)
 {
     std::string group_name = splitKey[1].c_str();
     auto year = std::stoi(splitKey[2].c_str());
@@ -368,7 +378,97 @@ bool Rules::readBindingConstraints(const AreaName::Vector& splitKey, String valu
     return true;
 }
 
-bool Rules::readLine(const AreaName::Vector& splitKey, String value, bool updaterMode)
+ShortTermStorage::STStorageCluster* getShortTermStorage(Area* area,
+                                                        const std::string& stStorageClusterName)
+{
+    auto stStorageCluster = std::ranges::find_if(area->shortTermStorage.storagesByIndex,
+                                                 [&stStorageClusterName](
+                                                   const ShortTermStorage::STStorageCluster& s)
+                                                 { return s.id == stStorageClusterName; });
+    if (stStorageCluster == area->shortTermStorage.storagesByIndex.end())
+    {
+        logs.warning() << "[scenario-builder] In area '" << area->name
+                       << "' the short-term storage cluster '" << stStorageClusterName
+                       << "' does not exist";
+        return nullptr;
+    }
+    // iterator -> raw pointer
+    return &(*stStorageCluster);
+}
+
+ShortTermStorage::AdditionalConstraints* getShortTermStorageAdditionalConstraint(
+  ShortTermStorage::STStorageCluster* sts,
+  const std::string& constraintName)
+{
+    if (!sts)
+    {
+        logs.warning() << "[scenario-builder] Short-term storage does not exist";
+        return nullptr;
+    }
+    auto constraint = std::ranges::find_if(
+      sts->additionalConstraints,
+      [&constraintName](std::shared_ptr<ShortTermStorage::AdditionalConstraints> c)
+      { return c->name == constraintName; });
+    if (constraint == sts->additionalConstraints.end())
+    {
+        logs.warning() << "[scenario-builder] In short-term storage '" << sts->id
+                       << "' the additional constraint '" << constraintName << "' does not exist";
+        return nullptr;
+    }
+    // iterator -> raw pointer
+    return constraint->get();
+}
+
+bool Rules::readShortTermStorageInflows(const AreaName::Vector& splitKey,
+                                        const String& value,
+                                        bool updaterMode)
+{
+    const AreaName& areaName = splitKey[1];
+
+    Data::Area* area = getArea(areaName, updaterMode);
+    if (!area)
+    {
+        return false;
+    }
+    const uint year = splitKey[2].to<uint>();
+
+    const std::string stStorageClusterName = splitKey[3];
+    if (auto* sts = getShortTermStorage(area, stStorageClusterName))
+    {
+        shortTermStorageInflows[area->index].setTSnumber(sts, year, fromStringToTSnumber(value));
+        return true;
+    }
+    return false;
+}
+
+bool Rules::readShortTermStorageAdditionalConstraints(const AreaName::Vector& splitKey,
+                                                      const String& value,
+                                                      bool updaterMode)
+{
+    const AreaName& areaName = splitKey[1];
+
+    Data::Area* area = getArea(areaName, updaterMode);
+    if (!area)
+    {
+        return false;
+    }
+    const uint year = splitKey[2].to<uint>();
+
+    const std::string stStorageClusterName = splitKey[3];
+    if (auto* sts = getShortTermStorage(area, stStorageClusterName))
+    {
+        const std::string constraintName = splitKey[4];
+        if (auto* ct = getShortTermStorageAdditionalConstraint(sts, constraintName))
+        {
+            shortTermStorageAdditionalConstraints[area->index]
+              .setTSnumber(ct, year, fromStringToTSnumber(value));
+            return true;
+        }
+    }
+    return false;
+}
+
+bool Rules::readLine(const AreaName::Vector& splitKey, const String& value, bool updaterMode)
 {
     if (splitKey.size() <= 2)
     {
@@ -421,6 +521,15 @@ bool Rules::readLine(const AreaName::Vector& splitKey, String value, bool update
     {
         return readBindingConstraints(splitKey, value);
     }
+    else if (kind_of_scenario == "sts")
+    {
+        return readShortTermStorageInflows(splitKey, value, updaterMode);
+    }
+    else if (kind_of_scenario == "sta")
+    {
+        return readShortTermStorageAdditionalConstraints(splitKey, value, updaterMode);
+    }
+
     return false;
 }
 
@@ -438,6 +547,9 @@ bool Rules::apply()
             returned_status = thermal[i].apply(study_) && returned_status;
             returned_status = renewable[i].apply(study_) && returned_status;
             returned_status = linksNTC[i].apply(study_) && returned_status;
+            returned_status = shortTermStorageInflows[i].apply(study_) && returned_status;
+            returned_status = shortTermStorageAdditionalConstraints[i].apply(study_)
+                              && returned_status;
         }
         returned_status = hydroInitialLevels.apply(study_) && returned_status;
         returned_status = hydroFinalLevels.apply(study_) && returned_status;

@@ -38,9 +38,6 @@ bool Generate(Data::Study& study);
 
 void StoreTimeSeriesNumbersIntoOuput(Data::Study& study, IResultWriter& resultWriter);
 
-// Exported for unit-tests
-bool checkAllElementsIdenticalOrOne(std::vector<uint> w);
-
 } // namespace Antares::Solver::TimeSeriesNumbers
 
 #endif // __SOLVER_SIMULATION_GENERATE_TIMESERIES_H__

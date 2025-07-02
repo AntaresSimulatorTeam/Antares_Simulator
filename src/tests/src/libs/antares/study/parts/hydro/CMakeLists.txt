@@ -13,3 +13,10 @@ add_boost_test(test-hydro-series
   LIBS
   Antares::study
   test_utils_unit)
+
+# Hydro series
+add_boost_test(test-hydro-common
+  SRC test-hydro-common.cpp
+  LIBS
+  Antares::study
+  test_utils_unit)

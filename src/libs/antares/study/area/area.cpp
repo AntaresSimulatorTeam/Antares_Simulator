@@ -229,8 +229,7 @@ void Area::resetToDefaultValues()
     miscGen.reset(fhhMax, HOURS_PER_YEAR, true);
     // reserves
     reserves.reset(fhrMax, HOURS_PER_YEAR, true);
-
-    // invalidate the whole area
+    //  invalidate the whole area
     invalidateJIT = true;
 }
 
@@ -249,6 +248,7 @@ void Area::resizeAllTimeseriesNumbers(uint nbYears)
     }
     thermal.resizeAllTimeseriesNumbers(nbYears);
     renewable.resizeAllTimeseriesNumbers(nbYears);
+    shortTermStorage.resizeTimeseriesNumbers(nbYears);
 }
 
 bool Area::thermalClustersMinStablePowerValidity(std::vector<YString>& output) const

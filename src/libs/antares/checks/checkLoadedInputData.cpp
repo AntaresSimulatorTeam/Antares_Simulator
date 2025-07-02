@@ -20,7 +20,6 @@
 */
 
 #include <antares/checks/checkLoadedInputData.h>
-#include <antares/exception/InitializationError.hpp>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/series/series.h>
 #include <antares/study/area/area.h>
@@ -29,15 +28,6 @@
 
 namespace Antares::Check
 {
-void checkSolverMILPincompatibility(Antares::Data::UnitCommitmentMode ucMode,
-                                    const std::string& solverName)
-{
-    using namespace Antares::Data;
-    if (ucMode == UnitCommitmentMode::ucMILP && solverName == "sirius")
-    {
-        throw Error::IncompatibleMILPOrtoolsSolver();
-    }
-}
 
 void checkStudyVersion(const AnyString& optStudyFolder)
 {
@@ -102,17 +92,15 @@ bool areasThermalClustersMinStablePowerValidity(const Antares::Data::AreaList& a
 {
     YString areaname = "";
     bool resultat = true;
-    auto endarea = areas.end();
     int count = 0;
-
-    for (auto areait = areas.begin(); areait != endarea; areait++)
+    for (const auto& [_, area]: areas)
     {
-        areaname = areait->second->name;
+        areaname = area->name;
         logs.debug() << "areaname : " << areaname;
 
         std::vector<YString> clusternames;
 
-        if (!areait->second->thermalClustersMinStablePowerValidity(clusternames))
+        if (!area->thermalClustersMinStablePowerValidity(clusternames))
         {
             for (auto it = clusternames.begin(); it != clusternames.end(); it++)
             {

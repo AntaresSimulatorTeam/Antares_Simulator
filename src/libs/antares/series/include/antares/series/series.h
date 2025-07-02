@@ -74,7 +74,9 @@ public:
      ** \param average used to average timeseries
      ** \return A non-zero value if the operation succeeded, 0 otherwise
      */
-    bool loadFromFile(const std::filesystem::path& path, const bool average);
+    bool loadFromFile(const std::filesystem::path& path,
+                      const bool average,
+                      unsigned options = Matrix<>::optNone);
     /*!
      ** \brief Save time series to a file
      **

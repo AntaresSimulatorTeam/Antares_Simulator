@@ -82,7 +82,10 @@ bool Study::importTimeseriesIntoInput()
             {
                 logs.info() << "Importing hydro timeseries : " << areaName;
                 buffer.clear() << folderInput << SEP << "hydro" << SEP << "series";
-                ret = area->hydro.series->saveToFolder(area->id, buffer) && ret;
+                ret = area->hydro.series->saveToFolder(area->id,
+                                                       buffer,
+                                                       parameters.compatibility.hydroPmax)
+                      && ret;
                 ++progression;
             }
         }

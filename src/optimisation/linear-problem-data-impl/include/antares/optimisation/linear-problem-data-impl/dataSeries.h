@@ -2,6 +2,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 namespace Antares::Optimisation::LinearProblemDataImpl
 {
@@ -9,12 +10,14 @@ namespace Antares::Optimisation::LinearProblemDataImpl
 class IDataSeries
 {
 public:
-    IDataSeries(std::string name):
+    virtual ~IDataSeries() = default;
+
+    explicit IDataSeries(std::string name):
         name_(std::move(name))
     {
     }
 
-    virtual double getData(unsigned int rank, unsigned int hour) = 0;
+    virtual double getData(unsigned int rank, unsigned int hour) const = 0;
 
     std::string name() const
     {

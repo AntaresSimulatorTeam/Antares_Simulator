@@ -79,11 +79,9 @@ void StudyInfoCollector::enabledThermalClustersCountToFileContent(FileContent& f
     // Computing the number of enabled thermal clusters
     unsigned int nbEnabledThermalClusters = 0;
 
-    auto end = study_.areas.end();
-    for (auto i = study_.areas.begin(); i != end; ++i)
+    for (const auto& [_, area]: study_.areas)
     {
-        const Area& area = *(i->second);
-        nbEnabledThermalClusters += area.thermal.list.enabledAndNotMustRunCount();
+        nbEnabledThermalClusters += area->thermal.list.enabledAndNotMustRunCount();
     }
 
     // Adding an item related to number of enabled thermal clusters to the file content
@@ -145,8 +143,11 @@ void StudyInfoCollector::solverVersionToFileContent(FileContent& file_content)
 
 void StudyInfoCollector::ORToolsSolver(FileContent& file_content)
 {
-    std::string solverName = study_.parameters.optOptions.ortoolsSolver;
-    file_content.addItemToSection("study", "ortools solver", solverName);
+    std::string linearSolverName = study_.parameters.optOptions.firstOptimOptions.solverName;
+    file_content.addItemToSection("study", "linear solver", linearSolverName);
+
+    std::string quadraticSolverName = study_.parameters.optOptions.quadraticOptimOptions.solverName;
+    file_content.addItemToSection("study", "quadratic solver", quadraticSolverName);
 }
 
 // Collecting data optimization problem
