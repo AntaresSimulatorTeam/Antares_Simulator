@@ -487,8 +487,8 @@ All IDs in the model library and system file must respect the following:
 ### Scenario builder
 
 The **modeler-scenariobuilder.dat** file is used to map scenarios to data series.
-Each line consists of the association of a groupe name and Monte-carlo year -refered as _year_- to a data series ID
--refered as _chronicle_-.
+Each line consists of the association of a groupe name and Monte-carlo year -referred to as _year_- to a data series ID
+-referred to as _chronicle_-.
 
 Example:
 
@@ -502,10 +502,10 @@ hydro_group, 3 = 7
 * For hydro_group the year 3 is associated with the chronicle 7.
 
 
-* A _year_ is a number starting at 1.
-* A _chronicle_ is a number starting at 0, and refers to the zero-based colonne number in the coresponding data
-  series file for a group.
-* Groupe ID is the file name without the extension of the data series file.
+* A _year_ is a number, starting at 1.
+* A _chronicle_ is a number, starting at 0, and refers to the zero-based column number in the corresponding data
+  series file.
+* Group IDs refer to groups defined in the [components](#components) description.
 
 ## Full examples
 

@@ -31,7 +31,7 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual std::any visitScenario(ScenarioBuilderParser::ScenarioContext *ctx) override {
+  virtual std::any visitChronicle(ScenarioBuilderParser::ChronicleContext *ctx) override {
     return visitChildren(ctx);
   }
 

@@ -1,4 +1,4 @@
-#Modeler-lib-2 is a temp name and will be corrected in furture commits
+#TODO Modeler-lib-2 is a temp name and will be corrected in future commits
 add_library(modeler-lib-2)
 add_library(Antares::modeler-lib-2 ALIAS modeler-lib-2)
 target_sources(modeler-lib-2

@@ -52,7 +52,7 @@ void scenariobuilderParserInitialize() {
 #endif
   auto staticData = std::make_unique<ScenarioBuilderParserStaticData>(
     std::vector<std::string>{
-      "rules", "line", "group", "year", "scenario"
+      "rules", "line", "group", "year", "chronicle"
     },
     std::vector<std::string>{
       "", "','", "", "", "", "'='"
@@ -208,8 +208,8 @@ tree::TerminalNode* ScenarioBuilderParser::LineContext::EQUALS() {
   return getToken(ScenarioBuilderParser::EQUALS, 0);
 }
 
-ScenarioBuilderParser::ScenarioContext* ScenarioBuilderParser::LineContext::scenario() {
-  return getRuleContext<ScenarioBuilderParser::ScenarioContext>(0);
+ScenarioBuilderParser::ChronicleContext* ScenarioBuilderParser::LineContext::chronicle() {
+  return getRuleContext<ScenarioBuilderParser::ChronicleContext>(0);
 }
 
 
@@ -247,7 +247,7 @@ ScenarioBuilderParser::LineContext* ScenarioBuilderParser::line() {
     setState(20);
     match(ScenarioBuilderParser::EQUALS);
     setState(21);
-    scenario();
+    chronicle();
    
   }
   catch (RecognitionException &e) {
@@ -357,32 +357,32 @@ ScenarioBuilderParser::YearContext* ScenarioBuilderParser::year() {
   return _localctx;
 }
 
-//----------------- ScenarioContext ------------------------------------------------------------------
+//----------------- ChronicleContext ------------------------------------------------------------------
 
-ScenarioBuilderParser::ScenarioContext::ScenarioContext(ParserRuleContext *parent, size_t invokingState)
+ScenarioBuilderParser::ChronicleContext::ChronicleContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-tree::TerminalNode* ScenarioBuilderParser::ScenarioContext::INT() {
+tree::TerminalNode* ScenarioBuilderParser::ChronicleContext::INT() {
   return getToken(ScenarioBuilderParser::INT, 0);
 }
 
 
-size_t ScenarioBuilderParser::ScenarioContext::getRuleIndex() const {
-  return ScenarioBuilderParser::RuleScenario;
+size_t ScenarioBuilderParser::ChronicleContext::getRuleIndex() const {
+  return ScenarioBuilderParser::RuleChronicle;
 }
 
 
-std::any ScenarioBuilderParser::ScenarioContext::accept(tree::ParseTreeVisitor *visitor) {
+std::any ScenarioBuilderParser::ChronicleContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<ScenarioBuilderVisitor*>(visitor))
-    return parserVisitor->visitScenario(this);
+    return parserVisitor->visitChronicle(this);
   else
     return visitor->visitChildren(this);
 }
 
-ScenarioBuilderParser::ScenarioContext* ScenarioBuilderParser::scenario() {
-  ScenarioContext *_localctx = _tracker.createInstance<ScenarioContext>(_ctx, getState());
-  enterRule(_localctx, 8, ScenarioBuilderParser::RuleScenario);
+ScenarioBuilderParser::ChronicleContext* ScenarioBuilderParser::chronicle() {
+  ChronicleContext *_localctx = _tracker.createInstance<ChronicleContext>(_ctx, getState());
+  enterRule(_localctx, 8, ScenarioBuilderParser::RuleChronicle);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {

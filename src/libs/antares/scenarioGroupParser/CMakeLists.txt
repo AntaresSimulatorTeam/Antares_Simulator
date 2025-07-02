@@ -13,6 +13,7 @@ target_include_directories(scenario-group-parser
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
+# TODO: remove this dependency to fmt when possible
 find_package(fmt REQUIRED)
 target_link_libraries(scenario-group-parser
         PRIVATE

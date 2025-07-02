@@ -34,57 +34,63 @@ namespace
 const std::filesystem::path SCENARIO_BUILDER_PATH = "input/data-series/modeler-scenariobuilder.dat";
 }
 
+Optimization::ScenarioGroupRepository parseScenarioGroupRepository(std::ifstream file)
+{
+    Optimization::ScenarioGroupRepository scenarioGroupRepository;
+    ScenarioGroupParser parser;
+    std::map<std::string, std::unique_ptr<Optimisation::LinearProblemDataImpl::Scenario>>
+      alreadyCreatedScenarios;
+    std::string line;
+    while (std::getline(file, line))
+    {
+        if (line.empty() || line[0] == '#')
+        {
+            continue; // Skip empty lines and comments
+        }
+        try
+        {
+            auto parsedLine = parser.parseLine(line);
+            if (!alreadyCreatedScenarios.contains(parsedLine.groupName))
+            {
+                alreadyCreatedScenarios[parsedLine.groupName] = std::make_unique<
+                  Optimisation::LinearProblemDataImpl::Scenario>(parsedLine.groupName);
+            }
+            alreadyCreatedScenarios[parsedLine.groupName]->setChronicle(parsedLine.year,
+                                                                        parsedLine.chronicle);
+        }
+        catch (const std::exception& e)
+        {
+            logs.error() << "Error parsing line: " << line << " - "
+                         << e.what(); // TODO: stack errors and log all ?
+        }
+    }
+    for (auto& [groupId, scenario]: alreadyCreatedScenarios)
+    {
+        scenarioGroupRepository.addScenario(groupId, std::move(scenario));
+    }
+    file.close();
+    return scenarioGroupRepository;
+}
+
 Optimization::ScenarioGroupRepository loadScenarioGroupRepository(
   const std::filesystem::path& studyPath)
 {
     try
     {
         // Read file line by line and add scenario for each line
-        Optimization::ScenarioGroupRepository scenarioGroupRepository;
+
         auto file_path = studyPath / SCENARIO_BUILDER_PATH;
         if (!std::filesystem::exists(file_path))
         {
             logs.info() << "No scenario builder found, skipping scenario groups loading.";
-            return scenarioGroupRepository;
+            return {};
         }
         std::ifstream file(file_path);
         if (!file.is_open())
         {
             throw std::runtime_error(fmt::format("Could not open {}", file_path.string()));
         }
-        ScenarioGroupParser parser;
-        std::map<std::string, std::unique_ptr<Optimisation::LinearProblemDataImpl::Scenario>>
-          alreadyCreatedScenarios;
-        std::string line;
-        while (std::getline(file, line))
-        {
-            if (line.empty() || line[0] == '#')
-            {
-                continue; // Skip empty lines and comments
-            }
-            try
-            {
-                auto parsedLine = parser.parseLine(line);
-                if (!alreadyCreatedScenarios.contains(parsedLine.groupName))
-                {
-                    alreadyCreatedScenarios[parsedLine.groupName] = std::make_unique<
-                      Optimisation::LinearProblemDataImpl::Scenario>(parsedLine.groupName);
-                }
-                alreadyCreatedScenarios[parsedLine.groupName]->setChronicle(parsedLine.year,
-                                                                            parsedLine.chronicle);
-            }
-            catch (const std::exception& e)
-            {
-                logs.error() << "Error parsing line: " << line << " - "
-                             << e.what(); // TODO: stack errors and log all ?
-                continue;                 // Skip lines that cannot be parsed
-            }
-        }
-        for (auto& [groupId, scenario]: alreadyCreatedScenarios)
-        {
-            scenarioGroupRepository.addScenario(groupId, std::move(scenario));
-        }
-        return scenarioGroupRepository;
+        return parseScenarioGroupRepository(std::move(file));
     }
     catch (const std::exception& e)
     {

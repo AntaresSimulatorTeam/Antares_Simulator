@@ -40,8 +40,8 @@ public:
     {
         auto group = std::any_cast<std::string>(visitGroup(ctx->group()));
         auto year = std::any_cast<int>(visitYear(ctx->year()));
-        auto scenario = std::any_cast<int>(visitScenario(ctx->scenario()));
-        return ScenarioGroupParser::Line{.groupName = group, .year = year, .chronicle = scenario};
+        auto chronicle = std::any_cast<int>(visitChronicle(ctx->chronicle()));
+        return ScenarioGroupParser::Line{.groupName = group, .year = year, .chronicle = chronicle};
     }
 
     std::any visitGroup(ScenarioBuilderParser::GroupContext* ctx) override
@@ -57,7 +57,7 @@ public:
         return year;
     }
 
-    std::any visitScenario(ScenarioBuilderParser::ScenarioContext* ctx) override
+    std::any visitChronicle(ScenarioBuilderParser::ChronicleContext* ctx) override
     {
         auto scenarioText = ctx->getText();
         int scenario = std::stoi(scenarioText);

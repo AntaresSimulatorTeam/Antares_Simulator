@@ -22,10 +22,10 @@
 grammar ScenarioBuilder;
 
 rules       : line+ EOF ;
-line        : group COMMA year EQUALS scenario ;
+line        : group COMMA year EQUALS chronicle ;
 group       : IDENTIFIER ;
 year        : INT ;
-scenario    : INT ;
+chronicle   : INT ;
 
 COMMA      : ',' ;
 INT        : [0-9]+ ;
