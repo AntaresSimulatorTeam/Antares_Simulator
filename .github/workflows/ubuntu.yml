@@ -152,7 +152,7 @@ jobs:
         if: ${{ success() }}
         uses: actions/upload-artifact@v4
         with:
-          name: targz
+          name: ubuntu-targz
           path: _build/*.tar.gz
 
       - name: Run API tests
