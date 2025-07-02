@@ -77,7 +77,6 @@ protected:
               uint numSpace,
               yearRandomNumbers& randomForYear,
               std::list<uint>& failedWeekList,
-              bool isFirstPerformedYearOfSimulation,
               const HYDRO_VENTILATION_RESULTS&,
               OptimizationStatisticsWriter& optWriter,
               const Antares::Data::Area::ScratchMap& scratchmap);

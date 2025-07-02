@@ -492,12 +492,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                 Xmax[var] = LINFINI_ANTARES;
 
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
-
-                //	Note: if there were a single optimization run instead of two; the following
-                // could be used: 	adresseDuResultat =
-                //&(problemeHebdo->CaracteristiquesHydrauliques[pays].LevelForTimeInterval);
-                //	AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
-
                 AdresseOuPlacerLaValeurDesCoutsReduits[var] = nullptr;
             }
             for (uint nblayer = 0; nblayer < 100; nblayer++)

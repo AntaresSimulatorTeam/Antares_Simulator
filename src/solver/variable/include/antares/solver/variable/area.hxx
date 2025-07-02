@@ -475,13 +475,12 @@ void Areas<NextT>::yearEnd(uint year, uint numSpace)
 }
 
 template<class NextT>
-void Areas<NextT>::computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
-                                  unsigned int nbYearsForCurrentSummary)
+void Areas<NextT>::computeSummary(unsigned int year, unsigned int numSpace)
 {
     for (uint i = 0; i != pAreaCount; ++i)
     {
         // Broadcast to all areas
-        pAreas[i].computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
+        pAreas[i].computeSummary(year, numSpace);
     }
 }
 

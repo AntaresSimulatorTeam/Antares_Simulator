@@ -306,19 +306,15 @@ public:
     }
 
     template<class V>
-    void computeSpatialAggregatesSummary(V& allVars,
-                                         std::map<unsigned int, unsigned int>& numSpaceToYear,
-                                         uint nbYearsForCurrentSummary)
+    void computeSpatialAggregatesSummary(V& allVars, unsigned int year, unsigned int numSpace)
     {
         if (VCardType::VCardOrigin::spatialAggregateMode & Category::spatialAggregateEachYear)
         {
-            internalSpatialAggregateForParallelYears(numSpaceToYear, nbYearsForCurrentSummary);
+            internalSpatialAggregateForParallelYears(year, numSpace);
         }
 
         // Next variable
-        NextType::computeSpatialAggregatesSummary(allVars,
-                                                  numSpaceToYear,
-                                                  nbYearsForCurrentSummary);
+        NextType::computeSpatialAggregatesSummary(allVars, year, numSpace);
     }
 
     template<class V, class SetT>
@@ -469,17 +465,12 @@ private:
           pValuesForTheCurrentYear[numSpace]);
     }
 
-    void internalSpatialAggregateForParallelYears(
-      std::map<unsigned int, unsigned int>& numSpaceToYear,
-      uint nbYearsForCurrentSummary)
+    void internalSpatialAggregateForParallelYears(unsigned int year, unsigned int numSpace)
     {
-        for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
-        {
-            // Merge all those values with the global results
-            VariableAccessorType::ComputeSummary(pValuesForTheCurrentYear[numSpace],
-                                                 AncestorType::pResults,
-                                                 numSpaceToYear[numSpace]);
-        }
+        // Merge all those values with the global results
+        VariableAccessorType::ComputeSummary(pValuesForTheCurrentYear[numSpace],
+                                             AncestorType::pResults,
+                                             year);
     }
 
 private:

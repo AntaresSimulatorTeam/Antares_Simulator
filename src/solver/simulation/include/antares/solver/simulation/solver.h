@@ -21,6 +21,8 @@
 #ifndef __SOLVER_SIMULATION_SOLVER_H__
 #define __SOLVER_SIMULATION_SOLVER_H__
 
+#include <stdexcept>
+
 #include <yuni/job/queue/service.h>
 
 #include <antares/benchmarking/DurationCollector.h>
@@ -109,7 +111,7 @@ private:
     ** \param	years			List of years
     */
     void computeRandomNumbers(randomNumbers& randomForYears,
-                              std::vector<uint>& years,
+                              unsigned years,
                               std::map<unsigned int, bool>& isYearPerformed,
                               MersenneTwister& randomHydro);
 
@@ -123,8 +125,7 @@ private:
     ** Same thing for min and max costs over all years.
     ** Storing these costs to compute std deviation later.
     */
-    void computeAnnualCostsStatistics(std::vector<Variable::State>& state,
-                                      setOfParallelYears& batch);
+    void computeAnnualCostsStatistics(Variable::State state);
 
     /*!
     ** \brief Iterate through all MC years
@@ -140,8 +141,6 @@ private:
     uint pNbMaxPerformedYearsInParallel;
     //! Year by year output results
     bool pYearByYear;
-    //! The first set of parallel year(s) with a performed year was already run ?
-    bool pFirstSetParallelWithAPerformedYearWasRun;
 
     //! Statistics about annual (system and solution) costs
     annualCostsStatistics pAnnualStatistics;

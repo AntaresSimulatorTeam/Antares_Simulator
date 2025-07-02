@@ -134,8 +134,7 @@ public:
 
     void yearEnd(unsigned int year, unsigned int numSpace);
 
-    void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
-                        unsigned int nbYearsForCurrentSummary);
+    void computeSummary(unsigned int year, unsigned int numSpace);
 
     void hourBegin(unsigned int hourInTheYear);
     void hourForEachArea(State& state, unsigned int numSpace);
@@ -168,9 +167,7 @@ public:
     void yearEndSpatialAggregates(V& allVars, unsigned int year, unsigned int numSpace);
 
     template<class V>
-    void computeSpatialAggregatesSummary(V& allVars,
-                                         std::map<unsigned int, unsigned int>& numSpaceToYear,
-                                         unsigned int);
+    void computeSpatialAggregatesSummary(V& allVars, unsigned int year, unsigned int numSpace);
 
     template<class V>
     void simulationEndSpatialAggregates(V& allVars);

@@ -50,8 +50,6 @@ jobs:
           echo "DOCKERDIR=$(pwd)/docker" >> $GITHUB_ENV
 
 
-
-
       - name: check if DockerFiles has changed
         run: |
           # Check for changes in the target path
