@@ -25,7 +25,6 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
-#include "antares/expressions/RotateIndex.h"
 #include "antares/expressions/ShiftVector.h"
 
 namespace Antares::Expressions::Visitors
@@ -86,22 +85,27 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
 {
-    if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
+    const auto systemParameter = context_.getParameter(node->value());
+    if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
+        && systemParameter.type != ParameterType::CONSTANT)
+    {
+        std::string msg = "Parameter " + node->value() + " is declared constant in time and"
+                          + " scenario in library but not in system";
+        throw std::invalid_argument(msg);
+    }
+    if (systemParameter.type == ParameterType::CONSTANT)
     {
         return EvaluationResult{context_.getSystemParameterValueAsDouble(node->value())};
     }
-    else
+    std::vector<double> params;
+    params.reserve(fillContext_.getNumberOfTimestep());
+    for (auto timeStep = fillContext_.getFirstTimeStep();
+         timeStep <= fillContext_.getLastTimeStep();
+         ++timeStep)
     {
-        std::vector<double> params;
-        params.reserve(fillContext_.getNumberOfTimestep());
-        for (auto timeStep = fillContext_.getFirstTimeStep();
-             timeStep <= fillContext_.getLastTimeStep();
-             ++timeStep)
-        {
-            params.emplace_back(context_.getParameterValue(node->value(), "", 0, timeStep));
-        }
-        return EvaluationResult{params};
+        params.emplace_back(context_.getParameterValue(node->value(), "", 0, timeStep));
     }
+    return EvaluationResult{params};
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::LiteralNode* node)

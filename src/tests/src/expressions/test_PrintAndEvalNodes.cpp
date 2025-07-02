@@ -21,6 +21,8 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <stdexcept>
+
 #include <boost/mpl/list.hpp>
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
@@ -590,12 +592,25 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param, MyDummyFixture)
     BOOST_CHECK_EQUAL(std::stod(value), eval);
 }
 
+BOOST_FIXTURE_TEST_CASE(parameter_constant_at_creation_but_not_in_eval_context___exception_raised,
+                        MyDummyFixture)
+{
+    const std::string id = "my-param";
+    const std::string value = "45.7";
+    const ParameterType param_type = ParameterType::TIMESERIE;
+    ParameterNode root(id, TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+    EvaluationContext context({build_context_parameter_with(id, value, param_type)}, {}, data);
+
+    EvalVisitor evalVisitor(context, fillContext);
+    BOOST_CHECK_THROW(evalVisitor.dispatch(&root), std::invalid_argument);
+}
+
 struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearProblemData
 {
     double getData(const std::string& dataSetId,
                    const std::string& scenarioGroup,
-                   const unsigned scenario,
-                   const unsigned hour) override
+                   unsigned scenario,
+                   unsigned hour) override
     {
         return hour; // for test
     }

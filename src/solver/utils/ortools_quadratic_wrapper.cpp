@@ -84,11 +84,14 @@ void SolveQuadraticProblemWithOrtools(const SingleOptimOptions& options,
 void BuildVariablesAndObjective(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre, Model& model)
 {
     QuadraticExpression objective(0);
-    for (auto i = 0; i < ProblemeAResoudre->NombreDeVariables; ++i)
+    for (size_t i = 0; i < ProblemeAResoudre->NombreDeVariables; ++i)
     {
         double lb, ub;
         switch (ProblemeAResoudre->TypeDeVariable[i])
         {
+        case VARIABLE_FIXE:
+            lb = ub = 0.5 * (ProblemeAResoudre->Xmax[i] + ProblemeAResoudre->Xmin[i]);
+            break;
         case VARIABLE_BORNEE_DES_DEUX_COTES:
             lb = ProblemeAResoudre->Xmin[i];
             ub = ProblemeAResoudre->Xmax[i];
@@ -128,10 +131,10 @@ void BuildConstraints(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre, Model& mod
         LinearExpression linear_expression(0);
         for (auto iCoef = 0; iCoef < ProblemeAResoudre->NombreDeTermesDesLignes[iCt]; ++iCoef)
         {
-            int iVar = ProblemeAResoudre->IndicesColonnes
-                         .data()[ProblemeAResoudre->IndicesDebutDeLigne[iCt] + iCoef];
+            int iVar = ProblemeAResoudre
+                         ->IndicesColonnes[ProblemeAResoudre->IndicesDebutDeLigne[iCt] + iCoef];
             auto coef = ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes
-                          .data()[ProblemeAResoudre->IndicesDebutDeLigne[iCt] + iCoef];
+                          [ProblemeAResoudre->IndicesDebutDeLigne[iCt] + iCoef];
             linear_expression += model.variable(iVar) * coef;
         }
         double lb = -infinity;

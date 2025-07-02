@@ -11,6 +11,7 @@ on:
       - release/*
       - doc/*
       - dependabot/*
+      - tests/*
   schedule:
     - cron: '21 2 * * *'
   workflow_call:
@@ -69,14 +70,14 @@ jobs:
       - name: Restore ccache cache
         uses: actions/cache/restore@v4
         with:
-          path: ${{ github.workspace }}/.ccache
-          key: ${{ env.os }}-${{ github.sha }}
+          path: ${{ github.workspace }}/.ccache_ubuntu
+          key: ${{ env.os }}-${{ github.ref_name }}
           restore-keys: |
-            ${{ env.os }}-   
+            ${{ env.os }}-  
 
       - name: Configure ccache
         run: |
-          ccache --set-config=cache_dir=${{ github.workspace }}/.ccache
+          ccache --set-config=cache_dir=${{ github.workspace }}/.ccache_ubuntu
           ccache --set-config=max_size=500M
           ccache --set-config=compression=true
           ccache -p
@@ -129,6 +130,31 @@ jobs:
         run: |
           cmake --build _build -j$(nproc)
 
+      - name: Creation of complete .tar.gz archive
+        if: ${{ success() }}
+        run: |
+          cd _build
+          cpack -G TGZ -D CPACK_INSTALLED_DIRECTORIES="${{ env.ORTOOLS_DIR }}/install/lib;bin"
+
+      - name: Creation of solver only .tar.gz archive
+        if: ${{ success() }}
+        run: |
+          cd _build
+          cmake --install . --prefix install
+          pushd .
+          cd install/bin
+          cp ${{ env.ORTOOLS_DIR }}/install/lib/*.so* .
+          tar czf ../../antares-solver_ubuntu22.04.tar.gz antares-solver libsirius_solver.so *.so*
+          popd
+          rm -rf install
+
+      - name: Both previous archives upload
+        if: ${{ success() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: targz
+          path: _build/*.tar.gz
+
       - name: Run API tests
         run: |
           cmake --install _build --prefix antares_install
@@ -142,7 +168,7 @@ jobs:
            -DBUILD_TESTING=ON \
            -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake \
            -DVCPKG_TARGET_TRIPLET=x64-linux-release \
-           -DCMAKE_PREFIX_PATH="${{github.workspace}}/rte-antares-deps-Release;${{github.workspace}}/install;${{ env.ORTOOLS_DIR }}/install;${{github.workspace}}/antares_install;${{github.workspace}}/rte-antares-deps-Release;${{github.workspace}}/_build/vcpkg_installed/x64-linux-release"
+           -DCMAKE_PREFIX_PATH="${{github.workspace}}/_build/vcpkg_installed/x64-linux-release;${{github.workspace}}/install;${{ env.ORTOOLS_DIR }}/install;${{github.workspace}}/antares_install"
            cmake --build _build -j$(nproc)
            cd _build
            ctest -C Release --output-on-failure
@@ -170,11 +196,11 @@ jobs:
           os: ${{ env.os }}
           variant: "named-mps"
 
-      - name: Run cucumber on short-tests
+      - name: Run fast cucumber
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/cucumber-tests
         with:
-          feature: "features/solver-features/short_tests.feature"
+          tags: "fast"
 
       - name: Run cucumber on modeler
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
@@ -291,15 +317,6 @@ jobs:
           os: ${{ env.os }}
           variant: "parallel"
 
-      - name: Run tests for time series generator tool
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-        uses: ./.github/workflows/run-tests
-        with:
-          simtest-tag: ${{ env.SIMTEST }}
-          batch-name: ts-generator
-          os: ${{ env.os }}
-          variant: "tsgenerator"
-
       - name: Run medium-tests
         if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
@@ -350,28 +367,7 @@ jobs:
       - name: Installer .deb creation
         run: |
           cd _build
-          cpack -G DEB
-
-      - name: .tar.gz creation
-        run: |
-          cd _build
-          cpack -G TGZ
-
-      - name: Solver archive creation
-        run: |
-          cd _build
-          cmake --install . --prefix install
-          pushd .
-          cd install/bin
-          tar czf ../../antares-solver_ubuntu22.04.tar.gz antares-solver libsirius_solver.so
-          popd
-          rm -rf install
-
-      - name: Installer archive upload push
-        uses: actions/upload-artifact@v4
-        with:
-          name: targz
-          path: _build/*.tar.gz
+          cpack -G DEB -D CPACK_INSTALLED_DIRECTORIES="${{ env.ORTOOLS_DIR }}/install/lib;bin"
 
       - name: Installer deb upload push
         uses: actions/upload-artifact@v4
@@ -409,7 +405,8 @@ jobs:
         run: ccache -s
 
       - name: Save ccache cache
+        if: ${{ !cancelled() }}
         uses: actions/cache/save@v4
         with:
-          path: ${{ github.workspace }}/.ccache
-          key: ${{ env.os }}-${{ github.sha }}
+          path: ${{ github.workspace }}/.ccache_ubuntu
+          key: ${{ env.os }}-${{ github.ref_name }}

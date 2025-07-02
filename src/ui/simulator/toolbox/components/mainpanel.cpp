@@ -75,6 +75,12 @@ void MainPanel::author(const wxString& s)
     Dispatcher::GUI::Refresh(this);
 }
 
+    void MainPanel::editor(const wxString& s)
+{
+    pEditor = s;
+    Dispatcher::GUI::Refresh(this);
+}
+
 void MainPanel::addProperty(wxDC& dc,
                             const wxString& caption,
                             const wxString& text,
@@ -247,6 +253,7 @@ void MainPanel::refreshFromStudy()
     {
         pStudyCaption.clear();
         pAuthor.clear();
+        pEditor.clear();
         mainFrm->title();
     }
     else
@@ -270,6 +277,12 @@ void MainPanel::refreshFromStudy()
             pAuthor.clear();
         else
             pAuthor = wxStringFromUTF8(study.header.author);
+
+        // Editor
+        if (study.header.editor.empty())
+            pEditor.clear();
+        else
+            pEditor = wxStringFromUTF8(study.header.editor);
     }
 
     // Refresh

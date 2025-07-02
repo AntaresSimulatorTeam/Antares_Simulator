@@ -29,6 +29,7 @@
 #include <antares/utils/utils.h>
 
 namespace fs = std::filesystem;
+namespace tt = boost::test_tools;
 
 namespace
 {
@@ -104,6 +105,37 @@ BOOST_AUTO_TEST_CASE(yuni_normalize_vs_std_lexically_normal)
     };
     helper(fs::path("a/./b/.."));
     helper(fs::path("a/.///b/../"));
+}
+
+BOOST_AUTO_TEST_CASE(isZero)
+{
+    BOOST_CHECK(!Antares::Utils::isZero(1.e-5));
+    BOOST_CHECK(Antares::Utils::isZero(1.e-7));
+}
+
+BOOST_AUTO_TEST_CASE(round)
+{
+    BOOST_TEST(Antares::Utils::round(2.1, 0) == 2, tt::tolerance(1e-9));
+    BOOST_TEST(Antares::Utils::round(2.1, 1) == 2.1, tt::tolerance(1e-9));
+    BOOST_TEST(Antares::Utils::round(2.1, 2) == 2.1, tt::tolerance(1e-9));
+}
+
+BOOST_AUTO_TEST_CASE(ceil)
+{
+    BOOST_TEST(Antares::Utils::ceil(2.4) == 3, tt::tolerance(1e-9));
+    BOOST_TEST(Antares::Utils::ceil(2.4 / 10) == 1, tt::tolerance(1e-9));
+
+    BOOST_TEST(Antares::Utils::ceil(2.6) == 3, tt::tolerance(1e-9));
+    BOOST_TEST(Antares::Utils::ceil(2.6 / 10) == 1, tt::tolerance(1e-9));
+}
+
+BOOST_AUTO_TEST_CASE(floor)
+{
+    BOOST_TEST(Antares::Utils::floor(2.4) == 2, tt::tolerance(1e-9));
+    BOOST_TEST(Antares::Utils::floor(2.4 / 10) == 0, tt::tolerance(1e-9));
+
+    BOOST_TEST(Antares::Utils::floor(2.6) == 2, tt::tolerance(1e-9));
+    BOOST_TEST(Antares::Utils::floor(2.6 / 10) == 0, tt::tolerance(1e-9));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

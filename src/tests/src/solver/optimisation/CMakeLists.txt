@@ -1,4 +1,19 @@
+include(${CMAKE_SOURCE_DIR}/tests/macros.cmake)
+add_boost_test(unit-tests-for-solver-optimisation
+        SRC
+        test_main.cpp
+        adequacy_patch.cpp
+        test_componentToAreaConnectionFiller.cpp
+        LIBS
+        antares-study-system-model
+        Antares::linear-problem-mpsolver-impl
+        Antares::optim-model-filler
+        Antares::linear-problem-data-impl
+        test_utils_unit
+        Antares::yml-model
+        Antares::model-converter
+        Antares::yml-system)
+
 add_subdirectory(adequacy_patch)
 add_subdirectory(translator)
-add_subdirectory(name-translator)
 add_subdirectory(constraints)

@@ -189,22 +189,17 @@ public:
         NextType::yearEnd(year, numSpace);
     }
 
-    void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
-                        unsigned int nbYearsForCurrentSummary)
+    void computeSummary(unsigned int year, unsigned int numSpace)
     {
-        for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
+        for (unsigned int clusterIndex = 0; clusterIndex < nbClusters_; ++clusterIndex)
         {
-            for (unsigned int clusterIndex = 0; clusterIndex < nbClusters_; ++clusterIndex)
-            {
-                // Merge all those values with the global results
-                AncestorType::pResults[clusterIndex].merge(
-                  numSpaceToYear[numSpace],
-                  pValuesForTheCurrentYear[numSpace][clusterIndex]);
-            }
+            // Merge all those values with the global results
+            AncestorType::pResults[clusterIndex]
+              .merge(year, pValuesForTheCurrentYear[numSpace][clusterIndex]);
         }
 
         // Next variable
-        NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
+        NextType::computeSummary(year, numSpace);
     }
 
     void hourBegin(unsigned int hourInTheYear)
@@ -255,10 +250,10 @@ public:
 
             // Write the data for the current year
             uint clusterIndex = 0;
-            for (const auto& cluster: shortTermStorage.storagesByIndex)
+            for (const auto& sts: shortTermStorage.storagesByIndex)
             {
                 // Write the data for the current year
-                results.variableCaption = cluster.properties.name;
+                results.variableCaption = sts.properties.name;
                 results.variableUnit = VCardType::Unit();
                 pValuesForTheCurrentYear[numSpace][clusterIndex]
                   .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);

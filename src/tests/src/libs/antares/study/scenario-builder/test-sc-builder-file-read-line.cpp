@@ -148,6 +148,39 @@ struct Fixture
         study->bindingConstraintsGroups.resizeAllTimeseriesNumbers(study->parameters.nbYears);
         bc->RHSTimeSeries().resize(7, 1);
 
+        auto add1 = std::make_shared<ShortTermStorage::AdditionalConstraints>(
+          "add1",
+          "st-cluster-1",
+          "withdrawal",
+          "less",
+          true,
+          std::vector<Antares::Data::ShortTermStorage::SingleAdditionalConstraint>{});
+
+        stCluster1.id = "st-cluster-1";
+        stCluster1.series->inflows.resize(12, 12);
+        add1->rhs().resize(12, 12);
+        stCluster1.additionalConstraints.push_back(add1);
+        area_1->shortTermStorage.storagesByIndex.push_back(stCluster1);
+
+        auto add2 = std::make_shared<ShortTermStorage::AdditionalConstraints>(
+          "add2",
+          "st-cluster-2",
+          "withdrawal",
+          "less",
+          true,
+          std::vector<Antares::Data::ShortTermStorage::SingleAdditionalConstraint>{});
+
+        stCluster2.id = "st-cluster-2";
+        stCluster2.series->inflows.resize(12, 12);
+        add2->rhs().resize(12, 12);
+        stCluster2.additionalConstraints.push_back(add2);
+        area_2->shortTermStorage.storagesByIndex.push_back(stCluster2);
+
+        // Prepare time series numbers storage
+        area_1->shortTermStorage.resizeTimeseriesNumbers(10);
+        area_2->shortTermStorage.resizeTimeseriesNumbers(11);
+        area_3->shortTermStorage.resizeTimeseriesNumbers(12);
+
         BOOST_CHECK(my_rule.reset());
     }
 
@@ -166,6 +199,9 @@ struct Fixture
     std::shared_ptr<RenewableCluster> rnCluster_21;
     std::shared_ptr<RenewableCluster> rnCluster_31;
     std::shared_ptr<RenewableCluster> rnCluster_32;
+    // Setup short-term storage for testing
+    ShortTermStorage::STStorageCluster stCluster1;
+    ShortTermStorage::STStorageCluster stCluster2;
 
     ScenarioBuilder::Rules my_rule;
 };
@@ -528,6 +564,62 @@ BOOST_FIXTURE_TEST_CASE(thermalTSNumberData, Fixture)
 
     BOOST_CHECK_EQUAL(thCluster_12->series.timeseriesNumbers[2], 21);
     BOOST_CHECK_EQUAL(thCluster_12->series.timeseriesNumbers[5], 0);
+}
+
+// ========================
+// Tests on Short-Term Storage
+// ========================
+
+BOOST_FIXTURE_TEST_CASE(short_term_storage_valid_cluster_and_year__reading_OK, Fixture)
+{
+    AreaName yearNumber = "5";
+    String tsNumber = "3";
+    AreaName::Vector splitKey = {"sts", "area 1", yearNumber, "st-cluster-1"};
+
+    BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
+
+    splitKey = {"sta", "area 1", yearNumber, "st-cluster-1", "add1"};
+
+    BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
+
+    BOOST_CHECK_EQUAL(
+      my_rule.shortTermStorageInflows[0].get(&area_1->shortTermStorage.storagesByIndex.back(),
+                                             yearNumber.to<uint>()),
+      tsNumber.to<uint>());
+
+    auto* addc = area_1->shortTermStorage.storagesByIndex.back().additionalConstraints[0].get();
+    BOOST_CHECK_EQUAL(my_rule.shortTermStorageAdditionalConstraints[0].get(addc,
+                                                                           yearNumber.to<uint>()),
+                      tsNumber.to<uint>());
+
+    BOOST_CHECK(my_rule.apply());
+}
+
+BOOST_FIXTURE_TEST_CASE(short_term_storage_nonexistent_cluster, Fixture)
+{
+    AreaName yearNumber = "3";
+    String tsNumber = "2";
+    AreaName::Vector splitKey = {"sts", "area 2", yearNumber, "nonexistent-cluster"};
+    BOOST_CHECK(!my_rule.readLine(splitKey, tsNumber));
+}
+
+BOOST_FIXTURE_TEST_CASE(short_term_storage_nonexistent_area, Fixture)
+{
+    AreaName yearNumber = "7";
+    String tsNumber = "1";
+    AreaName::Vector splitKey = {"sts", "nonexistent area", yearNumber, "any-cluster"};
+    BOOST_CHECK(!my_rule.readLine(splitKey, tsNumber));
+}
+
+BOOST_FIXTURE_TEST_CASE(short_term_storage_large_ts_number__handled_gracefully, Fixture)
+{
+    // Add a short-term storage cluster to area 3
+
+    AreaName yearNumber = "10";
+    String veryLarge = "100000000"; // take maxTSnumber := 10'000
+    AreaName::Vector splitKey = {"sts", "area 1", yearNumber, "st-cluster-1"};
+
+    BOOST_CHECK(my_rule.readLine(splitKey, veryLarge));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -25,7 +25,7 @@
 namespace Antares::ModelerStudy::SystemModel
 {
 
-ConnexionEnd::ConnexionEnd(Component* component, const Port* port)
+ConnectionEnd::ConnectionEnd(Component* component, const Port* port)
 {
     if (component == nullptr)
     {
@@ -40,12 +40,12 @@ ConnexionEnd::ConnexionEnd(Component* component, const Port* port)
     port_ = port;
 }
 
-const Component* ConnexionEnd::component() const
+const Component* ConnectionEnd::component() const
 {
     return component_;
 }
 
-const Port* ConnexionEnd::port() const
+const Port* ConnectionEnd::port() const
 {
     return port_;
 }

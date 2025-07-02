@@ -203,11 +203,11 @@ public:
         RightType::yearEnd(year, numSpace);
     }
 
-    void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
-                        unsigned int nbYearsForCurrentSummary)
+    void computeSummary(unsigned int year, unsigned int numSpace)
     {
-        LeftType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
-        RightType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
+        // Next variable
+        LeftType::computeSummary(year, numSpace);
+        RightType::computeSummary(year, numSpace);
     }
 
     void weekBegin(State& state)
@@ -307,16 +307,10 @@ public:
     }
 
     template<class V>
-    void computeSpatialAggregatesSummary(V& allVars,
-                                         std::map<unsigned int, unsigned int>& numSpaceToYear,
-                                         unsigned int nbYearsForCurrentSummary)
+    void computeSpatialAggregatesSummary(V& allVars, unsigned int year, unsigned int numSpace)
     {
-        LeftType::computeSpatialAggregatesSummary(allVars,
-                                                  numSpaceToYear,
-                                                  nbYearsForCurrentSummary);
-        RightType::computeSpatialAggregatesSummary(allVars,
-                                                   numSpaceToYear,
-                                                   nbYearsForCurrentSummary);
+        LeftType::computeSpatialAggregatesSummary(allVars, year, numSpace);
+        RightType::computeSpatialAggregatesSummary(allVars, year, numSpace);
     }
 
     template<class V>

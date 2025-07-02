@@ -29,6 +29,7 @@
 #include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
 
 namespace fs = std::filesystem;
+using namespace Antares::Data;
 
 namespace Antares
 {
@@ -76,35 +77,40 @@ static void CheckHydroAllocationProblem(Data::Area& area,
 }
 #endif
 
-double HydroManagement::prepareMonthlyTargetGenerations(
-  Data::Area& area,
-  Antares::Data::AreaDependantHydroManagementData& data,
-  Antares::Data::TimeDependantHydroManagementData& hydro_specific)
+double computeYearInflows(AreaDependantHydroManagementData& data)
 {
-    double total = 0;
-
-    for (uint realmonth = 0; realmonth != MONTHS_PER_YEAR; ++realmonth)
+    double yearInflows = 0;
+    for (uint realmonth = 0; realmonth != 12; ++realmonth)
     {
-        total += data.inflows[realmonth];
+        yearInflows += data.inflows[realmonth];
     }
+    return yearInflows;
+}
+
+static std::array<double, 12> computeMonthlyTargetGenerations(
+  Area& area,
+  AreaDependantHydroManagementData& data,
+  std::array<MonthlyGenerationTargetData, 12>& areaMonthlyData)
+{
+    std::array<double, 12> MTG{0};
+    double yearInflows = computeYearInflows(data);
 
     if (not area.hydro.followLoadModulations)
     {
         for (uint realmonth = 0; realmonth != MONTHS_PER_YEAR; ++realmonth)
         {
-            hydro_specific.monthly[realmonth].MTG = data.inflows[realmonth];
+            MTG[realmonth] = data.inflows[realmonth];
         }
-
-        return total;
+        return MTG;
     }
 
     double monthlyMaxDemand = -std::numeric_limits<double>::infinity();
 
     for (uint realmonth = 0; realmonth != MONTHS_PER_YEAR; ++realmonth)
     {
-        if (hydro_specific.monthly[realmonth].MLE > monthlyMaxDemand)
+        if (areaMonthlyData[realmonth].MLE > monthlyMaxDemand)
         {
-            monthlyMaxDemand = hydro_specific.monthly[realmonth].MLE;
+            monthlyMaxDemand = areaMonthlyData[realmonth].MLE;
         }
     }
 
@@ -113,36 +119,33 @@ double HydroManagement::prepareMonthlyTargetGenerations(
         double coeff = 0.;
         for (uint realmonth = 0; realmonth != MONTHS_PER_YEAR; ++realmonth)
         {
-            assert(hydro_specific.monthly[realmonth].MLE / monthlyMaxDemand >= 0.);
-            coeff += std::pow(hydro_specific.monthly[realmonth].MLE / monthlyMaxDemand,
+            assert(areaMonthlyData[realmonth].MLE / monthlyMaxDemand >= 0.);
+            coeff += std::pow(areaMonthlyData[realmonth].MLE / monthlyMaxDemand,
                               area.hydro.intermonthlyBreakdown);
         }
 
         if (!Utils::isZero(coeff))
         {
-            coeff = total / coeff;
+            coeff = yearInflows / coeff;
         }
 
         for (uint realmonth = 0; realmonth != MONTHS_PER_YEAR; ++realmonth)
         {
-            assert(hydro_specific.monthly[realmonth].MLE / monthlyMaxDemand >= 0.);
-            hydro_specific.monthly[realmonth].MTG = coeff
-                                                    * std::pow(hydro_specific.monthly[realmonth].MLE
-                                                                 / monthlyMaxDemand,
-                                                               area.hydro.intermonthlyBreakdown);
+            assert(areaMonthlyData[realmonth].MLE / monthlyMaxDemand >= 0.);
+            MTG[realmonth] = coeff
+                             * std::pow(areaMonthlyData[realmonth].MLE / monthlyMaxDemand,
+                                        area.hydro.intermonthlyBreakdown);
         }
     }
     else
     {
-        double coeff = total / 12.;
-
+        double coeff = yearInflows / 12.;
         for (uint realmonth = 0; realmonth != MONTHS_PER_YEAR; ++realmonth)
         {
-            hydro_specific.monthly[realmonth].MTG = coeff;
+            MTG[realmonth] = coeff;
         }
     }
-
-    return total;
+    return MTG;
 }
 
 static double calcTurbineMaxForMonth(unsigned simulationMonth,
@@ -168,10 +171,11 @@ static double calcTurbineMaxForMonth(unsigned simulationMonth,
     return turbine;
 }
 
-void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_reservoir_level,
-                                                       uint y,
-                                                       Antares::Data::Area::ScratchMap& scratchmap,
-                                                       HydroSpecificMap& hydro_specific_map)
+void HydroManagement::prepareMonthlyOptimalGenerations(
+  const std::vector<double>& random_reservoir_level,
+  uint y,
+  Antares::Data::Area::ScratchMap& scratchmap,
+  HydroSpecificMap& hydro_specific_map)
 {
     uint indexArea = 0;
     areas_.each(
@@ -179,7 +183,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_rese
         Data::Area& area)
       {
           auto& data = area.hydro.managementData[y];
-          auto& hydro_specific = hydro_specific_map[&area];
+          auto& areaMonthlyData = hydro_specific_map[&area].monthly;
 
           auto& minLvl = area.hydro.reservoirLevel[Data::PartHydro::minimum];
           auto& maxLvl = area.hydro.reservoirLevel[Data::PartHydro::maximum];
@@ -194,19 +198,20 @@ void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_rese
 
           double solutionCost = 0.;
           double solutionCostNoised = 0.;
+          std::array<double, 12> MTG{0};
+          std::array<double, 12> OVF{0};
 
           if (area.hydro.reservoirManagement)
           {
               auto problem = DonneesOptimisationMensuelle::H2O_M_Instanciation(1);
 
-              double totalInflowsYear = prepareMonthlyTargetGenerations(area, data, hydro_specific);
-              assert(totalInflowsYear >= 0.);
+              MTG = computeMonthlyTargetGenerations(area, data, areaMonthlyData);
 
               problem.CoutDepassementVolume = 1e2;
               problem.CoutViolMaxDuVolumeMin = 1e5;
+              problem.overflowfCost = 1e6;
               problem.VolumeInitial = lvi;
 
-              double yearlyMaxGeneration = 0;
               for (unsigned month = 0; month != MONTHS_PER_YEAR; ++month)
               {
                   uint realmonth = (initReservoirLvlMonth + month) % MONTHS_PER_YEAR;
@@ -220,19 +225,11 @@ void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_rese
                                                                      calendar_,
                                                                      scratchmap);
 
-                  yearlyMaxGeneration += problem.TurbineMax[month];
-
                   problem.TurbineMin[month] = data.mingens[realmonth];
-                  problem.TurbineCible[month] = hydro_specific.monthly[realmonth].MTG;
+                  problem.TurbineCible[month] = MTG[realmonth];
                   problem.Apport[month] = data.inflows[realmonth];
                   problem.VolumeMin[month] = minLvl[firstDay];
                   problem.VolumeMax[month] = maxLvl[firstDay];
-              }
-
-              if (totalInflowsYear > yearlyMaxGeneration)
-              {
-                  logs.debug() << "Apports annuels > capacité turbinage annuelle";
-                  problem.TurbineMax.assign(12, totalInflowsYear);
               }
 
               DonneesOptimisationMensuelle::H2O_M_OptimiserUneAnnee(problem, 0);
@@ -247,12 +244,12 @@ void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_rese
                   for (uint month = 0; month != MONTHS_PER_YEAR; ++month)
                   {
                       uint realmonth = (initReservoirLvlMonth + month) % MONTHS_PER_YEAR;
-
-                      hydro_specific.monthly[realmonth].MOG = problem.Turbine[month]
-                                                              * area.hydro.reservoirCapacity;
-                      hydro_specific.monthly[realmonth].MOL = problem.Volume[month];
+                      areaMonthlyData[realmonth].MOG = problem.Turbine[month]
+                                                       * area.hydro.reservoirCapacity;
+                      areaMonthlyData[realmonth].MOL = problem.Volume[month];
+                      OVF[realmonth] = problem.overflow[month];
                   }
-                  hydro_specific.monthly[initReservoirLvlMonth].MOL = lvi;
+                  areaMonthlyData[initReservoirLvlMonth].MOL = lvi;
                   solutionCost = problem.ProblemeHydraulique.CoutDeLaSolution;
                   solutionCostNoised = problem.ProblemeHydraulique.CoutDeLaSolutionBruite;
 
@@ -280,48 +277,46 @@ void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_rese
 
               for (uint realmonth = 0; realmonth != MONTHS_PER_YEAR; ++realmonth)
               {
-                  hydro_specific.monthly[realmonth].MOG = data.inflows[realmonth];
-                  hydro_specific.monthly[realmonth].MOL = reservoirLevel[realmonth];
+                  areaMonthlyData[realmonth].MOG = data.inflows[realmonth];
+                  areaMonthlyData[realmonth].MOL = reservoirLevel[realmonth];
               }
           }
 
 #ifndef NDEBUG
           for (uint realmonth = 0; realmonth != MONTHS_PER_YEAR; ++realmonth)
           {
-              assert(!std::isnan(hydro_specific.monthly[realmonth].MOG)
-                     && "nan value detected for MOG");
-              assert(!std::isnan(hydro_specific.monthly[realmonth].MOL)
-                     && "nan value detected for MOL");
-              assert(!std::isinf(hydro_specific.monthly[realmonth].MOG)
+              assert(!std::isnan(areaMonthlyData[realmonth].MOG) && "nan value detected for MOG");
+              assert(!std::isnan(areaMonthlyData[realmonth].MOL) && "nan value detected for MOL");
+              assert(!std::isinf(areaMonthlyData[realmonth].MOG)
                      && "infinite value detected for MOG");
-              assert(!std::isinf(hydro_specific.monthly[realmonth].MOL)
+              assert(!std::isinf(areaMonthlyData[realmonth].MOL)
                      && "infinite value detected for MOL");
           }
 #endif
           if (parameters_.hydroDebug)
           {
-              std::ostringstream buffer;
-              auto path = fs::path("debug") / "solver" / std::to_string(1 + y) / "monthly."
-                          / area.name.c_str() / ".txt";
+              auto path = fs::path("debug") / "solver" / std::to_string(1 + y)
+                          / ("monthly." + area.name + ".txt").c_str();
 
+              std::ostringstream fileContent;
               if (area.hydro.reservoirManagement)
-                  buffer << "Initial Reservoir Level\t" << lvi << "\n";
+                  fileContent << "Initial Reservoir Level\t" << lvi << "\n";
               else
-                  buffer << "Initial Reservoir Level : unrelevant (no reservoir mgmt)\n";
-              buffer << "\n";
+                  fileContent << "Initial Reservoir Level : unrelevant (no reservoir mgmt)\n";
+              fileContent << "\n";
 
-              auto writeSolutionCost = [&buffer](const std::string& caption, double cost)
+              auto writeSolutionCost = [&fileContent](const std::string& caption, double cost)
               {
-                  auto precision = buffer.precision();
-                  buffer << caption << std::fixed << std::setprecision(13) << cost;
-                  buffer << std::setprecision(precision) << std::defaultfloat;
+                  auto precision = fileContent.precision();
+                  fileContent << caption << std::fixed << std::setprecision(13) << cost;
+                  fileContent << std::setprecision(precision) << std::defaultfloat;
               };
               writeSolutionCost("Solution cost : ", solutionCost);
               writeSolutionCost("Solution cost (noised) : ", solutionCostNoised);
-              buffer << "\n\n";
+              fileContent << "\n\n";
 
-              buffer << '\t' << "\tInflows" << '\t' << "\tTarget Gen." << "\tTurbined" << "\tLevels"
-                     << '\t' << "\tLvl min" << '\t' << "\tLvl max\n";
+              fileContent << '\t' << "\tInflows" << '\t' << "\tTarget Gen." << "\tTurbined"
+                          << "\tOVF" << "\tLevels" << '\t' << "\tLvl min" << '\t' << "\tLvl max\n";
               for (uint month = 0; month != MONTHS_PER_YEAR; ++month)
               {
                   uint realmonth = (initReservoirLvlMonth + month) % MONTHS_PER_YEAR;
@@ -332,18 +327,19 @@ void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_rese
 
                   auto monthName = calendar_.text.months[simulationMonth].name;
 
-                  buffer << monthName[0] << monthName[1] << monthName[2] << '\t';
-                  buffer << '\t';
-                  buffer << data.inflows[realmonth] << '\t';
-                  buffer << hydro_specific.monthly[realmonth].MTG << '\t';
-                  buffer << hydro_specific.monthly[realmonth].MOG / area.hydro.reservoirCapacity
-                         << '\t';
-                  buffer << hydro_specific.monthly[realmonth].MOL << '\t';
-                  buffer << minLvl[firstDay] << '\t';
-                  buffer << maxLvl[firstDay] << '\t';
-                  buffer << '\n';
+                  fileContent << monthName[0] << monthName[1] << monthName[2] << '\t';
+                  fileContent << '\t';
+                  fileContent << data.inflows[realmonth] << '\t';
+                  fileContent << MTG[realmonth] << '\t';
+                  fileContent << areaMonthlyData[realmonth].MOG / area.hydro.reservoirCapacity
+                              << '\t';
+                  fileContent << OVF[realmonth] << '\t';
+                  fileContent << areaMonthlyData[realmonth].MOL << '\t';
+                  fileContent << minLvl[firstDay] << '\t';
+                  fileContent << maxLvl[firstDay] << '\t';
+                  fileContent << '\n';
               }
-              auto content = buffer.str();
+              auto content = fileContent.str();
               resultWriter_.addEntryFromBuffer(path, content);
           }
           indexArea++;

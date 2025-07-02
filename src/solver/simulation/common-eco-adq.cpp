@@ -349,7 +349,9 @@ void SetInitialHydroLevel(Data::Study& study,
     study.areas.each(
       [&problem, &firstDaySimu, &hydroVentilationResults](const Data::Area& area)
       {
-          if (area.hydro.reservoirManagement)
+          bool updatePreviousLevel = area.hydro.reservoirManagement
+                                     && (!area.hydro.useHeuristicTarget || area.hydro.useLeeway);
+          if (updatePreviousLevel)
           {
               double capacity = area.hydro.reservoirCapacity;
               problem.previousSimulationFinalLevel[area.index] = hydroVentilationResults[area.index]

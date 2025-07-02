@@ -54,7 +54,7 @@ StudyFixture::StudyFixture()
 
     loadInArea = 7.0;
     loadTSconfig = TimeSeriesConfigurer(area->load.series.timeSeries);
-    loadTSconfig.setColumnCount(1).fillColumnWith(0, loadInArea);
+    loadTSconfig.setDimensions(1).fillColumnWith(0, loadInArea);
 
     clusterCost = 2.;
     clusterConfig = ThermalClusterConfig(cluster.get());
@@ -85,18 +85,18 @@ HydroMaxPowerStudy::HydroMaxPowerStudy()
     setNumberMCyears(1);
 
     TimeSeriesConfigurer loadTSconfig(area->load.series.timeSeries);
-    loadTSconfig.setColumnCount(1).fillColumnWith(0, loadInArea);
+    loadTSconfig.setDimensions(1).fillColumnWith(0, loadInArea);
 
     hydro = &area->hydro;
 
     TimeSeriesConfigurer genP(hydro->series->maxHourlyGenPower.timeSeries);
-    genP.setColumnCount(1).fillColumnWith(0, 100.);
+    genP.setDimensions(1).fillColumnWith(0, 100.);
 
     TimeSeriesConfigurer hydroStorage(hydro->series->storage.timeSeries);
-    hydroStorage.setColumnCount(1, DAYS_PER_YEAR).fillColumnWith(0, 2400.);
+    hydroStorage.setDimensions(1, DAYS_PER_YEAR).fillColumnWith(0, 2400.);
 
     TimeSeriesConfigurer genE(hydro->dailyNbHoursAtGenPmax);
-    genE.setColumnCount(1, DAYS_PER_YEAR).fillColumnWith(0, 24);
+    genE.setDimensions(1, DAYS_PER_YEAR).fillColumnWith(0, 24);
 
     hydro->reservoirCapacity = 1e6;
     hydro->reservoirManagement = true;
@@ -133,7 +133,7 @@ BOOST_FIXTURE_TEST_CASE(two_mc_years__two_ts_identical, StudyFixture)
 {
     setNumberMCyears(2);
 
-    loadTSconfig.setColumnCount(2).fillColumnWith(0, 7.0).fillColumnWith(1, 7.0);
+    loadTSconfig.setDimensions(2).fillColumnWith(0, 7.0).fillColumnWith(1, 7.0);
 
     clusterConfig.setAvailablePowerNumberOfTS(2).setAvailablePower(0, 50.).setAvailablePower(1,
                                                                                              50.);
@@ -150,7 +150,7 @@ BOOST_FIXTURE_TEST_CASE(two_mc_years__two_ts_for_load, StudyFixture)
 {
     setNumberMCyears(2);
 
-    loadTSconfig.setColumnCount(2).fillColumnWith(0, 7.0).fillColumnWith(1, 14.0);
+    loadTSconfig.setDimensions(2).fillColumnWith(0, 7.0).fillColumnWith(1, 14.0);
 
     ScenarioBuilderRule scenarioBuilderRule(*study);
     scenarioBuilderRule.load().setTSnumber(area->index, 0, 1);
@@ -174,7 +174,7 @@ BOOST_FIXTURE_TEST_CASE(two_mc_years_with_different_weight__two_ts, StudyFixture
     giveWeightToYear(10.f, 1);
     float weightSum = study->parameters.getYearsWeightSum();
 
-    loadTSconfig.setColumnCount(2).fillColumnWith(0, 7.0).fillColumnWith(1, 14.0);
+    loadTSconfig.setDimensions(2).fillColumnWith(0, 7.0).fillColumnWith(1, 14.0);
 
     ScenarioBuilderRule scenarioBuilderRule(*study);
     scenarioBuilderRule.load().setTSnumber(area->index, 0, 1);
@@ -222,7 +222,7 @@ BOOST_FIXTURE_TEST_CASE(milp_two_mc_two_unit_single_scenario, StudyFixture)
     clusterConfig.setAvailablePower(0, 150.).setUnitCount(2);
 
     loadInArea = 150;
-    loadTSconfig.setColumnCount(1).fillColumnWith(0, loadInArea);
+    loadTSconfig.setDimensions(1).fillColumnWith(0, loadInArea);
     // Arbitrary large number, only characteristic is : larger than all
     // other marginal costs
     area->thermal.unsuppliedEnergyCost = 1000;
@@ -261,7 +261,7 @@ BOOST_FIXTURE_TEST_CASE(parallel2, StudyFixture)
     setNumberMCyears(2);
     study->maxNbYearsInParallel = 2;
 
-    loadTSconfig.setColumnCount(2).fillColumnWith(0, 7.0).fillColumnWith(1, 7.0);
+    loadTSconfig.setDimensions(2).fillColumnWith(0, 7.0).fillColumnWith(1, 7.0);
 
     clusterConfig.setAvailablePowerNumberOfTS(2).setAvailablePower(0, 50.).setAvailablePower(1,
                                                                                              50.);
@@ -285,7 +285,7 @@ BOOST_FIXTURE_TEST_CASE(error_on_wrong_hydro_data, StudyFixture)
     Area& area = *builder.addAreaToStudy("A");
     PartHydro& hydro = area.hydro;
     TimeSeriesConfigurer(hydro.series->storage.timeSeries)
-      .setColumnCount(1)
+      .setDimensions(1)
       .fillColumnWith(0, -1.0); // Negative inflow will cause a consistency error with mingen
 
     builder.setNumberMCyears(1);
@@ -319,12 +319,12 @@ BOOST_FIXTURE_TEST_CASE(STS_initial_level_is_also_weekly_final_level, StudyFixtu
 
     // Fatal gen at h=1
     auto& windTS = area->wind.series.timeSeries;
-    TimeSeriesConfigurer(windTS).setColumnCount(1).fillColumnWith(0, 0.);
+    TimeSeriesConfigurer(windTS).setDimensions(1).fillColumnWith(0, 0.);
     windTS[0][1] = 100;
 
     // Fatal load at h=2-10
     auto& loadTS = area->load.series.timeSeries;
-    TimeSeriesConfigurer(loadTS).setColumnCount(1).fillColumnWith(0, 0.);
+    TimeSeriesConfigurer(loadTS).setDimensions(1).fillColumnWith(0, 0.);
     for (int i = 2; i < 10; i++)
     {
         loadTS[0][i] = 100;
@@ -366,12 +366,12 @@ BOOST_FIXTURE_TEST_CASE(STS_efficiency_for_injection_and_withdrawal, StudyFixtur
 
     // Fatal gen at h=1
     auto& windTS = area->wind.series.timeSeries;
-    TimeSeriesConfigurer(windTS).setColumnCount(1).fillColumnWith(0, 0.);
+    TimeSeriesConfigurer(windTS).setDimensions(1).fillColumnWith(0, 0.);
     windTS[0][1] = 100;
 
     // Fatal load at h=2
     auto& loadTS = area->load.series.timeSeries;
-    TimeSeriesConfigurer(loadTS).setColumnCount(1).fillColumnWith(0, 0.);
+    TimeSeriesConfigurer(loadTS).setDimensions(1).fillColumnWith(0, 0.);
     loadTS[0][2] = 100;
 
     // Usual values, avoid spillage & unsupplied energy
@@ -419,8 +419,8 @@ BOOST_FIXTURE_TEST_CASE(scenario_builder, HydroMaxPowerStudy)
 
     TimeSeriesConfigurer genP(hydro->series->maxHourlyGenPower.timeSeries);
     TimeSeriesConfigurer genE(hydro->series->maxHourlyPumpPower.timeSeries);
-    genP.setColumnCount(3).fillColumnWith(0, 100.).fillColumnWith(1, 200.).fillColumnWith(2, 300.);
-    genE.setColumnCount(3).fillColumnWith(0, 0.).fillColumnWith(1, 0.).fillColumnWith(2, 0.);
+    genP.setDimensions(3).fillColumnWith(0, 100.).fillColumnWith(1, 200.).fillColumnWith(2, 300.);
+    genE.setDimensions(3).fillColumnWith(0, 0.).fillColumnWith(1, 0.).fillColumnWith(2, 0.);
 
     ScenarioBuilderRule scenarioBuilderRule(*study);
     scenarioBuilderRule.hydro().setTSnumber(area->index, 0, 3);

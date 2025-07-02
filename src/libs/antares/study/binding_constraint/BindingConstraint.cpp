@@ -258,14 +258,8 @@ void BindingConstraint::copyWeights(
     AreaName fromID;
     AreaName withID;
 
-    auto end = rhs.pLinkWeights.end();
-    for (auto i = rhs.pLinkWeights.begin(); i != end; ++i)
+    for (const auto& [sourceLink, weight]: rhs.pLinkWeights)
     {
-        // Alias to the current link
-        const AreaLink* sourceLink = i->first;
-        // weight
-        const double weight = i->second;
-
         assert(sourceLink and "Invalid link in binding constraint");
         assert(sourceLink->from and "Invalid area pointer 'from' within link");
         assert(sourceLink->with and "Invalid area pointer 'with' within link");
@@ -283,14 +277,8 @@ void BindingConstraint::copyWeights(
 
     if (!rhs.pClusterWeights.empty())
     {
-        auto end = rhs.pClusterWeights.end();
-        for (auto i = rhs.pClusterWeights.begin(); i != end; ++i)
+        for (const auto& [thermalCluster, weight]: rhs.pClusterWeights)
         {
-            // Alias to the current thermalCluster
-            const ThermalCluster* thermalCluster = i->first;
-            // weight
-            const double weight = i->second;
-
             assert(thermalCluster and "Invalid thermal cluster in binding constraint");
 
             AreaName parentID;
@@ -328,14 +316,8 @@ void BindingConstraint::copyOffsets(
     AreaName fromID;
     AreaName withID;
 
-    auto end = rhs.pLinkOffsets.end();
-    for (auto i = rhs.pLinkOffsets.begin(); i != end; ++i)
+    for (const auto& [sourceLink, offset]: rhs.pLinkOffsets)
     {
-        // Alias to the current link
-        const AreaLink* sourceLink = i->first;
-        // offset
-        const int offset = i->second;
-
         assert(sourceLink and "Invalid link in binding constraint");
         assert(sourceLink->from and "Invalid area pointer 'from' within link");
         assert(sourceLink->with and "Invalid area pointer 'with' within link");
@@ -354,13 +336,8 @@ void BindingConstraint::copyOffsets(
     if (!rhs.pClusterOffsets.empty())
     {
         auto end = rhs.pClusterOffsets.end();
-        for (auto i = rhs.pClusterOffsets.begin(); i != end; ++i)
+        for (const auto& [thermalCluster, offset]: rhs.pClusterOffsets)
         {
-            // Alias to the current thermalCluster
-            const ThermalCluster* thermalCluster = i->first;
-            // weight
-            const int offset = i->second;
-
             assert(thermalCluster and "Invalid thermal cluster in binding constraint");
 
             AreaName parentID;
@@ -409,19 +386,17 @@ void BindingConstraint::reverseWeightSign(const AreaLink* lnk)
 
 bool BindingConstraint::contains(const Area* area) const
 {
-    const auto end = pLinkWeights.end();
-    for (auto i = pLinkWeights.begin(); i != end; ++i)
+    for (const auto& [sourceLink, _]: pLinkWeights)
     {
-        if ((i->first)->from == area || (i->first)->with == area)
+        if (sourceLink->from == area || sourceLink->with == area)
         {
             return true;
         }
     }
 
-    const auto tEnd = pClusterWeights.end();
-    for (auto i = pClusterWeights.begin(); i != tEnd; ++i)
+    for (const auto& [thermalCluster, _]: pClusterWeights)
     {
-        if ((i->first)->parentArea == area)
+        if (thermalCluster->parentArea == area)
         {
             return true;
         }
@@ -434,27 +409,26 @@ void BindingConstraint::buildFormula(Yuni::String& s) const
 {
     char tmp[42];
     bool first = true;
-    auto end = pLinkWeights.end();
-    for (auto i = pLinkWeights.begin(); i != end; ++i)
+    for (const auto& [sourceLink, weight]: pLinkWeights)
     {
-        if (!first)
+        if (!sourceLink)
         {
             s << " + ";
         }
-        SNPRINTF(tmp, sizeof(tmp), "%.2f", i->second);
+        SNPRINTF(tmp, sizeof(tmp), "%.2f", weight);
 
-        s << '(' << (const char*)tmp << " x " << (i->first)->getName();
+        s << '(' << (const char*)tmp << " x " << sourceLink->getName();
 
-        if (auto at = pLinkOffsets.find(i->first); at != pLinkOffsets.end())
+        if (auto at = pLinkOffsets.find(sourceLink); at != pLinkOffsets.end())
         {
             int o = at->second;
             if (o > 0)
             {
-                s << " x (t + " << pLinkOffsets.find(i->first)->second << ')';
+                s << " x (t + " << pLinkOffsets.find(sourceLink)->second << ')';
             }
             if (o < 0)
             {
-                s << " x (t - " << std::abs(pLinkOffsets.find(i->first)->second) << ')';
+                s << " x (t - " << std::abs(pLinkOffsets.find(sourceLink)->second) << ')';
             }
         }
 
@@ -462,31 +436,30 @@ void BindingConstraint::buildFormula(Yuni::String& s) const
         first = false;
     }
 
-    auto tEnd = pClusterWeights.end();
-    for (auto i = pClusterWeights.begin(); i != tEnd; ++i)
+    for (const auto [thermalCluster, weight]: pClusterWeights)
     {
-        if (!first)
+        if (!thermalCluster)
         {
             s << " + ";
         }
-        SNPRINTF(tmp, sizeof(tmp), "%.2f", i->second);
+        SNPRINTF(tmp, sizeof(tmp), "%.2f", weight);
 
-        s << '(' << (const char*)tmp << " x " << (i->first)->getFullName();
+        s << '(' << (const char*)tmp << " x " << thermalCluster->getFullName();
 
-        if (auto at = pClusterOffsets.find(i->first); at != pClusterOffsets.end())
+        if (auto at = pClusterOffsets.find(thermalCluster); at != pClusterOffsets.end())
         {
             int o = at->second;
             if (o > 0)
             {
-                s << " x (t + " << pClusterOffsets.find(i->first)->second << ')';
+                s << " x (t + " << pClusterOffsets.find(thermalCluster)->second << ')';
             }
             if (o < 0)
             {
-                s << " x (t - " << std::abs(pClusterOffsets.find(i->first)->second) << ')';
+                s << " x (t - " << std::abs(pClusterOffsets.find(thermalCluster)->second) << ')';
             }
         }
 
-        if (!i->first->isActive())
+        if (!thermalCluster->isActive())
         {
             s << " x N/A";
         }
@@ -676,6 +649,11 @@ BindingConstraintStructures BindingConstraint::initLinkArrays() const
       clusterIndex,
       clustersAreaIndex,
     };
+}
+
+const BindingConstraint::clusterWeightMap& BindingConstraint::clustersAndWeights() const
+{
+    return pClusterWeights;
 }
 
 bool BindingConstraint::forceReload(bool reload) const

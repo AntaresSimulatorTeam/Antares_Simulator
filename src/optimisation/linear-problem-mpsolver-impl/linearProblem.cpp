@@ -42,6 +42,12 @@ OrtoolsMipVariable* OrtoolsLinearProblem::addVariable(double lb,
                                                       bool integer,
                                                       const std::string& name)
 {
+    if (ub < lb)
+    {
+        std::ostringstream os;
+        os << "Variable '" << name << "' has invalid bounds [" << lb << ", " << ub << "] (ub < lb)";
+        throw std::invalid_argument(os.str());
+    }
     auto* mpVar = mpSolver_->MakeVar(lb, ub, integer, name);
 
     if (!mpVar)
@@ -171,7 +177,7 @@ bool OrtoolsLinearProblem::isMaximization() const
     return objective_->maximization();
 }
 
-void OrtoolsLinearProblem::WriteLP(const std::string& filename)
+void OrtoolsLinearProblem::WriteLP(const std::string& filename) const
 {
     std::string out;
     mpSolver_->ExportModelAsLpFormat(false, &out);

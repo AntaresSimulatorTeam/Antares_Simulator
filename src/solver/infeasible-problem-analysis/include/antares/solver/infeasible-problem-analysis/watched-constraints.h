@@ -8,12 +8,18 @@
 #include <string>
 #include <vector>
 
+std::string timeStep(const std::vector<std::string>& splitName);
+std::string shortName(const std::vector<std::string>& splitName);
+std::string areaName(const std::vector<std::string>& splitName);
+std::string STSname(const std::vector<std::string>& splitName);
+std::string STSAdditionalConstraintName(const std::vector<std::string>& splitName);
+
 namespace Antares::Optimization
 {
 class WatchedConstraint
 {
 public:
-    explicit WatchedConstraint(const std::string& name, const double slackValue);
+    explicit WatchedConstraint(const std::string& name, double slackValue);
     virtual ~WatchedConstraint() = default;
     virtual std::string infeasibility() = 0;
     virtual std::string infeasibilityCause() = 0;
@@ -97,16 +103,47 @@ public:
     std::string infeasibilityCause() override;
 };
 
+template<const char* ConstraintType>
+class STSAdditionalConstraint: public WatchedConstraint
+{
+    using WatchedConstraint::WatchedConstraint;
+
+public:
+    ~STSAdditionalConstraint() override = default;
+
+    std::string infeasibility() override
+    {
+        return "Short-term-storage additional constraint (" + std::string(ConstraintType) + ") "
+               + STSAdditionalConstraintName(splitName()) + " at area '" + areaName(splitName())
+               + "' in STS '" + STSname(splitName()) + "' at  " + timeStep(splitName());
+    }
+
+    std::string infeasibilityCause() override
+    {
+        return "* Short-term " + std::string(ConstraintType) + " additional constraint";
+    }
+};
+
+constexpr char WITHDRAWAL[] = "withdrawal";
+constexpr char INJECTION[] = "injection";
+constexpr char NETTING[] = "netting";
+
+using STSWithdrawalSum = STSAdditionalConstraint<WITHDRAWAL>;
+using STSInjectionSum = STSAdditionalConstraint<INJECTION>;
+using STSNettingSum = STSAdditionalConstraint<NETTING>;
+
 class ConstraintsFactory
 {
 public:
-    explicit ConstraintsFactory();
-    std::unique_ptr<WatchedConstraint> create(const std::string&, const double) const;
+    explicit ConstraintsFactory() = default;
+    std::unique_ptr<WatchedConstraint> create(const std::string&, double) const;
     std::regex constraintsFilter();
 
 private:
-    std::map<std::string,
-             std::function<std::unique_ptr<WatchedConstraint>(const std::string&, const double)>>
+    static const std::map<
+      std::string,
+      std::pair<std::regex,
+                std::function<std::unique_ptr<WatchedConstraint>(const std::string&, double)>>>
       regex_to_ctypes_;
 };
 

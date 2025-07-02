@@ -19,6 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
+#include <ranges>
 
 namespace Antares::Data
 {
@@ -49,9 +50,9 @@ inline uint BindingConstraint::linkCount() const
 
 inline uint BindingConstraint::clusterCount() const
 {
-    return std::ranges::count_if(pClusterWeights,
-                                 [](const std::pair<const Data::ThermalCluster*, double>& coeff)
-                                 { return coeff.first->isActive(); });
+    return std::ranges::count_if(pClusterWeights | std::views::keys,
+                                 [](const Data::ThermalCluster* coeff)
+                                 { return coeff->isActive(); });
 }
 
 inline bool BindingConstraint::enabled() const

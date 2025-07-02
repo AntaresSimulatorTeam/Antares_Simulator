@@ -379,9 +379,9 @@ BOOST_FIXTURE_TEST_CASE(SystemWithSenderAndReceiverPort, PrepareYaml)
     auto& component_G = components.at("G");
     auto& component_D = components.at("D");
 
-    auto connections_to_N = component_N.connexionsViaPort(port_id);
-    auto connections_to_G = component_G.connexionsViaPort(port_id);
-    auto connections_to_D = component_D.connexionsViaPort(port_id);
+    auto connections_to_N = component_N.componentConnectionsViaPort(port_id);
+    auto connections_to_G = component_G.componentConnectionsViaPort(port_id);
+    auto connections_to_D = component_D.componentConnectionsViaPort(port_id);
 
     BOOST_CHECK(connections_to_N.size() == 1);
     BOOST_CHECK(connections_to_G.size() == 0);

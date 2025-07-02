@@ -212,13 +212,6 @@ public:
             VariableAccessorType::InitializeAndReset(pValuesForTheCurrentYear[numSpace], study);
         }
 
-        auto& limits = study.runtime.rangeLimits;
-
-        pRatioYear = 100. / (double)limits.year[Data::rangeCount];
-        pRatioDay = 100. / (double)limits.day[Data::rangeCount];
-        pRatioMonth = 100. / (double)limits.month[Data::rangeCount];
-        pRatioWeek = 100. / (double)limits.week[Data::rangeCount];
-
         // Next
         NextType::initializeFromStudy(study);
     }
@@ -313,19 +306,15 @@ public:
     }
 
     template<class V>
-    void computeSpatialAggregatesSummary(V& allVars,
-                                         std::map<unsigned int, unsigned int>& numSpaceToYear,
-                                         uint nbYearsForCurrentSummary)
+    void computeSpatialAggregatesSummary(V& allVars, unsigned int year, unsigned int numSpace)
     {
         if (VCardType::VCardOrigin::spatialAggregateMode & Category::spatialAggregateEachYear)
         {
-            internalSpatialAggregateForParallelYears(numSpaceToYear, nbYearsForCurrentSummary);
+            internalSpatialAggregateForParallelYears(year, numSpace);
         }
 
         // Next variable
-        NextType::computeSpatialAggregatesSummary(allVars,
-                                                  numSpaceToYear,
-                                                  nbYearsForCurrentSummary);
+        NextType::computeSpatialAggregatesSummary(allVars, year, numSpace);
     }
 
     template<class V, class SetT>
@@ -476,27 +465,18 @@ private:
           pValuesForTheCurrentYear[numSpace]);
     }
 
-    void internalSpatialAggregateForParallelYears(
-      std::map<unsigned int, unsigned int>& numSpaceToYear,
-      uint nbYearsForCurrentSummary)
+    void internalSpatialAggregateForParallelYears(unsigned int year, unsigned int numSpace)
     {
-        for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
-        {
-            // Merge all those values with the global results
-            VariableAccessorType::ComputeSummary(pValuesForTheCurrentYear[numSpace],
-                                                 AncestorType::pResults,
-                                                 numSpaceToYear[numSpace]);
-        }
+        // Merge all those values with the global results
+        VariableAccessorType::ComputeSummary(pValuesForTheCurrentYear[numSpace],
+                                             AncestorType::pResults,
+                                             year);
     }
 
 private:
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesTypeForSpatialAg pValuesForTheCurrentYear;
 
-    double pRatioYear;
-    double pRatioDay;
-    double pRatioMonth;
-    double pRatioWeek;
     unsigned int pNbYearsParallel;
 
 }; // class SpatialAggregate

@@ -3,6 +3,24 @@
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to
 lower the costs of changing existing interfaces, both GUI and scripts.
 
+## v9.3.0
+
+### Input
+
+#### Removed properties
+
+The following properties were removed from **settings/generaldata.ini**.
+
+- `refreshtimeseries`
+- `refreshintervalload`
+- `refreshintervalhydro`
+- `refreshintervalwind`
+- `refreshintervalthermal`
+- `refreshintervalsolar`
+
+If the user provides a value for key refreshtimeseries the simulation will fail with a warning.
+Values for the refresh intervals will be ignored.
+
 ## v9.2.0
 
 ### Input
@@ -15,10 +33,12 @@ The following properties were removed from **settings/generaldata.ini**.
 - `adequacy patch/set-to-null-ntc-between-physical-out-for-first-step`
 - `other preferences/initial-reservoir-levels`
 
-If the user provides any of the key/values below
+If the user provides any of the key/values below:
+
 - `adequacy patch/enable-first-step = true`
 - `adequacy patch/set-to-null-ntc-between-physical-out-for-first-step = false`
 - `other preferences/initial-reservoir-levels = hot start`
+- 
 the simulation will fail with a warning. We recommend removing these properties from `settings/generaldata.ini`. Other values (e.g `adequacy patch/enable-first-step = false`) will be ignored.
 
 #### Hydraulic reservoirs / long-term storage
@@ -46,6 +66,35 @@ It is possible to provide only k of these time-series, for k=0..5. However, if p
 
 Note that in order for time-series `cost-variation-injection.txt` and `cost-variation-withdrawal.txt` to be taken into account, the user needs to set `penalize-variation-injection = true` (resp. `penalize-variation-withdrawal = true`). If not, these files will be ignored.
 
+#### Short-term storages / additional constraints
+For each area, add optional file `input/st-storage/constraints/<area id>/additional-constraints.ini`
+
+For example
+```ini
+[withdrawal-1]
+cluster = cluster-11
+variable = withdrawal
+operator = equal
+hours = [1,3,5], [120,121,122,123,124,125,126,127,128]
+
+[netting-1]
+cluster = cluster-11
+variable = netting
+operator = less
+hours = [1, 168]
+```
+
+Possible values:
+
+- `cluster`: ID of the short-term storage in the same area
+- `variable`: `withdrawal`, `injection`, `netting`
+- `operator`: `less`, `equal`, `greater`
+- `hours`: not empty, any number of lists `[h_1, ..., h_n]` with n>=1, and coefficients from 1 to 168 included.
+
+Note that all fields are mandatory.
+
+For each constraint, the corresponding RHS time-series must be located at `input/st-storage/constraints/<area id>/rhs_<constraint id>.txt`. The time-series must contain a single column and 8760 rows, empty files are also accepted.
+
 ####  Hydro final levels / scenario-builder
 
 - Added optional key type "hfl" (hydro final level) in the scenario builder. The syntax is equivalent to existing
@@ -60,6 +109,7 @@ By convention, `year` start at 0 and `value` must be in interval [0, 1].
 #### Compatibility flag for hydro maximal power
 
 In file settings/generaldata.ini, in new section `compatibility`, add new property `hydro-pmax` with possible values
+
 - `daily` (default, legacy) 
 - `hourly` (new).
 

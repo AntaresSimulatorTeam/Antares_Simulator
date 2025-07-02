@@ -30,6 +30,7 @@
 
 #include "antares/study/binding_constraint/BindingConstraintGroup.h"
 #include "antares/study/parts/hydro/series.h"
+#include "antares/study/parts/short-term-storage/cluster.h"
 #include "antares/study/scenario-builder/TSnumberData.h"
 
 namespace Antares::Data::ScenarioBuilder

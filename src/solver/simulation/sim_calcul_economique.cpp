@@ -27,6 +27,7 @@
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
+#include "antares/solver/simulation/sim_binding_constraints_rhs.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/simulation/simulation.h"
 #include "antares/study/fwd.h"
@@ -64,18 +65,16 @@ static void importShortTermStorages(
             toInsert.name = st.properties.name;
             for (const auto& constraint: st.additionalConstraints)
             {
-                if (constraint.enabled)
+                if (constraint->enabled)
                 {
-                    auto newConstraint = constraint;
-                    for (auto& c: newConstraint.constraints)
+                    for (auto& c: constraint->constraints)
                     {
                         c.globalIndex = constraintGlobalIndex;
                         ++constraintGlobalIndex;
                     }
-                    toInsert.additionalConstraints.push_back(std::move(newConstraint));
+                    toInsert.additionalConstraints.push_back(constraint);
                 }
             }
-
             toInsert.series = st.series;
 
             // TODO add missing properties, or use the same struct
@@ -99,7 +98,6 @@ void SIM_InitialisationProblemeHebdo(Study& study,
     problem.linear_problem_data_ = study.getModelerData();
 
     problem.Expansion = (parameters.mode == Data::SimulationMode::Expansion);
-    problem.firstWeekOfSimulation = false;
 
     // gp adq : to be removed
     if (parameters.adqPatchParams.enabled)
@@ -252,7 +250,6 @@ void SIM_InitialisationProblemeHebdo(Study& study,
         PtMat.bindingConstraint = bc;
         PtMat.NombreDInterconnexionsDansLaContrainteCouplante = bc->linkCount();
         PtMat.NombreDePaliersDispatchDansLaContrainteCouplante = bc->clusterCount();
-        PtMat.NombreDElementsDansLaContrainteCouplante = bc->linkCount() + bc->clusterCount();
         PtMat.NomDeLaContrainteCouplante = bc->name().c_str();
         switch (bc->type())
         {
@@ -340,93 +337,12 @@ void SIM_InitialisationProblemeHebdo(Study& study,
     problem.LeProblemeADejaEteInstancie = false;
 }
 
-static void prepareBindingConstraint(PROBLEME_HEBDO& problem,
-                                     int PasDeTempsDebut,
-                                     const BindingConstraintsRepository& bindingConstraints,
-                                     const BindingConstraintGroupRepository& bcgroups,
-                                     const uint weekFirstDay,
-                                     int pasDeTemps)
-{
-    auto activeConstraints = bindingConstraints.activeConstraints();
-    const auto constraintCount = activeConstraints.size();
-
-    for (unsigned constraintIndex = 0; constraintIndex != constraintCount; ++constraintIndex)
-    {
-        auto bc = activeConstraints[constraintIndex];
-        assert(bc->RHSTimeSeries().width && "Invalid constraint data width");
-
-        uint tsIndexForBc = 0;
-        auto* group = bcgroups[bc->group()];
-        if (group)
-        {
-            tsIndexForBc = group->timeseriesNumbers[problem.year];
-        }
-
-        // If there is only one TS, always select it.
-        const auto ts_number = bc->RHSTimeSeries().width == 1 ? 0 : tsIndexForBc;
-
-        auto& timeSeries = bc->RHSTimeSeries();
-        const double* column = timeSeries[ts_number];
-        switch (bc->type())
-        {
-        case BindingConstraint::typeHourly:
-        {
-            problem.MatriceDesContraintesCouplantes[constraintIndex]
-              .SecondMembreDeLaContrainteCouplante[pasDeTemps]
-              = column[PasDeTempsDebut + pasDeTemps];
-            break;
-        }
-        case BindingConstraint::typeDaily:
-        {
-            assert(timeSeries.width && "Invalid constraint data width");
-            assert(weekFirstDay + 6 < timeSeries.height && "Invalid constraint data height");
-
-            std::vector<double>& sndMember = problem
-                                               .MatriceDesContraintesCouplantes[constraintIndex]
-                                               .SecondMembreDeLaContrainteCouplante;
-
-            for (unsigned day = 0; day != 7; ++day)
-            {
-                sndMember[day] = column[weekFirstDay + day];
-            }
-
-            break;
-        }
-        case BindingConstraint::typeWeekly:
-        {
-            assert(timeSeries.width && "Invalid constraint data width");
-            assert(weekFirstDay + 6 < timeSeries.height && "Invalid constraint data height");
-
-            double sum = 0;
-            for (unsigned day = 0; day != 7; ++day)
-            {
-                sum += column[weekFirstDay + day];
-            }
-
-            problem.MatriceDesContraintesCouplantes[constraintIndex]
-              .SecondMembreDeLaContrainteCouplante[0]
-              = sum;
-            break;
-        }
-        case BindingConstraint::typeUnknown:
-        case BindingConstraint::typeMax:
-        default:
-        {
-            assert(false && "invalid constraint type");
-            logs.error() << "internal error. Please submit a full bug report";
-            break;
-        }
-        }
-    }
-}
-
 void SIM_RenseignementProblemeHebdo(const Study& study,
                                     PROBLEME_HEBDO& problem,
                                     uint weekInTheYear,
                                     const int PasDeTempsDebut,
                                     const HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
                                     const Antares::Data::Area::ScratchMap& scratchmap)
-
 {
     const auto& parameters = study.parameters;
     auto& studyruntime = study.runtime;
@@ -492,13 +408,15 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
         if (area.hydro.reservoirManagement)
         {
-            problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir
-              = problem.previousSimulationFinalLevel[k];
+            double& nivInit = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
+            nivInit = problem.previousSimulationFinalLevel[k];
+            if (not problem.CaracteristiquesHydrauliques[k].TurbinageEntreBornes)
+            {
+                nivInit = hydroVentilationResults[k].NiveauxReservoirsDebutJours[weekFirstDay]
+                          * area.hydro.reservoirCapacity;
+                problem.previousSimulationFinalLevel[k] = nivInit;
+            }
 
-            problem.CaracteristiquesHydrauliques[k].LevelForTimeInterval
-              = problem.CaracteristiquesHydrauliques[k]
-                  .NiveauInitialReservoir; /*for first 24-hour optim*/
-            double nivInit = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
             if (nivInit < -LEVEL_TOLERANCE_MWH)
             {
                 std::ostringstream msg;
@@ -518,14 +436,12 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             if (area.hydro.powerToLevel)
             {
                 problem.CaracteristiquesHydrauliques[k].WeeklyGeneratingModulation = Antares::Data::
-                  getWeeklyModulation(problem.previousSimulationFinalLevel[k] * 100
-                                        / area.hydro.reservoirCapacity,
+                  getWeeklyModulation(nivInit * 100 / area.hydro.reservoirCapacity,
                                       area.hydro.creditModulation,
                                       Data::PartHydro::genMod);
 
                 problem.CaracteristiquesHydrauliques[k].WeeklyPumpingModulation = Antares::Data::
-                  getWeeklyModulation(problem.previousSimulationFinalLevel[k] * 100
-                                        / area.hydro.reservoirCapacity,
+                  getWeeklyModulation(nivInit * 100 / area.hydro.reservoirCapacity,
                                       area.hydro.creditModulation,
                                       Data::PartHydro::pumpMod);
             }
@@ -533,8 +449,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             if (area.hydro.useWaterValue)
             {
                 problem.CaracteristiquesHydrauliques[k].WeeklyWaterValueStateRegular
-                  = getWaterValue(problem.previousSimulationFinalLevel[k] * 100
-                                    / area.hydro.reservoirCapacity,
+                  = getWaterValue(nivInit * 100 / area.hydro.reservoirCapacity,
                                   area.hydro.waterValues,
                                   weekFirstDay);
             }
@@ -614,17 +529,16 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
         }
     }
 
+    Simulation::setBindingConstraintsRHS(problem,
+                                         study.bindingConstraints,
+                                         study.bindingConstraintsGroups,
+                                         PasDeTempsDebut,
+                                         weekFirstDay);
+
     int hourInYear = PasDeTempsDebut;
     for (unsigned hourInWeek = 0; hourInWeek < problem.NombreDePasDeTemps;
          ++hourInWeek, ++hourInYear)
     {
-        prepareBindingConstraint(problem,
-                                 PasDeTempsDebut,
-                                 study.bindingConstraints,
-                                 study.bindingConstraintsGroups,
-                                 weekFirstDay,
-                                 hourInWeek);
-
         for (uint k = 0; k < nbPays; ++k)
         {
             auto& area = *(study.areas.byIndex[k]);
@@ -687,7 +601,6 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                                                                              + hourInWeek];
         }
     }
-
     {
         for (uint k = 0; k < nbPays; ++k)
         {
@@ -811,7 +724,6 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                                     DGU[j] = DGU_tmp[j] * std::min(WGU, WSL + WNI) / WGU;
                                 }
                             }
-
                             else
                             {
                                 const uint nextWeekFirstDay = study.calendar
@@ -957,7 +869,6 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                                         DPU[j] = DPC * DPM * std::min(U, V) / U;
                                     }
                                 }
-
                                 else
                                 {
                                     const uint nextWeekFirstDay = study.calendar

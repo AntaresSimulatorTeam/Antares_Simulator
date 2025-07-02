@@ -1,8 +1,5 @@
-#define BOOST_TEST_MODULE test adequacy patch functions
-
 #define WIN32_LEAN_AND_MEAN
 
-#include <adequacy_patch_runtime_data.h>
 #include <fstream>
 #include <tuple>
 #include <vector>
@@ -10,13 +7,9 @@
 #include <boost/test/unit_test.hpp>
 
 #include <antares/exception/LoadingError.hpp>
+#include <antares/solver/simulation/adequacy_patch_runtime_data.h>
+#include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include "antares/study/parameters/adq-patch-params.h"
-
-#include "adequacy_patch_csr/adq_patch_curtailment_sharing.h"
-#include "adequacy_patch_local_matching/adq_patch_local_matching.h"
-
-static double origineExtremite = -1;
-static double extremiteOrigine = 5;
 
 using namespace Antares::Data::AdequacyPatch;
 namespace tt = boost::test_tools;
@@ -56,8 +49,6 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
     problem.IndexDebutIntercoExtremite = std::vector<int>(1);
 
     // input values
-    adqPatchParams.localMatching.setToZeroOutsideInsideLinks
-      = !includeFlowsOutsideAdqPatchToDensNew;
     problem.ResultatsHoraires[Area].ValeursHorairesDeDefaillancePositive[hour] = ensInit;
     int Interco = 1;
     problem.IndexDebutIntercoOrigine[Area] = Interco;
@@ -76,7 +67,7 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
     double densNew;
     std::tie(netPositionInit, densNew, std::ignore) = calculateAreaFlowBalance(
       &problem,
-      adqPatchParams.localMatching.setToZeroOutsideInsideLinks,
+      !includeFlowsOutsideAdqPatchToDensNew,
       Area,
       hour);
 
@@ -92,6 +83,8 @@ AdqPatchParams createParams()
 
     return p;
 }
+
+BOOST_AUTO_TEST_SUITE(_AdequacyPatch_)
 
 // Area 0 is physical area inside adq-patch connected to two areas:
 // Area1 virtual-area, and Area2-virtual area
@@ -384,3 +377,5 @@ BOOST_AUTO_TEST_CASE(check_adq_param_wrong_hurdle_cost)
     auto p = createParams();
     BOOST_CHECK_THROW(p.checkAdqPatchIncludeHurdleCost(false), Error::IncompatibleHurdleCostCSR);
 }
+
+BOOST_AUTO_TEST_SUITE_END()

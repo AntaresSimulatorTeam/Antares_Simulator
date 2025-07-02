@@ -26,6 +26,12 @@ def modeler_var_optimal_value(context, var, value):
 def modeler_obj_value(context, value):
     assert_double_close(value, context.moh.get_optimal_value("objective"), 1e-6)
 
+
+@step('the objective value is greater than {lb:g} and lower than {ub:g}')
+def modeler_obj_value(context, lb, ub):
+    assert lb <= context.moh.get_optimal_value("objective") <= ub, f"Objective value is not inside expected range: {context.moh.get_optimal_value('objective')}"
+
+
 @step('the optimal values of the variables are')
 def modeler_var_optimal_value(context):
     for row in context.table:
@@ -52,6 +58,14 @@ def run_modeler(context):
     print(f"Running command: {command}")
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = process.communicate()
+    if out:
+        context.logs_out = out.decode("utf-8")
+    else:
+        context.logs_out = ""
+    if err:
+        context.logs_err = err.decode("utf-8")
+    else:
+        context.logs_err = ""
 
     if process.returncode != 0:
         print("*********************** Begin stdout ***********************")

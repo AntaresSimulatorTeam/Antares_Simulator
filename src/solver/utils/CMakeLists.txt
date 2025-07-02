@@ -5,12 +5,8 @@ set(SRC
         ortools_quadratic_wrapper.cpp
         include/antares/solver/utils/filename.h
         filename.cpp
-        include/antares/solver/utils/named_problem.h
-        named_problem.cpp
         include/antares/solver/utils/mps_utils.h
         mps_utils.cpp
-        include/antares/solver/utils/name_translator.h
-        name_translator.cpp
         include/antares/solver/utils/opt_period_string_generator.h
         opt_period_string_generator.cpp
         basis_status.cpp

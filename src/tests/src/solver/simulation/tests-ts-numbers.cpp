@@ -45,7 +45,6 @@ void initializeStudy(Study::Ptr study, unsigned int nbYears = 1)
 
     study->parameters.intraModal = 0;
     study->parameters.interModal = 0;
-    study->parameters.timeSeriesToRefresh = 0;
 }
 
 // ========================

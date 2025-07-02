@@ -52,7 +52,6 @@ void initializeStudy(Study& study)
 
     study.parameters.intraModal = 0;
     study.parameters.interModal = 0;
-    study.parameters.timeSeriesToRefresh = 0;
 }
 
 BOOST_AUTO_TEST_CASE(BC_group_TestGroup_has_output_file)
@@ -142,4 +141,103 @@ BOOST_AUTO_TEST_CASE(BC_timeseries_numbers_store_values)
     out.loadFromCSVFile(test1_path.string());
     BOOST_CHECK_EQUAL(tsNumbers[0] + 1, out[0][0]);
     BOOST_CHECK_EQUAL(tsNumbers[1] + 1, out[0][1]);
+}
+
+BOOST_AUTO_TEST_CASE(sts_area_cluster_inflows_timeseries_numbers_store_values)
+{
+    auto study = std::make_shared<Study>();
+    study->parameters.storeTimeseriesNumbers = true;
+
+    // Create an area
+    auto area = study->areaAdd("fr");
+    auto& clusters = area->shortTermStorage.storagesByIndex;
+
+    // Add one STS cluster
+    clusters.resize(1);
+    auto& cluster = clusters[0];
+    cluster.id = "sts";
+
+    // Prepare inflow time series
+    cluster.series->inflows.resize(10, 10); // [10 timesteps, 10 MC years]
+
+    // Assign time series numbers
+    cluster.series->inflowsTSNumbers.reset(2);
+    cluster.series->inflowsTSNumbers[0] = 3;
+    cluster.series->inflowsTSNumbers[1] = 4;
+
+    // Temp directory and writer
+    auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    Benchmarking::DurationCollector durationCollector;
+    auto resultWriter = resultWriterFactory(ResultFormat::legacyFilesDirectories,
+                                            working_tmp_dir.string().c_str(),
+                                            nullptr,
+                                            durationCollector);
+
+    // Init and generate
+    initializeStudy(*study);
+    // Antares::Solver::TimeSeriesNumbers::Generate(*study);
+    Antares::Solver::TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(*study, *resultWriter);
+
+    // Verify the output file for inflows
+    fs::path inflow_ts_file = working_tmp_dir / "ts-numbers" / "st-storage" / "fr" / "sts"
+                              / "inflows.txt";
+    BOOST_CHECK_EQUAL(fs::exists(inflow_ts_file), true);
+
+    Matrix<uint32_t> out;
+    out.loadFromCSVFile(inflow_ts_file.string());
+
+    // TimeSeriesNumbers are stored as values + 1
+    BOOST_CHECK_EQUAL(out[0][0], 4); // 3 + 1
+    BOOST_CHECK_EQUAL(out[0][1], 5); // 4 + 1
+}
+
+BOOST_AUTO_TEST_CASE(sts_area_cluster_additional_constraints_timeseries_numbers_store_values)
+{
+    auto study = std::make_shared<Study>();
+    study->parameters.storeTimeseriesNumbers = true;
+
+    // Create an area
+    auto area = study->areaAdd("fr");
+    auto& clusters = area->shortTermStorage.storagesByIndex;
+
+    // Add one STS cluster
+    clusters.resize(1);
+    auto& cluster = clusters[0];
+    cluster.id = "sts";
+
+    // Add one AdditionalConstraint
+    auto constraint = std::make_shared<ShortTermStorage::AdditionalConstraints>();
+    constraint->cluster_id = "sts";
+    constraint->name = "addc";
+    // Prepare time series for the constraint
+    constraint->timeSeries.resize(10, 10); // [10 timesteps, 10 MC years]
+
+    // Assign time series numbers
+    constraint->timeseriesNumbers.reset(2);
+    constraint->timeseriesNumbers[0] = 7;
+    constraint->timeseriesNumbers[1] = 8;
+    cluster.additionalConstraints.push_back(constraint);
+
+    // Temp directory and writer
+    auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    Benchmarking::DurationCollector durationCollector;
+    auto resultWriter = resultWriterFactory(ResultFormat::legacyFilesDirectories,
+                                            working_tmp_dir.string().c_str(),
+                                            nullptr,
+                                            durationCollector);
+
+    // Init and store
+    initializeStudy(*study);
+    Antares::Solver::TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(*study, *resultWriter);
+
+    // Check the output file
+    fs::path ac_ts_file = working_tmp_dir / "ts-numbers" / "st-storage" / "fr" / "sts" / "addc.txt";
+    BOOST_CHECK_EQUAL(fs::exists(ac_ts_file), true);
+
+    Matrix<uint32_t> out;
+    out.loadFromCSVFile(ac_ts_file.string());
+
+    // TimeSeriesNumbers are stored as values + 1
+    BOOST_CHECK_EQUAL(out[0][0], 8); // 7 + 1
+    BOOST_CHECK_EQUAL(out[0][1], 9); // 8 + 1
 }

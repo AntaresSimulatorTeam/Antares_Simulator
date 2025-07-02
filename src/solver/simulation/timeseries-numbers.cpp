@@ -588,6 +588,39 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
                                              * nbTimeSeries));
         }
     }
+
+    // Short-term storage inflows
+    study.areas.each(
+      [&](const Antares::Data::Area& area)
+      {
+          for (const auto& sts: area.shortTermStorage.storagesByIndex)
+          {
+              const auto nbTimeSeries = sts.series->inflows.numberOfColumns();
+              if (nbTimeSeries > 1)
+              {
+                  sts.series->inflowsTSNumbers[year] = (uint32_t)(floor(
+                    study.runtime.random[seedTimeseriesNumbers].next() * nbTimeSeries));
+              }
+          }
+      });
+
+    // Short-term storage additional constraints
+    study.areas.each(
+      [&](const Antares::Data::Area& area)
+      {
+          for (const auto& sts: area.shortTermStorage.storagesByIndex)
+          {
+              for (const auto& ct: sts.additionalConstraints)
+              {
+                  const auto nbTimeSeries = ct->timeSeries.numberOfColumns();
+                  if (nbTimeSeries > 1)
+                  {
+                      ct->timeseriesNumbers[year] = (uint32_t)(floor(
+                        study.runtime.random[seedTimeseriesNumbers].next() * nbTimeSeries));
+                  }
+              }
+          }
+      });
 }
 
 Data::TimeSeriesNumbers* getFirstTSnumberInterModalMatrixFoundInArea(
@@ -846,6 +879,9 @@ void TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(Data::Study& study,
         study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesThermal>(resultWriter);
         study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesRenewable>(resultWriter);
         study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesTransmissionCapacities>(
+          resultWriter);
+        study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesShortTermInflows>(resultWriter);
+        study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesShortTermAdditionalConstraints>(
           resultWriter);
 
         Simulation::BindingConstraintsTimeSeriesNumbersWriter ts_writer(resultWriter);

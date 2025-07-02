@@ -100,7 +100,7 @@ TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldSumNode* node)
     std::string fieldId = node->getFieldName();
 
     TimeIndex to_return = TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
-    for (const auto connexion_end: component_.connexionsViaPort(portId))
+    for (const auto connexion_end: component_.componentConnectionsViaPort(portId))
     {
         auto* component = connexion_end.component();
         auto* port = connexion_end.port();

@@ -25,6 +25,7 @@
 #include <memory>
 #include <vector>
 
+#include "antares/solver/optimisation/opt_constants.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/utils/optimization_statistics.h"
 #include "antares/study/fwd.h"
@@ -149,7 +150,6 @@ struct CONTRAINTES_COUPLANTES
 
     std::vector<double> SecondMembreDeLaContrainteCouplante;
 
-    int NombreDElementsDansLaContrainteCouplante;
     int NombreDInterconnexionsDansLaContrainteCouplante;
 
     std::vector<double> PoidsDeLInterconnexion;
@@ -165,7 +165,7 @@ struct CONTRAINTES_COUPLANTES
 
     const char* NomDeLaContrainteCouplante;
 
-    std::shared_ptr<Data::BindingConstraint> bindingConstraint;
+    std::shared_ptr<Antares::Data::BindingConstraint> bindingConstraint;
 };
 
 namespace ShortTermStorage
@@ -183,7 +183,8 @@ struct PROPERTIES
     bool penalizeVariationInjection;
 
     std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
-    std::vector<Antares::Data::ShortTermStorage::AdditionalConstraints> additionalConstraints;
+    std::vector<std::shared_ptr<Antares::Data::ShortTermStorage::AdditionalConstraints>>
+      additionalConstraints;
     int clusterGlobalIndex;
     std::string name;
 };
@@ -325,8 +326,7 @@ struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
     double WeeklyGeneratingModulation;
     double WeeklyPumpingModulation;
     bool DirectLevelAccess; /*  determines the type of constraints bearing on the final stok level*/
-    bool AccurateWaterValue;     /*  determines the type of modelling used for water budget*/
-    double LevelForTimeInterval; /*  value computed by the simulator in water-value based modes*/
+    bool AccurateWaterValue; /*  determines the type of modelling used for water budget*/
     std::vector<double> WaterLayerValues;      /*  reference costs for the last time step (caution :
                                       dimension set to      100, should be made dynamic)*/
     std::vector<double> InflowForTimeInterval; /*  Energy input to the reservoir, used to in the
@@ -472,7 +472,6 @@ struct PROBLEME_HEBDO
 
     uint32_t HeureDansLAnnee = 0;
     bool LeProblemeADejaEteInstancie = false;
-    bool firstWeekOfSimulation = false;
 
     std::vector<CORRESPONDANCES_DES_VARIABLES> CorrespondanceVarNativesVarOptim;
     std::vector<CORRESPONDANCES_DES_CONTRAINTES> CorrespondanceCntNativesCntOptim;

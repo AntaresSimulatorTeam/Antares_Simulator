@@ -36,8 +36,8 @@ void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES& DonneesAnnuel
 
     DonneesAnnuelles.Volume[0] = DonneesAnnuelles.VolumeInitial;
 
-    const int NbPdt = DonneesAnnuelles.NombreDePasDeTemps;
     double CoutDepassementVolume = DonneesAnnuelles.CoutDepassementVolume;
+    double overflowfCost = DonneesAnnuelles.overflowfCost;
     auto& TurbineMax = DonneesAnnuelles.TurbineMax;
     const auto& TurbineMin = DonneesAnnuelles.TurbineMin;
 
@@ -51,13 +51,13 @@ void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES& DonneesAnnuel
     Xmin[Var] = DonneesAnnuelles.Volume[0];
     Xmax[Var] = DonneesAnnuelles.Volume[0];
 
-    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < nbMonths; Pdt++)
     {
         Var = CorrespondanceDesVariables.NumeroDeVariableVolume[Pdt];
         CoutLineaire[Var] = 0.0;
     }
 
-    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < nbMonths; Pdt++)
     {
         Var = CorrespondanceDesVariables.NumeroDeVariableTurbine[Pdt];
         Xmax[Var] = TurbineMax[Pdt];
@@ -65,13 +65,19 @@ void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES& DonneesAnnuel
         CoutLineaire[Var] = 0.0;
     }
 
-    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < nbMonths; Pdt++)
+    {
+        Var = CorrespondanceDesVariables.NumeroDeVariableOverflow[Pdt];
+        CoutLineaire[Var] = overflowfCost;
+    }
+
+    for (int Pdt = 0; Pdt < nbMonths; Pdt++)
     {
         Var = CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMax[Pdt];
         CoutLineaire[Var] = CoutDepassementVolume;
     }
 
-    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < nbMonths; Pdt++)
     {
         Var = CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMin[Pdt];
         CoutLineaire[Var] = CoutDepassementVolume;
@@ -80,13 +86,13 @@ void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES& DonneesAnnuel
     Var = CorrespondanceDesVariables.NumeroDeLaVariableViolMaxVolumeMin;
     CoutLineaire[Var] = DonneesAnnuelles.CoutViolMaxDuVolumeMin;
 
-    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < nbMonths; Pdt++)
     {
         Var = CorrespondanceDesVariables.NumeroDeVariableDEcartPositifAuTurbineCible[Pdt];
         CoutLineaire[Var] = 1.0;
     }
 
-    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < nbMonths; Pdt++)
     {
         Var = CorrespondanceDesVariables.NumeroDeVariableDEcartNegatifAuTurbineCible[Pdt];
         CoutLineaire[Var] = 1.0;

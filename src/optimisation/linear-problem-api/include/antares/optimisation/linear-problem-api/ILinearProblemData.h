@@ -15,17 +15,17 @@ public:
     {
     }
 
-    unsigned getFirstTimeStep() const
+    [[nodiscard]] unsigned getFirstTimeStep() const
     {
         return firstTimeStep;
     }
 
-    unsigned getLastTimeStep() const
+    [[nodiscard]] unsigned getLastTimeStep() const
     {
         return lastTimeStep;
     }
 
-    unsigned int getNumberOfTimestep() const
+    [[nodiscard]] unsigned int getNumberOfTimestep() const
     {
         return lastTimeStep - firstTimeStep + 1;
     }
@@ -50,10 +50,12 @@ private:
 class ILinearProblemData
 {
 public:
+    virtual ~ILinearProblemData() = default;
+
     virtual double getData(const std::string& dataSetId,
                            const std::string& scenarioGroup,
-                           const unsigned scenario,
-                           const unsigned hour)
+                           unsigned scenario,
+                           unsigned hour)
       = 0;
 };
 
