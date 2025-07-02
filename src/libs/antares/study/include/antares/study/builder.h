@@ -5,38 +5,55 @@
 
 #include <antares/study/study.h>
 
-class StudyFiller
+class StudyBuilder
 {
 public:
-    class Area
+    class AreaBuilder
     {
     public:
-        Area& setName(const std::string& name)
+        AreaBuilder(StudyBuilder& builder, Antares::Data::AreaList& areas):
+            builder(builder),
+            areas(areas)
+        {
+        }
+
+        AreaBuilder& setName(const std::string& name)
         {
             this->name = name;
             return *this;
         }
 
-        Area& setNodalOptimization(unsigned int nodalOptimization)
+        AreaBuilder& setNodalOptimization(unsigned int nodalOptimization)
         {
             this->nodalOptimization = nodalOptimization;
             return *this;
         }
 
-        Area& setUnsuppliedEnergyCost(double cost)
+        AreaBuilder& setUnsuppliedEnergyCost(double cost)
         {
             this->unsuppliedEnergyCost = cost;
             return *this;
         }
 
-        Area& setSpilledEnergyCost(double cost)
+        AreaBuilder& setSpilledEnergyCost(double cost)
         {
             this->spilledEnergyCost = cost;
             return *this;
         }
 
+        StudyBuilder& add()
+        {
+            auto toAdd = new Antares::Data::Area(name);
+            toAdd->nodalOptimization = nodalOptimization;
+            toAdd->thermal.unsuppliedEnergyCost = unsuppliedEnergyCost;
+            toAdd->thermal.spilledEnergyCost = spilledEnergyCost;
+
+            areas.add(toAdd);
+            return builder;
+        }
+
         // Area& setAdequacyPatchMode(AdequacyPatch::AdequacyPatchMode mode);
-        friend class StudyFiller;
+        friend class StudyBuilder;
 
     private:
         std::string name;
@@ -44,32 +61,26 @@ public:
         double unsuppliedEnergyCost = 0.;
         double spilledEnergyCost = 0.;
         // AdequacyPatch::AdequacyPatchMode adequacyPatchMode;
+        StudyBuilder& builder;
+        Antares::Data::AreaList& areas;
     };
 
-    StudyFiller(Antares::Data::Study& study):
-        study(study)
+    StudyBuilder(Antares::Data::Study& study):
+        study(study),
+        areaBuilder(*this, study.areas)
     {
     }
 
-    StudyFiller& addArea(const Area& area)
+    AreaBuilder& addArea()
     {
-        areas.emplace_back(std::move(area));
-        return *this;
+        return areaBuilder;
     }
 
     void build()
     {
-        for (const auto& area: areas)
-        {
-            auto toAdd = new Antares::Data::Area(area.name);
-            toAdd->nodalOptimization = area.nodalOptimization;
-            toAdd->thermal.unsuppliedEnergyCost = area.unsuppliedEnergyCost;
-            toAdd->thermal.spilledEnergyCost = area.spilledEnergyCost;
-            study.areas.add(toAdd);
-        }
     }
 
 private:
     Antares::Data::Study& study;
-    std::vector<StudyFiller::Area> areas;
+    AreaBuilder areaBuilder;
 };

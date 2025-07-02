@@ -28,18 +28,19 @@
 BOOST_AUTO_TEST_CASE(two_areas)
 {
     auto study = std::make_unique<Antares::Data::Study>(true);
-    StudyFiller filler(*study);
-    filler
-      .addArea(StudyFiller::Area()
-                 .setName("hello")
-                 .setUnsuppliedEnergyCost(221)
-                 .setSpilledEnergyCost(20)
-                 .setNodalOptimization(2))
-      .addArea(StudyFiller::Area()
-                 .setName("world")
-                 .setUnsuppliedEnergyCost(221)
-                 .setSpilledEnergyCost(20)
-                 .setNodalOptimization(2))
+    StudyBuilder builder(*study);
+    builder.addArea()
+      .setName("hello")
+      .setUnsuppliedEnergyCost(221)
+      .setSpilledEnergyCost(20)
+      .setNodalOptimization(2)
+      .add()
+      .addArea()
+      .setName("world")
+      .setUnsuppliedEnergyCost(221)
+      .setSpilledEnergyCost(20)
+      .setNodalOptimization(2)
+      .add()
       .build();
     BOOST_CHECK_EQUAL(study->areas.size(), 2);
 }
