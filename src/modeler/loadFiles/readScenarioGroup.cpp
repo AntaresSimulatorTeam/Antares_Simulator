@@ -24,6 +24,7 @@
 
 #include <antares/logs/logs.h>
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
+#include "antares/exception/RuntimeError.hpp"
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/scenarioGroupParser/ScenarioGroupParser.h"
 
@@ -60,8 +61,7 @@ Optimization::ScenarioGroupRepository parseScenarioGroupRepository(std::ifstream
         }
         catch (const std::exception& e)
         {
-            logs.error() << "Error parsing line: " << line << " - "
-                         << e.what(); // TODO: stack errors and log all ?
+            logs.error() << "Error parsing line: " << line << " - " << e.what();
         }
     }
     for (auto& [groupId, scenario]: alreadyCreatedScenarios)
@@ -88,14 +88,15 @@ Optimization::ScenarioGroupRepository loadScenarioGroupRepository(
         std::ifstream file(file_path);
         if (!file.is_open())
         {
-            throw std::runtime_error(fmt::format("Could not open {}", file_path.string()));
+            throw Error::RuntimeError(fmt::format("Could not open {}", file_path.string()));
         }
         return parseScenarioGroupRepository(std::move(file));
     }
     catch (const std::exception& e)
     {
-        // data-series are not mandatory
-        logs.info() << "Data-series could not be loaded: " << e.what();
+        // scenario-builder is not mandatory
+        // this code is probably unreachable
+        logs.info() << "Scenario-builder could not be loaded: " << e.what();
         return {};
     }
 }

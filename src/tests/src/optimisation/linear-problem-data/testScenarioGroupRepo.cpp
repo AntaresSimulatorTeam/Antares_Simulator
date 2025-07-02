@@ -5,6 +5,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <antares/solver/optim-model-filler/scenarioGroupRepo.h>
+#include "antares/exception/RuntimeError.hpp"
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 
 using namespace Antares::Optimisation::LinearProblemDataImpl;
@@ -56,7 +57,7 @@ BOOST_AUTO_TEST_CASE(ask_a_repo_a_rank_it_cannot_find_exception_raised)
     std::string expectedErrMsg = "In scenario group 'some group', chronicle for year 0 does not "
                                  "exist.";
     BOOST_CHECK_EXCEPTION(scenarioGroupRepo.scenario("some group").getData(0),
-                          Scenario::ScenarioNotExist,
+                          Antares::Error::RuntimeError,
                           checkMessage(expectedErrMsg));
 }
 
@@ -70,4 +71,16 @@ BOOST_AUTO_TEST_CASE(empty_group_id_returns_default_rank)
     scenarioGroupRepo.addScenario("some group", std::move(scenarioPtr));
 
     BOOST_CHECK_EQUAL(scenarioGroupRepo.scenario("").getData(scenario), 0);
+}
+
+BOOST_AUTO_TEST_CASE(set_should_fail_if_chronicle_exists)
+{
+    ScenarioGroupRepository scenarioGroupRepo;
+    unsigned scenario = 10;
+    unsigned dataRank = 15;
+    auto scenarioPtr = std::make_unique<Scenario>("some group");
+    scenarioPtr->setChronicle(scenario, dataRank);
+    BOOST_CHECK_EXCEPTION(scenarioPtr->setChronicle(scenario, dataRank),
+                          Antares::Error::RuntimeError,
+                          checkMessage("Chronicle for year 10 already exists."));
 }

@@ -1,4 +1,3 @@
-
 // Copyright 2007-2025, RTE (https://www.rte-france.com)
 // See AUTHORS.txt
 // SPDX-License-Identifier: MPL-2.0
@@ -20,6 +19,8 @@
 
 #include "include/antares/optimisation/linear-problem-data-impl/Scenario.h"
 
+#include "antares/exception/RuntimeError.hpp"
+
 #include "fmt/format.h"
 
 namespace Antares::Optimisation::LinearProblemDataImpl
@@ -29,7 +30,10 @@ LinearProblemApi::IScenario::Chronicle Scenario::getData(Year year) const
     auto it = chronicleData_.find(year);
     if (it == chronicleData_.end())
     {
-        throw ScenarioNotExist(group(), year);
+        throw Error::RuntimeError(
+          fmt::format("In scenario group '{}', chronicle for year {} does not exist.",
+                      group(),
+                      year));
     }
     return it->second;
 }
@@ -38,19 +42,9 @@ void Scenario::setChronicle(Year year, Chronicle chronicle)
 {
     if (chronicleData_.contains(year))
     {
-        throw AlreadyExists("Chronicle for year " + std::to_string(year));
+        throw Error::RuntimeError("Chronicle for year " + std::to_string(year)
+                                  + " already exists.");
     }
     chronicleData_[year] = chronicle;
-}
-
-Scenario::AlreadyExists::AlreadyExists(const std::string& groupId):
-    std::invalid_argument("Scenario group '" + groupId + "' already exists in group repo.")
-{
-}
-
-Scenario::ScenarioNotExist::ScenarioNotExist(const std::string& groupId, Year year):
-    std::invalid_argument(
-      fmt::format("In scenario group '{}', chronicle for year {} does not exist.", groupId, year))
-{
 }
 } // namespace Antares::Optimisation::LinearProblemDataImpl

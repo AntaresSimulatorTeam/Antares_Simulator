@@ -19,6 +19,7 @@ target_link_libraries(scenario-group-parser
         PRIVATE
         Antares::scenario-builder-antlr
         fmt::fmt
+        Antares::exception
 )
 
 install(DIRECTORY include/antares

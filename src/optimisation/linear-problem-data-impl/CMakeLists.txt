@@ -27,6 +27,7 @@ target_link_libraries(${PROJ}
         PUBLIC
         linear-problem-api
         fmt::fmt
+        Antares::exception
 )
 
 target_include_directories(${PROJ}

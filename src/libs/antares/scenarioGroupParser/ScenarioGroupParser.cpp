@@ -22,6 +22,8 @@
 #include <ANTLRInputStream.h>
 #include <fmt/format.h>
 
+#include "antares/exception/RuntimeError.hpp"
+
 #include "scenarioBuilderExpression/ScenarioBuilderBaseVisitor.h"
 #include "scenarioBuilderExpression/ScenarioBuilderLexer.h"
 #include "scenarioBuilderExpression/ScenarioBuilderParser.h"
@@ -79,13 +81,8 @@ ScenarioGroupParser::Line ScenarioGroupParser::parseLine(const std::string& line
     }
     catch (const std::exception& e)
     {
-        throw ParsingException(line, e.what());
+        throw Error::RuntimeError(
+          fmt::format("Error parsing line \"{}\".\n\tDetails: {}", line, e.what()));
     }
-}
-
-ScenarioGroupParser::ParsingException::ParsingException(const std::string& line,
-                                                        const std::string& what):
-    std::runtime_error(fmt::format("Error parsing line \"{}\".\n\tDetails: {}", line, what))
-{
 }
 } // namespace Antares

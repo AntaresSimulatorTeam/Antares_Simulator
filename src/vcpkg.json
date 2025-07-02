@@ -32,6 +32,8 @@
     {
       "name": "antlr4"
     },
-    "fmt"
+    {
+      "name": "fmt"
+    }
   ]
 }

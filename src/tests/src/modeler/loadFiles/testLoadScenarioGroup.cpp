@@ -25,6 +25,9 @@
 #include <boost/test/unit_test.hpp>
 
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
+#include "antares/exception/RuntimeError.hpp"
+
+#include "unit_test_utils.h"
 
 using namespace Antares::Solver::LoadFiles;
 
@@ -68,4 +71,20 @@ BOOST_AUTO_TEST_CASE(read_multiple_lines)
     BOOST_CHECK_EQUAL(scenarioGroupRepository.scenario("group1").getData(0), 0);
     BOOST_CHECK_EQUAL(scenarioGroupRepository.scenario("group1").getData(1), 1);
     BOOST_CHECK_EQUAL(scenarioGroupRepository.scenario("group2").getData(0), 2);
+}
+
+BOOST_AUTO_TEST_CASE(ignore_wrong_lines)
+{
+    auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    std::filesystem::create_directories(studyPath / "input" / "data-series");
+    std::ofstream file(studyPath / "input/data-series/modeler-scenariobuilder.dat");
+    file << "group1, DF=0\n"; // 'DF' used instead of int
+    file << "group1, 1=1\n";
+    file.close();
+    auto scenarioGroupRepository = loadScenarioGroupRepository(studyPath);
+    BOOST_CHECK_EXCEPTION(scenarioGroupRepository.scenario("group1").getData(0),
+                          Antares::Error::RuntimeError,
+                          checkMessage(
+                            "In scenario group 'group1', chronicle for year 0 does not exist."));
+    BOOST_CHECK_EQUAL(scenarioGroupRepository.scenario("group1").getData(1), 1);
 }

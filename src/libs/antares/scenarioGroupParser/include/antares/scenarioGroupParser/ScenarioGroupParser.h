@@ -19,7 +19,6 @@
 // along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 
 #pragma once
-#include <stdexcept>
 #include <string>
 
 namespace Antares
@@ -35,11 +34,5 @@ public:
     };
 
     Line parseLine(const std::string& line);
-
-    class ParsingException: public std::runtime_error
-    {
-    public:
-        ParsingException(const std::string& line, const std::string& what);
-    };
 };
 } // namespace Antares
