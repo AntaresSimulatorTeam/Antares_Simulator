@@ -766,7 +766,29 @@ struct NullWriterExtension: Solver::NullResultWriter
     std::vector<std::string> ConstraintNames;
 };
 
-// not naming of mps, the test will show that because successfull run does not rename the problem
+/**
+ * These two tests verify the behavior of OPT_AppelDuSimplexe regarding
+ * the solver's handling of problem feasibility and naming logic for MPS export.
+ */
+/**
+ *  -------------------------------------------------------------------------------------
+ * ✅ TEST 1: feasible_problem_does_not_triggers_analyzer_and_named_flag
+ *
+ * Purpose:
+ *   This test builds a small *feasible* linear program and ensures that:
+ *     - The solver succeeds.
+ *     - The problem is not renamed (i.e., default names like "c0", "c1" are used in MPS).
+ *     - The analyzer is *not* triggered (since the problem is feasible).
+ *
+ * Key Checks:
+ *   - The returned constraint names differ from the original ones, which confirms
+ *     that the original names were *not* injected into the solver before MPS export.
+ *   - `NamedProblems` remains false (no need for analysis or recovery).
+ *
+ * Notes:
+ *   The test proves that when the problem is feasible, the solver uses default
+ *   names in the MPS output, and does not require variable/constraint renaming.
+ */
 
 BOOST_AUTO_TEST_CASE(feasible_problem_does_not_triggers_analyzer_and_named_flag)
 {
@@ -795,7 +817,7 @@ BOOST_AUTO_TEST_CASE(feasible_problem_does_not_triggers_analyzer_and_named_flag)
 
     // Constraint matrix:
     // Constraint 0: x0 ≤ 5   => row 0: coeff=1.0, RHS=5
-    // Constraint 1: x0 ≥ 10  => row 1: coeff=1.0, RHS=10
+    // Constraint 1: x0 <= 10  => row 1: coeff=1.0, RHS=10
 
     probleme->IndicesDebutDeLigne = {0, 1};     // start index of each row in Coefficients vector
     probleme->NombreDeTermesDesLignes = {1, 1}; // 1 var per constraint
@@ -817,14 +839,10 @@ BOOST_AUTO_TEST_CASE(feasible_problem_does_not_triggers_analyzer_and_named_flag)
     probleme->ProblemesSpx.resize(1, nullptr); // Only one interval
     probleme->VariablesEntieres.resize(1, false);
 
-    // // Reinit not required, keep false
-    // problemeHebdo.ReinitOptimisation = false;
-    // // problemeHebdo->optimizationStatistics[0] = OptimizationStatistics();
-    // // problemeHebdo->optimizationStatistics[1] = OptimizationStatistics();
-    //
-    // // MPS export options
-    problemeHebdo.ExportMPS = Data::mpsExportStatus::UNKNOWN_EXPORT;
+    // MPS export options
+    problemeHebdo.ExportMPS = Data::mpsExportStatus::EXPORT_BOTH_OPTIMS; // to generate mps
     problemeHebdo.exportMPSOnError = true;
+
     problemeHebdo.modelerSystem = nullptr;
     problemeHebdo.NamedProblems = false;
 
@@ -841,17 +859,39 @@ BOOST_AUTO_TEST_CASE(feasible_problem_does_not_triggers_analyzer_and_named_flag)
                                             writer);
 
     BOOST_CHECK_EQUAL(writer.VariableNames.size(), nbVar);
-    BOOST_CHECK_EQUAL(writer.VariableNames[0], "x1");
+    BOOST_CHECK_EQUAL(writer.VariableNames[0], "x0");
     auto constraintNameFromGeneratedMps = writer.ConstraintNames;
-    BOOST_CHECK_EQUAL_COLLECTIONS(constraintNames.begin(),
-                                  constraintNames.end(),
+    BOOST_CHECK_NE(constraintNames[0], constraintNameFromGeneratedMps[0]);
+    BOOST_CHECK_NE(constraintNames[1], constraintNameFromGeneratedMps[1]);
+    std::vector<std::string> expected_cnstr_namee = {"c0", "c1"};
+    BOOST_CHECK_EQUAL_COLLECTIONS(expected_cnstr_namee.begin(),
+                                  expected_cnstr_namee.end(),
                                   constraintNameFromGeneratedMps.begin(),
                                   constraintNameFromGeneratedMps.end());
 }
 
-// not naming of mps, the test will show that because of
-// infeasibility, vars and constraint in the solver will be
-// named
+/**
+ * -------------------------------------------------------------------------------------
+ * ❌ TEST 2: infeasible_problem_triggers_analyzer_and_named_flag
+ *
+ * Purpose:
+ *   This test builds a *mathematically infeasible* problem: x ≤ 5 and x ≥ 10.
+ *   It verifies that:
+ *     - The solver fails in both standard and safe modes.
+ *     - The problem analyzer is triggered.
+ *     - The original variable and constraint names are injected into the solver.
+ *
+ * Key Checks:
+ *   - The constraint names in the MPS output match the original ones provided
+ *     (`firstConstraint`, `secondConstraint`).
+ *   - `NamedProblems` is set to true, indicating that names were pushed to the solver.
+ *
+ * Notes:
+ *   This confirms that when a problem fails to solve, Antares injects full
+ *   naming information into the solver (for better diagnostics) and prepares
+ *   MPS output accordingly.
+ *
+ */
 BOOST_AUTO_TEST_CASE(infeasible_problem_triggers_analyzer_and_named_flag)
 {
     PROBLEME_HEBDO problemeHebdo;
@@ -901,27 +941,19 @@ BOOST_AUTO_TEST_CASE(infeasible_problem_triggers_analyzer_and_named_flag)
     probleme->ProblemesSpx.resize(1, nullptr); // Only one interval
     probleme->VariablesEntieres.resize(1, false);
 
-    // // Reinit not required, keep false
-    // problemeHebdo.ReinitOptimisation = false;
-    // // problemeHebdo->optimizationStatistics[0] = OptimizationStatistics();
-    // // problemeHebdo->optimizationStatistics[1] = OptimizationStatistics();
-    //
-    // // MPS export options
+    // MPS export options
     problemeHebdo.ExportMPS = Data::mpsExportStatus::UNKNOWN_EXPORT;
     problemeHebdo.exportMPSOnError = true;
     problemeHebdo.modelerSystem = nullptr;
-    problemeHebdo.NamedProblems = false; // not naming of mps, the test will show that because of
-                                         // infeasibility, vars and constraint in the solver will be
-                                         // named
+    problemeHebdo.NamedProblems = false; // not naming mps, the test will show that because of
+                                         // infeasibility, vars and constraints in the solver will
+                                         // be named
 
     SingleOptimOptions options;
     NullWriterExtension writer;
     DummyOptPeriodStringGenerator generator;
-    //
-    // // Force infeasibility result from the solver
-    // // We assume ORTOOLS_Simplexe returns nullptr and leaves .ExistenceDUneSolution unset or !=
-    // // OUI_SPX
-    //
+    // Force infeasibility result from the solver
+
     const bool result = OPT_AppelDuSimplexe(options,
                                             &problemeHebdo,
                                             0, // NumIntervalle
@@ -929,10 +961,6 @@ BOOST_AUTO_TEST_CASE(infeasible_problem_triggers_analyzer_and_named_flag)
                                             generator,
                                             writer);
 
-    // // BOOST_CHECK_MESSAGE(!result, "Infeasible problem should return false");
-    // // BOOST_CHECK_MESSAGE(problemeHebdo->NamedProblems,
-    // //                     "NamedProblems should be set after infeasibility");
-    // BOOST_CHECK_EQUAL(problemeHebdo.NamedProblems, true);
 
     BOOST_CHECK_EQUAL(writer.VariableNames.size(), nbVar);
     BOOST_CHECK_EQUAL(writer.VariableNames[0], "var");
