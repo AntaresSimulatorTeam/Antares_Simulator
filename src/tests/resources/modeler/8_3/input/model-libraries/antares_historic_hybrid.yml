@@ -1,0 +1,243 @@
+# Copyright (c) 2024, RTE (https://www.rte-france.com)
+#
+# See AUTHORS.txt
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# SPDX-License-Identifier: MPL-2.0
+#
+# This file is part of the Antares project.
+library:
+  id: antares-historic-weo-hybrid
+  description: Antares historic model library  - without expectation operators
+
+
+  port-types:
+    - id: flow
+      description: A port which transfers power flow
+      fields:
+        - id: flow
+      area-connection:
+        - injection-field: flow
+
+  models:
+    - id: area
+      parameters:
+        - id: spillage_cost
+        - id: ens_cost
+      variables:
+        - id: spillage
+          lower-bound: 0
+          upper-bound: 1000000
+          variable-type: continuous
+        - id: unsupplied_energy
+          lower-bound: 0
+          upper-bound: 1000000
+          variable-type: continuous
+      ports:
+        - id: balance_port
+          type: flow
+      binding-constraints:
+        - id: balance
+          expression: sum_connections(balance_port.flow) = spillage - unsupplied_energy
+      objective: sum(spillage_cost * spillage + ens_cost * unsupplied_energy)
+
+    - id: load
+      parameters:
+        - id: load
+          time-dependent: true
+          scenario-dependent: true
+      ports:
+        - id: balance_port
+          type: flow
+      port-field-definitions:
+        - port: balance_port
+          field: flow
+          definition: -load
+
+    - id: link
+      parameters:
+        - id: capacity_direct
+          time-dependent: true
+          scenario-dependent: true
+        - id: capacity_indirect
+          time-dependent: true
+          scenario-dependent: true
+      variables:
+        - id: flow_direct
+          lower-bound: 0
+          upper-bound: capacity_direct
+          variable-type: continuous
+        - id: flow_indirect
+          lower-bound: 0
+          upper-bound: capacity_indirect
+          variable-type: continuous
+        - id: flow
+          lower-bound: -capacity_indirect
+          upper-bound: capacity_indirect
+          variable-type: continuous
+      ports:
+        - id: out_port
+          type: flow
+        - id: in_port
+          type: flow
+      port-field-definitions:
+        - port: out_port
+          field: flow
+          definition: flow
+        - port: in_port
+          field: flow
+          definition: -flow
+      constraints:
+        - id: flow_direct_indirect
+          expression: flow = flow_direct - flow_indirect
+
+    - id: renewable
+      parameters:
+        - id: nominal_capacity
+        - id: unit_count
+        - id: generation
+          time-dependent: true
+          scenario-dependent: true
+      ports:
+        - id: balance_port
+          type: flow
+      port-field-definitions:
+        - port: balance_port
+          field: flow
+          definition: generation
+
+    - id: thermal
+      parameters:
+        - id: p_min_cluster
+          scenario-dependent: true
+          time-dependent: true
+        - id: p_max_cluster # timeseries that takes outages into account
+          scenario-dependent: true
+          time-dependent: true
+        - id: p_min_unit
+        - id: p_max_unit
+        - id: generation_cost
+        - id: startup_cost
+        - id: fixed_cost
+        - id: d_min_up
+        - id: d_min_down
+        - id: nb_units_min # Equals to ceil(p_min_cluster/p_max_unit), to be done in preprocessing
+          scenario-dependent: true
+          time-dependent: true
+        - id: nb_units_max # Equals to ceil(p_max_cluster/p_max_unit), to be done in preprocessing
+          scenario-dependent: true
+          time-dependent: true
+        - id: nb_units_max_variation_forward
+          scenario-dependent: true
+          time-dependent: true
+        - id: nb_units_max_variation_backward
+          scenario-dependent: true
+          time-dependent: true
+      variables:
+        - id: generation
+          lower-bound: p_min_cluster
+          upper-bound: p_max_cluster
+          variable-type: continuous
+        - id: nb_units_on
+          lower-bound: nb_units_min
+          upper-bound: nb_units_max
+          variable-type: integer
+        - id: nb_starting
+          lower-bound: 0
+          upper-bound: nb_units_max
+          variable-type: integer
+        - id: nb_stopping
+          lower-bound: 0
+          upper-bound: nb_units_max
+          variable-type: integer
+        - id: nb_failing
+          lower-bound: 0
+          upper-bound: nb_units_max
+          variable-type: integer
+      ports:
+        - id: balance_port
+          type: flow
+      port-field-definitions:
+        - port: balance_port
+          field: flow
+          definition: generation
+      constraints:
+        - id: max_generation
+          expression: generation <= nb_units_on * p_max_unit
+        - id: min_generation
+          expression: generation >= nb_units_on * p_min_unit
+        - id: on_units_dynamics
+          expression: nb_units_on = nb_units_on[t-1] + nb_starting - nb_stopping
+        - id: nb_failing_lower_than_stopping
+          expression: nb_failing <= nb_stopping
+        - id: nb_failing_lower_than_max_variation
+          expression: nb_failing <= nb_units_max_variation_forward
+        - id: min_up_duration
+          expression: sum(t-d_min_up + 1 .. t, nb_starting - nb_failing) <= nb_units_on
+        - id: min_down_duration
+          expression: sum(t-d_min_down + 1 .. t, nb_stopping) <= nb_units_max[t-d_min_down] - nb_units_on + sum(t-d_min_down + 1 .. t, nb_units_max_variation_backward)
+      objective: sum(generation_cost * generation + startup_cost * nb_starting + fixed_cost * nb_units_on)
+
+    - id: short-term-storage
+      parameters:
+        - id: reservoir_capacity
+          time-dependent: false
+          scenario-dependent: false
+        - id: injection_nominal_capacity
+          time-dependent: false
+          scenario-dependent: false
+        - id: withdrawal_nominal_capacity
+          time-dependent: false
+          scenario-dependent: false
+        - id: efficiency_injection
+          time-dependent: false
+          scenario-dependent: false
+        - id: efficiency_withdrawal
+          time-dependent: false
+          scenario-dependent: false
+        - id: lower_rule_curve
+          time-dependent: true
+          scenario-dependent: true
+        - id: upper_rule_curve
+          time-dependent: true
+          scenario-dependent: true
+        - id: p_max_injection_modulation  # Read in p_max_injection
+          time-dependent: true
+          scenario-dependent: true
+        - id: p_max_withdrawal_modulation # Read in p_max_withdrawal
+          time-dependent: true
+          scenario-dependent: true
+        - id: inflows
+          time-dependent: true
+          scenario-dependent: true
+        - id: initial_level
+          time-dependent: false
+          scenario-dependent: true
+      variables:
+        - id: p_injection
+          lower-bound: 0
+          upper-bound: p_max_injection_modulation * injection_nominal_capacity # p_max_injection_modulation is a timeseries with adimensional values between 0 and 1
+          variable-type: continuous
+        - id: p_withdrawal
+          lower-bound: 0
+          upper-bound: p_max_withdrawal_modulation * withdrawal_nominal_capacity # p_max_withdrawal_modulation is a timeseries with adimensional values between 0 and 1
+          variable-type: continuous
+        - id: level
+          lower-bound: lower_rule_curve * reservoir_capacity
+          upper-bound: upper_rule_curve * reservoir_capacity
+          variable-type: continuous
+      ports:
+        - id: injection_port
+          type: flow
+      port-field-definitions:
+        - port: injection_port
+          field: flow
+          definition: p_withdrawal - p_injection
+      constraints:
+        - id: initial_level
+          expression: level[0] = initial_level * reservoir_capacity
+        - id: Level equation
+          expression: level[t+1] = level + efficiency_injection * p_injection - efficiency_withdrawal * p_withdrawal + inflows

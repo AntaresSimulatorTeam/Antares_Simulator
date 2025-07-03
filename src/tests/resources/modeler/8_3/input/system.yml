@@ -1,0 +1,72 @@
+# Copyright (c) 2024, RTE (https://www.rte-france.com)
+#
+# See AUTHORS.txt
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# SPDX-License-Identifier: MPL-2.0
+#
+# This file is part of the Antares project.
+
+   # Study 028b Electrolyser - V8.6
+   # Small test case in hybrid mode. The only Andromede component is the electrolyser.
+system:
+  id: 8_3
+  components:
+        - id: storage_base_zone
+          scenario-group: sg
+          model: antares-historic-weo-hybrid.short-term-storage
+          parameters:
+            - id: reservoir_capacity
+              time-dependent: false
+              scenario-dependent: false
+              value: 1200
+            - id: injection_nominal_capacity
+              time-dependent: false
+              scenario-dependent: false
+              value: 300
+            - id: withdrawal_nominal_capacity
+              time-dependent: false
+              scenario-dependent: false
+              value: 300
+            - id: efficiency_injection
+              time-dependent: false
+              scenario-dependent: false
+              value: 0.9 
+            - id: efficiency_withdrawal
+              time-dependent: false
+              scenario-dependent: false
+              value: 1.0 
+            - id: lower_rule_curve
+              time-dependent: false
+              scenario-dependent: false
+              value: 0.0
+            - id: upper_rule_curve
+              time-dependent: false
+              scenario-dependent: false
+              value: 1.0
+            - id: p_max_injection_modulation  # Read in p_max_injection
+              time-dependent: false
+              scenario-dependent: false
+              value: 1.0
+            - id: p_max_withdrawal_modulation # Read in p_max_withdrawal
+              time-dependent: false
+              scenario-dependent: false
+              value: 1.0
+            - id: inflows
+              time-dependent: false
+              scenario-dependent: false
+              value: 0.0
+            - id: initial_level
+              time-dependent: false
+              scenario-dependent: false
+              value: 0.5
+
+  area-connections:
+
+
+    - component: storage_base_zone
+      port: injection_port
+      area: west
