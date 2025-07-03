@@ -841,6 +841,11 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
 
     return ret;
 }
+
+bool Study::readonly() const
+{
+    return (parameters.readonly);
+}
 #endif // BUILD_UI
 
 void Study::ensureDataAreLoadedForAllBindingConstraints()
