@@ -11,10 +11,32 @@ namespace Antares::Data
 
 static std::wstring to_wstring(const std::string& str)
 {
-    int size_needed = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), (int)str.size(), NULL, 0);
+    int size_needed = MultiByteToWideChar(CP_UTF8, 0, str.data(), (int)str.size(), nullptr, 0);
     std::wstring wstr(size_needed, 0);
-    MultiByteToWideChar(CP_UTF8, 0, str.c_str(), (int)str.size(), &wstr[0], size_needed);
+    MultiByteToWideChar(CP_UTF8, 0, str.data(), (int)str.size(), &wstr[0], size_needed);
     return wstr;
+}
+
+static std::string to_string(const std::wstring& wstr)
+{
+    int size_needed = WideCharToMultiByte(CP_UTF8,
+                                          0,
+                                          wstr.data(),
+                                          (int)wstr.size(),
+                                          nullptr,
+                                          0,
+                                          nullptr,
+                                          nullptr);
+    std::string str(size_needed, 0);
+    WideCharToMultiByte(CP_UTF8,
+                        0,
+                        wstr.data(),
+                        (int)wstr.size(),
+                        &str[0],
+                        size_needed,
+                        nullptr,
+                        nullptr);
+    return str;
 }
 #endif
 
@@ -27,5 +49,14 @@ fs::path normalize(const std::string& folder_path)
 #endif
     abspath = abspath.lexically_normal();
     return abspath;
+}
+
+std::string denormalize(const fs::path& folder_path)
+{
+#if defined(_WIN32) || defined(_WIN64)
+    return to_string(folder_path.wstring());
+#else
+    return folder_path.string();
+#endif
 }
 } // namespace Antares::Data

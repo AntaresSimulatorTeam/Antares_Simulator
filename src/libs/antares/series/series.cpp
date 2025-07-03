@@ -30,6 +30,7 @@
 
 #include <antares/antares/constants.h>
 #include <antares/utils/utils.h>
+#include "antares/study/normalize_paths.h"
 
 namespace Antares::Data
 {
@@ -110,7 +111,8 @@ bool TimeSeries::loadFromFile(const std::filesystem::path& path,
 {
     bool ret = true;
     Matrix<>::BufferType dataBuffer;
-    ret = timeSeries.loadFromCSVFile(path.string(), 1, HOURS_PER_YEAR, options, &dataBuffer) && ret;
+    ret = timeSeries.loadFromCSVFile(denormalize(path), 1, HOURS_PER_YEAR, options, &dataBuffer)
+          && ret;
 
     if (average)
     {

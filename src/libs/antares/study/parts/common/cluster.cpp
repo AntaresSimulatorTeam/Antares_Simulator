@@ -24,6 +24,7 @@
 
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
+#include "antares/study/normalize_paths.h"
 
 namespace fs = std::filesystem;
 
@@ -102,7 +103,10 @@ bool Cluster::loadDataSeriesFromFolder(Study& s, const fs::path& folder)
     bool ret = true;
     fs::path seriesPath = folder / parentArea->id.to<std::string>() / id() / "series.txt";
 
-    ret = series.timeSeries.loadFromCSVFile(seriesPath.string(), 1, HOURS_PER_YEAR, &s.dataBuffer)
+    ret = series.timeSeries.loadFromCSVFile(denormalize(seriesPath),
+                                            1,
+                                            HOURS_PER_YEAR,
+                                            &s.dataBuffer)
           && ret;
 
     if (s.usedByTheSolver && s.parameters.derated)

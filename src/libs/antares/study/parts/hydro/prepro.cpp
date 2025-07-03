@@ -27,6 +27,7 @@
 
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
+#include "antares/study/normalize_paths.h"
 #include "antares/study/study.h"
 
 using namespace Antares;
@@ -156,7 +157,7 @@ bool PreproHydro::loadFromFolder(Study& s, const std::string& areaID, const fs::
     bool ret = PreproHydroLoadSettings(this, preproPath);
 
     fs::path energyPath = folder / areaID / "energy.txt";
-    ret = data.loadFromCSVFile(energyPath.string(),
+    ret = data.loadFromCSVFile(denormalize(energyPath),
                                hydroPreproMax,
                                maxNbOfLineToLoad,
                                mtrxOption,

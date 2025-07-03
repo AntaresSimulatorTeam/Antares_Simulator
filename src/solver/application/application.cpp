@@ -40,6 +40,7 @@
 #include "antares/solver/simulation/simulation-run.h"
 #include "antares/solver/simulation/solver.h"
 #include "antares/solver/utils/ortools_utils.h"
+#include "antares/study/normalize_paths.h"
 
 using namespace Antares::Check;
 
@@ -411,7 +412,8 @@ void Application::execute()
 
 void Application::resetLogFilename() const
 {
-    fs::path logfile = fs::path(pSettings.studyFolder.c_str()) / "logs";
+    fs::path studyFolder = Antares::Data::normalize(pSettings.studyFolder.c_str());
+    fs::path logfile = studyFolder / "logs";
 
     if (!fs::exists(logfile) && !fs::create_directory(logfile))
     {
@@ -424,7 +426,7 @@ void Application::resetLogFilename() const
                + ".log"; // complete filename with timestamp and extension
 
     // Assigning the log filename
-    logs.logfile(logfile.string());
+    logs.logfile(Antares::Data::denormalize(logfile));
 
     if (!logs.logfileIsOpened())
     {

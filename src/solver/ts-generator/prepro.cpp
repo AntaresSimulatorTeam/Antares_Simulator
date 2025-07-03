@@ -23,6 +23,7 @@
 
 #include <antares/logs/logs.h>
 #include <antares/solver/ts-generator/prepro.h>
+#include "antares/study/normalize_paths.h"
 #include "antares/study/study.h"
 
 namespace Antares::Data
@@ -56,7 +57,7 @@ bool PreproAvailability::loadFromFolder(Study& study, const std::filesystem::pat
 {
     auto filePath = folder / "data.txt";
     // standard loading
-    return data.loadFromCSVFile(filePath.string(),
+    return data.loadFromCSVFile(denormalize(filePath),
                                 preproAvailabilityMax,
                                 DAYS_PER_YEAR,
                                 Matrix<>::optFixedSize,

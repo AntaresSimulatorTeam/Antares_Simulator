@@ -314,7 +314,7 @@ void Settings::checkAndSetStudyFolder(const std::string& folder)
     }
 
     // Copying the result
-    studyFolder = abspath.string();
+    studyFolder = folder;
 }
 
 void Settings::reset()

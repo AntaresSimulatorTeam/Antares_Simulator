@@ -24,11 +24,10 @@
 #include <filesystem>
 
 #include <yuni/yuni.h>
-#include <yuni/core/math.h>
 #include <yuni/io/directory.h>
 #include <yuni/io/file.h>
 
-#include <antares/logs/logs.h>
+#include "antares/study/normalize_paths.h"
 #include "antares/study/study.h"
 
 using namespace Yuni;
@@ -75,7 +74,7 @@ bool EconomicInputData::loadFromFolder(Study& study, const fs::path& folder)
         fs::path filename = folder / "fuelCost.txt";
         if (fs::exists(filename))
         {
-            ret = fuelcost.loadFromCSVFile(filename.string(),
+            ret = fuelcost.loadFromCSVFile(denormalize(filename),
                                            1,
                                            HOURS_PER_YEAR,
                                            Matrix<>::optImmediate,
@@ -90,7 +89,7 @@ bool EconomicInputData::loadFromFolder(Study& study, const fs::path& folder)
         filename = folder / "CO2Cost.txt";
         if (fs::exists(filename))
         {
-            ret = co2cost.loadFromCSVFile(filename.string(),
+            ret = co2cost.loadFromCSVFile(denormalize(filename),
                                           1,
                                           HOURS_PER_YEAR,
                                           Matrix<>::optImmediate,

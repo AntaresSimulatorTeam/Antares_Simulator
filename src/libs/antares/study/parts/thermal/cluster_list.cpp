@@ -24,6 +24,7 @@
 #include <ranges>
 
 #include <antares/utils/utils.h>
+#include "antares/study/normalize_paths.h"
 #include "antares/study/parts/common/cluster.h"
 #include "antares/study/study.h"
 
@@ -149,7 +150,7 @@ bool ThermalClusterList::loadFromFolder(Study& study, const fs::path& folder, Ar
             options = Matrix<>::optFixedSize,
         };
 
-        ret = cluster->modulation.loadFromCSVFile(modulationFile.string(),
+        ret = cluster->modulation.loadFromCSVFile(denormalize(modulationFile),
                                                   thermalModulationMax,
                                                   HOURS_PER_YEAR,
                                                   options)
