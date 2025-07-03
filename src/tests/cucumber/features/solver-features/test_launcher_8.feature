@@ -13,7 +13,7 @@ Feature: 8 - End-to-end tests for Andromede V1 models - hybrid mode
     And in area "west", during year 1, hourly production of "sb" for hour 0 is equal to 0 MWh
     And in area "west", during year 1, hourly production of "p" for hour 0 is equal to 0 MWh
     And in area "west-H2", during year 1, hourly production of "SMR" for hour 0 is equal to 10 MWh
-    # Hour 32
+    # At hour 32, the electrolyzer provides 94 MW to west-H2
     And in area "west", unsupplied energy on "2 JAN 08:00" of year 1 is of 0 MW
     And in area "west-H2", unsupplied energy on "2 JAN 08:00" of year 1 is of 0 MW
 
@@ -28,6 +28,16 @@ Feature: 8 - End-to-end tests for Andromede V1 models - hybrid mode
     When I run antares simulator
     Then the simulation succeeds
     And the annual system cost is 13119200
+    # Hour 0, DSR curtails 0 MW of load
+    And in area "west", unsupplied energy on "1 JAN 00:00" of year 1 is of 0 MW
+    And in area "west", during year 1, hourly production of "b" for hour 0 is equal to 3020 MWh
+    And in area "west", during year 1, hourly production of "sb" for hour 0 is equal to 0 MWh
+    And in area "west", during year 1, hourly production of "p" for hour 0 is equal to 0 MWh
+    # At hour 34, DSR curtails 300 MW of load
+    And in area "west", unsupplied energy on "2 JAN 08:00" of year 1 is of 0 MW
+    And in area "west", during year 1, hourly production of "b" for hour 34 is equal to 6000 MWh
+    And in area "west", during year 1, hourly production of "sb" for hour 34 is equal to 775 MWh
+    And in area "west", during year 1, hourly production of "p" for hour 34 is equal to 0 MWh
 
   Scenario: 8.3: Study 028b Storage - V8.6
    # Small test case with one node (3 thermal clusters, 1 one load, 1 wind, 1 short-term storage)
