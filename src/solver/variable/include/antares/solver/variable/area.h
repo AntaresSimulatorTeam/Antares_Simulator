@@ -134,8 +134,7 @@ public:
 
     void yearEnd(uint year, uint numSpace);
 
-    void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
-                        unsigned int nbYearsForCurrentSummary);
+    void computeSummary(unsigned int year, unsigned int numSpace);
 
     void hourBegin(uint hourInTheYear);
 
@@ -173,7 +172,7 @@ public:
     }
 
     template<class V>
-    void computeSpatialAggregatesSummary(V&, std::map<unsigned int, unsigned int>&, unsigned int)
+    void computeSpatialAggregatesSummary(V&, unsigned int, unsigned int)
     {
         // do nothing
     }

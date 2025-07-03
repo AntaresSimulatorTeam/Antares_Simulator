@@ -74,12 +74,12 @@ struct StudyFixture
 
         std::map<unsigned int, unsigned int> numSpaceToYear{{0, 0}, {1, 1}, {2, 2}, {3, 3}, {4, 4}};
 
+        unsigned int nbYearsForCurrentSummary = study->parameters.nbYears;
         for (auto [numSpace, year]: numSpaceToYear)
         {
             variable.yearBegin(year, numSpace);
+            variable.computeSummary(year, nbYearsForCurrentSummary);
         }
-        unsigned int nbYearsForCurrentSummary = study->parameters.nbYears;
-        variable.computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
 
         survey.data.columnIndex = 0;
         using namespace Antares::Solver::Variable;
