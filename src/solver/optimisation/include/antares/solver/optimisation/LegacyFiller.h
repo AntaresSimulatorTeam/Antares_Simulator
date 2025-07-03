@@ -10,7 +10,7 @@ namespace Antares::Optimization
 class LegacyFiller: public Optimisation::LinearProblemApi::LinearProblemFiller
 {
 public:
-    explicit LegacyFiller(const PROBLEME_HEBDO* problemeHebdo);
+    explicit LegacyFiller(const PROBLEME_HEBDO* problemeHebdo, bool forceNamingProblem = false);
     void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
                       Optimisation::LinearProblemApi::FillContext& ctx) override;

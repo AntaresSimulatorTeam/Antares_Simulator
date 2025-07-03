@@ -158,11 +158,12 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
 // Returns a non-owning pointer
 MPSolver* convertToMPSolver(const PROBLEME_HEBDO* problemeHebdo,
                             const int NumIntervalle,
-                            const SingleOptimOptions& options)
+                            const SingleOptimOptions& options,
+                            bool forceNamingProblem)
 {
     LegacyOrtoolsLinearProblem ortoolsProblem(problemeHebdo->ProblemeAResoudre->isMIP(),
                                               options.solverName);
-    LegacyFiller legacyOrtoolsFiller(problemeHebdo);
+    LegacyFiller legacyOrtoolsFiller(problemeHebdo, forceNamingProblem);
     std::vector<LinearProblemFiller*> fillersCollection = {&legacyOrtoolsFiller};
 
     std::vector<std::unique_ptr<ComponentFiller>> componentFillers;
@@ -248,7 +249,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
 
     if (solver == nullptr)
     {
-        solver = convertToMPSolver(problemeHebdo, NumIntervalle, options);
+        solver = convertToMPSolver(problemeHebdo, NumIntervalle, options, false);
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
@@ -393,9 +394,8 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         {
             logs.info() << " Solver: Safe resolution failed";
         }
-        problemeHebdo->NamedProblems = true;
         std::unique_ptr<MPSolver> MPproblem(
-          convertToMPSolver(problemeHebdo, NumIntervalle, options));
+          convertToMPSolver(problemeHebdo, NumIntervalle, options, true));
 
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());
