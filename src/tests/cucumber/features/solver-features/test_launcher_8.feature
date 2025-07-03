@@ -2,7 +2,7 @@ Feature: 8 - End-to-end tests for Andromede V1 models - hybrid mode
 
   Scenario: 8.1 : Study 028b Electrolyser - V8.6
     Small test case with two Legacy nodes (areas). One electric node :  3 thermal clusters, 1 load, 1 wind, one H2 node :  1 H2 load, 1 H2 back-up production, one electrolyser as modeler component
-    Given the solver study path is "modeler/8_1"
+    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/8_1"
     When I run antares simulator
     Then the simulation succeeds
     # Hour 0
@@ -24,7 +24,7 @@ Feature: 8 - End-to-end tests for Andromede V1 models - hybrid mode
 
   Scenario: 8.2: Study 028b DSR - V8.6
    # Small test case with one node (3 thermal clusters, 1 load, 1 wind, 1 demand-side response model)
-    Given the solver study path is "modeler/8_2"
+    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/8_2"
     When I run antares simulator
     Then the simulation succeeds
     And the annual system cost is 13119200
@@ -41,7 +41,7 @@ Feature: 8 - End-to-end tests for Andromede V1 models - hybrid mode
 
   Scenario: 8.3: Study 028b Storage - V8.6
    # Small test case with one node (3 thermal clusters, 1 one load, 1 wind, 1 short-term storage)
-    Given the solver study path is "modeler/8_3"
+    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/8_3"
     When I run antares simulator
     Then the simulation succeeds
     And the annual system cost is 11971300
