@@ -840,7 +840,7 @@ BOOST_AUTO_TEST_CASE(feasible_problem_does_not_triggers_analyzer_and_named_flag)
                                             generator,
                                             writer);
 
-BOOST_CHECK_EQUAL(writer.VariableNames.size(), nbVar);
+    BOOST_CHECK_EQUAL(writer.VariableNames.size(), nbVar);
     BOOST_CHECK_EQUAL(writer.VariableNames[0], "x1");
     auto constraintNameFromGeneratedMps = writer.ConstraintNames;
     BOOST_CHECK_EQUAL_COLLECTIONS(constraintNames.begin(),
