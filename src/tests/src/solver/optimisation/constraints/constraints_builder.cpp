@@ -961,7 +961,6 @@ BOOST_AUTO_TEST_CASE(infeasible_problem_triggers_analyzer_and_named_flag)
                                             generator,
                                             writer);
 
-
     BOOST_CHECK_EQUAL(writer.VariableNames.size(), nbVar);
     BOOST_CHECK_EQUAL(writer.VariableNames[0], "var");
     auto constraintNameFromGeneratedMps = writer.ConstraintNames;
