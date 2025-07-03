@@ -768,7 +768,7 @@ struct NullWriterExtension: Solver::NullResultWriter
 
 // not naming of mps, the test will show that because successfull run does not rename the problem
 
-BOOST_AUTO_TEST_CASE(infeasible_problem_triggers_analyzer_and_named_flag)
+BOOST_AUTO_TEST_CASE(feasible_problem_does_not_triggers_analyzer_and_named_flag)
 {
     PROBLEME_HEBDO problemeHebdo;
     problemeHebdo.coutOptimalSolution1.resize(1);
@@ -833,9 +833,6 @@ BOOST_AUTO_TEST_CASE(infeasible_problem_triggers_analyzer_and_named_flag)
     DummyOptPeriodStringGenerator generator;
     //
     // // Force infeasibility result from the solver
-    // // We assume ORTOOLS_Simplexe returns nullptr and leaves .ExistenceDUneSolution unset or !=
-    // // OUI_SPX
-    //
     const bool result = OPT_AppelDuSimplexe(options,
                                             &problemeHebdo,
                                             0, // NumIntervalle
@@ -843,13 +840,8 @@ BOOST_AUTO_TEST_CASE(infeasible_problem_triggers_analyzer_and_named_flag)
                                             generator,
                                             writer);
 
-    // // BOOST_CHECK_MESSAGE(!result, "Infeasible problem should return false");
-    // // BOOST_CHECK_MESSAGE(problemeHebdo->NamedProblems,
-    // //                     "NamedProblems should be set after infeasibility");
-    // BOOST_CHECK_EQUAL(problemeHebdo.NamedProblems, true);
-
-    BOOST_CHECK_EQUAL(writer.VariableNames.size(), nbVar);
-    BOOST_CHECK_EQUAL(writer.VariableNames[0], "var");
+BOOST_CHECK_EQUAL(writer.VariableNames.size(), nbVar);
+    BOOST_CHECK_EQUAL(writer.VariableNames[0], "x1");
     auto constraintNameFromGeneratedMps = writer.ConstraintNames;
     BOOST_CHECK_EQUAL_COLLECTIONS(constraintNames.begin(),
                                   constraintNames.end(),
