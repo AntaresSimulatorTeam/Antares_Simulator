@@ -1,0 +1,38 @@
+# Copyright (c) 2024, RTE (https://www.rte-france.com)
+#
+# See AUTHORS.txt
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# SPDX-License-Identifier: MPL-2.0
+#
+# This file is part of the Antares project.
+
+   # Study 028b Electrolyser - V8.6
+   # Small test case in hybrid mode. The only Andromede component is the electrolyser.
+system:
+  id: 8_1
+  components:
+    - id: electrolyser
+      scenario-group: sg
+      model: andromede-v1-models-weo-hybrid.electrolyser
+      parameters:
+      - id: p_max
+        scenario-dependent: false
+        time-dependent: false
+        value: 300
+      - id: efficiency
+        scenario-dependent: false
+        time-dependent: false
+        value: 0.7
+
+  area-connections:
+    - component: electrolyser
+      port: hydrogen_port
+      area: west-H2
+
+    - component: electrolyser
+      port: power_port
+      area: west

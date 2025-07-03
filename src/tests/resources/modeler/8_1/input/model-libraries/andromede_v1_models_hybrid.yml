@@ -1,0 +1,72 @@
+# Copyright (c) 2024, RTE (https://www.rte-france.com)
+#
+# See AUTHORS.txt
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# SPDX-License-Identifier: MPL-2.0
+#
+# This file is part of the Antares project.
+
+library:
+  id: andromede-v1-models-weo-hybrid
+  description: Andromede V1 model library - without expectation operators - allows hybrid connections (i.e. connections between Andromede models and Antares legacy area)
+
+  port-types:
+    - id: flow
+      description: A port which transfers power flow
+      fields:
+        - id: flow
+      area-connection:
+        - injection-field: flow
+  models:
+    - id: dsr
+      parameters:
+        - id: max_load
+          time-dependent: true
+          scenario-dependent: true
+        - id: curtailment_price
+          time-dependent: false
+          scenario-dependent: false
+      variables:
+        - id: curtailment
+          lower-bound: 0
+          upper-bound: max_load
+          variable-type: continuous
+      objective: sum(curtailment * curtailment_price)
+      ports:
+        - id: balance_port
+          type: flow
+      port-field-definitions:
+        - port: balance_port
+          field: flow
+          definition: -max_load + curtailment
+
+
+    - id: electrolyser
+      parameters:
+      - id: efficiency
+        scenario-dependent: false
+        time-dependent: false
+      - id: p_max
+        scenario-dependent: true
+        time-dependent: true
+      variables:
+      - id: power
+        lower-bound: 0
+        upper-bound: p_max
+        variable-type: continuous
+      ports:
+        - id: power_port
+          type: flow
+        - id: hydrogen_port
+          type: flow
+      port-field-definitions:
+        - port: power_port
+          field: flow
+          definition: -power
+        - port: hydrogen_port
+          field: flow
+          definition: efficiency * power
