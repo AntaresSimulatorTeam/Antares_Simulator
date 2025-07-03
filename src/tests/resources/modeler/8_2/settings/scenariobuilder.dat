@@ -1,0 +1,16 @@
+[Default Ruleset]
+h,west,0 = 1
+h,west-h2,0 = 1
+hl,west,0 = 0.005
+hl,west-h2,0 = 0.005
+l,west,0 = 1
+l,west-h2,0 = 1
+s,west,0 = 1
+s,west-h2,0 = 1
+t,west,0,b = 1
+t,west,0,p = 1
+t,west,0,sb = 1
+t,west-h2,0,smr = 1
+w,west,0 = 1
+w,west-h2,0 = 1
+
