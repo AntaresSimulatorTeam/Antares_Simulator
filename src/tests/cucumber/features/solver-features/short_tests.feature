@@ -1,4 +1,5 @@
 Feature: short tests
+
   @fast @short
   Scenario: 001 One node - passive
     Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/001 One node - passive"
