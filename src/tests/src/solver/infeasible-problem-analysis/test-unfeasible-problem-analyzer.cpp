@@ -330,6 +330,15 @@ BOOST_AUTO_TEST_CASE(Infeasibility_causes_are_unique_and_sorted_by_slack_value)
     BOOST_CHECK_EQUAL(reportLogs[3], "* impossible to generate exactly the weekly hydro target");
 }
 
+/**
+ * This test suite verifies the behavior of OPT_AppelDuSimplexe regarding:
+ * - Handling of feasible vs. infeasible linear programs
+ * - Naming behavior of variables and constraints in the MPS output
+ * - Whether the problem analyzer is triggered based on feasibility
+ */
+
+namespace
+{
 struct DummyOptPeriodStringGenerator: OptPeriodStringGenerator
 {
     std::string to_string() const override
@@ -366,6 +375,63 @@ struct NullWriterExtension: Solver::NullResultWriter
 
     std::vector<std::string> ConstraintNames;
 };
+enum class ProblemFeasibility
+{
+    Feasible,
+    Infeasible
+};
+
+void setupMinimalProblem(PROBLEME_HEBDO& problemeHebdo, ProblemFeasibility feasibility)
+{
+    const int nbVar = 1;
+    const int nbConstraints = 2;
+
+    // Initialize problem
+    problemeHebdo.coutOptimalSolution1.resize(1);
+    problemeHebdo.ProblemeAResoudre = std::make_unique<PROBLEME_ANTARES_A_RESOUDRE>();
+    auto& probleme = problemeHebdo.ProblemeAResoudre;
+
+    probleme->NombreDeVariables = nbVar;
+    probleme->NomDesVariables.resize(nbVar, "var");
+    probleme->NombreDeContraintes = nbConstraints;
+    probleme->NomDesContraintes = {"firstConstraint", "secondConstraint"};
+
+    probleme->Xmin = {0.0};
+    probleme->Xmax = {10.0};
+    probleme->TypeDeVariable = {VARIABLE_BORNEE_DES_DEUX_COTES};
+    probleme->CoutLineaire = {0.0};
+    probleme->X = {0.0};
+    probleme->CoutsReduits = {0.0};
+    probleme->VariablesEntieres = {false};
+
+    // Constraint matrix setup
+    probleme->IndicesDebutDeLigne = {0, 1};
+    probleme->NombreDeTermesDesLignes = {1, 1};
+    probleme->CoefficientsDeLaMatriceDesContraintes = {1.0, 1.0};
+    probleme->IndicesColonnes = {0, 0};
+    probleme->SecondMembre = {5.0, 10.0};
+    probleme->Sens = feasibility == ProblemFeasibility::Feasible ? "<<" : "<>";
+
+    // Pointers for result mapping
+    probleme->CoutsMarginauxDesContraintes.resize(nbConstraints, 0.0);
+    probleme->AdresseOuPlacerLaValeurDesVariablesOptimisees = {&probleme->X[0]};
+    probleme->AdresseOuPlacerLaValeurDesCoutsReduits = {&probleme->CoutsReduits[0]};
+    probleme->AdresseOuPlacerLaValeurDesCoutsMarginaux = {
+      &probleme->CoutsMarginauxDesContraintes[0],
+      &probleme->CoutsMarginauxDesContraintes[1]};
+
+    probleme->ProblemesSpx.resize(1, nullptr);
+
+    // Solver export options
+    problemeHebdo.ExportMPS = Data::mpsExportStatus::EXPORT_BOTH_OPTIMS;
+    problemeHebdo.exportMPSOnError = true;
+    problemeHebdo.modelerSystem = nullptr;
+    problemeHebdo.NamedProblems = false;
+}
+
+// Shared setup for feasible and infeasible tests
+
+} // namespace
 
 /**
  * These two tests verify the behavior of OPT_AppelDuSimplexe regarding
@@ -391,67 +457,16 @@ struct NullWriterExtension: Solver::NullResultWriter
  *   names in the MPS output, and does not require variable/constraint renaming.
  */
 
-BOOST_AUTO_TEST_CASE(feasible_problem_does_not_triggers_analyzer_and_named_flag)
+BOOST_AUTO_TEST_CASE(feasible_problem_does_not_trigger_analyzer_or_named_flag)
 {
     PROBLEME_HEBDO problemeHebdo;
-    problemeHebdo.coutOptimalSolution1.resize(1);
-    //
-    problemeHebdo.ProblemeAResoudre = std::make_unique<PROBLEME_ANTARES_A_RESOUDRE>();
-    auto& probleme = problemeHebdo.ProblemeAResoudre;
-    //
-    // // Set up 1 variable and 1 constraint
-    const int nbVar = 1;
-    const int nbConstraints = 2;
 
-    probleme->NombreDeVariables = nbVar;
-    probleme->NomDesVariables.resize(nbVar, "var");
-    probleme->NombreDeContraintes = nbConstraints;
-    std::vector<std::string> constraintNames = {"firstConstraint", "secondConstraint"};
-    probleme->NomDesContraintes = constraintNames;
-    //
-    probleme->Xmin.resize(nbVar, 0.0);
-    probleme->Xmax.resize(nbVar, 10.0);                                     // feasible bounds
-    probleme->TypeDeVariable.resize(nbVar, VARIABLE_BORNEE_DES_DEUX_COTES); // assume enum or int
-    probleme->CoutLineaire.resize(nbVar, 0.0);
-    probleme->X.resize(nbVar, 0.0);
-    probleme->CoutsReduits.resize(nbVar, 0.0);
-
-    // Constraint matrix:
-    // Constraint 0: x0 ≤ 5   => row 0: coeff=1.0, RHS=5
-    // Constraint 1: x0 <= 10  => row 1: coeff=1.0, RHS=10
-
-    probleme->IndicesDebutDeLigne = {0, 1};     // start index of each row in Coefficients vector
-    probleme->NombreDeTermesDesLignes = {1, 1}; // 1 var per constraint
-
-    probleme->CoefficientsDeLaMatriceDesContraintes = {1.0, 1.0}; // x0 in both
-    probleme->IndicesColonnes = {0, 0};                           // x0 is column 0
-
-    probleme->SecondMembre = {5.0, 10.0};
-
-    // Assuming: Less than == <
-    probleme->Sens = "<<"; // Constraint 0: <, Constraint 1: >
-    probleme->CoutsMarginauxDesContraintes.resize(nbConstraints, 0.0);
-    probleme->AdresseOuPlacerLaValeurDesVariablesOptimisees = {&probleme->X[0]};
-    probleme->AdresseOuPlacerLaValeurDesCoutsReduits = {&probleme->CoutsReduits[0]};
-    probleme->AdresseOuPlacerLaValeurDesCoutsMarginaux = {
-      &probleme->CoutsMarginauxDesContraintes[0],
-      &probleme->CoutsMarginauxDesContraintes[1]};
-    // Setup solver pointer array
-    probleme->ProblemesSpx.resize(1, nullptr); // Only one interval
-    probleme->VariablesEntieres.resize(1, false);
-
-    // MPS export options
-    problemeHebdo.ExportMPS = Data::mpsExportStatus::EXPORT_BOTH_OPTIMS; // to generate mps
-    problemeHebdo.exportMPSOnError = true;
-
-    problemeHebdo.modelerSystem = nullptr;
-    problemeHebdo.NamedProblems = false;
+    setupMinimalProblem(problemeHebdo, ProblemFeasibility::Feasible);
 
     SingleOptimOptions options;
     NullWriterExtension writer;
     DummyOptPeriodStringGenerator generator;
-    //
-    // // Force infeasibility result from the solver
+
     const bool result = OPT_AppelDuSimplexe(options,
                                             &problemeHebdo,
                                             0, // NumIntervalle
@@ -459,16 +474,25 @@ BOOST_AUTO_TEST_CASE(feasible_problem_does_not_triggers_analyzer_and_named_flag)
                                             generator,
                                             writer);
 
-    BOOST_CHECK_EQUAL(writer.VariableNames.size(), nbVar);
+    // Should succeed
+    BOOST_CHECK(result);
+    BOOST_CHECK_EQUAL(writer.VariableNames.size(), 1);
     BOOST_CHECK_EQUAL(writer.VariableNames[0], "x0");
-    auto constraintNameFromGeneratedMps = writer.ConstraintNames;
-    BOOST_CHECK_NE(constraintNames[0], constraintNameFromGeneratedMps[0]);
-    BOOST_CHECK_NE(constraintNames[1], constraintNameFromGeneratedMps[1]);
-    std::vector<std::string> expected_cnstr_namee = {"c0", "c1"};
-    BOOST_CHECK_EQUAL_COLLECTIONS(expected_cnstr_namee.begin(),
-                                  expected_cnstr_namee.end(),
-                                  constraintNameFromGeneratedMps.begin(),
-                                  constraintNameFromGeneratedMps.end());
+
+    // Since feasible, constraint names should NOT match the user names (renamed to c0, c1)
+    BOOST_CHECK_NE(writer.ConstraintNames[0],
+                   problemeHebdo.ProblemeAResoudre->NomDesContraintes.at(0));
+    BOOST_CHECK_NE(writer.ConstraintNames[1],
+                   problemeHebdo.ProblemeAResoudre->NomDesContraintes.at(1));
+
+    std::vector<std::string> expected = {"c0", "c1"};
+    BOOST_CHECK_EQUAL_COLLECTIONS(expected.begin(),
+                                  expected.end(),
+                                  writer.ConstraintNames.begin(),
+                                  writer.ConstraintNames.end());
+
+    // Analyzer not triggered
+    BOOST_CHECK(!problemeHebdo.NamedProblems);
 }
 
 /**
@@ -493,67 +517,16 @@ BOOST_AUTO_TEST_CASE(feasible_problem_does_not_triggers_analyzer_and_named_flag)
  *   MPS output accordingly.
  *
  */
+
 BOOST_AUTO_TEST_CASE(infeasible_problem_triggers_analyzer_and_named_flag)
 {
     PROBLEME_HEBDO problemeHebdo;
-    problemeHebdo.coutOptimalSolution1.resize(1);
-    //
-    problemeHebdo.ProblemeAResoudre = std::make_unique<PROBLEME_ANTARES_A_RESOUDRE>();
-    auto& probleme = problemeHebdo.ProblemeAResoudre;
-    //
-    // // Set up 1 variable and 1 constraint
-    const int nbVar = 1;
-    const int nbConstraints = 2;
 
-    probleme->NombreDeVariables = nbVar;
-    probleme->NomDesVariables.resize(nbVar, "var");
-    probleme->NombreDeContraintes = nbConstraints;
-    std::vector<std::string> constraintNames = {"firstConstraint", "secondConstraint"};
-    probleme->NomDesContraintes = constraintNames;
-    //
-    probleme->Xmin.resize(nbVar, 0.0);
-    probleme->Xmax.resize(nbVar, 10.0);                                     // Infeasible bounds
-    probleme->TypeDeVariable.resize(nbVar, VARIABLE_BORNEE_DES_DEUX_COTES); // assume enum or int
-    probleme->CoutLineaire.resize(nbVar, 0.0);
-    probleme->X.resize(nbVar, 0.0);
-    probleme->CoutsReduits.resize(nbVar, 0.0);
-
-    // Constraint matrix:
-    // Constraint 0: x0 ≤ 5   => row 0: coeff=1.0, RHS=5
-    // Constraint 1: x0 ≥ 10  => row 1: coeff=1.0, RHS=10
-
-    probleme->IndicesDebutDeLigne = {0, 1};     // start index of each row in Coefficients vector
-    probleme->NombreDeTermesDesLignes = {1, 1}; // 1 var per constraint
-
-    probleme->CoefficientsDeLaMatriceDesContraintes = {1.0, 1.0}; // x0 in both
-    probleme->IndicesColonnes = {0, 0};                           // x0 is column 0
-
-    probleme->SecondMembre = {5.0, 10.0};
-
-    // Assuming: Less than == <, Greater than == >
-    probleme->Sens = "<>"; // Constraint 0: <, Constraint 1: >
-    probleme->CoutsMarginauxDesContraintes.resize(nbConstraints, 0.0);
-    probleme->AdresseOuPlacerLaValeurDesVariablesOptimisees = {&probleme->X[0]};
-    probleme->AdresseOuPlacerLaValeurDesCoutsReduits = {&probleme->CoutsReduits[0]};
-    probleme->AdresseOuPlacerLaValeurDesCoutsMarginaux = {
-      &probleme->CoutsMarginauxDesContraintes[0],
-      &probleme->CoutsMarginauxDesContraintes[1]};
-    // Setup solver pointer array
-    probleme->ProblemesSpx.resize(1, nullptr); // Only one interval
-    probleme->VariablesEntieres.resize(1, false);
-
-    // MPS export options
-    problemeHebdo.ExportMPS = Data::mpsExportStatus::UNKNOWN_EXPORT;
-    problemeHebdo.exportMPSOnError = true;
-    problemeHebdo.modelerSystem = nullptr;
-    problemeHebdo.NamedProblems = false; // not naming mps, the test will show that because of
-                                         // infeasibility, vars and constraints in the solver will
-                                         // be named
+    setupMinimalProblem(problemeHebdo, ProblemFeasibility::Infeasible);
 
     SingleOptimOptions options;
     NullWriterExtension writer;
     DummyOptPeriodStringGenerator generator;
-    // Force infeasibility result from the solver
 
     const bool result = OPT_AppelDuSimplexe(options,
                                             &problemeHebdo,
@@ -562,13 +535,19 @@ BOOST_AUTO_TEST_CASE(infeasible_problem_triggers_analyzer_and_named_flag)
                                             generator,
                                             writer);
 
-    BOOST_CHECK_EQUAL(writer.VariableNames.size(), nbVar);
+    // Should fail
+    BOOST_CHECK(!result);
+    BOOST_CHECK_EQUAL(writer.VariableNames.size(), 1);
     BOOST_CHECK_EQUAL(writer.VariableNames[0], "var");
-    auto constraintNameFromGeneratedMps = writer.ConstraintNames;
-    BOOST_CHECK_EQUAL_COLLECTIONS(constraintNames.begin(),
-                                  constraintNames.end(),
-                                  constraintNameFromGeneratedMps.begin(),
-                                  constraintNameFromGeneratedMps.end());
+
+    // Since infeasible, solver is named with original constraints
+    BOOST_CHECK_EQUAL_COLLECTIONS(problemeHebdo.ProblemeAResoudre->NomDesContraintes.begin(),
+                                  problemeHebdo.ProblemeAResoudre->NomDesContraintes.end(),
+                                  writer.ConstraintNames.begin(),
+                                  writer.ConstraintNames.end());
+
+    // Analyzer was triggered
+    BOOST_CHECK(problemeHebdo.NamedProblems);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
