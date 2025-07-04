@@ -25,6 +25,7 @@
 #include <yuni/io/file.h>
 
 #include <antares/logs/logs.h>
+#include "antares/paths/normalize_paths.h"
 #include "antares/study/study.h"
 
 using namespace Yuni;
@@ -40,8 +41,7 @@ void Study::importLogsToOutputFolder(Solver::IResultWriter& resultWriter) const
         return;
     }
 
-    std::filesystem::path from = logs.logfile().c_str();
-    from = from.lexically_normal();
+    std::filesystem::path from = normalize(logs.logfile().c_str());
 
     if (System::windows)
     {
@@ -50,7 +50,7 @@ void Study::importLogsToOutputFolder(Solver::IResultWriter& resultWriter) const
         logs.closeLogfile();
     }
 
-    resultWriter.addEntryFromFile("simulation.log", from.string());
+    resultWriter.addEntryFromFile("simulation.log", from);
 
     if (System::windows)
     {
