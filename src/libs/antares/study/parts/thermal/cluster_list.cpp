@@ -24,7 +24,7 @@
 #include <ranges>
 
 #include <antares/utils/utils.h>
-#include "antares/study/normalize_paths.h"
+#include "antares/paths/normalize_paths.h"
 #include "antares/study/parts/common/cluster.h"
 #include "antares/study/study.h"
 

@@ -26,7 +26,8 @@ set(TARGET_LIBS #No alias
         StudyUtils
         utils
         correlation
-        path
+        paths-list
+        paths-normalize
         mersenne
         result_writer
         series

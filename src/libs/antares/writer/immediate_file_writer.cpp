@@ -25,8 +25,10 @@
 
 #include <antares/io/file.h>
 #include <antares/logs/logs.h>
+#include "antares/paths/normalize_paths.h"
 
 namespace fs = std::filesystem;
+using namespace Antares::Data;
 
 namespace Antares
 {
@@ -63,7 +65,7 @@ void ImmediateFileResultWriter::addEntryFromBuffer(const std::string& entryPath,
     fs::path output;
     if (prepareDirectoryHierarchy(pOutputFolder, entryPath, output))
     {
-        IO::fileSetContent(output.string(), entryContent);
+        IO::fileSetContent(denormalize(output), entryContent);
     }
 }
 
@@ -74,7 +76,7 @@ void ImmediateFileResultWriter::addEntryFromBuffer(const fs::path& entryPath,
     fs::path output;
     if (prepareDirectoryHierarchy(pOutputFolder, entryPath, output))
     {
-        IO::fileSetContent(output.string(), entryContent);
+        IO::fileSetContent(denormalize(output), entryContent);
     }
 }
 

@@ -25,9 +25,9 @@ add_library(result_writer
 add_library(Antares::result_writer ALIAS result_writer)
 
 target_include_directories(result_writer
-    PUBLIC
+        PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    PRIVATE
+        PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/private
 )
 
@@ -41,6 +41,7 @@ target_link_libraries(result_writer
         inifile
         io
         Antares::concurrency
+        Antares::paths-normalize
 )
 
 install(DIRECTORY include/antares

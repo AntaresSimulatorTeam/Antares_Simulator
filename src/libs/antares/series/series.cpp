@@ -30,7 +30,7 @@
 
 #include <antares/antares/constants.h>
 #include <antares/utils/utils.h>
-#include "antares/study/normalize_paths.h"
+#include "antares/paths/normalize_paths.h"
 
 namespace Antares::Data
 {

@@ -22,7 +22,7 @@
 
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
-#include "antares/study/normalize_paths.h"
+#include "antares/paths/normalize_paths.h"
 #include "antares/study/scenario-builder/sets.h"
 #include "antares/study/study.h"
 #include "antares/study/ui-runtimeinfos.h"

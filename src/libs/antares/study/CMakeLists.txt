@@ -212,8 +212,6 @@ set(SRC_STUDY
         include/antares/study/parts/solar/prepro.hxx
 
         # Study
-        include/antares/study/normalize_paths.h
-        normalize_paths.cpp
         include/antares/study/header.h
         header.cpp
         include/antares/study/load-options.h
@@ -301,7 +299,8 @@ target_link_libraries(study
         Antares::utils #area.hxx
         Antares::solverUtils #sim_structure_probleme_economique.h -> optimization_statistics.h
         Antares::correlation
-        Antares::path
+        Antares::paths-list
+        Antares::paths-normalize
         Antares::mersenne
         Antares::result_writer #study.h
         Antares::series

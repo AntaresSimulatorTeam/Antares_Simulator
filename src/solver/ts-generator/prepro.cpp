@@ -23,7 +23,7 @@
 
 #include <antares/logs/logs.h>
 #include <antares/solver/ts-generator/prepro.h>
-#include "antares/study/normalize_paths.h"
+#include "antares/paths/normalize_paths.h"
 #include "antares/study/study.h"
 
 namespace Antares::Data

@@ -27,7 +27,7 @@
 #include <yuni/io/directory.h>
 #include <yuni/io/file.h>
 
-#include "antares/study/normalize_paths.h"
+#include "antares/paths/normalize_paths.h"
 #include "antares/study/study.h"
 
 using namespace Yuni;

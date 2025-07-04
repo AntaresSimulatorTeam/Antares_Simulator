@@ -1,4 +1,4 @@
-#include "include/antares/study/normalize_paths.h"
+#include "antares/paths/normalize_paths.h"
 
 namespace fs = std::filesystem;
 

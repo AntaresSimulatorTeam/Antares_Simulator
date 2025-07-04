@@ -25,8 +25,8 @@
 
 #include <antares/exception/LoadingError.hpp>
 #include "antares/config/config.h"
+#include "antares/paths/normalize_paths.h"
 #include "antares/solver/utils/ortools_utils.h"
-#include "antares/study/normalize_paths.h"
 
 using namespace Antares;
 using namespace Antares::Data;

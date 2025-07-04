@@ -22,7 +22,7 @@
 #include "antares/study/parts/hydro/container.h"
 
 #include <antares/inifile/inifile.h>
-#include "antares/study/normalize_paths.h"
+#include "antares/paths/normalize_paths.h"
 #include "antares/study/parts/hydro/hydromaxtimeseriesreader.h"
 #include "antares/study/study.h"
 

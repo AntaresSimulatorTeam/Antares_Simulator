@@ -28,7 +28,7 @@
 #include "yuni/core/system/username.h"
 
 #include <antares/logs/logs.h>
-#include "antares/study/normalize_paths.h"
+#include "antares/paths/normalize_paths.h"
 #include "antares/study/version.h"
 
 using namespace Yuni;
