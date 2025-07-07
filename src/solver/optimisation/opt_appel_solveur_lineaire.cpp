@@ -159,11 +159,11 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
 MPSolver* convertToMPSolver(const PROBLEME_HEBDO* problemeHebdo,
                             const int NumIntervalle,
                             const SingleOptimOptions& options,
-                            bool forceNamingProblem)
+                            bool nameProblems)
 {
     LegacyOrtoolsLinearProblem ortoolsProblem(problemeHebdo->ProblemeAResoudre->isMIP(),
                                               options.solverName);
-    LegacyFiller legacyOrtoolsFiller(problemeHebdo, forceNamingProblem);
+    LegacyFiller legacyOrtoolsFiller(problemeHebdo, nameProblems);
     std::vector<LinearProblemFiller*> fillersCollection = {&legacyOrtoolsFiller};
 
     std::vector<std::unique_ptr<ComponentFiller>> componentFillers;

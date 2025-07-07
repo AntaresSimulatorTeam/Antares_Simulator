@@ -347,6 +347,7 @@ struct NullWriterExtension: Solver::NullResultWriter
                           const std::filesystem::path&) override
     {
         const std::ifstream mps(std::filesystem::temp_directory_path() / entryPath);
+        mpsContent.str("");
         mpsContent << mps.rdbuf();
     }
 
@@ -516,7 +517,7 @@ NAME          Pb Solve
 ROWS
  N  OBJECTIF
  L  firstConstraint
- L  secondConstraint
+ G  secondConstraint
 COLUMNS
     var  firstConstraint  1.0000000000
     var  secondConstraint  1.0000000000
@@ -525,7 +526,8 @@ RHS
     RHSVAL    secondConstraint  10.000000000
 BOUNDS
  UP BNDVALUE  var  10.000000000
-ENDATA)";
+ENDATA
+)";
     BOOST_CHECK_EQUAL(expectedMps, writer.mpsContent.str());
 }
 
