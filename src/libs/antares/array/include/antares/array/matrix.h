@@ -542,48 +542,6 @@ public:
 };
 
 /*!
-** \brief Test if all the values in the matrix are positive (>= 0)
-**
-** \param m The matrix
-** \return A non-zero value if the test succeeded, 0 otherwise
-*/
-int MatrixTestForPositiveValues(const char* msg, const Matrix<>* m);
-
-/*!
-** \brief Test if all the values in the matrix are higher than an arbitrary number
-**
-** \param m The matrix
-** \param value The minimum value
-** \return A non-zero value if the test succeeded, 0 otherwise
-*/
-int MatrixTestIfValuesAreHigherThan(const char* msg, const Matrix<>* m, const double value);
-
-/*!
-** \brief Test if all the values in the matrix are lower than an arbitrary number
-**
-** \param m The matrix
-** \param value The maximum value
-** \return A non-zero value if the test succeeded, 0 otherwise
-*/
-int MatrixTestIfValuesAreLowerThan(const char* msg, const Matrix<>* m, const double value);
-
-/*!
-** \brief Test if all the values in the matrix are negative (<= 0)
-**
-** \param m The matrix
-** \return A non-zero value if the test succeeded, 0 otherwise
-*/
-int MatrixTestForNegativeValues(const char* msg, const Matrix<>* m);
-
-/*!
-** \brief Test if all the values in the matrix are positive (>= 0)
-**
-** \param m The matrix
-** \return A non-zero value if the test succeeded, 0 otherwise
-*/
-int MatrixTestForPositiveValues_LimitWidth(const char* msg, const Matrix<>* m, uint maxWidth);
-
-/*!
 ** \brief Test if there is at least one positive value
 **
 ** \param m The matrix

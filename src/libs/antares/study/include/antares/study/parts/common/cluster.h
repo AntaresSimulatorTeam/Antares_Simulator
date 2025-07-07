@@ -54,14 +54,13 @@ public:
 
     virtual ~Cluster() = default;
 
-    const ClusterName& id() const;
-    const ClusterName& group() const;
-    const ClusterName& name() const;
+    const std::string& id() const;
+    const std::string& name() const;
     void setName(const AnyString& newname);
     Yuni::String getFullName() const;
 
-    virtual uint groupId() const = 0;
-    virtual void setGroup(Data::ClusterName newgrp) = 0;
+    void setGroup(const std::string& group);
+    std::string getGroup() const;
 
     /*!
     ** \brief Check and fix all values of a renewable cluster
@@ -135,11 +134,12 @@ public:
     Matrix<> modulation;
 
 protected:
-    Data::ClusterName pName;
-    Data::ClusterName pID;
-    Data::ClusterName pGroup;
+    std::string pName;
+    std::string pID;
 
 private:
+    std::string group_ = "OTHER";
+
     virtual unsigned int precision() const = 0;
 };
 } // namespace Data

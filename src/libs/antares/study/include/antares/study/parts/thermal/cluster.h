@@ -30,7 +30,6 @@
 #include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
 
-#include <antares/array/matrix.h>
 #include <antares/solver/ts-generator/law.h>
 
 #include "../../fwd.h"
@@ -78,33 +77,6 @@ double computeMarketBidCost(double fuelCost,
 class ThermalCluster final: public Cluster, public std::enable_shared_from_this<ThermalCluster>
 {
 public:
-    enum ThermalDispatchableGroup
-    {
-        //! Nuclear
-        thermalDispatchGrpNuclear = 0,
-        //! Lignite
-        thermalDispatchGrpLignite,
-        //! Hard Coal
-        thermalDispatchGrpHardCoal,
-        //! Gas
-        thermalDispatchGrpGas,
-        //! Oil
-        thermalDispatchGrpOil,
-        //! Mixed fuel
-        thermalDispatchGrpMixedFuel,
-        //! Other 1
-        thermalDispatchGrpOther1,
-        //! Other 2
-        thermalDispatchGrpOther2,
-        //! Other 3
-        thermalDispatchGrpOther3,
-        //! Other 4
-        thermalDispatchGrpOther4,
-
-        //! The highest value
-        groupMax
-    };
-
     Pollutant emissions;
 
     //! Set of thermal clusters
@@ -113,12 +85,6 @@ public:
     using SetPointer = std::set<ThermalCluster*>;
     //! Vector of thermal clusters
     using Vector = std::vector<Data::ThermalCluster*>;
-
-    /*!
-    ** \brief Get the group name string
-    ** \return A valid CString
-    */
-    static const char* GroupName(enum ThermalDispatchableGroup grp);
 
     explicit ThermalCluster(Data::Area* parent);
 
@@ -141,10 +107,6 @@ public:
     ** This method should only be called from the GUI
     */
     void reset() override;
-
-    //! Set the group
-    void setGroup(Data::ClusterName newgrp) override;
-    //@}
 
     //! \name Spinning
     //@{
@@ -181,11 +143,6 @@ public:
     */
     void copyFrom(const ThermalCluster& cluster);
 
-    /*!
-    ** \brief Group ID as an uint
-    */
-    uint groupId() const override;
-
     //! \name validity of Min Stable Power
     //@{
     // bool minStablePowerValidity() const;
@@ -206,6 +163,8 @@ public:
     bool checkMinStablePowerWithNewModulation(uint idx, double value);
     //@}
 
+    bool checkModulation();
+
     bool doWeGenerateTS(bool globalTSgeneration) const;
 
     // Check & correct availability timeseries for thermal availability
@@ -216,14 +175,6 @@ public:
 
     //! The index of the cluster (within a list)
     uint index = 0;
-
-    /*!
-    ** \brief The group ID
-    **
-    ** This value is computed from the field 'group' in 'group()
-    ** \see group()
-    */
-    ThermalDispatchableGroup groupID = thermalDispatchGrpOther1;
 
     //! Mustrun
     bool mustrun = false;

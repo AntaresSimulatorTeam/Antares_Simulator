@@ -70,7 +70,7 @@ wxString RenewableClusterSummarySingleArea::cellValue(int x, int y) const
     switch (x)
     {
     case 0:
-        return wxStringFromUTF8(cluster->group());
+        return wxStringFromUTF8(cluster->getGroup());
     case 1:
         return cluster->enabled ? wxT("Yes") : wxT("No");
     case 2:
@@ -115,7 +115,7 @@ bool RenewableClusterSummarySingleArea::cellValue(int x, int y, const String& v)
         {
         case 0:
         {
-            if (cluster->group() != v)
+            if (cluster->getGroup() != v)
             {
                 cluster->setGroup(v);
                 return true;
