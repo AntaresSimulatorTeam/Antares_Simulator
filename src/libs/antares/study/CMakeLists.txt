@@ -314,6 +314,7 @@ target_link_libraries(study
         Antares::modeler-lib
         PRIVATE
         Antares::exception
+        PRIVATE
         Antares::benchmarking
         antares-solver-variable
         Antares::additional-constraint-rhs-antlr-interface

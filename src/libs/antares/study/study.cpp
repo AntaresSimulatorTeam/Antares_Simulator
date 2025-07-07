@@ -740,7 +740,7 @@ bool Study::areaRename(Area* area, AreaName newName)
 }
 
 // TODO VP: delete with GUI
-bool Study::clusterRename(Cluster* cluster, ClusterName newName)
+bool Study::clusterRename(Cluster* cluster, std::string newName)
 {
     // A name must not be empty
     if (!cluster or newName.empty())
@@ -757,7 +757,7 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
     newName = beautifyname.c_str();
 
     // Preparing the new area ID
-    ClusterName newID = transformNameIntoID(newName);
+    std::string newID = transformNameIntoID(newName);
     if (newID.empty())
     {
         logs.error() << "invalid id transformation";
