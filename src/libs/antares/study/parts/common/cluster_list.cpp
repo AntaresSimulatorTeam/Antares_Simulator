@@ -68,7 +68,7 @@ std::vector<std::shared_ptr<ClusterT>> ClusterList<ClusterT>::all() const
 }
 
 template<class ClusterT>
-bool ClusterList<ClusterT>::exists(const Data::ClusterName& id) const
+bool ClusterList<ClusterT>::exists(const std::string& id) const
 {
     return std::ranges::any_of(allClusters_, [&id](const auto& c) { return c->id() == id; });
 }
@@ -160,7 +160,7 @@ void ClusterList<ClusterT>::rebuildIndexes()
 }
 
 template<class ClusterT>
-bool ClusterList<ClusterT>::rename(Data::ClusterName idToFind, Data::ClusterName newName)
+bool ClusterList<ClusterT>::rename(std::string idToFind, std::string newName)
 {
     if (idToFind.empty() or newName.empty())
     {
@@ -177,7 +177,7 @@ bool ClusterList<ClusterT>::rename(Data::ClusterName idToFind, Data::ClusterName
     boost::to_lower(idToFind);
 
     // The new ID
-    Data::ClusterName newID = Antares::transformNameIntoID(newName);
+    std::string newID = Antares::transformNameIntoID(newName);
 
     // Looking for the renewable clusters in the list
     auto* cluster_ptr = this->findInAll(idToFind);
@@ -234,7 +234,7 @@ void ClusterList<ClusterT>::markAsModified() const
 }
 
 template<class ClusterT>
-bool ClusterList<ClusterT>::remove(const Data::ClusterName& id)
+bool ClusterList<ClusterT>::remove(const std::string& id)
 {
     auto nbDeletion = std::erase_if(allClusters_,
                                     [&id](const SharedPtr& c) { return c->id() == id; });

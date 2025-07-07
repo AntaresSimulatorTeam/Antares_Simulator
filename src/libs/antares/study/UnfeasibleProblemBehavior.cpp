@@ -22,7 +22,6 @@
 #include <initializer_list>
 #include <string>
 
-#include <antares/exception/AssertionError.hpp>
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
 #include "antares/antares/Enum.hpp"
 
@@ -41,7 +40,7 @@ const char* getIcon(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior)
     case UnfeasibleProblemBehavior::ERROR_MPS:
         return "images/16x16/light_orange.png";
     default:
-        throw AssertionError(
+        throw std::runtime_error(
           "Invalid UnfeasibleProblemBehavior "
           + std::to_string(static_cast<unsigned long>(unfeasibleProblemBehavior)));
         return "";
@@ -59,7 +58,7 @@ bool exportMPS(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior)
     case UnfeasibleProblemBehavior::ERROR_MPS:
         return true;
     default:
-        throw AssertionError(
+        throw std::runtime_error(
           "Invalid UnfeasibleProblemBehavior "
           + std::to_string(static_cast<unsigned long>(unfeasibleProblemBehavior)));
         return "";
@@ -77,7 +76,7 @@ bool stopSimulation(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior)
     case UnfeasibleProblemBehavior::ERROR_DRY:
         return true;
     default:
-        throw AssertionError(
+        throw std::runtime_error(
           "Invalid UnfeasibleProblemBehavior "
           + std::to_string(static_cast<unsigned long>(unfeasibleProblemBehavior)));
         return "";
@@ -97,7 +96,7 @@ std::string getDisplayName(const UnfeasibleProblemBehavior& unfeasibleProblemBeh
     case UnfeasibleProblemBehavior::ERROR_MPS:
         return "Error Verbose";
     default:
-        throw AssertionError(
+        throw std::runtime_error(
           "Invalid UnfeasibleProblemBehavior "
           + std::to_string(static_cast<unsigned long>(unfeasibleProblemBehavior)));
         return "";
