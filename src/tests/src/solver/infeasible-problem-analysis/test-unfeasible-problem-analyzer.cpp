@@ -466,7 +466,8 @@ RHS
     RHSVAL    c1  10.000000000
 BOUNDS
  UP BNDVALUE  x0  10.000000000
-ENDATA)";
+ENDATA
+)";
     BOOST_CHECK_EQUAL(expectedMps, writer.mpsContent.str());
 }
 
