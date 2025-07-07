@@ -13,7 +13,7 @@ var classAntares_1_1Data_1_1Study =
     [ "areaRename", "classAntares_1_1Data_1_1Study.html#a6a9942c90e8932e8610d11c3517beae7", null ],
     [ "checkForFilenameLimits", "classAntares_1_1Data_1_1Study.html#a92a7dc71b966e460f9e6f1750ce25382", null ],
     [ "clear", "classAntares_1_1Data_1_1Study.html#acd6521d444413475db5e715adb608ef7", null ],
-    [ "clusterRename", "classAntares_1_1Data_1_1Study.html#a3c3b4c2094ee9b0a9d900affab4e2d0a", null ],
+    [ "clusterRename", "classAntares_1_1Data_1_1Study.html#a2783c5d60fe95b1b7eedd23b99f55788", null ],
     [ "computePThetaInfForThermalClusters", "classAntares_1_1Data_1_1Study.html#af7987d6c6edc71b0bf67930f5c7e7edb", null ],
     [ "createAsNew", "classAntares_1_1Data_1_1Study.html#a591d782141664dd97ca221b4660ab0a9", null ],
     [ "destroyTSGeneratorData", "classAntares_1_1Data_1_1Study.html#aa1843bfc0ded4d958277fc78f1807e68", null ],

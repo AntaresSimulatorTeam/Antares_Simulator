@@ -492,7 +492,6 @@ var namespaces_dup =
         [ "AreaLinkName", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#aacc34b1e6fb5050093a29423e48e9f1d", null ],
         [ "AreaName", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#ae1e51d49a27fe9aa695aafa6bc53b004", null ],
         [ "AreaNameMapping", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a757462004019be4d70a2be7300aaec69", null ],
-        [ "ClusterName", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a631ed34b150aa0dc97f0075a6708b8cb", null ],
         [ "ConstraintName", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#aa6295e2e2415c6f29884816c859248fc", null ],
         [ "RulesScenarioName", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a3ca66fcf06bdceb305397cdfbd16f02a", null ],
         [ "AreaNodalOptimization", "libs_2antares_2study_2include_2antares_2study_2area_2constants_8h.html#adc8894eb1410d8f8ce36ee3b1188e83d", [
@@ -798,7 +797,6 @@ var namespaces_dup =
         [ "allTimeSeriesMask", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#afd2917ad5e73189d9de08a4af138c02a", null ],
         [ "antaresSeedDefaultValue", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a3244a44273ecadf23d5147801d42085d", null ],
         [ "antaresSeedIncrement", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#af048e5d54a0e2e783c87ac14c5f84e8b", null ],
-        [ "groupToName", "libs_2antares_2study_2parts_2renewable_2cluster_8cpp.html#ac17fee9e9a5789c57f1a743f458899da", null ],
         [ "nbDaysInYear", "libs_2antares_2study_2include_2antares_2study_2parts_2hydro_2container_8h.html#a099af11532655dd2964f55a9f3002449", null ],
         [ "StudyIconFile", "libs_2antares_2study_2include_2antares_2study_2study_8h.html#ac41bcb9b3dd859f34b0b2dc6ffcc5a74", null ],
         [ "timeSeriesCount", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#affa3d918be92f1016e56794f61026a5a", null ]
@@ -1483,7 +1481,7 @@ var namespaces_dup =
             [ "VariablePerLink", "solver_2variable_2include_2antares_2solver_2variable_2adequacy_2links_8h.html#ac7862558b93b2c0fa2c6765424d20a7e", null ],
             [ "VariablesPerArea", "solver_2variable_2include_2antares_2solver_2variable_2adequacy_2all_8h.html#a3ab2b9be58958671624de85a5061fa52", null ],
             [ "VariablesPerBindingConstraints", "solver_2variable_2include_2antares_2solver_2variable_2adequacy_2all_8h.html#a339039e669de07d5b94e857fef852f08", null ],
-            [ "VariablesPerSetOfAreas", "solver_2variable_2include_2antares_2solver_2variable_2adequacy_2all_8h.html#aea1d666020e2d5dadc2cee73db8149ba", null ]
+            [ "VariablesPerSetOfAreas", "solver_2variable_2include_2antares_2solver_2variable_2adequacy_2all_8h.html#a3935b9d195d02b329dabef71505ee199", null ]
           ] ],
           [ "Category", null, [
             [ "DataLevel", null, [
@@ -1689,7 +1687,7 @@ var namespaces_dup =
             [ "VariablePerLink", "solver_2variable_2include_2antares_2solver_2variable_2economy_2links_8h.html#a44aafe2a340f8ea798f90fa7c9aa6f30", null ],
             [ "VariablesPerArea", "solver_2variable_2include_2antares_2solver_2variable_2economy_2all_8h.html#a33d9e91e2b55c44855f707b198b9378b", null ],
             [ "VariablesPerBindingConstraints", "solver_2variable_2include_2antares_2solver_2variable_2economy_2all_8h.html#a005042f761a476e46844d1dd486d074d", null ],
-            [ "VariablesPerSetOfAreas", "solver_2variable_2include_2antares_2solver_2variable_2economy_2all_8h.html#a1b1a1a934ac1c2c2fcda84dc95a6bfa4", null ],
+            [ "VariablesPerSetOfAreas", "solver_2variable_2include_2antares_2solver_2variable_2economy_2all_8h.html#a5979547c7f2aadc59505525dfab798c3", null ],
             [ "computeMaxMRG", "max-mrg-utils_8h.html#a964d979b2dc91a2d4faf60efad135bf6", null ],
             [ "PrepareMaxMRGFor", "max-mrg-csr_8h.html#a73110ea53bb5d333201e2eda76f48970", null ],
             [ "eps", "nearPriceCap_8h.html#ae4c312a5614cd3dabec99918aab0459c", null ],
@@ -1966,6 +1964,7 @@ var namespaces_dup =
         [ "checkAllElementsIdenticalOrOne", "utils_8h.html#ad7848a35534130d9e658b91eef55321d", null ],
         [ "checkAllElementsIdenticalOrOne", "utils_8h.html#a5c195397128b4459eacc09d2d83e24f3", null ],
         [ "floor", "utils_8h.html#a28e4efa05d04724ebaabf457c1d64271", null ],
+        [ "giveNumbersToStrings", "utils_8h.html#a02f264835becd9b85fc7ecfed3f5e91a", null ],
         [ "isZero", "utils_8h.html#a3820d7fc44841c7455de7b7250042677", null ],
         [ "round", "utils_8h.html#a55cc90c1c1261f10fd4ebd6c24086b2f", null ]
       ] ],
@@ -2348,11 +2347,6 @@ var namespaces_dup =
       [ "MarkTheStudyAsModified", "ui_2simulator_2application_2study_8cpp.html#aab1f58defb58290325cee83a11736e31", null ],
       [ "MarkTheStudyAsModified", "ui_2simulator_2application_2study_8cpp.html#a655c96d3201d221db558ac5cd9c9a04c", null ],
       [ "MatrixTestForAtLeastOnePositiveValue", "libs_2antares_2array_2include_2antares_2array_2matrix_8h.html#a8dc26aa738df72a4c21b451d3721b7d9", null ],
-      [ "MatrixTestForNegativeValues", "libs_2antares_2array_2include_2antares_2array_2matrix_8h.html#a262e42e63e167853a147a1f350867caa", null ],
-      [ "MatrixTestForPositiveValues", "libs_2antares_2array_2include_2antares_2array_2matrix_8h.html#aa51e1511b7c7eba742ae021212b59bd9", null ],
-      [ "MatrixTestForPositiveValues_LimitWidth", "libs_2antares_2array_2include_2antares_2array_2matrix_8h.html#ae04da40ee79f9b40d35e558964eb7204", null ],
-      [ "MatrixTestIfValuesAreHigherThan", "libs_2antares_2array_2include_2antares_2array_2matrix_8h.html#a59d56495a3d9e3761d7a03a7c3f5d2bd", null ],
-      [ "MatrixTestIfValuesAreLowerThan", "libs_2antares_2array_2include_2antares_2array_2matrix_8h.html#a5ddc4d6a3718fba90b649cb4b1b1b02a", null ],
       [ "MemoryFlushBeginUpdate", "ui_2simulator_2application_2study_8cpp.html#af0646445441f7296c5c4285ee11887a3", null ],
       [ "MemoryFlushEndUpdate", "ui_2simulator_2application_2study_8cpp.html#a6af99e9877afd2b787c0c523dc71298a", null ],
       [ "NewStudy", "ui_2simulator_2application_2study_8cpp.html#acf046d279ea8cf476dc7eb4795018c9e", null ],
