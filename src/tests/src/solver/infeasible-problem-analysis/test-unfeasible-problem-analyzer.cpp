@@ -21,6 +21,7 @@
 #define WIN32_LEAN_AND_MEAN
 #define BOOST_TEST_MODULE unfeasible_problem_analyzer
 
+#include <fstream>
 #include <ortools/linear_solver/linear_solver.h>
 #include <pi_constantes_externes.h>
 #include <ranges>
@@ -35,14 +36,6 @@
 #include "antares/solver/infeasible-problem-analysis/variables-bounds-consistency.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
-
-// ignore unused parameters warnings from ortools
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-#include "antares/solver/utils/ortools_utils.h"
-
-#include "ortools/lp_data/mps_reader.h"
-#pragma GCC diagnostic pop
 
 namespace bdata = boost::unit_test::data;
 
@@ -353,27 +346,11 @@ struct NullWriterExtension: Solver::NullResultWriter
     void addEntryFromFile(const std::filesystem::path& entryPath,
                           const std::filesystem::path&) override
     {
-        auto fullPath = std::filesystem::temp_directory_path() / entryPath;
-        //   auto* solver = MPSolverFactory(false, "sirius");
-        auto model_proto = operations_research::glop::MpsFileToMPModelProto(fullPath.string());
-        std::string error_msg;
-
-        VariableNames.resize(model_proto->variable_size());
-        for (int i(0); i < model_proto->variable_size(); ++i)
-        {
-            VariableNames[i] = model_proto->variable(i).name();
-        }
-
-        ConstraintNames.resize(model_proto->constraint_size());
-        for (int c(0); c < model_proto->constraint_size(); ++c)
-        {
-            ConstraintNames[c] = model_proto->constraint(c).name();
-        }
+        const std::ifstream mps(std::filesystem::temp_directory_path() / entryPath);
+        mpsContent << mps.rdbuf();
     }
 
-    std::vector<std::string> VariableNames;
-
-    std::vector<std::string> ConstraintNames;
+    std::ostringstream mpsContent;
 };
 enum class ProblemFeasibility
 {
@@ -474,25 +451,23 @@ BOOST_AUTO_TEST_CASE(feasible_problem_does_not_trigger_analyzer_or_named_flag)
                                             generator,
                                             writer);
 
-    // Should succeed
-    BOOST_CHECK(result);
-    BOOST_CHECK_EQUAL(writer.VariableNames.size(), 1);
-    BOOST_CHECK_EQUAL(writer.VariableNames[0], "x0");
-
-    // Since feasible, constraint names should NOT match the user names (renamed to c0, c1)
-    BOOST_CHECK_NE(writer.ConstraintNames[0],
-                   problemeHebdo.ProblemeAResoudre->NomDesContraintes.at(0));
-    BOOST_CHECK_NE(writer.ConstraintNames[1],
-                   problemeHebdo.ProblemeAResoudre->NomDesContraintes.at(1));
-
-    std::vector<std::string> expected = {"c0", "c1"};
-    BOOST_CHECK_EQUAL_COLLECTIONS(expected.begin(),
-                                  expected.end(),
-                                  writer.ConstraintNames.begin(),
-                                  writer.ConstraintNames.end());
-
-    // Analyzer not triggered
-    BOOST_CHECK(!problemeHebdo.NamedProblems);
+    const auto expectedMps = R"(* Number of variables:   1
+* Number of constraints: 2
+NAME          Pb Solve
+ROWS
+ N  OBJECTIF
+ L  c0
+ L  c1
+COLUMNS
+    x0  c0  1.0000000000
+    x0  c1  1.0000000000
+RHS
+    RHSVAL    c0  5.000000000
+    RHSVAL    c1  10.000000000
+BOUNDS
+ UP BNDVALUE  x0  10.000000000
+ENDATA)";
+    BOOST_CHECK_EQUAL(expectedMps, writer.mpsContent.str());
 }
 
 /**
@@ -534,20 +509,23 @@ BOOST_AUTO_TEST_CASE(infeasible_problem_triggers_analyzer_and_named_flag)
                                             1, // optimizationNumber
                                             generator,
                                             writer);
-
-    // Should fail
-    BOOST_CHECK(!result);
-    BOOST_CHECK_EQUAL(writer.VariableNames.size(), 1);
-    BOOST_CHECK_EQUAL(writer.VariableNames[0], "var");
-
-    // Since infeasible, solver is named with original constraints
-    BOOST_CHECK_EQUAL_COLLECTIONS(problemeHebdo.ProblemeAResoudre->NomDesContraintes.begin(),
-                                  problemeHebdo.ProblemeAResoudre->NomDesContraintes.end(),
-                                  writer.ConstraintNames.begin(),
-                                  writer.ConstraintNames.end());
-
-    // Analyzer was triggered
-    BOOST_CHECK(problemeHebdo.NamedProblems);
+    const auto expectedMps = R"(* Number of variables:   1
+* Number of constraints: 2
+NAME          Pb Solve
+ROWS
+ N  OBJECTIF
+ L  firstConstraint
+ L  secondConstraint
+COLUMNS
+    var  firstConstraint  1.0000000000
+    var  secondConstraint  1.0000000000
+RHS
+    RHSVAL    firstConstraint  5.000000000
+    RHSVAL    secondConstraint  10.000000000
+BOUNDS
+ UP BNDVALUE  var  10.000000000
+ENDATA)";
+    BOOST_CHECK_EQUAL(expectedMps, writer.mpsContent.str());
 }
 
 BOOST_AUTO_TEST_SUITE_END()
