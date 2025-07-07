@@ -27,7 +27,7 @@ namespace Antares::Modeler
 class FileWriter: public Solver::IWriter
 {
 public:
-    void init(bool setOutput = true) override;
+    void init(bool setOutput) override;
 
     void writeSolution(
       const Optimisation::LinearProblemMpsolverImpl::OrtoolsMipSolution& solution) override;
