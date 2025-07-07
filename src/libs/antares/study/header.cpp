@@ -224,7 +224,6 @@ StudyVersion StudyHeader::tryToFindTheVersion(const std::string& folder)
             std::string versionStr;
             if (!readVersionFromFile(abspath, versionStr))
             {
-                logs.info() << "tryToFindTheVersion : can't read abspath";
                 return StudyVersion::unknown();
             }
 
@@ -233,7 +232,6 @@ StudyVersion StudyHeader::tryToFindTheVersion(const std::string& folder)
             return v;
         }
     }
-    logs.info() << "tryToFindTheVersion : abspath does not exist";
     return StudyVersion::unknown();
 }
 

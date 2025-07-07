@@ -28,6 +28,7 @@
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include <antares/study/parts/hydro/series.h>
+#include "antares/paths/normalize_paths.h"
 #include "antares/study/study.h"
 
 using namespace Yuni;
@@ -47,7 +48,7 @@ static bool loadTSfromFile(Matrix<double>& ts,
 {
     fs::path filePath = folder / areaID / filename;
     Matrix<>::BufferType fileContent;
-    return ts.loadFromCSVFile(filePath.string(), 1, height, &fileContent);
+    return ts.loadFromCSVFile(denormalize(filePath), 1, height, &fileContent);
 }
 
 static void ConvertDailyTSintoHourlyTS(const Matrix<double>::ColumnType& dailyColumn,

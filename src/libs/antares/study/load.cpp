@@ -178,7 +178,7 @@ bool Study::internalLoadFromFolder(const fs::path& path, const StudyLoadOptions&
     }
 
     // Initialize all internal paths
-    relocate(path.string());
+    relocate(path);
 
     // Reserving enough space in buffer to avoid several calls to realloc
     this->dataBuffer.reserve(4 * 1024 * 1024); // For matrices, reserving 4Mo

@@ -283,7 +283,7 @@ bool PartHydro::LoadFromFolder(Study& study, const fs::path& folder)
                       enabledModeIsChanged = true;
                   }
 
-                  ret = area.hydro.LoadDailyMaxEnergy(folder.string(), area.id) && ret;
+                  ret = area.hydro.LoadDailyMaxEnergy(folder, area.id) && ret;
 
                   if (enabledModeIsChanged)
                   {
@@ -292,7 +292,7 @@ bool PartHydro::LoadFromFolder(Study& study, const fs::path& folder)
               }
               else
               {
-                  ret = area.hydro.LoadDailyMaxEnergy(folder.string(), area.id) && ret;
+                  ret = area.hydro.LoadDailyMaxEnergy(folder, area.id) && ret;
 
                   // Check is moved here, because in case of old study
                   // dailyNbHoursAtGenPmax and dailyNbHoursAtPumpPmax are not yet initialized.

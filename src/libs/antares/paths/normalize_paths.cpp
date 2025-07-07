@@ -7,7 +7,7 @@ namespace Antares::Data
 
 #if defined(_WIN32) || defined(_WIN64)
 
-#include <windows.h> // For MultiByteToWideChar
+#include <windows.h> // For MultiByteToWideChar / WideCharToMultiByte
 
 static std::wstring to_wstring(const std::string& str)
 {
