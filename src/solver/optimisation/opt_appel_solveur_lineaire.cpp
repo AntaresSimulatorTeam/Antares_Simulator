@@ -241,7 +241,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
             optimizationStatistics.addUpdateTime(timeMeasure.updateTime);
         }
     }
-// TODO could this condition be true?
+    // TODO could this condition be true?
     if (solver == nullptr)
     {
         solver = convertToMPSolver(problemeHebdo, NumIntervalle, options, false);
@@ -309,7 +309,6 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                          IResultWriter& writer)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
-
 
     SimplexResult simplexResult = OPT_TryToCallSimplex(options,
                                                        problemeHebdo,
