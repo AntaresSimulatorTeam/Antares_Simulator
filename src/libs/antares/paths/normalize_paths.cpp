@@ -1,5 +1,7 @@
 #include "antares/paths/normalize_paths.h"
 
+#include <cstring>
+
 namespace fs = std::filesystem;
 
 namespace Antares::Data
