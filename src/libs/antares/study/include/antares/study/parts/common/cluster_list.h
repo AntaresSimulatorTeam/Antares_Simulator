@@ -35,6 +35,8 @@ namespace Antares
 {
 namespace Data
 {
+
+// TODO VP: remove template, we can have a regular class in this use case
 /*!
 ** \brief Generic list of clusters
 ** \ingroup renewableclusters
@@ -64,7 +66,7 @@ public:
     ** \param id ID of the cluster to find
     ** \return True if the cluster exists
     */
-    bool exists(const Data::ClusterName& id) const;
+    bool exists(const std::string& id) const;
 
     auto each_enabled() const
     {
@@ -83,12 +85,12 @@ public:
     **
     ** The indexes for clusters will be rebuilt.
     */
-    bool rename(Data::ClusterName idToFind, Data::ClusterName newName);
+    bool rename(std::string idToFind, std::string newName);
 
     /*!
     ** \brief Remove properly a cluster
     */
-    virtual bool remove(const Data::ClusterName& id);
+    virtual bool remove(const std::string& id);
 
     //@}
 

@@ -24,10 +24,9 @@
 
 #include <algorithm>
 #include <list>
+#include <stdexcept>
 
-#include <antares/exception/AssertionError.hpp>
 #include <antares/stdcxx/class_name.h>
-#include "antares/antares/Enum.hpp"
 
 namespace Antares::Data::Enum
 {
@@ -38,7 +37,7 @@ E fromString(const std::string& name)
     const auto& it = std::find(names.begin(), names.end(), name);
     if (it == names.end())
     {
-        throw AssertionError("Unexpected " + stdcxx::simpleClassName<E>() + " name " + name);
+        throw std::runtime_error("Unexpected " + stdcxx::simpleClassName<E>() + " name " + name);
     }
 
     return static_cast<E>(it - names.begin());
@@ -51,8 +50,8 @@ std::string toString(const E& value)
     const auto& names = getNames<E>();
     if (index >= names.size())
     {
-        throw AssertionError("Unexpected " + stdcxx::simpleClassName<E>() + " value "
-                             + std::to_string(index));
+        throw std::runtime_error("Unexpected " + stdcxx::simpleClassName<E>() + " value "
+                                 + std::to_string(index));
     }
     return *(names.begin() + index);
 }

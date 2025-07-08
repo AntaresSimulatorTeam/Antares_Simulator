@@ -295,7 +295,7 @@ void Create::createActionsForAStandardAreaCopy(Context& ctx, bool copyPosition)
 }
 
 IAction* Create::StandardActionsToCopyThermalCluster(const Data::AreaName& area,
-                                                     const Data::ClusterName& name)
+                                                     const std::string& name)
 {
     using NodePlant = Antares::Action::AntaresStudy::ThermalCluster::Create;
     using NodePlantCommonData = Antares::Action::AntaresStudy::ThermalCluster::CommonData;

@@ -313,6 +313,7 @@ target_link_libraries(study
         Antares::modeler-parameters
         PRIVATE
         Antares::exception
+        PRIVATE
         Antares::benchmarking
         antares-solver-variable
         Antares::additional-constraint-rhs-antlr-interface
