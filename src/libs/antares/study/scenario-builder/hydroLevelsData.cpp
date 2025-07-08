@@ -28,23 +28,13 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-#ifdef BUILD_UI
-hydroLevelsData::hydroLevelsData(const std::string& iniFilePrefix,
-                                 std::function<void(Study&, MatrixType&)> applyToTarget):
 
-    addToPrefix_(iniFilePrefix),
-    applyToTarget_(applyToTarget)
-{
-}
-#endif
-
-#ifndef BUILD_UI
 hydroLevelsData::hydroLevelsData(const std::string& iniFilePrefix,
                                  std::function<void(Study&, MatrixType&)> applyToTarget):
     applyToTarget_(applyToTarget)
 {
 }
-#endif
+
 bool hydroLevelsData::reset(const Study& study)
 {
     const uint nbYears = study.parameters.nbYears;
