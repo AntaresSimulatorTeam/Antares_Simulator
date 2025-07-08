@@ -21,19 +21,21 @@
 #ifndef __ANTARES_APPLICATION_MAIN_MAIN_H__
 #define __ANTARES_APPLICATION_MAIN_MAIN_H__
 
-#include <yuni/yuni.h>
+#include <list>
+#include <ui/common/component/frame/local-frame.h>
 #include <ui/common/wx-wrapper.h>
 #include <wx/aui/aui.h>
 
-#include "../../toolbox/components/notebook/notebook.h"
+#include <yuni/yuni.h>
+
+#include <antares/study/output.h>
+#include <antares/study/study.h>
+#include "antares/config/config.h"
+
 #include "../../toolbox/components/datagrid/selectionoperation.h"
 #include "../../toolbox/components/map/settings.h"
-#include <list>
+#include "../../toolbox/components/notebook/notebook.h"
 #include "fwd.h"
-#include "antares/config/config.h"
-#include <ui/common/component/frame/local-frame.h>
-#include <antares/study/study.h>
-#include <antares/study/output.h>
 
 namespace Antares
 {
@@ -46,7 +48,7 @@ class MainFormData;
 /*!
 ** \brief Main Frame of the Antares UI application
 */
-class ApplWnd final : public Component::Frame::WxLocalFrame, public Yuni::IEventObserver<ApplWnd>
+class ApplWnd final: public Component::Frame::WxLocalFrame, public Yuni::IEventObserver<ApplWnd>
 {
 public:
     /*!
@@ -243,6 +245,7 @@ public:
     {
         return pAUIManager;
     }
+
     const wxAuiManager& AUIManager() const
     {
         return pAUIManager;
@@ -252,13 +255,6 @@ public:
     ** \brief Reset the default text for the status bar
     */
     void resetDefaultStatusBarText();
-
-    /*!
-    ** \brief Launch the processor
-    **
-    ** \param filename A filename which contains all required informations for the analyzer
-    */
-    void launchAnalyzer(const Yuni::String& filename);
 
     /*!
     ** \brief Launch the processor
@@ -523,9 +519,6 @@ private:
     void evtOnRunTSGenerators(wxCommandEvent& evt);
     void evtOnRunTSGeneratorsDelayed();
 
-    void evtOnRunTSAnalyzer(wxCommandEvent& evt);
-    void evtOnRunTSAnalyzerDelayed();
-
     void evtOnRunConstraintsBuilder(wxCommandEvent& evt);
     void evtOnRunConstraintsBuilderDelayed();
     //@}
@@ -618,8 +611,6 @@ private:
     void evtOnFrameClose(wxCloseEvent& evt);
 
     void internalFrameClose();
-
-    void evtLaunchAnalyzer(wxCommandEvent& evt);
 
     void evtLaunchConstraintsBuilder(wxCommandEvent& evt);
 
@@ -790,7 +781,7 @@ extern Yuni::String StudyToLoadAtStartup;
 } // namespace Forms
 } // namespace Antares
 
-#include "main.hxx"
 #include "disabler.h"
+#include "main.hxx"
 
 #endif // __ANTARES_APPLICATION_MAIN_MAIN_H__

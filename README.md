@@ -63,7 +63,6 @@ or [its sources](docs/developer-guide/0-Introduction.md).
 * [ROADMAP](ROADMAP.txt)            - Main orientations for further developments
 * [THANKS](THANKS.txt)             - Attribution notices for external libraries and contributors.
 * [resources/](resources)     - Free sample data sets.
-* [src/analyzer/](src/analyzer)      - source code for the statistical analysis of historical time-series.
 * [src/cmake/](src/cmake)        - files for initializing a solution ready for compilation.
 * [src/distrib/](src/distrib)       - system redistributable libraries Win(x64,x86),unix.
 * [src/ext/](src/ext)         - third party libraries used by Antares_Simulator: libYuni, Sirius_Solver.
