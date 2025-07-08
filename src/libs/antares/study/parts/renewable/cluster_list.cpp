@@ -61,9 +61,9 @@ bool RenewableClusterList::saveToFolder(const AnyString& folder) const
             // This key will be silently ignored the next time
             s->add("name", c->name());
 
-            if (!c->getGroup().empty())
+            if (!c->group().empty())
             {
-                s->add("group", c->getGroup());
+                s->add("group", c->group());
             }
             if (!c->enabled)
             {

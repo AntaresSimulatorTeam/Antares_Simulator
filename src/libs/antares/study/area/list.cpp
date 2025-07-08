@@ -28,7 +28,6 @@
 #include <antares/logs/logs.h>
 #include <antares/study/area/scratchpad.h>
 #include "antares/antares/antares.h"
-#include "antares/array/matrix.h"
 #include "antares/study//study.h"
 #include "antares/study/area/area.h"
 #include "antares/study/parts/load/prepro.h"
@@ -818,28 +817,6 @@ static void readAdqPatchMode(Study& study, Area& area)
     }
 }
 
-static bool checkMatrixPositive(const Matrix<>& m, const std::string& buffer, unsigned limit)
-{
-    logs.debug() << "Checking : " << buffer;
-    if (m.width and m.height and limit)
-    {
-        for (unsigned x = 0; x < limit; ++x)
-        {
-            auto& column = m.entry[x];
-            for (unsigned y = 0; y < m.height; ++y)
-            {
-                if (column[y] < 0.)
-                {
-                    logs.error() << buffer << ": negative value detected (at column " << x
-                                 << ", row: " << y << ')';
-                    return false;
-                }
-            }
-        }
-    }
-    return true;
-}
-
 template<class StringT>
 static bool AreaListLoadFromFolderSingleArea(Study& study,
                                              AreaList* list,
@@ -895,8 +872,10 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
           && ret;
 
     // Check misc gen
-    buffer.clear() << "Misc Gen: `" << area.id << '`';
-    ret = checkMatrixPositive(area.miscGen, buffer, fhhPSP) && ret;
+    {
+        buffer.clear() << "Misc Gen: `" << area.id << '`';
+        MatrixTestForPositiveValues_LimitWidth(buffer.c_str(), &area.miscGen, fhhPSP);
+    }
 
     // Links
     {
@@ -1673,7 +1652,7 @@ ThermalCluster* AreaList::findClusterFromINIKey(const AnyString& key)
         return nullptr;
     }
     AreaName parentName(key.c_str(), offset);
-    std::string id(key.c_str() + offset + 1, key.size() - (offset + 1));
+    ClusterName id(key.c_str() + offset + 1, key.size() - (offset + 1));
     Area* parentArea = findFromName(parentName);
     if (parentArea == nullptr)
     {

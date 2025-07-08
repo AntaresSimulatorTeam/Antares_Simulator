@@ -5,10 +5,9 @@ set(SOURCES
         readParameters.cpp
         readDataSeries.cpp
         handleErrors.cpp
-        FileLoader.cpp
 
         include/antares/solver/modeler/loadFiles/loadFiles.h
-        include/antares/solver/modeler/loadFiles/Fileloader.h
+        include/antares/solver/modeler/loadFiles/data.h
 )
 
 # Create the library
@@ -34,7 +33,6 @@ target_link_libraries(load-modeler-files
         Antares::model-converter
         Antares::modeler-parameters
         Antares::data-series-csv-importer
-        Antares::modeler-lib
 )
 
 install(DIRECTORY include/antares

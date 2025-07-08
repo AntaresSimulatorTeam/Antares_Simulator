@@ -1,6 +1,5 @@
 Feature: 2.5 - Pure modeler simple studies, with no ports and no timeseries
 
-  @fast
   Scenario: 2.5.1: One model with one load and two generators, one timestep
     Given the modeler study path is "modeler/epic2/us2.5/study_2.5.1"
     When I run antares modeler
@@ -9,7 +8,6 @@ Feature: 2.5 - Pure modeler simple studies, with no ports and no timeseries
     And the optimal value of variable node1.gen1_p_t0 is 80
     And the optimal value of variable node1.gen2_p_t0 is 20
 
-  @fast
   Scenario: 2.5.2: One model with one load and two generators (minP), three timesteps
     Given the modeler study path is "modeler/epic2/us2.5/study_2.5.2"
     When I run antares modeler
@@ -22,7 +20,6 @@ Feature: 2.5 - Pure modeler simple studies, with no ports and no timeseries
       | node1     | gen1_up  | 0-2       | 1     |
       | node1     | gen2_p   | 0-2       | 40    |
 
-  @fast
   Scenario: 2.5.3: Two libs, one timestep
     Given the modeler study path is "modeler/epic2/us2.5/study_2.5.3"
     When I run antares modeler
@@ -37,7 +34,6 @@ Feature: 2.5 - Pure modeler simple studies, with no ports and no timeseries
       | node2     | gen2_p   | 0         | 500   |
       | node2     | gen2_up  | 0         | 1     |
 
-  @fast
   Scenario: 2.5.4: Test with integer variable
     Given the modeler study path is "modeler/epic2/us2.5/study_2.5.4"
     When I run antares modeler

@@ -20,10 +20,12 @@
 */
 #include "antares/study/parts/common/cluster.h"
 
-#include <boost/algorithm/string/case_conv.hpp>
+#include <yuni/yuni.h>
+#include <yuni/io/directory.h>
+#include <yuni/io/file.h>
 
-#include <antares/study/study.h>
 #include <antares/utils/utils.h>
+#include "antares/study/study.h"
 
 namespace fs = std::filesystem;
 
@@ -35,12 +37,17 @@ Cluster::Cluster(Area* parent):
 {
 }
 
-const std::string& Cluster::name() const
+const ClusterName& Cluster::group() const
+{
+    return pGroup;
+}
+
+const ClusterName& Cluster::name() const
 {
     return pName;
 }
 
-const std::string& Cluster::id() const
+const ClusterName& Cluster::id() const
 {
     return pID;
 }
@@ -57,17 +64,6 @@ void Cluster::setName(const AnyString& newname)
     pName = newname;
     pID.clear();
     pID = transformNameIntoID(pName);
-}
-
-void Cluster::setGroup(const std::string& group)
-{
-    group_ = group;
-    boost::to_upper(group_);
-}
-
-std::string Cluster::getGroup() const
-{
-    return group_;
 }
 
 #define SEP Yuni::IO::Separator

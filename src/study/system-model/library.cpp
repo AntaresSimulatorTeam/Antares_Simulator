@@ -89,15 +89,6 @@ LibraryBuilder& LibraryBuilder::withModels(std::vector<Model>&& models)
     return *this;
 }
 
-LibraryBuilder& LibraryBuilder::withModelsMap(std::unordered_map<std::string, Model>&& models)
-{
-    for (auto&& pair: models)
-    {
-        library_.models_->insert(std::move(pair));
-    }
-    return *this;
-}
-
 /**
  * \brief Returns the Library object.
  *

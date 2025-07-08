@@ -216,7 +216,7 @@ void ThermalCluster::renameAggregate(Antares::Data::ThermalCluster* cluster,
     WIP::Locker wip;
     if (cluster && pArea && CurrentStudyIsValid())
     {
-        std::string newPlantName;
+        ClusterName newPlantName;
         wxStringToString(newName, newPlantName);
 
         GetCurrentStudy()->clusterRename(cluster, newPlantName);

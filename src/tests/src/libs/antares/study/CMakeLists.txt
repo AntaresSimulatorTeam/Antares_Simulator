@@ -14,10 +14,7 @@ add_subdirectory(parameters)
 
 add_boost_test(test-study
   SRC test_study.cpp
-  LIBS
-  Antares::study
-  Antares::exception
-  )
+  LIBS Antares::study)
 
 add_boost_test(test-duplicates
   SRC test_duplicates.cpp

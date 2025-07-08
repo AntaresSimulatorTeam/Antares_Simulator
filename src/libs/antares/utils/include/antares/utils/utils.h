@@ -21,7 +21,6 @@
 #ifndef __ANTARES_LIBS_UTILS_H__
 #define __ANTARES_LIBS_UTILS_H__
 
-#include <map>
 #include <string>
 #include <vector>
 
@@ -60,7 +59,6 @@ double round(double d, unsigned precision);
 double ceil(double d);
 double floor(double d);
 
-std::map<std::string, unsigned> giveNumbersToStrings(const std::vector<std::string>& strs);
 bool checkAllElementsIdenticalOrOne(std::vector<unsigned> w);
 bool checkAllElementsIdenticalOrOne(std::vector<std::pair<unsigned, std::string>>& p);
 

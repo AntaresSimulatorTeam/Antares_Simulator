@@ -42,7 +42,7 @@ public:
 
 public:
     static IAction* StandardActionsToCopyThermalCluster(const Data::AreaName& area,
-                                                        const std::string& name);
+                                                        const Data::ClusterName& name);
 
 public:
     //! \name Constructor & Destructor

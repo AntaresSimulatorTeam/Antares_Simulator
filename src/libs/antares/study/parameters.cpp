@@ -1932,13 +1932,23 @@ bool Parameters::saveToFile(const AnyString& filename) const
 
 void Parameters::RenewableGeneration::addExcludedVariables(std::vector<std::string>& out) const
 {
+    const static std::vector<std::string> ren = {"WIND OFFSHORE",
+                                                 "WIND ONSHORE",
+                                                 "SOLAR CONCRT.",
+                                                 "SOLAR PV",
+                                                 "SOLAR ROOFT",
+                                                 "RENW. 1",
+                                                 "RENW. 2",
+                                                 "RENW. 3",
+                                                 "RENW. 4"};
+
     const static std::vector<std::string> agg = {"WIND", "SOLAR"};
 
     switch (rgModelling)
     {
     // Using `aggregated` renewable generation, exclude `renewable` variables
     case rgAggregated:
-        out.push_back("RENEWABLE GEN.");
+        out.insert(out.end(), ren.begin(), ren.end());
         break;
     // Using `renewable clusters` renewable generation, exclude `aggregated` variables
     case rgClusters:

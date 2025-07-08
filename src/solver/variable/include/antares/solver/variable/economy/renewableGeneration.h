@@ -18,12 +18,18 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#pragma once
+#ifndef __SOLVER_VARIABLE_ECONOMY_RenewableGeneration_H__
+#define __SOLVER_VARIABLE_ECONOMY_RenewableGeneration_H__
 
-#include <antares/utils/utils.h>
 #include "antares/solver/variable/variable.h"
 
-namespace Antares::Solver::Variable::Economy
+namespace Antares
+{
+namespace Solver
+{
+namespace Variable
+{
+namespace Economy
 {
 struct VCardRenewableGeneration
 {
@@ -68,8 +74,8 @@ struct VCardRenewableGeneration
     static constexpr uint8_t nodeDepthForGUI = +0;
     //! Decimal precision
     static constexpr uint8_t decimal = 0;
-    //! Nb of columns occupied by this variable in year-by-year results
-    static constexpr int columnCount = Category::dynamicColumns;
+    //! Number of columns used by the variable (One ResultsType per column)
+    static constexpr int columnCount = 9;
     //! The Spatial aggregation
     static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
     static constexpr uint8_t spatialAggregateMode = Category::spatialAggregateEachYear;
@@ -79,10 +85,45 @@ struct VCardRenewableGeneration
     //! Can this variable be non applicable (0 : no, 1 : yes)
     static constexpr uint8_t isPossiblyNonApplicable = 0;
 
-    typedef IntermediateValues IntermediateValuesDeepType;
-    typedef std::vector<IntermediateValues> IntermediateValuesBaseType;
-    typedef std::vector<IntermediateValuesBaseType> IntermediateValuesType;
+    typedef IntermediateValues IntermediateValuesBaseType[columnCount];
+    typedef IntermediateValuesBaseType* IntermediateValuesType;
 
+    typedef IntermediateValuesBaseType* IntermediateValuesTypeForSpatialAg;
+
+    struct Multiple
+    {
+        static std::string Caption(const unsigned int indx)
+        {
+            switch (indx)
+            {
+            case 0:
+                return "WIND OFFSHORE";
+            case 1:
+                return "WIND ONSHORE";
+            case 2:
+                return "SOLAR CONCRT.";
+            case 3:
+                return "SOLAR PV";
+            case 4:
+                return "SOLAR ROOFT";
+            case 5:
+                return "RENW. 1";
+            case 6:
+                return "RENW. 2";
+            case 7:
+                return "RENW. 3";
+            case 8:
+                return "RENW. 4";
+            default:
+                return "<unknown>";
+            }
+        }
+
+        static std::string Unit([[maybe_unused]] const unsigned int indx)
+        {
+            return VCardRenewableGeneration::Unit();
+        }
+    };
 }; // class VCard
 
 /*!
@@ -124,62 +165,68 @@ public:
         };
     };
 
+public:
+    ~RenewableGeneration()
+    {
+        delete[] pValuesForTheCurrentYear;
+    }
+
+    void initializeFromStudy(Data::Study& study)
+    {
+        pNbYearsParallel = study.maxNbYearsInParallel;
+
+        InitializeResultsFromStudy(AncestorType::pResults, study);
+
+        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
+        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; ++numSpace)
+        {
+            for (unsigned int i = 0; i != VCardType::columnCount; ++i)
+            {
+                pValuesForTheCurrentYear[numSpace][i].initializeFromStudy(study);
+            }
+        }
+
+        // Next
+        NextType::initializeFromStudy(study);
+    }
+
+    template<class R>
+    static void InitializeResultsFromStudy(R& results, Data::Study& study)
+    {
+        for (unsigned int i = 0; i != VCardType::columnCount; ++i)
+        {
+            results[i].initializeFromStudy(study);
+            results[i].reset();
+        }
+    }
+
     void initializeFromArea(Data::Study* study, Data::Area* area)
     {
-        pNbYearsParallel = study->maxNbYearsInParallel;
-        pValuesForTheCurrentYear.resize(pNbYearsParallel);
-
-        // Building the vector of group names the clusters belong to.
-        std::set<std::string> names;
-        for (const auto& cluster: area->renewable.list.each_enabled())
-        {
-            names.insert(cluster->getGroup());
-        }
-        groupNames_ = {names.begin(), names.end()};
-        groupToNumbers_ = Utils::giveNumbersToStrings(groupNames_);
-
-        nbColumns_ = groupNames_.size();
-
-        if (nbColumns_)
-        {
-            AncestorType::pResults.resize(nbColumns_);
-
-            for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-            {
-                pValuesForTheCurrentYear[numSpace].resize(nbColumns_);
-            }
-
-            for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-            {
-                for (unsigned int i = 0; i != nbColumns_; ++i)
-                {
-                    pValuesForTheCurrentYear[numSpace][i].initializeFromStudy(*study);
-                }
-            }
-
-            for (unsigned int i = 0; i != nbColumns_; ++i)
-            {
-                AncestorType::pResults[i].initializeFromStudy(*study);
-                AncestorType::pResults[i].reset();
-            }
-        }
-        else
-        {
-            AncestorType::pResults.clear();
-        }
         // Next
         NextType::initializeFromArea(study, area);
     }
 
-    size_t getMaxNumberColumns() const
+    void initializeFromLink(Data::Study* study, Data::AreaLink* link)
     {
-        return nbColumns_ * ResultsType::count;
+        // Next
+        NextType::initializeFromAreaLink(study, link);
+    }
+
+    void simulationBegin()
+    {
+        // Next
+        NextType::simulationBegin();
+    }
+
+    void simulationEnd()
+    {
+        NextType::simulationEnd();
     }
 
     void yearBegin(unsigned int year, unsigned int numSpace)
     {
         // Reset the values for the current year
-        for (unsigned int i = 0; i != nbColumns_; ++i)
+        for (unsigned int i = 0; i != VCardType::columnCount; ++i)
         {
             pValuesForTheCurrentYear[numSpace][i].reset();
         }
@@ -187,12 +234,16 @@ public:
         NextType::yearBegin(year, numSpace);
     }
 
+    void yearEndBuild(State& state, unsigned int year, unsigned int numSpace)
+    {
+        // Next variable
+        NextType::yearEndBuild(state, year, numSpace);
+    }
+
     void yearEnd(unsigned int year, unsigned int numSpace)
     {
-        for (unsigned int column = 0; column < nbColumns_; column++)
-        {
-            pValuesForTheCurrentYear[numSpace][column].computeStatisticsForTheCurrentYear();
-        }
+        VariableAccessorType::template ComputeStatistics<VCardType>(
+          pValuesForTheCurrentYear[numSpace]);
 
         // Next variable
         NextType::yearEnd(year, numSpace);
@@ -220,24 +271,16 @@ public:
     {
         for (const auto& renewableCluster: state.area->renewable.list.each_enabled())
         {
-            unsigned int groupNumber = groupToNumbers_[renewableCluster->getGroup()];
-
             double renewableClusterProduction = renewableCluster->valueAtTimeStep(
               state.year,
               state.hourInTheYear);
 
-            pValuesForTheCurrentYear[numSpace][groupNumber][state.hourInTheYear]
+            pValuesForTheCurrentYear[numSpace][renewableCluster->groupID][state.hourInTheYear]
               += renewableClusterProduction;
         }
 
         // Next variable
         NextType::hourForEachArea(state, numSpace);
-    }
-
-    inline void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
-    {
-        // Ask to build the digest to the next variable
-        NextType::buildDigest(results, digestLevel, dataLevel);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
@@ -255,62 +298,30 @@ public:
         // The current variable is actually a multiple-variable.
         results.isCurrentVarNA = AncestorType::isNonApplicable;
 
-        if (!AncestorType::isPrinted[0])
+        for (uint i = 0; i != VCardType::columnCount; ++i)
         {
-            return;
-        }
-
-        for (unsigned int column = 0; column < nbColumns_; column++)
-        {
-            results.variableCaption = groupNames_[column];
-            results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear[numSpace][column]
-              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
-        }
-    }
-
-    void buildSurveyReport(SurveyResults& results,
-                           int dataLevel,
-                           int fileLevel,
-                           int precision) const
-    {
-        // Building synthesis results
-        // ------------------------------
-
-        if (AncestorType::isPrinted[0])
-        {
-            // And only if we match the current data level _and_ precision level
-            if ((dataLevel & VCardType::categoryDataLevel)
-                && (fileLevel & VCardType::categoryFileLevel) && (precision & VCardType::precision))
+            if (AncestorType::isPrinted[i])
             {
-                results.isCurrentVarNA[0] = AncestorType::isNonApplicable[0];
-
-                for (unsigned int column = 0; column < nbColumns_; column++)
-                {
-                    results.variableCaption = groupNames_[column];
-                    results.variableUnit = VCardType::Unit();
-                    AncestorType::pResults[column]
-                      .template buildSurveyReport<ResultsType, VCardType>(
-                        results,
-                        AncestorType::pResults[column],
-                        dataLevel,
-                        fileLevel,
-                        precision);
-                }
+                // Write the data for the current year
+                results.variableCaption = VCardType::Multiple::Caption(i);
+                results.variableUnit = VCardType::Multiple::Unit(i);
+                pValuesForTheCurrentYear[numSpace][i]
+                  .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
             }
+            results.isCurrentVarNA++;
         }
-        // Ask to the next item in the static list to export its results as well
-        NextType::buildSurveyReport(results, dataLevel, fileLevel, precision);
     }
 
 private:
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
-    std::vector<std::string> groupNames_; // Names of group containing the clusters of the area
-    std::map<std::string, unsigned int> groupToNumbers_; // Gives to each group (of area) a number
-    size_t nbColumns_ = 0;
     unsigned int pNbYearsParallel;
 
 }; // class RenewableGeneration
 
-} // namespace Antares::Solver::Variable::Economy
+} // namespace Economy
+} // namespace Variable
+} // namespace Solver
+} // namespace Antares
+
+#endif // __SOLVER_VARIABLE_ECONOMY_RenewableGeneration_H__

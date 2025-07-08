@@ -739,7 +739,7 @@ struct PClusterGroup
     using Type = wxString;
     static Type Value(const Data::Cluster* cluster)
     {
-        return wxStringFromUTF8(cluster->getGroup());
+        return wxStringFromUTF8(cluster->group());
     }
     static wxString ConvertToString(const Type v)
     {

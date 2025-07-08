@@ -41,6 +41,31 @@ namespace Data
 class RenewableCluster final: public Cluster
 {
 public:
+    enum RenewableGroup
+    {
+        //! Wind offshore
+        windOffShore = 0,
+        //! Wind onshore
+        windOnShore,
+        //! Concentration solar
+        thermalSolar,
+        //! PV solar
+        PVSolar,
+        //! Rooftop solar
+        rooftopSolar,
+        //! Other 1
+        renewableOther1,
+        //! Other 2
+        renewableOther2,
+        //! Other 3
+        renewableOther3,
+        //! Other 4
+        renewableOther4,
+
+        //! The highest value
+        groupMax
+    };
+
     enum TimeSeriesMode
     {
         //! TS contain power generation for each unit
@@ -54,6 +79,7 @@ public:
     //! Set of renewable clusters
     using Set = std::set<RenewableCluster*, CompareClusterName>;
 
+public:
     //! \name Constructor & Destructor
     //@{
     /*!
@@ -79,6 +105,10 @@ public:
     */
     void reset() override;
 
+    //! Set the group
+    void setGroup(Data::ClusterName newgrp) override;
+    //@}
+
     /*!
     ** \brief Check and fix all values of a renewable cluster
     **
@@ -93,6 +123,11 @@ public:
     */
     void copyFrom(const RenewableCluster& cluster);
 
+    /*!
+    ** \brief Group ID as an uint
+    */
+    uint groupId() const override;
+
     bool setTimeSeriesModeFromString(const YString& value);
 
     YString getTimeSeriesModeAsString() const;
@@ -101,6 +136,15 @@ public:
     ** Get production value at time-step ts
     */
     double valueAtTimeStep(uint year, uint hourInYear) const;
+
+public:
+    /*!
+    ** \brief The group ID
+    **
+    ** This value is computed from the field 'group' in 'group()
+    ** \see group()
+    */
+    enum RenewableGroup groupID = renewableOther1;
 
     enum TimeSeriesMode tsMode = powerGeneration;
 
