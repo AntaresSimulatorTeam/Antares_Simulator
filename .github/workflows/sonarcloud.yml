@@ -212,7 +212,7 @@ jobs:
           variant: "named-mps"
 
       - name: Run fast cucumber
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        if: ${{ !cancelled() }}
         uses: ./.github/workflows/cucumber-tests
         with:
           tags: "fast"
