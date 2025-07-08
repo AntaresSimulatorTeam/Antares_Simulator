@@ -25,8 +25,6 @@
 #include <cassert>
 #include <numeric>
 
-#include <boost/algorithm/string/case_conv.hpp>
-
 #include <yuni/yuni.h>
 #include <yuni/io/file.h>
 
@@ -34,13 +32,12 @@
 #include <antares/logs/logs.h>
 #include <antares/solver/ts-generator/law.h>
 #include <antares/utils/utils.h>
+#include "antares/array/matrix.h"
 #include "antares/study/parts/thermal/cluster.h"
 #include "antares/study/study.h"
 
 using namespace Yuni;
 using namespace Antares;
-
-#define THERMALAGGREGATELIST_INITIAL_CAPACITY 10
 
 namespace Yuni::Extension::CString
 {
@@ -126,12 +123,6 @@ Data::ThermalCluster::ThermalCluster(Area* parent):
     assert(parent && "A parent for a thermal dispatchable cluster can not be null");
 }
 
-uint ThermalCluster::groupId() const
-{
-    return groupID;
-}
-
-// TODO VP: delete with GUI
 void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
 {
     // Note: In this method, only the data can be copied (and not the name or
@@ -142,8 +133,7 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     mustrunOrigin = cluster.mustrunOrigin;
 
     // group
-    groupID = cluster.groupID;
-    pGroup = cluster.pGroup;
+    setGroup(cluster.getGroup());
 
     // Enabled
     enabled = cluster.enabled;
@@ -210,43 +200,6 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     {
         parentArea->forceReload();
     }
-}
-
-static Data::ThermalCluster::ThermalDispatchableGroup stringToGroup(Data::ClusterName& newgrp)
-{
-    using namespace Antares::Data;
-    const static std::map<ClusterName, ThermalCluster::ThermalDispatchableGroup> mapping = {
-      {"nuclear", ThermalCluster::thermalDispatchGrpNuclear},
-      {"lignite", ThermalCluster::thermalDispatchGrpLignite},
-      {"hard coal", ThermalCluster::thermalDispatchGrpHardCoal},
-      {"gas", ThermalCluster::thermalDispatchGrpGas},
-      {"oil", ThermalCluster::thermalDispatchGrpOil},
-      {"mixed fuel", ThermalCluster::thermalDispatchGrpMixedFuel},
-      {"other", ThermalCluster::thermalDispatchGrpOther1},
-      {"other 1", ThermalCluster::thermalDispatchGrpOther1},
-      {"other 2", ThermalCluster::thermalDispatchGrpOther2},
-      {"other 3", ThermalCluster::thermalDispatchGrpOther3},
-      {"other 4", ThermalCluster::thermalDispatchGrpOther4}};
-
-    boost::to_lower(newgrp);
-    if (auto res = mapping.find(newgrp); res != mapping.end())
-    {
-        return res->second;
-    }
-    // assigning a default value
-    return ThermalCluster::thermalDispatchGrpOther1;
-}
-
-void Data::ThermalCluster::setGroup(Data::ClusterName newgrp)
-{
-    if (newgrp.empty())
-    {
-        groupID = thermalDispatchGrpOther1;
-        pGroup.clear();
-        return;
-    }
-    pGroup = newgrp;
-    groupID = stringToGroup(newgrp);
 }
 
 bool Data::ThermalCluster::forceReload(bool reload) const
@@ -471,12 +424,7 @@ bool Data::ThermalCluster::integrityCheck()
     }
 
     // Modulation
-    if (modulation.height > 0)
-    {
-        CString<ant_k_cluster_name_max_length + ant_k_area_name_max_length + 50, false> buffer;
-        buffer << "Thermal cluster: " << parentArea->name << '/' << pName << ": Modulation";
-        ret = MatrixTestForPositiveValues(buffer.c_str(), &modulation) && ret;
-    }
+    ret = checkModulation() && ret;
 
     // la valeur minStablePower should not be modified
     /*
@@ -492,35 +440,25 @@ bool Data::ThermalCluster::integrityCheck()
     return ret;
 }
 
-const char* Data::ThermalCluster::GroupName(enum ThermalDispatchableGroup grp)
+bool ThermalCluster::checkModulation()
 {
-    switch (grp)
+    std::string buffer = "Thermal cluster: " + parentArea->name + '/' + pName + ": Modulation";
+    if (modulation.width and modulation.height)
     {
-    case thermalDispatchGrpNuclear:
-        return "Nuclear";
-    case thermalDispatchGrpLignite:
-        return "Lignite";
-    case thermalDispatchGrpHardCoal:
-        return "Hard Coal";
-    case thermalDispatchGrpGas:
-        return "Gas";
-    case thermalDispatchGrpOil:
-        return "Oil";
-    case thermalDispatchGrpMixedFuel:
-        return "Mixed Fuel";
-    case thermalDispatchGrpOther1:
-        return "Other";
-    case thermalDispatchGrpOther2:
-        return "Other 2";
-    case thermalDispatchGrpOther3:
-        return "Other 3";
-    case thermalDispatchGrpOther4:
-        return "Other 4";
-
-    case groupMax:
-        return "";
+        for (int x = 0; x < modulation.width; ++x)
+        {
+            for (int y = 0; y < modulation.height; ++y)
+            {
+                if (modulation[x][y] < 0.)
+                {
+                    logs.error() << buffer << ": Negative value detected (at the position " << x
+                                 << ',' << y << ')';
+                    return false;
+                }
+            }
+        }
     }
-    return "";
+    return true;
 }
 
 void ThermalCluster::calculatMinDivModulation()
