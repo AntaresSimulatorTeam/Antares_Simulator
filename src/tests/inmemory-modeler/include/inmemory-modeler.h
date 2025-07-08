@@ -28,54 +28,10 @@
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
 #include "antares/solver/optim-model-filler/VariableDictionary.h"
+#include "antares/study/system-model/component.h"
 #include "antares/study/system-model/model.h"
 
 #include "inmemory-modeler.h"
-
-namespace Antares::Optimisation::LinearProblemDataImpl
-{
-class LinearProblemData;
-}
-
-namespace Antares::ModelerStudy::SystemModel
-{
-class Model;
-class Component;
-enum class TimeDependent : bool;
-enum class ScenarioDependent : bool;
-class Constraint;
-class Parameter;
-enum class ValueType;
-} // namespace Antares::ModelerStudy::SystemModel
-
-namespace Antares::Expressions::Visitors
-{
-enum class TimeIndex : unsigned int;
-enum class ParameterType : unsigned int;
-struct ParameterTypeAndValue;
-} // namespace Antares::Expressions::Visitors
-
-namespace Antares::Expressions::Nodes
-{
-class Node;
-class LiteralNode;
-class ParameterNode;
-class VariableNode;
-class MultiplicationNode;
-class NegationNode;
-} // namespace Antares::Expressions::Nodes
-
-namespace Antares::Optimization
-{
-class ComponentFiller;
-}
-
-namespace Antares::Optimisation::LinearProblemApi
-{
-class ILinearProblem;
-class FillContext;
-class LinearProblemFiller;
-} // namespace Antares::Optimisation::LinearProblemApi
 
 namespace Test::Modeler
 {
