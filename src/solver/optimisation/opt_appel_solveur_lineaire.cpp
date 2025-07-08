@@ -217,8 +217,6 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
 
     ProblemeAResoudre->ProblemesSpx[NumIntervalle] = nullptr;
 
-    solver = nullptr;
-
     solver = convertToMPSolver(problemeHebdo, NumIntervalle, options);
 
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
