@@ -199,7 +199,6 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                           const int NumIntervalle,
                                           const int optimizationNumber,
                                           const OptPeriodStringGenerator& optPeriodStringGenerator,
-                                          bool PremierPassage,
                                           IResultWriter& writer)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
@@ -209,10 +208,6 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     assert(opt >= 0 && opt < 2);
     OptimizationStatistics& optimizationStatistics = problemeHebdo->optimizationStatistics[opt];
     TIME_MEASURE timeMeasure;
-    if (!PremierPassage)
-    {
-        solver = nullptr;
-    }
 
     if (solver)
     {
@@ -246,7 +241,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
             optimizationStatistics.addUpdateTime(timeMeasure.updateTime);
         }
     }
-
+// TODO could this condition be true?
     if (solver == nullptr)
     {
         solver = convertToMPSolver(problemeHebdo, NumIntervalle, options, false);
@@ -272,7 +267,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     timeMeasure.solveTime = measure.duration_ms();
     optimizationStatistics.addSolveTime(timeMeasure.solveTime);
 
-    if (ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX && PremierPassage)
+    if (ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX)
     {
         if (ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE)
         {
@@ -281,8 +276,9 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                 ORTOOLS_LibererProbleme(solver);
             }
 
-            logs.info() << " Solver: Standard resolution failed";
-            logs.info() << " Solver: Retry in safe mode"; // second trial w/o scaling
+            logs.info() << " Solver: resolution failed";
+            // TODO re-introduce scaling?
+            // logs.info() << " Solver: Retry in safe mode"; // second trial w/o scaling
             logs.debug() << " solver: resetting";
 
             return {.success = false,
@@ -314,35 +310,16 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
-    bool PremierPassage = true;
 
     SimplexResult simplexResult = OPT_TryToCallSimplex(options,
                                                        problemeHebdo,
                                                        NumIntervalle,
                                                        optimizationNumber,
                                                        optPeriodStringGenerator,
-                                                       PremierPassage,
                                                        writer);
-
-    if (!simplexResult.success)
-    {
-        PremierPassage = false;
-        simplexResult = OPT_TryToCallSimplex(options,
-                                             problemeHebdo,
-                                             NumIntervalle,
-                                             optimizationNumber,
-                                             optPeriodStringGenerator,
-                                             PremierPassage,
-                                             writer);
-    }
 
     if (ProblemeAResoudre->ExistenceDUneSolution == OUI_SPX)
     {
-        if (!PremierPassage)
-        {
-            logs.info() << " Solver: Safe resolution succeeded";
-        }
-
         double* pt;
         double optimizationCost = simplexResult.objectiveValue;
 
@@ -390,10 +367,6 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
 
     else
     {
-        if (!PremierPassage)
-        {
-            logs.info() << " Solver: Safe resolution failed";
-        }
         std::unique_ptr<MPSolver> MPproblem(
           convertToMPSolver(problemeHebdo, NumIntervalle, options, true));
 
