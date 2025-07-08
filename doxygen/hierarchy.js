@@ -136,10 +136,10 @@ var hierarchy =
       [ "Antares::Component::Datagrid::Renderer::classicColumn", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1classicColumn.html", null ],
       [ "Antares::Component::Datagrid::Renderer::thermalColumn", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1thermalColumn.html", null ]
     ] ],
-    [ "CommonFixture", "structCommonFixture.html", null ],
     [ "commonFixture", "structcommonFixture.html", [
       [ "saveFixture", "structsaveFixture.html", null ]
     ] ],
+    [ "CommonFixture", "structCommonFixture.html", null ],
     [ "Antares::Data::CompareAreaName", "structAntares_1_1Data_1_1CompareAreaName.html", null ],
     [ "Antares::Data::CompareBindingConstraintName", "structAntares_1_1Data_1_1CompareBindingConstraintName.html", null ],
     [ "Antares::Forms::CompareBySimulationMode", "structAntares_1_1Forms_1_1CompareBySimulationMode.html", null ],
@@ -171,7 +171,7 @@ var hierarchy =
     [ "Antares::ModelerStudy::SystemModel::Constraint", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Constraint.html", null ],
     [ "ConstraintBuilder", "classConstraintBuilder.html", null ],
     [ "ConstraintBuilderData", "classConstraintBuilderData.html", null ],
-    [ "ConstraintData", "structConstraintData.html", null ],
+    [ "Test::Modeler::ConstraintData", "structTest_1_1Modeler_1_1ConstraintData.html", null ],
     [ "ConstraintFactory", "classConstraintFactory.html", [
       [ "AreaBalance", "classAreaBalance.html", null ],
       [ "AreaHydroLevel", "classAreaHydroLevel.html", null ],
@@ -881,8 +881,13 @@ var hierarchy =
     ] ],
     [ "Antares::Optimisation::LinearProblemApi::ILinearProblemData", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html", [
       [ "Antares::Optimisation::LinearProblemDataImpl::LinearProblemData", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1LinearProblemData.html", null ],
+      [ "EmptyDataSeries", "classEmptyDataSeries.html", null ],
       [ "MockLinearProblemData", "structMockLinearProblemData.html", null ],
       [ "MockLinearProblemData", "structMockLinearProblemData.html", null ]
+    ] ],
+    [ "Antares::Solver::ILoader", "classAntares_1_1Solver_1_1ILoader.html", [
+      [ "Antares::Solver::LoadFiles::FileLoader", "classAntares_1_1Solver_1_1LoadFiles_1_1FileLoader.html", null ],
+      [ "InMemoryLoader< Fixture >", "classInMemoryLoader.html", null ]
     ] ],
     [ "Antares::Optimisation::LinearProblemApi::IMipSolution", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipSolution.html", [
       [ "Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsMipSolution", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipSolution.html", null ]
@@ -1046,6 +1051,10 @@ var hierarchy =
     [ "Antares::Solver::Simulation::ITimeSeriesNumbersWriter", "classAntares_1_1Solver_1_1Simulation_1_1ITimeSeriesNumbersWriter.html", [
       [ "Antares::Solver::Simulation::BindingConstraintsTimeSeriesNumbersWriter", "classAntares_1_1Solver_1_1Simulation_1_1BindingConstraintsTimeSeriesNumbersWriter.html", null ]
     ] ],
+    [ "Antares::Solver::IWriter", "classAntares_1_1Solver_1_1IWriter.html", [
+      [ "Antares::Modeler::FileWriter", "classAntares_1_1Modeler_1_1FileWriter.html", null ],
+      [ "StubWriter", "classStubWriter.html", null ]
+    ] ],
     [ "JIT", "classJIT.html", null ],
     [ "json_collector.jsonCollector", "classjson__collector_1_1jsonCollector.html", null ],
     [ "JIT::just_in_time_manager", "classJIT_1_1just__in__time__manager.html", null ],
@@ -1073,7 +1082,7 @@ var hierarchy =
     [ "Antares::Optimization::LinearConstraint", "structAntares_1_1Optimization_1_1LinearConstraint.html", null ],
     [ "Antares::Optimization::LinearExpression", "classAntares_1_1Optimization_1_1LinearExpression.html", null ],
     [ "Antares::Optimisation::LinearProblemApi::LinearProblemBuilder", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1LinearProblemBuilder.html", null ],
-    [ "LinearProblemBuildingFixture", "structLinearProblemBuildingFixture.html", null ],
+    [ "Test::Modeler::LinearProblemBuildingFixture", "structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html", null ],
     [ "Antares::Optimisation::LinearProblemApi::LinearProblemFiller", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1LinearProblemFiller.html", [
       [ "Antares::Optimisation::LinearProblemApi::OneConstraintFiller", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1OneConstraintFiller.html", null ],
       [ "Antares::Optimisation::LinearProblemApi::OneVarFiller", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1OneVarFiller.html", null ],
@@ -1143,6 +1152,7 @@ var hierarchy =
     [ "Antares::IO::Inputs::YmlModel::Model", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html", null ],
     [ "Antares::ModelerStudy::SystemModel::Model", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html", null ],
     [ "Antares::ModelerStudy::SystemModel::ModelBuilder", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ModelBuilder.html", null ],
+    [ "Antares::Solver::Modeler", "classAntares_1_1Solver_1_1Modeler.html", null ],
     [ "modeler_output_handler.modeler_output_handler", "classmodeler__output__handler_1_1modeler__output__handler.html", null ],
     [ "Antares::Solver::ModelerParameters", "structAntares_1_1Solver_1_1ModelerParameters.html", null ],
     [ "Monster", "structMonster.html", null ],
@@ -1506,6 +1516,7 @@ var hierarchy =
       [ "Antares::IO::Inputs::SystemConverter::ModelNotFound", "classAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ModelNotFound.html", null ],
       [ "Antares::Solver::Initialization::Error::NoQueueService", "classAntares_1_1Solver_1_1Initialization_1_1Error_1_1NoQueueService.html", null ],
       [ "Antares::Solver::LoadFiles::ErrorLoadingYaml", "classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml.html", null ],
+      [ "Antares::Solver::Modeler::Error", "classAntares_1_1Solver_1_1Modeler_1_1Error.html", null ],
       [ "Antares::Solver::WeeklyProblemTranslationException", "classAntares_1_1Solver_1_1WeeklyProblemTranslationException.html", null ],
       [ "ConstraintBuilder::ConstraintBuilderInvalidOperator", "classConstraintBuilder_1_1ConstraintBuilderInvalidOperator.html", null ],
       [ "StringIsNotWellFormated", "classStringIsNotWellFormated.html", null ]
@@ -1759,7 +1770,7 @@ var hierarchy =
     [ "Antares::ModelerStudy::SystemModel::System", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1System.html", null ],
     [ "Antares::ModelerStudy::SystemModel::SystemBuilder", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemBuilder.html", null ],
     [ "SystemBuilderCreationFixture", "structSystemBuilderCreationFixture.html", null ],
-    [ "SystemLinearProblemBuilder", "classSystemLinearProblemBuilder.html", null ],
+    [ "Antares::Solver::SystemLinearProblemBuilder", "classAntares_1_1Solver_1_1SystemLinearProblemBuilder.html", null ],
     [ "T", null, [
       [ "Antares::Expressions::Visitors::EvaluationContext::CouldNotEvaluateConstantParameter< T >", "structAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext_1_1CouldNotEvaluateConstantParameter.html", null ]
     ] ],
@@ -1872,7 +1883,7 @@ var hierarchy =
     [ "Antares::Solver::Variable::VariableAccessor< ResultsT, Category::singleColumn >", "structAntares_1_1Solver_1_1Variable_1_1VariableAccessor_3_01ResultsT_00_01Category_1_1singleColumn_01_4.html", null ],
     [ "Antares::Optimization::VariableBounds", "structAntares_1_1Optimization_1_1VariableBounds.html", null ],
     [ "Antares::Window::OutputViewer::Provider::VariableCollector", "classAntares_1_1Window_1_1OutputViewer_1_1Provider_1_1VariableCollector.html", null ],
-    [ "VariableData", "structVariableData.html", null ],
+    [ "Test::Modeler::VariableData", "structTest_1_1Modeler_1_1VariableData.html", null ],
     [ "Antares::Optimization::VariableDictionary", "classAntares_1_1Optimization_1_1VariableDictionary.html", null ],
     [ "VariableManagement::VariableManager", "classVariableManagement_1_1VariableManager.html", null ],
     [ "Antares::Data::VariablePrintInfo", "classAntares_1_1Data_1_1VariablePrintInfo.html", null ],

@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: src/modeler/loadFiles/include/antares/solver/modeler/loadFiles/data.h Source File</title>
+<title>Antares Simulator: Test::Modeler::VariableData Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -104,7 +104,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('modeler_2loadFiles_2include_2antares_2solver_2modeler_2loadFiles_2data_8h_source.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('structTest_1_1Modeler_1_1VariableData.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -123,57 +123,44 @@ $(document).ready(function(){initNavTree('modeler_2loadFiles_2include_2antares_2
 </div>
 
 <div class="header">
+  <div class="summary">
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="structTest_1_1Modeler_1_1VariableData-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">data.h</div>  </div>
+<div class="title">Test::Modeler::VariableData Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">** Copyright 2007-2024, RTE (https://www.rte-france.com)</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">** See AUTHORS.txt</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">** SPDX-License-Identifier: MPL-2.0</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">** This file is part of Antares-Simulator,</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">** Adequacy and Performance assessment for interconnected energy networks.</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">**</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">** Antares_Simulator is free software: you can redistribute it and/or modify</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment">** it under the terms of the Mozilla Public Licence 2.0 as published by</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment">** the Mozilla Foundation, either version 2 of the License, or</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment">** (at your option) any later version.</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment">**</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">** Antares_Simulator is distributed in the hope that it will be useful,</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment">** but WITHOUT ANY WARRANTY; without even the implied warranty of</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment">** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment">** Mozilla Public Licence 2.0 for more details.</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">**</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">** You should have received a copy of the Mozilla Public Licence 2.0</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">** along with Antares_Simulator. If not, see &lt;https://opensource.org/license/mpl-2-0/&gt;.</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">*/</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;antares/optimisation/linear-problem-data-impl/linearProblemData.h&gt;</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;antares/solver/modeler/parameters/modelerParameters.h&gt;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;antares/study/system-model/library.h&gt;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &lt;antares/study/system-model/system.h&gt;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">namespace </span>Antares::Modeler</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;{</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="structAntares_1_1Modeler_1_1Data.html">   33</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Modeler_1_1Data.html">Data</a></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;{</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    std::vector&lt;ModelerStudy::SystemModel::Library&gt; libraries;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    std::unique_ptr&lt;ModelerStudy::SystemModel::System&gt; system;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    std::unique_ptr&lt;Optimisation::LinearProblemApi::ILinearProblemData&gt; dataSeries;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;};</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;} <span class="comment">// namespace Antares::Modeler</span></div>
-<div class="ttc" id="astructAntares_1_1Modeler_1_1Data_html"><div class="ttname"><a href="structAntares_1_1Modeler_1_1Data.html">Antares::Modeler::Data</a></div><div class="ttdef"><b>Definition:</b> data.h:34</div></div>
-</div><!-- fragment --></div><!-- contents -->
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:ad3075bf4edc320eab7b462c4154a1ed8"><td class="memItemLeft" align="right" valign="top"><a id="ad3075bf4edc320eab7b462c4154a1ed8"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>id</b></td></tr>
+<tr class="separator:ad3075bf4edc320eab7b462c4154a1ed8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acdfd32a5e0c0929917f0a73a0b11e3fc"><td class="memItemLeft" align="right" valign="top"><a id="acdfd32a5e0c0929917f0a73a0b11e3fc"></a>
+Antares::ModelerStudy::SystemModel::ValueType&#160;</td><td class="memItemRight" valign="bottom"><b>type</b></td></tr>
+<tr class="separator:acdfd32a5e0c0929917f0a73a0b11e3fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f1f8291d40162ef8cac67040822eb5e"><td class="memItemLeft" align="right" valign="top"><a id="a3f1f8291d40162ef8cac67040822eb5e"></a>
+<a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>lb</b></td></tr>
+<tr class="separator:a3f1f8291d40162ef8cac67040822eb5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acba7005c2d761062e70a4c1c4001187c"><td class="memItemLeft" align="right" valign="top"><a id="acba7005c2d761062e70a4c1c4001187c"></a>
+<a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>ub</b></td></tr>
+<tr class="separator:acba7005c2d761062e70a4c1c4001187c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4e3ac94454aa4c43a390595f768a51d"><td class="memItemLeft" align="right" valign="top"><a id="aa4e3ac94454aa4c43a390595f768a51d"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>timeDependent</b> = true</td></tr>
+<tr class="separator:aa4e3ac94454aa4c43a390595f768a51d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a060252001500c0e97733801b376c6bd5"><td class="memItemLeft" align="right" valign="top"><a id="a060252001500c0e97733801b376c6bd5"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>scenarioDependent</b> = true</td></tr>
+<tr class="separator:a060252001500c0e97733801b376c6bd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>src/tests/inmemory-modeler/include/<a class="el" href="inmemory-modeler_8h_source.html">inmemory-modeler.h</a></li>
+</ul>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_45215590e5c4d98109af9f0f9921f13a.html">modeler</a></li><li class="navelem"><a class="el" href="dir_03bde25dd5aaf6a48891929ad3468560.html">loadFiles</a></li><li class="navelem"><a class="el" href="dir_bd8fd2ac40d01e398fd429e689e5a220.html">include</a></li><li class="navelem"><a class="el" href="dir_f0a1227722302b853dd1dbdee3f8cd3d.html">antares</a></li><li class="navelem"><a class="el" href="dir_054476bb392b66ea06d3553241bb42da.html">solver</a></li><li class="navelem"><a class="el" href="dir_40456181201b16ba8903bfa7d723e8fd.html">modeler</a></li><li class="navelem"><a class="el" href="dir_01a5b12af437d98f9990671de8689261.html">loadFiles</a></li><li class="navelem"><b>data.h</b></li>
+    <li class="navelem"><b>Test</b></li><li class="navelem"><b>Modeler</b></li><li class="navelem"><a class="el" href="structTest_1_1Modeler_1_1VariableData.html">VariableData</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

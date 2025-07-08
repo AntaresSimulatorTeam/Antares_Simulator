@@ -558,6 +558,7 @@ var annotated_dup =
         [ "Settings", "classAntares_1_1Map_1_1Settings.html", null ]
       ] ],
       [ "Modeler", null, [
+        [ "FileWriter", "classAntares_1_1Modeler_1_1FileWriter.html", "classAntares_1_1Modeler_1_1FileWriter" ],
         [ "Data", "structAntares_1_1Modeler_1_1Data.html", "structAntares_1_1Modeler_1_1Data" ]
       ] ],
       [ "ModelerStudy", null, [
@@ -687,6 +688,7 @@ var annotated_dup =
           ] ]
         ] ],
         [ "LoadFiles", null, [
+          [ "FileLoader", "classAntares_1_1Solver_1_1LoadFiles_1_1FileLoader.html", "classAntares_1_1Solver_1_1LoadFiles_1_1FileLoader" ],
           [ "ErrorLoadingYaml", "classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml.html", "classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml" ]
         ] ],
         [ "Optimization", null, [
@@ -946,6 +948,10 @@ var annotated_dup =
         [ "ImmediateFileResultWriter", "classAntares_1_1Solver_1_1ImmediateFileResultWriter.html", "classAntares_1_1Solver_1_1ImmediateFileResultWriter" ],
         [ "ZipWriteJob", "classAntares_1_1Solver_1_1ZipWriteJob.html", "classAntares_1_1Solver_1_1ZipWriteJob" ],
         [ "ZipWriter", "classAntares_1_1Solver_1_1ZipWriter.html", "classAntares_1_1Solver_1_1ZipWriter" ],
+        [ "ILoader", "classAntares_1_1Solver_1_1ILoader.html", "classAntares_1_1Solver_1_1ILoader" ],
+        [ "IWriter", "classAntares_1_1Solver_1_1IWriter.html", "classAntares_1_1Solver_1_1IWriter" ],
+        [ "Modeler", "classAntares_1_1Solver_1_1Modeler.html", "classAntares_1_1Solver_1_1Modeler" ],
+        [ "SystemLinearProblemBuilder", "classAntares_1_1Solver_1_1SystemLinearProblemBuilder.html", "classAntares_1_1Solver_1_1SystemLinearProblemBuilder" ],
         [ "ModelerParameters", "structAntares_1_1Solver_1_1ModelerParameters.html", "structAntares_1_1Solver_1_1ModelerParameters" ],
         [ "Application", "classAntares_1_1Solver_1_1Application.html", "classAntares_1_1Solver_1_1Application" ],
         [ "ScenarioBuilderOwner", "classAntares_1_1Solver_1_1ScenarioBuilderOwner.html", "classAntares_1_1Solver_1_1ScenarioBuilderOwner" ],
@@ -1385,6 +1391,11 @@ var annotated_dup =
       [ "study_run", "classstudy__run_1_1study__run.html", "classstudy__run_1_1study__run" ]
     ] ],
     [ "Test", null, [
+      [ "Modeler", null, [
+        [ "VariableData", "structTest_1_1Modeler_1_1VariableData.html", "structTest_1_1Modeler_1_1VariableData" ],
+        [ "ConstraintData", "structTest_1_1Modeler_1_1ConstraintData.html", "structTest_1_1Modeler_1_1ConstraintData" ],
+        [ "LinearProblemBuildingFixture", "structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html", "structTest_1_1Modeler_1_1LinearProblemBuildingFixture" ]
+      ] ],
       [ "BasisStatus", "classTest_1_1BasisStatus.html", "classTest_1_1BasisStatus" ]
     ] ],
     [ "tolerances", null, [
@@ -1460,8 +1471,8 @@ var annotated_dup =
     [ "BOUND_FLEX_UP_NODE", "structBOUND__FLEX__UP__NODE.html", "structBOUND__FLEX__UP__NODE" ],
     [ "CellColumnData", "classCellColumnData.html", "classCellColumnData" ],
     [ "CmdLineOptionsFixture", "structCmdLineOptionsFixture.html", "structCmdLineOptionsFixture" ],
-    [ "CommonFixture", "structCommonFixture.html", "structCommonFixture" ],
     [ "commonFixture", "structcommonFixture.html", "structcommonFixture" ],
+    [ "CommonFixture", "structCommonFixture.html", "structCommonFixture" ],
     [ "ComparisonFixture", "structComparisonFixture.html", "structComparisonFixture" ],
     [ "ComponentBuilderCreationFixture", "structComponentBuilderCreationFixture.html", "structComponentBuilderCreationFixture" ],
     [ "ComponentToAreaConnectionFillerFixture", "structComponentToAreaConnectionFillerFixture.html", "structComponentToAreaConnectionFillerFixture" ],
@@ -1471,7 +1482,6 @@ var annotated_dup =
     [ "ConstantOverScenarios", "classConstantOverScenarios.html", "classConstantOverScenarios" ],
     [ "ConstraintBuilder", "classConstraintBuilder.html", "classConstraintBuilder" ],
     [ "ConstraintBuilderData", "classConstraintBuilderData.html", "classConstraintBuilderData" ],
-    [ "ConstraintData", "structConstraintData.html", "structConstraintData" ],
     [ "ConstraintFactory", "classConstraintFactory.html", "classConstraintFactory" ],
     [ "ConstraintGroup", "classConstraintGroup.html", "classConstraintGroup" ],
     [ "ConstraintNamer", "classConstraintNamer.html", "classConstraintNamer" ],
@@ -1499,6 +1509,7 @@ var annotated_dup =
     [ "DONNEES_ANNUELLES", "structDONNEES__ANNUELLES.html", "structDONNEES__ANNUELLES" ],
     [ "DONNEES_MENSUELLES_ETENDUES", "structDONNEES__MENSUELLES__ETENDUES.html", "structDONNEES__MENSUELLES__ETENDUES" ],
     [ "DuplicateFixture", "structDuplicateFixture.html", "structDuplicateFixture" ],
+    [ "EmptyDataSeries", "classEmptyDataSeries.html", "classEmptyDataSeries" ],
     [ "ENERGIES_ET_PUISSANCES_HYDRAULIQUES", "structENERGIES__ET__PUISSANCES__HYDRAULIQUES.html", "structENERGIES__ET__PUISSANCES__HYDRAULIQUES" ],
     [ "ExchangeBalance", "classExchangeBalance.html", "classExchangeBalance" ],
     [ "ExchangeBalanceData", "structExchangeBalanceData.html", "structExchangeBalanceData" ],
@@ -1549,6 +1560,7 @@ var annotated_dup =
     [ "I_MPS_writer", "classI__MPS__writer.html", "classI__MPS__writer" ],
     [ "IItem", "classIItem.html", "classIItem" ],
     [ "InjectionCumulationConstraint", "classInjectionCumulationConstraint.html", "classInjectionCumulationConstraint" ],
+    [ "InMemoryLoader", "classInMemoryLoader.html", "classInMemoryLoader" ],
     [ "InMemoryStudyLoader", "classInMemoryStudyLoader.html", "classInMemoryStudyLoader" ],
     [ "InputFixture", "structInputFixture.html", "structInputFixture" ],
     [ "IntegerIndex", "classIntegerIndex.html", "classIntegerIndex" ],
@@ -1561,7 +1573,6 @@ var annotated_dup =
     [ "LEVEL_FLEX_UP_NODE", "structLEVEL__FLEX__UP__NODE.html", "structLEVEL__FLEX__UP__NODE" ],
     [ "LibererProbleme", "structLibererProbleme.html", "structLibererProbleme" ],
     [ "LibraryObjects", "structLibraryObjects.html", "structLibraryObjects" ],
-    [ "LinearProblemBuildingFixture", "structLinearProblemBuildingFixture.html", "structLinearProblemBuildingFixture" ],
     [ "LinearProblemMatrix", "classLinearProblemMatrix.html", "classLinearProblemMatrix" ],
     [ "LinearProblemMatrixStartUpCosts", "classLinearProblemMatrixStartUpCosts.html", "classLinearProblemMatrixStartUpCosts" ],
     [ "LinkVariable", "structLinkVariable.html", "structLinkVariable" ],
@@ -1660,6 +1671,7 @@ var annotated_dup =
     [ "StringIsNotWellFormated", "classStringIsNotWellFormated.html", "classStringIsNotWellFormated" ],
     [ "StructureIndex", "classStructureIndex.html", "classStructureIndex" ],
     [ "StubOptPeriodStringGenerator", "classStubOptPeriodStringGenerator.html", "classStubOptPeriodStringGenerator" ],
+    [ "StubWriter", "classStubWriter.html", "classStubWriter" ],
     [ "StudyBuilder", "structStudyBuilder.html", "structStudyBuilder" ],
     [ "StudyData", "classStudyData.html", "classStudyData" ],
     [ "StudyFixture", "structStudyFixture.html", "structStudyFixture" ],
@@ -1669,7 +1681,6 @@ var annotated_dup =
     [ "SubstitutionFixture", "classSubstitutionFixture.html", "classSubstitutionFixture" ],
     [ "SumSubstitutionFixture", "classSumSubstitutionFixture.html", "classSumSubstitutionFixture" ],
     [ "SystemBuilderCreationFixture", "structSystemBuilderCreationFixture.html", "structSystemBuilderCreationFixture" ],
-    [ "SystemLinearProblemBuilder", "classSystemLinearProblemBuilder.html", "classSystemLinearProblemBuilder" ],
     [ "SystemMemoryLogger", "classSystemMemoryLogger.html", "classSystemMemoryLogger" ],
     [ "TargetVectorUpdater", "classTargetVectorUpdater.html", "classTargetVectorUpdater" ],
     [ "TestContext", "structTestContext.html", "structTestContext" ],
@@ -1690,7 +1701,6 @@ var annotated_dup =
     [ "UserData", "classUserData.html", "classUserData" ],
     [ "VALEURS_DE_NTC_ET_RESISTANCES", "structVALEURS__DE__NTC__ET__RESISTANCES.html", "structVALEURS__DE__NTC__ET__RESISTANCES" ],
     [ "Variable", "classVariable.html", "classVariable" ],
-    [ "VariableData", "structVariableData.html", "structVariableData" ],
     [ "VariableNamer", "classVariableNamer.html", "classVariableNamer" ],
     [ "VARIABLES_DUALES_INTERCONNEXIONS", "structVARIABLES__DUALES__INTERCONNEXIONS.html", "structVARIABLES__DUALES__INTERCONNEXIONS" ],
     [ "Vec3", "structVec3.html", "structVec3" ],

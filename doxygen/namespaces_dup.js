@@ -1256,6 +1256,7 @@ var namespaces_dup =
         [ "new_check_allocation", "new__check_8hxx.html#af621f5a9f76d218541543ce2a2156f9c", null ]
       ] ],
       [ "Modeler", null, [
+        [ "FileWriter", "classAntares_1_1Modeler_1_1FileWriter.html", "classAntares_1_1Modeler_1_1FileWriter" ],
         [ "Data", "structAntares_1_1Modeler_1_1Data.html", "structAntares_1_1Modeler_1_1Data" ]
       ] ],
       [ "ModelerStudy", null, [
@@ -1392,6 +1393,7 @@ var namespaces_dup =
           ] ]
         ] ],
         [ "LoadFiles", null, [
+          [ "FileLoader", "classAntares_1_1Solver_1_1LoadFiles_1_1FileLoader.html", "classAntares_1_1Solver_1_1LoadFiles_1_1FileLoader" ],
           [ "ErrorLoadingYaml", "classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml.html", "classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml" ],
           [ "handleYamlError", "handleErrors_8cpp.html#a3931b46cb45d08d279deff1b66f27d16", null ],
           [ "loadAll", "loadFiles_8h.html#aff8eb21ced6578063106ab9797151ba1", null ],
@@ -1763,6 +1765,10 @@ var namespaces_dup =
         [ "ImmediateFileResultWriter", "classAntares_1_1Solver_1_1ImmediateFileResultWriter.html", "classAntares_1_1Solver_1_1ImmediateFileResultWriter" ],
         [ "ZipWriteJob", "classAntares_1_1Solver_1_1ZipWriteJob.html", "classAntares_1_1Solver_1_1ZipWriteJob" ],
         [ "ZipWriter", "classAntares_1_1Solver_1_1ZipWriter.html", "classAntares_1_1Solver_1_1ZipWriter" ],
+        [ "ILoader", "classAntares_1_1Solver_1_1ILoader.html", "classAntares_1_1Solver_1_1ILoader" ],
+        [ "IWriter", "classAntares_1_1Solver_1_1IWriter.html", "classAntares_1_1Solver_1_1IWriter" ],
+        [ "Modeler", "classAntares_1_1Solver_1_1Modeler.html", "classAntares_1_1Solver_1_1Modeler" ],
+        [ "SystemLinearProblemBuilder", "classAntares_1_1Solver_1_1SystemLinearProblemBuilder.html", "classAntares_1_1Solver_1_1SystemLinearProblemBuilder" ],
         [ "ModelerParameters", "structAntares_1_1Solver_1_1ModelerParameters.html", "structAntares_1_1Solver_1_1ModelerParameters" ],
         [ "Application", "classAntares_1_1Solver_1_1Application.html", "classAntares_1_1Solver_1_1Application" ],
         [ "ScenarioBuilderOwner", "classAntares_1_1Solver_1_1ScenarioBuilderOwner.html", "classAntares_1_1Solver_1_1ScenarioBuilderOwner" ],
@@ -2760,6 +2766,12 @@ var namespaces_dup =
       [ "study_run", "classstudy__run_1_1study__run.html", "classstudy__run_1_1study__run" ]
     ] ],
     [ "Test", null, [
+      [ "Modeler", null, [
+        [ "VariableData", "structTest_1_1Modeler_1_1VariableData.html", "structTest_1_1Modeler_1_1VariableData" ],
+        [ "ConstraintData", "structTest_1_1Modeler_1_1ConstraintData.html", "structTest_1_1Modeler_1_1ConstraintData" ],
+        [ "LinearProblemBuildingFixture", "structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html", "structTest_1_1Modeler_1_1LinearProblemBuildingFixture" ],
+        [ "build_context_parameter_with", "inmemory-modeler_8h.html#a487d3f0e57742f36ba536b38ee210426", null ]
+      ] ],
       [ "BasisStatus", "classTest_1_1BasisStatus.html", "classTest_1_1BasisStatus" ]
     ] ],
     [ "test_from_json", null, [
