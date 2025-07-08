@@ -27,6 +27,7 @@
 
 #include <antares/exception/LoadingError.hpp>
 #include <antares/logs/logs.h>
+#include "antares/paths/normalize_paths.h"
 #include "antares/study//study.h"
 #include "antares/study/area/area.h"
 #include "antares/utils/utils.h"
@@ -80,7 +81,7 @@ bool AreaLink::linkLoadTimeSeries_for_version_below_810(const fs::path& folder)
     // Load link's data
     Matrix<> tmpMatrix;
     const uint matrixWidth = 8;
-    if (!tmpMatrix.loadFromCSVFile(path.string(),
+    if (!tmpMatrix.loadFromCSVFile(denormalize(path),
                                    matrixWidth,
                                    HOURS_PER_YEAR,
                                    Matrix<>::optFixedSize | Matrix<>::optImmediate))
@@ -111,7 +112,7 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const fs::path& fold
     // Read link's parameters times series
     std::string paramId = with->id + "_parameters.txt";
     fs::path path = folder / paramId;
-    success = parameters.loadFromCSVFile(path.string(),
+    success = parameters.loadFromCSVFile(denormalize(path),
                                          fhlMax,
                                          HOURS_PER_YEAR,
                                          Matrix<>::optFixedSize)
@@ -472,8 +473,8 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
                                                       uint indirect)
 {
     logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Found " << direct
-                 << " direct TS " << " and " << indirect
-                 << " indirect TS, expected the same number";
+                 << " direct TS "
+                 << " and " << indirect << " indirect TS, expected the same number";
     throw Antares::Error::ReadingStudy();
 }
 } // anonymous namespace

@@ -26,7 +26,6 @@
 
 #include <antares/exception/LoadingError.hpp>
 #include <antares/inifile/inifile.h>
-#include <antares/logs/logs.h>
 #include <antares/study/parts/hydro/series.h>
 #include "antares/paths/normalize_paths.h"
 #include "antares/study/study.h"
@@ -163,14 +162,14 @@ bool DataSeriesHydro::LoadMaxPower(const std::string& areaID, const fs::path& fo
     Matrix<>::BufferType fileContent;
 
     fs::path filePath = folder / areaID / "maxHourlyGenPower.txt";
-    ret = maxHourlyGenPower.timeSeries.loadFromCSVFile(filePath.string(),
+    ret = maxHourlyGenPower.timeSeries.loadFromCSVFile(denormalize(filePath),
                                                        1,
                                                        HOURS_PER_YEAR,
                                                        &fileContent)
           && ret;
 
     filePath = folder / areaID / "maxHourlyPumpPower.txt";
-    ret = maxHourlyPumpPower.timeSeries.loadFromCSVFile(filePath.string(),
+    ret = maxHourlyPumpPower.timeSeries.loadFromCSVFile(denormalize(filePath),
                                                         1,
                                                         HOURS_PER_YEAR,
                                                         &fileContent)

@@ -30,6 +30,7 @@
 #include <vector>
 
 #include <antares/study/study.h>
+#include "antares/paths/normalize_paths.h"
 #include "antares/study/binding_constraint/BindingConstraint.h"
 #include "antares/study/binding_constraint/BindingConstraintLoader.h"
 #include "antares/study/binding_constraint/BindingConstraintSaver.h"
@@ -201,7 +202,7 @@ bool BindingConstraintsRepository::loadFromFolder(Study& study,
     }
 
     EnvForLoading env(study.areas, study.header.version);
-    env.folder = folder;
+    env.folder = denormalize(folder);
 
     env.iniFilename = folder / "bindingconstraints.ini";
     IniFile ini;
