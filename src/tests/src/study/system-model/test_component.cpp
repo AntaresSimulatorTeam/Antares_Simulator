@@ -320,7 +320,6 @@ BOOST_AUTO_TEST_CASE(successfully_connect_area_to_port)
     PortType portTypeWithAreaConnection("portType2", std::move(portFields2), "field2");
 
     Port portACDef("portACDef", portTypeWithAreaConnection);
-    Antares::Expressions::NodeRegistry nodeRegistry;
     std::vector<PortFieldDefinition> portFieldDefs;
     portFieldDefs.emplace_back(portACDef, field2, Expression());
 

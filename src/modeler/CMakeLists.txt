@@ -1,36 +1,24 @@
 add_subdirectory(loadFiles)
+add_subdirectory(modeler)
 add_subdirectory(parameters)
 
 OMESSAGE("  :: modeler")
 
 set(exec_name "antares-modeler")
 
-add_library(modeler-lib INTERFACE
-        ${SRCS}
-)
-
 add_executable(antares-modeler
         main.cpp
+        FileWriter.cpp
+        FileWriter.h
         ${SRCS}
 )
 
 set_target_properties(antares-modeler PROPERTIES OUTPUT_NAME ${exec_name})
 
-target_link_libraries(modeler-lib
-        INTERFACE
-        Antares::load-modeler-files
-        Antares::modeler-parameters
-        Antares::optim-model-filler
-        Antares::linear-problem-api
-        # TODO FIXME don't depend on implementations
-        Antares::linear-problem-mpsolver-impl
-)
-
 target_link_libraries(antares-modeler
         PRIVATE
-        modeler-lib
-        linear-problem-mpsolver-impl
-        optim-model-filler
+        Antares::modeler-lib
+        Antares::logs
 )
 
 import_std_libs(antares-modeler)
