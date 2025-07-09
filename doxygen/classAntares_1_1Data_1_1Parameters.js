@@ -25,6 +25,7 @@ var classAntares_1_1Data_1_1Parameters =
     [ "saveToINI", "classAntares_1_1Data_1_1Parameters.html#ad0da60a0b8f2d16bb5102b5ac62a03f0", null ],
     [ "setYearWeight", "classAntares_1_1Data_1_1Parameters.html#a8cf9523c92bbe5c7152b975f4a96d8ae", null ],
     [ "validateOptions", "classAntares_1_1Data_1_1Parameters.html#a7e039cee0a39de2e53d4cfdabceb57b2", null ],
+    [ "accurateShavePeaksIncludeShortTermStorage", "classAntares_1_1Data_1_1Parameters.html#aa5b273f2572a2f42a221dbfd1346f603", null ],
     [ "activeRulesScenario", "classAntares_1_1Data_1_1Parameters.html#a5d260b49155d895c6dfdb195663106c1", null ],
     [ "adqPatchParams", "classAntares_1_1Data_1_1Parameters.html#a0e496f203c573dc3ead23be035964173", null ],
     [ "compatibility", "classAntares_1_1Data_1_1Parameters.html#ade843b14f331a09fb1a136a52ea2fabf", null ],
