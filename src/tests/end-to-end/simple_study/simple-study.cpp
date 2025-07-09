@@ -48,12 +48,11 @@ struct StudyFixture: public StudyBuilder
 StudyFixture::StudyFixture():
     area(addAreaToStudy("Some area")),
     cluster(addClusterToArea(area, "some cluster")),
-    clusterConfig(cluster)
+    clusterConfig(cluster),
+    loadTSconfig(area->load.series.timeSeries)
 {
     simulationBetweenDays(0, 7);
-
     loadInArea = 7.0;
-    loadTSconfig = TimeSeriesConfigurer(area->load.series.timeSeries);
     loadTSconfig.setDimensions(1).fillColumnWith(0, loadInArea);
 
     clusterCost = 2.;
