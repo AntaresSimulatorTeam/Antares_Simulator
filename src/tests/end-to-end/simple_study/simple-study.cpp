@@ -37,8 +37,8 @@ struct StudyFixture: public StudyBuilder
     StudyFixture();
 
     // Data members
-    std::shared_ptr<ThermalCluster> cluster;
     Area* area = nullptr;
+    std::shared_ptr<ThermalCluster> cluster;
     double loadInArea = 0.;
     double clusterCost = 0.;
     ThermalClusterConfig clusterConfig;
@@ -46,11 +46,11 @@ struct StudyFixture: public StudyBuilder
 };
 
 StudyFixture::StudyFixture():
+    area(addAreaToStudy("Some area")),
+    cluster(addClusterToArea(area, "some cluster")),
     clusterConfig(cluster)
 {
     simulationBetweenDays(0, 7);
-    area = addAreaToStudy("Some area");
-    cluster = addClusterToArea(area, "some cluster");
 
     loadInArea = 7.0;
     loadTSconfig = TimeSeriesConfigurer(area->load.series.timeSeries);
