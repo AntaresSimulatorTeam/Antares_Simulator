@@ -274,6 +274,10 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
             if (solver)
             {
                 ORTOOLS_LibererProbleme(solver);
+
+                ProblemeAResoudre->ProblemesSpx[NumIntervalle] = nullptr;
+
+                solver = nullptr;
             }
 
             logs.info() << " Solver: resolution failed";
