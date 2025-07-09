@@ -63,10 +63,15 @@ loading
         4. Error type returned by loadFromFileToBuffer(...)
 */
 
+struct pathsFixture
+{
+    fs::path dummyPath = "path/to/a/file";
+};
+
 // ================================
 // ===  Matrix<double, double>  ===
 // ================================
-BOOST_AUTO_TEST_SUITE(coeffs_are_double__load_from_double)
+BOOST_FIXTURE_TEST_SUITE(coeffs_are_double__load_from_double, pathsFixture)
 
 // 1.a.
 BOOST_AUTO_TEST_CASE(fake_file_is_empty___target_matrix_has_only_0s)
@@ -76,7 +81,7 @@ BOOST_AUTO_TEST_CASE(fake_file_is_empty___target_matrix_has_only_0s)
 
     // Testing load
     Matrix_mock_load_to_buffer<double, double> mtx(2, 2);
-    BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file", 2, 2, Matrix<>::optNone, fake_buffer));
+    BOOST_CHECK(mtx.loadFromCSVFile(dummyPath, 2, 2, Matrix<>::optNone, fake_buffer));
 
     delete fake_buffer;
 
@@ -97,7 +102,7 @@ BOOST_AUTO_TEST_CASE(fake_file_with_banner__target_mtx_empty___mtx_gets_file_dim
 
     // Testing load
     Matrix_mock_load_to_buffer<double, double> mtx;
-    BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file", 0, 0, Matrix<>::optNone, fake_buffer));
+    BOOST_CHECK(mtx.loadFromCSVFile(dummyPath, 0, 0, Matrix<>::optNone, fake_buffer));
 
     delete fake_buffer;
 
@@ -123,7 +128,7 @@ BOOST_AUTO_TEST_CASE(fake_file_precision_is_4___matrix_precision_gets_4)
 
     // Testing load
     Matrix_mock_load_to_buffer<double, double> mtx;
-    BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file", 1, 3, Matrix<>::optNone, fake_buffer));
+    BOOST_CHECK(mtx.loadFromCSVFile(dummyPath, 1, 3, Matrix<>::optNone, fake_buffer));
 
     delete fake_buffer;
 
@@ -147,7 +152,7 @@ BOOST_AUTO_TEST_CASE(fake_file_contains_int___matrix_precision_is_0)
 
     // Testing load
     Matrix_mock_load_to_buffer<double, double> mtx;
-    BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file", 4, 1, Matrix<>::optNone, fake_buffer));
+    BOOST_CHECK(mtx.loadFromCSVFile(dummyPath, 4, 1, Matrix<>::optNone, fake_buffer));
 
     delete fake_buffer;
 
@@ -171,7 +176,7 @@ BOOST_AUTO_TEST_CASE(fake_file_full_0s__load_mtx___mtx_contains_only_0s)
 
     // Testing load
     Matrix_mock_load_to_buffer<double, double> mtx;
-    BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file", 3, 2, Matrix<>::optNone, fake_buffer));
+    BOOST_CHECK(mtx.loadFromCSVFile(dummyPath, 3, 2, Matrix<>::optNone, fake_buffer));
 
     delete fake_buffer;
 
@@ -192,7 +197,7 @@ BOOST_AUTO_TEST_CASE(fake_file_not_empty__target_mtx_empty___mtx_gets_file_dimen
 
     // Testing load
     Matrix_mock_load_to_buffer<double, double> mtx;
-    BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file", 0, 0, Matrix<>::optNone, fake_buffer));
+    BOOST_CHECK(mtx.loadFromCSVFile(dummyPath, 0, 0, Matrix<>::optNone, fake_buffer));
 
     delete fake_buffer;
 
@@ -223,7 +228,7 @@ BOOST_AUTO_TEST_CASE(fake_file_double_renewable)
 
     // Testing load
     Matrix_mock_load_to_buffer<double, double> mtx;
-    BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file", 0, 0, Matrix<>::optNone, fake_buffer));
+    BOOST_CHECK(mtx.loadFromCSVFile(dummyPath, 0, 0, Matrix<>::optNone, fake_buffer));
 
     delete fake_buffer;
 
@@ -254,7 +259,7 @@ BOOST_AUTO_TEST_CASE(fake_file_double_thermal)
 
     // Testing load
     Matrix_mock_load_to_buffer<double, double> mtx;
-    BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file", 0, 0, Matrix<>::optNone, fake_buffer));
+    BOOST_CHECK(mtx.loadFromCSVFile(dummyPath, 0, 0, Matrix<>::optNone, fake_buffer));
 
     delete fake_buffer;
 
@@ -276,7 +281,7 @@ BOOST_AUTO_TEST_CASE(file_with_alphabetic_char___load_fails_with_warning)
 
     Matrix_mock_load_to_buffer<double, double> mtx;
     logs.warning().clear();
-    BOOST_CHECK(not mtx.loadFromCSVFile("path/to/a/file", 2, 1, Matrix<>::optNone, fake_buffer));
+    BOOST_CHECK(not mtx.loadFromCSVFile(dummyPath, 2, 1, Matrix<>::optNone, fake_buffer));
 
     delete fake_buffer;
 
@@ -305,9 +310,10 @@ BOOST_AUTO_TEST_CASE(
     // ------------------------------------------------------------------------------------------
 
     Clob* fake_buffer = new Clob;
+    fs::path filename("text.txt");
 
     Matrix<double, double> mtx;
-    BOOST_CHECK(not mtx.loadFromCSVFile("text.txt", 2, 2, Matrix<>::optNone, fake_buffer));
+    BOOST_CHECK(not mtx.loadFromCSVFile(filename, 2, 2, Matrix<>::optNone, fake_buffer));
     BOOST_CHECK(not fake_buffer->empty());
 
     delete fake_buffer;
@@ -323,7 +329,7 @@ BOOST_AUTO_TEST_CASE(file_with_only_charriot_return__load_fails_with_warning)
 
     Matrix_mock_load_to_buffer<double, double> mtx;
     logs.warning().clear();
-    BOOST_CHECK(not mtx.loadFromCSVFile("path/to/a/file", 2, 1, Matrix<>::optNone, fake_buffer));
+    BOOST_CHECK(not mtx.loadFromCSVFile(dummyPath, 2, 1, Matrix<>::optNone, fake_buffer));
 
     delete fake_buffer;
 
@@ -338,8 +344,7 @@ BOOST_AUTO_TEST_CASE(file_with_only_tabs__option_no_failure___load_fails_with_wa
 
     Matrix_mock_load_to_buffer<double, double> mtx;
     logs.warning().clear();
-    BOOST_CHECK(
-      not mtx.loadFromCSVFile("path/to/a/file", 2, 1, Matrix<>::optNeverFails, fake_buffer));
+    BOOST_CHECK(not mtx.loadFromCSVFile(dummyPath, 2, 1, Matrix<>::optNeverFails, fake_buffer));
 
     delete fake_buffer;
 
@@ -355,7 +360,7 @@ BOOST_AUTO_TEST_CASE(
 
     Matrix_mock_load_to_buffer<double, double> mtx;
     logs.warning().clear();
-    BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file", 2, 2, Matrix<>::optNeverFails, fake_buffer));
+    BOOST_CHECK(mtx.loadFromCSVFile(dummyPath, 2, 2, Matrix<>::optNeverFails, fake_buffer));
 
     delete fake_buffer;
 
@@ -383,7 +388,7 @@ BOOST_AUTO_TEST_CASE(
     fake_buffer->append("5.2\t6.1\n1.3\t4.5\t9.7\n");
 
     Matrix_mock_load_to_buffer<double, double> mtx;
-    BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file", 2, 2, Matrix<>::optNeverFails, fake_buffer));
+    BOOST_CHECK(mtx.loadFromCSVFile(dummyPath, 2, 2, Matrix<>::optNeverFails, fake_buffer));
 
     delete fake_buffer;
 
@@ -407,7 +412,7 @@ BOOST_AUTO_TEST_CASE(file_with_columns_of_different_size___load_succeeds__row_no
     fake_buffer->append("5.2\t6.1\n1.3\t4.5\n9.7\n");
 
     Matrix_mock_load_to_buffer<double, double> mtx;
-    BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file", 2, 2, Matrix<>::optNeverFails, fake_buffer));
+    BOOST_CHECK(mtx.loadFromCSVFile(dummyPath, 2, 2, Matrix<>::optNeverFails, fake_buffer));
 
     delete fake_buffer;
 
@@ -430,7 +435,7 @@ BOOST_AUTO_TEST_CASE(
 
     Matrix_mock_load_to_buffer<double, double> mtx;
     logs.warning().clear();
-    BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file", 2, 5, Matrix<>::optNeverFails, fake_buffer));
+    BOOST_CHECK(mtx.loadFromCSVFile(dummyPath, 2, 5, Matrix<>::optNeverFails, fake_buffer));
 
     delete fake_buffer;
 
@@ -451,7 +456,7 @@ BOOST_AUTO_TEST_CASE(fake_file_empty__mtx_resized_to_0x2___mtx_cleared)
 
     // Testing load
     Matrix_mock_load_to_buffer<double, double> mtx;
-    BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file", 0, 2, Matrix<>::optNone, fake_buffer));
+    BOOST_CHECK(mtx.loadFromCSVFile(dummyPath, 0, 2, Matrix<>::optNone, fake_buffer));
 
     delete fake_buffer;
 
@@ -470,7 +475,7 @@ BOOST_AUTO_TEST_CASE(
 
     // Testing load
     Matrix_mock_load_to_buffer<double, double> mtx;
-    BOOST_CHECK(not mtx.loadFromCSVFile("path/to/a/file", 5, 7, Matrix<>::optNone, fake_buffer));
+    BOOST_CHECK(not mtx.loadFromCSVFile(dummyPath, 5, 7, Matrix<>::optNone, fake_buffer));
 
     delete fake_buffer;
 
@@ -490,7 +495,7 @@ BOOST_AUTO_TEST_CASE(file_size_3x3__mtx_resized_to_1x2___mtx_column_resized_to_3
 
     // Testing load
     Matrix_mock_load_to_buffer<double, double> mtx;
-    BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file", 1, 2, Matrix<>::optNone, fake_buffer));
+    BOOST_CHECK(mtx.loadFromCSVFile(dummyPath, 1, 2, Matrix<>::optNone, fake_buffer));
 
     delete fake_buffer;
 
@@ -520,8 +525,7 @@ BOOST_AUTO_TEST_CASE(
     // Testing load
     Matrix_mock_load_to_buffer<double, double> mtx;
     logs.warning().clear();
-    BOOST_CHECK(
-      not mtx.loadFromCSVFile("path/to/a/file", 3, 3, Matrix<>::optFixedSize, fake_buffer));
+    BOOST_CHECK(not mtx.loadFromCSVFile(dummyPath, 3, 3, Matrix<>::optFixedSize, fake_buffer));
 
     delete fake_buffer;
 
@@ -544,7 +548,7 @@ BOOST_AUTO_TEST_CASE(
 
     // Testing load
     Matrix_mock_load_to_buffer<double, double> mtx;
-    BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file",
+    BOOST_CHECK(mtx.loadFromCSVFile(dummyPath,
                                     2,
                                     2,
                                     Matrix<>::optFixedSize | Matrix<>::optNeverFails,
@@ -575,7 +579,7 @@ BOOST_AUTO_TEST_CASE(loading_option_to_none___target_mtx_not_loaded_but_pointed_
 
     // Testing load
     Matrix_mock_load_to_buffer<double, double> mtx;
-    BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file", 3, 1, Matrix<>::optNone, fake_buffer));
+    BOOST_CHECK(mtx.loadFromCSVFile(dummyPath, 3, 1, Matrix<>::optNone, fake_buffer));
 
     delete fake_buffer;
 
@@ -599,7 +603,7 @@ BOOST_AUTO_TEST_CASE(loading_option_to_immediate___target_mtx_loaded_but_not_poi
 
     // Testing load
     Matrix_mock_load_to_buffer<double, double> mtx;
-    BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file", 3, 1, Matrix<>::optImmediate, fake_buffer));
+    BOOST_CHECK(mtx.loadFromCSVFile(dummyPath, 3, 1, Matrix<>::optImmediate, fake_buffer));
 
     delete fake_buffer;
 
@@ -626,7 +630,7 @@ BOOST_AUTO_TEST_CASE(
 
     // Testing load
     Matrix_mock_load_to_buffer<double, double> mtx;
-    BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file",
+    BOOST_CHECK(mtx.loadFromCSVFile(dummyPath,
                                     3,
                                     1,
                                     Matrix<>::optImmediate | Matrix<>::optFixedSize,
@@ -654,12 +658,12 @@ BOOST_AUTO_TEST_CASE(err_not_found_when_loading___log_is_ok)
 
     // option : none
     logs.error().clear();
-    BOOST_CHECK(not mtx.loadFromCSVFile("path/to/a/file", 0, 0, Matrix<>::optNone, fake_buffer));
+    BOOST_CHECK(not mtx.loadFromCSVFile(dummyPath, 0, 0, Matrix<>::optNone, fake_buffer));
     BOOST_REQUIRE_EQUAL(logs.error().content(), "I/O Error: not found: 'path/to/a/file'");
 
     // option : quiet
     logs.error().clear();
-    BOOST_CHECK(not mtx.loadFromCSVFile("path/to/a/file", 2, 5, Matrix<>::optQuiet, fake_buffer));
+    BOOST_CHECK(not mtx.loadFromCSVFile(dummyPath, 2, 5, Matrix<>::optQuiet, fake_buffer));
     BOOST_REQUIRE_EQUAL(logs.error().content(), "");
 
     delete fake_buffer;
@@ -676,7 +680,7 @@ BOOST_AUTO_TEST_CASE(err_memory_limit_when_loading___log_is_ok)
 
     // option : none
     logs.error().clear();
-    BOOST_CHECK(not mtx.loadFromCSVFile("path/to/a/file", 3, 7, Matrix<>::optNone, fake_buffer));
+    BOOST_CHECK(not mtx.loadFromCSVFile(dummyPath, 3, 7, Matrix<>::optNone, fake_buffer));
     string logs_to_get = "path/to/a/file: The file is too large (>"
                          + to_string(filesizeHardLimit / 1024 / 1024) + "Mo)";
     BOOST_REQUIRE_EQUAL(logs.error().content(), logs_to_get);
@@ -687,7 +691,7 @@ BOOST_AUTO_TEST_CASE(err_memory_limit_when_loading___log_is_ok)
 
     // option : quiet
     logs.error().clear();
-    BOOST_CHECK(not mtx.loadFromCSVFile("path/to/a/file", 3, 1, Matrix<>::optQuiet, fake_buffer));
+    BOOST_CHECK(not mtx.loadFromCSVFile(dummyPath, 3, 1, Matrix<>::optQuiet, fake_buffer));
     BOOST_REQUIRE_EQUAL(logs.error().content(), "");
 
     BOOST_REQUIRE_EQUAL(mtx.width, 3);
@@ -708,12 +712,12 @@ BOOST_AUTO_TEST_CASE(err_unknown_when_loading___log_is_ok)
 
     // option : none
     logs.error().clear();
-    BOOST_CHECK(not mtx.loadFromCSVFile("path/to/a/file", 3, 7, Matrix<>::optNone, fake_buffer));
+    BOOST_CHECK(not mtx.loadFromCSVFile(dummyPath, 3, 7, Matrix<>::optNone, fake_buffer));
     BOOST_REQUIRE_EQUAL(logs.error().content(), "I/O Error: failed to load 'path/to/a/file'");
 
     // option : quiet
     logs.error().clear();
-    BOOST_CHECK(not mtx.loadFromCSVFile("path/to/a/file", 3, 1, Matrix<>::optQuiet, fake_buffer));
+    BOOST_CHECK(not mtx.loadFromCSVFile(dummyPath, 3, 1, Matrix<>::optQuiet, fake_buffer));
     BOOST_REQUIRE_EQUAL(logs.error().content(), "");
 
     delete fake_buffer;
@@ -724,7 +728,7 @@ BOOST_AUTO_TEST_SUITE_END()
 // ============================
 // ====  Matrix<int, int>  ====
 // ============================
-BOOST_AUTO_TEST_SUITE(coeffs_are_int__load_from_int)
+BOOST_FIXTURE_TEST_SUITE(coeffs_are_int__load_from_int, pathsFixture)
 
 // 1.c.
 BOOST_AUTO_TEST_CASE(file_contains_digits___loading_to_target_matrix_rounds_each_coef_to_floor)
@@ -740,7 +744,7 @@ BOOST_AUTO_TEST_CASE(file_contains_digits___loading_to_target_matrix_rounds_each
 
     // Testing load
     Matrix_mock_load_to_buffer<int, int> mtx;
-    BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file", 1, 2, Matrix<>::optNone, fake_buffer));
+    BOOST_CHECK(mtx.loadFromCSVFile(dummyPath, 1, 2, Matrix<>::optNone, fake_buffer));
 
     delete fake_buffer;
 
@@ -763,7 +767,7 @@ BOOST_AUTO_TEST_CASE(file_contains_int___loaded_coefs_are_int)
 
     // Testing load
     Matrix_mock_load_to_buffer<int, int> mtx;
-    BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file", 1, 2, Matrix<>::optNone, fake_buffer));
+    BOOST_CHECK(mtx.loadFromCSVFile(dummyPath, 1, 2, Matrix<>::optNone, fake_buffer));
 
     delete fake_buffer;
 
@@ -778,7 +782,7 @@ BOOST_AUTO_TEST_SUITE_END()
 // ===============================
 // ====  Matrix<int, double>  ====
 // ===============================
-BOOST_AUTO_TEST_SUITE(coeffs_are_int__load_from_digits)
+BOOST_FIXTURE_TEST_SUITE(coeffs_are_int__load_from_digits, pathsFixture)
 
 // 1.c.
 BOOST_AUTO_TEST_CASE(file_contains_digits___loading_to_target_matrix_rounds_each_coef_to_floor)
@@ -794,7 +798,7 @@ BOOST_AUTO_TEST_CASE(file_contains_digits___loading_to_target_matrix_rounds_each
 
     // Testing load
     Matrix_mock_load_to_buffer<int, double> mtx;
-    BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file", 1, 2, Matrix<>::optNone, fake_buffer));
+    BOOST_CHECK(mtx.loadFromCSVFile(dummyPath, 1, 2, Matrix<>::optNone, fake_buffer));
 
     delete fake_buffer;
 
@@ -809,7 +813,7 @@ BOOST_AUTO_TEST_SUITE_END()
 // ===============================
 // ====  Matrix<double, int>  ====
 // ===============================
-BOOST_AUTO_TEST_SUITE(coeffs_are_digits__load_from_int)
+BOOST_FIXTURE_TEST_SUITE(coeffs_are_digits__load_from_int, pathsFixture)
 
 // 1.c.
 BOOST_AUTO_TEST_CASE(file_contains_digits___loaded_coefs_are_rounded_to_floor_but_stored_as_digits)
@@ -825,7 +829,7 @@ BOOST_AUTO_TEST_CASE(file_contains_digits___loaded_coefs_are_rounded_to_floor_bu
 
     // Testing load
     Matrix_mock_load_to_buffer<int, double> mtx;
-    BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file", 1, 2, Matrix<>::optNone, fake_buffer));
+    BOOST_CHECK(mtx.loadFromCSVFile(dummyPath, 1, 2, Matrix<>::optNone, fake_buffer));
 
     delete fake_buffer;
 
@@ -837,7 +841,7 @@ BOOST_AUTO_TEST_CASE(file_contains_digits___loaded_coefs_are_rounded_to_floor_bu
 
 BOOST_AUTO_TEST_SUITE_END()
 
-BOOST_AUTO_TEST_SUITE(JIT_management)
+BOOST_FIXTURE_TEST_SUITE(JIT_management, pathsFixture)
 
 BOOST_AUTO_TEST_CASE(mtx_is_marked_modified__load_is_done___mtx_no_more_modified)
 {
@@ -854,7 +858,7 @@ BOOST_AUTO_TEST_CASE(mtx_is_marked_modified__load_is_done___mtx_no_more_modified
     Matrix_mock_load_to_buffer<int, int> mtx;
     mtx.jit = new JIT::Informations(); // Giving matrix a defaut jit information
     mtx.markAsModified();
-    BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file",
+    BOOST_CHECK(mtx.loadFromCSVFile(dummyPath,
                                     0,
                                     0,
                                     Matrix<>::optImmediate | Matrix<>::optMarkAsModified,
@@ -877,7 +881,7 @@ BOOST_AUTO_TEST_CASE(
     // Testing load
     Matrix_mock_load_to_buffer<int, int> mtx;
     mtx.error_when_loading_from_file(IO::errNotFound);
-    BOOST_CHECK(not mtx.loadFromCSVFile("path/to/a/file",
+    BOOST_CHECK(not mtx.loadFromCSVFile(dummyPath,
                                         1,
                                         2,
                                         Matrix<>::optImmediate | Matrix<>::optFixedSize,
