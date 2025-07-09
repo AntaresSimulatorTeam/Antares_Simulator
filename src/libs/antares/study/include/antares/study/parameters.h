@@ -431,6 +431,8 @@ public:
         HydroPricingMode hpMode;
     } hydroPricing;
 
+    bool accurateShavePeaksIncludeShortTermStorage = false;
+
     //! Transmission capacities
     GlobalTransmissionCapacities transmissionCapacities;
     //! Simplex optimization range (day/week)
