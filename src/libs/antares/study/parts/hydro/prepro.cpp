@@ -157,7 +157,7 @@ bool PreproHydro::loadFromFolder(Study& s, const std::string& areaID, const fs::
     bool ret = PreproHydroLoadSettings(this, preproPath);
 
     fs::path energyPath = folder / areaID / "energy.txt";
-    ret = data.loadFromCSVFile(denormalize(energyPath),
+    ret = data.loadFromCSVFile(energyPath,
                                hydroPreproMax,
                                maxNbOfLineToLoad,
                                mtrxOption,

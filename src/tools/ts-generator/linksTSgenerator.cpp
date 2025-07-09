@@ -200,17 +200,17 @@ bool readLinkPreproTimeSeries(LinkTSgenerationParams& link, fs::path sourceAreaD
     }
 
     // Files loading
-    to_return = link.prepro->data.loadFromCSVFile(preproFile.string(),
+    to_return = link.prepro->data.loadFromCSVFile(preproFile,
                                                   Data::PreproAvailability::preproAvailabilityMax,
                                                   DAYS_PER_YEAR)
                 && link.prepro->validate() && to_return;
 
-    to_return = link.modulationCapacityDirect.loadFromCSVFile(modulationDirectFile.string(),
+    to_return = link.modulationCapacityDirect.loadFromCSVFile(modulationDirectFile,
                                                               1,
                                                               HOURS_PER_YEAR)
                 && to_return;
 
-    to_return = link.modulationCapacityIndirect.loadFromCSVFile(modulationIndirectFile.string(),
+    to_return = link.modulationCapacityIndirect.loadFromCSVFile(modulationIndirectFile,
                                                                 1,
                                                                 HOURS_PER_YEAR)
                 && to_return;

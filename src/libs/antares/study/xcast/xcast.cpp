@@ -271,23 +271,18 @@ bool XCast::loadFromFolder(const fs::path& folder)
     fs::path p = folder / "data.txt";
 
     // Performing normal loading
-    ret = data.loadFromCSVFile(denormalize(p),
-                               (uint)dataMax,
-                               12,
-                               Matrix<>::optFixedSize,
-                               &readBuffer)
-          && ret;
+    ret = data.loadFromCSVFile(p, (uint)dataMax, 12, Matrix<>::optFixedSize, &readBuffer) && ret;
 
     // K
     p = folder / "k.txt";
-    ret = K.loadFromCSVFile(denormalize(p), 12, 24, Matrix<>::optFixedSize, &readBuffer) && ret;
+    ret = K.loadFromCSVFile(p, 12, 24, Matrix<>::optFixedSize, &readBuffer) && ret;
 
     uint opts = Matrix<>::optNone;
 
     // Time-series translation
     p = folder / "translation.txt";
 
-    ret = translation.loadFromCSVFile(denormalize(p), 1, HOURS_PER_YEAR, opts, &readBuffer) && ret;
+    ret = translation.loadFromCSVFile(p, 1, HOURS_PER_YEAR, opts, &readBuffer) && ret;
     if (!JIT::usedFromGUI)
     {
         if (translation.empty())
@@ -312,7 +307,7 @@ bool XCast::loadFromFolder(const fs::path& folder)
     // Transfer function
     p = folder / "conversion.txt";
 
-    ret = conversion.loadFromCSVFile(denormalize(p), 3, 2, opts, &readBuffer) && ret;
+    ret = conversion.loadFromCSVFile(p, 3, 2, opts, &readBuffer) && ret;
     if (not JIT::enabled)
     {
         if (conversion.width >= 3 && conversion.width <= conversionMaxPoints)

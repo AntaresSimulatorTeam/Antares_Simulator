@@ -862,7 +862,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     // DSM, Reserves, D-1
     fs::path reservesPath = (study.folderInput / "reserves" / area.id.to<std::string>())
                               .replace_extension("txt");
-    ret = area.reserves.loadFromCSVFile(denormalize(reservesPath),
+    ret = area.reserves.loadFromCSVFile(reservesPath,
                                         fhrMax,
                                         HOURS_PER_YEAR,
                                         Matrix<>::optFixedSize)
@@ -889,10 +889,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     std::string miscgenName = "miscgen-" + area.id + ".txt";
     fs::path miscgenPath = study.folderInput / "misc-gen" / miscgenName;
 
-    ret = area.miscGen.loadFromCSVFile(denormalize(miscgenPath),
-                                       fhhMax,
-                                       HOURS_PER_YEAR,
-                                       Matrix<>::optFixedSize)
+    ret = area.miscGen.loadFromCSVFile(miscgenPath, fhhMax, HOURS_PER_YEAR, Matrix<>::optFixedSize)
           && ret;
 
     // Check misc gen
@@ -981,7 +978,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             HydroMaxTimeSeriesReader reader(area.hydro,
                                             area.id.to<std::string>(),
                                             area.name.to<std::string>());
-            ret = reader.read(denormalize(pathHydro), study.usedByTheSolver) && ret;
+            ret = reader.read(pathHydro, study.usedByTheSolver) && ret;
             break;
         }
         case Parameters::Compatibility::HydroPmax::Hourly:

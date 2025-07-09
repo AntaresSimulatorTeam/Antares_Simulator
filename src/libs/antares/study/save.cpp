@@ -223,8 +223,8 @@ bool Study::saveToFolder(const AnyString& newfolder)
     ret = saveLayers(buffer) and ret;
 
     // Binding constraints
-    buffer.clear() << folder << SEP << "input" << SEP << "bindingconstraints";
-    ret = bindingConstraints.saveToFolder(buffer) and ret;
+    fs::path filpath = folder / "input" / "bindingconstraints";
+    ret = bindingConstraints.saveToFolder(filpath) and ret;
 
     // Correlation matrices
     logs.info() << "Exporting the correlation matrices";

@@ -150,7 +150,7 @@ bool ThermalClusterList::loadFromFolder(Study& study, const fs::path& folder, Ar
             options = Matrix<>::optFixedSize,
         };
 
-        ret = cluster->modulation.loadFromCSVFile(denormalize(modulationFile),
+        ret = cluster->modulation.loadFromCSVFile(modulationFile,
                                                   thermalModulationMax,
                                                   HOURS_PER_YEAR,
                                                   options)

@@ -30,6 +30,7 @@
 
 #include <antares/io/statistics.h>
 #include <antares/logs/logs.h>
+#include "antares/paths/normalize_paths.h"
 
 #include "matrix-to-buffer.h"
 
@@ -403,41 +404,55 @@ bool Matrix<T, ReadWriteT>::internalLoadJITData(const AnyString& filename,
 }
 
 template<class T, class ReadWriteT>
-inline bool Matrix<T, ReadWriteT>::loadFromCSVFile(const AnyString& filename)
+bool Matrix<T, ReadWriteT>::loadFromCSVFile(const AnyString& filepath,
+                                            uint minWidth,
+                                            uint maxHeight,
+                                            uint options,
+                                            BufferType* buffer)
 {
-    return loadFromCSVFile(filename,
+    fs::path path_str(filepath.to<std::string>());
+    return loadFromCSVFile(path_str, minWidth, maxHeight, options, buffer);
+}
+
+template<class T, class ReadWriteT>
+inline bool Matrix<T, ReadWriteT>::loadFromCSVFile(const fs::path& filepath)
+{
+    return loadFromCSVFile(filepath,
                            1,
                            0,
                            optImmediate | optNoWarnIfEmpty | optNeverFails | optQuiet);
 }
 
 template<class T, class ReadWriteT>
-inline bool Matrix<T, ReadWriteT>::loadFromCSVFile(const AnyString& filename,
+inline bool Matrix<T, ReadWriteT>::loadFromCSVFile(const fs::path& filepath,
                                                    uint minWidth,
                                                    uint maxHeight,
                                                    BufferType* buffer)
 {
-    return loadFromCSVFile(filename, minWidth, maxHeight, optNone, buffer);
+    return loadFromCSVFile(filepath, minWidth, maxHeight, optNone, buffer);
 }
 
 template<class T, class ReadWriteT>
-bool Matrix<T, ReadWriteT>::loadFromCSVFile(const AnyString& filename,
+bool Matrix<T, ReadWriteT>::loadFromCSVFile(const fs::path& filepath,
                                             uint minWidth,
                                             uint maxHeight,
                                             uint options,
                                             BufferType* buffer)
 {
-    assert(not filename.empty() and "Matrix<>:: loadFromCSVFile: empty filename");
+    assert(not filepath.empty() and "Matrix<>:: loadFromCSVFile: empty filepath");
+
+    std::string path_str = Data::to_utf8_string(filepath);
+
     // As the loading might be expensive, especially when dealing with
     // numerous matrices, we may want to delay this loading (a `lazy` mode)
     if (JIT::enabled and not(options & optImmediate))
     {
-        return internalLoadJITData(filename, minWidth, maxHeight, options);
+        return internalLoadJITData(path_str, minWidth, maxHeight, options);
     }
     else
     {
         // Reading data from file
-        return internalLoadCSVFile(filename, minWidth, maxHeight, options, buffer);
+        return internalLoadCSVFile(path_str, minWidth, maxHeight, options, buffer);
     }
 }
 
@@ -1357,8 +1372,9 @@ bool Matrix<T, ReadWriteT>::loadAllJITData() const
 {
     if (jit and not JIT::IsReady(jit))
     {
+        fs::path sourceFilePath(jit->sourceFilename.to<std::string>());
         return (const_cast<Matrix<T, ReadWriteT>*>(this))
-          ->loadFromCSVFile(jit->sourceFilename,
+          ->loadFromCSVFile(sourceFilePath,
                             jit->minWidth,
                             jit->maxHeight,
                             jit->options | optImmediate);

@@ -296,9 +296,9 @@ bool BindingConstraintLoader::loadTimeSeries(EnvForLoading& env,
                                              BindingConstraint::Operator operatorType,
                                              BindingConstraint* bindingConstraint) const
 {
-    Yuni::Clob buffer = bindingConstraint->timeSeriesFileName(env);
+    fs::path filePath = bindingConstraint->timeSeriesFileName(env);
     bool load_ok = bindingConstraint->RHSTimeSeries_.loadFromCSVFile(
-      buffer,
+      filePath,
       1,
       (bindingConstraint->type() == BindingConstraint::typeHourly) ? 8784 : 366,
       Matrix<>::optImmediate,
@@ -323,12 +323,12 @@ bool BindingConstraintLoader::loadTimeSeriesLegacyStudies(
   EnvForLoading& env,
   BindingConstraint* bindingConstraint) const
 {
-    Yuni::Clob buffer;
-    buffer << env.folder << IO::Separator << bindingConstraint->pID << ".txt";
+    std::string filename = bindingConstraint->pID + ".txt";
+    fs::path filepath = env.folder / filename;
 
     Matrix<> intermediate;
     const int height = (bindingConstraint->pType == BindingConstraint::typeHourly) ? 8784 : 366;
-    if (intermediate.loadFromCSVFile(buffer,
+    if (intermediate.loadFromCSVFile(filepath,
                                      BindingConstraint::columnMax,
                                      height,
                                      Matrix<>::optImmediate | Matrix<>::optFixedSize,

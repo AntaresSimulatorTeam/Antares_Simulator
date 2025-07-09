@@ -65,15 +65,13 @@ static bool checkPower(const Matrix<>& dailyMaxPumpAndGen, const std::string& ar
     return true;
 }
 
-bool HydroMaxTimeSeriesReader::loadDailyMaxPowersAndEnergies(const AnyString& folder,
+bool HydroMaxTimeSeriesReader::loadDailyMaxPowersAndEnergies(const fs::path& folder,
                                                              bool usedBySolver)
 {
-    YString filePath;
     Matrix<>::BufferType fileContent;
     bool ret = true;
-
-    filePath.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxpower_"
-                     << areaID_ << ".txt";
+    std::string filename = "maxpower_" + areaID_ + ".txt";
+    fs::path filePath = folder / "common" / "capacity" / filename;
 
     //  It is necessary to load maxpower_ txt file, whether loading is called from old GUI
     //  or from solver.
@@ -141,7 +139,7 @@ void HydroMaxTimeSeriesReader::copyDailyMaxPumpingEnergy() const
     dailyNbHoursAtPumpPmax.pasteToColumn(0, dailyMaxPumpE);
 }
 
-bool HydroMaxTimeSeriesReader::read(const AnyString& folder, bool usedBySolver)
+bool HydroMaxTimeSeriesReader::read(const fs::path& folder, bool usedBySolver)
 {
     bool ret = loadDailyMaxPowersAndEnergies(folder, usedBySolver);
     ret = checkPower(hydro_.dailyMaxPumpAndGen, areaName_) && ret;

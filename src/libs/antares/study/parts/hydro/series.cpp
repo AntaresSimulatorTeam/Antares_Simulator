@@ -47,7 +47,7 @@ static bool loadTSfromFile(Matrix<double>& ts,
 {
     fs::path filePath = folder / areaID / filename;
     Matrix<>::BufferType fileContent;
-    return ts.loadFromCSVFile(denormalize(filePath), 1, height, &fileContent);
+    return ts.loadFromCSVFile(filePath, 1, height, &fileContent);
 }
 
 static void ConvertDailyTSintoHourlyTS(const Matrix<double>::ColumnType& dailyColumn,
@@ -162,17 +162,11 @@ bool DataSeriesHydro::LoadMaxPower(const std::string& areaID, const fs::path& fo
     Matrix<>::BufferType fileContent;
 
     fs::path filePath = folder / areaID / "maxHourlyGenPower.txt";
-    ret = maxHourlyGenPower.timeSeries.loadFromCSVFile(denormalize(filePath),
-                                                       1,
-                                                       HOURS_PER_YEAR,
-                                                       &fileContent)
+    ret = maxHourlyGenPower.timeSeries.loadFromCSVFile(filePath, 1, HOURS_PER_YEAR, &fileContent)
           && ret;
 
     filePath = folder / areaID / "maxHourlyPumpPower.txt";
-    ret = maxHourlyPumpPower.timeSeries.loadFromCSVFile(denormalize(filePath),
-                                                        1,
-                                                        HOURS_PER_YEAR,
-                                                        &fileContent)
+    ret = maxHourlyPumpPower.timeSeries.loadFromCSVFile(filePath, 1, HOURS_PER_YEAR, &fileContent)
           && ret;
 
     return ret;

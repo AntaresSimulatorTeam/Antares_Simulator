@@ -25,10 +25,13 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#ifndef __ANTARES_LIBS_STUDY_PARTS_HYDRO_MAX_TIME_SERIES_READER_H__
-#define __ANTARES_LIBS_STUDY_PARTS_HYDRO_MAX_TIME_SERIES_READER_H__
+#pragma once
+
+#include <filesystem>
 
 #include "antares/study/parts/hydro/container.h"
+
+namespace fs = std::filesystem;
 
 namespace Antares::Data
 {
@@ -43,7 +46,7 @@ class HydroMaxTimeSeriesReader
 public:
     HydroMaxTimeSeriesReader(PartHydro& hydro, std::string areaID, std::string areaName);
 
-    bool read(const AnyString& folder, bool usedBySolver);
+    bool read(const fs::path& folder, bool usedBySolver);
 
     enum powerDailyE
     {
@@ -67,7 +70,7 @@ private:
      *  This function provides reading from deprecated files which
      *  contains daily maximum generation/pumping power and energy data.
      */
-    bool loadDailyMaxPowersAndEnergies(const AnyString& folder, bool usedBySolver);
+    bool loadDailyMaxPowersAndEnergies(const fs::path& folder, bool usedBySolver);
 
     /**
      * \brief Copy energy functions
@@ -79,5 +82,3 @@ private:
     void copyDailyMaxPumpingEnergy() const;
 };
 } // namespace Antares::Data
-
-#endif /*__ANTARES_LIBS_STUDY_PARTS_HYDRO_MAX_TIME_SERIES_READER_H__*/

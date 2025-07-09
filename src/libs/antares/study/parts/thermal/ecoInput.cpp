@@ -71,10 +71,10 @@ bool EconomicInputData::loadFromFolder(Study& study, const fs::path& folder)
     {
         Yuni::Clob dataBuffer;
 
-        fs::path filename = folder / "fuelCost.txt";
-        if (fs::exists(filename))
+        fs::path filepath = folder / "fuelCost.txt";
+        if (fs::exists(filepath))
         {
-            ret = fuelcost.loadFromCSVFile(denormalize(filename),
+            ret = fuelcost.loadFromCSVFile(filepath,
                                            1,
                                            HOURS_PER_YEAR,
                                            Matrix<>::optImmediate,
@@ -86,10 +86,10 @@ bool EconomicInputData::loadFromFolder(Study& study, const fs::path& folder)
             }
         }
 
-        filename = folder / "CO2Cost.txt";
-        if (fs::exists(filename))
+        filepath = folder / "CO2Cost.txt";
+        if (fs::exists(filepath))
         {
-            ret = co2cost.loadFromCSVFile(denormalize(filename),
+            ret = co2cost.loadFromCSVFile(filepath,
                                           1,
                                           HOURS_PER_YEAR,
                                           Matrix<>::optImmediate,

@@ -21,7 +21,7 @@ fs::path normalize(const std::string& folder_path)
     return abspath;
 }
 
-std::string denormalize(const fs::path& folder_path)
+std::string to_utf8_string(const fs::path& folder_path)
 {
     std::u8string u8_string = folder_path.u8string();
     std::string s(u8_string.cbegin(), u8_string.cend());

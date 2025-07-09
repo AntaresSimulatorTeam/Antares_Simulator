@@ -103,11 +103,7 @@ bool Cluster::loadDataSeriesFromFolder(Study& s, const fs::path& folder)
     bool ret = true;
     fs::path seriesPath = folder / parentArea->id.to<std::string>() / id() / "series.txt";
 
-    ret = series.timeSeries.loadFromCSVFile(denormalize(seriesPath),
-                                            1,
-                                            HOURS_PER_YEAR,
-                                            &s.dataBuffer)
-          && ret;
+    ret = series.timeSeries.loadFromCSVFile(seriesPath, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
 
     if (s.usedByTheSolver && s.parameters.derated)
     {

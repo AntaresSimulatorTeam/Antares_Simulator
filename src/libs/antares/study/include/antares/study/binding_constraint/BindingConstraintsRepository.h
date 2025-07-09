@@ -115,7 +115,7 @@ public:
     /*!
     ** \brief Save all binding constraints into a folder
     */
-    [[nodiscard]] bool saveToFolder(const AnyString& folder) const;
+    [[nodiscard]] bool saveToFolder(const std::filesystem::path& folder) const;
 
     /*!
     ** \brief Reverse the sign of the weight for a given interconnection or thermal cluster

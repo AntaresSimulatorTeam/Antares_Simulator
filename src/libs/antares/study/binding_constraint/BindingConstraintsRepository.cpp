@@ -147,7 +147,7 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::Lo
     return loader.load(std::move(env));
 }
 
-bool BindingConstraintsRepository::saveToFolder(const AnyString& folder) const
+bool BindingConstraintsRepository::saveToFolder(const std::filesystem::path& folder) const
 {
     BindingConstraintSaver::EnvForSaving env;
     env.folder = folder;
@@ -202,7 +202,7 @@ bool BindingConstraintsRepository::loadFromFolder(Study& study,
     }
 
     EnvForLoading env(study.areas, study.header.version);
-    env.folder = denormalize(folder);
+    env.folder = folder;
 
     env.iniFilename = folder / "bindingconstraints.ini";
     IniFile ini;
@@ -273,13 +273,13 @@ bool BindingConstraintsRepository::internalSaveToFolder(
     if (constraints_.empty())
     {
         logs.info() << "No binding constraint to export.";
-        if (!Yuni::IO::Directory::Create(env.folder))
+        if (!fs::create_directory(env.folder))
         {
             return false;
         }
         // stripping the file
-        env.folder << Yuni::IO::Separator << "bindingconstraints.ini";
-        return Yuni::IO::File::CreateEmptyFile(env.folder);
+        fs::path filepath = env.folder / "bindingconstraints.ini";
+        return Yuni::IO::File::CreateEmptyFile(filepath.string());
     }
 
     if (constraints_.size() == 1)
@@ -291,7 +291,7 @@ bool BindingConstraintsRepository::internalSaveToFolder(
         logs.info() << "Exporting " << constraints_.size() << " binding constraints...";
     }
 
-    if (!Yuni::IO::Directory::Create(env.folder))
+    if (!fs::create_directory(env.folder))
     {
         return false;
     }
@@ -307,8 +307,8 @@ bool BindingConstraintsRepository::internalSaveToFolder(
         ret = Antares::Data::BindingConstraintSaver::saveToEnv(env, i->get()) && ret;
     }
 
-    env.folder << Yuni::IO::Separator << "bindingconstraints.ini";
-    return ini.save(env.folder) && ret;
+    env.folder /= "bindingconstraints.ini";
+    return ini.save(env.folder.string()) && ret;
 }
 
 void BindingConstraintsRepository::reverseWeightSign(const AreaLink* lnk)

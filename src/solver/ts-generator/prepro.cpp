@@ -57,7 +57,7 @@ bool PreproAvailability::loadFromFolder(Study& study, const std::filesystem::pat
 {
     auto filePath = folder / "data.txt";
     // standard loading
-    return data.loadFromCSVFile(denormalize(filePath),
+    return data.loadFromCSVFile(filePath,
                                 preproAvailabilityMax,
                                 DAYS_PER_YEAR,
                                 Matrix<>::optFixedSize,

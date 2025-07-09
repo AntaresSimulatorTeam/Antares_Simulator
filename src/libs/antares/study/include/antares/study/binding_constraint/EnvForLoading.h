@@ -45,9 +45,9 @@ public:
     std::filesystem::path iniFilename;
     //! Current section
     IniFile::Section* section;
-    
+
     Matrix<>::BufferType matrixBuffer;
-    Yuni::Clob folder;
+    std::filesystem::path folder;
 
     //! List of areas
     AreaList& areaList;

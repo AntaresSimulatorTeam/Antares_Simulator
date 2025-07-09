@@ -22,6 +22,7 @@
 #define __ANTARES_LIBS_ARRAY_MATRIX_H__
 
 #include <cassert>
+#include <filesystem>
 #include <set>
 
 #include <yuni/yuni.h>
@@ -29,6 +30,8 @@
 
 #include <antares/memory/memory.h>
 #include "antares/jit/jit.h"
+
+namespace fs = std::filesystem;
 
 namespace Antares
 {
@@ -166,12 +169,18 @@ public:
                                  uint options = optNone,
                                  BufferType* buffer = NULL);
 
-    bool loadFromCSVFile(const AnyString& filename,
+    virtual bool loadFromCSVFile(const fs::path& filepath,
+                                 uint minWidth,
+                                 uint maxHeight,
+                                 uint options = optNone,
+                                 BufferType* buffer = NULL);
+
+    bool loadFromCSVFile(const fs::path& filepath,
                          uint minWidth,
                          uint maxHeight,
                          BufferType* buffer);
 
-    bool loadFromCSVFile(const AnyString& filename);
+    bool loadFromCSVFile(const fs::path& filepath);
 
     /*!
     ** \brief Trying to open a file

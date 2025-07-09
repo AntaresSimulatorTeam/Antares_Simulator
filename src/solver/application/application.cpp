@@ -426,7 +426,7 @@ void Application::resetLogFilename() const
                + ".log"; // complete filename with timestamp and extension
 
     // Assigning the log filename
-    logs.logfile(Antares::Data::denormalize(logfile));
+    logs.logfile(Antares::Data::to_utf8_string(logfile));
 
     if (!logs.logfileIsOpened())
     {

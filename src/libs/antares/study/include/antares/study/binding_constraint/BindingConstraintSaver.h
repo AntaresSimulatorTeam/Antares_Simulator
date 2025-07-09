@@ -25,6 +25,8 @@
 
 #pragma once
 
+#include <filesystem>
+
 #include <antares/inifile/inifile.h>
 #include "antares/study/fwd.h"
 
@@ -41,7 +43,7 @@ public:
         //! Current section
         IniFile::Section* section = nullptr;
 
-        Yuni::Clob folder;
+        std::filesystem::path folder;
         Yuni::Clob matrixFilename;
         Yuni::CString<2 * (ant_k_area_name_max_length + 8), false> key;
     };

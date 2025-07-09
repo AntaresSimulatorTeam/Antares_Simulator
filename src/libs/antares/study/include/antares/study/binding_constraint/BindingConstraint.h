@@ -371,7 +371,7 @@ public:
     BindingConstraintStructures initLinkArrays() const;
 
     template<class Env>
-    std::string timeSeriesFileName(const Env& env) const;
+    fs::path timeSeriesFileName(const Env& env) const;
 
     const clusterWeightMap& clustersAndWeights() const;
 

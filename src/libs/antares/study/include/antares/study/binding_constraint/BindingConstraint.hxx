@@ -109,23 +109,25 @@ inline BindingConstraint::const_iterator BindingConstraint::end() const
 }
 
 template<class Env>
-inline std::string BindingConstraint::timeSeriesFileName(const Env& env) const
+inline fs::path BindingConstraint::timeSeriesFileName(const Env& env) const
 {
+    std::string filename = id().c_str();
     switch (operatorType())
     {
     case BindingConstraint::opLess:
-        return std::string() + env.folder.c_str() + Yuni::IO::Separator + id().c_str() + "_lt"
-               + ".txt";
+        filename += "_lt.txt";
+        break;
     case BindingConstraint::opGreater:
-        return std::string() + env.folder.c_str() + Yuni::IO::Separator + id().c_str() + "_gt"
-               + ".txt";
+        filename += "_gt.txt";
+        break;
     case BindingConstraint::opEquality:
-        return std::string() + env.folder.c_str() + Yuni::IO::Separator + id().c_str() + "_eq"
-               + ".txt";
+        filename += "_eq.txt";
+        break;
     default:
         logs.error("Cannot load/save time series of type other that eq/gt/lt");
         return "";
     }
+    return env.folder / filename;
 }
 
 } // namespace Antares::Data

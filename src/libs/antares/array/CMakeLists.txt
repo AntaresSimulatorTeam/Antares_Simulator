@@ -11,6 +11,7 @@ add_library(Antares::array ALIAS array)
 target_link_libraries(array
         PRIVATE
         yuni-static-core
+        Antares::paths-normalize
         PUBLIC
         io #matrix.hxx
         jit #jit.hxx require logs
@@ -19,7 +20,7 @@ target_link_libraries(array
 )
 
 target_include_directories(array
-                PUBLIC
+        PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
