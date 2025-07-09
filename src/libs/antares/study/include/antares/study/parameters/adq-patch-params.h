@@ -98,7 +98,7 @@ struct AdqPatchParams
     // TODO VP: remove this comment
     // This parameters does nothing right now, it will be implemented later in 9.3.x
     bool redispatch = false;
-     
+
     CurtailmentSharing curtailmentSharing;
 
     void reset();
