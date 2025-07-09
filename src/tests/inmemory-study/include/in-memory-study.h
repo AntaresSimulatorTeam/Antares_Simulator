@@ -54,7 +54,7 @@ private:
 class ThermalClusterConfig
 {
 public:
-    ThermalClusterConfig() = default;
+    ThermalClusterConfig() = delete;
     ThermalClusterConfig(std::shared_ptr<ThermalCluster> cluster);
     ThermalClusterConfig& setNominalCapacity(double nominalCapacity);
     ThermalClusterConfig& setUnitCount(unsigned unitCount);

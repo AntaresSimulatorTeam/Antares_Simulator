@@ -34,7 +34,6 @@ using namespace Antares::Data;
 // =================================
 struct StudyFixture: public StudyBuilder
 {
-    using StudyBuilder::StudyBuilder;
     StudyFixture();
 
     // Data members
@@ -46,7 +45,8 @@ struct StudyFixture: public StudyBuilder
     TimeSeriesConfigurer loadTSconfig;
 };
 
-StudyFixture::StudyFixture()
+StudyFixture::StudyFixture():
+    clusterConfig(cluster)
 {
     simulationBetweenDays(0, 7);
     area = addAreaToStudy("Some area");
@@ -57,7 +57,6 @@ StudyFixture::StudyFixture()
     loadTSconfig.setDimensions(1).fillColumnWith(0, loadInArea);
 
     clusterCost = 2.;
-    clusterConfig = ThermalClusterConfig(cluster);
     clusterConfig.setNominalCapacity(100.)
       .setAvailablePower(0, 50.)
       .setCosts(clusterCost)
