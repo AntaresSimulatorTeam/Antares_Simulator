@@ -241,7 +241,6 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
             optimizationStatistics.addUpdateTime(timeMeasure.updateTime);
         }
     }
-    // TODO could this condition be true?
     if (solver == nullptr)
     {
         solver = convertToMPSolver(problemeHebdo, NumIntervalle, options, false);
@@ -281,8 +280,6 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
             }
 
             logs.info() << " Solver: resolution failed";
-            // TODO re-introduce scaling?
-            // logs.info() << " Solver: Retry in safe mode"; // second trial w/o scaling
             logs.debug() << " solver: resetting";
 
             return {.success = false,
