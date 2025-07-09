@@ -55,7 +55,7 @@ class ThermalClusterConfig
 {
 public:
     ThermalClusterConfig() = default;
-    ThermalClusterConfig(ThermalCluster* cluster);
+    ThermalClusterConfig(std::shared_ptr<ThermalCluster> cluster);
     ThermalClusterConfig& setNominalCapacity(double nominalCapacity);
     ThermalClusterConfig& setUnitCount(unsigned unitCount);
     ThermalClusterConfig& setCosts(double cost);
@@ -63,7 +63,7 @@ public:
     ThermalClusterConfig& setAvailablePower(unsigned column, double value);
 
 private:
-    ThermalCluster* cluster_ = nullptr;
+    std::shared_ptr<ThermalCluster> cluster_ = nullptr;
     TimeSeriesConfigurer tsAvailablePowerConfig_;
 };
 

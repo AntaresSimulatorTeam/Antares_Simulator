@@ -57,7 +57,7 @@ StudyFixture::StudyFixture()
     loadTSconfig.setDimensions(1).fillColumnWith(0, loadInArea);
 
     clusterCost = 2.;
-    clusterConfig = ThermalClusterConfig(cluster.get());
+    clusterConfig = ThermalClusterConfig(cluster);
     clusterConfig.setNominalCapacity(100.)
       .setAvailablePower(0, 50.)
       .setCosts(clusterCost)
