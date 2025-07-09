@@ -67,7 +67,30 @@ private:
     TimeSeriesConfigurer tsAvailablePowerConfig_;
 };
 
+class ShortTermStorageConfig
+{
+public:
+    ShortTermStorageConfig() = delete;
+    explicit ShortTermStorageConfig(Antares::Data::ShortTermStorage::STStorageCluster& storage);
+    ShortTermStorageConfig& setInjectionNominalCapacity(double injectionNominalCapacity);
+    ShortTermStorageConfig& setWithdrawalNominalCapacity(double withdrawalNominalCapacity);
+    ShortTermStorageConfig& setReservoirCapacity(double reservoirCapacity);
+    ShortTermStorageConfig& setInitiallevelDefault(double initialLevel);
+    ShortTermStorageConfig& setInitialLevelOptim(bool initialLevelOptim);
+    ShortTermStorageConfig& setInjectionEfficiency(double injectionEfficiency);
+    ShortTermStorageConfig& setWithdrawalEfficiency(double withdrawalEfficiency);
+    ShortTermStorageConfig& setGroupName(const std::string& groupName);
+    ShortTermStorageConfig& setName(const std::string& name);
+    ShortTermStorageConfig& setPenalizeVariationWithdrawal(bool penalizeVariationWithdrawal);
+    ShortTermStorageConfig& setPenalizeVariationInjection(bool penalizeVariationInjection);
+    ShortTermStorageConfig& setEnabled(bool enabled);
+
+private:
+    Antares::Data::ShortTermStorage::STStorageCluster& storage;
+};
+
 std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& clusterName);
+
 void addScratchpadToEachArea(Data::Study& study);
 
 // -------------------------------

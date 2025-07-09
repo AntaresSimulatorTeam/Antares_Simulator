@@ -118,6 +118,85 @@ ThermalClusterConfig& ThermalClusterConfig::setAvailablePower(unsigned column, d
 }
 
 // -------------------------------
+// Short-term storage
+// -------------------------------
+ShortTermStorageConfig& ShortTermStorageConfig::setInjectionNominalCapacity(
+  double injectionNominalCapacity)
+{
+    storage.properties.injectionNominalCapacity = injectionNominalCapacity;
+    return *this;
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::setWithdrawalNominalCapacity(
+  double withdrawalNominalCapacity)
+{
+    storage.properties.withdrawalNominalCapacity = withdrawalNominalCapacity;
+    return *this;
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::setReservoirCapacity(double reservoirCapacity)
+{
+    storage.properties.reservoirCapacity = reservoirCapacity;
+    return *this;
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::setInitiallevelDefault(double initialLevel)
+{
+    storage.properties.initialLevel = initialLevel;
+    return *this;
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::setInitialLevelOptim(bool initialLevelOptim)
+{
+    storage.properties.initialLevelOptim = initialLevelOptim;
+    return *this;
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::setInjectionEfficiency(double injectionEfficiency)
+{
+    storage.properties.injectionEfficiency = injectionEfficiency;
+    return *this;
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::setWithdrawalEfficiency(double withdrawalEfficiency)
+{
+    storage.properties.withdrawalEfficiency = withdrawalEfficiency;
+    return *this;
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::setGroupName(const std::string& groupName)
+{
+    storage.properties.groupName = groupName;
+    return *this;
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::setName(const std::string& name)
+{
+    storage.properties.name = name;
+    return *this;
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::setPenalizeVariationWithdrawal(
+  bool penalizeVariationWithdrawal)
+{
+    storage.properties.penalizeVariationWithdrawal = penalizeVariationWithdrawal;
+    return *this;
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::setPenalizeVariationInjection(
+  bool penalizeVariationInjection)
+{
+    storage.properties.penalizeVariationInjection = penalizeVariationInjection;
+    return *this;
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::ShortTermStorageConfig::setEnabled(bool enabled)
+{
+    storage.properties.enabled = enabled;
+    return *this;
+}
+
+// -------------------------------
 // Simulation results retrieval
 // -------------------------------
 averageResults OutputRetriever::overallCost(Area* area)
