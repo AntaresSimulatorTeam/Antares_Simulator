@@ -486,7 +486,7 @@ All IDs in the model library and system file must respect the following:
 
 ### Scenario builder
 
-The **modeler-scenariobuilder.dat** file is used to map scenarios to data series.
+The **modeler-scenariobuilder.dat** file, located in the **data-series** directory, is used to map scenarios to data series.
 Each line consists of the association of a groupe name and Monte-carlo year -referred to as _year_- to a data series ID
 -referred to as _chronicle_-.
 

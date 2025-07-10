@@ -75,7 +75,7 @@ ScenarioGroupParser::Line ScenarioGroupParser::parseLine(const std::string& line
     ScenarioBuilderParser parser(&tokens);
     try
     {
-        auto* tree = parser->rules();
+        auto* tree = parser.rules();
         ScenarioBuilderImplVisitor visitor;
         return std::any_cast<Line>(visitor.visit(tree));
     }

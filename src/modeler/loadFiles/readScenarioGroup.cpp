@@ -51,11 +51,10 @@ Optimisation::ScenarioGroupRepository parseScenarioGroupRepository(std::ifstream
         try
         {
             auto parsedLine = parser.parseLine(line);
-            if (!alreadyCreatedScenarios.contains(parsedLine.groupName))
-            {
-                alreadyCreatedScenarios[parsedLine.groupName] = std::make_unique<
-                  Optimisation::LinearProblemDataImpl::Scenario>(parsedLine.groupName);
-            }
+            alreadyCreatedScenarios.emplace(
+              parsedLine.groupName,
+              std::make_unique<Optimisation::LinearProblemDataImpl::Scenario>(
+                parsedLine.groupName));
             alreadyCreatedScenarios[parsedLine.groupName]->setChronicle(parsedLine.year,
                                                                         parsedLine.chronicle);
         }
@@ -68,7 +67,6 @@ Optimisation::ScenarioGroupRepository parseScenarioGroupRepository(std::ifstream
     {
         scenarioGroupRepository.addScenario(groupId, std::move(scenario));
     }
-    file.close();
     return scenarioGroupRepository;
 }
 
