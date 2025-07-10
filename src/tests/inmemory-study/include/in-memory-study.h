@@ -20,8 +20,6 @@
  */
 #pragma once
 #define WIN32_LEAN_AND_MEAN
-#include <variant>
-
 #include "antares/solver/simulation/economy.h"
 #include "antares/solver/simulation/simulation.h"
 #include "antares/study/scenario-builder/rules.h"
@@ -38,17 +36,10 @@ void configureLinkCapacities(AreaLink* link);
 class TimeSeriesConfigurer
 {
 public:
-    using MatrixRef = std::reference_wrapper<Matrix<>>;
-    using VectorRef = std::reference_wrapper<std::vector<double>>;
-    TimeSeriesConfigurer() = delete;
+    TimeSeriesConfigurer() = default;
 
-    TimeSeriesConfigurer(MatrixRef matrix):
-        ts_(matrix)
-    {
-    }
-
-    TimeSeriesConfigurer(VectorRef vector):
-        ts_(vector)
+    TimeSeriesConfigurer(Matrix<>& matrix):
+        ts_(&matrix)
     {
     }
 
@@ -57,7 +48,7 @@ public:
     TimeSeriesConfigurer& fillColumnWith(unsigned column, const std::vector<double>& values);
 
 private:
-    std::variant<MatrixRef, VectorRef> ts_;
+    Matrix<>* ts_ = nullptr;
 };
 
 class ThermalClusterConfig
