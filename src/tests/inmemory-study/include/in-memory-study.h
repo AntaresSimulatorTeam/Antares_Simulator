@@ -281,6 +281,12 @@ public:
         return rules_->hydro;
     }
 
+    // index = area index
+    std::vector<ShortTermAdditionalConstraintsTSNumberData>& stsAdditionalConstraints()
+    {
+        return rules_->shortTermStorageAdditionalConstraints;
+    }
+
 private:
     Rules::Ptr rules_;
 };

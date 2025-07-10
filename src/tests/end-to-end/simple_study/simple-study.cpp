@@ -400,6 +400,61 @@ BOOST_FIXTURE_TEST_CASE(STS_efficiency_for_injection_and_withdrawal, StudyFixtur
     BOOST_CHECK_EQUAL(output.levelForSTSgroup(area, groupNb).hour(2), 48); // withdrawal
 }
 
+BOOST_FIXTURE_TEST_CASE(sts_scenarized_withdrawal_constraint, StudyBuilder)
+{
+    simulationBetweenDays(0, 7);
+    Area* area = addAreaToStudy("A");
+    auto* sts = addSTSToArea(area, "my-sts");
+    ShortTermStorageConfig stsConfig(*sts);
+    stsConfig.setReservoirCapacity(1000)
+      .setWithdrawalNominalCapacity(10)
+      .setInjectionNominalCapacity(10)
+      .setInitialLevelOptim(true);
+
+    sts->series->fillDefaultSeriesIfEmpty();
+
+    auto ct = stsConfig.addConstraint()
+                .setName("my-constraint")
+                .setVariable("withdrawal")
+                .setOperatorType("equal")
+                .setHours({{1, 2}}) // first hour has index 1
+                .build();
+
+    const int nbYears = 4;
+    const int nbHours = 2; // Constraint on 2 hours
+    const double withdrawalYear[] = {1., 2., 4., 8.};
+    TimeSeriesConfigurer addcRHS(ct->rhs());
+    addcRHS.setDimensions(nbYears)
+      .fillColumnWith(0, withdrawalYear[0])
+      .fillColumnWith(1, withdrawalYear[1])
+      .fillColumnWith(2, withdrawalYear[2])
+      .fillColumnWith(3, withdrawalYear[3]);
+
+    setNumberMCyears(nbYears);
+
+    ScenarioBuilderRule scenarioBuilderRule(*study);
+    auto& stsScenario = scenarioBuilderRule.stsAdditionalConstraints()[/*areaIndex = */ 0];
+
+    stsScenario.setTSnumber(ct.get(), 0, 1);
+    stsScenario.setTSnumber(ct.get(), 1, 2);
+    stsScenario.setTSnumber(ct.get(), 2, 3);
+    stsScenario.setTSnumber(ct.get(), 3, 4);
+
+    const double expectedAverage = nbHours
+                                   * (withdrawalYear[0] + withdrawalYear[1] + withdrawalYear[2]
+                                      + withdrawalYear[3])
+                                   / nbYears;
+
+    simulation->create();
+    simulation->run();
+
+    unsigned int groupNb = 0; // Used to reach the first group of STS results
+    OutputRetriever output(simulation->rawSimu());
+
+    auto withdrawal = output.withdrawalForSTSgroup(area, groupNb);
+    BOOST_TEST(withdrawal.hour(0) + withdrawal.hour(1) == expectedAverage, tt::tolerance(0.001));
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(HYDRO_MAX_POWER)
