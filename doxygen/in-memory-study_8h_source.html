@@ -183,8 +183,8 @@ $(document).ready(function(){initNavTree('in-memory-study_8h_source.html',''); i
 <div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="classThermalClusterConfig.html">   54</a></span>&#160;<span class="keyword">class </span><a class="code" href="classThermalClusterConfig.html">ThermalClusterConfig</a></div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;{</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <a class="code" href="classThermalClusterConfig.html">ThermalClusterConfig</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <a class="code" href="classThermalClusterConfig.html">ThermalClusterConfig</a>(<a class="code" href="classAntares_1_1Data_1_1ThermalCluster.html">ThermalCluster</a>* cluster);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <a class="code" href="classThermalClusterConfig.html">ThermalClusterConfig</a>() = <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classThermalClusterConfig.html">ThermalClusterConfig</a>(std::shared_ptr&lt;ThermalCluster&gt; cluster);</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <a class="code" href="classThermalClusterConfig.html">ThermalClusterConfig</a>&amp; setNominalCapacity(<span class="keywordtype">double</span> nominalCapacity);</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <a class="code" href="classThermalClusterConfig.html">ThermalClusterConfig</a>&amp; setUnitCount(<span class="keywordtype">unsigned</span> unitCount);</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <a class="code" href="classThermalClusterConfig.html">ThermalClusterConfig</a>&amp; setCosts(<span class="keywordtype">double</span> cost);</div>
@@ -192,7 +192,7 @@ $(document).ready(function(){initNavTree('in-memory-study_8h_source.html',''); i
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <a class="code" href="classThermalClusterConfig.html">ThermalClusterConfig</a>&amp; setAvailablePower(<span class="keywordtype">unsigned</span> column, <span class="keywordtype">double</span> value);</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1ThermalCluster.html">ThermalCluster</a>* cluster_ = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    std::shared_ptr&lt;ThermalCluster&gt; cluster_ = <span class="keyword">nullptr</span>;</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <a class="code" href="classTimeSeriesConfigurer.html">TimeSeriesConfigurer</a> tsAvailablePowerConfig_;</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;};</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>

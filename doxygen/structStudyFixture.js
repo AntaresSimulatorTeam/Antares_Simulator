@@ -4,7 +4,6 @@ var structStudyFixture =
     [ "StudyFixture", "structStudyFixture.html#a9833119d966e476890849b374047fd57", null ],
     [ "StudyFixture", "structStudyFixture.html#a9833119d966e476890849b374047fd57", null ],
     [ "run", "structStudyFixture.html#a1498b7710aaacdfcbecc833def183d55", null ],
-    [ "StudyBuilder", "structStudyFixture.html#a6d0f6ea2d8894a9d3833d1e9eabfee48", null ],
     [ "area", "structStudyFixture.html#a55f33d55ff4a7f8fb16d4a02f8ec4362", null ],
     [ "cluster", "structStudyFixture.html#a7bb40e5d558cca55d2e8635fb9b8741c", null ],
     [ "clusterConfig", "structStudyFixture.html#a79050046161e92da8d3cd1d036aeee12", null ],
