@@ -69,10 +69,10 @@ public:
 
 ScenarioGroupParser::Line ScenarioGroupParser::parseLine(const std::string& line)
 {
-    auto input = std::make_unique<antlr4::ANTLRInputStream>(line);
-    auto lexer = std::make_unique<ScenarioBuilderLexer>(input.get());
-    auto tokens = std::make_unique<antlr4::CommonTokenStream>(lexer.get());
-    auto parser = std::make_unique<ScenarioBuilderParser>(tokens.get());
+    antlr4::ANTLRInputStream input(line);
+    ScenarioBuilderLexer lexer(&input);
+    antlr4::CommonTokenStream tokens(&lexer);
+    ScenarioBuilderParser parser(&tokens);
     try
     {
         auto* tree = parser->rules();
