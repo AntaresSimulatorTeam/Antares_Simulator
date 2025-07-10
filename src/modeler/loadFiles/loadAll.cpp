@@ -47,4 +47,5 @@ Modeler::Data loadAll(const std::filesystem::path& studyPath)
 
     return data;
 }
+
 } // namespace Antares::Solver::LoadFiles

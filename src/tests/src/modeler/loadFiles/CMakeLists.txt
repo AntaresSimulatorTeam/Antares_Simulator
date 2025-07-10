@@ -8,4 +8,6 @@ add_boost_test(loadFiles
         LIBS
         Antares::modeler-parameters
         Antares::load-modeler-files
-        test_utils_unit)
+        Antares::modeler-lib
+        test_utils_unit
+)

@@ -80,7 +80,7 @@ TimeSeriesConfigurer& TimeSeriesConfigurer::fillColumnWith(unsigned column,
     return *this;
 }
 
-ThermalClusterConfig::ThermalClusterConfig(ThermalCluster* cluster):
+ThermalClusterConfig::ThermalClusterConfig(std::shared_ptr<ThermalCluster> cluster):
     cluster_(cluster),
     tsAvailablePowerConfig_(cluster_->series.timeSeries)
 {

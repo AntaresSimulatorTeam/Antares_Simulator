@@ -831,6 +831,11 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
                                                            d.renewableGeneration.rgModelling);
     }
 
+    if (key == "accurate-shave-peaks-include-short-term-storage")
+    {
+        return value.to<bool>(d.accurateShavePeaksIncludeShortTermStorage);
+    }
+
     return false;
 }
 

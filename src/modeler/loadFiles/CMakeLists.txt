@@ -4,10 +4,14 @@ set(SOURCES
         readDataSeries.cpp
         readLibraries.cpp
         readParameters.cpp
+        readDataSeries.cpp
+        handleErrors.cpp
+        FileLoader.cpp
         readScenarioGroup.cpp
         readSystem.cpp
 
         include/antares/solver/modeler/loadFiles/loadFiles.h
+        include/antares/solver/modeler/loadFiles/Fileloader.h
 )
 
 # Create the library
@@ -35,6 +39,7 @@ target_link_libraries(load-modeler-files
         Antares::model-converter
         Antares::modeler-parameters
         Antares::data-series-csv-importer
+        Antares::modeler-lib
         Antares::scenario-group-parser
         fmt::fmt
 )

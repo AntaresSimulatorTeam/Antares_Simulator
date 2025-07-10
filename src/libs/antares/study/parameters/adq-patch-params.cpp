@@ -164,6 +164,10 @@ bool AdqPatchParams::updateFromKeyValue(const Yuni::String& key, const Yuni::Str
     {
         return value.to<bool>(setToZeroOutsideInsideLinks);
     }
+    if (key == "redispatch")
+    {
+        return value.to<bool>(redispatch);
+    }
     return curtailmentSharing.updateFromKeyValue(key, value);
 }
 

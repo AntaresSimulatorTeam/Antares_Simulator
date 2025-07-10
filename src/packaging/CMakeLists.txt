@@ -81,6 +81,7 @@ set(TARGET_LIBS #No alias
         linear-problem-api
         linear-problem-data-impl
         linear-problem-mpsolver-impl
+        modeler-lib
 
         # solver-lib
         args_helper

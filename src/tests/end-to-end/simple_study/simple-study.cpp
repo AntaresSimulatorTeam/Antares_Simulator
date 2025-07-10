@@ -34,30 +34,29 @@ using namespace Antares::Data;
 // =================================
 struct StudyFixture: public StudyBuilder
 {
-    using StudyBuilder::StudyBuilder;
     StudyFixture();
 
     // Data members
-    std::shared_ptr<ThermalCluster> cluster;
     Area* area = nullptr;
+    std::shared_ptr<ThermalCluster> cluster;
     double loadInArea = 0.;
     double clusterCost = 0.;
     ThermalClusterConfig clusterConfig;
     TimeSeriesConfigurer loadTSconfig;
 };
 
-StudyFixture::StudyFixture()
+StudyFixture::StudyFixture():
+    area(addAreaToStudy("Some area")),
+    cluster(addClusterToArea(area, "some cluster")),
+    clusterConfig(cluster)
 {
     simulationBetweenDays(0, 7);
-    area = addAreaToStudy("Some area");
-    cluster = addClusterToArea(area, "some cluster");
 
     loadInArea = 7.0;
     loadTSconfig = TimeSeriesConfigurer(area->load.series.timeSeries);
     loadTSconfig.setDimensions(1).fillColumnWith(0, loadInArea);
 
     clusterCost = 2.;
-    clusterConfig = ThermalClusterConfig(cluster.get());
     clusterConfig.setNominalCapacity(100.)
       .setAvailablePower(0, 50.)
       .setCosts(clusterCost)

@@ -48,7 +48,7 @@ StudyWithTwoClusters::StudyWithTwoClusters()
 
     // Adding a dispatchable cluster to the previous area
     cluster_dispatch = addClusterToArea(area, "dispatch-cluster");
-    ThermalClusterConfig(cluster_dispatch.get())
+    ThermalClusterConfig(cluster_dispatch)
       .setNominalCapacity(1000.)
       .setAvailablePower(0, 1000.)
       .setCosts(50.)
@@ -57,7 +57,7 @@ StudyWithTwoClusters::StudyWithTwoClusters()
     // Adding a mustrun cluster to the previous area
     cluster_mustrun = addClusterToArea(area, "mustrun-cluster");
     cluster_mustrun->mustrun = true;
-    ThermalClusterConfig(cluster_mustrun.get())
+    ThermalClusterConfig(cluster_mustrun)
       .setNominalCapacity(100.)
       .setAvailablePower(0, 100.)
       .setCosts(10.)

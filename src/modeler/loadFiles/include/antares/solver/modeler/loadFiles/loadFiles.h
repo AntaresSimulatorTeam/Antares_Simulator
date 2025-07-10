@@ -28,10 +28,12 @@
 #include <antares/solver/modeler/parameters/modelerParameters.h>
 #include <antares/study/system-model/library.h>
 #include <antares/study/system-model/system.h>
-#include "antares/modeler/data/data.h"
+
+#include "data.h"
 
 namespace Antares::Solver::LoadFiles
 {
+
 /// Load the libraries, system and dataseries
 Antares::Modeler::Data loadAll(const std::filesystem::path& studyPath);
 
@@ -61,4 +63,5 @@ public:
     {
     }
 };
+
 } // namespace Antares::Solver::LoadFiles
