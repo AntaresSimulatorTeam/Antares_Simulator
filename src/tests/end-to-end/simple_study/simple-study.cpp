@@ -280,7 +280,8 @@ BOOST_FIXTURE_TEST_CASE(error_on_wrong_hydro_data, StudyFixture)
 {
     StudyBuilder builder;
     builder.simulationBetweenDays(0, 7);
-    PartHydro& hydro = area->hydro;
+    Area& area = *builder.addAreaToStudy("A");
+    PartHydro& hydro = area.hydro;
     TimeSeriesConfigurer(hydro.series->storage.timeSeries)
       .setDimensions(1)
       .fillColumnWith(0, -1.0); // Negative inflow will cause a consistency error with mingen
