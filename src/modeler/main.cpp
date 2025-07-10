@@ -20,60 +20,15 @@
  */
 
 #include <fstream>
-#include <ranges>
 
 #include <antares/logs/logs.h>
-#include <antares/optimisation/linear-problem-api/linearProblem.h>
-#include <antares/optimisation/linear-problem-api/linearProblemBuilder.h>
-#include <antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h>
-#include <antares/solver/modeler/loadFiles/loadFiles.h>
-#include <antares/solver/modeler/parameters/parseModelerParameters.h>
-#include <antares/solver/optim-model-filler/ComponentFiller.h>
+#include <antares/solver/modeler/Modeler.h>
+#include "antares/solver/modeler/loadFiles/Fileloader.h"
+#include "antares/solver/simulation/solver.h"
 
-using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
+#include "FileWriter.h"
+
 using namespace Antares;
-using namespace Antares::Optimization;
-using namespace Antares::Solver;
-using namespace Antares::Optimisation::LinearProblemApi;
-
-class SystemLinearProblemBuilder
-{
-public:
-    explicit SystemLinearProblemBuilder(const ModelerStudy::SystemModel::System* system):
-        system_(system)
-    {
-    }
-
-    ~SystemLinearProblemBuilder() = default;
-
-    void Provide(ILinearProblem& pb,
-                 const ModelerParameters& parameters,
-                 ILinearProblemData* dataSeries)
-    {
-        std::vector<std::unique_ptr<Optimization::ComponentFiller>> fillers;
-        std::vector<LinearProblemFiller*> fillers_ptr;
-        // All LP variables coordinates (component id, variable id, scenario, time step)
-        VariableDictionary variableDictionary;
-
-        for (const auto& [_, component]: system_->Components())
-        {
-            auto cf = std::make_unique<Optimization::ComponentFiller>(component,
-                                                                      variableDictionary);
-            fillers.push_back(std::move(cf));
-        }
-        for (auto& component_filler: fillers)
-        {
-            fillers_ptr.push_back(component_filler.get());
-        }
-
-        LinearProblemBuilder linear_problem_builder(fillers_ptr);
-        FillContext dummy_time_scenario_ctx = {parameters.firstTimeStep, parameters.lastTimeStep};
-        linear_problem_builder.build(pb, *dataSeries, dummy_time_scenario_ctx);
-    }
-
-private:
-    const ModelerStudy::SystemModel::System* system_;
-};
 
 static void usage()
 {
@@ -102,78 +57,15 @@ int main(int argc, const char** argv)
 
     try
     {
-        const auto parameters = LoadFiles::loadParameters(studyPath);
-        logs.info() << "Parameters loaded";
-
-        Modeler::Data data = LoadFiles::loadAll(studyPath);
-
-        SystemLinearProblemBuilder system_linear_problem(data.system.get());
-
-        auto outputPath = studyPath / "output";
-        if (!parameters.noOutput)
-        {
-            logs.info() << "Output folder : " << outputPath;
-            if (!std::filesystem::is_directory(outputPath)
-                && !std::filesystem::create_directory(outputPath))
-            {
-                logs.error() << "Failed to create output directory. Exiting simulation.";
-                return EXIT_FAILURE;
-            }
-        }
-
-        logs.info() << "linear problem of System loaded";
-        // Problem is MIP if any variable of any component is not continuous
-        bool isMip = std::ranges::any_of(
-          data.system->Components() | std::views::values,
-          [](const auto& component)
-          {
-              return std::ranges::any_of(component.getModel()->Variables() | std::views::values,
-                                         [](const auto& variable) {
-                                             return variable.Type()
-                                                    != ModelerStudy::SystemModel::ValueType::FLOAT;
-                                         });
-          });
-        OrtoolsLinearProblem ortools_linear_problem(isMip, parameters.solver);
-
-        system_linear_problem.Provide(ortools_linear_problem, parameters, data.dataSeries.get());
-
-        logs.info() << "Linear problem provided";
-
-        logs.info() << "Number of variables: " << ortools_linear_problem.variableCount();
-        logs.info() << "Number of constraints: " << ortools_linear_problem.constraintCount();
-
-        if (!parameters.noOutput)
-        {
-            logs.info() << "Writing problem.lp...";
-            auto lp_path = outputPath / "problem.lp";
-            ortools_linear_problem.WriteLP(lp_path.string());
-        }
-
-        logs.info() << "Launching resolution...";
-        auto* solution = ortools_linear_problem.solve(parameters.solverLogs);
-        switch (solution->getStatus())
-        {
-        case MipStatus::OPTIMAL:
-        case MipStatus::FEASIBLE:
-            if (!parameters.noOutput)
-            {
-                logs.info() << "Writing objective & variable values...";
-                std::ofstream sol_out(outputPath / "solution.csv");
-                sol_out << std::setprecision(15) << "objective " << solution->getObjectiveValue()
-                        << std::endl;
-                for (const auto& [name, value]: solution->getOptimalValues())
-                {
-                    sol_out << name << " " << value << std::endl;
-                }
-            }
-            break;
-        default:
-            logs.error() << "Problem during linear optimization";
-        }
+        LoadFiles::FileLoader loader(studyPath);
+        Antares::Modeler::FileWriter writer(studyPath);
+        Antares::Solver::Modeler modeler(loader, writer);
+        modeler.solve();
     }
-    catch (const LoadFiles::ErrorLoadingYaml&)
+    catch (const Antares::Solver::Modeler::Error& e)
     {
-        logs.error() << "Error while loading files, exiting";
+        logs.error() << "Modeler error: " << e.what();
+        logs.error() << "Exiting simulation";
         return EXIT_FAILURE;
     }
     catch (const std::exception& e)
