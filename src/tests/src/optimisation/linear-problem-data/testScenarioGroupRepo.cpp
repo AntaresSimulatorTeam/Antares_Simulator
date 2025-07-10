@@ -8,8 +8,8 @@
 #include "antares/exception/RuntimeError.hpp"
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 
+using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemDataImpl;
-using namespace Antares::Optimization;
 
 BOOST_AUTO_TEST_CASE(ask_repo_a_question_it_can_answer_repo_answers_correctly)
 {

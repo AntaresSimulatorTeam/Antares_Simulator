@@ -35,9 +35,9 @@ namespace
 const std::filesystem::path SCENARIO_BUILDER_PATH = "input/data-series/modeler-scenariobuilder.dat";
 }
 
-Optimization::ScenarioGroupRepository parseScenarioGroupRepository(std::ifstream file)
+Optimisation::ScenarioGroupRepository parseScenarioGroupRepository(std::ifstream file)
 {
-    Optimization::ScenarioGroupRepository scenarioGroupRepository;
+    Optimisation::ScenarioGroupRepository scenarioGroupRepository;
     ScenarioGroupParser parser;
     std::map<std::string, std::unique_ptr<Optimisation::LinearProblemDataImpl::Scenario>>
       alreadyCreatedScenarios;
@@ -72,7 +72,7 @@ Optimization::ScenarioGroupRepository parseScenarioGroupRepository(std::ifstream
     return scenarioGroupRepository;
 }
 
-Optimization::ScenarioGroupRepository loadScenarioGroupRepository(
+Optimisation::ScenarioGroupRepository loadScenarioGroupRepository(
   const std::filesystem::path& studyPath)
 {
     try

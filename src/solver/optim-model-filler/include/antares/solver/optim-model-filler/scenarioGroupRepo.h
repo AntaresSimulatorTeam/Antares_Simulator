@@ -6,19 +6,19 @@
 
 #include "antares/optimisation/linear-problem-api/IScenario.h"
 
-namespace Antares::Optimization
+namespace Antares::Optimisation
 {
 class ScenarioGroupRepository
 {
 public:
     void addScenario(const std::string& groupId,
-                     std::unique_ptr<Optimisation::LinearProblemApi::IScenario> scenario);
+                     std::unique_ptr<LinearProblemApi::IScenario> scenario);
 
-    [[nodiscard]] Optimisation::LinearProblemApi::IScenario& scenario(
+    [[nodiscard]] LinearProblemApi::IScenario& scenario(
       const std::string& groupId) const;
 
 private:
-    std::map<std::string, std::unique_ptr<Optimisation::LinearProblemApi::IScenario>>
+    std::map<std::string, std::unique_ptr<LinearProblemApi::IScenario>>
       scenarioGroups_;
 
 public:

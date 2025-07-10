@@ -31,7 +31,6 @@ target_link_libraries(load-modeler-files
         Antares::antares-study-system-model
         Antares::linear-problem-api
         Antares::linear-problem-data-impl
-        Antares::modeler-data
         PRIVATE
         Antares::io
         Antares::yml-system

@@ -22,7 +22,7 @@
 #include <filesystem>
 
 #include <antares/logs/logs.h>
-#include "antares/modeler/data/data.h"
+#include <antares/solver/modeler/data.h>
 #include "antares/solver/modeler/loadFiles/loadFiles.h"
 
 namespace Antares::Solver::LoadFiles

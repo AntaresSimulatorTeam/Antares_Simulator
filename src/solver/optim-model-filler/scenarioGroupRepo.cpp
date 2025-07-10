@@ -19,11 +19,11 @@
 
 #include "antares/solver/optim-model-filler/scenarioGroupRepo.h"
 
-namespace Antares::Optimization
+namespace Antares::Optimisation
 {
 void ScenarioGroupRepository::addScenario(
   const std::string& groupId,
-  std::unique_ptr<Optimisation::LinearProblemApi::IScenario> scenario)
+  std::unique_ptr<LinearProblemApi::IScenario> scenario)
 {
     if (scenarioGroups_.contains(groupId))
     {
@@ -32,7 +32,7 @@ void ScenarioGroupRepository::addScenario(
     scenarioGroups_[groupId] = std::move(scenario);
 }
 
-class DefaultScenario: public Optimisation::LinearProblemApi::IScenario
+class DefaultScenario: public LinearProblemApi::IScenario
 {
 public:
     using IScenario::IScenario;
@@ -44,7 +44,7 @@ public:
     }
 };
 
-Optimisation::LinearProblemApi::IScenario& ScenarioGroupRepository::scenario(
+LinearProblemApi::IScenario& ScenarioGroupRepository::scenario(
   const std::string& groupId) const
 {
     // A component require a group id. Assuming that the default group id is "default"
@@ -60,4 +60,4 @@ Optimisation::LinearProblemApi::IScenario& ScenarioGroupRepository::scenario(
     }
     return *scenarioGroups_.at(groupId).get();
 }
-} // namespace Antares::Optimization
+} // namespace Antares::Optimisation

@@ -21,7 +21,7 @@
 
 #include "antares/solver/optim-model-filler/scenarioGroupRepo.h"
 
-namespace Antares::Optimization
+namespace Antares::Optimisation
 {
 
 ScenarioGroupRepository::AlreadyExists::AlreadyExists(const std::string& groupId):
