@@ -346,7 +346,7 @@ BOOST_FIXTURE_TEST_CASE(STS_initial_level_is_also_weekly_final_level, StudyFixtu
     simulation.run();
 
     unsigned int groupNb = 0; // Used to reach the first group of STS results
-    OutputRetriever output(simulation->rawSimu());
+    OutputRetriever output(simulation.rawSimu());
 
     // Check the initial level
     BOOST_TEST(output.levelForSTSgroup(area, groupNb).hour(167) == initialLevel * reservoirCapacity,
@@ -448,11 +448,11 @@ BOOST_FIXTURE_TEST_CASE(sts_scenarized_withdrawal_constraint, StudyBuilder)
                                       + withdrawalYear[3])
                                    / nbYears;
 
-    simulation->create();
-    simulation->run();
+    simulation.create();
+    simulation.run();
 
     unsigned int groupNb = 0; // Used to reach the first group of STS results
-    OutputRetriever output(simulation->rawSimu());
+    OutputRetriever output(simulation.rawSimu());
 
     auto withdrawal = output.withdrawalForSTSgroup(area, groupNb);
     BOOST_TEST(withdrawal.hour(0) + withdrawal.hour(1) == expectedAverage, tt::tolerance(0.001));
