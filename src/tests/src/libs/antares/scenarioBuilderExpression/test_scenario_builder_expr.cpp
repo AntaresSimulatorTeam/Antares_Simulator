@@ -89,7 +89,7 @@ BOOST_FIXTURE_TEST_CASE(dont_accept_strings_for_scenario, ScenarioBuilderFixture
 
 BOOST_FIXTURE_TEST_CASE(group_name_parsed_properly, ScenarioBuilderFixture) {
     const auto line = group_parser.parseLine("groupe,3=56"s);
-    BOOST_REQUIRE_EQUAL(line.groupName, "groupe");
+    BOOST_CHECK_EQUAL(line.groupName, "groupe");
 }
 
 BOOST_FIXTURE_TEST_CASE(year_parsed_properly, ScenarioBuilderFixture) {
