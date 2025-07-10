@@ -6,6 +6,6 @@ var structStudyBuilder =
     [ "playOnlyYear", "structStudyBuilder.html#abb6afec52d21f96e134aa6fe2cd4088d", null ],
     [ "setNumberMCyears", "structStudyBuilder.html#a343497b31e45528e3af725815ec38997", null ],
     [ "simulationBetweenDays", "structStudyBuilder.html#a915f2f571ce4902cf4f6357760c4263f", null ],
-    [ "simulation", "structStudyBuilder.html#ada0c914047c358fd28ff9b01304b1b5f", null ],
+    [ "simulation", "structStudyBuilder.html#a04533892b59497feead20f43079fc073", null ],
     [ "study", "structStudyBuilder.html#a80489944e06b562c9e858199ea14a1ef", null ]
 ];
