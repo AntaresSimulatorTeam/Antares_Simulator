@@ -22,6 +22,8 @@
 
 #include "in-memory-study.h"
 
+#include <algorithm>
+
 #include "antares/application/ScenarioBuilderOwner.h"
 
 void initializeStudy(Study* study)
@@ -63,20 +65,58 @@ void addScratchpadToEachArea(Study& study)
 
 TimeSeriesConfigurer& TimeSeriesConfigurer::setDimensions(unsigned columnCount, unsigned rowCount)
 {
-    ts_->resize(columnCount, rowCount);
+    if (auto* mat = std::get_if<MatrixRef>(&ts_))
+    {
+        mat->get().resize(columnCount, rowCount);
+    }
+    if (auto* vec = std::get_if<VectorRef>(&ts_))
+    {
+        if (columnCount != 1)
+        {
+            throw std::runtime_error("Tried to assign multiple columns to a vector");
+        }
+        vec->get().resize(rowCount);
+    }
     return *this;
 }
 
 TimeSeriesConfigurer& TimeSeriesConfigurer::fillColumnWith(unsigned column, double value)
 {
-    ts_->fillColumn(column, value);
+    if (auto* mat = std::get_if<MatrixRef>(&ts_))
+    {
+        mat->get().fillColumn(column, value);
+    }
+    if (auto* vec = std::get_if<VectorRef>(&ts_))
+    {
+        if (column != 1)
+        {
+            throw std::runtime_error("Tried to assign a value to columns>1 in a vector");
+        }
+        std::fill(vec->get().begin(), vec->get().end(), value);
+    }
     return *this;
 }
 
 TimeSeriesConfigurer& TimeSeriesConfigurer::fillColumnWith(unsigned column,
                                                            const std::vector<double>& values)
 {
-    ts_->pasteToColumn(column, values.data());
+    if (auto* mat = std::get_if<MatrixRef>(&ts_))
+    {
+        mat->get().pasteToColumn(column, values.data());
+    }
+    if (auto* vec = std::get_if<VectorRef>(&ts_))
+    {
+        if (column != 1)
+        {
+            throw std::runtime_error("Tried to assign a value to columns>1 in a vector");
+        }
+        auto& v = vec->get();
+        for (std::size_t idx = 0; idx < v.size() && idx < values.size(); ++idx)
+        {
+            v[idx] = values[idx];
+        }
+    }
+
     return *this;
 }
 
