@@ -105,10 +105,10 @@ BOOST_AUTO_TEST_SUITE(ONE_AREA__ONE_THERMAL_CLUSTER)
 BOOST_FIXTURE_TEST_CASE(thermal_cluster_fullfills_area_demand, StudyFixture)
 {
     setNumberMCyears(1);
-    simulation->create();
-    simulation->run();
+    simulation.create();
+    simulation.run();
 
-    OutputRetriever output(simulation->rawSimu());
+    OutputRetriever output(simulation.rawSimu());
     BOOST_TEST(output.overallCost(area).hour(0) == loadInArea * clusterCost, tt::tolerance(0.001));
     BOOST_TEST(output.load(area).hour(0) == loadInArea, tt::tolerance(0.001));
 }
@@ -118,11 +118,11 @@ BOOST_FIXTURE_TEST_CASE(two_MC_years__thermal_cluster_fullfills_area_demand_on_2
 {
     setNumberMCyears(2);
 
-    simulation->create();
+    simulation.create();
     playOnlyYear(1);
-    simulation->run();
+    simulation.run();
 
-    OutputRetriever output(simulation->rawSimu());
+    OutputRetriever output(simulation.rawSimu());
     BOOST_TEST(output.overallCost(area).hour(0) == loadInArea * clusterCost, tt::tolerance(0.001));
     BOOST_TEST(output.load(area).hour(0) == loadInArea, tt::tolerance(0.001));
 }
@@ -136,10 +136,10 @@ BOOST_FIXTURE_TEST_CASE(two_mc_years__two_ts_identical, StudyFixture)
     clusterConfig.setAvailablePowerNumberOfTS(2).setAvailablePower(0, 50.).setAvailablePower(1,
                                                                                              50.);
 
-    simulation->create();
-    simulation->run();
+    simulation.create();
+    simulation.run();
 
-    OutputRetriever output(simulation->rawSimu());
+    OutputRetriever output(simulation.rawSimu());
     BOOST_TEST(output.overallCost(area).hour(0) == loadInArea * clusterCost, tt::tolerance(0.001));
     BOOST_TEST(output.load(area).hour(0) == loadInArea, tt::tolerance(0.001));
 }
@@ -154,10 +154,10 @@ BOOST_FIXTURE_TEST_CASE(two_mc_years__two_ts_for_load, StudyFixture)
     scenarioBuilderRule.load().setTSnumber(area->index, 0, 1);
     scenarioBuilderRule.load().setTSnumber(area->index, 1, 2);
 
-    simulation->create();
-    simulation->run();
+    simulation.create();
+    simulation.run();
 
-    OutputRetriever output(simulation->rawSimu());
+    OutputRetriever output(simulation.rawSimu());
     double averageLoad = (7. + 14.) / 2.;
     BOOST_TEST(output.thermalGeneration(cluster.get()).hour(10) == averageLoad,
                tt::tolerance(0.001));
@@ -178,10 +178,10 @@ BOOST_FIXTURE_TEST_CASE(two_mc_years_with_different_weight__two_ts, StudyFixture
     scenarioBuilderRule.load().setTSnumber(area->index, 0, 1);
     scenarioBuilderRule.load().setTSnumber(area->index, 1, 2);
 
-    simulation->create();
-    simulation->run();
+    simulation.create();
+    simulation.run();
 
-    OutputRetriever output(simulation->rawSimu());
+    OutputRetriever output(simulation.rawSimu());
     double averageLoad = (4 * 7. + 10. * 14.) / weightSum;
     BOOST_TEST(output.thermalGeneration(cluster.get()).hour(10) == averageLoad,
                tt::tolerance(0.001));
@@ -202,10 +202,10 @@ BOOST_FIXTURE_TEST_CASE(milp_two_mc_single_unit_single_scenario, StudyFixture)
     p.optOptions.firstOptimOptions.solverName = "coin";
     p.optOptions.secondOptimOptions.solverName = "coin";
 
-    simulation->create();
-    simulation->run();
+    simulation.create();
+    simulation.run();
 
-    OutputRetriever output(simulation->rawSimu());
+    OutputRetriever output(simulation.rawSimu());
 
     BOOST_TEST(output.thermalGeneration(cluster.get()).hour(10) == loadInArea,
                tt::tolerance(0.001));
@@ -231,10 +231,10 @@ BOOST_FIXTURE_TEST_CASE(milp_two_mc_two_unit_single_scenario, StudyFixture)
     p.optOptions.firstOptimOptions.solverName = "coin";
     p.optOptions.secondOptimOptions.solverName = "coin";
 
-    simulation->create();
-    simulation->run();
+    simulation.create();
+    simulation.run();
 
-    OutputRetriever output(simulation->rawSimu());
+    OutputRetriever output(simulation.rawSimu());
 
     BOOST_TEST(output.thermalGeneration(cluster.get()).hour(10) == loadInArea,
                tt::tolerance(0.001));
@@ -246,10 +246,10 @@ BOOST_FIXTURE_TEST_CASE(parallel, StudyFixture)
     setNumberMCyears(10);
     study->maxNbYearsInParallel = 2;
 
-    simulation->create();
-    simulation->run();
+    simulation.create();
+    simulation.run();
 
-    OutputRetriever output(simulation->rawSimu());
+    OutputRetriever output(simulation.rawSimu());
     BOOST_TEST(output.overallCost(area).hour(0) == loadInArea * clusterCost, tt::tolerance(0.001));
     BOOST_TEST(output.load(area).hour(0) == loadInArea, tt::tolerance(0.001));
 }
@@ -264,10 +264,10 @@ BOOST_FIXTURE_TEST_CASE(parallel2, StudyFixture)
     clusterConfig.setAvailablePowerNumberOfTS(2).setAvailablePower(0, 50.).setAvailablePower(1,
                                                                                              50.);
 
-    simulation->create();
-    simulation->run();
+    simulation.create();
+    simulation.run();
 
-    OutputRetriever output(simulation->rawSimu());
+    OutputRetriever output(simulation.rawSimu());
     BOOST_TEST(output.overallCost(area).hour(0) == loadInArea * clusterCost, tt::tolerance(0.001));
     BOOST_TEST(output.load(area).hour(0) == loadInArea, tt::tolerance(0.001));
 }
@@ -287,9 +287,9 @@ BOOST_FIXTURE_TEST_CASE(error_on_wrong_hydro_data, StudyFixture)
       .fillColumnWith(0, -1.0); // Negative inflow will cause a consistency error with mingen
 
     builder.setNumberMCyears(1);
-    auto simulation = builder.simulation;
-    simulation->create();
-    BOOST_CHECK_THROW(simulation->run(), Antares::FatalError);
+    auto& simulation = builder.simulation;
+    simulation.create();
+    BOOST_CHECK_THROW(simulation.run(), Antares::FatalError);
 }
 BOOST_AUTO_TEST_SUITE_END()
 
@@ -342,14 +342,17 @@ BOOST_FIXTURE_TEST_CASE(STS_initial_level_is_also_weekly_final_level, StudyFixtu
     area->thermal.unsuppliedEnergyCost = 1.e3;
     area->thermal.spilledEnergyCost = 1.;
 
-    simulation->create();
-    simulation->run();
+    simulation.create();
+    simulation.run();
 
     unsigned int groupNb = 0; // Used to reach the first group of STS results
     OutputRetriever output(simulation->rawSimu());
+
+    // Check the initial level
     BOOST_TEST(output.levelForSTSgroup(area, groupNb).hour(167) == initialLevel * reservoirCapacity,
                tt::tolerance(0.001));
 
+    // Check that the withdrawal additional constraint is taken into account
     auto withdrawal = output.withdrawalForSTSgroup(area, groupNb);
     BOOST_TEST(withdrawal.hour(0) + withdrawal.hour(1) + withdrawal.hour(2) == 4. + 4. + 4.,
                tt::tolerance(0.001));
@@ -390,11 +393,11 @@ BOOST_FIXTURE_TEST_CASE(STS_efficiency_for_injection_and_withdrawal, StudyFixtur
     area->thermal.unsuppliedEnergyCost = 1.e3;
     area->thermal.spilledEnergyCost = 1.;
 
-    simulation->create();
-    simulation->run();
+    simulation.create();
+    simulation.run();
 
     unsigned int groupNb = 0; // Used to reach the first group of STS results
-    OutputRetriever output(simulation->rawSimu());
+    OutputRetriever output(simulation.rawSimu());
 
     BOOST_CHECK_EQUAL(output.levelForSTSgroup(area, groupNb).hour(1), 56); // injection
     BOOST_CHECK_EQUAL(output.levelForSTSgroup(area, groupNb).hour(2), 48); // withdrawal
@@ -461,10 +464,10 @@ BOOST_AUTO_TEST_SUITE(HYDRO_MAX_POWER)
 
 BOOST_FIXTURE_TEST_CASE(basic, HydroMaxPowerStudy)
 {
-    simulation->create();
-    simulation->run();
+    simulation.create();
+    simulation.run();
 
-    OutputRetriever output(simulation->rawSimu());
+    OutputRetriever output(simulation.rawSimu());
 
     BOOST_TEST(output.hydroStorage(area).hour(0) == hydro->series->maxHourlyGenPower[0][0],
                tt::tolerance(0.001));
@@ -493,10 +496,10 @@ BOOST_FIXTURE_TEST_CASE(scenario_builder, HydroMaxPowerStudy)
     scenarioBuilderRule.hydro().setTSnumber(area->index, 1, 2);
     scenarioBuilderRule.hydro().setTSnumber(area->index, 2, 1);
 
-    simulation->create();
-    simulation->run();
+    simulation.create();
+    simulation.run();
 
-    OutputRetriever output(simulation->rawSimu());
+    OutputRetriever output(simulation.rawSimu());
 
     double averageLoad = (4 * 300. + 3. * 200. + 2. * 100.) / weightSum;
 
