@@ -299,11 +299,11 @@ BOOST_FIXTURE_TEST_CASE(STS_initial_level_is_also_weekly_final_level, StudyFixtu
 {
     setNumberMCyears(1);
     auto* sts = addSTSToArea(area, "my-sts");
-    ShortTermStorageConfig stsConfig(*sts);
 
     const double initialLevel = .443;
     const double reservoirCapacity = 100;
 
+    ShortTermStorageConfig stsConfig(*sts);
     stsConfig.setInjectionNominalCapacity(10)
       .setWithdrawalNominalCapacity(10)
       .setReservoirCapacity(reservoirCapacity)
@@ -343,23 +343,24 @@ BOOST_FIXTURE_TEST_CASE(STS_initial_level_is_also_weekly_final_level, StudyFixtu
 
 BOOST_FIXTURE_TEST_CASE(STS_efficiency_for_injection_and_withdrawal, StudyFixture)
 {
-    using namespace Antares::Data::ShortTermStorage;
     setNumberMCyears(1);
-    auto& storages = area->shortTermStorage.storagesByIndex;
-    STStorageCluster sts;
-    auto& props = sts.properties;
-    props.name = "my-sts";
-    props.injectionNominalCapacity = 10;
-    props.withdrawalNominalCapacity = 10;
-    props.reservoirCapacity = 100;
-    props.injectionEfficiency = .6;
-    props.withdrawalEfficiency = .8;
-    props.initialLevel = .5;
-    props.groupName = std::string("Some STS group");
-    // Default values for series
-    sts.series->fillDefaultSeriesIfEmpty();
 
-    storages.push_back(sts);
+    auto* sts = addSTSToArea(area, "my-sts");
+
+    const double initialLevel = .5;
+    const double reservoirCapacity = 100;
+
+    ShortTermStorageConfig stsConfig(*sts);
+    stsConfig.setInjectionNominalCapacity(10)
+      .setWithdrawalNominalCapacity(10)
+      .setReservoirCapacity(reservoirCapacity)
+      .setInjectionEfficiency(.6)
+      .setWithdrawalEfficiency(.8)
+      .setInitialLevel(initialLevel)
+      .setInitialLevelOptim(false)
+      .setGroupName("Some STS group");
+    // Default values for series
+    sts->series->fillDefaultSeriesIfEmpty();
 
     // Fatal gen at h=1
     auto& windTS = area->wind.series.timeSeries;
