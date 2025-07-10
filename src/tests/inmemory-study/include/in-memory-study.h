@@ -207,6 +207,10 @@ public:
     }
 
     ~SimulationHandler() = default;
+
+    SimulationHandler(const SimulationHandler&) = delete;
+    SimulationHandler& operator=(const SimulationHandler&) = delete;
+
     void create();
 
     void run()
@@ -244,7 +248,7 @@ struct StudyBuilder
 
     // Data members
     std::unique_ptr<Data::Study> study;
-    std::shared_ptr<SimulationHandler> simulation;
+    SimulationHandler simulation;
 };
 
 std::shared_ptr<Antares::Data::BindingConstraint> addBindingConstraints(Antares::Data::Study& study,

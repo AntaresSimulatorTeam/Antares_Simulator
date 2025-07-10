@@ -97,10 +97,10 @@ BOOST_FIXTURE_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90, StudyWit
     double rhsValue = 90.;
     TimeSeriesConfigurer(BC->RHSTimeSeries()).setDimensions(1).fillColumnWith(0, rhsValue);
 
-    simulation->create();
-    simulation->run();
+    simulation.create();
+    simulation.run();
 
-    OutputRetriever output(simulation->rawSimu());
+    OutputRetriever output(simulation.rawSimu());
 
     BOOST_TEST(output.flow(link).hour(0) == rhsValue, tt::tolerance(0.001));
 }
@@ -115,10 +115,10 @@ BOOST_FIXTURE_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50, StudyWit
     double rhsValue = 50.;
     TimeSeriesConfigurer(BC->RHSTimeSeries()).setDimensions(1, 366).fillColumnWith(0, rhsValue);
 
-    simulation->create();
-    simulation->run();
+    simulation.create();
+    simulation.run();
 
-    OutputRetriever output(simulation->rawSimu());
+    OutputRetriever output(simulation.rawSimu());
     unsigned int nbDaysInWeek = 7;
     BOOST_TEST(output.flow(link).week(0) == rhsValue * nbDaysInWeek, tt::tolerance(0.001));
 }
@@ -133,10 +133,10 @@ BOOST_FIXTURE_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60, StudyWith
     double rhsValue = 60.;
     TimeSeriesConfigurer(BC->RHSTimeSeries()).setDimensions(1, 366).fillColumnWith(0, rhsValue);
 
-    simulation->create();
-    simulation->run();
+    simulation.create();
+    simulation.run();
 
-    OutputRetriever output(simulation->rawSimu());
+    OutputRetriever output(simulation.rawSimu());
     BOOST_TEST(output.flow(link).day(0) == rhsValue, tt::tolerance(0.001));
 }
 
@@ -150,10 +150,10 @@ BOOST_FIXTURE_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90
     double rhsValue = 90.;
     TimeSeriesConfigurer(BC->RHSTimeSeries()).setDimensions(1).fillColumnWith(0, rhsValue);
 
-    simulation->create();
-    simulation->run();
+    simulation.create();
+    simulation.run();
 
-    OutputRetriever output(simulation->rawSimu());
+    OutputRetriever output(simulation.rawSimu());
     BOOST_TEST(output.flow(link).hour(100) <= rhsValue, tt::tolerance(0.001));
 }
 
@@ -168,10 +168,10 @@ BOOST_FIXTURE_TEST_CASE(Daily_BC_restricts_link_direct_capacity_to_greater_than_
     double rhsValue = 80.;
     TimeSeriesConfigurer(BC->RHSTimeSeries()).setDimensions(1, 366).fillColumnWith(0, rhsValue);
 
-    simulation->create();
-    simulation->run();
+    simulation.create();
+    simulation.run();
 
-    OutputRetriever output(simulation->rawSimu());
+    OutputRetriever output(simulation.rawSimu());
     BOOST_TEST(output.flow(link).hour(100) >= rhsValue, tt::tolerance(0.001));
 }
 
@@ -189,10 +189,10 @@ BOOST_FIXTURE_TEST_CASE(Hourly_BC_restricts_cluster_generation_to_90, StudyWithB
     double rhsValue = 90.;
     TimeSeriesConfigurer(BC->RHSTimeSeries()).setDimensions(1).fillColumnWith(0, rhsValue);
 
-    simulation->create();
-    simulation->run();
+    simulation.create();
+    simulation.run();
 
-    OutputRetriever output(simulation->rawSimu());
+    OutputRetriever output(simulation.rawSimu());
     BOOST_TEST(output.thermalGeneration(cluster.get()).hour(10) == rhsValue, tt::tolerance(0.001));
 }
 
@@ -218,11 +218,11 @@ BOOST_FIXTURE_TEST_CASE(On_year_2__RHS_TS_number_2_is_taken_into_account, StudyW
     scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 0, 1);
     scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 1, 2);
 
-    simulation->create();
+    simulation.create();
     playOnlyYear(1);
-    simulation->run();
+    simulation.run();
 
-    OutputRetriever output(simulation->rawSimu());
+    OutputRetriever output(simulation.rawSimu());
     BOOST_TEST(output.flow(link).hour(0) == bcGroupRHS2, tt::tolerance(0.001));
 }
 
@@ -255,11 +255,11 @@ BOOST_FIXTURE_TEST_CASE(On_year_9__RHS_TS_number_4_is_taken_into_account, StudyW
     scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 8, 4); // Here year 9
     scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 9, 1);
 
-    simulation->create();
+    simulation.create();
     playOnlyYear(8);
-    simulation->run();
+    simulation.run();
 
-    OutputRetriever output(simulation->rawSimu());
+    OutputRetriever output(simulation.rawSimu());
     BOOST_TEST(output.flow(link).hour(0) == 40., tt::tolerance(0.001));
 }
 
@@ -285,11 +285,11 @@ BOOST_FIXTURE_TEST_CASE(On_year_9__RHS_TS_number_4_out_of_bound_use_random_fallb
     scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 8, 42); // Here year 9
     scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 9, 1);
 
-    simulation->create();
+    simulation.create();
     playOnlyYear(8);
-    simulation->run();
+    simulation.run();
 
-    OutputRetriever output(simulation->rawSimu());
+    OutputRetriever output(simulation.rawSimu());
     BOOST_TEST(output.flow(link).hour(0) == 0., tt::tolerance(0.001));
 }
 
