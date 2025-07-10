@@ -104,7 +104,7 @@ BOOST_FIXTURE_TEST_CASE(year_scenario_properly, ScenarioBuilderFixture) {
 
 BOOST_FIXTURE_TEST_CASE(parse_all_properly, ScenarioBuilderFixture) {
     const auto [groupName, year, chronicle] = group_parser.parseLine("  groupe_name   ,42 =      9999     "s);
-    BOOST_REQUIRE_EQUAL(groupName, "groupe_name");
-    BOOST_REQUIRE_EQUAL(year, 42);
-    BOOST_REQUIRE_EQUAL(chronicle, 9999);
+    BOOST_CHECK_EQUAL(groupName, "groupe_name");
+    BOOST_CHECK_EQUAL(year, 42);
+    BOOST_CHECK_EQUAL(chronicle, 9999);
 }
