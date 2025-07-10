@@ -21,9 +21,8 @@
 
 namespace Antares::Optimisation
 {
-void ScenarioGroupRepository::addScenario(
-  const std::string& groupId,
-  std::unique_ptr<LinearProblemApi::IScenario> scenario)
+void ScenarioGroupRepository::addScenario(const std::string& groupId,
+                                          std::unique_ptr<LinearProblemApi::IScenario> scenario)
 {
     if (scenarioGroups_.contains(groupId))
     {
@@ -44,8 +43,7 @@ public:
     }
 };
 
-LinearProblemApi::IScenario& ScenarioGroupRepository::scenario(
-  const std::string& groupId) const
+LinearProblemApi::IScenario& ScenarioGroupRepository::scenario(const std::string& groupId) const
 {
     // A component require a group id. Assuming that the default group id is "default"
     if (groupId.empty() || groupId == "default")

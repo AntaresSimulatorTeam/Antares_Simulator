@@ -21,9 +21,9 @@
 #include <vector>
 
 #include <antares/optimisation/linear-problem-data-impl/linearProblemData.h>
+#include <antares/solver/optim-model-filler/scenarioGroupRepo.h>
 #include <antares/study/system-model/library.h>
 #include <antares/study/system-model/system.h>
-#include <antares/solver/optim-model-filler/scenarioGroupRepo.h>
 
 namespace Antares::Modeler
 {

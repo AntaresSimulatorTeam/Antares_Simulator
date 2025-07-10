@@ -34,4 +34,4 @@ ScenarioGroupRepository::DoesNotExist::DoesNotExist(const std::string& groupId):
 {
 }
 
-} // namespace Antares::Optimization
+} // namespace Antares::Optimisation

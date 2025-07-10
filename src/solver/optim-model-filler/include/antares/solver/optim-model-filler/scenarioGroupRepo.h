@@ -14,12 +14,10 @@ public:
     void addScenario(const std::string& groupId,
                      std::unique_ptr<LinearProblemApi::IScenario> scenario);
 
-    [[nodiscard]] LinearProblemApi::IScenario& scenario(
-      const std::string& groupId) const;
+    [[nodiscard]] LinearProblemApi::IScenario& scenario(const std::string& groupId) const;
 
 private:
-    std::map<std::string, std::unique_ptr<LinearProblemApi::IScenario>>
-      scenarioGroups_;
+    std::map<std::string, std::unique_ptr<LinearProblemApi::IScenario>> scenarioGroups_;
 
 public:
     class AlreadyExists: public std::invalid_argument
@@ -34,4 +32,4 @@ public:
         explicit DoesNotExist(const std::string& groupId);
     };
 };
-} // namespace Antares::Optimization
+} // namespace Antares::Optimisation
