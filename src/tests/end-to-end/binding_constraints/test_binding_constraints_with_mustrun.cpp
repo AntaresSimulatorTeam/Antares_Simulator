@@ -82,10 +82,10 @@ BOOST_FIXTURE_TEST_CASE(in_hourly_BC__weights_are_1__it_restricts_dispatchable_p
     BC->weight(cluster_mustrun.get(), 1);
     BC->enabled(true);
 
-    simulation->create();
-    simulation->run();
+    simulation.create();
+    simulation.run();
 
-    OutputRetriever output(simulation->rawSimu());
+    OutputRetriever output(simulation.rawSimu());
     auto dispatch_prod = std::span<long double>{
       output.thermalGeneration(cluster_dispatch.get()).hours(),
       Constants::nbHoursInAWeek};
@@ -107,10 +107,10 @@ BOOST_FIXTURE_TEST_CASE(in_hourly_BC__weights_are_2_and_3__it_restricts_dispatch
     BC->weight(cluster_mustrun.get(), 3);
     BC->enabled(true);
 
-    simulation->create();
-    simulation->run();
+    simulation.create();
+    simulation.run();
 
-    OutputRetriever output(simulation->rawSimu());
+    OutputRetriever output(simulation.rawSimu());
     auto dispatch_prod = std::span<long double>{
       output.thermalGeneration(cluster_dispatch.get()).hours(),
       Constants::nbHoursInAWeek};
@@ -134,10 +134,10 @@ BOOST_FIXTURE_TEST_CASE(in_daily_BC__weights_are_2_and_3__it_restricts_dispatcha
     BC->weight(cluster_mustrun.get(), 3);
     BC->enabled(true);
 
-    simulation->create();
-    simulation->run();
+    simulation.create();
+    simulation.run();
 
-    OutputRetriever out(simulation->rawSimu());
+    OutputRetriever out(simulation.rawSimu());
     auto dispatch_prod = std::span<long double>{
       out.thermalGeneration(cluster_dispatch.get()).days(),
       7};
@@ -166,10 +166,10 @@ BOOST_FIXTURE_TEST_CASE(simulation_2_weeks_long__daily_BC_RHS_changes_on_2nd_wee
     BC->weight(cluster_mustrun.get(), 1);
     BC->enabled(true);
 
-    simulation->create();
-    simulation->run();
+    simulation.create();
+    simulation.run();
 
-    OutputRetriever out(simulation->rawSimu());
+    OutputRetriever out(simulation.rawSimu());
     // Week 1
     auto dispatch_prod = std::span<long double>{
       out.thermalGeneration(cluster_dispatch.get()).days(),
@@ -204,10 +204,10 @@ BOOST_FIXTURE_TEST_CASE(in_weekly_BC__weights_are_3_and_4__it_restricts_dispatch
     BC->weight(cluster_mustrun.get(), 4);
     BC->enabled(true);
 
-    simulation->create();
-    simulation->run();
+    simulation.create();
+    simulation.run();
 
-    OutputRetriever output(simulation->rawSimu());
+    OutputRetriever output(simulation.rawSimu());
     double dispatch_prod = output.thermalGeneration(cluster_dispatch.get()).week(0);
     BOOST_TEST(dispatch_prod == 17600., boost::test_tools::tolerance(0.001));
 }
