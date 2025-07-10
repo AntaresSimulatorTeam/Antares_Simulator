@@ -1372,9 +1372,8 @@ bool Matrix<T, ReadWriteT>::loadAllJITData() const
 {
     if (jit and not JIT::IsReady(jit))
     {
-        fs::path sourceFilePath(jit->sourceFilename.to<std::string>());
         return (const_cast<Matrix<T, ReadWriteT>*>(this))
-          ->loadFromCSVFile(sourceFilePath,
+          ->loadFromCSVFile(jit->sourceFilename,
                             jit->minWidth,
                             jit->maxHeight,
                             jit->options | optImmediate);

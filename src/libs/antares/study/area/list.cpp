@@ -927,7 +927,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         {
             std::string loadId = "load_" + area.id + ".txt";
             fs::path loadSeriesPath = study.folderInput / "load" / "series" / loadId;
-
+            logs.info() << "list.cpp : loadSeriesPath : " << loadSeriesPath.string();
             ret = area.load.series.loadFromFile(loadSeriesPath, averageTs) && ret;
         }
     }

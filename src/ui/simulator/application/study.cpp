@@ -209,12 +209,17 @@ protected:
         String sFl;
         wxStringToString(pFolder, sFl);
 
+        // std::string studyFolder = pFolder.ToStdString();
+        // logs.info() << "studyFolder : " << studyFolder;
+
         auto study = std::make_shared<Data::Study>(); // new study
 
         // Load all data
         Data::StudyLoadOptions options;
         options.loadOnlyNeeded = false;
         study->loadFromFolder(sFl, options);
+
+        logs.checkpoint() << "Study opened.";
 
         // Postflight
         logs.info();

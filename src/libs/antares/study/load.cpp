@@ -54,6 +54,7 @@ bool Study::internalLoadHeader(const fs::path& path)
 bool Study::loadFromFolder(const std::string& path, const StudyLoadOptions& options)
 {
     fs::path normPath = normalize(path);
+    logs.info() << "Study::loadFromFolder : " << path;
     return internalLoadFromFolder(normPath, options);
 }
 
@@ -166,6 +167,7 @@ void Study::parameterFiller(const StudyLoadOptions& options)
 
 bool Study::internalLoadFromFolder(const fs::path& path, const StudyLoadOptions& options)
 {
+    logs.info() << "Study::internalLoadFromFolder 0";
     // IO statistics
     Statistics::LogsDumper statisticsDumper;
 
