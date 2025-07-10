@@ -49,7 +49,7 @@ StudyFixture::StudyFixture():
     area(addAreaToStudy("Some area")),
     cluster(addClusterToArea(area, "some cluster")),
     clusterConfig(cluster),
-    loadTSconfig(area->load.series.timeSeries)
+    loadTSconfig(area->load.series)
 {
     simulationBetweenDays(0, 7);
     loadInArea = 7.0;
@@ -82,15 +82,15 @@ HydroMaxPowerStudy::HydroMaxPowerStudy()
 
     setNumberMCyears(1);
 
-    TimeSeriesConfigurer loadTSconfig(area->load.series.timeSeries);
+    TimeSeriesConfigurer loadTSconfig(area->load.series);
     loadTSconfig.setDimensions(1).fillColumnWith(0, loadInArea);
 
     hydro = &area->hydro;
 
-    TimeSeriesConfigurer genP(hydro->series->maxHourlyGenPower.timeSeries);
+    TimeSeriesConfigurer genP(hydro->series->maxHourlyGenPower);
     genP.setDimensions(1).fillColumnWith(0, 100.);
 
-    TimeSeriesConfigurer hydroStorage(hydro->series->storage.timeSeries);
+    TimeSeriesConfigurer hydroStorage(hydro->series->storage);
     hydroStorage.setDimensions(1, DAYS_PER_YEAR).fillColumnWith(0, 2400.);
 
     TimeSeriesConfigurer genE(hydro->dailyNbHoursAtGenPmax);
@@ -282,7 +282,7 @@ BOOST_FIXTURE_TEST_CASE(error_on_wrong_hydro_data, StudyFixture)
     builder.simulationBetweenDays(0, 7);
     Area& area = *builder.addAreaToStudy("A");
     PartHydro& hydro = area.hydro;
-    TimeSeriesConfigurer(hydro.series->storage.timeSeries)
+    TimeSeriesConfigurer(hydro.series->storage)
       .setDimensions(1)
       .fillColumnWith(0, -1.0); // Negative inflow will cause a consistency error with mingen
 
@@ -315,13 +315,23 @@ BOOST_FIXTURE_TEST_CASE(STS_initial_level_is_also_weekly_final_level, StudyFixtu
     // Default values for series
     sts->series->fillDefaultSeriesIfEmpty();
 
+    auto ct = stsConfig.addConstraint()
+                .setName("my-constraint")
+                .setVariable("withdrawal")
+                .setOperatorType("equal")
+                .setHours({{1, 2, 3}}) // first hour has index 1
+                .build();
+
+    TimeSeriesConfigurer addcRHS(ct->rhs());
+    addcRHS.setDimensions(1).fillColumnWith(0, 4.);
+
     // Fatal gen at h=1
-    auto& windTS = area->wind.series.timeSeries;
+    auto& windTS = area->wind.series;
     TimeSeriesConfigurer(windTS).setDimensions(1).fillColumnWith(0, 0.);
     windTS[0][1] = 100;
 
     // Fatal load at h=2-10
-    auto& loadTS = area->load.series.timeSeries;
+    auto& loadTS = area->load.series;
     TimeSeriesConfigurer(loadTS).setDimensions(1).fillColumnWith(0, 0.);
     for (int i = 2; i < 10; i++)
     {
@@ -338,6 +348,10 @@ BOOST_FIXTURE_TEST_CASE(STS_initial_level_is_also_weekly_final_level, StudyFixtu
     unsigned int groupNb = 0; // Used to reach the first group of STS results
     OutputRetriever output(simulation->rawSimu());
     BOOST_TEST(output.levelForSTSgroup(area, groupNb).hour(167) == initialLevel * reservoirCapacity,
+               tt::tolerance(0.001));
+
+    auto withdrawal = output.withdrawalForSTSgroup(area, groupNb);
+    BOOST_TEST(withdrawal.hour(0) + withdrawal.hour(1) + withdrawal.hour(2) == 4. + 4. + 4.,
                tt::tolerance(0.001));
 }
 
@@ -363,12 +377,12 @@ BOOST_FIXTURE_TEST_CASE(STS_efficiency_for_injection_and_withdrawal, StudyFixtur
     sts->series->fillDefaultSeriesIfEmpty();
 
     // Fatal gen at h=1
-    auto& windTS = area->wind.series.timeSeries;
+    auto& windTS = area->wind.series;
     TimeSeriesConfigurer(windTS).setDimensions(1).fillColumnWith(0, 0.);
     windTS[0][1] = 100;
 
     // Fatal load at h=2
-    auto& loadTS = area->load.series.timeSeries;
+    auto& loadTS = area->load.series;
     TimeSeriesConfigurer(loadTS).setDimensions(1).fillColumnWith(0, 0.);
     loadTS[0][2] = 100;
 
@@ -397,8 +411,7 @@ BOOST_FIXTURE_TEST_CASE(basic, HydroMaxPowerStudy)
 
     OutputRetriever output(simulation->rawSimu());
 
-    BOOST_TEST(output.hydroStorage(area).hour(0)
-                 == hydro->series->maxHourlyGenPower.timeSeries[0][0],
+    BOOST_TEST(output.hydroStorage(area).hour(0) == hydro->series->maxHourlyGenPower[0][0],
                tt::tolerance(0.001));
     BOOST_TEST(output.overallCost(area).hour(0)
                  == (loadInArea - output.hydroStorage(area).hour(0))
@@ -415,8 +428,8 @@ BOOST_FIXTURE_TEST_CASE(scenario_builder, HydroMaxPowerStudy)
     giveWeightToYear(2.f, 2);
     float weightSum = study->parameters.getYearsWeightSum();
 
-    TimeSeriesConfigurer genP(hydro->series->maxHourlyGenPower.timeSeries);
-    TimeSeriesConfigurer genE(hydro->series->maxHourlyPumpPower.timeSeries);
+    TimeSeriesConfigurer genP(hydro->series->maxHourlyGenPower);
+    TimeSeriesConfigurer genE(hydro->series->maxHourlyPumpPower);
     genP.setDimensions(3).fillColumnWith(0, 100.).fillColumnWith(1, 200.).fillColumnWith(2, 300.);
     genE.setDimensions(3).fillColumnWith(0, 0.).fillColumnWith(1, 0.).fillColumnWith(2, 0.);
 

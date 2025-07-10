@@ -43,6 +43,11 @@ public:
     {
     }
 
+    TimeSeriesConfigurer(TimeSeries& ts):
+        ts_(&ts.timeSeries)
+    {
+    }
+
     TimeSeriesConfigurer& setDimensions(unsigned columnCount, unsigned rowCount = HOURS_PER_YEAR);
     TimeSeriesConfigurer& fillColumnWith(unsigned column, double value);
     TimeSeriesConfigurer& fillColumnWith(unsigned column, const std::vector<double>& values);
@@ -67,7 +72,60 @@ private:
     TimeSeriesConfigurer tsAvailablePowerConfig_;
 };
 
+class ShortTermStorageAddConstraintConfig
+{
+public:
+    ShortTermStorageAddConstraintConfig() = delete;
+
+    ShortTermStorageAddConstraintConfig(Antares::Data::ShortTermStorage::STStorageCluster& storage):
+        storage(storage),
+        constraint(std::make_shared<Antares::Data::ShortTermStorage::AdditionalConstraints>())
+    {
+    }
+
+    ShortTermStorageAddConstraintConfig& setName(const std::string& name)
+    {
+        constraint->name = name;
+        return *this;
+    }
+
+    ShortTermStorageAddConstraintConfig& setVariable(const std::string& variable)
+    {
+        constraint->variable = variable;
+        return *this;
+    }
+
+    ShortTermStorageAddConstraintConfig& setOperatorType(const std::string& operatorType)
+    {
+        constraint->operatorType = operatorType;
+        return *this;
+    }
+
+    ShortTermStorageAddConstraintConfig& setHours(const std::vector<std::set<int>>& hourSets)
+    {
+        for (const auto& hourSet: hourSets)
+        {
+            constraint->constraints.push_back(
+              {.hours = hourSet, .globalIndex = 0, .localIndex = 0});
+        }
+        return *this;
+    }
+
+    std::shared_ptr<Antares::Data::ShortTermStorage::AdditionalConstraints> build()
+    {
+        storage.additionalConstraints.push_back(std::move(constraint));
+        // The ShortTermStorageAddConstraintConfig instance may be re-used
+        constraint = std::make_shared<Antares::Data::ShortTermStorage::AdditionalConstraints>();
+        return storage.additionalConstraints.back();
+    }
+
+private:
+    Antares::Data::ShortTermStorage::STStorageCluster& storage;
+    std::shared_ptr<Antares::Data::ShortTermStorage::AdditionalConstraints> constraint;
+};
+
 class ShortTermStorageConfig
+
 {
 public:
     ShortTermStorageConfig() = delete;
@@ -85,8 +143,14 @@ public:
     ShortTermStorageConfig& setPenalizeVariationInjection(bool penalizeVariationInjection);
     ShortTermStorageConfig& setEnabled(bool enabled);
 
+    ShortTermStorageAddConstraintConfig& addConstraint()
+    {
+        return constraintConfig;
+    }
+
 private:
     Antares::Data::ShortTermStorage::STStorageCluster& storage;
+    ShortTermStorageAddConstraintConfig constraintConfig;
 };
 
 std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& clusterName);
@@ -151,6 +215,7 @@ public:
 
     averageResults overallCost(Area* area);
     averageResults levelForSTSgroup(Area* area, unsigned groupNb);
+    averageResults withdrawalForSTSgroup(Area* area, unsigned groupNb);
     averageResults load(Area* area);
     averageResults hydroStorage(Area* area);
     averageResults flow(AreaLink* link);

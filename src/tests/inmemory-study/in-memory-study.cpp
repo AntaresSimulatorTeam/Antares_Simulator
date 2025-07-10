@@ -132,7 +132,8 @@ ThermalClusterConfig& ThermalClusterConfig::setAvailablePower(unsigned column, d
 // -------------------------------
 ShortTermStorageConfig::ShortTermStorageConfig(
   Antares::Data::ShortTermStorage::STStorageCluster& storage):
-    storage(storage)
+    storage(storage),
+    constraintConfig(storage)
 {
 }
 
@@ -226,6 +227,13 @@ averageResults OutputRetriever::levelForSTSgroup(Area* area, unsigned groupNb)
     auto result = retrieveAreaResults<Variable::Economy::VCardSTSbyGroup>(area);
     unsigned levelIndex = groupNb * 3 + 2;
     return result[area->index][levelIndex].avgdata;
+}
+
+averageResults OutputRetriever::withdrawalForSTSgroup(Area* area, unsigned groupNb)
+{
+    auto result = retrieveAreaResults<Variable::Economy::VCardSTSbyGroup>(area);
+    unsigned withdrawalIndex = groupNb * 3 + 1;
+    return result[area->index][withdrawalIndex].avgdata;
 }
 
 averageResults OutputRetriever::load(Area* area)
