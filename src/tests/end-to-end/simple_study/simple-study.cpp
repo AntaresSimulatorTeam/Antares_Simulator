@@ -280,8 +280,7 @@ BOOST_FIXTURE_TEST_CASE(error_on_wrong_hydro_data, StudyFixture)
 {
     StudyBuilder builder;
     builder.simulationBetweenDays(0, 7);
-    Area& area = *builder.addAreaToStudy("A");
-    PartHydro& hydro = area.hydro;
+    PartHydro& hydro = area->hydro;
     TimeSeriesConfigurer(hydro.series->storage.timeSeries)
       .setDimensions(1)
       .fillColumnWith(0, -1.0); // Negative inflow will cause a consistency error with mingen
@@ -297,23 +296,23 @@ BOOST_AUTO_TEST_SUITE(ONE_AREA__ONE_STS_THERMAL_CLUSTER)
 
 BOOST_FIXTURE_TEST_CASE(STS_initial_level_is_also_weekly_final_level, StudyFixture)
 {
-    using namespace Antares::Data::ShortTermStorage;
     setNumberMCyears(1);
-    auto& storages = area->shortTermStorage.storagesByIndex;
-    STStorageCluster sts;
-    auto& props = sts.properties;
-    props.name = "my-sts";
-    props.injectionNominalCapacity = 10;
-    props.withdrawalNominalCapacity = 10;
-    props.reservoirCapacity = 100;
-    props.injectionEfficiency = .9;
-    props.withdrawalEfficiency = .8;
-    props.initialLevel = .443;
-    props.groupName = std::string("Some STS group");
-    // Default values for series
-    sts.series->fillDefaultSeriesIfEmpty();
+    auto* sts = addSTSToArea(area, "my-sts");
+    ShortTermStorageConfig stsConfig(*sts);
 
-    storages.push_back(sts);
+    const double initialLevel = .443;
+    const double reservoirCapacity = 100;
+
+    stsConfig.setInjectionNominalCapacity(10)
+      .setWithdrawalNominalCapacity(10)
+      .setReservoirCapacity(reservoirCapacity)
+      .setInjectionEfficiency(.9)
+      .setWithdrawalEfficiency(.8)
+      .setInitialLevel(initialLevel)
+      .setInitialLevelOptim(false)
+      .setGroupName("Some STS group");
+    // Default values for series
+    sts->series->fillDefaultSeriesIfEmpty();
 
     // Fatal gen at h=1
     auto& windTS = area->wind.series.timeSeries;
@@ -337,8 +336,7 @@ BOOST_FIXTURE_TEST_CASE(STS_initial_level_is_also_weekly_final_level, StudyFixtu
 
     unsigned int groupNb = 0; // Used to reach the first group of STS results
     OutputRetriever output(simulation->rawSimu());
-    BOOST_TEST(output.levelForSTSgroup(area, groupNb).hour(167)
-                 == props.initialLevel * props.reservoirCapacity.value(),
+    BOOST_TEST(output.levelForSTSgroup(area, groupNb).hour(167) == initialLevel * reservoirCapacity,
                tt::tolerance(0.001));
 }
 
@@ -446,4 +444,5 @@ BOOST_FIXTURE_TEST_CASE(saving_study, HydroMaxPowerStudy)
 
     BOOST_CHECK(study->saveToFolder(std::filesystem::temp_directory_path().string()));
 }
+
 BOOST_AUTO_TEST_SUITE_END()

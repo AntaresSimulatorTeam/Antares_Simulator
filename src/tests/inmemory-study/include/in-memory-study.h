@@ -84,7 +84,7 @@ public:
     ShortTermStorageConfig& setInjectionNominalCapacity(double injectionNominalCapacity);
     ShortTermStorageConfig& setWithdrawalNominalCapacity(double withdrawalNominalCapacity);
     ShortTermStorageConfig& setReservoirCapacity(double reservoirCapacity);
-    ShortTermStorageConfig& setInitiallevelDefault(double initialLevel);
+    ShortTermStorageConfig& setInitialLevel(double initialLevel);
     ShortTermStorageConfig& setInitialLevelOptim(bool initialLevelOptim);
     ShortTermStorageConfig& setInjectionEfficiency(double injectionEfficiency);
     ShortTermStorageConfig& setWithdrawalEfficiency(double withdrawalEfficiency);
@@ -99,6 +99,9 @@ private:
 };
 
 std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& clusterName);
+
+Antares::Data::ShortTermStorage::STStorageCluster* addSTSToArea(Area* area,
+                                                                const std::string& stsName);
 
 void addScratchpadToEachArea(Data::Study& study);
 

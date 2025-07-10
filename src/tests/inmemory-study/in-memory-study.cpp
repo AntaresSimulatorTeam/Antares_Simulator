@@ -52,6 +52,16 @@ std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& 
     return cluster;
 }
 
+Antares::Data::ShortTermStorage::STStorageCluster* addSTSToArea(Area* area,
+                                                                const std::string& stsName)
+{
+    Antares::Data::ShortTermStorage::STStorageCluster sts;
+    sts.properties.name = stsName;
+    auto& storages = area->shortTermStorage.storagesByIndex;
+    storages.push_back(sts);
+    return &storages.back();
+}
+
 void addScratchpadToEachArea(Study& study)
 {
     for (auto& [_, area]: study.areas)
@@ -68,6 +78,7 @@ TimeSeriesConfigurer& TimeSeriesConfigurer::setDimensions(unsigned columnCount, 
     if (auto* mat = std::get_if<MatrixRef>(&ts_))
     {
         mat->get().resize(columnCount, rowCount);
+        return *this;
     }
     if (auto* vec = std::get_if<VectorRef>(&ts_))
     {
@@ -76,8 +87,9 @@ TimeSeriesConfigurer& TimeSeriesConfigurer::setDimensions(unsigned columnCount, 
             throw std::runtime_error("Tried to assign multiple columns to a vector");
         }
         vec->get().resize(rowCount);
+        return *this;
     }
-    return *this;
+    throw std::runtime_error("Bad variant");
 }
 
 TimeSeriesConfigurer& TimeSeriesConfigurer::fillColumnWith(unsigned column, double value)
@@ -85,6 +97,7 @@ TimeSeriesConfigurer& TimeSeriesConfigurer::fillColumnWith(unsigned column, doub
     if (auto* mat = std::get_if<MatrixRef>(&ts_))
     {
         mat->get().fillColumn(column, value);
+        return *this;
     }
     if (auto* vec = std::get_if<VectorRef>(&ts_))
     {
@@ -93,8 +106,9 @@ TimeSeriesConfigurer& TimeSeriesConfigurer::fillColumnWith(unsigned column, doub
             throw std::runtime_error("Tried to assign a value to columns>1 in a vector");
         }
         std::fill(vec->get().begin(), vec->get().end(), value);
+        return *this;
     }
-    return *this;
+    throw std::runtime_error("Bad variant");
 }
 
 TimeSeriesConfigurer& TimeSeriesConfigurer::fillColumnWith(unsigned column,
@@ -103,6 +117,7 @@ TimeSeriesConfigurer& TimeSeriesConfigurer::fillColumnWith(unsigned column,
     if (auto* mat = std::get_if<MatrixRef>(&ts_))
     {
         mat->get().pasteToColumn(column, values.data());
+        return *this;
     }
     if (auto* vec = std::get_if<VectorRef>(&ts_))
     {
@@ -114,10 +129,10 @@ TimeSeriesConfigurer& TimeSeriesConfigurer::fillColumnWith(unsigned column,
         for (std::size_t idx = 0; idx < v.size() && idx < values.size(); ++idx)
         {
             v[idx] = values[idx];
+            return *this;
         }
     }
-
-    return *this;
+    throw std::runtime_error("Bad variant");
 }
 
 ThermalClusterConfig::ThermalClusterConfig(std::shared_ptr<ThermalCluster> cluster):
@@ -160,6 +175,12 @@ ThermalClusterConfig& ThermalClusterConfig::setAvailablePower(unsigned column, d
 // -------------------------------
 // Short-term storage
 // -------------------------------
+ShortTermStorageConfig::ShortTermStorageConfig(
+  Antares::Data::ShortTermStorage::STStorageCluster& storage):
+    storage(storage)
+{
+}
+
 ShortTermStorageConfig& ShortTermStorageConfig::setInjectionNominalCapacity(
   double injectionNominalCapacity)
 {
@@ -180,7 +201,7 @@ ShortTermStorageConfig& ShortTermStorageConfig::setReservoirCapacity(double rese
     return *this;
 }
 
-ShortTermStorageConfig& ShortTermStorageConfig::setInitiallevelDefault(double initialLevel)
+ShortTermStorageConfig& ShortTermStorageConfig::setInitialLevel(double initialLevel)
 {
     storage.properties.initialLevel = initialLevel;
     return *this;
