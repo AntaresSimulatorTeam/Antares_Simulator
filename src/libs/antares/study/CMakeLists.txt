@@ -311,7 +311,7 @@ target_link_libraries(study
         linear-problem-api
         Antares::load-modeler-files
         Antares::modeler-parameters
-        Antares::modeler-lib-2
+        Antares::modeler-data
         PRIVATE
         Antares::exception
         PRIVATE

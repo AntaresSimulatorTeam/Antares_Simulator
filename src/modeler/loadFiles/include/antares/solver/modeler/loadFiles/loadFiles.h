@@ -28,7 +28,7 @@
 #include <antares/solver/modeler/parameters/modelerParameters.h>
 #include <antares/study/system-model/library.h>
 #include <antares/study/system-model/system.h>
-#include "antares/solver/modeler/data.h"
+#include "antares/modeler/data/data.h"
 
 namespace Antares::Solver::LoadFiles
 {

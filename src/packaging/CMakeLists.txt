@@ -106,7 +106,7 @@ set(TARGET_LIBS #No alias
         additional-constraint-rhs-antlr-interface
         scenario-builder-antlr
         scenario-group-parser
-        modeler-lib-2
+        modeler-data
 )
 
 install(TARGETS ${TARGET_LIBS}
