@@ -150,7 +150,7 @@ bool Matrix<T, ReadWriteT, PrecisionT>::ensureDataAreLoaded()
     {
         auto& jit = *pMatrix->jit;
         // Timestamp for last modification
-        auto timestamp = IO::File::LastModificationTime(jit.sourceFilename);
+        auto timestamp = std::filesystem::last_write_time(jit.sourceFilename);
         if (jit.lastModification != timestamp)
         {
             jit.lastModification = timestamp;

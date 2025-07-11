@@ -167,7 +167,8 @@ public:
         unsigned estimatedSize[2];
 
         //! Timestamp of the last modification
-        int64_t lastModification;
+
+        std::filesystem::file_time_type lastModification;
 
     }; // class Informations
 

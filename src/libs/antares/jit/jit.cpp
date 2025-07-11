@@ -35,8 +35,7 @@ JIT::Informations::Informations():
     loadDataIfNotAlreadyDone(false),
     options(0),
     minWidth(0),
-    maxHeight(0),
-    lastModification(0)
+    maxHeight(0)
 {
     estimatedSize[0] = 0;
     estimatedSize[1] = 0;
@@ -48,8 +47,7 @@ JIT::Informations::Informations(const Informations& rhs):
     loadDataIfNotAlreadyDone(true),
     options(rhs.options),
     minWidth(rhs.minWidth),
-    maxHeight(rhs.maxHeight),
-    lastModification(0)
+    maxHeight(rhs.maxHeight)
 {
     estimatedSize[0] = 0;
     estimatedSize[1] = 0;

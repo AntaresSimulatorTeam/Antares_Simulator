@@ -238,7 +238,7 @@ public:
             return Yuni::IO::errNotFound;
         }
 
-        std::streamsize size = file.tellg(); // Get size
+        auto size = fs::file_size(filepath);
         if (size > filesizeHardLimit)
         {
             return Yuni::IO::errMemoryLimit;
