@@ -1024,7 +1024,7 @@ bool Matrix<T, ReadWriteT>::loadFromBuffer(const AnyString& filename,
 }
 
 template<class T, class ReadWriteT>
-bool Matrix<T, ReadWriteT>::internalLoadCSVFile(const AnyString& filename,
+bool Matrix<T, ReadWriteT>::internalLoadCSVFile(const std::fs::path& filename,
                                                 uint minWidth,
                                                 uint maxHeight,
                                                 uint options,

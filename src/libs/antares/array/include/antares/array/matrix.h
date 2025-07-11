@@ -23,6 +23,7 @@
 
 #include <cassert>
 #include <filesystem>
+#include <fstream>
 #include <set>
 
 #include <yuni/yuni.h>
@@ -229,9 +230,28 @@ public:
     //@}
 
     virtual Yuni::IO::Error loadFromFileToBuffer(BufferType& buffer,
-                                                 const AnyString& filename) const
+                                                 const std::fs::path& filepath) const
     {
-        return Yuni::IO::File::LoadFromFile(buffer, filename, filesizeHardLimit);
+        // Open the file in binary mode and move to the end to get size
+        std::ifstream file(filepath, std::ios::binary | std::ios::ate);
+        if (!file.is_open())
+        {
+            return Yuni::IO::errNotFound;
+        }
+
+        std::streamsize size = file.tellg(); // Get size
+        if (size > filesizeHardLimit)
+        {
+            return Yuni::IO::errMemoryLimit;
+        }
+
+        file.seekg(0, std::ios::beg); // Rewind to beginning
+
+        buffer.resize(size);
+        if (!file.read(buffer.data(), size))
+        {
+            return Yuni::IO::errReadFailed;
+        }
     }
 
     template<class PredicateT>
@@ -477,7 +497,7 @@ private:
     /*!
     ** \brief Load data from a CSV file
     */
-    bool internalLoadCSVFile(const AnyString& filename,
+    bool internalLoadCSVFile(const std::fs::path& filename,
                              uint minWidth,
                              uint maxHeight,
                              uint options,
