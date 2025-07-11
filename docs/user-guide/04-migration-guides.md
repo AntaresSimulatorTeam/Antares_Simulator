@@ -55,7 +55,7 @@ They're replaced by the dynamic variable `RENEWABLE GEN."`
 
 For short-term storage inflows, the format is as follows
 ```
-prefix,area,year,object = TS number
+sts,area,year,storage = TS number
 ```
 
 For short-term storage additional constraints, the format is
