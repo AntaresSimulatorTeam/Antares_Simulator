@@ -172,6 +172,17 @@ double floor(double d)
     return std::floor(std::round(d * largeValue) / largeValue);
 }
 
+std::map<std::string, unsigned> giveNumbersToStrings(const std::vector<std::string>& strs)
+{
+    unsigned strNb = 0;
+    std::map<std::string, unsigned> strToNumber;
+    for (const auto& s: strs)
+    {
+        strToNumber[s] = strNb++;
+    }
+    return strToNumber;
+}
+
 bool checkAllElementsIdenticalOrOne(std::vector<unsigned> w)
 {
     auto first_one = std::remove(w.begin(), w.end(), 1); // Reject all 1 to the end

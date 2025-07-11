@@ -7,7 +7,7 @@ set(ANTARES_VERSION_REVISION  0)
 
 # Beta release
 set(ANTARES_BETA 0)
-set(ANTARES_RC 3)
+set(ANTARES_RC 4)
 
 set(ANTARES_VERSION_YEAR      2025)
 
@@ -275,7 +275,6 @@ add_subdirectory(expressions)   #modeler expressions (AST)
 add_subdirectory(optimisation)  #optimisation APIs
 add_subdirectory(study)	        #antares study model
 add_subdirectory(solver)	    #antares solver and all associated libs
-add_subdirectory(analyzer)      #antares analyser
 add_subdirectory(modeler)       #antares modeler
 
 # Tools

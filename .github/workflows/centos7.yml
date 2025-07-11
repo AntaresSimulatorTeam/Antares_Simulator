@@ -140,7 +140,7 @@ jobs:
       - name: Push artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: targz
+          name: centos-targz
           path: archive/*.tar.gz
 
       - name: Publish assets

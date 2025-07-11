@@ -80,7 +80,7 @@ TimeSeriesConfigurer& TimeSeriesConfigurer::fillColumnWith(unsigned column,
     return *this;
 }
 
-ThermalClusterConfig::ThermalClusterConfig(ThermalCluster* cluster):
+ThermalClusterConfig::ThermalClusterConfig(std::shared_ptr<ThermalCluster> cluster):
     cluster_(cluster),
     tsAvailablePowerConfig_(cluster_->series.timeSeries)
 {
@@ -206,13 +206,12 @@ void SimulationHandler::create()
 // =========================
 // Basic study builder
 // =========================
-StudyBuilder::StudyBuilder()
+StudyBuilder::StudyBuilder():
+    study(std::make_unique<Study>(true)),
+    simulation(*study)
 {
     // Make logs shrink to errors (and higher) only
     logs.verbosityLevel = Logs::Verbosity::Error::level;
-
-    study = std::make_unique<Study>(true);
-    simulation = std::make_shared<SimulationHandler>(*study);
 
     initializeStudy(study.get());
 }

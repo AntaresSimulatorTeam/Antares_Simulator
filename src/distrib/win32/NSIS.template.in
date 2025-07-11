@@ -297,8 +297,7 @@ ${MementoSection} "$(LngCoreFiles)" SecCore
 	
 	${File} "${ANTARES_BUILD_DIR}\solver\${TARGET}"               "antares-solver.exe"
 	${FileOptionnal} "${ANTARES_BUILD_DIR}\solver\${TARGET}"      "*.dll"
-	
-	${File} "${ANTARES_BUILD_DIR}\analyzer\${TARGET}"             "antares-analyzer.exe"
+
 	${File} "${ANTARES_BUILD_DIR}\tools\yby-aggregator\${TARGET}" "antares-ybyaggregator.exe"
 	${File} "${ANTARES_BUILD_DIR}\tools\batchrun\${TARGET}"       "antares-batchrun.exe"
 	${File} "${ANTARES_BUILD_DIR}\tools\finder\${TARGET}"         "antares-study-finder.exe"

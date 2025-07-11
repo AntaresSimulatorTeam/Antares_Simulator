@@ -63,8 +63,6 @@ set(SRCS
 		windows/simulation/panel.cpp
 		windows/simulation/run.h
 		windows/simulation/run.cpp
-		windows/analyzer/analyzer.cpp
-		windows/analyzer/analyzer.h
 		windows/constraints-builder/constraintsbuilder.cpp
 		windows/constraints-builder/constraintsbuilder.h
 		windows/saveas.h

@@ -54,8 +54,8 @@ private:
 class ThermalClusterConfig
 {
 public:
-    ThermalClusterConfig() = default;
-    ThermalClusterConfig(ThermalCluster* cluster);
+    ThermalClusterConfig() = delete;
+    explicit ThermalClusterConfig(std::shared_ptr<ThermalCluster> cluster);
     ThermalClusterConfig& setNominalCapacity(double nominalCapacity);
     ThermalClusterConfig& setUnitCount(unsigned unitCount);
     ThermalClusterConfig& setCosts(double cost);
@@ -63,7 +63,7 @@ public:
     ThermalClusterConfig& setAvailablePower(unsigned column, double value);
 
 private:
-    ThermalCluster* cluster_ = nullptr;
+    std::shared_ptr<ThermalCluster> cluster_ = nullptr;
     TimeSeriesConfigurer tsAvailablePowerConfig_;
 };
 
@@ -207,6 +207,10 @@ public:
     }
 
     ~SimulationHandler() = default;
+
+    SimulationHandler(const SimulationHandler&) = delete;
+    SimulationHandler& operator=(const SimulationHandler&) = delete;
+
     void create();
 
     void run()
@@ -244,7 +248,7 @@ struct StudyBuilder
 
     // Data members
     std::unique_ptr<Data::Study> study;
-    std::shared_ptr<SimulationHandler> simulation;
+    SimulationHandler simulation;
 };
 
 std::shared_ptr<Antares::Data::BindingConstraint> addBindingConstraints(Antares::Data::Study& study,
