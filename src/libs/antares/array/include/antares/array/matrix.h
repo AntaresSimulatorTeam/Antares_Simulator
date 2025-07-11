@@ -251,6 +251,7 @@ public:
         {
             return Yuni::IO::errReadFailed;
         }
+        return Yuni::IO::errNone;
     }
 
     template<class PredicateT>
@@ -503,10 +504,7 @@ private:
                              BufferType* buffer = NULL);
 
     //! Initialize the JIT structures and returns true
-    bool internalLoadJITData(const AnyString& filename,
-                             uint minWidth,
-                             uint maxHeight,
-                             uint options);
+    bool internalLoadJITData(const fs::path& filename, uint minWidth, uint maxHeight, uint options);
 
     /*!
     ** \brief Save data to a CSV file
@@ -518,7 +516,7 @@ private:
                              PredicateT& predicate,
                              bool saveEvenIfAllZero) const;
 
-    bool loadFromBuffer(const AnyString& filename,
+    bool loadFromBuffer(const fs::path& filename,
                         BufferType& data,
                         uint minWidth,
                         uint maxHeight,

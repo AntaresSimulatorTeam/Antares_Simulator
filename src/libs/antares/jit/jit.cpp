@@ -77,7 +77,7 @@ JIT::Informations* JIT::Reset(JIT::Informations* jit)
     return jit;
 }
 
-JIT::Informations* JIT::Reset(JIT::Informations* jit, const AnyString& filename)
+JIT::Informations* JIT::Reset(JIT::Informations* jit, const std::filesystem::path& filename)
 {
     assert(JIT::enabled and "JIT must be enabled");
 

@@ -21,6 +21,8 @@
 #ifndef __ANTARES_LIBS_JIT_JIT_H__
 #define __ANTARES_LIBS_JIT_JIT_H__
 
+#include <filesystem>
+
 #include <yuni/core/fwd.h>
 #include <yuni/core/string/string.h>
 
@@ -39,7 +41,7 @@ public:
     /*!
     ** \brief Reset the source filename
     */
-    static Informations* Reset(Informations* jit, const AnyString& filename);
+    static Informations* Reset(Informations* jit, const std::filesystem::path& filename);
 
     /*!
     ** \brief Reset the source filename
@@ -65,7 +67,7 @@ public:
     class just_in_time_manager
     {
     public:
-        just_in_time_manager(JIT::Informations* jit, const AnyString filename):
+        just_in_time_manager(JIT::Informations* jit, const std::filesystem::path& filename):
             jit_(jit),
             file_name_(filename)
         {
@@ -107,7 +109,7 @@ public:
     private:
         JIT::Informations* jit_;
         JIT::Informations* jit_record_;
-        AnyString file_name_;
+        std::filesystem::path file_name_;
     };
 
 public:
@@ -136,7 +138,7 @@ public:
 
     public:
         //! Filename/folder to consider if some data should be loaded
-        YString sourceFilename;
+        std::filesystem::path sourceFilename;
 
         //! Flag to determine wheter if the associated data have already been loaded
         bool alreadyLoaded;

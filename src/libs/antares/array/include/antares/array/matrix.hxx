@@ -386,14 +386,14 @@ inline void Matrix<T, ReadWriteT>::reset(uint w, uint h, bool fixedSize)
 }
 
 template<class T, class ReadWriteT>
-bool Matrix<T, ReadWriteT>::internalLoadJITData(const AnyString& filename,
+bool Matrix<T, ReadWriteT>::internalLoadJITData(const fs::path& filename,
                                                 uint minWidth,
                                                 uint maxHeight,
                                                 uint options)
 {
     // To avoid undefined behavior when filename is jit->sourceFilename
     // we have to make a copy first.
-    jit = JIT::Reset(jit, YString(filename));
+    jit = JIT::Reset(jit, filename);
 
     JIT::MarkAsNotLoaded(jit);
     clear();
@@ -627,7 +627,7 @@ void Matrix<T, ReadWriteT>::resize(uint w, uint h, bool fixedSize)
 
 namespace // anonymous
 {
-static inline bool DetectEncoding(const AnyString& filename, const AnyString& data, size_t& offset)
+static inline bool DetectEncoding(const fs::path& filename, const AnyString& data, size_t& offset)
 {
     if (data.size() > 1)
     {
@@ -676,7 +676,7 @@ static inline bool DetectEncoding(const AnyString& filename, const AnyString& da
 } // anonymous namespace
 
 template<class T, class ReadWriteT>
-bool Matrix<T, ReadWriteT>::loadFromBuffer(const AnyString& filename,
+bool Matrix<T, ReadWriteT>::loadFromBuffer(const fs::path& filename,
                                            BufferType& data,
                                            uint minWidth,
                                            uint maxHeight,
