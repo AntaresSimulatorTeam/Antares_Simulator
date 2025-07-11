@@ -94,6 +94,11 @@ struct AdqPatchParams
     //! physical areas inside adequacy patch (area type 2). NTC is set to null (if true)
     //! only in the first step of adequacy patch local matching rule.
     bool setToZeroOutsideInsideLinks = true;
+
+    // TODO VP: remove this comment
+    // This parameters does nothing right now, it will be implemented later in 9.3.x
+    bool redispatch = false;
+
     CurtailmentSharing curtailmentSharing;
 
     void reset();
