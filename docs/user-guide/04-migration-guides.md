@@ -51,6 +51,13 @@ The following variables were removed:
 
 They're replaced by the dynamic variable `RENEWABLE GEN."`
 
+####  Short term storage / scenario-builder
+
+For short-term storage additional constraints, the format is
+```
+sta,area,year,storage,constraint = TS number
+```
+
 ## v9.2.0
 
 ### Input
