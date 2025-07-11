@@ -27,7 +27,6 @@ var classAntares_1_1Forms_1_1ApplWnd =
     [ "hideWIP", "classAntares_1_1Forms_1_1ApplWnd.html#a37d9962f69b51719429ad9a7f188ec5e", null ],
     [ "isInWIPMode", "classAntares_1_1Forms_1_1ApplWnd.html#a426ce0fdb3de5e926be020f0bb967557", null ],
     [ "isScenarioBuilderOpened", "classAntares_1_1Forms_1_1ApplWnd.html#a8e7249ccf12b2fcd6070bf4014b1038c", null ],
-    [ "launchAnalyzer", "classAntares_1_1Forms_1_1ApplWnd.html#affe5737c7b9bc45a909ce7b08edb8d7e", null ],
     [ "launchConstraintsBuilder", "classAntares_1_1Forms_1_1ApplWnd.html#ac06e606002631d37800029ed807d48f0", null ],
     [ "loadSets", "classAntares_1_1Forms_1_1ApplWnd.html#ae38b2c4c8d1cc9760f9cd84f7354b594", null ],
     [ "loadUserNotes", "classAntares_1_1Forms_1_1ApplWnd.html#a930bda7f693bbc8e62854b209f18a019", null ],

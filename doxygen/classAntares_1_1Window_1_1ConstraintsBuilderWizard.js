@@ -11,8 +11,7 @@ var classAntares_1_1Window_1_1ConstraintsBuilderWizard =
       [ "mnIDAutoClean", "classAntares_1_1Window_1_1ConstraintsBuilderWizard.html#ad7214ea01eb33fc51676ce038091436da3792bd7456c4acd8a05d7867668a0d59", null ],
       [ "mnIDUpdateInfo", "classAntares_1_1Window_1_1ConstraintsBuilderWizard.html#ad7214ea01eb33fc51676ce038091436da23a640db625389b981dd4a9cb2e0b563", null ],
       [ "mnIDUpdateFileMapping", "classAntares_1_1Window_1_1ConstraintsBuilderWizard.html#ad7214ea01eb33fc51676ce038091436da0557ccaa85ed69b2ee4a2f80307bfe5a", null ],
-      [ "mnIDGridUpdate", "classAntares_1_1Window_1_1ConstraintsBuilderWizard.html#ad7214ea01eb33fc51676ce038091436daa513f30d90c5461bb80b4fb209f09890", null ],
-      [ "mnIDCanRunAnalyzer", "classAntares_1_1Window_1_1ConstraintsBuilderWizard.html#ad7214ea01eb33fc51676ce038091436da466dd616f33463443b995c2b686dfbc4", null ]
+      [ "mnIDGridUpdate", "classAntares_1_1Window_1_1ConstraintsBuilderWizard.html#ad7214ea01eb33fc51676ce038091436daa513f30d90c5461bb80b4fb209f09890", null ]
     ] ],
     [ "ConstraintsBuilderWizard", "classAntares_1_1Window_1_1ConstraintsBuilderWizard.html#a06377565aa82353aa882f67f8100ddcc", null ],
     [ "~ConstraintsBuilderWizard", "classAntares_1_1Window_1_1ConstraintsBuilderWizard.html#a84a3b776b0df929de6e6d6d4ca95dc49", null ],

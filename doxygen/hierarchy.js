@@ -65,7 +65,6 @@ var hierarchy =
     [ "Antares::Data::AreaUI", "classAntares_1_1Data_1_1AreaUI.html", null ],
     [ "Antares::Expressions::Nodes::AST", "classAntares_1_1Expressions_1_1Nodes_1_1AST.html", null ],
     [ "Antares::Expressions::Nodes::ASTPreOrderIterator", "classAntares_1_1Expressions_1_1Nodes_1_1ASTPreOrderIterator.html", null ],
-    [ "Antares::ATSP", "classAntares_1_1ATSP.html", null ],
     [ "Antares::TSGenerator::AvailabilityTSGeneratorData", "classAntares_1_1TSGenerator_1_1AvailabilityTSGeneratorData.html", null ],
     [ "Antares::Solver::Variable::R::AllYears::AverageData", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData.html", null ],
     [ "averageResults", "classaverageResults.html", null ],
@@ -699,7 +698,6 @@ var hierarchy =
           [ "Antares::Component::Datagrid::Renderer::XCastTranslation< T >", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1XCastTranslation.html", null ]
         ] ],
         [ "Antares::Component::Datagrid::Renderer::AdequacyPatchAreaGrid", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1AdequacyPatchAreaGrid.html", null ],
-        [ "Antares::Component::Datagrid::Renderer::Analyzer::Areas", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Analyzer_1_1Areas.html", null ],
         [ "Antares::Component::Datagrid::Renderer::BindingConstraint::ClusterOffsets", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1BindingConstraint_1_1ClusterOffsets.html", null ],
         [ "Antares::Component::Datagrid::Renderer::BindingConstraint::ClusterWeights", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1BindingConstraint_1_1ClusterWeights.html", null ],
         [ "Antares::Component::Datagrid::Renderer::BindingConstraint::Data", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1BindingConstraint_1_1Data.html", null ],
@@ -1010,7 +1008,6 @@ var hierarchy =
     ] ],
     [ "IItem::IPart", "classIItem_1_1IPart.html", null ],
     [ "Antares::Component::Spotlight::IProvider", null, [
-      [ "Antares::Window::FileSearchProvider", "classAntares_1_1Window_1_1FileSearchProvider.html", null ],
       [ "Antares::Window::OutputViewer::Provider::Comparison", "classAntares_1_1Window_1_1OutputViewer_1_1Provider_1_1Comparison.html", null ],
       [ "Antares::Window::OutputViewer::Provider::Outputs", "classAntares_1_1Window_1_1OutputViewer_1_1Provider_1_1Outputs.html", null ],
       [ "Antares::Window::OutputViewer::Provider::Variables", "classAntares_1_1Window_1_1OutputViewer_1_1Provider_1_1Variables.html", null ],
@@ -1427,7 +1424,6 @@ var hierarchy =
     [ "RawConnection", "structRawConnection.html", null ],
     [ "Antares::Solver::Variable::R::AllYears::RawData", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html", null ],
     [ "ReadFromStreamFixture", "structReadFromStreamFixture.html", null ],
-    [ "Antares::Component::Datagrid::Renderer::Analyzer::Areas::Record", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Analyzer_1_1Areas_1_1Record.html", null ],
     [ "Antares::Component::Datagrid::Renderer::ConstraintsBuilder::Links::Record", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ConstraintsBuilder_1_1Links_1_1Record.html", null ],
     [ "find_reference.reference_folder_finder", "classfind__reference_1_1reference__folder__finder.html", null ],
     [ "referenceIniFile", "classreferenceIniFile.html", null ],
@@ -1961,7 +1957,6 @@ var hierarchy =
     [ "Antares::Solver::Variable::Economy::VCardUnsupliedEnergyCSR", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergyCSR.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardWaterValue", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html", null ],
     [ "Vec3", "structVec3.html", null ],
-    [ "Antares::Component::Datagrid::Renderer::Analyzer::Areas::Record::Vector", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Analyzer_1_1Areas_1_1Record_1_1Vector.html", null ],
     [ "Antares::Component::Datagrid::Renderer::ConstraintsBuilder::Links::Record::Vector", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ConstraintsBuilder_1_1Links_1_1Record_1_1Vector.html", null ],
     [ "Antares::VENTILATION_HYDRO_RESULTS_BY_AREA", "structAntares_1_1VENTILATION__HYDRO__RESULTS__BY__AREA.html", null ],
     [ "FSWalker::WalkerThread", "classFSWalker_1_1WalkerThread.html", null ],
@@ -1993,7 +1988,6 @@ var hierarchy =
     [ "wxDialog", null, [
       [ "Antares::Toolbox::Jobs::Job", "classAntares_1_1Toolbox_1_1Jobs_1_1Job.html", null ],
       [ "Antares::Window::AboutBox", "classAntares_1_1Window_1_1AboutBox.html", null ],
-      [ "Antares::Window::AnalyzerWizard", "classAntares_1_1Window_1_1AnalyzerWizard.html", null ],
       [ "Antares::Window::ApplyActionsDialog", "classAntares_1_1Window_1_1ApplyActionsDialog.html", null ],
       [ "Antares::Window::BindingConstraintInfoEditor", "classAntares_1_1Window_1_1BindingConstraintInfoEditor.html", null ],
       [ "Antares::Window::CalendarSelect", "classAntares_1_1Window_1_1CalendarSelect.html", null ],

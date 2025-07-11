@@ -63,9 +63,6 @@ var annotated_dup =
       [ "Component", null, [
         [ "Datagrid", null, [
           [ "Renderer", null, [
-            [ "Analyzer", null, [
-              [ "Areas", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Analyzer_1_1Areas.html", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Analyzer_1_1Areas" ]
-            ] ],
             [ "BindingConstraint", null, [
               [ "Data", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1BindingConstraint_1_1Data.html", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1BindingConstraint_1_1Data" ],
               [ "LinkOffsets", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1BindingConstraint_1_1LinkOffsets.html", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1BindingConstraint_1_1LinkOffsets" ],
@@ -1201,8 +1198,6 @@ var annotated_dup =
         [ "PerformerDialog", "classAntares_1_1Window_1_1PerformerDialog.html", "classAntares_1_1Window_1_1PerformerDialog" ],
         [ "ApplyActionsDialog", "classAntares_1_1Window_1_1ApplyActionsDialog.html", "classAntares_1_1Window_1_1ApplyActionsDialog" ],
         [ "AboutBox", "classAntares_1_1Window_1_1AboutBox.html", "classAntares_1_1Window_1_1AboutBox" ],
-        [ "FileSearchProvider", "classAntares_1_1Window_1_1FileSearchProvider.html", "classAntares_1_1Window_1_1FileSearchProvider" ],
-        [ "AnalyzerWizard", "classAntares_1_1Window_1_1AnalyzerWizard.html", "classAntares_1_1Window_1_1AnalyzerWizard" ],
         [ "BindingConstraintWeightsPanel", "classAntares_1_1Window_1_1BindingConstraintWeightsPanel.html", "classAntares_1_1Window_1_1BindingConstraintWeightsPanel" ],
         [ "BindingConstraintOffsetsPanel", "classAntares_1_1Window_1_1BindingConstraintOffsetsPanel.html", "classAntares_1_1Window_1_1BindingConstraintOffsetsPanel" ],
         [ "BindingConstraint", "classAntares_1_1Window_1_1BindingConstraint.html", "classAntares_1_1Window_1_1BindingConstraint" ],
@@ -1245,7 +1240,6 @@ var annotated_dup =
       [ "WIP", "namespaceAntares_1_1WIP.html", [
         [ "Locker", "classAntares_1_1WIP_1_1Locker.html", "classAntares_1_1WIP_1_1Locker" ]
       ] ],
-      [ "ATSP", "classAntares_1_1ATSP.html", "classAntares_1_1ATSP" ],
       [ "Matrix", "classAntares_1_1Matrix.html", "classAntares_1_1Matrix" ],
       [ "I_mtx_to_buffer_dumper", "classAntares_1_1I__mtx__to__buffer__dumper.html", "classAntares_1_1I__mtx__to__buffer__dumper" ],
       [ "matrix_to_buffer_dumper_factory", "classAntares_1_1matrix__to__buffer__dumper__factory.html", "classAntares_1_1matrix__to__buffer__dumper__factory" ],

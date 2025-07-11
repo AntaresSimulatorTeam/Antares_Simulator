@@ -104,9 +104,6 @@ var namespaces_dup =
             [ "BorderMonthSeparator", "default_8h.html#ae5b6ac694b0b8e2f2d94429965072ad4", null ]
           ] ],
           [ "Renderer", null, [
-            [ "Analyzer", null, [
-              [ "Areas", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Analyzer_1_1Areas.html", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Analyzer_1_1Areas" ]
-            ] ],
             [ "BindingConstraint", null, [
               [ "Data", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1BindingConstraint_1_1Data.html", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1BindingConstraint_1_1Data" ],
               [ "LinkOffsets", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1BindingConstraint_1_1LinkOffsets.html", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1BindingConstraint_1_1LinkOffsets" ],
@@ -1077,7 +1074,6 @@ var namespaces_dup =
           [ "mnIDStudyRemoveReadyMadeTS", "internal-ids_8h.html#a9e9b814398d8f3dfd614e67481b6a5d0ae21001f60f698a23a022de9eb30ba226", null ],
           [ "mnIDRunTheSimulation", "internal-ids_8h.html#a9e9b814398d8f3dfd614e67481b6a5d0ac471da1779bf64ece12b542a7c03d2b4", null ],
           [ "mnIDRunTheTSGenerators", "internal-ids_8h.html#a9e9b814398d8f3dfd614e67481b6a5d0aff87e5b9a09ce155c3a86a64170cb2d8", null ],
-          [ "mnIDRunTheTSAnalyzer", "internal-ids_8h.html#a9e9b814398d8f3dfd614e67481b6a5d0a830fe2f8165f319999842c7a485a25fd", null ],
           [ "mnIDRunTheConstraintsBuilder", "internal-ids_8h.html#a9e9b814398d8f3dfd614e67481b6a5d0afb4ca9ec078a3aadc1564f899d34a543", null ],
           [ "mnIDOpenOutputInExplorer", "internal-ids_8h.html#a9e9b814398d8f3dfd614e67481b6a5d0a09fd2efedc68b126f7c0055b71a4c565", null ],
           [ "mnIDCleanAStudyFolder", "internal-ids_8h.html#a9e9b814398d8f3dfd614e67481b6a5d0ae95f74588b5de5eba8e489d36bad865a", null ],
@@ -1117,7 +1113,6 @@ var namespaces_dup =
           [ "mnUpdateInterfaceAfterLoadingAStudy", "internal-ids_8h.html#a9e9b814398d8f3dfd614e67481b6a5d0ac598643e1ad8797ffc3c3cdf8a7751d6", null ],
           [ "mnInternalLogMessage", "internal-ids_8h.html#a9e9b814398d8f3dfd614e67481b6a5d0a7b68ca1ad6e572aeb0a9fd9f42993341", null ],
           [ "mnRefreshGUI", "internal-ids_8h.html#a9e9b814398d8f3dfd614e67481b6a5d0aebf527175b25a99441dd28d0517b4387", null ],
-          [ "mnIDLaunchAnalyzer", "internal-ids_8h.html#a9e9b814398d8f3dfd614e67481b6a5d0a9ab04c273f66d7801af5b75b27e3380f", null ],
           [ "mnIDLaunchConstraintsBuilder", "internal-ids_8h.html#a9e9b814398d8f3dfd614e67481b6a5d0a0c91018395af66f720138d11ed2c9a52", null ],
           [ "mnIDPopupOpNone", "internal-ids_8h.html#a9e9b814398d8f3dfd614e67481b6a5d0aaec6160b3f1aec3445b57d0e85485ed9", null ],
           [ "mnIDPopupOpAverage", "internal-ids_8h.html#a9e9b814398d8f3dfd614e67481b6a5d0a60920f25e8c492957c1f706fb951bd6e", null ],
@@ -1805,8 +1800,6 @@ var namespaces_dup =
         [ "Cholesky", "cholesky_8h.html#af9f84c90b499eaf5d056b32ebe4cf550", null ],
         [ "drawAndStoreTSnumbersForNOTintraModal", "timeseries-numbers_8cpp.html#a7aab078115c88079cda4a4400ff9308e", null ],
         [ "drawTSnumbersForIntraModal", "timeseries-numbers_8cpp.html#ac2092bd5bbd3ddd09a99fc035e3f479d", null ],
-        [ "FindAnalyzerLocation", "locator_8cpp.html#a6bb56267c30c5b92c6aac974439461bb", null ],
-        [ "FindAnalyzerLocation", "locator_8h.html#a47a007f32507e2566b5c93b9fded8b3d", null ],
         [ "FindConstraintsBuilderLocation", "locator_8cpp.html#a0c95713724f67c1770727e7f581db03d", null ],
         [ "FindConstraintsBuilderLocation", "locator_8h.html#a13a64765edded45f46b9c25568e2b5aa", null ],
         [ "FindLocation", "locator_8cpp.html#a6b51d7340f2dab8786f45e270f0c7d5f", null ],
@@ -2219,8 +2212,6 @@ var namespaces_dup =
         [ "PerformerDialog", "classAntares_1_1Window_1_1PerformerDialog.html", "classAntares_1_1Window_1_1PerformerDialog" ],
         [ "ApplyActionsDialog", "classAntares_1_1Window_1_1ApplyActionsDialog.html", "classAntares_1_1Window_1_1ApplyActionsDialog" ],
         [ "AboutBox", "classAntares_1_1Window_1_1AboutBox.html", "classAntares_1_1Window_1_1AboutBox" ],
-        [ "FileSearchProvider", "classAntares_1_1Window_1_1FileSearchProvider.html", "classAntares_1_1Window_1_1FileSearchProvider" ],
-        [ "AnalyzerWizard", "classAntares_1_1Window_1_1AnalyzerWizard.html", "classAntares_1_1Window_1_1AnalyzerWizard" ],
         [ "BindingConstraintWeightsPanel", "classAntares_1_1Window_1_1BindingConstraintWeightsPanel.html", "classAntares_1_1Window_1_1BindingConstraintWeightsPanel" ],
         [ "BindingConstraintOffsetsPanel", "classAntares_1_1Window_1_1BindingConstraintOffsetsPanel.html", "classAntares_1_1Window_1_1BindingConstraintOffsetsPanel" ],
         [ "BindingConstraint", "classAntares_1_1Window_1_1BindingConstraint.html", "classAntares_1_1Window_1_1BindingConstraint" ],
@@ -2264,7 +2255,6 @@ var namespaces_dup =
         [ "getFormatAsYString", "exportmap_8cpp.html#a6854432a538945c2a89d1b348eb63207", null ]
       ] ],
       [ "WIP", "namespaceAntares_1_1WIP.html", "namespaceAntares_1_1WIP" ],
-      [ "ATSP", "classAntares_1_1ATSP.html", "classAntares_1_1ATSP" ],
       [ "Matrix", "classAntares_1_1Matrix.html", "classAntares_1_1Matrix" ],
       [ "I_mtx_to_buffer_dumper", "classAntares_1_1I__mtx__to__buffer__dumper.html", "classAntares_1_1I__mtx__to__buffer__dumper" ],
       [ "matrix_to_buffer_dumper_factory", "classAntares_1_1matrix__to__buffer__dumper__factory.html", "classAntares_1_1matrix__to__buffer__dumper__factory" ],
