@@ -67,7 +67,6 @@ For short-term storage additional constraints, the format is
 sta,area,year,storage,constraint = TS number
 ```
 
-
 ### Binding constraints
 The case of binding constraints is a bit specific. Each binding constraint has a group, which is used exclusively to scenarize the RHS of all the constraints in the group.
 

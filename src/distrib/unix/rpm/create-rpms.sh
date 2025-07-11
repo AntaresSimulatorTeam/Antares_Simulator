@@ -196,7 +196,6 @@ main()
 	pkg_cwd "/usr/bin"
 	pkg_add_exec "solver/antares-solver"
 	pkg_add_exec "solver/antares-solver-swap"
-	pkg_add_exec "analyzer/antares-analyzer"
 	pkg_add_exec "tools/finder/antares-study-finder"
 	pkg_add_exec "tools/batchrun/antares-batchrun"
 	pkg_add_exec "tools/config/antares-config"
@@ -207,8 +206,6 @@ main()
 	pkg_add_file "distrib/unix/rpm/pkginfo-solver" "solver"
 	echo "/usr/bin/antares-solver-swap" > "${root}/pkginfo-solver-swap"
 	pkg_add_file "distrib/unix/rpm/pkginfo-solver-swap" "solver-swap"
-	echo "/usr/bin/antares-analyzer" > "${root}/pkginfo-analyzer"
-	pkg_add_file "distrib/unix/rpm/pkginfo-analyzer" "analyzer"
 	echo "/usr/bin/antares-config" > "${root}/pkginfo-config"
 	pkg_add_file "distrib/unix/rpm/pkginfo-config" "config"
 
