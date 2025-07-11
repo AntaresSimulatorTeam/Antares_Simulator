@@ -229,8 +229,7 @@ public:
 
     //@}
 
-    virtual Yuni::IO::Error loadFromFileToBuffer(BufferType& buffer,
-                                                 const std::fs::path& filepath) const
+    virtual Yuni::IO::Error loadFromFileToBuffer(BufferType& buffer, const fs::path& filepath) const
     {
         // Open the file in binary mode and move to the end to get size
         std::ifstream file(filepath, std::ios::binary | std::ios::ate);
@@ -497,7 +496,7 @@ private:
     /*!
     ** \brief Load data from a CSV file
     */
-    bool internalLoadCSVFile(const std::fs::path& filename,
+    bool internalLoadCSVFile(const fs::path& filename,
                              uint minWidth,
                              uint maxHeight,
                              uint options,
