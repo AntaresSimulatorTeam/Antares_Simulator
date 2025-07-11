@@ -151,7 +151,7 @@ public:
     }
 
     IO::Error loadFromFileToBuffer(typename Matrix<T, ReadWriteT>::BufferType& /* buffer */,
-                                   const AnyString& /* filename */) const override
+                                   const std::filesystem::path& /* filename */) const override
     {
         return fake_mtx_error_when_loading_;
     }
