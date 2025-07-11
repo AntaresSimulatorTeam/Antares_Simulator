@@ -444,7 +444,7 @@ BOOST_FIXTURE_TEST_CASE(saving_study, HydroMaxPowerStudy)
     enabledCluster->setName("Cluster1");
     enabledCluster->enabled = true;
     area->thermal.list.addToCompleteList(enabledCluster);
-
-    BOOST_CHECK(study->saveToFolder(std::filesystem::temp_directory_path().string()));
+    std::filesystem::path pathToStudy = std::filesystem::temp_directory_path() / "my-study";
+    BOOST_CHECK(study->saveToFolder(pathToStudy.string()));
 }
 BOOST_AUTO_TEST_SUITE_END()

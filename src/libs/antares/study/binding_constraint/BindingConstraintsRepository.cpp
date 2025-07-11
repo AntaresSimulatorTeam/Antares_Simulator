@@ -273,7 +273,7 @@ bool BindingConstraintsRepository::internalSaveToFolder(
     if (constraints_.empty())
     {
         logs.info() << "No binding constraint to export.";
-        if (!fs::create_directory(env.folder))
+        if (!fs::exists(env.folder) && !fs::create_directory(env.folder))
         {
             return false;
         }
