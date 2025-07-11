@@ -425,13 +425,13 @@ BOOST_FIXTURE_TEST_CASE(sts_scenarized_withdrawal_constraint, StudyBuilder)
 
     const int nbYears = 4;
     const int nbHours = 2; // Constraint on 2 hours
-    const double withdrawalYear[] = {1., 2., 4., 8.};
+    const double additionalConstraint_RHS[] = {1., 2., 4., 8.};
     TimeSeriesConfigurer addcRHS(ct->rhs());
     addcRHS.setDimensions(nbYears)
-      .fillColumnWith(0, withdrawalYear[0])
-      .fillColumnWith(1, withdrawalYear[1])
-      .fillColumnWith(2, withdrawalYear[2])
-      .fillColumnWith(3, withdrawalYear[3]);
+      .fillColumnWith(0, additionalConstraint_RHS[0])
+      .fillColumnWith(1, additionalConstraint_RHS[1])
+      .fillColumnWith(2, additionalConstraint_RHS[2])
+      .fillColumnWith(3, additionalConstraint_RHS[3]);
 
     setNumberMCyears(nbYears);
 
@@ -444,8 +444,8 @@ BOOST_FIXTURE_TEST_CASE(sts_scenarized_withdrawal_constraint, StudyBuilder)
     stsScenario.setTSnumber(ct.get(), 3, 4);
 
     const double expectedAverage = nbHours
-                                   * (withdrawalYear[0] + withdrawalYear[1] + withdrawalYear[2]
-                                      + withdrawalYear[3])
+                                   * (additionalConstraint_RHS[0] + additionalConstraint_RHS[1]
+                                      + additionalConstraint_RHS[2] + additionalConstraint_RHS[3])
                                    / nbYears;
 
     simulation.create();
