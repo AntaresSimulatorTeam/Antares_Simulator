@@ -21,12 +21,11 @@
 
 #include "main.h"
 
+#include <antares/date/date.h>
 #include <antares/study/study.h>
 
 #include "../menus.h"
 #include "../study.h"
-
-#include <antares/date/date.h>
 
 // Map
 #include "../../toolbox/components/map/component.h"
@@ -39,28 +38,28 @@
 #include "../../toolbox/components/mainpanel.h"
 
 // Jobs
-#include "../../toolbox/jobs.h"
-#include <antares/study/scenario-builder/sets.h>
+#include <ui/common/component/frame/registry.h>
+#include <ui/common/component/spotlight/spotlight.h>
 #include <ui/common/dispatcher/settings.h>
 #include <ui/common/lock.h>
-#include <ui/common/component/spotlight/spotlight.h>
-#include <ui/common/component/frame/registry.h>
+
+#include <antares/study/scenario-builder/sets.h>
+
+#include "../../toolbox/jobs.h"
 
 // Windows
-#include "../../windows/inspector.h"
-#include "../../windows/message.h"
-#include "../../windows/bindingconstraint/bindingconstraint.h"
-
 #include <wx/sizer.h>
 #include <wx/utils.h>
 #include <wx/wupdlock.h>
 
-#include "internal-ids.h"
-#include "internal-data.h"
-#include "../wait.h"
-
+#include "../../windows/bindingconstraint/bindingconstraint.h"
+#include "../../windows/inspector.h"
+#include "../../windows/message.h"
 #include "../../windows/options/advanced/advanced.h"
+#include "../wait.h"
 #include "application/study.h"
+#include "internal-data.h"
+#include "internal-ids.h"
 
 using namespace Yuni;
 
@@ -138,7 +137,6 @@ EVT_MENU(mnIDStudySessions, ApplWnd::evtOnStudySessions)
 // Simulation
 EVT_MENU(mnIDRunTheSimulation, ApplWnd::evtOnRunSimulation)
 EVT_MENU(mnIDRunTheTSGenerators, ApplWnd::evtOnRunTSGenerators)
-EVT_MENU(mnIDRunTheTSAnalyzer, ApplWnd::evtOnRunTSAnalyzer)
 EVT_MENU(mnIDRunTheConstraintsBuilder, ApplWnd::evtOnRunConstraintsBuilder)
 
 // Options
@@ -176,7 +174,6 @@ EVT_MENU(mnIDHelpPDFSystemMapEditorReferenceGuide,
 EVT_MENU(mnIDHelpPDFExamplesLibrary, ApplWnd::evtOnHelpPDFExamplesLibrary)
 EVT_MENU(mnIDHelpOnlineDocumentation, ApplWnd::evtOnHelpOnlineDocumentation)
 EVT_MENU(mnInternalLogMessage, ApplWnd::onLogMessage)
-EVT_MENU(mnIDLaunchAnalyzer, ApplWnd::evtLaunchAnalyzer)
 EVT_MENU(mnIDLaunchConstraintsBuilder, ApplWnd::evtLaunchConstraintsBuilder)
 
 // Context menu : Operator for selected cells (grid)
@@ -201,68 +198,68 @@ ApplWnd* ApplWnd::Instance()
     return gInstance;
 }
 
-ApplWnd::ApplWnd() :
- Component::Frame::WxLocalFrame(nullptr,
-                                wxID_ANY,
-                                wxT("Antares"),
-                                wxDefaultPosition,
-                                wxSize(minimalWidth, minimalHeight)),
- pMainSizer(nullptr),
- pMenu(nullptr),
- pMenuFile(nullptr),
- pMenuFileRecents(nullptr),
- pMenuEdit(nullptr),
- pMenuView(nullptr),
- pMenuInput(nullptr),
- pMenuInputCreation(nullptr),
- pMenuInputLastSaved(nullptr),
- pMenuOutput(nullptr),
- pMenuSimulation(nullptr),
- pMenuOptions(nullptr),
- pMenuGeographicTrimming(nullptr),
- pMenuAdequacyPatch(nullptr),
- pMenuWindow(nullptr),
- pMenuTools(nullptr),
- pMenuHelp(nullptr),
- pPopupMenuOperatorsGrid(nullptr),
- pMainMap(nullptr),
- pNotebook(nullptr),
- pSectionNotebook(nullptr),
- pMainPanel(nullptr),
- pageLoadTimeSeries(nullptr),
- pageLoadPrepro(nullptr),
- pageLoadCorrelation(nullptr),
- pageSolarTimeSeries(nullptr),
- pageSolarPrepro(nullptr),
- pageSolarCorrelation(nullptr),
- pageHydroTimeSeries(nullptr),
- pageHydroPrepro(nullptr),
- pageHydroCorrelation(nullptr),
- pageHydroAllocation(nullptr),
- pageWindTimeSeries(nullptr),
- pageWindPrepro(nullptr),
- pageWindPreproDailyProfile(nullptr),
- pageWindCorrelation(nullptr),
- pageThermalClusterList(nullptr),
- pageThermalTimeSeries(nullptr),
- pageThermalTimeSeriesFuelCost(nullptr),
- pageThermalTimeSeriesCO2Cost(nullptr),
- pageThermalPrepro(nullptr),
- pageThermalCommon(nullptr),
- pageRenewableClusterList(nullptr),
- pageRenewableCommon(nullptr),
- pageNodalOptim(nullptr),
- pWndBindingConstraints(nullptr),
- pGridSelectionOperator(new Component::Datagrid::Selection::CellCount()),
- pGridSelectionAttachedGrid(nullptr),
- pMapContextMenu(nullptr),
- pUserNotes(nullptr),
- pMainNotebookAlreadyHasItsComponents(false),
- pLogFlusherTimer(nullptr),
- pWndLogs(nullptr),
- pGuiReady(false),
- pUpdateCountLocker(0),
- pCurrentEquipmentPage(0)
+ApplWnd::ApplWnd():
+    Component::Frame::WxLocalFrame(nullptr,
+                                   wxID_ANY,
+                                   wxT("Antares"),
+                                   wxDefaultPosition,
+                                   wxSize(minimalWidth, minimalHeight)),
+    pMainSizer(nullptr),
+    pMenu(nullptr),
+    pMenuFile(nullptr),
+    pMenuFileRecents(nullptr),
+    pMenuEdit(nullptr),
+    pMenuView(nullptr),
+    pMenuInput(nullptr),
+    pMenuInputCreation(nullptr),
+    pMenuInputLastSaved(nullptr),
+    pMenuOutput(nullptr),
+    pMenuSimulation(nullptr),
+    pMenuOptions(nullptr),
+    pMenuGeographicTrimming(nullptr),
+    pMenuAdequacyPatch(nullptr),
+    pMenuWindow(nullptr),
+    pMenuTools(nullptr),
+    pMenuHelp(nullptr),
+    pPopupMenuOperatorsGrid(nullptr),
+    pMainMap(nullptr),
+    pNotebook(nullptr),
+    pSectionNotebook(nullptr),
+    pMainPanel(nullptr),
+    pageLoadTimeSeries(nullptr),
+    pageLoadPrepro(nullptr),
+    pageLoadCorrelation(nullptr),
+    pageSolarTimeSeries(nullptr),
+    pageSolarPrepro(nullptr),
+    pageSolarCorrelation(nullptr),
+    pageHydroTimeSeries(nullptr),
+    pageHydroPrepro(nullptr),
+    pageHydroCorrelation(nullptr),
+    pageHydroAllocation(nullptr),
+    pageWindTimeSeries(nullptr),
+    pageWindPrepro(nullptr),
+    pageWindPreproDailyProfile(nullptr),
+    pageWindCorrelation(nullptr),
+    pageThermalClusterList(nullptr),
+    pageThermalTimeSeries(nullptr),
+    pageThermalTimeSeriesFuelCost(nullptr),
+    pageThermalTimeSeriesCO2Cost(nullptr),
+    pageThermalPrepro(nullptr),
+    pageThermalCommon(nullptr),
+    pageRenewableClusterList(nullptr),
+    pageRenewableCommon(nullptr),
+    pageNodalOptim(nullptr),
+    pWndBindingConstraints(nullptr),
+    pGridSelectionOperator(new Component::Datagrid::Selection::CellCount()),
+    pGridSelectionAttachedGrid(nullptr),
+    pMapContextMenu(nullptr),
+    pUserNotes(nullptr),
+    pMainNotebookAlreadyHasItsComponents(false),
+    pLogFlusherTimer(nullptr),
+    pWndLogs(nullptr),
+    pGuiReady(false),
+    pUpdateCountLocker(0),
+    pCurrentEquipmentPage(0)
 {
     // Setting the global instance
     gInstance = this;
@@ -352,7 +349,9 @@ ApplWnd::~ApplWnd()
     // Because components may access to this class, we should
     // destroy them here to avoid a corrupt vtable.
     if (GetSizer())
+    {
         GetSizer()->Clear(true);
+    }
 }
 
 void ApplWnd::selectSystem()
@@ -360,7 +359,9 @@ void ApplWnd::selectSystem()
     assert(wxIsMainThread() == true and "Must be ran from the main thread");
 
     if (pNotebook)
+    {
         pNotebook->select(wxT("sys"), true);
+    }
 }
 
 void ApplWnd::evtOnContextMenuChangeOperator(wxCommandEvent& evt)
@@ -395,7 +396,9 @@ static inline void EnableItem(wxMenuBar* menu, int id, bool opened)
 {
     auto* item = menu->FindItem(id);
     if (item)
+    {
         item->Enable(opened);
+    }
 }
 
 void ApplWnd::evtOnUpdateGUIAfterStudyIO(bool opened)
@@ -407,7 +410,9 @@ void ApplWnd::evtOnUpdateGUIAfterStudyIO(bool opened)
 
     // No UI controls
     if (not pBigDaddy)
+    {
         return;
+    }
 
     // Close any opened windows
     Component::Spotlight::FrameClose();
@@ -478,12 +483,15 @@ void ApplWnd::evtOnUpdateGUIAfterStudyIO(bool opened)
         EnableItem(menu, mnIDViewNotes, opened);
         EnableItem(menu, mnIDViewLoad, opened);
 
-        EnableItem(
-          menu, mnIDViewSolar, opened && study->parameters.renewableGeneration.isAggregated());
-        EnableItem(
-          menu, mnIDViewWind, opened && study->parameters.renewableGeneration.isAggregated());
-        EnableItem(
-          menu, mnIDViewRenewable, opened && study->parameters.renewableGeneration.isClusters());
+        EnableItem(menu,
+                   mnIDViewSolar,
+                   opened && study->parameters.renewableGeneration.isAggregated());
+        EnableItem(menu,
+                   mnIDViewWind,
+                   opened && study->parameters.renewableGeneration.isAggregated());
+        EnableItem(menu,
+                   mnIDViewRenewable,
+                   opened && study->parameters.renewableGeneration.isClusters());
 
         EnableItem(menu, mnIDViewHydro, opened);
         EnableItem(menu, mnIDViewThermal, opened);
@@ -496,7 +504,6 @@ void ApplWnd::evtOnUpdateGUIAfterStudyIO(bool opened)
         // Simulation
         EnableItem(menu, mnIDRunTheSimulation, opened);
         EnableItem(menu, mnIDRunTheTSGenerators, opened);
-        EnableItem(menu, mnIDRunTheTSAnalyzer, opened);
         EnableItem(menu, mnIDRunTheConstraintsBuilder, opened);
 
         // Options
@@ -553,7 +560,9 @@ void ApplWnd::evtOnUpdateGUIAfterStudyIO(bool opened)
     // work properly.
     // This method will refresh the form as well
     if (not aboutToQuit)
+    {
         delayForceFocus();
+    }
 
     // Refresh
     GetSizer()->Layout();
@@ -603,13 +612,17 @@ void ApplWnd::updateOpenWindowsMenu()
 void ApplWnd::saveStudy()
 {
     if (CurrentStudyIsValid())
+    {
         Antares::SaveStudy();
+    }
 }
 
 void ApplWnd::saveStudyAs(const String& path, bool copyoutput, bool copyuserdata, bool copylogs)
 {
     if (CurrentStudyIsValid())
+    {
         Antares::SaveStudyAs(path, copyoutput, copyuserdata, copylogs);
+    }
 }
 
 void ApplWnd::exportMap(const Yuni::String& path,
@@ -620,8 +633,14 @@ void ApplWnd::exportMap(const Yuni::String& path,
                         Antares::Map::mapImageFormat format)
 {
     if (CurrentStudyIsValid())
-        Antares::ExportMap(
-          path, transparentBackground, backgroundColor, layers, nbSplitParts, format);
+    {
+        Antares::ExportMap(path,
+                           transparentBackground,
+                           backgroundColor,
+                           layers,
+                           nbSplitParts,
+                           format);
+    }
 }
 
 uint ApplWnd::mainNotebookCurrentEquipmentPage() const
@@ -637,19 +656,33 @@ void ApplWnd::onMainNotebookPageChanging(Component::Notebook::Page& page)
     pData->editCurrentLocation(page.caption());
 
     if (page.name() == wxT("load"))
+    {
         pCurrentEquipmentPage = Data::timeSeriesLoad;
+    }
     else if (page.name() == wxT("thermal"))
+    {
         pCurrentEquipmentPage = Data::timeSeriesThermal;
+    }
     else if (page.name() == wxT("renewable"))
+    {
         pCurrentEquipmentPage = Data::timeSeriesRenewable;
+    }
     else if (page.name() == wxT("solar"))
+    {
         pCurrentEquipmentPage = Data::timeSeriesSolar;
+    }
     else if (page.name() == wxT("wind"))
+    {
         pCurrentEquipmentPage = Data::timeSeriesWind;
+    }
     else if (page.name() == wxT("hydro"))
+    {
         pCurrentEquipmentPage = Data::timeSeriesHydro;
+    }
     else
+    {
         pCurrentEquipmentPage = 0;
+    }
 
     // Updating the menu EDIT
     {
@@ -680,20 +713,22 @@ void ApplWnd::onMainNotebookPageChanging(Component::Notebook::Page& page)
     }
 
     if (page.name() == wxT("bindingconstraints"))
+    {
         OnStudyConstraintModified(nullptr);
+    }
 
     // Notify any subscriber that the selection of the main notebook
     // has changed.
     OnMainNotebookChanged();
 }
 
-class JobLoadScenarioBuilder final : public Toolbox::Jobs::Job
+class JobLoadScenarioBuilder final: public Toolbox::Jobs::Job
 {
 public:
-    JobLoadScenarioBuilder(Data::Study& study) :
-     Toolbox::Jobs::Job(wxT("Scenario Builder"), wxT("Loading data"), "images/32x32/open.png"),
-     pStudy(study),
-     pSets(nullptr)
+    JobLoadScenarioBuilder(Data::Study& study):
+        Toolbox::Jobs::Job(wxT("Scenario Builder"), wxT("Loading data"), "images/32x32/open.png"),
+        pStudy(study),
+        pSets(nullptr)
     {
     }
 
@@ -737,7 +772,9 @@ void ApplWnd::onSectionNotebookPageChanging(Component::Notebook::Page& page)
     assert(wxIsMainThread() == true and "Must be ran from the main thread");
 
     if (pScenarioBuilderNotebook)
+    {
         pScenarioBuilderNotebook->select(wxT("load"), true);
+    }
 
     // Scenario Builder
     auto study = GetCurrentStudy();
@@ -772,8 +809,10 @@ void ApplWnd::onSystemParametersChanged()
 void ApplWnd::refreshHomePageOnRenewableModellingChanged(bool aggregated, bool init)
 {
     // Main window
-    for (auto s : {"wind", "solar"})
+    for (auto s: {"wind", "solar"})
+    {
         pNotebook->set_page_visibility(wxString(s), aggregated);
+    }
     pNotebook->set_page_visibility(wxString("renewable"), not aggregated);
 
     // Page selection after the renewable modelling changed
@@ -785,12 +824,16 @@ void ApplWnd::refreshHomePageOnRenewableModellingChanged(bool aggregated, bool i
         if (aggregated)
         {
             if (pNotebook->selected() == renewablePage)
+            {
                 pNotebook->select(wxT("wind"));
+            }
         }
         else
         {
             if (pNotebook->selected() == windPage || pNotebook->selected() == solarPage)
+            {
                 pNotebook->select(wxT("renewable"));
+            }
         }
         pNotebook->forceRefresh();
     }
@@ -798,8 +841,10 @@ void ApplWnd::refreshHomePageOnRenewableModellingChanged(bool aggregated, bool i
 
 void ApplWnd::refreshScenarioBuilderPagOnRenewableModellingChanged(bool aggregated)
 {
-    for (auto s : {"wind", "solar"})
+    for (auto s: {"wind", "solar"})
+    {
         pScenarioBuilderNotebook->set_page_visibility(wxString(s), aggregated);
+    }
 
     pScenarioBuilderNotebook->set_page_visibility(wxString("renewable"), not aggregated);
 }
@@ -816,7 +861,9 @@ void ApplWnd::onRenewableGenerationModellingChanged(bool init)
 {
     auto study = GetCurrentStudy();
     if (!study)
+    {
         return;
+    }
 
     const bool aggregated = study->parameters.renewableGeneration.isAggregated();
 
@@ -840,7 +887,9 @@ Component::Datagrid::Selection::IOperator* ApplWnd::gridOperatorSelectedCells() 
 void ApplWnd::disableGridOperatorIfGrid(wxGrid* grid)
 {
     if (pGridSelectionAttachedGrid == grid)
+    {
         gridOperatorSelectedCellsUpdateResult(nullptr);
+    }
 }
 
 void ApplWnd::title()
@@ -865,7 +914,9 @@ void ApplWnd::title(const wxString& s)
     assert(wxIsMainThread() == true and "Must be ran from the main thread");
     wxString t;
     if (StudyHasBeenModified())
+    {
         t << wxT("* ");
+    }
     t << (s.IsEmpty() ? wxString(wxT("<untitled>")) : s) << wxT(" - Antares Simulator")
 #ifndef NDEBUG
       << wxT(" - DEVELOPER PREVIEW")
@@ -892,13 +943,20 @@ bool ApplWnd::wouldYouLikeToSaveTheStudy()
             t << wxT("Would you like to save changes for the study \"")
               << wxStringFromUTF8(study->header.caption) << wxT("\" ?");
 
-            Window::Message message(
-              this, wxT("Save"), wxT("The study has been modified"), t, "images/misc/save.png");
+            Window::Message message(this,
+                                    wxT("Save"),
+                                    wxT("The study has been modified"),
+                                    t,
+                                    "images/misc/save.png");
             message.add(Window::Message::btnSaveChanges);
             if (IsGUIAboutToQuit())
+            {
                 message.add(Window::Message::btnQuitWithoutSaving, false, 15);
+            }
             else
+            {
                 message.add(Window::Message::btnDiscard, false, 15);
+            }
             message.add(Window::Message::btnCancel, true);
 
             switch (message.showModal())
@@ -962,35 +1020,65 @@ void ApplWnd::selectAllDefaultPages()
     assert(wxIsMainThread() == true and "Must be ran from the main thread");
 
     if (pageLoadTimeSeries)
+    {
         pageLoadTimeSeries->select();
+    }
     if (pageSolarTimeSeries)
+    {
         pageSolarTimeSeries->select();
+    }
     if (pageHydroTimeSeries)
+    {
         pageHydroTimeSeries->select();
+    }
     if (pageWindTimeSeries)
+    {
         pageWindTimeSeries->select();
+    }
     if (pageThermalClusterList)
+    {
         pageThermalClusterList->select();
+    }
     if (pageThermalCommon)
+    {
         pageThermalCommon->select();
+    }
     if (pageRenewableClusterList)
+    {
         pageRenewableClusterList->select();
+    }
     if (pageRenewableCommon)
+    {
         pageRenewableCommon->select();
+    }
     if (pageLinksParameters)
+    {
         pageLinksParameters->select();
+    }
     if (pageLinksNTC)
+    {
         pageLinksNTC->select();
+    }
     if (pageWindPreproDailyProfile)
+    {
         pageWindPreproDailyProfile->select();
+    }
     if (pWndBindingConstraints)
+    {
         pWndBindingConstraints->selectDefaultPage();
+    }
     if (pageNodalOptim)
+    {
         pageNodalOptim->select();
+    }
     if (pSectionNotebook)
+    {
         pSectionNotebook->select(wxT("input"));
+    }
     if (pScenarioBuilderNotebook)
+    {
         pScenarioBuilderNotebook->select(wxT("load"));
+    }
 }
 
 void ApplWnd::hideAllComponentsRelatedToTheStudy()
@@ -1026,7 +1114,9 @@ void ApplWnd::evtOnContextMenuMap(int x, int y)
     {
         // create the menu if not already exist
         if (not pMapContextMenu)
+        {
             pMapContextMenu = createMenuEdit();
+        }
         pMainMap->PopupMenu(pMapContextMenu, x, y);
     }
 }
@@ -1045,7 +1135,9 @@ bool ApplWnd::isScenarioBuilderOpened() const
 void ApplWnd::backToInputData()
 {
     if (pSectionNotebook)
+    {
         pSectionNotebook->select(wxT("input"), true);
+    }
 }
 
 void ApplWnd::evtOnExecuteQueueEvent(wxCommandEvent&)

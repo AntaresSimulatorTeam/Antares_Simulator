@@ -275,7 +275,6 @@ add_subdirectory(expressions)   #modeler expressions (AST)
 add_subdirectory(optimisation)  #optimisation APIs
 add_subdirectory(study)	        #antares study model
 add_subdirectory(solver)	    #antares solver and all associated libs
-add_subdirectory(analyzer)      #antares analyser
 add_subdirectory(modeler)       #antares modeler
 
 # Tools
