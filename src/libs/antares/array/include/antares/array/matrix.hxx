@@ -1260,7 +1260,8 @@ bool Matrix<T, ReadWriteT>::internalSaveCSVFile(const AnyString& filename,
                                                 PredicateT& predicate,
                                                 bool saveEvenIfAllZero) const
 {
-    JIT::just_in_time_manager jit_mgr(jit, filename);
+    // TODO
+    JIT::just_in_time_manager jit_mgr(jit, std::string(filename));
 
     jit_mgr.record_current_jit_state(width, height);
 
