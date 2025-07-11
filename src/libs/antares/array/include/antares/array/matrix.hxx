@@ -441,18 +441,16 @@ bool Matrix<T, ReadWriteT>::loadFromCSVFile(const fs::path& filepath,
 {
     assert(not filepath.empty() and "Matrix<>:: loadFromCSVFile: empty filepath");
 
-    std::string path_str = Data::to_utf8_string(filepath);
-
     // As the loading might be expensive, especially when dealing with
     // numerous matrices, we may want to delay this loading (a `lazy` mode)
     if (JIT::enabled and not(options & optImmediate))
     {
-        return internalLoadJITData(path_str, minWidth, maxHeight, options);
+        return internalLoadJITData(filepath, minWidth, maxHeight, options);
     }
     else
     {
         // Reading data from file
-        return internalLoadCSVFile(path_str, minWidth, maxHeight, options, buffer);
+        return internalLoadCSVFile(filepath, minWidth, maxHeight, options, buffer);
     }
 }
 
