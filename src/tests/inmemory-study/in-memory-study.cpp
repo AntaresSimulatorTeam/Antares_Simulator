@@ -188,6 +188,26 @@ ScenarioBuilderRule::ScenarioBuilderRule(Study& study)
 }
 
 // =====================
+// Simulation observer
+// =====================
+void TestingSimulationObserver::notifyHebdoProblem(const PROBLEME_HEBDO& problemeHebdo,
+                                                   int optimizationNumber,
+                                                   std::string_view name)
+{
+    auto* pb = problemeHebdo.ProblemeAResoudre.get();
+    std::string nameStr(name.begin(), name.end());
+    auto& toInsert = problems[std::make_pair(optimizationNumber, nameStr)];
+
+    for (int var = 0; var < pb->NombreDeVariables; var++)
+    {
+        const std::string& varName = pb->NomDesVariables[var];
+        toInsert.Xmin[varName] = pb->Xmin[var];
+        toInsert.Xmax[varName] = pb->Xmax[var];
+        toInsert.Objective[varName] = pb->CoutLineaire[var];
+    }
+}
+
+// =====================
 // Simulation handler
 // =====================
 
@@ -212,7 +232,7 @@ StudyBuilder::StudyBuilder():
 {
     // Make logs shrink to errors (and higher) only
     logs.verbosityLevel = Logs::Verbosity::Error::level;
-
+    study->parameters.namedProblems = true;
     initializeStudy(study.get());
 }
 

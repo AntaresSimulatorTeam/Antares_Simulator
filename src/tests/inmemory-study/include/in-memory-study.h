@@ -20,6 +20,7 @@
  */
 #pragma once
 #define WIN32_LEAN_AND_MEAN
+#include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/solver/simulation/economy.h"
 #include "antares/solver/simulation/simulation.h"
 #include "antares/study/scenario-builder/rules.h"
@@ -198,6 +199,23 @@ private:
 // Simulation handler
 // =====================
 
+class TestingSimulationObserver: public Solver::Simulation::ISimulationObserver
+{
+public:
+    struct SingleProblem
+    {
+        std::map<std::string, double> Xmin;
+        std::map<std::string, double> Xmax;
+        std::map<std::string, double> Objective;
+    };
+
+    std::map<std::pair<int, std::string>, SingleProblem> problems;
+
+    void notifyHebdoProblem(const PROBLEME_HEBDO& problemeHebdo,
+                            int optimizationNumber,
+                            std::string_view name) override;
+};
+
 class SimulationHandler
 {
 public:
@@ -223,13 +241,19 @@ public:
         return *simulation_;
     }
 
+public:
+    const TestingSimulationObserver& getObserver() const
+    {
+        return observer_;
+    }
+
 private:
     std::shared_ptr<ISimulation<Economy>> simulation_;
     Benchmarking::DurationCollector durationCollector_;
     Settings settings_;
     Data::Study& study_;
     NullResultWriter resultWriter_;
-    NullSimulationObserver observer_;
+    TestingSimulationObserver observer_;
 };
 
 // =========================
