@@ -7,5 +7,6 @@ var classOutputRetriever =
     [ "load", "classOutputRetriever.html#a0f7399ff0538429f8e9686c9aed9190c", null ],
     [ "overallCost", "classOutputRetriever.html#a5d41ab44ccf44844d9dce23a12f6e443", null ],
     [ "thermalGeneration", "classOutputRetriever.html#a9828743599c8be20e11d80b80c095a0a", null ],
-    [ "thermalNbUnitsON", "classOutputRetriever.html#a804ccd3df5b9d99ea117da933de2f9c8", null ]
+    [ "thermalNbUnitsON", "classOutputRetriever.html#a804ccd3df5b9d99ea117da933de2f9c8", null ],
+    [ "withdrawalForSTSgroup", "classOutputRetriever.html#af6d0f823fffaaa0c6d8cb0aa94fa7585", null ]
 ];
