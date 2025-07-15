@@ -29,8 +29,8 @@ public:
     struct Line
     {
         std::string groupName;
-        int year;
-        int chronicle;
+        int year{0};
+        int chronicle{0};
     };
 
     Line parseLine(const std::string& line);
