@@ -26,8 +26,9 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "ScenarioBuilderBaseVisitor.h"
 #include "antares/scenarioGroupParser/ScenarioGroupParser.h"
+
+#include "ScenarioBuilderBaseVisitor.h"
 
 using namespace std::string_literals;
 using namespace Antares;
@@ -49,21 +50,6 @@ struct ScenarioBuilderFixture
 {
     ScenarioGroupParser group_parser;
     CustomErrorListener customErrorListener;
-
-    void prepare(const std::string& line, bool withErrorListener = false)
-    {
-        antlr4::ANTLRInputStream input(line);
-        ScenarioBuilderLexer lexer(&input);
-        antlr4::CommonTokenStream tokens(&lexer);
-        ScenarioBuilderParser parser(&tokens);
-        if (withErrorListener)
-        {
-            lexer.removeErrorListeners();
-            parser.removeErrorListeners();
-            lexer.addErrorListener(&customErrorListener);
-            parser.addErrorListener(&customErrorListener);
-        }
-    }
 };
 
 BOOST_FIXTURE_TEST_CASE(dont_accept_strings_for_year, ScenarioBuilderFixture)
