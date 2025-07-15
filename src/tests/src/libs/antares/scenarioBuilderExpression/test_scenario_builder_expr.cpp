@@ -54,15 +54,13 @@ struct ScenarioBuilderFixture
 
 BOOST_FIXTURE_TEST_CASE(dont_accept_strings_for_year, ScenarioBuilderFixture)
 {
-    group_parser.parseLine("groupe,year=0"s, &customErrorListener);
-    BOOST_REQUIRE_THROW(parser->rules(),
+    BOOST_REQUIRE_THROW(group_parser.parseLine("groupe,year=0"s, &customErrorListener),
                         std::runtime_error); // Expecting a runtime error due to mismatched input
 }
 
 BOOST_FIXTURE_TEST_CASE(dont_accept_strings_for_scenario, ScenarioBuilderFixture)
 {
-    group_parser.parseLine("groupe,0=scenario"s, &customErrorListener);
-    BOOST_REQUIRE_THROW(parser->rules(),
+    BOOST_REQUIRE_THROW(group_parser.parseLine("groupe,0=scenario"s, &customErrorListener),
                         std::runtime_error); // Expecting a runtime error due to mismatched input
 }
 
