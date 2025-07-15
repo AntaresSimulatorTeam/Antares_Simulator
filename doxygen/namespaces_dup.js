@@ -695,7 +695,6 @@ var namespaces_dup =
         [ "AreaLinkRemove", "libs_2antares_2study_2area_2links_8cpp.html#a637a0125c7752f7693dd0a543962ff62", null ],
         [ "AreaLinksLoadFromFolder", "libs_2antares_2study_2include_2antares_2study_2area_2area_8h.html#a36efde59a3b80e772be65b2a296be4b4", null ],
         [ "AreaLinksLoadFromFolder", "libs_2antares_2study_2area_2links_8cpp.html#a4c24e592fa1ae6a0c2f065307d0a83ed", null ],
-        [ "AreaLinksSaveToFolder", "libs_2antares_2study_2area_2links_8cpp.html#aacaf0c89c17ee3695c3384bb89ff9fd5", null ],
         [ "AreaListAddFromNames", "study_2area_2list_8cpp.html#a73366c3dc97c520da68a09a5ce116995", null ],
         [ "AreaListAddLink", "study_2area_2list_8cpp.html#a5d17455c0381550ef5a9780f57319e55", null ],
         [ "AreaListClearAllLinks", "libs_2antares_2study_2include_2antares_2study_2area_2area_8h.html#a7f700a21563ebd6e80d684c22d14d188", null ],
@@ -729,8 +728,7 @@ var namespaces_dup =
         [ "InterAreaCorrelationLoadFromFile", "libs_2antares_2correlation_2correlation_8cpp.html#a7cffb742981172383c67523fa98f59fc", null ],
         [ "InterAreaCorrelationLoadFromIniFile", "libs_2antares_2correlation_2correlation_8cpp.html#a9a1f1ad410f2e473f8391aec20ca7c05", null ],
         [ "InterAreaCorrelationResetMatrix", "libs_2antares_2correlation_2include_2antares_2correlation_2correlation_8h.html#a3044629170a3c5e770d14b52e62e60bc", null ],
-        [ "InterAreaCorrelationSaveToFile", "libs_2antares_2correlation_2correlation_8cpp.html#a3e41b0cbe29d425086f931e08113c076", null ],
-        [ "InterAreaCorrelationSaveToIniFile", "libs_2antares_2correlation_2correlation_8cpp.html#ac76207f1c1087e2604f3a91c328d4572", null ],
+        [ "InterAreaCorrelationSaveToFile", "libs_2antares_2correlation_2include_2antares_2correlation_2correlation_8h.html#a3e41b0cbe29d425086f931e08113c076", null ],
         [ "listOfFilesAnDirectoriesToKeep", "cleaner-v20_8cpp.html#a896541127912ce5951f0212f81a8da99", null ],
         [ "mpsExportStatusToString", "fwd_8cpp.html#a42f97d78966f83b64b28b28c785ad5cf", null ],
         [ "NumberOfCoresModeToCString", "fwd_8cpp.html#a50dcf1856d205ee26921f1db618f50f1", null ],
@@ -741,7 +739,6 @@ var namespaces_dup =
         [ "requires", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a67251db487558e91d37243c1407f9c50", null ],
         [ "saveAreaAdequacyPatchIniFile", "study_2area_2list_8cpp.html#a01a204bd776cc34a901644b0ea8b8414", null ],
         [ "saveAreaAdequacyPatchIniFile", "libs_2antares_2study_2include_2antares_2study_2area_2area_8h.html#abc6de025eddd638e9587d4e8d1544797", null ],
-        [ "saveAreaLinksConfigurationFileToFolder", "libs_2antares_2study_2area_2links_8cpp.html#aee8bac329368f60e55e753260b54a68e", null ],
         [ "saveAreaLinksTimeSeriesToFolder", "libs_2antares_2study_2area_2links_8cpp.html#abb9322722c39e99acc2744bb840ffd6a", null ],
         [ "saveAreaOptimisationIniFile", "study_2area_2list_8cpp.html#a2ec69542b1d8b27ef301f0216a8c6c74", null ],
         [ "saveAreaOptimisationIniFile", "libs_2antares_2study_2include_2antares_2study_2area_2area_8h.html#a80e97be70e5aec000a5140dc885a170c", null ],
@@ -2473,7 +2470,6 @@ var namespaces_dup =
     ] ],
     [ "conftest", null, [
       [ "antares_simu_path", "run-study-tests_2conftest_8py.html#a75aa74dbf5a8cc876d721a29b81cf470", null ],
-      [ "exe_kirchhoff_path", "kirchhoff-cbuilder_2conftest_8py.html#af676438624e133e4ff5ce07059e41804", null ],
       [ "named_mps_problems", "run-study-tests_2conftest_8py.html#ab14b209de745d00c3dea31b7fc8b55be", null ],
       [ "ortools_solver", "examples_2conftest_8py.html#a54ae42864d0cd3a8e733dfdf653f8274", null ],
       [ "parallel", "run-study-tests_2conftest_8py.html#a9740f129861e2a7c9214e69368a0a87f", null ],
@@ -2587,13 +2583,6 @@ var namespaces_dup =
       [ "json_collector", "json__collector_8py.html#ab3452d8338e49d9dea1fba125b0559aa", null ],
       [ "ROOT_FOLDER", "json__collector_8py.html#a0c62b73bc38896e7325ed89ea6a9346c", null ],
       [ "study_paths", "json__collector_8py.html#a3a9035b9088b08d576bc6e8981fdf65d", null ]
-    ] ],
-    [ "kirchhoff_pytest", null, [
-      [ "StudyReference", "classkirchhoff__pytest_1_1StudyReference.html", "classkirchhoff__pytest_1_1StudyReference" ],
-      [ "test_kirchhoff_0", "kirchhoff__pytest_8py.html#a9bbe474c449a33cdaea11272cec33abc", null ],
-      [ "test_kirchhoff_1", "kirchhoff__pytest_8py.html#aca9a5f715b439c280980c79eaf50260e", null ],
-      [ "test_kirchhoff_2", "kirchhoff__pytest_8py.html#a7152ba6f8fe9623a2b248f23efe89289", null ],
-      [ "study_list", "kirchhoff__pytest_8py.html#a5f13434c9209a1c8a19937cae46ab80e", null ]
     ] ],
     [ "LocalPolicy", "namespaceLocalPolicy.html", [
       [ "PolicyKey", "namespaceLocalPolicy.html#a47b0c7226dcf5d16ee301e7bbc468b14", null ],

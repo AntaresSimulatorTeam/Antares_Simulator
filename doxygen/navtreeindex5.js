@@ -1,6 +1,5 @@
 var NAVTREEINDEX5 =
 {
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1AdequacyPatchAreaGrid.html#a243fb1b152458a834968c32f5bc9c39a":[8,0,0,2,0,0,3,2],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1AdequacyPatchAreaGrid.html#a252b77b48f93ca7d808943ea01264812":[8,0,0,2,0,0,3,8],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1AdequacyPatchAreaGrid.html#a3ef326b075d374b1e5d908e2b19b4ede":[8,0,0,2,0,0,3,12],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1AdequacyPatchAreaGrid.html#a3fc5fa66db7fcdda1df18a2c833d4db8":[8,0,0,2,0,0,3,4],
@@ -249,5 +248,6 @@ var NAVTREEINDEX5 =
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CorrelationMatrix_1_1IDatasource.html#a665c8f2175918c665a962aab6766d081":[8,0,0,2,0,0,71,0,12],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CorrelationMatrix_1_1IDatasource.html#a9fc4de44914a2bc3204edf90645b9505":[8,0,0,2,0,0,71,0,7],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CorrelationMatrix_1_1IDatasource.html#aa30efebdf729c39f12f9f0849224ae14":[8,0,0,2,0,0,71,0,10],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CorrelationMatrix_1_1IDatasource.html#abd830afc47b0568e16b67d9f82667e21":[8,0,0,2,0,0,71,0,8]
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CorrelationMatrix_1_1IDatasource.html#abd830afc47b0568e16b67d9f82667e21":[8,0,0,2,0,0,71,0,8],
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CreditModulations.html":[8,0,0,2,0,0,10]
 };

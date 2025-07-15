@@ -8,6 +8,5 @@ var classAntares_1_1Data_1_1ScenarioBuilder_1_1ntcTSNumberData =
     [ "get_prefix", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ntcTSNumberData.html#aa4b9374741272c16020ed8062ac06846", null ],
     [ "get_tsGenCount", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ntcTSNumberData.html#a3bd0cc932256a0b94c6b85f843cbcf68", null ],
     [ "reset", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ntcTSNumberData.html#abe0cb793bae7e3ae765333adee91eb5a", null ],
-    [ "saveToINIFile", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ntcTSNumberData.html#a4ae391be2df70352dd95b531b2397897", null ],
     [ "setTSnumber", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ntcTSNumberData.html#a8b1bdd3e8aebed616f832ff17354d212", null ]
 ];

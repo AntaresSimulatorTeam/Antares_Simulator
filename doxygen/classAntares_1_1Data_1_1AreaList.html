@@ -228,12 +228,6 @@ template&lt;class PredicateT &gt; </td></tr>
 <tr class="memitem:a9c307ced045f62ff3eae9a4fa79ff987"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaList.html#a9c307ced045f62ff3eae9a4fa79ff987">loadListFromFile</a> (const std::filesystem::path &amp;filename)</td></tr>
 <tr class="memdesc:a9c307ced045f62ff3eae9a4fa79ff987"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill the list of areas from an input file.  <a href="classAntares_1_1Data_1_1AreaList.html#a9c307ced045f62ff3eae9a4fa79ff987">More...</a><br /></td></tr>
 <tr class="separator:a9c307ced045f62ff3eae9a4fa79ff987"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b333dc45ba1db775fbe18a4250e5f0a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaList.html#a1b333dc45ba1db775fbe18a4250e5f0a">saveToFolder</a> (const AnyString &amp;folder) const</td></tr>
-<tr class="memdesc:a1b333dc45ba1db775fbe18a4250e5f0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save all informations about areas into a folder (-&gt; input/generalData)  <a href="classAntares_1_1Data_1_1AreaList.html#a1b333dc45ba1db775fbe18a4250e5f0a">More...</a><br /></td></tr>
-<tr class="separator:a1b333dc45ba1db775fbe18a4250e5f0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae37cc5d0b255e8a791c39204a2fe563e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaList.html#ae37cc5d0b255e8a791c39204a2fe563e">saveListToFile</a> (const AnyString &amp;filename) const</td></tr>
-<tr class="memdesc:ae37cc5d0b255e8a791c39204a2fe563e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write the list of areas into a file.  <a href="classAntares_1_1Data_1_1AreaList.html#ae37cc5d0b255e8a791c39204a2fe563e">More...</a><br /></td></tr>
-<tr class="separator:ae37cc5d0b255e8a791c39204a2fe563e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ac3d8c5b01e4f25868257f32befa80d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaList.html#a1ac3d8c5b01e4f25868257f32befa80d">saveLinkListToBuffer</a> (Yuni::Clob &amp;buffer) const</td></tr>
 <tr class="memdesc:a1ac3d8c5b01e4f25868257f32befa80d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write the list of all links into a file.  <a href="classAntares_1_1Data_1_1AreaList.html#a1ac3d8c5b01e4f25868257f32befa80d">More...</a><br /></td></tr>
 <tr class="separator:a1ac3d8c5b01e4f25868257f32befa80d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -386,7 +380,7 @@ const <a class="el" href="classAntares_1_1Data_1_1Area.html">Area</a> *&#160;</t
 <div class="line">    ...</div>
 <div class="line">    c = c-&gt;next;</div>
 <div class="line">}</div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1AreaList_html_aa431d0a45abd90c77f87c4b457e1cb3c"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaList.html#aa431d0a45abd90c77f87c4b457e1cb3c">Antares::Data::AreaList::AreaList</a></div><div class="ttdeci">AreaList(Study &amp;study)</div><div class="ttdoc">Default constructor.</div><div class="ttdef"><b>Definition:</b> list.cpp:382</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1AreaList_html_aa431d0a45abd90c77f87c4b457e1cb3c"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaList.html#aa431d0a45abd90c77f87c4b457e1cb3c">Antares::Data::AreaList::AreaList</a></div><div class="ttdeci">AreaList(Study &amp;study)</div><div class="ttdoc">Default constructor.</div><div class="ttdef"><b>Definition:</b> list.cpp:384</div></div>
 </div><!-- fragment --><p>It is possible to directly access to an area via its index : </p><div class="fragment"><div class="line"><a class="code" href="classAntares_1_1Data_1_1AreaList.html#aa431d0a45abd90c77f87c4b457e1cb3c">AreaList</a>* l;</div>
 <div class="line">...</div>
 <div class="line">&lt;<span class="keywordflow">do</span> some stuff here to fill the area list&gt;</div>
@@ -752,61 +746,6 @@ const <a class="el" href="classAntares_1_1Data_1_1Area.html">Area</a> *&#160;</t
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A non-zero value if the operation was successful, 0 otherwise </dd></dl>
-
-</div>
-</div>
-<a id="ae37cc5d0b255e8a791c39204a2fe563e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae37cc5d0b255e8a791c39204a2fe563e">&#9670;&nbsp;</a></span>saveListToFile()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool Antares::Data::AreaList::saveListToFile </td>
-          <td>(</td>
-          <td class="paramtype">const AnyString &amp;&#160;</td>
-          <td class="paramname"><em>filename</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Write the list of areas into a file. </p>
-<p>The file structure is merely composed by all names of areas, one line one area</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">filename</td><td>The file to read </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>A non-zero value if the operation was successful, 0 otherwise </dd></dl>
-
-</div>
-</div>
-<a id="a1b333dc45ba1db775fbe18a4250e5f0a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1b333dc45ba1db775fbe18a4250e5f0a">&#9670;&nbsp;</a></span>saveToFolder()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool Antares::Data::AreaList::saveToFolder </td>
-          <td>(</td>
-          <td class="paramtype">const AnyString &amp;&#160;</td>
-          <td class="paramname"><em>folder</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Save all informations about areas into a folder (-&gt; input/generalData) </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">l</td><td>The list of areas </td></tr>
-    <tr><td class="paramname">folder</td><td>The target folder </td></tr>
-  </table>
-  </dd>
-</dl>
 
 </div>
 </div>

@@ -175,76 +175,77 @@ $(document).ready(function(){initNavTree('hydroLevelsData_8h_source.html',''); i
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html#adc6752b717f5145274e5c6c9ff523c90">reset</a>(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; study) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html#a0b42ed1892cfe13f1785f5a51997a9e9">saveToINIFile</a>(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; study, Yuni::IO::File::Stream&amp; file) <span class="keyword">const override</span>;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html#abdbaf82f578b6a8d6242ed9873967b32">setTSnumber</a>(uint index, uint year, <span class="keywordtype">double</span> value);</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    uint width() <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">#ifdef BUILD_UI</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordtype">void</span> saveToINIFile(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; study, Yuni::IO::File::Stream&amp; file) <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html#abdbaf82f578b6a8d6242ed9873967b32">setTSnumber</a>(uint index, uint year, <span class="keywordtype">double</span> value);</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    uint height() <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    uint width() <span class="keyword">const override</span>;</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordtype">double</span> get_value(uint x, uint y) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    uint height() <span class="keyword">const override</span>;</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordtype">void</span> set_value(uint x, uint y, <span class="keywordtype">double</span> value);</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordtype">double</span> get_value(uint x, uint y) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html#a852d15c068492fc02e8cd9315d9320bd">apply</a>(<a class="code" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; study) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keywordtype">void</span> set_value(uint x, uint y, <span class="keywordtype">double</span> value);</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <a class="code" href="classAntares_1_1Matrix.html">MatrixType</a> pHydroLevelsRules;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="comment">// prefix to be added when calling saveToINIFileHydroLevel</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keyword">const</span> std::string addToPrefix_;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    std::function&lt;void(<a class="code" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp;, <a class="code" href="classAntares_1_1Matrix.html">MatrixType</a>&amp;)&gt; applyToTarget_;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html#a852d15c068492fc02e8cd9315d9320bd">apply</a>(<a class="code" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; study) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <a class="code" href="classAntares_1_1Matrix.html">MatrixType</a> pHydroLevelsRules;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="comment">// prefix to be added when calling saveToINIFileHydroLevel</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keyword">const</span> std::string addToPrefix_;</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;}; <span class="comment">// class hydroLevelsData</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    std::function&lt;void(<a class="code" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp;, <a class="code" href="classAntares_1_1Matrix.html">MatrixType</a>&amp;)&gt; applyToTarget_;</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="comment">// class hydroLevelsData : inline functions</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;}; <span class="comment">// class hydroLevelsData</span></div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
-<div class="line"><a name="l00093"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html#abdbaf82f578b6a8d6242ed9873967b32">   93</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html#abdbaf82f578b6a8d6242ed9873967b32">hydroLevelsData::setTSnumber</a>(uint areaindex, uint year, <span class="keywordtype">double</span> value)</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;{</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    assert(areaindex &lt; pHydroLevelsRules.<a class="code" href="classAntares_1_1Matrix.html#ad4320bd2dc03fd11887d3ba350c6c8ef">width</a>);</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordflow">if</span> (year &lt; pHydroLevelsRules.<a class="code" href="classAntares_1_1Matrix.html#a0b5614256a04ece0ea54b8aad7e6980c">height</a>)</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    {</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        pHydroLevelsRules[areaindex][year] = value;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    }</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;}</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="keyword">inline</span> uint hydroLevelsData::width()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordflow">return</span> pHydroLevelsRules.<a class="code" href="classAntares_1_1Matrix.html#ad4320bd2dc03fd11887d3ba350c6c8ef">width</a>;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;}</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="keyword">inline</span> uint hydroLevelsData::height()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keywordflow">return</span> pHydroLevelsRules.<a class="code" href="classAntares_1_1Matrix.html#a0b5614256a04ece0ea54b8aad7e6980c">height</a>;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;}</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">double</span> hydroLevelsData::get_value(uint x, uint y)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="keywordflow">return</span> pHydroLevelsRules.<a class="code" href="classAntares_1_1Matrix.html#a74c6c7ead4e77284edea439f5eedc230">entry</a>[y][x];</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;}</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> initLevelApply(Study&amp; study, <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;double&gt;</a>&amp; matrix)</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;{</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    study.scenarioInitialHydroLevels.copyFrom(matrix);</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;}</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> finalLevelApply(Study&amp; study, <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;double&gt;</a>&amp; matrix)</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;{</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    study.scenarioFinalHydroLevels.copyFrom(matrix);</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;}</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160; </div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;} <span class="comment">// namespace ScenarioBuilder</span></div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;} <span class="comment">// namespace Data</span></div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;} <span class="comment">// namespace Antares</span></div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160; </div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __LIBS_STUDY_SCENARIO_BUILDER_DATA_HYDRO_LEVELS_H__</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="comment">// class hydroLevelsData : inline functions</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
+<div class="line"><a name="l00095"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html#abdbaf82f578b6a8d6242ed9873967b32">   95</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html#abdbaf82f578b6a8d6242ed9873967b32">hydroLevelsData::setTSnumber</a>(uint areaindex, uint year, <span class="keywordtype">double</span> value)</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;{</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    assert(areaindex &lt; pHydroLevelsRules.<a class="code" href="classAntares_1_1Matrix.html#ad4320bd2dc03fd11887d3ba350c6c8ef">width</a>);</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordflow">if</span> (year &lt; pHydroLevelsRules.<a class="code" href="classAntares_1_1Matrix.html#a0b5614256a04ece0ea54b8aad7e6980c">height</a>)</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    {</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        pHydroLevelsRules[areaindex][year] = value;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    }</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;}</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="keyword">inline</span> uint hydroLevelsData::width()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keywordflow">return</span> pHydroLevelsRules.<a class="code" href="classAntares_1_1Matrix.html#ad4320bd2dc03fd11887d3ba350c6c8ef">width</a>;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;}</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="keyword">inline</span> uint hydroLevelsData::height()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <span class="keywordflow">return</span> pHydroLevelsRules.<a class="code" href="classAntares_1_1Matrix.html#a0b5614256a04ece0ea54b8aad7e6980c">height</a>;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;}</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">double</span> hydroLevelsData::get_value(uint x, uint y)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keywordflow">return</span> pHydroLevelsRules.<a class="code" href="classAntares_1_1Matrix.html#a74c6c7ead4e77284edea439f5eedc230">entry</a>[y][x];</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;}</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> initLevelApply(Study&amp; study, <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;double&gt;</a>&amp; matrix)</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;{</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    study.scenarioInitialHydroLevels.copyFrom(matrix);</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;}</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> finalLevelApply(Study&amp; study, <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;double&gt;</a>&amp; matrix)</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;{</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    study.scenarioFinalHydroLevels.copyFrom(matrix);</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;}</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160; </div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;} <span class="comment">// namespace ScenarioBuilder</span></div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;} <span class="comment">// namespace Data</span></div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;} <span class="comment">// namespace Antares</span></div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160; </div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __LIBS_STUDY_SCENARIO_BUILDER_DATA_HYDRO_LEVELS_H__</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1ScenarioBuilder_1_1dataInterface_html"><div class="ttname"><a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1dataInterface.html">Antares::Data::ScenarioBuilder::dataInterface</a></div><div class="ttdoc">Interface for scenario builder data (time series, hydro levels, ...)</div><div class="ttdef"><b>Definition:</b> scBuilderDataInterface.h:37</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData_html"><div class="ttname"><a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html">Antares::Data::ScenarioBuilder::hydroLevelsData</a></div><div class="ttdoc">Rules for hydro levels, for all years and areas.</div><div class="ttdef"><b>Definition:</b> hydroLevelsData.h:38</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData_html_a0b42ed1892cfe13f1785f5a51997a9e9"><div class="ttname"><a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html#a0b42ed1892cfe13f1785f5a51997a9e9">Antares::Data::ScenarioBuilder::hydroLevelsData::saveToINIFile</a></div><div class="ttdeci">void saveToINIFile(const Study &amp;study, Yuni::IO::File::Stream &amp;file) const override</div><div class="ttdoc">Export the data into a mere INI file.</div><div class="ttdef"><b>Definition:</b> hydroLevelsData.cpp:48</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData_html_a852d15c068492fc02e8cd9315d9320bd"><div class="ttname"><a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html#a852d15c068492fc02e8cd9315d9320bd">Antares::Data::ScenarioBuilder::hydroLevelsData::apply</a></div><div class="ttdeci">bool apply(Study &amp;study) override</div><div class="ttdoc">Apply the changes to the study corresponding data (time series, hydro levels, ...)</div><div class="ttdef"><b>Definition:</b> hydroLevelsData.cpp:83</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData_html_abdbaf82f578b6a8d6242ed9873967b32"><div class="ttname"><a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html#abdbaf82f578b6a8d6242ed9873967b32">Antares::Data::ScenarioBuilder::hydroLevelsData::setTSnumber</a></div><div class="ttdeci">void setTSnumber(uint index, uint year, double value)</div><div class="ttdoc">Assign a single value.</div><div class="ttdef"><b>Definition:</b> hydroLevelsData.h:93</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData_html_adc6752b717f5145274e5c6c9ff523c90"><div class="ttname"><a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html#adc6752b717f5145274e5c6c9ff523c90">Antares::Data::ScenarioBuilder::hydroLevelsData::reset</a></div><div class="ttdeci">bool reset(const Study &amp;study) override</div><div class="ttdoc">Reset data from the study.</div><div class="ttdef"><b>Definition:</b> hydroLevelsData.cpp:38</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData_html_a852d15c068492fc02e8cd9315d9320bd"><div class="ttname"><a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html#a852d15c068492fc02e8cd9315d9320bd">Antares::Data::ScenarioBuilder::hydroLevelsData::apply</a></div><div class="ttdeci">bool apply(Study &amp;study) override</div><div class="ttdoc">Apply the changes to the study corresponding data (time series, hydro levels, ...)</div><div class="ttdef"><b>Definition:</b> hydroLevelsData.cpp:86</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData_html_abdbaf82f578b6a8d6242ed9873967b32"><div class="ttname"><a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html#abdbaf82f578b6a8d6242ed9873967b32">Antares::Data::ScenarioBuilder::hydroLevelsData::setTSnumber</a></div><div class="ttdeci">void setTSnumber(uint index, uint year, double value)</div><div class="ttdoc">Assign a single value.</div><div class="ttdef"><b>Definition:</b> hydroLevelsData.h:95</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData_html_adc6752b717f5145274e5c6c9ff523c90"><div class="ttname"><a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html#adc6752b717f5145274e5c6c9ff523c90">Antares::Data::ScenarioBuilder::hydroLevelsData::reset</a></div><div class="ttdeci">bool reset(const Study &amp;study) override</div><div class="ttdoc">Reset data from the study.</div><div class="ttdef"><b>Definition:</b> hydroLevelsData.cpp:39</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdef"><b>Definition:</b> study.h:65</div></div>
 <div class="ttc" id="aclassAntares_1_1Matrix_html"><div class="ttname"><a href="classAntares_1_1Matrix.html">Antares::Matrix</a></div><div class="ttdoc">A n-by-n matrix.</div><div class="ttdef"><b>Definition:</b> matrix.h:44</div></div>
 <div class="ttc" id="aclassAntares_1_1Matrix_html_a0b5614256a04ece0ea54b8aad7e6980c"><div class="ttname"><a href="classAntares_1_1Matrix.html#a0b5614256a04ece0ea54b8aad7e6980c">Antares::Matrix::height</a></div><div class="ttdeci">uint height</div><div class="ttdoc">Height of the matrix.</div><div class="ttdef"><b>Definition:</b> matrix.h:443</div></div>

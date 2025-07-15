@@ -10,7 +10,6 @@ var classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules =
     [ "name", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#ab41d23d1487e495fe5d1fa1c01b1c244", null ],
     [ "readLine", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#a8d8f0f31ed05ca0a4594edec8c3cb3ae", null ],
     [ "reset", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#a5cdee301d4da5027ef38727efcb968d8", null ],
-    [ "saveToINIFile", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#a65c83f6e887e1314aeaa1122db4c89db", null ],
     [ "sendWarningsForDisabledClusters", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#a7f604a053ff35ce09e8477f6716dcacb", null ],
     [ "setName", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#a70696fc88ba8e5d9e8458de2b0e7fc0f", null ],
     [ "binding_constraints", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#ae52f41ddac67eb3b765923b88995a198", null ],

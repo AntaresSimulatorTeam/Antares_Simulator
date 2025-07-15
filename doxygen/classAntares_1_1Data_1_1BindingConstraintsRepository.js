@@ -30,6 +30,5 @@ var classAntares_1_1Data_1_1BindingConstraintsRepository =
     [ "removeConstraintsWhoseNameConstains", "classAntares_1_1Data_1_1BindingConstraintsRepository.html#a39304cd53ba0cc61319dcc8a2cf2bd62", null ],
     [ "rename", "classAntares_1_1Data_1_1BindingConstraintsRepository.html#af1365b09e149a0ca20565d84f3202536", null ],
     [ "reverseWeightSign", "classAntares_1_1Data_1_1BindingConstraintsRepository.html#aa73290ca28f000465924f01e11ee440d", null ],
-    [ "saveToFolder", "classAntares_1_1Data_1_1BindingConstraintsRepository.html#af3043d7076674a4e41a98f5f560be74c", null ],
     [ "size", "classAntares_1_1Data_1_1BindingConstraintsRepository.html#a7e077d964694c2af32ae48e1ac9b4bda", null ]
 ];

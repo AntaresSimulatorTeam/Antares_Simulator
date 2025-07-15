@@ -53,8 +53,6 @@ var classAntares_1_1Data_1_1AreaList =
     [ "rend", "classAntares_1_1Data_1_1AreaList.html#a84d69fe3f7cb47978e7e8a98e41cfe70", null ],
     [ "resizeAllTimeseriesNumbers", "classAntares_1_1Data_1_1AreaList.html#aaa662b42c3e42e0d46db8bf1493c8fef", null ],
     [ "saveLinkListToBuffer", "classAntares_1_1Data_1_1AreaList.html#a1ac3d8c5b01e4f25868257f32befa80d", null ],
-    [ "saveListToFile", "classAntares_1_1Data_1_1AreaList.html#ae37cc5d0b255e8a791c39204a2fe563e", null ],
-    [ "saveToFolder", "classAntares_1_1Data_1_1AreaList.html#a1b333dc45ba1db775fbe18a4250e5f0a", null ],
     [ "size", "classAntares_1_1Data_1_1AreaList.html#aef727d85346e2144e5978719f78b516e", null ],
     [ "updateNameIDSet", "classAntares_1_1Data_1_1AreaList.html#a600e35fa262c7fea7de82a4f95c4cc7a", null ],
     [ "areas", "classAntares_1_1Data_1_1AreaList.html#a33794771a577c317dc7450f55cd12da6", null ],

@@ -164,41 +164,43 @@ $(document).ready(function(){initNavTree('BindingConstraintsTSNumbersData_8h_sou
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1BindingConstraintsTSNumberData.html">BindingConstraintsTSNumberData</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1BindingConstraintsTSNumberData.html#aaa6123924150e6b9888c1aef43e52f84">reset</a>(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; study) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1BindingConstraintsTSNumberData.html#a3144f5599dc12163da5816c4ccc808ba">saveToINIFile</a>(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; study, Yuni::IO::File::Stream&amp; file) <span class="keyword">const override</span>;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordtype">void</span> setTSnumber(<span class="keyword">const</span> std::string&amp; group_name, <span class="keywordtype">unsigned</span> year, <span class="keywordtype">unsigned</span> value);</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordtype">unsigned</span> get(<span class="keyword">const</span> std::string&amp; group_name, <span class="keywordtype">unsigned</span> year) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1BindingConstraintsTSNumberData.html#abb63f40270ff26c0974e3cc17c247e98">apply</a>(<a class="code" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; study) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    CString&lt;512, false&gt; get_prefix() <span class="keyword">const override</span>;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordtype">unsigned</span> get_tsGenCount(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; study) <span class="keyword">const override</span>;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    std::map&lt;std::string, MatrixType&gt; rules_;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;};</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">unsigned</span> BindingConstraintsTSNumberData::get(<span class="keyword">const</span> std::string&amp; group_name,</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;                                                    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> year)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keyword">auto</span> it = rules_.find(group_name);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordflow">if</span> (it == rules_.end())</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    {</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    }</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordflow">return</span> it-&gt;second[0][year];</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;}</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keyword">inline</span> CString&lt;512, false&gt; BindingConstraintsTSNumberData::get_prefix()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordflow">return</span> <span class="stringliteral">&quot;bc,&quot;</span>;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;}</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">unsigned</span> BindingConstraintsTSNumberData::get_tsGenCount(<span class="keyword">const</span> Study&amp;)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;}</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;} <span class="comment">// namespace Antares::Data::ScenarioBuilder</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#ifdef BUILD_UI</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordtype">void</span> saveToINIFile(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; study, Yuni::IO::File::Stream&amp; file) <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordtype">void</span> setTSnumber(<span class="keyword">const</span> std::string&amp; group_name, <span class="keywordtype">unsigned</span> year, <span class="keywordtype">unsigned</span> value);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordtype">unsigned</span> get(<span class="keyword">const</span> std::string&amp; group_name, <span class="keywordtype">unsigned</span> year) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1BindingConstraintsTSNumberData.html#abb63f40270ff26c0974e3cc17c247e98">apply</a>(<a class="code" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; study) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    CString&lt;512, false&gt; get_prefix() <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordtype">unsigned</span> get_tsGenCount(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; study) <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    std::map&lt;std::string, MatrixType&gt; rules_;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;};</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">unsigned</span> BindingConstraintsTSNumberData::get(<span class="keyword">const</span> std::string&amp; group_name,</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;                                                    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> year)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keyword">auto</span> it = rules_.find(group_name);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordflow">if</span> (it == rules_.end())</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    {</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    }</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordflow">return</span> it-&gt;second[0][year];</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;}</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keyword">inline</span> CString&lt;512, false&gt; BindingConstraintsTSNumberData::get_prefix()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keywordflow">return</span> <span class="stringliteral">&quot;bc,&quot;</span>;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;}</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">unsigned</span> BindingConstraintsTSNumberData::get_tsGenCount(<span class="keyword">const</span> Study&amp;)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;}</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;} <span class="comment">// namespace Antares::Data::ScenarioBuilder</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1ScenarioBuilder_1_1BindingConstraintsTSNumberData_html"><div class="ttname"><a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1BindingConstraintsTSNumberData.html">Antares::Data::ScenarioBuilder::BindingConstraintsTSNumberData</a></div><div class="ttdef"><b>Definition:</b> BindingConstraintsTSNumbersData.h:32</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1ScenarioBuilder_1_1BindingConstraintsTSNumberData_html_a3144f5599dc12163da5816c4ccc808ba"><div class="ttname"><a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1BindingConstraintsTSNumberData.html#a3144f5599dc12163da5816c4ccc808ba">Antares::Data::ScenarioBuilder::BindingConstraintsTSNumberData::saveToINIFile</a></div><div class="ttdeci">void saveToINIFile(const Study &amp;study, Yuni::IO::File::Stream &amp;file) const override</div><div class="ttdoc">Export the data into a mere INI file.</div><div class="ttdef"><b>Definition:</b> BindingConstraintsTSNumbersData.cpp:92</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1ScenarioBuilder_1_1BindingConstraintsTSNumberData_html_aaa6123924150e6b9888c1aef43e52f84"><div class="ttname"><a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1BindingConstraintsTSNumberData.html#aaa6123924150e6b9888c1aef43e52f84">Antares::Data::ScenarioBuilder::BindingConstraintsTSNumberData::reset</a></div><div class="ttdeci">bool reset(const Study &amp;study) override</div><div class="ttdoc">Reset data from the study.</div><div class="ttdef"><b>Definition:</b> BindingConstraintsTSNumbersData.cpp:80</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1ScenarioBuilder_1_1BindingConstraintsTSNumberData_html_abb63f40270ff26c0974e3cc17c247e98"><div class="ttname"><a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1BindingConstraintsTSNumberData.html#abb63f40270ff26c0974e3cc17c247e98">Antares::Data::ScenarioBuilder::BindingConstraintsTSNumberData::apply</a></div><div class="ttdeci">bool apply(Study &amp;study) override</div><div class="ttdoc">Apply the changes to the study corresponding data (time series, hydro levels, ...)</div><div class="ttdef"><b>Definition:</b> BindingConstraintsTSNumbersData.cpp:60</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1ScenarioBuilder_1_1TSNumberData_html"><div class="ttname"><a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1TSNumberData.html">Antares::Data::ScenarioBuilder::TSNumberData</a></div><div class="ttdoc">Rules for TS numbers, for all years and a single timeseries.</div><div class="ttdef"><b>Definition:</b> TSnumberData.h:32</div></div>

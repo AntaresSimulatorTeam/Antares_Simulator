@@ -15,7 +15,6 @@ var classAntares_1_1Data_1_1ThermalClusterList =
     [ "reverseCalculationOfSpinning", "classAntares_1_1Data_1_1ThermalClusterList.html#ad5a970a75df18a4326b3ddd7a1acd6c4", null ],
     [ "saveEconomicCosts", "classAntares_1_1Data_1_1ThermalClusterList.html#a6571ba17ab5a261aad5c52881d544843", null ],
     [ "savePreproToFolder", "classAntares_1_1Data_1_1ThermalClusterList.html#abdd61c6dd43e96d51073dd76a207846a", null ],
-    [ "saveToFolder", "classAntares_1_1Data_1_1ThermalClusterList.html#a486b30aaed0ae58f3e67d98da83a9a15", null ],
     [ "typeID", "classAntares_1_1Data_1_1ThermalClusterList.html#abe899cd1531faa599daf3944184889f4", null ],
     [ "validateClusters", "classAntares_1_1Data_1_1ThermalClusterList.html#acd54af68acdadbb9376fd242f0b009ce", null ],
     [ "validatePrepro", "classAntares_1_1Data_1_1ThermalClusterList.html#a2133137b820ad29adafeae38db15fd8b", null ]

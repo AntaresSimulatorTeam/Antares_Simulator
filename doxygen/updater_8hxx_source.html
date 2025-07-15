@@ -181,43 +181,45 @@ $(document).ready(function(){initNavTree('updater_8hxx_source.html',''); initRes
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;            pTempFile &lt;&lt; memory.<a class="code" href="classAntares_1_1Memory.html#a818c69050b5d3c4c3998b66eb3053e93">cacheFolder</a>() &lt;&lt; SEP &lt;&lt; <span class="stringliteral">&quot;antares-scenbld-save-&quot;</span></div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;                      &lt;&lt; memory.<a class="code" href="classAntares_1_1Memory.html#ae52786b2c1f35d82f6ad1d9579020071">processID</a>() &lt;&lt; <span class="charliteral">&#39;-&#39;</span> &lt;&lt; (size_t)(<span class="keyword">this</span>) &lt;&lt; <span class="stringliteral">&quot;-scenariobuilder.tmp&quot;</span>;</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;            <span class="comment">// Dump the memory</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;            study.scenarioRules-&gt;saveToINIFile(pTempFile);</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            study.scenarioRules-&gt;clear();</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        }</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    }</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    ~ScenarioBuilderUpdater()</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    {</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="keyword">using namespace </span>Yuni;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keywordflow">if</span> (not pTempFile.empty())</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        {</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            <span class="keywordflow">if</span> (pStudy.<a class="code" href="classAntares_1_1Data_1_1Study.html#ab38f6175f709dd6eb830dab471b5ec16">scenarioRules</a>)</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            {</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;                logs.debug() &lt;&lt; <span class="stringliteral">&quot;[scenario-builder] reloading data from a temporary file&quot;</span>;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;                pStudy.<a class="code" href="classAntares_1_1Data_1_1Study.html#ab38f6175f709dd6eb830dab471b5ec16">scenarioRules</a>-&gt;loadFromINIFile(pTempFile);</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;                pStudy.<a class="code" href="classAntares_1_1Data_1_1Study.html#ab38f6175f709dd6eb830dab471b5ec16">scenarioRules</a>-&gt;inUpdaterMode = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;                logs.debug() &lt;&lt; <span class="stringliteral">&quot;[scenario-builder] updater mode OFF&quot;</span>;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            }</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            <span class="comment">// Removing the temporary file</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            IO::File::Delete(pTempFile);</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        }</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    }</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; pStudy;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    Yuni::String pTempFile;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;}; <span class="comment">// class ScenarioBuilderUpdater</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#ifdef BUILD_UI</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            study.scenarioRules-&gt;saveToINIFile(pTempFile);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            study.scenarioRules-&gt;clear();</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        }</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    }</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    ~ScenarioBuilderUpdater()</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    {</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keyword">using namespace </span>Yuni;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="keywordflow">if</span> (not pTempFile.empty())</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        {</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            <span class="keywordflow">if</span> (pStudy.<a class="code" href="classAntares_1_1Data_1_1Study.html#ab38f6175f709dd6eb830dab471b5ec16">scenarioRules</a>)</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            {</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                logs.debug() &lt;&lt; <span class="stringliteral">&quot;[scenario-builder] reloading data from a temporary file&quot;</span>;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;                pStudy.<a class="code" href="classAntares_1_1Data_1_1Study.html#ab38f6175f709dd6eb830dab471b5ec16">scenarioRules</a>-&gt;loadFromINIFile(pTempFile);</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;                pStudy.<a class="code" href="classAntares_1_1Data_1_1Study.html#ab38f6175f709dd6eb830dab471b5ec16">scenarioRules</a>-&gt;inUpdaterMode = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;                logs.debug() &lt;&lt; <span class="stringliteral">&quot;[scenario-builder] updater mode OFF&quot;</span>;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            }</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            <span class="comment">// Removing the temporary file</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            IO::File::Delete(pTempFile);</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        }</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    }</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; pStudy;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    Yuni::String pTempFile;</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;} <span class="comment">// anonymous namespace</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;}; <span class="comment">// class ScenarioBuilderUpdater</span></div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;} <span class="comment">// namespace Antares</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;} <span class="comment">// anonymous namespace</span></div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="preprocessor">#endif </span><span class="comment">//  __ANTARES_LIBS_STUDY_SCENARIO_BUILDER_UPDATER_HXX__</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;} <span class="comment">// namespace Antares</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="preprocessor">#endif </span><span class="comment">//  __ANTARES_LIBS_STUDY_SCENARIO_BUILDER_UPDATER_HXX__</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdef"><b>Definition:</b> study.h:65</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1Study_html_ab38f6175f709dd6eb830dab471b5ec16"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html#ab38f6175f709dd6eb830dab471b5ec16">Antares::Data::Study::scenarioRules</a></div><div class="ttdeci">std::unique_ptr&lt; ScenarioBuilder::Sets &gt; scenarioRules</div><div class="ttdoc">Rules for building scenarios (can be null)</div><div class="ttdef"><b>Definition:</b> study.h:561</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1Study_html_ab38f6175f709dd6eb830dab471b5ec16"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html#ab38f6175f709dd6eb830dab471b5ec16">Antares::Data::Study::scenarioRules</a></div><div class="ttdeci">std::unique_ptr&lt; ScenarioBuilder::Sets &gt; scenarioRules</div><div class="ttdoc">Rules for building scenarios (can be null)</div><div class="ttdef"><b>Definition:</b> study.h:563</div></div>
 <div class="ttc" id="aclassAntares_1_1Memory_html_a818c69050b5d3c4c3998b66eb3053e93"><div class="ttname"><a href="classAntares_1_1Memory.html#a818c69050b5d3c4c3998b66eb3053e93">Antares::Memory::cacheFolder</a></div><div class="ttdeci">const Yuni::String &amp; cacheFolder() const</div><div class="ttdoc">\nane Cache Folder</div><div class="ttdef"><b>Definition:</b> memory.cpp:137</div></div>
 <div class="ttc" id="aclassAntares_1_1Memory_html_ae52786b2c1f35d82f6ad1d9579020071"><div class="ttname"><a href="classAntares_1_1Memory.html#ae52786b2c1f35d82f6ad1d9579020071">Antares::Memory::processID</a></div><div class="ttdeci">uint64_t processID() const</div><div class="ttdoc">Get the process ID of the application.</div><div class="ttdef"><b>Definition:</b> memory.hxx:26</div></div>
 </div><!-- fragment --></div><!-- contents -->

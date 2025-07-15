@@ -8,6 +8,5 @@ var classAntares_1_1Data_1_1ScenarioBuilder_1_1thermalTSNumberData =
     [ "get_prefix", "classAntares_1_1Data_1_1ScenarioBuilder_1_1thermalTSNumberData.html#a039303ce6419b5071dc9247495056424", null ],
     [ "get_tsGenCount", "classAntares_1_1Data_1_1ScenarioBuilder_1_1thermalTSNumberData.html#a3664894eb97ffd73a5c4a16bec01e6b7", null ],
     [ "reset", "classAntares_1_1Data_1_1ScenarioBuilder_1_1thermalTSNumberData.html#a33866cf904fb67824a771a24f6a4632f", null ],
-    [ "saveToINIFile", "classAntares_1_1Data_1_1ScenarioBuilder_1_1thermalTSNumberData.html#a23a50dfebf3925353d7230b088cb358b", null ],
     [ "setTSnumber", "classAntares_1_1Data_1_1ScenarioBuilder_1_1thermalTSNumberData.html#aa036f95f60531266cbcba514734b75c5", null ]
 ];

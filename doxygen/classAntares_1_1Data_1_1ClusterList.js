@@ -22,7 +22,6 @@ var classAntares_1_1Data_1_1ClusterList =
     [ "resizeAllTimeseriesNumbers", "classAntares_1_1Data_1_1ClusterList.html#a2742ab55510a24092d9cb7105c73bd7e", null ],
     [ "retrieveTotalCapacityAndUnitCount", "classAntares_1_1Data_1_1ClusterList.html#aebf4acf28c0d0becf175f69862cb49b6", null ],
     [ "saveDataSeriesToFolder", "classAntares_1_1Data_1_1ClusterList.html#a6f13a4fb77ccb1889cc18f26537ca1bf", null ],
-    [ "saveToFolder", "classAntares_1_1Data_1_1ClusterList.html#a6568ac7e61f836c46ca9b28dac80cd03", null ],
     [ "sortCompleteList", "classAntares_1_1Data_1_1ClusterList.html#a7dc77ef05e2f8f008efd950e74b2e0d5", null ],
     [ "storeTimeseriesNumbers", "classAntares_1_1Data_1_1ClusterList.html#ae8a8b64ecc6febfe1df1ec900ff269be", null ],
     [ "typeID", "classAntares_1_1Data_1_1ClusterList.html#a62f093580139d7e146f6e6a27959ea9d", null ],

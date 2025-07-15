@@ -1349,9 +1349,6 @@ var annotated_dup =
       [ "checksRetriever", "classjson__collector_1_1checksRetriever.html", "classjson__collector_1_1checksRetriever" ],
       [ "jsonCollector", "classjson__collector_1_1jsonCollector.html", "classjson__collector_1_1jsonCollector" ]
     ] ],
-    [ "kirchhoff_pytest", null, [
-      [ "StudyReference", "classkirchhoff__pytest_1_1StudyReference.html", "classkirchhoff__pytest_1_1StudyReference" ]
-    ] ],
     [ "modeler_output_handler", null, [
       [ "modeler_output_handler", "classmodeler__output__handler_1_1modeler__output__handler.html", "classmodeler__output__handler_1_1modeler__output__handler" ]
     ] ],
@@ -1465,8 +1462,8 @@ var annotated_dup =
     [ "BOUND_FLEX_UP_NODE", "structBOUND__FLEX__UP__NODE.html", "structBOUND__FLEX__UP__NODE" ],
     [ "CellColumnData", "classCellColumnData.html", "classCellColumnData" ],
     [ "CmdLineOptionsFixture", "structCmdLineOptionsFixture.html", "structCmdLineOptionsFixture" ],
-    [ "CommonFixture", "structCommonFixture.html", "structCommonFixture" ],
     [ "commonFixture", "structcommonFixture.html", "structcommonFixture" ],
+    [ "CommonFixture", "structCommonFixture.html", "structCommonFixture" ],
     [ "ComparisonFixture", "structComparisonFixture.html", "structComparisonFixture" ],
     [ "ComponentBuilderCreationFixture", "structComponentBuilderCreationFixture.html", "structComponentBuilderCreationFixture" ],
     [ "ComponentToAreaConnectionFillerFixture", "structComponentToAreaConnectionFillerFixture.html", "structComponentToAreaConnectionFillerFixture" ],
@@ -1642,7 +1639,6 @@ var annotated_dup =
     [ "RESERVE_JMOINS1", "structRESERVE__JMOINS1.html", "structRESERVE__JMOINS1" ],
     [ "RESULTATS_HORAIRES", "structRESULTATS__HORAIRES.html", "structRESULTATS__HORAIRES" ],
     [ "ResultMatrix", "classResultMatrix.html", "classResultMatrix" ],
-    [ "saveFixture", "structsaveFixture.html", "structsaveFixture" ],
     [ "SavingToStreamFixture", "structSavingToStreamFixture.html", "structSavingToStreamFixture" ],
     [ "ScenarioBuilderRule", "classScenarioBuilderRule.html", "classScenarioBuilderRule" ],
     [ "SearchToken", "classSearchToken.html", "classSearchToken" ],
