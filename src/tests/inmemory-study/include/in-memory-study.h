@@ -20,6 +20,8 @@
  */
 #pragma once
 #define WIN32_LEAN_AND_MEAN
+#include <limits>
+
 #include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/solver/simulation/economy.h"
 #include "antares/solver/simulation/simulation.h"
@@ -301,14 +303,19 @@ class TestingSimulationObserver: public Solver::Simulation::ISimulationObserver
 public:
     struct Variable
     {
-        double Xmin;
-        double Xmax;
-        double objectiveCoefficient;
+        // All comparisons with NaN return false, except for !=
+        // For example (NaN == 4.) => false
+        // (NaN == NaN) => false
+        // Using any other arbitrary value (infinity, 0, etc.) may result in false positives
+        // or false negatives
+        double Xmin = std::numeric_limits<double>::quiet_NaN();
+        double Xmax = std::numeric_limits<double>::quiet_NaN();
+        double objectiveCoefficient = std::numeric_limits<double>::quiet_NaN();
     };
 
     struct Constraint
     {
-        double rhs;
+        double rhs = std::numeric_limits<double>::quiet_NaN();
         std::map<std::string, double> coefficients;
     };
 
