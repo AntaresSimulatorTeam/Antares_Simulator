@@ -17,7 +17,7 @@
 // You should have received a copy of the Mozilla Public Licence 2.0
 // along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 
-#include "include/antares/scenarioGroupParser/ScenarioGroupParser.h"
+#include "antares/scenarioGroupParser/ScenarioGroupParser.h"
 
 #include <ANTLRInputStream.h>
 #include <fmt/format.h>
@@ -62,8 +62,13 @@ public:
     std::any visitChronicle(ScenarioBuilderParser::ChronicleContext* ctx) override
     {
         auto scenarioText = ctx->getText();
-        int scenario = std::stoi(scenarioText);
-        return scenario;
+        try {
+            int scenario = std::stoi(scenarioText);
+            return scenario;
+        } catch (std::exception& e) {
+            throw Antares::Error::RuntimeError(fmt::format("Scenario builder errror: could not parse the following text as a number \"{}\"", scenarioText));
+        }
+
     }
 };
 

@@ -26,7 +26,7 @@
 #include <ScenarioBuilderParser.h>
 
 #include "ScenarioBuilderBaseVisitor.h"
-#include "ScenarioGroupParser.h"
+#include "antares/scenarioGroupParser/ScenarioGroupParser.h"
 
 using namespace std::string_literals;
 using namespace Antares;
