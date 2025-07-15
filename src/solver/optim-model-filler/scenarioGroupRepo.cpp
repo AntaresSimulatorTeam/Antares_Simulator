@@ -56,6 +56,6 @@ const LinearProblemApi::IScenario &ScenarioGroupRepository::scenario(const std::
     {
         throw DoesNotExist(groupId);
     }
-    return *scenarioGroups_.at(groupId).get();
+    return *scenarioGroups_.at(groupId);
 }
 } // namespace Antares::Optimisation
