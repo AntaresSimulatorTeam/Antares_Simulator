@@ -1,4 +1,3 @@
-
 #Define executable name
 set(execname "antares-ui-simulator")
 

@@ -18,7 +18,7 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-
+#ifdef BUILD_UI
 #include <fstream>
 
 #include <yuni/core/string/wstring.h>
@@ -267,3 +267,4 @@ bool Study::saveToFolder(const AnyString& newfolder)
 }
 
 } // namespace Antares::Data
+#endif

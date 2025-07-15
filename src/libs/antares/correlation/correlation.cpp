@@ -266,6 +266,7 @@ int InterAreaCorrelationLoadFromFile(Matrix<>* m, AreaList* l, const std::string
     return 0;
 }
 
+#ifdef BUILD_UI
 IniFile* InterAreaCorrelationSaveToIniFile(const Matrix<>* m, const AreaList* l)
 {
     /* Asserts */
@@ -325,6 +326,7 @@ int InterAreaCorrelationSaveToFile(const Matrix<>* m, const AreaList* l, const c
     }
     return 0;
 }
+#endif
 
 Correlation::Correlation():
     pMode(modeNone)

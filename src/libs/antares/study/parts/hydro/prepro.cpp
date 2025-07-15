@@ -114,6 +114,7 @@ void PreproHydro::copyFrom(const PreproHydro& rhs)
     rhs.data.unloadFromMemory();
 }
 
+#ifdef BUILD_UI
 bool PreproHydro::saveToFolder(const AreaName& areaID, const char* folder)
 {
     assert(folder);
@@ -141,6 +142,7 @@ bool PreproHydro::saveToFolder(const AreaName& areaID, const char* folder)
     }
     return false;
 }
+#endif
 
 bool PreproHydro::loadFromFolder(Study& s, const std::string& areaID, const fs::path& folder)
 {

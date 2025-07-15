@@ -52,7 +52,9 @@ public:
             pTempFile << memory.cacheFolder() << SEP << "antares-scenbld-save-"
                       << memory.processID() << '-' << (size_t)(this) << "-scenariobuilder.tmp";
             // Dump the memory
+#ifdef BUILD_UI
             study.scenarioRules->saveToINIFile(pTempFile);
+#endif
             study.scenarioRules->clear();
         }
     }
