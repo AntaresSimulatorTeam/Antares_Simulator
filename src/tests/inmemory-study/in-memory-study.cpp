@@ -50,6 +50,16 @@ std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& 
     return cluster;
 }
 
+Antares::Data::ShortTermStorage::STStorageCluster* addSTSToArea(Area* area,
+                                                                const std::string& stsName)
+{
+    Antares::Data::ShortTermStorage::STStorageCluster sts;
+    sts.properties.name = stsName;
+    auto& storages = area->shortTermStorage.storagesByIndex;
+    storages.push_back(sts);
+    return &storages.back();
+}
+
 void addScratchpadToEachArea(Study& study)
 {
     for (auto& [_, area]: study.areas)
@@ -118,6 +128,92 @@ ThermalClusterConfig& ThermalClusterConfig::setAvailablePower(unsigned column, d
 }
 
 // -------------------------------
+// Short-term storage
+// -------------------------------
+ShortTermStorageConfig::ShortTermStorageConfig(
+  Antares::Data::ShortTermStorage::STStorageCluster& storage):
+    storage(storage),
+    constraintConfig(storage)
+{
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::setInjectionNominalCapacity(
+  double injectionNominalCapacity)
+{
+    storage.properties.injectionNominalCapacity = injectionNominalCapacity;
+    return *this;
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::setWithdrawalNominalCapacity(
+  double withdrawalNominalCapacity)
+{
+    storage.properties.withdrawalNominalCapacity = withdrawalNominalCapacity;
+    return *this;
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::setReservoirCapacity(double reservoirCapacity)
+{
+    storage.properties.reservoirCapacity = reservoirCapacity;
+    return *this;
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::setInitialLevel(double initialLevel)
+{
+    storage.properties.initialLevel = initialLevel;
+    return *this;
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::setInitialLevelOptim(bool initialLevelOptim)
+{
+    storage.properties.initialLevelOptim = initialLevelOptim;
+    return *this;
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::setInjectionEfficiency(double injectionEfficiency)
+{
+    storage.properties.injectionEfficiency = injectionEfficiency;
+    return *this;
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::setWithdrawalEfficiency(double withdrawalEfficiency)
+{
+    storage.properties.withdrawalEfficiency = withdrawalEfficiency;
+    return *this;
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::setGroupName(const std::string& groupName)
+{
+    storage.properties.groupName = groupName;
+    return *this;
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::setName(const std::string& name)
+{
+    storage.properties.name = name;
+    return *this;
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::setPenalizeVariationWithdrawal(
+  bool penalizeVariationWithdrawal)
+{
+    storage.properties.penalizeVariationWithdrawal = penalizeVariationWithdrawal;
+    return *this;
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::setPenalizeVariationInjection(
+  bool penalizeVariationInjection)
+{
+    storage.properties.penalizeVariationInjection = penalizeVariationInjection;
+    return *this;
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::ShortTermStorageConfig::setEnabled(bool enabled)
+{
+    storage.properties.enabled = enabled;
+    return *this;
+}
+
+// -------------------------------
 // Simulation results retrieval
 // -------------------------------
 averageResults OutputRetriever::overallCost(Area* area)
@@ -131,6 +227,13 @@ averageResults OutputRetriever::levelForSTSgroup(Area* area, unsigned groupNb)
     auto result = retrieveAreaResults<Variable::Economy::VCardSTSbyGroup>(area);
     unsigned levelIndex = groupNb * 3 + 2;
     return result[area->index][levelIndex].avgdata;
+}
+
+averageResults OutputRetriever::withdrawalForSTSgroup(Area* area, unsigned groupNb)
+{
+    auto result = retrieveAreaResults<Variable::Economy::VCardSTSbyGroup>(area);
+    unsigned withdrawalIndex = groupNb * 3 + 1;
+    return result[area->index][withdrawalIndex].avgdata;
 }
 
 averageResults OutputRetriever::load(Area* area)
