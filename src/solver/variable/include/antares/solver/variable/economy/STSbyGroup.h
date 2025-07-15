@@ -20,6 +20,7 @@
 */
 #pragma once
 
+#include <antares/utils/utils.h>
 #include "antares/solver/variable/variable.h"
 
 namespace
@@ -33,18 +34,6 @@ inline std::vector<std::string> sortedUniqueGroups(
         names.insert(cluster.properties.groupName);
     }
     return {names.begin(), names.end()};
-}
-
-inline std::map<std::string, unsigned int> giveNumbersToGroups(
-  const std::vector<std::string>& groupNames)
-{
-    unsigned int groupNumber{0};
-    std::map<std::string, unsigned int> groupToNumbers;
-    for (const auto& name: groupNames)
-    {
-        groupToNumbers[name] = groupNumber++;
-    }
-    return groupToNumbers;
 }
 } // namespace
 
@@ -165,7 +154,7 @@ public:
 
         // Building the vector of group names the clusters belong to.
         groupNames_ = sortedUniqueGroups(area->shortTermStorage.storagesByIndex);
-        groupToNumbers_ = giveNumbersToGroups(groupNames_);
+        groupToNumbers_ = Utils::giveNumbersToStrings(groupNames_);
 
         nbColumns_ = groupNames_.size() * NB_COLS_PER_GROUP;
 

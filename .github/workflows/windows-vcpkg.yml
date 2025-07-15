@@ -289,7 +289,6 @@ jobs:
           batch-name: short-tests
           os: ${{ env.os }}
 
-
       - name: Run cucumber on v9.2 tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/cucumber-tests
@@ -322,6 +321,7 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run cucumber on medium-tests
+        if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/cucumber-tests
         with:
           feature: "features/solver-features/medium_tests.feature"
@@ -350,8 +350,8 @@ jobs:
           batch-name: long-tests-3
           os: ${{ env.os }}
 
-
       - name: Run cucumber on hybrid studies
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/cucumber-tests
         with:
           feature: "features/solver-features/hybrid_studies.feature"
@@ -372,6 +372,7 @@ jobs:
         shell: bash
         run: |
           rm -rf src/tests/resources/Antares_Simulator_Tests
+          rm -rf src/tests/resources/Antares_Simulator_Tests_NR
           cd _build
           cpack -GNSIS
           export NSIS_NAME=$(ls *.exe)

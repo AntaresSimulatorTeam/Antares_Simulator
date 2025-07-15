@@ -19,17 +19,18 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include <yuni/datetime/timestamp.h>
+
+#include <antares/study/version.h>
+#include "antares/config/config.h"
+
+#include "../../toolbox/dispatcher/study.h"
+#include "../../windows/constraints-builder/constraintsbuilder.h"
+#include "../../windows/simulation/run.h"
 #include "../main.h"
 #include "../study.h"
-#include "../../windows/simulation/run.h"
-#include "../../windows/analyzer/analyzer.h"
-#include "../../windows/constraints-builder/constraintsbuilder.h"
-#include "internal-data.h"
-#include "antares/config/config.h"
-#include <yuni/datetime/timestamp.h>
-#include "../../toolbox/dispatcher/study.h"
-#include <antares/study/version.h>
 #include "application/study.h"
+#include "internal-data.h"
 using namespace Yuni;
 
 namespace Antares
@@ -102,46 +103,6 @@ void ApplWnd::evtOnRunTSGeneratorsDelayed()
     ShowSimulationPanel(this, true);
 }
 
-void ApplWnd::evtOnRunTSAnalyzer(wxCommandEvent&)
-{
-    Dispatcher::GUI::Post(this, &ApplWnd::evtOnRunTSAnalyzerDelayed);
-}
-
-void ApplWnd::evtOnRunTSAnalyzerDelayed()
-{
-    if (not CurrentStudyIsValid())
-    {
-        logs.error() << "No study opened";
-        return;
-    }
-    auto& study = *GetCurrentStudy();
-
-    if (SimulationCheck(study))
-    {
-        if (study.folder.empty() || study.folderInput.empty())
-        {
-            logs.error() << "The study must be saved before launching the analyzer";
-            return;
-        }
-        if (study.header.version != Data::StudyVersion::latest())
-        {
-            logs.error() << "The study must be upgraded to the v"
-                         << Data::StudyVersion::latest().toString()
-                         << " format before launching the analyzer";
-            return;
-        }
-
-        Forms::Disabler<ApplWnd> disabler(*this);
-
-        auto* form = new Window::AnalyzerWizard(nullptr);
-        form->ShowModal();
-        String filename = form->analyzerInfoFile();
-        form->Destroy();
-
-        launchAnalyzer(filename);
-    }
-}
-
 void ApplWnd::evtOnRunConstraintsBuilder(wxCommandEvent&)
 {
     Dispatcher::GUI::Post(this, &ApplWnd::evtOnRunConstraintsBuilderDelayed);
@@ -178,7 +139,9 @@ void ApplWnd::evtOnRunConstraintsBuilderDelayed()
         form->Destroy();
 
         if (beforeRun != study.bindingConstraints.size())
+        {
             MarkTheStudyAsModified();
+        }
 
         // TO DO : create job
         // String filename = "D:/settings.ini";

@@ -27,8 +27,6 @@ The results obtained in the different sessions are stored side by side and tagge
 The identification tag has two components: a user-defined session name and the time at which the session was launched.
 
 Particular cases:
-- Some specific input data may be located outside the study folder (this is the case for some inputs of 
-  the [time-series analyzer](other-features/analyzer.md), for example).
 - If the study folder contains a specific subfolder named "user", then this folder will have a special status: *Antares* 
   will consider it as a "private" user space, and avoid deleting any files in it (but files may be updated if the user requires it). 
   As a consequence, the user is free to store any kind of information in this directory without the risk of it being 

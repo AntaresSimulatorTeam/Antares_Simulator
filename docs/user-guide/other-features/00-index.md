@@ -3,7 +3,6 @@
 
 ```{toctree}
 :hidden:
-analyzer.md
 batchrun.md
 config.md
 kirchhoff-constraints-builder.md
