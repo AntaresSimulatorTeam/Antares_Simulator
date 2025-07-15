@@ -16,8 +16,9 @@ target_include_directories(scenario-group-parser
 # TODO: remove this dependency to fmt when possible
 find_package(fmt REQUIRED)
 target_link_libraries(scenario-group-parser
-        PRIVATE
+        PUBLIC
         Antares::scenario-builder-antlr
+        PRIVATE
         fmt::fmt
         Antares::exception
 )

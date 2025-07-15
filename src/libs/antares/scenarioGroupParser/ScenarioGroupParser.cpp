@@ -62,22 +62,35 @@ public:
     std::any visitChronicle(ScenarioBuilderParser::ChronicleContext* ctx) override
     {
         auto scenarioText = ctx->getText();
-        try {
+        try
+        {
             int scenario = std::stoi(scenarioText);
             return scenario;
-        } catch (std::exception& e) {
-            throw Antares::Error::RuntimeError(fmt::format("Scenario builder errror: could not parse the following text as a number \"{}\"", scenarioText));
         }
-
+        catch (std::exception& e)
+        {
+            throw Antares::Error::RuntimeError(fmt::format(
+              "Scenario builder errror: could not parse the following text as a number \"{}\"",
+              scenarioText));
+        }
     }
 };
 
-ScenarioGroupParser::Line ScenarioGroupParser::parseLine(const std::string& line)
+ScenarioGroupParser::Line ScenarioGroupParser::parseLine(const std::string& line,
+                                                         antlr4::BaseErrorListener* errorListener)
 {
     antlr4::ANTLRInputStream input(line);
     ScenarioBuilderLexer lexer(&input);
     antlr4::CommonTokenStream tokens(&lexer);
     ScenarioBuilderParser parser(&tokens);
+    if (errorListener)
+    {
+        lexer.removeErrorListeners();
+        parser.removeErrorListeners();
+        lexer.addErrorListener(errorListener);
+        parser.addErrorListener(errorListener);
+    }
+
     try
     {
         auto* tree = parser.rules();
