@@ -62,13 +62,17 @@ public:
     std::any visitChronicle(ScenarioBuilderParser::ChronicleContext* ctx) override
     {
         auto scenarioText = ctx->getText();
-        try {
+        try
+        {
             int scenario = std::stoi(scenarioText);
             return scenario;
-        } catch (std::exception& e) {
-            throw Antares::Error::RuntimeError(fmt::format("Scenario builder errror: could not parse the following text as a number \"{}\"", scenarioText));
         }
-
+        catch (std::exception& e)
+        {
+            throw Antares::Error::RuntimeError(fmt::format(
+              "Scenario builder errror: could not parse the following text as a number \"{}\"",
+              scenarioText));
+        }
     }
 };
 

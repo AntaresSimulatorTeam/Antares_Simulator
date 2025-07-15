@@ -33,7 +33,7 @@ BOOST_AUTO_TEST_CASE(add_to_repo_a_group_it_already_contains_exception_raised)
 
     std::string expectedErrMsg = "Scenario group 'some group' already exists in group repo.";
     BOOST_CHECK_EXCEPTION(scenarioGroupRepo.addScenario("some group",
-                                                            std::move(anotherScenarioPtr)),
+                                                        std::move(anotherScenarioPtr)),
                           ScenarioGroupRepository::AlreadyExists,
                           checkMessage(expectedErrMsg));
 }
