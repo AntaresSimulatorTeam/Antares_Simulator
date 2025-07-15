@@ -198,25 +198,30 @@ void TestingSimulationObserver::notifyHebdoProblem(const PROBLEME_HEBDO& problem
     std::string nameStr(name.begin(), name.end());
     auto& toInsert = problems[std::make_pair(optimizationNumber, nameStr)];
 
+    // Variables
     for (int varIdx = 0; varIdx < pb->NombreDeVariables; varIdx++)
     {
         const std::string& varName = pb->NomDesVariables[varIdx];
-        toInsert.Xmin[varName] = pb->Xmin[varIdx];
-        toInsert.Xmax[varName] = pb->Xmax[varIdx];
-        toInsert.Objective[varName] = pb->CoutLineaire[varIdx];
+        auto& insertedVariable = toInsert.variables[varName];
+        insertedVariable = {.Xmin = pb->Xmin[varIdx],
+                            .Xmax = pb->Xmax[varIdx],
+                            .objectiveCoefficient = pb->CoutLineaire[varIdx]};
     }
 
+    // Constraints
     for (int ctIdx = 0; ctIdx < pb->NombreDeContraintes; ctIdx++)
     {
         const std::string& ctName = pb->NomDesContraintes[ctIdx];
-        auto& constraint = toInsert.Coefficients[ctName];
+        auto& insertedConstraint = toInsert.constraints[ctName];
         int debutLigne = pb->IndicesDebutDeLigne[ctIdx];
         for (int coefIdx = 0; coefIdx < pb->NombreDeTermesDesLignes[ctIdx]; ++coefIdx)
         {
             int pos = debutLigne + coefIdx;
             int varIdx = pb->IndicesColonnes[pos];
             const std::string& varName = pb->NomDesVariables[varIdx];
-            constraint[varName] = pb->CoefficientsDeLaMatriceDesContraintes[pos];
+            insertedConstraint.coefficients[varName] = pb->CoefficientsDeLaMatriceDesContraintes
+                                                         [pos];
+            insertedConstraint.rhs = pb->SecondMembre[ctIdx];
         }
     }
 }

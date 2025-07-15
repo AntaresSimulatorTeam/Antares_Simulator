@@ -202,12 +202,24 @@ private:
 class TestingSimulationObserver: public Solver::Simulation::ISimulationObserver
 {
 public:
-    struct SingleProblem
+    struct Variable
     {
-        std::map<std::string, double> Xmin;
-        std::map<std::string, double> Xmax;
-        std::map<std::string, double> Objective;
-        std::map<std::string, std::map<std::string, double>> Coefficients;
+        double Xmin;
+        double Xmax;
+        double objectiveCoefficient;
+    };
+
+    struct Constraint
+    {
+        double rhs;
+        std::map<std::string, double> coefficients;
+    };
+
+    struct SingleProblem
+
+    {
+        std::map<std::string, Variable> variables;
+        std::map<std::string, Constraint> constraints;
     };
 
     std::map<std::pair<int, std::string>, SingleProblem> problems;
