@@ -207,6 +207,7 @@ public:
         std::map<std::string, double> Xmin;
         std::map<std::string, double> Xmax;
         std::map<std::string, double> Objective;
+        std::map<std::string, std::map<std::string, double>> Coefficients;
     };
 
     std::map<std::pair<int, std::string>, SingleProblem> problems;
