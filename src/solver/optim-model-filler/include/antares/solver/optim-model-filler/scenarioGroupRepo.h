@@ -12,9 +12,9 @@ class ScenarioGroupRepository
 {
 public:
     void addScenario(const std::string& groupId,
-                     std::unique_ptr<LinearProblemApi::IScenario> &&scenario);
+                     std::unique_ptr<LinearProblemApi::IScenario>&& scenario);
 
-    [[nodiscard]] const LinearProblemApi::IScenario &scenario(const std::string &groupId) const;
+    [[nodiscard]] const LinearProblemApi::IScenario& scenario(const std::string& groupId) const;
 
 private:
     std::map<std::string, std::unique_ptr<LinearProblemApi::IScenario>> scenarioGroups_;
