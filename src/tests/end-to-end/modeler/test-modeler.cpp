@@ -58,7 +58,7 @@ class InMemoryLoader: public Antares::Solver::ILoader
 public:
     Antares::Solver::ModelerParameters loadParameters() override
     {
-        return {.solver = "xpress",
+        return {.solver = "sirius",
                 .solverLogs = false,
                 .solverParameters = "DUMMY",
                 .noOutput = true,
@@ -116,12 +116,10 @@ struct Solution
     double objectiveValue{0.0};
 };
 
-class InMemoryWriter: public Antares::Solver::IWriter
+class StubWriter: public Antares::Solver::IWriter
 {
 public:
-    Solution solution_{};
-
-    void init() override
+    void init(bool) override
     {
         // No initialization needed for in-memory writer
     }
@@ -143,7 +141,7 @@ public:
 BOOST_AUTO_TEST_CASE(Minimal_system_minimize_to_0)
 {
     InMemoryLoader<Test::Modeler::LinearProblemBuildingFixture> inMemoryLoader;
-    InMemoryWriter inMemoryWriter;
+    StubWriter inMemoryWriter;
 
     const Antares::Solver::Modeler modeler(inMemoryLoader, inMemoryWriter);
     modeler.solve();

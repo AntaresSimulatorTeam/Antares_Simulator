@@ -93,9 +93,7 @@ LibraryBuilder& LibraryBuilder::withModelsMap(std::unordered_map<std::string, Mo
 {
     for (auto&& pair: models)
     {
-        std::inserter(*library_.models_, library_.models_->end()) = std::make_pair(pair.first,
-                                                                                   std::move(
-                                                                                     pair.second));
+        library_.models_->insert(std::make_pair(pair.first, std::move(pair.second)));
     }
     return *this;
 }
