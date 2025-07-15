@@ -19,8 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#ifndef __ANTARES_LIBS_ARRAY_MATRIX_BYPASS_LOAD_H__
-#define __ANTARES_LIBS_ARRAY_MATRIX_BYPASS_LOAD_H__
+#pragma once
 
 #include "fill-matrix.h"
 
@@ -48,24 +47,21 @@ class Matrix_load_bypass: public Matrix_easy_to_fill<T, ReadWriteT>
 
 public:
     Matrix_load_bypass():
-        Matrix_easy_to_fill<T, ReadWriteT>(),
-        loadFromCSVFile_called(false)
+        Matrix_easy_to_fill<T, ReadWriteT>()
     {
     }
 
     Matrix_load_bypass(uint height, uint width):
-        Matrix_easy_to_fill<T, ReadWriteT>(height, width),
-        loadFromCSVFile_called(false)
+        Matrix_easy_to_fill<T, ReadWriteT>(height, width)
     {
     }
 
     Matrix_load_bypass(uint height, uint width, const vector<T>& vec):
-        Matrix_easy_to_fill<T, ReadWriteT>(height, width, vec),
-        loadFromCSVFile_called(false)
+        Matrix_easy_to_fill<T, ReadWriteT>(height, width, vec)
     {
     }
 
-    bool loadFromCSVFile(const AnyString& /* filename */,
+    bool loadFromCSVFile(const fs::path& /* filepath */,
                          uint /* minWidth */,
                          uint /* maxHeight */,
                          uint /* options */,
@@ -76,7 +72,7 @@ public:
     }
 
 public:
-    bool loadFromCSVFile_called;
+    bool loadFromCSVFile_called = false;
 };
 
 template<class T = double, class ReadWriteT = T>
@@ -164,5 +160,3 @@ public:
 private:
     IO::Error fake_mtx_error_when_loading_;
 };
-
-#endif // __ANTARES_LIBS_ARRAY_MATRIX_BYPASS_LOAD_H__
