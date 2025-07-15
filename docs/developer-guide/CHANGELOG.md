@@ -4,6 +4,78 @@ toc_depth: 2
 
 # Antares Changelog
 
+## Branch 9.3.x
+
+### 9.3.0
+
+#### New features
+Dynamic groups for thermal and renewable clusters [ANT-1672] (#2579)
+
+
+#### Removed features
+Remove timeseries refresh [ANT-1335] (#2451)
+
+
+#### Improvements
+Remove year batches, launch jobs continually [ANT-2139] (#2718)
+Random TS numbers for STS inflows & additional constraints [ANT-3415] (#2882)
+or-tools : update to v9.13 [ANT-3348] (#2857)
+Add STS additional constraints to infeasible problem analysis [ANT-3386] (#2869)
+Add Gurobi to list of queried solvers [ANT-3381] (#2865)
+
+
+
+
+#### Bugfixes
+Infeasibility caused by hydro (attempt 2) [ANT-3122] (#2874)
+Re-implement MPObjective::Value (#2892)
+Bypass JIT only for STS [ANT-3425] (#2887)
+Hydro monthly heuristic : add variable overflow to problem [ANT-3236] (#2837)
+
+
+#### Modeler
+Checking modeler variable bounds (#2844)
+
+
+#### CI
+Use correct keys for ccache, update ccache for windows, always save ccache (#2884)(#2864)
+
+
+#### Build
+[ANT-2034] Various warnings or linter fixes (#2861)
+Fix compilation warning (implicit double -> float conversion) (#2862)
+
+#### Doc
+Migration guide for dynamic cluster groups and sts inflows (#2913)(#2915)(#2916)(#2918)
+Add more doc for STS additional constraints (#2867)
+
+#### Code quality
+Use range-based for loops (#2897)
+Save sts inflows in legacy GUI [ANT-3425] (#2886)
+Use std::vector<double> instead of double\*, add const (#2878)
+
+
+
+#### Technical cleaning
+[ANT-3409] Store short term time series number (#2881)
+
+
+
+#### Tests
+[In-memory studies] Add & use helpers for short-term storage (#2910)
+Remove useless std::shared_ptr around SimulationHandler (#2911)
+Improve helper class ThermalClusterConfig (#2909)
+[ANT-2034] InMemory modeler test (#2827)
+Add modeler features 8.1, 8.2 and 8.3 [ANT-3535] (#2902)
+Run parallel tests on windows only in extended tests (#2894)
+Add cucumber tests for v9.3.0 STS scenarization features [ANT-3037] (#2873)
+
+
+#### For developers
+Add 2 future parameters in generaldata.ini [ANT-3504] (#2907)
+
+
+
 ## Branch 9.2.x
 
 ### 9.2.1
