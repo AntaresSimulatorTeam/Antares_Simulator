@@ -43,7 +43,7 @@ public:
     }
 };
 
-LinearProblemApi::IScenario& ScenarioGroupRepository::scenario(const std::string& groupId) const
+const LinearProblemApi::IScenario &ScenarioGroupRepository::scenario(const std::string &groupId) const
 {
     // A component require a group id. Assuming that the default group id is "default"
     if (groupId.empty() || groupId == "default")
