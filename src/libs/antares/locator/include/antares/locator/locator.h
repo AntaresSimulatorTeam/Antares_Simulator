@@ -44,12 +44,6 @@ enum Feature
 bool FindLocation(Yuni::String& location);
 
 /*!
-** \brief Find the location of the analyzer
-** \return A non-empty string if the solver has been found, empty otherwise
-*/
-bool FindAnalyzerLocation(Yuni::String& location);
-
-/*!
 ** \brief Find the location of the constraints builder
 ** \return A non-empty string if the solver has been found, empty otherwise
 */

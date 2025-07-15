@@ -15,7 +15,7 @@ In other words, it is possible to make Antares work as a genuine DC OPF, provide
 
 - Among all cycle basis, some should be preferred to others because they lead to a sparser constraint matrix.
 
-To get around this issue, the KCG is an autonomous Antares module (much like the time-series analyzer) which automatically instantiates a set of adequate binding constraints that will enforce Kirchhoff's law on the AC subgraph of the power system. The graph cycle basis associated with the generated constraints is optimal, in that sense that it leads to a constraint matrix as sparse as possible.
+To get around this issue, the KCG is an autonomous Antares module which automatically instantiates a set of adequate binding constraints that will enforce Kirchhoff's law on the AC subgraph of the power system. The graph cycle basis associated with the generated constraints is optimal, in that sense that it leads to a constraint matrix as sparse as possible.
 To achieve that, the KCG implements an efficient algorithm yielding a minimal cycle basis [^16] and, for all cycles of the chosen basis, generates constraints of the form:
 
 $$c= 1, ..., C : \sum_{l \in C}{sign(l,c)F_lZ_l} = 0$$
