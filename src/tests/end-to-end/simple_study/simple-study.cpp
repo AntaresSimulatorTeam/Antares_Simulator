@@ -518,6 +518,6 @@ BOOST_FIXTURE_TEST_CASE(saving_study, HydroMaxPowerStudy)
 
     BOOST_CHECK(study->saveToFolder(std::filesystem::temp_directory_path().string()));
 }
-#endif
+#endif // BUILD_UI
 
 BOOST_AUTO_TEST_SUITE_END()
