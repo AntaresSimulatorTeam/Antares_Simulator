@@ -208,6 +208,7 @@ int InterAreaCorrelationSaveToFile(const Matrix<>* m, const AreaList* l, const c
 */
 int InterAreaCorrelationLoadFromIniFile(Matrix<>* m, AreaList* l, IniFile* ini, int warnings);
 
+#ifdef BUILD_UI
 /*!
 ** \brief Save an inter-area correlation matrix to a Ini file structure
 ** \ingroup interareacorrelation
@@ -220,6 +221,7 @@ int InterAreaCorrelationLoadFromIniFile(Matrix<>* m, AreaList* l, IniFile* ini, 
 ** \return An Ini file structure
 */
 IniFile* InterAreaCorrelationSaveToIniFile(const Matrix<>* m, const AreaList* l);
+#endif
 
 } // namespace Antares::Data
 

@@ -84,11 +84,13 @@ public:
     */
     bool readLine(const AreaName::Vector& splitKey, const String& value, bool updaterMode = false);
 
+#ifdef BUILD_UI
     /*!
     ** \brief Export the data into a mere INI file
     */
     void saveToINIFile(Yuni::IO::File::Stream& file) const;
-    //@}
+//@}
+#endif
 
     //! Get the number of areas
     uint areaCount() const;

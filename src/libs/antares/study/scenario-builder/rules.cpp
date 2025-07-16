@@ -55,6 +55,7 @@ Rules::Rules(Study& study):
 {
 }
 
+#ifdef BUILD_UI
 void Rules::saveToINIFile(Yuni::IO::File::Stream& file) const
 {
     file << "[" << pName << "]\n";
@@ -84,6 +85,7 @@ void Rules::saveToINIFile(Yuni::IO::File::Stream& file) const
     binding_constraints.saveToINIFile(study_, file);
     file << '\n';
 }
+#endif
 
 bool Rules::reset()
 {
