@@ -23,6 +23,7 @@
 
 #include <fstream>
 #include <ortools/linear_solver/linear_solver.h>
+#include <pi_constantes_externes.h>
 #include <ranges>
 
 #include <boost/test/data/dataset.hpp>
