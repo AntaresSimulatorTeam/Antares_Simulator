@@ -76,12 +76,21 @@ public:
     }
 };
 
-ScenarioGroupParser::Line ScenarioGroupParser::parseLine(const std::string& line)
+ScenarioGroupParser::Line ScenarioGroupParser::parseLine(const std::string& line,
+                                                         antlr4::BaseErrorListener* errorListener)
 {
     antlr4::ANTLRInputStream input(line);
     ScenarioBuilderLexer lexer(&input);
     antlr4::CommonTokenStream tokens(&lexer);
     ScenarioBuilderParser parser(&tokens);
+    if (errorListener)
+    {
+        lexer.removeErrorListeners();
+        parser.removeErrorListeners();
+        lexer.addErrorListener(errorListener);
+        parser.addErrorListener(errorListener);
+    }
+
     try
     {
         auto* tree = parser.rules();
