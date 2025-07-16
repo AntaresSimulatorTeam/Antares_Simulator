@@ -135,8 +135,8 @@ var hierarchy =
       [ "Antares::Component::Datagrid::Renderer::classicColumn", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1classicColumn.html", null ],
       [ "Antares::Component::Datagrid::Renderer::thermalColumn", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1thermalColumn.html", null ]
     ] ],
-    [ "commonFixture", "structcommonFixture.html", null ],
     [ "CommonFixture", "structCommonFixture.html", null ],
+    [ "commonFixture", "structcommonFixture.html", null ],
     [ "Antares::Data::CompareAreaName", "structAntares_1_1Data_1_1CompareAreaName.html", null ],
     [ "Antares::Data::CompareBindingConstraintName", "structAntares_1_1Data_1_1CompareBindingConstraintName.html", null ],
     [ "Antares::Forms::CompareBySimulationMode", "structAntares_1_1Forms_1_1CompareBySimulationMode.html", null ],
@@ -166,6 +166,7 @@ var hierarchy =
     [ "Antares::Solver::ConstantDataFromAntares", "structAntares_1_1Solver_1_1ConstantDataFromAntares.html", null ],
     [ "Antares::IO::Inputs::YmlModel::Constraint", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Constraint.html", null ],
     [ "Antares::ModelerStudy::SystemModel::Constraint", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Constraint.html", null ],
+    [ "TestingSimulationObserver::Constraint", "structTestingSimulationObserver_1_1Constraint.html", null ],
     [ "ConstraintBuilder", "classConstraintBuilder.html", null ],
     [ "ConstraintBuilderData", "classConstraintBuilderData.html", null ],
     [ "Test::Modeler::ConstraintData", "structTest_1_1Modeler_1_1ConstraintData.html", null ],
@@ -1027,7 +1028,8 @@ var hierarchy =
     ] ],
     [ "Antares::Solver::Simulation::ISimulationObserver", "classAntares_1_1Solver_1_1Simulation_1_1ISimulationObserver.html", [
       [ "Antares::API::SimulationObserver", "classAntares_1_1API_1_1SimulationObserver.html", null ],
-      [ "Antares::Solver::Simulation::NullSimulationObserver", "classAntares_1_1Solver_1_1Simulation_1_1NullSimulationObserver.html", null ]
+      [ "Antares::Solver::Simulation::NullSimulationObserver", "classAntares_1_1Solver_1_1Simulation_1_1NullSimulationObserver.html", null ],
+      [ "TestingSimulationObserver", "classTestingSimulationObserver.html", null ]
     ] ],
     [ "Antares::IStudyLoader", "classAntares_1_1IStudyLoader.html", [
       [ "Antares::FileTreeStudyLoader", "classAntares_1_1FileTreeStudyLoader.html", null ],
@@ -1545,6 +1547,7 @@ var hierarchy =
     [ "Antares::Private::OutputViewerData::Content::SimulationType", "classAntares_1_1Private_1_1OutputViewerData_1_1Content_1_1SimulationType.html", null ],
     [ "Antares::Data::ShortTermStorage::SingleAdditionalConstraint", "classAntares_1_1Data_1_1ShortTermStorage_1_1SingleAdditionalConstraint.html", null ],
     [ "Antares::Solver::Optimization::SingleOptimOptions", "structAntares_1_1Solver_1_1Optimization_1_1SingleOptimOptions.html", null ],
+    [ "TestingSimulationObserver::SingleProblem", "structTestingSimulationObserver_1_1SingleProblem.html", null ],
     [ "Antares::TSGenerator::Predicate::Solar", "classAntares_1_1TSGenerator_1_1Predicate_1_1Solar.html", null ],
     [ "SOLDE_MOYEN_DES_ECHANGES", "structSOLDE__MOYEN__DES__ECHANGES.html", null ],
     [ "solver_input_handler.solver_input_handler", "classsolver__input__handler_1_1solver__input__handler.html", null ],
@@ -1870,6 +1873,7 @@ var hierarchy =
     [ "Antares::Toolbox::Filter::Operator::Parameter::Value", "structAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter_1_1Value.html", null ],
     [ "Antares::IO::Inputs::YmlModel::Variable", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable.html", null ],
     [ "Antares::ModelerStudy::SystemModel::Variable", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Variable.html", null ],
+    [ "TestingSimulationObserver::Variable", "structTestingSimulationObserver_1_1Variable.html", null ],
     [ "Variable", "classVariable.html", null ],
     [ "Antares::Solver::Variable::VariableAccessor< ResultsT, ColumnCountT >", "structAntares_1_1Solver_1_1Variable_1_1VariableAccessor.html", null ],
     [ "Antares::Solver::Variable::VariableAccessor< ResultsT, Category::dynamicColumns >", "structAntares_1_1Solver_1_1Variable_1_1VariableAccessor_3_01ResultsT_00_01Category_1_1dynamicColumns_01_4.html", null ],

@@ -1,13 +1,17 @@
 var NAVTREEINDEX58 =
 {
-"structCommonFixture.html#a4f9e23bd2b1a51312d117fb7308b8a55":[8,0,64,6],
-"structCommonFixture.html#a63a6dca7ef2f76e7adf9c1de859b828d":[8,0,64,2],
-"structCommonFixture.html#a673cfdc1de1cd2460da44ec34ac86799":[8,0,64,5],
-"structCommonFixture.html#a7e857d7a36118588d9b0496d3e320fa2":[8,0,64,0],
-"structCommonFixture.html#aa805477ed6aee7b227ba37f024d589ac":[8,0,64,1],
-"structCommonFixture.html#aab7556b97e8491a2c8698c82e2459272":[8,0,64,3],
-"structCommonFixture.html#abf9bdc1f6baaa402775a5479ef363c3d":[8,0,64,8],
-"structCommonFixture.html#ac429fdaa75158dfb6377334918c99c44":[8,0,64,7],
+"structCmdLineOptionsFixture.html#a81ce2b20b2e5a1d4c376b7391b772630":[8,0,62,0],
+"structCommonFixture.html":[8,0,63],
+"structCommonFixture.html#a1e4002092a472cf12357e6f1adf7e571":[8,0,63,9],
+"structCommonFixture.html#a38c4907074260ede2987187e59262f5d":[8,0,63,4],
+"structCommonFixture.html#a4f9e23bd2b1a51312d117fb7308b8a55":[8,0,63,6],
+"structCommonFixture.html#a63a6dca7ef2f76e7adf9c1de859b828d":[8,0,63,2],
+"structCommonFixture.html#a673cfdc1de1cd2460da44ec34ac86799":[8,0,63,5],
+"structCommonFixture.html#a7e857d7a36118588d9b0496d3e320fa2":[8,0,63,0],
+"structCommonFixture.html#aa805477ed6aee7b227ba37f024d589ac":[8,0,63,1],
+"structCommonFixture.html#aab7556b97e8491a2c8698c82e2459272":[8,0,63,3],
+"structCommonFixture.html#abf9bdc1f6baaa402775a5479ef363c3d":[8,0,63,8],
+"structCommonFixture.html#ac429fdaa75158dfb6377334918c99c44":[8,0,63,7],
 "structComparisonFixture.html":[8,0,65],
 "structComparisonFixture.html#a3480ed9959b1514c17ebdd74ea45b854":[8,0,65,0],
 "structComparisonFixture.html#a7e038ad752f551e466e2375b9cba2e42":[8,0,65,1],
@@ -245,9 +249,5 @@ var NAVTREEINDEX58 =
 "structExpectedResult.html#a1058380386c251fd2f8d8be9ecd07c53":[8,0,106,1],
 "structExpectedResult.html#a3c78a5ee4250730560d7eefa27b71033":[8,0,106,0],
 "structFictitiousLoadData.html":[8,0,114],
-"structFictitiousLoadData.html#a179c1f3c4949332a7a1b7d1ca27a6aa6":[8,0,114,2],
-"structFictitiousLoadData.html#a8f0af892e855b2ceb0716fbc6bc86fca":[8,0,114,0],
-"structFictitiousLoadData.html#ae35cf7def56231fbb9275894bef58e8d":[8,0,114,1],
-"structFinalStockEquivalentData.html":[8,0,116],
-"structFinalStockEquivalentData.html#a47f75fe99a114e81c25761b51b2bb8bb":[8,0,116,0]
+"structFictitiousLoadData.html#a179c1f3c4949332a7a1b7d1ca27a6aa6":[8,0,114,2]
 };
