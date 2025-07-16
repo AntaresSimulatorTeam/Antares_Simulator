@@ -252,14 +252,16 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
                 {
                     break;
                 }
-                double max_pic, max_creux;
+
+                double max_pic = std::numeric_limits<double>::max();
+                double max_creux = std::numeric_limits<double>::max();
 
                 if (reservoirManagement)
                 {
-                    std::span<double> intermediate_level(levels.begin()
-                                                           + std::min(hourBottom, hourPeak),
-                                                         levels.begin()
-                                                           + std::max(hourBottom, hourPeak));
+                    unsigned minHour = std::min(hourBottom, hourPeak);
+                    unsigned maxHour = std::max(hourBottom, hourPeak);
+                    std::span<double> intermediate_level(levels.begin() + minHour,
+                                                         levels.begin() + maxHour);
 
                     if (hourBottom < hourPeak)
                     {
@@ -271,11 +273,6 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
                         max_pic = reservoirCapacity - *std::ranges::max_element(intermediate_level);
                         max_creux = reservoirCapacity;
                     }
-                }
-                else
-                {
-                    max_pic = std::numeric_limits<double>::max();
-                    max_creux = std::numeric_limits<double>::max();
                 }
 
                 max_pic = std::min(OutHydroGen[hourPeak] - HydroPmin[hourPeak], max_pic);
