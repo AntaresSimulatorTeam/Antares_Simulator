@@ -1,7 +1,7 @@
 #include "include/antares/solver/simulation/shave-peaks-by-remix-hydro.h"
 
 #include <algorithm>
-#include <numeric>
+#include <limits>
 #include <ranges>
 #include <span>
 #include <stdexcept>
@@ -12,23 +12,23 @@ constexpr double RESERVOIR_LEVEL_TOLERANCE = 1.e-6;
 namespace Antares::Solver::Simulation
 {
 
-int find_min_index(const std::vector<double>& TotalGen,
-                   const std::vector<double>& OutUnsupE,
-                   const std::vector<double>& OutHydroGen,
-                   const std::vector<bool>& triedBottom,
-                   const std::vector<double>& HydroPmax,
-                   const std::vector<bool>& enabledHours,
-                   double top)
+int hour_for_totalGen_min(const std::vector<double>& TotalGen,
+                          const std::vector<double>& OutUnsupE,
+                          const std::vector<double>& OutHydroGen,
+                          const std::vector<bool>& triedBottom,
+                          const std::vector<double>& HydroPmax,
+                          const std::vector<bool>& enabledHours,
+                          double top)
 {
-    double min_val = top;
+    double minTotalGen = top;
     int min_hour = -1;
     for (unsigned int h = 0; h < TotalGen.size(); ++h)
     {
         if (OutUnsupE[h] > 0 && OutHydroGen[h] < HydroPmax[h] && !triedBottom[h] && enabledHours[h])
         {
-            if (TotalGen[h] < min_val)
+            if (TotalGen[h] < minTotalGen)
             {
-                min_val = TotalGen[h];
+                minTotalGen = TotalGen[h];
                 min_hour = h;
             }
         }
@@ -36,24 +36,24 @@ int find_min_index(const std::vector<double>& TotalGen,
     return min_hour;
 }
 
-int find_max_index(const std::vector<double>& TotalGen,
-                   const std::vector<double>& OutHydroGen,
-                   const std::vector<bool>& triedPeak,
-                   const std::vector<double>& HydroPmin,
-                   const std::vector<bool>& enabledHours,
-                   double ref_value,
-                   double eps)
+int hour_for_totalGen_max(const std::vector<double>& TotalGen,
+                          const std::vector<double>& OutHydroGen,
+                          const std::vector<bool>& triedPeak,
+                          const std::vector<double>& HydroPmin,
+                          const std::vector<bool>& enabledHours,
+                          double ref_value,
+                          double eps)
 {
-    double max_val = 0;
+    double maxTotalGen = 0;
     int max_hour = -1;
     for (unsigned int h = 0; h < TotalGen.size(); ++h)
     {
         if (OutHydroGen[h] > HydroPmin[h] && TotalGen[h] >= ref_value + eps && !triedPeak[h]
             && enabledHours[h])
         {
-            if (TotalGen[h] > max_val)
+            if (TotalGen[h] > maxTotalGen)
             {
-                max_val = TotalGen[h];
+                maxTotalGen = TotalGen[h];
                 max_hour = h;
             }
         }
@@ -226,13 +226,13 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
 
         while (true)
         {
-            int hourBottom = find_min_index(TotalGen,
-                                            OutUnsupE,
-                                            OutHydroGen,
-                                            triedBottom,
-                                            HydroPmax,
-                                            enabledHours,
-                                            top);
+            int hourBottom = hour_for_totalGen_min(TotalGen,
+                                                   OutUnsupE,
+                                                   OutHydroGen,
+                                                   triedBottom,
+                                                   HydroPmax,
+                                                   enabledHours,
+                                                   top);
             if (hourBottom == -1)
             {
                 break;
@@ -241,13 +241,13 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
             std::vector<bool> triedPeak(DispatchGen.size(), false);
             while (true)
             {
-                int hourPeak = find_max_index(TotalGen,
-                                              OutHydroGen,
-                                              triedPeak,
-                                              HydroPmin,
-                                              enabledHours,
-                                              TotalGen[hourBottom],
-                                              eps);
+                int hourPeak = hour_for_totalGen_max(TotalGen,
+                                                     OutHydroGen,
+                                                     triedPeak,
+                                                     HydroPmin,
+                                                     enabledHours,
+                                                     TotalGen[hourBottom],
+                                                     eps);
                 if (hourPeak == -1)
                 {
                     break;
