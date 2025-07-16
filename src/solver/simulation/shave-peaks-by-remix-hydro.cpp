@@ -8,6 +8,7 @@
 #include <vector>
 
 constexpr double RESERVOIR_LEVEL_TOLERANCE = 1.e-6;
+constexpr double eps = 1e-3;
 
 namespace Antares::Solver::Simulation
 {
@@ -41,8 +42,7 @@ int hour_for_totalGen_max(const std::vector<double>& TotalGen,
                           const std::vector<bool>& triedPeak,
                           const std::vector<double>& HydroPmin,
                           const std::vector<bool>& enabledHours,
-                          double ref_value,
-                          double eps)
+                          double ref_value)
 {
     double maxTotalGen = 0;
     int max_hour = -1;
@@ -198,7 +198,6 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
     std::vector<double> OutUnsupE = UnsupE;
 
     int loop = 1000;
-    double eps = 1e-3;
     double top = *std::max_element(DispatchGen.begin(), DispatchGen.end())
                  + *std::max_element(HydroGen.begin(), HydroGen.end())
                  + *std::max_element(UnsupE.begin(), UnsupE.end()) + 1;
@@ -246,8 +245,7 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
                                                      triedPeak,
                                                      HydroPmin,
                                                      enabledHours,
-                                                     TotalGen[hourBottom],
-                                                     eps);
+                                                     TotalGen[hourBottom]);
                 if (hourPeak == -1)
                 {
                     break;
