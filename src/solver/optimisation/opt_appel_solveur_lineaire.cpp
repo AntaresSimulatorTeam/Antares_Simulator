@@ -158,11 +158,12 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
 // Returns a non-owning pointer
 MPSolver* convertToMPSolver(const PROBLEME_HEBDO* problemeHebdo,
                             const int NumIntervalle,
-                            const SingleOptimOptions& options)
+                            const SingleOptimOptions& options,
+                            bool namedProblems)
 {
     LegacyOrtoolsLinearProblem ortoolsProblem(problemeHebdo->ProblemeAResoudre->isMIP(),
                                               options.solverName);
-    LegacyFiller legacyOrtoolsFiller(problemeHebdo);
+    LegacyFiller legacyOrtoolsFiller(problemeHebdo, namedProblems);
     std::vector<LinearProblemFiller*> fillersCollection = {&legacyOrtoolsFiller};
 
     std::vector<std::unique_ptr<ComponentFiller>> componentFillers;
@@ -198,7 +199,6 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                           const int NumIntervalle,
                                           const int optimizationNumber,
                                           const OptPeriodStringGenerator& optPeriodStringGenerator,
-                                          bool PremierPassage,
                                           IResultWriter& writer)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
@@ -208,10 +208,6 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     assert(opt >= 0 && opt < 2);
     OptimizationStatistics& optimizationStatistics = problemeHebdo->optimizationStatistics[opt];
     TIME_MEASURE timeMeasure;
-    if (!PremierPassage)
-    {
-        solver = nullptr;
-    }
 
     if (solver)
     {
@@ -245,10 +241,12 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
             optimizationStatistics.addUpdateTime(timeMeasure.updateTime);
         }
     }
-
     if (solver == nullptr)
     {
-        solver = convertToMPSolver(problemeHebdo, NumIntervalle, options);
+        solver = convertToMPSolver(problemeHebdo,
+                                   NumIntervalle,
+                                   options,
+                                   problemeHebdo->NamedProblems);
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
@@ -271,17 +269,20 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     timeMeasure.solveTime = measure.duration_ms();
     optimizationStatistics.addSolveTime(timeMeasure.solveTime);
 
-    if (ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX && PremierPassage)
+    if (ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX)
     {
         if (ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE)
         {
             if (solver)
             {
                 ORTOOLS_LibererProbleme(solver);
+
+                ProblemeAResoudre->ProblemesSpx[NumIntervalle] = nullptr;
+
+                solver = nullptr;
             }
 
-            logs.info() << " Solver: Standard resolution failed";
-            logs.info() << " Solver: Retry in safe mode"; // second trial w/o scaling
+            logs.info() << " Solver: resolution failed";
             logs.debug() << " solver: resetting";
 
             return {.success = false,
@@ -313,35 +314,15 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
-    bool PremierPassage = true;
-
     SimplexResult simplexResult = OPT_TryToCallSimplex(options,
                                                        problemeHebdo,
                                                        NumIntervalle,
                                                        optimizationNumber,
                                                        optPeriodStringGenerator,
-                                                       PremierPassage,
                                                        writer);
-
-    if (!simplexResult.success)
-    {
-        PremierPassage = false;
-        simplexResult = OPT_TryToCallSimplex(options,
-                                             problemeHebdo,
-                                             NumIntervalle,
-                                             optimizationNumber,
-                                             optPeriodStringGenerator,
-                                             PremierPassage,
-                                             writer);
-    }
 
     if (ProblemeAResoudre->ExistenceDUneSolution == OUI_SPX)
     {
-        if (!PremierPassage)
-        {
-            logs.info() << " Solver: Safe resolution succeeded";
-        }
-
         double* pt;
         double optimizationCost = simplexResult.objectiveValue;
 
@@ -389,19 +370,19 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
 
     else
     {
-        if (!PremierPassage)
-        {
-            logs.info() << " Solver: Safe resolution failed";
-        }
-
         std::unique_ptr<MPSolver> MPproblem(
-          convertToMPSolver(problemeHebdo, NumIntervalle, options));
+          convertToMPSolver(problemeHebdo, NumIntervalle, options, true));
 
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());
         analyzer->printReport();
-
-        auto mps_writer_on_error = simplexResult.mps_writer_factory.createOnOptimizationError();
+        mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
+                                            problemeHebdo->exportMPSOnError,
+                                            optimizationNumber,
+                                            MPproblem.get());
+        // Since MpProblem must have named vars and constraints in case of infeasibility, we must
+        // use the updated MPSolver
+        auto mps_writer_on_error = mps_writer_factory.createOnOptimizationError();
         const std::string filename = createMPSfilename(optPeriodStringGenerator,
                                                        optimizationNumber);
         mps_writer_on_error->runIfNeeded(writer, filename);
