@@ -250,9 +250,12 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
                 {
                     break;
                 }
-
-                double max_pic = std::numeric_limits<double>::max();
-                double max_creux = std::numeric_limits<double>::max();
+                // max slice we can take from hydro generation, at an hour when the total
+                // production reaches a peak.
+                double maxSliceOfHydroAtPeak = std::numeric_limits<double>::max();
+                // max slice we can add to hydro generation, at an hour when the total
+                // production reaches a bottom.
+                double maxSliceOfHydroAtBottom = std::numeric_limits<double>::max();
 
                 if (reservoirManagement)
                 {
@@ -263,24 +266,28 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
 
                     if (hourBottom < hourPeak)
                     {
-                        max_pic = reservoirCapacity;
-                        max_creux = *std::ranges::min_element(intermediate_level);
+                        maxSliceOfHydroAtPeak = reservoirCapacity;
+                        maxSliceOfHydroAtBottom = *std::ranges::min_element(intermediate_level);
                     }
                     else
                     {
-                        max_pic = reservoirCapacity - *std::ranges::max_element(intermediate_level);
-                        max_creux = reservoirCapacity;
+                        maxSliceOfHydroAtPeak = reservoirCapacity
+                                                - *std::ranges::max_element(intermediate_level);
+                        maxSliceOfHydroAtBottom = reservoirCapacity;
                     }
                 }
 
-                max_pic = std::min(OutHydroGen[hourPeak] - HydroPmin[hourPeak], max_pic);
-                max_creux = std::min({HydroPmax[hourBottom] - OutHydroGen[hourBottom],
-                                      OutUnsupE[hourBottom],
-                                      max_creux});
+                maxSliceOfHydroAtPeak = std::min(OutHydroGen[hourPeak] - HydroPmin[hourPeak],
+                                                 maxSliceOfHydroAtPeak);
+                maxSliceOfHydroAtBottom = std::min({HydroPmax[hourBottom] - OutHydroGen[hourBottom],
+                                                    OutUnsupE[hourBottom],
+                                                    maxSliceOfHydroAtBottom});
 
                 double dif_pic_creux = std::max(TotalGen[hourPeak] - TotalGen[hourBottom], 0.);
 
-                delta = std::max(std::min({max_pic, max_creux, dif_pic_creux / 2.}), 0.);
+                delta = std::max(
+                  std::min({maxSliceOfHydroAtPeak, maxSliceOfHydroAtBottom, dif_pic_creux / 2.}),
+                  0.);
 
                 if (delta > eps)
                 {
