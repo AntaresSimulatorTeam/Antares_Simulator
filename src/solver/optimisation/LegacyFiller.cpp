@@ -28,9 +28,9 @@ using namespace Antares::Optimisation::LinearProblemApi;
 namespace Antares::Optimization
 {
 
-LegacyFiller::LegacyFiller(const PROBLEME_HEBDO* problemeHebdo, bool nameProblems):
+LegacyFiller::LegacyFiller(const PROBLEME_HEBDO* problemeHebdo, bool namedProblems):
     problemeAResoudre_(problemeHebdo->ProblemeAResoudre.get()),
-    useNamedProblems_(problemeHebdo->NamedProblems || nameProblems)
+    useNamedProblems_(namedProblems)
 {
 }
 

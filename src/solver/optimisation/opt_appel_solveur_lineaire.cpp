@@ -159,11 +159,11 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
 MPSolver* convertToMPSolver(const PROBLEME_HEBDO* problemeHebdo,
                             const int NumIntervalle,
                             const SingleOptimOptions& options,
-                            bool nameProblems)
+                            bool namedProblems)
 {
     LegacyOrtoolsLinearProblem ortoolsProblem(problemeHebdo->ProblemeAResoudre->isMIP(),
                                               options.solverName);
-    LegacyFiller legacyOrtoolsFiller(problemeHebdo, nameProblems);
+    LegacyFiller legacyOrtoolsFiller(problemeHebdo, namedProblems);
     std::vector<LinearProblemFiller*> fillersCollection = {&legacyOrtoolsFiller};
 
     std::vector<std::unique_ptr<ComponentFiller>> componentFillers;
@@ -243,7 +243,10 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     }
     if (solver == nullptr)
     {
-        solver = convertToMPSolver(problemeHebdo, NumIntervalle, options, false);
+        solver = convertToMPSolver(problemeHebdo,
+                                   NumIntervalle,
+                                   options,
+                                   problemeHebdo->NamedProblems);
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
