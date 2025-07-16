@@ -390,7 +390,6 @@ void Application::execute()
 
     // Save about-the-study files (comments, notes, etc.)
     pStudy->saveAboutTheStudy(*resultWriter);
-
     SystemMemoryLogger memoryReport;
     memoryReport.interval(1000 * 60 * 5); // 5 minutes
     memoryReport.start();

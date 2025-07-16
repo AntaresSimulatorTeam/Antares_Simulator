@@ -131,8 +131,9 @@ public:
     bool loadDataSeriesFromFolder(Study& study, const std::filesystem::path& folder);
 
     bool saveDataSeriesToFolder(const AnyString& folder) const;
-
+#ifdef BUILD_UI
     virtual bool saveToFolder(const AnyString& folder) const = 0;
+#endif
     ///@}
 
     /*!

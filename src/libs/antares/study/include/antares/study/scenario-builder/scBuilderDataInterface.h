@@ -45,10 +45,12 @@ public:
      */
     virtual bool reset(const Study& study) = 0;
 
+#ifdef BUILD_UI
     /*!
      ** \brief Export the data into a mere INI file
      */
     virtual void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const = 0;
+#endif
 
     [[nodiscard]] virtual uint width() const = 0;
 
