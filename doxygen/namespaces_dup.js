@@ -1304,7 +1304,7 @@ var namespaces_dup =
           [ "IDataSeries", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1IDataSeries.html", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1IDataSeries" ],
           [ "DataSeriesRepository", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository.html", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository" ],
           [ "LinearProblemData", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1LinearProblemData.html", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1LinearProblemData" ],
-          [ "ScenarioGroupRepository", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository.html", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository" ],
+          [ "Scenario", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1Scenario.html", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1Scenario" ],
           [ "TimeSeriesSet", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1TimeSeriesSet.html", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1TimeSeriesSet" ]
         ] ],
         [ "LinearProblemMpsolverImpl", null, [
@@ -1312,7 +1312,9 @@ var namespaces_dup =
           [ "OrtoolsMipConstraint", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipConstraint.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipConstraint" ],
           [ "OrtoolsMipSolution", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipSolution.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipSolution" ],
           [ "OrtoolsMipVariable", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable" ]
-        ] ]
+        ] ],
+        [ "ScenarioGroupRepository", "classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html", "classAntares_1_1Optimisation_1_1ScenarioGroupRepository" ],
+        [ "DefaultScenario", "classAntares_1_1Optimisation_1_1DefaultScenario.html", "classAntares_1_1Optimisation_1_1DefaultScenario" ]
       ] ],
       [ "Optimization", "namespaceAntares_1_1Optimization.html", "namespaceAntares_1_1Optimization" ],
       [ "Private", null, [
@@ -1394,9 +1396,11 @@ var namespaces_dup =
           [ "loadLibraries", "loadFiles_8h.html#aff904c8613f4c1757a9b56fd397fcb19", null ],
           [ "loadParameters", "readParameters_8cpp.html#a851d9bdb147028b9f37d6bb7d4b68ce3", null ],
           [ "loadParameters", "loadFiles_8h.html#aefa634dcb9ba9c6ba4ec4ac55065fe3b", null ],
+          [ "loadScenarioGroupRepository", "loadFiles_8h.html#a0090c27f5dec990dc65e6482653feb99", null ],
           [ "loadSystem", "readSystem_8cpp.html#a8babba588d7df856e9efd4ae1350c30d", null ],
           [ "loadSystem", "loadFiles_8h.html#a33a4abfd0fc7d8e50b06ec3bc672e8d9", null ],
-          [ "parseModelerParameters", "parseModelerParameters_8h.html#aec770ce15d1ae94b5c46e6d8575f038f", null ]
+          [ "parseModelerParameters", "parseModelerParameters_8h.html#aec770ce15d1ae94b5c46e6d8575f038f", null ],
+          [ "parseScenarioGroupRepository", "readScenarioGroup_8cpp.html#a943db40ecb725367be53737db95dcdb2", null ]
         ] ],
         [ "Optimization", null, [
           [ "SingleOptimOptions", "structAntares_1_1Solver_1_1Optimization_1_1SingleOptimOptions.html", "structAntares_1_1Solver_1_1Optimization_1_1SingleOptimOptions" ],
@@ -2266,6 +2270,8 @@ var namespaces_dup =
       [ "IniFile", "classAntares_1_1IniFile.html", "classAntares_1_1IniFile" ],
       [ "Memory", "classAntares_1_1Memory.html", "classAntares_1_1Memory" ],
       [ "MersenneTwister", "classAntares_1_1MersenneTwister.html", "classAntares_1_1MersenneTwister" ],
+      [ "ScenarioGroupParser", "classAntares_1_1ScenarioGroupParser.html", "classAntares_1_1ScenarioGroupParser" ],
+      [ "ScenarioBuilderImplVisitor", "classAntares_1_1ScenarioBuilderImplVisitor.html", "classAntares_1_1ScenarioBuilderImplVisitor" ],
       [ "IStudyLoader", "classAntares_1_1IStudyLoader.html", "classAntares_1_1IStudyLoader" ],
       [ "areaInfo", "classAntares_1_1areaInfo.html", "classAntares_1_1areaInfo" ],
       [ "linkInfo", "classAntares_1_1linkInfo.html", "classAntares_1_1linkInfo" ],

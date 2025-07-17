@@ -9,10 +9,10 @@ var classFSWalker_1_1EventsRegistry =
     [ "finalize", "classFSWalker_1_1EventsRegistry.html#af868dbeb1c0c17c0534dbe22ef188161", null ],
     [ "initialize", "classFSWalker_1_1EventsRegistry.html#a8e8094e699bd0235dbc6a1b04b4ccf8e", null ],
     [ "access", "classFSWalker_1_1EventsRegistry.html#aca71e6ff6188e8baf32fe6692d3e13a5", null ],
-    [ "directory", "classFSWalker_1_1EventsRegistry.html#af2891219d79798632a69249d5ba1218f", null ],
+    [ "directory", "classFSWalker_1_1EventsRegistry.html#af51535fb992b33e9dc08e6c13409475b", null ],
     [ "enter", "classFSWalker_1_1EventsRegistry.html#a3ce17d2cccd450be9c269cd2144b0599", null ],
     [ "extensions", "classFSWalker_1_1EventsRegistry.html#a4d25055f43ec064572e779629a777bc1", null ],
-    [ "file", "classFSWalker_1_1EventsRegistry.html#a3065ff40ef10f1149d738d4bed7e810e", null ],
+    [ "file", "classFSWalker_1_1EventsRegistry.html#a22ba0f6b53e795614947ccdb81be1410", null ],
     [ "indexes", "classFSWalker_1_1EventsRegistry.html#a39b85c20ba81278315b614686aa81cff", null ],
     [ "uniqueUserdata", "classFSWalker_1_1EventsRegistry.html#a6fec6f003d17a503d0d0b1d3db5d0e94", null ],
     [ "userdata", "classFSWalker_1_1EventsRegistry.html#a6f0f235a98187d4239baaf042077591e", null ]

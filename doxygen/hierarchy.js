@@ -15,6 +15,11 @@ var hierarchy =
         [ "HoursFieldBaseVisitor", "classHoursFieldBaseVisitor.html", [
           [ "HoursCollectorVisitor", "classHoursCollectorVisitor.html", null ]
         ] ]
+      ] ],
+      [ "ScenarioBuilderVisitor", "classScenarioBuilderVisitor.html", [
+        [ "ScenarioBuilderBaseVisitor", "classScenarioBuilderBaseVisitor.html", [
+          [ "Antares::ScenarioBuilderImplVisitor", "classAntares_1_1ScenarioBuilderImplVisitor.html", null ]
+        ] ]
       ] ]
     ] ],
     [ "Antares::Window::Inspector::Accumulator< PredicateT, TraitsT >", "structAntares_1_1Window_1_1Inspector_1_1Accumulator.html", null ],
@@ -69,7 +74,8 @@ var hierarchy =
     [ "Antares::Solver::Variable::R::AllYears::AverageData", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData.html", null ],
     [ "averageResults", "classaverageResults.html", null ],
     [ "antlr4::BaseErrorListener", null, [
-      [ "Antares::Data::ShortTermStorage::CustomErrorListener", "classAntares_1_1Data_1_1ShortTermStorage_1_1CustomErrorListener.html", null ]
+      [ "Antares::Data::ShortTermStorage::CustomErrorListener", "classAntares_1_1Data_1_1ShortTermStorage_1_1CustomErrorListener.html", null ],
+      [ "CustomErrorListener", "classCustomErrorListener.html", null ]
     ] ],
     [ "Antares::Solver::Simulation::basePostProcessCommand", "classAntares_1_1Solver_1_1Simulation_1_1basePostProcessCommand.html", [
       [ "Antares::Solver::Simulation::CurtailmentSharingPostProcessCmd", "classAntares_1_1Solver_1_1Simulation_1_1CurtailmentSharingPostProcessCmd.html", null ],
@@ -989,13 +995,14 @@ var hierarchy =
       [ "Antares::Optimisation::LinearProblemDataImpl::DataSeriesRepository::DataSeriesAlreadyExists", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_1_1DataSeriesAlreadyExists.html", null ],
       [ "Antares::Optimisation::LinearProblemDataImpl::DataSeriesRepository::DataSeriesNotExist", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_1_1DataSeriesNotExist.html", null ],
       [ "Antares::Optimisation::LinearProblemDataImpl::DataSeriesRepository::Empty", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_1_1Empty.html", null ],
-      [ "Antares::Optimisation::LinearProblemDataImpl::ScenarioGroupRepository::AlreadyExists", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository_1_1AlreadyExists.html", null ],
-      [ "Antares::Optimisation::LinearProblemDataImpl::ScenarioGroupRepository::DoesNotExist", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository_1_1DoesNotExist.html", null ],
-      [ "Antares::Optimisation::LinearProblemDataImpl::ScenarioGroupRepository::ScenarioNotExist", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository_1_1ScenarioNotExist.html", null ],
+      [ "Antares::Optimisation::LinearProblemDataImpl::Scenario::AlreadyExists", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1Scenario_1_1AlreadyExists.html", null ],
+      [ "Antares::Optimisation::LinearProblemDataImpl::Scenario::ScenarioNotExist", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1Scenario_1_1ScenarioNotExist.html", null ],
       [ "Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet::AddTSofWrongSize", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1TimeSeriesSet_1_1AddTSofWrongSize.html", null ],
       [ "Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet::Empty", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1TimeSeriesSet_1_1Empty.html", null ],
       [ "Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet::HourTooBig", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1TimeSeriesSet_1_1HourTooBig.html", null ],
       [ "Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet::RankTooBig", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1TimeSeriesSet_1_1RankTooBig.html", null ],
+      [ "Antares::Optimisation::ScenarioGroupRepository::AlreadyExists", "classAntares_1_1Optimisation_1_1ScenarioGroupRepository_1_1AlreadyExists.html", null ],
+      [ "Antares::Optimisation::ScenarioGroupRepository::DoesNotExist", "classAntares_1_1Optimisation_1_1ScenarioGroupRepository_1_1DoesNotExist.html", null ],
       [ "Antares::Optimization::VariablesBulkAddition::BoundsSizeMismatch", "classAntares_1_1Optimization_1_1VariablesBulkAddition_1_1BoundsSizeMismatch.html", null ]
     ] ],
     [ "Antares::Component::Datagrid::Selection::IOperator", "classAntares_1_1Component_1_1Datagrid_1_1Selection_1_1IOperator.html", [
@@ -1025,6 +1032,10 @@ var hierarchy =
       [ "Antares::Solver::InMemoryWriter", "classAntares_1_1Solver_1_1InMemoryWriter.html", null ],
       [ "Antares::Solver::NullResultWriter", "classAntares_1_1Solver_1_1NullResultWriter.html", null ],
       [ "Antares::Solver::ZipWriter", "classAntares_1_1Solver_1_1ZipWriter.html", null ]
+    ] ],
+    [ "Antares::Optimisation::LinearProblemApi::IScenario", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario.html", [
+      [ "Antares::Optimisation::DefaultScenario", "classAntares_1_1Optimisation_1_1DefaultScenario.html", null ],
+      [ "Antares::Optimisation::LinearProblemDataImpl::Scenario", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1Scenario.html", null ]
     ] ],
     [ "Antares::Solver::Simulation::ISimulationObserver", "classAntares_1_1Solver_1_1Simulation_1_1ISimulationObserver.html", [
       [ "Antares::API::SimulationObserver", "classAntares_1_1API_1_1SimulationObserver.html", null ],
@@ -1069,13 +1080,15 @@ var hierarchy =
     [ "LEVEL_FLEX_UP_NODE", "structLEVEL__FLEX__UP__NODE.html", null ],
     [ "antlr4::Lexer", null, [
       [ "ExprLexer", "classExprLexer.html", null ],
-      [ "HoursFieldLexer", "classHoursFieldLexer.html", null ]
+      [ "HoursFieldLexer", "classHoursFieldLexer.html", null ],
+      [ "ScenarioBuilderLexer", "classScenarioBuilderLexer.html", null ]
     ] ],
     [ "LibererProbleme", "structLibererProbleme.html", null ],
     [ "Antares::IO::Inputs::YmlModel::Library", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library.html", null ],
     [ "Antares::ModelerStudy::SystemModel::Library", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Library.html", null ],
     [ "Antares::ModelerStudy::SystemModel::LibraryBuilder", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1LibraryBuilder.html", null ],
     [ "LibraryObjects", "structLibraryObjects.html", null ],
+    [ "Antares::ScenarioGroupParser::Line", "structAntares_1_1ScenarioGroupParser_1_1Line.html", null ],
     [ "Antares::Optimization::LinearConstraint", "structAntares_1_1Optimization_1_1LinearConstraint.html", null ],
     [ "Antares::Optimization::LinearExpression", "classAntares_1_1Optimization_1_1LinearExpression.html", null ],
     [ "Antares::Optimisation::LinearProblemApi::LinearProblemBuilder", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1LinearProblemBuilder.html", null ],
@@ -1254,7 +1267,8 @@ var hierarchy =
     [ "Antares::IO::Inputs::YmlSystem::Parser", "classAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parser.html", null ],
     [ "antlr4::Parser", null, [
       [ "ExprParser", "classExprParser.html", null ],
-      [ "HoursFieldParser", "classHoursFieldParser.html", null ]
+      [ "HoursFieldParser", "classHoursFieldParser.html", null ],
+      [ "ScenarioBuilderParser", "classScenarioBuilderParser.html", null ]
     ] ],
     [ "antlr4::ParserRuleContext", null, [
       [ "ExprParser::AtomContext", "classExprParser_1_1AtomContext.html", [
@@ -1294,7 +1308,12 @@ var hierarchy =
       ] ],
       [ "HoursFieldParser::GroupContext", "classHoursFieldParser_1_1GroupContext.html", null ],
       [ "HoursFieldParser::HourContext", "classHoursFieldParser_1_1HourContext.html", null ],
-      [ "HoursFieldParser::HoursFieldContext", "classHoursFieldParser_1_1HoursFieldContext.html", null ]
+      [ "HoursFieldParser::HoursFieldContext", "classHoursFieldParser_1_1HoursFieldContext.html", null ],
+      [ "ScenarioBuilderParser::GroupContext", "classScenarioBuilderParser_1_1GroupContext.html", null ],
+      [ "ScenarioBuilderParser::LineContext", "classScenarioBuilderParser_1_1LineContext.html", null ],
+      [ "ScenarioBuilderParser::RulesContext", "classScenarioBuilderParser_1_1RulesContext.html", null ],
+      [ "ScenarioBuilderParser::TimeSeriesNumberContext", "classScenarioBuilderParser_1_1TimeSeriesNumberContext.html", null ],
+      [ "ScenarioBuilderParser::YearContext", "classScenarioBuilderParser_1_1YearContext.html", null ]
     ] ],
     [ "Antares::Toolbox::Jobs::Part", "classAntares_1_1Toolbox_1_1Jobs_1_1Part.html", null ],
     [ "Antares::Data::PartHydro", "classAntares_1_1Data_1_1PartHydro.html", null ],
@@ -1518,9 +1537,11 @@ var hierarchy =
     ] ],
     [ "Antares::Expressions::Visitors::EvaluationResult::SafeDivides", "structAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult_1_1SafeDivides.html", null ],
     [ "SavingToStreamFixture", "structSavingToStreamFixture.html", null ],
+    [ "ScenarioBuilderFixture", "structScenarioBuilderFixture.html", null ],
     [ "Antares::Solver::ScenarioBuilderOwner", "classAntares_1_1Solver_1_1ScenarioBuilderOwner.html", null ],
     [ "ScenarioBuilderRule", "classScenarioBuilderRule.html", null ],
-    [ "Antares::Optimisation::LinearProblemDataImpl::ScenarioGroupRepository", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository.html", null ],
+    [ "Antares::ScenarioGroupParser", "classAntares_1_1ScenarioGroupParser.html", null ],
+    [ "Antares::Optimisation::ScenarioGroupRepository", "classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html", null ],
     [ "SearchToken", "classSearchToken.html", null ],
     [ "Antares::IniFile::Section", "classAntares_1_1IniFile_1_1Section.html", null ],
     [ "Antares::Component::Datagrid::SelectionRect", "classAntares_1_1Component_1_1Datagrid_1_1SelectionRect.html", null ],

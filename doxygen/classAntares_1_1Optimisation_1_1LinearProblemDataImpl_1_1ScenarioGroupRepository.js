@@ -1,8 +1,0 @@
-var classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository =
-[
-    [ "AlreadyExists", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository_1_1AlreadyExists.html", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository_1_1AlreadyExists" ],
-    [ "DoesNotExist", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository_1_1DoesNotExist.html", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository_1_1DoesNotExist" ],
-    [ "ScenarioNotExist", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository_1_1ScenarioNotExist.html", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository_1_1ScenarioNotExist" ],
-    [ "addPairScenarioRankToGroup", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository.html#a1f2a10b5705ae7b9e20f814b3606ead2", null ],
-    [ "getDataRank", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository.html#a4ad88d0f2d2d1dfe2dda7c7029312f74", null ]
-];

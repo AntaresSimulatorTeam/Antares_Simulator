@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: src/optimisation/linear-problem-data-impl/include/antares/optimisation/linear-problem-data-impl/scenarioGroupRepo.h Source File</title>
+<title>Antares Simulator: src/solver/optim-model-filler/include/antares/solver/optim-model-filler/scenarioGroupRepo.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -127,55 +127,51 @@ $(document).ready(function(){initNavTree('scenarioGroupRepo_8h_source.html','');
 <div class="title">scenarioGroupRepo.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160; </div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;map&gt;</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &lt;map&gt;</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;stdexcept&gt;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">namespace </span>Antares::Optimisation::LinearProblemDataImpl</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;{</div>
-<div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository.html">    9</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository.html">ScenarioGroupRepository</a></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &quot;antares/optimisation/linear-problem-api/IScenario.h&quot;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keyword">namespace </span>Antares::Optimisation</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;{</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    <span class="keywordtype">void</span> addPairScenarioRankToGroup(<span class="keyword">const</span> std::string&amp; groupId,</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;                                    <span class="keyword">const</span> std::pair&lt;unsigned, unsigned&gt; scenarioToRank);</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keywordtype">unsigned</span> getDataRank(<span class="keyword">const</span> std::string&amp; groupId, <span class="keyword">const</span> <span class="keywordtype">unsigned</span> scenario);</div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html">   11</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html">ScenarioGroupRepository</a></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;{</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keywordtype">void</span> addScenario(<span class="keyword">const</span> std::string&amp; groupId,</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;                     std::unique_ptr&lt;LinearProblemApi::IScenario&gt;&amp;&amp; scenario);</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    std::map&lt;std::string, std::map&lt;unsigned, unsigned&gt;&gt; scenarioGroups_;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository_1_1AlreadyExists.html">   21</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository_1_1AlreadyExists.html">AlreadyExists</a>: <span class="keyword">public</span> std::invalid_argument</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    {</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository_1_1AlreadyExists.html">AlreadyExists</a>(<span class="keyword">const</span> std::string&amp; groupId);</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    };</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository_1_1DoesNotExist.html">   27</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository_1_1DoesNotExist.html">DoesNotExist</a>: <span class="keyword">public</span> std::invalid_argument</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    {</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository_1_1DoesNotExist.html">DoesNotExist</a>(<span class="keyword">const</span> std::string&amp; groupId);</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    };</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository_1_1ScenarioNotExist.html">   33</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository_1_1ScenarioNotExist.html">ScenarioNotExist</a>: <span class="keyword">public</span> std::invalid_argument</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    {</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository_1_1ScenarioNotExist.html">ScenarioNotExist</a>(<span class="keyword">const</span> std::string&amp; groupId, <span class="keywordtype">unsigned</span> scenario);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    };</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;};</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;} <span class="comment">// namespace Antares::Optimisation::LinearProblemDataImpl</span></div>
-<div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository_1_1AlreadyExists_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository_1_1AlreadyExists.html">Antares::Optimisation::LinearProblemDataImpl::ScenarioGroupRepository::AlreadyExists</a></div><div class="ttdef"><b>Definition:</b> scenarioGroupRepo.h:22</div></div>
-<div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository_1_1DoesNotExist_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository_1_1DoesNotExist.html">Antares::Optimisation::LinearProblemDataImpl::ScenarioGroupRepository::DoesNotExist</a></div><div class="ttdef"><b>Definition:</b> scenarioGroupRepo.h:28</div></div>
-<div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository_1_1ScenarioNotExist_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository_1_1ScenarioNotExist.html">Antares::Optimisation::LinearProblemDataImpl::ScenarioGroupRepository::ScenarioNotExist</a></div><div class="ttdef"><b>Definition:</b> scenarioGroupRepo.h:34</div></div>
-<div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository.html">Antares::Optimisation::LinearProblemDataImpl::ScenarioGroupRepository</a></div><div class="ttdef"><b>Definition:</b> scenarioGroupRepo.h:10</div></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    [[nodiscard]] <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario.html">LinearProblemApi::IScenario</a>&amp; scenario(<span class="keyword">const</span> std::string&amp; groupId) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    std::map&lt;std::string, std::unique_ptr&lt;LinearProblemApi::IScenario&gt;&gt; scenarioGroups_;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository_1_1AlreadyExists.html">   23</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository_1_1AlreadyExists.html">AlreadyExists</a>: <span class="keyword">public</span> std::invalid_argument</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    {</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository_1_1AlreadyExists.html">AlreadyExists</a>(<span class="keyword">const</span> std::string&amp; groupId);</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    };</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository_1_1DoesNotExist.html">   29</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository_1_1DoesNotExist.html">DoesNotExist</a>: <span class="keyword">public</span> std::invalid_argument</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    {</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository_1_1DoesNotExist.html">DoesNotExist</a>(<span class="keyword">const</span> std::string&amp; groupId);</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    };</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;};</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;} <span class="comment">// namespace Antares::Optimisation</span></div>
+<div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario.html">Antares::Optimisation::LinearProblemApi::IScenario</a></div><div class="ttdef"><b>Definition:</b> IScenario.h:8</div></div>
+<div class="ttc" id="aclassAntares_1_1Optimisation_1_1ScenarioGroupRepository_1_1AlreadyExists_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository_1_1AlreadyExists.html">Antares::Optimisation::ScenarioGroupRepository::AlreadyExists</a></div><div class="ttdef"><b>Definition:</b> scenarioGroupRepo.h:24</div></div>
+<div class="ttc" id="aclassAntares_1_1Optimisation_1_1ScenarioGroupRepository_1_1DoesNotExist_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository_1_1DoesNotExist.html">Antares::Optimisation::ScenarioGroupRepository::DoesNotExist</a></div><div class="ttdef"><b>Definition:</b> scenarioGroupRepo.h:30</div></div>
+<div class="ttc" id="aclassAntares_1_1Optimisation_1_1ScenarioGroupRepository_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html">Antares::Optimisation::ScenarioGroupRepository</a></div><div class="ttdef"><b>Definition:</b> scenarioGroupRepo.h:12</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_df940598938059c8102df77332c101e5.html">optimisation</a></li><li class="navelem"><a class="el" href="dir_af6048b6920247df6a9d7b097c3defd9.html">linear-problem-data-impl</a></li><li class="navelem"><a class="el" href="dir_ef40270c11645fefe8fd5acc5df1e4b7.html">include</a></li><li class="navelem"><a class="el" href="dir_b599908ab8ed2e81b30ceb3393861c3b.html">antares</a></li><li class="navelem"><a class="el" href="dir_2c13c2bf4cfdfe5fb6ed03c27228bdee.html">optimisation</a></li><li class="navelem"><a class="el" href="dir_858418f9e7d17ff8c89dd54ecc57baaa.html">linear-problem-data-impl</a></li><li class="navelem"><b>scenarioGroupRepo.h</b></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_6feeaea8bd29979b56256f58401b91b0.html">optim-model-filler</a></li><li class="navelem"><a class="el" href="dir_b2cbcd5d7b8340f070296625af291b61.html">include</a></li><li class="navelem"><a class="el" href="dir_178c8ef38b01ceddc925e5180d51db25.html">antares</a></li><li class="navelem"><a class="el" href="dir_4cd28f4d991dbf75622a77b5ee5a535e.html">solver</a></li><li class="navelem"><a class="el" href="dir_127d85b80ce91e86377b1838e8eb232e.html">optim-model-filler</a></li><li class="navelem"><b>scenarioGroupRepo.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

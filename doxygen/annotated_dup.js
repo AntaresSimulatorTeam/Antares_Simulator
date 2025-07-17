@@ -588,6 +588,7 @@ var annotated_dup =
           [ "IHasName", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasName.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasName" ],
           [ "FillContext", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext" ],
           [ "ILinearProblemData", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData" ],
+          [ "IScenario", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario" ],
           [ "ILinearProblem", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem" ],
           [ "LinearProblemBuilder", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1LinearProblemBuilder.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1LinearProblemBuilder" ],
           [ "LinearProblemFiller", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1LinearProblemFiller.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1LinearProblemFiller" ],
@@ -603,7 +604,7 @@ var annotated_dup =
           [ "IDataSeries", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1IDataSeries.html", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1IDataSeries" ],
           [ "DataSeriesRepository", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository.html", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository" ],
           [ "LinearProblemData", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1LinearProblemData.html", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1LinearProblemData" ],
-          [ "ScenarioGroupRepository", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository.html", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1ScenarioGroupRepository" ],
+          [ "Scenario", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1Scenario.html", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1Scenario" ],
           [ "TimeSeriesSet", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1TimeSeriesSet.html", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1TimeSeriesSet" ]
         ] ],
         [ "LinearProblemMpsolverImpl", null, [
@@ -611,7 +612,9 @@ var annotated_dup =
           [ "OrtoolsMipConstraint", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipConstraint.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipConstraint" ],
           [ "OrtoolsMipSolution", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipSolution.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipSolution" ],
           [ "OrtoolsMipVariable", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable" ]
-        ] ]
+        ] ],
+        [ "ScenarioGroupRepository", "classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html", "classAntares_1_1Optimisation_1_1ScenarioGroupRepository" ],
+        [ "DefaultScenario", "classAntares_1_1Optimisation_1_1DefaultScenario.html", "classAntares_1_1Optimisation_1_1DefaultScenario" ]
       ] ],
       [ "Optimization", "namespaceAntares_1_1Optimization.html", [
         [ "ConstraintSlackAnalysis", "classAntares_1_1Optimization_1_1ConstraintSlackAnalysis.html", "classAntares_1_1Optimization_1_1ConstraintSlackAnalysis" ],
@@ -1254,6 +1257,8 @@ var annotated_dup =
       [ "IniFile", "classAntares_1_1IniFile.html", "classAntares_1_1IniFile" ],
       [ "Memory", "classAntares_1_1Memory.html", "classAntares_1_1Memory" ],
       [ "MersenneTwister", "classAntares_1_1MersenneTwister.html", "classAntares_1_1MersenneTwister" ],
+      [ "ScenarioGroupParser", "classAntares_1_1ScenarioGroupParser.html", "classAntares_1_1ScenarioGroupParser" ],
+      [ "ScenarioBuilderImplVisitor", "classAntares_1_1ScenarioBuilderImplVisitor.html", "classAntares_1_1ScenarioBuilderImplVisitor" ],
       [ "IStudyLoader", "classAntares_1_1IStudyLoader.html", "classAntares_1_1IStudyLoader" ],
       [ "areaInfo", "classAntares_1_1areaInfo.html", "classAntares_1_1areaInfo" ],
       [ "linkInfo", "classAntares_1_1linkInfo.html", "classAntares_1_1linkInfo" ],
@@ -1493,6 +1498,7 @@ var annotated_dup =
     [ "CsrFlowDissociationData", "structCsrFlowDissociationData.html", "structCsrFlowDissociationData" ],
     [ "CsvCreationFixture", "structCsvCreationFixture.html", "structCsvCreationFixture" ],
     [ "CumulationConstraint", "classCumulationConstraint.html", "classCumulationConstraint" ],
+    [ "CustomErrorListener", "classCustomErrorListener.html", null ],
     [ "DataFile", "classDataFile.html", "classDataFile" ],
     [ "DEMAND_FLEX_DOWN_POOL", "structDEMAND__FLEX__DOWN__POOL.html", "structDEMAND__FLEX__DOWN__POOL" ],
     [ "DEMAND_FLEX_UP_POOL", "structDEMAND__FLEX__UP__POOL.html", "structDEMAND__FLEX__UP__POOL" ],
@@ -1640,7 +1646,12 @@ var annotated_dup =
     [ "RESULTATS_HORAIRES", "structRESULTATS__HORAIRES.html", "structRESULTATS__HORAIRES" ],
     [ "ResultMatrix", "classResultMatrix.html", "classResultMatrix" ],
     [ "SavingToStreamFixture", "structSavingToStreamFixture.html", "structSavingToStreamFixture" ],
+    [ "ScenarioBuilderBaseVisitor", "classScenarioBuilderBaseVisitor.html", "classScenarioBuilderBaseVisitor" ],
+    [ "ScenarioBuilderFixture", "structScenarioBuilderFixture.html", "structScenarioBuilderFixture" ],
+    [ "ScenarioBuilderLexer", "classScenarioBuilderLexer.html", "classScenarioBuilderLexer" ],
+    [ "ScenarioBuilderParser", "classScenarioBuilderParser.html", "classScenarioBuilderParser" ],
     [ "ScenarioBuilderRule", "classScenarioBuilderRule.html", "classScenarioBuilderRule" ],
+    [ "ScenarioBuilderVisitor", "classScenarioBuilderVisitor.html", "classScenarioBuilderVisitor" ],
     [ "SearchToken", "classSearchToken.html", "classSearchToken" ],
     [ "Separator", "classSeparator.html", "classSeparator" ],
     [ "Settings", "classSettings.html", "classSettings" ],
