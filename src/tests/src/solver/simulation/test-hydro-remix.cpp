@@ -35,7 +35,7 @@ struct InputFixture
     double capacity = std::numeric_limits<double>::max();
 };
 
-BOOST_FIXTURE_TEST_CASE(input_vectors_of_different_sizes__exception_raised, InputFixture<0>)
+BOOST_FIXTURE_TEST_CASE(input_vectors_of_different_sizes__exception_raised, InputFixture<1>)
 {
     HydroGen = {0., 0.};
 
@@ -57,9 +57,8 @@ BOOST_FIXTURE_TEST_CASE(input_vectors_of_different_sizes__exception_raised, Inpu
                           checkMessage("Remix hydro input : arrays of different sizes"));
 }
 
-BOOST_FIXTURE_TEST_CASE(input_init_level_exceeds_capacity__exception_raised, InputFixture<0>)
+BOOST_FIXTURE_TEST_CASE(input_init_level_exceeds_capacity__exception_raised, InputFixture<1>)
 {
-    HydroGen = {0., 0.};
     init_level = 2.;
     capacity = 1.;
 

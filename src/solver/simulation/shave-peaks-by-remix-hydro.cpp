@@ -7,8 +7,9 @@
 #include <stdexcept>
 #include <vector>
 
-constexpr double RESERVOIR_LEVEL_TOLERANCE = 1.e-6;
+constexpr double LEVEL_TOLERANCE = 1.e-6;
 constexpr double eps = 1e-3;
+const std::string error_msg_start = "Remix hydro input : ";
 
 namespace Antares::Solver::Simulation
 {
@@ -80,74 +81,71 @@ bool operator>=(const std::vector<double>& v, const double c)
     return std::ranges::all_of(v, [&c](double e) { return e >= c; });
 }
 
-void checkInputCorrectness(const std::vector<double>& DispatchGen,
-                           const std::vector<double>& HydroGen,
-                           const std::vector<double>& UnsupE,
-                           const std::vector<double>& levels,
-                           const std::vector<double>& HydroPmax,
-                           const std::vector<double>& HydroPmin,
-                           double initialLevel,
-                           double reservoirCapacity,
-                           bool reservoirManagement,
-                           const std::vector<double>& inflows,
-                           const std::vector<double>& overflow,
-                           const std::vector<double>& pump,
-                           const std::vector<double>& Spillage,
-                           const std::vector<double>& DTG_MRG)
+void checkInput(const std::vector<double>& DispatchGen,
+                const std::vector<double>& HydroGen,
+                const std::vector<double>& UnsupE,
+                const std::vector<double>& HydroPmax,
+                const std::vector<double>& HydroPmin,
+                const std::vector<double>& Spillage,
+                const std::vector<double>& DTG_MRG)
 {
-    std::string msg_prefix = "Remix hydro input : ";
-
-    // Initial level smaller than capacity
-    if (initialLevel >= reservoirCapacity + RESERVOIR_LEVEL_TOLERANCE)
-    {
-        throw std::invalid_argument(msg_prefix + "initial level > reservoir capacity");
-    }
     // Arrays sizes must be identical
     std::vector<size_t> sizes = {DispatchGen.size(),
                                  HydroGen.size(),
                                  UnsupE.size(),
-                                 levels.size(),
                                  HydroPmax.size(),
                                  HydroPmin.size(),
-                                 inflows.size(),
-                                 overflow.size(),
-                                 pump.size(),
                                  Spillage.size(),
                                  DTG_MRG.size()};
 
     if (!std::ranges::all_of(sizes, [&sizes](const size_t s) { return s == sizes.front(); }))
     {
-        throw std::invalid_argument(msg_prefix + "arrays of different sizes");
+        throw std::invalid_argument(error_msg_start + "arrays of different sizes");
     }
 
-    // Arrays are of size 0
     if (!DispatchGen.size())
     {
-        throw std::invalid_argument(msg_prefix + "all arrays of sizes 0");
+        throw std::invalid_argument(error_msg_start + "all arrays of sizes 0");
     }
 
-    // Hydro production < Pmax
     if (!(HydroGen <= HydroPmax))
     {
-        throw std::invalid_argument(msg_prefix
+        throw std::invalid_argument(error_msg_start
                                     + "Hydro generation not smaller than Pmax everywhere");
     }
 
-    // Hydro production > Pmin
     if (!(HydroPmin <= HydroGen))
     {
-        throw std::invalid_argument(msg_prefix
+        throw std::invalid_argument(error_msg_start
                                     + "Hydro generation not greater than Pmin everywhere");
     }
+}
 
-    if (reservoirManagement)
+void checkReservoirManagementInput(size_t size,
+                                   const double initLevel,
+                                   const double capacity,
+                                   const std::vector<double>& inflows,
+                                   const std::vector<double>& overflow,
+                                   const std::vector<double>& pump)
+{
+    if (initLevel >= capacity + LEVEL_TOLERANCE)
     {
-        if (!(levels <= reservoirCapacity + RESERVOIR_LEVEL_TOLERANCE)
-            || !(levels >= -RESERVOIR_LEVEL_TOLERANCE))
-        {
-            throw std::invalid_argument(
-              msg_prefix + "levels computed from input don't respect reservoir bounds");
-        }
+        throw std::invalid_argument(error_msg_start + "initial level > reservoir capacity");
+    }
+
+    std::vector<size_t> sizes = {size, inflows.size(), overflow.size(), pump.size()};
+    if (!std::ranges::all_of(sizes, [&sizes](const size_t s) { return s == sizes.front(); }))
+    {
+        throw std::invalid_argument(error_msg_start + "arrays of different sizes");
+    }
+}
+
+void checkLevels(const std::vector<double>& levels, const double capacity)
+{
+    if (!(levels <= capacity + LEVEL_TOLERANCE) || !(levels >= -LEVEL_TOLERANCE))
+    {
+        throw std::invalid_argument(error_msg_start
+                                    + "levels computed from input don't respect reservoir bounds");
     }
 }
 } // namespace
@@ -164,13 +162,30 @@ std::vector<double> updateTotalGen(const std::vector<double>& DispatchGen,
     return totalGen;
 }
 
+std::vector<double> updateLevels(const double initLevel,
+                                 const double pumpEfficiency,
+                                 const std::vector<double>& HydroGen,
+                                 const std::vector<double>& inflows,
+                                 const std::vector<double>& overflow,
+                                 const std::vector<double>& pump)
+{
+    std::vector<double> levels(HydroGen.size());
+    levels[0] = initLevel + inflows[0] - overflow[0] + pumpEfficiency * pump[0] - HydroGen[0];
+    for (size_t h = 1; h < levels.size(); ++h)
+    {
+        levels[h] = levels[h - 1] + inflows[h] - overflow[h] + pumpEfficiency * pump[h]
+                    - HydroGen[h];
+    }
+    return levels;
+}
+
 RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGen,
                                            const std::vector<double>& HydroGen,
                                            const std::vector<double>& UnsupE,
                                            const std::vector<double>& HydroPmax,
                                            const std::vector<double>& HydroPmin,
-                                           const double initialLevel,
-                                           const double reservoirCapacity,
+                                           const double initLevel,
+                                           const double capacity,
                                            const double pumpEfficiency,
                                            const bool reservoirManagement,
                                            const std::vector<double>& inflows,
@@ -179,32 +194,16 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
                                            const std::vector<double>& Spillage,
                                            const std::vector<double>& DTG_MRG)
 {
-    std::vector<double> levels(DispatchGen.size());
-    if (!levels.empty() && reservoirManagement)
-    {
-        levels[0] = initialLevel + inflows[0] - overflow[0] + pumpEfficiency * pump[0]
-                    - HydroGen[0];
-        for (size_t h = 1; h < levels.size(); ++h)
-        {
-            levels[h] = levels[h - 1] + inflows[h] - overflow[h] + pumpEfficiency * pump[h]
-                        - HydroGen[h];
-        }
-    }
+    checkInput(DispatchGen, HydroGen, UnsupE, HydroPmax, HydroPmin, Spillage, DTG_MRG);
 
-    checkInputCorrectness(DispatchGen,
-                          HydroGen,
-                          UnsupE,
-                          levels,
-                          HydroPmax,
-                          HydroPmin,
-                          initialLevel,
-                          reservoirCapacity,
-                          reservoirManagement,
-                          inflows,
-                          overflow,
-                          pump,
-                          Spillage,
-                          DTG_MRG);
+    std::vector<double> levels;
+    if (reservoirManagement)
+    {
+        size_t size = DispatchGen.size();
+        checkReservoirManagementInput(size, initLevel, capacity, inflows, overflow, pump);
+        levels = updateLevels(initLevel, pumpEfficiency, HydroGen, inflows, overflow, pump);
+        checkLevels(levels, capacity);
+    }
 
     std::vector<double> OutHydroGen = HydroGen;
     std::vector<double> OutUnsupE = UnsupE;
@@ -273,14 +272,14 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
 
                     if (hourBottom < hourPeak)
                     {
-                        maxSliceOfHydroAtPeak = reservoirCapacity;
+                        maxSliceOfHydroAtPeak = capacity;
                         maxSliceOfHydroAtBottom = *std::ranges::min_element(intermediate_level);
                     }
                     else
                     {
-                        maxSliceOfHydroAtPeak = reservoirCapacity
+                        maxSliceOfHydroAtPeak = capacity
                                                 - *std::ranges::max_element(intermediate_level);
-                        maxSliceOfHydroAtBottom = reservoirCapacity;
+                        maxSliceOfHydroAtBottom = capacity;
                     }
                 }
 
@@ -320,18 +319,12 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
         {
             break;
         }
-        
+
         TotalGen = updateTotalGen(DispatchGen, OutHydroGen);
 
         if (reservoirManagement)
         {
-            levels[0] = initialLevel + inflows[0] - overflow[0] + pumpEfficiency * pump[0]
-                        - OutHydroGen[0];
-            for (size_t h = 1; h < levels.size(); ++h)
-            {
-                levels[h] = levels[h - 1] + inflows[h] - overflow[h] + pumpEfficiency * pump[h]
-                            - OutHydroGen[h];
-            }
+            levels = updateLevels(initLevel, pumpEfficiency, OutHydroGen, inflows, overflow, pump);
         }
     }
     return {OutHydroGen, OutUnsupE, levels};
