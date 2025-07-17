@@ -291,6 +291,45 @@ ScenarioBuilderRule::ScenarioBuilderRule(Study& study)
 }
 
 // =====================
+// Simulation observer
+// =====================
+void TestingSimulationObserver::notifyHebdoProblem(const PROBLEME_HEBDO& problemeHebdo,
+                                                   int optimizationNumber,
+                                                   std::string_view name)
+{
+    auto* pb = problemeHebdo.ProblemeAResoudre.get();
+    std::string nameStr(name.begin(), name.end());
+    auto& toInsert = problems[std::make_pair(optimizationNumber, nameStr)];
+
+    // Variables
+    for (int varIdx = 0; varIdx < pb->NombreDeVariables; varIdx++)
+    {
+        const std::string& varName = pb->NomDesVariables[varIdx];
+        auto& insertedVariable = toInsert.variables[varName];
+        insertedVariable = {.Xmin = pb->Xmin[varIdx],
+                            .Xmax = pb->Xmax[varIdx],
+                            .objectiveCoefficient = pb->CoutLineaire[varIdx]};
+    }
+
+    // Constraints
+    for (int ctIdx = 0; ctIdx < pb->NombreDeContraintes; ctIdx++)
+    {
+        const std::string& ctName = pb->NomDesContraintes[ctIdx];
+        auto& insertedConstraint = toInsert.constraints[ctName];
+        int debutLigne = pb->IndicesDebutDeLigne[ctIdx];
+        for (int coefIdx = 0; coefIdx < pb->NombreDeTermesDesLignes[ctIdx]; ++coefIdx)
+        {
+            int pos = debutLigne + coefIdx;
+            int varIdx = pb->IndicesColonnes[pos];
+            const std::string& varName = pb->NomDesVariables[varIdx];
+            insertedConstraint.coefficients[varName] = pb->CoefficientsDeLaMatriceDesContraintes
+                                                         [pos];
+            insertedConstraint.rhs = pb->SecondMembre[ctIdx];
+        }
+    }
+}
+
+// =====================
 // Simulation handler
 // =====================
 
@@ -315,7 +354,7 @@ StudyBuilder::StudyBuilder():
 {
     // Make logs shrink to errors (and higher) only
     logs.verbosityLevel = Logs::Verbosity::Error::level;
-
+    study->parameters.namedProblems = true;
     initializeStudy(study.get());
 }
 

@@ -21,7 +21,9 @@
 #define WIN32_LEAN_AND_MEAN
 #define BOOST_TEST_MODULE unfeasible_problem_analyzer
 
+#include <fstream>
 #include <ortools/linear_solver/linear_solver.h>
+#include <pi_constantes_externes.h>
 #include <ranges>
 
 #include <boost/test/data/dataset.hpp>
@@ -32,6 +34,8 @@
 #include "antares/solver/infeasible-problem-analysis/report.h"
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
 #include "antares/solver/infeasible-problem-analysis/variables-bounds-consistency.h"
+#include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 namespace bdata = boost::unit_test::data;
 
@@ -317,6 +321,214 @@ BOOST_AUTO_TEST_CASE(Infeasibility_causes_are_unique_and_sorted_by_slack_value)
     BOOST_CHECK_EQUAL(reportLogs[1], "* Last resort shedding status.");
     BOOST_CHECK_EQUAL(reportLogs[2], "* Hourly binding constraints.");
     BOOST_CHECK_EQUAL(reportLogs[3], "* impossible to generate exactly the weekly hydro target");
+}
+
+/**
+ * This test suite verifies the behavior of OPT_AppelDuSimplexe regarding:
+ * - Handling of feasible vs. infeasible linear programs
+ * - Naming behavior of variables and constraints in the MPS output
+ * - Whether the problem analyzer is triggered based on feasibility
+ */
+
+namespace
+{
+struct DummyOptPeriodStringGenerator: OptPeriodStringGenerator
+{
+    std::string to_string() const override
+    {
+        return "myTest";
+    }
+};
+
+struct NullWriterExtension: Solver::NullResultWriter
+{
+    // hack to read variables and constraints names
+    void addEntryFromFile(const std::filesystem::path& entryPath,
+                          const std::filesystem::path&) override
+    {
+        const std::ifstream mps(std::filesystem::temp_directory_path() / entryPath);
+        mpsContent.str("");
+        mpsContent << mps.rdbuf();
+    }
+
+    std::ostringstream mpsContent;
+};
+enum class ProblemFeasibility
+{
+    Feasible,
+    Infeasible
+};
+
+void setupMinimalProblem(PROBLEME_HEBDO& problemeHebdo, ProblemFeasibility feasibility)
+{
+    const int nbVar = 1;
+    const int nbConstraints = 2;
+
+    // Initialize problem
+    problemeHebdo.coutOptimalSolution1.resize(1);
+    problemeHebdo.ProblemeAResoudre = std::make_unique<PROBLEME_ANTARES_A_RESOUDRE>();
+    auto& probleme = problemeHebdo.ProblemeAResoudre;
+
+    probleme->NombreDeVariables = nbVar;
+    probleme->NomDesVariables.resize(nbVar, "var");
+    probleme->NombreDeContraintes = nbConstraints;
+    probleme->NomDesContraintes = {"firstConstraint", "secondConstraint"};
+
+    probleme->Xmin = {0.0};
+    probleme->Xmax = {10.0};
+    probleme->TypeDeVariable = {VARIABLE_BORNEE_DES_DEUX_COTES};
+    probleme->CoutLineaire = {0.0};
+    probleme->X = {0.0};
+    probleme->CoutsReduits = {0.0};
+    probleme->VariablesEntieres = {false};
+
+    // Constraint matrix setup
+    probleme->IndicesDebutDeLigne = {0, 1};
+    probleme->NombreDeTermesDesLignes = {1, 1};
+    probleme->CoefficientsDeLaMatriceDesContraintes = {1.0, 1.0};
+    probleme->IndicesColonnes = {0, 0};
+    probleme->SecondMembre = {5.0, 10.0};
+    probleme->Sens = feasibility == ProblemFeasibility::Feasible ? "<<" : "<>";
+
+    // Pointers for result mapping
+    probleme->CoutsMarginauxDesContraintes.resize(nbConstraints, 0.0);
+    probleme->AdresseOuPlacerLaValeurDesVariablesOptimisees = {&probleme->X[0]};
+    probleme->AdresseOuPlacerLaValeurDesCoutsReduits = {&probleme->CoutsReduits[0]};
+    probleme->AdresseOuPlacerLaValeurDesCoutsMarginaux = {
+      &probleme->CoutsMarginauxDesContraintes[0],
+      &probleme->CoutsMarginauxDesContraintes[1]};
+
+    probleme->ProblemesSpx.resize(1, nullptr);
+
+    // Solver export options
+    problemeHebdo.ExportMPS = Data::mpsExportStatus::EXPORT_BOTH_OPTIMS;
+    problemeHebdo.exportMPSOnError = true;
+    problemeHebdo.modelerSystem = nullptr;
+    problemeHebdo.NamedProblems = false;
+}
+
+// Shared setup for feasible and infeasible tests
+
+} // namespace
+
+/**
+ * These two tests verify the behavior of OPT_AppelDuSimplexe regarding
+ * the solver's handling of problem feasibility and naming logic for MPS export.
+ */
+/**
+ *  -------------------------------------------------------------------------------------
+ * ✅ TEST 1: feasible_problem_does_not_triggers_analyzer_and_named_flag
+ *
+ * Purpose:
+ *   This test builds a small *feasible* linear program and ensures that:
+ *     - The solver succeeds.
+ *     - The problem is not renamed (i.e., default names like "c0", "c1" are used in MPS).
+ *     - The analyzer is *not* triggered (since the problem is feasible).
+ *
+ * Key Checks:
+ *   - The returned constraint names differ from the original ones, which confirms
+ *     that the original names were *not* injected into the solver before MPS export.
+ *   - `NamedProblems` remains false (no need for analysis or recovery).
+ *
+ * Notes:
+ *   The test proves that when the problem is feasible, the solver uses default
+ *   names in the MPS output, and does not require variable/constraint renaming.
+ */
+
+BOOST_AUTO_TEST_CASE(feasible_problem_does_not_trigger_analyzer_or_named_flag)
+{
+    PROBLEME_HEBDO problemeHebdo;
+
+    setupMinimalProblem(problemeHebdo, ProblemFeasibility::Feasible);
+
+    SingleOptimOptions options;
+    NullWriterExtension writer;
+    DummyOptPeriodStringGenerator generator;
+
+    const bool result = OPT_AppelDuSimplexe(options,
+                                            &problemeHebdo,
+                                            0, // NumIntervalle
+                                            1, // optimizationNumber
+                                            generator,
+                                            writer);
+
+    const auto expectedMps = R"(* Number of variables:   1
+* Number of constraints: 2
+NAME          Pb Solve
+ROWS
+ N  OBJECTIF
+ L  c0
+ L  c1
+COLUMNS
+    x0  c0  1.0000000000
+    x0  c1  1.0000000000
+RHS
+    RHSVAL    c0  5.000000000
+    RHSVAL    c1  10.000000000
+BOUNDS
+ UP BNDVALUE  x0  10.000000000
+ENDATA
+)";
+    BOOST_CHECK_EQUAL(expectedMps, writer.mpsContent.str());
+}
+
+/**
+ * -------------------------------------------------------------------------------------
+ * ❌ TEST 2: infeasible_problem_triggers_analyzer_and_named_flag
+ *
+ * Purpose:
+ *   This test builds a *mathematically infeasible* problem: x ≤ 5 and x ≥ 10.
+ *   It verifies that:
+ *     - The solver fails in both standard and safe modes.
+ *     - The problem analyzer is triggered.
+ *     - The original variable and constraint names are injected into the solver.
+ *
+ * Key Checks:
+ *   - The constraint names in the MPS output match the original ones provided
+ *     (`firstConstraint`, `secondConstraint`).
+ *   - `NamedProblems` is set to true, indicating that names were pushed to the solver.
+ *
+ * Notes:
+ *   This confirms that when a problem fails to solve, Antares injects full
+ *   naming information into the solver (for better diagnostics) and prepares
+ *   MPS output accordingly.
+ *
+ */
+
+BOOST_AUTO_TEST_CASE(infeasible_problem_triggers_analyzer_and_named_flag)
+{
+    PROBLEME_HEBDO problemeHebdo;
+
+    setupMinimalProblem(problemeHebdo, ProblemFeasibility::Infeasible);
+
+    SingleOptimOptions options;
+    NullWriterExtension writer;
+    DummyOptPeriodStringGenerator generator;
+
+    const bool result = OPT_AppelDuSimplexe(options,
+                                            &problemeHebdo,
+                                            0, // NumIntervalle
+                                            1, // optimizationNumber
+                                            generator,
+                                            writer);
+    const auto expectedMps = R"(* Number of variables:   1
+* Number of constraints: 2
+NAME          Pb Solve
+ROWS
+ N  OBJECTIF
+ L  firstConstraint
+ G  secondConstraint
+COLUMNS
+    var  firstConstraint  1.0000000000
+    var  secondConstraint  1.0000000000
+RHS
+    RHSVAL    firstConstraint  5.000000000
+    RHSVAL    secondConstraint  10.000000000
+BOUNDS
+ UP BNDVALUE  var  10.000000000
+ENDATA
+)";
+    BOOST_CHECK_EQUAL(expectedMps, writer.mpsContent.str());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

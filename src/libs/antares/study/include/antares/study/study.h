@@ -223,6 +223,7 @@ public:
     // default value
     Area* areaAdd(const AreaName& name, bool update = false);
 
+#ifdef BUILD_UI
     /*!
     ** \brief Rename an area
     **
@@ -285,6 +286,7 @@ public:
     bool readonly() const;
 
     //@}
+#endif
 
     //! \name Time-series
     //@{

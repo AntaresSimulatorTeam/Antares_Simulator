@@ -263,13 +263,13 @@ add_subdirectory("ext/yuni/src")
 OMESSAGE("") # empty line
 
 # Sub Directories
+if(BUILD_UI)
+    add_compile_definitions(BUILD_UI)
+	add_subdirectory(ui)		#all antares ui libs + antares simulator
+endif()
 add_subdirectory(api)
 add_subdirectory(io)
 add_subdirectory(libs) 		#antares-core fswalker
-
-if(BUILD_UI)
-	add_subdirectory(ui)		#all antares ui libs + antares simulator
-endif()
 
 add_subdirectory(expressions)   #modeler expressions (AST)
 add_subdirectory(optimisation)  #optimisation APIs

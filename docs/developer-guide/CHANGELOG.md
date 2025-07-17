@@ -4,6 +4,152 @@ toc_depth: 2
 
 # Antares Changelog
 
+## Branch 9.3.x
+
+### 9.3.0
+
+#### New features
+Scenarize short-term storage additional constraints [ANT-3037] (#2813)
+Scenarize inflows for short-term storage [ANT-3037] (#2772)
+Dynamic groups for thermal and renewable clusters [ANT-1672] (#2579)
+Near price cap hours variable [ANT-3038] (#2810)
+
+#### Removed features
+Remove timeseries refresh [ANT-1335] (#2451)
+
+#### Improvements
+Remove year batches, launch jobs continually [ANT-2139] (#2718)
+Random TS numbers for STS inflows & additional constraints [ANT-3415] (#2882)
+or-tools : update to v9.13 [ANT-3348] (#2857)
+Add STS additional constraints to infeasible problem analysis [ANT-3386] (#2869)
+Add Gurobi to list of queried solvers [ANT-3381] (#2865)
+Force the export for criterion files in Expansion mode [ANT-3137] (#2821)
+[ANT-2140] MustRun clusters taken into account in BC (#2690)
+Add fixed variables support to OR-Tools quadratic wrapper (#2789)
+New cmd line options for solver (#2765)
+Add checks for duplicates on study objects [ANT-2127] (#2733)
+Allow empty series files for STS [ANT-3053] (#2731)
+
+#### Bugfixes
+Infeasibility caused by hydro (attempt 2) [ANT-3122] (#2874)
+Re-implement MPObjective::Value (#2892)
+Bypass JIT only for STS [ANT-3425] (#2887)
+Hydro monthly heuristic : add variable overflow to problem [ANT-3236] (#2837)
+Fix missing ortools dll in windows zip asset (#2840)
+[ANT-3264] Default author is username (#2817)
+Ceiling error with xpress and accurate [ANT-3167] (#2785)
+Fix fixed variable value in quadratic optimization (#2790)
+Monthly turbine error [ANT-3095] (#2759)
+[ANT-3122] Part 1/2 : Set primal tolerance to 1e-6 in ortools_utils (#2776)
+Check constraints width if the sizes are only ones (#2771)
+Change control for sts injection/withdrawal efficiency [ANT-3100] (#2749)
+Fix unfeasible problems with <0 hydro infows [ANT-3043] (#2732)
+Fix undefined behavior in BCs [ANT-2994] (#2708)
+
+#### Modeler
+2.9: TimeIndex and TimeShift operators [ANT-2874] (#2678)
+2.9: TimeSum and AllTimeSum operators [ANT-2932][ANT-2933] (#2703)
+3.3: Hydrid studies without connections [ANT-2898] (#2699)
+3.5: Hybrid area connections from yaml [ANT-2901] (#2787)
+3.6: Connect components to areas in linear optimization problem [ANT-2902] (#2792)
+4.7: Import connections and ports [ANT-2875] (#2662)
+4.8: Establishing Component Connections [ANT-2876] (#2724)
+Connections : build expressions from connections and ports (#2739)
+Checking modeler variable bounds (#2844)
+[ANT-3359] Scenario-group is optional in component and default to "default" (#2855)
+[ANT-3092] Valeur par defaut des bornes des variables (#2814)
+Don't write modeler files if there's no solutions (#2760)
+Work on port rules (#2746)
+Use indices for getVariable & getConstraint, don't reconstruct name (#2729)
+Improve modeler API & main class (#2669)
+
+#### CI
+Use correct keys for ccache, update ccache for windows, always save ccache (#2884)(#2864)
+Remove end to end tests on TS generator binary (#2843)
+Package OR-Tools shared libs [ANT-3227] (#2803)
+Fix windows CI (#2788)
+[ANT-2997] use official actions (#2761)
+Add continuous-delivery for windows & simplify it (#2755)
+Fix Oracle continuous-delivery (#2758)
+Fix Sonarcloud jobs failing silently (#2710)
+Create a permanent release from develop (#2688)
+
+#### Build
+[ANT-2034] Various warnings or linter fixes (#2861)
+Fix compilation warning (implicit double -> float conversion) (#2862)
+Remove some warnings (#2774)
+Fix dependency issue for clients (#2757)
+Bump vcpkg to 2025.02.14 (#2741)
+Remove compilation warnings for GCC (#2740)
+
+#### Doc
+Migration guide for dynamic cluster groups and sts inflows (#2913)(#2915)(#2916)(#2918)
+Document STS additional constraints @ v9.2.0 (#2847)(#2867)
+Add doc for scenariobuilder.dat, add short-term storage feature (#2808)
+Add documentation for hybrid area connections (#2754)
+FIx typos in doc (#2707)
+Add doc for behave.ini (#2748)
+Add doc for overflow spilled cost difference (#2713)
+Add documentation on the ANTLR4 code generation process (#2745)
+Fix broken link in mkdocs.yml (#2743)
+updating output changelog (#2689)
+correct python command to install dependencies (#2695)
+
+#### Code quality
+Use range-based for loops (#2897)
+Save sts inflows in legacy GUI [ANT-3425] (#2886)
+Use std::vector<double> instead of double\*, add const (#2878)
+Simplify linear optimization code (#2809)
+Fix prefix for short-term storage in scenariobuilder parser (#2811)
+Rename lp-solver -> linear-solver, move some options in the "Optimization" section in the help page (#2781)
+Fix double free and leak (#2767)
+Fix memory leak in hydro (#2736)
+Fix leak using matrix_to_buffer_dumper_factory::get_dumper (#2737)
+Use std::identity from header <functional> (#2727)
+Use std::call_once to avoid race conditions in ThermalCluster::getCostProvider (#2725)
+Small refactor around PROBLEME_SIMPLEXE_NOMME -> MPSolver conversion (#2723)
+Fix memory leak, double free (#2700)
+Use MPSolver* instead of void\*, remove static_casts (#2704)
+Pass strings by const reference when reading scenariobuilder.dat (#2683)
+Remove dynamic allocations, use local variables instead (#2694)
+
+#### Technical cleaning
+Remove yuni limit on max threads (#2832)
+[ANT-3409] Store short term time series number (#2881)
+Remove unused members from spatial-aggregate.h (#2848)
+Remove SparseVector, remove data()[position] (#2816)
+Remove verbose log (#2756)
+Remove macro ndebug (#2720)
+Remove unused Parameters member data (#2712)
+
+#### Tests
+[In-memory studies] Add & use helpers for short-term storage (#2910)
+Remove useless std::shared_ptr around SimulationHandler (#2911)
+Improve helper class ThermalClusterConfig (#2909)
+[ANT-2034] InMemory modeler test (#2827)
+New modeler : make test 7.1 pass (#2786)
+Add modeler tests 7.2, 7.2, 7.4 (#2800)
+Add modeler features 8.1, 8.2 and 8.3 [ANT-3535] (#2902)
+Add cucumber tests for v9.3.0 STS scenarization features [ANT-3037] (#2873)
+Unit test synthesis aggregation (EXP/MIN/MAX/STD) (#2828)
+Add some unit tests for hydro (#2831)
+Fix behave comparison tolerance (#2826)
+Add behave short tests 9 to 20 (#2807)
+Add a few unit tests for "math utils" functions (#2795)
+[behave] Update solver steps (#2753)
+Migrate some tests to cucumber (#2682)
+Add unit tests for BindingConstraintGroup::numberOfTimeseries (#2711)
+Fix ortools unit tests (#2702)
+Fix non-passing tests (#2696)
+
+#### For developers
+Add 2 future parameters in generaldata.ini [ANT-3504] (#2907)
+Use antlr to process st additional constraints [ANT-3091] (#2777)
+Use OR-Tools/MathOpt for quadratic problem resolution [ANT-2546] (#2574)
+Don't rebuild optimization problem at every simplex resolution (#2722)
+Enable extra linear solvers: PDLP & HiGHS (#2693)
+
+
 ## Branch 9.2.x
 
 ### 9.2.1
@@ -101,7 +247,7 @@ toc_depth: 2
 * Fix variable bounds for 1st week in the year (#2517)
 * Fix timestamp = 0 in file info.antares-output (ANT-2494) (#2508)
 * Fix build after the removal of bool OptimizationOptions::ortoolsUsed (#2505)
- 
+
 #### Modeler
 * 1.1: Modeler API [ANT-1876] (#2286) (#2391)
 * 1.1c: Scenarize problem filler (#2445)
@@ -1239,7 +1385,7 @@ features to be used without hassle.
 - Remove dead code
 
 ### 8.0.2 (04/2021)
--------------------- 
+--------------------
 
 #### Bug fixes
 
@@ -1247,7 +1393,7 @@ features to be used without hassle.
 - Correction of MC year weight use for PSP and MISC NDG
 
 ### 8.0.1 (03/2021)
--------------------- 
+--------------------
 
 #### Features
 
@@ -1267,7 +1413,7 @@ features to be used without hassle.
 - Add shared dll in windows .zip archive
 
 ### 8.0.0 (03/2021)
--------------------- 
+--------------------
 
 #### Features
 
@@ -1350,7 +1496,7 @@ features to be used without hassle.
     - Add pytest scripts related to unfeasible problems
 
 ### 7.2.0 (06/2020)
--------------------- 
+--------------------
 
 #### Features
 
@@ -1366,7 +1512,7 @@ features to be used without hassle.
   The first two options make the simulation stop right after
   encountering the first mathematically unfeasible problem, if any
   The last two options make the simulation skip all unfeasible
-  problems, if any  
+  problems, if any
   "Verbose" options print faulty problems in the “mps” format
   "Dry" options only report the time frame (MC year, week) for which
   an unfeasible problem was detected
@@ -1406,7 +1552,7 @@ features to be used without hassle.
   to launch a sequence of simulations to run in parallel
 
 ### 7.1.0 (12/2019)
--------------------- 
+--------------------
 
 #### Features
 
@@ -1415,7 +1561,7 @@ features to be used without hassle.
   now makes it possible to define precisely the content of
   output files so as to include only variables of interest
 
-- Optimization: a new parameter "Hydro Pricing mode" is   
+- Optimization: a new parameter "Hydro Pricing mode" is
   available in the "advanced parameters" section, with two
   possible values (fast, accurate):
   In mode "fast", water value is, in the course of optimization,
@@ -1465,7 +1611,7 @@ features to be used without hassle.
   named after said Areas or Links
 
 ### 7.0.1 (04/2019)
--------------------- 
+--------------------
 
 #### Features
 
@@ -1476,7 +1622,7 @@ features to be used without hassle.
   with generation in mode "use heuristic target without leeway"
 
 ### 7.0.0 (12/2018)
--------------------- 
+--------------------
 
 #### Features
 
@@ -1493,7 +1639,7 @@ features to be used without hassle.
 - Documentation: updated examples library
 
 ### 7.0.0-rc (12/2018)
--------------------- 
+--------------------
 
 #### Features
 
@@ -1507,7 +1653,7 @@ features to be used without hassle.
   and constraints are generated for the whole year
 
 ### 6.5.1 (11/2018)
----------------- 
+----------------
 
 #### Bugs
 
@@ -1518,7 +1664,7 @@ features to be used without hassle.
 - Districts GUI: improved syntax control
 
 ### 6.5.0 (11/2018)
----------------- 
+----------------
 
 #### Features
 
@@ -1535,8 +1681,8 @@ features to be used without hassle.
   Impedances (moved from col.3 to col.5)(Ohms at ref. voltage U)
   Loop flow (passive) (MW)
   Min Tap of phase-shifter  (MW*Ohms/U2 along any AC cycle including L)
-  Max Tap of phase-shifter  (MW*Ohms/U2 along any AC cycle including L)		
-  New link parameters (one value)		
+  Max Tap of phase-shifter  (MW*Ohms/U2 along any AC cycle including L)
+  New link parameters (one value)
   Asset type (AC,DC,Gas,Virtual,Other) : KCG deals only with AC links
   "account for loop flow" toggle
   "tune PST"        toggle
@@ -1546,17 +1692,17 @@ features to be used without hassle.
   Status of passive loop flow in constraints RHS (included or not)
   Status or PST settings in constraints RHS      (included or not)
   Auto-check of nodal loop flow balance (activated or not)
-  Definition of the "infinite" to use for constraints relaxation  
+  Definition of the "infinite" to use for constraints relaxation
   KCG results:
   For AC Links involved in the generation process: The KCG sets the
   values of the two input data toggles related to loop flows and
   PST settings, in accordance with the current generation directives
 
-  		Identification of an optimal (minimum-weight) cycle basis for the
-  		formulation of constraints 
-  		
-  		Generation of all relevant constraints (equality, inequalities, with
-  		or without relaxation) 
+        Identification of an optimal (minimum-weight) cycle basis for the
+        formulation of constraints
+
+        Generation of all relevant constraints (equality, inequalities, with
+        or without relaxation)
 
 - Reservoir-type hydro and other energy storage facilities:
   interface, input and output data structure, functionalities,
@@ -1615,7 +1761,7 @@ features to be used without hassle.
   value (changed to 2 decimal accuracy)
 
 ### 6.1.3 (06/2018)
----------------- 
+----------------
 
 #### Features
 
@@ -1645,7 +1791,7 @@ features to be used without hassle.
 - Example library : upgraded to 6.1 and extended
 
 ### 6.1.2 (11/2017)
----------------- 
+----------------
 
 #### Features
 
@@ -1653,14 +1799,14 @@ features to be used without hassle.
   (Matrix, right hand side, costs)
 
 ### 6.1.1 (11/2017)
----------------- 
+----------------
 
 #### Features
 
 - Solver: Light changes in Presolve stage
 
 ### 6.1.0 (09/2017)
----------------- 
+----------------
 
 #### Features
 
@@ -1671,7 +1817,7 @@ features to be used without hassle.
   associated with arbitrary offsets (time-lags expressed in hours).
 
 ### 6.0.6 (07/2017)
----------------- 
+----------------
 
 #### Features
 
@@ -1682,7 +1828,7 @@ features to be used without hassle.
   commitment mode
 
 ### 6.0.5 (07/2017)
----------------- 
+----------------
 
 #### Bug fixes
 
@@ -1696,7 +1842,7 @@ features to be used without hassle.
   cleaning datasets  (detected as of 6.0.0)
 
 ### 6.0.4 (06/2017)
----------------- 
+----------------
 
 #### Bug fixes
 
@@ -1707,7 +1853,7 @@ features to be used without hassle.
   unsupplied energy allowances
 
 ### 6.0.3 (06/2017)
----------------- 
+----------------
 
 #### Features
 
@@ -1727,7 +1873,7 @@ features to be used without hassle.
   circumstances
 
 ### 6.0.2 (06/2017)
----------------- 
+----------------
 
 #### Features
 
@@ -1743,7 +1889,7 @@ features to be used without hassle.
   two years ore more.
 
 ### 6.0.1 (05/2017)
----------------- 
+----------------
 
 #### Features
 
@@ -1770,7 +1916,7 @@ features to be used without hassle.
   listed above
 
 ### 6.0.0 (04/2017)
----------------- 
+----------------
 
 #### Features
 
@@ -1806,7 +1952,7 @@ features to be used without hassle.
   copy to backup folders, registering of studies and archives in catalogues.
 
 ### 5.0.9-SE (04/2017)
----------------- 
+----------------
 
 #### Bug fixes
 
@@ -1819,21 +1965,21 @@ features to be used without hassle.
   "accurate" mode only)
 
 ### 5.0.7-SE (04/2017)
----------------- 
+----------------
 
 #### Features
 
 - License control : management of SSL certificates encrypted through SHA-256 algorithm
 
 ### 5.0.7 (12/2016)
----------------- 
+----------------
 
 #### Bug fixes
 
 - Fixing a packaging error
 
 ### 5.0.6 (12/2016)
----------------- 
+----------------
 
 #### Bug fixes
 
@@ -1861,7 +2007,7 @@ features to be used without hassle.
   versions of Antares, which will be fully multi-threaded
 
 ### 5.0.5 (08/2016)
----------------- 
+----------------
 
 #### Bug fixes
 
@@ -1884,7 +2030,7 @@ features to be used without hassle.
   is locally expressed as a constraint of the optimization problem  (LOLE=0)
 
 ### 5.0.4 (05/2016)
----------------- 
+----------------
 
 #### Bug fixes
 
@@ -1899,7 +2045,7 @@ features to be used without hassle.
   negative values can be used for all classes of constraints (hourly, daily, weekly)
 
 ### 5.0.3 (05/2016)
----------------- 
+----------------
 
 #### Bug fixes
 
@@ -1907,7 +2053,7 @@ features to be used without hassle.
   "true" for thermal clusters
 
 ### 5.0.2 (04/2016)
----------------- 
+----------------
 
 #### Bug fixes
 
@@ -1920,7 +2066,7 @@ features to be used without hassle.
   theoretical monthly targets (formerly, only the largest deviation was penalized).
 
 ### 5.0.1 (04/2016)
----------------- 
+----------------
 
 #### Bug fixes
 
@@ -1931,7 +2077,7 @@ features to be used without hassle.
   performances in some cases. This problem is now solved.
 
 ### 5.0.0 (03/2016)
----------------- 
+----------------
 
 #### Bug fixes
 
@@ -2171,19 +2317,19 @@ features to be used without hassle.
 - Time-series screens: a new function is available for hourly and daily time-series
   (shift rows until #date#)
 
-- Linear solver: new version slightly more accurate than the previous one.  
+- Linear solver: new version slightly more accurate than the previous one.
   Note that when a daily or weekly optimization has multiple equally optimal solutions,
   the ultimate choice may differ from that of the previous version
 
 #### Bug fixes
 
-- Reference numbers of the time-series used in the course of a simulation:  
+- Reference numbers of the time-series used in the course of a simulation:
   When the simulation is based on a user-defined scenario (building mode: custom)
   and when a printout of the reference numbers of the time-series used in the simulation
   is asked for (MC scenarios: true), the numbers printed for thermal clusters running
   under the "must-run" status were wrong
 
-- Interconnection results, marginal costs:  
+- Interconnection results, marginal costs:
   For a congested interconnection whose transmission capacities are not symmetric,
   and in presence of hurdle costs, a zero could sometimes be delivered instead of
   the actually expected value

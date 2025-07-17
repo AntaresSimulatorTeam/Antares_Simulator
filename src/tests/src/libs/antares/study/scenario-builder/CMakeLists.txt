@@ -14,16 +14,18 @@ add_boost_test(test-sc-builder-file-read-line
 # ====================================
 # Tests on saving scenario-builder
 # ====================================
-add_boost_test(test-sc-builder-file-save
-  SRC
-  test-sc-builder-file-save.cpp
-  "${src_tests_src_libs_antares_study}/area/files-helper.cpp"
-  INCLUDE
-  "${src_libs_antares_study}"
-  "${src_libs_antares_study}/scenario-builder"
-  "${src_tests_src_libs_antares_study}"
-  LIBS
-  model_antares)
+if(BUILD_UI)
+    add_boost_test(test-sc-builder-file-save
+      SRC
+      test-sc-builder-file-save.cpp
+      "${src_tests_src_libs_antares_study}/area/files-helper.cpp"
+      INCLUDE
+      "${src_libs_antares_study}"
+      "${src_libs_antares_study}/scenario-builder"
+      "${src_tests_src_libs_antares_study}"
+      LIBS
+      model_antares)
+endif()
 
 add_boost_test(test-sc-builder-get-set
   SRC test-sc-builder-get-set.cpp

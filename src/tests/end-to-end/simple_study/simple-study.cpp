@@ -460,6 +460,59 @@ BOOST_FIXTURE_TEST_CASE(sts_scenarized_withdrawal_constraint, StudyBuilder)
 
 BOOST_AUTO_TEST_SUITE_END()
 
+BOOST_AUTO_TEST_SUITE(IN_MEMORY_PROBLEM_BUILDING)
+
+BOOST_FIXTURE_TEST_CASE(STS_efficiency_for_injection_and_withdrawal, StudyFixture)
+{
+    setNumberMCyears(1);
+
+    auto* sts = addSTSToArea(area, "my-sts");
+
+    const double initialLevel = .5;
+    const double reservoirCapacity = 100;
+
+    ShortTermStorageConfig stsConfig(*sts);
+    stsConfig.setInjectionNominalCapacity(10)
+      .setWithdrawalNominalCapacity(10)
+      .setReservoirCapacity(reservoirCapacity)
+      .setInjectionEfficiency(.6)
+      .setWithdrawalEfficiency(.8)
+      .setInitialLevel(initialLevel)
+      .setInitialLevelOptim(false)
+      .setGroupName("Some STS group");
+    // Default values for series
+    sts->series->fillDefaultSeriesIfEmpty();
+
+    simulation.create();
+    simulation.run();
+
+    const auto& observer = simulation.getObserver();
+    BOOST_REQUIRE_EQUAL(observer.problems.size(), 2);
+    BOOST_REQUIRE(observer.problems.contains({2, "problem-1-1--optim-nb-2.mps"}));
+    const auto& problem = observer.problems.at({2, "problem-1-1--optim-nb-2.mps"});
+
+    // Withdrawal variable
+    const std::string withdrawalKey = "Withdrawal::area<some*area>::ShortTermStorage<my-sts>::hour<"
+                                      "38>";
+    BOOST_REQUIRE(problem.variables.contains(withdrawalKey));
+
+    const auto& withdrawal_h38 = problem.variables.at(withdrawalKey);
+    BOOST_CHECK_EQUAL(withdrawal_h38.Xmin, 0);
+    BOOST_CHECK_EQUAL(withdrawal_h38.Xmax, 10);
+    BOOST_CHECK_EQUAL(withdrawal_h38.objectiveCoefficient, 0);
+
+    // Level constraint
+    const std::string levelKey = "Level::area<some*area>::ShortTermStorage<my-sts>::hour<38>";
+    const std::string injectionKey = "Injection::area<some*area>::ShortTermStorage<my-sts>::hour<"
+                                     "38>";
+    BOOST_REQUIRE(problem.constraints.contains(levelKey));
+    const auto& level_h38 = problem.constraints.at(levelKey);
+    BOOST_CHECK_EQUAL(level_h38.coefficients.at(withdrawalKey), 0.8); // withdrawalEfficiency
+    BOOST_CHECK_EQUAL(level_h38.coefficients.at(injectionKey), -0.6); // -injectionEfficiency
+    BOOST_CHECK_EQUAL(level_h38.rhs, 0);                              // no inflows
+}
+BOOST_AUTO_TEST_SUITE_END()
+
 BOOST_AUTO_TEST_SUITE(HYDRO_MAX_POWER)
 
 BOOST_FIXTURE_TEST_CASE(basic, HydroMaxPowerStudy)
@@ -508,6 +561,7 @@ BOOST_FIXTURE_TEST_CASE(scenario_builder, HydroMaxPowerStudy)
                tt::tolerance(0.1));
 }
 
+#ifdef BUILD_UI
 BOOST_FIXTURE_TEST_CASE(saving_study, HydroMaxPowerStudy)
 {
     auto enabledCluster = std::make_shared<ThermalCluster>(area);
@@ -517,5 +571,6 @@ BOOST_FIXTURE_TEST_CASE(saving_study, HydroMaxPowerStudy)
 
     BOOST_CHECK(study->saveToFolder(std::filesystem::temp_directory_path().string()));
 }
+#endif // BUILD_UI
 
 BOOST_AUTO_TEST_SUITE_END()

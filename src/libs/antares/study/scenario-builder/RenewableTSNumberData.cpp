@@ -77,6 +77,7 @@ uint renewableTSNumberData::get_tsGenCount(const Study& study) const
     return tsGenRenewable ? 1 : 0u;
 }
 
+#ifdef BUILD_UI
 void renewableTSNumberData::saveToINIFile(const Study& /* study */,
                                           Yuni::IO::File::Stream& file) const
 {
@@ -104,6 +105,7 @@ void renewableTSNumberData::saveToINIFile(const Study& /* study */,
         }
     }
 }
+#endif
 
 bool renewableTSNumberData::reset(const Study& study)
 {
