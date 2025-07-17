@@ -42,7 +42,8 @@ void Scenario::setTimeSerieNumber(Year year, TimeSerieNumber timeSerieNumber)
 {
     if (timeSerieData_.contains(year))
     {
-        throw Error::RuntimeError(fmt::format("Time serie number for year {} already exists.", year));
+        throw Error::RuntimeError(
+          fmt::format("Time serie number for year {} already exists.", year));
     }
     timeSerieData_[year] = timeSerieNumber;
 }
