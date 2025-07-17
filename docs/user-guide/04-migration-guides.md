@@ -55,7 +55,7 @@ The following variables were removed:
 - RENW. 3
 - RENW. 4
 
-They're replaced by the dynamic variable `RENEWABLE GEN."`
+They're replaced by the dynamic variable `RENEWABLE GEN.`
 
 ####  Short term storage / scenario-builder
 
