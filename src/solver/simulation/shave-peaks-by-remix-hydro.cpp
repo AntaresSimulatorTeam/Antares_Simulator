@@ -298,8 +298,6 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
                     OutHydroGen[hourBottom] += delta;
                     OutUnsupE[hourPeak] = HydroGen[hourPeak] + UnsupE[hourPeak]
                                           - OutHydroGen[hourPeak];
-                    OutUnsupE[hourBottom] = HydroGen[hourBottom] + UnsupE[hourBottom]
-                                            - OutHydroGen[hourBottom];
                     if (reservoirManagement)
                     {
                         levels = updateLevels(initLevel,
@@ -315,6 +313,8 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
                 triedPeak[hourPeak] = true;
             }
 
+            OutUnsupE[hourBottom] = HydroGen[hourBottom] + UnsupE[hourBottom]
+                                    - OutHydroGen[hourBottom];
             if (delta > eps)
             {
                 break;
