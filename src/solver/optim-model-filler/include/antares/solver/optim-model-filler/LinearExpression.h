@@ -159,7 +159,6 @@ public:
     const FullKeyMap& coefPerVar() const;
 
     LinearExpression& operator+=(const LinearExpression& value);
-    // LinearExpression& operator-=(const LinearExpression& value);
 
 private:
     double offset_ = 0;
