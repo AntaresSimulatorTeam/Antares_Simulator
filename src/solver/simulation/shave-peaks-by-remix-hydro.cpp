@@ -309,6 +309,7 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
                                               overflow,
                                               pump);
                     }
+                    TotalGen = updateTotalGen(DispatchGen, OutHydroGen);
                     break;
                 }
                 triedPeak[hourPeak] = true;
@@ -325,8 +326,6 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
         {
             break;
         }
-
-        TotalGen = updateTotalGen(DispatchGen, OutHydroGen);
     }
     return {OutHydroGen, OutUnsupE, levels};
 }
