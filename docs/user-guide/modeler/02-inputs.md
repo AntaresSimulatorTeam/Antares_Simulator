@@ -143,8 +143,7 @@ models:
     - **variable-type**: `continuous`, `integer`, or `binary`
     - **lower-bound** _(optional)_: an [expression](#expressions) representing the lower bound of the variable. The expression inside the parentheses must evaluate to a scalar.
       and/or parameters only. If missing, defaults to -inf for continuous and integer types, or 0 for binary.
-    - **upper-bound** _(optional)_: an [expression](#expressions) representing the upper bound of the variable. Must use
-      scalars
+    - **upper-bound** _(optional)_: an [expression](#expressions) representing the upper bound of the variable. The expression inside the parentheses must evaluate to a scalar.
       and/or parameters only. If missing, defaults to +inf for continuous and integer types, or 1 for binary.
 - **constraints** _(optional)_: a collection of "internal" optimization constraints set by the model
     - **id**: an ID for the constraint. Must be unique inside the scope of the model, and
