@@ -2,12 +2,16 @@
 
 # To generate all headers and sources
 # cmake --build <build> --target antlr_generate_all
-# NOTE ANTLR_JAR_PATH must be set
+# NOTE Environment variable ANTLR_JAR_PATH must be set
 
 macro(add_antlr_target target_name directory grammar_file)
 
     if(NOT ANTLR_JAR_PATH)
-        message(FATAL_ERROR "ANTLR_JAR_PATH must be set before calling add_antlr_target")
+	if(DEFINED ENV{ANTLR_JAR_PATH})
+	    set(ANTLR_JAR_PATH "$ENV{ANTLR_JAR_PATH}")
+	else()
+	    message(FATAL_ERROR "ANTLR_JAR_PATH must be set via -D or environment variable")
+	endif()
     endif()
 
     # Stamp file to track generation
