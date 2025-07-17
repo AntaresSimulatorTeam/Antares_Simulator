@@ -17,7 +17,7 @@ BOOST_AUTO_TEST_CASE(ask_repo_a_question_it_can_answer_repo_answers_correctly)
     unsigned scenario = 10;
     unsigned dataRank = 15;
     auto scenarioPtr = std::make_unique<Scenario>("some group");
-    scenarioPtr->setChronicle(scenario, dataRank);
+    scenarioPtr->setTimeSerieNumber(scenario, dataRank);
     scenarioGroupRepo.addScenario("some group", std::move(scenarioPtr));
 
     BOOST_CHECK_EQUAL(scenarioGroupRepo.scenario("some group").getData(scenario), dataRank);
@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_CASE(ask_a_repo_a_rank_it_cannot_find_exception_raised)
     auto scenarioPtr = std::make_unique<Scenario>("some group");
     scenarioGroupRepo.addScenario("some group", std::move(scenarioPtr));
 
-    std::string expectedErrMsg = "In scenario group 'some group', chronicle for year 0 does not "
+    std::string expectedErrMsg = "In scenario group 'some group', time serie for year 0 does not "
                                  "exist.";
     BOOST_CHECK_EXCEPTION(scenarioGroupRepo.scenario("some group").getData(0),
                           Antares::Error::RuntimeError,
@@ -67,20 +67,20 @@ BOOST_AUTO_TEST_CASE(empty_group_id_returns_default_rank)
     unsigned scenario = 10;
     unsigned dataRank = 15;
     auto scenarioPtr = std::make_unique<Scenario>("some group");
-    scenarioPtr->setChronicle(scenario, dataRank);
+    scenarioPtr->setTimeSerieNumber(scenario, dataRank);
     scenarioGroupRepo.addScenario("some group", std::move(scenarioPtr));
 
     BOOST_CHECK_EQUAL(scenarioGroupRepo.scenario("").getData(scenario), 0);
 }
 
-BOOST_AUTO_TEST_CASE(set_should_fail_if_chronicle_exists)
+BOOST_AUTO_TEST_CASE(set_should_fail_if_timeserie_exists)
 {
     ScenarioGroupRepository scenarioGroupRepo;
     unsigned scenario = 10;
     unsigned dataRank = 15;
     auto scenarioPtr = std::make_unique<Scenario>("some group");
-    scenarioPtr->setChronicle(scenario, dataRank);
-    BOOST_CHECK_EXCEPTION(scenarioPtr->setChronicle(scenario, dataRank),
+    scenarioPtr->setTimeSerieNumber(scenario, dataRank);
+    BOOST_CHECK_EXCEPTION(scenarioPtr->setTimeSerieNumber(scenario, dataRank),
                           Antares::Error::RuntimeError,
-                          checkMessage("Chronicle for year 10 already exists."));
+                          checkMessage("Time serie number for year 10 already exists."));
 }

@@ -140,9 +140,11 @@ models:
     - **id**: an ID for the variable. Must be unique inside the scope of the model, and
       respect [these rules](#rules-for-ids).
     - **variable-type**: `continuous`, `integer`, or `binary`
-    - **lower-bound** _(optional)_: an [expression](#expressions) representing the lower bound of the variable. The expression inside the parentheses must evaluate to a scalar.
+    - **lower-bound** _(optional)_: an [expression](#expressions) representing the lower bound of the variable. The
+      expression inside the parentheses must evaluate to a scalar.
       and/or parameters only. If missing, defaults to -inf for continuous and integer types, or 0 for binary.
-    - **upper-bound** _(optional)_: an [expression](#expressions) representing the upper bound of the variable. The expression inside the parentheses must evaluate to a scalar.
+    - **upper-bound** _(optional)_: an [expression](#expressions) representing the upper bound of the variable. The
+      expression inside the parentheses must evaluate to a scalar.
       and/or parameters only. If missing, defaults to +inf for continuous and integer types, or 1 for binary.
 - **constraints** _(optional)_: a collection of "internal" optimization constraints set by the model
     - **id**: an ID for the constraint. Must be unique inside the scope of the model, and
@@ -486,7 +488,7 @@ All IDs in the model library and system file must respect the following:
 The **modeler-scenariobuilder.dat** file, located in the **data-series** directory, is used to map scenarios to data
 series.
 Each line consists of the association of a groupe name and Monte-carlo year -referred to as _year_- to a data series ID
--referred to as _chronicle_-.
+-referred to as _time serie number_-.
 
 Example:
 
@@ -496,12 +498,14 @@ thermal_group, 2 = 5
 hydro_group, 3 = 7
 ~~~
 
-* For thermal_group the year 1 is associated with the chronicle 1 whereas the year 2 is associated with the chronicle 5.
-* For hydro_group the year 3 is associated with the chronicle 7.
+* For thermal_group the year 1 is associated with the time serie number 1 whereas the year 2 is associated with the time
+  serie number 5.
+* For hydro_group the year 3 is associated with the time serie number 7.
 
 
 * A _year_ is a integer, starting at 1.
-* A _chronicle_ is a integer, starting at 0, and refers to the zero-based column number in the corresponding data
+* A _time serie number_ is a integer, starting at 0, and refers to the zero-based column number in the corresponding
+  data
   series file.
 * Group IDs refer to groups defined in the [components](#components) description.
 

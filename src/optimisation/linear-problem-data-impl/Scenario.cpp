@@ -25,26 +25,25 @@
 
 namespace Antares::Optimisation::LinearProblemDataImpl
 {
-LinearProblemApi::IScenario::Chronicle Scenario::getData(Year year) const
+LinearProblemApi::IScenario::TimeSerieNumber Scenario::getData(Year year) const
 {
-    auto it = chronicleData_.find(year);
-    if (it == chronicleData_.end())
+    auto it = timeSerieData_.find(year);
+    if (it == timeSerieData_.end())
     {
         throw Error::RuntimeError(
-          fmt::format("In scenario group '{}', chronicle for year {} does not exist.",
+          fmt::format("In scenario group '{}', time serie for year {} does not exist.",
                       group(),
                       year));
     }
     return it->second;
 }
 
-void Scenario::setChronicle(Year year, Chronicle chronicle)
+void Scenario::setTimeSerieNumber(Year year, TimeSerieNumber timeSerieNumber)
 {
-    if (chronicleData_.contains(year))
+    if (timeSerieData_.contains(year))
     {
-        throw Error::RuntimeError("Chronicle for year " + std::to_string(year)
-                                  + " already exists.");
+        throw Error::RuntimeError(fmt::format("Time serie number for year {} already exists.", year));
     }
-    chronicleData_[year] = chronicle;
+    timeSerieData_[year] = timeSerieNumber;
 }
 } // namespace Antares::Optimisation::LinearProblemDataImpl

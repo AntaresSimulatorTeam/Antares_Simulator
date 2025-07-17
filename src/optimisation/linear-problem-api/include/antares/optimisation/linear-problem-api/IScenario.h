@@ -8,7 +8,7 @@ class IScenario
 {
 public:
     using Year = unsigned;
-    using Chronicle = unsigned;
+    using TimeSerieNumber = unsigned;
 
     virtual ~IScenario() = default;
 
@@ -17,7 +17,7 @@ public:
     {
     }
 
-    [[nodiscard]] virtual Chronicle getData(Year year) const = 0;
+    [[nodiscard]] virtual TimeSerieNumber getData(Year year) const = 0;
 
     [[nodiscard]] std::string group() const
     {

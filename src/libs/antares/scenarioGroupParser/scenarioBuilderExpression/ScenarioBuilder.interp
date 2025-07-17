@@ -19,7 +19,7 @@ rules
 line
 group
 year
-chronicle
+timeSerieNumber
 
 
 atn:

@@ -16,7 +16,7 @@ public:
   };
 
   enum {
-    RuleRules = 0, RuleLine = 1, RuleGroup = 2, RuleYear = 3, RuleChronicle = 4
+    RuleRules = 0, RuleLine = 1, RuleGroup = 2, RuleYear = 3, RuleTimeSerieNumber = 4
   };
 
   explicit ScenarioBuilderParser(antlr4::TokenStream *input);
@@ -40,7 +40,7 @@ public:
   class LineContext;
   class GroupContext;
   class YearContext;
-  class ChronicleContext; 
+  class TimeSerieNumberContext; 
 
   class  RulesContext : public antlr4::ParserRuleContext {
   public:
@@ -65,7 +65,7 @@ public:
     antlr4::tree::TerminalNode *COMMA();
     YearContext *year();
     antlr4::tree::TerminalNode *EQUALS();
-    ChronicleContext *chronicle();
+    TimeSerieNumberContext *timeSerieNumber();
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -100,9 +100,9 @@ public:
 
   YearContext* year();
 
-  class  ChronicleContext : public antlr4::ParserRuleContext {
+  class  TimeSerieNumberContext : public antlr4::ParserRuleContext {
   public:
-    ChronicleContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    TimeSerieNumberContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *INT();
 
@@ -111,7 +111,7 @@ public:
    
   };
 
-  ChronicleContext* chronicle();
+  TimeSerieNumberContext* timeSerieNumber();
 
 
   // By default the static state used to implement the parser is lazily initialized during the first

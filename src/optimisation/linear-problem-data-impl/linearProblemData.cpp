@@ -30,10 +30,10 @@ void LinearProblemData::addDataSeries(std::unique_ptr<IDataSeries> dataSeries)
 }
 
 double LinearProblemData::getData(const std::string& dataSetId,
-                                  LinearProblemApi::IScenario::Chronicle chronicle,
+                                  LinearProblemApi::IScenario::TimeSerieNumber timeSerieNumber,
                                   unsigned hour) const
 {
-    return dataSeriesRepository_.getDataSeries(dataSetId).getData(chronicle, hour);
+    return dataSeriesRepository_.getDataSeries(dataSetId).getData(timeSerieNumber, hour);
 }
 
 } // namespace Antares::Optimisation::LinearProblemDataImpl
