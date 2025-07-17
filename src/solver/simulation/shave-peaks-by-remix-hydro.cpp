@@ -14,13 +14,13 @@ const std::string error_msg_start = "Remix hydro input : ";
 namespace Antares::Solver::Simulation
 {
 
-int hour_for_totalGen_min(const std::vector<double>& TotalGen,
-                          const std::vector<double>& OutUnsupE,
-                          const std::vector<double>& OutHydroGen,
-                          const std::vector<bool>& triedBottom,
-                          const std::vector<double>& HydroPmax,
-                          const std::vector<bool>& enabledHours,
-                          double top)
+static int hour_for_totalGen_min(const std::vector<double>& TotalGen,
+                                 const std::vector<double>& OutUnsupE,
+                                 const std::vector<double>& OutHydroGen,
+                                 const std::vector<bool>& triedBottom,
+                                 const std::vector<double>& HydroPmax,
+                                 const std::vector<bool>& enabledHours,
+                                 double top)
 {
     double minTotalGen = top;
     int min_hour = -1;
@@ -38,12 +38,12 @@ int hour_for_totalGen_min(const std::vector<double>& TotalGen,
     return min_hour;
 }
 
-int hour_for_totalGen_max(const std::vector<double>& TotalGen,
-                          const std::vector<double>& OutHydroGen,
-                          const std::vector<bool>& triedPeak,
-                          const std::vector<double>& HydroPmin,
-                          const std::vector<bool>& enabledHours,
-                          double minTotalGen)
+static int hour_for_totalGen_max(const std::vector<double>& TotalGen,
+                                 const std::vector<double>& OutHydroGen,
+                                 const std::vector<bool>& triedPeak,
+                                 const std::vector<double>& HydroPmin,
+                                 const std::vector<bool>& enabledHours,
+                                 double minTotalGen)
 {
     double maxTotalGen = 0;
     int max_hour = -1;
@@ -62,32 +62,30 @@ int hour_for_totalGen_max(const std::vector<double>& TotalGen,
     return max_hour;
 }
 
-namespace
-{
-bool operator<=(const std::vector<double>& a, const std::vector<double>& b)
+static bool operator<=(const std::vector<double>& a, const std::vector<double>& b)
 {
     return a.size() == b.size()
            && std::ranges::all_of(std::views::iota(size_t{0}, a.size()),
                                   [&](size_t i) { return a[i] <= b[i]; });
 }
 
-bool operator<=(const std::vector<double>& v, const double c)
+static bool operator<=(const std::vector<double>& v, const double c)
 {
     return std::ranges::all_of(v, [&c](double e) { return e <= c; });
 }
 
-bool operator>=(const std::vector<double>& v, const double c)
+static bool operator>=(const std::vector<double>& v, const double c)
 {
     return std::ranges::all_of(v, [&c](double e) { return e >= c; });
 }
 
-void checkInput(const std::vector<double>& DispatchGen,
-                const std::vector<double>& HydroGen,
-                const std::vector<double>& UnsupE,
-                const std::vector<double>& HydroPmax,
-                const std::vector<double>& HydroPmin,
-                const std::vector<double>& Spillage,
-                const std::vector<double>& DTG_MRG)
+static void checkInput(const std::vector<double>& DispatchGen,
+                       const std::vector<double>& HydroGen,
+                       const std::vector<double>& UnsupE,
+                       const std::vector<double>& HydroPmax,
+                       const std::vector<double>& HydroPmin,
+                       const std::vector<double>& Spillage,
+                       const std::vector<double>& DTG_MRG)
 {
     // Arrays sizes must be identical
     std::vector<size_t> sizes = {DispatchGen.size(),
@@ -121,12 +119,12 @@ void checkInput(const std::vector<double>& DispatchGen,
     }
 }
 
-void checkReservoirManagementInput(size_t size,
-                                   const double initLevel,
-                                   const double capacity,
-                                   const std::vector<double>& inflows,
-                                   const std::vector<double>& overflow,
-                                   const std::vector<double>& pump)
+static void checkReservoirManagementInput(size_t size,
+                                          const double initLevel,
+                                          const double capacity,
+                                          const std::vector<double>& inflows,
+                                          const std::vector<double>& overflow,
+                                          const std::vector<double>& pump)
 {
     if (initLevel >= capacity + LEVEL_TOLERANCE)
     {
@@ -140,7 +138,7 @@ void checkReservoirManagementInput(size_t size,
     }
 }
 
-void checkLevels(const std::vector<double>& levels, const double capacity)
+static void checkLevels(const std::vector<double>& levels, const double capacity)
 {
     if (!(levels <= capacity + LEVEL_TOLERANCE) || !(levels >= -LEVEL_TOLERANCE))
     {
@@ -148,10 +146,9 @@ void checkLevels(const std::vector<double>& levels, const double capacity)
                                     + "levels computed from input don't respect reservoir bounds");
     }
 }
-} // namespace
 
-std::vector<double> updateTotalGen(const std::vector<double>& DispatchGen,
-                                   const std::vector<double>& HydroGen)
+static std::vector<double> updateTotalGen(const std::vector<double>& DispatchGen,
+                                          const std::vector<double>& HydroGen)
 {
     std::vector<double> totalGen(DispatchGen.size());
     std::transform(DispatchGen.begin(),
@@ -162,12 +159,12 @@ std::vector<double> updateTotalGen(const std::vector<double>& DispatchGen,
     return totalGen;
 }
 
-std::vector<double> updateLevels(const double initLevel,
-                                 const double pumpEfficiency,
-                                 const std::vector<double>& HydroGen,
-                                 const std::vector<double>& inflows,
-                                 const std::vector<double>& overflow,
-                                 const std::vector<double>& pump)
+static std::vector<double> updateLevels(const double initLevel,
+                                        const double pumpEfficiency,
+                                        const std::vector<double>& HydroGen,
+                                        const std::vector<double>& inflows,
+                                        const std::vector<double>& overflow,
+                                        const std::vector<double>& pump)
 {
     std::vector<double> levels(HydroGen.size());
     levels[0] = initLevel + inflows[0] - overflow[0] + pumpEfficiency * pump[0] - HydroGen[0];
