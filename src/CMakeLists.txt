@@ -45,6 +45,9 @@ endif()
 #CMake function
 include("cmake/utils.cmake")
 
+#Generate ANTLR4 source files from grammar files
+include("cmake/antlr4-generate.cmake")
+
 #CMake Macro to display message
 include("cmake/messages.cmake")
 

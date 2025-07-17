@@ -1,0 +1,48 @@
+# This file adds custom targets to generate headers & sources from ANTLR4 grammar files
+
+# To generate all headers and sources
+# cmake --build <build> --target antlr_generate_all
+
+macro(add_antlr_target target_name directory grammar_file)
+
+    if(NOT ANTLR_JAR_PATH)
+        message(FATAL_ERROR "ANTLR_JAR_PATH must be set before calling add_antlr_target")
+    endif()
+
+    # Stamp file to track generation
+    set(stamp_file ${directory}/${target_name}.stamp)
+
+    # ANTLR generation command
+    add_custom_command(
+        OUTPUT ${stamp_file}
+	WORKING_DIRECTORY ${directory}
+        COMMAND java -jar ${ANTLR_JAR_PATH}
+            -Dlanguage=Cpp
+            -visitor
+            -no-listener
+            -o .
+            ${grammar_file}
+        COMMAND ${CMAKE_COMMAND} -E touch ${stamp_file}
+        DEPENDS ${directory}/${grammar_file}
+        COMMENT "Generating C++ files from ${grammar_file}"
+        VERBATIM
+    )
+
+    # Target to trigger generation
+    add_custom_target(${target_name} DEPENDS ${stamp_file})
+endmacro()
+
+add_antlr_target(antlr_generate_hours_field
+  ${CMAKE_SOURCE_DIR}/libs/antares/additionalConstraintRhsExpression
+  HoursField.g4
+)
+
+add_antlr_target(antlr_generate_expression
+  ${CMAKE_SOURCE_DIR}/expressions/antlr-interface
+  Expr.g4
+)
+
+add_custom_target(antlr_generate_all
+  DEPENDS
+  antlr_generate_hours_field
+  antlr_generate_expression)
