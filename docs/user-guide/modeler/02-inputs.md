@@ -500,7 +500,7 @@ hydro_group, 3 = 7
 * For hydro_group the year 3 is associated with the chronicle 7.
 
 
-* A _year_ is a number, starting at 1.
+* A _year_ is a integer, starting at 1.
 * A _chronicle_ is a integer, starting at 0, and refers to the zero-based column number in the corresponding data
   series file.
 * Group IDs refer to groups defined in the [components](#components) description.
