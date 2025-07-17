@@ -152,6 +152,18 @@ void checkInputCorrectness(const std::vector<double>& DispatchGen,
 }
 } // namespace
 
+std::vector<double> updateTotalGen(const std::vector<double>& DispatchGen,
+                                   const std::vector<double>& HydroGen)
+{
+    std::vector<double> totalGen(DispatchGen.size());
+    std::transform(DispatchGen.begin(),
+                   DispatchGen.end(),
+                   HydroGen.begin(),
+                   totalGen.begin(),
+                   std::plus<>());
+    return totalGen;
+}
+
 RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGen,
                                            const std::vector<double>& HydroGen,
                                            const std::vector<double>& UnsupE,
@@ -211,12 +223,7 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
         }
     }
 
-    std::vector<double> TotalGen(DispatchGen.size());
-    std::transform(DispatchGen.begin(),
-                   DispatchGen.end(),
-                   HydroGen.begin(),
-                   TotalGen.begin(),
-                   std::plus<>());
+    std::vector<double> TotalGen = updateTotalGen(DispatchGen, HydroGen);
 
     while (loop-- > 0)
     {
@@ -313,12 +320,9 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
         {
             break;
         }
+        
+        TotalGen = updateTotalGen(DispatchGen, OutHydroGen);
 
-        std::transform(DispatchGen.begin(),
-                       DispatchGen.end(),
-                       OutHydroGen.begin(),
-                       TotalGen.begin(),
-                       std::plus<>());
         if (reservoirManagement)
         {
             levels[0] = initialLevel + inflows[0] - overflow[0] + pumpEfficiency * pump[0]
