@@ -5,15 +5,6 @@
 # NOTE Environment variable ANTLR_JAR_PATH must be set
 
 macro(add_antlr_target target_name directory grammar_file)
-
-    if(NOT ANTLR_JAR_PATH)
-	if(DEFINED ENV{ANTLR_JAR_PATH})
-	    set(ANTLR_JAR_PATH "$ENV{ANTLR_JAR_PATH}")
-	else()
-	    message(FATAL_ERROR "ANTLR_JAR_PATH must be set via -D or environment variable")
-	endif()
-    endif()
-
     # Stamp file to track generation
     set(stamp_file ${directory}/${target_name}.stamp)
 
@@ -21,12 +12,15 @@ macro(add_antlr_target target_name directory grammar_file)
     add_custom_command(
         OUTPUT ${stamp_file}
 	WORKING_DIRECTORY ${directory}
-        COMMAND java -jar ${ANTLR_JAR_PATH}
+	COMMAND ${CMAKE_COMMAND} -P ${CMAKE_SOURCE_DIR}/cmake/check_antlr_jar.cmake
+
+	COMMAND ${CMAKE_COMMAND} -E env java -jar "$ENV{ANTLR_JAR_PATH}"
             -Dlanguage=Cpp
             -visitor
             -no-listener
             -o .
             ${grammar_file}
+
         COMMAND ${CMAKE_COMMAND} -E touch ${stamp_file}
         DEPENDS ${directory}/${grammar_file}
         COMMENT "Generating C++ files from ${grammar_file}"

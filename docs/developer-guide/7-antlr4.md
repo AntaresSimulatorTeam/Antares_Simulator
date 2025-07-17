@@ -11,16 +11,7 @@ You may use the convenience CMake target `antlr_generate_all` to re-generate fro
 
 with environment variables
 ```
-export ANTLR_JAR_PATH=path/to/antlr.jar
-cmake -S src -B build
-cmake --build <build> --target antlr_generate_all
-```
-
-or with CMake flags
-
-```
-cmake -S src -B build -DANTLR_JAR_PATH=path/to/antlr.jar
-cmake --build <build> --target antlr_generate_all
+ANTLR_JAR_PATH=path/to/antlr.jar cmake --build <build> --target antlr_generate_all
 ```
 
 See [here](https://github.com/antlr/antlr4/blob/master/doc/getting-started.md) for some general documentation about generating C++ code from an ANTLR4 grammar.
