@@ -52,7 +52,7 @@ void scenariobuilderParserInitialize() {
 #endif
   auto staticData = std::make_unique<ScenarioBuilderParserStaticData>(
     std::vector<std::string>{
-      "rules", "line", "group", "year", "timeSerieNumber"
+      "rules", "line", "group", "year", "timeSeriesNumber"
     },
     std::vector<std::string>{
       "", "','", "", "", "", "'='"
@@ -208,8 +208,8 @@ tree::TerminalNode* ScenarioBuilderParser::LineContext::EQUALS() {
   return getToken(ScenarioBuilderParser::EQUALS, 0);
 }
 
-ScenarioBuilderParser::TimeSerieNumberContext* ScenarioBuilderParser::LineContext::timeSerieNumber() {
-  return getRuleContext<ScenarioBuilderParser::TimeSerieNumberContext>(0);
+ScenarioBuilderParser::TimeSeriesNumberContext* ScenarioBuilderParser::LineContext::timeSeriesNumber() {
+  return getRuleContext<ScenarioBuilderParser::TimeSeriesNumberContext>(0);
 }
 
 
@@ -247,7 +247,7 @@ ScenarioBuilderParser::LineContext* ScenarioBuilderParser::line() {
     setState(20);
     match(ScenarioBuilderParser::EQUALS);
     setState(21);
-    timeSerieNumber();
+    timeSeriesNumber();
    
   }
   catch (RecognitionException &e) {
@@ -357,32 +357,32 @@ ScenarioBuilderParser::YearContext* ScenarioBuilderParser::year() {
   return _localctx;
 }
 
-//----------------- TimeSerieNumberContext ------------------------------------------------------------------
+//----------------- TimeSeriesNumberContext ------------------------------------------------------------------
 
-ScenarioBuilderParser::TimeSerieNumberContext::TimeSerieNumberContext(ParserRuleContext *parent, size_t invokingState)
+ScenarioBuilderParser::TimeSeriesNumberContext::TimeSeriesNumberContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-tree::TerminalNode* ScenarioBuilderParser::TimeSerieNumberContext::INT() {
+tree::TerminalNode* ScenarioBuilderParser::TimeSeriesNumberContext::INT() {
   return getToken(ScenarioBuilderParser::INT, 0);
 }
 
 
-size_t ScenarioBuilderParser::TimeSerieNumberContext::getRuleIndex() const {
-  return ScenarioBuilderParser::RuleTimeSerieNumber;
+size_t ScenarioBuilderParser::TimeSeriesNumberContext::getRuleIndex() const {
+  return ScenarioBuilderParser::RuleTimeSeriesNumber;
 }
 
 
-std::any ScenarioBuilderParser::TimeSerieNumberContext::accept(tree::ParseTreeVisitor *visitor) {
+std::any ScenarioBuilderParser::TimeSeriesNumberContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<ScenarioBuilderVisitor*>(visitor))
-    return parserVisitor->visitTimeSerieNumber(this);
+    return parserVisitor->visitTimeSeriesNumber(this);
   else
     return visitor->visitChildren(this);
 }
 
-ScenarioBuilderParser::TimeSerieNumberContext* ScenarioBuilderParser::timeSerieNumber() {
-  TimeSerieNumberContext *_localctx = _tracker.createInstance<TimeSerieNumberContext>(_ctx, getState());
-  enterRule(_localctx, 8, ScenarioBuilderParser::RuleTimeSerieNumber);
+ScenarioBuilderParser::TimeSeriesNumberContext* ScenarioBuilderParser::timeSeriesNumber() {
+  TimeSeriesNumberContext *_localctx = _tracker.createInstance<TimeSeriesNumberContext>(_ctx, getState());
+  enterRule(_localctx, 8, ScenarioBuilderParser::RuleTimeSeriesNumber);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {

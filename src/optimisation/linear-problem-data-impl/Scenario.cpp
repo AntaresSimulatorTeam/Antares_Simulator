@@ -25,7 +25,7 @@
 
 namespace Antares::Optimisation::LinearProblemDataImpl
 {
-LinearProblemApi::IScenario::TimeSerieNumber Scenario::getData(Year year) const
+LinearProblemApi::IScenario::TimeSeriesNumber Scenario::getData(Year year) const
 {
     auto it = timeSerieData_.find(year);
     if (it == timeSerieData_.end())
@@ -38,13 +38,13 @@ LinearProblemApi::IScenario::TimeSerieNumber Scenario::getData(Year year) const
     return it->second;
 }
 
-void Scenario::setTimeSerieNumber(Year year, TimeSerieNumber timeSerieNumber)
+void Scenario::setTimeSerieNumber(Year year, TimeSeriesNumber timeSeriesNumber)
 {
     if (timeSerieData_.contains(year))
     {
         throw Error::RuntimeError(
           fmt::format("Time serie number for year {} already exists.", year));
     }
-    timeSerieData_[year] = timeSerieNumber;
+    timeSerieData_[year] = timeSeriesNumber;
 }
 } // namespace Antares::Optimisation::LinearProblemDataImpl

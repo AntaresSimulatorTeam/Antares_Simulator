@@ -31,7 +31,7 @@ public:
     {
         std::string groupName;
         int year{0};
-        int timeSerieNumber{0};
+        int timeSeriesNumber{0};
     };
 
     Line parseLine(const std::string& line, antlr4::BaseErrorListener* errorListener = nullptr);

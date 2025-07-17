@@ -42,7 +42,7 @@ public:
     }
 
     [[nodiscard]] double getData(const std::string& dataSetId,
-                                 LinearProblemApi::IScenario::TimeSerieNumber timeSerieNumber,
+                                 LinearProblemApi::IScenario::TimeSeriesNumber timeSeriesNumber,
                                  unsigned hour) const override;
 
     void addDataSeries(std::unique_ptr<IDataSeries> dataSeries);

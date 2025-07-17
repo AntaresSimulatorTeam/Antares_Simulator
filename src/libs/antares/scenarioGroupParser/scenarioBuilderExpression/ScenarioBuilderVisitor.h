@@ -27,7 +27,7 @@ public:
 
     virtual std::any visitYear(ScenarioBuilderParser::YearContext *context) = 0;
 
-    virtual std::any visitTimeSerieNumber(ScenarioBuilderParser::TimeSerieNumberContext *context) = 0;
+    virtual std::any visitTimeSeriesNumber(ScenarioBuilderParser::TimeSeriesNumberContext *context) = 0;
 
 
 };

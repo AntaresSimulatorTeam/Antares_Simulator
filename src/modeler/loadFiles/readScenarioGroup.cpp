@@ -56,7 +56,7 @@ Optimisation::ScenarioGroupRepository parseScenarioGroupRepository(std::ifstream
               std::make_unique<Optimisation::LinearProblemDataImpl::Scenario>(
                 parsedLine.groupName));
             alreadyCreatedScenarios[parsedLine.groupName]
-              ->setTimeSerieNumber(parsedLine.year, parsedLine.timeSerieNumber);
+              ->setTimeSerieNumber(parsedLine.year, parsedLine.timeSeriesNumber);
         }
         catch (const std::exception& e)
         {

@@ -31,7 +31,7 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual std::any visitTimeSerieNumber(ScenarioBuilderParser::TimeSerieNumberContext *ctx) override {
+  virtual std::any visitTimeSeriesNumber(ScenarioBuilderParser::TimeSeriesNumberContext *ctx) override {
     return visitChildren(ctx);
   }
 

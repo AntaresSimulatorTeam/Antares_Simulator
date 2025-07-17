@@ -22,10 +22,10 @@
 grammar ScenarioBuilder;
 
 rules       : line+ EOF ;
-line        : group COMMA year EQUALS timeSerieNumber ;
+line        : group COMMA year EQUALS timeSeriesNumber ;
 group       : IDENTIFIER ;
 year        : INT ;
-timeSerieNumber   : INT ;
+timeSeriesNumber   : INT ;
 
 COMMA      : ',' ;
 INT        : [0-9]+ ;

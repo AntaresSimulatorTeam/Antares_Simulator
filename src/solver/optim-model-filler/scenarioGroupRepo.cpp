@@ -36,7 +36,7 @@ class DefaultScenario: public LinearProblemApi::IScenario
 public:
     using IScenario::IScenario;
 
-    [[nodiscard]] TimeSerieNumber getData(Year) const override
+    [[nodiscard]] TimeSeriesNumber getData(Year) const override
     {
         return 0; // Default rank for empty groupId
         // 0 or year ? TODO: check

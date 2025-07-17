@@ -30,9 +30,9 @@ class Scenario: public LinearProblemApi::IScenario
 public:
     using IScenario::IScenario;
 
-    [[nodiscard]] TimeSerieNumber getData(Year year) const override;
+    [[nodiscard]] TimeSeriesNumber getData(Year year) const override;
 
-    void setTimeSerieNumber(Year year, TimeSerieNumber timeSerieNumber);
+    void setTimeSerieNumber(Year year, TimeSeriesNumber timeSeriesNumber);
 
     class AlreadyExists: public std::invalid_argument
     {
@@ -47,6 +47,6 @@ public:
     };
 
 private:
-    std::map<Year, TimeSerieNumber> timeSerieData_;
+    std::map<Year, TimeSeriesNumber> timeSerieData_;
 };
 } // namespace Antares::Optimisation::LinearProblemDataImpl

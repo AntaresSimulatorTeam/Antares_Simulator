@@ -53,7 +53,7 @@ public:
     virtual ~ILinearProblemData() = default;
 
     [[nodiscard]] virtual double getData(const std::string& dataSetId,
-                                         unsigned timeSerieNumber,
+                                         unsigned timeSeriesNumber,
                                          unsigned hour) const
       = 0;
 };
