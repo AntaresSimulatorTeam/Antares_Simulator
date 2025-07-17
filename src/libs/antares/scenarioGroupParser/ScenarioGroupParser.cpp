@@ -42,7 +42,7 @@ public:
     {
         auto group = std::any_cast<std::string>(visitGroup(ctx->group()));
         auto year = std::any_cast<int>(visitYear(ctx->year()));
-        auto timeSeriesNumber = std::any_cast<int>(visitTimeSerieNumber(ctx->timeSeriesNumber()));
+        auto timeSeriesNumber = std::any_cast<int>(visitTimeSeriesNumber(ctx->timeSeriesNumber()));
         return ScenarioGroupParser::Line{.groupName = group,
                                          .year = year,
                                          .timeSeriesNumber = timeSeriesNumber};
@@ -71,7 +71,7 @@ public:
         }
     }
 
-    std::any visitTimeSerieNumber(ScenarioBuilderParser::TimeSeriesNumberContext* ctx) override
+    std::any visitTimeSeriesNumber(ScenarioBuilderParser::TimeSeriesNumberContext* ctx) override
     {
         auto scenarioText = ctx->getText();
         try
