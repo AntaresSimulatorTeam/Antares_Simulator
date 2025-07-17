@@ -2,6 +2,7 @@
 
 # To generate all headers and sources
 # cmake --build <build> --target antlr_generate_all
+# NOTE ANTLR_JAR_PATH must be set
 
 macro(add_antlr_target target_name directory grammar_file)
 
