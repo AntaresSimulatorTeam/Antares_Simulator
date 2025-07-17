@@ -11,7 +11,6 @@ follows:
         - **data-series**: a directory that contains all [data series](#data-series) needed by the study
             - Contains **modeler-scenariobuilder.dat** file, which is used to map scenarios to data series
         - **system.yml**: the [system file](#system-file) describing the simulated energy system
-        - **system.yml**: the [system file](#system-file) describing the simulated energy system
     - **parameters.yml**: the [parameters](04-parameters.md) file
 
 Note that Antares will automatically create an **output** directory to write the modeler [outputs](03-outputs.md).
@@ -484,7 +483,8 @@ All IDs in the model library and system file must respect the following:
 
 ### Scenario builder
 
-The **modeler-scenariobuilder.dat** file, located in the **data-series** directory, is used to map scenarios to data series.
+The **modeler-scenariobuilder.dat** file, located in the **data-series** directory, is used to map scenarios to data
+series.
 Each line consists of the association of a groupe name and Monte-carlo year -referred to as _year_- to a data series ID
 -referred to as _chronicle_-.
 
