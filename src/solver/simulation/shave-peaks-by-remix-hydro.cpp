@@ -19,14 +19,14 @@ static int hour_for_totalGen_min(const std::vector<double>& TotalGen,
                                  const std::vector<double>& OutHydroGen,
                                  const std::vector<bool>& triedBottom,
                                  const std::vector<double>& HydroPmax,
-                                 const std::vector<bool>& enabledHours,
+                                 const std::vector<bool>& validHours,
                                  double top)
 {
     double minTotalGen = top;
     int min_hour = -1;
-    for (unsigned int h = 0; h < TotalGen.size(); ++h)
+    for (unsigned h = 0; h < TotalGen.size(); ++h)
     {
-        if (OutUnsupE[h] > 0 && OutHydroGen[h] < HydroPmax[h] && !triedBottom[h] && enabledHours[h])
+        if (OutUnsupE[h] > 0 && OutHydroGen[h] < HydroPmax[h] && !triedBottom[h] && validHours[h])
         {
             if (TotalGen[h] < minTotalGen)
             {
@@ -42,15 +42,15 @@ static int hour_for_totalGen_max(const std::vector<double>& TotalGen,
                                  const std::vector<double>& OutHydroGen,
                                  const std::vector<bool>& triedPeak,
                                  const std::vector<double>& HydroPmin,
-                                 const std::vector<bool>& enabledHours,
+                                 const std::vector<bool>& validHours,
                                  double minTotalGen)
 {
     double maxTotalGen = 0;
     int max_hour = -1;
-    for (unsigned int h = 0; h < TotalGen.size(); ++h)
+    for (unsigned h = 0; h < TotalGen.size(); ++h)
     {
         if (OutHydroGen[h] > HydroPmin[h] && TotalGen[h] >= minTotalGen + eps && !triedPeak[h]
-            && enabledHours[h])
+            && validHours[h])
         {
             if (TotalGen[h] > maxTotalGen)
             {
@@ -210,12 +210,12 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
                  + *std::max_element(HydroGen.begin(), HydroGen.end())
                  + *std::max_element(UnsupE.begin(), UnsupE.end()) + 1;
 
-    std::vector<bool> enabledHours(DispatchGen.size(), false);
-    for (unsigned int h = 0; h < enabledHours.size(); h++)
+    std::vector<bool> validHours(DispatchGen.size(), false);
+    for (unsigned int h = 0; h < validHours.size(); h++)
     {
         if (Spillage[h] + DTG_MRG[h] == 0. && HydroGen[h] + UnsupE[h] > 0.)
         {
-            enabledHours[h] = true;
+            validHours[h] = true;
         }
     }
 
@@ -233,7 +233,7 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
                                                    OutHydroGen,
                                                    triedBottom,
                                                    HydroPmax,
-                                                   enabledHours,
+                                                   validHours,
                                                    top);
             if (hourBottom == -1)
             {
@@ -247,7 +247,7 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
                                                      OutHydroGen,
                                                      triedPeak,
                                                      HydroPmin,
-                                                     enabledHours,
+                                                     validHours,
                                                      TotalGen[hourBottom]);
                 if (hourPeak == -1)
                 {
