@@ -71,7 +71,7 @@ public:
         }
     }
 
-    std::any visitTimeSerieNumber(ScenarioBuilderParser::TimeSerieNumberContext* ctx) override
+    std::any visitTimeSerieNumber(ScenarioBuilderParser::TimeSeriesNumberContext* ctx) override
     {
         auto scenarioText = ctx->getText();
         try
