@@ -159,7 +159,7 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
                                            const std::vector<double>& HydroPmin,
                                            const double initialLevel,
                                            const double reservoirCapacity,
-                                           const double pumpingEfficiency,
+                                           const double pumpEfficiency,
                                            const bool reservoirManagement,
                                            const std::vector<double>& inflows,
                                            const std::vector<double>& overflow,
@@ -170,11 +170,11 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
     std::vector<double> levels(DispatchGen.size());
     if (!levels.empty() && reservoirManagement)
     {
-        levels[0] = initialLevel + inflows[0] - overflow[0] + pumpingEfficiency * pump[0]
+        levels[0] = initialLevel + inflows[0] - overflow[0] + pumpEfficiency * pump[0]
                     - HydroGen[0];
         for (size_t h = 1; h < levels.size(); ++h)
         {
-            levels[h] = levels[h - 1] + inflows[h] - overflow[h] + pumpingEfficiency * pump[h]
+            levels[h] = levels[h - 1] + inflows[h] - overflow[h] + pumpEfficiency * pump[h]
                         - HydroGen[h];
         }
     }
@@ -283,10 +283,10 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
                                                     OutUnsupE[hourBottom],
                                                     maxSliceOfHydroAtBottom});
 
-                double dif_pic_creux = std::max(TotalGen[hourPeak] - TotalGen[hourBottom], 0.);
+                double maxVariation = std::max(TotalGen[hourPeak] - TotalGen[hourBottom], 0.);
 
                 delta = std::max(
-                  std::min({maxSliceOfHydroAtPeak, maxSliceOfHydroAtBottom, dif_pic_creux / 2.}),
+                  std::min({maxSliceOfHydroAtPeak, maxSliceOfHydroAtBottom, maxVariation / 2.}),
                   0.);
 
                 if (delta > eps)
@@ -321,11 +321,11 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
                        std::plus<>());
         if (reservoirManagement)
         {
-            levels[0] = initialLevel + inflows[0] - overflow[0] + pumpingEfficiency * pump[0]
+            levels[0] = initialLevel + inflows[0] - overflow[0] + pumpEfficiency * pump[0]
                         - OutHydroGen[0];
             for (size_t h = 1; h < levels.size(); ++h)
             {
-                levels[h] = levels[h - 1] + inflows[h] - overflow[h] + pumpingEfficiency * pump[h]
+                levels[h] = levels[h - 1] + inflows[h] - overflow[h] + pumpEfficiency * pump[h]
                             - OutHydroGen[h];
             }
         }
