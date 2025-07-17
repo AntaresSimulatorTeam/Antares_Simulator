@@ -19,33 +19,17 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include <filesystem>
+grammar ScenarioBuilder;
 
-#include <antares/logs/logs.h>
-#include <antares/solver/modeler/data.h>
-#include "antares/solver/modeler/loadFiles/loadFiles.h"
+rules       : line+ EOF ;
+line        : group COMMA year EQUALS timeSeriesNumber ;
+group       : IDENTIFIER ;
+year        : INT ;
+timeSeriesNumber   : INT ;
 
-namespace Antares::Solver::LoadFiles
-{
-Modeler::Data loadAll(const std::filesystem::path& studyPath)
-{
-    logs.info() << "Loading modeler files...";
-    Modeler::Data data;
+COMMA      : ',' ;
+INT        : [0-9]+ ;
+WS : [\u0020\u0009\u000A\u000B\u000C\u000D]+ -> skip ;
+IDENTIFIER: [a-zA-Z_][a-zA-Z0-9_]*;
+EQUALS    : '=' ;
 
-    data.libraries = loadLibraries(studyPath);
-    logs.info() << "Libraries loaded";
-
-    data.system = std::make_unique<Antares::ModelerStudy::SystemModel::System>(
-      loadSystem(studyPath, data.libraries));
-    logs.info() << "System loaded";
-
-    data.dataSeries = loadDataSeries(studyPath);
-    logs.info() << "Timeseries loaded";
-
-    data.scenario_group_repository = loadScenarioGroupRepository(studyPath);
-    logs.info() << "Scenario groups loaded";
-
-    return data;
-}
-
-} // namespace Antares::Solver::LoadFiles

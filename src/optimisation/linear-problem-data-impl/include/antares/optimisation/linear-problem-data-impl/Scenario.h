@@ -16,24 +16,37 @@
 //
 // You should have received a copy of the Mozilla Public Licence 2.0
 // along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+
 #pragma once
+#include <map>
+#include <stdexcept>
 
-#include <vector>
+#include "antares/optimisation/linear-problem-api/IScenario.h"
 
-#include <antares/optimisation/linear-problem-data-impl/linearProblemData.h>
-#include <antares/solver/optim-model-filler/scenarioGroupRepo.h>
-#include <antares/study/system-model/library.h>
-#include <antares/study/system-model/system.h>
-
-namespace Antares::Modeler
+namespace Antares::Optimisation::LinearProblemDataImpl
 {
-
-struct Data
+class Scenario: public LinearProblemApi::IScenario
 {
-    std::vector<ModelerStudy::SystemModel::Library> libraries;
-    std::unique_ptr<ModelerStudy::SystemModel::System> system;
-    std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> dataSeries;
-    Optimisation::ScenarioGroupRepository scenario_group_repository;
+public:
+    using IScenario::IScenario;
+
+    [[nodiscard]] TimeSeriesNumber getData(Year year) const override;
+
+    void setTimeSerieNumber(Year year, TimeSeriesNumber timeSeriesNumber);
+
+    class AlreadyExists: public std::invalid_argument
+    {
+    public:
+        explicit AlreadyExists(const std::string& groupId);
+    };
+
+    class ScenarioNotExist: public std::invalid_argument
+    {
+    public:
+        explicit ScenarioNotExist(const std::string& groupId, Year year);
+    };
+
+private:
+    std::map<Year, TimeSeriesNumber> timeSerieData_;
 };
-
-} // namespace Antares::Modeler
+} // namespace Antares::Optimisation::LinearProblemDataImpl

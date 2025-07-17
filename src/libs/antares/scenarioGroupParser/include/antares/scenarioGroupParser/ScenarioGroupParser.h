@@ -1,3 +1,4 @@
+
 // Copyright 2007-2025, RTE (https://www.rte-france.com)
 // See AUTHORS.txt
 // SPDX-License-Identifier: MPL-2.0
@@ -16,24 +17,23 @@
 //
 // You should have received a copy of the Mozilla Public Licence 2.0
 // along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+
 #pragma once
+#include <BaseErrorListener.h>
+#include <string>
 
-#include <vector>
-
-#include <antares/optimisation/linear-problem-data-impl/linearProblemData.h>
-#include <antares/solver/optim-model-filler/scenarioGroupRepo.h>
-#include <antares/study/system-model/library.h>
-#include <antares/study/system-model/system.h>
-
-namespace Antares::Modeler
+namespace Antares
 {
-
-struct Data
+class ScenarioGroupParser
 {
-    std::vector<ModelerStudy::SystemModel::Library> libraries;
-    std::unique_ptr<ModelerStudy::SystemModel::System> system;
-    std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> dataSeries;
-    Optimisation::ScenarioGroupRepository scenario_group_repository;
+public:
+    struct Line
+    {
+        std::string groupName;
+        int year{0};
+        int timeSeriesNumber{0};
+    };
+
+    Line parseLine(const std::string& line, antlr4::BaseErrorListener* errorListener = nullptr);
 };
-
-} // namespace Antares::Modeler
+} // namespace Antares

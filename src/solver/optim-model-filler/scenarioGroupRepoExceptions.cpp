@@ -16,24 +16,22 @@
 //
 // You should have received a copy of the Mozilla Public Licence 2.0
 // along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-#pragma once
 
-#include <vector>
+#include <string>
 
-#include <antares/optimisation/linear-problem-data-impl/linearProblemData.h>
-#include <antares/solver/optim-model-filler/scenarioGroupRepo.h>
-#include <antares/study/system-model/library.h>
-#include <antares/study/system-model/system.h>
+#include "antares/solver/optim-model-filler/scenarioGroupRepo.h"
 
-namespace Antares::Modeler
+namespace Antares::Optimisation
 {
 
-struct Data
+ScenarioGroupRepository::AlreadyExists::AlreadyExists(const std::string& groupId):
+    std::invalid_argument("Scenario group '" + groupId + "' already exists in group repo.")
 {
-    std::vector<ModelerStudy::SystemModel::Library> libraries;
-    std::unique_ptr<ModelerStudy::SystemModel::System> system;
-    std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> dataSeries;
-    Optimisation::ScenarioGroupRepository scenario_group_repository;
-};
+}
 
-} // namespace Antares::Modeler
+ScenarioGroupRepository::DoesNotExist::DoesNotExist(const std::string& groupId):
+    std::invalid_argument("Scenario group '" + groupId + "' does not exist in group repo.")
+{
+}
+
+} // namespace Antares::Optimisation
