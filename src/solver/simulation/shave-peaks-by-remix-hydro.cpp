@@ -16,9 +16,7 @@ namespace Antares::Solver::Simulation
 
 static int hour_for_totalGen_min(const std::vector<double>& TotalGen,
                                  const std::vector<double>& OutUnsupE,
-                                 const std::vector<double>& OutHydroGen,
                                  const std::vector<bool>& triedBottom,
-                                 const std::vector<double>& HydroPmax,
                                  const std::vector<bool>& validHours,
                                  double top)
 {
@@ -26,7 +24,7 @@ static int hour_for_totalGen_min(const std::vector<double>& TotalGen,
     int min_hour = -1;
     for (unsigned h = 0; h < TotalGen.size(); ++h)
     {
-        if (OutUnsupE[h] > 0 && OutHydroGen[h] < HydroPmax[h] && !triedBottom[h] && validHours[h])
+        if (OutUnsupE[h] > 0 && !triedBottom[h] && validHours[h])
         {
             if (TotalGen[h] < minTotalGen)
             {
@@ -39,9 +37,7 @@ static int hour_for_totalGen_min(const std::vector<double>& TotalGen,
 }
 
 static int hour_for_totalGen_max(const std::vector<double>& TotalGen,
-                                 const std::vector<double>& OutHydroGen,
                                  const std::vector<bool>& triedPeak,
-                                 const std::vector<double>& HydroPmin,
                                  const std::vector<bool>& validHours,
                                  double minTotalGen)
 {
@@ -49,8 +45,7 @@ static int hour_for_totalGen_max(const std::vector<double>& TotalGen,
     int max_hour = -1;
     for (unsigned h = 0; h < TotalGen.size(); ++h)
     {
-        if (OutHydroGen[h] > HydroPmin[h] && TotalGen[h] >= minTotalGen + eps && !triedPeak[h]
-            && validHours[h])
+        if (TotalGen[h] >= minTotalGen + eps && !triedPeak[h] && validHours[h])
         {
             if (TotalGen[h] > maxTotalGen)
             {
@@ -230,9 +225,7 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
         {
             int hourBottom = hour_for_totalGen_min(TotalGen,
                                                    OutUnsupE,
-                                                   OutHydroGen,
                                                    triedBottom,
-                                                   HydroPmax,
                                                    validHours,
                                                    top);
             if (hourBottom == -1)
@@ -244,9 +237,7 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
             while (true)
             {
                 int hourPeak = hour_for_totalGen_max(TotalGen,
-                                                     OutHydroGen,
                                                      triedPeak,
-                                                     HydroPmin,
                                                      validHours,
                                                      TotalGen[hourBottom]);
                 if (hourPeak == -1)
