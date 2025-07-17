@@ -56,8 +56,6 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const SumNode* 
     return std::accumulate(std::begin(operands),
                            std::end(operands),
                            TimeDependentLinearExpression(fillContext_),
-                        //    [this](const TimeDependentLinearExpression& sum, const Node* operand)
-                        //    { return sum + dispatch(operand); });
                            [this](TimeDependentLinearExpression&& sum, Node* operand)
                            {
                                sum += dispatch(operand);

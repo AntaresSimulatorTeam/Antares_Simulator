@@ -69,13 +69,6 @@ LinearExpression& LinearExpression::operator+=(const LinearExpression& other)
     return *this;
 }
 
-// LinearExpression& LinearExpression::operator-=(const LinearExpression& other)
-// {
-//     this->offset_ -= other.offset_;
-//     add_maps(coef_per_var_, std::move(other.coef_per_var_), std::negate<double>());
-//     return *this;
-// }
-
 LinearExpression LinearExpression::operator-(const LinearExpression& other) const
 {
     auto result(*this);

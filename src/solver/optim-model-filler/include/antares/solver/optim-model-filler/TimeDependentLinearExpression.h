@@ -44,7 +44,6 @@ public:
       const Optimisation::LinearProblemApi::FillContext& fillContext,
       const LinearExpression& linearExpression);
     explicit TimeDependentLinearExpression(LinearExpressionMap linearExpressions);
-    // explicit TimeDependentLinearExpression(const LinearExpressionMap& linearExpressions);
     explicit TimeDependentLinearExpression(
       const TimeDependentLinearExpression& timeDependentLinearExpression);
 

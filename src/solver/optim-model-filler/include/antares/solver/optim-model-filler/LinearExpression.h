@@ -99,17 +99,16 @@ using FullKeyMap = std::unordered_map<FullKey, double, FullKeyHash>;
 template<typename MapType, typename UnaryOp = std::identity>
 void add_maps(MapType& left, const MapType&& right, UnaryOp op = std::identity{})
 {
-    // auto result(left);
     for (auto& [key, value]: right)
     {
         if (left.find(key) != left.end())
         {
-            // Key exists in map1, add the values
+            // Key exists in left, add the values
             left[key] += op(value);
         }
         else
         {
-            // Key does not exist in map1, insert the pair
+            // Key does not exist in left, insert the pair
             left.emplace(key, op(value));
         }
     }
