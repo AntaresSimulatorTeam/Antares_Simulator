@@ -186,35 +186,35 @@ RemixHydroOutput shavePeaksByRemixingHydro(std::vector<double>& HydroGen,
                                            const std::vector<double>& Spillage,
                                            const std::vector<double>& DTG_MRG)
 {
-    checkInput(DispatchGen, HydroGen, UnsupE, HydroPmax, HydroPmin, Spillage, DTG_MRG);
+    const std::vector<double> HydroGenInit = HydroGen;
+    const std::vector<double> UnsupEinit = UnsupE;
+
+    checkInput(DispatchGen, HydroGenInit, UnsupEinit, HydroPmax, HydroPmin, Spillage, DTG_MRG);
 
     std::vector<double> levels;
     if (reservoirManagement)
     {
         size_t size = DispatchGen.size();
         checkReservoirManagementInput(size, initLevel, capacity, inflows, overflow, pump);
-        levels = updateLevels(initLevel, pumpEfficiency, HydroGen, inflows, overflow, pump);
+        levels = updateLevels(initLevel, pumpEfficiency, HydroGenInit, inflows, overflow, pump);
         checkLevels(levels, capacity);
     }
 
-    std::vector<double> OutHydroGen = HydroGen;
-    std::vector<double> OutUnsupE = UnsupE;
-
     int loop = 1000;
     double top = *std::max_element(DispatchGen.begin(), DispatchGen.end())
-                 + *std::max_element(HydroGen.begin(), HydroGen.end())
-                 + *std::max_element(UnsupE.begin(), UnsupE.end()) + 1;
+                 + *std::max_element(HydroGenInit.begin(), HydroGenInit.end())
+                 + *std::max_element(UnsupEinit.begin(), UnsupEinit.end()) + 1;
 
     std::vector<bool> validHours(DispatchGen.size(), false);
     for (unsigned int h = 0; h < validHours.size(); h++)
     {
-        if (Spillage[h] + DTG_MRG[h] == 0. && HydroGen[h] + UnsupE[h] > 0.)
+        if (Spillage[h] + DTG_MRG[h] == 0. && HydroGenInit[h] + UnsupEinit[h] > 0.)
         {
             validHours[h] = true;
         }
     }
 
-    std::vector<double> TotalGen = updateTotalGen(DispatchGen, HydroGen);
+    std::vector<double> TotalGen = updateTotalGen(DispatchGen, HydroGenInit);
 
     while (loop-- > 0)
     {
@@ -223,11 +223,7 @@ RemixHydroOutput shavePeaksByRemixingHydro(std::vector<double>& HydroGen,
 
         while (true)
         {
-            int hourBottom = hour_for_totalGen_min(TotalGen,
-                                                   OutUnsupE,
-                                                   triedBottom,
-                                                   validHours,
-                                                   top);
+            int hourBottom = hour_for_totalGen_min(TotalGen, UnsupE, triedBottom, validHours, top);
             if (hourBottom == -1)
             {
                 break;
@@ -271,10 +267,10 @@ RemixHydroOutput shavePeaksByRemixingHydro(std::vector<double>& HydroGen,
                     }
                 }
 
-                maxSliceOfHydroAtPeak = std::min(OutHydroGen[hourPeak] - HydroPmin[hourPeak],
+                maxSliceOfHydroAtPeak = std::min(HydroGen[hourPeak] - HydroPmin[hourPeak],
                                                  maxSliceOfHydroAtPeak);
-                maxSliceOfHydroAtBottom = std::min({HydroPmax[hourBottom] - OutHydroGen[hourBottom],
-                                                    OutUnsupE[hourBottom],
+                maxSliceOfHydroAtBottom = std::min({HydroPmax[hourBottom] - HydroGen[hourBottom],
+                                                    UnsupE[hourBottom],
                                                     maxSliceOfHydroAtBottom});
 
                 double maxVariation = std::max(TotalGen[hourPeak] - TotalGen[hourBottom], 0.);
@@ -285,27 +281,27 @@ RemixHydroOutput shavePeaksByRemixingHydro(std::vector<double>& HydroGen,
 
                 if (delta > eps)
                 {
-                    OutHydroGen[hourPeak] -= delta;
-                    OutHydroGen[hourBottom] += delta;
-                    OutUnsupE[hourPeak] = HydroGen[hourPeak] + UnsupE[hourPeak]
-                                          - OutHydroGen[hourPeak];
+                    HydroGen[hourPeak] -= delta;
+                    HydroGen[hourBottom] += delta;
+                    UnsupE[hourPeak] = HydroGenInit[hourPeak] + UnsupEinit[hourPeak]
+                                       - HydroGen[hourPeak];
                     if (reservoirManagement)
                     {
                         levels = updateLevels(initLevel,
                                               pumpEfficiency,
-                                              OutHydroGen,
+                                              HydroGen,
                                               inflows,
                                               overflow,
                                               pump);
                     }
-                    TotalGen = updateTotalGen(DispatchGen, OutHydroGen);
+                    TotalGen = updateTotalGen(DispatchGen, HydroGen);
                     break;
                 }
                 triedPeak[hourPeak] = true;
             }
 
-            OutUnsupE[hourBottom] = HydroGen[hourBottom] + UnsupE[hourBottom]
-                                    - OutHydroGen[hourBottom];
+            UnsupE[hourBottom] = HydroGenInit[hourBottom] + UnsupEinit[hourBottom]
+                                 - HydroGen[hourBottom];
             if (delta > eps)
             {
                 break;
@@ -318,7 +314,7 @@ RemixHydroOutput shavePeaksByRemixingHydro(std::vector<double>& HydroGen,
             break;
         }
     }
-    return {OutHydroGen, OutUnsupE, levels};
+    return {HydroGen, UnsupE, levels};
 }
 
 } // End namespace Antares::Solver::Simulation
