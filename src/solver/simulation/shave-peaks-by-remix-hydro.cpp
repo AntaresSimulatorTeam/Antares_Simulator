@@ -31,43 +31,6 @@ static bool operator>=(const std::vector<double>& v, const double c)
     return std::ranges::all_of(v, [&c](double e) { return e >= c; });
 }
 
-class HydroStorage: public Storage
-{
-public:
-    HydroStorage(std::vector<double>& generation,
-                 std::vector<double>& unsupE,
-                 const std::vector<double>& Pmax,
-                 const std::vector<double>& Pmin,
-                 const std::vector<double>& inflows,
-                 const std::vector<double>& overflow,
-                 const std::vector<double>& pump,
-                 const double initLevel,
-                 const double capacity,
-                 const double pumpEfficiency,
-                 const bool reservoirManagement);
-
-    double computeBound(unsigned hourPeak, unsigned hourBottom) override;
-    void checkInput() override;
-    void update() override;
-    std::vector<double>& generation() override;
-    std::vector<double> levels() override;
-
-private:
-    std::vector<double>& generation_;
-    std::vector<double>& unsupE_;
-    const std::vector<double>& pmax_;
-    const std::vector<double>& pmin_;
-    const std::vector<double>& inflows_;
-    const std::vector<double>& overflow_;
-    const std::vector<double>& pump_;
-    std::vector<double> levels_;
-
-    const double initLevel_;
-    const double capacity_;
-    const double pumpEff_;
-    const bool reservoirManagement_;
-};
-
 HydroStorage::HydroStorage(std::vector<double>& generation,
                            std::vector<double>& unsupE,
                            const std::vector<double>& Pmax,
@@ -75,10 +38,10 @@ HydroStorage::HydroStorage(std::vector<double>& generation,
                            const std::vector<double>& inflows,
                            const std::vector<double>& overflow,
                            const std::vector<double>& pump,
-                           const double initLevel,
-                           const double capacity,
-                           const double pumpEfficiency,
-                           const bool reservoirManagement):
+                           const double& initLevel,
+                           const double& capacity,
+                           const double& pumpEfficiency,
+                           const bool& reservoirManagement):
     generation_(generation),
     unsupE_(unsupE),
     pmax_(Pmax),
@@ -133,7 +96,7 @@ void HydroStorage::checkInput()
     {
         return;
     }
-    
+
     if (initLevel_ >= capacity_ + LEVEL_TOLERANCE)
     {
         throw std::invalid_argument(error_msg_start + "initial level > reservoir capacity");
@@ -340,7 +303,8 @@ std::vector<double> shavePeaksByRemixingHydro(std::vector<double>& HydroGen,
                                               const std::vector<double>& overflow,
                                               const std::vector<double>& pump,
                                               const std::vector<double>& Spillage,
-                                              const std::vector<double>& DTG_MRG)
+                                              const std::vector<double>& DTG_MRG,
+                                              std::shared_ptr<Storage> storage)
 {
     const std::vector<double> HydroGenInit = HydroGen;
     const std::vector<double> UnsupEinit = UnsupE;

@@ -294,6 +294,18 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
           const auto& dtgMrgArray = area.scratchpad[numSpace].dispatchableGenerationMargin;
           const std::vector<double> dtgMrg(dtgMrgArray, dtgMrgArray + HOURS_IN_WEEK);
 
+          auto hydroStorage = std::make_shared<HydroStorage>(hydroGen,
+                                                             unsupE,
+                                                             hydroPmax,
+                                                             hydroPmin,
+                                                             inflows,
+                                                             ovf,
+                                                             pump,
+                                                             initLevel,
+                                                             capacity,
+                                                             efficiency,
+                                                             reservoirManagement);
+
           levels = shavePeaksByRemixingHydro(hydroGen,
                                              unsupE,
                                              DispatchGen,
@@ -307,7 +319,8 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
                                              ovf,
                                              pump,
                                              spillage,
-                                             dtgMrg);
+                                             dtgMrg,
+                                             hydroStorage);
       });
 }
 
