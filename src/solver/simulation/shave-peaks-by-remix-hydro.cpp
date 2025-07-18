@@ -14,6 +14,164 @@ const std::string error_msg_start = "Remix hydro input : ";
 namespace Antares::Solver::Simulation
 {
 
+static bool operator<=(const std::vector<double>& a, const std::vector<double>& b)
+{
+    return a.size() == b.size()
+           && std::ranges::all_of(std::views::iota(size_t{0}, a.size()),
+                                  [&](size_t i) { return a[i] <= b[i]; });
+}
+
+static bool operator<=(const std::vector<double>& v, const double c)
+{
+    return std::ranges::all_of(v, [&c](double e) { return e <= c; });
+}
+
+static bool operator>=(const std::vector<double>& v, const double c)
+{
+    return std::ranges::all_of(v, [&c](double e) { return e >= c; });
+}
+
+class HydroStorage: public Storage
+{
+public:
+    HydroStorage(std::vector<double>& generation,
+                 std::vector<double>& unsupE,
+                 const std::vector<double>& Pmax,
+                 const std::vector<double>& Pmin,
+                 const std::vector<double>& inflows,
+                 const std::vector<double>& overflow,
+                 const std::vector<double>& pump,
+                 const double initLevel,
+                 const double capacity,
+                 const double pumpEfficiency,
+                 const bool reservoirManagement);
+
+    double computeBound(unsigned hourPeak, unsigned hourBottom) override;
+    void checkInput() override;
+    void update() override;
+    std::vector<double>& generation() override;
+    std::vector<double> levels() override;
+
+private:
+    std::vector<double>& generation_;
+    std::vector<double>& unsupE_;
+    const std::vector<double>& pmax_;
+    const std::vector<double>& pmin_;
+    const std::vector<double>& inflows_;
+    const std::vector<double>& overflow_;
+    const std::vector<double>& pump_;
+    std::vector<double> levels_;
+
+    const double initLevel_;
+    const double capacity_;
+    const double pumpEff_;
+    const bool reservoirManagement_;
+};
+
+HydroStorage::HydroStorage(std::vector<double>& generation,
+                           std::vector<double>& unsupE,
+                           const std::vector<double>& Pmax,
+                           const std::vector<double>& Pmin,
+                           const std::vector<double>& inflows,
+                           const std::vector<double>& overflow,
+                           const std::vector<double>& pump,
+                           const double initLevel,
+                           const double capacity,
+                           const double pumpEfficiency,
+                           const bool reservoirManagement):
+    generation_(generation),
+    unsupE_(unsupE),
+    pmax_(Pmax),
+    pmin_(Pmin),
+    inflows_(inflows),
+    overflow_(overflow),
+    pump_(pump),
+    initLevel_(initLevel),
+    capacity_(capacity),
+    pumpEff_(pumpEfficiency),
+    reservoirManagement_(reservoirManagement)
+{
+    levels_.assign(generation.size(), 0.);
+}
+
+double HydroStorage::computeBound(unsigned hourPeak, unsigned hourBottom)
+{
+    // max slice we can take from hydro generation, at an hour when the total
+    // production reaches a peak.
+    double boundAtPeak = std::numeric_limits<double>::max();
+    // max slice we can add to hydro generation, at an hour when the total
+    // production reaches a bottom.
+    double boundAtBottom = std::numeric_limits<double>::max();
+
+    if (reservoirManagement_)
+    {
+        unsigned minHour = std::min(hourBottom, hourPeak);
+        unsigned maxHour = std::max(hourBottom, hourPeak);
+        std::span<double> intermediate_level(levels_.begin() + minHour, levels_.begin() + maxHour);
+
+        if (hourBottom < hourPeak)
+        {
+            boundAtPeak = capacity_;
+            boundAtBottom = *std::ranges::min_element(intermediate_level);
+        }
+        else
+        {
+            boundAtPeak = capacity_ - *std::ranges::max_element(intermediate_level);
+            boundAtBottom = capacity_;
+        }
+    }
+
+    boundAtPeak = std::min(generation_[hourPeak] - pmin_[hourPeak], boundAtPeak);
+    boundAtBottom = std::min(
+      {pmax_[hourBottom] - generation_[hourBottom], unsupE_[hourBottom], boundAtBottom});
+    return std::min(boundAtPeak, boundAtBottom);
+}
+
+void HydroStorage::checkInput()
+{
+    if (!reservoirManagement_)
+    {
+        return;
+    }
+    
+    if (initLevel_ >= capacity_ + LEVEL_TOLERANCE)
+    {
+        throw std::invalid_argument(error_msg_start + "initial level > reservoir capacity");
+    }
+
+    std::vector<size_t> sizes = {inflows_.size(), overflow_.size(), pump_.size()};
+    if (!std::ranges::all_of(sizes, [&sizes](const size_t s) { return s == sizes.front(); }))
+    {
+        throw std::invalid_argument(error_msg_start + "arrays of different sizes");
+    }
+
+    if (!(levels_ <= capacity_ + LEVEL_TOLERANCE) || !(levels_ >= -LEVEL_TOLERANCE))
+    {
+        throw std::invalid_argument(error_msg_start
+                                    + "levels computed from input don't respect reservoir bounds");
+    }
+}
+
+void HydroStorage::update()
+{
+    levels_[0] = initLevel_ + inflows_[0] - overflow_[0] + pumpEff_ * pump_[0] - generation_[0];
+    for (size_t h = 1; h < levels_.size(); ++h)
+    {
+        levels_[h] = levels_[h - 1] + inflows_[h] - overflow_[h] + pumpEff_ * pump_[h]
+                     - generation_[h];
+    }
+}
+
+std::vector<double>& HydroStorage::generation()
+{
+    return generation_;
+}
+
+std::vector<double> HydroStorage::levels()
+{
+    return levels_;
+}
+
 static int hour_for_totalGen_min(const std::vector<double>& TotalGen,
                                  const std::vector<double>& OutUnsupE,
                                  const std::vector<bool>& triedBottom,
@@ -55,23 +213,6 @@ static int hour_for_totalGen_max(const std::vector<double>& TotalGen,
         }
     }
     return max_hour;
-}
-
-static bool operator<=(const std::vector<double>& a, const std::vector<double>& b)
-{
-    return a.size() == b.size()
-           && std::ranges::all_of(std::views::iota(size_t{0}, a.size()),
-                                  [&](size_t i) { return a[i] <= b[i]; });
-}
-
-static bool operator<=(const std::vector<double>& v, const double c)
-{
-    return std::ranges::all_of(v, [&c](double e) { return e <= c; });
-}
-
-static bool operator>=(const std::vector<double>& v, const double c)
-{
-    return std::ranges::all_of(v, [&c](double e) { return e >= c; });
 }
 
 static void checkInput(const std::vector<double>& DispatchGen,

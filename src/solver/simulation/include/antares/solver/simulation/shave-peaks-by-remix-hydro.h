@@ -1,10 +1,23 @@
 
 #pragma once
 
+// #include <memory>
 #include <vector>
 
 namespace Antares::Solver::Simulation
 {
+
+class Storage
+{
+public:
+    virtual double computeBound(unsigned hourPeak, unsigned hourBottom) = 0;
+    virtual void checkInput() = 0; // should be private at some point, and called in constructor.
+    virtual void update() = 0;
+    virtual std::vector<double>& generation() = 0;
+    virtual std::vector<double> levels() = 0;
+};
+
+// std::shared_ptr<Storage> makeHydroStorage();
 
 std::vector<double> shavePeaksByRemixingHydro(std::vector<double>& HydroGen,
                                               std::vector<double>& UnsupE,
