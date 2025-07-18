@@ -39,9 +39,9 @@ BOOST_FIXTURE_TEST_CASE(input_vectors_of_different_sizes__exception_raised, Inpu
 {
     HydroGen = {0., 0.};
 
-    BOOST_CHECK_EXCEPTION(shavePeaksByRemixingHydro(TotalGenNoHydro,
-                                                    HydroGen,
+    BOOST_CHECK_EXCEPTION(shavePeaksByRemixingHydro(HydroGen,
                                                     UnsupE,
+                                                    TotalGenNoHydro,
                                                     HydroPmax,
                                                     HydroPmin,
                                                     init_level,
@@ -62,9 +62,9 @@ BOOST_FIXTURE_TEST_CASE(input_init_level_exceeds_capacity__exception_raised, Inp
     init_level = 2.;
     capacity = 1.;
 
-    BOOST_CHECK_EXCEPTION(shavePeaksByRemixingHydro(TotalGenNoHydro,
-                                                    HydroGen,
+    BOOST_CHECK_EXCEPTION(shavePeaksByRemixingHydro(HydroGen,
                                                     UnsupE,
+                                                    TotalGenNoHydro,
                                                     HydroPmax,
                                                     HydroPmin,
                                                     init_level,
@@ -85,9 +85,9 @@ BOOST_FIXTURE_TEST_CASE(all_input_arrays_of_size_0__exception_raised, InputFixtu
     init_level = 0.;
     capacity = 1.;
 
-    BOOST_CHECK_EXCEPTION(shavePeaksByRemixingHydro(TotalGenNoHydro,
-                                                    HydroGen,
+    BOOST_CHECK_EXCEPTION(shavePeaksByRemixingHydro(HydroGen,
                                                     UnsupE,
+                                                    TotalGenNoHydro,
                                                     HydroPmax,
                                                     HydroPmin,
                                                     init_level,
@@ -111,9 +111,9 @@ BOOST_FIXTURE_TEST_CASE(Hydro_gen_not_smaller_than_pmax__exception_raised, Input
     capacity = 1.;
 
     BOOST_CHECK_EXCEPTION(
-      shavePeaksByRemixingHydro(TotalGenNoHydro,
-                                HydroGen,
+      shavePeaksByRemixingHydro(HydroGen,
                                 UnsupE,
+                                TotalGenNoHydro,
                                 HydroPmax,
                                 HydroPmin,
                                 init_level,
@@ -137,9 +137,9 @@ BOOST_FIXTURE_TEST_CASE(Hydro_gen_not_greater_than_pmin__exception_raised, Input
     capacity = 1.;
 
     BOOST_CHECK_EXCEPTION(
-      shavePeaksByRemixingHydro(TotalGenNoHydro,
-                                HydroGen,
+      shavePeaksByRemixingHydro(HydroGen,
                                 UnsupE,
+                                TotalGenNoHydro,
                                 HydroPmax,
                                 HydroPmin,
                                 init_level,
@@ -160,9 +160,9 @@ BOOST_FIXTURE_TEST_CASE(input_is_acceptable__no_exception_raised, InputFixture<1
     init_level = 0.;
     capacity = 1.;
 
-    BOOST_CHECK_NO_THROW(shavePeaksByRemixingHydro(TotalGenNoHydro,
-                                                   HydroGen,
+    BOOST_CHECK_NO_THROW(shavePeaksByRemixingHydro(HydroGen,
                                                    UnsupE,
+                                                   TotalGenNoHydro,
                                                    HydroPmax,
                                                    HydroPmin,
                                                    init_level,
@@ -187,9 +187,9 @@ BOOST_FIXTURE_TEST_CASE(
     init_level = 500.;
     capacity = 1000.;
 
-    auto [OutHydroGen, OutUnsupE, _] = shavePeaksByRemixingHydro(TotalGenNoHydro,
-                                                                 HydroGen,
+    auto [OutHydroGen, OutUnsupE, _] = shavePeaksByRemixingHydro(HydroGen,
                                                                  UnsupE,
+                                                                 TotalGenNoHydro,
                                                                  HydroPmax,
                                                                  HydroPmin,
                                                                  init_level,
@@ -218,9 +218,9 @@ BOOST_FIXTURE_TEST_CASE(Pmax_does_not_impact_results_when_greater_than_40mwh, In
     init_level = 500.;
     capacity = 1000.;
 
-    auto [OutHydroGen, OutUnsupE, _] = shavePeaksByRemixingHydro(TotalGenNoHydro,
-                                                                 HydroGen,
+    auto [OutHydroGen, OutUnsupE, _] = shavePeaksByRemixingHydro(HydroGen,
                                                                  UnsupE,
+                                                                 TotalGenNoHydro,
                                                                  HydroPmax,
                                                                  HydroPmin,
                                                                  init_level,
@@ -251,9 +251,9 @@ BOOST_FIXTURE_TEST_CASE(
     init_level = 500.;
     capacity = 1000.;
 
-    auto [OutHydroGen, OutUnsupE, _] = shavePeaksByRemixingHydro(TotalGenNoHydro,
-                                                                 HydroGen,
+    auto [OutHydroGen, OutUnsupE, _] = shavePeaksByRemixingHydro(HydroGen,
                                                                  UnsupE,
+                                                                 TotalGenNoHydro,
                                                                  HydroPmax,
                                                                  HydroPmin,
                                                                  init_level,
@@ -286,9 +286,9 @@ BOOST_FIXTURE_TEST_CASE(influence_of_pmax, InputFixture<5>, *boost::unit_test::t
 
     // 1. Algorithm tends to flatten TotalGenNoHydro + HydroGen, so it would require HydroGen to
     // increase. Proof :
-    auto [OutHydroGen_1, new_D1, L] = shavePeaksByRemixingHydro(TotalGenNoHydro,
-                                                                HydroGen,
+    auto [OutHydroGen_1, new_D1, L] = shavePeaksByRemixingHydro(HydroGen,
                                                                 UnsupE,
+                                                                TotalGenNoHydro,
                                                                 HydroPmax,
                                                                 HydroPmin,
                                                                 init_level,
@@ -307,9 +307,9 @@ BOOST_FIXTURE_TEST_CASE(influence_of_pmax, InputFixture<5>, *boost::unit_test::t
     // 2. But HydroGen is limited by HydroPmax. So Algo does nothing in the end.
     // Proof :
     HydroPmax = {20., 20., 20., 20., 20.};
-    auto [OutHydroGen_2, OutUnsupE_2, _] = shavePeaksByRemixingHydro(TotalGenNoHydro,
-                                                                     HydroGen,
+    auto [OutHydroGen_2, OutUnsupE_2, _] = shavePeaksByRemixingHydro(HydroGen,
                                                                      UnsupE,
+                                                                     TotalGenNoHydro,
                                                                      HydroPmax,
                                                                      HydroPmin,
                                                                      init_level,
@@ -341,9 +341,9 @@ BOOST_FIXTURE_TEST_CASE(influence_of_pmin, InputFixture<5>, *boost::unit_test::t
 
     // 1. Algorithm tends to flatten TotalGenNoHydro + HydroGen, so it would require HydroGen to
     // increase.
-    auto [OutHydroGen_1, new_D1, L] = shavePeaksByRemixingHydro(TotalGenNoHydro,
-                                                                HydroGen,
+    auto [OutHydroGen_1, new_D1, L] = shavePeaksByRemixingHydro(HydroGen,
                                                                 UnsupE,
+                                                                TotalGenNoHydro,
                                                                 HydroPmax,
                                                                 HydroPmin,
                                                                 init_level,
@@ -360,9 +360,9 @@ BOOST_FIXTURE_TEST_CASE(influence_of_pmin, InputFixture<5>, *boost::unit_test::t
 
     // 2. But HydroGen is low bounded by HydroPmin. So Algo does nothing in the end.
     HydroPmin = {20., 20., 20., 20., 20.};
-    auto [OutHydroGen_2, OutUnsupE_2, _] = shavePeaksByRemixingHydro(TotalGenNoHydro,
-                                                                     HydroGen,
+    auto [OutHydroGen_2, OutUnsupE_2, _] = shavePeaksByRemixingHydro(HydroGen,
                                                                      UnsupE,
+                                                                     TotalGenNoHydro,
                                                                      HydroPmax,
                                                                      HydroPmin,
                                                                      init_level,
@@ -390,9 +390,9 @@ BOOST_FIXTURE_TEST_CASE(Hydro_gen_is_already_flat___remix_is_useless__level_easi
     std::ranges::fill(inflows, 15.);  // Cause levels to increase
     std::ranges::fill(pump, 10.);     // Cause levels to increase
 
-    auto [OutHydroGen, OutUnsupE, levels] = shavePeaksByRemixingHydro(TotalGenNoHydro,
-                                                                      HydroGen,
+    auto [OutHydroGen, OutUnsupE, levels] = shavePeaksByRemixingHydro(HydroGen,
                                                                       UnsupE,
+                                                                      TotalGenNoHydro,
                                                                       HydroPmax,
                                                                       HydroPmin,
                                                                       init_level,
@@ -419,9 +419,9 @@ BOOST_FIXTURE_TEST_CASE(input_leads_to_levels_over_capacity___exception_raised, 
     std::ranges::fill(pump, 20);     // Cause levels to increase
 
     BOOST_CHECK_EXCEPTION(
-      shavePeaksByRemixingHydro(TotalGenNoHydro,
-                                HydroGen,
+      shavePeaksByRemixingHydro(HydroGen,
                                 UnsupE,
+                                TotalGenNoHydro,
                                 HydroPmax,
                                 HydroPmin,
                                 init_level,
@@ -447,9 +447,9 @@ BOOST_FIXTURE_TEST_CASE(input_leads_to_levels_less_than_zero___exception_raised,
     std::ranges::fill(pump, 10);     // Cause levels to increase
 
     BOOST_CHECK_EXCEPTION(
-      shavePeaksByRemixingHydro(TotalGenNoHydro,
-                                HydroGen,
+      shavePeaksByRemixingHydro(HydroGen,
                                 UnsupE,
+                                TotalGenNoHydro,
                                 HydroPmax,
                                 HydroPmin,
                                 init_level,
@@ -484,9 +484,9 @@ BOOST_FIXTURE_TEST_CASE(influence_of_capacity_on_algorithm___case_where_no_influ
 
     // Case 1 : capacity relaxed (infinite by default) ==> leads to optimal solution (HydroGen is
     // flat)
-    auto [OutHydroGen, OutUnsupE, L] = shavePeaksByRemixingHydro(TotalGenNoHydro,
-                                                                 HydroGen,
+    auto [OutHydroGen, OutUnsupE, L] = shavePeaksByRemixingHydro(HydroGen,
                                                                  UnsupE,
+                                                                 TotalGenNoHydro,
                                                                  HydroPmax,
                                                                  HydroPmin,
                                                                  init_level,
@@ -510,9 +510,9 @@ BOOST_FIXTURE_TEST_CASE(influence_of_capacity_on_algorithm___case_where_no_influ
     // have HydroGen and L identical to previously : this value of capacity should
     // not have an influence on HydroGen and levels as results of the algorithm.
     capacity = 155.;
-    auto [OutHydroGen_2, OutUnsupE_2, L2] = shavePeaksByRemixingHydro(TotalGenNoHydro,
-                                                                      HydroGen,
+    auto [OutHydroGen_2, OutUnsupE_2, L2] = shavePeaksByRemixingHydro(HydroGen,
                                                                       UnsupE,
+                                                                      TotalGenNoHydro,
                                                                       HydroPmax,
                                                                       HydroPmin,
                                                                       init_level,
@@ -547,9 +547,9 @@ BOOST_FIXTURE_TEST_CASE(lowering_capacity_too_low_leads_to_suboptimal_solution_f
 
     // Case 1 : capacity relaxed (infinite by default) ==> leads to optimal solution (HydroGen is
     // flat)
-    auto [OutHydroGen, OutUnsupE, L] = shavePeaksByRemixingHydro(TotalGenNoHydro,
-                                                                 HydroGen,
+    auto [OutHydroGen, OutUnsupE, L] = shavePeaksByRemixingHydro(HydroGen,
                                                                  UnsupE,
+                                                                 TotalGenNoHydro,
                                                                  HydroPmax,
                                                                  HydroPmin,
                                                                  init_level,
@@ -576,9 +576,9 @@ BOOST_FIXTURE_TEST_CASE(lowering_capacity_too_low_leads_to_suboptimal_solution_f
     // was infinite. Therefore, solution found is suboptimal : we expect to get an
     // output HydroGen flat by interval, not flat on the whole domain.
     capacity = 145.;
-    auto [OutHydroGen_2, OutUnsupE_2, L2] = shavePeaksByRemixingHydro(TotalGenNoHydro,
-                                                                      HydroGen,
+    auto [OutHydroGen_2, OutUnsupE_2, L2] = shavePeaksByRemixingHydro(HydroGen,
                                                                       UnsupE,
+                                                                      TotalGenNoHydro,
                                                                       HydroPmax,
                                                                       HydroPmin,
                                                                       init_level,
@@ -615,9 +615,9 @@ BOOST_FIXTURE_TEST_CASE(lowering_initial_level_too_low_leads_to_suboptimal_solut
     // Case 1 : init level (== 100) is high enough so that input levels (computed from input data)
     // are acceptable for algorithm (input levels >= 0.), and running algorithm leads to optimal
     // solution (OutHydroGen is flat)
-    auto [OutHydroGen, OutUnsupE, L] = shavePeaksByRemixingHydro(TotalGenNoHydro,
-                                                                 HydroGen,
+    auto [OutHydroGen, OutUnsupE, L] = shavePeaksByRemixingHydro(HydroGen,
                                                                  UnsupE,
+                                                                 TotalGenNoHydro,
                                                                  HydroPmax,
                                                                  HydroPmin,
                                                                  init_level,
@@ -642,9 +642,9 @@ BOOST_FIXTURE_TEST_CASE(lowering_initial_level_too_low_leads_to_suboptimal_solut
     // bound (0.) into account. As the levels change, the solution OutHydroGen will be suboptimal,
     // that is flat by interval (not flat on the whole domain).
     init_level = 95.;
-    auto [OutHydroGen_2, OutUnsupE_2, L2] = shavePeaksByRemixingHydro(TotalGenNoHydro,
-                                                                      HydroGen,
+    auto [OutHydroGen_2, OutUnsupE_2, L2] = shavePeaksByRemixingHydro(HydroGen,
                                                                       UnsupE,
+                                                                      TotalGenNoHydro,
                                                                       HydroPmax,
                                                                       HydroPmin,
                                                                       init_level,
@@ -679,9 +679,9 @@ BOOST_FIXTURE_TEST_CASE(influence_of_initial_level_on_algorithm___case_where_no_
     // Case 1 : init level (== 100) is high enough so that input levels (computed from input data)
     // are acceptable by algorithm, and levels computed by algorithm (output) are optimal, that
     // is computed from a optimal (that is flat) OutHydroGen.
-    auto [OutHydroGen, OutUnsupE, L] = shavePeaksByRemixingHydro(TotalGenNoHydro,
-                                                                 HydroGen,
+    auto [OutHydroGen, OutUnsupE, L] = shavePeaksByRemixingHydro(HydroGen,
                                                                  UnsupE,
+                                                                 TotalGenNoHydro,
                                                                  HydroPmax,
                                                                  HydroPmin,
                                                                  init_level,
@@ -706,9 +706,9 @@ BOOST_FIXTURE_TEST_CASE(influence_of_initial_level_on_algorithm___case_where_no_
     // and algorithm won't have to take the levels lower bound (0.) into account.
     // The solution OutHydroGen will be optimal, that is flat by interval.
     init_level = 55.;
-    auto [OutHydroGen_2, OutUnsupE_2, L2] = shavePeaksByRemixingHydro(TotalGenNoHydro,
-                                                                      HydroGen,
+    auto [OutHydroGen_2, OutUnsupE_2, L2] = shavePeaksByRemixingHydro(HydroGen,
                                                                       UnsupE,
+                                                                      TotalGenNoHydro,
                                                                       HydroPmax,
                                                                       HydroPmin,
                                                                       init_level,
@@ -738,9 +738,9 @@ BOOST_FIXTURE_TEST_CASE(spillage_positive_at_hour_0___no_change_at_this_hour, In
     // But :
     Spillage[0] = 1.;
     // Now, we expect no change for HydroGen at hour 0
-    auto [OutHydroGen, __, _] = shavePeaksByRemixingHydro(TotalGenNoHydro,
-                                                          HydroGen,
+    auto [OutHydroGen, __, _] = shavePeaksByRemixingHydro(HydroGen,
                                                           UnsupE,
+                                                          TotalGenNoHydro,
                                                           HydroPmax,
                                                           HydroPmin,
                                                           init_level,
@@ -769,9 +769,9 @@ BOOST_FIXTURE_TEST_CASE(DTG_MRG_positive_on_hour_4___no_change_at_this_hour, Inp
     // But :
     DTG_MRG[4] = 1.;
     // Now, we expect no change for HydroGen at hour 4
-    auto [OutHydroGen, OutUnsupE, L] = shavePeaksByRemixingHydro(TotalGenNoHydro,
-                                                                 HydroGen,
+    auto [OutHydroGen, OutUnsupE, L] = shavePeaksByRemixingHydro(HydroGen,
                                                                  UnsupE,
+                                                                 TotalGenNoHydro,
                                                                  HydroPmax,
                                                                  HydroPmin,
                                                                  init_level,
@@ -810,9 +810,9 @@ BOOST_FIXTURE_TEST_CASE(comparison_of_results_with_python_algo,
     capacity = 126.;
     inflows = {37, 27, 41, 36, 7, 14, 38, 23, 17, 35, 20, 24, 17, 46, 1, 10, 10, 12, 46, 30};
 
-    auto [OutHydroGen, OutUnsupE, L] = shavePeaksByRemixingHydro(TotalGenNoHydro,
-                                                                 HydroGen,
+    auto [OutHydroGen, OutUnsupE, L] = shavePeaksByRemixingHydro(HydroGen,
                                                                  UnsupE,
+                                                                 TotalGenNoHydro,
                                                                  HydroPmax,
                                                                  HydroPmin,
                                                                  init_level,

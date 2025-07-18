@@ -171,9 +171,9 @@ static std::vector<double> updateLevels(const double initLevel,
     return levels;
 }
 
-RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGen,
-                                           const std::vector<double>& HydroGen,
-                                           const std::vector<double>& UnsupE,
+RemixHydroOutput shavePeaksByRemixingHydro(std::vector<double>& HydroGen,
+                                           std::vector<double>& UnsupE,
+                                           const std::vector<double>& DispatchGen,
                                            const std::vector<double>& HydroPmax,
                                            const std::vector<double>& HydroPmin,
                                            const double initLevel,

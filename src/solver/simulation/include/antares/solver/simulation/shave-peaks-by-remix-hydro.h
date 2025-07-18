@@ -21,20 +21,9 @@ struct RemixHydroOutput
     }
 };
 
-// class ExchangeBounds
-//{
-// public:
-//     virtual double atPeak(unsigned hourPeak) = 0;
-//     virtual double atBottom(unsigned hourPeak) = 0;
-// };
-//
-// std::shared_ptr<ExchangeBounds> ExchangeBoundsFactory()
-//{
-// }
-
-RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGen,
-                                           const std::vector<double>& HydroGen,
-                                           const std::vector<double>& UnsupE,
+RemixHydroOutput shavePeaksByRemixingHydro(std::vector<double>& HydroGen,
+                                           std::vector<double>& UnsupE,
+                                           const std::vector<double>& DispatchGen,
                                            const std::vector<double>& HydroPmax,
                                            const std::vector<double>& HydroPmin,
                                            const double initialLevel,

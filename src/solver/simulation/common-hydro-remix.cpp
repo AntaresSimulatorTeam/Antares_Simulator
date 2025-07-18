@@ -294,9 +294,9 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
           const auto& dtgMrgArray = area.scratchpad[numSpace].dispatchableGenerationMargin;
           const std::vector<double> dtgMrg(dtgMrgArray, dtgMrgArray + HOURS_IN_WEEK);
 
-          std::tie(hydroGen, unsupE, levels) = shavePeaksByRemixingHydro(DispatchGen,
-                                                                         hydroGen,
+          std::tie(hydroGen, unsupE, levels) = shavePeaksByRemixingHydro(hydroGen,
                                                                          unsupE,
+                                                                         DispatchGen,
                                                                          hydroPmax,
                                                                          hydroPmin,
                                                                          initLevel,
