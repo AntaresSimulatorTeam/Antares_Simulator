@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include <tuple>
 #include <vector>
 
 namespace Antares::Solver::Simulation

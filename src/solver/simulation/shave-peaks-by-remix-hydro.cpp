@@ -209,9 +209,8 @@ std::vector<double> shavePeaksByRemixingHydro(std::vector<double>& HydroGen,
     std::vector<double> levels;
     if (reservoirManagement)
     {
-        size_t size = DispatchGen.size();
-        checkReservoirManagementInput(initLevel, capacity, inflows, overflow, pump);
         levels = updateLevels(initLevel, pumpEfficiency, HydroGenInit, inflows, overflow, pump);
+        checkReservoirManagementInput(initLevel, capacity, inflows, overflow, pump);
         checkLevels(levels, capacity);
     }
 
