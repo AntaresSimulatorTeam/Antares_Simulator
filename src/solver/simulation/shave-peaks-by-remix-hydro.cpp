@@ -311,11 +311,11 @@ std::vector<double> shavePeaksByRemixingHydro(std::vector<double>& HydroGen,
                                               const std::vector<double>& DTG_MRG,
                                               std::shared_ptr<Storage> storage)
 {
-    const std::vector<double> HydroGenInit = HydroGen;
+    const std::vector<double> HydroGenInit = storage->generation();
     const std::vector<double> UnsupEinit = UnsupE;
 
     checkInput(DispatchGen, HydroGenInit, UnsupEinit, HydroPmax, HydroPmin, Spillage, DTG_MRG);
-    
+
     storage->update();
     storage->checkInput();
     std::vector<double> levels = storage->levels();
@@ -353,6 +353,7 @@ std::vector<double> shavePeaksByRemixingHydro(std::vector<double>& HydroGen,
                 {
                     break;
                 }
+
                 // max slice we can take from hydro generation, at an hour when the total
                 // production reaches a peak.
                 double maxSliceOfHydroAtPeak = std::numeric_limits<double>::max();
@@ -391,6 +392,12 @@ std::vector<double> shavePeaksByRemixingHydro(std::vector<double>& HydroGen,
                 delta = std::max(
                   std::min({maxSliceOfHydroAtPeak, maxSliceOfHydroAtBottom, maxVariation / 2.}),
                   0.);
+                
+                /*
+                double maxVariation = std::max(TotalGen[hourPeak] - TotalGen[hourBottom], 0.);
+                double storageBound = storage->computeBound(hourPeak, hourBottom);
+                delta = std::max(std::min(storageBound, maxVariation / 2.), 0.);
+                */
 
                 if (delta > eps)
                 {
