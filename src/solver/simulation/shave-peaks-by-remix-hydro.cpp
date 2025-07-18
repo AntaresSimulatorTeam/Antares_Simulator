@@ -114,8 +114,7 @@ static void checkInput(const std::vector<double>& DispatchGen,
     }
 }
 
-static void checkReservoirManagementInput(size_t size,
-                                          const double initLevel,
+static void checkReservoirManagementInput(const double initLevel,
                                           const double capacity,
                                           const std::vector<double>& inflows,
                                           const std::vector<double>& overflow,
@@ -126,7 +125,7 @@ static void checkReservoirManagementInput(size_t size,
         throw std::invalid_argument(error_msg_start + "initial level > reservoir capacity");
     }
 
-    std::vector<size_t> sizes = {size, inflows.size(), overflow.size(), pump.size()};
+    std::vector<size_t> sizes = {inflows.size(), overflow.size(), pump.size()};
     if (!std::ranges::all_of(sizes, [&sizes](const size_t s) { return s == sizes.front(); }))
     {
         throw std::invalid_argument(error_msg_start + "arrays of different sizes");
@@ -195,7 +194,7 @@ std::vector<double> shavePeaksByRemixingHydro(std::vector<double>& HydroGen,
     if (reservoirManagement)
     {
         size_t size = DispatchGen.size();
-        checkReservoirManagementInput(size, initLevel, capacity, inflows, overflow, pump);
+        checkReservoirManagementInput(initLevel, capacity, inflows, overflow, pump);
         levels = updateLevels(initLevel, pumpEfficiency, HydroGenInit, inflows, overflow, pump);
         checkLevels(levels, capacity);
     }
