@@ -101,10 +101,11 @@ void add_maps(MapType& left, const MapType&& right, UnaryOp op = std::identity{}
 {
     for (auto& [key, value]: right)
     {
-        if (left.find(key) != left.end())
+        auto it = left.find(key);
+        if (it != left.end())
         {
             // Key exists in left, add the values
-            left[key] += op(value);
+            it->second += op(value);
         }
         else
         {

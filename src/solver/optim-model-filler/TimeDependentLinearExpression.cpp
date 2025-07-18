@@ -66,6 +66,13 @@ TimeDependentLinearExpression& TimeDependentLinearExpression::operator+=(
     return *this;
 }
 
+TimeDependentLinearExpression& TimeDependentLinearExpression::operator-=(
+  const TimeDependentLinearExpression& other)
+{
+    add_maps(linearExpressions_, std::move(other.GetLinearExpressions()), std::negate<>());
+    return *this;
+}
+
 TimeDependentLinearExpression TimeDependentLinearExpression::operator+(
   const TimeDependentLinearExpression& other) const
 {
@@ -78,7 +85,7 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator-(
   const TimeDependentLinearExpression& other) const
 {
     auto result(*this);
-    result += -other;
+    result -= other;
     return result;
 }
 
