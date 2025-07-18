@@ -65,7 +65,7 @@ const FullKeyMap& LinearExpression::coefPerVar() const
 LinearExpression& LinearExpression::operator+=(const LinearExpression& other)
 {
     this->offset_ += other.offset_;
-    add_maps(coef_per_var_, std::move(other.coef_per_var_));
+    add_maps(coef_per_var_, other.coef_per_var_);
     return *this;
 }
 
