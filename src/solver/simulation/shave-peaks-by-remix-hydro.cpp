@@ -171,20 +171,20 @@ static std::vector<double> updateLevels(const double initLevel,
     return levels;
 }
 
-RemixHydroOutput shavePeaksByRemixingHydro(std::vector<double>& HydroGen,
-                                           std::vector<double>& UnsupE,
-                                           const std::vector<double>& DispatchGen,
-                                           const std::vector<double>& HydroPmax,
-                                           const std::vector<double>& HydroPmin,
-                                           const double initLevel,
-                                           const double capacity,
-                                           const double pumpEfficiency,
-                                           const bool reservoirManagement,
-                                           const std::vector<double>& inflows,
-                                           const std::vector<double>& overflow,
-                                           const std::vector<double>& pump,
-                                           const std::vector<double>& Spillage,
-                                           const std::vector<double>& DTG_MRG)
+std::vector<double> shavePeaksByRemixingHydro(std::vector<double>& HydroGen,
+                                              std::vector<double>& UnsupE,
+                                              const std::vector<double>& DispatchGen,
+                                              const std::vector<double>& HydroPmax,
+                                              const std::vector<double>& HydroPmin,
+                                              const double initLevel,
+                                              const double capacity,
+                                              const double pumpEfficiency,
+                                              const bool reservoirManagement,
+                                              const std::vector<double>& inflows,
+                                              const std::vector<double>& overflow,
+                                              const std::vector<double>& pump,
+                                              const std::vector<double>& Spillage,
+                                              const std::vector<double>& DTG_MRG)
 {
     const std::vector<double> HydroGenInit = HydroGen;
     const std::vector<double> UnsupEinit = UnsupE;
@@ -314,7 +314,7 @@ RemixHydroOutput shavePeaksByRemixingHydro(std::vector<double>& HydroGen,
             break;
         }
     }
-    return {HydroGen, UnsupE, levels};
+    return levels;
 }
 
 } // End namespace Antares::Solver::Simulation
