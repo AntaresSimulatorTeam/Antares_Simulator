@@ -64,7 +64,7 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: ${{ github.workspace }}/.ccache
-          key: sonarcloud-${{ github.sha }}
+          key: sonarcloud-${{ github.ref_name }}
           restore-keys: |
             sonarcloud- 
 
@@ -211,11 +211,11 @@ jobs:
           os: ${{ matrix.os }}
           variant: "named-mps"
 
-      - name: Run cucumber on modeler
+      - name: Run fast cucumber
         if: ${{ !cancelled() }}
         uses: ./.github/workflows/cucumber-tests
         with:
-          feature: "features/modeler-features"
+          tags: "fast"
 
       - name: Run cucumber on hybrid studies
         if: ${{ !cancelled() }}
@@ -223,16 +223,13 @@ jobs:
         with:
           feature: "features/solver-features/hybrid_studies.feature"
 
-      - name: Barrier
-        if: ${{ !success() }}
-        run: exit 1
-
       - name: Collect coverage into one XML report
+        if: ${{ !cancelled() }}
         run: |
           gcovr --sonarqube --output coverage.xml
 
-
       - name: SonarQube Scan
+        if: ${{ !cancelled() }}
         uses: SonarSource/sonarqube-scan-action@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -240,6 +237,10 @@ jobs:
         with:
           args: >
             --define sonar.host.url="${{ env.SONAR_SERVER_URL }}" --define sonar.cfamily.compile-commands="${{ env.BUILD_WRAPPER_OUT_DIR }}/compile_commands.json"
+
+      - name: Barrier
+        if: ${{ !success() }}
+        run: exit 1
 
       - name: Cache vcpkg binary dir
         if: always()
@@ -253,7 +254,9 @@ jobs:
         run: ccache -s
 
       - name: Save ccache cache
+        if: ${{ !cancelled() }}
         uses: actions/cache/save@v4
         with:
           path: ${{ github.workspace }}/.ccache
-          key: sonarcloud-${{ github.sha }}
+          key: ${{ env.os }}-${{ github.ref_name }}
+

@@ -50,8 +50,6 @@ jobs:
           echo "DOCKERDIR=$(pwd)/docker" >> $GITHUB_ENV
 
 
-
-
       - name: check if DockerFiles has changed
         run: |
           # Check for changes in the target path
@@ -105,7 +103,7 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: ${{ github.workspace }}/.ccache
-          key: centos7-on-${{ runner.os }}-${{ github.sha }}
+          key: centos7-on-${{ runner.os }}-${{ github.ref_name }}
           restore-keys: |
             centos7-on-${{ runner.os }}-   
 
@@ -142,7 +140,7 @@ jobs:
       - name: Push artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: targz
+          name: centos-targz
           path: archive/*.tar.gz
 
       - name: Publish assets
@@ -177,5 +175,5 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: ${{ github.workspace }}/.ccache
-          key: centos7-on-${{ runner.os }}-${{ github.sha }}
+          key: centos7-on-${{ runner.os }}-${{ github.ref_name }}
 

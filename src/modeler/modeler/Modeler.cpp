@@ -123,7 +123,7 @@ void Modeler::solve() const
         writer_.writeProblem(ortools_linear_problem);
 
         logs.info() << "Launching resolution...";
-        auto* solution = ortools_linear_problem.solve(true);
+        auto* solution = ortools_linear_problem.solve(parameters.solverLogs);
         switch (solution->getStatus())
         {
         case MipStatus::OPTIMAL:

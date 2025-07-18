@@ -28,54 +28,10 @@
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
 #include "antares/solver/optim-model-filler/VariableDictionary.h"
+#include "antares/study/system-model/component.h"
 #include "antares/study/system-model/model.h"
 
 #include "inmemory-modeler.h"
-
-namespace Antares::Optimisation::LinearProblemDataImpl
-{
-class LinearProblemData;
-}
-
-namespace Antares::ModelerStudy::SystemModel
-{
-class Model;
-class Component;
-enum class TimeDependent : bool;
-enum class ScenarioDependent : bool;
-class Constraint;
-class Parameter;
-enum class ValueType;
-} // namespace Antares::ModelerStudy::SystemModel
-
-namespace Antares::Expressions::Visitors
-{
-enum class TimeIndex : unsigned int;
-enum class ParameterType : unsigned int;
-struct ParameterTypeAndValue;
-} // namespace Antares::Expressions::Visitors
-
-namespace Antares::Expressions::Nodes
-{
-class Node;
-class LiteralNode;
-class ParameterNode;
-class VariableNode;
-class MultiplicationNode;
-class NegationNode;
-} // namespace Antares::Expressions::Nodes
-
-namespace Antares::Optimization
-{
-class ComponentFiller;
-}
-
-namespace Antares::Optimisation::LinearProblemApi
-{
-class ILinearProblem;
-class FillContext;
-class LinearProblemFiller;
-} // namespace Antares::Optimisation::LinearProblemApi
 
 namespace Test::Modeler
 {
@@ -110,17 +66,17 @@ struct LinearProblemBuildingFixture
     std::unique_ptr<Antares::Optimisation::LinearProblemApi::ILinearProblem> pb;
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData dummy_data_;
 
-    void createModel(const std::string& modelId,
-                     const std::vector<std::string>& parameterIds,
-                     const std::vector<VariableData>& variablesData,
-                     const std::vector<ConstraintData>& constraintsData,
+    void createModel(std::string modelId,
+                     std::vector<std::string> parameterIds,
+                     std::vector<VariableData> variablesData,
+                     std::vector<ConstraintData> constraintsData,
                      Antares::Expressions::Nodes::Node* objective = nullptr);
 
     void createModelWithSystemModelParameter(
-      const std::string& modelId,
+      std::string modelId,
       std::vector<Antares::ModelerStudy::SystemModel::Parameter>,
-      const std::vector<VariableData>& variablesData,
-      const std::vector<ConstraintData>& constraintsData,
+      std::vector<VariableData> variablesData,
+      std::vector<ConstraintData> constraintsData,
       Antares::Expressions::Nodes::Node* objective = nullptr);
 
     void createModelWithOneFloatVar(const std::string& modelId,

@@ -68,10 +68,12 @@ jobs:
       - name: Install ccache
         shell: bash
         run: |
-          wget https://github.com/ccache/ccache/releases/download/v4.8.3/ccache-4.8.3-windows-x86_64.zip -O ccache.zip
+          ccacheVersion=4.11.3
+          ccacheFile=ccache-$ccacheVersion-windows-x86_64
+          wget https://github.com/ccache/ccache/releases/download/v$ccacheVersion/$ccacheFile.zip -O ccache.zip
           unzip ccache.zip
           rm ccache.zip
-          mv ccache-4.8.3-windows-x86_64 ccache
+          mv $ccacheFile ccache
           cp ccache/ccache.exe ccache/cl.exe
           echo "${GITHUB_WORKSPACE}/ccache" >> $GITHUB_PATH
 
@@ -79,14 +81,14 @@ jobs:
       - name: Restore ccache cache
         uses: actions/cache/restore@v4
         with:
-          path: ${{ github.workspace }}/.ccache
-          key: ${{ env.os }}-${{ github.sha }}
+          path: ${{ github.workspace }}/.ccache_windows
+          key: ${{ env.os }}-${{ github.ref_name }}
           restore-keys: |
             ${{ env.os }}-  
 
       - name: Configure ccache
         run: |
-          ccache --set-config=cache_dir=${{ github.workspace }}/.ccache
+          ccache --set-config=cache_dir=${{ github.workspace }}/.ccache_windows
           ccache --set-config=max_size=500M
           ccache --set-config=compression=true
           ccache -p
@@ -145,6 +147,22 @@ jobs:
         run: |
           cmake --build _build --config Release -j$(nproc)
 
+      - name: .zip creation
+        if: ${{ success() }}
+        shell: bash
+        run: |
+          cd _build
+          FIXED_PATH=${ORTOOLS_DIR//\\//}
+          cpack -G ZIP -D CPACK_INSTALLED_DIRECTORIES="${FIXED_PATH}/install/bin;bin"
+          export ZIP_ARCHIVE_NAME=$(ls -1 *.zip)
+          echo "ZIP_ARCHIVE_NAME=$ZIP_ARCHIVE_NAME" >> $GITHUB_ENV
+
+      - name: Upload .zip
+        if: ${{ success() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{env.ZIP_ARCHIVE_NAME}}
+          path: _build/${{env.ZIP_ARCHIVE_NAME}}
 
       - name: Add OR-Tools to PATH
         run: echo "D:\a\Antares_Simulator\Antares_Simulator/or-tools/install/bin" | Out-File -Append -Encoding ascii $env:GITHUB_PATH
@@ -174,11 +192,11 @@ jobs:
           os: ${{ env.os }}
           variant: "named-mps"
 
-      - name: Run cucumber on short-tests
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
+      - name: Run fast cucumber
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/cucumber-tests
         with:
-          feature: "features/solver-features/short_tests.feature"
+          tags: "fast"
 
       - name: Run cucumber on modeler
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
@@ -271,7 +289,6 @@ jobs:
           batch-name: short-tests
           os: ${{ env.os }}
 
-
       - name: Run cucumber on v9.2 tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/cucumber-tests
@@ -295,15 +312,6 @@ jobs:
           os: ${{ env.os }}
           variant: "parallel"
 
-      - name: Run tests for time series generator tool
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-        uses: ./.github/workflows/run-tests
-        with:
-          simtest-tag: ${{ env.SIMTEST }}
-          batch-name: ts-generator
-          os: ${{ env.os }}
-          variant: "tsgenerator"
-
       - name: Run medium-tests
         if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
@@ -313,6 +321,7 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run cucumber on medium-tests
+        if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/cucumber-tests
         with:
           feature: "features/solver-features/medium_tests.feature"
@@ -341,8 +350,8 @@ jobs:
           batch-name: long-tests-3
           os: ${{ env.os }}
 
-
       - name: Run cucumber on hybrid studies
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/cucumber-tests
         with:
           feature: "features/solver-features/hybrid_studies.feature"
@@ -363,6 +372,7 @@ jobs:
         shell: bash
         run: |
           rm -rf src/tests/resources/Antares_Simulator_Tests
+          rm -rf src/tests/resources/Antares_Simulator_Tests_NR
           cd _build
           cpack -GNSIS
           export NSIS_NAME=$(ls *.exe)
@@ -374,11 +384,6 @@ jobs:
         with:
           name: NSISError.log
           path: _build/_CPack_Packages/win64/NSIS/NSISOutput.log
-
-      - name: .zip creation
-        run: |
-          cd _build
-          cpack -G ZIP -D CPACK_INSTALLED_DIRECTORIES="${{ env.ORTOOLS_DIR }}/install/lib;bin"
 
       - name: Installer upload
         uses: actions/upload-artifact@v4
@@ -416,7 +421,8 @@ jobs:
         run: ccache -s
 
       - name: Save ccache cache
+        if: ${{ !cancelled() }}
         uses: actions/cache/save@v4
         with:
-          path: ${{ github.workspace }}/.ccache
-          key: ${{ env.os }}-${{ github.sha }}
+          path: ${{ github.workspace }}/.ccache_windows
+          key: ${{ env.os }}-${{ github.ref_name }}
