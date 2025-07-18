@@ -29,8 +29,7 @@ class FileWriter: public Solver::IWriter
 public:
     void init(bool setOutput = true) override;
 
-    void writeSolution(
-      const Optimisation::LinearProblemApi::IMipSolution& solution) override;
+    void writeSolution(const Optimisation::LinearProblemApi::IMipSolution& solution) override;
     explicit FileWriter(std::filesystem::path path);
 
     void writeProblem(

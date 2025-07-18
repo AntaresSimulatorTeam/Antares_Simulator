@@ -122,6 +122,7 @@ public:
     {
         // No initialization needed for in-memory writer
     }
+
     Solution solution_{};
 
     void writeSolution(
