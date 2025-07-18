@@ -117,6 +117,11 @@ void HydroStorage::checkInput()
 
 void HydroStorage::update()
 {
+    if (!reservoirManagement_)
+    {
+        return;
+    }
+
     levels_[0] = initLevel_ + inflows_[0] - overflow_[0] + pumpEff_ * pump_[0] - generation_[0];
     for (size_t h = 1; h < levels_.size(); ++h)
     {
@@ -310,14 +315,10 @@ std::vector<double> shavePeaksByRemixingHydro(std::vector<double>& HydroGen,
     const std::vector<double> UnsupEinit = UnsupE;
 
     checkInput(DispatchGen, HydroGenInit, UnsupEinit, HydroPmax, HydroPmin, Spillage, DTG_MRG);
-
-    std::vector<double> levels;
-    if (reservoirManagement)
-    {
-        levels = updateLevels(initLevel, pumpEfficiency, HydroGenInit, inflows, overflow, pump);
-        checkReservoirManagementInput(initLevel, capacity, inflows, overflow, pump);
-        checkLevels(levels, capacity);
-    }
+    
+    storage->update();
+    storage->checkInput();
+    std::vector<double> levels = storage->levels();
 
     int loop = 1000;
     double top = *std::max_element(DispatchGen.begin(), DispatchGen.end())
