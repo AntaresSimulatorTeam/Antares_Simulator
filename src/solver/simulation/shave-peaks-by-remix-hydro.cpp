@@ -135,7 +135,7 @@ std::vector<double>& HydroStorage::generation()
     return generation_;
 }
 
-std::vector<double> HydroStorage::levels()
+std::vector<double>& HydroStorage::levels()
 {
     return levels_;
 }
@@ -318,7 +318,7 @@ std::vector<double> shavePeaksByRemixingHydro(std::vector<double>& HydroGen,
 
     storage->update();
     storage->checkInput();
-    std::vector<double> levels = storage->levels();
+    std::vector<double>& levels = storage->levels();
 
     int loop = 1000;
     double top = *std::max_element(DispatchGen.begin(), DispatchGen.end())
@@ -354,50 +354,9 @@ std::vector<double> shavePeaksByRemixingHydro(std::vector<double>& HydroGen,
                     break;
                 }
 
-                // max slice we can take from hydro generation, at an hour when the total
-                // production reaches a peak.
-                double maxSliceOfHydroAtPeak = std::numeric_limits<double>::max();
-                // max slice we can add to hydro generation, at an hour when the total
-                // production reaches a bottom.
-                double maxSliceOfHydroAtBottom = std::numeric_limits<double>::max();
-
-                if (reservoirManagement)
-                {
-                    unsigned minHour = std::min(hourBottom, hourPeak);
-                    unsigned maxHour = std::max(hourBottom, hourPeak);
-                    std::span<double> intermediate_level(levels.begin() + minHour,
-                                                         levels.begin() + maxHour);
-
-                    if (hourBottom < hourPeak)
-                    {
-                        maxSliceOfHydroAtPeak = capacity;
-                        maxSliceOfHydroAtBottom = *std::ranges::min_element(intermediate_level);
-                    }
-                    else
-                    {
-                        maxSliceOfHydroAtPeak = capacity
-                                                - *std::ranges::max_element(intermediate_level);
-                        maxSliceOfHydroAtBottom = capacity;
-                    }
-                }
-
-                maxSliceOfHydroAtPeak = std::min(HydroGen[hourPeak] - HydroPmin[hourPeak],
-                                                 maxSliceOfHydroAtPeak);
-                maxSliceOfHydroAtBottom = std::min({HydroPmax[hourBottom] - HydroGen[hourBottom],
-                                                    UnsupE[hourBottom],
-                                                    maxSliceOfHydroAtBottom});
-
-                double maxVariation = std::max(TotalGen[hourPeak] - TotalGen[hourBottom], 0.);
-
-                delta = std::max(
-                  std::min({maxSliceOfHydroAtPeak, maxSliceOfHydroAtBottom, maxVariation / 2.}),
-                  0.);
-                
-                /*
                 double maxVariation = std::max(TotalGen[hourPeak] - TotalGen[hourBottom], 0.);
                 double storageBound = storage->computeBound(hourPeak, hourBottom);
                 delta = std::max(std::min(storageBound, maxVariation / 2.), 0.);
-                */
 
                 if (delta > eps)
                 {
@@ -405,15 +364,9 @@ std::vector<double> shavePeaksByRemixingHydro(std::vector<double>& HydroGen,
                     HydroGen[hourBottom] += delta;
                     UnsupE[hourPeak] = HydroGenInit[hourPeak] + UnsupEinit[hourPeak]
                                        - HydroGen[hourPeak];
-                    if (reservoirManagement)
-                    {
-                        levels = updateLevels(initLevel,
-                                              pumpEfficiency,
-                                              HydroGen,
-                                              inflows,
-                                              overflow,
-                                              pump);
-                    }
+
+                    storage->update();
+
                     TotalGen = updateTotalGen(DispatchGen, HydroGen);
                     break;
                 }
