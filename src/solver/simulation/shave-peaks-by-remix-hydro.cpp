@@ -170,6 +170,22 @@ static std::vector<double> updateLevels(const double initLevel,
     return levels;
 }
 
+std::vector<bool> ValidHours(const std::vector<double>& Spillage,
+                             const std::vector<double>& DTG_MRG,
+                             const std::vector<double>& HydroGen,
+                             const std::vector<double>& UnsupE)
+{
+    std::vector<bool> validHours(Spillage.size(), false);
+    for (unsigned h = 0; h < validHours.size(); h++)
+    {
+        if (Spillage[h] + DTG_MRG[h] == 0. && HydroGen[h] + UnsupE[h] > 0.)
+        {
+            validHours[h] = true;
+        }
+    }
+    return validHours;
+}
+
 std::vector<double> shavePeaksByRemixingHydro(std::vector<double>& HydroGen,
                                               std::vector<double>& UnsupE,
                                               const std::vector<double>& DispatchGen,
@@ -204,14 +220,7 @@ std::vector<double> shavePeaksByRemixingHydro(std::vector<double>& HydroGen,
                  + *std::max_element(HydroGenInit.begin(), HydroGenInit.end())
                  + *std::max_element(UnsupEinit.begin(), UnsupEinit.end()) + 1;
 
-    std::vector<bool> validHours(DispatchGen.size(), false);
-    for (unsigned int h = 0; h < validHours.size(); h++)
-    {
-        if (Spillage[h] + DTG_MRG[h] == 0. && HydroGenInit[h] + UnsupEinit[h] > 0.)
-        {
-            validHours[h] = true;
-        }
-    }
+    const auto validHours = ValidHours(Spillage, DTG_MRG, HydroGenInit, UnsupEinit);
 
     std::vector<double> TotalGen = updateTotalGen(DispatchGen, HydroGenInit);
 
