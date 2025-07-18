@@ -135,7 +135,7 @@ std::vector<double>& HydroStorage::generation()
     return generation_;
 }
 
-std::vector<double>& HydroStorage::levels()
+std::vector<double> HydroStorage::levels()
 {
     return levels_;
 }

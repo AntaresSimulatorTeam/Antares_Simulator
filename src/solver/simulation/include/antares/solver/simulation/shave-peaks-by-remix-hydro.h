@@ -14,7 +14,7 @@ public:
     virtual void checkInput() = 0; // should be private at some point, and called in constructor.
     virtual void update() = 0;
     virtual std::vector<double>& generation() = 0;
-    virtual std::vector<double>& levels() = 0;
+    virtual std::vector<double> levels() = 0;
 };
 
 class HydroStorage: public Storage
@@ -36,7 +36,7 @@ public:
     void checkInput() override;
     void update() override;
     std::vector<double>& generation() override;
-    std::vector<double>& levels() override;
+    std::vector<double> levels() override;
 
 private:
     std::vector<double>& generation_;
