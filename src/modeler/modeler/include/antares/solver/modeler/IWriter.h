@@ -20,23 +20,25 @@
 
 #pragma once
 
-namespace Antares::Optimisation::LinearProblemMpsolverImpl
-{
-class OrtoolsLinearProblem;
-class OrtoolsMipSolution;
+namespace Antares::Optimisation::LinearProblemMpsolverImpl {
+    class OrtoolsLinearProblem;
+    class OrtoolsMipSolution;
 } // namespace Antares::Optimisation::LinearProblemMpsolverImpl
+namespace Antares::Optimisation::LinearProblemApi {
+    class IMipSolution;
+}
 
-namespace Antares::Solver
-{
-class IWriter
-{
-public:
-    virtual ~IWriter() = default;
-    virtual void init(bool) = 0;
-    virtual void writeSolution(const Optimisation::LinearProblemApi::IMipSolution& solution) = 0;
+namespace Antares::Solver {
+    class IWriter {
+    public:
+        virtual ~IWriter() = default;
 
-    virtual void writeProblem(
-      const Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem& problem)
-      = 0;
-};
+        virtual void init(bool) = 0;
+
+        virtual void writeSolution(const Optimisation::LinearProblemApi::IMipSolution &solution) = 0;
+
+        virtual void writeProblem(
+            const Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem &problem)
+        = 0;
+    };
 } // namespace Antares::Solver
