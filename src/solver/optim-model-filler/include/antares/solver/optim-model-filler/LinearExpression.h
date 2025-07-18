@@ -97,9 +97,9 @@ using FullKeyMap = std::unordered_map<FullKey, double, FullKeyHash>;
  * ```
  */
 template<typename MapType, typename UnaryOp = std::identity>
-void add_maps(MapType& left, const MapType&& right, UnaryOp op = std::identity{})
+void add_maps(MapType& left, const MapType& right, UnaryOp op = std::identity{})
 {
-    for (auto& [key, value]: right)
+    for (const auto& [key, value]: right)
     {
         auto it = left.find(key);
         if (it != left.end())
