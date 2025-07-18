@@ -223,33 +223,6 @@ static void checkInput(const std::vector<double>& DispatchGen,
     }
 }
 
-static void checkReservoirManagementInput(const double initLevel,
-                                          const double capacity,
-                                          const std::vector<double>& inflows,
-                                          const std::vector<double>& overflow,
-                                          const std::vector<double>& pump)
-{
-    if (initLevel >= capacity + LEVEL_TOLERANCE)
-    {
-        throw std::invalid_argument(error_msg_start + "initial level > reservoir capacity");
-    }
-
-    std::vector<size_t> sizes = {inflows.size(), overflow.size(), pump.size()};
-    if (!std::ranges::all_of(sizes, [&sizes](const size_t s) { return s == sizes.front(); }))
-    {
-        throw std::invalid_argument(error_msg_start + "arrays of different sizes");
-    }
-}
-
-static void checkLevels(const std::vector<double>& levels, const double capacity)
-{
-    if (!(levels <= capacity + LEVEL_TOLERANCE) || !(levels >= -LEVEL_TOLERANCE))
-    {
-        throw std::invalid_argument(error_msg_start
-                                    + "levels computed from input don't respect reservoir bounds");
-    }
-}
-
 static std::vector<double> updateTotalGen(const std::vector<double>& DispatchGen,
                                           const std::vector<double>& HydroGen)
 {
@@ -260,23 +233,6 @@ static std::vector<double> updateTotalGen(const std::vector<double>& DispatchGen
                    totalGen.begin(),
                    std::plus<>());
     return totalGen;
-}
-
-static std::vector<double> updateLevels(const double initLevel,
-                                        const double pumpEfficiency,
-                                        const std::vector<double>& HydroGen,
-                                        const std::vector<double>& inflows,
-                                        const std::vector<double>& overflow,
-                                        const std::vector<double>& pump)
-{
-    std::vector<double> levels(HydroGen.size());
-    levels[0] = initLevel + inflows[0] - overflow[0] + pumpEfficiency * pump[0] - HydroGen[0];
-    for (size_t h = 1; h < levels.size(); ++h)
-    {
-        levels[h] = levels[h - 1] + inflows[h] - overflow[h] + pumpEfficiency * pump[h]
-                    - HydroGen[h];
-    }
-    return levels;
 }
 
 std::vector<bool> ValidHours(const std::vector<double>& Spillage,
