@@ -318,7 +318,6 @@ std::vector<double> shavePeaksByRemixingHydro(std::vector<double>& HydroGen,
 
     storage->update();
     storage->checkInput();
-    std::vector<double>& levels = storage->levels();
 
     int loop = 1000;
     double top = *std::max_element(DispatchGen.begin(), DispatchGen.end())
@@ -387,7 +386,7 @@ std::vector<double> shavePeaksByRemixingHydro(std::vector<double>& HydroGen,
             break;
         }
     }
-    return levels;
+    return storage->levels();
 }
 
 } // End namespace Antares::Solver::Simulation
