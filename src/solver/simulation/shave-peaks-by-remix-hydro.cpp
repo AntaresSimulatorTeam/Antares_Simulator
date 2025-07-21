@@ -154,11 +154,11 @@ std::vector<double> HydroStorage::levels()
     return levels_;
 }
 
-static int hour_for_totalGen_min(const std::vector<double>& TotalGen,
-                                 const std::vector<double>& OutUnsupE,
-                                 const std::vector<bool>& triedMins,
-                                 const std::vector<bool>& validHours,
-                                 double top)
+static int hourForTotalGenMin(const std::vector<double>& TotalGen,
+                              const std::vector<double>& OutUnsupE,
+                              const std::vector<bool>& triedMins,
+                              const std::vector<bool>& validHours,
+                              double top)
 {
     double minTotalGen = top;
     int min_hour = -1;
@@ -176,10 +176,10 @@ static int hour_for_totalGen_min(const std::vector<double>& TotalGen,
     return min_hour;
 }
 
-static int hour_for_totalGen_max(const std::vector<double>& TotalGen,
-                                 const std::vector<bool>& triedMaxs,
-                                 const std::vector<bool>& validHours,
-                                 double minTotalGen)
+static int hourForTotalGenMax(const std::vector<double>& TotalGen,
+                              const std::vector<bool>& triedMaxs,
+                              const std::vector<bool>& validHours,
+                              double minTotalGen)
 {
     double maxTotalGen = 0;
     int max_hour = -1;
@@ -277,7 +277,7 @@ void shavePeaksByRemixingHydro(std::vector<double>& UnsupE,
 
         while (true)
         {
-            int hourMin = hour_for_totalGen_min(TotalGen, UnsupE, triedMins, validHours, top);
+            int hourMin = hourForTotalGenMin(TotalGen, UnsupE, triedMins, validHours, top);
             if (hourMin == -1)
             {
                 break;
@@ -286,10 +286,10 @@ void shavePeaksByRemixingHydro(std::vector<double>& UnsupE,
             std::vector<bool> triedMaxs(DispatchGen.size(), false);
             while (true)
             {
-                int hourMax = hour_for_totalGen_max(TotalGen,
-                                                    triedMaxs,
-                                                    validHours,
-                                                    TotalGen[hourMin]);
+                int hourMax = hourForTotalGenMax(TotalGen,
+                                                 triedMaxs,
+                                                 validHours,
+                                                 TotalGen[hourMin]);
                 if (hourMax == -1)
                 {
                     break;
