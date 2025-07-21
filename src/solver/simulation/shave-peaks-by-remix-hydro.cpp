@@ -247,11 +247,11 @@ std::vector<bool> ValidHours(const std::vector<double>& Spillage,
     return validHours;
 }
 
-void shavePeaksByRemixingHydro(std::vector<double>& UnsupE,
-                               const std::vector<double>& DispatchGen,
-                               const std::vector<double>& Spillage,
-                               const std::vector<double>& DTG_MRG,
-                               std::shared_ptr<Storage> storage)
+void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
+                                    const std::vector<double>& DispatchGen,
+                                    const std::vector<double>& Spillage,
+                                    const std::vector<double>& DTG_MRG,
+                                    std::shared_ptr<Storage> storage)
 {
     const std::vector<double> storageGenInit = storage->generation();
     const std::vector<double> UnsupEinit = UnsupE;

@@ -306,7 +306,7 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
                                                              efficiency,
                                                              reservoirManagement);
 
-          shavePeaksByRemixingHydro(unsupE, DispatchGen, spillage, dtgMrg, hydroStorage);
+          shavePeaksByRemixingStorageGen(unsupE, DispatchGen, spillage, dtgMrg, hydroStorage);
           levels = hydroStorage->levels();
       });
 }
