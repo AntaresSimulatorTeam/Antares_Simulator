@@ -10,11 +10,9 @@ namespace Antares::Solver::Simulation
 class Storage
 {
 public:
-    virtual double computeBound(unsigned hourPeak, unsigned hourBottom) = 0;
-
-    // should be private at some point, and called in constructor.
+    virtual double maxExchange(unsigned hourPeak, unsigned hourBottom) = 0;
+    // gp : checkInput(...) should be private at some point, and called in constructor.
     virtual void checkInput(size_t size) = 0;
-
     virtual void update() = 0;
     virtual std::vector<double>& generation() = 0;
     virtual std::vector<double> levels() = 0;
@@ -35,7 +33,7 @@ public:
                  const double& pumpEfficiency,
                  const bool& reservoirManagement);
 
-    double computeBound(unsigned hourPeak, unsigned hourBottom) override;
+    double maxExchange(unsigned hourPeak, unsigned hourBottom) override;
     void checkInput(size_t size) override;
     void update() override;
     std::vector<double>& generation() override;

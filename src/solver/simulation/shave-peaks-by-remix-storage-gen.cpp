@@ -57,7 +57,7 @@ HydroStorage::HydroStorage(std::vector<double>& generation,
     levels_.assign(generation.size(), 0.);
 }
 
-double HydroStorage::computeBound(unsigned hourMax, unsigned hourMin)
+double HydroStorage::maxExchange(unsigned hourMax, unsigned hourMin)
 {
     // max slice we can take from hydro generation, at an hour when the total
     // production reaches a max.
@@ -273,7 +273,7 @@ void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
     while (loop-- > 0)
     {
         std::vector<bool> triedMins(DispatchGen.size(), false);
-        double delta = 0;
+        double maxExchange = 0;
 
         while (true)
         {
@@ -296,13 +296,13 @@ void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
                 }
 
                 double maxVariation = std::max(TotalGen[hourMax] - TotalGen[hourMin], 0.);
-                double storageBound = storage->computeBound(hourMax, hourMin);
-                delta = std::max(std::min(storageBound, maxVariation / 2.), 0.);
+                double maxExchangeFromStorage = storage->maxExchange(hourMax, hourMin);
+                maxExchange = std::max(std::min(maxExchangeFromStorage, maxVariation / 2.), 0.);
 
-                if (delta > eps)
+                if (maxExchange > eps)
                 {
-                    storage->generation()[hourMax] -= delta;
-                    storage->generation()[hourMin] += delta;
+                    storage->generation()[hourMax] -= maxExchange;
+                    storage->generation()[hourMin] += maxExchange;
                     UnsupE[hourMax] = storageGenInit[hourMax] + UnsupEinit[hourMax]
                                       - storage->generation()[hourMax];
 
@@ -316,14 +316,14 @@ void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
 
             UnsupE[hourMin] = storageGenInit[hourMin] + UnsupEinit[hourMin]
                               - storage->generation()[hourMin];
-            if (delta > eps)
+            if (maxExchange > eps)
             {
                 break;
             }
             triedMins[hourMin] = true;
         }
 
-        if (delta <= eps)
+        if (maxExchange <= eps)
         {
             break;
         }
