@@ -90,78 +90,6 @@ struct MultipleCaptionProxy<Category::dynamicColumns, VCardT>
 };
 
 template<template<class> class V>
-struct VCardProxyDynamic
-{
-    //! The real VCard for the variable
-    typedef typename V<Container::EndOfList>::VCardType VCardOrigin;
-
-    //! Caption
-    static std::string Caption()
-    {
-        return VCardOrigin::Caption();
-    }
-
-    //! Unit
-    static std::string Unit()
-    {
-        return VCardOrigin::Unit();
-    }
-
-    //! The short description of the variable
-    static std::string Description()
-    {
-        return VCardOrigin::Description();
-    }
-
-    //! The expecte results
-    typedef typename VCardOrigin::ResultsType ResultsType;
-    //! The VCard to look for for calculating spatial aggregates
-    typedef typename VCardOrigin::VCardForSpatialAggregate VCardForSpatialAggregate;
-
-    typedef typename VCardOrigin::IntermediateValuesType IntermediateValuesType;
-    typedef typename VCardOrigin::IntermediateValuesBaseType IntermediateValuesBaseType;
-    typedef
-      typename VCardOrigin::IntermediateValuesTypeForSpatialAg IntermediateValuesTypeForSpatialAg;
-
-    //! Data Level
-    static constexpr uint8_t categoryDataLevel = Category::DataLevel::setOfAreas;
-    //! File level (provided by the type of the results)
-    static constexpr uint8_t categoryFileLevel = VCardOrigin::categoryFileLevel;
-    //! Precision (views)
-    static constexpr uint8_t precision = VCardOrigin::precision;
-    //! Indentation (GUI)
-    static constexpr uint8_t nodeDepthForGUI = +0;
-    //! Decimal precision
-    static constexpr uint8_t decimal = VCardOrigin::decimal;
-    //! Number of columns used by the variable (One ResultsType per column)
-    static constexpr int columnCount = VCardOrigin::dynamicColumns;
-    //! The Spatial aggregation
-    static constexpr uint8_t spatialAggregate = Category::noSpatialAggregate;
-    static constexpr uint8_t spatialAggregateMode = Category::spatialAggregateEachYear;
-    static constexpr uint8_t spatialAggregatePostProcessing = 0;
-
-    //! Intermediate values
-    static constexpr uint8_t hasIntermediateValues = 1;
-    //! Can this variable be non applicable (0 : no, 1 : yes)
-    static constexpr uint8_t isPossiblyNonApplicable = VCardOrigin::isPossiblyNonApplicable;
-
-    struct Multiple
-    {
-        static std::string Caption(const uint indx)
-        {
-            return MultipleCaptionProxy<columnCount, VCardOrigin>::Caption(indx);
-        }
-
-        static std::string Unit(const unsigned int indx)
-        {
-            return MultipleCaptionProxy<columnCount, VCardOrigin>::Unit(indx);
-        }
-    };
-
-}; // class VCard
-
-
-template<template<class> class V>
 struct VCardProxy
 {
     //! The real VCard for the variable
@@ -272,13 +200,11 @@ public:
 public:
     void initializeFromStudy(Data::Study& study)
     {
-        typedef
-          typename VCardType::VCardOrigin::IntermediateValuesBaseType IntermediateValuesBaseType;
         pNbYearsParallel = study.maxNbYearsInParallel;
 
         // Intermediate values
         VarT<Container::EndOfList>::InitializeResultsFromStudy(AncestorType::pResults, study);
-        pValuesForTheCurrentYear = new IntermediateValuesBaseType[pNbYearsParallel];
+        pValuesForTheCurrentYear.resize(pNbYearsParallel);
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
         {
             VariableAccessorType::InitializeAndReset(pValuesForTheCurrentYear[numSpace], study);
@@ -486,7 +412,8 @@ private:
         }
 
         // Compute all statistics for the current year (daily,weekly,monthly,...)
-        VariableAccessorType::template ComputeStatistics<VCardOrigin>(pValuesForTheCurrentYear[0]);
+        // VariableAccessorType::template
+        // ComputeStatistics<VCardOrigin>(pValuesForTheCurrentYear[0]);
         VariableAccessorType::ComputeSummary(pValuesForTheCurrentYear[0],
                                              AncestorType::pResults,
                                              year);
@@ -533,8 +460,8 @@ private:
         }
 
         // Compute all statistics for the current year (daily,weekly,monthly,...)
-        VariableAccessorType::template ComputeStatistics<VCardOrigin>(
-          pValuesForTheCurrentYear[numSpace]);
+        // VariableAccessorType::template ComputeStatistics<VCardOrigin>(
+        //   pValuesForTheCurrentYear[numSpace]);
     }
 
     void internalSpatialAggregateForParallelYears(unsigned int year, unsigned int numSpace)

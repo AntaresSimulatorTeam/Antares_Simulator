@@ -79,9 +79,9 @@ struct VCardDispatchableGeneration
     //! Can this variable be non applicable (0 : no, 1 : yes)
     static constexpr uint8_t isPossiblyNonApplicable = 0;
 
-    typedef std::vector<IntermediateValues> IntermediateValuesBaseType;
-    typedef std::vector<IntermediateValuesBaseType> IntermediateValuesType;
-    typedef IntermediateValues* IntermediateValuesTypeForSpatialAg;
+    using IntermediateValuesBaseType = std::vector<IntermediateValues>;
+    using IntermediateValuesType = std::vector<IntermediateValuesBaseType>;
+    using IntermediateValuesTypeForSpatialAg = IntermediateValuesType;
 
 }; // class VCard
 

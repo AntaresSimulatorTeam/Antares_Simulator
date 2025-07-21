@@ -275,8 +275,8 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
     {
         assert(!std::isnan(v));
         double* array;
-        const typename Type::const_iterator end = intermediateValues.end();
-        for (typename Type::const_iterator i = intermediateValues.begin(); i != end; ++i)
+        const auto end = intermediateValues.end();
+        for (auto i = intermediateValues.begin(); i != end; ++i)
         {
             array = (*i).hour;
             for (uint y = 0; y != HOURS_PER_YEAR; ++y)
@@ -290,8 +290,8 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
     static void SetTo1IfPositive(U& intermediateValues)
     {
         double* array;
-        const typename Type::const_iterator end = intermediateValues.end();
-        for (typename Type::const_iterator i = intermediateValues.begin(); i != end; ++i)
+        const auto end = intermediateValues.end();
+        for (auto i = intermediateValues.begin(); i != end; ++i)
         {
             array = (*i).hour;
             for (uint y = 0; y != HOURS_PER_YEAR; ++y)
@@ -305,8 +305,8 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
     static void Or(U& intermediateValues)
     {
         double* array;
-        const typename Type::const_iterator end = intermediateValues.end();
-        for (typename Type::const_iterator i = intermediateValues.begin(); i != end; ++i)
+        const auto end = intermediateValues.end();
+        for (auto i = intermediateValues.begin(); i != end; ++i)
         {
             array = (*i).hour;
             for (uint y = 0; y != HOURS_PER_YEAR; ++y)
@@ -319,8 +319,8 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
     template<class U>
     static void InitializeAndReset(U& out, Data::Study& study)
     {
-        const typename Type::const_iterator end = out.end();
-        for (typename Type::const_iterator i = out.begin(); i != end; ++i)
+        const auto end = out.end();
+        for (auto i = out.begin(); i != end; ++i)
         {
             (*i).initializeFromStudy(study);
             (*i).reset();
@@ -330,8 +330,8 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
     template<class U>
     static void Reset(U& out)
     {
-        const typename Type::const_iterator end = out.end();
-        for (typename Type::const_iterator i = out.begin(); i != end; ++i)
+        const auto end = out.end();
+        for (auto i = out.begin(); i != end; ++i)
         {
             (*i).reset();
         }

@@ -90,7 +90,7 @@ struct VCardHydroCost
     typedef IntermediateValues IntermediateValuesBaseType;
     typedef std::vector<IntermediateValues> IntermediateValuesType;
 
-    typedef IntermediateValuesBaseType* IntermediateValuesTypeForSpatialAg;
+    typedef std::vector<IntermediateValuesBaseType> IntermediateValuesTypeForSpatialAg;
 
 }; // class VCard
 

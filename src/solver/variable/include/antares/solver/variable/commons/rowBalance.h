@@ -86,7 +86,7 @@ struct VCardRowBalance
     typedef IntermediateValues IntermediateValuesType;
     typedef IntermediateValues IntermediateValuesBaseType;
 
-    typedef IntermediateValuesBaseType* IntermediateValuesTypeForSpatialAg;
+    typedef std::vector<IntermediateValuesBaseType> IntermediateValuesTypeForSpatialAg;
 
 }; // class VCard
 

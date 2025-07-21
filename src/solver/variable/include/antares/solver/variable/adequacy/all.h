@@ -140,59 +140,59 @@ typedef // Prices
       Common::SpatialAggregate<
         Variable::Economy::Price,
         // pollutant
+        /* Common::SpatialAggregate< */
+        /*   Variable::Economy::ThermalAirPollutantEmissions, */
+        // Production by thermal cluster
         Common::SpatialAggregate<
-          Variable::Economy::ThermalAirPollutantEmissions,
-          // Production by thermal cluster
+          Variable::Economy::Balance,
+          // Misc Gen.
           Common::SpatialAggregate<
-            Variable::Economy::Balance,
-            // Misc Gen.
+            Variable::Economy::RowBalance,
             Common::SpatialAggregate<
-              Variable::Economy::RowBalance,
+              Variable::Economy::PSP,
               Common::SpatialAggregate<
-                Variable::Economy::PSP,
+                Variable::Economy::MiscGenMinusRowPSP,
+                // Time series
                 Common::SpatialAggregate<
-                  Variable::Economy::MiscGenMinusRowPSP,
-                  // Time series
+                  Variable::Economy::TimeSeriesValuesLoad,
                   Common::SpatialAggregate<
-                    Variable::Economy::TimeSeriesValuesLoad,
+                    Variable::Economy::TimeSeriesValuesHydro,
                     Common::SpatialAggregate<
-                      Variable::Economy::TimeSeriesValuesHydro,
+                      Variable::Economy::TimeSeriesValuesWind,
                       Common::SpatialAggregate<
-                        Variable::Economy::TimeSeriesValuesWind,
+                        Variable::Economy::TimeSeriesValuesSolar,
+                        // Other
                         Common::SpatialAggregate<
-                          Variable::Economy::TimeSeriesValuesSolar,
-                          // Other
+                          Variable::Economy::HydroStorage,
                           Common::SpatialAggregate<
-                            Variable::Economy::HydroStorage,
+                            Variable::Economy::Pumping,
                             Common::SpatialAggregate<
-                              Variable::Economy::Pumping,
+                              Variable::Economy::ReservoirLevel,
                               Common::SpatialAggregate<
-                                Variable::Economy::ReservoirLevel,
+                                Variable::Economy::Inflows,
                                 Common::SpatialAggregate<
-                                  Variable::Economy::Inflows,
+                                  Variable::Economy::Overflows,
                                   Common::SpatialAggregate<
-                                    Variable::Economy::Overflows,
+                                    Variable::Economy::WaterValue,
                                     Common::SpatialAggregate<
-                                      Variable::Economy::WaterValue,
+                                      Variable::Economy::HydroCost,
                                       Common::SpatialAggregate<
-                                        Variable::Economy::HydroCost,
+                                        Variable::Economy::UnsupliedEnergy,
                                         Common::SpatialAggregate<
-                                          Variable::Economy::UnsupliedEnergy,
+                                          Variable::Adequacy::SpilledEnergy,
+                                          // LOLD
                                           Common::SpatialAggregate<
-                                            Variable::Adequacy::SpilledEnergy,
-                                            // LOLD
+                                            Variable::Economy::LOLD,
                                             Common::SpatialAggregate<
-                                              Variable::Economy::LOLD,
-                                              Common::SpatialAggregate<
-                                                Variable::Economy::LOLP,
+                                              Variable::Economy::LOLP,
 
+                                              Common::SpatialAggregate<
+                                                Variable::Economy::AvailableDispatchGen,
                                                 Common::SpatialAggregate<
-                                                  Variable::Economy::AvailableDispatchGen,
+                                                  Variable::Economy::DispatchableGenMargin,
                                                   Common::SpatialAggregate<
-                                                    Variable::Economy::DispatchableGenMargin,
-                                                    Common::SpatialAggregate<
-                                                      Variable::Economy::
-                                                        Marge>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                                    Variable::Economy::
+                                                      Marge>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
 typedef Variable::Economy::BindingConstMarginCost< // Marginal cost for a binding constraint
