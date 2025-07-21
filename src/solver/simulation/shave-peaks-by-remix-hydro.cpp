@@ -221,12 +221,12 @@ static void checkInput(const std::vector<double>& DispatchGen,
 }
 
 static std::vector<double> updateTotalGen(const std::vector<double>& DispatchGen,
-                                          const std::vector<double>& HydroGen)
+                                          const std::vector<double>& StorageGen)
 {
     std::vector<double> totalGen(DispatchGen.size());
     std::transform(DispatchGen.begin(),
                    DispatchGen.end(),
-                   HydroGen.begin(),
+                   StorageGen.begin(),
                    totalGen.begin(),
                    std::plus<>());
     return totalGen;
@@ -234,13 +234,13 @@ static std::vector<double> updateTotalGen(const std::vector<double>& DispatchGen
 
 std::vector<bool> ValidHours(const std::vector<double>& Spillage,
                              const std::vector<double>& DTG_MRG,
-                             const std::vector<double>& HydroGen,
+                             const std::vector<double>& StorageGen,
                              const std::vector<double>& UnsupE)
 {
     std::vector<bool> validHours(Spillage.size(), false);
     for (unsigned h = 0; h < validHours.size(); h++)
     {
-        if (Spillage[h] + DTG_MRG[h] == 0. && HydroGen[h] + UnsupE[h] > 0.)
+        if (Spillage[h] + DTG_MRG[h] == 0. && StorageGen[h] + UnsupE[h] > 0.)
         {
             validHours[h] = true;
         }
@@ -248,7 +248,7 @@ std::vector<bool> ValidHours(const std::vector<double>& Spillage,
     return validHours;
 }
 
-std::vector<double> shavePeaksByRemixingHydro(std::vector<double>& HydroGen,
+std::vector<double> shavePeaksByRemixingHydro(std::vector<double>& StorageGen,
                                               std::vector<double>& UnsupE,
                                               const std::vector<double>& DispatchGen,
                                               const std::vector<double>& HydroPmax,
@@ -312,21 +312,21 @@ std::vector<double> shavePeaksByRemixingHydro(std::vector<double>& HydroGen,
 
                 if (delta > eps)
                 {
-                    HydroGen[hourPeak] -= delta;
-                    HydroGen[hourBottom] += delta;
+                    storage->generation()[hourPeak] -= delta;
+                    storage->generation()[hourBottom] += delta;
                     UnsupE[hourPeak] = storageGenInit[hourPeak] + UnsupEinit[hourPeak]
-                                       - HydroGen[hourPeak];
+                                       - storage->generation()[hourPeak];
 
                     storage->update();
 
-                    TotalGen = updateTotalGen(DispatchGen, HydroGen);
+                    TotalGen = updateTotalGen(DispatchGen, storage->generation());
                     break;
                 }
                 triedPeak[hourPeak] = true;
             }
 
             UnsupE[hourBottom] = storageGenInit[hourBottom] + UnsupEinit[hourBottom]
-                                 - HydroGen[hourBottom];
+                                 - storage->generation()[hourBottom];
             if (delta > eps)
             {
                 break;
