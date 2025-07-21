@@ -57,8 +57,6 @@ private:
     const bool& reservoirManagement_;
 };
 
-// std::shared_ptr<Storage> makeHydroStorage();
-
 void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
                                     const std::vector<double>& DispatchGen,
                                     const std::vector<double>& Spillage,

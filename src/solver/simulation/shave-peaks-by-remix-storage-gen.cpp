@@ -1,4 +1,4 @@
-#include "include/antares/solver/simulation/shave-peaks-by-remix-hydro.h"
+#include "include/antares/solver/simulation/shave-peaks-by-remix-storage-gen.h"
 
 #include <algorithm>
 #include <limits>

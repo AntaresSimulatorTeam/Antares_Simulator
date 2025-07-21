@@ -9,7 +9,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "antares/solver/simulation/shave-peaks-by-remix-hydro.h"
+#include "antares/solver/simulation/shave-peaks-by-remix-storage-gen.h"
 
 using namespace Antares::Solver::Simulation;
 
