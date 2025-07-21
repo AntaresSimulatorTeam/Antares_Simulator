@@ -31,130 +31,110 @@
 
 using namespace Antares::Optimisation::LinearProblemApi;
 
-namespace Antares::Optimization
-{
-ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
-  const PROBLEME_HEBDO* problemeHebdo,
-  const VariableDictionary& modelerVariableDictionary):
-    problemeHebdo_(problemeHebdo),
-    modelerSystem_(problemeHebdo->modelerSystem),
-    modelerVariableDictionary_(modelerVariableDictionary)
-{
-    int i = 0;
-    for (auto name: problemeHebdo_->NomsDesPays)
-    {
-        areaIndices_[name] = i++;
-    }
-}
-
-void ComponentToAreaConnectionFiller::addVariables(ILinearProblem&,
-                                                   ILinearProblemData&,
-                                                   FillContext&)
-{
-    // nothing to do
-}
-
-static std::string getConnectionFieldId(const ModelerStudy::SystemModel::Component& component,
-                                        const std::string& portId)
-{
-    auto field = component.getModel()->Ports().at(portId).Type().AreaConnectionFieldId();
-    if (!field.has_value())
-    {
-        throw Error::RuntimeError("Component \"" + component.Id()
-                                  + "\" is connected to an area using a port type that has no "
-                                    "area-connection field defined.");
-    }
-    return field.value();
-}
-
-IMipConstraint* ComponentToAreaConnectionFiller::getBalanceConstraint(ILinearProblem& pb,
-                                                                      const std::string& areaId,
-                                                                      unsigned ts) const
-{
-    auto pdt = ts % problemeHebdo_->NombreDePasDeTempsPourUneOptimisation;
-    if (const auto it = areaIndices_.find(areaId); it != areaIndices_.end())
-    {
-        auto contraintIndex = problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt]
-                                .NumeroDeContrainteDesBilansPays[it->second];
-        if (auto* ct = pb.getConstraint(contraintIndex))
-        {
-            return ct;
+namespace Antares::Optimization {
+    ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
+        const PROBLEME_HEBDO *problemeHebdo,
+        const VariableDictionary &modelerVariableDictionary): problemeHebdo_(problemeHebdo),
+                                                              modelerSystem_(problemeHebdo->modelerSystem),
+                                                              modelerVariableDictionary_(modelerVariableDictionary) {
+        int i = 0;
+        for (auto name: problemeHebdo_->NomsDesPays) {
+            areaIndices_[name] = i++;
         }
     }
-    throw Error::RuntimeError("A component is connected to area \"" + areaId
-                              + "\", that does not have a balance constraint defined for timestep "
-                              + std::to_string(ts));
-}
 
-void ComponentToAreaConnectionFiller::addExpressionToConstraint(
-  const LinearExpression& expression,
-  IMipConstraint* areaBalanceConstraint) const
-{
-    // Contribution is added to the left-hand side of the constraint
-    // We invert the sign bc modeler is in "gen>0, load<0" convention
-    // legacy constraint is in "gen<0, load>0" convention
-    for (const auto& [varKey, coef]: expression.coefPerVar())
-    {
-        auto* var = modelerVariableDictionary_[varKey];
-        areaBalanceConstraint->setCoefficient(var, -coef);
+    void ComponentToAreaConnectionFiller::addVariables(ILinearProblem &,
+                                                       ILinearProblemData &,
+                                                       FillContext &) {
+        // nothing to do
     }
-    areaBalanceConstraint->setBounds(areaBalanceConstraint->getLb() + expression.offset(),
-                                     areaBalanceConstraint->getUb() + expression.offset());
-}
 
-// TODO remove and ue proper scenario
-class DefaultScenario: public IScenario
-{
-public:
-    using IScenario::IScenario;
-
-    [[nodiscard]] Chronicle getData(Year) const override
-    {
-        return 0; // Default rank for empty groupId
+    static std::string getConnectionFieldId(const ModelerStudy::SystemModel::Component &component,
+                                            const std::string &portId) {
+        auto field = component.getModel()->Ports().at(portId).Type().AreaConnectionFieldId();
+        if (!field.has_value()) {
+            throw Error::RuntimeError("Component \"" + component.Id()
+                                      + "\" is connected to an area using a port type that has no "
+                                      "area-connection field defined.");
+        }
+        return field.value();
     }
-};
 
-void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
-  ILinearProblem& pb,
-  ILinearProblemData& data,
-  const FillContext& ctx,
-  const ModelerStudy::SystemModel::Component& component,
-  const std::string& portId,
-  const std::string& areaId)
-{
-    std::string injectionFieldId = getConnectionFieldId(component, portId);
-    DefaultScenario defaultScenario("empty"); //TODO default ?
-    const Expressions::Visitors::EvaluationContext
-      connectedComponentEvalContext(component.getParameterValues(), {}, data, defaultScenario);
-    ReadLinearExpressionVisitor visitor(connectedComponentEvalContext, ctx, component);
-    auto timeDependentLinearExpression = visitor.dispatch(
-      component.nodeAtPortField(portId, injectionFieldId));
-    std::string lowerAreaId = areaId;
-    boost::algorithm::to_lower(lowerAreaId);
-    for (const auto& [ts, expression]: timeDependentLinearExpression.GetLinearExpressions())
-    {
-        IMipConstraint* areaBalanceConstraint = getBalanceConstraint(pb, lowerAreaId, ts);
-        addExpressionToConstraint(expression, areaBalanceConstraint);
+    IMipConstraint *ComponentToAreaConnectionFiller::getBalanceConstraint(ILinearProblem &pb,
+                                                                          const std::string &areaId,
+                                                                          unsigned ts) const {
+        auto pdt = ts % problemeHebdo_->NombreDePasDeTempsPourUneOptimisation;
+        if (const auto it = areaIndices_.find(areaId); it != areaIndices_.end()) {
+            auto contraintIndex = problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt]
+                    .NumeroDeContrainteDesBilansPays[it->second];
+            if (auto *ct = pb.getConstraint(contraintIndex)) {
+                return ct;
+            }
+        }
+        throw Error::RuntimeError("A component is connected to area \"" + areaId
+                                  + "\", that does not have a balance constraint defined for timestep "
+                                  + std::to_string(ts));
     }
-}
 
-void ComponentToAreaConnectionFiller::addConstraints(ILinearProblem& pb,
-                                                     ILinearProblemData& data,
-                                                     FillContext& ctx)
-{
-    for (const auto& component: modelerSystem_->Components() | std::ranges::views::values)
-    {
-        for (const auto& [portId, areaId]: component.portToAreaConnections())
-        {
-            addComponentPortContributionToArea(pb, data, ctx, component, portId, areaId);
+    void ComponentToAreaConnectionFiller::addExpressionToConstraint(
+        const LinearExpression &expression,
+        IMipConstraint *areaBalanceConstraint) const {
+        // Contribution is added to the left-hand side of the constraint
+        // We invert the sign bc modeler is in "gen>0, load<0" convention
+        // legacy constraint is in "gen<0, load>0" convention
+        for (const auto &[varKey, coef]: expression.coefPerVar()) {
+            auto *var = modelerVariableDictionary_[varKey];
+            areaBalanceConstraint->setCoefficient(var, -coef);
+        }
+        areaBalanceConstraint->setBounds(areaBalanceConstraint->getLb() + expression.offset(),
+                                         areaBalanceConstraint->getUb() + expression.offset());
+    }
+
+    // TODO remove and ue proper scenario
+    class DefaultScenario : public IScenario {
+    public:
+        using IScenario::IScenario;
+
+        [[nodiscard]] TimeSeriesNumber getData(Year) const override {
+            return 0; // Default rank for empty groupId
+        }
+    };
+
+    void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
+        ILinearProblem &pb,
+        ILinearProblemData &data,
+        const FillContext &ctx,
+        const ModelerStudy::SystemModel::Component &component,
+        const std::string &portId,
+        const std::string &areaId) {
+        std::string injectionFieldId = getConnectionFieldId(component, portId);
+        DefaultScenario defaultScenario("empty"); //TODO default ?
+        const Expressions::Visitors::EvaluationContext
+                connectedComponentEvalContext(component.getParameterValues(), {}, data, defaultScenario);
+        ReadLinearExpressionVisitor visitor(connectedComponentEvalContext, ctx, component);
+        auto timeDependentLinearExpression = visitor.dispatch(
+            component.nodeAtPortField(portId, injectionFieldId));
+        std::string lowerAreaId = areaId;
+        boost::algorithm::to_lower(lowerAreaId);
+        for (const auto &[ts, expression]: timeDependentLinearExpression.GetLinearExpressions()) {
+            IMipConstraint *areaBalanceConstraint = getBalanceConstraint(pb, lowerAreaId, ts);
+            addExpressionToConstraint(expression, areaBalanceConstraint);
         }
     }
-}
 
-void ComponentToAreaConnectionFiller::addObjective(ILinearProblem&,
-                                                   ILinearProblemData&,
-                                                   FillContext&)
-{
-    // nothing to do
-}
+    void ComponentToAreaConnectionFiller::addConstraints(ILinearProblem &pb,
+                                                         ILinearProblemData &data,
+                                                         FillContext &ctx) {
+        for (const auto &component: modelerSystem_->Components() | std::ranges::views::values) {
+            for (const auto &[portId, areaId]: component.portToAreaConnections()) {
+                addComponentPortContributionToArea(pb, data, ctx, component, portId, areaId);
+            }
+        }
+    }
+
+    void ComponentToAreaConnectionFiller::addObjective(ILinearProblem &,
+                                                       ILinearProblemData &,
+                                                       FillContext &) {
+        // nothing to do
+    }
 } // namespace Antares::Optimization

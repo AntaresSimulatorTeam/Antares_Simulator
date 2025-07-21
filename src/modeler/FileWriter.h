@@ -22,22 +22,21 @@
 
 #include "modeler/include/antares/solver/modeler/IWriter.h"
 
-namespace Antares::Modeler
-{
-class FileWriter: public Solver::IWriter
-{
-public:
-    void init(bool setOutput) override;
+namespace Antares::Modeler {
+    class FileWriter : public Solver::IWriter {
+    public:
+        void init(bool setOutput) override;
 
-    void writeSolution(const Optimisation::LinearProblemApi::IMipSolution& solution) override;
-    explicit FileWriter(std::filesystem::path path, bool noOutput = false);
+        void writeSolution(const Optimisation::LinearProblemApi::IMipSolution &solution) override;
 
-    void writeProblem(
-      const Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem& problem) override;
+        explicit FileWriter(std::filesystem::path path);
 
-private:
-    const std::filesystem::path studyPath_;
-    std::filesystem::path outputPath_;
-    bool output{false};
-};
+        void writeProblem(
+            const Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem &problem) override;
+
+    private:
+        const std::filesystem::path studyPath_;
+        std::filesystem::path outputPath_;
+        bool output{true};
+    };
 } // namespace Antares::Modeler

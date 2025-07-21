@@ -38,110 +38,94 @@ using namespace Antares::Optimization;
 using namespace Antares::Solver;
 using namespace Antares::Optimisation::LinearProblemApi;
 
-namespace Antares::Solver
-{
-
-Modeler::Modeler(ILoader& loader, IWriter& writer):
-    loader_{loader},
-    writer_{writer}
-{
-}
-
-class SystemLinearProblemBuilder
-{
-public:
-    explicit SystemLinearProblemBuilder(const ModelerStudy::SystemModel::System* system):
-        system_(system)
-    {
+namespace Antares::Solver {
+    Modeler::Modeler(ILoader &loader, IWriter &writer): loader_{loader},
+                                                        writer_{writer} {
     }
 
-    ~SystemLinearProblemBuilder() = default;
-
-    void Provide(ILinearProblem& pb,
-                 const ModelerParameters& parameters,
-                 ILinearProblemData* dataSeries,
-                 const Optimization::ScenarioGroupRepository& scenario_group_repository)
-    {
-        std::vector<std::unique_ptr<Optimization::ComponentFiller>> fillers;
-        std::vector<LinearProblemFiller*> fillers_ptr;
-        // All LP variables coordinates (component id, variable id, scenario, time step)
-        VariableDictionary variableDictionary;
-
-        for (const auto& [_, component]: system_->Components())
-        {
-            auto cf = std::make_unique<Optimization::ComponentFiller>(component,
-                                                                      variableDictionary,
-                                                                      scenario_group_repository);
-            fillers.push_back(std::move(cf));
-        }
-        for (auto& component_filler: fillers)
-        {
-            fillers_ptr.push_back(component_filler.get());
+    class SystemLinearProblemBuilder {
+    public:
+        explicit SystemLinearProblemBuilder(const ModelerStudy::SystemModel::System *system): system_(system) {
         }
 
-        LinearProblemBuilder linear_problem_builder(fillers_ptr);
-        // Todo: scenario
-        FillContext time_scenario_ctx = {parameters.firstTimeStep, parameters.lastTimeStep, 0};
-        linear_problem_builder.build(pb, *dataSeries, time_scenario_ctx);
-    }
+        ~SystemLinearProblemBuilder() = default;
 
-private:
-    const ModelerStudy::SystemModel::System* system_;
-};
+        void Provide(ILinearProblem &pb,
+                     const ModelerParameters &parameters,
+                     ILinearProblemData *dataSeries,
+                     const Optimisation::ScenarioGroupRepository &scenario_group_repository) {
+            std::vector<std::unique_ptr<Optimisation::ComponentFiller> > fillers;
+            std::vector<LinearProblemFiller *> fillers_ptr;
+            // All LP variables coordinates (component id, variable id, scenario, time step)
+            VariableDictionary variableDictionary;
 
-void Modeler::solve() const
-{
-    try
-    {
-        const auto parameters = loader_.loadParameters();
-        logs.info() << "Parameters loaded";
-        const auto data = loader_.loadAll();
+            for (const auto &[_, component]: system_->Components()) {
+                auto cf = std::make_unique<Optimisation::ComponentFiller>(component,
+                                                                          variableDictionary,
+                                                                          scenario_group_repository);
+                fillers.push_back(std::move(cf));
+            }
+            for (auto &component_filler: fillers) {
+                fillers_ptr.push_back(component_filler.get());
+            }
 
-        SystemLinearProblemBuilder system_linear_problem(data.system.get());
+            LinearProblemBuilder linear_problem_builder(fillers_ptr);
+            // Todo: scenario
+            FillContext time_scenario_ctx = {parameters.firstTimeStep, parameters.lastTimeStep, 0};
+            linear_problem_builder.build(pb, *dataSeries, time_scenario_ctx);
+        }
 
-        writer_.init(!parameters.noOutput);
+    private:
+        const ModelerStudy::SystemModel::System *system_;
+    };
 
-        logs.info() << "linear problem of System loaded";
-        // Problem is MIP if any variable of any component is not continuous
-        bool isMip = std::ranges::any_of(
-          data.system->Components() | std::views::values,
-          [](const auto& component)
-          {
-              return std::ranges::any_of(component.getModel()->Variables() | std::views::values,
-                                         [](const auto& variable) {
-                                             return variable.Type()
-                                                    != ModelerStudy::SystemModel::ValueType::FLOAT;
-                                         });
-          });
-        OrtoolsLinearProblem ortools_linear_problem(isMip, parameters.solver);
+    void Modeler::solve() const {
+        try {
+            const auto parameters = loader_.loadParameters();
+            logs.info() << "Parameters loaded";
+            const auto data = loader_.loadAll();
 
-        system_linear_problem.Provide(ortools_linear_problem,
-                                      parameters,
-                                      data.dataSeries.get(),
-                                      data.scenario_group_repository);
+            SystemLinearProblemBuilder system_linear_problem(data.system.get());
 
-        logs.info() << "Linear problem provided";
+            writer_.init(!parameters.noOutput);
 
-        logs.info() << "Number of variables: " << ortools_linear_problem.variableCount();
-        logs.info() << "Number of constraints: " << ortools_linear_problem.constraintCount();
+            logs.info() << "linear problem of System loaded";
+            // Problem is MIP if any variable of any component is not continuous
+            bool isMip = std::ranges::any_of(
+                data.system->Components() | std::views::values,
+                [](const auto &component) {
+                    return std::ranges::any_of(component.getModel()->Variables() | std::views::values,
+                                               [](const auto &variable) {
+                                                   return variable.Type()
+                                                          != ModelerStudy::SystemModel::ValueType::FLOAT;
+                                               });
+                });
+            OrtoolsLinearProblem ortools_linear_problem(isMip, parameters.solver);
 
-        writer_.writeProblem(ortools_linear_problem);
+            system_linear_problem.Provide(ortools_linear_problem,
+                                          parameters,
+                                          data.dataSeries.get(),
+                                          data.scenario_group_repository);
 
-        logs.info() << "Launching resolution...";
-        auto* solution = ortools_linear_problem.solve(true);
-        switch (solution->getStatus())
-        {
-        case MipStatus::OPTIMAL:
-        case MipStatus::FEASIBLE:
-            writer_.writeSolution(*solution);
-            break;
-        default:
-            logs.error() << "Problem during linear optimization";
+            logs.info() << "Linear problem provided";
+
+            logs.info() << "Number of variables: " << ortools_linear_problem.variableCount();
+            logs.info() << "Number of constraints: " << ortools_linear_problem.constraintCount();
+
+            writer_.writeProblem(ortools_linear_problem);
+
+            logs.info() << "Launching resolution...";
+            auto *solution = ortools_linear_problem.solve(true);
+            switch (solution->getStatus()) {
+                case MipStatus::OPTIMAL:
+                case MipStatus::FEASIBLE:
+                    writer_.writeSolution(*solution);
+                    break;
+                default:
+                    logs.error() << "Problem during linear optimization";
+            }
+        } catch (const LoadFiles::ErrorLoadingYaml &) {
+            throw Antares::Solver::Modeler::Error("Error while loading files, exiting");
         }
     }
-    catch (const LoadFiles::ErrorLoadingYaml&)
-    {
-        throw Antares::Solver::Modeler::Error("Error while loading files, exiting");
-    }
-}
 } // namespace Antares::Solver
