@@ -199,10 +199,7 @@ static int hour_for_totalGen_max(const std::vector<double>& TotalGen,
 }
 
 static void checkInput(const std::vector<double>& DispatchGen,
-                       const std::vector<double>& HydroGen,
                        const std::vector<double>& UnsupE,
-                       const std::vector<double>& HydroPmax,
-                       const std::vector<double>& HydroPmin,
                        const std::vector<double>& Spillage,
                        const std::vector<double>& DTG_MRG)
 {
@@ -270,7 +267,7 @@ std::vector<double> shavePeaksByRemixingHydro(std::vector<double>& HydroGen,
     const std::vector<double> HydroGenInit = storage->generation();
     const std::vector<double> UnsupEinit = UnsupE;
 
-    checkInput(DispatchGen, HydroGenInit, UnsupEinit, HydroPmax, HydroPmin, Spillage, DTG_MRG);
+    checkInput(DispatchGen, UnsupEinit, Spillage, DTG_MRG);
 
     storage->checkInput(DispatchGen.size());
     storage->update();
