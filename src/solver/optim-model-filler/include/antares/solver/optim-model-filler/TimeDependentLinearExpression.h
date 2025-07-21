@@ -51,10 +51,12 @@ public:
     TimeDependentLinearExpression& operator=(TimeDependentLinearExpression&& other) = default;
 
     /// Sum two linear expressions
-    [[deprecated("Will make a potentially expensive copy of a TimeDependentLinearExpression. Use operator+= if possible.")]]
+    [[deprecated("Will make a potentially expensive copy of a TimeDependentLinearExpression. Use "
+                 "operator+= if possible.")]]
     TimeDependentLinearExpression operator+(const TimeDependentLinearExpression& other) const;
     /// Subtract two linear expressions
-    [[deprecated("Will make a potentially expensive copy of a TimeDependentLinearExpression. Use operator-= if possible.")]]
+    [[deprecated("Will make a potentially expensive copy of a TimeDependentLinearExpression. Use "
+                 "operator-= if possible.")]]
     TimeDependentLinearExpression operator-(const TimeDependentLinearExpression& other) const;
     /// Multiply two linear expressions
     /// Only one can have non-zero coefficients, otherwise the result cannot be linear
