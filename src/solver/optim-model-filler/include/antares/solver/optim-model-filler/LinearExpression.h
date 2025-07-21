@@ -58,7 +58,7 @@ using FullKeyMap = std::unordered_map<FullKey, double, FullKeyHash>;
  * @param right The right-hand-side map.
  * @param op A unary operation to transform the values of the right-hand-side map before adding
  * them. Defaults to the identity function.
- * @return A new map containing the element-wise sum of the two input maps.
+ * @return None, the left map is modified in-place to contain the element-wise sum of the two input maps.
  *
  * @example
  * Example 1: Using `std::unordered_map<FullKey, double, FullKeyHash>`
@@ -75,7 +75,7 @@ using FullKeyMap = std::unordered_map<FullKey, double, FullKeyHash>;
  *     {FullKey("component3", "variable3"), 4.0}
  * };
  *
- * auto result = add_maps(map1, map2);
+ * add_maps(map1, map2);
  * ```
  *
  * @example
@@ -93,7 +93,7 @@ using FullKeyMap = std::unordered_map<FullKey, double, FullKeyHash>;
  *     {3, linearExpression4}
  * };
  *
- * auto result = add_maps(map3, map4);
+ * add_maps(map3, map4);
  * ```
  */
 template<typename MapType, typename UnaryOp = std::identity>
