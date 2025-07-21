@@ -59,10 +59,10 @@ private:
 
 // std::shared_ptr<Storage> makeHydroStorage();
 
-std::vector<double> shavePeaksByRemixingHydro(std::vector<double>& UnsupE,
-                                              const std::vector<double>& DispatchGen,
-                                              const std::vector<double>& Spillage,
-                                              const std::vector<double>& DTG_MRG,
-                                              std::shared_ptr<Storage> storage);
+void shavePeaksByRemixingHydro(std::vector<double>& UnsupE,
+                               const std::vector<double>& DispatchGen,
+                               const std::vector<double>& Spillage,
+                               const std::vector<double>& DTG_MRG,
+                               std::shared_ptr<Storage> storage);
 
 } // namespace Antares::Solver::Simulation
