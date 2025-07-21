@@ -28,97 +28,97 @@
 
 #include "ReadLinearConstraintVisitor.h"
 
-namespace Antares::ModelerStudy::SystemModel
-{
-class Component;
-class Variable;
+namespace Antares::ModelerStudy::SystemModel {
+    class Component;
+    class Variable;
 } // namespace Antares::ModelerStudy::SystemModel
 
-namespace Antares::Expressions::Visitors
-{
-class EvalVisitor;
+namespace Antares::Expressions::Visitors {
+    class EvalVisitor;
 }
 
-namespace Antares::Optimization
-{
-class ScenarioGroupRepository;
+namespace Antares::Optimisation {
+    class ScenarioGroupRepository;
 
-/**
- * Component filler
- * Implements LinearProblemFiller interface.
- * Fills a LinearProblem with variables, constraints, and objective coefficients of a Component
- */
-class ComponentFiller: public Optimisation::LinearProblemApi::LinearProblemFiller
-{
-public:
-    ComponentFiller() = delete;
-    ComponentFiller(ComponentFiller& other) = delete;
-    /// Create a ComponentFiller for a Component
-    explicit ComponentFiller(const ModelerStudy::SystemModel::Component& component,
-                             VariableDictionary& variableDictionary,
-                             const ScenarioGroupRepository& scenarioGroupRepository);
+    /**
+     * Component filler
+     * Implements LinearProblemFiller interface.
+     * Fills a LinearProblem with variables, constraints, and objective coefficients of a Component
+     */
+    class ComponentFiller : public Optimisation::LinearProblemApi::LinearProblemFiller {
+    public:
+        ComponentFiller() = delete;
 
-    void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                      Optimisation::LinearProblemApi::ILinearProblemData& data,
-                      Optimisation::LinearProblemApi::FillContext& ctx) override;
+        ComponentFiller(ComponentFiller &other) = delete;
 
-    void addConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                        Optimisation::LinearProblemApi::ILinearProblemData& data,
-                        Optimisation::LinearProblemApi::FillContext& ctx) override;
+        /// Create a ComponentFiller for a Component
+        explicit ComponentFiller(const ModelerStudy::SystemModel::Component &component,
+                                 VariableDictionary &variableDictionary,
+                                 const ScenarioGroupRepository &scenarioGroupRepository);
 
-    void addObjective(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                      Optimisation::LinearProblemApi::ILinearProblemData& data,
-                      Optimisation::LinearProblemApi::FillContext& ctx) override;
+        void addVariables(Optimisation::LinearProblemApi::ILinearProblem &pb,
+                          Optimisation::LinearProblemApi::ILinearProblemData &data,
+                          Optimisation::LinearProblemApi::FillContext &ctx) override;
 
-private:
-    void addStaticConstraint(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                             const LinearConstraint& linear_constraint,
-                             const std::string& constraint_id) const;
+        void addConstraints(Optimisation::LinearProblemApi::ILinearProblem &pb,
+                            Optimisation::LinearProblemApi::ILinearProblemData &data,
+                            Optimisation::LinearProblemApi::FillContext &ctx) override;
 
-    void addTimeDependentConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                                     const std::vector<LinearConstraint>& linear_constraints,
-                                     const std::string& constraint_id) const;
+        void addObjective(Optimisation::LinearProblemApi::ILinearProblem &pb,
+                          Optimisation::LinearProblemApi::ILinearProblemData &data,
+                          Optimisation::LinearProblemApi::FillContext &ctx) override;
 
-    bool IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node);
+    private:
+        void addStaticConstraint(Optimisation::LinearProblemApi::ILinearProblem &pb,
+                                 const LinearConstraint &linear_constraint,
+                                 const std::string &constraint_id) const;
 
-    const ModelerStudy::SystemModel::Component& component_;
-    VariableDictionary& variableDictionary_;
-    const ScenarioGroupRepository& scenarioGroupRepository_;
-};
+        void addTimeDependentConstraints(Optimisation::LinearProblemApi::ILinearProblem &pb,
+                                         const std::vector<LinearConstraint> &linear_constraints,
+                                         const std::string &constraint_id) const;
 
-class VariablesBulkAddition
-{
-public:
-    VariablesBulkAddition(Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
-                          VariableDictionary& variableDictionary);
-    void addVariable(double lb,
-                     double ub,
-                     bool integer,
-                     const Dimensions& dim,
-                     const PartialKey&) const;
-    void addVariable(const std::vector<double>& lb,
-                     double ub,
-                     bool integer,
-                     const Dimensions& dim,
-                     const PartialKey&) const;
-    void addVariable(double lb,
-                     const std::vector<double>& ub,
-                     bool integer,
-                     const Dimensions& dim,
-                     const PartialKey&) const;
-    void addVariable(const std::vector<double>& lb,
-                     const std::vector<double>& ub,
-                     bool integer,
-                     const Dimensions& dim,
-                     const PartialKey&) const;
+        bool IsThisConstraintTimeDependent(const Expressions::Nodes::Node *node);
 
-    class BoundsSizeMismatch: public std::invalid_argument
-    {
-        using std::invalid_argument::invalid_argument;
+        const ModelerStudy::SystemModel::Component &component_;
+        VariableDictionary &variableDictionary_;
+        const ScenarioGroupRepository &scenarioGroupRepository_;
     };
 
-private:
-    Optimisation::LinearProblemApi::ILinearProblem& linear_problem_;
-    VariableDictionary& variableDictionary;
-};
+    class VariablesBulkAddition {
+    public:
+        VariablesBulkAddition(Optimisation::LinearProblemApi::ILinearProblem &linear_problem,
+                              VariableDictionary &variableDictionary);
+
+        void addVariable(double lb,
+                         double ub,
+                         bool integer,
+                         const Dimensions &dim,
+                         const PartialKey &) const;
+
+        void addVariable(const std::vector<double> &lb,
+                         double ub,
+                         bool integer,
+                         const Dimensions &dim,
+                         const PartialKey &) const;
+
+        void addVariable(double lb,
+                         const std::vector<double> &ub,
+                         bool integer,
+                         const Dimensions &dim,
+                         const PartialKey &) const;
+
+        void addVariable(const std::vector<double> &lb,
+                         const std::vector<double> &ub,
+                         bool integer,
+                         const Dimensions &dim,
+                         const PartialKey &) const;
+
+        class BoundsSizeMismatch : public std::invalid_argument {
+            using std::invalid_argument::invalid_argument;
+        };
+
+    private:
+        Optimisation::LinearProblemApi::ILinearProblem &linear_problem_;
+        VariableDictionary &variableDictionary;
+    };
 } // namespace Antares::Optimization

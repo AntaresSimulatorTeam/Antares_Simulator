@@ -26,212 +26,194 @@
 #include <antares/expressions/visitors/NodeVisitor.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h>
+
+#include "antares/optimisation/linear-problem-api/IScenario.h"
 #include "antares/study/system-model/component.h"
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::Expressions::Visitors;
 using namespace Antares::ModelerStudy;
 
-namespace Antares::Optimization
-{
+namespace Antares::Optimization {
+    ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
+        EvaluationContext evalContext,
+        Optimisation::LinearProblemApi::FillContext fillContext,
+        const SystemModel::Component &component): fillContext_(std::move(fillContext)),
+                                                  evalContext_(std::move(evalContext)),
+                                                  component_(component),
+                                                  evalVisitor_(evalContext_, fillContext_) {
+    }
 
-ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
-  EvaluationContext evalContext,
-  Optimisation::LinearProblemApi::FillContext fillContext,
-  const SystemModel::Component& component):
-    fillContext_(std::move(fillContext)),
-    evalContext_(std::move(evalContext)),
-    component_(component),
-    evalVisitor_(evalContext_, fillContext_)
-{
-}
+    std::string ReadLinearExpressionVisitor::name() const {
+        return "ReadLinearExpressionVisitor";
+    }
 
-std::string ReadLinearExpressionVisitor::name() const
-{
-    return "ReadLinearExpressionVisitor";
-}
-
-TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const SumNode* node)
-{
-    auto operands = node->getOperands();
-    return std::accumulate(std::begin(operands),
-                           std::end(operands),
-                           TimeDependentLinearExpression(fillContext_),
+    TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const SumNode *node) {
+        auto operands = node->getOperands();
+        return std::accumulate(std::begin(operands),
+                               std::end(operands),
+                               TimeDependentLinearExpression(fillContext_),
                            [this](TimeDependentLinearExpression&& sum, Node* operand)
                            {
                                sum += dispatch(operand);
                                return std::move(sum);
                            });
-}
-
-TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const SubtractionNode* node)
-{
-    return dispatch(node->left()) - dispatch(node->right());
-}
-
-TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const MultiplicationNode* node)
-{
-    return dispatch(node->left()) * dispatch(node->right());
-}
-
-TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const DivisionNode* node)
-{
-    return dispatch(node->left()) / dispatch(node->right());
-}
-
-TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const EqualNode*)
-{
-    throw std::invalid_argument("A linear expression can't contain comparison operators.");
-}
-
-TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const LessThanOrEqualNode*)
-{
-    throw std::invalid_argument("A linear expression can't contain comparison operators.");
-}
-
-TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const GreaterThanOrEqualNode*)
-{
-    throw std::invalid_argument("A linear expression can't contain comparison operators.");
-}
-
-TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const NegationNode* node)
-{
-    return -dispatch(node->child());
-}
-
-TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const VariableNode* node)
-{
-    if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
-    {
-        return TimeDependentLinearExpression(
-          fillContext_,
-          LinearExpression(0, {{FullKey(component_.Id(), node->value(), evalContext_.scenario().getData(fillContext_.getYear())), 1}}));
     }
-    // only dependent
-    LinearExpressionMap linearExpressions;
 
-    for (unsigned int timeStep = fillContext_.getFirstTimeStep();
-         timeStep <= fillContext_.getLastTimeStep();
-             ++timeStep)
-        {
-        linearExpressions[timeStep] = LinearExpression(
-          0,
-              {{FullKey(component_.Id(),
-                        node->value(),
-                        evalContext_.scenario().getData(fillContext_.getYear()),
-                        timeStep),
-                1}});
+    TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const SubtractionNode *node) {
+        return dispatch(node->left()) - dispatch(node->right());
     }
-    return TimeDependentLinearExpression(linearExpressions);
-}
 
-TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const ParameterNode* node)
-{
-    const auto systemParameter = evalContext_.getParameter(node->value());
-    if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
-        && systemParameter.type != ParameterType::CONSTANT)
-    {
-        throw std::invalid_argument(
-          "Parameter " + node->value()
-          + " is declared constant in time and scenario in library but not in system");
+    TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const MultiplicationNode *node) {
+        return dispatch(node->left()) * dispatch(node->right());
     }
-    if (systemParameter.type == ParameterType::CONSTANT)
-    {
-        return TimeDependentLinearExpression(
-          fillContext_,
-          LinearExpression(evalContext_.getSystemParameterValueAsDouble(node->value()), {}));
-    }
-    // only dependent
-    LinearExpressionMap linearExpressions;
 
-    for (auto timeStep = fillContext_.getFirstTimeStep();
-         timeStep <= fillContext_.getLastTimeStep();
-             ++timeStep)
-        {
+    TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const DivisionNode *node) {
+        return dispatch(node->left()) / dispatch(node->right());
+    }
+
+    TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const EqualNode *) {
+        throw std::invalid_argument("A linear expression can't contain comparison operators.");
+    }
+
+    TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const LessThanOrEqualNode *) {
+        throw std::invalid_argument("A linear expression can't contain comparison operators.");
+    }
+
+    TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const GreaterThanOrEqualNode *) {
+        throw std::invalid_argument("A linear expression can't contain comparison operators.");
+    }
+
+    TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const NegationNode *node) {
+        return -dispatch(node->child());
+    }
+
+    TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const VariableNode *node) {
+        if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO) {
+            return TimeDependentLinearExpression(
+                fillContext_,
+                LinearExpression(0, {
+                                     {
+                                         FullKey(component_.Id(), node->value(),
+                                                 evalContext_.scenario().getData(fillContext_.getYear())),
+                                         1
+                                     }
+                                 }));
+        }
+        // only dependent
+        LinearExpressionMap linearExpressions;
+
+        for (unsigned int timeStep = fillContext_.getFirstTimeStep();
+             timeStep <= fillContext_.getLastTimeStep();
+             ++timeStep) {
+            linearExpressions[timeStep] = LinearExpression(
+                0,
+                {
+                    {
+                        FullKey(component_.Id(),
+                                node->value(),
+                                evalContext_.scenario().getData(fillContext_.getYear()),
+                                timeStep),
+                        1
+                    }
+                });
+        }
+        return TimeDependentLinearExpression(linearExpressions);
+    }
+
+    TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const ParameterNode *node) {
+        const auto systemParameter = evalContext_.getParameter(node->value());
+        if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
+            && systemParameter.type != ParameterType::CONSTANT) {
+            throw std::invalid_argument(
+                "Parameter " + node->value()
+                + " is declared constant in time and scenario in library but not in system");
+        }
+        if (systemParameter.type == ParameterType::CONSTANT) {
+            return TimeDependentLinearExpression(
+                fillContext_,
+                LinearExpression(evalContext_.getSystemParameterValueAsDouble(node->value()), {}));
+        }
+        // only dependent
+        LinearExpressionMap linearExpressions;
+
+        for (auto timeStep = fillContext_.getFirstTimeStep();
+             timeStep <= fillContext_.getLastTimeStep();
+             ++timeStep) {
             // TODO: pass year
-        linearExpressions[timeStep] = LinearExpression(
-              evalContext_.getParameterValue(node->value(), 0, timeStep),
-          {});
-    }
-    return TimeDependentLinearExpression(linearExpressions);
-}
-
-TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const LiteralNode* node)
-{
-    return TimeDependentLinearExpression(fillContext_, LinearExpression(node->value(), {}));
-}
-
-TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const PortFieldNode*)
-{
-    throw std::invalid_argument("ReadLinearExpressionVisitor cannot visit PortFieldNodes");
-}
-
-TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const PortFieldSumNode* node)
-{
-    std::string portId = node->getPortName();
-    std::string fieldId = node->getFieldName();
-
-    TimeDependentLinearExpression to_return(fillContext_);
-    for (const auto connexion_end: component_.componentConnectionsViaPort(portId))
-    {
-        auto* component = connexion_end.component();
-        auto* port = connexion_end.port();
-
-        const EvaluationContext connectedComponentEvalContext(component->getParameterValues(),
-                                                              {},
-                                                              evalContext_.data(),
-                                                              evalContext_.scenario());
-        ReadLinearExpressionVisitor visitor(connectedComponentEvalContext,
-                                            fillContext_,
-                                            *component);
-
-        const Node* node = component->nodeAtPortField(port->Id(), fieldId);
-        to_return += visitor.dispatch(node);
+            linearExpressions[timeStep] = LinearExpression(
+                evalContext_.getParameterValue(node->value(), 0, timeStep),
+                {});
+        }
+        return TimeDependentLinearExpression(linearExpressions);
     }
 
-    return to_return;
-}
+    TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const LiteralNode *node) {
+        return TimeDependentLinearExpression(fillContext_, LinearExpression(node->value(), {}));
+    }
 
-TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const ComponentVariableNode*)
-{
-    throw std::invalid_argument("ReadLinearExpressionVisitor cannot visit ComponentVariableNodes");
-}
+    TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const PortFieldNode *) {
+        throw std::invalid_argument("ReadLinearExpressionVisitor cannot visit PortFieldNodes");
+    }
 
-TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const ComponentParameterNode*)
-{
-    throw std::invalid_argument("ReadLinearExpressionVisitor cannot visit ComponentParameterNodes");
-}
+    TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const PortFieldSumNode *node) {
+        std::string portId = node->getPortName();
+        std::string fieldId = node->getFieldName();
 
-TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const TimeShiftNode* node)
-{
-    const auto ret = dispatch(node->left());
-    // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
-    const auto timeShift = static_cast<int>(evalVisitor_.dispatch(node->right()).valueAsDouble());
-    return ret.shiftLinearExpressions(timeShift);
-}
+        TimeDependentLinearExpression to_return(fillContext_);
+        for (const auto connexion_end: component_.componentConnectionsViaPort(portId)) {
+            auto *component = connexion_end.component();
+            auto *port = connexion_end.port();
 
-TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const TimeIndexNode* node)
-{
-    const auto ret = dispatch(node->left());
-    // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
-    const auto timeIndex = static_cast<int>(evalVisitor_.dispatch(node->right()).valueAsDouble());
-    return ret[timeIndex];
-}
+            const EvaluationContext connectedComponentEvalContext(component->getParameterValues(),
+                                                                  {},
+                                                                  evalContext_.data(),
+                                                                  evalContext_.scenario());
+            ReadLinearExpressionVisitor visitor(connectedComponentEvalContext,
+                                                fillContext_,
+                                                *component);
 
-TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const TimeSumNode* node)
-{
-    const auto expression = dispatch(node->expression());
-    // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
-    const auto from = static_cast<int>(evalVisitor_.dispatch(node->from()).valueAsDouble());
+            const Node *node = component->nodeAtPortField(port->Id(), fieldId);
+            to_return += visitor.dispatch(node);
+        }
 
-    // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
-    const auto to = static_cast<int>(evalVisitor_.dispatch(node->to()).valueAsDouble());
+        return to_return;
+    }
 
-    return expression.timeSumLinearExpressions(from, to);
-}
+    TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const ComponentVariableNode *) {
+        throw std::invalid_argument("ReadLinearExpressionVisitor cannot visit ComponentVariableNodes");
+    }
 
-TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const AllTimeSumNode* node)
-{
-    const auto expression = dispatch(node->child());
-    return expression.allTimeSumLinearExpressions();
-}
+    TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const ComponentParameterNode *) {
+        throw std::invalid_argument("ReadLinearExpressionVisitor cannot visit ComponentParameterNodes");
+    }
+
+    TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const TimeShiftNode *node) {
+        const auto ret = dispatch(node->left());
+        // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
+        const auto timeShift = static_cast<int>(evalVisitor_.dispatch(node->right()).valueAsDouble());
+        return ret.shiftLinearExpressions(timeShift);
+    }
+
+    TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const TimeIndexNode *node) {
+        const auto ret = dispatch(node->left());
+        // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
+        const auto timeIndex = static_cast<int>(evalVisitor_.dispatch(node->right()).valueAsDouble());
+        return ret[timeIndex];
+    }
+
+    TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const TimeSumNode *node) {
+        const auto expression = dispatch(node->expression());
+        // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
+        const auto from = static_cast<int>(evalVisitor_.dispatch(node->from()).valueAsDouble());
+
+        // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
+        const auto to = static_cast<int>(evalVisitor_.dispatch(node->to()).valueAsDouble());
+
+        return expression.timeSumLinearExpressions(from, to);
+    }
+
+    TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const AllTimeSumNode *node) {
+        const auto expression = dispatch(node->child());
+        return expression.allTimeSumLinearExpressions();
+    }
 } // namespace Antares::Optimization
