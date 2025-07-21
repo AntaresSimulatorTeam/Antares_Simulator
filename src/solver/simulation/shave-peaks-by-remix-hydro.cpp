@@ -264,7 +264,7 @@ std::vector<double> shavePeaksByRemixingHydro(std::vector<double>& HydroGen,
                                               const std::vector<double>& DTG_MRG,
                                               std::shared_ptr<Storage> storage)
 {
-    const std::vector<double> HydroGenInit = storage->generation();
+    const std::vector<double> storageGenInit = storage->generation();
     const std::vector<double> UnsupEinit = UnsupE;
 
     checkInput(DispatchGen, UnsupEinit, Spillage, DTG_MRG);
@@ -274,12 +274,12 @@ std::vector<double> shavePeaksByRemixingHydro(std::vector<double>& HydroGen,
 
     int loop = 1000;
     double top = *std::max_element(DispatchGen.begin(), DispatchGen.end())
-                 + *std::max_element(HydroGenInit.begin(), HydroGenInit.end())
+                 + *std::max_element(storageGenInit.begin(), storageGenInit.end())
                  + *std::max_element(UnsupEinit.begin(), UnsupEinit.end()) + 1;
 
-    const auto validHours = ValidHours(Spillage, DTG_MRG, HydroGenInit, UnsupEinit);
+    const auto validHours = ValidHours(Spillage, DTG_MRG, storageGenInit, UnsupEinit);
 
-    std::vector<double> TotalGen = updateTotalGen(DispatchGen, HydroGenInit);
+    std::vector<double> TotalGen = updateTotalGen(DispatchGen, storageGenInit);
 
     while (loop-- > 0)
     {
@@ -314,7 +314,7 @@ std::vector<double> shavePeaksByRemixingHydro(std::vector<double>& HydroGen,
                 {
                     HydroGen[hourPeak] -= delta;
                     HydroGen[hourBottom] += delta;
-                    UnsupE[hourPeak] = HydroGenInit[hourPeak] + UnsupEinit[hourPeak]
+                    UnsupE[hourPeak] = storageGenInit[hourPeak] + UnsupEinit[hourPeak]
                                        - HydroGen[hourPeak];
 
                     storage->update();
@@ -325,7 +325,7 @@ std::vector<double> shavePeaksByRemixingHydro(std::vector<double>& HydroGen,
                 triedPeak[hourPeak] = true;
             }
 
-            UnsupE[hourBottom] = HydroGenInit[hourBottom] + UnsupEinit[hourBottom]
+            UnsupE[hourBottom] = storageGenInit[hourBottom] + UnsupEinit[hourBottom]
                                  - HydroGen[hourBottom];
             if (delta > eps)
             {
