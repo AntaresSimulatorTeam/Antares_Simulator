@@ -1,5 +1,9 @@
 var NAVTREEINDEX54 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html":[8,0,0,18,4,0,2],
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#a1d2dfffc8dbf3e6b2debbac2abef063d":[8,0,0,18,4,0,2,0],
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#a8cd0653f9b095636f0e5217a394d3762":[8,0,0,18,4,0,2,1],
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#a92399f65baa263b4d2a01a75ff21c3b0":[8,0,0,18,4,0,2,4],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#aaadcd1fe54e5af2b9ca85dfdc84e3a30":[8,0,0,18,4,0,2,2],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#ae8243f6e44a2d7883fa25100f5315363":[8,0,0,18,4,0,2,3],
 "structAntares_1_1Solver_1_1Variable_1_1Areas_1_1Statistics.html":[8,0,0,18,4,8,0],
@@ -245,9 +249,5 @@ var NAVTREEINDEX54 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html":[8,0,0,18,4,4,74],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html#a44f62fefc94791bbf5fef297e66415c9":[8,0,0,18,4,4,74,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html#a780167a642bf5aa2c6300dfade007828":[8,0,0,18,4,4,74,4],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html#a9892d1ed37ca29747b62dc897a061747":[8,0,0,18,4,4,74,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html#a9a598b2dfa52b0e1ea9c2bdfd77a86f9":[8,0,0,18,4,4,74,3],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html#adc09543eb6b63a969bd71865ce10a7f0":[8,0,0,18,4,4,74,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html":[8,0,0,18,4,4,76],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html#a22d42613b62d39f9f21c62b093a447f0":[8,0,0,18,4,4,76,2]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html#a9892d1ed37ca29747b62dc897a061747":[8,0,0,18,4,4,74,2]
 };

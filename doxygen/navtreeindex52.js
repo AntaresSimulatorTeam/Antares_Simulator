@@ -1,5 +1,9 @@
 var NAVTREEINDEX52 =
 {
+"solver_2variable_2include_2antares_2solver_2variable_2commons_2links_2links_8h_source.html":[9,0,0,7,12,0,0,0,0,1,0,0],
+"solver_2variable_2include_2antares_2solver_2variable_2container_8h_source.html":[9,0,0,7,12,0,0,0,0,10],
+"solver_2variable_2include_2antares_2solver_2variable_2container_8hxx_source.html":[9,0,0,7,12,0,0,0,0,11],
+"solver_2variable_2include_2antares_2solver_2variable_2economy_2all_8h.html#a005042f761a476e46844d1dd486d074d":[7,0,0,25,5,4,131],
 "solver_2variable_2include_2antares_2solver_2variable_2economy_2all_8h.html#a33d9e91e2b55c44855f707b198b9378b":[7,0,0,25,5,4,130],
 "solver_2variable_2include_2antares_2solver_2variable_2economy_2all_8h.html#a5979547c7f2aadc59505525dfab798c3":[7,0,0,25,5,4,132],
 "solver_2variable_2include_2antares_2solver_2variable_2economy_2all_8h.html#aa4aad598d0e0f49745c15bbadccb78df":[7,0,0,25,5,4,127],
@@ -245,9 +249,5 @@ var NAVTREEINDEX52 =
 "structAntares_1_1Date_1_1Calendar_1_1Settings.html#a23f160f379ccae1da99a369db0959dc6":[8,0,0,5,2,0,2],
 "structAntares_1_1Date_1_1Calendar_1_1Settings.html#a576c127cbbe0448b583e186a8dabac1a":[8,0,0,5,2,0,1],
 "structAntares_1_1Date_1_1Calendar_1_1Settings.html#a74af88b90038e83fb25c558efa1d9178":[8,0,0,5,2,0,3],
-"structAntares_1_1Date_1_1Calendar_1_1Settings.html#a7fab86c6a9e2d7cd718e66af498fa662":[8,0,0,5,2,0,0],
-"structAntares_1_1Date_1_1DayInterval.html":[8,0,0,5,1],
-"structAntares_1_1Date_1_1DayInterval.html#a0dc9599f70b43803e74b1dca42748d03":[8,0,0,5,1,1],
-"structAntares_1_1Date_1_1DayInterval.html#a2d4af235f35e11feb8121cd64c6de06b":[8,0,0,5,1,3],
-"structAntares_1_1Date_1_1DayInterval.html#ab4108dc01e14e419434bf62dfaf98fb4":[8,0,0,5,1,0]
+"structAntares_1_1Date_1_1Calendar_1_1Settings.html#a7fab86c6a9e2d7cd718e66af498fa662":[8,0,0,5,2,0,0]
 };

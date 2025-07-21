@@ -1,5 +1,9 @@
 var NAVTREEINDEX47 =
 {
+"fatal-error_8h_source.html":[9,0,0,4,0,10,0,0,4],
+"file_8cpp.html#a2d0c92d569f739fb52bbf5e0b1b4fef2":[7,0,0,14,1],
+"file_8cpp.html#a752414a7e2eb33d25b41deeb4167d3c9":[7,0,0,14,2],
+"file_8h.html#a29b940cfba7d5fda23c8d4ec4e5bffb0":[7,0,0,14,3],
 "file_8h_source.html":[9,0,0,3,0,0,0,0],
 "file__content_8h_source.html":[9,0,0,4,0,3,0,0,0,1],
 "filejob_8inc_8hxx_source.html":[9,0,0,4,1,0],
@@ -44,8 +48,8 @@ var NAVTREEINDEX47 =
 "functions_enum.html":[8,3,4],
 "functions_eval.html":[8,3,5],
 "functions_f.html":[8,3,0,5],
-"functions_func.html":[8,3,1],
 "functions_func.html":[8,3,1,0],
+"functions_func.html":[8,3,1],
 "functions_func_b.html":[8,3,1,1],
 "functions_func_c.html":[8,3,1,2],
 "functions_func_d.html":[8,3,1,3],
@@ -104,8 +108,8 @@ var NAVTREEINDEX47 =
 "functions_type_v.html":[8,3,3,15],
 "functions_u.html":[8,3,0,20],
 "functions_v.html":[8,3,0,21],
-"functions_vars.html":[8,3,2],
 "functions_vars.html":[8,3,2,0],
+"functions_vars.html":[8,3,2],
 "functions_vars_b.html":[8,3,2,1],
 "functions_vars_c.html":[8,3,2,2],
 "functions_vars_d.html":[8,3,2,3],
@@ -245,9 +249,5 @@ var NAVTREEINDEX47 =
 "htmllistbox_2item_2item_8cpp.html#abaecf0ac46c012bc6e727972050dae28":[7,0,0,3,2,1,11],
 "htmllistbox_2item_2item_8h_source.html":[9,0,0,11,2,1,1,2,1,6],
 "hurdleCosts_8h_source.html":[9,0,0,7,12,0,0,0,0,2,1,6],
-"hurdles-cost_8h_source.html":[9,0,0,11,0,0,0,2,4],
-"hydroCost_8h_source.html":[9,0,0,7,12,0,0,0,0,2,9],
-"hydroLevelsData_8h.html#a0a410d7a47fdae804e85708ce15a4dfd":[7,0,0,6,3,25],
-"hydroLevelsData_8h.html#a0cdd801ac45d582e9ee10dea4de0fb2f":[7,0,0,6,3,19],
-"hydroLevelsData_8h_source.html":[9,0,0,4,0,25,0,0,0,8,2]
+"hurdles-cost_8h_source.html":[9,0,0,11,0,0,0,2,4]
 };
