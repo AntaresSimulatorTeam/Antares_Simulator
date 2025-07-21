@@ -31,17 +31,17 @@ static bool operator>=(const std::vector<double>& v, const double c)
     return std::ranges::all_of(v, [&c](double e) { return e >= c; });
 }
 
-HydroStorage::HydroStorage(std::vector<double>& generation,
-                           std::vector<double>& unsupE,
-                           const std::vector<double>& Pmax,
-                           const std::vector<double>& Pmin,
-                           const std::vector<double>& inflows,
-                           const std::vector<double>& overflow,
-                           const std::vector<double>& pump,
-                           const double& initLevel,
-                           const double& capacity,
-                           const double& pumpEfficiency,
-                           const bool& reservoirManagement):
+HydroForRemix::HydroForRemix(std::vector<double>& generation,
+                             std::vector<double>& unsupE,
+                             const std::vector<double>& Pmax,
+                             const std::vector<double>& Pmin,
+                             const std::vector<double>& inflows,
+                             const std::vector<double>& overflow,
+                             const std::vector<double>& pump,
+                             const double& initLevel,
+                             const double& capacity,
+                             const double& pumpEfficiency,
+                             const bool& reservoirManagement):
     generation_(generation),
     unsupE_(unsupE),
     pmax_(Pmax),
@@ -57,7 +57,7 @@ HydroStorage::HydroStorage(std::vector<double>& generation,
     levels_.assign(generation.size(), 0.);
 }
 
-double HydroStorage::maxExchange(unsigned hourMax, unsigned hourMin)
+double HydroForRemix::maxExchange(unsigned hourMax, unsigned hourMin)
 {
     // max slice we can take from hydro generation, at an hour when the total
     // production reaches a max.
@@ -89,7 +89,7 @@ double HydroStorage::maxExchange(unsigned hourMax, unsigned hourMin)
     return std::min(boundAtMax, boundAtMin);
 }
 
-void HydroStorage::checkInput(size_t size)
+void HydroForRemix::checkInput(size_t size)
 {
     std::vector<size_t> sizes = {generation_.size(), pmin_.size(), pmax_.size()};
 
@@ -123,7 +123,7 @@ void HydroStorage::checkInput(size_t size)
     }
 }
 
-void HydroStorage::update()
+void HydroForRemix::update()
 {
     if (!reservoirManagement_)
     {
@@ -144,12 +144,12 @@ void HydroStorage::update()
     }
 }
 
-std::vector<double>& HydroStorage::generation()
+std::vector<double>& HydroForRemix::generation()
 {
     return generation_;
 }
 
-std::vector<double> HydroStorage::levels()
+std::vector<double> HydroForRemix::levels()
 {
     return levels_;
 }
@@ -251,14 +251,14 @@ void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
                                     const std::vector<double>& DispatchGen,
                                     const std::vector<double>& Spillage,
                                     const std::vector<double>& DTG_MRG,
-                                    std::shared_ptr<Storage> storage)
+                                    std::shared_ptr<StorageForRemix> storage)
 {
     const std::vector<double> storageGenInit = storage->generation();
     const std::vector<double> UnsupEinit = UnsupE;
 
     checkInput(DispatchGen, UnsupEinit, Spillage, DTG_MRG);
-
     storage->checkInput(DispatchGen.size());
+
     storage->update();
 
     int loop = 1000;

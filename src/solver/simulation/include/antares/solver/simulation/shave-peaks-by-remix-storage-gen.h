@@ -7,7 +7,7 @@
 namespace Antares::Solver::Simulation
 {
 
-class Storage
+class StorageForRemix
 {
 public:
     virtual double maxExchange(unsigned hourPeak, unsigned hourBottom) = 0;
@@ -18,20 +18,20 @@ public:
     virtual std::vector<double> levels() = 0;
 };
 
-class HydroStorage: public Storage
+class HydroForRemix: public StorageForRemix
 {
 public:
-    HydroStorage(std::vector<double>& generation,
-                 std::vector<double>& unsupE,
-                 const std::vector<double>& Pmax,
-                 const std::vector<double>& Pmin,
-                 const std::vector<double>& inflows,
-                 const std::vector<double>& overflow,
-                 const std::vector<double>& pump,
-                 const double& initLevel,
-                 const double& capacity,
-                 const double& pumpEfficiency,
-                 const bool& reservoirManagement);
+    HydroForRemix(std::vector<double>& generation,
+                  std::vector<double>& unsupE,
+                  const std::vector<double>& Pmax,
+                  const std::vector<double>& Pmin,
+                  const std::vector<double>& inflows,
+                  const std::vector<double>& overflow,
+                  const std::vector<double>& pump,
+                  const double& initLevel,
+                  const double& capacity,
+                  const double& pumpEfficiency,
+                  const bool& reservoirManagement);
 
     double maxExchange(unsigned hourPeak, unsigned hourBottom) override;
     void checkInput(size_t size) override;
@@ -59,6 +59,6 @@ void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
                                     const std::vector<double>& DispatchGen,
                                     const std::vector<double>& Spillage,
                                     const std::vector<double>& DTG_MRG,
-                                    std::shared_ptr<Storage> storage);
+                                    std::shared_ptr<StorageForRemix> storage);
 
 } // namespace Antares::Solver::Simulation
