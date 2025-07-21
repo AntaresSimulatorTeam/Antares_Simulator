@@ -90,28 +90,37 @@ double HydroStorage::computeBound(unsigned hourPeak, unsigned hourBottom)
     return std::min(boundAtPeak, boundAtBottom);
 }
 
-void HydroStorage::checkInput()
+void HydroStorage::checkInput(size_t size)
 {
-    if (!reservoirManagement_)
+    std::vector<size_t> sizes = {generation_.size(), pmin_.size(), pmax_.size()};
+
+    if (reservoirManagement_)
     {
-        return;
+        if (initLevel_ >= capacity_ + LEVEL_TOLERANCE)
+        {
+            throw std::invalid_argument(error_msg_start + "initial level > reservoir capacity");
+        }
+
+        sizes.push_back(inflows_.size());
+        sizes.push_back(overflow_.size());
+        sizes.push_back(pump_.size());
     }
 
-    if (initLevel_ >= capacity_ + LEVEL_TOLERANCE)
-    {
-        throw std::invalid_argument(error_msg_start + "initial level > reservoir capacity");
-    }
-
-    std::vector<size_t> sizes = {inflows_.size(), overflow_.size(), pump_.size()};
     if (!std::ranges::all_of(sizes, [&sizes](const size_t s) { return s == sizes.front(); }))
     {
         throw std::invalid_argument(error_msg_start + "arrays of different sizes");
     }
 
-    if (!(levels_ <= capacity_ + LEVEL_TOLERANCE) || !(levels_ >= -LEVEL_TOLERANCE))
+    if (!(generation_ <= pmax_))
     {
         throw std::invalid_argument(error_msg_start
-                                    + "levels computed from input don't respect reservoir bounds");
+                                    + "Hydro generation not smaller than Pmax everywhere");
+    }
+
+    if (!(pmin_ <= generation_))
+    {
+        throw std::invalid_argument(error_msg_start
+                                    + "Hydro generation not greater than Pmin everywhere");
     }
 }
 
@@ -127,6 +136,12 @@ void HydroStorage::update()
     {
         levels_[h] = levels_[h - 1] + inflows_[h] - overflow_[h] + pumpEff_ * pump_[h]
                      - generation_[h];
+    }
+
+    if (!(levels_ <= capacity_ + LEVEL_TOLERANCE) || !(levels_ >= -LEVEL_TOLERANCE))
+    {
+        throw std::invalid_argument(error_msg_start
+                                    + "levels computed from input don't respect reservoir bounds");
     }
 }
 
@@ -193,10 +208,7 @@ static void checkInput(const std::vector<double>& DispatchGen,
 {
     // Arrays sizes must be identical
     std::vector<size_t> sizes = {DispatchGen.size(),
-                                 HydroGen.size(),
                                  UnsupE.size(),
-                                 HydroPmax.size(),
-                                 HydroPmin.size(),
                                  Spillage.size(),
                                  DTG_MRG.size()};
 
@@ -208,18 +220,6 @@ static void checkInput(const std::vector<double>& DispatchGen,
     if (!DispatchGen.size())
     {
         throw std::invalid_argument(error_msg_start + "all arrays of sizes 0");
-    }
-
-    if (!(HydroGen <= HydroPmax))
-    {
-        throw std::invalid_argument(error_msg_start
-                                    + "Hydro generation not smaller than Pmax everywhere");
-    }
-
-    if (!(HydroPmin <= HydroGen))
-    {
-        throw std::invalid_argument(error_msg_start
-                                    + "Hydro generation not greater than Pmin everywhere");
     }
 }
 
@@ -272,8 +272,8 @@ std::vector<double> shavePeaksByRemixingHydro(std::vector<double>& HydroGen,
 
     checkInput(DispatchGen, HydroGenInit, UnsupEinit, HydroPmax, HydroPmin, Spillage, DTG_MRG);
 
+    storage->checkInput(DispatchGen.size());
     storage->update();
-    storage->checkInput();
 
     int loop = 1000;
     double top = *std::max_element(DispatchGen.begin(), DispatchGen.end())

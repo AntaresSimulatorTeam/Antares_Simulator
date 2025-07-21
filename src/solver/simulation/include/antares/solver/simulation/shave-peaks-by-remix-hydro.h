@@ -11,7 +11,10 @@ class Storage
 {
 public:
     virtual double computeBound(unsigned hourPeak, unsigned hourBottom) = 0;
-    virtual void checkInput() = 0; // should be private at some point, and called in constructor.
+
+    // should be private at some point, and called in constructor.
+    virtual void checkInput(size_t size) = 0;
+
     virtual void update() = 0;
     virtual std::vector<double>& generation() = 0;
     virtual std::vector<double> levels() = 0;
@@ -33,7 +36,7 @@ public:
                  const bool& reservoirManagement);
 
     double computeBound(unsigned hourPeak, unsigned hourBottom) override;
-    void checkInput() override;
+    void checkInput(size_t size) override;
     void update() override;
     std::vector<double>& generation() override;
     std::vector<double> levels() override;
