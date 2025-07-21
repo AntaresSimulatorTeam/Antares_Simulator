@@ -34,8 +34,6 @@ set(SRC_STUDY_SCENARIO_BUILDER
         include/antares/study/scenario-builder/ShortTermAdditionalConstraintsTSNumberData.h
         scenario-builder/ShortTermAdditionalConstraintsTSNumberData.cpp
         include/antares/study/scenario-builder/applyToMatrix.hxx
-        include/antares/study/scenario-builder/ShortTermTSNumberData.h
-        scenario-builder/ShortTermTSNumberData.cpp
 )
 source_group("study\\scenario builder" FILES ${SRC_MATRIX})
 
