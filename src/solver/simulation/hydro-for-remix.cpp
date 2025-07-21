@@ -39,27 +39,28 @@ HydroForRemix::HydroForRemix(std::vector<double>& generation,
 
 double HydroForRemix::maxExchange(unsigned hourMax, unsigned hourMin)
 {
-    // max slice we can take from hydro generation, at an hour when the total
+    // Max slice we can take from hydro generation, at an hour when the total
     // production reaches a max.
     double boundAtMax = std::numeric_limits<double>::max();
-    // max slice we can add to hydro generation, at an hour when the total
+    // Max slice we can add to hydro generation, at an hour when the total
     // production reaches a min.
     double boundAtMin = std::numeric_limits<double>::max();
 
     if (reservoirManagement_)
     {
-        unsigned minHour = std::min(hourMin, hourMax);
-        unsigned maxHour = std::max(hourMin, hourMax);
-        std::span<double> intermediate_level(levels_.begin() + minHour, levels_.begin() + maxHour);
+        unsigned smallestHour = std::min(hourMin, hourMax);
+        unsigned greatestHour = std::max(hourMin, hourMax);
+        std::span<double> level_subset(levels_.begin() + smallestHour,
+                                       levels_.begin() + greatestHour);
 
         if (hourMin < hourMax)
         {
             boundAtMax = capacity_;
-            boundAtMin = *std::ranges::min_element(intermediate_level);
+            boundAtMin = *std::ranges::min_element(level_subset);
         }
         else
         {
-            boundAtMax = capacity_ - *std::ranges::max_element(intermediate_level);
+            boundAtMax = capacity_ - *std::ranges::max_element(level_subset);
             boundAtMin = capacity_;
         }
     }
@@ -79,10 +80,8 @@ void HydroForRemix::checkInput(size_t size)
         {
             throw std::invalid_argument(error_msg_start + "initial level > reservoir capacity");
         }
-
-        sizes.push_back(inflows_.size());
-        sizes.push_back(overflow_.size());
-        sizes.push_back(pump_.size());
+        std::vector<size_t> toAppend = {inflows_.size(), overflow_.size(), pump_.size()};
+        std::ranges::copy(sizes, std::back_inserter(toAppend));
     }
 
     if (!std::ranges::all_of(sizes, [&sizes](const size_t s) { return s == sizes.front(); }))

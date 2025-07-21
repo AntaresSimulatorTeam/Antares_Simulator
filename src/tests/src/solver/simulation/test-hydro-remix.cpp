@@ -78,7 +78,7 @@ BOOST_FIXTURE_TEST_CASE(all_input_arrays_of_size_0__exception_raised, InputFixtu
     BOOST_CHECK_EXCEPTION(
       shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix),
       std::invalid_argument,
-      checkMessage("Remix hydro input : all arrays of sizes 0"));
+      checkMessage("Remix storage input : all arrays of sizes 0"));
 }
 
 BOOST_FIXTURE_TEST_CASE(Hydro_gen_not_smaller_than_pmax__exception_raised, InputFixture<5>)

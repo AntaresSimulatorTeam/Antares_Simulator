@@ -89,10 +89,10 @@ static std::vector<double> updateTotalGen(const std::vector<double>& DispatchGen
     return totalGen;
 }
 
-std::vector<bool> ValidHours(const std::vector<double>& Spillage,
-                             const std::vector<double>& DTG_MRG,
-                             const std::vector<double>& StorageGen,
-                             const std::vector<double>& UnsupE)
+static std::vector<bool> ValidHours(const std::vector<double>& Spillage,
+                                    const std::vector<double>& DTG_MRG,
+                                    const std::vector<double>& StorageGen,
+                                    const std::vector<double>& UnsupE)
 {
     std::vector<bool> validHours(Spillage.size(), false);
     for (unsigned h = 0; h < validHours.size(); h++)
