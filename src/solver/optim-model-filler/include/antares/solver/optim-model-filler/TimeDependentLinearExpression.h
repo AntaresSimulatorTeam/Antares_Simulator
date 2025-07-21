@@ -47,21 +47,8 @@ public:
     explicit TimeDependentLinearExpression(
       const TimeDependentLinearExpression& timeDependentLinearExpression);
 
-    // Move constructor
-    TimeDependentLinearExpression(TimeDependentLinearExpression&& other) noexcept:
-        linearExpressions_(std::move(other.linearExpressions_))
-    {
-    }
-
-    // Move assignment operator
-    TimeDependentLinearExpression& operator=(TimeDependentLinearExpression&& other) noexcept
-    {
-        if (this != &other)
-        {
-            linearExpressions_ = std::move(other.linearExpressions_);
-        }
-        return *this;
-    }
+    TimeDependentLinearExpression(TimeDependentLinearExpression&& other) = default;
+    TimeDependentLinearExpression& operator=(TimeDependentLinearExpression&& other) = default;
 
     /// Sum two linear expressions
     TimeDependentLinearExpression operator+(const TimeDependentLinearExpression& other) const;
