@@ -1,5 +1,7 @@
 var NAVTREEINDEX54 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#aaadcd1fe54e5af2b9ca85dfdc84e3a30":[8,0,0,18,4,0,2,2],
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#ae8243f6e44a2d7883fa25100f5315363":[8,0,0,18,4,0,2,3],
 "structAntares_1_1Solver_1_1Variable_1_1Areas_1_1Statistics.html":[8,0,0,18,4,8,0],
 "structAntares_1_1Solver_1_1Variable_1_1BindingConstraints_1_1Statistics.html":[8,0,0,18,4,10,0],
 "structAntares_1_1Solver_1_1Variable_1_1Category_1_1NextLevel.html":[8,0,0,18,4,1,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX54 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html#a9a598b2dfa52b0e1ea9c2bdfd77a86f9":[8,0,0,18,4,4,74,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html#adc09543eb6b63a969bd71865ce10a7f0":[8,0,0,18,4,4,74,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html":[8,0,0,18,4,4,76],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html#a22d42613b62d39f9f21c62b093a447f0":[8,0,0,18,4,4,76,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html#a302633664a5a202db83a41b76cdf786c":[8,0,0,18,4,4,76,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html#a8bec9973b19163101b17800656db563e":[8,0,0,18,4,4,76,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html#a22d42613b62d39f9f21c62b093a447f0":[8,0,0,18,4,4,76,2]
 };

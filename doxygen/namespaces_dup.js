@@ -2675,6 +2675,7 @@ var namespaces_dup =
       [ "check_hydro_production_value", "solver__steps_8py.html#aef25c12fe624e896b6dc5acf3cee915c", null ],
       [ "check_hydro_pumping_value", "solver__steps_8py.html#a754d3942eb20316fe0f3c91e564b93d8", null ],
       [ "check_lold_duration", "solver__steps_8py.html#a7696c1bc76e2ff40a4c0d748f3cadeae", null ],
+      [ "check_lold_weekly_duration", "solver__steps_8py.html#a0d6066d93b1d91553039b66130ff5e09", null ],
       [ "check_no_mingen_column_for_cluster", "solver__steps_8py.html#aa281a354ead0677f44051587f789b3a2", null ],
       [ "check_np_cost_for_specific_year", "solver__steps_8py.html#aa91257aac7aef80384c16fa65ec8fd43", null ],
       [ "check_pmin_pmax", "solver__steps_8py.html#a26a7735f18a74d8dc880a4ecf0f78cd8", null ],

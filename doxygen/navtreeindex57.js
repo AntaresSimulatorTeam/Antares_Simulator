@@ -1,5 +1,7 @@
 var NAVTREEINDEX57 =
 {
+"structAntares_1_1Window_1_1Inspector_1_1PStudyYears.html":[8,0,0,23,1,18],
+"structAntares_1_1Window_1_1Inspector_1_1PStudyYears.html#ae3d9922f2b2f1031c1a1dac66258976a":[8,0,0,23,1,18,0],
 "structAntares_1_1Window_1_1Inspector_1_1Unique.html":[8,0,0,23,1,0],
 "structAntares_1_1Window_1_1SortColor.html":[8,0,0,23,31],
 "structAntares_1_1Window_1_1SortColor.html#afd57fe258750985ef56db5bbc777f6be":[8,0,0,23,31,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX57 =
 "structCsrFlowDissociationData.html":[8,0,91],
 "structCsrFlowDissociationData.html#a265585c099ccfd554b8a3fcccc83a012":[8,0,91,1],
 "structCsrFlowDissociationData.html#a302cad09aaa374a645ac3040d92e3370":[8,0,91,3],
-"structCsrFlowDissociationData.html#a33d49b1768bc4ccb9aba4337f4622650":[8,0,91,6],
-"structCsrFlowDissociationData.html#a437cbc94b012a9acb58a787f6eb0dea6":[8,0,91,2],
-"structCsrFlowDissociationData.html#a99b40eb333618c461b87c125e2045201":[8,0,91,0]
+"structCsrFlowDissociationData.html#a33d49b1768bc4ccb9aba4337f4622650":[8,0,91,6]
 };

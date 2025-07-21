@@ -10,6 +10,7 @@ var classsolver__output__handler_1_1solver__output__handler =
     [ "get_hydro_production_mwh", "classsolver__output__handler_1_1solver__output__handler.html#a69bacabe308d035f91dfb961d961350a", null ],
     [ "get_hydro_pumping_mwh", "classsolver__output__handler_1_1solver__output__handler.html#a8e89193d6bf918942ca8a71e30d165b0", null ],
     [ "get_loss_of_load_duration_h", "classsolver__output__handler_1_1solver__output__handler.html#a2a455bfa6f7a553909145147e0369d4c", null ],
+    [ "get_loss_of_load_weekly_duration_h", "classsolver__output__handler_1_1solver__output__handler.html#a8660765459298615c9e6fe7cd4d23f1a", null ],
     [ "get_non_proportional_cost", "classsolver__output__handler_1_1solver__output__handler.html#afec988d40cfc048c84c3b2102ca9b2d0", null ],
     [ "get_simu_time", "classsolver__output__handler_1_1solver__output__handler.html#a7319c20c5a74833cc09615468fda3105", null ],
     [ "get_specific_value", "classsolver__output__handler_1_1solver__output__handler.html#a072885a78978daa3fe848158d1109b78", null ],
