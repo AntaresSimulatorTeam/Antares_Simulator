@@ -21,25 +21,27 @@
 #ifndef __ANTARES_APPLICATION_WINDOW_CONSTRAINTSBUILDER_H__
 #define __ANTARES_APPLICATION_WINDOW_CONSTRAINTSBUILDER_H__
 
-#include <wx/dialog.h>
-#include <wx/sizer.h>
+#include <memory>
+#include <ui/common/component/spotlight.h>
 #include <wx/checkbox.h>
+#include <wx/dialog.h>
 #include <wx/radiobut.h>
+#include <wx/sizer.h>
 #include <wx/timer.h>
+
+#include <yuni/core/event.h>
+#include <yuni/thread/thread.h>
+
+#include "antares/solver/constraints-builder/cbuilder.h"
+
 #include "../../toolbox/components/datagrid/component.h"
 #include "../../toolbox/components/datagrid/renderer/constraintsbuilder/links.h"
-#include "antares/solver/constraints-builder/cbuilder.h"
-#include <ui/common/component/spotlight.h>
-#include <yuni/thread/thread.h>
-#include <yuni/core/event.h>
-
-#include <memory>
 
 namespace Antares
 {
 namespace Window
 {
-class ConstraintsBuilderWizard final : public wxDialog
+class ConstraintsBuilderWizard final: public wxDialog
 {
 public:
     //! File mapping
@@ -58,8 +60,7 @@ public:
         mnIDAutoClean,
         mnIDUpdateInfo,
         mnIDUpdateFileMapping,
-        mnIDGridUpdate,
-        mnIDCanRunAnalyzer,
+        mnIDGridUpdate
     };
 
 public:

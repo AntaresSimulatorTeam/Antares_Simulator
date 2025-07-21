@@ -40,6 +40,7 @@ bool ntcTSNumberData::reset(const Study& study)
     return true;
 }
 
+#ifdef BUILD_UI
 void ntcTSNumberData::saveToINIFile(const Study& /* study */, Yuni::IO::File::Stream& file) const
 {
     if (!pArea)
@@ -79,6 +80,7 @@ void ntcTSNumberData::saveToINIFile(const Study& /* study */, Yuni::IO::File::St
         }
     }
 }
+#endif
 
 void ntcTSNumberData::setTSnumber(const Antares::Data::AreaLink* link, const uint year, uint value)
 {

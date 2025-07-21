@@ -7,7 +7,7 @@ set(ANTARES_VERSION_REVISION  0)
 
 # Beta release
 set(ANTARES_BETA 0)
-set(ANTARES_RC 3)
+set(ANTARES_RC 4)
 
 set(ANTARES_VERSION_YEAR      2025)
 
@@ -263,19 +263,18 @@ add_subdirectory("ext/yuni/src")
 OMESSAGE("") # empty line
 
 # Sub Directories
+if(BUILD_UI)
+    add_compile_definitions(BUILD_UI)
+	add_subdirectory(ui)		#all antares ui libs + antares simulator
+endif()
 add_subdirectory(api)
 add_subdirectory(io)
 add_subdirectory(libs) 		#antares-core fswalker
-
-if(BUILD_UI)
-	add_subdirectory(ui)		#all antares ui libs + antares simulator
-endif()
 
 add_subdirectory(expressions)   #modeler expressions (AST)
 add_subdirectory(optimisation)  #optimisation APIs
 add_subdirectory(study)	        #antares study model
 add_subdirectory(solver)	    #antares solver and all associated libs
-add_subdirectory(analyzer)      #antares analyser
 add_subdirectory(modeler)       #antares modeler
 
 # Tools

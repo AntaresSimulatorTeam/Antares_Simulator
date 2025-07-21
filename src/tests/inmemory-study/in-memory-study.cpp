@@ -50,6 +50,16 @@ std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& 
     return cluster;
 }
 
+Antares::Data::ShortTermStorage::STStorageCluster* addSTSToArea(Area* area,
+                                                                const std::string& stsName)
+{
+    Antares::Data::ShortTermStorage::STStorageCluster sts;
+    sts.properties.name = stsName;
+    auto& storages = area->shortTermStorage.storagesByIndex;
+    storages.push_back(sts);
+    return &storages.back();
+}
+
 void addScratchpadToEachArea(Study& study)
 {
     for (auto& [_, area]: study.areas)
@@ -80,7 +90,7 @@ TimeSeriesConfigurer& TimeSeriesConfigurer::fillColumnWith(unsigned column,
     return *this;
 }
 
-ThermalClusterConfig::ThermalClusterConfig(ThermalCluster* cluster):
+ThermalClusterConfig::ThermalClusterConfig(std::shared_ptr<ThermalCluster> cluster):
     cluster_(cluster),
     tsAvailablePowerConfig_(cluster_->series.timeSeries)
 {
@@ -118,6 +128,92 @@ ThermalClusterConfig& ThermalClusterConfig::setAvailablePower(unsigned column, d
 }
 
 // -------------------------------
+// Short-term storage
+// -------------------------------
+ShortTermStorageConfig::ShortTermStorageConfig(
+  Antares::Data::ShortTermStorage::STStorageCluster& storage):
+    storage(storage),
+    constraintConfig(storage)
+{
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::setInjectionNominalCapacity(
+  double injectionNominalCapacity)
+{
+    storage.properties.injectionNominalCapacity = injectionNominalCapacity;
+    return *this;
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::setWithdrawalNominalCapacity(
+  double withdrawalNominalCapacity)
+{
+    storage.properties.withdrawalNominalCapacity = withdrawalNominalCapacity;
+    return *this;
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::setReservoirCapacity(double reservoirCapacity)
+{
+    storage.properties.reservoirCapacity = reservoirCapacity;
+    return *this;
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::setInitialLevel(double initialLevel)
+{
+    storage.properties.initialLevel = initialLevel;
+    return *this;
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::setInitialLevelOptim(bool initialLevelOptim)
+{
+    storage.properties.initialLevelOptim = initialLevelOptim;
+    return *this;
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::setInjectionEfficiency(double injectionEfficiency)
+{
+    storage.properties.injectionEfficiency = injectionEfficiency;
+    return *this;
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::setWithdrawalEfficiency(double withdrawalEfficiency)
+{
+    storage.properties.withdrawalEfficiency = withdrawalEfficiency;
+    return *this;
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::setGroupName(const std::string& groupName)
+{
+    storage.properties.groupName = groupName;
+    return *this;
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::setName(const std::string& name)
+{
+    storage.properties.name = name;
+    return *this;
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::setPenalizeVariationWithdrawal(
+  bool penalizeVariationWithdrawal)
+{
+    storage.properties.penalizeVariationWithdrawal = penalizeVariationWithdrawal;
+    return *this;
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::setPenalizeVariationInjection(
+  bool penalizeVariationInjection)
+{
+    storage.properties.penalizeVariationInjection = penalizeVariationInjection;
+    return *this;
+}
+
+ShortTermStorageConfig& ShortTermStorageConfig::ShortTermStorageConfig::setEnabled(bool enabled)
+{
+    storage.properties.enabled = enabled;
+    return *this;
+}
+
+// -------------------------------
 // Simulation results retrieval
 // -------------------------------
 averageResults OutputRetriever::overallCost(Area* area)
@@ -131,6 +227,13 @@ averageResults OutputRetriever::levelForSTSgroup(Area* area, unsigned groupNb)
     auto result = retrieveAreaResults<Variable::Economy::VCardSTSbyGroup>(area);
     unsigned levelIndex = groupNb * 3 + 2;
     return result[area->index][levelIndex].avgdata;
+}
+
+averageResults OutputRetriever::withdrawalForSTSgroup(Area* area, unsigned groupNb)
+{
+    auto result = retrieveAreaResults<Variable::Economy::VCardSTSbyGroup>(area);
+    unsigned withdrawalIndex = groupNb * 3 + 1;
+    return result[area->index][withdrawalIndex].avgdata;
 }
 
 averageResults OutputRetriever::load(Area* area)
@@ -188,6 +291,45 @@ ScenarioBuilderRule::ScenarioBuilderRule(Study& study)
 }
 
 // =====================
+// Simulation observer
+// =====================
+void TestingSimulationObserver::notifyHebdoProblem(const PROBLEME_HEBDO& problemeHebdo,
+                                                   int optimizationNumber,
+                                                   std::string_view name)
+{
+    auto* pb = problemeHebdo.ProblemeAResoudre.get();
+    std::string nameStr(name.begin(), name.end());
+    auto& toInsert = problems[std::make_pair(optimizationNumber, nameStr)];
+
+    // Variables
+    for (int varIdx = 0; varIdx < pb->NombreDeVariables; varIdx++)
+    {
+        const std::string& varName = pb->NomDesVariables[varIdx];
+        auto& insertedVariable = toInsert.variables[varName];
+        insertedVariable = {.Xmin = pb->Xmin[varIdx],
+                            .Xmax = pb->Xmax[varIdx],
+                            .objectiveCoefficient = pb->CoutLineaire[varIdx]};
+    }
+
+    // Constraints
+    for (int ctIdx = 0; ctIdx < pb->NombreDeContraintes; ctIdx++)
+    {
+        const std::string& ctName = pb->NomDesContraintes[ctIdx];
+        auto& insertedConstraint = toInsert.constraints[ctName];
+        int debutLigne = pb->IndicesDebutDeLigne[ctIdx];
+        for (int coefIdx = 0; coefIdx < pb->NombreDeTermesDesLignes[ctIdx]; ++coefIdx)
+        {
+            int pos = debutLigne + coefIdx;
+            int varIdx = pb->IndicesColonnes[pos];
+            const std::string& varName = pb->NomDesVariables[varIdx];
+            insertedConstraint.coefficients[varName] = pb->CoefficientsDeLaMatriceDesContraintes
+                                                         [pos];
+            insertedConstraint.rhs = pb->SecondMembre[ctIdx];
+        }
+    }
+}
+
+// =====================
 // Simulation handler
 // =====================
 
@@ -206,14 +348,13 @@ void SimulationHandler::create()
 // =========================
 // Basic study builder
 // =========================
-StudyBuilder::StudyBuilder()
+StudyBuilder::StudyBuilder():
+    study(std::make_unique<Study>(true)),
+    simulation(*study)
 {
     // Make logs shrink to errors (and higher) only
     logs.verbosityLevel = Logs::Verbosity::Error::level;
-
-    study = std::make_unique<Study>(true);
-    simulation = std::make_shared<SimulationHandler>(*study);
-
+    study->parameters.namedProblems = true;
     initializeStudy(study.get());
 }
 

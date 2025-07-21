@@ -40,6 +40,7 @@ std::string RenewableClusterList::typeID() const
     return "renewables";
 }
 
+#ifdef BUILD_UI
 bool RenewableClusterList::saveToFolder(const AnyString& folder) const
 {
     // Make sure the folder is created
@@ -95,6 +96,7 @@ bool RenewableClusterList::saveToFolder(const AnyString& folder) const
 
     return true;
 }
+#endif
 
 static bool ClusterLoadFromProperty(RenewableCluster& cluster, const IniFile::Property* p)
 {

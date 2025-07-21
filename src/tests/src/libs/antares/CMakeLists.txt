@@ -6,6 +6,7 @@ add_subdirectory(inifile)
 
 add_subdirectory(yaml-parser)
 add_subdirectory(antlr4-interface)
+add_subdirectory(scenarioBuilderExpression)
 
 set(src_libs_antares "${CMAKE_SOURCE_DIR}/libs/antares")
 

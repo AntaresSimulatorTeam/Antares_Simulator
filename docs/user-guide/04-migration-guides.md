@@ -21,6 +21,54 @@ The following properties were removed from **settings/generaldata.ini**.
 If the user provides a value for key refreshtimeseries the simulation will fail with a warning.
 Values for the refresh intervals will be ignored.
 
+#### Thermal and renewable clusters groups
+
+Thermal and renewable groups in input are now "dynamic": group names are no longer fixed by code, user is free to define these groups.
+The default group name is "OTHER" for both types of clusters.
+Adding `DISPATCH. GEN.` and `RENEWABLE GEN.` in the thematic trimming section allows to enable/disable variables for all groups.
+
+In **settings/generaldata.ini**, in section `variables selection`, the following variables were removed:
+
+- NUCLEAR
+- LIGNITE
+- COAL
+- BATTERY
+- GAS
+- OIL
+- MIX. FUEL
+- MISC. DTG
+- MISC. DTG 2
+- MISC. DTG 3
+- MISC. DTG 4
+
+They're replaced by the dynamic variable `DISPATCH. GEN.`
+
+The following variables were removed:
+
+- WIND OFFSHORE
+- WIND ONSHORE
+- SOLAR CONCRT.
+- SOLAR PV
+- SOLAR ROOFT
+- RENW. 1
+- RENW. 2
+- RENW. 3
+- RENW. 4
+
+They're replaced by the dynamic variable `RENEWABLE GEN.`
+
+####  Short term storage / scenario-builder
+
+For short-term storage inflows, the format is as follows
+```
+sts,area,year,storage = TS number
+```
+
+For short-term storage additional constraints, the format is
+```
+sta,area,year,storage,constraint = TS number
+```
+
 ## v9.2.0
 
 ### Input

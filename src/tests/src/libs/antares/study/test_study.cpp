@@ -55,6 +55,7 @@ BOOST_AUTO_TEST_CASE(area_add)
     BOOST_CHECK_EQUAL(areaA->id, "a");
 }
 
+#ifdef BUILD_UI
 BOOST_FIXTURE_TEST_CASE(area_rename, OneAreaStudy)
 {
     BOOST_CHECK(study->areaRename(areaA, "B"));
@@ -68,6 +69,7 @@ BOOST_FIXTURE_TEST_CASE(area_delete, OneAreaStudy)
     BOOST_CHECK(study->areaDelete(areaA));
     BOOST_CHECK(study->areas.empty());
 }
+#endif
 
 BOOST_AUTO_TEST_SUITE_END() // areas
 
@@ -183,12 +185,14 @@ struct ThermalClusterStudy: public OneAreaStudy
     ThermalCluster* cluster;
 };
 
+#ifdef BUILD_UI
 BOOST_FIXTURE_TEST_CASE(thermal_cluster_rename, ThermalClusterStudy)
 {
     BOOST_CHECK(study->clusterRename(cluster, "Renamed"));
     BOOST_CHECK_EQUAL(cluster->name(), "Renamed");
     BOOST_CHECK_EQUAL(cluster->id(), "renamed");
 }
+#endif // BUILD_UI
 
 BOOST_FIXTURE_TEST_CASE(thermal_cluster_delete, ThermalClusterStudy)
 {
@@ -229,6 +233,56 @@ BOOST_FIXTURE_TEST_CASE(WithForceNoGenOptionTimeSeriesNotGeneratedForReverseSpin
     }
 }
 
+BOOST_FIXTURE_TEST_CASE(thermal_integrity, ThermalClusterStudy)
+{
+    cluster->parentArea = nullptr;
+    BOOST_CHECK(!cluster->integrityCheck());
+    cluster->parentArea = areaA;
+
+    cluster->marketBidCost = std::nan("1");
+    BOOST_CHECK(!cluster->integrityCheck());
+    cluster->marketBidCost = 0.0;
+
+    cluster->marginalCost = std::nan("1");
+    BOOST_CHECK(!cluster->integrityCheck());
+    cluster->marginalCost = 0.0;
+
+    cluster->spreadCost = std::nan("1");
+    BOOST_CHECK(!cluster->integrityCheck());
+    cluster->spreadCost = 0.0;
+
+    cluster->marketBidCost = std::nan("1");
+    BOOST_CHECK(!cluster->integrityCheck());
+    cluster->marketBidCost = 0.0;
+
+    cluster->nominalCapacity = -1;
+    BOOST_CHECK(!cluster->integrityCheck());
+    cluster->nominalCapacity = 1;
+
+    cluster->spinning = -1;
+    BOOST_CHECK(!cluster->integrityCheck());
+
+    cluster->spinning = 200;
+    BOOST_CHECK(!cluster->integrityCheck());
+
+    cluster->fuelEfficiency = 200;
+    BOOST_CHECK(!cluster->integrityCheck());
+
+    cluster->spreadCost = -1;
+    BOOST_CHECK(!cluster->integrityCheck());
+
+    cluster->variableomcost = -1;
+    BOOST_CHECK(!cluster->integrityCheck());
+}
+
+BOOST_FIXTURE_TEST_CASE(check_modulation, ThermalClusterStudy)
+{
+    cluster->modulation.resize(3, 1);
+    cluster->modulation.fill(1.);
+    cluster->modulation[0][0] = -1;
+    BOOST_CHECK(!cluster->checkModulation());
+}
+
 #undef BOOST_CHECK_EQUAL_MESSAGE
 
 BOOST_AUTO_TEST_SUITE_END() // thermal clusters
@@ -266,12 +320,14 @@ struct RenewableClusterStudy: public OneAreaStudy
     RenewableCluster* cluster;
 };
 
+#ifdef BUILD_UI
 BOOST_FIXTURE_TEST_CASE(renewable_cluster_rename, RenewableClusterStudy)
 {
     BOOST_CHECK(study->clusterRename(cluster, "Renamed"));
     BOOST_CHECK(cluster->name() == "Renamed");
     BOOST_CHECK(cluster->id() == "renamed");
 }
+#endif // BUILD_UI
 
 BOOST_FIXTURE_TEST_CASE(renewable_cluster_delete, RenewableClusterStudy)
 {
