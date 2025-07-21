@@ -225,6 +225,8 @@ typedef // Prices
                                                       NearPriceCap,
                                                       Common::SpatialAggregate<
                                                         AvailableDispatchGen,
+                                                      Common::SpatialAggregate<
+                                                        DispatchableGeneration,
                                                         Common::SpatialAggregate<
                                                           DispatchableGenMargin,
                                                           Common::SpatialAggregate<
@@ -247,7 +249,7 @@ typedef // Prices
                                                                                       // -
                                                                                       // refs:
                                                                                       // #55
-                                                                  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                                                  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
 typedef BindingConstMarginCost< // Marginal cost for a binding constraint
