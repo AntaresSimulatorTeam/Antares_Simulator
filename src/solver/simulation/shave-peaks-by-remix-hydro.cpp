@@ -57,37 +57,36 @@ HydroStorage::HydroStorage(std::vector<double>& generation,
     levels_.assign(generation.size(), 0.);
 }
 
-double HydroStorage::computeBound(unsigned hourPeak, unsigned hourBottom)
+double HydroStorage::computeBound(unsigned hourMax, unsigned hourMin)
 {
     // max slice we can take from hydro generation, at an hour when the total
-    // production reaches a peak.
-    double boundAtPeak = std::numeric_limits<double>::max();
+    // production reaches a max.
+    double boundAtMax = std::numeric_limits<double>::max();
     // max slice we can add to hydro generation, at an hour when the total
-    // production reaches a bottom.
-    double boundAtBottom = std::numeric_limits<double>::max();
+    // production reaches a min.
+    double boundAtMin = std::numeric_limits<double>::max();
 
     if (reservoirManagement_)
     {
-        unsigned minHour = std::min(hourBottom, hourPeak);
-        unsigned maxHour = std::max(hourBottom, hourPeak);
+        unsigned minHour = std::min(hourMin, hourMax);
+        unsigned maxHour = std::max(hourMin, hourMax);
         std::span<double> intermediate_level(levels_.begin() + minHour, levels_.begin() + maxHour);
 
-        if (hourBottom < hourPeak)
+        if (hourMin < hourMax)
         {
-            boundAtPeak = capacity_;
-            boundAtBottom = *std::ranges::min_element(intermediate_level);
+            boundAtMax = capacity_;
+            boundAtMin = *std::ranges::min_element(intermediate_level);
         }
         else
         {
-            boundAtPeak = capacity_ - *std::ranges::max_element(intermediate_level);
-            boundAtBottom = capacity_;
+            boundAtMax = capacity_ - *std::ranges::max_element(intermediate_level);
+            boundAtMin = capacity_;
         }
     }
 
-    boundAtPeak = std::min(generation_[hourPeak] - pmin_[hourPeak], boundAtPeak);
-    boundAtBottom = std::min(
-      {pmax_[hourBottom] - generation_[hourBottom], unsupE_[hourBottom], boundAtBottom});
-    return std::min(boundAtPeak, boundAtBottom);
+    boundAtMax = std::min(generation_[hourMax] - pmin_[hourMax], boundAtMax);
+    boundAtMin = std::min({pmax_[hourMin] - generation_[hourMin], unsupE_[hourMin], boundAtMin});
+    return std::min(boundAtMax, boundAtMin);
 }
 
 void HydroStorage::checkInput(size_t size)
@@ -157,7 +156,7 @@ std::vector<double> HydroStorage::levels()
 
 static int hour_for_totalGen_min(const std::vector<double>& TotalGen,
                                  const std::vector<double>& OutUnsupE,
-                                 const std::vector<bool>& triedBottom,
+                                 const std::vector<bool>& triedMins,
                                  const std::vector<bool>& validHours,
                                  double top)
 {
@@ -165,7 +164,7 @@ static int hour_for_totalGen_min(const std::vector<double>& TotalGen,
     int min_hour = -1;
     for (unsigned h = 0; h < TotalGen.size(); ++h)
     {
-        if (OutUnsupE[h] > 0 && !triedBottom[h] && validHours[h])
+        if (OutUnsupE[h] > 0 && !triedMins[h] && validHours[h])
         {
             if (TotalGen[h] < minTotalGen)
             {
@@ -178,7 +177,7 @@ static int hour_for_totalGen_min(const std::vector<double>& TotalGen,
 }
 
 static int hour_for_totalGen_max(const std::vector<double>& TotalGen,
-                                 const std::vector<bool>& triedPeak,
+                                 const std::vector<bool>& triedMaxs,
                                  const std::vector<bool>& validHours,
                                  double minTotalGen)
 {
@@ -186,7 +185,7 @@ static int hour_for_totalGen_max(const std::vector<double>& TotalGen,
     int max_hour = -1;
     for (unsigned h = 0; h < TotalGen.size(); ++h)
     {
-        if (TotalGen[h] >= minTotalGen + eps && !triedPeak[h] && validHours[h])
+        if (TotalGen[h] >= minTotalGen + eps && !triedMaxs[h] && validHours[h])
         {
             if (TotalGen[h] > maxTotalGen)
             {
@@ -273,55 +272,55 @@ void shavePeaksByRemixingHydro(std::vector<double>& UnsupE,
 
     while (loop-- > 0)
     {
-        std::vector<bool> triedBottom(DispatchGen.size(), false);
+        std::vector<bool> triedMins(DispatchGen.size(), false);
         double delta = 0;
 
         while (true)
         {
-            int hourBottom = hour_for_totalGen_min(TotalGen, UnsupE, triedBottom, validHours, top);
-            if (hourBottom == -1)
+            int hourMin = hour_for_totalGen_min(TotalGen, UnsupE, triedMins, validHours, top);
+            if (hourMin == -1)
             {
                 break;
             }
 
-            std::vector<bool> triedPeak(DispatchGen.size(), false);
+            std::vector<bool> triedMaxs(DispatchGen.size(), false);
             while (true)
             {
-                int hourPeak = hour_for_totalGen_max(TotalGen,
-                                                     triedPeak,
-                                                     validHours,
-                                                     TotalGen[hourBottom]);
-                if (hourPeak == -1)
+                int hourMax = hour_for_totalGen_max(TotalGen,
+                                                    triedMaxs,
+                                                    validHours,
+                                                    TotalGen[hourMin]);
+                if (hourMax == -1)
                 {
                     break;
                 }
 
-                double maxVariation = std::max(TotalGen[hourPeak] - TotalGen[hourBottom], 0.);
-                double storageBound = storage->computeBound(hourPeak, hourBottom);
+                double maxVariation = std::max(TotalGen[hourMax] - TotalGen[hourMin], 0.);
+                double storageBound = storage->computeBound(hourMax, hourMin);
                 delta = std::max(std::min(storageBound, maxVariation / 2.), 0.);
 
                 if (delta > eps)
                 {
-                    storage->generation()[hourPeak] -= delta;
-                    storage->generation()[hourBottom] += delta;
-                    UnsupE[hourPeak] = storageGenInit[hourPeak] + UnsupEinit[hourPeak]
-                                       - storage->generation()[hourPeak];
+                    storage->generation()[hourMax] -= delta;
+                    storage->generation()[hourMin] += delta;
+                    UnsupE[hourMax] = storageGenInit[hourMax] + UnsupEinit[hourMax]
+                                      - storage->generation()[hourMax];
 
                     storage->update();
 
                     TotalGen = updateTotalGen(DispatchGen, storage->generation());
                     break;
                 }
-                triedPeak[hourPeak] = true;
+                triedMaxs[hourMax] = true;
             }
 
-            UnsupE[hourBottom] = storageGenInit[hourBottom] + UnsupEinit[hourBottom]
-                                 - storage->generation()[hourBottom];
+            UnsupE[hourMin] = storageGenInit[hourMin] + UnsupEinit[hourMin]
+                              - storage->generation()[hourMin];
             if (delta > eps)
             {
                 break;
             }
-            triedBottom[hourBottom] = true;
+            triedMins[hourMin] = true;
         }
 
         if (delta <= eps)
