@@ -53,12 +53,6 @@ TimeDependentLinearExpression::TimeDependentLinearExpression(LinearExpressionMap
 {
 }
 
-TimeDependentLinearExpression::TimeDependentLinearExpression(
-  const TimeDependentLinearExpression& timeDependentLinearExpression):
-    linearExpressions_(timeDependentLinearExpression.linearExpressions_)
-{
-}
-
 TimeDependentLinearExpression& TimeDependentLinearExpression::operator+=(
   const TimeDependentLinearExpression& other)
 {

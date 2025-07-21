@@ -45,7 +45,8 @@ public:
       const LinearExpression& linearExpression);
     explicit TimeDependentLinearExpression(LinearExpressionMap linearExpressions);
     explicit TimeDependentLinearExpression(
-      const TimeDependentLinearExpression& timeDependentLinearExpression);
+      const TimeDependentLinearExpression& timeDependentLinearExpression)
+      = default;
 
     TimeDependentLinearExpression(TimeDependentLinearExpression&& other) noexcept = default;
     TimeDependentLinearExpression& operator=(TimeDependentLinearExpression&& other) = default;
