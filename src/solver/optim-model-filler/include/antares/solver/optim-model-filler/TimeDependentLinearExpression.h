@@ -47,7 +47,7 @@ public:
     explicit TimeDependentLinearExpression(
       const TimeDependentLinearExpression& timeDependentLinearExpression);
 
-    TimeDependentLinearExpression(TimeDependentLinearExpression&& other) = default;
+    TimeDependentLinearExpression(TimeDependentLinearExpression&& other) noexcept = default;
     TimeDependentLinearExpression& operator=(TimeDependentLinearExpression&& other) = default;
 
     /// Sum two linear expressions
