@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE(test_getSystemParameterValueAsDouble)
     // Mock dependency
     struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearProblemData
     {
-        double getData(const std::string&, const std::string&, unsigned int, unsigned int) override
+        double getData(const std::string&, unsigned int, unsigned int) const override
         {
             return 123.45; // Mock return value for testing
         }
@@ -607,10 +607,7 @@ BOOST_FIXTURE_TEST_CASE(parameter_constant_at_creation_but_not_in_eval_context__
 
 struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearProblemData
 {
-    double getData(const std::string& dataSetId,
-                   const std::string& scenarioGroup,
-                   unsigned scenario,
-                   unsigned hour) override
+    double getData(const std::string& dataSetId, unsigned scenario, unsigned hour) const override
     {
         return hour; // for test
     }

@@ -19,13 +19,14 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include <filesystem>
+
 #include <antares/logs/logs.h>
-#include "antares/solver/modeler/data.h"
+#include <antares/solver/modeler/data.h>
 #include "antares/solver/modeler/loadFiles/loadFiles.h"
 
 namespace Antares::Solver::LoadFiles
 {
-
 Modeler::Data loadAll(const std::filesystem::path& studyPath)
 {
     logs.info() << "Loading modeler files...";
@@ -40,6 +41,9 @@ Modeler::Data loadAll(const std::filesystem::path& studyPath)
 
     data.dataSeries = loadDataSeries(studyPath);
     logs.info() << "Timeseries loaded";
+
+    data.scenario_group_repository = loadScenarioGroupRepository(studyPath);
+    logs.info() << "Scenario groups loaded";
 
     return data;
 }
