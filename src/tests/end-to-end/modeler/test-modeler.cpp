@@ -145,6 +145,6 @@ BOOST_AUTO_TEST_CASE(Minimal_system_minimize_to_0)
     StubWriter inMemoryWriter;
 
     const Antares::Solver::Modeler modeler(inMemoryLoader, inMemoryWriter);
-    modeler.solve();
-    BOOST_CHECK_EQUAL(inMemoryWriter.solution_.objectiveValue, 0);
+    auto solution = modeler.solve();
+    BOOST_CHECK_EQUAL(solution.objectiveValue, 0);
 }
