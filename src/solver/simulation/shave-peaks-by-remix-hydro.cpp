@@ -248,18 +248,8 @@ std::vector<bool> ValidHours(const std::vector<double>& Spillage,
     return validHours;
 }
 
-std::vector<double> shavePeaksByRemixingHydro(std::vector<double>& StorageGen,
-                                              std::vector<double>& UnsupE,
+std::vector<double> shavePeaksByRemixingHydro(std::vector<double>& UnsupE,
                                               const std::vector<double>& DispatchGen,
-                                              const std::vector<double>& HydroPmax,
-                                              const std::vector<double>& HydroPmin,
-                                              const double initLevel,
-                                              const double capacity,
-                                              const double pumpEfficiency,
-                                              const bool reservoirManagement,
-                                              const std::vector<double>& inflows,
-                                              const std::vector<double>& overflow,
-                                              const std::vector<double>& pump,
                                               const std::vector<double>& Spillage,
                                               const std::vector<double>& DTG_MRG,
                                               std::shared_ptr<Storage> storage)
