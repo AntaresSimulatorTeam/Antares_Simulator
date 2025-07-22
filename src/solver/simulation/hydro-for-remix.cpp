@@ -13,6 +13,7 @@ namespace Antares::Solver::Simulation
 {
 HydroForRemix::HydroForRemix(std::vector<double>& generation,
                              std::vector<double>& unsupE,
+                             std::vector<double>& levels,
                              const std::vector<double>& Pmax,
                              const std::vector<double>& Pmin,
                              const std::vector<double>& inflows,
@@ -24,6 +25,7 @@ HydroForRemix::HydroForRemix(std::vector<double>& generation,
                              const bool& reservoirManagement):
     generation_(generation),
     unsupE_(unsupE),
+    levels_(levels),
     pmax_(Pmax),
     pmin_(Pmin),
     inflows_(inflows),
@@ -34,7 +36,6 @@ HydroForRemix::HydroForRemix(std::vector<double>& generation,
     pumpEff_(pumpEfficiency),
     reservoirManagement_(reservoirManagement)
 {
-    levels_.assign(generation.size(), 0.);
 }
 
 double HydroForRemix::maxExchange(unsigned hourMax, unsigned hourMin)
@@ -80,7 +81,10 @@ void HydroForRemix::checkInput(size_t size)
         {
             throw std::invalid_argument(error_msg_start + "initial level > reservoir capacity");
         }
-        std::vector<size_t> toAppend = {inflows_.size(), overflow_.size(), pump_.size()};
+        std::vector<size_t> toAppend = {inflows_.size(),
+                                        overflow_.size(),
+                                        pump_.size(),
+                                        levels_.size()};
         std::ranges::copy(sizes, std::back_inserter(toAppend));
     }
 
@@ -126,10 +130,5 @@ void HydroForRemix::update()
 std::vector<double>& HydroForRemix::generation()
 {
     return generation_;
-}
-
-std::vector<double> HydroForRemix::levels()
-{
-    return levels_;
 }
 } // namespace Antares::Solver::Simulation

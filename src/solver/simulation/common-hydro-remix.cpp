@@ -296,6 +296,7 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
 
           auto hydroStorage = std::make_shared<HydroForRemix>(hydroGen,
                                                               unsupE,
+                                                              levels,
                                                               hydroPmax,
                                                               hydroPmin,
                                                               inflows,
@@ -307,7 +308,6 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
                                                               reservoirManagement);
 
           shavePeaksByRemixingStorageGen(unsupE, DispatchGen, spillage, dtgMrg, hydroStorage);
-          levels = hydroStorage->levels();
       });
 }
 

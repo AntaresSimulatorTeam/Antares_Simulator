@@ -12,6 +12,5 @@ public:
     virtual void checkInput(size_t size) = 0;
     virtual void update() = 0;
     virtual std::vector<double>& generation() = 0;
-    virtual std::vector<double> levels() = 0;
 };
 } // namespace Antares::Solver::Simulation

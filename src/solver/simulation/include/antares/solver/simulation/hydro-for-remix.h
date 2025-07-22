@@ -9,6 +9,7 @@ class HydroForRemix: public StorageForRemix
 public:
     HydroForRemix(std::vector<double>& generation,
                   std::vector<double>& unsupE,
+                  std::vector<double>& levels,
                   const std::vector<double>& Pmax,
                   const std::vector<double>& Pmin,
                   const std::vector<double>& inflows,
@@ -23,17 +24,16 @@ public:
     void checkInput(size_t size) override;
     void update() override;
     std::vector<double>& generation() override;
-    std::vector<double> levels() override;
 
 private:
     std::vector<double>& generation_;
     std::vector<double>& unsupE_;
+    std::vector<double>& levels_;
     const std::vector<double>& pmax_;
     const std::vector<double>& pmin_;
     const std::vector<double>& inflows_;
     const std::vector<double>& overflow_;
     const std::vector<double>& pump_;
-    std::vector<double> levels_;
 
     const double& initLevel_;
     const double& capacity_;
