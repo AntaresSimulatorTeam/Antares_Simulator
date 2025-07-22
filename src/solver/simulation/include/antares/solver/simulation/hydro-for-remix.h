@@ -4,21 +4,21 @@
 
 namespace Antares::Solver::Simulation
 {
-class HydroForRemix: public StorageForRemix
+class HydroForRemixWithLevels: public StorageForRemix
 {
 public:
-    HydroForRemix(std::vector<double>& generation,
-                  std::vector<double>& unsupE,
-                  std::vector<double>& levels,
-                  const std::vector<double>& Pmax,
-                  const std::vector<double>& Pmin,
-                  const std::vector<double>& inflows,
-                  const std::vector<double>& overflow,
-                  const std::vector<double>& pump,
-                  const double& initLevel,
-                  const double& capacity,
-                  const double& pumpEfficiency,
-                  const bool& reservoirManagement);
+    HydroForRemixWithLevels(std::vector<double>& generation,
+                            std::vector<double>& unsupE,
+                            std::vector<double>& levels,
+                            const std::vector<double>& Pmax,
+                            const std::vector<double>& Pmin,
+                            const std::vector<double>& inflows,
+                            const std::vector<double>& overflow,
+                            const std::vector<double>& pump,
+                            const double& initLevel,
+                            const double& capacity,
+                            const double& pumpEfficiency,
+                            const bool& reservoirManagement);
 
     double maxExchange(unsigned hourPeak, unsigned hourBottom) override;
     void checkInput(size_t size) override;

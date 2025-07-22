@@ -11,18 +11,18 @@ const std::string error_msg_start = "Remix hydro input : ";
 
 namespace Antares::Solver::Simulation
 {
-HydroForRemix::HydroForRemix(std::vector<double>& generation,
-                             std::vector<double>& unsupE,
-                             std::vector<double>& levels,
-                             const std::vector<double>& Pmax,
-                             const std::vector<double>& Pmin,
-                             const std::vector<double>& inflows,
-                             const std::vector<double>& overflow,
-                             const std::vector<double>& pump,
-                             const double& initLevel,
-                             const double& capacity,
-                             const double& pumpEfficiency,
-                             const bool& reservoirManagement):
+HydroForRemixWithLevels::HydroForRemixWithLevels(std::vector<double>& generation,
+                                                 std::vector<double>& unsupE,
+                                                 std::vector<double>& levels,
+                                                 const std::vector<double>& Pmax,
+                                                 const std::vector<double>& Pmin,
+                                                 const std::vector<double>& inflows,
+                                                 const std::vector<double>& overflow,
+                                                 const std::vector<double>& pump,
+                                                 const double& initLevel,
+                                                 const double& capacity,
+                                                 const double& pumpEfficiency,
+                                                 const bool& reservoirManagement):
     generation_(generation),
     unsupE_(unsupE),
     levels_(levels),
@@ -38,7 +38,7 @@ HydroForRemix::HydroForRemix(std::vector<double>& generation,
 {
 }
 
-double HydroForRemix::maxExchange(unsigned hourMax, unsigned hourMin)
+double HydroForRemixWithLevels::maxExchange(unsigned hourMax, unsigned hourMin)
 {
     // Max slice we can take from hydro generation, at an hour when the total
     // production reaches a max.
@@ -71,7 +71,7 @@ double HydroForRemix::maxExchange(unsigned hourMax, unsigned hourMin)
     return std::min(boundAtMax, boundAtMin);
 }
 
-void HydroForRemix::checkInput(size_t size)
+void HydroForRemixWithLevels::checkInput(size_t size)
 {
     std::vector<size_t> sizes = {generation_.size(), pmin_.size(), pmax_.size()};
 
@@ -106,7 +106,7 @@ void HydroForRemix::checkInput(size_t size)
     }
 }
 
-void HydroForRemix::update()
+void HydroForRemixWithLevels::update()
 {
     if (!reservoirManagement_)
     {
@@ -127,7 +127,7 @@ void HydroForRemix::update()
     }
 }
 
-std::vector<double>& HydroForRemix::generation()
+std::vector<double>& HydroForRemixWithLevels::generation()
 {
     return generation_;
 }

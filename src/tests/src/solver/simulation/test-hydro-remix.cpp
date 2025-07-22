@@ -28,18 +28,18 @@ struct InputFixture
         pump.assign(size, 0.);
         Spillage.assign(size, 0.);
         DTG_MRG.assign(size, 0.);
-        hydroForRemix = std::make_shared<HydroForRemix>(HydroGen,
-                                                        UnsupE,
-                                                        levels,
-                                                        HydroPmax,
-                                                        HydroPmin,
-                                                        inflows,
-                                                        ovf,
-                                                        pump,
-                                                        init_level,
-                                                        capacity,
-                                                        pumpEff,
-                                                        reservoirManagement);
+        hydroForRemix = std::make_shared<HydroForRemixWithLevels>(HydroGen,
+                                                                  UnsupE,
+                                                                  levels,
+                                                                  HydroPmax,
+                                                                  HydroPmin,
+                                                                  inflows,
+                                                                  ovf,
+                                                                  pump,
+                                                                  init_level,
+                                                                  capacity,
+                                                                  pumpEff,
+                                                                  reservoirManagement);
     }
 
     std::vector<double> TotalGenNoHydro, HydroGen, UnsupE, levels, HydroPmax, HydroPmin, inflows,
