@@ -28,6 +28,10 @@ struct InputFixture
         pump.assign(size, 0.);
         Spillage.assign(size, 0.);
         DTG_MRG.assign(size, 0.);
+    }
+
+    void createHydroRemix()
+    {
         hydroForRemix = std::make_shared<HydroForRemixWithLevels>(HydroGen,
                                                                   UnsupE,
                                                                   levels,
@@ -41,6 +45,12 @@ struct InputFixture
                                                                   pumpEff);
     }
 
+    void callRemixStorageAlgorithm()
+    {
+        createHydroRemix();
+        shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix);
+    }
+
     std::vector<double> TotalGenNoHydro, HydroGen, UnsupE, levels, HydroPmax, HydroPmin, inflows,
       ovf, pump, Spillage, DTG_MRG;
     std::shared_ptr<StorageForRemix> hydroForRemix;
@@ -48,38 +58,31 @@ struct InputFixture
     double capacity = std::numeric_limits<double>::max();
     const double pumpEff = 1.0;
     const bool reservoirManagement = true;
+
+    std::string err_msg;
 };
 
 BOOST_FIXTURE_TEST_CASE(input_vectors_of_different_sizes__exception_raised, InputFixture<1>)
 {
     HydroGen = {0., 0.};
-
-    BOOST_CHECK_EXCEPTION(
-      shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix),
-      std::invalid_argument,
-      checkMessage("Remix hydro input : arrays of different sizes"));
+    err_msg = "Remix hydro input : arrays of different sizes";
+    BOOST_CHECK_EXCEPTION(createHydroRemix(), std::invalid_argument, checkMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(input_init_level_exceeds_capacity__exception_raised, InputFixture<1>)
 {
     init_level = 2.;
     capacity = 1.;
-
-    BOOST_CHECK_EXCEPTION(
-      shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix),
-      std::invalid_argument,
-      checkMessage("Remix hydro input : initial level > reservoir capacity"));
+    err_msg = "Remix hydro input : initial level > reservoir capacity";
+    BOOST_CHECK_EXCEPTION(createHydroRemix(), std::invalid_argument, checkMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(all_input_arrays_of_size_0__exception_raised, InputFixture<0>)
 {
     init_level = 0.;
     capacity = 1.;
-
-    BOOST_CHECK_EXCEPTION(
-      shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix),
-      std::invalid_argument,
-      checkMessage("Remix storage input : all arrays of sizes 0"));
+    err_msg = "Remix hydro input : all arrays of sizes 0";
+    BOOST_CHECK_EXCEPTION(createHydroRemix(), std::invalid_argument, checkMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(Hydro_gen_not_smaller_than_pmax__exception_raised, InputFixture<5>)
@@ -88,11 +91,8 @@ BOOST_FIXTURE_TEST_CASE(Hydro_gen_not_smaller_than_pmax__exception_raised, Input
     HydroPmax = {2., 2., 2., 4., 5.};
     init_level = 0.;
     capacity = 1.;
-
-    BOOST_CHECK_EXCEPTION(
-      shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix),
-      std::invalid_argument,
-      checkMessage("Remix hydro input : Hydro generation not smaller than Pmax everywhere"));
+    err_msg = "Remix hydro input : Hydro generation not smaller than Pmax everywhere";
+    BOOST_CHECK_EXCEPTION(createHydroRemix(), std::invalid_argument, checkMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(Hydro_gen_not_greater_than_pmin__exception_raised, InputFixture<5>)
@@ -101,18 +101,15 @@ BOOST_FIXTURE_TEST_CASE(Hydro_gen_not_greater_than_pmin__exception_raised, Input
     HydroPmin = {0., 0., 4., 0., 0.};
     init_level = 0.;
     capacity = 1.;
-
-    BOOST_CHECK_EXCEPTION(
-      shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix),
-      std::invalid_argument,
-      checkMessage("Remix hydro input : Hydro generation not greater than Pmin everywhere"));
+    err_msg = "Remix hydro input : Hydro generation not greater than Pmin everywhere";
+    BOOST_CHECK_EXCEPTION(createHydroRemix(), std::invalid_argument, checkMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(input_is_acceptable__no_exception_raised, InputFixture<1>)
 {
     init_level = 0.;
     capacity = 1.;
-
+    BOOST_CHECK_NO_THROW(createHydroRemix());
     BOOST_CHECK_NO_THROW(
       shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix));
 }
@@ -128,7 +125,7 @@ BOOST_FIXTURE_TEST_CASE(
     init_level = 500.;
     capacity = 1000.;
 
-    shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix);
+    callRemixStorageAlgorithm();
 
     std::vector<double> expected_HydroGen = {20., 20., 20., 20., 20.};
     // UnsupE such as TotalGenNoHydro + HydroGen + UnsupE remains flat
@@ -146,7 +143,7 @@ BOOST_FIXTURE_TEST_CASE(Pmax_does_not_impact_results_when_greater_than_40mwh, In
     init_level = 500.;
     capacity = 1000.;
 
-    shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix);
+    callRemixStorageAlgorithm();
 
     std::vector<double> expected_HydroGen = {20., 20., 20., 20., 20.};
     // UnsupE such as TotalGenNoHydro + HydroGen + UnsupE remains constant at each hour
@@ -166,7 +163,7 @@ BOOST_FIXTURE_TEST_CASE(
     init_level = 500.;
     capacity = 1000.;
 
-    shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix);
+    callRemixStorageAlgorithm();
 
     std::vector<double> expected_HydroGen = {20., 20., 20., 20., 20.};
     // UnsupE such as TotalGenNoHydro + HydroGen + UnsupE remains constant at each hour
@@ -188,7 +185,7 @@ BOOST_FIXTURE_TEST_CASE(influence_of_pmax, InputFixture<5>, *boost::unit_test::t
 
     // 1. Algorithm tends to flatten TotalGenNoHydro + HydroGen, so it would require HydroGen to
     // increase. Proof :
-    shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix);
+    callRemixStorageAlgorithm();
 
     std::vector<double> expected_HydroGen_1 = {0., 0., 13.33, 33.33, 53.33};
     BOOST_TEST(HydroGen == expected_HydroGen_1, boost::test_tools::per_element());
@@ -198,7 +195,8 @@ BOOST_FIXTURE_TEST_CASE(influence_of_pmax, InputFixture<5>, *boost::unit_test::t
     HydroPmax = {20., 20., 20., 20., 20.};
     HydroGen = {20., 20., 20., 20., 20.}; // Reset hydro generation
     UnsupE = {50., 50., 50., 50., 50.};   // Reset unsupplied energy
-    shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix);
+
+    callRemixStorageAlgorithm();
 
     std::vector<double> expected_HydroGen_2 = {20., 20., 20., 20., 20.};
     std::vector<double> expected_UnsupE_2 = {50., 50., 50., 50., 50.};
@@ -219,7 +217,8 @@ BOOST_FIXTURE_TEST_CASE(influence_of_pmin, InputFixture<5>, *boost::unit_test::t
 
     // 1. Algorithm tends to flatten TotalGenNoHydro + HydroGen, so it would require HydroGen to
     // increase.
-    shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix);
+    callRemixStorageAlgorithm();
+
     std::vector<double> expected_HydroGen_1 = {0., 0., 13.33, 33.33, 53.33};
     BOOST_TEST(HydroGen == expected_HydroGen_1, boost::test_tools::per_element());
 
@@ -227,7 +226,8 @@ BOOST_FIXTURE_TEST_CASE(influence_of_pmin, InputFixture<5>, *boost::unit_test::t
     HydroPmin = {20., 20., 20., 20., 20.};
     HydroGen = {20., 20., 20., 20., 20.}; // Reset hydro generation
     UnsupE = {50., 50., 50., 50., 50.};   // Reset unsupplied energy
-    shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix);
+
+    callRemixStorageAlgorithm();
 
     std::vector<double> expected_HydroGen_2 = {20., 20., 20., 20., 20.};
     std::vector<double> expected_UnsupE_2 = {50., 50., 50., 50., 50.};
@@ -244,7 +244,7 @@ BOOST_FIXTURE_TEST_CASE(Hydro_gen_is_already_flat___remix_is_useless__level_easi
     std::ranges::fill(inflows, 15.);  // Cause levels to increase
     std::ranges::fill(pump, 10.);     // Cause levels to increase
 
-    shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix);
+    callRemixStorageAlgorithm();
 
     std::vector<double> expected_levels = {480., 460., 440., 420., 400.};
     BOOST_TEST(levels == expected_levels, boost::test_tools::per_element());
@@ -258,12 +258,8 @@ BOOST_FIXTURE_TEST_CASE(input_leads_to_levels_over_capacity___exception_raised, 
     std::ranges::fill(HydroGen, 10); // Cause levels to decrease
     std::ranges::fill(inflows, 25);  // Cause levels to increase
     std::ranges::fill(pump, 20);     // Cause levels to increase
-
-    BOOST_CHECK_EXCEPTION(
-      shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix),
-      std::invalid_argument,
-      checkMessage(
-        "Remix hydro input : levels computed from input don't respect reservoir bounds"));
+    err_msg = "Remix hydro input : levels computed from input don't respect reservoir bounds";
+    BOOST_CHECK_EXCEPTION(createHydroRemix(), std::invalid_argument, checkMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(input_leads_to_levels_less_than_zero___exception_raised, InputFixture<5>)
@@ -273,12 +269,8 @@ BOOST_FIXTURE_TEST_CASE(input_leads_to_levels_less_than_zero___exception_raised,
     std::ranges::fill(HydroGen, 10); // Cause levels to decrease
     std::ranges::fill(inflows, 5);   // Cause levels to increase
     std::ranges::fill(pump, 10);     // Cause levels to increase
-
-    BOOST_CHECK_EXCEPTION(
-      shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix),
-      std::invalid_argument,
-      checkMessage(
-        "Remix hydro input : levels computed from input don't respect reservoir bounds"));
+    err_msg = "Remix hydro input : levels computed from input don't respect reservoir bounds";
+    BOOST_CHECK_EXCEPTION(createHydroRemix(), std::invalid_argument, checkMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(influence_of_capacity_on_algorithm___case_where_no_influence,
@@ -293,13 +285,14 @@ BOOST_FIXTURE_TEST_CASE(influence_of_capacity_on_algorithm___case_where_no_influ
     // decrease.
     inflows = {25., 25., 25., 25., 25., 5., 5., 5., 5., 5.};
     init_level = 100.;
-    // HydroGen and inflows result in : input_levels = {115, 120, 135, 140, 155, 140, 135, 120, 115,
-    // 100}
+
+    // HydroGen and inflows result in :
+    //   input_levels = {115, 120, 135, 140, 155, 140, 135, 120, 115, 100}
     // Note that : sup(input_levels) = 155
 
-    // Case 1 : capacity relaxed (infinite by default) ==> leads to optimal solution (HydroGen is
-    // flat)
-    shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix);
+    // Case 1 :
+    //   capacity relaxed (infinite by default) ==> leads to optimal solution (HydroGen is flat)
+    callRemixStorageAlgorithm();
 
     // HydroGen is flat and is 15. (means of initial HydroGen)
     std::vector<double> expected_HydroGen(10, 15.);
@@ -314,7 +307,8 @@ BOOST_FIXTURE_TEST_CASE(influence_of_capacity_on_algorithm___case_where_no_influ
     capacity = 155.;
     HydroGen = {10., 20., 10., 20., 10., 20., 10., 20., 10., 20.}; // Reset hydro generation
     UnsupE.assign(HydroGen.size(), 20.);                           // Reset unsupplied energy
-    shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix);
+
+    callRemixStorageAlgorithm();
 
     BOOST_TEST(HydroGen == expected_HydroGen, boost::test_tools::per_element());
     BOOST_TEST(levels == expected_L, boost::test_tools::per_element());
@@ -332,13 +326,14 @@ BOOST_FIXTURE_TEST_CASE(lowering_capacity_too_low_leads_to_suboptimal_solution_f
     // decrease.
     inflows = {25., 25., 25., 25., 25., 5., 5., 5., 5., 5.};
     init_level = 100.;
+
     // HydroGen and inflows lead to have :
     // input_levels = {105, 120, 125, 140, 145, 140, 125, 120, 105,100}
     // Note sup(input_levels) = 145
 
     // Case 1 : capacity relaxed (infinite by default) ==> leads to optimal solution (HydroGen is
     // flat)
-    shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix);
+    callRemixStorageAlgorithm();
 
     // HydroGen is flat and is 15. (means of initial HydroGen)
     std::vector<double> expected_HydroGen(10, 15.);
@@ -356,7 +351,8 @@ BOOST_FIXTURE_TEST_CASE(lowering_capacity_too_low_leads_to_suboptimal_solution_f
     capacity = 145.;
     HydroGen = {20., 10., 20., 10., 20., 10., 20., 10., 20., 10.}; // Reset hydro generation
     UnsupE.assign(HydroGen.size(), 20.);                           // Reset unsupplied energy
-    shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix);
+
+    callRemixStorageAlgorithm();
 
     // OutHydroGen_2 is flat by interval
     std::vector<double> expected_HydroGen_2 = {16., 16., 16., 16., 16., 14., 14., 14., 14., 14.};
@@ -376,13 +372,14 @@ BOOST_FIXTURE_TEST_CASE(lowering_initial_level_too_low_leads_to_suboptimal_solut
     inflows = {5., 5., 5., 5., 5., 45., 45., 45., 45., 45.};
     capacity = std::numeric_limits<double>::max();
     init_level = 100.;
+
     // HydroGen and inflows result in : input_levels = {85, 60, 45, 20, 5, 20, 45, 60, 85, 100}
     // Note : inf(input_levels) = 5
 
     // Case 1 : init level (== 100) is high enough so that input levels (computed from input data)
     // are acceptable for algorithm (input levels >= 0.), and running algorithm leads to optimal
     // solution (OutHydroGen is flat)
-    shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix);
+    callRemixStorageAlgorithm();
 
     // HydroGen is flat and is 25. (means of initial HydroGen)
     std::vector<double> expected_HydroGen(10, 25.);
@@ -398,7 +395,8 @@ BOOST_FIXTURE_TEST_CASE(lowering_initial_level_too_low_leads_to_suboptimal_solut
     init_level = 95.;
     HydroGen = {20., 30., 20., 30., 20., 30., 20., 30., 20., 30.}; // Reset hydro generation
     UnsupE.assign(HydroGen.size(), 20.);                           // Reset unsupplied energy
-    shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix);
+
+    callRemixStorageAlgorithm();
 
     // OutHydroGen_2 is flat by interval
     std::vector<double> expected_HydroGen_2 = {24., 24., 24., 24., 24., 26., 26., 26., 26., 26.};
@@ -422,7 +420,7 @@ BOOST_FIXTURE_TEST_CASE(influence_of_initial_level_on_algorithm___case_where_no_
     // Case 1 : init level (== 100) is high enough so that input levels (computed from input data)
     // are acceptable by algorithm, and levels computed by algorithm (output) are optimal, that
     // is computed from a optimal (that is flat) OutHydroGen.
-    shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix);
+    callRemixStorageAlgorithm();
 
     // HydroGen is flat and is 15. (means of initial HydroGen)
     std::vector<double> expected_HydroGen(10, 15.);
@@ -438,7 +436,8 @@ BOOST_FIXTURE_TEST_CASE(influence_of_initial_level_on_algorithm___case_where_no_
     init_level = 55.;
     HydroGen = {20., 10., 20., 10., 20., 10., 20., 10., 20., 10.}; // Reset hydro generation
     UnsupE.assign(HydroGen.size(), 20.);                           // Reset unsuppied energy
-    shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix);
+
+    callRemixStorageAlgorithm();
 
     // OutHydroGen_2 is flat (and optimal)
     std::vector<double> expected_HydroGen_2(10, 15.);
@@ -457,7 +456,7 @@ BOOST_FIXTURE_TEST_CASE(spillage_positive_at_hour_0___no_change_at_this_hour, In
     // But :
     Spillage[0] = 1.;
     // Now, we expect no change for HydroGen at hour 0
-    shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix);
+    callRemixStorageAlgorithm();
 
     std::vector<double> expected_HydroGen = {40., 15., 15., 15., 15.};
     BOOST_CHECK(HydroGen == expected_HydroGen);
@@ -475,7 +474,7 @@ BOOST_FIXTURE_TEST_CASE(DTG_MRG_positive_on_hour_4___no_change_at_this_hour, Inp
     // But :
     DTG_MRG[4] = 1.;
     // Now, we expect no change for HydroGen at hour 4
-    shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix);
+    callRemixStorageAlgorithm();
 
     std::vector<double> expected_HydroGen = {25., 25., 25., 25., 0.};
     BOOST_CHECK(HydroGen == expected_HydroGen);
@@ -503,11 +502,11 @@ BOOST_FIXTURE_TEST_CASE(comparison_of_results_with_python_algo,
     capacity = 126.;
     inflows = {37, 27, 41, 36, 7, 14, 38, 23, 17, 35, 20, 24, 17, 46, 1, 10, 10, 12, 46, 30};
 
-    shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix);
+    callRemixStorageAlgorithm();
+
     std::vector<double> expected_HydroGen = {42.3, 35.3,  27.,  31.,   7.,    33.,   8.,
                                              31.,  19.55, 2.,   38.55, 30.55, 22.55, 7.,
                                              4.,   45.55, 6.55, 25.55, 41.55, 25.};
-
     BOOST_TEST(HydroGen == expected_HydroGen, boost::test_tools::per_element());
 }
 

@@ -13,12 +13,13 @@ public:
                   const std::vector<double>& Pmax,
                   const std::vector<double>& Pmin);
 
-    virtual double maxExchange(unsigned hourPeak, unsigned hourBottom) override;
-    virtual void checkInput(size_t size) override;
-    virtual void update() override;
+    double maxExchange(unsigned hourPeak, unsigned hourBottom) override;
+    void update() override;
     std::vector<double>& generation() override;
 
 protected:
+    void checkInput(size_t size) override;
+
     std::vector<double>& generation_;
     std::vector<double>& unsupE_;
     const std::vector<double>& pmax_;
@@ -40,11 +41,13 @@ public:
                             const double& capacity,
                             const double& pumpEfficiency);
 
-    virtual double maxExchange(unsigned hourPeak, unsigned hourBottom) override;
-    virtual void checkInput(size_t size) override;
-    virtual void update() override;
+    double maxExchange(unsigned hourPeak, unsigned hourBottom) override;
+    void update() override;
 
 private:
+    void checkLevels();
+    void checkInput(size_t size) override;
+
     std::vector<double>& levels_;
     const std::vector<double>& inflows_;
     const std::vector<double>& overflow_;

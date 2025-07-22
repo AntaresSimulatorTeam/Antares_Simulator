@@ -58,13 +58,15 @@ static int hourForTotalGenMax(const std::vector<double>& TotalGen,
 static void checkInput(const std::vector<double>& DispatchGen,
                        const std::vector<double>& UnsupE,
                        const std::vector<double>& Spillage,
-                       const std::vector<double>& DTG_MRG)
+                       const std::vector<double>& DTG_MRG,
+                       const std::vector<double>& storageGen)
 {
     // Arrays sizes must be identical
     std::vector<size_t> sizes = {DispatchGen.size(),
                                  UnsupE.size(),
                                  Spillage.size(),
-                                 DTG_MRG.size()};
+                                 DTG_MRG.size(),
+                                 storageGen.size()};
 
     if (!std::ranges::all_of(sizes, [&sizes](const size_t s) { return s == sizes.front(); }))
     {
@@ -114,10 +116,7 @@ void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
     const std::vector<double> storageGenInit = storage->generation();
     const std::vector<double> UnsupEinit = UnsupE;
 
-    checkInput(DispatchGen, UnsupEinit, Spillage, DTG_MRG);
-    storage->checkInput(DispatchGen.size());
-
-    storage->update();
+    checkInput(DispatchGen, UnsupEinit, Spillage, DTG_MRG, storageGenInit);
 
     int loop = 1000;
     double top = *std::max_element(DispatchGen.begin(), DispatchGen.end())

@@ -1,6 +1,5 @@
 #include "include/antares/solver/simulation/hydro-for-remix.h"
 
-#include <limits>
 #include <span>
 #include <stdexcept>
 
@@ -51,6 +50,7 @@ HydroForRemix::HydroForRemix(std::vector<double>& generation,
     pmax_(Pmax),
     pmin_(Pmin)
 {
+    checkInput(generation_.size());
 }
 
 double HydroForRemix::maxExchange(unsigned hourMax, unsigned hourMin)
@@ -116,6 +116,9 @@ HydroForRemixWithLevels::HydroForRemixWithLevels(std::vector<double>& generation
     capacity_(capacity),
     pumpEff_(pumpEfficiency)
 {
+    checkInput(generation_.size());
+    update();
+    checkLevels();
 }
 
 double HydroForRemixWithLevels::maxExchange(unsigned hourMax, unsigned hourMin)
@@ -157,11 +160,19 @@ void HydroForRemixWithLevels::checkInput(size_t size)
         throw std::invalid_argument(error_msg_start + "arrays of different sizes");
     }
 
+    if (!size)
+    {
+        throw std::invalid_argument(error_msg_start + "all arrays of sizes 0");
+    }
+
     if (initLevel_ >= capacity_ + LEVEL_TOLERANCE)
     {
         throw std::invalid_argument(error_msg_start + "initial level > reservoir capacity");
     }
+}
 
+void HydroForRemixWithLevels::checkLevels()
+{
     if (!(levels_ <= capacity_ + LEVEL_TOLERANCE) || !(levels_ >= -LEVEL_TOLERANCE))
     {
         throw std::invalid_argument(error_msg_start
