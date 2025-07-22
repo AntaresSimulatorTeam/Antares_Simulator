@@ -88,6 +88,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
           sudo apt-get install g++-10 gcc-10
+          sudo apt-get install xsltproc
 
       - name: Config OR-Tools URL
         run: |
@@ -214,12 +215,16 @@ jobs:
           cd _build
           ctest -C Release --output-on-failure -R "^unfeasible$"
 
-      - name: Run unit and end-to-end tests, generate reports
+      - name: Run unit and end-to-end tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         run: |
           cd _build
           ctest -C Release --output-on-failure -L "unit|end-to-end"
-          cd tests
+
+      - name: Merge XML reports into single HTML
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        run: |
+          cd _build/tests
           ${{github.workspace}}/src/tests/merge_all.sh ${{github.workspace}}/src/tests/format_xml_report.xsl
 
       - name: Upload report as artifact
