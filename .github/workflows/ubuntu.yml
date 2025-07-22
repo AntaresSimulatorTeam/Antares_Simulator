@@ -214,12 +214,20 @@ jobs:
           cd _build
           ctest -C Release --output-on-failure -R "^unfeasible$"
 
-      - name: Run unit and end-to-end tests
+      - name: Run unit and end-to-end tests, generate reports
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         run: |
           cd _build
           ctest -C Release --output-on-failure -L "unit|end-to-end"
+          cd tests
+          {{github.workspace}}/src/tests/merge_generate_all.sh {{github.workspace}}/src/tests/format_xml_report.xsl
 
+      - name: Upload report as artifact
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-report
+          path: ${{ github.workspace }}/_build/tests/report.html
 
       - name: Upload logs for failed tests
         if: ${{ failure() }}
