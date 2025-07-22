@@ -220,7 +220,7 @@ jobs:
           cd _build
           ctest -C Release --output-on-failure -L "unit|end-to-end"
           cd tests
-          ${{github.workspace}}/src/tests/merge_generate_all.sh ${{github.workspace}}/src/tests/format_xml_report.xsl
+          ${{github.workspace}}/src/tests/merge_all.sh ${{github.workspace}}/src/tests/format_xml_report.xsl
 
       - name: Upload report as artifact
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
