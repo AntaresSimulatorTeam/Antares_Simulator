@@ -18,27 +18,31 @@
 // along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 
 #define BOOST_TEST_MODULE testE2EModeler
+#include <fmt/format.h>
+
 #include <boost/test/unit_test.hpp>
 
 #include <antares/solver/modeler/ILoader.h>
 #include <antares/solver/modeler/Modeler.h>
-#include <fmt/format.h>
-
 #include "antares/expressions/nodes/GreaterThanOrEqualNode.h"
+#include "antares/optimisation/linear-problem-data-impl/Scenario.h"
+#include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
 #include "antares/solver/modeler/IWriter.h"
 
 #include "inmemory-modeler.h"
-#include "antares/optimisation/linear-problem-data-impl/Scenario.h"
-#include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
 
-class ConstantDataSeries : public Antares::Optimisation::LinearProblemApi::ILinearProblemData {
+class ConstantDataSeries: public Antares::Optimisation::LinearProblemApi::ILinearProblemData
+{
 public:
-    explicit ConstantDataSeries(double value): value_(value) {
+    explicit ConstantDataSeries(double value):
+        value_(value)
+    {
     }
 
-    double getData([[maybe_unused]] const std::string &dataSetId,
+    double getData([[maybe_unused]] const std::string& dataSetId,
                    [[maybe_unused]] unsigned year,
-                   [[maybe_unused]] unsigned hour) const override {
+                   [[maybe_unused]] unsigned hour) const override
+    {
         return value_;
     }
 
@@ -46,29 +50,35 @@ private:
     double value_{0.};
 };
 
-class EmptyDataSeries : public ConstantDataSeries {
+class EmptyDataSeries: public ConstantDataSeries
+{
 public:
-    EmptyDataSeries(): ConstantDataSeries(0.0) {
+    EmptyDataSeries():
+        ConstantDataSeries(0.0)
+    {
     }
 };
 
 EmptyDataSeries emptyDataSeries;
 
 Antares::ModelerStudy::SystemModel::Component copyComponent(
-    const Antares::ModelerStudy::SystemModel::Component &c) {
+  const Antares::ModelerStudy::SystemModel::Component& c)
+{
     Antares::ModelerStudy::SystemModel::ComponentBuilder builder;
     return builder.withId(c.Id())
-            .withModel(c.getModel())
-            .withScenarioGroupId(c.getScenarioGroupId())
-            .withParameterValues(c.getParameterValues())
-            .build();
+      .withModel(c.getModel())
+      .withScenarioGroupId(c.getScenarioGroupId())
+      .withParameterValues(c.getParameterValues())
+      .build();
 }
 
-class DefaultScenario : public Antares::Optimisation::LinearProblemApi::IScenario {
+class DefaultScenario: public Antares::Optimisation::LinearProblemApi::IScenario
+{
 public:
     using IScenario::IScenario;
 
-    [[nodiscard]] TimeSeriesNumber getData(Year) const override {
+    [[nodiscard]] TimeSeriesNumber getData(Year) const override
+    {
         return 0; // Default rank for empty groupId
     }
 };
@@ -76,25 +86,26 @@ public:
 using Models = std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Model>;
 
 template<class Fixture>
-class InMemoryLoader : public Antares::Solver::ILoader {
+class InMemoryLoader: public Antares::Solver::ILoader
+{
 public:
-    Antares::Solver::ModelerParameters loadParameters() override {
-        return {
-            .solver = "sirius",
-            .solverLogs = false,
-            .solverParameters = "DUMMY",
-            .noOutput = true,
-            .firstTimeStep = timeSteps.first,
-            .lastTimeStep = timeSteps.second
-        };
+    Antares::Solver::ModelerParameters loadParameters() override
+    {
+        return {.solver = "sirius",
+                .solverLogs = false,
+                .solverParameters = "DUMMY",
+                .noOutput = true,
+                .firstTimeStep = timeSteps.first,
+                .lastTimeStep = timeSteps.second};
     }
 
-    Antares::Modeler::Data loadAll() override {
+    Antares::Modeler::Data loadAll() override
+    {
         auto objective = fixture.variable("x");
         auto var_node = fixture.variable("var1");
         auto zero = fixture.literal(0);
         auto ct_node = fixture.nodes.template create<
-            Antares::Expressions::Nodes::GreaterThanOrEqualNode>(var_node, zero);
+          Antares::Expressions::Nodes::GreaterThanOrEqualNode>(var_node, zero);
         fixture.createModelWithOneFloatVar("some_model",
                                            parameterIds,
                                            "x",
@@ -105,57 +116,65 @@ public:
                                            timeDependent);
 
         Antares::ModelerStudy::SystemModel::LibraryBuilder library_builder;
-        auto &&library = library_builder.withId("dummy-library")
-                .withDescription("")
-                // We should set models in the library
-                // However doing so will move the model, reseting the fixture.models
-                // Also invaliding the component reference to the model
-                //.withModelsMap(std::move(fixture.models))
-                .build();
+        auto&& library = library_builder.withId("dummy-library")
+                           .withDescription("")
+                           // We should set models in the library
+                           // However doing so will move the model, reseting the fixture.models
+                           // Also invaliding the component reference to the model
+                           //.withModelsMap(std::move(fixture.models))
+                           .build();
         auto groupIt = groupes.find("some_component");
-        if (groupIt != groupes.end()) {
+        if (groupIt != groupes.end())
+        {
             fixture.createComponent("some_model", "some_component", parameters, groupIt->second);
-        } else {
+        }
+        else
+        {
             fixture.createComponent("some_model", "some_component", parameters);
         }
         setComponents(fixture.components); // Component model may not be the system model
         Antares::ModelerStudy::SystemModel::SystemBuilder builder;
         auto system = builder.withId("dummy-system").withComponents(std::move(components)).build();
-        return {
-            .libraries = {library},
-            .system = std::make_unique<Antares::ModelerStudy::SystemModel::System>(
-                std::move(system)),
-            .dataSeries = std::move(data),
-            .scenario_group_repository = std::move(scenarioGroupRepository)
-        };
+        return {.libraries = {library},
+                .system = std::make_unique<Antares::ModelerStudy::SystemModel::System>(
+                  std::move(system)),
+                .dataSeries = std::move(data),
+                .scenario_group_repository = std::move(scenarioGroupRepository)};
     }
 
-    void setComponents(const std::span<Antares::ModelerStudy::SystemModel::Component> &vector) {
-        for (const auto &component: vector) {
+    void setComponents(const std::span<Antares::ModelerStudy::SystemModel::Component>& vector)
+    {
+        for (const auto& component: vector)
+        {
             components.emplace(component.Id(), copyComponent(component));
         }
     }
 
-    void setModels(Models &&map) {
+    void setModels(Models&& map)
+    {
         models = std::move(map);
     }
 
-    void setLowerBoundToParameter(const std::string &parameterId) {
+    void setLowerBoundToParameter(const std::string& parameterId)
+    {
         lower_bound = fixture.parameter(
-            parameterId,
-            Antares::Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY);
+          parameterId,
+          Antares::Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY);
     }
 
-    void addParameter(const std::string &str, Antares::Expressions::Visitors::TimeIndex) {
+    void addParameter(const std::string& str, Antares::Expressions::Visitors::TimeIndex)
+    {
         parameters.emplace(Test::Modeler::build_context_parameter_with(
-            "a",
-            "a",
-            Antares::Expressions::Visitors::ParameterType::TIMESERIE));
+          "a",
+          "a",
+          Antares::Expressions::Visitors::ParameterType::TIMESERIE));
         parameterIds.push_back(str);
     }
 
-    void addScenario(const std::string &str, int year, int chronicle) {
-        auto scenario = std::make_unique<Antares::Optimisation::LinearProblemDataImpl::Scenario>(str);
+    void addScenario(const std::string& str, int year, int chronicle)
+    {
+        auto scenario = std::make_unique<Antares::Optimisation::LinearProblemDataImpl::Scenario>(
+          str);
         scenario->setTimeSerieNumber(year, chronicle);
         scenarioGroupRepository.addScenario(str, std::move(scenario));
     }
@@ -164,8 +183,8 @@ public:
     std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component> components;
     Fixture fixture;
     std::unique_ptr<Antares::Optimisation::LinearProblemApi::ILinearProblemData>
-    data = std::make_unique<EmptyDataSeries>();
-    Antares::Expressions::Nodes::Node *lower_bound = fixture.literal(0.0);
+      data = std::make_unique<EmptyDataSeries>();
+    Antares::Expressions::Nodes::Node* lower_bound = fixture.literal(0.0);
     bool timeDependent{false};
     std::map<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue> parameters{};
     std::vector<std::string> parameterIds{};
@@ -174,33 +193,38 @@ public:
     std::pair<int, int> timeSteps{0, 0};
 };
 
-struct Solution {
+struct Solution
+{
     double objectiveValue{0.0};
 };
 
-class InMemoryWriter : public Antares::Solver::IWriter {
+class InMemoryWriter: public Antares::Solver::IWriter
+{
 public:
     Solution solution_{};
 
-    void init(bool) override {
+    void init(bool) override
+    {
         // No initialization needed for in-memory writer
     }
 
     void writeSolution(
-        const Antares::Optimisation::LinearProblemApi::IMipSolution &
-        solution) override {
+      const Antares::Optimisation::LinearProblemApi::IMipSolution& solution) override
+    {
         solution_.objectiveValue = solution.getObjectiveValue();
         // No output to write for in-memory writer
     }
 
     void writeProblem(
-        [[maybe_unused]] const Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem &
-        problem) override {
+      [[maybe_unused]] const Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem&
+        problem) override
+    {
         problem.WriteLP("dummy.lp");
     }
 };
 
-BOOST_AUTO_TEST_CASE(minimal_system) {
+BOOST_AUTO_TEST_CASE(minimal_system)
+{
     InMemoryLoader<Test::Modeler::LinearProblemBuildingFixture> inMemoryLoader;
     InMemoryWriter inMemoryWriter;
 
@@ -209,7 +233,8 @@ BOOST_AUTO_TEST_CASE(minimal_system) {
     BOOST_CHECK_EQUAL(inMemoryWriter.solution_.objectiveValue, 0);
 }
 
-BOOST_AUTO_TEST_CASE(system_with_one_constant_serie_value_10) {
+BOOST_AUTO_TEST_CASE(system_with_one_constant_serie_value_10)
+{
     InMemoryLoader<Test::Modeler::LinearProblemBuildingFixture> inMemoryLoader;
     inMemoryLoader.timeDependent = true;
     inMemoryLoader.setLowerBoundToParameter("a");
@@ -225,16 +250,20 @@ BOOST_AUTO_TEST_CASE(system_with_one_constant_serie_value_10) {
     BOOST_CHECK_EQUAL(inMemoryWriter.solution_.objectiveValue, 5);
 }
 
-struct TSDimensions {
+struct TSDimensions
+{
     int nRows{1};
     int nCols{1};
 };
 
 Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet
-constantTimeSeriesSets(const std::string &id, std::span<double> values, unsigned int nRows = 1) {
+constantTimeSeriesSets(const std::string& id, std::span<double> values, unsigned int nRows = 1)
+{
     Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet timeSeriesSet(id, nRows);
-    for (double value: values) {
-        if (nRows == 0) {
+    for (double value: values)
+    {
+        if (nRows == 0)
+        {
             return timeSeriesSet;
         }
         std::vector<double> set(nRows, value);
@@ -245,12 +274,14 @@ constantTimeSeriesSets(const std::string &id, std::span<double> values, unsigned
 }
 
 Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet
-constantTimeSeriesSet(const std::string &id, double value = 0., TSDimensions dims = {1, 1}) {
+constantTimeSeriesSet(const std::string& id, double value = 0., TSDimensions dims = {1, 1})
+{
     std::vector<double> values(dims.nCols, value);
     return constantTimeSeriesSets(id, values, dims.nRows);
 }
 
-BOOST_AUTO_TEST_CASE(system_with_two_time_series_use_default_first_all_2) {
+BOOST_AUTO_TEST_CASE(system_with_two_time_series_use_default_first_all_2)
+{
     InMemoryLoader<Test::Modeler::LinearProblemBuildingFixture> inMemoryLoader;
     inMemoryLoader.timeDependent = true;
     inMemoryLoader.setLowerBoundToParameter("a");
@@ -260,11 +291,11 @@ BOOST_AUTO_TEST_CASE(system_with_two_time_series_use_default_first_all_2) {
     Antares::Optimisation::LinearProblemDataImpl::DataSeriesRepository data_series_repository;
     std::vector<double> values = {2, 3, 4};
     data_series_repository.addDataSeries(
-        std::make_unique<Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet>(
-            constantTimeSeriesSets("a", values, 1)));
+      std::make_unique<Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet>(
+        constantTimeSeriesSets("a", values, 1)));
     inMemoryLoader.data = std::make_unique<
-        Antares::Optimisation::LinearProblemDataImpl::LinearProblemData>(
-        std::move(data_series_repository));
+      Antares::Optimisation::LinearProblemDataImpl::LinearProblemData>(
+      std::move(data_series_repository));
 
     InMemoryWriter inMemoryWriter;
 
@@ -273,7 +304,8 @@ BOOST_AUTO_TEST_CASE(system_with_two_time_series_use_default_first_all_2) {
     BOOST_CHECK_EQUAL(inMemoryWriter.solution_.objectiveValue, 2);
 }
 
-BOOST_AUTO_TEST_CASE(system_with_three_time_series_use_second_one_all_3) {
+BOOST_AUTO_TEST_CASE(system_with_three_time_series_use_second_one_all_3)
+{
     InMemoryLoader<Test::Modeler::LinearProblemBuildingFixture> inMemoryLoader;
     inMemoryLoader.timeDependent = true;
     inMemoryLoader.setLowerBoundToParameter("a");
@@ -283,13 +315,13 @@ BOOST_AUTO_TEST_CASE(system_with_three_time_series_use_second_one_all_3) {
     Antares::Optimisation::LinearProblemDataImpl::DataSeriesRepository data_series_repository;
     std::vector<double> values = {2, 3, 4};
     data_series_repository.addDataSeries(
-        std::make_unique<Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet>(
-            constantTimeSeriesSets("a", values, 1)));
+      std::make_unique<Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet>(
+        constantTimeSeriesSets("a", values, 1)));
     inMemoryLoader.data = std::make_unique<
-        Antares::Optimisation::LinearProblemDataImpl::LinearProblemData>(
-        std::move(data_series_repository));
+      Antares::Optimisation::LinearProblemDataImpl::LinearProblemData>(
+      std::move(data_series_repository));
 
-    inMemoryLoader.addScenario("GroupA", 0, 1); //Year 0, chronicle 1
+    inMemoryLoader.addScenario("GroupA", 0, 1); // Year 0, chronicle 1
     inMemoryLoader.groupes["some_component"] = "GroupA";
 
     InMemoryWriter inMemoryWriter;

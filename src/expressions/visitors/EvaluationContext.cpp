@@ -1,6 +1,5 @@
 #include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
-
 #include "antares/optimisation/linear-problem-api/IScenario.h"
 
 using namespace Antares::Optimisation::LinearProblemApi;

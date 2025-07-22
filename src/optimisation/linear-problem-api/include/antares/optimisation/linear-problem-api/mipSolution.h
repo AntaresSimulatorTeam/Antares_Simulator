@@ -27,33 +27,36 @@
 
 #include "mipVariable.h"
 
-namespace Antares::Optimisation::LinearProblemApi {
-    enum class MipStatus {
-        OPTIMAL,
-        FEASIBLE,
-        UNBOUNDED,
-        INFEASIBLE,
-        MIP_ERROR
-    };
+namespace Antares::Optimisation::LinearProblemApi
+{
+enum class MipStatus
+{
+    OPTIMAL,
+    FEASIBLE,
+    UNBOUNDED,
+    INFEASIBLE,
+    MIP_ERROR
+};
 
-    /**
-     * MipSolution
-     * Used to get the return status of the solve
-     * Contains the problem's optimal values for each variable
-     */
-    class IMipSolution {
-    public:
-        virtual ~IMipSolution() = default;
+/**
+ * MipSolution
+ * Used to get the return status of the solve
+ * Contains the problem's optimal values for each variable
+ */
+class IMipSolution
+{
+public:
+    virtual ~IMipSolution() = default;
 
-        [[nodiscard]] virtual MipStatus getStatus() const = 0;
+    [[nodiscard]] virtual MipStatus getStatus() const = 0;
 
-        [[nodiscard]] virtual double getObjectiveValue() const = 0;
+    [[nodiscard]] virtual double getObjectiveValue() const = 0;
 
-        [[nodiscard]] virtual double getOptimalValue(const IMipVariable *var) const = 0;
+    [[nodiscard]] virtual double getOptimalValue(const IMipVariable* var) const = 0;
 
-        [[nodiscard]] virtual std::vector<double>
-        getOptimalValues(const std::vector<IMipVariable *> &vars) const = 0;
+    [[nodiscard]] virtual std::vector<double>
+    getOptimalValues(const std::vector<IMipVariable*>& vars) const = 0;
 
-        [[nodiscard]] virtual const std::map<std::string, double> &getOptimalValues() const = 0;
-    };
+    [[nodiscard]] virtual const std::map<std::string, double>& getOptimalValues() const = 0;
+};
 } // namespace Antares::Optimisation::LinearProblemApi

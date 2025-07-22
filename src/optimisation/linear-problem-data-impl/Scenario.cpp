@@ -34,9 +34,9 @@ LinearProblemApi::IScenario::TimeSeriesNumber Scenario::getData(Year year) const
           fmt::format("In scenario group '{}', time serie for year {} does not exist.",
                       group(),
                       year));
-        }
-        return it->second;
     }
+    return it->second;
+}
 
 void Scenario::setTimeSerieNumber(Year year, TimeSeriesNumber timeSeriesNumber)
 {
