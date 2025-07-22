@@ -9,7 +9,7 @@
 
 using namespace Antares::Optimisation::LinearProblemDataImpl;
 
-BOOST_AUTO_TEST_CASE(repo_is_empty_asking_any_data_series_raises_exception)
+BOOST_AUTO_TEST_CASE(repo_is_empty__asking_any_data_series_raises_exception)
 {
     DataSeriesRepository dataSeriesRepository;
 
@@ -19,7 +19,7 @@ BOOST_AUTO_TEST_CASE(repo_is_empty_asking_any_data_series_raises_exception)
                           checkMessage(expected_err_msg));
 }
 
-BOOST_AUTO_TEST_CASE(adding_to_repo_a_data_it_already_contains_exception_raised)
+BOOST_AUTO_TEST_CASE(adding_to_repo_a_data_it_already_contains___exception_raised)
 {
     DataSeriesRepository dataSeriesRepository;
     auto some_TS_set = std::make_unique<TimeSeriesSet>("some TS set", 5);
@@ -34,7 +34,7 @@ BOOST_AUTO_TEST_CASE(adding_to_repo_a_data_it_already_contains_exception_raised)
                           checkMessage(expected_err_msg));
 }
 
-BOOST_AUTO_TEST_CASE(repo_not_empty_asking_nonexistent_data_raises_exception)
+BOOST_AUTO_TEST_CASE(repo_not_empty__asking_nonexistent_data_raises_exception)
 {
     DataSeriesRepository dataSeriesRepository;
     auto some_TS_set = std::make_unique<TimeSeriesSet>("some TS set", 5);
@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE(repo_not_empty_asking_nonexistent_data_raises_exception)
                           checkMessage(expected_err_msg));
 }
 
-BOOST_AUTO_TEST_CASE(ask_a_simple_data_repo_some_data_it_contains_answer_is_correct)
+BOOST_AUTO_TEST_CASE(ask_a_simple_data_repo_some_data_it_contains___answer_is_correct)
 {
     DataSeriesRepository dataSeriesRepository;
 
@@ -61,7 +61,7 @@ BOOST_AUTO_TEST_CASE(ask_a_simple_data_repo_some_data_it_contains_answer_is_corr
     BOOST_CHECK_EQUAL(dataSeriesRepository.getDataSeries("some TS set").getData(rank, hour), 14.);
 }
 
-BOOST_AUTO_TEST_CASE(asking_repo_data_for_a_too_big_hour_exception_from_data_series_is_caught)
+BOOST_AUTO_TEST_CASE(asking_repo_data_for_a_too_big_hour___exception_from_data_series_is_caught)
 {
     DataSeriesRepository dataSeriesRepository;
     auto some_TS_set = std::make_unique<TimeSeriesSet>("some TS set", 5);
@@ -76,7 +76,7 @@ BOOST_AUTO_TEST_CASE(asking_repo_data_for_a_too_big_hour_exception_from_data_ser
                           checkMessage(expected_err_msg));
 }
 
-BOOST_AUTO_TEST_CASE(ask_a_more_complex_data_repo_some_data_it_contains_answer_is_correct)
+BOOST_AUTO_TEST_CASE(ask_a_more_complex_data_repo_some_data_it_contains___answer_is_correct)
 {
     DataSeriesRepository dataSeriesRepository;
 
