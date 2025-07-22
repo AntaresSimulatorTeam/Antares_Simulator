@@ -30,8 +30,7 @@
 
 using namespace Antares::Optimisation::LinearProblemDataImpl;
 
-BOOST_AUTO_TEST_CASE(PbData_is_empty_asking_it_a_value_leads_to_exception)
-{
+BOOST_AUTO_TEST_CASE(PbData_is_empty_asking_it_a_value_leads_to_exception) {
     LinearProblemData linearProblemData;
     std::string expected_err_msg = "Data series repo is empty, and somebody requests data from it";
     BOOST_CHECK_EXCEPTION(linearProblemData.getData("data set name", 0, 0),
@@ -39,8 +38,7 @@ BOOST_AUTO_TEST_CASE(PbData_is_empty_asking_it_a_value_leads_to_exception)
                           checkMessage(expected_err_msg));
 }
 
-BOOST_AUTO_TEST_CASE(ask_to_a_simple_linearProblemData_data_it_contains_answer_ok)
-{
+BOOST_AUTO_TEST_CASE(ask_to_a_simple_linearProblemData_data_it_contains_answer_ok) {
     LinearProblemData linearProblemData;
 
     // Adding a scenario group to the linear problem data
