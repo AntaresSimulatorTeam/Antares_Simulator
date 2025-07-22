@@ -12,9 +12,7 @@ macro(add_antlr_target target_name directory grammar_file)
     add_custom_command(
         OUTPUT ${stamp_file}
 	WORKING_DIRECTORY ${directory}
-	COMMAND ${CMAKE_COMMAND} -P ${CMAKE_SOURCE_DIR}/cmake/check_antlr_jar.cmake
-
-	COMMAND ${CMAKE_COMMAND} -E env java -jar "$ENV{ANTLR_JAR_PATH}"
+	COMMAND ${CMAKE_COMMAND} -E env java -jar "${ANTLR_JAR_PATH}"
             -Dlanguage=Cpp
             -visitor
             -no-listener

@@ -45,8 +45,14 @@ endif()
 #CMake function
 include("cmake/utils.cmake")
 
+# Only used for code generation (optional)
+set(ANTLR_JAR_PATH "" CACHE FILEPATH "Path to ANTLR 4 .jar file (e.g., antlr-4.13.2-complete.jar)")
+message(STATUS "ANTLR_JAR_PATH is: ${ANTLR_JAR_PATH}")
+
 #Generate ANTLR4 source files from grammar files
 include("cmake/antlr4-generate.cmake")
+
+
 
 #CMake Macro to display message
 include("cmake/messages.cmake")
@@ -297,9 +303,6 @@ if(BUILD_TESTING)
 endif()
 
 OMESSAGE("")
-
-
-
 
 # Informations for NSIS
 if(WIN32 OR WIN64)
