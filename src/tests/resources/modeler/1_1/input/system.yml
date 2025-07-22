@@ -21,22 +21,22 @@ system:
 
       parameters:
         - id: load
-      time-dependent: true
+          time-dependent: true
           scenario-dependent: false
-      value: load_1_1
+          value: load_1_1
         - id: gen1_max_p
-      time-dependent: true
-      scenario-dependent: false
-      value: gen1_max_p_1_1
-    - id: gen1_prop_cost
-      time-dependent: true
+          time-dependent: true
           scenario-dependent: false
-      value: gen1_prop_cost_1_1
-    - id: gen2_max_p
-      time-dependent: true
-      scenario-dependent: false
-      value: gen2_max_p_1_1
-    - id: gen2_prop_cost
-      time-dependent: true
-      scenario-dependent: false
-      value: gen2_prop_cost_1_1
+          value: gen1_max_p_1_1
+        - id: gen1_prop_cost
+          time-dependent: true
+          scenario-dependent: false
+          value: gen1_prop_cost_1_1
+        - id: gen2_max_p
+          time-dependent: true
+          scenario-dependent: false
+          value: gen2_max_p_1_1
+        - id: gen2_prop_cost
+          time-dependent: true
+          scenario-dependent: false
+          value: gen2_prop_cost_1_1
