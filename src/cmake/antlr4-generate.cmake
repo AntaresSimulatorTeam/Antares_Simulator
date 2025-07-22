@@ -33,15 +33,18 @@ endmacro()
 
 add_antlr_target(antlr_generate_hours_field
   ${CMAKE_SOURCE_DIR}/libs/antares/additionalConstraintRhsExpression
-  HoursField.g4
-)
+  HoursField.g4)
 
 add_antlr_target(antlr_generate_expression
   ${CMAKE_SOURCE_DIR}/expressions/antlr-interface
-  Expr.g4
-)
+  Expr.g4)
+
+add_antlr_target(antlr_generate_scbuilder
+  ${CMAKE_SOURCE_DIR}/libs/antares/scenarioGroupParser/scenarioBuilderExpression
+  ScenarioBuilder.g4)
 
 add_custom_target(antlr_generate_all
   DEPENDS
   antlr_generate_hours_field
-  antlr_generate_expression)
+  antlr_generate_expression
+  antlr_generate_scbuilder)
