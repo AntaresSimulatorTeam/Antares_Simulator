@@ -89,7 +89,7 @@ TimeIndex TimeIndexVisitor::visit(const Nodes::NegationNode* neg)
     return dispatch(neg->child());
 }
 
-TimeIndex TimeIndexVisitor::visit( const Nodes::PortFieldNode* )
+TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldNode*)
 {
     throw std::invalid_argument("PortFieldNode not handled by visitor TimeIndexVisitor");
 }
