@@ -31,9 +31,8 @@ class EmptyDataSeries: public Antares::Optimisation::LinearProblemApi::ILinearPr
 {
 public:
     double getData([[maybe_unused]] const std::string& dataSetId,
-                   [[maybe_unused]] const std::string& scenarioGroup,
-                   [[maybe_unused]] unsigned year,
-                   [[maybe_unused]] unsigned hour) override
+                   [[maybe_unused]] unsigned timeSeriesNumber,
+                   [[maybe_unused]] unsigned hour) const override
     {
         return 0.;
     }

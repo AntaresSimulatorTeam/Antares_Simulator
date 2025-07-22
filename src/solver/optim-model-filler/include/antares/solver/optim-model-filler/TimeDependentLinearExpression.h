@@ -44,10 +44,20 @@ public:
       const Optimisation::LinearProblemApi::FillContext& fillContext,
       const LinearExpression& linearExpression);
     explicit TimeDependentLinearExpression(LinearExpressionMap linearExpressions);
+    explicit TimeDependentLinearExpression(
+      const TimeDependentLinearExpression& timeDependentLinearExpression)
+      = default;
+
+    TimeDependentLinearExpression(TimeDependentLinearExpression&& other) noexcept = default;
+    TimeDependentLinearExpression& operator=(TimeDependentLinearExpression&& other) = default;
 
     /// Sum two linear expressions
+    [[deprecated("Will make a potentially expensive copy of a TimeDependentLinearExpression. Use "
+                 "operator+= if possible.")]]
     TimeDependentLinearExpression operator+(const TimeDependentLinearExpression& other) const;
     /// Subtract two linear expressions
+    [[deprecated("Will make a potentially expensive copy of a TimeDependentLinearExpression. Use "
+                 "operator-= if possible.")]]
     TimeDependentLinearExpression operator-(const TimeDependentLinearExpression& other) const;
     /// Multiply two linear expressions
     /// Only one can have non-zero coefficients, otherwise the result cannot be linear
@@ -65,6 +75,7 @@ public:
     const LinearExpressionMap& GetLinearExpressions() const;
     size_t getSize() const;
     TimeDependentLinearExpression& operator+=(const TimeDependentLinearExpression& other);
+    TimeDependentLinearExpression& operator-=(const TimeDependentLinearExpression& other);
 
 private:
     LinearExpressionMap linearExpressions_;
