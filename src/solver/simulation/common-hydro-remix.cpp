@@ -294,18 +294,18 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
           const auto& dtgMrgArray = area.scratchpad[numSpace].dispatchableGenerationMargin;
           const std::vector<double> dtgMrg(dtgMrgArray, dtgMrgArray + HOURS_IN_WEEK);
 
-          auto hydroStorage = std::make_shared<HydroForRemixWithLevels>(hydroGen,
-                                                                        unsupE,
-                                                                        levels,
-                                                                        hydroPmax,
-                                                                        hydroPmin,
-                                                                        inflows,
-                                                                        ovf,
-                                                                        pump,
-                                                                        initLevel,
-                                                                        capacity,
-                                                                        efficiency,
-                                                                        reservoirManagement);
+          auto hydroStorage = makeHydroForRemix(hydroGen,
+                                                unsupE,
+                                                levels,
+                                                hydroPmax,
+                                                hydroPmin,
+                                                inflows,
+                                                ovf,
+                                                pump,
+                                                initLevel,
+                                                capacity,
+                                                efficiency,
+                                                reservoirManagement);
 
           shavePeaksByRemixingStorageGen(unsupE, DispatchGen, spillage, dtgMrg, hydroStorage);
       });

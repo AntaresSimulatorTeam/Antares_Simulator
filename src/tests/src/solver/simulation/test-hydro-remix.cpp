@@ -38,8 +38,7 @@ struct InputFixture
                                                                   pump,
                                                                   init_level,
                                                                   capacity,
-                                                                  pumpEff,
-                                                                  reservoirManagement);
+                                                                  pumpEff);
     }
 
     std::vector<double> TotalGenNoHydro, HydroGen, UnsupE, levels, HydroPmax, HydroPmin, inflows,
