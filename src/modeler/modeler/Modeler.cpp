@@ -140,7 +140,7 @@ void Modeler::solve() const
     }
     catch (const LoadFiles::ErrorLoadingYaml&)
     {
-        throw Antares::Solver::Modeler::Error("Error while loading files, exiting");
+        throw Antares::Solver::Modeler::ModelerError("Error while loading files, exiting");
     }
 }
 } // namespace Antares::Solver

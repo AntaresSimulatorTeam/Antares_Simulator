@@ -60,7 +60,7 @@ int main(int argc, const char** argv)
         Antares::Solver::Modeler modeler(loader, writer);
         modeler.solve();
     }
-    catch (const Antares::Solver::Modeler::Error& e)
+    catch (const Antares::Solver::Modeler::ModelerError& e)
     {
         logs.error() << "Modeler error: " << e.what() << "\nExiting simulation.";
         return EXIT_FAILURE;
