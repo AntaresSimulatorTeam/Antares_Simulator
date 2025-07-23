@@ -40,6 +40,8 @@ namespace Antares
 {
 namespace Data
 {
+
+#ifdef BUILD_UI
 static bool PreproHydroSaveSettings(PreproHydro* h, const char* filename)
 {
     IniFile ini;
@@ -47,6 +49,7 @@ static bool PreproHydroSaveSettings(PreproHydro* h, const char* filename)
     s->add("intermonthly-correlation", h->intermonthlyCorrelation);
     return ini.save(filename);
 }
+#endif
 
 static bool PreproHydroLoadSettings(PreproHydro* h, const fs::path& filename)
 {
