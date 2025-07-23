@@ -412,8 +412,7 @@ private:
         }
 
         // Compute all statistics for the current year (daily,weekly,monthly,...)
-        VariableAccessorType::template
-        ComputeStatistics<VCardOrigin>(pValuesForTheCurrentYear[0]);
+        VariableAccessorType::template ComputeStatistics<VCardOrigin>(pValuesForTheCurrentYear[0]);
         VariableAccessorType::ComputeSummary(pValuesForTheCurrentYear[0],
                                              AncestorType::pResults,
                                              year);
@@ -460,8 +459,8 @@ private:
         }
 
         // Compute all statistics for the current year (daily,weekly,monthly,...)
-        // VariableAccessorType::template ComputeStatistics<VCardOrigin>(
-        //   pValuesForTheCurrentYear[numSpace]);
+        VariableAccessorType::template ComputeStatistics<VCardOrigin>(
+          pValuesForTheCurrentYear[numSpace]);
     }
 
     void internalSpatialAggregateForParallelYears(unsigned int year, unsigned int numSpace)

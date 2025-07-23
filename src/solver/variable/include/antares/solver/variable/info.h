@@ -342,27 +342,28 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
     {
         for (uint i = 0; i != intermediateValues.size(); ++i)
         {
-        if (VCardT::spatialAggregate & Category::spatialAggregateOr)
-        {
-            intermediateValues[i].computeStatisticsOrForTheCurrentYear();
-        }
-        else
-        {
-            // Compute all statistics for the current year (daily,weekly,monthly)
-            if (VCardT::spatialAggregatePostProcessing
-                == (int)Category::spatialAggregatePostProcessingPrice)
+            if (VCardT::spatialAggregate & Category::spatialAggregateOr)
             {
-                // intermediateValues[i].adjustValuesWhenRelatedToAPrice();
-                intermediateValues[i].computeAveragesForCurrentYearFromHourlyResults();
+                intermediateValues[i].computeStatisticsOrForTheCurrentYear();
             }
             else
             {
-                intermediateValues[i].computeStatisticsForTheCurrentYear();
+                // Compute all statistics for the current year (daily,weekly,monthly)
+                if (VCardT::spatialAggregatePostProcessing
+                    == (int)Category::spatialAggregatePostProcessingPrice)
+                {
+                    // intermediateValues[i].adjustValuesWhenRelatedToAPrice();
+                    intermediateValues[i].computeAveragesForCurrentYearFromHourlyResults();
+                }
+                else
+                {
+                    intermediateValues[i].computeStatisticsForTheCurrentYear();
+                }
             }
-        }
         }
     }
 
+    // TODO VP: remove ? seems unused
     template<class VCardT, class U>
     static void ComputeStatistics(U& intermediateValues, Type& container, uint)
     {
