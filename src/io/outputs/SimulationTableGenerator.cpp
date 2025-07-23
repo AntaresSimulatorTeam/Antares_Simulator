@@ -38,7 +38,9 @@ void FillSimulationTable(
         {
             if (modelVar.IsScenarioDependent() && modelVar.isTimeDependent())
             {
-                for (auto scenario: fillContext.getSelectedScenarios())
+                // TODO
+                //  for (auto scenario: fillContext.getSelectedScenarios())
+                unsigned int scenario = 0;
                 {
                     for (auto timeStep(fillContext.getFirstTimeStep());
                          timeStep <= fillContext.getLastTimeStep();
