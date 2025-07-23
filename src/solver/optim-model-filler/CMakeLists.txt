@@ -27,7 +27,6 @@ add_library(Antares::${PROJ} ALIAS ${PROJ})
 
 set_target_properties(${PROJ} PROPERTIES LINKER_LANGUAGE CXX)
 
-find_package(fmt REQUIRED)
 target_link_libraries(${PROJ}
         PRIVATE
         Antares::expressions
