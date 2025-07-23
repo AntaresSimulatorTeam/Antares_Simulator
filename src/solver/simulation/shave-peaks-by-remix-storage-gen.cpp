@@ -21,15 +21,22 @@ static int hourForTotalGenMin(const std::vector<double>& TotalGen,
 {
     double minTotalGen = top;
     int min_hour = -1;
-    for (unsigned h = 0; h < TotalGen.size(); ++h)
+
+    auto indices = std::views::iota(0, static_cast<int>(TotalGen.size()));
+    auto filter_view = indices
+                       | rng::views::filter(
+                         [&](int h) { return UnsupE[h] > 0 && !triedMins[h] && validHours[h]; });
+    std::vector<int> filtered_indices(filter_view.begin(), filter_view.end());
+
+    //    auto min_it = rng::min_element(filtered_indices, {}, [&](int h) { return TotalGen[h]; });
+    //    return TotalGen[*min_it] > top ? -1 : *min_it;
+
+    for (const auto& h: filtered_indices)
     {
-        if (UnsupE[h] > 0 && !triedMins[h] && validHours[h])
+        if (TotalGen[h] < minTotalGen)
         {
-            if (TotalGen[h] < minTotalGen)
-            {
-                minTotalGen = TotalGen[h];
-                min_hour = h;
-            }
+            minTotalGen = TotalGen[h];
+            min_hour = h;
         }
     }
     return min_hour;
