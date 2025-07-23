@@ -57,7 +57,7 @@ struct VCardDispatchableGeneration
     typedef VCardDispatchableGeneration VCardForSpatialAggregate;
 
     //! Data Level
-    static constexpr uint8_t categoryDataLevel = Category::DataLevel::area;
+    static constexpr uint8_t categoryDataLevel = Category::DataLevel::setOfAreas;
     //! File level (provided by the type of the results)
     static constexpr uint8_t categoryFileLevel = ResultsType::categoryFile
                                                  & (Category::FileLevel::id
@@ -81,7 +81,7 @@ struct VCardDispatchableGeneration
 
     using IntermediateValuesBaseType = std::vector<IntermediateValues>;
     using IntermediateValuesType = std::vector<IntermediateValuesBaseType>;
-    using IntermediateValuesTypeForSpatialAg = IntermediateValuesType;
+    using IntermediateValuesTypeForSpatialAg =  std::vector<IntermediateValuesBaseType>;
 
 }; // class VCard
 
