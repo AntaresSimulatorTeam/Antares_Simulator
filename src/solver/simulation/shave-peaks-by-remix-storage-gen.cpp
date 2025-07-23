@@ -15,40 +15,39 @@ const std::string error_msg_start = "Remix storage input : ";
 namespace Antares::Solver::Simulation
 {
 
-static int hourForTotalGenMin(const std::vector<double>& TotalGen,
-                              const std::vector<double>& UnsupE,
-                              const std::vector<bool>& triedMins,
-                              const std::vector<bool>& validHours,
-                              double top)
+static std::vector<int> filterHoursForMin(const std::vector<double>& UnsupE,
+                                          const std::vector<bool>& triedMins,
+                                          const std::vector<bool>& validHours)
 {
     auto selectHours = [&](int h) { return UnsupE[h] > 0 && !triedMins[h] && validHours[h]; };
-    auto hours = std::views::iota(0, static_cast<int>(TotalGen.size()));
-    auto filterHoursView = hours | vws::filter(selectHours);
-    std::vector<int> filteredHours(filterHoursView.begin(), filterHoursView.end());
+    auto filterHoursView = vws::iota(0, static_cast<int>(UnsupE.size())) | vws::filter(selectHours);
+    return {filterHoursView.begin(), filterHoursView.end()};
+}
 
+static int hourForTotalGenMin(const std::vector<double>& TotalGen,
+                              std::vector<int>& filteredHours,
+                              double top)
+{
     auto min_it = rng::min_element(filteredHours, {}, [&](int h) { return TotalGen[h]; });
     return min_it == filteredHours.end() || TotalGen[*min_it] > top ? -1 : *min_it;
 }
 
-static int hourForTotalGenMax(const std::vector<double>& TotalGen,
-                              const std::vector<bool>& triedMaxs,
-                              const std::vector<bool>& validHours,
-                              double minTotalGen)
+static std::vector<int> filterHoursForMax(const std::vector<double>& TotalGen,
+                                          const std::vector<bool>& triedMaxs,
+                                          const std::vector<bool>& validHours,
+                                          double minTotalGen)
 {
-    double maxTotalGen = 0;
-    int max_hour = -1;
-    for (unsigned h = 0; h < TotalGen.size(); ++h)
-    {
-        if (TotalGen[h] >= minTotalGen + eps && !triedMaxs[h] && validHours[h])
-        {
-            if (TotalGen[h] > maxTotalGen)
-            {
-                maxTotalGen = TotalGen[h];
-                max_hour = h;
-            }
-        }
-    }
-    return max_hour;
+    auto selectHours = [&](int h)
+    { return TotalGen[h] >= minTotalGen + eps && !triedMaxs[h] && validHours[h]; };
+    auto filterHoursView = vws::iota(0, static_cast<int>(TotalGen.size()))
+                           | vws::filter(selectHours);
+    return {filterHoursView.begin(), filterHoursView.end()};
+}
+
+static int hourForTotalGenMax(const std::vector<double>& TotalGen, std::vector<int>& filteredHours)
+{
+    auto max_it = rng::max_element(filteredHours, {}, [&](int h) { return TotalGen[h]; });
+    return max_it == filteredHours.end() ? -1 : *max_it;
 }
 
 static void checkInput(const std::vector<double>& DispatchGen,
@@ -129,7 +128,8 @@ void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
 
         while (true)
         {
-            int hourMin = hourForTotalGenMin(TotalGen, UnsupE, triedMins, validHours, top);
+            auto filteredHours = filterHoursForMin(UnsupE, triedMins, validHours);
+            int hourMin = hourForTotalGenMin(TotalGen, filteredHours, top);
             if (hourMin == -1)
             {
                 break;
@@ -138,10 +138,9 @@ void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
             std::vector<bool> triedMaxs(DispatchGen.size(), false);
             while (true)
             {
-                int hourMax = hourForTotalGenMax(TotalGen,
-                                                 triedMaxs,
-                                                 validHours,
-                                                 TotalGen[hourMin]);
+                double totaGenMin = TotalGen[hourMin];
+                filteredHours = filterHoursForMax(TotalGen, triedMaxs, validHours, totaGenMin);
+                int hourMax = hourForTotalGenMax(TotalGen, filteredHours);
                 if (hourMax == -1)
                 {
                     break;
