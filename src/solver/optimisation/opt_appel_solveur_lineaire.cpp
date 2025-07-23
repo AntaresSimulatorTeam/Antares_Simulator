@@ -109,6 +109,7 @@ static void fillModelerComponents(
           std::make_unique<Optimisation::ComponentFiller>(component,
                                                           variableDictionary,
                                                           emptyScenarioGroupRepository));
+        // TODO: use scenario group repository
     }
     for (auto& component_filler: componentFillers)
     {
@@ -160,7 +161,7 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
                         * nTsInDay;
         lastTimestep = firstTimestep + nTsInDay - 1;
     }
-    return {firstTimestep, lastTimestep, 0};
+    return {firstTimestep, lastTimestep, 0}; // TODO: handle scenarios/year
 }
 
 // Returns a non-owning pointer

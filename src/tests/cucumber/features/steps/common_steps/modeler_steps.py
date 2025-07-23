@@ -1,3 +1,35 @@
+#  Copyright 2007-2025, RTE (https://www.rte-france.com)
+#  See AUTHORS.txt
+#  SPDX-License-Identifier: MPL-2.0
+#  This file is part of Antares-Simulator,
+#  Adequacy and Performance assessment for interconnected energy networks.
+#
+#  Antares_Simulator is free software: you can redistribute it and/or modify
+#  it under the terms of the Mozilla Public Licence 2.0 as published by
+#  the Mozilla Foundation, either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  Antares_Simulator is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#  Mozilla Public Licence 2.0 for more details.
+#
+#  You should have received a copy of the Mozilla Public Licence 2.0
+#  along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+#
+#  Antares_Simulator is free software: you can redistribute it and/or modify
+#  it under the terms of the Mozilla Public Licence 2.0 as published by
+#  the Mozilla Foundation, either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  Antares_Simulator is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#  Mozilla Public Licence 2.0 for more details.
+#
+#  You should have received a copy of the Mozilla Public Licence 2.0
+#  along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+
 # Test steps definitions specific to antares-modeler
 
 import os
@@ -41,17 +73,18 @@ def modeler_var_optimal_value(context):
         ts_array = row["timestep"].split("-")
         ts_start = int(ts_array[0])
         ts_end = int(ts_array[1]) if len(ts_array) == 2 else ts_start
-        if "chronicle" not in context.table.headings:
-            print("No chronicle specified, using default values")
-            chronicle_start = 0
-            chronicle_end = 0
+        if "timeseriesNumber" not in context.table.headings:
+            print("No timeseriesNumber specified, using default values")
+            timeseriesNumber_start = 0
+            timeseriesNumber_end = 0
         else:
-            chronicle_array = row["chronicle"].split("-")
-            chronicle_start = int(chronicle_array[0])
-            chronicle_end = int(chronicle_array[1]) if len(chronicle_array) == 2 else chronicle_start
-        for chronicle in range(chronicle_start, chronicle_end + 1):
+            timeseriesNumber_array = row["timeseriesNumber"].split("-")
+            timeseriesNumber_start = int(timeseriesNumber_array[0])
+            timeseriesNumber_end = int(timeseriesNumber_array[1]) if len(
+                timeseriesNumber_array) == 2 else timeseriesNumber_start
+        for timeseriesNumber in range(timeseriesNumber_start, timeseriesNumber_end + 1):
             for ts in range(ts_start, ts_end + 1):
-                var_id = row["component"] + "." + row["variable"] + "_s" + str(chronicle) + "_t" + str(ts)
+                var_id = row["component"] + "." + row["variable"] + "_s" + str(timeseriesNumber) + "_t" + str(ts)
                 assert_double_close(get_value(row, ts), context.moh.get_optimal_value(var_id), 1e-6)
 
 

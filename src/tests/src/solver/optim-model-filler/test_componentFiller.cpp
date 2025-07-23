@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -465,7 +465,7 @@ BOOST_AUTO_TEST_CASE(ct_with_time_series_variable_bounds)
     }
 }
 
-BOOST_AUTO_TEST_CASE(get_chronicle_for_given_year)
+BOOST_AUTO_TEST_CASE(get_timeseriesNumber_for_given_year)
 {
     auto var_node = variable("var1",
                              Antares::Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY);

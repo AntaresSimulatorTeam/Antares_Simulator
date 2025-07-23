@@ -191,7 +191,7 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
             const Optimization::Dimensions dim(
               Optimization::IntegerInterval{
                 time_series_number,
-                time_series_number}, /*TODO Handle range of chronicle ? */
+                time_series_number}, /*TODO Handle range of timeSeries ? */
               Optimization::IntegerInterval(ctx.getFirstTimeStep(), ctx.getLastTimeStep()));
             // std::visit to handle the 4 cases: double/double, vector/double,
             // double/vector and vector/vector.
