@@ -7,6 +7,8 @@
 #include "include/antares/solver/simulation/remix-utils.h"
 
 namespace rng = std::ranges;
+namespace vws = std::ranges::views;
+
 constexpr double eps = 1e-3;
 const std::string error_msg_start = "Remix storage input : ";
 
@@ -22,24 +24,13 @@ static int hourForTotalGenMin(const std::vector<double>& TotalGen,
     double minTotalGen = top;
     int min_hour = -1;
 
-    auto indices = std::views::iota(0, static_cast<int>(TotalGen.size()));
-    auto filter_view = indices
-                       | rng::views::filter(
-                         [&](int h) { return UnsupE[h] > 0 && !triedMins[h] && validHours[h]; });
-    std::vector<int> filtered_indices(filter_view.begin(), filter_view.end());
+    auto selectHours = [&](int h) { return UnsupE[h] > 0 && !triedMins[h] && validHours[h]; };
+    auto hours = std::views::iota(0, static_cast<int>(TotalGen.size()));
+    auto filterHoursView = hours | vws::filter(selectHours);
+    std::vector<int> filteredHours(filterHoursView.begin(), filterHoursView.end());
 
-    //    auto min_it = rng::min_element(filtered_indices, {}, [&](int h) { return TotalGen[h]; });
-    //    return TotalGen[*min_it] > top ? -1 : *min_it;
-
-    for (const auto& h: filtered_indices)
-    {
-        if (TotalGen[h] < minTotalGen)
-        {
-            minTotalGen = TotalGen[h];
-            min_hour = h;
-        }
-    }
-    return min_hour;
+    auto min_it = rng::min_element(filteredHours, {}, [&](int h) { return TotalGen[h]; });
+    return min_it == filteredHours.end() || TotalGen[*min_it] > top ? -1 : *min_it;
 }
 
 static int hourForTotalGenMax(const std::vector<double>& TotalGen,
