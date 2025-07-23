@@ -72,6 +72,7 @@ struct CORRESPONDANCES_DES_VARIABLES
         std::vector<int> LevelVariable;
         std::vector<int> CostVariationInjection;
         std::vector<int> CostVariationWithdrawal;
+        std::vector<int> OverflowVariable;
     } SIM_ShortTermStorage;
 };
 
@@ -181,6 +182,8 @@ struct PROPERTIES
     bool initialLevelOptim;
     bool penalizeVariationWithdrawal;
     bool penalizeVariationInjection;
+    bool allowOverflow;
+    double overflowCost;
 
     std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
     std::vector<std::shared_ptr<Antares::Data::ShortTermStorage::AdditionalConstraints>>

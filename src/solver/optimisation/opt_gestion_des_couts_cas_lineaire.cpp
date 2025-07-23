@@ -89,6 +89,12 @@ static void shortTermStorageCost(
                     linearCost[varCostVariationWithdrawal] = storage.series->costVariationWithdrawal
                                                                [hourInTheYear];
                 }
+                if (const int var = variableManager.ShortTermStorageOverflow(clusterGlobalIndex,
+                                                                             pdtJour);
+                    storage.allowOverflow && var >= 0)
+                {
+                    linearCost[var] = storage.overflowCost;
+                }
             }
         }
     }
