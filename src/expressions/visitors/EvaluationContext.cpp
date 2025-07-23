@@ -1,3 +1,24 @@
+/*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
 #include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include "antares/optimisation/linear-problem-api/IScenario.h"
@@ -60,8 +81,8 @@ double EvaluationContext::getParameterValue(const std::string& key,
                                             unsigned int year,
                                             unsigned int hour) const
 {
-    IScenario::TimeSeriesNumber chronicle = scenario_.getData(year);
-    return data_.getData(parameters_types_and_values_.at(key).value, chronicle, hour);
+    IScenario::TimeSeriesNumber time_series_number = scenario_.getData(year);
+    return data_.getData(parameters_types_and_values_.at(key).value, time_series_number, hour);
 }
 
 ParameterType EvaluationContext::getParameterType(const std::string& key) const

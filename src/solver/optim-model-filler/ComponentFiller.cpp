@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -186,11 +186,12 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
         const Optimization::PartialKey key(component_.Id(), variable.Id());
         if (variable.isTimeDependent())
         {
-            Optimisation::LinearProblemApi::IScenario::TimeSeriesNumber chronicle
+            Optimisation::LinearProblemApi::IScenario::TimeSeriesNumber time_series_number
               = scenario.getData(ctx.getYear());
             const Optimization::Dimensions dim(
-              Optimization::IntegerInterval{chronicle,
-                                            chronicle}, /*TODO Handle range of chronicle ? */
+              Optimization::IntegerInterval{
+                time_series_number,
+                time_series_number}, /*TODO Handle range of chronicle ? */
               Optimization::IntegerInterval(ctx.getFirstTimeStep(), ctx.getLastTimeStep()));
             // std::visit to handle the 4 cases: double/double, vector/double,
             // double/vector and vector/vector.
