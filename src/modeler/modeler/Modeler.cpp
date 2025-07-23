@@ -32,6 +32,8 @@
 #include "antares/solver/modeler/ILoader.h"
 #include "antares/solver/modeler/IWriter.h"
 
+#include "../../io/outputs/include/antares/io/outputs/SimulationTableCsvFile.h"
+
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares;
 using namespace Antares::Optimization;
@@ -64,12 +66,11 @@ public:
         std::vector<std::unique_ptr<Optimization::ComponentFiller>> fillers;
         std::vector<LinearProblemFiller*> fillers_ptr;
         // All LP variables coordinates (component id, variable id, scenario, time step)
-        VariableDictionary variableDictionary;
 
         for (const auto& [_, component]: system_->Components())
         {
             auto cf = std::make_unique<Optimization::ComponentFiller>(component,
-                                                                      variableDictionary);
+                                                                      variableDictionary_);
             fillers.push_back(std::move(cf));
         }
         for (auto& component_filler: fillers)
@@ -83,8 +84,14 @@ public:
         linear_problem_builder.build(pb, *dataSeries, dummy_time_scenario_ctx);
     }
 
+    [[nodiscard]] const VariableDictionary& getVariableDictionary() const
+    {
+        return variableDictionary_;
+    }
+
 private:
     const ModelerStudy::SystemModel::System* system_;
+    VariableDictionary variableDictionary_;
 };
 
 void Modeler::solve() const
@@ -124,11 +131,16 @@ void Modeler::solve() const
 
         logs.info() << "Launching resolution...";
         auto* solution = ortools_linear_problem.solve(parameters.solverLogs);
+
         switch (solution->getStatus())
         {
         case MipStatus::OPTIMAL:
         case MipStatus::FEASIBLE:
             writer_.writeSolution(*solution);
+            writer_.writeSimulationTable(*solution,
+                                         data.system->Components(),
+                                         system_linear_problem.getVariableDictionary(),
+                                         {parameters.firstTimeStep, parameters.lastTimeStep});
             break;
         default:
             logs.error() << "Problem during linear optimization";

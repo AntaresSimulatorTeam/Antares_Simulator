@@ -126,7 +126,18 @@ public:
 
     void writeProblem(
       [[maybe_unused]] const Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem&
-        problem) override {};
+        problem) override
+    {
+    }
+
+    void writeSimulationTable(
+      const Antares::Optimisation::LinearProblemApi::IMipSolution& solution,
+      const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>&
+        components,
+      const Antares::Optimization::VariableDictionary& variableDictionary,
+      const Antares::Optimisation::LinearProblemApi::FillContext& fillContext) const override
+    {
+    }
 };
 
 BOOST_AUTO_TEST_CASE(dummy)

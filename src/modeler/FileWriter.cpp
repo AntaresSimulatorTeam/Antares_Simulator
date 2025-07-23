@@ -25,7 +25,11 @@
 #include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/mipSolution.h>
+#include <antares/solver/optim-model-filler/VariableDictionary.h>
+#include <antares/study/system-model/component.h>
 
+#include "../io/outputs/include/antares/io/outputs/SimulationTableCsvFile.h"
+#include "../io/outputs/include/antares/io/outputs/SimulationTableGenerator.h"
 #include "modeler/include/antares/solver/modeler/Modeler.h"
 
 namespace Antares::Modeler
@@ -59,6 +63,20 @@ void FileWriter::writeSolution(
         {
             sol_out << name << " " << value << std::endl;
         }
+    }
+}
+
+void FileWriter::writeSimulationTable(
+  const Optimisation::LinearProblemApi::IMipSolution& solution,
+  const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>& components,
+  const Antares::Optimization::VariableDictionary& variableDictionary,
+  const Antares::Optimisation::LinearProblemApi::FillContext& fillContext) const
+{
+    if (output)
+    {
+        SimulationTableCsvFile simulationTable(outputPath_, "");
+        FillSimulationTable(simulationTable, solution, components, variableDictionary, fillContext);
+        simulationTable.write();
     }
 }
 

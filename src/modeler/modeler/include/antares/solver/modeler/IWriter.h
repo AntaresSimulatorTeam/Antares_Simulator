@@ -20,11 +20,31 @@
 
 #pragma once
 
+namespace Antares::Optimization
+{
+class VariableDictionary;
+}
+
 namespace Antares::Optimisation::LinearProblemMpsolverImpl
 {
 class OrtoolsLinearProblem;
 class OrtoolsMipSolution;
 } // namespace Antares::Optimisation::LinearProblemMpsolverImpl
+namespace Antares::Optimisation::LinearProblemApi
+{
+class IMipSolution;
+class FillContext;
+} // namespace Antares::Optimisation::LinearProblemApi
+
+namespace Antares::Optimization
+{
+class VariableDictionary;
+}
+
+namespace Antares::ModelerStudy::SystemModel
+{
+class Component;
+}
 
 namespace Antares::Solver
 {
@@ -35,6 +55,13 @@ public:
     virtual void init(bool) = 0;
     virtual void writeSolution(
       const Optimisation::LinearProblemMpsolverImpl::OrtoolsMipSolution& solution)
+      = 0;
+    virtual void writeSimulationTable(
+      const Optimisation::LinearProblemApi::IMipSolution& solution,
+      const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>&
+        components,
+      const Antares::Optimization::VariableDictionary& variableDictionary,
+      const Optimisation::LinearProblemApi::FillContext& fillContext) const
       = 0;
 
     virtual void writeProblem(
