@@ -6,6 +6,7 @@
 
 #include "include/antares/solver/simulation/remix-utils.h"
 
+namespace rng = std::ranges;
 constexpr double eps = 1e-3;
 const std::string error_msg_start = "Remix storage input : ";
 
@@ -13,7 +14,7 @@ namespace Antares::Solver::Simulation
 {
 
 static int hourForTotalGenMin(const std::vector<double>& TotalGen,
-                              const std::vector<double>& OutUnsupE,
+                              const std::vector<double>& UnsupE,
                               const std::vector<bool>& triedMins,
                               const std::vector<bool>& validHours,
                               double top)
@@ -22,7 +23,7 @@ static int hourForTotalGenMin(const std::vector<double>& TotalGen,
     int min_hour = -1;
     for (unsigned h = 0; h < TotalGen.size(); ++h)
     {
-        if (OutUnsupE[h] > 0 && !triedMins[h] && validHours[h])
+        if (UnsupE[h] > 0 && !triedMins[h] && validHours[h])
         {
             if (TotalGen[h] < minTotalGen)
             {
@@ -68,7 +69,7 @@ static void checkInput(const std::vector<double>& DispatchGen,
                                  DTG_MRG.size(),
                                  storageGen.size()};
 
-    if (!std::ranges::all_of(sizes, [&sizes](const size_t s) { return s == sizes.front(); }))
+    if (!rng::all_of(sizes, [&sizes](const size_t s) { return s == sizes.front(); }))
     {
         throw std::invalid_argument(error_msg_start + "arrays of different sizes");
     }
@@ -119,9 +120,8 @@ void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
     checkInput(DispatchGen, UnsupEinit, Spillage, DTG_MRG, storageGenInit);
 
     int loop = 1000;
-    double top = *std::max_element(DispatchGen.begin(), DispatchGen.end())
-                 + *std::max_element(storageGenInit.begin(), storageGenInit.end())
-                 + *std::max_element(UnsupEinit.begin(), UnsupEinit.end()) + 1;
+    double top = *rng::max_element(DispatchGen) + *rng::max_element(storageGenInit)
+                 + *rng::max_element(UnsupEinit) + 1;
 
     const auto validHours = ValidHours(Spillage, DTG_MRG, storageGenInit, UnsupEinit);
 
