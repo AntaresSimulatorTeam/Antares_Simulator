@@ -21,9 +21,6 @@ static int hourForTotalGenMin(const std::vector<double>& TotalGen,
                               const std::vector<bool>& validHours,
                               double top)
 {
-    double minTotalGen = top;
-    int min_hour = -1;
-
     auto selectHours = [&](int h) { return UnsupE[h] > 0 && !triedMins[h] && validHours[h]; };
     auto hours = std::views::iota(0, static_cast<int>(TotalGen.size()));
     auto filterHoursView = hours | vws::filter(selectHours);
