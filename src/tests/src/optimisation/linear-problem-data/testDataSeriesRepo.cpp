@@ -14,7 +14,7 @@ BOOST_AUTO_TEST_CASE(repo_is_empty__asking_any_data_series_raises_exception)
     DataSeriesRepository dataSeriesRepository;
 
     std::string expected_err_msg = "Data series repo is empty, and somebody requests data from it";
-    BOOST_CHECK_EXCEPTION(dataSeriesRepository.getDataSeries("dummy name"),
+    BOOST_CHECK_EXCEPTION((void)dataSeriesRepository.getDataSeries("dummy name"),
                           DataSeriesRepository::Empty,
                           checkMessage(expected_err_msg));
 }
@@ -41,7 +41,7 @@ BOOST_AUTO_TEST_CASE(repo_not_empty__asking_nonexistent_data_raises_exception)
     dataSeriesRepository.addDataSeries(std::move(some_TS_set));
 
     std::string expected_err_msg = "Data series repo : data series 'dummy name' does not exist";
-    BOOST_CHECK_EXCEPTION(dataSeriesRepository.getDataSeries("dummy name"),
+    BOOST_CHECK_EXCEPTION((void)dataSeriesRepository.getDataSeries("dummy name"),
                           DataSeriesRepository::DataSeriesNotExist,
                           checkMessage(expected_err_msg));
 }

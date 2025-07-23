@@ -209,45 +209,12 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     OptimizationStatistics& optimizationStatistics = problemeHebdo->optimizationStatistics[opt];
     TIME_MEASURE timeMeasure;
 
-    if (solver)
-    {
-        if (problemeHebdo->ReinitOptimisation)
-        {
-            ORTOOLS_LibererProbleme(solver);
+    ORTOOLS_LibererProbleme(solver);
 
-            ProblemeAResoudre->ProblemesSpx[NumIntervalle] = nullptr;
+    ProblemeAResoudre->ProblemesSpx[NumIntervalle] = nullptr;
 
-            solver = nullptr;
-        }
-        else
-        {
-            TimeMeasurement updateMeasure;
+    solver = convertToMPSolver(problemeHebdo, NumIntervalle, options, problemeHebdo->NamedProblems);
 
-            ORTOOLS_ModifierLeVecteurCouts(solver,
-                                           ProblemeAResoudre->CoutLineaire.data(),
-                                           ProblemeAResoudre->NombreDeVariables);
-            ORTOOLS_ModifierLeVecteurSecondMembre(solver,
-                                                  ProblemeAResoudre->SecondMembre.data(),
-                                                  ProblemeAResoudre->Sens.data(),
-                                                  ProblemeAResoudre->NombreDeContraintes);
-            ORTOOLS_CorrigerLesBornes(solver,
-                                      ProblemeAResoudre->Xmin.data(),
-                                      ProblemeAResoudre->Xmax.data(),
-                                      ProblemeAResoudre->TypeDeVariable.data(),
-                                      ProblemeAResoudre->NombreDeVariables);
-
-            updateMeasure.tick();
-            timeMeasure.updateTime = updateMeasure.duration_ms();
-            optimizationStatistics.addUpdateTime(timeMeasure.updateTime);
-        }
-    }
-    if (solver == nullptr)
-    {
-        solver = convertToMPSolver(problemeHebdo,
-                                   NumIntervalle,
-                                   options,
-                                   problemeHebdo->NamedProblems);
-    }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
     mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,

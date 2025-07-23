@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE(ask_an_empty_repo_a_rank_exception_raised)
     ScenarioGroupRepository scenarioGroupRepo;
 
     std::string expectedErrMsg = "Scenario group 'some group' does not exist in group repo.";
-    BOOST_CHECK_EXCEPTION(scenarioGroupRepo.scenario("some group"),
+    BOOST_CHECK_EXCEPTION((void)scenarioGroupRepo.scenario("some group"),
                           ScenarioGroupRepository::DoesNotExist,
                           checkMessage(expectedErrMsg));
 }
@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE(ask_a_repo_a_rank_it_cannot_find_exception_raised)
 
     std::string expectedErrMsg = "In scenario group 'some group', time serie for year 0 does not "
                                  "exist.";
-    BOOST_CHECK_EXCEPTION(scenarioGroupRepo.scenario("some group").getData(0),
+    BOOST_CHECK_EXCEPTION((void)scenarioGroupRepo.scenario("some group").getData(0),
                           Antares::Error::RuntimeError,
                           checkMessage(expectedErrMsg));
 }

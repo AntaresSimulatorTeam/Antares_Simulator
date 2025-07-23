@@ -52,7 +52,9 @@ LinearExpression::LinearExpression(double offset, FullKeyMap coef_per_var):
 
 LinearExpression LinearExpression::operator+(const LinearExpression& other) const
 {
-    return {offset_ + other.offset_, add_maps(coef_per_var_, other.coef_per_var_)};
+    auto result(*this);
+    result += other;
+    return result;
 }
 
 const FullKeyMap& LinearExpression::coefPerVar() const
@@ -63,14 +65,15 @@ const FullKeyMap& LinearExpression::coefPerVar() const
 LinearExpression& LinearExpression::operator+=(const LinearExpression& other)
 {
     this->offset_ += other.offset_;
-    this->coef_per_var_ = add_maps(coef_per_var_, other.coef_per_var_);
+    add_maps(coef_per_var_, other.coef_per_var_);
     return *this;
 }
 
 LinearExpression LinearExpression::operator-(const LinearExpression& other) const
 {
-    return {offset_ - other.offset_,
-            add_maps(coef_per_var_, other.coef_per_var_, std::negate<double>())};
+    auto result(*this);
+    result += -other;
+    return result;
 }
 
 LinearExpression LinearExpression::operator*(const LinearExpression& other) const

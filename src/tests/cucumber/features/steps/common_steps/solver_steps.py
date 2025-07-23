@@ -120,6 +120,9 @@ def check_simu_time(context, seconds):
 def check_lold_duration(context, area, year, lold_hours):
     assert_double_close(lold_hours , context.soh.get_loss_of_load_duration_h(area, year), 0.001, "Loss of load")
 
+@then('in area "{area}", during year {year:d}, week {week:d}, loss of load lasts {lold_hours:d} hours')
+def check_lold_weekly_duration(context, area, year, week, lold_hours):
+    assert_double_close(lold_hours , context.soh.get_loss_of_load_weekly_duration_h(area, year, week), 0.001, "Loss of load")
 
 @then('in area "{area}", during year {year:d}, total spilled energy is {value:g} MWh')
 def check_spilled_energy_value(context, area, year, value):
@@ -268,18 +271,18 @@ def parse_output_folder_from_logs(logs: bytes) -> str:
 
 def make_daily_values_from_a_string(days: str):
     list_daily_values = [float(number) for number in re.findall(r'\d+', days)]
-    assert len(list_daily_values) == NB_DAYS_IN_WEEK, f"7 daily values expected, %d given" % len(list_daily_values)
+    assert len(list_daily_values) == NB_DAYS_IN_WEEK, "7 daily values expected, %d given" % len(list_daily_values)
     return list_daily_values
 
 def check_week_ts_has_daily_values(week_ts,  list_daily_values):
     split_ts = np.array_split(week_ts, NB_DAYS_IN_WEEK)
     for day, daily_ts in enumerate(split_ts):
         assert np.allclose(daily_ts, list_daily_values[day], atol=1e-2), \
-            f"day %d : all hourly values do not equal %.2f" % (day, list_daily_values[day])
+            "day %d : all hourly values do not equal %.2f" % (day, list_daily_values[day])
 
 def extract_week_ts(ts, week):
-    assert week >= 1, f"week should be greater than 1"
-    assert ts.size >= 168, f"hourly values should have at least 168, it has %d" % ts.size
+    assert week >= 1, "week should be greater than 1"
+    assert ts.size >= 168, "hourly values should have at least 168, it has %d" % ts.size
     week_ts = ts[(week - 1) * NB_HOURS_IN_WEEK:week * NB_HOURS_IN_WEEK]
     return week_ts
 
@@ -309,7 +312,7 @@ def check_sts_level(context, area, sts, year, hour, expected):
 @then('in area "{area}", year {year:d}, no mingens for cluster "{cluster}"')
 def check_no_mingen_column_for_cluster(context, area, year, cluster):
     column_names = list(context.soh.details_hourly_for_cluster(area, year, cluster).columns)
-    assert "MinGen - MWh" not in column_names, f"cluster %s should not be in file details" % cluster
+    assert "MinGen - MWh" not in column_names, "cluster %s should not be in file details" % cluster
 
 # Unused for now
 @then('in area "{area}", min gen for thermal cluster "{cluster_name}" on hour {hour:d} of year {year:d} is : {expected_value:g} MW')
