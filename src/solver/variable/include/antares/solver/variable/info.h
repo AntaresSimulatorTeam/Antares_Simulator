@@ -24,6 +24,7 @@
 #include <cmath>
 
 #include "antares/solver/variable/surveyresults.h"
+#include "antares/solver/variable/storage/intermediate.h"
 #include "antares/study/fwd.h"
 
 namespace Antares
@@ -486,6 +487,29 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
                                                                              dataLevel,
                                                                              fileLevel,
                                                                              precision);
+            }
+        }
+    }
+
+    template<class VCardType>
+    static void BuildAnnualSurveyReport(SurveyResults& results,
+                                        const std::vector<IntermediateValues>& container,
+                                        int fileLevel,
+                                        int precision)
+    {
+        bool res;
+        if (*results.isPrinted)
+        {
+            for (uint i = 0; i != container.size(); ++i)
+            {
+                res = setClusterCaption(results, fileLevel, i);
+                if (!res)
+                {
+                    return;
+                }
+                container[i].template buildAnnualSurveyReport<VCardType>(results,
+                                                                         fileLevel,
+                                                                         precision);
             }
         }
     }

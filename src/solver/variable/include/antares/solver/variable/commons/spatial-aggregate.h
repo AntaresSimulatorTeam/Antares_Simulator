@@ -362,11 +362,11 @@ public:
             typedef VariableAccessor<typename VCardType::IntermediateValuesBaseType,
                                      VCardType::columnCount>
               VAType;
-            /*VAType::template BuildAnnualSurveyReport<typename VCardType::VCardOrigin>(*/
-            /*  results,*/
-            /*  pValuesForTheCurrentYear[numSpace],*/
-            /*  fileLevel,*/
-            /*  precision);*/
+            VAType::template BuildAnnualSurveyReport<typename VCardType::VCardOrigin>(
+              results,
+              pValuesForTheCurrentYear[numSpace],
+              fileLevel,
+              precision);
         }
     }
 

@@ -81,7 +81,7 @@ struct VCardDispatchableGeneration
 
     using IntermediateValuesBaseType = std::vector<IntermediateValues>;
     using IntermediateValuesType = std::vector<IntermediateValuesBaseType>;
-    using IntermediateValuesTypeForSpatialAg =  std::vector<IntermediateValuesBaseType>;
+    using IntermediateValuesTypeForSpatialAg = std::vector<IntermediateValuesBaseType>;
 
 }; // class VCard
 
