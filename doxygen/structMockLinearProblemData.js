@@ -1,5 +1,5 @@
 var structMockLinearProblemData =
 [
-    [ "getData", "structMockLinearProblemData.html#ac0cee9073b05816ff37031c8e1f0f919", null ],
-    [ "getData", "structMockLinearProblemData.html#ac0cee9073b05816ff37031c8e1f0f919", null ]
+    [ "getData", "structMockLinearProblemData.html#a7856971bf8e1c5693dd3e1b61522471b", null ],
+    [ "getData", "structMockLinearProblemData.html#a7856971bf8e1c5693dd3e1b61522471b", null ]
 ];
