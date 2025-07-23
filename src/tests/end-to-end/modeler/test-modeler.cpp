@@ -104,7 +104,7 @@ public:
     Antares::Modeler::Data loadAll() override
     {
         auto objective = fixture.variable("x");
-        auto var_node = fixture.variable("var1");
+        auto var_node = fixture.variable("x");
         auto zero = fixture.literal(0);
         auto ct_node = fixture.nodes.template create<
           Antares::Expressions::Nodes::GreaterThanOrEqualNode>(var_node, zero);
@@ -113,7 +113,7 @@ public:
                                            "x",
                                            lower_bound,
                                            fixture.literal(10),
-                                           {},
+                                           {{"ct1", ct_node}},
                                            objective,
                                            timeDependent);
 
