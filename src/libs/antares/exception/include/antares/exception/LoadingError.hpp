@@ -52,6 +52,12 @@ public:
     explicit StudyFolderDoesNotExist(const Yuni::String& folder);
 };
 
+class StudyFolderContainsNonASCIIchars : public LoadingError
+{
+public:
+    explicit StudyFolderContainsNonASCIIchars(const Yuni::String& folder);
+};
+
 class ReadingStudy: public LoadingError
 {
 public:

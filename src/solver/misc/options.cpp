@@ -295,12 +295,26 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
     }
 }
 
+static bool containsOnlyASCIIcharsOnWindows(const std::string& path)
+{
+#if defined(_WIN32) || defined(_WIN64)
+    return std::ranges::all_of(path, [](unsigned c) { return c <= 127; });
+#else
+    return false;
+#endif
+}
+
 void Settings::checkAndSetStudyFolder(const std::string& folder)
 {
     // The study folder
     if (folder.empty())
     {
         throw Error::NoStudyProvided();
+    }
+
+    if (!containsOnlyASCIIcharsOnWindows(folder))
+    {
+        throw Error::StudyFolderContainsNonASCIIchars(folder);
     }
 
     // Making the path absolute

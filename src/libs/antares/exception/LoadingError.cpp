@@ -31,6 +31,12 @@ StudyFolderDoesNotExist::StudyFolderDoesNotExist(const Yuni::String& folder):
 {
 }
 
+StudyFolderContainsNonASCIIchars::StudyFolderContainsNonASCIIchars(const Yuni::String& folder):
+    LoadingError(std::string("Study folder contains non ASCII chars : ") + folder.c_str())
+{
+}
+
+
 ReadingStudy::ReadingStudy():
     LoadingError("Got a fatal error reading the study.")
 {
