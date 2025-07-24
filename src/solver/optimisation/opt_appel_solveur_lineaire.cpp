@@ -226,7 +226,15 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     mps_writer->runIfNeeded(writer, filename);
 
     TimeMeasurement measure;
-    solver = ORTOOLS_Simplexe(ProblemeAResoudre.get(), solver, options);
+    SingleOptimOptions options_modified
+    {
+        .solverName = options.solverName,
+        .solverParameters = options.solverParameters,
+        .solverUsesBasis = options.solverUsesBasis && problemeHebdo->weekInTheYear > 0,
+        .solverExportsBasis = options.solverExportsBasis,
+        .solverLogs = options.solverLogs,
+    };
+    solver = ORTOOLS_Simplexe(ProblemeAResoudre.get(), solver, options_modified);
     if (solver != nullptr)
     {
         ProblemeAResoudre->ProblemesSpx[NumIntervalle] = solver;
