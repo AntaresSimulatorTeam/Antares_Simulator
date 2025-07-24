@@ -29,10 +29,9 @@ SimulationTableCsvFile::SimulationTableCsvFile(const std::filesystem::path& outp
     {
         throw std::runtime_error("could not find output Folder: " + outputFolder.string());
     }
-    // const auto simulationTableSuffix = std::string(simulationId_.empty() ? "" : "_" +
-    // simulationId_)
-    //                                    + ".csv";
-    const auto simulationTableSuffix = std::string("_" + simulationId) + ".csv";
+    const auto simulationTableSuffix = std::string(simulationId.empty() ? "" : "_" + simulationId)
+                                       + ".csv";
+    // const auto simulationTableSuffix = std::string("_" + simulationId) + ".csv";
     const auto simulationTableFile = outputFolder / simulationTableSuffix;
     file_.open(simulationTableFile);
     if (!file_)

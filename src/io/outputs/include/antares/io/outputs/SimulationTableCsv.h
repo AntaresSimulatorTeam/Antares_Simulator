@@ -33,7 +33,6 @@ public:
     void write() override;
     void clearEntries() override;
 
-protected:
     // const std::string& buffer() const;
     std::string buffer() const;
 

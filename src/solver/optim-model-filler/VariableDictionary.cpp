@@ -24,9 +24,9 @@
 namespace Antares::Optimization
 {
 
-std::string buildVariableName(const PartialKey& key,
-                              std::optional<unsigned int> scenario,
-                              std::optional<unsigned int> timestep)
+std::string VariableDictionary::buildVariableName(const PartialKey& key,
+                                                  std::optional<unsigned int> scenario,
+                                                  std::optional<unsigned int> timestep)
 {
     std::string ret = key.getComponent() + "." + key.getVariable();
     if (scenario.has_value())

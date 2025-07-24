@@ -27,9 +27,9 @@
 #include <antares/optimisation/linear-problem-mpsolver-impl/mipSolution.h>
 #include <antares/solver/optim-model-filler/VariableDictionary.h>
 #include <antares/study/system-model/component.h>
+#include "antares/io/outputs/SimulationTableCsvFile.h"
+#include "antares/io/outputs/SimulationTableGenerator.h"
 
-#include "../io/outputs/include/antares/io/outputs/SimulationTableCsvFile.h"
-#include "../io/outputs/include/antares/io/outputs/SimulationTableGenerator.h"
 #include "modeler/include/antares/solver/modeler/Modeler.h"
 
 namespace Antares::Modeler

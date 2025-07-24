@@ -25,6 +25,8 @@
 #include <antares/antares/fatal-error.h>
 #include <antares/logs/logs.h>
 #include <antares/solver/utils/ortools_utils.h>
+#include "antares/io/outputs/ISimulationTable.h"
+#include "antares/io/outputs/SimulationTableCsv.h"
 #include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
 #include "antares/optimization-options/options.h"
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
@@ -193,6 +195,120 @@ MPSolver* convertToMPSolver(const PROBLEME_HEBDO* problemeHebdo,
     return ortoolsProblem.getMpSolver();
 }
 
+static void FillSimulationTable(
+  ISimulationTable& simulationTable,
+  const std::vector<MPVariable*>& variables,
+  const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>& components,
+  const Antares::Optimisation::LinearProblemApi::FillContext& fillContext)
+{
+    auto solution = [&variables]
+    {
+        std::unordered_map<std::string, double> solution;
+        for (const auto v: variables)
+        {
+            solution.try_emplace(v->name(), v->solution_value());
+        }
+        return solution;
+    }();
+    for (const auto& [componentId, component]: components)
+    {
+        for (const auto& [var_name, modelVar]: component.getModel()->Variables())
+        {
+            if (modelVar.IsScenarioDependent() && modelVar.isTimeDependent())
+            {
+                // TODO
+                //  for (auto scenario: fillContext.getSelectedScenarios())
+                unsigned int scenario = 0;
+                {
+                    for (auto timeStep(fillContext.getFirstTimeStep());
+                         timeStep <= fillContext.getLastTimeStep();
+                         ++timeStep)
+                    {
+                        auto variableFullName = VariableDictionary::buildVariableName({componentId,
+                                                                                       var_name},
+                                                                                      scenario,
+                                                                                      timeStep);
+                        simulationTable.addEntry({.block = 1,
+                                                  .component = componentId,
+                                                  .output = var_name,
+                                                  .absolute_time_index = timeStep,
+                                                  .block_time_index = timeStep,
+                                                  .scenario_index = scenario,
+                                                  .value = solution.at(variableFullName)});
+                    }
+                }
+            }
+            else if (modelVar.IsScenarioDependent())
+            {
+                for (auto scenario: fillContext.getSelectedScenarios())
+                {
+                    auto variableFullName = VariableDictionary::buildVariableName({componentId,
+                                                                                   var_name},
+                                                                                  scenario,
+                                                                                  std::nullopt);
+
+                    simulationTable.addEntry({.block = 1,
+                                              .component = componentId,
+                                              .output = var_name,
+                                              .absolute_time_index = std::nullopt,
+                                              .block_time_index = std::nullopt,
+                                              .scenario_index = scenario,
+                                              .value = solution.at(variableFullName)});
+                }
+            }
+            else if (modelVar.isTimeDependent())
+            {
+                for (auto timeStep: fillContext.getSelectedScenarios())
+                {
+                    auto variableFullName = VariableDictionary::buildVariableName({componentId,
+                                                                                   var_name},
+                                                                                  std::nullopt,
+                                                                                  timeStep);
+                    simulationTable.addEntry({.block = 1,
+                                              .component = componentId,
+                                              .output = var_name,
+                                              .absolute_time_index = timeStep,
+                                              .block_time_index = timeStep,
+                                              .scenario_index = std::nullopt,
+                                              .value = solution.at(variableFullName)});
+                }
+            }
+
+            else
+            {
+                auto variableFullName = VariableDictionary::buildVariableName({componentId,
+                                                                               var_name},
+                                                                              std::nullopt,
+                                                                              std::nullopt);
+                simulationTable.addEntry({.block = 1,
+                                          .component = componentId,
+                                          .output = var_name,
+                                          .absolute_time_index = std::nullopt,
+                                          .block_time_index = std::nullopt,
+                                          .scenario_index = std::nullopt,
+                                          .value = solution.at(variableFullName)});
+            }
+        }
+    }
+}
+
+static void writeModelerSimulationTable(PROBLEME_HEBDO* problemeHebdo,
+                                        int NumIntervalle,
+                                        IResultWriter& writer,
+                                        const MPSolver* solver)
+{
+    SimulationTableCsv simulationTableCsv;
+
+    FillSimulationTable(simulationTableCsv,
+                        solver->variables(),
+                        problemeHebdo->modelerSystem->Components(),
+                        buildFillContext(problemeHebdo, NumIntervalle));
+    simulationTableCsv.write();
+    const std::string simulationTableFile = "simulation_table.csv";
+    auto simulationTableBuffer = simulationTableCsv.buffer();
+    writer.addEntryFromBuffer(simulationTableFile, simulationTableBuffer);
+}
+
 static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                           PROBLEME_HEBDO* problemeHebdo,
                                           const int NumIntervalle,
@@ -297,6 +413,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                           optimizationNumber,
                           optPeriodStringGenerator,
                           writer);
+    writeModelerSimulationTable(problemeHebdo, NumIntervalle, writer, solver);
 
     return {.success = true,
             .timeMeasure = timeMeasure,
