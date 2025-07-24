@@ -110,7 +110,7 @@ public:
 
     [[nodiscard]] TimeSeriesNumber getData(Year) const override
     {
-        return 0; // Default rank for empty groupId
+        return 1; // Default rank for empty groupId
     }
 };
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -107,7 +107,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const VariableN
           LinearExpression(0,
                            {{FullKey(component_.Id(),
                                      node->value(),
-                                     evalContext_.scenario().getData(fillContext_.getYear())),
+                                     ScenarioAndTime::Scenario{fillContext_.getYear()}),
                              1}}));
     }
     // only dependent
@@ -120,8 +120,8 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const VariableN
         linearExpressions[timeStep] = LinearExpression(0,
                                                        {{FullKey(component_.Id(),
                                                                  node->value(),
-                                                                 evalContext_.scenario().getData(
-                                                                   fillContext_.getYear()),
+                                                                 ScenarioAndTime::Scenario{
+                                                                   fillContext_.getYear()},
                                                                  timeStep),
                                                          1}});
     }

@@ -48,7 +48,7 @@ void VariablesBulkAddition::addVariable(double lb,
 {
     variableDictionary.addVariable(dim,
                                    key,
-                                   [this, lb, ub, integer](const Optimization::TimeAndScenario&,
+                                   [this, lb, ub, integer](const Optimization::ScenarioAndTime&,
                                                            const std::string& name)
                                    { return linear_problem_.addVariable(lb, ub, integer, name); });
 }
@@ -72,7 +72,7 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
     variableDictionary.addVariable(
       dim,
       key,
-      [this, &lb, ub, integer, offset](const Optimization::TimeAndScenario& timeAndScenario,
+      [this, &lb, ub, integer, offset](const Optimization::ScenarioAndTime& timeAndScenario,
                                        const std::string& name) {
           return linear_problem_.addVariable(lb[timeAndScenario.timestep - offset],
                                              ub,
@@ -98,7 +98,7 @@ void VariablesBulkAddition::addVariable(double lb,
     variableDictionary.addVariable(
       dim,
       key,
-      [this, lb, &ub, integer, offset](const Optimization::TimeAndScenario& timeAndScenario,
+      [this, lb, &ub, integer, offset](const Optimization::ScenarioAndTime& timeAndScenario,
                                        const std::string& name) {
           return linear_problem_.addVariable(lb,
                                              ub[timeAndScenario.timestep - offset],
@@ -126,7 +126,7 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
     variableDictionary.addVariable(
       dim,
       key,
-      [this, &lb, &ub, integer, offset](const Optimization::TimeAndScenario& timeAndScenario,
+      [this, &lb, &ub, integer, offset](const Optimization::ScenarioAndTime& timeAndScenario,
                                         const std::string& name)
       {
           return linear_problem_.addVariable(lb[timeAndScenario.timestep - offset],
@@ -216,7 +216,7 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
             variableDictionary_.addVariable(
               dim,
               key,
-              [&pb, &lb, &ub, &variable](const Optimization::TimeAndScenario&,
+              [&pb, &lb, &ub, &variable](const Optimization::ScenarioAndTime&,
                                          const std::string& name)
               {
                   return pb.addVariable(lb.valueAsDouble(),

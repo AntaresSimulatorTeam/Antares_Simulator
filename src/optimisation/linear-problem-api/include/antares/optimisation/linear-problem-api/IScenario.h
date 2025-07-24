@@ -68,7 +68,7 @@ public:
 
     [[nodiscard]] TimeSeriesNumber getData(Year) const override
     {
-        return 0; // No data available in an empty scenario
+        return 1; // No data available in an empty scenario
     }
 };
 } // namespace Antares::Optimisation::LinearProblemApi

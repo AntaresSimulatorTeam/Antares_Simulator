@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -84,8 +84,12 @@ BOOST_FIXTURE_TEST_CASE(test_visit_equal_node, MyDummyFixture)
     BOOST_CHECK_EQUAL(constraint.lb, -14.);
     BOOST_CHECK_EQUAL(constraint.ub, -14.);
     BOOST_CHECK_EQUAL(constraint.coef_per_var.size(), 2);
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(FullKey(component.Id(), "var1", 0, 0)), -2);
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(FullKey(component.Id(), "var2", 0, 0)), -1);
+    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
+                        FullKey(component.Id(), "var1", ScenarioAndTime::Scenario{0}, 0)),
+                      -2);
+    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
+                        FullKey(component.Id(), "var2", ScenarioAndTime::Scenario{0}, 0)),
+                      -1);
 }
 
 BOOST_FIXTURE_TEST_CASE(test_visit_less_than_or_equal_node, MyDummyFixture)
@@ -106,9 +110,15 @@ BOOST_FIXTURE_TEST_CASE(test_visit_less_than_or_equal_node, MyDummyFixture)
     BOOST_CHECK_EQUAL(constraint.lb, -std::numeric_limits<double>::infinity());
     BOOST_CHECK_EQUAL(constraint.ub, -1.);
     BOOST_CHECK_EQUAL(constraint.coef_per_var.size(), 3);
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(FullKey(component.Id(), "var1", 0, 0)), -1);
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(FullKey(component.Id(), "var2", 0, 0)), -5);
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(FullKey(component.Id(), "var3", 0, 0)), 1);
+    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
+                        FullKey(component.Id(), "var1", ScenarioAndTime::Scenario{0}, 0)),
+                      -1);
+    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
+                        FullKey(component.Id(), "var2", ScenarioAndTime::Scenario{0}, 0)),
+                      -5);
+    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
+                        FullKey(component.Id(), "var3", ScenarioAndTime::Scenario{0}, 0)),
+                      1);
 }
 
 BOOST_FIXTURE_TEST_CASE(test_visit_greater_than_or_equal_node, MyDummyFixture)
@@ -129,8 +139,12 @@ BOOST_FIXTURE_TEST_CASE(test_visit_greater_than_or_equal_node, MyDummyFixture)
     BOOST_CHECK_EQUAL(constraint.lb, -14);
     BOOST_CHECK_EQUAL(constraint.ub, std::numeric_limits<double>::infinity());
     BOOST_CHECK_EQUAL(constraint.coef_per_var.size(), 2);
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(FullKey(component.Id(), "var1", 0, 0)), -2);
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(FullKey(component.Id(), "var2", 0, 0)), -1);
+    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
+                        FullKey(component.Id(), "var1", ScenarioAndTime::Scenario{0}, 0)),
+                      -2);
+    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
+                        FullKey(component.Id(), "var2", ScenarioAndTime::Scenario{0}, 0)),
+                      -1);
 }
 
 BOOST_FIXTURE_TEST_CASE(test_visit_illegal_node, MyDummyFixture)

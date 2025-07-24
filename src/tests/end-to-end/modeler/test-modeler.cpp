@@ -81,7 +81,7 @@ public:
 
     [[nodiscard]] TimeSeriesNumber getData(Year) const override
     {
-        return 0; // Default rank for empty groupId
+        return 1; // Default rank for empty groupId
     }
 };
 
@@ -323,7 +323,7 @@ BOOST_AUTO_TEST_CASE(system_with_three_time_series_use_second_one_all_3)
       Antares::Optimisation::LinearProblemDataImpl::LinearProblemData>(
       std::move(data_series_repository));
 
-    inMemoryLoader.addScenario("GroupA", 0, 1); // Year 0, timeseriesNumber 1
+    inMemoryLoader.addScenario("GroupA", 0, 2); // Year 0, timeseriesNumber 1
     inMemoryLoader.groupes["some_component"] = "GroupA";
 
     InMemoryWriter inMemoryWriter;

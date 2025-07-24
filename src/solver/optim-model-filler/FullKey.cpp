@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -20,6 +20,7 @@
  */
 
 #include <antares/solver/optim-model-filler/FullKey.h>
+#include "antares/solver/optim-model-filler/VariableDictionary.h"
 
 namespace Antares::Optimization
 {
@@ -27,7 +28,7 @@ namespace Antares::Optimization
 // FullKey
 FullKey::FullKey(const std::string& component,
                  const std::string& variable,
-                 unsigned int scenario,
+                 ScenarioAndTime::Scenario scenario,
                  unsigned int timestep):
     pk(component, variable),
     scenario(scenario),
@@ -40,7 +41,9 @@ FullKey::FullKey(const std::string& component, const std::string& variable):
 {
 }
 
-FullKey::FullKey(const std::string& component, const std::string& variable, unsigned int scenario):
+FullKey::FullKey(const std::string& component,
+                 const std::string& variable,
+                 ScenarioAndTime::Scenario scenario):
     pk(component, variable),
     scenario(scenario)
 {
@@ -61,7 +64,7 @@ const std::string& FullKey::getVariable() const
     return pk.getVariable();
 }
 
-std::optional<unsigned int> FullKey::getScenario() const
+std::optional<ScenarioAndTime::Scenario> FullKey::getScenario() const
 {
     return scenario;
 }

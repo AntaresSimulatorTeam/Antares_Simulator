@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -26,6 +26,8 @@
 
 #include <antares/solver/optim-model-filler/PartialKey.h>
 
+#include "ScenarioAndTime.h"
+
 template<>
 struct boost::hash<Antares::Optimization::PartialKey>
 {
@@ -42,24 +44,26 @@ class FullKey
 {
 public:
     FullKey(const std::string& component, const std::string& variable);
-    FullKey(const std::string& component, const std::string& variable, unsigned int scenario);
     FullKey(const std::string& component,
             const std::string& variable,
-            unsigned int scenario,
+            ScenarioAndTime::Scenario scenario);
+    FullKey(const std::string& component,
+            const std::string& variable,
+            ScenarioAndTime::Scenario scenario,
             unsigned int timestep);
 
-    const PartialKey& getPartialKey() const;
-    const std::string& getComponent() const;
-    const std::string& getVariable() const;
+    [[nodiscard]] const PartialKey& getPartialKey() const;
+    [[nodiscard]] const std::string& getComponent() const;
+    [[nodiscard]] const std::string& getVariable() const;
 
-    std::optional<unsigned int> getScenario() const;
-    std::optional<unsigned int> getTimestep() const;
+    [[nodiscard]] std::optional<ScenarioAndTime::Scenario> getScenario() const;
+    [[nodiscard]] std::optional<unsigned int> getTimestep() const;
 
     auto operator<=>(const FullKey&) const = default; // Automatically generates <, >, ==, etc.
 
 private:
     PartialKey pk;
-    std::optional<unsigned int> scenario;
+    std::optional<ScenarioAndTime::Scenario> scenario;
     std::optional<unsigned int> timestep;
 };
 

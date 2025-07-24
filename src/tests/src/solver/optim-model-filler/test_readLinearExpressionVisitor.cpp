@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -103,7 +103,9 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var, CreateVisitorFixture)
     auto linear_expression = visitor.dispatch(sum).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 55.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
-    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(FullKey(component.Id(), "var", 0, 0)), 7.);
+    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(
+                        FullKey(component.Id(), "var", ScenarioAndTime::Scenario{0}, 0)),
+                      7.);
 }
 
 struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearProblemData
@@ -178,10 +180,10 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_time_dependent_param_plus_var, Create
     BOOST_CHECK_EQUAL(linear_expressions.at(1).offset(), 61.);
     BOOST_CHECK_EQUAL(linear_expressions.at(0).coefPerVar().size(), 1);
     BOOST_CHECK_EQUAL(linear_expressions.at(0).coefPerVar().at(
-                        FullKey(component.Id(), "var", 0, 0)),
+                        FullKey(component.Id(), "var", ScenarioAndTime::Scenario{0}, 0)),
                       7.);
     BOOST_CHECK_EQUAL(linear_expressions.at(1).coefPerVar().at(
-                        FullKey(component.Id(), "var", 0, 1)),
+                        FullKey(component.Id(), "var", ScenarioAndTime::Scenario{0}, 1)),
                       7.);
 }
 
@@ -209,7 +211,9 @@ BOOST_FIXTURE_TEST_CASE(visit_negate_literal_plus_var, CreateVisitorFixture)
     auto linear_expression = visitor.dispatch(neg).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), -60.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
-    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(FullKey(component.Id(), "var", 0, 0)), -7.);
+    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(
+                        FullKey(component.Id(), "var", ScenarioAndTime::Scenario{0}, 0)),
+                      -7.);
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_literal_minus_var, CreateVisitorFixture)
@@ -221,7 +225,9 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_minus_var, CreateVisitorFixture)
     auto linear_expression = visitor.dispatch(sub).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 60.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
-    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(FullKey(component.Id(), "var", 0, 0)), -7.);
+    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(
+                        FullKey(component.Id(), "var", ScenarioAndTime::Scenario{0}, 0)),
+                      -7.);
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_complex_expression, CreateVisitorFixture)
@@ -252,8 +258,12 @@ BOOST_FIXTURE_TEST_CASE(visit_complex_expression, CreateVisitorFixture)
     auto linear_expression = visitor.dispatch(big_sum).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 10.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 2);
-    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(FullKey(component.Id(), "var1", 0, 0)), 4.);
-    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(FullKey(component.Id(), "var2", 0, 0)), 6.);
+    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(
+                        FullKey(component.Id(), "var1", ScenarioAndTime::Scenario{0}, 0)),
+                      4.);
+    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(
+                        FullKey(component.Id(), "var2", ScenarioAndTime::Scenario{0}, 0)),
+                      6.);
 }
 
 BOOST_FIXTURE_TEST_CASE(comparison_nodes__exception_thrown, CreateVisitorFixture)
