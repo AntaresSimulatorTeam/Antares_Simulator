@@ -36,7 +36,6 @@ StudyFolderContainsNonASCIIchars::StudyFolderContainsNonASCIIchars(const Yuni::S
 {
 }
 
-
 ReadingStudy::ReadingStudy():
     LoadingError("Got a fatal error reading the study.")
 {
