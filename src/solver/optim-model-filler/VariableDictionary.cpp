@@ -90,7 +90,7 @@ IntegerInterval Dimensions::getTimesteps() const
 
 IntegerInterval Dimensions::getScenarioIndices() const
 {
-    return scenarioInterval.value_or(IntegerInterval{.initialTime = 1, .finalTime = 1});
+    return scenarioInterval.value_or(IntegerInterval{.initialTime = 0, .finalTime = 0});
 }
 
 unsigned int Dimensions::getNumberOfTimesteps() const
@@ -146,19 +146,20 @@ void VariableDictionary::addVariable(
   std::function<Value(const ScenarioAndTime&, const std::string&)>&& func)
 {
     auto& m = storageOfAddedMipVariables_[key];
-    const auto timeseriesNumbers = dimensions.getScenarioIndices();
+    const auto&& scenariosIndices = dimensions.getScenarioIndices();
     const auto time_interval = dimensions.getTimesteps();
     const auto offset = *time_interval.begin();
-    for (const auto timeseriesNumber: timeseriesNumbers)
+    for (const auto&& scenario: scenariosIndices)
     {
-        auto tsNumber = static_cast<ScenarioAndTime::Scenario>(timeseriesNumber);
-        m[tsNumber].resize(time_interval.size(), offset);
+        auto scenarioNumber = static_cast<ScenarioAndTime::Scenario>(scenario);
+        m[scenarioNumber].resize(time_interval.size(), offset);
         for (const auto timestep: time_interval)
         {
-            const auto sc = buildOptional(dimensions.isScenarioDependent(), timeseriesNumber);
+            const auto sc = buildOptional(dimensions.isScenarioDependent(), scenario);
             const auto ts = buildOptional(dimensions.isTimeDependent(), timestep);
             const std::string name = buildVariableName(key, sc, ts);
-            m[tsNumber][timestep] = func({.scenario = tsNumber, .timestep = timestep}, name);
+            m[scenarioNumber][timestep] = func({.scenario = scenarioNumber, .timestep = timestep},
+                                               name);
         }
     }
 }
@@ -200,22 +201,21 @@ VariableDictionary::Value& VariableDictionary::operator()(const std::string& com
 
 VariableDictionary::Value VariableDictionary::operator()(const std::string& component,
                                                          const std::string& variable,
-                                                         ScenarioAndTime::Scenario timeseriesNumber,
+                                                         ScenarioAndTime::Scenario scenario,
                                                          unsigned int timestep) const
 {
     return storageOfAddedMipVariables_.at(PartialKey(component, variable))
-      .at(timeseriesNumber)
+      .at(scenario)
       .at(timestep);
 }
 
-VariableDictionary::Value& VariableDictionary::operator()(
-  const std::string& component,
-  const std::string& variable,
-  ScenarioAndTime::Scenario timeseriesNumber,
-  unsigned int timestep)
+VariableDictionary::Value& VariableDictionary::operator()(const std::string& component,
+                                                          const std::string& variable,
+                                                          ScenarioAndTime::Scenario scenario,
+                                                          unsigned int timestep)
 {
     auto&& var = storageOfAddedMipVariables_[PartialKey(component, variable)];
-    return var.at(timeseriesNumber).at(timestep);
+    return var.at(scenario).at(timestep);
 }
 
 VariableDictionary::Value VariableDictionary::operator()(const FullKey& fullKey) const

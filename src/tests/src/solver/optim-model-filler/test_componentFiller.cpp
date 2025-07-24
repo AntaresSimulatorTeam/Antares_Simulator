@@ -84,7 +84,7 @@ BOOST_AUTO_TEST_CASE(ten_timesteps_var_with_literal_bounds_to_filler__problem_co
     BOOST_CHECK_EQUAL(pb->constraintCount(), 0);
     for (unsigned int i = 0; i < nb_var; i++)
     {
-        auto* var = pb->lookupVariable("some_component.var1_s1_t" + to_string(i));
+        auto* var = pb->lookupVariable("some_component.var1_s0_t" + to_string(i));
         BOOST_REQUIRE(var);
         BOOST_CHECK_EQUAL(var->getLb(), -5);
         BOOST_CHECK_EQUAL(var->getUb(), 10);
@@ -124,12 +124,12 @@ BOOST_AUTO_TEST_CASE(var_with_empty_lower_bound_default_to_minus_infinity)
                 {});
     createComponent("my-model", "component");
     buildLinearProblem();
-    auto* var = pb->lookupVariable("component.variableF_s1_t" + to_string(0));
+    auto* var = pb->lookupVariable("component.variableF_s0_t" + to_string(0));
     BOOST_REQUIRE(var);
     BOOST_CHECK_EQUAL(var->getLb(), -std::numeric_limits<double>::infinity());
     BOOST_CHECK_EQUAL(var->getUb(), 10);
 
-    var = pb->lookupVariable("component.variableI_s1_t" + to_string(0));
+    var = pb->lookupVariable("component.variableI_s0_t" + to_string(0));
     BOOST_REQUIRE(var);
     BOOST_CHECK_EQUAL(var->getLb(), -std::numeric_limits<double>::infinity());
     BOOST_CHECK_EQUAL(var->getUb(), 10);
@@ -144,12 +144,12 @@ BOOST_AUTO_TEST_CASE(var_with_empty_upper_bound_default_to_infinity)
                 {});
     createComponent("my-model", "component");
     buildLinearProblem();
-    auto* var = pb->lookupVariable("component.variableF_s1_t" + to_string(0));
+    auto* var = pb->lookupVariable("component.variableF_s0_t" + to_string(0));
     BOOST_REQUIRE(var);
     BOOST_CHECK_EQUAL(var->getLb(), 10);
     BOOST_CHECK_EQUAL(var->getUb(), std::numeric_limits<double>::infinity());
 
-    var = pb->lookupVariable("component.variableI_s1_t" + to_string(0));
+    var = pb->lookupVariable("component.variableI_s0_t" + to_string(0));
     BOOST_REQUIRE(var);
     BOOST_CHECK_EQUAL(var->getLb(), 10);
     BOOST_CHECK_EQUAL(var->getUb(), std::numeric_limits<double>::infinity());
@@ -160,7 +160,7 @@ BOOST_AUTO_TEST_CASE(var_BOOLEAN_with_empty_lower_bound_default_to_0)
     createModel("my-model", {}, {{"variableB", ValueType::BOOL, nullptr, literal(1)}}, {});
     createComponent("my-model", "component");
     buildLinearProblem();
-    auto* var = pb->lookupVariable("component.variableB_s1_t" + to_string(0));
+    auto* var = pb->lookupVariable("component.variableB_s0_t" + to_string(0));
     BOOST_REQUIRE(var);
     BOOST_CHECK_EQUAL(var->getLb(), 0);
     BOOST_CHECK_EQUAL(var->getUb(), 1);
@@ -179,7 +179,7 @@ BOOST_AUTO_TEST_CASE(var_BOOLEAN_with_empty_upper_bound_default_to_1)
                 {});
     createComponent("my-model", "component");
     buildLinearProblem();
-    auto* var = pb->lookupVariable("component.variableB_s1_t" + to_string(0));
+    auto* var = pb->lookupVariable("component.variableB_s0_t" + to_string(0));
     BOOST_REQUIRE(var);
     BOOST_CHECK_EQUAL(var->getLb(), 0);
     BOOST_CHECK_EQUAL(var->getUb(), 1);
@@ -223,13 +223,13 @@ BOOST_AUTO_TEST_CASE(
     BOOST_CHECK_EQUAL(pb->variableCount(), 2 * 10);
     for (auto i = 0; i < nb_var; i++)
     {
-        auto* var1 = pb->lookupVariable("component_1.var1_s1_t" + to_string(i));
+        auto* var1 = pb->lookupVariable("component_1.var1_s0_t" + to_string(i));
         BOOST_REQUIRE(var1);
         BOOST_CHECK(!var1->isInteger());
         BOOST_CHECK_EQUAL(var1->getLb(), -1.);
         BOOST_CHECK_EQUAL(var1->getUb(), 6.);
 
-        auto* var2 = pb->lookupVariable("component_2.var2_s1_t" + to_string(i));
+        auto* var2 = pb->lookupVariable("component_2.var2_s0_t" + to_string(i));
         BOOST_REQUIRE(var2);
         BOOST_CHECK(!var2->isInteger());
         BOOST_CHECK_EQUAL(var2->getLb(), -3.);
@@ -380,7 +380,7 @@ BOOST_AUTO_TEST_CASE(ct_with_ten_vars__pb_contains_ten_ct)
         BOOST_REQUIRE(ct);
         BOOST_CHECK_EQUAL(ct->getLb(), -pb->infinity());
         BOOST_CHECK_EQUAL(ct->getUb(), 3);
-        auto var = pb->lookupVariable("componentToto.var1_s1_t" + to_string(i));
+        auto var = pb->lookupVariable("componentToto.var1_s0_t" + to_string(i));
         BOOST_REQUIRE(var);
         BOOST_CHECK(var->isInteger());
         BOOST_CHECK_EQUAL(ct->getCoefficient(var), 1);
@@ -456,7 +456,7 @@ BOOST_AUTO_TEST_CASE(ct_with_time_series_variable_bounds)
         BOOST_REQUIRE(ct);
         BOOST_CHECK_EQUAL(ct->getLb(), -pb->infinity());
         BOOST_CHECK_EQUAL(ct->getUb(), -5 + 3);
-        auto var = pb->lookupVariable("componentToto.var1_s1_t" + to_string(t));
+        auto var = pb->lookupVariable("componentToto.var1_s0_t" + to_string(t));
         BOOST_REQUIRE(var);
         BOOST_CHECK(var->isInteger());
         BOOST_CHECK_EQUAL(ct->getCoefficient(var), -1);
@@ -497,7 +497,7 @@ BOOST_AUTO_TEST_CASE(get_timeseriesNumber_for_given_year)
     auto bounds_time_series = std::make_unique<TimeSeriesSet>("bounds", 3);
     // setting 3 hours (including h 1 and 2)
     bounds_time_series->add({1., 1., 1.});
-    bounds_time_series->add({10., 10., 10.}); //<--- on voudra ça
+    bounds_time_series->add({10., 10., 10.}); //<--- on voudra ça, TS=2 (commence à 0)
     bounds_time_series->add({3., 3., 3.});
     bounds_time_series->add({4., 4., 4.});
 
@@ -505,7 +505,7 @@ BOOST_AUTO_TEST_CASE(get_timeseriesNumber_for_given_year)
     scenario->setTimeSerieNumber(0, 10);
     scenario->setTimeSerieNumber(1, 11);
     scenario->setTimeSerieNumber(2, 12);
-    scenario->setTimeSerieNumber(3, 1); // <--- on voudra ça
+    scenario->setTimeSerieNumber(3, 2); // <--- on voudra ça
 
     LinearProblemData data;
     data.addDataSeries(std::move(bounds_time_series));
@@ -524,7 +524,7 @@ BOOST_AUTO_TEST_CASE(get_timeseriesNumber_for_given_year)
         BOOST_REQUIRE(ct);
         BOOST_CHECK_EQUAL(ct->getLb(), -pb->infinity());
         BOOST_CHECK_EQUAL(ct->getUb(), -5 + 3);
-        const auto* var = pb->lookupVariable("componentToto.var1_s2_t" + to_string(t));
+        const auto* var = pb->lookupVariable("componentToto.var1_s3_t" + to_string(t));
         BOOST_REQUIRE(var);
         BOOST_CHECK(var->isInteger());
         BOOST_CHECK_EQUAL(ct->getCoefficient(var), -1);

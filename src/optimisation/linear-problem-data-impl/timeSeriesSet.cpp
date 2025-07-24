@@ -44,7 +44,8 @@ void TimeSeriesSet::add(const std::vector<double>& ts)
     tsSet_.push_back(std::move(ts));
 }
 
-double TimeSeriesSet::getData(unsigned rank, unsigned hour) const
+double TimeSeriesSet::getData(LinearProblemApi::IScenario::TimeSeriesNumber rank,
+                              unsigned hour) const
 {
     if (rank == 0)
     {
@@ -58,7 +59,7 @@ double TimeSeriesSet::getData(unsigned rank, unsigned hour) const
     rank = rank - 1;
     if (rank > tsSet_.size() - 1)
     {
-        throw RankTooBig(name(), rank);
+        throw RankTooBig(name(), rank + 1);
     }
 
     if (hour > height_ - 1)
