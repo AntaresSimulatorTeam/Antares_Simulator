@@ -146,6 +146,8 @@ Note that all fields are mandatory.
 
 For each constraint, the corresponding RHS time-series must be located at `input/st-storage/constraints/<area id>/rhs_<constraint id>.txt`. The time-series must contain a single column and 8760 rows, empty files are also accepted.
 
+To avoid filename conflicts, each constraint name must be unique within a given area.
+
 ####  Hydro final levels / scenario-builder
 
 - Added optional key type "hfl" (hydro final level) in the scenario builder. The syntax is equivalent to existing
