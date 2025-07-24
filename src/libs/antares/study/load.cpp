@@ -20,7 +20,6 @@
 */
 #include <fstream>
 
-#include <antares/benchmarking/DurationCollector.h>
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include "antares/study/scenario-builder/sets.h"
 #include "antares/study/study.h"
@@ -50,10 +49,24 @@ bool Study::internalLoadHeader(const fs::path& path)
     return true;
 }
 
+static bool containsOnlyASCIIonWindows(const std::string& path)
+{
+#if defined(_WIN32) || defined(_WIN64)
+    return std::ranges::any_of(path, [](unsigned c) { return c > 127; });
+#else
+    return false;
+#endif
+}
+
 bool Study::loadFromFolder(const std::string& path, const StudyLoadOptions& options)
 {
     fs::path normPath = path;
     normPath = normPath.lexically_normal();
+    if (containsOnlyASCIIonWindows(path))
+    {
+        logs.error() << "Study path contains a non ASCII char";
+        return false;
+    }
     return internalLoadFromFolder(normPath, options);
 }
 

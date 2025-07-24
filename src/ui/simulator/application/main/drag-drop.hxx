@@ -31,6 +31,16 @@ namespace Antares
 {
 namespace Forms
 {
+
+static bool containsOnlyASCIIonWindows(const std::string& path)
+{
+#if defined(_WIN32) || defined(_WIN64)
+    return std::ranges::any_of(path, [](unsigned c) { return c > 127; });
+#else
+    return false;
+#endif
+}
+
 class StudyDrop final : public wxFileDropTarget
 {
 public:
@@ -54,6 +64,13 @@ public:
         for (uint i = 0; i != (uint)filenames.size(); ++i)
         {
             wxStringToString(filenames[i], filename);
+
+            if (containsOnlyASCIIonWindows(filename.to<std::string>()))
+            {
+                logs.error() << "Drag & drop : study path contains a non ASCII char";
+                return false;
+            }
+
             if (not Data::Study::IsInsideStudyFolder(filename, folder, title))
                 folder.clear();
         }
