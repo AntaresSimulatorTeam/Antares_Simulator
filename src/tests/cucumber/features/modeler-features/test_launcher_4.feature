@@ -41,10 +41,10 @@ Feature: 4 - Simple end-to-end tests to test temporal expression management
     Then the simulation succeeds
     And the objective value is 420
     And the optimal values of the variables are
-      | component | variable | timestep | value | timeseriesNumber |
-      | node1     | gen1_p   | 0     | 80    | 1            |
-      | node1     | gen2_p   | 0     | 0    | 1             |
-      | node1     | gen1_p   | 1     | 20    | 1            |
-      | node1     | gen2_p   | 1     | 60    | 1            |
+      | component | variable | timestep | value | scenarioInterval |
+      | node1     | gen1_p   | 0        | 80    | 0            |
+      | node1     | gen2_p   | 0        | 0     | 0             |
+      | node1     | gen1_p   | 1        | 20    | 0            |
+      | node1     | gen2_p   | 1        | 60    | 0            |
 
  
