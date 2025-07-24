@@ -20,8 +20,6 @@
 
 #include "antares/solver/modeler/Modeler.h"
 
-#include <fstream>
-
 #include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 #include <antares/optimisation/linear-problem-api/linearProblemBuilder.h>
@@ -31,8 +29,7 @@
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
 #include "antares/solver/modeler/ILoader.h"
 #include "antares/solver/modeler/IWriter.h"
-
-#include "../../io/outputs/include/antares/io/outputs/SimulationTableCsvFile.h"
+#include "antares/utils/utils.h"
 
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares;
@@ -98,13 +95,14 @@ void Modeler::solve() const
 {
     try
     {
+        const auto simulationTableSuffix = formatTime(getCurrentTime(), "%Y%m%d-%H%M");
         const auto parameters = loader_.loadParameters();
         logs.info() << "Parameters loaded";
         const auto data = loader_.loadAll();
 
         SystemLinearProblemBuilder system_linear_problem(data.system.get());
 
-        writer_.init(!parameters.noOutput);
+        writer_.init(!parameters.noOutput, simulationTableSuffix);
 
         logs.info() << "linear problem of System loaded";
         // Problem is MIP if any variable of any component is not continuous

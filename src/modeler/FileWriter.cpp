@@ -34,10 +34,11 @@
 
 namespace Antares::Modeler
 {
-void FileWriter::init(bool setOutput)
+void FileWriter::init(bool setOutput, const std::string& simulationId)
 {
     output = setOutput;
     outputPath_ = studyPath_ / "output";
+    simulationId_ = simulationId;
     if (output)
     {
         logs.info() << "Output folder : " << outputPath_;
@@ -74,7 +75,7 @@ void FileWriter::writeSimulationTable(
 {
     if (output)
     {
-        SimulationTableCsvFile simulationTable(outputPath_, "");
+        SimulationTableCsvFile simulationTable(outputPath_, simulationId_);
         FillSimulationTable(simulationTable, solution, components, variableDictionary, fillContext);
         simulationTable.write();
     }

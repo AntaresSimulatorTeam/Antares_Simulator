@@ -413,7 +413,10 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                           optimizationNumber,
                           optPeriodStringGenerator,
                           writer);
-    writeModelerSimulationTable(problemeHebdo, NumIntervalle, writer, solver);
+    if (problemeHebdo->modelerSystem)
+    {
+        writeModelerSimulationTable(problemeHebdo, NumIntervalle, writer, solver);
+    }
 
     return {.success = true,
             .timeMeasure = timeMeasure,

@@ -52,7 +52,7 @@ class IWriter
 {
 public:
     virtual ~IWriter() = default;
-    virtual void init(bool) = 0;
+    virtual void init(bool, const std::string& simulationId) = 0;
     virtual void writeSolution(
       const Optimisation::LinearProblemMpsolverImpl::OrtoolsMipSolution& solution)
       = 0;

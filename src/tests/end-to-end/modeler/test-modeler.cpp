@@ -112,7 +112,7 @@ public:
 class StubWriter: public Antares::Solver::IWriter
 {
 public:
-    void init(bool) override
+    void init(bool, const std::string&) override
     {
         // No initialization needed for in-memory writer
     }
