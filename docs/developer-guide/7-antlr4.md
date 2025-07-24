@@ -9,9 +9,9 @@ Some of the code uses ANTLR generated code to parse expressions at runtime. The 
 
 You may use the convenience CMake target `antlr_generate_all` to re-generate from *all* grammars.
 
-with environment variables
 ```
-ANTLR_JAR_PATH=path/to/antlr.jar cmake --build <build> --target antlr_generate_all
+cmake -B <build> -DANTLR_JAR_PATH=path/to/antlr.jar [other options]
+cmake --build <build> --target antlr_generate_all
 ```
 
 See [here](https://github.com/antlr/antlr4/blob/master/doc/getting-started.md) for some general documentation about generating C++ code from an ANTLR4 grammar.
