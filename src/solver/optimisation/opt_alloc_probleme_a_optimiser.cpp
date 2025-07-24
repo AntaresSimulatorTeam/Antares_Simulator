@@ -88,8 +88,6 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo)
 
 void OPT_AllocDuProblemeAOptimiser(PROBLEME_HEBDO* problemeHebdo)
 {
-    problemeHebdo->ProblemeAResoudre = std::make_unique<PROBLEME_ANTARES_A_RESOUDRE>();
-
     OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(problemeHebdo);
 
     optimisationAllocateProblem(problemeHebdo);
