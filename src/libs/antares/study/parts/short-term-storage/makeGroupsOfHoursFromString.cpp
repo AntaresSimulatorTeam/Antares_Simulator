@@ -34,7 +34,7 @@ void CustomErrorListener::syntaxError(antlr4::Recognizer*,
                                       size_t line,
                                       size_t charPositionInLine,
                                       const std::string& msg,
-                                      std::exception_ptr e)
+                                      [[maybe_unused]] std::exception_ptr e)
 {
     std::ostringstream os;
     os << "Syntax error at line " << line << ":" << charPositionInLine << " - " << msg << std::endl;

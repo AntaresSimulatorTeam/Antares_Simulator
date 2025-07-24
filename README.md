@@ -71,18 +71,18 @@ or [its sources](docs/developer-guide/0-Introduction.md).
 * [src/tools/](src/tools)        - miscellaneous tools for dataset management.
 * [src/ui/](src/ui)           - Graphic user interface.
 
-[ubuntu_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Ubuntu%20CI%20(push%20and/or%20release)/badge.svg
+[ubuntu_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/ubuntu.yml/badge.svg?branch=develop
+
+[windows_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/windows-vcpkg.yml/badge.svg?branch=develop
+
+[centos_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/centos7.yml/badge.svg?branch=develop
 
 [ubuntu_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/ubuntu.yml
 
-[windows_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Windows%20CI%20(VCPKG%20and%20pre-compiled)/badge.svg
+[oraclelinux_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/oracle8.yml/badge.svg?branch=develop
 
 [windows_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/windows-vcpkg.yml
 
-[centos_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Centos7%20CI%20(push%20and/or%20release)/badge.svg
-
 [centos_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/centos7.yml
-
-[oraclelinux_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Oracle%208%20CI%20(push%20and/or%20release)/badge.svg
 
 [oraclelinux_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/oracle8.yml

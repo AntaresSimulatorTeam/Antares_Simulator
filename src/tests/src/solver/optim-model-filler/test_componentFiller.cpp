@@ -220,7 +220,7 @@ BOOST_AUTO_TEST_CASE(
     const auto nb_var = ctx.getNumberOfTimestep(); // = 10
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 2 * 10);
-    for (auto i = 0; i < nb_var; i++)
+    for (unsigned i = 0; i < nb_var; i++)
     {
         auto* var1 = pb->lookupVariable("component_1.var1_t" + to_string(i));
         BOOST_REQUIRE(var1);
@@ -373,7 +373,7 @@ BOOST_AUTO_TEST_CASE(ct_with_ten_vars__pb_contains_ten_ct)
     BOOST_CHECK_EQUAL(pb->variableCount(), 10);
     BOOST_CHECK_EQUAL(pb->constraintCount(), 10);
 
-    for (auto i = 0; i < nb_var; i++)
+    for (unsigned i = 0; i < nb_var; i++)
     {
         auto ct = pb->lookupConstraint("componentToto.ct1_" + to_string(i));
         BOOST_REQUIRE(ct);
@@ -639,7 +639,7 @@ BOOST_AUTO_TEST_CASE(one_time_dependent_var_with_objective)
     const auto nb_var = ctx.getNumberOfTimestep(); // = 10
 
     BOOST_CHECK_EQUAL(pb->variableCount(), nb_var);
-    for (auto i = 0; i < nb_var; i++)
+    for (unsigned i = 0; i < nb_var; i++)
     {
         const auto var_name = "componentA.x_t" + to_string(i);
         BOOST_CHECK_NO_THROW(pb->lookupVariable(var_name));
@@ -791,17 +791,19 @@ public:
         return static_cast<int>(variables_.size());
     }
 
-    IMipConstraint* addConstraint(double lb, double ub, const std::string& name) override
+    IMipConstraint* addConstraint([[maybe_unused]] double lb,
+                                  [[maybe_unused]] double ub,
+                                  [[maybe_unused]] const std::string& name) override
     {
         return nullptr;
     }
 
-    IMipConstraint* lookupConstraint(const std::string& name) const override
+    IMipConstraint* lookupConstraint([[maybe_unused]] const std::string& name) const override
     {
         return nullptr;
     }
 
-    IMipConstraint* getConstraint(std::size_t idx) const override
+    IMipConstraint* getConstraint([[maybe_unused]] std::size_t idx) const override
     {
         return nullptr;
     }
@@ -811,11 +813,12 @@ public:
         return 0;
     }
 
-    void setObjectiveCoefficient(IMipVariable* var, double coefficient) override
+    void setObjectiveCoefficient([[maybe_unused]] IMipVariable* var,
+                                 [[maybe_unused]] double coefficient) override
     {
     }
 
-    double getObjectiveCoefficient(const IMipVariable* var) const override
+    double getObjectiveCoefficient([[maybe_unused]] const IMipVariable* var) const override
     {
         return 0.0;
     }
@@ -838,12 +841,12 @@ public:
         return false;
     }
 
-    IMipSolution* solve(bool verboseSolver) override
+    IMipSolution* solve([[maybe_unused]] bool verboseSolver) override
     {
         return nullptr;
     }
 
-    void WriteLP(const std::string& filename) const override
+    void WriteLP([[maybe_unused]] const std::string& filename) const override
     {
     }
 

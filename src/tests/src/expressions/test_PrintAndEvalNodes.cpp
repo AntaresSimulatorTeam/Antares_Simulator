@@ -65,19 +65,19 @@ BOOST_AUTO_TEST_CASE(test_getSystemParameterValueAsDouble)
     BOOST_CHECK_EQUAL(context.getSystemParameterValueAsDouble("valid_number"), 42.5);
 
     // 2. Parameter not found
-    BOOST_CHECK_THROW(context.getSystemParameterValueAsDouble("nonexistent"),
+    BOOST_CHECK_THROW((void)context.getSystemParameterValueAsDouble("nonexistent"),
                       EvaluationContext::CouldNotEvaluateConstantParameter<std::out_of_range>);
 
     // 3. Invalid number format
-    BOOST_CHECK_THROW(context.getSystemParameterValueAsDouble("invalid_number"),
+    BOOST_CHECK_THROW((void)context.getSystemParameterValueAsDouble("invalid_number"),
                       EvaluationContext::CouldNotEvaluateConstantParameter<std::invalid_argument>);
 
     // 4. Out of range value
-    BOOST_CHECK_THROW(context.getSystemParameterValueAsDouble("out_of_range"),
+    BOOST_CHECK_THROW((void)context.getSystemParameterValueAsDouble("out_of_range"),
                       EvaluationContext::CouldNotEvaluateConstantParameter<std::out_of_range>);
 
     // 5. Timeserie parameter should NOT be converted to double, expect an exception
-    BOOST_CHECK_THROW(context.getSystemParameterValueAsDouble("timeserie_param"),
+    BOOST_CHECK_THROW((void)context.getSystemParameterValueAsDouble("timeserie_param"),
                       EvaluationContext::CouldNotEvaluateConstantParameter<std::invalid_argument>);
 
     // 6. Timeserie parameter should be handled by getParameterValue instead
@@ -137,7 +137,7 @@ BOOST_AUTO_TEST_CASE(EvaluationResult_OperatorNegationOnSingleValue)
 {
     EvaluationResult res1(5.0);
     EvaluationResult res2 = -res1;
-    BOOST_CHECK_THROW(res2.valuesAsVector(), EvaluationResult::EvalResultTypeError);
+    BOOST_CHECK_THROW((void)res2.valuesAsVector(), EvaluationResult::EvalResultTypeError);
     BOOST_CHECK_EQUAL(std::get<double>(res2.value()), -5.0);
 }
 
@@ -261,7 +261,7 @@ BOOST_AUTO_TEST_CASE(EvaluationResult_operator_bracket)
     const EvaluationResult res1(vec);
 
     BOOST_CHECK_NO_THROW(res1[0].valueAsDouble());
-    BOOST_CHECK_THROW(res1[0].valuesAsVector(), EvaluationResult::EvalResultTypeError);
+    BOOST_CHECK_THROW((void)res1[0].valuesAsVector(), EvaluationResult::EvalResultTypeError);
     BOOST_CHECK_EQUAL(res1[0].valueAsDouble(), vec[0]);
     BOOST_CHECK_EQUAL(res1[1].valueAsDouble(), vec[1]);
     BOOST_CHECK_EQUAL(res1[2].valueAsDouble(), vec[2]);
@@ -272,12 +272,12 @@ BOOST_AUTO_TEST_CASE(EvaluationResult_operator_bracket_one_value)
     const EvaluationResult res1(2025.03);
 
     BOOST_CHECK_NO_THROW(res1[0].valueAsDouble());
-    BOOST_CHECK_THROW(res1[0].valuesAsVector(), EvaluationResult::EvalResultTypeError);
+    BOOST_CHECK_THROW((void)res1[0].valuesAsVector(), EvaluationResult::EvalResultTypeError);
     BOOST_CHECK_EQUAL(res1[0].valueAsDouble(), 2025.03);
     BOOST_CHECK_EQUAL(res1[10].valueAsDouble(), 2025.03);
     BOOST_CHECK_EQUAL(res1[2000].valueAsDouble(), 2025.03);
     BOOST_CHECK_EQUAL(res1[-20000].valueAsDouble(), 2025.03);
-    BOOST_CHECK_EQUAL(res1[2025.03].valueAsDouble(), 2025.03);
+    BOOST_CHECK_EQUAL(res1[(int)2025.03].valueAsDouble(), 2025.03);
 }
 
 BOOST_AUTO_TEST_CASE(EvaluationResult_invalid_index)
@@ -296,7 +296,8 @@ BOOST_AUTO_TEST_CASE(ShiftResult_DoubleValue)
 {
     const EvaluationResult eval(4.0);
     const EvaluationResult shiftedEval = eval.timeShift(2);
-    BOOST_CHECK_THROW(eval.timeShift(2).valuesAsVector(), EvaluationResult::EvalResultTypeError);
+    BOOST_CHECK_THROW((void)eval.timeShift(2).valuesAsVector(),
+                      EvaluationResult::EvalResultTypeError);
     BOOST_CHECK_NO_THROW(eval.timeShift(2).valueAsDouble());
 
     BOOST_CHECK_EQUAL(eval.timeShift(2).valueAsDouble(), 4.0);
@@ -311,7 +312,7 @@ BOOST_AUTO_TEST_CASE(ShiftResult_VectorValue_PositiveShift)
     EvaluationResult eval(std::vector<double>{1.0, 2.0, 3.0});
 
     BOOST_CHECK_THROW(eval.timeShift(2).valueAsDouble(), EvaluationResult::EvalResultTypeError);
-    BOOST_CHECK_NO_THROW(eval.timeShift(2).valuesAsVector());
+    BOOST_CHECK_NO_THROW((void)eval.timeShift(2).valuesAsVector());
     const auto res = eval.timeShift(1).valuesAsVector();
     const std::vector<double> expected{2.0, 3.0, 1.0};
     BOOST_CHECK_EQUAL_COLLECTIONS(res.begin(), res.end(), expected.begin(), expected.end());
@@ -348,7 +349,8 @@ BOOST_AUTO_TEST_CASE(TimeSum_DoubleValue)
     const EvaluationResult sum = eval.timeSum(-2, 2);
     BOOST_CHECK_EQUAL(sum.valueAsDouble(), 20.0); // 4.0 * 5 = 20.0
 
-    BOOST_CHECK_THROW(eval.timeSum(-1, 0).valuesAsVector(), EvaluationResult::EvalResultTypeError);
+    BOOST_CHECK_THROW((void)eval.timeSum(-1, 0).valuesAsVector(),
+                      EvaluationResult::EvalResultTypeError);
 }
 
 BOOST_AUTO_TEST_CASE(TimeSum_VectorValue_PositiveShift)
@@ -378,7 +380,7 @@ BOOST_AUTO_TEST_CASE(AlltimeSum_DoubleValue)
     const EvaluationResult sum = eval.alltimeSum(5);
     BOOST_CHECK_EQUAL(sum.valueAsDouble(), 20.0); // 4.0 * 5 = 20.0
 
-    BOOST_CHECK_THROW(sum.valuesAsVector(), EvaluationResult::EvalResultTypeError);
+    BOOST_CHECK_THROW((void)sum.valuesAsVector(), EvaluationResult::EvalResultTypeError);
 }
 
 BOOST_AUTO_TEST_CASE(AlltimeSum_VectorValue)
@@ -607,7 +609,9 @@ BOOST_FIXTURE_TEST_CASE(parameter_constant_at_creation_but_not_in_eval_context__
 
 struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearProblemData
 {
-    double getData(const std::string& dataSetId, unsigned scenario, unsigned hour) const override
+    double getData([[maybe_unused]] const std::string& dataSetId,
+                   [[maybe_unused]] unsigned scenario,
+                   unsigned hour) const override
     {
         return hour; // for test
     }
@@ -637,7 +641,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_shifted_literal, MyDummyFixture)
     LiteralNode literal_node(13.0);
     TimeShiftNode time_shift_node(&literal_node, &literal_node);
     BOOST_CHECK_EQUAL(evalVisitor.dispatch(&time_shift_node).valueAsDouble(), 13.0);
-    BOOST_CHECK_THROW(evalVisitor.dispatch(&time_shift_node).valuesAsVector(),
+    BOOST_CHECK_THROW((void)evalVisitor.dispatch(&time_shift_node).valuesAsVector(),
                       EvaluationResult::EvalResultTypeError);
 }
 
@@ -758,7 +762,6 @@ BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_multiplication, MyDummyFixture)
     BOOST_CHECK_EQUAL(eval[1], hour_1 * literal.value());
 }
 
-namespace bdata = boost::unit_test::data;
 // Helper function to compute the expected value based on the operation type
 template<typename BinaryNode>
 double evalExpected(double a, double b);
@@ -966,7 +969,7 @@ BOOST_FIXTURE_TEST_CASE(DivisionNodeFull, MyDummyFixture)
     BOOST_CHECK_THROW(evalVisitor.dispatch(&divisionNode3).valueAsDouble(), InvalidNode);
 
     // truncated to zero
-    LiteralNode literalVerySmall(1.e-324);
+    LiteralNode literalVerySmall(1.e-323);
 
     DivisionNode divisionNode4(&literalNode1, &literalVerySmall);
 
