@@ -124,12 +124,14 @@ cluster = cluster-11
 variable = withdrawal
 operator = equal
 hours = [1,3,5], [120,121,122,123,124,125,126,127,128]
+enabled = true
 
 [netting-1]
 cluster = cluster-11
 variable = netting
 operator = less
 hours = [1, 168]
+enabled = false
 ```
 
 Possible values:
@@ -138,6 +140,7 @@ Possible values:
 - `variable`: `withdrawal`, `injection`, `netting`
 - `operator`: `less`, `equal`, `greater`
 - `hours`: not empty, any number of lists `[h_1, ..., h_n]` with n>=1, and coefficients from 1 to 168 included.
+- `enabled`: Boolean, default=`true`. Ignore the additional constraint if `enabled=false`.
 
 Note that all fields are mandatory.
 
