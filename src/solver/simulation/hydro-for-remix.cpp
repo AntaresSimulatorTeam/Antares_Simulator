@@ -53,14 +53,15 @@ HydroForRemix::HydroForRemix(std::vector<double>& generation,
     checkInput(generation_.size());
 }
 
-double HydroForRemix::maxExchange(unsigned hourMax, unsigned hourMin)
+double HydroForRemix::maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen)
 {
     // Max slice we can take from hydro generation, at an hour when the total
     // production reaches a max.
-    double boundAtMax = generation_[hourMax] - pmin_[hourMax];
+    double boundAtMax = generation_[hourOfMaxGen] - pmin_[hourOfMaxGen];
     // Max slice we can add to hydro generation, at an hour when the total
     // production reaches a min.
-    double boundAtMin = std::min({pmax_[hourMin] - generation_[hourMin], unsupE_[hourMin]});
+    double boundAtMin = std::min(
+      {pmax_[hourOfMinGen] - generation_[hourOfMinGen], unsupE_[hourOfMinGen]});
 
     return std::min(boundAtMax, boundAtMin);
 }
@@ -121,17 +122,17 @@ HydroForRemixWithLevels::HydroForRemixWithLevels(std::vector<double>& generation
     checkLevels();
 }
 
-double HydroForRemixWithLevels::maxExchange(unsigned hourMax, unsigned hourMin)
+double HydroForRemixWithLevels::maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen)
 {
-    double bound = HydroForRemix::maxExchange(hourMax, hourMin);
+    double bound = HydroForRemix::maxExchange(hourOfMaxGen, hourOfMinGen);
 
-    unsigned smallestHour = std::min(hourMin, hourMax);
-    unsigned greatestHour = std::max(hourMin, hourMax);
+    unsigned smallestHour = std::min(hourOfMinGen, hourOfMaxGen);
+    unsigned greatestHour = std::max(hourOfMinGen, hourOfMaxGen);
     std::span<double> level_subset(levels_.begin() + smallestHour, levels_.begin() + greatestHour);
 
     double boundAtMax = std::numeric_limits<double>::max();
     double boundAtMin = std::numeric_limits<double>::max();
-    if (hourMin < hourMax)
+    if (hourOfMinGen < hourOfMaxGen)
     {
         boundAtMax = capacity_;
         boundAtMin = *std::ranges::min_element(level_subset);

@@ -13,7 +13,7 @@ public:
                   const std::vector<double>& Pmax,
                   const std::vector<double>& Pmin);
 
-    double maxExchange(unsigned hourPeak, unsigned hourBottom) override;
+    double maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) override;
     void update() override;
     std::vector<double>& generation() override;
 
@@ -41,7 +41,7 @@ public:
                             const double& capacity,
                             const double& pumpEfficiency);
 
-    double maxExchange(unsigned hourPeak, unsigned hourBottom) override;
+    double maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) override;
     void update() override;
 
 private:
