@@ -73,16 +73,16 @@ or [its sources](docs/developer-guide/0-Introduction.md).
 
 [ubuntu_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/ubuntu.yml/badge.svg?branch=develop
 
-[ubuntu_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/ubuntu.yml
-
 [windows_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/windows-vcpkg.yml/badge.svg?branch=develop
-
-[windows_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/windows-vcpkg.yml
 
 [centos_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/centos7.yml/badge.svg?branch=develop
 
-[centos_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/centos7.yml
+[ubuntu_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/ubuntu.yml
 
 [oraclelinux_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/oracle8.yml/badge.svg?branch=develop
+
+[windows_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/windows-vcpkg.yml
+
+[centos_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/centos7.yml
 
 [oraclelinux_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/oracle8.yml
