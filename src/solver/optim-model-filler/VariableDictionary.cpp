@@ -204,7 +204,7 @@ VariableDictionary::Value& VariableDictionary::operator()(const std::string& com
 
 VariableDictionary::Value VariableDictionary::operator()(const std::string& component,
                                                          const std::string& variable,
-                                                         MCYearAndTime::MCYear scenario,
+                                                         const MCYearAndTime::MCYear& scenario,
                                                          unsigned int timestep) const
 {
     return storageOfAddedMipVariables_.at(PartialKey(component, variable))
@@ -214,7 +214,7 @@ VariableDictionary::Value VariableDictionary::operator()(const std::string& comp
 
 VariableDictionary::Value& VariableDictionary::operator()(const std::string& component,
                                                           const std::string& variable,
-                                                          MCYearAndTime::MCYear scenario,
+                                                          const MCYearAndTime::MCYear& scenario,
                                                           unsigned int timestep)
 {
     auto&& var = storageOfAddedMipVariables_[PartialKey(component, variable)];

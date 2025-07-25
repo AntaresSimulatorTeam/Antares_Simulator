@@ -132,7 +132,7 @@ public:
 
     Value& operator()(const std::string& component,
                       const std::string& variable,
-                      MCYearAndTime::MCYear scenario,
+                      const MCYearAndTime::MCYear& scenario,
                       unsigned int timestep);
     Value operator()(const FullKey& fullKey) const;
 
