@@ -28,29 +28,29 @@ namespace Antares::Optimization
 /**
  * Association of a Scenario (year) and time step
  */
-struct ScenarioAndTime
+struct MCYearAndTime
 {
-    enum class Scenario : unsigned int
+    enum class MCYear : unsigned int
     {
     };
-    Scenario scenario;
+    MCYear mcYear;
     unsigned int timestep;
 };
 
-inline auto format_as(ScenarioAndTime::Scenario scenario)
+inline auto format_as(MCYearAndTime::MCYear mcyear)
 {
-    return fmt::underlying(scenario);
+    return fmt::underlying(mcyear);
 }
 
-inline std::ostream& operator<<(std::ostream& os, const ScenarioAndTime::Scenario& scenario)
+inline std::ostream& operator<<(std::ostream& os, const MCYearAndTime::MCYear& mcYear)
 {
-    os << static_cast<unsigned int>(scenario);
+    os << static_cast<unsigned int>(mcYear);
     return os;
 }
 
-inline std::ostream& operator<<(std::ostream& os, const ScenarioAndTime& st)
+inline std::ostream& operator<<(std::ostream& os, const MCYearAndTime& st)
 {
-    os << fmt::format("{{scenario: {}, timestep: {}}}", st.scenario, st.timestep);
+    os << fmt::format("{{scenario: {}, timestep: {}}}", st.mcYear, st.timestep);
     return os;
 }
 

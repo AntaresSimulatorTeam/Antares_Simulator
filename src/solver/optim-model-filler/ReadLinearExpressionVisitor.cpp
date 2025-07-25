@@ -107,7 +107,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const VariableN
           LinearExpression(0,
                            {{FullKey(component_.Id(),
                                      node->value(),
-                                     ScenarioAndTime::Scenario{fillContext_.getYear()}),
+                                     MCYearAndTime::MCYear{fillContext_.getYear()}),
                              1}}));
     }
     // only dependent
@@ -120,7 +120,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const VariableN
         linearExpressions[timeStep] = LinearExpression(0,
                                                        {{FullKey(component_.Id(),
                                                                  node->value(),
-                                                                 ScenarioAndTime::Scenario{
+                                                                 MCYearAndTime::MCYear{
                                                                    fillContext_.getYear()},
                                                                  timeStep),
                                                          1}});
@@ -172,8 +172,8 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const PortField
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const PortFieldSumNode* node)
 {
-    std::string portId = node->getPortName();
-    std::string fieldId = node->getFieldName();
+    auto& portId = node->getPortName();
+    auto& fieldId = node->getFieldName();
 
     TimeDependentLinearExpression to_return(fillContext_);
     for (const auto connexion_end: component_.componentConnectionsViaPort(portId))

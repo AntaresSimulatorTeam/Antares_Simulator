@@ -26,7 +26,7 @@
 
 #include <antares/solver/optim-model-filler/PartialKey.h>
 
-#include "ScenarioAndTime.h"
+#include "MCYearAndTime.h"
 
 template<>
 struct boost::hash<Antares::Optimization::PartialKey>
@@ -46,24 +46,24 @@ public:
     FullKey(const std::string& component, const std::string& variable);
     FullKey(const std::string& component,
             const std::string& variable,
-            ScenarioAndTime::Scenario scenario);
+            MCYearAndTime::MCYear scenario);
     FullKey(const std::string& component,
             const std::string& variable,
-            ScenarioAndTime::Scenario scenario,
+            MCYearAndTime::MCYear scenario,
             unsigned int timestep);
 
     [[nodiscard]] const PartialKey& getPartialKey() const;
     [[nodiscard]] const std::string& getComponent() const;
     [[nodiscard]] const std::string& getVariable() const;
 
-    [[nodiscard]] std::optional<ScenarioAndTime::Scenario> getScenario() const;
+    [[nodiscard]] std::optional<MCYearAndTime::MCYear> getScenario() const;
     [[nodiscard]] std::optional<unsigned int> getTimestep() const;
 
     auto operator<=>(const FullKey&) const = default; // Automatically generates <, >, ==, etc.
 
 private:
     PartialKey pk;
-    std::optional<ScenarioAndTime::Scenario> scenario;
+    std::optional<MCYearAndTime::MCYear> scenario;
     std::optional<unsigned int> timestep;
 };
 

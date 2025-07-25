@@ -29,7 +29,7 @@
 
 #include <antares/solver/optim-model-filler/FullKey.h>
 
-#include "ScenarioAndTime.h"
+#include "MCYearAndTime.h"
 
 namespace Antares::Optimisation::LinearProblemApi
 {
@@ -76,7 +76,7 @@ class Dimensions
 {
 public:
     Dimensions() = default;
-    Dimensions(std::optional<IntegerInterval> scenarioInterval,
+    Dimensions(std::optional<IntegerInterval> mcyearInterval,
                std::optional<IntegerInterval> timeInterval);
     [[nodiscard]] bool isTimeDependent() const;
     [[nodiscard]] bool isScenarioDependent() const;
@@ -85,7 +85,7 @@ public:
     [[nodiscard]] unsigned int getNumberOfTimesteps() const;
 
 private:
-    std::optional<IntegerInterval> scenarioInterval;
+    std::optional<IntegerInterval> mcyearInterval;
     std::optional<IntegerInterval> timeInterval;
 };
 
@@ -108,7 +108,7 @@ class VariableDictionary
         unsigned int offset_ = 0;
     };
 
-    using TwoIndexVector = std::unordered_map<ScenarioAndTime::Scenario, VectorWithOffset>;
+    using TwoIndexVector = std::unordered_map<MCYearAndTime::MCYear, VectorWithOffset>;
     using HashMapVector = std::unordered_map<PartialKey, TwoIndexVector, PartialKeyHash>;
 
     HashMapVector storageOfAddedMipVariables_;
@@ -117,7 +117,7 @@ class VariableDictionary
 public:
     void addVariable(const Dimensions& dimensions,
                      const PartialKey& key,
-                     std::function<Value(const ScenarioAndTime&, const std::string&)>&& func);
+                     std::function<Value(const MCYearAndTime&, const std::string&)>&& func);
 
     Value operator[](const FullKey& k) const;
     Value& operator[](const FullKey& k);
@@ -127,12 +127,12 @@ public:
 
     Value operator()(const std::string& component,
                      const std::string& variable,
-                     ScenarioAndTime::Scenario scenario,
+                     MCYearAndTime::MCYear scenario,
                      unsigned int timestep) const;
 
     Value& operator()(const std::string& component,
                       const std::string& variable,
-                      ScenarioAndTime::Scenario scenario,
+                      MCYearAndTime::MCYear scenario,
                       unsigned int timestep);
     Value operator()(const FullKey& fullKey) const;
 

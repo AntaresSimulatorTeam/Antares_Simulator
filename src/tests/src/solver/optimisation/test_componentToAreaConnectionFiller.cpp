@@ -164,7 +164,7 @@ struct ComponentToAreaConnectionFillerFixture
                 modelerVariableDictionary.addVariable(
                   dim,
                   key,
-                  [this](const ScenarioAndTime&, const std::string& name)
+                  [this](const MCYearAndTime&, const std::string& name)
                   { return linearProblem.addVariable(-999, 999, false, name); });
             }
         }

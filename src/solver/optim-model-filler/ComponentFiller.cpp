@@ -48,7 +48,7 @@ void VariablesBulkAddition::addVariable(double lb,
 {
     variableDictionary.addVariable(dim,
                                    key,
-                                   [this, lb, ub, integer](const Optimization::ScenarioAndTime&,
+                                   [this, lb, ub, integer](const Optimization::MCYearAndTime&,
                                                            const std::string& name)
                                    { return linear_problem_.addVariable(lb, ub, integer, name); });
 }
@@ -72,7 +72,7 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
     variableDictionary.addVariable(
       dim,
       key,
-      [this, &lb, ub, integer, offset](const Optimization::ScenarioAndTime& timeAndScenario,
+      [this, &lb, ub, integer, offset](const Optimization::MCYearAndTime& timeAndScenario,
                                        const std::string& name) {
           return linear_problem_.addVariable(lb[timeAndScenario.timestep - offset],
                                              ub,
@@ -98,7 +98,7 @@ void VariablesBulkAddition::addVariable(double lb,
     variableDictionary.addVariable(
       dim,
       key,
-      [this, lb, &ub, integer, offset](const Optimization::ScenarioAndTime& timeAndScenario,
+      [this, lb, &ub, integer, offset](const Optimization::MCYearAndTime& timeAndScenario,
                                        const std::string& name) {
           return linear_problem_.addVariable(lb,
                                              ub[timeAndScenario.timestep - offset],
@@ -126,7 +126,7 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
     variableDictionary.addVariable(
       dim,
       key,
-      [this, &lb, &ub, integer, offset](const Optimization::ScenarioAndTime& timeAndScenario,
+      [this, &lb, &ub, integer, offset](const Optimization::MCYearAndTime& timeAndScenario,
                                         const std::string& name)
       {
           return linear_problem_.addVariable(lb[timeAndScenario.timestep - offset],
@@ -188,7 +188,7 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
         {
             const Optimization::Dimensions dim(
               Optimization::IntegerInterval{ctx.getYear(),
-                                            ctx.getYear()}, /*TODO Handle range of timeSeries ? */
+                                            ctx.getYear()}, /*TODO Handle range of year ? */
               Optimization::IntegerInterval(ctx.getFirstTimeStep(), ctx.getLastTimeStep()));
             // std::visit to handle the 4 cases: double/double, vector/double,
             // double/vector and vector/vector.
@@ -213,7 +213,7 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
             variableDictionary_.addVariable(
               dim,
               key,
-              [&pb, &lb, &ub, &variable](const Optimization::ScenarioAndTime&,
+              [&pb, &lb, &ub, &variable](const Optimization::MCYearAndTime&,
                                          const std::string& name)
               {
                   return pb.addVariable(lb.valueAsDouble(),

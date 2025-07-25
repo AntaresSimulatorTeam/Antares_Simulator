@@ -104,7 +104,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var, CreateVisitorFixture)
     BOOST_CHECK_EQUAL(linear_expression.offset(), 55.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(
-                        FullKey(component.Id(), "var", ScenarioAndTime::Scenario{0}, 0)),
+                        FullKey(component.Id(), "var", MCYearAndTime::MCYear{0}, 0)),
                       7.);
 }
 
@@ -180,10 +180,10 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_time_dependent_param_plus_var, Create
     BOOST_CHECK_EQUAL(linear_expressions.at(1).offset(), 61.);
     BOOST_CHECK_EQUAL(linear_expressions.at(0).coefPerVar().size(), 1);
     BOOST_CHECK_EQUAL(linear_expressions.at(0).coefPerVar().at(
-                        FullKey(component.Id(), "var", ScenarioAndTime::Scenario{0}, 0)),
+                        FullKey(component.Id(), "var", MCYearAndTime::MCYear{0}, 0)),
                       7.);
     BOOST_CHECK_EQUAL(linear_expressions.at(1).coefPerVar().at(
-                        FullKey(component.Id(), "var", ScenarioAndTime::Scenario{0}, 1)),
+                        FullKey(component.Id(), "var", MCYearAndTime::MCYear{0}, 1)),
                       7.);
 }
 
@@ -212,7 +212,7 @@ BOOST_FIXTURE_TEST_CASE(visit_negate_literal_plus_var, CreateVisitorFixture)
     BOOST_CHECK_EQUAL(linear_expression.offset(), -60.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(
-                        FullKey(component.Id(), "var", ScenarioAndTime::Scenario{0}, 0)),
+                        FullKey(component.Id(), "var", MCYearAndTime::MCYear{0}, 0)),
                       -7.);
 }
 
@@ -226,7 +226,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_minus_var, CreateVisitorFixture)
     BOOST_CHECK_EQUAL(linear_expression.offset(), 60.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(
-                        FullKey(component.Id(), "var", ScenarioAndTime::Scenario{0}, 0)),
+                        FullKey(component.Id(), "var", MCYearAndTime::MCYear{0}, 0)),
                       -7.);
 }
 
@@ -259,10 +259,10 @@ BOOST_FIXTURE_TEST_CASE(visit_complex_expression, CreateVisitorFixture)
     BOOST_CHECK_EQUAL(linear_expression.offset(), 10.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 2);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(
-                        FullKey(component.Id(), "var1", ScenarioAndTime::Scenario{0}, 0)),
+                        FullKey(component.Id(), "var1", MCYearAndTime::MCYear{0}, 0)),
                       4.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(
-                        FullKey(component.Id(), "var2", ScenarioAndTime::Scenario{0}, 0)),
+                        FullKey(component.Id(), "var2", MCYearAndTime::MCYear{0}, 0)),
                       6.);
 }
 

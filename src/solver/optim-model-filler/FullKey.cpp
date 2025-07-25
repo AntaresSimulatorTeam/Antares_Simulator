@@ -28,7 +28,7 @@ namespace Antares::Optimization
 // FullKey
 FullKey::FullKey(const std::string& component,
                  const std::string& variable,
-                 ScenarioAndTime::Scenario scenario,
+                 MCYearAndTime::MCYear scenario,
                  unsigned int timestep):
     pk(component, variable),
     scenario(scenario),
@@ -43,7 +43,7 @@ FullKey::FullKey(const std::string& component, const std::string& variable):
 
 FullKey::FullKey(const std::string& component,
                  const std::string& variable,
-                 ScenarioAndTime::Scenario scenario):
+                 MCYearAndTime::MCYear scenario):
     pk(component, variable),
     scenario(scenario)
 {
@@ -64,7 +64,7 @@ const std::string& FullKey::getVariable() const
     return pk.getVariable();
 }
 
-std::optional<ScenarioAndTime::Scenario> FullKey::getScenario() const
+std::optional<MCYearAndTime::MCYear> FullKey::getScenario() const
 {
     return scenario;
 }
