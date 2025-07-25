@@ -221,7 +221,7 @@ BOOST_AUTO_TEST_CASE(
     const auto nb_var = ctx.getNumberOfTimestep(); // = 10
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 2 * 10);
-    for (auto i = 0; i < nb_var; i++)
+    for (unsigned i = 0; i < nb_var; i++)
     {
         auto* var1 = pb->lookupVariable("component_1.var1_s0_t" + to_string(i));
         BOOST_REQUIRE(var1);
@@ -374,7 +374,7 @@ BOOST_AUTO_TEST_CASE(ct_with_ten_vars__pb_contains_ten_ct)
     BOOST_CHECK_EQUAL(pb->variableCount(), 10);
     BOOST_CHECK_EQUAL(pb->constraintCount(), 10);
 
-    for (auto i = 0; i < nb_var; i++)
+    for (unsigned i = 0; i < nb_var; i++)
     {
         auto ct = pb->lookupConstraint("componentToto.ct1_" + to_string(i));
         BOOST_REQUIRE(ct);
@@ -707,7 +707,7 @@ BOOST_AUTO_TEST_CASE(one_time_dependent_var_with_objective)
     const auto nb_var = ctx.getNumberOfTimestep(); // = 10
 
     BOOST_CHECK_EQUAL(pb->variableCount(), nb_var);
-    for (auto i = 0; i < nb_var; i++)
+    for (unsigned i = 0; i < nb_var; i++)
     {
         const auto var_name = "componentA.x_s0_t" + to_string(i);
         BOOST_CHECK_NO_THROW(pb->lookupVariable(var_name));
