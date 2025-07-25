@@ -137,11 +137,10 @@ public:
         setComponents(fixture.components); // Component model may not be the system model
         Antares::ModelerStudy::SystemModel::SystemBuilder builder;
         auto system = builder.withId("dummy-system").withComponents(std::move(components)).build();
-        Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepository;
         return {.libraries = {library},
                 .system = std::make_unique<Antares::ModelerStudy::SystemModel::System>(
                   std::move(system)),
-                .dataSeries = std::make_unique<EmptyDataSeries>(),
+                .dataSeries = std::move(data),
                 .scenario_group_repository = std::move(scenarioGroupRepository)};
     }
 
@@ -165,12 +164,11 @@ public:
           Antares::Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY);
     }
 
-    void addParameter(const std::string& str, Antares::Expressions::Visitors::TimeIndex)
+    void addParameter(const std::string& str,
+                      const Antares::Expressions::Visitors::ParameterType& type = Antares::
+                        Expressions::Visitors::ParameterType::TIMESERIE)
     {
-        parameters.emplace(Test::Modeler::build_context_parameter_with(
-          "a",
-          "a",
-          Antares::Expressions::Visitors::ParameterType::TIMESERIE));
+        parameters.emplace(Test::Modeler::build_context_parameter_with(str, "GroupA", type));
         parameterIds.push_back(str);
     }
 
@@ -240,9 +238,8 @@ BOOST_AUTO_TEST_CASE(system_with_one_constant_serie_value_10)
 {
     InMemoryLoader<Test::Modeler::LinearProblemBuildingFixture> inMemoryLoader;
     inMemoryLoader.timeDependent = true;
-    inMemoryLoader.setLowerBoundToParameter("a");
-    inMemoryLoader.addParameter("a",
-                                Antares::Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY);
+    inMemoryLoader.setLowerBoundToParameter("paramA");
+    inMemoryLoader.addParameter("paramA");
 
     inMemoryLoader.data = std::make_unique<ConstantDataSeries>(5);
 
@@ -287,15 +284,14 @@ BOOST_AUTO_TEST_CASE(system_with_two_time_series_use_default_first_all_2)
 {
     InMemoryLoader<Test::Modeler::LinearProblemBuildingFixture> inMemoryLoader;
     inMemoryLoader.timeDependent = true;
-    inMemoryLoader.setLowerBoundToParameter("a");
-    inMemoryLoader.addParameter("a",
-                                Antares::Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY);
+    inMemoryLoader.setLowerBoundToParameter("paramA");
+    inMemoryLoader.addParameter("paramA");
 
     Antares::Optimisation::LinearProblemDataImpl::DataSeriesRepository data_series_repository;
     std::vector<double> values = {2, 3, 4};
     data_series_repository.addDataSeries(
       std::make_unique<Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet>(
-        constantTimeSeriesSets("a", values, 1)));
+        constantTimeSeriesSets("GroupA", values, 1)));
     inMemoryLoader.data = std::make_unique<
       Antares::Optimisation::LinearProblemDataImpl::LinearProblemData>(
       std::move(data_series_repository));
@@ -311,15 +307,14 @@ BOOST_AUTO_TEST_CASE(system_with_three_time_series_use_second_one_all_3)
 {
     InMemoryLoader<Test::Modeler::LinearProblemBuildingFixture> inMemoryLoader;
     inMemoryLoader.timeDependent = true;
-    inMemoryLoader.setLowerBoundToParameter("a");
-    inMemoryLoader.addParameter("a",
-                                Antares::Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY);
+    inMemoryLoader.setLowerBoundToParameter("paramA");
+    inMemoryLoader.addParameter("paramA");
 
     Antares::Optimisation::LinearProblemDataImpl::DataSeriesRepository data_series_repository;
     std::vector<double> values = {2, 3, 4};
     data_series_repository.addDataSeries(
       std::make_unique<Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet>(
-        constantTimeSeriesSets("a", values, 1)));
+        constantTimeSeriesSets("GroupA", values, 1)));
     inMemoryLoader.data = std::make_unique<
       Antares::Optimisation::LinearProblemDataImpl::LinearProblemData>(
       std::move(data_series_repository));
