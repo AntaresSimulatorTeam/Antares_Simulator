@@ -227,12 +227,19 @@ jobs:
           cd _build/tests
           ${{github.workspace}}/src/tests/merge_all.sh ${{github.workspace}}/src/tests/format_xml_report.xsl
 
-      - name: Upload report as artifact
+      - name: Rename report
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-        uses: actions/upload-artifact@v4
+        run: |
+          mkdir testing-report
+          mv ${{ github.workspace }}/_build/tests/report.html testing-report/$(git rev-parse HEAD).html
+
+      - name: Deploy to antares-simulator-reports.surge.sh
+        uses: dswistowski/surge-sh-action@v1
         with:
-          name: unit-test-report
-          path: ${{ github.workspace }}/_build/tests/report.html
+          domain: 'antares-simulator-reports.surge.sh'
+          project: 'testing-report'
+          login: ${{ secrets.SURGE_LOGIN }}
+          token: ${{ secrets.SURGE_TOKEN }}
 
       - name: Upload logs for failed tests
         if: ${{ failure() }}
