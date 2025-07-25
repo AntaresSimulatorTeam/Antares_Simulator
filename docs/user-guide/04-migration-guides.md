@@ -89,6 +89,9 @@ If the user provides any of the key/values below:
 - 
 the simulation will fail with a warning. We recommend removing these properties from `settings/generaldata.ini`. Other values (e.g `adequacy patch/enable-first-step = false`) will be ignored.
 
+#### Export raw solutions
+In existing file `settings/generaldata.ini`, in section `optimization`, add property `include-export-solutions` (bool, default value `false`). If set to true, export files containing raw solutions from the optimization problems, which can be useful for analysis & debugging.
+
 #### Hydraulic reservoirs / long-term storage
 - In existing file `input/hydro/hydro.ini`, add property `overflow spilled cost difference` for each area (double, default value = 1.). This value describes the additionnal cost of overflow relative to the cost of spillage for the area.
 - In file `settings/generaldata.ini`, for property `other-preferences/shedding-policy`, add value `accurate shave peaks`. This new value becomes the default value (previously `shave peaks`).

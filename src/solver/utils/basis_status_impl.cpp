@@ -53,4 +53,10 @@ bool BasisStatusImpl::exists() const
 {
     return !StatutDesVariables.empty() && !StatutDesContraintes.empty();
 }
+
+void BasisStatusImpl::clear()
+{
+    StatutDesVariables.clear();
+    StatutDesContraintes.clear();
+}
 } // namespace Antares::Optimization
