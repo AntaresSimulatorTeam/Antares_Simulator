@@ -194,6 +194,7 @@ MPSolver* convertToMPSolver(const PROBLEME_HEBDO* problemeHebdo,
 
     return ortoolsProblem.getMpSolver();
 }
+
 struct TimeBlock
 {
     unsigned int block;
@@ -266,8 +267,8 @@ static void FillSimulationTable(
                                                                                   0 /*TODO*/,
                                                                                   std::nullopt);
                     const auto [block, blockTimeIndex] = convertTimeStepToBlockTimeIndex(
-                                              timeStep,
-                                              problemeHebdo->OptimisationAuPasHebdomadaire);
+                      timeStep,
+                      problemeHebdo->OptimisationAuPasHebdomadaire);
                     simulationTable.addEntry({.block = 1,
                                               .component = componentId,
                                               .output = var_name,
