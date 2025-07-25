@@ -194,13 +194,32 @@ MPSolver* convertToMPSolver(const PROBLEME_HEBDO* problemeHebdo,
 
     return ortoolsProblem.getMpSolver();
 }
+struct TimeBlock
+{
+    unsigned int block;
+    unsigned int blockTimeIndex;
+};
+
+static TimeBlock convertTimeStepToBlockTimeIndex(unsigned int timeStep, bool weekOptimisation)
+{
+    if (weekOptimisation)
+    {
+        return {.block = timeStep / 168, .blockTimeIndex = timeStep % 168};
+    }
+    else
+    {
+        return {.block = timeStep / 24, .blockTimeIndex = timeStep % 24};
+    }
+}
 
 static void FillSimulationTable(
   ISimulationTable& simulationTable,
   const std::vector<MPVariable*>& variables,
-  const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>& components,
+  const PROBLEME_HEBDO* problemeHebdo,
   const Antares::Optimisation::LinearProblemApi::FillContext& fillContext)
 {
+    const auto& components = problemeHebdo->modelerSystem->Components();
+
     auto solution = [&variables]
     {
         std::unordered_map<std::string, double> solution;
@@ -216,9 +235,6 @@ static void FillSimulationTable(
         {
             if (modelVar.IsScenarioDependent() && modelVar.isTimeDependent())
             {
-                // TODO
-                //  for (auto scenario: fillContext.getSelectedScenarios())
-                unsigned int scenario = 0;
                 {
                     for (auto timeStep(fillContext.getFirstTimeStep());
                          timeStep <= fillContext.getLastTimeStep();
@@ -226,14 +242,17 @@ static void FillSimulationTable(
                     {
                         auto variableFullName = VariableDictionary::buildVariableName({componentId,
                                                                                        var_name},
-                                                                                      scenario,
+                                                                                      0 /*TODO*/,
                                                                                       timeStep);
-                        simulationTable.addEntry({.block = 1,
+                        const auto [block, blockTimeIndex] = convertTimeStepToBlockTimeIndex(
+                          timeStep,
+                          problemeHebdo->OptimisationAuPasHebdomadaire);
+                        simulationTable.addEntry({.block = block,
                                                   .component = componentId,
                                                   .output = var_name,
                                                   .absolute_time_index = timeStep,
-                                                  .block_time_index = timeStep,
-                                                  .scenario_index = scenario,
+                                                  .block_time_index = blockTimeIndex,
+                                                  .scenario_index = problemeHebdo->year,
                                                   .value = solution.at(variableFullName)});
                     }
                 }
@@ -244,9 +263,11 @@ static void FillSimulationTable(
                 {
                     auto variableFullName = VariableDictionary::buildVariableName({componentId,
                                                                                    var_name},
-                                                                                  scenario,
+                                                                                  0 /*TODO*/,
                                                                                   std::nullopt);
-
+                    const auto [block, blockTimeIndex] = convertTimeStepToBlockTimeIndex(
+                                              timeStep,
+                                              problemeHebdo->OptimisationAuPasHebdomadaire);
                     simulationTable.addEntry({.block = 1,
                                               .component = componentId,
                                               .output = var_name,
@@ -292,7 +313,7 @@ static void FillSimulationTable(
     }
 }
 
-static void writeModelerSimulationTable(PROBLEME_HEBDO* problemeHebdo,
+static void writeModelerSimulationTable(const PROBLEME_HEBDO* problemeHebdo,
                                         int NumIntervalle,
                                         IResultWriter& writer,
                                         const MPSolver* solver)
