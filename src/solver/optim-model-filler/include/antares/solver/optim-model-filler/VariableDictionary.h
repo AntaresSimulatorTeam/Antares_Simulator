@@ -108,11 +108,11 @@ class VariableDictionary
         unsigned int offset_ = 0;
     };
 
-    using TwoIndexVector = std::unordered_map<MCYearAndTime::MCYear, VectorWithOffset>;
-    using HashMapVector = std::unordered_map<PartialKey, TwoIndexVector, PartialKeyHash>;
+    using TwoIndexVectorByYear = std::unordered_map<MCYearAndTime::MCYear, VectorWithOffset>;
+    using HashMapVector = std::unordered_map<PartialKey, TwoIndexVectorByYear, PartialKeyHash>;
 
     HashMapVector storageOfAddedMipVariables_;
-    const TwoIndexVector& operator[](const PartialKey& k) const;
+    const TwoIndexVectorByYear& operator[](const PartialKey& k) const;
 
 public:
     void addVariable(const Dimensions& dimensions,

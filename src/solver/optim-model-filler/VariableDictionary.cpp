@@ -180,7 +180,8 @@ VariableDictionary::Value& VariableDictionary::operator[](const FullKey& k)
       .at(k.getTimestep().value_or(0));
 }
 
-const VariableDictionary::TwoIndexVector& VariableDictionary::operator[](const PartialKey& k) const
+const VariableDictionary::TwoIndexVectorByYear& VariableDictionary::operator[](
+  const PartialKey& k) const
 {
     return storageOfAddedMipVariables_.at(k);
 }
