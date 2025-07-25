@@ -513,7 +513,6 @@ BOOST_AUTO_TEST_CASE(get_timeseriesNumber_for_given_year)
     std::vector<std::unique_ptr<IScenario>> scenarios;
     scenarios.emplace_back(std::move(scenario));
     buildLinearProblem(ctx, data, scenarios);
-    const auto nb_var = ctx.getNumberOfTimestep(); // = 2
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 2);
     BOOST_CHECK_EQUAL(pb->constraintCount(), 2);
