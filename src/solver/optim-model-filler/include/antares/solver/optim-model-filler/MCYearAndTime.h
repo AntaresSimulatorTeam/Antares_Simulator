@@ -37,7 +37,7 @@ struct MCYearAndTime
     unsigned int timestep;
 };
 
-inline auto format_as(MCYearAndTime::MCYear mcyear)
+inline auto format_as(const MCYearAndTime::MCYear& mcyear)
 {
     return fmt::underlying(mcyear);
 }
