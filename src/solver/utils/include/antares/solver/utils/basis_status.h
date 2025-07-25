@@ -50,6 +50,7 @@ public:
     bool exists() const;
     void setStartingBasis(operations_research::MPSolver* solver) const;
     void extractBasis(const operations_research::MPSolver* solver);
+    void clear();
 
 private:
     std::unique_ptr<BasisStatusImpl> impl;

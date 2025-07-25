@@ -46,4 +46,10 @@ bool BasisStatus::exists() const
 {
     return impl->exists();
 }
+
+void BasisStatus::clear()
+{
+    impl->clear();
+}
+
 } // namespace Antares::Optimization

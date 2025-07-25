@@ -17,11 +17,11 @@ class  HoursFieldVisitor : public antlr4::tree::AbstractParseTreeVisitor {
 public:
 
   /**
-     * Visit parse trees produced by HoursFieldParser.
-     */
-    virtual std::any visitHoursField(HoursFieldParser::HoursFieldContext* context) = 0;
+   * Visit parse trees produced by HoursFieldParser.
+   */
+    virtual std::any visitHoursField(HoursFieldParser::HoursFieldContext *context) = 0;
 
-    virtual std::any visitGroup(HoursFieldParser::GroupContext* context) = 0;
+    virtual std::any visitGroup(HoursFieldParser::GroupContext *context) = 0;
 
     virtual std::any visitHour(HoursFieldParser::HourContext *context) = 0;
 
