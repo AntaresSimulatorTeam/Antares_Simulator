@@ -1,5 +1,6 @@
 var NAVTREEINDEX41 =
 {
+"classIItem.html#a8a29fec10fb1800c05bf539e57ec3edd":[8,0,151,22],
 "classIItem.html#a8c33f81b0a0a56b3ca764d26b08cf62c":[8,0,151,40],
 "classIItem.html#a8cdf9476ec0579075999935aa552c7b3":[8,0,151,11],
 "classIItem.html#a8fc6067e92ad4fd6fea717be9076a5c6":[8,0,151,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX41 =
 "classOptDailyStringGenerator.html#a9e2a4f732f54605881e52aed4bd4630f":[8,0,203,0],
 "classOptPeriodStringGenerator.html":[8,0,206],
 "classOptPeriodStringGenerator.html#a21a96176dbd6a050d0237069a0033b64":[8,0,206,0],
-"classOptPeriodStringGenerator.html#a6020978dca258fa9b40ffe7ef2fa0f4a":[8,0,206,1],
-"classOptWeeklyStringGenerator.html":[8,0,207]
+"classOptPeriodStringGenerator.html#a6020978dca258fa9b40ffe7ef2fa0f4a":[8,0,206,1]
 };

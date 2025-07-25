@@ -1,5 +1,6 @@
 var NAVTREEINDEX26 =
 {
+"classAntares_1_1Solver_1_1Simulation_1_1yearRandomNumbers.html#a90841a902bfc6ab3597bdef5221e1639":[8,0,0,18,3,25,2],
 "classAntares_1_1Solver_1_1Simulation_1_1yearRandomNumbers.html#a997f216903bf774bb5001497caa1f8bf":[8,0,0,18,3,25,1],
 "classAntares_1_1Solver_1_1Simulation_1_1yearRandomNumbers.html#aa43d82ad6356be31a87e73ea53fd5cbf":[8,0,0,18,3,25,5],
 "classAntares_1_1Solver_1_1Simulation_1_1yearRandomNumbers.html#aaf11c6ef12fb93a63ded81b6b37a697d":[8,0,0,18,3,25,9],
@@ -248,6 +249,5 @@ var NAVTREEINDEX26 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Balance.html#ad5f846ce43c105bf4942d37a84b705a2":[8,0,0,18,4,4,17,7],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Balance.html#adcb20aca5a1972cf83569c6b76e738f2":[8,0,0,18,4,4,17,9],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Balance.html#aeb53aa1cdb1825f90ecfffdd38fa2d82":[8,0,0,18,4,4,17,15],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Balance.html#af386fba01228e6263b83018d893d692c":[8,0,0,18,4,4,17,12],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Balance.html#af86a03c81a4d8982784bf4c96671bb8b":[8,0,0,18,4,4,17,13]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Balance.html#af386fba01228e6263b83018d893d692c":[8,0,0,18,4,4,17,12]
 };

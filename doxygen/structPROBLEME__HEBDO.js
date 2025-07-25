@@ -66,7 +66,6 @@ var structPROBLEME__HEBDO =
     [ "PaysOrigineDeLInterconnexion", "structPROBLEME__HEBDO.html#a59df4046b36e84c69ffd49cb13565bd7", null ],
     [ "previousSimulationFinalLevel", "structPROBLEME__HEBDO.html#afdb61f81f3ecc242d9688d817064d2ec", null ],
     [ "ProblemeAResoudre", "structPROBLEME__HEBDO.html#a76891964aec36ef4706b98793dca471f", null ],
-    [ "ReinitOptimisation", "structPROBLEME__HEBDO.html#a357485adf442d7d0495308c79ece5dd5", null ],
     [ "ReserveJMoins1", "structPROBLEME__HEBDO.html#afb056ba04c97a4da0e1d7284b5503cea", null ],
     [ "ResultatsContraintesCouplantes", "structPROBLEME__HEBDO.html#a044b813b23a80d530224c97ea98cbbb6", null ],
     [ "ResultatsHoraires", "structPROBLEME__HEBDO.html#a942670b312b62c76caf1ae7b20932ded", null ],

@@ -179,12 +179,13 @@ $(document).ready(function(){initNavTree('basis__status_8h_source.html',''); ini
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordtype">bool</span> exists() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordtype">void</span> setStartingBasis(operations_research::MPSolver* solver) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordtype">void</span> extractBasis(<span class="keyword">const</span> operations_research::MPSolver* solver);</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    std::unique_ptr&lt;BasisStatusImpl&gt; impl;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classTest_1_1BasisStatus.html">Test::BasisStatus</a>; <span class="comment">// For tests</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;};</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;} <span class="comment">// namespace Antares::Optimization</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordtype">void</span> clear();</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    std::unique_ptr&lt;BasisStatusImpl&gt; impl;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classTest_1_1BasisStatus.html">Test::BasisStatus</a>; <span class="comment">// For tests</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;};</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;} <span class="comment">// namespace Antares::Optimization</span></div>
 <div class="ttc" id="aclassAntares_1_1Optimization_1_1BasisStatus_html"><div class="ttname"><a href="classAntares_1_1Optimization_1_1BasisStatus.html">Antares::Optimization::BasisStatus</a></div><div class="ttdef"><b>Definition:</b> basis_status.h:40</div></div>
 <div class="ttc" id="aclassTest_1_1BasisStatus_html"><div class="ttname"><a href="classTest_1_1BasisStatus.html">Test::BasisStatus</a></div><div class="ttdef"><b>Definition:</b> basis_status.cpp:35</div></div>
 <div class="ttc" id="anamespaceAntares_1_1Optimization_html"><div class="ttname"><a href="namespaceAntares_1_1Optimization.html">Antares::Optimization</a></div><div class="ttdef"><b>Definition:</b> constraint-slack-analysis.cpp:45</div></div>

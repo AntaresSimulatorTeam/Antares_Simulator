@@ -1,5 +1,7 @@
 var NAVTREEINDEX59 =
 {
+"structDoneesOptimisationJournaliere_1_1PROBLEME__HYDRAULIQUE.html#ad8ef7b2bb2ec3bc2cd603f1c8390a78b":[8,0,11,5,1],
+"structDoneesOptimisationJournaliere_1_1PROBLEME__HYDRAULIQUE.html#aed680c32b6118afffd91dc1dd5d61cca":[8,0,11,5,0],
 "structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html":[8,0,11,1],
 "structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html#a1936212c7690eb1cdb17ecda56af03e1":[8,0,11,1,4],
 "structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html#a8a033a1876d06e40340834d0b734c12a":[8,0,11,1,5],
@@ -247,7 +249,5 @@ var NAVTREEINDEX59 =
 "structMyDummyFixture.html#a7d75fe6cd5b3f7c678b51f19628b9f0f":[8,0,189,0],
 "structMyDummyFixture.html#afbff0d1e4d83f86fa00606ffd3f8e058":[8,0,189,5],
 "structMyDummyFixture.html#aff338a606b9c977a778dfdc9417d5452":[8,0,189,6],
-"structNbDispUnitsMinBoundSinceMinUpTimeData.html":[8,0,193],
-"structNbDispUnitsMinBoundSinceMinUpTimeData.html#a02f32d864d1d9fdf2addf08fdb2b3e5e":[8,0,193,2],
-"structNbDispUnitsMinBoundSinceMinUpTimeData.html#a7192fbd2b41e5a691cbd746431279147":[8,0,193,1]
+"structNbDispUnitsMinBoundSinceMinUpTimeData.html":[8,0,193]
 };

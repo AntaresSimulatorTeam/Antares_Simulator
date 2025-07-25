@@ -1,5 +1,6 @@
 var NAVTREEINDEX24 =
 {
+"classAntares_1_1Optimization_1_1UnfeasiblePbAnalyzer.html":[8,0,0,16,3],
 "classAntares_1_1Optimization_1_1UnfeasiblePbAnalyzer.html#a01bb8ba6f00fc2a7a9013738fdaf8924":[8,0,0,16,3,3],
 "classAntares_1_1Optimization_1_1UnfeasiblePbAnalyzer.html#a21f7de9d7651bd03c04d158a04bb4273":[8,0,0,16,3,0],
 "classAntares_1_1Optimization_1_1UnfeasiblePbAnalyzer.html#a90a56f70e09604b73daf6664bc103781":[8,0,0,16,3,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX24 =
 "classAntares_1_1Solver_1_1IResultWriter.html":[8,0,0,18,6],
 "classAntares_1_1Solver_1_1IResultWriter.html#a00cf9aa35c2cc4ae1afe2984d5f4be3d":[8,0,0,18,6,2],
 "classAntares_1_1Solver_1_1IResultWriter.html#a1a15d10f60950a3c0b3e89c5a5bf316a":[8,0,0,18,6,4],
-"classAntares_1_1Solver_1_1IResultWriter.html#a2d3eea88ce7f0fc6ac0aa1c6a5813868":[8,0,0,18,6,0],
-"classAntares_1_1Solver_1_1IResultWriter.html#a866bc43cd373dc27cf69ec3968737c8c":[8,0,0,18,6,5]
+"classAntares_1_1Solver_1_1IResultWriter.html#a2d3eea88ce7f0fc6ac0aa1c6a5813868":[8,0,0,18,6,0]
 };

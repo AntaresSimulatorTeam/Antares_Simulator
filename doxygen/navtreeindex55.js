@@ -1,5 +1,7 @@
 var NAVTREEINDEX55 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping_1_1Statistics.html":[8,0,0,18,4,4,101,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration_1_1Statistics.html":[8,0,0,18,4,4,103,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel_1_1Statistics.html":[8,0,0,18,4,4,105,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance_1_1Statistics.html":[8,0,0,18,4,4,9,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STSbyGroup_1_1Statistics.html":[8,0,0,18,4,4,109,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX55 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProductionByRenewablePlant.html#aad16ef81723aa89ef3791d4bbca0a4cf":[8,0,0,18,4,4,96,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProfitByPlant.html":[8,0,0,18,4,4,98],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProfitByPlant.html#a1ca935698caad4bf9e04e0e26758f781":[8,0,0,18,4,4,98,4],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProfitByPlant.html#aa44e0e4836b72856f4d0c3f5808176f9":[8,0,0,18,4,4,98,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProfitByPlant.html#ac0c827cf45920b2bc5b5e25e4a84ca45":[8,0,0,18,4,4,98,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProfitByPlant.html#ae23399b4ff79346552479965ffd43140":[8,0,0,18,4,4,98,3]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProfitByPlant.html#aa44e0e4836b72856f4d0c3f5808176f9":[8,0,0,18,4,4,98,0]
 };

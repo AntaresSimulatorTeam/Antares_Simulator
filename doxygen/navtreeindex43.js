@@ -1,5 +1,7 @@
 var NAVTREEINDEX43 =
 {
+"classSettings.html#a2f6a7ad328def111ce976e4102f7cc85":[8,0,250,10],
+"classSettings.html#a533bd3e503ce147fdf74467a7251c511":[8,0,250,9],
 "classSettings.html#a7a85732f59739f454763d67bf3b89789":[8,0,250,13],
 "classSettings.html#a7cf7176a50ff929e8954f32c4767e470":[8,0,250,7],
 "classSettings.html#a7e3032664b2d4a1a06317571315eebf1":[8,0,250,8],
@@ -247,7 +249,5 @@ var NAVTREEINDEX43 =
 "classYuni_1_1Extension_1_1CString_1_1Into_3_01Antares_1_1Data_1_1LocalTSGenerationBehavior_01_4.html#a54d9bb2f05897f8b7c5edbc03c9a2321":[8,0,34,0,0,5,0],
 "classYuni_1_1Extension_1_1CString_1_1Into_3_01Antares_1_1Data_1_1StatisticalLaw_01_4.html":[8,0,34,0,0,3],
 "classYuni_1_1Extension_1_1CString_1_1Into_3_01Antares_1_1Data_1_1StatisticalLaw_01_4.html#a4fa35353f970ad641567cef7e8d4bae9":[8,0,34,0,0,3,0],
-"class__name_8cpp.html#a4bed426510253cc72f6bc083e1264e6a":[7,0,40,2],
-"class__name_8cpp.html#aa177d84a39ad89060fa6c174bf415b5a":[7,0,40,1],
-"class__name_8h.html#a8476daf60987482d6dc7c79a05eaff08":[7,0,40,0]
+"class__name_8cpp.html#a4bed426510253cc72f6bc083e1264e6a":[7,0,40,2]
 };

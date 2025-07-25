@@ -1,5 +1,6 @@
 var NAVTREEINDEX27 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Balance.html#af86a03c81a4d8982784bf4c96671bb8b":[8,0,0,18,4,4,17,13],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html":[8,0,0,18,4,4,19],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a1fc77d590567494a5bdefed251019656":[8,0,0,18,4,4,19,24],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a29ff605f45c21be58b31bdf9b4c0e4c9":[8,0,0,18,4,4,19,16],
@@ -248,6 +249,5 @@ var NAVTREEINDEX27 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#aa856266b9803a70fcc1e14cff18b0f06":[8,0,0,18,4,4,47,14],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#abf41085366b8f6dfcb8ba06df81b7719":[8,0,0,18,4,4,47,18],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#ad059ddae5d6235533cb95fdf92400a39":[8,0,0,18,4,4,47,10],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#adee763a02329ec32c63bb2d438553afe":[8,0,0,18,4,4,47,17],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost.html":[8,0,0,18,4,4,29]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#adee763a02329ec32c63bb2d438553afe":[8,0,0,18,4,4,47,17]
 };

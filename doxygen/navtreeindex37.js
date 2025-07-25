@@ -1,5 +1,6 @@
 var NAVTREEINDEX37 =
 {
+"classAntares_1_1Window_1_1OutputViewer_1_1SpotlightProviderMCAll.html#a866ead4a113af1058f48573a9155005d":[8,0,0,23,3,5,1],
 "classAntares_1_1Window_1_1OutputViewer_1_1SpotlightProviderMCAll.html#aa57abe03b3480ca0bb21694ae6c42922":[8,0,0,23,3,5,2],
 "classAntares_1_1Window_1_1OutputViewer_1_1Window.html":[8,0,0,23,3,6],
 "classAntares_1_1Window_1_1OutputViewer_1_1Window.html#a9b2f94e9ef92979ea3e8875f01e34eb4":[8,0,0,23,3,6,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX37 =
 "classCellColumnData.html#a2b8c47c484cfd3364a20b1597f17bc16":[8,0,61,2],
 "classCellColumnData.html#a9de1ff0803326e7a7cddc04ec579871c":[8,0,61,0],
 "classCellColumnData.html#acf382fdbf28ef94507b5a787a122e3d5":[8,0,61,4],
-"classConsistenceNumberOfDispatchableUnits.html":[8,0,68],
-"classConsistenceNumberOfDispatchableUnits.html#a82a171181e16d287fa192f56f3c29b82":[8,0,68,0]
+"classConsistenceNumberOfDispatchableUnits.html":[8,0,68]
 };
