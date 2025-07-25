@@ -462,7 +462,6 @@ struct PROBLEME_HEBDO
 
     std::vector<SOLDE_MOYEN_DES_ECHANGES> SoldeMoyenHoraire; // Used for quadratic opt
     /* Implementation details : I/O, error management, etc. */
-    bool ReinitOptimisation = false;
 
     Data::mpsExportStatus ExportMPS = Data::mpsExportStatus::NO_EXPORT;
     bool exportMPSOnError = false;
@@ -604,7 +603,8 @@ public:
     std::vector<int> NbGrpCourbeGuide; // ?
     std::vector<int> NbGrpOpt;         // ?
 
-    std::unique_ptr<PROBLEME_ANTARES_A_RESOUDRE> ProblemeAResoudre;
+    std::unique_ptr<PROBLEME_ANTARES_A_RESOUDRE>
+      ProblemeAResoudre = std::make_unique<PROBLEME_ANTARES_A_RESOUDRE>();
 
     // TODO: 1 study but several PROBLEME_HEBDO, may cause race conditions
     const ModelerStudy::SystemModel::System* modelerSystem;                   // for hybrid studies

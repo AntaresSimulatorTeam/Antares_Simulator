@@ -445,9 +445,9 @@ bool ThermalCluster::checkModulation()
     std::string buffer = "Thermal cluster: " + parentArea->name + '/' + pName + ": Modulation";
     if (modulation.width and modulation.height)
     {
-        for (int x = 0; x < modulation.width; ++x)
+        for (unsigned x = 0; x < modulation.width; ++x)
         {
-            for (int y = 0; y < modulation.height; ++y)
+            for (unsigned y = 0; y < modulation.height; ++y)
             {
                 if (modulation[x][y] < 0.)
                 {

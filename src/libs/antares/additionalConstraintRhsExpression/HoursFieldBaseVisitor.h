@@ -14,12 +14,12 @@
  */
 class  HoursFieldBaseVisitor : public HoursFieldVisitor {
 public:
-    virtual std::any visitHoursField(HoursFieldParser::HoursFieldContext* ctx) override
-    {
-        return visitChildren(ctx);
-    }
 
-    virtual std::any visitGroup(HoursFieldParser::GroupContext* ctx) override {
+  virtual std::any visitHoursField(HoursFieldParser::HoursFieldContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitGroup(HoursFieldParser::GroupContext *ctx) override {
     return visitChildren(ctx);
   }
 

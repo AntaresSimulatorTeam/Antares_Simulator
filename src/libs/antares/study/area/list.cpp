@@ -164,6 +164,7 @@ static bool AreaListLoadThermalDataFromFile(AreaList& list, const fs::path& file
     return true;
 }
 
+#ifdef BUILD_UI
 static bool AreaListSaveThermalDataToFile(const AreaList& list, const AnyString& filename)
 {
     IniFile ini;
@@ -193,7 +194,6 @@ static bool AreaListSaveThermalDataToFile(const AreaList& list, const AnyString&
     return ini.save(filename);
 }
 
-#ifdef BUILD_UI
 static bool AreaListSaveToFolderSingleArea(const Area& area,
                                            const AnyString& folder,
                                            const Parameters::Compatibility::HydroPmax hydroPmax)
