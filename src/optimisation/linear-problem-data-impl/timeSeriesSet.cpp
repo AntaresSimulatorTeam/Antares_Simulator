@@ -44,10 +44,10 @@ void TimeSeriesSet::add(const std::vector<double>& ts)
     tsSet_.push_back(std::move(ts));
 }
 
-double TimeSeriesSet::getData(LinearProblemApi::IScenario::TimeSeriesNumber rank,
+double TimeSeriesSet::getData(LinearProblemApi::IScenario::TimeSeriesNumber tsNumber,
                               unsigned hour) const
 {
-    if (rank == 0)
+    if (tsNumber == 0)
     {
         throw Antares::Error::RuntimeError(
           "Trying to get data set at rank 0. Data sets are indexed starting at 1.");
@@ -56,17 +56,17 @@ double TimeSeriesSet::getData(LinearProblemApi::IScenario::TimeSeriesNumber rank
     {
         throw Empty(name());
     }
-    rank = rank - 1;
-    if (rank > tsSet_.size() - 1)
+    auto tsIndex = tsNumber - 1;
+    if (tsIndex > tsSet_.size() - 1)
     {
-        throw RankTooBig(name(), rank + 1);
+        throw RankTooBig(name(), tsNumber);
     }
 
     if (hour > height_ - 1)
     {
         throw HourTooBig(name(), hour);
     }
-    return tsSet_[rank][hour];
+    return tsSet_[tsIndex][hour];
 }
 
 } // namespace Antares::Optimisation::LinearProblemDataImpl
