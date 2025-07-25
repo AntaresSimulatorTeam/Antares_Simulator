@@ -938,8 +938,7 @@ BOOST_AUTO_TEST_CASE(AddVariable_SingleBounds)
     vba.addVariable(0.0, 1.0, true, dim, key);
     for (int ts = 0; ts < 3; ++ts)
     {
-        BOOST_CHECK(vdict("my-component", "my-variable", MCYearAndTime::MCYear{0}, ts)
-                    != nullptr);
+        BOOST_CHECK(vdict("my-component", "my-variable", MCYearAndTime::MCYear{0}, ts) != nullptr);
     }
 }
 
@@ -954,8 +953,7 @@ BOOST_AUTO_TEST_CASE(AddVariable_VectorLowerBound)
     vba.addVariable(lb, 1.0, true, dim, key);
     for (int ts = 0; ts < 3; ++ts)
     {
-        BOOST_CHECK(vdict("my-component", "my-variable", MCYearAndTime::MCYear{0}, ts)
-                    != nullptr);
+        BOOST_CHECK(vdict("my-component", "my-variable", MCYearAndTime::MCYear{0}, ts) != nullptr);
     }
 }
 
@@ -970,8 +968,7 @@ BOOST_AUTO_TEST_CASE(AddVariable_VectorUpperBound)
     vba.addVariable(0.0, ub, true, dim, key);
     for (int ts = 0; ts < 3; ++ts)
     {
-        BOOST_CHECK(vdict("my-component", "my-variable", MCYearAndTime::MCYear{0}, ts)
-                    != nullptr);
+        BOOST_CHECK(vdict("my-component", "my-variable", MCYearAndTime::MCYear{0}, ts) != nullptr);
     }
 }
 
@@ -987,8 +984,7 @@ BOOST_AUTO_TEST_CASE(AddVariable_VectorBounds)
     vba.addVariable(lb, ub, true, dim, key);
     for (int ts = 0; ts < 3; ++ts)
     {
-        BOOST_CHECK(vdict("my-component", "my-variable", MCYearAndTime::MCYear{0}, ts)
-                    != nullptr);
+        BOOST_CHECK(vdict("my-component", "my-variable", MCYearAndTime::MCYear{0}, ts) != nullptr);
     }
 }
 
