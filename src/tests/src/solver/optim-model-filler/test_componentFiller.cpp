@@ -497,7 +497,7 @@ BOOST_AUTO_TEST_CASE(get_timeseriesNumber_for_given_year)
     auto bounds_time_series = std::make_unique<TimeSeriesSet>("bounds", 3);
     // setting 3 hours (including h 1 and 2)
     bounds_time_series->add({1., 1., 1.});
-    bounds_time_series->add({10., 10., 10.}); //<--- on voudra ça, TS=2 (commence à 0)
+    bounds_time_series->add({10., 10., 10.}); //<--- on voudra ça, TS=2 (commence à 1)
     bounds_time_series->add({3., 3., 3.});
     bounds_time_series->add({4., 4., 4.});
 
