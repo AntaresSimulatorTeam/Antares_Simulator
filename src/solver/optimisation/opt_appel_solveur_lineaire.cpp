@@ -322,7 +322,6 @@ static void FillSimulationTable(
     }
 }
 
-
 static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                           PROBLEME_HEBDO* problemeHebdo,
                                           const int NumIntervalle,
@@ -474,7 +473,8 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                                              optimizationNumber,
                                              optPeriodStringGenerator,
                                              PremierPassage,
-                                             writer, simulationTable);
+                                             writer,
+                                             simulationTable);
     }
 
     if (ProblemeAResoudre->ExistenceDUneSolution == OUI_SPX)

@@ -291,7 +291,8 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                                      problemeHebdo,
                                      writer,
                                      DEUXIEME_OPTIMISATION,
-                                     simulationObserver,simulationTable );
+                                     simulationObserver,
+                                     simulationTable);
     }
     return ret;
 }
