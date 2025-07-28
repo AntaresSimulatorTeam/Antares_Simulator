@@ -246,8 +246,8 @@ static void FillSimulationTable(
                          timeStep <= fillContext.getLastTimeStep();
                          ++timeStep)
                     {
-                        auto variableFullName = VariableDictionary::buildVariableName({componentId,
-                                                                                       var_name},
+                        auto variableFullName = VariableDictionary::buildVariableName(
+                          {componentId, var_name},
                           std::nullopt /**should be year**/,
                           timeStep);
                         const auto [block, blockTimeIndex] = convertTimeStepToBlockTimeIndex(
@@ -267,8 +267,8 @@ static void FillSimulationTable(
             {
                 // for (auto scenario: fillContext.getSelectedScenarios())
                 // {
-                auto variableFullName = VariableDictionary::buildVariableName({componentId,
-                                                                               var_name},
+                auto variableFullName = VariableDictionary::buildVariableName(
+                  {componentId, var_name},
                   std::nullopt /**should be year**/,
                   std::nullopt);
                 // const auto [block, blockTimeIndex] = convertTimeStepToBlockTimeIndex(
