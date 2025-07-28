@@ -191,7 +191,7 @@ public:
     std::vector<std::string> parameterIds{};
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepository{};
     std::unordered_map<std::string, std::string> groupes;
-    std::pair<int, int> timeSteps{0, 0};
+    std::pair<unsigned int, unsigned int> timeSteps{0, 0};
 };
 
 struct Solution
