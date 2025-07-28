@@ -88,6 +88,7 @@ target_link_libraries(antares-solver-simulation
         antares-solver-variable
         antares-solver-ts-generator
         shave-peaks-by-remix-hydro
+		Antares::modeler-simulation-table
 )
 
 install(DIRECTORY include/antares

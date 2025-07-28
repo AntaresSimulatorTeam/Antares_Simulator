@@ -217,7 +217,8 @@ static void FillSimulationTable(
   ISimulationTable& simulationTable,
   const std::vector<MPVariable*>& variables,
   const PROBLEME_HEBDO* problemeHebdo,
-  const Antares::Optimisation::LinearProblemApi::FillContext& fillContext)
+  const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
+  int NumIntervalle)
 {
     const auto& components = problemeHebdo->modelerSystem->Components();
 
@@ -230,6 +231,10 @@ static void FillSimulationTable(
         }
         return solution;
     }();
+
+    auto currentWeekOrDay = problemeHebdo->OptimisationAuPasHebdomadaire
+                              ? problemeHebdo->weekInTheYear
+                              : NumIntervalle;
     for (const auto& [componentId, component]: components)
     {
         for (const auto& [var_name, modelVar]: component.getModel()->Variables())
@@ -260,23 +265,23 @@ static void FillSimulationTable(
             }
             else if (modelVar.IsScenarioDependent())
             {
-                for (auto scenario: fillContext.getSelectedScenarios())
-                {
-                    auto variableFullName = VariableDictionary::buildVariableName({componentId,
-                                                                                   var_name},
-                                                                                  0 /*TODO*/,
-                                                                                  std::nullopt);
-                    const auto [block, blockTimeIndex] = convertTimeStepToBlockTimeIndex(
-                      timeStep,
-                      problemeHebdo->OptimisationAuPasHebdomadaire);
-                    simulationTable.addEntry({.block = 1,
-                                              .component = componentId,
-                                              .output = var_name,
-                                              .absolute_time_index = std::nullopt,
-                                              .block_time_index = std::nullopt,
-                                              .scenario_index = scenario,
-                                              .value = solution.at(variableFullName)});
-                }
+                // for (auto scenario: fillContext.getSelectedScenarios())
+                // {
+                auto variableFullName = VariableDictionary::buildVariableName({componentId,
+                                                                               var_name},
+                                                                              0 /*TODO*/,
+                                                                              std::nullopt);
+                // const auto [block, blockTimeIndex] = convertTimeStepToBlockTimeIndex(
+                //   timeStep,
+                //   problemeHebdo->OptimisationAuPasHebdomadaire);
+                simulationTable.addEntry({.block = currentWeekOrDay,
+                                          .component = componentId,
+                                          .output = var_name,
+                                          .absolute_time_index = std::nullopt,
+                                          .block_time_index = std::nullopt,
+                                          .scenario_index = problemeHebdo->year,
+                                          .value = solution.at(variableFullName)});
+                // }
             }
             else if (modelVar.isTimeDependent())
             {
@@ -286,11 +291,14 @@ static void FillSimulationTable(
                                                                                    var_name},
                                                                                   std::nullopt,
                                                                                   timeStep);
-                    simulationTable.addEntry({.block = 1,
+                    const auto [block, blockTimeIndex] = convertTimeStepToBlockTimeIndex(
+                      timeStep,
+                      problemeHebdo->OptimisationAuPasHebdomadaire);
+                    simulationTable.addEntry({.block = block,
                                               .component = componentId,
                                               .output = var_name,
                                               .absolute_time_index = timeStep,
-                                              .block_time_index = timeStep,
+                                              .block_time_index = blockTimeIndex,
                                               .scenario_index = std::nullopt,
                                               .value = solution.at(variableFullName)});
                 }
@@ -302,7 +310,7 @@ static void FillSimulationTable(
                                                                                var_name},
                                                                               std::nullopt,
                                                                               std::nullopt);
-                simulationTable.addEntry({.block = 1,
+                simulationTable.addEntry({.block = currentWeekOrDay,
                                           .component = componentId,
                                           .output = var_name,
                                           .absolute_time_index = std::nullopt,
@@ -314,22 +322,6 @@ static void FillSimulationTable(
     }
 }
 
-static void writeModelerSimulationTable(const PROBLEME_HEBDO* problemeHebdo,
-                                        int NumIntervalle,
-                                        IResultWriter& writer,
-                                        const MPSolver* solver)
-{
-    SimulationTableCsv simulationTableCsv;
-
-    FillSimulationTable(simulationTableCsv,
-                        solver->variables(),
-                        problemeHebdo->modelerSystem->Components(),
-                        buildFillContext(problemeHebdo, NumIntervalle));
-    simulationTableCsv.write();
-    const std::string simulationTableFile = "simulation_table.csv";
-    auto simulationTableBuffer = simulationTableCsv.buffer();
-    writer.addEntryFromBuffer(simulationTableFile, simulationTableBuffer);
-}
 
 static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                           PROBLEME_HEBDO* problemeHebdo,
@@ -337,7 +329,8 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                           const int optimizationNumber,
                                           const OptPeriodStringGenerator& optPeriodStringGenerator,
                                           bool PremierPassage,
-                                          IResultWriter& writer)
+                                          IResultWriter& writer,
+                                          ISimulationTable& simulationTable)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     auto* solver = ProblemeAResoudre->ProblemesSpx[NumIntervalle];
@@ -437,7 +430,12 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                           writer);
     if (problemeHebdo->modelerSystem)
     {
-        writeModelerSimulationTable(problemeHebdo, NumIntervalle, writer, solver);
+        FillSimulationTable(simulationTable,
+                            solver->variables(),
+                            problemeHebdo,
+                            buildFillContext(problemeHebdo, NumIntervalle),
+                            NumIntervalle);
+        simulationTable.write();
     }
 
     return {.success = true,
@@ -451,7 +449,8 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                          int NumIntervalle,
                          const int optimizationNumber,
                          const OptPeriodStringGenerator& optPeriodStringGenerator,
-                         IResultWriter& writer)
+                         IResultWriter& writer,
+                         ISimulationTable& simulationTable)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
@@ -463,7 +462,8 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                                                        optimizationNumber,
                                                        optPeriodStringGenerator,
                                                        PremierPassage,
-                                                       writer);
+                                                       writer,
+                                                       simulationTable);
 
     if (!simplexResult.success)
     {
@@ -474,7 +474,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                                              optimizationNumber,
                                              optPeriodStringGenerator,
                                              PremierPassage,
-                                             writer);
+                                             writer, simulationTable);
     }
 
     if (ProblemeAResoudre->ExistenceDUneSolution == OUI_SPX)

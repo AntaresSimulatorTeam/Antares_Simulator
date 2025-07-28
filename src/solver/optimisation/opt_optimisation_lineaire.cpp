@@ -22,6 +22,7 @@
 #include <mutex>
 
 #include <antares/logs/logs.h>
+#include "antares/io/outputs/ISimulationTable.h"
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
 #include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
 #include "antares/solver/optimisation/opt_export_structure.h"
@@ -120,7 +121,8 @@ bool runWeeklyOptimization(const SingleOptimOptions& options,
                            PROBLEME_HEBDO* problemeHebdo,
                            Solver::IResultWriter& writer,
                            int optimizationNumber,
-                           Solver::Simulation::ISimulationObserver& simulationObserver)
+                           Solver::Simulation::ISimulationObserver& simulationObserver,
+                           ISimulationTable& simulationTable)
 {
     const int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
                                                         ->NombreDePasDeTempsPourUneOptimisation;
@@ -166,7 +168,8 @@ bool runWeeklyOptimization(const SingleOptimOptions& options,
                                  numeroDeLIntervalle,
                                  optimizationNumber,
                                  *optPeriodStringGenerator,
-                                 writer))
+                                 writer,
+                                 simulationTable))
         {
             return false;
         }
@@ -235,7 +238,8 @@ void resizeProbleme(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
                               Solver::IResultWriter& writer,
-                              Solver::Simulation::ISimulationObserver& simulationObserver)
+                              Solver::Simulation::ISimulationObserver& simulationObserver,
+                              ISimulationTable& simulationTable)
 {
     if (!problemeHebdo->OptimisationAuPasHebdomadaire)
     {
@@ -273,7 +277,8 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                                      problemeHebdo,
                                      writer,
                                      PREMIERE_OPTIMISATION,
-                                     simulationObserver);
+                                     simulationObserver,
+                                     simulationTable);
 
     // We only need the 2nd optimization when NOT solving with integer variables
     // We also skip the 2nd optimization in the hidden 'Expansion' mode
@@ -286,7 +291,7 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                                      problemeHebdo,
                                      writer,
                                      DEUXIEME_OPTIMISATION,
-                                     simulationObserver);
+                                     simulationObserver,simulationTable );
     }
     return ret;
 }

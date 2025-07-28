@@ -28,6 +28,8 @@
 #include "antares/solver/simulation/common-eco-adq.h"
 #include "antares/solver/simulation/simulation.h"
 
+#include "../../io/outputs/include/antares/io/outputs/SimulationTableCsv.h"
+
 using namespace Yuni;
 using Antares::Constants::nbHoursInAWeek;
 
@@ -83,7 +85,8 @@ bool Economy::simulationBegin()
             weeklyOptProblems_.emplace_back(study.parameters.optOptions,
                                             &pProblemesHebdo[numSpace],
                                             resultWriter,
-                                            simulationObserver_.get());
+                                            simulationObserver_.get(),
+                                            simulationTable_);
 
             postProcessesList_[numSpace] = interfacePostProcessList::create(
               study.parameters.adqPatchParams,
@@ -129,6 +132,7 @@ bool Economy::year(Progression::Task& progression,
     int hourInTheYear = pStartTime;
     bool reinitOptim = true;
 
+    simulationTableBuffer_ += simulationTable_.buffer();
     for (uint w = 0; w != pNbWeeks; ++w)
     {
         state.hourInTheYear = hourInTheYear;
@@ -155,7 +159,7 @@ bool Economy::year(Progression::Task& progression,
         try
         {
             weeklyOptProblems_[numSpace].solve();
-
+            simulationTable_.clearEntries();
             // Runs all the post processes in the list of post-process commands
             optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
             postProcessesList_[numSpace]->runAll(opt_runtime_data);
@@ -220,6 +224,8 @@ bool Economy::year(Progression::Task& progression,
         ++progression;
     }
 
+    const std::string simulationTableFile = "simulation_table.csv";
+    resultWriter.addEntryFromBuffer(simulationTableFile, simulationTableBuffer_);
     optWriter.finalize();
     finalizeOptimizationStatistics(currentProblem, state);
 
@@ -255,7 +261,7 @@ void Economy::simulationEnd()
     if (!preproOnly && study.runtime.interconnectionsCount() > 0)
     {
         auto balance = retrieveBalance(study, variables);
-        ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks);
+        ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks, simulationTable_);
     }
 }
 

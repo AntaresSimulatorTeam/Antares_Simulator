@@ -206,7 +206,8 @@ bool Adequacy::year(Progression::Task& progression,
                 OPT_OptimisationHebdomadaire(study.parameters.optOptions,
                                              &currentProblem,
                                              resultWriter,
-                                             simulationObserver_.get());
+                                             simulationObserver_.get(),
+                                             simulationTable_);
 
                 RemixHydroForAllAreas(study.areas,
                                       currentProblem,

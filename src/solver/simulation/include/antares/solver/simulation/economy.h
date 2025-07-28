@@ -22,6 +22,7 @@
 #define __SOLVER_SIMULATION_ECONOMY_H__
 
 #include "antares/infoCollection/StudyInfoCollector.h"
+#include "antares/io/outputs/SimulationTableCsv.h"
 #include "antares/solver/optimisation/weekly_optimization.h"
 #include "antares/solver/simulation/opt_time_writer.h"
 #include "antares/solver/simulation/solver.h" // for definition of type yearRandomNumbers
@@ -101,6 +102,8 @@ private:
     std::vector<std::unique_ptr<interfacePostProcessList>> postProcessesList_;
     IResultWriter& resultWriter;
     std::reference_wrapper<Simulation::ISimulationObserver> simulationObserver_;
+    SimulationTableCsv simulationTable_;
+    std::string simulationTableBuffer_;
 }; // class Economy
 
 } // namespace Antares::Solver::Simulation
