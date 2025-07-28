@@ -93,6 +93,7 @@ SimulationResults APIInternal::execute(
     }
 
     SimulationObserver simulationObserver;
+    // TODO
     SimulationTableCsv simulationTableCsv;
     optimizationInfo = simulationRun(*study_,
                                      settings,
