@@ -335,7 +335,6 @@ void BindingConstraint::copyOffsets(
 
     if (!rhs.pClusterOffsets.empty())
     {
-        auto end = rhs.pClusterOffsets.end();
         for (const auto& [thermalCluster, offset]: rhs.pClusterOffsets)
         {
             assert(thermalCluster and "Invalid thermal cluster in binding constraint");
@@ -408,7 +407,6 @@ bool BindingConstraint::contains(const Area* area) const
 void BindingConstraint::buildFormula(Yuni::String& s) const
 {
     char tmp[42];
-    bool first = true;
     for (const auto& [sourceLink, weight]: pLinkWeights)
     {
         if (!sourceLink)
@@ -433,7 +431,6 @@ void BindingConstraint::buildFormula(Yuni::String& s) const
         }
 
         s << ')';
-        first = false;
     }
 
     for (const auto [thermalCluster, weight]: pClusterWeights)
@@ -465,7 +462,6 @@ void BindingConstraint::buildFormula(Yuni::String& s) const
         }
 
         s << ')';
-        first = false;
     }
 }
 

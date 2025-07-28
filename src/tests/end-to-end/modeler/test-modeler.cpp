@@ -90,10 +90,12 @@ public:
         setComponents(fixture.components); // Component model may not be the system model
         Antares::ModelerStudy::SystemModel::SystemBuilder builder;
         auto system = builder.withId("dummy-system").withComponents(std::move(components)).build();
+        Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepository;
         return {.libraries = {library},
                 .system = std::make_unique<Antares::ModelerStudy::SystemModel::System>(
                   std::move(system)),
-                .dataSeries = std::make_unique<EmptyDataSeries>()};
+                .dataSeries = std::make_unique<EmptyDataSeries>(),
+                .scenario_group_repository = std::move(scenarioGroupRepository)};
     }
 
     void setComponents(const std::span<Antares::ModelerStudy::SystemModel::Component>& vector)

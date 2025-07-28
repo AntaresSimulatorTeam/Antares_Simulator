@@ -187,7 +187,7 @@ BOOST_FIXTURE_TEST_SUITE(_DataSeriesImport_AllCsvFiles_, CsvCreationFixture)
 BOOST_AUTO_TEST_CASE(empty_dir)
 {
     auto repo = DataSeriesRepoImporter::importFromDirectory(temp_path);
-    BOOST_CHECK_EXCEPTION(repo.getDataSeries("any"),
+    BOOST_CHECK_EXCEPTION((void)repo.getDataSeries("any"),
                           DataSeriesRepository::Empty,
                           checkMessage(
                             "Data series repo is empty, and somebody requests data from it"));

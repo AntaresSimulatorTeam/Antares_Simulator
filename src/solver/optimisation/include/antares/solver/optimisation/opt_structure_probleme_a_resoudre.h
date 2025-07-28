@@ -112,6 +112,11 @@ public:
     // PIMPL is used to break dependency to OR-Tools' linear_solver.h (big header)
     Antares::Optimization::BasisStatus basisStatus;
 
+    void clearBasis()
+    {
+        basisStatus.clear();
+    }
+
     bool isMIP() const
     {
         return std::any_of(VariablesEntieres.cbegin(),

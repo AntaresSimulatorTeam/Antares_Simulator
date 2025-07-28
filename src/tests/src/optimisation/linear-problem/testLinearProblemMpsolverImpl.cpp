@@ -107,7 +107,7 @@ BOOST_FIXTURE_TEST_CASE(give_coef_to_null_var_in_constaint_leads_to_bad_cast, Fi
 BOOST_FIXTURE_TEST_CASE(get_coef_of_null_var_in_constaint_leads_to_bad_cast, FixtureEmptyProblem)
 {
     auto* constraint = pb->addConstraint(0, 1, "constraint");
-    BOOST_CHECK_THROW(constraint->getCoefficient(nullptr), std::bad_cast);
+    BOOST_CHECK_THROW((void)constraint->getCoefficient(nullptr), std::bad_cast);
 }
 
 bool expectedMessage(const std::exception& ex)

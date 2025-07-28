@@ -35,12 +35,12 @@ using namespace Antares;
 
 class CustomErrorListener: public antlr4::BaseErrorListener
 {
-    void syntaxError(antlr4::Recognizer* recognizer,
-                     antlr4::Token* offendingSymbol,
-                     size_t line,
-                     size_t charPositionInLine,
-                     const std::string& msg,
-                     std::exception_ptr e) override
+    void syntaxError([[maybe_unused]] antlr4::Recognizer* recognizer,
+                     [[maybe_unused]] antlr4::Token* offendingSymbol,
+                     [[maybe_unused]] size_t line,
+                     [[maybe_unused]] size_t charPositionInLine,
+                     [[maybe_unused]] const std::string& msg,
+                     [[maybe_unused]] std::exception_ptr e) override
     {
         throw std::runtime_error("plop");
     }

@@ -95,6 +95,9 @@ If the user provides any of the key/values below:
 the simulation will fail with a warning. We recommend removing these properties from `settings/generaldata.ini`. Other
 values (e.g `adequacy patch/enable-first-step = false`) will be ignored.
 
+#### Export raw solutions
+In existing file `settings/generaldata.ini`, in section `optimization`, add property `include-export-solutions` (bool, default value `false`). If set to true, export files containing raw solutions from the optimization problems, which can be useful for analysis & debugging.
+
 #### Hydraulic reservoirs / long-term storage
 
 - In existing file `input/hydro/hydro.ini`, add property `overflow spilled cost difference` for each area (double,
@@ -140,12 +143,14 @@ cluster = cluster-11
 variable = withdrawal
 operator = equal
 hours = [1,3,5], [120,121,122,123,124,125,126,127,128]
+enabled = true
 
 [netting-1]
 cluster = cluster-11
 variable = netting
 operator = less
 hours = [1, 168]
+enabled = false
 ```
 
 Possible values:
@@ -154,6 +159,7 @@ Possible values:
 - `variable`: `withdrawal`, `injection`, `netting`
 - `operator`: `less`, `equal`, `greater`
 - `hours`: not empty, any number of lists `[h_1, ..., h_n]` with n>=1, and coefficients from 1 to 168 included.
+- `enabled`: Boolean, default=`true`. Ignore the additional constraint if `enabled=false`.
 
 Note that all fields are mandatory.
 
@@ -162,7 +168,9 @@ For each constraint, the corresponding RHS time-series must be located at
 column and 8760
 rows, empty files are also accepted.
 
-#### Hydro final levels / scenario-builder
+To avoid filename conflicts, each constraint name must be unique within a given area.
+
+####  Hydro final levels / scenario-builder
 
 - Added optional key type "hfl" (hydro final level) in the scenario builder. The syntax is equivalent to existing
   prefix "hl" (hydro initial level), that is
