@@ -31,6 +31,8 @@ public:
 
     virtual void clearEntries() = 0;
 
+    virtual std::string buffer() const = 0;
+
     /// Write the table to the given file path, using the concrete export format
     virtual void write() = 0;
 };

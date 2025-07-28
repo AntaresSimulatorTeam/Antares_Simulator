@@ -34,7 +34,7 @@ public:
     void clearEntries() override;
 
     // const std::string& buffer() const;
-    std::string buffer() const;
+    std::string buffer() const override;
 
 private:
     std::ostringstream buffer_;

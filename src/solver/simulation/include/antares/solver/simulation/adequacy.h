@@ -52,7 +52,8 @@ public:
     */
     Adequacy(Data::Study& study,
              IResultWriter& resultWriter,
-             Simulation::ISimulationObserver& simulationObserver);
+             Simulation::ISimulationObserver& simulationObserver,
+             ISimulationTable& simulationTable);
     //! Destructor
     ~Adequacy() = default;
     //@}
@@ -104,7 +105,7 @@ private:
     IResultWriter& resultWriter;
 
     std::reference_wrapper<Simulation::ISimulationObserver> simulationObserver_;
-    ISimulationTable& simulationTable;
+    ISimulationTable& simulationTable_;
 }; // class Adequacy
 
 } // namespace Antares::Solver::Simulation

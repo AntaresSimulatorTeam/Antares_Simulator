@@ -31,10 +31,12 @@ namespace Antares::Solver::Simulation
 {
 Adequacy::Adequacy(Data::Study& study,
                    IResultWriter& resultWriter,
-                   Simulation::ISimulationObserver& simulationObserver):
+                   Simulation::ISimulationObserver& simulationObserver,
+                   ISimulationTable& simulationTable):
     study(study),
     resultWriter(resultWriter),
-    simulationObserver_(simulationObserver)
+    simulationObserver_(simulationObserver),
+    simulationTable_(simulationTable)
 {
 }
 

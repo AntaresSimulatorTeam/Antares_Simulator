@@ -53,7 +53,8 @@ public:
     */
     Economy(Data::Study& study,
             IResultWriter& resultWriter,
-            Simulation::ISimulationObserver& simulationObserver);
+            Simulation::ISimulationObserver& simulationObserver,
+            ISimulationTable& simulationTable);
     //! Destructor
     ~Economy() = default;
     //@}
@@ -102,7 +103,7 @@ private:
     std::vector<std::unique_ptr<interfacePostProcessList>> postProcessesList_;
     IResultWriter& resultWriter;
     std::reference_wrapper<Simulation::ISimulationObserver> simulationObserver_;
-    SimulationTableCsv simulationTable_;
+    ISimulationTable& simulationTable_;
     std::string simulationTableBuffer_;
 }; // class Economy
 

@@ -37,11 +37,13 @@ namespace Antares::Solver::Simulation
 {
 Economy::Economy(Data::Study& study,
                  IResultWriter& resultWriter,
-                 Simulation::ISimulationObserver& simulationObserver):
+                 Simulation::ISimulationObserver& simulationObserver,
+                 ISimulationTable& simulationTable):
     study(study),
     preproOnly(false),
     resultWriter(resultWriter),
-    simulationObserver_(simulationObserver)
+    simulationObserver_(simulationObserver),
+    simulationTable_(simulationTable)
 {
 }
 
