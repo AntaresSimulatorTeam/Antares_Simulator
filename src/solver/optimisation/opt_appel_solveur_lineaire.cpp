@@ -248,8 +248,8 @@ static void FillSimulationTable(
                     {
                         auto variableFullName = VariableDictionary::buildVariableName({componentId,
                                                                                        var_name},
-                                                                                      0 /*TODO*/,
-                                                                                      timeStep);
+                          std::nullopt /**should be year**/,
+                          timeStep);
                         const auto [block, blockTimeIndex] = convertTimeStepToBlockTimeIndex(
                           timeStep,
                           problemeHebdo->OptimisationAuPasHebdomadaire);
@@ -269,8 +269,8 @@ static void FillSimulationTable(
                 // {
                 auto variableFullName = VariableDictionary::buildVariableName({componentId,
                                                                                var_name},
-                                                                              0 /*TODO*/,
-                                                                              std::nullopt);
+                  std::nullopt /**should be year**/,
+                  std::nullopt);
                 // const auto [block, blockTimeIndex] = convertTimeStepToBlockTimeIndex(
                 //   timeStep,
                 //   problemeHebdo->OptimisationAuPasHebdomadaire);

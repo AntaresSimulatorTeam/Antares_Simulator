@@ -134,7 +134,6 @@ bool Economy::year(Progression::Task& progression,
     int hourInTheYear = pStartTime;
     bool reinitOptim = true;
 
-    simulationTableBuffer_ += simulationTable_.buffer();
     for (uint w = 0; w != pNbWeeks; ++w)
     {
         state.hourInTheYear = hourInTheYear;
@@ -161,6 +160,7 @@ bool Economy::year(Progression::Task& progression,
         try
         {
             weeklyOptProblems_[numSpace].solve();
+            simulationTableBuffer_ += simulationTable_.buffer();
             simulationTable_.clearEntries();
             // Runs all the post processes in the list of post-process commands
             optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
