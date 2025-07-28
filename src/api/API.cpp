@@ -30,6 +30,8 @@
 #include "antares/solver/misc/options.h"
 #include "antares/solver/simulation/simulation-run.h"
 
+#include "../io/outputs/include/antares/io/outputs/SimulationTableCsv.h"
+
 namespace Antares::API
 {
 SimulationResults APIInternal::run(
@@ -91,12 +93,13 @@ SimulationResults APIInternal::execute(
     }
 
     SimulationObserver simulationObserver;
-
+    SimulationTableCsv simulationTableCsv;
     optimizationInfo = simulationRun(*study_,
                                      settings,
                                      durationCollector,
                                      *resultWriter,
-                                     simulationObserver);
+                                     simulationObserver,
+                                     simulationTableCsv);
 
     // Importing Time-Series if asked
     study_->importTimeseriesIntoInput();

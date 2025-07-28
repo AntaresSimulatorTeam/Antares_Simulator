@@ -31,6 +31,7 @@ Benchmarking::OptimizationInfo simulationRun(Antares::Data::Study& study,
                                              const Settings& settings,
                                              Benchmarking::DurationCollector& durationCollector,
                                              IResultWriter& resultWriter,
-                                             Simulation::ISimulationObserver& simulationObserver);
+                                             Simulation::ISimulationObserver& simulationObserver,
+                                             ISimulationTable& simulationTable);
 
 } // namespace Antares::Solver
