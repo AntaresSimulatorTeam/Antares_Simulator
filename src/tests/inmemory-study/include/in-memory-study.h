@@ -20,6 +20,7 @@
  */
 #pragma once
 #define WIN32_LEAN_AND_MEAN
+#include "antares/io/outputs/SimulationTableCsv.h"
 #include "antares/solver/simulation/economy.h"
 #include "antares/solver/simulation/simulation.h"
 #include "antares/study/scenario-builder/rules.h"
@@ -230,6 +231,8 @@ private:
     Data::Study& study_;
     NullResultWriter resultWriter_;
     NullSimulationObserver observer_;
+    // TODO -- make this empty
+    SimulationTableCsv simulationTable_;
 };
 
 // =========================

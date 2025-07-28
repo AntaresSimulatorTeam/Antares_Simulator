@@ -199,7 +199,8 @@ void SimulationHandler::create()
                                                          settings_,
                                                          durationCollector_,
                                                          resultWriter_,
-                                                         observer_);
+                                                         observer_,
+                                                         simulationTable_);
     Antares::Solver::ScenarioBuilderOwner(study_).callScenarioBuilder();
 }
 
