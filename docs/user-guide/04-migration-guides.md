@@ -20,7 +20,6 @@ If the user provides any of the key/values below:
 - `adequacy patch/enable-first-step = true`
 - `adequacy patch/set-to-null-ntc-between-physical-out-for-first-step = false`
 - `other preferences/initial-reservoir-levels = hot start`
--
 
 the simulation will fail with a warning. We recommend removing these properties from `settings/generaldata.ini`. Other
 values (e.g `adequacy patch/enable-first-step = false`) will be ignored.
@@ -50,9 +49,13 @@ values (e.g `adequacy patch/enable-first-step = false`) will be ignored.
     - `cost-variation-injection.txt`
     - `cost-variation-withdrawal.txt`
 
-It is possible to provide only k of these time-series, for k=0..5. However, if present each file must contain either no value (same behavior as no file), or HOURS_PER_YEAR = 8760 coefficients in one column. These timeseries are located along existing series (rule-curves.txt, etc.).
+It is possible to provide only k of these time-series, for k=0..5. However, if present each file must contain either no
+value (same behavior as no file), or HOURS_PER_YEAR = 8760 coefficients in one column. These timeseries are located
+along existing series (rule-curves.txt, etc.).
 
-Note that in order for time-series `cost-variation-injection.txt` and `cost-variation-withdrawal.txt` to be taken into account, the user needs to set `penalize-variation-injection = true` (resp. `penalize-variation-withdrawal = true`). If not, these files will be ignored.
+Note that in order for time-series `cost-variation-injection.txt` and `cost-variation-withdrawal.txt` to be taken into
+account, the user needs to set `penalize-variation-injection = true` (resp. `penalize-variation-withdrawal = true`). If
+not, these files will be ignored.
 
 #### Short-term storages / additional constraints
 

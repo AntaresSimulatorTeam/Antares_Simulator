@@ -252,7 +252,7 @@ def run_simulation(context):
         context.logs_err = ""
     context.output_path = parse_output_folder_from_logs(out)
     context.return_code = process.returncode
-    context.soh = solver_output_handler(context.output_path, context.mode)
+    context.soh = solver_output_handler(context.output_path)
 
 
 def init_simulation(context):
