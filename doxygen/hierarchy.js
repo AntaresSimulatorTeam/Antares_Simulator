@@ -1571,6 +1571,7 @@ var hierarchy =
     [ "TestingSimulationObserver::SingleProblem", "structTestingSimulationObserver_1_1SingleProblem.html", null ],
     [ "Antares::TSGenerator::Predicate::Solar", "classAntares_1_1TSGenerator_1_1Predicate_1_1Solar.html", null ],
     [ "SOLDE_MOYEN_DES_ECHANGES", "structSOLDE__MOYEN__DES__ECHANGES.html", null ],
+    [ "Solution", "structSolution.html", null ],
     [ "solver_input_handler.solver_input_handler", "classsolver__input__handler_1_1solver__input__handler.html", null ],
     [ "solver_output_handler.solver_output_handler", "classsolver__output__handler_1_1solver__output__handler.html", null ],
     [ "OrtoolsUtils::SolverNames", "structOrtoolsUtils_1_1SolverNames.html", null ],

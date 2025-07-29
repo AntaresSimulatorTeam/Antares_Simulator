@@ -168,7 +168,7 @@ $(document).ready(function(){initNavTree('linear-problem-mpsolver-impl_2include_
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    ~<a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipSolution.html">OrtoolsMipSolution</a>() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    LinearProblemApi::MipStatus getStatus() <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    [[nodiscard]] LinearProblemApi::MipStatus getStatus() <span class="keyword">const override</span>;</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    [[nodiscard]] <span class="keywordtype">double</span> getObjectiveValue() <span class="keyword">const override</span>;</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    [[nodiscard]] <span class="keywordtype">double</span> getOptimalValue(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">LinearProblemApi::IMipVariable</a>* var) <span class="keyword">const override</span>;</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    [[nodiscard]] std::vector&lt;double&gt; getOptimalValues(</div>

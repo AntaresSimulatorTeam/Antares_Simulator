@@ -156,25 +156,24 @@ $(document).ready(function(){initNavTree('FileWriter_8h_source.html',''); initRe
 <div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="classAntares_1_1Modeler_1_1FileWriter.html">   27</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Modeler_1_1FileWriter.html">FileWriter</a>: <span class="keyword">public</span> <a class="code" href="classAntares_1_1Solver_1_1IWriter.html">Solver::IWriter</a></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;{</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordtype">void</span> init(<span class="keywordtype">bool</span> setOutput) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordtype">void</span> init(<span class="keywordtype">bool</span> setOutput = <span class="keyword">true</span>) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keywordtype">void</span> writeSolution(</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;      <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipSolution.html">Optimisation::LinearProblemMpsolverImpl::OrtoolsMipSolution</a>&amp; solution) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1Modeler_1_1FileWriter.html">FileWriter</a>(std::filesystem::path path);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordtype">void</span> writeProblem(</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;      <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html">Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem</a>&amp; problem) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">const</span> std::filesystem::path studyPath_;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    std::filesystem::path outputPath_;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordtype">bool</span> output{<span class="keyword">false</span>};</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;};</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;} <span class="comment">// namespace Antares::Modeler</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keywordtype">void</span> writeSolution(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipSolution.html">Optimisation::LinearProblemApi::IMipSolution</a>&amp; solution) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1Modeler_1_1FileWriter.html">FileWriter</a>(std::filesystem::path path);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keywordtype">void</span> writeProblem(</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;      <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html">Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem</a>&amp; problem) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keyword">const</span> std::filesystem::path studyPath_;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    std::filesystem::path outputPath_;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordtype">bool</span> output{<span class="keyword">false</span>};</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;};</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;} <span class="comment">// namespace Antares::Modeler</span></div>
 <div class="ttc" id="aclassAntares_1_1Modeler_1_1FileWriter_html"><div class="ttname"><a href="classAntares_1_1Modeler_1_1FileWriter.html">Antares::Modeler::FileWriter</a></div><div class="ttdef"><b>Definition:</b> FileWriter.h:28</div></div>
+<div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipSolution_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipSolution.html">Antares::Optimisation::LinearProblemApi::IMipSolution</a></div><div class="ttdef"><b>Definition:</b> mipSolution.h:48</div></div>
 <div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html">Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem</a></div><div class="ttdef"><b>Definition:</b> linearProblem.h:40</div></div>
-<div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipSolution_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipSolution.html">Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsMipSolution</a></div><div class="ttdef"><b>Definition:</b> mipSolution.h:35</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1IWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1IWriter.html">Antares::Solver::IWriter</a></div><div class="ttdef"><b>Definition:</b> IWriter.h:32</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1IWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1IWriter.html">Antares::Solver::IWriter</a></div><div class="ttdef"><b>Definition:</b> IWriter.h:37</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
