@@ -4,5 +4,5 @@
 [submodule "src/tests/resources/Antares_Simulator_Tests_NR"]
 	path = src/tests/resources/Antares_Simulator_Tests_NR
 	url = https://github.com/AntaresSimulatorTeam/Antares_Simulator_Tests_NR.git
-	branch = 5751516bb1ecff515a8a1212b4fbf2a107c1f2d2
+	branch = v9.2.2a
     ignore = dirty
