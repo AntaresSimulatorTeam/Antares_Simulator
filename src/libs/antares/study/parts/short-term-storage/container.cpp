@@ -23,7 +23,6 @@
 
 #include <algorithm>
 #include <numeric>
-#include <regex>
 #include <string>
 
 #include <yuni/io/file.h>
