@@ -132,9 +132,7 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
 
                 if (key == "cluster")
                 {
-                    std::string clusterName;
-                    value.to<std::string>(clusterName);
-                    additionalConstraints.cluster_id = transformNameIntoID(clusterName);
+                    additionalConstraints.cluster_id = sts.id;
                 }
                 else if (key == "enabled")
                 {
