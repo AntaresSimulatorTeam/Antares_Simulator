@@ -124,7 +124,7 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
         for (auto* section = ini.firstSection; section; section = section->next)
         {
             AdditionalConstraints additionalConstraints;
-            additionalConstraints.name = section->name.c_str();
+            additionalConstraints.name = transformNameIntoID(section->name.c_str());
             for (auto* property = section->firstProperty; property; property = property->next)
             {
                 const std::string key = property->key;
