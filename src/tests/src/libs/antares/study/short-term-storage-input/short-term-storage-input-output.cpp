@@ -635,7 +635,6 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_ValidFile)
 
     std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
-    iniFile << "cluster=cluster1\n";
     iniFile << "variable=injection\n";
     iniFile << "operator=less\n";
     iniFile << "hours=[1,2,3]\n";
@@ -662,7 +661,6 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_InvalidHours)
 
     std::ofstream iniFile(testPath / "ClusterA" / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
-    iniFile << "cluster=ClusterA\n";
     iniFile << "variable=injection\n";
     iniFile << "operator=less\n";
     iniFile << "hours=[0,1]\n"; // Invalid hours
@@ -693,7 +691,6 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_InvalidConstraint)
 
     std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
-    iniFile << "cluster=cluster1\n";
     iniFile << "variable=invalid\n"; // Invalid variable
     iniFile << "operator=less\n";
     iniFile << "hours=[1,2,3]\n";
@@ -717,7 +714,6 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_ValidRhs)
 
     std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
-    iniFile << "cluster=cluster1\n";
     iniFile << "variable=injection\n";
     iniFile << "operator=less\n";
     iniFile << "hours=[1,2,3]\n";
@@ -755,12 +751,10 @@ BOOST_AUTO_TEST_CASE(Load2ConstraintsFromIniFile)
 
     std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
     iniFile << R"([constraint1]
-                  cluster=cluster1
                   variable=injection
                   operator=less
                   hours=[1,2,3]
                   [constraint2]
-                  cluster=cluster1
                   variable=withdrawal
                   operator=greater
                   hours=[5,33])";
@@ -815,7 +809,6 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MissingRhsFile)
 
     std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
-    iniFile << "cluster=cluster1\n";
     iniFile << "variable=injection\n";
     iniFile << "operator=less\n";
     iniFile << "hours=[1,2,3]\n";
@@ -843,7 +836,6 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MalformedRhsFile)
 
     std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
-    iniFile << "cluster=cluster1\n";
     iniFile << "variable=injection\n";
     iniFile << "operator=less\n";
     iniFile << "hours=[1,2,3]\n";
@@ -873,7 +865,6 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_IncompleteRhsFile)
 
     std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
-    iniFile << "cluster=cluster1\n";
     iniFile << "variable=injection\n";
     iniFile << "operator=less\n";
     iniFile << "hours=[1,2,3]\n";
@@ -936,7 +927,6 @@ BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinationsFromFile,
     // Write the `.ini` file for this test case
     std::ofstream iniFile(testPath / "clustera" / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
-    iniFile << "cluster=clustera\n";
     iniFile << "variable=" << variable << "\n";
     iniFile << "operator=" << op << "\n";
     iniFile << "enabled=true\n";
@@ -993,7 +983,6 @@ BOOST_AUTO_TEST_CASE(Load_disabled)
     // Write the `.ini` file for this test case
     std::ofstream iniFile(testPath / "clustera" / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
-    iniFile << "cluster=clustera\n";
     iniFile << "variable=injection\n";
     iniFile << "operator=less\n";
     iniFile << "enabled=false\n";
