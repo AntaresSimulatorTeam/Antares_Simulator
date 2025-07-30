@@ -60,9 +60,10 @@ void SimulationTableCsv::write()
     }
 }
 
-void SimulationTableCsv::clearEntries()
+void SimulationTableCsv::clear()
 {
     entries_.clear();
+    buffer_.str("");
 }
 
 //

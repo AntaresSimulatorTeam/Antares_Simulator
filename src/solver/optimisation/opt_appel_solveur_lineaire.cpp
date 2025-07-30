@@ -434,7 +434,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                             problemeHebdo,
                             buildFillContext(problemeHebdo, NumIntervalle),
                             NumIntervalle);
-        simulationTable.write();
+        // simulationTable.write();
     }
 
     return {.success = true,

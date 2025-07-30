@@ -35,7 +35,7 @@
 #include "antares/solver/simulation/solver_utils.h"
 #include "antares/solver/variable/state.h"
 
-struct OptimisationsSimulationTable;
+class OptimisationsSimulationTable;
 
 namespace Antares::Solver::Simulation
 {

@@ -20,19 +20,29 @@
 */
 #pragma once
 
-#include "SimulationTableEntry.h"
+#include "antares/io/outputs/SimulationTableCsv.h"
 
-class ISimulationTable
+namespace Antares::Solver
+{
+class IResultWriter;
+}
+
+class OptimisationsSimulationTable
 {
 public:
-    virtual ~ISimulationTable() = default;
+    void clear();
 
-    virtual void addEntry(SimulationTableEntry entry) = 0;
+    std::pair<std::string, std::string> buffers() const;
 
-    virtual void clear() = 0;
+    void write();
 
-    virtual std::string buffer() const = 0;
+    void writeTo(const std::string& filePrefix, Antares::Solver::IResultWriter& writer);
+    ISimulationTable& firstOptimSimulationTable();
+    ISimulationTable& secondOptimSimulationTable();
 
-    /// Write the table to the given file path, using the concrete export format
-    virtual void write() = 0;
+private:
+    SimulationTableCsv firstOptimSimulationTable_;
+    SimulationTableCsv secondOptimSimulationTable_;
+    std::string firstOptimBuffer_;
+    std::string secondOptimBuffer_;
 };

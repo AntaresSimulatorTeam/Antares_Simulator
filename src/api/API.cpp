@@ -30,7 +30,6 @@
 #include "antares/solver/misc/options.h"
 #include "antares/solver/simulation/simulation-run.h"
 
-#include "../io/outputs/include/antares/io/outputs/SimulationTableCsv.h"
 
 namespace Antares::API
 {

@@ -182,6 +182,8 @@ set(RTESOLVER_OPT
         LegacyFiller.cpp
         include/antares/solver/optimisation/ComponentToAreaConnectionFiller.h
         ComponentToAreaConnectionFiller.cpp
+        include/antares/solver/optimisation/OptimisationsSimulationTable.h
+        OptimisationsSimulationTable.cpp
 )
 
 

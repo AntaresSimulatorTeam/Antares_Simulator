@@ -209,11 +209,8 @@ bool Adequacy::year(Progression::Task& progression,
                                              resultWriter,
                                              simulationObserver_.get(),
                                              simulationTables_);
-
-                firstOptimSimulationTableBuffer_ += firstOptimSimulationTable_.buffer();
-                secondOptimSimulationTableBuffer_ += secondOptimSimulationTable_.buffer();
-                firstOptimSimulationTable_.clearEntries();
-                secondOptimSimulationTable_.clearEntries();
+                simulationTables_.write();
+                simulationTables_.clear();
 
                 RemixHydroForAllAreas(study.areas,
                                       currentProblem,
@@ -358,11 +355,8 @@ bool Adequacy::year(Progression::Task& progression,
         ++progression;
     }
 
-    const std::string simulationTableFile = "simulation_table";
-    resultWriter.addEntryFromBuffer(simulationTableFile + "_1.csv",
-                                    firstOptimSimulationTableBuffer_);
-    resultWriter.addEntryFromBuffer(simulationTableFile + "_2.csv",
-                                    secondOptimSimulationTableBuffer_);
+    simulationTables_.writeTo("simulation_table", resultWriter);
+
     optWriter.finalize();
     finalizeOptimizationStatistics(currentProblem, state);
 

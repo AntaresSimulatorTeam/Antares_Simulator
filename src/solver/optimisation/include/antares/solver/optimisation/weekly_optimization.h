@@ -21,9 +21,10 @@
 
 #pragma once
 
-#include "antares/io/outputs/ISimulationTable.h"
 #include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
+
+class OptimisationsSimulationTable;
 
 namespace Antares::Solver::Optimization
 {

@@ -31,7 +31,7 @@ public:
     void addEntry(SimulationTableEntry entry) override;
 
     void write() override;
-    void clearEntries() override;
+    void clear() override;
 
     // const std::string& buffer() const;
     std::string buffer() const override;

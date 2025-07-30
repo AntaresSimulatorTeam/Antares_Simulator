@@ -24,6 +24,7 @@
 #include <antares/logs/logs.h>
 #include "antares/io/outputs/ISimulationTable.h"
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
+#include "antares/solver/optimisation/OptimisationsSimulationTable.h"
 #include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
 #include "antares/solver/optimisation/opt_export_structure.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
@@ -278,7 +279,7 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                                      writer,
                                      PREMIERE_OPTIMISATION,
                                      simulationObserver,
-                                     simulationTables.firstOptimSimulationTable);
+                                     simulationTables.firstOptimSimulationTable());
 
     // We only need the 2nd optimization when NOT solving with integer variables
     // We also skip the 2nd optimization in the hidden 'Expansion' mode
@@ -292,7 +293,7 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                                      writer,
                                      DEUXIEME_OPTIMISATION,
                                      simulationObserver,
-                                     simulationTables.secondOptimSimulationTable);
+                                     simulationTables.secondOptimSimulationTable());
     }
     return ret;
 }

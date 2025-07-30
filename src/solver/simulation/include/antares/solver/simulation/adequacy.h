@@ -22,8 +22,8 @@
 #define __SOLVER_SIMULATION_ADEQUACY_H__
 
 #include "antares/infoCollection/StudyInfoCollector.h"
-#include "antares/io/outputs/ISimulationTable.h"
 #include "antares/io/outputs/SimulationTableCsv.h"
+#include "antares/solver/optimisation/OptimisationsSimulationTable.h"
 #include "antares/solver/simulation/common-eco-adq.h"
 #include "antares/solver/simulation/opt_time_writer.h"
 #include "antares/solver/simulation/solver.h" // for definition of type yearRandomNumbers
@@ -108,10 +108,7 @@ private:
     std::reference_wrapper<Simulation::ISimulationObserver> simulationObserver_;
     SimulationTableCsv firstOptimSimulationTable_;
     SimulationTableCsv secondOptimSimulationTable_;
-    OptimisationsSimulationTable simulationTables_ = {firstOptimSimulationTable_,
-                                                      secondOptimSimulationTable_};
-    std::string firstOptimSimulationTableBuffer_;
-    std::string secondOptimSimulationTableBuffer_;
+    OptimisationsSimulationTable simulationTables_;
 }; // class Adequacy
 
 } // namespace Antares::Solver::Simulation
