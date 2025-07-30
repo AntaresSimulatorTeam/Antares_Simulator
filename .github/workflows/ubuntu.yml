@@ -301,6 +301,7 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run cucumber on medium-tests
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/cucumber-tests
         with:
           feature: "features/solver-features/medium_tests.feature"
@@ -331,6 +332,7 @@ jobs:
 
 
       - name: Run cucumber on hybrid studies
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/cucumber-tests
         with:
           feature: "features/solver-features/hybrid_studies.feature"
