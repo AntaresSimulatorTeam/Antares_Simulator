@@ -30,7 +30,6 @@
 #include "antares/solver/misc/options.h"
 #include "antares/solver/simulation/simulation-run.h"
 
-
 namespace Antares::API
 {
 SimulationResults APIInternal::run(
