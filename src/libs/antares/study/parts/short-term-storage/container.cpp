@@ -150,6 +150,7 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
 {
     for (const auto& sts: storagesByIndex)
     {
+        return true;
         auto data_path = parentPath / sts.id;
         IniFile ini;
         const auto pathIni = data_path / "additional-constraints.ini";
