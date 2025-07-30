@@ -168,7 +168,7 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
             if (!loadAdditionalConstraintsProperties(additionalConstraints.get(), section))
             {
                 return false;
-            }            
+            }
 
             // We don't want load RHS and link the STS time if the constraint is disabled
             if (!additionalConstraints->enabled)
