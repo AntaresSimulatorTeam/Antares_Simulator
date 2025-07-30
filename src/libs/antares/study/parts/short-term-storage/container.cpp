@@ -108,6 +108,44 @@ static bool readRHS(AdditionalConstraints& additionalConstraints, const fs::path
     return ret;
 }
 
+static bool loadAdditionalConstraintsProperties(AdditionalConstraints& additionalConstraints,
+                                                const IniFile::Section* section)
+{
+    for (auto* property = section->firstProperty; property; property = property->next)
+    {
+        const std::string key = property->key;
+        const auto value = property->value;
+
+        if (key == "enabled")
+        {
+            value.to<bool>(additionalConstraints.enabled);
+        }
+        else if (key == "variable")
+        {
+            value.to<std::string>(additionalConstraints.variable);
+        }
+        else if (key == "operator")
+        {
+            value.to<std::string>(additionalConstraints.operatorType);
+        }
+        else if (key == "hours")
+        {
+            try
+            {
+                std::string hoursField = value.c_str();
+                additionalConstraints.constraints = makeConstraints(hoursField);
+            }
+            catch (const std::exception& e)
+            {
+                logs.error() << "Constraint " << additionalConstraints.name << " : " << e.what()
+                             << '\n';
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
 {
     for (const auto& sts: storagesByIndex)
@@ -125,41 +163,11 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
         {
             AdditionalConstraints additionalConstraints;
             additionalConstraints.name = transformNameIntoID(section->name.c_str());
-            for (auto* property = section->firstProperty; property; property = property->next)
-            {
-                const std::string key = property->key;
-                const auto value = property->value;
+            additionalConstraints.cluster_id = sts.id;
 
-                if (key == "cluster")
-                {
-                    additionalConstraints.cluster_id = sts.id;
-                }
-                else if (key == "enabled")
-                {
-                    value.to<bool>(additionalConstraints.enabled);
-                }
-                else if (key == "variable")
-                {
-                    value.to<std::string>(additionalConstraints.variable);
-                }
-                else if (key == "operator")
-                {
-                    value.to<std::string>(additionalConstraints.operatorType);
-                }
-                else if (key == "hours")
-                {
-                    try
-                    {
-                        std::string hoursField = value.c_str();
-                        additionalConstraints.constraints = makeConstraints(hoursField);
-                    }
-                    catch (const std::exception& e)
-                    {
-                        logs.error() << "Constraint " << additionalConstraints.name << " : "
-                                     << e.what() << '\n';
-                        return false;
-                    }
-                }
+            if (!loadAdditionalConstraintsProperties(additionalConstraints, section))
+            {
+                return false;
             }
 
             // We don't want load RHS and link the STS time if the constraint is disabled
