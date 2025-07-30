@@ -37,13 +37,11 @@ namespace Antares::Solver::Simulation
 {
 Economy::Economy(Data::Study& study,
                  IResultWriter& resultWriter,
-                 Simulation::ISimulationObserver& simulationObserver,
-                 ISimulationTable& simulationTable):
+                 Simulation::ISimulationObserver& simulationObserver):
     study(study),
     preproOnly(false),
     resultWriter(resultWriter),
-    simulationObserver_(simulationObserver),
-    simulationTable_(simulationTable)
+    simulationObserver_(simulationObserver)
 {
 }
 
@@ -88,7 +86,7 @@ bool Economy::simulationBegin()
                                             &pProblemesHebdo[numSpace],
                                             resultWriter,
                                             simulationObserver_.get(),
-                                            simulationTable_);
+                                            simulationTables_);
 
             postProcessesList_[numSpace] = interfacePostProcessList::create(
               study.parameters.adqPatchParams,
@@ -160,8 +158,10 @@ bool Economy::year(Progression::Task& progression,
         try
         {
             weeklyOptProblems_[numSpace].solve();
-            simulationTableBuffer_ += simulationTable_.buffer();
-            simulationTable_.clearEntries();
+            firstOptimSimulationTableBuffer_ += firstOptimSimulationTable_.buffer();
+            secondOptimSimulationTableBuffer_ += secondOptimSimulationTable_.buffer();
+            firstOptimSimulationTable_.clearEntries();
+            secondOptimSimulationTable_.clearEntries();
             // Runs all the post processes in the list of post-process commands
             optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
             postProcessesList_[numSpace]->runAll(opt_runtime_data);
@@ -226,8 +226,11 @@ bool Economy::year(Progression::Task& progression,
         ++progression;
     }
 
-    const std::string simulationTableFile = "simulation_table.csv";
-    resultWriter.addEntryFromBuffer(simulationTableFile, simulationTableBuffer_);
+    const std::string simulationTableFile = "simulation_table";
+    resultWriter.addEntryFromBuffer(simulationTableFile + "_1.csv",
+                                    firstOptimSimulationTableBuffer_);
+    resultWriter.addEntryFromBuffer(simulationTableFile + "_2.csv",
+                                    secondOptimSimulationTableBuffer_);
     optWriter.finalize();
     finalizeOptimizationStatistics(currentProblem, state);
 
@@ -263,7 +266,7 @@ void Economy::simulationEnd()
     if (!preproOnly && study.runtime.interconnectionsCount() > 0)
     {
         auto balance = retrieveBalance(study, variables);
-        ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks, simulationTable_);
+        ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks, simulationTables_);
     }
 }
 

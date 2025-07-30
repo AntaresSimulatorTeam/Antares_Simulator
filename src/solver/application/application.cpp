@@ -396,15 +396,12 @@ void Application::execute()
     memoryReport.start();
 
     Simulation::NullSimulationObserver observer;
-    // TODO
-    SimulationTableCsv simulationTableCsv;
 
     pOptimizationInfo = simulationRun(*pStudy,
                                       pSettings,
                                       pDurationCollector,
                                       *resultWriter,
-                                      observer,
-                                      simulationTableCsv);
+                                      observer);
 
     // Importing Time-Series if asked
     pStudy->importTimeseriesIntoInput();

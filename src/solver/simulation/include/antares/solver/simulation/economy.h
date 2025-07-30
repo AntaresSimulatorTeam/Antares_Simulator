@@ -53,8 +53,7 @@ public:
     */
     Economy(Data::Study& study,
             IResultWriter& resultWriter,
-            Simulation::ISimulationObserver& simulationObserver,
-            ISimulationTable& simulationTable);
+            Simulation::ISimulationObserver& simulationObserver);
     //! Destructor
     ~Economy() = default;
     //@}
@@ -103,8 +102,12 @@ private:
     std::vector<std::unique_ptr<interfacePostProcessList>> postProcessesList_;
     IResultWriter& resultWriter;
     std::reference_wrapper<Simulation::ISimulationObserver> simulationObserver_;
-    ISimulationTable& simulationTable_;
-    std::string simulationTableBuffer_;
+    SimulationTableCsv firstOptimSimulationTable_;
+    SimulationTableCsv secondOptimSimulationTable_;
+    OptimisationsSimulationTable simulationTables_ = {firstOptimSimulationTable_,
+                                                      secondOptimSimulationTable_};
+    std::string firstOptimSimulationTableBuffer_;
+    std::string secondOptimSimulationTableBuffer_;
 }; // class Economy
 
 } // namespace Antares::Solver::Simulation

@@ -93,14 +93,11 @@ SimulationResults APIInternal::execute(
     }
 
     SimulationObserver simulationObserver;
-    // TODO
-    SimulationTableCsv simulationTableCsv;
     optimizationInfo = simulationRun(*study_,
                                      settings,
                                      durationCollector,
                                      *resultWriter,
-                                     simulationObserver,
-                                     simulationTableCsv);
+                                     simulationObserver);
 
     // Importing Time-Series if asked
     study_->importTimeseriesIntoInput();

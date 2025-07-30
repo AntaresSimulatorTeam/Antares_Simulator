@@ -80,7 +80,7 @@ void ComputeFlowQuad(Data::Study& study,
                      PROBLEME_HEBDO& problem,
                      const std::vector<AvgExchangeResults*>& balance,
                      unsigned int nbWeeks,
-                     ISimulationTable& simulationTable);
+                     OptimisationsSimulationTable& simulationTables);
 
 /*!
 ** \brief Hydro Remix

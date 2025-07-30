@@ -35,7 +35,7 @@ bool OPT_PilotageOptimisationLineaire(const OptimizationOptions&,
                                       PROBLEME_HEBDO*,
                                       Solver::IResultWriter&,
                                       Solver::Simulation::ISimulationObserver&,
-                                      ISimulationTable& simulationTable);
+                                      OptimisationsSimulationTable& simulationTables);
 bool OPT_PilotageOptimisationQuadratique(const SingleOptimOptions&, PROBLEME_HEBDO*);
 void OPT_LiberationProblemesSimplexe(const PROBLEME_HEBDO*);
 
@@ -43,7 +43,7 @@ void OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
                                   PROBLEME_HEBDO* pProblemeHebdo,
                                   Solver::IResultWriter& writer,
                                   Solver::Simulation::ISimulationObserver& simulationObserver,
-                                  ISimulationTable& simulationTable)
+                                  OptimisationsSimulationTable& simulationTables)
 {
     if (pProblemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE)
     {
@@ -51,7 +51,7 @@ void OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
                                               pProblemeHebdo,
                                               writer,
                                               simulationObserver,
-                                              simulationTable))
+                                              simulationTables))
         {
             logs.error() << "Linear optimization failed";
             throw UnfeasibleProblemError("Linear optimization failed");

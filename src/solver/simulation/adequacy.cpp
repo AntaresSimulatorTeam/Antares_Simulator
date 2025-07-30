@@ -23,6 +23,7 @@
 
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/UnfeasibleProblemError.hpp>
+#include "antares/io/outputs/ISimulationTable.h"
 
 using namespace Yuni;
 using Antares::Constants::nbHoursInAWeek;
@@ -31,12 +32,10 @@ namespace Antares::Solver::Simulation
 {
 Adequacy::Adequacy(Data::Study& study,
                    IResultWriter& resultWriter,
-                   Simulation::ISimulationObserver& simulationObserver,
-                   ISimulationTable& simulationTable):
+                   Simulation::ISimulationObserver& simulationObserver):
     study(study),
     resultWriter(resultWriter),
-    simulationObserver_(simulationObserver),
-    simulationTable_(simulationTable)
+    simulationObserver_(simulationObserver)
 {
 }
 
@@ -209,7 +208,12 @@ bool Adequacy::year(Progression::Task& progression,
                                              &currentProblem,
                                              resultWriter,
                                              simulationObserver_.get(),
-                                             simulationTable_);
+                                             simulationTables_);
+
+                firstOptimSimulationTableBuffer_ += firstOptimSimulationTable_.buffer();
+                secondOptimSimulationTableBuffer_ += secondOptimSimulationTable_.buffer();
+                firstOptimSimulationTable_.clearEntries();
+                secondOptimSimulationTable_.clearEntries();
 
                 RemixHydroForAllAreas(study.areas,
                                       currentProblem,
@@ -354,6 +358,11 @@ bool Adequacy::year(Progression::Task& progression,
         ++progression;
     }
 
+    const std::string simulationTableFile = "simulation_table";
+    resultWriter.addEntryFromBuffer(simulationTableFile + "_1.csv",
+                                    firstOptimSimulationTableBuffer_);
+    resultWriter.addEntryFromBuffer(simulationTableFile + "_2.csv",
+                                    secondOptimSimulationTableBuffer_);
     optWriter.finalize();
     finalizeOptimizationStatistics(currentProblem, state);
 
@@ -389,7 +398,7 @@ void Adequacy::simulationEnd()
     if (!preproOnly && study.runtime.interconnectionsCount() > 0)
     {
         auto balance = retrieveBalance(study, variables);
-        ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks, simulationTable_);
+        ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks, simulationTables_);
     }
 }
 

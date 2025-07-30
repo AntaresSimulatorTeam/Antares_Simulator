@@ -229,9 +229,8 @@ inline ISimulation<ImplementationType>::ISimulation(
   const ::Settings& settings,
   Benchmarking::DurationCollector& duration_collector,
   IResultWriter& resultWriter,
-  Simulation::ISimulationObserver& simulationObserver,
-  ISimulationTable& simulationTable):
-    ImplementationType(study, resultWriter, simulationObserver, simulationTable),
+  Simulation::ISimulationObserver& simulationObserver):
+    ImplementationType(study, resultWriter, simulationObserver),
     study(study),
     settings(settings),
     pNbMaxPerformedYearsInParallel(0),
@@ -239,8 +238,7 @@ inline ISimulation<ImplementationType>::ISimulation(
     pDurationCollector(duration_collector),
     pQueueService(study.pQueueService),
     pResultWriter(resultWriter),
-    simulationObserver_(simulationObserver),
-    simulationTable_(simulationTable)
+    simulationObserver_(simulationObserver)
 {
     // Ask to the interface to show the messages
     logs.info();

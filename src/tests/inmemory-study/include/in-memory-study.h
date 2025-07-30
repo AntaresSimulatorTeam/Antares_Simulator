@@ -231,8 +231,6 @@ private:
     Data::Study& study_;
     NullResultWriter resultWriter_;
     NullSimulationObserver observer_;
-    // TODO -- make this empty
-    SimulationTableCsv simulationTable_;
 };
 
 // =========================

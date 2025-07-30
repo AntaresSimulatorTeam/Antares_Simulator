@@ -22,6 +22,8 @@
 #define __SOLVER_SIMULATION_ADEQUACY_H__
 
 #include "antares/infoCollection/StudyInfoCollector.h"
+#include "antares/io/outputs/ISimulationTable.h"
+#include "antares/io/outputs/SimulationTableCsv.h"
 #include "antares/solver/simulation/common-eco-adq.h"
 #include "antares/solver/simulation/opt_time_writer.h"
 #include "antares/solver/simulation/solver.h" // for definition of type yearRandomNumbers
@@ -52,8 +54,7 @@ public:
     */
     Adequacy(Data::Study& study,
              IResultWriter& resultWriter,
-             Simulation::ISimulationObserver& simulationObserver,
-             ISimulationTable& simulationTable);
+             Simulation::ISimulationObserver& simulationObserver);
     //! Destructor
     ~Adequacy() = default;
     //@}
@@ -105,7 +106,12 @@ private:
     IResultWriter& resultWriter;
 
     std::reference_wrapper<Simulation::ISimulationObserver> simulationObserver_;
-    ISimulationTable& simulationTable_;
+    SimulationTableCsv firstOptimSimulationTable_;
+    SimulationTableCsv secondOptimSimulationTable_;
+    OptimisationsSimulationTable simulationTables_ = {firstOptimSimulationTable_,
+                                                      secondOptimSimulationTable_};
+    std::string firstOptimSimulationTableBuffer_;
+    std::string secondOptimSimulationTableBuffer_;
 }; // class Adequacy
 
 } // namespace Antares::Solver::Simulation

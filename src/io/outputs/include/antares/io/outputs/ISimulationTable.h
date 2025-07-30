@@ -36,3 +36,10 @@ public:
     /// Write the table to the given file path, using the concrete export format
     virtual void write() = 0;
 };
+
+// TODO move this
+struct OptimisationsSimulationTable
+{
+    ISimulationTable& firstOptimSimulationTable;
+    ISimulationTable& secondOptimSimulationTable;
+};

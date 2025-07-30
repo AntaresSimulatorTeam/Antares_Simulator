@@ -32,15 +32,9 @@ Benchmarking::OptimizationInfo runSimulation(Antares::Data::Study& study,
                                              const Settings& settings,
                                              Benchmarking::DurationCollector& durationCollector,
                                              IResultWriter& resultWriter,
-                                             Simulation::ISimulationObserver& simulationObserver,
-                                             ISimulationTable& simulationTable)
+                                             Simulation::ISimulationObserver& simulationObserver)
 {
-    simulationType simulation(study,
-                              settings,
-                              durationCollector,
-                              resultWriter,
-                              simulationObserver,
-                              simulationTable);
+    simulationType simulation(study, settings, durationCollector, resultWriter, simulationObserver);
     simulation.checkWriter();
     simulation.run();
 
@@ -58,8 +52,7 @@ Benchmarking::OptimizationInfo simulationRun(Antares::Data::Study& study,
                                              const Settings& settings,
                                              Benchmarking::DurationCollector& durationCollector,
                                              IResultWriter& resultWriter,
-                                             Simulation::ISimulationObserver& simulationObserver,
-                                             ISimulationTable& simulationTable)
+                                             Simulation::ISimulationObserver& simulationObserver)
 {
     // gp : is there a reason why we do that here and not inside the clusters and
     // gp : right after the read step ?
@@ -74,8 +67,7 @@ Benchmarking::OptimizationInfo simulationRun(Antares::Data::Study& study,
           settings,
           durationCollector,
           resultWriter,
-          simulationObserver,
-          simulationTable);
+          simulationObserver);
     case Data::SimulationMode::Economy:
     case Data::SimulationMode::Expansion:
     default:
@@ -84,8 +76,7 @@ Benchmarking::OptimizationInfo simulationRun(Antares::Data::Study& study,
           settings,
           durationCollector,
           resultWriter,
-          simulationObserver,
-          simulationTable);
+          simulationObserver);
     }
 }
 

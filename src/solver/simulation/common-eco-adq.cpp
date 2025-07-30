@@ -38,7 +38,7 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
                                       PROBLEME_HEBDO& problem,
                                       const std::vector<AvgExchangeResults*>& balance,
                                       int PasDeTempsDebut,
-                                      ISimulationTable& simulationTable)
+                                      OptimisationsSimulationTable& simulationTables)
 {
     for (uint i = 0; i < (uint)problem.NombreDePasDeTemps; i++)
     {
@@ -100,7 +100,7 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
                                      &problem,
                                      resultWriter,
                                      simulationObserver,
-                                     simulationTable);
+                                     simulationTables);
     }
     catch (Data::UnfeasibleProblemError&)
     {
@@ -149,7 +149,7 @@ void ComputeFlowQuad(Data::Study& study,
                      PROBLEME_HEBDO& problem,
                      const std::vector<AvgExchangeResults*>& balance,
                      uint nbWeeks,
-                     ISimulationTable& simulationTable)
+                     OptimisationsSimulationTable& simulationTables)
 {
     uint startTime = study.calendar.days[study.parameters.simulationDays.first].hours.first;
 
@@ -162,7 +162,7 @@ void ComputeFlowQuad(Data::Study& study,
         for (uint w = 0; w != nbWeeks; ++w)
         {
             int PasDeTempsDebut = startTime + (w * problem.NombreDePasDeTemps);
-            RecalculDesEchangesMoyens(study, problem, balance, PasDeTempsDebut, simulationTable);
+            RecalculDesEchangesMoyens(study, problem, balance, PasDeTempsDebut, simulationTables);
         }
     }
     else

@@ -29,12 +29,12 @@ WeeklyOptimization::WeeklyOptimization(const OptimizationOptions& options,
                                        PROBLEME_HEBDO* problemeHebdo,
                                        IResultWriter& writer,
                                        Simulation::ISimulationObserver& simulationObserver,
-                                       ISimulationTable& simulationTable):
+                                       OptimisationsSimulationTable& simulationTables):
     options_(options),
     problemeHebdo_(problemeHebdo),
     writer_(writer),
     simulationObserver_(simulationObserver),
-    simulationTable_(simulationTable)
+    simulationTables_(simulationTables)
 {
 }
 
@@ -44,7 +44,7 @@ void WeeklyOptimization::solve()
                                  problemeHebdo_,
                                  writer_,
                                  simulationObserver_.get(),
-                                 simulationTable_);
+                                 simulationTables_);
 }
 
 } // namespace Antares::Solver::Optimization

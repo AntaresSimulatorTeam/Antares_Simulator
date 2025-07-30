@@ -31,7 +31,7 @@ bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
                                       PROBLEME_HEBDO* problemeHebdo,
                                       Solver::IResultWriter& writer,
                                       Solver::Simulation::ISimulationObserver& simulationObserver,
-                                      ISimulationTable& simulationTable)
+                                      OptimisationsSimulationTable& simulationTables)
 {
     if (!problemeHebdo->LeProblemeADejaEteInstancie)
     {
@@ -76,5 +76,5 @@ bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
                                     problemeHebdo,
                                     writer,
                                     simulationObserver,
-                                    simulationTable);
+                                    simulationTables);
 }

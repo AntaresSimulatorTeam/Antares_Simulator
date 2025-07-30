@@ -35,7 +35,7 @@
 #include "antares/solver/simulation/solver_utils.h"
 #include "antares/solver/variable/state.h"
 
-class ISimulationTable;
+struct OptimisationsSimulationTable;
 
 namespace Antares::Solver::Simulation
 {
@@ -58,8 +58,7 @@ public:
                 const ::Settings& settings,
                 Benchmarking::DurationCollector& duration_collector,
                 IResultWriter& resultWriter,
-                Simulation::ISimulationObserver& simulationObserver,
-                ISimulationTable& simulationTable);
+                Simulation::ISimulationObserver& simulationObserver);
     //! Destructor
     ~ISimulation();
     //@}
@@ -158,7 +157,6 @@ public:
     Antares::Solver::IResultWriter& pResultWriter;
 
     std::reference_wrapper<ISimulationObserver> simulationObserver_;
-    ISimulationTable& simulationTable_;
 }; // class ISimulation
 } // namespace Antares::Solver::Simulation
 
