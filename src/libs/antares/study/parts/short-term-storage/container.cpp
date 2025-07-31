@@ -161,7 +161,8 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
         for (auto* section = ini.firstSection; section; section = section->next)
         {
             AdditionalConstraints additionalConstraints;
-            additionalConstraints.name = transformNameIntoID(section->name.c_str());
+            additionalConstraints.name = section->name.c_str();
+            additionalConstraints.id = transformNameIntoID(section->name.c_str());
             additionalConstraints.cluster_id = sts.id;
 
             if (!loadAdditionalConstraintsProperties(additionalConstraints, section))
@@ -177,7 +178,7 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
                 return true;
             }
 
-            if (const auto rhsPath = data_path / ("rhs_" + additionalConstraints.name + ".txt");
+            if (const auto rhsPath = data_path / ("rhs_" + additionalConstraints.id + ".txt");
                 !readRHS(additionalConstraints, rhsPath))
             {
                 logs.error() << "Error while reading rhs file: " << rhsPath;

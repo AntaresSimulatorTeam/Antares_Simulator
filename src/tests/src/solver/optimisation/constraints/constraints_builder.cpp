@@ -112,6 +112,7 @@ struct BB
 
     Antares::Data::ShortTermStorage::AdditionalConstraints addc1_withdrawal = {
       .name = "addc1_withdrawal",
+      .id = "addc1_withdrawal",
       .cluster_id = "cluster_1",
       .variable = "withdrawal",
       .operatorType = "less",
@@ -119,6 +120,7 @@ struct BB
       .constraints = addc1_withdrawal_constraints};
     Antares::Data::ShortTermStorage::AdditionalConstraints addc2_injection = {
       .name = "addc2_injection",
+      .id = "addc2_injection",
       .cluster_id = "cluster_2",
       .variable = "injection",
       .operatorType = "greater",
@@ -126,6 +128,7 @@ struct BB
       .constraints = addc2_injection_constraints};
     Antares::Data::ShortTermStorage::AdditionalConstraints addc3_netting = {
       .name = "addc3_netting",
+      .id = "addc3_netting",
       .cluster_id = "cluster_3",
       .variable = "netting",
       .operatorType = "equal",
