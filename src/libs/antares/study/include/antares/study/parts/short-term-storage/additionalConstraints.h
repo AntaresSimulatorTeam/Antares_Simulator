@@ -51,6 +51,7 @@ class AdditionalConstraints
 public:
     AdditionalConstraints();
     AdditionalConstraints(std::string name,
+                          std::string id,
                           std::string cluster_id,
                           std::string variable,
                           std::string operatorType,
@@ -66,6 +67,7 @@ public:
     ~AdditionalConstraints() = default;
 
     std::string name;
+    std::string id;
     std::string cluster_id;
     std::string variable;
     std::string operatorType;

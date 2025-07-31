@@ -161,7 +161,8 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
         for (auto* section = ini.firstSection; section; section = section->next)
         {
             auto additionalConstraints = std::make_shared<AdditionalConstraints>();
-            additionalConstraints->name = transformNameIntoID(section->name.c_str());
+            additionalConstraints->name = section->name.c_str();
+            additionalConstraints->id = transformNameIntoID(section->name.c_str());
             additionalConstraints->cluster_id = sts.id;
 
             if (!loadAdditionalConstraintsProperties(additionalConstraints.get(), section))
@@ -177,7 +178,7 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
                 return true;
             }
 
-            if (const auto rhsPath = data_path / ("rhs_" + additionalConstraints->name + ".txt");
+            if (const auto rhsPath = data_path / ("rhs_" + additionalConstraints->id + ".txt");
                 !readRHS(rhsPath, additionalConstraints->rhs()))
             {
                 logs.error() << "Error while reading rhs file: " << rhsPath;

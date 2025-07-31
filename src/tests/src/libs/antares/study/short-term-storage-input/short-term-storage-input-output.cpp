@@ -530,7 +530,7 @@ BOOST_AUTO_TEST_SUITE(AdditionalConstraintsTests)
 
 BOOST_AUTO_TEST_CASE(Validate_ClusterIdEmpty)
 {
-    ShortTermStorage::AdditionalConstraints constraints("name", "", "injection", "less", true, {});
+    ShortTermStorage::AdditionalConstraints constraints("name", "name", "", "injection", "less", true, {});
 
     auto [ok, error_msg] = validate(constraints);
     BOOST_CHECK_EQUAL(ok, false);
@@ -540,6 +540,7 @@ BOOST_AUTO_TEST_CASE(Validate_ClusterIdEmpty)
 BOOST_AUTO_TEST_CASE(Validate_InvalidVariable)
 {
     ShortTermStorage::AdditionalConstraints constraints("name",
+                                                        "name",
                                                         "ClusterA",
                                                         "invalid",
                                                         "less",
@@ -554,6 +555,7 @@ BOOST_AUTO_TEST_CASE(Validate_InvalidVariable)
 BOOST_AUTO_TEST_CASE(Validate_InvalidOperatorType)
 {
     ShortTermStorage::AdditionalConstraints constraints("name",
+                                                        "name",
                                                         "ClusterA",
                                                         "injection",
                                                         "invalid",
@@ -572,6 +574,7 @@ BOOST_AUTO_TEST_CASE(Validate_InvalidHours_Empty)
     constraint.hours = {}; // Invalid: empty
 
     ShortTermStorage::AdditionalConstraints constraints("name",
+                                                        "name",
                                                         "ClusterA",
                                                         "injection",
                                                         "less",
@@ -586,6 +589,7 @@ BOOST_AUTO_TEST_CASE(Validate_InvalidHours_Empty)
 BOOST_AUTO_TEST_CASE(Validate_InvalidHours_Out_of_range)
 {
     ShortTermStorage::AdditionalConstraints constraints("name",
+                                                        "name",
                                                         "ClusterA",
                                                         "injection",
                                                         "less",
@@ -605,6 +609,7 @@ BOOST_AUTO_TEST_CASE(Validate_InvalidHours_Out_of_range)
 BOOST_AUTO_TEST_CASE(Validate_InvalidHours_Below_minimum)
 {
     ShortTermStorage::AdditionalConstraints constraints("name",
+                                                        "name",
                                                         "ClusterA",
                                                         "injection",
                                                         "less",
@@ -624,6 +629,7 @@ BOOST_AUTO_TEST_CASE(Validate_InvalidHours_Below_minimum)
 BOOST_AUTO_TEST_CASE(Validate_ValidConstraints)
 {
     ShortTermStorage::AdditionalConstraints constraints("name",
+                                                        "name",
                                                         "ClusterA",
                                                         "injection",
                                                         "less",
@@ -911,7 +917,7 @@ BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinations,
                      variable,
                      op)
 {
-    ShortTermStorage::AdditionalConstraints constraints("name", "clusterA", variable, op, true, {});
+    ShortTermStorage::AdditionalConstraints constraints("name", "name", "clusterA", variable, op, true, {});
 
     // Create constraints with valid hours
     constraints.constraints.push_back(ShortTermStorage::SingleAdditionalConstraint{{1, 2, 3}});
