@@ -270,8 +270,7 @@ jobs:
         os: ${{ env.os }}
 
 
-    - name: Run 
-    mber on v9.2 tests
+    - name: Run cucumber on v9.2 tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
       uses: ./.github/workflows/cucumber-tests
       with:
