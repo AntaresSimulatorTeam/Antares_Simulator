@@ -68,7 +68,7 @@ struct BB
                                                                 true,
                                                                 addc2_injection_constraints)),
         addc3_netting(std::make_shared<AdditionalConstraints>("addc3_netting",
-                                                              "cluster_3",
+                                                              "addc3_netting",
                                                               "cluster_3",
                                                               "netting",
                                                               "equal",
