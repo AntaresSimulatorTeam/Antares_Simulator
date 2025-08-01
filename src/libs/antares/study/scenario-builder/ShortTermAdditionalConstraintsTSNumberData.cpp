@@ -41,8 +41,8 @@ bool ShortTermAdditionalConstraintsTSNumberData::apply(Study& study)
         {
             auto& rule = rules_[ct.get()];
 
-            std::string logprefix = "Short term storage additional constraints: area '"
-                                    + pArea->id + "', sts: '" + sts.id + "': " + ct->id;
+            std::string logprefix = "Short term storage additional constraints: area '" + pArea->id
+                                    + "', sts: '" + sts.id + "': " + ct->id;
             ret = ApplyToMatrix(errors, logprefix, ct->timeSeries, rule[0], tsGenMax) && ret;
         }
     }
