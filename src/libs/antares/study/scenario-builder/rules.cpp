@@ -410,7 +410,7 @@ ShortTermStorage::AdditionalConstraints* getShortTermStorageAdditionalConstraint
     auto constraint = std::ranges::find_if(
       sts->additionalConstraints,
       [&constraintName](std::shared_ptr<ShortTermStorage::AdditionalConstraints> c)
-      { return c->name == constraintName; });
+      { return c->name == constraintName; }); // TODO SL: ID here for consistency
     if (constraint == sts->additionalConstraints.end())
     {
         logs.warning() << "[scenario-builder] In short-term storage '" << sts->id
