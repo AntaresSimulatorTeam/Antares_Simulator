@@ -30,24 +30,24 @@ struct InputFixture
         DTG_MRG.assign(size, 0.);
     }
 
-    void createHydroRemix()
+    std::shared_ptr<StorageForRemix> createHydroRemix()
     {
-        hydroForRemix = std::make_shared<HydroForRemixWithLevels>(HydroGen,
-                                                                  UnsupE,
-                                                                  levels,
-                                                                  HydroPmax,
-                                                                  HydroPmin,
-                                                                  inflows,
-                                                                  ovf,
-                                                                  pump,
-                                                                  init_level,
-                                                                  capacity,
-                                                                  pumpEff);
+        return std::make_shared<HydroForRemixWithLevels>(HydroGen,
+                                                         UnsupE,
+                                                         levels,
+                                                         HydroPmax,
+                                                         HydroPmin,
+                                                         inflows,
+                                                         ovf,
+                                                         pump,
+                                                         init_level,
+                                                         capacity,
+                                                         pumpEff);
     }
 
     void callRemixStorageAlgorithm()
     {
-        createHydroRemix();
+        hydroForRemix = createHydroRemix();
         shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix);
     }
 
@@ -109,7 +109,7 @@ BOOST_FIXTURE_TEST_CASE(input_is_acceptable__no_exception_raised, InputFixture<1
 {
     init_level = 0.;
     capacity = 1.;
-    BOOST_CHECK_NO_THROW(createHydroRemix());
+    BOOST_CHECK_NO_THROW(hydroForRemix = createHydroRemix());
     BOOST_CHECK_NO_THROW(
       shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix));
 }
