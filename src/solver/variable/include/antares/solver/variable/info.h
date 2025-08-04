@@ -23,8 +23,8 @@
 
 #include <cmath>
 
-#include "antares/solver/variable/surveyresults.h"
 #include "antares/solver/variable/storage/intermediate.h"
+#include "antares/solver/variable/surveyresults.h"
 #include "antares/study/fwd.h"
 
 namespace Antares
