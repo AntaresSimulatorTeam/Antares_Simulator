@@ -57,7 +57,7 @@ void SimulationTableCsv::write()
                 << (absolute_time_index ? std::to_string(*absolute_time_index) : "None") << ','
                 << (block_time_index ? std::to_string(*block_time_index) : "None") << ','
                 << (scenario_index ? std::to_string(*scenario_index) : "None") << ',' << value
-                << StatusToString(status) << '\n';
+                << ',' << StatusToString(status) << '\n';
     }
 }
 

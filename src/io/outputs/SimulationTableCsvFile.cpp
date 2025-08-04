@@ -32,7 +32,7 @@ SimulationTableCsvFile::SimulationTableCsvFile(const std::filesystem::path& outp
     const auto simulationTableSuffix = std::string(simulationId.empty() ? "" : "_" + simulationId)
                                        + ".csv";
     // const auto simulationTableSuffix = std::string("_" + simulationId) + ".csv";
-    const auto simulationTableFile = outputFolder / simulationTableSuffix;
+    const auto simulationTableFile = outputFolder / ("simulation_table" + simulationTableSuffix);
     file_.open(simulationTableFile);
     if (!file_)
     {
