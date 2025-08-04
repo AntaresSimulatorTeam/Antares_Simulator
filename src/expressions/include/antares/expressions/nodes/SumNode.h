@@ -20,8 +20,6 @@
 */
 #pragma once
 
-#include <vector>
-
 #include "antares/expressions/nodes/ParentNode.h"
 
 namespace Antares::Expressions::Nodes

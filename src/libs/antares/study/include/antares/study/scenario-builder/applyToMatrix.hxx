@@ -26,8 +26,6 @@
 
 #include <cstdlib>
 
-#include "yuni/core/system/stdint.h"
-
 #include "antares/study/binding_constraint/BindingConstraintGroup.h"
 #include "antares/study/parts/hydro/series.h"
 #include "antares/study/parts/short-term-storage/cluster.h"

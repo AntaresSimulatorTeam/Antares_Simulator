@@ -3,7 +3,6 @@
 #include <map>
 #include <stdexcept>
 #include <string>
-#include <vector>
 
 namespace Antares::Optimisation::LinearProblemApi
 {
