@@ -737,6 +737,11 @@ public:
         return name_;
     }
 
+    MipBasisStatus getMipBasisStatus() const override
+    {
+        return MipBasisStatus::FREE;
+    }
+
 private:
     double lb_;
     double ub_;
