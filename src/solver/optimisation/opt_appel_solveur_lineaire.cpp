@@ -258,11 +258,12 @@ static void FillSimulationTable(
                           timeStep,
                           problemeHebdo->OptimisationAuPasHebdomadaire);
                         const auto* var = variablesByName.at(variableFullName);
-                        simulationTable.addEntry({.block = block,
-                                                  .component = componentId,
-                                                  .output = var_name,
-                                                  .absolute_time_index = timeStep,
-                                                  .block_time_index = blockTimeIndex,
+                        simulationTable.addEntry(
+                          {.block = block,
+                           .component = componentId,
+                           .output = var_name,
+                           .absolute_time_index = timeStep,
+                           .block_time_index = blockTimeIndex,
                            .scenario_index = problemeHebdo->year,
                            .value = var->solution_value(),
                            .status = convertOrtoolsBasisStatus(var->basis_status())});
@@ -281,11 +282,12 @@ static void FillSimulationTable(
                 //   timeStep,
                 //   problemeHebdo->OptimisationAuPasHebdomadaire);
                 const auto* var = variablesByName.at(variableFullName);
-                simulationTable.addEntry({.block = currentWeekOrDay,
-                                          .component = componentId,
-                                          .output = var_name,
-                                          .absolute_time_index = std::nullopt,
-                                          .block_time_index = std::nullopt,
+                simulationTable.addEntry(
+                  {.block = currentWeekOrDay,
+                   .component = componentId,
+                   .output = var_name,
+                   .absolute_time_index = std::nullopt,
+                   .block_time_index = std::nullopt,
                    .scenario_index = problemeHebdo->year,
                    .value = var->solution_value(),
                    .status = convertOrtoolsBasisStatus(var->basis_status())});
@@ -303,11 +305,12 @@ static void FillSimulationTable(
                       timeStep,
                       problemeHebdo->OptimisationAuPasHebdomadaire);
                     const auto* var = variablesByName.at(variableFullName);
-                    simulationTable.addEntry({.block = block,
-                                              .component = componentId,
-                                              .output = var_name,
-                                              .absolute_time_index = timeStep,
-                                              .block_time_index = blockTimeIndex,
+                    simulationTable.addEntry(
+                      {.block = block,
+                       .component = componentId,
+                       .output = var_name,
+                       .absolute_time_index = timeStep,
+                       .block_time_index = blockTimeIndex,
                        .scenario_index = std::nullopt,
                        .value = var->solution_value(),
                        .status = convertOrtoolsBasisStatus(var->basis_status())});
@@ -321,10 +324,11 @@ static void FillSimulationTable(
                                                                               std::nullopt,
                                                                               std::nullopt);
                 const auto* var = variablesByName.at(variableFullName);
-                simulationTable.addEntry({.block = currentWeekOrDay,
-                                          .component = componentId,
-                                          .output = var_name,
-                                          .absolute_time_index = std::nullopt,
+                simulationTable.addEntry(
+                  {.block = currentWeekOrDay,
+                   .component = componentId,
+                   .output = var_name,
+                   .absolute_time_index = std::nullopt,
                    .block_time_index = std::nullopt,
                    .scenario_index = std::nullopt,
                    .value = var->solution_value(),

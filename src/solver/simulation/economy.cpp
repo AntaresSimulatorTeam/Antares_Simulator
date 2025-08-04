@@ -28,7 +28,6 @@
 #include "antares/solver/simulation/common-eco-adq.h"
 #include "antares/solver/simulation/simulation.h"
 
-
 using namespace Yuni;
 using Antares::Constants::nbHoursInAWeek;
 
