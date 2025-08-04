@@ -124,13 +124,6 @@ public:
         };
     };
 
-    template<class U>
-    static void InitializeAndReset(U& out, Data::Study& study)
-    {
-        out.initializeFromStudy(study);
-        out.reset();
-    }
-
     void initializeFromArea(Data::Study* study, Data::Area* area)
     {
         pNbYearsParallel = study->maxNbYearsInParallel;
