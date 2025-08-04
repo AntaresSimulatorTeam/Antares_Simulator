@@ -39,6 +39,7 @@ public:
 struct AdditionalConstraints
 {
     std::string name;
+    std::string id;
     std::string cluster_id;
     std::string variable;
     std::string operatorType;

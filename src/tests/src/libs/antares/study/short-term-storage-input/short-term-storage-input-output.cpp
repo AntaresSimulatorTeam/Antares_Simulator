@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -631,11 +631,10 @@ BOOST_AUTO_TEST_CASE(Validate_ValidConstraints)
 BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_ValidFile)
 {
     std::filesystem::path testPath = getFolder() / "test_data";
-    std::filesystem::create_directory(testPath);
+    std::filesystem::create_directories(testPath / "cluster1");
 
-    std::ofstream iniFile(testPath / "additional-constraints.ini");
+    std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
-    iniFile << "cluster=cluster1\n";
     iniFile << "variable=injection\n";
     iniFile << "operator=less\n";
     iniFile << "hours=[1,2,3]\n";
@@ -658,11 +657,10 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_ValidFile)
 BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_InvalidHours)
 {
     std::filesystem::path testPath = getFolder() / "test_data";
-    std::filesystem::create_directory(testPath);
+    std::filesystem::create_directories(testPath / "ClusterA");
 
-    std::ofstream iniFile(testPath / "additional-constraints.ini");
+    std::ofstream iniFile(testPath / "ClusterA" / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
-    iniFile << "cluster=ClusterA\n";
     iniFile << "variable=injection\n";
     iniFile << "operator=less\n";
     iniFile << "hours=[0,1]\n"; // Invalid hours
@@ -689,11 +687,10 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MissingFile)
 BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_InvalidConstraint)
 {
     std::filesystem::path testPath = getFolder() / "test_data";
-    std::filesystem::create_directory(testPath);
+    std::filesystem::create_directories(testPath / "cluster1");
 
-    std::ofstream iniFile(testPath / "additional-constraints.ini");
+    std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
-    iniFile << "cluster=cluster1\n";
     iniFile << "variable=invalid\n"; // Invalid variable
     iniFile << "operator=less\n";
     iniFile << "hours=[1,2,3]\n";
@@ -713,17 +710,16 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_InvalidConstraint)
 BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_ValidRhs)
 {
     std::filesystem::path testPath = getFolder() / "test_data";
-    std::filesystem::create_directory(testPath);
+    std::filesystem::create_directories(testPath / "cluster1");
 
-    std::ofstream iniFile(testPath / "additional-constraints.ini");
+    std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
-    iniFile << "cluster=cluster1\n";
     iniFile << "variable=injection\n";
     iniFile << "operator=less\n";
     iniFile << "hours=[1,2,3]\n";
     iniFile.close();
 
-    std::ofstream rhsFile(testPath / "rhs_constraint1.txt");
+    std::ofstream rhsFile(testPath / "cluster1" / "rhs_constraint1.txt");
     for (unsigned int i = 0; i < HOURS_PER_YEAR; ++i)
     {
         rhsFile << i * 1.0 << "\n";
@@ -751,22 +747,20 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_ValidRhs)
 BOOST_AUTO_TEST_CASE(Load2ConstraintsFromIniFile)
 {
     std::filesystem::path testPath = getFolder() / "test_data";
-    std::filesystem::create_directory(testPath);
+    std::filesystem::create_directories(testPath / "cluster1");
 
-    std::ofstream iniFile(testPath / "additional-constraints.ini");
+    std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
     iniFile << R"([constraint1]
-                  cluster=cluster1
                   variable=injection
                   operator=less
                   hours=[1,2,3]
                   [constraint2]
-                  cluster=cluster1
                   variable=withdrawal
                   operator=greater
                   hours=[5,33])";
     iniFile.close();
 
-    std::ofstream rhsFile(testPath / "rhs_constraint1.txt");
+    std::ofstream rhsFile(testPath / "cluster1" / "rhs_constraint1.txt");
     for (unsigned int i = 0; i < HOURS_PER_YEAR; ++i)
     {
         rhsFile << i * 1.0 << "\n";
@@ -811,11 +805,10 @@ BOOST_AUTO_TEST_CASE(Load2ConstraintsFromIniFile)
 BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MissingRhsFile)
 {
     std::filesystem::path testPath = getFolder() / "test_data";
-    std::filesystem::create_directory(testPath);
+    std::filesystem::create_directories(testPath / "cluster1");
 
-    std::ofstream iniFile(testPath / "additional-constraints.ini");
+    std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
-    iniFile << "cluster=cluster1\n";
     iniFile << "variable=injection\n";
     iniFile << "operator=less\n";
     iniFile << "hours=[1,2,3]\n";
@@ -839,17 +832,16 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MissingRhsFile)
 BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MalformedRhsFile)
 {
     std::filesystem::path testPath = getFolder() / "test_data";
-    std::filesystem::create_directory(testPath);
+    std::filesystem::create_directories(testPath / "cluster1");
 
-    std::ofstream iniFile(testPath / "additional-constraints.ini");
+    std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
-    iniFile << "cluster=cluster1\n";
     iniFile << "variable=injection\n";
     iniFile << "operator=less\n";
     iniFile << "hours=[1,2,3]\n";
     iniFile.close();
 
-    std::ofstream rhsFile(testPath / "rhs_constraint1.txt");
+    std::ofstream rhsFile(testPath / "cluster1" / "rhs_constraint1.txt");
     rhsFile << "1.0\n2.0\ninvalid\n4.0\n"; // Malformed line
     rhsFile.close();
 
@@ -869,17 +861,16 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MalformedRhsFile)
 BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_IncompleteRhsFile)
 {
     std::filesystem::path testPath = getFolder() / "test_data";
-    std::filesystem::create_directory(testPath);
+    std::filesystem::create_directories(testPath / "cluster1");
 
-    std::ofstream iniFile(testPath / "additional-constraints.ini");
+    std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
-    iniFile << "cluster=cluster1\n";
     iniFile << "variable=injection\n";
     iniFile << "operator=less\n";
     iniFile << "hours=[1,2,3]\n";
     iniFile.close();
 
-    std::ofstream rhsFile(testPath / "rhs_constraint1.txt");
+    std::ofstream rhsFile(testPath / "cluster1" / "rhs_constraint1.txt");
     for (int i = 0; i < 10; ++i)
     {
         rhsFile << i * 1.0 << "\n";
@@ -931,12 +922,11 @@ BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinationsFromFile,
 {
     // Define the path for the test data
     std::filesystem::path testPath = std::filesystem::temp_directory_path() / "test_data";
-    std::filesystem::create_directory(testPath);
+    std::filesystem::create_directories(testPath / "clustera");
 
     // Write the `.ini` file for this test case
-    std::ofstream iniFile(testPath / "additional-constraints.ini");
+    std::ofstream iniFile(testPath / "clustera" / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
-    iniFile << "cluster=clustera\n";
     iniFile << "variable=" << variable << "\n";
     iniFile << "operator=" << op << "\n";
     iniFile << "enabled=true\n";
@@ -944,7 +934,7 @@ BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinationsFromFile,
     iniFile.close();
 
     // Write the `rhs_constraint1.txt` file
-    std::ofstream rhsFile(testPath / "rhs_constraint1.txt");
+    std::ofstream rhsFile(testPath / "clustera" / "rhs_constraint1.txt");
     for (unsigned int i = 0; i < HOURS_PER_YEAR; ++i)
     {
         rhsFile << i * 1.0 << "\n";
@@ -988,12 +978,11 @@ BOOST_AUTO_TEST_CASE(Load_disabled)
 {
     // Define the path for the test data
     std::filesystem::path testPath = std::filesystem::temp_directory_path() / "test_data";
-    std::filesystem::create_directory(testPath);
+    std::filesystem::create_directories(testPath / "clustera");
 
     // Write the `.ini` file for this test case
-    std::ofstream iniFile(testPath / "additional-constraints.ini");
+    std::ofstream iniFile(testPath / "clustera" / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
-    iniFile << "cluster=clustera\n";
     iniFile << "variable=injection\n";
     iniFile << "operator=less\n";
     iniFile << "enabled=false\n";
