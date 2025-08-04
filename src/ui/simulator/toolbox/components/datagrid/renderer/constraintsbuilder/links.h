@@ -21,13 +21,16 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_LINKS_H__
 #define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_LINKS_H__
 
-#include "../../renderer.h"
-#include <antares/study/study.h>
-#include "antares/solver/constraints-builder/cbuilder.h"
-#include <mutex>
 #include <map>
+#include <mutex>
+
 #include <yuni/core/bind.h>
 #include <yuni/core/event.h>
+
+#include <antares/study/study.h>
+#include "antares/solver/constraints-builder/cbuilder.h"
+
+#include "../../renderer.h"
 
 namespace Antares
 {
@@ -39,11 +42,12 @@ namespace Renderer
 {
 namespace ConstraintsBuilder
 {
-class Links final : public virtual Renderer::IRenderer
+class Links final: public virtual Renderer::IRenderer
 {
 public:
     //! Map of string
     using Map = std::map<Yuni::String, Yuni::String>;
+
     class Record final
     {
     public:
@@ -53,6 +57,7 @@ public:
             tyDC,
             tyACPST,
         };
+
         class Vector final
         {
         public:
@@ -73,7 +78,6 @@ public:
         public:
             mutable std::mutex mutex;
             std::vector<Record> array;
-            bool canRunAnalyzer;
         };
 
     public:
@@ -98,7 +102,9 @@ public:
     /*!
     ** \brief Constructor
     */
-    Links(CBuilder* cBuilder) : pMapFile(nullptr), pCBuilder(cBuilder){};
+    Links(CBuilder* cBuilder):
+        pMapFile(nullptr),
+        pCBuilder(cBuilder){};
     //! Destructor
     virtual ~Links();
     //@}
@@ -115,6 +121,7 @@ public:
     {
         pOnBeforeUpdate = b;
     }
+
     void onAfterUpdate(const Yuni::Bind<void(int, int)>& b)
     {
         pOnAfterUpdate = b;

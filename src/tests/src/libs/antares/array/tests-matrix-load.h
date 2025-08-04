@@ -20,8 +20,6 @@
 */
 #include <global_JIT_manager.h>
 
-#include <yuni/core/system/stdint.h>
-
 #include "matrix-bypass-load.h"
 
 enum

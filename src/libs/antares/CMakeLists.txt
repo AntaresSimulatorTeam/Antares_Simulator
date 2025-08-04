@@ -2,6 +2,7 @@
 OMESSAGE("Antares Core library")
 
 add_subdirectory(InfoCollection)
+add_subdirectory(additionalConstraintRhsExpression)
 add_subdirectory(args)
 add_subdirectory(array)
 add_subdirectory(benchmarking)
@@ -18,18 +19,17 @@ add_subdirectory(locator)
 add_subdirectory(logs)
 add_subdirectory(memory)
 add_subdirectory(mersenne-twister)
+add_subdirectory(optimization-options)
 add_subdirectory(paths)
 add_subdirectory(resources)
+add_subdirectory(scenarioGroupParser)
 add_subdirectory(series)
 add_subdirectory(stdcxx)
-add_subdirectory(additionalConstraintRhsExpression)
 add_subdirectory(study)
 add_subdirectory(study-loader)
 add_subdirectory(sys)
 add_subdirectory(utils)
 add_subdirectory(writer)
-
-add_subdirectory(optimization-options)
 
 set(HEADERS
         include/antares/antares/antares.h

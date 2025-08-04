@@ -56,7 +56,7 @@ void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES& DonneesAnnuelles)
     int NombreDeContraintes = 0;
     int il = 0;
 
-    for (int Pdt = 1; Pdt < nbMonths; Pdt++)
+    for (unsigned Pdt = 1; Pdt < nbMonths; Pdt++)
     {
         IndicesDebutDeLigne[NombreDeContraintes] = il;
 
@@ -99,7 +99,7 @@ void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES& DonneesAnnuelles)
     NombreDeTermesDesLignes[NombreDeContraintes] = 3;
     NombreDeContraintes++;
 
-    for (int Pdt = 1; Pdt < nbMonths; Pdt++)
+    for (unsigned Pdt = 1; Pdt < nbMonths; Pdt++)
     {
         IndicesDebutDeLigne[NombreDeContraintes] = il;
 
@@ -130,7 +130,7 @@ void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES& DonneesAnnuelles)
         NombreDeContraintes++;
     }
 
-    for (int Pdt = 1; Pdt < nbMonths; Pdt++)
+    for (unsigned Pdt = 1; Pdt < nbMonths; Pdt++)
     {
         IndicesDebutDeLigne[NombreDeContraintes] = il;
 
@@ -147,7 +147,7 @@ void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES& DonneesAnnuelles)
         NombreDeContraintes++;
     }
 
-    for (int Pdt = 0; Pdt < nbMonths; Pdt++)
+    for (unsigned Pdt = 0; Pdt < nbMonths; Pdt++)
     {
         IndicesDebutDeLigne[NombreDeContraintes] = il;
 

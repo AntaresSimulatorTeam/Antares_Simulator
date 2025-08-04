@@ -45,5 +45,6 @@ private:
     void setStartingBasis(operations_research::MPSolver* solver) const;
     void extractBasis(const operations_research::MPSolver* solver);
     bool exists() const;
+    void clear();
 };
 } // namespace Antares::Optimization

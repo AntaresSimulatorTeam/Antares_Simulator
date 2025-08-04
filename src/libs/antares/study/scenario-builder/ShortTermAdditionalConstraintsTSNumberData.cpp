@@ -41,8 +41,8 @@ bool ShortTermAdditionalConstraintsTSNumberData::apply(Study& study)
         {
             auto& rule = rules_[ct.get()];
 
-            std::string logprefix = "Short term storage additional constraints: area '"
-                                    + pArea->name + "', sts: '" + sts.id + "': ";
+            std::string logprefix = "Short term storage additional constraints: area '" + pArea->id
+                                    + "', sts: '" + sts.id + "': " + ct->id;
             ret = ApplyToMatrix(errors, logprefix, ct->timeSeries, rule[0], tsGenMax) && ret;
         }
     }
@@ -107,8 +107,8 @@ void ShortTermAdditionalConstraintsTSNumberData::saveToINIFile(Yuni::IO::File::S
                 {
                     continue;
                 }
-                file << prefix << pArea->id << "," << year << ',' << sts.id << ',' << c->name
-                     << " = " << val << '\n';
+                file << prefix << pArea->id << "," << year << ',' << sts.id << ',' << c->id << " = "
+                     << val << '\n';
             }
         }
     }

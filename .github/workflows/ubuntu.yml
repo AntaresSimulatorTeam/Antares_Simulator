@@ -88,6 +88,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
           sudo apt-get install g++-10 gcc-10
+          sudo apt-get install xsltproc
 
       - name: Config OR-Tools URL
         run: |
@@ -220,6 +221,35 @@ jobs:
           cd _build
           ctest -C Release --output-on-failure -L "unit|end-to-end"
 
+      - name: Merge XML reports into single HTML
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        run: |
+          cd _build/tests
+          ${{github.workspace}}/src/tests/merge_all.sh ${{github.workspace}}/src/tests/format_xml_report.xsl
+
+      - name: Rename report
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        run: |
+          mkdir testing-report
+          mv ${{ github.workspace }}/_build/tests/report.html testing-report/$PAGE
+        env:
+          PAGE: ${{ github.sha }}.html
+
+      - name: Deploy to antares-simulator-reports.surge.sh
+        uses: dswistowski/surge-sh-action@v1
+        with:
+          domain: 'antares-simulator-reports.surge.sh'
+          project: 'testing-report'
+          login: ${{ secrets.SURGE_LOGIN }}
+          token: ${{ secrets.SURGE_TOKEN }}
+
+      - name: Add PR comment
+        if: ${{ success() }}
+        run: gh pr comment "$PR_URL" --body "Unit test report available [here](https://antares-simulator-reports.surge.sh/$PAGE)"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PAGE: ${{ github.sha }}.html
 
       - name: Upload logs for failed tests
         if: ${{ failure() }}

@@ -40,6 +40,8 @@ namespace Antares
 {
 namespace Data
 {
+
+#ifdef BUILD_UI
 static bool PreproHydroSaveSettings(PreproHydro* h, const char* filename)
 {
     IniFile ini;
@@ -47,6 +49,7 @@ static bool PreproHydroSaveSettings(PreproHydro* h, const char* filename)
     s->add("intermonthly-correlation", h->intermonthlyCorrelation);
     return ini.save(filename);
 }
+#endif
 
 static bool PreproHydroLoadSettings(PreproHydro* h, const fs::path& filename)
 {
@@ -114,6 +117,7 @@ void PreproHydro::copyFrom(const PreproHydro& rhs)
     rhs.data.unloadFromMemory();
 }
 
+#ifdef BUILD_UI
 bool PreproHydro::saveToFolder(const AreaName& areaID, const char* folder)
 {
     assert(folder);
@@ -141,6 +145,7 @@ bool PreproHydro::saveToFolder(const AreaName& areaID, const char* folder)
     }
     return false;
 }
+#endif
 
 bool PreproHydro::loadFromFolder(Study& s, const std::string& areaID, const fs::path& folder)
 {

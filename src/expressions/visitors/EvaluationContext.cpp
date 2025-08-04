@@ -58,7 +58,7 @@ double EvaluationContext::getParameterValue(const std::string& key,
                                             const unsigned scenario,
                                             unsigned int hour) const
 {
-    return data_.getData(parameters_types_and_values_.at(key).value, scenarioGroup, scenario, hour);
+    return data_.getData(parameters_types_and_values_.at(key).value, scenario, hour);
 }
 
 ParameterType EvaluationContext::getParameterType(const std::string& key) const

@@ -36,7 +36,7 @@ void H2O_M_InitialiserLeSecondMembre(DONNEES_ANNUELLES& DonneesAnnuelles)
     auto& TurbineCible = DonneesAnnuelles.TurbineCible;
     auto& SecondMembre = ProblemeLineairePartieVariable.SecondMembre;
 
-    for (int Pdt = 1; Pdt < nbMonths; Pdt++)
+    for (unsigned Pdt = 1; Pdt < nbMonths; Pdt++)
     {
         SecondMembre[Cnt] = DonneesAnnuelles.Apport[Pdt - 1];
         Cnt++;
@@ -45,7 +45,7 @@ void H2O_M_InitialiserLeSecondMembre(DONNEES_ANNUELLES& DonneesAnnuelles)
     SecondMembre[Cnt] = DonneesAnnuelles.Volume[0] - DonneesAnnuelles.Apport[nbMonths - 1];
     Cnt++;
 
-    for (int Pdt = 1; Pdt < nbMonths; Pdt++)
+    for (unsigned Pdt = 1; Pdt < nbMonths; Pdt++)
     {
         SecondMembre[Cnt] = DonneesAnnuelles.VolumeMax[Pdt];
         Cnt++;
@@ -54,13 +54,13 @@ void H2O_M_InitialiserLeSecondMembre(DONNEES_ANNUELLES& DonneesAnnuelles)
         Cnt++;
     }
 
-    for (int Pdt = 1; Pdt < nbMonths; Pdt++)
+    for (unsigned Pdt = 1; Pdt < nbMonths; Pdt++)
     {
         SecondMembre[Cnt] = 0.;
         Cnt++;
     }
 
-    for (int Pdt = 0; Pdt < nbMonths; Pdt++)
+    for (unsigned Pdt = 0; Pdt < nbMonths; Pdt++)
     {
         SecondMembre[Cnt] = TurbineCible[Pdt];
         Cnt++;

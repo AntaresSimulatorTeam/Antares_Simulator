@@ -42,7 +42,9 @@ public:
     bool loadFromFolder(const std::filesystem::path& folder, Area* area);
     bool validateClusters() const;
 
+#ifdef BUILD_UI
     bool saveToFolder(const AnyString& folder) const override;
+#endif
 }; // class RenewableClusterList
 } // namespace Antares::Data
 

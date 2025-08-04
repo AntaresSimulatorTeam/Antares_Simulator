@@ -2,83 +2,81 @@
 
 SET(SRC_APPLICATION
 
-		# Menu
-		application/recentfiles.h
-		application/recentfiles.cpp
-		application/menus.h application/menus.cpp
+        # Menu
+        application/recentfiles.h
+        application/recentfiles.cpp
+        application/menus.h application/menus.cpp
 
-		application/main/fwd.h
-		application/main/events.cpp
-		application/main/events.file.cpp
-		application/main/events.edit.cpp
-		application/main/events.simulation.cpp
+        application/main/fwd.h
+        application/main/events.cpp
+        application/main/events.file.cpp
+        application/main/events.edit.cpp
+        application/main/events.simulation.cpp
 
-		application/main/paste-from-clipboard.cpp
+        application/main/paste-from-clipboard.cpp
 
-		application/main/internal-data.h
-		application/main/internal-ids.h
-		application/main/internal-data.cpp
-		application/main/help.cpp
-		application/main/menu.cpp
-		application/main/refresh.cpp
-		application/main/notes.cpp
-		application/main/options.cpp
-		application/main/analyzer.cpp
-		application/main/constraintsbuilder.cpp
-		application/main/main.h
-		application/main/main.hxx
-		application/main/disabler.h
-		application/main/main.cpp
-		application/main/create.cpp
-		application/main/drag-drop.hxx
-		application/main/wip.cpp
-		application/main/statusbar.cpp
-		application/main/build/standard-page.hxx
-		application/main/build/load.cpp
-		application/main/build/solar.cpp
-		application/main/build/wind.cpp
-		application/main/build/hydro.cpp
-		application/main/build/notes.cpp
-		application/main/build/sets.cpp
-		application/main/build/economic-optimization.cpp
-		application/main/build/scenario-builder.cpp
-		application/main/logs.cpp
-		application/wait.h
-		application/wait.cpp
-		application/main.h
+        application/main/internal-data.h
+        application/main/internal-ids.h
+        application/main/internal-data.cpp
+        application/main/help.cpp
+        application/main/menu.cpp
+        application/main/refresh.cpp
+        application/main/notes.cpp
+        application/main/options.cpp
+        application/main/constraintsbuilder.cpp
+        application/main/main.h
+        application/main/main.hxx
+        application/main/disabler.h
+        application/main/main.cpp
+        application/main/create.cpp
+        application/main/drag-drop.hxx
+        application/main/wip.cpp
+        application/main/statusbar.cpp
+        application/main/build/standard-page.hxx
+        application/main/build/load.cpp
+        application/main/build/solar.cpp
+        application/main/build/wind.cpp
+        application/main/build/hydro.cpp
+        application/main/build/notes.cpp
+        application/main/build/sets.cpp
+        application/main/build/economic-optimization.cpp
+        application/main/build/scenario-builder.cpp
+        application/main/logs.cpp
+        application/wait.h
+        application/wait.cpp
+        application/main.h
 
-		# Application
-		application/application.h
-		application/application.cpp
+        # Application
+        application/application.h
+        application/application.cpp
         application/log_cleaner.h
         application/log_cleaner.cpp
-		application/study.h
-		application/study.cpp
+        application/study.h
+        application/study.cpp
 
-		main.cpp
+        main.cpp
 )
-
 
 
 add_library(antares-ui-application ${SRC_APPLICATION})
 
 target_include_directories(antares-ui-application
-							PRIVATE
-								"${CMAKE_SOURCE_DIR}/ui/simulator"
+        PRIVATE
+        "${CMAKE_SOURCE_DIR}/ui/simulator"
 )
 
 target_link_libraries(antares-ui-application
-						PRIVATE
-							${wxWidgets_LIBRARIES}
-							antares-ui-common
-							antares-core
-							Antares::args_helper
-							Antares::sys
-							Antares::study
-		Antares::resources
-		Antares::locator
-		Antares::locale
-		Antares::application
-		antares-solver-constraints-builder
+        PRIVATE
+        ${wxWidgets_LIBRARIES}
+        antares-ui-common
+        antares-core
+        Antares::args_helper
+        Antares::sys
+        Antares::study
+        Antares::resources
+        Antares::locator
+        Antares::locale
+        Antares::application
+        antares-solver-constraints-builder
 )
 

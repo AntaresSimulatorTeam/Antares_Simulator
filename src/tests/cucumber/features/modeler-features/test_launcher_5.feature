@@ -1,6 +1,7 @@
 Feature: 5 - Simple end-to-end tests to test temporal expression management - TimeSum operator
   TODO
 
+  @fast
   Scenario: 5.1: One model with one load and two generators, 3 timesteps, temporal constraint on generator 1 linking consecutive timesteps sum(t..t+1,expr)
     Given the modeler study path is "modeler/5_1"
     When I run antares modeler

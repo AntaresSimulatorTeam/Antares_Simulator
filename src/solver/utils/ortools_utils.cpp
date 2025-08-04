@@ -114,6 +114,7 @@ static bool solverSupportsWarmStart(const MPSolver::OptimizationProblemType solv
 {
     switch (solverType)
     {
+    case MPSolver::SIRIUS_LINEAR_PROGRAMMING:
     case MPSolver::XPRESS_LINEAR_PROGRAMMING:
         return true;
     default:

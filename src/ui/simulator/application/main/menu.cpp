@@ -19,21 +19,22 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include <ui/common/component/frame/registry.h>
+
+#include <antares/config/config.h>
+#include "antares/antares/antares.h"
+
+#include "../../toolbox/resources.h"
+#include "../../windows/message.h"
 #include "../main.h"
 #include "../menus.h"
 #include "../recentfiles.h"
 #include "../study.h"
-#include "../../windows/message.h"
-#include "../../toolbox/resources.h"
+#include "application/study.h"
 #include "internal-data.h"
 #include "internal-ids.h"
-#include <antares/config/config.h>
-#include "antares/antares/antares.h"
-#include <ui/common/component/frame/registry.h>
-#include "application/study.h"
 
 using namespace Yuni;
-
 
 namespace Antares::Forms
 {
@@ -99,8 +100,11 @@ wxMenu* ApplWnd::createMenuFiles()
                      wxT("Create a new study with default settings"));
 
     // Open a study
-    Menu::CreateItem(
-      pMenuFile, mnIDOpen, wxT("&Open...\tCtrl+O"), "images/16x16/open.png", wxT("Load a study"));
+    Menu::CreateItem(pMenuFile,
+                     mnIDOpen,
+                     wxT("&Open...\tCtrl+O"),
+                     "images/16x16/open.png",
+                     wxT("Load a study"));
     pMenuFileRecents = pMenuFile->AppendSubMenu(new wxMenu(), wxT("Quick open"));
     Menu::RebuildRecentFiles(pMenuFileRecents);
 
@@ -110,13 +114,19 @@ wxMenu* ApplWnd::createMenuFiles()
                      wxT("Save\tCtrl+S"),
                      "images/16x16/savestudy.png",
                      wxT("Save the last changes"));
-    Menu::CreateItem(
-      pMenuFile, mnIDSaveAs, wxT("Save As..."), nullptr, wxT("Save the study as..."));
+    Menu::CreateItem(pMenuFile,
+                     mnIDSaveAs,
+                     wxT("Save As..."),
+                     nullptr,
+                     wxT("Save the study as..."));
 
     pMenuFile->AppendSeparator();
 
-    Menu::CreateItem(
-      pMenuFile, mnIDExportMap, wxT("Export Map..."), nullptr, wxT("Export the map as..."));
+    Menu::CreateItem(pMenuFile,
+                     mnIDExportMap,
+                     wxT("Export Map..."),
+                     nullptr,
+                     wxT("Export the map as..."));
 
     pMenuFile->AppendSeparator();
 
@@ -146,8 +156,11 @@ wxMenu* ApplWnd::createMenuFiles()
     pMenuFile->AppendSeparator();
 
     // Close
-    Menu::CreateItem(
-      pMenuFile, mnIDClose, wxT("Close"), "images/16x16/empty.png", wxT("Close the current study"));
+    Menu::CreateItem(pMenuFile,
+                     mnIDClose,
+                     wxT("Close"),
+                     "images/16x16/empty.png",
+                     wxT("Close the current study"));
 
     pMenuFile->AppendSeparator();
 
@@ -160,8 +173,11 @@ wxMenu* ApplWnd::createMenuEdit()
     auto& data = *(this->data()); // internal data
     wxMenu* menu = new wxMenu();
 
-    data.pEditCurrentLocation = Menu::CreateItem(
-      menu, wxID_ANY, wxT("System Maps"), "images/16x16/empty.png", wxEmptyString);
+    data.pEditCurrentLocation = Menu::CreateItem(menu,
+                                                 wxID_ANY,
+                                                 wxT("System Maps"),
+                                                 "images/16x16/empty.png",
+                                                 wxEmptyString);
     data.pEditCurrentLocation->Enable(false);
 
     Menu::CreateItem(menu,
@@ -225,11 +241,17 @@ wxMenu* ApplWnd::createMenuInput()
     delete pMenuInput;
     pMenuInput = new wxMenu();
 
-    pMenuInputCreation = Menu::CreateItem(
-      pMenuInput, wxID_ANY, wxT("Created: "), "images/16x16/empty.png", wxEmptyString);
+    pMenuInputCreation = Menu::CreateItem(pMenuInput,
+                                          wxID_ANY,
+                                          wxT("Created: "),
+                                          "images/16x16/empty.png",
+                                          wxEmptyString);
 
-    pMenuInputLastSaved
-      = Menu::CreateItem(pMenuInput, wxID_ANY, wxT("Last saved: none"), nullptr, wxEmptyString);
+    pMenuInputLastSaved = Menu::CreateItem(pMenuInput,
+                                           wxID_ANY,
+                                           wxT("Last saved: none"),
+                                           nullptr,
+                                           wxEmptyString);
 
     pMenuInputCreation->Enable(false);
     pMenuInputLastSaved->Enable(false);
@@ -275,14 +297,23 @@ wxMenu* ApplWnd::createMenuInput()
     Menu::CreateItem(pMenuInput, mnIDViewLoad, wxT("View  Load"), nullptr, wxT("View 'Load'"));
     Menu::CreateItem(pMenuInput, mnIDViewSolar, wxT("View  Solar"), nullptr, wxT("View 'Solar'"));
     Menu::CreateItem(pMenuInput, mnIDViewWind, wxT("View  Wind"), nullptr, wxT("View 'Wind'"));
-    Menu::CreateItem(
-      pMenuInput, mnIDViewRenewable, wxT("View  Renewable"), nullptr, wxT("View 'Wind'"));
+    Menu::CreateItem(pMenuInput,
+                     mnIDViewRenewable,
+                     wxT("View  Renewable"),
+                     nullptr,
+                     wxT("View 'Wind'"));
     Menu::CreateItem(pMenuInput, mnIDViewHydro, wxT("View  Hydro"), nullptr, wxT("View 'Hydro'"));
-    Menu::CreateItem(
-      pMenuInput, mnIDViewThermal, wxT("View  Thermal"), nullptr, wxT("View 'Thermal'"));
+    Menu::CreateItem(pMenuInput,
+                     mnIDViewThermal,
+                     wxT("View  Thermal"),
+                     nullptr,
+                     wxT("View 'Thermal'"));
 
-    Menu::CreateItem(
-      pMenuInput, mnIDViewMiscGen, wxT("View  Misc Gen."), nullptr, wxT("View 'Misc Gen.'"));
+    Menu::CreateItem(pMenuInput,
+                     mnIDViewMiscGen,
+                     wxT("View  Misc Gen."),
+                     nullptr,
+                     wxT("View 'Misc Gen.'"));
     Menu::CreateItem(pMenuInput,
                      mnIDViewReservesDSM,
                      wxT("View  Reserves / DSM"),
@@ -386,12 +417,6 @@ wxMenu* ApplWnd::createMenuSimulation()
     pMenuSimulation->AppendSeparator();
 
     Menu::CreateItem(pMenuSimulation,
-                     mnIDRunTheTSAnalyzer,
-                     wxT("Run the time-series analyzer"),
-                     nullptr,
-                     wxT("Run the time-series analyzer"));
-
-    Menu::CreateItem(pMenuSimulation,
                      mnIDRunTheConstraintsBuilder,
                      wxT("Run the Kirchhoff's constraints generator"),
                      nullptr,
@@ -413,8 +438,8 @@ wxMenu* ApplWnd::createMenuOptions()
                      wxT("Configure thematic trimming"));
 
     delete pMenuGeographicTrimming;
-    pMenuGeographicTrimming
-      = pMenuOptions->AppendSubMenu(new wxMenu(), wxT("Geographic trimming..."));
+    pMenuGeographicTrimming = pMenuOptions->AppendSubMenu(new wxMenu(),
+                                                          wxT("Geographic trimming..."));
 
     wxMenu* geoTrimSubMenu = pMenuGeographicTrimming->GetSubMenu();
     Menu::CreateItem(geoTrimSubMenu,
@@ -458,8 +483,7 @@ wxMenu* ApplWnd::createMenuOptions()
                           wxT("Set advanced parameters"));
 
     delete pMenuAdequacyPatch;
-    pMenuAdequacyPatch
-      = pMenuOptions->AppendSubMenu(new wxMenu(), wxT("Adequacy Patch..."));
+    pMenuAdequacyPatch = pMenuOptions->AppendSubMenu(new wxMenu(), wxT("Adequacy Patch..."));
 
     wxMenu* adqPatchSubMenu = pMenuAdequacyPatch->GetSubMenu();
     Menu::CreateItem(adqPatchSubMenu,
@@ -515,9 +539,13 @@ wxMenu* ApplWnd::createMenuTools()
 wxMenu* ApplWnd::createMenuWindow()
 {
     if (not pMenuWindow)
+    {
         pMenuWindow = new wxMenu();
+    }
     else
+    {
         Menu::Clear(*pMenuWindow);
+    }
 
     // Fullscreen
     Menu::CreateItem(pMenuWindow,
@@ -551,7 +579,9 @@ wxMenu* ApplWnd::createMenuWindow()
         {
             ++evId;
             if (frame->excludeFromMenu())
+            {
                 continue;
+            }
 
             wxString mnCaption = wxStringFromUTF8(frame->frameTitle());
             if (evId != mnIDWindowRaise_Other)
@@ -640,10 +670,15 @@ void ApplWnd::evtOnOpenStudyFolderInExplorer(wxCommandEvent&)
     if (!(!study))
     {
         if (System::windows)
+        {
             wxExecute(wxString(wxT("explorer.exe \""))
                       << wxStringFromUTF8(study->folder.string()) << wxT("\""));
+        }
         else
-            wxExecute(wxString(wxT("xdg-open \"")) << wxStringFromUTF8(study->folder.string()) << wxT("\""));
+        {
+            wxExecute(wxString(wxT("xdg-open \""))
+                      << wxStringFromUTF8(study->folder.string()) << wxT("\""));
+        }
     }
 }
 
@@ -655,11 +690,15 @@ void ApplWnd::evtOnOpenOutputInExplorer(wxCommandEvent& evt)
         if ((*i)->menuID == evt.GetId())
         {
             if (System::windows)
+            {
                 wxExecute(wxString(wxT("explorer.exe \""))
                           << wxStringFromUTF8((*i)->path) << wxT("\""));
+            }
             else
+            {
                 wxExecute(wxString(wxT("xdg-open \""))
                           << wxStringFromUTF8((*i)->path) << wxT("\""));
+            }
             return;
         }
     }
@@ -773,4 +812,3 @@ void ApplWnd::evtOnViewNodalOptimization(wxCommandEvent&)
 }
 
 } // namespace Antares::Forms
-

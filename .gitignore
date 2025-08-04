@@ -59,3 +59,5 @@ _build*
 __pycache__
 venv/
 vcpkg_installed
+
+src/CMakeUserPresets.json

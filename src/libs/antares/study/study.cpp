@@ -519,6 +519,7 @@ Area* Study::areaAdd(const AreaName& name, bool updateMode)
     return area;
 }
 
+#ifdef BUILD_UI
 // TODO VP: delete with GUI
 bool Study::areaDelete(Area* area)
 {
@@ -844,6 +845,7 @@ bool Study::readonly() const
 {
     return (parameters.readonly);
 }
+#endif // BUILD_UI
 
 void Study::ensureDataAreLoadedForAllBindingConstraints()
 {

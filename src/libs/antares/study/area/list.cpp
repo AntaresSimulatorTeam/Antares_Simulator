@@ -164,6 +164,7 @@ static bool AreaListLoadThermalDataFromFile(AreaList& list, const fs::path& file
     return true;
 }
 
+#ifdef BUILD_UI
 static bool AreaListSaveThermalDataToFile(const AreaList& list, const AnyString& filename)
 {
     IniFile ini;
@@ -331,6 +332,7 @@ static bool AreaListSaveToFolderSingleArea(const Area& area,
 
     return ret;
 }
+#endif
 
 } // anonymous namespace
 
@@ -609,6 +611,7 @@ void AreaList::saveLinkListToBuffer(Yuni::Clob& buffer) const
       });
 }
 
+#ifdef BUILD_UI
 bool AreaList::saveListToFile(const AnyString& filename) const
 {
     if (!filename)
@@ -648,6 +651,7 @@ bool AreaList::saveListToFile(const AnyString& filename) const
     logs.error() << "impossible to write " << filename;
     return false;
 }
+#endif
 
 bool AreaList::preloadAndMarkAsModifiedAllInvalidatedAreas(uint* invalidateCount) const
 {
@@ -678,6 +682,7 @@ void AreaList::markAsModified() const
     each([](const Data::Area& area) { area.markAsModified(); });
 }
 
+#ifdef BUILD_UI
 bool AreaList::saveToFolder(const AnyString& folder) const
 {
     if (folder.empty())
@@ -778,6 +783,7 @@ bool AreaList::saveToFolder(const AnyString& folder) const
 
     return ret;
 }
+#endif
 
 static void readAdqPatchMode(Study& study, Area& area)
 {
