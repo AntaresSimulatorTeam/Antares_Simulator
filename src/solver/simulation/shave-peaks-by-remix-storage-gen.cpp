@@ -153,8 +153,11 @@ void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
                 {
                     storage->generation()[hourOfMaxGen] -= maxExchange;
                     storage->generation()[hourOfMinGen] += maxExchange;
+
                     UnsupE[hourOfMaxGen] = storageGenInit[hourOfMaxGen] + UnsupEinit[hourOfMaxGen]
                                            - storage->generation()[hourOfMaxGen];
+                    UnsupE[hourOfMinGen] = storageGenInit[hourOfMinGen] + UnsupEinit[hourOfMinGen]
+                                           - storage->generation()[hourOfMinGen];
 
                     storage->update();
 
@@ -164,8 +167,6 @@ void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
                 triedMaxs[hourOfMaxGen] = true;
             }
 
-            UnsupE[hourOfMinGen] = storageGenInit[hourOfMinGen] + UnsupEinit[hourOfMinGen]
-                                   - storage->generation()[hourOfMinGen];
             if (maxExchange > eps)
             {
                 break;
