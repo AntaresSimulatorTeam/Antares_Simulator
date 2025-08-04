@@ -39,7 +39,7 @@ void SimulationTableCsv::addEntry(SimulationTableEntry entry)
 void SimulationTableCsv::writeHeader()
 {
     buffer_ << "block,component,output,"
-               "absolute_time_index,block_time_index,scenario_index,value\n";
+               "absolute_time_index,block_time_index,scenario_index,value,basis_status\n";
 }
 
 void SimulationTableCsv::write()
@@ -50,13 +50,14 @@ void SimulationTableCsv::write()
                       absolute_time_index,
                       block_time_index,
                       scenario_index,
-                      value]: entries_)
+                      value,
+                      status]: entries_)
     {
         buffer_ << block << ',' << component << ',' << output << ','
                 << (absolute_time_index ? std::to_string(*absolute_time_index) : "None") << ','
                 << (block_time_index ? std::to_string(*block_time_index) : "None") << ','
                 << (scenario_index ? std::to_string(*scenario_index) : "None") << ',' << value
-                << '\n';
+                << StatusToString(status) << '\n';
     }
 }
 

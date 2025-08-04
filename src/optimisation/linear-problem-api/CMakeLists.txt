@@ -6,6 +6,7 @@ set(SRC_API
         include/antares/optimisation/linear-problem-api/mipConstraint.h
         include/antares/optimisation/linear-problem-api/hasBounds.h
         include/antares/optimisation/linear-problem-api/hasName.h
+        include/antares/optimisation/linear-problem-api/hasStatus.h
         include/antares/optimisation/linear-problem-api/ILinearProblemData.h
         include/antares/optimisation/linear-problem-api/linearProblem.h
         include/antares/optimisation/linear-problem-api/linearProblemFiller.h

@@ -28,6 +28,7 @@
 #include "antares/io/outputs/ISimulationTable.h"
 #include "antares/io/outputs/SimulationTableCsv.h"
 #include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
+#include "antares/optimisation/linear-problem-mpsolver-impl/convertOrtoolsBasisStatus.h"
 #include "antares/optimization-options/options.h"
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
@@ -222,15 +223,18 @@ static void FillSimulationTable(
 {
     const auto& components = problemeHebdo->modelerSystem->Components();
 
-    auto solution = [&variables]
+    auto variablesByName =
+      [&variables]
     {
-        std::unordered_map<std::string, double> solution;
+        std::unordered_map<std::string, const MPVariable*> ret;
         for (const auto v: variables)
         {
-            solution.try_emplace(v->name(), v->solution_value());
+            ret.try_emplace(v->name(), v);
         }
-        return solution;
-    }();
+        return ret;
+    }
+
+    ();
 
     auto currentWeekOrDay = problemeHebdo->OptimisationAuPasHebdomadaire
                               ? problemeHebdo->weekInTheYear
@@ -253,13 +257,15 @@ static void FillSimulationTable(
                         const auto [block, blockTimeIndex] = convertTimeStepToBlockTimeIndex(
                           timeStep,
                           problemeHebdo->OptimisationAuPasHebdomadaire);
+                        const auto* var = variablesByName.at(variableFullName);
                         simulationTable.addEntry({.block = block,
                                                   .component = componentId,
                                                   .output = var_name,
                                                   .absolute_time_index = timeStep,
                                                   .block_time_index = blockTimeIndex,
-                                                  .scenario_index = problemeHebdo->year,
-                                                  .value = solution.at(variableFullName)});
+                           .scenario_index = problemeHebdo->year,
+                           .value = var->solution_value(),
+                           .status = convertOrtoolsBasisStatus(var->basis_status())});
                     }
                 }
             }
@@ -274,13 +280,15 @@ static void FillSimulationTable(
                 // const auto [block, blockTimeIndex] = convertTimeStepToBlockTimeIndex(
                 //   timeStep,
                 //   problemeHebdo->OptimisationAuPasHebdomadaire);
+                const auto* var = variablesByName.at(variableFullName);
                 simulationTable.addEntry({.block = currentWeekOrDay,
                                           .component = componentId,
                                           .output = var_name,
                                           .absolute_time_index = std::nullopt,
                                           .block_time_index = std::nullopt,
-                                          .scenario_index = problemeHebdo->year,
-                                          .value = solution.at(variableFullName)});
+                   .scenario_index = problemeHebdo->year,
+                   .value = var->solution_value(),
+                   .status = convertOrtoolsBasisStatus(var->basis_status())});
                 // }
             }
             else if (modelVar.isTimeDependent())
@@ -294,13 +302,15 @@ static void FillSimulationTable(
                     const auto [block, blockTimeIndex] = convertTimeStepToBlockTimeIndex(
                       timeStep,
                       problemeHebdo->OptimisationAuPasHebdomadaire);
+                    const auto* var = variablesByName.at(variableFullName);
                     simulationTable.addEntry({.block = block,
                                               .component = componentId,
                                               .output = var_name,
                                               .absolute_time_index = timeStep,
                                               .block_time_index = blockTimeIndex,
-                                              .scenario_index = std::nullopt,
-                                              .value = solution.at(variableFullName)});
+                       .scenario_index = std::nullopt,
+                       .value = var->solution_value(),
+                       .status = convertOrtoolsBasisStatus(var->basis_status())});
                 }
             }
 
@@ -310,13 +320,15 @@ static void FillSimulationTable(
                                                                                var_name},
                                                                               std::nullopt,
                                                                               std::nullopt);
+                const auto* var = variablesByName.at(variableFullName);
                 simulationTable.addEntry({.block = currentWeekOrDay,
                                           .component = componentId,
                                           .output = var_name,
                                           .absolute_time_index = std::nullopt,
-                                          .block_time_index = std::nullopt,
-                                          .scenario_index = std::nullopt,
-                                          .value = solution.at(variableFullName)});
+                   .block_time_index = std::nullopt,
+                   .scenario_index = std::nullopt,
+                   .value = var->solution_value(),
+                   .status = convertOrtoolsBasisStatus(var->basis_status())});
             }
         }
     }

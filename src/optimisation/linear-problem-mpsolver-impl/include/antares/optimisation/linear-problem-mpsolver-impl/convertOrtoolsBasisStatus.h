@@ -18,41 +18,14 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-
 #pragma once
+#include <ortools/linear_solver/linear_solver.h>
 
-#include <antares/optimisation/linear-problem-api/mipConstraint.h>
-
-namespace operations_research
-{
-class MPConstraint; // forward declaration
-}
+#include "antares/optimisation/linear-problem-api/hasStatus.h"
 
 namespace Antares::Optimisation::LinearProblemMpsolverImpl
 {
-
-class OrtoolsMipConstraint final: public LinearProblemApi::IMipConstraint
-{
-public:
-    void setLb(double lb) override;
-    void setUb(double ub) override;
-
-    void setBounds(double lb, double ub) override;
-    void setCoefficient(LinearProblemApi::IMipVariable* var, double coefficient) override;
-
-    [[nodiscard]] double getLb() const override;
-    [[nodiscard]] double getUb() const override;
-
-    [[nodiscard]] double getCoefficient(const LinearProblemApi::IMipVariable* var) const override;
-
-    [[nodiscard]] const std::string& getName() const override;
-    LinearProblemApi::MipBasisStatus OrtoolsMipConstraint::getMipBasisStatus() const override;
-    ~OrtoolsMipConstraint() override = default;
-
-    explicit OrtoolsMipConstraint(operations_research::MPConstraint* mpConstraint);
-
-private:
-    operations_research::MPConstraint* mpConstraint_;
-};
+LinearProblemApi::MipBasisStatus convertOrtoolsBasisStatus(
+  const operations_research::MPSolver::BasisStatus& status);
 
 } // namespace Antares::Optimisation::LinearProblemMpsolverImpl

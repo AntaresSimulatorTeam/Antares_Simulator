@@ -19,16 +19,48 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
-#include <string>
 #include <optional>
+#include <string>
+
+#include "antares/optimisation/linear-problem-api/hasStatus.h"
+
+inline std::string StatusToString(
+  const std::optional<Antares::Optimisation::LinearProblemApi::MipBasisStatus>& status)
+{
+    using namespace Antares::Optimisation::LinearProblemApi;
+    // TODO shorten returns
+    if (status.has_value())
+    {
+        switch (*status)
+        {
+        case MipBasisStatus::FREE:
+            return "Free";
+        case MipBasisStatus::AT_LOWER_BOUND:
+            return "At lower bound";
+        case MipBasisStatus::AT_UPPER_BOUND:
+            return "At upper bound";
+        case MipBasisStatus::FIXED_VALUE:
+            return "Fixed value";
+        case MipBasisStatus::BASIC:
+            return "Basic";
+        default:
+            return "None";
+        }
+    }
+    else
+    {
+        return "None";
+    }
+}
 
 struct SimulationTableEntry
 {
-    unsigned int  block;
+    unsigned int block;
     std::string component;
     std::string output;
-    std::optional<  unsigned int > absolute_time_index;
-    std::optional<unsigned int > block_time_index;
-    std::optional<unsigned int > scenario_index;
+    std::optional<unsigned int> absolute_time_index;
+    std::optional<unsigned int> block_time_index;
+    std::optional<unsigned int> scenario_index;
     double value;
+    std::optional<Antares::Optimisation::LinearProblemApi::MipBasisStatus> status;
 };

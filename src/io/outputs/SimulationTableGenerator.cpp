@@ -53,7 +53,8 @@ void FillSimulationTable(
                                                   .absolute_time_index = timeStep,
                                                   .block_time_index = timeStep,
                                                   .scenario_index = scenario,
-                                                  .value = solution.getOptimalValue(var)});
+                                                  .value = solution.getOptimalValue(var),
+                                                  .status = var->getMipBasisStatus()});
                     }
                 }
             }
@@ -68,7 +69,8 @@ void FillSimulationTable(
                                               .absolute_time_index = std::nullopt,
                                               .block_time_index = std::nullopt,
                                               .scenario_index = scenario,
-                                              .value = solution.getOptimalValue(var)});
+                                              .value = solution.getOptimalValue(var),
+                                              .status = var->getMipBasisStatus()});
                 }
             }
             else if (modelVar.isTimeDependent())
@@ -82,7 +84,8 @@ void FillSimulationTable(
                                               .absolute_time_index = timeStep,
                                               .block_time_index = timeStep,
                                               .scenario_index = std::nullopt,
-                                              .value = solution.getOptimalValue(var)});
+                                              .value = solution.getOptimalValue(var),
+                                              .status = var->getMipBasisStatus()});
                 }
             }
 
@@ -95,7 +98,8 @@ void FillSimulationTable(
                                           .absolute_time_index = std::nullopt,
                                           .block_time_index = std::nullopt,
                                           .scenario_index = std::nullopt,
-                                          .value = solution.getOptimalValue(var)});
+                                          .value = solution.getOptimalValue(var),
+                                          .status = var->getMipBasisStatus()});
             }
         }
     }

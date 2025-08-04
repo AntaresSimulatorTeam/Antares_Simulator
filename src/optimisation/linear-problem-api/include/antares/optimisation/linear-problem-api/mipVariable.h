@@ -23,11 +23,12 @@
 
 #include "hasBounds.h"
 #include "hasName.h"
+#include "hasStatus.h"
 
 namespace Antares::Optimisation::LinearProblemApi
 {
 
-class IMipVariable: public IHasBounds, public IHasName
+class IMipVariable: public IHasBounds, public IHasName, public IHasStatus
 {
 public:
     virtual bool isInteger() const = 0;

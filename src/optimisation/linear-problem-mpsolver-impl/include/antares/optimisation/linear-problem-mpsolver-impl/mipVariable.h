@@ -47,7 +47,7 @@ public:
     bool isInteger() const override;
 
     const operations_research::MPVariable* getMpVar() const;
-
+    LinearProblemApi::MipBasisStatus getMipBasisStatus() const override;
     ~OrtoolsMipVariable() override = default;
 
     explicit OrtoolsMipVariable(operations_research::MPVariable*);
