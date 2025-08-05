@@ -21,7 +21,6 @@
 
 #include "antares/io/outputs/SimulationTableCsv.h"
 
-
 #include "antares/io/outputs/SimulationTableEntry.h"
 
 SimulationTableCsv::SimulationTableCsv()
@@ -40,6 +39,7 @@ void SimulationTableCsv::writeHeader()
     buffer_ << "block,component,output,"
                "absolute_time_index,block_time_index,scenario_index,value,basis_status\n";
 }
+
 const std::string NONE = "None";
 
 template<typename T>
