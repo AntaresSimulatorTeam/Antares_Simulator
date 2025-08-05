@@ -19,7 +19,6 @@
 // along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 
 #pragma once
-#include "antares/optimisation/linear-problem-api/mipSolution.h"
 
 namespace Antares::Optimisation::LinearProblemMpsolverImpl
 {
@@ -27,13 +26,20 @@ class OrtoolsLinearProblem;
 class OrtoolsMipSolution;
 } // namespace Antares::Optimisation::LinearProblemMpsolverImpl
 
+namespace Antares::Optimisation::LinearProblemApi
+{
+class IMipSolution;
+}
+
 namespace Antares::Solver
 {
 class IWriter
 {
 public:
     virtual ~IWriter() = default;
+
     virtual void init(bool) = 0;
+
     virtual void writeSolution(const Optimisation::LinearProblemApi::IMipSolution& solution) = 0;
 
     virtual void writeProblem(

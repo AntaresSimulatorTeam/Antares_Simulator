@@ -22,8 +22,6 @@
 #ifndef __SOLVER_H2O_J_FONCTIONS__
 #define __SOLVER_H2O_J_FONCTIONS__
 
-#include <memory>
-
 namespace DoneesOptimisationJournaliere
 {
 DONNEES_MENSUELLES H2O_J_Instanciation(void);

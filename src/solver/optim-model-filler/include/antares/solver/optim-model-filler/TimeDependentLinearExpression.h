@@ -23,7 +23,6 @@
 
 #include <string>
 #include <unordered_map>
-#include <vector>
 
 #include <antares/solver/optim-model-filler/LinearExpression.h>
 #include "antares/optimisation/linear-problem-api/ILinearProblemData.h"

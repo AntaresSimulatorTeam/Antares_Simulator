@@ -255,7 +255,8 @@ The following table contains a list of new output variables in recent versions.
 | 8.8 | MAX MRG CSR[^16] | values-*.txt | yes |
 | 8.8 | OV. COST CSR[^16] | values-*.txt | yes |
 | 9.1 | **Short-term storage** - dynamic groups instead of static groups. For any group :<br>\<STS group\>_injection <br> \<STS group\>_withdrawal <br> \<STS group\>_level| values-*.txt | yes |
-| 9.2 | MIN DTG by plant | details-\*.txt | yes |
+| 9.2.0 | MIN DTG by plant | details-\*.txt | yes |
+| 9.2.1, 9.3.0 | NPCAP HOURS | values-\*.txt | yes |
 | 9.3 | Use dynamic groups for thermal dispatchable generation and renewable generation, instead of static groups. 
 
 [^16] : this output variable was introduced both in **8.8** and **9.2**, meaning that **9.0** and **9.1** don't have it.

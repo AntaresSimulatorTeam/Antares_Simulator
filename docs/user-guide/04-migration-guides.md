@@ -23,9 +23,11 @@ Values for the refresh intervals will be ignored.
 
 #### Thermal and renewable clusters groups
 
-Thermal and renewable groups in input are now "dynamic": group names are no longer fixed by code, user is free to define these groups.
+Thermal and renewable groups in input are now "dynamic": group names are no longer fixed by code, user is free to define
+these groups.
 The default group name is "OTHER" for both types of clusters.
-Adding `DISPATCH. GEN.` and `RENEWABLE GEN.` in the thematic trimming section allows to enable/disable variables for all groups.
+Adding `DISPATCH. GEN.` and `RENEWABLE GEN.` in the thematic trimming section allows to enable/disable variables for all
+groups.
 
 In **settings/generaldata.ini**, in section `variables selection`, the following variables were removed:
 
@@ -57,14 +59,16 @@ The following variables were removed:
 
 They're replaced by the dynamic variable `RENEWABLE GEN.`
 
-####  Short term storage / scenario-builder
+#### Short term storage / scenario-builder
 
 For short-term storage inflows, the format is as follows
+
 ```
 sts,area,year,storage = TS number
 ```
 
 For short-term storage additional constraints, the format is
+
 ```
 sta,area,year,storage,constraint = TS number
 ```
@@ -86,15 +90,21 @@ If the user provides any of the key/values below:
 - `adequacy patch/enable-first-step = true`
 - `adequacy patch/set-to-null-ntc-between-physical-out-for-first-step = false`
 - `other preferences/initial-reservoir-levels = hot start`
-- 
-the simulation will fail with a warning. We recommend removing these properties from `settings/generaldata.ini`. Other values (e.g `adequacy patch/enable-first-step = false`) will be ignored.
+-
+
+the simulation will fail with a warning. We recommend removing these properties from `settings/generaldata.ini`. Other
+values (e.g `adequacy patch/enable-first-step = false`) will be ignored.
 
 #### Export raw solutions
 In existing file `settings/generaldata.ini`, in section `optimization`, add property `include-export-solutions` (bool, default value `false`). If set to true, export files containing raw solutions from the optimization problems, which can be useful for analysis & debugging.
 
 #### Hydraulic reservoirs / long-term storage
-- In existing file `input/hydro/hydro.ini`, add property `overflow spilled cost difference` for each area (double, default value = 1.). This value describes the additionnal cost of overflow relative to the cost of spillage for the area.
-- In file `settings/generaldata.ini`, for property `other-preferences/shedding-policy`, add value `accurate shave peaks`. This new value becomes the default value (previously `shave peaks`).
+
+- In existing file `input/hydro/hydro.ini`, add property `overflow spilled cost difference` for each area (double,
+  default value = 1.). This value describes the additionnal cost of overflow relative to the cost of spillage for the
+  area.
+- In file `settings/generaldata.ini`, for property `other-preferences/shedding-policy`, add value
+  `accurate shave peaks`. This new value becomes the default value (previously `shave peaks`).
 
 #### Short-term storages
 
@@ -107,20 +117,26 @@ In existing file `settings/generaldata.ini`, in section `optimization`, add prop
       input/st-storage/clusters/<area id>/list.ini)
 
 - Added 5 optional timeseries for each STS in existing directory `input/st-storage/series/<area id>/<ST id>/`
-	- `cost-injection.txt`
-	- `cost-withdrawal.txt`
-	- `cost-level.txt`
-	- `cost-variation-injection.txt`
-	- `cost-variation-withdrawal.txt`
+    - `cost-injection.txt`
+    - `cost-withdrawal.txt`
+    - `cost-level.txt`
+    - `cost-variation-injection.txt`
+    - `cost-variation-withdrawal.txt`
 
-It is possible to provide only k of these time-series, for k=0..5. However, if present each file must contain either no value (same behavior as no file), or HOURS_PER_YEAR = 8760 coefficients in one column. These timeseries are located along existing series (rule-curves.txt, etc.).
+It is possible to provide only k of these time-series, for k=0..5. However, if present each file must contain either no
+value (same behavior as no file), or HOURS_PER_YEAR = 8760 coefficients in one column. These timeseries are located
+along existing series (rule-curves.txt, etc.).
 
-Note that in order for time-series `cost-variation-injection.txt` and `cost-variation-withdrawal.txt` to be taken into account, the user needs to set `penalize-variation-injection = true` (resp. `penalize-variation-withdrawal = true`). If not, these files will be ignored.
+Note that in order for time-series `cost-variation-injection.txt` and `cost-variation-withdrawal.txt` to be taken into
+account, the user needs to set `penalize-variation-injection = true` (resp. `penalize-variation-withdrawal = true`). If
+not, these files will be ignored.
 
 #### Short-term storages / additional constraints
-For each area, add optional file `input/st-storage/constraints/<area id>/additional-constraints.ini`
+
+For each area, add optional file `input/st-storage/constraints/<area id>/<storage_id>/additional-constraints.ini`
 
 For example
+
 ```ini
 [withdrawal-1]
 cluster = cluster-11
@@ -147,7 +163,10 @@ Possible values:
 
 Note that all fields are mandatory.
 
-For each constraint, the corresponding RHS time-series must be located at `input/st-storage/constraints/<area id>/rhs_<constraint id>.txt`. The time-series must contain a single column and 8760 rows, empty files are also accepted.
+For each constraint, the corresponding RHS time-series must be located at
+`input/st-storage/constraints/<area id>/<cluster_id>/rhs_<constraint id>.txt`. The time-series must contain a single
+column and 8760
+rows, empty files are also accepted.
 
 To avoid filename conflicts, each constraint name must be unique within a given area.
 
@@ -166,10 +185,13 @@ By convention, `year` start at 0 and `value` must be in interval [0, 1].
 
 In file settings/generaldata.ini, in new section `compatibility`, add new property `hydro-pmax` with possible values
 
-- `daily` (default, legacy) 
+- `daily` (default, legacy)
 - `hourly` (new).
 
-Note: This flag allows to bypass the breaking change that was introduced in version 9.1 the representation of max hydro power (daily -> hourly, see below). If flag is not specified or given value `daily`, the 8.8 format will be used for hydro pmax time-series. For reference, this format consists of a single file with 4 columns and 365 rows located in `input/hydro/common/capacity/maxpower_<area id>.txt`.
+Note: This flag allows to bypass the breaking change that was introduced in version 9.1 the representation of max hydro
+power (daily -> hourly, see below). If flag is not specified or given value `daily`, the 8.8 format will be used for
+hydro pmax time-series. For reference, this format consists of a single file with 4 columns and 365 rows located in
+`input/hydro/common/capacity/maxpower_<area id>.txt`.
 
 ### Output
 
@@ -282,7 +304,6 @@ Starting from version 9.2, the syntax is as following
 ```
 antares-solver --solver coin|xpress ...
 ```
-
 
 ### Output
 

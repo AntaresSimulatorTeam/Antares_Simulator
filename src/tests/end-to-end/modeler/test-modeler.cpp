@@ -218,13 +218,10 @@ public:
 
     void writeProblem(
       [[maybe_unused]] const Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem&
-        problem) override
-    {
-        problem.WriteLP("dummy.lp");
-    }
+        problem) override {};
 };
 
-BOOST_AUTO_TEST_CASE(minimal_system)
+BOOST_AUTO_TEST_CASE(Minimal_system_minimize_to_0)
 {
     InMemoryLoader<Test::Modeler::LinearProblemBuildingFixture> inMemoryLoader;
     InMemoryWriter inMemoryWriter;
