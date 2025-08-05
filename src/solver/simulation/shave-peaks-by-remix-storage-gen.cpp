@@ -15,27 +15,25 @@ const std::string error_msg_start = "Remix storage input : ";
 namespace Antares::Solver::Simulation
 {
 
-static std::vector<int> filterHoursForMin(const std::vector<double>& UnsupE,
-                                          const std::vector<bool>& triedMins,
-                                          const std::vector<bool>& validHours)
+static std::vector<unsigned> filterHoursForMin(const std::vector<double>& UnsupE,
+                                               const std::vector<bool>& triedMins,
+                                               const std::vector<bool>& validHours)
 {
     auto filter = [&](int h) { return UnsupE[h] > 0 && !triedMins[h] && validHours[h]; };
     auto filterHoursView = vws::iota(0, static_cast<int>(UnsupE.size())) | vws::filter(filter);
     return {filterHoursView.begin(), filterHoursView.end()};
 }
 
-static int hourForTotalGenMin(const std::vector<double>& TotalGen,
-                              std::vector<int>& filteredHours,
-                              double top)
+static unsigned hourForTotalGenMin(const std::vector<double>& TotalGen,
+                                   const std::vector<unsigned>& filteredHours)
 {
-    auto min_it = rng::min_element(filteredHours, {}, [&](int h) { return TotalGen[h]; });
-    return TotalGen[*min_it] > top ? -1 : *min_it;
+    return *rng::min_element(filteredHours, {}, [&](int h) { return TotalGen[h]; });
 }
 
-static std::vector<int> filterHoursForMax(const std::vector<double>& TotalGen,
-                                          const std::vector<bool>& triedMaxs,
-                                          const std::vector<bool>& validHours,
-                                          double minTotalGen)
+static std::vector<unsigned> filterHoursForMax(const std::vector<double>& TotalGen,
+                                               const std::vector<bool>& triedMaxs,
+                                               const std::vector<bool>& validHours,
+                                               double minTotalGen)
 {
     auto filter = [&](int h)
     { return TotalGen[h] >= minTotalGen + eps && !triedMaxs[h] && validHours[h]; };
@@ -43,7 +41,8 @@ static std::vector<int> filterHoursForMax(const std::vector<double>& TotalGen,
     return {filterHoursView.begin(), filterHoursView.end()};
 }
 
-static int hourForTotalGenMax(const std::vector<double>& TotalGen, std::vector<int>& filteredHours)
+static unsigned hourForTotalGenMax(const std::vector<double>& TotalGen,
+                                   const std::vector<unsigned>& filteredHours)
 {
     return *rng::max_element(filteredHours, {}, [&](int h) { return TotalGen[h]; });
 }
@@ -133,8 +132,8 @@ void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
                 break;
             }
 
-            int hourOfMinGen = hourForTotalGenMin(TotalGen, filteredHours, top);
-            if (hourOfMinGen == -1)
+            unsigned hourOfMinGen = hourForTotalGenMin(TotalGen, filteredHours);
+            if (TotalGen[hourOfMinGen] > top)
             {
                 break;
             }
@@ -149,7 +148,7 @@ void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
                     break;
                 }
 
-                int hourOfMaxGen = hourForTotalGenMax(TotalGen, filteredHours);
+                unsigned hourOfMaxGen = hourForTotalGenMax(TotalGen, filteredHours);
                 
                 double maxVariation = std::max(TotalGen[hourOfMaxGen] - TotalGen[hourOfMinGen], 0.);
                 double maxExchangeFromStorage = storage->maxExchange(hourOfMaxGen, hourOfMinGen);
