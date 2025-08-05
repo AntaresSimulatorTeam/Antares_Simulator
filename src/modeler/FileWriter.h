@@ -25,6 +25,7 @@
 
 namespace Antares::Optimisation::LinearProblemApi
 {
+class ILinearProblem;
 class FillContext;
 }
 
@@ -48,6 +49,7 @@ public:
     void writeSolution(
       const Optimisation::LinearProblemMpsolverImpl::OrtoolsMipSolution& solution) override;
     void writeSimulationTable(
+      const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
       const Optimisation::LinearProblemApi::IMipSolution& solution,
       const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>&
         components,

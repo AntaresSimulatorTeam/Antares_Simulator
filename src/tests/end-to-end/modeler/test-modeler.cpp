@@ -131,6 +131,7 @@ public:
     }
 
     void writeSimulationTable(
+      const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
       const Antares::Optimisation::LinearProblemApi::IMipSolution& solution,
       const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>&
         components,

@@ -295,10 +295,10 @@ BOOST_FIXTURE_TEST_CASE(model_constraints_properly_translated, Fixture)
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);
     auto& model = lib.Models().at("model1");
-    BOOST_REQUIRE_EQUAL(model.getConstraints().size(), 3);
-    auto& constraint1 = model.getConstraints().at("constraint1");
-    auto& constraint2 = model.getConstraints().at("constraint2");
-    auto& constraint3 = model.getConstraints().at("constraint3");
+    BOOST_REQUIRE_EQUAL(model.Constraints().size(), 3);
+    auto& constraint1 = model.Constraints().at("constraint1");
+    auto& constraint2 = model.Constraints().at("constraint2");
+    auto& constraint3 = model.Constraints().at("constraint3");
     BOOST_CHECK_EQUAL(constraint1.Id(), "constraint1");
     BOOST_CHECK_EQUAL(constraint1.expression().Value(), "expression1");
     BOOST_CHECK_EQUAL(constraint2.Id(), "constraint2");

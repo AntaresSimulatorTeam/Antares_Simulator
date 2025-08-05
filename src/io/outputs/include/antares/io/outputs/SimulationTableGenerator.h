@@ -26,6 +26,8 @@
 
 namespace Antares::Optimisation::LinearProblemApi
 {
+class ILinearProblem;
+
 class IMipSolution;
 class FillContext;
 } // namespace Antares::Optimisation::LinearProblemApi
@@ -42,6 +44,7 @@ class Component;
 
 void FillSimulationTable(
   ISimulationTable& simulationTable,
+  const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
   const Antares::Optimisation::LinearProblemApi::IMipSolution& solution,
   const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>& components,
   const Antares::Optimization::VariableDictionary& variableDictionary,

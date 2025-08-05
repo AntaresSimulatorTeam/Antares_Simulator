@@ -261,7 +261,7 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
                                                                {},
                                                                data);
     ReadLinearConstraintVisitor visitor(evaluationContext, ctx, component_);
-    for (const auto& constraint: component_.getModel()->getConstraints() | std::views::values)
+    for (const auto& constraint: component_.getModel()->Constraints() | std::views::values)
     {
         auto* root_node = constraint.expression().RootNode();
         auto linear_constraints = visitor.dispatch(root_node);
@@ -314,7 +314,7 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
     }
 }
 
-bool ComponentFiller::IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node)
+bool ComponentFiller::IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node) const
 {
     Expressions::Visitors::TimeIndexVisitor timeIndexVisitor(component_);
     const auto ret = timeIndexVisitor.dispatch(node);

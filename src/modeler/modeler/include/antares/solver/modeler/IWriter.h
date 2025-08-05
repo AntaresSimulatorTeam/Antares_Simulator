@@ -32,6 +32,7 @@ class OrtoolsMipSolution;
 } // namespace Antares::Optimisation::LinearProblemMpsolverImpl
 namespace Antares::Optimisation::LinearProblemApi
 {
+class ILinearProblem;
 class IMipSolution;
 class FillContext;
 } // namespace Antares::Optimisation::LinearProblemApi
@@ -57,11 +58,12 @@ public:
       const Optimisation::LinearProblemMpsolverImpl::OrtoolsMipSolution& solution)
       = 0;
     virtual void writeSimulationTable(
+      const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
       const Optimisation::LinearProblemApi::IMipSolution& solution,
       const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>&
         components,
       const Antares::Optimization::VariableDictionary& variableDictionary,
-      const Optimisation::LinearProblemApi::FillContext& fillContext) const
+      const Antares::Optimisation::LinearProblemApi::FillContext& fillContext) const
       = 0;
 
     virtual void writeProblem(

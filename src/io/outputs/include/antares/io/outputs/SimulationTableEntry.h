@@ -61,6 +61,6 @@ struct SimulationTableEntry
     std::optional<unsigned int> absolute_time_index;
     std::optional<unsigned int> block_time_index;
     std::optional<unsigned int> scenario_index;
-    double value;
+    std::optional<double> value;
     std::optional<Antares::Optimisation::LinearProblemApi::MipBasisStatus> status;
 };

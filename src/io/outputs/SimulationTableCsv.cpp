@@ -21,7 +21,6 @@
 
 #include "antares/io/outputs/SimulationTableCsv.h"
 
-#include <fstream>
 
 #include "antares/io/outputs/SimulationTableEntry.h"
 
@@ -41,6 +40,17 @@ void SimulationTableCsv::writeHeader()
     buffer_ << "block,component,output,"
                "absolute_time_index,block_time_index,scenario_index,value,basis_status\n";
 }
+const std::string NONE = "None";
+
+template<typename T>
+std::string extractFromOptional(const std::optional<T>& option)
+{
+    if (option.has_value())
+    {
+        return std::to_string(option.value());
+    }
+    return NONE;
+}
 
 void SimulationTableCsv::write()
 {
@@ -54,10 +64,10 @@ void SimulationTableCsv::write()
                       status]: entries_)
     {
         buffer_ << block << ',' << component << ',' << output << ','
-                << (absolute_time_index ? std::to_string(*absolute_time_index) : "None") << ','
-                << (block_time_index ? std::to_string(*block_time_index) : "None") << ','
-                << (scenario_index ? std::to_string(*scenario_index) : "None") << ',' << value
-                << ',' << StatusToString(status) << '\n';
+                << extractFromOptional(absolute_time_index) << ','
+                << extractFromOptional(block_time_index) << ','
+                << extractFromOptional(scenario_index) << ',' << extractFromOptional(value) << ','
+                << StatusToString(status) << '\n';
     }
 }
 

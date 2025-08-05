@@ -74,7 +74,7 @@ public:
         return objective_;
     }
 
-    const std::map<std::string, Constraint>& getConstraints() const
+    const std::map<std::string, Constraint>& Constraints() const
     {
         return constraints_;
     }

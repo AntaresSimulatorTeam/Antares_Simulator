@@ -68,6 +68,7 @@ void FileWriter::writeSolution(
 }
 
 void FileWriter::writeSimulationTable(
+  const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
   const Optimisation::LinearProblemApi::IMipSolution& solution,
   const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>& components,
   const Antares::Optimization::VariableDictionary& variableDictionary,
@@ -76,7 +77,7 @@ void FileWriter::writeSimulationTable(
     if (output)
     {
         SimulationTableCsvFile simulationTable(outputPath_, simulationId_);
-        FillSimulationTable(simulationTable, solution, components, variableDictionary, fillContext);
+        FillSimulationTable(simulationTable, linearProblem, solution, components, variableDictionary, fillContext);
         simulationTable.write();
     }
 }
