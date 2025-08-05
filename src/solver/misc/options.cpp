@@ -300,7 +300,7 @@ static bool containsOnlyASCIIcharsOnWindows(const std::string& path)
 #if defined(_WIN32) || defined(_WIN64)
     return std::ranges::all_of(path, [](unsigned c) { return c <= 127; });
 #else
-    return false;
+    return true;
 #endif
 }
 
