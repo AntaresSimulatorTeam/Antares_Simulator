@@ -54,18 +54,21 @@ struct BB
         addc3_netting_constraints({{.hours = {9, 10}, .globalIndex = 4, .localIndex = 0},
                                    {.hours = {11, 12}, .globalIndex = 5, .localIndex = 1}}),
         addc1_withdrawal(std::make_shared<AdditionalConstraints>("addc1_withdrawal",
+                                                                 "addc1_withdrawal",
                                                                  "cluster_1",
                                                                  "withdrawal",
                                                                  "less",
                                                                  true,
                                                                  addc1_withdrawal_constraints)),
         addc2_injection(std::make_shared<AdditionalConstraints>("addc2_injection",
+                                                                "addc2_injection",
                                                                 "cluster_2",
                                                                 "injection",
                                                                 "greater",
                                                                 true,
                                                                 addc2_injection_constraints)),
         addc3_netting(std::make_shared<AdditionalConstraints>("addc3_netting",
+                                                              "addc3_netting",
                                                               "cluster_3",
                                                               "netting",
                                                               "equal",
@@ -491,6 +494,7 @@ ExpectedResult SetupSingleStorageOneArea(PROBLEME_HEBDO& problemeHebdo)
 
     auto additionalConstraint = std::make_shared<AdditionalConstraints>(
       "name",
+      "name",
       "cluster1",
       "withdrawal",
       "less",
@@ -539,6 +543,7 @@ std::vector<ExpectedResult> SetupMultipleStoragesDifferentAreas(PROBLEME_HEBDO& 
     area0.resize(1);
     auto additionalConstraint0 = std::make_shared<AdditionalConstraints>(
       "name",
+      "name",
       "cluster1",
       "withdrawal",
       "less",
@@ -562,6 +567,7 @@ std::vector<ExpectedResult> SetupMultipleStoragesDifferentAreas(PROBLEME_HEBDO& 
     ShortTermStorage::AREA_INPUT& area1 = problemeHebdo.ShortTermStorage[1];
     area1.resize(1);
     auto additionalConstraint1 = std::make_shared<Data::ShortTermStorage::AdditionalConstraints>(
+      "name",
       "name",
       "cluster1",
       "withdrawal",
@@ -646,6 +652,7 @@ std::vector<ExpectedResult> SetupMultipleStoragesSameArea(PROBLEME_HEBDO& proble
     // First storage
     auto additionalConstraint1 = std::make_shared<AdditionalConstraints>(
       "name",
+      "name",
       "cluster1",
       "withdrawal",
       "less",
@@ -665,6 +672,7 @@ std::vector<ExpectedResult> SetupMultipleStoragesSameArea(PROBLEME_HEBDO& proble
 
     // Second storage
     auto additionalConstraint2 = std::make_shared<AdditionalConstraints>(
+      "name",
       "name",
       "cluster1",
       "withdrawal",

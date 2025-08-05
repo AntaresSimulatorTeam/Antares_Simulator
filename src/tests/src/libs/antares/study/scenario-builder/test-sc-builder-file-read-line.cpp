@@ -150,6 +150,7 @@ struct Fixture
 
         auto add1 = std::make_shared<ShortTermStorage::AdditionalConstraints>(
           "add1",
+          "add1",
           "st-cluster-1",
           "withdrawal",
           "less",
@@ -163,6 +164,7 @@ struct Fixture
         area_1->shortTermStorage.storagesByIndex.push_back(stCluster1);
 
         auto add2 = std::make_shared<ShortTermStorage::AdditionalConstraints>(
+          "add2",
           "add2",
           "st-cluster-2",
           "withdrawal",

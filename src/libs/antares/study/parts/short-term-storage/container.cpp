@@ -1,29 +1,28 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "antares/study/parts/short-term-storage/container.h"
 
 #include <algorithm>
 #include <numeric>
-#include <regex>
 #include <string>
 
 #include <yuni/io/file.h>
@@ -108,96 +107,111 @@ static bool readRHS(const fs::path& rhsPath, TimeSeries& rhsSeries)
     return ret;
 }
 
-bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
+static bool loadAdditionalConstraintsProperties(AdditionalConstraints* additionalConstraints,
+                                                const IniFile::Section* section)
 {
-    IniFile ini;
-    const auto pathIni = parentPath / "additional-constraints.ini";
-    if (!ini.open(pathIni, false))
+    for (auto* property = section->firstProperty; property; property = property->next)
     {
-        logs.info() << "There is no: " << pathIni;
-        return true;
-    }
+        const std::string key = property->key;
+        const auto value = property->value;
 
-    for (auto* section = ini.firstSection; section; section = section->next)
-    {
-        auto additionalConstraints = std::make_shared<AdditionalConstraints>();
-        additionalConstraints->name = section->name.c_str();
-        for (auto* property = section->firstProperty; property; property = property->next)
+        if (key == "enabled")
         {
-            const std::string key = property->key;
-            const auto value = property->value;
-
-            if (key == "cluster")
+            value.to<bool>(additionalConstraints->enabled);
+        }
+        else if (key == "variable")
+        {
+            value.to<std::string>(additionalConstraints->variable);
+        }
+        else if (key == "operator")
+        {
+            value.to<std::string>(additionalConstraints->operatorType);
+        }
+        else if (key == "hours")
+        {
+            try
             {
-                std::string clusterName;
-                value.to<std::string>(clusterName);
-                additionalConstraints->cluster_id = transformNameIntoID(clusterName);
+                std::string hoursField = value.c_str();
+                additionalConstraints->constraints = makeConstraints(hoursField);
             }
-            else if (key == "enabled")
+            catch (const std::exception& e)
             {
-                value.to<bool>(additionalConstraints->enabled);
-            }
-            else if (key == "variable")
-            {
-                value.to<std::string>(additionalConstraints->variable);
-            }
-            else if (key == "operator")
-            {
-                value.to<std::string>(additionalConstraints->operatorType);
-            }
-            else if (key == "hours")
-            {
-                try
-                {
-                    std::string hoursField = value.c_str();
-                    additionalConstraints->constraints = makeConstraints(hoursField);
-                }
-                catch (const std::exception& e)
-                {
-                    logs.error() << "Constraint " << additionalConstraints->name << " : "
-                                 << e.what() << '\n';
-                    return false;
-                }
+                logs.error() << "Constraint " << additionalConstraints->name << " : " << e.what()
+                             << '\n';
+                return false;
             }
         }
+    }
+    return true;
+}
 
-        // We don't want load RHS and link the STS time if the constraint is disabled
-        if (!additionalConstraints->enabled)
+bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
+{
+    for (const auto& sts: storagesByIndex)
+    {
+        auto data_path = parentPath / sts.id;
+        IniFile ini;
+        const auto pathIni = data_path / "additional-constraints.ini";
+        if (!ini.open(pathIni, false))
         {
-            logs.info() << "Additional constraints disabled for ST "
-                        << additionalConstraints->cluster_id;
+            logs.info() << "There is no: " << pathIni;
             return true;
         }
 
-        if (const auto rhsPath = parentPath / ("rhs_" + additionalConstraints->name + ".txt");
-            !readRHS(rhsPath, additionalConstraints->rhs()))
+        for (auto* section = ini.firstSection; section; section = section->next)
         {
-            logs.error() << "Error while reading rhs file: " << rhsPath;
-            return false;
-        }
+            auto additionalConstraints = std::make_shared<AdditionalConstraints>();
+            additionalConstraints->name = section->name.c_str();
+            additionalConstraints->id = transformNameIntoID(section->name.c_str());
+            additionalConstraints->cluster_id = sts.id;
 
-        if (auto [ok, error_msg] = ShortTermStorage::validate(*additionalConstraints); !ok)
-        {
-            logs.error() << "Invalid constraint in section: " << section->name;
-            logs.error() << error_msg;
-            return false;
-        }
+            if (!loadAdditionalConstraintsProperties(additionalConstraints.get(), section))
+            {
+                return false;
+            }
 
-        auto it = std::ranges::find_if(storagesByIndex,
-                                       [&additionalConstraints](const STStorageCluster& cluster)
-                                       { return cluster.id == additionalConstraints->cluster_id; });
-        if (it == storagesByIndex.end())
-        {
-            logs.warning() << " from file " << pathIni;
-            logs.warning() << "Constraint " << section->name
-                           << " does not reference an existing cluster";
-            return false;
-        }
-        else
-        {
-            logs.info() << "Loaded ST additional constraint " << additionalConstraints->cluster_id
-                        << "/" << additionalConstraints->name;
-            it->additionalConstraints.push_back(additionalConstraints);
+            // We don't want load RHS and link the STS time if the constraint is disabled
+            if (!additionalConstraints->enabled)
+            {
+                logs.info() << "Additional constraints disabled for ST "
+                            << additionalConstraints->cluster_id;
+                return true;
+            }
+
+            if (const auto rhsPath = data_path / ("rhs_" + additionalConstraints->id + ".txt");
+                !readRHS(rhsPath, additionalConstraints->rhs()))
+            {
+                logs.error() << "Error while reading rhs file: " << rhsPath;
+                return false;
+            }
+
+            if (auto [ok, error_msg] = ShortTermStorage::validate(*additionalConstraints); !ok)
+            {
+                logs.error() << "Invalid constraint in section: " << section->name;
+                logs.error() << error_msg;
+                return false;
+            }
+
+            auto it = std::ranges::find_if(storagesByIndex,
+                                           [&additionalConstraints](const STStorageCluster& cluster)
+                                           {
+                                               return cluster.id
+                                                      == additionalConstraints->cluster_id;
+                                           });
+            if (it == storagesByIndex.end())
+            {
+                logs.warning() << " from file " << pathIni;
+                logs.warning() << "Constraint " << section->name
+                               << " does not reference an existing cluster";
+                return false;
+            }
+            else
+            {
+                logs.info() << "Loaded ST additional constraint "
+                            << additionalConstraints->cluster_id << "/"
+                            << additionalConstraints->name;
+                it->additionalConstraints.push_back(additionalConstraints);
+            }
         }
     }
 

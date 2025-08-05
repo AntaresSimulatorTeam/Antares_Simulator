@@ -204,13 +204,6 @@ jobs:
         with:
           feature: "features/modeler-features"
 
-
-      - name: Run unfeasibility-related tests
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
-        run: |
-          cd _build
-          ctest -C Release --output-on-failure -R "^unfeasible$"
-
       - name: Run unit and end-to-end tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
         run: |
@@ -281,6 +274,14 @@ jobs:
           batch-name: valid-v920
           os: ${{ env.os }}
 
+      - name: Run tests introduced in 9.3.0
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: valid-v930
+          os: ${{ env.os }}
+
       - name: Run short-tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
@@ -302,6 +303,12 @@ jobs:
           simtest-tag: ${{ env.SIMTEST }}
           batch-name: valid-mps
           os: ${{ env.os }}
+
+      - name: Run unfeasibility-related tests
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
+        run: |
+          cd _build
+          ctest -C Release --output-on-failure -R "^unfeasible$"
 
       - name: Run parallel tests
         if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}

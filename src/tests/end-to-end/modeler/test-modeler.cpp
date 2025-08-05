@@ -67,16 +67,18 @@ public:
 
     Antares::Modeler::Data loadAll() override
     {
-        auto var_node = fixture.variable("var1");
+        auto var_node = fixture.variable("x");
         auto zero = fixture.literal(0);
         auto ct_node = fixture.nodes.template create<
           Antares::Expressions::Nodes::GreaterThanOrEqualNode>(var_node, zero);
+        auto objective = fixture.variable("x");
         fixture.createModelWithOneFloatVar("some_model",
                                            {},
-                                           "var1",
-                                           fixture.literal(-5),
+                                           "x",
+                                           fixture.literal(0),
                                            fixture.literal(10),
-                                           {{"ct1", ct_node}});
+                                           {{"ct1", ct_node}},
+                                           objective);
 
         Antares::ModelerStudy::SystemModel::LibraryBuilder library_builder;
         auto&& library = library_builder.withId("dummy-library")
@@ -110,6 +112,11 @@ public:
     Fixture fixture;
 };
 
+struct Solution
+{
+    double objectiveValue{0.0};
+};
+
 class StubWriter: public Antares::Solver::IWriter
 {
 public:
@@ -118,23 +125,28 @@ public:
         // No initialization needed for in-memory writer
     }
 
+    Solution solution_{};
+
     void writeSolution(
-      [[maybe_unused]] const Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsMipSolution&
-        solution) override
+      const Antares::Optimisation::LinearProblemApi::IMipSolution& solution) override
     {
+        solution_.objectiveValue = solution.getObjectiveValue();
         // No output to write for in-memory writer
     }
 
     void writeProblem(
       [[maybe_unused]] const Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem&
-        problem) override {};
+        problem) override
+    {
+    }
 };
 
-BOOST_AUTO_TEST_CASE(dummy)
+BOOST_AUTO_TEST_CASE(Minimal_system_minimize_to_0)
 {
     InMemoryLoader<Test::Modeler::LinearProblemBuildingFixture> inMemoryLoader;
     StubWriter inMemoryWriter;
 
     const Antares::Solver::Modeler modeler(inMemoryLoader, inMemoryWriter);
     modeler.solve();
+    BOOST_CHECK_EQUAL(inMemoryWriter.solution_.objectiveValue, 0);
 }

@@ -21,8 +21,6 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_THERMAL_ECOINPUT_H__
 #define __ANTARES_LIBS_STUDY_PARTS_THERMAL_ECOINPUT_H__
 
-#include <memory>
-
 #include <antares/array/matrix.h>
 #include <antares/series/series.h>
 
