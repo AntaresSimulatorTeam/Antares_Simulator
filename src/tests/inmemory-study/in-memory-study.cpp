@@ -169,6 +169,12 @@ ShortTermStorageConfig& ShortTermStorageConfig::setInitialLevelOptim(bool initia
     return *this;
 }
 
+ShortTermStorageConfig& ShortTermStorageConfig::setAllowOverflow(bool allowOverflow)
+{
+    storage.properties.allowOverflow = allowOverflow;
+    return *this;
+}
+
 ShortTermStorageConfig& ShortTermStorageConfig::setInjectionEfficiency(double injectionEfficiency)
 {
     storage.properties.injectionEfficiency = injectionEfficiency;

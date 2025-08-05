@@ -63,6 +63,8 @@ public:
     /// Enabled ?
     bool enabled = true;
 
+    bool allowOverflow = false;
+
 private:
     static constexpr double initiallevelDefault = .5;
 };

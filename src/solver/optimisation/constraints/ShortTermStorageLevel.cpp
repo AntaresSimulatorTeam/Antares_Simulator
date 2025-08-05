@@ -43,8 +43,11 @@ void ShortTermStorageLevel::add(int pdt, int pays)
                                  -1,
                                  builder.data.NombreDePasDeTempsPourUneOptimisation)
           .ShortTermStorageInjection(index, -storage.injectionEfficiency)
-          .ShortTermStorageWithdrawal(index, storage.withdrawalEfficiency)
-          .equalTo()
-          .build();
+          .ShortTermStorageWithdrawal(index, storage.withdrawalEfficiency);
+        if (storage.allowOverflow)
+        {
+            builder.ShortTermStorageOverflow(index, 1.0);
+        }
+        builder.equalTo().build();
     }
 }
