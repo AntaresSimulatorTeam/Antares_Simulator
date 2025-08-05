@@ -5,7 +5,7 @@
 
 #include "include/antares/solver/simulation/remix-utils.h"
 
-constexpr double LEVEL_TOLERANCE = 1.e-6;
+constexpr double TOLERANCE = 1.e-6;
 const std::string error_msg_start = "Remix hydro input : ";
 
 namespace Antares::Solver::Simulation
@@ -75,13 +75,13 @@ void HydroForRemix::checkInput(size_t size)
         throw std::invalid_argument(error_msg_start + "arrays of different sizes");
     }
 
-    if (!(generation_ <= pmax_))
+    if (!(generation_ <= pmax_ + TOLERANCE))
     {
         throw std::invalid_argument(error_msg_start
                                     + "Hydro generation not smaller than Pmax everywhere");
     }
 
-    if (!(pmin_ <= generation_))
+    if (!(pmin_ - TOLERANCE <= generation_))
     {
         throw std::invalid_argument(error_msg_start
                                     + "Hydro generation not greater than Pmin everywhere");
@@ -166,7 +166,7 @@ void HydroForRemixWithLevels::checkInput(size_t size)
         throw std::invalid_argument(error_msg_start + "all arrays of sizes 0");
     }
 
-    if (initLevel_ >= capacity_ + LEVEL_TOLERANCE)
+    if (initLevel_ >= capacity_ + TOLERANCE)
     {
         throw std::invalid_argument(error_msg_start + "initial level > reservoir capacity");
     }
@@ -174,7 +174,7 @@ void HydroForRemixWithLevels::checkInput(size_t size)
 
 void HydroForRemixWithLevels::checkLevels()
 {
-    if (!(levels_ <= capacity_ + LEVEL_TOLERANCE) || !(levels_ >= -LEVEL_TOLERANCE))
+    if (!(levels_ <= capacity_ + TOLERANCE) || !(levels_ >= -TOLERANCE))
     {
         throw std::invalid_argument(error_msg_start
                                     + "levels computed from input don't respect reservoir bounds");
