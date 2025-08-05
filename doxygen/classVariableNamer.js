@@ -24,5 +24,6 @@ var classVariableNamer =
     [ "ShortTermStorageCostVariationWithdrawal", "classVariableNamer.html#ab1d0717749c4f9d80c37e8bde083b270", null ],
     [ "ShortTermStorageInjection", "classVariableNamer.html#ad3a13d808e418158caa243b809605080", null ],
     [ "ShortTermStorageLevel", "classVariableNamer.html#abc867ccc9bc1da7c6842b80b2f5a2e5d", null ],
+    [ "ShortTermStorageOverflow", "classVariableNamer.html#a2afbb72faeca7e98251988b36c97c404", null ],
     [ "ShortTermStorageWithdrawal", "classVariableNamer.html#a69b5ebe26acddd1473dfdcefc466e73e", null ]
 ];
