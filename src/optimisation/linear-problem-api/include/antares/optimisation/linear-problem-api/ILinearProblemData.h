@@ -52,10 +52,9 @@ class ILinearProblemData
 public:
     virtual ~ILinearProblemData() = default;
 
-    virtual double getData(const std::string& dataSetId,
-                           const std::string& scenarioGroup,
-                           unsigned scenario,
-                           unsigned hour)
+    [[nodiscard]] virtual double getData(const std::string& dataSetId,
+                                         unsigned timeSeriesNumber,
+                                         unsigned hour) const
       = 0;
 };
 

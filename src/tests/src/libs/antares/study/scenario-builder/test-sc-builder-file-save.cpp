@@ -105,6 +105,7 @@ ShortTermStorage::AdditionalConstraints* addConstraint(ShortTermStorage::STStora
     sts->additionalConstraints.push_back(
       std::make_shared<ShortTermStorage::AdditionalConstraints>());
     sts->additionalConstraints.back()->name = name;
+    sts->additionalConstraints.back()->id = name;
     return sts->additionalConstraints.back().get();
 }
 

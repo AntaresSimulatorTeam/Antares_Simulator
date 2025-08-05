@@ -32,12 +32,12 @@
 #include <antares/correlation/correlation.h>
 #include <antares/date/date.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
+#include <antares/solver/modeler/data.h>
 #include <antares/study/runtime/runtime.h>
 #include <antares/study/system-model/library.h>
 #include <antares/study/system-model/system.h>
 #include <antares/writer/i_writer.h>
 #include "antares/antares/antares.h"
-#include "antares/solver/modeler/data.h"
 #include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
 #include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 

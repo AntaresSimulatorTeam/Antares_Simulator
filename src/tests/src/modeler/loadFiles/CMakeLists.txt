@@ -4,6 +4,7 @@ add_boost_test(loadFiles
         SRC
         testLoadModelerFiles.cpp
         testParameters.cpp
+        testLoadScenarioGroup.cpp
         LIBS
         Antares::modeler-parameters
         Antares::load-modeler-files

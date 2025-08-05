@@ -24,8 +24,6 @@
 // NOTE : template includes are used here to reduce template instanciation
 // which still seems to be really cpu/memory consuming
 
-#include <vector>
-
 #include "antares/solver/variable/info.h"
 #include "antares/solver/variable/storage/results.h"
 

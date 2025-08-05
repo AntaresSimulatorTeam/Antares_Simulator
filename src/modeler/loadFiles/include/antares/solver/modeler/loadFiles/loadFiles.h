@@ -25,10 +25,11 @@
 #include <vector>
 #include <yaml-cpp/yaml.h>
 
+#include <antares/solver/modeler/data.h>
 #include <antares/solver/modeler/parameters/modelerParameters.h>
+#include <antares/solver/optim-model-filler/scenarioGroupRepo.h>
 #include <antares/study/system-model/library.h>
 #include <antares/study/system-model/system.h>
-#include "antares/solver/modeler/data.h"
 
 namespace Antares::Solver::LoadFiles
 {
@@ -46,6 +47,9 @@ ModelerStudy::SystemModel::System loadSystem(
   const std::vector<ModelerStudy::SystemModel::Library>& libraries);
 
 std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> loadDataSeries(
+  const std::filesystem::path& studyPath);
+
+Optimisation::ScenarioGroupRepository loadScenarioGroupRepository(
   const std::filesystem::path& studyPath);
 
 void handleYamlError(const YAML::Exception& e, const std::string& context);
