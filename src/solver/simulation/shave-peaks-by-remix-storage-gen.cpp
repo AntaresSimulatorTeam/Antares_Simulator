@@ -149,7 +149,7 @@ void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
                 }
 
                 unsigned hourOfMaxGen = hourForTotalGenMax(TotalGen, filteredHours);
-                
+
                 double maxVariation = std::max(TotalGen[hourOfMaxGen] - TotalGen[hourOfMinGen], 0.);
                 double maxExchangeFromStorage = storage->maxExchange(hourOfMaxGen, hourOfMinGen);
                 maxExchange = std::max(std::min(maxExchangeFromStorage, maxVariation / 2.), 0.);
