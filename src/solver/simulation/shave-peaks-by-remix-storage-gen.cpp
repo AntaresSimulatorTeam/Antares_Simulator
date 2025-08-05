@@ -111,6 +111,7 @@ void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
     const std::vector<double> UnsupEinit = UnsupE;
 
     checkInput(DispatchGen, UnsupEinit, Spillage, DTG_MRG, storageGenInit);
+    size_t nbHours = DispatchGen.size();
 
     int loop = 1000;
     double top = *rng::max_element(DispatchGen) + *rng::max_element(storageGenInit)
@@ -122,7 +123,7 @@ void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
 
     while (loop-- > 0)
     {
-        std::vector<bool> triedMins(DispatchGen.size(), false);
+        std::vector<bool> triedMins(nbHours, false);
         double maxExchange = 0;
 
         while (true)
@@ -134,7 +135,7 @@ void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
                 break;
             }
 
-            std::vector<bool> triedMaxs(DispatchGen.size(), false);
+            std::vector<bool> triedMaxs(nbHours, false);
             while (true)
             {
                 double totaGenMin = TotalGen[hourOfMinGen];
