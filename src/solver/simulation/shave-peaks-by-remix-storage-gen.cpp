@@ -29,7 +29,7 @@ static int hourForTotalGenMin(const std::vector<double>& TotalGen,
                               double top)
 {
     auto min_it = rng::min_element(filteredHours, {}, [&](int h) { return TotalGen[h]; });
-    return min_it == filteredHours.end() || TotalGen[*min_it] > top ? -1 : *min_it;
+    return TotalGen[*min_it] > top ? -1 : *min_it;
 }
 
 static std::vector<int> filterHoursForMax(const std::vector<double>& TotalGen,
@@ -45,8 +45,7 @@ static std::vector<int> filterHoursForMax(const std::vector<double>& TotalGen,
 
 static int hourForTotalGenMax(const std::vector<double>& TotalGen, std::vector<int>& filteredHours)
 {
-    auto max_it = rng::max_element(filteredHours, {}, [&](int h) { return TotalGen[h]; });
-    return max_it == filteredHours.end() ? -1 : *max_it;
+    return *rng::max_element(filteredHours, {}, [&](int h) { return TotalGen[h]; });
 }
 
 static void checkInput(const std::vector<double>& DispatchGen,
@@ -129,6 +128,11 @@ void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
         while (true)
         {
             auto filteredHours = filterHoursForMin(UnsupE, triedMins, validHours);
+            if (!filteredHours.size())
+            {
+                break;
+            }
+
             int hourOfMinGen = hourForTotalGenMin(TotalGen, filteredHours, top);
             if (hourOfMinGen == -1)
             {
@@ -140,12 +144,13 @@ void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
             {
                 double totaGenMin = TotalGen[hourOfMinGen];
                 filteredHours = filterHoursForMax(TotalGen, triedMaxs, validHours, totaGenMin);
-                int hourOfMaxGen = hourForTotalGenMax(TotalGen, filteredHours);
-                if (hourOfMaxGen == -1)
+                if (!filteredHours.size())
                 {
                     break;
                 }
 
+                int hourOfMaxGen = hourForTotalGenMax(TotalGen, filteredHours);
+                
                 double maxVariation = std::max(TotalGen[hourOfMaxGen] - TotalGen[hourOfMinGen], 0.);
                 double maxExchangeFromStorage = storage->maxExchange(hourOfMaxGen, hourOfMinGen);
                 maxExchange = std::max(std::min(maxExchangeFromStorage, maxVariation / 2.), 0.);
