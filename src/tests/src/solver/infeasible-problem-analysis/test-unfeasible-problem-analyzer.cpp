@@ -425,6 +425,7 @@ public:
 
     std::string buffer() const override
     {
+        return "";
     }
 
     /// Write the table to the given file path, using the concrete export format
