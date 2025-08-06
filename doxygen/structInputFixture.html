@@ -124,6 +124,7 @@ $(document).ready(function(){initNavTree('structInputFixture.html',''); initResi
 
 <div class="header">
   <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="structInputFixture-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -131,6 +132,15 @@ $(document).ready(function(){initNavTree('structInputFixture.html',''); initResi
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a8bffe9ad69478d6e739aae89ac97f14f"><td class="memItemLeft" align="right" valign="top"><a id="a8bffe9ad69478d6e739aae89ac97f14f"></a>
+std::shared_ptr&lt; <a class="el" href="classAntares_1_1Solver_1_1Simulation_1_1StorageForRemix.html">StorageForRemix</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>createHydroRemix</b> ()</td></tr>
+<tr class="separator:a8bffe9ad69478d6e739aae89ac97f14f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d38ab0339c07608b629648c816543a6"><td class="memItemLeft" align="right" valign="top"><a id="a7d38ab0339c07608b629648c816543a6"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>callRemixStorageAlgorithm</b> ()</td></tr>
+<tr class="separator:a7d38ab0339c07608b629648c816543a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a29deb1ad80e0ce8f5e0543caf716186b"><td class="memItemLeft" align="right" valign="top"><a id="a29deb1ad80e0ce8f5e0543caf716186b"></a>
@@ -142,6 +152,9 @@ std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><
 <tr class="memitem:a61bd3674b83f87580ab1f04c45f6fcfc"><td class="memItemLeft" align="right" valign="top"><a id="a61bd3674b83f87580ab1f04c45f6fcfc"></a>
 std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>UnsupE</b></td></tr>
 <tr class="separator:a61bd3674b83f87580ab1f04c45f6fcfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c55961c4d22d3b02ee9878efce43d90"><td class="memItemLeft" align="right" valign="top"><a id="a5c55961c4d22d3b02ee9878efce43d90"></a>
+std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>levels</b></td></tr>
+<tr class="separator:a5c55961c4d22d3b02ee9878efce43d90"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b79e68953b2a8059967612189ffc3e7"><td class="memItemLeft" align="right" valign="top"><a id="a4b79e68953b2a8059967612189ffc3e7"></a>
 std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>HydroPmax</b></td></tr>
 <tr class="separator:a4b79e68953b2a8059967612189ffc3e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -163,12 +176,24 @@ std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><
 <tr class="memitem:ad693215661e43d2a7029824a93152e06"><td class="memItemLeft" align="right" valign="top"><a id="ad693215661e43d2a7029824a93152e06"></a>
 std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>DTG_MRG</b></td></tr>
 <tr class="separator:ad693215661e43d2a7029824a93152e06"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a9927d0013548c9e378655a803e9b4b"><td class="memItemLeft" align="right" valign="top"><a id="a7a9927d0013548c9e378655a803e9b4b"></a>
+std::shared_ptr&lt; <a class="el" href="classAntares_1_1Solver_1_1Simulation_1_1StorageForRemix.html">StorageForRemix</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>hydroForRemix</b></td></tr>
+<tr class="separator:a7a9927d0013548c9e378655a803e9b4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a76dc53f910c40839aadde7c0f66c11c2"><td class="memItemLeft" align="right" valign="top"><a id="a76dc53f910c40839aadde7c0f66c11c2"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>init_level</b> = 0.</td></tr>
 <tr class="separator:a76dc53f910c40839aadde7c0f66c11c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3056d3004bb5db484e4f63aff1860846"><td class="memItemLeft" align="right" valign="top"><a id="a3056d3004bb5db484e4f63aff1860846"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>capacity</b> = std::numeric_limits&lt;double&gt;::max()</td></tr>
 <tr class="separator:a3056d3004bb5db484e4f63aff1860846"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50f7925048d49711b2f5c71d6662815f"><td class="memItemLeft" align="right" valign="top"><a id="a50f7925048d49711b2f5c71d6662815f"></a>
+const double&#160;</td><td class="memItemRight" valign="bottom"><b>pumpEff</b> = 1.0</td></tr>
+<tr class="separator:a50f7925048d49711b2f5c71d6662815f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9beb76956a6d81772457db382ed5576"><td class="memItemLeft" align="right" valign="top"><a id="aa9beb76956a6d81772457db382ed5576"></a>
+const bool&#160;</td><td class="memItemRight" valign="bottom"><b>reservoirManagement</b> = true</td></tr>
+<tr class="separator:aa9beb76956a6d81772457db382ed5576"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abaed082adf445cd14421c4d2be58aef6"><td class="memItemLeft" align="right" valign="top"><a id="abaed082adf445cd14421c4d2be58aef6"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>err_msg</b></td></tr>
+<tr class="separator:abaed082adf445cd14421c4d2be58aef6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>src/tests/src/solver/simulation/test-hydro-remix.cpp</li>

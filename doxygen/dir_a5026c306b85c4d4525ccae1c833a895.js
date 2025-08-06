@@ -7,11 +7,13 @@ var dir_a5026c306b85c4d4525ccae1c833a895 =
     [ "BindingConstraintsTimeSeriesNumbersWriter.h", "BindingConstraintsTimeSeriesNumbersWriter_8h_source.html", null ],
     [ "common-eco-adq.h", "common-eco-adq_8h_source.html", null ],
     [ "economy.h", "economy_8h_source.html", null ],
+    [ "hydro-for-remix.h", "hydro-for-remix_8h_source.html", null ],
     [ "ISimulationObserver.h", "ISimulationObserver_8h_source.html", null ],
     [ "ITimeSeriesNumbersWriter.h", "ITimeSeriesNumbersWriter_8h_source.html", null ],
     [ "numspace_manager.h", "numspace__manager_8h_source.html", null ],
     [ "opt_time_writer.h", "opt__time__writer_8h_source.html", null ],
-    [ "shave-peaks-by-remix-hydro.h", "shave-peaks-by-remix-hydro_8h_source.html", null ],
+    [ "remix-utils.h", "remix-utils_8h_source.html", null ],
+    [ "shave-peaks-by-remix-storage-gen.h", "shave-peaks-by-remix-storage-gen_8h_source.html", null ],
     [ "sim_alloc_probleme_hebdo.h", "sim__alloc__probleme__hebdo_8h_source.html", null ],
     [ "sim_binding_constraints_rhs.h", "sim__binding__constraints__rhs_8h_source.html", null ],
     [ "sim_constants.h", "sim__constants_8h_source.html", null ],
@@ -22,5 +24,6 @@ var dir_a5026c306b85c4d4525ccae1c833a895 =
     [ "solver.h", "solver_2simulation_2include_2antares_2solver_2simulation_2solver_8h_source.html", null ],
     [ "solver.hxx", "solver_8hxx_source.html", null ],
     [ "solver_utils.h", "solver__utils_8h_source.html", null ],
+    [ "storage-for-remix.h", "storage-for-remix_8h_source.html", null ],
     [ "timeseries-numbers.h", "timeseries-numbers_8h_source.html", null ]
 ];

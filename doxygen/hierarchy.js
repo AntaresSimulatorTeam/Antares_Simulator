@@ -1459,7 +1459,6 @@ var hierarchy =
       [ "SubstitutionFixture", "classSubstitutionFixture.html", null ],
       [ "SumSubstitutionFixture", "classSumSubstitutionFixture.html", null ]
     ] ],
-    [ "Antares::Solver::Simulation::RemixHydroOutput", "structAntares_1_1Solver_1_1Simulation_1_1RemixHydroOutput.html", null ],
     [ "Antares::Map::RemovalToolPredicate", "classAntares_1_1Map_1_1RemovalToolPredicate.html", null ],
     [ "Antares::Data::Parameters::RenewableGeneration", "structAntares_1_1Data_1_1Parameters_1_1RenewableGeneration.html", null ],
     [ "Antares::Data::Parameters::IncludeOptions::Reserve", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions_1_1Reserve.html", null ],
@@ -1731,6 +1730,11 @@ var hierarchy =
     [ "Antares::Solver::Variable::Storage< VCardUnsupliedEnergy >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardUnsupliedEnergyCSR >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardWaterValue >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
+    [ "Antares::Solver::Simulation::StorageForRemix", "classAntares_1_1Solver_1_1Simulation_1_1StorageForRemix.html", [
+      [ "Antares::Solver::Simulation::HydroForRemix", "classAntares_1_1Solver_1_1Simulation_1_1HydroForRemix.html", [
+        [ "Antares::Solver::Simulation::HydroForRemixWithLevels", "classAntares_1_1Solver_1_1Simulation_1_1HydroForRemixWithLevels.html", null ]
+      ] ]
+    ] ],
     [ "Antares::Memory::Stored< T >", "structAntares_1_1Memory_1_1Stored.html", null ],
     [ "Antares::Memory::Stored< CellData >", "structAntares_1_1Memory_1_1Stored.html", null ],
     [ "Antares::Memory::Stored< double >", "structAntares_1_1Memory_1_1Stored.html", null ],

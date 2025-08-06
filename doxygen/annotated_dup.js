@@ -714,11 +714,12 @@ var annotated_dup =
           [ "interfacePostProcessList", "classAntares_1_1Solver_1_1Simulation_1_1interfacePostProcessList.html", "classAntares_1_1Solver_1_1Simulation_1_1interfacePostProcessList" ],
           [ "BindingConstraintsTimeSeriesNumbersWriter", "classAntares_1_1Solver_1_1Simulation_1_1BindingConstraintsTimeSeriesNumbersWriter.html", "classAntares_1_1Solver_1_1Simulation_1_1BindingConstraintsTimeSeriesNumbersWriter" ],
           [ "Economy", "classAntares_1_1Solver_1_1Simulation_1_1Economy.html", "classAntares_1_1Solver_1_1Simulation_1_1Economy" ],
+          [ "HydroForRemix", "classAntares_1_1Solver_1_1Simulation_1_1HydroForRemix.html", "classAntares_1_1Solver_1_1Simulation_1_1HydroForRemix" ],
+          [ "HydroForRemixWithLevels", "classAntares_1_1Solver_1_1Simulation_1_1HydroForRemixWithLevels.html", "classAntares_1_1Solver_1_1Simulation_1_1HydroForRemixWithLevels" ],
           [ "ISimulationObserver", "classAntares_1_1Solver_1_1Simulation_1_1ISimulationObserver.html", "classAntares_1_1Solver_1_1Simulation_1_1ISimulationObserver" ],
           [ "NullSimulationObserver", "classAntares_1_1Solver_1_1Simulation_1_1NullSimulationObserver.html", "classAntares_1_1Solver_1_1Simulation_1_1NullSimulationObserver" ],
           [ "ITimeSeriesNumbersWriter", "classAntares_1_1Solver_1_1Simulation_1_1ITimeSeriesNumbersWriter.html", "classAntares_1_1Solver_1_1Simulation_1_1ITimeSeriesNumbersWriter" ],
           [ "NumSpaceManager", "classAntares_1_1Solver_1_1Simulation_1_1NumSpaceManager.html", "classAntares_1_1Solver_1_1Simulation_1_1NumSpaceManager" ],
-          [ "RemixHydroOutput", "structAntares_1_1Solver_1_1Simulation_1_1RemixHydroOutput.html", "structAntares_1_1Solver_1_1Simulation_1_1RemixHydroOutput" ],
           [ "yearJob", "classAntares_1_1Solver_1_1Simulation_1_1yearJob.html", "classAntares_1_1Solver_1_1Simulation_1_1yearJob" ],
           [ "ISimulation", "classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html", "classAntares_1_1Solver_1_1Simulation_1_1ISimulation" ],
           [ "setOfParallelYears", "structAntares_1_1Solver_1_1Simulation_1_1setOfParallelYears.html", "structAntares_1_1Solver_1_1Simulation_1_1setOfParallelYears" ],
@@ -727,7 +728,8 @@ var annotated_dup =
           [ "yearRandomNumbers", "classAntares_1_1Solver_1_1Simulation_1_1yearRandomNumbers.html", "classAntares_1_1Solver_1_1Simulation_1_1yearRandomNumbers" ],
           [ "randomNumbers", "classAntares_1_1Solver_1_1Simulation_1_1randomNumbers.html", "classAntares_1_1Solver_1_1Simulation_1_1randomNumbers" ],
           [ "hydroCostNoise", "classAntares_1_1Solver_1_1Simulation_1_1hydroCostNoise.html", "classAntares_1_1Solver_1_1Simulation_1_1hydroCostNoise" ],
-          [ "compareHydroCostsNoises", "structAntares_1_1Solver_1_1Simulation_1_1compareHydroCostsNoises.html", "structAntares_1_1Solver_1_1Simulation_1_1compareHydroCostsNoises" ]
+          [ "compareHydroCostsNoises", "structAntares_1_1Solver_1_1Simulation_1_1compareHydroCostsNoises.html", "structAntares_1_1Solver_1_1Simulation_1_1compareHydroCostsNoises" ],
+          [ "StorageForRemix", "classAntares_1_1Solver_1_1Simulation_1_1StorageForRemix.html", "classAntares_1_1Solver_1_1Simulation_1_1StorageForRemix" ]
         ] ],
         [ "Variable", null, [
           [ "Adequacy", null, [
