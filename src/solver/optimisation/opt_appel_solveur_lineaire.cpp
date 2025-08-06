@@ -692,8 +692,8 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                          int NumIntervalle,
                          const int optimizationNumber,
                          const OptPeriodStringGenerator& optPeriodStringGenerator,
+                         IResultWriter& writer,
                          ISimulationTable& simulationTable)
-                         IResultWriter& writer)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
@@ -702,7 +702,8 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                                                        NumIntervalle,
                                                        optimizationNumber,
                                                        optPeriodStringGenerator,
-                                                       writer, simulationTable);
+                                                       writer,
+                                                       simulationTable);
 
     if (ProblemeAResoudre->ExistenceDUneSolution == OUI_SPX)
     {
