@@ -94,6 +94,7 @@ std::string BuildModelerConstraintName(const std::string& cid,
     }
     return key;
 }
+
 void FillSimulationTable(
   ISimulationTable& simulationTable,
   const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,

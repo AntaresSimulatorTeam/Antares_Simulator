@@ -199,7 +199,6 @@ MPSolver* convertToMPSolver(const PROBLEME_HEBDO* problemeHebdo,
     return ortoolsProblem.getMpSolver();
 }
 
-
 struct LegacySolverTraits
 {
     static double getValue(const operations_research::MPVariable* var)
