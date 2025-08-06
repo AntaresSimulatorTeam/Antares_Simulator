@@ -1,5 +1,6 @@
 #include "include/antares/solver/simulation/hydro-for-remix.h"
 
+#include <limits>
 #include <span>
 #include <stdexcept>
 
