@@ -46,8 +46,7 @@ class FileWriter: public Solver::IWriter
 public:
     void init(bool setOutput , const std::string& simulationId) override;
 
-    void writeSolution(
-      const Optimisation::LinearProblemMpsolverImpl::OrtoolsMipSolution& solution) override;
+    void writeSolution(const Optimisation::LinearProblemApi::IMipSolution& solution) override;
     void writeSimulationTable(
       const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
       const Optimisation::LinearProblemApi::IMipSolution& solution,
