@@ -558,13 +558,21 @@ static void FillSimulationTable(ISimulationTable& simulationTable,
                               const std::string& name,
                               std::optional<unsigned> scen,
                               std::optional<unsigned> ts) -> const MPVariable*
-    { return variablesByName.at(VariableDictionary::buildVariableName({cid, name}, scen, ts)); };
+    {
+        return variablesByName.at(
+          VariableDictionary::buildVariableName({cid, name},
+                                                /* TODO should be = scen*/ std::nullopt,
+                                                ts));
+    };
 
     auto constraintLookup = [&](const std::string& cid,
                                 const std::string& cname,
                                 std::optional<unsigned> scen,
                                 std::optional<unsigned> ts) -> const MPConstraint*
-    { return solver->LookupConstraintOrNull(BuildModelerConstraintName(cid, cname, scen, ts)); };
+    {
+        return solver->LookupConstraintOrNull(
+          BuildModelerConstraintName(cid, cname, /* TODO should be = scen*/ std::nullopt, ts));
+    };
 
     unsigned currentBlock = problemeHebdo->OptimisationAuPasHebdomadaire
                               ? problemeHebdo->weekInTheYear
