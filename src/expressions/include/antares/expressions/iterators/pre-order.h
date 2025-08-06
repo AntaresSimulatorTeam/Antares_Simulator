@@ -1,7 +1,6 @@
 #pragma once
 
 #include <stack>
-#include <vector>
 
 namespace Antares::Expressions::Nodes
 {

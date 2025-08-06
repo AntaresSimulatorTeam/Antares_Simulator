@@ -27,7 +27,7 @@
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
 #include "antares/solver/simulation/common-eco-adq.h"
-#include "antares/solver/simulation/shave-peaks-by-remix-hydro.h"
+#include "antares/solver/simulation/shave-peaks-by-remix-storage-gen.h"
 #include "antares/study/simulation.h"
 
 #define EPSILON 1e-6
@@ -294,20 +294,20 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
           const auto& dtgMrgArray = area.scratchpad[numSpace].dispatchableGenerationMargin;
           const std::vector<double> dtgMrg(dtgMrgArray, dtgMrgArray + HOURS_IN_WEEK);
 
-          std::tie(hydroGen, unsupE, levels) = shavePeaksByRemixingHydro(DispatchGen,
-                                                                         hydroGen,
-                                                                         unsupE,
-                                                                         hydroPmax,
-                                                                         hydroPmin,
-                                                                         initLevel,
-                                                                         capacity,
-                                                                         efficiency,
-                                                                         reservoirManagement,
-                                                                         inflows,
-                                                                         ovf,
-                                                                         pump,
-                                                                         spillage,
-                                                                         dtgMrg);
+          auto hydroStorage = makeHydroForRemix(hydroGen,
+                                                unsupE,
+                                                levels,
+                                                hydroPmax,
+                                                hydroPmin,
+                                                inflows,
+                                                ovf,
+                                                pump,
+                                                initLevel,
+                                                capacity,
+                                                efficiency,
+                                                reservoirManagement);
+
+          shavePeaksByRemixingStorageGen(unsupE, DispatchGen, spillage, dtgMrg, hydroStorage);
       });
 }
 

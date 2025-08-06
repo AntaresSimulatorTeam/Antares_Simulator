@@ -214,6 +214,12 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                     Xmin[varCostVariationWithdrawal] = 0.;
                 }
                 storageIndex++;
+                if (storage.allowOverflow)
+                {
+                    int var = variableManager.ShortTermStorageOverflow(clusterGlobalIndex, pdtJour);
+                    Xmin[var] = 0;
+                    Xmax[var] = LINFINI_ANTARES;
+                }
             }
         }
     }

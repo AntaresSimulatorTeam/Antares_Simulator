@@ -39,7 +39,7 @@ public:
 
     ~OrtoolsMipSolution() override = default;
 
-    LinearProblemApi::MipStatus getStatus() const override;
+    [[nodiscard]] LinearProblemApi::MipStatus getStatus() const override;
     [[nodiscard]] double getObjectiveValue() const override;
     [[nodiscard]] double getOptimalValue(const LinearProblemApi::IMipVariable* var) const override;
     [[nodiscard]] std::vector<double> getOptimalValues(

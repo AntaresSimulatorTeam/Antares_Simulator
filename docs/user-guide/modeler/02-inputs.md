@@ -296,7 +296,7 @@ You can aggregate incoming ports using the following operator:
 Examples:
 
 ~~~yaml
-expression: sum(dc_port.flow) = 0
+expression: sum_connections(dc_port.flow) = 0
 ~~~
 
 ## System file
