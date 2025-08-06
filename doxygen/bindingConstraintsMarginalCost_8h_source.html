@@ -488,93 +488,95 @@ $(document).ready(function(){initNavTree('bindingConstraintsMarginalCost_8h_sour
 <div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;            <span class="keywordflow">return</span>;</div>
 <div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;        }</div>
 <div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160; </div>
-<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;        <span class="comment">// Initializing external pointer on current variable non applicable status</span></div>
-<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;        <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.isCurrentVarNA[0] = isCurrentOutputNonApplicable(precision);</div>
-<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160; </div>
-<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;        <span class="keywordflow">if</span> (AncestorType::isPrinted[0])</div>
-<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;        {</div>
-<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;            <span class="comment">// Write the data for the current year</span></div>
-<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;            <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.variableCaption = getBindConstraintCaption();</div>
-<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;            <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.variableUnit = <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost.html#a12bfe356f9ac48a906efde8743e1101a">VCardType::Unit</a>();</div>
-<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;            pValuesForTheCurrentYear[numSpace]</div>
-<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;              .template buildAnnualSurveyReport&lt;VCardType&gt;(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>, fileLevel, precision);</div>
-<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;        }</div>
-<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;    }</div>
-<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160; </div>
-<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;    <span class="keywordtype">void</span> buildSurveyReport(SurveyResults&amp; <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>,</div>
-<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;                           <span class="keywordtype">int</span> dataLevel,</div>
-<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;                           <span class="keywordtype">int</span> fileLevel,</div>
-<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;                           <span class="keywordtype">int</span> precision)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;        <span class="comment">// Building syntheses results</span></div>
-<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;        <span class="comment">// ------------------------------</span></div>
-<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;        <span class="keywordflow">if</span> (precision &amp; associatedBC_-&gt;yearByYearFilter())</div>
-<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;        {</div>
-<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;            <span class="comment">// And only if we match the current data level _and_ precision level</span></div>
-<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;            <span class="keywordflow">if</span> ((dataLevel &amp; <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost.html#a1f1ac816a90c8ccb78424b99d6323ab6">VCardType::categoryDataLevel</a>)</div>
-<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;                &amp;&amp; (fileLevel &amp; <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost.html#a0d5709ca03a0e77b2261d2333622675b">VCardType::categoryFileLevel</a>) &amp;&amp; (precision &amp; <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost.html#a8d6cfb2184ecd5db7a1fa555e63edb08">VCardType::precision</a>))</div>
-<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;            {</div>
-<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;                <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.isPrinted = AncestorType::isPrinted;</div>
-<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;                <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.isCurrentVarNA[0] = isCurrentOutputNonApplicable(precision);</div>
-<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;                <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.variableCaption = getBindConstraintCaption();</div>
-<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160; </div>
-<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;                VariableAccessorType::template BuildSurveyReport&lt;VCardType&gt;(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>,</div>
-<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;                                                                            <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a5c927574a94a005bd28a3522d2176334">AncestorType::pResults</a>,</div>
-<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;                                                                            dataLevel,</div>
-<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;                                                                            fileLevel,</div>
-<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;                                                                            precision,</div>
-<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;                                                                            <span class="keyword">false</span>);</div>
-<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;            }</div>
-<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;        }</div>
-<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;        NextType::buildSurveyReport(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>, dataLevel, fileLevel, precision);</div>
-<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;    }</div>
-<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160; </div>
-<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;    <span class="comment">// Private methods</span></div>
-<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;    <span class="comment">// ---------------</span></div>
-<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;    std::string getBindConstraintCaption()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;        std::string mathOperator(</div>
-<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;          <a class="code" href="classAntares_1_1Data_1_1BindingConstraint.html#a7109adf3676288f15cbb2064a664b2bc">Antares::Data::BindingConstraint::MathOperatorToCString</a>(associatedBC_-&gt;operatorType()));</div>
-<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;        <span class="keywordflow">return</span> std::string() + associatedBC_-&gt;name().c_str() + <span class="stringliteral">&quot; (&quot;</span> + mathOperator + <span class="stringliteral">&quot;)&quot;</span>;</div>
-<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;    }</div>
-<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160; </div>
-<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;    <span class="keywordtype">bool</span> isInitialized()</div>
-<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;    {</div>
-<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;        <span class="keywordflow">return</span> associatedBC_ != <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;    }</div>
-<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160; </div>
-<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;    <span class="keywordtype">bool</span> isCurrentOutputNonApplicable(<span class="keywordtype">int</span> precision)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;        <span class="keyword">using namespace </span>Antares::Data;</div>
-<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;        <span class="comment">// The current marginal prices to print becomes non applicable if they have a precision</span></div>
-<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;        <span class="comment">// (hour, day, week, ...) smaller than the associated binding constraint granularity.</span></div>
-<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;        <span class="comment">// Ex : if the BC is daily and we try to print hourly associated marginal prices,</span></div>
-<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;        <span class="comment">//      then these prices are set to N/A</span></div>
-<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;        <span class="keywordflow">switch</span> (associatedBC_-&gt;type())</div>
-<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;        {</div>
-<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;        <span class="keywordflow">case</span> BindingConstraint::typeUnknown:</div>
-<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;        <span class="keywordflow">case</span> BindingConstraint::typeMax:</div>
-<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;        <span class="keywordflow">default</span>:</div>
-<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;            <span class="keyword">const</span> <span class="keyword">auto</span> precision_bc = 1 &lt;&lt; (associatedBC_-&gt;type() - 1);</div>
-<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;            <span class="keywordflow">return</span> precision &lt; precision_bc;</div>
-<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;        }</div>
-<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;    }</div>
-<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160; </div>
-<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;    <span class="comment">// Private data mambers</span></div>
-<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;    <span class="comment">// ----------------------</span></div>
-<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;<span class="comment"></span>    <span class="keyword">typename</span> VCardType::IntermediateValuesType pValuesForTheCurrentYear;</div>
-<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> pNbYearsParallel = 0;</div>
-<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;    std::shared_ptr&lt;Data::BindingConstraint&gt; associatedBC_ = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;    uint nbCount_ = 0; <span class="comment">// Number of inequality BCs</span></div>
-<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160; </div>
-<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;}; <span class="comment">// class BindingConstMarginCost</span></div>
+<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;        <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.isCurrentVarNA = AncestorType::isNonApplicable;</div>
+<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;        <span class="comment">// Initializing external pointer on current variable non applicable status</span></div>
+<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;        <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.isCurrentVarNA[0] = isCurrentOutputNonApplicable(precision);</div>
+<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160; </div>
+<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;        <span class="keywordflow">if</span> (AncestorType::isPrinted[0])</div>
+<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;        {</div>
+<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;            <span class="comment">// Write the data for the current year</span></div>
+<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;            <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.variableCaption = getBindConstraintCaption();</div>
+<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;            <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.variableUnit = <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost.html#a12bfe356f9ac48a906efde8743e1101a">VCardType::Unit</a>();</div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;            pValuesForTheCurrentYear[numSpace]</div>
+<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;              .template buildAnnualSurveyReport&lt;VCardType&gt;(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>, fileLevel, precision);</div>
+<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;        }</div>
+<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;    }</div>
+<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160; </div>
+<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;    <span class="keywordtype">void</span> buildSurveyReport(SurveyResults&amp; <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>,</div>
+<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;                           <span class="keywordtype">int</span> dataLevel,</div>
+<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;                           <span class="keywordtype">int</span> fileLevel,</div>
+<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;                           <span class="keywordtype">int</span> precision)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;        <span class="comment">// Building syntheses results</span></div>
+<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;        <span class="comment">// ------------------------------</span></div>
+<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;        <span class="keywordflow">if</span> (precision &amp; associatedBC_-&gt;yearByYearFilter())</div>
+<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;        {</div>
+<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;            <span class="comment">// And only if we match the current data level _and_ precision level</span></div>
+<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;            <span class="keywordflow">if</span> ((dataLevel &amp; <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost.html#a1f1ac816a90c8ccb78424b99d6323ab6">VCardType::categoryDataLevel</a>)</div>
+<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;                &amp;&amp; (fileLevel &amp; <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost.html#a0d5709ca03a0e77b2261d2333622675b">VCardType::categoryFileLevel</a>) &amp;&amp; (precision &amp; <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost.html#a8d6cfb2184ecd5db7a1fa555e63edb08">VCardType::precision</a>))</div>
+<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;            {</div>
+<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;                <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.isPrinted = AncestorType::isPrinted;</div>
+<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;                <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.isCurrentVarNA = AncestorType::isNonApplicable;</div>
+<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;                <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.isCurrentVarNA[0] = isCurrentOutputNonApplicable(precision);</div>
+<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;                <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.variableCaption = getBindConstraintCaption();</div>
+<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160; </div>
+<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;                VariableAccessorType::template BuildSurveyReport&lt;VCardType&gt;(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>,</div>
+<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;                                                                            <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a5c927574a94a005bd28a3522d2176334">AncestorType::pResults</a>,</div>
+<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;                                                                            dataLevel,</div>
+<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;                                                                            fileLevel,</div>
+<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;                                                                            precision,</div>
+<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;                                                                            <span class="keyword">false</span>);</div>
+<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;            }</div>
+<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;        }</div>
+<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;        NextType::buildSurveyReport(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>, dataLevel, fileLevel, precision);</div>
+<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;    }</div>
+<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160; </div>
+<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;    <span class="comment">// Private methods</span></div>
+<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;    <span class="comment">// ---------------</span></div>
+<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;    std::string getBindConstraintCaption()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;        std::string mathOperator(</div>
+<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;          <a class="code" href="classAntares_1_1Data_1_1BindingConstraint.html#a7109adf3676288f15cbb2064a664b2bc">Antares::Data::BindingConstraint::MathOperatorToCString</a>(associatedBC_-&gt;operatorType()));</div>
+<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;        <span class="keywordflow">return</span> std::string() + associatedBC_-&gt;name().c_str() + <span class="stringliteral">&quot; (&quot;</span> + mathOperator + <span class="stringliteral">&quot;)&quot;</span>;</div>
+<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;    }</div>
+<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160; </div>
+<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;    <span class="keywordtype">bool</span> isInitialized()</div>
+<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;    {</div>
+<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;        <span class="keywordflow">return</span> associatedBC_ != <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;    }</div>
+<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160; </div>
+<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;    <span class="keywordtype">bool</span> isCurrentOutputNonApplicable(<span class="keywordtype">int</span> precision)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;        <span class="keyword">using namespace </span>Antares::Data;</div>
+<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;        <span class="comment">// The current marginal prices to print becomes non applicable if they have a precision</span></div>
+<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;        <span class="comment">// (hour, day, week, ...) smaller than the associated binding constraint granularity.</span></div>
+<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;        <span class="comment">// Ex : if the BC is daily and we try to print hourly associated marginal prices,</span></div>
+<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;        <span class="comment">//      then these prices are set to N/A</span></div>
+<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;        <span class="keywordflow">switch</span> (associatedBC_-&gt;type())</div>
+<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;        {</div>
+<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;        <span class="keywordflow">case</span> BindingConstraint::typeUnknown:</div>
+<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;        <span class="keywordflow">case</span> BindingConstraint::typeMax:</div>
+<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;        <span class="keywordflow">default</span>:</div>
+<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;            <span class="keyword">const</span> <span class="keyword">auto</span> precision_bc = 1 &lt;&lt; (associatedBC_-&gt;type() - 1);</div>
+<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;            <span class="keywordflow">return</span> precision &lt; precision_bc;</div>
+<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;        }</div>
+<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;    }</div>
+<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160; </div>
+<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;    <span class="comment">// Private data mambers</span></div>
+<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;    <span class="comment">// ----------------------</span></div>
+<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;<span class="comment"></span>    <span class="keyword">typename</span> VCardType::IntermediateValuesType pValuesForTheCurrentYear;</div>
+<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> pNbYearsParallel = 0;</div>
+<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;    std::shared_ptr&lt;Data::BindingConstraint&gt; associatedBC_ = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;    uint nbCount_ = 0; <span class="comment">// Number of inequality BCs</span></div>
 <div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160; </div>
-<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;} <span class="comment">// namespace Economy</span></div>
-<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;} <span class="comment">// namespace Variable</span></div>
-<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;} <span class="comment">// namespace Solver</span></div>
-<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;} <span class="comment">// namespace Antares</span></div>
+<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;}; <span class="comment">// class BindingConstMarginCost</span></div>
+<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160; </div>
+<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;} <span class="comment">// namespace Economy</span></div>
+<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;} <span class="comment">// namespace Variable</span></div>
+<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;} <span class="comment">// namespace Solver</span></div>
+<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;} <span class="comment">// namespace Antares</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1AreaLink_html"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaLink.html">Antares::Data::AreaLink</a></div><div class="ttdoc">Definition of a link between two areas (Interconnection)</div><div class="ttdef"><b>Definition:</b> links.h:50</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Area_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Area.html">Antares::Data::Area</a></div><div class="ttdoc">Definition for a single area.</div><div class="ttdef"><b>Definition:</b> area.h:52</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1BindingConstraint_html_a7109adf3676288f15cbb2064a664b2bc"><div class="ttname"><a href="classAntares_1_1Data_1_1BindingConstraint.html#a7109adf3676288f15cbb2064a664b2bc">Antares::Data::BindingConstraint::MathOperatorToCString</a></div><div class="ttdeci">static const char * MathOperatorToCString(Operator o)</div><div class="ttdoc">Convert a binding constraint operator into a short C-String (symbol)</div><div class="ttdef"><b>Definition:</b> BindingConstraint.cpp:133</div></div>
