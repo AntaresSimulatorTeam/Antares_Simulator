@@ -126,6 +126,16 @@ ConstraintBuilder& ConstraintBuilder::ShortTermStorageLevel(unsigned int index,
     return *this;
 }
 
+ConstraintBuilder& ConstraintBuilder::ShortTermStorageOverflow(unsigned int index,
+                                                               double coeff,
+                                                               int offset,
+                                                               int delta)
+{
+    AddVariable(variableManager_.ShortTermStorageOverflow(index, hourInWeek_, offset, delta),
+                coeff);
+    return *this;
+}
+
 ConstraintBuilder& ConstraintBuilder::ShortTermCostVariationInjection(unsigned int index,
                                                                       double coeff,
                                                                       int offset,

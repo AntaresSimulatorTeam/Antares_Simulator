@@ -31,12 +31,14 @@ AdditionalConstraints::AdditionalConstraints():
 }
 
 AdditionalConstraints::AdditionalConstraints(std::string name,
+                                             std::string id,
                                              std::string cluster_id,
                                              std::string variable,
                                              std::string operatorType,
                                              bool enabled,
                                              std::vector<SingleAdditionalConstraint> constraints):
     name(name),
+    id(id),
     cluster_id(cluster_id),
     variable(variable),
     operatorType(operatorType),

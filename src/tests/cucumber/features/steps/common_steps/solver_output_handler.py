@@ -66,6 +66,10 @@ class solver_output_handler:
     def __get_values_hourly(self, area: str, year: int):
         return self.__if_none_then_parse(result_type.VALUES, area.lower(), year, "values-hourly.txt")
 
+    def __get_values_hourly_for_specific_week(self, area: str, year: int, week: int):
+        df = self.__if_none_then_parse(result_type.VALUES, area.lower(), year, "values-hourly.txt")
+        return df[(df['hourly']['Unnamed: 1_level_1'] > (week - 1) * 168) & (df['hourly']['Unnamed: 1_level_1'] <= week * 168)]
+
     def __get_values_hourly_for_specific_hour(self, area: str, year: int, datetime: str):
         df = self.__get_values_hourly(area, year)
         return df.loc[df['datetime'] == datetime]
@@ -96,6 +100,10 @@ class solver_output_handler:
 
     def get_hourly_n_dispatched_units(self, area: str, year: int, prod_name: str) -> pd.Series:
         return self.__get_details_hourly(area, year)[prod_name]['NODU']
+
+    def get_loss_of_load_weekly_duration_h(self, area: str, year: int, week: int) -> int:
+        df = self.__get_values_hourly_for_specific_week(area, year, week)
+        return self.__get_values_hourly_for_specific_week(area, year, week)["LOLD"]["Hours"].sum()
 
     def get_loss_of_load_duration_h(self, area: str, year: int) -> int:
         return self.__get_values_hourly(area, year)["LOLD"]["Hours"].sum()

@@ -21,8 +21,6 @@
 #ifndef __SOLVER_SIMULATION_GENERATE_TIMESERIES_H__
 #define __SOLVER_SIMULATION_GENERATE_TIMESERIES_H__
 
-#include <vector>
-
 #include <antares/study/study.h>
 
 #include "ITimeSeriesNumbersWriter.h"

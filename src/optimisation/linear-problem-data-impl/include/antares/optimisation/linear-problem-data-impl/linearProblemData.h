@@ -25,8 +25,8 @@
 #include <string>
 
 #include "antares/optimisation/linear-problem-api/ILinearProblemData.h"
+#include "antares/optimisation/linear-problem-api/IScenario.h"
 #include "antares/optimisation/linear-problem-data-impl/dataSeriesRepo.h"
-#include "antares/optimisation/linear-problem-data-impl/scenarioGroupRepo.h"
 
 namespace Antares::Optimisation::LinearProblemDataImpl
 {
@@ -42,16 +42,13 @@ public:
     }
 
     [[nodiscard]] double getData(const std::string& dataSetId,
-                                 const std::string& scenarioGroup,
-                                 unsigned scenario,
-                                 unsigned hour) override;
+                                 LinearProblemApi::IScenario::TimeSeriesNumber timeSeriesNumber,
+                                 unsigned hour) const override;
 
-    void addScenarioGroup(const std::string& groupId, std::pair<unsigned, unsigned> scenarioToRank);
     void addDataSeries(std::unique_ptr<IDataSeries> dataSeries);
 
 private:
     DataSeriesRepository dataSeriesRepository_;
-    ScenarioGroupRepository groupRepository_;
 };
 
 } // namespace Antares::Optimisation::LinearProblemDataImpl

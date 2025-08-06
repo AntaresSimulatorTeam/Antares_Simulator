@@ -58,7 +58,8 @@ using FullKeyMap = std::unordered_map<FullKey, double, FullKeyHash>;
  * @param right The right-hand-side map.
  * @param op A unary operation to transform the values of the right-hand-side map before adding
  * them. Defaults to the identity function.
- * @return A new map containing the element-wise sum of the two input maps.
+ * @return None, the left map is modified in-place to contain the element-wise sum of the two input
+ * maps.
  *
  * @example
  * Example 1: Using `std::unordered_map<FullKey, double, FullKeyHash>`
@@ -75,7 +76,7 @@ using FullKeyMap = std::unordered_map<FullKey, double, FullKeyHash>;
  *     {FullKey("component3", "variable3"), 4.0}
  * };
  *
- * auto result = add_maps(map1, map2);
+ * add_maps(map1, map2);
  * ```
  *
  * @example
@@ -93,25 +94,26 @@ using FullKeyMap = std::unordered_map<FullKey, double, FullKeyHash>;
  *     {3, linearExpression4}
  * };
  *
- * auto result = add_maps(map3, map4);
+ * add_maps(map3, map4);
  * ```
  */
 template<typename MapType, typename UnaryOp = std::identity>
-MapType add_maps(const MapType& left, const MapType& right, UnaryOp op = std::identity{})
+void add_maps(MapType& left, const MapType& right, UnaryOp op = std::identity{})
 {
-    auto result(left);
-    for (auto [key, value]: right)
+    for (const auto& [key, value]: right)
     {
-        if (result.contains(key))
+        auto it = left.find(key);
+        if (it != left.end())
         {
-            result[key] += op(value);
+            // Key exists in left, add the values
+            it->second += op(value);
         }
         else
         {
-            result[key] = op(value);
+            // Key does not exist in left, insert the pair
+            left.emplace(key, op(value));
         }
     }
-    return result;
 }
 
 /**
@@ -135,8 +137,8 @@ class LinearExpression
 public:
     /// Build a linear expression with zero offset and zero coefficients
     LinearExpression() = default;
-    /// Build a linear expression with a given offset and a given map of non-zero coefficients per
-    /// variable ID
+    /// Build a linear expression with a given offset and a given map of non-zero coefficients
+    /// per variable ID
     LinearExpression(double offset, FullKeyMap coef_per_var);
     /// Sum two linear expressions
     LinearExpression operator+(const LinearExpression& other) const;
@@ -146,7 +148,8 @@ public:
     /// Only one can have non-zero coefficients, otherwise the result cannot be linear
     LinearExpression operator*(const LinearExpression& other) const;
     /// Divide two linear expressions
-    /// Only first expression can have non-zero coefficients, otherwise the result cannot be linear
+    /// Only first expression can have non-zero coefficients, otherwise the result cannot be
+    /// linear
     LinearExpression operator/(const LinearExpression& other) const;
     /// Multiply linear expression by -1
     LinearExpression operator-() const;

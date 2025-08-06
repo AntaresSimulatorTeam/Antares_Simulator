@@ -1,0 +1,7 @@
+COMMA=1
+INT=2
+WS=3
+IDENTIFIER=4
+EQUALS=5
+','=1
+'='=5

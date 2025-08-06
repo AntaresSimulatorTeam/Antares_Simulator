@@ -27,7 +27,11 @@ function(add_boost_test)
       target_include_directories(${TEST_NAME} PRIVATE ${arg_INCLUDE})
     endif()
 
-    add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
+    add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME}
+      --output_format=XML
+      --report_level=detailed
+      --report_sink=report_${TEST_NAME}.xml
+      WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/tests)
 
     # Adding labels allows ctest filter what tests to run
     set_property(TEST ${TEST_NAME} PROPERTY LABELS unit)

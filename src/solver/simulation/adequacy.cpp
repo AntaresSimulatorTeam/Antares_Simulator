@@ -137,7 +137,10 @@ bool Adequacy::year(Progression::Task& progression,
     state.startANewYear();
 
     int hourInTheYear = pStartTime;
-    bool reinitOptim = true;
+
+    // In order to avoid slight differences in parallel/sequential, we clear the basis at the start
+    // of each year
+    currentProblem.ProblemeAResoudre->clearBasis();
 
     for (uint w = 0; w != pNbWeeks; ++w)
     {
@@ -157,10 +160,6 @@ bool Adequacy::year(Progression::Task& progression,
                                         hourInTheYear,
                                         randomForYear.pThermalNoisesByArea,
                                         state.year);
-
-        // Reinit optimisation if needed
-        currentProblem.ReinitOptimisation = reinitOptim;
-        reinitOptim = false;
 
         state.simplexRunNeeded = (w == 0)
                                  || simplexIsRequired(hourInTheYear,
@@ -232,9 +231,6 @@ bool Adequacy::year(Progression::Task& progression,
             }
             catch (Data::UnfeasibleProblemError&)
             {
-                // need to clean next problemeHebdo
-                reinitOptim = true;
-
                 // Indicate failed week list (first week of the year is "week number one" for the
                 // user but w=0 for the loop)
                 failedWeekList.push_back(w + 1);

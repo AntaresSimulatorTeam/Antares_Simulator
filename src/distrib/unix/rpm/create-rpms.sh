@@ -199,7 +199,6 @@ main()
 	pkg_add_exec "tools/finder/antares-study-finder"
 	pkg_add_exec "tools/batchrun/antares-batchrun"
 	pkg_add_exec "tools/config/antares-config"
-	pkg_add_exec "tools/updater/antares-study-updater"
 
 	pkg_cwd "/etc/antares/pkgs"
 	echo "/usr/bin/antares-solver" > "${root}/pkginfo-solver"

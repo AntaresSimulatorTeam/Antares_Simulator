@@ -89,6 +89,7 @@ bool BindingConstraintsTSNumberData::reset(const Study& study)
     return true;
 }
 
+#ifdef BUILD_UI
 void BindingConstraintsTSNumberData::saveToINIFile(const Study&, Yuni::IO::File::Stream& file) const
 {
     // Turning values into strings (precision 4)
@@ -107,6 +108,7 @@ void BindingConstraintsTSNumberData::saveToINIFile(const Study&, Yuni::IO::File:
         }
     }
 }
+#endif
 
 void BindingConstraintsTSNumberData::setTSnumber(const std::string& group_name,
                                                  const uint year,

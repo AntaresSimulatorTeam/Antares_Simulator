@@ -51,8 +51,7 @@ void FileWriter::init(bool setOutput, const std::string& simulationId)
     }
 }
 
-void FileWriter::writeSolution(
-  const Optimisation::LinearProblemMpsolverImpl::OrtoolsMipSolution& solution)
+void FileWriter::writeSolution(const Optimisation::LinearProblemApi::IMipSolution& solution)
 {
     if (output)
     {

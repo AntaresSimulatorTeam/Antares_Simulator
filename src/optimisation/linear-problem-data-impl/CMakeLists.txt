@@ -9,23 +9,25 @@ set(SRC_DATA_SERIES
 
         include/antares/optimisation/linear-problem-data-impl/dataSeriesRepo.h
         dataSeriesRepo.cpp
-		dataSeriesRepoExceptions.cpp
-
-        include/antares/optimisation/linear-problem-data-impl/scenarioGroupRepo.h
-        scenarioGroupRepo.cpp
-        scenarioGroupRepoExceptions.cpp
+        dataSeriesRepoExceptions.cpp
 
         include/antares/optimisation/linear-problem-data-impl/linearProblemData.h
         linearProblemData.cpp
+
+        include/antares/optimisation/linear-problem-data-impl/Scenario.h
+        Scenario.cpp
 )
 
 add_library(${PROJ} ${SRC_DATA_SERIES})
 add_library(Antares::${PROJ} ALIAS ${PROJ})
 
+find_package(fmt REQUIRED)
 
 target_link_libraries(${PROJ}
         PUBLIC
         linear-problem-api
+        fmt::fmt
+        Antares::exception
 )
 
 target_include_directories(${PROJ}
