@@ -30,6 +30,7 @@
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
+#include "antares/io/outputs/SimulationTableCsv.h"
 #include "antares/solver/infeasible-problem-analysis/constraint-slack-analysis.h"
 #include "antares/solver/infeasible-problem-analysis/report.h"
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
@@ -410,6 +411,26 @@ void setupMinimalProblem(PROBLEME_HEBDO& problemeHebdo, ProblemFeasibility feasi
 // Shared setup for feasible and infeasible tests
 
 } // namespace
+class EmptySimulationTable final: public ISimulationTable
+{
+public:
+    void addEntry(SimulationTableEntry entry) override
+    {
+    }
+
+    void clear() override
+    {
+    }
+
+    std::string buffer() const override
+    {
+    }
+
+    /// Write the table to the given file path, using the concrete export format
+    void write() override
+    {
+    }
+};
 
 /**
  * These two tests verify the behavior of OPT_AppelDuSimplexe regarding
@@ -444,13 +465,15 @@ BOOST_AUTO_TEST_CASE(feasible_problem_does_not_trigger_analyzer_or_named_flag)
     SingleOptimOptions options;
     NullWriterExtension writer;
     DummyOptPeriodStringGenerator generator;
+    EmptySimulationTable simulationTableCsv;
 
     const bool result = OPT_AppelDuSimplexe(options,
                                             &problemeHebdo,
                                             0, // NumIntervalle
                                             1, // optimizationNumber
                                             generator,
-                                            writer);
+                                            writer,
+                                            simulationTableCsv);
 
     const auto expectedMps = R"(* Number of variables:   1
 * Number of constraints: 2
@@ -504,13 +527,15 @@ BOOST_AUTO_TEST_CASE(infeasible_problem_triggers_analyzer_and_named_flag)
     SingleOptimOptions options;
     NullWriterExtension writer;
     DummyOptPeriodStringGenerator generator;
+    EmptySimulationTable simulationTableCsv;
 
     const bool result = OPT_AppelDuSimplexe(options,
                                             &problemeHebdo,
                                             0, // NumIntervalle
                                             1, // optimizationNumber
                                             generator,
-                                            writer);
+                                            writer,
+                                            simulationTableCsv);
     const auto expectedMps = R"(* Number of variables:   1
 * Number of constraints: 2
 NAME          Pb Solve
