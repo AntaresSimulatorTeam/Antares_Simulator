@@ -411,6 +411,7 @@ void setupMinimalProblem(PROBLEME_HEBDO& problemeHebdo, ProblemFeasibility feasi
 // Shared setup for feasible and infeasible tests
 
 } // namespace
+
 class EmptySimulationTable final: public ISimulationTable
 {
 public:
