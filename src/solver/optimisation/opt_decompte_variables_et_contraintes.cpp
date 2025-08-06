@@ -251,6 +251,11 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
                                                                     ->enabledConstraintsCount();
                     }
                 }
+                if (storage.allowOverflow)
+                {
+                    ProblemeAResoudre->NombreDeVariables += nbSTS
+                                                            * nombreDePasDeTempsPourUneOptimisation;
+                }
             }
         }
     }
