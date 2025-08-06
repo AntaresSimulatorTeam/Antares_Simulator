@@ -26,6 +26,7 @@
 #include <antares/exception/LoadingError.hpp>
 #include "antares/config/config.h"
 #include "antares/solver/utils/ortools_utils.h"
+#include "antares/utils/utils.h"
 
 using namespace Antares;
 using namespace Antares::Data;
@@ -295,15 +296,6 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
     }
 }
 
-static bool containsOnlyASCIIcharsOnWindows(const std::string& path)
-{
-#if defined(_WIN32) || defined(_WIN64)
-    return std::ranges::all_of(path, [](unsigned c) { return c <= 127; });
-#else
-    return true;
-#endif
-}
-
 void Settings::checkAndSetStudyFolder(const std::string& folder)
 {
     // The study folder
@@ -312,7 +304,7 @@ void Settings::checkAndSetStudyFolder(const std::string& folder)
         throw Error::NoStudyProvided();
     }
 
-    if (!containsOnlyASCIIcharsOnWindows(folder))
+    if (!Utils::containsOnlyASCIIcharsOnWindows(folder))
     {
         throw Error::StudyFolderContainsNonASCIIchars(folder);
     }

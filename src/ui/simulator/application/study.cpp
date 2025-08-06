@@ -1047,15 +1047,6 @@ void UpdateGUIFromStudyState()
     }
 }
 
-static bool containsOnlyASCIIcharsOnWindows(const std::string& path)
-{
-#if defined(_WIN32) || defined(_WIN64)
-    return std::ranges::all_of(path, [](unsigned c) { return c <= 127; });
-#else
-    return true;
-#endif
-}
-
 void OpenStudyFromFolder(wxString folder)
 {
     // It is important on Windows to not have the final backslash
@@ -1068,7 +1059,7 @@ void OpenStudyFromFolder(wxString folder)
     String studyfolder;
     wxStringToString(folder, studyfolder);
 
-    if (!containsOnlyASCIIcharsOnWindows(studyfolder.to<std::string>()))
+    if (!Utils::containsOnlyASCIIcharsOnWindows(studyfolder.to<std::string>()))
     {
         logs.error() << "Study path contains a non ASCII char";
         return;

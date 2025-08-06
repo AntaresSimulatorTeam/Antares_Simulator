@@ -24,6 +24,7 @@
 #include "antares/study/study.h"
 #include "../../toolbox/dispatcher/study.h"
 #include <ui/common/lock.h>
+#include "antares/utils/utils.h"
 
 using namespace Yuni;
 
@@ -31,15 +32,6 @@ namespace Antares
 {
 namespace Forms
 {
-
-static bool containsOnlyASCIIcharsOnWindows(const std::string& path)
-{
-#if defined(_WIN32) || defined(_WIN64)
-    return std::ranges::all_of(path, [](unsigned c) { return c <= 127; });
-#else
-    return true;
-#endif
-}
 
 class StudyDrop final : public wxFileDropTarget
 {
@@ -65,7 +57,7 @@ public:
         {
             wxStringToString(filenames[i], filename);
 
-            if (!containsOnlyASCIIcharsOnWindows(filename.to<std::string>()))
+            if (!Utils::containsOnlyASCIIcharsOnWindows(filename.to<std::string>()))
             {
                 logs.error() << "Drag & drop : study path contains a non ASCII char";
                 return false;
