@@ -67,6 +67,11 @@ LinearProblemApi::MipBasisStatus OrtoolsMipVariable::getMipBasisStatus() const
     return convertOrtoolsBasisStatus(mpVar_->basis_status());
 }
 
+double OrtoolsMipVariable::solutionValue() const
+{
+    return mpVar_->solution_value();
+}
+
 const std::string& OrtoolsMipVariable::getName() const
 {
     return mpVar_->name();

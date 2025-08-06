@@ -742,6 +742,11 @@ public:
         return MipBasisStatus::FREE;
     }
 
+    double solutionValue() const override
+    {
+        return 0.;
+    }
+
 private:
     double lb_;
     double ub_;
