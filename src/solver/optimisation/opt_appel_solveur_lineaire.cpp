@@ -201,6 +201,7 @@ MPSolver* convertToMPSolver(const PROBLEME_HEBDO* problemeHebdo,
 
     return ortoolsProblem.getMpSolver();
 }
+
 //
 // struct TimeBlock
 // {
