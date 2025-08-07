@@ -286,12 +286,13 @@ static void FillSimulationTable(ISimulationTable& simulationTable,
                                                problemeHebdo->year,
                                                !solver->IsMIP()); /*assume we never do discrete pb*/
 
-        addConstraintEntries<LegacySolverTraits>(simulationTable,
-                                                 fillContext,
-                                                 comp,
-                                                 constraintLookup,
-                                                 currentBlock,
-                                                 timeConversionMode,
+        addConstraintEntries<LegacySolverTraits>(
+          simulationTable,
+          fillContext,
+          comp,
+          constraintLookup,
+          currentBlock,
+          timeConversionMode,
           problemeHebdo->year,
           !solver->IsMIP()); /*assume we never do discrete pb*/
     }
