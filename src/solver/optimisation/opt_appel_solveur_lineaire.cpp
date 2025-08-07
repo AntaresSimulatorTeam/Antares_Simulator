@@ -208,21 +208,12 @@ struct LegacySolverTraits
 
     static MipBasisStatus getStatus(const MPVariable* var)
     {
-        return var->integer()
-                 ? MipBasisStatus::FREE
-                 : convertOrtoolsBasisStatus(var->basis_status()); // TODO or return not available
+        return convertOrtoolsBasisStatus(var->basis_status());
     }
 
     static MipBasisStatus getStatus(const MPConstraint* cst)
     {
-        try
-        {
-            return convertOrtoolsBasisStatus(cst->basis_status());
-        }
-        catch (const std::exception&)
-        {
-            return MipBasisStatus::FREE; // TODO
-        }
+        return convertOrtoolsBasisStatus(cst->basis_status());
     }
 
     static std::optional<double> getValue(const MPConstraint*)
