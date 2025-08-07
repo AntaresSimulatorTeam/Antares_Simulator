@@ -30,7 +30,8 @@ enum class MipBasisStatus : unsigned int
     AT_LOWER_BOUND,
     AT_UPPER_BOUND,
     FIXED_VALUE,
-    BASIC
+    BASIC,
+    NOT_AVAILABLE
 };
 
 

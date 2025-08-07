@@ -127,7 +127,8 @@ void FillSimulationTable(
                                                 variableLookupModeler,
                                                 1,
                                                 TimeConversionMode::SingleBlock,
-                                                scenario);
+                                                scenario,
+                                                linearProblem.isLP());
 
         addConstraintEntries<ModelerSolverTraits>(simulationTable,
                                                   fillContext,
@@ -135,6 +136,7 @@ void FillSimulationTable(
                                                   constraintLookupModeler,
                                                   1,
                                                   TimeConversionMode::SingleBlock,
-                                                  scenario);
+                                                  scenario,
+                                                  linearProblem.isLP());
     }
 }

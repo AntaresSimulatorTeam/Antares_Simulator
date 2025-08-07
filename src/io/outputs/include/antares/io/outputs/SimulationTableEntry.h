@@ -43,6 +43,7 @@ inline std::string StatusToString(
             return "Fixed value";
         case MipBasisStatus::BASIC:
             return "Basic";
+        case MipBasisStatus::NOT_AVAILABLE:
         default:
             return "None";
         }

@@ -16,8 +16,9 @@ LinearProblemApi::MipBasisStatus convertOrtoolsBasisStatus(
     case operations_research::MPSolver::BasisStatus::FIXED_VALUE:
         return LinearProblemApi::MipBasisStatus::FIXED_VALUE;
     case operations_research::MPSolver::BasisStatus::BASIC:
-    default: /*TODO*/
         return LinearProblemApi::MipBasisStatus::BASIC;
+    default:
+        return LinearProblemApi::MipBasisStatus::NOT_AVAILABLE;
     }
 }
 } // namespace Antares::Optimisation::LinearProblemMpsolverImpl

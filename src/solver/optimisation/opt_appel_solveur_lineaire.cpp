@@ -201,22 +201,31 @@ MPSolver* convertToMPSolver(const PROBLEME_HEBDO* problemeHebdo,
 
 struct LegacySolverTraits
 {
-    static double getValue(const operations_research::MPVariable* var)
+    static double getValue(const MPVariable* var)
     {
         return var->solution_value();
     }
 
-    static MipBasisStatus getStatus(const operations_research::MPVariable* var)
+    static MipBasisStatus getStatus(const MPVariable* var)
     {
-        return convertOrtoolsBasisStatus(var->basis_status());
+        return var->integer()
+                 ? MipBasisStatus::FREE
+                 : convertOrtoolsBasisStatus(var->basis_status()); // TODO or return not available
     }
 
-    static MipBasisStatus getStatus(const operations_research::MPConstraint* cst)
+    static MipBasisStatus getStatus(const MPConstraint* cst)
     {
-        return convertOrtoolsBasisStatus(cst->basis_status());
+        try
+        {
+            return convertOrtoolsBasisStatus(cst->basis_status());
+        }
+        catch (const std::exception&)
+        {
+            return MipBasisStatus::FREE; // TODO
+        }
     }
 
-    static std::optional<double> getValue(const operations_research::MPConstraint*)
+    static std::optional<double> getValue(const MPConstraint*)
     {
         return std::nullopt;
     }
@@ -274,7 +283,8 @@ static void FillSimulationTable(ISimulationTable& simulationTable,
                                                variableLookup,
                                                currentBlock,
                                                timeConversionMode,
-                                               problemeHebdo->year);
+                                               problemeHebdo->year,
+                                               !solver->IsMIP()); /*assume we never do discrete pb*/
 
         addConstraintEntries<LegacySolverTraits>(simulationTable,
                                                  fillContext,
@@ -282,7 +292,8 @@ static void FillSimulationTable(ISimulationTable& simulationTable,
                                                  constraintLookup,
                                                  currentBlock,
                                                  timeConversionMode,
-                                                 problemeHebdo->year);
+          problemeHebdo->year,
+          !solver->IsMIP()); /*assume we never do discrete pb*/
     }
 }
 

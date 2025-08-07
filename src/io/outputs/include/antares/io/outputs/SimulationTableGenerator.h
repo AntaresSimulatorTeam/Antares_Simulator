@@ -69,7 +69,8 @@ void addVariableEntries(ISimulationTable& simulationTable,
                         VarLookup variableLookup,
                         unsigned currentBlock,
                         const TimeConversionMode& timeConversionMode,
-                        std::optional<unsigned> scenario = std::nullopt)
+                        std::optional<unsigned> scenario,
+                        bool isLp)
 {
     const auto& cid = component.Id();
 
@@ -92,7 +93,9 @@ void addVariableEntries(ISimulationTable& simulationTable,
                                       .block_time_index = tb.blockTimeIndex,
                                       .scenario_index = scenIdx,
                                       .value = SolverTraits::getValue(var),
-                                      .status = SolverTraits::getStatus(var)});
+                                      .status = isLp ? SolverTraits::getStatus(var)
+                                                     : Antares::Optimisation::LinearProblemApi::
+                                                         MipBasisStatus::NOT_AVAILABLE});
         };
 
         if (scenDep && timeDep)
@@ -129,7 +132,8 @@ void addConstraintEntries(ISimulationTable& simulationTable,
                           ConstraintLookup lookupConstraint,
                           unsigned currentBlock,
                           const TimeConversionMode& timeConversionMode,
-                          std::optional<unsigned> scenario = std::nullopt)
+                          std::optional<unsigned> scenario,
+                          bool isLp)
 {
     using TI = Antares::Expressions::Visitors::TimeIndex;
     const auto& cid = component.Id();
@@ -153,7 +157,9 @@ void addConstraintEntries(ISimulationTable& simulationTable,
                                       .block_time_index = tb.blockTimeIndex,
                                       .scenario_index = scenIdx,
                                       .value = std::nullopt,
-                                      .status = SolverTraits::getStatus(c)});
+                                      .status = isLp ? SolverTraits::getStatus(c)
+                                                     : Antares::Optimisation::LinearProblemApi::
+                                                         MipBasisStatus::NOT_AVAILABLE});
         };
 
         switch (idxType)
