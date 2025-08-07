@@ -4,23 +4,69 @@ toc_depth: 2
 
 # Antares Changelog
 
-## Branch 9.2.x
+### 9.2.1
+
+#### New features
+
+* Add new near price cap hours variable (NPCAP HOURS) [ANT-3038] (#2815)
+
+#### Modeler features/improvements
+
+* 3.3: Hydrid studies without connections [ANT-2898] (#2699)
+* Do not create modeler solution files if study has no modeler components (#2849)
+
+#### Numerical issues fixes
+
+* Set primal tolerance to 1e-6 in ortools_utils [ANT-3122] (#2850)
+* Fix unfeasible problems with <0 hydro infows [ANT-3043] (#2732)
+* Ceiling error with xpress and accurate [ANT-3167] (#2785)
+* Hydro monthly heuristic : add a new overflow optimization variable for v9.2.x [ANT-3236] (#2845)
+
+#### Short-term storage fixes/improvements
+
+* Use ANTLR4 to handle STS additional constraints, allowing the parsing of larger "hours" field for additional
+  constraints [ANT-3091] (#2777)
+* Fix check for STS injection/withdrawal efficiency [ANT-3100] (#2749)
+* Allow empty series files for STS [ANT-3053] (#2731)
+
+#### Other bugfix
+
+* The use of OR-Tools v9.13-rte1.0 allows fixing multiple minor bugs with XPRESS [ANT-3348]
+    - non-reproducibility
+    - unsafe "locale" modification
+    - performance issues
+* Fix memory leak in hydro (#2736)
+* Don't rebuild optimization problem at every simplex resolution (performance issues with XPRESS) [ANT-3044] (#2722)
+* Fix missing DLL / .so by packaging OR-Tools shared libs [ANT-3227] (#2803)
+* Remove limit on max threads when requested threads == nproc (#2834)
+* Use `std::call_once` to avoid race conditions in `ThermalCluster::getCostProvider` (#2725)
+
+#### Other improvements
+
+* Use OR-Tools/MathOpt for quadratic problem resolution [ANT-2546] (#2574)
+* Force the export for criterion files in Expansion mode [ANT-3137] (#2823)
+* Check for duplicates on study objects (thermal, renewable clusters, short-term storages) [ANT-2127] (#2733)
 
 ### 9.2.0
+
 #### New features
+
 * Short term storage: withdrawal efficiency [ANT-1862] (#2223)
 * Short term storage: penalty on level, injection, withdrawal [ANT-1854] (#2302)
 * Short term storage: additional constraints on injection, withdrawal, netting [ANT-1855] (#2550, #2546)
 * Short term storage: penalty for storage control, injection and withdrawal flow gradient [ANT-2300] (#2491)
 * Make it possible to specify the final hydro reservoir level [ANT-1084] (#1521)
-* Major changes on the hydro behavior. Use overflow from the weekly optimization problem, don't recompute levels as a post-processing. These changes improve the handling of min-gen constraints for hydro reservoirs. [ANT-1825]
+* Major changes on the hydro behavior. Use overflow from the weekly optimization problem, don't recompute levels as a
+  post-processing. These changes improve the handling of min-gen constraints for hydro reservoirs. [ANT-1825]
 
 #### Removed features
+
 * Remove hydro hotstart (#2131)
 * Remove adequacy patch lmr [ANT-1933] (#2341)
 * Possibility to disable OR-Tools. All problems are now solved through OR-Tools (#2450)
 
 #### Improvements
+
 * Changed the formula for the number of cores [details](../user-guide/solver/optional-features/multi-threading.md)
 * Expose API [ANT-1158] (#1993)
 * Adequacy patch CSR - revamp output variables [ANT-1932] (#2306)
@@ -41,6 +87,7 @@ toc_depth: 2
 * Remove computation for number of non-zero terms in the constraint matrix [ANT-2258] (#2496)
 
 #### Bugfixes
+
 * Adequacy Patch regression [ANT-1845] (#2235)
 * BC marginal cost : remove "return"s that break the static chain (#2121)
 * Fix condition for disabling "store in input" (#2180)
@@ -66,8 +113,9 @@ toc_depth: 2
 * Fix variable bounds for 1st week in the year (#2517)
 * Fix timestamp = 0 in file info.antares-output (ANT-2494) (#2508)
 * Fix build after the removal of bool OptimizationOptions::ortoolsUsed (#2505)
- 
+
 #### Modeler
+
 * 1.1: Modeler API [ANT-1876] (#2286) (#2391)
 * 1.1c: Scenarize problem filler (#2445)
 * 2.1: Lib for modeling objects (#2383)
@@ -89,7 +137,7 @@ toc_depth: 2
 * Add iterators on ASTs, allowing for loops (#2387)
 * Use variable dict (#2670)(#2655)
 * Support time dependency [ANT-2749] (#2622)
-* Import modeler data-series [ANT-2033] (#2621)
+* Import modeler data-series [ANT-2033](#2621)
 * Simplify ComponentFiller::addVariables (#2615)
 * add of unit tests for time dependant expression [ANT-2608] (#2597)
 * Refactor modeler code (#2616)
@@ -98,6 +146,7 @@ toc_depth: 2
 * Tests (#2626)(#2617)
 
 #### CI
+
 * SonarCloud job, improvements, bugfixes (#2315) (#2281) (#2246)
 * Run all tests even if one of them fails (#2265)
 * install gh from rpm (#2216)
@@ -116,6 +165,7 @@ toc_depth: 2
 * centos build (#2509) (#2510)
 
 #### Build
+
 * vcpkg (linux, sirius) (#2078) (#2090) (#2145)
 * Remove src/antares-deps (#2182)
 * Fix or-tools integration (#2402)
@@ -129,6 +179,7 @@ toc_depth: 2
 * Use sirius-solver@antares-integration-v1.6 (#2533)
 
 #### Doc
+
 * CHANGELOG improvements (#2287) (#2229) (#2125)
 * Fix PDF generation for useguide (#2134)
 * Add contribution guidelines (#2380)
@@ -141,6 +192,7 @@ toc_depth: 2
 * Migration doc : move hydro level from v8.7.0 to v9.2.0 (#2482)
 
 #### Code quality
+
 * Using filesystem path instead of Yuni [ANT-1999] (#2435) (#2454) (#2123) (#2066)
 * Compilation warnings (#2237) (#2199) (#2183) (#2144) (#2119) (#2340)
 * Separation of loading and validation [ANT-1213] (#2173) (#2175) (#2177) (#2179)
@@ -180,6 +232,7 @@ toc_depth: 2
 * Use thread-safe version of localtime (#2503)
 
 #### Technical cleaning
+
 * Remove last global variable (#2410)
 * Local matching removal : remove unused thread number / numSpace (#2404)
 * Remove Antares::Memory::Array (#2187)
@@ -196,6 +249,7 @@ toc_depth: 2
 * Remove unused enum class (#2584)
 
 #### Tests
+
 * Unfeasible tests (#2611)
 * Add unit tests on class Antares::Solver::Variable::IntermediateValues (#2593)
 * Add tests for TSData getters & setters (#2677)
@@ -214,7 +268,6 @@ toc_depth: 2
 * Various improvement to code quality
 * Sonarcloud coverage (#2652)(#2649)(#2647)(#2640)(#2641)(#2645)(#2639)
 * Write raw optimization results [ANT-2302] (#2565)
-
 
 ## Branch 9.1.x
 
@@ -313,29 +366,35 @@ toc_depth: 2
 ### 8.8.14 (03/2025)
 
 #### Improvements
+
 - Increase precision for `LOLD[CSR]` and `MRG PRICE[CSR]` [ANT-2443] (#2613)
 
 #### Bugfix
+
 - Segfault related to **scenariobuilder.dat** [ANT-2890] (#2675)
-- Fix function `ThermalCluster::getMarketBidCost` [ANT-2527] (#2605) (backport) 
+- Fix function `ThermalCluster::getMarketBidCost` [ANT-2527] (#2605) (backport)
 
 #### Legacy GUI bugs
-- Binding constraints TS loading in 8.8 [ANT-2746] (#2635) 
-- Correct cluster count, load constraints even for disabled clusters [ANT-2754] (#2659) 
+
+- Binding constraints TS loading in 8.8 [ANT-2746] (#2635)
+- Correct cluster count, load constraints even for disabled clusters [ANT-2754] (#2659)
 
 ### 8.8.13 (01/2025)
 
 #### Bugfix
+
 - Backport bug on annual aggregation [ANT-2630] (#2585)
 
 ### 8.8.12 (01/2025)
 
 #### New features
+
 * Add variable MRG PRICE CSR [ANT-2562] (#2531)
 * Use VCPKG for dependencies (#2549)
 * Activate long tests on branch release/8.8.x (#2538)
 
 #### Bugfix
+
 * Fix segfault related to district for 8.8 [ANT-2452] (#2519)
 * Fix uninitialized CSR variables [ANT-2496] (#2518)
 * Fix segfault caused by invalid index [ANT-2582] (#2544)
@@ -343,10 +402,12 @@ toc_depth: 2
 ### 8.8.11 (11/2024)
 
 #### New features
+
 * Adding parameters for the used optimization solver [ANT-2280] (#2466)
 * Adequacy patch CSR : add out variables after DTG netting step [ANT-2295] (#2472)
 
 #### Bugfix
+
 * Legacy GUI : Restore and fix grid statistics [ANT-2381] (#2478)
 * Don't apply reverse spinning if the cluster is no force gen [ANT-2293] (#2468)
 * Use "trigerred" criterion for mrg price [ANT-2294] (#2453)
