@@ -320,6 +320,7 @@ public:
             return;
 
         // Initializing external pointer on current variable non applicable status
+        results.isCurrentVarNA = AncestorType::isNonApplicable;
         results.isCurrentVarNA[0] = isCurrentOutputNonApplicable(precision);
 
         if (AncestorType::isPrinted[0])
@@ -346,6 +347,7 @@ public:
                 && (precision & VCardType::precision))
             {
                 results.isPrinted = AncestorType::isPrinted;
+                results.isCurrentVarNA = AncestorType::isNonApplicable;
                 results.isCurrentVarNA[0] = isCurrentOutputNonApplicable(precision);
                 results.variableCaption = getBindConstraintCaption();
 
