@@ -34,7 +34,7 @@ SimulationTableCsvFile::SimulationTableCsvFile(const std::filesystem::path& outp
     // const auto simulationTableSuffix = std::string("_" + simulationId) + ".csv";
     const auto simulationTableFile = outputFolder / ("simulation_table" + simulationTableSuffix);
     file_.open(simulationTableFile);
-    if (!file_)
+    if (!file_.is_open())
     {
         throw std::runtime_error("Cannot open file: " + simulationTableFile.string());
     }

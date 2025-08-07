@@ -16,7 +16,7 @@ LinearProblemApi::MipBasisStatus convertOrtoolsBasisStatus(
     case operations_research::MPSolver::BasisStatus::FIXED_VALUE:
         return LinearProblemApi::MipBasisStatus::FIXED_VALUE;
     case operations_research::MPSolver::BasisStatus::BASIC:
-    case default: /*TODO*/
+    default: /*TODO*/
         return LinearProblemApi::MipBasisStatus::BASIC;
     }
 }

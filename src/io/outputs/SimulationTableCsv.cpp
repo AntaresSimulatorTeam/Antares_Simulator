@@ -45,11 +45,7 @@ const std::string NONE = "None";
 template<typename T>
 std::string extractFromOptional(const std::optional<T>& option)
 {
-    if (option.has_value())
-    {
-        return std::to_string(option.value());
-    }
-    return NONE;
+    return option.has_value() ? std::to_string(option.value()) : NONE;
 }
 
 void SimulationTableCsv::write()
