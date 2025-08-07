@@ -51,7 +51,7 @@ HydroForRemix::HydroForRemix(std::vector<double>& generation,
     pmax_(Pmax),
     pmin_(Pmin)
 {
-    checkInput(generation_.size());
+    checkInput(unsupE_.size());
 }
 
 double HydroForRemix::maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen)
@@ -69,7 +69,7 @@ double HydroForRemix::maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen)
 
 void HydroForRemix::checkInput(size_t size)
 {
-    std::vector<size_t> sizes = {generation_.size(), pmin_.size(), pmax_.size()};
+    std::vector<size_t> sizes = {size, generation_.size(), pmin_.size(), pmax_.size()};
 
     if (!std::ranges::all_of(sizes, [&sizes](const size_t s) { return s == sizes.front(); }))
     {
@@ -118,7 +118,7 @@ HydroForRemixWithLevels::HydroForRemixWithLevels(std::vector<double>& generation
     capacity_(capacity),
     pumpEff_(pumpEfficiency)
 {
-    checkInput(generation_.size());
+    checkInput(unsupE_.size());
     update();
     checkLevels();
 }
