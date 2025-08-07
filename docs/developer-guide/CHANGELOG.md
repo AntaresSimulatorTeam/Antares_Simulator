@@ -4,6 +4,17 @@ toc_depth: 2
 
 # Antares Changelog
 
+### 9.2.2
+
+#### New features
+
+> [!CAUTION] Breaking change
+
+* [ANT-3666] Move STS additional constraint data
+  folder https://github.com/AntaresSimulatorTeam/Antares_Simulator/pull/2945
+  Change sts constraint directory to follow this path
+  `input/st-storage/constraints/<area id>/<storage_id>/additional-constraints.ini`
+
 ### 9.2.1
 
 #### New features
