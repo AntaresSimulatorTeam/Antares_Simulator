@@ -4,6 +4,12 @@ toc_depth: 2
 
 # Antares Changelog
 
+### 9.2.3
+
+#### Bugfixes
+
+* Fix segfault when exporting binding constraints results (#2954)
+
 ### 9.2.2
 
 #### New features
