@@ -107,10 +107,8 @@ static double makeExchange(const std::vector<double>& DispatchGen,
                            const std::vector<bool>& validHours,
                            std::shared_ptr<StorageForRemix>& storage)
 {
-    double exchange = 0; // to be returned
-    size_t nbHours = DispatchGen.size();
-    double top = *rng::max_element(DispatchGen) + *rng::max_element(storage->initialGen())
-                 + *rng::max_element(UnsupEinit) + 1;
+    double exchange = 0; // To be returned
+    size_t nbHours = TotalGen.size();
 
     std::vector<bool> triedMins(nbHours, false);
     while (true)
@@ -122,10 +120,6 @@ static double makeExchange(const std::vector<double>& DispatchGen,
         }
 
         unsigned hourOfMinGen = hourForTotalGenMin(TotalGen, filteredHours);
-        if (TotalGen[hourOfMinGen] > top)
-        {
-            return 0.;
-        }
 
         std::vector<bool> triedMaxs(nbHours, false);
         while (true)
