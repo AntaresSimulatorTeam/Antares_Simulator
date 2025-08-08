@@ -179,7 +179,7 @@ void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
     while (nbLoops-- > 0)
     {
         double exchange = makeExchange(DispatchGen,
-                                       TotalGen, 
+                                       TotalGen,
                                        UnsupE,
                                        UnsupEinit,
                                        validHours,

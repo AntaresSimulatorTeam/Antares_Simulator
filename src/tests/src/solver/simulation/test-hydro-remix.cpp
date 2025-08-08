@@ -56,7 +56,7 @@ struct InputFixture
     std::shared_ptr<StorageForRemix> hydroForRemix;
     double init_level = 0.;
     double capacity = std::numeric_limits<double>::max();
-    const double pumpEff = 1.0;
+    const double pumpEff = 1.;
     const bool reservoirManagement = true;
 
     std::string err_msg;
@@ -121,7 +121,7 @@ BOOST_FIXTURE_TEST_CASE(
     std::ranges::fill(HydroPmax, 40.);
     std::ranges::fill(TotalGenNoHydro, 100.);
     HydroGen = {0., 10., 20., 30., 40.}; // we have Pmin <= HydroGen <= Pmax
-    UnsupE = {80.0, 60., 40., 20., 0.};
+    UnsupE = {80., 60., 40., 20., 0.};
     init_level = 500.;
     capacity = 1000.;
 
@@ -139,7 +139,7 @@ BOOST_FIXTURE_TEST_CASE(Pmax_does_not_impact_results_when_greater_than_40mwh, In
     std::ranges::fill(HydroPmax, 50.);
     std::ranges::fill(TotalGenNoHydro, 100.);
     HydroGen = {0., 10., 20., 30., 40.};
-    UnsupE = {80.0, 60., 40., 20., 0.};
+    UnsupE = {80., 60., 40., 20., 0.};
     init_level = 500.;
     capacity = 1000.;
 
