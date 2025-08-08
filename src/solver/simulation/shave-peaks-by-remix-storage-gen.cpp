@@ -10,6 +10,7 @@ namespace rng = std::ranges;
 namespace vws = std::ranges::views;
 
 constexpr double eps = 1e-3;
+constexpr unsigned maxNbLoops = 1000;
 const std::string error_msg_start = "Remix storage input : ";
 
 namespace Antares::Solver::Simulation
@@ -102,7 +103,6 @@ static std::vector<bool> ValidHours(const std::vector<double>& Spillage,
 static double makeExchange(std::vector<double>& UnsupE,
                            const std::vector<bool>& validHours,
                            std::vector<double>& TotalGen,
-                           double top,
                            std::shared_ptr<StorageForRemix>& storage,
                            const std::vector<double>& storageGenInit,
                            const std::vector<double>& UnsupEinit,
@@ -110,6 +110,8 @@ static double makeExchange(std::vector<double>& UnsupE,
 {
     double exchange = 0; // to be returned
     size_t nbHours = DispatchGen.size();
+    double top = *rng::max_element(DispatchGen) + *rng::max_element(storageGenInit)
+                 + *rng::max_element(UnsupEinit) + 1;
 
     std::vector<bool> triedMins(nbHours, false);
     while (true)
@@ -175,20 +177,16 @@ void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
 
     checkInput(DispatchGen, UnsupEinit, Spillage, DTG_MRG, storageGenInit);
 
-    int loop = 1000;
-    double top = *rng::max_element(DispatchGen) + *rng::max_element(storageGenInit)
-                 + *rng::max_element(UnsupEinit) + 1;
-
     const auto validHours = ValidHours(Spillage, DTG_MRG, storageGenInit, UnsupEinit);
 
     std::vector<double> TotalGen = updateTotalGen(DispatchGen, storageGenInit);
 
-    while (loop-- > 0)
+    unsigned nbLoops = maxNbLoops;
+    while (nbLoops-- > 0)
     {
         double exchange = makeExchange(UnsupE,
                                        validHours,
                                        TotalGen,
-                                       top,
                                        storage,
                                        storageGenInit,
                                        UnsupEinit,
