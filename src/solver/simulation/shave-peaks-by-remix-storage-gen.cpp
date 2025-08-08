@@ -100,12 +100,12 @@ static std::vector<bool> ValidHours(const std::vector<double>& Spillage,
     return validHours;
 }
 
-static double makeExchange(std::vector<double>& UnsupE,
-                           const std::vector<bool>& validHours,
+static double makeExchange(const std::vector<double>& DispatchGen,
                            std::vector<double>& TotalGen,
-                           std::shared_ptr<StorageForRemix>& storage,
+                           std::vector<double>& UnsupE,
                            const std::vector<double>& UnsupEinit,
-                           const std::vector<double>& DispatchGen)
+                           const std::vector<bool>& validHours,
+                           std::shared_ptr<StorageForRemix>& storage)
 {
     double exchange = 0; // to be returned
     size_t nbHours = DispatchGen.size();
@@ -184,12 +184,12 @@ void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
     unsigned nbLoops = maxNbLoops;
     while (nbLoops-- > 0)
     {
-        double exchange = makeExchange(UnsupE,
-                                       validHours,
-                                       TotalGen,
-                                       storage,
+        double exchange = makeExchange(DispatchGen,
+                                       TotalGen, 
+                                       UnsupE,
                                        UnsupEinit,
-                                       DispatchGen);
+                                       validHours,
+                                       storage);
 
         if (exchange <= eps)
         {
