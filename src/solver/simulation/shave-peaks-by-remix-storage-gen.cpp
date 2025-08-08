@@ -99,6 +99,71 @@ static std::vector<bool> ValidHours(const std::vector<double>& Spillage,
     return validHours;
 }
 
+static double makeExchange(std::vector<double>& UnsupE,
+                           const std::vector<bool>& validHours,
+                           std::vector<double>& TotalGen,
+                           double top,
+                           std::shared_ptr<StorageForRemix>& storage,
+                           const std::vector<double>& storageGenInit,
+                           const std::vector<double>& UnsupEinit,
+                           const std::vector<double>& DispatchGen)
+{
+    double exchange = 0; // to be returned
+    size_t nbHours = DispatchGen.size();
+
+    std::vector<bool> triedMins(nbHours, false);
+    while (true)
+    {
+        auto filteredHours = filterHoursForMin(UnsupE, triedMins, validHours);
+        if (!filteredHours.size())
+        {
+            return 0.;
+        }
+
+        unsigned hourOfMinGen = hourForTotalGenMin(TotalGen, filteredHours);
+        if (TotalGen[hourOfMinGen] > top)
+        {
+            return 0.;
+        }
+
+        std::vector<bool> triedMaxs(nbHours, false);
+        while (true)
+        {
+            double totaGenMin = TotalGen[hourOfMinGen];
+            filteredHours = filterHoursForMax(TotalGen, triedMaxs, validHours, totaGenMin);
+            if (!filteredHours.size())
+            {
+                break;
+            }
+
+            unsigned hourOfMaxGen = hourForTotalGenMax(TotalGen, filteredHours);
+
+            double maxVariation = std::max(TotalGen[hourOfMaxGen] - TotalGen[hourOfMinGen], 0.);
+            double maxExchangeFromStorage = storage->maxExchange(hourOfMaxGen, hourOfMinGen);
+            exchange = std::max(std::min(maxExchangeFromStorage, maxVariation / 2.), 0.);
+
+            if (exchange > eps)
+            {
+                storage->generation()[hourOfMaxGen] -= exchange;
+                storage->generation()[hourOfMinGen] += exchange;
+
+                UnsupE[hourOfMaxGen] = storageGenInit[hourOfMaxGen] + UnsupEinit[hourOfMaxGen]
+                                       - storage->generation()[hourOfMaxGen];
+                UnsupE[hourOfMinGen] = storageGenInit[hourOfMinGen] + UnsupEinit[hourOfMinGen]
+                                       - storage->generation()[hourOfMinGen];
+
+                storage->update();
+
+                TotalGen = updateTotalGen(DispatchGen, storage->generation());
+                return exchange;
+            }
+            triedMaxs[hourOfMaxGen] = true;
+        }
+
+        triedMins[hourOfMinGen] = true;
+    }
+}
+
 void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
                                     const std::vector<double>& DispatchGen,
                                     const std::vector<double>& Spillage,
@@ -109,7 +174,6 @@ void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
     const std::vector<double> UnsupEinit = UnsupE;
 
     checkInput(DispatchGen, UnsupEinit, Spillage, DTG_MRG, storageGenInit);
-    size_t nbHours = DispatchGen.size();
 
     int loop = 1000;
     double top = *rng::max_element(DispatchGen) + *rng::max_element(storageGenInit)
@@ -121,63 +185,14 @@ void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
 
     while (loop-- > 0)
     {
-        double exchange = 0;
-
-        std::vector<bool> triedMins(nbHours, false);
-        while (true)
-        {
-            auto filteredHours = filterHoursForMin(UnsupE, triedMins, validHours);
-            if (!filteredHours.size())
-            {
-                break;
-            }
-
-            unsigned hourOfMinGen = hourForTotalGenMin(TotalGen, filteredHours);
-            if (TotalGen[hourOfMinGen] > top)
-            {
-                break;
-            }
-
-            std::vector<bool> triedMaxs(nbHours, false);
-            while (true)
-            {
-                double totaGenMin = TotalGen[hourOfMinGen];
-                filteredHours = filterHoursForMax(TotalGen, triedMaxs, validHours, totaGenMin);
-                if (!filteredHours.size())
-                {
-                    break;
-                }
-
-                unsigned hourOfMaxGen = hourForTotalGenMax(TotalGen, filteredHours);
-
-                double maxVariation = std::max(TotalGen[hourOfMaxGen] - TotalGen[hourOfMinGen], 0.);
-                double maxExchangeFromStorage = storage->maxExchange(hourOfMaxGen, hourOfMinGen);
-                exchange = std::max(std::min(maxExchangeFromStorage, maxVariation / 2.), 0.);
-
-                if (exchange > eps)
-                {
-                    storage->generation()[hourOfMaxGen] -= exchange;
-                    storage->generation()[hourOfMinGen] += exchange;
-
-                    UnsupE[hourOfMaxGen] = storageGenInit[hourOfMaxGen] + UnsupEinit[hourOfMaxGen]
-                                           - storage->generation()[hourOfMaxGen];
-                    UnsupE[hourOfMinGen] = storageGenInit[hourOfMinGen] + UnsupEinit[hourOfMinGen]
-                                           - storage->generation()[hourOfMinGen];
-
-                    storage->update();
-
-                    TotalGen = updateTotalGen(DispatchGen, storage->generation());
-                    break;
-                }
-                triedMaxs[hourOfMaxGen] = true;
-            }
-
-            if (exchange > eps)
-            {
-                break;
-            }
-            triedMins[hourOfMinGen] = true;
-        }
+        double exchange = makeExchange(UnsupE,
+                                       validHours,
+                                       TotalGen,
+                                       top,
+                                       storage,
+                                       storageGenInit,
+                                       UnsupEinit,
+                                       DispatchGen);
 
         if (exchange <= eps)
         {
