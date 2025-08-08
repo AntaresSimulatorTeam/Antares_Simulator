@@ -30,7 +30,7 @@ struct InputFixture
         DTG_MRG.assign(size, 0.);
     }
 
-    std::shared_ptr<StorageForRemix> createHydroRemix()
+    std::shared_ptr<StorageForRemix> createHydroForRemix()
     {
         return std::make_shared<HydroForRemixWithLevels>(HydroGen,
                                                          UnsupE,
@@ -47,7 +47,7 @@ struct InputFixture
 
     void callRemixStorageAlgorithm()
     {
-        hydroForRemix = createHydroRemix();
+        hydroForRemix = createHydroForRemix();
         shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix);
     }
 
@@ -66,7 +66,7 @@ BOOST_FIXTURE_TEST_CASE(input_vectors_of_different_sizes__exception_raised, Inpu
 {
     HydroGen = {0., 0.};
     err_msg = "Remix hydro input : arrays of different sizes";
-    BOOST_CHECK_EXCEPTION(createHydroRemix(), std::invalid_argument, checkMessage(err_msg));
+    BOOST_CHECK_EXCEPTION(createHydroForRemix(), std::invalid_argument, checkMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(input_init_level_exceeds_capacity__exception_raised, InputFixture<1>)
@@ -74,7 +74,7 @@ BOOST_FIXTURE_TEST_CASE(input_init_level_exceeds_capacity__exception_raised, Inp
     init_level = 2.;
     capacity = 1.;
     err_msg = "Remix hydro input : initial level > reservoir capacity";
-    BOOST_CHECK_EXCEPTION(createHydroRemix(), std::invalid_argument, checkMessage(err_msg));
+    BOOST_CHECK_EXCEPTION(createHydroForRemix(), std::invalid_argument, checkMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(all_input_arrays_of_size_0__exception_raised, InputFixture<0>)
@@ -82,7 +82,7 @@ BOOST_FIXTURE_TEST_CASE(all_input_arrays_of_size_0__exception_raised, InputFixtu
     init_level = 0.;
     capacity = 1.;
     err_msg = "Remix hydro input : all arrays of sizes 0";
-    BOOST_CHECK_EXCEPTION(createHydroRemix(), std::invalid_argument, checkMessage(err_msg));
+    BOOST_CHECK_EXCEPTION(createHydroForRemix(), std::invalid_argument, checkMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(Hydro_gen_not_smaller_than_pmax__exception_raised, InputFixture<5>)
@@ -92,7 +92,7 @@ BOOST_FIXTURE_TEST_CASE(Hydro_gen_not_smaller_than_pmax__exception_raised, Input
     init_level = 0.;
     capacity = 1.;
     err_msg = "Remix hydro input : Hydro generation not smaller than Pmax everywhere";
-    BOOST_CHECK_EXCEPTION(createHydroRemix(), std::invalid_argument, checkMessage(err_msg));
+    BOOST_CHECK_EXCEPTION(createHydroForRemix(), std::invalid_argument, checkMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(Hydro_gen_not_greater_than_pmin__exception_raised, InputFixture<5>)
@@ -102,14 +102,14 @@ BOOST_FIXTURE_TEST_CASE(Hydro_gen_not_greater_than_pmin__exception_raised, Input
     init_level = 0.;
     capacity = 1.;
     err_msg = "Remix hydro input : Hydro generation not greater than Pmin everywhere";
-    BOOST_CHECK_EXCEPTION(createHydroRemix(), std::invalid_argument, checkMessage(err_msg));
+    BOOST_CHECK_EXCEPTION(createHydroForRemix(), std::invalid_argument, checkMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(input_is_acceptable__no_exception_raised, InputFixture<1>)
 {
     init_level = 0.;
     capacity = 1.;
-    BOOST_CHECK_NO_THROW(hydroForRemix = createHydroRemix());
+    BOOST_CHECK_NO_THROW(hydroForRemix = createHydroForRemix());
     BOOST_CHECK_NO_THROW(
       shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix));
 }
@@ -259,7 +259,7 @@ BOOST_FIXTURE_TEST_CASE(input_leads_to_levels_over_capacity___exception_raised, 
     std::ranges::fill(inflows, 25);  // Cause levels to increase
     std::ranges::fill(pump, 20);     // Cause levels to increase
     err_msg = "Remix hydro input : levels computed from input don't respect reservoir bounds";
-    BOOST_CHECK_EXCEPTION(createHydroRemix(), std::invalid_argument, checkMessage(err_msg));
+    BOOST_CHECK_EXCEPTION(createHydroForRemix(), std::invalid_argument, checkMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(input_leads_to_levels_less_than_zero___exception_raised, InputFixture<5>)
@@ -270,7 +270,7 @@ BOOST_FIXTURE_TEST_CASE(input_leads_to_levels_less_than_zero___exception_raised,
     std::ranges::fill(inflows, 5);   // Cause levels to increase
     std::ranges::fill(pump, 10);     // Cause levels to increase
     err_msg = "Remix hydro input : levels computed from input don't respect reservoir bounds";
-    BOOST_CHECK_EXCEPTION(createHydroRemix(), std::invalid_argument, checkMessage(err_msg));
+    BOOST_CHECK_EXCEPTION(createHydroForRemix(), std::invalid_argument, checkMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(influence_of_capacity_on_algorithm___case_where_no_influence,

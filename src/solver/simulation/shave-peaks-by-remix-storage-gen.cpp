@@ -172,7 +172,7 @@ void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
                                     const std::vector<double>& DTG_MRG,
                                     std::shared_ptr<StorageForRemix> storage)
 {
-    const std::vector<double> storageGenInit = storage->generation();
+    const std::vector<double> storageGenInit = storage->initialGen();
     const std::vector<double> UnsupEinit = UnsupE;
 
     checkInput(DispatchGen, UnsupEinit, Spillage, DTG_MRG, storageGenInit);
