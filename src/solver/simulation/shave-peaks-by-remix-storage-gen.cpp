@@ -104,13 +104,12 @@ static double makeExchange(std::vector<double>& UnsupE,
                            const std::vector<bool>& validHours,
                            std::vector<double>& TotalGen,
                            std::shared_ptr<StorageForRemix>& storage,
-                           const std::vector<double>& storageGenInit,
                            const std::vector<double>& UnsupEinit,
                            const std::vector<double>& DispatchGen)
 {
     double exchange = 0; // to be returned
     size_t nbHours = DispatchGen.size();
-    double top = *rng::max_element(DispatchGen) + *rng::max_element(storageGenInit)
+    double top = *rng::max_element(DispatchGen) + *rng::max_element(storage->initialGen())
                  + *rng::max_element(UnsupEinit) + 1;
 
     std::vector<bool> triedMins(nbHours, false);
@@ -149,9 +148,11 @@ static double makeExchange(std::vector<double>& UnsupE,
                 storage->generation()[hourOfMaxGen] -= exchange;
                 storage->generation()[hourOfMinGen] += exchange;
 
-                UnsupE[hourOfMaxGen] = storageGenInit[hourOfMaxGen] + UnsupEinit[hourOfMaxGen]
+                UnsupE[hourOfMaxGen] = storage->initialGen()[hourOfMaxGen]
+                                       + UnsupEinit[hourOfMaxGen]
                                        - storage->generation()[hourOfMaxGen];
-                UnsupE[hourOfMinGen] = storageGenInit[hourOfMinGen] + UnsupEinit[hourOfMinGen]
+                UnsupE[hourOfMinGen] = storage->initialGen()[hourOfMinGen]
+                                       + UnsupEinit[hourOfMinGen]
                                        - storage->generation()[hourOfMinGen];
 
                 storage->update();
@@ -172,14 +173,13 @@ void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
                                     const std::vector<double>& DTG_MRG,
                                     std::shared_ptr<StorageForRemix> storage)
 {
-    const std::vector<double> storageGenInit = storage->initialGen();
     const std::vector<double> UnsupEinit = UnsupE;
 
-    checkInput(DispatchGen, UnsupEinit, Spillage, DTG_MRG, storageGenInit);
+    checkInput(DispatchGen, UnsupEinit, Spillage, DTG_MRG, storage->initialGen());
 
-    const auto validHours = ValidHours(Spillage, DTG_MRG, storageGenInit, UnsupEinit);
+    const auto validHours = ValidHours(Spillage, DTG_MRG, storage->initialGen(), UnsupEinit);
 
-    std::vector<double> TotalGen = updateTotalGen(DispatchGen, storageGenInit);
+    std::vector<double> TotalGen = updateTotalGen(DispatchGen, storage->initialGen());
 
     unsigned nbLoops = maxNbLoops;
     while (nbLoops-- > 0)
@@ -188,7 +188,6 @@ void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
                                        validHours,
                                        TotalGen,
                                        storage,
-                                       storageGenInit,
                                        UnsupEinit,
                                        DispatchGen);
 
