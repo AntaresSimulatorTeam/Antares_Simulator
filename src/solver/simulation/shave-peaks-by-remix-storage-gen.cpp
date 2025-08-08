@@ -121,9 +121,9 @@ void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
 
     while (loop-- > 0)
     {
-        std::vector<bool> triedMins(nbHours, false);
-        double maxExchange = 0;
+        double exchange = 0;
 
+        std::vector<bool> triedMins(nbHours, false);
         while (true)
         {
             auto filteredHours = filterHoursForMin(UnsupE, triedMins, validHours);
@@ -152,12 +152,12 @@ void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
 
                 double maxVariation = std::max(TotalGen[hourOfMaxGen] - TotalGen[hourOfMinGen], 0.);
                 double maxExchangeFromStorage = storage->maxExchange(hourOfMaxGen, hourOfMinGen);
-                maxExchange = std::max(std::min(maxExchangeFromStorage, maxVariation / 2.), 0.);
+                exchange = std::max(std::min(maxExchangeFromStorage, maxVariation / 2.), 0.);
 
-                if (maxExchange > eps)
+                if (exchange > eps)
                 {
-                    storage->generation()[hourOfMaxGen] -= maxExchange;
-                    storage->generation()[hourOfMinGen] += maxExchange;
+                    storage->generation()[hourOfMaxGen] -= exchange;
+                    storage->generation()[hourOfMinGen] += exchange;
 
                     UnsupE[hourOfMaxGen] = storageGenInit[hourOfMaxGen] + UnsupEinit[hourOfMaxGen]
                                            - storage->generation()[hourOfMaxGen];
@@ -172,14 +172,14 @@ void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
                 triedMaxs[hourOfMaxGen] = true;
             }
 
-            if (maxExchange > eps)
+            if (exchange > eps)
             {
                 break;
             }
             triedMins[hourOfMinGen] = true;
         }
 
-        if (maxExchange <= eps)
+        if (exchange <= eps)
         {
             break;
         }
