@@ -501,6 +501,10 @@ toc_depth: 2
 
 ## Branch 8.8.x (end of support 12/2025)
 
+### 8.8.18 (08/2025)
+#### Bugfixes
+* Fix segfault when exporting binding constraints results (#2955)
+
 ### 8.8.17 (06/2025)
 #### Bugfixes
 * Bump OR-Tools v9.13-rte1.0 [ANT-3350]
