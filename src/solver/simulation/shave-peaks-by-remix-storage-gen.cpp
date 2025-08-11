@@ -150,19 +150,19 @@ static double makeExchange(std::vector<double>& TotalGen,
     }
 }
 
-void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
-                                    const std::vector<double>& DispatchGen,
+void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
+                                    std::vector<double>& UnsupE,
                                     const std::vector<double>& Spillage,
                                     const std::vector<double>& DTG_MRG,
                                     std::shared_ptr<StorageForRemix> storage)
 {
     const std::vector<double> UnsupEinit = UnsupE;
 
-    checkInput(DispatchGen, UnsupEinit, Spillage, DTG_MRG, storage->initialGen());
+    checkInput(Load, UnsupEinit, Spillage, DTG_MRG, storage->initialGen());
 
     const auto validHours = ValidHours(Spillage, DTG_MRG, storage->initialGen(), UnsupEinit);
 
-    std::vector<double> TotalGen = DispatchGen + storage->initialGen();
+    std::vector<double> TotalGen = Load - UnsupEinit;
 
     unsigned nbLoops = maxNbLoops;
     while (nbLoops-- > 0)

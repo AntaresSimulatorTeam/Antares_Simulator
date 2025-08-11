@@ -9,6 +9,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "antares/solver/simulation/shave-peaks-by-remix-storage-gen.h"
+#include "antares/solver/simulation/remix-utils.h"
 
 using namespace Antares::Solver::Simulation;
 
@@ -18,6 +19,7 @@ struct InputFixture
     InputFixture()
     {
         TotalGenNoHydro.assign(size, 0.);
+        Load.assign(size, 0.);
         HydroGen.assign(size, 0.);
         UnsupE.assign(size, 0.);
         levels.assign(size, 0.);
@@ -48,10 +50,11 @@ struct InputFixture
     void callRemixStorageAlgorithm()
     {
         hydroForRemix = createHydroForRemix();
-        shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix);
+        Load = TotalGenNoHydro + UnsupE + HydroGen;
+        shavePeaksByRemixingStorageGen(Load, UnsupE, Spillage, DTG_MRG, hydroForRemix);
     }
 
-    std::vector<double> TotalGenNoHydro, HydroGen, UnsupE, levels, HydroPmax, HydroPmin, inflows,
+    std::vector<double> TotalGenNoHydro, Load, HydroGen, UnsupE, levels, HydroPmax, HydroPmin, inflows,
       ovf, pump, Spillage, DTG_MRG;
     std::shared_ptr<StorageForRemix> hydroForRemix;
     double init_level = 0.;
@@ -109,9 +112,11 @@ BOOST_FIXTURE_TEST_CASE(input_is_acceptable__no_exception_raised, InputFixture<1
 {
     init_level = 0.;
     capacity = 1.;
+    Load = TotalGenNoHydro + UnsupE + HydroGen;
+
     BOOST_CHECK_NO_THROW(hydroForRemix = createHydroForRemix());
     BOOST_CHECK_NO_THROW(
-      shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix));
+      shavePeaksByRemixingStorageGen(Load, UnsupE, Spillage, DTG_MRG, hydroForRemix));
 }
 
 BOOST_FIXTURE_TEST_CASE(
