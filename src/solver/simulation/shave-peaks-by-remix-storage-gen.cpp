@@ -48,14 +48,14 @@ static unsigned hourForTotalGenMax(const std::vector<double>& TotalGen,
     return *rng::max_element(filteredHours, {}, [&](int h) { return TotalGen[h]; });
 }
 
-static void checkInput(const std::vector<double>& DispatchGen,
-                       const std::vector<double>& UnsupE,
-                       const std::vector<double>& Spillage,
-                       const std::vector<double>& DTG_MRG,
-                       const std::vector<double>& storageGen)
+void checkInput(const std::vector<double>& Load,
+                const std::vector<double>& UnsupE,
+                const std::vector<double>& Spillage,
+                const std::vector<double>& DTG_MRG,
+                const std::vector<double>& storageGen)
 {
     // Arrays sizes must be identical
-    std::vector<size_t> sizes = {DispatchGen.size(),
+    std::vector<size_t> sizes = {Load.size(),
                                  UnsupE.size(),
                                  Spillage.size(),
                                  DTG_MRG.size(),
@@ -66,7 +66,7 @@ static void checkInput(const std::vector<double>& DispatchGen,
         throw std::invalid_argument(error_msg_start + "arrays of different sizes");
     }
 
-    if (!DispatchGen.size())
+    if (!Load.size())
     {
         throw std::invalid_argument(error_msg_start + "all arrays of sizes 0");
     }
@@ -157,8 +157,6 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
                                     std::shared_ptr<StorageForRemix> storage)
 {
     const std::vector<double> UnsupEinit = UnsupE;
-
-    checkInput(Load, UnsupEinit, Spillage, DTG_MRG, storage->initialGen());
 
     const auto validHours = ValidHours(Spillage, DTG_MRG, storage->initialGen(), UnsupEinit);
 

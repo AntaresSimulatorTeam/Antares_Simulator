@@ -280,6 +280,7 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
           const auto& dtgMrgArray = area.scratchpad[numSpace].dispatchableGenerationMargin;
           const std::vector<double> dtgMrg(dtgMrgArray, dtgMrgArray + HOURS_IN_WEEK);
 
+
           auto hydroStorage = makeHydroForRemix(hydroGen,
                                                 unsupE,
                                                 levels,
@@ -292,6 +293,8 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
                                                 capacity,
                                                 efficiency,
                                                 reservoirManagement);
+
+          checkInput(load, unsupE, spillage, dtgMrg, hydroStorage->initialGen());
 
           shavePeaksByRemixingStorageGen(load, unsupE, spillage, dtgMrg, hydroStorage);
       });
