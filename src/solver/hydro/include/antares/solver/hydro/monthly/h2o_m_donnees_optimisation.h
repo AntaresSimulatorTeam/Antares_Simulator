@@ -20,6 +20,8 @@
 */
 #pragma once
 
+#include <vector>
+
 #include <antares/solver/hydro/probleme_spx_wrapper.h>
 
 #ifdef __CPLUSPLUS
@@ -32,9 +34,6 @@ extern "C"
 #ifdef __CPLUSPLUS
 }
 #endif
-
-#include <memory>
-#include <vector>
 
 #define LINFINI 1.e+80
 

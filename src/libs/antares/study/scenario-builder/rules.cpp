@@ -24,7 +24,6 @@
 #include <algorithm>
 
 #include <antares/logs/logs.h>
-#include "antares/study/scenario-builder/TSnumberData.h"
 #include "antares/study/scenario-builder/scBuilderUtils.h"
 #include "antares/study/study.h"
 
@@ -410,7 +409,7 @@ ShortTermStorage::AdditionalConstraints* getShortTermStorageAdditionalConstraint
     auto constraint = std::ranges::find_if(
       sts->additionalConstraints,
       [&constraintName](std::shared_ptr<ShortTermStorage::AdditionalConstraints> c)
-      { return c->name == constraintName; });
+      { return c->id == constraintName; });
     if (constraint == sts->additionalConstraints.end())
     {
         logs.warning() << "[scenario-builder] In short-term storage '" << sts->id

@@ -66,6 +66,12 @@ public:
                                unsigned int hourInWeek,
                                int offset = 0,
                                int delta = 0);
+
+    int& ShortTermStorageOverflow(unsigned int index,
+                                  unsigned int hourInWeek,
+                                  int offset = 0,
+                                  int delta = 0);
+
     int& ShortTermStorageCostVariationInjection(unsigned int index,
                                                 unsigned int hourInWeek,
                                                 int offset = 0,

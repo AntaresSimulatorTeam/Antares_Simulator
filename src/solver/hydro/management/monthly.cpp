@@ -42,7 +42,7 @@ static void CheckHydroAllocationProblem(Data::Area& area,
 {
     bool error = false;
 
-    double X = problem.Volume[11] - problem.Turbine[11] + problem.Apport[11];
+    double X = problem.Volume[11] - problem.Turbine[11] + problem.Apport[11] - problem.overflow[11];
     if (!Utils::isZero(X - lvi))
     {
         logs.fatal() << area.id << ": hydro management: monthly: reservoir error";

@@ -20,7 +20,6 @@
  */
 
 #include <chrono>
-#include <span>
 
 #include <antares/antares/fatal-error.h>
 #include <antares/logs/logs.h>

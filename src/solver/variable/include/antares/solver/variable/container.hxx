@@ -21,8 +21,6 @@
 #ifndef __SOLVER_CONTAINER_CONTAINER_HXX__
 #define __SOLVER_CONTAINER_CONTAINER_HXX__
 
-#include <memory>
-
 #include <yuni/core/static/types.h>
 
 #include "antares/solver/variable/surveyresults/reportbuilder.hxx"
