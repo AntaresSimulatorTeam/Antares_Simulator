@@ -37,4 +37,18 @@ inline std::vector<double> operator-(const std::vector<double>& v, const double 
     return to_return;
 }
 
+inline std::vector<double> operator+(std::vector<double>& a, std::vector<double>& b)
+{
+    std::vector<double> out = a;
+    std::transform(out.begin(), out.end(), b.begin(), out.begin(), std::plus<>());
+    return out;
+}
+
+inline std::vector<double> operator-(std::vector<double>& a, std::vector<double>& b)
+{
+    std::vector<double> out = a;
+    std::transform(out.begin(), out.end(), b.begin(), out.begin(), std::minus<>());
+    return out;
+}
+
 }; // namespace Antares::Solver::Simulation

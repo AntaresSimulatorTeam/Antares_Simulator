@@ -151,7 +151,9 @@ static double makeExchange(const std::vector<double>& DispatchGen,
 
                 storage->update();
 
-                TotalGen = updateTotalGen(DispatchGen, storage->generation());
+                TotalGen[hourOfMaxGen] -= exchange;
+                TotalGen[hourOfMinGen] += exchange;
+
                 return exchange;
             }
             triedMaxs[hourOfMaxGen] = true;

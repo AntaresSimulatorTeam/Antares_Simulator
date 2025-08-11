@@ -128,7 +128,7 @@ BOOST_FIXTURE_TEST_CASE(
     callRemixStorageAlgorithm();
 
     std::vector<double> expected_HydroGen = {20., 20., 20., 20., 20.};
-    // UnsupE such as TotalGenNoHydro + HydroGen + UnsupE remains flat
+    // UnsupE such as Load = TotalGenNoHydro + HydroGen + UnsupE remains flat
     std::vector<double> expected_UnsupE = {60., 50., 40., 30., 20.};
     BOOST_CHECK(HydroGen == expected_HydroGen);
     BOOST_CHECK(UnsupE == expected_UnsupE);
@@ -146,7 +146,7 @@ BOOST_FIXTURE_TEST_CASE(Pmax_does_not_impact_results_when_greater_than_40mwh, In
     callRemixStorageAlgorithm();
 
     std::vector<double> expected_HydroGen = {20., 20., 20., 20., 20.};
-    // UnsupE such as TotalGenNoHydro + HydroGen + UnsupE remains constant at each hour
+    // UnsupE such as Load = TotalGenNoHydro + HydroGen + UnsupE remains constant at each hour
     std::vector<double> expected_UnsupE = {60., 50., 40., 30., 20.};
     BOOST_CHECK(HydroGen == expected_HydroGen);
     BOOST_CHECK(UnsupE == expected_UnsupE);
@@ -166,7 +166,7 @@ BOOST_FIXTURE_TEST_CASE(
     callRemixStorageAlgorithm();
 
     std::vector<double> expected_HydroGen = {20., 20., 20., 20., 20.};
-    // UnsupE such as TotalGenNoHydro + HydroGen + UnsupE remains constant at each hour
+    // UnsupE such as Load = TotalGenNoHydro + HydroGen + UnsupE remains constant at each hour
     std::vector<double> expected_UnsupE = {20., 30., 40., 50., 60.};
     BOOST_CHECK(HydroGen == expected_HydroGen);
     BOOST_CHECK(UnsupE == expected_UnsupE);
