@@ -72,18 +72,6 @@ static void checkInput(const std::vector<double>& DispatchGen,
     }
 }
 
-static std::vector<double> updateTotalGen(const std::vector<double>& DispatchGen,
-                                          const std::vector<double>& StorageGen)
-{
-    std::vector<double> totalGen(DispatchGen.size());
-    std::transform(DispatchGen.begin(),
-                   DispatchGen.end(),
-                   StorageGen.begin(),
-                   totalGen.begin(),
-                   std::plus<>());
-    return totalGen;
-}
-
 static std::vector<bool> ValidHours(const std::vector<double>& Spillage,
                                     const std::vector<double>& DTG_MRG,
                                     const std::vector<double>& StorageGen,
@@ -100,8 +88,7 @@ static std::vector<bool> ValidHours(const std::vector<double>& Spillage,
     return validHours;
 }
 
-static double makeExchange(const std::vector<double>& DispatchGen,
-                           std::vector<double>& TotalGen,
+static double makeExchange(std::vector<double>& TotalGen,
                            std::vector<double>& UnsupE,
                            const std::vector<double>& UnsupEinit,
                            const std::vector<bool>& validHours,
@@ -175,17 +162,12 @@ void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
 
     const auto validHours = ValidHours(Spillage, DTG_MRG, storage->initialGen(), UnsupEinit);
 
-    std::vector<double> TotalGen = updateTotalGen(DispatchGen, storage->initialGen());
+    std::vector<double> TotalGen = DispatchGen + storage->initialGen();
 
     unsigned nbLoops = maxNbLoops;
     while (nbLoops-- > 0)
     {
-        double exchange = makeExchange(DispatchGen,
-                                       TotalGen,
-                                       UnsupE,
-                                       UnsupEinit,
-                                       validHours,
-                                       storage);
+        double exchange = makeExchange(TotalGen, UnsupE, UnsupEinit, validHours, storage);
 
         if (exchange <= eps)
         {
