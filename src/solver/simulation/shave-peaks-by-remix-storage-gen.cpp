@@ -158,13 +158,13 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
 {
     const std::vector<double> UnsupEinit = UnsupE;
 
-    const auto validHours = ValidHours(Spillage, DTG_MRG, storage->initialGen(), UnsupEinit);
-
     std::vector<double> TotalGen = Load - UnsupEinit;
 
     unsigned nbLoops = maxNbLoops;
     while (nbLoops-- > 0)
     {
+        // Valid hours could be computed once for all, not at each iterations.
+        const auto validHours = ValidHours(Spillage, DTG_MRG, storage->initialGen(), UnsupEinit);
         double exchange = makeExchange(TotalGen, UnsupE, UnsupEinit, validHours, storage);
 
         if (exchange <= eps)
