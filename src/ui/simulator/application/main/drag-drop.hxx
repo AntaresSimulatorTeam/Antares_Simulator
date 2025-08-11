@@ -57,7 +57,7 @@ public:
         {
             wxStringToString(filenames[i], filename);
 
-            if (!Utils::containsOnlyASCIIcharsOnWindows(filename.to<std::string>()))
+            if (!Utils::isPathValid(filename.to<std::string>()))
             {
                 logs.error() << "Drag & drop : study path contains a non ASCII char";
                 return false;

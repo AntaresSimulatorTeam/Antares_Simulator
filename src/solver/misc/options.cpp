@@ -304,7 +304,7 @@ void Settings::checkAndSetStudyFolder(const std::string& folder)
         throw Error::NoStudyProvided();
     }
 
-    if (!Utils::containsOnlyASCIIcharsOnWindows(folder))
+    if (!Utils::isPathValid(folder))
     {
         throw Error::StudyFolderContainsNonASCIIchars(folder);
     }

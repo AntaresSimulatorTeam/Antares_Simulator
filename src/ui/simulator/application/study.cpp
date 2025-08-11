@@ -1059,7 +1059,7 @@ void OpenStudyFromFolder(wxString folder)
     String studyfolder;
     wxStringToString(folder, studyfolder);
 
-    if (!Utils::containsOnlyASCIIcharsOnWindows(studyfolder.to<std::string>()))
+    if (!Utils::isPathValid(studyfolder.to<std::string>()))
     {
         logs.error() << "Study path contains a non ASCII char";
         return;

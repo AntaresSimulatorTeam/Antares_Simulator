@@ -60,7 +60,7 @@ double round(double d, unsigned precision);
 double ceil(double d);
 double floor(double d);
 
-bool containsOnlyASCIIcharsOnWindows(const std::string& path);
+bool isPathValid(const std::string& path);
 
 std::map<std::string, unsigned> giveNumbersToStrings(const std::vector<std::string>& strs);
 bool checkAllElementsIdenticalOrOne(std::vector<unsigned> w);

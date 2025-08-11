@@ -402,7 +402,7 @@ void SaveAs::onSave(void*)
         return;
     }
 
-    if (!Utils::containsOnlyASCIIcharsOnWindows(wantedPath.to<std::string>()))
+    if (!Utils::isPathValid(wantedPath.to<std::string>()))
     {
         logs.error() << "Target study path contains a non ASCII char";
         return;
