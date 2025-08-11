@@ -152,6 +152,17 @@ toc_depth: 2
 
 ## Branch 9.2.x
 
+### 9.2.3
+#### Bugfixes
+* Fix segfault when exporting binding constraints results (#2954)
+
+### 9.2.2
+
+#### New features
+> [!CAUTION] Breaking change
+
+* [ANT-3666] Move STS additional constraint data folder (#2945)
+
 ### 9.2.1
 #### New features
 * Add new near price cap hours variable (NPCAP HOURS) [ANT-3038] (#2815)
