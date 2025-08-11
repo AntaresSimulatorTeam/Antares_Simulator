@@ -21,6 +21,8 @@
 #ifndef __SOLVER_VARIABLE_SET_OF_AREAS_HXX__
 #define __SOLVER_VARIABLE_SET_OF_AREAS_HXX__
 
+#include "antares/solver/variable/economy/dispatchableGeneration.h"
+
 namespace Antares
 {
 namespace Solver
@@ -63,6 +65,11 @@ void SetsOfAreas<NextT>::initializeFromStudy(Data::Study& study)
         // Initialize the variables
         // From the study
         n->initializeFromStudy(study);
+
+        /*n->initializeFromSetOfAreas(study, sets[setIndex]);*/
+
+        typename Variable::Storage<Economy::VCardDispatchableGeneration>::ResultsType** result = nullptr;
+        retrieveResultsForThermalCluster<Economy::VCardDispatchableGeneration>(result, nullptr);
 
         // Making specific variables non applicable in following output reports :
         // - annual district reports
@@ -353,9 +360,13 @@ inline void SetsOfAreas<NextT>::retrieveResultsForThermalCluster(
   typename Storage<VCardToFindT>::ResultsType** result,
   const Data::ThermalCluster* cluster)
 {
-    (void)result;
-    (void)cluster;
-}
+    using AssignT = RetrieveResultsAssignment<
+      Yuni::Static::Type::StrictlyEqual<VCardType, VCardToFindT>::Yes>;
+    AssignT::Do(pResults, result);
+    if (!AssignT::Yes)
+    {
+        NextT::template retrieveResultsForThermalCluster<VCardToFindT>(result, cluster);
+    }}
 
 template<class NextT>
 template<class VCardToFindT>
