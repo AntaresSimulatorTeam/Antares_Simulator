@@ -157,7 +157,6 @@ toc_depth: 2
 * Fix segfault when exporting binding constraints results (#2954)
 
 ### 9.2.2
-
 #### New features
 > [!CAUTION] Breaking change
 
