@@ -26,18 +26,42 @@
 SimulationTableCsv::SimulationTableCsv()
 
 {
+    storage_.addIntColumn("block");
+    storage_.addStringColumn("component");
+    storage_.addStringColumn("output");
+    storage_.addOptionalColumn<unsigned int>("absolute_time_index");
+    storage_.addOptionalColumn<unsigned int>("block_time_index");
+    storage_.addOptionalColumn<unsigned int>("scenario_index");
+    storage_.addOptionalColumn<double>("value");
+    storage_.addStringColumn("basis_status");
     writeHeader();
 }
 
 void SimulationTableCsv::addEntry(SimulationTableEntry entry)
 {
-    entries_.emplace_back(std::move(entry));
+    storage_.addValue("block", entry.block);
+    storage_.addValue("component", entry.component);
+    storage_.addValue("output", entry.output);
+    storage_.addValue("absolute_time_index", entry.absolute_time_index);
+    storage_.addValue("block_time_index", entry.block_time_index);
+    storage_.addValue("scenario_index", entry.scenario_index);
+    storage_.addValue("value", *entry.value);
+    storage_.addValue("basis_status", StatusToString(entry.status));
 }
 
 void SimulationTableCsv::writeHeader()
 {
-    buffer_ << "block,component,output,"
-               "absolute_time_index,block_time_index,scenario_index,value,basis_status\n";
+    bool first = true;
+    for (const auto& col_name: storage_.columnOrder())
+    {
+        if (!first)
+        {
+            buffer_ << ',';
+        }
+        first = false;
+        buffer_ << col_name;
+    }
+    buffer_ << '\n';
 }
 
 const std::string NONE = "None";
@@ -50,20 +74,39 @@ std::string extractFromOptional(const std::optional<T>& option)
 
 void SimulationTableCsv::write()
 {
-    for (const auto& [block,
-                      component,
-                      output,
-                      absolute_time_index,
-                      block_time_index,
-                      scenario_index,
-                      value,
-                      status]: entries_)
+    // for (const auto& [block,
+    //                   component,
+    //                   output,
+    //                   absolute_time_index,
+    //                   block_time_index,
+    //                   scenario_index,
+    //                   value,
+    //                   status]: entries_)
+    // {
+    //     buffer_ << block << ',' << component << ',' << output << ','
+    //             << extractFromOptional(absolute_time_index) << ','
+    //             << extractFromOptional(block_time_index) << ','
+    //             << extractFromOptional(scenario_index) << ',' << extractFromOptional(value) <<
+    //             ','
+    //             << StatusToString(status) << '\n';
+    // }
+
+    const size_t row_count = storage_.rowCount();
+    const auto& columns = storage_.columnOrder();
+
+    for (size_t row = 0; row < row_count; ++row)
     {
-        buffer_ << block << ',' << component << ',' << output << ','
-                << extractFromOptional(absolute_time_index) << ','
-                << extractFromOptional(block_time_index) << ','
-                << extractFromOptional(scenario_index) << ',' << extractFromOptional(value) << ','
-                << StatusToString(status) << '\n';
+        bool first = true;
+        for (const auto& col_name: columns)
+        {
+            if (!first)
+            {
+                buffer_ << ',';
+            }
+            first = false;
+            buffer_ << storage_.getColumn(col_name).toString(row);
+        }
+        buffer_ << '\n';
     }
 }
 

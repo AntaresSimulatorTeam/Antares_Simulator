@@ -22,6 +22,8 @@
 #include <filesystem>
 #include <vector>
 
+#include "antares/io/outputs/storage.h"
+
 #include "ISimulationTable.h"
 
 class SimulationTableCsv: public ISimulationTable
@@ -39,5 +41,6 @@ public:
 private:
     std::ostringstream buffer_;
     std::vector<SimulationTableEntry> entries_;
+    ColumnBasedStorage storage_;
     void writeHeader();
 };
