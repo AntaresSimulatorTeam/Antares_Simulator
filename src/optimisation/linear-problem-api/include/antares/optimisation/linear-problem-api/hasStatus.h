@@ -1,5 +1,5 @@
 /*
-* Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -20,6 +20,7 @@
  */
 
 #pragma once
+
 namespace Antares::Optimisation::LinearProblemApi
 {
 // TODO this is dummy copy of ortools basis status, to avoid including and linking against
@@ -34,11 +35,10 @@ enum class MipBasisStatus : unsigned int
     NOT_AVAILABLE
 };
 
-
-class IHasStatus {
+class IHasStatus
+{
 public:
-virtual MipBasisStatus getMipBasisStatus() const  =0;
+    virtual MipBasisStatus getMipBasisStatus() const = 0;
 };
 
-}
-
+} // namespace Antares::Optimisation::LinearProblemApi

@@ -27,7 +27,7 @@ namespace Antares::Optimisation::LinearProblemApi
 {
 class ILinearProblem;
 class FillContext;
-}
+} // namespace Antares::Optimisation::LinearProblemApi
 
 namespace Antares::Optimization
 {
@@ -44,7 +44,7 @@ namespace Antares::Modeler
 class FileWriter: public Solver::IWriter
 {
 public:
-    void init(bool setOutput , const std::string& simulationId) override;
+    void init(bool setOutput, const std::string& simulationId) override;
 
     void writeSolution(const Optimisation::LinearProblemApi::IMipSolution& solution) override;
     void writeSimulationTable(
