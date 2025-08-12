@@ -43,25 +43,34 @@ static void importShortTermStorages(
 {
     int clusterGlobalIndex = 0;
     int constraintGlobalIndex = 0;
+
     for (uint areaIndex = 0; areaIndex != areas.size(); areaIndex++)
     {
-        ShortTermStorageOut[areaIndex].resize(areas[areaIndex]->shortTermStorage.count());
+        const auto* area = areas[areaIndex];
+        ShortTermStorageOut[areaIndex].resize(area->shortTermStorage.count());
         int storageIndex = 0;
-        for (const auto& st: areas[areaIndex]->shortTermStorage.storagesByIndex)
+        for (const auto& st: area->shortTermStorage.storagesByIndex)
         {
             ::ShortTermStorage::PROPERTIES& toInsert = ShortTermStorageOut[areaIndex][storageIndex];
             toInsert.clusterGlobalIndex = clusterGlobalIndex;
 
-            // Properties
+            // capacities
             toInsert.reservoirCapacity = st.properties.reservoirCapacity.value();
             toInsert.injectionEfficiency = st.properties.injectionEfficiency;
             toInsert.withdrawalEfficiency = st.properties.withdrawalEfficiency;
             toInsert.injectionNominalCapacity = st.properties.injectionNominalCapacity.value();
             toInsert.withdrawalNominalCapacity = st.properties.withdrawalNominalCapacity.value();
+            // initial level
             toInsert.initialLevel = st.properties.initialLevel;
             toInsert.initialLevelOptim = st.properties.initialLevelOptim;
+
+            // optional penalization
             toInsert.penalizeVariationInjection = st.properties.penalizeVariationInjection;
             toInsert.penalizeVariationWithdrawal = st.properties.penalizeVariationWithdrawal;
+            // optional overflow
+            toInsert.allowOverflow = st.properties.allowOverflow;
+            toInsert.overflowCost = area->thermal.spilledEnergyCost;
+
             toInsert.name = st.properties.name;
             for (const auto& constraint: st.additionalConstraints)
             {

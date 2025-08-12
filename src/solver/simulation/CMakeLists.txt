@@ -1,11 +1,12 @@
 # Remix hydro algorithm
-add_library(shave-peaks-by-remix-hydro)
+add_library(shave-peaks-by-remix-storage-gen)
 
-target_sources(shave-peaks-by-remix-hydro
+target_sources(shave-peaks-by-remix-storage-gen
         PRIVATE
-        shave-peaks-by-remix-hydro.cpp)
+        hydro-for-remix.cpp
+        shave-peaks-by-remix-storage-gen.cpp)
 
-target_include_directories(shave-peaks-by-remix-hydro
+target_include_directories(shave-peaks-by-remix-storage-gen
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 
@@ -23,8 +24,8 @@ set(SRC_SIMULATION
         include/antares/solver/simulation/simulation.h
         include/antares/solver/simulation/solver.h
         include/antares/solver/simulation/solver.hxx
-	include/antares/solver/simulation/numspace_manager.h
-	numspace_manager.cpp
+        include/antares/solver/simulation/numspace_manager.h
+        numspace_manager.cpp
         include/antares/solver/simulation/timeseries-numbers.h
         sim_alloc_probleme_hebdo.cpp
         sim_binding_constraints_rhs.cpp
@@ -87,7 +88,7 @@ target_link_libraries(antares-solver-simulation
         antares-solver-hydro
         antares-solver-variable
         antares-solver-ts-generator
-        shave-peaks-by-remix-hydro
+        shave-peaks-by-remix-storage-gen
 )
 
 install(DIRECTORY include/antares
