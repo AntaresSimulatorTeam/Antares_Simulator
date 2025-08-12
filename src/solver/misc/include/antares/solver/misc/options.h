@@ -60,6 +60,7 @@ public:
     //! Progression
     bool displayProgression = false;
 
+    Yuni::String PID;
     bool forceZipOutput = false;
     Antares::Solver::Optimization::CmdLineOptimOptions solverOptions;
 }; // class Settings
@@ -72,4 +73,5 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings,
 
 void checkStudyFolder(const std::string& studyFolder);
 std::string fixStudyFolder(const std::string& studyFolder);
+void printPIDtoDisk(Settings& settings);
 void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOptions& options);

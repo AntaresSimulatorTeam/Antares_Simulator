@@ -213,6 +213,9 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
                     "progress",
                     "Display the progress of each task");
 
+     // --pid
+    parser->add(settings.PID, 'p', "pid", "Specify the file where to write the process ID");
+
     // --list-solvers
     parser->addFlag(options.listSolvers,
                     'l',
@@ -230,6 +233,22 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
     parser->remainingArguments(options.studyFolder);
 
     return parser;
+}
+
+void printPIDtoDisk(Settings& settings)
+{
+    const auto& optPID = settings.PID;
+    if (!optPID.empty())
+    {
+        if (std::ofstream pidfile(optPID); pidfile.is_open())
+        {
+            pidfile << getpid();
+        }
+        else
+        {
+            throw Error::WritingPID(optPID);
+        }
+    }
 }
 
 void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOptions& options)
@@ -296,7 +315,7 @@ std::string fixStudyFolder(const std::string& studyFolder)
     std::filesystem::path abspath = std::filesystem::absolute(studyFolder);
     abspath = abspath.lexically_normal();
 
-    if (!std::filesystem::exists(abspath))
+    if (!std::filesystem::exists(abspath) || !std::filesystem::is_directory(abspath))
     {
         throw Error::StudyFolderDoesNotExist(studyFolder);
     }

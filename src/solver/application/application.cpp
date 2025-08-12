@@ -342,7 +342,8 @@ void Application::prepare(int argc, const char* argv[])
         return;
     }
 
-    // Perform some checks
+    printPIDtoDisk(pSettings);
+
     checkAndCorrectSettingsAndOptions(pSettings, options);
 
     checkStudyFolder(options.studyFolder);
