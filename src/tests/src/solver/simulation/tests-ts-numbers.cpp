@@ -36,7 +36,7 @@ using namespace Antares::Solver::TimeSeriesNumbers;
 
 void initializeStudy(Study::Ptr study, unsigned int nbYears = 1)
 {
-    study->parameters.derated = false;
+    study->parameters.reset();
 
     study->runtime.rangeLimits.year[rangeBegin] = 0;
     study->runtime.rangeLimits.year[rangeEnd] = nbYears - 1;
@@ -85,35 +85,30 @@ std::shared_ptr<ClusterType> addClusterToArea(Area* area, const std::string& clu
 
 BOOST_AUTO_TEST_CASE(all_one_OK)
 {
-    using namespace Antares::Solver::TimeSeriesNumbers;
     std::vector<std::pair<unsigned, std::string>> list = {{1, ""}, {1, ""}, {1, ""}};
     BOOST_CHECK(Utils::checkAllElementsIdenticalOrOne(list));
 }
 
 BOOST_AUTO_TEST_CASE(test_compare_function_identical_values_OK)
 {
-    using namespace Antares::Solver::TimeSeriesNumbers;
     std::vector<std::pair<unsigned, std::string>> list = {{4, ""}, {4, ""}, {4, ""}, {4, ""}};
     BOOST_CHECK(Utils::checkAllElementsIdenticalOrOne(list));
 }
 
 BOOST_AUTO_TEST_CASE(test_compare_function_identical_values_and_one_OK)
 {
-    using namespace Antares::Solver::TimeSeriesNumbers;
     std::vector<std::pair<unsigned, std::string>> list = {{4, ""}, {4, ""}, {4, ""}, {1, ""}};
     BOOST_CHECK(Utils::checkAllElementsIdenticalOrOne(list));
 }
 
 BOOST_AUTO_TEST_CASE(test_compare_function_one_and_identical_values_OK)
 {
-    using namespace Antares::Solver::TimeSeriesNumbers;
     std::vector<std::pair<unsigned, std::string>> list = {{1, ""}, {4, ""}, {4, ""}, {4, ""}};
     BOOST_CHECK(Utils::checkAllElementsIdenticalOrOne(list));
 }
 
 BOOST_AUTO_TEST_CASE(test_compare_function_two_distinct_values_of_which_one_KO)
 {
-    using namespace Antares::Solver::TimeSeriesNumbers;
     std::vector<std::pair<unsigned, std::string>> list = {{1, ""},
                                                           {2, ""},
                                                           {1, ""},
@@ -125,7 +120,6 @@ BOOST_AUTO_TEST_CASE(test_compare_function_two_distinct_values_of_which_one_KO)
 
 BOOST_AUTO_TEST_CASE(test_compare_function_three_distinct_values_KO)
 {
-    using namespace Antares::Solver::TimeSeriesNumbers;
     std::vector<std::pair<unsigned, std::string>> list = {{1, ""},
                                                           {2, ""},
                                                           {1, ""},
