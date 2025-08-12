@@ -39,18 +39,6 @@ struct MCYearAndTime
     auto operator<=>(const MCYearAndTime&) const = default;
 };
 
-class MCYearAndTimeHash
-{
-public:
-    std::size_t operator()(const MCYearAndTime& p) const
-    {
-        std::size_t seed = 0;
-        boost::hash_combine(seed, p.mcYear);
-        boost::hash_combine(seed, p.timestep);
-        return seed;
-    }
-};
-
 inline auto format_as(const MCYearAndTime::MCYear& mcyear)
 {
     return fmt::underlying(mcyear);

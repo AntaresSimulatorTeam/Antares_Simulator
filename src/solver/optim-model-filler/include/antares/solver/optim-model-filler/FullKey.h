@@ -42,7 +42,10 @@ struct boost::hash<Antares::Optimization::MCYearAndTime>
 {
     std::size_t operator()(const Antares::Optimization::MCYearAndTime& p) const
     {
-        return Antares::Optimization::MCYearAndTimeHash{}(p);
+        std::size_t seed = 0;
+        boost::hash_combine(seed, p.mcYear);
+        boost::hash_combine(seed, p.timestep);
+        return seed;
     }
 }; // namespace boost
 
