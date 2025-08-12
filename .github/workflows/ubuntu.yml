@@ -229,22 +229,6 @@ jobs:
       env:
         PAGE: ${{ github.sha }}.html
 
-    - name: Deploy to antares-simulator-reports.surge.sh
-      uses: dswistowski/surge-sh-action@v1
-      with:
-        domain: 'antares-simulator-reports.surge.sh'
-        project: 'testing-report'
-        login: ${{ secrets.SURGE_LOGIN }}
-        token: ${{ secrets.SURGE_TOKEN }}
-
-    - name: Add PR comment
-      if: ${{ success() && github.event_name == 'pull_request' }}
-      run: gh pr comment "$PR_URL" --body "Unit test report available [here](https://antares-simulator-reports.surge.sh/$PAGE)"
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        PR_URL: ${{ github.event.pull_request.html_url }}
-        PAGE: ${{ github.sha }}.html
-
     - name: Upload logs for failed tests
       if: ${{ failure() }}
       uses: actions/upload-artifact@v4
