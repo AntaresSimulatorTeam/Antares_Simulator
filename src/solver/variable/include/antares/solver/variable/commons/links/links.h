@@ -210,6 +210,12 @@ public:
         // Do nothing
     }
 
+    template<class SetT>
+    void initializeFromSetOfAreas(Data::Study* , SetT&)
+    {
+        // do nothing
+    }
+
 public:
     //! Area list
     NextType* pLinks;

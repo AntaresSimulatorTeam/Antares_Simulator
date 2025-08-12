@@ -178,6 +178,11 @@ public:
     {
     }
 
+    template<class SetT>
+    void initializeFromSetOfAreas([[maybe_unused]] Data::Study*, SetT&)
+    {
+    }
+
     static void weekBegin(State&)
     {
     }
