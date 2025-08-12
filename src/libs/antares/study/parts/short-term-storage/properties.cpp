@@ -104,11 +104,6 @@ bool Properties::loadKey(const IniFile::Property* p)
         return p->value.to<bool>(this->enabled);
     }
 
-    if (p->key == "allow-overflow")
-    {
-        return p->value.to<bool>(this->allowOverflow);
-    }
-
     return false;
 }
 
