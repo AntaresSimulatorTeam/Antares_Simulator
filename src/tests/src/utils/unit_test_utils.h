@@ -25,3 +25,4 @@
 #include <string>
 
 std::function<bool(const std::exception&)> checkMessage(std::string expected_message);
+std::function<bool(const std::exception&)> containsMessage(std::string expected_message);

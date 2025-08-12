@@ -278,28 +278,27 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
     }
 }
 
-void checkStudyFolder(const std::string& folder)
+void checkStudyFolder(const std::string& studyFolder)
 {
-    // The study folder
-    if (folder.empty())
+    if (studyFolder.empty())
     {
         throw Error::NoStudyProvided();
     }
 
-    if (!Utils::isPathValid(folder))
+    if (!Utils::isPathValid(studyFolder))
     {
-        throw Error::StudyFolderContainsNonASCIIchars(folder);
+        throw Error::StudyFolderContainsNonASCIIchars(studyFolder);
     }
 }
 
-std::string fixStudyFolder(const std::string& folder)
+std::string fixStudyFolder(const std::string& studyFolder)
 {
-    std::filesystem::path abspath = std::filesystem::absolute(folder);
+    std::filesystem::path abspath = std::filesystem::absolute(studyFolder);
     abspath = abspath.lexically_normal();
 
     if (!std::filesystem::exists(abspath))
     {
-        throw Error::StudyFolderDoesNotExist(folder);
+        throw Error::StudyFolderDoesNotExist(studyFolder);
     }
 
     return abspath.string();
