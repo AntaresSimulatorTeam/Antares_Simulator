@@ -158,13 +158,13 @@ template<typename T>
 class OptionalColumn: public TypedColumn<std::optional<T>>
 {
 public:
-    std::string FromOptional(const std::optional<T>& option)
+    static std::string FromOptional(const std::optional<T>& option)
     {
         if (option.has_value())
         {
             if constexpr (std::is_floating_point_v<T>)
             {
-                return FromDouble(option.value());
+                return DoubleColumn::FromDouble(option.value());
             }
             else
             {
@@ -177,7 +177,7 @@ public:
         }
     }
 
-    std::optional<T> ToOptional(const std::string& s)
+    static std::optional<T> ToOptional(const std::string& s)
     {
         if constexpr (std::is_floating_point_v<T>)
         {
@@ -190,7 +190,7 @@ public:
     }
 
     OptionalColumn():
-        TypedColumn<T>(FromOptional, ToOptional)
+        TypedColumn<std::optional<T>>(FromOptional, ToOptional)
 
     {
     }

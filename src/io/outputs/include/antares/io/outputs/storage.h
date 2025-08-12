@@ -17,6 +17,23 @@ struct is_optional<std::optional<U>>: std::true_type
 template<typename T>
 inline constexpr bool is_optional_v = is_optional<T>::value;
 
+// Primary template: applies to any type that's NOT an optional
+template<typename T>
+struct unwrap_optional
+{
+    using type = T; // just return the type unchanged
+};
+
+// Specialization for std::optional<U>
+template<typename U>
+struct unwrap_optional<std::optional<U>>
+{
+    using type = U; // remove the optional and return the inner type
+};
+
+template<typename T>
+using unwrap_optional_t = typename unwrap_optional<T>::type;
+
 class ColumnBasedStorage
 {
 public:
@@ -58,7 +75,8 @@ public:
         }
         else if constexpr (is_optional_v<T>)
         {
-            getColumn<OptionalColumn<T>>(column_name).add(value);
+            using Inner = unwrap_optional_t<T>;
+            getColumn<OptionalColumn<Inner>>(column_name).add(value);
         }
         else
         {

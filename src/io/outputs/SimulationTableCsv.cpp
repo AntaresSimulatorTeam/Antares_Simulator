@@ -45,7 +45,7 @@ void SimulationTableCsv::addEntry(SimulationTableEntry entry)
     storage_.addValue("absolute_time_index", entry.absolute_time_index);
     storage_.addValue("block_time_index", entry.block_time_index);
     storage_.addValue("scenario_index", entry.scenario_index);
-    storage_.addValue("value", *entry.value);
+    storage_.addValue("value", entry.value);
     storage_.addValue("basis_status", StatusToString(entry.status));
 }
 
