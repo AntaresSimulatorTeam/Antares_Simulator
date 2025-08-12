@@ -345,7 +345,8 @@ void Application::prepare(int argc, const char* argv[])
     // Perform some checks
     checkAndCorrectSettingsAndOptions(pSettings, options);
 
-    pSettings.checkAndSetStudyFolder(options.studyFolder);
+    checkStudyFolder(options.studyFolder);
+    pSettings.studyFolder = fixStudyFolder(options.studyFolder);
 
     checkStudyVersion(pSettings.studyFolder);
 

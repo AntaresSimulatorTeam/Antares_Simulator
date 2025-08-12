@@ -213,9 +213,6 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
                     "progress",
                     "Display the progress of each task");
 
-    // --pid
-    parser->add(settings.PID, 'p', "pid", "Specify the file where to write the process ID");
-
     // --list-solvers
     parser->addFlag(options.listSolvers,
                     'l',
@@ -237,20 +234,6 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
 
 void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOptions& options)
 {
-    const auto& optPID = settings.PID;
-    if (!optPID.empty())
-    {
-        if (std::ofstream pidfile(optPID); pidfile.is_open())
-        {
-            pidfile << getpid();
-        }
-        else
-        {
-            throw Error::WritingPID(optPID);
-        }
-    }
-
-    // Simulation name
     if (!options.simulationName.empty())
     {
         settings.simulationName = options.simulationName;
@@ -289,14 +272,13 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
 
     options.checkForceSimulationMode();
 
-    // no-output and force-zip-output
     if (settings.noOutput && settings.forceZipOutput)
     {
         throw Error::IncompatibleOutputOptions("no-output and zip-output options are incompatible");
     }
 }
 
-void Settings::checkAndSetStudyFolder(const std::string& folder)
+void checkStudyFolder(const std::string& folder)
 {
     // The study folder
     if (folder.empty())
@@ -308,19 +290,19 @@ void Settings::checkAndSetStudyFolder(const std::string& folder)
     {
         throw Error::StudyFolderContainsNonASCIIchars(folder);
     }
+}
 
-    // Making the path absolute
+std::string fixStudyFolder(const std::string& folder)
+{
     std::filesystem::path abspath = std::filesystem::absolute(folder);
     abspath = abspath.lexically_normal();
 
-    // Checking if the path exists
     if (!std::filesystem::exists(abspath))
     {
         throw Error::StudyFolderDoesNotExist(folder);
     }
 
-    // Copying the result
-    studyFolder = abspath.string();
+    return abspath.string();
 }
 
 void Settings::reset()

@@ -35,7 +35,6 @@
 class Settings
 {
 public:
-    void checkAndSetStudyFolder(const std::string& folder);
     void reset();
 
     //! Where is my study
@@ -61,7 +60,6 @@ public:
     //! Progression
     bool displayProgression = false;
 
-    Yuni::String PID;
     bool forceZipOutput = false;
     Antares::Solver::Optimization::CmdLineOptimOptions solverOptions;
 }; // class Settings
@@ -72,4 +70,6 @@ public:
 std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings,
                                                    Antares::Data::StudyLoadOptions& options);
 
+void checkStudyFolder(const std::string& folder);
+std::string fixStudyFolder(const std::string& folder);
 void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOptions& options);
