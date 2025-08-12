@@ -66,10 +66,7 @@ void SetsOfAreas<NextT>::initializeFromStudy(Data::Study& study)
         // From the study
         n->initializeFromStudy(study);
 
-        /*n->initializeFromSetOfAreas(study, sets[setIndex]);*/
-
-        typename Variable::Storage<Economy::VCardDispatchableGeneration>::ResultsType** result = nullptr;
-        retrieveResultsForThermalCluster<Economy::VCardDispatchableGeneration>(result, nullptr);
+        n->initializeFromSetOfAreas(study, sets[setIndex]);
 
         // Making specific variables non applicable in following output reports :
         // - annual district reports
@@ -360,13 +357,9 @@ inline void SetsOfAreas<NextT>::retrieveResultsForThermalCluster(
   typename Storage<VCardToFindT>::ResultsType** result,
   const Data::ThermalCluster* cluster)
 {
-    using AssignT = RetrieveResultsAssignment<
-      Yuni::Static::Type::StrictlyEqual<VCardType, VCardToFindT>::Yes>;
-    AssignT::Do(pResults, result);
-    if (!AssignT::Yes)
-    {
-        NextT::template retrieveResultsForThermalCluster<VCardToFindT>(result, cluster);
-    }}
+    (void)result;
+    (void)cluster;
+}
 
 template<class NextT>
 template<class VCardToFindT>
