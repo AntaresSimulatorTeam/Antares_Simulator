@@ -74,7 +74,6 @@ std::string extractFromOptional(const std::optional<T>& option)
 
 void SimulationTableCsv::write()
 {
-
     const size_t row_count = storage_.rowCount();
     // const auto& nameToIndex = storage_.columnsNameToIndex();
     const auto& columns = storage_.columns();
