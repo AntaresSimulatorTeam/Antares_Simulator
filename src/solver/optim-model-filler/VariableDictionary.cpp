@@ -168,16 +168,14 @@ void VariableDictionary::addVariable(
 
 VariableDictionary::Value VariableDictionary::operator[](const FullKey& k) const
 {
-    return storageOfAddedMipVariables_.at(k.getPartialKey())
-      .at(k.getScenario().value_or(MCYearAndTime::MCYear{0}))
-      .at(k.getTimestep().value_or(0));
+    auto&& key = k.getTime().value_or(MCYearAndTime{});
+    return storageOfAddedMipVariables_.at(k.getPartialKey()).at(key.mcYear).at(key.timestep);
 }
 
 VariableDictionary::Value& VariableDictionary::operator[](const FullKey& k)
 {
-    return storageOfAddedMipVariables_[k.getPartialKey()]
-      .at(k.getScenario().value_or(MCYearAndTime::MCYear{0}))
-      .at(k.getTimestep().value_or(0));
+    auto&& key = k.getTime().value_or(MCYearAndTime{});
+    return storageOfAddedMipVariables_[k.getPartialKey()].at(key.mcYear).at(key.timestep);
 }
 
 const VariableDictionary::TwoIndexVectorByYear& VariableDictionary::operator[](
@@ -204,36 +202,32 @@ VariableDictionary::Value& VariableDictionary::operator()(const std::string& com
 
 VariableDictionary::Value VariableDictionary::operator()(const std::string& component,
                                                          const std::string& variable,
-                                                         const MCYearAndTime::MCYear& scenario,
-                                                         unsigned int timestep) const
+                                                         const MCYearAndTime& time) const
 {
     return storageOfAddedMipVariables_.at(PartialKey(component, variable))
-      .at(scenario)
-      .at(timestep);
+      .at(time.mcYear)
+      .at(time.timestep);
 }
 
 VariableDictionary::Value& VariableDictionary::operator()(const std::string& component,
                                                           const std::string& variable,
-                                                          const MCYearAndTime::MCYear& scenario,
-                                                          unsigned int timestep)
+                                                          const MCYearAndTime& time)
 {
     auto&& var = storageOfAddedMipVariables_[PartialKey(component, variable)];
-    return var.at(scenario).at(timestep);
+    return var.at(time.mcYear).at(time.timestep);
 }
 
 VariableDictionary::Value VariableDictionary::operator()(const FullKey& fullKey) const
 {
     return this->operator()(fullKey.getComponent(),
                             fullKey.getVariable(),
-                            fullKey.getScenario().value_or(MCYearAndTime::MCYear{0}),
-                            fullKey.getTimestep().value_or(0));
+                            fullKey.getTime().value_or(MCYearAndTime{}));
 }
 
 VariableDictionary::Value& VariableDictionary::operator()(const FullKey& fullKey)
 {
     return this->operator()(fullKey.getComponent(),
                             fullKey.getVariable(),
-                            fullKey.getScenario().value_or(MCYearAndTime::MCYear{0}),
-                            fullKey.getTimestep().value_or(0));
+                            fullKey.getTime().value_or(MCYearAndTime{}));
 }
 } // namespace Antares::Optimization

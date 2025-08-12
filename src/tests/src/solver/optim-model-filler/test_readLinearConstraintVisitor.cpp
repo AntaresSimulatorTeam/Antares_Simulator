@@ -85,10 +85,10 @@ BOOST_FIXTURE_TEST_CASE(test_visit_equal_node, MyDummyFixture)
     BOOST_CHECK_EQUAL(constraint.ub, -14.);
     BOOST_CHECK_EQUAL(constraint.coef_per_var.size(), 2);
     BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
-                        FullKey(component.Id(), "var1", MCYearAndTime::MCYear{0}, 0)),
+                        FullKey(component.Id(), "var1", {MCYearAndTime::MCYear{0}, 0})),
                       -2);
     BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
-                        FullKey(component.Id(), "var2", MCYearAndTime::MCYear{0}, 0)),
+                        FullKey(component.Id(), "var2", {MCYearAndTime::MCYear{0}, 0})),
                       -1);
 }
 
@@ -111,13 +111,13 @@ BOOST_FIXTURE_TEST_CASE(test_visit_less_than_or_equal_node, MyDummyFixture)
     BOOST_CHECK_EQUAL(constraint.ub, -1.);
     BOOST_CHECK_EQUAL(constraint.coef_per_var.size(), 3);
     BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
-                        FullKey(component.Id(), "var1", MCYearAndTime::MCYear{0}, 0)),
+                        FullKey(component.Id(), "var1", {MCYearAndTime::MCYear{0}, 0})),
                       -1);
     BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
-                        FullKey(component.Id(), "var2", MCYearAndTime::MCYear{0}, 0)),
+                        FullKey(component.Id(), "var2", {MCYearAndTime::MCYear{0}, 0})),
                       -5);
     BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
-                        FullKey(component.Id(), "var3", MCYearAndTime::MCYear{0}, 0)),
+                        FullKey(component.Id(), "var3", {MCYearAndTime::MCYear{0}, 0})),
                       1);
 }
 
@@ -140,10 +140,10 @@ BOOST_FIXTURE_TEST_CASE(test_visit_greater_than_or_equal_node, MyDummyFixture)
     BOOST_CHECK_EQUAL(constraint.ub, std::numeric_limits<double>::infinity());
     BOOST_CHECK_EQUAL(constraint.coef_per_var.size(), 2);
     BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
-                        FullKey(component.Id(), "var1", MCYearAndTime::MCYear{0}, 0)),
+                        FullKey(component.Id(), "var1", {MCYearAndTime::MCYear{0}, 0})),
                       -2);
     BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
-                        FullKey(component.Id(), "var2", MCYearAndTime::MCYear{0}, 0)),
+                        FullKey(component.Id(), "var2", {MCYearAndTime::MCYear{0}, 0})),
                       -1);
 }
 

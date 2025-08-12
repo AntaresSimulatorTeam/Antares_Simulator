@@ -102,13 +102,11 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const VariableN
 {
     if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
     {
-        return TimeDependentLinearExpression(
-          fillContext_,
-          LinearExpression(0,
-                           {{FullKey(component_.Id(),
-                                     node->value(),
-                                     MCYearAndTime::MCYear{fillContext_.getYear()}),
-                             1}}));
+        MCYearAndTime::MCYear year{fillContext_.getYear()};
+        MCYearAndTime time{year, 0};
+        FullKey key{component_.Id(), node->value(), time};
+        FullKeyMap map{{key, 1.0}};
+        return TimeDependentLinearExpression(fillContext_, LinearExpression(0, map));
     }
     // only dependent
     LinearExpressionMap linearExpressions;
@@ -117,13 +115,12 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const VariableN
          timeStep <= fillContext_.getLastTimeStep();
          ++timeStep)
     {
-        linearExpressions[timeStep] = LinearExpression(0,
-                                                       {{FullKey(component_.Id(),
-                                                                 node->value(),
-                                                                 MCYearAndTime::MCYear{
-                                                                   fillContext_.getYear()},
-                                                                 timeStep),
-                                                         1}});
+        linearExpressions[timeStep] = LinearExpression(
+          0,
+          {{FullKey(component_.Id(),
+                    node->value(),
+                    {MCYearAndTime::MCYear{fillContext_.getYear()}, timeStep}),
+            1}});
     }
     return TimeDependentLinearExpression(linearExpressions);
 }

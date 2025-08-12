@@ -935,9 +935,10 @@ BOOST_AUTO_TEST_CASE(AddVariable_SingleBounds)
     const PartialKey key("my-component", "my-variable");
     const Dimensions dim({}, IntegerInterval(0, 2));
     vba.addVariable(0.0, 1.0, true, dim, key);
-    for (int ts = 0; ts < 3; ++ts)
+    for (unsigned int ts = 0; ts < 3; ++ts)
     {
-        BOOST_CHECK(vdict("my-component", "my-variable", MCYearAndTime::MCYear{0}, ts) != nullptr);
+        BOOST_CHECK(vdict("my-component", "my-variable", {MCYearAndTime::MCYear{0}, ts})
+                    != nullptr);
     }
 }
 
@@ -950,9 +951,10 @@ BOOST_AUTO_TEST_CASE(AddVariable_VectorLowerBound)
     const PartialKey key("my-component", "my-variable");
     const Dimensions dim({}, IntegerInterval(0, 2));
     vba.addVariable(lb, 1.0, true, dim, key);
-    for (int ts = 0; ts < 3; ++ts)
+    for (unsigned int ts = 0; ts < 3; ++ts)
     {
-        BOOST_CHECK(vdict("my-component", "my-variable", MCYearAndTime::MCYear{0}, ts) != nullptr);
+        BOOST_CHECK(vdict("my-component", "my-variable", {MCYearAndTime::MCYear{0}, ts})
+                    != nullptr);
     }
 }
 
@@ -965,9 +967,10 @@ BOOST_AUTO_TEST_CASE(AddVariable_VectorUpperBound)
     const PartialKey key("my-component", "my-variable");
     const Dimensions dim({}, IntegerInterval(0, 2));
     vba.addVariable(0.0, ub, true, dim, key);
-    for (int ts = 0; ts < 3; ++ts)
+    for (unsigned int ts = 0; ts < 3; ++ts)
     {
-        BOOST_CHECK(vdict("my-component", "my-variable", MCYearAndTime::MCYear{0}, ts) != nullptr);
+        BOOST_CHECK(vdict("my-component", "my-variable", {MCYearAndTime::MCYear{0}, ts})
+                    != nullptr);
     }
 }
 
@@ -981,9 +984,10 @@ BOOST_AUTO_TEST_CASE(AddVariable_VectorBounds)
     const PartialKey key("my-component", "my-variable");
     const Dimensions dim({}, IntegerInterval(0, 2));
     vba.addVariable(lb, ub, true, dim, key);
-    for (int ts = 0; ts < 3; ++ts)
+    for (unsigned int ts = 0; ts < 3; ++ts)
     {
-        BOOST_CHECK(vdict("my-component", "my-variable", MCYearAndTime::MCYear{0}, ts) != nullptr);
+        BOOST_CHECK(vdict("my-component", "my-variable", {MCYearAndTime::MCYear{0}, ts})
+                    != nullptr);
     }
 }
 
