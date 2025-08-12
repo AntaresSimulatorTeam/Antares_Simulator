@@ -121,23 +121,8 @@ private:
     std::function<T(const std::string&)> fromStringFn_;
 };
 
-class StringColumn: public TypedColumn<std::string>
-{
-public:
-    StringColumn():
-        TypedColumn()
-    {
-    }
-};
-
-class IntColumn: public TypedColumn<int>
-{
-public:
-    IntColumn():
-        TypedColumn()
-    {
-    }
-};
+using StringColumn = TypedColumn<std::string>;
+using IntColumn = TypedColumn<int>;
 
 class DoubleColumn: public TypedColumn<double>
 {
