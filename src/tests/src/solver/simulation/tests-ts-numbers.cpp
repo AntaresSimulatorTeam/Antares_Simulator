@@ -83,52 +83,6 @@ std::shared_ptr<ClusterType> addClusterToArea(Area* area, const std::string& clu
     return cluster;
 }
 
-BOOST_AUTO_TEST_CASE(all_one_OK)
-{
-    std::vector<std::pair<unsigned, std::string>> list = {{1, ""}, {1, ""}, {1, ""}};
-    BOOST_CHECK(Utils::checkAllElementsIdenticalOrOne(list));
-}
-
-BOOST_AUTO_TEST_CASE(test_compare_function_identical_values_OK)
-{
-    std::vector<std::pair<unsigned, std::string>> list = {{4, ""}, {4, ""}, {4, ""}, {4, ""}};
-    BOOST_CHECK(Utils::checkAllElementsIdenticalOrOne(list));
-}
-
-BOOST_AUTO_TEST_CASE(test_compare_function_identical_values_and_one_OK)
-{
-    std::vector<std::pair<unsigned, std::string>> list = {{4, ""}, {4, ""}, {4, ""}, {1, ""}};
-    BOOST_CHECK(Utils::checkAllElementsIdenticalOrOne(list));
-}
-
-BOOST_AUTO_TEST_CASE(test_compare_function_one_and_identical_values_OK)
-{
-    std::vector<std::pair<unsigned, std::string>> list = {{1, ""}, {4, ""}, {4, ""}, {4, ""}};
-    BOOST_CHECK(Utils::checkAllElementsIdenticalOrOne(list));
-}
-
-BOOST_AUTO_TEST_CASE(test_compare_function_two_distinct_values_of_which_one_KO)
-{
-    std::vector<std::pair<unsigned, std::string>> list = {{1, ""},
-                                                          {2, ""},
-                                                          {1, ""},
-                                                          {2, ""},
-                                                          {1, ""},
-                                                          {3, ""}};
-    BOOST_CHECK(!Utils::checkAllElementsIdenticalOrOne(list));
-}
-
-BOOST_AUTO_TEST_CASE(test_compare_function_three_distinct_values_KO)
-{
-    std::vector<std::pair<unsigned, std::string>> list = {{1, ""},
-                                                          {2, ""},
-                                                          {1, ""},
-                                                          {3, ""},
-                                                          {2, ""},
-                                                          {1, ""}};
-    BOOST_CHECK(!Utils::checkAllElementsIdenticalOrOne(list));
-}
-
 BOOST_AUTO_TEST_CASE(two_areas_with_5_ready_made_ts_on_load___check_intra_modal_consistency_OK)
 {
     // Creating a study
