@@ -168,7 +168,7 @@ public:
             }
             else
             {
-                TypedColumn<T>::defaultToString(option.value());
+                return TypedColumn<T>::defaultToString(option.value());
             }
         }
         else

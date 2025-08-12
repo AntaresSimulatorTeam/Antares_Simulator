@@ -30,6 +30,7 @@ namespace Antares::Optimisation::LinearProblemMpsolverImpl
 class OrtoolsLinearProblem;
 class OrtoolsMipSolution;
 } // namespace Antares::Optimisation::LinearProblemMpsolverImpl
+
 namespace Antares::Optimisation::LinearProblemApi
 {
 class ILinearProblem;

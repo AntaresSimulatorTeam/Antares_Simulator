@@ -65,4 +65,3 @@ struct SimulationTableEntry
     std::optional<double> value;
     Antares::Optimisation::LinearProblemApi::MipBasisStatus status;
 };
-
