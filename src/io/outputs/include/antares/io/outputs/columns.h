@@ -34,6 +34,7 @@ public:
     virtual std::string toString(size_t index) const = 0;
     virtual size_t size() const = 0;
     virtual void reserve(size_t capacity) = 0;
+    virtual void clear() = 0;
 };
 
 template<typename T>
@@ -107,6 +108,11 @@ public:
             iss >> v;
             return v;
         }
+    }
+
+    void clear() override
+    {
+        data_.clear();
     }
 
 private:

@@ -96,7 +96,7 @@ void SimulationTableCsv::write()
 
 void SimulationTableCsv::clear()
 {
-    entries_.clear();
+    storage_.clear();
     buffer_.str("");
 }
 

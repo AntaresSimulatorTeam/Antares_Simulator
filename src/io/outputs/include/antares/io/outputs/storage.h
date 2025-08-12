@@ -114,6 +114,14 @@ public:
         return columnNames_;
     }
 
+    void clear() const
+    {
+        for (auto& column: columns_)
+        {
+            column->clear();
+        }
+    }
+
 private:
     template<typename T>
     struct always_false: std::false_type

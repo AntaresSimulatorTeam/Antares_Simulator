@@ -40,7 +40,6 @@ public:
 
 private:
     std::ostringstream buffer_;
-    std::vector<SimulationTableEntry> entries_;
     ColumnBasedStorage storage_;
     void writeHeader();
 };
