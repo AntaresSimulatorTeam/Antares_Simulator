@@ -20,21 +20,32 @@
  */
 
 #include <antares/solver/optim-model-filler/FullKey.h>
-#include "antares/solver/optim-model-filler/MCYearAndTime.h"
 #include "antares/solver/optim-model-filler/VariableDictionary.h"
 
 namespace Antares::Optimization
 {
 
 // FullKey
-FullKey::FullKey(const std::string& component, const std::string& variable, MCYearAndTime time):
+FullKey::FullKey(const std::string& component,
+                 const std::string& variable,
+                 MCYearAndTime::MCYear scenario,
+                 unsigned int timestep):
     pk(component, variable),
-    time(time)
+    scenario(scenario),
+    timestep(timestep)
 {
 }
 
 FullKey::FullKey(const std::string& component, const std::string& variable):
     pk(component, variable)
+{
+}
+
+FullKey::FullKey(const std::string& component,
+                 const std::string& variable,
+                 MCYearAndTime::MCYear scenario):
+    pk(component, variable),
+    scenario(scenario)
 {
 }
 
@@ -53,16 +64,22 @@ const std::string& FullKey::getVariable() const
     return pk.getVariable();
 }
 
-std::optional<MCYearAndTime> FullKey::getTime() const
+std::optional<MCYearAndTime::MCYear> FullKey::getScenario() const
 {
-    return time;
+    return scenario;
+}
+
+std::optional<unsigned int> FullKey::getTimestep() const
+{
+    return timestep;
 }
 
 std::size_t FullKeyHash::operator()(const FullKey& p) const
 {
     std::size_t seed = 0;
     boost::hash_combine(seed, p.getPartialKey());
-    boost::hash_combine(seed, p.getTime());
+    boost::hash_combine(seed, p.getScenario());
+    boost::hash_combine(seed, p.getTimestep());
     return seed;
 }
 

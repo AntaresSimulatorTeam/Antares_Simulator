@@ -33,10 +33,8 @@ struct MCYearAndTime
     enum class MCYear : unsigned int
     {
     };
-    MCYear mcYear{0};
-    unsigned int timestep{0};
-
-    auto operator<=>(const MCYearAndTime&) const = default;
+    MCYear mcYear;
+    unsigned int timestep;
 };
 
 inline auto format_as(const MCYearAndTime::MCYear& mcyear)

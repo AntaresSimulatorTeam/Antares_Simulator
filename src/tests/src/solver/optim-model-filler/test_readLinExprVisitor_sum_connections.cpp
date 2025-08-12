@@ -253,7 +253,7 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_3_components_with_a_port_field,
     auto linear_expression = timeDependentLinExpr.GetLinearExpressions().at(0);
 
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
-    FullKey generationKey(generatorComponent.Id(), "generation", {MCYearAndTime::MCYear{0}, 0});
+    FullKey generationKey(generatorComponent.Id(), "generation", MCYearAndTime::MCYear{0}, 0);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(generationKey), 1.);
     BOOST_CHECK_EQUAL(linear_expression.offset(), -5.);
 }

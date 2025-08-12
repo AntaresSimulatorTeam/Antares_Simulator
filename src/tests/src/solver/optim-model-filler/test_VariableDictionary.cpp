@@ -45,17 +45,18 @@ BOOST_AUTO_TEST_CASE(FullKeyGetters_2ArgsConstructor)
     BOOST_CHECK_EQUAL(k.getComponent(), "component");
     BOOST_CHECK_EQUAL(k.getVariable(), "variable");
 
-    BOOST_CHECK(!k.getTime());
+    BOOST_CHECK(!k.getScenario());
+    BOOST_CHECK(!k.getTimestep());
 }
 
 BOOST_AUTO_TEST_CASE(FullKeyGetters_4ArgsConstructor)
 {
-    FullKey k("component", "variable", {MCYearAndTime::MCYear{3}, 4});
+    FullKey k("component", "variable", MCYearAndTime::MCYear{3}, 4);
     BOOST_CHECK_EQUAL(k.getComponent(), "component");
     BOOST_CHECK_EQUAL(k.getVariable(), "variable");
 
-    BOOST_CHECK_EQUAL(k.getTime()->mcYear, MCYearAndTime::MCYear{3});
-    BOOST_CHECK_EQUAL(k.getTime()->timestep, 4);
+    BOOST_CHECK_EQUAL(*k.getScenario(), MCYearAndTime::MCYear{3});
+    BOOST_CHECK_EQUAL(*k.getTimestep(), 4);
 }
 
 BOOST_AUTO_TEST_CASE(FullKeyCompare)
@@ -121,7 +122,7 @@ BOOST_AUTO_TEST_CASE(addVariable_no_ts_multiple_sc)
     BOOST_CHECK_EQUAL(names.size(), 3);
     BOOST_CHECK_EQUAL(names.at(std::pair(MCYearAndTime::MCYear{0}, 0)), "component.variable_s0");
 
-    BOOST_CHECK_NO_THROW(dict("component", "variable", {MCYearAndTime::MCYear{1}, 0}));
+    BOOST_CHECK_NO_THROW(dict("component", "variable", MCYearAndTime::MCYear{1}, 0));
 }
 
 BOOST_AUTO_TEST_CASE(addVariable_multiple_ts_no_sc)
@@ -130,7 +131,7 @@ BOOST_AUTO_TEST_CASE(addVariable_multiple_ts_no_sc)
     BOOST_CHECK_EQUAL(names.size(), 3);
     BOOST_CHECK_EQUAL(names.at(std::pair(MCYearAndTime::MCYear{0}, 0)), "component.variable_t0");
 
-    BOOST_CHECK_NO_THROW(dict("component", "variable", {MCYearAndTime::MCYear{0}, 2}));
+    BOOST_CHECK_NO_THROW(dict("component", "variable", MCYearAndTime::MCYear{0}, 2));
 }
 
 BOOST_AUTO_TEST_CASE(addVariable_multiple_ts_sc)
@@ -140,9 +141,9 @@ BOOST_AUTO_TEST_CASE(addVariable_multiple_ts_sc)
     BOOST_CHECK_EQUAL(names.at(std::pair(MCYearAndTime::MCYear{2}, 3)), "component.variable_s2_t3");
     BOOST_CHECK(!names.contains(std::pair(MCYearAndTime::MCYear{3}, 3)));
 
-    BOOST_CHECK_THROW(dict("component", "variable", {MCYearAndTime::MCYear{3}, 2}),
+    BOOST_CHECK_THROW(dict("component", "variable", MCYearAndTime::MCYear{3}, 2),
                       std::out_of_range);
-    BOOST_CHECK_THROW(dict("component", "variable", {MCYearAndTime::MCYear{2}, 5}),
+    BOOST_CHECK_THROW(dict("component", "variable", MCYearAndTime::MCYear{2}, 5),
                       std::out_of_range);
 }
 BOOST_AUTO_TEST_SUITE_END()

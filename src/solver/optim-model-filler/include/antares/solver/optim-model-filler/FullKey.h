@@ -37,18 +37,6 @@ struct boost::hash<Antares::Optimization::PartialKey>
     }
 }; // namespace boost
 
-template<>
-struct boost::hash<Antares::Optimization::MCYearAndTime>
-{
-    std::size_t operator()(const Antares::Optimization::MCYearAndTime& p) const
-    {
-        std::size_t seed = 0;
-        boost::hash_combine(seed, p.mcYear);
-        boost::hash_combine(seed, p.timestep);
-        return seed;
-    }
-}; // namespace boost
-
 namespace Antares::Optimization
 {
 
@@ -56,18 +44,27 @@ class FullKey
 {
 public:
     FullKey(const std::string& component, const std::string& variable);
-    FullKey(const std::string& component, const std::string& variable, MCYearAndTime time);
+    FullKey(const std::string& component,
+            const std::string& variable,
+            MCYearAndTime::MCYear scenario);
+    FullKey(const std::string& component,
+            const std::string& variable,
+            MCYearAndTime::MCYear scenario,
+            unsigned int timestep);
 
     [[nodiscard]] const PartialKey& getPartialKey() const;
     [[nodiscard]] const std::string& getComponent() const;
     [[nodiscard]] const std::string& getVariable() const;
-    [[nodiscard]] std::optional<MCYearAndTime> getTime() const;
+
+    [[nodiscard]] std::optional<MCYearAndTime::MCYear> getScenario() const;
+    [[nodiscard]] std::optional<unsigned int> getTimestep() const;
 
     auto operator<=>(const FullKey&) const = default; // Automatically generates <, >, ==, etc.
 
 private:
     PartialKey pk;
-    std::optional<MCYearAndTime> time;
+    std::optional<MCYearAndTime::MCYear> scenario;
+    std::optional<unsigned int> timestep;
 };
 
 class FullKeyHash
