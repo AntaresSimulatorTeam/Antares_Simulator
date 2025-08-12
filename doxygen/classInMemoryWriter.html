@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: Member List</title>
+<title>Antares Simulator: InMemoryWriter Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -104,7 +104,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('structAntares_1_1Optimization_1_1TimeAndScenario.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('classInMemoryWriter.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -123,20 +123,55 @@ $(document).ready(function(){initNavTree('structAntares_1_1Optimization_1_1TimeA
 </div>
 
 <div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="classInMemoryWriter-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">Antares::Optimization::TimeAndScenario Member List</div>  </div>
+<div class="title">InMemoryWriter Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p>This is the complete list of members for <a class="el" href="structAntares_1_1Optimization_1_1TimeAndScenario.html">Antares::Optimization::TimeAndScenario</a>, including all inherited members.</p>
-<table class="directory">
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>scenario</b> (defined in <a class="el" href="structAntares_1_1Optimization_1_1TimeAndScenario.html">Antares::Optimization::TimeAndScenario</a>)</td><td class="entry"><a class="el" href="structAntares_1_1Optimization_1_1TimeAndScenario.html">Antares::Optimization::TimeAndScenario</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>timestep</b> (defined in <a class="el" href="structAntares_1_1Optimization_1_1TimeAndScenario.html">Antares::Optimization::TimeAndScenario</a>)</td><td class="entry"><a class="el" href="structAntares_1_1Optimization_1_1TimeAndScenario.html">Antares::Optimization::TimeAndScenario</a></td><td class="entry"></td></tr>
-</table></div><!-- contents -->
+<div class="dynheader">
+Inheritance diagram for InMemoryWriter:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="classInMemoryWriter.png" usemap="#InMemoryWriter_map" alt=""/>
+  <map id="InMemoryWriter_map" name="InMemoryWriter_map">
+<area href="classAntares_1_1Solver_1_1IWriter.html" alt="Antares::Solver::IWriter" shape="rect" coords="0,0,142,24"/>
+  </map>
+</div></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a735eb2a9c519a414392b77ecc4e7c593"><td class="memItemLeft" align="right" valign="top"><a id="a735eb2a9c519a414392b77ecc4e7c593"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> (bool) override</td></tr>
+<tr class="separator:a735eb2a9c519a414392b77ecc4e7c593"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73dc2bff5c75273e65b9ba154b1b8514"><td class="memItemLeft" align="right" valign="top"><a id="a73dc2bff5c75273e65b9ba154b1b8514"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>writeSolution</b> (const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipSolution.html">Antares::Optimisation::LinearProblemApi::IMipSolution</a> &amp;solution) override</td></tr>
+<tr class="separator:a73dc2bff5c75273e65b9ba154b1b8514"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3827b8baeedeb7096f05220c9cb3456c"><td class="memItemLeft" align="right" valign="top"><a id="a3827b8baeedeb7096f05220c9cb3456c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>writeProblem</b> ([[maybe_unused]] const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html">Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem</a> &amp;problem) override</td></tr>
+<tr class="separator:a3827b8baeedeb7096f05220c9cb3456c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classAntares_1_1Solver_1_1IWriter"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classAntares_1_1Solver_1_1IWriter')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classAntares_1_1Solver_1_1IWriter.html">Antares::Solver::IWriter</a></td></tr>
+<tr class="memitem:a67adfd12a731e57a368b192e347e4437 inherit pub_methods_classAntares_1_1Solver_1_1IWriter"><td class="memItemLeft" align="right" valign="top"><a id="a67adfd12a731e57a368b192e347e4437"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>writeProblem</b> (const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html">Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem</a> &amp;problem)=0</td></tr>
+<tr class="separator:a67adfd12a731e57a368b192e347e4437 inherit pub_methods_classAntares_1_1Solver_1_1IWriter"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a190c342790cdd247ea5c6016e020c51e"><td class="memItemLeft" align="right" valign="top"><a id="a190c342790cdd247ea5c6016e020c51e"></a>
+<a class="el" href="structSolution.html">Solution</a>&#160;</td><td class="memItemRight" valign="bottom"><b>solution_</b> {}</td></tr>
+<tr class="separator:a190c342790cdd247ea5c6016e020c51e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>src/tests/end-to-end/modeler/test-modeler.cpp</li>
+</ul>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
+    <li class="navelem"><a class="el" href="classInMemoryWriter.html">InMemoryWriter</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: Member List</title>
+<title>Antares Simulator: Antares::Optimisation::LinearProblemApi::EmptyScenario Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -104,7 +104,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('classStubWriter.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('classAntares_1_1Optimisation_1_1LinearProblemApi_1_1EmptyScenario.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -123,24 +123,62 @@ $(document).ready(function(){initNavTree('classStubWriter.html',''); initResizab
 </div>
 
 <div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1EmptyScenario-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">StubWriter Member List</div>  </div>
+<div class="title">Antares::Optimisation::LinearProblemApi::EmptyScenario Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>This is the complete list of members for <a class="el" href="classStubWriter.html">StubWriter</a>, including all inherited members.</p>
-<table class="directory">
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>init</b>(bool) override (defined in <a class="el" href="classStubWriter.html">StubWriter</a>)</td><td class="entry"><a class="el" href="classStubWriter.html">StubWriter</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>solution_</b> (defined in <a class="el" href="classStubWriter.html">StubWriter</a>)</td><td class="entry"><a class="el" href="classStubWriter.html">StubWriter</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>writeProblem</b>([[maybe_unused]] const Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem &amp;problem) override (defined in <a class="el" href="classStubWriter.html">StubWriter</a>)</td><td class="entry"><a class="el" href="classStubWriter.html">StubWriter</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>writeProblem</b>(const Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem &amp;problem)=0 (defined in <a class="el" href="classAntares_1_1Solver_1_1IWriter.html">Antares::Solver::IWriter</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1IWriter.html">Antares::Solver::IWriter</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>writeSolution</b>(const Antares::Optimisation::LinearProblemApi::IMipSolution &amp;solution) override (defined in <a class="el" href="classStubWriter.html">StubWriter</a>)</td><td class="entry"><a class="el" href="classStubWriter.html">StubWriter</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>~IWriter</b>()=default (defined in <a class="el" href="classAntares_1_1Solver_1_1IWriter.html">Antares::Solver::IWriter</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1IWriter.html">Antares::Solver::IWriter</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-</table></div><!-- contents -->
+<p>Empty scenario implementation of <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario.html" title="Interface for scenarios in the linear problem API. A scenario is an association of years to their res...">IScenario</a>. Provide a default implementation of <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario.html" title="Interface for scenarios in the linear problem API. A scenario is an association of years to their res...">IScenario</a> that returns 0 for any year for a group named "empty".  
+ <a href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1EmptyScenario.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="IScenario_8h_source.html">IScenario.h</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for Antares::Optimisation::LinearProblemApi::EmptyScenario:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1EmptyScenario.png" usemap="#Antares::Optimisation::LinearProblemApi::EmptyScenario_map" alt=""/>
+  <map id="Antares::Optimisation::LinearProblemApi::EmptyScenario_map" name="Antares::Optimisation::LinearProblemApi::EmptyScenario_map">
+<area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario.html" title="Interface for scenarios in the linear problem API. A scenario is an association of years to their res..." alt="Antares::Optimisation::LinearProblemApi::IScenario" shape="rect" coords="0,0,328,24"/>
+  </map>
+</div></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a9ce3edddc7d0f7f9570fefbeab37318c"><td class="memItemLeft" align="right" valign="top"><a id="a9ce3edddc7d0f7f9570fefbeab37318c"></a>
+TimeSeriesNumber&#160;</td><td class="memItemRight" valign="bottom"><b>getData</b> (Year) const override</td></tr>
+<tr class="separator:a9ce3edddc7d0f7f9570fefbeab37318c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario.html">Antares::Optimisation::LinearProblemApi::IScenario</a></td></tr>
+<tr class="memitem:a6d2febce6a6c20a3d8d8ea0773e4b97b inherit pub_methods_classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario"><td class="memItemLeft" align="right" valign="top"><a id="a6d2febce6a6c20a3d8d8ea0773e4b97b"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>IScenario</b> (std::string group)</td></tr>
+<tr class="separator:a6d2febce6a6c20a3d8d8ea0773e4b97b inherit pub_methods_classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d8c924d331e35d6ce8901a3f2bcfcc9 inherit pub_methods_classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario"><td class="memItemLeft" align="right" valign="top"><a id="a6d8c924d331e35d6ce8901a3f2bcfcc9"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>group</b> () const</td></tr>
+<tr class="separator:a6d8c924d331e35d6ce8901a3f2bcfcc9 inherit pub_methods_classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pub_types_classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario.html">Antares::Optimisation::LinearProblemApi::IScenario</a></td></tr>
+<tr class="memitem:a8b08da172c5bd177bc1f8c07e04f237b inherit pub_types_classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario"><td class="memItemLeft" align="right" valign="top"><a id="a8b08da172c5bd177bc1f8c07e04f237b"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>Year</b> = unsigned</td></tr>
+<tr class="separator:a8b08da172c5bd177bc1f8c07e04f237b inherit pub_types_classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a30f5fd18dbc4aac7b2c30e9025a94238 inherit pub_types_classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario"><td class="memItemLeft" align="right" valign="top"><a id="a30f5fd18dbc4aac7b2c30e9025a94238"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>TimeSeriesNumber</b> = unsigned</td></tr>
+<tr class="separator:a30f5fd18dbc4aac7b2c30e9025a94238 inherit pub_types_classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Empty scenario implementation of <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario.html" title="Interface for scenarios in the linear problem API. A scenario is an association of years to their res...">IScenario</a>. Provide a default implementation of <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario.html" title="Interface for scenarios in the linear problem API. A scenario is an association of years to their res...">IScenario</a> that returns 0 for any year for a group named "empty". </p>
+</div><hr/>The documentation for this class was generated from the following file:<ul>
+<li>src/optimisation/linear-problem-api/include/antares/optimisation/linear-problem-api/<a class="el" href="IScenario_8h_source.html">IScenario.h</a></li>
+</ul>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
+    <li class="navelem"><b>Antares</b></li><li class="navelem"><b>Optimisation</b></li><li class="navelem"><a class="el" href="namespaceAntares_1_1Optimisation_1_1LinearProblemApi.html">LinearProblemApi</a></li><li class="navelem"><a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1EmptyScenario.html">EmptyScenario</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

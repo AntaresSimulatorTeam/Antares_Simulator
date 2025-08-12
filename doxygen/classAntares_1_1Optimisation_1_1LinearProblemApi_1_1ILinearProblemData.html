@@ -130,6 +130,11 @@ $(document).ready(function(){initNavTree('classAntares_1_1Optimisation_1_1Linear
 <div class="title">Antares::Optimisation::LinearProblemApi::ILinearProblemData Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Interface for linear problem data. Provides a method to retrieve data for a specific dataset, time series number, and hour.  
+ <a href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="ILinearProblemData_8h_source.html">ILinearProblemData.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for Antares::Optimisation::LinearProblemApi::ILinearProblemData:</div>
 <div class="dyncontent">
@@ -137,9 +142,10 @@ Inheritance diagram for Antares::Optimisation::LinearProblemApi::ILinearProblemD
   <img src="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.png" usemap="#Antares::Optimisation::LinearProblemApi::ILinearProblemData_map" alt=""/>
   <map id="Antares::Optimisation::LinearProblemApi::ILinearProblemData_map" name="Antares::Optimisation::LinearProblemApi::ILinearProblemData_map">
 <area href="classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1LinearProblemData.html" alt="Antares::Optimisation::LinearProblemDataImpl::LinearProblemData" shape="rect" coords="0,56,380,80"/>
-<area href="classEmptyDataSeries.html" alt="EmptyDataSeries" shape="rect" coords="390,56,770,80"/>
+<area href="classConstantDataSeries.html" alt="ConstantDataSeries" shape="rect" coords="390,56,770,80"/>
 <area href="structMockLinearProblemData.html" alt="MockLinearProblemData" shape="rect" coords="780,56,1160,80"/>
 <area href="structMockLinearProblemData.html" alt="MockLinearProblemData" shape="rect" coords="1170,56,1550,80"/>
+<area href="classEmptyDataSeries.html" alt="EmptyDataSeries" shape="rect" coords="390,112,770,136"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -149,7 +155,9 @@ Public Member Functions</h2></td></tr>
 virtual double&#160;</td><td class="memItemRight" valign="bottom"><b>getData</b> (const std::string &amp;dataSetId, unsigned timeSeriesNumber, unsigned hour) const =0</td></tr>
 <tr class="separator:a0a188e2921abcb871fe497d86668565b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Interface for linear problem data. Provides a method to retrieve data for a specific dataset, time series number, and hour. </p>
+</div><hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/optimisation/linear-problem-api/include/antares/optimisation/linear-problem-api/<a class="el" href="ILinearProblemData_8h_source.html">ILinearProblemData.h</a></li>
 </ul>
 </div><!-- contents -->

@@ -4,6 +4,5 @@ var classAntares_1_1ModelerStudy_1_1SystemModel_1_1LibraryBuilder =
     [ "withDescription", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1LibraryBuilder.html#aab7fd5eaeeaea09f18bcd152b5cb11d5", null ],
     [ "withId", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1LibraryBuilder.html#ac0c3d7b9fa3b7c981eef827f7e233793", null ],
     [ "withModels", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1LibraryBuilder.html#a2129dba95c7e7da6b92c5e4e383e7e5f", null ],
-    [ "withModelsMap", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1LibraryBuilder.html#ac2a7afe63d0451458414db30d477cad4", null ],
     [ "withPortTypes", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1LibraryBuilder.html#ac67e589c53a145133c96271e3e43c2f9", null ]
 ];

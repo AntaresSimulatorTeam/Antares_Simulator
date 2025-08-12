@@ -1313,8 +1313,11 @@ var namespaces_dup =
           [ "OrtoolsMipSolution", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipSolution.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipSolution" ],
           [ "OrtoolsMipVariable", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable" ]
         ] ],
+        [ "ComponentFiller", "classAntares_1_1Optimisation_1_1ComponentFiller.html", "classAntares_1_1Optimisation_1_1ComponentFiller" ],
+        [ "VariablesBulkAddition", "classAntares_1_1Optimisation_1_1VariablesBulkAddition.html", "classAntares_1_1Optimisation_1_1VariablesBulkAddition" ],
         [ "ScenarioGroupRepository", "classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html", "classAntares_1_1Optimisation_1_1ScenarioGroupRepository" ],
-        [ "DefaultScenario", "classAntares_1_1Optimisation_1_1DefaultScenario.html", "classAntares_1_1Optimisation_1_1DefaultScenario" ]
+        [ "DefaultScenario", "classAntares_1_1Optimisation_1_1DefaultScenario.html", "classAntares_1_1Optimisation_1_1DefaultScenario" ],
+        [ "checkTimeSteps", "ComponentFiller_8cpp.html#a976f9a528fccdb9ccdf17140b4c0cdf5", null ]
       ] ],
       [ "Optimization", "namespaceAntares_1_1Optimization.html", "namespaceAntares_1_1Optimization" ],
       [ "Private", null, [

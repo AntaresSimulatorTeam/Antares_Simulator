@@ -124,7 +124,6 @@ $(document).ready(function(){initNavTree('classEmptyDataSeries.html',''); initRe
 
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classEmptyDataSeries-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">EmptyDataSeries Class Reference</div>  </div>
@@ -136,15 +135,20 @@ Inheritance diagram for EmptyDataSeries:</div>
  <div class="center">
   <img src="classEmptyDataSeries.png" usemap="#EmptyDataSeries_map" alt=""/>
   <map id="EmptyDataSeries_map" name="EmptyDataSeries_map">
-<area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html" alt="Antares::Optimisation::LinearProblemApi::ILinearProblemData" shape="rect" coords="0,0,354,24"/>
+<area href="classConstantDataSeries.html" alt="ConstantDataSeries" shape="rect" coords="0,56,354,80"/>
+<area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html" title="Interface for linear problem data. Provides a method to retrieve data for a specific dataset,..." alt="Antares::Optimisation::LinearProblemApi::ILinearProblemData" shape="rect" coords="0,0,354,24"/>
   </map>
 </div></div>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
-Public Member Functions</h2></td></tr>
-<tr class="memitem:abc43869d7f18303089aaa3079612bd69"><td class="memItemLeft" align="right" valign="top"><a id="abc43869d7f18303089aaa3079612bd69"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>getData</b> ([[maybe_unused]] const std::string &amp;dataSetId, [[maybe_unused]] unsigned timeSeriesNumber, [[maybe_unused]] unsigned hour) const override</td></tr>
-<tr class="separator:abc43869d7f18303089aaa3079612bd69"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pub_methods_classConstantDataSeries"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classConstantDataSeries')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classConstantDataSeries.html">ConstantDataSeries</a></td></tr>
+<tr class="memitem:a84b41e45eb1fa2b7abe4ad4ada8df67b inherit pub_methods_classConstantDataSeries"><td class="memItemLeft" align="right" valign="top"><a id="a84b41e45eb1fa2b7abe4ad4ada8df67b"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ConstantDataSeries</b> (double value)</td></tr>
+<tr class="separator:a84b41e45eb1fa2b7abe4ad4ada8df67b inherit pub_methods_classConstantDataSeries"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f0e2b445a66baee1c55db5116d04d58 inherit pub_methods_classConstantDataSeries"><td class="memItemLeft" align="right" valign="top"><a id="a0f0e2b445a66baee1c55db5116d04d58"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>getData</b> ([[maybe_unused]] const std::string &amp;dataSetId, [[maybe_unused]] unsigned year, [[maybe_unused]] unsigned hour) const override</td></tr>
+<tr class="separator:a0f0e2b445a66baee1c55db5116d04d58 inherit pub_methods_classConstantDataSeries"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">Antares::Optimisation::LinearProblemApi::ILinearProblemData</a></td></tr>
 <tr class="memitem:a0a188e2921abcb871fe497d86668565b inherit pub_methods_classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData"><td class="memItemLeft" align="right" valign="top"><a id="a0a188e2921abcb871fe497d86668565b"></a>
 virtual double&#160;</td><td class="memItemRight" valign="bottom"><b>getData</b> (const std::string &amp;dataSetId, unsigned timeSeriesNumber, unsigned hour) const =0</td></tr>

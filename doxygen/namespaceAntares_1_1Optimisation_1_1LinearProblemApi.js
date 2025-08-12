@@ -5,6 +5,7 @@ var namespaceAntares_1_1Optimisation_1_1LinearProblemApi =
     [ "FillContext", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext" ],
     [ "ILinearProblemData", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData" ],
     [ "IScenario", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario" ],
+    [ "EmptyScenario", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1EmptyScenario.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1EmptyScenario" ],
     [ "ILinearProblem", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem" ],
     [ "LinearProblemBuilder", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1LinearProblemBuilder.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1LinearProblemBuilder" ],
     [ "LinearProblemFiller", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1LinearProblemFiller.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1LinearProblemFiller" ],

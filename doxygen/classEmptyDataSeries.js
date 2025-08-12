@@ -1,4 +1,4 @@
 var classEmptyDataSeries =
 [
-    [ "getData", "classEmptyDataSeries.html#abc43869d7f18303089aaa3079612bd69", null ]
+    [ "EmptyDataSeries", "classEmptyDataSeries.html#a98391f0606e04943172b724958bbaa04", null ]
 ];
