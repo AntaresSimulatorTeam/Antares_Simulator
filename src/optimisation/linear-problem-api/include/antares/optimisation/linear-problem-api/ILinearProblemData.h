@@ -75,7 +75,7 @@ private:
 
     unsigned firstTimeStep = 0;
     unsigned lastTimeStep = 0;
-    unsigned year_{0};
+    unsigned year_ = 0;
 };
 
 /**
