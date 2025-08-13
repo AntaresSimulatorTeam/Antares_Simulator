@@ -185,6 +185,41 @@ BOOST_AUTO_TEST_CASE(test_compare_function_three_distinct_values_KO)
     BOOST_CHECK(!Utils::checkAllElementsIdenticalOrOne(list));
 }
 
+BOOST_AUTO_TEST_CASE(split_string_ts_cluster_gen)
+{
+    char delimiter1 = ';';
+    char delimiter2 = '.';
+
+    using stringPair = std::pair<std::string, std::string>;
+    std::vector<stringPair> v;
+
+    // only one pair of area cluster
+    v = splitStringIntoPairs("abc.def", delimiter1, delimiter2);
+    BOOST_CHECK(v[0] == stringPair("abc", "def"));
+
+    // two pairs
+    v = splitStringIntoPairs("abc.def;ghi.jkl", delimiter1, delimiter2);
+    BOOST_CHECK(v[0] == stringPair("abc", "def"));
+    BOOST_CHECK(v[1] == stringPair("ghi", "jkl"));
+
+    // first pair isn't valid
+    v = splitStringIntoPairs("abcdef;ghi.jkl", delimiter1, delimiter2);
+    BOOST_CHECK(v[0] == stringPair("ghi", "jkl"));
+
+    // second pair isn't valid
+    v = splitStringIntoPairs("abc.def;ghijkl", delimiter1, delimiter2);
+    BOOST_CHECK(v[0] == stringPair("abc", "def"));
+
+    // no semi colon
+    v = splitStringIntoPairs("abc.def.ghi.jkl", delimiter1, delimiter2);
+    BOOST_CHECK(v[0] == stringPair("abc", "def.ghi.jkl"));
+
+    // no separator
+    v.clear();
+    v = splitStringIntoPairs("abcdef", delimiter1, delimiter2);
+    BOOST_CHECK(v.empty());
+}
+
 BOOST_AUTO_TEST_CASE(path_is_empty___path_is_valid)
 {
     fs::path path;
