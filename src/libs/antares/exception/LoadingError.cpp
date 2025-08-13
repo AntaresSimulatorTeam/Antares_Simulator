@@ -132,11 +132,6 @@ IncompatibleParallelOptions::IncompatibleParallelOptions():
 {
 }
 
-IncompatibleMILPWithoutOrtools::IncompatibleMILPWithoutOrtools():
-    LoadingError("Unit Commitment mode 'milp' must be used with an OR-Tools solver ")
-{
-}
-
 IncompatibleMILPOrtoolsSolver::IncompatibleMILPOrtoolsSolver():
     LoadingError("'milp' mode does not work with OR-Tools using Sirius solver")
 {

@@ -1,0 +1,29 @@
+#define BOOST_TEST_MODULE test check input data
+
+#include <boost/test/unit_test.hpp>
+#include <unit_test_utils.h>
+#include "antares/study/version.h"
+#include "antares/checks/checkLoadedInputData.h"
+
+using namespace Antares::Data;
+using namespace Antares::Check;
+
+BOOST_AUTO_TEST_CASE(study_version_is_unknown___exception_raised)
+{
+    StudyVersion version;
+    const AnyString StudyFolder; // Whaterver the value
+    std::string err_msg = "does not seem to be a valid study";
+    BOOST_CHECK_EXCEPTION(checkStudyVersion(version, StudyFolder),
+                          std::runtime_error,
+                          containsMessage(err_msg));
+}
+
+BOOST_AUTO_TEST_CASE(study_version_is_too_high___exception_raised)
+{
+    StudyVersion version(9999, 8888);
+    const AnyString StudyFolder; // Whaterver the value
+    std::string err_msg = "Invalid version for the study : found";
+    BOOST_CHECK_EXCEPTION(checkStudyVersion(version, StudyFolder),
+                          std::runtime_error,
+                          containsMessage(err_msg));
+}

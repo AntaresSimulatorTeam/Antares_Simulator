@@ -40,6 +40,7 @@
 #include "antares/solver/simulation/simulation-run.h"
 #include "antares/solver/simulation/solver.h"
 #include "antares/solver/utils/ortools_utils.h"
+#include <antares/study/header.h>
 
 using namespace Antares::Check;
 
@@ -349,7 +350,8 @@ void Application::prepare(int argc, const char* argv[])
     checkStudyFolder(options.studyFolder);
     pSettings.studyFolder = fixStudyFolder(options.studyFolder);
 
-    checkStudyVersion(pSettings.studyFolder);
+    auto version = Data::StudyHeader::tryToFindTheVersion(pSettings.studyFolder);
+    checkStudyVersion(version, pSettings.studyFolder);
 
     // Determine the log filename to use for this simulation
     resetLogFilename();
