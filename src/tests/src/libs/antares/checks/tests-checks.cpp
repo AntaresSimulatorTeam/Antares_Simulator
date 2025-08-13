@@ -47,3 +47,18 @@ BOOST_AUTO_TEST_CASE(splx_optim_range_and_hydro_pricing_are_incompatible___excep
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(check_simplex_range_and_unit_commitment)
+
+BOOST_AUTO_TEST_CASE(splx_optim_range_and_unit_commitment_are_incompatible___exception_raised)
+{
+    SimplexOptimization splxOptimRange = SimplexOptimization::sorDay;
+    UnitCommitmentMode ucMode = UnitCommitmentMode::ucMILP;
+    std::string err_msg = "Simplexe optimization range and unit commitment mode : values are not "
+                          "compatible";
+    BOOST_CHECK_EXCEPTION(checkSimplexRangeUnitCommitmentMode(splxOptimRange, ucMode),
+                          std::runtime_error,
+                          checkMessage(err_msg));
+}
+
+BOOST_AUTO_TEST_SUITE_END()
