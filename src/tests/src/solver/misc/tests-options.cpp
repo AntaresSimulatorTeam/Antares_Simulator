@@ -8,6 +8,7 @@
 
 #include "antares/solver/misc/options.h"
 
+using namespace Antares::Data;
 namespace fs = std::filesystem;
 
 BOOST_AUTO_TEST_SUITE(check_study_folder)
@@ -80,7 +81,7 @@ std::string getPIDfromFile(fs::path& filePath)
     {
         while (pidFile.good())
         {
-            getline(pidFile, pid_to_return);
+            std::getline(pidFile, pid_to_return);
         }
     }
     pidFile.close();
@@ -109,6 +110,79 @@ BOOST_AUTO_TEST_CASE(ask_for_pid_printed_to_an_non_existing_file___exception_rai
 
     std::string err_msg = "Impossible to write pid file";
     BOOST_CHECK_EXCEPTION(printPIDtoDisk(settings), std::runtime_error, containsMessage(err_msg));
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+struct CreateOptionsAndSettings
+{
+    Settings settings;
+    StudyLoadOptions options;
+};
+
+BOOST_FIXTURE_TEST_SUITE(check_and_fix_settings_and_options, CreateOptionsAndSettings)
+
+BOOST_AUTO_TEST_CASE(options_give_to_settings_the_simulation_name)
+{
+    BOOST_CHECK(options.simulationName.empty()); // Value by default
+
+    options.simulationName = "my-simulation";
+    checkAndCorrectSettingsAndOptions(settings, options);
+    BOOST_CHECK(settings.simulationName == options.simulationName);
+}
+
+BOOST_AUTO_TEST_CASE(options_nb_of_threads_forces_parallel_mode)
+{
+    BOOST_CHECK(!options.forceParallel); // Value by default
+
+    options.maxNbYearsInParallel = 3;
+    checkAndCorrectSettingsAndOptions(settings, options);
+    BOOST_CHECK(options.forceParallel);
+}
+
+BOOST_AUTO_TEST_CASE(parallel_optione_incompatible)
+{
+    options.enableParallel = true;
+    options.forceParallel = true;
+    std::string err_msg = "Options --parallel and --force-parallel are incompatible";
+    BOOST_CHECK_EXCEPTION(checkAndCorrectSettingsAndOptions(settings, options),
+                          std::runtime_error,
+                          checkMessage(err_msg));
+}
+
+BOOST_AUTO_TEST_CASE(optimization_range_set_to_unknown___exception_raised)
+{
+    settings.simplexOptimRange = "unknown_opt_range";
+    std::string err_msg = "Invalid command line value for --optimization-range ('day' or 'week' "
+                          "expected)";
+    BOOST_CHECK_EXCEPTION(checkAndCorrectSettingsAndOptions(settings, options),
+                          std::runtime_error,
+                          checkMessage(err_msg));
+}
+
+BOOST_AUTO_TEST_CASE(optimization_range_set_to_day)
+{
+    settings.simplexOptimRange = "DAy"; // Whatever the case, will be downcased
+    checkAndCorrectSettingsAndOptions(settings, options);
+    BOOST_CHECK_EQUAL(options.simplexOptimizationRange, sorDay);
+}
+
+BOOST_AUTO_TEST_CASE(optimization_range_set_to_week)
+{
+    settings.simplexOptimRange = "wEeK"; // Whatever the case, will be downcased
+    checkAndCorrectSettingsAndOptions(settings, options);
+    BOOST_CHECK_EQUAL(options.simplexOptimizationRange, sorWeek);
+}
+
+// settings.noOutput && settings.forceZipOutput
+BOOST_AUTO_TEST_CASE(output_settings_are_incompatible___exception_raised)
+{
+    settings.noOutput = true;
+    settings.forceZipOutput = true;
+    std::string err_msg = "no-output and zip-output options are incompatible";
+    BOOST_CHECK_EXCEPTION(checkAndCorrectSettingsAndOptions(settings, options),
+                          std::runtime_error,
+                          checkMessage(err_msg));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
