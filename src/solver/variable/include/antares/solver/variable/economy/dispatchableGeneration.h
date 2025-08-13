@@ -171,12 +171,6 @@ public:
         NextType::initializeFromArea(study, area);
     }
     
-    template<class SetT>
-    void initializeFromSetOfAreas(Data::Study* study, SetT& set)
-    {
-        logs.notice() << "set for dispatchable";
-    }
-
     size_t getMaxNumberColumns() const
     {
         return nbColumns_ * ResultsType::count;

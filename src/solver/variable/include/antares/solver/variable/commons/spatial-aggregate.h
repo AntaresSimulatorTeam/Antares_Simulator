@@ -214,6 +214,12 @@ public:
         NextType::initializeFromStudy(study);
     }
 
+    void initializeFromSetOfAreas(Data::Study* study, unsigned index)
+    {
+        logs.notice() << "set for spatial";
+        NextType::initializeFromSetOfAreas(study, index);
+    }
+
     void initializeFromArea(Data::Study* study, Data::Area* area)
     {
         // Next

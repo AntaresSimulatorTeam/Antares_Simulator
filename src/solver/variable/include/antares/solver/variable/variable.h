@@ -132,8 +132,7 @@ public:
     void initializeFromArea(Data::Study* study, Data::Area* area);
 
 
-    template<class SetT>
-    void initializeFromSetOfAreas(Data::Study* study, SetT& set);
+    void initializeFromSetOfAreas(Data::Study* study, unsigned index);
 
     /*!
     ** \brief Initialize the variable with a specific link between two areas

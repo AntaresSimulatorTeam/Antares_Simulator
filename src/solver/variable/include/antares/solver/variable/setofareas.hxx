@@ -66,7 +66,7 @@ void SetsOfAreas<NextT>::initializeFromStudy(Data::Study& study)
         // From the study
         n->initializeFromStudy(study);
 
-        n->initializeFromSetOfAreas(study, sets[setIndex]);
+        n->initializeFromSetOfAreas(&study, setIndex);
 
         // Making specific variables non applicable in following output reports :
         // - annual district reports

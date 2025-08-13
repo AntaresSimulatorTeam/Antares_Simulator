@@ -83,12 +83,11 @@ inline void IVariable<ChildT, NextT, VCardT>::initializeFromArea(Data::Study* st
 }
 
 template<class ChildT, class NextT, class VCardT>
-template<class SetT>
 inline void IVariable<ChildT, NextT, VCardT>::initializeFromSetOfAreas(Data::Study* study,
-                                                                       SetT& set)
+                                                                       unsigned index)
 {
     // Next
-    NextType::initializeFromSetOfAreas(study, set);
+    NextType::initializeFromSetOfAreas(study, index);
 }
 
 template<class ChildT, class NextT, class VCardT>

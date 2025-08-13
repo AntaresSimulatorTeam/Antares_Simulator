@@ -178,8 +178,7 @@ public:
     {
     }
 
-    template<class SetT>
-    void initializeFromSetOfAreas([[maybe_unused]] Data::Study*, SetT&)
+    void initializeFromSetOfAreas([[maybe_unused]] Data::Study*, unsigned)
     {
     }
 

@@ -210,8 +210,7 @@ public:
         // Do nothing
     }
 
-    template<class SetT>
-    void initializeFromSetOfAreas(Data::Study* , SetT&)
+    void initializeFromSetOfAreas(Data::Study* , unsigned)
     {
         // do nothing
     }
