@@ -27,7 +27,8 @@ BOOST_AUTO_TEST_CASE(study_folder_is_empty___exception_raised)
                           checkMessage(err_msg));
 }
 
-BOOST_AUTO_TEST_CASE(study_folder_contains_non_ascii_chars___exception_raised)
+#if defined(_WIN32)
+BOOST_AUTO_TEST_CASE(on_Win__study_folder_contains_non_ascii_chars___exception_raised)
 {
     fs::path studyFolder = fs::temp_directory_path() / "I contain an accènt";
     std::string err_msg = "Study folder contains non ASCII chars : ";
@@ -35,6 +36,7 @@ BOOST_AUTO_TEST_CASE(study_folder_contains_non_ascii_chars___exception_raised)
                           std::runtime_error,
                           containsMessage(err_msg));
 }
+#endif
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(fix_study_folder)
