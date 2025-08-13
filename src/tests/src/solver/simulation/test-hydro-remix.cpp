@@ -8,8 +8,8 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "antares/solver/simulation/shave-peaks-by-remix-storage-gen.h"
 #include "antares/solver/simulation/remix-utils.h"
+#include "antares/solver/simulation/shave-peaks-by-remix-storage-gen.h"
 
 using namespace Antares::Solver::Simulation;
 
@@ -54,8 +54,8 @@ struct InputFixture
         shavePeaksByRemixingStorageGen(Load, UnsupE, Spillage, DTG_MRG, hydroForRemix);
     }
 
-    std::vector<double> TotalGenNoHydro, Load, HydroGen, UnsupE, levels, HydroPmax, HydroPmin, inflows,
-      ovf, pump, Spillage, DTG_MRG;
+    std::vector<double> TotalGenNoHydro, Load, HydroGen, UnsupE, levels, HydroPmax, HydroPmin,
+      inflows, ovf, pump, Spillage, DTG_MRG;
     std::shared_ptr<StorageForRemix> hydroForRemix;
     double init_level = 0.;
     double capacity = std::numeric_limits<double>::max();
