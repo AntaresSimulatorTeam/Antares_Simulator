@@ -1,10 +1,5 @@
 var NAVTREEINDEX53 =
 {
-"solver_2variable_2include_2antares_2solver_2variable_2economy_2links_8h_source.html":[9,0,0,7,12,0,0,0,0,2,12],
-"solver_2variable_2include_2antares_2solver_2variable_2info_8h_source.html":[9,0,0,7,12,0,0,0,0,13],
-"solver_2variable_2include_2antares_2solver_2variable_2state_8h_source.html":[9,0,0,7,12,0,0,0,0,17],
-"solver_2variable_2include_2antares_2solver_2variable_2storage_2fwd_8h_source.html":[9,0,0,7,12,0,0,0,0,3,3],
-"solver_2variable_2include_2antares_2solver_2variable_2surveyresults_2data_8h.html#aa68e16e57ecc5051a9166fd4d78b7f01":[7,0,0,25,5,5,1],
 "solver_2variable_2include_2antares_2solver_2variable_2surveyresults_2data_8h_source.html":[9,0,0,7,12,0,0,0,0,4,0],
 "solver_2variable_2include_2antares_2solver_2variable_2variable_8h_source.html":[9,0,0,7,12,0,0,0,0,20],
 "solver_8hxx_source.html":[9,0,0,7,9,0,0,0,0,22],
@@ -249,5 +244,10 @@ var NAVTREEINDEX53 =
 "structAntares_1_1Date_1_1HourInterval.html#a53e86b3732adfe8635cab8d74fa5779d":[8,0,0,5,0,2],
 "structAntares_1_1Date_1_1HourInterval.html#a8e699af7f35137c818d5a00934f38a53":[8,0,0,5,0,1],
 "structAntares_1_1Date_1_1HourInterval.html#af683944cd6ecd18ffb9f977e8b7fb790":[8,0,0,5,0,0],
-"structAntares_1_1DebugData.html":[8,0,0,53]
+"structAntares_1_1DebugData.html":[8,0,0,53],
+"structAntares_1_1DebugData.html#a02bc55683169d012e89e0b3f61adb3e7":[8,0,0,53,19],
+"structAntares_1_1DebugData.html#a06a88317bba1a0e30fbf6cc7dca729cb":[8,0,0,53,6],
+"structAntares_1_1DebugData.html#a08326154d2f98a7b832b484b7cd9895f":[8,0,0,53,20],
+"structAntares_1_1DebugData.html#a0aaeeeb0f3406fcdb118a4687cb96b7a":[8,0,0,53,10],
+"structAntares_1_1DebugData.html#a0b7a332cee3db8569de6400ba3015c23":[8,0,0,53,9]
 };

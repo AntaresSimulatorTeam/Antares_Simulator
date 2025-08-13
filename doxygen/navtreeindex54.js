@@ -1,10 +1,5 @@
 var NAVTREEINDEX54 =
 {
-"structAntares_1_1DebugData.html#a02bc55683169d012e89e0b3f61adb3e7":[8,0,0,53,19],
-"structAntares_1_1DebugData.html#a06a88317bba1a0e30fbf6cc7dca729cb":[8,0,0,53,6],
-"structAntares_1_1DebugData.html#a08326154d2f98a7b832b484b7cd9895f":[8,0,0,53,20],
-"structAntares_1_1DebugData.html#a0aaeeeb0f3406fcdb118a4687cb96b7a":[8,0,0,53,10],
-"structAntares_1_1DebugData.html#a0b7a332cee3db8569de6400ba3015c23":[8,0,0,53,9],
 "structAntares_1_1DebugData.html#a0fd1a9004b469319a93ff229e845906e":[8,0,0,53,8],
 "structAntares_1_1DebugData.html#a16dfa17140e67a83780575c2a2a5c022":[8,0,0,53,23],
 "structAntares_1_1DebugData.html#a1c1e6c515dbc1564b8612a99068dbceb":[8,0,0,53,18],
@@ -249,5 +244,10 @@ var NAVTREEINDEX54 =
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy_3_010_00_01VCardT_01_4.html":[8,0,0,18,4,2,1],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy_3_011_00_01VCardT_01_4.html":[8,0,0,18,4,2,2],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy_3_01Category_1_1dynamicColumns_00_01VCardT_01_4.html":[8,0,0,18,4,2,3],
-"structAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate_1_1Statistics.html":[8,0,0,18,4,2,5,0]
+"structAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate_1_1Statistics.html":[8,0,0,18,4,2,5,0],
+"structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html":[8,0,0,18,4,2,4],
+"structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#a557de5cb7722aebe1712eef0d95e44e9":[8,0,0,18,4,2,4,1],
+"structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#a9a44430db793c29fddd32b7f47c7b7e8":[8,0,0,18,4,2,4,6],
+"structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#aaa890883e70aa99ba77758166a186ccc":[8,0,0,18,4,2,4,5],
+"structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#ad8bcde81cd7a9576a40fcfbdec0ef641":[8,0,0,18,4,2,4,4]
 };

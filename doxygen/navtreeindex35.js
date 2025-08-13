@@ -1,6 +1,5 @@
 var NAVTREEINDEX35 =
 {
-"classAntares_1_1Toolbox_1_1Jobs_1_1PartList.html#a26dc56b8f29230b6753aa568b46140da":[8,0,0,20,3,1,4],
 "classAntares_1_1Toolbox_1_1Jobs_1_1PartList.html#a2bc3aebcd532d4fb0b6bf042865aeb6f":[8,0,0,20,3,1,0],
 "classAntares_1_1Toolbox_1_1Jobs_1_1PartList.html#a6803673b75e454ab6dfbe3c65a07b91e":[8,0,0,20,3,1,1],
 "classAntares_1_1Toolbox_1_1Jobs_1_1PartList.html#ab2a6884f5ff5e4fa5a94ffffe61ba477":[8,0,0,20,3,1,3],
@@ -249,5 +248,6 @@ var NAVTREEINDEX35 =
 "classAntares_1_1Window_1_1Inspector_1_1ClusterUpdater.html#aa7188818ba99d1938a0ee23910ef2038":[8,0,0,23,1,74,9],
 "classAntares_1_1Window_1_1Inspector_1_1ClusterUpdater.html#ab7fd7694512aff9c3f57789df0ed2bad":[8,0,0,23,1,74,4],
 "classAntares_1_1Window_1_1Inspector_1_1ClusterUpdater.html#ae7cf6606286b94f325dce01dc0edf989":[8,0,0,23,1,74,6],
-"classAntares_1_1Window_1_1Inspector_1_1ClusterUpdater.html#aea0845a846155f460271a2124d938442":[8,0,0,23,1,74,11]
+"classAntares_1_1Window_1_1Inspector_1_1ClusterUpdater.html#aea0845a846155f460271a2124d938442":[8,0,0,23,1,74,11],
+"classAntares_1_1Window_1_1Inspector_1_1ClusterUpdater.html#aedfc77831ada123e94d05c80b5a9d422":[8,0,0,23,1,74,3]
 };

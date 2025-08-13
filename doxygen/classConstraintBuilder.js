@@ -31,7 +31,6 @@ var classConstraintBuilder =
     [ "ShortTermCostVariationWithdrawal", "classConstraintBuilder.html#af470a67b771ddf7eb7492712d58474cf", null ],
     [ "ShortTermStorageInjection", "classConstraintBuilder.html#aed4cbe71d2334bcc88fd05fee2d011db", null ],
     [ "ShortTermStorageLevel", "classConstraintBuilder.html#ae9ed8f71f80cbde9243ef09f8e8c4cf7", null ],
-    [ "ShortTermStorageOverflow", "classConstraintBuilder.html#a51619522ef95290fe281632a02b126ab", null ],
     [ "ShortTermStorageWithdrawal", "classConstraintBuilder.html#a52b0b0e7dc6b890df4f55cf3b72f773c", null ],
     [ "updateHourWithinWeek", "classConstraintBuilder.html#a1daa3a79a8586a9a95e6bbd973830075", null ],
     [ "data", "classConstraintBuilder.html#a206bfb317c63a99e019b7cdd19d2350a", null ]

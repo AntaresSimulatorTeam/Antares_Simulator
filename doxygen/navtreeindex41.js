@@ -1,7 +1,5 @@
 var NAVTREEINDEX41 =
 {
-"classHydroPowerSmoothingUsingVariationMaxDown.html#a16f83c45906b11c5f8dcf26670674503":[8,0,150,2],
-"classHydroPowerSmoothingUsingVariationMaxDown.html#aaadca5844da2109ad2614cd3240e0b12":[8,0,150,0],
 "classHydroPowerSmoothingUsingVariationMaxDown.html#ae2985230ac7e6c6dc7715307120eda04":[8,0,150,1],
 "classHydroPowerSmoothingUsingVariationMaxUp.html":[8,0,151],
 "classHydroPowerSmoothingUsingVariationMaxUp.html#a16f83c45906b11c5f8dcf26670674503":[8,0,151,2],
@@ -249,5 +247,7 @@ var NAVTREEINDEX41 =
 "classMockMipVariable.html#abfdf12d894c589832a5349145870362d":[8,0,189,0],
 "classMockMipVariable.html#acdd76cc0fae5672910cd2728fc189ba7":[8,0,189,2],
 "classMockMipVariable.html#aee318be77be770fa41b15f73a9fe6dd4":[8,0,189,1],
-"classMockMipVariable.html#af1097002bb5e2dad854309ce4e620a3d":[8,0,189,7]
+"classMockMipVariable.html#af1097002bb5e2dad854309ce4e620a3d":[8,0,189,7],
+"classModifiedINode.html":[8,0,190],
+"classModifiedINode.html#a32e5cffa56a52c2d00558645b6816fd4":[8,0,190,5]
 };

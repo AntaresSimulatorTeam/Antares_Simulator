@@ -1,11 +1,5 @@
 var NAVTREEINDEX59 =
 {
-"structDEMAND__FLEX__DOWN__POOL.html":[8,0,98],
-"structDEMAND__FLEX__DOWN__POOL.html#a4b91aa5f6b0605c637f074c435c46bdd":[8,0,98,0],
-"structDEMAND__FLEX__UP__POOL.html":[8,0,99],
-"structDEMAND__FLEX__UP__POOL.html#af984221093cc2b5d97fe9b7ca6bc1562":[8,0,99,0],
-"structDEMAND__MARKET__POOL.html":[8,0,100],
-"structDEMAND__MARKET__POOL.html#a39a0643c2eee267c6ee3a987506a5a0c":[8,0,100,0],
 "structDONNEES__ANNUELLES.html":[8,0,101],
 "structDONNEES__ANNUELLES.html#a0a55d18ec598c1bc4c7244c68e8d0acf":[8,0,101,7],
 "structDONNEES__ANNUELLES.html#a285c24ba96771edd7ad6a0f9d6c709bb":[8,0,101,14],
@@ -249,5 +243,11 @@ var NAVTREEINDEX59 =
 "structHydroPowerData.html":[8,0,148],
 "structHydroPowerData.html#a69de186af47bb7f8bbba3198f692698c":[8,0,148,1],
 "structHydroPowerData.html#aae81c7f94c64444074e99012d158edb9":[8,0,148,0],
-"structHydroPowerData.html#ad889a21c8e485c9eff972f2260c3fb6f":[8,0,148,2]
+"structHydroPowerData.html#ad889a21c8e485c9eff972f2260c3fb6f":[8,0,148,2],
+"structInputFixture.html":[8,0,159],
+"structInputFixture.html#a29deb1ad80e0ce8f5e0543caf716186b":[8,0,159,18],
+"structInputFixture.html#a3056d3004bb5db484e4f63aff1860846":[8,0,159,3],
+"structInputFixture.html#a3bebb37829463ebe6492cb011a6e020b":[8,0,159,13],
+"structInputFixture.html#a4b79e68953b2a8059967612189ffc3e7":[8,0,159,8],
+"structInputFixture.html#a50f7925048d49711b2f5c71d6662815f":[8,0,159,15]
 };

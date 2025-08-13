@@ -23,6 +23,5 @@ var classVariableManagement_1_1VariableManager =
     [ "ShortTermStorageCostVariationWithdrawal", "classVariableManagement_1_1VariableManager.html#a2bc96efc19cc97f7f2ed7a076420ceb3", null ],
     [ "ShortTermStorageInjection", "classVariableManagement_1_1VariableManager.html#a1478b8928aeae2b4ad9e20c565c92aa0", null ],
     [ "ShortTermStorageLevel", "classVariableManagement_1_1VariableManager.html#ae05f4ae6e4c60a84a22a5ebc1b246573", null ],
-    [ "ShortTermStorageOverflow", "classVariableManagement_1_1VariableManager.html#aafc9e3db642b8a4f66b0a2e28b347326", null ],
     [ "ShortTermStorageWithdrawal", "classVariableManagement_1_1VariableManager.html#a8ae2ecf25176c721838d8ccf5eb73f12", null ]
 ];

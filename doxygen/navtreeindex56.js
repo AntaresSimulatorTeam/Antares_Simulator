@@ -1,10 +1,5 @@
 var NAVTREEINDEX56 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNonProportionalCostByDispatchablePlant.html":[8,0,0,18,4,4,80],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNonProportionalCostByDispatchablePlant.html#a138eba53c2879b53a7898fc0e3a33c63":[8,0,0,18,4,4,80,4],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNonProportionalCostByDispatchablePlant.html#a301953d5cf01b11370b86ac8208eb4f5":[8,0,0,18,4,4,80,3],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNonProportionalCostByDispatchablePlant.html#a3f7f30a59f09e536f3cf717e3a8b82a0":[8,0,0,18,4,4,80,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNonProportionalCostByDispatchablePlant.html#a5e6fffd8ce61ed4d75a127cfd00ad561":[8,0,0,18,4,4,80,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNonProportionalCostByDispatchablePlant.html#a9422dc6a78fa495b810d8865eca12e93":[8,0,0,18,4,4,80,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOperatingCost.html":[8,0,0,18,4,4,82],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOperatingCost.html#a1b9546d291595b227bc9a8d1a3b84d94":[8,0,0,18,4,4,82,0],
@@ -249,5 +244,10 @@ var NAVTREEINDEX56 =
 "structAntares_1_1Solver_1_1Variable_1_1SpatialAggregateOperation_3_01true_00_01Category_1_1spatialAggregateOr_00_01VCardT_01_4.html":[8,0,0,18,4,27],
 "structAntares_1_1Solver_1_1Variable_1_1SpatialAggregateOperation_3_01true_00_01Category_1_1spatialAggregateSum_00_01VCardT_01_4.html":[8,0,0,18,4,26],
 "structAntares_1_1Solver_1_1Variable_1_1SpatialAggregateOperation_3_01true_00_01Category_1_1spatib45dc589c9aad1010829c4d00b555bd9.html":[8,0,0,18,4,29],
-"structAntares_1_1Solver_1_1Variable_1_1SpecifierRemover.html":[8,0,0,18,4,15]
+"structAntares_1_1Solver_1_1Variable_1_1SpecifierRemover.html":[8,0,0,18,4,15],
+"structAntares_1_1Solver_1_1Variable_1_1SpecifierRemover.html#aa5c566f07fbaf9cf9ece100d0df22113":[8,0,0,18,4,15,0],
+"structAntares_1_1Solver_1_1Variable_1_1SpecifierRemover_3_01T_01_5_01_4.html":[8,0,0,18,4,17],
+"structAntares_1_1Solver_1_1Variable_1_1SpecifierRemover_3_01T_01_5_01_4.html#a5a681bdf044ea51a190d0a65b5a561f9":[8,0,0,18,4,17,0],
+"structAntares_1_1Solver_1_1Variable_1_1SpecifierRemover_3_01T_0fN_0e_4.html":[8,0,0,18,4,16],
+"structAntares_1_1Solver_1_1Variable_1_1SpecifierRemover_3_01T_0fN_0e_4.html#a98be79698b15bf70b4a2d2455626fdca":[8,0,0,18,4,16,0]
 };

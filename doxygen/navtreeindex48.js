@@ -1,10 +1,5 @@
 var NAVTREEINDEX48 =
 {
-"fixtures_8py.html#a15dd6c53721f69434e66232668625898":[7,0,21,4],
-"fixtures_8py.html#a40228dc2652833ab5cc3c0d688ec0613":[7,0,21,1],
-"fixtures_8py.html#a4b9048662ccb12913b857b9a3b910084":[7,0,21,2],
-"fixtures_8py.html#ac46e8b1ec42c568ff491677c104f3a77":[7,0,21,3],
-"flowLinearAbs_8h_source.html":[9,0,0,7,12,0,0,0,0,2,1,4],
 "flowLinear_8h_source.html":[9,0,0,7,12,0,0,0,0,2,1,3],
 "flowQuad_8h_source.html":[9,0,0,7,12,0,0,0,0,2,1,5],
 "frame_8cpp.html#a3be0296b7816a5858cca6d4f56bc0987":[7,0,0,31,1,133],
@@ -249,5 +244,10 @@ var NAVTREEINDEX48 =
 "iitem_8hxx_source.html":[9,0,0,11,1,0,3,1],
 "immediate__file__writer_8h_source.html":[9,0,0,4,0,29,1,1],
 "impedances_8h_source.html":[9,0,0,11,0,0,0,2,5],
-"import__helper_8py.html#aa974063ef554e07ce24987062c9177e6":[7,0,41,0,0]
+"import__helper_8py.html#aa974063ef554e07ce24987062c9177e6":[7,0,41,0,0],
+"in-memory-study_8h_source.html":[9,0,0,9,1,0,0],
+"in__memory__writer_8h_source.html":[9,0,0,4,0,29,0,0,0,1],
+"index.html":[],
+"index.html#autotoc_md1":[0],
+"index.html#autotoc_md2":[1]
 };
