@@ -171,6 +171,11 @@ public:
         NextType::initializeFromArea(study, area);
     }
     
+    void initializeFromSetOfAreas(Data::Study* study, unsigned index)
+    {
+        logs.notice() << "set for dispatchable";
+    }
+
     size_t getMaxNumberColumns() const
     {
         return nbColumns_ * ResultsType::count;

@@ -217,6 +217,7 @@ public:
     void initializeFromSetOfAreas(Data::Study* study, unsigned index)
     {
         logs.notice() << "set for spatial";
+        VariableAccessorType:: initializeFromSetOfAreas(study, index);
         NextType::initializeFromSetOfAreas(study, index);
     }
 
