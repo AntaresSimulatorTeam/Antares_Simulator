@@ -280,7 +280,6 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
           const auto& dtgMrgArray = area.scratchpad[numSpace].dispatchableGenerationMargin;
           const std::vector<double> dtgMrg(dtgMrgArray, dtgMrgArray + HOURS_IN_WEEK);
 
-
           auto hydroStorage = makeHydroForRemix(hydroGen,
                                                 unsupE,
                                                 levels,
