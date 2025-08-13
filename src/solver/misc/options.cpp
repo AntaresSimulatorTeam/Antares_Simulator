@@ -214,7 +214,7 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
                     "progress",
                     "Display the progress of each task");
 
-     // --pid
+    // --pid
     parser->add(settings.PID, 'p', "pid", "Specify the file where to write the process ID");
 
     // --list-solvers
