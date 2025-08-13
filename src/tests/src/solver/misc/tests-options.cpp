@@ -41,11 +41,22 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(fix_study_folder)
 
+std::string removeTrailingSeparator(const std::string& path)
+{
+    std::string to_return = path;
+    if (to_return.back() == '/' || to_return.back() == '\\')
+    {
+        to_return.pop_back();
+    }
+    return to_return;
+}
+
 BOOST_AUTO_TEST_CASE(sudy_folder_relative_path_is_converted_into_an_absolute_path)
 {
     fs::path studyFolder(".");
-    fs::path expectedPath = fs::absolute(fs::current_path());
-    BOOST_CHECK_EQUAL(fixStudyFolder(studyFolder.string()), expectedPath.string());
+    std::string expectedPath = fs::absolute(fs::current_path()).string();
+    std::string fixedStudyFolder = fixStudyFolder(studyFolder.string());
+    BOOST_CHECK_EQUAL(removeTrailingSeparator(fixedStudyFolder), expectedPath);
 }
 
 BOOST_AUTO_TEST_CASE(study_folder_does_not_exist___exception_raised)

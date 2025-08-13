@@ -30,6 +30,7 @@
 
 using namespace Antares;
 using namespace Antares::Data;
+namespace fs = std::filesystem;
 
 std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoadOptions& options)
 {
@@ -312,10 +313,10 @@ void checkStudyFolder(const std::string& studyFolder)
 
 std::string fixStudyFolder(const std::string& studyFolder)
 {
-    std::filesystem::path abspath = std::filesystem::absolute(studyFolder);
+    fs::path abspath = fs::absolute(studyFolder);
     abspath = abspath.lexically_normal();
 
-    if (!std::filesystem::exists(abspath) || !std::filesystem::is_directory(abspath))
+    if (!fs::exists(abspath) || !fs::is_directory(abspath))
     {
         throw Error::StudyFolderDoesNotExist(studyFolder);
     }
