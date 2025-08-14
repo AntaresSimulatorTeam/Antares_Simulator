@@ -1,6 +1,5 @@
 #include "include/antares/solver/simulation/shave-peaks-by-remix-storage-gen.h"
 
-#include <algorithm>
 #include <ranges>
 #include <set>
 #include <stdexcept>
@@ -118,7 +117,6 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
                                     std::shared_ptr<StorageForRemix> storage)
 {
     const std::vector<double> UnsupEinit = UnsupE;
-
     std::vector<double> TotalGen = Load - UnsupEinit;
 
     unsigned nbLoops = maxNbLoops;
