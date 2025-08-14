@@ -16,6 +16,7 @@ toc_depth: 2
 
 #### Removed features
 * Remove timeseries refresh [ANT-1335] (#2451)
+* Forbid study path with non ascii chars [ANT-3635] (#2934)
 
 #### Improvements
 * Remove year batches, launch jobs continually [ANT-2139] (#2718)
