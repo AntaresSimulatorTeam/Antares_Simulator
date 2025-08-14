@@ -1,6 +1,7 @@
 #include "include/antares/solver/simulation/shave-peaks-by-remix-storage-gen.h"
 
 #include <algorithm>
+#include <ranges>
 #include <stdexcept>
 #include <vector>
 
@@ -90,7 +91,6 @@ static std::vector<bool> ValidHours(const std::vector<double>& Spillage,
 
 static double makeExchange(std::vector<double>& TotalGen,
                            std::vector<double>& UnsupE,
-                           const std::vector<double>& UnsupEinit,
                            const std::vector<bool>& validHours,
                            std::shared_ptr<StorageForRemix>& storage)
 {
@@ -129,12 +129,8 @@ static double makeExchange(std::vector<double>& TotalGen,
                 storage->generation()[hourOfMaxGen] -= exchange;
                 storage->generation()[hourOfMinGen] += exchange;
 
-                UnsupE[hourOfMaxGen] = storage->initialGen()[hourOfMaxGen]
-                                       + UnsupEinit[hourOfMaxGen]
-                                       - storage->generation()[hourOfMaxGen];
-                UnsupE[hourOfMinGen] = storage->initialGen()[hourOfMinGen]
-                                       + UnsupEinit[hourOfMinGen]
-                                       - storage->generation()[hourOfMinGen];
+                UnsupE[hourOfMaxGen] += exchange;
+                UnsupE[hourOfMinGen] -= exchange;
 
                 storage->update();
 
@@ -165,7 +161,7 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
     {
         // Valid hours could be computed once for all, not at each iterations.
         const auto validHours = ValidHours(Spillage, DTG_MRG, storage->initialGen(), UnsupEinit);
-        double exchange = makeExchange(TotalGen, UnsupE, UnsupEinit, validHours, storage);
+        double exchange = makeExchange(TotalGen, UnsupE, validHours, storage);
 
         if (exchange <= eps)
         {
