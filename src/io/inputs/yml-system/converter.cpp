@@ -307,16 +307,16 @@ SystemModel::System convert(const YmlSystem::System& ymlSystem,
     for (const auto& connection: ymlSystem.connections)
     {
         connectComponents(connection, components);
-        logs.debug() << "Loaded connection (component1 = `" << connection.firstEntry.componentId
-                     << "` component2 = `" << connection.secondEntry.componentId << "`)";
+        logs.debug() << "Loaded connection (component1=`" << connection.firstEntry.componentId
+                     << "` component2=`" << connection.secondEntry.componentId << "`)";
     }
 
     // Create area connections from system
     for (const auto& connection: ymlSystem.areaConnections)
     {
         connectAreas(connection, components);
-        logs.debug() << "Loaded area connection (component = `" << connection.componentId
-                     << "` area = `" << connection.areaId << "`)";
+        logs.debug() << "Loaded area connection (component=`" << connection.componentId
+                     << "` area=`" << connection.areaId << "`)";
     }
 
     // Build system from components and connections
