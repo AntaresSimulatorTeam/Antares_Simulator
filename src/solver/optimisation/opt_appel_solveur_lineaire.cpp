@@ -144,28 +144,24 @@ static void writeModelerSolutions(const MPSolver* solver,
     writer.addEntryFromBuffer(modelerSolutionFilename, content);
 }
 
-FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumIntervalle)
+FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo)
 {
-    unsigned firstTimestep, lastTimestep;
     auto nTsInDay = static_cast<unsigned>(problemeHebdo->NombreDePasDeTempsDUneJournee);
+    unsigned firstTimestep = 0;
+    unsigned lastTimestep;
     if (problemeHebdo->OptimisationAuPasHebdomadaire)
     {
-        firstTimestep = problemeHebdo->weekInTheYear * nTsInDay * problemeHebdo->NombreDeJours;
-        lastTimestep = firstTimestep + nTsInDay * problemeHebdo->NombreDeJours - 1;
+        lastTimestep = nTsInDay * problemeHebdo->NombreDeJours - 1;
     }
     else
     {
-        firstTimestep = (problemeHebdo->weekInTheYear * problemeHebdo->NombreDeJours
-                         + static_cast<unsigned>(NumIntervalle))
-                        * nTsInDay;
-        lastTimestep = firstTimestep + nTsInDay - 1;
+        lastTimestep = nTsInDay - 1;
     }
     return {firstTimestep, lastTimestep, problemeHebdo->year}; // TODO: handle scenarios/year
 }
 
 // Returns a non-owning pointer
 MPSolver* convertToMPSolver(const PROBLEME_HEBDO* problemeHebdo,
-                            const int NumIntervalle,
                             const SingleOptimOptions& options,
                             bool namedProblems)
 {
@@ -191,7 +187,7 @@ MPSolver* convertToMPSolver(const PROBLEME_HEBDO* problemeHebdo,
         fillersCollection.push_back(&componentToAreaConnectionFiller);
     }
 
-    FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
+    FillContext fillCtx = buildFillContext(problemeHebdo);
     LinearProblemBuilder linearProblemBuilder(fillersCollection);
 
     // Note that the modeler is only called for the 1st simulation week,
@@ -221,7 +217,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
 
     ProblemeAResoudre->ProblemesSpx[NumIntervalle] = nullptr;
 
-    solver = convertToMPSolver(problemeHebdo, NumIntervalle, options, problemeHebdo->NamedProblems);
+    solver = convertToMPSolver(problemeHebdo, options, problemeHebdo->NamedProblems);
 
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
@@ -343,8 +339,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
     }
     else
     {
-        std::unique_ptr<MPSolver> MPproblem(
-          convertToMPSolver(problemeHebdo, NumIntervalle, options, true));
+        std::unique_ptr<MPSolver> MPproblem(convertToMPSolver(problemeHebdo, options, true));
 
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());

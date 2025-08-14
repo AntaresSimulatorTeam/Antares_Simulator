@@ -21,8 +21,8 @@
 
 #pragma once
 
+#include <map>
 #include <string>
-#include <unordered_map>
 
 #include <antares/solver/optim-model-filler/LinearExpression.h>
 #include "antares/optimisation/linear-problem-api/ILinearProblemData.h"
