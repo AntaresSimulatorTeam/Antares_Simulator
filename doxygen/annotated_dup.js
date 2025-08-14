@@ -368,6 +368,7 @@ var annotated_dup =
       [ "Error", null, [
         [ "LoadingError", "classAntares_1_1Error_1_1LoadingError.html", null ],
         [ "StudyFolderDoesNotExist", "classAntares_1_1Error_1_1StudyFolderDoesNotExist.html", "classAntares_1_1Error_1_1StudyFolderDoesNotExist" ],
+        [ "StudyFolderContainsNonASCIIchars", "classAntares_1_1Error_1_1StudyFolderContainsNonASCIIchars.html", "classAntares_1_1Error_1_1StudyFolderContainsNonASCIIchars" ],
         [ "ReadingStudy", "classAntares_1_1Error_1_1ReadingStudy.html", "classAntares_1_1Error_1_1ReadingStudy" ],
         [ "NoAreas", "classAntares_1_1Error_1_1NoAreas.html", "classAntares_1_1Error_1_1NoAreas" ],
         [ "Duplicates", "classAntares_1_1Error_1_1Duplicates.html", "classAntares_1_1Error_1_1Duplicates" ],
@@ -375,7 +376,6 @@ var annotated_dup =
         [ "RuntimeInfoInitialization", "classAntares_1_1Error_1_1RuntimeInfoInitialization.html", "classAntares_1_1Error_1_1RuntimeInfoInitialization" ],
         [ "WritingPID", "classAntares_1_1Error_1_1WritingPID.html", "classAntares_1_1Error_1_1WritingPID" ],
         [ "IncompatibleParallelOptions", "classAntares_1_1Error_1_1IncompatibleParallelOptions.html", "classAntares_1_1Error_1_1IncompatibleParallelOptions" ],
-        [ "IncompatibleMILPWithoutOrtools", "classAntares_1_1Error_1_1IncompatibleMILPWithoutOrtools.html", "classAntares_1_1Error_1_1IncompatibleMILPWithoutOrtools" ],
         [ "IncompatibleMILPOrtoolsSolver", "classAntares_1_1Error_1_1IncompatibleMILPOrtoolsSolver.html", "classAntares_1_1Error_1_1IncompatibleMILPOrtoolsSolver" ],
         [ "UseMILPsolverWithWrongOptions", "classAntares_1_1Error_1_1UseMILPsolverWithWrongOptions.html", "classAntares_1_1Error_1_1UseMILPsolverWithWrongOptions" ],
         [ "IncompatibleOptRangeHydroPricing", "classAntares_1_1Error_1_1IncompatibleOptRangeHydroPricing.html", "classAntares_1_1Error_1_1IncompatibleOptRangeHydroPricing" ],
@@ -1494,6 +1494,7 @@ var annotated_dup =
     [ "CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES", "structCORRESPONDANCES__DES__CONTRAINTES__JOURNALIERES.html", "structCORRESPONDANCES__DES__CONTRAINTES__JOURNALIERES" ],
     [ "CORRESPONDANCES_DES_VARIABLES", "structCORRESPONDANCES__DES__VARIABLES.html", "structCORRESPONDANCES__DES__VARIABLES" ],
     [ "COUTS_DE_TRANSPORT", "structCOUTS__DE__TRANSPORT.html", "structCOUTS__DE__TRANSPORT" ],
+    [ "CreateOptionsAndSettings", "structCreateOptionsAndSettings.html", "structCreateOptionsAndSettings" ],
     [ "CreateVisitorFixture", "structCreateVisitorFixture.html", "structCreateVisitorFixture" ],
     [ "CsrAreaBalance", "classCsrAreaBalance.html", "classCsrAreaBalance" ],
     [ "CsrAreaBalanceData", "structCsrAreaBalanceData.html", "structCsrAreaBalanceData" ],

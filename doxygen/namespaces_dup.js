@@ -93,7 +93,7 @@ var namespaces_dup =
         [ "checkSimplexRangeHydroPricing", "checkLoadedInputData_8cpp.html#a24d8049dbc552aa79f64a3beb4c3aaa1", null ],
         [ "checkSimplexRangeUnitCommitmentMode", "checkLoadedInputData_8cpp.html#a978a237353f03f703f28d5344cf24898", null ],
         [ "checkSolverOptions", "checksOnLPsolver_8cpp.html#add0f44755ecd1bdff04f4c3ba9b2ac30", null ],
-        [ "checkStudyVersion", "checkLoadedInputData_8cpp.html#a60bb78baac5d7b8592cf71eadb771d70", null ]
+        [ "checkStudyVersion", "checkLoadedInputData_8cpp.html#a03bf4b5e11c19a37527e3caed805031e", null ]
       ] ],
       [ "Component", null, [
         [ "Datagrid", null, [
@@ -863,6 +863,7 @@ var namespaces_dup =
       [ "Error", null, [
         [ "LoadingError", "classAntares_1_1Error_1_1LoadingError.html", null ],
         [ "StudyFolderDoesNotExist", "classAntares_1_1Error_1_1StudyFolderDoesNotExist.html", "classAntares_1_1Error_1_1StudyFolderDoesNotExist" ],
+        [ "StudyFolderContainsNonASCIIchars", "classAntares_1_1Error_1_1StudyFolderContainsNonASCIIchars.html", "classAntares_1_1Error_1_1StudyFolderContainsNonASCIIchars" ],
         [ "ReadingStudy", "classAntares_1_1Error_1_1ReadingStudy.html", "classAntares_1_1Error_1_1ReadingStudy" ],
         [ "NoAreas", "classAntares_1_1Error_1_1NoAreas.html", "classAntares_1_1Error_1_1NoAreas" ],
         [ "Duplicates", "classAntares_1_1Error_1_1Duplicates.html", "classAntares_1_1Error_1_1Duplicates" ],
@@ -870,7 +871,6 @@ var namespaces_dup =
         [ "RuntimeInfoInitialization", "classAntares_1_1Error_1_1RuntimeInfoInitialization.html", "classAntares_1_1Error_1_1RuntimeInfoInitialization" ],
         [ "WritingPID", "classAntares_1_1Error_1_1WritingPID.html", "classAntares_1_1Error_1_1WritingPID" ],
         [ "IncompatibleParallelOptions", "classAntares_1_1Error_1_1IncompatibleParallelOptions.html", "classAntares_1_1Error_1_1IncompatibleParallelOptions" ],
-        [ "IncompatibleMILPWithoutOrtools", "classAntares_1_1Error_1_1IncompatibleMILPWithoutOrtools.html", "classAntares_1_1Error_1_1IncompatibleMILPWithoutOrtools" ],
         [ "IncompatibleMILPOrtoolsSolver", "classAntares_1_1Error_1_1IncompatibleMILPOrtoolsSolver.html", "classAntares_1_1Error_1_1IncompatibleMILPOrtoolsSolver" ],
         [ "UseMILPsolverWithWrongOptions", "classAntares_1_1Error_1_1UseMILPsolverWithWrongOptions.html", "classAntares_1_1Error_1_1UseMILPsolverWithWrongOptions" ],
         [ "IncompatibleOptRangeHydroPricing", "classAntares_1_1Error_1_1IncompatibleOptRangeHydroPricing.html", "classAntares_1_1Error_1_1IncompatibleOptRangeHydroPricing" ],
@@ -1974,6 +1974,7 @@ var namespaces_dup =
         [ "checkAllElementsIdenticalOrOne", "utils_8h.html#a5c195397128b4459eacc09d2d83e24f3", null ],
         [ "floor", "utils_8h.html#a28e4efa05d04724ebaabf457c1d64271", null ],
         [ "giveNumbersToStrings", "utils_8h.html#a02f264835becd9b85fc7ecfed3f5e91a", null ],
+        [ "isPathValid", "utils_8h.html#a43349a7124563a9e3c4738ac8569d321", null ],
         [ "isZero", "utils_8h.html#a3820d7fc44841c7455de7b7250042677", null ],
         [ "round", "utils_8h.html#a55cc90c1c1261f10fd4ebd6c24086b2f", null ]
       ] ],

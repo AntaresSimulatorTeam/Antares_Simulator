@@ -1,6 +1,5 @@
 var classSettings =
 [
-    [ "checkAndSetStudyFolder", "classSettings.html#afc985c5a9259d40494b9b217ae9eccbb", null ],
     [ "reset", "classSettings.html#afecd6362eeeee77b655500ec3be9f168", null ],
     [ "commentFile", "classSettings.html#a228b5676a10dbeb98600e5e6f1b4ac76", null ],
     [ "displayProgression", "classSettings.html#aa742a4d5b98ed4e1fa60847e5a738db8", null ],
