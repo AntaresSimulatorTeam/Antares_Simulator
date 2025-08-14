@@ -25,7 +25,7 @@ static std::set<unsigned> ValidHours(const std::vector<double>& Spillage,
                                      const std::vector<double>& UnsupE)
 {
     auto filter = [&](int h)
-    { return std::abs(Spillage[h] + DTG_MRG[h]) < eps && StorageGen[h] + UnsupE[h] > 0.; };
+    { return std::abs(Spillage[h] + DTG_MRG[h]) < eps && StorageGen[h] + UnsupE[h] > eps; };
 
     auto validHoursView = vws::iota(0, static_cast<int>(Spillage.size())) | vws::filter(filter);
     return {validHoursView.begin(), validHoursView.end()};
