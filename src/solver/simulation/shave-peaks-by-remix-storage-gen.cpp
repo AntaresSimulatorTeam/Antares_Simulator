@@ -66,7 +66,7 @@ static double makeExchange(std::vector<double>& TotalGen,
     std::set<unsigned> validHoursForMin(validHours);
     while (true)
     {
-        std::erase_if(validHoursForMin, [&](int h) { return UnsupE[h] <= 0.; });
+        std::erase_if(validHoursForMin, [&](int h) { return UnsupE[h] <= eps; });
         if (!validHoursForMin.size())
         {
             return 0.;
