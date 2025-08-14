@@ -28,7 +28,7 @@ function(add_boost_test)
     endif()
 
     add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME}
-      --output_format=XML
+      --report_format=XML
       --report_level=detailed
       --report_sink=report_${TEST_NAME}.xml
       WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/tests)
