@@ -19,6 +19,8 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include <boost/algorithm/string.hpp>
+
 #include "antares/solver/optim-model-filler/scenarioGroupRepo.h"
 
 namespace Antares::Optimisation
@@ -47,17 +49,19 @@ public:
 const LinearProblemApi::IScenario& ScenarioGroupRepository::scenario(
   const std::string& groupId) const
 {
-    // A component require a group id. Assuming that the default group id is "default"
-    if (groupId.empty() || groupId == "default")
+    std::string gId = groupId;
+    boost::to_upper(gId);
+    // A component require a group id. Assuming that the default group id is "DEFAULT"
+    if (gId.empty() || gId == "DEFAULT")
     {
         static DefaultScenario defaultScenario(
-          "default");           // Todo: default ou empty for consistency ?
+          "DEFAULT");           // Todo: default ou empty for consistency ?
         return defaultScenario; // Default rank for empty groupId
     }
-    if (!scenarioGroups_.contains(groupId))
+    if (!scenarioGroups_.contains(gId))
     {
-        throw DoesNotExist(groupId);
+        throw DoesNotExist(gId);
     }
-    return *scenarioGroups_.at(groupId);
+    return *scenarioGroups_.at(gId);
 }
 } // namespace Antares::Optimisation

@@ -22,6 +22,8 @@
 #include <fstream>
 #include <string>
 
+#include <boost/algorithm/string.hpp>
+
 #include <antares/logs/logs.h>
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include "antares/exception/RuntimeError.hpp"
@@ -51,11 +53,15 @@ Optimisation::ScenarioGroupRepository parseScenarioGroupRepository(std::ifstream
         try
         {
             auto parsedLine = parser.parseLine(line);
+
+            std::string groupId = parsedLine.groupName;
+            boost::to_upper(groupId); // all groups are uppercase
+
             alreadyCreatedScenarios.emplace(
-              parsedLine.groupName,
+              groupId,
               std::make_unique<Optimisation::LinearProblemDataImpl::Scenario>(
-                parsedLine.groupName));
-            alreadyCreatedScenarios[parsedLine.groupName]
+                groupId));
+            alreadyCreatedScenarios[groupId]
               ->setTimeSerieNumber(parsedLine.year, parsedLine.timeSeriesNumber);
         }
         catch (const std::exception& e)
