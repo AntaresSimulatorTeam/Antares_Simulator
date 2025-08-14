@@ -152,10 +152,9 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Parameter
          ++timeStep)
     {
         // TODO: pass year
-        linearExpressions[timeStep] = LinearExpression(evalContext_.getParameterValue(node->value(),
-                                                                                      0,
-                                                                                      timeStep),
-                                                       {});
+        linearExpressions[timeStep] = LinearExpression(
+          evalContext_.getParameterValue(node->value(), fillContext_.getYear(), timeStep),
+          {});
     }
     return TimeDependentLinearExpression(linearExpressions);
 }
