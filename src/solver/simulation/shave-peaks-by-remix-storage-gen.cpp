@@ -19,10 +19,10 @@ namespace Antares::Solver::Simulation
 
 static std::vector<unsigned> filterHoursForMin(const std::vector<double>& UnsupE,
                                                const std::vector<bool>& triedMins,
-                                               const std::vector<bool>& validHours)
+                                               const std::vector<unsigned>& validHours)
 {
-    auto filter = [&](int h) { return UnsupE[h] > 0 && !triedMins[h] && validHours[h]; };
-    auto filterHoursView = vws::iota(0, static_cast<int>(UnsupE.size())) | vws::filter(filter);
+    auto filter = [&](int h) { return UnsupE[h] > 0 && !triedMins[h]; };
+    auto filterHoursView = validHours | vws::filter(filter);
     return {filterHoursView.begin(), filterHoursView.end()};
 }
 
@@ -34,12 +34,11 @@ static unsigned hourForTotalGenMin(const std::vector<double>& TotalGen,
 
 static std::vector<unsigned> filterHoursForMax(const std::vector<double>& TotalGen,
                                                const std::vector<bool>& triedMaxs,
-                                               const std::vector<bool>& validHours,
+                                               const std::vector<unsigned>& validHours,
                                                double minTotalGen)
 {
-    auto filter = [&](int h)
-    { return TotalGen[h] >= minTotalGen + eps && !triedMaxs[h] && validHours[h]; };
-    auto filterHoursView = vws::iota(0, static_cast<int>(TotalGen.size())) | vws::filter(filter);
+    auto filter = [&](int h) { return TotalGen[h] >= minTotalGen + eps && !triedMaxs[h]; };
+    auto filterHoursView = validHours | vws::filter(filter);
     return {filterHoursView.begin(), filterHoursView.end()};
 }
 
@@ -73,25 +72,21 @@ void checkInput(const std::vector<double>& Load,
     }
 }
 
-static std::vector<bool> ValidHours(const std::vector<double>& Spillage,
-                                    const std::vector<double>& DTG_MRG,
-                                    const std::vector<double>& StorageGen,
-                                    const std::vector<double>& UnsupE)
+static std::vector<unsigned> ValidHours(const std::vector<double>& Spillage,
+                                        const std::vector<double>& DTG_MRG,
+                                        const std::vector<double>& StorageGen,
+                                        const std::vector<double>& UnsupE)
 {
-    std::vector<bool> validHours(Spillage.size(), false);
-    for (unsigned h = 0; h < validHours.size(); h++)
-    {
-        if (Spillage[h] + DTG_MRG[h] == 0. && StorageGen[h] + UnsupE[h] > 0.)
-        {
-            validHours[h] = true;
-        }
-    }
-    return validHours;
+    auto filter = [&](int h)
+    { return std::abs(Spillage[h] + DTG_MRG[h]) < eps && StorageGen[h] + UnsupE[h] > 0.; };
+
+    auto filterHoursView = vws::iota(0, static_cast<int>(Spillage.size())) | vws::filter(filter);
+    return {filterHoursView.begin(), filterHoursView.end()};
 }
 
 static double makeExchange(std::vector<double>& TotalGen,
                            std::vector<double>& UnsupE,
-                           const std::vector<bool>& validHours,
+                           const std::vector<unsigned>& validHours,
                            std::shared_ptr<StorageForRemix>& storage)
 {
     double exchange = 0.; // To be returned
