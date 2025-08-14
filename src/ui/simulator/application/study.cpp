@@ -19,39 +19,36 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include "antares/study/study.h"
+
+#include <atomic>
+#include <ui/common/component/spotlight/spotlight.h>
+#include <ui/common/lock.h>
+#include <ui/common/wx-wrapper.h>
+#include <wx/busyinfo.h>
+#include <wx/wupdlock.h>
+
+#include <yuni/core/system/cpu.h>
 #include <yuni/core/system/environment.h>
-#include <antares/study/area/area.h>
+
+#include <antares/date/date.h>
 #include <antares/inifile/inifile.h>
 #include <antares/io/statistics.h>
-
-#include <ui/common/component/spotlight/spotlight.h>
-
-#include "../toolbox/components/map/component.h"
-#include "../toolbox/components/mainpanel.h"
-#include "../toolbox/jobs.h"
-
-#include "../toolbox/execute/execute.h"
-#include "../windows/message.h"
-#include <antares/date/date.h>
-#include "../windows/saveas.h"
-#include "main.h"
-#include "menus.h"
-#include "../windows/inspector/inspector.h"
-#include <ui/common/lock.h>
-
-#include <wx/wupdlock.h>
-#include "wait.h"
-#include <wx/busyinfo.h>
-#include <ui/common/wx-wrapper.h>
-
-#include "../windows/startupwizard.h"
-#include <yuni/core/system/cpu.h>
-
-#include "main/internal-data.h"
+#include <antares/study/area/area.h>
 #include "antares/study/ui-runtimeinfos.h"
 #include "antares/utils/utils.h"
 
-#include <atomic>
+#include "../toolbox/components/mainpanel.h"
+#include "../toolbox/components/map/component.h"
+#include "../toolbox/execute/execute.h"
+#include "../toolbox/jobs.h"
+#include "../windows/inspector/inspector.h"
+#include "../windows/message.h"
+#include "../windows/saveas.h"
+#include "../windows/startupwizard.h"
+#include "main.h"
+#include "main/internal-data.h"
+#include "menus.h"
+#include "wait.h"
 
 using namespace Yuni;
 
@@ -135,7 +132,9 @@ inline static void ResetLastOpenedFilepath()
 static void TheSimulationIsComplete(const wxString& duration)
 {
     if (IsGUIAboutToQuit() || !CurrentStudyIsValid())
+    {
         return;
+    }
     auto* mainFrm = Forms::ApplWnd::Instance();
     if (mainFrm)
     {
@@ -148,7 +147,9 @@ static void TheSimulationIsComplete(const wxString& duration)
         message.add(Window::Message::btnViewResults);
         const uint userChoice = message.showModal();
         if (userChoice == Window::Message::btnViewResults)
+        {
             mainFrm->viewLatestOutput();
+        }
     }
 }
 
@@ -172,14 +173,14 @@ static void finalizeSaveExport(Data::Study::Ptr study, Forms::ApplWnd& frame)
 
 namespace // anonymous
 {
-class JobOpenStudy final : public Toolbox::Jobs::Job
+class JobOpenStudy final: public Toolbox::Jobs::Job
 {
 public:
-    JobOpenStudy(const wxString& folder) :
-     Toolbox::Jobs::Job(wxT("Opening a study"),
-                        wxT("Gathering informations about the study"),
-                        "images/32x32/open.png"),
-     pFolder(folder)
+    JobOpenStudy(const wxString& folder):
+        Toolbox::Jobs::Job(wxT("Opening a study"),
+                           wxT("Gathering informations about the study"),
+                           "images/32x32/open.png"),
+        pFolder(folder)
     {
         // reset IO statistics
         Statistics::Reset();
@@ -223,7 +224,9 @@ protected:
         gLastOpenedStudyFolder = pFolder;
         LastPathForOpeningAFile.clear() << sFl << SEP << "user";
         if (!IO::Directory::Exists(LastPathForOpeningAFile))
+        {
             LastPathForOpeningAFile = sFl;
+        }
 
         // We have a valid study. Go ahead
         // Keeping the study somewhere
@@ -244,22 +247,24 @@ private:
 
 }; // class JobOpenStudy
 
-class JobSaveStudy final : public Toolbox::Jobs::Job
+class JobSaveStudy final: public Toolbox::Jobs::Job
 {
 public:
     JobSaveStudy(Data::Study::Ptr study,
                  const String& folder,
                  bool copyOutput = false,
                  bool copyUserData = false,
-                 bool copyLogs = false) :
-     Toolbox::Jobs::Job(wxT("Saving the study"), wxT("Saving the study"), "images/32x32/open.png"),
-     study(study),
-     pSaveAs(false),
-     pShouldInvalidateStudy(false),
-     pCopyOutput(copyOutput),
-     pCopyUserData(copyUserData),
-     pCopyLogs(copyLogs),
-     pCount(128)
+                 bool copyLogs = false):
+        Toolbox::Jobs::Job(wxT("Saving the study"),
+                           wxT("Saving the study"),
+                           "images/32x32/open.png"),
+        study(study),
+        pSaveAs(false),
+        pShouldInvalidateStudy(false),
+        pCopyOutput(copyOutput),
+        pCopyUserData(copyUserData),
+        pCopyLogs(copyLogs),
+        pCount(128)
     {
         // reset IO statistics
         Statistics::Reset();
@@ -320,17 +325,21 @@ protected:
             logs.info() << "Preparing study";
             // If the user save the study as something, we have to invalidate
             // all data (and load all missing files)
-            study->areas.each([&](Data::Area& area) {
-                logs.info() << "Preparing the area " << area.name;
-                area.forceReload(true);
-            });
+            study->areas.each(
+              [&](Data::Area& area)
+              {
+                  logs.info() << "Preparing the area " << area.name;
+                  area.forceReload(true);
+              });
             study->forceReload(true);
             // We have to mark the whole study as modified
             study->markAsModified();
 
             // The Scenario Builder Data must be available to perform a full save
             if (!study->scenarioRules)
+            {
                 study->scenarioRulesCreate();
+            }
         }
 
         if (pSaveAs)
@@ -362,7 +371,9 @@ protected:
                     logs.info() << "   from " << src;
                     logs.info() << "   to   " << targetOutput;
                     if (targetOutput != src)
+                    {
                         IO::Directory::Copy(src, targetOutput, true, true, e);
+                    }
                 }
                 // The folder `user`
                 if (pCopyUserData)
@@ -373,7 +384,9 @@ protected:
                     logs.info() << "   from " << src;
                     logs.info() << "   to   " << targetUser;
                     if (targetUser != src)
+                    {
                         IO::Directory::Copy(src, targetUser, true, true, e);
+                    }
                 }
                 // The folder `logs`
                 if (pCopyLogs)
@@ -384,7 +397,9 @@ protected:
                     logs.info() << "   from " << src;
                     logs.info() << "   to   " << targetLogs;
                     if (targetLogs != src)
+                    {
                         IO::Directory::Copy(src, targetLogs, true, true, e);
+                    }
                 }
             } // not empty - copy files folders
         }     // save as
@@ -401,7 +416,9 @@ protected:
         }
 
         if (pSaveAs || LastPathForOpeningAFile.empty())
+        {
             LastPathForOpeningAFile.clear() << pFolder << SEP << "user";
+        }
 
         SystemParameterHaveChanged = true;
 
@@ -423,7 +440,9 @@ protected:
             case IO::Directory::cpsCopying:
             {
                 if (!total) // prevent division by 0
+                {
                     total = 1;
+                }
                 logs.info() << pTitle << " : " << ((100 * count) / total) << "%   ("
                             << (count / 1024 / 1024) << "Mo / " << (1 + (total / 1024 / 1024))
                             << "Mo)";
@@ -454,7 +473,7 @@ private:
 
 }; // class JobSaveStudy
 
-class JobExportMap final : public Toolbox::Jobs::Job
+class JobExportMap final: public Toolbox::Jobs::Job
 {
 public:
     explicit JobExportMap(const String& path,
@@ -462,10 +481,10 @@ public:
                           const wxColour& backgroundColor,
                           const std::list<uint16_t>& layers,
                           int nbSplitParts,
-                          Antares::Map::mapImageFormat format) :
-     Toolbox::Jobs::Job(wxT("Exporting the map"),
-                        wxT("Exporting the map"),
-                        "images/32x32/exportmap.png")
+                          Antares::Map::mapImageFormat format):
+        Toolbox::Jobs::Job(wxT("Exporting the map"),
+                           wxT("Exporting the map"),
+                           "images/32x32/exportmap.png")
     {
         IO::Normalize(pPath, path);
 
@@ -522,7 +541,9 @@ bool CheckIfInsideAStudyFolder(const AnyString& path, bool quiet)
     String location;
     String title;
     if (!Data::Study::IsInsideStudyFolder(path, location, title))
+    {
         return false;
+    }
 
     if (!quiet)
     {
@@ -565,8 +586,11 @@ uint64_t StudyInMemoryRevisionID()
 void MarkTheStudyAsModified(const Data::Study::Ptr& study)
 {
     if (!(!study) and study == GetCurrentStudy())
+    {
         MarkTheStudyAsModified();
+    }
 }
+
 void MarkTheStudyAsModified()
 {
     auto study = GetCurrentStudy();
@@ -590,7 +614,9 @@ void MarkTheStudyAsModified()
 
             OnStudyChanged(*study);
             if (wnd)
+            {
                 wnd->SetFocus();
+            }
         }
     }
 }
@@ -601,9 +627,13 @@ void ResetTheModifierState(bool v)
     gInMemoryRevisionIncrement = 0;
     gStudyHasBeenModified = v;
     if (!study)
+    {
         Forms::ApplWnd::Instance()->title();
+    }
     else
+    {
         Forms::ApplWnd::Instance()->title(wxStringFromUTF8(study->header.caption));
+    }
 }
 
 bool StudyHasBeenModified()
@@ -627,7 +657,9 @@ bool CloseTheStudy(bool updateGUI)
     auto study = GetCurrentStudy();
 
     if (!study or !Forms::ApplWnd::Instance())
+    {
         return false;
+    }
 
     GUILocker locker;
     logs.info();
@@ -681,7 +713,9 @@ bool CloseTheStudy(bool updateGUI)
 
     // Update the GUI accordingly
     if (updateGUI)
+    {
         mainFrm.requestUpdateGUIAfterStudyIO(false);
+    }
 
     Map::Control::newUID = 1;
 
@@ -744,7 +778,9 @@ SaveResult SaveStudy()
 {
     auto studyptr = GetCurrentStudy();
     if (!studyptr or !Forms::ApplWnd::Instance())
+    {
         return svsCancel;
+    }
 
     GUILocker locker;
     // The currently opened study
@@ -771,7 +807,9 @@ SaveResult SaveStudy()
     // SaveAs required
     // Especially when the study is readonly (by lock or written in the general data)
     if (study.folder.empty() || study.readonly())
+    {
         return Window::SaveAs::Execute(&mainFrm, studyptr);
+    }
 
     // We want to invalidate the whole study when upgrading
     bool shouldInvalidateStudy = false;
@@ -786,8 +824,7 @@ SaveResult SaveStudy()
           wxString() << wxT("You can choose either to upgrade the study folder or to save it\n")
                      << wxT("into a new folder.\n\nCurrent version of Antares : ")
                      << Data::StudyVersion::latest().toString()
-                     << wxT("\nFormat version of the study : ")
-                     << study.header.version.toString(),
+                     << wxT("\nFormat version of the study : ") << study.header.version.toString(),
           "images/misc/save.png");
         message.add(Window::Message::btnUpgrade);
         message.add(Window::Message::btnSaveAs, false, 15);
@@ -813,12 +850,15 @@ SaveResult SaveStudy()
                         wxStringFromUTF8(study.header.caption),
                         wxStringFromUTF8(study.folder.string()));
 
-    mainFrm.SetStatusText(wxString() << wxT("  Saving ") << wxStringFromUTF8(study.folder.string()));
+    mainFrm.SetStatusText(wxString()
+                          << wxT("  Saving ") << wxStringFromUTF8(study.folder.string()));
 
     // Save the study
     auto* job = new JobSaveStudy(studyptr, study.folder.string());
     if (shouldInvalidateStudy)
+    {
         job->shouldInvalidateStudy();
+    }
     job->run();
     job->Destroy();
 
@@ -833,7 +873,9 @@ SaveResult SaveStudy()
     study.ensureDataAreLoadedForAllBindingConstraints();
     // Reload runtime info about the study (Paranoid, should not be required)
     if (study.uiinfo)
+    {
         study.uiinfo->reloadAll();
+    }
 
     // GUIFlagInvalidateAreas = true;
 
@@ -861,7 +903,9 @@ SaveResult SaveStudy()
 SaveResult SaveStudyAs(const String& path, bool copyoutput, bool copyuserdata, bool copylogs)
 {
     if (!CurrentStudyIsValid() || path.empty())
+    {
         return svsCancel;
+    }
 
     // alias to the current study
     auto study = GetCurrentStudy();
@@ -879,7 +923,9 @@ SaveResult SaveStudyAs(const String& path, bool copyoutput, bool copyuserdata, b
         newP.removeTrailingSlash();
         oldP.removeTrailingSlash();
         if (newP == oldP)
+        {
             return SaveStudy();
+        }
     }
 
     // Ok ! We're good to go !
@@ -914,7 +960,9 @@ SaveResult SaveStudyAs(const String& path, bool copyoutput, bool copyuserdata, b
         study->ensureDataAreLoadedForAllBindingConstraints();
         // Reload runtime info about the study (Paranoid, should not be required)
         if (study->uiinfo)
+        {
             study->uiinfo->reloadAll();
+        }
 
         // GUIFlagInvalidateAreas = true;
         OnStudySavedAs();
@@ -932,7 +980,9 @@ SaveResult ExportMap(const Yuni::String& path,
                      Antares::Map::mapImageFormat format)
 {
     if (!CurrentStudyIsValid() || path.empty())
+    {
         return svsCancel;
+    }
 
     // alias to the current study
     auto study = GetCurrentStudy();
@@ -956,8 +1006,12 @@ SaveResult ExportMap(const Yuni::String& path,
         mainFrm.SetStatusText(wxString() << wxT("  Exporting map ") << wxStringFromUTF8(newPath));
 
         // Exporting map (in background)
-        auto* job = new JobExportMap(
-          path, transparentBackground, backgroundColor, layers, nbSplitParts, format);
+        auto* job = new JobExportMap(path,
+                                     transparentBackground,
+                                     backgroundColor,
+                                     layers,
+                                     nbSplitParts,
+                                     format);
         job->run();
         job->Destroy();
 
@@ -972,7 +1026,9 @@ SaveResult ExportMap(const Yuni::String& path,
         study->ensureDataAreLoadedForAllBindingConstraints();
         // Reload runtime info about the study (Paranoid, should not be required)
         if (study->uiinfo)
+        {
             study->uiinfo->reloadAll();
+        }
 
         // GUIFlagInvalidateAreas = true;
         OnStudySavedAs();
@@ -986,18 +1042,29 @@ void UpdateGUIFromStudyState()
 {
     auto* mainform = Forms::ApplWnd::Instance();
     if (mainform)
+    {
         mainform->requestUpdateGUIAfterStudyIO(CurrentStudyIsValid());
+    }
 }
 
 void OpenStudyFromFolder(wxString folder)
 {
     // It is important on Windows to not have the final backslash
     if ('\\' == folder.Last() || '/' == folder.Last())
+    {
         folder.RemoveLast();
+    }
 
     // Getting the version of the study
     String studyfolder;
     wxStringToString(folder, studyfolder);
+
+    if (!Utils::isPathValid(studyfolder.to<std::string>()))
+    {
+        logs.error() << "Study path contains a non ASCII char";
+        return;
+    }
+
     auto version = Data::StudyHeader::tryToFindTheVersion(studyfolder);
 
     if (version == Data::StudyVersion::unknown())
@@ -1009,7 +1076,7 @@ void OpenStudyFromFolder(wxString folder)
     if (version > Data::StudyVersion::latest())
     {
         logs.error() << "A more recent version of Antares is required to open `" << studyfolder
-            << "`  (" << version.toString() << ')';
+                     << "`  (" << version.toString() << ')';
         return;
     }
 
@@ -1059,7 +1126,9 @@ void OpenStudyFromFolder(wxString folder)
         OnStudyLoaded();
         auto studyptr = GetCurrentStudy();
         if (!(!studyptr)) // should never be null
+        {
             OnStudyChanged(*studyptr);
+        }
     }
 
     // User notes
@@ -1098,9 +1167,13 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
         return;
     }
     if (!Forms::ApplWnd::Instance())
+    {
         return;
+    }
     if (IsGUIAboutToQuit())
+    {
         return;
+    }
 
     GUILocker locker;
     auto& mainFrm = *Forms::ApplWnd::Instance();
@@ -1114,7 +1187,8 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
 
     {
         // Logs
-        mainFrm.SetStatusText(wxString() << wxT("  Running ") << wxStringFromUTF8(study->folder.string()));
+        mainFrm.SetStatusText(wxString()
+                              << wxT("  Running ") << wxStringFromUTF8(study->folder.string()));
         logs.info();
         logs.checkpoint() << "Launching the simulation";
 
@@ -1164,7 +1238,9 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
             if (System::unix)
             {
                 if (System::CPU::Count() <= 2) // nice on unixes is good
+                {
                     cmd << "nice ";
+                }
             }
 
             // binary
@@ -1191,11 +1267,15 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
 
             // Force
             if (ignoreWarnings)
+            {
                 cmd << " --force";
+            }
 
             // Prepro only
             if (preproOnly)
+            {
                 cmd << " --generators-only";
+            }
 
             cmd << ' ';
             // The input data
@@ -1204,7 +1284,9 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
 
             // Parallel mode chosen ?
             if (features == Solver::parallel)
+            {
                 cmd << " --parallel";
+            }
 
             // add solver name for ortools
             if (!solverName.empty())
@@ -1233,9 +1315,13 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
             String duration;
             wxStringToString(timeSpan.Format(), duration);
             if (result)
+            {
                 logs.info() << "The simulation is over : " << duration;
+            }
             else
+            {
                 logs.info() << "The simulation has been canceled : " << duration;
+            }
         }
 
         // Releasing
@@ -1247,7 +1333,9 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
         RefreshListOfOutputsForTheCurrentStudy();
 
         if (result)
+        {
             logs.info() << "The simulation has ended.";
+        }
         logs.info(); // space, for beauty
 
         // Reset the status bar
@@ -1258,7 +1346,9 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
 
         auto studyptr = GetCurrentStudy();
         if (!(!studyptr)) // should never be null
+        {
             OnStudyChanged(*studyptr);
+        }
     }
 
     if (result)
@@ -1274,7 +1364,9 @@ void RefreshListOfOutputsForTheCurrentStudy()
 {
     ListOfOutputsForTheCurrentStudy.clear();
     if (IsGUIAboutToQuit())
+    {
         return;
+    }
 
     if (auto study = GetCurrentStudy(); CurrentStudyIsValid())
     {
@@ -1287,19 +1379,27 @@ void RefreshListOfOutputsForTheCurrentStudy()
 
     auto* mainfrm = Forms::ApplWnd::Instance();
     if (mainfrm)
+    {
         mainfrm->refreshMenuOutput();
+    }
 }
 
 bool StudyRenameArea(Data::Area* area, const AnyString& newname, Data::Study* study)
 {
     if (!area || newname.empty())
+    {
         return false;
+    }
 
     auto currentstudy = GetCurrentStudy();
     if (!study)
+    {
         study = currentstudy.get();
+    }
     if (!study)
+    {
         return false;
+    }
 
     if (study == currentstudy.get())
     {
@@ -1323,8 +1423,10 @@ bool StudyRenameArea(Data::Area* area, const AnyString& newname, Data::Study* st
         String beautifyname;
         BeautifyName(beautifyname, newname);
         if (beautifyname.empty())
+        {
             logs.error() << "impossible to rename the area '" << area->name
                          << "' with an empty name";
+        }
         else
         {
             logs.error() << "impossible to rename the area '" << area->name << "' to '"
@@ -1334,7 +1436,9 @@ bool StudyRenameArea(Data::Area* area, const AnyString& newname, Data::Study* st
     else
     {
         if (study->areaRename(area, newname))
+        {
             return true;
+        }
     }
     return false;
 }

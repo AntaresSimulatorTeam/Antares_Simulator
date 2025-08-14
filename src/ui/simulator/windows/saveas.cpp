@@ -35,6 +35,7 @@
 #include "../application/main.h"
 #include "message.h"
 #include <antares/resources/resources.h>
+#include "antares/utils/utils.h"
 
 using namespace Yuni;
 
@@ -400,6 +401,13 @@ void SaveAs::onSave(void*)
         logs.error() << "Please select a folder";
         return;
     }
+
+    if (!Utils::isPathValid(wantedPath.to<std::string>()))
+    {
+        logs.error() << "Target study path contains a non ASCII char";
+        return;
+    }
+
     if (not IO::Directory::Exists(wantedPath))
     {
         logs.error() << "The selected path does not exist : " << wantedPath;

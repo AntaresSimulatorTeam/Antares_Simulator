@@ -2,6 +2,7 @@ add_subdirectory(concurrency)
 add_subdirectory(writer)
 add_subdirectory(study)
 add_subdirectory(benchmarking)
+add_subdirectory(checks)
 add_subdirectory(inifile)
 add_subdirectory(scenarioBuilderExpression)
 
