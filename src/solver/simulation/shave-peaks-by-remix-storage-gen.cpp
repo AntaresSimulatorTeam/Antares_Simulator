@@ -55,9 +55,9 @@ void checkInput(const std::vector<double>& Load,
     }
 }
 
-static double makeExchange(std::vector<double>& TotalGen,
+static double makeExchange(const std::set<unsigned>& validHours,
+                           std::vector<double>& TotalGen,
                            std::vector<double>& UnsupE,
-                           const std::set<unsigned>& validHours,
                            std::shared_ptr<StorageForRemix>& storage)
 {
     double exchange = 0.; // To be returned
@@ -124,7 +124,7 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
     {
         // Valid hours could be computed once for all, not at each iterations.
         const auto validHours = ValidHours(Spillage, DTG_MRG, storage->initialGen(), UnsupEinit);
-        double exchange = makeExchange(TotalGen, UnsupE, validHours, storage);
+        double exchange = makeExchange(validHours, TotalGen, UnsupE, storage);
 
         if (exchange <= eps)
         {
