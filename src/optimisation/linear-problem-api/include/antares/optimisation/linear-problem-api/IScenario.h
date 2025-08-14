@@ -22,6 +22,7 @@
 #pragma once
 
 #include <string>
+#include <boost/algorithm/string.hpp>
 
 namespace Antares::Optimisation::LinearProblemApi
 {
@@ -41,6 +42,7 @@ public:
     explicit IScenario(std::string group):
         group_(std::move(group))
     {
+        boost::to_upper(group_); // Ensure group name is uppercase for consistency
     }
 
     [[nodiscard]] virtual TimeSeriesNumber getData(Year year) const = 0;
