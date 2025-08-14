@@ -49,13 +49,13 @@ public:
 class StudyFolderDoesNotExist: public LoadingError
 {
 public:
-    explicit StudyFolderDoesNotExist(const Yuni::String& folder);
+    explicit StudyFolderDoesNotExist(const std::string& folder);
 };
 
 class StudyFolderContainsNonASCIIchars: public LoadingError
 {
 public:
-    explicit StudyFolderContainsNonASCIIchars(const Yuni::String& folder);
+    explicit StudyFolderContainsNonASCIIchars(const std::string& folder);
 };
 
 class ReadingStudy: public LoadingError
@@ -91,7 +91,7 @@ public:
 class WritingPID: public LoadingError
 {
 public:
-    explicit WritingPID(const Yuni::String& file);
+    explicit WritingPID(const std::string& filePath);
 };
 
 class IncompatibleParallelOptions: public LoadingError
