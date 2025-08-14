@@ -489,7 +489,7 @@ BOOST_AUTO_TEST_CASE(get_timeseriesNumber_for_given_year)
       "model",
       "componentToto",
       {build_context_parameter_with("bounds", "bounds", Visitors::ParameterType::TIMESERIE)},
-      "groupeName");
+      "GROUPENAME");
 
     const vector<unsigned int> timeSteps{1, 2};
     FillContext ctx{timeSteps.at(0), timeSteps.at(1), 3};
@@ -501,7 +501,7 @@ BOOST_AUTO_TEST_CASE(get_timeseriesNumber_for_given_year)
     bounds_time_series->add({3., 3., 3.});
     bounds_time_series->add({4., 4., 4.});
 
-    auto scenario = std::make_unique<Scenario>("groupeName");
+    auto scenario = std::make_unique<Scenario>("GROUPENAME");
     scenario->setTimeSerieNumber(0, 10);
     scenario->setTimeSerieNumber(1, 11);
     scenario->setTimeSerieNumber(2, 12);
