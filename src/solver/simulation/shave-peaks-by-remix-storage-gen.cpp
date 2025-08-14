@@ -94,7 +94,7 @@ static double makeExchange(std::vector<double>& TotalGen,
                            const std::vector<bool>& validHours,
                            std::shared_ptr<StorageForRemix>& storage)
 {
-    double exchange = 0; // To be returned
+    double exchange = 0.; // To be returned
     size_t nbHours = TotalGen.size();
 
     std::vector<bool> triedMins(nbHours, false);
@@ -128,11 +128,10 @@ static double makeExchange(std::vector<double>& TotalGen,
             {
                 storage->generation()[hourOfMaxGen] -= exchange;
                 storage->generation()[hourOfMinGen] += exchange;
+                storage->update();
 
                 UnsupE[hourOfMaxGen] += exchange;
                 UnsupE[hourOfMinGen] -= exchange;
-
-                storage->update();
 
                 TotalGen[hourOfMaxGen] -= exchange;
                 TotalGen[hourOfMinGen] += exchange;
