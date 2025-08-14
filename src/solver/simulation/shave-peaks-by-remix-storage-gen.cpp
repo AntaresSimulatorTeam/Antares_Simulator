@@ -28,8 +28,8 @@ static std::set<unsigned> ValidHours(const std::vector<double>& Spillage,
     auto filter = [&](int h)
     { return std::abs(Spillage[h] + DTG_MRG[h]) < eps && StorageGen[h] + UnsupE[h] > 0.; };
 
-    auto filterHoursView = vws::iota(0, static_cast<int>(Spillage.size())) | vws::filter(filter);
-    return {filterHoursView.begin(), filterHoursView.end()};
+    auto validHoursView = vws::iota(0, static_cast<int>(Spillage.size())) | vws::filter(filter);
+    return {validHoursView.begin(), validHoursView.end()};
 }
 
 void checkInput(const std::vector<double>& Load,
