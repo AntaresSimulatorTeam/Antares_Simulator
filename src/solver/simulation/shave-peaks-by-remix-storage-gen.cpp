@@ -121,7 +121,7 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
     while (nbLoops-- > 0)
     {
         std::set<unsigned> hoursForStorage;
-        auto predicate = [&](int h) { return storage->initialGen()[h] + UnsupE[h] > eps; };
+        auto predicate = [&](int h) { return storage->initialGen()[h] + UnsupEinit[h] > eps; };
         rng::copy_if(validHours, std::inserter(hoursForStorage, hoursForStorage.end()), predicate);
 
         double exchange = makeExchange(hoursForStorage, TotalGen, UnsupE, storage);
