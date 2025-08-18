@@ -295,7 +295,9 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
 
           checkInput(load, unsupE, spillage, dtgMrg, hydroStorage->initialGen());
 
-          shavePeaksByRemixingStorageGen(load, unsupE, spillage, dtgMrg, hydroStorage);
+          listStorageForRemix storagesForRemix = {hydroStorage};
+
+          shavePeaksByRemixingStorageGen(load, unsupE, spillage, dtgMrg, storagesForRemix);
       });
 }
 

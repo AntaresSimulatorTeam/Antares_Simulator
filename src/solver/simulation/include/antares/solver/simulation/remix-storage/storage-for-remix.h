@@ -17,6 +17,8 @@ private:
     virtual void checkInput(size_t size) = 0;
 };
 
+using listStorageForRemix = std::vector<std::shared_ptr<StorageForRemix>>;
+
 std::shared_ptr<StorageForRemix> makeHydroForRemix(std::vector<double>& generation,
                                                    std::vector<double>& unsupE,
                                                    std::vector<double>& levels,
