@@ -94,16 +94,10 @@ public:
     }
 
 private:
-    template<typename T>
-    struct always_false: std::false_type
-    {
-    };
 
     template<typename ColumnType>
     void addColumn(const std::string& name)
     {
-        // columns_[name] = std::make_unique<ColumnType>();
-        // column_order_.push_back(name);
 
         if (name_to_index_.contains(name))
         {
@@ -140,8 +134,6 @@ private:
         return dynamic_cast<ColumnType&>(*columns_[index]);
     }
 
-    // std::unordered_map<std::string, std::unique_ptr<IColumn>> columns_;
-    // std::vector<std::string> column_order_;
 
     std::vector<std::unique_ptr<IColumn>> columns_;
     std::vector<std::string> columnNames_;
