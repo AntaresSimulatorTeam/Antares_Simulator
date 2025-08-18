@@ -20,18 +20,10 @@
  */
 #pragma once
 
-#include <concepts>
-
 #include "antares/solver/variable/variable.h"
 
 namespace Antares::Solver::Variable::Adequacy
 {
-// Concept minimal vérifiant l'interface attendue pour NextT
-// template<typename T>
-// concept OverallCostNext = requires {
-//     { T::count };
-//     typename T::template Statistics<0,0>;
-// };
 
 struct VCardOverallCost
 {

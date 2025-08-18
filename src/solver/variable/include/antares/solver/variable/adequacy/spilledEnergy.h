@@ -20,18 +20,10 @@
  */
 #pragma once
 
-// <concepts> non requis ici (unification des vérifications dans variable.h)
-
 #include "antares/solver/variable/variable.h"
 
 namespace Antares::Solver::Variable::Adequacy
 {
-// Concept minimal pour contraindre NextT
-// template<typename T>
-// concept SpilledEnergyNext = requires {
-//     { T::count };
-//     typename T::template Statistics<0, 0>;
-// };
 
 struct VCardSpilledEnergy
 {
