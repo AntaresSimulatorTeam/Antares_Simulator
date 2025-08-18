@@ -26,7 +26,7 @@
 SimulationTableCsv::SimulationTableCsv()
 
 {
-    storage_.addIntColumn("block");
+    storage_.addIntegralColumn<unsigned int>("block");
     storage_.addStringColumn("component");
     storage_.addStringColumn("output");
     storage_.addOptionalColumn<unsigned int>("absolute_time_index");
@@ -100,11 +100,6 @@ void SimulationTableCsv::clear()
     buffer_.str("");
 }
 
-//
-// const std::string& SimulationTableCsv::buffer() const
-// {
-//     return buffer_.str();
-// }
 
 std::string SimulationTableCsv::buffer() const
 {

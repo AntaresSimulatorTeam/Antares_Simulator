@@ -19,18 +19,16 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
-#include <functional>
 #include <memory>
 #include <optional>
 #include <string>
-#include <unordered_map>
+#include <type_traits>
 #include <vector>
 
 class IColumn
 {
 public:
     virtual ~IColumn() = default;
-    virtual void addFromString(const std::string& value) = 0;
     virtual std::string toString(size_t index) const = 0;
     virtual size_t size() const = 0;
     virtual void reserve(size_t capacity) = 0;
@@ -38,29 +36,60 @@ public:
 };
 
 template<typename T>
+struct is_optional: std::false_type
+{
+};
+
+template<typename U>
+struct is_optional<std::optional<U>>: std::true_type
+{
+};
+
+template<typename T>
+inline constexpr bool is_optional_v = is_optional<T>::value;
+
+static std::string FromDouble(const double value)
+{
+    std::ostringstream oss;
+    oss << std::setprecision(15) << value;
+    return oss.str();
+}
+
+template<typename U>
+static std::string FormatValue(const U& v)
+{
+    if constexpr (std::is_same_v<U, std::string>)
+    {
+        return v;
+    }
+    else if constexpr (std::is_floating_point_v<U>)
+    {
+        return FromDouble(v);
+    }
+    else if constexpr (is_optional_v<U>)
+    {
+        return v ? FormatValue(*v) : "None";
+    }
+    else
+    {
+        return std::to_string(v);
+    }
+}
+
+template<typename T>
 class TypedColumn: public IColumn
 {
 public:
-    explicit TypedColumn(std::function<std::string(const T&)> toStringFn = defaultToString,
-                         std::function<T(const std::string&)> fromStringFn = defaultFromString):
-        toStringFn_(toStringFn),
-        fromStringFn_(fromStringFn)
-    {
-    }
+    TypedColumn() = default;
 
     void add(const T& value)
     {
         data_.push_back(value);
     }
 
-    void addFromString(const std::string& value) override
-    {
-        data_.push_back(fromStringFn_(value));
-    }
-
     std::string toString(size_t index) const override
     {
-        return toStringFn_(data_.at(index));
+        return FormatValue(data_.at(index));
     }
 
     const T& get(size_t index) const
@@ -83,33 +112,6 @@ public:
         return data_;
     }
 
-    static std::string defaultToString(const T& v)
-    {
-        if constexpr (std::is_same_v<T, std::string>)
-        {
-            return v;
-        }
-        else
-        {
-            return std::to_string(v);
-        }
-    }
-
-    static T defaultFromString(const std::string& s)
-    {
-        if constexpr (std::is_same_v<T, std::string>)
-        {
-            return s;
-        }
-        else
-        {
-            T v;
-            std::istringstream iss(s);
-            iss >> v;
-            return v;
-        }
-    }
-
     void clear() override
     {
         data_.clear();
@@ -117,72 +119,13 @@ public:
 
 private:
     std::vector<T> data_;
-    std::function<std::string(const T&)> toStringFn_;
-    std::function<T(const std::string&)> fromStringFn_;
 };
 
 using StringColumn = TypedColumn<std::string>;
-using IntColumn = TypedColumn<int>;
-
-class DoubleColumn: public TypedColumn<double>
-{
-public:
-    static std::string FromDouble(const double v)
-    {
-        std::ostringstream oss;
-        oss << std::setprecision(15) << v;
-        return oss.str();
-    }
-
-    static double ToDouble(const std::string& s)
-    {
-        return std::stod(s);
-    }
-
-    DoubleColumn():
-        TypedColumn(FromDouble, ToDouble)
-    {
-    }
-};
-
 template<typename T>
-class OptionalColumn: public TypedColumn<std::optional<T>>
-{
-public:
-    static std::string FromOptional(const std::optional<T>& option)
-    {
-        if (option.has_value())
-        {
-            if constexpr (std::is_floating_point_v<T>)
-            {
-                return DoubleColumn::FromDouble(option.value());
-            }
-            else
-            {
-                return TypedColumn<T>::defaultToString(option.value());
-            }
-        }
-        else
-        {
-            return "NONE";
-        }
-    }
-
-    static std::optional<T> ToOptional(const std::string& s)
-    {
-        if constexpr (std::is_floating_point_v<T>)
-        {
-            return DoubleColumn::ToDouble(s);
-        }
-        else
-        {
-            return TypedColumn<T>::defaultFromString(s);
-        }
-    }
-
-    OptionalColumn():
-        TypedColumn<std::optional<T>>(FromOptional, ToOptional)
-
-    {
-    }
-};
+concept Integral = std::is_integral_v<T>;
+template<Integral T>
+using IntegralColumn = TypedColumn<T>;
+using DoubleColumn = TypedColumn<double>;
+template<typename T>
+using OptionalColumn = TypedColumn<std::optional<T>>;
