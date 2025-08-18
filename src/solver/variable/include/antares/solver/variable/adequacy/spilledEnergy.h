@@ -20,18 +20,18 @@
  */
 #pragma once
 
-#include <concepts>
+// <concepts> non requis ici (unification des vérifications dans variable.h)
 
 #include "antares/solver/variable/variable.h"
 
 namespace Antares::Solver::Variable::Adequacy
 {
 // Concept minimal pour contraindre NextT
-template<typename T>
-concept SpilledEnergyNext = requires {
-    { T::count };
-    typename T::template Statistics<0, 0>;
-};
+// template<typename T>
+// concept SpilledEnergyNext = requires {
+//     { T::count };
+//     typename T::template Statistics<0, 0>;
+// };
 
 struct VCardSpilledEnergy
 {
@@ -75,10 +75,10 @@ struct VCardSpilledEnergy
 };
 
 /*!
-** \brief C02 Average value of the overrall SpilledEnergy emissions expected from all
-**   the thermal dispatchable clusters
+** \brief Hourly spilled energy aggregated across Monte Carlo years (deficit absorption +
+*curtailment).
 */
-template<SpilledEnergyNext NextT = Container::EndOfList>
+template<class NextT = Container::EndOfList>
 class SpilledEnergy: public Variable::IVariable<SpilledEnergy<NextT>, NextT, VCardSpilledEnergy>
 {
 public:

@@ -27,11 +27,11 @@
 namespace Antares::Solver::Variable::Adequacy
 {
 // Concept minimal vérifiant l'interface attendue pour NextT
-template<typename T>
-concept OverallCostNext = requires {
-    { T::count };
-    typename T::template Statistics<0, 0>;
-};
+// template<typename T>
+// concept OverallCostNext = requires {
+//     { T::count };
+//     typename T::template Statistics<0,0>;
+// };
 
 struct VCardOverallCost
 {
@@ -53,7 +53,7 @@ struct VCardOverallCost
         return "Overall Cost throughout all MC years";
     }
 
-    //! The expecte results
+    //! Expected results
     using ResultsType = Results<R::AllYears::Average<>, R::AllYears::Average>;
 
     //! The VCard to look for for calculating spatial aggregates
@@ -89,10 +89,9 @@ struct VCardOverallCost
 }; // class VCard
 
 /*!
-** \brief C02 Average value of the overrall OverallCost emissions expected from all
-**   the thermal dispatchable clusters
+** \brief Overall aggregated operating cost across all Monte Carlo years (thermal + penalties).\n
 */
-template<OverallCostNext NextT = Container::EndOfList>
+template<class NextT = Container::EndOfList>
 class OverallCost: public Variable::IVariable<OverallCost<NextT>, NextT, VCardOverallCost>
 {
 public:

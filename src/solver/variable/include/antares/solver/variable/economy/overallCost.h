@@ -20,18 +20,10 @@
  */
 #pragma once
 
-#include <concepts>
-
 #include "antares/solver/variable/variable.h"
 
 namespace Antares::Solver::Variable::Economy
 {
-// Concept minimal pour contraindre NextT
-template<typename T>
-concept OverallCostNext = requires {
-    { T::count };
-    typename T::template Statistics<0, 0>;
-};
 
 struct VCardOverallCost
 {
@@ -72,7 +64,7 @@ struct VCardOverallCost
     using IntermediateValuesTypeForSpatialAg = IntermediateValuesBaseType*;
 };
 
-template<OverallCostNext NextT = Container::EndOfList>
+template<class NextT = Container::EndOfList>
 class OverallCost: public Variable::IVariable<OverallCost<NextT>, NextT, VCardOverallCost>
 {
 public:
