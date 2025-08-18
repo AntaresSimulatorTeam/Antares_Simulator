@@ -552,12 +552,26 @@ inline const typename Storage<VCardT>::ResultsType& IVariable<ChildT, NextT, VCa
 // Each output variable gets registered in the print info collector
 // ===================================================================
 
-// Forward decl du helper d'itération sur captions (défini plus bas)
-namespace
+// Helper générique pour itérer sur les captions (single, dynamic, multiple)
+namespace // anonymous
 {
 template<class VCardT, class F>
-inline void for_each_column_caption(F&& f);
+inline void for_each_column_caption(F&& f)
+{
+    if constexpr (VCardT::columnCount == Category::singleColumn
+                  || VCardT::columnCount == Category::dynamicColumns)
+    {
+        f(0, VCardT::Caption());
+    }
+    else
+    {
+        for (int i = 0; i < VCardT::columnCount; ++i)
+        {
+            f(i, VCardT::Multiple::Caption(i));
+        }
+    }
 }
+} // namespace
 
 // Suppression de RetrieveVariableListHelper : unification via for_each_column_caption
 template<class ChildT, class NextT, class VCardT>
@@ -596,26 +610,7 @@ void IVariable<ChildT, NextT, VCardT>::RetrieveVariableList(PredicateT& predicat
 // Each output variable gets its print status from the study parameters
 // =============================================================================
 
-// Helper générique pour itérer sur les captions (single, dynamic, multiple)
-namespace // anonymous
-{
-template<class VCardT, class F>
-inline void for_each_column_caption(F&& f)
-{
-    if constexpr (VCardT::columnCount == Category::singleColumn
-                  || VCardT::columnCount == Category::dynamicColumns)
-    {
-        f(0, VCardT::Caption());
-    }
-    else
-    {
-        for (int i = 0; i < VCardT::columnCount; ++i)
-        {
-            f(i, VCardT::Multiple::Caption(i));
-        }
-    }
-}
-} // namespace
+// (Définition unique de for_each_column_caption déjà fournie plus haut)
 
 template<class ChildT, class NextT, class VCardT>
 inline void IVariable<ChildT, NextT, VCardT>::getPrintStatusFromStudy(Data::Study& study)
