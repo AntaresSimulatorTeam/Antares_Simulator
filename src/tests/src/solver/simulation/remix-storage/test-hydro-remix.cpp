@@ -49,15 +49,14 @@ struct InputFixture
 
     void callRemixStorageAlgorithm()
     {
-        hydroForRemix = createHydroForRemix();
-        listStorageForRemix storagesForRemix = {hydroForRemix};
         Load = TotalGenNoHydro + UnsupE + HydroGen;
+        storagesForRemix.push_back(createHydroForRemix());
         shavePeaksByRemixingStorageGen(Load, UnsupE, Spillage, DTG_MRG, storagesForRemix);
     }
 
     std::vector<double> TotalGenNoHydro, Load, HydroGen, UnsupE, levels, HydroPmax, HydroPmin,
       inflows, ovf, pump, Spillage, DTG_MRG;
-    std::shared_ptr<StorageForRemix> hydroForRemix;
+    listStorageForRemix storagesForRemix;
     double init_level = 0.;
     double capacity = std::numeric_limits<double>::max();
     const double pumpEff = 1.;
@@ -115,8 +114,7 @@ BOOST_FIXTURE_TEST_CASE(input_is_acceptable__no_exception_raised, InputFixture<1
     capacity = 1.;
     Load = TotalGenNoHydro + UnsupE + HydroGen;
 
-    BOOST_CHECK_NO_THROW(hydroForRemix = createHydroForRemix());
-    listStorageForRemix storagesForRemix = {hydroForRemix};
+    BOOST_CHECK_NO_THROW(storagesForRemix.push_back(createHydroForRemix()));
     BOOST_CHECK_NO_THROW(
       shavePeaksByRemixingStorageGen(Load, UnsupE, Spillage, DTG_MRG, storagesForRemix));
 }
