@@ -1,121 +1,79 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
-#ifndef __SOLVER_VARIABLE_ECONOMY_OverallCost_H__
-#define __SOLVER_VARIABLE_ECONOMY_OverallCost_H__
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+#pragma once
 
 #include "antares/solver/variable/variable.h"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace Economy
+namespace Antares::Solver::Variable::Economy
 {
 struct VCardOverallCost
 {
-    //! Caption
     static std::string Caption()
     {
         return "OV. COST";
     }
 
-    //! Unit
     static std::string Unit()
     {
         return "Euro";
     }
 
-    //! The short description of the variable
     static std::string Description()
     {
         return "Overall Cost throughout all MC years";
     }
 
-    //! The expecte results
-    typedef Results<R::AllYears::Average< // The average values throughout all years
-                      >,
-                    R::AllYears::Average // Use these values for spatial cluster
-                    >
-      ResultsType;
+    using ResultsType = Results<R::AllYears::Average<>, R::AllYears::Average>;
+    using VCardForSpatialAggregate = VCardOverallCost;
 
-    //! The VCard to look for for calculating spatial aggregates
-    typedef VCardOverallCost VCardForSpatialAggregate;
-
-    //! Data Level
     static constexpr uint8_t categoryDataLevel = Category::DataLevel::area;
-    //! File level (provided by the type of the results)
     static constexpr uint8_t categoryFileLevel = ResultsType::categoryFile
                                                  & (Category::FileLevel::id
                                                     | Category::FileLevel::va);
-    //! Precision (views)
     static constexpr uint8_t precision = Category::all;
-    //! Indentation (GUI)
     static constexpr uint8_t nodeDepthForGUI = +0;
-    //! Decimal precision
     static constexpr uint8_t decimal = 0;
-    //! Number of columns used by the variable (One ResultsType per column)
     static constexpr int columnCount = 1;
-    //! The Spatial aggregation
     static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
     static constexpr uint8_t spatialAggregateMode = Category::spatialAggregateEachYear;
     static constexpr uint8_t spatialAggregatePostProcessing = 0;
-    //! Intermediate values
     static constexpr uint8_t hasIntermediateValues = 1;
-    //! Can this variable be non applicable (0 : no, 1 : yes)
     static constexpr uint8_t isPossiblyNonApplicable = 0;
 
-    typedef IntermediateValues IntermediateValuesBaseType;
-    typedef std::vector<IntermediateValues> IntermediateValuesType;
+    using IntermediateValuesBaseType = IntermediateValues;
+    using IntermediateValuesType = std::vector<IntermediateValues>;
+    using IntermediateValuesTypeForSpatialAg = IntermediateValuesBaseType*;
+};
 
-    typedef IntermediateValuesBaseType* IntermediateValuesTypeForSpatialAg;
-
-}; // class VCard
-
-/*!
-** \brief C02 Average value of the overrall OverallCost emissions expected from all
-**   the thermal dispatchable clusters
-*/
 template<class NextT = Container::EndOfList>
 class OverallCost: public Variable::IVariable<OverallCost<NextT>, NextT, VCardOverallCost>
 {
 public:
-    //! Type of the next static variable
-    typedef NextT NextType;
-    //! VCard
-    typedef VCardOverallCost VCardType;
-    //! Ancestor
-    typedef Variable::IVariable<OverallCost<NextT>, NextT, VCardType> AncestorType;
+    using NextType = NextT;
+    using VCardType = VCardOverallCost;
+    using AncestorType = Variable::IVariable<OverallCost<NextT>, NextT, VCardType>;
+    using VariableAccessorType = VariableAccessor<typename VCardType::ResultsType,
+                                                  VCardType::columnCount>;
 
-    //! List of expected results
-    typedef typename VCardType::ResultsType ResultsType;
-
-    typedef VariableAccessor<ResultsType, VCardType::columnCount> VariableAccessorType;
-
-    enum
-    {
-        //! How many items have we got
-        count = 1 + NextT::count,
-    };
+    static constexpr int count = 1 + NextT::count;
 
     template<int CDataLevel, int CFile>
     struct Statistics
@@ -125,27 +83,20 @@ public:
             count = ((VCardType::categoryDataLevel & CDataLevel
                       && VCardType::categoryFileLevel & CFile)
                        ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + VCardType::columnCount * ResultsType::count)
+                          + VCardType::columnCount * VCardType::ResultsType::count)
                        : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
-public:
     void initializeFromStudy(Data::Study& study)
     {
         pNbYearsParallel = study.maxNbYearsInParallel;
-
-        // Intermediate values
         InitializeResultsFromStudy(AncestorType::pResults, study);
-
-        // Intermediate values
         pValuesForTheCurrentYear.resize(pNbYearsParallel);
-        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        for (unsigned int s = 0; s < pNbYearsParallel; ++s)
         {
-            pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
+            pValuesForTheCurrentYear[s].initializeFromStudy(study);
         }
-
-        // Next
         NextType::initializeFromStudy(study);
     }
 
@@ -155,109 +106,90 @@ public:
         VariableAccessorType::InitializeAndReset(results, study);
     }
 
-    void initializeFromArea(Data::Study* study, Data::Area* area)
+    void initializeFromArea(Data::Study* study, Data::Area* area) noexcept
     {
-        // Next
         NextType::initializeFromArea(study, area);
     }
 
-    void initializeFromLink(Data::Study* study, Data::AreaLink* link)
+    void initializeFromLink(Data::Study* study, Data::AreaLink* link) noexcept
     {
-        // Next
         NextType::initializeFromAreaLink(study, link);
     }
 
-    void simulationBegin()
+    void simulationBegin() noexcept
     {
-        // Next
         NextType::simulationBegin();
     }
 
-    void simulationEnd()
+    void simulationEnd() noexcept
     {
         NextType::simulationEnd();
     }
 
-    void yearBegin(unsigned int year, unsigned int numSpace)
+    void yearBegin(unsigned int year, unsigned int numSpace) noexcept
     {
-        // Reset the values for the current year
         pValuesForTheCurrentYear[numSpace].reset();
-        // Next variable
         NextType::yearBegin(year, numSpace);
     }
 
-    void yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
+    void yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace) noexcept
     {
-        // Get end year calculations
-        for (unsigned int i = state.study.runtime.rangeLimits.hour[Data::rangeBegin];
-             i <= state.study.runtime.rangeLimits.hour[Data::rangeEnd];
-             ++i)
+        const auto begin = state.study.runtime.rangeLimits.hour[Data::rangeBegin];
+        const auto end = state.study.runtime.rangeLimits.hour[Data::rangeEnd]; // inclusive
+        for (unsigned int h = begin; h <= end; ++h)
         {
-            pValuesForTheCurrentYear[numSpace][i] += state.thermalClusterOperatingCostForYear[i];
-            // Incrementing annual system cost (to be printed in output into a separate file)
-            state.annualSystemCost += state.thermalClusterOperatingCostForYear[i];
+            const auto cost = state.thermalClusterOperatingCostForYear[h];
+            pValuesForTheCurrentYear[numSpace][h] += cost;
+            state.annualSystemCost += cost; // maintain existing side-effect
         }
-
-        // Next variable
         NextType::yearEndBuildForEachThermalCluster(state, year, numSpace);
     }
 
-    void yearEndBuild(State& state, unsigned int year, unsigned int numSpace)
+    void yearEndBuild(State& state, unsigned int year, unsigned int numSpace) noexcept
     {
-        // Next variable
         NextType::yearEndBuild(state, year, numSpace);
     }
 
     void yearEnd(unsigned int year, unsigned int numSpace)
     {
-        // Compute all statistics for the current year (daily,weekly,monthly)
         pValuesForTheCurrentYear[numSpace].computeStatisticsForTheCurrentYear();
-
-        // Next variable
         NextType::yearEnd(year, numSpace);
     }
 
     void computeSummary(unsigned int year, unsigned int numSpace)
     {
-        // Merge all those values with the global results
         AncestorType::pResults.merge(year, pValuesForTheCurrentYear[numSpace]);
-
-        // Next variable
         NextType::computeSummary(year, numSpace);
     }
 
-    void hourBegin(unsigned int hourInTheYear)
+    void hourBegin(unsigned int hourInTheYear) noexcept
     {
-        // Next variable
         NextType::hourBegin(hourInTheYear);
     }
 
-    void hourForEachArea(State& state, unsigned int numSpace)
+    void hourForEachArea(State& state, unsigned int numSpace) noexcept
     {
-        const double costForSpilledOrUnsuppliedEnergy =
-          // Total UnsupliedEnergy emissions
-          (state.hourlyResults->ValeursHorairesDeDefaillancePositive[state.hourInTheWeek]
-           * state.area->thermal.unsuppliedEnergyCost)
-          + (state.hourlyResults->ValeursHorairesDeDefaillanceNegative[state.hourInTheWeek]
-             * state.area->thermal.spilledEnergyCost)
-          // Current hydro storage and pumping generation costs
-          + (state.hourlyResults->valeurH2oHoraire[state.hourInTheWeek]
-             * (state.hourlyResults->TurbinageHoraire[state.hourInTheWeek]
-                - state.area->hydro.pumpingEfficiency
-                    * state.hourlyResults->PompageHoraire[state.hourInTheWeek]));
+        const auto hw = state.hourInTheWeek;
+        const auto hy = state.hourInTheYear;
+        const auto area = state.area;
 
-        pValuesForTheCurrentYear[numSpace][state.hourInTheYear] += costForSpilledOrUnsuppliedEnergy;
+        const double costForSpilledOrUnsuppliedEnergy
+          = (state.hourlyResults->ValeursHorairesDeDefaillancePositive[hw]
+             * area->thermal.unsuppliedEnergyCost)
+            + (state.hourlyResults->ValeursHorairesDeDefaillanceNegative[hw]
+               * area->thermal.spilledEnergyCost)
+            + (state.hourlyResults->valeurH2oHoraire[hw]
+               * (state.hourlyResults->TurbinageHoraire[hw]
+                  - area->hydro.pumpingEfficiency * state.hourlyResults->PompageHoraire[hw]));
 
-        // Incrementing annual system cost (to be printed in output into a separate file)
+        pValuesForTheCurrentYear[numSpace][hy] += costForSpilledOrUnsuppliedEnergy;
         state.annualSystemCost += costForSpilledOrUnsuppliedEnergy;
 
-        // Next variable
         NextType::hourForEachArea(state, numSpace);
     }
 
-    Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
-      unsigned int,
-      unsigned int numSpace) const
+    [[nodiscard]] Antares::Memory::Stored<double>::ConstReturnType
+    retrieveRawHourlyValuesForCurrentYear(unsigned int, unsigned int numSpace) const noexcept
     {
         return pValuesForTheCurrentYear[numSpace].hour;
     }
@@ -267,29 +199,21 @@ public:
                                       int precision,
                                       unsigned int numSpace) const
     {
-        // Initializing external pointer on current variable non applicable status
         results.isCurrentVarNA = AncestorType::isNonApplicable;
-
-        if (AncestorType::isPrinted[0])
+        if (!AncestorType::isPrinted[0])
         {
-            // Write the data for the current year
-            results.variableCaption = VCardType::Caption();
-            results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear[numSpace]
-              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
+            return;
         }
+        results.variableCaption = VCardType::Caption();
+        results.variableUnit = VCardType::Unit();
+        pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(results,
+                                                                                       fileLevel,
+                                                                                       precision);
     }
 
 private:
-    //! Intermediate values for each year
-    typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
-    unsigned int pNbYearsParallel;
+    VCardType::IntermediateValuesType pValuesForTheCurrentYear;
+    unsigned int pNbYearsParallel{0};
+};
 
-}; // class OverallCost
-
-} // namespace Economy
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
-
-#endif // __SOLVER_VARIABLE_ECONOMY_OverallCost_H__
+} // namespace Antares::Solver::Variable::Economy
