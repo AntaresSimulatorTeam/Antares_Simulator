@@ -22,6 +22,24 @@
 
 #include <type_traits>
 
+// Traits de catégorie de variable
+namespace Antares::Solver::Variable::detail
+{
+
+template<class VCardT>
+struct variable_category_traits
+{
+    static constexpr bool is_single = (VCardT::columnCount == Category::singleColumn);
+    static constexpr bool is_dynamic = (VCardT::columnCount == Category::dynamicColumns);
+    static constexpr bool is_multiple = (VCardT::columnCount > 1)
+                                        && !is_dynamic; // plusieurs colonnes statiques
+    static constexpr int effective_column_count = is_multiple ? VCardT::columnCount
+                                                              : 1; // dynamique ou single => 1 pour
+                                                                   // itérations internes
+};
+
+} // namespace Antares::Solver::Variable::detail
+
 #include <yuni/core/static/types.h>
 
 #include <antares/study/variable-print-info.h>
@@ -555,23 +573,24 @@ inline const typename Storage<VCardT>::ResultsType& IVariable<ChildT, NextT, VCa
 // Helper générique pour itérer sur les captions (single, dynamic, multiple)
 namespace // anonymous
 {
+using Antares::Solver::Variable::detail::variable_category_traits;
+
 template<class VCardT, class F>
 inline void for_each_column_caption(F&& f)
 {
-    if constexpr (VCardT::columnCount == Category::singleColumn
-                  || VCardT::columnCount == Category::dynamicColumns)
-    {
-        f(0, VCardT::Caption());
-    }
-    else
+    if constexpr (variable_category_traits<VCardT>::is_multiple)
     {
         for (int i = 0; i < VCardT::columnCount; ++i)
         {
             f(i, VCardT::Multiple::Caption(i));
         }
     }
+    else
+    {
+        f(0, VCardT::Caption());
+    }
 }
-} // namespace
+} // anonymous namespace
 
 // Suppression de RetrieveVariableListHelper : unification via for_each_column_caption
 template<class ChildT, class NextT, class VCardT>
@@ -579,6 +598,7 @@ template<class PredicateT>
 void IVariable<ChildT, NextT, VCardT>::RetrieveVariableList(PredicateT& predicate)
 {
     using DecayedPred = std::decay_t<PredicateT>;
+    using Traits = detail::variable_category_traits<VCardType>;
     if constexpr (std::is_same_v<DecayedPred, Data::variablePrintInfoCollector>)
     {
         for_each_column_caption<VCardType>(
@@ -587,12 +607,12 @@ void IVariable<ChildT, NextT, VCardT>::RetrieveVariableList(PredicateT& predicat
     }
     else
     {
-        if constexpr (VCardType::columnCount != Category::dynamicColumns)
+        if constexpr (!Traits::is_dynamic)
         {
             for_each_column_caption<VCardType>(
               [&](int idx, const auto& caption)
               {
-                  if constexpr (VCardType::columnCount == Category::singleColumn)
+                  if constexpr (Traits::is_single)
                   {
                       predicate.add(caption, VCardT::Unit(), VCardT::Description());
                   }
@@ -618,7 +638,6 @@ inline void IVariable<ChildT, NextT, VCardT>::getPrintStatusFromStudy(Data::Stud
     auto& vpi = study.parameters.variablesPrintInfo;
     for_each_column_caption<VCardType>([&](int idx, const auto& caption)
                                        { isPrinted[idx] = vpi.isPrinted(caption); });
-    // Go to the next variable
     NextType::getPrintStatusFromStudy(study);
 }
 
@@ -635,7 +654,6 @@ inline void IVariable<ChildT, NextT, VCardT>::supplyMaxNumberOfColumns(Data::Stu
     for_each_column_caption<VCardType>(
       [&](int /*idx*/, const auto& caption)
       { vpi.setMaxColumns(caption, static_cast<uint>(max_columns)); });
-    // Go to the next variable
     NextType::supplyMaxNumberOfColumns(study);
 }
 
