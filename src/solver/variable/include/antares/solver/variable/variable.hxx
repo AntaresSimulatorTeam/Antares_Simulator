@@ -637,58 +637,33 @@ void IVariable<ChildT, NextT, VCardT>::RetrieveVariableList(PredicateT& predicat
 // Each output variable gets its print status from the study parameters
 // =============================================================================
 
-// The class GetPrintStatusHelper is used to make a different Do(...) treatment depending on current
-// VCardType::columnCount. Recall that a variable can be single, dynamic or multiple.
+// Helper générique pour itérer sur les captions (single, dynamic, multiple)
 namespace // anonymous
 {
-// Case : the variable is multiple
-template<int ColumnT, class VCardT>
-class GetPrintStatusHelper
+template<class VCardT, class F>
+inline void for_each_column_caption(F&& f)
 {
-public:
-    static void Do(Data::Study& study, bool* isPrinted)
+    if constexpr (VCardT::columnCount == Category::singleColumn
+                  || VCardT::columnCount == Category::dynamicColumns)
     {
-        for (uint i = 0; i != VCardT::columnCount; ++i)
+        f(0, VCardT::Caption());
+    }
+    else
+    {
+        for (int i = 0; i < VCardT::columnCount; ++i)
         {
-            // Shifting inside the variables print info collection until reaching the print info
-            // associated with the current name, and then getting its print status.
-            isPrinted[i] = study.parameters.variablesPrintInfo.isPrinted(
-              VCardT::Multiple::Caption(i));
+            f(i, VCardT::Multiple::Caption(i));
         }
     }
-};
-
-// Case : the variable is single
-template<class VCardT>
-class GetPrintStatusHelper<Category::singleColumn, VCardT>
-{
-public:
-    static void Do(Data::Study& study, bool* isPrinted)
-    {
-        // Shifting inside the variables print info collection until reaching the print info
-        // associated with the current name, and then getting its print status.
-        isPrinted[0] = study.parameters.variablesPrintInfo.isPrinted(VCardT::Caption());
-    }
-};
-
-// Case : the variable is dynamic
-template<class VCardT>
-class GetPrintStatusHelper<Category::dynamicColumns, VCardT>
-{
-public:
-    static void Do(Data::Study& study, bool* isPrinted)
-    {
-        // Shifting inside the variables print info collection until reaching the print info
-        // associated with the current name, and then getting its print status.
-        isPrinted[0] = study.parameters.variablesPrintInfo.isPrinted(VCardT::Caption());
-    }
-};
+}
 } // namespace
 
 template<class ChildT, class NextT, class VCardT>
 inline void IVariable<ChildT, NextT, VCardT>::getPrintStatusFromStudy(Data::Study& study)
 {
-    GetPrintStatusHelper<VCardType::columnCount, VCardType>::Do(study, isPrinted);
+    auto& vpi = study.parameters.variablesPrintInfo;
+    for_each_column_caption<VCardType>([&](int idx, const auto& caption)
+                                       { isPrinted[idx] = vpi.isPrinted(caption); });
     // Go to the next variable
     NextType::getPrintStatusFromStudy(study);
 }
@@ -698,54 +673,14 @@ inline void IVariable<ChildT, NextT, VCardT>::getPrintStatusFromStudy(Data::Stud
 // in an ouptut report to the variable print info instance
 // =======================================================================
 
-// The class SupplyMaxNbColumnsHelper is used to make a different Do(...) treatment depending on
-// current VCardType::columnCount : recall that a variable can be single, dynamic or multiple.
-namespace // anonymous
-{
-// Case : the variable is multiple
-template<int ColumnT, class VCardT>
-class SupplyMaxNbColumnsHelper
-{
-public:
-    static void Do(Data::Study& study, uint maxNumberColumns)
-    {
-        for (uint i = 0; i != VCardT::columnCount; ++i)
-        {
-            study.parameters.variablesPrintInfo.setMaxColumns(VCardT::Multiple::Caption(i),
-                                                              maxNumberColumns);
-        }
-    }
-};
-
-// Case : the variable is single
-template<class VCardT>
-class SupplyMaxNbColumnsHelper<Category::singleColumn, VCardT>
-{
-public:
-    static void Do(Data::Study& study, uint maxNumberColumns)
-    {
-        study.parameters.variablesPrintInfo.setMaxColumns(VCardT::Caption(), maxNumberColumns);
-    }
-};
-
-// Case : the variable is dynamic
-template<class VCardT>
-class SupplyMaxNbColumnsHelper<Category::dynamicColumns, VCardT>
-{
-public:
-    static void Do(Data::Study& study, uint maxNumberColumns)
-    {
-        study.parameters.variablesPrintInfo.setMaxColumns(VCardT::Caption(), maxNumberColumns);
-    }
-};
-} // namespace
-
 template<class ChildT, class NextT, class VCardT>
 inline void IVariable<ChildT, NextT, VCardT>::supplyMaxNumberOfColumns(Data::Study& study)
 {
     auto max_columns = static_cast<const ChildT*>(this)->getMaxNumberColumns();
-    SupplyMaxNbColumnsHelper<VCardType::columnCount, VCardType>::Do(study,
-                                                                    static_cast<uint>(max_columns));
+    auto& vpi = study.parameters.variablesPrintInfo;
+    for_each_column_caption<VCardType>(
+      [&](int /*idx*/, const auto& caption)
+      { vpi.setMaxColumns(caption, static_cast<uint>(max_columns)); });
     // Go to the next variable
     NextType::supplyMaxNumberOfColumns(study);
 }
