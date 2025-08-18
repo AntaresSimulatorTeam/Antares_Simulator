@@ -21,24 +21,8 @@
 #pragma once
 
 #include <type_traits>
-
-// Traits de catégorie de variable
-namespace Antares::Solver::Variable::detail
-{
-
-template<class VCardT>
-struct variable_category_traits
-{
-    static constexpr bool is_single = (VCardT::columnCount == Category::singleColumn);
-    static constexpr bool is_dynamic = (VCardT::columnCount == Category::dynamicColumns);
-    static constexpr bool is_multiple = (VCardT::columnCount > 1)
-                                        && !is_dynamic; // plusieurs colonnes statiques
-    static constexpr int effective_column_count = is_multiple ? VCardT::columnCount
-                                                              : 1; // dynamique ou single => 1 pour
-                                                                   // itérations internes
-};
-
-} // namespace Antares::Solver::Variable::detail
+// (Suppression de la redéfinition locale de variable_category_traits : maintenant dans
+// variable_traits.h)
 
 #include <yuni/core/static/types.h>
 
@@ -50,21 +34,11 @@ namespace Antares::Solver::Variable
 template<class ChildT, class NextT, class VCardT>
 inline IVariable<ChildT, NextT, VCardT>::IVariable()
 {
-    // Initialization
-    // You should prefer the methods initializeFromStudy() or similiar
-    // to initialize the internal variables
+    // Initialisation via le trait centralisé
+    pColumnCount = static_cast<uint>(VariableType::effective_column_count);
 
-    // Number of column, where dimension -1 (dynamic) is avoided
-    pColumnCount = VCardType::columnCount > 1 ? VCardType::columnCount : 1;
-
-    // Allocation
-    // Does current output variable appear non applicable in all output reports (of any kind :
-    // area or district reports, annual or over all years reports, digest, ...) ?
     isNonApplicable = new bool[pColumnCount];
-    // Does current output variable column(s) appear in all reports ?
     isPrinted = new bool[pColumnCount];
-
-    // Initializing default print to true
     for (uint i = 0; i < pColumnCount; i++)
     {
         isPrinted[i] = true;

@@ -38,6 +38,7 @@
 #include "storage/intermediate.h"
 #include "storage/results.h"
 #include "surveyresults.h"
+#include "variable_traits.h"
 
 namespace Antares::Solver::Variable
 {
@@ -74,6 +75,11 @@ public:
 
     static constexpr uint8_t categoryDataLevel = VCardType::categoryDataLevel;
     static constexpr uint8_t categoryFileLevel = VCardType::categoryFileLevel;
+    static constexpr int effective_column_count = detail::variable_category_traits<
+      VCardType>::effective_column_count;
+    static constexpr bool is_multiple = detail::variable_category_traits<VCardType>::is_multiple;
+    static constexpr bool is_dynamic = detail::variable_category_traits<VCardType>::is_dynamic;
+    static constexpr bool is_single = detail::variable_category_traits<VCardType>::is_single;
 
     template<int CDataLevel, int CFile>
     struct Statistics
@@ -184,6 +190,11 @@ public:
     retrieveRawHourlyValuesForCurrentYear(uint column, uint) const;
 
     [[nodiscard]] const StoredResultType& results() const noexcept;
+
+    [[nodiscard]] static constexpr int EffectiveColumnCount() noexcept
+    {
+        return effective_column_count;
+    }
 
 protected:
     StoredResultType pResults;
