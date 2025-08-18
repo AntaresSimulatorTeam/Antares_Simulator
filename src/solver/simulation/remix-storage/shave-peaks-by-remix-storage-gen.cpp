@@ -1,11 +1,11 @@
-#include "include/antares/solver/simulation/shave-peaks-by-remix-storage-gen.h"
+#include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-storage-gen.h"
 
 #include <ranges>
 #include <set>
 #include <stdexcept>
 #include <vector>
 
-#include "include/antares/solver/simulation/remix-utils.h"
+#include "antares/solver/simulation/remix-storage/remix-utils.h"
 
 namespace rng = std::ranges;
 namespace vws = std::views;
@@ -115,7 +115,7 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
     const std::vector<double> UnsupEinit = UnsupE;
     std::vector<double> TotalGen = Load - UnsupEinit;
 
-    const auto validHours = ValidHours(Spillage, DTG_MRG);
+    const std::set<unsigned> validHours = ValidHours(Spillage, DTG_MRG);
 
     unsigned nbLoops = maxNbLoops;
     while (nbLoops-- > 0)

@@ -1,10 +1,10 @@
-#include "include/antares/solver/simulation/hydro-for-remix.h"
+#include "antares/solver/simulation/remix-storage/hydro-for-remix.h"
 
 #include <limits>
 #include <span>
 #include <stdexcept>
 
-#include "include/antares/solver/simulation/remix-utils.h"
+#include "antares/solver/simulation/remix-storage/remix-utils.h"
 
 constexpr double TOLERANCE = 1.e-6;
 const std::string error_msg_start = "Remix hydro input : ";
