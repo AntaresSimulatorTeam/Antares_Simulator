@@ -20,10 +20,19 @@
  */
 #pragma once
 
+#include <concepts>
+
 #include "antares/solver/variable/variable.h"
 
 namespace Antares::Solver::Variable::Adequacy
 {
+// Concept minimal vérifiant l'interface attendue pour NextT
+template<typename T>
+concept OverallCostNext = requires {
+    { T::count };
+    typename T::template Statistics<0, 0>;
+};
+
 struct VCardOverallCost
 {
     //! Caption
@@ -83,7 +92,7 @@ struct VCardOverallCost
 ** \brief C02 Average value of the overrall OverallCost emissions expected from all
 **   the thermal dispatchable clusters
 */
-template<class NextT = Container::EndOfList>
+template<OverallCostNext NextT = Container::EndOfList>
 class OverallCost: public Variable::IVariable<OverallCost<NextT>, NextT, VCardOverallCost>
 {
 public:
