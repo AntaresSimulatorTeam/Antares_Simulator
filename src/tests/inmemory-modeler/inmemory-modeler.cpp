@@ -86,7 +86,7 @@ void LinearProblemBuildingFixture::buildLinearProblem(
 
 void LinearProblemBuildingFixture::buildLinearProblem()
 {
-    Antares::Optimisation::LinearProblemApi::FillContext time_scenario_ctx = {0, 0, 0};
+    Antares::Optimisation::LinearProblemApi::FillContext time_scenario_ctx = {0, 0, 0, 0, 0};
     buildLinearProblem(time_scenario_ctx);
 }
 

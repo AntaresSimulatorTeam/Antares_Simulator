@@ -147,17 +147,14 @@ static void writeModelerSolutions(const MPSolver* solver,
 FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo)
 {
     auto nTsInDay = static_cast<unsigned>(problemeHebdo->NombreDePasDeTempsDUneJournee);
-    unsigned firstTimestep = 0;
-    unsigned lastTimestep;
-    if (problemeHebdo->OptimisationAuPasHebdomadaire)
-    {
-        lastTimestep = nTsInDay * problemeHebdo->NombreDeJours - 1;
-    }
-    else
-    {
-        lastTimestep = nTsInDay - 1;
-    }
-    return {firstTimestep, lastTimestep, problemeHebdo->year}; // TODO: handle scenarios/year
+
+    const unsigned globalFirst = problemeHebdo->weekInTheYear * nTsInDay
+                                 * problemeHebdo->NombreDeJours;
+    const unsigned globalLast = globalFirst + nTsInDay * problemeHebdo->NombreDeJours - 1;
+    const unsigned localFirst = 0;
+    const unsigned localLast = nTsInDay * problemeHebdo->NombreDeJours - 1;
+
+    return {localFirst, localLast, globalFirst, globalLast, problemeHebdo->year};
 }
 
 // Returns a non-owning pointer

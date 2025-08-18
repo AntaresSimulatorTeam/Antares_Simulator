@@ -147,7 +147,7 @@ ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& com
 
 bool checkTimeSteps(Optimisation::LinearProblemApi::FillContext& ctx)
 {
-    return ctx.getFirstTimeStep() <= ctx.getLastTimeStep();
+    return ctx.getLocalFirstTimeStep() <= ctx.getLocalLastTimeStep();
 }
 
 void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
@@ -189,7 +189,8 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
             const Optimization::Dimensions dim(
               Optimization::IntegerInterval{ctx.getYear(),
                                             ctx.getYear()}, /*TODO Handle range of year ? */
-              Optimization::IntegerInterval(ctx.getFirstTimeStep(), ctx.getLastTimeStep()));
+              Optimization::IntegerInterval(ctx.getLocalFirstTimeStep(),
+                                            ctx.getLocalLastTimeStep()));
             // std::visit to handle the 4 cases: double/double, vector/double,
             // double/vector and vector/vector.
             std::visit(
@@ -308,7 +309,7 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
     const auto timeDependentLinearExpression = visitor.dispatch(model->Objective().RootNode());
     const auto& linear_expressions = timeDependentLinearExpression.GetLinearExpressions();
 
-    if (abs(linear_expressions.at(ctx.getFirstTimeStep()).offset()) > 1e-10)
+    if (abs(linear_expressions.at(ctx.getLocalFirstTimeStep()).offset()) > 1e-10)
     {
         throw std::invalid_argument("Antares does not support objective offsets (found in model '"
                                     + model->Id() + "' of component '" + component_.Id() + "').");

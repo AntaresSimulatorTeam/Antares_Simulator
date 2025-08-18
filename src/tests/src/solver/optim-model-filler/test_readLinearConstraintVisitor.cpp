@@ -50,7 +50,7 @@ struct MyDummyFixture: Registry<Node>
                                                .withModel(&m)
                                                .withScenarioGroupId("group")
                                                .build();
-    ReadLinearConstraintVisitor visitor{evaluationContext, {0, 0, 0}, component};
+    ReadLinearConstraintVisitor visitor{evaluationContext, {0, 0, 0, 0, 0}, component};
 };
 
 BOOST_FIXTURE_TEST_CASE(test_name, MyDummyFixture)
@@ -79,7 +79,7 @@ BOOST_FIXTURE_TEST_CASE(test_visit_equal_node, MyDummyFixture)
                               {},
                               data,
                               empty_scenario);
-    ReadLinearConstraintVisitor visitor(context, {0, 0, 0}, component);
+    ReadLinearConstraintVisitor visitor(context, {0, 0, 0, 0, 0}, component);
     auto constraint = visitor.dispatch(node)[0];
     BOOST_CHECK_EQUAL(constraint.lb, -14.);
     BOOST_CHECK_EQUAL(constraint.ub, -14.);
@@ -105,7 +105,7 @@ BOOST_FIXTURE_TEST_CASE(test_visit_less_than_or_equal_node, MyDummyFixture)
                               {},
                               data,
                               empty_scenario);
-    ReadLinearConstraintVisitor visitor(context, {0, 0, 0}, component);
+    ReadLinearConstraintVisitor visitor(context, {0, 0, 0, 0, 0}, component);
     auto constraint = visitor.dispatch(node)[0];
     BOOST_CHECK_EQUAL(constraint.lb, -std::numeric_limits<double>::infinity());
     BOOST_CHECK_EQUAL(constraint.ub, -1.);
@@ -134,7 +134,7 @@ BOOST_FIXTURE_TEST_CASE(test_visit_greater_than_or_equal_node, MyDummyFixture)
                               {},
                               data,
                               empty_scenario);
-    ReadLinearConstraintVisitor visitor(context, {0, 0, 0}, component);
+    ReadLinearConstraintVisitor visitor(context, {0, 0, 0, 0, 0}, component);
     auto constraint = visitor.dispatch(node)[0];
     BOOST_CHECK_EQUAL(constraint.lb, -14);
     BOOST_CHECK_EQUAL(constraint.ub, std::numeric_limits<double>::infinity());
