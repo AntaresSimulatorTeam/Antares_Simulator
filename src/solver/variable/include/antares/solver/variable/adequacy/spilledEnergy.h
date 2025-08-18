@@ -1,122 +1,94 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
-#ifndef __SOLVER_VARIABLE_ADEQUACY_SpilledEnergy_H__
-#define __SOLVER_VARIABLE_ADEQUACY_SpilledEnergy_H__
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+#pragma once
+
+#include <concepts>
 
 #include "antares/solver/variable/variable.h"
 
-namespace Antares
+namespace Antares::Solver::Variable::Adequacy
 {
-namespace Solver
-{
-namespace Variable
-{
-namespace Adequacy
-{
+// Concept minimal pour contraindre NextT
+template<typename T>
+concept SpilledEnergyNext = requires {
+    { T::count };
+    typename T::template Statistics<0, 0>;
+};
+
 struct VCardSpilledEnergy
 {
-    //! Caption
     static std::string Caption()
     {
         return "SPIL. ENRG";
     }
 
-    //! Unit
     static std::string Unit()
     {
         return "MWh";
     }
 
-    //! The short description of the variable
     static std::string Description()
     {
         return "Spilled Energy (generation that cannot be satisfied)";
     }
 
-    //! The expecte results
-    typedef Results<R::AllYears::Average< // The average values throughout all years
-      R::AllYears::StdDeviation<          // The standard deviation values throughout all years
-        R::AllYears::Min<                 // The minimum values throughout all years
-          R::AllYears::Max<               // The maximum values throughout all years
-            >>>>>
-      ResultsType;
+    using ResultsType = Results<
+      R::AllYears::Average<R::AllYears::StdDeviation<R::AllYears::Min<R::AllYears::Max<>>>>,
+      R::AllYears::Average>;
+    using VCardForSpatialAggregate = VCardSpilledEnergy;
 
-    //! The VCard to look for for calculating spatial aggregates
-    typedef VCardSpilledEnergy VCardForSpatialAggregate;
-
-    //! Data Level
     static constexpr uint8_t categoryDataLevel = Category::DataLevel::area;
-    //! File level (provided by the type of the results)
     static constexpr uint8_t categoryFileLevel = ResultsType::categoryFile
                                                  & (Category::FileLevel::id
                                                     | Category::FileLevel::va);
-    //! Precision (views)
     static constexpr uint8_t precision = Category::all;
-    //! Indentation (GUI)
     static constexpr uint8_t nodeDepthForGUI = +0;
-    //! Decimal precision
     static constexpr uint8_t decimal = 0;
-    //! Number of columns used by the variable (One ResultsType per column)
     static constexpr int columnCount = 1;
-    //! The Spatial aggregation
     static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
     static constexpr uint8_t spatialAggregateMode = Category::spatialAggregateEachYear;
     static constexpr uint8_t spatialAggregatePostProcessing = 0;
-    //! Intermediate values
     static constexpr uint8_t hasIntermediateValues = 1;
-    //! Can this variable be non applicable (0 : no, 1 : yes)
     static constexpr uint8_t isPossiblyNonApplicable = 0;
 
-    typedef IntermediateValues IntermediateValuesBaseType;
-    typedef std::vector<IntermediateValues> IntermediateValuesType;
-
-    typedef IntermediateValuesBaseType* IntermediateValuesTypeForSpatialAg;
-
-}; // class VCard
+    using IntermediateValuesBaseType = IntermediateValues;
+    using IntermediateValuesType = std::vector<IntermediateValues>;
+    using IntermediateValuesTypeForSpatialAg = IntermediateValuesBaseType*;
+};
 
 /*!
 ** \brief C02 Average value of the overrall SpilledEnergy emissions expected from all
 **   the thermal dispatchable clusters
 */
-template<class NextT = Container::EndOfList>
+template<SpilledEnergyNext NextT = Container::EndOfList>
 class SpilledEnergy: public Variable::IVariable<SpilledEnergy<NextT>, NextT, VCardSpilledEnergy>
 {
 public:
-    //! Type of the next static variable
-    typedef NextT NextType;
-    //! VCard
-    typedef VCardSpilledEnergy VCardType;
-    //! Ancestor
-    typedef Variable::IVariable<SpilledEnergy<NextT>, NextT, VCardType> AncestorType;
+    using NextType = NextT;
+    using VCardType = VCardSpilledEnergy;
+    using AncestorType = Variable::IVariable<SpilledEnergy<NextT>, NextT, VCardType>;
+    using VariableAccessorType = VariableAccessor<typename VCardType::ResultsType,
+                                                  VCardType::columnCount>;
 
-    //! List of expected results
-    typedef typename VCardType::ResultsType ResultsType;
-
-    typedef VariableAccessor<ResultsType, VCardType::columnCount> VariableAccessorType;
-
-    enum
-    {
-        //! How many items have we got
-        count = 1 + NextT::count,
-    };
+    static constexpr int count = 1 + NextT::count;
 
     template<int CDataLevel, int CFile>
     struct Statistics
@@ -126,26 +98,20 @@ public:
             count = ((VCardType::categoryDataLevel & CDataLevel
                       && VCardType::categoryFileLevel & CFile)
                        ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + VCardType::columnCount * ResultsType::count)
+                          + VCardType::columnCount * VCardType::ResultsType::count)
                        : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
-public:
     void initializeFromStudy(Data::Study& study)
     {
         pNbYearsParallel = study.maxNbYearsInParallel;
-
-        // Intermediate values
         InitializeResultsFromStudy(AncestorType::pResults, study);
-
         pValuesForTheCurrentYear.resize(pNbYearsParallel);
-        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        for (unsigned int s = 0; s < pNbYearsParallel; ++s)
         {
-            pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
+            pValuesForTheCurrentYear[s].initializeFromStudy(study);
         }
-
-        // Next
         NextType::initializeFromStudy(study);
     }
 
@@ -155,87 +121,69 @@ public:
         VariableAccessorType::InitializeAndReset(results, study);
     }
 
-    void initializeFromArea(Data::Study* study, Data::Area* area)
+    void initializeFromArea(Data::Study* study, Data::Area* area) noexcept
     {
-        // Next
         NextType::initializeFromArea(study, area);
     }
 
-    void initializeFromLink(Data::Study* study, Data::AreaLink* link)
+    void initializeFromLink(Data::Study* study, Data::AreaLink* link) noexcept
     {
-        // Next
         NextType::initializeFromAreaLink(study, link);
     }
 
-    void simulationBegin()
+    void simulationBegin() noexcept
     {
-        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        for (auto& v: pValuesForTheCurrentYear)
         {
-            pValuesForTheCurrentYear[numSpace].reset();
+            v.reset();
         }
-        // Next
         NextType::simulationBegin();
     }
 
-    void simulationEnd()
+    void simulationEnd() noexcept
     {
         NextType::simulationEnd();
     }
 
-    void yearBegin(unsigned int year, unsigned int numSpace)
+    void yearBegin(unsigned int year, unsigned int numSpace) noexcept
     {
-        // Reset the values for the current year
         pValuesForTheCurrentYear[numSpace].reset();
-        // Next variable
         NextType::yearBegin(year, numSpace);
     }
 
-    void yearEndBuild(State& state, unsigned int year, unsigned int numSpace)
+    void yearEndBuild(State& state, unsigned int year, unsigned int numSpace) noexcept
     {
-        // Next variable
         NextType::yearEndBuild(state, year, numSpace);
     }
 
     void yearEnd(unsigned int year, unsigned int numSpace)
     {
-        // Compute all statistics for the current year (daily,weekly,monthly)
         pValuesForTheCurrentYear[numSpace].computeStatisticsForTheCurrentYear();
-
-        // Next variable
         NextType::yearEnd(year, numSpace);
     }
 
     void computeSummary(unsigned int year, unsigned int numSpace)
     {
-        // Merge all those values with the global results
         AncestorType::pResults.merge(year, pValuesForTheCurrentYear[numSpace]);
-
-        // Next variable
         NextType::computeSummary(year, numSpace);
     }
 
-    void hourBegin(unsigned int hourInTheYear)
+    void hourBegin(unsigned int hourInTheYear) noexcept
     {
-        // Next variable
         NextType::hourBegin(hourInTheYear);
     }
 
-    void hourForEachArea(State& state, unsigned int numSpace)
+    void hourForEachArea(State& state, unsigned int numSpace) noexcept
     {
         assert(state.hourlyResults && "Invalid pointer to simplex results");
-
-        // Total SpilledEnergy emissions
         pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
-          = +state.hourlyResults->ValeursHorairesDeDefaillanceNegative[state.hourInTheWeek]
+          = state.hourlyResults->ValeursHorairesDeDefaillanceNegative[state.hourInTheWeek]
             + state.resSpilled.entry[state.area->index][state.hourInTheWeek];
-
-        // Next variable
         NextType::hourForEachArea(state, numSpace);
     }
 
-    Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
-      unsigned int,
-      unsigned int numSpace) const
+    [[nodiscard]] Antares::Memory::Stored<double>::ConstReturnType
+    retrieveRawHourlyValuesForCurrentYear(unsigned int, unsigned int numSpace) const noexcept
     {
         return pValuesForTheCurrentYear[numSpace].hour;
     }
@@ -245,29 +193,21 @@ public:
                                       int precision,
                                       unsigned int numSpace) const
     {
-        // Initializing external pointer on current variable non applicable status
         results.isCurrentVarNA = AncestorType::isNonApplicable;
-
-        if (AncestorType::isPrinted[0])
+        if (!AncestorType::isPrinted[0])
         {
-            // Write the data for the current year
-            results.variableCaption = VCardType::Caption();
-            results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear[numSpace]
-              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
+            return;
         }
+        results.variableCaption = VCardType::Caption();
+        results.variableUnit = VCardType::Unit();
+        pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(results,
+                                                                                       fileLevel,
+                                                                                       precision);
     }
 
 private:
-    //! Intermediate values for each year
-    typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
-    unsigned int pNbYearsParallel;
+    VCardType::IntermediateValuesType pValuesForTheCurrentYear;
+    unsigned int pNbYearsParallel{0};
+};
 
-}; // class SpilledEnergy
-
-} // namespace Adequacy
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
-
-#endif // __SOLVER_VARIABLE_ADEQUACY_SpilledEnergy_H__
+} // namespace Antares::Solver::Variable::Adequacy
