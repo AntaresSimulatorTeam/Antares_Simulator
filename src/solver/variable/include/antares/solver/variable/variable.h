@@ -56,17 +56,11 @@ struct is_variable_next<T, std::void_t<decltype(T::count), typename T::template 
 };
 } // namespace detail
 
-#if defined(__cpp_concepts)
 template<typename T>
 concept VariableNextLike = std::is_same_v<T, Yuni::Default> || detail::is_variable_next<T>::value;
-#endif
 
 /*! Interface for any variable */
-#if defined(__cpp_concepts) && defined(ANTARES_VARIABLE_STRICT_CONCEPTS)
 template<class ChildT, VariableNextLike NextT, class VCardT>
-#else
-template<class ChildT, class NextT, class VCardT>
-#endif
 class IVariable: protected NextT
 {
 public:
