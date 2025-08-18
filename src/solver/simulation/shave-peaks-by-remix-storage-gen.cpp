@@ -8,7 +8,7 @@
 #include "include/antares/solver/simulation/remix-utils.h"
 
 namespace rng = std::ranges;
-namespace vws = std::ranges::views;
+namespace vws = std::views;
 
 constexpr double eps = 1e-3;
 constexpr unsigned maxNbLoops = 1000;
@@ -20,13 +20,9 @@ namespace Antares::Solver::Simulation
 {
 
 static std::set<unsigned> ValidHours(const std::vector<double>& Spillage,
-                                     const std::vector<double>& DTG_MRG,
-                                     const std::vector<double>& StorageGen,
-                                     const std::vector<double>& UnsupE)
+                                     const std::vector<double>& DTG_MRG)
 {
-    auto filter = [&](int h)
-    { return std::abs(Spillage[h] + DTG_MRG[h]) < eps && StorageGen[h] + UnsupE[h] > eps; };
-
+    auto filter = [&](int h) { return std::abs(Spillage[h] + DTG_MRG[h]) < eps; };
     auto validHoursView = vws::iota(0, static_cast<int>(Spillage.size())) | vws::filter(filter);
     return {validHoursView.begin(), validHoursView.end()};
 }
@@ -119,12 +115,16 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
     const std::vector<double> UnsupEinit = UnsupE;
     std::vector<double> TotalGen = Load - UnsupEinit;
 
+    const auto validHours = ValidHours(Spillage, DTG_MRG);
+
     unsigned nbLoops = maxNbLoops;
     while (nbLoops-- > 0)
     {
-        // Valid hours could be computed once for all, not at each iterations.
-        const auto validHours = ValidHours(Spillage, DTG_MRG, storage->initialGen(), UnsupEinit);
-        double exchange = makeExchange(validHours, TotalGen, UnsupE, storage);
+        std::set<unsigned> hoursForStorage;
+        auto predicate = [&](int h) { return storage->initialGen()[h] + UnsupE[h] > eps; };
+        rng::copy_if(validHours, std::inserter(hoursForStorage, hoursForStorage.end()), predicate);
+
+        double exchange = makeExchange(hoursForStorage, TotalGen, UnsupE, storage);
 
         if (exchange <= eps)
         {
