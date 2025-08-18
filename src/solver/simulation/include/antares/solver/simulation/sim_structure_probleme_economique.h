@@ -25,6 +25,7 @@
 #include <memory>
 #include <vector>
 
+#include "antares/solver/optim-model-filler/scenarioGroupRepo.h"
 #include "antares/solver/optimisation/opt_constants.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/utils/optimization_statistics.h"
@@ -609,5 +610,6 @@ public:
     // TODO: 1 study but several PROBLEME_HEBDO, may cause race conditions
     const ModelerStudy::SystemModel::System* modelerSystem;                   // for hybrid studies
     Optimisation::LinearProblemApi::ILinearProblemData* linear_problem_data_; // for hybrid studies
+    Antares::Optimisation::ScenarioGroupRepository* scenarioGroupRepository;  // for hybrid studies
 };
 #endif

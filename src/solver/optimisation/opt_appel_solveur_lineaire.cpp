@@ -85,14 +85,11 @@ struct SimplexResult
     double objectiveValue;
 };
 
-class EmptyScenarioGroupRepository: public Optimisation::ScenarioGroupRepository
-{
-};
-
 static void fillModelerComponents(
   std::vector<std::unique_ptr<Optimisation::ComponentFiller>>& componentFillers,
   std::vector<LinearProblemFiller*>& fillersCollection,
   const ModelerStudy::SystemModel::System* modelerSystem,
+  const Optimisation::ScenarioGroupRepository& scenarioGroupRepository,
   VariableDictionary& variableDictionary)
 {
     if (!modelerSystem)
@@ -101,13 +98,12 @@ static void fillModelerComponents(
         return;
     }
 
-    static const EmptyScenarioGroupRepository emptyScenarioGroupRepository;
     for (const auto& [_, component]: modelerSystem->Components())
     {
         componentFillers.push_back(
           std::make_unique<Optimisation::ComponentFiller>(component,
                                                           variableDictionary,
-                                                          emptyScenarioGroupRepository));
+                                                          scenarioGroupRepository));
         // TODO: use scenario group repository
     }
     for (auto& component_filler: componentFillers)
@@ -185,12 +181,13 @@ MPSolver* convertToMPSolver(const PROBLEME_HEBDO* problemeHebdo,
     VariableDictionary variableDictionary;
     ComponentToAreaConnectionFiller componentToAreaConnectionFiller(problemeHebdo,
                                                                     variableDictionary);
-    if (problemeHebdo->modelerSystem)
+    if (problemeHebdo->modelerSystem && problemeHebdo->scenarioGroupRepository)
     {
         // All LP variables coordinates (component id, variable id, scenario, time step)
         fillModelerComponents(componentFillers,
                               fillersCollection,
                               problemeHebdo->modelerSystem,
+                              *problemeHebdo->scenarioGroupRepository,
                               variableDictionary);
 
         // Add compatibility filler that connects components to areas
