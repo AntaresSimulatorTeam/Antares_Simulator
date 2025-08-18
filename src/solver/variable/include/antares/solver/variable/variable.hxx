@@ -519,36 +519,28 @@ inline void IVariable<ChildT, NextT, VCardT>::retrieveResultsForLink(
 
 namespace // anonymous
 {
-template<int ColumnT>
-struct HourlyResultsForCurrentYear
-{
-    template<class R>
-    static Antares::Memory::Stored<double>::ConstReturnType Get(const R& results, uint column)
-    {
-        return results[column].hourlyValuesForSpatialAggregate();
-    }
-};
+// Ancien pattern HourlyResultsForCurrentYear basé sur template<int ColumnT> remplacé par
+// une fonction template unique utilisant les traits.
 
-template<>
-struct HourlyResultsForCurrentYear<Category::singleColumn>
+template<class VCardT, class R>
+inline Antares::Memory::Stored<double>::ConstReturnType getHourlyResultsForCurrentYear(
+  const R& results,
+  uint column)
 {
-    template<class R>
-    static Antares::Memory::Stored<double>::ConstReturnType Get(const R& results, uint)
-    {
-        return results.hourlyValuesForSpatialAggregate();
-    }
-};
-
-template<>
-struct HourlyResultsForCurrentYear<Category::noColumn>
-{
-    template<class R>
-    static Antares::Memory::Stored<double>::ConstReturnType Get(const R&, uint)
+    using Traits = Antares::Solver::Variable::detail::variable_category_traits<VCardT>;
+    if constexpr (VCardT::columnCount == Category::noColumn)
     {
         return Antares::Memory::Stored<double>::NullValue();
     }
-};
-
+    else if constexpr (Traits::is_multiple)
+    {
+        return results[column].hourlyValuesForSpatialAggregate();
+    }
+    else // single ou dynamic
+    {
+        return results.hourlyValuesForSpatialAggregate();
+    }
+}
 } // anonymous namespace
 
 template<class ChildT, class NextT, class VCardT>
@@ -556,7 +548,7 @@ inline Antares::Memory::Stored<double>::ConstReturnType
 IVariable<ChildT, NextT, VCardT>::retrieveRawHourlyValuesForCurrentYear(uint column,
                                                                         uint /* numSpace */) const
 {
-    return HourlyResultsForCurrentYear<VCardType::columnCount>::Get(pResults, column);
+    return getHourlyResultsForCurrentYear<VCardType>(pResults, column);
 }
 
 template<class ChildT, class NextT, class VCardT>
