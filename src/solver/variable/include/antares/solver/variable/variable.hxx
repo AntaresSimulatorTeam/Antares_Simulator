@@ -20,6 +20,8 @@
  */
 #pragma once
 
+#include <type_traits>
+
 #include <yuni/core/static/types.h>
 
 #include <antares/study/variable-print-info.h>
@@ -550,86 +552,43 @@ inline const typename Storage<VCardT>::ResultsType& IVariable<ChildT, NextT, VCa
 // Each output variable gets registered in the print info collector
 // ===================================================================
 
-// class RetrieveVariableListHelper goes with function RetrieveVariableList(...).
-// This class is used to make a different Do(...) treatment depending on current
-// VCardType::columnCount. Recall that a variable can be single, dynamic or multiple.
-namespace // anonymous
+// Forward decl du helper d'itération sur captions (défini plus bas)
+namespace
 {
-template<int ColumnT, class VCardT, class ChildT>
-class RetrieveVariableListHelper
-{
-public:
-    template<class PredicateT>
-    static void Do(PredicateT& predicate)
-    {
-        for (int i = 0; i < VCardT::columnCount; ++i)
-        {
-            predicate.add(VCardT::Multiple::Caption(i),
-                          VCardT::Multiple::Unit(i),
-                          VCardT::Description());
-        }
-    }
+template<class VCardT, class F>
+inline void for_each_column_caption(F&& f);
+}
 
-    // Function used to build the collection of variables print info from the static variables list.
-    // Multiple variable function version.
-    static void Do(Data::variablePrintInfoCollector& printInfoCollector)
-    {
-        for (int i = 0; i < VCardT::columnCount; ++i)
-        {
-            printInfoCollector.add(VCardT::Multiple::Caption(i),
-                                   VCardT::categoryDataLevel,
-                                   VCardT::categoryFileLevel);
-        }
-    }
-};
-
-template<class VCardT, class ChildT>
-class RetrieveVariableListHelper<Category::singleColumn, VCardT, ChildT>
-{
-public:
-    template<class PredicateT>
-    static void Do(PredicateT& predicate)
-    {
-        predicate.add(VCardT::Caption(), VCardT::Unit(), VCardT::Description());
-    }
-
-    // Function used to build the collection of variables print info from the static variables list.
-    // Single variable function version.
-    static void Do(Data::variablePrintInfoCollector& printInfoCollector)
-    {
-        printInfoCollector.add(VCardT::Caption(),
-                               VCardT::categoryDataLevel,
-                               VCardT::categoryFileLevel);
-    }
-};
-
-template<class VCardT, class ChildT>
-class RetrieveVariableListHelper<Category::dynamicColumns, VCardT, ChildT>
-{
-public:
-    template<class PredicateT>
-    static void Do(PredicateT&)
-    {
-    }
-
-    // Function used to build the collection of variables print info from the static variables list.
-    // Dynamic variable function version.
-    static void Do(Data::variablePrintInfoCollector& printInfoCollector)
-    {
-        printInfoCollector.add(VCardT::Caption(),
-                               VCardT::categoryDataLevel,
-                               VCardT::categoryFileLevel);
-    }
-};
-
-} // anonymous namespace
-
+// Suppression de RetrieveVariableListHelper : unification via for_each_column_caption
 template<class ChildT, class NextT, class VCardT>
 template<class PredicateT>
 void IVariable<ChildT, NextT, VCardT>::RetrieveVariableList(PredicateT& predicate)
 {
-    RetrieveVariableListHelper<VCardType::columnCount, VCardType, ChildT>::Do(predicate);
-    // Go to the next variable
+    using DecayedPred = std::decay_t<PredicateT>;
+    if constexpr (std::is_same_v<DecayedPred, Data::variablePrintInfoCollector>)
+    {
+        for_each_column_caption<VCardType>(
+          [&](int /*idx*/, const auto& caption)
+          { predicate.add(caption, VCardT::categoryDataLevel, VCardT::categoryFileLevel); });
+    }
+    else
+    {
+        if constexpr (VCardType::columnCount != Category::dynamicColumns)
+        {
+            for_each_column_caption<VCardType>(
+              [&](int idx, const auto& caption)
+              {
+                  if constexpr (VCardType::columnCount == Category::singleColumn)
+                  {
+                      predicate.add(caption, VCardT::Unit(), VCardT::Description());
+                  }
+                  else
+                  {
+                      predicate.add(caption, VCardT::Multiple::Unit(idx), VCardT::Description());
+                  }
+              });
+        }
+    }
     NextType::RetrieveVariableList(predicate);
 }
 
