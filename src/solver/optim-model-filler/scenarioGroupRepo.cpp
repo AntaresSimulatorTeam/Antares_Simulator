@@ -19,9 +19,9 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include <boost/algorithm/string.hpp>
-
 #include "antares/solver/optim-model-filler/scenarioGroupRepo.h"
+
+#include <boost/algorithm/string.hpp>
 
 namespace Antares::Optimisation
 {

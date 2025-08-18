@@ -22,6 +22,7 @@
 #pragma once
 
 #include <string>
+
 #include <boost/algorithm/string.hpp>
 
 namespace Antares::Optimisation::LinearProblemApi
