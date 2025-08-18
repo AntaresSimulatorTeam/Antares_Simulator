@@ -30,7 +30,7 @@ namespace Antares::Expressions::Visitors
 {
 std::string PrintVisitor::visit(const Nodes::SumNode* node)
 {
-    auto operands = node->getOperands();
+    const auto& operands = node->getOperands();
     if (operands.empty())
     {
         return "()";

@@ -52,7 +52,7 @@ std::string ReadLinearExpressionVisitor::name() const
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const SumNode* node)
 {
-    auto operands = node->getOperands();
+    const auto& operands = node->getOperands();
     TimeDependentLinearExpression ret(fillContext_);
     for (auto* operand: operands)
     {
