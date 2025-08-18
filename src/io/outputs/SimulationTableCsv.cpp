@@ -100,7 +100,6 @@ void SimulationTableCsv::clear()
     buffer_.str("");
 }
 
-
 std::string SimulationTableCsv::buffer() const
 {
     return buffer_.str();
