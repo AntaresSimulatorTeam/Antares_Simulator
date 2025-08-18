@@ -55,8 +55,6 @@ jobs:
       run: |
         echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_ubuntu-22.04_static_sirius.zip" >> $GITHUB_ENV
 
-
-
     - name: Install ccache
       run: sudo apt-get install -y ccache
 
@@ -66,7 +64,7 @@ jobs:
         path: ${{ github.workspace }}/.ccache
         key: ${{ matrix.os }}-${{ github.ref_name }}
         restore-keys: |
-          sonarcloud- 
+          ${{ matrix.os }}- 
 
     - name: Configure ccache
       run: |
@@ -128,7 +126,7 @@ jobs:
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake \
         -DVCPKG_TARGET_TRIPLET=x64-linux-release \
         -DCODE_COVERAGE=ON \
-        -DCMAKE_BUILD_TYPE=Debug \
+        -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_PREFIX_PATH="../install;${{ env.ORTOOLS_DIR }}/install" \
         -DBUILD_TESTING=ON \
         -DMZ_CODE_COVERAGE=ON \
@@ -226,14 +224,7 @@ jobs:
     - name: Collect coverage into one XML report
       if: ${{ !cancelled() }}
       run: |
-        gcovr --exclude-throw-branches --exclude-unreachable-branches --sonarqube --output coverage.xml
-
-    - name: Upload coverage report
-      if: ${{ !cancelled() }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: coverage-report
-        path: coverage.xml
+        gcovr --sonarqube --output coverage.xml
 
     - name: SonarQube Scan
       if: ${{ !cancelled() }}
@@ -266,3 +257,4 @@ jobs:
       with:
         path: ${{ github.workspace }}/.ccache
         key: ${{ matrix.os }}-${{ github.ref_name }}
+
