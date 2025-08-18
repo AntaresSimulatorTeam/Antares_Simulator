@@ -87,14 +87,20 @@ public:
 private:
     std::vector<unsigned> selectedScenario;
 
-    struct TimeInterval
+    struct LocalTimeInterval
     {
         unsigned first = 0; // included
         unsigned last = 0;  // included
     };
 
-    TimeInterval local;
-    TimeInterval global;
+    struct GlobalTimeInterval
+    {
+        unsigned first = 0; // included
+        unsigned last = 0;  // included
+    };
+
+    LocalTimeInterval local;
+    GlobalTimeInterval global;
 
     unsigned year_ = 0;
 };
