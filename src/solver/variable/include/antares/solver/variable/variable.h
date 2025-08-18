@@ -42,6 +42,184 @@
 
 namespace Antares::Solver::Variable
 {
+// Type sentinelle interne remplaçant Yuni::Default
+struct NullNext
+{
+    static constexpr int count = 0;
+
+    template<int CDataLevel, int CFile>
+    struct Statistics
+    {
+        enum
+        {
+            count = 0
+        };
+    };
+
+    template<class PredicateT>
+    static void RetrieveVariableList(PredicateT&)
+    {
+    }
+
+    static void initializeFromStudy(Data::Study&)
+    {
+    }
+
+    static void initializeFromArea(Data::Study*, Data::Area*)
+    {
+    }
+
+    static void initializeFromLink(Data::Study*, Data::AreaLink*)
+    {
+    }
+
+    static void initializeFromThermalCluster(Data::Study*, Data::Area*, Data::ThermalCluster*)
+    {
+    }
+
+    static void broadcastNonApplicability(bool)
+    {
+    }
+
+    static void getPrintStatusFromStudy(Data::Study&)
+    {
+    }
+
+    static void supplyMaxNumberOfColumns(Data::Study&)
+    {
+    }
+
+    static void simulationBegin()
+    {
+    }
+
+    static void simulationEnd()
+    {
+    }
+
+    static void yearBegin(uint)
+    {
+    }
+
+    static void yearEnd(uint)
+    {
+    }
+
+    template<class V>
+    static void yearEndSpatialAggregates(V&, uint, unsigned int)
+    {
+    }
+
+    template<class V, class SetT>
+    static void yearEndSpatialAggregates(V&, uint, const SetT&)
+    {
+    }
+
+    template<class V>
+    static void simulationEndSpatialAggregates(V&)
+    {
+    }
+
+    template<class V, class SetT>
+    static void simulationEndSpatialAggregates(V&, const SetT&)
+    {
+    }
+
+    static void hourBegin(uint)
+    {
+    }
+
+    static void hourEnd(State&, uint)
+    {
+    }
+
+    static void hourForEachArea(State&)
+    {
+    }
+
+    static void hourForEachArea(State&, unsigned int)
+    {
+    }
+
+    static void hourForEachLink(State&, unsigned int)
+    {
+    }
+
+    static void weekBegin(State&)
+    {
+    }
+
+    static void weekForEachArea(State&, uint)
+    {
+    }
+
+    static void weekEnd(State&)
+    {
+    }
+
+    static void buildSurveyReport(SurveyResults&, int, int, int)
+    {
+    }
+
+    static void buildAnnualSurveyReport(SurveyResults&, int, int, int, uint)
+    {
+    }
+
+    static void buildDigest(SurveyResults&, int, int)
+    {
+    }
+
+    static void beforeYearByYearExport(uint, uint)
+    {
+    }
+
+    template<class I>
+    static void provideInformations(I&)
+    {
+    }
+
+    template<class VCardSearchT, class O>
+    static void computeSpatialAggregateWith(O&, uint)
+    {
+    }
+
+    template<class VCardSearchT, class O>
+    static void computeSpatialAggregateWith(O&, const Data::Area*)
+    {
+    }
+
+    template<class VCardToFindT>
+    static const double* retrieveHourlyResultsForCurrentYear(uint)
+    {
+        return nullptr;
+    }
+
+    template<class VCardToFindT>
+    static void retrieveResultsForArea(typename Storage<VCardToFindT>::ResultsType**,
+                                       const Data::Area*)
+    {
+    }
+
+    template<class VCardToFindT>
+    static void retrieveResultsForThermalCluster(typename Storage<VCardToFindT>::ResultsType**,
+                                                 const Data::ThermalCluster*)
+    {
+    }
+
+    template<class VCardToFindT>
+    static void retrieveResultsForLink(typename Storage<VCardToFindT>::ResultsType**,
+                                       const Data::AreaLink*)
+    {
+    }
+
+    static Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
+      uint,
+      uint)
+    {
+        return Antares::Memory::Stored<double>::NullValue();
+    }
+};
+
 // Traits de détection optionnels pour NextT
 namespace detail
 {
@@ -58,7 +236,7 @@ struct is_variable_next<T, std::void_t<decltype(T::count), typename T::template 
 } // namespace detail
 
 template<typename T>
-concept VariableNextLike = std::is_same_v<T, Yuni::Default> || detail::is_variable_next<T>::value;
+concept VariableNextLike = std::is_same_v<T, NullNext> || detail::is_variable_next<T>::value;
 
 /*! Interface for any variable */
 template<class ChildT, VariableNextLike NextT, class VCardT>
