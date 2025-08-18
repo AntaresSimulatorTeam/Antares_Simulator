@@ -145,14 +145,16 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Parameter
     // only dependent
     LinearExpressionMap linearExpressions;
 
-    for (auto timeStep = fillContext_.getLocalFirstTimeStep();
-         timeStep <= fillContext_.getLocalLastTimeStep();
-         ++timeStep)
+    int idx = 0;
+    for (auto localTimeStep = fillContext_.getLocalFirstTimeStep();
+         localTimeStep <= fillContext_.getLocalLastTimeStep();
+         ++localTimeStep)
     {
-        // TODO: pass year
-        linearExpressions[timeStep] = LinearExpression(
-          evalContext_.getParameterValue(node->value(), fillContext_.getYear(), timeStep),
+        auto globalTimeStep = fillContext_.getGlobalFirstTimeStep() + idx;
+        linearExpressions[localTimeStep] = LinearExpression(
+          evalContext_.getParameterValue(node->value(), fillContext_.getYear(), globalTimeStep),
           {});
+        idx++;
     }
     return TimeDependentLinearExpression(fillContext_, linearExpressions);
 }
