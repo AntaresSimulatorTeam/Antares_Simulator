@@ -388,7 +388,7 @@ std::list<std::string> availableLinearSolversList()
     return result;
 }
 
-bool isSolverAvailable(const std::string& solverName)
+bool isLinearSolverAvailable(const std::string& solverName)
 {
     auto it = OrtoolsUtils::mpSolverMap.find(solverName);
     if (it == OrtoolsUtils::mpSolverMap.end())
