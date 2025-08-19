@@ -22,16 +22,15 @@
 #ifndef ANTARES_SOLVER_VARIABLE_COMMONS_HOUR_UTILS_H
 #define ANTARES_SOLVER_VARIABLE_COMMONS_HOUR_UTILS_H
 
+#include <concepts>
 #include <cstddef>
 #include <type_traits>
-#include <concepts>
 
 namespace Antares::Solver::Variable::Util
 {
 // Concept décrivant une série horaire minimale
 template<class T>
-concept HourlySeries = requires(T t, unsigned y)
-{
+concept HourlySeries = requires(T t, unsigned y) {
     { t.series.getColumn(y) } -> std::convertible_to<const double*>;
     { t.series.timeSeries.height } -> std::convertible_to<size_t>;
 };
@@ -40,24 +39,51 @@ concept HourlySeries = requires(T t, unsigned y)
 template<class Ptr, class F>
 inline void for_each_hour(const Ptr data, size_t n, F&& f) noexcept
 {
-    for (size_t h = 0; h < n; ++h) f(h, data[h]);
+    for (size_t h = 0; h < n; ++h)
+    {
+        f(h, data[h]);
+    }
 }
 
 // Version sur conteneur indexable
 template<class Container, class F>
 inline void for_each_hour(Container& c, F&& f) noexcept(noexcept(f(size_t{}, *c.data())))
 {
-    for (size_t h = 0; h < c.size(); ++h) f(h, c[h]);
+    for (size_t h = 0; h < c.size(); ++h)
+    {
+        f(h, c[h]);
+    }
 }
 
 // transform in place (générique)
 template<class Range, class F>
 inline void transform_in_place(Range&& r, F&& f) noexcept(noexcept(f(*r.begin())))
 {
-    for (auto& v : r) v = f(v);
+    for (auto& v: r)
+    {
+        v = f(v);
+    }
+}
+
+// Helper pour appliquer une transformation sur un buffer horaire brut
+template<class F>
+inline void apply_over_hours(double* data, F&& f) noexcept(noexcept(f(*data)))
+{
+    for (uint y = 0; y != HOURS_PER_YEAR; ++y)
+    {
+        f(data[y]);
+    }
+}
+
+template<class F>
+inline void apply_over_hours_const(const double* data, F&& f) noexcept(noexcept(f(*data)))
+{
+    for (uint y = 0; y != HOURS_PER_YEAR; ++y)
+    {
+        f(data[y]);
+    }
 }
 
 } // namespace Antares::Solver::Variable::Util
 
 #endif // ANTARES_SOLVER_VARIABLE_COMMONS_HOUR_UTILS_H
-

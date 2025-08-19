@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "antares/solver/variable/storage/intermediate.h"
 
@@ -49,7 +49,7 @@ void IntermediateValues::initializeFromStudy(Data::Study& study)
     pRuntimeInfo = &study.runtime;
 }
 
-void IntermediateValues::computeStatisticsAdequacyForTheCurrentYear()
+void IntermediateValues::computeStatisticsAdequacyForTheCurrentYear() noexcept
 {
     year = 0.;
 
@@ -67,7 +67,7 @@ void IntermediateValues::computeStatisticsAdequacyForTheCurrentYear()
     }
 }
 
-void IntermediateValues::computeStatisticsForTheCurrentYear()
+void IntermediateValues::computeStatisticsForTheCurrentYear() noexcept
 {
     uint i;
     uint j;
@@ -123,7 +123,7 @@ void IntermediateValues::computeStatisticsForTheCurrentYear()
     }
 }
 
-void IntermediateValues::computeStatisticsOrForTheCurrentYear()
+void IntermediateValues::computeStatisticsOrForTheCurrentYear() noexcept
 {
     uint i;
     uint j;
@@ -184,7 +184,7 @@ void IntermediateValues::computeStatisticsOrForTheCurrentYear()
     }
 }
 
-void IntermediateValues::computeAveragesForCurrentYearFromHourlyResults()
+void IntermediateValues::computeAveragesForCurrentYearFromHourlyResults() noexcept
 {
     // Detecting large buffer overflow
     assert(pRange);
@@ -198,14 +198,14 @@ void IntermediateValues::computeAveragesForCurrentYearFromHourlyResults()
     computeYearlyAveragesForCurrentYear();
 }
 
-void IntermediateValues::computeAveragesForCurrentYearFromDailyResults()
+void IntermediateValues::computeAveragesForCurrentYearFromDailyResults() noexcept
 {
     computeWeeklyAveragesForCurrentYear();
     computeMonthlyAveragesForCurrentYear();
     computeYearlyAveragesForCurrentYear();
 }
 
-void IntermediateValues::computeAveragesForCurrentYearFromWeeklyResults()
+void IntermediateValues::computeAveragesForCurrentYearFromWeeklyResults() noexcept
 {
     computeMonthlyAveragesForCurrentYear();
     computeYearlyAveragesForCurrentYear();
@@ -280,7 +280,7 @@ void IntermediateValues::computeYearlyAveragesForCurrentYear()
     year *= HOURS_PER_DAY / (double)pRange->hour[Data::rangeCount];
 }
 
-void IntermediateValues::computeProbabilitiesForTheCurrentYear()
+void IntermediateValues::computeProbabilitiesForTheCurrentYear() noexcept
 {
     uint i;
     uint j;
@@ -354,7 +354,7 @@ void IntermediateValues::computeProbabilitiesForTheCurrentYear()
     }
 }
 
-void IntermediateValues::adjustValuesWhenRelatedToAPrice()
+void IntermediateValues::adjustValuesWhenRelatedToAPrice() noexcept
 {
     uint i;
     double ratio;
@@ -384,7 +384,7 @@ void IntermediateValues::adjustValuesWhenRelatedToAPrice()
     year /= pRange->hour[Data::rangeCount];
 }
 
-void IntermediateValues::adjustValuesAdequacyWhenRelatedToAPrice()
+void IntermediateValues::adjustValuesAdequacyWhenRelatedToAPrice() noexcept
 {
     // Year
     year /= pRange->hour[Data::rangeCount];

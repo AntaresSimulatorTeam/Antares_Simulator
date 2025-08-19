@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __SOLVER_VARIABLE_ECONOMY_PSP_H__
 #define __SOLVER_VARIABLE_ECONOMY_PSP_H__
 
@@ -34,22 +34,25 @@ namespace Economy
 {
 struct VCardPSP
 {
+    inline static constexpr std::string_view kCaption = "PSP";
+    inline static constexpr std::string_view kUnit = "MWh";
+    inline static constexpr std::string_view kDescription = "PSP";
     //! Caption
     static std::string Caption()
     {
-        return "PSP";
+        return std::string(kCaption);
     }
 
     //! Unit
     static std::string Unit()
     {
-        return "MWh";
+        return std::string(kUnit);
     }
 
     //! The short description of the variable
     static std::string Description()
     {
-        return "PSP";
+        return std::string(kDescription);
     }
 
     //! The expecte results
@@ -243,8 +246,8 @@ public:
         if (AncestorType::isPrinted[0])
         {
             // Write the data for the current year
-            results.variableCaption = VCardType::Caption();
-            results.variableUnit = VCardType::Unit();
+            results.variableCaption = VCardType::kCaption.data();
+            results.variableUnit = std::string(VCardType::kUnit);
             pValuesForTheCurrentYear[numSpace]
               .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }

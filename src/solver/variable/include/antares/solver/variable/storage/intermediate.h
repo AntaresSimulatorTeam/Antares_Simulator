@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __SOLVER_VARIABLE_STORAGE_INTERMEDIATE_H__
 #define __SOLVER_VARIABLE_STORAGE_INTERMEDIATE_H__
 
@@ -26,6 +26,7 @@
 
 #include <antares/study/study.h>
 #include "antares/antares/constants.h"
+#include "antares/solver/variable/commons/hour_utils.h"
 
 #include "../categories.h"
 #include "../surveyresults.h"
@@ -69,40 +70,40 @@ public:
     /*!
     ** \brief Compute statistics for the current year
     */
-    void computeStatisticsForTheCurrentYear();
+    void computeStatisticsForTheCurrentYear() noexcept;
 
     /*!
     ** \brief Compute statistics for the current year
     */
-    void computeStatisticsOrForTheCurrentYear();
+    void computeStatisticsOrForTheCurrentYear() noexcept;
 
     /*!
     ** \brief Compute statistics for the current year
     */
-    void computeStatisticsAdequacyForTheCurrentYear();
+    void computeStatisticsAdequacyForTheCurrentYear() noexcept;
 
     // Compute averages for the current year from a particular time division results :
     // For instances :
     // - compute averages daily to yearly, from hourly results
     // - compute averages monthly to yearly, from weekly results
-    void computeAveragesForCurrentYearFromHourlyResults();
-    void computeAveragesForCurrentYearFromDailyResults();
-    void computeAveragesForCurrentYearFromWeeklyResults();
+    void computeAveragesForCurrentYearFromHourlyResults() noexcept;
+    void computeAveragesForCurrentYearFromDailyResults() noexcept;
+    void computeAveragesForCurrentYearFromWeeklyResults() noexcept;
 
     /*!
     ** \brief Compute probabilities for the current year
     */
-    void computeProbabilitiesForTheCurrentYear();
+    void computeProbabilitiesForTheCurrentYear() noexcept;
 
     /*!
     ** \brief Make another calculations when values are related to a price
     */
-    void adjustValuesWhenRelatedToAPrice();
+    void adjustValuesWhenRelatedToAPrice() noexcept;
 
     /*!
     ** \brief Make another calculations when values are related to a price
     */
-    void adjustValuesAdequacyWhenRelatedToAPrice();
+    void adjustValuesAdequacyWhenRelatedToAPrice() noexcept;
 
     //! \name User reports
     //@{

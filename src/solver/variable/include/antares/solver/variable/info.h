@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __SOLVER_VARIABLE_INFO_H__
 #define __SOLVER_VARIABLE_INFO_H__
 
@@ -25,6 +25,7 @@
 
 #include "antares/solver/variable/surveyresults.h"
 #include "antares/study/fwd.h"
+#include "antares/solver/variable/commons/hour_utils.h"
 
 namespace Antares
 {
@@ -75,10 +76,7 @@ struct VariableAccessor
         for (uint i = 0; i != ColumnCountT; ++i)
         {
             Antares::Memory::Stored<double>::ReturnType array = intermediateValues[i].hour;
-            for (uint y = 0; y != HOURS_PER_YEAR; ++y)
-            {
-                array[y] *= v;
-            }
+            Util::apply_over_hours(array, [v](double& val) noexcept { val *= v; });
         }
     }
 
@@ -88,10 +86,7 @@ struct VariableAccessor
         for (uint i = 0; i != ColumnCountT; ++i)
         {
             Antares::Memory::Stored<double>::ReturnType array = intermediateValues[i].hour;
-            for (uint y = 0; y != HOURS_PER_YEAR; ++y)
-            {
-                array[y] = std::abs(array[y]) > 0. ? 1. : 0.;
-            }
+            Util::apply_over_hours(array, [](double& val) noexcept { val = (std::abs(val) > 0.) ? 1. : 0.; });
         }
     }
 
@@ -101,10 +96,7 @@ struct VariableAccessor
         for (uint i = 0; i != ColumnCountT; ++i)
         {
             Antares::Memory::Stored<double>::ReturnType array = intermediateValues[i].hour;
-            for (uint y = 0; y != HOURS_PER_YEAR; ++y)
-            {
-                array[y] = std::abs(array[y]) > 0. ? 100. : 0.;
-            }
+            Util::apply_over_hours(array, [](double& val) noexcept { val = (std::abs(val) > 0.) ? 100. : 0.; });
         }
     }
 
@@ -279,10 +271,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         for (typename Type::const_iterator i = intermediateValues.begin(); i != end; ++i)
         {
             array = (*i).hour;
-            for (uint y = 0; y != HOURS_PER_YEAR; ++y)
-            {
-                array[y] *= v;
-            }
+            Util::apply_over_hours(array, [v](double& val) noexcept { val *= v; });
         }
     }
 
@@ -294,10 +283,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         for (typename Type::const_iterator i = intermediateValues.begin(); i != end; ++i)
         {
             array = (*i).hour;
-            for (uint y = 0; y != HOURS_PER_YEAR; ++y)
-            {
-                array[y] = std::abs(array[y]) > 0. ? 1. : 0.;
-            }
+            Util::apply_over_hours(array, [](double& val) noexcept { val = (std::abs(val) > 0.) ? 1. : 0.; });
         }
     }
 
@@ -309,10 +295,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         for (typename Type::const_iterator i = intermediateValues.begin(); i != end; ++i)
         {
             array = (*i).hour;
-            for (uint y = 0; y != HOURS_PER_YEAR; ++y)
-            {
-                array[y] = std::abs(array[y]) > 0. ? 100. : 0.;
-            }
+            Util::apply_over_hours(array, [](double& val) noexcept { val = (std::abs(val) > 0.) ? 100. : 0.; });
         }
     }
 
