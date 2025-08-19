@@ -110,7 +110,8 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
     parser->add(options.solverOptions.linearSolver,
                 ' ',
                 "linear-solver",
-                "Solver used for linear optimizations during simulation. Use --list-solvers to get the avaible solver list");
+                "Solver used for linear optimizations during simulation. Use --list-solvers to get "
+                "the avaible solver list");
 
     //--solver
     parser->add(options.solverOptions.linearSolver,
@@ -160,11 +161,11 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
                     "Use basis of first optimization in second optimization");
 
     //--quadratic-solver
-    parser->add(
-      options.solverOptions.quadraticSolver,
-      ' ',
-      "quadratic-solver",
-      "Solver used for quadratic optimizations during simulation. Use --list-solvers to get the avaible solver list");
+    parser->add(options.solverOptions.quadraticSolver,
+                ' ',
+                "quadratic-solver",
+                "Solver used for quadratic optimizations during simulation. Use --list-solvers to "
+                "get the avaible solver list");
 
     //--quadratic-solver-param
     parser->add(options.solverOptions.quadraticSolverParameters,
