@@ -70,6 +70,11 @@ std::list<std::string> availableLinearSolversList();
 std::list<std::string> availableQuadraticSolversList();
 
 /*!
+ *  \brief Check if a solver is available
+ */
+bool isSolverAvailable(const std::string& solverName);
+
+/*!
  *  \brief Create a MPSolver with correct linear or mixed variant
  *
  *  \return MPSolver
