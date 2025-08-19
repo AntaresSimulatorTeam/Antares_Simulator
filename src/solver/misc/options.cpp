@@ -110,8 +110,7 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
     parser->add(options.solverOptions.linearSolver,
                 ' ',
                 "linear-solver",
-                "Solver used for linear optimizations during simulation. Available solver list : "
-                  + toString(availableLinearSolversList()));
+                "Solver used for linear optimizations during simulation. Use --list-solvers to get the avaible solver list");
 
     //--solver
     parser->add(options.solverOptions.linearSolver,
@@ -165,8 +164,7 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
       options.solverOptions.quadraticSolver,
       ' ',
       "quadratic-solver",
-      "Solver used for quadratic optimizations during simulation. Available solver list : "
-        + toString(availableQuadraticSolversList()));
+      "Solver used for quadratic optimizations during simulation. Use --list-solvers to get the avaible solver list");
 
     //--quadratic-solver-param
     parser->add(options.solverOptions.quadraticSolverParameters,
