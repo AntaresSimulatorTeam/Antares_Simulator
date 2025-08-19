@@ -86,11 +86,7 @@ RemixHydroPostProcessCmd::RemixHydroPostProcessCmd(PROBLEME_HEBDO* problemeHebdo
 void RemixHydroPostProcessCmd::execute(const optRuntimeData& opt_runtime_data)
 {
     unsigned int hourInYear = opt_runtime_data.hourInTheYear;
-    RemixHydroForAllAreas(area_list_,
-                          *problemeHebdo_,
-                          params_,
-                          numSpace_,
-                          hourInYear);
+    RemixHydroForAllAreas(area_list_, *problemeHebdo_, params_, numSpace_, hourInYear);
 }
 
 // ----------------------------------

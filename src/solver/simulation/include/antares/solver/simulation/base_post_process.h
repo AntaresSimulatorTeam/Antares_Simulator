@@ -70,13 +70,12 @@ public:
     // gp : to the create(...) method, and to underlying calls to constructors.
     // gp : In case we need new data for a new post process, we would not have to change
     // gp : the constructors' signatures of the post process list classes.
-    static std::unique_ptr<interfacePostProcessList> create(
-      AdqPatchParams& adqPatchParams,
-      PROBLEME_HEBDO* problemeHebdo,
-      uint numSpace,
-      AreaList& areas,
-      const Data::Parameters& params,
-      Calendar& calendar);
+    static std::unique_ptr<interfacePostProcessList> create(AdqPatchParams& adqPatchParams,
+                                                            PROBLEME_HEBDO* problemeHebdo,
+                                                            uint numSpace,
+                                                            AreaList& areas,
+                                                            const Data::Parameters& params,
+                                                            Calendar& calendar);
     void runAll(const optRuntimeData& opt_runtime_data);
 
 protected:
