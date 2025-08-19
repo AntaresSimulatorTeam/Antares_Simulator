@@ -19,6 +19,7 @@ var classAntares_1_1Data_1_1Study =
     [ "getModelerSystem", "classAntares_1_1Data_1_1Study.html#a6c8623477ec18c77c3c27fb2d7eb9a95", null ],
     [ "getNumberOfCores", "classAntares_1_1Data_1_1Study.html#aa8ddbddbd409bc9aa2a76b0e92f5dff2", null ],
     [ "getNumberOfCoresPerMode", "classAntares_1_1Data_1_1Study.html#a3ade1389d5a8c512a7d91c1e2d4d7de9", null ],
+    [ "getScenarioGroupRepository", "classAntares_1_1Data_1_1Study.html#ac5ba7efbcd5833780b266f7b5e5bc52d", null ],
     [ "importLogsToOutputFolder", "classAntares_1_1Data_1_1Study.html#a43e70c63ab3f91b02a55a9a24a81c4a6", null ],
     [ "importTimeseriesIntoInput", "classAntares_1_1Data_1_1Study.html#aa10e1e043ff44c8042267be05450e29e", null ],
     [ "initializeProgressMeter", "classAntares_1_1Data_1_1Study.html#af5262eae0524c8e0cb695eddadd0c3d7", null ],

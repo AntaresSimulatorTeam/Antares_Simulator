@@ -154,14 +154,14 @@ $(document).ready(function(){initNavTree('RotateIndex_8h_source.html',''); initR
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;                        <span class="keywordtype">int</span> shift,</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;                        <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Antares::Optimisation::LinearProblemApi::FillContext</a>&amp; fillContext)</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;{</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordtype">unsigned</span> rangeSize = fillContext.getNumberOfTimestep();</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordtype">unsigned</span> rangeSize = fillContext.getLocalNumberOfTimeSteps();</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="comment">// Normalize shift within bounds (to prevent negative indexing)</span></div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    shift = (shift % <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(rangeSize) + rangeSize) % <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(rangeSize);</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="comment">// Compute which key&#39;s value should be assigned to `key`</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordflow">return</span> fillContext.getFirstTimeStep()</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;           + (key - fillContext.getFirstTimeStep() + shift) % rangeSize;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordflow">return</span> fillContext.getLocalFirstTimeStep()</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;           + (key - fillContext.getLocalFirstTimeStep() + shift) % rangeSize;</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;}</div>
 <div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Antares::Optimisation::LinearProblemApi::FillContext</a></div><div class="ttdoc">Context for filling linear problem data. Contains temporal information.</div><div class="ttdef"><b>Definition:</b> ILinearProblemData.h:34</div></div>
 </div><!-- fragment --></div><!-- contents -->

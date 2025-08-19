@@ -69,6 +69,7 @@ var structPROBLEME__HEBDO =
     [ "ReserveJMoins1", "structPROBLEME__HEBDO.html#afb056ba04c97a4da0e1d7284b5503cea", null ],
     [ "ResultatsContraintesCouplantes", "structPROBLEME__HEBDO.html#a044b813b23a80d530224c97ea98cbbb6", null ],
     [ "ResultatsHoraires", "structPROBLEME__HEBDO.html#a942670b312b62c76caf1ae7b20932ded", null ],
+    [ "scenarioGroupRepository", "structPROBLEME__HEBDO.html#ac46a6946f1eb667969d5c4d23534084d", null ],
     [ "ShortTermStorage", "structPROBLEME__HEBDO.html#a21c9a1868202d66fb14975f0fcf8c59e", null ],
     [ "SoldeMoyenHoraire", "structPROBLEME__HEBDO.html#a85edb54aeb2aa706a159ea2296d239b9", null ],
     [ "timeMeasure", "structPROBLEME__HEBDO.html#a6c856b8bc8967e66aea8ebef29169834", null ],

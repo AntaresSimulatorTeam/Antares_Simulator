@@ -1547,9 +1547,7 @@ var hierarchy =
     [ "Antares::Solver::ScenarioBuilderOwner", "classAntares_1_1Solver_1_1ScenarioBuilderOwner.html", null ],
     [ "ScenarioBuilderRule", "classScenarioBuilderRule.html", null ],
     [ "Antares::ScenarioGroupParser", "classAntares_1_1ScenarioGroupParser.html", null ],
-    [ "Antares::Optimisation::ScenarioGroupRepository", "classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html", [
-      [ "EmptyScenarioGroupRepository", "classEmptyScenarioGroupRepository.html", null ]
-    ] ],
+    [ "Antares::Optimisation::ScenarioGroupRepository", "classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html", null ],
     [ "SearchToken", "classSearchToken.html", null ],
     [ "Antares::IniFile::Section", "classAntares_1_1IniFile_1_1Section.html", null ],
     [ "Antares::Component::Datagrid::SelectionRect", "classAntares_1_1Component_1_1Datagrid_1_1SelectionRect.html", null ],

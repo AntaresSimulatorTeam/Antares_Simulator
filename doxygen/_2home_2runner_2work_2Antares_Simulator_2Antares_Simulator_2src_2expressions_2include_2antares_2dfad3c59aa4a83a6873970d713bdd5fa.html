@@ -167,14 +167,14 @@ $(document).ready(function(){initNavTree('_2home_2runner_2work_2Antares_Simulato
 <div class="line">                        <span class="keywordtype">int</span> shift,</div>
 <div class="line">                        <span class="keyword">const</span> <a name="_a0"></a><a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Antares::Optimisation::LinearProblemApi::FillContext</a>&amp; fillContext)</div>
 <div class="line">{</div>
-<div class="line">    <span class="keywordtype">unsigned</span> rangeSize = fillContext.getNumberOfTimestep();</div>
+<div class="line">    <span class="keywordtype">unsigned</span> rangeSize = fillContext.getLocalNumberOfTimeSteps();</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Normalize shift within bounds (to prevent negative indexing)</span></div>
 <div class="line">    shift = (shift % <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(rangeSize) + rangeSize) % <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(rangeSize);</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Compute which key&#39;s value should be assigned to `key`</span></div>
-<div class="line">    <span class="keywordflow">return</span> fillContext.getFirstTimeStep()</div>
-<div class="line">           + (key - fillContext.getFirstTimeStep() + shift) % rangeSize;</div>
+<div class="line">    <span class="keywordflow">return</span> fillContext.getLocalFirstTimeStep()</div>
+<div class="line">           + (key - fillContext.getLocalFirstTimeStep() + shift) % rangeSize;</div>
 <div class="line">}</div>
 <div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Antares::Optimisation::LinearProblemApi::FillContext</a></div><div class="ttdoc">Context for filling linear problem data. Contains temporal information.</div><div class="ttdef"><b>Definition:</b> ILinearProblemData.h:34</div></div>
 </div><!-- fragment --> </div><!-- contents -->

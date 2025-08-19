@@ -41,7 +41,7 @@ var namespaceAntares_1_1Optimization =
     [ "STSNettingSum", "namespaceAntares_1_1Optimization.html#a92ecfd5cfe8111fcc5761687e57227fa", null ],
     [ "STSWithdrawalSum", "namespaceAntares_1_1Optimization.html#aac13d5895b888127d4d62045556476ba", null ],
     [ "add_maps", "namespaceAntares_1_1Optimization.html#a4035de46da0ea227f71f19817ff0e88e", null ],
-    [ "BinaryOpLinearExpression", "namespaceAntares_1_1Optimization.html#ad1882deb11352b01b4acb8b3bcc263b0", null ],
+    [ "BinaryOpLinearExpression", "namespaceAntares_1_1Optimization.html#a1a5dca99337537968ed197d7c4d838ac", null ],
     [ "format_as", "namespaceAntares_1_1Optimization.html#a42bbf89c2f89bc518949ad86f6818be4", null ],
     [ "greaterValue", "namespaceAntares_1_1Optimization.html#afca59b8c35ac2975defa738d1098f969", null ],
     [ "Helper", "namespaceAntares_1_1Optimization.html#a9957d3cc982e75341f07ae9e56c1e0e5", null ],
