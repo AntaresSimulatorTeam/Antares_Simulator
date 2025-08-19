@@ -62,7 +62,7 @@ struct LinearProblemBuildingFixture
 {
     std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Model> models;
     Antares::Expressions::Registry<Antares::Expressions::Nodes::Node> nodes;
-    std::vector<Antares::ModelerStudy::SystemModel::Component> components;
+    std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component> components;
     std::unique_ptr<Antares::Optimisation::LinearProblemApi::ILinearProblem> pb;
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData dummy_data_;
 

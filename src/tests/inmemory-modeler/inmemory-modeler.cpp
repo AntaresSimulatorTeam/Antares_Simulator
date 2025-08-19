@@ -48,7 +48,7 @@ void LinearProblemBuildingFixture::buildLinearProblem(
     std::vector<Antares::Optimisation::LinearProblemApi::LinearProblemFiller*> fillers_ptr;
     // All LP variables coordinates (component id, variable id, scenario, time step)
     Antares::Optimization::VariableDictionary variableDictionary;
-    for (auto& component: components)
+    for (auto& component: components | std::views::values)
     {
         auto cf = std::make_unique<Antares::Optimization::ComponentFiller>(component,
                                                                            variableDictionary);
@@ -90,7 +90,7 @@ void LinearProblemBuildingFixture::createComponent(
                        .withScenarioGroupId("scenario_group")
                        .withParameterValues(move(parameterValues))
                        .build();
-    components.push_back(std::move(component));
+    components.emplace(component.Id(), std::move(component));
 }
 
 Antares::Expressions::Nodes::Node* LinearProblemBuildingFixture::literal(double value)
