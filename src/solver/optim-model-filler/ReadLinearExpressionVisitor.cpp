@@ -52,15 +52,13 @@ std::string ReadLinearExpressionVisitor::name() const
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const SumNode* node)
 {
-    auto operands = node->getOperands();
-    return std::accumulate(std::begin(operands),
-                           std::end(operands),
-                           TimeDependentLinearExpression(fillContext_),
-                           [this](TimeDependentLinearExpression&& sum, Node* operand)
-                           {
-                               sum += dispatch(operand);
-                               return std::move(sum);
-                           });
+    const auto& operands = node->getOperands();
+    TimeDependentLinearExpression ret(fillContext_);
+    for (auto* operand: operands)
+    {
+        ret += dispatch(operand);
+    }
+    return ret;
 }
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const SubtractionNode* node)
@@ -113,8 +111,8 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const VariableN
     // only dependent
     LinearExpressionMap linearExpressions;
 
-    for (unsigned int timeStep = fillContext_.getFirstTimeStep();
-         timeStep <= fillContext_.getLastTimeStep();
+    for (unsigned int timeStep = fillContext_.getLocalFirstTimeStep();
+         timeStep <= fillContext_.getLocalLastTimeStep();
          ++timeStep)
     {
         linearExpressions[timeStep] = LinearExpression(0,
@@ -125,7 +123,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const VariableN
                                                                  timeStep),
                                                          1}});
     }
-    return TimeDependentLinearExpression(linearExpressions);
+    return TimeDependentLinearExpression(fillContext_, linearExpressions);
 }
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const ParameterNode* node)
@@ -147,17 +145,18 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Parameter
     // only dependent
     LinearExpressionMap linearExpressions;
 
-    for (auto timeStep = fillContext_.getFirstTimeStep();
-         timeStep <= fillContext_.getLastTimeStep();
-         ++timeStep)
+    int idx = 0;
+    for (auto localTimeStep = fillContext_.getLocalFirstTimeStep();
+         localTimeStep <= fillContext_.getLocalLastTimeStep();
+         ++localTimeStep)
     {
-        // TODO: pass year
-        linearExpressions[timeStep] = LinearExpression(evalContext_.getParameterValue(node->value(),
-                                                                                      0,
-                                                                                      timeStep),
-                                                       {});
+        auto globalTimeStep = fillContext_.getGlobalFirstTimeStep() + idx;
+        linearExpressions[localTimeStep] = LinearExpression(
+          evalContext_.getParameterValue(node->value(), fillContext_.getYear(), globalTimeStep),
+          {});
+        idx++;
     }
-    return TimeDependentLinearExpression(linearExpressions);
+    return TimeDependentLinearExpression(fillContext_, linearExpressions);
 }
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const LiteralNode* node)

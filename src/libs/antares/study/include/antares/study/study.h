@@ -636,6 +636,11 @@ public:
         return modelerInput_.dataSeries.get();
     }
 
+    Optimisation::ScenarioGroupRepository* getScenarioGroupRepository()
+    {
+        return &modelerInput_.scenario_group_repository;
+    }
+
 protected:
     //! \name Loading
     //@{

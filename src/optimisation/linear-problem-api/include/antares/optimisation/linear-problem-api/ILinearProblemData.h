@@ -33,26 +33,40 @@ namespace Antares::Optimisation::LinearProblemApi
 class FillContext
 {
 public:
-    FillContext(unsigned first, unsigned last, unsigned year):
-        firstTimeStep(first),
-        lastTimeStep(last),
-        year_{year}
+    FillContext(unsigned localFirstTimeStep,
+                unsigned localLastTimeStep,
+                unsigned globalFirstTimeStep,
+                unsigned globalLastTimeStep,
+                unsigned year):
+        local{localFirstTimeStep, localLastTimeStep},
+        global{globalFirstTimeStep, globalLastTimeStep},
+        year_(year)
     {
     }
 
-    [[nodiscard]] unsigned getFirstTimeStep() const
+    [[nodiscard]] unsigned getLocalFirstTimeStep() const
     {
-        return firstTimeStep;
+        return local.first;
     }
 
-    [[nodiscard]] unsigned getLastTimeStep() const
+    [[nodiscard]] unsigned getLocalLastTimeStep() const
     {
-        return lastTimeStep;
+        return local.last;
     }
 
-    [[nodiscard]] unsigned int getNumberOfTimestep() const
+    [[nodiscard]] unsigned getGlobalFirstTimeStep() const
     {
-        return lastTimeStep - firstTimeStep + 1;
+        return global.first;
+    }
+
+    [[nodiscard]] unsigned getGlobalLastTimeStep() const
+    {
+        return global.last;
+    }
+
+    [[nodiscard]] unsigned int getLocalNumberOfTimeSteps() const
+    {
+        return local.last - local.first + 1;
     }
 
     [[nodiscard]] std::vector<unsigned> getSelectedScenarios() const
@@ -73,8 +87,21 @@ public:
 private:
     std::vector<unsigned> selectedScenario;
 
-    unsigned firstTimeStep = 0;
-    unsigned lastTimeStep = 0;
+    struct LocalTimeInterval
+    {
+        unsigned first = 0; // included
+        unsigned last = 0;  // included
+    };
+
+    struct GlobalTimeInterval
+    {
+        unsigned first = 0; // included
+        unsigned last = 0;  // included
+    };
+
+    LocalTimeInterval local;
+    GlobalTimeInterval global;
+
     unsigned year_ = 0;
 };
 
