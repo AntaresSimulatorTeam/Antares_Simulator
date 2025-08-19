@@ -75,10 +75,8 @@ public:
       PROBLEME_HEBDO* problemeHebdo,
       uint numSpace,
       AreaList& areas,
-      SheddingPolicy sheddingPolicy,
-      SimplexOptimization splxOptimization,
-      Calendar& calendar,
-      const OptimizationOptions& solverOptions);
+      const Data::Parameters& params,
+      Calendar& calendar);
     void runAll(const optRuntimeData& opt_runtime_data);
 
 protected:

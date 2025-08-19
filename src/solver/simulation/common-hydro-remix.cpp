@@ -303,16 +303,15 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
 
 void RemixHydroForAllAreas(const Data::AreaList& areas,
                            PROBLEME_HEBDO& problem,
-                           Data::SheddingPolicy sheddingPolicy,
-                           Data::SimplexOptimization simplexOptimizationRange,
+                           const Data::Parameters& params,
                            uint numSpace,
                            uint hourInYear)
 {
-    if (sheddingPolicy == Data::shpShavePeaks)
+    if (params.shedding.policy == Data::shpShavePeaks)
     {
         bool result = true;
 
-        switch (simplexOptimizationRange)
+        switch (params.simplexOptimizationRange)
         {
         case Data::sorWeek:
             result = Remix<HOURS_IN_WEEK>(areas, problem, numSpace, hourInYear);
@@ -331,7 +330,8 @@ void RemixHydroForAllAreas(const Data::AreaList& areas,
               "Error in simplex optimisation. Check logs for more details.");
         }
     }
-    else if (sheddingPolicy == Data::shpAccurateShavePeaks)
+    else if (params.shedding.policy == Data::shpAccurateShavePeaks
+             && !params.accurateShavePeaksIncludeShortTermStorage)
     {
         try
         {

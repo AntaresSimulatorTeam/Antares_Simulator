@@ -209,8 +209,7 @@ bool Adequacy::year(Progression::Task& progression,
 
                 RemixHydroForAllAreas(study.areas,
                                       currentProblem,
-                                      study.parameters.shedding.policy,
-                                      study.parameters.simplexOptimizationRange,
+                                      study.parameters,
                                       numSpace,
                                       hourInTheYear);
             }

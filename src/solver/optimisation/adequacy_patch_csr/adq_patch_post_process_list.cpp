@@ -29,10 +29,8 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(const AdqPatchParams& adqPatchP
                                                  PROBLEME_HEBDO* problemeHebdo,
                                                  uint numSpace,
                                                  AreaList& areas,
-                                                 SheddingPolicy sheddingPolicy,
-                                                 SimplexOptimization splxOptimization,
-                                                 Calendar& calendar,
-                                                 const OptimizationOptions& solverOptions):
+                                                 const Data::Parameters& params,
+                                                 Calendar& calendar):
     interfacePostProcessList(problemeHebdo, numSpace)
 {
     post_process_list.push_back(
@@ -40,14 +38,13 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(const AdqPatchParams& adqPatchP
     // Here a post process particular to adq patch
     post_process_list.push_back(std::make_unique<RemixHydroPostProcessCmd>(problemeHebdo_,
                                                                            areas,
-                                                                           sheddingPolicy,
-                                                                           splxOptimization,
+                                                                           params,
                                                                            numSpace));
     post_process_list.push_back(std::make_unique<CurtailmentSharingPostProcessCmd>(adqPatchParams,
                                                                                    problemeHebdo_,
                                                                                    areas,
                                                                                    numSpace_,
-                                                                                   solverOptions));
+                                                                                   params.optOptions));
     post_process_list.push_back(
       std::make_unique<DTGnettingAfterCSRcmd>(problemeHebdo_, areas, numSpace));
     post_process_list.push_back(
