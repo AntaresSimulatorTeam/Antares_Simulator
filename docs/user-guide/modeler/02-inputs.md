@@ -494,8 +494,8 @@ Each line consists of the association of a groupe name and Monte-carlo year -ref
 Example:
 
 ~~~
-thermal_group, 1 = 1
-thermal_group, 2 = 5
+thermal_group, 0 = 1
+thermal_group, 1 = 5
 hydro_group, 2 = 7
 ~~~
 
