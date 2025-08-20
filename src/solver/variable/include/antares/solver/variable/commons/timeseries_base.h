@@ -30,13 +30,7 @@
 #include <antares/study/area/area.h>
 #include "antares/solver/variable/variable.h"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace Economy
+namespace Antares::Solver::Variable::Economy
 {
 
 // Base traits for time series variables
@@ -244,7 +238,4 @@ protected:
     unsigned int nbYearsParallel{0};
 };
 
-} // namespace Economy
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::Economy

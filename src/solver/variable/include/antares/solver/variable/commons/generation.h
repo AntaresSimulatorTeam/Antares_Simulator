@@ -31,13 +31,7 @@
 
 #include "timeseries_base.h"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace Economy
+namespace Antares::Solver::Variable::Economy
 {
 
 // Tags for different generation types
@@ -136,7 +130,4 @@ using TimeSeriesValuesSolar = TimeSeriesValuesGenerationImpl<SolarTraits, NextT>
 template<class NextT = Container::EndOfList>
 using TimeSeriesValuesWind = TimeSeriesValuesGenerationImpl<WindTraits, NextT>;
 
-} // namespace Economy
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::Economy

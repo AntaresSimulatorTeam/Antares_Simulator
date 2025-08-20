@@ -24,13 +24,7 @@
 
 #include "timeseries_base.h"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace Economy
+namespace Antares::Solver::Variable::Economy
 {
 
 // Hydro-specific traits
@@ -79,7 +73,4 @@ private:
     std::vector<Matrix<>::ColumnType*> fatalValues;
 };
 
-} // namespace Economy
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::Economy
