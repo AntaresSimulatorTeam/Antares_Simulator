@@ -499,7 +499,7 @@ thermal_group, 1 = 5
 hydro_group, 2 = 7
 ~~~
 
-* For thermal_group the year 1 is associated with the time serie number 1 whereas the year 2 is associated with the time
+* For thermal_group the year 0 is associated with the time serie number 1 whereas the year 1 is associated with the time
   serie number 5.
 * For hydro_group the year 2 is associated with the time serie number 7.
 
