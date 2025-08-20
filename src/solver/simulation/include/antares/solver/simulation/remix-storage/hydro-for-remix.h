@@ -25,7 +25,7 @@ protected:
     const std::vector<double> initialGen_;
     std::vector<double>& unsupE_;
     const std::vector<double>& pmax_;
-    const std::vector<double>& pmin_;
+    const std::vector<double> pmin_;
 };
 
 class HydroForRemixWithLevels: public HydroForRemix
@@ -39,9 +39,9 @@ public:
                             const std::vector<double>& inflows,
                             const std::vector<double>& overflow,
                             const std::vector<double>& pump,
-                            const double& initLevel,
-                            const double& capacity,
-                            const double& pumpEfficiency);
+                            const double initLevel,
+                            const double capacity,
+                            const double pumpEfficiency);
 
     double maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) override;
     void update() override;
@@ -55,8 +55,8 @@ private:
     const std::vector<double>& overflow_;
     const std::vector<double>& pump_;
 
-    const double& initLevel_;
-    const double& capacity_;
-    const double& pumpEff_;
+    const double initLevel_;
+    const double capacity_;
+    const double pumpEff_;
 };
 } // namespace Antares::Solver::Simulation

@@ -255,6 +255,41 @@ std::vector<double> extractDTG_MRG(const Data::Area& area, uint numSpace)
     return dtgMrg;
 }
 
+std::shared_ptr<StorageForRemix> extractHydroForRemix(const Data::Area& area,
+                                                      PROBLEME_HEBDO& problem,
+                                                      uint firstHourOfWeek)
+{
+    auto& weeklyResults = problem.ResultatsHoraires[area.index];
+
+    auto& unsupE = weeklyResults.ValeursHorairesDeDefaillancePositive;
+    auto& hydroGen = weeklyResults.TurbinageHoraire;
+    auto& levels = weeklyResults.niveauxHoraires;
+    const auto& hydroPmax = problem.CaracteristiquesHydrauliques[area.index]
+                              .ContrainteDePmaxHydrauliqueHoraire;
+    const auto hydroPmin = extractHydroPmin(area, problem.year, firstHourOfWeek);
+    const double initLevel = problem.CaracteristiquesHydrauliques[area.index]
+                               .NiveauInitialReservoir;
+    const double capacity = area.hydro.reservoirCapacity;
+    const double efficiency = area.hydro.pumpingEfficiency;
+    const bool reservoirManagement = area.hydro.reservoirManagement;
+    const auto& inflows = problem.CaracteristiquesHydrauliques[area.index].ApportNaturelHoraire;
+    const auto& ovf = weeklyResults.debordementsHoraires;
+    const auto& pump = weeklyResults.PompageHoraire;
+
+    return makeHydroForRemix(hydroGen,
+                             unsupE,
+                             levels,
+                             hydroPmax,
+                             hydroPmin,
+                             inflows,
+                             ovf,
+                             pump,
+                             initLevel,
+                             capacity,
+                             efficiency,
+                             reservoirManagement);
+}
+
 static void RunAccurateShavePeaks(const Data::AreaList& areas,
                                   PROBLEME_HEBDO& problem,
                                   uint numSpace,
@@ -271,34 +306,7 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
           const auto& spillage = weeklyResults.ValeursHorairesDeDefaillanceNegative;
           const auto dtgMrg = extractDTG_MRG(area, numSpace);
 
-          // Data useful to build the remix object associated to hydro storage
-          auto& hydroGen = weeklyResults.TurbinageHoraire;
-          auto& levels = weeklyResults.niveauxHoraires;
-          const auto& hydroPmax = problem.CaracteristiquesHydrauliques[area.index]
-                                    .ContrainteDePmaxHydrauliqueHoraire;
-          const auto hydroPmin = extractHydroPmin(area, problem.year, firstHourOfWeek);
-          const double initLevel = problem.CaracteristiquesHydrauliques[area.index]
-                                     .NiveauInitialReservoir;
-          const double capacity = area.hydro.reservoirCapacity;
-          const double efficiency = area.hydro.pumpingEfficiency;
-          const bool reservoirManagement = area.hydro.reservoirManagement;
-          const auto& inflows = problem.CaracteristiquesHydrauliques[area.index]
-                                  .ApportNaturelHoraire;
-          const auto& ovf = weeklyResults.debordementsHoraires;
-          const auto& pump = weeklyResults.PompageHoraire;
-
-          auto hydroStorage = makeHydroForRemix(hydroGen,
-                                                unsupE,
-                                                levels,
-                                                hydroPmax,
-                                                hydroPmin,
-                                                inflows,
-                                                ovf,
-                                                pump,
-                                                initLevel,
-                                                capacity,
-                                                efficiency,
-                                                reservoirManagement);
+          auto hydroStorage = extractHydroForRemix(area, problem, firstHourOfWeek);
 
           checkInput(load, unsupE, spillage, dtgMrg, hydroStorage->initialGen());
 

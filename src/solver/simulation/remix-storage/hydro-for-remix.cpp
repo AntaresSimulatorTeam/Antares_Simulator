@@ -20,9 +20,9 @@ std::shared_ptr<StorageForRemix> makeHydroForRemix(std::vector<double>& generati
                                                    const std::vector<double>& inflows,
                                                    const std::vector<double>& overflow,
                                                    const std::vector<double>& pump,
-                                                   const double& initLevel,
-                                                   const double& capacity,
-                                                   const double& pumpEfficiency,
+                                                   const double initLevel,
+                                                   const double capacity,
+                                                   const double pumpEfficiency,
                                                    bool reservoirManagement)
 {
     if (!reservoirManagement)
@@ -112,9 +112,9 @@ HydroForRemixWithLevels::HydroForRemixWithLevels(std::vector<double>& generation
                                                  const std::vector<double>& inflows,
                                                  const std::vector<double>& overflow,
                                                  const std::vector<double>& pump,
-                                                 const double& initLevel,
-                                                 const double& capacity,
-                                                 const double& pumpEfficiency):
+                                                 const double initLevel,
+                                                 const double capacity,
+                                                 const double pumpEfficiency):
     HydroForRemix(generation, unsupE, Pmax, Pmin),
     levels_(levels),
     inflows_(inflows),

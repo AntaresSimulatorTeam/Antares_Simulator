@@ -50,6 +50,7 @@ struct InputFixture
     void callRemixStorageAlgorithm()
     {
         Load = TotalGenNoHydro + UnsupE + HydroGen;
+        storagesForRemix.clear();
         storagesForRemix.push_back(createHydroForRemix());
         shavePeaksByRemixingStorageGen(Load, UnsupE, Spillage, DTG_MRG, storagesForRemix);
     }
