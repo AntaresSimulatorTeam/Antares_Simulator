@@ -59,7 +59,7 @@ double TimeSeriesSet::getData(LinearProblemApi::IScenario::TimeSeriesNumber tsNu
     auto tsIndex = tsNumber - 1;
     if (tsIndex > tsSet_.size() - 1)
     {
-        throw RankTooBig(name(), tsNumber);
+        throw RankTooBig(name(), tsNumber, tsSet_.size());
     }
 
     if (hour > height_ - 1)
