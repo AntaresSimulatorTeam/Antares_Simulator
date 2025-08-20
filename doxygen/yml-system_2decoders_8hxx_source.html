@@ -192,7 +192,7 @@ $(document).ready(function(){initNavTree('yml-system_2decoders_8hxx_source.html'
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        }</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        rhs.id = node[<span class="stringliteral">&quot;id&quot;</span>].as&lt;std::string&gt;();</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        rhs.model = node[<span class="stringliteral">&quot;model&quot;</span>].as&lt;std::string&gt;();</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        rhs.scenarioGroup = node[<span class="stringliteral">&quot;scenario-group&quot;</span>].as&lt;std::string&gt;(<span class="stringliteral">&quot;default&quot;</span>);</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        rhs.scenarioGroup = node[<span class="stringliteral">&quot;scenario-group&quot;</span>].as&lt;std::string&gt;(<span class="stringliteral">&quot;&quot;</span>);</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        rhs.parameters = as_fallback_default&lt;</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;          std::vector&lt;Antares::IO::Inputs::YmlSystem::Parameter&gt;&gt;(node[<span class="stringliteral">&quot;parameters&quot;</span>]);</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
