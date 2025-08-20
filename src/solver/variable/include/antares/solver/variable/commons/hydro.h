@@ -20,7 +20,8 @@
 
 /**
  * @file hydro.h* @brief Hydro ROR (Run-of-River) time series variables for hydroelectric power
- * modeling
+ * @file hydro.h
+ * @brief Hydro ROR (Run-of-River) time series variables for hydroelectric power modeling
  *
  * This file implements hydro run-of-river time series variables using the modern
  * time series base framework. Hydro variables represent the electricity generation
