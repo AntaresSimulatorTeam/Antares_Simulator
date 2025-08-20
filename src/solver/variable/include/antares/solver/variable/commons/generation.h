@@ -392,7 +392,7 @@ using TimeSeriesValuesGeneration = TimeSeriesValuesGenerationImpl<GenerationTrai
  * ```cpp
  * // Standalone solar variable
  * TimeSeriesValuesSolar<> solarOnly;
- * * // Chained with other variables
+ * // Chained with other variables
  * TimeSeriesValuesSolar<TimeSeriesValuesWind<>> solarAndWind;
  * ```
  */
