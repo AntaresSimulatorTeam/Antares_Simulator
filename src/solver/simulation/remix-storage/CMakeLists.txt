@@ -8,8 +8,8 @@ target_sources(${local_target}
         PRIVATE
 		${include_dir}/antares/solver/simulation/remix-storage/remix-utils.h
 		${include_dir}/antares/solver/simulation/remix-storage/storage-for-remix-interface.h
-		${include_dir}/antares/solver/simulation/remix-storage/hydro-for-remix.h
-        hydro-for-remix.cpp
+		${include_dir}/antares/solver/simulation/remix-storage/storage-for-remix.h
+        storage-for-remix.cpp
 		${include_dir}/antares/solver/simulation/remix-storage/shave-peaks-by-remix-storage-gen.h
         shave-peaks-by-remix-storage-gen.cpp)
 
