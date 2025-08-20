@@ -12,18 +12,18 @@ const std::string error_msg_start = "Remix hydro input : ";
 namespace Antares::Solver::Simulation
 {
 
-std::shared_ptr<StorageForRemix> makeHydroForRemix(std::vector<double>& generation,
-                                                   std::vector<double>& unsupE,
-                                                   std::vector<double>& levels,
-                                                   const std::vector<double>& Pmax,
-                                                   const std::vector<double>& Pmin,
-                                                   const std::vector<double>& inflows,
-                                                   const std::vector<double>& overflow,
-                                                   const std::vector<double>& pump,
-                                                   const double initLevel,
-                                                   const double capacity,
-                                                   const double pumpEfficiency,
-                                                   bool reservoirManagement)
+std::shared_ptr<IStorageForRemix> makeHydroForRemix(std::vector<double>& generation,
+                                                    std::vector<double>& unsupE,
+                                                    std::vector<double>& levels,
+                                                    const std::vector<double>& Pmax,
+                                                    const std::vector<double>& Pmin,
+                                                    const std::vector<double>& inflows,
+                                                    const std::vector<double>& overflow,
+                                                    const std::vector<double>& pump,
+                                                    const double initLevel,
+                                                    const double capacity,
+                                                    const double pumpEfficiency,
+                                                    bool reservoirManagement)
 {
     if (!reservoirManagement)
     {

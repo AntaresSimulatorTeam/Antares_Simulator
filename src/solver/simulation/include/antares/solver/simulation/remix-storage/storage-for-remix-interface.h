@@ -5,7 +5,7 @@
 
 namespace Antares::Solver::Simulation
 {
-class StorageForRemix
+class IStorageForRemix
 {
 public:
     virtual double maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) = 0;
@@ -17,6 +17,6 @@ private:
     virtual void checkInput(size_t size) = 0;
 };
 
-using listStorageForRemix = std::vector<std::shared_ptr<StorageForRemix>>;
+using listStorageForRemix = std::vector<std::shared_ptr<IStorageForRemix>>;
 
 } // namespace Antares::Solver::Simulation

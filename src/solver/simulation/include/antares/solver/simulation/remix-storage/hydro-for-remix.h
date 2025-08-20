@@ -5,7 +5,7 @@
 namespace Antares::Solver::Simulation
 {
 
-class HydroForRemix: public StorageForRemix
+class HydroForRemix: public IStorageForRemix
 {
 public:
     HydroForRemix(std::vector<double>& generation,
@@ -66,17 +66,17 @@ private:
     const double pumpEff_;
 };
 
-std::shared_ptr<StorageForRemix> makeHydroForRemix(std::vector<double>& generation,
-                                                   std::vector<double>& unsupE,
-                                                   std::vector<double>& levels,
-                                                   const std::vector<double>& Pmax,
-                                                   const std::vector<double>& Pmin,
-                                                   const std::vector<double>& inflows,
-                                                   const std::vector<double>& overflow,
-                                                   const std::vector<double>& pump,
-                                                   const double initLevel,
-                                                   const double capacity,
-                                                   const double pumpEfficiency,
-                                                   bool reservoirManagement);
+std::shared_ptr<IStorageForRemix> makeHydroForRemix(std::vector<double>& generation,
+                                                    std::vector<double>& unsupE,
+                                                    std::vector<double>& levels,
+                                                    const std::vector<double>& Pmax,
+                                                    const std::vector<double>& Pmin,
+                                                    const std::vector<double>& inflows,
+                                                    const std::vector<double>& overflow,
+                                                    const std::vector<double>& pump,
+                                                    const double initLevel,
+                                                    const double capacity,
+                                                    const double pumpEfficiency,
+                                                    bool reservoirManagement);
 
 } // namespace Antares::Solver::Simulation

@@ -27,8 +27,8 @@
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
 #include "antares/solver/simulation/common-eco-adq.h"
-#include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-storage-gen.h"
 #include "antares/solver/simulation/remix-storage/hydro-for-remix.h"
+#include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-storage-gen.h"
 #include "antares/study/simulation.h"
 
 #define EPSILON 1e-6
@@ -251,9 +251,9 @@ std::vector<double> extractDTG_MRG(const Data::Area& area, uint numSpace)
     return {dtgMrg, dtgMrg + HOURS_IN_WEEK};
 }
 
-std::shared_ptr<StorageForRemix> extractHydroForRemix(const Data::Area& area,
-                                                      PROBLEME_HEBDO& problem,
-                                                      uint firstHourOfWeek)
+std::shared_ptr<IStorageForRemix> extractHydroForRemix(const Data::Area& area,
+                                                       PROBLEME_HEBDO& problem,
+                                                       uint firstHourOfWeek)
 {
     auto& weeklyResults = problem.ResultatsHoraires[area.index];
 

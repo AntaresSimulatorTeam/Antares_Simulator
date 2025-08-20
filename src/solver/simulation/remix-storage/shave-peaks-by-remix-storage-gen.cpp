@@ -54,7 +54,7 @@ void checkInput(const std::vector<double>& Load,
 static double makeExchange(const std::set<unsigned>& validHours,
                            std::vector<double>& TotalGen,
                            std::vector<double>& UnsupE,
-                           std::shared_ptr<StorageForRemix>& storage)
+                           std::shared_ptr<IStorageForRemix>& storage)
 {
     double exchange = 0.; // To be returned
     auto totalGenProjection = [&](int h) { return TotalGen[h]; };
