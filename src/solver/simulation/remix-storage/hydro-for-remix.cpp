@@ -137,20 +137,14 @@ double HydroForRemixWithLevels::maxExchange(unsigned hourOfMaxGen, unsigned hour
     unsigned greatestHour = std::max(hourOfMinGen, hourOfMaxGen);
     std::span<double> level_subset(levels_.begin() + smallestHour, levels_.begin() + greatestHour);
 
-    double boundAtMax = std::numeric_limits<double>::max();
-    double boundAtMin = std::numeric_limits<double>::max();
     if (hourOfMinGen < hourOfMaxGen)
     {
-        boundAtMax = capacity_;
-        boundAtMin = *std::ranges::min_element(level_subset);
+        return std::min(bound, *std::ranges::min_element(level_subset));
     }
     else
     {
-        boundAtMax = capacity_ - *std::ranges::max_element(level_subset);
-        boundAtMin = capacity_;
+        return std::min(bound, capacity_ - *std::ranges::max_element(level_subset));
     }
-
-    return std::min({bound, boundAtMax, boundAtMin});
 }
 
 void HydroForRemixWithLevels::checkInput(size_t size)

@@ -25,6 +25,10 @@ protected:
     const std::vector<double> initialGen_;
     std::vector<double>& unsupE_;
     const std::vector<double>& pmax_;
+    // pmin_ is not a const ref to vector because of the way we acquire the related hydro TS
+    // (outside constructor). This requires a deep copy in constructor.
+    // Maybe we should pass to constructor and have here a std::span<cont double> instead,
+    // this would require a very light weight copy
     const std::vector<double> pmin_;
 };
 
