@@ -496,18 +496,19 @@ Example:
 ~~~
 thermal_group, 1 = 1
 thermal_group, 2 = 5
-hydro_group, 3 = 7
+hydro_group, 2 = 7
 ~~~
 
 * For thermal_group the year 1 is associated with the time serie number 1 whereas the year 2 is associated with the time
   serie number 5.
-* For hydro_group the year 3 is associated with the time serie number 7.
+* For hydro_group the year 2 is associated with the time serie number 7.
 
 
 * A _year_ is a integer, starting at 0.
 * A _time serie number_ is a integer, starting at 1, and refers to the column number in the corresponding
   data series file.
 * Group IDs refer to groups defined in the [components](#components) description.
+* All years of the simulation require an association to a time serie number
 
 ## Full examples
 
