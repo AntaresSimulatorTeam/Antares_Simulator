@@ -248,6 +248,13 @@ std::vector<double> extractHydroPmin(const Data::Area& area,
     return hydroPmin;
 }
 
+std::vector<double> extractDTG_MRG(const Data::Area& area, uint numSpace)
+{
+    const auto& dtgMrgArray = area.scratchpad[numSpace].dispatchableGenerationMargin;
+    std::vector<double> dtgMrg(dtgMrgArray, dtgMrgArray + HOURS_IN_WEEK);
+    return dtgMrg;
+}
+
 static void RunAccurateShavePeaks(const Data::AreaList& areas,
                                   PROBLEME_HEBDO& problem,
                                   uint numSpace,
@@ -262,8 +269,7 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
           const auto load = extractLoadForCurrentWeek(area, problem.year, firstHourOfWeek);
           auto& unsupE = weeklyResults.ValeursHorairesDeDefaillancePositive;
           const auto& spillage = weeklyResults.ValeursHorairesDeDefaillanceNegative;
-          const auto& dtgMrgArray = area.scratchpad[numSpace].dispatchableGenerationMargin;
-          const std::vector<double> dtgMrg(dtgMrgArray, dtgMrgArray + HOURS_IN_WEEK);
+          const auto dtgMrg = extractDTG_MRG(area, numSpace);
 
           // Data useful to build the remix object associated to hydro storage
           auto& hydroGen = weeklyResults.TurbinageHoraire;
