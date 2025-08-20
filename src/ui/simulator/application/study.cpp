@@ -402,7 +402,7 @@ protected:
                     }
                 }
             } // not empty - copy files folders
-        }     // save as
+        } // save as
 
         // Save the study (only changes in the most cases)
         study->saveToFolder(pFolder);
