@@ -100,12 +100,10 @@ public:
                 .scenario_group_repository = std::move(scenarioGroupRepository)};
     }
 
-    void setComponents(const std::span<Antares::ModelerStudy::SystemModel::Component>& vector)
+    void setComponents(
+      const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>& compos)
     {
-        for (const auto& component: vector)
-        {
-            components.emplace(component.Id(), copyComponent(component));
-        }
+        components = compos;
     }
 
     std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component> components;
