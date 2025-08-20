@@ -9,8 +9,8 @@ using namespace Antares::Solver::Optimization;
 
 namespace Antares::Check
 {
-static void isQuadraticSolverAvailable(const std::string solverName,
-                                       const std::list<std::string> availableSolversList)
+static void isQuadraticSolverAvailable(const std::string& solverName,
+                                       const std::list<std::string>& availableSolversList)
 {
     bool found = std::ranges::find(availableSolversList, solverName) != availableSolversList.end();
     if (!found)
