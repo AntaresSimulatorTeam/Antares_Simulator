@@ -376,7 +376,7 @@ components:
   "model_id" is the ID of the model as it is defined inside the [model library](#models).
 - **scenario-group** _(only needed if the model has scenario-dependent parameters)_: the ID of the scenario group this
   component belongs to. Must be correctly configured in the [scenario builder](#scenario-builder), and
-  respect [these rules](#rules-for-ids).
+  respect [these rules](#rules-for-ids). Default value is "" (empty string).
 - **parameters** _(not needed if model has no parameters)_: a collection of values for the model's parameters. Note that
   all the parameters of the model should have their values assigned by the component.
     - **id**: the ID of the parameter, as defined by the [model](#models)

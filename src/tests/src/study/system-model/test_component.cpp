@@ -153,15 +153,6 @@ BOOST_AUTO_TEST_CASE(fail_on_no_model)
                           checkMessage("A component can't have an empty model"));
 }
 
-BOOST_AUTO_TEST_CASE(fail_on_no_scenario_group_id)
-{
-    Model model = createModelWithoutParameters();
-    auto component = component_builder.withId("component").withModel(&model);
-    BOOST_CHECK_EXCEPTION(component_builder.build(),
-                          std::invalid_argument,
-                          checkMessage("A component can't have an empty scenario_group_id"));
-}
-
 BOOST_AUTO_TEST_CASE(fail_on_no_params1)
 {
     Model model = createModelWithParameters();

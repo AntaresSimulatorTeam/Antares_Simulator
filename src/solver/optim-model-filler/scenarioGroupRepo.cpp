@@ -47,11 +47,10 @@ public:
 const LinearProblemApi::IScenario& ScenarioGroupRepository::scenario(
   const std::string& groupId) const
 {
-    // A component require a group id. Assuming that the default group id is "default"
-    if (groupId.empty() || groupId == "default")
+    // A component requires a group ID
+    if (groupId.empty())
     {
-        static DefaultScenario defaultScenario(
-          "default");           // Todo: default ou empty for consistency ?
+        static DefaultScenario defaultScenario("");
         return defaultScenario; // Default rank for empty groupId
     }
     if (!scenarioGroups_.contains(groupId))
