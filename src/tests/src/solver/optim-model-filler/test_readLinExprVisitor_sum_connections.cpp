@@ -132,7 +132,7 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_2_components_with_a_port_field,
                                          ConnectionEnd(&generatorComponent, &injection_port));
 
     // Visitor associated to component named "N"
-    ReadLinearExpressionVisitor visitor{evaluationContext, {0, 0, 0}, nodeComponent};
+    ReadLinearExpressionVisitor visitor{evaluationContext, {0, 0, 0, 0, 0}, nodeComponent};
 
     auto timeDependentLinExpr = visitor.dispatch(sum_connections_node);
 
@@ -246,7 +246,7 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_3_components_with_a_port_field,
     nodeComponent.addComponentConnection(portId, ConnectionEnd(&demandComponent, &injection_port));
 
     // Visitor associated to component named "N"
-    ReadLinearExpressionVisitor visitor{evaluationContext, {0, 0, 0}, nodeComponent};
+    ReadLinearExpressionVisitor visitor{evaluationContext, {0, 0, 0, 0, 0}, nodeComponent};
 
     auto timeDependentLinExpr = visitor.dispatch(sum_connections_node);
 

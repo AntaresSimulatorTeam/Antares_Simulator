@@ -33,9 +33,11 @@ namespace Antares::Optimization
 
 TimeDependentLinearExpression::TimeDependentLinearExpression(
   const Optimisation::LinearProblemApi::FillContext& fillContext,
-  const LinearExpression& linearExpression)
+  const LinearExpression& linearExpression):
+    fillContext_(fillContext)
 {
-    for (auto timestep(fillContext.getFirstTimeStep()); timestep <= fillContext.getLastTimeStep();
+    for (auto timestep = fillContext.getLocalFirstTimeStep();
+         timestep <= fillContext.getLocalLastTimeStep();
          ++timestep)
     {
         linearExpressions_.emplace(timestep, linearExpression);
@@ -48,9 +50,11 @@ TimeDependentLinearExpression::TimeDependentLinearExpression(
 {
 }
 
-TimeDependentLinearExpression::TimeDependentLinearExpression(LinearExpressionMap linearExpressions):
-    linearExpressions_(std::move(linearExpressions))
-
+TimeDependentLinearExpression::TimeDependentLinearExpression(
+  const Optimisation::LinearProblemApi::FillContext& fillContext,
+  LinearExpressionMap linearExpressions):
+    linearExpressions_(std::move(linearExpressions)),
+    fillContext_(fillContext)
 {
 }
 
@@ -85,9 +89,11 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator-(
 }
 
 template<typename BinaryOperator>
-TimeDependentLinearExpression BinaryOpLinearExpression(const LinearExpressionMap& left,
-                                                       const LinearExpressionMap& right,
-                                                       BinaryOperator op)
+TimeDependentLinearExpression BinaryOpLinearExpression(
+  const LinearExpressionMap& left,
+  const LinearExpressionMap& right,
+  BinaryOperator op,
+  const Optimisation::LinearProblemApi::FillContext& fillContext)
 {
     auto result(left);
     for (const auto& [timeStep, other_linear_expression]: right)
@@ -101,7 +107,7 @@ TimeDependentLinearExpression BinaryOpLinearExpression(const LinearExpressionMap
             it->second = op(it->second, other_linear_expression);
         }
     }
-    return TimeDependentLinearExpression(std::move(result));
+    return TimeDependentLinearExpression(fillContext, std::move(result));
 }
 
 TimeDependentLinearExpression TimeDependentLinearExpression::operator*(
@@ -109,7 +115,8 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator*(
 {
     return BinaryOpLinearExpression(GetLinearExpressions(),
                                     other.GetLinearExpressions(),
-                                    std::multiplies<>());
+                                    std::multiplies<>(),
+                                    fillContext_);
 }
 
 TimeDependentLinearExpression TimeDependentLinearExpression::operator/(
@@ -117,7 +124,8 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator/(
 {
     return BinaryOpLinearExpression(GetLinearExpressions(),
                                     other.GetLinearExpressions(),
-                                    std::divides<>());
+                                    std::divides<>(),
+                                    fillContext_);
 }
 
 TimeDependentLinearExpression TimeDependentLinearExpression::operator-() const
@@ -128,7 +136,7 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator-() const
     {
         result.emplace(timeStep, -linearExpression);
     }
-    return TimeDependentLinearExpression(std::move(result));
+    return TimeDependentLinearExpression(fillContext_, std::move(result));
 }
 
 const LinearExpressionMap& TimeDependentLinearExpression::GetLinearExpressions() const
@@ -144,32 +152,25 @@ size_t TimeDependentLinearExpression::getSize() const
 TimeDependentLinearExpression TimeDependentLinearExpression::shiftLinearExpressions(
   int shiftValue) const
 {
-    const Optimisation::LinearProblemApi::FillContext
-      fillContext{linearExpressions_.begin()->first, linearExpressions_.rbegin()->first, 0};
-
     LinearExpressionMap linearExpressions;
     for (const auto& timeStep: linearExpressions_ | std::views::keys)
     {
         linearExpressions.emplace(timeStep,
                                   linearExpressions_.at(
-                                    rotatedIndex(timeStep, shiftValue, fillContext)));
+                                    rotatedIndex(timeStep, shiftValue, fillContext_)));
     }
-    return TimeDependentLinearExpression(std::move(linearExpressions));
+    return TimeDependentLinearExpression(fillContext_, std::move(linearExpressions));
 }
 
 TimeDependentLinearExpression TimeDependentLinearExpression::operator[](int timeStep) const
 {
-    const Optimisation::LinearProblemApi::FillContext
-      fillContext{linearExpressions_.begin()->first, linearExpressions_.rbegin()->first, 0};
-    return TimeDependentLinearExpression(fillContext, linearExpressions_.at(timeStep));
+    return TimeDependentLinearExpression(fillContext_, linearExpressions_.at(timeStep));
 }
 
 TimeDependentLinearExpression TimeDependentLinearExpression::timeSumLinearExpressions(int from,
                                                                                       int to) const
 {
-    const Optimisation::LinearProblemApi::FillContext
-      fillContext{linearExpressions_.begin()->first, linearExpressions_.rbegin()->first, 0};
-    TimeDependentLinearExpression ret(fillContext);
+    TimeDependentLinearExpression ret(fillContext_);
 
     for (auto shift = from; shift <= to; ++shift)
     {
@@ -180,14 +181,12 @@ TimeDependentLinearExpression TimeDependentLinearExpression::timeSumLinearExpres
 
 TimeDependentLinearExpression TimeDependentLinearExpression::allTimeSumLinearExpressions() const
 {
-    const Optimisation::LinearProblemApi::FillContext
-      fillContext{linearExpressions_.begin()->first, linearExpressions_.rbegin()->first, 0};
     LinearExpression sum;
     for (const auto& expr: linearExpressions_ | std::views::values)
     {
         sum += expr;
     }
-    return TimeDependentLinearExpression(fillContext, sum);
+    return TimeDependentLinearExpression(fillContext_, sum);
 }
 
 } // namespace Antares::Optimization

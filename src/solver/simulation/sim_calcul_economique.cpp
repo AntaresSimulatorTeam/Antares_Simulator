@@ -96,6 +96,7 @@ void SIM_InitialisationProblemeHebdo(Study& study,
     // For hybrid studies
     problem.modelerSystem = study.getModelerSystem();
     problem.linear_problem_data_ = study.getModelerData();
+    problem.scenarioGroupRepository = study.getScenarioGroupRepository();
 
     problem.Expansion = (parameters.mode == Data::SimulationMode::Expansion);
 

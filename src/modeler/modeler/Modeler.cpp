@@ -82,7 +82,12 @@ public:
 
         LinearProblemBuilder linear_problem_builder(fillers_ptr);
         // Todo: scenario
-        FillContext time_scenario_ctx = {parameters.firstTimeStep, parameters.lastTimeStep, 0};
+        FillContext time_scenario_ctx = {
+          parameters.firstTimeStep,
+          parameters.lastTimeStep,
+          parameters.firstTimeStep, // global = local, single time block in pure modeler (for now)
+          parameters.lastTimeStep,  // global = local
+          0};
         linear_problem_builder.build(pb, *dataSeries, time_scenario_ctx);
     }
 

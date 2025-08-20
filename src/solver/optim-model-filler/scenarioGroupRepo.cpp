@@ -21,16 +21,20 @@
 
 #include "antares/solver/optim-model-filler/scenarioGroupRepo.h"
 
+#include <boost/algorithm/string.hpp>
+
 namespace Antares::Optimisation
 {
 void ScenarioGroupRepository::addScenario(const std::string& groupId,
                                           std::unique_ptr<LinearProblemApi::IScenario>&& scenario)
 {
-    if (scenarioGroups_.contains(groupId))
+    std::string gId = groupId;
+    boost::to_upper(gId);
+    if (scenarioGroups_.contains(gId))
     {
-        throw AlreadyExists(groupId);
+        throw AlreadyExists(gId);
     }
-    scenarioGroups_[groupId] = std::move(scenario);
+    scenarioGroups_[gId] = std::move(scenario);
 }
 
 class DefaultScenario: public Optimisation::LinearProblemApi::IScenario
@@ -50,13 +54,16 @@ const LinearProblemApi::IScenario& ScenarioGroupRepository::scenario(
     // A component requires a group ID
     if (groupId.empty())
     {
-        static DefaultScenario defaultScenario("");
+        const static DefaultScenario defaultScenario("");
         return defaultScenario; // Default rank for empty groupId
     }
-    if (!scenarioGroups_.contains(groupId))
+
+    std::string gId = groupId;
+    boost::to_upper(gId);
+    if (!scenarioGroups_.contains(gId))
     {
-        throw DoesNotExist(groupId);
+        throw DoesNotExist(gId);
     }
-    return *scenarioGroups_.at(groupId);
+    return *scenarioGroups_.at(gId);
 }
 } // namespace Antares::Optimisation

@@ -77,9 +77,9 @@ BOOST_AUTO_TEST_CASE(ten_timesteps_var_with_literal_bounds_to_filler__problem_co
                                true);
     createComponent("some_model", "some_component");
     constexpr unsigned int last_time_step = 9;
-    FillContext ctx{0, last_time_step, 0};
+    FillContext ctx{0, last_time_step, 0, 0, 0};
     buildLinearProblem(ctx);
-    const auto nb_var = ctx.getNumberOfTimestep(); // = 10
+    const auto nb_var = ctx.getLocalNumberOfTimeSteps(); // = 10
     BOOST_CHECK_EQUAL(pb->variableCount(), nb_var);
     BOOST_CHECK_EQUAL(pb->constraintCount(), 0);
     for (unsigned int i = 0; i < nb_var; i++)
@@ -216,9 +216,9 @@ BOOST_AUTO_TEST_CASE(
     createComponent("m1", "component_1");
     createComponent("m2", "component_2");
     constexpr unsigned int last_time_step = 9;
-    FillContext ctx{0, last_time_step, 0};
+    FillContext ctx{0, last_time_step, 0, last_time_step, 0};
     buildLinearProblem(ctx);
-    const auto nb_var = ctx.getNumberOfTimestep(); // = 10
+    const auto nb_var = ctx.getLocalNumberOfTimeSteps(); // = 10
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 2 * 10);
     for (unsigned i = 0; i < nb_var; i++)
@@ -367,9 +367,9 @@ BOOST_AUTO_TEST_CASE(ct_with_ten_vars__pb_contains_ten_ct)
     constexpr unsigned int last_time_step = 9;
     std::vector<unsigned int> timeSteps(last_time_step + 1);
     std::ranges::generate(timeSteps, [i = 0]() mutable { return i++; });
-    FillContext ctx{0, last_time_step, 0};
+    FillContext ctx{0, last_time_step, 0, last_time_step, 0};
     buildLinearProblem(ctx);
-    const auto nb_var = ctx.getNumberOfTimestep(); // = 10
+    const auto nb_var = ctx.getLocalNumberOfTimeSteps(); // = 10
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 10);
     BOOST_CHECK_EQUAL(pb->constraintCount(), 10);
@@ -435,7 +435,7 @@ BOOST_AUTO_TEST_CASE(ct_with_time_series_variable_bounds)
       {build_context_parameter_with("bounds", "bounds", Visitors::ParameterType::TIMESERIE)});
 
     const vector<unsigned int> timeSteps{1, 2};
-    FillContext ctx{timeSteps.at(0), timeSteps.at(1), 0};
+    FillContext ctx{timeSteps.at(0), timeSteps.at(1), timeSteps.at(0), timeSteps.at(1), 0};
 
     auto bounds_time_series = std::make_unique<TimeSeriesSet>("bounds", 3);
     // setting 3 hours (including h 1 and 2)
@@ -445,7 +445,7 @@ BOOST_AUTO_TEST_CASE(ct_with_time_series_variable_bounds)
 
     std::vector<std::unique_ptr<IScenario>> scenarios;
     buildLinearProblem(ctx, data, scenarios);
-    const auto nb_var = ctx.getNumberOfTimestep(); // = 2
+    const auto nb_var = ctx.getLocalNumberOfTimeSteps(); // = 2
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 2);
     BOOST_CHECK_EQUAL(pb->constraintCount(), 2);
@@ -489,10 +489,10 @@ BOOST_AUTO_TEST_CASE(get_timeseriesNumber_for_given_year)
       "model",
       "componentToto",
       {build_context_parameter_with("bounds", "bounds", Visitors::ParameterType::TIMESERIE)},
-      "groupeName");
+      "GROUPENAME");
 
     const vector<unsigned int> timeSteps{1, 2};
-    FillContext ctx{timeSteps.at(0), timeSteps.at(1), 3};
+    FillContext ctx{timeSteps.at(0), timeSteps.at(1), timeSteps.at(0), timeSteps.at(1), 3};
 
     auto bounds_time_series = std::make_unique<TimeSeriesSet>("bounds", 3);
     // setting 3 hours (including h 1 and 2)
@@ -501,7 +501,7 @@ BOOST_AUTO_TEST_CASE(get_timeseriesNumber_for_given_year)
     bounds_time_series->add({3., 3., 3.});
     bounds_time_series->add({4., 4., 4.});
 
-    auto scenario = std::make_unique<Scenario>("groupeName");
+    auto scenario = std::make_unique<Scenario>("GROUPENAME");
     scenario->setTimeSerieNumber(0, 10);
     scenario->setTimeSerieNumber(1, 11);
     scenario->setTimeSerieNumber(2, 12);
@@ -701,9 +701,9 @@ BOOST_AUTO_TEST_CASE(one_time_dependent_var_with_objective)
     createComponent("model", "componentA", {});
 
     constexpr unsigned int last_time_step = 9;
-    FillContext ctx{0, last_time_step, 0};
+    FillContext ctx{0, last_time_step, 0, last_time_step, 0};
     buildLinearProblem(ctx);
-    const auto nb_var = ctx.getNumberOfTimestep(); // = 10
+    const auto nb_var = ctx.getLocalNumberOfTimeSteps(); // = 10
 
     BOOST_CHECK_EQUAL(pb->variableCount(), nb_var);
     for (unsigned i = 0; i < nb_var; i++)
