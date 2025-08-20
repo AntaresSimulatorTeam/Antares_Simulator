@@ -5,13 +5,13 @@
 namespace Antares::Solver::Simulation
 {
 
-class HydroForRemix: public IStorageForRemix
+class StorageForRemixNoLevels: public IStorageForRemix
 {
 public:
-    HydroForRemix(std::vector<double>& generation,
-                  std::vector<double>& unsupE,
-                  const std::vector<double>& Pmax,
-                  const std::vector<double>& Pmin);
+    StorageForRemixNoLevels(std::vector<double>& generation,
+                            std::vector<double>& unsupE,
+                            const std::vector<double>& Pmax,
+                            const std::vector<double>& Pmin);
 
     double maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) override;
     void update() override;
@@ -32,20 +32,20 @@ protected:
     const std::vector<double> pmin_;
 };
 
-class HydroForRemixWithLevels: public HydroForRemix
+class StorageForRemixWithLevels: public StorageForRemixNoLevels
 {
 public:
-    HydroForRemixWithLevels(std::vector<double>& generation,
-                            std::vector<double>& unsupE,
-                            std::vector<double>& levels,
-                            const std::vector<double>& Pmax,
-                            const std::vector<double>& Pmin,
-                            const std::vector<double>& inflows,
-                            const std::vector<double>& overflow,
-                            const std::vector<double>& pump,
-                            const double initLevel,
-                            const double capacity,
-                            const double pumpEfficiency);
+    StorageForRemixWithLevels(std::vector<double>& generation,
+                              std::vector<double>& unsupE,
+                              std::vector<double>& levels,
+                              const std::vector<double>& Pmax,
+                              const std::vector<double>& Pmin,
+                              const std::vector<double>& inflows,
+                              const std::vector<double>& overflow,
+                              const std::vector<double>& pump,
+                              const double initLevel,
+                              const double capacity,
+                              const double pumpEfficiency);
 
     double maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) override;
     void update() override;

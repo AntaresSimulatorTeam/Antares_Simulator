@@ -35,17 +35,17 @@ struct InputFixture
 
     std::shared_ptr<IStorageForRemix> createHydroForRemix()
     {
-        return std::make_shared<HydroForRemixWithLevels>(HydroGen,
-                                                         UnsupE,
-                                                         levels,
-                                                         HydroPmax,
-                                                         HydroPmin,
-                                                         inflows,
-                                                         ovf,
-                                                         pump,
-                                                         init_level,
-                                                         capacity,
-                                                         pumpEff);
+        return std::make_shared<StorageForRemixWithLevels>(HydroGen,
+                                                           UnsupE,
+                                                           levels,
+                                                           HydroPmax,
+                                                           HydroPmin,
+                                                           inflows,
+                                                           ovf,
+                                                           pump,
+                                                           init_level,
+                                                           capacity,
+                                                           pumpEff);
     }
 
     void callRemixStorageAlgorithm()

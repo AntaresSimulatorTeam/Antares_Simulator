@@ -27,25 +27,25 @@ std::shared_ptr<IStorageForRemix> makeHydroForRemix(std::vector<double>& generat
 {
     if (!reservoirManagement)
     {
-        return std::make_shared<HydroForRemix>(generation, unsupE, Pmax, Pmin);
+        return std::make_shared<StorageForRemixNoLevels>(generation, unsupE, Pmax, Pmin);
     }
-    return std::make_shared<HydroForRemixWithLevels>(generation,
-                                                     unsupE,
-                                                     levels,
-                                                     Pmax,
-                                                     Pmin,
-                                                     inflows,
-                                                     overflow,
-                                                     pump,
-                                                     initLevel,
-                                                     capacity,
-                                                     pumpEfficiency);
+    return std::make_shared<StorageForRemixWithLevels>(generation,
+                                                       unsupE,
+                                                       levels,
+                                                       Pmax,
+                                                       Pmin,
+                                                       inflows,
+                                                       overflow,
+                                                       pump,
+                                                       initLevel,
+                                                       capacity,
+                                                       pumpEfficiency);
 }
 
-HydroForRemix::HydroForRemix(std::vector<double>& generation,
-                             std::vector<double>& unsupE,
-                             const std::vector<double>& Pmax,
-                             const std::vector<double>& Pmin):
+StorageForRemixNoLevels::StorageForRemixNoLevels(std::vector<double>& generation,
+                                                 std::vector<double>& unsupE,
+                                                 const std::vector<double>& Pmax,
+                                                 const std::vector<double>& Pmin):
     generation_(generation),
     initialGen_(generation),
     unsupE_(unsupE),
@@ -55,7 +55,7 @@ HydroForRemix::HydroForRemix(std::vector<double>& generation,
     checkInput(unsupE_.size());
 }
 
-double HydroForRemix::maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen)
+double StorageForRemixNoLevels::maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen)
 {
     // Max slice we can take from hydro generation, at an hour when the total
     // production reaches a max.
@@ -68,7 +68,7 @@ double HydroForRemix::maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen)
     return std::min(boundAtMax, boundAtMin);
 }
 
-void HydroForRemix::checkInput(size_t size)
+void StorageForRemixNoLevels::checkInput(size_t size)
 {
     std::vector<size_t> sizes = {size, generation_.size(), pmin_.size(), pmax_.size()};
 
@@ -90,32 +90,32 @@ void HydroForRemix::checkInput(size_t size)
     }
 }
 
-void HydroForRemix::update()
+void StorageForRemixNoLevels::update()
 {
 }
 
-const std::vector<double>& HydroForRemix::initialGen()
+const std::vector<double>& StorageForRemixNoLevels::initialGen()
 {
     return initialGen_;
 }
 
-std::vector<double>& HydroForRemix::generation()
+std::vector<double>& StorageForRemixNoLevels::generation()
 {
     return generation_;
 }
 
-HydroForRemixWithLevels::HydroForRemixWithLevels(std::vector<double>& generation,
-                                                 std::vector<double>& unsupE,
-                                                 std::vector<double>& levels,
-                                                 const std::vector<double>& Pmax,
-                                                 const std::vector<double>& Pmin,
-                                                 const std::vector<double>& inflows,
-                                                 const std::vector<double>& overflow,
-                                                 const std::vector<double>& pump,
-                                                 const double initLevel,
-                                                 const double capacity,
-                                                 const double pumpEfficiency):
-    HydroForRemix(generation, unsupE, Pmax, Pmin),
+StorageForRemixWithLevels::StorageForRemixWithLevels(std::vector<double>& generation,
+                                                     std::vector<double>& unsupE,
+                                                     std::vector<double>& levels,
+                                                     const std::vector<double>& Pmax,
+                                                     const std::vector<double>& Pmin,
+                                                     const std::vector<double>& inflows,
+                                                     const std::vector<double>& overflow,
+                                                     const std::vector<double>& pump,
+                                                     const double initLevel,
+                                                     const double capacity,
+                                                     const double pumpEfficiency):
+    StorageForRemixNoLevels(generation, unsupE, Pmax, Pmin),
     levels_(levels),
     inflows_(inflows),
     overflow_(overflow),
@@ -130,9 +130,9 @@ HydroForRemixWithLevels::HydroForRemixWithLevels(std::vector<double>& generation
     checkLevels();
 }
 
-double HydroForRemixWithLevels::maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen)
+double StorageForRemixWithLevels::maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen)
 {
-    double bound = HydroForRemix::maxExchange(hourOfMaxGen, hourOfMinGen);
+    double bound = StorageForRemixNoLevels::maxExchange(hourOfMaxGen, hourOfMinGen);
 
     unsigned hour = std::min(hourOfMinGen, hourOfMaxGen);
     unsigned HOUR = std::max(hourOfMinGen, hourOfMaxGen);
@@ -151,9 +151,9 @@ double HydroForRemixWithLevels::maxExchange(unsigned hourOfMaxGen, unsigned hour
     }
 }
 
-void HydroForRemixWithLevels::checkInput(size_t size)
+void StorageForRemixWithLevels::checkInput(size_t size)
 {
-    HydroForRemix::checkInput(size);
+    StorageForRemixNoLevels::checkInput(size);
 
     std::vector<size_t> sizes = {size,
                                  inflows_.size(),
@@ -177,7 +177,7 @@ void HydroForRemixWithLevels::checkInput(size_t size)
     }
 }
 
-void HydroForRemixWithLevels::checkLevels()
+void StorageForRemixWithLevels::checkLevels()
 {
     if (!(levels_ <= ruleCurveUp_ + TOLERANCE) || !(levels_ >= -TOLERANCE))
     {
@@ -186,7 +186,7 @@ void HydroForRemixWithLevels::checkLevels()
     }
 }
 
-void HydroForRemixWithLevels::update()
+void StorageForRemixWithLevels::update()
 {
     levels_[0] = initLevel_ + inflows_[0] - overflow_[0] + pumpEff_ * pump_[0] - generation_[0];
     for (size_t h = 1; h < levels_.size(); ++h)
