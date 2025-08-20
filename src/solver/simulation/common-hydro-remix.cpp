@@ -240,7 +240,6 @@ std::vector<double> extractHydroPmin(const Data::Area& area,
                                      const unsigned int year,
                                      const unsigned int firstHourOfWeek)
 {
-    // area->hydro.series->mingen.timeSeries
     std::vector<double> hydroPmin(HOURS_IN_WEEK, 0.);
     for (unsigned int h = 0; h < HOURS_IN_WEEK; ++h)
     {
@@ -259,8 +258,14 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
       {
           auto& weeklyResults = problem.ResultatsHoraires[area.index];
 
+          // Arguments of remix algorithm that are invariant whatever the storage  
           const auto load = extractLoadForCurrentWeek(area, problem.year, firstHourOfWeek);
           auto& unsupE = weeklyResults.ValeursHorairesDeDefaillancePositive;
+          const auto& spillage = weeklyResults.ValeursHorairesDeDefaillanceNegative;
+          const auto& dtgMrgArray = area.scratchpad[numSpace].dispatchableGenerationMargin;
+          const std::vector<double> dtgMrg(dtgMrgArray, dtgMrgArray + HOURS_IN_WEEK);
+
+          // Specific to hydro storage
           auto& hydroGen = weeklyResults.TurbinageHoraire;
           auto& levels = weeklyResults.niveauxHoraires;
           const auto& hydroPmax = problem.CaracteristiquesHydrauliques[area.index]
@@ -275,10 +280,6 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
                                   .ApportNaturelHoraire;
           const auto& ovf = weeklyResults.debordementsHoraires;
           const auto& pump = weeklyResults.PompageHoraire;
-          const auto& spillage = weeklyResults.ValeursHorairesDeDefaillanceNegative;
-
-          const auto& dtgMrgArray = area.scratchpad[numSpace].dispatchableGenerationMargin;
-          const std::vector<double> dtgMrg(dtgMrgArray, dtgMrgArray + HOURS_IN_WEEK);
 
           auto hydroStorage = makeHydroForRemix(hydroGen,
                                                 unsupE,
