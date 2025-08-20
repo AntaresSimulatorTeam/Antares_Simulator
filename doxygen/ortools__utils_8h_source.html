@@ -183,25 +183,27 @@ $(document).ready(function(){initNavTree('ortools__utils_8h_source.html',''); in
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;std::list&lt;std::string&gt; availableQuadraticSolversList();</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;MPSolver* MPSolverFactory(<span class="keyword">const</span> <span class="keywordtype">bool</span> isMip, <span class="keyword">const</span> std::string&amp; solverName);</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;std::string generateTempPath(<span class="keyword">const</span> std::string&amp; filename);</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="keywordtype">void</span> removeTemporaryFile(<span class="keyword">const</span> std::string&amp; tmpPath);</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
-<div class="line"><a name="l00082"></a><span class="lineno"><a class="line" href="classOrtoolsUtils.html">   82</a></span>&#160;<span class="keyword">class </span><a class="code" href="classOrtoolsUtils.html">OrtoolsUtils</a></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;{</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00085"></a><span class="lineno"><a class="line" href="structOrtoolsUtils_1_1SolverNames.html">   85</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="structOrtoolsUtils_1_1SolverNames.html">SolverNames</a></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    {</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        std::optional&lt;std::string&gt; LPSolverName, MIPSolverName;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    };</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> std::map&lt;std::string, SolverNames&gt; mpSolverMap;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> std::map&lt;std::string, math_opt::SolverType&gt; mathoptSolverMap;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;};</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="keywordtype">bool</span> isLinearSolverAvailable(<span class="keyword">const</span> std::string&amp; solverName);</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;MPSolver* MPSolverFactory(<span class="keyword">const</span> <span class="keywordtype">bool</span> isMip, <span class="keyword">const</span> std::string&amp; solverName);</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;std::string generateTempPath(<span class="keyword">const</span> std::string&amp; filename);</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="keywordtype">void</span> removeTemporaryFile(<span class="keyword">const</span> std::string&amp; tmpPath);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
+<div class="line"><a name="l00087"></a><span class="lineno"><a class="line" href="classOrtoolsUtils.html">   87</a></span>&#160;<span class="keyword">class </span><a class="code" href="classOrtoolsUtils.html">OrtoolsUtils</a></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;{</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00090"></a><span class="lineno"><a class="line" href="structOrtoolsUtils_1_1SolverNames.html">   90</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="structOrtoolsUtils_1_1SolverNames.html">SolverNames</a></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    {</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        std::optional&lt;std::string&gt; LPSolverName, MIPSolverName;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    };</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> std::map&lt;std::string, SolverNames&gt; mpSolverMap;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> std::map&lt;std::string, math_opt::SolverType&gt; mathoptSolverMap;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;};</div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1IResultWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a></div><div class="ttdef"><b>Definition:</b> i_writer.h:34</div></div>
-<div class="ttc" id="aclassOrtoolsUtils_html"><div class="ttname"><a href="classOrtoolsUtils.html">OrtoolsUtils</a></div><div class="ttdef"><b>Definition:</b> ortools_utils.h:83</div></div>
-<div class="ttc" id="astructOrtoolsUtils_1_1SolverNames_html"><div class="ttname"><a href="structOrtoolsUtils_1_1SolverNames.html">OrtoolsUtils::SolverNames</a></div><div class="ttdef"><b>Definition:</b> ortools_utils.h:86</div></div>
+<div class="ttc" id="aclassOrtoolsUtils_html"><div class="ttname"><a href="classOrtoolsUtils.html">OrtoolsUtils</a></div><div class="ttdef"><b>Definition:</b> ortools_utils.h:88</div></div>
+<div class="ttc" id="astructOrtoolsUtils_1_1SolverNames_html"><div class="ttname"><a href="structOrtoolsUtils_1_1SolverNames.html">OrtoolsUtils::SolverNames</a></div><div class="ttdef"><b>Definition:</b> ortools_utils.h:91</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
