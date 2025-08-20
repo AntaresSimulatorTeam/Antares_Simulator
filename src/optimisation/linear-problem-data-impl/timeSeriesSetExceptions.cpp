@@ -43,7 +43,7 @@ TimeSeriesSet::Empty::Empty(const std::string& name):
 
 TimeSeriesSet::RankTooBig::RankTooBig(const std::string& name, unsigned rank, unsigned tsSetSize):
     std::invalid_argument(
-      fmt::format("TS set '{}' : TS number {} exceeds TS set's number of time series ({})",
+      fmt::format("TS set '{}' : TS number {} exceeds TS set's number of columns ({})",
                   name,
                   rank,
                   tsSetSize))
