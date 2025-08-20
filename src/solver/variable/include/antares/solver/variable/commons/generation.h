@@ -142,7 +142,8 @@ struct SolarTraits
  * * Defines the specific characteristics of wind generation variables:
  * - Caption: "WIND" (as displayed in outputs)
  * - Description: Descriptive text for documentation* - Area Member: Points to Data::Area::wind for
- * data access
+ * - Description: Descriptive text for documentation
+ * - Area Member: Points to Data::Area::wind for data access
  * * ## Data Access:
  * The areaMember pointer allows type-safe access to the correct area data:
  * ```cpp
