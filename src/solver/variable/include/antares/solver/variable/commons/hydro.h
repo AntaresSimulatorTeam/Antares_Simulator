@@ -19,7 +19,8 @@
  */
 
 /**
- * @file hydro.h* @brief Hydro ROR (Run-of-River) time series variables for hydroelectric power modeling
+ * @file hydro.h* @brief Hydro ROR (Run-of-River) time series variables for hydroelectric power
+ * modeling
  *
  * This file implements hydro run-of-river time series variables using the modern
  * time series base framework. Hydro variables represent the electricity generation
@@ -89,7 +90,7 @@ struct HydroTraits
 {
     /// Display name for hydro ROR in outputs and GUI
     inline static constexpr std::string_view kCaption = "H. ROR";
- /// Descriptive text for hydro generation time series
+    /// Descriptive text for hydro generation time series
     inline static constexpr std::string_view kDescription = "Hydro generation, thoughout all MC "
                                                             "years";
 };
@@ -253,10 +254,10 @@ public:
     {
         // Access the run-of-river hydro time series data
         auto& ror = BaseType::areaPtr->hydro.series->ror;
- // Determine which time series to use for this simulation year
+        // Determine which time series to use for this simulation year
         // This allows different hydrological scenarios across Monte Carlo years
         const unsigned int nbchro = ror.getSeriesIndex(year);
- // Cache pointer to the selected time series for efficient hourly access
+        // Cache pointer to the selected time series for efficient hourly access
         // This avoids repeated index calculations during hourly processing
         fatalValues[space] = &(ror.timeSeries.entry[nbchro]);
     }
@@ -319,7 +320,7 @@ public:
 private:
     /// @name Private Members
     /// @{
- /**
+    /**
      * @brief Cached pointers to time series data for each parallel space
      *     * Stores pointers to the selected time series for each parallel execution
      * space. This modern C++ approach using std::vector replaces the previous
