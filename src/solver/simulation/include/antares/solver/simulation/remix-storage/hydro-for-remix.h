@@ -59,8 +59,10 @@ private:
     const std::vector<double>& overflow_;
     const std::vector<double>& pump_;
 
+    const std::vector<double> ruleCurveLow_;
+    const std::vector<double> ruleCurveUp_;
+
     const double initLevel_;
-    const double capacity_;
     const double pumpEff_;
 };
 } // namespace Antares::Solver::Simulation

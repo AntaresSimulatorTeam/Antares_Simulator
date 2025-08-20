@@ -121,8 +121,9 @@ HydroForRemixWithLevels::HydroForRemixWithLevels(std::vector<double>& generation
     overflow_(overflow),
     pump_(pump),
     initLevel_(initLevel),
-    capacity_(capacity),
-    pumpEff_(pumpEfficiency)
+    pumpEff_(pumpEfficiency),
+    ruleCurveLow_(unsupE_.size(), 0.),
+    ruleCurveUp_(unsupE_.size(), capacity)
 {
     checkInput(unsupE_.size());
     update();
@@ -133,17 +134,20 @@ double HydroForRemixWithLevels::maxExchange(unsigned hourOfMaxGen, unsigned hour
 {
     double bound = HydroForRemix::maxExchange(hourOfMaxGen, hourOfMinGen);
 
-    unsigned smallestHour = std::min(hourOfMinGen, hourOfMaxGen);
-    unsigned greatestHour = std::max(hourOfMinGen, hourOfMaxGen);
-    std::span<double> level_subset(levels_.begin() + smallestHour, levels_.begin() + greatestHour);
+    unsigned hour = std::min(hourOfMinGen, hourOfMaxGen);
+    unsigned HOUR = std::max(hourOfMinGen, hourOfMaxGen);
 
     if (hourOfMinGen < hourOfMaxGen)
     {
-        return std::min(bound, *std::ranges::min_element(level_subset));
+        auto levels_lowCurve = levels_ - ruleCurveLow_;
+        std::span<double> subset(levels_lowCurve.begin() + hour, levels_lowCurve.begin() + HOUR);
+        return std::min(bound, *std::ranges::min_element(subset));
     }
     else
     {
-        return std::min(bound, capacity_ - *std::ranges::max_element(level_subset));
+        auto upCurve_levels = ruleCurveUp_ - levels_;
+        std::span<double> subset(upCurve_levels.begin() + hour, upCurve_levels.begin() + HOUR);
+        return std::min(bound, *std::ranges::min_element(subset));
     }
 }
 
@@ -167,7 +171,7 @@ void HydroForRemixWithLevels::checkInput(size_t size)
         throw std::invalid_argument(error_msg_start + "all arrays of sizes 0");
     }
 
-    if (initLevel_ >= capacity_ + TOLERANCE)
+    if (ruleCurveUp_ + TOLERANCE <= initLevel_)
     {
         throw std::invalid_argument(error_msg_start + "initial level > reservoir capacity");
     }
@@ -175,7 +179,7 @@ void HydroForRemixWithLevels::checkInput(size_t size)
 
 void HydroForRemixWithLevels::checkLevels()
 {
-    if (!(levels_ <= capacity_ + TOLERANCE) || !(levels_ >= -TOLERANCE))
+    if (!(levels_ <= ruleCurveUp_ + TOLERANCE) || !(levels_ >= -TOLERANCE))
     {
         throw std::invalid_argument(error_msg_start
                                     + "levels computed from input don't respect reservoir bounds");

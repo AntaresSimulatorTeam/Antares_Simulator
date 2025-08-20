@@ -334,7 +334,7 @@ BOOST_FIXTURE_TEST_CASE(lowering_capacity_too_low_leads_to_suboptimal_solution_f
     init_level = 100.;
 
     // HydroGen and inflows lead to have :
-    // input_levels = {105, 120, 125, 140, 145, 140, 125, 120, 105,100}
+    // input_levels = {105, 120, 125, 140, 145, 140, 125, 120, 105, 100}
     // Note sup(input_levels) = 145
 
     // Case 1 : capacity relaxed (infinite by default) ==> leads to optimal solution (HydroGen is
