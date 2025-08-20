@@ -66,17 +66,17 @@ struct LinearProblemBuildingFixture
     std::unique_ptr<Antares::Optimisation::LinearProblemApi::ILinearProblem> pb;
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData dummy_data_;
 
-    void createModel(std::string modelId,
-                     std::vector<std::string> parameterIds,
-                     std::vector<VariableData> variablesData,
-                     std::vector<ConstraintData> constraintsData,
+    void createModel(const std::string& modelId,
+                     const std::vector<std::string>& parameterIds,
+                     const std::vector<VariableData>& variablesData,
+                     const std::vector<ConstraintData>& constraintsData,
                      Antares::Expressions::Nodes::Node* objective = nullptr);
 
     void createModelWithSystemModelParameter(
-      std::string modelId,
+      const std::string& modelId,
       std::vector<Antares::ModelerStudy::SystemModel::Parameter>,
-      std::vector<VariableData> variablesData,
-      std::vector<ConstraintData> constraintsData,
+      const std::vector<VariableData>& variablesData,
+      const std::vector<ConstraintData>& constraintsData,
       Antares::Expressions::Nodes::Node* objective = nullptr);
 
     void createModelWithOneFloatVar(const std::string& modelId,
@@ -92,7 +92,8 @@ struct LinearProblemBuildingFixture
       const std::string& modelId,
       const std::string& componentId,
       std::map<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue> parameterValues
-      = {});
+      = {},
+      std::string scenarioGroupId = "default");
 
     Antares::Expressions::Nodes::Node* literal(double value);
 
@@ -113,7 +114,8 @@ struct LinearProblemBuildingFixture
 
     void buildLinearProblem(
       Antares::Optimisation::LinearProblemApi::FillContext& time_scenario_ctx,
-      Antares::Optimisation::LinearProblemDataImpl::LinearProblemData& dummy_data);
+      Antares::Optimisation::LinearProblemDataImpl::LinearProblemData& dummy_data,
+      std::vector<std::unique_ptr<Antares::Optimisation::LinearProblemApi::IScenario>>& scenarios);
 
     void buildLinearProblem(
       Antares::Optimisation::LinearProblemApi::FillContext& time_scenario_ctx);

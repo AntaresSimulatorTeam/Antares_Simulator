@@ -441,14 +441,19 @@ BOOST_AUTO_TEST_SUITE(VariableDictionaryTests)
 BOOST_AUTO_TEST_CASE(BuildVariableName_AllParameters)
 {
     PartialKey key("component1", "variable1");
-    std::string result = Antares::Optimization::VariableDictionary::buildVariableName(key, 5u, 10u);
+    std::string result = Antares::Optimization::VariableDictionary::buildVariableName(
+      key,
+      MCYearAndTime::MCYear{5u},
+      10u);
     BOOST_CHECK_EQUAL(result, "component1.variable1_s5_t10");
 }
 
 BOOST_AUTO_TEST_CASE(BuildVariableName_OnlyScenario)
 {
     PartialKey key("component1", "variable1");
-    std::string result = VariableDictionary::buildVariableName(key, 5u, std::nullopt);
+    std::string result = VariableDictionary::buildVariableName(key,
+                                                               MCYearAndTime::MCYear{5u},
+                                                               std::nullopt);
     BOOST_CHECK_EQUAL(result, "component1.variable1_s5");
 }
 
@@ -758,7 +763,8 @@ private:
 
 struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
 {
-    void build(const FillContext& fillContext = {0, 4}, MockLinearProblem* linearProblem = nullptr)
+    void build(const FillContext& fillContext = {0, 4, 0, 4, 0},
+               MockLinearProblem* linearProblem = nullptr)
     {
         std::vector<Test::Modeler::VariableData> variablesData = {
           {"var1", ValueType::FLOAT, nullptr, nullptr, false, false}, // Neither time nor scenario
@@ -781,7 +787,7 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
         createModel("model", {}, variablesData, constraintsData, nullptr);
         createComponent("model", "comp1");
         createComponent("model", "comp2");
-        auto f = [](const TimeAndScenario&, const std::string& name)
+        auto f = [](const MCYearAndTime&, const std::string& name)
         {
             static MockMipVariable mockVar(123.45, MipBasisStatus::FREE);
             return &mockVar;
@@ -793,8 +799,8 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
             {
                 variableDictionary.addVariable(
                   Dimensions{IntegerInterval{},
-                             IntegerInterval{fillContext.getFirstTimeStep(),
-                                             fillContext.getLastTimeStep()}},
+                             IntegerInterval{fillContext.getLocalFirstTimeStep(),
+                                             fillContext.getLocalLastTimeStep()}},
                   PartialKey(compoId, varId),
                   f);
             }
@@ -957,7 +963,7 @@ BOOST_AUTO_TEST_CASE(TemplateFunction_VariableEntries_AllCombinations)
 {
     SimulationTableCsv table;
     build();
-    const FillContext fillContext(0, 9); // 10 time steps
+    const FillContext fillContext(0, 9, 0, 9, 0); // 10 time steps
 
     auto variableLookup = [](const std::string&,
                              const std::string&,
@@ -1000,7 +1006,7 @@ BOOST_FIXTURE_TEST_CASE(NullPointer_Handling, BasicProblemFixture)
     // Test with null variable lookup
     SimulationTableCsv table;
     build();
-    FillContext fillContext(0, 2);
+    FillContext fillContext(0, 2, 0, 2, 0);
 
     auto nullVariableLookup = [](const std::string&,
                                  const std::string&,
@@ -1148,7 +1154,7 @@ BOOST_FIXTURE_TEST_SUITE(SimulationTableGeneratorTemplateTests, BasicProblemFixt
 BOOST_AUTO_TEST_CASE(FillSimulationTable_ModelerIntegration)
 {
     SimulationTableCsv table;
-    FillContext fillContext(0, 4); // 5 time steps
+    FillContext fillContext(0, 4, 0, 4, 0); // 5 time steps
     MockLinearProblem linearProblem(true);
 
     build(fillContext, &linearProblem);

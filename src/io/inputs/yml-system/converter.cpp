@@ -25,6 +25,7 @@
 #include <sstream>
 
 #include "antares/io/inputs/yml-system/system.h"
+#include "antares/logs/logs.h"
 #include "antares/study/system-model/connection.h"
 #include "antares/study/system-model/system.h"
 
@@ -299,18 +300,23 @@ SystemModel::System convert(const YmlSystem::System& ymlSystem,
                                         + c.id + "'), this is not supported");
         }
         components.emplace(c.id, createComponent(c, libraries));
+        logs.debug() << "Loaded component `" << c.id << "`";
     }
 
     // Create connections from system
     for (const auto& connection: ymlSystem.connections)
     {
         connectComponents(connection, components);
+        logs.debug() << "Loaded connection (component1=`" << connection.firstEntry.componentId
+                     << "` component2=`" << connection.secondEntry.componentId << "`)";
     }
 
     // Create area connections from system
     for (const auto& connection: ymlSystem.areaConnections)
     {
         connectAreas(connection, components);
+        logs.debug() << "Loaded area connection (component=`" << connection.componentId
+                     << "` area=`" << connection.areaId << "`)";
     }
 
     // Build system from components and connections

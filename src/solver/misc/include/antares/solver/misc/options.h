@@ -35,7 +35,6 @@
 class Settings
 {
 public:
-    void checkAndSetStudyFolder(const std::string& folder);
     void reset();
 
     //! Where is my study
@@ -72,4 +71,7 @@ public:
 std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings,
                                                    Antares::Data::StudyLoadOptions& options);
 
+void checkStudyFolder(const std::string& studyFolder);
+std::string fixStudyFolder(const std::string& studyFolder);
+void printPIDtoDisk(Settings& settings);
 void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOptions& options);

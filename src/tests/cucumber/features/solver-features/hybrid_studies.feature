@@ -1,6 +1,6 @@
 Feature: hybrid (simulator+modeler) studies
 
-  @fast @short
+  @fast @short @1
   Scenario: 001 One node - passive + modeler test 1_1
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/001 One node - passive"
     When I run antares simulator

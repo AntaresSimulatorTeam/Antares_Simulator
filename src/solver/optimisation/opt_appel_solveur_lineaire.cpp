@@ -91,10 +91,12 @@ struct SimplexResult
     double objectiveValue;
 };
 
-static void fillModelerComponents(std::vector<std::unique_ptr<ComponentFiller>>& componentFillers,
-                                  std::vector<LinearProblemFiller*>& fillersCollection,
-                                  const ModelerStudy::SystemModel::System* modelerSystem,
-                                  VariableDictionary& variableDictionary)
+static void fillModelerComponents(
+  std::vector<std::unique_ptr<Optimisation::ComponentFiller>>& componentFillers,
+  std::vector<LinearProblemFiller*>& fillersCollection,
+  const ModelerStudy::SystemModel::System* modelerSystem,
+  const Optimisation::ScenarioGroupRepository& scenarioGroupRepository,
+  VariableDictionary& variableDictionary)
 {
     if (!modelerSystem)
     {
@@ -105,7 +107,10 @@ static void fillModelerComponents(std::vector<std::unique_ptr<ComponentFiller>>&
     for (const auto& [_, component]: modelerSystem->Components())
     {
         componentFillers.push_back(
-          std::make_unique<ComponentFiller>(component, variableDictionary));
+          std::make_unique<Optimisation::ComponentFiller>(component,
+                                                          variableDictionary,
+                                                          scenarioGroupRepository));
+        // TODO: use scenario group repository
     }
     for (auto& component_filler: componentFillers)
     {
@@ -143,44 +148,52 @@ static void writeModelerSolutions(const MPSolver* solver,
 
 FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumIntervalle)
 {
-    unsigned firstTimestep, lastTimestep;
+    unsigned globalFirst, globalLast;
+    unsigned localFirst = 0, localLast;
     auto nTsInDay = static_cast<unsigned>(problemeHebdo->NombreDePasDeTempsDUneJournee);
     if (problemeHebdo->OptimisationAuPasHebdomadaire)
     {
-        firstTimestep = problemeHebdo->weekInTheYear * nTsInDay * problemeHebdo->NombreDeJours;
-        lastTimestep = firstTimestep + nTsInDay * problemeHebdo->NombreDeJours - 1;
+        globalFirst = problemeHebdo->weekInTheYear * nTsInDay * problemeHebdo->NombreDeJours;
+        globalLast = globalFirst + nTsInDay * problemeHebdo->NombreDeJours - 1;
+        localLast = nTsInDay * problemeHebdo->NombreDeJours - 1;
     }
     else
     {
-        firstTimestep = (problemeHebdo->weekInTheYear * problemeHebdo->NombreDeJours
-                         + static_cast<unsigned>(NumIntervalle))
-                        * nTsInDay;
-        lastTimestep = firstTimestep + nTsInDay - 1;
+        globalFirst = (problemeHebdo->weekInTheYear * problemeHebdo->NombreDeJours
+                       + static_cast<unsigned>(NumIntervalle))
+                      * nTsInDay;
+        globalLast = globalFirst + nTsInDay - 1;
+        localLast = nTsInDay - 1;
     }
-    return {firstTimestep, lastTimestep};
+    return {localFirst,
+            localLast,
+            globalFirst,
+            globalLast,
+            problemeHebdo->year}; // TODO: handle scenarios/year
 }
 
 // Returns a non-owning pointer
 MPSolver* convertToMPSolver(const PROBLEME_HEBDO* problemeHebdo,
-                            const int NumIntervalle,
                             const SingleOptimOptions& options,
-                            bool namedProblems)
+                            bool namedProblems,
+                            unsigned int NumIntervalle)
 {
     LegacyOrtoolsLinearProblem ortoolsProblem(problemeHebdo->ProblemeAResoudre->isMIP(),
                                               options.solverName);
     LegacyFiller legacyOrtoolsFiller(problemeHebdo, namedProblems);
     std::vector<LinearProblemFiller*> fillersCollection = {&legacyOrtoolsFiller};
 
-    std::vector<std::unique_ptr<ComponentFiller>> componentFillers;
+    std::vector<std::unique_ptr<Optimisation::ComponentFiller>> componentFillers;
     VariableDictionary variableDictionary;
     ComponentToAreaConnectionFiller componentToAreaConnectionFiller(problemeHebdo,
                                                                     variableDictionary);
-    if (problemeHebdo->modelerSystem)
+    if (problemeHebdo->modelerSystem && problemeHebdo->scenarioGroupRepository)
     {
         // All LP variables coordinates (component id, variable id, scenario, time step)
         fillModelerComponents(componentFillers,
                               fillersCollection,
                               problemeHebdo->modelerSystem,
+                              *problemeHebdo->scenarioGroupRepository,
                               variableDictionary);
 
         // Add compatibility filler that connects components to areas
@@ -309,7 +322,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
 
     ProblemeAResoudre->ProblemesSpx[NumIntervalle] = nullptr;
 
-    solver = convertToMPSolver(problemeHebdo, NumIntervalle, options, problemeHebdo->NamedProblems);
+    solver = convertToMPSolver(problemeHebdo, options, problemeHebdo->NamedProblems, NumIntervalle);
 
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
@@ -414,7 +427,6 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                 *pt = ProblemeAResoudre->CoutsReduits[i];
             }
         }
-
         {
             const int opt = optimizationNumber - 1;
             assert(opt >= 0 && opt < 2);
@@ -441,11 +453,10 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
             }
         }
     }
-
     else
     {
         std::unique_ptr<MPSolver> MPproblem(
-          convertToMPSolver(problemeHebdo, NumIntervalle, options, true));
+          convertToMPSolver(problemeHebdo, options, true, NumIntervalle));
 
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());

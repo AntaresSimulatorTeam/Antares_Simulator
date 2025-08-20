@@ -26,8 +26,13 @@ namespace Antares
 {
 namespace Error
 {
-StudyFolderDoesNotExist::StudyFolderDoesNotExist(const Yuni::String& folder):
-    LoadingError(std::string("Study folder") + folder.c_str() + " does not exist.")
+StudyFolderDoesNotExist::StudyFolderDoesNotExist(const std::string& folder):
+    LoadingError(std::string("Study folder ") + folder + " does not exist.")
+{
+}
+
+StudyFolderContainsNonASCIIchars::StudyFolderContainsNonASCIIchars(const std::string& folder):
+    LoadingError(std::string("Study folder contains non ASCII chars : ") + folder)
 {
 }
 
@@ -56,8 +61,8 @@ RuntimeInfoInitialization::RuntimeInfoInitialization():
 {
 }
 
-WritingPID::WritingPID(const Yuni::String& file):
-    LoadingError(std::string("Impossible to write pid file ") + file.c_str())
+WritingPID::WritingPID(const std::string& filePath):
+    LoadingError(std::string("Impossible to write pid file ") + filePath)
 {
 }
 
@@ -124,11 +129,6 @@ NoStudyProvided::NoStudyProvided():
 
 IncompatibleParallelOptions::IncompatibleParallelOptions():
     LoadingError("Options --parallel and --force-parallel are incompatible")
-{
-}
-
-IncompatibleMILPWithoutOrtools::IncompatibleMILPWithoutOrtools():
-    LoadingError("Unit Commitment mode 'milp' must be used with an OR-Tools solver ")
 {
 }
 

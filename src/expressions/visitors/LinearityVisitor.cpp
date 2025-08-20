@@ -31,7 +31,7 @@ namespace Antares::Expressions::Visitors
 
 LinearStatus LinearityVisitor::visit(const Nodes::SumNode* node)
 {
-    auto operands = node->getOperands();
+    const auto& operands = node->getOperands();
     return std::accumulate(std::begin(operands),
                            std::end(operands),
                            LinearStatus::CONSTANT,
