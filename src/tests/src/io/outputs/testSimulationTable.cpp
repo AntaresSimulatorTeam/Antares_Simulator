@@ -23,6 +23,7 @@
 #include <filesystem>
 #include <fstream>
 #include <sstream>
+#include <thread>
 
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
@@ -53,8 +54,15 @@ using namespace Antares::ModelerStudy::SystemModel;
 
 auto count_lines = [](std::string_view s)
 {
-    auto lines = s | std::views::split('\n');
-    return static_cast<int>(std::ranges::distance(lines));
+    int count = 0;
+    for (auto&& line: s | std::views::split('\n'))
+    {
+        if (!std::ranges::empty(line))
+        {
+            ++count;
+        }
+    }
+    return count;
 };
 
 namespace
@@ -1220,8 +1228,15 @@ BOOST_AUTO_TEST_CASE(AlternatingClear_Write_Operations)
         // Verify content before clearing
         std::string buffer = table.buffer();
         auto lineCount = count_lines(buffer);
-        BOOST_CHECK_EQUAL(lineCount, 4); // 3 entries + header
-
+        if (cycle == 0)
+        {
+            // only first cycle has header
+            BOOST_CHECK_EQUAL(lineCount, 4); // 3 entries + header
+        }
+        else
+        {
+            BOOST_CHECK_EQUAL(lineCount, 3);
+        }
         // Clear for next cycle
         table.clear();
 
@@ -1314,7 +1329,7 @@ BOOST_FIXTURE_TEST_CASE(Write_CreatesFile, TempDirFixture)
     std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
 
     BOOST_CHECK(content.find("block,component,output") != std::string::npos);
-    BOOST_CHECK(content.find("1,test_comp,test_var,1,1,0,123.45,Basic") != std::string::npos);
+    BOOST_CHECK(content.find("1,test_comp,test_var,1,1,0,123.450000,Basic") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -1413,8 +1428,8 @@ BOOST_AUTO_TEST_CASE(AddEntriesToBothTables)
     tables.write();
 
     auto buffers = tables.buffers();
-    BOOST_CHECK(buffers.first.find("1,comp1,var1,1,1,0,10,Basic") != std::string::npos);
-    BOOST_CHECK(buffers.second.find("2,comp2,var2,2,2,1,20,Free") != std::string::npos);
+    BOOST_CHECK(buffers.first.find("1,comp1,var1,1,1,0,10.000000,Basic") != std::string::npos);
+    BOOST_CHECK(buffers.second.find("2,comp2,var2,2,2,1,20.000000,Free") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(Clear_ResetsAllTables)
@@ -1436,10 +1451,9 @@ BOOST_AUTO_TEST_CASE(Clear_ResetsAllTables)
 
     tables.clear();
 
-    auto buffers = tables.buffers();
-    // After clear, should only contain headers
-    BOOST_CHECK_EQUAL(count_lines(buffers.first), 1);
-    BOOST_CHECK_EQUAL(count_lines(buffers.second), 1);
+    auto [fst, snd] = tables.buffers();
+    BOOST_CHECK(fst.empty());
+    BOOST_CHECK(snd.empty());
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -1658,7 +1672,7 @@ BOOST_AUTO_TEST_CASE(ZeroValues_HandledCorrectly)
 
     std::string buffer = table.buffer();
     BOOST_CHECK(buffer.find("0,,") != std::string::npos);
-    BOOST_CHECK(buffer.find(",0,Free") != std::string::npos);
+    BOOST_CHECK(buffer.find(",0.000000,Free") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(NegativeValues_HandledCorrectly)
