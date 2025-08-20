@@ -1,6 +1,6 @@
 #pragma once
 
-#include "storage-for-remix.h"
+#include "storage-for-remix-interface.h"
 
 namespace Antares::Solver::Simulation
 {
@@ -65,4 +65,18 @@ private:
     const double initLevel_;
     const double pumpEff_;
 };
+
+std::shared_ptr<StorageForRemix> makeHydroForRemix(std::vector<double>& generation,
+                                                   std::vector<double>& unsupE,
+                                                   std::vector<double>& levels,
+                                                   const std::vector<double>& Pmax,
+                                                   const std::vector<double>& Pmin,
+                                                   const std::vector<double>& inflows,
+                                                   const std::vector<double>& overflow,
+                                                   const std::vector<double>& pump,
+                                                   const double initLevel,
+                                                   const double capacity,
+                                                   const double pumpEfficiency,
+                                                   bool reservoirManagement);
+
 } // namespace Antares::Solver::Simulation

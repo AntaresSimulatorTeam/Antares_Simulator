@@ -3,8 +3,7 @@
 
 #include <memory>
 
-#include "hydro-for-remix.h"
-#include "storage-for-remix.h" // gp : will be removed (needed by common-hydro-remix.cpp)
+#include "storage-for-remix-interface.h"
 
 namespace Antares::Solver::Simulation
 {
