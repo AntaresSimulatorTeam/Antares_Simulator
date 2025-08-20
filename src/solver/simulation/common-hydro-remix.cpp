@@ -240,12 +240,8 @@ std::vector<double> extractHydroPmin(const Data::Area& area,
                                      const unsigned int year,
                                      const unsigned int firstHourOfWeek)
 {
-    std::vector<double> hydroPmin(HOURS_IN_WEEK, 0.);
-    for (unsigned int h = 0; h < HOURS_IN_WEEK; ++h)
-    {
-        hydroPmin[h] = area.hydro.series->mingen.getColumn(year)[h + firstHourOfWeek];
-    }
-    return hydroPmin;
+    const double* hydroPmin = area.hydro.series->mingen.getColumn(year);
+    return {hydroPmin + firstHourOfWeek, hydroPmin + firstHourOfWeek + HOURS_IN_WEEK};
 }
 
 std::vector<double> extractDTG_MRG(const Data::Area& area, uint numSpace)
@@ -300,7 +296,7 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
       {
           auto& weeklyResults = problem.ResultatsHoraires[area.index];
 
-          // Arguments of remix algorithm that are invariant whatever the storage  
+          // Arguments of remix algorithm that are invariant whatever the storage
           const auto load = extractLoadForCurrentWeek(area, problem.year, firstHourOfWeek);
           auto& unsupE = weeklyResults.ValeursHorairesDeDefaillancePositive;
           const auto& spillage = weeklyResults.ValeursHorairesDeDefaillanceNegative;
