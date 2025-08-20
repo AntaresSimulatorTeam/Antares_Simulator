@@ -406,11 +406,7 @@ bool isLinearSolverAvailable(const std::string& solverName)
         MPSolver::ParseSolverType(it->second.MIPSolverName.value(), &solverType);
     }
 
-    if (MPSolver::SupportsProblemType(solverType))
-    {
-        return true;
-    }
-    return false;
+    return MPSolver::SupportsProblemType(solverType);
 }
 
 std::list<std::string> availableQuadraticSolversList()
