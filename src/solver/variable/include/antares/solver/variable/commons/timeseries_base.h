@@ -191,7 +191,8 @@ struct VCardTimeSeriesBase: public TimeSeriesTraits<TraitsType>
     }
 
     /**
-     * @brief Get variable unit as std::string    * @return Variable unit ("MWh")
+     * @brief Get variable unit as std::string
+     * @return Variable unit ("MWh")
      */
     static std::string Unit()
     {
