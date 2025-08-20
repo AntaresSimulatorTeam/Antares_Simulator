@@ -230,8 +230,7 @@ std::vector<ModelerStudy::SystemModel::Port> convertPorts(
  */
 std::vector<ModelerStudy::SystemModel::PortFieldDefinition> convertPortFieldDefinitions(
   const IO::Inputs::YmlModel::Model& model,
-  const std::vector<ModelerStudy::SystemModel::Port>& ports,
-  const std::vector<ModelerStudy::SystemModel::PortType>& portTypes)
+  const std::vector<ModelerStudy::SystemModel::Port>& ports)
 {
     std::vector<ModelerStudy::SystemModel::PortFieldDefinition> portFieldDefinitions;
     portFieldDefinitions.reserve(model.port_field_definitions.size());
@@ -247,13 +246,11 @@ std::vector<ModelerStudy::SystemModel::PortFieldDefinition> convertPortFieldDefi
         }
 
         // second check if the field exists in type
-        auto itType = std::ranges::find_if(portTypes,
-                                           [&itPort](const auto& pt)
-                                           { return pt.Id() == itPort->Type().Id(); });
-        auto itField = std::ranges::find_if(itType->Fields(),
+        const auto& portFields = itPort->Type().Fields();
+        auto itField = std::ranges::find_if(portFields,
                                             [&pfdefinition](const auto& field)
                                             { return field.Id() == pfdefinition.field; });
-        if (itField == itType->Fields().end())
+        if (itField == portFields.end())
         {
             throw FieldNotFoundForDefinition(pfdefinition.port, pfdefinition.field);
         }
@@ -264,11 +261,12 @@ std::vector<ModelerStudy::SystemModel::PortFieldDefinition> convertPortFieldDefi
         AST preorder(nodeRegistry.node);
         auto it = std::find_if(preorder.begin(),
                                preorder.end(),
-                               [](const Node& node) { return node.name() == "PortFieldNode"; });
+                               [](const Node& node)
+                               { return dynamic_cast<const PortFieldNode*>(&node) != nullptr; });
         if (it != preorder.end())
         {
             throw PortInDefinition(pfdefinition.port,
-                                   dynamic_cast<PortFieldNode*>(&*it)->getPortName());
+                                   dynamic_cast<const PortFieldNode&>(*it).getPortName());
         }
 
         portFieldDefinitions.emplace_back(
@@ -340,7 +338,7 @@ std::vector<ModelerStudy::SystemModel::Model> convertModels(
         std::vector<ModelerStudy::SystemModel::Variable> variables = convertVariables(model);
         std::vector<ModelerStudy::SystemModel::Port> ports = convertPorts(model, portTypes);
         std::vector<ModelerStudy::SystemModel::PortFieldDefinition>
-          portFieldDefinitions = convertPortFieldDefinitions(model, ports, portTypes);
+          portFieldDefinitions = convertPortFieldDefinitions(model, ports);
         std::vector<ModelerStudy::SystemModel::Constraint> constraints = convertConstraints(model);
 
         auto nodeObjective = convertExpressionToNode(model.objective, model);
@@ -368,9 +366,10 @@ std::vector<ModelerStudy::SystemModel::Model> convertModels(
  */
 ModelerStudy::SystemModel::Library convert(const IO::Inputs::YmlModel::Library& library)
 {
-    ModelerStudy::SystemModel::LibraryBuilder builder;
     std::vector<ModelerStudy::SystemModel::PortType> portTypes = convertTypes(library);
     std::vector<ModelerStudy::SystemModel::Model> models = convertModels(library, portTypes);
+
+    ModelerStudy::SystemModel::LibraryBuilder builder;
     ModelerStudy::SystemModel::Library lib = builder.withId(library.id)
                                                .withDescription(library.description)
                                                .withPortTypes(std::move(portTypes))
