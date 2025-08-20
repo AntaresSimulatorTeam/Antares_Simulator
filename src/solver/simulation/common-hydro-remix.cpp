@@ -246,9 +246,8 @@ std::vector<double> extractHydroPmin(const Data::Area& area,
 
 std::vector<double> extractDTG_MRG(const Data::Area& area, uint numSpace)
 {
-    const auto& dtgMrgArray = area.scratchpad[numSpace].dispatchableGenerationMargin;
-    std::vector<double> dtgMrg(dtgMrgArray, dtgMrgArray + HOURS_IN_WEEK);
-    return dtgMrg;
+    const double* dtgMrg = area.scratchpad[numSpace].dispatchableGenerationMargin;
+    return {dtgMrg, dtgMrg + HOURS_IN_WEEK};
 }
 
 std::shared_ptr<StorageForRemix> extractHydroForRemix(const Data::Area& area,
