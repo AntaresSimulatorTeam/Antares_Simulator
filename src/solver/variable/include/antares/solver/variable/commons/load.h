@@ -22,7 +22,7 @@
 /**
  * @file load.h
  * @brief Load time series variables for electrical demand modeling
- * * This file implements load (electrical demand) time series variables using
+ * This file implements load (electrical demand) time series variables using
  * the modern time series base framework. Load variables represent the electrical
  * demand that must be satisfied in each area during simulation.
  *
