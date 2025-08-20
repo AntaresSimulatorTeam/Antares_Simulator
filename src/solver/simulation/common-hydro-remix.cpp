@@ -265,7 +265,7 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
           const auto& dtgMrgArray = area.scratchpad[numSpace].dispatchableGenerationMargin;
           const std::vector<double> dtgMrg(dtgMrgArray, dtgMrgArray + HOURS_IN_WEEK);
 
-          // Specific to hydro storage
+          // Data useful to build the remix object associated to hydro storage
           auto& hydroGen = weeklyResults.TurbinageHoraire;
           auto& levels = weeklyResults.niveauxHoraires;
           const auto& hydroPmax = problem.CaracteristiquesHydrauliques[area.index]
