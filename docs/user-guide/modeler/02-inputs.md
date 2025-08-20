@@ -53,15 +53,15 @@ Example:
 
 ~~~yaml
 port-types:
-  - id: dc_port
-    description: A port which transfers power flow value
-    fields:
-      - id: flow
-  - id: ac_port
-    description: A port which transfers power flow and voltage angle values
-    fields:
-      - id: flow
-      - id: angle
+- id: dc_port
+  description: A port which transfers power flow value
+  fields:
+  - id: flow
+- id: ac_port
+  description: A port which transfers power flow and voltage angle values
+  fields:
+  - id: flow
+  - id: angle
 ~~~
 
 - **id**: the ID for the port type. Must be unique inside the scope of the library, and
@@ -83,46 +83,46 @@ Example:
 
 ~~~yaml
 models:
-  - id: generator_dc
-    description: A simple DC model of a generator
-    parameters:
-      - id: min_active_power_setpoint
-        time-dependent: false
-        scenario-dependent: false
-      - id: max_active_power_setpoint
-        time-dependent: true
-        scenario-dependent: true
-      - id: proportional_cost
-        time-dependent: false
-        scenario-dependent: true
-    variables:
-      - id: is_on
-        variable-type: boolean
-        lower-bound: 0
-        upper-bound: 1
-      - id: active_power
-        variable-type: continuous
-        lower-bound: 0
-        upper-bound: max_active_power_setpoint
-    constraints:
-      - id: respect_min_p
-        expression: active_power >= is_on * min_active_power_setpoint
-    objective: active_power * proportional_cost
-    ports:
-      - id: injection
-        type: dc_port
-    port-field-definitions:
-      - port: injection
-        field: flow
-        definition: active_power
-  - id: node
-    description: A balance node with injections (productions and loads)
-    ports:
-      - id: injections
-        type: dc_port
-    binding-constraints:
-      - id: balance
-        expression: sum_connections(injections.flow) = 0
+- id: generator_dc
+  description: A simple DC model of a generator
+  parameters:
+  - id: min_active_power_setpoint
+    time-dependent: false
+    scenario-dependent: false
+  - id: max_active_power_setpoint
+    time-dependent: true
+    scenario-dependent: true
+  - id: proportional_cost
+    time-dependent: false
+    scenario-dependent: true
+  variables:
+  - id: is_on
+    variable-type: boolean
+    lower-bound: 0
+    upper-bound: 1
+  - id: active_power
+    variable-type: continuous
+    lower-bound: 0
+    upper-bound: max_active_power_setpoint
+  constraints:
+  - id: respect_min_p
+    expression: active_power >= is_on * min_active_power_setpoint
+  objective: active_power * proportional_cost
+  ports:
+  - id: injection
+    type: dc_port
+  port-field-definitions:
+  - port: injection
+    field: flow
+    definition: active_power
+- id: node
+  description: A balance node with injections (productions and loads)
+  ports:
+  - id: injections
+    type: dc_port
+  binding-constraints:
+  - id: balance
+    expression: sum_connections(injections.flow) = 0
 ~~~
 
 - **id**: an ID for the model. Must be unique inside the scope of the library, and
@@ -334,40 +334,40 @@ Example:
 
 ~~~yaml
 components:
-  - id: generator1
-    model: my_lib_id.dc_generator
-    scenario-group: thermal_group
-    parameters:
-      - id: min_active_power_setpoint
-        time-dependent: false
-        scenario-dependent: false
-        value: 100
-      - id: max_active_power_setpoint
-        time-dependent: true
-        scenario-dependent: true
-        value: generator1_max_p
-      - id: proportional_cost
-        time-dependent: false
-        scenario-dependent: true
-        value: generator1_cost
-  - id: generator2
-    model: my_lib_id.dc_generator
-    scenario-group: hydro_group
-    parameters:
-      - id: min_active_power_setpoint
-        time-dependent: false
-        scenario-dependent: false
-        value: 20
-      - id: max_active_power_setpoint
-        time-dependent: true
-        scenario-dependent: false
-        value: generator2_max_p
-      - id: proportional_cost
-        time-dependent: false
-        scenario-dependent: false
-        value: 0.5
-  - id: node1
-    model: my_lib_id.node
+- id: generator1
+  model: my_lib_id.dc_generator
+  scenario-group: thermal_group
+  parameters:
+  - id: min_active_power_setpoint
+    time-dependent: false
+    scenario-dependent: false
+    value: 100
+  - id: max_active_power_setpoint
+    time-dependent: true
+    scenario-dependent: true
+    value: generator1_max_p
+  - id: proportional_cost
+    time-dependent: false
+    scenario-dependent: true
+    value: generator1_cost
+- id: generator2
+  model: my_lib_id.dc_generator
+  scenario-group: hydro_group
+  parameters:
+  - id: min_active_power_setpoint
+    time-dependent: false
+    scenario-dependent: false
+    value: 20
+  - id: max_active_power_setpoint
+    time-dependent: true
+    scenario-dependent: false
+    value: generator2_max_p
+  - id: proportional_cost
+    time-dependent: false
+    scenario-dependent: false
+    value: 0.5
+- id: node1
+  model: my_lib_id.node
 ~~~
 
 - **id**: an ID for the component. Must be unique in the scope of the system, and respect [these rules](#rules-for-ids).
@@ -400,14 +400,14 @@ Example:
 
 ~~~yaml
 connections:
-  - component1: generator1
-    port1: injection
-    component2: node1
-    port2: injections
-  - component1: generator2
-    port1: injection
-    component2: node1
-    port2: injections
+- component1: generator1
+  port1: injection
+  component2: node1
+  port2: injections
+- component1: generator2
+  port1: injection
+  component2: node1
+  port2: injections
 ~~~
 
 - **component1**, **component2**: the IDs of the components to connect together
@@ -504,10 +504,9 @@ hydro_group, 3 = 7
 * For hydro_group the year 3 is associated with the time serie number 7.
 
 
-* A _year_ is a integer, starting at 1.
-* A _time serie number_ is a integer, starting at 0, and refers to the zero-based column number in the corresponding
-  data
-  series file.
+* A _year_ is a integer, starting at 0.
+* A _time serie number_ is a integer, starting at 1, and refers to the column number in the corresponding
+  data series file.
 * Group IDs refer to groups defined in the [components](#components) description.
 
 ## Full examples
