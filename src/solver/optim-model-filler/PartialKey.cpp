@@ -25,8 +25,6 @@
 
 namespace Antares::Optimization
 {
-// Nouvelle implémentation alignée avec l'internage défini dans le header
-
 PartialKey::PartialKey(std::string_view component_id, std::string_view variable_id) noexcept:
     component_id_(interner().intern(component_id)),
     variable_id_(interner().intern(variable_id))

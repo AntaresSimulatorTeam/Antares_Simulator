@@ -39,27 +39,33 @@ struct boost::hash<Antares::Optimization::PartialKey>
 
 namespace Antares::Optimization
 {
-
+/**
+ * @brief Full variable key including optional scenario and timestep dimensions.
+ *
+ * Combines a mandatory (component, variable) pair (interned via PartialKey) with
+ * optional scenario (Monte Carlo year) and timestep indices.
+ * Provides strong ordering via spaceship operator for use in ordered containers if needed.
+ */
 class FullKey
 {
 public:
+    /** Scalar constructor (no scenario/time dependence). */
     FullKey(const std::string& component, const std::string& variable);
-    FullKey(const std::string& component,
-            const std::string& variable,
-            MCYearAndTime::MCYear scenario);
+    /** Scenario-dependent (no time). */
+    FullKey(const std::string& component, const std::string& variable, MCYearAndTime::MCYear scenario);
+    /** Scenario + timestep dependent. */
     FullKey(const std::string& component,
             const std::string& variable,
             MCYearAndTime::MCYear scenario,
             unsigned int timestep);
 
-    [[nodiscard]] const PartialKey& getPartialKey() const;
-    [[nodiscard]] const std::string& getComponent() const;
-    [[nodiscard]] const std::string& getVariable() const;
+    [[nodiscard]] const PartialKey& getPartialKey() const;               ///< Access interned pair
+    [[nodiscard]] const std::string& getComponent() const;               ///< Convenience pass-through
+    [[nodiscard]] const std::string& getVariable() const;                ///< Convenience pass-through
+    [[nodiscard]] std::optional<MCYearAndTime::MCYear> getScenario() const; ///< Scenario index (if any)
+    [[nodiscard]] std::optional<unsigned int> getTimestep() const;       ///< Timestep index (if any)
 
-    [[nodiscard]] std::optional<MCYearAndTime::MCYear> getScenario() const;
-    [[nodiscard]] std::optional<unsigned int> getTimestep() const;
-
-    auto operator<=>(const FullKey&) const = default; // Automatically generates <, >, ==, etc.
+    auto operator<=>(const FullKey&) const = default;
 
 private:
     PartialKey pk;
@@ -67,6 +73,9 @@ private:
     std::optional<unsigned int> timestep;
 };
 
+/**
+ * @brief Hash functor for FullKey (combines hash of PartialKey and optionals).
+ */
 class FullKeyHash
 {
 public:
