@@ -130,12 +130,6 @@ StorageForRemixWithLevels::StorageForRemixWithLevels(std::vector<double>& genera
     checkLevels();
 }
 
-double min_on_hour_range(std::vector<double> && v, unsigned h, unsigned H)
-{
-    std::span<double> subset(v.begin() + h, v.begin() + H);
-    return *std::ranges::min_element(subset);
-}
-
 double StorageForRemixWithLevels::maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen)
 {
     double bound = StorageForRemixNoLevels::maxExchange(hourOfMaxGen, hourOfMinGen);

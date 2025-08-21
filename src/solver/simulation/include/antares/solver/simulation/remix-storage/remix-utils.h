@@ -51,4 +51,10 @@ inline std::vector<double> operator-(std::vector<double> a, const std::vector<do
     return a;
 }
 
+inline double min_on_hour_range(std::vector<double>&& v, unsigned h, unsigned H)
+{
+    std::span<double> subset(v.begin() + h, v.begin() + H);
+    return *std::ranges::min_element(subset);
+}
+
 }; // namespace Antares::Solver::Simulation
