@@ -65,7 +65,7 @@ jobs:
         run: |
           ccacheVersion=4.11.3
           ccacheFile=ccache-$ccacheVersion-windows-x86_64
-          wget https://github.com/ccache/ccache/releases/download/v$ccacheVersion/$ccacheFile.zip -O ccache.zip
+          curl -L -o ccache.zip https://github.com/ccache/ccache/releases/download/v$ccacheVersion/$ccacheFile.zip
           unzip ccache.zip
           rm ccache.zip
           mv $ccacheFile ccache
