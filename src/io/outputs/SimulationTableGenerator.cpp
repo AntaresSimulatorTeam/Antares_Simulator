@@ -19,10 +19,12 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include "antares/io/outputs/SimulationTableGenerator.h"
+#include "antares/logs/logs.h""
 
 #include <optional>
 
 #include <antares/solver/optim-model-filler/VariableDictionary.h>
+#include "antares/expressions/visitors/EvalVisitor.h"
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
 #include "antares/optimisation/linear-problem-api/mipConstraint.h"
 #include "antares/optimisation/linear-problem-api/mipSolution.h"
@@ -123,7 +125,12 @@ void addPortEntries(ISimulationTable& simulationTable,
             std::optional<double> value = std::nullopt;
 
             const Antares::Expressions::Visitors::EvaluationContext
-              connectedComponentEvalContext(component.getParameterValues(), {}, *dataSeries);
+              evalContext(component.getParameterValues(), {}, *dataSeries);
+
+            Antares::Expressions::Visitors::EvalVisitor evalVisitor(evalContext, fillContext);
+
+            auto res = evalVisitor.dispatch(portFieldDef.Definition().RootNode());
+            Antares::logs.notice() << res.valueAsDouble();
 
             simulationTable.addEntry(
               {.block = tb.block,
