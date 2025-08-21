@@ -101,7 +101,7 @@ unsigned int Dimensions::getNumberOfTimesteps() const
 void VariableDictionary::VectorWithOffset::resize(size_t initial_size, unsigned int offset)
 {
     offset_ = offset;
-    values_.resize(initial_size);
+    values_.assign(initial_size, nullptr); // initialize all slots to nullptr
 }
 
 VariableDictionary::Value& VariableDictionary::VectorWithOffset::operator[](unsigned int index)
@@ -123,6 +123,16 @@ const VariableDictionary::Value& VariableDictionary::VectorWithOffset::at(unsign
 VariableDictionary::Value& VariableDictionary::VectorWithOffset::at(unsigned int index)
 {
     return values_.at(index - offset_);
+}
+
+bool VariableDictionary::VectorWithOffset::contains(unsigned int index) const noexcept
+{
+    if (values_.empty() || index < offset_)
+    {
+        return false;
+    }
+    auto pos = index - offset_;
+    return pos < values_.size();
 }
 
 namespace
@@ -256,24 +266,21 @@ VariableDictionary::Value VariableDictionary::tryGet(std::string_view component,
                                                      MCYearAndTime::MCYear scenario,
                                                      unsigned int timestep) const noexcept
 {
-    try
-    {
-        auto itKey = storageOfAddedMipVariables_.find(PartialKey(component, variable));
-        if (itKey == storageOfAddedMipVariables_.end())
-        {
-            return nullptr;
-        }
-        auto itScenario = itKey->second.find(scenario);
-        if (itScenario == itKey->second.end())
-        {
-            return nullptr;
-        }
-        // Utilise at pour sécuriser index; capture exception si hors bornes
-        return itScenario->second.at(timestep);
-    }
-    catch (const std::exception&)
+    // Avoid exceptions by manual lookups and bounds checks
+    auto itKey = storageOfAddedMipVariables_.find(PartialKey(component, variable));
+    if (itKey == storageOfAddedMipVariables_.end())
     {
         return nullptr;
     }
+    auto itScenario = itKey->second.find(scenario);
+    if (itScenario == itKey->second.end())
+    {
+        return nullptr;
+    }
+    if (!itScenario->second.contains(timestep))
+    {
+        return nullptr;
+    }
+    return itScenario->second[timestep];
 }
 } // namespace Antares::Optimization
