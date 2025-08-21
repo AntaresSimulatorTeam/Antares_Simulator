@@ -130,6 +130,12 @@ StorageForRemixWithLevels::StorageForRemixWithLevels(std::vector<double>& genera
     checkLevels();
 }
 
+double min_on_hour_range(std::vector<double> && v, unsigned h, unsigned H)
+{
+    std::span<double> subset(v.begin() + h, v.begin() + H);
+    return *std::ranges::min_element(subset);
+}
+
 double StorageForRemixWithLevels::maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen)
 {
     double bound = StorageForRemixNoLevels::maxExchange(hourOfMaxGen, hourOfMinGen);
@@ -139,15 +145,11 @@ double StorageForRemixWithLevels::maxExchange(unsigned hourOfMaxGen, unsigned ho
 
     if (hourOfMinGen < hourOfMaxGen)
     {
-        auto levels_lowCurve = levels_ - ruleCurveLow_;
-        std::span<double> subset(levels_lowCurve.begin() + hour, levels_lowCurve.begin() + HOUR);
-        return std::min(bound, *std::ranges::min_element(subset));
+        return std::min(bound, min_on_hour_range(levels_ - ruleCurveLow_, hour, HOUR));
     }
     else
     {
-        auto upCurve_levels = ruleCurveUp_ - levels_;
-        std::span<double> subset(upCurve_levels.begin() + hour, upCurve_levels.begin() + HOUR);
-        return std::min(bound, *std::ranges::min_element(subset));
+        return std::min(bound, min_on_hour_range(ruleCurveUp_ - levels_, hour, HOUR));
     }
 }
 
