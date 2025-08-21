@@ -51,10 +51,9 @@ PartialKey::StringInterner& PartialKey::interner() noexcept
 
 std::size_t PartialKeyHash::operator()(const PartialKey& p) const noexcept
 {
-    std::size_t seed = 0;
-    boost::hash_combine(seed, p.getComponentId());
-    boost::hash_combine(seed, p.getVariableId());
-    return seed;
+    std::size_t h1 = std::hash<PartialKey::id_type>{}(p.getComponentId());
+    std::size_t h2 = std::hash<PartialKey::id_type>{}(p.getVariableId());
+    return h1 ^ (h2 << 1);
 }
 
 } // namespace Antares::Optimization
