@@ -59,9 +59,16 @@ public:
     [[nodiscard]] const std::string& getVariable() const noexcept;
 
     /** @return Interned numeric id of component. */
-    [[nodiscard]] id_type getComponentId() const noexcept { return component_id_; }
+    [[nodiscard]] id_type getComponentId() const noexcept
+    {
+        return component_id_;
+    }
+
     /** @return Interned numeric id of variable. */
-    [[nodiscard]] id_type getVariableId() const noexcept { return variable_id_; }
+    [[nodiscard]] id_type getVariableId() const noexcept
+    {
+        return variable_id_;
+    }
 
     /** Three-way comparison based on (component_id_, variable_id_). */
     auto operator<=>(const PartialKey&) const = default;
@@ -72,9 +79,9 @@ private:
 
     struct StringInterner
     {
-        mutable std::shared_mutex mtx;                    ///< Protects both maps
-        std::unordered_map<std::string, id_type> map;     ///< string => id
-        std::vector<std::string> reverse;                 ///< id => string
+        mutable std::shared_mutex mtx;                ///< Protects both maps
+        std::unordered_map<std::string, id_type> map; ///< string => id
+        std::vector<std::string> reverse;             ///< id => string
 
         /**
          * @brief Intern string (idempotent). O(log N) average with unordered_map.
@@ -86,12 +93,16 @@ private:
             {
                 std::shared_lock lock(mtx);
                 if (auto it = map.find(std::string(s)); it != map.end())
+                {
                     return it->second;
+                }
             }
             std::unique_lock lock(mtx);
             auto it2 = map.find(std::string(s));
             if (it2 != map.end())
+            {
                 return it2->second; // inserted meanwhile
+            }
             id_type id = static_cast<id_type>(reverse.size());
             reverse.emplace_back(s);
             map.emplace(reverse.back(), id);

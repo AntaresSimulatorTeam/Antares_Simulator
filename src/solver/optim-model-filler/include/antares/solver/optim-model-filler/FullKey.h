@@ -52,18 +52,21 @@ public:
     /** Scalar constructor (no scenario/time dependence). */
     FullKey(const std::string& component, const std::string& variable);
     /** Scenario-dependent (no time). */
-    FullKey(const std::string& component, const std::string& variable, MCYearAndTime::MCYear scenario);
+    FullKey(const std::string& component,
+            const std::string& variable,
+            MCYearAndTime::MCYear scenario);
     /** Scenario + timestep dependent. */
     FullKey(const std::string& component,
             const std::string& variable,
             MCYearAndTime::MCYear scenario,
             unsigned int timestep);
 
-    [[nodiscard]] const PartialKey& getPartialKey() const;               ///< Access interned pair
-    [[nodiscard]] const std::string& getComponent() const;               ///< Convenience pass-through
-    [[nodiscard]] const std::string& getVariable() const;                ///< Convenience pass-through
-    [[nodiscard]] std::optional<MCYearAndTime::MCYear> getScenario() const; ///< Scenario index (if any)
-    [[nodiscard]] std::optional<unsigned int> getTimestep() const;       ///< Timestep index (if any)
+    [[nodiscard]] const PartialKey& getPartialKey() const; ///< Access interned pair
+    [[nodiscard]] const std::string& getComponent() const; ///< Convenience pass-through
+    [[nodiscard]] const std::string& getVariable() const;  ///< Convenience pass-through
+    [[nodiscard]] std::optional<MCYearAndTime::MCYear> getScenario()
+      const;                                                       ///< Scenario index (if any)
+    [[nodiscard]] std::optional<unsigned int> getTimestep() const; ///< Timestep index (if any)
 
     auto operator<=>(const FullKey&) const = default;
 

@@ -32,7 +32,10 @@
 
 #include "MCYearAndTime.h"
 
-namespace Antares::Optimisation::LinearProblemApi { class IMipVariable; }
+namespace Antares::Optimisation::LinearProblemApi
+{
+class IMipVariable;
+}
 
 namespace Antares::Optimization
 {
@@ -48,16 +51,28 @@ struct IntegerInterval
     {
     public:
         explicit Iterator(unsigned int current);
-        unsigned int operator*() const;          ///< Current value
-        Iterator& operator++();                  ///< Prefix increment
+        unsigned int operator*() const;               ///< Current value
+        Iterator& operator++();                       ///< Prefix increment
         bool operator!=(const Iterator& other) const; ///< Inequality
+
     private:
         unsigned int current_;
     };
 
-    [[nodiscard]] Iterator begin() const { return Iterator(initialTime); }
-    [[nodiscard]] Iterator end() const { return Iterator(finalTime + 1); } // inclusive range
-    [[nodiscard]] std::size_t size() const { return finalTime - initialTime + 1; }
+    [[nodiscard]] Iterator begin() const
+    {
+        return Iterator(initialTime);
+    }
+
+    [[nodiscard]] Iterator end() const
+    {
+        return Iterator(finalTime + 1);
+    } // inclusive range
+
+    [[nodiscard]] std::size_t size() const
+    {
+        return finalTime - initialTime + 1;
+    }
 };
 
 /**
@@ -70,11 +85,13 @@ public:
     Dimensions() = default;
     Dimensions(std::optional<IntegerInterval> mcyearInterval,
                std::optional<IntegerInterval> timeInterval);
-    [[nodiscard]] bool isTimeDependent() const;          ///< True if time dimension present
-    [[nodiscard]] bool isScenarioDependent() const;      ///< True if scenario dimension present
-    [[nodiscard]] IntegerInterval getTimesteps() const;  ///< Returns time interval or [0,0]
-    [[nodiscard]] IntegerInterval getScenarioIndices() const; ///< Returns scenario interval or [0,0]
-    [[nodiscard]] unsigned int getNumberOfTimesteps() const;  ///< Returns count (1 if scalar)
+    [[nodiscard]] bool isTimeDependent() const;         ///< True if time dimension present
+    [[nodiscard]] bool isScenarioDependent() const;     ///< True if scenario dimension present
+    [[nodiscard]] IntegerInterval getTimesteps() const; ///< Returns time interval or [0,0]
+    [[nodiscard]] IntegerInterval getScenarioIndices()
+      const;                                                 ///< Returns scenario interval or [0,0]
+    [[nodiscard]] unsigned int getNumberOfTimesteps() const; ///< Returns count (1 if scalar)
+
 private:
     std::optional<IntegerInterval> mcyearInterval;
     std::optional<IntegerInterval> timeInterval;
@@ -95,11 +112,12 @@ class VariableDictionary
         VectorWithOffset() = default;
         /** @brief Resize underlying storage; new slots initialised to nullptr. */
         void resize(size_t initial_size, unsigned offset);
-        Value& operator[](unsigned int index);                 ///< Unchecked access (existing)
+        Value& operator[](unsigned int index); ///< Unchecked access (existing)
         [[nodiscard]] const Value& operator[](unsigned int index) const; ///< Unchecked const
-        [[nodiscard]] const Value& at(unsigned int index) const; ///< Bounds-checked const
-        Value& at(unsigned int index);                          ///< Bounds-checked
-        [[nodiscard]] bool contains(unsigned int index) const noexcept; ///< Fast bounds test
+        [[nodiscard]] const Value& at(unsigned int index) const;         ///< Bounds-checked const
+        Value& at(unsigned int index);                                   ///< Bounds-checked
+        [[nodiscard]] bool contains(unsigned int index) const noexcept;  ///< Fast bounds test
+
     private:
         std::vector<Value> values_ = {};
         unsigned int offset_ = 0; ///< Logical start index used for mapping
@@ -108,7 +126,7 @@ class VariableDictionary
     using TwoIndexVectorByYear = std::unordered_map<MCYearAndTime::MCYear, VectorWithOffset>;
     using HashMapVector = std::unordered_map<PartialKey, TwoIndexVectorByYear, PartialKeyHash>;
 
-    HashMapVector storageOfAddedMipVariables_; ///< Main storage
+    HashMapVector storageOfAddedMipVariables_;                         ///< Main storage
     const TwoIndexVectorByYear& operator[](const PartialKey& k) const; ///< Internal helper
 
 public:
@@ -149,7 +167,8 @@ public:
      * @brief Non-throwing lookups returning nullptr if any index is absent.
      */
     [[nodiscard]] Value tryGet(const FullKey& k) const noexcept;
-    [[nodiscard]] Value tryGet(std::string_view component, std::string_view variable) const noexcept;
+    [[nodiscard]] Value tryGet(std::string_view component,
+                               std::string_view variable) const noexcept;
     [[nodiscard]] Value tryGet(std::string_view component,
                                std::string_view variable,
                                MCYearAndTime::MCYear scenario,
