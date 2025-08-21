@@ -24,6 +24,7 @@
 #include <functional>
 #include <optional>
 #include <string>
+#include <string_view>
 #include <unordered_map>
 #include <vector>
 
@@ -137,5 +138,14 @@ public:
     Value operator()(const FullKey& fullKey) const;
 
     Value& operator()(const FullKey& fullKey);
+
+    // Accès sécurisé (nullptr si absent) - n'affecte pas API existante
+    [[nodiscard]] Value tryGet(const FullKey& k) const noexcept;
+    [[nodiscard]] Value tryGet(std::string_view component,
+                               std::string_view variable) const noexcept;
+    [[nodiscard]] Value tryGet(std::string_view component,
+                               std::string_view variable,
+                               MCYearAndTime::MCYear scenario,
+                               unsigned int timestep) const noexcept;
 };
 } // namespace Antares::Optimization

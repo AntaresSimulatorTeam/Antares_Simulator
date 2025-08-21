@@ -236,4 +236,44 @@ VariableDictionary::Value& VariableDictionary::operator()(const FullKey& fullKey
                             fullKey.getScenario().value_or(MCYearAndTime::MCYear{0}),
                             fullKey.getTimestep().value_or(0));
 }
+
+VariableDictionary::Value VariableDictionary::tryGet(const FullKey& k) const noexcept
+{
+    return tryGet(k.getComponent(),
+                  k.getVariable(),
+                  k.getScenario().value_or(MCYearAndTime::MCYear{0}),
+                  k.getTimestep().value_or(0));
+}
+
+VariableDictionary::Value VariableDictionary::tryGet(std::string_view component,
+                                                     std::string_view variable) const noexcept
+{
+    return tryGet(component, variable, MCYearAndTime::MCYear{0}, 0);
+}
+
+VariableDictionary::Value VariableDictionary::tryGet(std::string_view component,
+                                                     std::string_view variable,
+                                                     MCYearAndTime::MCYear scenario,
+                                                     unsigned int timestep) const noexcept
+{
+    try
+    {
+        auto itKey = storageOfAddedMipVariables_.find(PartialKey(component, variable));
+        if (itKey == storageOfAddedMipVariables_.end())
+        {
+            return nullptr;
+        }
+        auto itScenario = itKey->second.find(scenario);
+        if (itScenario == itKey->second.end())
+        {
+            return nullptr;
+        }
+        // Utilise at pour sécuriser index; capture exception si hors bornes
+        return itScenario->second.at(timestep);
+    }
+    catch (const std::exception&)
+    {
+        return nullptr;
+    }
+}
 } // namespace Antares::Optimization
