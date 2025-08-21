@@ -259,8 +259,8 @@ static void FillSimulationTable(ISimulationTable& simulationTable,
         // TODO or call solver->LookupVariableOrNull()
         return variablesByName.at(
           VariableDictionary::buildVariableName({cid, name},
-                                                /* TODO should be = scen*/ std::nullopt,
-                                                ts));
+          Antares::Optimization::MCYearAndTime::MCYear{scen.value_or(0)},
+          ts));
     };
 
     auto constraintLookup = [&](const std::string& cid,
