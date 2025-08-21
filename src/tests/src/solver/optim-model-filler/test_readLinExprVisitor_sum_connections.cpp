@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -50,7 +50,8 @@ struct container_of_helpful_data_for_unit_tests
 
     Registry<Node> registry;
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
-    EvaluationContext evaluationContext{{}, {}, data};
+    Antares::Optimisation::LinearProblemApi::EmptyScenario empty_scenario;
+    EvaluationContext evaluationContext{{}, {}, data, empty_scenario};
     SystemModel::ModelBuilder modelBuilder;
     SystemModel::ComponentBuilder componentBuilder;
 };
@@ -131,7 +132,7 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_2_components_with_a_port_field,
                                          ConnectionEnd(&generatorComponent, &injection_port));
 
     // Visitor associated to component named "N"
-    ReadLinearExpressionVisitor visitor{evaluationContext, {0, 0}, nodeComponent};
+    ReadLinearExpressionVisitor visitor{evaluationContext, {0, 0, 0, 0, 0}, nodeComponent};
 
     auto timeDependentLinExpr = visitor.dispatch(sum_connections_node);
 
@@ -245,14 +246,14 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_3_components_with_a_port_field,
     nodeComponent.addComponentConnection(portId, ConnectionEnd(&demandComponent, &injection_port));
 
     // Visitor associated to component named "N"
-    ReadLinearExpressionVisitor visitor{evaluationContext, {0, 0}, nodeComponent};
+    ReadLinearExpressionVisitor visitor{evaluationContext, {0, 0, 0, 0, 0}, nodeComponent};
 
     auto timeDependentLinExpr = visitor.dispatch(sum_connections_node);
 
     auto linear_expression = timeDependentLinExpr.GetLinearExpressions().at(0);
 
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
-    FullKey generationKey(generatorComponent.Id(), "generation", 0, 0);
+    FullKey generationKey(generatorComponent.Id(), "generation", MCYearAndTime::MCYear{0}, 0);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(generationKey), 1.);
     BOOST_CHECK_EQUAL(linear_expression.offset(), -5.);
 }

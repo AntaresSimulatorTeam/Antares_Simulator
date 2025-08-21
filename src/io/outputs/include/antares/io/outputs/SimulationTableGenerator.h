@@ -100,7 +100,8 @@ void addVariableEntries(ISimulationTable& simulationTable,
 
         if (scenDep && timeDep)
         {
-            for (unsigned ts = fillContext.getFirstTimeStep(); ts <= fillContext.getLastTimeStep();
+            for (unsigned ts = fillContext.getLocalFirstTimeStep();
+                 ts <= fillContext.getLocalLastTimeStep();
                  ++ts)
             {
                 handle(ts, scenario);
@@ -112,7 +113,8 @@ void addVariableEntries(ISimulationTable& simulationTable,
         }
         else if (timeDep)
         {
-            for (unsigned ts = fillContext.getFirstTimeStep(); ts <= fillContext.getLastTimeStep();
+            for (unsigned ts = fillContext.getLocalFirstTimeStep();
+                 ts <= fillContext.getLocalLastTimeStep();
                  ++ts)
             {
                 handle(ts, std::nullopt);
@@ -165,7 +167,8 @@ void addConstraintEntries(ISimulationTable& simulationTable,
         switch (idxType)
         {
         case TI::VARYING_IN_TIME_AND_SCENARIO:
-            for (unsigned ts = fillContext.getFirstTimeStep(); ts <= fillContext.getLastTimeStep();
+            for (unsigned ts = fillContext.getLocalFirstTimeStep();
+                 ts <= fillContext.getLocalLastTimeStep();
                  ++ts)
             {
                 handle(ts, scenario);
@@ -175,7 +178,8 @@ void addConstraintEntries(ISimulationTable& simulationTable,
             handle(std::nullopt, scenario);
             break;
         case TI::VARYING_IN_TIME_ONLY:
-            for (unsigned ts = fillContext.getFirstTimeStep(); ts <= fillContext.getLastTimeStep();
+            for (unsigned ts = fillContext.getLocalFirstTimeStep();
+                 ts <= fillContext.getLocalLastTimeStep();
                  ++ts)
             {
                 handle(ts, std::nullopt);

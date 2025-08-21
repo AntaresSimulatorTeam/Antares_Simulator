@@ -16,6 +16,7 @@ toc_depth: 2
 
 #### Removed features
 * Remove timeseries refresh [ANT-1335] (#2451)
+* Forbid study path with non ascii chars [ANT-3635] (#2934)
 
 #### Improvements
 * Remove year batches, launch jobs continually [ANT-2139] (#2718)
@@ -29,6 +30,8 @@ toc_depth: 2
 * New cmd line options for solver (#2765)
 * Add checks for duplicates on study objects [ANT-2127] (#2733)
 * Allow empty series files for STS [ANT-3053] (#2731)
+* Fix final level computation in monthly hydro heuristic (#2943)
+* Move STS additional constraint data folder [ANT-3666] (#2944)
 
 #### Bugfixes
 * Infeasibility caused by hydro (attempt 2) [ANT-3122] (#2874)
@@ -45,6 +48,8 @@ toc_depth: 2
 * Change control for sts injection/withdrawal efficiency [ANT-3100] (#2749)
 * Fix unfeasible problems with <0 hydro infows [ANT-3043] (#2732)
 * Fix undefined behavior in BCs [ANT-2994] (#2708)
+* Fix segfault when exporting binding constraints (#2954)
+* Clear basis at start of each MC year to avoid sequential/parallel discrepancies (#2941)
 
 #### Modeler
 * 2.9: TimeIndex and TimeShift operators [ANT-2874] (#2678)
@@ -52,6 +57,7 @@ toc_depth: 2
 * 3.3: Hydrid studies without connections [ANT-2898] (#2699)
 * 3.5: Hybrid area connections from yaml [ANT-2901] (#2787)
 * 3.6: Connect components to areas in linear optimization problem [ANT-2902] (#2792)
+* 4.3 Scenario [ANT-2034][ANT-3603] (#2824)(#2863)
 * 4.7: Import connections and ports [ANT-2875] (#2662)
 * 4.8: Establishing Component Connections [ANT-2876] (#2724)
 * Connections : build expressions from connections and ports (#2739)
@@ -62,6 +68,7 @@ toc_depth: 2
 * Work on port rules (#2746)
 * Use indices for getVariable & getConstraint, don't reconstruct name (#2729)
 * Improve modeler API & main class (#2669)
+* Performance optimizations in TimeDependentLinearExpression (#2962)
 
 #### CI
 * Use correct keys for ccache, update ccache for windows, always save ccache (#2884)(#2864)
@@ -73,6 +80,11 @@ toc_depth: 2
 * Fix Oracle continuous-delivery (#2758)
 * Fix Sonarcloud jobs failing silently (#2710)
 * Create a permanent release from develop (#2688)
+* Remove usage of surge.sh (#2960)
+* Update sonar scanner (#2951)
+* Activate tests for 9.3 studies in CI (#2950)
+* Generate & upload HTML report for unit tests (#2930)
+* Badges: use status from branch develop instead of latest from any branch (#2939)
 
 #### Build
 * [ANT-2034] Various warnings or linter fixes (#2861)
@@ -81,6 +93,10 @@ toc_depth: 2
 * Fix dependency issue for clients (#2757)
 * Bump vcpkg to 2025.02.14 (#2741)
 * Remove compilation warnings for GCC (#2740)
+* Add helper CMake targets to generate C++ headers & source from ANTLR grammar files [ANT-3429] (#2924)
+* CMake presets (#2928)
+* Remove warnings on gcc (#2927)
+* Factorise antlr4 lib linking resolution (#2929)
 
 #### Doc
 * Migration guide for dynamic cluster groups and sts inflows (#2913)(#2915)(#2916)(#2918)
@@ -94,6 +110,8 @@ toc_depth: 2
 * Fix broken link in mkdocs.yml (#2743)
 * updating output changelog (#2689)
 * correct python command to install dependencies (#2695)
+* Improve doc for STS additional constraints (#2940)
+* Add documentation for include-export-solutions for migration guide (#2937)
 
 #### Code quality
 * Use range-based for loops (#2897)
@@ -112,6 +130,9 @@ toc_depth: 2
 * Use MPSolver* instead of void\*, remove static_casts (#2704)
 * Pass strings by const reference when reading scenariobuilder.dat (#2683)
 * Remove dynamic allocations, use local variables instead (#2694)
+* Hydro remix algo : simplification (#2922)(#2956)
+* Remove a few unused headers (#2935)
+* Performance for problem building : avoid maps copy (#2926)
 
 #### Technical cleaning
 * Remove yuni limit on max threads (#2832)
@@ -141,6 +162,7 @@ toc_depth: 2
 * Add unit tests for BindingConstraintGroup::numberOfTimeseries (#2711)
 * Fix ortools unit tests (#2702)
 * Fix non-passing tests (#2696)
+* Minimal system under test [ANT-2034] (#2830)
 
 #### For developers
 * Add 2 future parameters in generaldata.ini [ANT-3504] (#2907)
@@ -148,7 +170,8 @@ toc_depth: 2
 * Use OR-Tools/MathOpt for quadratic problem resolution [ANT-2546] (#2574)
 * Don't rebuild optimization problem at every simplex resolution (#2722)
 * Enable extra linear solvers: PDLP & HiGHS (#2693)
-
+* Rebuild MPSolver between solves & transmit basis when using sirius [ANT-1287] (#2868)
+* fix infeasible problem analyzer, remove "safe resolution mode" [ANT-3507](#2898)
 
 ## Branch 9.2.x
 

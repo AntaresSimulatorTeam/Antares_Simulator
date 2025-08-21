@@ -21,7 +21,6 @@
 
 #include <antares/api/solver.h>
 #include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
-#include "antares/study-loader/IStudyLoader.h"
 
 #include "private/API.h"
 

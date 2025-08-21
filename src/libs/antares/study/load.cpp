@@ -20,7 +20,6 @@
 */
 #include <fstream>
 
-#include <antares/benchmarking/DurationCollector.h>
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include "antares/study/scenario-builder/sets.h"
 #include "antares/study/study.h"
