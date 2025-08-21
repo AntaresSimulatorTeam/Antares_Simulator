@@ -70,6 +70,7 @@ void FileWriter::writeSimulationTable(
   const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
   const Optimisation::LinearProblemApi::IMipSolution& solution,
   const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>& components,
+  const Optimisation::LinearProblemApi::ILinearProblemData* dataSeries,
   const Antares::Optimization::VariableDictionary& variableDictionary,
   const Antares::Optimisation::LinearProblemApi::FillContext& fillContext) const
 {
@@ -80,6 +81,7 @@ void FileWriter::writeSimulationTable(
                             linearProblem,
                             solution,
                             components,
+                            dataSeries,
                             variableDictionary,
                             fillContext);
         simulationTable.write();

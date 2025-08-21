@@ -26,6 +26,7 @@
 namespace Antares::Optimisation::LinearProblemApi
 {
 class ILinearProblem;
+class ILinearProblemData;
 class FillContext;
 } // namespace Antares::Optimisation::LinearProblemApi
 
@@ -52,6 +53,7 @@ public:
       const Optimisation::LinearProblemApi::IMipSolution& solution,
       const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>&
         components,
+      const Optimisation::LinearProblemApi::ILinearProblemData* dataSeries,
       const Antares::Optimization::VariableDictionary& variableDictionary,
       const Antares::Optimisation::LinearProblemApi::FillContext& fillContext) const override;
     explicit FileWriter(std::filesystem::path path);

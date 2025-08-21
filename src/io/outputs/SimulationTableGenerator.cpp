@@ -20,6 +20,8 @@
 */
 #include "antares/io/outputs/SimulationTableGenerator.h"
 
+#include <optional>
+
 #include <antares/solver/optim-model-filler/VariableDictionary.h>
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
 #include "antares/optimisation/linear-problem-api/mipConstraint.h"
@@ -98,6 +100,8 @@ std::string BuildModelerConstraintName(const std::string& cid,
 void addPortEntries(ISimulationTable& simulationTable,
                     const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
                     const Antares::ModelerStudy::SystemModel::Component& component,
+                    const Antares::Optimisation::LinearProblemApi::ILinearProblem* dataSeries,
+                    Antares::Optimisation::LinearProblemApi::ILinearProblemData& data,
                     unsigned currentBlock,
                     const TimeConversionMode& timeConversionMode,
                     std::optional<unsigned> scenario)
@@ -116,6 +120,14 @@ void addPortEntries(ISimulationTable& simulationTable,
                               : TimeBlock{.block = currentBlock,
                                           .blockTimeIndex = std::nullopt,
                                           .absoluteTimeIndex = std::nullopt};
+
+            std::optional<double> value = std::nullopt;
+
+            const Antares::Expressions::Visitors::EvaluationContext connectedComponentEvalContext(
+              component.getParameterValues(),
+              {},
+              data);
+
             simulationTable.addEntry(
               {.block = tb.block,
                .component = cid,
@@ -123,7 +135,7 @@ void addPortEntries(ISimulationTable& simulationTable,
                .absolute_time_index = tb.absoluteTimeIndex,
                .block_time_index = tb.blockTimeIndex,
                .scenario_index = scenIdx,
-               .value = std::nullopt,
+               .value = value,
                .status = Antares::Optimisation::LinearProblemApi::MipBasisStatus::NOT_AVAILABLE});
         };
 
