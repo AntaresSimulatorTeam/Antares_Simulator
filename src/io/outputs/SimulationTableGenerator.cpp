@@ -100,8 +100,7 @@ void addPortEntries(ISimulationTable& simulationTable,
                     const Antares::ModelerStudy::SystemModel::Component& component,
                     unsigned currentBlock,
                     const TimeConversionMode& timeConversionMode,
-                    std::optional<unsigned> scenario,
-                    bool isLp)
+                    std::optional<unsigned> scenario)
 {
     using TI = Antares::Expressions::Visitors::TimeIndex;
     const auto& cid = component.Id();

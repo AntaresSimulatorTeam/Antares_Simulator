@@ -189,6 +189,13 @@ void addConstraintEntries(ISimulationTable& simulationTable,
     }
 }
 
+void addPortEntries(ISimulationTable& simulationTable,
+                    const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
+                    const Antares::ModelerStudy::SystemModel::Component& component,
+                    unsigned currentBlock,
+                    const TimeConversionMode& timeConversionMode,
+                    std::optional<unsigned> scenario);
+
 std::string BuildModelerConstraintName(const std::string& cid,
                                        const std::string& cname,
                                        const std::optional<unsigned>& scen,
