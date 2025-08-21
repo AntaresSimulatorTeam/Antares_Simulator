@@ -96,12 +96,12 @@ std::string BuildModelerConstraintName(const std::string& cid,
 }
 
 void addPortEntries(ISimulationTable& simulationTable,
-                          const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
-                          const Antares::ModelerStudy::SystemModel::Component& component,
-                          unsigned currentBlock,
-                          const TimeConversionMode& timeConversionMode,
-                          std::optional<unsigned> scenario,
-                          bool isLp)
+                    const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
+                    const Antares::ModelerStudy::SystemModel::Component& component,
+                    unsigned currentBlock,
+                    const TimeConversionMode& timeConversionMode,
+                    std::optional<unsigned> scenario,
+                    bool isLp)
 {
     using TI = Antares::Expressions::Visitors::TimeIndex;
     const auto& cid = component.Id();
@@ -117,14 +117,15 @@ void addPortEntries(ISimulationTable& simulationTable,
                               : TimeBlock{.block = currentBlock,
                                           .blockTimeIndex = std::nullopt,
                                           .absoluteTimeIndex = std::nullopt};
-            simulationTable.addEntry({.block = tb.block,
-                                      .component = cid,
-                                      .output = portFieldKey.portId + "." + portFieldKey.fieldId,
-                                      .absolute_time_index = tb.absoluteTimeIndex,
-                                      .block_time_index = tb.blockTimeIndex,
-                                      .scenario_index = scenIdx,
-                                      .value = std::nullopt,
-                                      .status = Antares::Optimisation::LinearProblemApi::MipBasisStatus::NOT_AVAILABLE});
+            simulationTable.addEntry(
+              {.block = tb.block,
+               .component = cid,
+               .output = portFieldKey.portId + "." + portFieldKey.fieldId,
+               .absolute_time_index = tb.absoluteTimeIndex,
+               .block_time_index = tb.blockTimeIndex,
+               .scenario_index = scenIdx,
+               .value = std::nullopt,
+               .status = Antares::Optimisation::LinearProblemApi::MipBasisStatus::NOT_AVAILABLE});
         };
 
         switch (idxType)
@@ -153,6 +154,7 @@ void addPortEntries(ISimulationTable& simulationTable,
         }
     }
 }
+
 void FillSimulationTable(
   ISimulationTable& simulationTable,
   const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
