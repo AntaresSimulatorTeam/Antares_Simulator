@@ -90,6 +90,7 @@ private:
          */
         id_type intern(std::string_view s)
         {
+            // Different thread can read at the same time
             {
                 std::shared_lock lock(mtx);
                 if (auto it = map.find(std::string(s)); it != map.end())
@@ -97,6 +98,7 @@ private:
                     return it->second;
                 }
             }
+            // Wait for shared_lock (reading) to release before modifying
             std::unique_lock lock(mtx);
             auto it2 = map.find(std::string(s));
             if (it2 != map.end())
