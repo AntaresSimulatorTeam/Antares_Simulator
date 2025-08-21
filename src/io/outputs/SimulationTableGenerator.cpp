@@ -122,10 +122,8 @@ void addPortEntries(ISimulationTable& simulationTable,
 
             std::optional<double> value = std::nullopt;
 
-            const Antares::Expressions::Visitors::EvaluationContext connectedComponentEvalContext(
-              component.getParameterValues(),
-              {},
-              *dataSeries);
+            const Antares::Expressions::Visitors::EvaluationContext
+              connectedComponentEvalContext(component.getParameterValues(), {}, *dataSeries);
 
             simulationTable.addEntry(
               {.block = tb.block,
