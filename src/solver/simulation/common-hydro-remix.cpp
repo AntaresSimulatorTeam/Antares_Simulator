@@ -27,8 +27,8 @@
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
 #include "antares/solver/simulation/common-eco-adq.h"
-#include "antares/solver/simulation/remix-storage/storage-for-remix.h"
 #include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-storage-gen.h"
+#include "antares/solver/simulation/remix-storage/storage-for-remix.h"
 #include "antares/study/simulation.h"
 
 #define EPSILON 1e-6
