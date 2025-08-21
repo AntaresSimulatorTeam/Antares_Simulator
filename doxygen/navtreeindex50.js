@@ -1,5 +1,7 @@
 var NAVTREEINDEX50 =
 {
+"libs_2antares_2study_2include_2antares_2study_2parts_2renewable_2container_8hxx_source.html":[9,0,0,4,0,25,0,0,0,5,3,4],
+"libs_2antares_2study_2include_2antares_2study_2parts_2short-term-storage_2cluster_8h_source.html":[9,0,0,4,0,25,0,0,0,5,4,1],
 "libs_2antares_2study_2include_2antares_2study_2parts_2short-term-storage_2container_8h_source.html":[9,0,0,4,0,25,0,0,0,5,4,2],
 "libs_2antares_2study_2include_2antares_2study_2parts_2short-term-storage_2series_8h.html#a268d69b2741f80354b516dc298b51a1f":[7,0,0,6,4,13],
 "libs_2antares_2study_2include_2antares_2study_2parts_2short-term-storage_2series_8h.html#a2dd8e02fcd42eb2bcf12580d84e3e3e8":[7,0,0,6,4,11],
@@ -247,7 +249,5 @@ var NAVTREEINDEX50 =
 "namespaceAntares_1_1Optimisation_1_1LinearProblemApi.html#a151c8d204cdbd68c4258e0b1ba4403d9af00c8dbdd6e1f11bdae06be94277d293":[7,0,0,20,0,16,0],
 "namespaceAntares_1_1Optimization.html":[7,0,0,21],
 "namespaceAntares_1_1Optimization.html#a1418a64099521dabe8235df401f4f0cc":[7,0,0,21,49],
-"namespaceAntares_1_1Optimization.html#a14f36c0006d50ed493aa40606b57bb4b":[7,0,0,21,46],
-"namespaceAntares_1_1Optimization.html#a1a5dca99337537968ed197d7c4d838ac":[7,0,0,21,41],
-"namespaceAntares_1_1Optimization.html#a381a6f88b0e7939894e8dfc6001069b3":[7,0,0,21,36]
+"namespaceAntares_1_1Optimization.html#a14f36c0006d50ed493aa40606b57bb4b":[7,0,0,21,46]
 };

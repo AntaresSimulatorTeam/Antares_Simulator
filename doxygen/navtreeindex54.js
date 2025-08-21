@@ -1,5 +1,10 @@
 var NAVTREEINDEX54 =
 {
+"structAntares_1_1Optimization_1_1VariableBounds.html#a2212021f92d0c5922a0e698178a2b22a":[8,0,0,16,4,3],
+"structAntares_1_1Optimization_1_1VariableBounds.html#ab585fb575c38a211d9f6a9e3a4b67a71":[8,0,0,16,4,2],
+"structAntares_1_1Optimization_1_1VariableBounds.html#acb6a350257a9655e941067a3383a4041":[8,0,0,16,4,1],
+"structAntares_1_1ScenarioGroupParser_1_1Line.html":[8,0,0,39,0],
+"structAntares_1_1ScenarioGroupParser_1_1Line.html#a6c7b44ff33b68ee45d35bb2374ec2f4f":[8,0,0,39,0,2],
 "structAntares_1_1ScenarioGroupParser_1_1Line.html#aa916761057fc5e3ee82ade8d4d354416":[8,0,0,39,0,0],
 "structAntares_1_1ScenarioGroupParser_1_1Line.html#adaedb692c41c436902463305dce21a0e":[8,0,0,39,0,1],
 "structAntares_1_1Solver_1_1ConstantDataFromAntares.html":[8,0,0,18,22],
@@ -244,10 +249,5 @@ var NAVTREEINDEX54 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLMRViolations.html":[8,0,0,18,4,4,52],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLMRViolations.html#a382498529be86ea5a1903ee4daafac60":[8,0,0,18,4,4,52,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLMRViolations.html#a889f9c6299aa4d67d579e9fc6be25def":[8,0,0,18,4,4,52,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLMRViolations.html#a8afef3f661a348620d2e22307a7b378a":[8,0,0,18,4,4,52,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLMRViolations.html#aa988dd4558b02a7d1393863163dfe6a0":[8,0,0,18,4,4,52,3],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLMRViolations.html#aab62f54b49dbb961887339120897b629":[8,0,0,18,4,4,52,4],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLD.html":[8,0,0,18,4,4,54],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLD.html#a2a1c8f1fe735bbd5085da04ef73f25df":[8,0,0,18,4,4,54,4],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLD.html#a303670ae0a48c5a24015ee0939182b84":[8,0,0,18,4,4,54,3]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLMRViolations.html#a8afef3f661a348620d2e22307a7b378a":[8,0,0,18,4,4,52,0]
 };

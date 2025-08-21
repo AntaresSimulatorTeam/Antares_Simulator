@@ -1,5 +1,10 @@
 var NAVTREEINDEX53 =
 {
+"structAntares_1_1Data_1_1MonthlyGenerationTargetData.html#ad94d7a42522c191d2b8fb1ddc01a7573":[8,0,0,4,47,1],
+"structAntares_1_1Data_1_1Parameters_1_1Compatibility.html":[8,0,0,4,41,0],
+"structAntares_1_1Data_1_1Parameters_1_1Compatibility.html#a01a2c753290e829d75346091474fd418":[8,0,0,4,41,0,1],
+"structAntares_1_1Data_1_1Parameters_1_1Compatibility.html#a299211b0305b9bb1bcdb3caaecc8f9d5":[8,0,0,4,41,0,0],
+"structAntares_1_1Data_1_1Parameters_1_1Compatibility.html#a299211b0305b9bb1bcdb3caaecc8f9d5a769cb50c95fd3a43c659aa73aba99e5b":[8,0,0,4,41,0,0,1],
 "structAntares_1_1Data_1_1Parameters_1_1Compatibility.html#a299211b0305b9bb1bcdb3caaecc8f9d5ac512b685438f41daa7386329a3b8f8d3":[8,0,0,4,41,0,0,0],
 "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions.html":[8,0,0,4,41,1],
 "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions.html#a05e715f1eb29b68c61b1c7a716acfcfc":[8,0,0,4,41,1,3],
@@ -244,10 +249,5 @@ var NAVTREEINDEX53 =
 "structAntares_1_1Optimization_1_1MCYearAndTime.html#ae2dbeb09dbdf7b87750797ae394ca7e6":[8,0,0,16,19,2],
 "structAntares_1_1Optimization_1_1MCYearAndTime.html#af523489c66678cdf6721b3c0775c1952":[8,0,0,16,19,0],
 "structAntares_1_1Optimization_1_1VariableBounds.html":[8,0,0,16,4],
-"structAntares_1_1Optimization_1_1VariableBounds.html#a03e3cbbfabe7cc02a18535fd955b7b6e":[8,0,0,16,4,0],
-"structAntares_1_1Optimization_1_1VariableBounds.html#a2212021f92d0c5922a0e698178a2b22a":[8,0,0,16,4,3],
-"structAntares_1_1Optimization_1_1VariableBounds.html#ab585fb575c38a211d9f6a9e3a4b67a71":[8,0,0,16,4,2],
-"structAntares_1_1Optimization_1_1VariableBounds.html#acb6a350257a9655e941067a3383a4041":[8,0,0,16,4,1],
-"structAntares_1_1ScenarioGroupParser_1_1Line.html":[8,0,0,39,0],
-"structAntares_1_1ScenarioGroupParser_1_1Line.html#a6c7b44ff33b68ee45d35bb2374ec2f4f":[8,0,0,39,0,2]
+"structAntares_1_1Optimization_1_1VariableBounds.html#a03e3cbbfabe7cc02a18535fd955b7b6e":[8,0,0,16,4,0]
 };

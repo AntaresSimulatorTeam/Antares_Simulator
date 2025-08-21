@@ -1,5 +1,8 @@
 var NAVTREEINDEX40 =
 {
+"classHourlyCSRProblem.html#a845a1557a82e20e0fa58004ca91aa334":[8,0,138,16],
+"classHourlyCSRProblem.html#a84afc58dbe983e98ac8439c37a754885":[8,0,138,14],
+"classHourlyCSRProblem.html#a917a651803183f9a85ef337b91abdd4d":[8,0,138,15],
 "classHourlyCSRProblem.html#aab32e346e8bf294dacc58d23e1a201c4":[8,0,138,7],
 "classHourlyCSRProblem.html#aabe98d48f584546bf58ec7e7edc1f9dd":[8,0,138,12],
 "classHourlyCSRProblem.html#aadc4ef7601d04a5b70eb7a3f3e10accb":[8,0,138,6],
@@ -246,8 +249,5 @@ var NAVTREEINDEX40 =
 "classJobFileReader.html#a181dbf72e030ce104178772da7fcfca9":[8,0,164,8],
 "classJobFileReader.html#a21f168cdef0f47ddd238f6d7839ec301":[8,0,164,0],
 "classJobFileReader.html#a35f76210b50cd6c8a86c8d0ac72f517c":[8,0,164,1],
-"classJobFileReader.html#aa8607cde78fa1eeb0a276127f49f5a00":[8,0,164,7],
-"classJobFileReader.html#ac0140032b098e5f4cbbedb62a4fee2a7":[8,0,164,3],
-"classJobFileReader.html#adcd1aebb5c4217842478e104bbe4054c":[8,0,164,5],
-"classJobFileReader.html#adde9c393e3088ec51984f977513d741e":[8,0,164,6]
+"classJobFileReader.html#aa8607cde78fa1eeb0a276127f49f5a00":[8,0,164,7]
 };

@@ -1,5 +1,7 @@
 var NAVTREEINDEX49 =
 {
+"io_2include_2antares_2io_2statistics_8h.html#a35f4ac41f1ff2703e4e67331bc4414f6":[7,0,0,26,6],
+"io_2include_2antares_2io_2statistics_8h.html#a3a3a37f11a6e596013003ee104b5eb8b":[7,0,0,26,11],
 "io_2include_2antares_2io_2statistics_8h.html#a40ff2eb49aeebce9b00005566c4b7c61":[7,0,0,26,10],
 "io_2include_2antares_2io_2statistics_8h.html#a529bd45626f89ea6df30c617cb8f89fe":[7,0,0,26,7],
 "io_2include_2antares_2io_2statistics_8h.html#a55ed7d42e2216a241734a022adc0b565":[7,0,0,26,3],
@@ -247,7 +249,5 @@ var NAVTREEINDEX49 =
 "libs_2antares_2study_2include_2antares_2study_2parts_2load_2container_8h_source.html":[9,0,0,4,0,25,0,0,0,5,2,0],
 "libs_2antares_2study_2include_2antares_2study_2parts_2load_2prepro_8h_source.html":[9,0,0,4,0,25,0,0,0,5,2,1],
 "libs_2antares_2study_2include_2antares_2study_2parts_2renewable_2cluster_8h_source.html":[9,0,0,4,0,25,0,0,0,5,3,0],
-"libs_2antares_2study_2include_2antares_2study_2parts_2renewable_2container_8h_source.html":[9,0,0,4,0,25,0,0,0,5,3,3],
-"libs_2antares_2study_2include_2antares_2study_2parts_2renewable_2container_8hxx_source.html":[9,0,0,4,0,25,0,0,0,5,3,4],
-"libs_2antares_2study_2include_2antares_2study_2parts_2short-term-storage_2cluster_8h_source.html":[9,0,0,4,0,25,0,0,0,5,4,1]
+"libs_2antares_2study_2include_2antares_2study_2parts_2renewable_2container_8h_source.html":[9,0,0,4,0,25,0,0,0,5,3,3]
 };

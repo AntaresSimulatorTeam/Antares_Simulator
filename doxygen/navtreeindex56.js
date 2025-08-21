@@ -1,5 +1,10 @@
 var NAVTREEINDEX56 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a00706afc42cd9e5132dbe8c0245274e9":[8,0,0,18,4,4,124,4],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a46c9290483710daea47a6571ed804724":[8,0,0,18,4,4,124,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a57eaa9833d5e2e19a97e609216940c7a":[8,0,0,18,4,4,124,2],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a8f7833edaaf5c9915e08c0fe524c6fe0":[8,0,0,18,4,4,124,3],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#ac46ef302975f5232a7a4892bde6c178f":[8,0,0,18,4,4,124,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue_1_1Statistics.html":[8,0,0,18,4,4,125,0],
 "structAntares_1_1Solver_1_1Variable_1_1Empty.html":[8,0,0,18,4,43],
 "structAntares_1_1Solver_1_1Variable_1_1Empty.html#af09b400c19dced6f209c4c3c5de88f91":[8,0,0,18,4,43,0],
@@ -244,10 +249,5 @@ var NAVTREEINDEX56 =
 "structAntares_1_1Window_1_1Inspector_1_1PClusterStartupCost.html":[8,0,0,23,1,55],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterStartupCost.html#a4387cac1e187e78a3679deb5c0640226":[8,0,0,23,1,55,0],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterUnitCount.html":[8,0,0,23,1,37],
-"structAntares_1_1Window_1_1Inspector_1_1PClusterUnitCount.html#a47a9dd7aaf691275d3389e030d63fe7e":[8,0,0,23,1,37,0],
-"structAntares_1_1Window_1_1Inspector_1_1PClusterVariableOMcost.html":[8,0,0,23,1,57],
-"structAntares_1_1Window_1_1Inspector_1_1PClusterVariableOMcost.html#a88f50e70afcbd7ff4164a3b17b227109":[8,0,0,23,1,57,0],
-"structAntares_1_1Window_1_1Inspector_1_1PClusterVolatilityForced.html":[8,0,0,23,1,46],
-"structAntares_1_1Window_1_1Inspector_1_1PClusterVolatilityForced.html#a46298b56335afe5b7ac7378d8060670c":[8,0,0,23,1,46,0],
-"structAntares_1_1Window_1_1Inspector_1_1PClusterVolatilityPlanned.html":[8,0,0,23,1,45]
+"structAntares_1_1Window_1_1Inspector_1_1PClusterUnitCount.html#a47a9dd7aaf691275d3389e030d63fe7e":[8,0,0,23,1,37,0]
 };

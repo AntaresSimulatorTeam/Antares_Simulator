@@ -1,5 +1,10 @@
 var NAVTREEINDEX55 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLMRViolations.html#aa988dd4558b02a7d1393863163dfe6a0":[8,0,0,18,4,4,52,3],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLMRViolations.html#aab62f54b49dbb961887339120897b629":[8,0,0,18,4,4,52,4],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLD.html":[8,0,0,18,4,4,54],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLD.html#a2a1c8f1fe735bbd5085da04ef73f25df":[8,0,0,18,4,4,54,4],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLD.html#a303670ae0a48c5a24015ee0939182b84":[8,0,0,18,4,4,54,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLD.html#a3a59abc93bdcd7e4eeed8cb095fbfb00":[8,0,0,18,4,4,54,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLD.html#ab88d38f2c2526ec1c666f8195917fd9a":[8,0,0,18,4,4,54,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLD.html#aecb2fcf9a30c805713c444afe8c76122":[8,0,0,18,4,4,54,1],
@@ -244,10 +249,5 @@ var NAVTREEINDEX55 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergyCSR.html#aa2a8d40a6443b8decac825f758ac9cf4":[8,0,0,18,4,4,122,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergyCSR.html#aaf40e1a4f05f4c319c686be754e729d9":[8,0,0,18,4,4,122,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergyCSR.html#afe3a65ea3e7cf5fd858ae0d4e8ff1f07":[8,0,0,18,4,4,122,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html":[8,0,0,18,4,4,124],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a00706afc42cd9e5132dbe8c0245274e9":[8,0,0,18,4,4,124,4],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a46c9290483710daea47a6571ed804724":[8,0,0,18,4,4,124,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a57eaa9833d5e2e19a97e609216940c7a":[8,0,0,18,4,4,124,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a8f7833edaaf5c9915e08c0fe524c6fe0":[8,0,0,18,4,4,124,3],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#ac46ef302975f5232a7a4892bde6c178f":[8,0,0,18,4,4,124,1]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html":[8,0,0,18,4,4,124]
 };
