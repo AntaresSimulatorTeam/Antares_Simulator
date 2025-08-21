@@ -372,6 +372,7 @@ jobs:
       - name: Create solver-only archive
         shell: pwsh
         run: |
+          cd _build
           Compress-Archive -Path solver/Release/antares-solver.exe, solver/Release/*.dll -DestinationPath antares-solver_windows.zip -Force
 
       - name: NSIS Installer creation
