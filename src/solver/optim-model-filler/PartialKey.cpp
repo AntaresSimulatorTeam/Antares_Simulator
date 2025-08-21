@@ -51,10 +51,9 @@ PartialKey::StringInterner& PartialKey::interner() noexcept
 
 std::size_t PartialKeyHash::operator()(const PartialKey& p) const noexcept
 {
-    // Combinaison portable (32/64 bits) inspirée de boost::hash_combine
-    std::size_t seed = static_cast<std::size_t>(p.getComponentId());
-    seed ^= static_cast<std::size_t>(p.getVariableId()) + 0x9e3779b97f4a7c15ULL + (seed << 6)
-            + (seed >> 2);
+    std::size_t seed = 0;
+    boost::hash_combine(seed, p.getComponentId());
+    boost::hash_combine(seed, p.getVariableId());
     return seed;
 }
 
