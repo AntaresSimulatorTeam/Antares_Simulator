@@ -257,8 +257,8 @@ static void FillSimulationTable(ISimulationTable& simulationTable,
                               std::optional<unsigned> ts) -> const MPVariable*
     {
         // TODO or call solver->LookupVariableOrNull()
-        return variablesByName.at(
-          VariableDictionary::buildVariableName({cid, name},
+        return variablesByName.at(VariableDictionary::buildVariableName(
+          {cid, name},
           Antares::Optimization::MCYearAndTime::MCYear{scen.value_or(0)},
           ts));
     };
