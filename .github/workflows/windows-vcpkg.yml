@@ -57,11 +57,6 @@ jobs:
           echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_windows-latest_static_sirius_Release.zip" >> $GITHUB_ENV
         shell: bash
 
-      - name: Pre-requisites
-        shell: cmd
-        run: |
-          choco install wget unzip zip --no-progress
-
       # Downloads ccache, and copies it to "cl.exe" in order to trick cmake into using it,
       # see ccache wiki for background on using it with MSVC:
       # https://github.com/ccache/ccache/wiki/MS-Visual-Studio
