@@ -192,6 +192,7 @@ void addConstraintEntries(ISimulationTable& simulationTable,
 void addPortEntries(ISimulationTable& simulationTable,
                     const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
                     const Antares::ModelerStudy::SystemModel::Component& component,
+                    Antares::Optimisation::LinearProblemApi::ILinearProblemData* dataSeries,
                     unsigned currentBlock,
                     const TimeConversionMode& timeConversionMode,
                     std::optional<unsigned> scenario);
@@ -205,5 +206,6 @@ void FillSimulationTable(
   const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
   const Antares::Optimisation::LinearProblemApi::IMipSolution& solution,
   const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>& components,
+  Antares::Optimisation::LinearProblemApi::ILinearProblemData* dataSeries,
   const Antares::Optimization::VariableDictionary& variableDictionary,
   const Antares::Optimisation::LinearProblemApi::FillContext& fillContext);
