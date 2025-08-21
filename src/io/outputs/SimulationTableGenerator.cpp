@@ -197,5 +197,11 @@ void FillSimulationTable(
                                                   TimeConversionMode::SingleBlock,
                                                   scenario,
                                                   linearProblem.isLP());
+        addPortEntries(simulationTable,
+                       fillContext,
+                       component,
+                       1,
+                       TimeConversionMode::SingleBlock,
+                       scenario);
     }
 }
