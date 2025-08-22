@@ -30,18 +30,22 @@
 
 using namespace Antares::Optimization;
 
-BOOST_AUTO_TEST_SUITE(DimensionsSuite)
+struct Fixture
+{
+    VariableDictionary variableDict;
+};
+BOOST_FIXTURE_TEST_SUITE(DimensionsSuite, Fixture)
 
 BOOST_AUTO_TEST_CASE(PartialKeyGetters)
 {
-    PartialKey pk("component", "variable");
+    auto pk = variableDict.buildKey("component", "variable");
     BOOST_CHECK_EQUAL(pk.getComponent(), "component");
     BOOST_CHECK_EQUAL(pk.getVariable(), "variable");
 }
 
 BOOST_AUTO_TEST_CASE(FullKeyGetters_2ArgsConstructor)
 {
-    FullKey k("component", "variable");
+    auto k = variableDict.buildFullKey("component", "variable");
     BOOST_CHECK_EQUAL(k.getComponent(), "component");
     BOOST_CHECK_EQUAL(k.getVariable(), "variable");
 
@@ -51,7 +55,7 @@ BOOST_AUTO_TEST_CASE(FullKeyGetters_2ArgsConstructor)
 
 BOOST_AUTO_TEST_CASE(FullKeyGetters_4ArgsConstructor)
 {
-    FullKey k("component", "variable", MCYearAndTime::MCYear{3}, 4);
+    FullKey k = variableDict.buildFullKey("component", "variable", MCYearAndTime::MCYear{3}, 4);
     BOOST_CHECK_EQUAL(k.getComponent(), "component");
     BOOST_CHECK_EQUAL(k.getVariable(), "variable");
 
@@ -61,17 +65,17 @@ BOOST_AUTO_TEST_CASE(FullKeyGetters_4ArgsConstructor)
 
 BOOST_AUTO_TEST_CASE(FullKeyCompare)
 {
-    FullKey k1("component", "a");
-    FullKey k2("component", "a");
-    BOOST_CHECK(k1 == k2);
-    BOOST_CHECK(k1 <= k2);
+    FullKey k1 = variableDict.buildFullKey("component", "a");
+    FullKey k2 = variableDict.buildFullKey("component", "a");
+    BOOST_CHECK_EQUAL(k1, k2);
+    BOOST_CHECK_LE(k1, k2);
 
-    FullKey k3("component", "b");
-    BOOST_CHECK(k3 != k1);
-    BOOST_CHECK(k1 < k3);
+    FullKey k3 = variableDict.buildFullKey("component", "b");
+    BOOST_CHECK_NE(k3, k1);
+    BOOST_CHECK_LT(k1, k3);
 
-    FullKey k4("komponent", "a");
-    BOOST_CHECK(k4 != k1);
+    FullKey k4 = variableDict.buildFullKey("komponent", "a");
+    BOOST_CHECK_NE(k4, k1);
 }
 
 BOOST_AUTO_TEST_CASE(IntegerInterval_count)
@@ -92,58 +96,59 @@ BOOST_AUTO_TEST_CASE(no_scenarios)
     BOOST_CHECK_EQUAL(dim.getNumberOfTimesteps(), 3);
 }
 
-std::pair<std::map<std::pair<MCYearAndTime::MCYear, int>, std::string>, VariableDictionary>
-namesFromDimensions(const Dimensions& dim)
+std::map<std::pair<MCYearAndTime::MCYear, int>, std::string> namesFromDimensions(
+  const Dimensions& dim,
+  VariableDictionary& vdict)
 {
-    VariableDictionary vdict;
     std::map<std::pair<MCYearAndTime::MCYear, int>, std::string> names;
     vdict.addVariable(dim,
-                      PartialKey("component", "variable"),
+                      vdict.buildKey("component", "variable"),
                       [&names](const MCYearAndTime& timeAndScenario, const std::string& name)
                       {
                           names[std::pair(timeAndScenario.mcYear, timeAndScenario.timestep)] = name;
                           return nullptr;
                       });
-    return {names, vdict};
+    return names;
 }
 
 BOOST_AUTO_TEST_CASE(addVariable_no_ts_no_sc)
 {
-    const auto [names, dict] = namesFromDimensions({});
+    const auto names = namesFromDimensions({}, variableDict);
     BOOST_CHECK_EQUAL(names.size(), 1);
     BOOST_CHECK_EQUAL(names.at(std::pair(MCYearAndTime::MCYear{0}, 0)), "component.variable");
 
-    BOOST_CHECK_NO_THROW(dict("component", "variable"));
+    BOOST_CHECK_NO_THROW(variableDict("component", "variable"));
 }
 
 BOOST_AUTO_TEST_CASE(addVariable_no_ts_multiple_sc)
 {
-    const auto [names, dict] = namesFromDimensions({IntegerInterval(0, 2), {}});
+    const auto names = namesFromDimensions({IntegerInterval(0, 2), {}}, variableDict);
     BOOST_CHECK_EQUAL(names.size(), 3);
     BOOST_CHECK_EQUAL(names.at(std::pair(MCYearAndTime::MCYear{0}, 0)), "component.variable_s0");
 
-    BOOST_CHECK_NO_THROW(dict("component", "variable", MCYearAndTime::MCYear{1}, 0));
+    BOOST_CHECK_NO_THROW(variableDict("component", "variable", MCYearAndTime::MCYear{1}, 0));
 }
 
 BOOST_AUTO_TEST_CASE(addVariable_multiple_ts_no_sc)
 {
-    const auto [names, dict] = namesFromDimensions({{}, IntegerInterval(0, 2)});
+    const auto names = namesFromDimensions({{}, IntegerInterval(0, 2)}, variableDict);
     BOOST_CHECK_EQUAL(names.size(), 3);
     BOOST_CHECK_EQUAL(names.at(std::pair(MCYearAndTime::MCYear{0}, 0)), "component.variable_t0");
 
-    BOOST_CHECK_NO_THROW(dict("component", "variable", MCYearAndTime::MCYear{0}, 2));
+    BOOST_CHECK_NO_THROW(variableDict("component", "variable", MCYearAndTime::MCYear{0}, 2));
 }
 
 BOOST_AUTO_TEST_CASE(addVariable_multiple_ts_sc)
 {
-    const auto [names, dict] = namesFromDimensions({IntegerInterval(0, 2), IntegerInterval(0, 4)});
+    const auto names = namesFromDimensions({IntegerInterval(0, 2), IntegerInterval(0, 4)},
+                                           variableDict);
     BOOST_CHECK_EQUAL(names.at(std::pair(MCYearAndTime::MCYear{0}, 0)), "component.variable_s0_t0");
     BOOST_CHECK_EQUAL(names.at(std::pair(MCYearAndTime::MCYear{2}, 3)), "component.variable_s2_t3");
     BOOST_CHECK(!names.contains(std::pair(MCYearAndTime::MCYear{3}, 3)));
 
-    BOOST_CHECK_THROW(dict("component", "variable", MCYearAndTime::MCYear{3}, 2),
+    BOOST_CHECK_THROW(variableDict("component", "variable", MCYearAndTime::MCYear{3}, 2),
                       std::out_of_range);
-    BOOST_CHECK_THROW(dict("component", "variable", MCYearAndTime::MCYear{2}, 5),
+    BOOST_CHECK_THROW(variableDict("component", "variable", MCYearAndTime::MCYear{2}, 5),
                       std::out_of_range);
 }
 BOOST_AUTO_TEST_SUITE_END()
