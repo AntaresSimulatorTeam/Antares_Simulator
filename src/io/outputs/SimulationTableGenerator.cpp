@@ -130,7 +130,7 @@ void addPortEntries(ISimulationTable& simulationTable,
             Antares::Expressions::Visitors::EvalVisitor evalVisitor(evalContext, fillContext);
 
             auto res = evalVisitor.dispatch(portFieldDef.Definition().RootNode());
-            Antares::logs.notice() << res.valueAsDouble();
+            Antares::logs.notice() << cid << "   " << res.valueAsDouble();
 
             simulationTable.addEntry(
               {.block = tb.block,

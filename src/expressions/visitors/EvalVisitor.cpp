@@ -26,6 +26,7 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include "antares/expressions/ShiftVector.h"
+#include "antares/logs/logs.h"
 
 namespace Antares::Expressions::Visitors
 {
@@ -34,6 +35,15 @@ EvalVisitor::EvalVisitor(EvaluationContext context,
     context_(std::move(context)),
     fillContext_(std::move(fillContext))
 {
+}
+
+EvalVisitor::EvalVisitor(EvaluationContext context,
+                         Optimisation::LinearProblemApi::FillContext fillContext,
+                         const ModelerStudy::SystemModel::Component* component):
+    context_(std::move(context)),
+    fillContext_(std::move(fillContext))
+{
+    component_ = component;
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::SumNode* node)
@@ -127,7 +137,22 @@ EvaluationResult EvalVisitor::visit(const Nodes::PortFieldNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
 {
-    throw EvalVisitorNotImplemented(name(), node->name());
+    std::string portId = node->getPortName();
+    std::string fieldId = node->getFieldName();
+
+    EvaluationResult to_return(0.);
+    logs.notice() << "PortFieldSumNode: summing over port '" << portId << "' field '" << fieldId
+                  << "'";
+    for (const auto connexion_end: component_->componentConnectionsViaPort(portId))
+    {
+        auto* component = connexion_end.component();
+        auto* port = connexion_end.port();
+
+        EvalVisitor visitor(context_, fillContext_, component);
+        const Nodes::Node* node = component->nodeAtPortField(port->Id(), fieldId);
+        to_return += visitor.dispatch(node);
+    }
+    return to_return;
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::ComponentVariableNode* node)
