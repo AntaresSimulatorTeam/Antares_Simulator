@@ -164,7 +164,7 @@ struct ComponentToAreaConnectionFillerFixture
                 modelerVariableDictionary.addVariable(
                   dim,
                   key,
-                  [this](const TimeAndScenario&, const std::string& name)
+                  [this](const MCYearAndTime&, const std::string& name)
                   { return linearProblem.addVariable(-999, 999, false, name); });
             }
         }
@@ -211,7 +211,7 @@ struct ComponentToAreaConnectionFillerFixture
                      std::vector<double> some_param_value)
     {
         problemeHebdo->NombreDePasDeTempsPourUneOptimisation = ts_end - ts_start + 1;
-        FillContext fillCtx(ts_start, ts_end);
+        FillContext fillCtx(ts_start, ts_end, ts_start, ts_end, 0);
         auto tss = std::make_unique<TimeSeriesSet>("some_param_value", some_param_value.size());
         tss->add(some_param_value);
         DataSeriesRepository ds;

@@ -136,15 +136,6 @@ int& VariableManager::ShortTermStorageLevel(unsigned int index,
     return CorrespondanceVarNativesVarOptim_[pdt].SIM_ShortTermStorage.LevelVariable[index];
 }
 
-int& VariableManager::ShortTermStorageOverflow(unsigned int index,
-                                               unsigned int hourInWeek,
-                                               int offset,
-                                               int delta)
-{
-    auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
-    return CorrespondanceVarNativesVarOptim_[pdt].SIM_ShortTermStorage.OverflowVariable[index];
-}
-
 int& VariableManager::ShortTermStorageCostVariationInjection(unsigned int index,
                                                              unsigned int hourInWeek,
                                                              int offset,

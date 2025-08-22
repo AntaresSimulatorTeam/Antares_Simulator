@@ -40,7 +40,7 @@ void FileWriter::init(bool setOutput)
         if (!std::filesystem::is_directory(outputPath_)
             && !std::filesystem::create_directory(outputPath_))
         {
-            throw Antares::Solver::Modeler::Error(
+            throw Antares::Solver::Modeler::ModelerError(
               "Failed to create output directory. Exiting simulation.");
         }
     }

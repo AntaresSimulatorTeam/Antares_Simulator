@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -29,6 +29,8 @@
 
 #include <antares/solver/optim-model-filler/FullKey.h>
 
+#include "MCYearAndTime.h"
+
 namespace Antares::Optimisation::LinearProblemApi
 {
 class IMipVariable;
@@ -54,17 +56,17 @@ struct IntegerInterval
         unsigned int current_;
     };
 
-    Iterator begin() const
+    [[nodiscard]] Iterator begin() const
     {
         return Iterator(initialTime);
     }
 
-    Iterator end() const
+    [[nodiscard]] Iterator end() const
     {
         return Iterator(finalTime + 1);
     } // Make it inclusive
 
-    std::size_t size() const
+    [[nodiscard]] std::size_t size() const
     {
         return finalTime - initialTime + 1;
     }
@@ -74,23 +76,17 @@ class Dimensions
 {
 public:
     Dimensions() = default;
-    Dimensions(std::optional<IntegerInterval> scenarioInterval,
+    Dimensions(std::optional<IntegerInterval> mcyearInterval,
                std::optional<IntegerInterval> timeInterval);
-    bool isTimeDependent() const;
-    bool isScenarioDependent() const;
-    IntegerInterval getTimesteps() const;
-    IntegerInterval getScenarioIndices() const;
-    unsigned int getNumberOfTimesteps() const;
+    [[nodiscard]] bool isTimeDependent() const;
+    [[nodiscard]] bool isScenarioDependent() const;
+    [[nodiscard]] IntegerInterval getTimesteps() const;
+    [[nodiscard]] IntegerInterval getScenarioIndices() const;
+    [[nodiscard]] unsigned int getNumberOfTimesteps() const;
 
 private:
-    std::optional<IntegerInterval> scenarioInterval;
+    std::optional<IntegerInterval> mcyearInterval;
     std::optional<IntegerInterval> timeInterval;
-};
-
-struct TimeAndScenario
-{
-    unsigned int scenario;
-    unsigned int timestep;
 };
 
 class VariableDictionary
@@ -112,16 +108,16 @@ class VariableDictionary
         unsigned int offset_ = 0;
     };
 
-    using TwoIndexVector = std::vector<VectorWithOffset>;
-    using HashMapVector = std::unordered_map<PartialKey, TwoIndexVector, PartialKeyHash>;
+    using TwoIndexVectorByYear = std::unordered_map<MCYearAndTime::MCYear, VectorWithOffset>;
+    using HashMapVector = std::unordered_map<PartialKey, TwoIndexVectorByYear, PartialKeyHash>;
 
     HashMapVector storageOfAddedMipVariables_;
-    const TwoIndexVector& operator[](const PartialKey& k) const;
+    const TwoIndexVectorByYear& operator[](const PartialKey& k) const;
 
 public:
     void addVariable(const Dimensions& dimensions,
                      const PartialKey& key,
-                     std::function<Value(const TimeAndScenario&, const std::string&)>&& func);
+                     std::function<Value(const MCYearAndTime&, const std::string&)>&& func);
 
     Value operator[](const FullKey& k) const;
     Value& operator[](const FullKey& k);
@@ -131,12 +127,12 @@ public:
 
     Value operator()(const std::string& component,
                      const std::string& variable,
-                     unsigned int scenario,
+                     const MCYearAndTime::MCYear& scenario,
                      unsigned int timestep) const;
 
     Value& operator()(const std::string& component,
                       const std::string& variable,
-                      unsigned int scenario,
+                      const MCYearAndTime::MCYear& scenario,
                       unsigned int timestep);
     Value operator()(const FullKey& fullKey) const;
 

@@ -78,12 +78,12 @@ inline int rotatedIndex(unsigned key,
                         int shift,
                         const Antares::Optimisation::LinearProblemApi::FillContext& fillContext)
 {
-    unsigned rangeSize = fillContext.getNumberOfTimestep();
+    unsigned rangeSize = fillContext.getLocalNumberOfTimeSteps();
 
     // Normalize shift within bounds (to prevent negative indexing)
     shift = (shift % static_cast<int>(rangeSize) + rangeSize) % static_cast<int>(rangeSize);
 
     // Compute which key's value should be assigned to `key`
-    return fillContext.getFirstTimeStep()
-           + (key - fillContext.getFirstTimeStep() + shift) % rangeSize;
+    return fillContext.getLocalFirstTimeStep()
+           + (key - fillContext.getLocalFirstTimeStep() + shift) % rangeSize;
 }

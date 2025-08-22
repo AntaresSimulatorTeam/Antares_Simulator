@@ -39,8 +39,10 @@ namespace Antares::Expressions::Visitors
 class EvalVisitor;
 }
 
-namespace Antares::Optimization
+namespace Antares::Optimisation
 {
+class ScenarioGroupRepository;
+
 /**
  * Component filler
  * Implements LinearProblemFiller interface.
@@ -50,10 +52,13 @@ class ComponentFiller: public Optimisation::LinearProblemApi::LinearProblemFille
 {
 public:
     ComponentFiller() = delete;
+
     ComponentFiller(ComponentFiller& other) = delete;
+
     /// Create a ComponentFiller for a Component
     explicit ComponentFiller(const ModelerStudy::SystemModel::Component& component,
-                             VariableDictionary& variableDictionary);
+                             Optimization::VariableDictionary& variableDictionary,
+                             const ScenarioGroupRepository& scenarioGroupRepository);
 
     void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
@@ -69,44 +74,50 @@ public:
 
 private:
     void addStaticConstraint(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                             const LinearConstraint& linear_constraint,
+                             const Optimization::LinearConstraint& linear_constraint,
                              const std::string& constraint_id) const;
 
-    void addTimeDependentConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                                     const std::vector<LinearConstraint>& linear_constraints,
-                                     const std::string& constraint_id) const;
+    void addTimeDependentConstraints(
+      Optimisation::LinearProblemApi::ILinearProblem& pb,
+      const std::vector<Optimization::LinearConstraint>& linear_constraints,
+      const std::string& constraint_id) const;
 
     bool IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node);
 
     const ModelerStudy::SystemModel::Component& component_;
-    VariableDictionary& variableDictionary_;
+    Optimization::VariableDictionary& variableDictionary_;
+    const ScenarioGroupRepository& scenarioGroupRepository_;
 };
 
 class VariablesBulkAddition
 {
 public:
     VariablesBulkAddition(Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
-                          VariableDictionary& variableDictionary);
+                          Optimization::VariableDictionary& variableDictionary);
+
     void addVariable(double lb,
                      double ub,
                      bool integer,
-                     const Dimensions& dim,
-                     const PartialKey&) const;
+                     const Optimization::Dimensions& dim,
+                     const Optimization::PartialKey&) const;
+
     void addVariable(const std::vector<double>& lb,
                      double ub,
                      bool integer,
-                     const Dimensions& dim,
-                     const PartialKey&) const;
+                     const Optimization::Dimensions& dim,
+                     const Optimization::PartialKey&) const;
+
     void addVariable(double lb,
                      const std::vector<double>& ub,
                      bool integer,
-                     const Dimensions& dim,
-                     const PartialKey&) const;
+                     const Optimization::Dimensions& dim,
+                     const Optimization::PartialKey&) const;
+
     void addVariable(const std::vector<double>& lb,
                      const std::vector<double>& ub,
                      bool integer,
-                     const Dimensions& dim,
-                     const PartialKey&) const;
+                     const Optimization::Dimensions& dim,
+                     const Optimization::PartialKey&) const;
 
     class BoundsSizeMismatch: public std::invalid_argument
     {
@@ -115,6 +126,6 @@ public:
 
 private:
     Optimisation::LinearProblemApi::ILinearProblem& linear_problem_;
-    VariableDictionary& variableDictionary;
+    Optimization::VariableDictionary& variableDictionary;
 };
-} // namespace Antares::Optimization
+} // namespace Antares::Optimisation

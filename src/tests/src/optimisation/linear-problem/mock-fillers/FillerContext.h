@@ -21,7 +21,8 @@ void VarFillerContext::addVariables(ILinearProblem& pb,
                                     [[maybe_unused]] ILinearProblemData& data,
                                     [[maybe_unused]] FillContext& ctx)
 {
-    for (unsigned timestep = ctx.getFirstTimeStep(); timestep < ctx.getLastTimeStep(); timestep++)
+    for (unsigned timestep = ctx.getLocalFirstTimeStep(); timestep < ctx.getLocalLastTimeStep();
+         timestep++)
     {
         for (unsigned scenario: ctx.getSelectedScenarios())
         {

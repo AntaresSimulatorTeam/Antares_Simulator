@@ -29,6 +29,7 @@
 #include <antares/logs/hostinfo.h>
 #include <antares/resources/resources.h>
 #include <antares/study/duplicates.h>
+#include <antares/study/header.h>
 #include <antares/sys/policy.h>
 #include <antares/writer/writer_factory.h>
 #include "antares/antares/version.h"
@@ -342,12 +343,15 @@ void Application::prepare(int argc, const char* argv[])
         return;
     }
 
-    // Perform some checks
+    printPIDtoDisk(pSettings);
+
     checkAndCorrectSettingsAndOptions(pSettings, options);
 
-    pSettings.checkAndSetStudyFolder(options.studyFolder);
+    checkStudyFolder(options.studyFolder);
+    pSettings.studyFolder = fixStudyFolder(options.studyFolder);
 
-    checkStudyVersion(pSettings.studyFolder);
+    auto version = Data::StudyHeader::tryToFindTheVersion(pSettings.studyFolder);
+    checkStudyVersion(version, pSettings.studyFolder);
 
     // Determine the log filename to use for this simulation
     resetLogFilename();

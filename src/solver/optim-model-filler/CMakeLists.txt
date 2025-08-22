@@ -15,6 +15,7 @@ set(SRC_optim_model_filler
         include/antares/solver/optim-model-filler/PartialKey.h
         include/antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h
         include/antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h
+        include/antares/solver/optim-model-filler/MCYearAndTime.h
         include/antares/solver/optim-model-filler/TimeDependentLinearExpression.h
         include/antares/solver/optim-model-filler/VariableDictionary.h
         include/antares/solver/optim-model-filler/scenarioGroupRepo.h
@@ -27,7 +28,6 @@ add_library(Antares::${PROJ} ALIAS ${PROJ})
 
 set_target_properties(${PROJ} PROPERTIES LINKER_LANGUAGE CXX)
 
-find_package(fmt REQUIRED)
 target_link_libraries(${PROJ}
         PRIVATE
         Antares::expressions

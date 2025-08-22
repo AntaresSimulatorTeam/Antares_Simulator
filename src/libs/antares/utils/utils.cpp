@@ -21,6 +21,7 @@
 
 #include "antares/utils/utils.h"
 
+#include <ranges>
 #include <sstream>
 
 #include <antares/logs/logs.h>
@@ -170,6 +171,15 @@ double ceil(double d)
 double floor(double d)
 {
     return std::floor(std::round(d * largeValue) / largeValue);
+}
+
+bool isPathValid(const std::string& path)
+{
+#if defined(_WIN32)
+    return std::ranges::all_of(path, [](unsigned c) { return c <= 127; });
+#else
+    return true;
+#endif
 }
 
 std::map<std::string, unsigned> giveNumbersToStrings(const std::vector<std::string>& strs)

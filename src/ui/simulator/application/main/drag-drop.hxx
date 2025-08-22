@@ -24,6 +24,7 @@
 #include "antares/study/study.h"
 #include "../../toolbox/dispatcher/study.h"
 #include <ui/common/lock.h>
+#include "antares/utils/utils.h"
 
 using namespace Yuni;
 
@@ -31,6 +32,7 @@ namespace Antares
 {
 namespace Forms
 {
+
 class StudyDrop final : public wxFileDropTarget
 {
 public:
@@ -54,6 +56,13 @@ public:
         for (uint i = 0; i != (uint)filenames.size(); ++i)
         {
             wxStringToString(filenames[i], filename);
+
+            if (!Utils::isPathValid(filename.to<std::string>()))
+            {
+                logs.error() << "Drag & drop : study path contains a non ASCII char";
+                return false;
+            }
+
             if (not Data::Study::IsInsideStudyFolder(filename, folder, title))
                 folder.clear();
         }

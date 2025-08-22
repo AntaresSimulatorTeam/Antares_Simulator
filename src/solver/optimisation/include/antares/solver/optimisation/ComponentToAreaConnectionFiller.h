@@ -29,6 +29,14 @@
 
 namespace Antares::Optimization
 {
+
+/**
+ * \brief Fills the linear problem with constraints and variables related to component-to-area
+ * connections.
+ *
+ * This class is responsible for adding variables, constraints, and objectives to the linear problem
+ * based on the connections between components and areas in the Antares study.
+ */
 class ComponentToAreaConnectionFiller: public Optimisation::LinearProblemApi::LinearProblemFiller
 {
 public:

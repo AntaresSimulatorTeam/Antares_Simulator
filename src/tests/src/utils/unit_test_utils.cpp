@@ -11,3 +11,13 @@ std::function<bool(const std::exception&)> checkMessage(std::string expected_mes
         return true;
     };
 }
+
+std::function<bool(const std::exception&)> containsMessage(std::string expected_message)
+{
+    return [expected_message](const std::exception& e)
+    {
+        std::string raised_msg = e.what();
+        BOOST_CHECK(raised_msg.find(expected_message) != std::string::npos);
+        return true;
+    };
+}
