@@ -7,6 +7,7 @@ set(SRC_optim_model_filler
         PartialKey.cpp
         ReadLinearConstraintVisitor.cpp
         ReadLinearExpressionVisitor.cpp
+        StringToIdMapper.cpp
         TimeDependentLinearExpression.cpp
         VariableDictionary.cpp
         include/antares/solver/optim-model-filler/ComponentFiller.h
@@ -16,6 +17,7 @@ set(SRC_optim_model_filler
         include/antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h
         include/antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h
         include/antares/solver/optim-model-filler/MCYearAndTime.h
+        include/antares/solver/optim-model-filler/StringToIdMapper.h
         include/antares/solver/optim-model-filler/TimeDependentLinearExpression.h
         include/antares/solver/optim-model-filler/VariableDictionary.h
         include/antares/solver/optim-model-filler/scenarioGroupRepo.h
