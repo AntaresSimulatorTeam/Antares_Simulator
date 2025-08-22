@@ -291,7 +291,7 @@ std::vector<double> extractSTSgeneration(const std::vector<ShortTermStorage::RES
                                          const unsigned stsIndex)
 {
     std::vector<double> generation(HOURS_IN_WEEK, 0.);
-    for (auto hour: std::views::iota(HOURS_IN_WEEK))
+    for (auto hour: std::views::iota(0, (int)HOURS_IN_WEEK))
     {
         generation[hour] = sts_results[hour].withdrawal[stsIndex];
     }
@@ -302,7 +302,7 @@ std::vector<double> extractSTSinjection(const std::vector<ShortTermStorage::RESU
                                         const unsigned stsIndex)
 {
     std::vector<double> injection(HOURS_IN_WEEK, 0.);
-    for (auto hour: std::views::iota(HOURS_IN_WEEK))
+    for (auto hour: std::views::iota(0, (int)HOURS_IN_WEEK))
     {
         injection[hour] = sts_results[hour].injection[stsIndex];
     }
@@ -313,7 +313,7 @@ std::vector<double> extractSTSlevels(const std::vector<ShortTermStorage::RESULTS
                                      const unsigned stsIndex)
 {
     std::vector<double> levels(HOURS_IN_WEEK, 0.);
-    for (auto hour: std::views::iota(HOURS_IN_WEEK))
+    for (auto hour: std::views::iota(0, (int)HOURS_IN_WEEK))
     {
         levels[hour] = sts_results[hour].level[stsIndex];
     }
@@ -334,7 +334,7 @@ std::vector<double> extractSTSinflows(const ShortTermStorage::PROPERTIES& sts_pr
                                       const unsigned year)
 {
     std::vector<double> to_return(HOURS_IN_WEEK, 0.);
-    for (auto h: std::views::iota(HOURS_IN_WEEK))
+    for (auto h: std::views::iota(0, (int)HOURS_IN_WEEK))
     {
         to_return[h] = sts_properties.series->inflows.getCoefficient(year, firstHourOfWeek + h);
     }
@@ -352,7 +352,7 @@ ListStorageForRemix extractListSTSforRemix(const Data::Area& area,
     auto& weeklyResults = problem.ResultatsHoraires[area.index];
     auto& stsResults = weeklyResults.ShortTermStorage;
 
-    for (unsigned stsIndex: std::views::iota(area.shortTermStorage.count()))
+    for (unsigned stsIndex: std::views::iota(0, (int)area.shortTermStorage.count()))
     {
         const auto& stsProperties = problem.ShortTermStorage[area.index][stsIndex];
 
