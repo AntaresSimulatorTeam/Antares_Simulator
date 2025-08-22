@@ -227,11 +227,11 @@ static bool Remix(const Data::AreaList& areas,
 }
 
 std::vector<double> extractLoadForCurrentWeek(const Data::Area& area,
-                                              const unsigned int year,
-                                              const unsigned int firstHourOfWeek)
+                                              const unsigned year,
+                                              const unsigned firstHourOfWeek)
 {
     std::vector<double> load_to_return(HOURS_IN_WEEK, 0.);
-    for (unsigned int h = 0; h < HOURS_IN_WEEK; ++h)
+    for (unsigned h = 0; h < HOURS_IN_WEEK; ++h)
     {
         load_to_return[h] = area.load.series.getColumn(year)[h + firstHourOfWeek];
     }
@@ -239,8 +239,8 @@ std::vector<double> extractLoadForCurrentWeek(const Data::Area& area,
 }
 
 std::vector<double> extractHydroPmin(const Data::Area& area,
-                                     const unsigned int year,
-                                     const unsigned int firstHourOfWeek)
+                                     const unsigned year,
+                                     const unsigned firstHourOfWeek)
 {
     const double* hydroPmin = area.hydro.series->mingen.getColumn(year);
     return {hydroPmin + firstHourOfWeek, hydroPmin + firstHourOfWeek + HOURS_IN_WEEK};
@@ -291,9 +291,9 @@ std::vector<double> extractSTSgeneration(const std::vector<ShortTermStorage::RES
                                          const unsigned stsIndex)
 {
     std::vector<double> generation(HOURS_IN_WEEK, 0.);
-    for (auto hour: std::views::iota(0, (int)HOURS_IN_WEEK))
+    for (unsigned h = 0; h < HOURS_IN_WEEK; ++h)
     {
-        generation[hour] = sts_results[hour].withdrawal[stsIndex];
+        generation[h] = sts_results[h].withdrawal[stsIndex];
     }
     return generation;
 }
@@ -302,9 +302,9 @@ std::vector<double> extractSTSinjection(const std::vector<ShortTermStorage::RESU
                                         const unsigned stsIndex)
 {
     std::vector<double> injection(HOURS_IN_WEEK, 0.);
-    for (auto hour: std::views::iota(0, (int)HOURS_IN_WEEK))
+    for (unsigned h = 0; h < HOURS_IN_WEEK; ++h)
     {
-        injection[hour] = sts_results[hour].injection[stsIndex];
+        injection[h] = sts_results[h].injection[stsIndex];
     }
     return injection;
 }
@@ -313,9 +313,9 @@ std::vector<double> extractSTSlevels(const std::vector<ShortTermStorage::RESULTS
                                      const unsigned stsIndex)
 {
     std::vector<double> levels(HOURS_IN_WEEK, 0.);
-    for (auto hour: std::views::iota(0, (int)HOURS_IN_WEEK))
+    for (unsigned h = 0; h < HOURS_IN_WEEK; ++h)
     {
-        levels[hour] = sts_results[hour].level[stsIndex];
+        levels[h] = sts_results[h].level[stsIndex];
     }
     return levels;
 }
@@ -334,7 +334,7 @@ std::vector<double> extractSTSinflows(const ShortTermStorage::PROPERTIES& sts_pr
                                       const unsigned year)
 {
     std::vector<double> to_return(HOURS_IN_WEEK, 0.);
-    for (auto h: std::views::iota(0, (int)HOURS_IN_WEEK))
+    for (unsigned h = 0; h < HOURS_IN_WEEK; ++h)
     {
         to_return[h] = sts_properties.series->inflows.getCoefficient(year, firstHourOfWeek + h);
     }
@@ -352,7 +352,8 @@ ListStorageForRemix extractListSTSforRemix(const Data::Area& area,
     auto& weeklyResults = problem.ResultatsHoraires[area.index];
     auto& stsResults = weeklyResults.ShortTermStorage;
 
-    for (unsigned stsIndex: std::views::iota(0, (int)area.shortTermStorage.count()))
+    for (unsigned stsIndex{0}; stsIndex < area.shortTermStorage.count(); ++stsIndex)
+    {)
     {
         const auto& stsProperties = problem.ShortTermStorage[area.index][stsIndex];
 
