@@ -26,6 +26,7 @@
 #include <antares/expressions/visitors/NodeVisitor.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h>
+#include <antares/solver/optim-model-filler/VariableDictionary.h>
 #include "antares/optimisation/linear-problem-api/IScenario.h"
 #include "antares/study/system-model/component.h"
 using namespace Antares::Expressions::Nodes;
@@ -37,11 +38,13 @@ namespace Antares::Optimization
 ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
   EvaluationContext evalContext,
   Optimisation::LinearProblemApi::FillContext fillContext,
-  const SystemModel::Component& component):
+  const SystemModel::Component& component,
+  const VariableDictionary& variable_dictionary):
     fillContext_(std::move(fillContext)),
     evalContext_(std::move(evalContext)),
     component_(component),
-    evalVisitor_(evalContext_, fillContext_)
+    evalVisitor_(evalContext_, fillContext_),
+    dictionary_(variable_dictionary)
 {
 }
 
@@ -100,14 +103,12 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const VariableN
 {
     if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
     {
-        return TimeDependentLinearExpression(
-          fillContext_,
-          LinearExpression(0,
-                           {{FullKey(component_.Id(),
-                                     node->value(),
-                                     MCYearAndTime::MCYear{fillContext_.getYear()}),
-                             1}}));
+        FullKey key = dictionary_.buildFullKey(component_.Id(),
+                                               node->value(),
+                                               MCYearAndTime::MCYear{fillContext_.getYear()});
+        return TimeDependentLinearExpression(fillContext_, LinearExpression(0, {{key, 1}}));
     }
+
     // only dependent
     LinearExpressionMap linearExpressions;
 
@@ -115,13 +116,10 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const VariableN
          timeStep <= fillContext_.getLocalLastTimeStep();
          ++timeStep)
     {
-        linearExpressions[timeStep] = LinearExpression(0,
-                                                       {{FullKey(component_.Id(),
-                                                                 node->value(),
-                                                                 MCYearAndTime::MCYear{
-                                                                   fillContext_.getYear()},
-                                                                 timeStep),
-                                                         1}});
+        FullKey key = dictionary_.buildFullKey(component_.Id(),
+                                               node->value(),
+                                               MCYearAndTime::MCYear{fillContext_.getYear()});
+        linearExpressions[timeStep] = LinearExpression(0, {{key, 1}});
     }
     return TimeDependentLinearExpression(fillContext_, linearExpressions);
 }
@@ -186,7 +184,8 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const PortField
                                                               evalContext_.scenario());
         ReadLinearExpressionVisitor visitor(connectedComponentEvalContext,
                                             fillContext_,
-                                            *component);
+                                            *component,
+                                            dictionary_);
 
         const Node* node = component->nodeAtPortField(port->Id(), fieldId);
         to_return += visitor.dispatch(node);

@@ -29,22 +29,26 @@ namespace Antares::Optimization
 FullKey::FullKey(const std::string& component,
                  const std::string& variable,
                  MCYearAndTime::MCYear scenario,
-                 unsigned int timestep):
-    pk(component, variable),
+                 unsigned int timestep,
+                 StringToIdMapper& mapper):
+    pk(component, variable, mapper),
     scenario(scenario),
     timestep(timestep)
 {
 }
 
-FullKey::FullKey(const std::string& component, const std::string& variable):
-    pk(component, variable)
+FullKey::FullKey(const std::string& component,
+                 const std::string& variable,
+                 StringToIdMapper& mapper):
+    pk(component, variable, mapper)
 {
 }
 
 FullKey::FullKey(const std::string& component,
                  const std::string& variable,
-                 MCYearAndTime::MCYear scenario):
-    pk(component, variable),
+                 MCYearAndTime::MCYear scenario,
+                 StringToIdMapper& mapper):
+    pk(component, variable, mapper),
     scenario(scenario)
 {
 }

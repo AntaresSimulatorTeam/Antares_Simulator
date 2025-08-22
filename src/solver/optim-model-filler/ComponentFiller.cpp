@@ -183,7 +183,8 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
                                                                                : -pb.infinity());
         const auto& ub = valueOrDefault(variable.UpperBound(),
                                         variable.Type() == SM::ValueType::BOOL ? 1 : pb.infinity());
-        const Optimization::PartialKey key(component_.Id(), variable.Id());
+        const Optimization::PartialKey key = variableDictionary_.buildKey(component_.Id(),
+                                                                          variable.Id());
         if (variable.isTimeDependent())
         {
             const Optimization::Dimensions dim(
@@ -270,7 +271,10 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
                                                                {},
                                                                data,
                                                                scenario);
-    Optimization::ReadLinearConstraintVisitor visitor(evaluationContext, ctx, component_);
+    Optimization::ReadLinearConstraintVisitor visitor(evaluationContext,
+                                                      ctx,
+                                                      component_,
+                                                      variableDictionary_);
     for (const auto& constraint: component_.getModel()->getConstraints() | std::views::values)
     {
         auto* root_node = constraint.expression().RootNode();
@@ -304,7 +308,10 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
                                                                data,
                                                                scenario);
 
-    Optimization::ReadLinearExpressionVisitor visitor(evaluationContext, ctx, component_);
+    Optimization::ReadLinearExpressionVisitor visitor(evaluationContext,
+                                                      ctx,
+                                                      component_,
+                                                      variableDictionary_);
 
     const auto timeDependentLinearExpression = visitor.dispatch(model->Objective().RootNode());
     const auto& linear_expressions = timeDependentLinearExpression.GetLinearExpressions();

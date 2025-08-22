@@ -25,32 +25,50 @@
 
 namespace Antares::Optimization
 {
-PartialKey::PartialKey(std::string_view component_id, std::string_view variable_id) noexcept:
-    component_id_(interner().intern(component_id)),
-    variable_id_(interner().intern(variable_id))
+PartialKey::PartialKey(std::string_view component_name,
+                       std::string_view variable_name,
+                       StringToIdMapper& mapper) noexcept:
+    component_id_(mapper.id(component_name)),
+    variable_id_(mapper.id(variable_name)),
+    mapper_(mapper)
 {
 }
 
 const std::string& PartialKey::getComponent() const noexcept
 {
-    return interner().get(component_id_);
+    return mapper_.get(component_id_);
 }
 
 const std::string& PartialKey::getVariable() const noexcept
 {
-    return interner().get(variable_id_);
+    return mapper_.get(variable_id_);
 }
 
-PartialKey::StringInterner& PartialKey::interner() noexcept
+StringToIdMapper::id_type PartialKey::getComponentId() const noexcept
 {
-    static StringInterner inst;
-    return inst;
+    return component_id_;
+}
+
+StringToIdMapper::id_type PartialKey::getVariableId() const noexcept
+{
+    return variable_id_;
+}
+
+auto PartialKey::operator<=>(const PartialKey& other) const
+{
+    return std::tie(component_id_, variable_id_)
+           <=> std::tie(other.component_id_, other.variable_id_);
+}
+
+bool PartialKey::operator==(const PartialKey& other) const
+{
+    return (component_id_ == other.component_id_) && (variable_id_ == other.variable_id_);
 }
 
 std::size_t PartialKeyHash::operator()(const PartialKey& p) const noexcept
 {
-    std::size_t h1 = std::hash<PartialKey::id_type>{}(p.getComponentId());
-    std::size_t h2 = std::hash<PartialKey::id_type>{}(p.getVariableId());
+    std::size_t h1 = std::hash<StringToIdMapper::id_type>{}(p.getComponentId());
+    std::size_t h2 = std::hash<StringToIdMapper::id_type>{}(p.getVariableId());
     return h1 ^ (h2 << 1);
 }
 
