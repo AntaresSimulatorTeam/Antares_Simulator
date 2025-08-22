@@ -110,7 +110,7 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
                                     std::vector<double>& UnsupE,
                                     const std::vector<double>& Spillage,
                                     const std::vector<double>& DTG_MRG,
-                                    listStorageForRemix& storagesForRemix)
+                                    ListStorageForRemix& storagesForRemix)
 {
     const std::vector<double> UnsupEinit = UnsupE;
     std::vector<double> TotalGen = Load - UnsupEinit;

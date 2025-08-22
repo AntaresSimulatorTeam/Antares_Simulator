@@ -42,6 +42,34 @@ std::shared_ptr<IStorageForRemix> makeHydroForRemix(std::vector<double>& generat
                                                        pumpEfficiency);
 }
 
+std::shared_ptr<StorageForRemixWithLevels> makeSTSforRemix(std::vector<double>& withdrawal,
+                                                           std::vector<double>& unsupE,
+                                                           std::vector<double>& levels,
+                                                           const std::vector<double>& pmax,
+                                                           const std::vector<double>& inflows,
+                                                           const std::vector<double>& injection,
+                                                           const double initLevel,
+                                                           const double withdrawalcapacity,
+                                                           const double efficiency)
+{
+    size_t size = withdrawal.size();
+
+    std::vector<double> ovf(size, 0.);
+    std::vector<double> pmin(size, 0.);
+
+    return std::make_shared<StorageForRemixWithLevels>(withdrawal,
+                                                       unsupE,
+                                                       levels,
+                                                       pmax,
+                                                       std::move(pmin),
+                                                       inflows,
+                                                       std::move(ovf),
+                                                       injection,
+                                                       initLevel,
+                                                       withdrawalcapacity,
+                                                       efficiency);
+}
+
 StorageForRemixNoLevels::StorageForRemixNoLevels(std::vector<double>& generation,
                                                  std::vector<double>& unsupE,
                                                  const std::vector<double>& Pmax,

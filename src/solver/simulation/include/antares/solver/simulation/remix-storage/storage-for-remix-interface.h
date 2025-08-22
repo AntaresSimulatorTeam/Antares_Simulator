@@ -17,6 +17,6 @@ private:
     virtual void checkInput(size_t size) = 0;
 };
 
-using listStorageForRemix = std::vector<std::shared_ptr<IStorageForRemix>>;
+using ListStorageForRemix = std::vector<std::shared_ptr<IStorageForRemix>>;
 
 } // namespace Antares::Solver::Simulation

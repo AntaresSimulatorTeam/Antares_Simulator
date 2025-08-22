@@ -79,4 +79,14 @@ std::shared_ptr<IStorageForRemix> makeHydroForRemix(std::vector<double>& generat
                                                     const double pumpEfficiency,
                                                     bool reservoirManagement);
 
+std::shared_ptr<StorageForRemixWithLevels> makeSTSforRemix(std::vector<double>& withdrawal,
+                                                           std::vector<double>& unsupE,
+                                                           std::vector<double>& levels,
+                                                           const std::vector<double>& pmax,
+                                                           const std::vector<double>& inflows,
+                                                           const std::vector<double>& injection,
+                                                           const double initLevel,
+                                                           const double withdrawalcapacity,
+                                                           const double efficiency);
+
 } // namespace Antares::Solver::Simulation

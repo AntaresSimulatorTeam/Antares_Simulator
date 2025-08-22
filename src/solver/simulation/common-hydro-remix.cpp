@@ -27,6 +27,7 @@
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
 #include "antares/solver/simulation/common-eco-adq.h"
+#include "antares/solver/simulation/remix-storage/remix-utils.h"
 #include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-storage-gen.h"
 #include "antares/solver/simulation/remix-storage/storage-for-remix.h"
 #include "antares/study/simulation.h"
@@ -286,10 +287,104 @@ std::shared_ptr<IStorageForRemix> extractHydroForRemix(const Data::Area& area,
                              reservoirManagement);
 }
 
+std::vector<double> extractSTSgeneration(const std::vector<ShortTermStorage::RESULTS>& sts_results,
+                                         const unsigned stsIndex)
+{
+    std::vector<double> generation(HOURS_IN_WEEK, 0.);
+    for (auto hour: std::views::iota(HOURS_IN_WEEK))
+    {
+        generation[hour] = sts_results[hour].withdrawal[stsIndex];
+    }
+    return generation;
+}
+
+std::vector<double> extractSTSinjection(const std::vector<ShortTermStorage::RESULTS>& sts_results,
+                                        const unsigned stsIndex)
+{
+    std::vector<double> injection(HOURS_IN_WEEK, 0.);
+    for (auto hour: std::views::iota(HOURS_IN_WEEK))
+    {
+        injection[hour] = sts_results[hour].injection[stsIndex];
+    }
+    return injection;
+}
+
+std::vector<double> extractSTSlevels(const std::vector<ShortTermStorage::RESULTS>& sts_results,
+                                     const unsigned stsIndex)
+{
+    std::vector<double> levels(HOURS_IN_WEEK, 0.);
+    for (auto hour: std::views::iota(HOURS_IN_WEEK))
+    {
+        levels[hour] = sts_results[hour].level[stsIndex];
+    }
+    return levels;
+}
+
+std::vector<double> extractSTSpmax(const ShortTermStorage::PROPERTIES& sts_properties,
+                                   const unsigned firstHourOfWeek)
+{
+    const auto& pmaxMod = sts_properties.series->maxWithdrawalModulation;
+    std::span<const double> subrange(pmaxMod.begin() + firstHourOfWeek,
+                                     pmaxMod.begin() + firstHourOfWeek + HOURS_IN_WEEK);
+    return subrange * sts_properties.withdrawalEfficiency;
+}
+
+std::vector<double> extractSTSinflows(const ShortTermStorage::PROPERTIES& sts_properties,
+                                      const unsigned firstHourOfWeek,
+                                      const unsigned year)
+{
+    std::vector<double> to_return(HOURS_IN_WEEK, 0.);
+    for (auto h: std::views::iota(HOURS_IN_WEEK))
+    {
+        to_return[h] = sts_properties.series->inflows.getCoefficient(year, firstHourOfWeek + h);
+    }
+    return to_return;
+}
+
+ListStorageForRemix extractListSTSforRemix(const Data::Area& area,
+                                           PROBLEME_HEBDO& problem,
+                                           const unsigned firstHourOfWeek)
+{
+    ListStorageForRemix list_to_return;
+
+    auto& weeklyResults = problem.ResultatsHoraires[area.index];
+    auto& stsResults = weeklyResults.ShortTermStorage;
+
+    for (unsigned stsIndex: std::views::iota(area.shortTermStorage.count()))
+    {
+        const auto& stsProperties = problem.ShortTermStorage[area.index][stsIndex];
+
+        auto generation = extractSTSgeneration(stsResults, stsIndex);
+        auto injection = extractSTSinjection(stsResults, stsIndex);
+        auto& unsupE = weeklyResults.ValeursHorairesDeDefaillancePositive;
+        auto levels = extractSTSlevels(stsResults, stsIndex);
+
+        const auto& pmax = extractSTSpmax(stsProperties, firstHourOfWeek);
+        const auto& inflows = extractSTSinflows(stsProperties, firstHourOfWeek, problem.year);
+        const double initLevel = levels[0];
+        const double withdrawalcapacity = stsProperties.withdrawalNominalCapacity;
+        const double efficiency = stsProperties.withdrawalEfficiency;
+
+        list_to_return.push_back(makeSTSforRemix(generation,
+                                                 unsupE,
+                                                 levels,
+                                                 pmax,
+                                                 inflows,
+                                                 injection,
+                                                 initLevel,
+                                                 withdrawalcapacity,
+                                                 efficiency));
+    }
+
+    // std::ranges::sort(list_to_return, {}, [](auto& e) { return e->});
+    return list_to_return;
+}
+
 static void RunAccurateShavePeaks(const Data::AreaList& areas,
                                   PROBLEME_HEBDO& problem,
                                   uint numSpace,
-                                  uint firstHourOfWeek)
+                                  uint firstHourOfWeek,
+                                  bool includeSTS)
 {
     areas.each(
       [&](const Data::Area& area)
@@ -306,7 +401,14 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
 
           checkInput(load, unsupE, spillage, dtgMrg, hydroStorage->initialGen());
 
-          listStorageForRemix storagesForRemix = {hydroStorage};
+          ListStorageForRemix storagesForRemix = {hydroStorage};
+
+          if (includeSTS)
+          {
+              auto stsForRemix = extractListSTSforRemix(area, problem, firstHourOfWeek);
+              // std::ranges::sort(stsForRemix, proj);
+              // add this list to storagesForRemix
+          }
 
           shavePeaksByRemixingStorageGen(load, unsupE, spillage, dtgMrg, storagesForRemix);
       });
@@ -341,12 +443,12 @@ void RemixHydroForAllAreas(const Data::AreaList& areas,
               "Error in simplex optimisation. Check logs for more details.");
         }
     }
-    else if (params.shedding.policy == Data::shpAccurateShavePeaks
-             && !params.accurateShavePeaksIncludeShortTermStorage)
+    else if (params.shedding.policy == Data::shpAccurateShavePeaks)
     {
+        bool includeSTS = params.accurateShavePeaksIncludeShortTermStorage;
         try
         {
-            RunAccurateShavePeaks(areas, problem, numSpace, hourInYear);
+            RunAccurateShavePeaks(areas, problem, numSpace, hourInYear, includeSTS);
         }
         catch (std::invalid_argument& invalidArgExc)
         {

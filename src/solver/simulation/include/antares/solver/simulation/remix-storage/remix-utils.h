@@ -51,6 +51,13 @@ inline std::vector<double> operator-(std::vector<double> a, const std::vector<do
     return a;
 }
 
+inline std::vector<double> operator*(std::span<const double> left, const double scalar)
+{
+    std::vector<double> to_return;
+    rng::transform(left, std::back_inserter(to_return), [&](double e) { return e * scalar; });
+    return to_return;
+}
+
 inline double min_on_hour_range(std::vector<double>&& v, unsigned h, unsigned H)
 {
     std::span<double> subset(v.begin() + h, v.begin() + H);

@@ -58,7 +58,7 @@ struct InputFixture
 
     std::vector<double> TotalGenNoHydro, Load, HydroGen, UnsupE, levels, HydroPmax, HydroPmin,
       inflows, ovf, pump, Spillage, DTG_MRG;
-    listStorageForRemix storagesForRemix;
+    ListStorageForRemix storagesForRemix;
     double init_level = 0.;
     double capacity = std::numeric_limits<double>::max();
     const double pumpEff = 1.;
