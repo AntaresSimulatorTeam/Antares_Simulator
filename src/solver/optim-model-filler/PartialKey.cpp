@@ -54,13 +54,13 @@ StringToIdMapper::id_type PartialKey::getVariableId() const noexcept
     return variable_id_;
 }
 
-auto PartialKey::operator<=>(const PartialKey& other) const
+std::strong_ordering PartialKey::operator<=>(const PartialKey& other) const noexcept
 {
     return std::tie(component_id_, variable_id_)
            <=> std::tie(other.component_id_, other.variable_id_);
 }
 
-bool PartialKey::operator==(const PartialKey& other) const
+bool PartialKey::operator==(const PartialKey& other) const noexcept
 {
     return (component_id_ == other.component_id_) && (variable_id_ == other.variable_id_);
 }

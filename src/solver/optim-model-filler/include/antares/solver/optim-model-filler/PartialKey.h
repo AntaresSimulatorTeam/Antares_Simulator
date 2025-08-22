@@ -65,8 +65,8 @@ public:
     [[nodiscard]] StringToIdMapper::id_type getVariableId() const noexcept;
 
     /** Three-way comparison based on (component_id_, variable_id_). */
-    auto operator<=>(const PartialKey&) const;
-    bool operator==(const PartialKey& other) const;
+    std::strong_ordering operator<=>(const PartialKey&) const noexcept;
+    bool operator==(const PartialKey& other) const noexcept;
 
 private:
     StringToIdMapper::id_type component_id_{}; ///< Interned id of component

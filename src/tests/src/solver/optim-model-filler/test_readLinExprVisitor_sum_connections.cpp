@@ -29,6 +29,7 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h>
+#include <antares/solver/optim-model-filler/VariableDictionary.h>
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/study/system-model/component.h"
 #include "antares/study/system-model/connection.h"
@@ -54,6 +55,7 @@ struct container_of_helpful_data_for_unit_tests
     EvaluationContext evaluationContext{{}, {}, data, empty_scenario};
     SystemModel::ModelBuilder modelBuilder;
     SystemModel::ComponentBuilder componentBuilder;
+    VariableDictionary variableDictionary;
 };
 
 BOOST_AUTO_TEST_SUITE(_running_the_read_linear_expression_visitor_on_a_sum_connections_)
@@ -132,7 +134,10 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_2_components_with_a_port_field,
                                          ConnectionEnd(&generatorComponent, &injection_port));
 
     // Visitor associated to component named "N"
-    ReadLinearExpressionVisitor visitor{evaluationContext, {0, 0, 0, 0, 0}, nodeComponent};
+    ReadLinearExpressionVisitor visitor{evaluationContext,
+                                        {0, 0, 0, 0, 0},
+                                        nodeComponent,
+                                        variableDictionary};
 
     auto timeDependentLinExpr = visitor.dispatch(sum_connections_node);
 
@@ -246,14 +251,20 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_3_components_with_a_port_field,
     nodeComponent.addComponentConnection(portId, ConnectionEnd(&demandComponent, &injection_port));
 
     // Visitor associated to component named "N"
-    ReadLinearExpressionVisitor visitor{evaluationContext, {0, 0, 0, 0, 0}, nodeComponent};
+    ReadLinearExpressionVisitor visitor{evaluationContext,
+                                        {0, 0, 0, 0, 0},
+                                        nodeComponent,
+                                        variableDictionary};
 
     auto timeDependentLinExpr = visitor.dispatch(sum_connections_node);
 
     auto linear_expression = timeDependentLinExpr.GetLinearExpressions().at(0);
 
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
-    FullKey generationKey(generatorComponent.Id(), "generation", MCYearAndTime::MCYear{0}, 0);
+    FullKey generationKey = variableDictionary.buildFullKey(generatorComponent.Id(),
+                                                            "generation",
+                                                            MCYearAndTime::MCYear{0},
+                                                            0);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(generationKey), 1.);
     BOOST_CHECK_EQUAL(linear_expression.offset(), -5.);
 }

@@ -160,7 +160,7 @@ struct ComponentToAreaConnectionFillerFixture
         {
             for (const auto& variable: component.getModel()->Variables() | std::views::values)
             {
-                PartialKey key(component.Id(), variable.Id());
+                PartialKey key = modelerVariableDictionary.buildKey(component.Id(), variable.Id());
                 modelerVariableDictionary.addVariable(
                   dim,
                   key,
