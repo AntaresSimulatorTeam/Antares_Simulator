@@ -28,6 +28,7 @@
 #include <antares/expressions/Registry.hxx>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h>
+#include <antares/solver/optim-model-filler/VariableDictionary.h>
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 
 using namespace Antares::Expressions;
@@ -46,11 +47,15 @@ struct MyDummyFixture: Registry<Node>
     EvaluationContext evaluationContext{{}, {}, data, empty_scenario};
     SystemModel::Model m;
     SystemModel::ComponentBuilder componentBuilder;
+    VariableDictionary variableDictionary;
     const SystemModel::Component component = componentBuilder.withId("compo")
                                                .withModel(&m)
                                                .withScenarioGroupId("group")
                                                .build();
-    ReadLinearConstraintVisitor visitor{evaluationContext, {0, 0, 0, 0, 0}, component};
+    ReadLinearConstraintVisitor visitor{evaluationContext,
+                                        {0, 0, 0, 0, 0},
+                                        component,
+                                        variableDictionary};
 };
 
 BOOST_FIXTURE_TEST_CASE(test_name, MyDummyFixture)
@@ -79,17 +84,19 @@ BOOST_FIXTURE_TEST_CASE(test_visit_equal_node, MyDummyFixture)
                               {},
                               data,
                               empty_scenario);
-    ReadLinearConstraintVisitor visitor(context, {0, 0, 0, 0, 0}, component);
+    ReadLinearConstraintVisitor visitor(context, {0, 0, 0, 0, 0}, component, variableDictionary);
     auto constraint = visitor.dispatch(node)[0];
     BOOST_CHECK_EQUAL(constraint.lb, -14.);
     BOOST_CHECK_EQUAL(constraint.ub, -14.);
     BOOST_CHECK_EQUAL(constraint.coef_per_var.size(), 2);
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
-                        FullKey(component.Id(), "var1", MCYearAndTime::MCYear{0}, 0)),
-                      -2);
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
-                        FullKey(component.Id(), "var2", MCYearAndTime::MCYear{0}, 0)),
-                      -1);
+    BOOST_CHECK_EQUAL(
+      constraint.coef_per_var.at(
+        variableDictionary.buildFullKey(component.Id(), "var1", MCYearAndTime::MCYear{0}, 0)),
+      -2);
+    BOOST_CHECK_EQUAL(
+      constraint.coef_per_var.at(
+        variableDictionary.buildFullKey(component.Id(), "var2", MCYearAndTime::MCYear{0}, 0)),
+      -1);
 }
 
 BOOST_FIXTURE_TEST_CASE(test_visit_less_than_or_equal_node, MyDummyFixture)
@@ -105,20 +112,23 @@ BOOST_FIXTURE_TEST_CASE(test_visit_less_than_or_equal_node, MyDummyFixture)
                               {},
                               data,
                               empty_scenario);
-    ReadLinearConstraintVisitor visitor(context, {0, 0, 0, 0, 0}, component);
+    ReadLinearConstraintVisitor visitor(context, {0, 0, 0, 0, 0}, component, variableDictionary);
     auto constraint = visitor.dispatch(node)[0];
     BOOST_CHECK_EQUAL(constraint.lb, -std::numeric_limits<double>::infinity());
     BOOST_CHECK_EQUAL(constraint.ub, -1.);
     BOOST_CHECK_EQUAL(constraint.coef_per_var.size(), 3);
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
-                        FullKey(component.Id(), "var1", MCYearAndTime::MCYear{0}, 0)),
-                      -1);
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
-                        FullKey(component.Id(), "var2", MCYearAndTime::MCYear{0}, 0)),
-                      -5);
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
-                        FullKey(component.Id(), "var3", MCYearAndTime::MCYear{0}, 0)),
-                      1);
+    BOOST_CHECK_EQUAL(
+      constraint.coef_per_var.at(
+        variableDictionary.buildFullKey(component.Id(), "var1", MCYearAndTime::MCYear{0}, 0)),
+      -1);
+    BOOST_CHECK_EQUAL(
+      constraint.coef_per_var.at(
+        variableDictionary.buildFullKey(component.Id(), "var2", MCYearAndTime::MCYear{0}, 0)),
+      -5);
+    BOOST_CHECK_EQUAL(
+      constraint.coef_per_var.at(
+        variableDictionary.buildFullKey(component.Id(), "var3", MCYearAndTime::MCYear{0}, 0)),
+      1);
 }
 
 BOOST_FIXTURE_TEST_CASE(test_visit_greater_than_or_equal_node, MyDummyFixture)
@@ -134,17 +144,19 @@ BOOST_FIXTURE_TEST_CASE(test_visit_greater_than_or_equal_node, MyDummyFixture)
                               {},
                               data,
                               empty_scenario);
-    ReadLinearConstraintVisitor visitor(context, {0, 0, 0, 0, 0}, component);
+    ReadLinearConstraintVisitor visitor(context, {0, 0, 0, 0, 0}, component, variableDictionary);
     auto constraint = visitor.dispatch(node)[0];
     BOOST_CHECK_EQUAL(constraint.lb, -14);
     BOOST_CHECK_EQUAL(constraint.ub, std::numeric_limits<double>::infinity());
     BOOST_CHECK_EQUAL(constraint.coef_per_var.size(), 2);
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
-                        FullKey(component.Id(), "var1", MCYearAndTime::MCYear{0}, 0)),
-                      -2);
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
-                        FullKey(component.Id(), "var2", MCYearAndTime::MCYear{0}, 0)),
-                      -1);
+    BOOST_CHECK_EQUAL(
+      constraint.coef_per_var.at(
+        variableDictionary.buildFullKey(component.Id(), "var1", MCYearAndTime::MCYear{0}, 0)),
+      -2);
+    BOOST_CHECK_EQUAL(
+      constraint.coef_per_var.at(
+        variableDictionary.buildFullKey(component.Id(), "var2", MCYearAndTime::MCYear{0}, 0)),
+      -1);
 }
 
 BOOST_FIXTURE_TEST_CASE(test_visit_illegal_node, MyDummyFixture)

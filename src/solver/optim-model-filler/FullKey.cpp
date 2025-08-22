@@ -78,6 +78,16 @@ std::optional<unsigned int> FullKey::getTimestep() const
     return timestep;
 }
 
+std::strong_ordering FullKey::operator<=>(const FullKey& other) const noexcept
+{
+    return std::tie(pk, scenario, timestep) <=> std::tie(other.pk, other.scenario, other.timestep);
+}
+
+bool FullKey::operator==(const FullKey& other) const noexcept
+{
+    return (pk == other.pk) && (scenario == other.scenario) && (timestep == other.timestep);
+}
+
 std::size_t FullKeyHash::operator()(const FullKey& p) const
 {
     std::size_t seed = 0;

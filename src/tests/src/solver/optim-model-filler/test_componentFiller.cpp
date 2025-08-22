@@ -932,7 +932,7 @@ BOOST_AUTO_TEST_CASE(AddVariable_SingleBounds)
     MockLinearProblem lp;
     VariableDictionary vdict;
     Antares::Optimisation::VariablesBulkAddition vba(lp, vdict);
-    const PartialKey key("my-component", "my-variable");
+    const auto key = vdict.buildKey("my-component", "my-variable");
     const Dimensions dim({}, IntegerInterval(0, 2));
     vba.addVariable(0.0, 1.0, true, dim, key);
     for (int ts = 0; ts < 3; ++ts)
@@ -947,7 +947,7 @@ BOOST_AUTO_TEST_CASE(AddVariable_VectorLowerBound)
     VariableDictionary vdict;
     Antares::Optimisation::VariablesBulkAddition vba(lp, vdict);
     std::vector<double> lb = {0.1, 0.2, 0.3};
-    const PartialKey key("my-component", "my-variable");
+    const PartialKey key = vdict.buildKey("my-component", "my-variable");
     const Dimensions dim({}, IntegerInterval(0, 2));
     vba.addVariable(lb, 1.0, true, dim, key);
     for (int ts = 0; ts < 3; ++ts)
@@ -962,7 +962,7 @@ BOOST_AUTO_TEST_CASE(AddVariable_VectorUpperBound)
     VariableDictionary vdict;
     Antares::Optimisation::VariablesBulkAddition vba(lp, vdict);
     std::vector<double> ub = {1.1, 1.2, 1.3};
-    const PartialKey key("my-component", "my-variable");
+    const PartialKey key = vdict.buildKey("my-component", "my-variable");
     const Dimensions dim({}, IntegerInterval(0, 2));
     vba.addVariable(0.0, ub, true, dim, key);
     for (int ts = 0; ts < 3; ++ts)
@@ -978,7 +978,7 @@ BOOST_AUTO_TEST_CASE(AddVariable_VectorBounds)
     Antares::Optimisation::VariablesBulkAddition vba(lp, vdict);
     std::vector<double> lb = {0.1, 0.2, 0.3};
     std::vector<double> ub = {1.1, 1.2, 1.3};
-    const PartialKey key("my-component", "my-variable");
+    const PartialKey key = vdict.buildKey("my-component", "my-variable");
     const Dimensions dim({}, IntegerInterval(0, 2));
     vba.addVariable(lb, ub, true, dim, key);
     for (int ts = 0; ts < 3; ++ts)
@@ -995,7 +995,7 @@ BOOST_AUTO_TEST_CASE(AddVariable_InvalidBounds)
     std::vector<double> lb = {0.1, 0.2};
     std::vector<double> ub = {1.1, 1.2, 1.3};
     const Dimensions dim({}, IntegerInterval(0, 2));
-    const PartialKey key("my-component", "my-variable");
+    const PartialKey key = vdict.buildKey("my-component", "my-variable");
     BOOST_CHECK_THROW(vba.addVariable(lb, ub, true, dim, key), std::invalid_argument);
 }
 
@@ -1004,7 +1004,7 @@ BOOST_AUTO_TEST_CASE(AddVariable_InvalidVectorLowerBound)
     MockLinearProblem lp;
     VariableDictionary vdict;
     Antares::Optimisation::VariablesBulkAddition vba(lp, vdict);
-    const PartialKey key("my-component", "my-variable");
+    const PartialKey key = vdict.buildKey("my-component", "my-variable");
     const Dimensions dim({}, IntegerInterval(0, 2));
     BOOST_CHECK_THROW(vba.addVariable({0.1, 0.2}, 1.0, true, dim, key), std::invalid_argument);
 }
@@ -1014,7 +1014,7 @@ BOOST_AUTO_TEST_CASE(AddVariable_InvalidVectorUpperBound)
     MockLinearProblem lp;
     VariableDictionary vdict;
     Antares::Optimisation::VariablesBulkAddition vba(lp, vdict);
-    const PartialKey key("my-component", "my-variable");
+    const PartialKey key = vdict.buildKey("my-component", "my-variable");
     const Dimensions dim({}, IntegerInterval(0, 2));
     BOOST_CHECK_THROW(vba.addVariable(0.0, {1.1, 1.2}, true, dim, key), std::invalid_argument);
 }
@@ -1025,7 +1025,7 @@ BOOST_AUTO_TEST_CASE(AddVariable_InvalidVectorBounds)
     VariableDictionary vdict;
     Antares::Optimisation::VariablesBulkAddition vba(lp, vdict);
 
-    const PartialKey key("my-component", "my-variable");
+    const PartialKey key = vdict.buildKey("my-component", "my-variable");
     const Dimensions dim({}, IntegerInterval(0, 2));
     BOOST_CHECK_THROW(vba.addVariable({0.1, 0.2}, {1.1, 1.2, 1.3}, true, dim, key),
                       std::invalid_argument);

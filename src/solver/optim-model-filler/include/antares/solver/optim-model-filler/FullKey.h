@@ -70,13 +70,26 @@ public:
       const;                                                       ///< Scenario index (if any)
     [[nodiscard]] std::optional<unsigned int> getTimestep() const; ///< Timestep index (if any)
 
-    auto operator<=>(const FullKey&) const = default;
+    std::strong_ordering operator<=>(const FullKey&) const noexcept;
+    bool operator==(const FullKey& other) const noexcept;
 
 private:
     PartialKey pk;
     std::optional<MCYearAndTime::MCYear> scenario;
     std::optional<unsigned int> timestep;
 };
+
+inline std::ostream& operator<<(std::ostream& os, const FullKey& key)
+{
+    return os << fmt::format("FullKey({}, {}, {}, {})",
+                             key.getComponent(),
+                             key.getVariable(),
+                             key.getScenario().has_value()
+                               ? std::to_string(format_as(*key.getScenario()))
+                               : "nullopt",
+                             key.getTimestep().has_value() ? std::to_string(*key.getTimestep())
+                                                           : "nullopt");
+}
 
 /**
  * @brief Hash functor for FullKey (combines hash of PartialKey and optionals).
