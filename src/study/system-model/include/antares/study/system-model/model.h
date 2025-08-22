@@ -26,6 +26,7 @@
 #include <antares/expressions/expression.h>
 
 #include "constraint.h"
+#include "extraOutput.h"
 #include "parameter.h"
 #include "port.h"
 #include "portFieldDefinition.h"
@@ -74,7 +75,7 @@ public:
         return objective_;
     }
 
-    const std::map<std::string, Constraint>& getConstraints() const
+    const std::map<std::string, Constraint>& Constraints() const
     {
         return constraints_;
     }
@@ -100,6 +101,11 @@ public:
         return portFieldDefinitions_;
     }
 
+    const std::map<std::string, ExtraOutput>& ExtraOutputs() const
+    {
+        return extraOutputs_;
+    }
+
 private:
     friend class ModelBuilder;
     std::string id_;
@@ -109,8 +115,11 @@ private:
     std::map<std::string, Variable> variables_;
     std::map<std::string, Constraint> constraints_;
     std::map<std::string, Port> ports_;
+    std::map<std::string, ExtraOutput> extraOutputs_;
 
     PortFieldMap portFieldDefinitions_;
+
+    void checkThatIdsAreUnique();
 };
 
 class ModelBuilder
@@ -121,13 +130,17 @@ public:
     ModelBuilder& withParameters(std::vector<Parameter>&& parameters);
     ModelBuilder& withVariables(std::vector<Variable>&& variables);
     ModelBuilder& withPorts(std::vector<Port>&& ports);
-    Model build();
-
     ModelBuilder& withConstraints(std::vector<Constraint>&& constraints);
     ModelBuilder& withPortFieldDefinitions(std::vector<PortFieldDefinition>&& portFieldDefinitions);
+    ModelBuilder& withExtraOutputs(std::vector<ExtraOutput>&& extraOutputs);
+    void checkIdUnicity(const std::string& id);
+    Model build();
 
 private:
     Model model_;
+    std::vector<std::string> attribute_ids_;
+
+    void reset();
 };
 
 } // namespace Antares::ModelerStudy::SystemModel
