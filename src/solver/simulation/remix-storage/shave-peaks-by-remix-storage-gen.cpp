@@ -23,7 +23,7 @@ static std::set<unsigned> ValidHours(const std::vector<double>& Spillage,
                                      const std::vector<double>& DTG_MRG)
 {
     auto filter = [&](int h) { return std::abs(Spillage[h] + DTG_MRG[h]) < eps; };
-    auto validHoursView = vws::iota(0, static_cast<int>(Spillage.size())) | vws::filter(filter);
+    auto validHoursView = vws::iota(0, (int)Spillage.size()) | vws::filter(filter);
     return {validHoursView.begin(), validHoursView.end()};
 }
 

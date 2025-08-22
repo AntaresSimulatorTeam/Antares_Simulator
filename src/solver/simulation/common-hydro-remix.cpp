@@ -414,6 +414,9 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
           if (includeSTS)
           {
               auto stsForRemix = extractListSTSforRemix(area, problem, firstHourOfWeek);
+
+              // Checking input data is missing for all STS. To be done.
+
               storagesForRemix.insert(storagesForRemix.end(),
                                       stsForRemix.begin(),
                                       stsForRemix.end());
