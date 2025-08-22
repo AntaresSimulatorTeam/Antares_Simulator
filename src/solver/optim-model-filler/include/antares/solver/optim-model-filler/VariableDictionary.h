@@ -162,16 +162,5 @@ public:
     /** Overload for FullKey (strict). */
     Value operator()(const FullKey& fullKey) const;
     Value& operator()(const FullKey& fullKey);
-
-    /**
-     * @brief Non-throwing lookups returning nullptr if any index is absent.
-     */
-    [[nodiscard]] Value tryGet(const FullKey& k) const noexcept;
-    [[nodiscard]] Value tryGet(std::string_view component,
-                               std::string_view variable) const noexcept;
-    [[nodiscard]] Value tryGet(std::string_view component,
-                               std::string_view variable,
-                               MCYearAndTime::MCYear scenario,
-                               unsigned int timestep) const noexcept;
 };
 } // namespace Antares::Optimization
