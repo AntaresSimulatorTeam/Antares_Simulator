@@ -141,6 +141,11 @@ std::optional<T> buildOptional(bool condition, T value)
 }
 } // namespace
 
+PartialKey VariableDictionary::buildKey(std::string_view component, std::string_view name) const
+{
+    return {component, name, mapper_};
+}
+
 void VariableDictionary::addVariable(
   const Dimensions& dimensions,
   const PartialKey& key,
@@ -189,7 +194,7 @@ const VariableDictionary::TwoIndexVectorByYear& VariableDictionary::operator[](
 VariableDictionary::Value VariableDictionary::operator()(const std::string& component,
                                                          const std::string& variable) const
 {
-    return storageOfAddedMipVariables_.at(PartialKey(component, variable))
+    return storageOfAddedMipVariables_.at(PartialKey(component, variable, mapper_))
       .at(MCYearAndTime::MCYear{0})
       .at(0);
 }
@@ -197,7 +202,7 @@ VariableDictionary::Value VariableDictionary::operator()(const std::string& comp
 VariableDictionary::Value& VariableDictionary::operator()(const std::string& component,
                                                           const std::string& variable)
 {
-    return storageOfAddedMipVariables_.at(PartialKey(component, variable))
+    return storageOfAddedMipVariables_.at(PartialKey(component, variable, mapper_))
       .at(MCYearAndTime::MCYear{0})
       .at(0);
 }
@@ -207,7 +212,7 @@ VariableDictionary::Value VariableDictionary::operator()(const std::string& comp
                                                          const MCYearAndTime::MCYear& scenario,
                                                          unsigned int timestep) const
 {
-    return storageOfAddedMipVariables_.at(PartialKey(component, variable))
+    return storageOfAddedMipVariables_.at(PartialKey(component, variable, mapper_))
       .at(scenario)
       .at(timestep);
 }
@@ -217,7 +222,7 @@ VariableDictionary::Value& VariableDictionary::operator()(const std::string& com
                                                           const MCYearAndTime::MCYear& scenario,
                                                           unsigned int timestep)
 {
-    auto&& var = storageOfAddedMipVariables_[PartialKey(component, variable)];
+    auto&& var = storageOfAddedMipVariables_[PartialKey(component, variable, mapper_)];
     return var.at(scenario).at(timestep);
 }
 

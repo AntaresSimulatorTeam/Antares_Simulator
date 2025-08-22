@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -37,6 +37,7 @@
  */
 namespace Antares::Optimization
 {
+class VariableDictionary;
 
 class ReadLinearExpressionVisitor
     : public Expressions::Visitors::NodeVisitor<TimeDependentLinearExpression>
@@ -45,7 +46,8 @@ public:
     explicit ReadLinearExpressionVisitor(
       Expressions::Visitors::EvaluationContext evalContext,
       Optimisation::LinearProblemApi::FillContext fillContext,
-      const Antares::ModelerStudy::SystemModel::Component& component);
+      const Antares::ModelerStudy::SystemModel::Component& component,
+      const VariableDictionary& variable_dictionary);
 
     ReadLinearExpressionVisitor() = default;
     std::string name() const override;
@@ -80,5 +82,6 @@ private:
     const Expressions::Visitors::EvaluationContext evalContext_;
     const Antares::ModelerStudy::SystemModel::Component& component_;
     Expressions::Visitors::EvalVisitor evalVisitor_;
+    const VariableDictionary& dictionary_;
 };
 } // namespace Antares::Optimization

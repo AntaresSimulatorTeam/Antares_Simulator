@@ -21,12 +21,11 @@
 
 #pragma once
 
-#include <cstdint>
 #include <shared_mutex>
 #include <string>
 #include <string_view>
-#include <unordered_map>
-#include <vector>
+
+#include "antares/solver/optim-model-filler/StringToIdMapper.h"
 
 namespace Antares::Optimization
 {
@@ -44,14 +43,15 @@ namespace Antares::Optimization
 class PartialKey
 {
 public:
-    using id_type = std::uint32_t;
-
     /**
      * @brief Construct and (if needed) intern the provided strings.
-     * @param component_id Component identifier (string_view accepted, copied only if new).
-     * @param variable_id Variable identifier.
+     * @param component_name Component identifier (string_view accepted, copied only if new).
+     * @param variable_name Variable identifier.
+     * @param mapper to get id from names
      */
-    PartialKey(std::string_view component_id, std::string_view variable_id) noexcept;
+    PartialKey(std::string_view component_name,
+               std::string_view variable_name,
+               StringToIdMapper& mapper) noexcept;
 
     /** @return Component identifier string (stable reference inside interner). */
     [[nodiscard]] const std::string& getComponent() const noexcept;
@@ -59,68 +59,19 @@ public:
     [[nodiscard]] const std::string& getVariable() const noexcept;
 
     /** @return Interned numeric id of component. */
-    [[nodiscard]] id_type getComponentId() const noexcept
-    {
-        return component_id_;
-    }
+    [[nodiscard]] StringToIdMapper::id_type getComponentId() const noexcept;
 
     /** @return Interned numeric id of variable. */
-    [[nodiscard]] id_type getVariableId() const noexcept
-    {
-        return variable_id_;
-    }
+    [[nodiscard]] StringToIdMapper::id_type getVariableId() const noexcept;
 
     /** Three-way comparison based on (component_id_, variable_id_). */
-    auto operator<=>(const PartialKey&) const = default;
+    auto operator<=>(const PartialKey&) const;
+    bool operator==(const PartialKey& other) const;
 
 private:
-    id_type component_id_{}; ///< Interned id of component
-    id_type variable_id_{};  ///< Interned id of variable
-
-    struct StringInterner
-    {
-        mutable std::shared_mutex mtx;                ///< Protects both maps
-        std::unordered_map<std::string, id_type> map; ///< string => id
-        std::vector<std::string> reverse;             ///< id => string
-
-        /**
-         * @brief Intern string (idempotent). O(log N) average with unordered_map.
-         * @param s The string to intern.
-         * @return Existing or newly created id.
-         */
-        id_type intern(std::string_view s)
-        {
-            // Different thread can read at the same time
-            {
-                std::shared_lock lock(mtx);
-                if (auto it = map.find(std::string(s)); it != map.end())
-                {
-                    return it->second;
-                }
-            }
-            // Wait for shared_lock (reading) to release before modifying
-            std::unique_lock lock(mtx);
-            auto it2 = map.find(std::string(s));
-            if (it2 != map.end())
-            {
-                return it2->second; // inserted meanwhile
-            }
-            id_type id = static_cast<id_type>(reverse.size());
-            reverse.emplace_back(s);
-            map.emplace(reverse.back(), id);
-            return id;
-        }
-
-        /** @return Reference to interned string for given id (undefined if id invalid). */
-        const std::string& get(id_type id) const noexcept
-        {
-            std::shared_lock lock(mtx);
-            return reverse[id];
-        }
-    };
-
-    /** @return Singleton interner instance. */
-    static StringInterner& interner() noexcept;
+    StringToIdMapper::id_type component_id_{}; ///< Interned id of component
+    StringToIdMapper::id_type variable_id_{};  ///< Interned id of variable
+    StringToIdMapper& mapper_;
 };
 
 /**

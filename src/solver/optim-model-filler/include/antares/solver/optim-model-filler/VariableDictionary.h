@@ -128,11 +128,18 @@ class VariableDictionary
 
     HashMapVector storageOfAddedMipVariables_;                         ///< Main storage
     const TwoIndexVectorByYear& operator[](const PartialKey& k) const; ///< Internal helper
+    mutable StringToIdMapper mapper_;                                  ///< For naming
 
 public:
+    PartialKey buildKey(std::string_view component, std::string_view name) const;
+
+    template<typename... Args>
+    FullKey buildFullKey(Args... args) const;
+
     /**
      * @brief Register a new multi-dimensional variable family.
-     * For each (scenario, timestep) in dimensions, the callback is invoked to create the variable.
+     * For each (scenario, timestep) in dimensions, the callback is invoked to create the
+     * variable.
      * @param dimensions Dimensional metadata.
      * @param key Partial key (component, variable).
      * @param func Factory: (MCYearAndTime, generatedName) -> variable pointer.
@@ -163,4 +170,10 @@ public:
     Value operator()(const FullKey& fullKey) const;
     Value& operator()(const FullKey& fullKey);
 };
+
+template<typename... Args>
+FullKey VariableDictionary::buildFullKey(Args... args) const
+{
+    return FullKey(std::forward<Args>(args)..., mapper_);
+}
 } // namespace Antares::Optimization

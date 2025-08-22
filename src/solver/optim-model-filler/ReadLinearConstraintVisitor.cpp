@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -34,8 +34,9 @@ namespace Antares::Optimization
 ReadLinearConstraintVisitor::ReadLinearConstraintVisitor(
   Expressions::Visitors::EvaluationContext context,
   const Optimisation::LinearProblemApi::FillContext& fillContext,
-  const Antares::ModelerStudy::SystemModel::Component& component):
-    linear_expression_visitor_(std::move(context), fillContext, component)
+  const Antares::ModelerStudy::SystemModel::Component& component,
+  const VariableDictionary& variable_dictionary):
+    linear_expression_visitor_(std::move(context), fillContext, component, variable_dictionary)
 {
 }
 

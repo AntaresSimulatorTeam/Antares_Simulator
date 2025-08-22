@@ -50,16 +50,18 @@ class FullKey
 {
 public:
     /** Scalar constructor (no scenario/time dependence). */
-    FullKey(const std::string& component, const std::string& variable);
+    FullKey(const std::string& component, const std::string& variable, StringToIdMapper& mapper);
     /** Scenario-dependent (no time). */
     FullKey(const std::string& component,
             const std::string& variable,
-            MCYearAndTime::MCYear scenario);
+            MCYearAndTime::MCYear scenario,
+            StringToIdMapper& mapper);
     /** Scenario + timestep dependent. */
     FullKey(const std::string& component,
             const std::string& variable,
             MCYearAndTime::MCYear scenario,
-            unsigned int timestep);
+            unsigned int timestep,
+            StringToIdMapper& mapper);
 
     [[nodiscard]] const PartialKey& getPartialKey() const; ///< Access interned pair
     [[nodiscard]] const std::string& getComponent() const; ///< Convenience pass-through
