@@ -353,7 +353,6 @@ ListStorageForRemix extractListSTSforRemix(const Data::Area& area,
     auto& stsResults = weeklyResults.ShortTermStorage;
 
     for (unsigned stsIndex{0}; stsIndex < area.shortTermStorage.count(); ++stsIndex)
-    {)
     {
         const auto& stsProperties = problem.ShortTermStorage[area.index][stsIndex];
 
