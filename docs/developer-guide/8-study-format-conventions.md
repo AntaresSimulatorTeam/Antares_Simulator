@@ -1,89 +1,110 @@
-# Conventions regarding the study format
-Here are some guidelines for the Antares_Simulator format. This document is meant to serve as a reference when applying changes to the study format.
+# Guidelines for the Study Format
 
-## Input files
-All input files are placed under the **input** directory of a study. The **input** directory contains thematic sub-directories (**thermal**, **wind**, **solar**, etc.). If you add functionality that is not related to the existing functionalities, consider adding a new sub-directory in **input**. Otherwise, use the existing sub-directories.
+This document provides reference guidelines for the **Antares\_Simulator** study format and should be consulted when making modifications to the format.
 
-## File names
-File names containing non-latin characters are not supported, and may lead to errors (Windows uses UTF-16 encoding for local paths).
+## Input Files
 
-## Floating point numbers representation
-- All floating point numbers are represented with a floating point decimal separator (for example "4.4" is valid , "4,4" is invalid)
-- Negative numbers start with "-" e.g "-5"
-- Scientific notation is accepted e.g "1e-4"
-- The above can be combined e.g "-1.3e-4"
+All input files are stored in the **input** directory of a study. This directory is organized into thematic subdirectories (e.g., **thermal**, **wind**, **solar**, etc.).
 
-## File encoding
-The default encoding for all files is ASCII, although UTF-8 is also supported when necessary (non-latin characters). To be clear, while file paths may not contain non-latin characters, their content can contain UTF-8 characters.
+* If you introduce functionality unrelated to existing categories, create a new subdirectory under **input**.
+* Otherwise, place new files in the appropriate existing subdirectory.
+
+## File Names
+
+File names must use only Latin characters. Non-Latin characters are not supported and may cause errors (especially on Windows, which uses UTF-16 encoding for local paths).
+
+## Floating-Point Number Format
+
+* Use a decimal point as the separator (e.g., `4.4` is valid, `4,4` is not).
+* Negative numbers must start with a minus sign (e.g., `-5`).
+* Scientific notation is allowed (e.g., `1e-4`).
+* These formats can be combined (e.g., `-1.3e-4`).
+
+## File Encoding
+
+* ASCII is the default encoding for all files.
+* UTF-8 can be used when necessary (e.g., for non-Latin characters in file contents).
+* Note: file paths cannot contain non-Latin characters, but file content can use UTF-8.
 
 ## Timeseries
-In cases where a time and/or scenario-dependent parameter is needed, we use "time series", which are stored in TAB-separated text files. The newline character "\n" is also used between entries.
 
-### Number types
-It is possible to add timeseries of integer values, and floating-point values (see above for their representation).
+Time- and/or scenario-dependent parameters are represented as **timeseries**, stored in TAB-separated text files. Each entry is separated by a newline (`\n`).
 
-### Sizing
-Timeseries can have 1..N columns and any number of rows. A common choice for the number of rows is `HOURS_PER_YEAR = 8760` (annual timeseries of hourly values).
+### Number Types
 
-If multiple columns are present, then all of them must contain the same number of rows.
+Timeseries can contain integer or floating-point values (see **Floating-Point Number Format** above).
 
-### Empty files
-An empty file is implicitly considered to contain one column of zeros, with the appropriate number of rows. More specifically, if we expect N rows, an empty file is considered to be a single column of zeros with N rows
+### Dimensions
+
+* Timeseries can have 1 to N columns and any number of rows.
+* A typical choice is `HOURS_PER_YEAR = 8760` (hourly values for a full year).
+* If multiple columns exist, all columns must have the same number of rows.
+
+### Empty Files
+
+An empty file is treated as a single column of zeros with the expected number of rows:
 
 ```
 0.0
 ...
-... (N times)
+... (repeated N times)
 ...
 0.0
 ```
 
 ## Parameters
-For parameters we use both INI and YAML. For newer additions, YAML should be preferred over INI.
+
+Parameters can be defined using **INI** or **YAML**. For new additions, **YAML** is preferred.
 
 ### INI
-Example
+
+Example:
+
 ```ini
 [section1]
 key1 = value1
 key2 = value2
 
-[section1]
+[section2]
 key1 = value1
 key2 = value2
 ```
-Within a section a key must be unique. While it is not the case in the current format, this restriction should be enforced for newer additions to the format.
 
-Empty lines are ignored.
+* Keys must be unique within a section. This rule should be enforced for new additions.
+* Empty lines are ignored.
 
 ### YAML
+
+Example:
 
 ```yaml
 system:
   id: fr
   components:
-  - id: gas
-    model: standard.thermal
+    - id: gas
+      model: standard.thermal
 ```
-We sometimes use IDs to refer to some existing objects. In this case, the ID must be unique at the local scope
 
-Valid
+* IDs can be used to reference objects and must be unique within the local scope.
+
+Valid example:
 
 ```yaml
 parameters:
-- id: reservoir_capacity
-  value: 1200
-- id: injection_nominal_capacity
-  value: 300
+  - id: reservoir_capacity
+    value: 1200
+  - id: injection_nominal_capacity
+    value: 300
 ```
 
-Invalid (duplicate ID)
+Invalid example (duplicate ID):
 
 ```yaml
 parameters:
-- id: reservoir_capacity
-  value: 1200
-- id: reservoir_capacity
-  value: 300
+  - id: reservoir_capacity
+    value: 1200
+  - id: reservoir_capacity
+    value: 300
 ```
-In this case `parameters.id` would be ambiguous, which is why we enforce uniqueness.
+
+Duplicate IDs are ambiguous and must be avoided.
