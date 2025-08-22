@@ -115,6 +115,9 @@ models:
   - port: injection
     field: flow
     definition: active_power
+  extra-outputs:
+  - id: total_cost_in_millions
+    expression: sum(active_power * proportional_cost) / 1000000
 - id: node
   description: A balance node with injections (productions and loads)
   ports:
@@ -173,6 +176,13 @@ models:
     - **field**: the field to define (refers to a field ID defined in the port type)
     - **definition**: an [expression](#expressions) representing the definition of the field. Can use scalars,
       parameters, and variables of the model.
+- **extra-outputs** _(optional)_: a collection of outputs relevant to the model, that can be computed after optimization
+  (i.e. using the optimal values of the variables). 
+  The values of these extra outputs will appear in the [output files](03-outputs.md) along with variable and port values.
+    - **id**: an ID for the extra-output. Must be unique inside the scope of the model, and
+      respect [these rules](#rules-for-ids).
+    - **expression**: the [expression](#expressions) of the output. Can use all operators, as long as the expression can be 
+      evaluated after optimization.
 
 ### Expressions
 

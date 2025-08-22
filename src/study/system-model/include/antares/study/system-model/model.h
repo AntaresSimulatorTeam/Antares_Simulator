@@ -118,8 +118,6 @@ private:
     std::map<std::string, ExtraOutput> extraOutputs_;
 
     PortFieldMap portFieldDefinitions_;
-
-    void checkThatIdsAreUnique();
 };
 
 class ModelBuilder
@@ -133,7 +131,7 @@ public:
     ModelBuilder& withConstraints(std::vector<Constraint>&& constraints);
     ModelBuilder& withPortFieldDefinitions(std::vector<PortFieldDefinition>&& portFieldDefinitions);
     ModelBuilder& withExtraOutputs(std::vector<ExtraOutput>&& extraOutputs);
-    void checkIdUnicity(const std::string& id);
+    void checkThatIdIsNotUsed(const std::string& id);
     Model build();
 
 private:

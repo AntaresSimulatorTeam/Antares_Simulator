@@ -39,7 +39,7 @@ std::size_t PortFieldKeyHash::operator()(const PortFieldKey& input) const
     return seed;
 }
 
-void ModelBuilder::checkIdUnicity(const std::string& id)
+void ModelBuilder::checkThatIdIsNotUsed(const std::string& id)
 {
     if (std::ranges::find(attribute_ids_, id) != attribute_ids_.end())
     {
@@ -99,13 +99,13 @@ ModelBuilder& ModelBuilder::withObjective(Expression&& objective)
  * \param parameters A vector of Parameter objects to set.
  * \return Reference to the ModelBuilder object.
  *
- * inputs it not guaranteed to be valid after the call
+ * inputs are not guaranteed to be valid after the call
  */
 ModelBuilder& ModelBuilder::withParameters(std::vector<Parameter>&& parameters)
 {
     for (const auto& parameter: parameters)
     {
-        checkIdUnicity(parameter.Id());
+        checkThatIdIsNotUsed(parameter.Id());
     }
     std::transform(parameters.begin(),
                    parameters.end(),
@@ -124,13 +124,13 @@ ModelBuilder& ModelBuilder::withParameters(std::vector<Parameter>&& parameters)
  * \param variables A vector of Variable objects to set.
  * \return Reference to the ModelBuilder object.
  *
- * inputs it not guaranteed to be valid after the call
+ * inputs are not guaranteed to be valid after the call
  */
 ModelBuilder& ModelBuilder::withVariables(std::vector<Variable>&& variables)
 {
     for (const auto& variable: variables)
     {
-        checkIdUnicity(variable.Id());
+        checkThatIdIsNotUsed(variable.Id());
     }
     std::ranges::transform(variables,
                            std::inserter(model_.variables_, model_.variables_.end()),
@@ -148,13 +148,13 @@ ModelBuilder& ModelBuilder::withVariables(std::vector<Variable>&& variables)
  * \param ports A vector of Port objects to set.
  * \return Reference to the ModelBuilder object.
  *
- * inputs it not garanteed to be valid after the call
+ * inputs are not garanteed to be valid after the call
  */
 ModelBuilder& ModelBuilder::withPorts(std::vector<Port>&& ports)
 {
     for (const auto& port: ports)
     {
-        checkIdUnicity(port.Id());
+        checkThatIdIsNotUsed(port.Id());
     }
     std::transform(ports.begin(),
                    ports.end(),
@@ -173,13 +173,13 @@ ModelBuilder& ModelBuilder::withPorts(std::vector<Port>&& ports)
  * \param constraints A vector of Constraint objects to set.
  * \return Reference to the ModelBuilder object.
  *
- * inputs it not guaranteed to be valid after the call
+ * inputs are not guaranteed to be valid after the call
  */
 ModelBuilder& ModelBuilder::withConstraints(std::vector<Constraint>&& constraints)
 {
     for (const auto& constraint: constraints)
     {
-        checkIdUnicity(constraint.Id());
+        checkThatIdIsNotUsed(constraint.Id());
     }
     std::transform(constraints.begin(),
                    constraints.end(),
@@ -198,7 +198,7 @@ ModelBuilder& ModelBuilder::withConstraints(std::vector<Constraint>&& constraint
  * \param portFieldDefinitions A vector of PortFieldDefinition objects to set.
  * \return Reference to the ModelBuilder object.
  *
- * inputs it not guaranteed to be valid after the call
+ * inputs are not guaranteed to be valid after the call
  */
 ModelBuilder& ModelBuilder::withPortFieldDefinitions(
   std::vector<PortFieldDefinition>&& portFieldDefinitions)
@@ -222,13 +222,13 @@ ModelBuilder& ModelBuilder::withPortFieldDefinitions(
  * \param extraOutputs A vector of ExtraOutput objects to set.
  * \return Reference to the ModelBuilder object.
  *
- * inputs it not guaranteed to be valid after the call
+ * inputs are not guaranteed to be valid after the call
  */
 ModelBuilder& ModelBuilder::withExtraOutputs(std::vector<ExtraOutput>&& extraOutputs)
 {
     for (const auto& extraOutput: extraOutputs)
     {
-        checkIdUnicity(extraOutput.Id());
+        checkThatIdIsNotUsed(extraOutput.Id());
     }
     std::transform(extraOutputs.begin(),
                    extraOutputs.end(),

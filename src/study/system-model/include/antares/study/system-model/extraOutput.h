@@ -37,8 +37,8 @@ namespace Antares::ModelerStudy::SystemModel
 class ExtraOutput
 {
 public:
-    ExtraOutput(std::string name, Expression expression):
-        id_(std::move(name)),
+    ExtraOutput(std::string id, Expression expression):
+        id_(std::move(id)),
         expression_(std::move(expression))
     {
     }
