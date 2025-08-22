@@ -166,8 +166,8 @@ void VariableDictionary::addVariable(
         m[scenarioNumber].resize(time_interval.size(), offset);
         for (const auto timestep: time_interval)
         {
-            auto year = buildOptional<MCYearAndTime::MCYear>(dimensions.isScenarioDependent(),
-                                                             scenarioNumber);
+            const auto year = buildOptional<MCYearAndTime::MCYear>(dimensions.isScenarioDependent(),
+                                                                   scenarioNumber);
             const auto ts = buildOptional(dimensions.isTimeDependent(), timestep);
             const std::string name = buildVariableName(key, year, ts);
             m[scenarioNumber][timestep] = func({.mcYear = scenarioNumber, .timestep = timestep},
@@ -247,40 +247,4 @@ VariableDictionary::Value& VariableDictionary::operator()(const FullKey& fullKey
                             fullKey.getTimestep().value_or(0));
 }
 
-VariableDictionary::Value VariableDictionary::tryGet(const FullKey& k) const noexcept
-{
-    return tryGet(k.getComponent(),
-                  k.getVariable(),
-                  k.getScenario().value_or(MCYearAndTime::MCYear{0}),
-                  k.getTimestep().value_or(0));
-}
-
-VariableDictionary::Value VariableDictionary::tryGet(std::string_view component,
-                                                     std::string_view variable) const noexcept
-{
-    return tryGet(component, variable, MCYearAndTime::MCYear{0}, 0);
-}
-
-VariableDictionary::Value VariableDictionary::tryGet(std::string_view component,
-                                                     std::string_view variable,
-                                                     MCYearAndTime::MCYear scenario,
-                                                     unsigned int timestep) const noexcept
-{
-    // Avoid exceptions by manual lookups and bounds checks
-    auto itKey = storageOfAddedMipVariables_.find(PartialKey(component, variable));
-    if (itKey == storageOfAddedMipVariables_.end())
-    {
-        return nullptr;
-    }
-    auto itScenario = itKey->second.find(scenario);
-    if (itScenario == itKey->second.end())
-    {
-        return nullptr;
-    }
-    if (!itScenario->second.contains(timestep))
-    {
-        return nullptr;
-    }
-    return itScenario->second[timestep];
-}
 } // namespace Antares::Optimization
