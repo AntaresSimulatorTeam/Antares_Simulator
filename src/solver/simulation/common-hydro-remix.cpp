@@ -345,7 +345,9 @@ ListStorageForRemix extractListSTSforRemix(const Data::Area& area,
                                            PROBLEME_HEBDO& problem,
                                            const unsigned firstHourOfWeek)
 {
-    ListStorageForRemix list_to_return;
+    // For purpose of ordering storage by capacity, we define a (local) vector of pairs :
+    // (capacity, storageForRemix).
+    std::vector<std::pair<double, std::shared_ptr<IStorageForRemix>>> pairs_capa_storage;
 
     auto& weeklyResults = problem.ResultatsHoraires[area.index];
     auto& stsResults = weeklyResults.ShortTermStorage;
@@ -365,18 +367,24 @@ ListStorageForRemix extractListSTSforRemix(const Data::Area& area,
         const double withdrawalcapacity = stsProperties.withdrawalNominalCapacity;
         const double efficiency = stsProperties.withdrawalEfficiency;
 
-        list_to_return.push_back(makeSTSforRemix(generation,
-                                                 unsupE,
-                                                 levels,
-                                                 pmax,
-                                                 inflows,
-                                                 injection,
-                                                 initLevel,
-                                                 withdrawalcapacity,
-                                                 efficiency));
+        pairs_capa_storage.push_back({withdrawalcapacity,
+                                      makeSTSforRemix(generation,
+                                                      unsupE,
+                                                      levels,
+                                                      pmax,
+                                                      inflows,
+                                                      injection,
+                                                      initLevel,
+                                                      withdrawalcapacity,
+                                                      efficiency)});
     }
 
-    // std::ranges::sort(list_to_return, {}, [](auto& e) { return e->});
+    std::ranges::sort(pairs_capa_storage, std::ranges::greater{}, [](auto& p) { return p.first; });
+
+    ListStorageForRemix list_to_return;
+    std::ranges::transform(pairs_capa_storage,
+                           std::back_inserter(list_to_return),
+                           [](auto& p) { return p.second; });
     return list_to_return;
 }
 
@@ -406,8 +414,9 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
           if (includeSTS)
           {
               auto stsForRemix = extractListSTSforRemix(area, problem, firstHourOfWeek);
-              // std::ranges::sort(stsForRemix, proj);
-              // add this list to storagesForRemix
+              storagesForRemix.insert(storagesForRemix.end(),
+                                      stsForRemix.begin(),
+                                      stsForRemix.end());
           }
 
           shavePeaksByRemixingStorageGen(load, unsupE, spillage, dtgMrg, storagesForRemix);
