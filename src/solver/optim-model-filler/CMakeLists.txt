@@ -5,11 +5,8 @@ set(SRC_optim_model_filler
         FullKey.cpp
         LinearExpression.cpp
         PartialKey.cpp
-        ReadLinearConstraintVisitor.cpp
-        ReadLinearExpressionVisitor.cpp
         StringToIdMapper.cpp
         TimeDependentLinearExpression.cpp
-        VariableDictionary.cpp
         include/antares/solver/optim-model-filler/ComponentFiller.h
         include/antares/solver/optim-model-filler/FullKey.h
         include/antares/solver/optim-model-filler/LinearExpression.h

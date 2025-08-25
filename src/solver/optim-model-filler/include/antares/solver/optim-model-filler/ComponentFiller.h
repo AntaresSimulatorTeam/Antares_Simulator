@@ -57,9 +57,10 @@ public:
     ComponentFiller(ComponentFiller& other) = delete;
 
     /// Create a ComponentFiller for a Component
-    explicit ComponentFiller(const ModelerStudy::SystemModel::Component& component,
-                             Optimization::VariableDictionary& variableDictionary,
-                             const ScenarioGroupRepository& scenarioGroupRepository);
+    explicit ComponentFiller(
+      const ModelerStudy::SystemModel::Component& component,
+      Optimization::VariableDictionary<typename SolverTagType::VariableType>& variableDictionary,
+      const ScenarioGroupRepository& scenarioGroupRepository);
 
     void addVariables(Optimisation::LinearProblemApi::ILinearProblem<SolverTagType>& pb,
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
@@ -86,7 +87,7 @@ private:
     bool IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node);
 
     const ModelerStudy::SystemModel::Component& component_;
-    Optimization::VariableDictionary& variableDictionary_;
+    Optimization::VariableDictionary<typename SolverTagType::VariableType>& variableDictionary_;
     const ScenarioGroupRepository& scenarioGroupRepository_;
 };
 
@@ -96,7 +97,7 @@ class VariablesBulkAddition
 public:
     VariablesBulkAddition(
       Optimisation::LinearProblemApi::ILinearProblem<SolverTagType>& linear_problem,
-      Optimization::VariableDictionary& variableDictionary);
+      Optimization::VariableDictionary<typename SolverTagType::VariableType>& variableDictionary);
 
     void addVariable(double lb,
                      double ub,
@@ -129,6 +130,6 @@ public:
 
 private:
     Optimisation::LinearProblemApi::ILinearProblem<SolverTagType>& linear_problem_;
-    Optimization::VariableDictionary& variableDictionary;
+    Optimization::VariableDictionary<typename SolverTagType::VariableType>& variableDictionary;
 };
 } // namespace Antares::Optimisation

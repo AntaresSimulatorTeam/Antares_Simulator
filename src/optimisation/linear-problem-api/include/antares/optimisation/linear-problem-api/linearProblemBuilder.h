@@ -22,9 +22,9 @@
 #pragma once
 
 #include <vector>
+#include <algorithm>
 
 #include "linearProblemFiller.h"
-#include "antares/optimisation/linear-problem-api/mipVariable.h"
 
 namespace Antares::Optimisation::LinearProblemApi
 {
@@ -39,5 +39,25 @@ public:
 private:
     const std::vector<LinearProblemFiller<SolverTagType>*>& fillers_;
 };
+
+template<SolverTag SolverTagType>
+LinearProblemBuilder<SolverTagType>::LinearProblemBuilder(
+  const std::vector<LinearProblemFiller<SolverTagType>*>& fillers):
+    fillers_(fillers)
+{
+}
+
+template<SolverTag SolverTagType>
+void LinearProblemBuilder<SolverTagType>::build(ILinearProblem<SolverTagType>& pb,
+                                                ILinearProblemData& data,
+                                                FillContext& ctx)
+{
+    std::ranges::for_each(fillers_,
+                          [&](const auto& filler) { filler->addVariables(pb, data, ctx); });
+    std::ranges::for_each(fillers_,
+                          [&](const auto& filler) { filler->addConstraints(pb, data, ctx); });
+    std::ranges::for_each(fillers_,
+                          [&](const auto& filler) { filler->addObjective(pb, data, ctx); });
+}
 
 } // namespace Antares::Optimisation::LinearProblemApi
