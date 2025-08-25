@@ -516,8 +516,3 @@ BOOST_FIXTURE_TEST_CASE(comparison_of_results_with_python_algo,
                                              4.,   45.55, 6.55, 25.55, 41.55, 25.};
     BOOST_TEST(HydroGen == expected_HydroGen, boost::test_tools::per_element());
 }
-
-// Possible simplifications / clarifications of the algorithm itself :
-// - the algo is flat, it's C (not C++), it should be divided in a small number of steps
-// - they are 3 while loops. Could 2 loops be enough ? (the iteration loop and
-//   another one simply updating HydroGen and UnsupE)

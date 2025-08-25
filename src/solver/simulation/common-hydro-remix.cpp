@@ -312,8 +312,10 @@ ListStorageForRemix extractListSTSforRemix(const Data::Area& area,
                                            PROBLEME_HEBDO& problem,
                                            const unsigned firstHourOfWeek)
 {
-    // For purpose of ordering storage by capacity, we define a (local) vector of pairs :
+    // For purpose of sorting storage by capacity, we define a (local) vector of pairs :
     // (capacity, storageForRemix).
+    // This vector will first be sorted depending on the first element of the pair,
+    // and then will make a vector with the second elements of all pairs.
     std::vector<std::pair<double, std::shared_ptr<IStorageForRemix>>> pairs_capa_storage;
 
     auto& weeklyResults = problem.ResultatsHoraires[area.index];

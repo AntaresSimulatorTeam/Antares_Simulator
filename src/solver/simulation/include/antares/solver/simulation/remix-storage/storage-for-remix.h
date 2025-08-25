@@ -10,7 +10,7 @@ class StorageForRemixNoLevels: public IStorageForRemix
 public:
     StorageForRemixNoLevels(std::vector<double>& generation,
                             std::vector<double>& unsupE,
-                            const std::vector<double>& Pmax,
+                            const std::vector<double> Pmax,
                             const std::vector<double>& Pmin);
 
     double maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) override;
@@ -24,7 +24,7 @@ protected:
     std::vector<double>& generation_;
     const std::vector<double> initialGen_;
     std::vector<double>& unsupE_;
-    const std::vector<double>& pmax_;
+    const std::vector<double> pmax_;
     // pmin_ is not a const ref to vector because of the way we acquire the related hydro TS
     // (outside constructor). This requires a deep copy in constructor.
     // Maybe we should pass to constructor and have here a std::span<cont double> instead,
@@ -38,7 +38,7 @@ public:
     StorageForRemixWithLevels(std::vector<double>& generation,
                               std::vector<double>& unsupE,
                               std::vector<double>& levels,
-                              const std::vector<double>& Pmax,
+                              const std::vector<double> Pmax,
                               const std::vector<double>& Pmin,
                               const std::vector<double>& inflows,
                               const std::vector<double>& overflow,
@@ -82,7 +82,7 @@ std::shared_ptr<IStorageForRemix> makeHydroForRemix(std::vector<double>& generat
 std::shared_ptr<StorageForRemixWithLevels> makeSTSforRemix(std::vector<double>& withdrawal,
                                                            std::vector<double>& unsupE,
                                                            std::vector<double>& levels,
-                                                           const std::vector<double>& pmax,
+                                                           const std::vector<double> pmax,
                                                            const std::vector<double>& inflows,
                                                            const std::vector<double>& injection,
                                                            const double initLevel,
