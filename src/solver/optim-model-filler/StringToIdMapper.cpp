@@ -24,6 +24,46 @@
 
 namespace Antares::Optimization
 {
+StringToIdMapper::StringToIdMapper(const StringToIdMapper& other)
+{
+    std::shared_lock lock(other.mtx);
+    map = other.map;
+    reverse = other.reverse;
+}
+
+StringToIdMapper& StringToIdMapper::operator=(const StringToIdMapper& other)
+{
+    if (this != &other)
+    {
+        // Lock both mutexes in a consistent order to avoid deadlock
+        std::shared_lock other_lock(other.mtx);
+        std::unique_lock this_lock(mtx);
+        map = other.map;
+        reverse = other.reverse;
+    }
+    return *this;
+}
+
+StringToIdMapper::StringToIdMapper(StringToIdMapper&& other) noexcept
+{
+    std::unique_lock lock(other.mtx);
+    map = std::move(other.map);
+    reverse = std::move(other.reverse);
+}
+
+StringToIdMapper& StringToIdMapper::operator=(StringToIdMapper&& other) noexcept
+{
+    if (this != &other)
+    {
+        // Lock both mutexes in a consistent order to avoid deadlock
+        std::unique_lock other_lock(other.mtx);
+        std::unique_lock this_lock(mtx);
+        map = std::move(other.map);
+        reverse = std::move(other.reverse);
+    }
+    return *this;
+}
+
 StringToIdMapper::id_type StringToIdMapper::id(std::string_view s)
 {
     // Different thread can read at the same time

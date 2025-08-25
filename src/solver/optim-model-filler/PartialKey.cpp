@@ -34,6 +34,42 @@ PartialKey::PartialKey(std::string_view component_name,
 {
 }
 
+PartialKey::PartialKey(const PartialKey& other) noexcept:
+    component_id_(other.component_id_),
+    variable_id_(other.variable_id_),
+    mapper_(other.mapper_)
+{
+}
+
+PartialKey& PartialKey::operator=(const PartialKey& other) noexcept
+{
+    if (this != &other)
+    {
+        component_id_ = other.component_id_;
+        variable_id_ = other.variable_id_;
+        mapper_ = other.mapper_;
+    }
+    return *this;
+}
+
+PartialKey::PartialKey(PartialKey&& other) noexcept:
+    component_id_(other.component_id_),
+    variable_id_(other.variable_id_),
+    mapper_(other.mapper_)
+{
+}
+
+PartialKey& PartialKey::operator=(PartialKey&& other) noexcept
+{
+    if (this != &other)
+    {
+        component_id_ = other.component_id_;
+        variable_id_ = other.variable_id_;
+        mapper_ = other.mapper_;
+    }
+    return *this;
+}
+
 const std::string& PartialKey::getComponent() const noexcept
 {
     return mapper_.get(component_id_);

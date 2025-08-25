@@ -31,6 +31,23 @@ class StringToIdMapper
 public:
     using id_type = std::uint32_t;
 
+    // Rule of Five
+    StringToIdMapper() = default;
+
+    ~StringToIdMapper() = default;
+
+    // Copy constructor - mutex cannot be copied, so we create a new one
+    StringToIdMapper(const StringToIdMapper& other);
+
+    // Copy assignment operator
+    StringToIdMapper& operator=(const StringToIdMapper& other);
+
+    // Move constructor - mutex cannot be moved, so we create a new one and move the data
+    StringToIdMapper(StringToIdMapper&& other) noexcept;
+
+    // Move assignment operator
+    StringToIdMapper& operator=(StringToIdMapper&& other) noexcept;
+
     /**
      * @brief Intern string (idempotent). O(log N) average with unordered_map.
      * @param s The string to intern.

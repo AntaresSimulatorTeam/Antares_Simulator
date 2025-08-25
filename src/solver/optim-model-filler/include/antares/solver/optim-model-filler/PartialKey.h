@@ -53,6 +53,17 @@ public:
                std::string_view variable_name,
                StringToIdMapper& mapper) noexcept;
 
+    // Rule of Five
+    ~PartialKey() = default;
+
+    PartialKey(const PartialKey& other) noexcept;
+
+    PartialKey& operator=(const PartialKey& other) noexcept;
+
+    PartialKey(PartialKey&& other) noexcept;
+
+    PartialKey& operator=(PartialKey&& other) noexcept;
+
     /** @return Component identifier string (stable reference inside interner). */
     [[nodiscard]] const std::string& getComponent() const noexcept;
     /** @return Variable identifier string (stable reference inside interner). */
