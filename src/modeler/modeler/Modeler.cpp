@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
@@ -28,6 +27,7 @@
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 #include <antares/optimisation/linear-problem-api/linearProblemBuilder.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h>
+#include <antares/optimisation/linear-problem-mpsolver-impl/ortoolsTag.h>
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include <antares/solver/modeler/parameters/parseModelerParameters.h>
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
@@ -48,6 +48,7 @@ Modeler::Modeler(ILoader& loader, IWriter& writer):
 {
 }
 
+template<Optimisation::LinearProblemApi::SolverTag SolverTagType>
 class SystemLinearProblemBuilder
 {
 public:
@@ -58,21 +59,22 @@ public:
 
     ~SystemLinearProblemBuilder() = default;
 
-    void Provide(ILinearProblem& pb,
+    void Provide(ILinearProblem<SolverTagType>& pb,
                  const ModelerParameters& parameters,
                  ILinearProblemData* dataSeries,
                  const Optimisation::ScenarioGroupRepository& scenario_group_repository)
     {
-        std::vector<std::unique_ptr<Optimisation::ComponentFiller>> fillers;
-        std::vector<LinearProblemFiller*> fillers_ptr;
+        std::vector<std::unique_ptr<Optimisation::ComponentFiller<SolverTagType>>> fillers;
+        std::vector<LinearProblemFiller<SolverTagType>*> fillers_ptr;
         // All LP variables coordinates (component id, variable id, scenario, time step)
-        VariableDictionary variableDictionary;
+        VariableDictionary<typename SolverTagType::VariableType> variableDictionary;
 
         for (const auto& [_, component]: system_->Components())
         {
-            auto cf = std::make_unique<Optimisation::ComponentFiller>(component,
-                                                                      variableDictionary,
-                                                                      scenario_group_repository);
+            auto cf = std::make_unique<Optimisation::ComponentFiller<SolverTagType>>(
+              component,
+              variableDictionary,
+              scenario_group_repository);
             fillers.push_back(std::move(cf));
         }
         for (auto& component_filler: fillers)
@@ -80,7 +82,7 @@ public:
             fillers_ptr.push_back(component_filler.get());
         }
 
-        LinearProblemBuilder linear_problem_builder(fillers_ptr);
+        LinearProblemBuilder<SolverTagType> linear_problem_builder(fillers_ptr);
         // Todo: scenario
         FillContext time_scenario_ctx = {
           parameters.firstTimeStep,
@@ -103,7 +105,7 @@ void Modeler::solve() const
         logs.info() << "Parameters loaded";
         const auto data = loader_.loadAll();
 
-        SystemLinearProblemBuilder system_linear_problem(data.system.get());
+        SystemLinearProblemBuilder<OrtoolsTag> system_linear_problem(data.system.get());
 
         writer_.init(!parameters.noOutput);
 

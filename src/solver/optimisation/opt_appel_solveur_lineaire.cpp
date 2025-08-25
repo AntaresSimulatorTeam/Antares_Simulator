@@ -25,6 +25,7 @@
 #include <antares/logs/logs.h>
 #include <antares/solver/utils/ortools_utils.h>
 #include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
+#include "antares/optimisation/linear-problem-mpsolver-impl/ortoolsTag.h"
 #include "antares/optimization-options/options.h"
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
@@ -85,12 +86,13 @@ struct SimplexResult
     double objectiveValue;
 };
 
+template<Optimisation::LinearProblemApi::SolverTag SolverTagType>
 static void fillModelerComponents(
-  std::vector<std::unique_ptr<Optimisation::ComponentFiller>>& componentFillers,
-  std::vector<LinearProblemFiller*>& fillersCollection,
+  std::vector<std::unique_ptr<Optimisation::ComponentFiller<SolverTagType>>>& componentFillers,
+  std::vector<LinearProblemFiller<SolverTagType>*>& fillersCollection,
   const ModelerStudy::SystemModel::System* modelerSystem,
   const Optimisation::ScenarioGroupRepository& scenarioGroupRepository,
-  VariableDictionary& variableDictionary)
+  VariableDictionary<typename SolverTagType::VariableType>& variableDictionary)
 {
     if (!modelerSystem)
     {
@@ -101,9 +103,9 @@ static void fillModelerComponents(
     for (const auto& [_, component]: modelerSystem->Components())
     {
         componentFillers.push_back(
-          std::make_unique<Optimisation::ComponentFiller>(component,
-                                                          variableDictionary,
-                                                          scenarioGroupRepository));
+          std::make_unique<Optimisation::ComponentFiller<SolverTagType>>(component,
+                                                                         variableDictionary,
+                                                                         scenarioGroupRepository));
         // TODO: use scenario group repository
     }
     for (auto& component_filler: componentFillers)
@@ -174,13 +176,13 @@ MPSolver* convertToMPSolver(const PROBLEME_HEBDO* problemeHebdo,
 {
     LegacyOrtoolsLinearProblem ortoolsProblem(problemeHebdo->ProblemeAResoudre->isMIP(),
                                               options.solverName);
-    LegacyFiller legacyOrtoolsFiller(problemeHebdo, namedProblems);
-    std::vector<LinearProblemFiller*> fillersCollection = {&legacyOrtoolsFiller};
+    LegacyFiller<OrtoolsTag> legacyOrtoolsFiller(problemeHebdo, namedProblems);
+    std::vector<LinearProblemFiller<OrtoolsTag>*> fillersCollection = {&legacyOrtoolsFiller};
 
-    std::vector<std::unique_ptr<Optimisation::ComponentFiller>> componentFillers;
-    VariableDictionary variableDictionary;
-    ComponentToAreaConnectionFiller componentToAreaConnectionFiller(problemeHebdo,
-                                                                    variableDictionary);
+    std::vector<std::unique_ptr<Optimisation::ComponentFiller<OrtoolsTag>>> componentFillers;
+    VariableDictionary<OrtoolsVariableWrapper> variableDictionary;
+    ComponentToAreaConnectionFiller<OrtoolsTag> componentToAreaConnectionFiller(problemeHebdo,
+                                                                                variableDictionary);
     if (problemeHebdo->modelerSystem && problemeHebdo->scenarioGroupRepository)
     {
         // All LP variables coordinates (component id, variable id, scenario, time step)
