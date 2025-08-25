@@ -296,6 +296,24 @@ std::vector<double> extractSTSpmax(const ShortTermStorage::PROPERTIES& sts_prope
     return subrange * sts_properties.withdrawalEfficiency;
 }
 
+std::vector<double> extractSTSlowRuleCurve(const ShortTermStorage::PROPERTIES& sts_properties,
+                                           const unsigned firstHourOfWeek)
+{
+    const auto& lowMod = sts_properties.series->lowerRuleCurve;
+    std::span<const double> subrange(lowMod.begin() + firstHourOfWeek,
+                                     lowMod.begin() + firstHourOfWeek + HOURS_IN_WEEK);
+    return subrange * sts_properties.reservoirCapacity;
+}
+
+std::vector<double> extractSTSupRuleCurve(const ShortTermStorage::PROPERTIES& sts_properties,
+                                          const unsigned firstHourOfWeek)
+{
+    const auto& upMod = sts_properties.series->upperRuleCurve;
+    std::span<const double> subrange(upMod.begin() + firstHourOfWeek,
+                                     upMod.begin() + firstHourOfWeek + HOURS_IN_WEEK);
+    return subrange * sts_properties.reservoirCapacity;
+}
+
 std::vector<double> extractSTSinflows(const ShortTermStorage::PROPERTIES& sts_properties,
                                       const unsigned firstHourOfWeek,
                                       const unsigned year)
@@ -332,6 +350,8 @@ ListStorageForRemix extractListSTSforRemix(const Data::Area& area,
 
         const auto& pmax = extractSTSpmax(stsProperties, firstHourOfWeek);
         const auto& inflows = extractSTSinflows(stsProperties, firstHourOfWeek, problem.year);
+        const auto lowRuleCurve = extractSTSlowRuleCurve(stsProperties, firstHourOfWeek);
+        const auto upRuleCurve = extractSTSupRuleCurve(stsProperties, firstHourOfWeek);
         const double initLevel = levels[0];
         const double withdrawalcapacity = stsProperties.withdrawalNominalCapacity;
         const double efficiency = stsProperties.withdrawalEfficiency;
@@ -343,8 +363,9 @@ ListStorageForRemix extractListSTSforRemix(const Data::Area& area,
                                                       pmax,
                                                       inflows,
                                                       injection,
+                                                      lowRuleCurve,
+                                                      upRuleCurve,
                                                       initLevel,
-                                                      withdrawalcapacity,
                                                       efficiency)});
     }
 

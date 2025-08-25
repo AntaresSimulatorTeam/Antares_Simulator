@@ -43,8 +43,9 @@ public:
                               const std::vector<double> inflows,
                               const std::vector<double> overflow,
                               const std::vector<double>& pump,
+                              const std::vector<double> lowRuleCurve,
+                              const std::vector<double> upRuleCurve,
                               const double initLevel,
-                              const double capacity,
                               const double pumpEfficiency);
 
     double maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) override;
@@ -75,7 +76,7 @@ std::shared_ptr<IStorageForRemix> makeHydroForRemix(std::vector<double>& generat
                                                     const std::vector<double>& overflow,
                                                     const std::vector<double>& pump,
                                                     const double initLevel,
-                                                    const double capacity,
+                                                    const double reservoirCapacity,
                                                     const double pumpEfficiency,
                                                     bool reservoirManagement);
 
@@ -85,8 +86,9 @@ std::shared_ptr<StorageForRemixWithLevels> makeSTSforRemix(std::vector<double>& 
                                                            const std::vector<double>& pmax,
                                                            const std::vector<double>& inflows,
                                                            const std::vector<double>& injection,
+                                                           const std::vector<double>& lowRuleCurve,
+                                                           const std::vector<double>& upRuleCurve,
                                                            const double initLevel,
-                                                           const double withdrawalcapacity,
                                                            const double efficiency);
 
 } // namespace Antares::Solver::Simulation
