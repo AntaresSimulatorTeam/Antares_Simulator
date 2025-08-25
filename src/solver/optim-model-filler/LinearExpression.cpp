@@ -20,6 +20,7 @@
  */
 
 #include <algorithm>
+#include <cmath>
 #include <functional>
 #include <stdexcept>
 
@@ -62,7 +63,8 @@ LinearExpression::LinearExpression(double offset, FullKeyMap coef_per_var):
 std::vector<LinearExpression::RawTerm> LinearExpression::scaleTerms(const std::vector<RawTerm>& src,
                                                                     double factor)
 {
-    if (factor == 1.0)
+    constexpr double kEpsilon = 1e-14;
+    if (std::abs(factor - 1.0) < kEpsilon)
     {
         return src; // copy elision
     }

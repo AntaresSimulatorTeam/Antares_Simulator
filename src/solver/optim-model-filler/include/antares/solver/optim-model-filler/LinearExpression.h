@@ -166,7 +166,6 @@ public:
     std::vector<RawTerm> terms_; // may contain duplicates
     mutable FullKeyMap cache_;   // aggregated unique sums
     mutable bool cacheValid_ = false;
-    /// Mise à l'échelle d'un ensemble de termes (utilitaire)
     static std::vector<RawTerm> scaleTerms(const std::vector<RawTerm>& src, double factor);
 
     void invalidate()
@@ -174,7 +173,7 @@ public:
         cacheValid_ = false;
     }
 
-    /// Construction paresseuse de cache_ si nécessaire
+    /// Lazy caching
     void materialize() const;
 };
 } // namespace Antares::Optimization
