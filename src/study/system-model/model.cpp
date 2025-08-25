@@ -74,7 +74,7 @@ ModelBuilder& ModelBuilder::withObjective(Expression&& objective)
     return *this;
 }
 
-template<class InT, class OutT>
+template<class OutT, class InT>
 void fillMapFrom(OutT& out, InT&& in)
 {
     using InnerT = std::remove_cvref_t<InT>::value_type;
