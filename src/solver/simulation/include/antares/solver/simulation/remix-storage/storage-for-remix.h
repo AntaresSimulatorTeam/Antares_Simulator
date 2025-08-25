@@ -40,7 +40,7 @@ public:
                               std::vector<double>& levels,
                               const std::vector<double> Pmax,
                               const std::vector<double> Pmin,
-                              const std::vector<double>& inflows,
+                              const std::vector<double> inflows,
                               const std::vector<double>& overflow,
                               const std::vector<double>& pump,
                               const double initLevel,
@@ -55,7 +55,7 @@ private:
     void checkInput(size_t size) override;
 
     std::vector<double>& levels_;
-    const std::vector<double>& inflows_;
+    const std::vector<double> inflows_;
     const std::vector<double>& overflow_;
     const std::vector<double>& pump_;
 
