@@ -63,7 +63,7 @@ std::size_t PortFieldKeyHash::operator()(const PortFieldKey& input) const
 
 void ModelBuilder::checkThatIdIsNotUsed(const std::string& id)
 {
-    if (std::ranges::find(attribute_ids_, id) != attribute_ids_.end())
+    if (attribute_ids_.contains(id))
     {
         std::string modelId = model_.id_;
         reset();
