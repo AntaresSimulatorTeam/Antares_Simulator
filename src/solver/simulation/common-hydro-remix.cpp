@@ -287,39 +287,6 @@ std::shared_ptr<IStorageForRemix> extractHydroForRemix(const Data::Area& area,
                              reservoirManagement);
 }
 
-std::vector<double> extractSTSgeneration(const std::vector<ShortTermStorage::RESULTS>& sts_results,
-                                         const unsigned stsIndex)
-{
-    std::vector<double> generation(HOURS_IN_WEEK, 0.);
-    for (unsigned h = 0; h < HOURS_IN_WEEK; ++h)
-    {
-        generation[h] = sts_results[h].withdrawal[stsIndex];
-    }
-    return generation;
-}
-
-std::vector<double> extractSTSinjection(const std::vector<ShortTermStorage::RESULTS>& sts_results,
-                                        const unsigned stsIndex)
-{
-    std::vector<double> injection(HOURS_IN_WEEK, 0.);
-    for (unsigned h = 0; h < HOURS_IN_WEEK; ++h)
-    {
-        injection[h] = sts_results[h].injection[stsIndex];
-    }
-    return injection;
-}
-
-std::vector<double> extractSTSlevels(const std::vector<ShortTermStorage::RESULTS>& sts_results,
-                                     const unsigned stsIndex)
-{
-    std::vector<double> levels(HOURS_IN_WEEK, 0.);
-    for (unsigned h = 0; h < HOURS_IN_WEEK; ++h)
-    {
-        levels[h] = sts_results[h].level[stsIndex];
-    }
-    return levels;
-}
-
 std::vector<double> extractSTSpmax(const ShortTermStorage::PROPERTIES& sts_properties,
                                    const unsigned firstHourOfWeek)
 {
@@ -356,10 +323,10 @@ ListStorageForRemix extractListSTSforRemix(const Data::Area& area,
     {
         const auto& stsProperties = problem.ShortTermStorage[area.index][stsIndex];
 
-        auto generation = extractSTSgeneration(stsResults, stsIndex);
-        auto injection = extractSTSinjection(stsResults, stsIndex);
+        auto& generation = stsResults[stsIndex].withdrawal;
+        auto injection = stsResults[stsIndex].injection;
         auto& unsupE = weeklyResults.ValeursHorairesDeDefaillancePositive;
-        auto levels = extractSTSlevels(stsResults, stsIndex);
+        auto levels = stsResults[stsIndex].level;
 
         const auto& pmax = extractSTSpmax(stsProperties, firstHourOfWeek);
         const auto& inflows = extractSTSinflows(stsProperties, firstHourOfWeek, problem.year);
