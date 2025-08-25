@@ -44,6 +44,123 @@ namespace Antares::Optimisation
 {
 class ScenarioGroupRepository;
 
+template<Optimisation::LinearProblemApi::SolverTag SolverTagType>
+class VariablesBulkAddition
+{
+public:
+    VariablesBulkAddition(
+      Optimisation::LinearProblemApi::ILinearProblem<SolverTagType>& linear_problem,
+      Optimization::VariableDictionary<typename SolverTagType::VariableType>& variableDictionary):
+        linear_problem_(linear_problem),
+        variableDictionary(variableDictionary)
+    {
+    }
+
+    void addVariable(double lb,
+                     double ub,
+                     bool integer,
+                     const Optimization::Dimensions& dim,
+                     const Optimization::PartialKey& key) const
+    {
+        variableDictionary.addVariable(
+          dim,
+          key,
+          [this, lb, ub, integer](const Optimization::MCYearAndTime&, const std::string& name)
+          { return linear_problem_.addVariable(lb, ub, integer, name); });
+    }
+
+    void addVariable(const std::vector<double>& lb,
+                     double ub,
+                     bool integer,
+                     const Optimization::Dimensions& dim,
+                     const Optimization::PartialKey& key) const
+    {
+        auto count = dim.getNumberOfTimesteps();
+        if (lb.size() != count)
+        {
+            std::ostringstream errMessage;
+            errMessage << "requested " << count << " variables but lb size = " << lb.size();
+            throw VariablesBulkAddition<SolverTagType>::BoundsSizeMismatch(errMessage.str());
+        }
+        const auto offset = *dim.getTimesteps().begin();
+
+        variableDictionary.addVariable(
+          dim,
+          key,
+          [this, &lb, ub, integer, offset](const Optimization::MCYearAndTime& timeAndScenario,
+                                           const std::string& name) {
+              return linear_problem_.addVariable(lb[timeAndScenario.timestep - offset],
+                                                 ub,
+                                                 integer,
+                                                 name);
+          });
+    }
+
+    void addVariable(double lb,
+                     const std::vector<double>& ub,
+                     bool integer,
+                     const Optimization::Dimensions& dim,
+                     const Optimization::PartialKey& key) const
+    {
+        auto count = dim.getNumberOfTimesteps();
+        if (ub.size() != count)
+        {
+            std::ostringstream errMessage;
+            errMessage << "requested " << count << " variables but ub size = " << ub.size();
+            throw VariablesBulkAddition<SolverTagType>::BoundsSizeMismatch(errMessage.str());
+        }
+        const auto offset = *dim.getTimesteps().begin();
+        variableDictionary.addVariable(
+          dim,
+          key,
+          [this, lb, &ub, integer, offset](const Optimization::MCYearAndTime& timeAndScenario,
+                                           const std::string& name) {
+              return linear_problem_.addVariable(lb,
+                                                 ub[timeAndScenario.timestep - offset],
+                                                 integer,
+                                                 name);
+          });
+    }
+
+    void addVariable(const std::vector<double>& lb,
+                     const std::vector<double>& ub,
+                     bool integer,
+                     const Optimization::Dimensions& dim,
+                     const Optimization::PartialKey& key) const
+    {
+        auto count = dim.getNumberOfTimesteps();
+        if (lb.size() != ub.size() || lb.size() != count)
+        {
+            std::ostringstream errMessage;
+            errMessage << "requested " << count << " variables but lb size = " << lb.size()
+                       << " and ub size = " << ub.size();
+            throw VariablesBulkAddition<SolverTagType>::BoundsSizeMismatch(errMessage.str());
+        }
+        const auto offset = *dim.getTimesteps().begin();
+
+        variableDictionary.addVariable(
+          dim,
+          key,
+          [this, &lb, &ub, integer, offset](const Optimization::MCYearAndTime& timeAndScenario,
+                                            const std::string& name)
+          {
+              return linear_problem_.addVariable(lb[timeAndScenario.timestep - offset],
+                                                 ub[timeAndScenario.timestep - offset],
+                                                 integer,
+                                                 name);
+          });
+    }
+
+    class BoundsSizeMismatch: public std::invalid_argument
+    {
+        using std::invalid_argument::invalid_argument;
+    };
+
+private:
+    Optimisation::LinearProblemApi::ILinearProblem<SolverTagType>& linear_problem_;
+    Optimization::VariableDictionary<typename SolverTagType::VariableType>& variableDictionary;
+};
+
 /**
  * Component filler
  * Implements LinearProblemFiller interface.
@@ -271,120 +388,4 @@ private:
     const ScenarioGroupRepository& scenarioGroupRepository_;
 };
 
-template<Optimisation::LinearProblemApi::SolverTag SolverTagType>
-class VariablesBulkAddition
-{
-public:
-    VariablesBulkAddition(
-      Optimisation::LinearProblemApi::ILinearProblem<SolverTagType>& linear_problem,
-      Optimization::VariableDictionary<typename SolverTagType::VariableType>& variableDictionary):
-        linear_problem_(linear_problem),
-        variableDictionary(variableDictionary)
-    {
-    }
-
-    void addVariable(double lb,
-                     double ub,
-                     bool integer,
-                     const Optimization::Dimensions& dim,
-                     const Optimization::PartialKey& key) const
-    {
-        variableDictionary.addVariable(
-          dim,
-          key,
-          [this, lb, ub, integer](const Optimization::MCYearAndTime&, const std::string& name)
-          { return linear_problem_.addVariable(lb, ub, integer, name); });
-    }
-
-    void addVariable(const std::vector<double>& lb,
-                     double ub,
-                     bool integer,
-                     const Optimization::Dimensions& dim,
-                     const Optimization::PartialKey& key) const
-    {
-        auto count = dim.getNumberOfTimesteps();
-        if (lb.size() != count)
-        {
-            std::ostringstream errMessage;
-            errMessage << "requested " << count << " variables but lb size = " << lb.size();
-            throw VariablesBulkAddition<SolverTagType>::BoundsSizeMismatch(errMessage.str());
-        }
-        const auto offset = *dim.getTimesteps().begin();
-
-        variableDictionary.addVariable(
-          dim,
-          key,
-          [this, &lb, ub, integer, offset](const Optimization::MCYearAndTime& timeAndScenario,
-                                           const std::string& name) {
-              return linear_problem_.addVariable(lb[timeAndScenario.timestep - offset],
-                                                 ub,
-                                                 integer,
-                                                 name);
-          });
-    }
-
-    void addVariable(double lb,
-                     const std::vector<double>& ub,
-                     bool integer,
-                     const Optimization::Dimensions& dim,
-                     const Optimization::PartialKey& key) const
-    {
-        auto count = dim.getNumberOfTimesteps();
-        if (ub.size() != count)
-        {
-            std::ostringstream errMessage;
-            errMessage << "requested " << count << " variables but ub size = " << ub.size();
-            throw VariablesBulkAddition<SolverTagType>::BoundsSizeMismatch(errMessage.str());
-        }
-        const auto offset = *dim.getTimesteps().begin();
-        variableDictionary.addVariable(
-          dim,
-          key,
-          [this, lb, &ub, integer, offset](const Optimization::MCYearAndTime& timeAndScenario,
-                                           const std::string& name) {
-              return linear_problem_.addVariable(lb,
-                                                 ub[timeAndScenario.timestep - offset],
-                                                 integer,
-                                                 name);
-          });
-    }
-
-    void addVariable(const std::vector<double>& lb,
-                     const std::vector<double>& ub,
-                     bool integer,
-                     const Optimization::Dimensions& dim,
-                     const Optimization::PartialKey& key) const
-    {
-        auto count = dim.getNumberOfTimesteps();
-        if (lb.size() != ub.size() || lb.size() != count)
-        {
-            std::ostringstream errMessage;
-            errMessage << "requested " << count << " variables but lb size = " << lb.size()
-                       << " and ub size = " << ub.size();
-            throw VariablesBulkAddition<SolverTagType>::BoundsSizeMismatch(errMessage.str());
-        }
-        const auto offset = *dim.getTimesteps().begin();
-
-        variableDictionary.addVariable(
-          dim,
-          key,
-          [this, &lb, &ub, integer, offset](const Optimization::MCYearAndTime& timeAndScenario,
-                                            const std::string& name)
-          {
-              return linear_problem_.addVariable(lb[timeAndScenario.timestep - offset],
-                                                 ub[timeAndScenario.timestep - offset],
-                                                 integer,
-                                                 name);
-          });
-    }
-
-    class BoundsSizeMismatch: public std::invalid_argument
-    {
-        using std::invalid_argument::invalid_argument;
-    };
-
-private:
-    Optimisation::LinearProblemApi::ILinearProblem<SolverTagType>& linear_problem_;
-    Optimization::VariableDictionary<typename SolverTagType::VariableType>& variableDictionary;
-};
 } // namespace Antares::Optimisation
