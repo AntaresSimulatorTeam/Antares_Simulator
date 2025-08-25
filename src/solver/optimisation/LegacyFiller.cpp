@@ -19,40 +19,58 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include "antares/solver/optimisation/LegacyFiller.h"
-
-#include <spx_constantes_externes.h>
+#include <antares/solver/optimisation/LegacyFiller.h>
 
 using namespace Antares::Optimisation::LinearProblemApi;
+
+// Définitions des constantes manquantes pour les types de variables
+namespace
+{
+constexpr int VARIABLE_BORNEE_DES_DEUX_COTES = 0;
+constexpr int VARIABLE_BORNEE_INFERIEUREMENT = 1;
+constexpr int VARIABLE_BORNEE_SUPERIEUREMENT = 2;
+constexpr int VARIABLE_NON_BORNEE = 3;
+} // namespace
 
 namespace Antares::Optimization
 {
 
-LegacyFiller::LegacyFiller(const PROBLEME_HEBDO* problemeHebdo, bool namedProblems):
+template<Optimisation::LinearProblemApi::SolverTag SolverTagType>
+LegacyFiller<SolverTagType>::LegacyFiller(const PROBLEME_HEBDO* problemeHebdo, bool namedProblems):
     problemeAResoudre_(problemeHebdo->ProblemeAResoudre.get()),
     useNamedProblems_(namedProblems)
 {
 }
 
-void LegacyFiller::addVariables(ILinearProblem& pb, ILinearProblemData&, FillContext&)
+template<Optimisation::LinearProblemApi::SolverTag SolverTagType>
+void LegacyFiller<SolverTagType>::addVariables(ILinearProblem<SolverTagType>& pb,
+                                               ILinearProblemData&,
+                                               FillContext&)
 {
     // Create the variables and set objective cost.
     CopyVariables(pb);
 }
 
-void LegacyFiller::addConstraints(ILinearProblem& pb, ILinearProblemData&, FillContext&)
+template<Optimisation::LinearProblemApi::SolverTag SolverTagType>
+void LegacyFiller<SolverTagType>::addConstraints(ILinearProblem<SolverTagType>& pb,
+                                                 ILinearProblemData&,
+                                                 FillContext&)
 {
     // Create constraints and set coefs
     CopyRows(pb);
     CopyMatrix(pb);
 }
 
-void LegacyFiller::addObjective(ILinearProblem&, ILinearProblemData&, FillContext&)
+template<Optimisation::LinearProblemApi::SolverTag SolverTagType>
+void LegacyFiller<SolverTagType>::addObjective(ILinearProblem<SolverTagType>& pb,
+                                               ILinearProblemData&,
+                                               FillContext&)
 {
     // nothing to do: objective coefficients are set along with variables definition
 }
 
-void LegacyFiller::CopyMatrix(ILinearProblem& pb) const
+template<Optimisation::LinearProblemApi::SolverTag SolverTagType>
+void LegacyFiller<SolverTagType>::CopyMatrix(ILinearProblem<SolverTagType>& pb) const
 {
     for (int idxRow = 0; idxRow < problemeAResoudre_->NombreDeContraintes; ++idxRow)
     {
@@ -68,7 +86,9 @@ void LegacyFiller::CopyMatrix(ILinearProblem& pb) const
     }
 }
 
-void LegacyFiller::CreateVariable(unsigned idxVar, ILinearProblem& pb) const
+template<Optimisation::LinearProblemApi::SolverTag SolverTagType>
+void LegacyFiller<SolverTagType>::CreateVariable(unsigned idxVar,
+                                                 ILinearProblem<SolverTagType>& pb) const
 {
     const double bMin = problemeAResoudre_->Xmin[idxVar];
     const double bMax = problemeAResoudre_->Xmax[idxVar];
@@ -86,7 +106,8 @@ void LegacyFiller::CreateVariable(unsigned idxVar, ILinearProblem& pb) const
     pb.setObjectiveCoefficient(var, problemeAResoudre_->CoutLineaire[idxVar]);
 }
 
-void LegacyFiller::CopyVariables(ILinearProblem& pb) const
+template<Optimisation::LinearProblemApi::SolverTag SolverTagType>
+void LegacyFiller<SolverTagType>::CopyVariables(ILinearProblem<SolverTagType>& pb) const
 {
     for (int idxVar = 0; idxVar < problemeAResoudre_->NombreDeVariables; ++idxVar)
     {
@@ -94,7 +115,9 @@ void LegacyFiller::CopyVariables(ILinearProblem& pb) const
     }
 }
 
-void LegacyFiller::UpdateContraints(unsigned idxRow, ILinearProblem& pb) const
+template<Optimisation::LinearProblemApi::SolverTag SolverTagType>
+void LegacyFiller<SolverTagType>::UpdateContraints(unsigned idxRow,
+                                                   ILinearProblem<SolverTagType>& pb) const
 {
     double bMin = -pb.infinity(), bMax = pb.infinity();
     switch (problemeAResoudre_->Sens[idxRow])
@@ -113,7 +136,8 @@ void LegacyFiller::UpdateContraints(unsigned idxRow, ILinearProblem& pb) const
     pb.addConstraint(bMin, bMax, GetConstraintName(idxRow));
 }
 
-void LegacyFiller::CopyRows(ILinearProblem& pb) const
+template<Optimisation::LinearProblemApi::SolverTag SolverTagType>
+void LegacyFiller<SolverTagType>::CopyRows(ILinearProblem<SolverTagType>& pb) const
 {
     for (int idxRow = 0; idxRow < problemeAResoudre_->NombreDeContraintes; ++idxRow)
     {
@@ -125,7 +149,8 @@ void LegacyFiller::CopyRows(ILinearProblem& pb) const
 // workaround MPSolver.Write when we want lighter MPS. In the future (maybe through MathOpt), this
 // shouldn't be done here
 
-std::string LegacyFiller::GetVariableName(unsigned int index) const
+template<Optimisation::LinearProblemApi::SolverTag SolverTagType>
+std::string LegacyFiller<SolverTagType>::GetVariableName(unsigned int index) const
 {
     if (!useNamedProblems_ || problemeAResoudre_->NomDesVariables[index].empty())
     {
@@ -134,7 +159,8 @@ std::string LegacyFiller::GetVariableName(unsigned int index) const
     return problemeAResoudre_->NomDesVariables[index];
 }
 
-std::string LegacyFiller::GetConstraintName(unsigned int index) const
+template<Optimisation::LinearProblemApi::SolverTag SolverTagType>
+std::string LegacyFiller<SolverTagType>::GetConstraintName(unsigned int index) const
 {
     if (!useNamedProblems_ || problemeAResoudre_->NomDesContraintes[index].empty())
     {

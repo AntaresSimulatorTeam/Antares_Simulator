@@ -19,24 +19,55 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#pragma once
-
-#include "ortoolsVariableWrapper.h"
-
-namespace operations_research
-{
-class MPVariable;   // forward declaration
-class MPConstraint; // forward declaration
-} // namespace operations_research
+#include <ortools/linear_solver/linear_solver.h>
+#include <antares/optimisation/linear-problem-mpsolver-impl/ortoolsVariableWrapper.h>
 
 namespace Antares::Optimisation::LinearProblemMpsolverImpl
 {
 
-// Tag pour identifier le solveur OrTools et ses types associés
-struct OrtoolsTag
+OrtoolsVariableWrapper::OrtoolsVariableWrapper(operations_research::MPVariable* mpVar)
+    : mpVar_(mpVar)
 {
-    using VariableType = OrtoolsVariableWrapper;
-    using ConstraintType = operations_research::MPConstraint;
-};
+}
+
+double OrtoolsVariableWrapper::lb() const
+{
+    return mpVar_->lb();
+}
+
+double OrtoolsVariableWrapper::ub() const
+{
+    return mpVar_->ub();
+}
+
+std::string OrtoolsVariableWrapper::name() const
+{
+    return mpVar_->name();
+}
+
+bool OrtoolsVariableWrapper::integer() const
+{
+    return mpVar_->integer();
+}
+
+void OrtoolsVariableWrapper::SetLB(double lb)
+{
+    mpVar_->SetLB(lb);
+}
+
+void OrtoolsVariableWrapper::SetUB(double ub)
+{
+    mpVar_->SetUB(ub);
+}
+
+void OrtoolsVariableWrapper::SetBounds(double lb, double ub)
+{
+    mpVar_->SetBounds(lb, ub);
+}
+
+operations_research::MPVariable* OrtoolsVariableWrapper::getMPVariable() const
+{
+    return mpVar_;
+}
 
 } // namespace Antares::Optimisation::LinearProblemMpsolverImpl

@@ -28,6 +28,7 @@
 
 #include <antares/optimisation/linear-problem-api/mipSolution.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/ortoolsTag.h>
+#include <antares/optimisation/linear-problem-mpsolver-impl/ortoolsVariableWrapper.h>
 
 namespace Antares::Optimisation::LinearProblemMpsolverImpl
 {
@@ -45,9 +46,9 @@ public:
     [[nodiscard]] LinearProblemApi::MipStatus getStatus() const override;
     [[nodiscard]] double getObjectiveValue() const override;
     [[nodiscard]] double getOptimalValue(
-      const LinearProblemApi::IMipVariable<operations_research::MPVariable>* var) const override;
+      const LinearProblemApi::IMipVariable<OrtoolsVariableWrapper>* var) const override;
     [[nodiscard]] std::vector<double> getOptimalValues(
-      const std::vector<LinearProblemApi::IMipVariable<operations_research::MPVariable>*>& vars)
+      const std::vector<LinearProblemApi::IMipVariable<OrtoolsVariableWrapper>*>& vars)
       const override;
     [[nodiscard]] const std::map<std::string, double>& getOptimalValues() const override;
 

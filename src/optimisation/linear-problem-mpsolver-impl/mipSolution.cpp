@@ -62,7 +62,7 @@ double OrtoolsMipSolutionImpl::getObjectiveValue() const
 }
 
 double OrtoolsMipSolutionImpl::getOptimalValue(
-  const LinearProblemApi::IMipVariable<operations_research::MPVariable>* var) const
+  const LinearProblemApi::IMipVariable<OrtoolsVariableWrapper>* var) const
 {
     if (!var)
     {
@@ -82,7 +82,7 @@ double OrtoolsMipSolutionImpl::getOptimalValue(
 }
 
 std::vector<double> OrtoolsMipSolutionImpl::getOptimalValues(
-  const std::vector<LinearProblemApi::IMipVariable<operations_research::MPVariable>*>& vars) const
+  const std::vector<LinearProblemApi::IMipVariable<OrtoolsVariableWrapper>*>& vars) const
 {
     std::vector<double> solution;
     solution.reserve(vars.size());

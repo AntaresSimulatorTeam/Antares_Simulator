@@ -32,19 +32,21 @@
 
 namespace Antares::Optimisation
 {
-VariablesBulkAddition::VariablesBulkAddition(
-  Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
-  Optimization::VariableDictionary& variableDictionary):
+template<Optimisation::LinearProblemApi::SolverTag SolverTagType>
+VariablesBulkAddition<SolverTagType>::VariablesBulkAddition(
+  Optimisation::LinearProblemApi::ILinearProblem<SolverTagType>& linear_problem,
+  Optimization::VariableDictionary<typename SolverTagType::VariableType>& variableDictionary):
     linear_problem_(linear_problem),
     variableDictionary(variableDictionary)
 {
 }
 
-void VariablesBulkAddition::addVariable(double lb,
-                                        double ub,
-                                        bool integer,
-                                        const Optimization::Dimensions& dim,
-                                        const Optimization::PartialKey& key) const
+template<Optimisation::LinearProblemApi::SolverTag SolverTagType>
+void VariablesBulkAddition<SolverTagType>::addVariable(double lb,
+                                                       double ub,
+                                                       bool integer,
+                                                       const Optimization::Dimensions& dim,
+                                                       const Optimization::PartialKey& key) const
 {
     variableDictionary.addVariable(dim,
                                    key,
@@ -53,11 +55,12 @@ void VariablesBulkAddition::addVariable(double lb,
                                    { return linear_problem_.addVariable(lb, ub, integer, name); });
 }
 
-void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
-                                        double ub,
-                                        bool integer,
-                                        const Optimization::Dimensions& dim,
-                                        const Optimization::PartialKey& key) const
+template<Optimisation::LinearProblemApi::SolverTag SolverTagType>
+void VariablesBulkAddition<SolverTagType>::addVariable(const std::vector<double>& lb,
+                                                       double ub,
+                                                       bool integer,
+                                                       const Optimization::Dimensions& dim,
+                                                       const Optimization::PartialKey& key) const
 {
     auto count = dim.getNumberOfTimesteps();
     if (lb.size() != count)
@@ -65,7 +68,7 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
         std::ostringstream errMessage;
 
         errMessage << "requested " << count << " variables but lb size = " << lb.size();
-        throw BoundsSizeMismatch(errMessage.str());
+        throw VariablesBulkAddition<SolverTagType>::BoundsSizeMismatch(errMessage.str());
     }
     const auto offset = *dim.getTimesteps().begin();
 
@@ -81,18 +84,19 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
       });
 }
 
-void VariablesBulkAddition::addVariable(double lb,
-                                        const std::vector<double>& ub,
-                                        bool integer,
-                                        const Optimization::Dimensions& dim,
-                                        const Optimization::PartialKey& key) const
+template<Optimisation::LinearProblemApi::SolverTag SolverTagType>
+void VariablesBulkAddition<SolverTagType>::addVariable(double lb,
+                                                       const std::vector<double>& ub,
+                                                       bool integer,
+                                                       const Optimization::Dimensions& dim,
+                                                       const Optimization::PartialKey& key) const
 {
     auto count = dim.getNumberOfTimesteps();
     if (ub.size() != count)
     {
         std::ostringstream errMessage;
         errMessage << "requested " << count << " variables but ub size = " << ub.size();
-        throw BoundsSizeMismatch(errMessage.str());
+        throw VariablesBulkAddition<SolverTagType>::BoundsSizeMismatch(errMessage.str());
     }
     const auto offset = *dim.getTimesteps().begin();
     variableDictionary.addVariable(
@@ -107,11 +111,12 @@ void VariablesBulkAddition::addVariable(double lb,
       });
 }
 
-void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
-                                        const std::vector<double>& ub,
-                                        bool integer,
-                                        const Optimization::Dimensions& dim,
-                                        const Optimization::PartialKey& key) const
+template<Optimisation::LinearProblemApi::SolverTag SolverTagType>
+void VariablesBulkAddition<SolverTagType>::addVariable(const std::vector<double>& lb,
+                                                       const std::vector<double>& ub,
+                                                       bool integer,
+                                                       const Optimization::Dimensions& dim,
+                                                       const Optimization::PartialKey& key) const
 {
     auto count = dim.getNumberOfTimesteps();
     if (lb.size() != ub.size() || lb.size() != count)
@@ -119,7 +124,7 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
         std::ostringstream errMessage;
         errMessage << "requested " << count << " variables but lb size = " << lb.size()
                    << " and ub size = " << ub.size();
-        throw BoundsSizeMismatch(errMessage.str());
+        throw VariablesBulkAddition<SolverTagType>::BoundsSizeMismatch(errMessage.str());
     }
     const auto offset = *dim.getTimesteps().begin();
 
@@ -136,9 +141,11 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
       });
 }
 
-ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& component,
-                                 Optimization::VariableDictionary& variableDictionary,
-                                 const ScenarioGroupRepository& scenarioGroupRepository):
+template<Optimisation::LinearProblemApi::SolverTag SolverTagType>
+ComponentFiller<SolverTagType>::ComponentFiller(
+  const ModelerStudy::SystemModel::Component& component,
+  Optimization::VariableDictionary<typename SolverTagType::VariableType>& variableDictionary,
+  const ScenarioGroupRepository& scenarioGroupRepository):
     component_(component),
     variableDictionary_(variableDictionary),
     scenarioGroupRepository_(scenarioGroupRepository)
@@ -150,9 +157,11 @@ bool checkTimeSteps(Optimisation::LinearProblemApi::FillContext& ctx)
     return ctx.getLocalFirstTimeStep() <= ctx.getLocalLastTimeStep();
 }
 
-void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                                   Optimisation::LinearProblemApi::ILinearProblemData& data,
-                                   Optimisation::LinearProblemApi::FillContext& ctx)
+template<Optimisation::LinearProblemApi::SolverTag SolverTagType>
+void ComponentFiller<SolverTagType>::addVariables(
+  Optimisation::LinearProblemApi::ILinearProblem<SolverTagType>& pb,
+  Optimisation::LinearProblemApi::ILinearProblemData& data,
+  Optimisation::LinearProblemApi::FillContext& ctx)
 {
     if (!checkTimeSteps(ctx))
     {
@@ -197,7 +206,7 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
             std::visit(
               [&pb, &variable, this, &key, &dim](const auto& lb_, const auto& ub_)
               {
-                  VariablesBulkAddition(pb, variableDictionary_)
+                  VariablesBulkAddition<SolverTagType>(pb, variableDictionary_)
                     .addVariable(lb_,
                                  ub_,
                                  variable.Type() != ModelerStudy::SystemModel::ValueType::FLOAT,
@@ -228,9 +237,11 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
     }
 }
 
-void ComponentFiller::addStaticConstraint(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                                          const Optimization::LinearConstraint& linear_constraint,
-                                          const std::string& constraint_id) const
+template<Optimisation::LinearProblemApi::SolverTag SolverTagType>
+void ComponentFiller<SolverTagType>::addStaticConstraint(
+  Optimisation::LinearProblemApi::ILinearProblem<SolverTagType>& pb,
+  const Optimization::LinearConstraint& linear_constraint,
+  const std::string& constraint_id) const
 {
     auto* ct = pb.addConstraint(linear_constraint.lb,
                                 linear_constraint.ub,
@@ -242,8 +253,9 @@ void ComponentFiller::addStaticConstraint(Optimisation::LinearProblemApi::ILinea
     }
 }
 
-void ComponentFiller::addTimeDependentConstraints(
-  Optimisation::LinearProblemApi::ILinearProblem& pb,
+template<Optimisation::LinearProblemApi::SolverTag SolverTagType>
+void ComponentFiller<SolverTagType>::addTimeDependentConstraints(
+  Optimisation::LinearProblemApi::ILinearProblem<SolverTagType>& pb,
   const std::vector<Optimization::LinearConstraint>& linear_constraints,
   const std::string& constraint_id) const
 {
@@ -262,9 +274,11 @@ void ComponentFiller::addTimeDependentConstraints(
     }
 }
 
-void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                                     Optimisation::LinearProblemApi::ILinearProblemData& data,
-                                     Optimisation::LinearProblemApi::FillContext& ctx)
+template<Optimisation::LinearProblemApi::SolverTag SolverTagType>
+void ComponentFiller<SolverTagType>::addConstraints(
+  Optimisation::LinearProblemApi::ILinearProblem<SolverTagType>& pb,
+  Optimisation::LinearProblemApi::ILinearProblemData& data,
+  Optimisation::LinearProblemApi::FillContext& ctx)
 {
     const auto& scenario = scenarioGroupRepository_.scenario(component_.getScenarioGroupId());
     Expressions::Visitors::EvaluationContext evaluationContext(component_.getParameterValues(),
@@ -293,9 +307,11 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
     }
 }
 
-void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                                   Optimisation::LinearProblemApi::ILinearProblemData& data,
-                                   Optimisation::LinearProblemApi::FillContext& ctx)
+template<Optimisation::LinearProblemApi::SolverTag SolverTagType>
+void ComponentFiller<SolverTagType>::addObjective(
+  Optimisation::LinearProblemApi::ILinearProblem<SolverTagType>& pb,
+  Optimisation::LinearProblemApi::ILinearProblemData& data,
+  Optimisation::LinearProblemApi::FillContext& ctx)
 {
     auto model = component_.getModel();
     if (model->Objective().Empty())
@@ -332,7 +348,9 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
     }
 }
 
-bool ComponentFiller::IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node)
+template<Optimisation::LinearProblemApi::SolverTag SolverTagType>
+bool ComponentFiller<SolverTagType>::IsThisConstraintTimeDependent(
+  const Expressions::Nodes::Node* node)
 {
     Expressions::Visitors::TimeIndexVisitor timeIndexVisitor(component_);
     const auto ret = timeIndexVisitor.dispatch(node);

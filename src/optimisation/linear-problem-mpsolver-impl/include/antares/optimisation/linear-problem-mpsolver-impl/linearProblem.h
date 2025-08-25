@@ -26,6 +26,7 @@
 #include <antares/optimisation/linear-problem-mpsolver-impl/mipSolution.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/mipVariable.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/ortoolsTag.h>
+#include <antares/optimisation/linear-problem-mpsolver-impl/ortoolsVariableWrapper.h>
 
 namespace operations_research
 {
@@ -63,11 +64,8 @@ public:
     OrtoolsMipConstraint* lookupConstraint(const std::string& name) const override;
     int constraintCount() const override;
 
-    void setObjectiveCoefficient(
-      LinearProblemApi::IMipVariable<operations_research::MPVariable>* var,
-      double coefficient) override;
-    double getObjectiveCoefficient(
-      const LinearProblemApi::IMipVariable<operations_research::MPVariable>* var) const override;
+    void setObjectiveCoefficient(OrtoolsMipVariable* var, double coefficient) override;
+    double getObjectiveCoefficient(const OrtoolsMipVariable* var) const override;
 
     void setMinimization() override;
     void setMaximization() override;
@@ -90,6 +88,9 @@ private:
 
     std::vector<std::unique_ptr<OrtoolsMipVariable>> variables_;
     std::vector<std::unique_ptr<OrtoolsMipConstraint>> constraints_;
+
+    // Stockage des wrappers pour qu'ils restent valides
+    std::vector<std::unique_ptr<OrtoolsVariableWrapper>> variableWrappers_;
 
     std::unique_ptr<OrtoolsMipSolutionImpl> solution_;
 };

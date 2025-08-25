@@ -55,7 +55,12 @@ OrtoolsMipVariable* OrtoolsLinearProblem::addVariable(double lb,
         logs.error() << "Couldn't add variable to Ortools MPSolver: " << name;
     }
 
-    variables_.push_back(std::make_unique<OrtoolsMipVariable>(mpVar));
+    // Créer un wrapper pour l'objet OrTools
+    auto wrapper = std::make_unique<OrtoolsVariableWrapper>(mpVar);
+    variables_.push_back(std::make_unique<OrtoolsMipVariable>(wrapper.get()));
+    // Stocker le wrapper pour qu'il reste valide
+    variableWrappers_.push_back(std::move(wrapper));
+
     return variables_.back().get();
 }
 
@@ -132,21 +137,17 @@ int OrtoolsLinearProblem::constraintCount() const
     return mpSolver_->NumConstraints();
 }
 
-static const operations_research::MPVariable* getMpVar(
-  const LinearProblemApi::IMipVariable<operations_research::MPVariable>* var)
+static const operations_research::MPVariable* getMpVar(const OrtoolsMipVariable* var)
 {
-    return var->getInnerVariable();
+    return var->getInnerVariable()->getMPVariable();
 }
 
-void OrtoolsLinearProblem::setObjectiveCoefficient(
-  LinearProblemApi::IMipVariable<operations_research::MPVariable>* var,
-  double coefficient)
+void OrtoolsLinearProblem::setObjectiveCoefficient(OrtoolsMipVariable* var, double coefficient)
 {
     objective_->SetCoefficient(getMpVar(var), coefficient);
 }
 
-double OrtoolsLinearProblem::getObjectiveCoefficient(
-  const LinearProblemApi::IMipVariable<operations_research::MPVariable>* var) const
+double OrtoolsLinearProblem::getObjectiveCoefficient(const OrtoolsMipVariable* var) const
 {
     return objective_->GetCoefficient(getMpVar(var));
 }

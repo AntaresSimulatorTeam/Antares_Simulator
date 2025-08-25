@@ -21,22 +21,39 @@
 
 #pragma once
 
-#include "ortoolsVariableWrapper.h"
+#include <string>
 
 namespace operations_research
 {
-class MPVariable;   // forward declaration
-class MPConstraint; // forward declaration
-} // namespace operations_research
+class MPVariable; // forward declaration
+}
 
 namespace Antares::Optimisation::LinearProblemMpsolverImpl
 {
 
-// Tag pour identifier le solveur OrTools et ses types associés
-struct OrtoolsTag
+/**
+ * Wrapper class to adapt operations_research::MPVariable to satisfy SolverVariable concept
+ */
+class OrtoolsVariableWrapper
 {
-    using VariableType = OrtoolsVariableWrapper;
-    using ConstraintType = operations_research::MPConstraint;
+public:
+    explicit OrtoolsVariableWrapper(operations_research::MPVariable* mpVar);
+
+    // Methods required by SolverVariable concept
+    double lb() const;
+    double ub() const;
+    std::string name() const;
+    bool integer() const;
+
+    void SetLB(double lb);
+    void SetUB(double ub);
+    void SetBounds(double lb, double ub);
+
+    // Access to underlying OrTools variable
+    operations_research::MPVariable* getMPVariable() const;
+
+private:
+    operations_research::MPVariable* mpVar_;
 };
 
 } // namespace Antares::Optimisation::LinearProblemMpsolverImpl

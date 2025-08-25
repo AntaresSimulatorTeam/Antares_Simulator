@@ -24,6 +24,7 @@
 #include <antares/optimisation/linear-problem-api/mipVariable.h>
 
 #include "ortoolsTag.h"
+#include "ortoolsVariableWrapper.h"
 
 namespace operations_research
 {
@@ -33,6 +34,6 @@ class MPVariable; // forward declaration
 namespace Antares::Optimisation::LinearProblemMpsolverImpl
 {
 
-using OrtoolsMipVariable = LinearProblemApi::IMipVariable<operations_research::MPVariable>;
+using OrtoolsMipVariable = LinearProblemApi::IMipVariable<OrtoolsVariableWrapper>;
 
 } // namespace Antares::Optimisation::LinearProblemMpsolverImpl
