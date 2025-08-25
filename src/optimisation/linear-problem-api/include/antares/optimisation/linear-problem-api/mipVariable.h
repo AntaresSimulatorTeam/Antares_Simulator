@@ -41,7 +41,7 @@ template<typename T>
 concept SolverVariable = requires(T t, const T ct) {
     { ct.lb() } -> std::convertible_to<double>;
     { ct.ub() } -> std::convertible_to<double>;
-    { ct.name() } -> std::convertible_to<std::string>;
+    { ct.name() } -> std::convertible_to<std::string&>;
     { ct.integer() } -> std::convertible_to<bool>;
     t.SetLB(double{});
     t.SetUB(double{});

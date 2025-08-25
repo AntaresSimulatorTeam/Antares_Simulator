@@ -42,7 +42,7 @@ template<typename T, typename V>
 concept SolverConstraint = requires(T t, const T ct, const V* v) {
     { ct.lb() } -> std::convertible_to<double>;
     { ct.ub() } -> std::convertible_to<double>;
-    { ct.name() } -> std::convertible_to<std::string>;
+    { ct.name() } -> std::convertible_to<std::string&>;
     { ct.GetCoefficient(v) } -> std::convertible_to<double>;
     t.SetLB(double{});
     t.SetUB(double{});

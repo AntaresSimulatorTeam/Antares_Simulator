@@ -42,7 +42,7 @@ public:
     // Methods required by SolverVariable concept
     double lb() const;
     double ub() const;
-    std::string name() const;
+    std::string& name() const;
     bool integer() const;
 
     void SetLB(double lb);
