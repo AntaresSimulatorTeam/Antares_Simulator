@@ -21,6 +21,7 @@
 #pragma once
 
 #include <map>
+#include <unordered_set>
 #include <vector>
 
 #include <antares/expressions/expression.h>
@@ -137,7 +138,7 @@ public:
 private:
     Model model_;
     // List of IDs used internally to check for uniqueness of IDs at component level
-    std::vector<std::string> attribute_ids_;
+    std::unordered_set<std::string> attribute_ids_;
 
     void reset();
 };

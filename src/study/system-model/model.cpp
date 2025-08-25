@@ -48,7 +48,7 @@ void ModelBuilder::checkThatIdIsNotUsed(const std::string& id)
         throw Error::RuntimeError("Model \"" + modelId + "\" contains multiple objects with ID \""
                                   + id + "\".");
     }
-    attribute_ids_.emplace_back(id);
+    attribute_ids_.emplace(id);
 }
 
 /**

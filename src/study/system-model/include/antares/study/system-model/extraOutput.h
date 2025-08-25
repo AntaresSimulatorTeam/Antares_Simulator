@@ -25,7 +25,6 @@
 
 #include <antares/expressions/expression.h>
 
-
 namespace Antares::ModelerStudy::SystemModel
 {
 
