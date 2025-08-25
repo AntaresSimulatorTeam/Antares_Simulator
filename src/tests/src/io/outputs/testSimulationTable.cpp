@@ -543,7 +543,7 @@ BOOST_AUTO_TEST_CASE(WritePerformance_LargeDataSet)
                                    .status = static_cast<MipBasisStatus>(i % 6)};
         table.addEntry(entry);
     }
-
+    table.writeHeader();
     table.write();
 
     auto end = std::chrono::high_resolution_clock::now();
@@ -984,6 +984,7 @@ BOOST_AUTO_TEST_CASE(TemplateFunction_VariableEntries_AllCombinations)
                                          std::optional<unsigned>(5), // scenario
                                          true);                      // isLP
 
+    table.writeHeader();
     table.write();
     std::string buffer = table.buffer();
 
@@ -1050,9 +1051,6 @@ BOOST_AUTO_TEST_CASE(RoundTrip_DataIntegrity)
     // Parse the CSV output manually to verify data integrity
     std::istringstream stream(csvOutput);
     std::string line;
-
-    // Skip header
-    std::getline(stream, line);
 
     int entryIndex = 0;
     while (std::getline(stream, line) && entryIndex < originalEntries.size())
@@ -1234,15 +1232,8 @@ BOOST_AUTO_TEST_CASE(AlternatingClear_Write_Operations)
         // Verify content before clearing
         std::string buffer = table.buffer();
         auto lineCount = count_lines(buffer);
-        if (cycle == 0)
-        {
-            // only first cycle has header
-            BOOST_CHECK_EQUAL(lineCount, 4); // 3 entries + header
-        }
-        else
-        {
-            BOOST_CHECK_EQUAL(lineCount, 3);
-        }
+
+        BOOST_CHECK_EQUAL(lineCount, 3);
         // Clear for next cycle
         table.clear();
 

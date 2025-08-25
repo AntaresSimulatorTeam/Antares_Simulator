@@ -27,17 +27,18 @@
 class SimulationTableCsv: public ISimulationTable
 {
 public:
-    SimulationTableCsv();
+    SimulationTableCsv() = default;
     void addEntry(SimulationTableEntry entry) override;
+    static std::string getHeader();
 
     void write() override;
     void clear() override;
 
     // const std::string& buffer() const;
     std::string buffer() const override;
+    void writeHeader();
 
 private:
     std::ostringstream buffer_;
     std::vector<SimulationTableEntry> entries_;
-    void writeHeader();
 };

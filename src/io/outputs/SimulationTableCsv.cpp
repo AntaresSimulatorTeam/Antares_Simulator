@@ -23,21 +23,20 @@
 
 #include "antares/io/outputs/SimulationTableEntry.h"
 
-SimulationTableCsv::SimulationTableCsv()
-
-{
-    writeHeader();
-}
-
 void SimulationTableCsv::addEntry(SimulationTableEntry entry)
 {
     entries_.emplace_back(std::move(entry));
 }
 
+std::string SimulationTableCsv::getHeader()
+{
+    return "block,component,output,"
+           "absolute_time_index,block_time_index,scenario_index,value,basis_status\n";
+}
+
 void SimulationTableCsv::writeHeader()
 {
-    buffer_ << "block,component,output,"
-               "absolute_time_index,block_time_index,scenario_index,value,basis_status\n";
+    buffer_ << getHeader();
 }
 
 const std::string NONE = "None";
