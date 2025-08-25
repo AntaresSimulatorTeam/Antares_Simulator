@@ -29,6 +29,28 @@
 #include <antares/study/system-model/model.h>
 #include "antares/exception/RuntimeError.hpp"
 
+namespace
+{
+template<class OutT, class InT>
+void fillMapFrom(OutT& out, InT&& in, Antares::ModelerStudy::SystemModel::ModelBuilder& builder)
+{
+    for (const auto& x: in)
+    {
+        builder.checkThatIdIsNotUsed(x.Id());
+    }
+
+    using InnerT = std::remove_cvref_t<InT>::value_type;
+    std::transform(in.begin(),
+                   in.end(),
+                   std::inserter(out, out.end()),
+                   [](/*Non const to prevent copy*/ InnerT& x)
+                   {
+                       std::string id = x.Id();
+                       return std::make_pair(std::move(id), std::move(x));
+                   });
+}
+} // namespace
+
 namespace Antares::ModelerStudy::SystemModel
 {
 std::size_t PortFieldKeyHash::operator()(const PortFieldKey& input) const
@@ -103,18 +125,7 @@ ModelBuilder& ModelBuilder::withObjective(Expression&& objective)
  */
 ModelBuilder& ModelBuilder::withParameters(std::vector<Parameter>&& parameters)
 {
-    for (const auto& parameter: parameters)
-    {
-        checkThatIdIsNotUsed(parameter.Id());
-    }
-    std::transform(parameters.begin(),
-                   parameters.end(),
-                   std::inserter(model_.parameters_, model_.parameters_.end()),
-                   [](/*Non const to prevent copy*/ Parameter& parameter)
-                   {
-                       auto id = parameter.Id();
-                       return std::make_pair(id, std::move(parameter));
-                   });
+    fillMapFrom(model_.parameters_, parameters, *this);
     return *this;
 }
 
@@ -128,17 +139,7 @@ ModelBuilder& ModelBuilder::withParameters(std::vector<Parameter>&& parameters)
  */
 ModelBuilder& ModelBuilder::withVariables(std::vector<Variable>&& variables)
 {
-    for (const auto& variable: variables)
-    {
-        checkThatIdIsNotUsed(variable.Id());
-    }
-    std::ranges::transform(variables,
-                           std::inserter(model_.variables_, model_.variables_.end()),
-                           [](/*Non const to prevent copy*/ Variable& variable)
-                           {
-                               auto id = variable.Id();
-                               return std::make_pair(id, std::move(variable));
-                           });
+    fillMapFrom(model_.variables_, variables, *this);
     return *this;
 }
 
@@ -152,18 +153,7 @@ ModelBuilder& ModelBuilder::withVariables(std::vector<Variable>&& variables)
  */
 ModelBuilder& ModelBuilder::withPorts(std::vector<Port>&& ports)
 {
-    for (const auto& port: ports)
-    {
-        checkThatIdIsNotUsed(port.Id());
-    }
-    std::transform(ports.begin(),
-                   ports.end(),
-                   std::inserter(model_.ports_, model_.ports_.end()),
-                   [](/*Non const to prevent copy*/ Port& port)
-                   {
-                       auto id = port.Id();
-                       return std::make_pair(id, std::move(port));
-                   });
+    fillMapFrom(model_.ports_, ports, *this);
     return *this;
 }
 
@@ -177,18 +167,7 @@ ModelBuilder& ModelBuilder::withPorts(std::vector<Port>&& ports)
  */
 ModelBuilder& ModelBuilder::withConstraints(std::vector<Constraint>&& constraints)
 {
-    for (const auto& constraint: constraints)
-    {
-        checkThatIdIsNotUsed(constraint.Id());
-    }
-    std::transform(constraints.begin(),
-                   constraints.end(),
-                   std::inserter(model_.constraints_, model_.constraints_.end()),
-                   [](/*Non const to prevent copy*/ Constraint& constraint)
-                   {
-                       auto id = constraint.Id();
-                       return std::make_pair(id, std::move(constraint));
-                   });
+    fillMapFrom(model_.constraints_, constraints, *this);
     return *this;
 }
 
@@ -226,18 +205,7 @@ ModelBuilder& ModelBuilder::withPortFieldDefinitions(
  */
 ModelBuilder& ModelBuilder::withExtraOutputs(std::vector<ExtraOutput>&& extraOutputs)
 {
-    for (const auto& extraOutput: extraOutputs)
-    {
-        checkThatIdIsNotUsed(extraOutput.Id());
-    }
-    std::transform(extraOutputs.begin(),
-                   extraOutputs.end(),
-                   std::inserter(model_.extraOutputs_, model_.extraOutputs_.end()),
-                   [](/*Non const to prevent copy*/ ExtraOutput& extraOutput)
-                   {
-                       auto id = extraOutput.Id();
-                       return std::make_pair(id, std::move(extraOutput));
-                   });
+    fillMapFrom(model_.extraOutputs_, extraOutputs, *this);
     return *this;
 }
 
