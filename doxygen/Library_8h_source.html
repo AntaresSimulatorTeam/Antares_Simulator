@@ -216,44 +216,52 @@ $(document).ready(function(){initNavTree('Library_8h_source.html',''); initResiz
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    std::string expression;</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;};</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
-<div class="line"><a name="l00090"></a><span class="lineno"><a class="line" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html">   90</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html">Model</a></div>
+<div class="line"><a name="l00090"></a><span class="lineno"><a class="line" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1ExtraOutput.html">   90</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1ExtraOutput.html">ExtraOutput</a></div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;{</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    std::string id;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    std::string description;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    std::vector&lt;Parameter&gt; parameters;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    std::vector&lt;Variable&gt; variables;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    std::vector&lt;Port&gt; ports;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    std::vector&lt;PortFieldDefinition&gt; port_field_definitions;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    std::vector&lt;Constraint&gt; constraints;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    std::vector&lt;Constraint&gt; binding_constraints;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    std::string objective;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;};</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
-<div class="line"><a name="l00103"></a><span class="lineno"><a class="line" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType.html">  103</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType.html">PortType</a></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;{</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    std::string id;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    std::string description;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="comment">// Small optimization: we only need the name of the fields</span></div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="comment">// No need for an intermediate struct &quot;field&quot; with just a string &quot;name&quot; member</span></div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    std::vector&lt;std::string&gt; fields;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="comment">// Also, we only need the injection-field of the area-connection</span></div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    std::string area_connection_injection_field;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;};</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
-<div class="line"><a name="l00114"></a><span class="lineno"><a class="line" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library.html">  114</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library.html">Library</a></div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;{</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    std::string id;</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    std::string description;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    std::vector&lt;PortType&gt; port_types;</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    std::vector&lt;Model&gt; models;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;};</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;} <span class="comment">// namespace Antares::IO::Inputs::YmlModel</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    std::string expression;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;};</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
+<div class="line"><a name="l00096"></a><span class="lineno"><a class="line" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html">   96</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html">Model</a></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;{</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    std::string id;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    std::string description;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    std::vector&lt;Parameter&gt; parameters;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    std::vector&lt;Variable&gt; variables;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    std::vector&lt;Port&gt; ports;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    std::vector&lt;PortFieldDefinition&gt; port_field_definitions;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    std::vector&lt;Constraint&gt; constraints;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    std::vector&lt;Constraint&gt; binding_constraints;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    std::string objective;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    std::vector&lt;ExtraOutput&gt; extra_outputs;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;};</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
+<div class="line"><a name="l00110"></a><span class="lineno"><a class="line" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType.html">  110</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType.html">PortType</a></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;{</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    std::string id;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    std::string description;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="comment">// Small optimization: we only need the name of the fields</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="comment">// No need for an intermediate struct &quot;field&quot; with just a string &quot;name&quot; member</span></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    std::vector&lt;std::string&gt; fields;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="comment">// Also, we only need the injection-field of the area-connection</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    std::string area_connection_injection_field;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;};</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160; </div>
+<div class="line"><a name="l00121"></a><span class="lineno"><a class="line" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library.html">  121</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library.html">Library</a></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;{</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    std::string id;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    std::string description;</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    std::vector&lt;PortType&gt; port_types;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    std::vector&lt;Model&gt; models;</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;};</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;} <span class="comment">// namespace Antares::IO::Inputs::YmlModel</span></div>
 <div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Constraint_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Constraint.html">Antares::IO::Inputs::YmlModel::Constraint</a></div><div class="ttdef"><b>Definition:</b> Library.h:85</div></div>
-<div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library.html">Antares::IO::Inputs::YmlModel::Library</a></div><div class="ttdef"><b>Definition:</b> Library.h:115</div></div>
-<div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html">Antares::IO::Inputs::YmlModel::Model</a></div><div class="ttdef"><b>Definition:</b> Library.h:91</div></div>
+<div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1ExtraOutput_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1ExtraOutput.html">Antares::IO::Inputs::YmlModel::ExtraOutput</a></div><div class="ttdef"><b>Definition:</b> Library.h:91</div></div>
+<div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library.html">Antares::IO::Inputs::YmlModel::Library</a></div><div class="ttdef"><b>Definition:</b> Library.h:122</div></div>
+<div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html">Antares::IO::Inputs::YmlModel::Model</a></div><div class="ttdef"><b>Definition:</b> Library.h:97</div></div>
 <div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parameter_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parameter.html">Antares::IO::Inputs::YmlModel::Parameter</a></div><div class="ttdef"><b>Definition:</b> Library.h:32</div></div>
 <div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortFieldDefinition_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortFieldDefinition.html">Antares::IO::Inputs::YmlModel::PortFieldDefinition</a></div><div class="ttdef"><b>Definition:</b> Library.h:78</div></div>
-<div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType.html">Antares::IO::Inputs::YmlModel::PortType</a></div><div class="ttdef"><b>Definition:</b> Library.h:104</div></div>
+<div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType.html">Antares::IO::Inputs::YmlModel::PortType</a></div><div class="ttdef"><b>Definition:</b> Library.h:111</div></div>
 <div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Port_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Port.html">Antares::IO::Inputs::YmlModel::Port</a></div><div class="ttdef"><b>Definition:</b> Library.h:72</div></div>
 <div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable.html">Antares::IO::Inputs::YmlModel::Variable</a></div><div class="ttdef"><b>Definition:</b> Library.h:62</div></div>
 </div><!-- fragment --></div><!-- contents -->
