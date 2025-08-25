@@ -5,13 +5,14 @@ set(HEADERS
         include/antares/optimisation/linear-problem-mpsolver-impl/mipSolution.h
         include/antares/optimisation/linear-problem-mpsolver-impl/mipConstraint.h
         include/antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h
+        include/antares/optimisation/linear-problem-mpsolver-impl/ortoolsVariableWrapper.h
 )
 set(SRC_ORTOOLS_IMPL
         ${HEADERS}
         mipVariable.cpp
         mipSolution.cpp
         mipConstraint.cpp
-
+        ortoolsVariableWrapper.cpp
         linearProblem.cpp
 )
 
@@ -25,10 +26,10 @@ target_link_libraries(${PROJ}
         Antares::linear-problem-api
         Antares::logs
         Antares::solverUtils
-	ortools::ortools
+        ortools::ortools
 )
 
 target_include_directories(${PROJ}
         PUBLIC
-	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )

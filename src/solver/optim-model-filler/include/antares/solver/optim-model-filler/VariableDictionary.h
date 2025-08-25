@@ -224,9 +224,9 @@ FullKey VariableDictionary<InnerSolverVariable>::buildFullKey(Args... args) cons
 }
 
 // Implémentation des méthodes template
-std::string buildVariableName(const PartialKey& key,
-                              std::optional<MCYearAndTime::MCYear> mcyear,
-                              std::optional<unsigned int> timestep)
+inline std::string buildVariableName(const PartialKey& key,
+                                     std::optional<MCYearAndTime::MCYear> mcyear,
+                                     std::optional<unsigned int> timestep)
 {
     std::string ret = fmt::format("{}.{}", key.getComponent(), key.getVariable());
     if (mcyear.has_value())

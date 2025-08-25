@@ -40,7 +40,7 @@ double OrtoolsVariableWrapper::ub() const
     return mpVar_->ub();
 }
 
-std::string OrtoolsVariableWrapper::name() const
+const std::string& OrtoolsVariableWrapper::name() const
 {
     return mpVar_->name();
 }
