@@ -57,10 +57,15 @@ public:
     ComponentFiller(ComponentFiller& other) = delete;
 
     /// Create a ComponentFiller for a Component
-    explicit ComponentFiller(
+    ComponentFiller(
       const ModelerStudy::SystemModel::Component& component,
       Optimization::VariableDictionary<typename SolverTagType::VariableType>& variableDictionary,
-      const ScenarioGroupRepository& scenarioGroupRepository);
+      const ScenarioGroupRepository& scenarioGroupRepository):
+        component_(component),
+        variableDictionary_(variableDictionary),
+        scenarioGroupRepository_(scenarioGroupRepository)
+    {
+    }
 
     void addVariables(Optimisation::LinearProblemApi::ILinearProblem<SolverTagType>& pb,
                       Optimisation::LinearProblemApi::ILinearProblemData& data,

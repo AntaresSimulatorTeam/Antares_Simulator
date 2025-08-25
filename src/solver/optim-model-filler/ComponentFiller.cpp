@@ -141,17 +141,6 @@ void VariablesBulkAddition<SolverTagType>::addVariable(const std::vector<double>
       });
 }
 
-template<Optimisation::LinearProblemApi::SolverTag SolverTagType>
-ComponentFiller<SolverTagType>::ComponentFiller(
-  const ModelerStudy::SystemModel::Component& component,
-  Optimization::VariableDictionary<typename SolverTagType::VariableType>& variableDictionary,
-  const ScenarioGroupRepository& scenarioGroupRepository):
-    component_(component),
-    variableDictionary_(variableDictionary),
-    scenarioGroupRepository_(scenarioGroupRepository)
-{
-}
-
 bool checkTimeSteps(Optimisation::LinearProblemApi::FillContext& ctx)
 {
     return ctx.getLocalFirstTimeStep() <= ctx.getLocalLastTimeStep();
