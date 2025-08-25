@@ -326,7 +326,7 @@ ListStorageForRemix extractListSTSforRemix(const Data::Area& area,
         const auto& stsProperties = problem.ShortTermStorage[area.index][stsIndex];
 
         auto& generation = stsResults[stsIndex].withdrawal;
-        auto& injection = stsResults[stsIndex].injection;
+        const auto& injection = stsResults[stsIndex].injection;
         auto& unsupE = weeklyResults.ValeursHorairesDeDefaillancePositive;
         auto& levels = stsResults[stsIndex].level;
 
