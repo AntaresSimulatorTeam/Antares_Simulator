@@ -74,6 +74,20 @@ ModelBuilder& ModelBuilder::withObjective(Expression&& objective)
     return *this;
 }
 
+template<class InT, class OutT>
+void fillMapFrom(OutT& out, InT&& in)
+{
+    using InnerT = std::remove_cvref_t<InT>::value_type;
+    std::transform(in.begin(),
+                   in.end(),
+                   std::inserter(out, out.end()),
+                   [](/*Non const to prevent copy*/ InnerT& x)
+                   {
+                       auto id = x.Id();
+                       return std::make_pair(id, std::move(x));
+                   });
+}
+
 /**
  * \brief Sets the parameters of the model.
  *
@@ -84,14 +98,7 @@ ModelBuilder& ModelBuilder::withObjective(Expression&& objective)
  */
 ModelBuilder& ModelBuilder::withParameters(std::vector<Parameter>&& parameters)
 {
-    std::transform(parameters.begin(),
-                   parameters.end(),
-                   std::inserter(model_.parameters_, model_.parameters_.end()),
-                   [](/*Non const to prevent copy*/ Parameter& parameter)
-                   {
-                       auto id = parameter.Id();
-                       return std::make_pair(id, std::move(parameter));
-                   });
+    fillMapFrom(model_.parameters_, parameters);
     return *this;
 }
 
@@ -105,13 +112,7 @@ ModelBuilder& ModelBuilder::withParameters(std::vector<Parameter>&& parameters)
  */
 ModelBuilder& ModelBuilder::withVariables(std::vector<Variable>&& variables)
 {
-    std::ranges::transform(variables,
-                           std::inserter(model_.variables_, model_.variables_.end()),
-                           [](/*Non const to prevent copy*/ Variable& variable)
-                           {
-                               auto id = variable.Id();
-                               return std::make_pair(id, std::move(variable));
-                           });
+    fillMapFrom(model_.variables_, variables);
     return *this;
 }
 
@@ -125,14 +126,7 @@ ModelBuilder& ModelBuilder::withVariables(std::vector<Variable>&& variables)
  */
 ModelBuilder& ModelBuilder::withPorts(std::vector<Port>&& ports)
 {
-    std::transform(ports.begin(),
-                   ports.end(),
-                   std::inserter(model_.ports_, model_.ports_.end()),
-                   [](/*Non const to prevent copy*/ Port& port)
-                   {
-                       auto id = port.Id();
-                       return std::make_pair(id, std::move(port));
-                   });
+    fillMapFrom(model_.ports_, ports);
     return *this;
 }
 
