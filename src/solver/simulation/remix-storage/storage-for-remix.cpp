@@ -138,7 +138,7 @@ StorageForRemixWithLevels::StorageForRemixWithLevels(std::vector<double>& genera
                                                      const std::vector<double> Pmax,
                                                      const std::vector<double> Pmin,
                                                      const std::vector<double> inflows,
-                                                     const std::vector<double>& overflow,
+                                                     const std::vector<double> overflow,
                                                      const std::vector<double>& pump,
                                                      const double initLevel,
                                                      const double capacity,
