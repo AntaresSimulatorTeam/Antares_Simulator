@@ -369,21 +369,21 @@ $(document).ready(function(){initNavTree('STSbyGroup_8h_source.html',''); initRe
 <div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; sts: shortTermStorage.storagesByIndex)</div>
 <div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;        {</div>
 <div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;            <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> groupNumber = groupToNumbers_[sts.properties.groupName];</div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;            <span class="keyword">const</span> <span class="keyword">auto</span>&amp; result = state.hourlyResults-&gt;ShortTermStorage[state.hourInTheWeek];</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;            <span class="keyword">const</span> <span class="keyword">auto</span>&amp; result = state.hourlyResults-&gt;ShortTermStorage[clusterIndex];</div>
 <div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;            <span class="comment">// Injection</span></div>
 <div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;            pValuesForTheCurrentYear[numSpace][NB_COLS_PER_GROUP * groupNumber</div>
 <div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;                                               + VariableType::injection][state.hourInTheYear]</div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;              += result.injection[clusterIndex];</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;              += result.injection[state.hourInTheWeek];</div>
 <div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160; </div>
 <div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;            <span class="comment">// Withdrawal</span></div>
 <div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;            pValuesForTheCurrentYear[numSpace][NB_COLS_PER_GROUP * groupNumber</div>
 <div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;                                               + VariableType::withdrawal][state.hourInTheYear]</div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;              += result.withdrawal[clusterIndex];</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;              += result.withdrawal[state.hourInTheWeek];</div>
 <div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160; </div>
 <div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;            <span class="comment">// Levels</span></div>
 <div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;            pValuesForTheCurrentYear[numSpace][NB_COLS_PER_GROUP * groupNumber</div>
 <div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;                                               + VariableType::level][state.hourInTheYear]</div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;              += result.level[clusterIndex];</div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;              += result.level[state.hourInTheWeek];</div>
 <div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160; </div>
 <div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;            clusterIndex++;</div>
 <div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;        }</div>
