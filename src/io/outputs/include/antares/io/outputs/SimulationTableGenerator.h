@@ -191,6 +191,7 @@ void addConstraintEntries(ISimulationTable& simulationTable,
 
 void addPortEntries(ISimulationTable& simulationTable,
                     const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
+                    const Antares::Optimisation::LinearProblemApi::IMipSolution& solution,
                     const Antares::ModelerStudy::SystemModel::Component& component,
                     Antares::Optimisation::LinearProblemApi::ILinearProblemData* dataSeries,
                     unsigned currentBlock,

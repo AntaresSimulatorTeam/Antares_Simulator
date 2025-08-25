@@ -21,6 +21,7 @@
 #include "antares/io/outputs/SimulationTableGenerator.h"
 
 #include <optional>
+#include <fstream> //TODO REMOVE DEBUG
 
 #include <antares/solver/optim-model-filler/VariableDictionary.h>
 #include "antares/expressions/visitors/EvalVisitor.h"
@@ -28,6 +29,8 @@
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
 #include "antares/optimisation/linear-problem-api/mipConstraint.h"
 #include "antares/optimisation/linear-problem-api/mipSolution.h"
+
+#include "antares/expressions/visitors/AstDOTStyleVisitor.h" //TODO REMOVE DEBUG
 
 using namespace Antares::Optimisation::LinearProblemApi;
 
@@ -101,6 +104,7 @@ std::string BuildModelerConstraintName(const std::string& cid,
 
 void addPortEntries(ISimulationTable& simulationTable,
                     const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
+                    const Antares::Optimisation::LinearProblemApi::IMipSolution& solution,
                     const Antares::ModelerStudy::SystemModel::Component& component,
                     Antares::Optimisation::LinearProblemApi::ILinearProblemData* dataSeries,
                     unsigned currentBlock,
@@ -124,10 +128,22 @@ void addPortEntries(ISimulationTable& simulationTable,
 
             std::optional<double> value = std::nullopt;
 
+            std::map<std::string, double> variables;
+
             const Antares::Expressions::Visitors::EvaluationContext
-              evalContext(component.getParameterValues(), {}, *dataSeries);
+              evalContext(component.getParameterValues(), solution.getOptimalValues(), *dataSeries);
 
             Antares::Expressions::Visitors::EvalVisitor evalVisitor(evalContext, fillContext);
+
+            // TODO REMOVE DEBUG
+            Antares::Expressions::Visitors::AstDOTStyleVisitor astGraphVisitor;
+            std::ostringstream dotContentStream;
+            astGraphVisitor(dotContentStream, portFieldDef.Definition().RootNode());
+            std::string dotFileName = cid + "_" + portFieldKey.portId + "_" + portFieldKey.fieldId + ".dot";
+            std::ofstream dotFile(dotFileName);
+            dotFile << dotContentStream.str();
+            dotFile.close();
+            // END DEBUG
 
             auto res = evalVisitor.dispatch(portFieldDef.Definition().RootNode());
             Antares::logs.notice() << cid << "   " << res.valueAsDouble();
@@ -216,6 +232,7 @@ void FillSimulationTable(
                                                   linearProblem.isLP());
         addPortEntries(simulationTable,
                        fillContext,
+                       solution,
                        component,
                        dataSeries,
                        1,

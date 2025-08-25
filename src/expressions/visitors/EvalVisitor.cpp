@@ -90,7 +90,9 @@ EvaluationResult EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 {
-    return EvaluationResult{context_.getVariableValue(node->value())};
+    logs.notice() << "VariableNode: getting variable '" << node->value() << "'";
+    auto res = EvaluationResult{context_.getVariableValue(node->value())};
+    return res;
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
