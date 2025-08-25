@@ -287,30 +287,30 @@ std::shared_ptr<IStorageForRemix> extractHydroForRemix(const Data::Area& area,
                              reservoirManagement);
 }
 
+
+std::span<const double> weekSubRange(const std::vector<double>& v, unsigned firstHourOfWeek)
+{
+    return {v.begin() + firstHourOfWeek, v.begin() + firstHourOfWeek + HOURS_IN_WEEK};
+}
+
 std::vector<double> extractSTSpmax(const ShortTermStorage::PROPERTIES& sts_properties,
                                    const unsigned firstHourOfWeek)
 {
-    const auto& pmaxMod = sts_properties.series->maxWithdrawalModulation;
-    std::span<const double> subrange(pmaxMod.begin() + firstHourOfWeek,
-                                     pmaxMod.begin() + firstHourOfWeek + HOURS_IN_WEEK);
+    auto subrange = weekSubRange(sts_properties.series->maxWithdrawalModulation, firstHourOfWeek);
     return subrange * sts_properties.withdrawalEfficiency;
 }
 
 std::vector<double> extractSTSlowRuleCurve(const ShortTermStorage::PROPERTIES& sts_properties,
                                            const unsigned firstHourOfWeek)
 {
-    const auto& lowMod = sts_properties.series->lowerRuleCurve;
-    std::span<const double> subrange(lowMod.begin() + firstHourOfWeek,
-                                     lowMod.begin() + firstHourOfWeek + HOURS_IN_WEEK);
+    auto subrange = weekSubRange(sts_properties.series->lowerRuleCurve, firstHourOfWeek);
     return subrange * sts_properties.reservoirCapacity;
 }
 
 std::vector<double> extractSTSupRuleCurve(const ShortTermStorage::PROPERTIES& sts_properties,
                                           const unsigned firstHourOfWeek)
 {
-    const auto& upMod = sts_properties.series->upperRuleCurve;
-    std::span<const double> subrange(upMod.begin() + firstHourOfWeek,
-                                     upMod.begin() + firstHourOfWeek + HOURS_IN_WEEK);
+    auto subrange = weekSubRange(sts_properties.series->upperRuleCurve, firstHourOfWeek);
     return subrange * sts_properties.reservoirCapacity;
 }
 
