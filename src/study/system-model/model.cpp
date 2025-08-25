@@ -28,6 +28,23 @@
 
 #include <antares/study/system-model/model.h>
 
+namespace
+{
+template<class OutT, class InT>
+void fillMapFrom(OutT& out, InT&& in)
+{
+    using InnerT = std::remove_cvref_t<InT>::value_type;
+    std::transform(in.begin(),
+                   in.end(),
+                   std::inserter(out, out.end()),
+                   [](/*Non const to prevent copy*/ InnerT& x)
+                   {
+                       auto id = x.Id();
+                       return std::make_pair(id, std::move(x));
+                   });
+}
+} // namespace
+
 namespace Antares::ModelerStudy::SystemModel
 {
 std::size_t PortFieldKeyHash::operator()(const PortFieldKey& input) const
@@ -72,20 +89,6 @@ ModelBuilder& ModelBuilder::withObjective(Expression&& objective)
 {
     model_.objective_ = std::move(objective);
     return *this;
-}
-
-template<class OutT, class InT>
-static void fillMapFrom(OutT& out, InT&& in)
-{
-    using InnerT = std::remove_cvref_t<InT>::value_type;
-    std::transform(in.begin(),
-                   in.end(),
-                   std::inserter(out, out.end()),
-                   [](/*Non const to prevent copy*/ InnerT& x)
-                   {
-                       auto id = x.Id();
-                       return std::make_pair(id, std::move(x));
-                   });
 }
 
 /**
