@@ -140,14 +140,7 @@ ModelBuilder& ModelBuilder::withPorts(std::vector<Port>&& ports)
  */
 ModelBuilder& ModelBuilder::withConstraints(std::vector<Constraint>&& constraints)
 {
-    std::transform(constraints.begin(),
-                   constraints.end(),
-                   std::inserter(model_.constraints_, model_.constraints_.end()),
-                   [](/*Non const to prevent copy*/ Constraint& constraint)
-                   {
-                       auto id = constraint.Id();
-                       return std::make_pair(id, std::move(constraint));
-                   });
+    fillMapFrom(model_.constraints_, constraints);
     return *this;
 }
 
