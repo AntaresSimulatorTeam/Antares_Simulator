@@ -82,7 +82,9 @@ void addVariableEntries(ISimulationTable& simulationTable,
         auto handle = [&](std::optional<unsigned> timeStep, std::optional<unsigned> scenIdx)
         {
             const auto* var = variableLookup(cid, varName, scenIdx, timeStep);
-            TimeBlock tb = timeStep ? convertTimeStepToBlockTimeIndex(*timeStep, timeConversionMode)
+            TimeBlock tb = timeStep ? convertTimeStepToBlockTimeIndex(
+                                        *timeStep + fillContext.getGlobalFirstTimeStep(),
+                                        timeConversionMode)
                                     : TimeBlock{.block = currentBlock,
                                                 .blockTimeIndex = std::nullopt,
                                                 .absoluteTimeIndex = std::nullopt};
@@ -148,7 +150,9 @@ void addConstraintEntries(ISimulationTable& simulationTable,
         auto handle = [&](std::optional<unsigned> ts, std::optional<unsigned> scenIdx)
         {
             const auto* c = lookupConstraint(cid, cname, scenIdx, ts);
-            TimeBlock tb = ts ? convertTimeStepToBlockTimeIndex(*ts, timeConversionMode)
+            TimeBlock tb = ts ? convertTimeStepToBlockTimeIndex(
+                                  *ts + fillContext.getGlobalFirstTimeStep(),
+                                  timeConversionMode)
                               : TimeBlock{.block = currentBlock,
                                           .blockTimeIndex = std::nullopt,
                                           .absoluteTimeIndex = std::nullopt};
