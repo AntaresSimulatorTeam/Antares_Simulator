@@ -214,7 +214,7 @@ public:
         {
             // ST storage injection for the current cluster and this hour
             pValuesForTheCurrentYear[numSpace][clusterIndex].hour[state.hourInTheYear]
-              = state.hourlyResults->ShortTermStorage[state.hourInTheWeek].injection[clusterIndex];
+              = state.hourlyResults->ShortTermStorage[clusterIndex].injection[state.hourInTheWeek];
         }
 
         // Next variable
