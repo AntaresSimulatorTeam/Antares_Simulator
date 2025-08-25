@@ -39,8 +39,8 @@ void fillMapFrom(OutT& out, InT&& in)
                    std::inserter(out, out.end()),
                    [](/*Non const to prevent copy*/ InnerT& x)
                    {
-                       auto id = x.Id();
-                       return std::make_pair(id, std::move(x));
+                       std::string id = x.Id();
+                       return std::make_pair(std::move(id), std::move(x));
                    });
 }
 } // namespace
