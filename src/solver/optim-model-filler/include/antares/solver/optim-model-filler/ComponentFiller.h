@@ -26,6 +26,7 @@
 #include <antares/study/system-model/component.h>
 #include "antares/expressions/visitors/EvaluationContext.h"
 #include "antares/solver/optim-model-filler/VariableDictionary.h"
+#include "antares/solver/optim-model-filler/scenarioGroupRepo.h"
 
 #include "ReadLinearConstraintVisitor.h"
 

@@ -26,6 +26,7 @@
 #include "antares/expressions/nodes/ExpressionsNodes.h"
 #include "antares/expressions/visitors/TimeIndex.h"
 #include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
+#include "antares/optimisation/linear-problem-api/mipVariable.h"
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
@@ -756,11 +757,14 @@ BOOST_AUTO_TEST_CASE(offset_in_objective__throws_exception)
                                        "'model' of component 'componentA')."));
 }
 
+using Tag = Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsTag;
+
 // Mock classes
-class MockMipVariable: public IMipVariable
+class MockMipVariable: public IMipVariable<Tag::VariableType>
 {
 public:
     MockMipVariable(double lb, double ub, bool integer, const std::string& name):
+        IMipVariable<Tag::VariableType>(nullptr),
         lb_(lb),
         ub_(ub),
         integer_(integer),
@@ -811,7 +815,7 @@ private:
     std::string name_;
 };
 
-class MockLinearProblem: public ILinearProblem
+class MockLinearProblem: public ILinearProblem<Tag>
 {
 public:
     std::vector<std::unique_ptr<MockMipVariable>> variables_;
@@ -858,17 +862,17 @@ public:
         return static_cast<int>(variables_.size());
     }
 
-    IMipConstraint* addConstraint(double, double, const std::string&) override
+    IMipConstraint<Tag>* addConstraint(double, double, const std::string&) override
     {
         return nullptr;
     }
 
-    IMipConstraint* lookupConstraint(const std::string&) const override
+    IMipConstraint<Tag>* lookupConstraint(const std::string&) const override
     {
         return nullptr;
     }
 
-    IMipConstraint* getConstraint(std::size_t) const override
+    IMipConstraint<Tag>* getConstraint(std::size_t) const override
     {
         return nullptr;
     }
@@ -878,11 +882,11 @@ public:
         return 0;
     }
 
-    void setObjectiveCoefficient(IMipVariable*, double) override
+    void setObjectiveCoefficient(IMipVariable<Tag::VariableType>*, double) override
     {
     }
 
-    double getObjectiveCoefficient(const IMipVariable*) const override
+    double getObjectiveCoefficient(const IMipVariable<Tag::VariableType>*) const override
     {
         return 0.0;
     }
@@ -905,7 +909,7 @@ public:
         return false;
     }
 
-    IMipSolution* solve(bool) override
+    IMipSolution<Tag>* solve(bool) override
     {
         return nullptr;
     }
@@ -923,14 +927,14 @@ public:
 BOOST_AUTO_TEST_CASE(Constructor_ValidIndices)
 {
     MockLinearProblem lp;
-    VariableDictionary vdict;
+    VariableDictionary<Tag::VariableType> vdict;
     BOOST_CHECK_NO_THROW(Antares::Optimisation::VariablesBulkAddition(lp, vdict));
 }
 
 BOOST_AUTO_TEST_CASE(AddVariable_SingleBounds)
 {
     MockLinearProblem lp;
-    VariableDictionary vdict;
+    VariableDictionary<Tag::VariableType> vdict;
     Antares::Optimisation::VariablesBulkAddition vba(lp, vdict);
     const auto key = vdict.buildKey("my-component", "my-variable");
     const Dimensions dim({}, IntegerInterval(0, 2));
@@ -944,7 +948,7 @@ BOOST_AUTO_TEST_CASE(AddVariable_SingleBounds)
 BOOST_AUTO_TEST_CASE(AddVariable_VectorLowerBound)
 {
     MockLinearProblem lp;
-    VariableDictionary vdict;
+    VariableDictionary<Tag::VariableType> vdict;
     Antares::Optimisation::VariablesBulkAddition vba(lp, vdict);
     std::vector<double> lb = {0.1, 0.2, 0.3};
     const PartialKey key = vdict.buildKey("my-component", "my-variable");
@@ -959,7 +963,7 @@ BOOST_AUTO_TEST_CASE(AddVariable_VectorLowerBound)
 BOOST_AUTO_TEST_CASE(AddVariable_VectorUpperBound)
 {
     MockLinearProblem lp;
-    VariableDictionary vdict;
+    VariableDictionary<Tag::VariableType> vdict;
     Antares::Optimisation::VariablesBulkAddition vba(lp, vdict);
     std::vector<double> ub = {1.1, 1.2, 1.3};
     const PartialKey key = vdict.buildKey("my-component", "my-variable");
@@ -974,7 +978,7 @@ BOOST_AUTO_TEST_CASE(AddVariable_VectorUpperBound)
 BOOST_AUTO_TEST_CASE(AddVariable_VectorBounds)
 {
     MockLinearProblem lp;
-    VariableDictionary vdict;
+    VariableDictionary<Tag::VariableType> vdict;
     Antares::Optimisation::VariablesBulkAddition vba(lp, vdict);
     std::vector<double> lb = {0.1, 0.2, 0.3};
     std::vector<double> ub = {1.1, 1.2, 1.3};
@@ -990,7 +994,7 @@ BOOST_AUTO_TEST_CASE(AddVariable_VectorBounds)
 BOOST_AUTO_TEST_CASE(AddVariable_InvalidBounds)
 {
     MockLinearProblem lp;
-    VariableDictionary vdict;
+    VariableDictionary<Tag::VariableType> vdict;
     Antares::Optimisation::VariablesBulkAddition vba(lp, vdict);
     std::vector<double> lb = {0.1, 0.2};
     std::vector<double> ub = {1.1, 1.2, 1.3};
@@ -1002,7 +1006,7 @@ BOOST_AUTO_TEST_CASE(AddVariable_InvalidBounds)
 BOOST_AUTO_TEST_CASE(AddVariable_InvalidVectorLowerBound)
 {
     MockLinearProblem lp;
-    VariableDictionary vdict;
+    VariableDictionary<Tag::VariableType> vdict;
     Antares::Optimisation::VariablesBulkAddition vba(lp, vdict);
     const PartialKey key = vdict.buildKey("my-component", "my-variable");
     const Dimensions dim({}, IntegerInterval(0, 2));
@@ -1012,7 +1016,7 @@ BOOST_AUTO_TEST_CASE(AddVariable_InvalidVectorLowerBound)
 BOOST_AUTO_TEST_CASE(AddVariable_InvalidVectorUpperBound)
 {
     MockLinearProblem lp;
-    VariableDictionary vdict;
+    VariableDictionary<Tag::VariableType> vdict;
     Antares::Optimisation::VariablesBulkAddition vba(lp, vdict);
     const PartialKey key = vdict.buildKey("my-component", "my-variable");
     const Dimensions dim({}, IntegerInterval(0, 2));
@@ -1022,7 +1026,7 @@ BOOST_AUTO_TEST_CASE(AddVariable_InvalidVectorUpperBound)
 BOOST_AUTO_TEST_CASE(AddVariable_InvalidVectorBounds)
 {
     MockLinearProblem lp;
-    VariableDictionary vdict;
+    VariableDictionary<Tag::VariableType> vdict;
     Antares::Optimisation::VariablesBulkAddition vba(lp, vdict);
 
     const PartialKey key = vdict.buildKey("my-component", "my-variable");

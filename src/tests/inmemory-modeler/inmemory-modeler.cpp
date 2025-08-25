@@ -1,21 +1,23 @@
-// Copyright 2007-2025, RTE (https://www.rte-france.com)
-// See AUTHORS.txt
-// SPDX-License-Identifier: MPL-2.0
-// This file is part of Antares-Simulator,
-// Adequacy and Performance assessment for interconnected energy networks.
-//
-// Antares_Simulator is free software: you can redistribute it and/or modify
-// it under the terms of the Mozilla Public Licence 2.0 as published by
-// the Mozilla Foundation, either version 2 of the License, or
-// (at your option) any later version.
-//
-// Antares_Simulator is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// Mozilla Public Licence 2.0 for more details.
-//
-// You should have received a copy of the Mozilla Public Licence 2.0
-// along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+/*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "inmemory-modeler.h"
 
@@ -30,6 +32,7 @@
 #include "antares/study/system-model/parameter.h"
 
 using namespace Antares::ModelerStudy::SystemModel;
+using Tag = Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsTag;
 
 namespace Test::Modeler
 {
@@ -46,10 +49,10 @@ void LinearProblemBuildingFixture::buildLinearProblem(
   Antares::Optimisation::LinearProblemDataImpl::LinearProblemData& dummy_data,
   std::vector<std::unique_ptr<Antares::Optimisation::LinearProblemApi::IScenario>>& scenarios)
 {
-    std::vector<std::unique_ptr<Antares::Optimisation::ComponentFiller>> fillers;
-    std::vector<Antares::Optimisation::LinearProblemApi::LinearProblemFiller*> fillers_ptr;
+    std::vector<std::unique_ptr<Antares::Optimisation::ComponentFiller<Tag>>> fillers;
+    std::vector<Antares::Optimisation::LinearProblemApi::LinearProblemFiller<Tag>*> fillers_ptr;
     // All LP variables coordinates (component id, variable id, scenario, time step)
-    Antares::Optimization::VariableDictionary variableDictionary;
+    Antares::Optimization::VariableDictionary<Tag::VariableType> variableDictionary;
     Antares::Optimisation::ScenarioGroupRepository scenario_group_repository;
     for (auto& scenario: scenarios)
     {
@@ -58,7 +61,7 @@ void LinearProblemBuildingFixture::buildLinearProblem(
     }
     for (auto& component: components)
     {
-        auto cf = std::make_unique<Antares::Optimisation::ComponentFiller>(
+        auto cf = std::make_unique<Antares::Optimisation::ComponentFiller<Tag>>(
           component,
           variableDictionary,
           scenario_group_repository);
@@ -71,7 +74,7 @@ void LinearProblemBuildingFixture::buildLinearProblem(
     pb = std::make_unique<Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem>(
       false,
       "sirius");
-    Antares::Optimisation::LinearProblemApi::LinearProblemBuilder linear_problem_builder(
+    Antares::Optimisation::LinearProblemApi::LinearProblemBuilder<Tag> linear_problem_builder(
       fillers_ptr);
 
     linear_problem_builder.build(*pb, dummy_data, time_scenario_ctx);

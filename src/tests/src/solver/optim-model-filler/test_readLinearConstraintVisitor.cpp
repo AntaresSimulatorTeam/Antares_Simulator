@@ -27,6 +27,7 @@
 
 #include <antares/expressions/Registry.hxx>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
+#include <antares/optimisation/linear-problem-mpsolver-impl/ortoolsTag.h>
 #include <antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h>
 #include <antares/solver/optim-model-filler/VariableDictionary.h>
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
@@ -37,6 +38,7 @@ using namespace Antares::Expressions::Nodes;
 using namespace Antares::Expressions::Visitors;
 
 using namespace Antares::Optimization;
+using Tag = Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsTag::VariableType;
 
 BOOST_AUTO_TEST_SUITE(_read_linear_constraint_visitor_)
 
@@ -47,15 +49,15 @@ struct MyDummyFixture: Registry<Node>
     EvaluationContext evaluationContext{{}, {}, data, empty_scenario};
     SystemModel::Model m;
     SystemModel::ComponentBuilder componentBuilder;
-    VariableDictionary variableDictionary;
+    VariableDictionary<Tag> variableDictionary;
     const SystemModel::Component component = componentBuilder.withId("compo")
                                                .withModel(&m)
                                                .withScenarioGroupId("group")
                                                .build();
-    ReadLinearConstraintVisitor visitor{evaluationContext,
-                                        {0, 0, 0, 0, 0},
-                                        component,
-                                        variableDictionary};
+    ReadLinearConstraintVisitor<Tag> visitor{evaluationContext,
+                                             {0, 0, 0, 0, 0},
+                                             component,
+                                             variableDictionary};
 };
 
 BOOST_FIXTURE_TEST_CASE(test_name, MyDummyFixture)
@@ -84,7 +86,10 @@ BOOST_FIXTURE_TEST_CASE(test_visit_equal_node, MyDummyFixture)
                               {},
                               data,
                               empty_scenario);
-    ReadLinearConstraintVisitor visitor(context, {0, 0, 0, 0, 0}, component, variableDictionary);
+    ReadLinearConstraintVisitor<Tag> visitor(context,
+                                             {0, 0, 0, 0, 0},
+                                             component,
+                                             variableDictionary);
     auto constraint = visitor.dispatch(node)[0];
     BOOST_CHECK_EQUAL(constraint.lb, -14.);
     BOOST_CHECK_EQUAL(constraint.ub, -14.);
@@ -112,7 +117,10 @@ BOOST_FIXTURE_TEST_CASE(test_visit_less_than_or_equal_node, MyDummyFixture)
                               {},
                               data,
                               empty_scenario);
-    ReadLinearConstraintVisitor visitor(context, {0, 0, 0, 0, 0}, component, variableDictionary);
+    ReadLinearConstraintVisitor<Tag> visitor(context,
+                                             {0, 0, 0, 0, 0},
+                                             component,
+                                             variableDictionary);
     auto constraint = visitor.dispatch(node)[0];
     BOOST_CHECK_EQUAL(constraint.lb, -std::numeric_limits<double>::infinity());
     BOOST_CHECK_EQUAL(constraint.ub, -1.);
@@ -144,7 +152,10 @@ BOOST_FIXTURE_TEST_CASE(test_visit_greater_than_or_equal_node, MyDummyFixture)
                               {},
                               data,
                               empty_scenario);
-    ReadLinearConstraintVisitor visitor(context, {0, 0, 0, 0, 0}, component, variableDictionary);
+    ReadLinearConstraintVisitor<Tag> visitor(context,
+                                             {0, 0, 0, 0, 0},
+                                             component,
+                                             variableDictionary);
     auto constraint = visitor.dispatch(node)[0];
     BOOST_CHECK_EQUAL(constraint.lb, -14);
     BOOST_CHECK_EQUAL(constraint.ub, std::numeric_limits<double>::infinity());

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -34,6 +34,7 @@
 using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::Optimisation::LinearProblemDataImpl;
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
+using Tag = Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsTag;
 
 struct Fixture
 {
@@ -42,17 +43,17 @@ struct Fixture
         pb = std::make_unique<OrtoolsLinearProblem>(false, "sirius");
     }
 
-    std::vector<LinearProblemFiller*> fillers;
+    std::vector<LinearProblemFiller<Tag>*> fillers;
     LinearProblemData LP_Data;
     FillContext ctx = {0, 0, 0, 0, 0}; // dummy value for other tests than context
-    std::unique_ptr<ILinearProblem> pb;
+    std::unique_ptr<ILinearProblem<Tag>> pb;
 };
 
 BOOST_AUTO_TEST_SUITE(tests_on_linear_problem_builder)
 
 BOOST_FIXTURE_TEST_CASE(no_filler_given_to_builder___nothing_built, Fixture)
 {
-    LinearProblemBuilder lpBuilder(fillers);
+    LinearProblemBuilder<Tag> lpBuilder(fillers);
     lpBuilder.build(*pb, LP_Data, ctx);
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 0);
@@ -61,10 +62,10 @@ BOOST_FIXTURE_TEST_CASE(no_filler_given_to_builder___nothing_built, Fixture)
 
 BOOST_FIXTURE_TEST_CASE(one_var_filler___the_var_is_built, Fixture)
 {
-    auto oneVarFiller = std::make_unique<OneVarFiller>();
+    auto oneVarFiller = std::make_unique<OneVarFiller<Tag>>();
     fillers = {oneVarFiller.get()};
 
-    LinearProblemBuilder lpBuilder(fillers);
+    LinearProblemBuilder<Tag> lpBuilder(fillers);
     lpBuilder.build(*pb, LP_Data, ctx);
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 1);
@@ -76,10 +77,10 @@ BOOST_FIXTURE_TEST_CASE(one_var_filler___the_var_is_built, Fixture)
 
 BOOST_FIXTURE_TEST_CASE(one_constraint_filler___the_constraint_is_built, Fixture)
 {
-    auto oneConstrFiller = std::make_unique<OneConstraintFiller>();
+    auto oneConstrFiller = std::make_unique<OneConstraintFiller<Tag>>();
     fillers = {oneConstrFiller.get()};
 
-    LinearProblemBuilder lpBuilder(fillers);
+    LinearProblemBuilder<Tag> lpBuilder(fillers);
     lpBuilder.build(*pb, LP_Data, ctx);
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 0);
@@ -89,12 +90,12 @@ BOOST_FIXTURE_TEST_CASE(one_constraint_filler___the_constraint_is_built, Fixture
 
 BOOST_FIXTURE_TEST_CASE(two_fillers_given_to_builder___all_is_built, Fixture)
 {
-    auto oneVarFiller = std::make_unique<OneVarFiller>();
-    auto oneConstrFiller = std::make_unique<OneConstraintFiller>();
+    auto oneVarFiller = std::make_unique<OneVarFiller<Tag>>();
+    auto oneConstrFiller = std::make_unique<OneConstraintFiller<Tag>>();
 
     fillers = {oneVarFiller.get(), oneConstrFiller.get()};
 
-    LinearProblemBuilder lpBuilder(fillers);
+    LinearProblemBuilder<Tag> lpBuilder(fillers);
     lpBuilder.build(*pb, LP_Data, ctx);
 
     BOOST_CHECK_EQUAL(pb->constraintCount(), 1);
@@ -104,12 +105,12 @@ BOOST_FIXTURE_TEST_CASE(two_fillers_given_to_builder___all_is_built, Fixture)
 
 BOOST_FIXTURE_TEST_CASE(three_fillers_given_to_builder___3_vars_3_constr_are_built, Fixture)
 {
-    auto oneVarFiller = std::make_unique<OneVarFiller>();
-    auto oneConstrFiller = std::make_unique<OneConstraintFiller>();
-    auto twoVarsTwoConstrFiller = std::make_unique<TwoVarsTwoConstraintsFiller>();
+    auto oneVarFiller = std::make_unique<OneVarFiller<Tag>>();
+    auto oneConstrFiller = std::make_unique<OneConstraintFiller<Tag>>();
+    auto twoVarsTwoConstrFiller = std::make_unique<TwoVarsTwoConstraintsFiller<Tag>>();
     fillers = {oneVarFiller.get(), oneConstrFiller.get(), twoVarsTwoConstrFiller.get()};
 
-    LinearProblemBuilder lpBuilder(fillers);
+    LinearProblemBuilder<Tag> lpBuilder(fillers);
     lpBuilder.build(*pb, LP_Data, ctx);
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 3);
@@ -118,7 +119,7 @@ BOOST_FIXTURE_TEST_CASE(three_fillers_given_to_builder___3_vars_3_constr_are_bui
 
 BOOST_FIXTURE_TEST_CASE(FillerWithContext, Fixture)
 {
-    auto varFiller = std::make_unique<VarFillerContext>();
+    auto varFiller = std::make_unique<VarFillerContext<Tag>>();
     fillers = {varFiller.get()};
 
     ctx = FillContext(0, 5, 0, 5, 0);
@@ -126,7 +127,7 @@ BOOST_FIXTURE_TEST_CASE(FillerWithContext, Fixture)
     ctx.addSelectedScenarios(0);
     ctx.addSelectedScenarios(2);
 
-    LinearProblemBuilder lpBuilder(fillers);
+    LinearProblemBuilder<Tag> lpBuilder(fillers);
     lpBuilder.build(*pb, LP_Data, ctx);
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 10); // 5 timestep * 2 scenario

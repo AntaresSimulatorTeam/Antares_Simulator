@@ -28,6 +28,7 @@
 #include <antares/expressions/Registry.hxx>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvaluationContext.h>
+#include <antares/optimisation/linear-problem-mpsolver-impl/ortoolsTag.h>
 #include <antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h>
 #include <antares/solver/optim-model-filler/VariableDictionary.h>
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
@@ -55,7 +56,8 @@ struct container_of_helpful_data_for_unit_tests
     EvaluationContext evaluationContext{{}, {}, data, empty_scenario};
     SystemModel::ModelBuilder modelBuilder;
     SystemModel::ComponentBuilder componentBuilder;
-    VariableDictionary variableDictionary;
+    VariableDictionary<Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsTag::VariableType>
+      variableDictionary;
 };
 
 BOOST_AUTO_TEST_SUITE(_running_the_read_linear_expression_visitor_on_a_sum_connections_)

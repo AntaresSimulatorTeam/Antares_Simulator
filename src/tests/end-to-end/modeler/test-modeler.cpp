@@ -210,7 +210,8 @@ public:
     }
 
     void writeSolution(
-      const Antares::Optimisation::LinearProblemApi::IMipSolution& solution) override
+      const Antares::Optimisation::LinearProblemApi::IMipSolution<
+        Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsTag>& solution) override
     {
         solution_.objectiveValue = solution.getObjectiveValue();
         // No output to write for in-memory writer

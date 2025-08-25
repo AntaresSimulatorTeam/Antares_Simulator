@@ -26,13 +26,15 @@
 #include <boost/test/test_tools.hpp>
 #include <boost/test/unit_test.hpp>
 
+#include <antares/optimisation/linear-problem-mpsolver-impl/ortoolsTag.h>
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 
 using namespace Antares::Optimization;
+using Tag = Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsTag::VariableType;
 
 struct Fixture
 {
-    VariableDictionary variableDict;
+    VariableDictionary<Tag> variableDict;
 };
 BOOST_FIXTURE_TEST_SUITE(DimensionsSuite, Fixture)
 
@@ -98,7 +100,7 @@ BOOST_AUTO_TEST_CASE(no_scenarios)
 
 std::map<std::pair<MCYearAndTime::MCYear, int>, std::string> namesFromDimensions(
   const Dimensions& dim,
-  VariableDictionary& vdict)
+  VariableDictionary<Tag>& vdict)
 {
     std::map<std::pair<MCYearAndTime::MCYear, int>, std::string> names;
     vdict.addVariable(dim,

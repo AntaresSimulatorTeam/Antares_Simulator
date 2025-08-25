@@ -27,6 +27,7 @@
 
 #include <antares/expressions/Registry.hxx>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
+#include <antares/optimisation/linear-problem-mpsolver-impl/ortoolsTag.h>
 #include <antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h>
 #include <antares/solver/optim-model-filler/VariableDictionary.h>
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
@@ -41,6 +42,8 @@ using namespace Antares::Optimization;
 
 BOOST_AUTO_TEST_SUITE(_read_linear_expression_visitor_)
 
+using Tag = Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsTag::VariableType;
+
 struct CreateVisitorFixture: Registry<Node>
 {
     Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
@@ -48,15 +51,15 @@ struct CreateVisitorFixture: Registry<Node>
     EvaluationContext evaluationContext{{}, {}, data, emptyScenario};
     SystemModel::Model m;
     SystemModel::ComponentBuilder componentBuilder;
-    VariableDictionary variableDictionary;
+    VariableDictionary<Tag> variableDictionary;
     const SystemModel::Component component = componentBuilder.withId("compo")
                                                .withModel(&m)
                                                .withScenarioGroupId("group")
                                                .build();
-    ReadLinearExpressionVisitor visitor{evaluationContext,
-                                        {0, 0, 0, 0, 0},
-                                        component,
-                                        variableDictionary};
+    ReadLinearExpressionVisitor<Tag> visitor{evaluationContext,
+                                             {0, 0, 0, 0, 0},
+                                             component,
+                                             variableDictionary};
 };
 
 BOOST_FIXTURE_TEST_CASE(name, CreateVisitorFixture)

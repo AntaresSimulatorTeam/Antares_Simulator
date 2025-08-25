@@ -26,6 +26,7 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <antares/optimisation/linear-problem-mpsolver-impl/ortoolsTag.h>
 #include <antares/solver/optim-model-filler/TimeDependentLinearExpression.h>
 #include <antares/solver/optim-model-filler/VariableDictionary.h>
 
@@ -33,7 +34,8 @@ using namespace Antares::Optimization;
 
 struct Fixture
 {
-    VariableDictionary variableDict;
+    VariableDictionary<Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsTag::VariableType>
+      variableDict;
 };
 
 BOOST_FIXTURE_TEST_SUITE(_linear_expressions_, Fixture)
