@@ -35,7 +35,7 @@ antares-x.y-solver --list-solvers | grep xpress
 ```
 
 ## Compatibility
-The currently supported versions (8.8.x and 9.3.x) have been shown to work well with XPRESS 9.25.0. Other versions may work, but using them may lead to crashes.
+The currently supported versions (8.8.x and 9.3.x) have been shown to work well with XPRESS 9.2.5. Other versions may work, but using them may lead to crashes.
 
 ## Known issues
 ### XPRESS 9.3.0 on Windows
