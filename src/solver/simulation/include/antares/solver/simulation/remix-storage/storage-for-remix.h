@@ -11,7 +11,7 @@ public:
     StorageForRemixNoLevels(std::vector<double>& generation,
                             std::vector<double>& unsupE,
                             const std::vector<double> Pmax,
-                            const std::vector<double>& Pmin);
+                            const std::vector<double> Pmin);
 
     double maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) override;
     void update() override;
@@ -39,7 +39,7 @@ public:
                               std::vector<double>& unsupE,
                               std::vector<double>& levels,
                               const std::vector<double> Pmax,
-                              const std::vector<double>& Pmin,
+                              const std::vector<double> Pmin,
                               const std::vector<double>& inflows,
                               const std::vector<double>& overflow,
                               const std::vector<double>& pump,
@@ -82,7 +82,7 @@ std::shared_ptr<IStorageForRemix> makeHydroForRemix(std::vector<double>& generat
 std::shared_ptr<StorageForRemixWithLevels> makeSTSforRemix(std::vector<double>& withdrawal,
                                                            std::vector<double>& unsupE,
                                                            std::vector<double>& levels,
-                                                           const std::vector<double> pmax,
+                                                           const std::vector<double>& pmax,
                                                            const std::vector<double>& inflows,
                                                            const std::vector<double>& injection,
                                                            const double initLevel,
