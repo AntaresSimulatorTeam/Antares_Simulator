@@ -223,6 +223,7 @@ BOOST_AUTO_TEST_SUITE(SimulationTableCsvTests)
 BOOST_AUTO_TEST_CASE(Constructor_WritesHeader)
 {
     SimulationTableCsv table;
+    table.writeHeader();
     std::string buffer = table.buffer();
     BOOST_CHECK(buffer.find("block,component,output,absolute_time_index,block_time_index,scenario_"
                             "index,value,basis_status")
@@ -515,9 +516,9 @@ BOOST_AUTO_TEST_CASE(ConcurrentAccess_MultipleThreads)
     table.write();
     std::string buffer = table.buffer();
 
-    // Should have all entries plus header
+    // Should have all entries
     auto lineCount = count_lines(buffer);
-    BOOST_CHECK_EQUAL(lineCount, numThreads * entriesPerThread + 1);
+    BOOST_CHECK_EQUAL(lineCount, numThreads * entriesPerThread);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -1315,6 +1316,7 @@ BOOST_FIXTURE_TEST_CASE(Write_CreatesFile, TempDirFixture)
                                    .value = 123.45,
                                    .status = MipBasisStatus::BASIC};
         table.addEntry(entry);
+        table.writeHeader();
         table.write();
     } // File should be closed here
 
@@ -1393,8 +1395,8 @@ BOOST_AUTO_TEST_CASE(Constructor_InitializesEmptyTables)
     auto buffers = tables.buffers();
 
     // Both buffers should contain only headers initially
-    BOOST_CHECK(buffers.first.find("block,component,output") != std::string::npos);
-    BOOST_CHECK(buffers.second.find("block,component,output") != std::string::npos);
+    BOOST_CHECK(buffers.first.empty());
+    BOOST_CHECK(buffers.second.empty());
 }
 
 BOOST_AUTO_TEST_CASE(AddEntriesToBothTables)
@@ -1597,11 +1599,6 @@ BOOST_FIXTURE_TEST_CASE(FullWorkflow_CreateWriteRead, TempDirFixture)
     // Read and verify content
     std::ifstream file(expectedFile);
     std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-
-    // Check header
-    BOOST_CHECK(content.find("block,component,output,absolute_time_index,block_time_index,scenario_"
-                             "index,value,basis_status")
-                != std::string::npos);
 
     // Check each entry
     for (int i = 0; i < 5; ++i)

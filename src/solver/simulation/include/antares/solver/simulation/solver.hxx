@@ -176,7 +176,7 @@ public:
         auto buffers = simTable.buffers();
         simTable.clear();
 
-        simulation_->storeYearBuffers(y, buffers.first, buffers.second);
+        simulation_->storeYearBuffers(y, std::move(buffers.first), std::move(buffers.second));
 
         // Log failing weeks
         logFailedWeek(y, study, failedWeekList);
@@ -895,11 +895,11 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
 }
 template<class ImplementationType>
 void ISimulation<ImplementationType>::storeYearBuffers(uint year,
-                                                       const std::string& firstBuffer,
-                                                       const std::string& secondBuffer)
+                                                       std::string&& firstBuffer,
+                                                       std::string&& secondBuffer)
 {
     std::lock_guard lock(buffersMutex_);
-    yearSimulationBuffers_[year] = {firstBuffer, secondBuffer};
+    yearSimulationBuffers_.emplace(year, std::pair{std::move(firstBuffer), std::move(secondBuffer)});
 }
 
 template<class ImplementationType>
