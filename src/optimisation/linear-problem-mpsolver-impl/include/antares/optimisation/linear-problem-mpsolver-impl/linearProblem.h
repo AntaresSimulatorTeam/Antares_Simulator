@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -25,6 +25,7 @@
 #include <antares/optimisation/linear-problem-mpsolver-impl/mipConstraint.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/mipSolution.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/mipVariable.h>
+#include <antares/optimisation/linear-problem-mpsolver-impl/ortoolsTag.h>
 
 namespace operations_research
 {
@@ -36,7 +37,7 @@ class MPObjective;
 namespace Antares::Optimisation::LinearProblemMpsolverImpl
 {
 
-class OrtoolsLinearProblem: public LinearProblemApi::ILinearProblem
+class OrtoolsLinearProblem: public LinearProblemApi::ILinearProblem<OrtoolsTag>
 {
 public:
     OrtoolsLinearProblem(bool isMip, const std::string& solverName);
@@ -62,8 +63,11 @@ public:
     OrtoolsMipConstraint* lookupConstraint(const std::string& name) const override;
     int constraintCount() const override;
 
-    void setObjectiveCoefficient(LinearProblemApi::IMipVariable* var, double coefficient) override;
-    double getObjectiveCoefficient(const LinearProblemApi::IMipVariable* var) const override;
+    void setObjectiveCoefficient(
+      LinearProblemApi::IMipVariable<operations_research::MPVariable>* var,
+      double coefficient) override;
+    double getObjectiveCoefficient(
+      const LinearProblemApi::IMipVariable<operations_research::MPVariable>* var) const override;
 
     void setMinimization() override;
     void setMaximization() override;
@@ -87,7 +91,7 @@ private:
     std::vector<std::unique_ptr<OrtoolsMipVariable>> variables_;
     std::vector<std::unique_ptr<OrtoolsMipConstraint>> constraints_;
 
-    std::unique_ptr<OrtoolsMipSolution> solution_;
+    std::unique_ptr<OrtoolsMipSolutionImpl> solution_;
 };
 
 } // namespace Antares::Optimisation::LinearProblemMpsolverImpl

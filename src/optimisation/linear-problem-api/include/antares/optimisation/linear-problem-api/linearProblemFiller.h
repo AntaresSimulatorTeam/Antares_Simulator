@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -23,16 +23,27 @@
 
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
+#include <antares/optimisation/linear-problem-api/mipVariable.h>
 
 namespace Antares::Optimisation::LinearProblemApi
 {
 
+template<SolverTag SolverTagType>
 class LinearProblemFiller
 {
 public:
-    virtual void addVariables(ILinearProblem& pb, ILinearProblemData& data, FillContext& ctx) = 0;
-    virtual void addConstraints(ILinearProblem& pb, ILinearProblemData& data, FillContext& ctx) = 0;
-    virtual void addObjective(ILinearProblem& pb, ILinearProblemData& data, FillContext& ctx) = 0;
+    virtual void addVariables(ILinearProblem<SolverTagType>& pb,
+                              ILinearProblemData& data,
+                              FillContext& ctx)
+      = 0;
+    virtual void addConstraints(ILinearProblem<SolverTagType>& pb,
+                                ILinearProblemData& data,
+                                FillContext& ctx)
+      = 0;
+    virtual void addObjective(ILinearProblem<SolverTagType>& pb,
+                              ILinearProblemData& data,
+                              FillContext& ctx)
+      = 0;
     virtual ~LinearProblemFiller() = default;
 };
 

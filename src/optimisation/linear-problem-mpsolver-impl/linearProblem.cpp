@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -132,27 +132,21 @@ int OrtoolsLinearProblem::constraintCount() const
     return mpSolver_->NumConstraints();
 }
 
-static const operations_research::MPVariable* getMpVar(const LinearProblemApi::IMipVariable* var)
-
+static const operations_research::MPVariable* getMpVar(
+  const LinearProblemApi::IMipVariable<operations_research::MPVariable>* var)
 {
-    const auto* OrtoolsMipVar = dynamic_cast<const OrtoolsMipVariable*>(var);
-    if (!OrtoolsMipVar)
-    {
-        logs.error()
-          << "Invalid cast, tried from LinearProblemApi::IMipVariable to OrtoolsMipVariable";
-        throw std::bad_cast();
-    }
-    return OrtoolsMipVar->getMpVar();
+    return var->getInnerVariable();
 }
 
-void OrtoolsLinearProblem::setObjectiveCoefficient(LinearProblemApi::IMipVariable* var,
-                                                   double coefficient)
+void OrtoolsLinearProblem::setObjectiveCoefficient(
+  LinearProblemApi::IMipVariable<operations_research::MPVariable>* var,
+  double coefficient)
 {
     objective_->SetCoefficient(getMpVar(var), coefficient);
 }
 
 double OrtoolsLinearProblem::getObjectiveCoefficient(
-  const LinearProblemApi::IMipVariable* var) const
+  const LinearProblemApi::IMipVariable<operations_research::MPVariable>* var) const
 {
     return objective_->GetCoefficient(getMpVar(var));
 }
@@ -199,7 +193,7 @@ OrtoolsMipSolution* OrtoolsLinearProblem::solve(bool verboseSolver)
 
     auto mpStatus = mpSolver_->Solve(params_);
 
-    solution_ = std::make_unique<OrtoolsMipSolution>(mpStatus, mpSolver_);
+    solution_ = std::make_unique<OrtoolsMipSolutionImpl>(mpStatus, mpSolver_);
     return solution_.get();
 }
 

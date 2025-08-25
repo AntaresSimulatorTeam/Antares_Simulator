@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -26,12 +26,15 @@
 namespace Antares::Optimisation::LinearProblemApi
 {
 
-LinearProblemBuilder::LinearProblemBuilder(const std::vector<LinearProblemFiller*>& fillers):
+LinearProblemBuilder::LinearProblemBuilder(
+  const std::vector<LinearProblemFiller<SolverTagType>*>& fillers):
     fillers_(fillers)
 {
 }
 
-void LinearProblemBuilder::build(ILinearProblem& pb, ILinearProblemData& data, FillContext& ctx)
+void LinearProblemBuilder::build(ILinearProblem<SolverTagType>& pb,
+                                 ILinearProblemData& data,
+                                 FillContext& ctx)
 {
     std::ranges::for_each(fillers_,
                           [&](const auto& filler) { filler->addVariables(pb, data, ctx); });

@@ -21,19 +21,20 @@
 
 #pragma once
 
-#include <antares/optimisation/linear-problem-api/mipConstraint.h>
-
-#include "ortoolsTag.h"
-
 namespace operations_research
 {
-class MPConstraint; // forward declaration
 class MPVariable;   // forward declaration
-} // namespace operations_research
+class MPConstraint; // forward declaration
+}
 
 namespace Antares::Optimisation::LinearProblemMpsolverImpl
 {
 
-using OrtoolsMipConstraint = LinearProblemApi::IMipConstraint<OrtoolsTag>;
+// Tag pour identifier le solveur OrTools et ses types associés
+struct OrtoolsTag
+{
+    using VariableType = operations_research::MPVariable;
+    using ConstraintType = operations_research::MPConstraint;
+};
 
 } // namespace Antares::Optimisation::LinearProblemMpsolverImpl

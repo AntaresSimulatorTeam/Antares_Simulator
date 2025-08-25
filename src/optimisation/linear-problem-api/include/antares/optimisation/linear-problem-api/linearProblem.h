@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include <concepts>
 #include <string>
 
 #include "mipConstraint.h"
@@ -36,37 +37,56 @@ namespace Antares::Optimisation::LinearProblemApi
  * This class is aimed at creating and manipulating variables/constraints
  * Also used to control the objective, maximization or minimization, and to solve the problem
  */
+template<SolverTag SolverTagType>
 class ILinearProblem
 {
 public:
+    using VariableType = typename SolverTagType::VariableType;
+    using ConstraintType = typename SolverTagType::ConstraintType;
+
     virtual ~ILinearProblem() = default;
 
     /// Create a continuous variable
-    virtual IMipVariable* addNumVariable(double lb, double ub, const std::string& name) = 0;
+    virtual IMipVariable<VariableType>* addNumVariable(double lb,
+                                                       double ub,
+                                                       const std::string& name)
+      = 0;
 
     /// Create a integer variable
-    virtual IMipVariable* addIntVariable(double lb, double ub, const std::string& name) = 0;
+    virtual IMipVariable<VariableType>* addIntVariable(double lb,
+                                                       double ub,
+                                                       const std::string& name)
+      = 0;
 
     /// Create a continuous or integer variable
-    virtual IMipVariable* addVariable(double lb, double ub, bool integer, const std::string& name)
+    virtual IMipVariable<VariableType>* addVariable(double lb,
+                                                    double ub,
+                                                    bool integer,
+                                                    const std::string& name)
       = 0;
 
     // Variables observers
-    [[nodiscard]] virtual IMipVariable* getVariable(std::size_t index) const = 0;
-    [[nodiscard]] virtual IMipVariable* lookupVariable(const std::string& name) const = 0;
+    [[nodiscard]] virtual IMipVariable<VariableType>* getVariable(std::size_t index) const = 0;
+    [[nodiscard]] virtual IMipVariable<VariableType>* lookupVariable(const std::string& name) const
+      = 0;
     [[nodiscard]] virtual int variableCount() const = 0;
 
     /// Add a bounded constraint to the problem
-    virtual IMipConstraint* addConstraint(double lb, double ub, const std::string& name) = 0;
+    virtual IMipConstraint<SolverTagType>* addConstraint(double lb,
+                                                         double ub,
+                                                         const std::string& name)
+      = 0;
 
     // Constraints observers
-    [[nodiscard]] virtual IMipConstraint* getConstraint(std::size_t index) const = 0;
-    [[nodiscard]] virtual IMipConstraint* lookupConstraint(const std::string& name) const = 0;
+    [[nodiscard]] virtual IMipConstraint<SolverTagType>* getConstraint(std::size_t index) const = 0;
+    [[nodiscard]] virtual IMipConstraint<SolverTagType>* lookupConstraint(
+      const std::string& name) const
+      = 0;
     [[nodiscard]] virtual int constraintCount() const = 0;
 
     /// Set the objective coefficient for a given variable
-    virtual void setObjectiveCoefficient(IMipVariable* var, double coefficient) = 0;
-    virtual double getObjectiveCoefficient(const IMipVariable* var) const = 0;
+    virtual void setObjectiveCoefficient(IMipVariable<VariableType>* var, double coefficient) = 0;
+    virtual double getObjectiveCoefficient(const IMipVariable<VariableType>* var) const = 0;
 
     /// Sets the optimization direction to minimize
     virtual void setMinimization() = 0;
@@ -77,7 +97,7 @@ public:
     [[nodiscard]] virtual bool isMaximization() const = 0;
 
     /// Solve the problem, returns a IMipSolution
-    virtual IMipSolution* solve(bool verboseSolver) = 0;
+    virtual IMipSolution<SolverTagType>* solve(bool verboseSolver) = 0;
 
     virtual void WriteLP(const std::string& filename) const = 0;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -23,6 +23,8 @@
 
 #include <antares/optimisation/linear-problem-api/mipVariable.h>
 
+#include "ortoolsTag.h"
+
 namespace operations_research
 {
 class MPVariable; // forward declaration
@@ -31,29 +33,6 @@ class MPVariable; // forward declaration
 namespace Antares::Optimisation::LinearProblemMpsolverImpl
 {
 
-class OrtoolsMipVariable final: public LinearProblemApi::IMipVariable
-{
-public:
-    void setLb(double lb) override;
-    void setUb(double ub) override;
-
-    void setBounds(double lb, double ub) override;
-
-    double getLb() const override;
-    double getUb() const override;
-
-    const std::string& getName() const override;
-
-    bool isInteger() const override;
-
-    const operations_research::MPVariable* getMpVar() const;
-
-    ~OrtoolsMipVariable() override = default;
-
-    explicit OrtoolsMipVariable(operations_research::MPVariable*);
-
-private:
-    operations_research::MPVariable* mpVar_;
-};
+using OrtoolsMipVariable = LinearProblemApi::IMipVariable<operations_research::MPVariable>;
 
 } // namespace Antares::Optimisation::LinearProblemMpsolverImpl

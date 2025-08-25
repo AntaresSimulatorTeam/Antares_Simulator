@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -48,7 +48,8 @@ class ScenarioGroupRepository;
  * Implements LinearProblemFiller interface.
  * Fills a LinearProblem with variables, constraints, and objective coefficients of a Component
  */
-class ComponentFiller: public Optimisation::LinearProblemApi::LinearProblemFiller
+template<Optimisation::LinearProblemApi::SolverTag SolverTagType>
+class ComponentFiller: public Optimisation::LinearProblemApi::LinearProblemFiller<SolverTagType>
 {
 public:
     ComponentFiller() = delete;
@@ -60,25 +61,25 @@ public:
                              Optimization::VariableDictionary& variableDictionary,
                              const ScenarioGroupRepository& scenarioGroupRepository);
 
-    void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
+    void addVariables(Optimisation::LinearProblemApi::ILinearProblem<SolverTagType>& pb,
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
                       Optimisation::LinearProblemApi::FillContext& ctx) override;
 
-    void addConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
+    void addConstraints(Optimisation::LinearProblemApi::ILinearProblem<SolverTagType>& pb,
                         Optimisation::LinearProblemApi::ILinearProblemData& data,
                         Optimisation::LinearProblemApi::FillContext& ctx) override;
 
-    void addObjective(Optimisation::LinearProblemApi::ILinearProblem& pb,
+    void addObjective(Optimisation::LinearProblemApi::ILinearProblem<SolverTagType>& pb,
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
                       Optimisation::LinearProblemApi::FillContext& ctx) override;
 
 private:
-    void addStaticConstraint(Optimisation::LinearProblemApi::ILinearProblem& pb,
+    void addStaticConstraint(Optimisation::LinearProblemApi::ILinearProblem<SolverTagType>& pb,
                              const Optimization::LinearConstraint& linear_constraint,
                              const std::string& constraint_id) const;
 
     void addTimeDependentConstraints(
-      Optimisation::LinearProblemApi::ILinearProblem& pb,
+      Optimisation::LinearProblemApi::ILinearProblem<SolverTagType>& pb,
       const std::vector<Optimization::LinearConstraint>& linear_constraints,
       const std::string& constraint_id) const;
 
@@ -89,11 +90,13 @@ private:
     const ScenarioGroupRepository& scenarioGroupRepository_;
 };
 
+template<Optimisation::LinearProblemApi::SolverTag SolverTagType>
 class VariablesBulkAddition
 {
 public:
-    VariablesBulkAddition(Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
-                          Optimization::VariableDictionary& variableDictionary);
+    VariablesBulkAddition(
+      Optimisation::LinearProblemApi::ILinearProblem<SolverTagType>& linear_problem,
+      Optimization::VariableDictionary& variableDictionary);
 
     void addVariable(double lb,
                      double ub,
@@ -125,7 +128,7 @@ public:
     };
 
 private:
-    Optimisation::LinearProblemApi::ILinearProblem& linear_problem_;
+    Optimisation::LinearProblemApi::ILinearProblem<SolverTagType>& linear_problem_;
     Optimization::VariableDictionary& variableDictionary;
 };
 } // namespace Antares::Optimisation

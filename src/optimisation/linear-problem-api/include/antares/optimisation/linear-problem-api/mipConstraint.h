@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -21,17 +21,98 @@
 
 #pragma once
 
+#include <concepts>
+
+#include "hasBounds.h"
+#include "hasName.h"
 #include "mipVariable.h"
 
 namespace Antares::Optimisation::LinearProblemApi
 {
 
+// Concept pour valider qu'un type peut être utilisé comme contrainte de solveur interne
+template<typename T, typename V>
+concept SolverConstraint = requires(T t, const T ct, const V* v) {
+    { ct.lb() } -> std::convertible_to<double>;
+    { ct.ub() } -> std::convertible_to<double>;
+    { ct.name() } -> std::convertible_to<std::string>;
+    { ct.GetCoefficient(v) } -> std::convertible_to<double>;
+    t.SetLB(double{});
+    t.SetUB(double{});
+    t.SetBounds(double{}, double{});
+    t.SetCoefficient(v, double{});
+};
+
+template<SolverTag SolverTagType>
 class IMipConstraint: public IHasBounds, public IHasName
 {
 public:
-    virtual void setCoefficient(IMipVariable* var, double coefficient) = 0;
+    using VariableType = typename SolverTagType::VariableType;
+    using ConstraintType = typename SolverTagType::ConstraintType;
 
-    virtual double getCoefficient(const LinearProblemApi::IMipVariable* var) const = 0;
+    explicit IMipConstraint(ConstraintType* innerConstraint):
+        innerConstraint_(innerConstraint)
+    {
+    }
+
+    virtual ~IMipConstraint() = default;
+
+    // Implémentation des méthodes IHasBounds
+    void setLb(double lb) override
+    {
+        innerConstraint_->SetLB(lb);
+    }
+
+    void setUb(double ub) override
+    {
+        innerConstraint_->SetUB(ub);
+    }
+
+    void setBounds(double lb, double ub) override
+    {
+        innerConstraint_->SetBounds(lb, ub);
+    }
+
+    double getLb() const override
+    {
+        return innerConstraint_->lb();
+    }
+
+    double getUb() const override
+    {
+        return innerConstraint_->ub();
+    }
+
+    // Implémentation des méthodes IHasName
+    const std::string& getName() const override
+    {
+        return innerConstraint_->name();
+    }
+
+    // Méthodes spécifiques à MipConstraint
+    virtual void setCoefficient(IMipVariable<VariableType>* var, double coefficient)
+    {
+        innerConstraint_->SetCoefficient(var->getInnerVariable(), coefficient);
+    }
+
+    virtual double getCoefficient(const IMipVariable<VariableType>* var) const
+    {
+        return innerConstraint_->GetCoefficient(var->getInnerVariable());
+    }
+
+    // Accès direct au type interne
+    const ConstraintType* getInnerConstraint() const
+    {
+        return innerConstraint_;
+    }
+
+    ConstraintType* getInnerConstraint()
+    {
+        return innerConstraint_;
+    }
+
+private:
+    ConstraintType* innerConstraint_;
 };
 
 } // namespace Antares::Optimisation::LinearProblemApi

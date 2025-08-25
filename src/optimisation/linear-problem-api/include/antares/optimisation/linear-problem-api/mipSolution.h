@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include <concepts>
 #include <map>
 #include <string>
 #include <vector>
@@ -43,19 +44,22 @@ enum class MipStatus
  * Used to get the return status of the solve
  * Contains the problem's optimal values for each variable
  */
+template<SolverTag SolverTagType>
 class IMipSolution
 {
 public:
+    using VariableType = typename SolverTagType::VariableType;
+
     virtual ~IMipSolution() = default;
 
     [[nodiscard]] virtual MipStatus getStatus() const = 0;
 
     [[nodiscard]] virtual double getObjectiveValue() const = 0;
 
-    [[nodiscard]] virtual double getOptimalValue(const IMipVariable* var) const = 0;
+    [[nodiscard]] virtual double getOptimalValue(const IMipVariable<VariableType>* var) const = 0;
 
     [[nodiscard]] virtual std::vector<double>
-    getOptimalValues(const std::vector<IMipVariable*>& vars) const = 0;
+    getOptimalValues(const std::vector<IMipVariable<VariableType>*>& vars) const = 0;
 
     [[nodiscard]] virtual const std::map<std::string, double>& getOptimalValues() const = 0;
 };

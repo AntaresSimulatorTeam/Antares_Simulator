@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -26,8 +26,8 @@
 namespace Antares::Optimisation::LinearProblemMpsolverImpl
 {
 
-OrtoolsMipSolution::OrtoolsMipSolution(operations_research::MPSolver::ResultStatus& status,
-                                       operations_research::MPSolver* solver):
+OrtoolsMipSolutionImpl::OrtoolsMipSolutionImpl(operations_research::MPSolver::ResultStatus& status,
+                                               operations_research::MPSolver* solver):
     status_(status),
     mpSolver_(solver)
 {
@@ -37,7 +37,7 @@ OrtoolsMipSolution::OrtoolsMipSolution(operations_research::MPSolver::ResultStat
     }
 }
 
-LinearProblemApi::MipStatus OrtoolsMipSolution::getStatus() const
+LinearProblemApi::MipStatus OrtoolsMipSolutionImpl::getStatus() const
 {
     switch (status_)
     {
@@ -56,12 +56,13 @@ LinearProblemApi::MipStatus OrtoolsMipSolution::getStatus() const
     return LinearProblemApi::MipStatus::MIP_ERROR;
 }
 
-double OrtoolsMipSolution::getObjectiveValue() const
+double OrtoolsMipSolutionImpl::getObjectiveValue() const
 {
     return ::getObjectiveValue(mpSolver_);
 }
 
-double OrtoolsMipSolution::getOptimalValue(const LinearProblemApi::IMipVariable* var) const
+double OrtoolsMipSolutionImpl::getOptimalValue(
+  const LinearProblemApi::IMipVariable<operations_research::MPVariable>* var) const
 {
     if (!var)
     {
@@ -80,8 +81,8 @@ double OrtoolsMipSolution::getOptimalValue(const LinearProblemApi::IMipVariable*
     return 0;
 }
 
-std::vector<double> OrtoolsMipSolution::getOptimalValues(
-  const std::vector<LinearProblemApi::IMipVariable*>& vars) const
+std::vector<double> OrtoolsMipSolutionImpl::getOptimalValues(
+  const std::vector<LinearProblemApi::IMipVariable<operations_research::MPVariable>*>& vars) const
 {
     std::vector<double> solution;
     solution.reserve(vars.size());
@@ -94,7 +95,7 @@ std::vector<double> OrtoolsMipSolution::getOptimalValues(
     return solution;
 }
 
-const std::map<std::string, double>& OrtoolsMipSolution::getOptimalValues() const
+const std::map<std::string, double>& OrtoolsMipSolutionImpl::getOptimalValues() const
 {
     return solution_;
 }

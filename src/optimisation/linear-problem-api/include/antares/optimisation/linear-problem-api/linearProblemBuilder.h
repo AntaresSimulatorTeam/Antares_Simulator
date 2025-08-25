@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -24,18 +24,20 @@
 #include <vector>
 
 #include "linearProblemFiller.h"
+#include "antares/optimisation/linear-problem-api/mipVariable.h"
 
 namespace Antares::Optimisation::LinearProblemApi
 {
 
+template<SolverTag SolverTagType>
 class LinearProblemBuilder
 {
 public:
-    explicit LinearProblemBuilder(const std::vector<LinearProblemFiller*>& fillers);
-    void build(ILinearProblem& pb, ILinearProblemData& data, FillContext& ctx);
+    explicit LinearProblemBuilder(const std::vector<LinearProblemFiller<SolverTagType>*>& fillers);
+    void build(ILinearProblem<SolverTagType>& pb, ILinearProblemData& data, FillContext& ctx);
 
 private:
-    const std::vector<LinearProblemFiller*>& fillers_;
+    const std::vector<LinearProblemFiller<SolverTagType>*>& fillers_;
 };
 
 } // namespace Antares::Optimisation::LinearProblemApi

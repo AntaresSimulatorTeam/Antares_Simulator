@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -27,23 +27,28 @@
 #include <vector>
 
 #include <antares/optimisation/linear-problem-api/mipSolution.h>
+#include <antares/optimisation/linear-problem-mpsolver-impl/ortoolsTag.h>
 
 namespace Antares::Optimisation::LinearProblemMpsolverImpl
 {
 
-class OrtoolsMipSolution final: public LinearProblemApi::IMipSolution
+using OrtoolsMipSolution = LinearProblemApi::IMipSolution<OrtoolsTag>;
+
+class OrtoolsMipSolutionImpl final: public OrtoolsMipSolution
 {
 public:
-    OrtoolsMipSolution(operations_research::MPSolver::ResultStatus& responseStatus,
-                       operations_research::MPSolver* solver);
+    OrtoolsMipSolutionImpl(operations_research::MPSolver::ResultStatus& responseStatus,
+                           operations_research::MPSolver* solver);
 
-    ~OrtoolsMipSolution() override = default;
+    ~OrtoolsMipSolutionImpl() override = default;
 
     [[nodiscard]] LinearProblemApi::MipStatus getStatus() const override;
     [[nodiscard]] double getObjectiveValue() const override;
-    [[nodiscard]] double getOptimalValue(const LinearProblemApi::IMipVariable* var) const override;
+    [[nodiscard]] double getOptimalValue(
+      const LinearProblemApi::IMipVariable<operations_research::MPVariable>* var) const override;
     [[nodiscard]] std::vector<double> getOptimalValues(
-      const std::vector<LinearProblemApi::IMipVariable*>& vars) const override;
+      const std::vector<LinearProblemApi::IMipVariable<operations_research::MPVariable>*>& vars)
+      const override;
     [[nodiscard]] const std::map<std::string, double>& getOptimalValues() const override;
 
 private:

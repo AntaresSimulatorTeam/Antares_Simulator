@@ -37,18 +37,20 @@ namespace Antares::Optimization
  * This class is responsible for adding variables, constraints, and objectives to the linear problem
  * based on the connections between components and areas in the Antares study.
  */
-class ComponentToAreaConnectionFiller: public Optimisation::LinearProblemApi::LinearProblemFiller
+template<Optimisation::LinearProblemApi::SolverTag SolverTagType>
+class ComponentToAreaConnectionFiller
+    : public Optimisation::LinearProblemApi::LinearProblemFiller<SolverTagType>
 {
 public:
     explicit ComponentToAreaConnectionFiller(const PROBLEME_HEBDO* problemeHebdo,
                                              const VariableDictionary& modelerVariableDictionary);
-    void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
+    void addVariables(Optimisation::LinearProblemApi::ILinearProblem<SolverTagType>& pb,
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
                       Optimisation::LinearProblemApi::FillContext& ctx) override;
-    void addConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
+    void addConstraints(Optimisation::LinearProblemApi::ILinearProblem<SolverTagType>& pb,
                         Optimisation::LinearProblemApi::ILinearProblemData& data,
                         Optimisation::LinearProblemApi::FillContext& ctx) override;
-    void addObjective(Optimisation::LinearProblemApi::ILinearProblem& pb,
+    void addObjective(Optimisation::LinearProblemApi::ILinearProblem<SolverTagType>& pb,
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
                       Optimisation::LinearProblemApi::FillContext& ctx) override;
 
@@ -59,15 +61,15 @@ private:
 
     std::map<std::string, unsigned> areaIndices_;
 
-    Optimisation::LinearProblemApi::IMipConstraint* getBalanceConstraint(
-      Optimisation::LinearProblemApi::ILinearProblem& pb,
+    Optimisation::LinearProblemApi::IMipConstraint<SolverTagType>* getBalanceConstraint(
+      Optimisation::LinearProblemApi::ILinearProblem<SolverTagType>& pb,
       const std::string& areaId,
       unsigned ts) const;
     void addExpressionToConstraint(
       const LinearExpression& expression,
-      Optimisation::LinearProblemApi::IMipConstraint* areaBalanceConstraint) const;
+      Optimisation::LinearProblemApi::IMipConstraint<SolverTagType>* areaBalanceConstraint) const;
     void addComponentPortContributionToArea(
-      Optimisation::LinearProblemApi::ILinearProblem& pb,
+      Optimisation::LinearProblemApi::ILinearProblem<SolverTagType>& pb,
       Optimisation::LinearProblemApi::ILinearProblemData& data,
       const Optimisation::LinearProblemApi::FillContext& ctx,
       const ModelerStudy::SystemModel::Component& component,
