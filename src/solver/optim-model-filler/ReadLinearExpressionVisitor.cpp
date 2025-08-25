@@ -118,7 +118,8 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const VariableN
     {
         FullKey key = dictionary_.buildFullKey(component_.Id(),
                                                node->value(),
-                                               MCYearAndTime::MCYear{fillContext_.getYear()});
+                                               MCYearAndTime::MCYear{fillContext_.getYear()},
+                                               timeStep);
         linearExpressions[timeStep] = LinearExpression(0, {{key, 1}});
     }
     return TimeDependentLinearExpression(fillContext_, linearExpressions);
