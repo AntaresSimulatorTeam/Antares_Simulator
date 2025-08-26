@@ -10,7 +10,6 @@ void OptimisationsSimulationTable::clear()
 
 std::pair<std::string, std::string> OptimisationsSimulationTable::buffers() const
 {
-    // return {firstOptimSimulationTable_.buffer(), secondOptimSimulationTable_.buffer()};
     return {firstOptimBuffer_, secondOptimBuffer_};
 }
 
