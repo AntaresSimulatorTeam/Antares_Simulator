@@ -254,7 +254,7 @@ std::vector<double> extractDTG_MRG(const Data::Area& area, uint numSpace)
 
 std::shared_ptr<IStorageForRemix> extractHydroForRemix(const Data::Area& area,
                                                        PROBLEME_HEBDO& problem,
-                                                       uint firstHourOfWeek)
+                                                       unsigned firstHourOfWeek)
 {
     auto& weeklyResults = problem.ResultatsHoraires[area.index];
 
@@ -325,56 +325,56 @@ std::vector<double> extractSTSinflows(const ShortTermStorage::PROPERTIES& sts_pr
     return to_return;
 }
 
+std::shared_ptr<IStorageForRemix> extractSTSforRemix(const Data::Area& area,
+                                                     PROBLEME_HEBDO& problem,
+                                                     unsigned stsIndex,
+                                                     unsigned firstHourOfWeek)
+{
+    const auto& stsProperties = problem.ShortTermStorage[area.index][stsIndex];
+    auto& weeklyResults = problem.ResultatsHoraires[area.index];
+    auto& stsResults = weeklyResults.ShortTermStorage;
+
+    auto& generation = stsResults[stsIndex].withdrawal;
+    const auto& injection = stsResults[stsIndex].injection;
+    auto& unsupE = weeklyResults.ValeursHorairesDeDefaillancePositive;
+    auto& levels = stsResults[stsIndex].level;
+
+    const auto& pmax = extractSTSpmax(stsProperties, firstHourOfWeek);
+    const auto& inflows = extractSTSinflows(stsProperties, firstHourOfWeek, problem.year);
+    const auto lowRuleCurve = extractSTSlowRuleCurve(stsProperties, firstHourOfWeek);
+    const auto upRuleCurve = extractSTSupRuleCurve(stsProperties, firstHourOfWeek);
+    const double initLevel = levels[0];
+    const double withdrawalcapacity = stsProperties.withdrawalNominalCapacity;
+    const double efficiency = stsProperties.withdrawalEfficiency;
+
+    return makeSTSforRemix(generation,
+                           unsupE,
+                           levels,
+                           pmax,
+                           inflows,
+                           injection,
+                           lowRuleCurve,
+                           upRuleCurve,
+                           initLevel,
+                           efficiency);
+}
+
 ListStorageForRemix extractListSTSforRemix(const Data::Area& area,
                                            PROBLEME_HEBDO& problem,
                                            const unsigned firstHourOfWeek)
 {
-    // For purpose of sorting storage by capacity, we define a (local) vector of pairs :
-    // (capacity, storageForRemix).
-    // This vector will first be sorted depending on the first element of the pair,
-    // and then will make a vector with the second elements of all pairs.
-    std::vector<std::pair<double, std::shared_ptr<IStorageForRemix>>> pairs_capa_storage;
-
-    auto& weeklyResults = problem.ResultatsHoraires[area.index];
-    auto& stsResults = weeklyResults.ShortTermStorage;
+    StorageListSort stsListSort;
 
     for (unsigned stsIndex{0}; stsIndex < area.shortTermStorage.count(); ++stsIndex)
     {
         const auto& stsProperties = problem.ShortTermStorage[area.index][stsIndex];
+        const double withdrawalCapacity = stsProperties.withdrawalNominalCapacity;
 
-        auto& generation = stsResults[stsIndex].withdrawal;
-        const auto& injection = stsResults[stsIndex].injection;
-        auto& unsupE = weeklyResults.ValeursHorairesDeDefaillancePositive;
-        auto& levels = stsResults[stsIndex].level;
-
-        const auto& pmax = extractSTSpmax(stsProperties, firstHourOfWeek);
-        const auto& inflows = extractSTSinflows(stsProperties, firstHourOfWeek, problem.year);
-        const auto lowRuleCurve = extractSTSlowRuleCurve(stsProperties, firstHourOfWeek);
-        const auto upRuleCurve = extractSTSupRuleCurve(stsProperties, firstHourOfWeek);
-        const double initLevel = levels[0];
-        const double withdrawalcapacity = stsProperties.withdrawalNominalCapacity;
-        const double efficiency = stsProperties.withdrawalEfficiency;
-
-        pairs_capa_storage.push_back({withdrawalcapacity,
-                                      makeSTSforRemix(generation,
-                                                      unsupE,
-                                                      levels,
-                                                      pmax,
-                                                      inflows,
-                                                      injection,
-                                                      lowRuleCurve,
-                                                      upRuleCurve,
-                                                      initLevel,
-                                                      efficiency)});
+        stsListSort.add(withdrawalCapacity,
+                        extractSTSforRemix(area, problem, stsIndex, firstHourOfWeek));
     }
-
-    std::ranges::sort(pairs_capa_storage, std::ranges::greater{}, [](auto& p) { return p.first; });
-
-    ListStorageForRemix list_to_return;
-    std::ranges::transform(pairs_capa_storage,
-                           std::back_inserter(list_to_return),
-                           [](auto& p) { return p.second; });
-    return list_to_return;
+   
+    return stsListSort.makeSortedList();
 }
 
 static void RunAccurateShavePeaks(const Data::AreaList& areas,
