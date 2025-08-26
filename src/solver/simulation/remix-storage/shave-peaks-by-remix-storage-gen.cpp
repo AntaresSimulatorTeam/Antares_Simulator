@@ -106,6 +106,14 @@ static double makeExchange(const std::set<unsigned>& validHours,
     }
 }
 
+auto remove(std::vector<std::shared_ptr<IStorageForRemix>>::iterator storage,
+            ListStorageForRemix& storagesForRemix)
+{
+    auto d = std::distance(storagesForRemix.begin(), storage);
+    storagesForRemix.erase(storage, storage + 1);
+    return storagesForRemix.begin() + d;
+}
+
 void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
                                     std::vector<double>& UnsupE,
                                     const std::vector<double>& Spillage,
@@ -117,10 +125,15 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
 
     const std::set<unsigned> validHours = ValidHours(Spillage, DTG_MRG);
 
-    unsigned nbLoops = maxNbLoops;
+    unsigned nbLoops = 0;
     auto storage = storagesForRemix.begin();
-    while (nbLoops-- > 0)
+    while (!storagesForRemix.empty() || nbLoops == maxNbLoops)
     {
+        if (nbLoops++ == maxNbLoops)
+        {
+            throw std::runtime_error("storage remix > max nb of iterations was reached");
+        }
+
         std::set<unsigned> hoursForStorage;
         auto predicate = [&](int h) { return (*storage)->initialGen()[h] + UnsupEinit[h] > eps; };
         rng::copy_if(validHours, std::inserter(hoursForStorage, hoursForStorage.end()), predicate);
@@ -129,7 +142,8 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
 
         if (exchange <= eps)
         {
-            break;
+            storage = remove(storage, storagesForRemix);
+            continue;
         }
 
         storage++;
