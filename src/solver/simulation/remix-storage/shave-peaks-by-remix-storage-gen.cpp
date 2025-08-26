@@ -73,8 +73,8 @@ static double makeExchange(const std::set<unsigned>& validHours,
         std::set<unsigned> validHoursForMax(validHours);
         while (true)
         {
-            double totaGenMin = TotalGen[*hourOfMinGen];
-            std::erase_if(validHoursForMax, [&](int h) { return TotalGen[h] < totaGenMin + eps; });
+            double totalGenMin = TotalGen[*hourOfMinGen];
+            std::erase_if(validHoursForMax, [&](int h) { return TotalGen[h] < totalGenMin + eps; });
             if (!validHoursForMax.size())
             {
                 break;
