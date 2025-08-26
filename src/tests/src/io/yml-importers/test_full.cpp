@@ -127,6 +127,9 @@ library:
         - id: balance
           expression: injection_port.flow = 0
       objective: cost * generation
+      extra-outputs:
+        - id: total_cost_in_millions
+          expression: sum(cost * generation) / 1000000
 
     - id: node
       description: A basic balancing node model
@@ -295,8 +298,10 @@ library:
         auto& model0 = lib.Models().at("generator");
         BOOST_CHECK_EQUAL(model0.Id(), "generator");
         BOOST_CHECK_EQUAL(model0.Objective().Value(), "cost * generation");
+        BOOST_CHECK_EQUAL(model0.ExtraOutputs().at("total_cost_in_millions").expression().Value(),
+                          "sum(cost * generation) / 1000000");
 
-        BOOST_REQUIRE_EQUAL(model0.getConstraints().size(), 1);
+        BOOST_REQUIRE_EQUAL(model0.Constraints().size(), 1);
         BOOST_REQUIRE_EQUAL(model0.Parameters().size(), 2);
         BOOST_REQUIRE_EQUAL(model0.Variables().size(), 1);
         BOOST_REQUIRE_EQUAL(model0.Ports().size(), 1);
@@ -317,7 +322,7 @@ library:
 
         auto& model1 = lib.Models().at("node");
         BOOST_CHECK_EQUAL(model1.Id(), "node");
-        BOOST_REQUIRE_EQUAL(model1.getConstraints().size(), 0);
+        BOOST_REQUIRE_EQUAL(model1.Constraints().size(), 0);
         BOOST_REQUIRE_EQUAL(model1.Parameters().size(), 0);
         BOOST_REQUIRE_EQUAL(model1.Variables().size(), 0);
         BOOST_REQUIRE_EQUAL(model1.Ports().size(), 1);
@@ -325,7 +330,7 @@ library:
 
         auto& model2 = lib.Models().at("spillage");
         BOOST_CHECK_EQUAL(model2.Id(), "spillage");
-        BOOST_REQUIRE_EQUAL(model2.getConstraints().size(), 0);
+        BOOST_REQUIRE_EQUAL(model2.Constraints().size(), 0);
         BOOST_REQUIRE_EQUAL(model2.Parameters().size(), 1);
         BOOST_REQUIRE_EQUAL(model2.Variables().size(), 1);
         BOOST_REQUIRE_EQUAL(model2.Ports().size(), 1);
@@ -342,7 +347,7 @@ library:
 
         auto& model3 = lib.Models().at("unsupplied");
         BOOST_CHECK_EQUAL(model3.Id(), "unsupplied");
-        BOOST_REQUIRE_EQUAL(model3.getConstraints().size(), 0);
+        BOOST_REQUIRE_EQUAL(model3.Constraints().size(), 0);
         BOOST_REQUIRE_EQUAL(model3.Parameters().size(), 1);
         BOOST_REQUIRE_EQUAL(model3.Variables().size(), 1);
         BOOST_REQUIRE_EQUAL(model3.Ports().size(), 1);
@@ -358,7 +363,7 @@ library:
 
         auto& model4 = lib.Models().at("demand");
         BOOST_CHECK_EQUAL(model4.Id(), "demand");
-        BOOST_REQUIRE_EQUAL(model4.getConstraints().size(), 0);
+        BOOST_REQUIRE_EQUAL(model4.Constraints().size(), 0);
         BOOST_REQUIRE_EQUAL(model4.Parameters().size(), 1);
         BOOST_REQUIRE_EQUAL(model4.Variables().size(), 0);
         BOOST_REQUIRE_EQUAL(model4.Ports().size(), 1);
@@ -367,7 +372,7 @@ library:
 
         auto& model5 = lib.Models().at("short-term-storage");
         BOOST_CHECK_EQUAL(model5.Id(), "short-term-storage");
-        BOOST_REQUIRE_EQUAL(model5.getConstraints().size(), 1);
+        BOOST_REQUIRE_EQUAL(model5.Constraints().size(), 1);
         BOOST_REQUIRE_EQUAL(model5.Parameters().size(), 6);
         BOOST_REQUIRE_EQUAL(model5.Variables().size(), 3);
         BOOST_REQUIRE_EQUAL(model5.Ports().size(), 1);
@@ -399,13 +404,13 @@ library:
                       SystemModel::ValueType::FLOAT,
                       SystemModel::TimeDependent::NO,
                       SystemModel::ScenarioDependent::NO);
-        checkConstraint(model5.getConstraints().at("Level equation"),
+        checkConstraint(model5.Constraints().at("Level equation"),
                         "Level equation",
                         "level - level - efficiency * injection + withdrawal = inflows");
 
         auto& model6 = lib.Models().at("thermal-cluster-dhd");
         BOOST_CHECK_EQUAL(model6.Id(), "thermal-cluster-dhd");
-        BOOST_REQUIRE_EQUAL(model6.getConstraints().size(), 5);
+        BOOST_REQUIRE_EQUAL(model6.Constraints().size(), 5);
         BOOST_REQUIRE_EQUAL(model6.Parameters().size(), 7);
         BOOST_REQUIRE_EQUAL(model6.Variables().size(), 4);
         BOOST_REQUIRE_EQUAL(model6.Ports().size(), 1);
@@ -445,19 +450,19 @@ library:
                       SystemModel::ValueType::FLOAT,
                       SystemModel::TimeDependent::YES,
                       SystemModel::ScenarioDependent::NO);
-        checkConstraint(model6.getConstraints().at("Max generation"),
+        checkConstraint(model6.Constraints().at("Max generation"),
                         "Max generation",
                         "generation <= nb_on * p_max");
-        checkConstraint(model6.getConstraints().at("Min generation"),
+        checkConstraint(model6.Constraints().at("Min generation"),
                         "Min generation",
                         "generation >= nb_on * p_min");
-        checkConstraint(model6.getConstraints().at("Number of units variation"),
+        checkConstraint(model6.Constraints().at("Number of units variation"),
                         "Number of units variation",
                         "nb_on = nb_on + nb_start - nb_stop");
-        checkConstraint(model6.getConstraints().at("Min up time"),
+        checkConstraint(model6.Constraints().at("Min up time"),
                         "Min up time",
                         "t-d_min_up + 1 <= nb_on");
-        checkConstraint(model6.getConstraints().at("Min down time"),
+        checkConstraint(model6.Constraints().at("Min down time"),
                         "Min down time",
                         "t-d_min_down + 1 <= nb_units_max - nb_on");
         BOOST_CHECK_EQUAL(model6.Objective().Value(), "cost * generation");

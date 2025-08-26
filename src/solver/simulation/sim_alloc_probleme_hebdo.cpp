@@ -454,13 +454,13 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
         }
         // Short term storage results
         const unsigned long nbShortTermStorage = study.areas.byIndex[k]->shortTermStorage.count();
-        problem.ResultatsHoraires[k].ShortTermStorage.resize(NombreDePasDeTemps);
-        for (uint pdt = 0; pdt < NombreDePasDeTemps; pdt++)
+        problem.ResultatsHoraires[k].ShortTermStorage.resize(nbShortTermStorage);
+        for (uint sts = 0; sts < nbShortTermStorage; sts++)
         {
-            problem.ResultatsHoraires[k].ShortTermStorage[pdt].injection.resize(nbShortTermStorage);
-            problem.ResultatsHoraires[k].ShortTermStorage[pdt].withdrawal.resize(
-              nbShortTermStorage);
-            problem.ResultatsHoraires[k].ShortTermStorage[pdt].level.resize(nbShortTermStorage);
+            problem.ResultatsHoraires[k].ShortTermStorage[sts].injection.resize(NombreDePasDeTemps);
+            problem.ResultatsHoraires[k].ShortTermStorage[sts].withdrawal.resize(
+              NombreDePasDeTemps);
+            problem.ResultatsHoraires[k].ShortTermStorage[sts].level.resize(NombreDePasDeTemps);
         }
     }
 }

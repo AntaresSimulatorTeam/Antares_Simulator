@@ -45,18 +45,8 @@ PortTypeDoesntContainsFields::PortTypeDoesntContainsFields(const std::string& id
 {
 }
 
-PortWithThisIdAlreadyExists::PortWithThisIdAlreadyExists(const std::string& id):
-    std::runtime_error("Port with this id already exists: " + id)
-{
-}
-
 PortTypeWithThisIdAlreadyExists::PortTypeWithThisIdAlreadyExists(const std::string& id):
     std::runtime_error("Port type with this id already exists: " + id)
-{
-}
-
-ConstraintWithThisIdAlreadyExists::ConstraintWithThisIdAlreadyExists(const std::string& id):
-    std::runtime_error("Constraint with this id already exists: " + id)
 {
 }
 
@@ -203,13 +193,6 @@ std::vector<ModelerStudy::SystemModel::Port> convertPorts(
     ports.reserve(model.ports.size());
     for (const auto& port: model.ports)
     {
-        // Can't have port with the same ID
-        if (std::ranges::find_if(ports, [&port](const auto& p) { return p.Id() == port.id; })
-            != ports.end())
-        {
-            throw PortWithThisIdAlreadyExists(port.id);
-        }
-
         const auto it = std::ranges::find_if(portTypes,
                                              [&port](const auto& pt)
                                              { return pt.Id() == port.type; });
@@ -281,14 +264,6 @@ static void addSingleConstraint(std::vector<ModelerStudy::SystemModel::Constrain
                                 const IO::Inputs::YmlModel::Constraint& constraint,
                                 const IO::Inputs::YmlModel::Model& model)
 {
-    // Can't have constraints with the same ID
-    if (std::ranges::find_if(constraints,
-                             [&constraint](const auto& c) { return c.Id() == constraint.id; })
-        != constraints.end())
-    {
-        throw ConstraintWithThisIdAlreadyExists(constraint.id);
-    }
-
     auto nodeRegistry = convertExpressionToNode(constraint.expression, model);
     constraints.emplace_back(constraint.id,
                              ModelerStudy::SystemModel::Expression{constraint.expression,
@@ -320,6 +295,28 @@ std::vector<ModelerStudy::SystemModel::Constraint> convertConstraints(
 }
 
 /**
+ * \brief Converts extra outputs from YmlModel::Model to SystemModel::ExtraOutput.
+ *
+ * \param model The YmlModel::Model object containing extra outputs.
+ * \return A vector of SystemModel::ExtraOutput objects.
+ */
+std::vector<ModelerStudy::SystemModel::ExtraOutput> convertExtraOutputs(
+  const IO::Inputs::YmlModel::Model& model)
+{
+    std::vector<ModelerStudy::SystemModel::ExtraOutput> extraOutputs;
+    extraOutputs.reserve(model.extra_outputs.size());
+
+    for (const auto& extraOutput: model.extra_outputs)
+    {
+        auto nodeRegistry = convertExpressionToNode(extraOutput.expression, model);
+        extraOutputs.emplace_back(extraOutput.id,
+                                  ModelerStudy::SystemModel::Expression{extraOutput.expression,
+                                                                        std::move(nodeRegistry)});
+    }
+    return extraOutputs;
+}
+
+/**
  * \brief Converts models from YmlModel::Library to SystemModel::Model.
  *
  * \param library The YmlModel::Library object containing models.
@@ -340,6 +337,8 @@ std::vector<ModelerStudy::SystemModel::Model> convertModels(
         std::vector<ModelerStudy::SystemModel::PortFieldDefinition>
           portFieldDefinitions = convertPortFieldDefinitions(model, ports);
         std::vector<ModelerStudy::SystemModel::Constraint> constraints = convertConstraints(model);
+        std::vector<ModelerStudy::SystemModel::ExtraOutput> extraOutputs = convertExtraOutputs(
+          model);
 
         auto nodeObjective = convertExpressionToNode(model.objective, model);
 
@@ -352,6 +351,7 @@ std::vector<ModelerStudy::SystemModel::Model> convertModels(
                           .withPorts(std::move(ports))
                           .withConstraints(std::move(constraints))
                           .withPortFieldDefinitions(std::move(portFieldDefinitions))
+                          .withExtraOutputs(std::move(extraOutputs))
                           .build();
         models.emplace_back(std::move(modelObj));
     }
