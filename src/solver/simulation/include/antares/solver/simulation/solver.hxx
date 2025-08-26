@@ -893,13 +893,15 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     pAnnualStatistics.endStandardDeviations();
     pAnnualStatistics.writeToOutput(pResultWriter);
 }
+
 template<class ImplementationType>
 void ISimulation<ImplementationType>::storeYearBuffers(uint year,
                                                        std::string&& firstBuffer,
                                                        std::string&& secondBuffer)
 {
     std::lock_guard lock(buffersMutex_);
-    yearSimulationBuffers_.emplace(year, std::pair{std::move(firstBuffer), std::move(secondBuffer)});
+    yearSimulationBuffers_.emplace(year,
+                                   std::pair{std::move(firstBuffer), std::move(secondBuffer)});
 }
 
 template<class ImplementationType>
