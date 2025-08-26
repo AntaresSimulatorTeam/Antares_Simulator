@@ -24,6 +24,7 @@ public:
     std::vector<double>& generation() override;
 
     int id();
+
 private:
     void checkInput(size_t size) override;
 
@@ -97,7 +98,6 @@ BOOST_AUTO_TEST_CASE(five_storage_added_to_list___storage_sorted_depending_on_as
     BOOST_CHECK_EQUAL(std::static_pointer_cast<StorageMock>(listSortedStorage[2])->id(), 3.);
     BOOST_CHECK_EQUAL(std::static_pointer_cast<StorageMock>(listSortedStorage[3])->id(), 2.);
     BOOST_CHECK_EQUAL(std::static_pointer_cast<StorageMock>(listSortedStorage[4])->id(), 1.);
-
 }
 
 BOOST_AUTO_TEST_SUITE_END()
