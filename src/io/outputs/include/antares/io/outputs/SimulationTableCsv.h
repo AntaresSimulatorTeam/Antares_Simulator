@@ -31,7 +31,7 @@ class SimulationTableCsv: public ISimulationTable
 public:
     SimulationTableCsv();
     void addEntry(SimulationTableEntry entry) override;
-
+    std::string getHeader() const;
     void write() override;
     void clear() override;
 

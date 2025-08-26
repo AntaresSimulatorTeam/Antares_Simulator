@@ -70,7 +70,7 @@ public:
 
 protected:
     void setNbPerformedYearsInParallel(uint nbMaxPerformedYearsInParallel);
-
+    std::string getSimulationTableHeader() const;
     bool simulationBegin();
 
     bool year(Progression::Task& progression,

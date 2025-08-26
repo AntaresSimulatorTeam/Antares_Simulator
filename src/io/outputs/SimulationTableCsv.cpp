@@ -48,19 +48,25 @@ void SimulationTableCsv::addEntry(SimulationTableEntry entry)
     storage_.addValue("basis_status", StatusToString(entry.status));
 }
 
-void SimulationTableCsv::writeHeader()
+std::string SimulationTableCsv::getHeader() const
 {
+    std::ostringstream os;
     bool first = true;
     for (const auto& col_name: storage_.columnNames())
     {
         if (!first)
         {
-            buffer_ << ',';
+            os << ',';
         }
         first = false;
-        buffer_ << col_name;
+        os << col_name;
     }
-    buffer_ << '\n';
+    return os.str();
+}
+
+void SimulationTableCsv::writeHeader()
+{
+    buffer_ << getHeader() << '\n';
 }
 
 const std::string NONE = "None";
