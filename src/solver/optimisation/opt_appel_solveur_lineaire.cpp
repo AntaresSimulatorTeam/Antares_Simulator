@@ -180,7 +180,7 @@ MPSolver* convertToMPSolver(const PROBLEME_HEBDO* problemeHebdo,
     std::vector<LinearProblemFiller<OrtoolsTag>*> fillersCollection = {&legacyOrtoolsFiller};
 
     std::vector<std::unique_ptr<Optimisation::ComponentFiller<OrtoolsTag>>> componentFillers;
-    VariableDictionary<OrtoolsVariableWrapper> variableDictionary;
+    VariableDictionary<operations_research::MPVariable> variableDictionary;
     ComponentToAreaConnectionFiller<OrtoolsTag> componentToAreaConnectionFiller(problemeHebdo,
                                                                                 variableDictionary);
     if (problemeHebdo->modelerSystem && problemeHebdo->scenarioGroupRepository)

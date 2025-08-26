@@ -27,15 +27,13 @@
 #include "hasName.h"
 #include "mipVariable.h"
 
-namespace Antares::Optimisation::LinearProblemMpsolverImpl
+namespace operations_research
 {
-class OrtoolsVariableWrapper; // Forward declaration
+class MPVariable; // Forward declaration
 }
 
 namespace Antares::Optimisation::LinearProblemApi
 {
-// Utilisation du namespace pour simplifier l'accès
-using Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsVariableWrapper;
 
 // Concept pour valider qu'un type peut être utilisé comme contrainte de solveur interne
 template<typename T, typename V>
@@ -99,10 +97,10 @@ public:
     // Méthodes spécifiques à MipConstraint
     virtual void setCoefficient(IMipVariable<VariableType>* var, double coefficient)
     {
-        if constexpr (std::is_same_v<VariableType, OrtoolsVariableWrapper>)
+        if constexpr (std::is_same_v<VariableType, operations_research::MPVariable>)
         {
-            // Pour OrTools, extraire l'objet MPVariable du wrapper
-            innerConstraint_->SetCoefficient(var->getInnerVariable()->getMPVariable(), coefficient);
+            // Pour OrTools, utiliser directement l'objet MPVariable
+            innerConstraint_->SetCoefficient(var->getInnerVariable(), coefficient);
         }
         else
         {
@@ -113,10 +111,10 @@ public:
 
     virtual double getCoefficient(const IMipVariable<VariableType>* var) const
     {
-        if constexpr (std::is_same_v<VariableType, OrtoolsVariableWrapper>)
+        if constexpr (std::is_same_v<VariableType, operations_research::MPVariable>)
         {
-            // Pour OrTools, extraire l'objet MPVariable du wrapper
-            return innerConstraint_->GetCoefficient(var->getInnerVariable()->getMPVariable());
+            // Pour OrTools, utiliser directement l'objet MPVariable
+            return innerConstraint_->GetCoefficient(var->getInnerVariable());
         }
         else
         {

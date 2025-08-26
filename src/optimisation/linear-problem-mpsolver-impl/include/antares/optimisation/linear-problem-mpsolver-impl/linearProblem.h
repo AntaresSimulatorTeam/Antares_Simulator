@@ -26,7 +26,6 @@
 #include <antares/optimisation/linear-problem-mpsolver-impl/mipSolution.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/mipVariable.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/ortoolsTag.h>
-#include <antares/optimisation/linear-problem-mpsolver-impl/ortoolsVariableWrapper.h>
 
 namespace operations_research
 {
@@ -88,9 +87,6 @@ private:
 
     std::vector<std::unique_ptr<OrtoolsMipVariable>> variables_;
     std::vector<std::unique_ptr<OrtoolsMipConstraint>> constraints_;
-
-    // Stockage des wrappers pour qu'ils restent valides
-    std::vector<std::unique_ptr<OrtoolsVariableWrapper>> variableWrappers_;
 
     std::unique_ptr<OrtoolsMipSolutionImpl> solution_;
 };

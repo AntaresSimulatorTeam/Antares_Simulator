@@ -21,19 +21,13 @@
 
 #pragma once
 
-#include <antares/optimisation/linear-problem-api/mipVariable.h>
+#include <ortools/linear_solver/linear_solver.h>
 
-#include "ortoolsTag.h"
-#include "ortoolsVariableWrapper.h"
-
-namespace operations_research
-{
-class MPVariable; // forward declaration
-}
+#include "antares/optimisation/linear-problem-api/mipVariable.h"
 
 namespace Antares::Optimisation::LinearProblemMpsolverImpl
 {
 
-using OrtoolsMipVariable = LinearProblemApi::IMipVariable<OrtoolsVariableWrapper>;
+using OrtoolsMipVariable = LinearProblemApi::IMipVariable<operations_research::MPVariable>;
 
 } // namespace Antares::Optimisation::LinearProblemMpsolverImpl

@@ -21,8 +21,6 @@
 
 #pragma once
 
-#include "ortoolsVariableWrapper.h"
-
 namespace operations_research
 {
 class MPVariable;   // forward declaration
@@ -35,7 +33,7 @@ namespace Antares::Optimisation::LinearProblemMpsolverImpl
 // Tag pour identifier le solveur OrTools et ses types associés
 struct OrtoolsTag
 {
-    using VariableType = OrtoolsVariableWrapper;
+    using VariableType = operations_research::MPVariable;
     using ConstraintType = operations_research::MPConstraint;
 };
 
