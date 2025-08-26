@@ -94,11 +94,9 @@ public:
     }
 
 private:
-
     template<typename ColumnType>
     void addColumn(const std::string& name)
     {
-
         if (name_to_index_.contains(name))
         {
             throw std::runtime_error("Column already exists: " + name);
@@ -133,7 +131,6 @@ private:
         }
         return dynamic_cast<ColumnType&>(*columns_[index]);
     }
-
 
     std::vector<std::unique_ptr<IColumn>> columns_;
     std::vector<std::string> columnNames_;
