@@ -33,7 +33,7 @@ SimulationTableCsv::SimulationTableCsv()
     storage_.addOptionalColumn<unsigned int>("block_time_index");
     storage_.addOptionalColumn<unsigned int>("scenario_index");
     storage_.addOptionalColumn<double>("value");
-    storage_.addStringColumn("basis_status");
+    storage_.addOptionalColumn<std::string>("basis_status");
 }
 
 void SimulationTableCsv::addEntry(SimulationTableEntry entry)
