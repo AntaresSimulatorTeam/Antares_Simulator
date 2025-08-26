@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -25,21 +25,14 @@
 
 #include <antares/expressions/expression.h>
 
-#include "parameter.h"
-
-namespace Antares::Expressions::Visitors
-{
-enum class TimeIndex : unsigned int;
-}
-
 namespace Antares::ModelerStudy::SystemModel
 {
 
-/// A constraint linking variables and parameters of a model together
-class Constraint
+/// An extra output expression
+class ExtraOutput
 {
 public:
-    Constraint(std::string id, Expression expression):
+    ExtraOutput(std::string id, Expression expression):
         id_(std::move(id)),
         expression_(std::move(expression))
     {

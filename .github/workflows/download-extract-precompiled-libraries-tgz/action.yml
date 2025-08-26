@@ -24,6 +24,6 @@ runs:
     run: |
            mkdir -p  ${{inputs.ortools-dir}}
            cd ${{inputs.ortools-dir}}
-           wget ${{inputs.ortools-url}} -O ortools.zip
+           curl -Ls -o ortools.zip ${{inputs.ortools-url}}
            unzip ortools.zip
            rm ortools.zip

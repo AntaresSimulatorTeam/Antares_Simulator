@@ -224,19 +224,6 @@ static bool Remix(const Data::AreaList& areas,
     return status;
 }
 
-std::vector<double> computeTotalGenWithoutHydro(const std::vector<double>& load,
-                                                const std::vector<double>& unsupE,
-                                                const std::vector<double>& hydroGen)
-{
-    // Can be computed (for any hour) as : load - unsupplied energy - hydro
-    std::vector<double> to_return = load;
-    for (size_t i = 0; i < to_return.size(); ++i)
-    {
-        to_return[i] -= unsupE[i] + hydroGen[i];
-    }
-    return to_return;
-}
-
 std::vector<double> extractLoadForCurrentWeek(const Data::Area& area,
                                               const unsigned int year,
                                               const unsigned int firstHourOfWeek)
@@ -276,7 +263,6 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
           auto& unsupE = weeklyResults.ValeursHorairesDeDefaillancePositive;
           auto& hydroGen = weeklyResults.TurbinageHoraire;
           auto& levels = weeklyResults.niveauxHoraires;
-          const auto DispatchGen = computeTotalGenWithoutHydro(load, unsupE, hydroGen);
           const auto& hydroPmax = problem.CaracteristiquesHydrauliques[area.index]
                                     .ContrainteDePmaxHydrauliqueHoraire;
           const auto hydroPmin = extractHydroPmin(area, problem.year, firstHourOfWeek);
@@ -307,7 +293,9 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
                                                 efficiency,
                                                 reservoirManagement);
 
-          shavePeaksByRemixingStorageGen(unsupE, DispatchGen, spillage, dtgMrg, hydroStorage);
+          checkInput(load, unsupE, spillage, dtgMrg, hydroStorage->initialGen());
+
+          shavePeaksByRemixingStorageGen(load, unsupE, spillage, dtgMrg, hydroStorage);
       });
 }
 

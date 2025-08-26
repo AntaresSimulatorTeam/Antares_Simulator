@@ -8,10 +8,16 @@
 
 namespace Antares::Solver::Simulation
 {
-void shavePeaksByRemixingStorageGen(std::vector<double>& UnsupE,
-                                    const std::vector<double>& DispatchGen,
+void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
+                                    std::vector<double>& UnsupE,
                                     const std::vector<double>& Spillage,
                                     const std::vector<double>& DTG_MRG,
                                     std::shared_ptr<StorageForRemix> storage);
+
+void checkInput(const std::vector<double>& Load,
+                const std::vector<double>& UnsupE,
+                const std::vector<double>& Spillage,
+                const std::vector<double>& DTG_MRG,
+                const std::vector<double>& storageGen);
 
 } // namespace Antares::Solver::Simulation

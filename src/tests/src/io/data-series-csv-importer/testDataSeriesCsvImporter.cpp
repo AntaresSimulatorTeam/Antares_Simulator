@@ -108,7 +108,8 @@ BOOST_AUTO_TEST_CASE(one_line_one_column)
     BOOST_CHECK_EQUAL(repo.getDataSeries("one").getData(1, 0), 138.583);
     BOOST_CHECK_EXCEPTION(repo.getDataSeries("one").getData(2, 0),
                           TimeSeriesSet::RankTooBig,
-                          checkMessage("TS set 'one' : rank 2 exceeds TS set's width"));
+                          checkMessage(
+                            "TS set 'one' : TS number 2 exceeds TS set's number of columns (1)"));
     BOOST_CHECK_EXCEPTION(repo.getDataSeries("one").getData(1, 1),
                           TimeSeriesSet::HourTooBig,
                           checkMessage("TS set 'one' : hour 1 exceeds TS set's height"));
@@ -121,9 +122,10 @@ BOOST_AUTO_TEST_CASE(one_line_two_columns)
     BOOST_CHECK_EQUAL(repo.getDataSeries("one_by_two").name(), "one_by_two");
     BOOST_CHECK_EQUAL(repo.getDataSeries("one_by_two").getData(1, 0), 123);
     BOOST_CHECK_EQUAL(repo.getDataSeries("one_by_two").getData(2, 0), 456.789);
-    BOOST_CHECK_EXCEPTION(repo.getDataSeries("one_by_two").getData(3, 0),
-                          TimeSeriesSet::RankTooBig,
-                          checkMessage("TS set 'one_by_two' : rank 3 exceeds TS set's width"));
+    BOOST_CHECK_EXCEPTION(
+      repo.getDataSeries("one_by_two").getData(3, 0),
+      TimeSeriesSet::RankTooBig,
+      checkMessage("TS set 'one_by_two' : TS number 3 exceeds TS set's number of columns (2)"));
     BOOST_CHECK_EXCEPTION(repo.getDataSeries("one_by_two").getData(2, 1),
                           TimeSeriesSet::HourTooBig,
                           checkMessage("TS set 'one_by_two' : hour 1 exceeds TS set's height"));
@@ -136,9 +138,10 @@ BOOST_AUTO_TEST_CASE(two_lines_one_column)
     BOOST_CHECK_EQUAL(repo.getDataSeries("two_by_one").name(), "two_by_one");
     BOOST_CHECK_EQUAL(repo.getDataSeries("two_by_one").getData(1, 0), 123);
     BOOST_CHECK_EQUAL(repo.getDataSeries("two_by_one").getData(1, 1), 20);
-    BOOST_CHECK_EXCEPTION(repo.getDataSeries("two_by_one").getData(2, 0),
-                          TimeSeriesSet::RankTooBig,
-                          checkMessage("TS set 'two_by_one' : rank 2 exceeds TS set's width"));
+    BOOST_CHECK_EXCEPTION(
+      repo.getDataSeries("two_by_one").getData(2, 0),
+      TimeSeriesSet::RankTooBig,
+      checkMessage("TS set 'two_by_one' : TS number 2 exceeds TS set's number of columns (1)"));
     BOOST_CHECK_EXCEPTION(repo.getDataSeries("two_by_one").getData(1, 2),
                           TimeSeriesSet::HourTooBig,
                           checkMessage("TS set 'two_by_one' : hour 2 exceeds TS set's height"));
@@ -153,9 +156,10 @@ BOOST_AUTO_TEST_CASE(two_lines_two_columns)
     BOOST_CHECK_EQUAL(repo.getDataSeries("two_by_two").getData(1, 1), 3);
     BOOST_CHECK_EQUAL(repo.getDataSeries("two_by_two").getData(2, 0), 2);
     BOOST_CHECK_EQUAL(repo.getDataSeries("two_by_two").getData(2, 1), 4);
-    BOOST_CHECK_EXCEPTION(repo.getDataSeries("two_by_two").getData(3, 1),
-                          TimeSeriesSet::RankTooBig,
-                          checkMessage("TS set 'two_by_two' : rank 3 exceeds TS set's width"));
+    BOOST_CHECK_EXCEPTION(
+      repo.getDataSeries("two_by_two").getData(3, 1),
+      TimeSeriesSet::RankTooBig,
+      checkMessage("TS set 'two_by_two' : TS number 3 exceeds TS set's number of columns (2)"));
     BOOST_CHECK_EXCEPTION(repo.getDataSeries("two_by_two").getData(2, 2),
                           TimeSeriesSet::HourTooBig,
                           checkMessage("TS set 'two_by_two' : hour 2 exceeds TS set's height"));
@@ -174,7 +178,8 @@ BOOST_AUTO_TEST_CASE(two_lines_three_columns_three_separators)
     BOOST_CHECK_EQUAL(repo.getDataSeries("2x3").getData(3, 1), 6);
     BOOST_CHECK_EXCEPTION(repo.getDataSeries("2x3").getData(4, 1),
                           TimeSeriesSet::RankTooBig,
-                          checkMessage("TS set '2x3' : rank 4 exceeds TS set's width"));
+                          checkMessage(
+                            "TS set '2x3' : TS number 4 exceeds TS set's number of columns (3)"));
     BOOST_CHECK_EXCEPTION(repo.getDataSeries("2x3").getData(3, 2),
                           TimeSeriesSet::HourTooBig,
                           checkMessage("TS set '2x3' : hour 2 exceeds TS set's height"));
@@ -245,9 +250,10 @@ BOOST_AUTO_TEST_CASE(three_small_files)
     BOOST_CHECK_EQUAL(repo.getDataSeries("gen1_p_max").getData(2, 3), 14);
     BOOST_CHECK_EQUAL(repo.getDataSeries("gen1_p_max").getData(3, 3), 15);
     BOOST_CHECK_EQUAL(repo.getDataSeries("gen1_p_max").getData(4, 3), 16.17);
-    BOOST_CHECK_EXCEPTION(repo.getDataSeries("gen1_p_max").getData(5, 0),
-                          TimeSeriesSet::RankTooBig,
-                          checkMessage("TS set 'gen1_p_max' : rank 5 exceeds TS set's width"));
+    BOOST_CHECK_EXCEPTION(
+      repo.getDataSeries("gen1_p_max").getData(5, 0),
+      TimeSeriesSet::RankTooBig,
+      checkMessage("TS set 'gen1_p_max' : TS number 5 exceeds TS set's number of columns (4)"));
     BOOST_CHECK_EXCEPTION(repo.getDataSeries("gen1_p_max").getData(1, 4),
                           TimeSeriesSet::HourTooBig,
                           checkMessage("TS set 'gen1_p_max' : hour 4 exceeds TS set's height"));
@@ -257,9 +263,10 @@ BOOST_AUTO_TEST_CASE(three_small_files)
     BOOST_CHECK_EQUAL(repo.getDataSeries("gen2_p_max").getData(1, 1), 20);
     BOOST_CHECK_EQUAL(repo.getDataSeries("gen2_p_max").getData(1, 2), 30);
     BOOST_CHECK_EQUAL(repo.getDataSeries("gen2_p_max").getData(1, 3), 40);
-    BOOST_CHECK_EXCEPTION(repo.getDataSeries("gen2_p_max").getData(2, 0),
-                          TimeSeriesSet::RankTooBig,
-                          checkMessage("TS set 'gen2_p_max' : rank 2 exceeds TS set's width"));
+    BOOST_CHECK_EXCEPTION(
+      repo.getDataSeries("gen2_p_max").getData(2, 0),
+      TimeSeriesSet::RankTooBig,
+      checkMessage("TS set 'gen2_p_max' : TS number 2 exceeds TS set's number of columns (1)"));
     BOOST_CHECK_EXCEPTION(repo.getDataSeries("gen2_p_max").getData(1, 4),
                           TimeSeriesSet::HourTooBig,
                           checkMessage("TS set 'gen2_p_max' : hour 4 exceeds TS set's height"));
@@ -273,9 +280,10 @@ BOOST_AUTO_TEST_CASE(three_small_files)
     BOOST_CHECK_EQUAL(repo.getDataSeries("node1_load").getData(2, 1), 31);
     BOOST_CHECK_EQUAL(repo.getDataSeries("node1_load").getData(2, 2), 32);
     BOOST_CHECK_EQUAL(repo.getDataSeries("node1_load").getData(2, 3), 33);
-    BOOST_CHECK_EXCEPTION(repo.getDataSeries("node1_load").getData(3, 0),
-                          TimeSeriesSet::RankTooBig,
-                          checkMessage("TS set 'node1_load' : rank 3 exceeds TS set's width"));
+    BOOST_CHECK_EXCEPTION(
+      repo.getDataSeries("node1_load").getData(3, 0),
+      TimeSeriesSet::RankTooBig,
+      checkMessage("TS set 'node1_load' : TS number 3 exceeds TS set's number of columns (2)"));
     BOOST_CHECK_EXCEPTION(repo.getDataSeries("node1_load").getData(1, 4),
                           TimeSeriesSet::HourTooBig,
                           checkMessage("TS set 'node1_load' : hour 4 exceeds TS set's height"));

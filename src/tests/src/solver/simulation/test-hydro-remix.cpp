@@ -8,6 +8,7 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include "antares/solver/simulation/remix-utils.h"
 #include "antares/solver/simulation/shave-peaks-by-remix-storage-gen.h"
 
 using namespace Antares::Solver::Simulation;
@@ -18,6 +19,7 @@ struct InputFixture
     InputFixture()
     {
         TotalGenNoHydro.assign(size, 0.);
+        Load.assign(size, 0.);
         HydroGen.assign(size, 0.);
         UnsupE.assign(size, 0.);
         levels.assign(size, 0.);
@@ -30,7 +32,7 @@ struct InputFixture
         DTG_MRG.assign(size, 0.);
     }
 
-    std::shared_ptr<StorageForRemix> createHydroRemix()
+    std::shared_ptr<StorageForRemix> createHydroForRemix()
     {
         return std::make_shared<HydroForRemixWithLevels>(HydroGen,
                                                          UnsupE,
@@ -47,16 +49,17 @@ struct InputFixture
 
     void callRemixStorageAlgorithm()
     {
-        hydroForRemix = createHydroRemix();
-        shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix);
+        hydroForRemix = createHydroForRemix();
+        Load = TotalGenNoHydro + UnsupE + HydroGen;
+        shavePeaksByRemixingStorageGen(Load, UnsupE, Spillage, DTG_MRG, hydroForRemix);
     }
 
-    std::vector<double> TotalGenNoHydro, HydroGen, UnsupE, levels, HydroPmax, HydroPmin, inflows,
-      ovf, pump, Spillage, DTG_MRG;
+    std::vector<double> TotalGenNoHydro, Load, HydroGen, UnsupE, levels, HydroPmax, HydroPmin,
+      inflows, ovf, pump, Spillage, DTG_MRG;
     std::shared_ptr<StorageForRemix> hydroForRemix;
     double init_level = 0.;
     double capacity = std::numeric_limits<double>::max();
-    const double pumpEff = 1.0;
+    const double pumpEff = 1.;
     const bool reservoirManagement = true;
 
     std::string err_msg;
@@ -66,7 +69,7 @@ BOOST_FIXTURE_TEST_CASE(input_vectors_of_different_sizes__exception_raised, Inpu
 {
     HydroGen = {0., 0.};
     err_msg = "Remix hydro input : arrays of different sizes";
-    BOOST_CHECK_EXCEPTION(createHydroRemix(), std::invalid_argument, checkMessage(err_msg));
+    BOOST_CHECK_EXCEPTION(createHydroForRemix(), std::invalid_argument, checkMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(input_init_level_exceeds_capacity__exception_raised, InputFixture<1>)
@@ -74,7 +77,7 @@ BOOST_FIXTURE_TEST_CASE(input_init_level_exceeds_capacity__exception_raised, Inp
     init_level = 2.;
     capacity = 1.;
     err_msg = "Remix hydro input : initial level > reservoir capacity";
-    BOOST_CHECK_EXCEPTION(createHydroRemix(), std::invalid_argument, checkMessage(err_msg));
+    BOOST_CHECK_EXCEPTION(createHydroForRemix(), std::invalid_argument, checkMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(all_input_arrays_of_size_0__exception_raised, InputFixture<0>)
@@ -82,7 +85,7 @@ BOOST_FIXTURE_TEST_CASE(all_input_arrays_of_size_0__exception_raised, InputFixtu
     init_level = 0.;
     capacity = 1.;
     err_msg = "Remix hydro input : all arrays of sizes 0";
-    BOOST_CHECK_EXCEPTION(createHydroRemix(), std::invalid_argument, checkMessage(err_msg));
+    BOOST_CHECK_EXCEPTION(createHydroForRemix(), std::invalid_argument, checkMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(Hydro_gen_not_smaller_than_pmax__exception_raised, InputFixture<5>)
@@ -92,7 +95,7 @@ BOOST_FIXTURE_TEST_CASE(Hydro_gen_not_smaller_than_pmax__exception_raised, Input
     init_level = 0.;
     capacity = 1.;
     err_msg = "Remix hydro input : Hydro generation not smaller than Pmax everywhere";
-    BOOST_CHECK_EXCEPTION(createHydroRemix(), std::invalid_argument, checkMessage(err_msg));
+    BOOST_CHECK_EXCEPTION(createHydroForRemix(), std::invalid_argument, checkMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(Hydro_gen_not_greater_than_pmin__exception_raised, InputFixture<5>)
@@ -102,16 +105,18 @@ BOOST_FIXTURE_TEST_CASE(Hydro_gen_not_greater_than_pmin__exception_raised, Input
     init_level = 0.;
     capacity = 1.;
     err_msg = "Remix hydro input : Hydro generation not greater than Pmin everywhere";
-    BOOST_CHECK_EXCEPTION(createHydroRemix(), std::invalid_argument, checkMessage(err_msg));
+    BOOST_CHECK_EXCEPTION(createHydroForRemix(), std::invalid_argument, checkMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(input_is_acceptable__no_exception_raised, InputFixture<1>)
 {
     init_level = 0.;
     capacity = 1.;
-    BOOST_CHECK_NO_THROW(hydroForRemix = createHydroRemix());
+    Load = TotalGenNoHydro + UnsupE + HydroGen;
+
+    BOOST_CHECK_NO_THROW(hydroForRemix = createHydroForRemix());
     BOOST_CHECK_NO_THROW(
-      shavePeaksByRemixingStorageGen(UnsupE, TotalGenNoHydro, Spillage, DTG_MRG, hydroForRemix));
+      shavePeaksByRemixingStorageGen(Load, UnsupE, Spillage, DTG_MRG, hydroForRemix));
 }
 
 BOOST_FIXTURE_TEST_CASE(
@@ -121,14 +126,14 @@ BOOST_FIXTURE_TEST_CASE(
     std::ranges::fill(HydroPmax, 40.);
     std::ranges::fill(TotalGenNoHydro, 100.);
     HydroGen = {0., 10., 20., 30., 40.}; // we have Pmin <= HydroGen <= Pmax
-    UnsupE = {80.0, 60., 40., 20., 0.};
+    UnsupE = {80., 60., 40., 20., 0.};
     init_level = 500.;
     capacity = 1000.;
 
     callRemixStorageAlgorithm();
 
     std::vector<double> expected_HydroGen = {20., 20., 20., 20., 20.};
-    // UnsupE such as TotalGenNoHydro + HydroGen + UnsupE remains flat
+    // UnsupE such as Load = TotalGenNoHydro + HydroGen + UnsupE remains flat
     std::vector<double> expected_UnsupE = {60., 50., 40., 30., 20.};
     BOOST_CHECK(HydroGen == expected_HydroGen);
     BOOST_CHECK(UnsupE == expected_UnsupE);
@@ -139,14 +144,14 @@ BOOST_FIXTURE_TEST_CASE(Pmax_does_not_impact_results_when_greater_than_40mwh, In
     std::ranges::fill(HydroPmax, 50.);
     std::ranges::fill(TotalGenNoHydro, 100.);
     HydroGen = {0., 10., 20., 30., 40.};
-    UnsupE = {80.0, 60., 40., 20., 0.};
+    UnsupE = {80., 60., 40., 20., 0.};
     init_level = 500.;
     capacity = 1000.;
 
     callRemixStorageAlgorithm();
 
     std::vector<double> expected_HydroGen = {20., 20., 20., 20., 20.};
-    // UnsupE such as TotalGenNoHydro + HydroGen + UnsupE remains constant at each hour
+    // UnsupE such as Load = TotalGenNoHydro + HydroGen + UnsupE remains constant at each hour
     std::vector<double> expected_UnsupE = {60., 50., 40., 30., 20.};
     BOOST_CHECK(HydroGen == expected_HydroGen);
     BOOST_CHECK(UnsupE == expected_UnsupE);
@@ -166,7 +171,7 @@ BOOST_FIXTURE_TEST_CASE(
     callRemixStorageAlgorithm();
 
     std::vector<double> expected_HydroGen = {20., 20., 20., 20., 20.};
-    // UnsupE such as TotalGenNoHydro + HydroGen + UnsupE remains constant at each hour
+    // UnsupE such as Load = TotalGenNoHydro + HydroGen + UnsupE remains constant at each hour
     std::vector<double> expected_UnsupE = {20., 30., 40., 50., 60.};
     BOOST_CHECK(HydroGen == expected_HydroGen);
     BOOST_CHECK(UnsupE == expected_UnsupE);
@@ -259,7 +264,7 @@ BOOST_FIXTURE_TEST_CASE(input_leads_to_levels_over_capacity___exception_raised, 
     std::ranges::fill(inflows, 25);  // Cause levels to increase
     std::ranges::fill(pump, 20);     // Cause levels to increase
     err_msg = "Remix hydro input : levels computed from input don't respect reservoir bounds";
-    BOOST_CHECK_EXCEPTION(createHydroRemix(), std::invalid_argument, checkMessage(err_msg));
+    BOOST_CHECK_EXCEPTION(createHydroForRemix(), std::invalid_argument, checkMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(input_leads_to_levels_less_than_zero___exception_raised, InputFixture<5>)
@@ -270,7 +275,7 @@ BOOST_FIXTURE_TEST_CASE(input_leads_to_levels_less_than_zero___exception_raised,
     std::ranges::fill(inflows, 5);   // Cause levels to increase
     std::ranges::fill(pump, 10);     // Cause levels to increase
     err_msg = "Remix hydro input : levels computed from input don't respect reservoir bounds";
-    BOOST_CHECK_EXCEPTION(createHydroRemix(), std::invalid_argument, checkMessage(err_msg));
+    BOOST_CHECK_EXCEPTION(createHydroForRemix(), std::invalid_argument, checkMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(influence_of_capacity_on_algorithm___case_where_no_influence,
