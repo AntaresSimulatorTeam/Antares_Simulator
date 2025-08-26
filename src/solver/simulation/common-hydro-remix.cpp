@@ -287,7 +287,6 @@ std::shared_ptr<IStorageForRemix> extractHydroForRemix(const Data::Area& area,
                              reservoirManagement);
 }
 
-
 std::span<const double> weekSubRange(const std::vector<double>& v, unsigned firstHourOfWeek)
 {
     return {v.begin() + firstHourOfWeek, v.begin() + firstHourOfWeek + HOURS_IN_WEEK};
