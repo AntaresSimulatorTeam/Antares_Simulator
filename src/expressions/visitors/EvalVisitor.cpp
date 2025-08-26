@@ -39,9 +39,11 @@ EvalVisitor::EvalVisitor(EvaluationContext context,
 
 EvalVisitor::EvalVisitor(EvaluationContext context,
                          Optimisation::LinearProblemApi::FillContext fillContext,
-                         const ModelerStudy::SystemModel::Component* component):
+                         const ModelerStudy::SystemModel::Component* component,
+                         int timeIndex):
     context_(std::move(context)),
-    fillContext_(std::move(fillContext))
+    fillContext_(std::move(fillContext)),
+    timeIndex_(timeIndex)
 {
     component_ = component;
 }
@@ -90,9 +92,14 @@ EvaluationResult EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 {
-    logs.notice() << "VariableNode: getting variable '" << node->value() << "'";
-    auto res = EvaluationResult{context_.getVariableValue(node->value())};
-    return res;
+    if (component_ == nullptr)
+    {
+        return EvaluationResult{context_.getVariableValue(node->value())};
+    }
+
+    std::string varName = component_->Id() + "." + node->value() + "_t" + std::to_string(timeIndex_); 
+    logs.notice() << "VariableNode: getting variable '" << varName << "'";
+    return EvaluationResult(context_.getVariableValue(varName));
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
@@ -143,6 +150,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
     std::string fieldId = node->getFieldName();
 
     EvaluationResult to_return(0.);
+    //TODO REMOVE DEBUG
     logs.notice() << "PortFieldSumNode: summing over port '" << portId << "' field '" << fieldId
                   << "'";
     for (const auto connexion_end: component_->componentConnectionsViaPort(portId))
@@ -150,7 +158,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
         auto* component = connexion_end.component();
         auto* port = connexion_end.port();
 
-        EvalVisitor visitor(context_, fillContext_, component);
+        EvalVisitor visitor(context_, fillContext_, component, timeIndex_);
         const Nodes::Node* node = component->nodeAtPortField(port->Id(), fieldId);
         to_return += visitor.dispatch(node);
     }

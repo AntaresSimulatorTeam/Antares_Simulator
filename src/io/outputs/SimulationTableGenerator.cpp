@@ -130,7 +130,10 @@ void addPortEntries(ISimulationTable& simulationTable,
             const Antares::Expressions::Visitors::EvaluationContext
               evalContext(component.getParameterValues(), solution.getOptimalValues(), *dataSeries);
 
-            Antares::Expressions::Visitors::EvalVisitor evalVisitor(evalContext, fillContext);
+            Antares::Expressions::Visitors::EvalVisitor evalVisitor(evalContext,
+                                                                    fillContext,
+                                                                    &component,
+                                                                    *ts);
 
             auto res = evalVisitor.dispatch(portFieldDef.Definition().RootNode());
             Antares::logs.notice() << cid << "   " << res.valueAsDouble();
@@ -142,7 +145,7 @@ void addPortEntries(ISimulationTable& simulationTable,
                .absolute_time_index = tb.absoluteTimeIndex,
                .block_time_index = tb.blockTimeIndex,
                .scenario_index = scenIdx,
-               .value = value,
+               .value = res.valueAsDouble(),
                .status = Antares::Optimisation::LinearProblemApi::MipBasisStatus::NOT_AVAILABLE});
         };
 
