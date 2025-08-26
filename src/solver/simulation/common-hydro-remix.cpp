@@ -398,7 +398,7 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
 
           checkInput(load, unsupE, spillage, dtgMrg, hydroStorage->initialGen());
 
-          ListStorageForRemix storagesForRemix = {hydroStorage};
+          ListStorageForRemix listStorage = {hydroStorage};
 
           if (includeSTS)
           {
@@ -406,14 +406,12 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
 
               // Checking input data is missing for all STS. To be done.
 
-              storagesForRemix.insert(storagesForRemix.end(),
-                                      stsForRemix.begin(),
-                                      stsForRemix.end());
+              listStorage.insert(listStorage.end(), stsForRemix.begin(), stsForRemix.end());
           }
 
           try
           {
-              shavePeaksByRemixingStorageGen(load, unsupE, spillage, dtgMrg, storagesForRemix);
+              shavePeaksByRemixingStorageGen(load, unsupE, spillage, dtgMrg, listStorage);
           }
           catch (std::exception& e)
           {

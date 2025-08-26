@@ -107,18 +107,18 @@ static double makeExchange(const std::set<unsigned>& validHours,
 }
 
 auto remove(std::vector<std::shared_ptr<IStorageForRemix>>::iterator storage,
-            ListStorageForRemix& storagesForRemix)
+            ListStorageForRemix& listStorage)
 {
-    auto d = std::distance(storagesForRemix.begin(), storage);
-    storagesForRemix.erase(storage, storage + 1);
-    return storagesForRemix.begin() + d;
+    auto d = std::distance(listStorage.begin(), storage);
+    listStorage.erase(storage, storage + 1);
+    return listStorage.begin() + d;
 }
 
 void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
                                     std::vector<double>& UnsupE,
                                     const std::vector<double>& Spillage,
                                     const std::vector<double>& DTG_MRG,
-                                    ListStorageForRemix& storagesForRemix)
+                                    ListStorageForRemix& listStorage)
 {
     const std::vector<double> UnsupEinit = UnsupE;
     std::vector<double> TotalGen = Load - UnsupEinit;
@@ -126,8 +126,8 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
     const std::set<unsigned> validHours = ValidHours(Spillage, DTG_MRG);
 
     unsigned nbLoops = 0;
-    auto storage = storagesForRemix.begin();
-    while (!storagesForRemix.empty() || nbLoops == maxNbLoops)
+    auto storage = listStorage.begin();
+    while (!listStorage.empty() || nbLoops == maxNbLoops)
     {
         if (nbLoops++ == maxNbLoops)
         {
@@ -142,14 +142,14 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
 
         if (exchange <= eps)
         {
-            storage = remove(storage, storagesForRemix);
+            storage = remove(storage, listStorage);
             continue;
         }
 
         storage++;
-        if (storage == storagesForRemix.end())
+        if (storage == listStorage.end())
         {
-            storage = storagesForRemix.begin();
+            storage = listStorage.begin();
         }
     }
 }
