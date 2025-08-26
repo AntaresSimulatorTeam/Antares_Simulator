@@ -260,14 +260,13 @@ public:
      * @param context The evaluation context.
      * @param fillContext
      */
+    explicit EvalVisitor(EvaluationContext context, Optimisation::LinearProblemApi::FillContext fillContext);
     explicit EvalVisitor(EvaluationContext context,
-                         Optimisation::LinearProblemApi::FillContext fillContext);
-    explicit EvalVisitor(EvaluationContext context,
-                         Optimisation::LinearProblemApi::FillContext fillContext,
-                         const ModelerStudy::SystemModel::Component* component);
+                Optimisation::LinearProblemApi::FillContext fillContext,
+                const ModelerStudy::SystemModel::Component* component);
     std::string name() const override;
 
-private:
+protected:
     const EvaluationContext context_;
     Optimisation::LinearProblemApi::FillContext fillContext_;
     const ModelerStudy::SystemModel::Component* component_;
