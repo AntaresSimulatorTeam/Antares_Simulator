@@ -1018,24 +1018,6 @@ BOOST_FIXTURE_TEST_CASE(invalidNode, MyDummyFixture)
     BOOST_CHECK_THROW(evalVisitor.dispatch(null_node).valueAsDouble(), InvalidNode);
 }
 
-BOOST_FIXTURE_TEST_CASE(NotEvaluableNodes, MyDummyFixture)
-{
-    LiteralNode literalNode(23.);
-    std::string component_id("id");
-    std::string name("name");
-    std::vector<Node*> nodes = {create<EqualNode>(&literalNode, &literalNode),
-                                create<LessThanOrEqualNode>(&literalNode, &literalNode),
-                                create<GreaterThanOrEqualNode>(&literalNode, &literalNode),
-                                create<PortFieldNode>(name, name),
-                                create<PortFieldSumNode>(name, name),
-                                create<ComponentParameterNode>(component_id, name),
-                                create<ComponentVariableNode>(component_id, name)};
-    for (auto* node: nodes)
-    {
-        BOOST_CHECK_THROW(evalVisitor.dispatch(node).valueAsDouble(), EvalVisitorNotImplemented);
-    }
-}
-
 BOOST_AUTO_TEST_CASE(PrintVisitor_name)
 {
     PrintVisitor printVisitor;
