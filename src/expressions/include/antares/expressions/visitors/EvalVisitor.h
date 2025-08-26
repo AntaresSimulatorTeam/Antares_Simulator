@@ -269,7 +269,7 @@ public:
 
     std::string name() const override;
 
-private:
+protected:
     const EvaluationContext context_;
     Optimisation::LinearProblemApi::FillContext fillContext_;
     const ModelerStudy::SystemModel::Component* component_ = nullptr;
