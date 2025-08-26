@@ -24,14 +24,6 @@
 using namespace Antares::Optimisation::LinearProblemApi;
 
 // Définitions des constantes manquantes pour les types de variables
-namespace
-{
-constexpr int VARIABLE_BORNEE_DES_DEUX_COTES = 0;
-constexpr int VARIABLE_BORNEE_INFERIEUREMENT = 1;
-constexpr int VARIABLE_BORNEE_SUPERIEUREMENT = 2;
-constexpr int VARIABLE_NON_BORNEE = 3;
-} // namespace
-
 namespace Antares::Optimization
 {
 

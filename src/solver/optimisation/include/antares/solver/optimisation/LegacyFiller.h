@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include <spx_constantes_externes.h>
+
 #include "antares/optimisation/linear-problem-api/linearProblemFiller.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
@@ -31,11 +33,6 @@ namespace Antares::Optimization
 template<Optimisation::LinearProblemApi::SolverTag SolverTagType>
 class LegacyFiller: public Optimisation::LinearProblemApi::LinearProblemFiller<SolverTagType>
 {
-    static constexpr int VARIABLE_BORNEE_DES_DEUX_COTES = 0;
-    static constexpr int VARIABLE_BORNEE_INFERIEUREMENT = 1;
-    static constexpr int VARIABLE_BORNEE_SUPERIEUREMENT = 2;
-    static constexpr int VARIABLE_NON_BORNEE = 3;
-
 public:
     LegacyFiller(const PROBLEME_HEBDO* problemeHebdo, bool namedProblems):
         problemeAResoudre_(problemeHebdo->ProblemeAResoudre.get()),
