@@ -23,9 +23,9 @@
 
 #include "antares/io/outputs/SimulationTableEntry.h"
 
-void SimulationTableCsv::addEntry(SimulationTableEntry entry)
+void SimulationTableCsv::addEntry(const SimulationTableEntry& entry)
 {
-    entries_.emplace_back(std::move(entry));
+    entries_.emplace_back(entry);
 }
 
 std::string SimulationTableCsv::getHeader()

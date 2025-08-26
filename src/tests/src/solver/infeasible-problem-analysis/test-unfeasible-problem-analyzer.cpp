@@ -415,7 +415,7 @@ void setupMinimalProblem(PROBLEME_HEBDO& problemeHebdo, ProblemFeasibility feasi
 class EmptySimulationTable final: public ISimulationTable
 {
 public:
-    void addEntry(SimulationTableEntry entry) override
+    void addEntry(const SimulationTableEntry& entry) override
     {
     }
 
