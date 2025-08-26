@@ -373,7 +373,7 @@ ListStorageForRemix extractListSTSforRemix(const Data::Area& area,
         stsListSort.add(withdrawalCapacity,
                         extractSTSforRemix(area, problem, stsIndex, firstHourOfWeek));
     }
-   
+
     return stsListSort.makeSortedList();
 }
 
