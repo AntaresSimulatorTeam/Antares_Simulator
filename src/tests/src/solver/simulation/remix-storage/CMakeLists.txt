@@ -6,3 +6,15 @@ add_boost_test(tests-on-hydro-remix
         LIBS
         shave-peaks-by-remix-storage-gen
         test_utils_unit)
+
+set_target_properties(tests-on-hydro-remix PROPERTIES FOLDER Unit-tests/storage-remix)
+
+
+add_boost_test(tests-on-remix-utils
+        SRC
+        tests-on-remix-utils.cpp
+        LIBS
+        shave-peaks-by-remix-storage-gen
+        test_utils_unit)
+		
+set_target_properties(tests-on-remix-utils PROPERTIES FOLDER Unit-tests/storage-remix)
