@@ -27,5 +27,4 @@
 namespace Antares::Expressions::Visitors
 {
 
-
 } // namespace Antares::Expressions::Visitors

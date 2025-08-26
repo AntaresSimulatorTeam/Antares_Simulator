@@ -92,12 +92,15 @@ EvaluationResult EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 {
-    if (component_ == nullptr)
+    if (component_ == nullptr || timeIndex_ == -1)
     {
         return EvaluationResult{context_.getVariableValue(node->value())};
     }
 
-    std::string varName = component_->Id() + "." + node->value() + "_t" + std::to_string(timeIndex_); 
+    std::string varName = component_->Id() + "." + node->value() + "_t"
+                          + std::to_string(timeIndex_);
+
+    // TODO RM DEBUG
     logs.notice() << "VariableNode: getting variable '" << varName << "'";
     return EvaluationResult(context_.getVariableValue(varName));
 }
@@ -150,7 +153,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
     std::string fieldId = node->getFieldName();
 
     EvaluationResult to_return(0.);
-    //TODO REMOVE DEBUG
+    // TODO REMOVE DEBUG
     logs.notice() << "PortFieldSumNode: summing over port '" << portId << "' field '" << fieldId
                   << "'";
     for (const auto connexion_end: component_->componentConnectionsViaPort(portId))
