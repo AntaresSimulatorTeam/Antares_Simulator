@@ -40,6 +40,7 @@ using namespace Optimization;
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Optimisation::LinearProblemApi;
 using namespace Optimisation::LinearProblemDataImpl;
+using Tag = Optimisation::LinearProblemMpsolverImpl::OrtoolsTag;
 
 static const auto libraryYaml = R"(
 library:
@@ -129,7 +130,7 @@ system:
 struct ComponentToAreaConnectionFillerFixture
 {
     std::unique_ptr<PROBLEME_HEBDO> problemeHebdo;
-    VariableDictionary modelerVariableDictionary;
+    VariableDictionary<Tag::VariableType> modelerVariableDictionary;
     std::unique_ptr<System> modelerSystem;
     std::vector<Library> libraries;
     Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem linearProblem;
@@ -217,7 +218,7 @@ struct ComponentToAreaConnectionFillerFixture
         DataSeriesRepository ds;
         ds.addDataSeries(std::move(tss));
         LinearProblemData data(std::move(ds));
-        ComponentToAreaConnectionFiller filler(problemeHebdo.get(), modelerVariableDictionary);
+        ComponentToAreaConnectionFiller<Tag> filler(problemeHebdo.get(), modelerVariableDictionary);
         filler.addVariables(linearProblem, data, fillCtx);
         filler.addConstraints(linearProblem, data, fillCtx);
         filler.addObjective(linearProblem, data, fillCtx);
