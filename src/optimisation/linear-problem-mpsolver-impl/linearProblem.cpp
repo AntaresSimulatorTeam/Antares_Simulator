@@ -141,7 +141,8 @@ static const operations_research::MPVariable* getMpVar(const OrtoolsMipVariable*
 
 void OrtoolsLinearProblem::setObjectiveCoefficient(OrtoolsMipVariable* var, double coefficient)
 {
-    objective_->SetCoefficient(getMpVar(var), coefficient);
+    auto* in = getMpVar(var);
+    objective_->SetCoefficient(in, coefficient);
 }
 
 double OrtoolsLinearProblem::getObjectiveCoefficient(const OrtoolsMipVariable* var) const
