@@ -94,8 +94,15 @@ void UniqueIDChecker::clear()
 Model ModelBuilder::build()
 {
     Model model = std::move(model_);
-    uniqueIdChecker_.check(model_.Id());
-    reset();
+    try
+    {
+        uniqueIdChecker_.check(model.Id());
+    }
+    catch (...)
+    {
+        reset();
+        throw;
+    }
     return model;
 }
 
