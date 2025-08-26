@@ -21,7 +21,6 @@
 #include "antares/io/outputs/SimulationTableGenerator.h"
 
 #include <optional>
-#include <fstream> //TODO REMOVE DEBUG
 
 #include <antares/solver/optim-model-filler/VariableDictionary.h>
 #include "antares/expressions/visitors/EvalVisitor.h"
@@ -29,8 +28,6 @@
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
 #include "antares/optimisation/linear-problem-api/mipConstraint.h"
 #include "antares/optimisation/linear-problem-api/mipSolution.h"
-
-#include "antares/expressions/visitors/AstDOTStyleVisitor.h" //TODO REMOVE DEBUG
 
 using namespace Antares::Optimisation::LinearProblemApi;
 
@@ -134,16 +131,6 @@ void addPortEntries(ISimulationTable& simulationTable,
               evalContext(component.getParameterValues(), solution.getOptimalValues(), *dataSeries);
 
             Antares::Expressions::Visitors::EvalVisitor evalVisitor(evalContext, fillContext);
-
-            // TODO REMOVE DEBUG
-            Antares::Expressions::Visitors::AstDOTStyleVisitor astGraphVisitor;
-            std::ostringstream dotContentStream;
-            astGraphVisitor(dotContentStream, portFieldDef.Definition().RootNode());
-            std::string dotFileName = cid + "_" + portFieldKey.portId + "_" + portFieldKey.fieldId + ".dot";
-            std::ofstream dotFile(dotFileName);
-            dotFile << dotContentStream.str();
-            dotFile.close();
-            // END DEBUG
 
             auto res = evalVisitor.dispatch(portFieldDef.Definition().RootNode());
             Antares::logs.notice() << cid << "   " << res.valueAsDouble();
