@@ -36,7 +36,7 @@ SimulationTableCsv::SimulationTableCsv()
     storage_.addOptionalColumn<std::string>("basis_status");
 }
 
-void SimulationTableCsv::addEntry(SimulationTableEntry entry)
+void SimulationTableCsv::addEntry(const SimulationTableEntry& entry)
 {
     storage_.addValue("block", entry.block);
     storage_.addValue("component", entry.component);

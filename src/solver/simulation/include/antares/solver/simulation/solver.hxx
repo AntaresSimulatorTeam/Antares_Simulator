@@ -921,7 +921,7 @@ void ISimulation<ImplementationType>::aggregateAndWriteSimulationTables()
             globalSecondBuffer += it->second.second;
         }
     }
-    const auto header = ImplementationType::getSimulationTableHeader();
+    const auto header = ImplementationType::getSimulationTableHeader() + "\n";
     if (!globalFirstBuffer.empty())
     {
         std::string writerEntry = header + std::move(globalFirstBuffer);
