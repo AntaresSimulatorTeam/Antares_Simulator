@@ -1321,7 +1321,7 @@ BOOST_FIXTURE_TEST_CASE(Write_CreatesFile, TempDirFixture)
     } // File should be closed here
 
     // Check file was created and contains expected content
-    auto expectedFile = tempDir / "simulation_table_test_sim.csv";
+    auto expectedFile = tempDir / "simulation_table--test_sim.csv";
     BOOST_CHECK(std::filesystem::exists(expectedFile));
 
     std::ifstream file(expectedFile);
@@ -1593,7 +1593,7 @@ BOOST_FIXTURE_TEST_CASE(FullWorkflow_CreateWriteRead, TempDirFixture)
     }
 
     // Verify file exists and has correct name
-    auto expectedFile = tempDir / ("simulation_table_" + simulationId + ".csv");
+    auto expectedFile = tempDir / ("simulation_table--" + simulationId + ".csv");
     BOOST_CHECK(std::filesystem::exists(expectedFile));
 
     // Read and verify content
