@@ -4,21 +4,24 @@
 
 void OptimisationsSimulationTable::clear()
 {
-    firstOptimSimulationTable_.clear();
-    secondOptimSimulationTable_.clear();
+    firstOptimBuffer_.clear();
+    secondOptimBuffer_.clear();
 }
 
 std::pair<std::string, std::string> OptimisationsSimulationTable::buffers() const
 {
-    return {firstOptimSimulationTable_.buffer(), secondOptimSimulationTable_.buffer()};
+    return {firstOptimBuffer_, secondOptimBuffer_};
 }
 
 void OptimisationsSimulationTable::write()
 {
     firstOptimSimulationTable_.write();
     firstOptimBuffer_ += firstOptimSimulationTable_.buffer();
+    firstOptimSimulationTable_.clear();
+
     secondOptimSimulationTable_.write();
     secondOptimBuffer_ += secondOptimSimulationTable_.buffer();
+    secondOptimSimulationTable_.clear();
 }
 
 void OptimisationsSimulationTable::writeTo(const std::string& filePrefix,

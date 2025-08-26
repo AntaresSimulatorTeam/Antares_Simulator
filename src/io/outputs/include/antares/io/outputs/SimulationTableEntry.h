@@ -24,7 +24,6 @@
 
 #include "antares/optimisation/linear-problem-api/hasStatus.h"
 
-
 struct SimulationTableEntry
 {
     unsigned int block;

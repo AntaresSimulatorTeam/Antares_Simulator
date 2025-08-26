@@ -127,6 +127,9 @@ library:
         - id: balance
           expression: injection_port.flow = 0
       objective: cost * generation
+      extra-outputs:
+        - id: total_cost_in_millions
+          expression: sum(cost * generation) / 1000000
 
     - id: node
       description: A basic balancing node model
@@ -295,6 +298,8 @@ library:
         auto& model0 = lib.Models().at("generator");
         BOOST_CHECK_EQUAL(model0.Id(), "generator");
         BOOST_CHECK_EQUAL(model0.Objective().Value(), "cost * generation");
+        BOOST_CHECK_EQUAL(model0.ExtraOutputs().at("total_cost_in_millions").expression().Value(),
+                          "sum(cost * generation) / 1000000");
 
         BOOST_REQUIRE_EQUAL(model0.Constraints().size(), 1);
         BOOST_REQUIRE_EQUAL(model0.Parameters().size(), 2);

@@ -223,6 +223,7 @@ BOOST_AUTO_TEST_SUITE(SimulationTableCsvTests)
 BOOST_AUTO_TEST_CASE(Constructor_WritesHeader)
 {
     SimulationTableCsv table;
+    table.writeHeader();
     std::string buffer = table.buffer();
     BOOST_CHECK(buffer.find("block,component,output,absolute_time_index,block_time_index,scenario_"
                             "index,value,basis_status")
@@ -312,9 +313,9 @@ BOOST_AUTO_TEST_CASE(MultipleEntries)
     std::string buffer = table.buffer();
     BOOST_CHECK(!buffer.empty());
 
-    // Count lines (should be numEntries + 1 for header)
+    // Count lines (should be numEntries)
     auto lineCount = count_lines(buffer);
-    BOOST_CHECK_EQUAL(lineCount, numEntries + 1);
+    BOOST_CHECK_EQUAL(lineCount, numEntries);
 }
 
 BOOST_AUTO_TEST_CASE(MultipleWriteCalls_AccumulateData)
@@ -515,9 +516,9 @@ BOOST_AUTO_TEST_CASE(ConcurrentAccess_MultipleThreads)
     table.write();
     std::string buffer = table.buffer();
 
-    // Should have all entries plus header
+    // Should have all entries
     auto lineCount = count_lines(buffer);
-    BOOST_CHECK_EQUAL(lineCount, numThreads * entriesPerThread + 1);
+    BOOST_CHECK_EQUAL(lineCount, numThreads * entriesPerThread);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -543,7 +544,7 @@ BOOST_AUTO_TEST_CASE(WritePerformance_LargeDataSet)
                                    .status = static_cast<MipBasisStatus>(i % 6)};
         table.addEntry(entry);
     }
-
+    table.writeHeader();
     table.write();
 
     auto end = std::chrono::high_resolution_clock::now();
@@ -984,6 +985,7 @@ BOOST_AUTO_TEST_CASE(TemplateFunction_VariableEntries_AllCombinations)
                                          std::optional<unsigned>(5), // scenario
                                          true);                      // isLP
 
+    table.writeHeader();
     table.write();
     std::string buffer = table.buffer();
 
@@ -1050,9 +1052,6 @@ BOOST_AUTO_TEST_CASE(RoundTrip_DataIntegrity)
     // Parse the CSV output manually to verify data integrity
     std::istringstream stream(csvOutput);
     std::string line;
-
-    // Skip header
-    std::getline(stream, line);
 
     int entryIndex = 0;
     while (std::getline(stream, line) && entryIndex < originalEntries.size())
@@ -1234,15 +1233,8 @@ BOOST_AUTO_TEST_CASE(AlternatingClear_Write_Operations)
         // Verify content before clearing
         std::string buffer = table.buffer();
         auto lineCount = count_lines(buffer);
-        if (cycle == 0)
-        {
-            // only first cycle has header
-            BOOST_CHECK_EQUAL(lineCount, 4); // 3 entries + header
-        }
-        else
-        {
-            BOOST_CHECK_EQUAL(lineCount, 3);
-        }
+
+        BOOST_CHECK_EQUAL(lineCount, 3);
         // Clear for next cycle
         table.clear();
 
@@ -1324,11 +1316,12 @@ BOOST_FIXTURE_TEST_CASE(Write_CreatesFile, TempDirFixture)
                                    .value = 123.45,
                                    .status = MipBasisStatus::BASIC};
         table.addEntry(entry);
+        table.writeHeader();
         table.write();
     } // File should be closed here
 
     // Check file was created and contains expected content
-    auto expectedFile = tempDir / "simulation_table_test_sim.csv";
+    auto expectedFile = tempDir / "simulation_table--test_sim.csv";
     BOOST_CHECK(std::filesystem::exists(expectedFile));
 
     std::ifstream file(expectedFile);
@@ -1402,8 +1395,8 @@ BOOST_AUTO_TEST_CASE(Constructor_InitializesEmptyTables)
     auto buffers = tables.buffers();
 
     // Both buffers should contain only headers initially
-    BOOST_CHECK(buffers.first.find("block,component,output") != std::string::npos);
-    BOOST_CHECK(buffers.second.find("block,component,output") != std::string::npos);
+    BOOST_CHECK(buffers.first.empty());
+    BOOST_CHECK(buffers.second.empty());
 }
 
 BOOST_AUTO_TEST_CASE(AddEntriesToBothTables)
@@ -1600,17 +1593,12 @@ BOOST_FIXTURE_TEST_CASE(FullWorkflow_CreateWriteRead, TempDirFixture)
     }
 
     // Verify file exists and has correct name
-    auto expectedFile = tempDir / ("simulation_table_" + simulationId + ".csv");
+    auto expectedFile = tempDir / ("simulation_table--" + simulationId + ".csv");
     BOOST_CHECK(std::filesystem::exists(expectedFile));
 
     // Read and verify content
     std::ifstream file(expectedFile);
     std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-
-    // Check header
-    BOOST_CHECK(content.find("block,component,output,absolute_time_index,block_time_index,scenario_"
-                             "index,value,basis_status")
-                != std::string::npos);
 
     // Check each entry
     for (int i = 0; i < 5; ++i)

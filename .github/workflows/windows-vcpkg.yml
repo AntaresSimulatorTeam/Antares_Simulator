@@ -57,11 +57,6 @@ jobs:
           echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_windows-latest_static_sirius_Release.zip" >> $GITHUB_ENV
         shell: bash
 
-      - name: Pre-requisites
-        shell: cmd
-        run: |
-          choco install wget unzip zip --no-progress
-
       # Downloads ccache, and copies it to "cl.exe" in order to trick cmake into using it,
       # see ccache wiki for background on using it with MSVC:
       # https://github.com/ccache/ccache/wiki/MS-Visual-Studio
@@ -70,7 +65,7 @@ jobs:
         run: |
           ccacheVersion=4.11.3
           ccacheFile=ccache-$ccacheVersion-windows-x86_64
-          wget https://github.com/ccache/ccache/releases/download/v$ccacheVersion/$ccacheFile.zip -O ccache.zip
+          curl -L -o ccache.zip https://github.com/ccache/ccache/releases/download/v$ccacheVersion/$ccacheFile.zip
           unzip ccache.zip
           rm ccache.zip
           mv $ccacheFile ccache
@@ -367,13 +362,18 @@ jobs:
         if: ${{ !success() }}
         run: exit 1
 
-      - name: Solver archive creation
+      - name: Prepare files for solver-only archive
         shell: bash
         run: |
           cd _build
           FIXED_PATH=${ORTOOLS_DIR//\\//}
           cp ${FIXED_PATH}/install/bin/*.dll* solver/Release
-          zip -r antares-solver_windows.zip solver/Release/antares-solver.exe solver/Release/*.dll
+
+      - name: Create solver-only archive
+        shell: pwsh
+        run: |
+          cd _build
+          Compress-Archive -Path solver/Release/antares-solver.exe, solver/Release/*.dll -DestinationPath antares-solver_windows.zip -Force
 
       - name: NSIS Installer creation
         shell: bash

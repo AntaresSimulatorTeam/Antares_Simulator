@@ -34,7 +34,6 @@ SimulationTableCsv::SimulationTableCsv()
     storage_.addOptionalColumn<unsigned int>("scenario_index");
     storage_.addOptionalColumn<double>("value");
     storage_.addStringColumn("basis_status");
-    writeHeader();
 }
 
 void SimulationTableCsv::addEntry(SimulationTableEntry entry)

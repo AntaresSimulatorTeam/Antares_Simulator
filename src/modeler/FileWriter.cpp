@@ -81,6 +81,7 @@ void FileWriter::writeSimulationTable(
                             components,
                             variableDictionary,
                             fillContext);
+        simulationTable.writeHeader();
         simulationTable.write();
     }
 }

@@ -93,6 +93,8 @@ protected:
 
     void initializeState(Variable::State& state, uint numSpace);
 
+    OptimisationsSimulationTable& getSimulationTable(uint numSpace);
+
 private:
     bool simplexIsRequired(uint hourInTheYear,
                            uint numSpace,
@@ -106,9 +108,7 @@ private:
     IResultWriter& resultWriter;
 
     std::reference_wrapper<Simulation::ISimulationObserver> simulationObserver_;
-    SimulationTableCsv firstOptimSimulationTable_;
-    SimulationTableCsv secondOptimSimulationTable_;
-    OptimisationsSimulationTable simulationTables_;
+    std::vector<OptimisationsSimulationTable> simulationTables_;
 }; // class Adequacy
 
 } // namespace Antares::Solver::Simulation

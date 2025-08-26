@@ -93,7 +93,7 @@ struct LinearProblemBuildingFixture
       const std::string& componentId,
       std::map<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue> parameterValues
       = {},
-      std::string scenarioGroupId = "default");
+      std::string scenarioGroupId = "");
 
     Antares::Expressions::Nodes::Node* literal(double value);
 

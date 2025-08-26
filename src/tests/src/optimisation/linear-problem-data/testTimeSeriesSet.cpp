@@ -54,7 +54,8 @@ BOOST_AUTO_TEST_CASE(ask_to_a_TS_set_for_an_out_of_range_TS_rank___exception_rai
     TimeSeriesSet timeSeriesSet("my-TS-set", 3);
     timeSeriesSet.add({1., 2., 3.});
 
-    std::string expected_err_msg = "TS set 'my-TS-set' : rank 2 exceeds TS set's width";
+    std::string expected_err_msg = "TS set 'my-TS-set' : TS number 2 exceeds TS set's number of "
+                                   "columns (1)";
     BOOST_CHECK_EXCEPTION(timeSeriesSet.getData(2, 0),
                           TimeSeriesSet::RankTooBig,
                           checkMessage(expected_err_msg));

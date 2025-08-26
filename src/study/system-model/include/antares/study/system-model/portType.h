@@ -51,7 +51,7 @@ public:
                   + "\" selected for area connections was not defined in PortType \"" + id_
                   + "\".");
             }
-            areaConnectionFieldId_ = std::optional(areaConnectionFieldId);
+            areaConnectionFieldId_ = areaConnectionFieldId;
         }
     }
 
