@@ -64,7 +64,7 @@ Simulation Table Output:
 Starting from version X.X.X, Antares Simulator hybrid and modeler modes produce detailed simulation table
 outputs in CSV format:
 — for each optimization run for hybrid mode (simulation_table--optim-nb-1.csv, simulation_table--optim-nb-2.csv)
-— unique file for pur modeler (simulation_table_*TimeStamp*.csv).
+— unique file for pure modeler (simulation_table_*TimeStamp*.csv).
 These files provide a comprehensive view of the variables and constraints involved in the optimization, including their
 values and basis statuses.
 
