@@ -108,8 +108,6 @@ private:
     IResultWriter& resultWriter;
 
     std::reference_wrapper<Simulation::ISimulationObserver> simulationObserver_;
-    SimulationTableCsv firstOptimSimulationTable_;
-    SimulationTableCsv secondOptimSimulationTable_;
     std::vector<OptimisationsSimulationTable> simulationTables_;
 }; // class Adequacy
 

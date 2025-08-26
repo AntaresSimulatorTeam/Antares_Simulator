@@ -313,9 +313,9 @@ BOOST_AUTO_TEST_CASE(MultipleEntries)
     std::string buffer = table.buffer();
     BOOST_CHECK(!buffer.empty());
 
-    // Count lines (should be numEntries + 1 for header)
+    // Count lines (should be numEntries)
     auto lineCount = count_lines(buffer);
-    BOOST_CHECK_EQUAL(lineCount, numEntries + 1);
+    BOOST_CHECK_EQUAL(lineCount, numEntries);
 }
 
 BOOST_AUTO_TEST_CASE(MultipleWriteCalls_AccumulateData)
