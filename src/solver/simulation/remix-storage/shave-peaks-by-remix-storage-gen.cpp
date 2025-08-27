@@ -82,10 +82,10 @@ struct Exchange
     double amount = 0;
 };
 
-static Exchange findExchange(const std::set<unsigned>& validHours,
-                             std::vector<double>& TotalGen,
-                             std::vector<double>& UnsupE,
-                             std::shared_ptr<IStorageForRemix>& storage)
+static Exchange searchForExhange(const std::set<unsigned>& validHours,
+                                 std::vector<double>& TotalGen,
+                                 std::vector<double>& UnsupE,
+                                 std::shared_ptr<IStorageForRemix>& storage)
 {
     auto totalGenProjection = [&](int h) { return TotalGen[h]; };
 
@@ -170,7 +170,7 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
         }
 
         updateValidHours(validHours, *storage, UnsupEinit);
-        auto exchange = findExchange(validHours, TotalGen, UnsupE, *storage);
+        auto exchange = searchForExhange(validHours, TotalGen, UnsupE, *storage);
 
         if (!exchange.valid())
         {
