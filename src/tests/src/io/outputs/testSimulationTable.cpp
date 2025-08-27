@@ -43,6 +43,7 @@
 #include "antares/solver/optim-model-filler/VariableDictionary.h"
 #include "antares/solver/optimisation/OptimisationsSimulationTable.h"
 #include "antares/writer/i_writer.h"
+#include "antares/writer/in_memory_writer.h"
 
 using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
@@ -356,49 +357,11 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(FileWriterIntegrationTests)
 
-class MockResultWriter: public Antares::Solver::IResultWriter
-{
-public:
-    void addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent) override
-    {
-    }
-
-    void addEntryFromBuffer(const std::filesystem::path& filename, std::string& buffer) override
-    {
-        files_[filename] = buffer;
-    }
-
-    // Mock implementations of other required methods
-    void addEntryFromFile(const std::filesystem::path&, const std::filesystem::path&) override
-    {
-    }
-
-    void flush() override
-    {
-    }
-
-    const std::map<std::filesystem::path, std::string>& getFiles() const
-    {
-        return files_;
-    }
-
-    bool needsTheJobQueue() const override
-    {
-        return false;
-    }
-
-    void finalize(bool verbose) override
-    {
-    }
-
-private:
-    std::map<std::filesystem::path, std::string> files_;
-};
-
 BOOST_AUTO_TEST_CASE(WriteTo_CreatesCorrectFiles)
 {
     OptimisationsSimulationTable tables;
-    MockResultWriter writer;
+    Benchmarking::DurationCollector duration_collector;
+    Antares::Solver::InMemoryWriter writer(duration_collector);
 
     // Add entries to both tables
     SimulationTableEntry entry1{.block = 1,
@@ -425,7 +388,7 @@ BOOST_AUTO_TEST_CASE(WriteTo_CreatesCorrectFiles)
 
     tables.writeTo("test_prefix", writer);
 
-    const auto& files = writer.getFiles();
+    const auto& files = writer.getMap();
     BOOST_CHECK_EQUAL(files.size(), 2);
     BOOST_CHECK(files.count("test_prefix--optim-nb-1.csv") > 0);
     BOOST_CHECK(files.count("test_prefix--optim-nb-2.csv") > 0);
@@ -1772,20 +1735,3 @@ BOOST_DATA_TEST_CASE(TimeConversion_ParameterizedTest,
 }
 
 BOOST_AUTO_TEST_SUITE_END()
-
-// BOOST_AUTO_TEST_SUITE(MemoryManagementTests)
-
-// BOOST_AUTO_TEST_CASE(LargeNumberOfEntries_NoMemoryLeaks)
-// {
-//     SimulationTableCsv table;
-//
-//     // Add many entries to test memory handling
-//     constexpr int numEntries = 10000;
-//     for (int i = 0; i < numEntries; ++i)
-//     {
-//         SimulationTableEntry entry
-//         {
-//             .block = static_cast<unsigned>(i % 100 + 1),
-//             .component = "comp_" + std::to_string(i % 50),
-//             .output = "var_" + std::to_string(i % 20), .absolute_time_index = i,
-//             .block_time_index = i
