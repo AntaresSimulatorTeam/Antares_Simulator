@@ -74,12 +74,12 @@ struct Exchange
 {
     bool valid()
     {
-        return hourOfMinGen.has_value() && hourOfMaxGen.has_value() && exchange > eps;
+        return hourOfMinGen.has_value() && hourOfMaxGen.has_value() && amount > eps;
     }
 
     std::optional<unsigned> hourOfMinGen;
     std::optional<unsigned> hourOfMaxGen;
-    double exchange = 0;
+    double amount = 0;
 };
 
 static Exchange makeExchange(const std::set<unsigned>& validHours,
@@ -117,22 +117,32 @@ static Exchange makeExchange(const std::set<unsigned>& validHours,
 
             if (exchange > eps)
             {
-                storage->withdrawal()[*hourOfMaxGen] -= exchange;
-                storage->withdrawal()[*hourOfMinGen] += exchange;
-                storage->update();
-
-                UnsupE[*hourOfMaxGen] += exchange;
-                UnsupE[*hourOfMinGen] -= exchange;
-
-                TotalGen[*hourOfMaxGen] -= exchange;
-                TotalGen[*hourOfMinGen] += exchange;
-
                 return {*hourOfMinGen, *hourOfMaxGen, exchange};
             }
             validHoursForMax.erase(hourOfMaxGen);
         }
         validHoursForMin.erase(hourOfMinGen);
     }
+}
+
+void update(Exchange& exchange,
+            std::shared_ptr<IStorageForRemix> storage,
+            std::vector<double>& UnsupE,
+            std::vector<double>& TotalGen)
+{
+    double amount = exchange.amount;
+    unsigned hourOfMinGen = exchange.hourOfMinGen.value();
+    unsigned hourOfMaxGen = exchange.hourOfMaxGen.value();
+
+    storage->withdrawal()[hourOfMaxGen] -= amount;
+    storage->withdrawal()[hourOfMinGen] += amount;
+    storage->update();
+
+    UnsupE[hourOfMaxGen] += amount;
+    UnsupE[hourOfMinGen] -= amount;
+
+    TotalGen[hourOfMaxGen] -= amount;
+    TotalGen[hourOfMinGen] += amount;
 }
 
 auto removeStorageFromList(std::vector<std::shared_ptr<IStorageForRemix>>::iterator storage,
@@ -177,6 +187,7 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
             storage = removeStorageFromList(storage, listStorage);
             continue;
         }
+        update(exchange, *storage, UnsupE, TotalGen);
         storage++;
     }
 }
