@@ -1903,6 +1903,7 @@ var hierarchy =
     ] ],
     [ "Antares::Optimization::UnfeasiblePbAnalyzer", "classAntares_1_1Optimization_1_1UnfeasiblePbAnalyzer.html", null ],
     [ "Antares::Window::Inspector::Unique", "structAntares_1_1Window_1_1Inspector_1_1Unique.html", null ],
+    [ "Antares::ModelerStudy::SystemModel::UniqueIDChecker", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1UniqueIDChecker.html", null ],
     [ "Antares::Statistics::Updater", "classAntares_1_1Statistics_1_1Updater.html", null ],
     [ "VALEURS_DE_NTC_ET_RESISTANCES", "structVALEURS__DE__NTC__ET__RESISTANCES.html", null ],
     [ "Antares::Data::ShortTermStorage::ValidateResult", "structAntares_1_1Data_1_1ShortTermStorage_1_1ValidateResult.html", null ],
