@@ -134,6 +134,11 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
             throw std::runtime_error("storage remix > max nb of iterations was reached");
         }
 
+        if (storage == listStorage.end())
+        {
+            storage = listStorage.begin();
+        }
+
         std::set<unsigned> hoursForStorage;
         auto predicate = [&](int h) { return (*storage)->initialGen()[h] + UnsupEinit[h] > eps; };
         rng::copy_if(validHours, std::inserter(hoursForStorage, hoursForStorage.end()), predicate);
@@ -145,12 +150,7 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
             storage = remove(storage, listStorage);
             continue;
         }
-
         storage++;
-        if (storage == listStorage.end())
-        {
-            storage = listStorage.begin();
-        }
     }
 }
 
