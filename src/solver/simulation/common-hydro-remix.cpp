@@ -345,7 +345,8 @@ std::shared_ptr<IStorageForRemix> extractSTSforRemix(const Data::Area& area,
     const auto upRuleCurve = extractSTSupRuleCurve(stsProperties, firstHourOfWeek);
     const double initLevel = levels[0];
     const double withdrawalcapacity = stsProperties.withdrawalNominalCapacity;
-    const double efficiency = stsProperties.withdrawalEfficiency;
+    const double withdrawalEff = stsProperties.withdrawalEfficiency;
+    const double injectionEff = stsProperties.injectionEfficiency;
 
     return makeSTSforRemix(withdrawal,
                            unsupE,
@@ -356,7 +357,8 @@ std::shared_ptr<IStorageForRemix> extractSTSforRemix(const Data::Area& area,
                            lowRuleCurve,
                            upRuleCurve,
                            initLevel,
-                           efficiency);
+                           withdrawalEff,
+                           injectionEff);
 }
 
 ListStorageForRemix extractListSTSforRemix(const Data::Area& area,

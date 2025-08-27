@@ -42,6 +42,7 @@ public:
                               const std::vector<double> lowRuleCurve,
                               const std::vector<double> upRuleCurve,
                               const double initLevel,
+                              const double withdrawalEff,
                               const double injectionEff);
 
     double maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) override;
@@ -86,7 +87,8 @@ std::shared_ptr<StorageForRemixWithLevels> makeSTSforRemix(std::vector<double>& 
                                                            const std::vector<double>& lowRuleCurve,
                                                            const std::vector<double>& upRuleCurve,
                                                            const double initLevel,
-                                                           const double efficiency);
+                                                           const double withdrawalEff,
+                                                           const double injectionEff);
 
 class StorageListSort
 {

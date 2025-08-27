@@ -33,6 +33,7 @@ std::shared_ptr<IStorageForRemix> makeHydroForRemix(std::vector<double>& generat
     size_t size = generation.size();
     const std::vector<double> lowRuleCurve(size, 0.);
     const std::vector<double> upRuleCurve(size, reservoirCapacity);
+    const double withdrawalEff = 1.;
     return std::make_shared<StorageForRemixWithLevels>(generation,
                                                        unsupE,
                                                        levels,
@@ -44,6 +45,7 @@ std::shared_ptr<IStorageForRemix> makeHydroForRemix(std::vector<double>& generat
                                                        lowRuleCurve,
                                                        upRuleCurve,
                                                        initLevel,
+                                                       withdrawalEff,
                                                        pumpEfficiency);
 }
 
@@ -56,7 +58,8 @@ std::shared_ptr<StorageForRemixWithLevels> makeSTSforRemix(std::vector<double>& 
                                                            const std::vector<double>& lowRuleCurve,
                                                            const std::vector<double>& upRuleCurve,
                                                            const double initLevel,
-                                                           const double efficiency)
+                                                           const double withdrawalEff,
+                                                           const double injectionEff)
 {
     size_t size = withdrawal.size();
 
@@ -74,7 +77,8 @@ std::shared_ptr<StorageForRemixWithLevels> makeSTSforRemix(std::vector<double>& 
                                                        lowRuleCurve,
                                                        upRuleCurve,
                                                        initLevel,
-                                                       efficiency);
+                                                       withdrawalEff,
+                                                       injectionEff);
 }
 
 StorageForRemixNoLevels::StorageForRemixNoLevels(std::vector<double>& withdrawal,
@@ -150,6 +154,7 @@ StorageForRemixWithLevels::StorageForRemixWithLevels(std::vector<double>& withdr
                                                      const std::vector<double> lowRuleCurve,
                                                      const std::vector<double> upRuleCurve,
                                                      const double initLevel,
+                                                     const double withdrawalEff,
                                                      const double injectionEff):
     StorageForRemixNoLevels(withdrawal, unsupE, Pmax, Pmin),
     levels_(levels),
@@ -157,6 +162,7 @@ StorageForRemixWithLevels::StorageForRemixWithLevels(std::vector<double>& withdr
     overflow_(overflow),
     injection_(injection),
     initLevel_(initLevel),
+    withdrawalEff_(withdrawalEff),
     injectionEff_(injectionEff),
     ruleCurveLow_(lowRuleCurve),
     ruleCurveUp_(upRuleCurve)
@@ -220,7 +226,8 @@ void StorageForRemixWithLevels::checkLevels()
 
 void StorageForRemixWithLevels::update()
 {
-    levels_[0] = initLevel_ + inflows_[0] - overflow_[0] + injectionEff_ * injection_[0] - withdrawalEff_ * withdrawal_[0];
+    levels_[0] = initLevel_ + inflows_[0] - overflow_[0] + injectionEff_ * injection_[0]
+                 - withdrawalEff_ * withdrawal_[0];
     for (size_t h = 1; h < levels_.size(); ++h)
     {
         levels_[h] = levels_[h - 1] + inflows_[h] - overflow_[h] + injectionEff_ * injection_[h]
