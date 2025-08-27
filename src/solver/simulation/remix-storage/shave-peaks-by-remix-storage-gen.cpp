@@ -88,8 +88,8 @@ static double makeExchange(const std::set<unsigned>& validHours,
 
             if (exchange > eps)
             {
-                storage->generation()[*hourOfMaxGen] -= exchange;
-                storage->generation()[*hourOfMinGen] += exchange;
+                storage->withdrawal()[*hourOfMaxGen] -= exchange;
+                storage->withdrawal()[*hourOfMinGen] += exchange;
                 storage->update();
 
                 UnsupE[*hourOfMaxGen] += exchange;
@@ -140,7 +140,7 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
         }
 
         std::set<unsigned> hoursForStorage;
-        auto predicate = [&](int h) { return (*storage)->initialGen()[h] + UnsupEinit[h] > eps; };
+        auto predicate = [&](int h) { return (*storage)->initWithdrawal()[h] + UnsupEinit[h] > eps; };
         rng::copy_if(validHours, std::inserter(hoursForStorage, hoursForStorage.end()), predicate);
 
         double exchange = makeExchange(hoursForStorage, TotalGen, UnsupE, *storage);

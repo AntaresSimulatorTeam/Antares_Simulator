@@ -77,12 +77,12 @@ std::shared_ptr<StorageForRemixWithLevels> makeSTSforRemix(std::vector<double>& 
                                                        efficiency);
 }
 
-StorageForRemixNoLevels::StorageForRemixNoLevels(std::vector<double>& generation,
+StorageForRemixNoLevels::StorageForRemixNoLevels(std::vector<double>& withdrawal,
                                                  std::vector<double>& unsupE,
                                                  const std::vector<double> Pmax,
                                                  const std::vector<double> Pmin):
-    generation_(generation),
-    initialGen_(generation),
+    withdrawal_(withdrawal),
+    initWithdrawal_(withdrawal),
     unsupE_(unsupE),
     pmax_(Pmax),
     pmin_(Pmin)
@@ -92,36 +92,36 @@ StorageForRemixNoLevels::StorageForRemixNoLevels(std::vector<double>& generation
 
 double StorageForRemixNoLevels::maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen)
 {
-    // Max slice we can take from hydro generation, at an hour when the total
+    // Max slice we can take from hydro withdrawal, at an hour when the total
     // production reaches a max.
-    double boundAtMax = generation_[hourOfMaxGen] - pmin_[hourOfMaxGen];
-    // Max slice we can add to hydro generation, at an hour when the total
+    double boundAtMax = withdrawal_[hourOfMaxGen] - pmin_[hourOfMaxGen];
+    // Max slice we can add to hydro withdrawal, at an hour when the total
     // production reaches a min.
     double boundAtMin = std::min(
-      {pmax_[hourOfMinGen] - generation_[hourOfMinGen], unsupE_[hourOfMinGen]});
+      {pmax_[hourOfMinGen] - withdrawal_[hourOfMinGen], unsupE_[hourOfMinGen]});
 
     return std::min(boundAtMax, boundAtMin);
 }
 
 void StorageForRemixNoLevels::checkInput(size_t size)
 {
-    std::vector<size_t> sizes = {size, generation_.size(), pmin_.size(), pmax_.size()};
+    std::vector<size_t> sizes = {size, withdrawal_.size(), pmin_.size(), pmax_.size()};
 
     if (!std::ranges::all_of(sizes, [&sizes](const size_t s) { return s == sizes.front(); }))
     {
         throw std::invalid_argument(error_msg_start + "arrays of different sizes");
     }
 
-    if (!(generation_ <= pmax_ + TOLERANCE))
+    if (!(withdrawal_ <= pmax_ + TOLERANCE))
     {
         throw std::invalid_argument(error_msg_start
-                                    + "Hydro generation not smaller than Pmax everywhere");
+                                    + "Storage withdrawal not smaller than Pmax everywhere");
     }
 
-    if (!(pmin_ - TOLERANCE <= generation_))
+    if (!(pmin_ - TOLERANCE <= withdrawal_))
     {
         throw std::invalid_argument(error_msg_start
-                                    + "Hydro generation not greater than Pmin everywhere");
+                                    + "Storage withdrawal not greater than Pmin everywhere");
     }
 }
 
@@ -129,35 +129,35 @@ void StorageForRemixNoLevels::update()
 {
 }
 
-const std::vector<double>& StorageForRemixNoLevels::initialGen()
+const std::vector<double>& StorageForRemixNoLevels::initWithdrawal()
 {
-    return initialGen_;
+    return initWithdrawal_;
 }
 
-std::vector<double>& StorageForRemixNoLevels::generation()
+std::vector<double>& StorageForRemixNoLevels::withdrawal()
 {
-    return generation_;
+    return withdrawal_;
 }
 
-StorageForRemixWithLevels::StorageForRemixWithLevels(std::vector<double>& generation,
+StorageForRemixWithLevels::StorageForRemixWithLevels(std::vector<double>& withdrawal,
                                                      std::vector<double>& unsupE,
                                                      std::vector<double>& levels,
                                                      const std::vector<double> Pmax,
                                                      const std::vector<double> Pmin,
                                                      const std::vector<double> inflows,
                                                      const std::vector<double> overflow,
-                                                     const std::vector<double>& pump,
+                                                     const std::vector<double>& injection,
                                                      const std::vector<double> lowRuleCurve,
                                                      const std::vector<double> upRuleCurve,
                                                      const double initLevel,
-                                                     const double pumpEfficiency):
-    StorageForRemixNoLevels(generation, unsupE, Pmax, Pmin),
+                                                     const double injectionEff):
+    StorageForRemixNoLevels(withdrawal, unsupE, Pmax, Pmin),
     levels_(levels),
     inflows_(inflows),
     overflow_(overflow),
-    pump_(pump),
+    injection_(injection),
     initLevel_(initLevel),
-    pumpEff_(pumpEfficiency),
+    injectionEff_(injectionEff),
     ruleCurveLow_(lowRuleCurve),
     ruleCurveUp_(upRuleCurve)
 {
@@ -190,7 +190,7 @@ void StorageForRemixWithLevels::checkInput(size_t size)
     std::vector<size_t> sizes = {size,
                                  inflows_.size(),
                                  overflow_.size(),
-                                 pump_.size(),
+                                 injection_.size(),
                                  levels_.size()};
 
     if (!std::ranges::all_of(sizes, [&sizes](const size_t s) { return s == sizes.front(); }))
@@ -220,11 +220,11 @@ void StorageForRemixWithLevels::checkLevels()
 
 void StorageForRemixWithLevels::update()
 {
-    levels_[0] = initLevel_ + inflows_[0] - overflow_[0] + pumpEff_ * pump_[0] - generation_[0];
+    levels_[0] = initLevel_ + inflows_[0] - overflow_[0] + injectionEff_ * injection_[0] - withdrawalEff_ * withdrawal_[0];
     for (size_t h = 1; h < levels_.size(); ++h)
     {
-        levels_[h] = levels_[h - 1] + inflows_[h] - overflow_[h] + pumpEff_ * pump_[h]
-                     - generation_[h];
+        levels_[h] = levels_[h - 1] + inflows_[h] - overflow_[h] + injectionEff_ * injection_[h]
+                     - withdrawalEff_ * withdrawal_[h];
     }
 }
 

@@ -334,7 +334,7 @@ std::shared_ptr<IStorageForRemix> extractSTSforRemix(const Data::Area& area,
     auto& weeklyResults = problem.ResultatsHoraires[area.index];
     auto& stsResults = weeklyResults.ShortTermStorage;
 
-    auto& generation = stsResults[stsIndex].withdrawal;
+    auto& withdrawal = stsResults[stsIndex].withdrawal;
     const auto& injection = stsResults[stsIndex].injection;
     auto& unsupE = weeklyResults.ValeursHorairesDeDefaillancePositive;
     auto& levels = stsResults[stsIndex].level;
@@ -347,7 +347,7 @@ std::shared_ptr<IStorageForRemix> extractSTSforRemix(const Data::Area& area,
     const double withdrawalcapacity = stsProperties.withdrawalNominalCapacity;
     const double efficiency = stsProperties.withdrawalEfficiency;
 
-    return makeSTSforRemix(generation,
+    return makeSTSforRemix(withdrawal,
                            unsupE,
                            levels,
                            pmax,
@@ -396,7 +396,7 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
 
           auto hydroStorage = extractHydroForRemix(area, problem, firstHourOfWeek);
 
-          checkInput(load, unsupE, spillage, dtgMrg, hydroStorage->initialGen());
+          checkInput(load, unsupE, spillage, dtgMrg, hydroStorage->initWithdrawal());
 
           ListStorageForRemix listStorage = {hydroStorage};
 

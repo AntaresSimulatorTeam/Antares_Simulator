@@ -97,7 +97,7 @@ BOOST_FIXTURE_TEST_CASE(Hydro_gen_not_smaller_than_pmax__exception_raised, Input
     HydroPmax = {2., 2., 2., 4., 5.};
     init_level = 0.;
     capacity = 1.;
-    err_msg = "Remix hydro input : Hydro generation not smaller than Pmax everywhere";
+    err_msg = "Remix hydro input : Storage withdrawal not smaller than Pmax everywhere";
     BOOST_CHECK_EXCEPTION(createHydroForRemix(), std::invalid_argument, checkMessage(err_msg));
 }
 
@@ -107,7 +107,7 @@ BOOST_FIXTURE_TEST_CASE(Hydro_gen_not_greater_than_pmin__exception_raised, Input
     HydroPmin = {0., 0., 4., 0., 0.};
     init_level = 0.;
     capacity = 1.;
-    err_msg = "Remix hydro input : Hydro generation not greater than Pmin everywhere";
+    err_msg = "Remix hydro input : Storage withdrawal not greater than Pmin everywhere";
     BOOST_CHECK_EXCEPTION(createHydroForRemix(), std::invalid_argument, checkMessage(err_msg));
 }
 
