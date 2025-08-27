@@ -265,6 +265,7 @@ public:
     explicit EvalVisitor(EvaluationContext context,
                          Optimisation::LinearProblemApi::FillContext fillContext,
                          const ModelerStudy::SystemModel::Component* component,
+                         int scenarioIndex,
                          int timeIndex);
 
     std::string name() const override;
@@ -273,6 +274,7 @@ protected:
     const EvaluationContext context_;
     Optimisation::LinearProblemApi::FillContext fillContext_;
     const ModelerStudy::SystemModel::Component* component_ = nullptr;
+    int scenarioIndex_ = -1;
     int timeIndex_ = -1;
 
     EvaluationResult visit(const Nodes::SumNode* node) override;

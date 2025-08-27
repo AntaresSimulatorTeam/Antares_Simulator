@@ -130,6 +130,7 @@ void addPortEntries(ISimulationTable& simulationTable,
             Antares::Expressions::Visitors::EvalVisitor evalVisitor(evalContext,
                                                                     fillContext,
                                                                     &component,
+                                                                    *scenIdx,
                                                                     *ts);
 
             auto portValue = evalVisitor.dispatch(portFieldDef.Definition().RootNode());

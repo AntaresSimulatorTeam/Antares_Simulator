@@ -22,9 +22,11 @@
 #include "antares/expressions/visitors/EvalVisitor.h"
 
 #include <numeric>
+#include <optional>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
+#include <antares/solver/optim-model-filler/VariableDictionary.h>
 #include "antares/expressions/ShiftVector.h"
 #include "antares/logs/logs.h"
 
@@ -40,9 +42,11 @@ EvalVisitor::EvalVisitor(EvaluationContext context,
 EvalVisitor::EvalVisitor(EvaluationContext context,
                          Optimisation::LinearProblemApi::FillContext fillContext,
                          const ModelerStudy::SystemModel::Component* component,
+                         int scenarioIndex,
                          int timeIndex):
     context_(std::move(context)),
     fillContext_(std::move(fillContext)),
+    scenarioIndex_(scenarioIndex),
     timeIndex_(timeIndex)
 {
     component_ = component;
@@ -97,9 +101,10 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
         return EvaluationResult{context_.getVariableValue(node->value())};
     }
 
-    std::string varName = component_->Id() + "." + node->value() + "_t"
-                          + std::to_string(timeIndex_);
-
+    Optimization::PartialKey key(component_->Id(), node->value());
+    std::string varName = Optimization::VariableDictionary::buildVariableName(key,
+                                                                              std::nullopt,
+                                                                              timeIndex_);
     // TODO RM DEBUG
     logs.notice() << "VariableNode: getting variable '" << varName << "'";
     return EvaluationResult(context_.getVariableValue(varName));
@@ -162,7 +167,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
         auto* component = connexion_end.component();
         auto* port = connexion_end.port();
 
-        EvalVisitor visitor(context_, fillContext_, component, timeIndex_);
+        EvalVisitor visitor(context_, fillContext_, component, scenarioIndex_, timeIndex_);
         const Nodes::Node* node = component->nodeAtPortField(port->Id(), fieldId);
         to_return += visitor.dispatch(node);
     }
