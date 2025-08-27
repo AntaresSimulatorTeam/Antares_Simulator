@@ -103,7 +103,7 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_2_components_with_a_port_field,
 
     std::vector<SystemModel::Constraint> constraints;
     constraints.push_back(std::move(balance_constraint));
-    modelBuilder.reset();
+
     auto nodeModel = modelBuilder.withId("node")
                        .withPorts({injection_port})
                        .withConstraints(std::move(constraints))

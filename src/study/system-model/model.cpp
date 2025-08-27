@@ -103,6 +103,7 @@ Model ModelBuilder::build()
         reset();
         throw;
     }
+    reset();
     return model;
 }
 
