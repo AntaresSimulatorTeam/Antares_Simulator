@@ -276,7 +276,7 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
                                                       ctx,
                                                       component_,
                                                       variableDictionary_);
-    for (const auto& constraint: component_.getModel()->getConstraints() | std::views::values)
+    for (const auto& constraint: component_.getModel()->Constraints() | std::views::values)
     {
         auto* root_node = constraint.expression().RootNode();
         auto linear_constraints = visitor.dispatch(root_node);
