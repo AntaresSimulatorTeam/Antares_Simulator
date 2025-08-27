@@ -59,6 +59,16 @@ void checkInput(const std::vector<double>& Load,
     }
 }
 
+double computeExchange(unsigned hourOfMinGen,
+                       unsigned hourOfMaxGen,
+                       const std::vector<double>& TotalGen,
+                       std::shared_ptr<IStorageForRemix> storage)
+{
+    double maxVariation = std::max(TotalGen[hourOfMaxGen] - TotalGen[hourOfMinGen], 0.);
+    double maxExchangeFromStorage = storage->maxExchange(hourOfMaxGen, hourOfMinGen);
+    return std::max(std::min(maxExchangeFromStorage, maxVariation / 2.), 0.);
+}
+
 static double makeExchange(const std::set<unsigned>& validHours,
                            std::vector<double>& TotalGen,
                            std::vector<double>& UnsupE,
@@ -90,9 +100,7 @@ static double makeExchange(const std::set<unsigned>& validHours,
 
             auto hourOfMaxGen = rng::max_element(validHoursForMax, {}, totalGenProjection);
 
-            double maxVariation = std::max(TotalGen[*hourOfMaxGen] - TotalGen[*hourOfMinGen], 0.);
-            double maxExchangeFromStorage = storage->maxExchange(*hourOfMaxGen, *hourOfMinGen);
-            exchange = std::max(std::min(maxExchangeFromStorage, maxVariation / 2.), 0.);
+            exchange = computeExchange(*hourOfMinGen, *hourOfMaxGen, TotalGen, storage);
 
             if (exchange > eps)
             {
