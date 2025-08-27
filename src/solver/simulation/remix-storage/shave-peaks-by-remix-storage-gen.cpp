@@ -92,26 +92,16 @@ static Exchange findExchange(const std::set<unsigned>& validHours,
     std::set<unsigned> validHoursForMin(validHours);
     std::erase_if(validHoursForMin, [&](int h) { return UnsupE[h] <= eps; });
 
-    while (true)
+    while (!validHoursForMin.empty())
     {
-        if (!validHoursForMin.size())
-        {
-            return {};
-        }
-
         auto hourOfMinGen = rng::min_element(validHoursForMin, {}, totalGenProjection);
 
         std::set<unsigned> validHoursForMax(validHours);
         double totalGenMin = TotalGen[*hourOfMinGen];
         std::erase_if(validHoursForMax, [&](int h) { return TotalGen[h] < totalGenMin + eps; });
 
-        while (true)
+        while (!validHoursForMax.empty())
         {
-            if (!validHoursForMax.size())
-            {
-                break;
-            }
-
             auto hourOfMaxGen = rng::max_element(validHoursForMax, {}, totalGenProjection);
             auto exchange = computeExchange(*hourOfMinGen, *hourOfMaxGen, TotalGen, storage);
 
@@ -123,6 +113,7 @@ static Exchange findExchange(const std::set<unsigned>& validHours,
         }
         validHoursForMin.erase(hourOfMinGen);
     }
+    return {};
 }
 
 void update(Exchange& exchange,
