@@ -22,16 +22,17 @@
 #pragma once
 
 #include <numeric>
+#include <utility> // std::move
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/expressions/visitors/NodeVisitor.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/solver/optim-model-filler/TimeDependentLinearExpression.h>
+#include <antares/solver/optim-model-filler/VariableDictionary.h>
 #include "antares/expressions/visitors/EvalVisitor.h"
 #include "antares/optimisation/linear-problem-api/IScenario.h"
 #include "antares/optimisation/linear-problem-api/mipVariable.h"
-#include "antares/solver/optim-model-filler/linearTypes.h"
 #include "antares/study/system-model/component.h"
 
 using namespace Antares::Expressions::Nodes;
@@ -184,28 +185,40 @@ template<Antares::Optimisation::LinearProblemApi::SolverVariable InnerSolverVari
 TimeDependentLinearExpression ReadLinearExpressionVisitor<InnerSolverVariable>::visit(
   const VariableNode* node)
 {
+    // Résout une fois le "handle" de la variable (componentId + variableId)
+    // Utilise l'API optimisée du VariableDictionary pour éviter les accès coûteux par FullKey
+    const auto partialKey = dictionary_.buildKey(component_.Id(), node->value());
+    const auto& handle = dictionary_.handle(partialKey);
+
     if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
     {
-        FullKey key = dictionary_.buildFullKey(component_.Id(),
-                                               node->value(),
-                                               MCYearAndTime::MCYear{fillContext_.getYear()});
-        return TimeDependentLinearExpression(fillContext_, LinearExpression(0, {{key, 1}}));
+        // Variable sans dimension temps: on passe timeStep=0 (ignoré si non pertinent)
+        const MCYearAndTime timeAndScenario{MCYearAndTime::MCYear{fillContext_.getYear()}, 0u};
+        const auto idx = dictionary_.indexOf(handle, timeAndScenario);
+
+        // Utilise la nouvelle API VarIndexMap au lieu de FullKeyMap
+        VarIndexMap coefficients;
+        coefficients[idx] = 1.0;
+        return TimeDependentLinearExpression(fillContext_,
+                                             LinearExpression(0.0, std::move(coefficients)));
     }
 
-    // only dependent
+    // Variable dépendante du temps local: un index par pas local
     LinearExpressionMap linearExpressions;
-
     for (unsigned int timeStep = fillContext_.getLocalFirstTimeStep();
          timeStep <= fillContext_.getLocalLastTimeStep();
          ++timeStep)
     {
-        FullKey key = dictionary_.buildFullKey(component_.Id(),
-                                               node->value(),
-                                               MCYearAndTime::MCYear{fillContext_.getYear()},
-                                               timeStep);
-        linearExpressions[timeStep] = LinearExpression(0, {{key, 1}});
+        const MCYearAndTime timeAndScenario{MCYearAndTime::MCYear{fillContext_.getYear()},
+                                            timeStep};
+        const auto idx = dictionary_.indexOf(handle, timeAndScenario);
+
+        // Utilise la nouvelle API VarIndexMap au lieu de FullKeyMap
+        VarIndexMap coefficients;
+        coefficients[idx] = 1.0;
+        linearExpressions[timeStep] = LinearExpression(0.0, std::move(coefficients));
     }
-    return TimeDependentLinearExpression(fillContext_, linearExpressions);
+    return TimeDependentLinearExpression(fillContext_, std::move(linearExpressions));
 }
 
 template<Antares::Optimisation::LinearProblemApi::SolverVariable InnerSolverVariable>

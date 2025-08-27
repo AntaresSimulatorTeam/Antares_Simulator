@@ -29,15 +29,15 @@
 namespace Antares::Optimization
 {
 /**
- * Element-wise multiplication of a map by a scale.
+ * Mise à l'échelle élément-par-élément d'une map d'index.
  * For every key: final_value = scale * initial_value
- * @param map The [string, double] map to scale
+ * @param map The [VarIndex, double] map to scale
  * @param scale The scale
  * @return The scaled map
  */
-FullKeyMap scale_map(const FullKeyMap& map, double scale)
+VarIndexMap scale_map(const VarIndexMap& map, double scale)
 {
-    FullKeyMap result;
+    VarIndexMap result;
     result.reserve(map.size());
     for (auto [key, value]: map)
     {
@@ -46,10 +46,10 @@ FullKeyMap scale_map(const FullKeyMap& map, double scale)
     return result;
 }
 
-LinearExpression::LinearExpression(double offset, FullKeyMap coef_per_var):
+LinearExpression::LinearExpression(double offset, VarIndexMap coef_per_index):
     offset_(offset),
     terms_(),
-    cache_(std::move(coef_per_var)),
+    cache_(std::move(coef_per_index)),
     cacheValid_(true)
 {
     terms_.reserve(cache_.size());
@@ -92,14 +92,7 @@ void LinearExpression::materialize() const
     cacheValid_ = true;
 }
 
-LinearExpression LinearExpression::operator+(const LinearExpression& other) const
-{
-    auto result(*this);
-    result += other;
-    return result;
-}
-
-const FullKeyMap& LinearExpression::coefPerVar() const
+const VarIndexMap& LinearExpression::coefPerIndex() const
 {
     materialize();
     return cache_;
@@ -116,6 +109,13 @@ LinearExpression& LinearExpression::operator+=(const LinearExpression& other)
     // If other had pre-materialized unique map but no raw terms (should not happen), ignore.
     invalidate();
     return *this;
+}
+
+LinearExpression LinearExpression::operator+(const LinearExpression& other) const
+{
+    auto result(*this);
+    result += other;
+    return result;
 }
 
 LinearExpression LinearExpression::operator-(const LinearExpression& other) const
@@ -175,11 +175,6 @@ LinearExpression LinearExpression::operator-() const
     out.terms_ = std::move(scaledTerms);
     out.invalidate();
     return out;
-}
-
-double LinearExpression::offset() const
-{
-    return offset_;
 }
 
 } // namespace Antares::Optimization

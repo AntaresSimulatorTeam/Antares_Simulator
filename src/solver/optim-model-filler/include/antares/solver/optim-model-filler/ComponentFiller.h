@@ -29,6 +29,7 @@
 #include "antares/solver/optim-model-filler/scenarioGroupRepo.h"
 
 #include "ReadLinearConstraintVisitor.h"
+#include "ReadLinearExpressionVisitor.h"
 
 namespace Antares::ModelerStudy::SystemModel
 {

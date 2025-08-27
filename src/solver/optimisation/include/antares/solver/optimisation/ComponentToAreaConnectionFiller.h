@@ -29,7 +29,6 @@
 #include "antares/logs/logs.h"
 #include "antares/optimisation/linear-problem-api/IScenario.h"
 #include "antares/optimisation/linear-problem-api/linearProblemFiller.h"
-#include "antares/solver/optim-model-filler/LinearExpression.h"
 #include "antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h"
 #include "antares/solver/optim-model-filler/VariableDictionary.h"
 #include "antares/solver/optim-model-filler/scenarioGroupRepo.h"
@@ -177,9 +176,11 @@ void ComponentToAreaConnectionFiller<SolverTagType>::addExpressionToConstraint(
     // Contribution is added to the left-hand side of the constraint
     // We invert the sign bc modeler is in "gen>0, load<0" convention
     // legacy constraint is in "gen<0, load>0" convention
-    for (const auto& [varKey, coef]: expression.coefPerVar())
+
+    // Use optimized approach with variable indices for O(1) access
+    for (const auto& [varIndex, coef]: expression.coefPerIndex())
     {
-        auto* var = modelerVariableDictionary_[varKey];
+        auto* var = modelerVariableDictionary_.byIndex(varIndex); // O(1) access!
         areaBalanceConstraint->setCoefficient(var, -coef);
     }
     areaBalanceConstraint->setBounds(areaBalanceConstraint->getLb() + expression.offset(),

@@ -21,16 +21,16 @@
 
 #pragma once
 
+#include <cstdint>
 #include <functional>
-#include <string>
 #include <unordered_map>
 #include <vector>
 
-#include <antares/solver/optim-model-filler/FullKey.h>
-
 namespace Antares::Optimization
 {
-using FullKeyMap = std::unordered_map<FullKey, double, FullKeyHash>;
+// Index compact vers le vecteur global de variables
+using VarIndex = std::uint32_t;
+using VarIndexMap = std::unordered_map<VarIndex, double>;
 
 /**
  * @brief Element-wise sum of two maps, with an optional transformation applied to the values of the
@@ -62,18 +62,18 @@ using FullKeyMap = std::unordered_map<FullKey, double, FullKeyHash>;
  * maps.
  *
  * @example
- * Example 1: Using `std::unordered_map<FullKey, double, FullKeyHash>`
+ * Example 1: Using `std::unordered_map<VarIndex, double>`
  *
  * ```cpp
  *
- * std::unordered_map<FullKey, double, FullKeyHash> map1 = {
- *     {FullKey("component1", "variable1"), 1.0},
- *     {FullKey("component2", "variable2"), 2.0}
+ * std::unordered_map<VarIndex, double> map1 = {
+ *     {1, 1.0},
+ *     {2, 2.0}
  * };
  *
- * std::unordered_map<FullKey, double, FullKeyHash> map2 = {
- *     {FullKey("component1", "variable1"), 3.0},
- *     {FullKey("component3", "variable3"), 4.0}
+ * std::unordered_map<VarIndex, double> map2 = {
+ *     {1, 3.0},
+ *     {3, 4.0}
  * };
  *
  * add_maps(map1, map2);
@@ -117,19 +117,19 @@ void add_maps(MapType& left, const MapType& right, UnaryOp op = std::identity{})
 }
 
 /**
- * Element-wise multiplication of a map by a scale.
+ * Mise à l'échelle élément-par-élément d'une map d'index.
  * For every key: final_value = scale * initial_value
- * @param map The [string, double] map to scale
+ * @param map The [VarIndex, double] map to scale
  * @param scale The scale
  * @return The scaled map
  */
-FullKeyMap scale_map(const FullKeyMap& map, double scale);
+VarIndexMap scale_map(const VarIndexMap& map, double scale);
 
 /**
- * Linear Expression
- * Represents an expression that is linear in regard to an optimization problem's variables.
+ * LinearExpression
+ * Représente une expression linéaire: coefficients non nuls par index de variable + offset.
  * It can be fully defined by:
- * - the non-zero coefficients of the variables
+ * - the non-zero coefficients of the variables (by VarIndex)
  * - a scalar offset
  */
 class LinearExpression
@@ -138,8 +138,9 @@ public:
     /// Build a linear expression with zero offset and zero coefficients
     LinearExpression() = default;
     /// Build a linear expression with a given offset and a given map of non-zero coefficients
-    /// per variable ID
-    LinearExpression(double offset, FullKeyMap coef_per_var);
+    /// per variable index
+    LinearExpression(double offset, VarIndexMap coef_per_index);
+
     /// Sum two linear expressions
     LinearExpression operator+(const LinearExpression& other) const;
     /// Subtract two linear expressions
@@ -153,27 +154,37 @@ public:
     LinearExpression operator/(const LinearExpression& other) const;
     /// Multiply linear expression by -1
     LinearExpression operator-() const;
-    /// Get the offset
-    double offset() const;
 
-    /// Get the non-zero coefficients per variable ID
-    const FullKeyMap& coefPerVar() const;
+    /// Get the offset
+    double offset() const
+    {
+        return offset_;
+    }
+
+    /// Get the non-zero coefficients per variable index (agrégation paresseuse)
+    const VarIndexMap& coefPerIndex() const;
 
     LinearExpression& operator+=(const LinearExpression& value);
 
-    using RawTerm = std::pair<FullKey, double>;
-    double offset_ = 0;
-    std::vector<RawTerm> terms_; // may contain duplicates
-    mutable FullKeyMap cache_;   // aggregated unique sums
-    mutable bool cacheValid_ = false;
+    // Termes bruts [index, coefficient], peuvent contenir des doublons
+    using RawTerm = std::pair<VarIndex, double>;
+
+    // Mise à l'échelle des termes bruts
     static std::vector<RawTerm> scaleTerms(const std::vector<RawTerm>& src, double factor);
 
+    // Invalidation explicite du cache
     void invalidate()
     {
         cacheValid_ = false;
     }
 
-    /// Lazy caching
+    // Matérialisation du cache [agrégation des doublons]
     void materialize() const;
+
+private:
+    double offset_ = 0.0;
+    std::vector<RawTerm> terms_; // chemin d'écriture rapide, doublons possibles
+    mutable VarIndexMap cache_;  // somme agrégée par index
+    mutable bool cacheValid_ = false;
 };
 } // namespace Antares::Optimization

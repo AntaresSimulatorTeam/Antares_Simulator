@@ -23,10 +23,12 @@
 
 #include <limits>
 #include <ranges>
+#include <utility>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/expressions/visitors/NodeVisitor.h>
+#include <antares/solver/optim-model-filler/LinearExpression.h>
 #include "antares/expressions/ShiftVector.h"
 
 #include "ReadLinearExpressionVisitor.h"
@@ -46,12 +48,12 @@ namespace Antares::Optimization
  * Linear Constraint
  * Represents a linear constraint in an optimization problem.
  * It is fully defined by:
- * - a Linear Expression (defined by an offset and non-zero variable coefficients)
+ * - a Linear Expression (defined by an offset and non-zero variable coefficients by index)
  * - a lower and an upper bounds
  */
 struct LinearConstraint
 {
-    FullKeyMap coef_per_var;
+    VarIndexMap coef_per_var; // Migré vers VarIndexMap pour accès O(1)
     double lb = -std::numeric_limits<double>::infinity();
     double ub = std::numeric_limits<double>::infinity();
     unsigned int timeStep = 0;
