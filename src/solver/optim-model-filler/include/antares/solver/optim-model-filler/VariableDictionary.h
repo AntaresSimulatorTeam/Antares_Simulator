@@ -180,14 +180,6 @@ inline std::string buildVariableName(const PartialKey& key,
     return ret;
 }
 
-inline std::string buildVariableName(const PartialKey& key, MCYearAndTime mcyearAndTime)
-{
-    std::string ret = fmt::format("{}.{}", key.getComponent(), key.getVariable());
-    ret += "_s" + std::to_string(format_as(mcyearAndTime.mcYear));
-    ret += "_t" + std::to_string(mcyearAndTime.timestep);
-    return ret;
-}
-
 /**
  * @brief Storage for created MIP variables indexed by (component, variable, scenario?, timestep?).
  * Uses nested hash maps + a vector with offset for contiguous timestep indices.
@@ -346,27 +338,12 @@ void VariableDictionary<InnerSolverVariable>::addVariable(const Dimensions& dime
         {
             const uint16_t ts = firstT + k;
             const MCYearAndTime yts{year, ts};
-            const std::string name = buildVariableName(key, yts);
+            const auto yearOpt = buildOptional<MCYearAndTime::MCYear>(
+              dimensions.isScenarioDependent(),
+              year);
+            const auto tsOpt = buildOptional(dimensions.isTimeDependent(), ts);
+            const std::string name = buildVariableName(key, yearOpt, tsOpt);
             storage_.push_back(factory(yts, name));
-        }
-    }
-
-    // Also maintain legacy storage for backward compatibility
-    auto& m = storageOfAddedMipVariables_[key];
-    const auto&& scenariosIndices = dimensions.getScenarioIndices();
-    const auto offset = *timeInterval.begin();
-    for (const auto&& scenario: scenariosIndices)
-    {
-        auto scenarioNumber = static_cast<MCYearAndTime::MCYear>(scenario);
-        m[scenarioNumber].resize(timeInterval.size(), offset);
-        for (const auto timestep: timeInterval)
-        {
-            const auto year = buildOptional<MCYearAndTime::MCYear>(dimensions.isScenarioDependent(),
-                                                                   scenarioNumber);
-            const auto ts = buildOptional(dimensions.isTimeDependent(), timestep);
-            const std::string name = buildVariableName(key, year, ts);
-            m[scenarioNumber][timestep] = factory({.mcYear = scenarioNumber, .timestep = timestep},
-                                                  name);
         }
     }
 }
