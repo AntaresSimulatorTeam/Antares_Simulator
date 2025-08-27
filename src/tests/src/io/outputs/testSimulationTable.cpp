@@ -1158,8 +1158,10 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_ModelerIntegration)
 
     build(fillContext, &linearProblem);
 
+    LinearProblemData data;
+    std::map<std::string, double> solution;
     BOOST_CHECK_NO_THROW(
-      FillSimulationTable(table, linearProblem, components, variableDictionary, fillContext););
+      FillSimulationTable(table, linearProblem, components, &data, solution, variableDictionary, fillContext););
 }
 
 BOOST_AUTO_TEST_SUITE_END()

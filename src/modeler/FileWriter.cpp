@@ -81,6 +81,7 @@ void FileWriter::writeSimulationTable(
                             linearProblem,
                             components,
                             dataSeries,
+                            solution.getOptimalValues(),
                             variableDictionary,
                             fillContext);
         simulationTable.writeHeader();

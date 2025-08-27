@@ -25,9 +25,9 @@
 #include <antares/solver/optim-model-filler/VariableDictionary.h>
 #include "antares/expressions/visitors/EvalVisitor.h"
 #include "antares/logs/logs.h"
+#include "antares/optimisation/linear-problem-api/IScenario.h"
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
 #include "antares/optimisation/linear-problem-api/mipConstraint.h"
-#include "antares/optimisation/linear-problem-api/mipSolution.h"
 
 using namespace Antares::Optimisation::LinearProblemApi;
 
@@ -101,9 +101,9 @@ std::string BuildModelerConstraintName(const std::string& cid,
 
 void addPortEntries(ISimulationTable& simulationTable,
                     const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
-                    const Antares::Optimisation::LinearProblemApi::IMipSolution& solution,
                     const Antares::ModelerStudy::SystemModel::Component& component,
-                    Antares::Optimisation::LinearProblemApi::ILinearProblemData* dataSeries,
+                    const Antares::Optimisation::LinearProblemApi::ILinearProblemData* dataSeries,
+                    const std::map<std::string, double>& solutions,
                     unsigned currentBlock,
                     const TimeConversionMode& timeConversionMode,
                     std::optional<unsigned> scenario)
@@ -123,20 +123,17 @@ void addPortEntries(ISimulationTable& simulationTable,
                                           .blockTimeIndex = std::nullopt,
                                           .absoluteTimeIndex = std::nullopt};
 
-            std::optional<double> value = std::nullopt;
-
-            std::map<std::string, double> variables;
-
+            EmptyScenario scenario;
             const Antares::Expressions::Visitors::EvaluationContext
-              evalContext(component.getParameterValues(), solution.getOptimalValues(), *dataSeries);
+              evalContext(component.getParameterValues(), solutions, *dataSeries, scenario);
 
             Antares::Expressions::Visitors::EvalVisitor evalVisitor(evalContext,
                                                                     fillContext,
                                                                     &component,
                                                                     *ts);
 
-            auto res = evalVisitor.dispatch(portFieldDef.Definition().RootNode());
-            Antares::logs.notice() << cid << "   " << res.valueAsDouble();
+            auto portValue = evalVisitor.dispatch(portFieldDef.Definition().RootNode());
+            Antares::logs.notice() << cid << "   " << portValue.valueAsDouble();
 
             simulationTable.addEntry(
               {.block = tb.block,
@@ -145,14 +142,14 @@ void addPortEntries(ISimulationTable& simulationTable,
                .absolute_time_index = tb.absoluteTimeIndex,
                .block_time_index = tb.blockTimeIndex,
                .scenario_index = scenIdx,
-               .value = res.valueAsDouble(),
+               .value = portValue.valueAsDouble(),
                .status = Antares::Optimisation::LinearProblemApi::MipBasisStatus::NOT_AVAILABLE});
         };
 
         switch (idxType)
         {
         case TI::VARYING_IN_TIME_AND_SCENARIO:
-            for (unsigned ts = fillContext.getFirstTimeStep(); ts <= fillContext.getLastTimeStep();
+            for (unsigned ts = fillContext.getLocalFirstTimeStep(); ts <= fillContext.getLocalLastTimeStep();
                  ++ts)
             {
                 handle(ts, scenario);
@@ -162,7 +159,7 @@ void addPortEntries(ISimulationTable& simulationTable,
             handle(std::nullopt, scenario);
             break;
         case TI::VARYING_IN_TIME_ONLY:
-            for (unsigned ts = fillContext.getFirstTimeStep(); ts <= fillContext.getLastTimeStep();
+            for (unsigned ts = fillContext.getLocalFirstTimeStep(); ts <= fillContext.getLocalLastTimeStep();
                  ++ts)
             {
                 handle(ts, std::nullopt);
@@ -180,7 +177,8 @@ void FillSimulationTable(
   ISimulationTable& simulationTable,
   const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
   const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>& components,
-  Antares::Optimisation::LinearProblemApi::ILinearProblemData* dataSeries,
+  const Antares::Optimisation::LinearProblemApi::ILinearProblemData* dataSeries,
+  const std::map<std::string, double>& solutions,
   const Antares::Optimization::VariableDictionary& variableDictionary,
   const Antares::Optimisation::LinearProblemApi::FillContext& fillContext)
 {
@@ -226,9 +224,9 @@ void FillSimulationTable(
                                                   linearProblem.isLP());
         addPortEntries(simulationTable,
                        fillContext,
-                       solution,
                        component,
                        dataSeries,
+                       solutions,
                        1,
                        TimeConversionMode::SingleBlock,
                        scenario);
