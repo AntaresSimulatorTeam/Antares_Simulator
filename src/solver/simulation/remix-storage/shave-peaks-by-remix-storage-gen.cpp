@@ -1,5 +1,6 @@
 #include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-storage-gen.h"
 
+#include <optional>
 #include <ranges>
 #include <set>
 #include <stdexcept>
@@ -69,10 +70,22 @@ double computeExchange(unsigned hourOfMinGen,
     return std::max(std::min(maxExchangeFromStorage, maxVariation / 2.), 0.);
 }
 
-static double makeExchange(const std::set<unsigned>& validHours,
-                           std::vector<double>& TotalGen,
-                           std::vector<double>& UnsupE,
-                           std::shared_ptr<IStorageForRemix>& storage)
+struct Exchange
+{
+    bool valid()
+    {
+        return hourOfMinGen.has_value() && hourOfMaxGen.has_value() && exchange > eps;
+    }
+
+    std::optional<unsigned> hourOfMinGen;
+    std::optional<unsigned> hourOfMaxGen;
+    double exchange = 0;
+};
+
+static Exchange makeExchange(const std::set<unsigned>& validHours,
+                             std::vector<double>& TotalGen,
+                             std::vector<double>& UnsupE,
+                             std::shared_ptr<IStorageForRemix>& storage)
 {
     double exchange = 0.; // To be returned
     auto totalGenProjection = [&](int h) { return TotalGen[h]; };
@@ -83,7 +96,7 @@ static double makeExchange(const std::set<unsigned>& validHours,
         std::erase_if(validHoursForMin, [&](int h) { return UnsupE[h] <= eps; });
         if (!validHoursForMin.size())
         {
-            return 0.;
+            return {};
         }
 
         auto hourOfMinGen = rng::min_element(validHoursForMin, {}, totalGenProjection);
@@ -114,7 +127,7 @@ static double makeExchange(const std::set<unsigned>& validHours,
                 TotalGen[*hourOfMaxGen] -= exchange;
                 TotalGen[*hourOfMinGen] += exchange;
 
-                return exchange;
+                return {*hourOfMinGen, *hourOfMaxGen, exchange};
             }
             validHoursForMax.erase(hourOfMaxGen);
         }
@@ -157,9 +170,9 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
 
         narrowValidHoursByStorage(validHours, *storage, UnsupEinit);
 
-        double exchange = makeExchange(validHours, TotalGen, UnsupE, *storage);
+        auto exchange = makeExchange(validHours, TotalGen, UnsupE, *storage);
 
-        if (exchange <= eps)
+        if (!exchange.valid())
         {
             storage = removeStorageFromList(storage, listStorage);
             continue;
