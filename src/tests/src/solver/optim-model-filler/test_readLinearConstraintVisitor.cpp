@@ -95,14 +95,23 @@ BOOST_FIXTURE_TEST_CASE(test_visit_equal_node, MyDummyFixture)
     BOOST_CHECK_EQUAL(constraint.lb, -14.);
     BOOST_CHECK_EQUAL(constraint.ub, -14.);
     BOOST_CHECK_EQUAL(constraint.coef_per_var.size(), 2);
-    BOOST_CHECK_EQUAL(
-      constraint.coef_per_var.at(
-        variableDictionary.buildFullKey(component.Id(), "var1", MCYearAndTime::MCYear{0}, 0)),
-      -2);
-    BOOST_CHECK_EQUAL(
-      constraint.coef_per_var.at(
-        variableDictionary.buildFullKey(component.Id(), "var2", MCYearAndTime::MCYear{0}, 0)),
-      -1);
+    // Convert FullKey to VarIndex for accessing coef_per_var
+    auto var1Key = variableDictionary.buildFullKey(component.Id(),
+                                                   "var1",
+                                                   MCYearAndTime::MCYear{0},
+                                                   0);
+    auto var1Handle = variableDictionary.handle(var1Key.getPartialKey());
+    auto var1Index = variableDictionary.indexOf(var1Handle,
+                                                MCYearAndTime{MCYearAndTime::MCYear{0}, 0});
+    auto var2Key = variableDictionary.buildFullKey(component.Id(),
+                                                   "var2",
+                                                   MCYearAndTime::MCYear{0},
+                                                   0);
+    auto var2Handle = variableDictionary.handle(var2Key.getPartialKey());
+    auto var2Index = variableDictionary.indexOf(var2Handle,
+                                                MCYearAndTime{MCYearAndTime::MCYear{0}, 0});
+    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(var1Index), -2);
+    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(var2Index), -1);
 }
 
 BOOST_FIXTURE_TEST_CASE(test_visit_less_than_or_equal_node, MyDummyFixture)
@@ -126,18 +135,33 @@ BOOST_FIXTURE_TEST_CASE(test_visit_less_than_or_equal_node, MyDummyFixture)
     BOOST_CHECK_EQUAL(constraint.lb, -std::numeric_limits<double>::infinity());
     BOOST_CHECK_EQUAL(constraint.ub, -1.);
     BOOST_CHECK_EQUAL(constraint.coef_per_var.size(), 3);
-    BOOST_CHECK_EQUAL(
-      constraint.coef_per_var.at(
-        variableDictionary.buildFullKey(component.Id(), "var1", MCYearAndTime::MCYear{0}, 0)),
-      -1);
-    BOOST_CHECK_EQUAL(
-      constraint.coef_per_var.at(
-        variableDictionary.buildFullKey(component.Id(), "var2", MCYearAndTime::MCYear{0}, 0)),
-      -5);
-    BOOST_CHECK_EQUAL(
-      constraint.coef_per_var.at(
-        variableDictionary.buildFullKey(component.Id(), "var3", MCYearAndTime::MCYear{0}, 0)),
-      1);
+    // Convert FullKey to VarIndex for accessing coef_per_var
+    auto var1Key = variableDictionary.buildFullKey(component.Id(),
+                                                   "var1",
+                                                   MCYearAndTime::MCYear{0},
+                                                   0);
+    auto var1Handle = variableDictionary.handle(var1Key.getPartialKey());
+    auto var1Index = variableDictionary.indexOf(var1Handle,
+                                                MCYearAndTime{MCYearAndTime::MCYear{0}, 0});
+    auto var2Key = variableDictionary.buildFullKey(component.Id(),
+                                                   "var2",
+                                                   MCYearAndTime::MCYear{0},
+                                                   0);
+    auto var2Handle = variableDictionary.handle(var2Key.getPartialKey());
+    auto var2Index = variableDictionary.indexOf(var2Handle,
+                                                MCYearAndTime{MCYearAndTime::MCYear{0}, 0});
+
+    auto var3Key = variableDictionary.buildFullKey(component.Id(),
+                                                   "var3",
+                                                   MCYearAndTime::MCYear{0},
+                                                   0);
+    auto var3Handle = variableDictionary.handle(var3Key.getPartialKey());
+    auto var3Index = variableDictionary.indexOf(var3Handle,
+                                                MCYearAndTime{MCYearAndTime::MCYear{0}, 0});
+
+    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(var1Index), -1);
+    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(var2Index), -5);
+    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(var3Index), 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(test_visit_greater_than_or_equal_node, MyDummyFixture)
@@ -161,14 +185,25 @@ BOOST_FIXTURE_TEST_CASE(test_visit_greater_than_or_equal_node, MyDummyFixture)
     BOOST_CHECK_EQUAL(constraint.lb, -14);
     BOOST_CHECK_EQUAL(constraint.ub, std::numeric_limits<double>::infinity());
     BOOST_CHECK_EQUAL(constraint.coef_per_var.size(), 2);
-    BOOST_CHECK_EQUAL(
-      constraint.coef_per_var.at(
-        variableDictionary.buildFullKey(component.Id(), "var1", MCYearAndTime::MCYear{0}, 0)),
-      -2);
-    BOOST_CHECK_EQUAL(
-      constraint.coef_per_var.at(
-        variableDictionary.buildFullKey(component.Id(), "var2", MCYearAndTime::MCYear{0}, 0)),
-      -1);
+    // Convert FullKey to VarIndex for accessing coef_per_var
+    auto var1Key = variableDictionary.buildFullKey(component.Id(),
+                                                   "var1",
+                                                   MCYearAndTime::MCYear{0},
+                                                   0);
+    auto var1Handle = variableDictionary.handle(var1Key.getPartialKey());
+    auto var1Index = variableDictionary.indexOf(var1Handle,
+                                                MCYearAndTime{MCYearAndTime::MCYear{0}, 0});
+
+    auto var2Key = variableDictionary.buildFullKey(component.Id(),
+                                                   "var2",
+                                                   MCYearAndTime::MCYear{0},
+                                                   0);
+    auto var2Handle = variableDictionary.handle(var2Key.getPartialKey());
+    auto var2Index = variableDictionary.indexOf(var2Handle,
+                                                MCYearAndTime{MCYearAndTime::MCYear{0}, 0});
+
+    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(var1Index), -2);
+    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(var2Index), -1);
 }
 
 BOOST_FIXTURE_TEST_CASE(test_visit_illegal_node, MyDummyFixture)

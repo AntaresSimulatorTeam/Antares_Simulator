@@ -98,7 +98,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param, CreateVisitorFixture)
                                         variableDictionary);
     auto linear_expression = visitor.dispatch(sum).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 8.);
-    BOOST_CHECK(linear_expression.coefPerVar().empty());
+    BOOST_CHECK(linear_expression.coefPerIndex().empty());
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var, CreateVisitorFixture)
@@ -117,11 +117,18 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var, CreateVisitorFixture)
                                         variableDictionary);
     auto linear_expression = visitor.dispatch(sum).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 55.);
-    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
-    BOOST_CHECK_EQUAL(
-      linear_expression.coefPerVar().at(
-        variableDictionary.buildFullKey(component.Id(), "var", MCYearAndTime::MCYear{0}, 0)),
-      7.);
+    BOOST_CHECK_EQUAL(linear_expression.coefPerIndex().size(), 1);
+
+    // Convert FullKey to VarIndex for accessing coefPerIndex
+    auto varKey = variableDictionary.buildFullKey(component.Id(),
+                                                  "var",
+                                                  MCYearAndTime::MCYear{0},
+                                                  0);
+    auto varHandle = variableDictionary.handle(varKey.getPartialKey());
+    auto varIndex = variableDictionary.indexOf(varHandle,
+                                               MCYearAndTime{MCYearAndTime::MCYear{0}, 0});
+
+    BOOST_CHECK_EQUAL(linear_expression.coefPerIndex().at(varIndex), 7.);
 }
 
 struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearProblemData
@@ -155,9 +162,9 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum, CreateVisitorFixture)
                                         variableDictionary);
     auto linear_expressions = visitor.dispatch(sum).GetLinearExpressions();
     BOOST_CHECK_EQUAL(linear_expressions.at(0).offset(), 9.);
-    BOOST_CHECK(linear_expressions.at(0).coefPerVar().empty());
+    BOOST_CHECK(linear_expressions.at(0).coefPerIndex().empty());
     BOOST_CHECK_EQUAL(linear_expressions.at(1).offset(), 10.);
-    BOOST_CHECK(linear_expressions.at(1).coefPerVar().empty());
+    BOOST_CHECK(linear_expressions.at(1).coefPerIndex().empty());
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_AllTimeSum, CreateVisitorFixture)
@@ -179,7 +186,7 @@ BOOST_FIXTURE_TEST_CASE(visit_AllTimeSum, CreateVisitorFixture)
                                         variableDictionary);
     auto linear_expressions = visitor.dispatch(sum).GetLinearExpressions();
     BOOST_CHECK_EQUAL(linear_expressions.at(0).offset(), 8.);
-    BOOST_CHECK(linear_expressions.at(0).coefPerVar().empty());
+    BOOST_CHECK(linear_expressions.at(0).coefPerIndex().empty());
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_literal_plus_time_dependent_param_plus_var, CreateVisitorFixture)
@@ -205,15 +212,24 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_time_dependent_param_plus_var, Create
     auto linear_expressions = visitor.dispatch(sum).GetLinearExpressions();
     BOOST_CHECK_EQUAL(linear_expressions.at(0).offset(), 60.);
     BOOST_CHECK_EQUAL(linear_expressions.at(1).offset(), 61.);
-    BOOST_CHECK_EQUAL(linear_expressions.at(0).coefPerVar().size(), 1);
-    BOOST_CHECK_EQUAL(
-      linear_expressions.at(0).coefPerVar().at(
-        variableDictionary.buildFullKey(component.Id(), "var", MCYearAndTime::MCYear{0}, 0)),
-      7.);
-    BOOST_CHECK_EQUAL(
-      linear_expressions.at(1).coefPerVar().at(
-        variableDictionary.buildFullKey(component.Id(), "var", MCYearAndTime::MCYear{0}, 1)),
-      7.);
+    BOOST_CHECK_EQUAL(linear_expressions.at(0).coefPerIndex().size(), 1);
+    // Convert FullKey to VarIndex for accessing coefPerIndex
+    auto var0Key = variableDictionary.buildFullKey(component.Id(),
+                                                   "var",
+                                                   MCYearAndTime::MCYear{0},
+                                                   0);
+    auto var0Handle = variableDictionary.handle(var0Key.getPartialKey());
+    auto var0Index = variableDictionary.indexOf(var0Handle,
+                                                MCYearAndTime{MCYearAndTime::MCYear{0}, 0});
+    auto var1Key = variableDictionary.buildFullKey(component.Id(),
+                                                   "var",
+                                                   MCYearAndTime::MCYear{0},
+                                                   1);
+    auto var1Handle = variableDictionary.handle(var1Key.getPartialKey());
+    auto var1Index = variableDictionary.indexOf(var1Handle,
+                                                MCYearAndTime{MCYearAndTime::MCYear{0}, 1});
+    BOOST_CHECK_EQUAL(linear_expressions.at(0).coefPerIndex().at(var0Index), 7.);
+    BOOST_CHECK_EQUAL(linear_expressions.at(1).coefPerIndex().at(var1Index), 7.);
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_param_declared_const_in_library_but_time_dep_in_system,
@@ -242,11 +258,18 @@ BOOST_FIXTURE_TEST_CASE(visit_negate_literal_plus_var, CreateVisitorFixture)
     Node* neg = create<NegationNode>(sum);
     auto linear_expression = visitor.dispatch(neg).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), -60.);
-    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
-    BOOST_CHECK_EQUAL(
-      linear_expression.coefPerVar().at(
-        variableDictionary.buildFullKey(component.Id(), "var", MCYearAndTime::MCYear{0}, 0)),
-      -7.);
+    BOOST_CHECK_EQUAL(linear_expression.coefPerIndex().size(), 1);
+
+    // Convert FullKey to VarIndex for accessing coefPerIndex
+    auto varKey = variableDictionary.buildFullKey(component.Id(),
+                                                  "var",
+                                                  MCYearAndTime::MCYear{0},
+                                                  0);
+    auto varHandle = variableDictionary.handle(varKey.getPartialKey());
+    auto varIndex = variableDictionary.indexOf(varHandle,
+                                               MCYearAndTime{MCYearAndTime::MCYear{0}, 0});
+
+    BOOST_CHECK_EQUAL(linear_expression.coefPerIndex().at(varIndex), -7.);
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_literal_minus_var, CreateVisitorFixture)
@@ -257,11 +280,18 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_minus_var, CreateVisitorFixture)
     Node* sub = create<SubtractionNode>(create<LiteralNode>(60.), product);
     auto linear_expression = visitor.dispatch(sub).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 60.);
-    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
-    BOOST_CHECK_EQUAL(
-      linear_expression.coefPerVar().at(
-        variableDictionary.buildFullKey(component.Id(), "var", MCYearAndTime::MCYear{0}, 0)),
-      -7.);
+    BOOST_CHECK_EQUAL(linear_expression.coefPerIndex().size(), 1);
+
+    // Convert FullKey to VarIndex for accessing coefPerIndex
+    auto varKey = variableDictionary.buildFullKey(component.Id(),
+                                                  "var",
+                                                  MCYearAndTime::MCYear{0},
+                                                  0);
+    auto varHandle = variableDictionary.handle(varKey.getPartialKey());
+    auto varIndex = variableDictionary.indexOf(varHandle,
+                                               MCYearAndTime{MCYearAndTime::MCYear{0}, 0});
+
+    BOOST_CHECK_EQUAL(linear_expression.coefPerIndex().at(varIndex), -7.);
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_complex_expression, CreateVisitorFixture)
@@ -294,15 +324,26 @@ BOOST_FIXTURE_TEST_CASE(visit_complex_expression, CreateVisitorFixture)
                                         variableDictionary);
     auto linear_expression = visitor.dispatch(big_sum).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 10.);
-    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 2);
-    BOOST_CHECK_EQUAL(
-      linear_expression.coefPerVar().at(
-        variableDictionary.buildFullKey(component.Id(), "var1", MCYearAndTime::MCYear{0}, 0)),
-      4.);
-    BOOST_CHECK_EQUAL(
-      linear_expression.coefPerVar().at(
-        variableDictionary.buildFullKey(component.Id(), "var2", MCYearAndTime::MCYear{0}, 0)),
-      6.);
+    BOOST_CHECK_EQUAL(linear_expression.coefPerIndex().size(), 2);
+    // Convert FullKey to VarIndex for accessing coefPerIndex
+    auto var1Key = variableDictionary.buildFullKey(component.Id(),
+                                                   "var1",
+                                                   MCYearAndTime::MCYear{0},
+                                                   0);
+    auto var1Handle = variableDictionary.handle(var1Key.getPartialKey());
+    auto var1Index = variableDictionary.indexOf(var1Handle,
+                                                MCYearAndTime{MCYearAndTime::MCYear{0}, 0});
+
+    auto var2Key = variableDictionary.buildFullKey(component.Id(),
+                                                   "var2",
+                                                   MCYearAndTime::MCYear{0},
+                                                   0);
+    auto var2Handle = variableDictionary.handle(var2Key.getPartialKey());
+    auto var2Index = variableDictionary.indexOf(var2Handle,
+                                                MCYearAndTime{MCYearAndTime::MCYear{0}, 0});
+
+    BOOST_CHECK_EQUAL(linear_expression.coefPerIndex().at(var1Index), 4.);
+    BOOST_CHECK_EQUAL(linear_expression.coefPerIndex().at(var2Index), 6.);
 }
 
 BOOST_FIXTURE_TEST_CASE(comparison_nodes__exception_thrown, CreateVisitorFixture)
