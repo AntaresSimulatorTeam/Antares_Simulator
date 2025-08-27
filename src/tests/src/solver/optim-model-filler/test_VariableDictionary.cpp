@@ -46,41 +46,6 @@ BOOST_AUTO_TEST_CASE(PartialKeyGetters)
     BOOST_CHECK_EQUAL(pk.getVariable(), "variable");
 }
 
-BOOST_AUTO_TEST_CASE(FullKeyGetters_2ArgsConstructor)
-{
-    auto k = variableDict.buildFullKey("component", "variable");
-    BOOST_CHECK_EQUAL(k.getComponent(), "component");
-    BOOST_CHECK_EQUAL(k.getVariable(), "variable");
-
-    BOOST_CHECK(!k.getScenario());
-    BOOST_CHECK(!k.getTimestep());
-}
-
-BOOST_AUTO_TEST_CASE(FullKeyGetters_4ArgsConstructor)
-{
-    FullKey k = variableDict.buildFullKey("component", "variable", MCYearAndTime::MCYear{3}, 4);
-    BOOST_CHECK_EQUAL(k.getComponent(), "component");
-    BOOST_CHECK_EQUAL(k.getVariable(), "variable");
-
-    BOOST_CHECK_EQUAL(*k.getScenario(), MCYearAndTime::MCYear{3});
-    BOOST_CHECK_EQUAL(*k.getTimestep(), 4);
-}
-
-BOOST_AUTO_TEST_CASE(FullKeyCompare)
-{
-    FullKey k1 = variableDict.buildFullKey("component", "a");
-    FullKey k2 = variableDict.buildFullKey("component", "a");
-    BOOST_CHECK_EQUAL(k1, k2);
-    BOOST_CHECK_LE(k1, k2);
-
-    FullKey k3 = variableDict.buildFullKey("component", "b");
-    BOOST_CHECK_NE(k3, k1);
-    BOOST_CHECK_LT(k1, k3);
-
-    FullKey k4 = variableDict.buildFullKey("komponent", "a");
-    BOOST_CHECK_NE(k4, k1);
-}
-
 BOOST_AUTO_TEST_CASE(IntegerInterval_count)
 {
     int count = 0;
@@ -120,7 +85,7 @@ BOOST_AUTO_TEST_CASE(addVariable_no_ts_no_sc)
     BOOST_CHECK_EQUAL(names.size(), 1);
     BOOST_CHECK_EQUAL(names.at(std::pair(MCYearAndTime::MCYear{0}, 0)), "component.variable");
 
-    BOOST_CHECK_NO_THROW(variableDict("component", "variable"));
+    BOOST_CHECK_NO_THROW(variableDict.byKey(variableDict.buildKey("component", "variable")));
 }
 
 BOOST_AUTO_TEST_CASE(addVariable_no_ts_multiple_sc)
@@ -129,7 +94,9 @@ BOOST_AUTO_TEST_CASE(addVariable_no_ts_multiple_sc)
     BOOST_CHECK_EQUAL(names.size(), 3);
     BOOST_CHECK_EQUAL(names.at(std::pair(MCYearAndTime::MCYear{0}, 0)), "component.variable_s0");
 
-    BOOST_CHECK_NO_THROW(variableDict("component", "variable", MCYearAndTime::MCYear{1}, 0));
+    BOOST_CHECK_NO_THROW(variableDict.byKey(variableDict.buildKey("component", "variable"),
+                                            MCYearAndTime::MCYear{1},
+                                            0));
 }
 
 BOOST_AUTO_TEST_CASE(addVariable_multiple_ts_no_sc)
@@ -138,7 +105,9 @@ BOOST_AUTO_TEST_CASE(addVariable_multiple_ts_no_sc)
     BOOST_CHECK_EQUAL(names.size(), 3);
     BOOST_CHECK_EQUAL(names.at(std::pair(MCYearAndTime::MCYear{0}, 0)), "component.variable_t0");
 
-    BOOST_CHECK_NO_THROW(variableDict("component", "variable", MCYearAndTime::MCYear{0}, 2));
+    BOOST_CHECK_NO_THROW(variableDict.byKey(variableDict.buildKey("component", "variable"),
+                                            MCYearAndTime::MCYear{0},
+                                            2));
 }
 
 BOOST_AUTO_TEST_CASE(addVariable_multiple_ts_sc)
@@ -149,9 +118,11 @@ BOOST_AUTO_TEST_CASE(addVariable_multiple_ts_sc)
     BOOST_CHECK_EQUAL(names.at(std::pair(MCYearAndTime::MCYear{2}, 3)), "component.variable_s2_t3");
     BOOST_CHECK(!names.contains(std::pair(MCYearAndTime::MCYear{3}, 3)));
 
-    BOOST_CHECK_THROW(variableDict("component", "variable", MCYearAndTime::MCYear{3}, 2),
-                      std::out_of_range);
-    BOOST_CHECK_THROW(variableDict("component", "variable", MCYearAndTime::MCYear{2}, 5),
-                      std::out_of_range);
+    BOOST_CHECK(!variableDict.byKey(variableDict.buildKey("component", "variable"),
+                                    MCYearAndTime::MCYear{3},
+                                    2));
+    BOOST_CHECK(!variableDict.byKey(variableDict.buildKey("component", "variable"),
+                                    MCYearAndTime::MCYear{2},
+                                    5));
 }
 BOOST_AUTO_TEST_SUITE_END()

@@ -53,7 +53,7 @@ namespace Antares::Optimization
  */
 struct LinearConstraint
 {
-    VarIndexMap coef_per_var; // Migré vers VarIndexMap pour accès O(1)
+    VarIndexMap coef_per_index; // Utilise VarIndexMap pour accès O(1) via index
     double lb = -std::numeric_limits<double>::infinity();
     double ub = std::numeric_limits<double>::infinity();
     unsigned int timeStep = 0;
@@ -133,7 +133,7 @@ std::vector<LinearConstraint> ReadLinearConstraintVisitor<InnerSolverVariable>::
 
     for (const auto& [timeStep, value]: leftMinusRightLinearExpression)
     {
-        constraints.emplace_back(LinearConstraint{.coef_per_var = value.coefPerIndex(),
+        constraints.emplace_back(LinearConstraint{.coef_per_index = value.coefPerIndex(),
                                                   .lb = -value.offset(),
                                                   .ub = -value.offset(),
                                                   .timeStep = timeStep});
@@ -154,7 +154,7 @@ std::vector<LinearConstraint> ReadLinearConstraintVisitor<InnerSolverVariable>::
 
     for (const auto& [timeStep, value]: leftMinusRightLinearExpression)
     {
-        constraints.emplace_back(LinearConstraint{.coef_per_var = value.coefPerIndex(),
+        constraints.emplace_back(LinearConstraint{.coef_per_index = value.coefPerIndex(),
                                                   .ub = -value.offset(),
                                                   .timeStep = timeStep});
     }
@@ -174,7 +174,7 @@ std::vector<LinearConstraint> ReadLinearConstraintVisitor<InnerSolverVariable>::
 
     for (const auto& [timeStep, value]: leftMinusRightLinearExpression)
     {
-        constraints.emplace_back(LinearConstraint{.coef_per_var = value.coefPerIndex(),
+        constraints.emplace_back(LinearConstraint{.coef_per_index = value.coefPerIndex(),
                                                   .lb = -value.offset(),
                                                   .timeStep = timeStep});
     }

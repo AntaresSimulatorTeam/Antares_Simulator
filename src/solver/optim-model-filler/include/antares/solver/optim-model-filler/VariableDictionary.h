@@ -30,7 +30,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include <antares/solver/optim-model-filler/FullKey.h>
+#include <antares/solver/optim-model-filler/PartialKey.h>
 #include <antares/solver/optim-model-filler/StringToIdMapper.h>
 #include "antares/optimisation/linear-problem-api/mipVariable.h"
 
@@ -180,48 +180,36 @@ inline std::string buildVariableName(const PartialKey& key,
     return ret;
 }
 
+template<typename T>
+std::optional<T> buildOptional(bool condition, T value)
+{
+    if (condition)
+    {
+        return value;
+    }
+    else
+    {
+        return {};
+    }
+}
+
 /**
- * @brief Storage for created MIP variables indexed by (component, variable, scenario?, timestep?).
- * Uses nested hash maps + a vector with offset for contiguous timestep indices.
- * Provides strict (throwing) accessors and non-throwing tryGet helpers.
- * Optimized version with O(1) access by index for hot path performance.
- */
+ * @brief Storage for created MIP variables with O(1) access by index for hot path performance.
+rmance.
+ * Uses compact index-based storage for optimal performance.
+   */
 template<Antares::Optimisation::LinearProblemApi::SolverVariable InnerSolverVariable>
 class VariableDictionary
 {
     using Value = Antares::Optimisation::LinearProblemApi::IMipVariable<
       InnerSolverVariable>*; ///< Pointer alias
 
-    // Legacy storage for backward compatibility
-    class VectorWithOffset
-    {
-    public:
-        VectorWithOffset() = default;
-        void resize(size_t initial_size, unsigned offset);
-        Value& operator[](unsigned int index);
-        [[nodiscard]] const Value& operator[](unsigned int index) const;
-        [[nodiscard]] const Value& at(unsigned int index) const;
-        Value& at(unsigned int index);
-        [[nodiscard]] bool contains(unsigned int index) const noexcept;
-
-    private:
-        std::vector<Value> values_ = {};
-        unsigned int offset_ = 0;
-    };
-
-    using TwoIndexVectorByYear = std::unordered_map<MCYearAndTime::MCYear, VectorWithOffset>;
-    using HashMapVector = std::unordered_map<PartialKey, TwoIndexVectorByYear, PartialKeyHash>;
-
-    // Legacy storage (kept for compatibility)
-    HashMapVector storageOfAddedMipVariables_;
-    // New optimized storage
+    // Optimized storage
     std::vector<Value> storage_; ///< O(1) access by index
     std::unordered_map<PartialKey, KeyHandle, PartialKeyHash>
       keyHandleMap_; ///< PartialKey -> Handle resolution
 
     mutable StringToIdMapper mapper_; ///< For naming
-
-    const TwoIndexVectorByYear& operator[](const PartialKey& k) const;
 
 public:
     /**
@@ -240,6 +228,22 @@ public:
         return keyHandleMap_.at(key);
     }
 
+    Value byKey(const PartialKey& key) const
+    {
+        const auto& handle_ = handle(key);
+        const auto& index = indexOf(handle_,
+                                    MCYearAndTime{.mcYear = MCYearAndTime::MCYear{0},
+                                                  .timestep = 0});
+        return byIndex(index);
+    }
+
+    Value byKey(const PartialKey& key, MCYearAndTime::MCYear year, unsigned int time) const
+    {
+        auto&& handle_ = handle(key);
+        auto&& index = indexOf(handle_, MCYearAndTime{.mcYear = year, .timestep = time});
+        return byIndex(index);
+    }
+
     /**
      * @brief Calculate variable index from handle and time/scenario (O(1))
      */
@@ -250,59 +254,30 @@ public:
         return static_cast<VarIndex>(h.base + yOff * h.countT + tOff);
     }
 
-    PartialKey buildKey(std::string_view component, std::string_view name) const;
+    /**
+     * @brief Convenience method to get handle for a component/variable pair
+     */
+    const KeyHandle& handleForVariable(const std::string& componentId,
+                                       const std::string& variableId) const
+    {
+        return keyHandleMap_.at(PartialKey(componentId, variableId, mapper_));
+    }
 
-    template<typename... Args>
-    FullKey buildFullKey(Args... args) const;
+    PartialKey buildKey(std::string_view component, std::string_view name) const;
 
     /**
      * @brief Register a new multi-dimensional variable family with optimized storage
      */
     template<typename Factory>
     void addVariable(const Dimensions& dimensions, const PartialKey& key, Factory&& factory);
-
-    /** Legacy strict accessors (kept for backward compatibility) */
-    Value operator[](const FullKey& k) const;
-    Value& operator[](const FullKey& k);
-
-    /** Convenience scalar (scenario/time = 0) accessors (strict). */
-    Value operator()(const std::string& component, const std::string& variable) const;
-    Value& operator()(const std::string& component, const std::string& variable);
-
-    /** Full dimension strict accessors. */
-    Value operator()(const std::string& component,
-                     const std::string& variable,
-                     const MCYearAndTime::MCYear& scenario,
-                     unsigned int timestep) const;
-    Value& operator()(const std::string& component,
-                      const std::string& variable,
-                      const MCYearAndTime::MCYear& scenario,
-                      unsigned int timestep);
-
-    /** Overload for FullKey (strict). */
-    Value operator()(const FullKey& fullKey) const;
-    Value& operator()(const FullKey& fullKey);
 };
 
 // Template implementations
 template<Antares::Optimisation::LinearProblemApi::SolverVariable InnerSolverVariable>
-template<typename... Args>
-FullKey VariableDictionary<InnerSolverVariable>::buildFullKey(Args... args) const
+PartialKey VariableDictionary<InnerSolverVariable>::buildKey(std::string_view component,
+                                                             std::string_view name) const
 {
-    return FullKey(std::forward<Args>(args)..., mapper_);
-}
-
-template<typename T>
-std::optional<T> buildOptional(bool condition, T value)
-{
-    if (condition)
-    {
-        return value;
-    }
-    else
-    {
-        return {};
-    }
+    return {component, name, mapper_};
 }
 
 template<Antares::Optimisation::LinearProblemApi::SolverVariable InnerSolverVariable>
@@ -348,147 +323,4 @@ void VariableDictionary<InnerSolverVariable>::addVariable(const Dimensions& dime
     }
 }
 
-// Legacy storage implementation
-template<Antares::Optimisation::LinearProblemApi::SolverVariable InnerSolverVariable>
-void VariableDictionary<InnerSolverVariable>::VectorWithOffset::resize(size_t initial_size,
-                                                                       unsigned int offset)
-{
-    offset_ = offset;
-    values_.assign(initial_size, nullptr);
-}
-
-template<Antares::Optimisation::LinearProblemApi::SolverVariable InnerSolverVariable>
-typename VariableDictionary<InnerSolverVariable>::Value&
-VariableDictionary<InnerSolverVariable>::VectorWithOffset::operator[](unsigned int index)
-{
-    return values_[index - offset_];
-}
-
-template<Antares::Optimisation::LinearProblemApi::SolverVariable InnerSolverVariable>
-const typename VariableDictionary<InnerSolverVariable>::Value&
-VariableDictionary<InnerSolverVariable>::VectorWithOffset::operator[](unsigned int index) const
-{
-    return values_[index - offset_];
-}
-
-template<Antares::Optimisation::LinearProblemApi::SolverVariable InnerSolverVariable>
-const typename VariableDictionary<InnerSolverVariable>::Value&
-VariableDictionary<InnerSolverVariable>::VectorWithOffset::at(unsigned int index) const
-{
-    return values_.at(index - offset_);
-}
-
-template<Antares::Optimisation::LinearProblemApi::SolverVariable InnerSolverVariable>
-typename VariableDictionary<InnerSolverVariable>::Value&
-VariableDictionary<InnerSolverVariable>::VectorWithOffset::at(unsigned int index)
-{
-    return values_.at(index - offset_);
-}
-
-template<Antares::Optimisation::LinearProblemApi::SolverVariable InnerSolverVariable>
-bool VariableDictionary<InnerSolverVariable>::VectorWithOffset::contains(
-  unsigned int index) const noexcept
-{
-    if (values_.empty() || index < offset_)
-    {
-        return false;
-    }
-    auto pos = index - offset_;
-    return pos < values_.size();
-}
-
-template<Antares::Optimisation::LinearProblemApi::SolverVariable InnerSolverVariable>
-PartialKey VariableDictionary<InnerSolverVariable>::buildKey(std::string_view component,
-                                                             std::string_view name) const
-{
-    return {component, name, mapper_};
-}
-
-template<Antares::Optimisation::LinearProblemApi::SolverVariable InnerSolverVariable>
-typename VariableDictionary<InnerSolverVariable>::Value
-VariableDictionary<InnerSolverVariable>::operator[](const FullKey& k) const
-{
-    return storageOfAddedMipVariables_.at(k.getPartialKey())
-      .at(k.getScenario().value_or(MCYearAndTime::MCYear{0}))
-      .at(k.getTimestep().value_or(0));
-}
-
-template<Antares::Optimisation::LinearProblemApi::SolverVariable InnerSolverVariable>
-typename VariableDictionary<InnerSolverVariable>::Value&
-VariableDictionary<InnerSolverVariable>::operator[](const FullKey& k)
-{
-    return storageOfAddedMipVariables_[k.getPartialKey()]
-      .at(k.getScenario().value_or(MCYearAndTime::MCYear{0}))
-      .at(k.getTimestep().value_or(0));
-}
-
-template<Antares::Optimisation::LinearProblemApi::SolverVariable InnerSolverVariable>
-const typename VariableDictionary<InnerSolverVariable>::TwoIndexVectorByYear&
-VariableDictionary<InnerSolverVariable>::operator[](const PartialKey& k) const
-{
-    return storageOfAddedMipVariables_.at(k);
-}
-
-template<Antares::Optimisation::LinearProblemApi::SolverVariable InnerSolverVariable>
-typename VariableDictionary<InnerSolverVariable>::Value
-VariableDictionary<InnerSolverVariable>::operator()(const std::string& component,
-                                                    const std::string& variable) const
-{
-    return storageOfAddedMipVariables_.at(PartialKey(component, variable, mapper_))
-      .at(MCYearAndTime::MCYear{0})
-      .at(0);
-}
-
-template<Antares::Optimisation::LinearProblemApi::SolverVariable InnerSolverVariable>
-typename VariableDictionary<InnerSolverVariable>::Value&
-VariableDictionary<InnerSolverVariable>::operator()(const std::string& component,
-                                                    const std::string& variable)
-{
-    return storageOfAddedMipVariables_.at(PartialKey(component, variable, mapper_))
-      .at(MCYearAndTime::MCYear{0})
-      .at(0);
-}
-
-template<Antares::Optimisation::LinearProblemApi::SolverVariable InnerSolverVariable>
-typename VariableDictionary<InnerSolverVariable>::Value
-VariableDictionary<InnerSolverVariable>::operator()(const std::string& component,
-                                                    const std::string& variable,
-                                                    const MCYearAndTime::MCYear& scenario,
-                                                    unsigned int timestep) const
-{
-    return storageOfAddedMipVariables_.at(PartialKey(component, variable, mapper_))
-      .at(scenario)
-      .at(timestep);
-}
-
-template<Antares::Optimisation::LinearProblemApi::SolverVariable InnerSolverVariable>
-typename VariableDictionary<InnerSolverVariable>::Value&
-VariableDictionary<InnerSolverVariable>::operator()(const std::string& component,
-                                                    const std::string& variable,
-                                                    const MCYearAndTime::MCYear& scenario,
-                                                    unsigned int timestep)
-{
-    auto&& var = storageOfAddedMipVariables_[PartialKey(component, variable, mapper_)];
-    return var.at(scenario).at(timestep);
-}
-
-template<Antares::Optimisation::LinearProblemApi::SolverVariable InnerSolverVariable>
-typename VariableDictionary<InnerSolverVariable>::Value
-VariableDictionary<InnerSolverVariable>::operator()(const FullKey& fullKey) const
-{
-    return this->operator()(fullKey.getComponent(),
-                            fullKey.getVariable(),
-                            fullKey.getScenario().value_or(MCYearAndTime::MCYear{0}),
-                            fullKey.getTimestep().value_or(0));
-}
-
-template<Antares::Optimisation::LinearProblemApi::SolverVariable InnerSolverVariable>
-typename VariableDictionary<InnerSolverVariable>::Value&
-VariableDictionary<InnerSolverVariable>::operator()(const FullKey& fullKey)
-{
-    return this->operator()(fullKey.getComponent(),
-                            fullKey.getVariable(),
-                            fullKey.getScenario().value_or(MCYearAndTime::MCYear{0}),
-                            fullKey.getTimestep().value_or(0));
-}
 } // namespace Antares::Optimization

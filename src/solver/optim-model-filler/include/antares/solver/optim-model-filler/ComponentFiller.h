@@ -353,7 +353,7 @@ private:
                                     linear_constraint.ub,
                                     component_.Id() + "." + constraint_id);
         // Hot path: O(1) access via variable index
-        for (const auto& [varIndex, coefficient]: linear_constraint.coef_per_var)
+        for (const auto& [varIndex, coefficient]: linear_constraint.coef_per_index)
         {
             auto* variable = variableDictionary_.byIndex(varIndex); // O(1) access!
             ct->setCoefficient(variable, coefficient);
@@ -372,7 +372,7 @@ private:
                                         component_.Id() + "." + constraint_id + '_'
                                           + std::to_string(linear_constraint.timeStep));
             // Hot path: O(1) access via variable index
-            for (const auto& [varIndex, coefficient]: linear_constraint.coef_per_var)
+            for (const auto& [varIndex, coefficient]: linear_constraint.coef_per_index)
             {
                 auto* variable = variableDictionary_.byIndex(varIndex); // O(1) access!
                 ct->setCoefficient(variable, coefficient);
