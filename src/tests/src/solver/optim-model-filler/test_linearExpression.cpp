@@ -35,8 +35,25 @@ using namespace Antares::Optimization;
 
 struct Fixture
 {
-    VariableDictionary<Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsTag::VariableType>
-      variableDict;
+    // Shim de tests: mappe ("component.name") -> VarIndex croissant
+    struct IndexProvider
+    {
+        std::unordered_map<std::string, VarIndex> cache;
+
+        VarIndex buildFullKey(const std::string& component, const std::string& name)
+        {
+            std::string key;
+            key.reserve(component.size() + 1 + name.size());
+            key.append(component);
+            key.push_back('.');
+            key.append(name);
+
+            auto [it, inserted] = cache.emplace(key, static_cast<VarIndex>(cache.size()));
+            return it->second; // renvoie l'index existant ou nouvellement créé
+        }
+    };
+
+    IndexProvider variableDict;
 };
 
 BOOST_FIXTURE_TEST_SUITE(_linear_expressions_, Fixture)

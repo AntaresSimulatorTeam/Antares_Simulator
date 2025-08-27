@@ -146,7 +146,7 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_2_components_with_a_port_field,
 
     auto linear_expression = timeDependentLinExpr.GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 0.);
-    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression.coefPerIndex().size(), 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(sum_conections_connects_3_components_with_a_port_field,
@@ -263,12 +263,11 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_3_components_with_a_port_field,
 
     auto linear_expression = timeDependentLinExpr.GetLinearExpressions().at(0);
 
-    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
-    FullKey generationKey = variableDictionary.buildFullKey(generatorComponent.Id(),
-                                                            "generation",
-                                                            MCYearAndTime::MCYear{0},
-                                                            0);
-    BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(generationKey), 1.);
+    const auto& idxMap = linear_expression.coefPerIndex();
+    BOOST_REQUIRE_EQUAL(idxMap.size(), 1u);
+    const auto only = *idxMap.begin();
+    BOOST_CHECK_EQUAL(only.second, 1.0);
+    BOOST_CHECK_EQUAL(linear_expression.offset(), -5.0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), -5.);
 }
 
