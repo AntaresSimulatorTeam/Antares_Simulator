@@ -29,6 +29,7 @@
 #include <antares/study/system-model/variable.h>
 #include "antares/expressions/visitors/TimeIndexVisitor.h"
 #include "antares/solver/optim-model-filler/scenarioGroupRepo.h"
+#include "antares/study/system-model/model.h"
 
 namespace Antares::Optimisation
 {
