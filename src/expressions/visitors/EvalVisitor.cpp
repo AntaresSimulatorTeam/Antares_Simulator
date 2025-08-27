@@ -50,7 +50,7 @@ EvalVisitor::EvalVisitor(EvaluationContext context,
 
 EvaluationResult EvalVisitor::visit(const Nodes::SumNode* node)
 {
-    auto operands = node->getOperands();
+    const auto& operands = node->getOperands();
     return std::accumulate(std::begin(operands),
                            std::end(operands),
                            EvaluationResult{0.},
@@ -120,12 +120,13 @@ EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
         return EvaluationResult{context_.getSystemParameterValueAsDouble(node->value())};
     }
     std::vector<double> params;
-    params.reserve(fillContext_.getNumberOfTimestep());
-    for (auto timeStep = fillContext_.getFirstTimeStep();
-         timeStep <= fillContext_.getLastTimeStep();
+    params.reserve(fillContext_.getLocalNumberOfTimeSteps());
+    for (auto timeStep = fillContext_.getGlobalFirstTimeStep();
+         timeStep <= fillContext_.getGlobalLastTimeStep();
          ++timeStep)
     {
-        params.emplace_back(context_.getParameterValue(node->value(), "", 0, timeStep));
+        params.emplace_back(
+          context_.getParameterValue(node->value(), fillContext_.getYear(), timeStep));
     }
     return EvaluationResult{params};
 }
@@ -208,7 +209,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
 EvaluationResult EvalVisitor::visit(const Nodes::AllTimeSumNode* node)
 {
     const EvaluationResult expression = dispatch(node->child());
-    return expression.alltimeSum(fillContext_.getNumberOfTimestep());
+    return expression.alltimeSum(fillContext_.getLocalNumberOfTimeSteps());
 }
 
 std::string EvalVisitor::name() const

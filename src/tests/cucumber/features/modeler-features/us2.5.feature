@@ -6,8 +6,8 @@ Feature: 2.5 - Pure modeler simple studies, with no ports and no timeseries
     When I run antares modeler
     Then the simulation succeeds
     And the objective value is 160
-    And the optimal value of variable node1.gen1_p_t0 is 80
-    And the optimal value of variable node1.gen2_p_t0 is 20
+    And the optimal value of variable node1.gen1_p_s0_t0 is 80
+    And the optimal value of variable node1.gen2_p_s0_t0 is 20
 
   @fast
   Scenario: 2.5.2: One model with one load and two generators (minP), three timesteps
@@ -43,5 +43,5 @@ Feature: 2.5 - Pure modeler simple studies, with no ports and no timeseries
     When I run antares modeler
     Then the simulation succeeds
     And the objective value is 540
-    And the optimal value of variable node1.gen_total_p_t0 is 1000
-    And the optimal value of variable node1.gen_n_on_t0 is 4
+    And the optimal value of variable node1.gen_total_p_s0_t0 is 1000
+    And the optimal value of variable node1.gen_n_on_s0_t0 is 4

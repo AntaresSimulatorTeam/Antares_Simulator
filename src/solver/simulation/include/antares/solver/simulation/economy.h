@@ -92,6 +92,8 @@ protected:
     void prepareClustersInMustRunMode(Data::Area::ScratchMap& scratchmap, uint year);
 
     void initializeState(Variable::State& state, uint numSpace);
+    OptimisationsSimulationTable& getSimulationTable(uint numSpace);
+    std::string getSimulationTableHeader() const;
 
 private:
     uint pNbWeeks;
@@ -103,7 +105,7 @@ private:
     IResultWriter& resultWriter;
     std::reference_wrapper<Simulation::ISimulationObserver> simulationObserver_;
 
-    OptimisationsSimulationTable simulationTables_;
+    std::vector<OptimisationsSimulationTable> simulationTables_;
 }; // class Economy
 
 } // namespace Antares::Solver::Simulation

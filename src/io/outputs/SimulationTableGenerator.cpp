@@ -179,7 +179,6 @@ void addPortEntries(ISimulationTable& simulationTable,
 void FillSimulationTable(
   ISimulationTable& simulationTable,
   const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
-  const Antares::Optimisation::LinearProblemApi::IMipSolution& solution,
   const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>& components,
   Antares::Optimisation::LinearProblemApi::ILinearProblemData* dataSeries,
   const Antares::Optimization::VariableDictionary& variableDictionary,
@@ -190,7 +189,12 @@ void FillSimulationTable(
                                      std::optional<unsigned> scen,
                                      std::optional<unsigned> ts)
       -> const Antares::Optimisation::LinearProblemApi::IMipVariable*
-    { return variableDictionary(cid, vname, scen.value_or(0), ts.value_or(0)); };
+    {
+        return variableDictionary(cid,
+                                  vname,
+                                  Antares::Optimization::MCYearAndTime::MCYear{scen.value_or(0)},
+                                  ts.value_or(0));
+    };
 
     auto constraintLookupModeler = [&](const std::string& cid,
                                        const std::string& cname,
@@ -202,7 +206,7 @@ void FillSimulationTable(
     for (const auto& component: components | std::views::values)
     {
         // TODO
-        unsigned scenario = 0;
+        unsigned scenario = fillContext.getYear();
         addVariableEntries<ModelerSolverTraits>(simulationTable,
                                                 fillContext,
                                                 component,

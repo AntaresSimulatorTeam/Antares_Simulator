@@ -20,6 +20,7 @@
  */
 
 #pragma once
+#include <optional>
 
 namespace Antares::Optimisation::LinearProblemApi
 {
@@ -34,6 +35,35 @@ enum class MipBasisStatus : unsigned int
     BASIC,
     NOT_AVAILABLE
 };
+
+inline std::string StatusToString(const std::optional<MipBasisStatus>& status)
+{
+    using namespace Antares::Optimisation::LinearProblemApi;
+    // TODO shorten returns
+    if (status.has_value())
+    {
+        switch (*status)
+        {
+        case MipBasisStatus::FREE:
+            return "Free";
+        case MipBasisStatus::AT_LOWER_BOUND:
+            return "At lower bound";
+        case MipBasisStatus::AT_UPPER_BOUND:
+            return "At upper bound";
+        case MipBasisStatus::FIXED_VALUE:
+            return "Fixed value";
+        case MipBasisStatus::BASIC:
+            return "Basic";
+        case MipBasisStatus::NOT_AVAILABLE:
+        default:
+            return "None";
+        }
+    }
+    else
+    {
+        return "None";
+    }
+}
 
 class IHasStatus
 {

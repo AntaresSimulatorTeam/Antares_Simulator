@@ -47,6 +47,7 @@ HydroForRemix::HydroForRemix(std::vector<double>& generation,
                              const std::vector<double>& Pmax,
                              const std::vector<double>& Pmin):
     generation_(generation),
+    initialGen_(generation),
     unsupE_(unsupE),
     pmax_(Pmax),
     pmin_(Pmin)
@@ -91,6 +92,11 @@ void HydroForRemix::checkInput(size_t size)
 
 void HydroForRemix::update()
 {
+}
+
+const std::vector<double>& HydroForRemix::initialGen()
+{
+    return initialGen_;
 }
 
 std::vector<double>& HydroForRemix::generation()

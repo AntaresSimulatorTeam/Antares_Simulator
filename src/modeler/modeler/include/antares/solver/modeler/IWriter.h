@@ -39,7 +39,7 @@ class IMipSolution;
 class FillContext;
 } // namespace Antares::Optimisation::LinearProblemApi
 
-namespace Antares::Optimization
+namespace Antares::Optimisation
 {
 class VariableDictionary;
 }

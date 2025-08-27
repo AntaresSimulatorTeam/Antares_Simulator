@@ -20,21 +20,24 @@
 */
 
 #include "saveas.h"
-#include <yuni/io/directory.h>
 
-#include <wx/stattext.h>
+#include <ui/common/component/panel.h>
 #include <wx/button.h>
 #include <wx/dirdlg.h>
 #include <wx/frame.h>
+#include <wx/stattext.h>
 
-#include "../toolbox/validator.h"
-#include "../toolbox/components/wizardheader.h"
-#include <ui/common/component/panel.h>
-#include "../toolbox/create.h"
-#include "../application/study.h"
-#include "../application/main.h"
-#include "message.h"
+#include <yuni/io/directory.h>
+
 #include <antares/resources/resources.h>
+#include "antares/utils/utils.h"
+
+#include "../application/main.h"
+#include "../application/study.h"
+#include "../toolbox/components/wizardheader.h"
+#include "../toolbox/create.h"
+#include "../toolbox/validator.h"
+#include "message.h"
 
 using namespace Yuni;
 
@@ -44,11 +47,13 @@ namespace Window
 {
 namespace // anonymous
 {
-class JobSaveAs final : public Yuni::Job::IJob
+class JobSaveAs final: public Yuni::Job::IJob
 {
 public:
-    explicit JobSaveAs(const String& path, bool output, bool userdata, bool logs) :
-     pCopyOutput(output), pCopyUserData(userdata), pCopyLogs(logs)
+    explicit JobSaveAs(const String& path, bool output, bool userdata, bool logs):
+        pCopyOutput(output),
+        pCopyUserData(userdata),
+        pCopyLogs(logs)
     {
         IO::Normalize(pPath, path);
     }
@@ -100,45 +105,45 @@ SaveResult SaveAs::Execute(wxFrame* parent, Data::Study::Ptr study)
     return result;
 }
 
-SaveAs::SaveAs(wxFrame* parent) :
- wxDialog(parent,
-          wxID_ANY,
-          wxT("Save As"),
-          wxDefaultPosition,
-          wxDefaultSize,
-          wxCLOSE_BOX | wxCAPTION | wxFRAME_FLOAT_ON_PARENT | wxCLIP_CHILDREN),
- pStudy(GetCurrentStudy()),
- pGridSizer(nullptr),
- pParentProperties(nullptr),
- pStudyName(nullptr),
- pStudyFolderName(nullptr),
- pCustomFolderName(false),
- pCopyOutput(nullptr),
- pCopyUserData(nullptr),
- pCopyLogs(nullptr),
- pResult(svsCancel)
+SaveAs::SaveAs(wxFrame* parent):
+    wxDialog(parent,
+             wxID_ANY,
+             wxT("Save As"),
+             wxDefaultPosition,
+             wxDefaultSize,
+             wxCLOSE_BOX | wxCAPTION | wxFRAME_FLOAT_ON_PARENT | wxCLIP_CHILDREN),
+    pStudy(GetCurrentStudy()),
+    pGridSizer(nullptr),
+    pParentProperties(nullptr),
+    pStudyName(nullptr),
+    pStudyFolderName(nullptr),
+    pCustomFolderName(false),
+    pCopyOutput(nullptr),
+    pCopyUserData(nullptr),
+    pCopyLogs(nullptr),
+    pResult(svsCancel)
 {
     assert(parent);
     internalCreateComponents();
 }
 
-SaveAs::SaveAs(wxFrame* parent, Data::Study::Ptr study) :
- wxDialog(parent,
-          wxID_ANY,
-          wxT("Save As"),
-          wxDefaultPosition,
-          wxDefaultSize,
-          wxCLOSE_BOX | wxCAPTION | wxFRAME_FLOAT_ON_PARENT | wxCLIP_CHILDREN),
- pStudy(study),
- pGridSizer(nullptr),
- pParentProperties(nullptr),
- pStudyName(nullptr),
- pStudyFolderName(nullptr),
- pCustomFolderName(false),
- pCopyOutput(nullptr),
- pCopyUserData(nullptr),
- pCopyLogs(nullptr),
- pResult(svsCancel)
+SaveAs::SaveAs(wxFrame* parent, Data::Study::Ptr study):
+    wxDialog(parent,
+             wxID_ANY,
+             wxT("Save As"),
+             wxDefaultPosition,
+             wxDefaultSize,
+             wxCLOSE_BOX | wxCAPTION | wxFRAME_FLOAT_ON_PARENT | wxCLIP_CHILDREN),
+    pStudy(study),
+    pGridSizer(nullptr),
+    pParentProperties(nullptr),
+    pStudyName(nullptr),
+    pStudyFolderName(nullptr),
+    pCustomFolderName(false),
+    pCopyOutput(nullptr),
+    pCopyUserData(nullptr),
+    pCopyLogs(nullptr),
+    pResult(svsCancel)
 {
     assert(parent);
     internalCreateComponents();
@@ -151,7 +156,9 @@ SaveAs::~SaveAs()
     // we should destroy all children as soon as possible.
     auto* sizer = GetSizer();
     if (sizer)
+    {
         sizer->Clear(true);
+    }
 }
 
 void SaveAs::propCaption(const wxString& text, bool bold)
@@ -193,8 +200,13 @@ wxWindow* SaveAs::propEdit(wxWindow* control)
 
 wxTextCtrl* SaveAs::propEdit(const wxString& defaultValue, const wxTextValidator& validator, int id)
 {
-    wxTextCtrl* edit = new wxTextCtrl(
-      pParentProperties, id, defaultValue, wxDefaultPosition, wxDefaultSize, 0, validator);
+    wxTextCtrl* edit = new wxTextCtrl(pParentProperties,
+                                      id,
+                                      defaultValue,
+                                      wxDefaultPosition,
+                                      wxDefaultSize,
+                                      0,
+                                      validator);
     pGridSizer->Add(edit, 1, wxALL | wxEXPAND, borderSize);
     return edit;
 }
@@ -205,8 +217,10 @@ void SaveAs::internalCreateComponents()
     auto* sizer = new wxBoxSizer(wxVERTICAL);
 
     // Header
-    auto* header = Toolbox::Components::WizardHeader::Create(
-      this, wxT("Save the Study As..."), "images/32x32/saveas.png", wxT(""));
+    auto* header = Toolbox::Components::WizardHeader::Create(this,
+                                                             wxT("Save the Study As..."),
+                                                             "images/32x32/saveas.png",
+                                                             wxT(""));
     sizer->Add(header, 0, wxALL | wxEXPAND);
     sizer->SetItemMinSize(header, 550, header->GetSize().GetHeight());
 
@@ -217,9 +231,13 @@ void SaveAs::internalCreateComponents()
     propCaption(wxT("Name of the study"), true);
     pStudyName = propEdit(wxEmptyString, mnIDEditStudyName);
     if (pStudy->header.caption.size())
+    {
         pStudyName->ChangeValue(wxStringFromUTF8(pStudy->header.caption));
+    }
     else
+    {
         pStudyName->ChangeValue(wxT("No Title"));
+    }
 
     // In the directory
     propCaption(wxT("In the directory"));
@@ -229,8 +247,12 @@ void SaveAs::internalCreateComponents()
         wxBoxSizer* pnlSizer = new wxBoxSizer(wxHORIZONTAL);
         pnl->SetSizer(pnlSizer);
         //
-        wxButton* btnBrowse = new wxButton(
-          pnl, mnIDBrowse, wxT(" Browse "), wxDefaultPosition, wxSize(-1, 22), wxBU_EXACTFIT);
+        wxButton* btnBrowse = new wxButton(pnl,
+                                           mnIDBrowse,
+                                           wxT(" Browse "),
+                                           wxDefaultPosition,
+                                           wxSize(-1, 22),
+                                           wxBU_EXACTFIT);
         pnlSizer->Add(btnBrowse);
         btnBrowse->Connect(btnBrowse->GetId(),
                            wxEVT_COMMAND_BUTTON_CLICKED,
@@ -238,17 +260,25 @@ void SaveAs::internalCreateComponents()
                            nullptr,
                            this);
 
-        pFolder = new wxTextCtrl(
-          pnl, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY);
+        pFolder = new wxTextCtrl(pnl,
+                                 wxID_ANY,
+                                 wxEmptyString,
+                                 wxDefaultPosition,
+                                 wxDefaultSize,
+                                 wxTE_READONLY);
         if (not pStudy->folder.empty())
         {
             // Get the parent folder
             wxString s = wxStringFromUTF8(pStudy->folder.string());
             size_t p = s.find_last_of(wxT("\\/"));
             if (p != std::string::npos)
+            {
                 pFolder->SetValue(s.substr(0, p));
+            }
             else
+            {
                 pFolder->SetValue(s);
+            }
         }
         pnlSizer->AddSpacer(5);
         pnlSizer->Add(pFolder, 1, wxALL | wxEXPAND);
@@ -350,10 +380,14 @@ void SaveAs::onStudyFolderNameChanged(wxCommandEvent&)
 
 void SaveAs::onBrowse(wxCommandEvent&)
 {
-    wxDirDialog dialog(
-      this, _T("Browse"), pFolder->GetValue(), wxDD_DEFAULT_STYLE & ~wxDD_DIR_MUST_EXIST);
+    wxDirDialog dialog(this,
+                       _T("Browse"),
+                       pFolder->GetValue(),
+                       wxDD_DEFAULT_STYLE & ~wxDD_DIR_MUST_EXIST);
     if (dialog.ShowModal() == wxID_OK)
+    {
         pFolder->SetValue(dialog.GetPath());
+    }
 }
 
 void SaveAs::onCancel(void*)
@@ -400,6 +434,13 @@ void SaveAs::onSave(void*)
         logs.error() << "Please select a folder";
         return;
     }
+
+    if (!Utils::isPathValid(wantedPath.to<std::string>()))
+    {
+        logs.error() << "Target study path contains a non ASCII char";
+        return;
+    }
+
     if (not IO::Directory::Exists(wantedPath))
     {
         logs.error() << "The selected path does not exist : " << wantedPath;
@@ -481,7 +522,9 @@ void SaveAs::onSave(void*)
                 canOverwrite = true;
             }
             else
+            {
                 return;
+            }
         }
 
         if (not canOverwrite)

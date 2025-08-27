@@ -33,11 +33,11 @@ SimulationTableCsv::SimulationTableCsv()
     storage_.addOptionalColumn<unsigned int>("block_time_index");
     storage_.addOptionalColumn<unsigned int>("scenario_index");
     storage_.addOptionalColumn<double>("value");
-    storage_.addStringColumn("basis_status");
-    writeHeader();
+    storage_.addOptionalColumn<Antares::Optimisation::LinearProblemApi::MipBasisStatus>(
+      "basis_status");
 }
 
-void SimulationTableCsv::addEntry(SimulationTableEntry entry)
+void SimulationTableCsv::addEntry(const SimulationTableEntry& entry)
 {
     storage_.addValue("block", entry.block);
     storage_.addValue("component", entry.component);
@@ -46,22 +46,28 @@ void SimulationTableCsv::addEntry(SimulationTableEntry entry)
     storage_.addValue("block_time_index", entry.block_time_index);
     storage_.addValue("scenario_index", entry.scenario_index);
     storage_.addValue("value", entry.value);
-    storage_.addValue("basis_status", StatusToString(entry.status));
+    storage_.addValue("basis_status", entry.status);
 }
 
-void SimulationTableCsv::writeHeader()
+std::string SimulationTableCsv::getHeader() const
 {
+    std::ostringstream os;
     bool first = true;
     for (const auto& col_name: storage_.columnNames())
     {
         if (!first)
         {
-            buffer_ << ',';
+            os << ',';
         }
         first = false;
-        buffer_ << col_name;
+        os << col_name;
     }
-    buffer_ << '\n';
+    return os.str();
+}
+
+void SimulationTableCsv::writeHeader()
+{
+    buffer_ << getHeader() << '\n';
 }
 
 const std::string NONE = "None";

@@ -233,6 +233,12 @@ def check_annual_results(context):
             check_unsupplied_energy_value(context, area, year, float(row["unsupplied energy"]))
 
 
+@then("simulation tables match the references")
+def check_simulation_tables(context):
+    assert context.sih.get_optim1_simulation_table() == context.soh.get_optim1_simulation_table(), "first optimisation simulation table does not match the reference"
+    ref_simulation_table2 = context.sih.get_optim2_simulation_table()
+    if ref_simulation_table2:
+        assert ref_simulation_table2 == context.soh.get_optim2_simulation_table(), "second simulation table does not match the reference"
 def should_check(row, key):
     return key in row.headings and len(row[key]) > 0
 

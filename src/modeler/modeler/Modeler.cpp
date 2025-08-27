@@ -1,22 +1,24 @@
 
-// Copyright 2007-2025, RTE (https://www.rte-france.com)
-// See AUTHORS.txt
-// SPDX-License-Identifier: MPL-2.0
-// This file is part of Antares-Simulator,
-// Adequacy and Performance assessment for interconnected energy networks.
-//
-// Antares_Simulator is free software: you can redistribute it and/or modify
-// it under the terms of the Mozilla Public Licence 2.0 as published by
-// the Mozilla Foundation, either version 2 of the License, or
-// (at your option) any later version.
-//
-// Antares_Simulator is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// Mozilla Public Licence 2.0 for more details.
-//
-// You should have received a copy of the Mozilla Public Licence 2.0
-// along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+/*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "antares/solver/modeler/Modeler.h"
 
@@ -39,7 +41,6 @@ using namespace Antares::Optimisation::LinearProblemApi;
 
 namespace Antares::Solver
 {
-
 Modeler::Modeler(ILoader& loader, IWriter& writer):
     loader_{loader},
     writer_{writer}
@@ -58,16 +59,19 @@ public:
 
     void Provide(ILinearProblem& pb,
                  const ModelerParameters& parameters,
-                 ILinearProblemData* dataSeries)
+                 ILinearProblemData* dataSeries,
+                 const Optimisation::ScenarioGroupRepository& scenario_group_repository,
+                 const FillContext& timeScenarioCtx)
     {
-        std::vector<std::unique_ptr<Optimization::ComponentFiller>> fillers;
+        std::vector<std::unique_ptr<Optimisation::ComponentFiller>> fillers;
         std::vector<LinearProblemFiller*> fillers_ptr;
         // All LP variables coordinates (component id, variable id, scenario, time step)
 
         for (const auto& [_, component]: system_->Components())
         {
-            auto cf = std::make_unique<Optimization::ComponentFiller>(component,
-                                                                      variableDictionary_);
+            auto cf = std::make_unique<Optimisation::ComponentFiller>(component,
+                                                                      variableDictionary_,
+                                                                      scenario_group_repository);
             fillers.push_back(std::move(cf));
         }
         for (auto& component_filler: fillers)
@@ -76,9 +80,8 @@ public:
         }
 
         LinearProblemBuilder linear_problem_builder(fillers_ptr);
-        // Todo: scenario
-        FillContext dummy_time_scenario_ctx = {parameters.firstTimeStep, parameters.lastTimeStep};
-        linear_problem_builder.build(pb, *dataSeries, dummy_time_scenario_ctx);
+
+        linear_problem_builder.build(pb, *dataSeries, timeScenarioCtx);
     }
 
     [[nodiscard]] const VariableDictionary& getVariableDictionary() const
@@ -117,8 +120,18 @@ void Modeler::solve() const
                                          });
           });
         OrtoolsLinearProblem ortools_linear_problem(isMip, parameters.solver);
-
-        system_linear_problem.Provide(ortools_linear_problem, parameters, data.dataSeries.get());
+        // Todo: scenario
+        FillContext timeScenarioCtx = {
+          parameters.firstTimeStep,
+          parameters.lastTimeStep,
+          parameters.firstTimeStep, // global = local, single time block in pure modeler (for now)
+          parameters.lastTimeStep,  // global = local
+          0};
+        system_linear_problem.Provide(ortools_linear_problem,
+                                      parameters,
+                                      data.dataSeries.get(),
+                                      data.scenario_group_repository,
+                                      timeScenarioCtx);
 
         logs.info() << "Linear problem provided";
 
@@ -140,7 +153,7 @@ void Modeler::solve() const
                                          data.system->Components(),
                                          data.dataSeries.get(),
                                          system_linear_problem.getVariableDictionary(),
-                                         {parameters.firstTimeStep, parameters.lastTimeStep});
+                                         timeScenarioCtx);
             break;
         default:
             logs.error() << "Problem during linear optimization";
@@ -148,7 +161,7 @@ void Modeler::solve() const
     }
     catch (const LoadFiles::ErrorLoadingYaml&)
     {
-        throw Antares::Solver::Modeler::Error("Error while loading files, exiting");
+        throw Antares::Solver::Modeler::ModelerError("Error while loading files, exiting");
     }
 }
 } // namespace Antares::Solver

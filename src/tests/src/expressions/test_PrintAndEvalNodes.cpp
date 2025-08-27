@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE(test_getSystemParameterValueAsDouble)
     // Mock dependency
     struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearProblemData
     {
-        double getData(const std::string&, unsigned int, unsigned int) const override
+        [[nodiscard]] double getData(const std::string&, unsigned int, unsigned int) const override
         {
             return 123.45; // Mock return value for testing
         }
@@ -59,7 +59,8 @@ BOOST_AUTO_TEST_CASE(test_getSystemParameterValueAsDouble)
 
     std::map<std::string, double> variables; // Not needed for this test
 
-    EvaluationContext context(system_parameters, variables, mockData);
+    Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
+    EvaluationContext context(system_parameters, variables, mockData, emptyScenario);
 
     // 1. Valid number (CONSTANT)
     BOOST_CHECK_EQUAL(context.getSystemParameterValueAsDouble("valid_number"), 42.5);
@@ -81,7 +82,7 @@ BOOST_AUTO_TEST_CASE(test_getSystemParameterValueAsDouble)
                       EvaluationContext::CouldNotEvaluateConstantParameter<std::invalid_argument>);
 
     // 6. Timeserie parameter should be handled by getParameterValue instead
-    BOOST_CHECK_EQUAL(context.getParameterValue("timeserie_param", "group1", 0, 1), 123.45);
+    BOOST_CHECK_EQUAL(context.getParameterValue("timeserie_param", 0, 1), 123.45);
 }
 
 BOOST_AUTO_TEST_CASE(EvaluationResult_ConstructorTest)
@@ -399,8 +400,9 @@ BOOST_AUTO_TEST_CASE(AlltimeSum_VectorValue_OutOfRange)
 struct MyDummyFixture: Registry<Node>
 {
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
-    EvaluationContext evaluationContext{{}, {}, data};
-    Antares::Optimisation::LinearProblemApi::FillContext fillContext{0, 0};
+    Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
+    EvaluationContext evaluationContext{{}, {}, data, emptyScenario};
+    Antares::Optimisation::LinearProblemApi::FillContext fillContext{0, 0, 0, 0, 0};
     EvalVisitor evalVisitor{evaluationContext, fillContext};
 };
 
@@ -586,7 +588,10 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param, MyDummyFixture)
 {
     ParameterNode root("my-param", TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
     const std::string value = "221.3";
-    EvaluationContext context({build_context_parameter_with("my-param", value)}, {}, data);
+    EvaluationContext context({build_context_parameter_with("my-param", value)},
+                              {},
+                              data,
+                              emptyScenario);
 
     EvalVisitor evalVisitor(context, fillContext);
     const double eval = evalVisitor.dispatch(&root).valueAsDouble();
@@ -601,7 +606,10 @@ BOOST_FIXTURE_TEST_CASE(parameter_constant_at_creation_but_not_in_eval_context__
     const std::string value = "45.7";
     const ParameterType param_type = ParameterType::TIMESERIE;
     ParameterNode root(id, TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
-    EvaluationContext context({build_context_parameter_with(id, value, param_type)}, {}, data);
+    EvaluationContext context({build_context_parameter_with(id, value, param_type)},
+                              {},
+                              data,
+                              emptyScenario);
 
     EvalVisitor evalVisitor(context, fillContext);
     BOOST_CHECK_THROW(evalVisitor.dispatch(&root), std::invalid_argument);
@@ -609,9 +617,9 @@ BOOST_FIXTURE_TEST_CASE(parameter_constant_at_creation_but_not_in_eval_context__
 
 struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearProblemData
 {
-    double getData([[maybe_unused]] const std::string& dataSetId,
-                   [[maybe_unused]] unsigned scenario,
-                   unsigned hour) const override
+    [[nodiscard]] double getData([[maybe_unused]] const std::string& dataSetId,
+                                 [[maybe_unused]] const unsigned scenario,
+                                 unsigned hour) const override
     {
         return hour; // for test
     }
@@ -625,11 +633,12 @@ BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_param, MyDummyFixture)
     EvaluationContext context(
       {build_context_parameter_with("my-param", value, ParameterType::TIMESERIE)},
       {},
-      dummy_data);
+      dummy_data,
+      emptyScenario);
 
     unsigned hour_0 = 0;
     unsigned hour_1 = 1;
-    EvalVisitor evalVisitor(context, {hour_0, hour_1 /*two hours*/});
+    EvalVisitor evalVisitor(context, {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0});
     const auto eval = evalVisitor.dispatch(&root).valuesAsVector();
 
     BOOST_CHECK_EQUAL(eval[0], hour_0);
@@ -652,14 +661,16 @@ EvaluationResult CreateAndEvaluateTimeNode(const right& p)
     left root(&param, p);
     const std::string value = "dummy";
     MockLinearProblemData dummy_data;
+    Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
     EvaluationContext context(
       {build_context_parameter_with("my-param", value, ParameterType::TIMESERIE)},
       {},
-      dummy_data);
+      dummy_data,
+      emptyScenario);
 
     unsigned first = 0;
     unsigned last = 2;
-    EvalVisitor evalVisitor(context, {first, last /*three hours*/});
+    EvalVisitor evalVisitor(context, {first, last /*three hours*/, first, last, 0});
     return evalVisitor.dispatch(&root);
 }
 
@@ -691,14 +702,16 @@ EvaluationResult CreateAndEvaluateTimeSumNode(Node* from, Node* to)
     TimeSumNode root(from, to, &param);
     const std::string value = "dummy";
     MockLinearProblemData dummy_data;
+    Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
     EvaluationContext context(
       {build_context_parameter_with("my-param", value, ParameterType::TIMESERIE)},
       {},
-      dummy_data);
+      dummy_data,
+      emptyScenario);
 
     unsigned first = 0;
     unsigned last = 2;
-    EvalVisitor evalVisitor(context, {first, last /*three hours*/});
+    EvalVisitor evalVisitor(context, {first, last /*three hours*/, first, last, 0});
     return evalVisitor.dispatch(&root);
 }
 
@@ -720,14 +733,16 @@ EvaluationResult CreateAndEvaluateAllTimeSumNode()
     AllTimeSumNode root(&param);
     const std::string value = "dummy";
     MockLinearProblemData dummy_data;
+    Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
     EvaluationContext context(
       {build_context_parameter_with("my-param", value, ParameterType::TIMESERIE)},
       {},
-      dummy_data);
+      dummy_data,
+      emptyScenario);
 
     unsigned first = 0;
     unsigned last = 2;
-    EvalVisitor evalVisitor(context, {first, last /*three hours*/});
+    EvalVisitor evalVisitor(context, {first, last /*three hours*/, first, last, 0});
     return evalVisitor.dispatch(&root);
 }
 
@@ -751,11 +766,12 @@ BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_multiplication, MyDummyFixture)
     EvaluationContext context(
       {build_context_parameter_with("my-param", value, ParameterType::TIMESERIE)},
       {},
-      dummy_data);
+      dummy_data,
+      emptyScenario);
 
     unsigned hour_0 = 0;
     unsigned hour_1 = 1;
-    EvalVisitor evalVisitor(context, {hour_0, hour_1 /*two hours*/});
+    EvalVisitor evalVisitor(context, {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0});
     const auto eval = evalVisitor.dispatch(&root).valuesAsVector();
 
     BOOST_CHECK_EQUAL(eval[0], hour_0 * literal.value());
@@ -798,14 +814,15 @@ void evaluate_time_dependent_operation()
     BinaryNode root(&literal, &param); // Correctly use the type as a template argument
     const std::string value = "dummy";
     MockLinearProblemData dummy_data;
-
+    Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
     EvaluationContext context(
       {build_context_parameter_with("my-param", value, ParameterType::TIMESERIE)},
       {},
-      dummy_data);
+      dummy_data,
+      emptyScenario);
     unsigned hour_0 = 0;
     unsigned hour_1 = 1;
-    EvalVisitor evalVisitor(context, {hour_0, hour_1 /*two hours*/});
+    EvalVisitor evalVisitor(context, {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0});
     const auto eval = evalVisitor.dispatch(&root).valuesAsVector();
 
     BOOST_CHECK_EQUAL(eval[0], evalExpected<BinaryNode>(hour_0, literal.value()));
@@ -823,15 +840,17 @@ void evaluate_time_dependent_operation_on_TimeShiftNode(Node* timeShift)
     const std::string value = "dummy";
 
     MockLinearProblemData dummy_data;
-
+    Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
     EvaluationContext context(
       {build_context_parameter_with("my-param", value, ParameterType::TIMESERIE)},
       {},
-      dummy_data);
+      dummy_data,
+      emptyScenario);
 
     std::vector<unsigned int> hours = {0, 1};
 
-    EvalVisitor evalVisitor(context, {hours.at(0), hours.at(1) /*two hours*/});
+    EvalVisitor evalVisitor(context,
+                            {hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0});
     const auto eval = evalVisitor.dispatch(&root).valuesAsVector();
 
     std::vector<double> result_before_timeShift = {evalExpected<BinaryNode>(hours.at(0),
@@ -857,15 +876,17 @@ void evaluate_time_dependent_operation_on_TimeIndexNode(Node* timeIndex)
     const std::string value = "dummy";
 
     MockLinearProblemData dummy_data;
-
+    Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
     EvaluationContext context(
       {build_context_parameter_with("my-param", value, ParameterType::TIMESERIE)},
       {},
-      dummy_data);
+      dummy_data,
+      emptyScenario);
 
     std::vector<unsigned int> hours = {0, 1};
 
-    EvalVisitor evalVisitor(context, {hours.at(0), hours.at(1) /*two hours*/});
+    EvalVisitor evalVisitor(context,
+                            {hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0});
     const auto eval = evalVisitor.dispatch(&root).valueAsDouble();
 
     std::vector<double> result_before_timeIndex = {evalExpected<BinaryNode>(hours.at(0),
@@ -906,7 +927,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_variable, MyDummyFixture)
 {
     VariableNode root("my-variable", TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
     const double value = 221.3;
-    EvaluationContext context({}, {{"my-variable", value}}, data);
+    EvaluationContext context({}, {{"my-variable", value}}, data, emptyScenario);
 
     EvalVisitor evalVisitor(context, fillContext);
     const double eval = evalVisitor.dispatch(&root).valueAsDouble();

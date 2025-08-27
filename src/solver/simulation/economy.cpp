@@ -39,7 +39,8 @@ Economy::Economy(Data::Study& study,
     study(study),
     preproOnly(false),
     resultWriter(resultWriter),
-    simulationObserver_(simulationObserver)
+    simulationObserver_(simulationObserver),
+    simulationTables_(study.maxNbYearsInParallel)
 {
 }
 
@@ -65,6 +66,20 @@ void Economy::initializeState(Variable::State& state, uint numSpace)
     state.numSpace = numSpace;
 }
 
+OptimisationsSimulationTable& Economy::getSimulationTable(uint numSpace)
+{
+    return simulationTables_[numSpace];
+}
+
+std::string Economy::getSimulationTableHeader() const
+{
+    if (!simulationTables_.empty())
+    {
+        return simulationTables_.at(0).getHeader();
+    }
+    return "";
+}
+
 bool Economy::simulationBegin()
 {
     if (!preproOnly)
@@ -84,7 +99,7 @@ bool Economy::simulationBegin()
                                             &pProblemesHebdo[numSpace],
                                             resultWriter,
                                             simulationObserver_.get(),
-                                            simulationTables_);
+                                            simulationTables_[numSpace]);
 
             postProcessesList_[numSpace] = interfacePostProcessList::create(
               study.parameters.adqPatchParams,
@@ -151,12 +166,11 @@ bool Economy::year(Progression::Task& progression,
                                         hourInTheYear,
                                         randomForYear.pThermalNoisesByArea,
                                         state.year);
-
+        auto& currentSimTable = simulationTables_[numSpace];
         try
         {
             weeklyOptProblems_[numSpace].solve();
-            simulationTables_.write();
-            simulationTables_.clear();
+            currentSimTable.write();
             // Runs all the post processes in the list of post-process commands
             optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
             postProcessesList_[numSpace]->runAll(opt_runtime_data);
@@ -220,7 +234,6 @@ bool Economy::year(Progression::Task& progression,
         ++progression;
     }
 
-    simulationTables_.writeTo("simulation_table", resultWriter);
     optWriter.finalize();
     finalizeOptimizationStatistics(currentProblem, state);
 
@@ -256,7 +269,11 @@ void Economy::simulationEnd()
     if (!preproOnly && study.runtime.interconnectionsCount() > 0)
     {
         auto balance = retrieveBalance(study, variables);
-        ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks, simulationTables_);
+        ComputeFlowQuad(study,
+                        pProblemesHebdo[0],
+                        balance,
+                        pNbWeeks,
+                        simulationTables_[0] /*TODO*/);
     }
 }
 

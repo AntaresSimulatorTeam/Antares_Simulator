@@ -31,10 +31,10 @@ public:
     Modeler(ILoader& loader, IWriter& writer);
     void solve() const;
 
-    class Error: public std::runtime_error
+    class ModelerError: public std::runtime_error
     {
     public:
-        explicit Error(const std::string& s):
+        explicit ModelerError(const std::string& s):
             runtime_error(s)
         {
         }

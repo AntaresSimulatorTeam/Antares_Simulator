@@ -1,6 +1,6 @@
 Feature: hybrid (simulator+modeler) studies
 
-  @fast @short
+  @fast @short @1
   Scenario: 001 One node - passive + modeler test 1_1
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/001 One node - passive"
     When I run antares simulator
@@ -36,6 +36,8 @@ Feature: hybrid (simulator+modeler) studies
     # for now, modeler costs does not figure in system cost txt
     And the annual system cost is 0
     And in area "AREA", during year 1, loss of load lasts 0 hours
+ # de-comment when https://github.com/AntaresSimulatorTeam/Antares_Simulator_Tests_NR/pull/75 would be merged
+#    And simulation tables match the references
 
   @fast @short
   Scenario: Legacy node with one legacy load (up to 5952 MW) and wind, and one generator component (max_p=5900) (168h simplex)

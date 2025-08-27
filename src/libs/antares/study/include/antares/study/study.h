@@ -38,6 +38,7 @@
 #include <antares/study/system-model/system.h>
 #include <antares/writer/i_writer.h>
 #include "antares/antares/antares.h"
+#include "antares/solver/modeler/data.h"
 #include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
 #include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 
@@ -633,6 +634,11 @@ public:
     Optimisation::LinearProblemApi::ILinearProblemData* getModelerData() const
     {
         return modelerInput_.dataSeries.get();
+    }
+
+    Optimisation::ScenarioGroupRepository* getScenarioGroupRepository()
+    {
+        return &modelerInput_.scenario_group_repository;
     }
 
 protected:

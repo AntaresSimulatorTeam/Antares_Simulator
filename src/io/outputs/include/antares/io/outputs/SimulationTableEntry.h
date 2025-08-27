@@ -24,36 +24,6 @@
 
 #include "antares/optimisation/linear-problem-api/hasStatus.h"
 
-inline std::string StatusToString(
-  const std::optional<Antares::Optimisation::LinearProblemApi::MipBasisStatus>& status)
-{
-    using namespace Antares::Optimisation::LinearProblemApi;
-    // TODO shorten returns
-    if (status.has_value())
-    {
-        switch (*status)
-        {
-        case MipBasisStatus::FREE:
-            return "Free";
-        case MipBasisStatus::AT_LOWER_BOUND:
-            return "At lower bound";
-        case MipBasisStatus::AT_UPPER_BOUND:
-            return "At upper bound";
-        case MipBasisStatus::FIXED_VALUE:
-            return "Fixed value";
-        case MipBasisStatus::BASIC:
-            return "Basic";
-        case MipBasisStatus::NOT_AVAILABLE:
-        default:
-            return "None";
-        }
-    }
-    else
-    {
-        return "None";
-    }
-}
-
 struct SimulationTableEntry
 {
     unsigned int block;
@@ -63,5 +33,5 @@ struct SimulationTableEntry
     std::optional<unsigned int> block_time_index;
     std::optional<unsigned int> scenario_index;
     std::optional<double> value;
-    Antares::Optimisation::LinearProblemApi::MipBasisStatus status;
+    std::optional<Antares::Optimisation::LinearProblemApi::MipBasisStatus> status;
 };

@@ -82,7 +82,9 @@ void addVariableEntries(ISimulationTable& simulationTable,
         auto handle = [&](std::optional<unsigned> timeStep, std::optional<unsigned> scenIdx)
         {
             const auto* var = variableLookup(cid, varName, scenIdx, timeStep);
-            TimeBlock tb = timeStep ? convertTimeStepToBlockTimeIndex(*timeStep, timeConversionMode)
+            TimeBlock tb = timeStep ? convertTimeStepToBlockTimeIndex(
+                                        *timeStep + fillContext.getGlobalFirstTimeStep(),
+                                        timeConversionMode)
                                     : TimeBlock{.block = currentBlock,
                                                 .blockTimeIndex = std::nullopt,
                                                 .absoluteTimeIndex = std::nullopt};
@@ -100,7 +102,8 @@ void addVariableEntries(ISimulationTable& simulationTable,
 
         if (scenDep && timeDep)
         {
-            for (unsigned ts = fillContext.getFirstTimeStep(); ts <= fillContext.getLastTimeStep();
+            for (unsigned ts = fillContext.getLocalFirstTimeStep();
+                 ts <= fillContext.getLocalLastTimeStep();
                  ++ts)
             {
                 handle(ts, scenario);
@@ -112,7 +115,8 @@ void addVariableEntries(ISimulationTable& simulationTable,
         }
         else if (timeDep)
         {
-            for (unsigned ts = fillContext.getFirstTimeStep(); ts <= fillContext.getLastTimeStep();
+            for (unsigned ts = fillContext.getLocalFirstTimeStep();
+                 ts <= fillContext.getLocalLastTimeStep();
                  ++ts)
             {
                 handle(ts, std::nullopt);
@@ -146,7 +150,9 @@ void addConstraintEntries(ISimulationTable& simulationTable,
         auto handle = [&](std::optional<unsigned> ts, std::optional<unsigned> scenIdx)
         {
             const auto* c = lookupConstraint(cid, cname, scenIdx, ts);
-            TimeBlock tb = ts ? convertTimeStepToBlockTimeIndex(*ts, timeConversionMode)
+            TimeBlock tb = ts ? convertTimeStepToBlockTimeIndex(
+                                  *ts + fillContext.getGlobalFirstTimeStep(),
+                                  timeConversionMode)
                               : TimeBlock{.block = currentBlock,
                                           .blockTimeIndex = std::nullopt,
                                           .absoluteTimeIndex = std::nullopt};
@@ -165,7 +171,8 @@ void addConstraintEntries(ISimulationTable& simulationTable,
         switch (idxType)
         {
         case TI::VARYING_IN_TIME_AND_SCENARIO:
-            for (unsigned ts = fillContext.getFirstTimeStep(); ts <= fillContext.getLastTimeStep();
+            for (unsigned ts = fillContext.getLocalFirstTimeStep();
+                 ts <= fillContext.getLocalLastTimeStep();
                  ++ts)
             {
                 handle(ts, scenario);
@@ -175,7 +182,8 @@ void addConstraintEntries(ISimulationTable& simulationTable,
             handle(std::nullopt, scenario);
             break;
         case TI::VARYING_IN_TIME_ONLY:
-            for (unsigned ts = fillContext.getFirstTimeStep(); ts <= fillContext.getLastTimeStep();
+            for (unsigned ts = fillContext.getLocalFirstTimeStep();
+                 ts <= fillContext.getLocalLastTimeStep();
                  ++ts)
             {
                 handle(ts, std::nullopt);
@@ -205,7 +213,6 @@ std::string BuildModelerConstraintName(const std::string& cid,
 void FillSimulationTable(
   ISimulationTable& simulationTable,
   const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
-  const Antares::Optimisation::LinearProblemApi::IMipSolution& solution,
   const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>& components,
   Antares::Optimisation::LinearProblemApi::ILinearProblemData* dataSeries,
   const Antares::Optimization::VariableDictionary& variableDictionary,

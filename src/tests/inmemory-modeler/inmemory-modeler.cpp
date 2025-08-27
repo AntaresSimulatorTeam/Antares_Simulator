@@ -25,6 +25,7 @@
 #include "antares/expressions/nodes/ExpressionsNodes.h"
 #include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
+#include "antares/solver/optim-model-filler/scenarioGroupRepo.h"
 #include "antares/study/system-model/component.h"
 #include "antares/study/system-model/parameter.h"
 
@@ -42,16 +43,25 @@ build_context_parameter_with(const std::string& id,
 
 void LinearProblemBuildingFixture::buildLinearProblem(
   Antares::Optimisation::LinearProblemApi::FillContext& time_scenario_ctx,
-  Antares::Optimisation::LinearProblemDataImpl::LinearProblemData& dummy_data)
+  Antares::Optimisation::LinearProblemDataImpl::LinearProblemData& dummy_data,
+  std::vector<std::unique_ptr<Antares::Optimisation::LinearProblemApi::IScenario>>& scenarios)
 {
-    std::vector<std::unique_ptr<Antares::Optimization::ComponentFiller>> fillers;
+    std::vector<std::unique_ptr<Antares::Optimisation::ComponentFiller>> fillers;
     std::vector<Antares::Optimisation::LinearProblemApi::LinearProblemFiller*> fillers_ptr;
     // All LP variables coordinates (component id, variable id, scenario, time step)
     Antares::Optimization::VariableDictionary variableDictionary;
-    for (auto& component: components)
+    Antares::Optimisation::ScenarioGroupRepository scenario_group_repository;
+    for (auto& scenario: scenarios)
     {
-        auto cf = std::make_unique<Antares::Optimization::ComponentFiller>(component,
-                                                                           variableDictionary);
+        auto name = scenario->group();
+        scenario_group_repository.addScenario(name, std::move(scenario));
+    }
+    for (auto& component: components | std::views::values)
+    {
+        auto cf = std::make_unique<Antares::Optimisation::ComponentFiller>(
+          component,
+          variableDictionary,
+          scenario_group_repository);
         fillers.push_back(std::move(cf));
     }
     for (auto& component_filler: fillers)
@@ -70,27 +80,29 @@ void LinearProblemBuildingFixture::buildLinearProblem(
 void LinearProblemBuildingFixture::buildLinearProblem(
   Antares::Optimisation::LinearProblemApi::FillContext& time_scenario_ctx)
 {
-    buildLinearProblem(time_scenario_ctx, dummy_data_);
+    std::vector<std::unique_ptr<Antares::Optimisation::LinearProblemApi::IScenario>> scenarios;
+    buildLinearProblem(time_scenario_ctx, dummy_data_, scenarios);
 }
 
 void LinearProblemBuildingFixture::buildLinearProblem()
 {
-    Antares::Optimisation::LinearProblemApi::FillContext time_scenario_ctx = {0, 0};
+    Antares::Optimisation::LinearProblemApi::FillContext time_scenario_ctx = {0, 0, 0, 0, 0};
     buildLinearProblem(time_scenario_ctx);
 }
 
 void LinearProblemBuildingFixture::createComponent(
   const std::string& modelId,
   const std::string& componentId,
-  std::map<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue> parameterValues)
+  std::map<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue> parameterValues,
+  std::string scenarioGroupId)
 {
-    Antares::ModelerStudy::SystemModel::ComponentBuilder component_builder;
+    ComponentBuilder component_builder;
     auto component = component_builder.withId(componentId)
                        .withModel(&models.at(modelId))
-                       .withScenarioGroupId("scenario_group")
+                       .withScenarioGroupId(scenarioGroupId)
                        .withParameterValues(move(parameterValues))
                        .build();
-    components.push_back(std::move(component));
+    components.emplace(component.Id(), std::move(component));
 }
 
 Antares::Expressions::Nodes::Node* LinearProblemBuildingFixture::literal(double value)
@@ -125,62 +137,55 @@ Antares::Expressions::Nodes::Node* LinearProblemBuildingFixture::negate(
     return nodes.create<Antares::Expressions::Nodes::NegationNode>(node);
 }
 
-void LinearProblemBuildingFixture::createModel(std::string modelId,
-                                               std::vector<std::string> parameterIds,
-                                               std::vector<VariableData> variablesData,
-                                               std::vector<ConstraintData> constraintsData,
+void LinearProblemBuildingFixture::createModel(const std::string& modelId,
+                                               const std::vector<std::string>& parameterIds,
+                                               const std::vector<VariableData>& variablesData,
+                                               const std::vector<ConstraintData>& constraintsData,
                                                Antares::Expressions::Nodes::Node* objective)
 {
-    std::vector<Antares::ModelerStudy::SystemModel::Parameter> parameters;
-    for (auto parameter_id: std::move(parameterIds))
+    std::vector<Parameter> parameters;
+    for (const auto& parameter_id: std::move(parameterIds))
     {
-        parameters.push_back(Antares::ModelerStudy::SystemModel::Parameter(
-          parameter_id,
-          Antares::ModelerStudy::SystemModel::TimeDependent::NO,
-          Antares::ModelerStudy::SystemModel::ScenarioDependent::NO));
+        parameters.emplace_back(parameter_id, TimeDependent::NO, ScenarioDependent::NO);
     }
-    createModelWithSystemModelParameter(std::move(modelId),
+    createModelWithSystemModelParameter(modelId,
                                         parameters,
-                                        std::move(variablesData),
-                                        std::move(constraintsData),
+                                        variablesData,
+                                        constraintsData,
                                         objective);
 }
 
 void LinearProblemBuildingFixture::createModelWithSystemModelParameter(
-  std::string modelId,
-  std::vector<Antares::ModelerStudy::SystemModel::Parameter> parameters,
-  std::vector<VariableData> variablesData,
-  std::vector<ConstraintData> constraintsData,
+  const std::string& modelId,
+  std::vector<Parameter> parameters,
+  const std::vector<VariableData>& variablesData,
+  const std::vector<ConstraintData>& constraintsData,
   Antares::Expressions::Nodes::Node* objective)
 {
     auto createExpression = [this](Antares::Expressions::Nodes::Node* node)
     {
         Antares::Expressions::NodeRegistry node_registry(node, std::move(nodes));
-        Antares::ModelerStudy::SystemModel::Expression expression("expression",
-                                                                  std::move(node_registry));
+        Expression expression("expression", std::move(node_registry));
         return expression;
     };
 
-    std::vector<Antares::ModelerStudy::SystemModel::Variable> variables;
-    for (auto [id, type, lb, ub, timeDependent, scenarioDependent]: variablesData)
+    std::vector<Variable> variables;
+    for (const auto& [id, type, lb, ub, timeDependent, scenarioDependent]: variablesData)
     {
-        variables.emplace_back(id,
-                               createExpression(lb),
-                               createExpression(ub),
-                               type,
-                               Antares::ModelerStudy::SystemModel::fromBool<
-                                 Antares::ModelerStudy::SystemModel::TimeDependent>(timeDependent),
-                               Antares::ModelerStudy::SystemModel::fromBool<
-                                 Antares::ModelerStudy::SystemModel::ScenarioDependent>(
-                                 scenarioDependent));
+        variables.emplace_back(
+          id,
+          createExpression(lb),
+          createExpression(ub),
+          type,
+          Antares::ModelerStudy::SystemModel::fromBool<TimeDependent>(timeDependent),
+          Antares::ModelerStudy::SystemModel::fromBool<ScenarioDependent>(scenarioDependent));
     }
-    std::vector<Antares::ModelerStudy::SystemModel::Constraint> constraints;
-    for (auto [id, expression]: constraintsData)
+    std::vector<Constraint> constraints;
+    for (const auto& [id, expression]: constraintsData)
     {
-        constraints.push_back(std::move(
-          Antares::ModelerStudy::SystemModel::Constraint(id, createExpression(expression))));
+        constraints.push_back(std::move(Constraint(id, createExpression(expression))));
     }
-    Antares::ModelerStudy::SystemModel::ModelBuilder model_builder;
+    ModelBuilder model_builder;
     model_builder.withId(modelId)
       .withParameters(std::move(parameters))
       .withVariables(std::move(variables))
@@ -205,12 +210,7 @@ void LinearProblemBuildingFixture::createModelWithOneFloatVar(
 {
     createModel(modelId,
                 parameterIds,
-                {{varId,
-                  Antares::ModelerStudy::SystemModel::ValueType::FLOAT,
-                  lb,
-                  ub,
-                  time_dependent,
-                  false}},
+                {{varId, ValueType::FLOAT, lb, ub, time_dependent, false}},
                 constraintsData,
                 objective);
 }

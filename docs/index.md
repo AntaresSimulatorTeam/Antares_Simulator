@@ -52,16 +52,16 @@ The GUI is deprecated in favor of [Antares Web](https://antares-web.readthedocs.
 
 [ubuntu_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/ubuntu.yml/badge.svg?branch=develop
 
-[centos_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/centos7.yml/badge.svg?branch=develop
-
 [ubuntu_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Ubuntu%20CI%20(push%20and/or%20release)"
 
 [centos_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/centos7.yml/badge.svg?branch=develop
 
+[centos_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Centos7%20CI%20(push%20and/or%20release)"
+
+[windows_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/windows-vcpkg.yml/badge.svg?branch=develop
+
 [windows_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Windows%20CI%20(VCPKG%20and%20pre-compiled)"
 
 [oraclelinux_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/oracle8.yml/badge.svg?branch=develop
-
-[centos_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Centos7%20CI%20(push%20and/or%20release)"
 
 [oraclelinux_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Oracle%208%20CI%20(push%20and/or%20release)"

@@ -82,9 +82,9 @@ BOOST_AUTO_TEST_CASE(ignore_wrong_lines)
     file << "group1, 1=1\n";
     file.close();
     auto scenarioGroupRepository = loadScenarioGroupRepository(studyPath);
-    BOOST_CHECK_EXCEPTION(scenarioGroupRepository.scenario("group1").getData(0),
+    BOOST_CHECK_EXCEPTION((void)scenarioGroupRepository.scenario("group1").getData(0),
                           Antares::Error::RuntimeError,
                           checkMessage(
-                            "In scenario group 'group1', time serie for year 0 does not exist."));
+                            "In scenario group 'GROUP1', time serie for year 0 does not exist."));
     BOOST_CHECK_EQUAL(scenarioGroupRepository.scenario("group1").getData(1), 1);
 }

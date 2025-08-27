@@ -27,7 +27,7 @@ class ISimulationTable
 public:
     virtual ~ISimulationTable() = default;
 
-    virtual void addEntry(SimulationTableEntry entry) = 0;
+    virtual void addEntry(const SimulationTableEntry& entry) = 0;
 
     virtual void clear() = 0;
 

@@ -65,6 +65,6 @@ private:
     const std::filesystem::path studyPath_;
     std::filesystem::path outputPath_;
     std::string simulationId_;
-    bool output{false};
+    bool output{true};
 };
 } // namespace Antares::Modeler

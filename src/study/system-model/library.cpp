@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -86,15 +86,6 @@ LibraryBuilder& LibraryBuilder::withModels(std::vector<Model>&& models)
                    std::inserter(*library_.models_, library_.models_->end()),
                    [](/*Non const to prevent copy*/ Model& model)
                    { return std::make_pair(model.Id(), std::move(model)); });
-    return *this;
-}
-
-LibraryBuilder& LibraryBuilder::withModelsMap(std::unordered_map<std::string, Model>&& models)
-{
-    for (auto&& pair: models)
-    {
-        library_.models_->insert(std::move(pair));
-    }
     return *this;
 }
 

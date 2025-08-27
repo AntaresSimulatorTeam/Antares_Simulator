@@ -39,10 +39,6 @@ static void checkComponentDataValidity(const ComponentData& data)
     {
         throw std::invalid_argument("A component can't have an empty model");
     }
-    if (data.scenario_group_id.empty())
-    {
-        throw std::invalid_argument("A component can't have an empty scenario_group_id");
-    }
     // Check that parameters values are coherent with the model
     if (data.model->Parameters().size() != data.parameter_values.size())
     {

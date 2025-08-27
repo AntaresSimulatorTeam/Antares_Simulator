@@ -35,7 +35,8 @@ Adequacy::Adequacy(Data::Study& study,
                    Simulation::ISimulationObserver& simulationObserver):
     study(study),
     resultWriter(resultWriter),
-    simulationObserver_(simulationObserver)
+    simulationObserver_(simulationObserver),
+    simulationTables_(study.maxNbYearsInParallel)
 {
 }
 
@@ -60,6 +61,20 @@ void Adequacy::initializeState(Variable::State& state, uint numSpace)
     state.problemeHebdo = &pProblemesHebdo[numSpace];
     state.resSpilled.reset(study.areas.size(), (uint)nbHoursInAWeek);
     state.numSpace = numSpace;
+}
+
+OptimisationsSimulationTable& Adequacy::getSimulationTable(uint numSpace)
+{
+    return simulationTables_[numSpace];
+}
+
+std::string Adequacy::getSimulationTableHeader() const
+{
+    if (!simulationTables_.empty())
+    {
+        return simulationTables_.at(0).getHeader();
+    }
+    return "";
 }
 
 // valGen maybe_unused to match simulationBegin() declaration in economy.cpp
@@ -203,13 +218,14 @@ bool Adequacy::year(Progression::Task& progression,
 
             try
             {
+                auto& currentSimTable = simulationTables_[numSpace];
                 OPT_OptimisationHebdomadaire(study.parameters.optOptions,
                                              &currentProblem,
                                              resultWriter,
                                              simulationObserver_.get(),
-                                             simulationTables_);
-                simulationTables_.write();
-                simulationTables_.clear();
+                                             currentSimTable);
+                currentSimTable.write();
+                currentSimTable.clear();
 
                 RemixHydroForAllAreas(study.areas,
                                       currentProblem,
@@ -351,8 +367,6 @@ bool Adequacy::year(Progression::Task& progression,
         ++progression;
     }
 
-    simulationTables_.writeTo("simulation_table", resultWriter);
-
     optWriter.finalize();
     finalizeOptimizationStatistics(currentProblem, state);
 
@@ -388,7 +402,11 @@ void Adequacy::simulationEnd()
     if (!preproOnly && study.runtime.interconnectionsCount() > 0)
     {
         auto balance = retrieveBalance(study, variables);
-        ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks, simulationTables_);
+        ComputeFlowQuad(study,
+                        pProblemesHebdo[0],
+                        balance,
+                        pNbWeeks,
+                        simulationTables_[0] /*TODO*/);
     }
 }
 

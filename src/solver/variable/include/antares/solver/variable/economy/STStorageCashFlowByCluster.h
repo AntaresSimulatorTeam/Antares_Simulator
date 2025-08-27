@@ -211,13 +211,12 @@ public:
         for (uint clusterIndex = 0; clusterIndex != state.area->shortTermStorage.count();
              ++clusterIndex)
         {
-            const auto& stsHourlyResults = state.hourlyResults
-                                             ->ShortTermStorage[state.hourInTheWeek];
+            const auto& stsHourlyResults = state.hourlyResults->ShortTermStorage[clusterIndex];
             // ST storage injection for the current cluster and this hour
             // CashFlow[h] = (withdrawal - injection) * MRG. PRICE
             pValuesForTheCurrentYear[numSpace][clusterIndex].hour[hourInYear]
-              = (stsHourlyResults.withdrawal[clusterIndex]
-                 - stsHourlyResults.injection[clusterIndex])
+              = (stsHourlyResults.withdrawal[state.hourInTheWeek]
+                 - stsHourlyResults.injection[state.hourInTheWeek])
                 * (-state.hourlyResults->CoutsMarginauxHoraires[state.hourInTheWeek]);
             // Note: The marginal price provided by the solver is negative (naming convention).
         }
