@@ -30,11 +30,10 @@ static std::set<unsigned> ValidHours(const std::vector<double>& Spillage,
 
 void updateValidHours(std::set<unsigned>& validHours,
                       std::shared_ptr<IStorageForRemix>& storage,
-                      const std::vector<double>& UnsupE)
+                      const std::vector<double>& UnsupEinit)
 {
     std::erase_if(validHours,
-                  [&](int h) { return storage->initWithdrawal()[h] + UnsupE[h] <= eps; });
-    // std::erase_if(validHours, [&](int h) { return UnsupE[h] <= eps; });
+                  [&](int h) { return storage->initWithdrawal()[h] + UnsupEinit[h] <= eps; });
 }
 
 void checkInput(const std::vector<double>& Load,
@@ -91,9 +90,10 @@ static Exchange findExchange(const std::set<unsigned>& validHours,
     auto totalGenProjection = [&](int h) { return TotalGen[h]; };
 
     std::set<unsigned> validHoursForMin(validHours);
+    std::erase_if(validHoursForMin, [&](int h) { return UnsupE[h] <= eps; });
+
     while (true)
     {
-        std::erase_if(validHoursForMin, [&](int h) { return UnsupE[h] <= eps; });
         if (!validHoursForMin.size())
         {
             return {};
@@ -102,17 +102,17 @@ static Exchange findExchange(const std::set<unsigned>& validHours,
         auto hourOfMinGen = rng::min_element(validHoursForMin, {}, totalGenProjection);
 
         std::set<unsigned> validHoursForMax(validHours);
+        double totalGenMin = TotalGen[*hourOfMinGen];
+        std::erase_if(validHoursForMax, [&](int h) { return TotalGen[h] < totalGenMin + eps; });
+
         while (true)
         {
-            double totalGenMin = TotalGen[*hourOfMinGen];
-            std::erase_if(validHoursForMax, [&](int h) { return TotalGen[h] < totalGenMin + eps; });
             if (!validHoursForMax.size())
             {
                 break;
             }
 
             auto hourOfMaxGen = rng::max_element(validHoursForMax, {}, totalGenProjection);
-
             auto exchange = computeExchange(*hourOfMinGen, *hourOfMaxGen, TotalGen, storage);
 
             if (exchange > eps)
@@ -179,7 +179,6 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
         }
 
         updateValidHours(validHours, *storage, UnsupEinit);
-
         auto exchange = findExchange(validHours, TotalGen, UnsupE, *storage);
 
         if (!exchange.valid())
