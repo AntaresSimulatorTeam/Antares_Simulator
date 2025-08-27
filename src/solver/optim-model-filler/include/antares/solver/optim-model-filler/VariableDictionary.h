@@ -92,6 +92,11 @@ struct IntegerInterval
     {
         return finalTime - initialTime + 1;
     }
+
+    [[nodiscard]] bool empty() const
+    {
+        return finalTime < initialTime;
+    }
 };
 
 /**
@@ -140,89 +145,6 @@ private:
     std::optional<IntegerInterval> timeInterval;
 };
 
-/**
- * @brief Storage for created MIP variables indexed by (component, variable, scenario?, timestep?).
- * Uses nested hash maps + a vector with offset for contiguous timestep indices.
- * Provides strict (throwing) accessors and non-throwing tryGet helpers.
- */
-template<Antares::Optimisation::LinearProblemApi::SolverVariable InnerSolverVariable>
-class VariableDictionary
-{
-    using Value = Antares::Optimisation::LinearProblemApi::IMipVariable<
-      InnerSolverVariable>*; ///< Pointer alias
-
-    class VectorWithOffset
-    {
-    public:
-        VectorWithOffset() = default;
-        /** @brief Resize underlying storage; new slots initialised to nullptr. */
-        void resize(size_t initial_size, unsigned offset);
-        Value& operator[](unsigned int index); ///< Unchecked access (existing)
-        [[nodiscard]] const Value& operator[](unsigned int index) const; ///< Unchecked const
-        [[nodiscard]] const Value& at(unsigned int index) const;         ///< Bounds-checked const
-        Value& at(unsigned int index);                                   ///< Bounds-checked
-        [[nodiscard]] bool contains(unsigned int index) const noexcept;  ///< Fast bounds test
-
-    private:
-        std::vector<Value> values_ = {};
-        unsigned int offset_ = 0; ///< Logical start index used for mapping
-    };
-
-    using TwoIndexVectorByYear = std::unordered_map<MCYearAndTime::MCYear, VectorWithOffset>;
-    using HashMapVector = std::unordered_map<PartialKey, TwoIndexVectorByYear, PartialKeyHash>;
-
-    HashMapVector storageOfAddedMipVariables_;                         ///< Main storage
-    const TwoIndexVectorByYear& operator[](const PartialKey& k) const; ///< Internal helper
-    mutable StringToIdMapper mapper_;                                  ///< For naming
-
-public:
-    PartialKey buildKey(std::string_view component, std::string_view name) const;
-
-    template<typename... Args>
-    FullKey buildFullKey(Args... args) const;
-
-    /**
-     * @brief Register a new multi-dimensional variable family.
-     * For each (scenario, timestep) in dimensions, the callback is invoked to create the
-     * variable.
-     * @param dimensions Dimensional metadata.
-     * @param key Partial key (component, variable).
-     * @param func Factory: (MCYearAndTime, generatedName) -> variable pointer.
-     */
-    void addVariable(const Dimensions& dimensions,
-                     const PartialKey& key,
-                     std::function<Value(const MCYearAndTime&, const std::string&)>&& func);
-
-    /** Strict accessors (throw std::out_of_range if missing). */
-    Value operator[](const FullKey& k) const;
-    Value& operator[](const FullKey& k);
-
-    /** Convenience scalar (scenario/time = 0) accessors (strict). */
-    Value operator()(const std::string& component, const std::string& variable) const;
-    Value& operator()(const std::string& component, const std::string& variable);
-
-    /** Full dimension strict accessors. */
-    Value operator()(const std::string& component,
-                     const std::string& variable,
-                     const MCYearAndTime::MCYear& scenario,
-                     unsigned int timestep) const;
-    Value& operator()(const std::string& component,
-                      const std::string& variable,
-                      const MCYearAndTime::MCYear& scenario,
-                      unsigned int timestep);
-
-    /** Overload for FullKey (strict). */
-    Value operator()(const FullKey& fullKey) const;
-    Value& operator()(const FullKey& fullKey);
-};
-
-template<Antares::Optimisation::LinearProblemApi::SolverVariable InnerSolverVariable>
-template<typename... Args>
-FullKey VariableDictionary<InnerSolverVariable>::buildFullKey(Args... args) const
-{
-    return FullKey(std::forward<Args>(args)..., mapper_);
-}
-
 // Implémentation des méthodes template
 inline std::string buildVariableName(const PartialKey& key,
                                      std::optional<MCYearAndTime::MCYear> mcyear,
@@ -238,6 +160,97 @@ inline std::string buildVariableName(const PartialKey& key,
         ret += "_t" + std::to_string(*timestep);
     }
     return ret;
+}
+
+inline std::string buildVariableName(const PartialKey& key, MCYearAndTime mcyearAndTime)
+{
+    std::string ret = fmt::format("{}.{}", key.getComponent(), key.getVariable());
+    ret += "_s" + std::to_string(format_as(mcyearAndTime.mcYear));
+    ret += "_t" + std::to_string(mcyearAndTime.timestep);
+    return ret;
+}
+
+/**
+ * @brief Storage for created MIP variables indexed by (component, variable, scenario?, timestep?).
+ * Uses nested hash maps + a vector with offset for contiguous timestep indices.
+ * Provides strict (throwing) accessors and non-throwing tryGet helpers.
+ */
+template<Antares::Optimisation::LinearProblemApi::SolverVariable InnerSolverVariable>
+class VariableDictionary
+{
+public:
+    using VarIndex = uint32_t;
+
+    struct KeyHandle
+    {
+        VarIndex base;   // index de base dans storage_
+        uint16_t firstT; // premier pas de temps
+        uint16_t countT; // nombre de pas de temps
+        uint16_t firstY; // première année
+        uint16_t countY; // nombre d'années
+    };
+
+    // API existante: addVariable(dim, key, factory) ...
+    // Pendant l'ajout, on pousse dans storage_ et on enregistre base/tailles dans keyHandleMap_.
+
+    InnerSolverVariable* byIndex(VarIndex idx) const
+    {
+        return storage_[idx];
+    }
+
+    // Renvoie un handle (résolu 1 fois par PartialKey)
+    const KeyHandle& handle(const PartialKey& key) const
+    {
+        return keyHandleMap_.at(key);
+    }
+
+    // Calcul d’index O(1) à partir du handle et du temps
+    VarIndex indexOf(const KeyHandle& h, const MCYearAndTime& t) const
+    {
+        const uint32_t yOff = static_cast<uint32_t>(t.mcYear - h.firstY);
+        const uint32_t tOff = static_cast<uint32_t>(t.timestep - h.firstT);
+        return static_cast<VarIndex>(h.base + yOff * h.countT + tOff);
+    }
+
+    // À appeler dans addVariable(...) pour initialiser storage_ et keyHandleMap_
+    template<typename Factory>
+    void addVariable(const Dimensions& dim, const PartialKey& key, Factory&& factory)
+    {
+        // Calcul des bornes
+        const uint16_t firstT = dim.getTimesteps().empty() ? 0 : *dim.getTimesteps().begin();
+        const uint16_t countT = static_cast<uint16_t>(dim.getNumberOfTimesteps());
+        const uint16_t firstY = dim.getScenarioIndices().empty()
+                                  ? 0
+                                  : *dim.getScenarioIndices().begin();
+        const uint16_t countY = static_cast<uint16_t>(dim.getScenarioIndices().size());
+
+        const VarIndex base = static_cast<VarIndex>(storage_.size());
+        keyHandleMap_[key] = KeyHandle{base, firstT, countT, firstY, countY};
+
+        // Matrice (année, timestep)
+        for (uint16_t y = 0; y < (countY ? countY : 1); ++y)
+        {
+            const uint16_t year = firstY + y;
+            for (uint16_t k = 0; k < (countT ? countT : 1); ++k)
+            {
+                const uint16_t ts = firstT + k;
+                const MCYearAndTime yts{MCYearAndTime::MCYear{year}, ts};
+                const std::string name = buildVariableName(key, yts); // fonction existante supposée
+                storage_.push_back(factory(yts, name));
+            }
+        }
+    }
+
+private:
+    std::vector<InnerSolverVariable*> storage_;              // accès O(1) par index
+    std::unordered_map<PartialKey, KeyHandle> keyHandleMap_; // résolution 1 fois par PartialKey
+};
+
+template<Antares::Optimisation::LinearProblemApi::SolverVariable InnerSolverVariable>
+template<typename... Args>
+FullKey VariableDictionary<InnerSolverVariable>::buildFullKey(Args... args) const
+{
+    return FullKey(std::forward<Args>(args)..., mapper_);
 }
 
 template<typename T>

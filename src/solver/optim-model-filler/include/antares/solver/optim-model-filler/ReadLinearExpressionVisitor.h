@@ -31,6 +31,7 @@
 #include "antares/expressions/visitors/EvalVisitor.h"
 #include "antares/optimisation/linear-problem-api/IScenario.h"
 #include "antares/optimisation/linear-problem-api/mipVariable.h"
+#include "antares/solver/optim-model-filler/linearTypes.h"
 #include "antares/study/system-model/component.h"
 
 using namespace Antares::Expressions::Nodes;
