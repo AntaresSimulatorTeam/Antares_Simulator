@@ -28,12 +28,13 @@ static std::set<unsigned> ValidHours(const std::vector<double>& Spillage,
     return {validHoursView.begin(), validHoursView.end()};
 }
 
-void narrowValidHoursByStorage(std::set<unsigned>& ValidHours,
-                               std::shared_ptr<IStorageForRemix>& storage,
-                               const std::vector<double>& UnsupE)
+void updateValidHours(std::set<unsigned>& validHours,
+                      std::shared_ptr<IStorageForRemix>& storage,
+                      const std::vector<double>& UnsupE)
 {
-    std::erase_if(ValidHours,
+    std::erase_if(validHours,
                   [&](int h) { return storage->initWithdrawal()[h] + UnsupE[h] <= eps; });
+    // std::erase_if(validHours, [&](int h) { return UnsupE[h] <= eps; });
 }
 
 void checkInput(const std::vector<double>& Load,
@@ -82,12 +83,11 @@ struct Exchange
     double amount = 0;
 };
 
-static Exchange makeExchange(const std::set<unsigned>& validHours,
+static Exchange findExchange(const std::set<unsigned>& validHours,
                              std::vector<double>& TotalGen,
                              std::vector<double>& UnsupE,
                              std::shared_ptr<IStorageForRemix>& storage)
 {
-    double exchange = 0.; // To be returned
     auto totalGenProjection = [&](int h) { return TotalGen[h]; };
 
     std::set<unsigned> validHoursForMin(validHours);
@@ -113,7 +113,7 @@ static Exchange makeExchange(const std::set<unsigned>& validHours,
 
             auto hourOfMaxGen = rng::max_element(validHoursForMax, {}, totalGenProjection);
 
-            exchange = computeExchange(*hourOfMinGen, *hourOfMaxGen, TotalGen, storage);
+            auto exchange = computeExchange(*hourOfMinGen, *hourOfMaxGen, TotalGen, storage);
 
             if (exchange > eps)
             {
@@ -178,9 +178,9 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
             storage = listStorage.begin();
         }
 
-        narrowValidHoursByStorage(validHours, *storage, UnsupEinit);
+        updateValidHours(validHours, *storage, UnsupEinit);
 
-        auto exchange = makeExchange(validHours, TotalGen, UnsupE, *storage);
+        auto exchange = findExchange(validHours, TotalGen, UnsupE, *storage);
 
         if (!exchange.valid())
         {
