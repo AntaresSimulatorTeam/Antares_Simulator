@@ -333,11 +333,12 @@ public:
               + "' of component '" + component_.Id() + "').");
         }
 
+        // Hot path: O(1) access via variable index instead of expensive FullKey lookup
         for (const auto& linear_expression: linear_expressions | std::views::values)
         {
-            for (const auto& [variableFullKey, coefficient]: linear_expression.coefPerVar())
+            for (const auto& [varIndex, coefficient]: linear_expression.coefPerIndex())
             {
-                auto* variable = variableDictionary_(variableFullKey);
+                auto* variable = variableDictionary_.byIndex(varIndex); // O(1) access!
                 pb.setObjectiveCoefficient(variable, coefficient);
             }
         }
@@ -351,9 +352,10 @@ private:
         auto* ct = pb.addConstraint(linear_constraint.lb,
                                     linear_constraint.ub,
                                     component_.Id() + "." + constraint_id);
-        for (const auto& [variableFullKey, coefficient]: linear_constraint.coef_per_var)
+        // Hot path: O(1) access via variable index
+        for (const auto& [varIndex, coefficient]: linear_constraint.coef_per_var)
         {
-            auto* variable = variableDictionary_(variableFullKey);
+            auto* variable = variableDictionary_.byIndex(varIndex); // O(1) access!
             ct->setCoefficient(variable, coefficient);
         }
     }
@@ -369,9 +371,10 @@ private:
                                         linear_constraint.ub,
                                         component_.Id() + "." + constraint_id + '_'
                                           + std::to_string(linear_constraint.timeStep));
-            for (const auto& [variableFullKey, coefficient]: linear_constraint.coef_per_var)
+            // Hot path: O(1) access via variable index
+            for (const auto& [varIndex, coefficient]: linear_constraint.coef_per_var)
             {
-                auto* variable = variableDictionary_(variableFullKey);
+                auto* variable = variableDictionary_.byIndex(varIndex); // O(1) access!
                 ct->setCoefficient(variable, coefficient);
             }
         }

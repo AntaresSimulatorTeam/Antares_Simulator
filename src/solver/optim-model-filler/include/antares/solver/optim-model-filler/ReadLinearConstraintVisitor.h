@@ -133,7 +133,7 @@ std::vector<LinearConstraint> ReadLinearConstraintVisitor<InnerSolverVariable>::
 
     for (const auto& [timeStep, value]: leftMinusRightLinearExpression)
     {
-        constraints.emplace_back(LinearConstraint{.coef_per_var = value.coefPerVar(),
+        constraints.emplace_back(LinearConstraint{.coef_per_var = value.coefPerIndex(),
                                                   .lb = -value.offset(),
                                                   .ub = -value.offset(),
                                                   .timeStep = timeStep});
@@ -154,7 +154,7 @@ std::vector<LinearConstraint> ReadLinearConstraintVisitor<InnerSolverVariable>::
 
     for (const auto& [timeStep, value]: leftMinusRightLinearExpression)
     {
-        constraints.emplace_back(LinearConstraint{.coef_per_var = value.coefPerVar(),
+        constraints.emplace_back(LinearConstraint{.coef_per_var = value.coefPerIndex(),
                                                   .ub = -value.offset(),
                                                   .timeStep = timeStep});
     }
@@ -174,7 +174,7 @@ std::vector<LinearConstraint> ReadLinearConstraintVisitor<InnerSolverVariable>::
 
     for (const auto& [timeStep, value]: leftMinusRightLinearExpression)
     {
-        constraints.emplace_back(LinearConstraint{.coef_per_var = value.coefPerVar(),
+        constraints.emplace_back(LinearConstraint{.coef_per_var = value.coefPerIndex(),
                                                   .lb = -value.offset(),
                                                   .timeStep = timeStep});
     }
