@@ -111,6 +111,10 @@ void addPortEntries(ISimulationTable& simulationTable,
     using TI = Antares::Expressions::Visitors::TimeIndex;
     const auto& cid = component.Id();
 
+    EmptyScenario emptyScenario;
+    const Antares::Expressions::Visitors::EvaluationContext
+      evalContext(component.getParameterValues(), solutions, *dataSeries, emptyScenario);
+
     for (const auto& [portFieldKey, portFieldDef]: component.getModel()->PortFieldDefinitions())
     {
         TI idxType = Antares::Expressions::Visitors::TimeIndexVisitor(component).dispatch(
@@ -122,10 +126,6 @@ void addPortEntries(ISimulationTable& simulationTable,
                               : TimeBlock{.block = currentBlock,
                                           .blockTimeIndex = std::nullopt,
                                           .absoluteTimeIndex = std::nullopt};
-
-            EmptyScenario scenario;
-            const Antares::Expressions::Visitors::EvaluationContext
-              evalContext(component.getParameterValues(), solutions, *dataSeries, scenario);
 
             Antares::Expressions::Visitors::EvalVisitor evalVisitor(evalContext,
                                                                     fillContext,
@@ -149,7 +149,8 @@ void addPortEntries(ISimulationTable& simulationTable,
         switch (idxType)
         {
         case TI::VARYING_IN_TIME_AND_SCENARIO:
-            for (unsigned ts = fillContext.getLocalFirstTimeStep(); ts <= fillContext.getLocalLastTimeStep();
+            for (unsigned ts = fillContext.getLocalFirstTimeStep();
+                 ts <= fillContext.getLocalLastTimeStep();
                  ++ts)
             {
                 handle(ts, scenario);
@@ -159,7 +160,8 @@ void addPortEntries(ISimulationTable& simulationTable,
             handle(std::nullopt, scenario);
             break;
         case TI::VARYING_IN_TIME_ONLY:
-            for (unsigned ts = fillContext.getLocalFirstTimeStep(); ts <= fillContext.getLocalLastTimeStep();
+            for (unsigned ts = fillContext.getLocalFirstTimeStep();
+                 ts <= fillContext.getLocalLastTimeStep();
                  ++ts)
             {
                 handle(ts, std::nullopt);
