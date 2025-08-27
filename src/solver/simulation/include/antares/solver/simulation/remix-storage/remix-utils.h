@@ -61,6 +61,10 @@ inline std::vector<double> operator*(std::span<const double> left, const double 
 
 inline double min_on_hour_range(std::vector<double>&& v, unsigned h, unsigned H)
 {
+    if (!v.size() || h > H)
+    {
+        return 0;
+    }
     std::span<double> subset(v.begin() + h, v.begin() + H);
     return *std::ranges::min_element(subset);
 }

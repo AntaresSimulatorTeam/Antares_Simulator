@@ -20,8 +20,8 @@ public:
     StorageMock(int id);
     double maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) override;
     void update() override;
-    const std::vector<double>& initialGen() override;
-    std::vector<double>& generation() override;
+    const std::vector<double>& initWithdrawal() override;
+    std::vector<double>& withdrawal() override;
 
     int id();
 
@@ -51,12 +51,12 @@ void StorageMock::update()
 {
 }
 
-const std::vector<double>& StorageMock::initialGen()
+const std::vector<double>& StorageMock::initWithdrawal()
 {
     return dummy_;
 }
 
-std::vector<double>& StorageMock::generation()
+std::vector<double>& StorageMock::withdrawal()
 {
     return dummy_;
 }
@@ -98,6 +98,30 @@ BOOST_AUTO_TEST_CASE(five_storage_added_to_list___storage_sorted_depending_on_as
     BOOST_CHECK_EQUAL(std::static_pointer_cast<StorageMock>(listSortedStorage[2])->id(), 3.);
     BOOST_CHECK_EQUAL(std::static_pointer_cast<StorageMock>(listSortedStorage[3])->id(), 2.);
     BOOST_CHECK_EQUAL(std::static_pointer_cast<StorageMock>(listSortedStorage[4])->id(), 1.);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(utils)
+
+BOOST_AUTO_TEST_CASE(between_hour_1_and_4___vector_min_is_2)
+{
+    BOOST_CHECK_EQUAL(min_on_hour_range({1., 2., 3., 4., 5.}, 1, 4), 2.);
+}
+
+BOOST_AUTO_TEST_CASE(hours_h_and_H_are_equals___vector_min_is_defined)
+{
+    BOOST_CHECK_EQUAL(min_on_hour_range({1., 2., 3.}, 2, 2), 3.);
+}
+
+BOOST_AUTO_TEST_CASE(vector_is_empty___vector_min_between_hour_2_and_7_is_zero)
+{
+    BOOST_CHECK_EQUAL(min_on_hour_range({}, 2, 7), 0.);
+}
+
+BOOST_AUTO_TEST_CASE(hour_h_greater_than_H___vector_min_between_these_hours_is_zero)
+{
+    BOOST_CHECK_EQUAL(min_on_hour_range({1., 2., 3., 4., 5.}, 4, 2), 0.);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

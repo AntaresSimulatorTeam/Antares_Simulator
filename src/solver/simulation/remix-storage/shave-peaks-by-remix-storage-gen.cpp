@@ -27,6 +27,14 @@ static std::set<unsigned> ValidHours(const std::vector<double>& Spillage,
     return {validHoursView.begin(), validHoursView.end()};
 }
 
+void narrowValidHoursByStorage(std::set<unsigned>& ValidHours,
+                               std::shared_ptr<IStorageForRemix>& storage,
+                               const std::vector<double>& UnsupE)
+{
+    std::erase_if(ValidHours,
+                  [&](int h) { return storage->initWithdrawal()[h] + UnsupE[h] <= eps; });
+}
+
 void checkInput(const std::vector<double>& Load,
                 const std::vector<double>& UnsupE,
                 const std::vector<double>& Spillage,
@@ -106,8 +114,8 @@ static double makeExchange(const std::set<unsigned>& validHours,
     }
 }
 
-auto remove(std::vector<std::shared_ptr<IStorageForRemix>>::iterator storage,
-            ListStorageForRemix& listStorage)
+auto removeStorageFromList(std::vector<std::shared_ptr<IStorageForRemix>>::iterator storage,
+                           ListStorageForRemix& listStorage)
 {
     auto d = std::distance(listStorage.begin(), storage);
     listStorage.erase(storage, storage + 1);
@@ -123,7 +131,7 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
     const std::vector<double> UnsupEinit = UnsupE;
     std::vector<double> TotalGen = Load - UnsupEinit;
 
-    const std::set<unsigned> validHours = ValidHours(Spillage, DTG_MRG);
+    std::set<unsigned> validHours = ValidHours(Spillage, DTG_MRG);
 
     unsigned nbLoops = 0;
     auto storage = listStorage.begin();
@@ -139,15 +147,13 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
             storage = listStorage.begin();
         }
 
-        std::set<unsigned> hoursForStorage;
-        auto predicate = [&](int h) { return (*storage)->initWithdrawal()[h] + UnsupEinit[h] > eps; };
-        rng::copy_if(validHours, std::inserter(hoursForStorage, hoursForStorage.end()), predicate);
+        narrowValidHoursByStorage(validHours, *storage, UnsupEinit);
 
-        double exchange = makeExchange(hoursForStorage, TotalGen, UnsupE, *storage);
+        double exchange = makeExchange(validHours, TotalGen, UnsupE, *storage);
 
         if (exchange <= eps)
         {
-            storage = remove(storage, listStorage);
+            storage = removeStorageFromList(storage, listStorage);
             continue;
         }
         storage++;
