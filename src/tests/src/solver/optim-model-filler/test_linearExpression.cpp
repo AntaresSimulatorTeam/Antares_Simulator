@@ -21,6 +21,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <ortools/linear_solver/linear_solver.h>
 #include <ranges>
 #include <unit_test_utils.h>
 
@@ -45,7 +46,7 @@ BOOST_AUTO_TEST_CASE(default_linear_expression)
     LinearExpression linearExpression;
 
     BOOST_CHECK_EQUAL(linearExpression.offset(), 0.);
-    BOOST_CHECK(linearExpression.coefPerVar().empty());
+    BOOST_CHECK(linearExpression.coefPerIndex().empty());
 }
 
 BOOST_AUTO_TEST_CASE(linear_expression_explicit_construction)
@@ -53,8 +54,8 @@ BOOST_AUTO_TEST_CASE(linear_expression_explicit_construction)
     LinearExpression linearExpression(4., {{variableDict.buildFullKey("compo", "some key"), -5.}});
 
     BOOST_CHECK_EQUAL(linearExpression.offset(), 4.);
-    BOOST_CHECK_EQUAL(linearExpression.coefPerVar().size(), 1);
-    BOOST_CHECK_EQUAL(linearExpression.coefPerVar().at(
+    BOOST_CHECK_EQUAL(linearExpression.coefPerIndex().size(), 1);
+    BOOST_CHECK_EQUAL(linearExpression.coefPerIndex().at(
                         variableDict.buildFullKey("compo", "some key")),
                       -5.);
 }
@@ -72,10 +73,10 @@ BOOST_AUTO_TEST_CASE(sum_two_linear_expressions)
     auto sum = linearExpression1 + linearExpression2;
 
     BOOST_CHECK_EQUAL(sum.offset(), 3.);
-    BOOST_CHECK_EQUAL(sum.coefPerVar().size(), 3);
-    BOOST_CHECK_EQUAL(sum.coefPerVar().at(variableDict.buildFullKey(component, "var1")), -5.);
-    BOOST_CHECK_EQUAL(sum.coefPerVar().at(variableDict.buildFullKey(component, "var2")), 2.);
-    BOOST_CHECK_EQUAL(sum.coefPerVar().at(variableDict.buildFullKey(component, "var3")), 20.);
+    BOOST_CHECK_EQUAL(sum.coefPerIndex().size(), 3);
+    BOOST_CHECK_EQUAL(sum.coefPerIndex().at(variableDict.buildFullKey(component, "var1")), -5.);
+    BOOST_CHECK_EQUAL(sum.coefPerIndex().at(variableDict.buildFullKey(component, "var2")), 2.);
+    BOOST_CHECK_EQUAL(sum.coefPerIndex().at(variableDict.buildFullKey(component, "var3")), 20.);
 }
 
 BOOST_AUTO_TEST_CASE(subtract_two_linear_expressions)
@@ -92,10 +93,13 @@ BOOST_AUTO_TEST_CASE(subtract_two_linear_expressions)
     auto subtract = linearExpression1 - linearExpression2;
 
     BOOST_CHECK_EQUAL(subtract.offset(), 5.);
-    BOOST_CHECK_EQUAL(subtract.coefPerVar().size(), 3);
-    BOOST_CHECK_EQUAL(subtract.coefPerVar().at(variableDict.buildFullKey(component, "var1")), -5.);
-    BOOST_CHECK_EQUAL(subtract.coefPerVar().at(variableDict.buildFullKey(component, "var2")), 10.);
-    BOOST_CHECK_EQUAL(subtract.coefPerVar().at(variableDict.buildFullKey(component, "var3")), -20.);
+    BOOST_CHECK_EQUAL(subtract.coefPerIndex().size(), 3);
+    BOOST_CHECK_EQUAL(subtract.coefPerIndex().at(variableDict.buildFullKey(component, "var1")),
+                      -5.);
+    BOOST_CHECK_EQUAL(subtract.coefPerIndex().at(variableDict.buildFullKey(component, "var2")),
+                      10.);
+    BOOST_CHECK_EQUAL(subtract.coefPerIndex().at(variableDict.buildFullKey(component, "var3")),
+                      -20.);
 }
 
 BOOST_AUTO_TEST_CASE(multiply_linear_expression_by_scalar)
@@ -110,9 +114,10 @@ BOOST_AUTO_TEST_CASE(multiply_linear_expression_by_scalar)
     auto product = linearExpression * someScalar;
 
     BOOST_CHECK_EQUAL(product.offset(), -8.);
-    BOOST_CHECK_EQUAL(product.coefPerVar().size(), 2);
-    BOOST_CHECK_EQUAL(product.coefPerVar().at(variableDict.buildFullKey(component, "var1")), 10.);
-    BOOST_CHECK_EQUAL(product.coefPerVar().at(variableDict.buildFullKey(component, "var2")), -12.);
+    BOOST_CHECK_EQUAL(product.coefPerIndex().size(), 2);
+    BOOST_CHECK_EQUAL(product.coefPerIndex().at(variableDict.buildFullKey(component, "var1")), 10.);
+    BOOST_CHECK_EQUAL(product.coefPerIndex().at(variableDict.buildFullKey(component, "var2")),
+                      -12.);
 }
 
 BOOST_AUTO_TEST_CASE(multiply_scalar_by_linear_expression)
@@ -127,9 +132,10 @@ BOOST_AUTO_TEST_CASE(multiply_scalar_by_linear_expression)
     auto product = someScalar * linearExpression;
 
     BOOST_CHECK_EQUAL(product.offset(), -8.);
-    BOOST_CHECK_EQUAL(product.coefPerVar().size(), 2);
-    BOOST_CHECK_EQUAL(product.coefPerVar().at(variableDict.buildFullKey(component, "var1")), 10.);
-    BOOST_CHECK_EQUAL(product.coefPerVar().at(variableDict.buildFullKey(component, "var2")), -12.);
+    BOOST_CHECK_EQUAL(product.coefPerIndex().size(), 2);
+    BOOST_CHECK_EQUAL(product.coefPerIndex().at(variableDict.buildFullKey(component, "var1")), 10.);
+    BOOST_CHECK_EQUAL(product.coefPerIndex().at(variableDict.buildFullKey(component, "var2")),
+                      -12.);
 }
 
 BOOST_AUTO_TEST_CASE(multiply_two_linear_expressions_containing_variables__exception_raised)
@@ -160,9 +166,9 @@ BOOST_AUTO_TEST_CASE(divide_linear_expression_by_scalar)
     auto product = linearExpression / someScalar;
 
     BOOST_CHECK_EQUAL(product.offset(), -2.);
-    BOOST_CHECK_EQUAL(product.coefPerVar().size(), 2);
-    BOOST_CHECK_EQUAL(product.coefPerVar().at(variableDict.buildFullKey(component, "var1")), 2.5);
-    BOOST_CHECK_EQUAL(product.coefPerVar().at(variableDict.buildFullKey(component, "var2")), -3.);
+    BOOST_CHECK_EQUAL(product.coefPerIndex().size(), 2);
+    BOOST_CHECK_EQUAL(product.coefPerIndex().at(variableDict.buildFullKey(component, "var1")), 2.5);
+    BOOST_CHECK_EQUAL(product.coefPerIndex().at(variableDict.buildFullKey(component, "var2")), -3.);
 }
 
 BOOST_AUTO_TEST_CASE(divide_scalar_by_linear_expression__exception_raised)
@@ -190,9 +196,10 @@ BOOST_AUTO_TEST_CASE(negate_linear_expression)
     auto negative = -linearExpression;
 
     BOOST_CHECK_EQUAL(negative.offset(), -4.);
-    BOOST_CHECK_EQUAL(negative.coefPerVar().size(), 2);
-    BOOST_CHECK_EQUAL(negative.coefPerVar().at(variableDict.buildFullKey(component, "var1")), 5.);
-    BOOST_CHECK_EQUAL(negative.coefPerVar().at(variableDict.buildFullKey(component, "var2")), -6.);
+    BOOST_CHECK_EQUAL(negative.coefPerIndex().size(), 2);
+    BOOST_CHECK_EQUAL(negative.coefPerIndex().at(variableDict.buildFullKey(component, "var1")), 5.);
+    BOOST_CHECK_EQUAL(negative.coefPerIndex().at(variableDict.buildFullKey(component, "var2")),
+                      -6.);
 }
 
 // Test default constructor
@@ -217,7 +224,7 @@ BOOST_AUTO_TEST_CASE(ConstructorWithLinearExpression)
     for (const auto& [timestep, lexpr]: expressions)
     {
         BOOST_TEST(lexpr.offset() == 5.0);
-        BOOST_TEST(lexpr.coefPerVar().at(variableDict.buildFullKey(component, "x")) == 2.0);
+        BOOST_TEST(lexpr.coefPerIndex().at(variableDict.buildFullKey(component, "x")) == 2.0);
     }
 }
 
@@ -253,12 +260,12 @@ BOOST_AUTO_TEST_CASE(AdditionOperator)
     TimeDependentLinearExpression result = expr1 + expr2;
 
     BOOST_TEST(result.GetLinearExpressions().at(0).offset() == 5.0);
-    BOOST_TEST(
-      result.GetLinearExpressions().at(0).coefPerVar().at(variableDict.buildFullKey(component, "x"))
-      == 3.0);
-    BOOST_TEST(
-      result.GetLinearExpressions().at(1).coefPerVar().at(variableDict.buildFullKey(component, "y"))
-      == 3.0);
+    BOOST_TEST(result.GetLinearExpressions().at(0).coefPerIndex().at(
+                 variableDict.buildFullKey(component, "x"))
+               == 3.0);
+    BOOST_TEST(result.GetLinearExpressions().at(1).coefPerIndex().at(
+                 variableDict.buildFullKey(component, "y"))
+               == 3.0);
 }
 
 // Test subtraction operator
@@ -278,12 +285,12 @@ BOOST_AUTO_TEST_CASE(SubtractionOperator)
     TimeDependentLinearExpression result = expr1 - expr2;
 
     BOOST_TEST(result.GetLinearExpressions().at(0).offset() == 2.0);
-    BOOST_TEST(
-      result.GetLinearExpressions().at(0).coefPerVar().at(variableDict.buildFullKey(component, "x"))
-      == 2.0);
-    BOOST_TEST(
-      result.GetLinearExpressions().at(1).coefPerVar().at(variableDict.buildFullKey(component, "y"))
-      == 2.0);
+    BOOST_TEST(result.GetLinearExpressions().at(0).coefPerIndex().at(
+                 variableDict.buildFullKey(component, "x"))
+               == 2.0);
+    BOOST_TEST(result.GetLinearExpressions().at(1).coefPerIndex().at(
+                 variableDict.buildFullKey(component, "y"))
+               == 2.0);
 }
 
 // Test multiplication operator
@@ -302,9 +309,9 @@ BOOST_AUTO_TEST_CASE(MultiplicationOperator)
     TimeDependentLinearExpression result = expr1 * expr2;
 
     BOOST_TEST(result.GetLinearExpressions().at(0).offset() == 8.0);
-    BOOST_TEST(
-      result.GetLinearExpressions().at(0).coefPerVar().at(variableDict.buildFullKey(component, "x"))
-      == 12.0);
+    BOOST_TEST(result.GetLinearExpressions().at(0).coefPerIndex().at(
+                 variableDict.buildFullKey(component, "x"))
+               == 12.0);
 }
 
 // Test division operator
@@ -323,9 +330,9 @@ BOOST_AUTO_TEST_CASE(DivisionOperator)
     TimeDependentLinearExpression result = expr1 / expr2;
 
     BOOST_TEST(result.GetLinearExpressions().at(0).offset() == 3.0);
-    BOOST_TEST(
-      result.GetLinearExpressions().at(0).coefPerVar().at(variableDict.buildFullKey(component, "x"))
-      == 1.5);
+    BOOST_TEST(result.GetLinearExpressions().at(0).coefPerIndex().at(
+                 variableDict.buildFullKey(component, "x"))
+               == 1.5);
 }
 
 // Test negation
@@ -342,12 +349,12 @@ BOOST_AUTO_TEST_CASE(NegationOperator)
     TimeDependentLinearExpression result = -expr;
 
     BOOST_TEST(result.GetLinearExpressions().at(0).offset() == -3.0);
-    BOOST_TEST(
-      result.GetLinearExpressions().at(0).coefPerVar().at(variableDict.buildFullKey(component, "x"))
-      == -2.0);
-    BOOST_TEST(
-      result.GetLinearExpressions().at(1).coefPerVar().at(variableDict.buildFullKey(component, "y"))
-      == -1.0);
+    BOOST_TEST(result.GetLinearExpressions().at(0).coefPerIndex().at(
+                 variableDict.buildFullKey(component, "x"))
+               == -2.0);
+    BOOST_TEST(result.GetLinearExpressions().at(1).coefPerIndex().at(
+                 variableDict.buildFullKey(component, "y"))
+               == -1.0);
 }
 
 // Test GetLinearExpressions
@@ -365,7 +372,8 @@ BOOST_AUTO_TEST_CASE(GetLinearExpressionsMethod)
 
     BOOST_TEST(expressions.size() == 2);
     BOOST_TEST(expressions.at(0).offset() == 5.0);
-    BOOST_TEST(expressions.at(1).coefPerVar().at(variableDict.buildFullKey(component, "y")) == 4.0);
+    BOOST_TEST(expressions.at(1).coefPerIndex().at(variableDict.buildFullKey(component, "y"))
+               == 4.0);
 }
 
 // Test getSize()
@@ -477,7 +485,7 @@ BOOST_AUTO_TEST_CASE(OperatorIndexValid)
 
     const auto result = indexed.GetLinearExpressions().cbegin()->second;
     BOOST_TEST(result.offset() == 2.0);
-    BOOST_TEST(result.coefPerVar().at(variableDict.buildFullKey(component, "b")) == 2.0);
+    BOOST_TEST(result.coefPerIndex().at(variableDict.buildFullKey(component, "b")) == 2.0);
 }
 
 // Test operator[] with invalid index
@@ -535,10 +543,10 @@ BOOST_AUTO_TEST_CASE(TimeSumLinearExpressions)
     for (const auto& expression: result.GetLinearExpressions() | std::views::values)
     {
         BOOST_TEST(expression.offset() == (1.0 + 1.0 + 2.0 + 3.0));
-        BOOST_TEST(expression.coefPerVar().at(variableDict.buildFullKey(component, "a"))
+        BOOST_TEST(expression.coefPerIndex().at(variableDict.buildFullKey(component, "a"))
                    == (1.0 - 18.0));
-        BOOST_TEST(expression.coefPerVar().at(variableDict.buildFullKey(component, "b")) == 2.0);
-        BOOST_TEST(expression.coefPerVar().at(variableDict.buildFullKey(component, "c")) == 3.0);
+        BOOST_TEST(expression.coefPerIndex().at(variableDict.buildFullKey(component, "b")) == 2.0);
+        BOOST_TEST(expression.coefPerIndex().at(variableDict.buildFullKey(component, "c")) == 3.0);
     }
 }
 
@@ -562,10 +570,10 @@ BOOST_AUTO_TEST_CASE(AllTimeSumLinearExpressions)
     for (const auto& expression: result.GetLinearExpressions() | std::views::values)
     {
         BOOST_TEST(expression.offset() == (1.0 + 1.0 + 2.0 + 3.0));
-        BOOST_TEST(expression.coefPerVar().at(variableDict.buildFullKey(component, "a"))
+        BOOST_TEST(expression.coefPerIndex().at(variableDict.buildFullKey(component, "a"))
                    == (1.0 - 18.0));
-        BOOST_TEST(expression.coefPerVar().at(variableDict.buildFullKey(component, "b")) == 2.0);
-        BOOST_TEST(expression.coefPerVar().at(variableDict.buildFullKey(component, "c")) == 3.0);
+        BOOST_TEST(expression.coefPerIndex().at(variableDict.buildFullKey(component, "b")) == 2.0);
+        BOOST_TEST(expression.coefPerIndex().at(variableDict.buildFullKey(component, "c")) == 3.0);
     }
 }
 
@@ -609,7 +617,7 @@ BOOST_AUTO_TEST_CASE(TimeSumLinearExpressionsOutOfBounds)
     for (const auto& expression: result3.GetLinearExpressions() | std::views::values)
     {
         BOOST_TEST(expression.offset() == 0.);
-        BOOST_TEST(expression.coefPerVar().empty());
+        BOOST_TEST(expression.coefPerIndex().empty());
     }
 }
 

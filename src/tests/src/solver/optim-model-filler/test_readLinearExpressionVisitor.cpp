@@ -21,6 +21,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <ortools/linear_solver/linear_solver.h>
 #include <unit_test_utils.h>
 
 #include <boost/test/unit_test.hpp>
@@ -72,7 +73,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal, CreateVisitorFixture)
     Node* node = create<LiteralNode>(5.);
     auto linear_expression = visitor.dispatch(node).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 5.);
-    BOOST_CHECK(linear_expression.coefPerVar().empty());
+    BOOST_CHECK(linear_expression.coefPerIndex().empty());
 }
 
 std::pair<std::string, ParameterTypeAndValue> build_context_parameter_with(

@@ -22,6 +22,7 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <map>
+#include <ortools/linear_solver/linear_solver.h>
 
 #include <boost/test/test_tools.hpp>
 #include <boost/test/unit_test.hpp>
