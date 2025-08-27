@@ -1,10 +1,5 @@
 var NAVTREEINDEX55 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroStorage.html":[8,0,0,18,4,4,30],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroStorage.html#a1dd8d79dfade7680606119dc4a8a77d2":[8,0,0,18,4,4,30,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroStorage.html#a6242146d0172f6496f3d981271168e75":[8,0,0,18,4,4,30,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroStorage.html#a6b44a8759f01ee209b09cf5e7cb54721":[8,0,0,18,4,4,30,4],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroStorage.html#ad3da2482bc0d7e8be44486a040a72d6c":[8,0,0,18,4,4,30,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroStorage.html#ad8828eab147d733abf1ab293a3ee1b24":[8,0,0,18,4,4,30,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardInflows.html":[8,0,0,18,4,4,32],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardInflows.html#a1550f5f030f5732bbf66c23632f9a69f":[8,0,0,18,4,4,32,2],
@@ -249,5 +244,10 @@ var NAVTREEINDEX55 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesSolar.html#aa287ab48cc64ba1214fb73614a54b6ed":[8,0,0,18,4,4,10,4],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesWind.html":[8,0,0,18,4,4,12],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesWind.html#a0b2b1aeda62055d1f0e77ce6a3235bb4":[8,0,0,18,4,4,12,4],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesWind.html#a649ab6679e98b32c14f10612f7f8d3ce":[8,0,0,18,4,4,12,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesWind.html#a649ab6679e98b32c14f10612f7f8d3ce":[8,0,0,18,4,4,12,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesWind.html#a65760f63e86de7d31e22d28b78e68c41":[8,0,0,18,4,4,12,2],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesWind.html#a823522da4a8825bd05d5ed5c939028b8":[8,0,0,18,4,4,12,3],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesWind.html#aa939662b7caddb16691d7d5054c1e9a2":[8,0,0,18,4,4,12,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergy.html":[8,0,0,18,4,4,120],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergy.html#a505308cb0c9d12d92da113e99e29d35c":[8,0,0,18,4,4,120,4]
 };

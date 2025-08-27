@@ -1,10 +1,5 @@
 var NAVTREEINDEX54 =
 {
-"structAntares_1_1Optimization_1_1IntegerInterval.html#a1e7ab4cb9830eb4f0c7a81ab5c76dba1":[8,0,0,16,26,2],
-"structAntares_1_1Optimization_1_1IntegerInterval.html#a44f59f1fb572656aea115e7e6e5d628d":[8,0,0,16,26,4],
-"structAntares_1_1Optimization_1_1IntegerInterval.html#a80e679255f6f12e08da709fe24ee3dc8":[8,0,0,16,26,3],
-"structAntares_1_1Optimization_1_1IntegerInterval.html#a9d3401509550ecb96cdcf07943b6a3c9":[8,0,0,16,26,5],
-"structAntares_1_1Optimization_1_1IntegerInterval.html#af8df726bc8737b77a13e3bbed02e5277":[8,0,0,16,26,1],
 "structAntares_1_1Optimization_1_1LinearConstraint.html":[8,0,0,16,22],
 "structAntares_1_1Optimization_1_1LinearConstraint.html#a43d43fb8d146fd4a67f0f3cf1ab89f68":[8,0,0,16,22,1],
 "structAntares_1_1Optimization_1_1LinearConstraint.html#a52dc20e1feefa09bf0ba2bb871a0ba55":[8,0,0,16,22,0],
@@ -249,5 +244,10 @@ var NAVTREEINDEX54 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroCost.html#a57c164aca14f4f4a2438a64de272da59":[8,0,0,18,4,4,28,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroCost.html#a8aa9f0ca24f11304ce8921a8ace69752":[8,0,0,18,4,4,28,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroCost.html#adf804c5f778d5f24f893eaec18b84de8":[8,0,0,18,4,4,28,4],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroCost.html#aeeef7768b3fbba55df650f165fdf7021":[8,0,0,18,4,4,28,2]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroCost.html#aeeef7768b3fbba55df650f165fdf7021":[8,0,0,18,4,4,28,2],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroStorage.html":[8,0,0,18,4,4,30],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroStorage.html#a1dd8d79dfade7680606119dc4a8a77d2":[8,0,0,18,4,4,30,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroStorage.html#a6242146d0172f6496f3d981271168e75":[8,0,0,18,4,4,30,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroStorage.html#a6b44a8759f01ee209b09cf5e7cb54721":[8,0,0,18,4,4,30,4],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroStorage.html#ad3da2482bc0d7e8be44486a040a72d6c":[8,0,0,18,4,4,30,2]
 };

@@ -1,10 +1,5 @@
 var NAVTREEINDEX56 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesWind.html#a65760f63e86de7d31e22d28b78e68c41":[8,0,0,18,4,4,12,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesWind.html#a823522da4a8825bd05d5ed5c939028b8":[8,0,0,18,4,4,12,3],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesWind.html#aa939662b7caddb16691d7d5054c1e9a2":[8,0,0,18,4,4,12,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergy.html":[8,0,0,18,4,4,120],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergy.html#a505308cb0c9d12d92da113e99e29d35c":[8,0,0,18,4,4,120,4],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergy.html#a60373abd6855d9f38d268da8ff1c07dc":[8,0,0,18,4,4,120,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergy.html#a959788dadb6499d0474b5f10290293c2":[8,0,0,18,4,4,120,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergy.html#a9eb2c18fc01946087cba4a5d3c27e667":[8,0,0,18,4,4,120,2],
@@ -249,5 +244,10 @@ var NAVTREEINDEX56 =
 "structAntares_1_1Window_1_1Inspector_1_1PClusterMinStablePower.html#a02d06d89cfde04f999c3179aaa7e894b":[8,0,0,23,1,58,0],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterMinStablePowerColor.html":[8,0,0,23,1,59],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterMinUpTime.html":[8,0,0,23,1,60],
-"structAntares_1_1Window_1_1Inspector_1_1PClusterMinUpTime.html#aa3d60c3b4b35dc402bc08983f4517e96":[8,0,0,23,1,60,0]
+"structAntares_1_1Window_1_1Inspector_1_1PClusterMinUpTime.html#aa3d60c3b4b35dc402bc08983f4517e96":[8,0,0,23,1,60,0],
+"structAntares_1_1Window_1_1Inspector_1_1PClusterMustRun.html":[8,0,0,23,1,43],
+"structAntares_1_1Window_1_1Inspector_1_1PClusterMustRun.html#afac2e0a3f631d9b8a24da79287d0f76e":[8,0,0,23,1,43,0],
+"structAntares_1_1Window_1_1Inspector_1_1PClusterNomCapacity.html":[8,0,0,23,1,38],
+"structAntares_1_1Window_1_1Inspector_1_1PClusterNomCapacity.html#afad9bd4a0dd8c656cea1d3bb1b27018c":[8,0,0,23,1,38,0],
+"structAntares_1_1Window_1_1Inspector_1_1PClusterNomCapacityColor.html":[8,0,0,23,1,42]
 };

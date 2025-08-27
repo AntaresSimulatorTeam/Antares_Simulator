@@ -941,7 +941,6 @@ var namespaces_dup =
           [ "EvalVisitor", "classAntares_1_1Expressions_1_1Visitors_1_1EvalVisitor.html", "classAntares_1_1Expressions_1_1Visitors_1_1EvalVisitor" ],
           [ "InvalidNode", "classAntares_1_1Expressions_1_1Visitors_1_1InvalidNode.html", "classAntares_1_1Expressions_1_1Visitors_1_1InvalidNode" ],
           [ "LinearityVisitor", "classAntares_1_1Expressions_1_1Visitors_1_1LinearityVisitor.html", "classAntares_1_1Expressions_1_1Visitors_1_1LinearityVisitor" ],
-          [ "LogSink", "structAntares_1_1Expressions_1_1Visitors_1_1LogSink.html", "structAntares_1_1Expressions_1_1Visitors_1_1LogSink" ],
           [ "NodeVisitor", "classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor.html", "classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor" ],
           [ "NodeVisitsProvider", "structAntares_1_1Expressions_1_1Visitors_1_1NodeVisitsProvider.html", "structAntares_1_1Expressions_1_1Visitors_1_1NodeVisitsProvider" ],
           [ "PortFieldSubstitutionContext", "structAntares_1_1Expressions_1_1Visitors_1_1PortFieldSubstitutionContext.html", "structAntares_1_1Expressions_1_1Visitors_1_1PortFieldSubstitutionContext" ],
@@ -974,6 +973,7 @@ var namespaces_dup =
           [ "computeBinaryOperation", "EvalVisitor_8h.html#afcd74acdcb56b7601246afd0c49f3d51", null ],
           [ "computeUnaryOperation", "EvalVisitor_8h.html#a04b51dea05b19ea2f6e0bdfc2b0d841d", null ],
           [ "computeUnaryOperation", "EvalVisitor_8h.html#a49c869a4645ef2f37a57ec80bbf57429", null ],
+          [ "logError", "NodeVisitor_8h.html#a5b5976faff61f38859604300973b83d2", null ],
           [ "makeLegendTitle", "AstDOTStyleVisitor_8cpp.html#aa120bed530f6d1de917bcb09d17a0e79", null ],
           [ "operator*", "LinearStatus_8h.html#a22569a31feed8f5e60952e5b6ea04b76", null ],
           [ "operator+", "LinearStatus_8h.html#af8cf5dc6b7e86ceeea180179b3256894", null ],
@@ -983,7 +983,6 @@ var namespaces_dup =
           [ "operator|", "TimeIndex_8h.html#a3ae3c84f2387d22e85ab218aea08a5bd", null ],
           [ "pair", "LinearStatus_8h.html#aa8b1e3f8d2f183e7432dde28d9bb3515", null ],
           [ "ProcessElementLegend", "AstDOTStyleVisitor_8cpp.html#a11bbd5b1795cb8de53364f93836932bf", null ],
-          [ "RedirectToAntaresLogs", "NodeVisitor_8h.html#aa23aeefe0057ed7b3a75a39151a163ee", null ],
           [ "tryVisit", "NodeVisitor_8h.html#a1223b5e8ad3c7f529adba9a8c80778d2", null ]
         ] ],
         [ "Hashable", "classAntares_1_1Expressions_1_1Hashable.html", "classAntares_1_1Expressions_1_1Hashable" ],

@@ -1,10 +1,5 @@
 var NAVTREEINDEX57 =
 {
-"structAntares_1_1Window_1_1Inspector_1_1PClusterMustRun.html":[8,0,0,23,1,43],
-"structAntares_1_1Window_1_1Inspector_1_1PClusterMustRun.html#afac2e0a3f631d9b8a24da79287d0f76e":[8,0,0,23,1,43,0],
-"structAntares_1_1Window_1_1Inspector_1_1PClusterNomCapacity.html":[8,0,0,23,1,38],
-"structAntares_1_1Window_1_1Inspector_1_1PClusterNomCapacity.html#afad9bd4a0dd8c656cea1d3bb1b27018c":[8,0,0,23,1,38,0],
-"structAntares_1_1Window_1_1Inspector_1_1PClusterNomCapacityColor.html":[8,0,0,23,1,42],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterRandomSpread.html":[8,0,0,23,1,51],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterRandomSpread.html#a1bc2a81044b14282742790424ca3403c":[8,0,0,23,1,51,0],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterReference.html":[8,0,0,23,1,50],
@@ -249,5 +244,10 @@ var NAVTREEINDEX57 =
 "structCORRESPONDANCES__DES__VARIABLES.html#a67aea8d5c3d6be4abf25f005d0373aab":[8,0,84,24],
 "structCORRESPONDANCES__DES__VARIABLES.html#a6c2a7ee36ec91b0f5f5e96a733e39d7e":[8,0,84,8],
 "structCORRESPONDANCES__DES__VARIABLES.html#a86ba7770ce8cfec6ebd09700722ea2b4":[8,0,84,7],
-"structCORRESPONDANCES__DES__VARIABLES.html#a9ba569d13f2c0b7ac1bd3047537983db":[8,0,84,4]
+"structCORRESPONDANCES__DES__VARIABLES.html#a9ba569d13f2c0b7ac1bd3047537983db":[8,0,84,4],
+"structCORRESPONDANCES__DES__VARIABLES.html#aab139e1893b2db521ed763270d44b016":[8,0,84,9],
+"structCORRESPONDANCES__DES__VARIABLES.html#ab3dc58baaa3c035a863d2595b51d5107":[8,0,84,18],
+"structCORRESPONDANCES__DES__VARIABLES.html#abb5a9836d85a7ff725733d62112bede0":[8,0,84,21],
+"structCORRESPONDANCES__DES__VARIABLES.html#aca4add055107f1ff658aca6d72b39777":[8,0,84,23],
+"structCORRESPONDANCES__DES__VARIABLES.html#acb6ac41053144e3033b777d8470066db":[8,0,84,12]
 };
