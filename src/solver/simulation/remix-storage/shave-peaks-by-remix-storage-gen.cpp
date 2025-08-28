@@ -74,7 +74,7 @@ struct Exchange
 {
     bool valid()
     {
-        return hourOfMinGen.has_value() && hourOfMaxGen.has_value() && amount > eps;
+        return amount > eps && hourOfMinGen.has_value() && hourOfMaxGen.has_value();
     }
 
     std::optional<unsigned> hourOfMinGen;
