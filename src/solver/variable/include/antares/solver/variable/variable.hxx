@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __SOLVER_VARIABLE_VARIABLE_HXX__
 #define __SOLVER_VARIABLE_VARIABLE_HXX__
 
@@ -155,26 +155,6 @@ inline void IVariable<ChildT, NextT, VCardT>::yearEnd(uint year)
 }
 
 template<class ChildT, class NextT, class VCardT>
-template<class V>
-inline void IVariable<ChildT, NextT, VCardT>::yearEndSpatialAggregates(V& allVars,
-                                                                       uint year,
-                                                                       unsigned int numSpace)
-{
-    // Next variable
-    NextType::yearEndSpatialAggregates(allVars, year, numSpace);
-}
-
-template<class ChildT, class NextT, class VCardT>
-template<class V, class SetT>
-inline void IVariable<ChildT, NextT, VCardT>::yearEndSpatialAggregates(V& allVars,
-                                                                       uint year,
-                                                                       const SetT& set)
-{
-    // Next variable
-    NextType::yearEndSpatialAggregates(allVars, year, set);
-}
-
-template<class ChildT, class NextT, class VCardT>
 inline void IVariable<ChildT, NextT, VCardT>::yearEndBuildPrepareDataForEachThermalCluster(
   State& state,
   uint year,
@@ -182,23 +162,6 @@ inline void IVariable<ChildT, NextT, VCardT>::yearEndBuildPrepareDataForEachTher
 {
     // Next variable
     NextType::yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);
-}
-
-template<class ChildT, class NextT, class VCardT>
-template<class V>
-inline void IVariable<ChildT, NextT, VCardT>::simulationEndSpatialAggregates(V& allVars)
-{
-    // Next variable
-    NextType::simulationEndSpatialAggregates(allVars);
-}
-
-template<class ChildT, class NextT, class VCardT>
-template<class V, class SetT>
-inline void IVariable<ChildT, NextT, VCardT>::simulationEndSpatialAggregates(V& allVars,
-                                                                             const SetT& set)
-{
-    // Next variable
-    NextType::simulationEndSpatialAggregates(allVars, set);
 }
 
 template<class ChildT, class NextT, class VCardT>

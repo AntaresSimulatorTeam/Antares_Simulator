@@ -1,24 +1,26 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #pragma once
+
+#include "antares/solver/variable/commons/spatial_aggregates_utils.h"
 
 #include "state.h"
 
@@ -152,9 +154,15 @@ public:
                                  uint numSpace) const;
 
     template<class V>
-    void yearEndSpatialAggregates(V&, uint, uint)
+    void yearEndSpatialAggregates(V& allVars, uint year, uint numSpace)
     {
-        // do nothing
+        Commons::SpatialAggregatesUtils::computeSpatialAggregatesSummary(allVars, year, numSpace);
+    }
+
+    template<class V>
+    void simulationEndSpatialAggregates(V& allVars)
+    {
+        Commons::SpatialAggregatesUtils::simulationEndSpatialAggregates(allVars);
     }
 
     template<class I>
@@ -164,9 +172,6 @@ public:
     void retrieveResultsForArea(typename Storage<VCardToFindT>::ResultsType** result,
                                 const Data::Area* area);
     void buildDigest(SurveyResults&, int digestLevel, int dataLevel) const;
-
-    template<class V>
-    void simulationEndSpatialAggregates(V& allVars);
 
     template<class VCardToFindT>
     void retrieveResultsForLink(typename Storage<VCardToFindT>::ResultsType** result,

@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __SOLVER_VARIABLE_LIST_H__
 #define __SOLVER_VARIABLE_LIST_H__
 
@@ -26,6 +26,7 @@
 #include <yuni/core/string.h>
 
 #include <antares/logs/logs.h>
+#include "antares/solver/variable/commons/spatial_aggregates_utils.h"
 
 #include "categories.h"
 #include "endoflist.h"
@@ -114,19 +115,35 @@ public:
     void computeSummary(unsigned int year, unsigned int numSpace);
 
     template<class V>
-    void yearEndSpatialAggregates(V& allVars, unsigned int year, unsigned int numSpace);
+    void yearEndSpatialAggregates(V& allVars, unsigned int year, unsigned int numSpace)
+    {
+        Commons::SpatialAggregatesUtils::computeSpatialAggregatesSummary(allVars, year, numSpace);
+    }
 
     template<class V, class SetT>
-    void yearEndSpatialAggregates(V& allVars, unsigned int year, const SetT& set);
+    void yearEndSpatialAggregates(V& allVars, unsigned int year, const SetT& set)
+    {
+        // No-op, conserver pour compatibilité
+    }
 
     template<class V>
-    void computeSpatialAggregatesSummary(V& allVars, unsigned int year, unsigned int numSpace);
+    void computeSpatialAggregatesSummary(V& allVars, unsigned int year, unsigned int numSpace)
+    {
+        Commons::SpatialAggregatesUtils::computeSpatialAggregatesSummary(allVars, year, numSpace);
+    }
 
     template<class V>
-    void simulationEndSpatialAggregates(V& allVars);
+    void simulationEndSpatialAggregates(V& allVars)
+    {
+        Commons::SpatialAggregatesUtils::simulationEndSpatialAggregates(allVars);
+    }
 
     template<class V, class SetT>
-    void simulationEndSpatialAggregates(V& allVars, const SetT& set);
+    void simulationEndSpatialAggregates(V& allVars, const SetT& set)
+    {
+        // No-op, conserver pour compatibilité
+    }
+
     //@}
 
     //! \name Hourly events
