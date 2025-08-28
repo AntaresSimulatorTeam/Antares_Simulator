@@ -7,7 +7,7 @@ Feature: 5 - Simple end-to-end tests to test temporal expression management - Ti
     When I run antares modeler
     Then the simulation succeeds
     And the objective value is 715
-    And the outputs contain the following entries
+    And the modeler outputs contain the following entries
       | component | output | timestep | value |
       | node1     | gen1_p | 0        | 50    |
       | node1     | gen1_p | 1        | 50    |

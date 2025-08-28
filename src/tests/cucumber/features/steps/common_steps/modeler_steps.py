@@ -39,19 +39,16 @@ def run_antares_modeler(context):
 
 @step('the objective value is {value:g}')
 def modeler_obj_value(context, value):
-    # TODO activate this when OBJECTIVE_VALUE is implemented in simulation table
-    #assert_double_close(value, context.moh.get_objective_value(), 1e-6)
-    pass
+    assert_double_close(value, context.moh.get_objective_value(), 1e-6)
 
 
 @step('the objective value is greater than {lb:g} and lower than {ub:g}')
 def modeler_obj_value(context, lb, ub):
-    # TODO activate this when OBJECTIVE_VALUE is implemented in simulation table
-    # assert lb <= context.moh.get_objective_value() <= ub, \
-    #     f"Objective value is not inside expected range: {context.moh.get_optimal_value('objective')}"
-    pass
+    assert lb <= context.moh.get_objective_value() <= ub, \
+         f"Objective value is not inside expected range: {context.moh.get_optimal_value('objective')}"
 
-@step('the outputs contain the following entries')
+
+@step('the modeler outputs contain the following entries')
 def modeler_output_values(context):
     for row in context.table:
         ts_array = row["timestep"].split("-")

@@ -26,7 +26,7 @@ Feature: hybrid (simulator+modeler) studies
     And the annual system cost is 0
     And in area "NODE", during year 1, loss of load lasts 0 hours
      # TODO activate the following checks for 5.2
-#    And the outputs contain the following entries
+#    And the modeler outputs contain the following entries
 #      | component | output                 | timestep | scenario | value |
 #      | gen1      | generation.flow_field  | 0-23     | 0        | 100   |
 #      | load1     | consumption.flow_field | 0        | 0        | -100  |

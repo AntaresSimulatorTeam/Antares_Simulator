@@ -122,10 +122,10 @@ void FillSimulationTable(
                                        std::optional<unsigned> ts) -> const IMipConstraint*
     { return linearProblem.lookupConstraint(BuildModelerConstraintName(cid, cname, scen, ts)); };
 
+    // TODO
+    unsigned scenario = fillContext.getYear();
     for (const auto& component: components | std::views::values)
     {
-        // TODO
-        unsigned scenario = fillContext.getYear();
         addVariableEntries<ModelerSolverTraits>(simulationTable,
                                                 fillContext,
                                                 component,
@@ -143,7 +143,6 @@ void FillSimulationTable(
                                                   TimeConversionMode::SingleBlock,
                                                   scenario,
                                                   linearProblem.isLP());
-
-        addObjectiveValue<ModelerSolverTraits>(simulationTable, &solution, 1, scenario);
     }
+    addObjectiveValue<ModelerSolverTraits>(simulationTable, &solution, 1, scenario);
 }

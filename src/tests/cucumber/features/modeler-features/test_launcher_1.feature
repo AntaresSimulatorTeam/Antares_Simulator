@@ -6,7 +6,7 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
     When I run antares modeler
     Then the simulation succeeds
     And the objective value is 320
-    And the outputs contain the following entries
+    And the modeler outputs contain the following entries
       | component | output | timestep | value |
       | node1     | gen1_p | 0-1      | 80    |
       | node1     | gen2_p | 0-1      | 20    |
@@ -17,7 +17,7 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
     When I run antares modeler
     Then the simulation succeeds
     And the objective value is 320
-    And the outputs contain the following entries
+    And the modeler outputs contain the following entries
       | component | output | timestep | value |
       | node1     | gen1_p | 0-1      | 80    |
       | node1     | gen2_p | 0-1      | 20    |
@@ -35,7 +35,7 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
     When I run antares modeler
     Then the simulation succeeds
     And the objective value is 765
-    And the outputs contain the following entries
+    And the modeler outputs contain the following entries
       | component | output        | timestep | value |
       | node1     | gen1_p        | 0        | 80    |
       | node1     | gen2_p        | 0        | 20    |
@@ -57,7 +57,7 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
     When I run antares modeler
     Then the simulation succeeds
     And the objective value is 16000
-    And the outputs contain the following entries
+    And the modeler outputs contain the following entries
       | component | output | timestep | value |
       | node1     | gen1_p | 0-99     | 80    |
       | node1     | gen2_p | 0-99     | 20    |

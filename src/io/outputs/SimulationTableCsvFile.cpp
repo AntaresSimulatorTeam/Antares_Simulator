@@ -20,6 +20,7 @@
 */
 
 #include "antares/io/outputs/SimulationTableCsvFile.h"
+
 #include <antares/logs/logs.h>
 
 SimulationTableCsvFile::SimulationTableCsvFile(const std::filesystem::path& outputFolder,
