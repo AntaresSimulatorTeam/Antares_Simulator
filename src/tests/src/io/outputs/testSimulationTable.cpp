@@ -650,7 +650,6 @@ public:
         return std::numeric_limits<double>::infinity();
     }
 
-
 private:
     bool isLP_;
     std::set<std::string> existingConstraints_;

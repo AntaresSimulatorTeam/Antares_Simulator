@@ -197,6 +197,7 @@ void addConstraintEntries(ISimulationTable& simulationTable,
         }
     }
 }
+
 template<typename SolverTraits, typename Solver>
 void addObjectiveValue(ISimulationTable& simulation,
                        const Solver* solver,
