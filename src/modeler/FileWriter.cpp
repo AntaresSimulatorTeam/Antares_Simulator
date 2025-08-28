@@ -78,6 +78,7 @@ void FileWriter::writeSimulationTable(
         SimulationTableCsvFile simulationTable(outputPath_, simulationId_);
         FillSimulationTable(simulationTable,
                             linearProblem,
+                            solution,
                             components,
                             variableDictionary,
                             fillContext);

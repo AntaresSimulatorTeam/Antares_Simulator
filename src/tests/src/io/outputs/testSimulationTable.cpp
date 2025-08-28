@@ -36,6 +36,7 @@
 #include "antares/io/outputs/SimulationTableEntry.h"
 #include "antares/io/outputs/SimulationTableGenerator.h"
 #include "antares/optimisation/linear-problem-api/mipConstraint.h"
+#include "antares/optimisation/linear-problem-api/mipSolution.h"
 #include "antares/optimisation/linear-problem-api/mipVariable.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/convertOrtoolsBasisStatus.h"
@@ -43,6 +44,7 @@
 #include "antares/solver/optim-model-filler/VariableDictionary.h"
 #include "antares/solver/optimisation/OptimisationsSimulationTable.h"
 #include "antares/writer/i_writer.h"
+#include "antares/writer/in_memory_writer.h"
 
 using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
@@ -189,6 +191,7 @@ private:
     MipBasisStatus status_;
     std::string name_ = "test_constraint";
 };
+
 } // namespace
 
 BOOST_AUTO_TEST_SUITE(SimulationTableEntryTests)
@@ -246,7 +249,7 @@ BOOST_AUTO_TEST_CASE(AddEntry_SingleEntry)
     table.write();
 
     std::string buffer = table.buffer();
-    BOOST_CHECK(buffer.find("1,comp1,var1,100,50,2,42.500000,Basic") != std::string::npos);
+    BOOST_CHECK(buffer.find("1,comp1,var1,100,50,2,42.5,Basic") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(AddEntry_WithNullOptionals)
@@ -356,49 +359,11 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(FileWriterIntegrationTests)
 
-class MockResultWriter: public Antares::Solver::IResultWriter
-{
-public:
-    void addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent) override
-    {
-    }
-
-    void addEntryFromBuffer(const std::filesystem::path& filename, std::string& buffer) override
-    {
-        files_[filename] = buffer;
-    }
-
-    // Mock implementations of other required methods
-    void addEntryFromFile(const std::filesystem::path&, const std::filesystem::path&) override
-    {
-    }
-
-    void flush() override
-    {
-    }
-
-    const std::map<std::filesystem::path, std::string>& getFiles() const
-    {
-        return files_;
-    }
-
-    bool needsTheJobQueue() const override
-    {
-        return false;
-    }
-
-    void finalize(bool verbose) override
-    {
-    }
-
-private:
-    std::map<std::filesystem::path, std::string> files_;
-};
-
 BOOST_AUTO_TEST_CASE(WriteTo_CreatesCorrectFiles)
 {
     OptimisationsSimulationTable tables;
-    MockResultWriter writer;
+    Benchmarking::DurationCollector duration_collector;
+    Antares::Solver::InMemoryWriter writer(duration_collector);
 
     // Add entries to both tables
     SimulationTableEntry entry1{.block = 1,
@@ -425,7 +390,7 @@ BOOST_AUTO_TEST_CASE(WriteTo_CreatesCorrectFiles)
 
     tables.writeTo("test_prefix", writer);
 
-    const auto& files = writer.getFiles();
+    const auto& files = writer.getMap();
     BOOST_CHECK_EQUAL(files.size(), 2);
     BOOST_CHECK(files.count("test_prefix--optim-nb-1.csv") > 0);
     BOOST_CHECK(files.count("test_prefix--optim-nb-2.csv") > 0);
@@ -667,10 +632,6 @@ public:
         return nullptr;
     }
 
-    // void setObjectiveFunction(bool) override
-    // {
-    // }
-
     void setObjectiveCoefficient(IMipVariable*, double) override
     {
     }
@@ -688,11 +649,6 @@ public:
     {
         return std::numeric_limits<double>::infinity();
     }
-
-    // const IMipConstraint* lookupConstraint(const std::string& name) const override
-    // {
-    //     return lookupConstraint(name);
-    // }
 
 private:
     bool isLP_;
@@ -759,6 +715,35 @@ private:
     [[nodiscard]] bool isMaximization() const override
     {
         return !isMinimization();
+    }
+};
+
+struct MockMipSolution: IMipSolution
+{
+    [[nodiscard]] MipStatus getStatus() const override
+    {
+        return MipStatus::OPTIMAL;
+    }
+
+    [[nodiscard]] double getObjectiveValue() const override
+    {
+        return 11.18;
+    }
+
+    [[nodiscard]] double getOptimalValue(const IMipVariable* var) const override
+    {
+        return 11.18;
+    }
+
+    [[nodiscard]] std::vector<double> getOptimalValues(
+      const std::vector<IMipVariable*>& vars) const override
+    {
+        return std::vector(vars.size(), 11.18);
+    }
+
+    [[nodiscard]] const std::map<std::string, double>& getOptimalValues() const override
+    {
+        return {};
     }
 };
 
@@ -1060,7 +1045,7 @@ BOOST_AUTO_TEST_CASE(RoundTrip_DataIntegrity)
 
         // Basic checks that the line contains expected components
         BOOST_CHECK(line.find(std::to_string(original.block)) != std::string::npos);
-        BOOST_CHECK(line.find(original.component) != std::string::npos);
+        BOOST_CHECK(line.find(original.component.value()) != std::string::npos);
         BOOST_CHECK(line.find(original.output) != std::string::npos);
 
         entryIndex++;
@@ -1157,9 +1142,13 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_ModelerIntegration)
     MockLinearProblem linearProblem(true);
 
     build(fillContext, &linearProblem);
-
-    BOOST_CHECK_NO_THROW(
-      FillSimulationTable(table, linearProblem, components, variableDictionary, fillContext););
+    MockMipSolution solution;
+    BOOST_CHECK_NO_THROW(FillSimulationTable(table,
+                                             linearProblem,
+                                             solution,
+                                             components,
+                                             variableDictionary,
+                                             fillContext););
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -1328,7 +1317,7 @@ BOOST_FIXTURE_TEST_CASE(Write_CreatesFile, TempDirFixture)
     std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
 
     BOOST_CHECK(content.find("block,component,output") != std::string::npos);
-    BOOST_CHECK(content.find("1,test_comp,test_var,1,1,0,123.450000,Basic") != std::string::npos);
+    BOOST_CHECK(content.find("1,test_comp,test_var,1,1,0,123.45,Basic") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -1427,8 +1416,8 @@ BOOST_AUTO_TEST_CASE(AddEntriesToBothTables)
     tables.write();
 
     auto buffers = tables.buffers();
-    BOOST_CHECK(buffers.first.find("1,comp1,var1,1,1,0,10.000000,Basic") != std::string::npos);
-    BOOST_CHECK(buffers.second.find("2,comp2,var2,2,2,1,20.000000,Free") != std::string::npos);
+    BOOST_CHECK(buffers.first.find("1,comp1,var1,1,1,0,10,Basic") != std::string::npos);
+    BOOST_CHECK(buffers.second.find("2,comp2,var2,2,2,1,20,Free") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(Clear_ResetsAllTables)
@@ -1666,7 +1655,7 @@ BOOST_AUTO_TEST_CASE(ZeroValues_HandledCorrectly)
 
     std::string buffer = table.buffer();
     BOOST_CHECK(buffer.find("0,,") != std::string::npos);
-    BOOST_CHECK(buffer.find(",0.000000,Free") != std::string::npos);
+    BOOST_CHECK(buffer.find(",0,Free") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(NegativeValues_HandledCorrectly)
@@ -1772,20 +1761,3 @@ BOOST_DATA_TEST_CASE(TimeConversion_ParameterizedTest,
 }
 
 BOOST_AUTO_TEST_SUITE_END()
-
-// BOOST_AUTO_TEST_SUITE(MemoryManagementTests)
-
-// BOOST_AUTO_TEST_CASE(LargeNumberOfEntries_NoMemoryLeaks)
-// {
-//     SimulationTableCsv table;
-//
-//     // Add many entries to test memory handling
-//     constexpr int numEntries = 10000;
-//     for (int i = 0; i < numEntries; ++i)
-//     {
-//         SimulationTableEntry entry
-//         {
-//             .block = static_cast<unsigned>(i % 100 + 1),
-//             .component = "comp_" + std::to_string(i % 50),
-//             .output = "var_" + std::to_string(i % 20), .absolute_time_index = i,
-//             .block_time_index = i

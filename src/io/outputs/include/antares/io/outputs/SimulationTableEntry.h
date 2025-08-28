@@ -27,7 +27,7 @@
 struct SimulationTableEntry
 {
     unsigned int block;
-    std::string component;
+    std::optional<std::string> component;
     std::string output;
     std::optional<unsigned int> absolute_time_index;
     std::optional<unsigned int> block_time_index;

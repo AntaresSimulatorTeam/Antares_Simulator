@@ -47,27 +47,29 @@ TimeBlock convertTimeStepToBlockTimeIndex(unsigned int timeStep, const TimeConve
 
 struct ModelerSolverTraits
 {
-    static double getValue(const Antares::Optimisation::LinearProblemApi::IMipVariable* var)
+    static double getValue(const IMipVariable* var)
     {
         return var->solutionValue();
     }
 
-    static MipBasisStatus getStatus(
-      const Antares::Optimisation::LinearProblemApi::IMipVariable* var)
+    static MipBasisStatus getStatus(const IMipVariable* var)
     {
         return var->getMipBasisStatus();
     }
 
-    static MipBasisStatus getStatus(
-      const Antares::Optimisation::LinearProblemApi::IMipConstraint* cst)
+    static MipBasisStatus getStatus(const IMipConstraint* cst)
     {
         return cst->getMipBasisStatus();
     }
 
-    static std::optional<double> getValue(
-      const Antares::Optimisation::LinearProblemApi::IMipConstraint*)
+    static std::optional<double> getValue(const IMipConstraint*)
     {
         return std::nullopt;
+    }
+
+    static double getValue(const IMipSolution* solution)
+    {
+        return solution->getObjectiveValue();
     }
 };
 
@@ -97,16 +99,16 @@ std::string BuildModelerConstraintName(const std::string& cid,
 
 void FillSimulationTable(
   ISimulationTable& simulationTable,
-  const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
+  const ILinearProblem& linearProblem,
+  const IMipSolution& solution,
   const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>& components,
   const Antares::Optimization::VariableDictionary& variableDictionary,
-  const Antares::Optimisation::LinearProblemApi::FillContext& fillContext)
+  const FillContext& fillContext)
 {
     auto variableLookupModeler = [&](const std::string& cid,
                                      const std::string& vname,
                                      std::optional<unsigned> scen,
-                                     std::optional<unsigned> ts)
-      -> const Antares::Optimisation::LinearProblemApi::IMipVariable*
+                                     std::optional<unsigned> ts) -> const IMipVariable*
     {
         return variableDictionary(cid,
                                   vname,
@@ -117,8 +119,7 @@ void FillSimulationTable(
     auto constraintLookupModeler = [&](const std::string& cid,
                                        const std::string& cname,
                                        std::optional<unsigned> scen,
-                                       std::optional<unsigned> ts)
-      -> const Antares::Optimisation::LinearProblemApi::IMipConstraint*
+                                       std::optional<unsigned> ts) -> const IMipConstraint*
     { return linearProblem.lookupConstraint(BuildModelerConstraintName(cid, cname, scen, ts)); };
 
     for (const auto& component: components | std::views::values)
@@ -142,5 +143,7 @@ void FillSimulationTable(
                                                   TimeConversionMode::SingleBlock,
                                                   scenario,
                                                   linearProblem.isLP());
+
+        addObjectiveValue<ModelerSolverTraits>(simulationTable, &solution, 1, scenario);
     }
 }

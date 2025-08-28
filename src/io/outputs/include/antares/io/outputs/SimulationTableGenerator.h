@@ -19,6 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
+#include <absl/strings/internal/str_format/extension.h>
 #include <string>
 #include <unordered_map>
 
@@ -85,7 +86,7 @@ void addVariableEntries(ISimulationTable& simulationTable,
             TimeBlock tb = timeStep ? convertTimeStepToBlockTimeIndex(
                                         *timeStep + fillContext.getGlobalFirstTimeStep(),
                                         timeConversionMode)
-                                    : TimeBlock{.block = currentBlock,
+                                    : TimeBlock{.block = currentBlock + 1,
                                                 .blockTimeIndex = std::nullopt,
                                                 .absoluteTimeIndex = std::nullopt};
             simulationTable.addEntry({.block = tb.block,
@@ -153,7 +154,7 @@ void addConstraintEntries(ISimulationTable& simulationTable,
             TimeBlock tb = ts ? convertTimeStepToBlockTimeIndex(
                                   *ts + fillContext.getGlobalFirstTimeStep(),
                                   timeConversionMode)
-                              : TimeBlock{.block = currentBlock,
+                              : TimeBlock{.block = currentBlock + 1,
                                           .blockTimeIndex = std::nullopt,
                                           .absoluteTimeIndex = std::nullopt};
             simulationTable.addEntry({.block = tb.block,
@@ -197,6 +198,23 @@ void addConstraintEntries(ISimulationTable& simulationTable,
     }
 }
 
+template<typename SolverTraits, typename Solver>
+void addObjectiveValue(ISimulationTable& simulation,
+                       const Solver* solver,
+                       unsigned int currentBlock,
+                       unsigned int scenario)
+{
+    simulation.addEntry(
+      {.block = currentBlock + 1,
+       .component = std::nullopt,
+       .output = "OBJECTIVE_VALUE",
+       .absolute_time_index = std::nullopt,
+       .block_time_index = std::nullopt,
+       .scenario_index = scenario,
+       .value = SolverTraits::getValue(solver),
+       .status = Antares::Optimisation::LinearProblemApi::MipBasisStatus::NOT_AVAILABLE});
+}
+
 std::string BuildModelerConstraintName(const std::string& cid,
                                        const std::string& cname,
                                        const std::optional<unsigned>& scen,
@@ -204,6 +222,7 @@ std::string BuildModelerConstraintName(const std::string& cid,
 void FillSimulationTable(
   ISimulationTable& simulationTable,
   const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
+  const Antares::Optimisation::LinearProblemApi::IMipSolution& solution,
   const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>& components,
   const Antares::Optimization::VariableDictionary& variableDictionary,
   const Antares::Optimisation::LinearProblemApi::FillContext& fillContext);

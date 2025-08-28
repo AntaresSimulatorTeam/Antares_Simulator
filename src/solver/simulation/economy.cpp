@@ -71,6 +71,15 @@ OptimisationsSimulationTable& Economy::getSimulationTable(uint numSpace)
     return simulationTables_[numSpace];
 }
 
+std::string Economy::getSimulationTableHeader() const
+{
+    if (!simulationTables_.empty())
+    {
+        return simulationTables_.at(0).getHeader();
+    }
+    return "";
+}
+
 bool Economy::simulationBegin()
 {
     if (!preproOnly)
