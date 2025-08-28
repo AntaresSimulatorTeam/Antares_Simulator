@@ -31,7 +31,7 @@ class LegacyOrtoolsLinearProblem final
 {
 public:
     LegacyOrtoolsLinearProblem(bool isMip, const std::string& solverName):
-        OrtoolsLinearProblem(isMip, solverName)
+        OrtoolsLinearProblem(isMip, solverName, false)
     {
         // nothing else to do
     }

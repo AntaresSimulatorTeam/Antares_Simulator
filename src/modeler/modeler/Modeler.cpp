@@ -119,7 +119,7 @@ void Modeler::solve() const
                                                     != ModelerStudy::SystemModel::ValueType::FLOAT;
                                          });
           });
-        OrtoolsLinearProblem ortools_linear_problem(isMip, parameters.solver);
+        OrtoolsLinearProblem ortools_linear_problem(isMip, parameters.solver, true);
 
         system_linear_problem.Provide(ortools_linear_problem,
                                       parameters,

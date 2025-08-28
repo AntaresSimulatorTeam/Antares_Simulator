@@ -70,7 +70,8 @@ void LinearProblemBuildingFixture::buildLinearProblem(
     }
     pb = std::make_unique<Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem>(
       false,
-      "sirius");
+      "sirius",
+      true);
     Antares::Optimisation::LinearProblemApi::LinearProblemBuilder linear_problem_builder(
       fillers_ptr);
 

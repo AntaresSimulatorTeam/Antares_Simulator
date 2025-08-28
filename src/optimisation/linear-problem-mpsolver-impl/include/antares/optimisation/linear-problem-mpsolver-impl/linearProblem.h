@@ -39,8 +39,8 @@ namespace Antares::Optimisation::LinearProblemMpsolverImpl
 class OrtoolsLinearProblem: public LinearProblemApi::ILinearProblem
 {
 public:
-    OrtoolsLinearProblem(bool isMip, const std::string& solverName);
-    ~OrtoolsLinearProblem() override = default;
+    OrtoolsLinearProblem(bool isMip, const std::string& solverName, bool autoDeleteMPSolver);
+    ~OrtoolsLinearProblem() override;
 
     OrtoolsMipVariable* addNumVariable(double lb, double ub, const std::string& name) override;
 
@@ -88,6 +88,7 @@ private:
     std::vector<std::unique_ptr<OrtoolsMipConstraint>> constraints_;
 
     std::unique_ptr<OrtoolsMipSolution> solution_;
+    bool autoDeleteMPSolver_ = true;
 };
 
 } // namespace Antares::Optimisation::LinearProblemMpsolverImpl

@@ -31,10 +31,21 @@
 namespace Antares::Optimisation::LinearProblemMpsolverImpl
 {
 
-OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solverName)
+OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip,
+                                           const std::string& solverName,
+                                           bool autoDeleteMPSolver)
 {
     mpSolver_ = MPSolverFactory(isMip, solverName);
     objective_ = mpSolver_->MutableObjective();
+    autoDeleteMPSolver_ = autoDeleteMPSolver;
+}
+
+OrtoolsLinearProblem::~OrtoolsLinearProblem()
+{
+    if (autoDeleteMPSolver_)
+    {
+        delete mpSolver_;
+    }
 }
 
 OrtoolsMipVariable* OrtoolsLinearProblem::addVariable(double lb,

@@ -39,7 +39,7 @@ struct Fixture
 {
     Fixture()
     {
-        pb = std::make_unique<OrtoolsLinearProblem>(false, "sirius");
+        pb = std::make_unique<OrtoolsLinearProblem>(false, "sirius", true);
     }
 
     std::vector<LinearProblemFiller*> fillers;

@@ -31,7 +31,7 @@ struct FixtureEmptyProblem
 {
     FixtureEmptyProblem()
     {
-        pb = std::make_unique<LinearProblemMpsolverImpl::OrtoolsLinearProblem>(false, "sirius");
+        pb = std::make_unique<LinearProblemMpsolverImpl::OrtoolsLinearProblem>(false, "sirius", true);
     }
 
     std::unique_ptr<LinearProblemMpsolverImpl::OrtoolsLinearProblem> pb;

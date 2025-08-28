@@ -135,7 +135,7 @@ struct ComponentToAreaConnectionFillerFixture
     Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem linearProblem;
 
     ComponentToAreaConnectionFillerFixture():
-        linearProblem(true, "scip")
+        linearProblem(true, "scip", true)
     {
         problemeHebdo = std::make_unique<PROBLEME_HEBDO>();
         problemeHebdo->ProblemeAResoudre = std::make_unique<PROBLEME_ANTARES_A_RESOUDRE>();
