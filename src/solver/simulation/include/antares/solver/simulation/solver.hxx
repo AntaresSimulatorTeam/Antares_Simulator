@@ -173,6 +173,7 @@ public:
                                              optWriter,
                                              scratchmap);
         auto& simTable = simulation_->getSimulationTable(numSpace);
+
         auto buffers = simTable.buffers();
         simTable.clear();
 
@@ -920,14 +921,15 @@ void ISimulation<ImplementationType>::aggregateAndWriteSimulationTables()
             globalSecondBuffer += it->second.second;
         }
     }
+    const auto header = ImplementationType::getSimulationTableHeader() + "\n";
     if (!globalFirstBuffer.empty())
     {
-        std::string writerEntry = SimulationTableCsv::getHeader() + std::move(globalFirstBuffer);
+        std::string writerEntry = header + std::move(globalFirstBuffer);
         pResultWriter.addEntryFromBuffer("simulation_table--optim-nb-1.csv", writerEntry);
     }
     if (!globalSecondBuffer.empty())
     {
-        std::string writerEntry = SimulationTableCsv::getHeader() + std::move(globalSecondBuffer);
+        std::string writerEntry = header + std::move(globalSecondBuffer);
         pResultWriter.addEntryFromBuffer("simulation_table--optim-nb-2.csv", writerEntry);
     }
 
