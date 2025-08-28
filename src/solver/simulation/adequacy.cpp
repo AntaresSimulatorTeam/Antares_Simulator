@@ -68,6 +68,15 @@ OptimisationsSimulationTable& Adequacy::getSimulationTable(uint numSpace)
     return simulationTables_[numSpace];
 }
 
+std::string Adequacy::getSimulationTableHeader() const
+{
+    if (!simulationTables_.empty())
+    {
+        return simulationTables_.at(0).getHeader();
+    }
+    return "";
+}
+
 // valGen maybe_unused to match simulationBegin() declaration in economy.cpp
 bool Adequacy::simulationBegin()
 {

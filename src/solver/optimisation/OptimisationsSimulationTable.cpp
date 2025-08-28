@@ -40,3 +40,8 @@ ISimulationTable& OptimisationsSimulationTable::secondOptimSimulationTable()
 {
     return secondOptimSimulationTable_;
 }
+
+std::string OptimisationsSimulationTable::getHeader() const
+{
+    return firstOptimSimulationTable_.getHeader();
+}

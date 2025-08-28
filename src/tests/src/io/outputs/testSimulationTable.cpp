@@ -247,7 +247,7 @@ BOOST_AUTO_TEST_CASE(AddEntry_SingleEntry)
     table.write();
 
     std::string buffer = table.buffer();
-    BOOST_CHECK(buffer.find("1,comp1,var1,100,50,2,42.500000,Basic") != std::string::npos);
+    BOOST_CHECK(buffer.find("1,comp1,var1,100,50,2,42.5,Basic") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(AddEntry_WithNullOptionals)
@@ -1291,7 +1291,7 @@ BOOST_FIXTURE_TEST_CASE(Write_CreatesFile, TempDirFixture)
     std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
 
     BOOST_CHECK(content.find("block,component,output") != std::string::npos);
-    BOOST_CHECK(content.find("1,test_comp,test_var,1,1,0,123.450000,Basic") != std::string::npos);
+    BOOST_CHECK(content.find("1,test_comp,test_var,1,1,0,123.45,Basic") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -1390,8 +1390,8 @@ BOOST_AUTO_TEST_CASE(AddEntriesToBothTables)
     tables.write();
 
     auto buffers = tables.buffers();
-    BOOST_CHECK(buffers.first.find("1,comp1,var1,1,1,0,10.000000,Basic") != std::string::npos);
-    BOOST_CHECK(buffers.second.find("2,comp2,var2,2,2,1,20.000000,Free") != std::string::npos);
+    BOOST_CHECK(buffers.first.find("1,comp1,var1,1,1,0,10,Basic") != std::string::npos);
+    BOOST_CHECK(buffers.second.find("2,comp2,var2,2,2,1,20,Free") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(Clear_ResetsAllTables)
@@ -1629,7 +1629,7 @@ BOOST_AUTO_TEST_CASE(ZeroValues_HandledCorrectly)
 
     std::string buffer = table.buffer();
     BOOST_CHECK(buffer.find("0,,") != std::string::npos);
-    BOOST_CHECK(buffer.find(",0.000000,Free") != std::string::npos);
+    BOOST_CHECK(buffer.find(",0,Free") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(NegativeValues_HandledCorrectly)

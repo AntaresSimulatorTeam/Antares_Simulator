@@ -22,15 +22,16 @@
 #include <filesystem>
 #include <vector>
 
+#include "antares/io/outputs/storage.h"
+
 #include "ISimulationTable.h"
 
 class SimulationTableCsv: public ISimulationTable
 {
 public:
-    SimulationTableCsv() = default;
+    SimulationTableCsv();
     void addEntry(const SimulationTableEntry& entry) override;
-    static std::string getHeader();
-
+    std::string getHeader() const;
     void write() override;
     void clear() override;
 
@@ -40,5 +41,5 @@ public:
 
 private:
     std::ostringstream buffer_;
-    std::vector<SimulationTableEntry> entries_;
+    ColumnBasedStorage storage_;
 };
