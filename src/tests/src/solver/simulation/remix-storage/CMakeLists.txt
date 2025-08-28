@@ -18,3 +18,13 @@ add_boost_test(tests-on-remix-utils
         test_utils_unit)
 		
 set_target_properties(tests-on-remix-utils PROPERTIES FOLDER Unit-tests/storage-remix)
+
+
+add_boost_test(tests-on-shave-peak-by-remix-help
+        SRC
+        tests-on-shave-peak-by-remix-help.cpp
+        LIBS
+        shave-peaks-by-remix-storage-gen
+        test_utils_unit)
+		
+set_target_properties(tests-on-shave-peak-by-remix-help PROPERTIES FOLDER Unit-tests/storage-remix)
