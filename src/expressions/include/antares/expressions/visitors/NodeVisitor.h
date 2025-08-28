@@ -19,8 +19,8 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
-#include <functional>
 #include <typeindex>
+#include <unordered_map>
 
 #include <antares/expressions/IName.h>
 #include <antares/expressions/nodes/Node.h>
@@ -29,19 +29,10 @@
 
 namespace Antares::Expressions::Visitors
 {
-// we use LogSink because the inclusion of <antares/logs/logs.h> somehow results in the
+// we use logError because the inclusion of <antares/logs/logs.h> somehow results in the
 // inclusion of <windows.h> (very bad idea in a header!) which conflict with antlr4 headers (defines
 // in the former become enums in the latter etc...)
-struct LogSink
-{
-    using LogFunction = std::function<void(const std::string&)>;
-
-    LogFunction info;
-    LogFunction warning;
-    LogFunction error;
-};
-
-LogSink RedirectToAntaresLogs();
+void logError(const std::string& msg);
 
 template<class RetT, class VisitorT, class NodeT, class... Args>
 RetT tryVisit(const Nodes::Node* node, VisitorT& visitor, Args... args)
@@ -135,7 +126,7 @@ public:
         catch (std::exception& e)
         {
             using namespace std::string_literals;
-            log_.error("Antares::Expressions::Visitor: could not visit the node! "s + e.what());
+            logError("Antares::Expressions::Visitor: could not visit the node! "s + e.what());
             throw;
         }
     }
@@ -322,11 +313,5 @@ public:
      * @return The result of processing the AllTimeSumNode.
      */
     virtual R visit(const Nodes::AllTimeSumNode*, Args... args) = 0;
-
-private:
-    // we use LogSink because the inclusion of <antares/logs/logs.h> somehow results in the
-    // inclusion of <windows.h> (very bad idea in a header!) which conflict with antlr4 headers
-    // (defines in the former become enums in the latter etc...)
-    LogSink log_ = RedirectToAntaresLogs();
 };
 } // namespace Antares::Expressions::Visitors
