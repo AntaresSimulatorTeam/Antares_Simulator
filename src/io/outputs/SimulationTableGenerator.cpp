@@ -20,10 +20,14 @@
 */
 #include "antares/io/outputs/SimulationTableGenerator.h"
 
+#include <optional>
+
 #include <antares/solver/optim-model-filler/VariableDictionary.h>
+#include "antares/expressions/visitors/EvalVisitor.h"
+#include "antares/expressions/visitors/TimeIndexVisitor.h"
+#include "antares/optimisation/linear-problem-api/IScenario.h"
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
 #include "antares/optimisation/linear-problem-api/mipConstraint.h"
-#include "antares/optimisation/linear-problem-api/mipSolution.h"
 
 using namespace Antares::Optimisation::LinearProblemApi;
 
@@ -44,34 +48,6 @@ TimeBlock convertTimeStepToBlockTimeIndex(unsigned int timeStep, const TimeConve
         return {.block = 1, .blockTimeIndex = timeStep + 1, .absoluteTimeIndex = timeStep + 1};
     }
 }
-
-struct ModelerSolverTraits
-{
-    static double getValue(const IMipVariable* var)
-    {
-        return var->solutionValue();
-    }
-
-    static MipBasisStatus getStatus(const IMipVariable* var)
-    {
-        return var->getMipBasisStatus();
-    }
-
-    static MipBasisStatus getStatus(const IMipConstraint* cst)
-    {
-        return cst->getMipBasisStatus();
-    }
-
-    static std::optional<double> getValue(const IMipConstraint*)
-    {
-        return std::nullopt;
-    }
-
-    static double getValue(const IMipSolution* solution)
-    {
-        return solution->getObjectiveValue();
-    }
-};
 
 std::string BuildModelerConstraintName(const std::string& cid,
                                        const std::string& cname,
@@ -97,52 +73,189 @@ std::string BuildModelerConstraintName(const std::string& cid,
     return key;
 }
 
+void addVariableEntries(ISimulationTable& simulationTable,
+                        const ILinearProblem& linearProblem,
+                        const FillContext& fillContext,
+                        const Antares::ModelerStudy::SystemModel::Component& component,
+                        const Antares::Optimization::VariableDictionary& variableDictionary,
+                        unsigned currentBlock,
+                        const TimeConversionMode& timeConversionMode,
+                        std::optional<unsigned> scenario,
+                        bool isLp)
+{
+    const auto& cid = component.Id();
+
+    for (const auto& [varName, modelVar]: component.getModel()->Variables())
+    {
+        bool scenDep = modelVar.IsScenarioDependent();
+        bool timeDep = modelVar.isTimeDependent();
+
+        auto handle = [&](std::optional<unsigned> timeStep, std::optional<unsigned> scenIdx)
+        {
+            std::string fullVarName = variableDictionary.buildVariableName(
+              {cid, varName},
+              Antares::Optimization::MCYearAndTime::MCYear{scenIdx.value_or(0)},
+              timeStep);
+            TimeBlock tb = timeStep ? convertTimeStepToBlockTimeIndex(
+                                        *timeStep + fillContext.getGlobalFirstTimeStep(),
+                                        timeConversionMode)
+                                    : TimeBlock{.block = currentBlock,
+                                                .blockTimeIndex = std::nullopt,
+                                                .absoluteTimeIndex = std::nullopt};
+            auto* var = linearProblem.lookupVariable(fullVarName);
+            simulationTable.addEntry(
+              {.block = tb.block,
+               .component = cid,
+               .output = varName,
+               .absolute_time_index = tb.absoluteTimeIndex,
+               .block_time_index = tb.blockTimeIndex,
+               .scenario_index = scenIdx,
+               .value = var->solutionValue(),
+               .status = isLp ? var->getMipBasisStatus() : MipBasisStatus::NOT_AVAILABLE});
+        };
+
+        if (scenDep && timeDep)
+        {
+            for (unsigned ts = fillContext.getLocalFirstTimeStep();
+                 ts <= fillContext.getLocalLastTimeStep();
+                 ++ts)
+            {
+                handle(ts, scenario);
+            }
+        }
+        else if (scenDep)
+        {
+            handle(std::nullopt, scenario);
+        }
+        else if (timeDep)
+        {
+            for (unsigned ts = fillContext.getLocalFirstTimeStep();
+                 ts <= fillContext.getLocalLastTimeStep();
+                 ++ts)
+            {
+                handle(ts, std::nullopt);
+            }
+        }
+        else
+        {
+            handle(std::nullopt, std::nullopt);
+        }
+    }
+}
+
+void addConstraintEntries(ISimulationTable& simulationTable,
+                          const ILinearProblem& linearProblem,
+                          const FillContext& fillContext,
+                          const Antares::ModelerStudy::SystemModel::Component& component,
+                          unsigned currentBlock,
+                          const TimeConversionMode& timeConversionMode,
+                          std::optional<unsigned> scenario,
+                          bool isLp)
+{
+    using TI = Antares::Expressions::Visitors::TimeIndex;
+    const auto& cid = component.Id();
+
+    for (const auto& [cname, modelConstr]: component.getModel()->Constraints())
+    {
+        TI idxType = Antares::Expressions::Visitors::TimeIndexVisitor(component).dispatch(
+          modelConstr.expression().RootNode());
+
+        auto handle = [&](std::optional<unsigned> ts, std::optional<unsigned> scenIdx)
+        {
+            std::string fullConstName = BuildModelerConstraintName(cid, cname, scenIdx, ts);
+            const auto* c = linearProblem.lookupConstraint(fullConstName);
+            TimeBlock tb = ts ? convertTimeStepToBlockTimeIndex(
+                                  *ts + fillContext.getGlobalFirstTimeStep(),
+                                  timeConversionMode)
+                              : TimeBlock{.block = currentBlock,
+                                          .blockTimeIndex = std::nullopt,
+                                          .absoluteTimeIndex = std::nullopt};
+            simulationTable.addEntry(
+              {.block = tb.block,
+               .component = cid,
+               .output = cname,
+               .absolute_time_index = tb.absoluteTimeIndex,
+               .block_time_index = tb.blockTimeIndex,
+               .scenario_index = scenIdx,
+               .value = std::nullopt,
+               .status = isLp ? c->getMipBasisStatus() : MipBasisStatus::NOT_AVAILABLE});
+        };
+
+        switch (idxType)
+        {
+        case TI::VARYING_IN_TIME_AND_SCENARIO:
+            for (unsigned ts = fillContext.getLocalFirstTimeStep();
+                 ts <= fillContext.getLocalLastTimeStep();
+                 ++ts)
+            {
+                handle(ts, scenario);
+            }
+            break;
+        case TI::VARYING_IN_SCENARIO_ONLY:
+            handle(std::nullopt, scenario);
+            break;
+        case TI::VARYING_IN_TIME_ONLY:
+            for (unsigned ts = fillContext.getLocalFirstTimeStep();
+                 ts <= fillContext.getLocalLastTimeStep();
+                 ++ts)
+            {
+                handle(ts, std::nullopt);
+            }
+            break;
+        case TI::CONSTANT_IN_TIME_AND_SCENARIO:
+        default:
+            handle(std::nullopt, std::nullopt);
+            break;
+        }
+    }
+}
+
+void addObjectiveValue(ISimulationTable& simulation,
+                       double objectiveValue,
+                       unsigned int currentBlock,
+                       unsigned int scenario)
+{
+    simulation.addEntry({.block = currentBlock + 1,
+                         .component = std::nullopt,
+                         .output = "OBJECTIVE_VALUE",
+                         .absolute_time_index = std::nullopt,
+                         .block_time_index = std::nullopt,
+                         .scenario_index = scenario,
+                         .value = objectiveValue,
+                         .status = MipBasisStatus::NOT_AVAILABLE});
+}
+
 void FillSimulationTable(
   ISimulationTable& simulationTable,
   const ILinearProblem& linearProblem,
-  const IMipSolution& solution,
+  double objectiveValue,
   const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>& components,
   const Antares::Optimization::VariableDictionary& variableDictionary,
-  const FillContext& fillContext)
+  const FillContext& fillContext,
+  unsigned currentBlock,
+  const TimeConversionMode& timeConversionMode)
 {
-    auto variableLookupModeler = [&](const std::string& cid,
-                                     const std::string& vname,
-                                     std::optional<unsigned> scen,
-                                     std::optional<unsigned> ts) -> const IMipVariable*
-    {
-        return variableDictionary(cid,
-                                  vname,
-                                  Antares::Optimization::MCYearAndTime::MCYear{scen.value_or(0)},
-                                  ts.value_or(0));
-    };
-
-    auto constraintLookupModeler = [&](const std::string& cid,
-                                       const std::string& cname,
-                                       std::optional<unsigned> scen,
-                                       std::optional<unsigned> ts) -> const IMipConstraint*
-    { return linearProblem.lookupConstraint(BuildModelerConstraintName(cid, cname, scen, ts)); };
-
-    // TODO
     unsigned scenario = fillContext.getYear();
     for (const auto& component: components | std::views::values)
     {
-        addVariableEntries<ModelerSolverTraits>(simulationTable,
-                                                fillContext,
-                                                component,
-                                                variableLookupModeler,
-                                                1,
-                                                TimeConversionMode::SingleBlock,
-                                                scenario,
-                                                linearProblem.isLP());
+        addVariableEntries(simulationTable,
+                           linearProblem,
+                           fillContext,
+                           component,
+                           variableDictionary,
+                           currentBlock,
+                           timeConversionMode,
+                           scenario,
+                           linearProblem.isLP());
 
-        addConstraintEntries<ModelerSolverTraits>(simulationTable,
-                                                  fillContext,
-                                                  component,
-                                                  constraintLookupModeler,
-                                                  1,
-                                                  TimeConversionMode::SingleBlock,
-                                                  scenario,
-                                                  linearProblem.isLP());
+        addConstraintEntries(simulationTable,
+                             linearProblem,
+                             fillContext,
+                             component,
+                             currentBlock,
+                             timeConversionMode,
+                             scenario,
+                             linearProblem.isLP());
     }
-    addObjectiveValue<ModelerSolverTraits>(simulationTable, &solution, 1, scenario);
+    addObjectiveValue(simulationTable, objectiveValue, currentBlock, scenario);
 }

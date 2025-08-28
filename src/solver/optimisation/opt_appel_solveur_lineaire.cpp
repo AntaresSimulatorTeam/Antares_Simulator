@@ -49,8 +49,8 @@ using namespace operations_research;
 using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 
-using Antares::Solver::IResultWriter;
-using Antares::Solver::Optimization::SingleOptimOptions;
+using Solver::IResultWriter;
+using Solver::Optimization::SingleOptimOptions;
 
 class TimeMeasurement
 {
@@ -173,18 +173,16 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
 }
 
 // Returns a non-owning pointer
-MPSolver* convertToMPSolver(const PROBLEME_HEBDO* problemeHebdo,
-                            const SingleOptimOptions& options,
-                            bool namedProblems,
-                            unsigned int NumIntervalle)
+MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
+                             FillContext& fillCtx,
+                             VariableDictionary& variableDictionary,
+                             const PROBLEME_HEBDO* problemeHebdo,
+                             bool namedProblems)
 {
-    LegacyOrtoolsLinearProblem ortoolsProblem(problemeHebdo->ProblemeAResoudre->isMIP(),
-                                              options.solverName);
     LegacyFiller legacyOrtoolsFiller(problemeHebdo, namedProblems);
     std::vector<LinearProblemFiller*> fillersCollection = {&legacyOrtoolsFiller};
 
     std::vector<std::unique_ptr<Optimisation::ComponentFiller>> componentFillers;
-    VariableDictionary variableDictionary;
     ComponentToAreaConnectionFiller componentToAreaConnectionFiller(problemeHebdo,
                                                                     variableDictionary);
     if (problemeHebdo->modelerSystem && problemeHebdo->scenarioGroupRepository)
@@ -201,7 +199,6 @@ MPSolver* convertToMPSolver(const PROBLEME_HEBDO* problemeHebdo,
         fillersCollection.push_back(&componentToAreaConnectionFiller);
     }
 
-    FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
     LinearProblemBuilder linearProblemBuilder(fillersCollection);
 
     // Note that the modeler is only called for the 1st simulation week,
@@ -210,107 +207,6 @@ MPSolver* convertToMPSolver(const PROBLEME_HEBDO* problemeHebdo,
     linearProblemBuilder.build(ortoolsProblem, *problemeHebdo->linear_problem_data_, fillCtx);
 
     return ortoolsProblem.getMpSolver();
-}
-
-struct LegacySolverTraits
-{
-    static double getValue(const MPVariable* var)
-    {
-        return var->solution_value();
-    }
-
-    static MipBasisStatus getStatus(const MPVariable* var)
-    {
-        return convertOrtoolsBasisStatus(var->basis_status());
-    }
-
-    static MipBasisStatus getStatus(const MPConstraint* cst)
-    {
-        return convertOrtoolsBasisStatus(cst->basis_status());
-    }
-
-    static std::optional<double> getValue(const MPConstraint*)
-    {
-        return std::nullopt;
-    }
-
-    static double getValue(const MPSolver* solver)
-    {
-        return getObjectiveValue(solver);
-        // TODO Or
-        // return solver->Objective().Value();
-    }
-};
-
-static void FillSimulationTable(ISimulationTable& simulationTable,
-                                const MPSolver* solver,
-                                const PROBLEME_HEBDO* problemeHebdo,
-                                const FillContext& fillContext,
-                                int NumIntervalle)
-{
-    const auto& components = problemeHebdo->modelerSystem->Components();
-    const auto& variables = solver->variables();
-
-    std::unordered_map<std::string, const MPVariable*> variablesByName;
-    // TODO maybe not necessary
-    for (const auto* v: variables)
-    {
-        variablesByName.emplace(v->name(), v);
-    }
-
-    auto variableLookup = [&](const std::string& cid,
-                              const std::string& name,
-                              std::optional<unsigned> scen,
-                              std::optional<unsigned> ts) -> const MPVariable*
-    {
-        // TODO or call solver->LookupVariableOrNull()
-        return variablesByName.at(VariableDictionary::buildVariableName(
-          {cid, name},
-          Antares::Optimization::MCYearAndTime::MCYear{scen.value_or(0)},
-          ts));
-    };
-
-    auto constraintLookup = [&](const std::string& cid,
-                                const std::string& cname,
-                                std::optional<unsigned> scen,
-                                std::optional<unsigned> ts) -> const MPConstraint*
-    {
-        return solver->LookupConstraintOrNull(
-          BuildModelerConstraintName(cid, cname, /* TODO should be = scen*/ std::nullopt, ts));
-    };
-
-    unsigned currentBlock = problemeHebdo->OptimisationAuPasHebdomadaire
-                              ? problemeHebdo->weekInTheYear
-                              : NumIntervalle;
-
-    TimeConversionMode timeConversionMode = problemeHebdo->OptimisationAuPasHebdomadaire
-                                              ? TimeConversionMode::WeeklyBlocks
-                                              : TimeConversionMode::DailyBlocks;
-    for (const auto& comp: components | std::views::values)
-    {
-        addVariableEntries<LegacySolverTraits>(simulationTable,
-                                               fillContext,
-                                               comp,
-                                               variableLookup,
-                                               currentBlock,
-                                               timeConversionMode,
-                                               problemeHebdo->year,
-                                               !solver->IsMIP()); /*assume we never do discrete pb*/
-
-        addConstraintEntries<LegacySolverTraits>(
-          simulationTable,
-          fillContext,
-          comp,
-          constraintLookup,
-          currentBlock,
-          timeConversionMode,
-          problemeHebdo->year,
-          !solver->IsMIP()); /*assume we never do discrete pb*/
-    }
-    addObjectiveValue<LegacySolverTraits>(simulationTable,
-                                          solver,
-                                          currentBlock,
-                                          problemeHebdo->year);
 }
 
 static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
@@ -333,7 +229,15 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
 
     ProblemeAResoudre->ProblemesSpx[NumIntervalle] = nullptr;
 
-    solver = convertToMPSolver(problemeHebdo, options, problemeHebdo->NamedProblems, NumIntervalle);
+    LegacyOrtoolsLinearProblem ortoolsProblem(problemeHebdo->ProblemeAResoudre->isMIP(),
+                                              options.solverName);
+    FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
+    VariableDictionary variableDictionary;
+    solver = fillAndGetMpSolver(ortoolsProblem,
+                                fillCtx,
+                                variableDictionary,
+                                problemeHebdo,
+                                problemeHebdo->NamedProblems);
 
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
@@ -387,12 +291,20 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                           writer);
     if (problemeHebdo->modelerSystem)
     {
+        unsigned currentBlock = problemeHebdo->OptimisationAuPasHebdomadaire
+                                  ? problemeHebdo->weekInTheYear
+                                  : NumIntervalle;
+        TimeConversionMode timeConversionMode = problemeHebdo->OptimisationAuPasHebdomadaire
+                                                  ? TimeConversionMode::WeeklyBlocks
+                                                  : TimeConversionMode::DailyBlocks;
         FillSimulationTable(simulationTable,
-                            solver,
-                            problemeHebdo,
-                            buildFillContext(problemeHebdo, NumIntervalle),
-                            NumIntervalle);
-        // simulationTable.write();
+                            ortoolsProblem,
+                            solver->Objective().Value(),
+                            problemeHebdo->modelerSystem->Components(),
+                            variableDictionary,
+                            fillCtx,
+                            currentBlock,
+                            timeConversionMode);
     }
 
     return {.success = true,
@@ -466,8 +378,12 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
     }
     else
     {
+        LegacyOrtoolsLinearProblem infeasibleProblem(problemeHebdo->ProblemeAResoudre->isMIP(),
+                                                     options.solverName);
+        FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
+        VariableDictionary variableDictionary;
         std::unique_ptr<MPSolver> MPproblem(
-          convertToMPSolver(problemeHebdo, options, true, NumIntervalle));
+          fillAndGetMpSolver(infeasibleProblem, fillCtx, variableDictionary, problemeHebdo, true));
 
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());
