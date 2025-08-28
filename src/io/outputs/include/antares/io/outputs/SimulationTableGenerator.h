@@ -86,7 +86,7 @@ void addVariableEntries(ISimulationTable& simulationTable,
             TimeBlock tb = timeStep ? convertTimeStepToBlockTimeIndex(
                                         *timeStep + fillContext.getGlobalFirstTimeStep(),
                                         timeConversionMode)
-                                    : TimeBlock{.block = currentBlock,
+                                    : TimeBlock{.block = currentBlock + 1,
                                                 .blockTimeIndex = std::nullopt,
                                                 .absoluteTimeIndex = std::nullopt};
             simulationTable.addEntry({.block = tb.block,
@@ -154,7 +154,7 @@ void addConstraintEntries(ISimulationTable& simulationTable,
             TimeBlock tb = ts ? convertTimeStepToBlockTimeIndex(
                                   *ts + fillContext.getGlobalFirstTimeStep(),
                                   timeConversionMode)
-                              : TimeBlock{.block = currentBlock,
+                              : TimeBlock{.block = currentBlock + 1,
                                           .blockTimeIndex = std::nullopt,
                                           .absoluteTimeIndex = std::nullopt};
             simulationTable.addEntry({.block = tb.block,
@@ -204,7 +204,7 @@ void addObjectiveValue(ISimulationTable& simulation,
                        unsigned int scenario)
 {
     simulation.addEntry(
-      {.block = currentBlock,
+      {.block = currentBlock + 1,
        .component = std::nullopt,
        .output = "OBJECTIVE_VALUE",
        .absolute_time_index = std::nullopt,
