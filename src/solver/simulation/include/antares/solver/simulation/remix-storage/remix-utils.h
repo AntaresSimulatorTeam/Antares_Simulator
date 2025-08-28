@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <ranges>
 #include <span>
+#include <stdexcept>
 #include <vector>
 
 namespace rng = std::ranges;
@@ -59,13 +60,24 @@ inline std::vector<double> operator*(std::span<const double> left, const double 
     return to_return;
 }
 
-inline double min_on_hour_range(std::vector<double>&& v, unsigned h, unsigned H)
+inline double min_on_subrange(std::vector<double>&& v, unsigned h, unsigned H)
 {
-    if (!v.size() || h > H)
+    if (!v.size())
     {
-        return 0;
+        throw std::invalid_argument("call min_on_subrange on an empty vector");
     }
-    std::span<double> subset(v.begin() + h, v.begin() + H);
+
+    if (H > v.size() || h > v.size())
+    {
+        throw std::invalid_argument("call of min_on_subrange : hour out of bound");
+    }
+
+    if (h > H)
+    {
+        throw std::invalid_argument("call min_on_subrange with inconsistant hours");
+    }
+
+    std::span<double> subset(v.begin() + h, v.begin() + H + 1);
     return *std::ranges::min_element(subset);
 }
 

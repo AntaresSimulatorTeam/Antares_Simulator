@@ -96,10 +96,10 @@ StorageForRemixNoLevels::StorageForRemixNoLevels(std::vector<double>& withdrawal
 
 double StorageForRemixNoLevels::maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen)
 {
-    // Max slice we can take from hydro withdrawal, at an hour when the total
+    // Max amont we can take from hydro withdrawal, at hour when the total
     // production reaches a max.
     double boundAtMax = withdrawal_[hourOfMaxGen] - pmin_[hourOfMaxGen];
-    // Max slice we can add to hydro withdrawal, at an hour when the total
+    // Max amont we can add to hydro withdrawal, at hour when the total
     // production reaches a min.
     double boundAtMin = std::min(
       {pmax_[hourOfMinGen] - withdrawal_[hourOfMinGen], unsupE_[hourOfMinGen]});
@@ -174,18 +174,18 @@ StorageForRemixWithLevels::StorageForRemixWithLevels(std::vector<double>& withdr
 
 double StorageForRemixWithLevels::maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen)
 {
-    double bound = StorageForRemixNoLevels::maxExchange(hourOfMaxGen, hourOfMinGen);
+    double boundNoLevels = StorageForRemixNoLevels::maxExchange(hourOfMaxGen, hourOfMinGen);
 
     unsigned hour = std::min(hourOfMinGen, hourOfMaxGen);
     unsigned HOUR = std::max(hourOfMinGen, hourOfMaxGen);
 
     if (hourOfMinGen < hourOfMaxGen)
     {
-        return std::min(bound, min_on_hour_range(levels_ - ruleCurveLow_, hour, HOUR));
+        return std::min(boundNoLevels, min_on_subrange(levels_ - ruleCurveLow_, hour, HOUR));
     }
     else
     {
-        return std::min(bound, min_on_hour_range(ruleCurveUp_ - levels_, hour, HOUR));
+        return std::min(boundNoLevels, min_on_subrange(ruleCurveUp_ - levels_, hour, HOUR));
     }
 }
 

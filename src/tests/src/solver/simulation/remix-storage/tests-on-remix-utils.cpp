@@ -106,22 +106,47 @@ BOOST_AUTO_TEST_SUITE(utils)
 
 BOOST_AUTO_TEST_CASE(between_hour_1_and_4___vector_min_is_2)
 {
-    BOOST_CHECK_EQUAL(min_on_hour_range({1., 2., 3., 4., 5.}, 1, 4), 2.);
+    BOOST_CHECK_EQUAL(min_on_subrange({1, 2, 3, 4, 5}, 1, 4), 2.);
+}
+
+BOOST_AUTO_TEST_CASE(between_hour_2_and_4___vector_min_is_half_one)
+{
+    BOOST_CHECK_EQUAL(min_on_subrange({ 5, 4, 0.6, 1.5, 0.5, 6}, 2, 4), 0.5);
 }
 
 BOOST_AUTO_TEST_CASE(hours_h_and_H_are_equals___vector_min_is_defined)
 {
-    BOOST_CHECK_EQUAL(min_on_hour_range({1., 2., 3.}, 2, 2), 3.);
+    BOOST_CHECK_EQUAL(min_on_subrange({1., 2., 3.}, 2, 2), 3.);
 }
 
-BOOST_AUTO_TEST_CASE(vector_is_empty___vector_min_between_hour_2_and_7_is_zero)
+BOOST_AUTO_TEST_CASE(vector_is_empty___exception_raised)
 {
-    BOOST_CHECK_EQUAL(min_on_hour_range({}, 2, 7), 0.);
+    std::string err_msg = "call min_on_subrange on an empty vector";
+    BOOST_CHECK_EXCEPTION(min_on_subrange({}, 2, 7), std::invalid_argument, checkMessage(err_msg));
 }
 
-BOOST_AUTO_TEST_CASE(hour_h_greater_than_H___vector_min_between_these_hours_is_zero)
+BOOST_AUTO_TEST_CASE(hour_h_greater_than_H___exception_raised)
 {
-    BOOST_CHECK_EQUAL(min_on_hour_range({1., 2., 3., 4., 5.}, 4, 2), 0.);
+    std::string err_msg = "call min_on_subrange with inconsistant hours";
+    BOOST_CHECK_EXCEPTION(min_on_subrange({1., 2.}, 1, 0),
+                          std::invalid_argument,
+                          checkMessage(err_msg));
+}
+
+BOOST_AUTO_TEST_CASE(hour_h_negative___exception_raised)
+{
+    std::string err_msg = "call of min_on_subrange : hour out of bound";
+    BOOST_CHECK_EXCEPTION(min_on_subrange({1., 2.}, -1, 1),
+                          std::invalid_argument,
+                          checkMessage(err_msg));
+}
+
+BOOST_AUTO_TEST_CASE(hour_H_too_large___exception_raised)
+{
+    std::string err_msg = "call of min_on_subrange : hour out of bound";
+    BOOST_CHECK_EXCEPTION(min_on_subrange({1., 2.}, -1, 2),
+                          std::invalid_argument,
+                          checkMessage(err_msg));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
