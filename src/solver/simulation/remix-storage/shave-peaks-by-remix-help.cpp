@@ -33,12 +33,11 @@ void updateValidHours(std::set<unsigned>& validHours,
 
 double computeExchange(unsigned hourOfMinGen,
                        unsigned hourOfMaxGen,
-                       const std::vector<double>& TotalGen,
+                       const double maxVariationGen,
                        std::shared_ptr<IStorageForRemix> storage)
 {
-    double maxVariation = std::max(TotalGen[hourOfMaxGen] - TotalGen[hourOfMinGen], 0.);
     double maxExchangeFromStorage = storage->maxExchange(hourOfMaxGen, hourOfMinGen);
-    return std::max(std::min(maxExchangeFromStorage, maxVariation / 2.), 0.);
+    return std::max(std::min(maxExchangeFromStorage, maxVariationGen / 2.), 0.);
 }
 
 Exchange searchForExhange(const std::set<unsigned>& validHours,
@@ -62,7 +61,9 @@ Exchange searchForExhange(const std::set<unsigned>& validHours,
         while (!validHoursForMax.empty())
         {
             auto hourOfMaxGen = rng::max_element(validHoursForMax, {}, totalGenProjection);
-            auto exchange = computeExchange(*hourOfMinGen, *hourOfMaxGen, TotalGen, storage);
+
+            double maxVariationGen = TotalGen[*hourOfMaxGen] - totalGenMin;
+            auto exchange = computeExchange(*hourOfMinGen, *hourOfMaxGen, maxVariationGen, storage);
 
             if (exchange > eps)
             {

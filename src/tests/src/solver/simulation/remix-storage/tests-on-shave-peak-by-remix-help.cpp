@@ -10,8 +10,8 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "antares/solver/simulation/remix-storage/storage-for-remix.h"
 #include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-help.h"
+#include "antares/solver/simulation/remix-storage/storage-for-remix.h"
 
 using namespace Antares::Solver::Simulation;
 
@@ -96,12 +96,12 @@ BOOST_FIXTURE_TEST_SUITE(compute_exchange, StorageFixture<5>)
 
 BOOST_AUTO_TEST_CASE(dummy)
 {
-    unsigned hourOfMinGen = 1;
-    unsigned hourOfMaxGen = 4;
-    std::vector<double> totalGen = {0, 2, 0, 0, 5};
+    const unsigned hourOfMinGen = 1;
+    const unsigned hourOfMaxGen = 4;
+    const double maxVariationGen = 10;
     auto storage = createSTSstorage();
 
-    auto exchange = computeExchange(hourOfMinGen, hourOfMaxGen, totalGen, storage);
+    auto exchange = computeExchange(hourOfMinGen, hourOfMaxGen, maxVariationGen, storage);
 
     BOOST_CHECK(true);
 }
