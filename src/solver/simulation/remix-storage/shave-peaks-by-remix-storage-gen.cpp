@@ -29,7 +29,7 @@ static std::set<unsigned> ValidHours(const std::vector<double>& Spillage,
 }
 
 void updateValidHours(std::set<unsigned>& validHours,
-                      std::shared_ptr<IStorageForRemix>& storage,
+                      std::shared_ptr<IStorageForRemix> storage,
                       const std::vector<double>& UnsupEinit)
 {
     std::erase_if(validHours,
@@ -85,7 +85,7 @@ struct Exchange
 static Exchange searchForExhange(const std::set<unsigned>& validHours,
                                  std::vector<double>& TotalGen,
                                  std::vector<double>& UnsupE,
-                                 std::shared_ptr<IStorageForRemix>& storage)
+                                 std::shared_ptr<IStorageForRemix> storage)
 {
     auto totalGenProjection = [&](int h) { return TotalGen[h]; };
 
