@@ -1,40 +1,20 @@
 #include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-storage-gen.h"
 
-#include <optional>
 #include <ranges>
 #include <set>
 #include <stdexcept>
 #include <vector>
 
 #include "antares/solver/simulation/remix-storage/remix-utils.h"
+#include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-help.h"
 
 namespace rng = std::ranges;
-namespace vws = std::views;
 
-constexpr double eps = 1e-3;
 constexpr unsigned maxNbLoops = 1000;
 const std::string error_msg_start = "Remix storage input : ";
 
-using set_iterator = std::set<unsigned>::iterator;
-
 namespace Antares::Solver::Simulation
 {
-
-static std::set<unsigned> ValidHours(const std::vector<double>& Spillage,
-                                     const std::vector<double>& DTG_MRG)
-{
-    auto filter = [&](int h) { return std::abs(Spillage[h] + DTG_MRG[h]) < eps; };
-    auto validHoursView = vws::iota(0, (int)Spillage.size()) | vws::filter(filter);
-    return {validHoursView.begin(), validHoursView.end()};
-}
-
-void updateValidHours(std::set<unsigned>& validHours,
-                      std::shared_ptr<IStorageForRemix> storage,
-                      const std::vector<double>& UnsupEinit)
-{
-    std::erase_if(validHours,
-                  [&](int h) { return storage->initWithdrawal()[h] + UnsupEinit[h] <= eps; });
-}
 
 void checkInput(const std::vector<double>& Load,
                 const std::vector<double>& UnsupE,
@@ -58,82 +38,6 @@ void checkInput(const std::vector<double>& Load,
     {
         throw std::invalid_argument(error_msg_start + "all arrays of sizes 0");
     }
-}
-
-double computeExchange(unsigned hourOfMinGen,
-                       unsigned hourOfMaxGen,
-                       const std::vector<double>& TotalGen,
-                       std::shared_ptr<IStorageForRemix> storage)
-{
-    double maxVariation = std::max(TotalGen[hourOfMaxGen] - TotalGen[hourOfMinGen], 0.);
-    double maxExchangeFromStorage = storage->maxExchange(hourOfMaxGen, hourOfMinGen);
-    return std::max(std::min(maxExchangeFromStorage, maxVariation / 2.), 0.);
-}
-
-struct Exchange
-{
-    bool valid()
-    {
-        return amount > eps && hourOfMinGen.has_value() && hourOfMaxGen.has_value();
-    }
-
-    std::optional<unsigned> hourOfMinGen;
-    std::optional<unsigned> hourOfMaxGen;
-    double amount = 0;
-};
-
-static Exchange searchForExhange(const std::set<unsigned>& validHours,
-                                 std::vector<double>& TotalGen,
-                                 std::vector<double>& UnsupE,
-                                 std::shared_ptr<IStorageForRemix> storage)
-{
-    auto totalGenProjection = [&](int h) { return TotalGen[h]; };
-
-    std::set<unsigned> validHoursForMin(validHours);
-    std::erase_if(validHoursForMin, [&](int h) { return UnsupE[h] <= eps; });
-
-    while (!validHoursForMin.empty())
-    {
-        auto hourOfMinGen = rng::min_element(validHoursForMin, {}, totalGenProjection);
-
-        std::set<unsigned> validHoursForMax(validHours);
-        double totalGenMin = TotalGen[*hourOfMinGen];
-        std::erase_if(validHoursForMax, [&](int h) { return TotalGen[h] < totalGenMin + eps; });
-
-        while (!validHoursForMax.empty())
-        {
-            auto hourOfMaxGen = rng::max_element(validHoursForMax, {}, totalGenProjection);
-            auto exchange = computeExchange(*hourOfMinGen, *hourOfMaxGen, TotalGen, storage);
-
-            if (exchange > eps)
-            {
-                return {*hourOfMinGen, *hourOfMaxGen, exchange};
-            }
-            validHoursForMax.erase(hourOfMaxGen);
-        }
-        validHoursForMin.erase(hourOfMinGen);
-    }
-    return {};
-}
-
-void update(Exchange& exchange,
-            std::shared_ptr<IStorageForRemix> storage,
-            std::vector<double>& UnsupE,
-            std::vector<double>& TotalGen)
-{
-    double amount = exchange.amount;
-    unsigned hourOfMinGen = exchange.hourOfMinGen.value();
-    unsigned hourOfMaxGen = exchange.hourOfMaxGen.value();
-
-    storage->withdrawal()[hourOfMaxGen] -= amount;
-    storage->withdrawal()[hourOfMinGen] += amount;
-    storage->update();
-
-    UnsupE[hourOfMaxGen] += amount;
-    UnsupE[hourOfMinGen] -= amount;
-
-    TotalGen[hourOfMaxGen] -= amount;
-    TotalGen[hourOfMinGen] += amount;
 }
 
 auto removeStorageFromList(std::vector<std::shared_ptr<IStorageForRemix>>::iterator storage,
