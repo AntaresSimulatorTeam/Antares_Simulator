@@ -36,6 +36,7 @@
 #include "antares/io/outputs/SimulationTableEntry.h"
 #include "antares/io/outputs/SimulationTableGenerator.h"
 #include "antares/optimisation/linear-problem-api/mipConstraint.h"
+#include "antares/optimisation/linear-problem-api/mipSolution.h"
 #include "antares/optimisation/linear-problem-api/mipVariable.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/convertOrtoolsBasisStatus.h"
@@ -190,6 +191,7 @@ private:
     MipBasisStatus status_;
     std::string name_ = "test_constraint";
 };
+
 } // namespace
 
 BOOST_AUTO_TEST_SUITE(SimulationTableEntryTests)
@@ -630,10 +632,6 @@ public:
         return nullptr;
     }
 
-    // void setObjectiveFunction(bool) override
-    // {
-    // }
-
     void setObjectiveCoefficient(IMipVariable*, double) override
     {
     }
@@ -652,10 +650,6 @@ public:
         return std::numeric_limits<double>::infinity();
     }
 
-    // const IMipConstraint* lookupConstraint(const std::string& name) const override
-    // {
-    //     return lookupConstraint(name);
-    // }
 
 private:
     bool isLP_;
@@ -722,6 +716,35 @@ private:
     [[nodiscard]] bool isMaximization() const override
     {
         return !isMinimization();
+    }
+};
+
+struct MockMipSolution: IMipSolution
+{
+    [[nodiscard]] MipStatus getStatus() const override
+    {
+        return MipStatus::OPTIMAL;
+    }
+
+    [[nodiscard]] double getObjectiveValue() const override
+    {
+        return 11.18;
+    }
+
+    [[nodiscard]] double getOptimalValue(const IMipVariable* var) const override
+    {
+        return 11.18;
+    }
+
+    [[nodiscard]] std::vector<double> getOptimalValues(
+      const std::vector<IMipVariable*>& vars) const override
+    {
+        return std::vector(vars.size(), 11.18);
+    }
+
+    [[nodiscard]] const std::map<std::string, double>& getOptimalValues() const override
+    {
+        return {};
     }
 };
 
@@ -1023,7 +1046,7 @@ BOOST_AUTO_TEST_CASE(RoundTrip_DataIntegrity)
 
         // Basic checks that the line contains expected components
         BOOST_CHECK(line.find(std::to_string(original.block)) != std::string::npos);
-        BOOST_CHECK(line.find(original.component) != std::string::npos);
+        BOOST_CHECK(line.find(original.component.value()) != std::string::npos);
         BOOST_CHECK(line.find(original.output) != std::string::npos);
 
         entryIndex++;
@@ -1120,9 +1143,13 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_ModelerIntegration)
     MockLinearProblem linearProblem(true);
 
     build(fillContext, &linearProblem);
-
-    BOOST_CHECK_NO_THROW(
-      FillSimulationTable(table, linearProblem, components, variableDictionary, fillContext););
+    MockMipSolution solution;
+    BOOST_CHECK_NO_THROW(FillSimulationTable(table,
+                                             linearProblem,
+                                             solution,
+                                             components,
+                                             variableDictionary,
+                                             fillContext););
 }
 
 BOOST_AUTO_TEST_SUITE_END()

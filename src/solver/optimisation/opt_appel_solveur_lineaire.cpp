@@ -233,6 +233,13 @@ struct LegacySolverTraits
     {
         return std::nullopt;
     }
+
+    static double getValue(const MPSolver* solver)
+    {
+        return getObjectiveValue(solver);
+        // TODO Or
+        // return solver->Objective().Value();
+    }
 };
 
 static void FillSimulationTable(ISimulationTable& simulationTable,
@@ -300,6 +307,10 @@ static void FillSimulationTable(ISimulationTable& simulationTable,
           problemeHebdo->year,
           !solver->IsMIP()); /*assume we never do discrete pb*/
     }
+    addObjectiveValue<LegacySolverTraits>(simulationTable,
+                                          solver,
+                                          currentBlock,
+                                          problemeHebdo->year);
 }
 
 static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,

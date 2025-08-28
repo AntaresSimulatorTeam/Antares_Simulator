@@ -27,7 +27,7 @@ SimulationTableCsv::SimulationTableCsv()
 
 {
     storage_.addIntegralColumn<unsigned int>("block");
-    storage_.addStringColumn("component");
+    storage_.addOptionalColumn<std::string>("component");
     storage_.addStringColumn("output");
     storage_.addOptionalColumn<unsigned int>("absolute_time_index");
     storage_.addOptionalColumn<unsigned int>("block_time_index");
