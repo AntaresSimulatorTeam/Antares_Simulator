@@ -80,9 +80,10 @@ void ShortTermStorageCumulation::add(int pays)
     {
         for (const auto& additionalConstraints: storage.additionalConstraints)
         {
-            auto cumulationConstraint = makeCumulationConstraint(additionalConstraints->variable,
-                                                                 builder,
-                                                                 storage);
+            const CumulationConstraint cumulationConstraint = makeCumulationConstraint(
+              additionalConstraints->variable,
+              builder,
+              storage);
 
             for (const auto& [hours, globalIndex, localIndex]: additionalConstraints->constraints)
             {
