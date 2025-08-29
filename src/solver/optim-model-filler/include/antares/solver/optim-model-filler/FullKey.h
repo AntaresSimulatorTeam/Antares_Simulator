@@ -60,6 +60,7 @@ public:
     [[nodiscard]] std::optional<unsigned int> getTimestep() const;
 
     auto operator<=>(const FullKey&) const = default; // Automatically generates <, >, ==, etc.
+    auto operator==(const FullKey&) const -> bool = default;
 
 private:
     PartialKey pk;
