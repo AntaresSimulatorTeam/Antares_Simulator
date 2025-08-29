@@ -669,14 +669,20 @@ private:
         return nullptr;
     }
 
+    static IMipVariable* RandomVariable()
+    {
+        static MockMipVariable mockMipVariable(12.25, MipBasisStatus::AT_LOWER_BOUND, false);
+        return &mockMipVariable;
+    }
+
     [[nodiscard]] IMipVariable* getVariable(std::size_t index) const override
     {
-        return nullptr;
+        return RandomVariable();
     }
 
     [[nodiscard]] IMipVariable* lookupVariable(const std::string& name) const override
     {
-        return nullptr;
+        return RandomVariable();
     }
 
     [[nodiscard]] int variableCount() const override
@@ -948,28 +954,17 @@ private:
 BOOST_AUTO_TEST_CASE(TemplateFunction_VariableEntries_AllCombinations)
 {
     SimulationTableCsv table;
+    MockLinearProblem linearProblem(true);
     build();
     const FillContext fillContext(0, 9, 0, 9, 0); // 10 time steps
 
-    auto variableLookup = [](const std::string&,
-                             const std::string&,
-                             std::optional<unsigned>,
-                             std::optional<unsigned>) -> const MockMipVariable*
-    {
-        static MockMipVariable mockVar(42.0, MipBasisStatus::BASIC);
-        return &mockVar;
-    };
-
-    // Test all variable dependency combinations
-    addVariableEntries<MockSolverTraits>(table,
-                                         fillContext,
-                                         components.begin()->second,
-                                         variableLookup,
-                                         1, // current block
-                                         TimeConversionMode::SingleBlock,
-                                         std::optional<unsigned>(5), // scenario
-                                         true);                      // isLP
-
+    addVariableEntries(table,
+                       linearProblem,
+                       fillContext,
+                       components.begin()->second,
+                       1,
+                       TimeConversionMode::SingleBlock,
+                       0);
     table.writeHeader();
     table.write();
     std::string buffer = table.buffer();
@@ -986,33 +981,6 @@ BOOST_AUTO_TEST_CASE(TemplateFunction_VariableEntries_AllCombinations)
 
 BOOST_AUTO_TEST_SUITE_END()
 
-BOOST_AUTO_TEST_SUITE(ErrorHandlingTests)
-
-BOOST_FIXTURE_TEST_CASE(NullPointer_Handling, BasicProblemFixture)
-{
-    // Test with null variable lookup
-    SimulationTableCsv table;
-    build();
-    FillContext fillContext(0, 2, 0, 2, 0);
-
-    auto nullVariableLookup = [](const std::string&,
-                                 const std::string&,
-                                 std::optional<unsigned>,
-                                 std::optional<unsigned>) -> const MockMipVariable*
-    { return nullptr; };
-
-    // Should handle null pointers gracefully
-    BOOST_CHECK_NO_THROW(addVariableEntries<MockSolverTraits>(table,
-                                                              fillContext,
-                                                              components.begin()->second,
-                                                              nullVariableLookup,
-                                                              1,
-                                                              TimeConversionMode::SingleBlock,
-                                                              std::nullopt,
-                                                              true));
-}
-
-BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(DataIntegrityTests)
 
@@ -1145,10 +1113,11 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_ModelerIntegration)
     MockMipSolution solution;
     BOOST_CHECK_NO_THROW(FillSimulationTable(table,
                                              linearProblem,
-                                             solution,
+                                             45.0,
                                              components,
-                                             variableDictionary,
-                                             fillContext););
+                                             fillContext,
+                                             1,
+                                             TimeConversionMode::SingleBlock););
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -1235,44 +1204,6 @@ BOOST_AUTO_TEST_CASE(AlternatingClear_Write_Operations)
 
 BOOST_AUTO_TEST_SUITE_END()
 
-// BOOST_AUTO_TEST_SUITE(LinearProblemInterfaceTests)
-//
-// class TestableOrtoolsLinearProblem
-// {
-// public:
-//     TestableOrtoolsLinearProblem(bool isMip):
-//         isMip_(isMip),
-//         isLP_(!isMip)
-//     {
-//     }
-//
-//     bool isLP() const
-//     {
-//         return isLP_;
-//     }
-//
-//     void addIntegerVariable()
-//     {
-//         isLP_ = false; // Adding integer variable makes it non-LP
-//     }
-//
-//     void addContin * 5, .scenario_index = i, .value = i * 1.5, .status = MipBasisStatus::FREE
-// };
-//
-// table.addEntry(entry);
-// }
-//
-// table.write();
-//
-// std::string buffer = table.buffer();
-//
-// // Check all entries are present
-// BOOST_CHECK(buffer.find("1,comp0,var0,0,0,0,0,Free") != std::string::npos);
-// BOOST_CHECK(buffer.find("2,comp1,var1,10,5,1,1.5,Free") != std::string::npos);
-// BOOST_CHECK(buffer.find("3,comp2,var2,20,10,2,3,Free") != std::string::npos);
-// }
-//
-// BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(SimulationTableCsvFileTests)
 
