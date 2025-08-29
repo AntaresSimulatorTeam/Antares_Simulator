@@ -130,7 +130,7 @@ void CyclicIterator<T>::back_to_begin()
 template<typename T>
 CyclicIterator<T>& CyclicIterator<T>::delete_current()
 {
-    it_ = v_.erase(it_, it_ + 1);
+    it_ = v_.erase(it_);
     back_to_begin();
     return *this;
 }
