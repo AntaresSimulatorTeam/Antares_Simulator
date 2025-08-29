@@ -151,6 +151,40 @@ void addVariableEntries(ISimulationTable& simulationTable,
     }
 }
 
+void handleDependingOnTimeIndex(
+  const FillContext& fillContext,
+  std::optional<unsigned> scenario,
+  TI idxType,
+  const std::function<void(std::optional<unsigned> ts, std::optional<unsigned> scenIdx)>& handle)
+{
+    switch (idxType)
+    {
+    case TI::VARYING_IN_TIME_AND_SCENARIO:
+        for (unsigned ts = fillContext.getLocalFirstTimeStep();
+             ts <= fillContext.getLocalLastTimeStep();
+             ++ts)
+        {
+            handle(ts, scenario);
+        }
+        break;
+    case TI::VARYING_IN_SCENARIO_ONLY:
+        handle(std::nullopt, scenario);
+        break;
+    case TI::VARYING_IN_TIME_ONLY:
+        for (unsigned ts = fillContext.getLocalFirstTimeStep();
+             ts <= fillContext.getLocalLastTimeStep();
+             ++ts)
+        {
+            handle(ts, std::nullopt);
+        }
+        break;
+    case TI::CONSTANT_IN_TIME_AND_SCENARIO:
+    default:
+        handle(std::nullopt, std::nullopt);
+        break;
+    }
+}
+
 void addConstraintEntries(ISimulationTable& simulationTable,
                           const ILinearProblem& linearProblem,
                           const FillContext& fillContext,
@@ -191,32 +225,7 @@ void addConstraintEntries(ISimulationTable& simulationTable,
                .status = isLp ? c->getMipBasisStatus() : MipBasisStatus::NOT_AVAILABLE});
         };
 
-        switch (idxType)
-        {
-        case TI::VARYING_IN_TIME_AND_SCENARIO:
-            for (unsigned ts = fillContext.getLocalFirstTimeStep();
-                 ts <= fillContext.getLocalLastTimeStep();
-                 ++ts)
-            {
-                handle(ts, scenario);
-            }
-            break;
-        case TI::VARYING_IN_SCENARIO_ONLY:
-            handle(std::nullopt, scenario);
-            break;
-        case TI::VARYING_IN_TIME_ONLY:
-            for (unsigned ts = fillContext.getLocalFirstTimeStep();
-                 ts <= fillContext.getLocalLastTimeStep();
-                 ++ts)
-            {
-                handle(ts, std::nullopt);
-            }
-            break;
-        case TI::CONSTANT_IN_TIME_AND_SCENARIO:
-        default:
-            handle(std::nullopt, std::nullopt);
-            break;
-        }
+        handleDependingOnTimeIndex(fillContext, scenario, idxType, handle);
     }
 }
 
@@ -260,11 +269,6 @@ void addPortEntries(ISimulationTable& simulationTable,
                                                                 &component);
 
         auto portValue = evalVisitor.dispatch(portFieldDef.Definition().RootNode());
-        // TODO
-        // special case: model parameter is scenario & time dependent, but system parameter is
-        // constant TimeIndexVisitor says that parameter is time & scenario dependent, EvalVisitor
-        // only outputs one value
-
         auto handle = [&](std::optional<unsigned> ts, std::optional<unsigned> scenIdx)
         {
             TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(*ts,
@@ -286,32 +290,7 @@ void addPortEntries(ISimulationTable& simulationTable,
                                       .status = MipBasisStatus::NOT_AVAILABLE});
         };
 
-        switch (idxType)
-        {
-        case TI::VARYING_IN_TIME_AND_SCENARIO:
-            for (unsigned ts = fillContext.getLocalFirstTimeStep();
-                 ts <= fillContext.getLocalLastTimeStep();
-                 ++ts)
-            {
-                handle(ts, scenario);
-            }
-            break;
-        case TI::VARYING_IN_SCENARIO_ONLY:
-            handle(std::nullopt, scenario);
-            break;
-        case TI::VARYING_IN_TIME_ONLY:
-            for (unsigned ts = fillContext.getLocalFirstTimeStep();
-                 ts <= fillContext.getLocalLastTimeStep();
-                 ++ts)
-            {
-                handle(ts, std::nullopt);
-            }
-            break;
-        case TI::CONSTANT_IN_TIME_AND_SCENARIO:
-        default:
-            handle(std::nullopt, std::nullopt);
-            break;
-        }
+        handleDependingOnTimeIndex(fillContext, scenario, idxType, handle);
     }
 }
 
