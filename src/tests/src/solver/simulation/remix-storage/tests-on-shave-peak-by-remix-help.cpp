@@ -206,11 +206,159 @@ struct FindExchangeFixture: public StorageFixture<size>
     std::vector<double> totalGen;
 };
 
-BOOST_FIXTURE_TEST_SUITE(find_exhange, FindExchangeFixture<5>)
+BOOST_AUTO_TEST_SUITE(find_exhange)
 
-BOOST_AUTO_TEST_CASE(dummy)
+BOOST_FIXTURE_TEST_CASE(totalGen_is_zero_everywhere___we_get_undefined_hours,
+                        FindExchangeFixture<5>)
 {
-    BOOST_CHECK(true);
+    auto storage = createSTSstorage();
+    auto exchange = searchForExhange(validHours, totalGen, unsupE, storage);
+
+    BOOST_CHECK(!exchange.hourOfMinGen.has_value());
+    BOOST_CHECK(!exchange.hourOfMaxGen.has_value());
+}
+
+BOOST_FIXTURE_TEST_CASE(totalGen_is_flat___we_get_undefined_hours, FindExchangeFixture<5>)
+{
+    std::ranges::fill(totalGen, 10);
+    auto storage = createSTSstorage();
+
+    auto exchange = searchForExhange(validHours, totalGen, unsupE, storage);
+
+    BOOST_CHECK(!exchange.hourOfMinGen.has_value());
+    BOOST_CHECK(!exchange.hourOfMaxGen.has_value());
+}
+
+BOOST_FIXTURE_TEST_CASE(totalGen_is_decreasing___hourOfMaxGen_is_first_and_hourOfMinGen_last,
+                        FindExchangeFixture<5>)
+{
+    totalGen = {15, 12, 10, 7, 4};
+    auto storage = createSTSstorage();
+
+    auto exchange = searchForExhange(validHours, totalGen, unsupE, storage);
+
+    BOOST_CHECK(exchange.hourOfMinGen.has_value());
+    BOOST_CHECK(exchange.hourOfMaxGen.has_value());
+
+    BOOST_CHECK_EQUAL(exchange.hourOfMaxGen.value(), 0);
+    BOOST_CHECK_EQUAL(exchange.hourOfMinGen.value(), 4);
+}
+
+BOOST_FIXTURE_TEST_CASE(totalGen_is_increasing___hourOfMinGen_is_first_and_hourOfMaxGen_last,
+                        FindExchangeFixture<5>)
+{
+    totalGen = {4, 7, 10, 12, 15};
+    auto storage = createSTSstorage();
+
+    auto exchange = searchForExhange(validHours, totalGen, unsupE, storage);
+
+    BOOST_CHECK(exchange.hourOfMinGen.has_value());
+    BOOST_CHECK(exchange.hourOfMaxGen.has_value());
+
+    BOOST_CHECK_EQUAL(exchange.hourOfMaxGen.value(), 4);
+    BOOST_CHECK_EQUAL(exchange.hourOfMinGen.value(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(totalGen_is_not_monotone__output_hours_are_as_expected,
+                        FindExchangeFixture<5>)
+{
+    totalGen = {25, 2, 10, 60, 15};
+    auto storage = createSTSstorage();
+
+    auto exchange = searchForExhange(validHours, totalGen, unsupE, storage);
+
+    BOOST_CHECK(exchange.hourOfMinGen.has_value());
+    BOOST_CHECK(exchange.hourOfMaxGen.has_value());
+
+    BOOST_CHECK_EQUAL(exchange.hourOfMaxGen.value(), 3);
+    BOOST_CHECK_EQUAL(exchange.hourOfMinGen.value(), 1);
+}
+
+BOOST_FIXTURE_TEST_CASE(valid_hours_is_a_strict_subrange__output_hours_are_as_expected,
+                        FindExchangeFixture<9>)
+{
+    // Absolute hours for min and max totalGen are 0 and 8
+    totalGen = {0, 25, 2, 10, 60, 15, 6, 75, 80};
+
+    validHours = {2, 3, 4};
+    auto storage = createSTSstorage();
+
+    auto exchange = searchForExhange(validHours, totalGen, unsupE, storage);
+
+    BOOST_CHECK(exchange.hourOfMinGen.has_value());
+    BOOST_CHECK(exchange.hourOfMaxGen.has_value());
+
+    BOOST_CHECK_EQUAL(exchange.hourOfMaxGen.value(), 4);
+    BOOST_CHECK_EQUAL(exchange.hourOfMinGen.value(), 2);
+}
+
+BOOST_FIXTURE_TEST_CASE(valid_hours_is_another_strict_subrange__output_hours_are_as_expected,
+                        FindExchangeFixture<9>)
+{
+    // Absolute hours for min and max totalGen are 0 and 8
+    totalGen = {0, 25, 2, 10, 60, 15, 6, 75, 80};
+
+    validHours = {3, 4, 5, 6, 7};
+    auto storage = createSTSstorage();
+
+    auto exchange = searchForExhange(validHours, totalGen, unsupE, storage);
+
+    BOOST_CHECK(exchange.hourOfMinGen.has_value());
+    BOOST_CHECK(exchange.hourOfMaxGen.has_value());
+
+    BOOST_CHECK_EQUAL(exchange.hourOfMaxGen.value(), 7);
+    BOOST_CHECK_EQUAL(exchange.hourOfMinGen.value(), 6);
+}
+
+BOOST_FIXTURE_TEST_CASE(valid_hours_is_not_contuguous__output_hours_are_as_expected,
+                        FindExchangeFixture<9>)
+{
+    // Absolute hours for min and max totalGen are 0 and 8
+    totalGen = {0, 25, 2, 10, 60, 15, 6, 75, 80};
+
+    validHours = {1, 3, 6};
+    auto storage = createSTSstorage();
+
+    auto exchange = searchForExhange(validHours, totalGen, unsupE, storage);
+
+    BOOST_CHECK(exchange.hourOfMinGen.has_value());
+    BOOST_CHECK(exchange.hourOfMaxGen.has_value());
+
+    BOOST_CHECK_EQUAL(exchange.hourOfMaxGen.value(), 1);
+    BOOST_CHECK_EQUAL(exchange.hourOfMinGen.value(), 6);
+}
+
+BOOST_FIXTURE_TEST_CASE(unsupE_is_zero_everywhere__valid_hours_is_empty__output_hours_undefined,
+                        FindExchangeFixture<9>)
+{
+    // Absolute hours for min and max totalGen are 0 and 8
+    totalGen = {0, 25, 2, 10, 60, 15, 6, 75, 80};
+    std::ranges::fill(unsupE, 0); // Makes all hours invalid
+
+    auto storage = createSTSstorage();
+
+    auto exchange = searchForExhange(validHours, totalGen, unsupE, storage);
+
+    BOOST_CHECK(!exchange.hourOfMinGen.has_value());
+    BOOST_CHECK(!exchange.hourOfMaxGen.has_value());
+}
+
+BOOST_FIXTURE_TEST_CASE(hourOfMinGen_can_only_be_in_the_subset_where_unsupE_is_non_null,
+                        FindExchangeFixture<9>)
+{
+    // Absolute hours for min and max totalGen are 0 and 8
+    totalGen = {0, 25, 2, 10, 60, 15, 6, 75, 80};
+    std::ranges::fill(unsupE, 0); // Makes all hours invalid
+    unsupE[1] = 1;
+    unsupE[3] = 1;
+    unsupE[6] = 1;
+
+    auto storage = createSTSstorage();
+
+    auto exchange = searchForExhange(validHours, totalGen, unsupE, storage);
+
+    BOOST_CHECK(exchange.hourOfMinGen.has_value());
+    BOOST_CHECK_EQUAL(exchange.hourOfMinGen.value(), 6);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

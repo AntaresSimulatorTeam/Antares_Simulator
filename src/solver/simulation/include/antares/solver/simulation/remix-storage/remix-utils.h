@@ -81,7 +81,6 @@ inline double min_on_subrange(std::vector<double>&& v, unsigned h, unsigned H)
     return *std::ranges::min_element(subset);
 }
 
-
 template<typename T>
 class CyclicIterator
 {
