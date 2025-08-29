@@ -23,13 +23,7 @@
 
 #include "antares/solver/variable/variable.h"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace Economy
+namespace Antares::Solver::Variable::Economy
 {
 struct VCardOverallCost
 {
@@ -287,9 +281,6 @@ private:
 
 }; // class OverallCost
 
-} // namespace Economy
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::Economy
 
 #endif // __SOLVER_VARIABLE_ECONOMY_OverallCost_H__

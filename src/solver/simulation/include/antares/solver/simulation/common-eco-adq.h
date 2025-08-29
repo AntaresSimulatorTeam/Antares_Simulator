@@ -24,17 +24,11 @@
 #include <vector>
 
 #include <antares/study/study.h>
-#include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/solver.h" // for definition of type yearRandomNumbers
 #include "antares/solver/variable/economy/all.h"
 #include "antares/solver/variable/economy/dispatchable-generation-margin.h" // for OP.MRG
-#include "antares/solver/variable/variable.h"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Simulation
+namespace Antares::Solver::Simulation
 {
 // We use the namespace 'economy' here. That means it is mandatory
 // that adequacy has the same variable (to get the same type)
@@ -135,8 +129,6 @@ int retrieveAverageNTC(const Data::Study& study,
 void finalizeOptimizationStatistics(PROBLEME_HEBDO& problem,
                                     Antares::Solver::Variable::State& state);
 
-} // namespace Simulation
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Simulation
 
 #endif // __SOLVER_SIMULATION_COMMON_ECONOMY_ADEQUACY_H__

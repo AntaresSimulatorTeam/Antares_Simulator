@@ -24,13 +24,7 @@
 #include <antares/study/study.h>
 #include "antares/solver/variable/commons/spatial_aggregates_utils.h"
 
-#include "state.h"
-
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
+namespace Antares::Solver::Variable
 {
 struct VCardAllSetsOfAreas
 {
@@ -217,9 +211,7 @@ public:
 
 }; // class SetsOfAreas
 
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable
 
 #include "setofareas.hxx"
 

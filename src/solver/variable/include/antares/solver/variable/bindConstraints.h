@@ -22,14 +22,9 @@
 
 #include "antares/solver/variable/commons/spatial_aggregates_utils.h"
 
-#include "state.h"
 #include "storage/results.h"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
+namespace Antares::Solver::Variable
 {
 struct VCardAllBindingConstraints
 {
@@ -196,8 +191,6 @@ private:
 
 }; // class Areas
 
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable
 
 #include "bindConstraints.hxx"
