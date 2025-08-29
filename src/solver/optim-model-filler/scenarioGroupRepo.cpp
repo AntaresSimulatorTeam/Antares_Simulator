@@ -23,8 +23,6 @@
 
 #include <boost/algorithm/string.hpp>
 
-#include "antares/logs/logs.h"
-
 namespace Antares::Optimisation
 {
 ScenarioGroupRepository* gScenarioGroupRepository;
@@ -68,9 +66,6 @@ const LinearProblemApi::IScenario& ScenarioGroupRepository::scenario(
     {
         throw DoesNotExist(gId);
     }
-    // logs.notice() << "gId " << gId << " " << scenarioGroups_.at(gId)->getData(0) << " "
-    //               << scenarioGroups_.at(gId)->getData(1);
-
     return *scenarioGroups_.at(gId);
 }
 } // namespace Antares::Optimisation
