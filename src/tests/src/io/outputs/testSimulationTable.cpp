@@ -981,7 +981,6 @@ BOOST_AUTO_TEST_CASE(TemplateFunction_VariableEntries_AllCombinations)
 
 BOOST_AUTO_TEST_SUITE_END()
 
-
 BOOST_AUTO_TEST_SUITE(DataIntegrityTests)
 
 BOOST_AUTO_TEST_CASE(RoundTrip_DataIntegrity)
@@ -1203,7 +1202,6 @@ BOOST_AUTO_TEST_CASE(AlternatingClear_Write_Operations)
 }
 
 BOOST_AUTO_TEST_SUITE_END()
-
 
 BOOST_AUTO_TEST_SUITE(SimulationTableCsvFileTests)
 
