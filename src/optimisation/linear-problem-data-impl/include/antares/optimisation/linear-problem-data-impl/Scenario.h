@@ -21,7 +21,6 @@
 #include <map>
 #include <stdexcept>
 
-#include "antares/logs/logs.h"
 #include "antares/optimisation/linear-problem-api/IScenario.h"
 
 namespace Antares::Optimisation::LinearProblemDataImpl
@@ -29,13 +28,7 @@ namespace Antares::Optimisation::LinearProblemDataImpl
 class Scenario: public LinearProblemApi::IScenario
 {
 public:
-    //    using IScenario::IScenario;
-
-    Scenario(std::string a):
-        IScenario(a)
-    {
-        logs.notice() << "Scenario @" << this << " " << a;
-    }
+    using IScenario::IScenario;
 
     [[nodiscard]] TimeSeriesNumber getData(Year year) const override;
 
