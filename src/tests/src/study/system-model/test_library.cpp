@@ -39,18 +39,20 @@ BOOST_AUTO_TEST_CASE(model_with_same_objects_of_same_id)
 
     // Two parameters with same ID
     model_builder.withId("model");
-    BOOST_CHECK_EXCEPTION(
-      model_builder.withParameters({Parameter("param1", TimeDependent::NO, ScenarioDependent::NO),
-                                    Parameter("param1", TimeDependent::NO, ScenarioDependent::NO)}),
-      Antares::Error::RuntimeError,
-      checkMessage("Model \"model\" contains multiple objects with ID \"param1\"."));
+    model_builder.withParameters({Parameter("param1", TimeDependent::NO, ScenarioDependent::NO),
+                                  Parameter("param1", TimeDependent::NO, ScenarioDependent::NO)});
+    BOOST_CHECK_EXCEPTION(model_builder.build(),
+                          Antares::Error::RuntimeError,
+                          checkMessage(
+                            "Model \"model\" contains multiple objects with ID \"param1\"."));
 
     // Two variables with same ID
     model_builder.withId("model");
     std::vector<Variable> variables;
     variables.push_back({"var1", {}, {}, ValueType::FLOAT, {}, {}});
     variables.push_back({"var1", {}, {}, ValueType::BOOL, {}, {}});
-    BOOST_CHECK_EXCEPTION(model_builder.withVariables(std::move(variables)),
+    model_builder.withVariables(std::move(variables));
+    BOOST_CHECK_EXCEPTION(model_builder.build(),
                           Antares::Error::RuntimeError,
                           checkMessage(
                             "Model \"model\" contains multiple objects with ID \"var1\"."));
@@ -62,7 +64,9 @@ BOOST_AUTO_TEST_CASE(model_with_same_objects_of_same_id)
     Constraint ct2("ctt", {});
     constraints.push_back(std::move(ct1));
     constraints.push_back(std::move(ct2));
-    BOOST_CHECK_EXCEPTION(model_builder.withConstraints(std::move(constraints)),
+
+    model_builder.withConstraints(std::move(constraints));
+    BOOST_CHECK_EXCEPTION(model_builder.build(),
                           Antares::Error::RuntimeError,
                           checkMessage(
                             "Model \"model32\" contains multiple objects with ID \"ctt\"."));
@@ -74,7 +78,8 @@ BOOST_AUTO_TEST_CASE(model_with_same_objects_of_same_id)
     PortType portType("some-port-type", std::move(portFields));
     Port port1("p", portType);
     Port port2("p", portType);
-    BOOST_CHECK_EXCEPTION(model_builder.withPorts({port1, port2}),
+    model_builder.withPorts({port1, port2});
+    BOOST_CHECK_EXCEPTION(model_builder.build(),
                           Antares::Error::RuntimeError,
                           checkMessage("Model \"model\" contains multiple objects with ID \"p\"."));
 
@@ -85,7 +90,9 @@ BOOST_AUTO_TEST_CASE(model_with_same_objects_of_same_id)
     ExtraOutput eo2("output", {});
     outputs.push_back(std::move(eo1));
     outputs.push_back(std::move(eo2));
-    BOOST_CHECK_EXCEPTION(model_builder.withExtraOutputs(std::move(outputs)),
+
+    model_builder.withExtraOutputs(std::move(outputs));
+    BOOST_CHECK_EXCEPTION(model_builder.build(),
                           Antares::Error::RuntimeError,
                           checkMessage(
                             "Model \"model312\" contains multiple objects with ID \"output\"."));
@@ -100,7 +107,8 @@ BOOST_AUTO_TEST_CASE(model_with_different_objects_of_same_id)
     model_builder.withParameters({Parameter("z", TimeDependent::NO, ScenarioDependent::NO)});
     std::vector<Variable> variables;
     variables.push_back({"z", {}, {}, ValueType::FLOAT, {}, {}});
-    BOOST_CHECK_EXCEPTION(model_builder.withVariables(std::move(variables)),
+    model_builder.withVariables(std::move(variables));
+    BOOST_CHECK_EXCEPTION(model_builder.build(),
                           Antares::Error::RuntimeError,
                           checkMessage("Model \"model\" contains multiple objects with ID \"z\"."));
 
@@ -110,19 +118,31 @@ BOOST_AUTO_TEST_CASE(model_with_different_objects_of_same_id)
     std::vector<Constraint> constraints;
     Constraint ct("x", {});
     constraints.push_back(std::move(ct));
-    BOOST_CHECK_EXCEPTION(model_builder.withConstraints(std::move(constraints)),
+    model_builder.withConstraints(std::move(constraints));
+    BOOST_CHECK_EXCEPTION(model_builder.build(),
                           Antares::Error::RuntimeError,
                           checkMessage(
                             "Model \"model32\" contains multiple objects with ID \"x\"."));
+}
+
+BOOST_AUTO_TEST_CASE(model_with_port_ct_same_id)
+{
+    ModelBuilder model_builder;
 
     // Port with same ID as constraint
     model_builder.withId("model");
-    model_builder.withConstraints(std::move(constraints));
     PortField flow("flow");
     std::vector<PortField> portFields = {flow};
     PortType portType("some-port-type", std::move(portFields));
     Port port("x", portType);
-    BOOST_CHECK_EXCEPTION(model_builder.withPorts({port}),
+    model_builder.withPorts({port});
+
+    std::vector<Constraint> constraints;
+    Constraint ct("x", {});
+    constraints.push_back(std::move(ct));
+    model_builder.withConstraints(std::move(constraints));
+
+    BOOST_CHECK_EXCEPTION(model_builder.build(),
                           Antares::Error::RuntimeError,
                           checkMessage("Model \"model\" contains multiple objects with ID \"x\"."));
 
@@ -134,7 +154,8 @@ BOOST_AUTO_TEST_CASE(model_with_different_objects_of_same_id)
     std::vector<ExtraOutput> extraOutputs;
     ExtraOutput eo("y", {});
     extraOutputs.push_back(std::move(eo));
-    BOOST_CHECK_EXCEPTION(model_builder.withExtraOutputs(std::move(extraOutputs)),
+    model_builder.withExtraOutputs(std::move(extraOutputs));
+    BOOST_CHECK_EXCEPTION(model_builder.build(),
                           Antares::Error::RuntimeError,
                           checkMessage(
                             "Model \"model__\" contains multiple objects with ID \"y\"."));

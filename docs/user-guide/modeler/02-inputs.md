@@ -182,7 +182,7 @@ models:
     - **id**: an ID for the extra-output. Must be unique inside the scope of the model, and
       respect [these rules](#rules-for-ids).
     - **expression**: the [expression](#expressions) of the output. Can use all operators, as long as the expression can be 
-      evaluated after optimization.
+      evaluated after optimization. Note that using an output's id in another output's expression is not allowed. 
 
 ### Expressions
 
@@ -402,6 +402,8 @@ components:
         - If the parameter is scenario-dependent, then this is the ID of a scenario-dependent [data serie](#data-series)
         - If the parameter is time and scenario-dependent, then this is the ID of a
           time-and-scenario-dependent [data serie](#data-series)
+      
+        Note that using an expression is not allowed (e.g. neither `3 * 4`, nor `6 * some_time_series`).
 
 ### Port connections
 
