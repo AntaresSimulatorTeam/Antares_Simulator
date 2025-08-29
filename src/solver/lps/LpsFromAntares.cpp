@@ -21,6 +21,9 @@
 
 #include "antares/solver/lps/LpsFromAntares.h"
 
+#include "../../libs/antares/exception/include/antares/exception/LoadingError.hpp"
+#include "../../libs/antares/exception/include/antares/exception/RuntimeError.hpp"
+
 namespace Antares::Solver
 {
 bool LpsFromAntares::empty() const
@@ -43,7 +46,8 @@ const WeeklyDataFromAntares& LpsFromAntares::weeklyData(WeeklyProblemId id) cons
     auto it = weeklyProblems.find(id);
     if (it == weeklyProblems.end())
     {
-        return WeeklyDataFromAntares(); // TODO Better error handling
+        throw Antares::Error::RuntimeError(
+          "No data for the requested weekly problem: year {},  week {}");
     }
     return it->second;
 }
