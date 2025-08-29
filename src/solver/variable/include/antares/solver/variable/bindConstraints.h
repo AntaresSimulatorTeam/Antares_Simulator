@@ -23,6 +23,7 @@
 #include "antares/solver/variable/commons/spatial_aggregates_utils.h"
 
 #include "state.h"
+#include "storage/results.h"
 
 namespace Antares
 {
