@@ -1,6 +1,5 @@
 var NAVTREEINDEX53 =
 {
-"solver_2variable_2include_2antares_2solver_2variable_2adequacy_2links_8h_source.html":[9,0,0,7,12,0,0,0,0,0,1],
 "solver_2variable_2include_2antares_2solver_2variable_2area_8h_source.html":[9,0,0,7,12,0,0,0,0,5],
 "solver_2variable_2include_2antares_2solver_2variable_2area_8hxx_source.html":[9,0,0,7,12,0,0,0,0,6],
 "solver_2variable_2include_2antares_2solver_2variable_2commons_2links_2links_8h_source.html":[9,0,0,7,12,0,0,0,0,1,0,0],
@@ -249,5 +248,6 @@ var NAVTREEINDEX53 =
 "structAntares_1_1Data_1_1WhoseNameContains.html":[8,0,0,4,25],
 "structAntares_1_1Data_1_1WhoseNameContains.html#a2839855f62396e1d1ae314f77b9cd1aa":[8,0,0,4,25,0],
 "structAntares_1_1Data_1_1WhoseNameContains.html#aa0c2a1891676ea02d814d053115b32d0":[8,0,0,4,25,1],
-"structAntares_1_1Date_1_1Calendar_1_1Settings.html":[8,0,0,5,2,0]
+"structAntares_1_1Date_1_1Calendar_1_1Settings.html":[8,0,0,5,2,0],
+"structAntares_1_1Date_1_1Calendar_1_1Settings.html#a23f160f379ccae1da99a369db0959dc6":[8,0,0,5,2,0,2]
 };

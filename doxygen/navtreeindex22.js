@@ -1,7 +1,5 @@
 var NAVTREEINDEX22 =
 {
-"classAntares_1_1MatrixSubColumn_3_01Matrix_3_01float_01_4_1_1ColumnType_01_5_01_4.html":[8,0,0,33],
-"classAntares_1_1MatrixSubColumn_3_01Matrix_3_01float_01_4_1_1ColumnType_01_5_01_4.html#a3bf238140568d426e2ba4599468be386":[8,0,0,33,0],
 "classAntares_1_1MatrixSubColumn_3_01Matrix_3_01float_01_4_1_1ColumnType_01_5_01_4.html#ab31caae73e75482019bd252adf4fbbaf":[8,0,0,33,1],
 "classAntares_1_1MatrixSubColumn_3_01Matrix_3_01float_01_4_1_1ColumnType_01_5_01_4.html#add9ebef6c0074e81dd97dcc122627f5e":[8,0,0,33,2],
 "classAntares_1_1MatrixSubColumn_3_01U_01_5_5_01_4.html":[8,0,0,31],
@@ -249,5 +247,7 @@ var NAVTREEINDEX22 =
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1LinearProblemBuilder.html":[8,0,0,15,0,7],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1LinearProblemBuilder.html#a0577bb1b27cc612412ff3882ae4a1d7f":[8,0,0,15,0,7,0],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1LinearProblemBuilder.html#ae8d38bfaef5a8e0f583b933b4c95c5a6":[8,0,0,15,0,7,1],
-"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1LinearProblemFiller.html":[8,0,0,15,0,8]
+"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1LinearProblemFiller.html":[8,0,0,15,0,8],
+"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1LinearProblemFiller.html#a2b2434ecadcc3551289aeef2e6ca3c8c":[8,0,0,15,0,8,1],
+"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1LinearProblemFiller.html#a2d6f1c7fa6826e16f0fcf281b6d34d59":[8,0,0,15,0,8,0]
 };

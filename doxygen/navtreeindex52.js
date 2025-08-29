@@ -1,6 +1,5 @@
 var NAVTREEINDEX52 =
 {
-"optimization_8h_source.html":[9,0,0,11,2,2,8,3,0],
 "optimization__statistics_8h_source.html":[9,0,0,7,11,0,0,0,0,4],
 "ortools__quadratic__wrapper_8h_source.html":[9,0,0,7,11,0,0,0,0,5],
 "ortools__utils_8h_source.html":[9,0,0,7,11,0,0,0,0,6],
@@ -249,5 +248,6 @@ var NAVTREEINDEX52 =
 "solver_2variable_2include_2antares_2solver_2variable_2adequacy_2all_8h.html#adc6eaa76997f99cf3790ca2dc8be2d0e":[7,0,0,25,5,0,5],
 "solver_2variable_2include_2antares_2solver_2variable_2adequacy_2all_8h_source.html":[9,0,0,7,12,0,0,0,0,0,0],
 "solver_2variable_2include_2antares_2solver_2variable_2adequacy_2links_8h.html#ac7862558b93b2c0fa2c6765424d20a7e":[7,0,0,25,5,0,7],
-"solver_2variable_2include_2antares_2solver_2variable_2adequacy_2links_8h.html#ae3b0a2b2f36640f873adddb9386f9f75":[7,0,0,25,5,0,6]
+"solver_2variable_2include_2antares_2solver_2variable_2adequacy_2links_8h.html#ae3b0a2b2f36640f873adddb9386f9f75":[7,0,0,25,5,0,6],
+"solver_2variable_2include_2antares_2solver_2variable_2adequacy_2links_8h_source.html":[9,0,0,7,12,0,0,0,0,0,1]
 };

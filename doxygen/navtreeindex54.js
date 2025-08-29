@@ -1,6 +1,5 @@
 var NAVTREEINDEX54 =
 {
-"structAntares_1_1Date_1_1Calendar_1_1Settings.html#a23f160f379ccae1da99a369db0959dc6":[8,0,0,5,2,0,2],
 "structAntares_1_1Date_1_1Calendar_1_1Settings.html#a576c127cbbe0448b583e186a8dabac1a":[8,0,0,5,2,0,1],
 "structAntares_1_1Date_1_1Calendar_1_1Settings.html#a74af88b90038e83fb25c558efa1d9178":[8,0,0,5,2,0,3],
 "structAntares_1_1Date_1_1Calendar_1_1Settings.html#a7fab86c6a9e2d7cd718e66af498fa662":[8,0,0,5,2,0,0],
@@ -249,5 +248,6 @@ var NAVTREEINDEX54 =
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#a9e39464214dd3554a1719085d8918e54":[8,0,0,18,4,0,0,4],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#ac0b0985d8f11135aa86fd4bfd956ae09":[8,0,0,18,4,0,0,1],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#ace52c792df435709cd66c6067b927e03":[8,0,0,18,4,0,0,2],
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html":[8,0,0,18,4,0,2]
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html":[8,0,0,18,4,0,2],
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#a1d2dfffc8dbf3e6b2debbac2abef063d":[8,0,0,18,4,0,2,0]
 };

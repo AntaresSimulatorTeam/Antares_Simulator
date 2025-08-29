@@ -1,7 +1,5 @@
 var NAVTREEINDEX5 =
 {
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ATimeSeries.html#acaeba3ac4cc855e02ad42b092a730a29":[8,0,0,2,0,0,23,15],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ATimeSeries.html#ad12b7b91b66f437df0efc7ea13d53731":[8,0,0,2,0,0,23,14],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ATimeSeries.html#ad25c25923ed206f164f7c4e48bd70ab3":[8,0,0,2,0,0,23,12],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ATimeSeries.html#ad5ee37914b11305661f2b24d7f95037a":[8,0,0,2,0,0,23,6],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ATimeSeries.html#ad65b2dc1cdd413960e61484d38e69f67":[8,0,0,2,0,0,23,5],
@@ -249,5 +247,7 @@ var NAVTREEINDEX5 =
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CorrelationMatrix_1_1IDatasource.html":[8,0,0,2,0,0,71,0],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CorrelationMatrix_1_1IDatasource.html#a035188c692f1fced0b8978ccc9c24dec":[8,0,0,2,0,0,71,0,2],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CorrelationMatrix_1_1IDatasource.html#a09678be77e836efa417673853dbe8ec2":[8,0,0,2,0,0,71,0,0],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CorrelationMatrix_1_1IDatasource.html#a09c8288dd43bd505c64fd1bac47b6e94":[8,0,0,2,0,0,71,0,1]
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CorrelationMatrix_1_1IDatasource.html#a09c8288dd43bd505c64fd1bac47b6e94":[8,0,0,2,0,0,71,0,1],
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CorrelationMatrix_1_1IDatasource.html#a10ea45f5faae39605408ecdae8e65d08":[8,0,0,2,0,0,71,0,5],
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CorrelationMatrix_1_1IDatasource.html#a221f84c5be18576af3c8aa0b4bd85f47":[8,0,0,2,0,0,71,0,9]
 };

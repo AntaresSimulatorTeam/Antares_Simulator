@@ -1,9 +1,5 @@
 var NAVTREEINDEX1 =
 {
-"FictitiousLoad_8h_source.html":[9,0,0,7,7,1,0,0,0,1,16],
-"FileTreeStudyLoader_8h_source.html":[9,0,0,4,0,9,0,0,0,0],
-"FileWriter_8h_source.html":[9,0,0,5,3],
-"Fileloader_8h_source.html":[9,0,0,5,0,0,0,0,0,0,0],
 "FillerContext_8h_source.html":[9,0,0,9,2,2,0,0,0],
 "FinalStockEquivalent_8h_source.html":[9,0,0,7,7,1,0,0,0,1,17],
 "FinalStockExpression_8h_source.html":[9,0,0,7,7,1,0,0,0,1,18],
@@ -96,6 +92,8 @@ var NAVTREEINDEX1 =
 "PMinDispatchableGeneration_8h_source.html":[9,0,0,7,7,1,0,0,0,1,40],
 "PMinMaxDispatchableGenerationGroup_8h_source.html":[9,0,0,7,7,1,0,0,0,1,41],
 "ParameterNode_8h_source.html":[9,0,0,2,1,0,0,1,15],
+"ParentNode_8h.html#a8507ee438f30dbf42296c586fc349a08":[7,0,0,10,0,29],
+"ParentNode_8h.html#adf0eb6c8fc10070cdb224c79244e5227":[7,0,0,10,0,28],
 "ParentNode_8h_source.html":[9,0,0,2,1,0,0,1,16],
 "PartialKey_8h_source.html":[9,0,0,7,6,0,0,0,0,4],
 "PortFieldNode_8h_source.html":[9,0,0,2,1,0,0,1,17],
@@ -249,5 +247,7 @@ var NAVTREEINDEX1 =
 "area-link-renderer_8cpp.html#a2512ece3407777beb49b3470a17d4ab8":[7,0,0,22,2,6],
 "area-link-renderer_8h_source.html":[9,0,0,11,2,2,9,0,0],
 "area_2filtering_8h_source.html":[9,0,0,11,0,0,0,0,7],
-"args__to__utf8_8h_source.html":[9,0,0,4,0,1,0,0,0,0]
+"args__to__utf8_8h_source.html":[9,0,0,4,0,1,0,0,0,0],
+"avail-dispatchable-generation_8h_source.html":[9,0,0,7,12,0,0,0,0,2,3],
+"availability_8cpp.html#a3e63ef1830806b4386115677e0cc8113":[7,0,0,28,38]
 };

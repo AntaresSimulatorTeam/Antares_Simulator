@@ -1,6 +1,5 @@
 var NAVTREEINDEX60 =
 {
-"structFlowDissociationData.html":[8,0,133],
 "structFlowDissociationData.html#a526ad2a342723bea892e5a06267220eb":[8,0,133,2],
 "structFlowDissociationData.html#ab0d56cc1466bdb3cdbc5afb05bb28538":[8,0,133,3],
 "structFlowDissociationData.html#adada92faf613622f6e4c4a7b240ff696":[8,0,133,1],
@@ -249,5 +248,6 @@ var NAVTREEINDEX60 =
 "structPRODUCTION__THERMIQUE.html#ab2161d4a4de992d2edd748348d84f798":[8,0,231,0],
 "structPRODUCTION__THERMIQUE__OPTIMALE.html":[8,0,232],
 "structPRODUCTION__THERMIQUE__OPTIMALE.html#a29f652fcbb30d5f9161ba978f146111d":[8,0,232,2],
-"structPRODUCTION__THERMIQUE__OPTIMALE.html#a4d608cd7ee6333ee686343aef5a69d9f":[8,0,232,1]
+"structPRODUCTION__THERMIQUE__OPTIMALE.html#a4d608cd7ee6333ee686343aef5a69d9f":[8,0,232,1],
+"structPRODUCTION__THERMIQUE__OPTIMALE.html#a50f511fdfd022e5bd517840c243d6590":[8,0,232,0]
 };

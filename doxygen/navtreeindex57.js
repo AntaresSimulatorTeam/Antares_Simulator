@@ -1,6 +1,5 @@
 var NAVTREEINDEX57 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#ae75c526742c65aca4a309c6c16561506":[8,0,0,18,4,6,0,9,1],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#aed37a620f52b81f5ed215d2f4b3bd18a":[8,0,0,18,4,6,0,9,6],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation_1_1Data.html":[8,0,0,18,4,6,0,9,0],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation_1_1Data.html#a09178644b4881df8b3f53976c1d60fb1":[8,0,0,18,4,6,0,9,0,1],
@@ -249,5 +248,6 @@ var NAVTREEINDEX57 =
 "structAntares_1_1Window_1_1Inspector_1_1PStudyPlaylist.html#a6bac110ef6483c110d26b6a9ead3367d":[8,0,0,23,1,10,0],
 "structAntares_1_1Window_1_1Inspector_1_1PStudySynthesis.html":[8,0,0,23,1,12],
 "structAntares_1_1Window_1_1Inspector_1_1PStudySynthesis.html#a7d4db039e78611084632dda7724081a2":[8,0,0,23,1,12,0],
-"structAntares_1_1Window_1_1Inspector_1_1PStudyThematicTrimming.html":[8,0,0,23,1,14]
+"structAntares_1_1Window_1_1Inspector_1_1PStudyThematicTrimming.html":[8,0,0,23,1,14],
+"structAntares_1_1Window_1_1Inspector_1_1PStudyThematicTrimming.html#a492c2e57b60dbba89fd0edc10e5282fa":[8,0,0,23,1,14,0]
 };

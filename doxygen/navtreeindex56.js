@@ -1,6 +1,5 @@
 var NAVTREEINDEX56 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html#adc09543eb6b63a969bd71865ce10a7f0":[8,0,0,18,4,4,74,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html":[8,0,0,18,4,4,76],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html#a22d42613b62d39f9f21c62b093a447f0":[8,0,0,18,4,4,76,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html#a302633664a5a202db83a41b76cdf786c":[8,0,0,18,4,4,76,1],
@@ -249,5 +248,6 @@ var NAVTREEINDEX56 =
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a7eced0a5c80c17d3b3fd318d40662509":[8,0,0,18,4,6,0,9,10],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#abd0753b91b382df30b7c6e028d8684a5":[8,0,0,18,4,6,0,9,9],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#ada37935b4e18bad9341852d49456baf0":[8,0,0,18,4,6,0,9,5],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#ae3ac30a527c9f15bc40503e58added6b":[8,0,0,18,4,6,0,9,2]
+"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#ae3ac30a527c9f15bc40503e58added6b":[8,0,0,18,4,6,0,9,2],
+"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#ae75c526742c65aca4a309c6c16561506":[8,0,0,18,4,6,0,9,1]
 };
