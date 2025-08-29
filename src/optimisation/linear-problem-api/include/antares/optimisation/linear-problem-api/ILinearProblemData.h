@@ -118,7 +118,6 @@ public:
                                          unsigned timeSeriesNumber,
                                          unsigned hour) const
       = 0;
-    virtual ~ILinearProblemData() = default;
 };
 
 } // namespace Antares::Optimisation::LinearProblemApi
