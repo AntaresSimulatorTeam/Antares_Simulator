@@ -81,4 +81,59 @@ inline double min_on_subrange(std::vector<double>&& v, unsigned h, unsigned H)
     return *std::ranges::min_element(subset);
 }
 
+
+template<typename T>
+class CyclicIterator
+{
+public:
+    CyclicIterator(std::vector<T>& v);
+    CyclicIterator& operator++(int);
+    T& operator*();
+    CyclicIterator& delete_current();
+
+private:
+    void back_to_begin();
+
+    std::vector<T>& v_;
+    std::vector<T>::iterator it_;
+};
+
+template<typename T>
+CyclicIterator<T>::CyclicIterator(std::vector<T>& v):
+    v_(v),
+    it_(v.begin())
+{
+}
+
+template<typename T>
+CyclicIterator<T>& CyclicIterator<T>::operator++(int)
+{
+    it_++;
+    back_to_begin();
+    return *this;
+}
+
+template<typename T>
+T& CyclicIterator<T>::operator*()
+{
+    return *it_;
+}
+
+template<typename T>
+void CyclicIterator<T>::back_to_begin()
+{
+    if (it_ == v_.end())
+    {
+        it_ = v_.begin();
+    }
+}
+
+template<typename T>
+CyclicIterator<T>& CyclicIterator<T>::delete_current()
+{
+    it_ = v_.erase(it_, it_ + 1);
+    back_to_begin();
+    return *this;
+}
+
 }; // namespace Antares::Solver::Simulation

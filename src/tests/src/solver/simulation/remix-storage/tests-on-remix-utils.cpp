@@ -102,7 +102,7 @@ BOOST_AUTO_TEST_CASE(five_storage_added_to_list___storage_sorted_depending_on_as
 
 BOOST_AUTO_TEST_SUITE_END()
 
-BOOST_AUTO_TEST_SUITE(utils)
+BOOST_AUTO_TEST_SUITE(min_on_subrange_unit_tests)
 
 BOOST_AUTO_TEST_CASE(between_hour_1_and_4___vector_min_is_2)
 {
@@ -147,6 +147,96 @@ BOOST_AUTO_TEST_CASE(hour_H_too_large___exception_raised)
     BOOST_CHECK_EXCEPTION(min_on_subrange({1., 2.}, -1, 2),
                           std::invalid_argument,
                           checkMessage(err_msg));
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+
+BOOST_AUTO_TEST_SUITE(cyclic_iterator_unit_tests)
+
+BOOST_AUTO_TEST_CASE(at_construction__cyclic_iterator_points_to_first_element)
+{
+    std::vector<int> v = {1, 2, 3};
+    CyclicIterator<int> cyclic_it(v);
+    BOOST_CHECK_EQUAL(*cyclic_it, v[0]);
+}
+
+BOOST_AUTO_TEST_CASE(calling_star_operator_allows_changing_underlying_element)
+{
+    std::vector<int> v = {1, 2, 3};
+    CyclicIterator<int> cyclic_it(v);
+    *cyclic_it = 7;
+    BOOST_CHECK_EQUAL(v[0], 7);
+}
+
+BOOST_AUTO_TEST_CASE(incrementing_iterator_makes_it_point_on_next_element)
+{
+    std::vector<int> v = {1, 2, 3};
+    CyclicIterator<int> cyclic_it(v);
+    cyclic_it++;
+    BOOST_CHECK_EQUAL(*cyclic_it, v[1]);
+}
+
+BOOST_AUTO_TEST_CASE(incrementing_iterator_enough_times_makes_it_point_back_to_vector_begin)
+{
+    std::vector<int> v = {1, 2};
+    CyclicIterator<int> cyclic_it(v);
+    cyclic_it++;
+    cyclic_it++;
+
+    BOOST_CHECK_EQUAL(*cyclic_it, v[0]);
+}
+
+BOOST_AUTO_TEST_CASE(calling_delete_current_on_fresh_iterator_deletes_the_first_element)
+{
+    std::vector<int> v = {1, 2, 3};
+    CyclicIterator<int> cyclic_it(v);
+    cyclic_it.delete_current();
+    
+    std::vector<int> expected = {2, 3};
+    BOOST_CHECK(v == expected);
+    BOOST_CHECK_EQUAL(*cyclic_it, 2);
+}
+
+BOOST_AUTO_TEST_CASE(when_calling_delete_current_on_last_element)
+{
+    std::vector<int> v = {1, 2, 3};
+    CyclicIterator<int> cyclic_it(v);
+    cyclic_it++;
+    cyclic_it++; // Now cyclic iterator point at last element
+    cyclic_it.delete_current();
+
+    std::vector<int> expected = {1, 2};
+    BOOST_CHECK(v == expected);
+    BOOST_CHECK_EQUAL(*cyclic_it, v[0]);
+}
+
+BOOST_AUTO_TEST_CASE(deleting_an_element_in_the_middle_of_the_vector)
+{
+    std::vector<int> v = {1, 2, 3, 4, 5};
+    CyclicIterator<int> cyclic_it(v);
+    cyclic_it++;
+    cyclic_it++;
+    cyclic_it.delete_current();
+
+    std::vector<int> expected = {1, 2, 4, 5};
+    BOOST_CHECK(v == expected);
+    BOOST_CHECK_EQUAL(*cyclic_it, 4);
+}
+
+BOOST_AUTO_TEST_CASE(deleting_an_element_with_itrator_keeps_this_iterator_valid)
+{
+    std::vector<int> v = {1, 2, 3, 4};
+    CyclicIterator<int> cyclic_it(v);
+    cyclic_it++;
+    cyclic_it++;
+    cyclic_it.delete_current();
+
+    // Now v = {1, 2, 4} and cyclic_it points to 4
+    *cyclic_it = 7;
+
+    std::vector<int> expected = {1, 2, 7};
+    BOOST_CHECK(v == expected);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
