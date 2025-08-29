@@ -73,7 +73,7 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
         }
         else
         {
-            update(exchange, *cyclic_it, UnsupE, TotalGen);
+            update(exchange, **cyclic_it, UnsupE, TotalGen);
             cyclic_it++;
         }
     }

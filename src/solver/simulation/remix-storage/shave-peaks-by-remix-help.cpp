@@ -76,7 +76,7 @@ Exchange searchForExhange(const std::set<unsigned>& validHours,
 }
 
 void update(Exchange& exchange,
-            std::shared_ptr<IStorageForRemix> storage,
+            IStorageForRemix& storage,
             std::vector<double>& UnsupE,
             std::vector<double>& TotalGen)
 {
@@ -84,9 +84,9 @@ void update(Exchange& exchange,
     unsigned hourOfMinGen = exchange.hourOfMinGen.value();
     unsigned hourOfMaxGen = exchange.hourOfMaxGen.value();
 
-    storage->withdrawal()[hourOfMaxGen] -= amount;
-    storage->withdrawal()[hourOfMinGen] += amount;
-    storage->update();
+    storage.withdrawal()[hourOfMaxGen] -= amount;
+    storage.withdrawal()[hourOfMinGen] += amount;
+    storage.update();
 
     UnsupE[hourOfMaxGen] += amount;
     UnsupE[hourOfMinGen] -= amount;
