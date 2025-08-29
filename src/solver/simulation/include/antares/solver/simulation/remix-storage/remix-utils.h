@@ -67,17 +67,17 @@ inline double min_on_subrange(std::vector<double>&& v, unsigned h, unsigned H)
         throw std::invalid_argument("call min_on_subrange on an empty vector");
     }
 
-    if (H > v.size() || h > v.size())
+    if (H >= v.size() || h >= v.size())
     {
         throw std::invalid_argument("call of min_on_subrange : hour out of bound");
     }
 
-    if (h > H)
+    if (h >= H)
     {
         throw std::invalid_argument("call min_on_subrange with inconsistant hours");
     }
 
-    std::span<double> subset(v.begin() + h, v.begin() + H + 1);
+    std::span<double> subset(v.begin() + h, v.begin() + H);
     return *std::ranges::min_element(subset);
 }
 

@@ -104,19 +104,19 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(min_on_subrange_unit_tests)
 
-BOOST_AUTO_TEST_CASE(between_hour_1_and_4___vector_min_is_2)
+BOOST_AUTO_TEST_CASE(when_range_increases_min_on_subrange_takes_first_element_of_subrange)
 {
-    BOOST_CHECK_EQUAL(min_on_subrange({1, 2, 3, 4, 5}, 1, 4), 2.);
+    BOOST_CHECK_EQUAL(min_on_subrange({1, 2, 3, 4, 5}, 1, 4), 2);
 }
 
-BOOST_AUTO_TEST_CASE(between_hour_2_and_4___vector_min_is_half_one)
+BOOST_AUTO_TEST_CASE(when_range_decreases_then_min_on_subrange_excludes_last_element_of_range)
 {
-    BOOST_CHECK_EQUAL(min_on_subrange({ 5, 4, 0.6, 1.5, 0.5, 6}, 2, 4), 0.5);
+    BOOST_CHECK_EQUAL(min_on_subrange({5, 4, 3, 2, 1}, 0, 2), 4);
 }
 
-BOOST_AUTO_TEST_CASE(hours_h_and_H_are_equals___vector_min_is_defined)
+BOOST_AUTO_TEST_CASE(min_on_subrange_exclude_last_element_of_range)
 {
-    BOOST_CHECK_EQUAL(min_on_subrange({1., 2., 3.}, 2, 2), 3.);
+    BOOST_CHECK_EQUAL(min_on_subrange({5, 4, 0.6, 1.5, 0.5, 6}, 2, 4), 0.6);
 }
 
 BOOST_AUTO_TEST_CASE(vector_is_empty___exception_raised)
@@ -125,10 +125,18 @@ BOOST_AUTO_TEST_CASE(vector_is_empty___exception_raised)
     BOOST_CHECK_EXCEPTION(min_on_subrange({}, 2, 7), std::invalid_argument, checkMessage(err_msg));
 }
 
+BOOST_AUTO_TEST_CASE(hours_h_and_H_are_equals___vector_min_is_not_defined)
+{
+    std::string err_msg = "call min_on_subrange with inconsistant hours";
+    BOOST_CHECK_EXCEPTION(min_on_subrange({1, 2, 3}, 2, 2),
+                          std::invalid_argument,
+                          checkMessage(err_msg));
+}
+
 BOOST_AUTO_TEST_CASE(hour_h_greater_than_H___exception_raised)
 {
     std::string err_msg = "call min_on_subrange with inconsistant hours";
-    BOOST_CHECK_EXCEPTION(min_on_subrange({1., 2.}, 1, 0),
+    BOOST_CHECK_EXCEPTION(min_on_subrange({1, 2}, 1, 0),
                           std::invalid_argument,
                           checkMessage(err_msg));
 }
@@ -136,7 +144,7 @@ BOOST_AUTO_TEST_CASE(hour_h_greater_than_H___exception_raised)
 BOOST_AUTO_TEST_CASE(hour_h_negative___exception_raised)
 {
     std::string err_msg = "call of min_on_subrange : hour out of bound";
-    BOOST_CHECK_EXCEPTION(min_on_subrange({1., 2.}, -1, 1),
+    BOOST_CHECK_EXCEPTION(min_on_subrange({1, 2}, -1, 1),
                           std::invalid_argument,
                           checkMessage(err_msg));
 }
@@ -144,13 +152,12 @@ BOOST_AUTO_TEST_CASE(hour_h_negative___exception_raised)
 BOOST_AUTO_TEST_CASE(hour_H_too_large___exception_raised)
 {
     std::string err_msg = "call of min_on_subrange : hour out of bound";
-    BOOST_CHECK_EXCEPTION(min_on_subrange({1., 2.}, -1, 2),
+    BOOST_CHECK_EXCEPTION(min_on_subrange({1, 2}, -1, 2),
                           std::invalid_argument,
                           checkMessage(err_msg));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
-
 
 BOOST_AUTO_TEST_SUITE(cyclic_iterator_unit_tests)
 
@@ -192,7 +199,7 @@ BOOST_AUTO_TEST_CASE(calling_delete_current_on_fresh_iterator_deletes_the_first_
     std::vector<int> v = {1, 2, 3};
     CyclicIterator<int> cyclic_it(v);
     cyclic_it.delete_current();
-    
+
     std::vector<int> expected = {2, 3};
     BOOST_CHECK(v == expected);
     BOOST_CHECK_EQUAL(*cyclic_it, 2);
