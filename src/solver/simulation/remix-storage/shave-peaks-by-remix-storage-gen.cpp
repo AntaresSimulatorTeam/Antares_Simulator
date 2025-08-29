@@ -43,9 +43,7 @@ void checkInput(const std::vector<double>& Load,
 auto removeStorageFromList(std::vector<std::shared_ptr<IStorageForRemix>>::iterator storage,
                            ListStorageForRemix& listStorage)
 {
-    auto d = std::distance(listStorage.begin(), storage);
-    listStorage.erase(storage, storage + 1);
-    return listStorage.begin() + d;
+    return listStorage.erase(storage, storage + 1);
 }
 
 void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
