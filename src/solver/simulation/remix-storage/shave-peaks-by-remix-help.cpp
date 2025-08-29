@@ -9,7 +9,7 @@ constexpr double eps = 1e-3;
 namespace Antares::Solver::Simulation
 {
 
-bool Exchange::valid()
+bool Exchange::isValid()
 {
     return amount > eps && hourOfMinGen.has_value() && hourOfMaxGen.has_value();
 }

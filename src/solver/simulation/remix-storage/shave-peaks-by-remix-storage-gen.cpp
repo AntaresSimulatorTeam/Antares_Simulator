@@ -67,7 +67,7 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
         updateValidHours(validHours, *cyclic_it, UnsupEinit);
         auto exchange = searchForExhange(validHours, TotalGen, UnsupE, *cyclic_it);
 
-        if (!exchange.valid())
+        if (!exchange.isValid())
         {
             cyclic_it.delete_current();
         }
