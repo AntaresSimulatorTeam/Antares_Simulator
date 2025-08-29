@@ -8,8 +8,6 @@
 #include "antares/solver/simulation/remix-storage/remix-utils.h"
 #include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-help.h"
 
-namespace rng = std::ranges;
-
 constexpr unsigned maxNbLoops = 1000;
 const std::string error_msg_start = "Remix storage input : ";
 
@@ -29,7 +27,7 @@ void checkInput(const std::vector<double>& Load,
                                  DTG_MRG.size(),
                                  storageGen.size()};
 
-    if (!rng::all_of(sizes, [&sizes](const size_t s) { return s == sizes.front(); }))
+    if (!std::ranges::all_of(sizes, [&sizes](const size_t s) { return s == sizes.front(); }))
     {
         throw std::invalid_argument(error_msg_start + "arrays of different sizes");
     }

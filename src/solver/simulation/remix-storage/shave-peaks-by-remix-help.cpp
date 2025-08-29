@@ -2,7 +2,6 @@
 
 #include <ranges>
 
-namespace rng = std::ranges;
 namespace vws = std::views;
 
 constexpr double eps = 1e-3;
@@ -52,7 +51,7 @@ Exchange searchForExhange(const std::set<unsigned>& validHours,
 
     while (!validHoursForMin.empty())
     {
-        auto hourOfMinGen = rng::min_element(validHoursForMin, {}, totalGenProjection);
+        auto hourOfMinGen = std::ranges::min_element(validHoursForMin, {}, totalGenProjection);
 
         std::set<unsigned> validHoursForMax(validHours);
         double totalGenMin = TotalGen[*hourOfMinGen];
@@ -60,7 +59,7 @@ Exchange searchForExhange(const std::set<unsigned>& validHours,
 
         while (!validHoursForMax.empty())
         {
-            auto hourOfMaxGen = rng::max_element(validHoursForMax, {}, totalGenProjection);
+            auto hourOfMaxGen = std::ranges::max_element(validHoursForMax, {}, totalGenProjection);
 
             double maxVariationGen = TotalGen[*hourOfMaxGen] - totalGenMin;
             auto exchange = computeExchange(*hourOfMinGen, *hourOfMaxGen, maxVariationGen, storage);
