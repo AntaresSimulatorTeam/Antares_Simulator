@@ -28,6 +28,7 @@
 #include <antares/exception/UnfeasibleProblemError.hpp>
 #include <antares/logs/logs.h>
 #include <antares/study/study.h>
+#include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/study/simulation.h"
 
 namespace Antares::Solver::Simulation

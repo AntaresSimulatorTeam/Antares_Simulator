@@ -23,6 +23,7 @@
 
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/UnfeasibleProblemError.hpp>
+#include "antares/solver/optimisation/opt_fonctions.h"
 
 using namespace Yuni;
 using Antares::Constants::nbHoursInAWeek;
