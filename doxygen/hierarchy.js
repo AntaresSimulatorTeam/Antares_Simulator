@@ -141,8 +141,8 @@ var hierarchy =
       [ "Antares::Component::Datagrid::Renderer::classicColumn", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1classicColumn.html", null ],
       [ "Antares::Component::Datagrid::Renderer::thermalColumn", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1thermalColumn.html", null ]
     ] ],
-    [ "commonFixture", "structcommonFixture.html", null ],
     [ "CommonFixture", "structCommonFixture.html", null ],
+    [ "commonFixture", "structcommonFixture.html", null ],
     [ "Antares::Data::CompareAreaName", "structAntares_1_1Data_1_1CompareAreaName.html", null ],
     [ "Antares::Data::CompareBindingConstraintName", "structAntares_1_1Data_1_1CompareBindingConstraintName.html", null ],
     [ "Antares::Forms::CompareBySimulationMode", "structAntares_1_1Forms_1_1CompareBySimulationMode.html", null ],
@@ -281,11 +281,7 @@ var hierarchy =
     [ "Antares::Solver::Optimization::CsrQuadraticProblem", "classAntares_1_1Solver_1_1Optimization_1_1CsrQuadraticProblem.html", null ],
     [ "CsvCreationFixture", "structCsvCreationFixture.html", null ],
     [ "cucumber_collector.cucumberCollector", "classcucumber__collector_1_1cucumberCollector.html", null ],
-    [ "CumulationConstraint", "classCumulationConstraint.html", [
-      [ "InjectionCumulationConstraint", "classInjectionCumulationConstraint.html", null ],
-      [ "NettingCumulationConstraint", "classNettingCumulationConstraint.html", null ],
-      [ "WithdrawalCumulationConstraint", "classWithdrawalCumulationConstraint.html", null ]
-    ] ],
+    [ "CumulationConstraint", "structCumulationConstraint.html", null ],
     [ "Antares::Data::AdequacyPatch::CurtailmentSharing", "classAntares_1_1Data_1_1AdequacyPatch_1_1CurtailmentSharing.html", null ],
     [ "Antares::Cycle", "classAntares_1_1Cycle.html", null ],
     [ "Antares::Data::DailyDemand", "structAntares_1_1Data_1_1DailyDemand.html", null ],

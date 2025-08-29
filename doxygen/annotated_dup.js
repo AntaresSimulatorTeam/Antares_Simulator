@@ -1474,8 +1474,8 @@ var annotated_dup =
     [ "BOUND_FLEX_UP_NODE", "structBOUND__FLEX__UP__NODE.html", "structBOUND__FLEX__UP__NODE" ],
     [ "CellColumnData", "classCellColumnData.html", "classCellColumnData" ],
     [ "CmdLineOptionsFixture", "structCmdLineOptionsFixture.html", "structCmdLineOptionsFixture" ],
-    [ "commonFixture", "structcommonFixture.html", "structcommonFixture" ],
     [ "CommonFixture", "structCommonFixture.html", "structCommonFixture" ],
+    [ "commonFixture", "structcommonFixture.html", "structcommonFixture" ],
     [ "ComparisonFixture", "structComparisonFixture.html", "structComparisonFixture" ],
     [ "ComponentBuilderCreationFixture", "structComponentBuilderCreationFixture.html", "structComponentBuilderCreationFixture" ],
     [ "ComponentToAreaConnectionFillerFixture", "structComponentToAreaConnectionFillerFixture.html", "structComponentToAreaConnectionFillerFixture" ],
@@ -1506,7 +1506,7 @@ var annotated_dup =
     [ "CsrFlowDissociation", "classCsrFlowDissociation.html", "classCsrFlowDissociation" ],
     [ "CsrFlowDissociationData", "structCsrFlowDissociationData.html", "structCsrFlowDissociationData" ],
     [ "CsvCreationFixture", "structCsvCreationFixture.html", "structCsvCreationFixture" ],
-    [ "CumulationConstraint", "classCumulationConstraint.html", "classCumulationConstraint" ],
+    [ "CumulationConstraint", "structCumulationConstraint.html", "structCumulationConstraint" ],
     [ "CustomErrorListener", "classCustomErrorListener.html", null ],
     [ "DataFile", "classDataFile.html", "classDataFile" ],
     [ "DefaultScenario", "classDefaultScenario.html", "classDefaultScenario" ],
@@ -1566,7 +1566,6 @@ var annotated_dup =
     [ "HydroPowerSmoothingUsingVariationSum", "classHydroPowerSmoothingUsingVariationSum.html", "classHydroPowerSmoothingUsingVariationSum" ],
     [ "I_MPS_writer", "classI__MPS__writer.html", "classI__MPS__writer" ],
     [ "IItem", "classIItem.html", "classIItem" ],
-    [ "InjectionCumulationConstraint", "classInjectionCumulationConstraint.html", "classInjectionCumulationConstraint" ],
     [ "InMemoryLoader", "classInMemoryLoader.html", "classInMemoryLoader" ],
     [ "InMemoryStudyLoader", "classInMemoryStudyLoader.html", "classInMemoryStudyLoader" ],
     [ "InMemoryWriter", "classInMemoryWriter.html", "classInMemoryWriter" ],
@@ -1613,7 +1612,6 @@ var annotated_dup =
     [ "NbUnitsOutageLessThanNbUnitsStop", "classNbUnitsOutageLessThanNbUnitsStop.html", "classNbUnitsOutageLessThanNbUnitsStop" ],
     [ "NbUnitsOutageLessThanNbUnitsStopData", "structNbUnitsOutageLessThanNbUnitsStopData.html", "structNbUnitsOutageLessThanNbUnitsStopData" ],
     [ "NbUnitsOutageLessThanNbUnitsStopGroup", "classNbUnitsOutageLessThanNbUnitsStopGroup.html", "classNbUnitsOutageLessThanNbUnitsStopGroup" ],
-    [ "NettingCumulationConstraint", "classNettingCumulationConstraint.html", "classNettingCumulationConstraint" ],
     [ "NonCopyableFunctionObject", "structNonCopyableFunctionObject.html", "structNonCopyableFunctionObject" ],
     [ "nullMPSwriter", "classnullMPSwriter.html", "classnullMPSwriter" ],
     [ "NullProvider", "classNullProvider.html", "classNullProvider" ],
@@ -1719,6 +1717,5 @@ var annotated_dup =
     [ "Variable", "classVariable.html", "classVariable" ],
     [ "VariableNamer", "classVariableNamer.html", "classVariableNamer" ],
     [ "VARIABLES_DUALES_INTERCONNEXIONS", "structVARIABLES__DUALES__INTERCONNEXIONS.html", "structVARIABLES__DUALES__INTERCONNEXIONS" ],
-    [ "Vec3", "structVec3.html", "structVec3" ],
-    [ "WithdrawalCumulationConstraint", "classWithdrawalCumulationConstraint.html", "classWithdrawalCumulationConstraint" ]
+    [ "Vec3", "structVec3.html", "structVec3" ]
 ];
