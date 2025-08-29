@@ -669,14 +669,20 @@ private:
         return nullptr;
     }
 
+    static IMipVariable* RandomVariable()
+    {
+        static MockMipVariable mockMipVariable(12.25, MipBasisStatus::AT_LOWER_BOUND, false);
+        return &mockMipVariable;
+    }
+
     [[nodiscard]] IMipVariable* getVariable(std::size_t index) const override
     {
-        return nullptr;
+        return RandomVariable();
     }
 
     [[nodiscard]] IMipVariable* lookupVariable(const std::string& name) const override
     {
-        return nullptr;
+        return RandomVariable();
     }
 
     [[nodiscard]] int variableCount() const override
@@ -948,6 +954,7 @@ private:
 BOOST_AUTO_TEST_CASE(TemplateFunction_VariableEntries_AllCombinations)
 {
     SimulationTableCsv table;
+    MockLinearProblem linearProblem(true);
     build();
     const FillContext fillContext(0, 9, 0, 9, 0); // 10 time steps
 
@@ -970,6 +977,14 @@ BOOST_AUTO_TEST_CASE(TemplateFunction_VariableEntries_AllCombinations)
     //                                      std::optional<unsigned>(5), // scenario
     //                                      true);                      // isLP
 
+    addVariableEntries(table,
+                       linearProblem,
+                       fillContext,
+                       components.begin()->second,
+                       1,
+                       TimeConversionMode::SingleBlock,
+                       0,
+                       true);
     table.writeHeader();
     table.write();
     std::string buffer = table.buffer();

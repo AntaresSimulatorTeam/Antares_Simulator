@@ -67,6 +67,27 @@ std::string BuildModelerConstraintName(const std::string& cid,
                                        const std::string& cname,
                                        const std::optional<unsigned>& scen,
                                        const std::optional<unsigned>& ts);
+
+void addVariableEntries(
+  ISimulationTable& simulationTable,
+  const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
+  const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
+  const Antares::ModelerStudy::SystemModel::Component& component,
+  unsigned currentBlock,
+  const TimeConversionMode& timeConversionMode,
+  std::optional<unsigned> scenario,
+  bool isLp);
+
+void addConstraintEntries(
+  ISimulationTable& simulationTable,
+  const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
+  const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
+  const Antares::ModelerStudy::SystemModel::Component& component,
+  unsigned currentBlock,
+  const TimeConversionMode& timeConversionMode,
+  std::optional<unsigned> scenario,
+  bool isLp);
+
 void FillSimulationTable(
   ISimulationTable& simulationTable,
   const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
