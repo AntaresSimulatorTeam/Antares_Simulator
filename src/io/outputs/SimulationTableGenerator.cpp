@@ -77,7 +77,6 @@ void addVariableEntries(ISimulationTable& simulationTable,
                         const ILinearProblem& linearProblem,
                         const FillContext& fillContext,
                         const Antares::ModelerStudy::SystemModel::Component& component,
-                        const Antares::Optimization::VariableDictionary& variableDictionary,
                         unsigned currentBlock,
                         const TimeConversionMode& timeConversionMode,
                         std::optional<unsigned> scenario,
@@ -92,7 +91,7 @@ void addVariableEntries(ISimulationTable& simulationTable,
 
         auto handle = [&](std::optional<unsigned> timeStep, std::optional<unsigned> scenIdx)
         {
-            std::string fullVarName = variableDictionary.buildVariableName(
+            std::string fullVarName = Antares::Optimization::VariableDictionary::buildVariableName(
               {cid, varName},
               Antares::Optimization::MCYearAndTime::MCYear{scenIdx.value_or(0)},
               timeStep);
@@ -230,7 +229,6 @@ void FillSimulationTable(
   const ILinearProblem& linearProblem,
   double objectiveValue,
   const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>& components,
-  const Antares::Optimization::VariableDictionary& variableDictionary,
   const FillContext& fillContext,
   unsigned currentBlock,
   const TimeConversionMode& timeConversionMode)
@@ -242,7 +240,6 @@ void FillSimulationTable(
                            linearProblem,
                            fillContext,
                            component,
-                           variableDictionary,
                            currentBlock,
                            timeConversionMode,
                            scenario,

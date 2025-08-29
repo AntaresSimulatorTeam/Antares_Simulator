@@ -1147,7 +1147,6 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_ModelerIntegration)
                                              linearProblem,
                                              45.0,
                                              components,
-                                             variableDictionary,
                                              fillContext,
                                              1,
                                              TimeConversionMode::SingleBlock););

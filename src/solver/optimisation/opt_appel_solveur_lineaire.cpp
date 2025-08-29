@@ -175,13 +175,13 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
 // Returns a non-owning pointer
 MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
                              FillContext& fillCtx,
-                             VariableDictionary& variableDictionary,
                              const PROBLEME_HEBDO* problemeHebdo,
                              bool namedProblems)
 {
     LegacyFiller legacyOrtoolsFiller(problemeHebdo, namedProblems);
     std::vector<LinearProblemFiller*> fillersCollection = {&legacyOrtoolsFiller};
 
+    VariableDictionary variableDictionary;
     std::vector<std::unique_ptr<Optimisation::ComponentFiller>> componentFillers;
     ComponentToAreaConnectionFiller componentToAreaConnectionFiller(problemeHebdo,
                                                                     variableDictionary);
@@ -232,10 +232,8 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     LegacyOrtoolsLinearProblem ortoolsProblem(problemeHebdo->ProblemeAResoudre->isMIP(),
                                               options.solverName);
     FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
-    VariableDictionary variableDictionary;
     solver = fillAndGetMpSolver(ortoolsProblem,
                                 fillCtx,
-                                variableDictionary,
                                 problemeHebdo,
                                 problemeHebdo->NamedProblems);
 
@@ -301,7 +299,6 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                             ortoolsProblem,
                             solver->Objective().Value(),
                             problemeHebdo->modelerSystem->Components(),
-                            variableDictionary,
                             fillCtx,
                             currentBlock,
                             timeConversionMode);
@@ -381,9 +378,8 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         LegacyOrtoolsLinearProblem infeasibleProblem(problemeHebdo->ProblemeAResoudre->isMIP(),
                                                      options.solverName);
         FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
-        VariableDictionary variableDictionary;
         std::unique_ptr<MPSolver> MPproblem(
-          fillAndGetMpSolver(infeasibleProblem, fillCtx, variableDictionary, problemeHebdo, true));
+          fillAndGetMpSolver(infeasibleProblem, fillCtx, problemeHebdo, true));
 
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());

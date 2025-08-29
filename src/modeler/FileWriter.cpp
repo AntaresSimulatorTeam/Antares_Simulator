@@ -80,7 +80,6 @@ void FileWriter::writeSimulationTable(
                             linearProblem,
                             solution.getObjectiveValue(),
                             components,
-                            variableDictionary,
                             fillContext,
                             1,
                             TimeConversionMode::SingleBlock);
