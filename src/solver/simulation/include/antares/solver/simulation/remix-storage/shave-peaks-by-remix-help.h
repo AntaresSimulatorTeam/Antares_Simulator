@@ -29,12 +29,12 @@ void updateValidHours(std::set<unsigned>& validHours,
 double computeExchange(const unsigned hourOfMinGen,
                        const unsigned hourOfMaxGen,
                        const double maxVariationGen,
-                       const std::shared_ptr<IStorageForRemix> storage);
+                       const IStorageForRemix& storage);
 
 Exchange searchForExhange(const std::set<unsigned>& validHours,
                           const std::vector<double>& TotalGen,
                           const std::vector<double>& UnsupE,
-                          const std::shared_ptr<IStorageForRemix> storage);
+                          const IStorageForRemix& storage);
 
 void update(Exchange& exchange,
             std::shared_ptr<IStorageForRemix> storage,

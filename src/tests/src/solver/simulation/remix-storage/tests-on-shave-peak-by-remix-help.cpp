@@ -83,7 +83,7 @@ BOOST_AUTO_TEST_CASE(default_values_of_function_arguments_leads_to_an_infinity)
     const unsigned hourOfMaxGen = 3;
     auto storage = createSTSstorage();
 
-    auto exchange = computeExchange(hourOfMinGen, hourOfMaxGen, maxVariationGen, storage);
+    auto exchange = computeExchange(hourOfMinGen, hourOfMaxGen, maxVariationGen, *storage);
 
     BOOST_CHECK_EQUAL(exchange, infinity / 2);
 }
@@ -95,7 +95,7 @@ BOOST_AUTO_TEST_CASE(maxVariationGen_is_bounded___exchange_gets_maxVariationGen_
     maxVariationGen = 10;
     auto storage = createSTSstorage();
 
-    auto exchange = computeExchange(hourOfMinGen, hourOfMaxGen, maxVariationGen, storage);
+    auto exchange = computeExchange(hourOfMinGen, hourOfMaxGen, maxVariationGen, *storage);
 
     BOOST_CHECK_EQUAL(exchange, maxVariationGen / 2);
 }
@@ -107,7 +107,7 @@ BOOST_AUTO_TEST_CASE(withdraw_at_hour_of_max_gen_is_bounded___exchange_gets_this
     withdrawal[hourOfMaxGen] = 9;
     auto storage = createSTSstorage();
 
-    auto exchange = computeExchange(hourOfMinGen, hourOfMaxGen, maxVariationGen, storage);
+    auto exchange = computeExchange(hourOfMinGen, hourOfMaxGen, maxVariationGen, *storage);
 
     BOOST_CHECK_EQUAL(exchange, withdrawal[hourOfMaxGen]);
 }
@@ -121,7 +121,7 @@ BOOST_AUTO_TEST_CASE(
     withdrawal[hourOfMinGen] = 5;
     auto storage = createSTSstorage();
 
-    auto exchange = computeExchange(hourOfMinGen, hourOfMaxGen, maxVariationGen, storage);
+    auto exchange = computeExchange(hourOfMinGen, hourOfMaxGen, maxVariationGen, *storage);
 
     BOOST_CHECK_EQUAL(exchange, pmax[hourOfMinGen] - withdrawal[hourOfMinGen]);
 }
@@ -133,7 +133,7 @@ BOOST_AUTO_TEST_CASE(unsup_energy_at_hour_of_min_gen_is_bounded___exchange_gets_
     unsupE[hourOfMinGen] = 7;
     auto storage = createSTSstorage();
 
-    auto exchange = computeExchange(hourOfMinGen, hourOfMaxGen, maxVariationGen, storage);
+    auto exchange = computeExchange(hourOfMinGen, hourOfMaxGen, maxVariationGen, *storage);
 
     BOOST_CHECK_EQUAL(exchange, unsupE[hourOfMinGen]);
 }
@@ -157,7 +157,7 @@ BOOST_AUTO_TEST_CASE(limit_for_exchange_can_be__min_of_LEVELS__minus__LOW_RULE_C
 
     auto storage = createSTSstorage();
 
-    auto exchange = computeExchange(hourOfMinGen, hourOfMaxGen, maxVariationGen, storage);
+    auto exchange = computeExchange(hourOfMinGen, hourOfMaxGen, maxVariationGen, *storage);
 
     double expectedExchange = levels[hourOfMaxGen - 1] - lowRuleCurve[hourOfMaxGen - 1];
     BOOST_CHECK_EQUAL(exchange, expectedExchange);
@@ -182,7 +182,7 @@ BOOST_AUTO_TEST_CASE(limit_for_exchange_can_be__min_of_UP_RULE_CURVE__minus__LEV
 
     auto storage = createSTSstorage();
 
-    auto exchange = computeExchange(hourOfMinGen, hourOfMaxGen, maxVariationGen, storage);
+    auto exchange = computeExchange(hourOfMinGen, hourOfMaxGen, maxVariationGen, *storage);
 
     double expectedExchange = upRuleCurve[hourOfMinGen - 1] - levels[hourOfMinGen - 1];
     BOOST_CHECK_EQUAL(exchange, expectedExchange);
@@ -212,7 +212,7 @@ BOOST_FIXTURE_TEST_CASE(totalGen_is_zero_everywhere___we_get_undefined_hours,
                         FindExchangeFixture<5>)
 {
     auto storage = createSTSstorage();
-    auto exchange = searchForExhange(validHours, totalGen, unsupE, storage);
+    auto exchange = searchForExhange(validHours, totalGen, unsupE, *storage);
 
     BOOST_CHECK(!exchange.hourOfMinGen.has_value());
     BOOST_CHECK(!exchange.hourOfMaxGen.has_value());
@@ -223,7 +223,7 @@ BOOST_FIXTURE_TEST_CASE(totalGen_is_flat___we_get_undefined_hours, FindExchangeF
     std::ranges::fill(totalGen, 10);
     auto storage = createSTSstorage();
 
-    auto exchange = searchForExhange(validHours, totalGen, unsupE, storage);
+    auto exchange = searchForExhange(validHours, totalGen, unsupE, *storage);
 
     BOOST_CHECK(!exchange.hourOfMinGen.has_value());
     BOOST_CHECK(!exchange.hourOfMaxGen.has_value());
@@ -235,7 +235,7 @@ BOOST_FIXTURE_TEST_CASE(totalGen_is_decreasing___hourOfMaxGen_is_first_and_hourO
     totalGen = {15, 12, 10, 7, 4};
     auto storage = createSTSstorage();
 
-    auto exchange = searchForExhange(validHours, totalGen, unsupE, storage);
+    auto exchange = searchForExhange(validHours, totalGen, unsupE, *storage);
 
     BOOST_CHECK(exchange.hourOfMinGen.has_value());
     BOOST_CHECK(exchange.hourOfMaxGen.has_value());
@@ -250,7 +250,7 @@ BOOST_FIXTURE_TEST_CASE(totalGen_is_increasing___hourOfMinGen_is_first_and_hourO
     totalGen = {4, 7, 10, 12, 15};
     auto storage = createSTSstorage();
 
-    auto exchange = searchForExhange(validHours, totalGen, unsupE, storage);
+    auto exchange = searchForExhange(validHours, totalGen, unsupE, *storage);
 
     BOOST_CHECK(exchange.hourOfMinGen.has_value());
     BOOST_CHECK(exchange.hourOfMaxGen.has_value());
@@ -265,7 +265,7 @@ BOOST_FIXTURE_TEST_CASE(totalGen_is_not_monotone__output_hours_are_as_expected,
     totalGen = {25, 2, 10, 60, 15};
     auto storage = createSTSstorage();
 
-    auto exchange = searchForExhange(validHours, totalGen, unsupE, storage);
+    auto exchange = searchForExhange(validHours, totalGen, unsupE, *storage);
 
     BOOST_CHECK(exchange.hourOfMinGen.has_value());
     BOOST_CHECK(exchange.hourOfMaxGen.has_value());
@@ -283,7 +283,7 @@ BOOST_FIXTURE_TEST_CASE(valid_hours_is_a_strict_subrange__output_hours_are_as_ex
     validHours = {2, 3, 4};
     auto storage = createSTSstorage();
 
-    auto exchange = searchForExhange(validHours, totalGen, unsupE, storage);
+    auto exchange = searchForExhange(validHours, totalGen, unsupE, *storage);
 
     BOOST_CHECK(exchange.hourOfMinGen.has_value());
     BOOST_CHECK(exchange.hourOfMaxGen.has_value());
@@ -301,7 +301,7 @@ BOOST_FIXTURE_TEST_CASE(valid_hours_is_another_strict_subrange__output_hours_are
     validHours = {3, 4, 5, 6, 7};
     auto storage = createSTSstorage();
 
-    auto exchange = searchForExhange(validHours, totalGen, unsupE, storage);
+    auto exchange = searchForExhange(validHours, totalGen, unsupE, *storage);
 
     BOOST_CHECK(exchange.hourOfMinGen.has_value());
     BOOST_CHECK(exchange.hourOfMaxGen.has_value());
@@ -319,7 +319,7 @@ BOOST_FIXTURE_TEST_CASE(valid_hours_is_not_contuguous__output_hours_are_as_expec
     validHours = {1, 3, 6};
     auto storage = createSTSstorage();
 
-    auto exchange = searchForExhange(validHours, totalGen, unsupE, storage);
+    auto exchange = searchForExhange(validHours, totalGen, unsupE, *storage);
 
     BOOST_CHECK(exchange.hourOfMinGen.has_value());
     BOOST_CHECK(exchange.hourOfMaxGen.has_value());
@@ -333,11 +333,11 @@ BOOST_FIXTURE_TEST_CASE(unsupE_is_zero_everywhere__valid_hours_is_empty__output_
 {
     // Absolute hours for min and max totalGen are 0 and 8
     totalGen = {0, 25, 2, 10, 60, 15, 6, 75, 80};
-    std::ranges::fill(unsupE, 0); // Makes all hours invalid
+    std::ranges::fill(unsupE, 0); // Makes all hours invalid for hourOfMinGen
 
     auto storage = createSTSstorage();
 
-    auto exchange = searchForExhange(validHours, totalGen, unsupE, storage);
+    auto exchange = searchForExhange(validHours, totalGen, unsupE, *storage);
 
     BOOST_CHECK(!exchange.hourOfMinGen.has_value());
     BOOST_CHECK(!exchange.hourOfMaxGen.has_value());
@@ -348,14 +348,14 @@ BOOST_FIXTURE_TEST_CASE(hourOfMinGen_can_only_be_in_the_subset_where_unsupE_is_n
 {
     // Absolute hours for min and max totalGen are 0 and 8
     totalGen = {0, 25, 2, 10, 60, 15, 6, 75, 80};
-    std::ranges::fill(unsupE, 0); // Makes all hours invalid
+    std::ranges::fill(unsupE, 0); // Makes all hours invalid for hourOfMinGen
     unsupE[1] = 1;
     unsupE[3] = 1;
     unsupE[6] = 1;
 
     auto storage = createSTSstorage();
 
-    auto exchange = searchForExhange(validHours, totalGen, unsupE, storage);
+    auto exchange = searchForExhange(validHours, totalGen, unsupE, *storage);
 
     BOOST_CHECK(exchange.hourOfMinGen.has_value());
     BOOST_CHECK_EQUAL(exchange.hourOfMinGen.value(), 6);

@@ -13,7 +13,7 @@ public:
                             const std::vector<double> Pmax,
                             const std::vector<double> Pmin);
 
-    double maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) override;
+    double maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) const override;
     void update() override;
     const std::vector<double>& initWithdrawal() override;
     std::vector<double>& withdrawal() override;
@@ -45,7 +45,7 @@ public:
                               const double withdrawalEff,
                               const double injectionEff);
 
-    double maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) override;
+    double maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) const override;
     void update() override;
 
 private:

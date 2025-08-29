@@ -94,7 +94,7 @@ StorageForRemixNoLevels::StorageForRemixNoLevels(std::vector<double>& withdrawal
     checkInput(unsupE_.size());
 }
 
-double StorageForRemixNoLevels::maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen)
+double StorageForRemixNoLevels::maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) const
 {
     // Max amont we can take from hydro withdrawal, at hour when the total
     // production reaches a max.
@@ -172,7 +172,7 @@ StorageForRemixWithLevels::StorageForRemixWithLevels(std::vector<double>& withdr
     checkLevels();
 }
 
-double StorageForRemixWithLevels::maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen)
+double StorageForRemixWithLevels::maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) const
 {
     double boundNoLevels = StorageForRemixNoLevels::maxExchange(hourOfMaxGen, hourOfMinGen);
 

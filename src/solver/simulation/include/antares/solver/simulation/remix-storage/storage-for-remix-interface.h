@@ -8,7 +8,7 @@ namespace Antares::Solver::Simulation
 class IStorageForRemix
 {
 public:
-    virtual double maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) = 0;
+    virtual double maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) const = 0;
     virtual void update() = 0;
     virtual const std::vector<double>& initWithdrawal() = 0;
     virtual std::vector<double>& withdrawal() = 0;
