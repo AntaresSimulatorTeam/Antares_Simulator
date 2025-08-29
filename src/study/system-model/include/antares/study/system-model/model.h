@@ -121,6 +121,18 @@ private:
     PortFieldMap portFieldDefinitions_;
 };
 
+// List of IDs used internally to check for uniqueness of IDs at component level
+class UniqueIDChecker
+{
+public:
+    void add(const std::string& id);
+    void check(const std::string& modelId) const;
+    void clear();
+
+private:
+    std::unordered_map<std::string, int> attribute_ids_;
+};
+
 class ModelBuilder
 {
 public:
@@ -132,14 +144,11 @@ public:
     ModelBuilder& withConstraints(std::vector<Constraint>&& constraints);
     ModelBuilder& withPortFieldDefinitions(std::vector<PortFieldDefinition>&& portFieldDefinitions);
     ModelBuilder& withExtraOutputs(std::vector<ExtraOutput>&& extraOutputs);
-    void checkThatIdIsNotUsed(const std::string& id);
     Model build();
 
 private:
     Model model_;
-    // List of IDs used internally to check for uniqueness of IDs at component level
-    std::unordered_set<std::string> attribute_ids_;
-
+    UniqueIDChecker uniqueIdChecker_;
     void reset();
 };
 

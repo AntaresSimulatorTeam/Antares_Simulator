@@ -32,14 +32,17 @@
 namespace
 {
 template<class OutT, class InT>
-void fillMapFrom(OutT& out, InT&& in, Antares::ModelerStudy::SystemModel::ModelBuilder& builder)
+void fillMapFrom(OutT& out,
+                 InT&& in,
+                 Antares::ModelerStudy::SystemModel::UniqueIDChecker& uniqueIdChecker)
 {
-    for (const auto& x: in)
+    using InnerT = std::remove_cvref_t<InT>::value_type;
+
+    for (const InnerT& x: in)
     {
-        builder.checkThatIdIsNotUsed(x.Id());
+        uniqueIdChecker.add(x.Id());
     }
 
-    using InnerT = std::remove_cvref_t<InT>::value_type;
     std::transform(in.begin(),
                    in.end(),
                    std::inserter(out, out.end()),
@@ -61,16 +64,26 @@ std::size_t PortFieldKeyHash::operator()(const PortFieldKey& input) const
     return seed;
 }
 
-void ModelBuilder::checkThatIdIsNotUsed(const std::string& id)
+void UniqueIDChecker::add(const std::string& id)
 {
-    if (attribute_ids_.contains(id))
+    attribute_ids_[id]++;
+}
+
+void UniqueIDChecker::check(const std::string& modelId) const
+{
+    for (const auto& [id, count]: attribute_ids_)
     {
-        std::string modelId = model_.id_;
-        reset();
-        throw Error::RuntimeError("Model \"" + modelId + "\" contains multiple objects with ID \""
-                                  + id + "\".");
+        if (count > 1)
+        {
+            throw Error::RuntimeError("Model \"" + modelId
+                                      + "\" contains multiple objects with ID \"" + id + "\".");
+        }
     }
-    attribute_ids_.emplace(id);
+}
+
+void UniqueIDChecker::clear()
+{
+    attribute_ids_.clear();
 }
 
 /**
@@ -81,6 +94,15 @@ void ModelBuilder::checkThatIdIsNotUsed(const std::string& id)
 Model ModelBuilder::build()
 {
     Model model = std::move(model_);
+    try
+    {
+        uniqueIdChecker_.check(model.Id());
+    }
+    catch (...)
+    {
+        reset();
+        throw;
+    }
     reset();
     return model;
 }
@@ -88,7 +110,7 @@ Model ModelBuilder::build()
 void ModelBuilder::reset()
 {
     model_ = Model(); // makes ModelBuilder re-usable
-    attribute_ids_.clear();
+    uniqueIdChecker_.clear();
 }
 
 /**
@@ -125,7 +147,7 @@ ModelBuilder& ModelBuilder::withObjective(Expression&& objective)
  */
 ModelBuilder& ModelBuilder::withParameters(std::vector<Parameter>&& parameters)
 {
-    fillMapFrom(model_.parameters_, parameters, *this);
+    fillMapFrom(model_.parameters_, parameters, uniqueIdChecker_);
     return *this;
 }
 
@@ -139,7 +161,7 @@ ModelBuilder& ModelBuilder::withParameters(std::vector<Parameter>&& parameters)
  */
 ModelBuilder& ModelBuilder::withVariables(std::vector<Variable>&& variables)
 {
-    fillMapFrom(model_.variables_, variables, *this);
+    fillMapFrom(model_.variables_, variables, uniqueIdChecker_);
     return *this;
 }
 
@@ -153,7 +175,7 @@ ModelBuilder& ModelBuilder::withVariables(std::vector<Variable>&& variables)
  */
 ModelBuilder& ModelBuilder::withPorts(std::vector<Port>&& ports)
 {
-    fillMapFrom(model_.ports_, ports, *this);
+    fillMapFrom(model_.ports_, ports, uniqueIdChecker_);
     return *this;
 }
 
@@ -167,7 +189,7 @@ ModelBuilder& ModelBuilder::withPorts(std::vector<Port>&& ports)
  */
 ModelBuilder& ModelBuilder::withConstraints(std::vector<Constraint>&& constraints)
 {
-    fillMapFrom(model_.constraints_, constraints, *this);
+    fillMapFrom(model_.constraints_, constraints, uniqueIdChecker_);
     return *this;
 }
 
@@ -205,7 +227,7 @@ ModelBuilder& ModelBuilder::withPortFieldDefinitions(
  */
 ModelBuilder& ModelBuilder::withExtraOutputs(std::vector<ExtraOutput>&& extraOutputs)
 {
-    fillMapFrom(model_.extraOutputs_, extraOutputs, *this);
+    fillMapFrom(model_.extraOutputs_, extraOutputs, uniqueIdChecker_);
     return *this;
 }
 
