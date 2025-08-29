@@ -8,6 +8,7 @@ namespace Antares::Solver::Simulation
 class StorageForRemix
 {
 public:
+    virtual ~StorageForRemix() = default;
     virtual double maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) = 0;
     virtual void update() = 0;
     virtual const std::vector<double>& initialGen() = 0;
