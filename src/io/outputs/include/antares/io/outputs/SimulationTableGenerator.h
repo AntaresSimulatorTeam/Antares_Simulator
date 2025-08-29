@@ -75,8 +75,7 @@ void addVariableEntries(
   const Antares::ModelerStudy::SystemModel::Component& component,
   unsigned currentBlock,
   const TimeConversionMode& timeConversionMode,
-  std::optional<unsigned> scenario,
-  bool isLp);
+  std::optional<unsigned> scenario);
 
 void addConstraintEntries(
   ISimulationTable& simulationTable,
@@ -85,8 +84,7 @@ void addConstraintEntries(
   const Antares::ModelerStudy::SystemModel::Component& component,
   unsigned currentBlock,
   const TimeConversionMode& timeConversionMode,
-  std::optional<unsigned> scenario,
-  bool isLp);
+  std::optional<unsigned> scenario);
 
 void FillSimulationTable(
   ISimulationTable& simulationTable,

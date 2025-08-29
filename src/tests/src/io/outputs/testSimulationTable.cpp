@@ -964,8 +964,7 @@ BOOST_AUTO_TEST_CASE(TemplateFunction_VariableEntries_AllCombinations)
                        components.begin()->second,
                        1,
                        TimeConversionMode::SingleBlock,
-                       0,
-                       true);
+                       0);
     table.writeHeader();
     table.write();
     std::string buffer = table.buffer();

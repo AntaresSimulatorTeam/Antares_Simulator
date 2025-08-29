@@ -79,11 +79,10 @@ void addVariableEntries(ISimulationTable& simulationTable,
                         const Antares::ModelerStudy::SystemModel::Component& component,
                         unsigned currentBlock,
                         const TimeConversionMode& timeConversionMode,
-                        std::optional<unsigned> scenario,
-                        bool isLp)
+                        std::optional<unsigned> scenario)
 {
     const auto& cid = component.Id();
-
+    const bool isLp = linearProblem.isLP();
     for (const auto& [varName, modelVar]: component.getModel()->Variables())
     {
         bool scenDep = modelVar.IsScenarioDependent();
@@ -148,12 +147,11 @@ void addConstraintEntries(ISimulationTable& simulationTable,
                           const Antares::ModelerStudy::SystemModel::Component& component,
                           unsigned currentBlock,
                           const TimeConversionMode& timeConversionMode,
-                          std::optional<unsigned> scenario,
-                          bool isLp)
+                          std::optional<unsigned> scenario)
 {
     using TI = Antares::Expressions::Visitors::TimeIndex;
     const auto& cid = component.Id();
-
+    const bool isLp = linearProblem.isLP();
     for (const auto& [cname, modelConstr]: component.getModel()->Constraints())
     {
         TI idxType = Antares::Expressions::Visitors::TimeIndexVisitor(component).dispatch(
@@ -242,8 +240,7 @@ void FillSimulationTable(
                            component,
                            currentBlock,
                            timeConversionMode,
-                           scenario,
-                           linearProblem.isLP());
+                           scenario);
 
         addConstraintEntries(simulationTable,
                              linearProblem,
@@ -251,8 +248,7 @@ void FillSimulationTable(
                              component,
                              currentBlock,
                              timeConversionMode,
-                             scenario,
-                             linearProblem.isLP());
+                             scenario);
     }
     addObjectiveValue(simulationTable, objectiveValue, currentBlock, scenario);
 }
