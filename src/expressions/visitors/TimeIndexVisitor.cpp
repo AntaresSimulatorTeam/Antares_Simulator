@@ -112,7 +112,11 @@ TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldSumNode* node)
         auto* component = connexion_end.component();
         auto* port = connexion_end.port();
 
-        TimeIndexVisitor visitor(*component, context_);
+        const EvaluationContext connectedComponentEvalContext(component->getParameterValues(),
+                                                              {},
+                                                              context_.data(),
+                                                              context_.scenario());
+        TimeIndexVisitor visitor(*component, connectedComponentEvalContext);
         const Nodes::Node* node = component->nodeAtPortField(port->Id(), fieldId);
         to_return = to_return | visitor.dispatch(node);
     }
