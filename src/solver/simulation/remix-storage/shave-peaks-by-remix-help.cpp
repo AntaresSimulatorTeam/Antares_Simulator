@@ -30,19 +30,19 @@ void updateValidHours(std::set<unsigned>& validHours,
                   [&](int h) { return storage->initWithdrawal()[h] + UnsupEinit[h] <= eps; });
 }
 
-double computeExchange(unsigned hourOfMinGen,
-                       unsigned hourOfMaxGen,
+double computeExchange(const unsigned hourOfMinGen,
+                       const unsigned hourOfMaxGen,
                        const double maxVariationGen,
-                       std::shared_ptr<IStorageForRemix> storage)
+                       const std::shared_ptr<IStorageForRemix> storage)
 {
     double maxExchangeFromStorage = storage->maxExchange(hourOfMaxGen, hourOfMinGen);
     return std::max(std::min(maxExchangeFromStorage, maxVariationGen / 2.), 0.);
 }
 
 Exchange searchForExhange(const std::set<unsigned>& validHours,
-                          std::vector<double>& TotalGen,
-                          std::vector<double>& UnsupE,
-                          std::shared_ptr<IStorageForRemix> storage)
+                          const std::vector<double>& TotalGen,
+                          const std::vector<double>& UnsupE,
+                          const std::shared_ptr<IStorageForRemix> storage)
 {
     auto totalGenProjection = [&](int h) { return TotalGen[h]; };
 
