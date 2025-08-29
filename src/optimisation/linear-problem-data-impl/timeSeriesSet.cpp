@@ -26,6 +26,7 @@
 
 #include "antares/exception/LoadingError.hpp"
 #include "antares/exception/RuntimeError.hpp"
+#include "antares/logs/logs.h"
 
 namespace Antares::Optimisation::LinearProblemDataImpl
 {
@@ -66,6 +67,7 @@ double TimeSeriesSet::getData(LinearProblemApi::IScenario::TimeSeriesNumber tsNu
     {
         throw HourTooBig(name(), hour);
     }
+    //    Antares::logs.notice() << "tsSet_ " << tsIndex << " " << hour;
     return tsSet_[tsIndex][hour];
 }
 

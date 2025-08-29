@@ -22,6 +22,7 @@
 #include "include/antares/optimisation/linear-problem-data-impl/Scenario.h"
 
 #include "antares/exception/RuntimeError.hpp"
+#include "antares/logs/logs.h"
 
 #include "fmt/format.h"
 
@@ -37,6 +38,7 @@ LinearProblemApi::IScenario::TimeSeriesNumber Scenario::getData(Year year) const
                       group(),
                       year));
     }
+    logs.notice() << (int)it->second;
     return it->second;
 }
 

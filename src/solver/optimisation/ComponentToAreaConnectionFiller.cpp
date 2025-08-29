@@ -106,10 +106,15 @@ void ComponentToAreaConnectionFiller::addExpressionToConstraint(
 class DefaultScenario: public IScenario
 {
 public:
-    using IScenario::IScenario;
+    DefaultScenario():
+        IScenario("empty")
+    {
+        throw 42;
+    }
 
     [[nodiscard]] TimeSeriesNumber getData(Year) const override
     {
+        throw 42;
         return 1; // Default rank for empty groupId
     }
 };
@@ -123,7 +128,7 @@ void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
   const std::string& areaId)
 {
     std::string injectionFieldId = getConnectionFieldId(component, portId);
-    DefaultScenario defaultScenario("empty"); // TODO default ?
+    DefaultScenario defaultScenario; // TODO default ?
     const Expressions::Visitors::EvaluationContext
       connectedComponentEvalContext(component.getParameterValues(), {}, data, defaultScenario);
     ReadLinearExpressionVisitor visitor(connectedComponentEvalContext, ctx, component);

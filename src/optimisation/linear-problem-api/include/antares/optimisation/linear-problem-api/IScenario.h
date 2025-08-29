@@ -25,6 +25,8 @@
 
 #include <boost/algorithm/string.hpp>
 
+#include "antares/logs/logs.h"
+
 namespace Antares::Optimisation::LinearProblemApi
 {
 
@@ -43,6 +45,7 @@ public:
     explicit IScenario(std::string group):
         group_(std::move(group))
     {
+        logs.info() << "IScenario @" << this << " " << this->group_;
         boost::to_upper(group_); // Ensure group name is uppercase for consistency
     }
 
@@ -59,13 +62,13 @@ private:
 
 /** \brief Empty scenario implementation of IScenario.
  * Provide a default implementation of IScenario that returns 0 for any year for a group named
- * "empty"
+ * ""
  */
 class EmptyScenario: public IScenario
 {
 public:
     EmptyScenario():
-        IScenario("empty")
+        IScenario("")
     {
     }
 

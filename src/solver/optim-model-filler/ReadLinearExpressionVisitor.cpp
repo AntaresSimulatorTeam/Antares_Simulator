@@ -27,6 +27,7 @@
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h>
 #include "antares/optimisation/linear-problem-api/IScenario.h"
+#include "antares/solver/optim-model-filler/scenarioGroupRepo.h"
 #include "antares/study/system-model/component.h"
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::Expressions::Visitors;
@@ -180,10 +181,13 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const PortField
         auto* component = connexion_end.component();
         auto* port = connexion_end.port();
 
-        const EvaluationContext connectedComponentEvalContext(component->getParameterValues(),
-                                                              {},
-                                                              evalContext_.data(),
-                                                              evalContext_.scenario());
+        const EvaluationContext connectedComponentEvalContext(
+          component->getParameterValues(),
+          {},
+          evalContext_.data(),
+          Antares::Optimisation::gScenarioGroupRepository->scenario(
+            component->getScenarioGroupId()));
+
         ReadLinearExpressionVisitor visitor(connectedComponentEvalContext,
                                             fillContext_,
                                             *component);

@@ -22,6 +22,7 @@
 #include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include "antares/optimisation/linear-problem-api/IScenario.h"
+#include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 
 using namespace Antares::Optimisation::LinearProblemApi;
 
@@ -82,6 +83,12 @@ double EvaluationContext::getParameterValue(const std::string& key,
                                             unsigned int hour) const
 {
     IScenario::TimeSeriesNumber time_series_number = scenario_.getData(year);
+
+    logs.notice()
+      << "key = " << key << " scenario = " << time_series_number << " "
+      << (const void*)dynamic_cast<const Antares::Optimisation::LinearProblemDataImpl::Scenario*>(
+           &scenario_);
+
     return data_.getData(parameters_types_and_values_.at(key).value, time_series_number, hour);
 }
 
