@@ -61,7 +61,13 @@ enum class TimeConversionMode
     WeeklyBlocks
 };
 
-TimeBlock convertTimeStepToBlockTimeIndex(unsigned int timeStep, const TimeConversionMode& mode);
+TimeBlock convertBlockTimeStepToAbsoluteTimeStep(unsigned int timeStep,
+                                                 const TimeConversionMode& mode,
+                                                 unsigned currentBlock);
+
+Antares::Expressions::Visitors::TimeIndex updateTimeIndexIfShouldForceScenario(
+  Antares::Expressions::Visitors::TimeIndex timeIndex,
+  bool forceScenarioDependency);
 
 std::string BuildModelerConstraintName(const std::string& cid,
                                        const std::string& cname,
@@ -84,13 +90,28 @@ void addConstraintEntries(
   const Antares::ModelerStudy::SystemModel::Component& component,
   unsigned currentBlock,
   const TimeConversionMode& timeConversionMode,
-  std::optional<unsigned> scenario);
+  std::optional<unsigned> scenario,
+  bool forceScenarioDependency,
+  const Antares::Expressions::Visitors::EvaluationContext& evalContext);
+
+void addPortEntries(ISimulationTable& simulationTable,
+                    const std::map<std::string, double>& solutions,
+                    const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
+                    const Antares::ModelerStudy::SystemModel::Component& component,
+                    const Antares::Optimisation::LinearProblemApi::ILinearProblemData* dataSeries,
+                    unsigned currentBlock,
+                    const TimeConversionMode& timeConversionMode,
+                    std::optional<unsigned> scenario,
+                    bool forceScenarioDependency,
+                    const Antares::Expressions::Visitors::EvaluationContext& evalContext);
 
 void FillSimulationTable(
   ISimulationTable& simulationTable,
   const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
   double objectiveValue,
   const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>& components,
+  const Antares::Optimisation::LinearProblemApi::ILinearProblemData* dataSeries,
   const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
   unsigned currentBlock,
-  const TimeConversionMode& timeConversionMode);
+  const TimeConversionMode& timeConversionMode,
+  bool forceScenarioDependency = false);

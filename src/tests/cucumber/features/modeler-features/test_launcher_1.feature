@@ -8,8 +8,8 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
     And the objective value is 320
     And the modeler outputs contain the following entries
       | component | output | timestep | value |
-      | node1     | gen1_p | 0-1      | 80    |
-      | node1     | gen2_p | 0-1      | 20    |
+      | node1     | gen1_p | 1-2      | 80    |
+      | node1     | gen2_p | 1-2      | 20    |
 
   @fast
   Scenario: 1.2: One model with one load and two generators, two timesteps ; mix of constant parameters and timeseries
@@ -19,8 +19,8 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
     And the objective value is 320
     And the modeler outputs contain the following entries
       | component | output | timestep | value |
-      | node1     | gen1_p | 0-1      | 80    |
-      | node1     | gen2_p | 0-1      | 20    |
+      | node1     | gen1_p | 1-2      | 80    |
+      | node1     | gen2_p | 1-2      | 20    |
 
   @fast
   Scenario: 1.3: One model with one load and two generators, one timestep ; fails because of timeseries of different lengths
@@ -37,12 +37,12 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
     And the objective value is 765
     And the modeler outputs contain the following entries
       | component | output        | timestep | value |
-      | node1     | gen1_p        | 0        | 80    |
-      | node1     | gen2_p        | 0        | 20    |
-      | node1     | gen1_p        | 1        | 0     |
-      | node1     | gen2_p        | 1        | 100   |
-      | node1     | on_off_gen1_p | 0        | 1     |
-      | node1     | on_off_gen1_p | 1        | 0     |
+      | node1     | gen1_p        | 1        | 80    |
+      | node1     | gen2_p        | 1        | 20    |
+      | node1     | gen1_p        | 2        | 0     |
+      | node1     | gen2_p        | 2        | 100   |
+      | node1     | on_off_gen1_p | 1        | 1     |
+      | node1     | on_off_gen1_p | 2        | 0     |
 
 
   @fast
@@ -59,5 +59,5 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
     And the objective value is 16000
     And the modeler outputs contain the following entries
       | component | output | timestep | value |
-      | node1     | gen1_p | 0-99     | 80    |
-      | node1     | gen2_p | 0-99     | 20    |
+      | node1     | gen1_p | 1-100    | 80    |
+      | node1     | gen2_p | 1-100    | 20    |

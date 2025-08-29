@@ -70,7 +70,7 @@ void FileWriter::writeSimulationTable(
   const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
   const Optimisation::LinearProblemApi::IMipSolution& solution,
   const std::unordered_map<std::string, ModelerStudy::SystemModel::Component>& components,
-  const Optimization::VariableDictionary& variableDictionary,
+  Optimisation::LinearProblemApi::ILinearProblemData* dataSeries,
   const Optimisation::LinearProblemApi::FillContext& fillContext) const
 {
     if (output)
@@ -80,6 +80,7 @@ void FileWriter::writeSimulationTable(
                             linearProblem,
                             solution.getObjectiveValue(),
                             components,
+                            dataSeries,
                             fillContext,
                             1,
                             TimeConversionMode::SingleBlock);

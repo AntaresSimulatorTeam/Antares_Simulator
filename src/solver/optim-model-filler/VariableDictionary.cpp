@@ -31,11 +31,10 @@ std::string VariableDictionary::buildVariableName(const PartialKey& key,
                                                   std::optional<unsigned int> timestep)
 {
     std::string ret = fmt::format("{}.{}", key.getComponent(), key.getVariable());
-    if (!mcyear.has_value())
+    if (mcyear.has_value())
     {
-        mcyear = MCYearAndTime::MCYear{0}; 
+        ret += "_s" + std::to_string(format_as(mcyear.value()));
     }
-    ret += "_s" + std::to_string(format_as(mcyear.value()));
     if (timestep.has_value())
     {
         ret += "_t" + std::to_string(*timestep);

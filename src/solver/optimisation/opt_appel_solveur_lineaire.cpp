@@ -282,16 +282,11 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         throw FatalError("Internal error: insufficient memory");
     }
 
-    writeModelerSolutions(solver,
-                          ProblemeAResoudre->NombreDeVariables,
-                          optimizationNumber,
-                          optPeriodStringGenerator,
-                          writer);
     if (problemeHebdo->modelerSystem)
     {
         unsigned currentBlock = problemeHebdo->OptimisationAuPasHebdomadaire
                                   ? problemeHebdo->weekInTheYear
-                                  : NumIntervalle;
+                                  : problemeHebdo->weekInTheYear * 7 + NumIntervalle;
         TimeConversionMode timeConversionMode = problemeHebdo->OptimisationAuPasHebdomadaire
                                                   ? TimeConversionMode::WeeklyBlocks
                                                   : TimeConversionMode::DailyBlocks;
@@ -299,9 +294,11 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                             ortoolsProblem,
                             solver->Objective().Value(),
                             problemeHebdo->modelerSystem->Components(),
+                            problemeHebdo->linear_problem_data_,
                             fillCtx,
                             currentBlock,
-                            timeConversionMode);
+                            timeConversionMode,
+                            true);
     }
 
     return {.success = true,

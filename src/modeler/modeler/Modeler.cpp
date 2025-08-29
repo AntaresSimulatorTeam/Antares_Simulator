@@ -152,7 +152,6 @@ void Modeler::solve() const
                                          *solution,
                                          data.system->Components(),
                                          data.dataSeries.get(),
-                                         system_linear_problem.getVariableDictionary(),
                                          timeScenarioCtx);
             break;
         default:

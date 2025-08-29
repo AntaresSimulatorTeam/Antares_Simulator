@@ -277,7 +277,7 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
         auto linear_constraints = visitor.dispatch(root_node);
         if (checkTimeSteps(ctx))
         {
-            if (IsThisConstraintTimeDependent(root_node))
+            if (IsThisConstraintTimeDependent(root_node, evaluationContext))
             {
                 addTimeDependentConstraints(pb, linear_constraints, constraint.Id());
             }
@@ -325,9 +325,11 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
     }
 }
 
-bool ComponentFiller::IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node) const
+bool ComponentFiller::IsThisConstraintTimeDependent(
+  const Expressions::Nodes::Node* node,
+  Expressions::Visitors::EvaluationContext& evaluationContext) const
 {
-    Expressions::Visitors::TimeIndexVisitor timeIndexVisitor(component_);
+    Expressions::Visitors::TimeIndexVisitor timeIndexVisitor(component_, evaluationContext);
     const auto ret = timeIndexVisitor.dispatch(node);
     return ret == Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY
            || ret == Expressions::Visitors::TimeIndex::VARYING_IN_TIME_AND_SCENARIO;

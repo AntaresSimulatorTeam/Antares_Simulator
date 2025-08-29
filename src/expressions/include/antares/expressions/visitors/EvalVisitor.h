@@ -21,13 +21,13 @@
 #pragma once
 
 #include <cmath>
-#include <functional>
 #include <sstream>
 #include <variant>
 
 #include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include "antares/expressions/visitors/NodeVisitor.h"
+#include "antares/solver/optim-model-filler/VariableDictionary.h"
 #include "antares/study/system-model/component.h"
 
 namespace Antares::Expressions::Visitors
@@ -133,10 +133,6 @@ public:
 
     [[nodiscard]] std::vector<double> valuesAsVector() const
     {
-        if (!std::holds_alternative<std::vector<double>>(value_))
-        {
-            throw EvalResultTypeError("Expected a vector but found a double.");
-        }
         return std::get<std::vector<double>>(value_);
     }
 
@@ -265,9 +261,7 @@ public:
                          Optimisation::LinearProblemApi::FillContext fillContext);
     explicit EvalVisitor(EvaluationContext context,
                          Optimisation::LinearProblemApi::FillContext fillContext,
-                         const ModelerStudy::SystemModel::Component* component,
-                         int scenarioIndex,
-                         int timeIndex);
+                         const ModelerStudy::SystemModel::Component* component);
 
     std::string name() const override;
 
@@ -275,8 +269,6 @@ protected:
     const EvaluationContext context_;
     Optimisation::LinearProblemApi::FillContext fillContext_;
     const ModelerStudy::SystemModel::Component* component_ = nullptr;
-    int scenarioIndex_ = -1;
-    int timeIndex_ = -1;
 
     EvaluationResult visit(const Nodes::SumNode* node) override;
     EvaluationResult visit(const Nodes::SubtractionNode* node) override;

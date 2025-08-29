@@ -58,17 +58,15 @@ public:
     virtual void init(bool, const std::string& simulationId) = 0;
     virtual void writeSolution(const Optimisation::LinearProblemApi::IMipSolution& solution) = 0;
     virtual void writeSimulationTable(
-      const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
+      const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
       const Optimisation::LinearProblemApi::IMipSolution& solution,
-      const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>&
-        components,
+      const std::unordered_map<std::string, ModelerStudy::SystemModel::Component>& components,
       Optimisation::LinearProblemApi::ILinearProblemData* dataSeries,
-      const Antares::Optimization::VariableDictionary& variableDictionary,
-      const Antares::Optimisation::LinearProblemApi::FillContext& fillContext) const
+      const Optimisation::LinearProblemApi::FillContext& fillContext) const
       = 0;
 
     virtual void writeProblem(
-      const Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem& problem)
+      const Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem& problem)
       = 0;
 };
 } // namespace Antares::Solver

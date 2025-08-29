@@ -658,8 +658,9 @@ protected:
 
     bool internalLoadIni(const std::filesystem::path& path, const StudyLoadOptions& options);
 
-    //! Load extra modeler components for hybrid studies
+    //! Load extra modeler components for hybrid studies and verify compatibility
     void loadModelerComponents();
+    void checkModelerDataCompatibility() const;
 
     void parameterFiller(const StudyLoadOptions& options);
 

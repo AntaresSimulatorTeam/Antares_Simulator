@@ -30,6 +30,8 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/PrintVisitor.h>
 #include <antares/expressions/visitors/TimeIndexVisitor.h>
+#include "antares/optimisation/linear-problem-api/ILinearProblemData.h"
+#include "antares/optimisation/linear-problem-api/IScenario.h"
 
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
@@ -71,10 +73,33 @@ struct BasicFixture: Registry<Node>
                                                .withModel(&m)
                                                .withScenarioGroupId("group")
                                                .build();
+
+    // Mock dependency
+    struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearProblemData
+    {
+        [[nodiscard]] double getData(const std::string&, unsigned int, unsigned int) const override
+        {
+            return 123.45; // Mock return value for testing
+        }
+    } mockData;
+
+    std::map<std::string, ParameterTypeAndValue> system_parameters = {
+      {"valid_number", {"valid_number", ParameterType::CONSTANT, "42.5"}},
+      {"invalid_number", {"invalid_number", ParameterType::CONSTANT, "abc"}},
+      {"out_of_range", {"out_of_range", ParameterType::CONSTANT, "1e500"}},
+      {"timeserie_param", {"timeserie_param", ParameterType::TIMESERIE, "timeserie_file"}}};
+
+    std::map<std::string, double> variables; // Not needed for this test
+
+    Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
+
+    // TODO update these tests and add new cases
+    EvaluationContext context;
     TimeIndexVisitor timeIndexVisitor;
 
     BasicFixture():
-        timeIndexVisitor(component)
+        context(system_parameters, variables, mockData, emptyScenario),
+        timeIndexVisitor(component, context)
     {
     }
 };
@@ -181,7 +206,7 @@ BOOST_DATA_TEST_CASE_F(BasicFixture,
                        binaryOperator)
 {
     auto [root, parameter] = binaryOperator(*this, timeIndex);
-    TimeIndexVisitor timeIndexVisitor(component);
+    TimeIndexVisitor timeIndexVisitor(component, context);
     BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(root), timeIndex);
 
     Node* neg = create<NegationNode>(root);
@@ -205,7 +230,7 @@ BOOST_DATA_TEST_CASE_F(BasicFixture,
                        not_handled_node)
 {
     Node* nonHandldedNode = not_handled_node(*this);
-    TimeIndexVisitor timeIndexVisitor(component);
+    TimeIndexVisitor timeIndexVisitor(component, context);
     BOOST_CHECK_THROW(timeIndexVisitor.dispatch(nonHandldedNode), std::invalid_argument);
 }
 

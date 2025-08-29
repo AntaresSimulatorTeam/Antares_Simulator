@@ -61,6 +61,7 @@ private:
 
 /**
  * @brief Represents a component variable node in a syntax tree.
+ * TODO : remove this, it is unused
  */
 class ComponentVariableNode: public ComponentNode
 {
@@ -75,6 +76,7 @@ public:
 
 /**
  * @brief Represents a component parameter node in a syntax tree.
+ * TODO : remove this, it is unused
  */
 class ComponentParameterNode: public ComponentNode
 {

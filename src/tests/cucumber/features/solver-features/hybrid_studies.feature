@@ -20,16 +20,16 @@ Feature: hybrid (simulator+modeler) studies
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_6_0"
     When I run antares simulator
     Then the simulation succeeds
-    And the simulation takes less than 5 seconds
+    And the simulation takes less than 10 seconds
     # 100MW @ 0.3€/MW/h, for 1 week = 5040 €
     # for now, modeler costs does not figure in system cost txt
     And the annual system cost is 0
     And in area "NODE", during year 1, loss of load lasts 0 hours
-     # TODO activate the following checks for 5.2
-#    And the modeler outputs contain the following entries
-#      | component | output                 | timestep | scenario | value |
-#      | gen1      | generation.flow_field  | 0-23     | 0        | 100   |
-#      | load1     | consumption.flow_field | 0        | 0        | -100  |
+    And the modeler outputs contain the following entries
+      | block | component | output                 | timestep  | scenario | value |
+      |       | gen1      | generation.flow_field  | 1-24      | 0-4      | 100   |
+      |       | gen1      | generation.flow_field  | 6184-6300 | 0-4      | 100   |
+      | 1-364 | load1     | consumption.flow_field |           | 0-4      | -100  |
 
   @fast @short
   Scenario: Legacy node with one legacy load (up to 5952 MW) and wind, and one generator component (max_p=6200) (168h simplex)

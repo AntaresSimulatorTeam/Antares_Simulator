@@ -40,7 +40,14 @@ EvaluationContext::EvaluationContext(std::map<std::string, ParameterTypeAndValue
 
 double EvaluationContext::getVariableValue(const std::string& key) const
 {
-    return variables_.at(key);
+    try
+    {
+        return variables_.at(key);
+    }
+    catch (std::exception& e)
+    {
+        throw std::runtime_error("No value for varName = " + key);
+    }
 }
 
 static double convertToDouble(const std::string& key, const std::string& value)

@@ -33,7 +33,8 @@ namespace Antares::Expressions::Visitors
 class TimeIndexVisitor: public NodeVisitor<TimeIndex>
 {
 public:
-    explicit TimeIndexVisitor(const Antares::ModelerStudy::SystemModel::Component& component);
+    explicit TimeIndexVisitor(const ModelerStudy::SystemModel::Component& component,
+                              EvaluationContext context);
 
     std::string name() const override;
 
@@ -58,8 +59,9 @@ private:
     TimeIndex visit(const Nodes::TimeSumNode* timeSumNode) override;
     TimeIndex visit(const Nodes::AllTimeSumNode* timeSumNode) override;
 
-    std::vector<const Antares::ModelerStudy::SystemModel::Component*> getConnectedComponents();
+    std::vector<const ModelerStudy::SystemModel::Component*> getConnectedComponents();
 
-    const Antares::ModelerStudy::SystemModel::Component& component_;
+    const ModelerStudy::SystemModel::Component& component_;
+    const EvaluationContext context_;
 };
 } // namespace Antares::Expressions::Visitors

@@ -27,8 +27,10 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/solver/optim-model-filler/VariableDictionary.h>
+#include "antares/exception/RuntimeError.hpp"
 #include "antares/expressions/ShiftVector.h"
 #include "antares/logs/logs.h"
+#include "antares/optimisation/linear-problem-api/IScenario.h"
 
 namespace Antares::Expressions::Visitors
 {
@@ -41,15 +43,11 @@ EvalVisitor::EvalVisitor(EvaluationContext context,
 
 EvalVisitor::EvalVisitor(EvaluationContext context,
                          Optimisation::LinearProblemApi::FillContext fillContext,
-                         const ModelerStudy::SystemModel::Component* component,
-                         int scenarioIndex,
-                         int timeIndex):
+                         const ModelerStudy::SystemModel::Component* component):
     context_(std::move(context)),
     fillContext_(std::move(fillContext)),
-    scenarioIndex_(scenarioIndex),
-    timeIndex_(timeIndex)
+    component_(component)
 {
-    component_ = component;
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::SumNode* node)
@@ -96,18 +94,34 @@ EvaluationResult EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 {
-    if (component_ == nullptr || timeIndex_ == -1)
+    if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
+        || node->timeIndex() == TimeIndex::VARYING_IN_SCENARIO_ONLY)
     {
-        return EvaluationResult{context_.getVariableValue(node->value())};
+        std::string varName = Optimization::VariableDictionary::buildVariableName(
+          {component_->Id(), node->value()},
+          Optimization::MCYearAndTime::MCYear{fillContext_.getYear()},
+          std::nullopt);
+        return EvaluationResult(context_.getVariableValue(varName));
     }
+    if (node->timeIndex() == TimeIndex::VARYING_IN_TIME_ONLY
+        || node->timeIndex() == TimeIndex::VARYING_IN_TIME_AND_SCENARIO)
+    {
+        std::vector<double> varValues;
+        varValues.reserve(fillContext_.getLocalNumberOfTimeSteps());
+        for (auto timeStep = fillContext_.getLocalFirstTimeStep();
+             timeStep <= fillContext_.getLocalLastTimeStep();
+             ++timeStep)
+        {
+            std::string varName = Optimization::VariableDictionary::buildVariableName(
+              {component_->Id(), node->value()},
+              Optimization::MCYearAndTime::MCYear{fillContext_.getYear()},
+              timeStep);
 
-    Optimization::PartialKey key(component_->Id(), node->value());
-    std::string varName = Optimization::VariableDictionary::buildVariableName(key,
-                                                                              std::nullopt,
-                                                                              timeIndex_);
-    // TODO RM DEBUG
-    logs.notice() << "VariableNode: getting variable '" << varName << "'";
-    return EvaluationResult(context_.getVariableValue(varName));
+            varValues.emplace_back(context_.getVariableValue(varName));
+        }
+        return EvaluationResult{varValues};
+    }
+    throw Error::RuntimeError("Case not supported");
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
@@ -157,21 +171,19 @@ EvaluationResult EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
 {
     std::string portId = node->getPortName();
     std::string fieldId = node->getFieldName();
-
-    EvaluationResult to_return(0.);
-    // TODO REMOVE DEBUG
-    logs.notice() << "PortFieldSumNode: summing over port '" << portId << "' field '" << fieldId
-                  << "'";
-    for (const auto connexion_end: component_->componentConnectionsViaPort(portId))
-    {
-        auto* component = connexion_end.component();
-        auto* port = connexion_end.port();
-
-        EvalVisitor visitor(context_, fillContext_, component, scenarioIndex_, timeIndex_);
-        const Nodes::Node* node = component->nodeAtPortField(port->Id(), fieldId);
-        to_return += visitor.dispatch(node);
-    }
-    return to_return;
+    const auto& connections = component_->componentConnectionsViaPort(portId);
+    return std::accumulate(std::begin(connections),
+                           std::end(connections),
+                           EvaluationResult{0.},
+                           [this,
+                            fieldId](const EvaluationResult& sum,
+                                     const ModelerStudy::SystemModel::ConnectionEnd& connection_end)
+                           {
+                               auto* component = connection_end.component();
+                               auto* port = connection_end.port();
+                               return sum
+                                      + dispatch(component->nodeAtPortField(port->Id(), fieldId));
+                           });
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::ComponentVariableNode* node)

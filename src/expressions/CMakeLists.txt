@@ -99,6 +99,7 @@ target_link_libraries(expressions
         PRIVATE
         Antares::antares-study-system-model
         Antares::optim-model-filler
+        Antares::exception
 )
 
 
