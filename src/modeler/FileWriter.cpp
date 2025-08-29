@@ -51,20 +51,6 @@ void FileWriter::init(bool setOutput, const std::string& simulationId)
     }
 }
 
-void FileWriter::writeSolution(const Optimisation::LinearProblemApi::IMipSolution& solution)
-{
-    if (output)
-    {
-        logs.info() << "Writing objective & variable values...";
-        std::ofstream sol_out(outputPath_ / "solution.csv");
-        sol_out << std::setprecision(15) << "objective " << solution.getObjectiveValue()
-                << std::endl;
-        for (const auto& [name, value]: solution.getOptimalValues())
-        {
-            sol_out << name << " " << value << std::endl;
-        }
-    }
-}
 
 void FileWriter::writeSimulationTable(
   const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,

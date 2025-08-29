@@ -147,7 +147,6 @@ void Modeler::solve() const
         {
         case MipStatus::OPTIMAL:
         case MipStatus::FEASIBLE:
-            writer_.writeSolution(*solution);
             writer_.writeSimulationTable(ortools_linear_problem,
                                          *solution,
                                          data.system->Components(),
