@@ -231,7 +231,7 @@ BOOST_AUTO_TEST_CASE(deleting_an_element_in_the_middle_of_the_vector)
     BOOST_CHECK_EQUAL(*cyclic_it, 4);
 }
 
-BOOST_AUTO_TEST_CASE(deleting_an_element_with_itrator_keeps_this_iterator_valid)
+BOOST_AUTO_TEST_CASE(deleting_an_element_with_iterator_keeps_this_iterator_valid)
 {
     std::vector<int> v = {1, 2, 3, 4};
     CyclicIterator<int> cyclic_it(v);

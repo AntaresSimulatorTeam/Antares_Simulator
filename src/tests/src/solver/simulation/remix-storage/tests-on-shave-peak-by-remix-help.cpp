@@ -138,28 +138,53 @@ BOOST_AUTO_TEST_CASE(unsup_energy_at_hour_of_min_gen_is_bounded___exchange_gets_
     BOOST_CHECK_EQUAL(exchange, unsupE[hourOfMinGen]);
 }
 
-BOOST_AUTO_TEST_CASE(
-  limit_for_exchange_can_be__min_of_levels_minus_low_rule_curve__at_hour_of_min_gen)
+BOOST_AUTO_TEST_CASE(limit_for_exchange_can_be__min_of_LEVELS__minus__LOW_RULE_CURVE)
 {
     // In case hourOfMinGen < hourOfMaxGen, exchange is limited by :
-    // min(levels - low rule curve) on subrange [hourOfMinGen, hourOfMaxGen]
+    // min(levels - low rule curve) on subrange [hourOfMinGen, hourOfMaxGen - 1]
+    // CAUTION : hourOfMaxGen is not part of subrange.
     const unsigned hourOfMinGen = 1;
     const unsigned hourOfMaxGen = 4;
 
-    // Levels decrease :
+    // Here levels decrease (but not mandatory for this test) :
     initLevel = 100;
-    std::ranges::fill(withdrawal, 50);
-    std::ranges::fill(inflows, 40);
-    // So levels (computed internally at storage creation) should be : {90, 80, 70, 60, 50}
+    std::ranges::fill(withdrawal, 95);
+    std::ranges::fill(inflows, 80);
+    // So levels (computed internally at storage creation) should be : {85, 70, 55, 40, 25}
 
     // Low rules curve increases :
-    lowRuleCurve = {5, 10, 15, 20, 25};
+    lowRuleCurve = {5, 10, 14, 18, 20};
 
     auto storage = createSTSstorage();
 
     auto exchange = computeExchange(hourOfMinGen, hourOfMaxGen, maxVariationGen, storage);
 
-    double expectedExchange = levels[hourOfMaxGen] - lowRuleCurve[hourOfMaxGen];
+    double expectedExchange = levels[hourOfMaxGen - 1] - lowRuleCurve[hourOfMaxGen - 1];
+    BOOST_CHECK_EQUAL(exchange, expectedExchange);
+}
+
+BOOST_AUTO_TEST_CASE(limit_for_exchange_can_be__min_of_UP_RULE_CURVE__minus__LEVELS)
+{
+    // In case hourOfMaxGen < hourOfMinGen, exchange is limited by :
+    // min(ruleCurveUp - levels) on subrange [hourOfMaxGen, hourOfMinGen - 1]
+    // CAUTION : hourOfMinGen is not part of subrange.
+    const unsigned hourOfMinGen = 4;
+    const unsigned hourOfMaxGen = 1;
+
+    // Here levels increase (but not mandatory for this test) :
+    initLevel = 100;
+    std::ranges::fill(withdrawal, 25);
+    std::ranges::fill(inflows, 35);
+    // So levels (computed internally at storage creation) should be : {110, 120, 130, 140, 150}
+
+    // Low rules curve decreases :
+    upRuleCurve = {175, 170, 165, 160, 155};
+
+    auto storage = createSTSstorage();
+
+    auto exchange = computeExchange(hourOfMinGen, hourOfMaxGen, maxVariationGen, storage);
+
+    double expectedExchange = upRuleCurve[hourOfMinGen - 1] - levels[hourOfMinGen - 1];
     BOOST_CHECK_EQUAL(exchange, expectedExchange);
 }
 
