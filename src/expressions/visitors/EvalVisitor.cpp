@@ -44,6 +44,7 @@ EvalVisitor::EvalVisitor(EvaluationContext context,
 EvalVisitor::EvalVisitor(EvaluationContext context,
                          Optimisation::LinearProblemApi::FillContext fillContext,
                          const ModelerStudy::SystemModel::Component* component):
+    // TODO put component or its id inside context, it is already component-bound
     context_(std::move(context)),
     fillContext_(std::move(fillContext)),
     component_(component)
