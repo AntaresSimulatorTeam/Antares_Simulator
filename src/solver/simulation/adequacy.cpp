@@ -225,7 +225,6 @@ bool Adequacy::year(Progression::Task& progression,
                                              simulationObserver_.get(),
                                              currentSimTable);
                 currentSimTable.write();
-                currentSimTable.clear();
 
                 RemixHydroForAllAreas(study.areas,
                                       currentProblem,

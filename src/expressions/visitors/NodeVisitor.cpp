@@ -24,23 +24,8 @@
 
 namespace Antares::Expressions::Visitors
 {
-static void ToYuniInfo(const std::string& msg)
-{
-    logs.info() << msg;
-}
-
-static void ToYuniWarning(const std::string& msg)
-{
-    logs.warning() << msg;
-}
-
-static void ToYuniError(const std::string& msg)
+void logError(const std::string& msg)
 {
     logs.error() << msg;
-}
-
-LogSink RedirectToAntaresLogs()
-{
-    return {.info = ToYuniInfo, .warning = ToYuniWarning, .error = ToYuniError};
 }
 } // namespace Antares::Expressions::Visitors

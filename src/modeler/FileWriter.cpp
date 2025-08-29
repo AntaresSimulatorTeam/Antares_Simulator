@@ -45,7 +45,7 @@ void FileWriter::init(bool setOutput, const std::string& simulationId)
         if (!std::filesystem::is_directory(outputPath_)
             && !std::filesystem::create_directory(outputPath_))
         {
-            throw Antares::Solver::Modeler::ModelerError(
+            throw Solver::Modeler::ModelerError(
               "Failed to create output directory. Exiting simulation.");
         }
     }
@@ -67,23 +67,22 @@ void FileWriter::writeSolution(const Optimisation::LinearProblemApi::IMipSolutio
 }
 
 void FileWriter::writeSimulationTable(
-  const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
+  const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
   const Optimisation::LinearProblemApi::IMipSolution& solution,
-  const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>& components,
-  Optimisation::LinearProblemApi::ILinearProblemData* dataSeries,
-  const Antares::Optimization::VariableDictionary& variableDictionary,
-  const Antares::Optimisation::LinearProblemApi::FillContext& fillContext) const
+  const std::unordered_map<std::string, ModelerStudy::SystemModel::Component>& components,
+  const Optimization::VariableDictionary& variableDictionary,
+  const Optimisation::LinearProblemApi::FillContext& fillContext) const
 {
     if (output)
     {
         SimulationTableCsvFile simulationTable(outputPath_, simulationId_);
         FillSimulationTable(simulationTable,
                             linearProblem,
+                            solution.getObjectiveValue(),
                             components,
-                            dataSeries,
-                            solution.getOptimalValues(),
-                            variableDictionary,
-                            fillContext);
+                            fillContext,
+                            1,
+                            TimeConversionMode::SingleBlock);
         simulationTable.writeHeader();
         simulationTable.write();
     }

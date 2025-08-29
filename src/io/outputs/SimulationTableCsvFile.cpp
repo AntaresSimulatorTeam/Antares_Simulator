@@ -21,6 +21,8 @@
 
 #include "antares/io/outputs/SimulationTableCsvFile.h"
 
+#include <antares/logs/logs.h>
+
 SimulationTableCsvFile::SimulationTableCsvFile(const std::filesystem::path& outputFolder,
                                                const std::string& simulationId):
     SimulationTableCsv()
@@ -37,6 +39,7 @@ SimulationTableCsvFile::SimulationTableCsvFile(const std::filesystem::path& outp
     {
         throw std::runtime_error("Cannot open file: " + simulationTableFile.string());
     }
+    Antares::logs.info() << "Simulation table is written in: " << simulationTableFile.string();
 }
 
 void SimulationTableCsvFile::write()
