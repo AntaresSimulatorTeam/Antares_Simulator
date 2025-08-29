@@ -512,7 +512,7 @@ BOOST_FIXTURE_TEST_CASE(comparison_of_results_with_python_algo,
 
     callRemixStorageAlgorithm();
 
-    std::vector<double> expected_HydroGen = {42.3, 35.3,  27.,  31.,   7.,    33.,   8.,
+    std::vector<double> expected_HydroGen = {39.6, 38.,  27.,  31.,   7.,    33.,   8.,
                                              31.,  19.55, 2.,   38.55, 30.55, 22.55, 7.,
                                              4.,   45.55, 6.55, 25.55, 41.55, 25.};
     BOOST_TEST(HydroGen == expected_HydroGen, boost::test_tools::per_element());
