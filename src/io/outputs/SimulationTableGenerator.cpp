@@ -260,15 +260,19 @@ void addPortEntries(ISimulationTable& simulationTable,
 
     for (const auto& [portFieldKey, portFieldDef]: component.getModel()->PortFieldDefinitions())
     {
-        TI idxType = Antares::Expressions::Visitors::TimeIndexVisitor(component, evalContext)
-                       .dispatch(portFieldDef.Definition().RootNode());
-        idxType = updateTimeIndexIfShouldForceScenario(idxType, forceScenarioDependency);
-
         Antares::Expressions::Visitors::EvalVisitor evalVisitor(evalContext,
                                                                 fillContext,
                                                                 &component);
 
         auto portValue = evalVisitor.dispatch(portFieldDef.Definition().RootNode());
+
+        TI idxType = Antares::Expressions::Visitors::TimeIndexVisitor(component, evalContext)
+                       .dispatch(portFieldDef.Definition().RootNode());
+        idxType = updateTimeIndexIfShouldForceScenario(idxType, forceScenarioDependency);
+        // TODO: EvalVistior already uses a TimeIndexVisitor under the hood to know if the port
+        // is time and/or scenario dependent. It may be more efficient to enrich EvaluationResult
+        // by adding a TimeIndex to it? It would require some careful work inside EvalVisitor
+
         auto handle = [&](std::optional<unsigned> ts, std::optional<unsigned> scenIdx)
         {
             TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(*ts,

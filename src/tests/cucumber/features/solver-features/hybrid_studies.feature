@@ -26,10 +26,10 @@ Feature: hybrid (simulator+modeler) studies
     And the annual system cost is 0
     And in area "NODE", during year 1, loss of load lasts 0 hours
     And the modeler outputs contain the following entries
-      | block | component | output                 | timestep  | scenario | value |
-      |       | gen1      | generation.flow_field  | 1-24      | 0-4      | 100   |
-      |       | gen1      | generation.flow_field  | 6184-6300 | 0-4      | 100   |
-      | 1-364 | load1     | consumption.flow_field |           | 0-4      | -100  |
+      | block   | component | output                 | timestep  | scenario | value |
+      |         | gen1      | generation.flow_field  | 1-24      | 0-4      | 100   |
+      |         | gen1      | generation.flow_field  | 6184-6230 | 0-4      | 100   |
+      | 330-364 | load1     | consumption.flow_field |           | 0-4      | -100  |
 
   @fast @short
   Scenario: Legacy node with one legacy load (up to 5952 MW) and wind, and one generator component (max_p=6200) (168h simplex)

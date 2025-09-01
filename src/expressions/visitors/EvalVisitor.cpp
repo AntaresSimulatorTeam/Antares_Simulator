@@ -66,9 +66,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::SubtractionNode* node)
     return dispatch(node->left()) - dispatch(node->right());
 }
 
-EvaluationResult EvalVisitor::visit(const Nodes::MultiplicationNode* node
-
-)
+EvaluationResult EvalVisitor::visit(const Nodes::MultiplicationNode* node)
 {
     return dispatch(node->left()) * dispatch(node->right());
 }
@@ -153,9 +151,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::LiteralNode* node)
 {
-    return
-
-      EvaluationResult{node->value()};
+    return EvaluationResult{node->value()};
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::NegationNode* node)
