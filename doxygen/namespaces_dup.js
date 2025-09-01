@@ -1928,7 +1928,8 @@ var namespaces_dup =
         ] ],
         [ "XCast", null, [
           [ "StudyData", "classAntares_1_1TSGenerator_1_1XCast_1_1StudyData.html", "classAntares_1_1TSGenerator_1_1XCast_1_1StudyData" ],
-          [ "XCast", "classAntares_1_1TSGenerator_1_1XCast_1_1XCast.html", "classAntares_1_1TSGenerator_1_1XCast_1_1XCast" ]
+          [ "XCast", "classAntares_1_1TSGenerator_1_1XCast_1_1XCast.html", "classAntares_1_1TSGenerator_1_1XCast_1_1XCast" ],
+          [ "mcyear", "solver_2ts-generator_2xcast_2xcast_8cpp.html#a82fecda6f8e19d9612b9f237259d72cc", null ]
         ] ],
         [ "StudyParamsForLinkTS", "structAntares_1_1TSGenerator_1_1StudyParamsForLinkTS.html", "structAntares_1_1TSGenerator_1_1StudyParamsForLinkTS" ],
         [ "LinkTSgenerationParams", "structAntares_1_1TSGenerator_1_1LinkTSgenerationParams.html", "structAntares_1_1TSGenerator_1_1LinkTSgenerationParams" ],
