@@ -168,9 +168,12 @@ struct BB
 
     ShortTermStorageCumulativeConstraintData InitializeShortTermStorageCumulativeConstraintData()
     {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmissing-braces"
         return {CorrespondanceCntNativesCntOptim,
                 shortTermStorage,
                 CorrespondanceCntNativesCntOptimHebdomadaires};
+#pragma GCC diagnostic pop
     }
 
     ConstraintBuilderData constraint_builder_data = InitializeConstraintBuilderData();
