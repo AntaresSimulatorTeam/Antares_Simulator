@@ -21,6 +21,7 @@
 #pragma once
 
 #include <cmath>
+#include <fmt/base.h>
 #include <functional>
 #include <sstream>
 #include <variant>
@@ -72,6 +73,11 @@ public:
         return evaluateBinaryOperation(right, std::multiplies<>());
     }
 
+    EvaluationResult& operator*=(const EvaluationResult& right)
+    {
+        return evaluateBinaryOperation(right, std::multiplies<>());
+    }
+
     struct SafeDivides
     {
         static constexpr double DEFAULT_THRESHOLD = 1e-16;
@@ -95,6 +101,11 @@ public:
     };
 
     EvaluationResult operator/(const EvaluationResult& right) const
+    {
+        return evaluateBinaryOperation(right, SafeDivides{});
+    }
+
+    EvaluationResult& operator/=(const EvaluationResult& right)
     {
         return evaluateBinaryOperation(right, SafeDivides{});
     }
@@ -151,6 +162,8 @@ private:
     template<typename Op>
     EvaluationResult evaluateBinaryOperation(const EvaluationResult& right, Op op) const;
     template<typename Op>
+    EvaluationResult& evaluateBinaryOperation(const EvaluationResult& right, Op op);
+    template<typename Op>
     EvaluationResult evaluateUnaryOperation(Op op) const;
 
     static double shift(double value, int)
@@ -168,6 +181,13 @@ double computeBinaryOperation(double lhs, double rhs, BinaryOp op)
 }
 
 template<typename BinaryOp>
+double& computeBinaryOperation(double& lhs, double rhs, BinaryOp op)
+{
+    lhs = op(lhs, rhs);
+    return lhs;
+}
+
+template<typename BinaryOp>
 std::vector<double> computeBinaryOperation(const std::vector<double>& lhs, double rhs, BinaryOp op)
 {
     auto result(lhs);
@@ -179,9 +199,35 @@ std::vector<double> computeBinaryOperation(const std::vector<double>& lhs, doubl
 }
 
 template<typename BinaryOp>
+std::vector<double>& computeBinaryOperation(std::vector<double>& lhs, double rhs, BinaryOp op)
+{
+    for (double& value: lhs)
+    {
+        value = op(value, rhs);
+    }
+    return lhs;
+}
+
+template<typename BinaryOp>
 std::vector<double> computeBinaryOperation(double lhs, const std::vector<double>& rhs, BinaryOp op)
 {
-    return computeBinaryOperation(rhs, lhs, op);
+    std::vector<double> result(rhs.size());
+    for (size_t i = 0; i < rhs.size(); ++i)
+    {
+        result[i] = op(lhs, rhs[i]);
+    }
+    return result;
+}
+
+template<typename BinaryOp>
+std::vector<double> computeBinaryOperation(double& lhs, const std::vector<double>& rhs, BinaryOp op)
+{
+    std::vector<double> result(rhs.size());
+    for (size_t i = 0; i < rhs.size(); ++i)
+    {
+        result[i] = op(lhs, rhs[i]);
+    }
+    return result;
 }
 
 class VectorsMismatchSize final: public std::runtime_error
@@ -190,10 +236,7 @@ public:
     using std::runtime_error::runtime_error;
 };
 
-template<typename BinaryOp>
-std::vector<double> computeBinaryOperation(const std::vector<double>& lhs,
-                                           const std::vector<double>& rhs,
-                                           BinaryOp op)
+void CheckVectorsSize(const std::vector<double>& lhs, const std::vector<double>& rhs)
 {
     if (lhs.size() != rhs.size())
     {
@@ -202,6 +245,14 @@ std::vector<double> computeBinaryOperation(const std::vector<double>& lhs,
                  << lhs.size() << " and " << rhs.size() << ").";
         throw VectorsMismatchSize(errorMsg.str());
     }
+}
+
+template<typename BinaryOp>
+std::vector<double> computeBinaryOperation(const std::vector<double>& lhs,
+                                           const std::vector<double>& rhs,
+                                           BinaryOp op)
+{
+    CheckVectorsSize(lhs, rhs);
 
     std::vector<double> result(lhs.size());
     for (size_t i = 0; i < lhs.size(); ++i)
@@ -209,6 +260,20 @@ std::vector<double> computeBinaryOperation(const std::vector<double>& lhs,
         result[i] = op(lhs[i], rhs[i]);
     }
     return result;
+}
+
+template<typename BinaryOp>
+std::vector<double>& computeBinaryOperation(std::vector<double>& lhs,
+                                            const std::vector<double>& rhs,
+                                            BinaryOp op)
+{
+    CheckVectorsSize(lhs, rhs);
+
+    for (size_t i = 0; i < lhs.size(); ++i)
+    {
+        lhs[i] = op(lhs[i], rhs[i]);
+    }
+    return lhs;
 }
 
 template<typename Op>
@@ -220,6 +285,24 @@ EvaluationResult EvaluationResult::evaluateBinaryOperation(const EvaluationResul
                  { return computeBinaryOperation(l, r, op); },
                  value_,
                  right.value_));
+}
+
+template<typename Op>
+EvaluationResult& EvaluationResult::evaluateBinaryOperation(const EvaluationResult& right, Op op)
+{
+    if (std::holds_alternative<std::vector<double>>(value_))
+    {
+        auto& l = std::get<std::vector<double>>(value_);
+        l = std::visit([&op, &l](const auto& r) { return computeBinaryOperation(l, r, op); },
+                       right.value());
+    }
+    else
+    {
+        auto& l = std::get<double>(value_);
+        value_ = std::visit([&op, l](const auto& r) -> std::variant<double, std::vector<double>>
+                            { return computeBinaryOperation(l, r, op); },
+                            right.value());
+    }
 }
 
 template<typename UnaryOp>

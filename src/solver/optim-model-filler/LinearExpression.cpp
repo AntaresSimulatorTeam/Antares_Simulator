@@ -44,9 +44,10 @@ FullKeyMap scale_map(const FullKeyMap& map, double scale)
     return result;
 }
 
-LinearExpression::LinearExpression(double offset, FullKeyMap coef_per_var):
+LinearExpression::LinearExpression(const OffsetType& offset,
+                                   const std::vector<CoefficientsType>& coef_per_var):
     offset_(offset),
-    coef_per_var_(std::move(coef_per_var))
+    coef_per_var_(coef_per_var)
 {
 }
 
@@ -57,16 +58,19 @@ LinearExpression LinearExpression::operator+(const LinearExpression& other) cons
     return result;
 }
 
-const FullKeyMap& LinearExpression::coefPerVar() const
-{
-    return coef_per_var_;
-}
-
 LinearExpression& LinearExpression::operator+=(const LinearExpression& other)
 {
     this->offset_ += other.offset_;
-    add_maps(coef_per_var_, other.coef_per_var_);
+    for (auto i = 0; i < coef_per_var_.size(); ++i)
+    {
+        coef_per_var_[i] += other.coef_per_var_.at(i);
+    }
     return *this;
+}
+
+const std::vector<CoefficientsType>& LinearExpression::coefPerVar() const
+{
+    return coef_per_var_;
 }
 
 LinearExpression LinearExpression::operator-(const LinearExpression& other) const
@@ -75,16 +79,93 @@ LinearExpression LinearExpression::operator-(const LinearExpression& other) cons
     result += -other;
     return result;
 }
+static bool EvaluationResultIsEmptyOrZero(const Expressions::Visitors::EvaluationResult& result)
+{
+    const auto& value = result.value();
+    if (std::holds_alternative<double>(value))
+    {
+        return std::get<double>(value) == 0;
+    }
+    if (std::holds_alternative<std::vector<double>>(value))
+    {
+        return std::get<std::vector<double>>(value).size() == 0;
+    }
+    throw std::runtime_error("LinearExpression::EvaluationResultIsEmptyOrZero() failed");
+}
+
+std::vector<Expressions::Visitors::EvaluationResult>& operator*(
+  const std::vector<Expressions::Visitors::EvaluationResult>& rights,
+  const Expressions::Visitors::EvaluationResult& scale)
+{
+    auto ret(rights);
+    for (auto& v: ret)
+    {
+        v *= scale;
+    }
+    return ret;
+}
+
+std::vector<Expressions::Visitors::EvaluationResult>& operator*=(
+  std::vector<Expressions::Visitors::EvaluationResult>& rights,
+  const Expressions::Visitors::EvaluationResult& scale)
+{
+    for (auto& right: rights)
+    {
+        right *= scale;
+    }
+    return rights;
+}
 
 LinearExpression LinearExpression::operator*(const LinearExpression& other) const
 {
-    if (coef_per_var_.empty())
+    bool localCoeffPerVarIsEmpty = std::ranges::all_of(coef_per_var_,
+                                                       [&](const CoefficientsType& coefficients)
+                                                       {
+                                                           return EvaluationResultIsEmptyOrZero(
+                                                             coefficients);
+                                                       });
+    bool otherCoeffPerVarIsEmpty = std::ranges::all_of(other.coef_per_var_,
+                                                       [&](const CoefficientsType& coefficients)
+                                                       {
+                                                           return EvaluationResultIsEmptyOrZero(
+                                                             coefficients);
+                                                       });
+    if (localCoeffPerVarIsEmpty)
     {
-        return {offset_ * other.offset_, scale_map(other.coef_per_var_, offset_)};
+        return {offset_ * other.offset_, other.coef_per_var_ * offset_};
     }
-    else if (other.coef_per_var_.empty())
+    else if (otherCoeffPerVarIsEmpty)
     {
-        return {offset_ * other.offset_, scale_map(coef_per_var_, other.offset_)};
+        return {offset_ * other.offset_, coef_per_var_ * other.offset_};
+    }
+    else
+    {
+        throw std::invalid_argument("A linear expression can't have quadratic terms.");
+    }
+}
+LinearExpression& LinearExpression::operator*=(const LinearExpression& other)
+{
+    bool localCoeffPerVarIsEmpty = std::ranges::all_of(coef_per_var_,
+                                                       [&](const CoefficientsType& coefficients)
+                                                       {
+                                                           return EvaluationResultIsEmptyOrZero(
+                                                             coefficients);
+                                                       });
+    bool otherCoeffPerVarIsEmpty = std::ranges::all_of(other.coef_per_var_,
+                                                       [&](const CoefficientsType& coefficients)
+                                                       {
+                                                           return EvaluationResultIsEmptyOrZero(
+                                                             coefficients);
+                                                       });
+    if (localCoeffPerVarIsEmpty)
+    {
+        offset_ *= other.offset_;
+        coef_per_var_ = other.coef_per_var_ * offset_;
+    }
+    else if (otherCoeffPerVarIsEmpty)
+    {
+        offset_ *= other.offset_;
+        coef_per_var_ *= other.offset_;
     }
     else
     {
@@ -94,19 +175,34 @@ LinearExpression LinearExpression::operator*(const LinearExpression& other) cons
 
 LinearExpression LinearExpression::operator/(const LinearExpression& other) const
 {
-    if (!other.coef_per_var_.empty())
+    if (!std::ranges::all_of(other.coef_per_var_,
+                             [&](const CoefficientsType& coefficients)
+                             { return EvaluationResultIsEmptyOrZero(coefficients); }))
     {
-        throw std::invalid_argument("A linear expression can't have a variable as a dividend.");
+        throw std::invalid_argument("A linear expression can't have a variable as a divisor.");
     }
-    return LinearExpression(offset_ / other.offset_, scale_map(coef_per_var_, 1 / other.offset_));
+    return {offset_ / other.offset_,
+            coef_per_var_ * (Expressions::Visitors::EvaluationResult(1.0) / other.offset_)};
+}
+LinearExpression& LinearExpression::operator/=(const LinearExpression& other)
+{
+    if (!std::ranges::all_of(other.coef_per_var_,
+                             [&](const CoefficientsType& coefficients)
+                             { return EvaluationResultIsEmptyOrZero(coefficients); }))
+    {
+        throw std::invalid_argument("A linear expression can't have a variable as a divisor.");
+    }
+    offset_ /= other.offset_;
+    coef_per_var_ *= (Expressions::Visitors::EvaluationResult(1.0) / other.offset_);
+    return *this;
 }
 
 LinearExpression LinearExpression::operator-() const
 {
-    return {-offset_, scale_map(coef_per_var_, -1)};
+    return {-offset_, coef_per_var_ * Expressions::Visitors::EvaluationResult(-1)};
 }
 
-double LinearExpression::offset() const
+const Expressions::Visitors::EvaluationResult& LinearExpression::offset() const
 {
     return offset_;
 }

@@ -26,6 +26,7 @@
 #include <unordered_map>
 
 #include <antares/solver/optim-model-filler/FullKey.h>
+#include "antares/expressions/visitors/EvalVisitor.h"
 
 namespace Antares::Optimization
 {
@@ -124,6 +125,8 @@ void add_maps(MapType& left, const MapType& right, UnaryOp op = std::identity{})
  * @return The scaled map
  */
 FullKeyMap scale_map(const FullKeyMap& map, double scale);
+using OffsetType = Expressions::Visitors::EvaluationResult;
+using CoefficientsType = Expressions::Visitors::EvaluationResult;
 
 /**
  * Linear Expression
@@ -139,7 +142,7 @@ public:
     LinearExpression() = default;
     /// Build a linear expression with a given offset and a given map of non-zero coefficients
     /// per variable ID
-    LinearExpression(double offset, FullKeyMap coef_per_var);
+    LinearExpression(const OffsetType& offset, const std::vector<CoefficientsType>& coef_per_var);
     /// Sum two linear expressions
     LinearExpression operator+(const LinearExpression& other) const;
     /// Subtract two linear expressions
@@ -147,24 +150,26 @@ public:
     /// Multiply two linear expressions
     /// Only one can have non-zero coefficients, otherwise the result cannot be linear
     LinearExpression operator*(const LinearExpression& other) const;
+    LinearExpression& operator*=(const LinearExpression& other);
     /// Divide two linear expressions
     /// Only first expression can have non-zero coefficients, otherwise the result cannot be
     /// linear
     LinearExpression operator/(const LinearExpression& other) const;
+    LinearExpression& operator/=(const LinearExpression& other);
     /// Multiply linear expression by -1
     LinearExpression operator-() const;
 
     /// Get the offset
-    double offset() const;
+    const Expressions::Visitors::EvaluationResult& offset() const;
 
     /// Get the non-zero coefficients per variable ID
-    const FullKeyMap& coefPerVar() const;
+    const std::vector<CoefficientsType>& coefPerVar() const;
 
     LinearExpression& operator+=(const LinearExpression& value);
 
 private:
-    double offset_ = 0;
-    FullKeyMap coef_per_var_;
+    OffsetType offset_;
+    std::vector<CoefficientsType> coef_per_var_;
 };
 
 } // namespace Antares::Optimization
