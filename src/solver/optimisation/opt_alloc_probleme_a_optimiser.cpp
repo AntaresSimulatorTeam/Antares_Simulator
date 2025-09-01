@@ -69,11 +69,8 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo)
     int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
                                                   ->NombreDePasDeTempsPourUneOptimisation;
 
-    logs.info();
-    logs.info()
-      << " Starting Memory Allocation for a Weekly Optimization problem in Canonical form ";
-    logs.info() << " ( Problem Size :" << ProblemeAResoudre->NombreDeVariables << " variables "
-                << ProblemeAResoudre->NombreDeContraintes << " Constraints) ";
+    logs.info() << " Starting Memory Allocation for legacy problem ";
+    logs.info() << " Problem Size :" << ProblemeAResoudre->NombreDeVariables << " variables ";
 
     OPT_AllocateFromNumberOfVariableConstraints(problemeHebdo->ProblemeAResoudre.get());
 
@@ -82,7 +79,7 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo)
     ProblemeAResoudre->ProblemesSpx.assign(NbIntervalles, nullptr);
 
     logs.info();
-    logs.info() << " Status of Preliminary Allocations for Generic Problem Resolution : Successful";
+    logs.info() << " Status of Preliminary Allocations for legacy problem: Successful";
     logs.info();
 }
 

@@ -85,6 +85,25 @@ struct SimplexResult
     double objectiveValue;
 };
 
+static bool firstOptimLogs = true;
+
+static void logProblemSize(MPSolver* mpSolver)
+{
+    if (!firstOptimLogs)
+    {
+        return;
+    }
+
+    logs.info();
+    logs.info();
+    logs.info() << " Problem size : " << mpSolver->NumVariables() << " variables, "
+                << mpSolver->NumConstraints() << " constraints";
+    logs.info();
+    logs.info();
+
+    firstOptimLogs = false;
+}
+
 static void fillModelerComponents(
   std::vector<std::unique_ptr<Optimisation::ComponentFiller>>& componentFillers,
   std::vector<LinearProblemFiller*>& fillersCollection,
@@ -92,12 +111,6 @@ static void fillModelerComponents(
   const Optimisation::ScenarioGroupRepository& scenarioGroupRepository,
   VariableDictionary& variableDictionary)
 {
-    if (!modelerSystem)
-    {
-        logs.info() << "No modeler system found, optimization will only be done on legacy study";
-        return;
-    }
-
     for (const auto& [_, component]: modelerSystem->Components())
     {
         componentFillers.push_back(
@@ -226,6 +239,8 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     ProblemeAResoudre->ProblemesSpx[NumIntervalle] = nullptr;
 
     solver = convertToMPSolver(problemeHebdo, options, problemeHebdo->NamedProblems, NumIntervalle);
+
+    logProblemSize(solver);
 
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
