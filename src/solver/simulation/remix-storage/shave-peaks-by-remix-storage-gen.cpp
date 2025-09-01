@@ -63,7 +63,7 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
 
         if (!exchange.isValid())
         {
-            cyclic_it.delete_current();
+            delete_current(cyclic_it);
         }
         else
         {

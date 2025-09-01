@@ -88,9 +88,11 @@ public:
     CyclicIterator(std::vector<T>& v);
     CyclicIterator& operator++(int);
     T& operator*();
-    CyclicIterator& delete_current();
 
 private:
+    template<typename T>
+    friend CyclicIterator<T>& delete_current(CyclicIterator<T>& it);
+
     void back_to_begin();
 
     std::vector<T>& v_;
@@ -128,11 +130,11 @@ void CyclicIterator<T>::back_to_begin()
 }
 
 template<typename T>
-CyclicIterator<T>& CyclicIterator<T>::delete_current()
+CyclicIterator<T>& delete_current(CyclicIterator<T>& cyclicIt)
 {
-    it_ = v_.erase(it_);
-    back_to_begin();
-    return *this;
+    cyclicIt.it_ = cyclicIt.v_.erase(cyclicIt.it_);
+    cyclicIt.back_to_begin();
+    return cyclicIt;
 }
 
 }; // namespace Antares::Solver::Simulation

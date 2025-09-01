@@ -19,4 +19,14 @@ private:
 
 using ListStorageForRemix = std::vector<std::shared_ptr<IStorageForRemix>>;
 
+class StorageListSort
+{
+public:
+    void add(const double capacity, const std::shared_ptr<IStorageForRemix> sts);
+    ListStorageForRemix makeSortedList();
+
+private:
+    std::vector<std::pair<double, std::shared_ptr<IStorageForRemix>>> pairs_capa_storage_;
+};
+
 } // namespace Antares::Solver::Simulation

@@ -9,8 +9,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "antares/solver/simulation/remix-storage/remix-utils.h"
-#include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-storage-gen.h"
-#include "antares/solver/simulation/remix-storage/storage-for-remix.h"
+#include "antares/solver/simulation/remix-storage/storage-for-remix-interface.h"
 
 using namespace Antares::Solver::Simulation;
 
@@ -198,7 +197,7 @@ BOOST_AUTO_TEST_CASE(calling_delete_current_on_fresh_iterator_deletes_the_first_
 {
     std::vector<int> v = {1, 2, 3};
     CyclicIterator<int> cyclic_it(v);
-    cyclic_it.delete_current();
+    delete_current<int>(cyclic_it);
 
     std::vector<int> expected = {2, 3};
     BOOST_CHECK(v == expected);
@@ -211,7 +210,7 @@ BOOST_AUTO_TEST_CASE(when_calling_delete_current_on_last_element)
     CyclicIterator<int> cyclic_it(v);
     cyclic_it++;
     cyclic_it++; // Now cyclic iterator point at last element
-    cyclic_it.delete_current();
+    delete_current<int>(cyclic_it);
 
     std::vector<int> expected = {1, 2};
     BOOST_CHECK(v == expected);
@@ -224,7 +223,7 @@ BOOST_AUTO_TEST_CASE(deleting_an_element_in_the_middle_of_the_vector)
     CyclicIterator<int> cyclic_it(v);
     cyclic_it++;
     cyclic_it++;
-    cyclic_it.delete_current();
+    delete_current<int>(cyclic_it);
 
     std::vector<int> expected = {1, 2, 4, 5};
     BOOST_CHECK(v == expected);
@@ -237,7 +236,7 @@ BOOST_AUTO_TEST_CASE(deleting_an_element_with_iterator_keeps_this_iterator_valid
     CyclicIterator<int> cyclic_it(v);
     cyclic_it++;
     cyclic_it++;
-    cyclic_it.delete_current();
+    delete_current<int>(cyclic_it);
 
     // Now v = {1, 2, 4} and cyclic_it points to 4
     *cyclic_it = 7;

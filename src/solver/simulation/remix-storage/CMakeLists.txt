@@ -18,3 +18,21 @@ target_sources(${local_target}
 target_include_directories(${local_target}
         PUBLIC
 		$<BUILD_INTERFACE:${include_dir}>)
+
+set_target_properties(${local_target} PROPERTIES FOLDER storage-remix)
+
+target_link_libraries(${local_target} PRIVATE storage-for-remix-list-sort)
+
+# Lib : sorting list of storage for remix
+add_library(storage-for-remix-list-sort)
+
+target_sources(storage-for-remix-list-sort
+			   PRIVATE
+			   ${include_dir}/antares/solver/simulation/remix-storage/storage-for-remix-interface.h
+			   storage-for-remix-list-sort.cpp)
+
+target_include_directories(storage-for-remix-list-sort
+        PUBLIC
+		$<BUILD_INTERFACE:${include_dir}>)
+
+set_target_properties(storage-for-remix-list-sort PROPERTIES FOLDER storage-remix)
