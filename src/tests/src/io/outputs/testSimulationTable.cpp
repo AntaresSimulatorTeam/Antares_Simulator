@@ -1389,28 +1389,25 @@ BOOST_AUTO_TEST_SUITE(SimulationTableGeneratorTests)
 
 BOOST_AUTO_TEST_CASE(BuildModelerConstraintName_AllParameters)
 {
-    std::string result = BuildModelerConstraintName("comp1", "constraint1", 5u, 10u);
+    std::string result = BuildModelerConstraintName("comp1", "constraint1", 10u);
     BOOST_CHECK_EQUAL(result, "comp1.constraint1_10");
 }
 
 BOOST_AUTO_TEST_CASE(BuildModelerConstraintName_OnlyScenario)
 {
-    std::string result = BuildModelerConstraintName("comp1", "constraint1", 5u, std::nullopt);
+    std::string result = BuildModelerConstraintName("comp1", "constraint1", std::nullopt);
     BOOST_CHECK_EQUAL(result, "comp1.constraint1_5");
 }
 
 BOOST_AUTO_TEST_CASE(BuildModelerConstraintName_OnlyTimestep)
 {
-    std::string result = BuildModelerConstraintName("comp1", "constraint1", std::nullopt, 10u);
+    std::string result = BuildModelerConstraintName("comp1", "constraint1", 10u);
     BOOST_CHECK_EQUAL(result, "comp1.constraint1_10");
 }
 
 BOOST_AUTO_TEST_CASE(BuildModelerConstraintName_NoOptionalParams)
 {
-    std::string result = BuildModelerConstraintName("comp1",
-                                                    "constraint1",
-                                                    std::nullopt,
-                                                    std::nullopt);
+    std::string result = BuildModelerConstraintName("comp1", "constraint1", std::nullopt);
     BOOST_CHECK_EQUAL(result, "comp1.constraint1");
 }
 

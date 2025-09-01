@@ -133,6 +133,10 @@ public:
 
     [[nodiscard]] std::vector<double> valuesAsVector() const
     {
+        if (!std::holds_alternative<std::vector<double>>(value_))
+        {
+            throw EvalResultTypeError("Expected a vector but found a double.");
+        }
         return std::get<std::vector<double>>(value_);
     }
 
@@ -265,7 +269,7 @@ public:
 
     std::string name() const override;
 
-protected:
+private:
     const EvaluationContext context_;
     Optimisation::LinearProblemApi::FillContext fillContext_;
     const ModelerStudy::SystemModel::Component* component_ = nullptr;

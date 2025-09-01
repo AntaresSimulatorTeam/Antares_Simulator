@@ -22,15 +22,12 @@
 #include "antares/expressions/visitors/EvalVisitor.h"
 
 #include <numeric>
-#include <optional>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/solver/optim-model-filler/VariableDictionary.h>
 #include "antares/exception/RuntimeError.hpp"
 #include "antares/expressions/ShiftVector.h"
-#include "antares/logs/logs.h"
-#include "antares/optimisation/linear-problem-api/IScenario.h"
 
 namespace Antares::Expressions::Visitors
 {

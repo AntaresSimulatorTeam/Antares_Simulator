@@ -145,14 +145,14 @@ ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& com
 {
 }
 
-bool checkTimeSteps(const Optimisation::LinearProblemApi::FillContext& ctx)
+bool checkTimeSteps(const LinearProblemApi::FillContext& ctx)
 {
     return ctx.getLocalFirstTimeStep() <= ctx.getLocalLastTimeStep();
 }
 
-void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                                   Optimisation::LinearProblemApi::ILinearProblemData& data,
-                                   const Optimisation::LinearProblemApi::FillContext& ctx)
+void ComponentFiller::addVariables(LinearProblemApi::ILinearProblem& pb,
+                                   LinearProblemApi::ILinearProblemData& data,
+                                   const LinearProblemApi::FillContext& ctx)
 {
     if (!checkTimeSteps(ctx))
     {
@@ -227,7 +227,7 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
     }
 }
 
-void ComponentFiller::addStaticConstraint(Optimisation::LinearProblemApi::ILinearProblem& pb,
+void ComponentFiller::addStaticConstraint(LinearProblemApi::ILinearProblem& pb,
                                           const Optimization::LinearConstraint& linear_constraint,
                                           const std::string& constraint_id) const
 {
@@ -261,9 +261,9 @@ void ComponentFiller::addTimeDependentConstraints(
     }
 }
 
-void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                                     Optimisation::LinearProblemApi::ILinearProblemData& data,
-                                     const Optimisation::LinearProblemApi::FillContext& ctx)
+void ComponentFiller::addConstraints(LinearProblemApi::ILinearProblem& pb,
+                                     LinearProblemApi::ILinearProblemData& data,
+                                     const LinearProblemApi::FillContext& ctx)
 {
     const auto& scenario = scenarioGroupRepository_.scenario(component_.getScenarioGroupId());
     Expressions::Visitors::EvaluationContext evaluationContext(component_.getParameterValues(),

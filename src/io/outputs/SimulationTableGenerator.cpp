@@ -60,25 +60,15 @@ TI updateTimeIndexIfShouldForceScenario(TI timeIndex, bool forceScenarioDependen
 
 std::string BuildModelerConstraintName(const std::string& cid,
                                        const std::string& cname,
-                                       const std::optional<unsigned>& scen,
                                        const std::optional<unsigned>& ts)
 {
-    // TODO
-    //  if (scen)
-    //      key += "_s" + std::to_string(*scen);
-    //  if (ts)
-    //      key += "_t" + std::to_string(*ts);
-
-    // TODO
     std::string key = cid + "." + cname;
     if (ts)
     {
-        key += "_" + std::to_string(*ts); // TODO
+        key += "_" + std::to_string(*ts);
     }
-    else if (scen)
-    {
-        key += "_" + std::to_string(*scen); // TODO
-    }
+    // ComponentFiller does not yet add the scenario index to the constraint name
+    // TODO make this cleaner like with VariableDictionary: maybe read & parse constraint names in LinearProblem instead?
     return key;
 }
 
@@ -203,9 +193,22 @@ void addConstraintEntries(ISimulationTable& simulationTable,
                        .dispatch(modelConstr.expression().RootNode());
         idxType = updateTimeIndexIfShouldForceScenario(idxType, forceScenarioDependency);
 
+        if (cname == "initial_level_constraint")
+        {
+            std::cout << "Initial level constraint " << cname << std::endl;
+        }
+
         auto handle = [&](std::optional<unsigned> ts, std::optional<unsigned> scenIdx)
         {
-            std::string fullConstName = BuildModelerConstraintName(cid, cname, scenIdx, ts);
+            std::string fullConstName = BuildModelerConstraintName(cid, cname, ts);
+            if (fullConstName == "storage_base_zone.initial_level_constraint_0")
+            {
+                for (auto c = 0; c < linearProblem.constraintCount(); ++c)
+                {
+                    std::cout << "!!! " << linearProblem.getConstraint(c)->getName() << std::endl;
+                }
+                std::cout << "oops" << std::endl;
+            }
             const auto* c = linearProblem.lookupConstraint(fullConstName);
             TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(
                                   *ts + fillContext.getGlobalFirstTimeStep(),

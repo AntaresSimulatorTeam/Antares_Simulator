@@ -71,7 +71,6 @@ Antares::Expressions::Visitors::TimeIndex updateTimeIndexIfShouldForceScenario(
 
 std::string BuildModelerConstraintName(const std::string& cid,
                                        const std::string& cname,
-                                       const std::optional<unsigned>& scen,
                                        const std::optional<unsigned>& ts);
 
 void addVariableEntries(
