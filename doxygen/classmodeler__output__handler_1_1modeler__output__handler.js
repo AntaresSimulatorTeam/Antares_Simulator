@@ -1,7 +1,7 @@
 var classmodeler__output__handler_1_1modeler__output__handler =
 [
-    [ "__init__", "classmodeler__output__handler_1_1modeler__output__handler.html#a74032a485ea41986465c4da5e72f8c7f", null ],
-    [ "get_optimal_value", "classmodeler__output__handler_1_1modeler__output__handler.html#a0eaeac41f2a6f2d9d472c26913df84c0", null ],
-    [ "results", "classmodeler__output__handler_1_1modeler__output__handler.html#ac159ba979b6eea49494425ebc06aeb3e", null ],
-    [ "study_output_path", "classmodeler__output__handler_1_1modeler__output__handler.html#aa28cced8fae88eb3616bb1c362b22153", null ]
+    [ "__init__", "classmodeler__output__handler_1_1modeler__output__handler.html#a98e717a90bd242b0360e871ac6d1e879", null ],
+    [ "get_objective_value", "classmodeler__output__handler_1_1modeler__output__handler.html#a43e3e72a925504936495e04da3f29c3e", null ],
+    [ "get_simulation_table_entry", "classmodeler__output__handler_1_1modeler__output__handler.html#a21a40fb884ab6ec3fabb984344b3316a", null ],
+    [ "simulation_table", "classmodeler__output__handler_1_1modeler__output__handler.html#af59107f79284eea116bc5f9e22018912", null ]
 ];

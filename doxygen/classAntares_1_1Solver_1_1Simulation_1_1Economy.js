@@ -3,6 +3,8 @@ var classAntares_1_1Solver_1_1Simulation_1_1Economy =
     [ "Economy", "classAntares_1_1Solver_1_1Simulation_1_1Economy.html#a561e37e845aa5746486a7e6252ea2cab", null ],
     [ "~Economy", "classAntares_1_1Solver_1_1Simulation_1_1Economy.html#ac6ba9f85ff17ff64d8564dc49040b80c", null ],
     [ "getOptimizationInfo", "classAntares_1_1Solver_1_1Simulation_1_1Economy.html#ad460dd045097e0e6ba3fca18ef333b45", null ],
+    [ "getSimulationTable", "classAntares_1_1Solver_1_1Simulation_1_1Economy.html#a1b7f54d256ed064cfde519f3e73a72b0", null ],
+    [ "getSimulationTableHeader", "classAntares_1_1Solver_1_1Simulation_1_1Economy.html#ae6aac4e894e92372d256e5bcea86785b", null ],
     [ "incrementProgression", "classAntares_1_1Solver_1_1Simulation_1_1Economy.html#ae1c95a3167a31699e6518c92b6d96be4", null ],
     [ "initializeState", "classAntares_1_1Solver_1_1Simulation_1_1Economy.html#a6236caebc7014d316f5abc12616cc573", null ],
     [ "prepareClustersInMustRunMode", "classAntares_1_1Solver_1_1Simulation_1_1Economy.html#a69e422d0546dfe86070963b1a5b80e2f", null ],

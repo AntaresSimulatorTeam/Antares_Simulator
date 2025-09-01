@@ -136,9 +136,14 @@ Inheritance diagram for MockMipVariable:</div>
  <div class="center">
   <img src="classMockMipVariable.png" usemap="#MockMipVariable_map" alt=""/>
   <map id="MockMipVariable_map" name="MockMipVariable_map">
-<area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html" alt="Antares::Optimisation::LinearProblemApi::IMipVariable" shape="rect" coords="162,56,477,80"/>
+<area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html" alt="Antares::Optimisation::LinearProblemApi::IMipVariable" shape="rect" coords="325,56,640,80"/>
+<area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html" alt="Antares::Optimisation::LinearProblemApi::IMipVariable" shape="rect" coords="1300,56,1615,80"/>
 <area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasBounds.html" title="Used to handle bounds for IMipVariable and IMipConstraint." alt="Antares::Optimisation::LinearProblemApi::IHasBounds" shape="rect" coords="0,0,315,24"/>
 <area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasName.html" title="Inherited by IMipVariable and IMipConstraint." alt="Antares::Optimisation::LinearProblemApi::IHasName" shape="rect" coords="325,0,640,24"/>
+<area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasStatus.html" alt="Antares::Optimisation::LinearProblemApi::IHasStatus" shape="rect" coords="650,0,965,24"/>
+<area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasBounds.html" title="Used to handle bounds for IMipVariable and IMipConstraint." alt="Antares::Optimisation::LinearProblemApi::IHasBounds" shape="rect" coords="975,0,1290,24"/>
+<area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasName.html" title="Inherited by IMipVariable and IMipConstraint." alt="Antares::Optimisation::LinearProblemApi::IHasName" shape="rect" coords="1300,0,1615,24"/>
+<area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasStatus.html" alt="Antares::Optimisation::LinearProblemApi::IHasStatus" shape="rect" coords="1625,0,1940,24"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -168,6 +173,12 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>getUb</b> () const 
 <tr class="memitem:acdd76cc0fae5672910cd2728fc189ba7"><td class="memItemLeft" align="right" valign="top"><a id="acdd76cc0fae5672910cd2728fc189ba7"></a>
 const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getName</b> () const override</td></tr>
 <tr class="separator:acdd76cc0fae5672910cd2728fc189ba7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab54fae166c9a12f4b714c9333a427c4e"><td class="memItemLeft" align="right" valign="top"><a id="ab54fae166c9a12f4b714c9333a427c4e"></a>
+MipBasisStatus&#160;</td><td class="memItemRight" valign="bottom"><b>getMipBasisStatus</b> () const override</td></tr>
+<tr class="separator:ab54fae166c9a12f4b714c9333a427c4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2cb67aad284236f38cc4112a9dad3c36"><td class="memItemLeft" align="right" valign="top"><a id="a2cb67aad284236f38cc4112a9dad3c36"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>solutionValue</b> () const override</td></tr>
+<tr class="separator:a2cb67aad284236f38cc4112a9dad3c36"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/tests/src/solver/optim-model-filler/test_componentFiller.cpp</li>

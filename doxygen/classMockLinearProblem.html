@@ -138,11 +138,46 @@ Inheritance diagram for MockLinearProblem:</div>
   <img src="classMockLinearProblem.png" usemap="#MockLinearProblem_map" alt=""/>
   <map id="MockLinearProblem_map" name="MockLinearProblem_map">
 <area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html" alt="Antares::Optimisation::LinearProblemApi::ILinearProblem" shape="rect" coords="0,0,328,24"/>
+<area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html" alt="Antares::Optimisation::LinearProblemApi::ILinearProblem" shape="rect" coords="338,0,666,24"/>
   </map>
 </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:ab85a3462ecf51ac9eda81da4516f2b2b"><td class="memItemLeft" align="right" valign="top"><a id="ab85a3462ecf51ac9eda81da4516f2b2b"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>MockLinearProblem</b> (bool isLP)</td></tr>
+<tr class="separator:ab85a3462ecf51ac9eda81da4516f2b2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0cc3a3f70d70fa3570a18b8a750d48c6"><td class="memItemLeft" align="right" valign="top"><a id="a0cc3a3f70d70fa3570a18b8a750d48c6"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isLP</b> () const override</td></tr>
+<tr class="separator:a0cc3a3f70d70fa3570a18b8a750d48c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f585c93a93fe4245d582e20c4fb0d90"><td class="memItemLeft" align="right" valign="top"><a id="a8f585c93a93fe4245d582e20c4fb0d90"></a>
+<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html">IMipConstraint</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>lookupConstraint</b> (const std::string &amp;name) const override</td></tr>
+<tr class="separator:a8f585c93a93fe4245d582e20c4fb0d90"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acebed606c69767a5122403bdc18db2f0"><td class="memItemLeft" align="right" valign="top"><a id="acebed606c69767a5122403bdc18db2f0"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setConstraintExists</b> (const std::string &amp;name, bool exists)</td></tr>
+<tr class="separator:acebed606c69767a5122403bdc18db2f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c70087ae820502862e964cb4eb91dc8"><td class="memItemLeft" align="right" valign="top"><a id="a2c70087ae820502862e964cb4eb91dc8"></a>
+<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">IMipVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMockLinearProblem.html#a2c70087ae820502862e964cb4eb91dc8">addVariable</a> (double, double, bool, const std::string &amp;) override</td></tr>
+<tr class="memdesc:a2c70087ae820502862e964cb4eb91dc8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a continuous or integer variable. <br /></td></tr>
+<tr class="separator:a2c70087ae820502862e964cb4eb91dc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00f9abc99d9b72a216483ba478c28563"><td class="memItemLeft" align="right" valign="top"><a id="a00f9abc99d9b72a216483ba478c28563"></a>
+<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html">IMipConstraint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMockLinearProblem.html#a00f9abc99d9b72a216483ba478c28563">addConstraint</a> (double, double, const std::string &amp;) override</td></tr>
+<tr class="memdesc:a00f9abc99d9b72a216483ba478c28563"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a bounded constraint to the problem. <br /></td></tr>
+<tr class="separator:a00f9abc99d9b72a216483ba478c28563"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2c863b15a6b07aa93af2b25de8124e5"><td class="memItemLeft" align="right" valign="top"><a id="ac2c863b15a6b07aa93af2b25de8124e5"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMockLinearProblem.html#ac2c863b15a6b07aa93af2b25de8124e5">setObjectiveCoefficient</a> (<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">IMipVariable</a> *, double) override</td></tr>
+<tr class="memdesc:ac2c863b15a6b07aa93af2b25de8124e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the objective coefficient for a given variable. <br /></td></tr>
+<tr class="separator:ac2c863b15a6b07aa93af2b25de8124e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8537f266ecbbcb9e1f7719497e0a157a"><td class="memItemLeft" align="right" valign="top"><a id="a8537f266ecbbcb9e1f7719497e0a157a"></a>
+<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipSolution.html">IMipSolution</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMockLinearProblem.html#a8537f266ecbbcb9e1f7719497e0a157a">solve</a> (bool) override</td></tr>
+<tr class="memdesc:a8537f266ecbbcb9e1f7719497e0a157a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the problem, returns a IMipSolution. <br /></td></tr>
+<tr class="separator:a8537f266ecbbcb9e1f7719497e0a157a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18bdd1810ea90971f3a4ae3283aa1892"><td class="memItemLeft" align="right" valign="top"><a id="a18bdd1810ea90971f3a4ae3283aa1892"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>WriteLP</b> (const std::string &amp;) const override</td></tr>
+<tr class="separator:a18bdd1810ea90971f3a4ae3283aa1892"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76d75747090e5286e43be590d0eb05ba"><td class="memItemLeft" align="right" valign="top"><a id="a76d75747090e5286e43be590d0eb05ba"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>infinity</b> () const override</td></tr>
+<tr class="separator:a76d75747090e5286e43be590d0eb05ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa16493772f201a039dbadca26bd965bb"><td class="memItemLeft" align="right" valign="top"><a id="aa16493772f201a039dbadca26bd965bb"></a>
 <a class="el" href="classMockMipVariable.html">MockMipVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMockLinearProblem.html#aa16493772f201a039dbadca26bd965bb">addNumVariable</a> (double lb, double ub, const std::string &amp;name) override</td></tr>
 <tr class="memdesc:aa16493772f201a039dbadca26bd965bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a continuous variable. <br /></td></tr>
@@ -208,6 +243,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>WriteLP</b> (const st
 <tr class="memitem:a76d75747090e5286e43be590d0eb05ba"><td class="memItemLeft" align="right" valign="top"><a id="a76d75747090e5286e43be590d0eb05ba"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>infinity</b> () const override</td></tr>
 <tr class="separator:a76d75747090e5286e43be590d0eb05ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0cc3a3f70d70fa3570a18b8a750d48c6"><td class="memItemLeft" align="right" valign="top"><a id="a0cc3a3f70d70fa3570a18b8a750d48c6"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isLP</b> () const override</td></tr>
+<tr class="separator:a0cc3a3f70d70fa3570a18b8a750d48c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -215,7 +253,8 @@ Public Attributes</h2></td></tr>
 std::vector&lt; std::unique_ptr&lt; <a class="el" href="classMockMipVariable.html">MockMipVariable</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>variables_</b></td></tr>
 <tr class="separator:a6929cb0ca9c2449063f5581f4f3f0a97"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>src/tests/src/io/outputs/testSimulationTable.cpp</li>
 <li>src/tests/src/solver/optim-model-filler/test_componentFiller.cpp</li>
 </ul>
 </div><!-- contents -->

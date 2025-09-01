@@ -138,8 +138,10 @@ Inheritance diagram for Antares::Optimisation::LinearProblemApi::IMipVariable:</
   <map id="Antares::Optimisation::LinearProblemApi::IMipVariable_map" name="Antares::Optimisation::LinearProblemApi::IMipVariable_map">
 <area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasBounds.html" title="Used to handle bounds for IMipVariable and IMipConstraint." alt="Antares::Optimisation::LinearProblemApi::IHasBounds" shape="rect" coords="0,0,409,24"/>
 <area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasName.html" title="Inherited by IMipVariable and IMipConstraint." alt="Antares::Optimisation::LinearProblemApi::IHasName" shape="rect" coords="419,0,828,24"/>
-<area href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable.html" alt="Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsMipVariable" shape="rect" coords="0,112,409,136"/>
-<area href="classMockMipVariable.html" alt="MockMipVariable" shape="rect" coords="419,112,828,136"/>
+<area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasStatus.html" alt="Antares::Optimisation::LinearProblemApi::IHasStatus" shape="rect" coords="838,0,1247,24"/>
+<area href="classMockMipVariable.html" alt="MockMipVariable" shape="rect" coords="0,112,409,136"/>
+<area href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable.html" alt="Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsMipVariable" shape="rect" coords="419,112,828,136"/>
+<area href="classMockMipVariable.html" alt="MockMipVariable" shape="rect" coords="838,112,1247,136"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -148,6 +150,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4a087a5304f09b711166e46e716b5e25"><td class="memItemLeft" align="right" valign="top"><a id="a4a087a5304f09b711166e46e716b5e25"></a>
 virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>isInteger</b> () const =0</td></tr>
 <tr class="separator:a4a087a5304f09b711166e46e716b5e25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aabe086715727feb473bf714967895115"><td class="memItemLeft" align="right" valign="top"><a id="aabe086715727feb473bf714967895115"></a>
+virtual double&#160;</td><td class="memItemRight" valign="bottom"><b>solutionValue</b> () const =0</td></tr>
+<tr class="separator:aabe086715727feb473bf714967895115"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasBounds"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasBounds')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasBounds.html">Antares::Optimisation::LinearProblemApi::IHasBounds</a></td></tr>
 <tr class="memitem:a6a87faf492df6964e95cac2e4e7150ff inherit pub_methods_classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasBounds"><td class="memItemLeft" align="right" valign="top"><a id="a6a87faf492df6964e95cac2e4e7150ff"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setLb</b> (double lb)=0</td></tr>
@@ -168,6 +173,10 @@ virtual double&#160;</td><td class="memItemRight" valign="bottom"><b>getUb</b> (
 <tr class="memitem:a7743c66b03b83b5eecfa317600060b1a inherit pub_methods_classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasName"><td class="memItemLeft" align="right" valign="top"><a id="a7743c66b03b83b5eecfa317600060b1a"></a>
 virtual const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getName</b> () const =0</td></tr>
 <tr class="separator:a7743c66b03b83b5eecfa317600060b1a inherit pub_methods_classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasName"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasStatus"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasStatus')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasStatus.html">Antares::Optimisation::LinearProblemApi::IHasStatus</a></td></tr>
+<tr class="memitem:a2f5bccd5b993ab5e6666a2f4b9933452 inherit pub_methods_classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasStatus"><td class="memItemLeft" align="right" valign="top"><a id="a2f5bccd5b993ab5e6666a2f4b9933452"></a>
+virtual MipBasisStatus&#160;</td><td class="memItemRight" valign="bottom"><b>getMipBasisStatus</b> () const =0</td></tr>
+<tr class="separator:a2f5bccd5b993ab5e6666a2f4b9933452 inherit pub_methods_classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasStatus"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/optimisation/linear-problem-api/include/antares/optimisation/linear-problem-api/<a class="el" href="linear-problem-api_2include_2antares_2optimisation_2linear-problem-api_2mipVariable_8h_source.html">mipVariable.h</a></li>

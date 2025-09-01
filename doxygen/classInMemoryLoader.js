@@ -4,7 +4,7 @@ var classInMemoryLoader =
     [ "addScenario", "classInMemoryLoader.html#a0886d592cc939c77ecbf020b04a4bff4", null ],
     [ "loadAll", "classInMemoryLoader.html#af600250c2c5cb95b34f9e9dab3b4e0dd", null ],
     [ "loadParameters", "classInMemoryLoader.html#a90704f9b81dd55011ac82d70eab860bb", null ],
-    [ "setComponents", "classInMemoryLoader.html#a4fccacf703ad8f57589a64531193c2ec", null ],
+    [ "setComponents", "classInMemoryLoader.html#a4787effdb98270f9a6e46b9186cc0264", null ],
     [ "setLowerBoundToParameter", "classInMemoryLoader.html#a0a0601dad50fab533593ee25f426dba6", null ],
     [ "setModels", "classInMemoryLoader.html#acecd8ee838614e5ea09910ce8d06b956", null ],
     [ "components", "classInMemoryLoader.html#a53bcf979b8724dedbb2844ca38ad4ffb", null ],

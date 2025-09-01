@@ -136,9 +136,10 @@ Inheritance diagram for Antares::Optimisation::LinearProblemMpsolverImpl::Ortool
  <div class="center">
   <img src="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable.png" usemap="#Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsMipVariable_map" alt=""/>
   <map id="Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsMipVariable_map" name="Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsMipVariable_map">
-<area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html" alt="Antares::Optimisation::LinearProblemApi::IMipVariable" shape="rect" coords="209,56,618,80"/>
+<area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html" alt="Antares::Optimisation::LinearProblemApi::IMipVariable" shape="rect" coords="419,56,828,80"/>
 <area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasBounds.html" title="Used to handle bounds for IMipVariable and IMipConstraint." alt="Antares::Optimisation::LinearProblemApi::IHasBounds" shape="rect" coords="0,0,409,24"/>
 <area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasName.html" title="Inherited by IMipVariable and IMipConstraint." alt="Antares::Optimisation::LinearProblemApi::IHasName" shape="rect" coords="419,0,828,24"/>
+<area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasStatus.html" alt="Antares::Optimisation::LinearProblemApi::IHasStatus" shape="rect" coords="838,0,1247,24"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -168,6 +169,12 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>isInteger</b> () cons
 <tr class="memitem:a0e833926358e04fcb398348eae0b8fca"><td class="memItemLeft" align="right" valign="top"><a id="a0e833926358e04fcb398348eae0b8fca"></a>
 const operations_research::MPVariable *&#160;</td><td class="memItemRight" valign="bottom"><b>getMpVar</b> () const</td></tr>
 <tr class="separator:a0e833926358e04fcb398348eae0b8fca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7227100ddab309c16eee0b1eec48577"><td class="memItemLeft" align="right" valign="top"><a id="ad7227100ddab309c16eee0b1eec48577"></a>
+LinearProblemApi::MipBasisStatus&#160;</td><td class="memItemRight" valign="bottom"><b>getMipBasisStatus</b> () const override</td></tr>
+<tr class="separator:ad7227100ddab309c16eee0b1eec48577"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1647db39e5496c419c591ff84cdf71b"><td class="memItemLeft" align="right" valign="top"><a id="ab1647db39e5496c419c591ff84cdf71b"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>solutionValue</b> () const override</td></tr>
+<tr class="separator:ab1647db39e5496c419c591ff84cdf71b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae82c241fb4b318fc5d462880b0377e7d"><td class="memItemLeft" align="right" valign="top"><a id="ae82c241fb4b318fc5d462880b0377e7d"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>OrtoolsMipVariable</b> (operations_research::MPVariable *)</td></tr>
 <tr class="separator:ae82c241fb4b318fc5d462880b0377e7d"><td class="memSeparator" colspan="2">&#160;</td></tr>

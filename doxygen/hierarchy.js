@@ -141,8 +141,9 @@ var hierarchy =
       [ "Antares::Component::Datagrid::Renderer::classicColumn", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1classicColumn.html", null ],
       [ "Antares::Component::Datagrid::Renderer::thermalColumn", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1thermalColumn.html", null ]
     ] ],
-    [ "CommonFixture", "structCommonFixture.html", null ],
+    [ "ColumnBasedStorage", "classColumnBasedStorage.html", null ],
     [ "commonFixture", "structcommonFixture.html", null ],
+    [ "CommonFixture", "structCommonFixture.html", null ],
     [ "Antares::Data::CompareAreaName", "structAntares_1_1Data_1_1CompareAreaName.html", null ],
     [ "Antares::Data::CompareBindingConstraintName", "structAntares_1_1Data_1_1CompareBindingConstraintName.html", null ],
     [ "Antares::Forms::CompareBySimulationMode", "structAntares_1_1Forms_1_1CompareBySimulationMode.html", null ],
@@ -552,6 +553,9 @@ var hierarchy =
     [ "Antares::ModelerStudy::SystemModel::ExtraOutput", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ExtraOutput.html", null ],
     [ "fake_buffer_factory< T, ReadWriteT >", "classfake__buffer__factory.html", null ],
     [ "Antares::UnitTests::fakeLogger", "classAntares_1_1UnitTests_1_1fakeLogger.html", null ],
+    [ "std::false_type", null, [
+      [ "is_optional< T >", "structis__optional.html", null ]
+    ] ],
     [ "FictitiousLoadData", "structFictitiousLoadData.html", null ],
     [ "Benchmarking::FileContent", "classBenchmarking_1_1FileContent.html", null ],
     [ "PathList::FileInfo", "structPathList_1_1FileInfo.html", null ],
@@ -603,6 +607,9 @@ var hierarchy =
     [ "Antares::I_mtx_to_buffer_dumper< T, ReadWriteT, PredicateT >", "classAntares_1_1I__mtx__to__buffer__dumper.html", [
       [ "Antares::multiple_columns__dumper< T, ReadWriteT, PredicateT >", "classAntares_1_1multiple__columns____dumper.html", null ],
       [ "Antares::one_column__dumper< T, ReadWriteT, PredicateT >", "classAntares_1_1one__column____dumper.html", null ]
+    ] ],
+    [ "IColumn", "classIColumn.html", [
+      [ "TypedColumn< T >", "classTypedColumn.html", null ]
     ] ],
     [ "Antares::Private::OutputViewerData::Panel::IData", "classAntares_1_1Private_1_1OutputViewerData_1_1Panel_1_1IData.html", null ],
     [ "Antares::Optimisation::LinearProblemDataImpl::IDataSeries", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1IDataSeries.html", [
@@ -828,11 +835,16 @@ var hierarchy =
         [ "Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsMipConstraint", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipConstraint.html", null ]
       ] ],
       [ "Antares::Optimisation::LinearProblemApi::IMipVariable", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html", [
+        [ "MockMipVariable", "classMockMipVariable.html", null ],
         [ "Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsMipVariable", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable.html", null ],
         [ "MockMipVariable", "classMockMipVariable.html", null ]
       ] ]
     ] ],
     [ "Antares::Optimisation::LinearProblemApi::IHasName", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasName.html", [
+      [ "Antares::Optimisation::LinearProblemApi::IMipConstraint", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html", null ],
+      [ "Antares::Optimisation::LinearProblemApi::IMipVariable", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html", null ]
+    ] ],
+    [ "Antares::Optimisation::LinearProblemApi::IHasStatus", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasStatus.html", [
       [ "Antares::Optimisation::LinearProblemApi::IMipConstraint", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html", null ],
       [ "Antares::Optimisation::LinearProblemApi::IMipVariable", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html", null ]
     ] ],
@@ -880,6 +892,7 @@ var hierarchy =
       [ "Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html", [
         [ "Antares::Optimization::LegacyOrtoolsLinearProblem", "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html", null ]
       ] ],
+      [ "MockLinearProblem", "classMockLinearProblem.html", null ],
       [ "MockLinearProblem", "classMockLinearProblem.html", null ]
     ] ],
     [ "Antares::Optimisation::LinearProblemApi::ILinearProblemData", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html", [
@@ -895,7 +908,8 @@ var hierarchy =
       [ "InMemoryLoader< Fixture >", "classInMemoryLoader.html", null ]
     ] ],
     [ "Antares::Optimisation::LinearProblemApi::IMipSolution", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipSolution.html", [
-      [ "Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsMipSolution", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipSolution.html", null ]
+      [ "Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsMipSolution", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipSolution.html", null ],
+      [ "MockMipSolution", "structMockMipSolution.html", null ]
     ] ],
     [ "Impl", null, [
       [ "Antares::Solver::Simulation::ISimulation< Impl >", "classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html", null ]
@@ -1047,6 +1061,12 @@ var hierarchy =
       [ "Antares::Solver::Simulation::NullSimulationObserver", "classAntares_1_1Solver_1_1Simulation_1_1NullSimulationObserver.html", null ],
       [ "TestingSimulationObserver", "classTestingSimulationObserver.html", null ]
     ] ],
+    [ "ISimulationTable", "classISimulationTable.html", [
+      [ "EmptySimulationTable", "classEmptySimulationTable.html", null ],
+      [ "SimulationTableCsv", "classSimulationTableCsv.html", [
+        [ "SimulationTableCsvFile", "classSimulationTableCsvFile.html", null ]
+      ] ]
+    ] ],
     [ "Antares::IStudyLoader", "classAntares_1_1IStudyLoader.html", [
       [ "Antares::FileTreeStudyLoader", "classAntares_1_1FileTreeStudyLoader.html", null ],
       [ "InMemoryStudyLoader", "classInMemoryStudyLoader.html", null ]
@@ -1097,7 +1117,9 @@ var hierarchy =
     [ "Antares::Optimization::LinearConstraint", "structAntares_1_1Optimization_1_1LinearConstraint.html", null ],
     [ "Antares::Optimization::LinearExpression", "classAntares_1_1Optimization_1_1LinearExpression.html", null ],
     [ "Antares::Optimisation::LinearProblemApi::LinearProblemBuilder", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1LinearProblemBuilder.html", null ],
-    [ "Test::Modeler::LinearProblemBuildingFixture", "structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html", null ],
+    [ "Test::Modeler::LinearProblemBuildingFixture", "structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html", [
+      [ "BasicProblemFixture", "structBasicProblemFixture.html", null ]
+    ] ],
     [ "Antares::Optimisation::LinearProblemApi::LinearProblemFiller", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1LinearProblemFiller.html", [
       [ "Antares::Optimisation::ComponentFiller", "classAntares_1_1Optimisation_1_1ComponentFiller.html", null ],
       [ "Antares::Optimisation::LinearProblemApi::OneConstraintFiller", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1OneConstraintFiller.html", null ],
@@ -1164,6 +1186,13 @@ var hierarchy =
     [ "Antares::MinGenerationScaling", "classAntares_1_1MinGenerationScaling.html", null ],
     [ "MinHydroPowerData", "structMinHydroPowerData.html", null ],
     [ "Antares::Solver::Variable::R::AllYears::MinMaxData", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData.html", null ],
+    [ "MockComponent", "classMockComponent.html", null ],
+    [ "MockConstraint", "classMockConstraint.html", null ],
+    [ "MockConstraint::MockExpression", "structMockConstraint_1_1MockExpression.html", null ],
+    [ "MockModel", "classMockModel.html", null ],
+    [ "MockConstraint::MockExpression::MockNode", "structMockConstraint_1_1MockExpression_1_1MockNode.html", null ],
+    [ "MockSolverTraits", "structMockSolverTraits.html", null ],
+    [ "MockVariable", "classMockVariable.html", null ],
     [ "Antares::IO::Inputs::YmlModel::Model", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html", null ],
     [ "Antares::ModelerStudy::SystemModel::Model", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html", null ],
     [ "Antares::ModelerStudy::SystemModel::ModelBuilder", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ModelBuilder.html", null ],
@@ -1235,6 +1264,7 @@ var hierarchy =
       [ "ThermalClusterStudy", "structThermalClusterStudy.html", null ]
     ] ],
     [ "Benchmarking::DurationCollector::OperationTimer", "structBenchmarking_1_1DurationCollector_1_1OperationTimer.html", null ],
+    [ "OptimisationsSimulationTable", "classOptimisationsSimulationTable.html", null ],
     [ "Benchmarking::OptimizationInfo", "structBenchmarking_1_1OptimizationInfo.html", null ],
     [ "Antares::Solver::Optimization::OptimizationOptions", "classAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html", null ],
     [ "OptimizationStatistics", "classOptimizationStatistics.html", null ],
@@ -1569,6 +1599,7 @@ var hierarchy =
     [ "SimulationHandler", "classSimulationHandler.html", null ],
     [ "Benchmarking::SimulationInfoCollector", "classBenchmarking_1_1SimulationInfoCollector.html", null ],
     [ "Antares::API::SimulationResults", "structAntares_1_1API_1_1SimulationResults.html", null ],
+    [ "SimulationTableEntry", "structSimulationTableEntry.html", null ],
     [ "Antares::Private::OutputViewerData::Content::SimulationType", "classAntares_1_1Private_1_1OutputViewerData_1_1Content_1_1SimulationType.html", null ],
     [ "Antares::Data::ShortTermStorage::SingleAdditionalConstraint", "classAntares_1_1Data_1_1ShortTermStorage_1_1SingleAdditionalConstraint.html", null ],
     [ "Antares::Solver::Optimization::SingleOptimOptions", "structAntares_1_1Solver_1_1Optimization_1_1SingleOptimOptions.html", null ],
@@ -1805,6 +1836,7 @@ var hierarchy =
     [ "IItem::Tag", "classIItem_1_1Tag.html", null ],
     [ "TargetVectorUpdater", "classTargetVectorUpdater.html", null ],
     [ "Antares::Solver::Progression::Task", "classAntares_1_1Solver_1_1Progression_1_1Task.html", null ],
+    [ "TempDirFixture", "structTempDirFixture.html", null ],
     [ "TestContext", "structTestContext.html", null ],
     [ "TestException", "classTestException.html", null ],
     [ "TestExceptionN< N >", "classTestExceptionN.html", null ],
@@ -1815,6 +1847,7 @@ var hierarchy =
     ] ],
     [ "Antares::Solver::Variable::ThermalState", "classAntares_1_1Solver_1_1Variable_1_1ThermalState.html", null ],
     [ "TIME_MEASURE", "structTIME__MEASURE.html", null ],
+    [ "TimeBlock", "structTimeBlock.html", null ],
     [ "Antares::Data::TimeDependantHydroManagementData", "structAntares_1_1Data_1_1TimeDependantHydroManagementData.html", null ],
     [ "Antares::Optimization::TimeDependentLinearExpression", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html", null ],
     [ "TimeMeasurement", "classTimeMeasurement.html", null ],
@@ -1836,6 +1869,7 @@ var hierarchy =
     [ "Antares::Data::TimeSeriesToCStr< 32 >", "structAntares_1_1Data_1_1TimeSeriesToCStr_3_0132_01_4.html", null ],
     [ "Antares::Data::TimeSeriesToCStr< 4 >", "structAntares_1_1Data_1_1TimeSeriesToCStr_3_014_01_4.html", null ],
     [ "Antares::Data::TimeSeriesToCStr< 8 >", "structAntares_1_1Data_1_1TimeSeriesToCStr_3_018_01_4.html", null ],
+    [ "TimeTestCase", "structTimeTestCase.html", null ],
     [ "tolerances.Tolerances", "classtolerances_1_1Tolerances.html", [
       [ "tolerances.Linux_tolerances", "classtolerances_1_1Linux__tolerances.html", null ],
       [ "tolerances.Win_tolerances", "classtolerances_1_1Win__tolerances.html", null ]
@@ -1886,6 +1920,9 @@ var hierarchy =
         [ "Antares::Action::Settings::SuffixPlantName", "classAntares_1_1Action_1_1Settings_1_1SuffixPlantName.html", null ],
         [ "Antares::Action::Text< AutoExpandT >", "classAntares_1_1Action_1_1Text.html", null ]
       ] ]
+    ] ],
+    [ "std::true_type", null, [
+      [ "is_optional< std::optional< U > >", "structis__optional_3_01std_1_1optional_3_01U_01_4_01_4.html", null ]
     ] ],
     [ "TSDimensions", "structTSDimensions.html", null ],
     [ "TSNumbersPredicate", "structTSNumbersPredicate.html", null ],

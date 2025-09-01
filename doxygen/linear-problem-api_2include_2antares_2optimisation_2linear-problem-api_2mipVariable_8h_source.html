@@ -152,20 +152,23 @@ $(document).ready(function(){initNavTree('linear-problem-api_2include_2antares_2
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &quot;hasBounds.h&quot;</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &quot;hasName.h&quot;</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceAntares_1_1Optimisation_1_1LinearProblemApi.html">Antares::Optimisation::LinearProblemApi</a></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;{</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">   30</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">IMipVariable</a>: <span class="keyword">public</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasBounds.html">IHasBounds</a>, <span class="keyword">public</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasName.html">IHasName</a></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;{</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span> isInteger() <span class="keyword">const</span> = 0;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;};</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;} <span class="comment">// namespace Antares::Optimisation::LinearProblemApi</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;hasStatus.h&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceAntares_1_1Optimisation_1_1LinearProblemApi.html">Antares::Optimisation::LinearProblemApi</a></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;{</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">   31</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">IMipVariable</a>: <span class="keyword">public</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasBounds.html">IHasBounds</a>, <span class="keyword">public</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasName.html">IHasName</a>, <span class="keyword">public</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasStatus.html">IHasStatus</a></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span> isInteger() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">double</span> solutionValue() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;};</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;} <span class="comment">// namespace Antares::Optimisation::LinearProblemApi</span></div>
 <div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasBounds_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasBounds.html">Antares::Optimisation::LinearProblemApi::IHasBounds</a></div><div class="ttdoc">Used to handle bounds for IMipVariable and IMipConstraint.</div><div class="ttdef"><b>Definition:</b> hasBounds.h:29</div></div>
 <div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasName_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasName.html">Antares::Optimisation::LinearProblemApi::IHasName</a></div><div class="ttdoc">Inherited by IMipVariable and IMipConstraint.</div><div class="ttdef"><b>Definition:</b> hasName.h:31</div></div>
-<div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">Antares::Optimisation::LinearProblemApi::IMipVariable</a></div><div class="ttdef"><b>Definition:</b> mipVariable.h:31</div></div>
+<div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasStatus_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasStatus.html">Antares::Optimisation::LinearProblemApi::IHasStatus</a></div><div class="ttdef"><b>Definition:</b> hasStatus.h:69</div></div>
+<div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">Antares::Optimisation::LinearProblemApi::IMipVariable</a></div><div class="ttdef"><b>Definition:</b> mipVariable.h:32</div></div>
 <div class="ttc" id="anamespaceAntares_1_1Optimisation_1_1LinearProblemApi_html"><div class="ttname"><a href="namespaceAntares_1_1Optimisation_1_1LinearProblemApi.html">Antares::Optimisation::LinearProblemApi</a></div><div class="ttdoc">Namespace for the classes related to the linear problem API.</div><div class="ttdef"><b>Definition:</b> EvaluationContext.h:8</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

@@ -10,6 +10,7 @@ var classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem =
     [ "getObjectiveCoefficient", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a1030be994c27b07f8315634ec045fbea", null ],
     [ "getVariable", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#acc4199d7ea128ac788f4de6eeb68150c", null ],
     [ "infinity", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a36ae3bf4633469cd6b6cd9120ed31dc5", null ],
+    [ "isLP", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#aebdb846f0ed1d83833051975c3a1bfa4", null ],
     [ "isMaximization", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a6e960534bf65fc592ef9ce229ca76349", null ],
     [ "isMinimization", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a0ce44b552d8f0e29bcb18fa11b97d795", null ],
     [ "lookupConstraint", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#ad6ea2e03ae07cab07f65a373561a0c7d", null ],

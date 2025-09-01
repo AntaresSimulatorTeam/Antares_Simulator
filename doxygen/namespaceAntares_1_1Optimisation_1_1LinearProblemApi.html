@@ -125,7 +125,8 @@ $(document).ready(function(){initNavTree('namespaceAntares_1_1Optimisation_1_1Li
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#enum-members">Enumerations</a>  </div>
+<a href="#enum-members">Enumerations</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">Antares::Optimisation::LinearProblemApi Namespace Reference</div>  </div>
 </div><!--header-->
@@ -141,6 +142,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasName.html">IHasName</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inherited by <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">IMipVariable</a> and <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html">IMipConstraint</a>.  <a href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasName.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasStatus.html">IHasStatus</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">FillContext</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Context for filling linear problem data. Contains temporal information.  <a href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html#details">More...</a><br /></td></tr>
@@ -177,6 +180,17 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
+<tr class="memitem:af3ab202941292bf021eb25436285050c"><td class="memItemLeft" align="right" valign="top"><a id="af3ab202941292bf021eb25436285050c"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>MipBasisStatus</b> : unsigned int { <br />
+&#160;&#160;<b>FREE</b> = 0
+, <b>AT_LOWER_BOUND</b>
+, <b>AT_UPPER_BOUND</b>
+, <b>FIXED_VALUE</b>
+, <br />
+&#160;&#160;<b>BASIC</b>
+, <b>NOT_AVAILABLE</b>
+<br />
+ }</td></tr>
+<tr class="separator:af3ab202941292bf021eb25436285050c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a151c8d204cdbd68c4258e0b1ba4403d9"><td class="memItemLeft" align="right" valign="top"><a id="a151c8d204cdbd68c4258e0b1ba4403d9"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>MipStatus</b> { <br />
 &#160;&#160;<b>OPTIMAL</b>
 , <b>FEASIBLE</b>
@@ -187,6 +201,15 @@ Enumerations</h2></td></tr>
 <br />
  }</td></tr>
 <tr class="separator:a151c8d204cdbd68c4258e0b1ba4403d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:af9284a9ffdf8ae444cea2630c5ebc6d1"><td class="memItemLeft" align="right" valign="top"><a id="af9284a9ffdf8ae444cea2630c5ebc6d1"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>StatusToString</b> (const std::optional&lt; MipBasisStatus &gt; &amp;status)</td></tr>
+<tr class="separator:af9284a9ffdf8ae444cea2630c5ebc6d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50f7fa9890249126a0d0d2a92a46cd89"><td class="memItemLeft" align="right" valign="top"><a id="a50f7fa9890249126a0d0d2a92a46cd89"></a>
+std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;&lt;</b> (std::ostream &amp;os, const MipBasisStatus &amp;status)</td></tr>
+<tr class="separator:a50f7fa9890249126a0d0d2a92a46cd89"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Namespace for the classes related to the linear problem API. </p>

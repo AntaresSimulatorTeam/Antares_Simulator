@@ -1314,13 +1314,14 @@ var namespaces_dup =
           [ "OrtoolsLinearProblem", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem" ],
           [ "OrtoolsMipConstraint", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipConstraint.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipConstraint" ],
           [ "OrtoolsMipSolution", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipSolution.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipSolution" ],
-          [ "OrtoolsMipVariable", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable" ]
+          [ "OrtoolsMipVariable", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable" ],
+          [ "convertOrtoolsBasisStatus", "convertOrtoolsBasisStatus_8cpp.html#a82d1e8a5093f3f009bf7c358f7ec432f", null ]
         ] ],
         [ "ComponentFiller", "classAntares_1_1Optimisation_1_1ComponentFiller.html", "classAntares_1_1Optimisation_1_1ComponentFiller" ],
         [ "VariablesBulkAddition", "classAntares_1_1Optimisation_1_1VariablesBulkAddition.html", "classAntares_1_1Optimisation_1_1VariablesBulkAddition" ],
         [ "ScenarioGroupRepository", "classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html", "classAntares_1_1Optimisation_1_1ScenarioGroupRepository" ],
         [ "DefaultScenario", "classAntares_1_1Optimisation_1_1DefaultScenario.html", "classAntares_1_1Optimisation_1_1DefaultScenario" ],
-        [ "checkTimeSteps", "ComponentFiller_8cpp.html#a976f9a528fccdb9ccdf17140b4c0cdf5", null ]
+        [ "checkTimeSteps", "ComponentFiller_8cpp.html#aee2ef02561622b13f427d04402309514", null ]
       ] ],
       [ "Optimization", "namespaceAntares_1_1Optimization.html", "namespaceAntares_1_1Optimization" ],
       [ "Private", null, [
@@ -1451,8 +1452,8 @@ var namespaces_dup =
           [ "AvgExchangeVCardBalance", "common-eco-adq_8h.html#a03f83cef439caae74b1af3abbf37b064", null ],
           [ "BuildThermalPartOfWeeklyProblem", "common-eco-adq_8cpp.html#aa1d5010a4bd506a7c02c781ec03d031d", null ],
           [ "checkInput", "shave-peaks-by-remix-storage-gen_8h.html#a163004ffb1f3cdaee57c9285c89522a7", null ],
-          [ "ComputeFlowQuad", "common-eco-adq_8cpp.html#a95d4ee7d313da8fda265079d92413916", null ],
-          [ "ComputeFlowQuad", "common-eco-adq_8h.html#a2e52203941a89d09c9149d8a8d0a8543", null ],
+          [ "ComputeFlowQuad", "common-eco-adq_8cpp.html#a1c6f41f21bfd89d4a641d245a59acc06", null ],
+          [ "ComputeFlowQuad", "common-eco-adq_8h.html#a9a473e903fe087b8f0a85ab9ee83e560", null ],
           [ "extractHydroPmin", "common-hydro-remix_8cpp.html#ae655a881f86cb20dbb0e8b22f189675f", null ],
           [ "extractLoadForCurrentWeek", "common-hydro-remix_8cpp.html#a3ed2d0cad36894073e1a9fb8c8bcac75", null ],
           [ "finalizeOptimizationStatistics", "common-eco-adq_8cpp.html#a11dfb84267c82f2f802941ba9861c8a3", null ],
@@ -2632,10 +2633,10 @@ var namespaces_dup =
       [ "get_value", "modeler__steps_8py.html#a109b1ad3dda0bf646d91b54fd231db86", null ],
       [ "modeler_obj_value", "modeler__steps_8py.html#af5e8a8caff7e09da270cd93877f5bbaa", null ],
       [ "modeler_obj_value", "modeler__steps_8py.html#a68ec571e892067af4f648b84600afd3a", null ],
+      [ "modeler_output_values", "modeler__steps_8py.html#a46e51627eea404e8093f8f07addcc312", null ],
       [ "modeler_study_path_is", "modeler__steps_8py.html#a4b60789db78871ca85f1563bc7f0070b", null ],
-      [ "modeler_var_optimal_value", "modeler__steps_8py.html#a687ddc88f0f79945181da8e8d0d0b359", null ],
-      [ "modeler_var_optimal_value", "modeler__steps_8py.html#ae274a6cd6793ff0fba44511e41b0d0b7", null ],
       [ "parse_output_folder_from_logs", "modeler__steps_8py.html#a62f8e382bb0f7b3ec9933dd1593b18c7", null ],
+      [ "parse_simulation_table_from_logs", "modeler__steps_8py.html#a4f06003109779a9894c3d22799a73f0a", null ],
       [ "run_antares_modeler", "modeler__steps_8py.html#a46943a258f11896089708a54ac5b0df2", null ],
       [ "run_modeler", "modeler__steps_8py.html#a9d99e3e1985a65e970317fcf0a7d30b2", null ]
     ] ],
@@ -2701,6 +2702,7 @@ var namespaces_dup =
       [ "check_prod_for_specific_year_hour", "solver__steps_8py.html#aea78b3117789304b50ea01ed270f34d5", null ],
       [ "check_production_value", "solver__steps_8py.html#ae1d5f24c503db441e4490191255ff0f1", null ],
       [ "check_simu_time", "solver__steps_8py.html#ab2dde1f1dea0fb35c42f79d1b100a659", null ],
+      [ "check_simulation_tables", "solver__steps_8py.html#a8c31314aab190376232a12ffc3b94bce", null ],
       [ "check_spilled_energy_value", "solver__steps_8py.html#ad370ece761d0ee9e8e90cb7b839547e0", null ],
       [ "check_sts_injection", "solver__steps_8py.html#a05650f62b55714edc6b45ed23fc73ff9", null ],
       [ "check_sts_level", "solver__steps_8py.html#a1faaccefe98f3ddbcf15b1d174491f39", null ],

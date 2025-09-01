@@ -142,12 +142,12 @@ Inheritance diagram for Antares::Modeler::FileWriter:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a5a08bef865963cbb25f3695e3d79b466"><td class="memItemLeft" align="right" valign="top"><a id="a5a08bef865963cbb25f3695e3d79b466"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> (bool setOutput=true) override</td></tr>
-<tr class="separator:a5a08bef865963cbb25f3695e3d79b466"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af0e66ec22559c264df383a085d320b76"><td class="memItemLeft" align="right" valign="top"><a id="af0e66ec22559c264df383a085d320b76"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>writeSolution</b> (const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipSolution.html">Optimisation::LinearProblemApi::IMipSolution</a> &amp;solution) override</td></tr>
-<tr class="separator:af0e66ec22559c264df383a085d320b76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99e69d7d81f079e7be49a8e949651079"><td class="memItemLeft" align="right" valign="top"><a id="a99e69d7d81f079e7be49a8e949651079"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> (bool setOutput, const std::string &amp;simulationId) override</td></tr>
+<tr class="separator:a99e69d7d81f079e7be49a8e949651079"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc1155f21371480ef5fbd575e91b02ff"><td class="memItemLeft" align="right" valign="top"><a id="abc1155f21371480ef5fbd575e91b02ff"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>writeSimulationTable</b> (const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">Antares::Optimisation::LinearProblemApi::ILinearProblem</a> &amp;linearProblem, const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipSolution.html">Optimisation::LinearProblemApi::IMipSolution</a> &amp;solution, const std::unordered_map&lt; std::string, <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a> &gt; &amp;components, const <a class="el" href="classAntares_1_1Optimization_1_1VariableDictionary.html">Antares::Optimization::VariableDictionary</a> &amp;variableDictionary, const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Antares::Optimisation::LinearProblemApi::FillContext</a> &amp;fillContext) const override</td></tr>
+<tr class="separator:abc1155f21371480ef5fbd575e91b02ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf9394061e6d2c61479524928bb26efb"><td class="memItemLeft" align="right" valign="top"><a id="acf9394061e6d2c61479524928bb26efb"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>FileWriter</b> (std::filesystem::path path)</td></tr>
 <tr class="separator:acf9394061e6d2c61479524928bb26efb"><td class="memSeparator" colspan="2">&#160;</td></tr>

@@ -3,6 +3,8 @@ var classAntares_1_1Solver_1_1Simulation_1_1Adequacy =
     [ "Adequacy", "classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#a9a0b9f64860444efa5f38063a1440430", null ],
     [ "~Adequacy", "classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#a29e714ce3e5f065b2a5f17d2a452818d", null ],
     [ "getOptimizationInfo", "classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#a04d7aa76cd0944fbffa790dfe2ab9019", null ],
+    [ "getSimulationTable", "classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#af0a60b88697e6dc8850fa5f2f6b885d1", null ],
+    [ "getSimulationTableHeader", "classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#a43220fc6e4c0afd5cb92cfa5aa352b99", null ],
     [ "incrementProgression", "classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#ad4eff07d31b9efb821a5ef5474480c3d", null ],
     [ "initializeState", "classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#a30965044bc4794f44ef789769c311ab3", null ],
     [ "prepareClustersInMustRunMode", "classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#acc70a60813365e67941864367f9083dd", null ],

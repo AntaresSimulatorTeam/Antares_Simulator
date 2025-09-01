@@ -11,6 +11,7 @@ var classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearPr
     [ "getObjectiveCoefficient", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#a82a02e375c6023ac34d4c4965452acb4", null ],
     [ "getVariable", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#a9c282cd0fb9aa0980f25621cd269909d", null ],
     [ "infinity", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#abd4e8899aef33860e73beeb6b432309f", null ],
+    [ "isLP", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#ae2869fb18f48793938a25deef9694830", null ],
     [ "isMaximization", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#ab2dd3699d651f8cb791ddd6ce6b2ecb8", null ],
     [ "isMinimization", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#a3ea598d72af44246d18dc6cc12105174", null ],
     [ "lookupConstraint", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#a99c4c3c221ee8dfc171945ddb7d3deaf", null ],

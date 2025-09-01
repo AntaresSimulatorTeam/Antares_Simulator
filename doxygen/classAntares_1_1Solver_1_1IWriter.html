@@ -143,12 +143,12 @@ Inheritance diagram for Antares::Solver::IWriter:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:afc4a012760758881b6baaf14b0c13471"><td class="memItemLeft" align="right" valign="top"><a id="afc4a012760758881b6baaf14b0c13471"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> (bool)=0</td></tr>
-<tr class="separator:afc4a012760758881b6baaf14b0c13471"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7ec1a35b5804c53420b751164e0fbf8f"><td class="memItemLeft" align="right" valign="top"><a id="a7ec1a35b5804c53420b751164e0fbf8f"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>writeSolution</b> (const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipSolution.html">Optimisation::LinearProblemApi::IMipSolution</a> &amp;solution)=0</td></tr>
-<tr class="separator:a7ec1a35b5804c53420b751164e0fbf8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10c6e3543cec4feb248415fb8b1edc91"><td class="memItemLeft" align="right" valign="top"><a id="a10c6e3543cec4feb248415fb8b1edc91"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> (bool, const std::string &amp;simulationId)=0</td></tr>
+<tr class="separator:a10c6e3543cec4feb248415fb8b1edc91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad55b4eaf5cc1e125014b467c9a048506"><td class="memItemLeft" align="right" valign="top"><a id="ad55b4eaf5cc1e125014b467c9a048506"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>writeSimulationTable</b> (const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">Antares::Optimisation::LinearProblemApi::ILinearProblem</a> &amp;linearProblem, const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipSolution.html">Optimisation::LinearProblemApi::IMipSolution</a> &amp;solution, const std::unordered_map&lt; std::string, <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a> &gt; &amp;components, const <a class="el" href="classAntares_1_1Optimization_1_1VariableDictionary.html">Antares::Optimization::VariableDictionary</a> &amp;variableDictionary, const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Antares::Optimisation::LinearProblemApi::FillContext</a> &amp;fillContext) const =0</td></tr>
+<tr class="separator:ad55b4eaf5cc1e125014b467c9a048506"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a67adfd12a731e57a368b192e347e4437"><td class="memItemLeft" align="right" valign="top"><a id="a67adfd12a731e57a368b192e347e4437"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>writeProblem</b> (const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html">Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem</a> &amp;problem)=0</td></tr>
 <tr class="separator:a67adfd12a731e57a368b192e347e4437"><td class="memSeparator" colspan="2">&#160;</td></tr>
