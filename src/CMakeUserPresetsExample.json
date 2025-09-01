@@ -1,0 +1,55 @@
+{
+  "version": 7,
+  "configurePresets": [
+    {
+      "name": "default",
+      "inherits": "vcpkg",
+      "environment": {
+        "VCPKG_ROOT": "../vcpkg",
+        "VCPKG_BINARY_SOURCES": "clear;files,/tmp/deps/vcpkg_cache/binary-cache,readwrite",
+        "CCACHE_DIR": "/tmp/deps/ccache",
+        "VCPKG_INSTALL_OPTIONS": "--x-buildtrees-root=/tmp/deps/vcpkg_cache/buildtrees;--x-packages-root=/tmp/deps/vcpkg_cache/packages"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "BUILD_TESTING": "ON",
+        "CMAKE_PREFIX_PATH": "/tmp/deps/ortools_9.13-rte1.1_cxx_ubuntu-22.04_static_sirius;/tmp/deps/sirius",
+        "BUILD_ORTOOLS": "OFF",
+        "BUILD_UI": "OFF",
+        "BUILD_TOOLS": "OFF",
+        "CMAKE_CXX_COMPILER_LAUNCHER": "ccache",
+        "CMAKE_VERBOSE_MAKEFILE": "TRUE",
+        "CMAKE_CXX_FLAGS": "-fclang-abi-compat=17",
+        "CMAKE_INSTALL_PREFIX": "/tmp/deps/install_simulator_debug_docker",
+        "CODE_COVERAGE": "OFF"
+        //"CMAKE_CXX_INCLUDE_WHAT_YOU_USE": "include-what-you-use"
+      },
+      "trace": {
+        "redirect": "cmake_out.txt"
+      },
+      "vendor": {
+        "jetbrains.com/clion": {
+          "toolchain": "Antares clang"
+        }
+      }
+    },
+    {
+      "name": "proxy",
+      "inherits": "default",
+      "environment": {
+        "HTTP_PROXY": "http://user:pwd@proxy:8080",
+        "HTTPS_PROXY": "http://user:pwd@proxy:8080",
+        "http_proxy": "http://user:pwd@proxy:8080",
+        "https_proxy": "http://user:pwd@proxy:8080"
+      }
+    },
+    {
+      "name": "profile build",
+      "inherits": "default",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER_LAUNCHER": "",
+        "CMAKE_CXX_FLAGS": "-fclang-abi-compat=17 -ftime-trace -ftime-report"
+      }
+    }
+  ]
+}
