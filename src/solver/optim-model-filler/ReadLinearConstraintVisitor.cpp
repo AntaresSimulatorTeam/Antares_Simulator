@@ -139,56 +139,47 @@ std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const Parameter
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(
-  [[maybe_unused]] const LiteralNode*)
+std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const LiteralNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(
-  [[maybe_unused]] const PortFieldNode*)
+std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const PortFieldNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(
-  [[maybe_unused]] const PortFieldSumNode*)
+std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const PortFieldSumNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(
-  [[maybe_unused]] const ComponentVariableNode*)
+std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const ComponentVariableNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(
-  [[maybe_unused]] const ComponentParameterNode*)
+std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const ComponentParameterNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(
-  [[maybe_unused]] const TimeShiftNode*)
+std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const TimeShiftNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(
-  [[maybe_unused]] const TimeIndexNode*)
+std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const TimeIndexNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(
-  [[maybe_unused]] const TimeSumNode*)
+std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const TimeSumNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(
-  [[maybe_unused]] const AllTimeSumNode*)
+std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const AllTimeSumNode*)
 {
     throw IllegalNodeException();
 }
