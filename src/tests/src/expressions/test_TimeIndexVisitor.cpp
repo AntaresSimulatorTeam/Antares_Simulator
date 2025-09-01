@@ -279,4 +279,29 @@ BOOST_AUTO_TEST_CASE(test_time_index_logical_operator)
                       TimeIndex::VARYING_IN_TIME_AND_SCENARIO);
 }
 
+BOOST_FIXTURE_TEST_CASE(test_overwrite_time_inde_from_component, BasicFixture)
+{
+    // When TimeIndex in component parameter is less varying than in model, the component's
+    // TimeIndex should be returned
+    ParameterNode parameterNode{"p1", TimeIndex::VARYING_IN_TIME_AND_SCENARIO};
+
+    EvaluationContext context1(
+      {{"p1", ParameterTypeAndValue{.id = "p1", .type = ParameterType::CONSTANT, .value = "1"}}},
+      {},
+      mockData,
+      emptyScenario);
+    TimeIndexVisitor timeIndexVisitor1{component, context1};
+    auto timeIndex = timeIndexVisitor1.dispatch(&parameterNode);
+    BOOST_CHECK_EQUAL(timeIndex, TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+
+    EvaluationContext context2(
+      {{"p1", ParameterTypeAndValue{.id = "p1", .type = ParameterType::TIMESERIE, .value = "1"}}},
+      {},
+      mockData,
+      emptyScenario);
+    TimeIndexVisitor timeIndexVisitor2{component, context2};
+    timeIndex = timeIndexVisitor2.dispatch(&parameterNode);
+    BOOST_CHECK_EQUAL(timeIndex, TimeIndex::VARYING_IN_TIME_AND_SCENARIO);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

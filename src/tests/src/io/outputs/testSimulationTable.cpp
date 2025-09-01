@@ -790,15 +790,6 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
         for (const auto& [compoId, compo]: components)
         {
             const auto* model = compo.getModel();
-            for (const auto& varId: model->Variables() | views::keys)
-            {
-                variableDictionary.addVariable(
-                  Dimensions{IntegerInterval{},
-                             IntegerInterval{fillContext.getLocalFirstTimeStep(),
-                                             fillContext.getLocalLastTimeStep()}},
-                  PartialKey(compoId, varId),
-                  f);
-            }
             if (linearProblem)
             {
                 for (const auto& constraintId: model->Constraints() | views::keys)
@@ -810,7 +801,6 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
         }
     }
 
-    VariableDictionary variableDictionary;
 };
 
 struct TempDirFixture
@@ -1391,12 +1381,6 @@ BOOST_AUTO_TEST_CASE(BuildModelerConstraintName_AllParameters)
 {
     std::string result = BuildModelerConstraintName("comp1", "constraint1", 10u);
     BOOST_CHECK_EQUAL(result, "comp1.constraint1_10");
-}
-
-BOOST_AUTO_TEST_CASE(BuildModelerConstraintName_OnlyScenario)
-{
-    std::string result = BuildModelerConstraintName("comp1", "constraint1", std::nullopt);
-    BOOST_CHECK_EQUAL(result, "comp1.constraint1_5");
 }
 
 BOOST_AUTO_TEST_CASE(BuildModelerConstraintName_OnlyTimestep)

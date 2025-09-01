@@ -159,21 +159,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::PortFieldNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
 {
-    std::string portId = node->getPortName();
-    std::string fieldId = node->getFieldName();
-    const auto& connections = component_->componentConnectionsViaPort(portId);
-    return std::accumulate(std::begin(connections),
-                           std::end(connections),
-                           EvaluationResult{0.},
-                           [this,
-                            fieldId](const EvaluationResult& sum,
-                                     const ModelerStudy::SystemModel::ConnectionEnd& connection_end)
-                           {
-                               auto* component = connection_end.component();
-                               auto* port = connection_end.port();
-                               return sum
-                                      + dispatch(component->nodeAtPortField(port->Id(), fieldId));
-                           });
+    throw EvalVisitorNotImplemented(name(), node->name());
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::ComponentVariableNode* node)

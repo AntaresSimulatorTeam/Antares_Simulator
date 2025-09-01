@@ -21,6 +21,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <absl/container/internal/inlined_vector.h>
 #include <stdexcept>
 
 #include <boost/mpl/list.hpp>
@@ -37,6 +38,7 @@
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::Expressions::Visitors;
+using namespace Antares::ModelerStudy::SystemModel;
 
 BOOST_AUTO_TEST_SUITE(_PrintAndEvalNodes_)
 
@@ -1261,4 +1263,44 @@ BOOST_AUTO_TEST_CASE(HandleEmptyString)
 {
     BOOST_CHECK_EQUAL(PrintVisitor::trimAndFormat(""), "");
 }
+
+BOOST_FIXTURE_TEST_CASE(testVariableNodeEvaluation, MyDummyFixture)
+{
+    Antares::Optimisation::LinearProblemApi::FillContext fillContext{0, 2, 10, 12, 0};
+    Model model;
+    ComponentBuilder component_builder;
+    auto component = component_builder.withModel(&model).withId("my_component").build();
+    EvaluationContext evaluationContext{{},
+                                        {{"my_component.my_const_variable_s0", 12.5},
+                                         {"my_component.my_non_const_variable_s0_t0", 45.3},
+                                         {"my_component.my_non_const_variable_s0_t1", 78.9},
+                                         {"my_component.my_non_const_variable_s0_t2", 714.5}},
+                                        data,
+                                        emptyScenario};
+    EvalVisitor evalVisitor{evaluationContext, fillContext, &component};
+
+    Node* root = create<VariableNode>("my_const_variable",
+                                      TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+    double eval = evalVisitor.dispatch(root).valueAsDouble();
+    BOOST_CHECK_EQUAL(eval, 12.5);
+
+    root = create<VariableNode>("my_const_variable", TimeIndex::VARYING_IN_SCENARIO_ONLY);
+    eval = evalVisitor.dispatch(root).valueAsDouble();
+    BOOST_CHECK_EQUAL(eval, 12.5);
+
+    root = create<VariableNode>("my_non_const_variable", TimeIndex::VARYING_IN_TIME_ONLY);
+    auto evalVector = evalVisitor.dispatch(root).valuesAsVector();
+    BOOST_CHECK_EQUAL(evalVector.size(), 3);
+    BOOST_CHECK_EQUAL(evalVector[0], 45.3);
+    BOOST_CHECK_EQUAL(evalVector[1], 78.9);
+    BOOST_CHECK_EQUAL(evalVector[2], 714.5);
+
+    root = create<VariableNode>("my_non_const_variable", TimeIndex::VARYING_IN_TIME_AND_SCENARIO);
+    evalVector = evalVisitor.dispatch(root).valuesAsVector();
+    BOOST_CHECK_EQUAL(evalVector.size(), 3);
+    BOOST_CHECK_EQUAL(evalVector[0], 45.3);
+    BOOST_CHECK_EQUAL(evalVector[1], 78.9);
+    BOOST_CHECK_EQUAL(evalVector[2], 714.5);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
