@@ -93,7 +93,7 @@ BOOST_AUTO_TEST_CASE(asking_repo_data_for_a_too_big_hour___exception_from_data_s
     Antares::Optimisation::LinearProblemApi::IScenario::TimeSeriesNumber tsNumber = 1;
     unsigned hour = 100; // Hour too big
     std::string expected_err_msg = "TS set 'some TS set' : hour 100 exceeds TS set's height";
-    BOOST_CHECK_EXCEPTION(dataSeriesRepository.getDataSeries("some TS set").getData(tsNumber, hour),
+    BOOST_CHECK_EXCEPTION(auto _ = dataSeriesRepository.getDataSeries("some TS set").getData(tsNumber, hour),
                           TimeSeriesSet::HourTooBig,
                           checkMessage(expected_err_msg));
 }
