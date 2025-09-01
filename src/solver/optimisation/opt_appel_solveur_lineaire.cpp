@@ -118,34 +118,6 @@ static void fillModelerComponents(
     }
 }
 
-static void writeModelerSolutions(const MPSolver* solver,
-                                  unsigned nLegacyVariables,
-                                  const int optimizationNumber,
-                                  const OptPeriodStringGenerator& optPeriodStringGenerator,
-                                  IResultWriter& writer)
-{
-    std::stringstream contentStream;
-    const auto& variables = solver->variables();
-
-    // we want to only get modeler variables, they're added after legacy vars
-    // TODO make this cleaner (what happens if order changes? use modeler var dictionary instead?)
-    auto start = variables.begin() + nLegacyVariables;
-    if (start == variables.end())
-    {
-        logs.debug() << "No modeler solutions, skip writing files";
-        return;
-    }
-    for (auto v = start; v < variables.end(); ++v)
-    {
-        contentStream << (*v)->name() << "\t" << (*v)->solution_value() << std::endl;
-    }
-
-    auto modelerSolutionFilename = createModelerSolutionsFilename(optPeriodStringGenerator,
-                                                                  optimizationNumber);
-    std::string content = contentStream.str();
-    writer.addEntryFromBuffer(modelerSolutionFilename, content);
-}
-
 FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumIntervalle)
 {
     unsigned globalFirst, globalLast;

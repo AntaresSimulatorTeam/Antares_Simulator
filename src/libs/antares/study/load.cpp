@@ -23,7 +23,6 @@
 
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include "antares/exception/LoadingError.hpp"
-#include "antares/exception/RuntimeError.hpp"
 #include "antares/study/scenario-builder/sets.h"
 #include "antares/study/study.h"
 #include "antares/study/ui-runtimeinfos.h"
@@ -258,7 +257,7 @@ void Study::checkModelerDataCompatibility() const
         {
             if (!variable.IsScenarioDependent())
             {
-                throw Error::RuntimeError(fmt::format(
+                throw Error::LoadingError(fmt::format(
                   "Scenario-independent variables are not supported in hybrid studies. "
                   "Please review variable \"{}\" in model \"{}\" (used in component \"{}\").",
                   variable.Id(),

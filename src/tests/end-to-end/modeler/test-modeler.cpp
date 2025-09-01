@@ -200,18 +200,11 @@ struct Solution
 class InMemoryWriter: public Antares::Solver::IWriter
 {
 public:
-    Solution solution_{};
+    mutable Solution solution_{};
 
     void init(bool, const std::string&) override
     {
         // No initialization needed for in-memory writer
-    }
-
-    void writeSolution(
-      const Antares::Optimisation::LinearProblemApi::IMipSolution& solution) override
-    {
-        solution_.objectiveValue = solution.getObjectiveValue();
-        // No output to write for in-memory writer
     }
 
     void writeProblem(
@@ -228,6 +221,7 @@ public:
       Antares::Optimisation::LinearProblemApi::ILinearProblemData* dataSeries,
       const Antares::Optimisation::LinearProblemApi::FillContext& fillContext) const override
     {
+        solution_.objectiveValue = solution.getObjectiveValue();
     }
 };
 

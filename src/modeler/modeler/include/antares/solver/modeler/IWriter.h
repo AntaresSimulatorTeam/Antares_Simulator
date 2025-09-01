@@ -56,7 +56,6 @@ class IWriter
 public:
     virtual ~IWriter() = default;
     virtual void init(bool, const std::string& simulationId) = 0;
-    virtual void writeSolution(const Optimisation::LinearProblemApi::IMipSolution& solution) = 0;
     virtual void writeSimulationTable(
       const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
       const Optimisation::LinearProblemApi::IMipSolution& solution,

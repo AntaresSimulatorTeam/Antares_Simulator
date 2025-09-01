@@ -55,28 +55,6 @@ void FileWriter::writeSimulationTable(
   const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
   const Optimisation::LinearProblemApi::IMipSolution& solution,
   const std::unordered_map<std::string, ModelerStudy::SystemModel::Component>& components,
-  const Optimization::VariableDictionary& variableDictionary,
-  const Optimisation::LinearProblemApi::FillContext& fillContext) const
-{
-    if (output)
-    {
-        SimulationTableCsvFile simulationTable(outputPath_, simulationId_);
-        FillSimulationTable(simulationTable,
-                            linearProblem,
-                            solution.getObjectiveValue(),
-                            components,
-                            fillContext,
-                            1,
-                            TimeConversionMode::SingleBlock);
-        simulationTable.writeHeader();
-        simulationTable.write();
-    }
-}
-
-void FileWriter::writeSimulationTable(
-  const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
-  const Optimisation::LinearProblemApi::IMipSolution& solution,
-  const std::unordered_map<std::string, ModelerStudy::SystemModel::Component>& components,
   Optimisation::LinearProblemApi::ILinearProblemData* dataSeries,
   const Optimisation::LinearProblemApi::FillContext& fillContext) const
 {

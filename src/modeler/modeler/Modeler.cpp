@@ -58,7 +58,6 @@ public:
     ~SystemLinearProblemBuilder() = default;
 
     void Provide(ILinearProblem& pb,
-                 const ModelerParameters& parameters,
                  ILinearProblemData* dataSeries,
                  const Optimisation::ScenarioGroupRepository& scenario_group_repository,
                  const FillContext& timeScenarioCtx)
@@ -128,7 +127,6 @@ void Modeler::solve() const
           parameters.lastTimeStep,  // global = local
           0};
         system_linear_problem.Provide(ortools_linear_problem,
-                                      parameters,
                                       data.dataSeries.get(),
                                       data.scenario_group_repository,
                                       timeScenarioCtx);
@@ -147,7 +145,6 @@ void Modeler::solve() const
         {
         case MipStatus::OPTIMAL:
         case MipStatus::FEASIBLE:
-            writer_.writeSolution(*solution);
             writer_.writeSimulationTable(ortools_linear_problem,
                                          *solution,
                                          data.system->Components(),
@@ -160,7 +157,7 @@ void Modeler::solve() const
     }
     catch (const LoadFiles::ErrorLoadingYaml&)
     {
-        throw Antares::Solver::Modeler::ModelerError("Error while loading files, exiting");
+        throw ModelerError("Error while loading files, exiting");
     }
 }
 } // namespace Antares::Solver
