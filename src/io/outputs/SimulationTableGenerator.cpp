@@ -68,7 +68,8 @@ std::string BuildModelerConstraintName(const std::string& cid,
         key += "_" + std::to_string(*ts);
     }
     // ComponentFiller does not yet add the scenario index to the constraint name
-    // TODO make this cleaner like with VariableDictionary: maybe read & parse constraint names in LinearProblem instead?
+    // TODO make this cleaner like with VariableDictionary: maybe read & parse constraint names in
+    // LinearProblem instead?
     return key;
 }
 
@@ -193,22 +194,9 @@ void addConstraintEntries(ISimulationTable& simulationTable,
                        .dispatch(modelConstr.expression().RootNode());
         idxType = updateTimeIndexIfShouldForceScenario(idxType, forceScenarioDependency);
 
-        if (cname == "initial_level_constraint")
-        {
-            std::cout << "Initial level constraint " << cname << std::endl;
-        }
-
         auto handle = [&](std::optional<unsigned> ts, std::optional<unsigned> scenIdx)
         {
             std::string fullConstName = BuildModelerConstraintName(cid, cname, ts);
-            if (fullConstName == "storage_base_zone.initial_level_constraint_0")
-            {
-                for (auto c = 0; c < linearProblem.constraintCount(); ++c)
-                {
-                    std::cout << "!!! " << linearProblem.getConstraint(c)->getName() << std::endl;
-                }
-                std::cout << "oops" << std::endl;
-            }
             const auto* c = linearProblem.lookupConstraint(fullConstName);
             TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(
                                   *ts + fillContext.getGlobalFirstTimeStep(),
@@ -299,19 +287,6 @@ void addPortEntries(ISimulationTable& simulationTable,
     }
 }
 
-/**
- * TODO + move to .h
- * @param simulationTable
- * @param linearProblem
- * @param objectiveValue
- * @param components
- * @param dataSeries
- * @param fillContext
- * @param currentBlock
- * @param timeConversionMode
- * @param forceScenarioDependency set to true if you want to force the scenario index to be exported
- * for scenario-independent outputs (useful for hybrid mode)
- */
 void FillSimulationTable(
   ISimulationTable& simulationTable,
   const ILinearProblem& linearProblem,

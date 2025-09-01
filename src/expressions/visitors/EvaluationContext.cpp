@@ -40,15 +40,7 @@ EvaluationContext::EvaluationContext(std::map<std::string, ParameterTypeAndValue
 
 double EvaluationContext::getVariableValue(const std::string& key) const
 {
-    try
-    {
-        return variables_.at(key);
-    }
-    catch (std::exception& e)
-    {
-        // TODO : make this cleaner
-        throw std::runtime_error("No value for varName = " + key);
-    }
+    return variables_.at(key);
 }
 
 static double convertToDouble(const std::string& key, const std::string& value)
@@ -100,15 +92,7 @@ ParameterType EvaluationContext::getParameterType(const std::string& key) const
 
 ParameterTypeAndValue EvaluationContext::getParameter(const std::string& key) const
 {
-    try
-    {
-        return parameters_types_and_values_.at(key);
-    }
-    catch (std::exception& e)
-    {
-        // TODO : make this cleaner
-        throw std::runtime_error("No value for parameter = " + key);
-    }
+    return parameters_types_and_values_.at(key);
 }
 
 const ILinearProblemData& EvaluationContext::data() const

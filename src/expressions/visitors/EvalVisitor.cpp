@@ -26,7 +26,6 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/solver/optim-model-filler/VariableDictionary.h>
-#include "antares/exception/RuntimeError.hpp"
 #include "antares/expressions/ShiftVector.h"
 
 namespace Antares::Expressions::Visitors
@@ -41,7 +40,9 @@ EvalVisitor::EvalVisitor(EvaluationContext context,
 EvalVisitor::EvalVisitor(EvaluationContext context,
                          Optimisation::LinearProblemApi::FillContext fillContext,
                          const ModelerStudy::SystemModel::Component* component):
-    // TODO put component or its id inside context, it is already component-bound
+    // TODO put component or its id inside context, it is already component-bound.
+    // Plus it is mandatory to visit Variables & PortFieldSums
+    // Else, create a PostOptimEvalVisitor that inherits from EvalVisitor & has a different ctor
     context_(std::move(context)),
     fillContext_(std::move(fillContext)),
     component_(component)
@@ -99,25 +100,20 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
           std::nullopt);
         return EvaluationResult(context_.getVariableValue(varName));
     }
-    if (node->timeIndex() == TimeIndex::VARYING_IN_TIME_ONLY
-        || node->timeIndex() == TimeIndex::VARYING_IN_TIME_AND_SCENARIO)
+    // VARYING_IN_TIME_ONLY or VARYING_IN_TIME_AND_SCENARIO)
+    std::vector<double> varValues;
+    varValues.reserve(fillContext_.getLocalNumberOfTimeSteps());
+    for (auto timeStep = fillContext_.getLocalFirstTimeStep();
+         timeStep <= fillContext_.getLocalLastTimeStep();
+         ++timeStep)
     {
-        std::vector<double> varValues;
-        varValues.reserve(fillContext_.getLocalNumberOfTimeSteps());
-        for (auto timeStep = fillContext_.getLocalFirstTimeStep();
-             timeStep <= fillContext_.getLocalLastTimeStep();
-             ++timeStep)
-        {
-            std::string varName = Optimization::VariableDictionary::buildVariableName(
-              {component_->Id(), node->value()},
-              Optimization::MCYearAndTime::MCYear{fillContext_.getYear()},
-              timeStep);
-
-            varValues.emplace_back(context_.getVariableValue(varName));
-        }
-        return EvaluationResult{varValues};
+        std::string varName = Optimization::VariableDictionary::buildVariableName(
+          {component_->Id(), node->value()},
+          Optimization::MCYearAndTime::MCYear{fillContext_.getYear()},
+          timeStep);
+        varValues.emplace_back(context_.getVariableValue(varName));
     }
-    throw Error::RuntimeError("Case not supported");
+    return EvaluationResult{varValues};
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)

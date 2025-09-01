@@ -82,7 +82,6 @@ TimeIndex TimeIndexVisitor::visit(const Nodes::ParameterNode* param)
         return TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
         // TODO: handle more cases, but ParameterType must be exhaustive first
     }
-    // TODO : add unit tests for this
     return param->timeIndex();
 }
 

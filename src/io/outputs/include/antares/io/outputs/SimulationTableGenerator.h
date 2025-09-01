@@ -102,6 +102,19 @@ void addPortEntries(ISimulationTable& simulationTable,
                     bool forceScenarioDependency,
                     const Antares::Expressions::Visitors::EvaluationContext& evalContext);
 
+/**
+ * Fill modeler outputs in the simulation table
+ * @param simulationTable the simulation table to fill
+ * @param linearProblem the linear problem containing the optimal solution
+ * @param objectiveValue the overall objective value
+ * @param components list of modeler components
+ * @param dataSeries the input data series
+ * @param fillContext the fill context used to fill the linear problem
+ * @param currentBlock the current block that was optimized
+ * @param timeConversionMode the block to absolute time conversion mode
+ * @param forceScenarioDependency set to true if you want to force the scenario index to be exported
+ * for scenario-independent outputs (useful for hybrid mode)
+ */
 void FillSimulationTable(
   ISimulationTable& simulationTable,
   const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
