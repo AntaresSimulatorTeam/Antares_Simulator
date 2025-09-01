@@ -95,10 +95,8 @@ void addConstraintEntries(
   const Antares::Expressions::Visitors::EvaluationContext& evalContext);
 
 void addPortEntries(ISimulationTable& simulationTable,
-                    const std::map<std::string, double>& solutions,
                     const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
                     const Antares::ModelerStudy::SystemModel::Component& component,
-                    const Antares::Optimisation::LinearProblemApi::ILinearProblemData* dataSeries,
                     unsigned currentBlock,
                     const TimeConversionMode& timeConversionMode,
                     std::optional<unsigned> scenario,

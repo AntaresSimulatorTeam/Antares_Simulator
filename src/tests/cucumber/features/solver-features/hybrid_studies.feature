@@ -1,6 +1,6 @@
 Feature: hybrid (simulator+modeler) studies
 
-  @fast @short @1
+  @fast @short
   Scenario: 001 One node - passive + modeler test 1_1
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/001 One node - passive"
     When I run antares simulator
@@ -79,3 +79,10 @@ Feature: hybrid (simulator+modeler) studies
     And in area "AREA", during year 1, week 1, loss of load lasts 0 hours
     And in area "AREA", during year 1, week 2, loss of load lasts 1 hours
     And in area "AREA", during year 1, total unsupplied energy is 52 MWh
+
+  @fast @short
+  Scenario: Invalid study - scenario-independent variable
+    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/Scenario-independent variable"
+    When I run antares simulator
+    Then the simulation fails
+    And the message "Scenario-independent variables are not supported in hybrid studies" is reported in the logs

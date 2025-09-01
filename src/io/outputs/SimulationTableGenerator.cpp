@@ -246,10 +246,8 @@ void addObjectiveValue(ISimulationTable& simulation,
 }
 
 void addPortEntries(ISimulationTable& simulationTable,
-                    const std::map<std::string, double>& solutions,
                     const FillContext& fillContext,
                     const Antares::ModelerStudy::SystemModel::Component& component,
-                    const ILinearProblemData* dataSeries,
                     unsigned currentBlock,
                     const TimeConversionMode& timeConversionMode,
                     std::optional<unsigned> scenario,
@@ -354,10 +352,8 @@ void FillSimulationTable(
                              evalContext);
 
         addPortEntries(simulationTable,
-                       solutions,
                        fillContext,
                        component,
-                       dataSeries,
                        currentBlock,
                        timeConversionMode,
                        scenario,
