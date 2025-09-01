@@ -48,6 +48,8 @@ namespace fs = std::filesystem;
 
 namespace
 {
+const char totalTimeKey[] = "total";
+
 void printSolvers()
 {
     std::cout << "Available linear solvers: " << toString(availableLinearSolversList())
@@ -399,7 +401,7 @@ void Application::execute()
     memoryReport.start();
 
     Simulation::NullSimulationObserver observer;
-    pDurationCollector("total") << [&]
+    pDurationCollector(totalTimeKey) << [&]
     {
         pOptimizationInfo = simulationRun(*pStudy,
                                           pSettings,
@@ -484,7 +486,7 @@ void Application::writeExectutionInfo()
         return;
     }
 
-    logTotalTime(pDurationCollector.getTime("total"));
+    logTotalTime(pDurationCollector.getTime(totalTimeKey));
 
     // If no writer is available, we can't write
     if (!resultWriter)
