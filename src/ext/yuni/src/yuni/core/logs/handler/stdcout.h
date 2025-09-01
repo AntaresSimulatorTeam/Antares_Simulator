@@ -42,7 +42,6 @@ public:
         // Write the message to the std::cout/cerr
         if (VerbosityType::shouldUsesStdCerr)
         {
-            using DecoratorsType = typename LoggerT::DecoratorsType;
             logger.DecoratorsType::template internalDecoratorAddPrefix<StdCout, VerbosityType>(
               std::cerr,
               s);
@@ -51,7 +50,6 @@ public:
         }
         else
         {
-            using DecoratorsType = typename LoggerT::DecoratorsType;
             logger.DecoratorsType::template internalDecoratorAddPrefix<StdCout, VerbosityType>(
               std::cout,
               s);
