@@ -100,7 +100,7 @@ void LinearProblemBuildingFixture::createComponent(
     auto component = component_builder.withId(componentId)
                        .withModel(&models.at(modelId))
                        .withScenarioGroupId(scenarioGroupId)
-                       .withParameterValues(move(parameterValues))
+                       .withParameterValues(std::move(parameterValues))
                        .build();
     components.push_back(std::move(component));
 }
