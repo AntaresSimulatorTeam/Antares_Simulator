@@ -183,7 +183,7 @@ void LinearProblemBuildingFixture::createModelWithSystemModelParameter(
     std::vector<Constraint> constraints;
     for (const auto& [id, expression]: constraintsData)
     {
-        constraints.push_back(std::move(Constraint(id, createExpression(expression))));
+        constraints.push_back(Constraint(id, createExpression(expression)));
     }
     ModelBuilder model_builder;
     model_builder.withId(modelId)
