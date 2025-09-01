@@ -251,10 +251,10 @@ BOOST_AUTO_TEST_CASE(three_small_files)
     BOOST_CHECK_EQUAL(repo.getDataSeries("gen1_p_max").getData(3, 3), 15);
     BOOST_CHECK_EQUAL(repo.getDataSeries("gen1_p_max").getData(4, 3), 16.17);
     BOOST_CHECK_EXCEPTION(
-      repo.getDataSeries("gen1_p_max").getData(5, 0),
+      auto _ = repo.getDataSeries("gen1_p_max").getData(5, 0),
       TimeSeriesSet::RankTooBig,
       checkMessage("TS set 'gen1_p_max' : TS number 5 exceeds TS set's number of columns (4)"));
-    BOOST_CHECK_EXCEPTION(repo.getDataSeries("gen1_p_max").getData(1, 4),
+    BOOST_CHECK_EXCEPTION(auto _ = repo.getDataSeries("gen1_p_max").getData(1, 4),
                           TimeSeriesSet::HourTooBig,
                           checkMessage("TS set 'gen1_p_max' : hour 4 exceeds TS set's height"));
 
