@@ -96,7 +96,7 @@ static void logProblemSize(MPSolver* mpSolver)
 
     logs.info();
     logs.info();
-    logs.info() << " Problem size : " << mpSolver->NumVariables() << " variables, "
+    logs.info() << " Total Problem size : " << mpSolver->NumVariables() << " variables, "
                 << mpSolver->NumConstraints() << " constraints";
     logs.info();
     logs.info();

@@ -69,8 +69,9 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo)
     int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
                                                   ->NombreDePasDeTempsPourUneOptimisation;
 
+    logs.info();
     logs.info() << " Starting Memory Allocation for legacy problem ";
-    logs.info() << " Problem Size :" << ProblemeAResoudre->NombreDeVariables << " variables ";
+    logs.info() << " Problem Size : " << ProblemeAResoudre->NombreDeVariables << " variables ";
 
     OPT_AllocateFromNumberOfVariableConstraints(problemeHebdo->ProblemeAResoudre.get());
 
