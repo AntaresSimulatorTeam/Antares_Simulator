@@ -1,5 +1,6 @@
 #include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-help.h"
 
+#include <algorithm> // For std::ranges::min_element(...)
 #include <ranges>
 
 namespace vws = std::views;
