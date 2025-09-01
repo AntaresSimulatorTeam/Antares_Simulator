@@ -292,7 +292,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                                   : TimeConversionMode::DailyBlocks;
         FillSimulationTable(simulationTable,
                             ortoolsProblem,
-                            solver->Objective().Value(),
+                            ::getObjectiveValue(solver),
                             problemeHebdo->modelerSystem->Components(),
                             problemeHebdo->linear_problem_data_,
                             fillCtx,
