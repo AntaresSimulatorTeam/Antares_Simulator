@@ -1980,6 +1980,7 @@ var namespaces_dup =
         [ "checkAllElementsIdenticalOrOne", "utils_8h.html#a5c195397128b4459eacc09d2d83e24f3", null ],
         [ "floor", "utils_8h.html#a28e4efa05d04724ebaabf457c1d64271", null ],
         [ "giveNumbersToStrings", "utils_8h.html#a02f264835becd9b85fc7ecfed3f5e91a", null ],
+        [ "isPathValid", "utils_8cpp.html#a147039a439a7c615a6823509701165b8", null ],
         [ "isPathValid", "utils_8h.html#a43349a7124563a9e3c4738ac8569d321", null ],
         [ "isZero", "utils_8h.html#a3820d7fc44841c7455de7b7250042677", null ],
         [ "round", "utils_8h.html#a55cc90c1c1261f10fd4ebd6c24086b2f", null ]
