@@ -87,29 +87,26 @@ void ZipWriteJob<ContentT>::writeEntry()
     }
 
     auto file_info = createInfo(pEntryPath);
+    std::unique_lock lock(pZipMutex, std::defer_lock);
+    pDurationCollector("zip_wait") << [&lock] { lock.lock(); };
 
-    Benchmarking::Timer timer_wait;
-    std::lock_guard guard(pZipMutex); // Wait
-    timer_wait.stop();
-    pDurationCollector.addDuration("zip_wait", timer_wait.get_duration());
-
-    Benchmarking::Timer timer_write;
-
-    if (int32_t ret = mz_zip_writer_entry_open(pZipHandle, file_info.get()); ret != MZ_OK)
+    pDurationCollector("zip_write") << [&]
     {
-        logErrorAndThrow("Error opening entry " + pEntryPath + " (" + std::to_string(ret) + ")");
-    }
-    int32_t bw = mz_zip_writer_entry_write(pZipHandle,
-                                           pContent.data(),
-                                           static_cast<int32_t>(pContent.size()));
-    if (static_cast<unsigned int>(bw) != pContent.size())
-    {
-        logErrorAndThrow("Error writing entry " + pEntryPath + "(written = " + std::to_string(bw)
-                         + ", size = " + std::to_string(pContent.size()) + ")");
-    }
-
-    timer_write.stop();
-    pDurationCollector.addDuration("zip_write", timer_write.get_duration());
+        if (int32_t ret = mz_zip_writer_entry_open(pZipHandle, file_info.get()); ret != MZ_OK)
+        {
+            logErrorAndThrow("Error opening entry " + pEntryPath + " (" + std::to_string(ret)
+                             + ")");
+        }
+        int32_t bw = mz_zip_writer_entry_write(pZipHandle,
+                                               pContent.data(),
+                                               static_cast<int32_t>(pContent.size()));
+        if (static_cast<unsigned int>(bw) != pContent.size())
+        {
+            logErrorAndThrow("Error writing entry " + pEntryPath
+                             + "(written = " + std::to_string(bw)
+                             + ", size = " + std::to_string(pContent.size()) + ")");
+        }
+    };
 }
 
 // Class ZipWriter

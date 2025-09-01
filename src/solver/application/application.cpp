@@ -399,11 +399,14 @@ void Application::execute()
     memoryReport.start();
 
     Simulation::NullSimulationObserver observer;
-    pOptimizationInfo = simulationRun(*pStudy,
-                                      pSettings,
-                                      pDurationCollector,
-                                      *resultWriter,
-                                      observer);
+    pDurationCollector("total") << [&]
+    {
+        pOptimizationInfo = simulationRun(*pStudy,
+                                          pSettings,
+                                          pDurationCollector,
+                                          *resultWriter,
+                                          observer);
+    };
 
     // Importing Time-Series if asked
     pStudy->importTimeseriesIntoInput();
@@ -481,10 +484,7 @@ void Application::writeExectutionInfo()
         return;
     }
 
-    pTotalTimer.stop();
-    pDurationCollector.addDuration("total", pTotalTimer.get_duration());
-
-    logTotalTime(pTotalTimer.get_duration());
+    logTotalTime(pDurationCollector.getTime("total"));
 
     // If no writer is available, we can't write
     if (!resultWriter)
