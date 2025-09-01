@@ -51,7 +51,6 @@ void FileWriter::init(bool setOutput, const std::string& simulationId)
     }
 }
 
-
 void FileWriter::writeSimulationTable(
   const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
   const Optimisation::LinearProblemApi::IMipSolution& solution,

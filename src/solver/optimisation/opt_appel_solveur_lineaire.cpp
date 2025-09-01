@@ -118,7 +118,6 @@ static void fillModelerComponents(
     }
 }
 
-
 FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumIntervalle)
 {
     unsigned globalFirst, globalLast;
