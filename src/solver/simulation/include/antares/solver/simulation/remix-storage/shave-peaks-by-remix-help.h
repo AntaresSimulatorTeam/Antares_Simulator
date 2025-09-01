@@ -12,7 +12,7 @@ namespace Antares::Solver::Simulation
 
 struct Exchange
 {
-    bool isValid();
+    bool isPossible();
 
     std::optional<unsigned> hourOfMinGen;
     std::optional<unsigned> hourOfMaxGen;

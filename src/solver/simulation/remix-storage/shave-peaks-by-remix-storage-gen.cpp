@@ -51,7 +51,7 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
 
     unsigned nbLoops = 0;
     CyclicIterator<std::shared_ptr<IStorageForRemix>> cyclic_it(listStorage);
-    while (!listStorage.empty() || nbLoops == maxNbLoops)
+    while (!listStorage.empty() || nbLoops != maxNbLoops)
     {
         if (nbLoops++ == maxNbLoops)
         {
@@ -61,7 +61,7 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
         updateValidHours(validHours, *cyclic_it, UnsupEinit);
         auto exchange = searchForExhange(validHours, TotalGen, UnsupE, **cyclic_it);
 
-        if (!exchange.isValid())
+        if (!exchange.isPossible())
         {
             delete_current(cyclic_it);
         }
