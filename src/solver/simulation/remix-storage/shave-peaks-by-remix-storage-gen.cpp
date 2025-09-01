@@ -38,12 +38,6 @@ void checkInput(const std::vector<double>& Load,
     }
 }
 
-auto removeStorageFromList(std::vector<std::shared_ptr<IStorageForRemix>>::iterator storage,
-                           ListStorageForRemix& listStorage)
-{
-    return listStorage.erase(storage, storage + 1);
-}
-
 void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
                                     std::vector<double>& UnsupE,
                                     const std::vector<double>& Spillage,
