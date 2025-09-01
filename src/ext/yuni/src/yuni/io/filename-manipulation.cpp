@@ -177,6 +177,7 @@ static inline void NormalizeImpl(StringT& out, const AnyString& input, bool repl
                     }
                     break;
                 }
+                [[fallthrough]];
                 // * break *
                 // we have a real folder, so `break` _must_ not
                 // be used here.

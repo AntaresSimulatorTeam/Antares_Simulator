@@ -71,9 +71,9 @@ else()
 
 	if(NOT WIN32)
 
-		set(CMAKE_CXX_FLAGS_DEBUG "${COMMON_GCC_FLAGS} -g3 -ggdb3 -feliminate-unused-debug-symbols")
+		set(CMAKE_CXX_FLAGS_DEBUG "${COMMON_GCC_FLAGS} -g3 -ggdb3")
 
-		set(CMAKE_C_FLAGS_DEBUG   "${COMMON_GCC_FLAGS} -g3 -ggdb3 -feliminate-unused-debug-symbols ${ADDITIONAL_C_FLAGS}")
+		set(CMAKE_C_FLAGS_DEBUG   "${COMMON_GCC_FLAGS} -g3 -ggdb3 ${ADDITIONAL_C_FLAGS}")
 
 	endif()
 	add_definitions("-DANTDEBUG") # More debug !

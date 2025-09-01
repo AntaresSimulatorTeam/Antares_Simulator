@@ -21,6 +21,10 @@
 
 #include "antares/solver/lps/LpsFromAntares.h"
 
+#include <fmt/format.h>
+
+#include "antares/exception/RuntimeError.hpp"
+
 namespace Antares::Solver
 {
 bool LpsFromAntares::empty() const
@@ -43,7 +47,10 @@ const WeeklyDataFromAntares& LpsFromAntares::weeklyData(WeeklyProblemId id) cons
     auto it = weeklyProblems.find(id);
     if (it == weeklyProblems.end())
     {
-        return WeeklyDataFromAntares(); // TODO Better error handling
+        throw Antares::Error::RuntimeError(
+          fmt::format("No data for the requested weekly problem: year {},  week {}",
+                      id.year,
+                      id.week));
     }
     return it->second;
 }

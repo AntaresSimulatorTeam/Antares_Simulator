@@ -59,6 +59,9 @@ The following variables were removed:
 
 They're replaced by the dynamic variable `RENEWABLE GEN.`
 
+#### Short term storage / overflows
+In files `input/st-storage/clusters/<area id>/list.ini`, add property `allow-overflow` (`bool, default = false`) for each short-term storage.
+
 #### Short term storage / scenario-builder
 
 For short-term storage inflows, the format is as follows

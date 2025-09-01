@@ -82,7 +82,8 @@ BOOST_AUTO_TEST_CASE(identifier)
       .port_field_definitions = {},
       .constraints = {},
       .binding_constraints = {},
-      .objective = "objectives"};
+      .objective = "objectives",
+      .extra_outputs = {}};
     ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
     {
@@ -116,7 +117,8 @@ BOOST_AUTO_TEST_CASE(identifierNotFound)
       .port_field_definitions = {},
       .constraints = {},
       .binding_constraints = {},
-      .objective = "objectives"};
+      .objective = "objectives",
+      .extra_outputs = {}};
 
     std::string expression = "abc"; // not a param or var
     BOOST_CHECK_EXCEPTION(ModelConverter::convertExpressionToNode(expression, model),
@@ -203,7 +205,8 @@ BOOST_AUTO_TEST_CASE(portfield)
                           .port_field_definitions = {{"port1", "field1", ""}},
                           .constraints = {},
                           .binding_constraints = {},
-                          .objective = "objectives"};
+                          .objective = "objectives",
+                          .extra_outputs = {}};
 
     ExpressionToNodeConvertorEmptyModel converter(std::move(model));
     std::string expression = "port1.field1";
@@ -225,7 +228,8 @@ BOOST_AUTO_TEST_CASE(portfieldSum)
                           .port_field_definitions = {{"port1", "field1", ""}},
                           .constraints = {},
                           .binding_constraints = {},
-                          .objective = "objectives"};
+                          .objective = "objectives",
+                          .extra_outputs = {}};
 
     ExpressionToNodeConvertorEmptyModel converter(std::move(model));
     std::string expression = "sum_connections(port1.field1)";
@@ -251,7 +255,8 @@ ExpressionToNodeConvertorEmptyModel createMediumExpression()
       .port_field_definitions = {},
       .constraints = {},
       .binding_constraints = {},
-      .objective = "objectives"};
+      .objective = "objectives",
+      .extra_outputs = {}};
 
     return {std::move(model)};
 }

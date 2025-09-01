@@ -52,8 +52,8 @@ ShortTermStorageData Group1::GetShortTermStorageData()
 
 ShortTermStorageCumulativeConstraintData Group1::GetShortTermStorageCumulativeConstraintData()
 {
-    return {problemeHebdo_->CorrespondanceCntNativesCntOptim,
-            problemeHebdo_->ShortTermStorage,
+    return {{.CorrespondanceCntNativesCntOptim = problemeHebdo_->CorrespondanceCntNativesCntOptim,
+             .ShortTermStorage = problemeHebdo_->ShortTermStorage},
             problemeHebdo_->CorrespondanceCntNativesCntOptimHebdomadaires};
 }
 
