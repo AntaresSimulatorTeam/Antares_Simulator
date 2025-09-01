@@ -21,8 +21,7 @@
 
 #include "antares/solver/lps/LpsFromAntares.h"
 
-#include "../../libs/antares/exception/include/antares/exception/LoadingError.hpp"
-#include "../../libs/antares/exception/include/antares/exception/RuntimeError.hpp"
+#include "antares/exception/RuntimeError.hpp"
 
 namespace Antares::Solver
 {
