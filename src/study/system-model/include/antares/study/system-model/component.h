@@ -132,10 +132,10 @@ protected:
 class ComponentBuilder
 {
 public:
-    // clang-format off
-    explicit ComponentBuilder(const Optimisation::ScenarioGroupRepository& scenarioRepository
-                              = Antares::Optimisation::defaultScenarioGroupRepository);
-    // clang-format on
+    explicit ComponentBuilder(
+      const Optimisation::ScenarioGroupRepository& scenarioRepository = Antares::Optimisation::
+        defaultScenarioGroupRepository);
+
     ComponentBuilder& withId(std::string_view id);
     ComponentBuilder& withModel(const Model* model);
     ComponentBuilder& withParameterValues(

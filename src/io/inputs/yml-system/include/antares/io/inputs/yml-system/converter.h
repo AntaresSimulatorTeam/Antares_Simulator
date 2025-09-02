@@ -43,8 +43,8 @@ struct ConnectingPortToItSelf final: std::invalid_argument
 ModelerStudy::SystemModel::System convert(
   const YmlSystem::System& ymlSystem,
   const std::vector<ModelerStudy::SystemModel::Library>& libraries,
-  // clang-format off
-  const Optimisation::ScenarioGroupRepository& scenarioRepository = Antares::Optimisation::defaultScenarioGroupRepository);
-// clang-format on
+
+  const Optimisation::ScenarioGroupRepository& scenarioRepository = Antares::Optimisation::
+    defaultScenarioGroupRepository);
 
 } // namespace Antares::IO::Inputs::SystemConverter
