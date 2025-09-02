@@ -185,7 +185,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const PortField
         const EvaluationContext connectedComponentEvalContext(component->getParameterValues(),
                                                               {},
                                                               evalContext_.data(),
-                                                              *component->scenario_);
+                                                              *component->getScenario());
         ReadLinearExpressionVisitor visitor(connectedComponentEvalContext,
                                             fillContext_,
                                             *component);

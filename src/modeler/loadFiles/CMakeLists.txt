@@ -1,14 +1,14 @@
 set(SOURCES
         handleErrors.cpp
         loadAll.cpp
-        readDataSeries.cpp
-        readLibraries.cpp
-        readParameters.cpp
-        readDataSeries.cpp
+        loadDataSeries.cpp
+        loadLibraries.cpp
+        loadParameters.cpp
+        loadDataSeries.cpp
         handleErrors.cpp
         FileLoader.cpp
-        readScenarioGroup.cpp
-        readSystem.cpp
+        loadScenarioGroup.cpp
+        loadSystem.cpp
 
         include/antares/solver/modeler/loadFiles/loadFiles.h
         include/antares/solver/modeler/loadFiles/Fileloader.h

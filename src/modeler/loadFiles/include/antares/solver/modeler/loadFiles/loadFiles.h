@@ -44,7 +44,8 @@ std::vector<ModelerStudy::SystemModel::Library> loadLibraries(
 
 ModelerStudy::SystemModel::System loadSystem(
   const std::filesystem::path& studyPath,
-  const std::vector<ModelerStudy::SystemModel::Library>& libraries);
+  const std::vector<ModelerStudy::SystemModel::Library>& libraries,
+  const Optimisation::ScenarioGroupRepository& scenarioRepository);
 
 std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> loadDataSeries(
   const std::filesystem::path& studyPath);

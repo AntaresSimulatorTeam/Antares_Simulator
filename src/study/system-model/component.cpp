@@ -22,6 +22,7 @@
 #include <ranges>
 
 #include <antares/study/system-model/component.h>
+#include "antares/solver/optim-model-filler/scenarioGroupRepo.h"
 
 using namespace Antares::Expressions::Nodes;
 
@@ -125,6 +126,11 @@ const std::map<std::string, std::string>& Component::portToAreaConnections() con
     return portToAreaConnections_;
 }
 
+ComponentBuilder::ComponentBuilder(const Optimisation::ScenarioGroupRepository& scenarioRepository):
+    scenarioRepository_(scenarioRepository)
+{
+}
+
 /**
  * \brief Sets the ID of the component.
  *
@@ -172,7 +178,7 @@ ComponentBuilder& ComponentBuilder::withParameterValues(
 ComponentBuilder& ComponentBuilder::withScenarioGroupId(const std::string& scenario_group_id)
 {
     data_.scenario_group_id = scenario_group_id;
-    data_.scenario = &scenario_group_repository_.scenario(scenario_group_id);
+    data_.scenario = &scenarioRepository_.scenario(scenario_group_id);
     return *this;
 }
 

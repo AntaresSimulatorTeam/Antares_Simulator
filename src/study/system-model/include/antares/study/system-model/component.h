@@ -34,6 +34,11 @@ namespace Antares::Optimisation::LinearProblemApi
 class IScenario;
 }
 
+namespace Antares::Optimisation
+{
+class ScenarioGroupRepository;
+}
+
 namespace Antares::ModelerStudy::SystemModel
 {
 
@@ -48,7 +53,7 @@ public:
     const Model* model = nullptr;
     std::map<std::string, Expressions::Visitors::ParameterTypeAndValue> parameter_values;
     std::string scenario_group_id;
-    const Antares::Optimisation::LinearProblemApi::IScenario* scenario_ = nullptr;
+    const Antares::Optimisation::LinearProblemApi::IScenario* scenario = nullptr;
 
     void reset()
     {
@@ -77,6 +82,11 @@ public:
     const Model* getModel() const
     {
         return data_.model;
+    }
+
+    const Antares::Optimisation::LinearProblemApi::IScenario* getScenario() const
+    {
+        return data_.scenario;
     }
 
     const std::map<std::string, Expressions::Visitors::ParameterTypeAndValue>& getParameterValues()
@@ -126,6 +136,7 @@ protected:
 class ComponentBuilder
 {
 public:
+    explicit ComponentBuilder(const Optimisation::ScenarioGroupRepository& scenarioRepository);
     ComponentBuilder& withId(std::string_view id);
     ComponentBuilder& withModel(const Model* model);
     ComponentBuilder& withParameterValues(
@@ -135,6 +146,7 @@ public:
     Component build();
 
 private:
+    const Optimisation::ScenarioGroupRepository& scenarioRepository_;
     ComponentData data_;
 };
 

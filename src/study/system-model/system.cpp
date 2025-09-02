@@ -40,6 +40,11 @@ System::System(const std::string_view id, std::unordered_map<std::string, Compon
     }
 }
 
+SystemBuilder::SystemBuilder(const Optimisation::ScenarioGroupRepository& scenarioRepository):
+    scenarioRepository_(scenarioRepository)
+{
+}
+
 /**
  * \brief Sets the ID of the system.
  *

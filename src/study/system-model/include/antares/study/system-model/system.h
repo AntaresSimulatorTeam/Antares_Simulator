@@ -63,11 +63,14 @@ private:
 class SystemBuilder
 {
 public:
+    SystemBuilder(const Optimisation::ScenarioGroupRepository& scenarioRepository);
+
     SystemBuilder& withId(std::string_view id);
     SystemBuilder& withComponents(std::unordered_map<std::string, Component>&& components);
     System build();
 
 private:
+    const Optimisation::ScenarioGroupRepository& scenarioRepository_;
     std::string id_;
     std::unordered_map<std::string, Component> components_;
 };

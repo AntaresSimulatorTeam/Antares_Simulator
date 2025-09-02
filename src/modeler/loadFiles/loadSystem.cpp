@@ -35,7 +35,8 @@ using namespace IO::Inputs;
 
 ModelerStudy::SystemModel::System loadSystem(
   const fs::path& studyPath,
-  const std::vector<ModelerStudy::SystemModel::Library>& libraries)
+  const std::vector<ModelerStudy::SystemModel::Library>& libraries,
+  const Optimisation::ScenarioGroupRepository& scenarioRepository)
 {
     std::string filename = "system.yml";
     std::string systemStr;
@@ -63,7 +64,7 @@ ModelerStudy::SystemModel::System loadSystem(
 
     try
     {
-        return SystemConverter::convert(systemObj, libraries);
+        return SystemConverter::convert(systemObj, libraries, scenarioRepository);
     }
     catch (const std::runtime_error& e)
     {
