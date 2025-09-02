@@ -51,7 +51,7 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
 
     unsigned nbLoops = 0;
     CyclicIterator<std::shared_ptr<IStorageForRemix>> cyclic_it(listStorage);
-    while (!listStorage.empty() || nbLoops != maxNbLoops)
+    while (!listStorage.empty() && nbLoops != maxNbLoops)
     {
         if (nbLoops++ == maxNbLoops)
         {
