@@ -67,7 +67,7 @@ TimeBlock convertBlockTimeStepToAbsoluteTimeStep(unsigned int timeStep,
 
 Antares::Expressions::Visitors::TimeIndex updateTimeIndexIfShouldForceScenario(
   Antares::Expressions::Visitors::TimeIndex timeIndex,
-  bool forceScenarioDependency);
+  bool forceExportForScenarioIndex);
 
 std::string BuildModelerConstraintName(const std::string& cid,
                                        const std::string& cname,
@@ -90,7 +90,7 @@ void addConstraintEntries(
   unsigned currentBlock,
   const TimeConversionMode& timeConversionMode,
   std::optional<unsigned> scenario,
-  bool forceScenarioDependency,
+  bool forceExportForScenarioIndex,
   const Antares::Expressions::Visitors::EvaluationContext& evalContext);
 
 void addPortEntries(ISimulationTable& simulationTable,
@@ -99,7 +99,7 @@ void addPortEntries(ISimulationTable& simulationTable,
                     unsigned currentBlock,
                     const TimeConversionMode& timeConversionMode,
                     std::optional<unsigned> scenario,
-                    bool forceScenarioDependency,
+                    bool forceExportForScenarioIndex,
                     const Antares::Expressions::Visitors::EvaluationContext& evalContext);
 
 /**
@@ -112,8 +112,8 @@ void addPortEntries(ISimulationTable& simulationTable,
  * @param fillContext the fill context used to fill the linear problem
  * @param currentBlock the current block that was optimized
  * @param timeConversionMode the block to absolute time conversion mode
- * @param forceScenarioDependency set to true if you want to force the scenario index to be exported
- * for scenario-independent outputs (useful for hybrid mode)
+ * @param forceExportForScenarioIndex set to true if you want to force the scenario index to be
+ * exported for scenario-independent outputs (useful for hybrid mode)
  */
 void FillSimulationTable(
   ISimulationTable& simulationTable,
@@ -124,4 +124,4 @@ void FillSimulationTable(
   const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
   unsigned currentBlock,
   const TimeConversionMode& timeConversionMode,
-  bool forceScenarioDependency = false);
+  bool forceExportForScenarioIndex = false);

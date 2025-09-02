@@ -53,9 +53,9 @@ TimeBlock convertBlockTimeStepToAbsoluteTimeStep(unsigned int timeStep,
     }
 }
 
-TI updateTimeIndexIfShouldForceScenario(TI timeIndex, bool forceScenarioDependency)
+TI updateTimeIndexIfShouldForceScenario(TI timeIndex, bool forceExportForScenarioIndex)
 {
-    return forceScenarioDependency ? timeIndex | TI::VARYING_IN_SCENARIO_ONLY : timeIndex;
+    return forceExportForScenarioIndex ? timeIndex | TI::VARYING_IN_SCENARIO_ONLY : timeIndex;
 }
 
 std::string BuildModelerConstraintName(const std::string& cid,
@@ -183,7 +183,7 @@ void addConstraintEntries(ISimulationTable& simulationTable,
                           unsigned currentBlock,
                           const TimeConversionMode& timeConversionMode,
                           std::optional<unsigned> scenario,
-                          bool forceScenarioDependency,
+                          bool forceExportForScenarioIndex,
                           const Antares::Expressions::Visitors::EvaluationContext& evalContext)
 {
     const auto& cid = component.Id();
@@ -192,7 +192,7 @@ void addConstraintEntries(ISimulationTable& simulationTable,
     {
         TI idxType = Antares::Expressions::Visitors::TimeIndexVisitor(component, evalContext)
                        .dispatch(modelConstr.expression().RootNode());
-        idxType = updateTimeIndexIfShouldForceScenario(idxType, forceScenarioDependency);
+        idxType = updateTimeIndexIfShouldForceScenario(idxType, forceExportForScenarioIndex);
 
         auto handle = [&](std::optional<unsigned> ts, std::optional<unsigned> scenIdx)
         {
@@ -242,7 +242,7 @@ void addPortEntries(ISimulationTable& simulationTable,
                     unsigned currentBlock,
                     const TimeConversionMode& timeConversionMode,
                     std::optional<unsigned> scenario,
-                    bool forceScenarioDependency,
+                    bool forceExportForScenarioIndex,
                     const Antares::Expressions::Visitors::EvaluationContext& evalContext)
 {
     const auto& cid = component.Id();
@@ -257,7 +257,7 @@ void addPortEntries(ISimulationTable& simulationTable,
 
         TI idxType = Antares::Expressions::Visitors::TimeIndexVisitor(component, evalContext)
                        .dispatch(portFieldDef.Definition().RootNode());
-        idxType = updateTimeIndexIfShouldForceScenario(idxType, forceScenarioDependency);
+        idxType = updateTimeIndexIfShouldForceScenario(idxType, forceExportForScenarioIndex);
         // TODO: EvalVistior already uses a TimeIndexVisitor under the hood to know if the port
         // is time and/or scenario dependent. It may be more efficient to enrich EvaluationResult
         // by adding a TimeIndex to it? It would require some careful work inside EvalVisitor
@@ -296,7 +296,7 @@ void FillSimulationTable(
   const FillContext& fillContext,
   unsigned currentBlock,
   const TimeConversionMode& timeConversionMode,
-  bool forceScenarioDependency)
+  bool forceExportForScenarioIndex)
 {
     unsigned scenario = fillContext.getYear();
     std::map<std::string, double> solutions;
@@ -326,7 +326,7 @@ void FillSimulationTable(
                              currentBlock,
                              timeConversionMode,
                              scenario,
-                             forceScenarioDependency,
+                             forceExportForScenarioIndex,
                              evalContext);
 
         addPortEntries(simulationTable,
@@ -335,7 +335,7 @@ void FillSimulationTable(
                        currentBlock,
                        timeConversionMode,
                        scenario,
-                       forceScenarioDependency,
+                       forceExportForScenarioIndex,
                        evalContext);
     }
     addObjectiveValue(simulationTable, objectiveValue, currentBlock, scenario);
