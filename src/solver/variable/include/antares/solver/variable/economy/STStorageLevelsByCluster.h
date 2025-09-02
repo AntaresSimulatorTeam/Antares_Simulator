@@ -215,7 +215,7 @@ public:
         {
             // ST storage levels for the current cluster and this hour
             pValuesForTheCurrentYear[numSpace][clusterIndex].hour[state.hourInTheYear]
-              = state.hourlyResults->ShortTermStorage[state.hourInTheWeek].level[clusterIndex];
+              = state.hourlyResults->ShortTermStorage[clusterIndex].level[state.hourInTheWeek];
         }
 
         // Next variable

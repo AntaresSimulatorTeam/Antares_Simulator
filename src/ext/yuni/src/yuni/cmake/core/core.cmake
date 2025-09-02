@@ -76,11 +76,6 @@ endif()
 add_library(yuni-static-core STATIC
 		yuni.h
 
-		core/any/any.cpp
-		core/any/any.h
-		core/any/any.hxx
-		core/any/any.private.h
-		core/any.h
 		core/atomic/bool.h
 		core/atomic/int.h
 		core/atomic/int.hxx
@@ -139,15 +134,6 @@ add_library(yuni-static-core STATIC
 		core/getopt/parser.h
 		core/getopt/parser.hxx
 		core/getopt.h
-		core/hash
-		core/hash/checksum/checksum.h
-		core/hash/checksum/checksum.hxx
-		core/hash/checksum/md5.cpp
-		core/hash/checksum/md5.h
-		core/hash/checksum/md5.hxx
-		core/hash/table/table.h
-		core/hash/table/table.hxx
-		core/hash/table.h
 		core/iterator/iterator.h
 		core/iterator/iterator.hxx
 		core/iterator.h
@@ -228,7 +214,6 @@ add_library(yuni-static-core STATIC
 		core/preprocessor/windows.h
 		core/process/program/program.cpp
 		core/process/program/program.h
-		core/process/program/program.hxx
 		core/process/program/process-info.h
 		core/process/program/process-info.hxx
 		core/process/program/windows.inc.hpp
@@ -353,17 +338,6 @@ add_library(yuni-static-core STATIC
 		core/validator/text/default.private.h
 		core/validator/text/validator.h
 		core/validator/validator.h
-		core/variant/dataholder/array.h
-		core/variant/dataholder/dataholder.cpp
-		core/variant/dataholder/dataholder.h
-		core/variant/dataholder/dataholder.hxx
-		core/variant/dataholder/string.h
-		core/variant/fwd.h
-		core/variant/types.h
-		core/variant/variant.cpp
-		core/variant/variant.h
-		core/variant/variant.hxx
-		core/variant.h
 		core/vector3D.h
 		core/version/version.cpp
 		core/version/version.h

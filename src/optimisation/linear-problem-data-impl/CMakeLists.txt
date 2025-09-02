@@ -21,8 +21,6 @@ set(SRC_DATA_SERIES
 add_library(${PROJ} ${SRC_DATA_SERIES})
 add_library(Antares::${PROJ} ALIAS ${PROJ})
 
-find_package(fmt REQUIRED)
-
 target_link_libraries(${PROJ}
         PUBLIC
         linear-problem-api

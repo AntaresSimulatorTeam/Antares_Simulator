@@ -1029,7 +1029,7 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
         String areaname;
 
         areas.each(
-          [&output, &linkname, &areaname](const Area& area)
+          [&linkname, &areaname](const Area& area)
           {
               if (areaname.size() < area.id.size())
               {

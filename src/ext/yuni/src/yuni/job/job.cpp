@@ -21,7 +21,6 @@ IJob::IJob() : pThread(nullptr)
 
 IJob::~IJob()
 {
-    assert(this && "IJob: Destructor: Oo `this' is null !?");
     assert(!pThread && "A job can not be attached to a thread when destroyed");
 }
 

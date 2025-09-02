@@ -388,6 +388,27 @@ std::list<std::string> availableLinearSolversList()
     return result;
 }
 
+bool isLinearSolverAvailable(const std::string& solverName)
+{
+    auto it = OrtoolsUtils::mpSolverMap.find(solverName);
+    if (it == OrtoolsUtils::mpSolverMap.end())
+    {
+        return false;
+    }
+
+    MPSolver::OptimizationProblemType solverType;
+    if (it->second.LPSolverName.has_value())
+    {
+        MPSolver::ParseSolverType(it->second.LPSolverName.value(), &solverType);
+    }
+    else
+    {
+        MPSolver::ParseSolverType(it->second.MIPSolverName.value(), &solverType);
+    }
+
+    return MPSolver::SupportsProblemType(solverType);
+}
+
 std::list<std::string> availableQuadraticSolversList()
 {
     std::list<std::string> result;

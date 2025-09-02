@@ -29,6 +29,14 @@
 
 namespace Antares::Optimization
 {
+
+/**
+ * \brief Fills the linear problem with constraints and variables related to component-to-area
+ * connections.
+ *
+ * This class is responsible for adding variables, constraints, and objectives to the linear problem
+ * based on the connections between components and areas in the Antares study.
+ */
 class ComponentToAreaConnectionFiller: public Optimisation::LinearProblemApi::LinearProblemFiller
 {
 public:
@@ -36,13 +44,13 @@ public:
                                              const VariableDictionary& modelerVariableDictionary);
     void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
-                      Optimisation::LinearProblemApi::FillContext& ctx) override;
+                      const Optimisation::LinearProblemApi::FillContext& ctx) override;
     void addConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
                         Optimisation::LinearProblemApi::ILinearProblemData& data,
-                        Optimisation::LinearProblemApi::FillContext& ctx) override;
+                        const Optimisation::LinearProblemApi::FillContext& ctx) override;
     void addObjective(Optimisation::LinearProblemApi::ILinearProblem& pb,
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
-                      Optimisation::LinearProblemApi::FillContext& ctx) override;
+                      const Optimisation::LinearProblemApi::FillContext& ctx) override;
 
 private:
     const PROBLEME_HEBDO* problemeHebdo_;

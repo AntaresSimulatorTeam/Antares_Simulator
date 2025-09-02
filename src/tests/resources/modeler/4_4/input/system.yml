@@ -1,0 +1,48 @@
+system:
+  id: sys_example_4_4
+  
+  description: >
+    2 generators, 1 consumption of 80 MW. 2 time steps
+    Generator 1: Pmax of 80 MW, 5 €/MWh at t=0, 10 €/MWh at t=1; production constraint for generator 1 over all 2 time steps: 100 MWh (fuel limit).
+     Generator 2: Pmax = 200 MWh, 6 €/MWh
+    
+    Generator 1 called at t0, cost 80 * 5 €
+    Generator 2 called at t1, cost 80 (conso = 80) * 6 €
+     Solution : node1.gen1_p[0] = 80
+       node1.gen1_p[1] = 0
+       node1.gen2_p[0] = 0
+       node1.gen2_p[1] = 80
+       Objective function value: 880 (80 * 5 + 80 * 6)
+  
+  model-libraries: lib_example_4_4
+  
+  components:
+    - id: node1
+      model: lib_example_4_4.node_2gen_1load
+      scenario-group: generators
+      parameters:
+        - id: load
+          time-dependent: false
+          scenario-dependent: false
+          value: 80
+        - id: fuel_max
+          time-dependent: false
+          scenario-dependent: false
+          value: 100
+        - id: gen1_max_p
+          time-dependent: false
+          scenario-dependent: false
+          value: 80
+        - id: gen1_prop_cost
+          time-dependent: true
+          scenario-dependent: true
+          value: gen1_prop_cost_4_4
+          scenario-group: generators
+        - id: gen2_max_p
+          time-dependent: true
+          scenario-dependent: false
+          value: gen2_max_p_4_4
+        - id: gen2_prop_cost
+          time-dependent: false
+          scenario-dependent: false
+          value: 6.0

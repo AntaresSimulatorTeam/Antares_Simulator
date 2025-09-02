@@ -30,12 +30,15 @@
 #include <antares/study/study.h>
 #include "antares/study/simulation.h"
 
+class ISimulationTable;
+
 namespace Antares::Solver::Simulation
 {
 static void RecalculDesEchangesMoyens(Data::Study& study,
                                       PROBLEME_HEBDO& problem,
                                       const std::vector<AvgExchangeResults*>& balance,
-                                      int PasDeTempsDebut)
+                                      int PasDeTempsDebut,
+                                      OptimisationsSimulationTable& simulationTables)
 {
     for (uint i = 0; i < (uint)problem.NombreDePasDeTemps; i++)
     {
@@ -92,10 +95,12 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
     {
         NullResultWriter resultWriter;
         NullSimulationObserver simulationObserver;
+
         OPT_OptimisationHebdomadaire(study.parameters.optOptions,
                                      &problem,
                                      resultWriter,
-                                     simulationObserver);
+                                     simulationObserver,
+                                     simulationTables);
     }
     catch (Data::UnfeasibleProblemError&)
     {
@@ -143,7 +148,8 @@ bool ShouldUseQuadraticOptimisation(const Data::Study& study)
 void ComputeFlowQuad(Data::Study& study,
                      PROBLEME_HEBDO& problem,
                      const std::vector<AvgExchangeResults*>& balance,
-                     uint nbWeeks)
+                     uint nbWeeks,
+                     OptimisationsSimulationTable& simulationTables)
 {
     uint startTime = study.calendar.days[study.parameters.simulationDays.first].hours.first;
 
@@ -156,7 +162,7 @@ void ComputeFlowQuad(Data::Study& study,
         for (uint w = 0; w != nbWeeks; ++w)
         {
             int PasDeTempsDebut = startTime + (w * problem.NombreDePasDeTemps);
-            RecalculDesEchangesMoyens(study, problem, balance, PasDeTempsDebut);
+            RecalculDesEchangesMoyens(study, problem, balance, PasDeTempsDebut, simulationTables);
         }
     }
     else

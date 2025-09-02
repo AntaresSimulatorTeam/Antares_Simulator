@@ -110,7 +110,6 @@ private:
     const char** pArgv = nullptr;
 
     // Benchmarking
-    Benchmarking::Timer pTotalTimer;
     Benchmarking::DurationCollector pDurationCollector;
     Benchmarking::OptimizationInfo pOptimizationInfo;
 

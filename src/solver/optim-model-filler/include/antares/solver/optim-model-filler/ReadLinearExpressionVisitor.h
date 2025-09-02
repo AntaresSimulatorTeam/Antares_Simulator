@@ -47,7 +47,7 @@ public:
       Optimisation::LinearProblemApi::FillContext fillContext,
       const Antares::ModelerStudy::SystemModel::Component& component);
 
-    ReadLinearExpressionVisitor() = default;
+    ReadLinearExpressionVisitor() = delete;
     std::string name() const override;
 
 private:

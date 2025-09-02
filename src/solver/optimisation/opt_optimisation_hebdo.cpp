@@ -22,6 +22,8 @@
 #include <antares/antares/fatal-error.h>
 #include <antares/exception/UnfeasibleProblemError.hpp>
 #include <antares/logs/logs.h>
+#include "antares/io/outputs/ISimulationTable.h"
+#include "antares/solver/optimisation/OptimisationsSimulationTable.h"
 #include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
@@ -33,18 +35,24 @@ using Solver::Optimization::SingleOptimOptions;
 bool OPT_PilotageOptimisationLineaire(const OptimizationOptions&,
                                       PROBLEME_HEBDO*,
                                       Solver::IResultWriter&,
-                                      Solver::Simulation::ISimulationObserver&);
+                                      Solver::Simulation::ISimulationObserver&,
+                                      OptimisationsSimulationTable& simulationTables);
 bool OPT_PilotageOptimisationQuadratique(const SingleOptimOptions&, PROBLEME_HEBDO*);
 void OPT_LiberationProblemesSimplexe(const PROBLEME_HEBDO*);
 
 void OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
                                   PROBLEME_HEBDO* pProblemeHebdo,
                                   Solver::IResultWriter& writer,
-                                  Solver::Simulation::ISimulationObserver& simulationObserver)
+                                  Solver::Simulation::ISimulationObserver& simulationObserver,
+                                  OptimisationsSimulationTable& simulationTables)
 {
     if (pProblemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE)
     {
-        if (!OPT_PilotageOptimisationLineaire(options, pProblemeHebdo, writer, simulationObserver))
+        if (!OPT_PilotageOptimisationLineaire(options,
+                                              pProblemeHebdo,
+                                              writer,
+                                              simulationObserver,
+                                              simulationTables))
         {
             logs.error() << "Linear optimization failed";
             throw UnfeasibleProblemError("Linear optimization failed");

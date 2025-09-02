@@ -28,6 +28,7 @@
 #include <antares/exception/InitializationError.hpp>
 #include <antares/logs/logs.h>
 #include "antares/concurrency/concurrency.h"
+#include "antares/io/outputs/SimulationTableCsv.h"
 #include "antares/solver/hydro/management/HydroInputsChecker.h"
 #include "antares/solver/hydro/management/management.h"
 #include "antares/solver/simulation/numspace_manager.h"
@@ -171,6 +172,12 @@ public:
                                              hydroManagement.ventilationResults(),
                                              optWriter,
                                              scratchmap);
+        auto& simTable = simulation_->getSimulationTable(numSpace);
+
+        auto buffers = simTable.buffers();
+        simTable.clear();
+
+        simulation_->storeYearBuffers(y, std::move(buffers.first), std::move(buffers.second));
 
         // Log failing weeks
         logFailedWeek(y, study, failedWeekList);
@@ -865,9 +872,9 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
 
     pQueueService->wait(Yuni::qseIdle);
     pQueueService->stop();
+    aggregateAndWriteSimulationTables();
     results.join();
     pResultWriter.flush();
-
     // On regarde si au moins une année du lot n'a pas trouvé de solution
     for (auto& [year, failed]: yearsFailed)
     {
@@ -888,6 +895,54 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     pAnnualStatistics.writeToOutput(pResultWriter);
 }
 
+template<class ImplementationType>
+void ISimulation<ImplementationType>::storeYearBuffers(uint year,
+                                                       std::string&& firstBuffer,
+                                                       std::string&& secondBuffer)
+{
+    std::lock_guard lock(buffersMutex_);
+    yearSimulationBuffers_.emplace(year,
+                                   std::pair{std::move(firstBuffer), std::move(secondBuffer)});
+}
+
+template<class ImplementationType>
+void ISimulation<ImplementationType>::aggregateAndWriteSimulationTables()
+{
+    std::lock_guard lock(buffersMutex_);
+    std::string globalFirstBuffer;
+    std::string globalSecondBuffer;
+    // dans l'ordre des années
+    for (uint year = 0; year < study.parameters.nbYears; ++year)
+    {
+        auto it = yearSimulationBuffers_.find(year);
+        if (it != yearSimulationBuffers_.end())
+        {
+            globalFirstBuffer += it->second.first;
+            globalSecondBuffer += it->second.second;
+        }
+    }
+    const auto header = ImplementationType::getSimulationTableHeader() + "\n";
+    if (!globalFirstBuffer.empty())
+    {
+        std::string writerEntry = header + std::move(globalFirstBuffer);
+        pResultWriter.addEntryFromBuffer("simulation_table--optim-nb-1.csv", writerEntry);
+    }
+    if (!globalSecondBuffer.empty())
+    {
+        std::string writerEntry = header + std::move(globalSecondBuffer);
+        pResultWriter.addEntryFromBuffer("simulation_table--optim-nb-2.csv", writerEntry);
+    }
+
+    yearSimulationBuffers_.clear();
+}
+
+template<class ImplementationType>
+OptimisationsSimulationTable& ISimulation<ImplementationType>::getSimulationTable(uint numSpace)
+{
+    // Cette méthode doit être implémentée dans la classe dérivée (Economy)
+    // pour retourner la table spécifique à l'espace numérique
+    return ImplementationType::getSimulationTable(numSpace);
+}
 } // namespace Antares::Solver::Simulation
 
 #endif // __SOLVER_SIMULATION_SOLVER_HXX__

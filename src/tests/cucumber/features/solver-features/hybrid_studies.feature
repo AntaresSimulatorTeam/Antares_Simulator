@@ -1,6 +1,6 @@
 Feature: hybrid (simulator+modeler) studies
 
-  @fast @short
+  @fast @short @1
   Scenario: 001 One node - passive + modeler test 1_1
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/001 One node - passive"
     When I run antares simulator
@@ -25,6 +25,11 @@ Feature: hybrid (simulator+modeler) studies
     # for now, modeler costs does not figure in system cost txt
     And the annual system cost is 0
     And in area "NODE", during year 1, loss of load lasts 0 hours
+     # TODO activate the following checks for 5.2
+#    And the modeler outputs contain the following entries
+#      | component | output                 | timestep | scenario | value |
+#      | gen1      | generation.flow_field  | 0-23     | 0        | 100   |
+#      | load1     | consumption.flow_field | 0        | 0        | -100  |
 
   @fast @short
   Scenario: Legacy node with one legacy load (up to 5952 MW) and wind, and one generator component (max_p=6200) (168h simplex)
@@ -36,6 +41,7 @@ Feature: hybrid (simulator+modeler) studies
     # for now, modeler costs does not figure in system cost txt
     And the annual system cost is 0
     And in area "AREA", during year 1, loss of load lasts 0 hours
+    And simulation tables match the references
 
   @fast @short
   Scenario: Legacy node with one legacy load (up to 5952 MW) and wind, and one generator component (max_p=5900) (168h simplex)

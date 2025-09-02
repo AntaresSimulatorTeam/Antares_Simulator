@@ -35,6 +35,8 @@
 #include "antares/solver/simulation/solver_utils.h"
 #include "antares/solver/variable/state.h"
 
+class OptimisationsSimulationTable;
+
 namespace Antares::Solver::Simulation
 {
 
@@ -148,6 +150,9 @@ private:
     // Collecting durations inside the simulation
     Benchmarking::DurationCollector& pDurationCollector;
 
+    std::map<uint, std::pair<std::string, std::string>> yearSimulationBuffers_;
+    std::mutex buffersMutex_;
+
 public:
     //! The queue service that runs every set of parallel years
     std::shared_ptr<Yuni::Job::QueueService> pQueueService = nullptr;
@@ -155,6 +160,10 @@ public:
     Antares::Solver::IResultWriter& pResultWriter;
 
     std::reference_wrapper<ISimulationObserver> simulationObserver_;
+    void storeYearBuffers(uint year, std::string&& firstBuffer, std::string&& secondBuffer);
+    void aggregateAndWriteSimulationTables();
+
+    OptimisationsSimulationTable& getSimulationTable(uint numSpace);
 }; // class ISimulation
 } // namespace Antares::Solver::Simulation
 

@@ -21,9 +21,8 @@
 
 #pragma once
 
+#include <map>
 #include <string>
-#include <unordered_map>
-#include <vector>
 
 #include <antares/solver/optim-model-filler/LinearExpression.h>
 #include "antares/optimisation/linear-problem-api/ILinearProblemData.h"
@@ -43,13 +42,15 @@ public:
     explicit TimeDependentLinearExpression(
       const Optimisation::LinearProblemApi::FillContext& fillContext,
       const LinearExpression& linearExpression);
-    explicit TimeDependentLinearExpression(LinearExpressionMap linearExpressions);
+    explicit TimeDependentLinearExpression(
+      const Optimisation::LinearProblemApi::FillContext& fillContext,
+      LinearExpressionMap linearExpressions);
     explicit TimeDependentLinearExpression(
       const TimeDependentLinearExpression& timeDependentLinearExpression)
       = default;
 
     TimeDependentLinearExpression(TimeDependentLinearExpression&& other) noexcept = default;
-    TimeDependentLinearExpression& operator=(TimeDependentLinearExpression&& other) = default;
+    TimeDependentLinearExpression& operator=(TimeDependentLinearExpression&& other) = delete;
 
     /// Sum two linear expressions
     [[deprecated("Will make a potentially expensive copy of a TimeDependentLinearExpression. Use "
@@ -79,5 +80,6 @@ public:
 
 private:
     LinearExpressionMap linearExpressions_;
+    const Optimisation::LinearProblemApi::FillContext& fillContext_;
 };
 } // namespace Antares::Optimization
