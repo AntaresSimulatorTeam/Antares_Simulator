@@ -90,8 +90,8 @@ public:
     T& operator*();
 
 private:
-    template<typename T>
-    friend CyclicIterator<T>& delete_current(CyclicIterator<T>& it);
+    template<typename U>
+    friend CyclicIterator<U>& delete_current(CyclicIterator<U>& it);
 
     void back_to_begin();
 
