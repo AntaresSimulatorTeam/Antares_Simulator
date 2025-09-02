@@ -4,8 +4,6 @@
 #include <stdexcept>
 #include <string>
 
-#include "antares/study/system-model/component.h"
-
 #include "ParameterTypeAndValue.h"
 
 namespace Antares::Optimisation::LinearProblemApi
@@ -86,6 +84,5 @@ private:
     std::map<std::string, double> variables_;
     const Optimisation::LinearProblemApi::ILinearProblemData& data_;
     const Optimisation::LinearProblemApi::IScenario& scenario_;
-    const Antares::ModelerStudy::SystemModel::Component* component_;
 };
 } // namespace Antares::Expressions::Visitors
