@@ -378,6 +378,7 @@ BOOST_FIXTURE_TEST_CASE(STS_efficiency_for_injection_and_withdrawal, StudyFixtur
       .setGroupName("Some STS group");
     // Default values for series
     sts->series->fillDefaultSeriesIfEmpty();
+    sts->series->costLevel.assign(HOURS_PER_YEAR, 0);
 
     // Fatal gen at h=1
     auto& windTS = area->wind.series;
@@ -560,7 +561,7 @@ BOOST_FIXTURE_TEST_CASE(overflow_exists_and_has_right_coeff, StudyFixture)
                       1.0); // check that "overflow" variable exists and has the right coefficient
     auto ovf = problem.variables.find(overflowKey);
     BOOST_REQUIRE(ovf != problem.variables.end());
-    BOOST_CHECK_EQUAL(ovf->second.objectiveCoefficient, area->thermal.spilledEnergyCost);
+    BOOST_CHECK_EQUAL(ovf->second.objectiveCoefficient, area->thermal.spilledEnergyCost + area->hydro.overflowSpilledCostDifference);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
