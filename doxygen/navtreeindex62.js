@@ -1,5 +1,6 @@
 var NAVTREEINDEX62 =
 {
+"structStudyBuilder.html#a915f2f571ce4902cf4f6357760c4263f":[8,0,290,5],
 "structStudyBuilder.html#a9ef49edfc6b16c304a48cd8dc98a00c8":[8,0,290,1],
 "structStudyBuilder.html#abb6afec52d21f96e134aa6fe2cd4088d":[8,0,290,3],
 "structStudyFixture.html":[8,0,292],
@@ -11,9 +12,9 @@ var NAVTREEINDEX62 =
 "structStudyFixture.html#a79050046161e92da8d3cd1d036aeee12":[8,0,292,6],
 "structStudyFixture.html#a7bb40e5d558cca55d2e8635fb9b8741c":[8,0,292,5],
 "structStudyFixture.html#a7f9294e12e51c105bfe982bcc69ec640":[8,0,292,12],
-"structStudyFixture.html#a9833119d966e476890849b374047fd57":[8,0,292,2],
-"structStudyFixture.html#a9833119d966e476890849b374047fd57":[8,0,292,1],
 "structStudyFixture.html#a9833119d966e476890849b374047fd57":[8,0,292,0],
+"structStudyFixture.html#a9833119d966e476890849b374047fd57":[8,0,292,1],
+"structStudyFixture.html#a9833119d966e476890849b374047fd57":[8,0,292,2],
 "structStudyFixture.html#ad030b15ed14595081f9c90fb6f7c2049":[8,0,292,8],
 "structStudyFixture.html#ae65400ddc7129fa01c5ae1ae44a6e00f":[8,0,292,10],
 "structStudyFixture.html#aebfb8a290fdbc5cc45b4fa56787601a9":[8,0,292,11],
@@ -248,6 +249,5 @@ var NAVTREEINDEX62 =
 "test__unfeasible__problem_8py.html#acfacac27434473e20fbc1b946f75a0df":[7,0,47,0],
 "test__unfeasible__problem_8py.html#ad02fff63ef4d71cede1f4fd5b275f712":[7,0,47,10],
 "test__unfeasible__problem_8py.html#addd803da5b8b645af37901eb79573e75":[7,0,47,22],
-"test__unfeasible__problem_8py.html#ae6a034599f760239ceed63966493da8c":[7,0,47,9],
-"test__unfeasible__problem_8py.html#af4caad2befc9ced97732cb5c30e90f3e":[7,0,47,14]
+"test__unfeasible__problem_8py.html#ae6a034599f760239ceed63966493da8c":[7,0,47,9]
 };

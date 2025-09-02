@@ -1,5 +1,6 @@
 var NAVTREEINDEX29 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#ab1cff0e3b034f5fab44cf920da9ba243":[8,0,0,18,4,4,69,2],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#ab9fa6b7dd49ccff1fb79de04b8489cb0":[8,0,0,18,4,4,69,19],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#ad687aab136c2180d668716af1abe7fc0":[8,0,0,18,4,4,69,5],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#ad795b4870dab4048cc3f444c0a997dbf":[8,0,0,18,4,4,69,18],
@@ -248,6 +249,5 @@ var NAVTREEINDEX29 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Overflows.html#a162b9edf177a3ba51758f4a7bb4b91cc":[8,0,0,18,4,4,89,8],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Overflows.html#a2a1a5806855dadb7e4e514a2b848f442":[8,0,0,18,4,4,89,7],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Overflows.html#a3e9c717d9d3001eb190c9e3f89e165e6":[8,0,0,18,4,4,89,18],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Overflows.html#a6ead822b3c3604c327c443ecad9beb85":[8,0,0,18,4,4,89,13],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Overflows.html#a86e6c93e849705acadc1eb27c88dbf63":[8,0,0,18,4,4,89,1]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Overflows.html#a6ead822b3c3604c327c443ecad9beb85":[8,0,0,18,4,4,89,13]
 };

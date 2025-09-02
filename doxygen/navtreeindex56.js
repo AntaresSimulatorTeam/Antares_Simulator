@@ -1,5 +1,6 @@
 var NAVTREEINDEX56 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDtgMarginCsr.html#a7d94af0bc2f671fcd397dd9e16191411":[8,0,0,18,4,4,26,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDtgMarginCsr.html#abd9111ce9a285f4c8d2efbf695b07035":[8,0,0,18,4,4,26,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDtgMarginCsr.html#ace71c098e57b64ae01b8be5aa3704c1b":[8,0,0,18,4,4,26,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDtgMarginCsr.html#af0a63c26c3f8c6ffee2a43aad413d5e5":[8,0,0,18,4,4,26,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX56 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSpilledEnergy.html#ae27a1dad610f47d4682d61c605a5a890":[8,0,0,18,4,4,106,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions.html":[8,0,0,18,4,4,118],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions.html#a0d747bf6058574e2dbc0a70d0a739b47":[8,0,0,18,4,4,118,3],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions.html#a24edd5fa908000952124732b3c29a2e3":[8,0,0,18,4,4,118,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions.html#ab38b58b113854c3cd6268b940963cb0b":[8,0,0,18,4,4,118,4]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions.html#a24edd5fa908000952124732b3c29a2e3":[8,0,0,18,4,4,118,2]
 };

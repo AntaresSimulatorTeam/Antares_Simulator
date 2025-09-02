@@ -1,5 +1,6 @@
 var NAVTREEINDEX28 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinear.html#a94594232f95a4966e591e47e26d6614b":[8,0,0,18,4,4,41,19],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinear.html#a945fb1a27c0aeb71078c3a277eeee89f":[8,0,0,18,4,4,41,8],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinear.html#aa3514a8a0b395000bcb148b9874610db":[8,0,0,18,4,4,41,2],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinear.html#aa4979e02b4308c0f20ea65329e44fa16":[8,0,0,18,4,4,41,13],
@@ -248,6 +249,5 @@ var NAVTREEINDEX28 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#a683fb7d6b458fc151ce0bbfdfe69485a":[8,0,0,18,4,4,69,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#a79665b68bfa13480592be6cedcd8697a":[8,0,0,18,4,4,69,8],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#a888e1eeea70d983a479bf5a2758e5148":[8,0,0,18,4,4,69,9],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#aa5e648b08fe85560bb372ffbf3dfdba7":[8,0,0,18,4,4,69,7],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#ab1cff0e3b034f5fab44cf920da9ba243":[8,0,0,18,4,4,69,2]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#aa5e648b08fe85560bb372ffbf3dfdba7":[8,0,0,18,4,4,69,7]
 };

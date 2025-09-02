@@ -1,5 +1,6 @@
 var NAVTREEINDEX34 =
 {
+"classAntares_1_1Toolbox_1_1Filter_1_1DayYear.html#a841b7f0e9ced8c1dd55f420536272b61":[8,0,0,20,1,4,6],
 "classAntares_1_1Toolbox_1_1Filter_1_1Hour.html":[8,0,0,20,1,5],
 "classAntares_1_1Toolbox_1_1Filter_1_1Hour.html#a269f6175eaa8faa2f0a70f87676f9f2f":[8,0,0,20,1,5,0],
 "classAntares_1_1Toolbox_1_1Filter_1_1Hour.html#a378e191e675ae033efad3bdabac31af0":[8,0,0,20,1,5,5],
@@ -248,6 +249,5 @@ var NAVTREEINDEX34 =
 "classAntares_1_1Toolbox_1_1Jobs_1_1Job.html#a55c620f32a9dfd6651681c5c2a24c577":[8,0,0,20,3,7,28],
 "classAntares_1_1Toolbox_1_1Jobs_1_1Job.html#a57bba31a1dd59992e210b8a6ccc9f9e2":[8,0,0,20,3,7,21],
 "classAntares_1_1Toolbox_1_1Jobs_1_1Job.html#a5c1ebf2df3ccc880ba95493cc7b2d69f":[8,0,0,20,3,7,13],
-"classAntares_1_1Toolbox_1_1Jobs_1_1Job.html#a68d9d32265c4be689466bca64a29876f":[8,0,0,20,3,7,16],
-"classAntares_1_1Toolbox_1_1Jobs_1_1Job.html#a753dedae5e7620f4643290a44e754e06":[8,0,0,20,3,7,2]
+"classAntares_1_1Toolbox_1_1Jobs_1_1Job.html#a68d9d32265c4be689466bca64a29876f":[8,0,0,20,3,7,16]
 };

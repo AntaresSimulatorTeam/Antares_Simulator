@@ -1,5 +1,6 @@
 var NAVTREEINDEX57 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions.html#ab38b58b113854c3cd6268b940963cb0b":[8,0,0,18,4,4,118,4],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions.html#af8e4d8b6a6407060fb314c2886542b94":[8,0,0,18,4,4,118,5],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions.html#afd7d2b4d71e49cb2914697c1d466a39b":[8,0,0,18,4,4,118,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions_1_1Multiple.html":[8,0,0,18,4,4,118,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX57 =
 "structAntares_1_1Window_1_1Inspector_1_1PClusterCO2.html#ada137f11147895e288cf03873322a95a":[8,0,0,23,1,44,0],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterCostGeneration.html":[8,0,0,23,1,52],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterCostGeneration.html#a7dd6cf6626c03e330334c8c2eacfdc77":[8,0,0,23,1,52,0],
-"structAntares_1_1Window_1_1Inspector_1_1PClusterDoGenerateTS.html":[8,0,0,23,1,64],
-"structAntares_1_1Window_1_1Inspector_1_1PClusterDoGenerateTS.html#abbafe06461006b22d31ad204acbda2bf":[8,0,0,23,1,64,0]
+"structAntares_1_1Window_1_1Inspector_1_1PClusterDoGenerateTS.html":[8,0,0,23,1,64]
 };

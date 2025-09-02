@@ -1,5 +1,6 @@
 var NAVTREEINDEX55 =
 {
+"structAntares_1_1Map_1_1Item_1_1SetCompare.html":[8,0,0,12,10,0],
 "structAntares_1_1Map_1_1Item_1_1SetCompare.html#a74521bb0e7405de920cfa8abf58a4d4e":[8,0,0,12,10,0,0],
 "structAntares_1_1Map_1_1MapRenderOptions.html":[8,0,0,12,12],
 "structAntares_1_1Map_1_1MapRenderOptions.html#a16f79f13bab10a29edc7e7ae9ed03dff":[8,0,0,12,12,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX55 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDomesticUnsuppliedEnergy.html#a65c516239c21fa067358276e53fb5a47":[8,0,0,18,4,4,24,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDomesticUnsuppliedEnergy.html#a6a24fa9c475e6c1999a5db68b84efe48":[8,0,0,18,4,4,24,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDtgMarginCsr.html":[8,0,0,18,4,4,26],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDtgMarginCsr.html#a187b0ce388f25ea734cfcfd492a5b2a9":[8,0,0,18,4,4,26,4],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDtgMarginCsr.html#a7d94af0bc2f671fcd397dd9e16191411":[8,0,0,18,4,4,26,2]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDtgMarginCsr.html#a187b0ce388f25ea734cfcfd492a5b2a9":[8,0,0,18,4,4,26,4]
 };
