@@ -55,6 +55,34 @@ VariablesBulkAddition::VariablesBulkAddition(
 {
 }
 
+void VariablesBulkAddition::checkVariableDictionary(const std::string& compoId,
+                                                    const std::string& variableId,
+                                                    unsigned int modelVariableIndex,
+                                                    unsigned localIndex) const
+{
+    // TOdo reserve the dict
+
+    if (const auto size = variableDictionary.size(); size == modelVariableIndex) // create the entry
+    {
+        variableDictionary.push_back({});
+    }
+    else if (modelVariableIndex > size)
+    {
+        throw std::runtime_error("can not add variable " + variableId + "from component "
+                                 + compoId);
+    }
+    auto& entry = variableDictionary[modelVariableIndex];
+    if (const auto varsSize = entry.size(); varsSize == localIndex)
+    {
+        entry.push_back(nullptr);
+    }
+    else if (localIndex > varsSize)
+    {
+        throw std::runtime_error("can not add variable " + variableId + "from component "
+                                 + compoId);
+    }
+}
+
 void VariablesBulkAddition::addVariable(const std::string& compoId,
                                         const std::string& variableId,
                                         unsigned int modelVariableIndex,
@@ -72,6 +100,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
               static_cast<Optimization::MCYearAndTime::MCYear>(s));
             const auto ts = buildOptional(dim.isTimeDependent(), t);
             auto localIndex = s * dim.getNumberOfTimesteps() + t;
+            checkVariableDictionary(compoId, variableId, modelVariableIndex, localIndex);
             variableDictionary[modelVariableIndex][localIndex] = linear_problem_.addVariable(
               lb,
               ub,
@@ -97,18 +126,6 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
         errMessage << "requested " << count << " variables but lb size = " << lb.size();
         throw BoundsSizeMismatch(errMessage.str());
     }
-    // const auto offset = *dim.getTimesteps().begin();
-    //
-    // variableDictionary.addVariable(
-    //   dim,
-    //   key,
-    //   [this, &lb, ub, integer, offset](const Optimization::MCYearAndTime& timeAndScenario,
-    //                                    const std::string& name) {
-    //       return linear_problem_.addVariable(lb[timeAndScenario.timestep - offset],
-    //                                          ub,
-    //                                          integer,
-    //                                          name);
-    //   });
 
     for (const auto& s: dim.getScenarioIndices())
     {
@@ -119,6 +136,8 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
               static_cast<Optimization::MCYearAndTime::MCYear>(s));
             const auto ts = buildOptional(dim.isTimeDependent(), t);
             auto localIndex = s * dim.getNumberOfTimesteps() + t;
+
+            checkVariableDictionary(compoId, variableId, modelVariableIndex, localIndex);
             variableDictionary[modelVariableIndex][localIndex] = linear_problem_.addVariable(
               lb.at(t), /*use localIndex*/
               ub,
@@ -143,17 +162,6 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
         errMessage << "requested " << count << " variables but ub size = " << ub.size();
         throw BoundsSizeMismatch(errMessage.str());
     }
-    // const auto offset = *dim.getTimesteps().begin();
-    // variableDictionary.addVariable(
-    //   dim,
-    //   key,
-    //   [this, lb, &ub, integer, offset](const Optimization::MCYearAndTime& timeAndScenario,
-    //                                    const std::string& name) {
-    //       return linear_problem_.addVariable(lb,
-    //                                          ub[timeAndScenario.timestep - offset],
-    //                                          integer,
-    //                                          name);
-    //   });
 
     for (const auto& s: dim.getScenarioIndices())
     {
@@ -164,6 +172,8 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
               static_cast<Optimization::MCYearAndTime::MCYear>(s));
             const auto ts = buildOptional(dim.isTimeDependent(), t);
             auto localIndex = s * dim.getNumberOfTimesteps() + t;
+
+            checkVariableDictionary(compoId, variableId, modelVariableIndex, localIndex);
             variableDictionary[modelVariableIndex][localIndex] = linear_problem_.addVariable(
               lb,
               ub.at(t), /*use localIndex*/
@@ -189,19 +199,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
                    << " and ub size = " << ub.size();
         throw BoundsSizeMismatch(errMessage.str());
     }
-    // const auto offset = *dim.getTimesteps().begin();
-    //
-    // variableDictionary.addVariable(
-    //   dim,
-    //   key,
-    //   [this, &lb, &ub, integer, offset](const Optimization::MCYearAndTime& timeAndScenario,
-    //                                     const std::string& name)
-    //   {
-    //       return linear_problem_.addVariable(lb[timeAndScenario.timestep - offset],
-    //                                          ub[timeAndScenario.timestep - offset],
-    //                                          integer,
-    //                                          name);
-    //   });
+
     for (const auto& s: dim.getScenarioIndices())
     {
         for (const auto t: dim.getTimesteps())
@@ -211,6 +209,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
               static_cast<Optimization::MCYearAndTime::MCYear>(s));
             const auto ts = buildOptional(dim.isTimeDependent(), t);
             auto localIndex = s * dim.getNumberOfTimesteps() + t;
+            checkVariableDictionary(compoId, variableId, modelVariableIndex, localIndex);
             variableDictionary[modelVariableIndex][localIndex] = linear_problem_.addVariable(
               lb.at(t), /*use localIndex*/
               ub.at(t), /*use localIndex*/

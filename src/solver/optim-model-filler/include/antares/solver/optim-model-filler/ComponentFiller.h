@@ -96,6 +96,10 @@ public:
     VariablesBulkAddition(
       Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
       std::vector<std::vector<LinearProblemApi::IMipVariable*>>& variableDictionary);
+    void checkVariableDictionary(const std::string& compoId,
+                                 const std::string& variableId,
+                                 unsigned int modelVariableIndex,
+                                 unsigned localIndex) const;
 
     void addVariable(const std::string& compoId,
                      const std::string& variableId,

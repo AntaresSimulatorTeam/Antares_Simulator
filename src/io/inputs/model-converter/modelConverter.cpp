@@ -328,7 +328,6 @@ std::vector<ModelerStudy::SystemModel::Model> convertModels(
 {
     std::vector<ModelerStudy::SystemModel::Model> models;
     models.reserve(library.models.size());
-    unsigned int variableGlobalIndex = 0;
     for (const auto& model: library.models)
     {
         ModelerStudy::SystemModel::ModelBuilder modelBuilder;

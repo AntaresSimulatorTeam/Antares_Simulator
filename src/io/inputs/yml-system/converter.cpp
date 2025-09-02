@@ -300,7 +300,7 @@ SystemModel::System convert(const YmlSystem::System& ymlSystem,
                             const std::vector<SystemModel::Library>& libraries)
 {
     // Create components from system
-    std::unordered_map<std::string, SystemModel::Component> components;
+    CompoMap components;
     unsigned int variableGlobalIndex = 0;
     for (const auto& c: ymlSystem.components)
     {

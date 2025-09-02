@@ -59,7 +59,7 @@ SystemBuilder& SystemBuilder::withId(std::string_view id)
  * \return Reference to the SystemBuilder object.
  */
 SystemBuilder& SystemBuilder::withComponents(
-  std::unordered_map<std::string, Component>&& components)
+  CompoMap&& components)
 {
     components_ = std::move(components);
     return *this;

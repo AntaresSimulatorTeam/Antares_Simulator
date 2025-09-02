@@ -43,6 +43,7 @@ public:
     const Model* model = nullptr;
     std::map<std::string, Expressions::Visitors::ParameterTypeAndValue> parameter_values;
     std::string scenario_group_id;
+    unsigned index = 0;
 
     void reset()
     {
@@ -104,6 +105,11 @@ public:
     std::optional<std::string> areaConnectedToPort(const std::string& portId) const;
 
     const std::map<std::string, std::string>& portToAreaConnections() const;
+
+    unsigned int Index() const
+    {
+        return data_.index;
+    }
 
 private:
     // Only ComponentBuilder is allowed to build Component instances
