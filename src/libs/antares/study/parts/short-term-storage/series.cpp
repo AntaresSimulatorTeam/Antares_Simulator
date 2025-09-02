@@ -164,7 +164,7 @@ void Series::fillDefaultSeriesIfEmpty()
 
     fillIfEmpty(costInjection, 0.0);
     fillIfEmpty(costWithdrawal, 0.0);
-    fillIfEmpty(costLevel, 0.0);
+    fillIfEmpty(costLevel, -1e6);
 
     fillIfEmpty(costVariationInjection, 0.0);
 

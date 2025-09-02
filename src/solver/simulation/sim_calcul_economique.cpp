@@ -69,7 +69,8 @@ static void importShortTermStorages(
             toInsert.penalizeVariationWithdrawal = st.properties.penalizeVariationWithdrawal;
             // optional overflow
             toInsert.allowOverflow = st.properties.allowOverflow;
-            toInsert.overflowCost = area->thermal.spilledEnergyCost;
+            toInsert.overflowCost = area->thermal.spilledEnergyCost
+                                    + area->hydro.overflowSpilledCostDifference;
 
             toInsert.name = st.properties.name;
             for (const auto& constraint: st.additionalConstraints)
