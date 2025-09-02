@@ -84,14 +84,14 @@ public:
         linear_problem_builder.build(pb, *dataSeries, timeScenarioCtx);
     }
 
-    [[nodiscard]] const VariableDictionary& getVariableDictionary() const
+    [[nodiscard]] const std::vector<std::vector<IMipVariable*>>& getVariableDictionary() const
     {
         return variableDictionary_;
     }
 
 private:
     const ModelerStudy::SystemModel::System* system_;
-    VariableDictionary variableDictionary_;
+    std::vector<std::vector<IMipVariable*>> variableDictionary_;
 };
 
 void Modeler::solve() const
@@ -150,7 +150,6 @@ void Modeler::solve() const
             writer_.writeSimulationTable(ortools_linear_problem,
                                          *solution,
                                          data.system->Components(),
-                                         system_linear_problem.getVariableDictionary(),
                                          timeScenarioCtx);
             break;
         default:

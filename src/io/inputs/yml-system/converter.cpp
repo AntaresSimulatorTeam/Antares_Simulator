@@ -80,7 +80,7 @@ static const SystemModel::Model& getModel(const std::vector<SystemModel::Library
                                           const std::string& modelId)
 {
     auto lib = std::ranges::find_if(libraries,
-                                    [&libraryId](const auto& l) { return l.Id() == libraryId; });
+                                    [&libraryId](auto& l) { return l.Id() == libraryId; });
     if (lib == libraries.end())
     {
         throw LibraryNotFound(libraryId);
@@ -96,7 +96,8 @@ static const SystemModel::Model& getModel(const std::vector<SystemModel::Library
 }
 
 static SystemModel::Component createComponent(const YmlSystem::Component& c,
-                                              const std::vector<SystemModel::Library>& libraries)
+                                              const std::vector<SystemModel::Library>& libraries,
+                                              unsigned int& variableGlobalIndex)
 {
     const auto [libraryId, modelId] = splitLibraryModelString(c.model);
 
@@ -114,6 +115,14 @@ static SystemModel::Component createComponent(const YmlSystem::Component& c,
                                            ? Expressions::Visitors::ParameterType::TIMESERIE
                                            : Expressions::Visitors::ParameterType::CONSTANT,
                                  .value = value});
+    }
+    unsigned int variableLocalIndex = 0;
+    for (const auto& variable: model.Variables() | std::views::values)
+    {
+        variable.setGlobalIndex(variableGlobalIndex);
+        ++variableGlobalIndex;
+        variable.setLocalIndex(variableLocalIndex);
+        ++variableLocalIndex;
     }
 
     auto component = component_builder.withId(c.id)
@@ -292,6 +301,7 @@ SystemModel::System convert(const YmlSystem::System& ymlSystem,
 {
     // Create components from system
     std::unordered_map<std::string, SystemModel::Component> components;
+    unsigned int variableGlobalIndex = 0;
     for (const auto& c: ymlSystem.components)
     {
         if (components.contains(c.id))
@@ -299,7 +309,7 @@ SystemModel::System convert(const YmlSystem::System& ymlSystem,
             throw std::invalid_argument("System has at least two components with the same id ('"
                                         + c.id + "'), this is not supported");
         }
-        components.emplace(c.id, createComponent(c, libraries));
+        components.emplace(c.id, createComponent(c, libraries, variableGlobalIndex));
         logs.debug() << "Loaded component `" << c.id << "`";
     }
 

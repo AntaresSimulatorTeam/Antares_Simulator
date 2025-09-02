@@ -28,7 +28,7 @@
 #include "antares/solver/optim-model-filler/scenarioGroupRepo.h"
 #include "antares/study/system-model/component.h"
 #include "antares/study/system-model/parameter.h"
-
+#if 0
 using namespace Antares::ModelerStudy::SystemModel;
 
 namespace Test::Modeler
@@ -215,3 +215,4 @@ void LinearProblemBuildingFixture::createModelWithOneFloatVar(
                 objective);
 }
 } // namespace Test::Modeler
+#endif

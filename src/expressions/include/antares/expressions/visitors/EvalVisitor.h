@@ -21,7 +21,6 @@
 #pragma once
 
 #include <cmath>
-#include <fmt/base.h>
 #include <functional>
 #include <sstream>
 #include <variant>
@@ -115,7 +114,7 @@ public:
         return evaluateUnaryOperation(std::negate<>());
     }
 
-    [[nodiscard]] std::variant<double, std::vector<double>> value() const
+    [[nodiscard]] const std::variant<double, std::vector<double>>& value() const
     {
         return value_;
     }
@@ -154,6 +153,12 @@ public:
     EvaluationResult timeShift(int time_shift) const;
     EvaluationResult timeSum(int from, int to) const;
     EvaluationResult alltimeSum(int numberOfTimeStep) const;
+
+    bool IsEmptyOrZero() const;
+
+    double singleValueOrAtIndex(unsigned int index) const;
+
+    size_t size() const;
 
 private:
     std::variant<double, std::vector<double>> value_;
@@ -236,16 +241,7 @@ public:
     using std::runtime_error::runtime_error;
 };
 
-void CheckVectorsSize(const std::vector<double>& lhs, const std::vector<double>& rhs)
-{
-    if (lhs.size() != rhs.size())
-    {
-        std::ostringstream errorMsg;
-        errorMsg << "Failed to compute binary operation: vectors have different sizes ("
-                 << lhs.size() << " and " << rhs.size() << ").";
-        throw VectorsMismatchSize(errorMsg.str());
-    }
-}
+void CheckVectorsSize(const std::vector<double>& lhs, const std::vector<double>& rhs);
 
 template<typename BinaryOp>
 std::vector<double> computeBinaryOperation(const std::vector<double>& lhs,
@@ -295,6 +291,7 @@ EvaluationResult& EvaluationResult::evaluateBinaryOperation(const EvaluationResu
         auto& l = std::get<std::vector<double>>(value_);
         l = std::visit([&op, &l](const auto& r) { return computeBinaryOperation(l, r, op); },
                        right.value());
+        return *this;
     }
     else
     {
@@ -302,6 +299,7 @@ EvaluationResult& EvaluationResult::evaluateBinaryOperation(const EvaluationResu
         value_ = std::visit([&op, l](const auto& r) -> std::variant<double, std::vector<double>>
                             { return computeBinaryOperation(l, r, op); },
                             right.value());
+        return *this;
     }
 }
 

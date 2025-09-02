@@ -51,7 +51,6 @@ public:
       const Optimisation::LinearProblemApi::IMipSolution& solution,
       const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>&
         components,
-      const Antares::Optimization::VariableDictionary& variableDictionary,
       const Antares::Optimisation::LinearProblemApi::FillContext& fillContext) const override;
     explicit FileWriter(std::filesystem::path path);
 

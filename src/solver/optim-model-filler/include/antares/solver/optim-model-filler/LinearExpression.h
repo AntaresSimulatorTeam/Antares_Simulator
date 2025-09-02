@@ -125,8 +125,6 @@ void add_maps(MapType& left, const MapType& right, UnaryOp op = std::identity{})
  * @return The scaled map
  */
 FullKeyMap scale_map(const FullKeyMap& map, double scale);
-using OffsetType = Expressions::Visitors::EvaluationResult;
-using CoefficientsType = Expressions::Visitors::EvaluationResult;
 
 /**
  * Linear Expression
@@ -139,14 +137,16 @@ class LinearExpression
 {
 public:
     /// Build a linear expression with zero offset and zero coefficients
-    LinearExpression() = default;
+    LinearExpression();
     /// Build a linear expression with a given offset and a given map of non-zero coefficients
     /// per variable ID
-    LinearExpression(const OffsetType& offset, const std::vector<CoefficientsType>& coef_per_var);
+    LinearExpression(const Expressions::Visitors::EvaluationResult& offset,
+                     const std::vector<Expressions::Visitors::EvaluationResult>& coef_per_var);
     /// Sum two linear expressions
     LinearExpression operator+(const LinearExpression& other) const;
     /// Subtract two linear expressions
     LinearExpression operator-(const LinearExpression& other) const;
+    LinearExpression& operator-=(const LinearExpression& other);
     /// Multiply two linear expressions
     /// Only one can have non-zero coefficients, otherwise the result cannot be linear
     LinearExpression operator*(const LinearExpression& other) const;
@@ -163,13 +163,17 @@ public:
     const Expressions::Visitors::EvaluationResult& offset() const;
 
     /// Get the non-zero coefficients per variable ID
-    const std::vector<CoefficientsType>& coefPerVar() const;
+    const std::vector<Expressions::Visitors::EvaluationResult>& coefPerVar() const;
 
     LinearExpression& operator+=(const LinearExpression& value);
+    LinearExpression ShiftLinearExpressions(int timeShift) const;
+    LinearExpression operator[](int timeShift) const;
+    LinearExpression TimeSumLinearExpressions(int from, int to) const;
+    LinearExpression AllTimeSumLinearExpressions(unsigned int nbTimeStep) const;
 
 private:
-    OffsetType offset_;
-    std::vector<CoefficientsType> coef_per_var_;
+    Expressions::Visitors::EvaluationResult offset_;
+    std::vector<Expressions::Visitors::EvaluationResult> coef_per_var_;
 };
 
 } // namespace Antares::Optimization

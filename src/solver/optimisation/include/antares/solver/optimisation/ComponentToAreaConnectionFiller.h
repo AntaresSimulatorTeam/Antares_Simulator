@@ -41,7 +41,8 @@ class ComponentToAreaConnectionFiller: public Optimisation::LinearProblemApi::Li
 {
 public:
     explicit ComponentToAreaConnectionFiller(const PROBLEME_HEBDO* problemeHebdo,
-                                             const VariableDictionary& modelerVariableDictionary);
+      const std::vector<std::vector<Optimisation::LinearProblemApi::IMipVariable*>>&
+        modelerVariableDictionary);
     void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
                       const Optimisation::LinearProblemApi::FillContext& ctx) override;
@@ -55,7 +56,8 @@ public:
 private:
     const PROBLEME_HEBDO* problemeHebdo_;
     const ModelerStudy::SystemModel::System* modelerSystem_;
-    const VariableDictionary& modelerVariableDictionary_;
+    const std::vector<std::vector<Optimisation::LinearProblemApi::IMipVariable*>>&
+      modelerVariableDictionary_;
 
     std::map<std::string, unsigned> areaIndices_;
 
@@ -63,9 +65,10 @@ private:
       Optimisation::LinearProblemApi::ILinearProblem& pb,
       const std::string& areaId,
       unsigned ts) const;
-    void addExpressionToConstraint(
-      const LinearExpression& expression,
-      Optimisation::LinearProblemApi::IMipConstraint* areaBalanceConstraint) const;
+    void addExpressionToConstraint(Optimisation::LinearProblemApi::ILinearProblem& pb,
+                                   const LinearExpression& linearExpression,
+                                   const Optimisation::LinearProblemApi::FillContext& ctx,
+                                   const std::string& areaId) const;
     void addComponentPortContributionToArea(
       Optimisation::LinearProblemApi::ILinearProblem& pb,
       Optimisation::LinearProblemApi::ILinearProblemData& data,

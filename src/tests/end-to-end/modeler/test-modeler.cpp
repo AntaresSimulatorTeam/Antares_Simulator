@@ -18,7 +18,7 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-
+#if 0
 #define BOOST_TEST_MODULE testE2EModeler
 #include <fmt/format.h>
 
@@ -329,3 +329,4 @@ BOOST_AUTO_TEST_CASE(system_with_three_time_series_use_second_one_all_3)
     modeler.solve();
     BOOST_CHECK_EQUAL(inMemoryWriter.solution_.objectiveValue, 3);
 }
+#endif

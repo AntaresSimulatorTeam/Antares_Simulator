@@ -39,15 +39,13 @@ public:
              Expression upper_bound,
              ValueType type,
              TimeDependent timeDependent,
-             ScenarioDependent scenarioDependent,
-             unsigned int index):
+             ScenarioDependent scenarioDependent):
         id_(std::move(id)),
         type_(type),
         lowerBound_(std::move(lower_bound)),
         upperBound_(std::move(upper_bound)),
         timeDependent_(timeDependent),
-        scenarioDependent_(scenarioDependent),
-        index_(index)
+        scenarioDependent_(scenarioDependent)
     {
     }
 
@@ -81,6 +79,26 @@ public:
         return scenarioDependent_ == ScenarioDependent::YES;
     }
 
+    [[nodiscard]] unsigned int GlobalIndex() const
+    {
+        return globalIndex_;
+    }
+
+    [[nodiscard]] unsigned int LocalIndex() const
+    {
+        return localIndex_;
+    }
+
+    void setGlobalIndex(unsigned int globalIndex) const
+    {
+        globalIndex_ = globalIndex;
+    }
+
+    void setLocalIndex(unsigned int localIndex) const
+    {
+        localIndex_ = localIndex;
+    }
+
 private:
     std::string id_;
     ValueType type_;
@@ -88,7 +106,8 @@ private:
     Expression upperBound_;
     TimeDependent timeDependent_ = TimeDependent::YES;
     ScenarioDependent scenarioDependent_ = ScenarioDependent::YES;
-    unsigned int index_ = 0;
+    mutable unsigned int globalIndex_ = 0;
+    mutable unsigned int localIndex_ = 0;
 };
 
 } // namespace Antares::ModelerStudy::SystemModel

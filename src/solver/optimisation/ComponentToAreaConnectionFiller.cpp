@@ -35,7 +35,7 @@ namespace Antares::Optimization
 {
 ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
   const PROBLEME_HEBDO* problemeHebdo,
-  const VariableDictionary& modelerVariableDictionary):
+  const std::vector<std::vector<IMipVariable*>>& modelerVariableDictionary):
     problemeHebdo_(problemeHebdo),
     modelerSystem_(problemeHebdo->modelerSystem),
     modelerVariableDictionary_(modelerVariableDictionary)
@@ -87,19 +87,45 @@ IMipConstraint* ComponentToAreaConnectionFiller::getBalanceConstraint(ILinearPro
 }
 
 void ComponentToAreaConnectionFiller::addExpressionToConstraint(
-  const LinearExpression& expression,
-  IMipConstraint* areaBalanceConstraint) const
+  ILinearProblem& pb,
+  const LinearExpression& linearExpression,
+  const FillContext& ctx,
+  const std::string& areaId) const
 {
     // Contribution is added to the left-hand side of the constraint
     // We invert the sign bc modeler is in "gen>0, load<0" convention
     // legacy constraint is in "gen<0, load>0" convention
-    for (const auto& [varKey, coef]: expression.coefPerVar())
+    // for (const auto& [varKey, coef]: coeffPerVar)
+    // {
+    //     auto* var = modelerVariableDictionary_[varKey];
+    //     areaBalanceConstraint->setCoefficient(var, -coef);
+    // }
+    std::string lowerAreaId = areaId;
+    boost::algorithm::to_lower(lowerAreaId);
+    for (auto localIndex(ctx.getLocalFirstTimeStep()); localIndex <= ctx.getLocalLastTimeStep();
+         ++localIndex)
     {
-        auto* var = modelerVariableDictionary_[varKey];
-        areaBalanceConstraint->setCoefficient(var, -coef);
+        IMipConstraint* areaBalanceConstraint = getBalanceConstraint(pb, lowerAreaId, localIndex);
+        // addExpressionToConstraint(expression, areaBalanceConstraint);
+        for (auto modelVarIndex = 0; modelVarIndex < linearExpression.coefPerVar().size();
+             ++modelVarIndex)
+        {
+            const auto& coeffPerVar = linearExpression.coefPerVar();
+            const auto& variables = modelerVariableDictionary_.at(modelVarIndex);
+            if (variables.size() > localIndex)
+            {
+                const auto& coefficients = coeffPerVar.at(modelVarIndex);
+                areaBalanceConstraint->setCoefficient(variables.at(localIndex),
+                                                      coefficients.singleValueOrAtIndex(
+                                                        localIndex));
+            }
+        }
+        areaBalanceConstraint->setBounds(
+          areaBalanceConstraint->getLb()
+            + linearExpression.offset().singleValueOrAtIndex(localIndex),
+          areaBalanceConstraint->getUb()
+            + linearExpression.offset().singleValueOrAtIndex(localIndex));
     }
-    areaBalanceConstraint->setBounds(areaBalanceConstraint->getLb() + expression.offset(),
-                                     areaBalanceConstraint->getUb() + expression.offset());
 }
 
 // TODO remove and ue proper scenario
@@ -126,16 +152,12 @@ void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
     DefaultScenario defaultScenario("empty"); // TODO default ?
     const Expressions::Visitors::EvaluationContext
       connectedComponentEvalContext(component.getParameterValues(), {}, data, defaultScenario);
-    ReadLinearExpressionVisitor visitor(connectedComponentEvalContext, ctx, component);
-    auto timeDependentLinearExpression = visitor.dispatch(
-      component.nodeAtPortField(portId, injectionFieldId));
-    std::string lowerAreaId = areaId;
-    boost::algorithm::to_lower(lowerAreaId);
-    for (const auto& [ts, expression]: timeDependentLinearExpression.GetLinearExpressions())
-    {
-        IMipConstraint* areaBalanceConstraint = getBalanceConstraint(pb, lowerAreaId, ts);
-        addExpressionToConstraint(expression, areaBalanceConstraint);
-    }
+    ReadLinearExpressionVisitor visitor(connectedComponentEvalContext,
+                                        ctx,
+                                        component,
+                                        modelerVariableDictionary_.size());
+    auto linearExpression = visitor.dispatch(component.nodeAtPortField(portId, injectionFieldId));
+    addExpressionToConstraint(pb, linearExpression, ctx, areaId);
 }
 
 void ComponentToAreaConnectionFiller::addConstraints(ILinearProblem& pb,

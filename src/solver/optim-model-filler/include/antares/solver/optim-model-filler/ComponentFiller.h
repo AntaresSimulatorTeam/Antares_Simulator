@@ -57,8 +57,8 @@ public:
 
     /// Create a ComponentFiller for a Component
     explicit ComponentFiller(const ModelerStudy::SystemModel::Component& component,
-                             Optimization::VariableDictionary& variableDictionary,
-                             const ScenarioGroupRepository& scenarioGroupRepository);
+      std::vector<std::vector<LinearProblemApi::IMipVariable*>>& variableDictionary,
+      const ScenarioGroupRepository& scenarioGroupRepository);
 
     void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
@@ -79,53 +79,68 @@ private:
 
     void addTimeDependentConstraints(
       Optimisation::LinearProblemApi::ILinearProblem& pb,
-      const std::vector<Optimization::LinearConstraint>& linear_constraints,
-      const std::string& constraint_id) const;
+                                     const Optimization::LinearConstraint& linear_constraints,
+                                     const std::string& constraint_id,
+                                     const Optimisation::LinearProblemApi::FillContext& ctx) const;
 
     bool IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node) const;
 
     const ModelerStudy::SystemModel::Component& component_;
-    Optimization::VariableDictionary& variableDictionary_;
+    std::vector<std::vector<LinearProblemApi::IMipVariable*>>& variableDictionary_;
     const ScenarioGroupRepository& scenarioGroupRepository_;
 };
 
 class VariablesBulkAddition
 {
 public:
-    VariablesBulkAddition(Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
-                          Optimization::VariableDictionary& variableDictionary);
+    VariablesBulkAddition(
+      Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
+      std::vector<std::vector<LinearProblemApi::IMipVariable*>>& variableDictionary);
 
-    void addVariable(double lb,
+    void addVariable(const std::string& compoId,
+                     const std::string& variableId,
+                     unsigned int modelVariableIndex,
+                     double lb,
                      double ub,
                      bool integer,
-                     const Optimization::Dimensions& dim,
-                     const Optimization::PartialKey&) const;
+                     const Optimization::Dimensions& dim) const;
 
-    void addVariable(const std::vector<double>& lb,
+    void addVariable(const std::string& compoId,
+                     const std::string& variableId,
+                     unsigned int modelVariableIndex,
+                     const std::vector<double>& lb,
                      double ub,
                      bool integer,
-                     const Optimization::Dimensions& dim,
-                     const Optimization::PartialKey&) const;
+                     const Optimization::Dimensions& dim) const;
 
-    void addVariable(double lb,
+    void addVariable(const std::string& compoId,
+                     const std::string& variableId,
+                     unsigned int modelVariableIndex,
+                     double lb,
                      const std::vector<double>& ub,
                      bool integer,
-                     const Optimization::Dimensions& dim,
-                     const Optimization::PartialKey&) const;
+                     const Optimization::Dimensions& dim) const;
 
-    void addVariable(const std::vector<double>& lb,
+    void addVariable(const std::string& compoId,
+                     const std::string& variableId,
+                     unsigned int modelVariableIndex,
+                     const std::vector<double>& lb,
                      const std::vector<double>& ub,
                      bool integer,
-                     const Optimization::Dimensions& dim,
-                     const Optimization::PartialKey&) const;
+                     const Optimization::Dimensions& dim) const;
 
     class BoundsSizeMismatch: public std::invalid_argument
     {
         using std::invalid_argument::invalid_argument;
     };
 
+    static std::string buildVariableName(const std::string& compoId,
+                                         const std::string& variableId,
+                                         std::optional<Optimization::MCYearAndTime::MCYear> mcyear,
+                                         std::optional<unsigned int> timestep);
+
 private:
     Optimisation::LinearProblemApi::ILinearProblem& linear_problem_;
-    Optimization::VariableDictionary& variableDictionary;
+    std::vector<std::vector<LinearProblemApi::IMipVariable*>>& variableDictionary;
 };
 } // namespace Antares::Optimisation

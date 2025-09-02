@@ -45,49 +45,45 @@ namespace Antares::Optimization
  */
 struct LinearConstraint
 {
-    FullKeyMap coef_per_var;
-    double lb = -std::numeric_limits<double>::infinity();
-    double ub = std::numeric_limits<double>::infinity();
-    unsigned int timeStep = 0;
+    std::vector<Expressions::Visitors::EvaluationResult> coef_per_var;
+    Expressions::Visitors::EvaluationResult lb = Expressions::Visitors::EvaluationResult(
+      -std::numeric_limits<double>::infinity());
+    Expressions::Visitors::EvaluationResult ub = Expressions::Visitors::EvaluationResult(
+      std::numeric_limits<double>::infinity());
 };
 
-class ReadLinearConstraintVisitor
-    : public Expressions::Visitors::NodeVisitor<std::vector<LinearConstraint>>
+class ReadLinearConstraintVisitor: public Expressions::Visitors::NodeVisitor<LinearConstraint>
 {
 public:
     ReadLinearConstraintVisitor() = delete;
     explicit ReadLinearConstraintVisitor(
       Expressions::Visitors::EvaluationContext context,
       const Optimisation::LinearProblemApi::FillContext& fillContext,
-      const Antares::ModelerStudy::SystemModel::Component& component);
+      const Antares::ModelerStudy::SystemModel::Component& component,
+      unsigned int nbModelVariables);
 
     std::string name() const override;
 
 private:
-    std::vector<LinearConstraint> visit(const Expressions::Nodes::SumNode* node) override;
-    std::vector<LinearConstraint> visit(const Expressions::Nodes::SubtractionNode* node) override;
-    std::vector<LinearConstraint> visit(
-      const Expressions::Nodes::MultiplicationNode* node) override;
-    std::vector<LinearConstraint> visit(const Expressions::Nodes::DivisionNode* node) override;
-    std::vector<LinearConstraint> visit(const Expressions::Nodes::EqualNode* node) override;
-    std::vector<LinearConstraint> visit(
-      const Expressions::Nodes::LessThanOrEqualNode* node) override;
-    std::vector<LinearConstraint> visit(
-      const Expressions::Nodes::GreaterThanOrEqualNode* node) override;
-    std::vector<LinearConstraint> visit(const Expressions::Nodes::NegationNode* node) override;
-    std::vector<LinearConstraint> visit(const Expressions::Nodes::VariableNode* node) override;
-    std::vector<LinearConstraint> visit(const Expressions::Nodes::ParameterNode* node) override;
-    std::vector<LinearConstraint> visit(const Expressions::Nodes::LiteralNode* node) override;
-    std::vector<LinearConstraint> visit(const Expressions::Nodes::PortFieldNode* node) override;
-    std::vector<LinearConstraint> visit(const Expressions::Nodes::PortFieldSumNode* node) override;
-    std::vector<LinearConstraint> visit(
-      const Expressions::Nodes::ComponentVariableNode* node) override;
-    std::vector<LinearConstraint> visit(
-      const Expressions::Nodes::ComponentParameterNode* node) override;
-    std::vector<LinearConstraint> visit(const Expressions::Nodes::TimeShiftNode* node) override;
-    std::vector<LinearConstraint> visit(const Expressions::Nodes::TimeIndexNode* node) override;
-    std::vector<LinearConstraint> visit(const Expressions::Nodes::TimeSumNode* node) override;
-    std::vector<LinearConstraint> visit(const Expressions::Nodes::AllTimeSumNode* node) override;
+    LinearConstraint visit(const Expressions::Nodes::SumNode* node) override;
+    LinearConstraint visit(const Expressions::Nodes::SubtractionNode* node) override;
+    LinearConstraint visit(const Expressions::Nodes::MultiplicationNode* node) override;
+    LinearConstraint visit(const Expressions::Nodes::DivisionNode* node) override;
+    LinearConstraint visit(const Expressions::Nodes::EqualNode* node) override;
+    LinearConstraint visit(const Expressions::Nodes::LessThanOrEqualNode* node) override;
+    LinearConstraint visit(const Expressions::Nodes::GreaterThanOrEqualNode* node) override;
+    LinearConstraint visit(const Expressions::Nodes::NegationNode* node) override;
+    LinearConstraint visit(const Expressions::Nodes::VariableNode* node) override;
+    LinearConstraint visit(const Expressions::Nodes::ParameterNode* node) override;
+    LinearConstraint visit(const Expressions::Nodes::LiteralNode* node) override;
+    LinearConstraint visit(const Expressions::Nodes::PortFieldNode* node) override;
+    LinearConstraint visit(const Expressions::Nodes::PortFieldSumNode* node) override;
+    LinearConstraint visit(const Expressions::Nodes::ComponentVariableNode* node) override;
+    LinearConstraint visit(const Expressions::Nodes::ComponentParameterNode* node) override;
+    LinearConstraint visit(const Expressions::Nodes::TimeShiftNode* node) override;
+    LinearConstraint visit(const Expressions::Nodes::TimeIndexNode* node) override;
+    LinearConstraint visit(const Expressions::Nodes::TimeSumNode* node) override;
+    LinearConstraint visit(const Expressions::Nodes::AllTimeSumNode* node) override;
 
     ReadLinearExpressionVisitor linear_expression_visitor_;
 };

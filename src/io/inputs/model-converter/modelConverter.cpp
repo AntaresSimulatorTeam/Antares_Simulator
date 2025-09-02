@@ -162,7 +162,6 @@ std::vector<ModelerStudy::SystemModel::Variable> convertVariables(const YmlModel
 
     std::vector<SM::Variable> variables;
     variables.reserve(model.variables.size());
-    unsigned variable_index = 0;
     for (const auto& variable: model.variables)
     {
         SM::Expression lb(variable.lower_bound,
@@ -174,8 +173,7 @@ std::vector<ModelerStudy::SystemModel::Variable> convertVariables(const YmlModel
                                std::move(ub),
                                convertType(variable.variable_type),
                                SM::fromBool<SM::TimeDependent>(variable.time_dependent),
-                               SM::fromBool<SM::ScenarioDependent>(variable.scenario_dependent),
-                               variable_index);
+                               SM::fromBool<SM::ScenarioDependent>(variable.scenario_dependent));
     }
 
     return variables;
@@ -330,6 +328,7 @@ std::vector<ModelerStudy::SystemModel::Model> convertModels(
 {
     std::vector<ModelerStudy::SystemModel::Model> models;
     models.reserve(library.models.size());
+    unsigned int variableGlobalIndex = 0;
     for (const auto& model: library.models)
     {
         ModelerStudy::SystemModel::ModelBuilder modelBuilder;

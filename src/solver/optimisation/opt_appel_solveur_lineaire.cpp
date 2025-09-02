@@ -96,7 +96,7 @@ static void fillModelerComponents(
   std::vector<LinearProblemFiller*>& fillersCollection,
   const ModelerStudy::SystemModel::System* modelerSystem,
   const Optimisation::ScenarioGroupRepository& scenarioGroupRepository,
-  VariableDictionary& variableDictionary)
+  std::vector<std::vector<IMipVariable*>>& variableDictionary)
 {
     if (!modelerSystem)
     {
@@ -153,7 +153,7 @@ MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
     LegacyFiller legacyOrtoolsFiller(problemeHebdo, namedProblems);
     std::vector<LinearProblemFiller*> fillersCollection = {&legacyOrtoolsFiller};
 
-    VariableDictionary variableDictionary;
+    std::vector<std::vector<IMipVariable*>> variableDictionary;
     std::vector<std::unique_ptr<Optimisation::ComponentFiller>> componentFillers;
     ComponentToAreaConnectionFiller componentToAreaConnectionFiller(problemeHebdo,
                                                                     variableDictionary);

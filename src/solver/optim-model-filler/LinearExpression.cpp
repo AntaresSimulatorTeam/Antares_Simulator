@@ -44,8 +44,15 @@ FullKeyMap scale_map(const FullKeyMap& map, double scale)
     return result;
 }
 
-LinearExpression::LinearExpression(const OffsetType& offset,
-                                   const std::vector<CoefficientsType>& coef_per_var):
+LinearExpression::LinearExpression():
+    offset_(0.),
+    coef_per_var_({})
+{
+}
+
+LinearExpression::LinearExpression(
+  const Expressions::Visitors::EvaluationResult& offset,
+  const std::vector<Expressions::Visitors::EvaluationResult>& coef_per_var):
     offset_(offset),
     coef_per_var_(coef_per_var)
 {
@@ -68,7 +75,48 @@ LinearExpression& LinearExpression::operator+=(const LinearExpression& other)
     return *this;
 }
 
-const std::vector<CoefficientsType>& LinearExpression::coefPerVar() const
+LinearExpression LinearExpression::ShiftLinearExpressions(int timeShift) const
+{
+    std::vector shiftedCoefPerVar(coef_per_var_.size(), Expressions::Visitors::EvaluationResult{0});
+    for (auto i(0); i < coef_per_var_.size(); ++i)
+    {
+        shiftedCoefPerVar[i] = coef_per_var_.at(i).timeShift(timeShift);
+    }
+
+    return {std::move(offset_.timeShift(timeShift)), std::move(shiftedCoefPerVar)};
+}
+
+LinearExpression LinearExpression::operator[](int timeIndex) const
+{
+    std::vector coefPerVar(coef_per_var_.size(), Expressions::Visitors::EvaluationResult{0});
+    for (auto i(0); i < coef_per_var_.size(); ++i)
+    {
+        coefPerVar[i] = coef_per_var_.at(i)[timeIndex];
+    }
+    return {std::move(offset_[timeIndex]), std::move(coefPerVar)};
+}
+
+LinearExpression LinearExpression::TimeSumLinearExpressions(int from, int to) const
+{
+    std::vector coefPerVar(coef_per_var_.size(), Expressions::Visitors::EvaluationResult{0});
+    for (auto i(0); i < coef_per_var_.size(); ++i)
+    {
+        coefPerVar[i] = coef_per_var_.at(i).timeSum(from, to);
+    }
+    return {std::move(offset_.timeSum(from, to)), std::move(coefPerVar)};
+}
+
+LinearExpression LinearExpression::AllTimeSumLinearExpressions(unsigned int nbTimeStep) const
+{
+    std::vector coefPerVar(coef_per_var_.size(), Expressions::Visitors::EvaluationResult{0});
+    for (auto i(0); i < coef_per_var_.size(); ++i)
+    {
+        coefPerVar[i] = coef_per_var_.at(i).alltimeSum(nbTimeStep);
+    }
+    return {std::move(offset_.alltimeSum(nbTimeStep)), std::move(coefPerVar)};
+}
+
+const std::vector<Expressions::Visitors::EvaluationResult>& LinearExpression::coefPerVar() const
 {
     return coef_per_var_;
 }
@@ -79,21 +127,13 @@ LinearExpression LinearExpression::operator-(const LinearExpression& other) cons
     result += -other;
     return result;
 }
-static bool EvaluationResultIsEmptyOrZero(const Expressions::Visitors::EvaluationResult& result)
+
+LinearExpression& LinearExpression::operator-=(const LinearExpression& other)
 {
-    const auto& value = result.value();
-    if (std::holds_alternative<double>(value))
-    {
-        return std::get<double>(value) == 0;
-    }
-    if (std::holds_alternative<std::vector<double>>(value))
-    {
-        return std::get<std::vector<double>>(value).size() == 0;
-    }
-    throw std::runtime_error("LinearExpression::EvaluationResultIsEmptyOrZero() failed");
+    return *this += -other;
 }
 
-std::vector<Expressions::Visitors::EvaluationResult>& operator*(
+std::vector<Expressions::Visitors::EvaluationResult> operator*(
   const std::vector<Expressions::Visitors::EvaluationResult>& rights,
   const Expressions::Visitors::EvaluationResult& scale)
 {
@@ -118,18 +158,14 @@ std::vector<Expressions::Visitors::EvaluationResult>& operator*=(
 
 LinearExpression LinearExpression::operator*(const LinearExpression& other) const
 {
-    bool localCoeffPerVarIsEmpty = std::ranges::all_of(coef_per_var_,
-                                                       [&](const CoefficientsType& coefficients)
-                                                       {
-                                                           return EvaluationResultIsEmptyOrZero(
-                                                             coefficients);
-                                                       });
-    bool otherCoeffPerVarIsEmpty = std::ranges::all_of(other.coef_per_var_,
-                                                       [&](const CoefficientsType& coefficients)
-                                                       {
-                                                           return EvaluationResultIsEmptyOrZero(
-                                                             coefficients);
-                                                       });
+    bool localCoeffPerVarIsEmpty = std::ranges::all_of(
+      coef_per_var_,
+      [&](const Expressions::Visitors::EvaluationResult& coefficients)
+      { return coefficients.IsEmptyOrZero(); });
+    bool otherCoeffPerVarIsEmpty = std::ranges::all_of(
+      other.coef_per_var_,
+      [&](const Expressions::Visitors::EvaluationResult& coefficients)
+      { return coefficients.IsEmptyOrZero(); });
     if (localCoeffPerVarIsEmpty)
     {
         return {offset_ * other.offset_, other.coef_per_var_ * offset_};
@@ -145,27 +181,27 @@ LinearExpression LinearExpression::operator*(const LinearExpression& other) cons
 }
 LinearExpression& LinearExpression::operator*=(const LinearExpression& other)
 {
-    bool localCoeffPerVarIsEmpty = std::ranges::all_of(coef_per_var_,
-                                                       [&](const CoefficientsType& coefficients)
-                                                       {
-                                                           return EvaluationResultIsEmptyOrZero(
-                                                             coefficients);
-                                                       });
-    bool otherCoeffPerVarIsEmpty = std::ranges::all_of(other.coef_per_var_,
-                                                       [&](const CoefficientsType& coefficients)
-                                                       {
-                                                           return EvaluationResultIsEmptyOrZero(
-                                                             coefficients);
-                                                       });
+    bool localCoeffPerVarIsEmpty = std::ranges::all_of(
+      coef_per_var_,
+      [&](const Expressions::Visitors::EvaluationResult& coefficients)
+      { return coefficients.IsEmptyOrZero(); });
+
+    bool otherCoeffPerVarIsEmpty = std::ranges::all_of(
+      other.coef_per_var_,
+      [&](const Expressions::Visitors::EvaluationResult& coefficients)
+      { return coefficients.IsEmptyOrZero(); });
+
     if (localCoeffPerVarIsEmpty)
     {
         offset_ *= other.offset_;
         coef_per_var_ = other.coef_per_var_ * offset_;
+        return *this;
     }
     else if (otherCoeffPerVarIsEmpty)
     {
         offset_ *= other.offset_;
         coef_per_var_ *= other.offset_;
+        return *this;
     }
     else
     {
@@ -176,8 +212,8 @@ LinearExpression& LinearExpression::operator*=(const LinearExpression& other)
 LinearExpression LinearExpression::operator/(const LinearExpression& other) const
 {
     if (!std::ranges::all_of(other.coef_per_var_,
-                             [&](const CoefficientsType& coefficients)
-                             { return EvaluationResultIsEmptyOrZero(coefficients); }))
+                             [&](const Expressions::Visitors::EvaluationResult& coefficients)
+                             { return coefficients.IsEmptyOrZero(); }))
     {
         throw std::invalid_argument("A linear expression can't have a variable as a divisor.");
     }
@@ -187,8 +223,8 @@ LinearExpression LinearExpression::operator/(const LinearExpression& other) cons
 LinearExpression& LinearExpression::operator/=(const LinearExpression& other)
 {
     if (!std::ranges::all_of(other.coef_per_var_,
-                             [&](const CoefficientsType& coefficients)
-                             { return EvaluationResultIsEmptyOrZero(coefficients); }))
+                             [&](const Expressions::Visitors::EvaluationResult& coefficients)
+                             { return coefficients.IsEmptyOrZero(); }))
     {
         throw std::invalid_argument("A linear expression can't have a variable as a divisor.");
     }

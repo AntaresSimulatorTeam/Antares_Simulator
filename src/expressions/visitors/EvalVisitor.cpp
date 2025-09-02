@@ -236,6 +236,45 @@ EvaluationResult EvaluationResult::alltimeSum(int numberOfTimeStep) const
     return ret;
 }
 
+bool EvaluationResult::IsEmptyOrZero() const
+{
+    if (std::holds_alternative<double>(value_))
+    {
+        return std::get<double>(value_) == 0;
+    }
+    if (std::holds_alternative<std::vector<double>>(value_))
+    {
+        return std::get<std::vector<double>>(value_).empty();
+    }
+    throw std::runtime_error("LinearExpression::EvaluationResultIsEmptyOrZero() failed");
+}
+
+double EvaluationResult::singleValueOrAtIndex(unsigned int index) const
+{
+    if (std::holds_alternative<double>(value_))
+    {
+        return std::get<double>(value_);
+    }
+    else
+    {
+        const auto& values = std::get<std::vector<double>>(value_);
+        return index < values.size() ? values.at(index) : 0;
+    }
+}
+
+size_t EvaluationResult::size() const
+{
+    if (std::holds_alternative<double>(value_))
+    {
+        return 1;
+    }
+    if (std::holds_alternative<std::vector<double>>(value_))
+    {
+        return std::get<std::vector<double>>(value_).size();
+    }
+    throw std::runtime_error("LinearExpression::EvaluationResultIsEmptyOrZero() failed");
+}
+
 EvaluationResult EvaluationResult::operator[](int timeIndex) const
 {
     if (std::holds_alternative<double>(value_))
@@ -253,6 +292,17 @@ EvaluationResult EvaluationResult::operator[](int timeIndex) const
 std::vector<double> EvaluationResult::shift(const std::vector<double>& values, int timeShift)
 {
     return shiftVector(values, timeShift);
+}
+
+void CheckVectorsSize(const std::vector<double>& lhs, const std::vector<double>& rhs)
+{
+    if (lhs.size() != rhs.size())
+    {
+        std::ostringstream errorMsg;
+        errorMsg << "Failed to compute binary operation: vectors have different sizes ("
+                 << lhs.size() << " and " << rhs.size() << ").";
+        throw VectorsMismatchSize(errorMsg.str());
+    }
 }
 
 } // namespace Antares::Expressions::Visitors
