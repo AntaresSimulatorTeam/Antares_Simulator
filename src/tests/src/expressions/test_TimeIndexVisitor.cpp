@@ -195,9 +195,7 @@ static Node* singleNode(Registry<Node>& registry)
 }
 
 static const std::vector<Node* (*)(Registry<Node>& registry)> nodesNotHandledByTimeIndexVisitor{
-  &singleNode<PortFieldNode>,
-  &singleNode<ComponentVariableNode>,
-  &singleNode<ComponentParameterNode>};
+  &singleNode<PortFieldNode>};
 
 BOOST_DATA_TEST_CASE_F(BasicFixture,
                        catching_exceptions_when_visiting_not_handled_nodes,

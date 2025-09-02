@@ -1048,9 +1048,7 @@ BOOST_FIXTURE_TEST_CASE(NotEvaluableNodes, MyDummyFixture)
                                 create<LessThanOrEqualNode>(&literalNode, &literalNode),
                                 create<GreaterThanOrEqualNode>(&literalNode, &literalNode),
                                 create<PortFieldNode>(name, name),
-                                create<PortFieldSumNode>(name, name),
-                                create<ComponentParameterNode>(component_id, name),
-                                create<ComponentVariableNode>(component_id, name)};
+                                create<PortFieldSumNode>(name, name)};
     for (auto* node: nodes)
     {
         BOOST_CHECK_THROW(evalVisitor.dispatch(node).valueAsDouble(), EvalVisitorNotImplemented);

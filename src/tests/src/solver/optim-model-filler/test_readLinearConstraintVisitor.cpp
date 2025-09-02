@@ -160,8 +160,6 @@ BOOST_FIXTURE_TEST_CASE(test_visit_illegal_node, MyDummyFixture)
                                         create<LiteralNode>(5.),
                                         create<PortFieldNode>("port", "field"),
                                         create<PortFieldSumNode>("port", "field"),
-                                        create<ComponentVariableNode>("x", "y"),
-                                        create<ComponentParameterNode>("x", "y"),
                                         create<TimeShiftNode>(lit, lit),
                                         create<TimeIndexNode>(lit, lit),
                                         create<TimeSumNode>(lit, lit, lit),

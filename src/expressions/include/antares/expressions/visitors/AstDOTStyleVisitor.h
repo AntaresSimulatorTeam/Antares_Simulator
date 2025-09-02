@@ -132,8 +132,6 @@ private:
     void visit(const Nodes::LiteralNode* node, std::ostream& os) override;
     void visit(const Nodes::PortFieldNode* node, std::ostream& os) override;
     void visit(const Nodes::PortFieldSumNode* node, std::ostream& os) override;
-    void visit(const Nodes::ComponentVariableNode* node, std::ostream& os) override;
-    void visit(const Nodes::ComponentParameterNode* node, std::ostream& os) override;
     void visit(const Nodes::TimeShiftNode* node, std::ostream& os) override;
     void visit(const Nodes::TimeIndexNode* node, std::ostream& os) override;
     void visit(const Nodes::TimeSumNode* node, std::ostream& os) override;

@@ -291,18 +291,6 @@ BOOST_FIXTURE_TEST_CASE(not_implemented_nodes__exception_thrown, CreateVisitorFi
     BOOST_CHECK_EXCEPTION(visitor.dispatch(node),
                           std::invalid_argument,
                           checkMessage("ReadLinearExpressionVisitor cannot visit PortFieldNodes"));
-
-    node = create<ComponentVariableNode>("id", "y");
-    BOOST_CHECK_EXCEPTION(visitor.dispatch(node),
-                          std::invalid_argument,
-                          checkMessage(
-                            "ReadLinearExpressionVisitor cannot visit ComponentVariableNodes"));
-
-    node = create<ComponentParameterNode>("id", "y");
-    BOOST_CHECK_EXCEPTION(visitor.dispatch(node),
-                          std::invalid_argument,
-                          checkMessage(
-                            "ReadLinearExpressionVisitor cannot visit ComponentParameterNodes"));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

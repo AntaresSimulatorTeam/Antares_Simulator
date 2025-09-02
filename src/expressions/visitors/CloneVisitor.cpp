@@ -106,20 +106,6 @@ Nodes::Node* CloneVisitor::visit(const Nodes::PortFieldSumNode* portfieldSumNode
                                                      portfieldSumNode->getFieldName());
 }
 
-Nodes::Node* CloneVisitor::visit(const Nodes::ComponentVariableNode* component_variable_node)
-{
-    return registry_.create<Nodes::ComponentVariableNode>(
-      component_variable_node->getComponentId(),
-      component_variable_node->getComponentName());
-}
-
-Nodes::Node* CloneVisitor::visit(const Nodes::ComponentParameterNode* component_parameter_node)
-{
-    return registry_.create<Nodes::ComponentParameterNode>(
-      component_parameter_node->getComponentId(),
-      component_parameter_node->getComponentName());
-}
-
 Nodes::Node* CloneVisitor::visit(const Nodes::TimeShiftNode* node)
 {
     return registry_.create<Nodes::TimeShiftNode>(dispatch(node->left()), node->right());

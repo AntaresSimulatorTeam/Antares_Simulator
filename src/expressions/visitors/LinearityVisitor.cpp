@@ -99,16 +99,6 @@ LinearStatus LinearityVisitor::visit(const Nodes::PortFieldSumNode*)
     return LinearStatus::CONSTANT;
 }
 
-LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::ComponentVariableNode*)
-{
-    return LinearStatus::LINEAR;
-}
-
-LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::ComponentParameterNode*)
-{
-    return LinearStatus::CONSTANT;
-}
-
 LinearStatus LinearityVisitor::visit(const Nodes::TimeShiftNode* timeShiftNode)
 {
     return dispatch(timeShiftNode->left());
