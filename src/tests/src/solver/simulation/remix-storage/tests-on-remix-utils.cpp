@@ -160,6 +160,13 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(cyclic_iterator_unit_tests)
 
+BOOST_AUTO_TEST_CASE(when_cyclic_iterator_points_to_empty_container)
+{
+    std::vector<int> v; // Empty
+    CyclicIterator<int> cyclic_it(v);
+    BOOST_CHECK(cyclic_it == v.begin());
+}
+
 BOOST_AUTO_TEST_CASE(at_construction__cyclic_iterator_points_to_first_element)
 {
     std::vector<int> v = {1, 2, 3};
