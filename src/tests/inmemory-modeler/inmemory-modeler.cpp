@@ -56,7 +56,7 @@ void LinearProblemBuildingFixture::buildLinearProblem(
         auto name = scenario->group();
         scenario_group_repository.addScenario(name, std::move(scenario));
     }
-    for (auto& component: components)
+    for (auto& component: components | std::views::values)
     {
         auto cf = std::make_unique<Antares::Optimisation::ComponentFiller>(
           component,
@@ -100,9 +100,9 @@ void LinearProblemBuildingFixture::createComponent(
     auto component = component_builder.withId(componentId)
                        .withModel(&models.at(modelId))
                        .withScenarioGroupId(scenarioGroupId)
-                       .withParameterValues(move(parameterValues))
+                       .withParameterValues(std::move(parameterValues))
                        .build();
-    components.push_back(std::move(component));
+    components.emplace(component.Id(), std::move(component));
 }
 
 Antares::Expressions::Nodes::Node* LinearProblemBuildingFixture::literal(double value)

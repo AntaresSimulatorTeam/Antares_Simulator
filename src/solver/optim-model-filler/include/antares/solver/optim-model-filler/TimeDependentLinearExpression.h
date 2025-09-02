@@ -50,7 +50,7 @@ public:
       = default;
 
     TimeDependentLinearExpression(TimeDependentLinearExpression&& other) noexcept = default;
-    TimeDependentLinearExpression& operator=(TimeDependentLinearExpression&& other) = default;
+    TimeDependentLinearExpression& operator=(TimeDependentLinearExpression&& other) = delete;
 
     /// Sum two linear expressions
     [[deprecated("Will make a potentially expensive copy of a TimeDependentLinearExpression. Use "

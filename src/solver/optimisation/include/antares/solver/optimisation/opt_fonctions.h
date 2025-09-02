@@ -34,11 +34,13 @@
 using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
 using OptimizationOptions = Antares::Solver::Optimization::OptimizationOptions;
 using SingleOptimOptions = Antares::Solver::Optimization::SingleOptimOptions;
-
+class ISimulationTable;
+class OptimisationsSimulationTable;
 void OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
                                   PROBLEME_HEBDO* pProblemeHebdo,
                                   Solver::IResultWriter& writer,
-                                  Solver::Simulation::ISimulationObserver& simulationObserver);
+                                  Solver::Simulation::ISimulationObserver& simulationObserver,
+                                  OptimisationsSimulationTable& simulationTables);
 void OPT_NumeroDeJourDuPasDeTemps(PROBLEME_HEBDO*);
 void OPT_NumeroDIntervalleOptimiseDuPasDeTemps(PROBLEME_HEBDO*);
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBDO*);
@@ -55,7 +57,8 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO*, const int, const int);
 bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
                                       PROBLEME_HEBDO* problemeHebdo,
                                       Solver::IResultWriter& writer,
-                                      Solver::Simulation::ISimulationObserver& simulationObserver);
+                                      Solver::Simulation::ISimulationObserver& simulationObserver,
+                                      OptimisationsSimulationTable& simulationTables);
 void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO*);
 
 /*!
@@ -68,13 +71,15 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                          int,
                          const int,
                          const OptPeriodStringGenerator&,
-                         Antares::Solver::IResultWriter& writer);
+                         Antares::Solver::IResultWriter& writer,
+                         ISimulationTable& simulationTable);
 void OPT_LiberationProblemesSimplexe(const PROBLEME_HEBDO*);
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
                               Solver::IResultWriter& writer,
-                              Solver::Simulation::ISimulationObserver& simulationObserver);
+                              Solver::Simulation::ISimulationObserver& simulationObserver,
+                              OptimisationsSimulationTable& simulationTables);
 void OPT_RestaurerLesDonnees(PROBLEME_HEBDO*);
 /*------------------------------*/
 

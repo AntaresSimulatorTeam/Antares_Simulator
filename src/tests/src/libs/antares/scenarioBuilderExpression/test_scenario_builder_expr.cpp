@@ -21,7 +21,6 @@
 #define WIN32_LEAN_AND_MEAN
 #include <ANTLRInputStream.h>
 #include <CommonTokenStream.h>
-#include <boost/test/unit_test.hpp>
 #include <ScenarioBuilderLexer.h>
 #include <ScenarioBuilderParser.h>
 

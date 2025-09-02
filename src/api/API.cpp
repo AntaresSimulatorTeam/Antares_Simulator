@@ -91,7 +91,6 @@ SimulationResults APIInternal::execute(
     }
 
     SimulationObserver simulationObserver;
-
     optimizationInfo = simulationRun(*study_,
                                      settings,
                                      durationCollector,

@@ -6,10 +6,10 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
     When I run antares modeler
     Then the simulation succeeds
     And the objective value is 320
-    And the optimal values of the variables are
-      | component | variable | timestep | value |
-      | node1     | gen1_p   | 0-1      | 80    |
-      | node1     | gen2_p   | 0-1      | 20    |
+    And the modeler outputs contain the following entries
+      | component | output | timestep | value |
+      | node1     | gen1_p | 0-1      | 80    |
+      | node1     | gen2_p | 0-1      | 20    |
 
   @fast
   Scenario: 1.2: One model with one load and two generators, two timesteps ; mix of constant parameters and timeseries
@@ -17,10 +17,10 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
     When I run antares modeler
     Then the simulation succeeds
     And the objective value is 320
-    And the optimal values of the variables are
-      | component | variable | timestep | value |
-      | node1     | gen1_p   | 0-1      | 80    |
-      | node1     | gen2_p   | 0-1      | 20    |
+    And the modeler outputs contain the following entries
+      | component | output | timestep | value |
+      | node1     | gen1_p | 0-1      | 80    |
+      | node1     | gen2_p | 0-1      | 20    |
 
   @fast
   Scenario: 1.3: One model with one load and two generators, one timestep ; fails because of timeseries of different lengths
@@ -35,8 +35,8 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
     When I run antares modeler
     Then the simulation succeeds
     And the objective value is 765
-    And the optimal values of the variables are
-      | component | variable      | timestep | value |
+    And the modeler outputs contain the following entries
+      | component | output        | timestep | value |
       | node1     | gen1_p        | 0        | 80    |
       | node1     | gen2_p        | 0        | 20    |
       | node1     | gen1_p        | 1        | 0     |
@@ -57,7 +57,7 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
     When I run antares modeler
     Then the simulation succeeds
     And the objective value is 16000
-    And the optimal values of the variables are
-      | component | variable | timestep | value |
-      | node1     | gen1_p   | 0-99     | 80    |
-      | node1     | gen2_p   | 0-99     | 20    |
+    And the modeler outputs contain the following entries
+      | component | output | timestep | value |
+      | node1     | gen1_p | 0-99     | 80    |
+      | node1     | gen2_p | 0-99     | 20    |

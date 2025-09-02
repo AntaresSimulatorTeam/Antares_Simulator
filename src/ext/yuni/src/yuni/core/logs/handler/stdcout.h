@@ -38,10 +38,10 @@ public:
     template<class LoggerT, class VerbosityType>
     void internalDecoratorWriteWL(LoggerT& logger, const AnyString& s) const
     {
+        using DecoratorsType = typename LoggerT::DecoratorsType;
         // Write the message to the std::cout/cerr
         if (VerbosityType::shouldUsesStdCerr)
         {
-            using DecoratorsType = typename LoggerT::DecoratorsType;
             logger.DecoratorsType::template internalDecoratorAddPrefix<StdCout, VerbosityType>(
               std::cerr,
               s);
@@ -50,7 +50,6 @@ public:
         }
         else
         {
-            using DecoratorsType = typename LoggerT::DecoratorsType;
             logger.DecoratorsType::template internalDecoratorAddPrefix<StdCout, VerbosityType>(
               std::cout,
               s);

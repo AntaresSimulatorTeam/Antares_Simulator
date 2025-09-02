@@ -22,8 +22,6 @@
 
 #include "antares/solver/modeler/Modeler.h"
 
-#include <fstream>
-
 #include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 #include <antares/optimisation/linear-problem-api/linearProblemBuilder.h>
@@ -33,6 +31,7 @@
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
 #include "antares/solver/modeler/ILoader.h"
 #include "antares/solver/modeler/IWriter.h"
+#include "antares/utils/utils.h"
 
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares;
@@ -61,17 +60,17 @@ public:
     void Provide(ILinearProblem& pb,
                  const ModelerParameters& parameters,
                  ILinearProblemData* dataSeries,
-                 const Optimisation::ScenarioGroupRepository& scenario_group_repository)
+                 const Optimisation::ScenarioGroupRepository& scenario_group_repository,
+                 const FillContext& timeScenarioCtx)
     {
         std::vector<std::unique_ptr<Optimisation::ComponentFiller>> fillers;
         std::vector<LinearProblemFiller*> fillers_ptr;
         // All LP variables coordinates (component id, variable id, scenario, time step)
-        VariableDictionary variableDictionary;
 
         for (const auto& [_, component]: system_->Components())
         {
             auto cf = std::make_unique<Optimisation::ComponentFiller>(component,
-                                                                      variableDictionary,
+                                                                      variableDictionary_,
                                                                       scenario_group_repository);
             fillers.push_back(std::move(cf));
         }
@@ -81,31 +80,32 @@ public:
         }
 
         LinearProblemBuilder linear_problem_builder(fillers_ptr);
-        // Todo: scenario
-        FillContext time_scenario_ctx = {
-          parameters.firstTimeStep,
-          parameters.lastTimeStep,
-          parameters.firstTimeStep, // global = local, single time block in pure modeler (for now)
-          parameters.lastTimeStep,  // global = local
-          0};
-        linear_problem_builder.build(pb, *dataSeries, time_scenario_ctx);
+
+        linear_problem_builder.build(pb, *dataSeries, timeScenarioCtx);
+    }
+
+    [[nodiscard]] const VariableDictionary& getVariableDictionary() const
+    {
+        return variableDictionary_;
     }
 
 private:
     const ModelerStudy::SystemModel::System* system_;
+    VariableDictionary variableDictionary_;
 };
 
 void Modeler::solve() const
 {
     try
     {
+        const auto simulationTableSuffix = formatTime(getCurrentTime(), "%Y%m%d-%H%M");
         const auto parameters = loader_.loadParameters();
         logs.info() << "Parameters loaded";
         const auto data = loader_.loadAll();
 
         SystemLinearProblemBuilder system_linear_problem(data.system.get());
 
-        writer_.init(!parameters.noOutput);
+        writer_.init(!parameters.noOutput, simulationTableSuffix);
 
         logs.info() << "linear problem of System loaded";
         // Problem is MIP if any variable of any component is not continuous
@@ -120,11 +120,18 @@ void Modeler::solve() const
                                          });
           });
         OrtoolsLinearProblem ortools_linear_problem(isMip, parameters.solver);
-
+        // Todo: scenario
+        FillContext timeScenarioCtx = {
+          parameters.firstTimeStep,
+          parameters.lastTimeStep,
+          parameters.firstTimeStep, // global = local, single time block in pure modeler (for now)
+          parameters.lastTimeStep,  // global = local
+          0};
         system_linear_problem.Provide(ortools_linear_problem,
                                       parameters,
                                       data.dataSeries.get(),
-                                      data.scenario_group_repository);
+                                      data.scenario_group_repository,
+                                      timeScenarioCtx);
 
         logs.info() << "Linear problem provided";
 
@@ -135,11 +142,16 @@ void Modeler::solve() const
 
         logs.info() << "Launching resolution...";
         auto* solution = ortools_linear_problem.solve(parameters.solverLogs);
+
         switch (solution->getStatus())
         {
         case MipStatus::OPTIMAL:
         case MipStatus::FEASIBLE:
-            writer_.writeSolution(*solution);
+            writer_.writeSimulationTable(ortools_linear_problem,
+                                         *solution,
+                                         data.system->Components(),
+                                         system_linear_problem.getVariableDictionary(),
+                                         timeScenarioCtx);
             break;
         default:
             logs.error() << "Problem during linear optimization";

@@ -83,6 +83,7 @@ public:
 
     // Definition of infinity
     [[nodiscard]] virtual double infinity() const = 0;
+    virtual bool isLP() const = 0;
 };
 
 } // namespace Antares::Optimisation::LinearProblemApi

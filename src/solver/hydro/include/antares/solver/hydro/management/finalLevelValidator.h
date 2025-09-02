@@ -42,7 +42,6 @@ class FinalLevelValidator
 {
 public:
     FinalLevelValidator(const Antares::Data::PartHydro& hydro,
-                        unsigned int areaIndex,
                         const Antares::Data::AreaName areaName,
                         double initialLevel,
                         double finalLevel,
@@ -70,7 +69,6 @@ private:
 
     // Data from area
     const Antares::Data::PartHydro& hydro_;
-    unsigned int areaIndex_;
     const Antares::Data::AreaName areaName_;
     double initialLevel_;
     double finalLevel_;

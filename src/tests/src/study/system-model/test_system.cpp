@@ -70,9 +70,16 @@ static Model createModelWith2PortsOneWayExchange()
     Port port1("port1", PortType("type", {port_field}));
     Port port2("port2", PortType("type", {port_field}));
     const auto var = GiveMeOneVar();
-    YmlModel::Model ymlmodel = {.variables = {var},
-                                .port_field_definitions = {{"port1", "field", var.id}}};
-
+    YmlModel::Model ymlmodel{.id = "model1",
+                             .description = "description",
+                             .parameters = {},
+                             .variables = {var},
+                             .ports = {},
+                             .port_field_definitions = {{"port1", "field", var.id}},
+                             .constraints = {},
+                             .binding_constraints = {},
+                             .objective = "",
+                             .extra_outputs = {}};
     auto nodeRegistry = convertExpressionToNode(var.id, ymlmodel);
     std::vector<PortFieldDefinition> portFieldDefinitions;
     portFieldDefinitions.emplace_back(port1,
@@ -135,11 +142,18 @@ static Model createModelWith2Ports2WayExchange()
     const Antares::IO::Inputs::YmlModel::Parameter p{.id = "corn_price",
                                                      .time_dependent = false,
                                                      .scenario_dependent = false};
-    Antares::IO::Inputs::YmlModel::Model ymlmodel = {
-      .parameters = {p},
-      .variables = {var},
-      .port_field_definitions = {{"port1", "rice", var.id}, {"port2", "corn", p.id}}};
 
+    YmlModel::Model ymlmodel{.id = "model1",
+                             .description = "description",
+                             .parameters = {p},
+                             .variables = {var},
+                             .ports = {},
+                             .port_field_definitions = {{"port1", "rice", var.id},
+                                                        {"port2", "corn", p.id}},
+                             .constraints = {},
+                             .binding_constraints = {},
+                             .objective = "",
+                             .extra_outputs = {}};
     auto nodeRegistryForVar = convertExpressionToNode(var.id, ymlmodel);
     auto nodeRegistryForP = convertExpressionToNode(p.id, ymlmodel);
     std::vector<PortFieldDefinition> portFieldDefinitions;

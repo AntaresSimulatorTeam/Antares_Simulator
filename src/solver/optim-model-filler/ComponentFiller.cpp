@@ -145,14 +145,14 @@ ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& com
 {
 }
 
-bool checkTimeSteps(Optimisation::LinearProblemApi::FillContext& ctx)
+bool checkTimeSteps(const Optimisation::LinearProblemApi::FillContext& ctx)
 {
     return ctx.getLocalFirstTimeStep() <= ctx.getLocalLastTimeStep();
 }
 
 void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
                                    Optimisation::LinearProblemApi::ILinearProblemData& data,
-                                   Optimisation::LinearProblemApi::FillContext& ctx)
+                                   const Optimisation::LinearProblemApi::FillContext& ctx)
 {
     if (!checkTimeSteps(ctx))
     {
@@ -263,7 +263,7 @@ void ComponentFiller::addTimeDependentConstraints(
 
 void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
                                      Optimisation::LinearProblemApi::ILinearProblemData& data,
-                                     Optimisation::LinearProblemApi::FillContext& ctx)
+                                     const Optimisation::LinearProblemApi::FillContext& ctx)
 {
     const auto& scenario = scenarioGroupRepository_.scenario(component_.getScenarioGroupId());
     Expressions::Visitors::EvaluationContext evaluationContext(component_.getParameterValues(),
@@ -291,7 +291,7 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
 
 void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProblem& pb,
                                    Optimisation::LinearProblemApi::ILinearProblemData& data,
-                                   Optimisation::LinearProblemApi::FillContext& ctx)
+                                   const Optimisation::LinearProblemApi::FillContext& ctx)
 {
     auto model = component_.getModel();
     if (model->Objective().Empty())
@@ -325,7 +325,7 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
     }
 }
 
-bool ComponentFiller::IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node)
+bool ComponentFiller::IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node) const
 {
     Expressions::Visitors::TimeIndexVisitor timeIndexVisitor(component_);
     const auto ret = timeIndexVisitor.dispatch(node);

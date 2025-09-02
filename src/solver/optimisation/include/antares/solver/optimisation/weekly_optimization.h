@@ -24,6 +24,8 @@
 #include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
+class OptimisationsSimulationTable;
+
 namespace Antares::Solver::Optimization
 {
 
@@ -33,7 +35,8 @@ public:
     WeeklyOptimization(const OptimizationOptions& options,
                        PROBLEME_HEBDO* problemeHebdo,
                        IResultWriter& writer,
-                       Simulation::ISimulationObserver& simulationObserver);
+                       Simulation::ISimulationObserver& simulationObserver,
+                       OptimisationsSimulationTable& simulationTables);
     ~WeeklyOptimization() = default;
     void solve();
 
@@ -42,5 +45,6 @@ private:
     PROBLEME_HEBDO* const problemeHebdo_ = nullptr;
     IResultWriter& writer_;
     std::reference_wrapper<Simulation::ISimulationObserver> simulationObserver_;
+    OptimisationsSimulationTable& simulationTables_;
 };
 } // namespace Antares::Solver::Optimization
