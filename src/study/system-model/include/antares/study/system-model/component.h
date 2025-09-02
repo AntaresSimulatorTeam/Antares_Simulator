@@ -48,6 +48,7 @@ public:
     const Model* model = nullptr;
     std::map<std::string, Expressions::Visitors::ParameterTypeAndValue> parameter_values;
     std::string scenario_group_id;
+    const Antares::Optimisation::LinearProblemApi::IScenario* scenario_ = nullptr;
 
     void reset()
     {
@@ -55,6 +56,7 @@ public:
         model = nullptr;
         parameter_values.clear();
         scenario_group_id.clear();
+        scenario = nullptr;
     }
 };
 
@@ -109,7 +111,6 @@ public:
     std::optional<std::string> areaConnectedToPort(const std::string& portId) const;
 
     const std::map<std::string, std::string>& portToAreaConnections() const;
-    const Antares::Optimisation::LinearProblemApi::IScenario* scenario_;
 
 private:
     // Only ComponentBuilder is allowed to build Component instances
@@ -130,6 +131,7 @@ public:
     ComponentBuilder& withParameterValues(
       std::map<std::string, Expressions::Visitors::ParameterTypeAndValue> parameter_values);
     ComponentBuilder& withScenarioGroupId(const std::string& scenario_group_id);
+
     Component build();
 
 private:

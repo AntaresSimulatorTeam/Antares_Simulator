@@ -172,6 +172,7 @@ ComponentBuilder& ComponentBuilder::withParameterValues(
 ComponentBuilder& ComponentBuilder::withScenarioGroupId(const std::string& scenario_group_id)
 {
     data_.scenario_group_id = scenario_group_id;
+    data_.scenario = &scenario_group_repository_.scenario(scenario_group_id);
     return *this;
 }
 
