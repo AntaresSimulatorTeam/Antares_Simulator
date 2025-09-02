@@ -45,6 +45,9 @@ Modeler::Data loadAll(const std::filesystem::path& studyPath)
     data.scenario_group_repository = loadScenarioGroupRepository(studyPath);
     logs.info() << "Scenario groups loaded";
 
+    data.bindComponentsAndScenarios();
+    logs.info() << "Scenario-building data bound to components";
+
     return data;
 }
 

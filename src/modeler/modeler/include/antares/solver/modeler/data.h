@@ -29,8 +29,11 @@
 namespace Antares::Modeler
 {
 
-struct Data
+class Data
 {
+public:
+    void bindComponentsAndScenarios();
+
     std::vector<ModelerStudy::SystemModel::Library> libraries;
     std::unique_ptr<ModelerStudy::SystemModel::System> system;
     std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> dataSeries;

@@ -3,6 +3,7 @@ add_library(Antares::modeler-lib ALIAS modeler-lib)
 target_sources(modeler-lib
         PRIVATE
         Modeler.cpp
+	data.cpp
         include/antares/solver/modeler/Modeler.h
         include/antares/solver/modeler/ILoader.h
         include/antares/solver/modeler/IWriter.h

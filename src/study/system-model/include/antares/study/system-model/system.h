@@ -42,6 +42,11 @@ public:
         return id_;
     }
 
+    std::unordered_map<std::string, Component>& Components()
+    {
+        return components_;
+    }
+
     const std::unordered_map<std::string, Component>& Components() const
     {
         return components_;
