@@ -32,4 +32,7 @@ public:
         explicit DoesNotExist(const std::string& groupId);
     };
 };
+
+extern const ScenarioGroupRepository defaultScenarioGroupRepository;
+
 } // namespace Antares::Optimisation

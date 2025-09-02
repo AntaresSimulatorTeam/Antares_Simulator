@@ -35,7 +35,8 @@ using namespace Antares::IO::Inputs;
 
 struct SystemBuilderCreationFixture
 {
-    SystemBuilder system_builder;
+    Antares::Optimisation::ScenarioGroupRepository scenarioRepository;
+    SystemBuilder system_builder{scenarioRepository};
     std::unordered_map<std::string, Component> components;
 };
 

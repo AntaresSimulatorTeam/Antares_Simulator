@@ -135,7 +135,8 @@ public:
             fixture.createComponent("some_model", "some_component", parameters);
         }
         setComponents(fixture.components); // Component model may not be the system model
-        Antares::ModelerStudy::SystemModel::SystemBuilder builder;
+        Antares::Optimisation::ScenarioGroupRepository scenarioRepository;
+        Antares::ModelerStudy::SystemModel::SystemBuilder builder(scenarioRepository);
         auto system = builder.withId("dummy-system").withComponents(std::move(components)).build();
         return {.libraries = {library},
                 .system = std::make_unique<Antares::ModelerStudy::SystemModel::System>(

@@ -26,17 +26,13 @@
 #include <antares/expressions/nodes/PortFieldNode.h>
 #include <antares/expressions/visitors/ParameterTypeAndValue.h>
 #include <antares/study/system-model/connection.h>
+#include "antares/solver/optim-model-filler/scenarioGroupRepo.h"
 
 #include "model.h"
 
 namespace Antares::Optimisation::LinearProblemApi
 {
 class IScenario;
-}
-
-namespace Antares::Optimisation
-{
-class ScenarioGroupRepository;
 }
 
 namespace Antares::ModelerStudy::SystemModel
@@ -136,7 +132,10 @@ protected:
 class ComponentBuilder
 {
 public:
-    explicit ComponentBuilder(const Optimisation::ScenarioGroupRepository& scenarioRepository);
+    // clang-format off
+    explicit ComponentBuilder(const Optimisation::ScenarioGroupRepository& scenarioRepository
+                              = Antares::Optimisation::defaultScenarioGroupRepository);
+    // clang-format on
     ComponentBuilder& withId(std::string_view id);
     ComponentBuilder& withModel(const Model* model);
     ComponentBuilder& withParameterValues(

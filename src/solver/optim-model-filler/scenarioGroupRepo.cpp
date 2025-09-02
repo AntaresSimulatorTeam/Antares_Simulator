@@ -25,6 +25,8 @@
 
 namespace Antares::Optimisation
 {
+const ScenarioGroupRepository defaultScenarioGroupRepository;
+
 void ScenarioGroupRepository::addScenario(const std::string& groupId,
                                           std::unique_ptr<LinearProblemApi::IScenario>&& scenario)
 {

@@ -26,6 +26,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
+#include "antares/solver/optim-model-filler/scenarioGroupRepo.h"
 
 #include "files-system.h"
 
@@ -58,7 +59,10 @@ BOOST_AUTO_TEST_CASE(files_not_existing)
     std::vector<Antares::ModelerStudy::SystemModel::Library> libraries;
 
     BOOST_CHECK_THROW(Antares::Solver::LoadFiles::loadLibraries(studyPath), std::runtime_error);
-    BOOST_CHECK_THROW(Antares::Solver::LoadFiles::loadSystem(studyPath, libraries),
+    Antares::Optimisation::ScenarioGroupRepository scenarioRepository;
+    BOOST_CHECK_THROW(Antares::Solver::LoadFiles::loadSystem(studyPath,
+                                                             libraries,
+                                                             scenarioRepository),
                       std::runtime_error);
 }
 
@@ -188,7 +192,9 @@ BOOST_FIXTURE_TEST_CASE(read_system_file, FixtureLoadFile)
     systemStream.close();
 
     auto libraries = Antares::Solver::LoadFiles::loadLibraries(studyPath);
-    BOOST_CHECK_NO_THROW(Antares::Solver::LoadFiles::loadSystem(studyPath, libraries));
+    Antares::Optimisation::ScenarioGroupRepository scenarioRepository;
+    BOOST_CHECK_NO_THROW(
+      Antares::Solver::LoadFiles::loadSystem(studyPath, libraries, scenarioRepository));
 }
 
 BOOST_FIXTURE_TEST_CASE(read_invalid_system_file, FixtureLoadFile)
@@ -213,7 +219,10 @@ BOOST_FIXTURE_TEST_CASE(read_invalid_system_file, FixtureLoadFile)
     systemStream.close();
 
     auto libraries = Antares::Solver::LoadFiles::loadLibraries(studyPath);
-    BOOST_CHECK_THROW(Antares::Solver::LoadFiles::loadSystem(studyPath, libraries),
+    Antares::Optimisation::ScenarioGroupRepository scenarioRepository;
+    BOOST_CHECK_THROW(Antares::Solver::LoadFiles::loadSystem(studyPath,
+                                                             libraries,
+                                                             scenarioRepository),
                       std::runtime_error);
 }
 
@@ -247,7 +256,8 @@ BOOST_FIXTURE_TEST_CASE(scenario_group_is_optional, FixtureLoadFile)
     systemStream.close();
 
     auto libraries = Antares::Solver::LoadFiles::loadLibraries(studyPath);
-    auto system = Antares::Solver::LoadFiles::loadSystem(studyPath, libraries);
+    Antares::Optimisation::ScenarioGroupRepository scenarioRepository;
+    auto system = Antares::Solver::LoadFiles::loadSystem(studyPath, libraries, scenarioRepository);
     BOOST_CHECK_EQUAL(system.Components().at("K").getScenarioGroupId(), "");
 }
 
