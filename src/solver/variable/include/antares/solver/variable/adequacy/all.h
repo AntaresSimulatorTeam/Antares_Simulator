@@ -110,22 +110,21 @@ typedef                                              // Prices
                     <Variable::Economy::Inflows       // Hydraulic inflows
                      <Variable::Economy::Overflows    // Hydraulic overflows
                       <Variable::Economy::WaterValue  // Water values
-                       <Variable::Economy::HydroCost  // Hydro costs
-                        <Variable::Economy::STSbyGroup<
-                          Variable::Economy::STstorageInjectionByCluster<
-                            Variable::Economy::STstorageWithdrawalByCluster<
-                              Variable::Economy::STstorageLevelsByCluster<
-                                Variable::Economy::UnsupliedEnergy // Unsuplied Energy
-                                <Variable::Adequacy::SpilledEnergy // Spilled Energy
-                                 <Variable::Economy::LOLD          // LOLD
-                                  <Variable::Economy::LOLP         // LOLP
-                                   <Variable::Economy::AvailableDispatchGen<
-                                     Variable::Economy::DispatchableGenMargin<
-                                       Variable::Economy::Marge // OP. MRG
-                                       <Variable::Economy::ProfitByPlant
-                                        // Links
-                                        <Variable::Adequacy::Links // All links
-                                         >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                       <Variable::Economy::STSbyGroup<
+                         Variable::Economy::STstorageInjectionByCluster<
+                           Variable::Economy::STstorageWithdrawalByCluster<
+                             Variable::Economy::STstorageLevelsByCluster<
+                               Variable::Economy::UnsupliedEnergy // Unsuplied Energy
+                               <Variable::Adequacy::SpilledEnergy // Spilled Energy
+                                <Variable::Economy::LOLD          // LOLD
+                                 <Variable::Economy::LOLP         // LOLP
+                                  <Variable::Economy::AvailableDispatchGen<
+                                    Variable::Economy::DispatchableGenMargin<
+                                      Variable::Economy::Marge // OP. MRG
+                                      <Variable::Economy::ProfitByPlant
+                                       // Links
+                                       <Variable::Adequacy::Links // All links
+                                        >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!
@@ -174,24 +173,22 @@ typedef // Prices
                                     Common::SpatialAggregate<
                                       Variable::Economy::WaterValue,
                                       Common::SpatialAggregate<
-                                        Variable::Economy::HydroCost,
+                                        Variable::Economy::UnsupliedEnergy,
                                         Common::SpatialAggregate<
-                                          Variable::Economy::UnsupliedEnergy,
+                                          Variable::Adequacy::SpilledEnergy,
+                                          // LOLD
                                           Common::SpatialAggregate<
-                                            Variable::Adequacy::SpilledEnergy,
-                                            // LOLD
+                                            Variable::Economy::LOLD,
                                             Common::SpatialAggregate<
-                                              Variable::Economy::LOLD,
-                                              Common::SpatialAggregate<
-                                                Variable::Economy::LOLP,
+                                              Variable::Economy::LOLP,
 
+                                              Common::SpatialAggregate<
+                                                Variable::Economy::AvailableDispatchGen,
                                                 Common::SpatialAggregate<
-                                                  Variable::Economy::AvailableDispatchGen,
+                                                  Variable::Economy::DispatchableGenMargin,
                                                   Common::SpatialAggregate<
-                                                    Variable::Economy::DispatchableGenMargin,
-                                                    Common::SpatialAggregate<
-                                                      Variable::Economy::
-                                                        Marge>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                                    Variable::Economy::
+                                                      Marge>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
 typedef Variable::Economy::BindingConstMarginCost< // Marginal cost for a binding constraint
