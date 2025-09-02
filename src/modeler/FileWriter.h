@@ -19,17 +19,40 @@
 
 #pragma once
 #include <filesystem>
+#include <unordered_map>
 
 #include "modeler/include/antares/solver/modeler/IWriter.h"
+
+namespace Antares::Optimisation::LinearProblemApi
+{
+class ILinearProblem;
+class FillContext;
+} // namespace Antares::Optimisation::LinearProblemApi
+
+namespace Antares::Optimization
+{
+class VariableDictionary;
+}
+
+namespace Antares::ModelerStudy::SystemModel
+{
+class Component;
+}
 
 namespace Antares::Modeler
 {
 class FileWriter: public Solver::IWriter
 {
 public:
-    void init(bool setOutput = true) override;
+    void init(bool setOutput, const std::string& simulationId) override;
 
-    void writeSolution(const Optimisation::LinearProblemApi::IMipSolution& solution) override;
+    void writeSimulationTable(
+      const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
+      const Optimisation::LinearProblemApi::IMipSolution& solution,
+      const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>&
+        components,
+      const Antares::Optimization::VariableDictionary& variableDictionary,
+      const Antares::Optimisation::LinearProblemApi::FillContext& fillContext) const override;
     explicit FileWriter(std::filesystem::path path);
 
     void writeProblem(
@@ -38,6 +61,7 @@ public:
 private:
     const std::filesystem::path studyPath_;
     std::filesystem::path outputPath_;
+    std::string simulationId_;
     bool output{true};
 };
 } // namespace Antares::Modeler

@@ -804,6 +804,16 @@ public:
         return name_;
     }
 
+    MipBasisStatus getMipBasisStatus() const override
+    {
+        return MipBasisStatus::FREE;
+    }
+
+    double solutionValue() const override
+    {
+        return 0.;
+    }
+
 private:
     double lb_;
     double ub_;
@@ -825,6 +835,7 @@ public:
     MockMipVariable* addIntVariable(double lb, double ub, const std::string& name) override
     {
         variables_.emplace_back(std::make_unique<MockMipVariable>(lb, ub, true, name));
+        isLP_ = false;
         return variables_.back().get();
     }
 
@@ -918,6 +929,13 @@ public:
     {
         return 1e20;
     }
+
+    bool isLP() const override
+    {
+        return isLP_;
+    }
+
+    bool isLP_ = true;
 };
 
 BOOST_AUTO_TEST_CASE(Constructor_ValidIndices)

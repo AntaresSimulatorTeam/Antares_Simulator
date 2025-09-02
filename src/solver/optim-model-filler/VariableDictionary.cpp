@@ -25,11 +25,10 @@
 
 namespace Antares::Optimization
 {
-namespace
-{
-std::string buildVariableName(const PartialKey& key,
-                              std::optional<MCYearAndTime::MCYear> mcyear,
-                              std::optional<unsigned int> timestep)
+
+std::string VariableDictionary::buildVariableName(const PartialKey& key,
+                                                  std::optional<MCYearAndTime::MCYear> mcyear,
+                                                  std::optional<unsigned int> timestep)
 {
     std::string ret = fmt::format("{}.{}", key.getComponent(), key.getVariable());
     if (mcyear.has_value())
@@ -42,7 +41,6 @@ std::string buildVariableName(const PartialKey& key,
     }
     return ret;
 }
-} // namespace
 
 IntegerInterval::Iterator::Iterator(unsigned int current):
     current_(current)

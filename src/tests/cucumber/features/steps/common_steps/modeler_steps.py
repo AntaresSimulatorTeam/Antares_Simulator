@@ -37,42 +37,37 @@ def run_antares_modeler(context):
     run_modeler(context)
 
 
-@step('the optimal value of variable {var} is {value:g}')
-def modeler_var_optimal_value(context, var, value):
-    assert_double_close(value, context.moh.get_optimal_value(var), 1e-6)
-
-
 @step('the objective value is {value:g}')
 def modeler_obj_value(context, value):
-    assert_double_close(value, context.moh.get_optimal_value("objective"), 1e-6)
+    assert_double_close(value, context.moh.get_objective_value(), 1e-6)
 
 
 @step('the objective value is greater than {lb:g} and lower than {ub:g}')
 def modeler_obj_value(context, lb, ub):
-    assert lb <= context.moh.get_optimal_value(
-        "objective") <= ub, f"Objective value is not inside expected range: {context.moh.get_optimal_value('objective')}"
+    assert lb <= context.moh.get_objective_value() <= ub, \
+         f"Objective value is not inside expected range: {context.moh.get_optimal_value('objective')}"
 
 
-@step('the optimal values of the variables are')
-def modeler_var_optimal_value(context):
+@step('the modeler outputs contain the following entries')
+def modeler_output_values(context):
     for row in context.table:
-        print("Processing row:", row)
         ts_array = row["timestep"].split("-")
-        ts_start = int(ts_array[0])
-        ts_end = int(ts_array[1]) if len(ts_array) == 2 else ts_start
-        if "scenarioInterval" not in context.table.headings:
-            print("No scenarioInterval specified, using default values")
-            scenarioInterval_start = 0
-            scenarioInterval_end = 0
+        ts_start = int(ts_array[0]) + 1
+        ts_end = int(ts_array[1]) + 1 if len(ts_array) == 2 else ts_start
+        if "scenario" not in context.table.headings:
+            print("No scenario specified, using default values")
+            scenario_start = 0
+            scenario_end = 0
         else:
-            scenarioInterval_array = row["scenarioInterval"].split("-")
-            scenarioInterval_start = int(scenarioInterval_array[0])
-            scenarioInterval_end = int(scenarioInterval_array[1]) if len(
-                scenarioInterval_array) == 2 else scenarioInterval_start
-        for scenarioInterval in range(scenarioInterval_start, scenarioInterval_end + 1):
+            scenario_array = row["scenario"].split("-")
+            scenario_start = int(scenario_array[0])
+            scenario_end = int(scenario_array[1]) if len(
+                scenario_array) == 2 else scenario_array
+        for scenario in range(scenario_start, scenario_end + 1):
             for ts in range(ts_start, ts_end + 1):
-                var_id = row["component"] + "." + row["variable"] + "_s" + str(scenarioInterval) + "_t" + str(ts)
-                assert_double_close(get_value(row, ts), context.moh.get_optimal_value(var_id), 1e-6)
+                assert_double_close(
+                    get_value(row, ts), context.moh.get_simulation_table_entry(row["component"], row["output"], ts, scenario), 1e-6
+                )
 
 
 def get_value(row, ts):
@@ -110,9 +105,17 @@ def run_modeler(context):
     else:
         context.output_path = os.path.join(context.study_path,
                                            "output")  # TODO : fixme parse_output_folder_from_logs(out)
-        context.moh = modeler_output_handler(context.output_path)
+        context.moh = modeler_output_handler(parse_simulation_table_from_logs(context.logs_out))
 
     context.return_code = process.returncode
+
+
+def parse_simulation_table_from_logs(logs: str) -> str:
+    for line in logs.splitlines():
+        if 'Simulation table is written in: ' in line:
+            return line.split('Simulation table is written in: ')[1]
+    raise LookupError("Could not find simulation table location in output logs")
+
 
 
 def build_antares_modeler_command(context):

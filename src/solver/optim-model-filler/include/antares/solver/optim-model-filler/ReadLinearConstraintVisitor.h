@@ -55,7 +55,7 @@ class ReadLinearConstraintVisitor
     : public Expressions::Visitors::NodeVisitor<std::vector<LinearConstraint>>
 {
 public:
-    ReadLinearConstraintVisitor() = default;
+    ReadLinearConstraintVisitor() = delete;
     explicit ReadLinearConstraintVisitor(
       Expressions::Visitors::EvaluationContext context,
       const Optimisation::LinearProblemApi::FillContext& fillContext,

@@ -145,14 +145,14 @@ ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& com
 {
 }
 
-bool checkTimeSteps(Optimisation::LinearProblemApi::FillContext& ctx)
+bool checkTimeSteps(const Optimisation::LinearProblemApi::FillContext& ctx)
 {
     return ctx.getLocalFirstTimeStep() <= ctx.getLocalLastTimeStep();
 }
 
 void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
                                    Optimisation::LinearProblemApi::ILinearProblemData& data,
-                                   Optimisation::LinearProblemApi::FillContext& ctx)
+                                   const Optimisation::LinearProblemApi::FillContext& ctx)
 {
     if (!checkTimeSteps(ctx))
     {
@@ -263,7 +263,7 @@ void ComponentFiller::addTimeDependentConstraints(
 
 void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
                                      Optimisation::LinearProblemApi::ILinearProblemData& data,
-                                     Optimisation::LinearProblemApi::FillContext& ctx)
+                                     const Optimisation::LinearProblemApi::FillContext& ctx)
 {
     const auto& scenario = scenarioGroupRepository_.scenario(component_.getScenarioGroupId());
     Expressions::Visitors::EvaluationContext evaluationContext(component_.getParameterValues(),
@@ -271,7 +271,7 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
                                                                data,
                                                                scenario);
     Optimization::ReadLinearConstraintVisitor visitor(evaluationContext, ctx, component_);
-    for (const auto& constraint: component_.getModel()->getConstraints() | std::views::values)
+    for (const auto& constraint: component_.getModel()->Constraints() | std::views::values)
     {
         auto* root_node = constraint.expression().RootNode();
         auto linear_constraints = visitor.dispatch(root_node);
@@ -291,7 +291,7 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
 
 void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProblem& pb,
                                    Optimisation::LinearProblemApi::ILinearProblemData& data,
-                                   Optimisation::LinearProblemApi::FillContext& ctx)
+                                   const Optimisation::LinearProblemApi::FillContext& ctx)
 {
     auto model = component_.getModel();
     if (model->Objective().Empty())
@@ -309,7 +309,7 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
     const auto timeDependentLinearExpression = visitor.dispatch(model->Objective().RootNode());
     const auto& linear_expressions = timeDependentLinearExpression.GetLinearExpressions();
 
-    if (abs(linear_expressions.at(ctx.getLocalFirstTimeStep()).offset()) > 1e-10)
+    if (std::abs(linear_expressions.at(ctx.getLocalFirstTimeStep()).offset()) > 1e-10)
     {
         throw std::invalid_argument("Antares does not support objective offsets (found in model '"
                                     + model->Id() + "' of component '" + component_.Id() + "').");
@@ -325,7 +325,7 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
     }
 }
 
-bool ComponentFiller::IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node)
+bool ComponentFiller::IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node) const
 {
     Expressions::Visitors::TimeIndexVisitor timeIndexVisitor(component_);
     const auto ret = timeIndexVisitor.dispatch(node);

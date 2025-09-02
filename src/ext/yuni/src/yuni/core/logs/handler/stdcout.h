@@ -9,8 +9,9 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../null.h"
 #include <iostream>
+
+#include "../null.h"
 
 #if defined(YUNI_OS_WINDOWS)
 #define YUNI_LOGS_COLORS_ALLOWED 1
@@ -26,7 +27,7 @@ namespace Logs
 ** \brief Log Handler: The standard output (cout & cerr)
 */
 template<class NextHandler = NullHandler>
-class YUNI_DECL StdCout : public NextHandler
+class YUNI_DECL StdCout: public NextHandler
 {
 public:
     enum Settings
@@ -42,14 +43,16 @@ public:
         if (VerbosityType::shouldUsesStdCerr)
         {
             logger.DecoratorsType::template internalDecoratorAddPrefix<StdCout, VerbosityType>(
-              std::cerr, s);
+              std::cerr,
+              s);
             // Flush
             std::cerr << std::endl;
         }
         else
         {
             logger.DecoratorsType::template internalDecoratorAddPrefix<StdCout, VerbosityType>(
-              std::cout, s);
+              std::cout,
+              s);
             // Flush
             std::cout << std::endl;
         }

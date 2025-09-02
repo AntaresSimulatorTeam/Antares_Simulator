@@ -622,7 +622,7 @@ BOOST_AUTO_TEST_CASE(model_is_not_scalar)
     BOOST_CHECK_THROW(parser.parse(library), std::runtime_error);
 }
 
-BOOST_AUTO_TEST_CASE(model_attributs_can_be_ommited)
+BOOST_AUTO_TEST_CASE(model_attributes_can_be_ommited)
 {
     Antares::IO::Inputs::YmlModel::Parser parser;
     const auto library = R"(
@@ -653,4 +653,37 @@ BOOST_AUTO_TEST_CASE(test_variable_to_string)
     BOOST_CHECK_EQUAL(YmlMod::toString(YmlMod::ValueType::INTEGER), "INTEGER");
     BOOST_CHECK_EQUAL(YmlMod::toString(YmlMod::ValueType::BOOL), "BOOL");
     BOOST_CHECK_EQUAL(YmlMod::toString(static_cast<YmlMod::ValueType>(5)), "UNKNOWN");
+}
+
+// Test library with one model containing multiple extra outputs
+BOOST_AUTO_TEST_CASE(model_can_contain_multiple_extra_outputs)
+{
+    Antares::IO::Inputs::YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            description: "lib_description"
+            port-types: []
+            models:
+                - id: "model_id"
+                  description: "model_description"
+                  parameters: []
+                  variables: []
+                  ports: []
+                  port-field-definitions: []
+                  constraints: []
+                  extra-outputs:
+                      - id: "output_name1"
+                        expression: "expression1"
+                      - id: "output_name2"
+                        expression: "expression2"
+                  objective: "objective"
+        )"s;
+    Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
+    BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
+    BOOST_REQUIRE_EQUAL(libraryObj.models[0].extra_outputs.size(), 2);
+    BOOST_CHECK_EQUAL(libraryObj.models[0].extra_outputs[0].id, "output_name1");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].extra_outputs[0].expression, "expression1");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].extra_outputs[1].id, "output_name2");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].extra_outputs[1].expression, "expression2");
 }

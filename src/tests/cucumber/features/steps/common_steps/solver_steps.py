@@ -14,6 +14,7 @@ from common_steps.solver_input_handler import solver_input_handler
 from common_steps.solver_output_handler import solver_output_handler
 
 from features.steps.common_steps.assertions import assert_double_close
+from features.steps.common_steps.modeler_output_handler import modeler_output_handler
 
 NB_HOURS_IN_WEEK = 168
 NB_DAYS_IN_WEEK = 7
@@ -233,6 +234,12 @@ def check_annual_results(context):
             check_unsupplied_energy_value(context, area, year, float(row["unsupplied energy"]))
 
 
+@then("simulation tables match the references")
+def check_simulation_tables(context):
+    assert context.sih.get_optim1_simulation_table() == context.soh.get_optim1_simulation_table(), "first optimisation simulation table does not match the reference"
+    ref_simulation_table2 = context.sih.get_optim2_simulation_table()
+    if ref_simulation_table2:
+        assert ref_simulation_table2 == context.soh.get_optim2_simulation_table(), "second simulation table does not match the reference"
 def should_check(row, key):
     return key in row.headings and len(row[key]) > 0
 
@@ -253,6 +260,10 @@ def run_simulation(context):
     context.output_path = parse_output_folder_from_logs(out)
     context.return_code = process.returncode
     context.soh = solver_output_handler(context.output_path, context.mode)
+    # for hybrid studies:
+    simulation_table = Path(context.output_path) / "simulation_table--optim-nb-1.csv"
+    if simulation_table.exists():
+        context.moh = modeler_output_handler(simulation_table)
 
 
 def init_simulation(context):

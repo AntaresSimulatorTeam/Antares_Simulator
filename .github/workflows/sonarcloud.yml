@@ -134,7 +134,7 @@ jobs:
         -DPython3_EXECUTABLE='${{ steps.setup-python.outputs.python-path }}'
 
     - name: Install Build Wrapper
-      uses: SonarSource/sonarqube-scan-action/install-build-wrapper@v5.3.0
+      uses: SonarSource/sonarqube-scan-action/install-build-wrapper@v5.3.1
 
     - name: Build
       run: |

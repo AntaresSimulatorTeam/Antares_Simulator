@@ -461,13 +461,11 @@ void WalkerThread::dispatchJob(IJob::Ptr job) const
     queueservice += job;
 }
 
-Walker::Walker():
-    pJobCount(0)
+Walker::Walker()
 {
 }
 
 Walker::Walker(const AnyString& logprefix):
-    pJobCount(0),
     pLogPrefix(logprefix)
 {
 }

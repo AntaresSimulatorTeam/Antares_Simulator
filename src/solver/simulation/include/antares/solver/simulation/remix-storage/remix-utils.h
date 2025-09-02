@@ -122,7 +122,7 @@ T& CyclicIterator<T>::operator*()
 }
 
 template<typename T>
-bool CyclicIterator<T>::operator==(const std::vector<T>::iterator& it)
+bool CyclicIterator<T>::operator==(const typename std::vector<T>::iterator& it)
 {
     return it_ == it;
 }

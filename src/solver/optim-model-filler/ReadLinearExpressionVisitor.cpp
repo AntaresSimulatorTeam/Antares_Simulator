@@ -63,7 +63,9 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const SumNode* 
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const SubtractionNode* node)
 {
-    return dispatch(node->left()) - dispatch(node->right());
+    auto ret = dispatch(node->left());
+    ret -= dispatch(node->right()); // using -= operator avoid expensive copy
+    return ret;
 }
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const MultiplicationNode* node)
