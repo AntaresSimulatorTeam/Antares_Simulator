@@ -23,6 +23,7 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include "antares/exception/RuntimeError.hpp"
 #include "antares/expressions/nodes/ExpressionsNodes.h"
 #include "antares/expressions/visitors/TimeIndex.h"
 #include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
@@ -111,8 +112,9 @@ BOOST_AUTO_TEST_CASE(var_with_wrong_variable_ub__exception_is_raised)
                 {{"variable", ValueType::FLOAT, literal(10), variable("variable")}},
                 {});
     createComponent("my-model", "my-component");
-    // TODO : improve exception message in eval visitor
-    BOOST_CHECK_THROW(buildLinearProblem(), out_of_range);
+    BOOST_CHECK_EXCEPTION(buildLinearProblem(),
+                          Antares::Error::RuntimeError,
+                          checkMessage("Component null. Cannot evaluate VariableNode."));
 }
 
 BOOST_AUTO_TEST_CASE(var_with_empty_lower_bound_default_to_minus_infinity)

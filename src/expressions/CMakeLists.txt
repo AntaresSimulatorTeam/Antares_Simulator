@@ -98,6 +98,7 @@ target_link_libraries(expressions
         linear-problem-api
         PRIVATE
         Antares::antares-study-system-model
+        Antares::exception
         # TODO: circular dependency here => we have to redesign these modules
         Antares::optim-model-filler
 )

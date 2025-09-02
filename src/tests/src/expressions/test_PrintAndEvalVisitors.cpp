@@ -925,18 +925,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(evaluate_time_dependent_operations_time_index_node
     evaluate_time_dependent_operation_on_TimeIndexNode<T>(&literal_node);
 }
 
-BOOST_FIXTURE_TEST_CASE(evaluate_variable, MyDummyFixture)
-{
-    VariableNode root("my-variable", TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
-    const double value = 221.3;
-    EvaluationContext context({}, {{"my-variable", value}}, data, emptyScenario);
-
-    EvalVisitor evalVisitor(context, fillContext);
-    const double eval = evalVisitor.dispatch(&root).valueAsDouble();
-
-    BOOST_CHECK_EQUAL(value, eval);
-}
-
 BOOST_FIXTURE_TEST_CASE(multiplication_node, MyDummyFixture)
 {
     double num1 = 22.0, num2 = 8;

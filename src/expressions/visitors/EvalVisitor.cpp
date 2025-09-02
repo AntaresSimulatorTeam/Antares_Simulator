@@ -26,6 +26,7 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/solver/optim-model-filler/VariableDictionary.h>
+#include "antares/exception/RuntimeError.hpp"
 #include "antares/expressions/ShiftVector.h"
 
 namespace Antares::Expressions::Visitors
@@ -91,6 +92,10 @@ EvaluationResult EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 {
+    if (!component_)
+    {
+        throw Error::RuntimeError("Component null. Cannot evaluate VariableNode.");
+    }
     if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
         || node->timeIndex() == TimeIndex::VARYING_IN_SCENARIO_ONLY)
     {

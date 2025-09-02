@@ -800,7 +800,6 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
             }
         }
     }
-
 };
 
 struct TempDirFixture

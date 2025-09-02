@@ -84,10 +84,9 @@ struct BasicFixture: Registry<Node>
     } mockData;
 
     std::map<std::string, ParameterTypeAndValue> system_parameters = {
-      {"valid_number", {"valid_number", ParameterType::CONSTANT, "42.5"}},
-      {"invalid_number", {"invalid_number", ParameterType::CONSTANT, "abc"}},
-      {"out_of_range", {"out_of_range", ParameterType::CONSTANT, "1e500"}},
-      {"timeserie_param", {"timeserie_param", ParameterType::TIMESERIE, "timeserie_file"}}};
+      {"p1", {"p1", ParameterType::TIMESERIE, "42.5"}},
+      {"param", {"param", ParameterType::TIMESERIE, "1234"}},
+    };
 
     std::map<std::string, double> variables; // Not needed for this test
 
