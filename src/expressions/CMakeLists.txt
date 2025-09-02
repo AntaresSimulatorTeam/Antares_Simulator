@@ -99,7 +99,7 @@ target_link_libraries(expressions
         linear-problem-api
         PRIVATE
         Antares::antares-study-system-model
-        Antares::optim-model-filler
+        Antares::antares-study-system-model
 )
 
 
