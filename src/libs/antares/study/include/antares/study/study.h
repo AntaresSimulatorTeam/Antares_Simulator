@@ -638,8 +638,7 @@ public:
 
     Optimisation::ScenarioGroupRepository* getScenarioGroupRepository()
     {
-        Antares::Optimisation::gScenarioGroupRepository = &modelerInput_.scenario_group_repository;
-        return Antares::Optimisation::gScenarioGroupRepository;
+        return &modelerInput_.scenario_group_repository;
     }
 
 protected:
