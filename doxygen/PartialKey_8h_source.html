@@ -163,20 +163,21 @@ $(document).ready(function(){initNavTree('PartialKey_8h_source.html',''); initRe
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">const</span> std::string&amp; getVariable() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">auto</span> operator&lt;=&gt;(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimization_1_1PartialKey.html">PartialKey</a>&amp;) <span class="keyword">const</span> = <span class="keywordflow">default</span>; <span class="comment">// Automatically generates &lt;, &gt;, ==, etc.</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    std::string component_id;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    std::string variable_id;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;};</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimization_1_1PartialKeyHash.html">   43</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Optimization_1_1PartialKeyHash.html">PartialKeyHash</a></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;{</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    std::size_t operator()(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimization_1_1PartialKey.html">PartialKey</a>&amp; p) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;};</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;} <span class="comment">// namespace Antares::Optimization</span></div>
-<div class="ttc" id="aclassAntares_1_1Optimization_1_1PartialKeyHash_html"><div class="ttname"><a href="classAntares_1_1Optimization_1_1PartialKeyHash.html">Antares::Optimization::PartialKeyHash</a></div><div class="ttdef"><b>Definition:</b> PartialKey.h:44</div></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">auto</span> operator==(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimization_1_1PartialKey.html">PartialKey</a>&amp;) <span class="keyword">const</span> -&gt; <span class="keywordtype">bool</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    std::string component_id;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    std::string variable_id;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;};</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimization_1_1PartialKeyHash.html">   44</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Optimization_1_1PartialKeyHash.html">PartialKeyHash</a></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;{</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    std::size_t operator()(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimization_1_1PartialKey.html">PartialKey</a>&amp; p) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;};</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;} <span class="comment">// namespace Antares::Optimization</span></div>
+<div class="ttc" id="aclassAntares_1_1Optimization_1_1PartialKeyHash_html"><div class="ttname"><a href="classAntares_1_1Optimization_1_1PartialKeyHash.html">Antares::Optimization::PartialKeyHash</a></div><div class="ttdef"><b>Definition:</b> PartialKey.h:45</div></div>
 <div class="ttc" id="aclassAntares_1_1Optimization_1_1PartialKey_html"><div class="ttname"><a href="classAntares_1_1Optimization_1_1PartialKey.html">Antares::Optimization::PartialKey</a></div><div class="ttdef"><b>Definition:</b> PartialKey.h:29</div></div>
 <div class="ttc" id="anamespaceAntares_1_1Optimization_html"><div class="ttname"><a href="namespaceAntares_1_1Optimization.html">Antares::Optimization</a></div><div class="ttdef"><b>Definition:</b> SimulationTableGenerator.h:42</div></div>
 </div><!-- fragment --></div><!-- contents -->

@@ -8,5 +8,6 @@ var classAntares_1_1Optimization_1_1FullKey =
     [ "getScenario", "classAntares_1_1Optimization_1_1FullKey.html#a9af5829ec669eb72eaec69261ecb0f9e", null ],
     [ "getTimestep", "classAntares_1_1Optimization_1_1FullKey.html#acb20b01272363b16251f82fc8f12dfa1", null ],
     [ "getVariable", "classAntares_1_1Optimization_1_1FullKey.html#a1dda66ba015de8625cb923ebc026b9fe", null ],
-    [ "operator<=>", "classAntares_1_1Optimization_1_1FullKey.html#aafd95ecd0fa2c097de55fc7691fca77a", null ]
+    [ "operator<=>", "classAntares_1_1Optimization_1_1FullKey.html#aafd95ecd0fa2c097de55fc7691fca77a", null ],
+    [ "operator==", "classAntares_1_1Optimization_1_1FullKey.html#ae55078726ceab8a62ba82feb5339acfe", null ]
 ];
