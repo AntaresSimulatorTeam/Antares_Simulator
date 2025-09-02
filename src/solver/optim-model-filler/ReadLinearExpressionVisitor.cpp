@@ -21,6 +21,7 @@
 
 #include <numeric>
 
+#include <antares/exception/InvalidArgumentError.hpp>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/expressions/visitors/NodeVisitor.h>
@@ -28,7 +29,6 @@
 #include <antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h>
 #include "antares/optimisation/linear-problem-api/IScenario.h"
 #include "antares/study/system-model/component.h"
-#include <antares/exception/InvalidArgumentError.hpp>
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::Expressions::Visitors;
 using namespace Antares::ModelerStudy;
