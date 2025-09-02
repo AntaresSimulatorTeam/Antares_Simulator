@@ -1,15 +1,21 @@
 # Antares modeler outputs parsing
 
 import pandas as pd
-
+import numpy as np
 
 class modeler_output_handler:
 
     def __init__(self, simulation_table_location):
-        self.simulation_table = self.__read_csv(simulation_table_location)
+        self.simulation_table = modeler_output_handler.__read_simulation_table(simulation_table_location)
 
-    def __read_csv(self, absolute_path) -> pd.DataFrame:
-        return pd.read_csv(absolute_path, header=0, sep=',', low_memory=False)
+    @staticmethod
+    def __read_simulation_table(absolute_path) -> pd.DataFrame:
+        df = pd.read_csv(absolute_path, header=0, sep=",", low_memory=False)
+        df.replace("None", np.nan, inplace=True)
+        cols = ["block", "absolute_time_index", "block_time_index", "scenario_index", "value"]
+        for col in cols:
+            df[col] = df[col].astype(float)
+        return df
 
     def get_simulation_table_entry(self, component : str, output : str, timestep : int, scenario : int):
         df = self.simulation_table[(self.simulation_table["component"] == component)
