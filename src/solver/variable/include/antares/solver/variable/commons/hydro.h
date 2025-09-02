@@ -75,17 +75,6 @@ namespace Antares::Solver::Variable::Economy
  * * Defines the specific characteristics of hydro run-of-river variables:
  * - Caption: "H. ROR" (Hydro Run-of-River, as displayed in outputs)
  * - Description: Descriptive text for hydro generation across Monte Carlo years
- * - No area member needed (hydro data accessed through specialized path)
- * * ## Hydro Data Access Pattern:
- * * Unlike generation variables that use direct area members, hydro variables
- * access data through a more complex path:
- * ```cpp
- * area->hydro.series->ror.timeSeries.entry[seriesIndex]
- * ```
- * * This reflects the more sophisticated hydro modeling system that includes:
- * - Multiple time series per area (different hydrological scenarios)
- * - ROR vs reservoir distinction
- * - Dynamic series selection based on Monte Carlo draw
  */
 struct HydroTraits
 {
@@ -96,23 +85,6 @@ struct HydroTraits
                                                             "years";
 };
 
-/**
- * @brief VCard for hydro ROR time series variables
- * * Provides metadata and configuration for hydro ROR time series.
- * Inherits common properties from TimeSeriesTraits and adds hydro-specific
- * information from HydroTraits.
- * * ## Output Configuration:
- * * Hydro variables use the standard time series output configuration:
- * - Unit: MWh (inherited from TimeSeriesTraits)
- * - Aggregation: Sum across areas (for regional hydro totals)
- * - Statistics: Average, StdDev, Min, Max across all Monte Carlo years
- * - Caption: "H. ROR" to distinguish from reservoir hydro
- * * ## Spatial Aggregation:
- * * When aggregating across multiple areas, hydro ROR values are summed:
- * - Regional total = sum of all area ROR generation
- * - Maintains physical meaning (total renewable hydro generation)
- * - Consistent with other generation types (solar, wind)
- */
 using VCardTimeSeriesValuesHydro = VCardTimeSeriesBase<HydroTraits>;
 
 /**
@@ -123,50 +95,6 @@ using VCardTimeSeriesValuesHydro = VCardTimeSeriesBase<HydroTraits>;
  *
  * @tparam NextT The next variable in the processing chain
  *
- * ## Processing Characteristics:
- *
- * ### Year Begin Processing:
- * - Dynamic time series selection based on Monte Carlo scenario
- * - Pointer setup for efficient hourly access
- * - No bulk data copying (accessed hourly for flexibility)
- *
- * ### Hourly Processing:
- * - Direct extraction from selected time series
- * - Hour-by-hour accumulation into yearly values
- * - Maintains temporal resolution for detailed analysis
- *
- * ## Data Access Pattern:
- *
- * ```cpp
- * // Year begin: Setup time series pointer
- * auto& ror = area->hydro.series->ror;
- * unsigned int seriesIndex = ror.getSeriesIndex(year);
- * fatalValues[space] = &(ror.timeSeries.entry[seriesIndex]);
- *
- * // Hourly: Extract specific hour value
- * yearlyValues[space][hourInYear] = (*fatalValues[space])[hourInYear];
- * ```
- *
- * ## Memory Management:
- *
- * Modern C++ approach using std::vector:
- * - **Before**: Raw pointer array with manual new[]/delete[]
- * - **After**: std::vector with automatic memory management
- * - **Benefits**: Exception safety, automatic cleanup, bounds checking in debug
- *
- * ## Thread Safety:
- *
- * Each parallel space maintains isolated data:
- * - `fatalValues[space]` provides per-thread time series pointers
- * - `yearlyValues[space]` provides per-thread value storage
- * - No shared mutable state during simulation
- *
- * ## Performance Considerations:
- *
- * - **Pointer Indirection**: Minimal overhead for hourly access
- * - **Memory Layout**: Respects existing time series organization
- * - **Cache Efficiency**: Sequential access within each hour
- * - **Flexibility**: Allows for different time series per year/scenario
  */
 template<class NextT = Container::EndOfList>
 class TimeSeriesValuesHydro
@@ -181,31 +109,7 @@ public:
 
     /// @}
 
-    /**
-     * @brief Initialize hydro-specific data structures from study
-     *     * Sets up the vector for storing time series pointers. This modern
-     * C++ approach replaces the previous manual memory management with
-     * automatic RAII-based resource handling.
-     *     * @param study The study configuration containing parallel execution settings
-     *     * ## Memory Management Evolution:
-     *     * **Previous approach:**
-     * ```cpp
-     * pFatalValues = new Matrix<>::ColumnType*[pNbYearsParallel];
-     * // Manual initialization and cleanup required
-     * ~TimeSeriesValuesHydro() { delete[] pFatalValues; }
-     * ```
-     *     * **Current approach:**
-     * ```cpp
-     * fatalValues.resize(nbYearsParallel, nullptr);
-     * // Automatic cleanup via std::vector destructor
-     * ```
-     *     * ## Benefits of Modern Approach:
-     * - **Exception Safety**: No memory leaks if initialization throws
-     * - **Automatic Cleanup**: Destructor handles resource deallocation
-     * - **Debug Support**: Bounds checking available in debug builds
-     * - **Standard Library**: Consistent with modern C++ practices
-     */
-    void initializeDerivedFromStudy(Data::Study& study)
+    void initializeDerivedFromStudy(Data::Study&)
     {
         // Initialize the vector for fatal values (modern C++ approach)
         // This replaces the previous manual memory management with RAII
@@ -246,10 +150,6 @@ public:
      * represent natural water flows that cannot be controlled or optimized,
      * unlike reservoir hydro which can be dispatched strategically.
      *
-     * ## Thread Safety:
-     *
-     * Each parallel space gets its own pointer, ensuring that concurrent
-     * execution threads don't interfere with each other's data access.
      */
     void yearBeginImpl(unsigned int year, unsigned int space)
     {
@@ -272,43 +172,6 @@ public:
      * @param state Current simulation state containing hour information
      * @param space The parallel space index for thread safety
      *
-     * ## Hourly Processing Logic:
-     *
-     * 1. **Hour Identification**: Extract current hour from simulation state
-     * 2. **Value Lookup**: Access pre-selected time series at current hour
-     * 3. **Value Storage**: Store in yearly values for statistics computation
-     *
-     * ## Data Access Pattern:
-     *
-     * ```cpp
-     * // Direct array access using cached pointer:
-     * double hydroValue = (*fatalValues[space])[state.hourInTheYear];
-     *
-     * // Store for statistics computation:
-     * yearlyValues[space][state.hourInTheYear] = hydroValue;
-     * ```
-     *
-     * ## Performance Characteristics:
-     *
-     * - **Single Pointer Dereference**: Minimal overhead per hour
-     * - **Direct Array Access**: O(1) time complexity
-     * - **Sequential Processing**: Good cache locality within each hour
-     * - **No Calculations**: Pure data movement, no transformations
-     *
-     * ## Hour Range:
-     *
-     * - `state.hourInTheYear` ranges from 0 to 8759 (8760 hours per year)
-     * - Handles both standard years (8760h) and leap years where applicable
-     * - Direct mapping to time series array indices
-     *
-     * ## Comparison with Other Time Series:
-     *
-     * - **Load**: Bulk copy entire year in yearBegin, no-op in hourly
-     * - **Generation**: Bulk copy if aggregated, no-op in hourly
-     * - **Hydro**: No bulk copy, individual hourly processing (current)
-     *
-     * The hydro approach provides maximum flexibility for future enhancements
-     * like hourly-dependent calculations or real-time hydro optimization.
      */
     void hourForEachAreaImpl(State& state, unsigned int space)
     {
@@ -323,24 +186,7 @@ private:
     /// @{
     /**
      * @brief Cached pointers to time series data for each parallel space
-     *     * Stores pointers to the selected time series for each parallel execution
-     * space. This modern C++ approach using std::vector replaces the previous
-     * manual memory management with raw pointer arrays.
-     *     * ## Array Organization:
-     * - Index: Parallel space (0 to nbYearsParallel-1)
-     * - Value: Pointer to Matrix<>::ColumnType (time series array)
-     * - Lifetime: Set in yearBeginImpl, used in hourForEachAreaImpl
-     *     * ## Memory Safety:
-     * - **Non-owning pointers**: Data owned by hydro.series structure
-     * - **Automatic cleanup**: std::vector destructor handles deallocation
-     * - **Exception safe**: No manual delete[] required
-     *     * ## Why Vector of Pointers?
-     *
-     * Each parallel space may process different Monte Carlo years simultaneously,
-     * potentially requiring different time series. The vector provides:
-     * - **Isolation**: Each space has independent time series access
-     * - **Performance**: Direct pointer access avoids repeated index calculations
-     * - **Flexibility**: Different spaces can use different series concurrently
+     * Stores pointers to the selected time series for each parallel execution
      */
     std::vector<Matrix<>::ColumnType*> fatalValues;
 

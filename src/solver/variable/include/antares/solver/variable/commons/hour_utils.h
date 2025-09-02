@@ -28,14 +28,13 @@
 
 namespace Antares::Solver::Variable::Util
 {
-// Concept décrivant une série horaire minimale
+
 template<class T>
 concept HourlySeries = requires(T t, unsigned y) {
     { t.series.getColumn(y) } -> std::convertible_to<const double*>;
     { t.series.timeSeries.height } -> std::convertible_to<size_t>;
 };
 
-// Appliquer un foncteur à chaque heure (index, valeur) — pointeurs bruts
 template<class Ptr, class F>
 inline void for_each_hour(const Ptr data, size_t n, F&& f) noexcept
 {
@@ -45,7 +44,6 @@ inline void for_each_hour(const Ptr data, size_t n, F&& f) noexcept
     }
 }
 
-// Version sur conteneur indexable
 template<class Container, class F>
 inline void for_each_hour(Container& c, F&& f) noexcept(noexcept(f(size_t{}, *c.data())))
 {
@@ -55,7 +53,6 @@ inline void for_each_hour(Container& c, F&& f) noexcept(noexcept(f(size_t{}, *c.
     }
 }
 
-// transform in place (générique)
 template<class Range, class F>
 inline void transform_in_place(Range&& r, F&& f) noexcept(noexcept(f(*r.begin())))
 {

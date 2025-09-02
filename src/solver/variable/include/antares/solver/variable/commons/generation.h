@@ -26,44 +26,6 @@
  * variables (solar and wind). It demonstrates the practical application of the
  * time series base framework defined in timeseries_base.h.
  *
- * ## Key Features:
- *
- * - **Unified Implementation**: Single implementation handles both solar and wind
- * - **Traits-Based Design**: Type-safe differentiation between generation types
- * - **Zero Duplication**: Eliminates ~90% code duplication from original files
- * - **Backward Compatibility**: Maintains all existing type aliases and APIs
- * - **Modern C++**: Uses C++20 features while respecting project standards
- *
- * ## Architecture:
- *
- * ```
- * SolarTraits / WindTraits     ← Type-specific configuration
- *           ↓
- * VCardTimeSeriesBase<Traits>  ← VCard generation
- *           ↓
- * TimeSeriesValuesGenerationImpl ← Common implementation
- *           ↓
- * Type Aliases                 ← Backward compatibility layer
- * ```
- *
- * ## Usage Examples:
- *
- * ### Using Modern Types:
- * ```cpp
- * // Direct usage with traits
- * TimeSeriesValuesSolar<> solarVar;
- * TimeSeriesValuesWind<> windVar;
- *
- * // Chain with other variables
- * TimeSeriesValuesSolar<TimeSeriesValuesWind<>> combined;
- * ```
- *
- * ### Using Legacy Types (backward compatibility):
- * ```cpp
- * // Tag-based approach (legacy)
- * TimeSeriesValuesGeneration<SolarTag> solarVar;
- * TimeSeriesValuesGeneration<WindTag> windVar;
- * ```
  *
  * ## Generation-Specific Behavior:
  *
@@ -330,7 +292,7 @@ public:
      *     * This differs from other time series like hydro where hourly
      * processing may involve complex calculations or data transformations.
      */
-    void hourForEachAreaImpl(State& state, unsigned int space)
+    void hourForEachAreaImpl(State&, unsigned int)
     {
         // Default implementation - no specific action needed for generation
         // Values are already copied in yearBeginImpl for performance
