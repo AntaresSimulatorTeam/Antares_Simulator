@@ -4,33 +4,23 @@
 #include <stdexcept>
 #include <string>
 
+#include "antares/study/system-model/component.h"
+
+#include "ParameterTypeAndValue.h"
+
 namespace Antares::Optimisation::LinearProblemApi
 {
 class IScenario;
 class ILinearProblemData;
 } // namespace Antares::Optimisation::LinearProblemApi
 
-namespace Antares::Expressions::Visitors
-{
-enum class ParameterType : unsigned int
-{
-    CONSTANT = 0,
-    TIMESERIE = 1
-};
-
-// this struct contains more or less the same infos as the one in system.h
-struct ParameterTypeAndValue
-{
-    std::string id;
-    ParameterType type;
-    std::string value;
-};
-
 /**
  * @brief Represents the context for evaluating expressions.
  *
  * Stores and provides access to parameter and variable values.
  */
+namespace Antares::Expressions::Visitors
+{
 class EvaluationContext
 {
 public:
@@ -96,5 +86,6 @@ private:
     std::map<std::string, double> variables_;
     const Optimisation::LinearProblemApi::ILinearProblemData& data_;
     const Optimisation::LinearProblemApi::IScenario& scenario_;
+    const Antares::ModelerStudy::SystemModel::Component* component_;
 };
 } // namespace Antares::Expressions::Visitors

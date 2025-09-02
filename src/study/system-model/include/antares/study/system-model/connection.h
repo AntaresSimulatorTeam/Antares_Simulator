@@ -24,6 +24,7 @@
 #include <sstream>
 
 #include "port.h"
+#include "portField.h"
 
 namespace Antares::ModelerStudy::SystemModel
 {

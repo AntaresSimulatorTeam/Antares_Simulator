@@ -24,8 +24,8 @@
 #include <optional>
 
 #include <antares/expressions/nodes/PortFieldNode.h>
-#include <antares/expressions/visitors/EvaluationContext.h>
-#include "antares/study/system-model/connection.h"
+#include <antares/expressions/visitors/ParameterTypeAndValue.h>
+#include <antares/study/system-model/connection.h>
 
 #include "model.h"
 

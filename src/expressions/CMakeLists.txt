@@ -58,6 +58,7 @@ set(SRC_Expressions
         include/antares/expressions/visitors/CompareVisitor.h
         include/antares/expressions/visitors/EvalVisitor.h
         include/antares/expressions/visitors/EvaluationContext.h
+	include/antares/expressions/visitors/ParameterTypeAndValue.h
         include/antares/expressions/visitors/LinearStatus.h
         include/antares/expressions/visitors/LinearityVisitor.h
         include/antares/expressions/visitors/NodeVisitor.h
@@ -98,6 +99,7 @@ target_link_libraries(expressions
         linear-problem-api
         PRIVATE
         Antares::antares-study-system-model
+        Antares::optim-model-filler
 )
 
 
