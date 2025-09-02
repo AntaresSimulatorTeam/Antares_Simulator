@@ -29,38 +29,38 @@ var NAVTREE =
     [ "Installation", "index.html#autotoc_md2", null ],
     [ "Source Code Content", "index.html#autotoc_md3", null ],
     [ "Antares Cucumber Tests", "md_src_tests_cucumber_readme.html", [
-      [ "Tests structure", "md_src_tests_cucumber_readme.html#autotoc_md5", [
-        [ "Features, scenarios and tags", "md_src_tests_cucumber_readme.html#autotoc_md6", null ],
-        [ "Steps structure", "md_src_tests_cucumber_readme.html#autotoc_md7", null ]
+      [ "Tests structure", "md_src_tests_cucumber_readme.html#autotoc_md19", [
+        [ "Features, scenarios and tags", "md_src_tests_cucumber_readme.html#autotoc_md20", null ],
+        [ "Steps structure", "md_src_tests_cucumber_readme.html#autotoc_md21", null ]
       ] ],
-      [ "Running the tests", "md_src_tests_cucumber_readme.html#autotoc_md8", [
-        [ "On your PC", "md_src_tests_cucumber_readme.html#autotoc_md9", null ],
-        [ "The configuration file", "md_src_tests_cucumber_readme.html#autotoc_md10", null ],
-        [ "In the CI", "md_src_tests_cucumber_readme.html#autotoc_md11", null ]
+      [ "Running the tests", "md_src_tests_cucumber_readme.html#autotoc_md22", [
+        [ "On your PC", "md_src_tests_cucumber_readme.html#autotoc_md23", null ],
+        [ "The configuration file", "md_src_tests_cucumber_readme.html#autotoc_md24", null ],
+        [ "In the CI", "md_src_tests_cucumber_readme.html#autotoc_md25", null ]
       ] ],
-      [ "Under the hood", "md_src_tests_cucumber_readme.html#autotoc_md12", [
-        [ "Test files", "md_src_tests_cucumber_readme.html#autotoc_md13", null ],
-        [ "Code-behind", "md_src_tests_cucumber_readme.html#autotoc_md14", null ]
+      [ "Under the hood", "md_src_tests_cucumber_readme.html#autotoc_md26", [
+        [ "Test files", "md_src_tests_cucumber_readme.html#autotoc_md27", null ],
+        [ "Code-behind", "md_src_tests_cucumber_readme.html#autotoc_md28", null ]
       ] ]
     ] ],
     [ "How does the automatic testing script system work ?", "md_src_tests_run_study_tests_readme.html", [
-      [ "Introduction", "md_src_tests_run_study_tests_readme.html#autotoc_md16", null ],
-      [ "Entry points to the automatic testing script system", "md_src_tests_run_study_tests_readme.html#autotoc_md17", null ],
-      [ "File test_from_json.py", "md_src_tests_run_study_tests_readme.html#autotoc_md18", null ],
-      [ "Fixtures", "md_src_tests_run_study_tests_readme.html#autotoc_md19", null ],
-      [ "Tests parametrization", "md_src_tests_run_study_tests_readme.html#autotoc_md20", null ],
-      [ "The test's body", "md_src_tests_run_study_tests_readme.html#autotoc_md21", [
-        [ "<ins>Run fixtures</ins>", "md_src_tests_run_study_tests_readme.html#autotoc_md22", null ],
-        [ "<ins>Checks creation factory</ins>", "md_src_tests_run_study_tests_readme.html#autotoc_md23", null ],
-        [ "<ins>Running the checks</ins>", "md_src_tests_run_study_tests_readme.html#autotoc_md24", null ],
-        [ "<ins>End of tests</ins>", "md_src_tests_run_study_tests_readme.html#autotoc_md25", null ]
+      [ "Introduction", "md_src_tests_run_study_tests_readme.html#autotoc_md30", null ],
+      [ "Entry points to the automatic testing script system", "md_src_tests_run_study_tests_readme.html#autotoc_md31", null ],
+      [ "File test_from_json.py", "md_src_tests_run_study_tests_readme.html#autotoc_md32", null ],
+      [ "Fixtures", "md_src_tests_run_study_tests_readme.html#autotoc_md33", null ],
+      [ "Tests parametrization", "md_src_tests_run_study_tests_readme.html#autotoc_md34", null ],
+      [ "The test's body", "md_src_tests_run_study_tests_readme.html#autotoc_md35", [
+        [ "<ins>Run fixtures</ins>", "md_src_tests_run_study_tests_readme.html#autotoc_md36", null ],
+        [ "<ins>Checks creation factory</ins>", "md_src_tests_run_study_tests_readme.html#autotoc_md37", null ],
+        [ "<ins>Running the checks</ins>", "md_src_tests_run_study_tests_readme.html#autotoc_md38", null ],
+        [ "<ins>End of tests</ins>", "md_src_tests_run_study_tests_readme.html#autotoc_md39", null ]
       ] ],
-      [ "How to add a check on a test ?", "md_src_tests_run_study_tests_readme.html#autotoc_md26", [
-        [ "What to do ?", "md_src_tests_run_study_tests_readme.html#autotoc_md27", null ],
-        [ "What NOT to do ?", "md_src_tests_run_study_tests_readme.html#autotoc_md28", null ]
+      [ "How to add a check on a test ?", "md_src_tests_run_study_tests_readme.html#autotoc_md40", [
+        [ "What to do ?", "md_src_tests_run_study_tests_readme.html#autotoc_md41", null ],
+        [ "What NOT to do ?", "md_src_tests_run_study_tests_readme.html#autotoc_md42", null ]
       ] ],
-      [ "Running the script", "md_src_tests_run_study_tests_readme.html#autotoc_md29", null ],
-      [ "TO DO", "md_src_tests_run_study_tests_readme.html#autotoc_md30", null ]
+      [ "Running the script", "md_src_tests_run_study_tests_readme.html#autotoc_md43", null ],
+      [ "TO DO", "md_src_tests_run_study_tests_readme.html#autotoc_md44", null ]
     ] ],
     [ "Todo List", "todo.html", null ],
     [ "Modules", "modules.html", "modules" ],
@@ -69,6 +69,7 @@ var NAVTREE =
       [ "Namespace Members", "namespacemembers.html", [
         [ "All", "namespacemembers.html", null ],
         [ "Functions", "namespacemembers_func.html", null ],
+        [ "Variables", "namespacemembers_vars.html", null ],
         [ "Typedefs", "namespacemembers_type.html", null ]
       ] ]
     ] ],
@@ -125,39 +126,39 @@ var NAVTREEINDEX =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD.html#ac85a44634f9e9bed61432beade4c08c9",
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCost.html#add329759b0d4cc1ad1a99fabc8b3f80a",
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html#a486ce0693a89676ba30a49bce3649b2a",
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesWind.html#af36c2a80120e5009de6d49c5d88d380b",
-"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData.html#a34a2c72a466e1bd0ec2bddefd02a9fd8",
-"classAntares_1_1Toolbox_1_1Clipboard.html#a203ad8eeb3c84cc344c487f38df0ddce",
-"classAntares_1_1Toolbox_1_1InputSelector_1_1BindingConstraint.html#a2aae746edac6be45dbda9d56b332b5ff",
-"classAntares_1_1Window_1_1CompareDesc.html#a8524d92079b79bf8dca66cd9e593a280",
-"classAntares_1_1Window_1_1Message.html#afda9ab9d40e3986ea47e4a15103556e7aa129c66d624046e68dcfd09a17c3eb18",
-"classAntares_1_1Window_1_1Thermal_1_1Panel.html#ae384fa333fe8cc5503867719e1957d6d",
-"classConstraintNamer.html#a0f59c8a385e9aed6278699e4eba76139",
-"classExprParser_1_1TimeIndexContext.html#acdd8c76c621f667e5ce6ff1e8a1bd43b",
-"classFixture.html#abcf03797ed4f9c75f14b497b459df02f",
-"classInMemoryLoader.html#a4787effdb98270f9a6e46b9186cc0264",
-"classOptimizationStatisticsWriter.html#a427073aa4fc98039e14526caf6b6561b",
-"classShortTermStorageConfig.html#a014a6306f84899c150f2f57434265205",
-"classaverageResults.html#aede4a40aa4b50496e963a64ccc8c223f",
-"classstudy__run_1_1study__run.html#a2f01045fe209b2604e2348df90591089",
-"dir_1b5d0521e8155fd5356782a86d8acc95.html",
-"dir_b555439204d371132268ab92bbb0e514.html",
-"functions_h.html",
-"inspector_8cpp.html#afb62cf7cd0b546bfae67d53feab446a2",
-"libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a13b583cf6023a0047b946ca4283b0b2ba724d04e988e5dc669b7f2e30089d1fd7",
-"map_2nodes_2item_8h_source.html",
-"provider_8h_source.html",
-"solver__steps_8py.html#acf92df42817fdf7a7c992480468401b7",
-"structAntares_1_1Expressions_1_1Visitors_1_1PortFieldSubstitutionContext.html",
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html#a8f7b1f94685c6940dad0dda2fd215502",
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPriceCSR.html",
-"structAntares_1_1Solver_1_1WeeklyDataFromAntares.html#a7b976a4f07ce89167620ba3942e081dc",
-"structBB.html#a885cf9d49b7680238ceef02ca4c54d75",
-"structDONNEES__MENSUELLES__ETENDUES.html#a937fa13bc436fa003e20108cbd7e51fd",
-"structLibraryObjects.html#adae772ab3f2e166d8ef4926bbd6fede2",
-"structRESULTATS__HORAIRES.html#a77adaab0de7e898f18c4e6fd0c0eff69",
-"structcommonFixture.html#a6dc317b3a08df89c24ce2e73947795cf",
-"ui_2simulator_2application_2study_8cpp.html#ad759c41c64bae3360b0847560a381e9d",
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue.html#a0ddfbf7b80dfd92aae0fe016d6b1d9f9",
+"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html#aca8c6c750bf1378521d83a981508c270",
+"classAntares_1_1Toolbox_1_1Filter_1_1AFilterBase.html#aef6378cef217e2c298fc422d931a21c1",
+"classAntares_1_1Toolbox_1_1InputSelector_1_1SpotlightProviderConstraint.html",
+"classAntares_1_1Window_1_1CorrelationPanelData.html#ac1f172cf9028ae832f210f417ff3365b",
+"classAntares_1_1Window_1_1Options_1_1MCPlaylist.html#a604e640694921728de056c783da37b95",
+"classAntares_1_1Window_1_1linkParametersGrid.html#aad605bedffa45d206a0e8f998c84ef92",
+"classDataFile.html#ad12b664847b8779728608abb1d1141f4",
+"classExprVisitor.html#a51f9b9466d14849a1a1f59349a8a37e8",
+"classFolderRemover.html#ab47f9d13ee831600acdf898cdffae478",
+"classJIT_1_1Informations.html#adf1b5eca4b7f69f15f4b2096118d3441",
+"classPROBLEME__ANTARES__A__RESOUDRE.html#a02cdd1ce49f2f0c27e7bd83d4359749c",
+"classShortTermStorageCostVariationWithdrawalBackward.html#acf5c6aced1b3ccdd95fe2a09b6ce114c",
+"classcheck__mps__existence_1_1check__mps__existence.html#ae68cb641eba890ffb5062f61acd7b059",
+"classunfeasible__problem_1_1weeks__in__year.html",
+"dir_37c215a6238fccea2bd701b2834f97bc.html",
+"dir_ca34f09bda743cd578baff63517bd688.html",
+"functions_vars_h.html",
+"internal-ids_8h.html#a9e9b814398d8f3dfd614e67481b6a5d0a2282d1c9904f038915d0a429612e9ccf",
+"libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a54bc5b99bddf744fb54d6f446fae169a",
+"max-mrg-utils_8h_source.html",
+"recentfiles_8cpp.html#a02d1800dba519d484107610be9023f58",
+"spatial-aggregate_8h_source.html",
+"structAntares_1_1Graph_1_1Edge_1_1compareWeight.html",
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits_1_1Statistics.html",
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPriceCSR.html#a9aeb53bd869810bbb144f056e8acfe6e",
+"structAntares_1_1TSGenerator_1_1LinkTSgenerationParams.html#a79528bfeddf3e32045e1c12a5a217d0f",
+"structBasicFixture.html",
+"structDoneesOptimisationJournaliere_1_1DONNEES__MENSUELLES.html#a1b2cc213f6879c70a914e15fc553b8c0",
+"structMinHydroPowerData.html",
+"structReadFromStreamFixture.html#a6afec8190d9ff27d3688a4f090896cb0",
+"structcontainer__of__helpful__data__for__unit__tests.html#ac987087ec3082f23cec8d7379db6a30b",
+"ui_2simulator_2application_2study_8cpp.html#af5ed7f67584946fc5469e45228bacdef",
 ""
 ];
 

@@ -206,6 +206,9 @@ $(document).ready(function(){initNavTree('functions_n.html',''); initResizable()
 , <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1Private_1_1SurveyResultsData.html#a052b5c276b20b98eaf18696f29206fc1">Antares::Solver::Variable::Private::SurveyResultsData</a>
 , <a class="el" href="classOutput.html#a0482280c8f91af837c124f9c79d616ef">Output</a>
 </li>
+<li>nbYearsParallel
+: <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesBase.html#a3426d842a1681923ba44e6d571d28a31">Antares::Solver::Variable::Economy::TimeSeriesValuesBase&lt; Derived, NextT, VCardType &gt;</a>
+</li>
 <li>ncMode
 : <a class="el" href="classAntares_1_1Data_1_1Parameters.html#a45cff9ebdb86a19b15529df124351afc">Antares::Data::Parameters</a>
 </li>
@@ -283,10 +286,6 @@ $(document).ready(function(){initNavTree('functions_n.html',''); initResizable()
 , <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageLevelsByCluster.html#a11f251df713a894e6df79968837bc0cc">Antares::Solver::Variable::Economy::STstorageLevelsByCluster&lt; NextT &gt;</a>
 , <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageWithdrawalByCluster.html#ab4a119bb8e1503848d4314e4bd7b0bea">Antares::Solver::Variable::Economy::STstorageWithdrawalByCluster&lt; NextT &gt;</a>
 , <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ThermalAirPollutantEmissions.html#a87a64b3a3a20764160763a5c71b35e77">Antares::Solver::Variable::Economy::ThermalAirPollutantEmissions&lt; NextT &gt;</a>
-, <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesHydro.html#a3dde3c1bb9e6ff329a8c4bda7040745d">Antares::Solver::Variable::Economy::TimeSeriesValuesHydro&lt; NextT &gt;</a>
-, <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesLoad.html#a8dee02cea2bc9a88dd7c23b3272bef83">Antares::Solver::Variable::Economy::TimeSeriesValuesLoad&lt; NextT &gt;</a>
-, <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesSolar.html#a1377c72cb80d9130e3b3f13ceffcb7d8">Antares::Solver::Variable::Economy::TimeSeriesValuesSolar&lt; NextT &gt;</a>
-, <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesWind.html#a65f9c1f5b845708d99a4a311635f67d7">Antares::Solver::Variable::Economy::TimeSeriesValuesWind&lt; NextT &gt;</a>
 , <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergy.html#abea16cc423e375f687ebe1f5e0eea616">Antares::Solver::Variable::Economy::UnsupliedEnergy&lt; NextT &gt;</a>
 , <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html#a5daa6c0aac4dcec5a4721acdba67adf5">Antares::Solver::Variable::Economy::UnsupliedEnergyCSR&lt; NextT &gt;</a>
 , <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue.html#acdf009678f827c59008caf3acb3a4c9b">Antares::Solver::Variable::Economy::WaterValue&lt; NextT &gt;</a>
@@ -314,6 +313,7 @@ $(document).ready(function(){initNavTree('functions_n.html',''); initResizable()
 : <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#a50db4f0804a09b8e4534d0b5931579f4">Antares::Solver::Variable::Adequacy::VCardOverallCost</a>
 , <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#a5b57ed081d6930e1b07af77f53cee3d9">Antares::Solver::Variable::Adequacy::VCardSpilledEnergy</a>
 , <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#a68216d202582cc70f6f0cfeb4bdec73d">Antares::Solver::Variable::Common::VCardProxy&lt; V &gt;</a>
+, <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesTraits.html#a260cbb90b997611032d946617e44b5f3">Antares::Solver::Variable::Economy::TimeSeriesTraits&lt; Derived &gt;</a>
 , <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardAvailableDispatchGen.html#aec401641784679bb613449b68bb5e98c">Antares::Solver::Variable::Economy::VCardAvailableDispatchGen</a>
 , <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBalance.html#aac41439beb94e12e6915037797720f43">Antares::Solver::Variable::Economy::VCardBalance</a>
 , <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost.html#a41c4ccfad5291a1a46cde84f70ccab64">Antares::Solver::Variable::Economy::VCardBindingConstMarginCost</a>
@@ -368,10 +368,6 @@ $(document).ready(function(){initNavTree('functions_n.html',''); initResizable()
 , <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageLevelsByCluster.html#a33a569acfe8bf4eaf46d92a6e472eb32">Antares::Solver::Variable::Economy::VCardSTstorageLevelsByCluster</a>
 , <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageWithdrawalByCluster.html#a7a6ba0b1eb71ff142ae1e9682c8e95bd">Antares::Solver::Variable::Economy::VCardSTstorageWithdrawalByCluster</a>
 , <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions.html#ab0f11e04fb119ab22b91f6fea4b886b8">Antares::Solver::Variable::Economy::VCardThermalAirPollutantEmissions</a>
-, <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesHydro.html#a16b1ac02b23b94409f99de25efecff16">Antares::Solver::Variable::Economy::VCardTimeSeriesValuesHydro</a>
-, <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesLoad.html#af2f83779b937714e12120532597be6e4">Antares::Solver::Variable::Economy::VCardTimeSeriesValuesLoad</a>
-, <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesSolar.html#a0adfae9523981b83f9493549052a8c0f">Antares::Solver::Variable::Economy::VCardTimeSeriesValuesSolar</a>
-, <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesWind.html#ac3ac7d1ded6d0ee31ad29a4bed854346">Antares::Solver::Variable::Economy::VCardTimeSeriesValuesWind</a>
 , <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergy.html#a0e4adcc88bed55b393c5cb18b9abf151">Antares::Solver::Variable::Economy::VCardUnsupliedEnergy</a>
 , <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergyCSR.html#a4693838c77a3086e978aeaaca740f63a">Antares::Solver::Variable::Economy::VCardUnsupliedEnergyCSR</a>
 , <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a200521cedb28ac5d2efc67628acef401">Antares::Solver::Variable::Economy::VCardWaterValue</a>

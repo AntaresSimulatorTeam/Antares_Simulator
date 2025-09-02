@@ -130,9 +130,9 @@ $(document).ready(function(){initNavTree('md_src_tests_cucumber_readme.html','')
 <div class="textblock"><p>: tests from the legacy "short-tests" batch</p>
 <p>This module contains non-regression functional tests for Antares written in the <a href="https://cucumber.io/docs/gherkin/">Gherkin language</a>. <br  />
 </p>
-<h1><a class="anchor" id="autotoc_md5"></a>
+<h1><a class="anchor" id="autotoc_md19"></a>
 Tests structure</h1>
-<h2><a class="anchor" id="autotoc_md6"></a>
+<h2><a class="anchor" id="autotoc_md20"></a>
 Features, scenarios and tags</h2>
 <p>Features are supposed to represent big-picture features of the application. Every feature can have its own set of tests, defined in a <code>.feature</code> file. Features are under the <a href="./features">features</a> folder. <br  />
  Every feature has multiple scenarios (every scenario represents a test case). <br  />
@@ -141,16 +141,16 @@ Features, scenarios and tags</h2>
 <li>@slow: tests that run slow -- @medium: tests from the legacy "medium-tests" batch</li>
 <li>@flaky: quarantine for flaky tests (i.e. sometimes pass, sometimes fail) that are to be skipped by the CI</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md7"></a>
+<h2><a class="anchor" id="autotoc_md21"></a>
 Steps structure</h2>
 <p>Currently, tests are being migrated from the <a href="../run-study-tests">legacy non-regression testing process</a>. Thus, they all begin by defining the path to the study to run and then call antares, through the following "steps": </p><div class="fragment"><div class="line">Given the solver study path is &quot;someFolder/someStudy&quot;</div>
 <div class="line">When I run antares simulator</div>
 </div><!-- fragment --><p> The test will load the study, run antares-simulator, and hold on to its outputs. <br  />
  Next, assertion "steps" can be added. For example, this next assertion checks that the simulation time (as measured by antares-simulator and reported in its logs) is less than 15 seconds: </p><div class="fragment"><div class="line">Then the simulation takes less than 15 seconds</div>
 </div><!-- fragment --><p> And the next step checks the expected value of the annual system cost: </p><div class="fragment"><div class="line">Then the expected value of the annual system cost is 3.725e+10</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md8"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md22"></a>
 Running the tests</h1>
-<h2><a class="anchor" id="autotoc_md9"></a>
+<h2><a class="anchor" id="autotoc_md23"></a>
 On your PC</h2>
 <p>First, you need to build antares-simulator. The tests will run the last antares-simulator executable built by the Cmake projet. <br  />
  Then, if needed, install the requirements by running: </p><div class="fragment"><div class="line">pip install -r requirements.txt</div>
@@ -158,7 +158,7 @@ On your PC</h2>
 <div class="line">behave</div>
 </div><!-- fragment --><p> If you want to filter on a feature file and given tags, you can use: </p><div class="fragment"><div class="line">behave --tags @some-tag features/some_feature.feature</div>
 </div><!-- fragment --><p> Refer to the <a href="https://behave.readthedocs.io/en/latest/">behave documentation</a> for more information.</p>
-<h2><a class="anchor" id="autotoc_md10"></a>
+<h2><a class="anchor" id="autotoc_md24"></a>
 The configuration file</h2>
 <p>When you build antares-simulator, a file called <code>behave.ini</code> is automatically generated. This file contains the full path to the built antares executables, as well as the test resources. <br  />
  This file is used by behave to configure the tests: you may as well create it yourself. Here is the expected content: </p><div class="fragment"><div class="line">[behave.userdata]</div>
@@ -175,16 +175,16 @@ The configuration file</h2>
 <li>quadratic-solver (optional): the solver you want to use during tests, for quadratic optimizations</li>
 </ul>
 <p>Alternatively, you can pass these options to behave through the command line. Beware that command-line options take precedence over options in the <code>behave.ini</code>file if both are defined. Example: </p><div class="fragment"><div class="line">behave -D antares-solver=/path/to/some/other/anatres-solver -D linear-solver=scip</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md11"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md25"></a>
 In the CI</h2>
 <p>Cucumber tests are run in the same way as the legacy tests in the Ubuntu &amp; Windows CIs, except that they don't need the reference values from the SimTest repository, since reference values are stored explicitly in the feature files. Note that tests marked as "@flaky" are skipped by default. <br  />
  Workflow file: <a href="../../../.github/workflows/cucumber-tests/action.yml">here</a></p>
-<h1><a class="anchor" id="autotoc_md12"></a>
+<h1><a class="anchor" id="autotoc_md26"></a>
 Under the hood</h1>
-<h2><a class="anchor" id="autotoc_md13"></a>
+<h2><a class="anchor" id="autotoc_md27"></a>
 Test files</h2>
 <p>Tests are hosted in the <a href="https://github.com/AntaresSimulatorTeam/Antares_Simulator_Tests_NR">Antares_Simulator_Tests_NR submodule</a> into the <code>src/test/resources</code> folder. Adding or modifying a study should thus change contents of this submodule.</p>
-<h2><a class="anchor" id="autotoc_md14"></a>
+<h2><a class="anchor" id="autotoc_md28"></a>
 Code-behind</h2>
 <p>All Gherkin steps have a code-behind definition called "step definitions". These are defined in the python files under <a href="./features/steps">features/steps</a> and use the <a href="https://behave.readthedocs.io/en/latest/">behave</a> implementation of cucumber. Feel free to add extra steps for your tests. </p>
 </div></div><!-- contents -->

@@ -1,0 +1,303 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<!-- BEGIN opengraph metadata -->
+<meta property="og:title" content="Antares Simulator" />
+<meta property="og:image" content="https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/assets/antares.png" />
+<meta property="og:description" content="Power System Simulator." />
+<meta property="og:url" content="https://antares-simulator.org/" />
+<!-- END opengraph metadata -->
+<!-- BEGIN twitter metadata -->
+<meta name="twitter:image:src" content="https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/assets/logo.png" />
+<meta name="twitter:title" content="Antares Simulator" />
+<meta name="twitter:description" content="Power System Simulator." />
+<!-- END twitter metadata -->
+<title>Antares Simulator: src/solver/variable/include/antares/solver/variable/commons/generation.h Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
+<script type="text/javascript" src="doxygen-awesome-fragment-copy-button.js"></script>
+<script type="text/javascript" src="doxygen-awesome-paragraph-link.js"></script>
+<script type="text/javascript" src="doxygen-awesome-interactive-toc.js"></script>
+<script type="text/javascript" src="doxygen-awesome-tabs.js"></script>
+<script type="text/javascript" src="toggle-alternative-theme.js"></script>
+<script type="text/javascript">
+    DoxygenAwesomeFragmentCopyButton.init()
+    DoxygenAwesomeDarkModeToggle.init()
+    DoxygenAwesomeParagraphLink.init()
+    DoxygenAwesomeInteractiveToc.init()
+    DoxygenAwesomeTabs.init()
+</script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
+<link href="custom-alternative.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- https://github.com/AntaresSimulatorTeam/Antares_Simulator/ -->
+<a href="https://github.com/AntaresSimulatorTeam/Antares_Simulator" class="github-corner" title="View source on GitHub" target="_blank">
+    <svg viewBox="0 0 250 250" width="40" height="40" style="position: absolute; top: 0; border: 0; right: 0; z-index: 99;" aria-hidden="true">
+    <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Antares Simulator
+   </div>
+   <div id="projectbrief">Power System Simulator</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Search','.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(document).ready(function(){initNavTree('generation_8h_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="headertitle">
+<div class="title">generation.h</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="generation_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * Copyright 2007-2025, RTE (https://www.rte-france.com)</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> * See AUTHORS.txt</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * SPDX-License-Identifier: MPL-2.0</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * This file is part of Antares-Simulator,</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> * Adequacy and Performance assessment for interconnected energy networks.</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment"> * Antares_Simulator is free software: you can redistribute it and/or modify</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment"> * it under the terms of the Mozilla Public Licence 2.0 as published by</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment"> * the Mozilla Foundation, either version 2 of the License, or</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment"> * (at your option) any later version.</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment"> * Antares_Simulator is distributed in the hope that it will be useful,</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment"> * but WITHOUT ANY WARRANTY; without even the implied warranty of</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment"> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment"> * Mozilla Public Licence 2.0 for more details.</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment"> * You should have received a copy of the Mozilla Public Licence 2.0</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment"> * along with Antares_Simulator. If not, see &lt;https://opensource.org/license/mpl-2-0/&gt;.</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#include &lt;algorithm&gt;</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#include &lt;string_view&gt;</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">#include &lt;antares/study/area/area.h&gt;</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="timeseries__base_8h.html">timeseries_base.h</a>&quot;</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">namespace </span>Antares::Solver::Variable::Economy</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;{</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SolarTag.html">   60</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SolarTag.html">SolarTag</a></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;{</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;};</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
+<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTag.html">   69</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTag.html">WindTag</a></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;{</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;};</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
+<div class="line"><a name="l00091"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SolarTraits.html">   91</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SolarTraits.html">SolarTraits</a></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;{</div>
+<div class="line"><a name="l00094"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SolarTraits.html#aa0c4a7bde5e2d858ab0614ab10716282">   94</a></span>&#160;    <span class="keyword">inline</span> <span class="keyword">static</span> constexpr std::string_view <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SolarTraits.html#aa0c4a7bde5e2d858ab0614ab10716282">kCaption</a> = <span class="stringliteral">&quot;SOLAR&quot;</span>;</div>
+<div class="line"><a name="l00096"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SolarTraits.html#ac66332845dbc0fee75359c17c8e2cdd6">   96</a></span>&#160;    <span class="keyword">inline</span> <span class="keyword">static</span> constexpr std::string_view <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SolarTraits.html#ac66332845dbc0fee75359c17c8e2cdd6">kDescription</a> = <span class="stringliteral">&quot;Solar generation, thoughout all MC &quot;</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;                                                            <span class="stringliteral">&quot;years&quot;</span>;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="comment">// Pointer-to-member for accessing solar data from Area</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keyword">static</span> constexpr <span class="keyword">auto</span> areaMember = &amp;Data::Area::solar;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;};</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
+<div class="line"><a name="l00116"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTraits.html">  116</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTraits.html">WindTraits</a></div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;{</div>
+<div class="line"><a name="l00119"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTraits.html#a687e24d67bfedbc73f612e7bc75504ea">  119</a></span>&#160;    <span class="keyword">inline</span> <span class="keyword">static</span> constexpr std::string_view <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTraits.html#a687e24d67bfedbc73f612e7bc75504ea">kCaption</a> = <span class="stringliteral">&quot;WIND&quot;</span>;</div>
+<div class="line"><a name="l00121"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTraits.html#aba17bf0eaa3bf7a0451eb0f7747e8e3a">  121</a></span>&#160;    <span class="keyword">inline</span> <span class="keyword">static</span> constexpr std::string_view <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTraits.html#aba17bf0eaa3bf7a0451eb0f7747e8e3a">kDescription</a> = <span class="stringliteral">&quot;Wind generation, thoughout all MC &quot;</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;                                                            <span class="stringliteral">&quot;years&quot;</span>;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="comment">// Pointer-to-member for accessing wind data from Area</span></div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <span class="keyword">static</span> constexpr <span class="keyword">auto</span> areaMember = &amp;<a class="code" href="classAntares_1_1Data_1_1Area.html#af593b90ffde0b3e1d025f99fa654161e">Data::Area::wind</a>;</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;};</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160; </div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160; </div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160; </div>
+<div class="line"><a name="l00138"></a><span class="lineno"><a class="line" href="generation_8h.html#a01070e426671cc260c0473f5a0d6158b">  138</a></span>&#160;<span class="keyword">using</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html">VCardTimeSeriesValuesSolar</a> = <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html">VCardTimeSeriesBase&lt;SolarTraits&gt;</a>;</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160; </div>
+<div class="line"><a name="l00146"></a><span class="lineno"><a class="line" href="generation_8h.html#ad43325234908f09a86db7e31aba3b1f3">  146</a></span>&#160;<span class="keyword">using</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html">VCardTimeSeriesValuesWind</a> = <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html">VCardTimeSeriesBase&lt;WindTraits&gt;</a>;</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160; </div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160; </div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160; </div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Tag&gt;</div>
+<div class="line"><a name="l00161"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1GenerationTraits.html">  161</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1GenerationTraits.html">GenerationTraits</a>; <span class="comment">// primary template (undefined)</span></div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160; </div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;<span class="keyword">template</span>&lt;&gt;</div>
+<div class="line"><a name="l00169"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1GenerationTraits_3_01SolarTag_01_4.html">  169</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1GenerationTraits.html">GenerationTraits</a>&lt;<a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SolarTag.html">SolarTag</a>&gt;: <span class="keyword">public</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SolarTraits.html">SolarTraits</a></div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;{</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;};</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160; </div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;<span class="keyword">template</span>&lt;&gt;</div>
+<div class="line"><a name="l00179"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1GenerationTraits_3_01WindTag_01_4.html">  179</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1GenerationTraits.html">GenerationTraits</a>&lt;<a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTag.html">WindTag</a>&gt;: <span class="keyword">public</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTraits.html">WindTraits</a></div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;{</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;};</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160; </div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Tag&gt;</div>
+<div class="line"><a name="l00190"></a><span class="lineno"><a class="line" href="generation_8h.html#a282c86615c4960094d02ae954f621a8d">  190</a></span>&#160;<span class="keyword">using</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html">VCardTimeSeriesValuesGeneration</a> = <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html">VCardTimeSeriesBase&lt;GenerationTraits&lt;Tag&gt;</a>&gt;;</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160; </div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160; </div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160; </div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> TraitsType, <span class="keyword">class</span> NextT = Container::EndOfList&gt;</div>
+<div class="line"><a name="l00223"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesGenerationImpl.html">  223</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesGenerationImpl.html">TimeSeriesValuesGenerationImpl</a></div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;    : <span class="keyword">public</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesBase.html">TimeSeriesValuesBase</a>&lt;TimeSeriesValuesGenerationImpl&lt;TraitsType, NextT&gt;,</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;                                  NextT,</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;                                  VCardTimeSeriesBase&lt;TraitsType&gt;&gt;</div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;{</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    <span class="keyword">using</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesBase.html">BaseType</a> = <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesBase.html">TimeSeriesValuesBase&lt;TimeSeriesValuesGenerationImpl&lt;TraitsType, NextT&gt;</a>,</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;                                          NextT,</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;                                          <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html">VCardTimeSeriesBase&lt;TraitsType&gt;</a>&gt;;</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;    <span class="keyword">using</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html">VCardType</a> = <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html">VCardTimeSeriesBase&lt;TraitsType&gt;</a>;</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160; </div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160; </div>
+<div class="line"><a name="l00245"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesGenerationImpl.html#a420ef8edf17722be4025830e286e220e">  245</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesGenerationImpl.html#a420ef8edf17722be4025830e286e220e">initializeDerivedFromStudy</a>(<a class="code" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; study)</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;    {</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;        isRenewableGenerationAggregated = study.parameters.renewableGeneration.isAggregated();</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;    }</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160; </div>
+<div class="line"><a name="l00267"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesGenerationImpl.html#a573f19bfeb0c878bff27efb9d758ad16">  267</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesGenerationImpl.html#a573f19bfeb0c878bff27efb9d758ad16">yearBeginImpl</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> year, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> space)</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;    {</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;        <span class="keywordflow">if</span> (isRenewableGenerationAggregated)</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;        {</div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;            <span class="comment">// Type-safe access to area data using traits</span></div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;            <span class="keyword">auto</span>&amp; holder = (BaseType::areaPtr-&gt;*TraitsType::areaMember);</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;            <span class="comment">// Bulk copy of time series data for performance</span></div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;            std::copy_n(holder.series.getColumn(year),</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;                        holder.series.timeSeries.height,</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;                        <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesBase.html#a7284a6a3df553cad2d26e04ff3771ba1">BaseType::yearlyValues</a>[space].hour);</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;        }</div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;    }</div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160; </div>
+<div class="line"><a name="l00295"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesGenerationImpl.html#aad2f252d7c5c22dd729e63357de1b979">  295</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesGenerationImpl.html#aad2f252d7c5c22dd729e63357de1b979">hourForEachAreaImpl</a>(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a>&amp;, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>)</div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;    {</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;        <span class="comment">// Default implementation - no specific action needed for generation</span></div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;        <span class="comment">// Values are already copied in yearBeginImpl for performance</span></div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;    }</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160; </div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160; </div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;    <span class="keywordtype">bool</span> isRenewableGenerationAggregated{<span class="keyword">true</span>};</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;};</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160; </div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160; </div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160; </div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Tag, <span class="keyword">class</span> NextT = Container::EndOfList&gt;</div>
+<div class="line"><a name="l00340"></a><span class="lineno"><a class="line" href="generation_8h.html#abee688d4b58a65940f8a284534e8842a">  340</a></span>&#160;<span class="keyword">using</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesGenerationImpl.html">TimeSeriesValuesGeneration</a> = <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesGenerationImpl.html">TimeSeriesValuesGenerationImpl&lt;GenerationTraits&lt;Tag&gt;</a>, NextT&gt;;</div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160; </div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> NextT = Container::EndOfList&gt;</div>
+<div class="line"><a name="l00362"></a><span class="lineno"><a class="line" href="generation_8h.html#add2d7087d91e303778c16bcb6f8330dc">  362</a></span>&#160;<span class="keyword">using</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesGenerationImpl.html">TimeSeriesValuesSolar</a> = <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesGenerationImpl.html">TimeSeriesValuesGenerationImpl&lt;SolarTraits, NextT&gt;</a>;</div>
+<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160; </div>
+<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> NextT = Container::EndOfList&gt;</div>
+<div class="line"><a name="l00384"></a><span class="lineno"><a class="line" href="generation_8h.html#a23f8f3edda80f0c6c10615325c0986d5">  384</a></span>&#160;<span class="keyword">using</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesGenerationImpl.html">TimeSeriesValuesWind</a> = <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesGenerationImpl.html">TimeSeriesValuesGenerationImpl&lt;WindTraits, NextT&gt;</a>;</div>
+<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160; </div>
+<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160; </div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;} <span class="comment">// namespace Antares::Solver::Variable::Economy</span></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1Area_html_af593b90ffde0b3e1d025f99fa654161e"><div class="ttname"><a href="classAntares_1_1Data_1_1Area.html#af593b90ffde0b3e1d025f99fa654161e">Antares::Data::Area::wind</a></div><div class="ttdeci">Wind::Container wind</div><div class="ttdoc">Wind time-series and Wind prepro data.</div><div class="ttdef"><b>Definition:</b> area.h:258</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdef"><b>Definition:</b> study.h:66</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesBase_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesBase.html">Antares::Solver::Variable::Economy::TimeSeriesValuesBase</a></div><div class="ttdoc">Base implementation for time series variables using CRTP pattern.</div><div class="ttdef"><b>Definition:</b> timeseries_base.h:263</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesBase_html_a7284a6a3df553cad2d26e04ff3771ba1"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesBase.html#a7284a6a3df553cad2d26e04ff3771ba1">Antares::Solver::Variable::Economy::TimeSeriesValuesBase::yearlyValues</a></div><div class="ttdeci">VCardType::IntermediateValuesType yearlyValues</div><div class="ttdoc">Intermediate values for each parallel space.</div><div class="ttdef"><b>Definition:</b> timeseries_base.h:488</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesGenerationImpl_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesGenerationImpl.html">Antares::Solver::Variable::Economy::TimeSeriesValuesGenerationImpl</a></div><div class="ttdoc">Common implementation for renewable generation time series.</div><div class="ttdef"><b>Definition:</b> generation.h:227</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesGenerationImpl_html_a420ef8edf17722be4025830e286e220e"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesGenerationImpl.html#a420ef8edf17722be4025830e286e220e">Antares::Solver::Variable::Economy::TimeSeriesValuesGenerationImpl::initializeDerivedFromStudy</a></div><div class="ttdeci">void initializeDerivedFromStudy(Data::Study &amp;study)</div><div class="ttdoc">Initialize generation-specific settings from study.</div><div class="ttdef"><b>Definition:</b> generation.h:245</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesGenerationImpl_html_a573f19bfeb0c878bff27efb9d758ad16"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesGenerationImpl.html#a573f19bfeb0c878bff27efb9d758ad16">Antares::Solver::Variable::Economy::TimeSeriesValuesGenerationImpl::yearBeginImpl</a></div><div class="ttdeci">void yearBeginImpl(unsigned int year, unsigned int space)</div><div class="ttdoc">Setup generation data at the beginning of each year.</div><div class="ttdef"><b>Definition:</b> generation.h:267</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesGenerationImpl_html_aad2f252d7c5c22dd729e63357de1b979"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesGenerationImpl.html#aad2f252d7c5c22dd729e63357de1b979">Antares::Solver::Variable::Economy::TimeSeriesValuesGenerationImpl::hourForEachAreaImpl</a></div><div class="ttdeci">void hourForEachAreaImpl(State &amp;, unsigned int)</div><div class="ttdoc">Hourly processing for generation variables.</div><div class="ttdef"><b>Definition:</b> generation.h:295</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1State_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1State.html">Antares::Solver::Variable::State</a></div><div class="ttdef"><b>Definition:</b> state.h:71</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1GenerationTraits_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1GenerationTraits.html">Antares::Solver::Variable::Economy::GenerationTraits</a></div><div class="ttdoc">Primary template for generation traits mapping (undefined)</div><div class="ttdef"><b>Definition:</b> generation.h:161</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1SolarTag_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SolarTag.html">Antares::Solver::Variable::Economy::SolarTag</a></div><div class="ttdoc">Tag type for solar generation variables.</div><div class="ttdef"><b>Definition:</b> generation.h:61</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1SolarTraits_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SolarTraits.html">Antares::Solver::Variable::Economy::SolarTraits</a></div><div class="ttdoc">Traits for solar generation time series.</div><div class="ttdef"><b>Definition:</b> generation.h:92</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1SolarTraits_html_aa0c4a7bde5e2d858ab0614ab10716282"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SolarTraits.html#aa0c4a7bde5e2d858ab0614ab10716282">Antares::Solver::Variable::Economy::SolarTraits::kCaption</a></div><div class="ttdeci">static constexpr std::string_view kCaption</div><div class="ttdoc">Display name for solar generation in outputs and GUI.</div><div class="ttdef"><b>Definition:</b> generation.h:94</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1SolarTraits_html_ac66332845dbc0fee75359c17c8e2cdd6"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SolarTraits.html#ac66332845dbc0fee75359c17c8e2cdd6">Antares::Solver::Variable::Economy::SolarTraits::kDescription</a></div><div class="ttdeci">static constexpr std::string_view kDescription</div><div class="ttdoc">Descriptive text (preserving original typo for stability)</div><div class="ttdef"><b>Definition:</b> generation.h:96</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html">Antares::Solver::Variable::Economy::VCardTimeSeriesBase</a></div><div class="ttdoc">VCard template providing variable metadata and configuration.</div><div class="ttdef"><b>Definition:</b> timeseries_base.h:147</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTag_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTag.html">Antares::Solver::Variable::Economy::WindTag</a></div><div class="ttdoc">Tag type for wind generation variables.</div><div class="ttdef"><b>Definition:</b> generation.h:70</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTraits_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTraits.html">Antares::Solver::Variable::Economy::WindTraits</a></div><div class="ttdoc">Traits for wind generation time series.</div><div class="ttdef"><b>Definition:</b> generation.h:117</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTraits_html_a687e24d67bfedbc73f612e7bc75504ea"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTraits.html#a687e24d67bfedbc73f612e7bc75504ea">Antares::Solver::Variable::Economy::WindTraits::kCaption</a></div><div class="ttdeci">static constexpr std::string_view kCaption</div><div class="ttdoc">Display name for wind generation in outputs and GUI.</div><div class="ttdef"><b>Definition:</b> generation.h:119</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTraits_html_aba17bf0eaa3bf7a0451eb0f7747e8e3a"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTraits.html#aba17bf0eaa3bf7a0451eb0f7747e8e3a">Antares::Solver::Variable::Economy::WindTraits::kDescription</a></div><div class="ttdeci">static constexpr std::string_view kDescription</div><div class="ttdoc">Descriptive text (preserving original typo for stability)</div><div class="ttdef"><b>Definition:</b> generation.h:121</div></div>
+<div class="ttc" id="atimeseries__base_8h_html"><div class="ttname"><a href="timeseries__base_8h.html">timeseries_base.h</a></div><div class="ttdoc">Base classes and traits for time series variables in Antares Simulator.</div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_3e822a6ee4d724687cb7bda3e29a5b91.html">variable</a></li><li class="navelem"><a class="el" href="dir_20840d7036cd3874771cb5f002fb682a.html">include</a></li><li class="navelem"><a class="el" href="dir_788e7f05e8620bbe44f03aee5eae2ddd.html">antares</a></li><li class="navelem"><a class="el" href="dir_8f58b5f8d3a1b7f0f618eab98f86bc8f.html">solver</a></li><li class="navelem"><a class="el" href="dir_6eccbe1c151b0c708db2d7dc07169755.html">variable</a></li><li class="navelem"><a class="el" href="dir_975cde24ce853807f10143515c4f97c7.html">commons</a></li><li class="navelem"><a class="el" href="generation_8h.html">generation.h</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+  </ul>
+</div>
+</body>
+</html>

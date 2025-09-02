@@ -244,8 +244,8 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;                                       <span class="comment">// Time series</span></div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;             &lt;TimeSeriesValuesLoad     <span class="comment">// Load</span></div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;              &lt;TimeSeriesValuesHydro   <span class="comment">// Hydro</span></div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;               &lt;TimeSeriesValuesWind   <span class="comment">// Wind</span></div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;                &lt;TimeSeriesValuesSolar <span class="comment">// Solar</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;               &lt;<a class="code" href="generation_8h.html#a23f8f3edda80f0c6c10615325c0986d5">TimeSeriesValuesWind</a>   <span class="comment">// Wind</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;                &lt;<a class="code" href="generation_8h.html#add2d7087d91e303778c16bcb6f8330dc">TimeSeriesValuesSolar</a> <span class="comment">// Solar</span></div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;                                       <span class="comment">// Other</span></div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;                 &lt;DispatchableGeneration <span class="comment">// All dispatchable generation</span></div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;                                         <span class="comment">//       minGenModulation * unit count * nominal capacity)</span></div>
@@ -313,9 +313,9 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;                    Common::SpatialAggregate&lt;</div>
 <div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;                      TimeSeriesValuesHydro,</div>
 <div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;                      Common::SpatialAggregate&lt;</div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;                        TimeSeriesValuesWind,</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;                        <a class="code" href="generation_8h.html#a23f8f3edda80f0c6c10615325c0986d5">TimeSeriesValuesWind</a>,</div>
 <div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;                        Common::SpatialAggregate&lt;</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;                          TimeSeriesValuesSolar,</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;                          <a class="code" href="generation_8h.html#add2d7087d91e303778c16bcb6f8330dc">TimeSeriesValuesSolar</a>,</div>
 <div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;                          <span class="comment">// Other</span></div>
 <div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;                          Common::SpatialAggregate&lt;</div>
 <div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;                            HydroStorage,</div>
@@ -393,6 +393,8 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;} <span class="comment">// namespace Antares::Solver::Variable::Economy</span></div>
 <div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160; </div>
 <div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __SOLVER_VARIABLE_ECONOMY_ALL_H__</span></div>
+<div class="ttc" id="ageneration_8h_html_a23f8f3edda80f0c6c10615325c0986d5"><div class="ttname"><a href="generation_8h.html#a23f8f3edda80f0c6c10615325c0986d5">Antares::Solver::Variable::Economy::TimeSeriesValuesWind</a></div><div class="ttdeci">TimeSeriesValuesGenerationImpl&lt; WindTraits, NextT &gt; TimeSeriesValuesWind</div><div class="ttdoc">Wind generation time series variable.</div><div class="ttdef"><b>Definition:</b> generation.h:384</div></div>
+<div class="ttc" id="ageneration_8h_html_add2d7087d91e303778c16bcb6f8330dc"><div class="ttname"><a href="generation_8h.html#add2d7087d91e303778c16bcb6f8330dc">Antares::Solver::Variable::Economy::TimeSeriesValuesSolar</a></div><div class="ttdeci">TimeSeriesValuesGenerationImpl&lt; SolarTraits, NextT &gt; TimeSeriesValuesSolar</div><div class="ttdoc">Solar generation time series variable.</div><div class="ttdef"><b>Definition:</b> generation.h:362</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
