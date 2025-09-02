@@ -302,7 +302,7 @@ void FillSimulationTable(
     std::map<std::string, double> solutions;
     for (int i = 0; i < linearProblem.variableCount(); ++i)
     {
-        auto var = linearProblem.getVariable(i);
+        auto* var = linearProblem.getVariable(i);
         solutions.try_emplace(var->getName(), var->solutionValue());
     }
     for (const auto& component: components | std::views::values)
