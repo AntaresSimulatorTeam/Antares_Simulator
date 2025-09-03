@@ -237,11 +237,8 @@ BOOST_FIXTURE_TEST_CASE(totalGen_is_decreasing___hourOfMaxGen_is_first_and_hourO
 
     auto exchange = searchForExhange(validHours, totalGen, unsupE, *storage);
 
-    BOOST_CHECK(exchange.hourOfMinGen.has_value());
-    BOOST_CHECK(exchange.hourOfMaxGen.has_value());
-
-    BOOST_CHECK_EQUAL(exchange.hourOfMaxGen.value(), 0);
-    BOOST_CHECK_EQUAL(exchange.hourOfMinGen.value(), 4);
+    BOOST_CHECK_EQUAL(exchange.hourOfMaxGen.value_or(100), 0);
+    BOOST_CHECK_EQUAL(exchange.hourOfMinGen.value_or(100), 4);
 }
 
 BOOST_FIXTURE_TEST_CASE(totalGen_is_increasing___hourOfMinGen_is_first_and_hourOfMaxGen_last,
@@ -252,11 +249,8 @@ BOOST_FIXTURE_TEST_CASE(totalGen_is_increasing___hourOfMinGen_is_first_and_hourO
 
     auto exchange = searchForExhange(validHours, totalGen, unsupE, *storage);
 
-    BOOST_CHECK(exchange.hourOfMinGen.has_value());
-    BOOST_CHECK(exchange.hourOfMaxGen.has_value());
-
-    BOOST_CHECK_EQUAL(exchange.hourOfMaxGen.value(), 4);
-    BOOST_CHECK_EQUAL(exchange.hourOfMinGen.value(), 0);
+    BOOST_CHECK_EQUAL(exchange.hourOfMaxGen.value_or(100), 4);
+    BOOST_CHECK_EQUAL(exchange.hourOfMinGen.value_or(100), 0);
 }
 
 BOOST_FIXTURE_TEST_CASE(totalGen_is_not_monotone__output_hours_are_as_expected,
@@ -267,11 +261,8 @@ BOOST_FIXTURE_TEST_CASE(totalGen_is_not_monotone__output_hours_are_as_expected,
 
     auto exchange = searchForExhange(validHours, totalGen, unsupE, *storage);
 
-    BOOST_CHECK(exchange.hourOfMinGen.has_value());
-    BOOST_CHECK(exchange.hourOfMaxGen.has_value());
-
-    BOOST_CHECK_EQUAL(exchange.hourOfMaxGen.value(), 3);
-    BOOST_CHECK_EQUAL(exchange.hourOfMinGen.value(), 1);
+    BOOST_CHECK_EQUAL(exchange.hourOfMaxGen.value_or(100), 3);
+    BOOST_CHECK_EQUAL(exchange.hourOfMinGen.value_or(100), 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(valid_hours_is_a_strict_subrange__output_hours_are_as_expected,
@@ -285,11 +276,8 @@ BOOST_FIXTURE_TEST_CASE(valid_hours_is_a_strict_subrange__output_hours_are_as_ex
 
     auto exchange = searchForExhange(validHours, totalGen, unsupE, *storage);
 
-    BOOST_CHECK(exchange.hourOfMinGen.has_value());
-    BOOST_CHECK(exchange.hourOfMaxGen.has_value());
-
-    BOOST_CHECK_EQUAL(exchange.hourOfMaxGen.value(), 4);
-    BOOST_CHECK_EQUAL(exchange.hourOfMinGen.value(), 2);
+    BOOST_CHECK_EQUAL(exchange.hourOfMaxGen.value_or(100), 4);
+    BOOST_CHECK_EQUAL(exchange.hourOfMinGen.value_or(100), 2);
 }
 
 BOOST_FIXTURE_TEST_CASE(valid_hours_is_another_strict_subrange__output_hours_are_as_expected,
@@ -303,11 +291,8 @@ BOOST_FIXTURE_TEST_CASE(valid_hours_is_another_strict_subrange__output_hours_are
 
     auto exchange = searchForExhange(validHours, totalGen, unsupE, *storage);
 
-    BOOST_CHECK(exchange.hourOfMinGen.has_value());
-    BOOST_CHECK(exchange.hourOfMaxGen.has_value());
-
-    BOOST_CHECK_EQUAL(exchange.hourOfMaxGen.value(), 7);
-    BOOST_CHECK_EQUAL(exchange.hourOfMinGen.value(), 6);
+    BOOST_CHECK_EQUAL(exchange.hourOfMaxGen.value_or(100), 7);
+    BOOST_CHECK_EQUAL(exchange.hourOfMinGen.value_or(100), 6);
 }
 
 BOOST_FIXTURE_TEST_CASE(valid_hours_is_not_contuguous__output_hours_are_as_expected,
@@ -321,11 +306,8 @@ BOOST_FIXTURE_TEST_CASE(valid_hours_is_not_contuguous__output_hours_are_as_expec
 
     auto exchange = searchForExhange(validHours, totalGen, unsupE, *storage);
 
-    BOOST_CHECK(exchange.hourOfMinGen.has_value());
-    BOOST_CHECK(exchange.hourOfMaxGen.has_value());
-
-    BOOST_CHECK_EQUAL(exchange.hourOfMaxGen.value(), 1);
-    BOOST_CHECK_EQUAL(exchange.hourOfMinGen.value(), 6);
+    BOOST_CHECK_EQUAL(exchange.hourOfMaxGen.value_or(100), 1);
+    BOOST_CHECK_EQUAL(exchange.hourOfMinGen.value_or(100), 6);
 }
 
 BOOST_FIXTURE_TEST_CASE(unsupE_is_zero_everywhere__valid_hours_is_empty__output_hours_undefined,
@@ -357,8 +339,7 @@ BOOST_FIXTURE_TEST_CASE(hourOfMinGen_can_only_be_in_the_subset_where_unsupE_is_n
 
     auto exchange = searchForExhange(validHours, totalGen, unsupE, *storage);
 
-    BOOST_CHECK(exchange.hourOfMinGen.has_value());
-    BOOST_CHECK_EQUAL(exchange.hourOfMinGen.value(), 6);
+    BOOST_CHECK_EQUAL(exchange.hourOfMinGen.value_or(100), 6);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
