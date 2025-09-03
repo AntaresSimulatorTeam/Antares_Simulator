@@ -10,7 +10,7 @@ constexpr double eps = 1e-3;
 namespace Antares::Solver::Simulation
 {
 
-bool Exchange::isPossible()
+bool Exchange::isPossible() const
 {
     return amount > eps && hourOfMinGen.has_value() && hourOfMaxGen.has_value();
 }
