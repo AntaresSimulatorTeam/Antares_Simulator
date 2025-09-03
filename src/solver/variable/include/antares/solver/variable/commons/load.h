@@ -1,189 +1,137 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
-#ifndef __SOLVER_VARIABLE_ECONOMY_TimeSeriesValuesLoad_H__
-#define __SOLVER_VARIABLE_ECONOMY_TimeSeriesValuesLoad_H__
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
-#include "../variable.h"
+/**
+ * @file load.h
+ * @brief Load time series variables for electrical demand modeling
+ * This file implements load (electrical demand) time series variables using
+ * the modern time series base framework. Load variables represent the electrical
+ * demand that must be satisfied in each area during simulation.
+ *
+ * @see timeseries_base.h for the base framework
+ * @see generation.h, hydro.h for other time series implementations
+ */
+#pragma once
 
-namespace Antares
+#include <cstring>
+
+#include "timeseries_base.h"
+
+namespace Antares::Solver::Variable::Economy
 {
-namespace Solver
+
+/**
+ * @brief Traits for load time series variables
+ * * Defines the specific characteristics of electrical load variables:
+ * - Caption: "LOAD" (as displayed in outputs and GUI)
+ * - Description: Descriptive text for load generation/consumption
+ * - No area member needed (load data accessed directly)
+ * * ## Load vs Generation:
+ * * Unlike generation variables that use areaMember pointers, load variables
+ * access data directly through `area->load.series` since load is a fundamental
+ * property present in all areas.
+ */
+struct LoadTraits
 {
-namespace Variable
-{
-namespace Economy
-{
-struct VCardTimeSeriesValuesLoad
-{
-    //! Caption
-    static std::string Caption()
-    {
-        return "LOAD";
-    }
+    /// Display name for load in outputs and GUI
+    inline static constexpr std::string_view kCaption = "LOAD";
+    /// Descriptive text for load time series
+    inline static constexpr std::string_view kDescription = "Load generation, thoughout all MC "
+                                                            "years";
+};
 
-    //! Unit
-    static std::string Unit()
-    {
-        return "MWh";
-    }
+/**
+ * @brief VCard for load time series variables
+ * * Provides metadata and configuration for load time series.
+ * Inherits common properties from TimeSeriesTraits and adds load-specific
+ * information from LoadTraits.
+ * * ## Output Configuration:
+ * * Load variables use the standard time series output configuration:
+ * - Unit: MWh (inherited from TimeSeriesTraits)
+ * - Aggregation: Sum across areas (for regional totals)
+ * - Statistics: Average, StdDev, Min, Max across all Monte Carlo years
+ * - Precision: All output levels (as configured in study)
+ */
+using VCardTimeSeriesValuesLoad = VCardTimeSeriesBase<LoadTraits>;
 
-    //! The short description of the variable
-    static std::string Description()
-    {
-        return "Load generation, thoughout all MC years";
-    }
-
-    //! The expecte results
-    typedef Results<R::AllYears::Average< // The average values throughout all years
-      R::AllYears::StdDeviation<          // The standard deviation values throughout all years
-        R::AllYears::Min<                 // The minimum values throughout all years
-          R::AllYears::Max<               // The maximum values throughout all years
-            >>>>>
-      ResultsType;
-
-    //! The VCard to look for for calculating spatial aggregates
-    typedef VCardTimeSeriesValuesLoad VCardForSpatialAggregate;
-
-    //! Data Level
-    static constexpr uint8_t categoryDataLevel = Category::DataLevel::area;
-    //! File level (provided by the type of the results)
-    static constexpr uint8_t categoryFileLevel = ResultsType::categoryFile
-                                                 & (Category::FileLevel::id
-                                                    | Category::FileLevel::va);
-    //! Precision (views)
-    static constexpr uint8_t precision = Category::all;
-    //! Indentation (GUI)
-    static constexpr uint8_t nodeDepthForGUI = +0;
-    //! Decimal precision
-    static constexpr uint8_t decimal = 0;
-    //! Number of columns used by the variable (One ResultsType per column)
-    static constexpr int columnCount = 1;
-    //! The Spatial aggregation
-    static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
-    static constexpr uint8_t spatialAggregateMode = Category::spatialAggregateEachYear;
-    static constexpr uint8_t spatialAggregatePostProcessing = 0;
-    //! Intermediate values
-    static constexpr uint8_t hasIntermediateValues = 1;
-    //! Can this variable be non applicable (0 : no, 1 : yes)
-    static constexpr uint8_t isPossiblyNonApplicable = 0;
-
-    typedef IntermediateValues IntermediateValuesBaseType;
-    typedef std::vector<IntermediateValues> IntermediateValuesType;
-
-    typedef IntermediateValuesBaseType* IntermediateValuesTypeForSpatialAg;
-
-}; // class VCard
-
-/*!
-** \brief Marginal TimeSeriesValuesLoad
-*/
+/**
+ * @brief Load time series implementation
+ * * This class implements the processing of electrical load time series data.
+ * It provides efficient handling of load data that has been pre-processed
+ * with DSM (Demand-Side Management) transformations.
+ *
+ * @tparam NextT The next variable in the processing chain
+ *
+ */
 template<class NextT = Container::EndOfList>
 class TimeSeriesValuesLoad
-    : public Variable::IVariable<TimeSeriesValuesLoad<NextT>, NextT, VCardTimeSeriesValuesLoad>
+    : public TimeSeriesValuesBase<TimeSeriesValuesLoad<NextT>, NextT, VCardTimeSeriesValuesLoad>
 {
 public:
-    //! Type of the next static variable
-    typedef NextT NextType;
-    //! VCard
-    typedef VCardTimeSeriesValuesLoad VCardType;
-    //! Ancestor
-    typedef Variable::IVariable<TimeSeriesValuesLoad<NextT>, NextT, VCardType> AncestorType;
+    /// @name Type Definitions
+    /// @{
+    using BaseType = TimeSeriesValuesBase<TimeSeriesValuesLoad<NextT>,
+                                          NextT,
+                                          VCardTimeSeriesValuesLoad>;
 
-    //! List of expected results
-    typedef typename VCardType::ResultsType ResultsType;
+    /// @}
 
-    typedef VariableAccessor<ResultsType, VCardType::columnCount> VariableAccessorType;
-
-    enum
+    /**
+     * @brief Initialize load-specific settings from study
+     * Load variables currently don't require specific initialization
+     */
+    void initializeDerivedFromStudy(Data::Study&)
     {
-        //! How many items have we got
-        count = 1 + NextT::count,
-    };
-
-    template<int CDataLevel, int CFile>
-    struct Statistics
-    {
-        enum
-        {
-            count = ((VCardType::categoryDataLevel & CDataLevel
-                      && VCardType::categoryFileLevel & CFile)
-                       ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + VCardType::columnCount * ResultsType::count)
-                       : NextType::template Statistics<CDataLevel, CFile>::count),
-        };
-    };
-
-public:
-    void initializeFromStudy(Data::Study& study)
-    {
-        pNbYearsParallel = study.maxNbYearsInParallel;
-
-        InitializeResultsFromStudy(AncestorType::pResults, study);
-
-        pValuesForTheCurrentYear.resize(pNbYearsParallel);
-        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-        {
-            pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
-        }
-
-        // Next
-        NextType::initializeFromStudy(study);
+        // No specific initialization needed for load
+        // Load data is accessed directly and doesn't require
+        // special configuration like renewable generation aggregation
     }
 
-    template<class R>
-    static void InitializeResultsFromStudy(R& results, Data::Study& study)
-    {
-        VariableAccessorType::InitializeAndReset(results, study);
-    }
-
-    void initializeFromArea(Data::Study* study, Data::Area* area)
-    {
-        pArea = area;
-        // Next
-        NextType::initializeFromArea(study, area);
-    }
-
-    void initializeFromLink(Data::Study* study, Data::AreaLink* link)
-    {
-        // Next
-        NextType::initializeFromAreaLink(study, link);
-    }
-
-    void simulationBegin()
-    {
-        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-        {
-            pValuesForTheCurrentYear[numSpace].reset();
-        }
-        // Next
-        NextType::simulationBegin();
-    }
-
-    void simulationEnd()
-    {
-        // Next
-        NextType::simulationEnd();
-    }
-
-    void yearBegin(unsigned int year, unsigned int numSpace)
+    /**
+     * @brief Setup load data at the beginning of each year
+     *     * This method performs bulk copying of the load time series data
+     * for the current simulation year. The data accessed here has
+     * already been processed to include DSM effects.
+     *
+     * @param year The simulation year index (0-based)
+     * @param space The parallel space index for thread safety
+     *
+     * ## Data Processing Note:
+     *
+     * **IMPORTANT**: At this point, the load values are NOT the raw values
+     * from the original load time series. They have been transformed by
+     * `performTransformationsBeforeLaunchingSimulation()` to include
+     * Demand-Side Management (DSM) effects:
+     *
+     * ```
+     * L* = L + DSM
+     * ```
+     *
+     * Where:
+     * - L* = Final load values (what we access here)
+     * - L = Original load time series
+     * - DSM = Demand-Side Management modifications
+     *
+     */
+    void yearBeginImpl(unsigned int year, unsigned int space)
     {
         // The current time-series
         //
@@ -191,87 +139,22 @@ public:
         // see performTransformationsBeforeLaunchingSimulation()
         // L* = L + DSM
         //
-        (void)::memcpy(pValuesForTheCurrentYear[numSpace].hour,
-                       pArea->load.series.getColumn(year),
-                       sizeof(double) * pArea->load.series.timeSeries.height);
-
-        // Next variable
-        NextType::yearBegin(year, numSpace);
+        std::memcpy(BaseType::yearlyValues[space].hour,
+                    BaseType::areaPtr->load.series.getColumn(year),
+                    sizeof(double) * BaseType::areaPtr->load.series.timeSeries.height);
     }
 
-    void yearEndBuild(State& state, unsigned int year, unsigned int numSpace)
+    /**
+     * @brief Hourly processing for load variables
+     *     * For load variables, no specific hourly processing is required since
+     * the data has already been bulk-copied during yearBeginImpl.
+     */
+    void hourForEachAreaImpl(State&, unsigned int)
     {
-        // Next variable
-        NextType::yearEndBuild(state, year, numSpace);
+        // No specific action needed - values are already copied in yearBeginImpl
+        // This provides optimal performance by avoiding 8760 individual operations
+        // per year in favor of a single bulk memory copy.
     }
+};
 
-    void yearEnd(unsigned int year, unsigned int numSpace)
-    {
-        // Compute all statistics for the current year (daily,weekly,monthly)
-        pValuesForTheCurrentYear[numSpace].computeStatisticsForTheCurrentYear();
-
-        // Next variable
-        NextType::yearEnd(year, numSpace);
-    }
-
-    void computeSummary(unsigned int year, unsigned int numSpace)
-    {
-        // Merge all those values with the global results
-        AncestorType::pResults.merge(year, pValuesForTheCurrentYear[numSpace]);
-
-        // Next variable
-        NextType::computeSummary(year, numSpace);
-    }
-
-    void hourBegin(unsigned int hourInTheYear)
-    {
-        // Next variable
-        NextType::hourBegin(hourInTheYear);
-    }
-
-    void hourForEachArea(State& state, unsigned int numSpace)
-    {
-        // Next variable
-        NextType::hourForEachArea(state, numSpace);
-    }
-
-    Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
-      unsigned int,
-      unsigned int numSpace) const
-    {
-        return pValuesForTheCurrentYear[numSpace].hour;
-    }
-
-    void localBuildAnnualSurveyReport(SurveyResults& results,
-                                      int fileLevel,
-                                      int precision,
-                                      unsigned int numSpace) const
-    {
-        // Initializing external pointer on current variable non applicable status
-        results.isCurrentVarNA = AncestorType::isNonApplicable;
-
-        if (AncestorType::isPrinted[0])
-        {
-            // Write the data for the current year
-            results.variableCaption = VCardType::Caption();
-            results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear[numSpace]
-              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
-        }
-    }
-
-private:
-    //! The attached area
-    Antares::Data::Area* pArea;
-    //! Intermediate values for each year
-    typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
-    unsigned int pNbYearsParallel;
-
-}; // class TimeSeriesValuesLoad
-
-} // namespace Economy
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
-
-#endif // __SOLVER_VARIABLE_ECONOMY_TimeSeriesValuesLoad_H__
+} // namespace Antares::Solver::Variable::Economy

@@ -99,7 +99,7 @@ unsigned int Dimensions::getNumberOfTimesteps() const
 void VariableDictionary::VectorWithOffset::resize(size_t initial_size, unsigned int offset)
 {
     offset_ = offset;
-    values_.resize(initial_size);
+    values_.assign(initial_size, nullptr); // initialize all slots to nullptr
 }
 
 VariableDictionary::Value& VariableDictionary::VectorWithOffset::operator[](unsigned int index)
