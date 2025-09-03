@@ -107,10 +107,8 @@ system:
   components:
   - id: connected_component_var
     model: my_lib.connected_model_through_vars
-    scenario-group: sg
   - id: connected_component_param
     model: my_lib.connected_model_through_param
-    scenario-group: sg
     parameters:
     - id: some_param
       time-dependent: true

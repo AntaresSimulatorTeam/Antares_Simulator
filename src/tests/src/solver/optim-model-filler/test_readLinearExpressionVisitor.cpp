@@ -42,7 +42,16 @@ BOOST_AUTO_TEST_SUITE(_read_linear_expression_visitor_)
 
 struct CreateVisitorFixture: Registry<Node>
 {
+    CreateVisitorFixture()
+    {
+        auto scenario = std::make_unique<Antares::Optimisation::LinearProblemDataImpl::Scenario>(
+          "group");
+        scenario->setTimeSerieNumber(0, 1);
+        scenarioGroupRepository.addScenario("group", std::move(scenario));
+    }
+
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
+    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepository;
     EvaluationContext evaluationContext{{}, {}, data, {}};
     SystemModel::Model m;
     SystemModel::ComponentBuilder componentBuilder;
@@ -131,7 +140,7 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum, CreateVisitorFixture)
       {{build_context_parameter_with("param", "something", ParameterType::TIMESERIE)}},
       {},
       my_data,
-      {});
+      scenarioGroupRepository);
     ReadLinearExpressionVisitor visitor(evaluation_context, {0, 2, 0, 2, 0}, component);
     auto linear_expressions = visitor.dispatch(sum).GetLinearExpressions();
     BOOST_CHECK_EQUAL(linear_expressions.at(0).offset(), 9.);
@@ -152,7 +161,7 @@ BOOST_FIXTURE_TEST_CASE(visit_AllTimeSum, CreateVisitorFixture)
       {{build_context_parameter_with("param", "something", ParameterType::TIMESERIE)}},
       {},
       my_data,
-      {});
+      scenarioGroupRepository);
     ReadLinearExpressionVisitor visitor(evaluation_context, {0, 2, 0, 2, 0}, component);
     auto linear_expressions = visitor.dispatch(sum).GetLinearExpressions();
     BOOST_CHECK_EQUAL(linear_expressions.at(0).offset(), 8.);
@@ -171,7 +180,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_time_dependent_param_plus_var, Create
       {{build_context_parameter_with("param", "something", ParameterType::TIMESERIE)}},
       {},
       my_data,
-      {});
+      scenarioGroupRepository);
 
     unsigned hour_0 = 0;
     unsigned hour_1 = 1;
@@ -198,7 +207,7 @@ BOOST_FIXTURE_TEST_CASE(visit_param_declared_const_in_library_but_time_dep_in_sy
       {{build_context_parameter_with("param", "something", ParameterType::TIMESERIE)}},
       {},
       data,
-      {});
+      scenarioGroupRepository);
 
     ReadLinearExpressionVisitor visitor(evaluation_context, {0, 1, 0, 1, 0}, component);
     BOOST_CHECK_THROW(visitor.dispatch(&p), std::invalid_argument);
@@ -256,7 +265,7 @@ BOOST_FIXTURE_TEST_CASE(visit_complex_expression, CreateVisitorFixture)
                                           build_context_parameter_with("param2", "8.")},
                                          {},
                                          data,
-                                         {});
+                                         scenarioGroupRepository);
     ReadLinearExpressionVisitor visitor(evaluation_context, {0, 0, 0, 0, 0}, component);
     auto linear_expression = visitor.dispatch(big_sum).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 10.);
