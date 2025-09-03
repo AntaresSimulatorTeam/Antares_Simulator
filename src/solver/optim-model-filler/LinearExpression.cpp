@@ -45,22 +45,8 @@ FullKeyMap scale_map(const FullKeyMap& map, double scale)
     return result;
 }
 
-LinearExpression::LinearExpression(double offset, FullKeyMap coef_per_var):
-    offset_(offset),
-    terms_(),
-    unique_terms_(std::move(coef_per_var)),
-    am_I_valid_(true)
-{
-    terms_.reserve(unique_terms_.size());
-    for (const auto& [k, v]: unique_terms_)
-    {
-        terms_.emplace_back(k, v);
-    }
-}
-
 // Static helper: scale vector of terms
-std::vector<LinearExpression::RawTerm> LinearExpression::scaleTerms(const std::vector<RawTerm>& src,
-                                                                    double factor)
+std::vector<RawTerm> scaleTerms(const std::vector<RawTerm>& src, double factor)
 {
     constexpr double epsilon = 1e-12;
     if (std::abs(factor - 1.0) < epsilon)
@@ -74,6 +60,19 @@ std::vector<LinearExpression::RawTerm> LinearExpression::scaleTerms(const std::v
         out.emplace_back(k, v * factor);
     }
     return out;
+}
+
+LinearExpression::LinearExpression(double offset, FullKeyMap coef_per_var):
+    offset_(offset),
+    terms_(),
+    unique_terms_(std::move(coef_per_var)),
+    am_I_valid_(true)
+{
+    terms_.reserve(unique_terms_.size());
+    for (const auto& [k, v]: unique_terms_)
+    {
+        terms_.emplace_back(k, v);
+    }
 }
 
 void LinearExpression::materialize() const

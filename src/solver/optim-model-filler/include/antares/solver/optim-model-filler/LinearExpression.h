@@ -126,6 +126,8 @@ using FullKeyMap = std::unordered_map<FullKey, double, FullKeyHash>;
  */
 FullKeyMap scale_map(const FullKeyMap& map, double scale);
 
+using RawTerm = std::pair<FullKey, double>;
+
 /**
  * Linear Expression
  * Represents an expression that is linear in regard to an optimization problem's variables.
@@ -135,7 +137,6 @@ FullKeyMap scale_map(const FullKeyMap& map, double scale);
  */
 class LinearExpression
 {
-    using RawTerm = std::pair<FullKey, double>;
 public:
     /// Build a linear expression with zero offset and zero coefficients
     LinearExpression() = default;
@@ -162,9 +163,6 @@ public:
     const FullKeyMap& coefPerVar() const;
 
     LinearExpression& operator+=(const LinearExpression& value);
-
-    /// Mise à l'échelle d'un ensemble de termes (utilitaire)
-    static std::vector<RawTerm> scaleTerms(const std::vector<RawTerm>& src, double factor);
 
 private:
     /// Construction paresseuse de cache_ si nécessaire
