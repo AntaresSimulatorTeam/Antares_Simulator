@@ -20,7 +20,6 @@
 */
 #pragma once
 
-#include <map>
 #include <optional>
 #include <string>
 
@@ -52,7 +51,7 @@ public:
     /// Efficiency factor for withdrawal between 0 and 1
     double withdrawalEfficiency = 1;
 
-    // Used to sort outputs
+    /// Used to sort outputs
     std::string groupName = "OTHER1";
     /// cluster name
     std::string name;
