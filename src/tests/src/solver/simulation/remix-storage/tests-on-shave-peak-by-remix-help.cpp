@@ -15,19 +15,19 @@
 
 using namespace Antares::Solver::Simulation;
 
-constexpr double infinity = 1000;
+constexpr double largeValue = 1000;
 
 template<size_t size>
 struct StorageFixture
 {
     StorageFixture()
     {
-        maxCapacity = infinity;
+        maxCapacity = largeValue;
 
         // Garantees that bound from the 'no level' part of the storage is infinite
-        pmax.assign(size, infinity);
-        withdrawal.assign(size, infinity / 2);
-        unsupE.assign(size, infinity);
+        pmax.assign(size, largeValue);
+        withdrawal.assign(size, largeValue / 2);
+        unsupE.assign(size, largeValue);
         levels.assign(size, maxCapacity);
 
         // Garantees that bound from 'level' part of the storage is infinite
@@ -69,7 +69,7 @@ struct ComputeExchangeFixture: public StorageFixture<size>
     ComputeExchangeFixture():
         StorageFixture<size>()
     {
-        maxVariationGen = infinity;
+        maxVariationGen = largeValue;
     }
 
     double maxVariationGen;
@@ -77,7 +77,7 @@ struct ComputeExchangeFixture: public StorageFixture<size>
 
 BOOST_FIXTURE_TEST_SUITE(compute_exchange, ComputeExchangeFixture<5>)
 
-BOOST_AUTO_TEST_CASE(default_values_of_function_arguments_leads_to_an_infinity)
+BOOST_AUTO_TEST_CASE(default_values_of_function_arguments_leads_to_a_large_exchange)
 {
     const unsigned hourOfMinGen = 1;
     const unsigned hourOfMaxGen = 3;
@@ -85,7 +85,7 @@ BOOST_AUTO_TEST_CASE(default_values_of_function_arguments_leads_to_an_infinity)
 
     auto exchange = computeExchange(hourOfMinGen, hourOfMaxGen, maxVariationGen, *storage);
 
-    BOOST_CHECK_EQUAL(exchange, infinity / 2);
+    BOOST_CHECK_EQUAL(exchange, largeValue / 2);
 }
 
 BOOST_AUTO_TEST_CASE(maxVariationGen_is_bounded___exchange_gets_maxVariationGen_value)
