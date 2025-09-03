@@ -85,6 +85,10 @@ more information, see the [official documentation](https://cmake.org/cmake/help/
 Presets allow you to quickly configure and build the project with consistent options. In CLion, presets substitute for
 manually filling the CMake options and build options in the CMake Settings window.
 
+Presets are useful in CLI to save the parameters of the configure and build commands, and to centralize default
+parameters across developers. They also allow you to easily switch between different build configurations or
+environments.
+
 ### 4.1. Simple command line usage
 
 The project provides `CMakePresets.json` and `CMakeUserPresets.json` in the `src/` folder. To configure the project with
@@ -105,10 +109,12 @@ cmake --list-presets
 - Open the project in CLion.
 - Go to _File > Settings > Build, Execution, Deployment > CMake_.
 - Select the desired preset.
-- To use Docker as a build environment, configure the toolchain in CLion and ensure the preset references the correct
-  toolchain (see the `vendor.jetbrains.com/clion.toolchain` key in the preset).
 
-### 4.3. Build caching
+---
+
+## 5. Caching and vcpkg
+
+### 5.1. Build caching
 
 The preset configures the use of `ccache`:
 
@@ -117,14 +123,14 @@ The preset configures the use of `ccache`:
 
 This speeds up recompilations by reusing compiled objects.
 
-### 4.4. vcpkg caching
+### 5.2. vcpkg caching
 
 - Binaries are stored in `/tmp/deps/vcpkg_cache/binary-cache`.
 - Installation options are configured via `VCPKG_INSTALL_OPTIONS` in the preset.
 - The environment variables `VCPKG_BINARY_SOURCES` and `VCPKG_INSTALL_OPTIONS` allow you to reuse binaries and avoid
   unnecessary recompilation.
 
-### 4.5. Tips and best practices
+### 5.3. Tips and best practices
 
 - Modify or add your own presets in `CMakeUserPresets.json` (not versioned).
 - For reproducible builds, use the shared presets in `CMakePresets.json`.
