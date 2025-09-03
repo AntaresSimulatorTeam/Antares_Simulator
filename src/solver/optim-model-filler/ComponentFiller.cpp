@@ -344,13 +344,8 @@ void ComponentFiller::addStaticConstraint(Optimisation::LinearProblemApi::ILinea
         const auto& coeffs = linear_constraint.coef_per_var[modelVarIndex];
 
         const auto& variables = variableDictionary_.at(modelVarIndex);
-        // TODO
-        if (variables.size() != 1)
-        {
-            throw std::runtime_error(
-              "static model variable should match exactly one optim variable.");
-        }
-        ct->setCoefficient(variables.at(0), coeffs.valueAsDouble());
+
+        ct->setCoefficient(variables.at(0), coeffs.singleValueOrAtIndex(0));
     }
 }
 
@@ -447,10 +442,10 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
                                     + model->Id() + "' of component '" + component_.Id() + "').");
     }
 
-    for (auto modelVarIndex = 0; modelVarIndex < linearExpression.coefPerVar().size();
-         ++modelVarIndex)
+    const auto& coefPerVars = linearExpression.coefPerVar();
+    for (auto modelVarIndex: component_.ModelVariablesGlobalIndices())
     {
-        const auto coefPerVar = linearExpression.coefPerVar().at(modelVarIndex);
+        const auto& coefPerVar = coefPerVars.at(modelVarIndex);
 
         if (const auto& values = coefPerVar.value();
             std::holds_alternative<std::vector<double>>(values))
@@ -461,6 +456,11 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
                 pb.setObjectiveCoefficient(variableDictionary_.at(modelVarIndex).at(i),
                                            coefficients.at(i));
             }
+        }
+        else
+        {
+            pb.setObjectiveCoefficient(variableDictionary_.at(modelVarIndex).at(0),
+                                       coefPerVar.valueAsDouble());
         }
     }
 }

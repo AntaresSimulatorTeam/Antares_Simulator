@@ -98,6 +98,9 @@ void Modeler::solve() const
 {
     try
     {
+        using clock = std::chrono::steady_clock;
+        clock::time_point start_(clock::now());
+        clock::time_point end_(start_);
         const auto simulationTableSuffix = formatTime(getCurrentTime(), "%Y%m%d-%H%M");
         const auto parameters = loader_.loadParameters();
         logs.info() << "Parameters loaded";
@@ -144,7 +147,10 @@ void Modeler::solve() const
 
         logs.info() << "Launching resolution...";
         auto* solution = ortools_linear_problem.solve(parameters.solverLogs);
-
+        end_ = clock::now();
+        logs.info() << "Modeler time: "
+                    << std::chrono::duration_cast<std::chrono::milliseconds>(end_ - start_).count()
+                    << " ms\n";
         switch (solution->getStatus())
         {
         case MipStatus::OPTIMAL:

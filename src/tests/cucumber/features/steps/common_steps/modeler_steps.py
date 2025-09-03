@@ -45,7 +45,7 @@ def modeler_obj_value(context, value):
 @step('the objective value is greater than {lb:g} and lower than {ub:g}')
 def modeler_obj_value(context, lb, ub):
     assert lb <= context.moh.get_objective_value() <= ub, \
-         f"Objective value is not inside expected range: {context.moh.get_optimal_value('objective')}"
+        f"Objective value is not inside expected range: {context.moh.get_objective_value()}"
 
 
 @step('the modeler outputs contain the following entries')

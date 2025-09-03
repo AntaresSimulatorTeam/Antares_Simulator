@@ -54,7 +54,8 @@ std::string ReadLinearExpressionVisitor::name() const
 LinearExpression ReadLinearExpressionVisitor::visit(const SumNode* node)
 {
     const auto& operands = node->getOperands();
-    LinearExpression ret;
+    LinearExpression ret(EvaluationResult(0),
+                         std::move(std::vector(nbModelVariables_, EvaluationResult(0))));
     for (auto* operand: operands)
     {
         ret += dispatch(operand);
@@ -179,7 +180,8 @@ LinearExpression ReadLinearExpressionVisitor::visit(const PortFieldSumNode* node
     auto& portId = node->getPortName();
     auto& fieldId = node->getFieldName();
 
-    LinearExpression to_return;
+    LinearExpression to_return(EvaluationResult(0),
+                               std::move(std::vector(nbModelVariables_, EvaluationResult(0))));
     for (const auto connexion_end: component_.componentConnectionsViaPort(portId))
     {
         auto* component = connexion_end.component();

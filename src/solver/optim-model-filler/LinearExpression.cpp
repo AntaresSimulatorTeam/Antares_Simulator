@@ -193,8 +193,8 @@ LinearExpression& LinearExpression::operator*=(const LinearExpression& other)
 
     if (localCoeffPerVarIsEmpty)
     {
-        offset_ *= other.offset_;
         coef_per_var_ = other.coef_per_var_ * offset_;
+        offset_ *= other.offset_;
         return *this;
     }
     else if (otherCoeffPerVarIsEmpty)
