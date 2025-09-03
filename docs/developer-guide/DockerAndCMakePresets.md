@@ -111,6 +111,11 @@ cmake --list-presets
 - Select the desired preset.
 - See the [CLion CMake Presets documentation](https://www.jetbrains.com/help/clion/cmake-presets.html) for more details.
 
+### 4.3. Presets and docker
+
+When using Docker, ensure that paths in the presets match the container's filesystem. For example, if your source code
+is mounted at `/work/Antares_Simulator`, update the `sourceDir` in your preset accordingly.
+
 ---
 
 ## 5. VCPKG
@@ -124,17 +129,50 @@ For information on installing and using vcpkg with Antares Simulator, please ref
 
 ## 6. Build Output Caching
 
-To speed up rebuilds, the project uses caching mechanisms to reuse previously compiled objects and dependency binaries.
+To speed up rebuilds and avoid unnecessary recompilation, you can use two complementary strategies:
 
-### 6.1. Using ccache
+### 6.1. Persisting Build Output with Docker Volumes
 
-- The CMake preset configures the use of `ccache`:
+By mounting a host directory as a volume in your Docker container, you can persist build artifacts (such as the CMake
+build directory, ccache, and vcpkg cache) across different container lifetimes. This avoids losing build output when the
+container is removed.
+
+**Example:**
+
+```sh
+docker run -it \
+  -v "$PWD:/work/Antares_Simulator" \
+  -v "$PWD/_build":/tmp/build \
+  antares/clang:latest bash
+```
+
+```sh
+cmake --preset=default --build-dir=/tmp/build
+```
+
+### 6.2. Using ccache
+
+`ccache` is a compiler cache that stores previously compiled object files to speed up subsequent builds.
+
+- Set the following varible at configure time or in a preset to use `ccache`:
     - Variable: `CMAKE_CXX_COMPILER_LAUNCHER=ccache`
     - Cache directory: `CCACHE_DIR=/tmp/deps/ccache`
-- This allows reuse of compiled objects and accelerates incremental builds.
-- Make sure the cache directory is persistent if you use Docker volumes.
+- Make sure the cache directory is persistent (see above) to benefit from caching across container runs.
 
-### 6.2. vcpkg caching
+```sh
+docker run -it \
+  -v "$PWD:/work/Antares_Simulator" \
+  -v "$PWD/_build":/tmp/build \
+  -v "$PWD/ccache":/tmp/deps/ccache \
+  antares/clang:latest bash
+```
+
+```sh
+export CCACHE_DIR=/tmp/deps/ccache
+cmake --preset=with_ccache --build-dir=/tmp/build
+```
+
+### 6.3. vcpkg caching
 
 - vcpkg binaries are stored in `/tmp/deps/vcpkg_cache/binary-cache`.
 - Installation options are configured via `VCPKG_INSTALL_OPTIONS` in the preset.
