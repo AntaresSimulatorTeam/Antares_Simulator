@@ -83,7 +83,7 @@ void addVariableEntries(ISimulationTable& simulationTable,
 {
     const auto& cid = component.Id();
     const bool isLp = linearProblem.isLP();
-    for (const auto& [varName, modelVar]: component.getModel()->Variables())
+    for (const auto& modelVar: component.getModel()->Variables())
     {
         bool scenDep = modelVar.IsScenarioDependent();
         bool timeDep = modelVar.isTimeDependent();
@@ -91,7 +91,7 @@ void addVariableEntries(ISimulationTable& simulationTable,
         auto handle = [&](std::optional<unsigned> timeStep, std::optional<unsigned> scenIdx)
         {
             std::string fullVarName = Antares::Optimization::VariableDictionary::buildVariableName(
-              {cid, varName},
+              {cid, modelVar.Id()},
               Antares::Optimization::MCYearAndTime::MCYear{scenIdx.value_or(0)},
               timeStep);
             TimeBlock tb = timeStep ? convertTimeStepToBlockTimeIndex(
@@ -104,7 +104,7 @@ void addVariableEntries(ISimulationTable& simulationTable,
             simulationTable.addEntry(
               {.block = tb.block,
                .component = cid,
-               .output = varName,
+               .output = modelVar.Id(),
                .absolute_time_index = tb.absoluteTimeIndex,
                .block_time_index = tb.blockTimeIndex,
                .scenario_index = scenIdx,
@@ -226,13 +226,13 @@ void FillSimulationTable(
   ISimulationTable& simulationTable,
   const ILinearProblem& linearProblem,
   double objectiveValue,
-  const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>& components,
+  const std::vector<Antares::ModelerStudy::SystemModel::Component>& components,
   const FillContext& fillContext,
   unsigned currentBlock,
   const TimeConversionMode& timeConversionMode)
 {
     unsigned scenario = fillContext.getYear();
-    for (const auto& component: components | std::views::values)
+    for (const auto& component: components)
     {
         addVariableEntries(simulationTable,
                            linearProblem,

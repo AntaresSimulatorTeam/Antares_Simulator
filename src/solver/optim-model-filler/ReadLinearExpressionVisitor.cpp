@@ -105,15 +105,19 @@ LinearExpression ReadLinearExpressionVisitor::visit(const NegationNode* node)
 
 LinearExpression ReadLinearExpressionVisitor::visit(const VariableNode* node)
 {
-    const auto& it = component_.getModel()->Variables().find(node->value());
-    if (it == component_.getModel()->Variables().end())
+    const auto& variables = component_.getModel()->Variables();
+    const auto& it = std::ranges::find_if(variables,
+                                          [&node](const auto& variable)
+                                          { return variable.Id() == node->value(); });
+    if (it == variables.end())
     {
         throw std::invalid_argument("Variable (" + node->value() + ") not found.");
     }
+    const auto& modelVariablesGlobalIndices = component_.ModelVariablesGlobalIndices();
+    const auto globalIndex = modelVariablesGlobalIndices.at(std::distance(variables.begin(), it));
     std::vector coefPerVar(nbModelVariables_, EvaluationResult(0));
     if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
     {
-        const auto globalIndex = it->second.GlobalIndex();
         coefPerVar[globalIndex] = EvaluationResult(1);
         return {EvaluationResult(0.), std::move(coefPerVar)};
     }
@@ -121,7 +125,6 @@ LinearExpression ReadLinearExpressionVisitor::visit(const VariableNode* node)
 
     auto nbTimeStep = fillContext_.getLocalLastTimeStep() - fillContext_.getLocalFirstTimeStep()
                       + 1;
-    const auto globalIndex = it->second.GlobalIndex();
     coefPerVar[globalIndex] = EvaluationResult(std::vector<double>(nbTimeStep, 1));
     return {EvaluationResult(0), std::move(coefPerVar)};
 }
@@ -136,9 +139,11 @@ LinearExpression ReadLinearExpressionVisitor::visit(const ParameterNode* node)
           "Parameter " + node->value()
           + " is declared constant in time and scenario in library but not in system");
     }
+    std::vector emptyCoefPerVar(nbModelVariables_, EvaluationResult(0));
     if (systemParameter.type == ParameterType::CONSTANT)
     {
-        return {EvaluationResult(evalContext_.getSystemParameterValueAsDouble(node->value())), {}};
+        return {EvaluationResult(evalContext_.getSystemParameterValueAsDouble(node->value())),
+                std::move(emptyCoefPerVar)};
     }
     // only dependent
     auto nbTimeStep = fillContext_.getLocalLastTimeStep() - fillContext_.getLocalFirstTimeStep()
@@ -155,12 +160,13 @@ LinearExpression ReadLinearExpressionVisitor::visit(const ParameterNode* node)
                                                          globalTimeStep);
         idx++;
     }
-    return {EvaluationResult(std::move(parameters)), {}};
+    return {EvaluationResult(std::move(parameters)), std::move(emptyCoefPerVar)};
 }
 
 LinearExpression ReadLinearExpressionVisitor::visit(const LiteralNode* node)
 {
-    return {EvaluationResult(node->value()), {}};
+    std::vector coefPerVar(nbModelVariables_, EvaluationResult(0));
+    return {EvaluationResult(node->value()), std::move(coefPerVar)};
 }
 
 LinearExpression ReadLinearExpressionVisitor::visit(const PortFieldNode*)

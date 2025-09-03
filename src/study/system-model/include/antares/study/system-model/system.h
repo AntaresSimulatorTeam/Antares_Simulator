@@ -26,15 +26,7 @@
 
 namespace Antares::ModelerStudy::SystemModel
 {
-struct SortComponent
-{
-    bool operator()(Component lhs, Component rhs) const
-    {
-        return lhs.Index() <= rhs.Index();
-    }
-};
 
-using CompoMap = std::map<std::string, Component, SortComponent>;
 
 /**
  * Defines the simulated system.
@@ -52,7 +44,7 @@ public:
         return id_;
     }
 
-    const CompoMap& Components() const
+    const std::vector<Component>& Components() const
     {
         return components_;
     }
@@ -60,22 +52,22 @@ public:
 private:
     // Only SystemBuilder is allowed to build System instances
     friend class SystemBuilder;
-    System(std::string_view id, CompoMap&& components);
+    System(std::string_view id, std::vector<Component>&& components);
     std::string id_;
-    CompoMap components_;
+    std::vector<Component> components_;
 };
 
 class SystemBuilder
 {
 public:
     SystemBuilder& withId(std::string_view id);
-    SystemBuilder& withComponents(CompoMap&& components);
+    SystemBuilder& withComponents(std::vector<Component>&& components);
     System build();
 
 private:
     std::string id_;
 
-    CompoMap components_;
+    std::vector<Component> components_;
 };
 
 } // namespace Antares::ModelerStudy::SystemModel

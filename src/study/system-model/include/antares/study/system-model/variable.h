@@ -79,25 +79,6 @@ public:
         return scenarioDependent_ == ScenarioDependent::YES;
     }
 
-    [[nodiscard]] unsigned int GlobalIndex() const
-    {
-        return globalIndex_;
-    }
-
-    [[nodiscard]] unsigned int LocalIndex() const
-    {
-        return localIndex_;
-    }
-
-    void setGlobalIndex(unsigned int globalIndex) const
-    {
-        globalIndex_ = globalIndex;
-    }
-
-    void setLocalIndex(unsigned int localIndex) const
-    {
-        localIndex_ = localIndex;
-    }
 
 private:
     std::string id_;
@@ -106,8 +87,6 @@ private:
     Expression upperBound_;
     TimeDependent timeDependent_ = TimeDependent::YES;
     ScenarioDependent scenarioDependent_ = ScenarioDependent::YES;
-    mutable unsigned int globalIndex_ = 0;
-    mutable unsigned int localIndex_ = 0;
 };
 
 } // namespace Antares::ModelerStudy::SystemModel

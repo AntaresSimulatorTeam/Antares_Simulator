@@ -90,7 +90,7 @@ void FillSimulationTable(
   ISimulationTable& simulationTable,
   const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
   double objectiveValue,
-  const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>& components,
+  const std::vector<Antares::ModelerStudy::SystemModel::Component>& components,
   const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
   unsigned currentBlock,
   const TimeConversionMode& timeConversionMode);

@@ -49,8 +49,7 @@ public:
     void writeSimulationTable(
       const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
       const Optimisation::LinearProblemApi::IMipSolution& solution,
-      const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>&
-        components,
+      const std::vector<Antares::ModelerStudy::SystemModel::Component>& components,
       const Antares::Optimisation::LinearProblemApi::FillContext& fillContext) const override;
     explicit FileWriter(std::filesystem::path path);
 

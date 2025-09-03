@@ -104,7 +104,7 @@ static void fillModelerComponents(
         return;
     }
 
-    for (const auto& [_, component]: modelerSystem->Components())
+    for (const auto& component: modelerSystem->Components())
     {
         componentFillers.push_back(
           std::make_unique<Optimisation::ComponentFiller>(component,

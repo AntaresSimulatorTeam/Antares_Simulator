@@ -116,34 +116,35 @@ static SystemModel::Component createComponent(const YmlSystem::Component& c,
                                            : Expressions::Visitors::ParameterType::CONSTANT,
                                  .value = value});
     }
-    unsigned int variableLocalIndex = 0;
-    for (const auto& variable: model.Variables() | std::views::values)
+    std::vector<unsigned int> modelVariablesGlobalIndices(model.Variables().size(), 0);
+    for (auto variableLocalIndex(0); variableLocalIndex < model.Variables().size();
+         ++variableLocalIndex)
     {
-        variable.setGlobalIndex(variableGlobalIndex);
+        modelVariablesGlobalIndices[variableLocalIndex] = variableGlobalIndex;
         ++variableGlobalIndex;
-        variable.setLocalIndex(variableLocalIndex);
-        ++variableLocalIndex;
     }
 
     auto component = component_builder.withId(c.id)
                        .withModel(&model)
+                       .withModelVariablesGlobalIndices(modelVariablesGlobalIndices)
                        .withScenarioGroupId(c.scenarioGroup)
                        .withParameterValues(parameters)
                        .build();
     return component;
 }
 
-static SystemModel::Component& findComponent(
-  const std::string& id,
-  std::unordered_map<std::string, SystemModel::Component>& components)
+static Component& findComponent(const std::string& id,
+                                std::vector<SystemModel::Component>& components)
 
 {
-    auto it = components.find(id);
+    const auto it = std::ranges::find_if(components,
+                                         [&id](const SystemModel::Component& c)
+                                         { return c.Id() == id; });
     if (it == components.end())
     {
         throw std::invalid_argument("Component with id '" + id + "' not found in system.");
     }
-    return it->second;
+    return *it;
 }
 
 static const SystemModel::Port& findPort(const SystemModel::Component& component,
@@ -250,7 +251,7 @@ static std::pair<SystemModel::PortFieldsRole, SystemModel::PortFieldsRole> Resol
  *        of the same type, or if fields are incorrectly configured for sending/receiving.
  */
 static void connectComponents(const YmlSystem::Connection& connection,
-                              std::unordered_map<std::string, SystemModel::Component>& components)
+                              std::vector<SystemModel::Component>& components)
 {
     const auto& firstComponentId = connection.firstEntry.componentId;
     const auto& firstPortId = connection.firstEntry.portId;
@@ -289,7 +290,7 @@ static void connectComponents(const YmlSystem::Connection& connection,
  * established
  */
 static void connectAreas(const YmlSystem::AreaConnection& connection,
-                         std::unordered_map<std::string, SystemModel::Component>& components)
+                         std::vector<SystemModel::Component>& components)
 {
     // TODO : check that area exists in legacy study? seems complicated here
     auto& component = findComponent(connection.componentId, components);
@@ -300,16 +301,18 @@ SystemModel::System convert(const YmlSystem::System& ymlSystem,
                             const std::vector<SystemModel::Library>& libraries)
 {
     // Create components from system
-    CompoMap components;
+    std::vector<Component> components;
     unsigned int variableGlobalIndex = 0;
     for (const auto& c: ymlSystem.components)
     {
-        if (components.contains(c.id))
+        auto it = std::ranges::find_if(std::as_const(components),
+                                       [&c](const Component& compo) { return compo.Id() == c.id; });
+        if (it != components.end())
         {
             throw std::invalid_argument("System has at least two components with the same id ('"
                                         + c.id + "'), this is not supported");
         }
-        components.emplace(c.id, createComponent(c, libraries, variableGlobalIndex));
+        components.push_back(createComponent(c, libraries, variableGlobalIndex));
         logs.debug() << "Loaded component `" << c.id << "`";
     }
 

@@ -164,7 +164,7 @@ void ComponentToAreaConnectionFiller::addConstraints(ILinearProblem& pb,
                                                      ILinearProblemData& data,
                                                      const FillContext& ctx)
 {
-    for (const auto& component: modelerSystem_->Components() | std::ranges::views::values)
+    for (const auto& component: modelerSystem_->Components())
     {
         for (const auto& [portId, areaId]: component.portToAreaConnections())
         {

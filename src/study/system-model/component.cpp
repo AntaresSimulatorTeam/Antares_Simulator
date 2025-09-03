@@ -54,6 +54,13 @@ static void checkComponentDataValidity(const ComponentData& data)
                                         + "\" has no value for parameter '" + param + "'");
         }
     }
+
+    if (data.modelVariablesGlobalIndices_.size() != data.model->Variables().size())
+    {
+        // TODO
+        throw std::runtime_error("Error in component " + data.id
+                                 + " has an invalid number of variables");
+    }
 }
 
 Component::Component(const ComponentData& component_data)
@@ -146,6 +153,13 @@ ComponentBuilder& ComponentBuilder::withId(const std::string_view id)
 ComponentBuilder& ComponentBuilder::withModel(const Model* model)
 {
     data_.model = model;
+    return *this;
+}
+
+ComponentBuilder& ComponentBuilder::withModelVariablesGlobalIndices(
+  const std::vector<unsigned>& modelVariablesGlobalIndices)
+{
+    data_.modelVariablesGlobalIndices_ = modelVariablesGlobalIndices;
     return *this;
 }
 

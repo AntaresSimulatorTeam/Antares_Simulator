@@ -86,7 +86,7 @@ public:
         return parameters_;
     }
 
-    const std::map<std::string, Variable>& Variables() const
+    const std::vector<Variable>& Variables() const
     {
         // TODO : convert to vector?
         return variables_;
@@ -113,7 +113,7 @@ private:
     Expression objective_;
 
     std::map<std::string, Parameter> parameters_;
-    std::map<std::string, Variable> variables_;
+    std::vector<Variable> variables_;
     std::map<std::string, Constraint> constraints_;
     std::map<std::string, Port> ports_;
     std::map<std::string, ExtraOutput> extraOutputs_;

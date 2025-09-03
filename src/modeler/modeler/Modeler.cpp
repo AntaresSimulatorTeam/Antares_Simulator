@@ -67,7 +67,7 @@ public:
         std::vector<LinearProblemFiller*> fillers_ptr;
         // All LP variables coordinates (component id, variable id, scenario, time step)
 
-        for (const auto& [_, component]: system_->Components())
+        for (const auto& component: system_->Components())
         {
             auto cf = std::make_unique<Optimisation::ComponentFiller>(component,
                                                                       variableDictionary_,
@@ -110,14 +110,16 @@ void Modeler::solve() const
         logs.info() << "linear problem of System loaded";
         // Problem is MIP if any variable of any component is not continuous
         bool isMip = std::ranges::any_of(
-          data.system->Components() | std::views::values,
+          data.system->Components(),
           [](const auto& component)
           {
-              return std::ranges::any_of(component.getModel()->Variables() | std::views::values,
-                                         [](const auto& variable) {
-                                             return variable.Type()
-                                                    != ModelerStudy::SystemModel::ValueType::FLOAT;
-                                         });
+              return std::any_of(component.getModel()->Variables().cbegin(),
+                                 component.getModel()->Variables().cend(),
+                                 [](const auto& variable)
+                                 {
+                                     return variable.Type()
+                                            != ModelerStudy::SystemModel::ValueType::FLOAT;
+                                 });
           });
         OrtoolsLinearProblem ortools_linear_problem(isMip, parameters.solver);
         // Todo: scenario

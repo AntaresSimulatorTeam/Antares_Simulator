@@ -161,7 +161,12 @@ ModelBuilder& ModelBuilder::withParameters(std::vector<Parameter>&& parameters)
  */
 ModelBuilder& ModelBuilder::withVariables(std::vector<Variable>&& variables)
 {
-    fillMapFrom(model_.variables_, variables, uniqueIdChecker_);
+    // fillMapFrom(model_.variables_, variables, uniqueIdChecker_);
+    for (const auto& v: variables)
+    {
+        uniqueIdChecker_.add(v.Id());
+    }
+    model_.variables_ = std::move(variables);
     return *this;
 }
 

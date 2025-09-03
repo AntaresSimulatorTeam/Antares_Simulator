@@ -276,8 +276,11 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
         }
         return evaluator.dispatch(node.RootNode());
     };
-    for (const auto& variable: component_.getModel()->Variables() | std::views::values)
+    const auto& variables = component_.getModel()->Variables();
+    for (auto i = 0; i < variables.size(); ++i)
     {
+        const auto& variable = variables.at(i);
+        const auto modelVariableGlobalIndex = component_.ModelVariablesGlobalIndices().at(i);
         namespace SM = ModelerStudy::SystemModel;
         const auto& lb = valueOrDefault(variable.LowerBound(),
                                         variable.Type() == SM::ValueType::BOOL ? 0
@@ -295,12 +298,13 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
             // std::visit to handle the 4 cases: double/double, vector/double,
             // double/vector and vector/vector.
             std::visit(
-              [&pb, &variable, this, &dim](const auto& lb_, const auto& ub_)
+              [&pb, &variable, this, &dim, &modelVariableGlobalIndex](const auto& lb_,
+                                                                      const auto& ub_)
               {
                   VariablesBulkAddition(pb, variableDictionary_)
                     .addVariable(component_.Id(),
                                  variable.Id(),
-                                 variable.GlobalIndex(),
+                                 modelVariableGlobalIndex,
                                  lb_,
                                  ub_,
                                  variable.Type() != ModelerStudy::SystemModel::ValueType::FLOAT,
@@ -317,7 +321,7 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
             VariablesBulkAddition(pb, variableDictionary_)
               .addVariable(component_.Id(),
                            variable.Id(),
-                           variable.GlobalIndex(),
+                           modelVariableGlobalIndex,
                            lb.valueAsDouble(),
                            ub.valueAsDouble(),
                            variable.Type() != ModelerStudy::SystemModel::ValueType::FLOAT,

@@ -54,7 +54,7 @@ void FileWriter::init(bool setOutput, const std::string& simulationId)
 void FileWriter::writeSimulationTable(
   const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
   const Optimisation::LinearProblemApi::IMipSolution& solution,
-  const std::unordered_map<std::string, ModelerStudy::SystemModel::Component>& components,
+  const std::vector<ModelerStudy::SystemModel::Component>& components,
   const Optimisation::LinearProblemApi::FillContext& fillContext) const
 {
     if (output)
