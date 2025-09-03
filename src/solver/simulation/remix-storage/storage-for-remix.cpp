@@ -45,8 +45,7 @@ std::shared_ptr<IStorageForRemix> makeHydroForRemix(std::vector<double>& generat
                                                        lowRuleCurve,
                                                        upRuleCurve,
                                                        initLevel,
-                                                       withdrawalEff,
-                                                       pumpEfficiency);
+                                                       withdrawalEff);
 }
 
 std::shared_ptr<StorageForRemixWithLevels> makeSTSforRemix(std::vector<double>& withdrawal,

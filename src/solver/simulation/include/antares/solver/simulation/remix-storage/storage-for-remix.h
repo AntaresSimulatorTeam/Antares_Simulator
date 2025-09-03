@@ -42,8 +42,8 @@ public:
                               const std::vector<double> lowRuleCurve,
                               const std::vector<double> upRuleCurve,
                               const double initLevel,
-                              const double withdrawalEff,
-                              const double injectionEff);
+                              const double withdrawalEff = 1,
+                              const double injectionEff = 1);
 
     double maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) const override;
     void update() override;
@@ -61,8 +61,8 @@ private:
     const std::vector<double> ruleCurveUp_;
 
     const double initLevel_;
-    const double withdrawalEff_ = 1;
-    const double injectionEff_ = 1;
+    const double withdrawalEff_;
+    const double injectionEff_;
 };
 
 std::shared_ptr<IStorageForRemix> makeHydroForRemix(std::vector<double>& generation,
