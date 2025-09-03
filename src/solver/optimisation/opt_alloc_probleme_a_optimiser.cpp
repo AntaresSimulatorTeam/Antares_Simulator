@@ -65,23 +65,14 @@ void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* Pr
 static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
-
     int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
                                                   ->NombreDePasDeTempsPourUneOptimisation;
-
-    logs.info();
-    logs.info() << " Starting Memory Allocation for legacy problem ";
-    logs.info() << " Problem Size : " << ProblemeAResoudre->NombreDeVariables << " variables ";
 
     OPT_AllocateFromNumberOfVariableConstraints(problemeHebdo->ProblemeAResoudre.get());
 
     int NbIntervalles = problemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation;
 
     ProblemeAResoudre->ProblemesSpx.assign(NbIntervalles, nullptr);
-
-    logs.info();
-    logs.info() << " Status of Preliminary Allocations for legacy problem: Successful";
-    logs.info();
 }
 
 void OPT_AllocDuProblemeAOptimiser(PROBLEME_HEBDO* problemeHebdo)

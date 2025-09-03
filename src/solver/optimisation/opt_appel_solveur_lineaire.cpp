@@ -20,6 +20,7 @@
  */
 
 #include <chrono>
+#include <mutex>
 
 #include <antares/antares/fatal-error.h>
 #include <antares/logs/logs.h>
@@ -85,23 +86,16 @@ struct SimplexResult
     double objectiveValue;
 };
 
-static bool firstOptimLogs = true;
+static std::once_flag logProblemSizeFlag;
 
-static void logProblemSize(MPSolver* mpSolver)
+static void logProblemSize(const MPSolver* mpSolver)
 {
-    if (!firstOptimLogs)
-    {
-        return;
-    }
-
     logs.info();
     logs.info();
     logs.info() << " Total Problem size : " << mpSolver->NumVariables() << " variables, "
                 << mpSolver->NumConstraints() << " constraints";
     logs.info();
     logs.info();
-
-    firstOptimLogs = false;
 }
 
 static void fillModelerComponents(
@@ -240,7 +234,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
 
     solver = convertToMPSolver(problemeHebdo, options, problemeHebdo->NamedProblems, NumIntervalle);
 
-    logProblemSize(solver);
+    std::call_once(logProblemSizeFlag, logProblemSize, solver);
 
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
