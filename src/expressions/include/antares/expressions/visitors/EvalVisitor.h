@@ -261,12 +261,14 @@ public:
      * @param fillContext
      */
     explicit EvalVisitor(EvaluationContext context,
-                         Optimisation::LinearProblemApi::FillContext fillContext);
+                         Optimisation::LinearProblemApi::FillContext fillContext,
+                         std::string scenarioGroupID);
     std::string name() const override;
 
 private:
     const EvaluationContext context_;
     Optimisation::LinearProblemApi::FillContext fillContext_;
+    std::string scenarioGroupID_;
     EvaluationResult visit(const Nodes::SumNode* node) override;
     EvaluationResult visit(const Nodes::SubtractionNode* node) override;
     EvaluationResult visit(const Nodes::MultiplicationNode* node) override;

@@ -30,9 +30,11 @@
 namespace Antares::Expressions::Visitors
 {
 EvalVisitor::EvalVisitor(EvaluationContext context,
-                         Optimisation::LinearProblemApi::FillContext fillContext):
+                         Optimisation::LinearProblemApi::FillContext fillContext,
+                         std::string scenarioGroupID):
     context_(std::move(context)),
-    fillContext_(std::move(fillContext))
+    fillContext_(std::move(fillContext)),
+    scenarioGroupID_(std::move(scenarioGroupID))
 {
 }
 

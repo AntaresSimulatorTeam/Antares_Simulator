@@ -42,7 +42,7 @@ ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
     fillContext_(std::move(fillContext)),
     evalContext_(std::move(evalContext)),
     component_(component),
-    evalVisitor_(evalContext_, fillContext_)
+    evalVisitor_(evalContext_, fillContext_, component_.getScenarioGroupId())
 {
 }
 

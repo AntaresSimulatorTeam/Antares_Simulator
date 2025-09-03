@@ -165,7 +165,9 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
                                                                data,
                                                                scenarioGroupRepository_);
 
-    Expressions::Visitors::EvalVisitor evaluator(evaluationContext, ctx);
+    Expressions::Visitors::EvalVisitor evaluator(evaluationContext,
+                                                 ctx,
+                                                 component_.getScenarioGroupId());
     auto valueOrDefault = [&evaluator](const auto& node, double defaultValue)
     {
         if (node.Empty())
