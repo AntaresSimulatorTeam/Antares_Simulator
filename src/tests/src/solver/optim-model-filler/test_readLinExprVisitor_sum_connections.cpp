@@ -50,8 +50,9 @@ struct container_of_helpful_data_for_unit_tests
 
     Registry<Node> registry;
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
-    Antares::Optimisation::LinearProblemApi::EmptyScenario empty_scenario;
-    EvaluationContext evaluationContext{{}, {}, data, empty_scenario};
+    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepository;
+
+    EvaluationContext evaluationContext{{}, {}, data, scenarioGroupRepository};
     SystemModel::ModelBuilder modelBuilder;
     SystemModel::ComponentBuilder componentBuilder;
 };

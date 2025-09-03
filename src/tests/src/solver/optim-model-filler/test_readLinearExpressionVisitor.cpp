@@ -42,9 +42,8 @@ BOOST_AUTO_TEST_SUITE(_read_linear_expression_visitor_)
 
 struct CreateVisitorFixture: Registry<Node>
 {
-    Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
-    EvaluationContext evaluationContext{{}, {}, data, emptyScenario};
+    EvaluationContext evaluationContext{{}, {}, data, {}};
     SystemModel::Model m;
     SystemModel::ComponentBuilder componentBuilder;
     const SystemModel::Component component = componentBuilder.withId("compo")
@@ -82,7 +81,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param, CreateVisitorFixture)
     EvaluationContext evaluation_context({{build_context_parameter_with("param", "3.")}},
                                          {},
                                          data,
-                                         emptyScenario);
+                                         {});
     ReadLinearExpressionVisitor visitor(evaluation_context, {0, 0, 0, 0, 0}, component);
     auto linear_expression = visitor.dispatch(sum).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 8.);
@@ -98,7 +97,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var, CreateVisitorFixture)
     EvaluationContext evaluation_context({{build_context_parameter_with("param", "-5.")}},
                                          {},
                                          data,
-                                         emptyScenario);
+                                         {});
     ReadLinearExpressionVisitor visitor(evaluation_context, {0, 0, 0, 0, 0}, component);
     auto linear_expression = visitor.dispatch(sum).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 55.);
@@ -132,7 +131,7 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum, CreateVisitorFixture)
       {{build_context_parameter_with("param", "something", ParameterType::TIMESERIE)}},
       {},
       my_data,
-      emptyScenario);
+      {});
     ReadLinearExpressionVisitor visitor(evaluation_context, {0, 2, 0, 2, 0}, component);
     auto linear_expressions = visitor.dispatch(sum).GetLinearExpressions();
     BOOST_CHECK_EQUAL(linear_expressions.at(0).offset(), 9.);
@@ -153,7 +152,7 @@ BOOST_FIXTURE_TEST_CASE(visit_AllTimeSum, CreateVisitorFixture)
       {{build_context_parameter_with("param", "something", ParameterType::TIMESERIE)}},
       {},
       my_data,
-      emptyScenario);
+      {});
     ReadLinearExpressionVisitor visitor(evaluation_context, {0, 2, 0, 2, 0}, component);
     auto linear_expressions = visitor.dispatch(sum).GetLinearExpressions();
     BOOST_CHECK_EQUAL(linear_expressions.at(0).offset(), 8.);
@@ -172,7 +171,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_time_dependent_param_plus_var, Create
       {{build_context_parameter_with("param", "something", ParameterType::TIMESERIE)}},
       {},
       my_data,
-      emptyScenario);
+      {});
 
     unsigned hour_0 = 0;
     unsigned hour_1 = 1;
@@ -199,7 +198,7 @@ BOOST_FIXTURE_TEST_CASE(visit_param_declared_const_in_library_but_time_dep_in_sy
       {{build_context_parameter_with("param", "something", ParameterType::TIMESERIE)}},
       {},
       data,
-      emptyScenario);
+      {});
 
     ReadLinearExpressionVisitor visitor(evaluation_context, {0, 1, 0, 1, 0}, component);
     BOOST_CHECK_THROW(visitor.dispatch(&p), std::invalid_argument);
@@ -257,7 +256,7 @@ BOOST_FIXTURE_TEST_CASE(visit_complex_expression, CreateVisitorFixture)
                                           build_context_parameter_with("param2", "8.")},
                                          {},
                                          data,
-                                         emptyScenario);
+                                         {});
     ReadLinearExpressionVisitor visitor(evaluation_context, {0, 0, 0, 0, 0}, component);
     auto linear_expression = visitor.dispatch(big_sum).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 10.);

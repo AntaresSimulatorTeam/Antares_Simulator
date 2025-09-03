@@ -217,7 +217,7 @@ struct ComponentToAreaConnectionFillerFixture
         DataSeriesRepository ds;
         ds.addDataSeries(std::move(tss));
         LinearProblemData data(std::move(ds));
-        ComponentToAreaConnectionFiller filler(problemeHebdo.get(), modelerVariableDictionary);
+        ComponentToAreaConnectionFiller filler(problemeHebdo.get(), modelerVariableDictionary, {});
         filler.addVariables(linearProblem, data, fillCtx);
         filler.addConstraints(linearProblem, data, fillCtx);
         filler.addObjective(linearProblem, data, fillCtx);
