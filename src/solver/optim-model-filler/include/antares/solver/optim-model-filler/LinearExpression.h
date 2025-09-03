@@ -30,7 +30,6 @@
 
 namespace Antares::Optimization
 {
-using FullKeyMap = std::unordered_map<FullKey, double, FullKeyHash>;
 
 /**
  * @brief Element-wise sum of two maps, with an optional transformation applied to the values of the
@@ -116,6 +115,8 @@ void add_maps(MapType& left, const MapType& right, UnaryOp op = std::identity{})
     }
 }
 
+using FullKeyMap = std::unordered_map<FullKey, double, FullKeyHash>;
+
 /**
  * Element-wise multiplication of a map by a scale.
  * For every key: final_value = scale * initial_value
@@ -134,6 +135,7 @@ FullKeyMap scale_map(const FullKeyMap& map, double scale);
  */
 class LinearExpression
 {
+    using RawTerm = std::pair<FullKey, double>;
 public:
     /// Build a linear expression with zero offset and zero coefficients
     LinearExpression() = default;
@@ -161,20 +163,21 @@ public:
 
     LinearExpression& operator+=(const LinearExpression& value);
 
-    using RawTerm = std::pair<FullKey, double>;
-    double offset_ = 0;
-    std::vector<RawTerm> terms_; // may contain duplicates
-    mutable FullKeyMap cache_;   // aggregated unique sums
-    mutable bool cacheValid_ = false;
     /// Mise à l'échelle d'un ensemble de termes (utilitaire)
     static std::vector<RawTerm> scaleTerms(const std::vector<RawTerm>& src, double factor);
 
-    void invalidate()
-    {
-        cacheValid_ = false;
-    }
-
+private:
     /// Construction paresseuse de cache_ si nécessaire
     void materialize() const;
+
+    void invalidate()
+    {
+        am_I_valid_ = false;
+    }
+
+    double offset_ = 0;
+    mutable FullKeyMap unique_terms_; // aggregated unique sums
+    std::vector<RawTerm> terms_; // may contain duplicates
+    mutable bool am_I_valid_ = false;
 };
 } // namespace Antares::Optimization
