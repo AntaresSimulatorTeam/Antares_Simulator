@@ -40,7 +40,7 @@ struct StorageFixture
         injection.assign(size, 0.);
     }
 
-    std::shared_ptr<StorageForRemixWithLevels> createSTSstorage()
+    std::shared_ptr<IStorageForRemix> createSTSstorage()
     {
         return makeSTSforRemix(withdrawal,
                                unsupE,

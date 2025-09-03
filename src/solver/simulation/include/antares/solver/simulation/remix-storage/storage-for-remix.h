@@ -78,16 +78,16 @@ std::shared_ptr<IStorageForRemix> makeHydroForRemix(std::vector<double>& generat
                                                     const double pumpEfficiency,
                                                     bool reservoirManagement);
 
-std::shared_ptr<StorageForRemixWithLevels> makeSTSforRemix(std::vector<double>& withdrawal,
-                                                           std::vector<double>& unsupE,
-                                                           std::vector<double>& levels,
-                                                           const std::vector<double>& pmax,
-                                                           const std::vector<double>& inflows,
-                                                           const std::vector<double>& injection,
-                                                           const std::vector<double>& lowRuleCurve,
-                                                           const std::vector<double>& upRuleCurve,
-                                                           const double initLevel,
-                                                           const double withdrawalEff,
-                                                           const double injectionEff);
+std::shared_ptr<IStorageForRemix> makeSTSforRemix(std::vector<double>& withdrawal,
+                                                  std::vector<double>& unsupE,
+                                                  std::vector<double>& levels,
+                                                  const std::vector<double>& pmax,
+                                                  const std::vector<double>& inflows,
+                                                  const std::vector<double>& injection,
+                                                  const std::vector<double>& lowRuleCurve,
+                                                  const std::vector<double>& upRuleCurve,
+                                                  const double initLevel,
+                                                  const double withdrawalEff,
+                                                  const double injectionEff);
 
 } // namespace Antares::Solver::Simulation
