@@ -88,7 +88,7 @@ public:
     CyclicIterator(std::vector<T>& v);
     CyclicIterator& operator++(int);
     T& operator*();
-    bool operator==(const std::vector<T>::iterator& it);
+    bool operator==(const std::vector<T>::iterator& other) const;
 
 private:
     template<typename U>
@@ -122,9 +122,9 @@ T& CyclicIterator<T>::operator*()
 }
 
 template<typename T>
-bool CyclicIterator<T>::operator==(const typename std::vector<T>::iterator& it)
+bool CyclicIterator<T>::operator==(const typename std::vector<T>::iterator& other) const
 {
-    return it_ == it;
+    return it_ == other;
 }
 
 template<typename T>
