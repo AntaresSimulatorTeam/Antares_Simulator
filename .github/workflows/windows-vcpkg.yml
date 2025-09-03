@@ -44,8 +44,7 @@ jobs:
       # Caching strategy of VCPKG dependencies
       VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg_cache,readwrite"
 
-    runs-on: windows-latest
-
+    runs-on: windows-2022
     steps:
 
       - uses: actions/checkout@v5
@@ -106,7 +105,6 @@ jobs:
       - name: Download pre-compiled librairies
         uses: ./.github/workflows/download-extract-precompiled-libraries-zip
         with:
-          os: windows-latest
           ortools-url: ${{env.ORTOOLS_URL}}
           ortools-dir: ${{env.ORTOOLS_DIR}}
 

@@ -173,7 +173,7 @@ double floor(double d)
     return std::floor(std::round(d * largeValue) / largeValue);
 }
 
-bool isPathValid(const std::string& path)
+bool isPathValid([[maybe_unused]] const std::string& path)
 {
 #if defined(_WIN32)
     return std::ranges::all_of(path, [](unsigned c) { return c <= 127; });

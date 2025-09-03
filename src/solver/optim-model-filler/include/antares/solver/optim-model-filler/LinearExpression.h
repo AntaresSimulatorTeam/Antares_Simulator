@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -24,12 +24,12 @@
 #include <functional>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 #include <antares/solver/optim-model-filler/FullKey.h>
 
 namespace Antares::Optimization
 {
-
 using FullKeyMap = std::unordered_map<FullKey, double, FullKeyHash>;
 
 /**
@@ -153,7 +153,6 @@ public:
     LinearExpression operator/(const LinearExpression& other) const;
     /// Multiply linear expression by -1
     LinearExpression operator-() const;
-
     /// Get the offset
     double offset() const;
 
@@ -162,9 +161,20 @@ public:
 
     LinearExpression& operator+=(const LinearExpression& value);
 
-private:
+    using RawTerm = std::pair<FullKey, double>;
     double offset_ = 0;
-    FullKeyMap coef_per_var_;
-};
+    std::vector<RawTerm> terms_; // may contain duplicates
+    mutable FullKeyMap cache_;   // aggregated unique sums
+    mutable bool cacheValid_ = false;
+    /// Mise à l'échelle d'un ensemble de termes (utilitaire)
+    static std::vector<RawTerm> scaleTerms(const std::vector<RawTerm>& src, double factor);
 
+    void invalidate()
+    {
+        cacheValid_ = false;
+    }
+
+    /// Construction paresseuse de cache_ si nécessaire
+    void materialize() const;
+};
 } // namespace Antares::Optimization

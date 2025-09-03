@@ -763,7 +763,7 @@ bool AreaList::saveToFolder(const AnyString& folder) const
 
     // Save all areas
     each(
-      [&ret, &buffer, &folder, this](const Data::Area& area)
+      [&ret, &folder, this](const Data::Area& area)
       {
           logs.info() << "Exporting the area " << (area.index + 1) << '/' << areas.size() << ": "
                       << area.name;

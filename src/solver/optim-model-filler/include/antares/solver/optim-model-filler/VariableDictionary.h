@@ -137,5 +137,8 @@ public:
     Value operator()(const FullKey& fullKey) const;
 
     Value& operator()(const FullKey& fullKey);
+    static std::string buildVariableName(const PartialKey& key,
+                                         std::optional<MCYearAndTime::MCYear> mcyear,
+                                         std::optional<unsigned int> timestep);
 };
 } // namespace Antares::Optimization
