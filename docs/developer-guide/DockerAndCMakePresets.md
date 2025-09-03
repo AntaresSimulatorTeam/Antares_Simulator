@@ -109,33 +109,44 @@ cmake --list-presets
 - Open the project in CLion.
 - Go to _File > Settings > Build, Execution, Deployment > CMake_.
 - Select the desired preset.
+- See the [CLion CMake Presets documentation](https://www.jetbrains.com/help/clion/cmake-presets.html) for more details.
 
 ---
 
-## 5. Caching and vcpkg
+## 5. VCPKG
 
-### 5.1. Build caching
+For information on installing and using vcpkg with Antares Simulator, please refer to:
 
-The preset configures the use of `ccache`:
+- [Dependencies install](2-Dependencies-install.md)
+- [Build instructions](3-Build.md)
 
-- Variable: `CMAKE_CXX_COMPILER_LAUNCHER=ccache`
-- Cache directory: `CCACHE_DIR=/tmp/deps/ccache`
+---
 
-This speeds up recompilations by reusing compiled objects.
+## 6. Build Output Caching
 
-### 5.2. vcpkg caching
+To speed up rebuilds, the project uses caching mechanisms to reuse previously compiled objects and dependency binaries.
 
-- Binaries are stored in `/tmp/deps/vcpkg_cache/binary-cache`.
+### 6.1. Using ccache
+
+- The CMake preset configures the use of `ccache`:
+    - Variable: `CMAKE_CXX_COMPILER_LAUNCHER=ccache`
+    - Cache directory: `CCACHE_DIR=/tmp/deps/ccache`
+- This allows reuse of compiled objects and accelerates incremental builds.
+- Make sure the cache directory is persistent if you use Docker volumes.
+
+### 6.2. vcpkg caching
+
+- vcpkg binaries are stored in `/tmp/deps/vcpkg_cache/binary-cache`.
 - Installation options are configured via `VCPKG_INSTALL_OPTIONS` in the preset.
-- The environment variables `VCPKG_BINARY_SOURCES` and `VCPKG_INSTALL_OPTIONS` allow you to reuse binaries and avoid
-  unnecessary recompilation.
+- The environment variables `VCPKG_BINARY_SOURCES` and `VCPKG_INSTALL_OPTIONS` allow reuse of binaries and avoid
+  unnecessary recompilations.
 
-### 5.3. Tips and best practices
+---
+
+## 7. Tips and Best Practices
 
 - Modify or add your own presets in `CMakeUserPresets.json` (not versioned).
 - For reproducible builds, use the shared presets in `CMakePresets.json`.
-- Make sure cache paths are persistent if you use Docker volumes.
-
----
+- Ensure cache paths are persistent if you use Docker.
 
 For any questions or issues, consult the official documentation or contact the project maintainers.
