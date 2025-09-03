@@ -92,6 +92,7 @@ nav:
       - 'Contributing': 'developer-guide/6-Contributing.md'
       - 'Continuous Integration': 'developer-guide/continuous-integration.md'
       - 'OR-tools integration': 'developer-guide/ortools-integration.md'
+      - 'Study format conventions': 'developer-guide/8-study-format-conventions.md'
       - 'Changelog': 'developer-guide/CHANGELOG.md'
       - 'Software architecture':
           - 'Dynamic modeler architecture': 'developer-guide/Architecture/Dynamic-modeler-architecture.md'

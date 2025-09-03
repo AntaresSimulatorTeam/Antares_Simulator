@@ -26,7 +26,7 @@
 namespace Antares::Optimisation::LinearProblemApi
 {
 
-class IMipConstraint: public IHasBounds, public IHasName
+class IMipConstraint: public IHasBounds, public IHasName, public IHasStatus
 {
 public:
     virtual void setCoefficient(IMipVariable* var, double coefficient) = 0;
