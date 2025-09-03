@@ -15,7 +15,7 @@ public:
 
     double maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) const override;
     void update() override;
-    const std::vector<double>& initWithdrawal() override;
+    const std::vector<double>& initWithdrawal() const override;
     std::vector<double>& withdrawal() override;
 
 protected:

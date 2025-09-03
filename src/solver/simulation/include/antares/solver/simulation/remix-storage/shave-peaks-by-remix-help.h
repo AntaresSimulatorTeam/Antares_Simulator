@@ -23,7 +23,7 @@ std::set<unsigned> ValidHours(const std::vector<double>& Spillage,
                               const std::vector<double>& DTG_MRG);
 
 void updateValidHours(std::set<unsigned>& validHours,
-                      std::shared_ptr<IStorageForRemix> storage,
+                      const IStorageForRemix& storage,
                       const std::vector<double>& UnsupEinit);
 
 double computeExchange(const unsigned hourOfMinGen,

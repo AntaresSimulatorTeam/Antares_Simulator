@@ -132,7 +132,7 @@ void StorageForRemixNoLevels::update()
 {
 }
 
-const std::vector<double>& StorageForRemixNoLevels::initWithdrawal()
+const std::vector<double>& StorageForRemixNoLevels::initWithdrawal() const
 {
     return initWithdrawal_;
 }

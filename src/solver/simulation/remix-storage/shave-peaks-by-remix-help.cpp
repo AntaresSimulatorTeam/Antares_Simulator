@@ -27,11 +27,11 @@ std::set<unsigned> ValidHours(const std::vector<double>& Spillage,
 }
 
 void updateValidHours(std::set<unsigned>& validHours,
-                      std::shared_ptr<IStorageForRemix> storage,
+                      const IStorageForRemix& storage,
                       const std::vector<double>& UnsupEinit)
 {
     std::erase_if(validHours,
-                  [&](int h) { return storage->initWithdrawal()[h] + UnsupEinit[h] <= eps; });
+                  [&](int h) { return storage.initWithdrawal()[h] + UnsupEinit[h] <= eps; });
 }
 
 double computeExchange(const unsigned hourOfMinGen,

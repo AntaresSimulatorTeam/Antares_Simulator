@@ -58,7 +58,7 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
             throw std::runtime_error("storage remix > max nb of iterations was reached");
         }
 
-        updateValidHours(validHours, *cyclic_it, UnsupEinit);
+        updateValidHours(validHours, **cyclic_it, UnsupEinit);
         auto exchange = searchForExhange(validHours, TotalGen, UnsupE, **cyclic_it);
 
         if (!exchange.isPossible())
