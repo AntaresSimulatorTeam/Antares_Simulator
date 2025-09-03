@@ -18,13 +18,13 @@ From the project root:
 
 ```sh
 cd docker/clang
-sudo docker build -t antares/clang:latest .
+docker build -t antares/clang:latest .
 ```
 
-### 2.2. Start a simple container (all sources and dependencies inside the container)
+### 2.2. Start a container and follow the developer guide as usual
 
 ```sh
-sudo docker run -it antares/clang:latest bash
+docker run -it antares/clang:latest bash
 ```
 
 **Drawbacks:**
@@ -48,6 +48,7 @@ sudo docker run -it \
 
 - Replace `/path/to/ortools` with the path to your local ortools directory.
 - Now, `/work/Antares_Simulator` and `/work/ortools` in the container point to your host files.
+- You can configure and build as always just point CMAKE_PREFIX_PATH to `/work/ortools`.
 
 **Local** = on your host (your computer).  
 **Remote** = inside the Docker container.
@@ -59,7 +60,7 @@ sudo docker run -it \
 
 ---
 
-## 3. Using Docker with CLion
+## 3. Using Docker Service with CLion
 
 - See the [official JetBrains documentation](https://www.jetbrains.com/help/clion/docker.html).
 - Start the Docker service.
@@ -67,11 +68,22 @@ sudo docker run -it \
 - Start the container from CLion or manually, and work in the container terminal while editing files in the IDE.
 - See the illustration below:
 
-![CLion Docker Service](docker_service.png)
+![CLion Docker Service](DockerAndCMakePresetsImages/docker_service.png)
 
 ---
 
 ## 4. CMake Presets
+
+CMake Presets are a convenient way to save and share configuration and build parameters for CMake. They are especially
+useful in command line workflows to avoid repeating options, and to centralize default parameters across developers. For
+more information, see the [official documentation](https://cmake.org/cmake/help/latest/manual/cmake-presets.7.html).
+
+- The default presets are available in `CMakePresets.json` (versioned, shared).
+- Custom presets should be placed in `CMakeUserPresets.json` (not versioned, user-specific). Example configurations are
+  provided in `CMakeUserPresetsExample.json`.
+
+Presets allow you to quickly configure and build the project with consistent options. In CLion, presets substitute for
+manually filling the CMake options and build options in the CMake Settings window.
 
 ### 4.1. Simple command line usage
 
