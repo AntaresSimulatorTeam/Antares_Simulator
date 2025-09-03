@@ -70,6 +70,51 @@ sudo docker run -it \
 
 ![CLion Docker Service](DockerAndCMakePresetsImages/docker_service.png)
 
+## 3.1. Setting up a Docker Toolchain in CLion (with Presets and Caching)
+
+To fully integrate building Antares Simulator in the IDE using Docker, you can set up a Docker toolchain in CLion. This
+allows you to configure, build, and run your project inside a Docker container directly from the IDE, leveraging CMake
+presets and build caching.
+
+### Step 1: Create a Docker Toolchain
+
+Follow the official JetBrains
+documentation: [Create a Docker toolchain](https://www.jetbrains.com/help/clion/clion-toolchains-in-docker.html#create-docker-toolchain)
+
+- Go to **File > Settings > Build, Execution, Deployment > Toolchains**.
+- Click the **+** button and select **Docker**.
+- Choose the Docker image you want to use (e.g., `antares/clang:latest`).
+- Set up the CMake, C, and C++ compilers as detected in the container.
+- Set the Make/Ninja executable if needed.
+
+![CLion Docker Toolchain](DockerAndCMakePresetsImages/docker_toolchain.png)
+
+### Step 2: Set Up Mounting Points
+
+To persist build output and caches across container runs, configure volume mounts:
+
+- Mount your project source directory (e.g., `/work/Antares_Simulator`).
+- Mount a directory for build output (e.g., `/tmp/build`).
+- Mount a directory for ccache and vcpkg cache (e.g., `/tmp/deps`).
+
+In the Docker toolchain settings, add these as **Bind mounts**. Example:
+
+- Host: `/path/to/Antares_Simulator` → Container: `/work/Antares_Simulator`
+- Host: `/path/to/_build` → Container: `/tmp/build`
+- Host: `/path/to/ccache` → Container: `/tmp/deps/ccache`
+- Host: `/path/to/vcpkg_cache` → Container: `/tmp/deps/vcpkg_cache`
+
+This ensures that your build artifacts and caches are preserved between sessions and container restarts.
+
+### Step 3: Use CMake Presets
+
+- In CLion, go to **File > Settings > Build, Execution, Deployment > CMake**.
+- Select the desired CMake preset (e.g., `default` or `with_ccache`).
+- Make sure the `sourceDir` and `buildDir` in the preset match the mount points in your Docker toolchain.
+
+With this setup, you can configure, build, and run Antares Simulator entirely within CLion, using Docker for a
+reproducible environment and leveraging build caching for fast iteration.
+
 ---
 
 ## 4. CMake Presets
@@ -174,10 +219,17 @@ cmake --preset=with_ccache --build-dir=/tmp/build
 
 ### 6.3. vcpkg caching
 
-- vcpkg binaries are stored in `/tmp/deps/vcpkg_cache/binary-cache`.
-- Installation options are configured via `VCPKG_INSTALL_OPTIONS` in the preset.
-- The environment variables `VCPKG_BINARY_SOURCES` and `VCPKG_INSTALL_OPTIONS` allow reuse of binaries and avoid
-  unnecessary recompilations.
+For detailed information on vcpkg binary caching, please refer to the official documentation:
+
+- [Binary Caching (Local)](https://learn.microsoft.com/en-us/vcpkg/consume/binary-caching-local?pivots=shell-bash)
+- [Common vcpkg command options](https://learn.microsoft.com/en-us/vcpkg/commands/common-options)
+
+In this project, vcpkg binaries are typically stored in `/tmp/deps/vcpkg_cache/binary-cache` and caching is configured
+via the `VCPKG_BINARY_SOURCES` and `VCPKG_INSTALL_OPTIONS` environment variables in your CMake presets or Docker
+environment. This allows reuse of binaries and avoids unnecessary recompilations. See the links above for advanced usage
+and troubleshooting.
+
+See example presets in `CMakeUserPresetsExample.json`.
 
 ---
 
