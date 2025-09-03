@@ -21,21 +21,20 @@
 
 #include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
-#include "antares/optimisation/linear-problem-api/IScenario.h"
-#include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 
 using namespace Antares::Optimisation::LinearProblemApi;
 
 namespace Antares::Expressions::Visitors
 {
-EvaluationContext::EvaluationContext(std::map<std::string, ParameterTypeAndValue> system_parameters,
-                                     std::map<std::string, double> variables,
-                                     const ILinearProblemData& data,
-                                     const IScenario& scenario):
+EvaluationContext::EvaluationContext(
+  std::map<std::string, ParameterTypeAndValue> system_parameters,
+  std::map<std::string, double> variables,
+  const ILinearProblemData& data,
+  const Antares::Optimisation::ScenarioGroupRepository& scenarioGroupRepository):
     parameters_types_and_values_(std::move(system_parameters)),
     variables_(std::move(variables)),
     data_(data),
-    scenario_(scenario)
+    scenarioGroupRepository_(scenarioGroupRepository)
 {
 }
 
@@ -78,11 +77,13 @@ std::string EvaluationContext::getSystemParameterValue(const std::string& key) c
     return parameters_types_and_values_.at(key).value;
 }
 
-double EvaluationContext::getParameterValue(const std::string& key,
+double EvaluationContext::getParameterValue(const std::string& scenarioGroupID,
+                                            const std::string& key,
                                             unsigned int year,
                                             unsigned int hour) const
 {
-    IScenario::TimeSeriesNumber time_series_number = scenario_.getData(year);
+    auto& scenario = scenarioGroupRepository_.scenario(scenarioGroupID);
+    IScenario::TimeSeriesNumber time_series_number = scenario.getData(year);
     return data_.getData(parameters_types_and_values_.at(key).value, time_series_number, hour);
 }
 
@@ -99,10 +100,5 @@ ParameterTypeAndValue EvaluationContext::getParameter(const std::string& key) co
 const ILinearProblemData& EvaluationContext::data() const
 {
     return data_;
-}
-
-const Optimisation::LinearProblemApi::IScenario& EvaluationContext::scenario() const
-{
-    return scenario_;
 }
 } // namespace Antares::Expressions::Visitors

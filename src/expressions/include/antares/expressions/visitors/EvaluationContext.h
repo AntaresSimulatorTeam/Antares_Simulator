@@ -4,6 +4,8 @@
 #include <stdexcept>
 #include <string>
 
+#include "antares/solver/optim-model-filler/scenarioGroupRepo.h"
+
 namespace Antares::Optimisation::LinearProblemApi
 {
 class IScenario;
@@ -41,10 +43,11 @@ public:
      * @param constant_parameters parameter values.
      * @param variables variable values.
      */
-    explicit EvaluationContext(std::map<std::string, ParameterTypeAndValue> system_parameters,
-                               std::map<std::string, double> variables,
-                               const Optimisation::LinearProblemApi::ILinearProblemData& data,
-                               const Optimisation::LinearProblemApi::IScenario& scenario);
+    explicit EvaluationContext(
+      std::map<std::string, ParameterTypeAndValue> system_parameters,
+      std::map<std::string, double> variables,
+      const Optimisation::LinearProblemApi::ILinearProblemData& data,
+      const Antares::Optimisation::ScenarioGroupRepository& scenarioGroupRepository);
 
     /**
      * @brief Retrieves the value of a variable.
@@ -66,7 +69,8 @@ public:
 
     [[nodiscard]] std::string getSystemParameterValue(const std::string& key) const;
 
-    [[nodiscard]] double getParameterValue(const std::string& key,
+    [[nodiscard]] double getParameterValue(const std::string& scenarioGroupID,
+                                           const std::string& key,
                                            unsigned int year,
                                            unsigned int hour) const;
 
@@ -75,8 +79,6 @@ public:
     [[nodiscard]] ParameterTypeAndValue getParameter(const std::string& key) const;
 
     [[nodiscard]] const Optimisation::LinearProblemApi::ILinearProblemData& data() const;
-
-    [[nodiscard]] const Optimisation::LinearProblemApi::IScenario& scenario() const;
 
     template<class T>
     struct CouldNotEvaluateConstantParameter: T
@@ -95,6 +97,9 @@ private:
      */
     std::map<std::string, double> variables_;
     const Optimisation::LinearProblemApi::ILinearProblemData& data_;
-    const Optimisation::LinearProblemApi::IScenario& scenario_;
+
+public:
+    // TODO getter
+    const Antares::Optimisation::ScenarioGroupRepository& scenarioGroupRepository_;
 };
 } // namespace Antares::Expressions::Visitors

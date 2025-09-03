@@ -153,7 +153,10 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Parameter
     {
         auto globalTimeStep = fillContext_.getGlobalFirstTimeStep() + idx;
         linearExpressions[localTimeStep] = LinearExpression(
-          evalContext_.getParameterValue(node->value(), fillContext_.getYear(), globalTimeStep),
+          evalContext_.getParameterValue(component_.getScenarioGroupId(),
+                                         node->value(),
+                                         fillContext_.getYear(),
+                                         globalTimeStep),
           {});
         idx++;
     }
@@ -185,8 +188,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const PortField
           component->getParameterValues(),
           {},
           evalContext_.data(),
-          Antares::Optimisation::gScenarioGroupRepository->scenario(
-            component->getScenarioGroupId()));
+          evalContext_.scenarioGroupRepository_);
 
         ReadLinearExpressionVisitor visitor(connectedComponentEvalContext,
                                             fillContext_,

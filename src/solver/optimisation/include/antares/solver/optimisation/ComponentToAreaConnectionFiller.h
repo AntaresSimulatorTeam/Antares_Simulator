@@ -40,8 +40,10 @@ namespace Antares::Optimization
 class ComponentToAreaConnectionFiller: public Optimisation::LinearProblemApi::LinearProblemFiller
 {
 public:
-    explicit ComponentToAreaConnectionFiller(const PROBLEME_HEBDO* problemeHebdo,
-                                             const VariableDictionary& modelerVariableDictionary);
+    explicit ComponentToAreaConnectionFiller(
+      const PROBLEME_HEBDO* problemeHebdo,
+      const VariableDictionary& modelerVariableDictionary,
+      const Antares::Optimisation::ScenarioGroupRepository& scenarioGroupRepository);
     void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
                       Optimisation::LinearProblemApi::FillContext& ctx) override;
@@ -56,7 +58,7 @@ private:
     const PROBLEME_HEBDO* problemeHebdo_;
     const ModelerStudy::SystemModel::System* modelerSystem_;
     const VariableDictionary& modelerVariableDictionary_;
-
+    const Antares::Optimisation::ScenarioGroupRepository& scenarioGroupRepository_;
     std::map<std::string, unsigned> areaIndices_;
 
     Optimisation::LinearProblemApi::IMipConstraint* getBalanceConstraint(

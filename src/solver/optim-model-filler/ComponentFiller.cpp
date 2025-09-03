@@ -160,11 +160,10 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
         return;
     }
 
-    const auto& scenario = scenarioGroupRepository_.scenario(component_.getScenarioGroupId());
     Expressions::Visitors::EvaluationContext evaluationContext(component_.getParameterValues(),
                                                                {},
                                                                data,
-                                                               scenario);
+                                                               scenarioGroupRepository_);
 
     Expressions::Visitors::EvalVisitor evaluator(evaluationContext, ctx);
     auto valueOrDefault = [&evaluator](const auto& node, double defaultValue)
@@ -265,11 +264,10 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
                                      Optimisation::LinearProblemApi::ILinearProblemData& data,
                                      Optimisation::LinearProblemApi::FillContext& ctx)
 {
-    const auto& scenario = scenarioGroupRepository_.scenario(component_.getScenarioGroupId());
     Expressions::Visitors::EvaluationContext evaluationContext(component_.getParameterValues(),
                                                                {},
                                                                data,
-                                                               scenario);
+                                                               scenarioGroupRepository_);
     Optimization::ReadLinearConstraintVisitor visitor(evaluationContext, ctx, component_);
     for (const auto& constraint: component_.getModel()->Constraints() | std::views::values)
     {
@@ -298,11 +296,11 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
     {
         return;
     }
-    const auto& scenario = scenarioGroupRepository_.scenario(component_.getScenarioGroupId());
+
     Expressions::Visitors::EvaluationContext evaluationContext(component_.getParameterValues(),
                                                                {},
                                                                data,
-                                                               scenario);
+                                                               scenarioGroupRepository_);
 
     Optimization::ReadLinearExpressionVisitor visitor(evaluationContext, ctx, component_);
 

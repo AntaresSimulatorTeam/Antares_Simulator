@@ -179,8 +179,10 @@ MPSolver* convertToMPSolver(const PROBLEME_HEBDO* problemeHebdo,
 
     std::vector<std::unique_ptr<Optimisation::ComponentFiller>> componentFillers;
     VariableDictionary variableDictionary;
-    ComponentToAreaConnectionFiller componentToAreaConnectionFiller(problemeHebdo,
-                                                                    variableDictionary);
+    ComponentToAreaConnectionFiller componentToAreaConnectionFiller(
+      problemeHebdo,
+      variableDictionary,
+      *problemeHebdo->scenarioGroupRepository);
     if (problemeHebdo->modelerSystem && problemeHebdo->scenarioGroupRepository)
     {
         // All LP variables coordinates (component id, variable id, scenario, time step)

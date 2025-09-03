@@ -27,18 +27,20 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include "antares/exception/RuntimeError.hpp"
 #include "antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h"
+#include "antares/solver/optim-model-filler/scenarioGroupRepo.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
-
 using namespace Antares::Optimisation::LinearProblemApi;
 
 namespace Antares::Optimization
 {
 ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
   const PROBLEME_HEBDO* problemeHebdo,
-  const VariableDictionary& modelerVariableDictionary):
+  const VariableDictionary& modelerVariableDictionary,
+  const Antares::Optimisation::ScenarioGroupRepository& scenarioGroupRepository):
     problemeHebdo_(problemeHebdo),
     modelerSystem_(problemeHebdo->modelerSystem),
-    modelerVariableDictionary_(modelerVariableDictionary)
+    modelerVariableDictionary_(modelerVariableDictionary),
+    scenarioGroupRepository_(scenarioGroupRepository)
 {
     int i = 0;
     for (auto name: problemeHebdo_->NomsDesPays)
@@ -123,9 +125,11 @@ void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
   const std::string& areaId)
 {
     std::string injectionFieldId = getConnectionFieldId(component, portId);
-    DefaultScenario defaultScenario("empty"); // TODO default ?
-    const Expressions::Visitors::EvaluationContext
-      connectedComponentEvalContext(component.getParameterValues(), {}, data, defaultScenario);
+    const Expressions::Visitors::EvaluationContext connectedComponentEvalContext(
+      component.getParameterValues(),
+      {},
+      data,
+      scenarioGroupRepository_);
     ReadLinearExpressionVisitor visitor(connectedComponentEvalContext, ctx, component);
     auto timeDependentLinearExpression = visitor.dispatch(
       component.nodeAtPortField(portId, injectionFieldId));
