@@ -36,7 +36,7 @@ Exchange searchForExhange(const std::set<unsigned>& validHours,
                           const std::vector<double>& UnsupE,
                           const IStorageForRemix& storage);
 
-void update(Exchange& exchange,
+void update(const Exchange& exchange,
             IStorageForRemix& storage,
             std::vector<double>& UnsupE,
             std::vector<double>& TotalGen);
