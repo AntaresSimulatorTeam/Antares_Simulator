@@ -35,8 +35,13 @@ ReadLinearConstraintVisitor::ReadLinearConstraintVisitor(
   Expressions::Visitors::EvaluationContext context,
   const Optimisation::LinearProblemApi::FillContext& fillContext,
   const Antares::ModelerStudy::SystemModel::Component& component,
-  unsigned int nbModelVariables):
-    linear_expression_visitor_(std::move(context), fillContext, component, nbModelVariables)
+  unsigned int nbModelVariables,
+  const std::vector<unsigned int>& variableStartColumn):
+    linear_expression_visitor_(std::move(context),
+                               fillContext,
+                               component,
+                               nbModelVariables,
+                               variableStartColumn)
 {
 }
 

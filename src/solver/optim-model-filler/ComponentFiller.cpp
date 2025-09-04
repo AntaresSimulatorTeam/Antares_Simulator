@@ -19,6 +19,7 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include <numeric>
 #include <ranges>
 #include <variant>
 
@@ -395,7 +396,8 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
     Optimization::ReadLinearConstraintVisitor visitor(evaluationContext,
                                                       ctx,
                                                       component_,
-                                                      variableDictionary_.size());
+                                                      getNbVars(),
+                                                      getVariableStartColumn());
     for (const auto& constraint: component_.getModel()->Constraints() | std::views::values)
     {
         auto* root_node = constraint.expression().RootNode();
@@ -412,6 +414,35 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
             }
         }
     }
+}
+
+size_t ComponentFiller::getNbVars() const
+{
+    return std::accumulate(variableDictionary_.begin(),
+                           variableDictionary_.end(),
+                           0,
+                           [](size_t nbVars,
+                              const std::vector<LinearProblemApi::IMipVariable*>& modelVar)
+                           { return nbVars += modelVar.size(); });
+}
+
+const std::vector<unsigned>& ComponentFiller::getVariableStartColumn() const
+{
+    static std::vector<unsigned> startColumn(variableDictionary_.size());
+    unsigned i = 0;
+    for (const auto& variables: variableDictionary_)
+    {
+        if (i == 0)
+        {
+            startColumn[i] = 0;
+        }
+        else
+        {
+            startColumn[i] = startColumn.at(i - 1) + variableDictionary_.at(i - 1).size();
+        }
+        ++i;
+    }
+    return startColumn;
 }
 
 void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProblem& pb,
@@ -432,7 +463,8 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
     Optimization::ReadLinearExpressionVisitor visitor(evaluationContext,
                                                       ctx,
                                                       component_,
-                                                      variableDictionary_.size());
+                                                      getNbVars(),
+                                                      getVariableStartColumn());
 
     const auto linearExpression = visitor.dispatch(model->Objective().RootNode());
 

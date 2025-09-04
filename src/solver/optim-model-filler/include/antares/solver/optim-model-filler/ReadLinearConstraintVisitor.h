@@ -58,7 +58,8 @@ public:
       Expressions::Visitors::EvaluationContext context,
       const Optimisation::LinearProblemApi::FillContext& fillContext,
       const Antares::ModelerStudy::SystemModel::Component& component,
-      unsigned int nbModelVariables);
+      unsigned int nbModelVariables,
+      const std::vector<unsigned int>& variableStartColumn);
 
     std::string name() const override;
 

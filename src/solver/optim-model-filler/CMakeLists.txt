@@ -1,4 +1,5 @@
 set(PROJ optim-model-filler)
+find_package(Eigen3 CONFIG REQUIRED)
 
 set(SRC_optim_model_filler
         ComponentFiller.cpp
@@ -9,6 +10,7 @@ set(SRC_optim_model_filler
         ReadLinearExpressionVisitor.cpp
         TimeDependentLinearExpression.cpp
         VariableDictionary.cpp
+        LinearExpressionEigen.cpp
         include/antares/solver/optim-model-filler/ComponentFiller.h
         include/antares/solver/optim-model-filler/FullKey.h
         include/antares/solver/optim-model-filler/LinearExpression.h
@@ -19,6 +21,7 @@ set(SRC_optim_model_filler
         include/antares/solver/optim-model-filler/TimeDependentLinearExpression.h
         include/antares/solver/optim-model-filler/VariableDictionary.h
         include/antares/solver/optim-model-filler/scenarioGroupRepo.h
+        include/antares/solver/optim-model-filler/LinearExpressionEigen.h
         scenarioGroupRepo.cpp
         scenarioGroupRepoExceptions.cpp
 )
@@ -34,6 +37,7 @@ target_link_libraries(${PROJ}
         Antares::antares-study-system-model
         Antares::linear-problem-api
         fmt::fmt
+        Eigen3::Eigen
 )
 
 target_include_directories(${PROJ}

@@ -25,7 +25,7 @@
 #include <antares/expressions/visitors/NodeVisitor.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/solver/optim-model-filler/FullKey.h>
-#include <antares/solver/optim-model-filler/LinearExpression.h>
+#include <antares/solver/optim-model-filler/LinearExpressionEigen.h>
 #include "antares/expressions/visitors/EvalVisitor.h"
 #include "antares/study/system-model/component.h"
 
@@ -38,43 +38,48 @@
 namespace Antares::Optimization
 {
 
-class ReadLinearExpressionVisitor: public Expressions::Visitors::NodeVisitor<LinearExpression>
+class ReadLinearExpressionVisitor: public Expressions::Visitors::NodeVisitor<LinearExpressionEigen>
 {
 public:
     explicit ReadLinearExpressionVisitor(
       Expressions::Visitors::EvaluationContext evalContext,
       Optimisation::LinearProblemApi::FillContext fillContext,
       const Antares::ModelerStudy::SystemModel::Component& component,
-      unsigned int nbModelVariables);
+      unsigned int nbModelVariables,
+      const std::vector<unsigned int>& variableStartColumn);
 
     ReadLinearExpressionVisitor() = delete;
     std::string name() const override;
 
 private:
-    LinearExpression visit(const Expressions::Nodes::SumNode* node) override;
-    LinearExpression visit(const Expressions::Nodes::SubtractionNode* node) override;
-    LinearExpression visit(const Expressions::Nodes::MultiplicationNode* node) override;
-    LinearExpression visit(const Expressions::Nodes::DivisionNode* node) override;
-    LinearExpression visit(const Expressions::Nodes::EqualNode* node) override;
-    LinearExpression visit(const Expressions::Nodes::LessThanOrEqualNode* node) override;
-    LinearExpression visit(const Expressions::Nodes::GreaterThanOrEqualNode* node) override;
-    LinearExpression visit(const Expressions::Nodes::NegationNode* node) override;
-    LinearExpression visit(const Expressions::Nodes::VariableNode* node) override;
-    LinearExpression visit(const Expressions::Nodes::ParameterNode* node) override;
-    LinearExpression visit(const Expressions::Nodes::LiteralNode* node) override;
-    LinearExpression visit(const Expressions::Nodes::PortFieldNode* node) override;
-    LinearExpression visit(const Expressions::Nodes::PortFieldSumNode* node) override;
-    LinearExpression visit(const Expressions::Nodes::ComponentVariableNode* node) override;
-    LinearExpression visit(const Expressions::Nodes::ComponentParameterNode* node) override;
-    LinearExpression visit(const Expressions::Nodes::TimeShiftNode* node) override;
-    LinearExpression visit(const Expressions::Nodes::TimeIndexNode* node) override;
-    LinearExpression visit(const Expressions::Nodes::TimeSumNode* node) override;
-    LinearExpression visit(const Expressions::Nodes::AllTimeSumNode* node) override;
+    LinearExpressionEigen visit(const Expressions::Nodes::SumNode* node) override;
+    LinearExpressionEigen visit(const Expressions::Nodes::SubtractionNode* node) override;
+    LinearExpressionEigen visit(const Expressions::Nodes::MultiplicationNode* node) override;
+    LinearExpressionEigen visit(const Expressions::Nodes::DivisionNode* node) override;
+    LinearExpressionEigen visit(const Expressions::Nodes::EqualNode* node) override;
+    LinearExpressionEigen visit(const Expressions::Nodes::LessThanOrEqualNode* node) override;
+    LinearExpressionEigen visit(const Expressions::Nodes::GreaterThanOrEqualNode* node) override;
+    LinearExpressionEigen visit(const Expressions::Nodes::NegationNode* node) override;
+    LinearExpressionEigen visit(const Expressions::Nodes::VariableNode* node) override;
+    LinearExpressionEigen visit(const Expressions::Nodes::ParameterNode* node) override;
+    LinearExpressionEigen visit(const Expressions::Nodes::LiteralNode* node) override;
+    LinearExpressionEigen visit(const Expressions::Nodes::PortFieldNode* node) override;
+    LinearExpressionEigen visit(const Expressions::Nodes::PortFieldSumNode* node) override;
+    LinearExpressionEigen visit(const Expressions::Nodes::ComponentVariableNode* node) override;
+    LinearExpressionEigen visit(const Expressions::Nodes::ComponentParameterNode* node) override;
+    LinearExpressionEigen TimeShift(const LinearExpressionEigen& left, int timeShift) const;
+    LinearExpressionEigen visit(const Expressions::Nodes::TimeShiftNode* node) override;
+    LinearExpressionEigen TimeIndex(const LinearExpressionEigen& expression, int timeIndex) const;
+    LinearExpressionEigen visit(const Expressions::Nodes::TimeIndexNode* node) override;
+    LinearExpressionEigen visit(const Expressions::Nodes::TimeSumNode* node) override;
+    LinearExpressionEigen visit(const Expressions::Nodes::AllTimeSumNode* node) override;
 
     Optimisation::LinearProblemApi::FillContext fillContext_;
     const Expressions::Visitors::EvaluationContext evalContext_;
     const Antares::ModelerStudy::SystemModel::Component& component_;
     Expressions::Visitors::EvalVisitor evalVisitor_;
     unsigned int nbModelVariables_;
+    unsigned int nbtimeSteps_;
+    const std::vector<unsigned int>& variableStartColumn_;
 };
 } // namespace Antares::Optimization

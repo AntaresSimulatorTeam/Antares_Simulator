@@ -67,6 +67,8 @@ public:
     void addConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
                         Optimisation::LinearProblemApi::ILinearProblemData& data,
                         const Optimisation::LinearProblemApi::FillContext& ctx) override;
+    size_t getNbVars() const;
+    const std::vector<unsigned int>& getVariableStartColumn() const;
 
     void addObjective(Optimisation::LinearProblemApi::ILinearProblem& pb,
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
