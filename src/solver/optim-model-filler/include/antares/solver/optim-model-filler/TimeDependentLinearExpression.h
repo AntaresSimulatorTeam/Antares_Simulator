@@ -42,9 +42,11 @@ public:
     explicit TimeDependentLinearExpression(
       const Optimisation::LinearProblemApi::FillContext& fillContext,
       const LinearExpression& linearExpression);
+
     explicit TimeDependentLinearExpression(
       const Optimisation::LinearProblemApi::FillContext& fillContext,
       LinearExpressionMap linearExpressions);
+
     explicit TimeDependentLinearExpression(
       const TimeDependentLinearExpression& timeDependentLinearExpression)
       = default;

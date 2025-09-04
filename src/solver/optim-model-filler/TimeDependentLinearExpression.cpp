@@ -28,11 +28,13 @@
 #include <antares/solver/optim-model-filler/TimeDependentLinearExpression.h>
 #include "antares/expressions/RotateIndex.h"
 
+using namespace Antares::Optimisation::LinearProblemApi;
+
 namespace Antares::Optimization
 {
 
 TimeDependentLinearExpression::TimeDependentLinearExpression(
-  const Optimisation::LinearProblemApi::FillContext& fillContext,
+  const FillContext& fillContext,
   const LinearExpression& linearExpression):
     fillContext_(fillContext)
 {
@@ -44,15 +46,13 @@ TimeDependentLinearExpression::TimeDependentLinearExpression(
     }
 }
 
-TimeDependentLinearExpression::TimeDependentLinearExpression(
-  const Optimisation::LinearProblemApi::FillContext& fillContext):
+TimeDependentLinearExpression::TimeDependentLinearExpression(const FillContext& fillContext):
     TimeDependentLinearExpression(fillContext, LinearExpression())
 {
 }
 
-TimeDependentLinearExpression::TimeDependentLinearExpression(
-  const Optimisation::LinearProblemApi::FillContext& fillContext,
-  LinearExpressionMap linearExpressions):
+TimeDependentLinearExpression::TimeDependentLinearExpression(const FillContext& fillContext,
+                                                             LinearExpressionMap linearExpressions):
     linearExpressions_(std::move(linearExpressions)),
     fillContext_(fillContext)
 {
