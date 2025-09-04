@@ -25,15 +25,6 @@ namespace Antares::Check
 {
 void checkStudyVersion(const Data::StudyVersion& version, const AnyString& StudyFolder);
 
-void checkSimplexRangeHydroPricing(Antares::Data::SimplexOptimization optRange,
-                                   Antares::Data::HydroPricingMode hpMode);
-
-void checkSimplexRangeUnitCommitmentMode(Antares::Data::SimplexOptimization optRange,
-                                         Antares::Data::UnitCommitmentMode ucMode);
-
-void checkSimplexRangeHydroHeuristic(Antares::Data::SimplexOptimization optRange,
-                                     const Antares::Data::AreaList& areas);
-
 void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas);
 
 void checkFuelCostColumnNumber(const Antares::Data::AreaList& areas);

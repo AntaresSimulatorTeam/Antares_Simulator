@@ -150,30 +150,6 @@ BOOST_AUTO_TEST_CASE(parallel_optione_incompatible)
                           checkMessage(err_msg));
 }
 
-BOOST_AUTO_TEST_CASE(optimization_range_set_to_unknown___exception_raised)
-{
-    settings.simplexOptimRange = "unknown_opt_range";
-    std::string err_msg = "Invalid command line value for --optimization-range ('day' or 'week' "
-                          "expected)";
-    BOOST_CHECK_EXCEPTION(checkAndCorrectSettingsAndOptions(settings, options),
-                          std::runtime_error,
-                          checkMessage(err_msg));
-}
-
-BOOST_AUTO_TEST_CASE(optimization_range_set_to_day)
-{
-    settings.simplexOptimRange = "DAy"; // Whatever the case, will be downcased
-    checkAndCorrectSettingsAndOptions(settings, options);
-    BOOST_CHECK_EQUAL(options.simplexOptimizationRange, sorDay);
-}
-
-BOOST_AUTO_TEST_CASE(optimization_range_set_to_week)
-{
-    settings.simplexOptimRange = "wEeK"; // Whatever the case, will be downcased
-    checkAndCorrectSettingsAndOptions(settings, options);
-    BOOST_CHECK_EQUAL(options.simplexOptimizationRange, sorWeek);
-}
-
 // settings.noOutput && settings.forceZipOutput
 BOOST_AUTO_TEST_CASE(output_settings_are_incompatible___exception_raised)
 {

@@ -142,24 +142,6 @@ UseMILPsolverWithWrongOptions::UseMILPsolverWithWrongOptions():
 {
 }
 
-IncompatibleOptRangeHydroPricing::IncompatibleOptRangeHydroPricing():
-    LoadingError("Simplex optimization range and hydro pricing mode : values are not compatible ")
-{
-}
-
-IncompatibleOptRangeUCMode::IncompatibleOptRangeUCMode():
-    LoadingError("Simplexe optimization range and unit commitment mode : values are not compatible")
-{
-}
-
-IncompatibleDailyOptHeuristicForArea::IncompatibleDailyOptHeuristicForArea(
-  const Antares::Data::AreaName& name):
-    LoadingError(
-      std::string("Area ") + name.c_str()
-      + " : simplex daily optimization and use heuristic target == no are not compatible")
-{
-}
-
 std::string InvalidParametersForThermalClusters::buildMessage(
   const std::map<int, Yuni::String>& clusterNames) const
 {

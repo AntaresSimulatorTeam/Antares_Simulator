@@ -285,16 +285,6 @@ void Application::readStudy_makeChecks_and_printThings(Data::StudyLoadOptions& o
 
 void Application::postParametersChecks() const
 {
-    // Some more checks require the existence of pParameters, hence of a study.
-    // Their execution is delayed up to this point.
-    checkSimplexRangeHydroPricing(pParameters->simplexOptimizationRange,
-                                  pParameters->hydroPricing.hpMode);
-
-    checkSimplexRangeUnitCommitmentMode(pParameters->simplexOptimizationRange,
-                                        pParameters->unitCommitment.ucMode);
-
-    checkSimplexRangeHydroHeuristic(pParameters->simplexOptimizationRange, pStudy->areas);
-
     if (pParameters->adqPatchParams.enabled)
     {
         pParameters->adqPatchParams.checkAdqPatchParams(pParameters->mode,

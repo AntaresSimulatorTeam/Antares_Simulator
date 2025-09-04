@@ -716,7 +716,7 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
 
     if (key == "simplex-range")
     {
-        d.simplexOptimizationRange = (!value.ifind("day")) ? sorDay : sorWeek;
+        d.simplexOptimizationRange = sorWeek;
         return true;
     }
 
@@ -1437,17 +1437,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     horizon.clear();
 
     // Simplex optimization range
-    switch (simplexOptimizationRange)
-    {
-    case sorDay:
-        logs.info() << "  simplex optimization range: day";
-        break;
-    case sorWeek:
-        logs.info() << "  simplex optimization range: week";
-        break;
-    case sorUnknown:
-        break;
-    }
+    logs.info() << "  simplex optimization range: week";
 
     if (derated && userPlaylist)
     {
@@ -1752,17 +1742,8 @@ void Parameters::saveToINI(IniFile& ini) const
     // Optimization
     {
         auto* section = ini.addSection("optimization");
-        switch (simplexOptimizationRange)
-        {
-        case sorDay:
-            section->add("simplex-range", "day");
-            break;
-        case sorWeek:
-            section->add("simplex-range", "week");
-            break;
-        case sorUnknown:
-            break;
-        }
+        section->add("simplex-range", "week");
+
         // Optimization preferences
         section->add("transmission-capacities",
                      GlobalTransmissionCapacitiesToString(transmissionCapacities));

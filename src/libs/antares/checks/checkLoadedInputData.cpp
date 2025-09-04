@@ -41,48 +41,6 @@ void checkStudyVersion(const Data::StudyVersion& version, const AnyString& Study
     }
 }
 
-// CHECK incompatible de choix simultané des options « simplex range= daily » et « hydro-pricing
-// = MILP ».
-void checkSimplexRangeHydroPricing(Antares::Data::SimplexOptimization optRange,
-                                   Antares::Data::HydroPricingMode hpMode)
-{
-    using namespace Antares::Data;
-    if (optRange == SimplexOptimization::sorDay && hpMode == HydroPricingMode::hpMILP)
-    {
-        throw Error::IncompatibleOptRangeHydroPricing();
-    }
-}
-
-// CHECK incompatible de choix simultané des options « simplex range= daily » et «
-// unit-commitment = MILP ».
-void checkSimplexRangeUnitCommitmentMode(Antares::Data::SimplexOptimization optRange,
-                                         Antares::Data::UnitCommitmentMode ucMode)
-{
-    if (optRange == Antares::Data::SimplexOptimization::sorDay
-        && ucMode == Antares::Data::UnitCommitmentMode::ucMILP)
-    {
-        throw Error::IncompatibleOptRangeUCMode();
-    }
-}
-
-// Daily simplex optimisation and any area's use heurictic target turned to "No" are not
-// compatible.
-void checkSimplexRangeHydroHeuristic(Antares::Data::SimplexOptimization optRange,
-                                     const Antares::Data::AreaList& areas)
-{
-    if (optRange == Antares::Data::SimplexOptimization::sorDay)
-    {
-        for (uint i = 0; i < areas.size(); ++i)
-        {
-            const auto& area = *(areas.byIndex[i]);
-            if (!area.hydro.useHeuristicTarget)
-            {
-                throw Error::IncompatibleDailyOptHeuristicForArea(area.name);
-            }
-        }
-    }
-}
-
 bool areasThermalClustersMinStablePowerValidity(const Antares::Data::AreaList& areas,
                                                 std::map<int, YString>& areaClusterNames)
 {

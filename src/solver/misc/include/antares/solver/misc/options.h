@@ -44,9 +44,6 @@ public:
     //! Comment file
     std::string commentFile;
 
-    //! Simplex optimizatio range
-    Yuni::CString<32, false> simplexOptimRange;
-
     //! Ignore error/warnings
     int ignoreWarningsErrors = 0;
     //! Ignore constraints

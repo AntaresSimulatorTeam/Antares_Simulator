@@ -112,18 +112,6 @@ public:
     UseMILPsolverWithWrongOptions();
 };
 
-class IncompatibleOptRangeHydroPricing: public LoadingError
-{
-public:
-    IncompatibleOptRangeHydroPricing();
-};
-
-class IncompatibleOptRangeUCMode: public LoadingError
-{
-public:
-    IncompatibleOptRangeUCMode();
-};
-
 class InvalidOptimizationRange: public LoadingError
 {
 public:
@@ -171,12 +159,6 @@ class InvalidVersion: public LoadingError
 {
 public:
     InvalidVersion(const std::string& version, const std::string& latest);
-};
-
-class IncompatibleDailyOptHeuristicForArea: public LoadingError
-{
-public:
-    explicit IncompatibleDailyOptHeuristicForArea(const Antares::Data::AreaName& name);
 };
 
 class InvalidParametersForThermalClusters: public LoadingError

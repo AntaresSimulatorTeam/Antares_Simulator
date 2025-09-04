@@ -33,7 +33,6 @@ StudyLoadOptions::StudyLoadOptions():
     forceYearByYear(false),
     forceDerated(false),
     noTimeseriesImportIntoInput(false),
-    simplexOptimizationRange(sorUnknown),
     mpsToExport(false),
     ignoreConstraints(false),
     forceMode(SimulationMode::Unknown),

@@ -175,12 +175,6 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
                 " for XPRESS or \"parallel/maxnthreads 8\" for SCIP. "
                 "Syntax is solver-dependent.");
 
-    // --optimization-range
-    parser->addFlag(settings.simplexOptimRange,
-                    ' ',
-                    "optimization-range",
-                    "Force the simplex optimization range ('day' or 'week')");
-
     // --no-constraints
     parser->addFlag(settings.ignoreConstraints, ' ', "no-constraints", "Ignore all constraints");
 
@@ -266,27 +260,6 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
     if (options.enableParallel && options.forceParallel)
     {
         throw Error::IncompatibleParallelOptions();
-    }
-
-    if (!settings.simplexOptimRange.empty())
-    {
-        settings.simplexOptimRange.trim(" \t");
-        settings.simplexOptimRange.toLower();
-        if (settings.simplexOptimRange == "week")
-        {
-            options.simplexOptimizationRange = Data::sorWeek;
-        }
-        else
-        {
-            if (settings.simplexOptimRange == "day")
-            {
-                options.simplexOptimizationRange = Data::sorDay;
-            }
-            else
-            {
-                throw Error::InvalidOptimizationRange();
-            }
-        }
     }
 
     options.checkForceSimulationMode();

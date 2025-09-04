@@ -60,8 +60,6 @@ public:
     // This option might be useful for running old studies without upgrading
     bool noTimeseriesImportIntoInput;
 
-    //! Simplex optimization range
-    SimplexOptimization simplexOptimizationRange;
     //! Mps files export asked
     bool mpsToExport;
     //! named problems
