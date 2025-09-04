@@ -160,6 +160,8 @@ MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
     LegacyFiller legacyOrtoolsFiller(problemeHebdo, namedProblems);
     std::vector<LinearProblemFiller*> fillersCollection = {&legacyOrtoolsFiller};
 
+    auto startTime = std::chrono::high_resolution_clock::now();
+
     VariableDictionary variableDictionary;
     std::vector<std::unique_ptr<Optimisation::ComponentFiller>> componentFillers;
     ComponentToAreaConnectionFiller componentToAreaConnectionFiller(problemeHebdo,
@@ -184,6 +186,11 @@ MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
     // this limitation must be lifted later,
     // when appropriate solvers (e.g with warm start) is integrated.
     linearProblemBuilder.build(ortoolsProblem, *problemeHebdo->linear_problem_data_, fillCtx);
+
+    auto endTime = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::seconds>(endTime - startTime).count();
+    logs.info();
+    logs.info() << "Modeler build took " << duration << " s";
 
     return ortoolsProblem.getMpSolver();
 }
