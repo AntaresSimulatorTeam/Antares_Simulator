@@ -49,21 +49,31 @@ LinearConstraint ReadLinearConstraintVisitor::visit(const EqualNode* node)
 {
     auto left = linear_expression_visitor_.dispatch(node->left());
     left -= linear_expression_visitor_.dispatch(node->right());
-    return {.coef_per_var = left.coefPerVar(), .lb = -left.offset(), .ub = -left.offset()};
+    const auto boundary = Expressions::Visitors::computeBinaryOperation(left.offset(),
+                                                                        -1,
+                                                                        std::multiplies<>());
+    return {.coef_per_var = left.coefPerVar(), .lb = boundary, .ub = boundary};
 }
 
 LinearConstraint ReadLinearConstraintVisitor::visit(const LessThanOrEqualNode* node)
 {
     auto left = linear_expression_visitor_.dispatch(node->left());
     left -= linear_expression_visitor_.dispatch(node->right());
-    return {.coef_per_var = left.coefPerVar(), .ub = -left.offset()};
+
+    return {
+      .coef_per_var = left.coefPerVar(),
+      .lb = std::vector<double>(left.offset().size(), -std::numeric_limits<double>::infinity()),
+      .ub = Expressions::Visitors::computeBinaryOperation(left.offset(), -1, std::multiplies<>())};
 }
 
 LinearConstraint ReadLinearConstraintVisitor::visit(const GreaterThanOrEqualNode* node)
 {
     auto left = linear_expression_visitor_.dispatch(node->left());
     left -= linear_expression_visitor_.dispatch(node->right());
-    return {.coef_per_var = left.coefPerVar(), .lb = -left.offset()};
+    return {
+      .coef_per_var = left.coefPerVar(),
+      .lb = Expressions::Visitors::computeBinaryOperation(left.offset(), -1, std::multiplies<>()),
+      .ub = std::vector<double>(left.offset().size(), std::numeric_limits<double>::infinity())};
 }
 
 static std::invalid_argument IllegalNodeException()

@@ -45,11 +45,9 @@ namespace Antares::Optimization
  */
 struct LinearConstraint
 {
-    std::vector<Expressions::Visitors::EvaluationResult> coef_per_var;
-    Expressions::Visitors::EvaluationResult lb = Expressions::Visitors::EvaluationResult(
-      -std::numeric_limits<double>::infinity());
-    Expressions::Visitors::EvaluationResult ub = Expressions::Visitors::EvaluationResult(
-      std::numeric_limits<double>::infinity());
+    std::vector<std::vector<double>> coef_per_var;
+    std::vector<double> lb;
+    std::vector<double> ub;
 };
 
 class ReadLinearConstraintVisitor: public Expressions::Visitors::NodeVisitor<LinearConstraint>

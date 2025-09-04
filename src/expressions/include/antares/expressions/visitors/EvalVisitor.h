@@ -302,6 +302,56 @@ EvaluationResult& EvaluationResult::evaluateBinaryOperation(const EvaluationResu
         return *this;
     }
 }
+template<class Op>
+std::vector<std::vector<double>> computeBinaryOperation(
+  const std::vector<std::vector<double>>& left,
+  const std::vector<double>& scale,
+  Op op)
+{
+    auto ret(left);
+    for (auto& v: ret)
+    {
+        Expressions::Visitors::computeBinaryOperation(v, scale, op);
+    }
+    return ret;
+}
+
+template<class Op>
+std::vector<std::vector<double>>& computeBinaryOperation(std::vector<std::vector<double>>& left,
+                                                         const std::vector<double>& scale,
+                                                         Op op)
+{
+    for (auto& v: left)
+    {
+        Expressions::Visitors::computeBinaryOperation(v, scale, op);
+    }
+    return left;
+}
+
+template<typename BinaryOp>
+std::vector<std::vector<double>> computeBinaryOperation(const std::vector<std::vector<double>>& lhs,
+                                                        double rhs,
+                                                        BinaryOp op)
+{
+    auto result(lhs);
+    for (auto& value: result)
+    {
+        value = computeBinaryOperation(value, rhs, op);
+    }
+    return result;
+}
+
+template<typename BinaryOp>
+std::vector<std::vector<double>>& computeBinaryOperation(std::vector<std::vector<double>>& lhs,
+                                                         double rhs,
+                                                         BinaryOp op)
+{
+    for (auto& value: lhs)
+    {
+        value = computeBinaryOperation(value, rhs, op);
+    }
+    return lhs;
+}
 
 template<typename UnaryOp>
 std::vector<double> computeUnaryOperation(const std::vector<double>& values, UnaryOp op)

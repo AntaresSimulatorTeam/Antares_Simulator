@@ -54,8 +54,7 @@ std::string ReadLinearExpressionVisitor::name() const
 LinearExpression ReadLinearExpressionVisitor::visit(const SumNode* node)
 {
     const auto& operands = node->getOperands();
-    LinearExpression ret(EvaluationResult(0),
-                         std::move(std::vector(nbModelVariables_, EvaluationResult(0))));
+    LinearExpression ret;
     for (auto* operand: operands)
     {
         ret += dispatch(operand);
@@ -116,18 +115,14 @@ LinearExpression ReadLinearExpressionVisitor::visit(const VariableNode* node)
     }
     const auto& modelVariablesGlobalIndices = component_.ModelVariablesGlobalIndices();
     const auto globalIndex = modelVariablesGlobalIndices.at(std::distance(variables.begin(), it));
-    std::vector coefPerVar(nbModelVariables_, EvaluationResult(0));
-    if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
-    {
-        coefPerVar[globalIndex] = EvaluationResult(1);
-        return {EvaluationResult(0.), std::move(coefPerVar)};
-    }
-    // only dependent
-
     auto nbTimeStep = fillContext_.getLocalLastTimeStep() - fillContext_.getLocalFirstTimeStep()
                       + 1;
-    coefPerVar[globalIndex] = EvaluationResult(std::vector<double>(nbTimeStep, 1));
-    return {EvaluationResult(0), std::move(coefPerVar)};
+    // TODO
+    unsigned int nbScenario = 1;
+    auto count = nbTimeStep * nbScenario;
+    std::vector coefPerVar(nbModelVariables_, std::vector<double>(count, 0));
+    coefPerVar[globalIndex] = std::vector<double>(count, 1);
+    return {std::vector(count, 0.), std::move(coefPerVar)};
 }
 
 LinearExpression ReadLinearExpressionVisitor::visit(const ParameterNode* node)
@@ -140,16 +135,20 @@ LinearExpression ReadLinearExpressionVisitor::visit(const ParameterNode* node)
           "Parameter " + node->value()
           + " is declared constant in time and scenario in library but not in system");
     }
-    std::vector emptyCoefPerVar(nbModelVariables_, EvaluationResult(0));
+    auto nbTimeStep = fillContext_.getLocalLastTimeStep() - fillContext_.getLocalFirstTimeStep()
+                      + 1;
+    // TODO
+    unsigned int nbScenario = 1;
+    auto count = nbTimeStep * nbScenario;
+    std::vector emptyCoefPerVar(nbModelVariables_, std::vector<double>(count, 0));
     if (systemParameter.type == ParameterType::CONSTANT)
     {
-        return {EvaluationResult(evalContext_.getSystemParameterValueAsDouble(node->value())),
+        return {std::vector(count, evalContext_.getSystemParameterValueAsDouble(node->value())),
                 std::move(emptyCoefPerVar)};
     }
     // only dependent
-    auto nbTimeStep = fillContext_.getLocalLastTimeStep() - fillContext_.getLocalFirstTimeStep()
-                      + 1;
-    std::vector<double> parameters(nbTimeStep, 0.);
+
+    std::vector<double> parameters(count, 0.);
     int idx = 0;
     for (auto localTimeStep = fillContext_.getLocalFirstTimeStep();
          localTimeStep <= fillContext_.getLocalLastTimeStep();
@@ -161,13 +160,18 @@ LinearExpression ReadLinearExpressionVisitor::visit(const ParameterNode* node)
                                                          globalTimeStep);
         idx++;
     }
-    return {EvaluationResult(std::move(parameters)), std::move(emptyCoefPerVar)};
+    return {parameters, std::move(emptyCoefPerVar)};
 }
 
 LinearExpression ReadLinearExpressionVisitor::visit(const LiteralNode* node)
 {
-    std::vector coefPerVar(nbModelVariables_, EvaluationResult(0));
-    return {EvaluationResult(node->value()), std::move(coefPerVar)};
+    // TODO
+    auto nbTimeStep = fillContext_.getLocalLastTimeStep() - fillContext_.getLocalFirstTimeStep()
+                      + 1;
+    unsigned int nbScenario = 1;
+    auto count = nbTimeStep * nbScenario;
+    std::vector emptyCoefPerVar(nbModelVariables_, std::vector<double>(count, 0));
+    return {std::vector<double>(count, node->value()), std::move(emptyCoefPerVar)};
 }
 
 LinearExpression ReadLinearExpressionVisitor::visit(const PortFieldNode*)
@@ -180,8 +184,7 @@ LinearExpression ReadLinearExpressionVisitor::visit(const PortFieldSumNode* node
     auto& portId = node->getPortName();
     auto& fieldId = node->getFieldName();
 
-    LinearExpression to_return(EvaluationResult(0),
-                               std::move(std::vector(nbModelVariables_, EvaluationResult(0))));
+    LinearExpression to_return;
     for (const auto connexion_end: component_.componentConnectionsViaPort(portId))
     {
         auto* component = connexion_end.component();

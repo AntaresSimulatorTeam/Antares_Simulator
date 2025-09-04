@@ -140,8 +140,8 @@ public:
     LinearExpression();
     /// Build a linear expression with a given offset and a given map of non-zero coefficients
     /// per variable ID
-    LinearExpression(const Expressions::Visitors::EvaluationResult& offset,
-                     const std::vector<Expressions::Visitors::EvaluationResult>& coef_per_var);
+    LinearExpression(const std::vector<double>& offset,
+                     const std::vector<std::vector<double>>& coef_per_var);
     /// Sum two linear expressions
     LinearExpression operator+(const LinearExpression& other) const;
     /// Subtract two linear expressions
@@ -160,10 +160,10 @@ public:
     LinearExpression operator-() const;
 
     /// Get the offset
-    const Expressions::Visitors::EvaluationResult& offset() const;
+    const std::vector<double>& offset() const;
 
     /// Get the non-zero coefficients per variable ID
-    const std::vector<Expressions::Visitors::EvaluationResult>& coefPerVar() const;
+    const std::vector<std::vector<double>>& coefPerVar() const;
 
     LinearExpression& operator+=(const LinearExpression& value);
     LinearExpression ShiftLinearExpressions(int timeShift) const;
@@ -172,8 +172,8 @@ public:
     LinearExpression AllTimeSumLinearExpressions(unsigned int nbTimeStep) const;
 
 private:
-    Expressions::Visitors::EvaluationResult offset_;
-    std::vector<Expressions::Visitors::EvaluationResult> coef_per_var_;
+    std::vector<double> offset_;
+    std::vector<std::vector<double>> coef_per_var_;
 };
 
 } // namespace Antares::Optimization

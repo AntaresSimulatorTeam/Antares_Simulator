@@ -363,8 +363,8 @@ void ComponentFiller::addTimeDependentConstraints(
         for (const auto t: dim.getTimesteps())
         {
             const auto localIndex = s * dim.getNumberOfTimesteps() + t;
-            auto* ct = pb.addConstraint(linear_constraints.lb.singleValueOrAtIndex(localIndex),
-                                        linear_constraints.ub.singleValueOrAtIndex(localIndex),
+            auto* ct = pb.addConstraint(linear_constraints.lb.(localIndex),
+                                        linear_constraints.ub.at(localIndex),
                                         component_.Id() + "." + constraint_id + '_'
                                           + std::to_string(t));
 
@@ -436,7 +436,7 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
 
     const auto linearExpression = visitor.dispatch(model->Objective().RootNode());
 
-    if (std::abs(linearExpression.offset().singleValueOrAtIndex(0)) > 1e-10)
+    if (std::abs(linearExpression.offset().at(0)) > 1e-10)
     {
         throw std::invalid_argument("Antares does not support objective offsets (found in model '"
                                     + model->Id() + "' of component '" + component_.Id() + "').");
@@ -445,22 +445,12 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
     const auto& coefPerVars = linearExpression.coefPerVar();
     for (auto modelVarIndex: component_.ModelVariablesGlobalIndices())
     {
-        const auto& coefPerVar = coefPerVars.at(modelVarIndex);
+        const auto& coefficients = coefPerVars.at(modelVarIndex);
+        const auto& mipVariables = variableDictionary_.at(modelVarIndex);
 
-        if (const auto& values = coefPerVar.value();
-            std::holds_alternative<std::vector<double>>(values))
+        for (auto i = 0; i < coefficients.size(); ++i)
         {
-            const auto& coefficients = std::get<std::vector<double>>(values);
-            for (auto i = 0; i < coefficients.size(); ++i)
-            {
-                pb.setObjectiveCoefficient(variableDictionary_.at(modelVarIndex).at(i),
-                                           coefficients.at(i));
-            }
-        }
-        else
-        {
-            pb.setObjectiveCoefficient(variableDictionary_.at(modelVarIndex).at(0),
-                                       coefPerVar.valueAsDouble());
+            pb.setObjectiveCoefficient(mipVariables.at(i), coefficients.at(i));
         }
     }
 }
