@@ -1,10 +1,5 @@
 var NAVTREEINDEX55 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits_1_1Statistics.html":[8,0,0,18,4,4,80,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NearPriceCap_1_1Statistics.html":[8,0,0,18,4,4,84,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispatchablePlant_1_1Statistics.html":[8,0,0,18,4,4,88,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCost_1_1Statistics.html":[8,0,0,18,4,4,86,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCost_1_1Statistics.html":[8,0,0,18,4,4,90,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostCsr_1_1Statistics.html":[8,0,0,18,4,4,94,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost_1_1Statistics.html":[8,0,0,18,4,4,92,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Overflows_1_1Statistics.html":[8,0,0,18,4,4,96,0],
@@ -249,5 +244,10 @@ var NAVTREEINDEX55 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPrice.html#ab73d2d32090e227b16f0e4effe4b9892":[8,0,0,18,4,4,97,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPriceCSR.html":[8,0,0,18,4,4,99],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPriceCSR.html#a16612c1c8fca019aff1596d00ca921b4":[8,0,0,18,4,4,99,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPriceCSR.html#a5c22844a58886dba301f9526a7ae9c97":[8,0,0,18,4,4,99,1]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPriceCSR.html#a5c22844a58886dba301f9526a7ae9c97":[8,0,0,18,4,4,99,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPriceCSR.html#a9aeb53bd869810bbb144f056e8acfe6e":[8,0,0,18,4,4,99,4],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPriceCSR.html#ac30156a1d5902082e81da43ffc1b9d8b":[8,0,0,18,4,4,99,3],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPriceCSR.html#ae7bf2528bb7ab6a3627fa4b38e5f8e05":[8,0,0,18,4,4,99,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProductionByDispatchablePlant.html":[8,0,0,18,4,4,101],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProductionByDispatchablePlant.html#a00d4aa5c3bc637ab231270502e3ce00f":[8,0,0,18,4,4,101,1]
 };

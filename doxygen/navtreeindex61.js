@@ -1,10 +1,5 @@
 var NAVTREEINDEX61 =
 {
-"structReadFromStreamFixture.html#a6afec8190d9ff27d3688a4f090896cb0":[8,0,250,2],
-"structReadFromStreamFixture.html#acf49541a9227580a2309079deae1a55e":[8,0,250,3],
-"structRenewableClusterStudy.html":[8,0,253],
-"structRenewableClusterStudy.html#a13ff5c540803af4438d2f9d28163b905":[8,0,253,0],
-"structRenewableClusterStudy.html#a599566de6186e559ac293caedb427389":[8,0,253,1],
 "structSOLDE__MOYEN__DES__ECHANGES.html":[8,0,283],
 "structSOLDE__MOYEN__DES__ECHANGES.html#a0f3289b3f05c7f6fcbec75786aa4e43d":[8,0,283,0],
 "structSavingToStreamFixture.html":[8,0,257],
@@ -249,5 +244,10 @@ var NAVTREEINDEX61 =
 "structcontainer__of__helpful__data__for__unit__tests.html#a1e51f981c91651a20843798365ff7467":[8,0,80,5],
 "structcontainer__of__helpful__data__for__unit__tests.html#a5f78eed5dc2d157b0bdef9b1cd91b514":[8,0,80,4],
 "structcontainer__of__helpful__data__for__unit__tests.html#a8122b28699f47711b74ee377b95a77d2":[8,0,80,3],
-"structcontainer__of__helpful__data__for__unit__tests.html#a9b64761e14f125ef43274d678afe1e22":[8,0,80,0]
+"structcontainer__of__helpful__data__for__unit__tests.html#a9b64761e14f125ef43274d678afe1e22":[8,0,80,0],
+"structcontainer__of__helpful__data__for__unit__tests.html#ac987087ec3082f23cec8d7379db6a30b":[8,0,80,2],
+"structcontainer__of__helpful__data__for__unit__tests.html#ad97fb628ebcefd1e22fc190b8bff8bde":[8,0,80,6],
+"structis__optional.html":[8,0,166],
+"structis__optional_3_01std_1_1optional_3_01U_01_4_01_4.html":[8,0,167],
+"study_2area_2list_8cpp.html#a01a204bd776cc34a901644b0ea8b8414":[7,0,0,6,162]
 };

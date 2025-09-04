@@ -1,12 +1,5 @@
 var NAVTREEINDEX26 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1Areas.html#afe916efa756ebcf9966754eb48c4c70d":[8,0,0,18,4,8,21],
-"classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html":[8,0,0,18,4,10],
-"classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html#a04e2349cadc94aa99250921ce0c9e5fc":[8,0,0,18,4,10,28],
-"classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html#a050a3bae9842033e6c6a23d054d5045c":[8,0,0,18,4,10,17],
-"classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html#a075c17ea3c75e2754763201a93d52550":[8,0,0,18,4,10,12],
-"classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html#a112cfd67376c451a3e73bc232ecf1ef1":[8,0,0,18,4,10,23],
-"classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html#a119d2793275b61fe3744f4d28bd732fc":[8,0,0,18,4,10,16],
 "classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html#a1fa14986f1d82f6c0c0de3d414eedb90":[8,0,0,18,4,10,24],
 "classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html#a223603a17cb295ecdab1289d5ef8afb2":[8,0,0,18,4,10,25],
 "classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html#a29d18c12064d66f6055261ddcd87367e":[8,0,0,18,4,10,19],
@@ -249,5 +242,12 @@ var NAVTREEINDEX26 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a86080191dcfc54ed0858732eccc7392b":[8,0,0,18,4,4,46,15],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a8922dad9233664224a5eed9476a5b79b":[8,0,0,18,4,4,46,20],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a8d0bbe52879e603361808382624530b0":[8,0,0,18,4,4,46,11],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a8e264a7cd902a1290f9dcc39bf5c2915":[8,0,0,18,4,4,46,12]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a8e264a7cd902a1290f9dcc39bf5c2915":[8,0,0,18,4,4,46,12],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#acd13d29fbdbad7c894a59965bd067bed":[8,0,0,18,4,4,46,3],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#ad412b52f6855ec63b0533aa9b5343b6c":[8,0,0,18,4,4,46,6],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html":[8,0,0,18,4,4,28],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html#a11aaa96a98fedf0d76737e837609142a":[8,0,0,18,4,4,28,8],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html#a3a23373beac82c6e3426680189dd8f91":[8,0,0,18,4,4,28,19],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html#a476bcd1c0db02869da2a523e4fae369e":[8,0,0,18,4,4,28,4],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html#a4d1c0e0707659eaf162ed919f0029815":[8,0,0,18,4,4,28,11]
 };

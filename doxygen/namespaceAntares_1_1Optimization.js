@@ -37,6 +37,7 @@ var namespaceAntares_1_1Optimization =
     [ "BasisStatus", "classAntares_1_1Optimization_1_1BasisStatus.html", "classAntares_1_1Optimization_1_1BasisStatus" ],
     [ "FullKeyMap", "namespaceAntares_1_1Optimization.html#ab781095ca93efa828787e247dc75ac6f", null ],
     [ "LinearExpressionMap", "namespaceAntares_1_1Optimization.html#a381a6f88b0e7939894e8dfc6001069b3", null ],
+    [ "RawTerm", "namespaceAntares_1_1Optimization.html#a1f4d1b62a4b8cfee50b0145ed8195342", null ],
     [ "STSInjectionSum", "namespaceAntares_1_1Optimization.html#a512aba669c091827c6b436d0b3408192", null ],
     [ "STSNettingSum", "namespaceAntares_1_1Optimization.html#a92ecfd5cfe8111fcc5761687e57227fa", null ],
     [ "STSWithdrawalSum", "namespaceAntares_1_1Optimization.html#aac13d5895b888127d4d62045556476ba", null ],
@@ -51,6 +52,7 @@ var namespaceAntares_1_1Optimization =
     [ "operator<<", "namespaceAntares_1_1Optimization.html#a577631761643b7e0a0785e4a82b75f34", null ],
     [ "sameType", "namespaceAntares_1_1Optimization.html#a1418a64099521dabe8235df401f4f0cc", null ],
     [ "scale_map", "namespaceAntares_1_1Optimization.html#a7190f8e021109840878686b5bf2f2ded", null ],
+    [ "scaleTerms", "namespaceAntares_1_1Optimization.html#a09d54e0bac5caf1129a3b1e7a9789503", null ],
     [ "INJECTION", "namespaceAntares_1_1Optimization.html#a520b3b8184f58d9c8cb41588b5514d8c", null ],
     [ "NETTING", "namespaceAntares_1_1Optimization.html#a5afa496b079694f802024e34366de8a7", null ],
     [ "WITHDRAWAL", "namespaceAntares_1_1Optimization.html#a49826da5a72d4e5d0264543dea5727c0", null ]

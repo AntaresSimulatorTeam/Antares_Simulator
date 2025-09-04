@@ -1,10 +1,5 @@
 var NAVTREEINDEX60 =
 {
-"structMinHydroPowerData.html":[8,0,191],
-"structMinHydroPowerData.html#a24a0318ec864d5d3cccc16fdf449db18":[8,0,191,2],
-"structMinHydroPowerData.html#ae608d18b4923971be95eacb3b4d1802e":[8,0,191,0],
-"structMinHydroPowerData.html#af66d42ef2021b6be1733e1bd218fb62d":[8,0,191,1],
-"structMockConstraint_1_1MockExpression.html":[8,0,194,0],
 "structMockConstraint_1_1MockExpression.html#a84d2f98c7732a9412d80b18073294c8c":[8,0,194,0,1],
 "structMockConstraint_1_1MockExpression_1_1MockNode.html":[8,0,194,0,0],
 "structMockLinearProblemData.html":[8,0,196],
@@ -249,5 +244,10 @@ var NAVTREEINDEX60 =
 "structRawConnection.html#a99c1de3a977350523a38bab1e65091cf":[8,0,249,0],
 "structReadFromStreamFixture.html":[8,0,250],
 "structReadFromStreamFixture.html#a0c6e320678f93675fdeb0b4742f6a65b":[8,0,250,1],
-"structReadFromStreamFixture.html#a174881c735483f79d4815a6ee9ca71f9":[8,0,250,0]
+"structReadFromStreamFixture.html#a174881c735483f79d4815a6ee9ca71f9":[8,0,250,0],
+"structReadFromStreamFixture.html#a6afec8190d9ff27d3688a4f090896cb0":[8,0,250,2],
+"structReadFromStreamFixture.html#acf49541a9227580a2309079deae1a55e":[8,0,250,3],
+"structRenewableClusterStudy.html":[8,0,253],
+"structRenewableClusterStudy.html#a13ff5c540803af4438d2f9d28163b905":[8,0,253,0],
+"structRenewableClusterStudy.html#a599566de6186e559ac293caedb427389":[8,0,253,1]
 };

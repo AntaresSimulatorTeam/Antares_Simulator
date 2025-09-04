@@ -1,10 +1,5 @@
 var NAVTREEINDEX54 =
 {
-"structAntares_1_1Graph_1_1Edge_1_1compareWeight.html":[8,0,0,10,1,1],
-"structAntares_1_1Graph_1_1Edge_1_1compareWeight.html#afc933aff024e6c8479b530010a71b06f":[8,0,0,10,1,1,0],
-"structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ConnectingPortToItSelf.html":[8,0,0,11,0,2,4],
-"structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1TwoFieldsOfSameRole.html":[8,0,0,11,0,2,3],
-"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Constraint.html":[8,0,0,11,0,3,4],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Constraint.html#a155bb81fcc470222c71d73086b94e37b":[8,0,0,11,0,3,4,0],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Constraint.html#acdd77a850f4370e5d59e680a7fbcde23":[8,0,0,11,0,3,4,1],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1ExtraOutput.html":[8,0,0,11,0,3,5],
@@ -249,5 +244,10 @@ var NAVTREEINDEX54 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCsr_1_1Statistics.html":[8,0,0,18,4,4,70,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlant_1_1Statistics.html":[8,0,0,18,4,4,78,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MiscGenMinusRowPSP_1_1Statistics.html":[8,0,0,18,4,4,13,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant_1_1Statistics.html":[8,0,0,18,4,4,82,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant_1_1Statistics.html":[8,0,0,18,4,4,82,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits_1_1Statistics.html":[8,0,0,18,4,4,80,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NearPriceCap_1_1Statistics.html":[8,0,0,18,4,4,84,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispatchablePlant_1_1Statistics.html":[8,0,0,18,4,4,88,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCost_1_1Statistics.html":[8,0,0,18,4,4,86,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCost_1_1Statistics.html":[8,0,0,18,4,4,90,0]
 };

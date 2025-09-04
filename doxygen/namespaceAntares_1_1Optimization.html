@@ -221,6 +221,9 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>STSNettingSum</b> = 
 <tr class="memitem:ab781095ca93efa828787e247dc75ac6f"><td class="memItemLeft" align="right" valign="top"><a id="ab781095ca93efa828787e247dc75ac6f"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>FullKeyMap</b> = std::unordered_map&lt; <a class="el" href="classAntares_1_1Optimization_1_1FullKey.html">FullKey</a>, double, <a class="el" href="classAntares_1_1Optimization_1_1FullKeyHash.html">FullKeyHash</a> &gt;</td></tr>
 <tr class="separator:ab781095ca93efa828787e247dc75ac6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f4d1b62a4b8cfee50b0145ed8195342"><td class="memItemLeft" align="right" valign="top"><a id="a1f4d1b62a4b8cfee50b0145ed8195342"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>RawTerm</b> = std::pair&lt; <a class="el" href="classAntares_1_1Optimization_1_1FullKey.html">FullKey</a>, double &gt;</td></tr>
+<tr class="separator:a1f4d1b62a4b8cfee50b0145ed8195342"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a381a6f88b0e7939894e8dfc6001069b3"><td class="memItemLeft" align="right" valign="top"><a id="a381a6f88b0e7939894e8dfc6001069b3"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>LinearExpressionMap</b> = std::map&lt; unsigned int, <a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> &gt;</td></tr>
 <tr class="separator:a381a6f88b0e7939894e8dfc6001069b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -258,6 +261,9 @@ std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operato
 <tr class="memitem:a4acd8157dc362e4991f60f2436acc4f4"><td class="memItemLeft" align="right" valign="top"><a id="a4acd8157dc362e4991f60f2436acc4f4"></a>
 std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;&lt;</b> (std::ostream &amp;os, const <a class="el" href="structAntares_1_1Optimization_1_1MCYearAndTime.html">MCYearAndTime</a> &amp;st)</td></tr>
 <tr class="separator:a4acd8157dc362e4991f60f2436acc4f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a09d54e0bac5caf1129a3b1e7a9789503"><td class="memItemLeft" align="right" valign="top"><a id="a09d54e0bac5caf1129a3b1e7a9789503"></a>
+std::vector&lt; RawTerm &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>scaleTerms</b> (const std::vector&lt; RawTerm &gt; &amp;src, double factor)</td></tr>
+<tr class="separator:a09d54e0bac5caf1129a3b1e7a9789503"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a5dca99337537968ed197d7c4d838ac"><td class="memTemplParams" colspan="2"><a id="a1a5dca99337537968ed197d7c4d838ac"></a>
 template&lt;typename BinaryOperator &gt; </td></tr>
 <tr class="memitem:a1a5dca99337537968ed197d7c4d838ac"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html">TimeDependentLinearExpression</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>BinaryOpLinearExpression</b> (const LinearExpressionMap &amp;left, const LinearExpressionMap &amp;right, BinaryOperator op, const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Optimisation::LinearProblemApi::FillContext</a> &amp;fillContext)</td></tr>
