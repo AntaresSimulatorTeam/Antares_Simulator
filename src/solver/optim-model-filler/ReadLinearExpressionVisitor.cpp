@@ -236,6 +236,7 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const ComponentParamete
 LinearExpressionEigen ReadLinearExpressionVisitor::TimeShift(const LinearExpressionEigen& left,
                                                              int timeShift) const
 {
+    // TODO to be continued ...
     LinearExpressionEigen to_return(nbtimeSteps_, nbModelVariables_);
     // to_return.setCol()
     for (auto localTimeStep = fillContext_.getLocalFirstTimeStep();
@@ -261,6 +262,7 @@ LinearExpressionEigen ReadLinearExpressionVisitor::TimeIndex(
   const LinearExpressionEigen& expression,
   int timeIndex) const
 {
+    // TODO to be continued ...
     LinearExpressionEigen to_return(nbtimeSteps_, nbModelVariables_);
     to_return.setCol(timeIndex, expression.coefPerVar().col(timeIndex));
     return to_return;
