@@ -30,7 +30,6 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(const AdqPatchParams& adqPatchP
                                                  uint numSpace,
                                                  AreaList& areas,
                                                  SheddingPolicy sheddingPolicy,
-                                                 SimplexOptimization splxOptimization,
                                                  Calendar& calendar,
                                                  const OptimizationOptions& solverOptions):
     interfacePostProcessList(problemeHebdo, numSpace)
