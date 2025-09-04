@@ -32,7 +32,6 @@ public:
                        uint numSpace,
                        AreaList& areas,
                        SheddingPolicy sheddingPolicy,
-                       SimplexOptimization splxOptimization,
                        Calendar& calendar);
 
     virtual ~OptPostProcessList() = default;

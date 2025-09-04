@@ -29,7 +29,6 @@ OptPostProcessList::OptPostProcessList(PROBLEME_HEBDO* problemeHebdo,
                                        uint numSpace,
                                        AreaList& areas,
                                        SheddingPolicy sheddingPolicy,
-                                       SimplexOptimization splxOptimization,
                                        Calendar& calendar)
 
     :

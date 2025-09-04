@@ -67,7 +67,6 @@ std::unique_ptr<interfacePostProcessList> interfacePostProcessList::create(
                                                     numSpace,
                                                     areas,
                                                     sheddingPolicy,
-                                                    splxOptimization,
                                                     calendar);
     }
 }
