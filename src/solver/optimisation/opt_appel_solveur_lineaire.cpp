@@ -108,6 +108,7 @@ static void fillModelerComponents(
   std::vector<std::unique_ptr<Optimisation::ComponentFiller>>& componentFillers,
   std::vector<LinearProblemFiller*>& fillersCollection,
   const ModelerStudy::SystemModel::System* modelerSystem,
+  const ILinearProblemData& linearProblemData,
   const Optimisation::ScenarioGroupRepository& scenarioGroupRepository,
   VariableDictionary& variableDictionary)
 {
@@ -116,6 +117,7 @@ static void fillModelerComponents(
         componentFillers.push_back(
           std::make_unique<Optimisation::ComponentFiller>(component,
                                                           variableDictionary,
+                                                          linearProblemData,
                                                           scenarioGroupRepository));
         // TODO: use scenario group repository
     }
@@ -165,6 +167,7 @@ MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
     ComponentToAreaConnectionFiller componentToAreaConnectionFiller(
       problemeHebdo,
       variableDictionary,
+      *problemeHebdo->linear_problem_data_,
       *problemeHebdo->scenarioGroupRepository);
     // TODO what happens if problemeHebdo->scenarioGroupRepository doesn't exist ?
     if (problemeHebdo->modelerSystem && problemeHebdo->scenarioGroupRepository)
@@ -173,6 +176,7 @@ MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
         fillModelerComponents(componentFillers,
                               fillersCollection,
                               problemeHebdo->modelerSystem,
+                              *problemeHebdo->linear_problem_data_,
                               *problemeHebdo->scenarioGroupRepository,
                               variableDictionary);
 

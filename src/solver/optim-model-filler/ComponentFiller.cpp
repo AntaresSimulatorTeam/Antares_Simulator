@@ -138,10 +138,11 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
 
 ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& component,
                                  Optimization::VariableDictionary& variableDictionary,
+                                 const LinearProblemApi::ILinearProblemData& data,
                                  const ScenarioGroupRepository& scenarioGroupRepository):
     component_(component),
     variableDictionary_(variableDictionary),
-    evaluationContextProvider_(scenarioGroupRepository)
+    evaluationContextProvider_(data, scenarioGroupRepository)
 {
 }
 
@@ -160,8 +161,8 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
         return;
     }
 
-    Expressions::Visitors::EvaluationContext evaluationContext = evaluationContextProvider_
-                                                                   .provide(component_, data);
+    Expressions::Visitors::EvaluationContext evaluationContext = evaluationContextProvider_.provide(
+      component_);
     Expressions::Visitors::EvalVisitor evaluator(evaluationContext, ctx);
     auto valueOrDefault = [&evaluator](const auto& node, double defaultValue)
     {
@@ -261,12 +262,9 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
                                      Optimisation::LinearProblemApi::ILinearProblemData& data,
                                      const Optimisation::LinearProblemApi::FillContext& ctx)
 {
-    Expressions::Visitors::EvaluationContext evaluationContext = evaluationContextProvider_
-                                                                   .provide(component_, data);
-    Optimization::ReadLinearConstraintVisitor visitor(evaluationContext,
-                                                      evaluationContextProvider_,
-                                                      ctx,
-                                                      component_);
+    Expressions::Visitors::EvaluationContext evaluationContext = evaluationContextProvider_.provide(
+      component_);
+    Optimization::ReadLinearConstraintVisitor visitor(evaluationContextProvider_, ctx, component_);
     for (const auto& constraint: component_.getModel()->Constraints() | std::views::values)
     {
         auto* root_node = constraint.expression().RootNode();
@@ -294,13 +292,10 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
     {
         return;
     }
-    Expressions::Visitors::EvaluationContext evaluationContext = evaluationContextProvider_
-                                                                   .provide(component_, data);
+    Expressions::Visitors::EvaluationContext evaluationContext = evaluationContextProvider_.provide(
+      component_);
 
-    Optimization::ReadLinearExpressionVisitor visitor(evaluationContext,
-                                                      evaluationContextProvider_,
-                                                      ctx,
-                                                      component_);
+    Optimization::ReadLinearExpressionVisitor visitor(evaluationContextProvider_, ctx, component_);
 
     const auto timeDependentLinearExpression = visitor.dispatch(model->Objective().RootNode());
     const auto& linear_expressions = timeDependentLinearExpression.GetLinearExpressions();

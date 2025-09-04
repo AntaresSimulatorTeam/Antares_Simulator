@@ -36,11 +36,12 @@ namespace Antares::Optimization
 ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
   const PROBLEME_HEBDO* problemeHebdo,
   const VariableDictionary& modelerVariableDictionary,
+  const ILinearProblemData& linearProblemData,
   const Optimisation::ScenarioGroupRepository& scenarioGroupRepository_):
     problemeHebdo_(problemeHebdo),
     modelerSystem_(problemeHebdo->modelerSystem),
     modelerVariableDictionary_(modelerVariableDictionary),
-    evaluationContextProvider_(scenarioGroupRepository_)
+    evaluationContextProvider_(linearProblemData, scenarioGroupRepository_)
 {
     int i = 0;
     for (auto name: problemeHebdo_->NomsDesPays)
@@ -118,7 +119,6 @@ public:
 
 void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
   ILinearProblem& pb,
-  ILinearProblemData& data,
   const FillContext& ctx,
   const ModelerStudy::SystemModel::Component& component,
   const std::string& portId,
@@ -127,11 +127,8 @@ void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
     std::string injectionFieldId = getConnectionFieldId(component, portId);
     DefaultScenario defaultScenario("empty"); // TODO default ?
     const Expressions::Visitors::EvaluationContext connectedComponentEvalContext
-      = evaluationContextProvider_.provide(component, data);
-    ReadLinearExpressionVisitor visitor(connectedComponentEvalContext,
-                                        evaluationContextProvider_,
-                                        ctx,
-                                        component);
+      = evaluationContextProvider_.provide(component);
+    ReadLinearExpressionVisitor visitor(evaluationContextProvider_, ctx, component);
     auto timeDependentLinearExpression = visitor.dispatch(
       component.nodeAtPortField(portId, injectionFieldId));
     std::string lowerAreaId = areaId;
@@ -151,7 +148,7 @@ void ComponentToAreaConnectionFiller::addConstraints(ILinearProblem& pb,
     {
         for (const auto& [portId, areaId]: component.portToAreaConnections())
         {
-            addComponentPortContributionToArea(pb, data, ctx, component, portId, areaId);
+            addComponentPortContributionToArea(pb, ctx, component, portId, areaId);
         }
     }
 }

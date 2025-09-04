@@ -57,7 +57,6 @@ class ReadLinearConstraintVisitor
 public:
     ReadLinearConstraintVisitor() = delete;
     explicit ReadLinearConstraintVisitor(
-      const Expressions::Visitors::EvaluationContext& evalContext,
       const Optimisation::EvaluationContextProvider& evalContextProvider,
       const Optimisation::LinearProblemApi::FillContext& fillContext,
       const ModelerStudy::SystemModel::Component& component);

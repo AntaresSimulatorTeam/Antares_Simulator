@@ -45,8 +45,7 @@ class ReadLinearExpressionVisitor
 {
 public:
     ReadLinearExpressionVisitor() = delete;
-    ReadLinearExpressionVisitor(const Expressions::Visitors::EvaluationContext& evalContext,
-                                const Optimisation::EvaluationContextProvider& evalContextProvider,
+    ReadLinearExpressionVisitor(const Optimisation::EvaluationContextProvider& evalContextProvider,
                                 const Optimisation::LinearProblemApi::FillContext& fillContext,
                                 const ModelerStudy::SystemModel::Component& component);
     std::string name() const override;
@@ -77,11 +76,10 @@ private:
     TimeDependentLinearExpression visit(const Expressions::Nodes::TimeSumNode* node) override;
     TimeDependentLinearExpression visit(const Expressions::Nodes::AllTimeSumNode* node) override;
 
-    const Expressions::Visitors::EvaluationContext& evalContext_;
-    const Optimisation::EvaluationContextProvider& evalContextProvider_; // TODO make this const
+    const Optimisation::EvaluationContextProvider& evalContextProvider_;
+    const Expressions::Visitors::EvaluationContext evalContext_;
     const Optimisation::LinearProblemApi::FillContext& fillContext_;
     const ModelerStudy::SystemModel::Component& component_;
-    Expressions::Visitors::EvalVisitor
-      evalVisitor_; // TODO make it a reference and get it from ComponentFiller ?
+    Expressions::Visitors::EvalVisitor evalVisitor_;
 };
 } // namespace Antares::Optimization

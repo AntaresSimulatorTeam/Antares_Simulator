@@ -36,17 +36,15 @@ namespace Antares::Optimization
 {
 
 ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
-  const EvaluationContext& evalContext,
   const Optimisation::EvaluationContextProvider& evalContextProvider,
   const Optimisation::LinearProblemApi::FillContext& fillContext,
   const SystemModel::Component& component):
-    evalContext_(evalContext),
     evalContextProvider_(evalContextProvider),
+    evalContext_(evalContextProvider_.provide(component)),
     fillContext_(fillContext),
     component_(component),
     evalVisitor_(evalContext_, fillContext_)
 {
-    // TODO this can be removed but I don't want to change all the APIs just yet
 }
 
 std::string ReadLinearExpressionVisitor::name() const
@@ -186,13 +184,8 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const PortField
         auto* component = connexion_end.component();
         auto* port = connexion_end.port();
 
-        // TODO make this cleaner by not accessing evalContext_.data()
-        const EvaluationContext otherEvalContext = evalContextProvider_
-                                                     .provide(*component, evalContext_.data());
-        ReadLinearExpressionVisitor visitor(otherEvalContext,
-                                            evalContextProvider_,
-                                            fillContext_,
-                                            *component);
+        const EvaluationContext otherEvalContext = evalContextProvider_.provide(*component);
+        ReadLinearExpressionVisitor visitor(evalContextProvider_, fillContext_, *component);
 
         const Node* node = component->nodeAtPortField(port->Id(), fieldId);
         to_return += visitor.dispatch(node);

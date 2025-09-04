@@ -19,23 +19,27 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include <iostream>
+
 #include <antares/solver/optim-model-filler/EvaluationContextProvider.h>
 
 namespace Antares::Optimisation
 {
 EvaluationContextProvider::EvaluationContextProvider(
+  const LinearProblemApi::ILinearProblemData& data,
   const ScenarioGroupRepository& scenarioGroupRepository):
+    data_(data),
     scenarioGroupRepository_(scenarioGroupRepository)
 {
+    std::cout << "hi";
 }
 
 Expressions::Visitors::EvaluationContext EvaluationContextProvider::provide(
-  const ModelerStudy::SystemModel::Component& component,
-  const LinearProblemApi::ILinearProblemData& data) const
+  const ModelerStudy::SystemModel::Component& component) const
 {
     return Expressions::Visitors::EvaluationContext(component.getParameterValues(),
                                                     {},
-                                                    data,
+                                                    data_,
                                                     scenarioGroupRepository_.scenario(
                                                       component.getScenarioGroupId()));
 }

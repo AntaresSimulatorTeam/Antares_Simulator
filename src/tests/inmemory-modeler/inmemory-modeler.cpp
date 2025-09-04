@@ -61,6 +61,7 @@ void LinearProblemBuildingFixture::buildLinearProblem(
         auto cf = std::make_unique<Antares::Optimisation::ComponentFiller>(
           component,
           variableDictionary,
+          dummy_data,
           scenario_group_repository);
         fillers.push_back(std::move(cf));
     }

@@ -30,13 +30,14 @@ namespace Antares::Optimisation
 class EvaluationContextProvider
 {
 public:
-    explicit EvaluationContextProvider(const ScenarioGroupRepository& scenarioGroupRepository);
+    explicit EvaluationContextProvider(const LinearProblemApi::ILinearProblemData& data,
+                                       const ScenarioGroupRepository& scenarioGroupRepository);
 
     [[nodiscard]] Expressions::Visitors::EvaluationContext provide(
-      const ModelerStudy::SystemModel::Component& component,
-      const LinearProblemApi::ILinearProblemData& data) const;
+      const ModelerStudy::SystemModel::Component& component) const;
 
 private:
+    const LinearProblemApi::ILinearProblemData& data_;
     const ScenarioGroupRepository& scenarioGroupRepository_;
 };
 } // namespace Antares::Optimisation

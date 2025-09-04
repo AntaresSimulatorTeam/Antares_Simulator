@@ -71,6 +71,7 @@ public:
         {
             auto cf = std::make_unique<Optimisation::ComponentFiller>(component,
                                                                       variableDictionary_,
+                                                                      *dataSeries,
                                                                       scenario_group_repository);
             fillers.push_back(std::move(cf));
         }
