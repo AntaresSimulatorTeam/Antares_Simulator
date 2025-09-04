@@ -19,8 +19,6 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include <iostream>
-
 #include <antares/solver/optim-model-filler/EvaluationContextProvider.h>
 
 namespace Antares::Optimisation
@@ -31,7 +29,6 @@ EvaluationContextProvider::EvaluationContextProvider(
     data_(data),
     scenarioGroupRepository_(scenarioGroupRepository)
 {
-    std::cout << "hi";
 }
 
 Expressions::Visitors::EvaluationContext EvaluationContextProvider::provide(
