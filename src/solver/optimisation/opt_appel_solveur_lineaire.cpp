@@ -162,8 +162,11 @@ MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
 
     VariableDictionary variableDictionary;
     std::vector<std::unique_ptr<Optimisation::ComponentFiller>> componentFillers;
-    ComponentToAreaConnectionFiller componentToAreaConnectionFiller(problemeHebdo,
-                                                                    variableDictionary);
+    ComponentToAreaConnectionFiller componentToAreaConnectionFiller(
+      problemeHebdo,
+      variableDictionary,
+      *problemeHebdo->scenarioGroupRepository);
+    // TODO what happens if problemeHebdo->scenarioGroupRepository doesn't exist ?
     if (problemeHebdo->modelerSystem && problemeHebdo->scenarioGroupRepository)
     {
         // All LP variables coordinates (component id, variable id, scenario, time step)

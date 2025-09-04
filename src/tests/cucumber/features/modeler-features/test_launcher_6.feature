@@ -55,3 +55,17 @@ Feature: 6 - Simple end-to-end tests to test port management
 #      | NG2       | injection_port.flow | 0        | 20    |
 #      | NG2       | injection_port.flow | 1        | 100   |
 #      | NL        | injection_port.flow | 0-1      | -100  |
+
+  @fast
+  Scenario: 6.1 - with scenario builder: Same as 6.1, but the load's first MC year is linked to 2nd timeseries in load.tsv
+    Given the modeler study path is "modeler/6_1_scenariobuilder"
+    When I run antares modeler
+    Then the simulation succeeds
+    And the objective value is 160
+    And the modeler outputs contain the following entries
+      | component | output | timestep | value |
+      | NG        | gen1_p | 0        | 80    |
+      | NG        | gen2_p | 0        | 20    |
+    # TODO activate the following checks for 5.2
+    #      | NG        | injection_port.flow | 1        | 0        | 100   |
+    #      | NL        | injection_port.flow |          |          | -100  |

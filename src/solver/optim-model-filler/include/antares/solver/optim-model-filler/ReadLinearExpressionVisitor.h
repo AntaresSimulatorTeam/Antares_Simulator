@@ -29,6 +29,8 @@
 #include "antares/expressions/visitors/EvalVisitor.h"
 #include "antares/study/system-model/component.h"
 
+#include "EvaluationContextProvider.h"
+
 /**
  * Read Linear Expression Visitor
  * Visits a Node and produces a Linear Expression (defined by an offset and non-zero
@@ -42,12 +44,11 @@ class ReadLinearExpressionVisitor
     : public Expressions::Visitors::NodeVisitor<TimeDependentLinearExpression>
 {
 public:
-    explicit ReadLinearExpressionVisitor(
-      Expressions::Visitors::EvaluationContext evalContext,
-      Optimisation::LinearProblemApi::FillContext fillContext,
-      const Antares::ModelerStudy::SystemModel::Component& component);
-
     ReadLinearExpressionVisitor() = delete;
+    ReadLinearExpressionVisitor(const Expressions::Visitors::EvaluationContext& evalContext,
+                                const Optimisation::EvaluationContextProvider& evalContextProvider,
+                                const Optimisation::LinearProblemApi::FillContext& fillContext,
+                                const ModelerStudy::SystemModel::Component& component);
     std::string name() const override;
 
 private:
@@ -76,9 +77,11 @@ private:
     TimeDependentLinearExpression visit(const Expressions::Nodes::TimeSumNode* node) override;
     TimeDependentLinearExpression visit(const Expressions::Nodes::AllTimeSumNode* node) override;
 
-    Optimisation::LinearProblemApi::FillContext fillContext_;
-    const Expressions::Visitors::EvaluationContext evalContext_;
-    const Antares::ModelerStudy::SystemModel::Component& component_;
-    Expressions::Visitors::EvalVisitor evalVisitor_;
+    const Expressions::Visitors::EvaluationContext& evalContext_;
+    const Optimisation::EvaluationContextProvider& evalContextProvider_; // TODO make this const
+    const Optimisation::LinearProblemApi::FillContext& fillContext_;
+    const ModelerStudy::SystemModel::Component& component_;
+    Expressions::Visitors::EvalVisitor
+      evalVisitor_; // TODO make it a reference and get it from ComponentFiller ?
 };
 } // namespace Antares::Optimization

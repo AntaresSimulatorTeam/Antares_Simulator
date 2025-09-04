@@ -57,9 +57,10 @@ class ReadLinearConstraintVisitor
 public:
     ReadLinearConstraintVisitor() = delete;
     explicit ReadLinearConstraintVisitor(
-      Expressions::Visitors::EvaluationContext context,
+      const Expressions::Visitors::EvaluationContext& evalContext,
+      const Optimisation::EvaluationContextProvider& evalContextProvider,
       const Optimisation::LinearProblemApi::FillContext& fillContext,
-      const Antares::ModelerStudy::SystemModel::Component& component);
+      const ModelerStudy::SystemModel::Component& component);
 
     std::string name() const override;
 

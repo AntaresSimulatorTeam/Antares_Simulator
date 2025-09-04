@@ -52,6 +52,7 @@ struct container_of_helpful_data_for_unit_tests
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
     Antares::Optimisation::LinearProblemApi::EmptyScenario empty_scenario;
     EvaluationContext evaluationContext{{}, {}, data, empty_scenario};
+    Antares::Optimisation::EvaluationContextProvider evaluationContextProvider{{}};
     SystemModel::ModelBuilder modelBuilder;
     SystemModel::ComponentBuilder componentBuilder;
 };
@@ -132,7 +133,10 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_2_components_with_a_port_field,
                                          ConnectionEnd(&generatorComponent, &injection_port));
 
     // Visitor associated to component named "N"
-    ReadLinearExpressionVisitor visitor{evaluationContext, {0, 0, 0, 0, 0}, nodeComponent};
+    ReadLinearExpressionVisitor visitor{evaluationContext,
+                                        evaluationContextProvider,
+                                        {0, 0, 0, 0, 0},
+                                        nodeComponent};
 
     auto timeDependentLinExpr = visitor.dispatch(sum_connections_node);
 
@@ -246,7 +250,10 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_3_components_with_a_port_field,
     nodeComponent.addComponentConnection(portId, ConnectionEnd(&demandComponent, &injection_port));
 
     // Visitor associated to component named "N"
-    ReadLinearExpressionVisitor visitor{evaluationContext, {0, 0, 0, 0, 0}, nodeComponent};
+    ReadLinearExpressionVisitor visitor{evaluationContext,
+                                        evaluationContextProvider,
+                                        {0, 0, 0, 0, 0},
+                                        nodeComponent};
 
     auto timeDependentLinExpr = visitor.dispatch(sum_connections_node);
 

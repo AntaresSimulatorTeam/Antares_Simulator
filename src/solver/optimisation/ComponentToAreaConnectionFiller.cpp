@@ -35,10 +35,12 @@ namespace Antares::Optimization
 {
 ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
   const PROBLEME_HEBDO* problemeHebdo,
-  const VariableDictionary& modelerVariableDictionary):
+  const VariableDictionary& modelerVariableDictionary,
+  const Optimisation::ScenarioGroupRepository& scenarioGroupRepository_):
     problemeHebdo_(problemeHebdo),
     modelerSystem_(problemeHebdo->modelerSystem),
-    modelerVariableDictionary_(modelerVariableDictionary)
+    modelerVariableDictionary_(modelerVariableDictionary),
+    evaluationContextProvider_(scenarioGroupRepository_)
 {
     int i = 0;
     for (auto name: problemeHebdo_->NomsDesPays)
@@ -124,9 +126,12 @@ void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
 {
     std::string injectionFieldId = getConnectionFieldId(component, portId);
     DefaultScenario defaultScenario("empty"); // TODO default ?
-    const Expressions::Visitors::EvaluationContext
-      connectedComponentEvalContext(component.getParameterValues(), {}, data, defaultScenario);
-    ReadLinearExpressionVisitor visitor(connectedComponentEvalContext, ctx, component);
+    const Expressions::Visitors::EvaluationContext connectedComponentEvalContext
+      = evaluationContextProvider_.provide(component, data);
+    ReadLinearExpressionVisitor visitor(connectedComponentEvalContext,
+                                        evaluationContextProvider_,
+                                        ctx,
+                                        component);
     auto timeDependentLinearExpression = visitor.dispatch(
       component.nodeAtPortField(portId, injectionFieldId));
     std::string lowerAreaId = areaId;
