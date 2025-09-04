@@ -97,6 +97,7 @@ target_link_libraries(expressions
         #TODO i need LinearProblemData
         linear-problem-api
 	linear-problem-data-impl
+	Antares::optim-model-filler
         PRIVATE
         Antares::antares-study-system-model
 )
