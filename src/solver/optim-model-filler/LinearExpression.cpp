@@ -19,8 +19,6 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include <algorithm>
-#include <functional>
 #include <stdexcept>
 
 #include <antares/solver/optim-model-filler/LinearExpression.h>
