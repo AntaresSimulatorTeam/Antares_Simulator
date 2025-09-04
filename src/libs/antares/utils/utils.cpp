@@ -244,8 +244,10 @@ std::string TimeMeasurement::toString() const
 
 std::string TimeMeasurement::toStringInSeconds() const
 {
-    auto time = std::chrono::duration_cast<std::chrono::seconds>(end_ - start_).count();
-    return std::to_string(time) + " s";
+    std::ostringstream oss;
+    oss.precision(3);
+    oss << std::fixed << (duration_ms() / 1000.0) << " s";
+    return oss.str();
 }
 
 } // namespace Utils
