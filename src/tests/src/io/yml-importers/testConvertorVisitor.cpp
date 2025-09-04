@@ -126,17 +126,17 @@ BOOST_AUTO_TEST_CASE(identifierNotFound)
                           expectedMessage);
 }
 
-BOOST_FIXTURE_TEST_CASE(addTwoLiterals, ExpressionToNodeConvertorEmptyModel)
+BOOST_FIXTURE_TEST_CASE(addThreeLiterals, ExpressionToNodeConvertorEmptyModel)
 {
-    const std::string expression = "1 + 2";
+    const std::string expression = "1 + 2 + 3";
     auto expr = run(expression);
-    BOOST_CHECK_EQUAL(expr.node->name(), "SumNode");
 
     auto* nodeSum = dynamic_cast<Nodes::SumNode*>(expr.node);
     BOOST_REQUIRE(nodeSum);
     const auto& operands = nodeSum->getOperands();
     BOOST_CHECK_EQUAL(toLiteral(operands[0])->value(), 1);
     BOOST_CHECK_EQUAL(toLiteral(operands[1])->value(), 2);
+    BOOST_CHECK_EQUAL(toLiteral(operands[1])->value(), 3);
 }
 
 BOOST_FIXTURE_TEST_CASE(subtractTwoLiterals, ExpressionToNodeConvertorEmptyModel)
