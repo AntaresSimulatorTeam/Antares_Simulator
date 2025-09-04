@@ -122,15 +122,27 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const VariableNode* nod
     const auto& modelVariablesGlobalIndices = component_.ModelVariablesGlobalIndices();
     const auto globalIndex = modelVariablesGlobalIndices.at(std::distance(variables.begin(), it));
     const auto variableStart = variableStartColumn_.at(globalIndex);
-    if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
+    const auto variableEnd = variableStart == *variableStartColumn_.rbegin()
+                               ? nbModelVariables_
+                               : variableStartColumn_.at(globalIndex + 1);
+    for (auto localTimeStep = fillContext_.getLocalFirstTimeStep();
+         localTimeStep < fillContext_.getLocalLastTimeStep();
+         ++localTimeStep)
     {
-        out.addVectorCoeff(variableStart, 1);
-        return out;
+        for (auto variableIndex(variableStart); variableIndex < variableEnd; ++variableIndex)
+        {
+            out.addCoeff(localTimeStep, variableIndex, 1);
+        }
     }
-    for (auto col = variableStart; col < variableStart + nbtimeSteps_; col++)
-    {
-        out.addVectorCoeff(col, 1);
-    }
+    // if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
+    // {
+    //     out.addVectorCoeff(variableStart, 1);
+    //     return out;
+    // }
+    // for (auto col = variableStart; col < variableStart + nbtimeSteps_; col++)
+    // {
+    //     out.addVectorCoeff(col, 1);
+    // }
 }
 
 LinearExpressionEigen ReadLinearExpressionVisitor::visit(const ParameterNode* node)
