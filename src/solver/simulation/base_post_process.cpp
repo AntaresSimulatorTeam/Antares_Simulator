@@ -46,7 +46,6 @@ std::unique_ptr<interfacePostProcessList> interfacePostProcessList::create(
   uint numSpace,
   AreaList& areas,
   SheddingPolicy sheddingPolicy,
-  SimplexOptimization splxOptimization,
   Calendar& calendar,
   const OptimizationOptions& solverOptions)
 {
