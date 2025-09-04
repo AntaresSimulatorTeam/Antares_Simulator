@@ -861,6 +861,7 @@ var namespaces_dup =
         [ "Wait", "namespaceAntares_1_1Dispatcher.html#a7d529d349b513caf851b7a3594894cf8", null ]
       ] ],
       [ "Error", null, [
+        [ "InvalidArgumentError", "classAntares_1_1Error_1_1InvalidArgumentError.html", null ],
         [ "LoadingError", "classAntares_1_1Error_1_1LoadingError.html", null ],
         [ "StudyFolderDoesNotExist", "classAntares_1_1Error_1_1StudyFolderDoesNotExist.html", "classAntares_1_1Error_1_1StudyFolderDoesNotExist" ],
         [ "StudyFolderContainsNonASCIIchars", "classAntares_1_1Error_1_1StudyFolderContainsNonASCIIchars.html", "classAntares_1_1Error_1_1StudyFolderContainsNonASCIIchars" ],
@@ -901,9 +902,6 @@ var namespaces_dup =
           [ "AllTimeSumNode", "classAntares_1_1Expressions_1_1Nodes_1_1AllTimeSumNode.html", "classAntares_1_1Expressions_1_1Nodes_1_1AllTimeSumNode" ],
           [ "BinaryNode", "classAntares_1_1Expressions_1_1Nodes_1_1BinaryNode.html", "classAntares_1_1Expressions_1_1Nodes_1_1BinaryNode" ],
           [ "ComparisonNode", "classAntares_1_1Expressions_1_1Nodes_1_1ComparisonNode.html", "classAntares_1_1Expressions_1_1Nodes_1_1ComparisonNode" ],
-          [ "ComponentNode", "classAntares_1_1Expressions_1_1Nodes_1_1ComponentNode.html", "classAntares_1_1Expressions_1_1Nodes_1_1ComponentNode" ],
-          [ "ComponentVariableNode", "classAntares_1_1Expressions_1_1Nodes_1_1ComponentVariableNode.html", "classAntares_1_1Expressions_1_1Nodes_1_1ComponentVariableNode" ],
-          [ "ComponentParameterNode", "classAntares_1_1Expressions_1_1Nodes_1_1ComponentParameterNode.html", "classAntares_1_1Expressions_1_1Nodes_1_1ComponentParameterNode" ],
           [ "DivisionNode", "classAntares_1_1Expressions_1_1Nodes_1_1DivisionNode.html", "classAntares_1_1Expressions_1_1Nodes_1_1DivisionNode" ],
           [ "EqualNode", "classAntares_1_1Expressions_1_1Nodes_1_1EqualNode.html", "classAntares_1_1Expressions_1_1Nodes_1_1EqualNode" ],
           [ "GreaterThanOrEqualNode", "classAntares_1_1Expressions_1_1Nodes_1_1GreaterThanOrEqualNode.html", "classAntares_1_1Expressions_1_1Nodes_1_1GreaterThanOrEqualNode" ],
@@ -943,13 +941,7 @@ var namespaces_dup =
           [ "LinearityVisitor", "classAntares_1_1Expressions_1_1Visitors_1_1LinearityVisitor.html", "classAntares_1_1Expressions_1_1Visitors_1_1LinearityVisitor" ],
           [ "NodeVisitor", "classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor.html", "classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor" ],
           [ "NodeVisitsProvider", "structAntares_1_1Expressions_1_1Visitors_1_1NodeVisitsProvider.html", "structAntares_1_1Expressions_1_1Visitors_1_1NodeVisitsProvider" ],
-          [ "PortFieldSubstitutionContext", "structAntares_1_1Expressions_1_1Visitors_1_1PortFieldSubstitutionContext.html", "structAntares_1_1Expressions_1_1Visitors_1_1PortFieldSubstitutionContext" ],
-          [ "PortFieldSubstitutionVisitor", "classAntares_1_1Expressions_1_1Visitors_1_1PortFieldSubstitutionVisitor.html", "classAntares_1_1Expressions_1_1Visitors_1_1PortFieldSubstitutionVisitor" ],
-          [ "PortFieldSumSubstitutionContext", "structAntares_1_1Expressions_1_1Visitors_1_1PortFieldSumSubstitutionContext.html", "structAntares_1_1Expressions_1_1Visitors_1_1PortFieldSumSubstitutionContext" ],
-          [ "PortFieldSumSubstitutionVisitor", "classAntares_1_1Expressions_1_1Visitors_1_1PortFieldSumSubstitutionVisitor.html", "classAntares_1_1Expressions_1_1Visitors_1_1PortFieldSumSubstitutionVisitor" ],
           [ "PrintVisitor", "classAntares_1_1Expressions_1_1Visitors_1_1PrintVisitor.html", "classAntares_1_1Expressions_1_1Visitors_1_1PrintVisitor" ],
-          [ "SubstitutionContext", "structAntares_1_1Expressions_1_1Visitors_1_1SubstitutionContext.html", "structAntares_1_1Expressions_1_1Visitors_1_1SubstitutionContext" ],
-          [ "SubstitutionVisitor", "classAntares_1_1Expressions_1_1Visitors_1_1SubstitutionVisitor.html", "classAntares_1_1Expressions_1_1Visitors_1_1SubstitutionVisitor" ],
           [ "TimeIndexVisitor", "classAntares_1_1Expressions_1_1Visitors_1_1TimeIndexVisitor.html", "classAntares_1_1Expressions_1_1Visitors_1_1TimeIndexVisitor" ],
           [ "LinearStatus", "LinearStatus_8h.html#af50e1b25870322fcafecb056c48bef0d", [
             [ "CONSTANT", "LinearStatus_8h.html#af50e1b25870322fcafecb056c48bef0da8d6b5cada83510220f59e00ce86d4d92", null ],

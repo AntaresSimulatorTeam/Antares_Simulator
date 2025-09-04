@@ -936,11 +936,7 @@ var hierarchy =
         [ "Antares::Expressions::Visitors::CompareVisitor", "classAntares_1_1Expressions_1_1Visitors_1_1CompareVisitor.html", null ]
       ] ],
       [ "Antares::Expressions::Visitors::NodeVisitor< Nodes::Node * >", "classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor.html", [
-        [ "Antares::Expressions::Visitors::CloneVisitor", "classAntares_1_1Expressions_1_1Visitors_1_1CloneVisitor.html", [
-          [ "Antares::Expressions::Visitors::PortFieldSubstitutionVisitor", "classAntares_1_1Expressions_1_1Visitors_1_1PortFieldSubstitutionVisitor.html", null ],
-          [ "Antares::Expressions::Visitors::PortFieldSumSubstitutionVisitor", "classAntares_1_1Expressions_1_1Visitors_1_1PortFieldSumSubstitutionVisitor.html", null ],
-          [ "Antares::Expressions::Visitors::SubstitutionVisitor", "classAntares_1_1Expressions_1_1Visitors_1_1SubstitutionVisitor.html", null ]
-        ] ]
+        [ "Antares::Expressions::Visitors::CloneVisitor", "classAntares_1_1Expressions_1_1Visitors_1_1CloneVisitor.html", null ]
       ] ],
       [ "Antares::Expressions::Visitors::NodeVisitor< EvaluationResult >", "classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor.html", [
         [ "Antares::Expressions::Visitors::EvalVisitor", "classAntares_1_1Expressions_1_1Visitors_1_1EvalVisitor.html", null ]
@@ -958,10 +954,6 @@ var hierarchy =
         [ "Antares::Expressions::Nodes::Leaf< std::string >", "classAntares_1_1Expressions_1_1Nodes_1_1Leaf.html", [
           [ "Antares::Expressions::Nodes::ParameterNode", "classAntares_1_1Expressions_1_1Nodes_1_1ParameterNode.html", null ],
           [ "Antares::Expressions::Nodes::VariableNode", "classAntares_1_1Expressions_1_1Nodes_1_1VariableNode.html", null ]
-        ] ],
-        [ "Antares::Expressions::Nodes::ComponentNode", "classAntares_1_1Expressions_1_1Nodes_1_1ComponentNode.html", [
-          [ "Antares::Expressions::Nodes::ComponentParameterNode", "classAntares_1_1Expressions_1_1Nodes_1_1ComponentParameterNode.html", null ],
-          [ "Antares::Expressions::Nodes::ComponentVariableNode", "classAntares_1_1Expressions_1_1Nodes_1_1ComponentVariableNode.html", null ]
         ] ],
         [ "Antares::Expressions::Nodes::Leaf< T >", "classAntares_1_1Expressions_1_1Nodes_1_1Leaf.html", null ],
         [ "Antares::Expressions::Nodes::ParentNode", "classAntares_1_1Expressions_1_1Nodes_1_1ParentNode.html", [
@@ -1009,6 +1001,7 @@ var hierarchy =
     [ "Antares::Solver::IntraModalConsistencyChecker", "classAntares_1_1Solver_1_1IntraModalConsistencyChecker.html", null ],
     [ "std::invalid_argument", null, [
       [ "Antares::Data::ShortTermStorage::ShortTermStorageAdditionalConstraintsError", "structAntares_1_1Data_1_1ShortTermStorage_1_1ShortTermStorageAdditionalConstraintsError.html", null ],
+      [ "Antares::Error::InvalidArgumentError", "classAntares_1_1Error_1_1InvalidArgumentError.html", null ],
       [ "Antares::Expressions::Visitors::EvalVisitorNotImplemented", "classAntares_1_1Expressions_1_1Visitors_1_1EvalVisitorNotImplemented.html", null ],
       [ "Antares::Expressions::Visitors::InvalidNode", "classAntares_1_1Expressions_1_1Visitors_1_1InvalidNode.html", null ],
       [ "Antares::IO::Inputs::SystemConverter::ConnectingPortToItSelf", "structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ConnectingPortToItSelf.html", null ],
@@ -1419,8 +1412,6 @@ var hierarchy =
     [ "Antares::Expressions::PortFieldHash", "structAntares_1_1Expressions_1_1PortFieldHash.html", null ],
     [ "Antares::ModelerStudy::SystemModel::PortFieldKey", "structAntares_1_1ModelerStudy_1_1SystemModel_1_1PortFieldKey.html", null ],
     [ "Antares::ModelerStudy::SystemModel::PortFieldKeyHash", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1PortFieldKeyHash.html", null ],
-    [ "Antares::Expressions::Visitors::PortFieldSubstitutionContext", "structAntares_1_1Expressions_1_1Visitors_1_1PortFieldSubstitutionContext.html", null ],
-    [ "Antares::Expressions::Visitors::PortFieldSumSubstitutionContext", "structAntares_1_1Expressions_1_1Visitors_1_1PortFieldSumSubstitutionContext.html", null ],
     [ "Antares::IO::Inputs::YmlModel::PortType", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType.html", null ],
     [ "Antares::ModelerStudy::SystemModel::PortType", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1PortType.html", null ],
     [ "Power", "structPower.html", null ],
@@ -1499,9 +1490,7 @@ var hierarchy =
       [ "CreateVisitorFixture", "structCreateVisitorFixture.html", null ],
       [ "MyDummyFixture", "structMyDummyFixture.html", null ],
       [ "MyDummyFixture", "structMyDummyFixture.html", null ],
-      [ "MyDummyFixture", "structMyDummyFixture.html", null ],
-      [ "SubstitutionFixture", "classSubstitutionFixture.html", null ],
-      [ "SumSubstitutionFixture", "classSumSubstitutionFixture.html", null ]
+      [ "MyDummyFixture", "structMyDummyFixture.html", null ]
     ] ],
     [ "Antares::Map::RemovalToolPredicate", "classAntares_1_1Map_1_1RemovalToolPredicate.html", null ],
     [ "Antares::Data::Parameters::RenewableGeneration", "structAntares_1_1Data_1_1Parameters_1_1RenewableGeneration.html", null ],
@@ -1832,7 +1821,6 @@ var hierarchy =
     [ "Antares::Data::StudyRuntimeInfos", "classAntares_1_1Data_1_1StudyRuntimeInfos.html", null ],
     [ "Antares::StudyUpdateLocker", "classAntares_1_1StudyUpdateLocker.html", null ],
     [ "Antares::Data::StudyVersion", "classAntares_1_1Data_1_1StudyVersion.html", null ],
-    [ "Antares::Expressions::Visitors::SubstitutionContext", "structAntares_1_1Expressions_1_1Visitors_1_1SubstitutionContext.html", null ],
     [ "Antares::Solver::Variable::SurveyResults", "classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html", null ],
     [ "Antares::Solver::Variable::Private::SurveyResultsData", "classAntares_1_1Solver_1_1Variable_1_1Private_1_1SurveyResultsData.html", null ],
     [ "Antares::IO::Inputs::YmlSystem::System", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html", null ],
