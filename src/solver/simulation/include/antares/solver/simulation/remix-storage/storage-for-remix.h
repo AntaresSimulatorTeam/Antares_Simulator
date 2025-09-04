@@ -1,32 +1,9 @@
 #pragma once
 
-#include "storage-for-remix-interface.h"
+#include "storage-for-remix-no-levels.h"
 
 namespace Antares::Solver::Simulation
 {
-
-class StorageForRemixNoLevels: public IStorageForRemix
-{
-public:
-    StorageForRemixNoLevels(std::vector<double>& generation,
-                            std::vector<double>& unsupE,
-                            const std::vector<double> Pmax,
-                            const std::vector<double> Pmin);
-
-    double maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) const override;
-    void update() override;
-    const std::vector<double>& initWithdrawal() const override;
-    std::vector<double>& withdrawal() override;
-
-protected:
-    void checkInput(size_t size) override;
-
-    std::vector<double>& withdrawal_;
-    const std::vector<double> initWithdrawal_;
-    std::vector<double>& unsupE_;
-    const std::vector<double> pmax_;
-    const std::vector<double> pmin_;
-};
 
 class StorageForRemixWithLevels: public StorageForRemixNoLevels
 {

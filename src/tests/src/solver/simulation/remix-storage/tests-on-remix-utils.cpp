@@ -202,7 +202,7 @@ BOOST_AUTO_TEST_CASE(incrementing_iterator_enough_times_makes_it_point_back_to_v
 
 BOOST_AUTO_TEST_CASE(incrementing_as_much_cyclic_than_classic_iterators_makes_them_equal)
 {
-    std::vector<int> v = {1, 2, 3, 4, 5, 6, 7, 8};
+    std::vector<int> v = {1, 2, 3, 4, 5, 6, 7};
 
     CyclicIterator<int> cyclic_it(v);
     cyclic_it++;
@@ -231,7 +231,6 @@ BOOST_AUTO_TEST_CASE(incrementing_cyclic_and_classic_iterators_differnetly_makes
     std::vector<int>::iterator classic_it = v.begin();
     classic_it++;
     classic_it++;
-
 
     BOOST_CHECK(cyclic_it != classic_it);
 }
