@@ -67,10 +67,6 @@ private:
     TimeDependentLinearExpression visit(const Expressions::Nodes::LiteralNode* node) override;
     TimeDependentLinearExpression visit(const Expressions::Nodes::PortFieldNode* node) override;
     TimeDependentLinearExpression visit(const Expressions::Nodes::PortFieldSumNode* node) override;
-    TimeDependentLinearExpression visit(
-      const Expressions::Nodes::ComponentVariableNode* node) override;
-    TimeDependentLinearExpression visit(
-      const Expressions::Nodes::ComponentParameterNode* node) override;
     TimeDependentLinearExpression visit(const Expressions::Nodes::TimeShiftNode* node) override;
     TimeDependentLinearExpression visit(const Expressions::Nodes::TimeIndexNode* node) override;
     TimeDependentLinearExpression visit(const Expressions::Nodes::TimeSumNode* node) override;

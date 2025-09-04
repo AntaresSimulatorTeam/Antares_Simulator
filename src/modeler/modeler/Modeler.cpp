@@ -22,6 +22,8 @@
 
 #include "antares/solver/modeler/Modeler.h"
 
+#include <chrono>
+
 #include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 #include <antares/optimisation/linear-problem-api/linearProblemBuilder.h>
@@ -104,6 +106,8 @@ void Modeler::solve() const
         logs.info() << "Parameters loaded";
         const auto data = loader_.loadAll();
 
+        Utils::TimeMeasurement measure;
+
         SystemLinearProblemBuilder system_linear_problem(data.system.get());
 
         writer_.init(!parameters.noOutput, simulationTableSuffix);
@@ -138,6 +142,10 @@ void Modeler::solve() const
 
         logs.info() << "Number of variables: " << ortools_linear_problem.variableCount();
         logs.info() << "Number of constraints: " << ortools_linear_problem.constraintCount();
+
+        measure.tick();
+        logs.info();
+        logs.info() << "Modeler build took " << measure.toStringInSeconds();
 
         writer_.writeProblem(ortools_linear_problem);
 

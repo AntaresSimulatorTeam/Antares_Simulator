@@ -52,8 +52,6 @@ public:
     Nodes::Node* visit(const Nodes::LiteralNode* node) override;
     Nodes::Node* visit(const Nodes::PortFieldNode* node) override;
     Nodes::Node* visit(const Nodes::PortFieldSumNode* node) override;
-    Nodes::Node* visit(const Nodes::ComponentVariableNode* node) override;
-    Nodes::Node* visit(const Nodes::ComponentParameterNode* node) override;
     Nodes::Node* visit(const Nodes::TimeShiftNode* node) override;
     Nodes::Node* visit(const Nodes::TimeIndexNode* node) override;
     Nodes::Node* visit(const Nodes::TimeSumNode* node) override;

@@ -28,6 +28,7 @@
 #include <antares/expressions/Registry.hxx>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h>
+#include "antares/exception/InvalidArgumentError.hpp"
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
@@ -226,7 +227,7 @@ BOOST_FIXTURE_TEST_CASE(visit_param_declared_const_in_library_but_time_dep_in_sy
     setComponentParameterValues({{"param", ParameterType::TIMESERIE, "0_1_2"}});
     Antares::Optimisation::LinearProblemApi::FillContext ctx{0, 1, 0, 1, 0};
     ReadLinearExpressionVisitor visitor(evaluationContextProvider, ctx, component);
-    BOOST_CHECK_THROW(visitor.dispatch(&p), std::invalid_argument);
+    BOOST_CHECK_THROW(visitor.dispatch(&p), Antares::Error::InvalidArgumentError);
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_negate_literal_plus_var, CreateVisitorFixture)
@@ -297,33 +298,21 @@ BOOST_FIXTURE_TEST_CASE(comparison_nodes__exception_thrown, CreateVisitorFixture
     auto predicate = checkMessage("A linear expression can't contain comparison operators.");
 
     Node* node = create<EqualNode>(literal, literal);
-    BOOST_CHECK_EXCEPTION(visitor().dispatch(node), std::invalid_argument, predicate);
+    BOOST_CHECK_EXCEPTION(visitor().dispatch(node), Antares::Error::InvalidArgumentError, predicate);
 
     node = create<LessThanOrEqualNode>(literal, literal);
-    BOOST_CHECK_EXCEPTION(visitor().dispatch(node), std::invalid_argument, predicate);
+    BOOST_CHECK_EXCEPTION(visitor().dispatch(node), Antares::Error::InvalidArgumentError, predicate);
 
     node = create<GreaterThanOrEqualNode>(literal, literal);
-    BOOST_CHECK_EXCEPTION(visitor().dispatch(node), std::invalid_argument, predicate);
+    BOOST_CHECK_EXCEPTION(visitor().dispatch(node), Antares::Error::InvalidArgumentError, predicate);
 }
 
 BOOST_FIXTURE_TEST_CASE(not_implemented_nodes__exception_thrown, CreateVisitorFixture)
 {
     Node* node = create<PortFieldNode>("port", "field");
     BOOST_CHECK_EXCEPTION(visitor().dispatch(node),
-                          std::invalid_argument,
+                          Antares::Error::InvalidArgumentError,
                           checkMessage("ReadLinearExpressionVisitor cannot visit PortFieldNodes"));
-
-    node = create<ComponentVariableNode>("id", "y");
-    BOOST_CHECK_EXCEPTION(visitor().dispatch(node),
-                          std::invalid_argument,
-                          checkMessage(
-                            "ReadLinearExpressionVisitor cannot visit ComponentVariableNodes"));
-
-    node = create<ComponentParameterNode>("id", "y");
-    BOOST_CHECK_EXCEPTION(visitor().dispatch(node),
-                          std::invalid_argument,
-                          checkMessage(
-                            "ReadLinearExpressionVisitor cannot visit ComponentParameterNodes"));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -103,16 +103,6 @@ std::string PrintVisitor::visit(const Nodes::PortFieldSumNode* node)
     return node->getPortName() + "." + node->getFieldName();
 }
 
-std::string PrintVisitor::visit(const Nodes::ComponentVariableNode* node)
-{
-    return node->getComponentId() + "." + node->getComponentName();
-}
-
-std::string PrintVisitor::visit(const Nodes::ComponentParameterNode* node)
-{
-    return node->getComponentId() + "." + node->getComponentName();
-}
-
 std::string PrintVisitor::trimAndFormat(const std::string& in)
 {
     auto s = in;

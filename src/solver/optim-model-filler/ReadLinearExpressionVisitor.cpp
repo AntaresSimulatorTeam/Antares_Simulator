@@ -21,6 +21,7 @@
 
 #include <numeric>
 
+#include <antares/exception/InvalidArgumentError.hpp>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/expressions/visitors/NodeVisitor.h>
@@ -82,17 +83,17 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const DivisionN
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const EqualNode*)
 {
-    throw std::invalid_argument("A linear expression can't contain comparison operators.");
+    throw Error::InvalidArgumentError("A linear expression can't contain comparison operators.");
 }
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const LessThanOrEqualNode*)
 {
-    throw std::invalid_argument("A linear expression can't contain comparison operators.");
+    throw Error::InvalidArgumentError("A linear expression can't contain comparison operators.");
 }
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const GreaterThanOrEqualNode*)
 {
-    throw std::invalid_argument("A linear expression can't contain comparison operators.");
+    throw Error::InvalidArgumentError("A linear expression can't contain comparison operators.");
 }
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const NegationNode* node)
@@ -136,7 +137,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Parameter
     if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
         && systemParameter.type != ParameterType::CONSTANT)
     {
-        throw std::invalid_argument(
+        throw Error::InvalidArgumentError(
           "Parameter " + node->value()
           + " is declared constant in time and scenario in library but not in system");
     }
@@ -170,7 +171,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const LiteralNo
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const PortFieldNode*)
 {
-    throw std::invalid_argument("ReadLinearExpressionVisitor cannot visit PortFieldNodes");
+    throw Error::InvalidArgumentError("ReadLinearExpressionVisitor cannot visit PortFieldNodes");
 }
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const PortFieldSumNode* node)
@@ -192,16 +193,6 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const PortField
     }
 
     return to_return;
-}
-
-TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const ComponentVariableNode*)
-{
-    throw std::invalid_argument("ReadLinearExpressionVisitor cannot visit ComponentVariableNodes");
-}
-
-TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const ComponentParameterNode*)
-{
-    throw std::invalid_argument("ReadLinearExpressionVisitor cannot visit ComponentParameterNodes");
 }
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const TimeShiftNode* node)

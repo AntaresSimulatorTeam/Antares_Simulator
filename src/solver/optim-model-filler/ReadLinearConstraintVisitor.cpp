@@ -23,6 +23,7 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h>
+#include "antares/exception/InvalidArgumentError.hpp"
 #include "antares/expressions/ShiftVector.h"
 
 using namespace Antares::Expressions::Nodes;
@@ -102,9 +103,9 @@ std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const GreaterTh
     return constraints;
 }
 
-static std::invalid_argument IllegalNodeException()
+static Error::InvalidArgumentError IllegalNodeException()
 {
-    return std::invalid_argument("Root node of a constraint must be a comparator.");
+    return Error::InvalidArgumentError("Root node of a constraint must be a comparator.");
 }
 
 std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const SumNode*)
@@ -153,16 +154,6 @@ std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const PortField
 }
 
 std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const PortFieldSumNode*)
-{
-    throw IllegalNodeException();
-}
-
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const ComponentVariableNode*)
-{
-    throw IllegalNodeException();
-}
-
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const ComponentParameterNode*)
 {
     throw IllegalNodeException();
 }

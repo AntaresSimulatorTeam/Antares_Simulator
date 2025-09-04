@@ -21,7 +21,6 @@
 
 #include "antares/utils/utils.h"
 
-#include <ranges>
 #include <sstream>
 
 #include <antares/logs/logs.h>
@@ -220,6 +219,35 @@ bool checkAllElementsIdenticalOrOne(std::vector<std::pair<unsigned, std::string>
         }
     }
     return true;
+}
+
+TimeMeasurement::TimeMeasurement()
+{
+    start_ = clock::now();
+    end_ = start_;
+}
+
+void TimeMeasurement::tick()
+{
+    end_ = clock::now();
+}
+
+long TimeMeasurement::duration_ms() const
+{
+    return std::chrono::duration_cast<std::chrono::milliseconds>(end_ - start_).count();
+}
+
+std::string TimeMeasurement::toString() const
+{
+    return std::to_string(duration_ms()) + " ms";
+}
+
+std::string TimeMeasurement::toStringInSeconds() const
+{
+    std::ostringstream oss;
+    oss.precision(3);
+    oss << std::fixed << (duration_ms() / 1000.0) << " s";
+    return oss.str();
 }
 
 } // namespace Utils

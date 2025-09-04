@@ -280,8 +280,6 @@ private:
     EvaluationResult visit(const Nodes::LiteralNode* node) override;
     EvaluationResult visit(const Nodes::PortFieldNode* node) override;
     EvaluationResult visit(const Nodes::PortFieldSumNode* node) override;
-    EvaluationResult visit(const Nodes::ComponentVariableNode* node) override;
-    EvaluationResult visit(const Nodes::ComponentParameterNode* node) override;
     EvaluationResult visit(const Nodes::TimeShiftNode* node) override;
     EvaluationResult visit(const Nodes::TimeIndexNode* node) override;
     EvaluationResult visit(const Nodes::TimeSumNode* node) override;

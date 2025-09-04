@@ -112,18 +112,6 @@ TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldSumNode* node)
     return to_return;
 }
 
-TimeIndex TimeIndexVisitor::visit(
-  [[maybe_unused]] const Nodes::ComponentVariableNode* component_variable_node)
-{
-    throw std::invalid_argument("ComponentVariableNode not handled by visitor TimeIndexVisitor");
-}
-
-TimeIndex TimeIndexVisitor::visit(
-  [[maybe_unused]] const Nodes::ComponentParameterNode* component_parameter_node)
-{
-    throw std::invalid_argument("ComponentParameterNode not handled by visitor TimeIndexVisitor");
-}
-
 TimeIndex TimeIndexVisitor::visit(const Nodes::TimeShiftNode* timeShiftNode)
 {
     return dispatch(timeShiftNode->left());
