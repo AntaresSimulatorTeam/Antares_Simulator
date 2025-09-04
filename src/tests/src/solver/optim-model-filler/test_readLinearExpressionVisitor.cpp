@@ -57,6 +57,7 @@ struct CreateVisitorFixture: Registry<Node>
                                          .withModel(&m)
                                          .withScenarioGroupId("group")
                                          .build();
+    Antares::Optimisation::LinearProblemApi::FillContext fillCtx{0, 0, 0, 0, 0};
 
     CreateVisitorFixture()
     {
@@ -73,7 +74,7 @@ struct CreateVisitorFixture: Registry<Node>
 
     ReadLinearExpressionVisitor visitor()
     {
-        return {evaluationContextProvider, {0, 0, 0, 0, 0}, component};
+        return {evaluationContextProvider, fillCtx, component};
     }
 
     void setComponentParameterValues(
@@ -127,7 +128,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param, CreateVisitorFixture)
     // 5 + param(3) = 8
     Node* sum = create<SumNode>(create<LiteralNode>(5.), create<ParameterNode>("param"));
     setComponentParameterValues({{"param", ParameterType::CONSTANT, "3."}});
-    ReadLinearExpressionVisitor visitor(evaluationContextProvider, {0, 0, 0, 0, 0}, component);
+    ReadLinearExpressionVisitor visitor(evaluationContextProvider, fillCtx, component);
     auto linear_expression = visitor.dispatch(sum).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 8.);
     BOOST_CHECK(linear_expression.coefPerVar().empty());
@@ -280,7 +281,7 @@ BOOST_FIXTURE_TEST_CASE(visit_complex_expression, CreateVisitorFixture)
 
     setComponentParameterValues(
       {{"param1", ParameterType::CONSTANT, "-2."}, {"param2", ParameterType::CONSTANT, "8."}});
-    ReadLinearExpressionVisitor visitor(evaluationContextProvider, {0, 0, 0, 0, 0}, component);
+    ReadLinearExpressionVisitor visitor(evaluationContextProvider, fillCtx, component);
     auto linear_expression = visitor.dispatch(big_sum).GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 10.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 2);
