@@ -1,5 +1,6 @@
 var NAVTREEINDEX56 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLD.html":[8,0,0,18,4,4,61],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLD.html#a2a1c8f1fe735bbd5085da04ef73f25df":[8,0,0,18,4,4,61,4],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLD.html#a303670ae0a48c5a24015ee0939182b84":[8,0,0,18,4,4,61,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLD.html#a3a59abc93bdcd7e4eeed8cb095fbfb00":[8,0,0,18,4,4,61,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX56 =
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_011_01_4.html":[8,0,0,18,4,34],
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_012_01_4.html":[8,0,0,18,4,35],
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_013_01_4.html":[8,0,0,18,4,36],
-"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_014_01_4.html":[8,0,0,18,4,37],
-"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_015_01_4.html":[8,0,0,18,4,38]
+"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_014_01_4.html":[8,0,0,18,4,37]
 };

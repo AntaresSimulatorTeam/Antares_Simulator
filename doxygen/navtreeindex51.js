@@ -1,5 +1,6 @@
 var NAVTREEINDEX51 =
 {
+"libs_2antares_2study_2include_2antares_2study_2parts_2thermal_2cluster_8h_source.html":[9,0,0,4,0,25,0,0,0,5,6,0],
 "libs_2antares_2study_2include_2antares_2study_2parts_2thermal_2container_8h_source.html":[9,0,0,4,0,25,0,0,0,5,6,3],
 "libs_2antares_2study_2include_2antares_2study_2parts_2wind_2container_8h_source.html":[9,0,0,4,0,25,0,0,0,5,7,0],
 "libs_2antares_2study_2include_2antares_2study_2parts_2wind_2prepro_8h_source.html":[9,0,0,4,0,25,0,0,0,5,7,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX51 =
 "namespaceAntares_1_1Optimization.html#a512aba669c091827c6b436d0b3408192":[7,0,0,21,38],
 "namespaceAntares_1_1Optimization.html#a520b3b8184f58d9c8cb41588b5514d8c":[7,0,0,21,53],
 "namespaceAntares_1_1Optimization.html#a577631761643b7e0a0785e4a82b75f34":[7,0,0,21,49],
-"namespaceAntares_1_1Optimization.html#a5afa496b079694f802024e34366de8a7":[7,0,0,21,54],
-"namespaceAntares_1_1Optimization.html#a7190f8e021109840878686b5bf2f2ded":[7,0,0,21,51]
+"namespaceAntares_1_1Optimization.html#a5afa496b079694f802024e34366de8a7":[7,0,0,21,54]
 };

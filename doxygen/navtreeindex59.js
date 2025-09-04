@@ -1,5 +1,6 @@
 var NAVTREEINDEX59 =
 {
+"structCommonFixture.html#a63a6dca7ef2f76e7adf9c1de859b828d":[8,0,65,2],
 "structCommonFixture.html#a673cfdc1de1cd2460da44ec34ac86799":[8,0,65,5],
 "structCommonFixture.html#a7e857d7a36118588d9b0496d3e320fa2":[8,0,65,0],
 "structCommonFixture.html#aa805477ed6aee7b227ba37f024d589ac":[8,0,65,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX59 =
 "structExchangeBalanceData.html#ad77a41c7cab8d2947ccb172ffaaaaaf8":[8,0,111,2],
 "structExpectedResult.html":[8,0,113],
 "structExpectedResult.html#a1058380386c251fd2f8d8be9ecd07c53":[8,0,113,1],
-"structExpectedResult.html#a3c78a5ee4250730560d7eefa27b71033":[8,0,113,0],
-"structFictitiousLoadData.html":[8,0,121]
+"structExpectedResult.html#a3c78a5ee4250730560d7eefa27b71033":[8,0,113,0]
 };

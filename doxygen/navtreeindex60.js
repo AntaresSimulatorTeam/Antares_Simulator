@@ -1,5 +1,6 @@
 var NAVTREEINDEX60 =
 {
+"structFictitiousLoadData.html":[8,0,121],
 "structFictitiousLoadData.html#a179c1f3c4949332a7a1b7d1ca27a6aa6":[8,0,121,2],
 "structFictitiousLoadData.html#a8f0af892e855b2ceb0716fbc6bc86fca":[8,0,121,0],
 "structFictitiousLoadData.html#ae35cf7def56231fbb9275894bef58e8d":[8,0,121,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX60 =
 "structPROBLEME__HEBDO.html#a8fad2d600c90fb07edaaeff6763252b5":[8,0,238,36],
 "structPROBLEME__HEBDO.html#a942670b312b62c76caf1ae7b20932ded":[8,0,238,68],
 "structPROBLEME__HEBDO.html#a98738ce7409d10cbf182d4bcee3a4bc2":[8,0,238,27],
-"structPROBLEME__HEBDO.html#a9a44be9365082743e3346f7b64bad27e":[8,0,238,51],
-"structPROBLEME__HEBDO.html#a9e9a14038b363216061cdeb9737d8327":[8,0,238,57]
+"structPROBLEME__HEBDO.html#a9a44be9365082743e3346f7b64bad27e":[8,0,238,51]
 };

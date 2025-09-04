@@ -1068,6 +1068,9 @@ var annotated_dup =
         [ "Buffer", "classAntares_1_1UnitTests_1_1Buffer.html", "classAntares_1_1UnitTests_1_1Buffer" ],
         [ "fakeLogger", "classAntares_1_1UnitTests_1_1fakeLogger.html", "classAntares_1_1UnitTests_1_1fakeLogger" ]
       ] ],
+      [ "Utils", null, [
+        [ "TimeMeasurement", "classAntares_1_1Utils_1_1TimeMeasurement.html", "classAntares_1_1Utils_1_1TimeMeasurement" ]
+      ] ],
       [ "Window", null, [
         [ "Hydro", null, [
           [ "Allocation", "classAntares_1_1Window_1_1Hydro_1_1Allocation.html", "classAntares_1_1Window_1_1Hydro_1_1Allocation" ],
@@ -1721,7 +1724,6 @@ var annotated_dup =
     [ "ThermalIniFile", "structThermalIniFile.html", "structThermalIniFile" ],
     [ "TIME_MEASURE", "structTIME__MEASURE.html", "structTIME__MEASURE" ],
     [ "TimeBlock", "structTimeBlock.html", "structTimeBlock" ],
-    [ "TimeMeasurement", "classTimeMeasurement.html", "classTimeMeasurement" ],
     [ "TimeSeriesConfigurer", "classTimeSeriesConfigurer.html", "classTimeSeriesConfigurer" ],
     [ "TimeSeriesFile", "structTimeSeriesFile.html", "structTimeSeriesFile" ],
     [ "TimeTestCase", "structTimeTestCase.html", "structTimeTestCase" ],

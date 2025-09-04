@@ -1,5 +1,6 @@
 var NAVTREEINDEX55 =
 {
+"structAntares_1_1Solver_1_1ConstantDataFromAntares.html#aa14d6319a62d65c5b574bf07313dce49":[8,0,0,18,22,8],
 "structAntares_1_1Solver_1_1ConstantDataFromAntares.html#aab62cfda12c1f04e97368ff7e9ff4dd8":[8,0,0,18,22,9],
 "structAntares_1_1Solver_1_1ConstantDataFromAntares.html#ab2866cb47bf3bc1992d5caf64607e114":[8,0,0,18,22,1],
 "structAntares_1_1Solver_1_1ConstantDataFromAntares.html#ac348cea35c836e9ebdb309ff5535544c":[8,0,0,18,22,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX55 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLMRViolations.html#a889f9c6299aa4d67d579e9fc6be25def":[8,0,0,18,4,4,59,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLMRViolations.html#a8afef3f661a348620d2e22307a7b378a":[8,0,0,18,4,4,59,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLMRViolations.html#aa988dd4558b02a7d1393863163dfe6a0":[8,0,0,18,4,4,59,3],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLMRViolations.html#aab62f54b49dbb961887339120897b629":[8,0,0,18,4,4,59,4],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLD.html":[8,0,0,18,4,4,61]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLMRViolations.html#aab62f54b49dbb961887339120897b629":[8,0,0,18,4,4,59,4]
 };

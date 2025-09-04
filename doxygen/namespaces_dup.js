@@ -1992,6 +1992,7 @@ var namespaces_dup =
         [ "fakeLogger", "classAntares_1_1UnitTests_1_1fakeLogger.html", "classAntares_1_1UnitTests_1_1fakeLogger" ]
       ] ],
       [ "Utils", null, [
+        [ "TimeMeasurement", "classAntares_1_1Utils_1_1TimeMeasurement.html", "classAntares_1_1Utils_1_1TimeMeasurement" ],
         [ "ceil", "utils_8h.html#a85a087be35e2e1b888638717aaf71cab", null ],
         [ "checkAllElementsIdenticalOrOne", "utils_8h.html#ad7848a35534130d9e658b91eef55321d", null ],
         [ "checkAllElementsIdenticalOrOne", "utils_8h.html#a5c195397128b4459eacc09d2d83e24f3", null ],

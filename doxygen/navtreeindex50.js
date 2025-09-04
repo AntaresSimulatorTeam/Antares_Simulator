@@ -1,5 +1,6 @@
 var NAVTREEINDEX50 =
 {
+"json__collector_8py.html#ab3452d8338e49d9dea1fba125b0559aa":[7,0,24,3],
 "law_8h.html#a216163bccb431c1e85890d4b8208cda8":[7,0,0,6,106],
 "law_8h.html#a216163bccb431c1e85890d4b8208cda8a11b2fa0f579d102298e1aa388ee89ecf":[7,0,0,6,106,0],
 "law_8h.html#a216163bccb431c1e85890d4b8208cda8a5ce64ef644416cdda61c0a2bb723c82f":[7,0,0,6,106,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX50 =
 "libs_2antares_2study_2include_2antares_2study_2parts_2thermal_2cluster_8h.html#ae155111eb9e7ecab971984a68cdd2378":[7,0,0,6,93],
 "libs_2antares_2study_2include_2antares_2study_2parts_2thermal_2cluster_8h.html#ae155111eb9e7ecab971984a68cdd2378a3e4b86aa01228a8a31ca9dad7c613205":[7,0,0,6,93,2],
 "libs_2antares_2study_2include_2antares_2study_2parts_2thermal_2cluster_8h.html#ae155111eb9e7ecab971984a68cdd2378a471690288ac168634e38e8973a95c584":[7,0,0,6,93,0],
-"libs_2antares_2study_2include_2antares_2study_2parts_2thermal_2cluster_8h.html#ae155111eb9e7ecab971984a68cdd2378afb89438f572053e7b5dc7973347751a9":[7,0,0,6,93,1],
-"libs_2antares_2study_2include_2antares_2study_2parts_2thermal_2cluster_8h_source.html":[9,0,0,4,0,25,0,0,0,5,6,0]
+"libs_2antares_2study_2include_2antares_2study_2parts_2thermal_2cluster_8h.html#ae155111eb9e7ecab971984a68cdd2378afb89438f572053e7b5dc7973347751a9":[7,0,0,6,93,1]
 };

@@ -1,5 +1,6 @@
 var NAVTREEINDEX45 =
 {
+"classreferenceIniFile.html#ae38f514c87175cb16d7d50c117aae175":[8,0,251,3],
 "classreferenceIniFile.html#af14c0e9ad664aa1793c0671b25a5c9ed":[8,0,251,7],
 "classreferenceIniFile.html#af14c0e9ad664aa1793c0671b25a5c9ed":[8,0,251,6],
 "classreferenceScBuilderFile.html":[8,0,252],
@@ -248,6 +249,5 @@ var NAVTREEINDEX45 =
 "date_8cpp.html#ae355f7d19224f0ae907b92441fc1cb29":[7,0,0,7,6],
 "date_8cpp.html#af6078354dc3955567d154650f2ee1b4a":[7,0,0,7,9],
 "date_8cpp.html#af6bdeba1fc9b6566d20decf5ba79f656":[7,0,0,7,11],
-"date_8h.html#a9ec23db21d66fd977fad22c8854cb726":[7,0,0,7,3],
-"date_8h.html#a9ec23db21d66fd977fad22c8854cb726a049af56923b78ef663737519c933adae":[7,0,0,7,3,2]
+"date_8h.html#a9ec23db21d66fd977fad22c8854cb726":[7,0,0,7,3]
 };
