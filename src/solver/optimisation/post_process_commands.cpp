@@ -75,13 +75,11 @@ void DispatchableMarginPostProcessCmd::execute(const optRuntimeData& opt_runtime
 RemixHydroPostProcessCmd::RemixHydroPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
                                                    AreaList& areas,
                                                    SheddingPolicy sheddingPolicy,
-                                                   SimplexOptimization simplexOptimization,
                                                    unsigned int numSpace):
     basePostProcessCommand(problemeHebdo),
     area_list_(areas),
     numSpace_(numSpace),
-    shedding_policy_(sheddingPolicy),
-    splx_optimization_(simplexOptimization)
+    shedding_policy_(sheddingPolicy)
 {
 }
 

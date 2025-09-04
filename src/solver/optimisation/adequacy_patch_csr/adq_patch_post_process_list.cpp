@@ -41,7 +41,6 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(const AdqPatchParams& adqPatchP
     post_process_list.push_back(std::make_unique<RemixHydroPostProcessCmd>(problemeHebdo_,
                                                                            areas,
                                                                            sheddingPolicy,
-                                                                           splxOptimization,
                                                                            numSpace));
     post_process_list.push_back(std::make_unique<CurtailmentSharingPostProcessCmd>(adqPatchParams,
                                                                                    problemeHebdo_,

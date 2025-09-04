@@ -43,7 +43,6 @@ public:
     RemixHydroPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
                              AreaList& areas,
                              SheddingPolicy sheddingPolicy,
-                             SimplexOptimization simplexOptimization,
                              unsigned int numSpace);
     void execute(const optRuntimeData& opt_runtime_data) override;
 
@@ -51,7 +50,6 @@ private:
     const AreaList& area_list_;
     unsigned int numSpace_ = 0;
     SheddingPolicy shedding_policy_;
-    SimplexOptimization splx_optimization_;
 };
 
 class UpdateMrgPriceAfterCSRcmd: public basePostProcessCommand
