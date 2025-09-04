@@ -173,7 +173,7 @@ private:
 
     double offset_ = 0;
     mutable FullKeyMap unique_terms_; // aggregated unique sums
-    std::vector<RawTerm> terms_; // may contain duplicates
+    std::vector<RawTerm> terms_;      // may contain duplicates
     mutable bool am_I_valid_ = false;
 };
 } // namespace Antares::Optimization
