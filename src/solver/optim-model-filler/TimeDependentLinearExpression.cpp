@@ -19,11 +19,8 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include <algorithm>
 #include <functional>
-#include <map>
 #include <ranges>
-#include <utility>
 
 #include <antares/solver/optim-model-filler/TimeDependentLinearExpression.h>
 #include "antares/expressions/RotateIndex.h"
