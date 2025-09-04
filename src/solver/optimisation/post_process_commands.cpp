@@ -91,7 +91,6 @@ void RemixHydroPostProcessCmd::execute(const optRuntimeData& opt_runtime_data)
     RemixHydroForAllAreas(area_list_,
                           *problemeHebdo_,
                           shedding_policy_,
-                          splx_optimization_,
                           numSpace_,
                           hourInYear);
 }

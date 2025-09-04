@@ -293,7 +293,6 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
 void RemixHydroForAllAreas(const Data::AreaList& areas,
                            PROBLEME_HEBDO& problem,
                            Data::SheddingPolicy sheddingPolicy,
-                           Data::SimplexOptimization simplexOptimizationRange,
                            uint numSpace,
                            uint hourInYear)
 {
