@@ -167,16 +167,6 @@ EvaluationResult EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
     throw EvalVisitorNotImplemented(name(), node->name());
 }
 
-EvaluationResult EvalVisitor::visit(const Nodes::ComponentVariableNode* node)
-{
-    throw EvalVisitorNotImplemented(name(), node->name());
-}
-
-EvaluationResult EvalVisitor::visit(const Nodes::ComponentParameterNode* node)
-{
-    throw EvalVisitorNotImplemented(name(), node->name());
-}
-
 EvaluationResult EvalVisitor::visit(const Nodes::TimeShiftNode* node)
 {
     const auto ret = dispatch(node->left());

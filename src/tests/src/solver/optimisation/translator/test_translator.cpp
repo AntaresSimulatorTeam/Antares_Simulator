@@ -152,7 +152,7 @@ BOOST_AUTO_TEST_CASE(throw_exception_if_NombreDeVariables_is_0)
     HebdoProblemToLpsTranslator translator;
     PROBLEME_ANTARES_A_RESOUDRE problemHebdo;
     problemHebdo.NombreDeVariables = 0;
-    BOOST_CHECK_THROW(translator.commonProblemData(&problemHebdo), std::runtime_error);
+    BOOST_CHECK_THROW((void)translator.commonProblemData(&problemHebdo), std::runtime_error);
 }
 
 BOOST_AUTO_TEST_CASE(throw_exception_if_NombreDeContraintes_is_0)
@@ -160,7 +160,7 @@ BOOST_AUTO_TEST_CASE(throw_exception_if_NombreDeContraintes_is_0)
     HebdoProblemToLpsTranslator translator;
     PROBLEME_ANTARES_A_RESOUDRE problemHebdo;
     problemHebdo.NombreDeContraintes = 0;
-    BOOST_CHECK_THROW(translator.commonProblemData(&problemHebdo), std::runtime_error);
+    BOOST_CHECK_THROW((void)translator.commonProblemData(&problemHebdo), std::runtime_error);
 }
 
 BOOST_AUTO_TEST_CASE(throw_exception_if_IndicesDebutDeLigne_out_of_bound)
@@ -171,7 +171,7 @@ BOOST_AUTO_TEST_CASE(throw_exception_if_IndicesDebutDeLigne_out_of_bound)
     problemHebdo.NombreDeContraintes = 3;
     problemHebdo.IndicesDebutDeLigne = {0, 3};
     problemHebdo.NombreDeTermesDesLignes = {0, 3, 6, 7, 8};
-    BOOST_CHECK_THROW(translator.commonProblemData(&problemHebdo), std::runtime_error);
+    BOOST_CHECK_THROW((void)translator.commonProblemData(&problemHebdo), std::runtime_error);
 }
 
 BOOST_AUTO_TEST_CASE(throw_exception_if_NombreDeTermesDesLignes_out_of_bound)
@@ -182,7 +182,7 @@ BOOST_AUTO_TEST_CASE(throw_exception_if_NombreDeTermesDesLignes_out_of_bound)
     problemHebdo.NombreDeContraintes = 3;
     problemHebdo.NombreDeTermesDesLignes = {0, 3};
     problemHebdo.IndicesDebutDeLigne = {0, 3, 6, 7, 8};
-    BOOST_CHECK_THROW(translator.commonProblemData(&problemHebdo), std::runtime_error);
+    BOOST_CHECK_THROW((void)translator.commonProblemData(&problemHebdo), std::runtime_error);
 }
 
 // NombreDeCoefficients

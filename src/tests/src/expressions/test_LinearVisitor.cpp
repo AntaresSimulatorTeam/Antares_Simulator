@@ -213,14 +213,14 @@ BOOST_FIXTURE_TEST_CASE(simple_linear, Registry<Node>)
     Node* u = create<MultiplicationNode>(&literalNode1, &var1);
 
     LiteralNode literalNode2(20.);
-    ComponentVariableNode var2("id", "y");
-    // 20.*id.y
+    VariableNode var2("id");
+    // 20.*id
     Node* v = create<MultiplicationNode>(&literalNode2, &var2);
-    // 10.*x+20.*id.y
+    // 10.*x+20.*id
     Node* expr = create<SumNode>(u, v);
 
     PrintVisitor printVisitor;
-    BOOST_CHECK_EQUAL(printVisitor.dispatch(expr), "((10.000000*x)+(20.000000*id.y))");
+    BOOST_CHECK_EQUAL(printVisitor.dispatch(expr), "((10.000000*x)+(20.000000*id))");
     LinearityVisitor linearVisitor;
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(expr), LinearStatus::LINEAR);
 }
@@ -228,12 +228,12 @@ BOOST_FIXTURE_TEST_CASE(simple_linear, Registry<Node>)
 BOOST_FIXTURE_TEST_CASE(simple_not_linear, Registry<Node>)
 {
     VariableNode var1("x");
-    ComponentVariableNode var2("id", "y");
+    VariableNode var2("id");
     // x*id.y
     Node* expr = create<MultiplicationNode>(&var1, &var2);
 
     PrintVisitor printVisitor;
-    BOOST_CHECK_EQUAL(printVisitor.dispatch(expr), "(x*id.y)");
+    BOOST_CHECK_EQUAL(printVisitor.dispatch(expr), "(x*id)");
     LinearityVisitor linearVisitor;
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(expr), LinearStatus::NON_LINEAR);
 }

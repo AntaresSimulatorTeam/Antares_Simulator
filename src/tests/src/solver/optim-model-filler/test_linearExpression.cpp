@@ -42,11 +42,11 @@ BOOST_AUTO_TEST_CASE(default_linear_expression)
 
 BOOST_AUTO_TEST_CASE(linear_expression_explicit_construction)
 {
-    LinearExpression linearExpression(4., {{FullKey("compo", "some key"), -5.}});
+    LinearExpression linearExpression(4., {{FullKey("compo", "var"), -5.}});
 
     BOOST_CHECK_EQUAL(linearExpression.offset(), 4.);
     BOOST_CHECK_EQUAL(linearExpression.coefPerVar().size(), 1);
-    BOOST_CHECK_EQUAL(linearExpression.coefPerVar().at(FullKey("compo", "some key")), -5.);
+    BOOST_CHECK_EQUAL(linearExpression.coefPerVar().at(FullKey("compo", "var")), -5.);
 }
 
 BOOST_AUTO_TEST_CASE(sum_two_linear_expressions)

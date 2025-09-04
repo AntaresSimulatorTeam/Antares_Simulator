@@ -31,6 +31,7 @@ set_target_properties(${PROJ} PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(${PROJ}
         PRIVATE
         Antares::expressions
+        Antares::exception
         Antares::antares-study-system-model
         Antares::linear-problem-api
         fmt::fmt

@@ -20,6 +20,7 @@
  */
 
 #include <chrono>
+#include <mutex>
 
 #include <antares/antares/fatal-error.h>
 #include <antares/logs/logs.h>
@@ -52,37 +53,6 @@ using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using Solver::IResultWriter;
 using Solver::Optimization::SingleOptimOptions;
 
-class TimeMeasurement
-{
-    using clock = std::chrono::steady_clock;
-
-public:
-    TimeMeasurement()
-    {
-        start_ = clock::now();
-        end_ = start_;
-    }
-
-    void tick()
-    {
-        end_ = clock::now();
-    }
-
-    long duration_ms() const
-    {
-        return std::chrono::duration_cast<std::chrono::milliseconds>(end_ - start_).count();
-    }
-
-    std::string toString() const
-    {
-        return std::to_string(duration_ms()) + " ms";
-    }
-
-private:
-    clock::time_point start_;
-    clock::time_point end_;
-};
-
 struct SimplexResult
 {
     bool success = false;
@@ -91,6 +61,18 @@ struct SimplexResult
     double objectiveValue;
 };
 
+static std::once_flag logProblemSizeFlag;
+
+static void logProblemSize(const MPSolver* mpSolver)
+{
+    logs.info();
+    logs.info();
+    logs.info() << " Total Problem size : " << mpSolver->NumVariables() << " variables, "
+                << mpSolver->NumConstraints() << " constraints";
+    logs.info();
+    logs.info();
+}
+
 static void fillModelerComponents(
   std::vector<std::unique_ptr<Optimisation::ComponentFiller>>& componentFillers,
   std::vector<LinearProblemFiller*>& fillersCollection,
@@ -98,12 +80,6 @@ static void fillModelerComponents(
   const Optimisation::ScenarioGroupRepository& scenarioGroupRepository,
   VariableDictionary& variableDictionary)
 {
-    if (!modelerSystem)
-    {
-        logs.info() << "No modeler system found, optimization will only be done on legacy study";
-        return;
-    }
-
     for (const auto& [_, component]: modelerSystem->Components())
     {
         componentFillers.push_back(
@@ -153,6 +129,8 @@ MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
     LegacyFiller legacyOrtoolsFiller(problemeHebdo, namedProblems);
     std::vector<LinearProblemFiller*> fillersCollection = {&legacyOrtoolsFiller};
 
+    Utils::TimeMeasurement measure;
+
     VariableDictionary variableDictionary;
     std::vector<std::unique_ptr<Optimisation::ComponentFiller>> componentFillers;
     ComponentToAreaConnectionFiller componentToAreaConnectionFiller(problemeHebdo,
@@ -177,6 +155,11 @@ MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
     // this limitation must be lifted later,
     // when appropriate solvers (e.g with warm start) is integrated.
     linearProblemBuilder.build(ortoolsProblem, *problemeHebdo->linear_problem_data_, fillCtx);
+
+    measure.tick();
+
+    logs.info();
+    logs.info() << "Modeler build took " << measure.toStringInSeconds();
 
     return ortoolsProblem.getMpSolver();
 }
@@ -209,6 +192,8 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                 problemeHebdo,
                                 problemeHebdo->NamedProblems);
 
+    std::call_once(logProblemSizeFlag, logProblemSize, solver);
+
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
     mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
@@ -219,7 +204,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     auto mps_writer = mps_writer_factory.create();
     mps_writer->runIfNeeded(writer, filename);
 
-    TimeMeasurement measure;
+    Utils::TimeMeasurement measure;
     solver = ORTOOLS_Simplexe(ProblemeAResoudre.get(), solver, options);
     if (solver != nullptr)
     {

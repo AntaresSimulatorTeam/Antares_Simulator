@@ -135,16 +135,6 @@ bool CompareVisitor::visit(const Nodes::PortFieldSumNode* node, const Nodes::Nod
     return compareEqualOperator(node, other);
 }
 
-bool CompareVisitor::visit(const Nodes::ComponentVariableNode* node, const Nodes::Node* other)
-{
-    return compareEqualOperator(node, other);
-}
-
-bool CompareVisitor::visit(const Nodes::ComponentParameterNode* node, const Nodes::Node* other)
-{
-    return compareEqualOperator(node, other);
-}
-
 bool CompareVisitor::visit(const Nodes::TimeShiftNode* timeShiftNode, const Nodes::Node* other)
 {
     return compareParentNode(*this, timeShiftNode, other);

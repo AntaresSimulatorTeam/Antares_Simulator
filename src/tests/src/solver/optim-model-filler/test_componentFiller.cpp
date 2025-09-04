@@ -556,11 +556,11 @@ BOOST_AUTO_TEST_CASE(ct_one_var_with_coef_pb_contains_the_ct)
     buildLinearProblem();
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 1);
-    BOOST_CHECK_NO_THROW(pb->lookupVariable("componentTata.var__1"));
+    BOOST_CHECK_NO_THROW((void)pb->lookupVariable("componentTata.var__1"));
     auto var = pb->lookupVariable("componentTata.var__1");
     BOOST_REQUIRE(var);
     BOOST_CHECK_EQUAL(pb->constraintCount(), 1);
-    BOOST_CHECK_NO_THROW(pb->lookupConstraint("componentTata.ct_1"));
+    BOOST_CHECK_NO_THROW((void)pb->lookupConstraint("componentTata.ct_1"));
     auto ct = pb->lookupConstraint("componentTata.ct_1");
     BOOST_CHECK(ct);
     BOOST_CHECK_EQUAL(ct->getLb(), 5);
@@ -607,7 +607,7 @@ BOOST_AUTO_TEST_CASE(ct_with_two_vars)
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 2);
     BOOST_CHECK_EQUAL(pb->constraintCount(), 1);
-    BOOST_CHECK_NO_THROW(pb->lookupConstraint("my_component.constraint1"));
+    BOOST_CHECK_NO_THROW((void)pb->lookupConstraint("my_component.constraint1"));
     auto ct = pb->lookupConstraint("my_component.constraint1");
     BOOST_CHECK(ct);
     BOOST_CHECK_EQUAL(ct->getLb(), 77);
@@ -648,7 +648,7 @@ BOOST_AUTO_TEST_CASE(two_constraints__they_are_created)
     BOOST_CHECK_EQUAL(pb->variableCount(), 2);
     BOOST_CHECK_EQUAL(pb->constraintCount(), 2);
 
-    BOOST_CHECK_NO_THROW(pb->lookupConstraint("my_component.ct1"));
+    BOOST_CHECK_NO_THROW((void)pb->lookupConstraint("my_component.ct1"));
     auto ct1 = pb->lookupConstraint("my_component.ct1");
     BOOST_CHECK(ct1);
     BOOST_CHECK_EQUAL(ct1->getLb(), -numeric_limits<float>::infinity());
@@ -662,7 +662,7 @@ BOOST_AUTO_TEST_CASE(two_constraints__they_are_created)
         BOOST_CHECK_EQUAL(ct1->getCoefficient(cv2), -1);
     }
 
-    BOOST_CHECK_NO_THROW(pb->lookupConstraint("my_component.ct2"));
+    BOOST_CHECK_NO_THROW((void)pb->lookupConstraint("my_component.ct2"));
     auto ct2 = pb->lookupConstraint("my_component.ct2");
     BOOST_REQUIRE(ct2);
     BOOST_CHECK_EQUAL(ct2->getLb(), -numeric_limits<float>::infinity());
@@ -691,7 +691,7 @@ BOOST_AUTO_TEST_CASE(one_var_with_objective)
     buildLinearProblem();
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 1);
-    BOOST_CHECK_NO_THROW(pb->lookupVariable("componentA.x"));
+    BOOST_CHECK_NO_THROW((void)pb->lookupVariable("componentA.x"));
     BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(pb->lookupVariable("componentA.x")), 1);
 }
 
@@ -711,7 +711,7 @@ BOOST_AUTO_TEST_CASE(one_time_dependent_var_with_objective)
     for (unsigned i = 0; i < nb_var; i++)
     {
         const auto var_name = "componentA.x_s0_t" + to_string(i);
-        BOOST_CHECK_NO_THROW(pb->lookupVariable(var_name));
+        BOOST_CHECK_NO_THROW((void)pb->lookupVariable(var_name));
         BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(pb->lookupVariable(var_name)), 1);
     }
 }
@@ -727,8 +727,8 @@ BOOST_AUTO_TEST_CASE(two_vars_but_only_one_in_objective)
     buildLinearProblem();
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 2);
-    BOOST_CHECK_NO_THROW(pb->lookupVariable("componentA.v1"));
-    BOOST_CHECK_NO_THROW(pb->lookupVariable("componentA.v2"));
+    BOOST_CHECK_NO_THROW((void)pb->lookupVariable("componentA.v1"));
+    BOOST_CHECK_NO_THROW((void)pb->lookupVariable("componentA.v2"));
     BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(pb->lookupVariable("componentA.v1")), 0);
     BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(pb->lookupVariable("componentA.v2")), 37);
 }
@@ -743,7 +743,7 @@ BOOST_AUTO_TEST_CASE(one_var_with_param_objective)
     buildLinearProblem();
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 1);
-    BOOST_CHECK_NO_THROW(pb->lookupVariable("componentA.x"));
+    BOOST_CHECK_NO_THROW((void)pb->lookupVariable("componentA.x"));
     BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(pb->lookupVariable("componentA.x")), -25);
 }
 

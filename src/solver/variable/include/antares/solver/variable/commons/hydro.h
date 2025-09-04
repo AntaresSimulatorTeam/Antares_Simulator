@@ -1,287 +1,196 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
-#ifndef __SOLVER_VARIABLE_ECONOMY_TimeSeriesValuesHydro_H__
-#define __SOLVER_VARIABLE_ECONOMY_TimeSeriesValuesHydro_H__
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ * * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
-#include "antares/solver/variable/variable.h"
+/**
+ * @file hydro.h* @brief Hydro ROR (Run-of-River) time series variables for hydroelectric power
+ * @file hydro.h
+ * @brief Hydro ROR (Run-of-River) time series variables for hydroelectric power modeling
+ *
+ * This file implements hydro run-of-river time series variables using the modern
+ * time series base framework. Hydro variables represent the electricity generation
+ * from run-of-river hydroelectric installations.
+ *
+ * ## Key Features:
+ *
+ * - **Dynamic Time Series Access**: Handles variable time series indices per year
+ * - **ROR Modeling**: Specific implementation for run-of-river hydro generation
+ * - **Modern Memory Management**: Uses std::vector instead of raw pointers
+ * - **Hourly Processing**: Granular access to time series data per simulation hour
+ *
+ * ## Hydro-Specific Behavior:
+ *
+ * Hydro variables differ from other time series types:
+ * - **Dynamic Series Selection**: Each year may use a different time series (nbchro)
+ * - **Hourly Data Access**: Values are extracted hour by hour during simulation
+ * - **ROR Specialization**: Focused on run-of-river rather than reservoir hydro
+ * - **Series Index Mapping**: Uses getSeriesIndex() to determine which series to use
+ *
+ * ## Data Processing Flow:
+ *
+ * ```
+ * Year Begin: area->hydro.series->ror.getSeriesIndex(year) → time series selection
+ *       ↓
+ * Hour Processing: (*fatalValues[space])[hourInYear] → hourly value extraction
+ *       ↓
+ * Storage: yearlyValues[space][hourInYear] ← accumulation for statistics
+ * ```
+ *
+ * ## ROR vs Reservoir Hydro:
+ *
+ * This implementation focuses on **Run-of-River (ROR)** hydro generation:
+ * - **ROR**: Flows directly through turbines, minimal storage, weather-dependent
+ * - **Reservoir**: Large storage capacity, optimizable dispatch (handled elsewhere)
+ *
+ * @see timeseries_base.h for the base framework
+ * @see generation.h, load.h for other time series implementations
+ */
+#pragma once
 
-namespace Antares
+#include <vector>
+
+#include "timeseries_base.h"
+
+namespace Antares::Solver::Variable::Economy
 {
-namespace Solver
+
+/**
+ * @brief Traits for hydro ROR time series variables
+ * * Defines the specific characteristics of hydro run-of-river variables:
+ * - Caption: "H. ROR" (Hydro Run-of-River, as displayed in outputs)
+ * - Description: Descriptive text for hydro generation across Monte Carlo years
+ */
+struct HydroTraits
 {
-namespace Variable
-{
-namespace Economy
-{
-struct VCardTimeSeriesValuesHydro
-{
-    //! Caption
-    static std::string Caption()
-    {
-        return "H. ROR";
-    }
+    /// Display name for hydro ROR in outputs and GUI
+    inline static constexpr std::string_view kCaption = "H. ROR";
+    /// Descriptive text for hydro generation time series
+    inline static constexpr std::string_view kDescription = "Hydro generation, thoughout all MC "
+                                                            "years";
+};
 
-    //! Unit
-    static std::string Unit()
-    {
-        return "MWh";
-    }
+using VCardTimeSeriesValuesHydro = VCardTimeSeriesBase<HydroTraits>;
 
-    //! The short description of the variable
-    static std::string Description()
-    {
-        return "Hydro generation, thoughout all MC years";
-    }
-
-    //! The expecte results
-    typedef Results<R::AllYears::Average< // The average values throughout all years
-      R::AllYears::StdDeviation<          // The standard deviation values throughout all years
-        R::AllYears::Min<                 // The minimum values throughout all years
-          R::AllYears::Max<               // The maximum values throughout all years
-            >>>>>
-      ResultsType;
-
-    //! The VCard to look for for calculating spatial aggregates
-    typedef VCardTimeSeriesValuesHydro VCardForSpatialAggregate;
-
-    //! Data Level
-    static constexpr uint8_t categoryDataLevel = Category::DataLevel::area;
-    //! File level (provided by the type of the results)
-    static constexpr uint8_t categoryFileLevel = ResultsType::categoryFile
-                                                 & (Category::FileLevel::id
-                                                    | Category::FileLevel::va);
-    //! Precision (views)
-    static constexpr uint8_t precision = Category::all;
-    //! Indentation (GUI)
-    static constexpr uint8_t nodeDepthForGUI = +0;
-    //! Decimal precision
-    static constexpr uint8_t decimal = 0;
-    //! Number of columns used by the variable (One ResultsType per column)
-    static constexpr int columnCount = 1;
-    //! The Spatial aggregation
-    static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
-    static constexpr uint8_t spatialAggregateMode = Category::spatialAggregateEachYear;
-    static constexpr uint8_t spatialAggregatePostProcessing = 0;
-    //! Intermediate values
-    static constexpr uint8_t hasIntermediateValues = 1;
-    //! Can this variable be non applicable (0 : no, 1 : yes)
-    static constexpr uint8_t isPossiblyNonApplicable = 0;
-
-    typedef IntermediateValues IntermediateValuesBaseType;
-    typedef std::vector<IntermediateValues> IntermediateValuesType;
-
-    typedef IntermediateValuesBaseType* IntermediateValuesTypeForSpatialAg;
-
-}; // class VCard
-
-/*!
-** \brief Marginal TimeSeriesValuesHydro
-*/
+/**
+ * @brief Hydro ROR time series implementation
+ * * This class implements the processing of hydro run-of-river time series data.
+ * It handles the dynamic selection of time series and hourly data extraction
+ * specific to hydro modeling requirements.
+ *
+ * @tparam NextT The next variable in the processing chain
+ *
+ */
 template<class NextT = Container::EndOfList>
 class TimeSeriesValuesHydro
-    : public Variable::IVariable<TimeSeriesValuesHydro<NextT>, NextT, VCardTimeSeriesValuesHydro>
+    : public TimeSeriesValuesBase<TimeSeriesValuesHydro<NextT>, NextT, VCardTimeSeriesValuesHydro>
 {
 public:
-    //! Type of the next static variable
-    typedef NextT NextType;
-    //! VCard
-    typedef VCardTimeSeriesValuesHydro VCardType;
-    //! Ancestor
-    typedef Variable::IVariable<TimeSeriesValuesHydro<NextT>, NextT, VCardType> AncestorType;
+    /// @name Type Definitions
+    /// @{
+    using BaseType = TimeSeriesValuesBase<TimeSeriesValuesHydro<NextT>,
+                                          NextT,
+                                          VCardTimeSeriesValuesHydro>;
 
-    //! List of expected results
-    typedef typename VCardType::ResultsType ResultsType;
+    /// @}
 
-    typedef VariableAccessor<ResultsType, VCardType::columnCount> VariableAccessorType;
-
-    enum
+    void initializeDerivedFromStudy(Data::Study&)
     {
-        //! How many items have we got
-        count = 1 + NextT::count,
-    };
-
-    template<int CDataLevel, int CFile>
-    struct Statistics
-    {
-        enum
-        {
-            count = ((VCardType::categoryDataLevel & CDataLevel
-                      && VCardType::categoryFileLevel & CFile)
-                       ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + VCardType::columnCount * ResultsType::count)
-                       : NextType::template Statistics<CDataLevel, CFile>::count),
-        };
-    };
-
-public:
-    ~TimeSeriesValuesHydro()
-    {
-        delete[] pFatalValues;
+        // Initialize the vector for fatal values (modern C++ approach)
+        // This replaces the previous manual memory management with RAII
+        fatalValues.resize(BaseType::nbYearsParallel, nullptr);
     }
 
-    void initializeFromStudy(Data::Study& study)
+    /**
+     * @brief Setup hydro time series selection at the beginning of each year
+     *     * This method determines which time series to use for the current simulation
+     * year and sets up efficient access for hourly processing. Each Monte Carlo
+     * year may use a different hydrological scenario.
+     *
+     * @param year The simulation year index (0-based)
+     * @param space The parallel space index for thread safety
+     *
+     * ## Time Series Selection Logic:
+     *
+     * 1. **Access ROR Data**: Get run-of-river time series collection
+     * 2. **Determine Series**: Use getSeriesIndex() to map year to series
+     * 3. **Setup Pointer**: Store reference for efficient hourly access
+     *
+     * ## Data Flow:
+     *
+     * ```
+     * Simulation Year (0-based)
+     *        ↓
+     * getSeriesIndex(year) → Maps to specific hydrological scenario
+     *        ↓
+     * ror.timeSeries.entry[nbchro] → Actual time series data
+     *        ↓
+     * fatalValues[space] → Cached pointer for hourly access
+     * ```
+     *
+     * ## Why "Fatal Values"?
+     *
+     * The name `fatalValues` is historical and refers to the fact that these
+     * values are "fatal" (fixed/predetermined) for the simulation - they
+     * represent natural water flows that cannot be controlled or optimized,
+     * unlike reservoir hydro which can be dispatched strategically.
+     *
+     */
+    void yearBeginImpl(unsigned int year, unsigned int space)
     {
-        pNbYearsParallel = study.maxNbYearsInParallel;
-
-        pFatalValues = new Matrix<>::ColumnType*[pNbYearsParallel];
-        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-        {
-            pFatalValues[numSpace] = NULL;
-        }
-
-        InitializeResultsFromStudy(AncestorType::pResults, study);
-
-        pValuesForTheCurrentYear.resize(pNbYearsParallel);
-        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-        {
-            pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
-        }
-
-        // Next
-        NextType::initializeFromStudy(study);
-    }
-
-    template<class R>
-    static void InitializeResultsFromStudy(R& results, Data::Study& study)
-    {
-        VariableAccessorType::InitializeAndReset(results, study);
-    }
-
-    void initializeFromArea(Data::Study* study, Data::Area* area)
-    {
-        pArea = area;
-        // Next
-        NextType::initializeFromArea(study, area);
-    }
-
-    void initializeFromLink(Data::Study* study, Data::AreaLink* link)
-    {
-        // Next
-        NextType::initializeFromAreaLink(study, link);
-    }
-
-    void simulationBegin()
-    {
-        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-        {
-            pValuesForTheCurrentYear[numSpace].reset();
-        }
-        // Next
-        NextType::simulationBegin();
-    }
-
-    void simulationEnd()
-    {
-        NextType::simulationEnd();
-    }
-
-    void yearBegin(unsigned int year, unsigned int numSpace)
-    {
-        // The current time-series
-        auto& ror = pArea->hydro.series->ror;
+        // Access the run-of-river hydro time series data
+        auto& ror = BaseType::areaPtr->hydro.series->ror;
+        // Determine which time series to use for this simulation year
+        // This allows different hydrological scenarios across Monte Carlo years
         const unsigned int nbchro = ror.getSeriesIndex(year);
-        pFatalValues[numSpace] = &(ror.timeSeries.entry[nbchro]);
-
-        // Next variable
-        NextType::yearBegin(year, numSpace);
+        // Cache pointer to the selected time series for efficient hourly access
+        // This avoids repeated index calculations during hourly processing
+        fatalValues[space] = &(ror.timeSeries.entry[nbchro]);
     }
 
-    void yearEndBuild(State& state, unsigned int year, unsigned int numSpace)
+    /**
+     * @brief Extract hourly hydro generation values during simulation
+     *     * This method extracts the specific hourly value from the selected hydro
+     * time series and stores it in the yearly values array for statistics
+     * computation and output generation.
+     *
+     * @param state Current simulation state containing hour information
+     * @param space The parallel space index for thread safety
+     *
+     */
+    void hourForEachAreaImpl(State& state, unsigned int space)
     {
-        // Next variable
-        NextType::yearEndBuild(state, year, numSpace);
-    }
-
-    void yearEnd(unsigned int year, unsigned int numSpace)
-    {
-        // Compute all statistics for the current year (daily,weekly,monthly)
-        pValuesForTheCurrentYear[numSpace].computeStatisticsForTheCurrentYear();
-
-        // Next variable
-        NextType::yearEnd(year, numSpace);
-    }
-
-    void computeSummary(unsigned int year, unsigned int numSpace)
-    {
-        // Merge all those values with the global results
-        AncestorType::pResults.merge(year, pValuesForTheCurrentYear[numSpace]);
-
-        // Next variable
-        NextType::computeSummary(year, numSpace);
-    }
-
-    void hourBegin(unsigned int hourInTheYear)
-    {
-        // Next variable
-        NextType::hourBegin(hourInTheYear);
-    }
-
-    void hourForEachArea(State& state, unsigned int numSpace)
-    {
-        pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = (*pFatalValues[numSpace])
+        // Extract the hydro generation value for the current hour
+        // Uses the time series pointer cached during yearBeginImpl
+        BaseType::yearlyValues[space][state.hourInTheYear] = (*fatalValues[space])
           [state.hourInTheYear];
-        // Next variable
-        NextType::hourForEachArea(state, numSpace);
-    }
-
-    Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
-      unsigned int,
-      unsigned int numSpace) const
-    {
-        return pValuesForTheCurrentYear[numSpace].hour;
-    }
-
-    void localBuildAnnualSurveyReport(SurveyResults& results,
-                                      int fileLevel,
-                                      int precision,
-                                      unsigned int numSpace) const
-    {
-        // Initializing external pointer on current variable non applicable status
-        results.isCurrentVarNA = AncestorType::isNonApplicable;
-
-        if (AncestorType::isPrinted[0])
-        {
-            // Write the data for the current year
-            results.variableCaption = VCardType::Caption();
-            results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear[numSpace]
-              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
-        }
     }
 
 private:
-    //! The attached area
-    Data::Area* pArea;
-    //!
-    Matrix<>::ColumnType** pFatalValues;
+    /// @name Private Members
+    /// @{
+    /**
+     * @brief Cached pointers to time series data for each parallel space
+     * Stores pointers to the selected time series for each parallel execution
+     */
+    std::vector<Matrix<>::ColumnType*> fatalValues;
 
-    //! Intermediate values for each year
-    typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
-    unsigned int pNbYearsParallel;
+    /// @}
+};
 
-}; // class TimeSeriesValuesHydro
-
-} // namespace Economy
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
-
-#endif // __SOLVER_VARIABLE_ECONOMY_TimeSeriesValuesHydro_H__
+} // namespace Antares::Solver::Variable::Economy

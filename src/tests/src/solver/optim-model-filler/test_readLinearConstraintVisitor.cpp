@@ -28,6 +28,7 @@
 #include <antares/expressions/Registry.hxx>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h>
+#include "antares/exception/InvalidArgumentError.hpp"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 
 using namespace Antares::Expressions;
@@ -160,8 +161,6 @@ BOOST_FIXTURE_TEST_CASE(test_visit_illegal_node, MyDummyFixture)
                                         create<LiteralNode>(5.),
                                         create<PortFieldNode>("port", "field"),
                                         create<PortFieldSumNode>("port", "field"),
-                                        create<ComponentVariableNode>("x", "y"),
-                                        create<ComponentParameterNode>("x", "y"),
                                         create<TimeShiftNode>(lit, lit),
                                         create<TimeIndexNode>(lit, lit),
                                         create<TimeSumNode>(lit, lit, lit),
@@ -170,7 +169,7 @@ BOOST_FIXTURE_TEST_CASE(test_visit_illegal_node, MyDummyFixture)
     for (Node* node: illegal_nodes)
     {
         BOOST_CHECK_EXCEPTION(visitor.dispatch(node),
-                              std::invalid_argument,
+                              Antares::Error::InvalidArgumentError,
                               checkMessage("Root node of a constraint must be a comparator."));
     }
 }
