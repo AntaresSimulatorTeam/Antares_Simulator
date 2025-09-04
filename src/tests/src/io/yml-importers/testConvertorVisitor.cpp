@@ -134,9 +134,10 @@ BOOST_FIXTURE_TEST_CASE(addThreeLiterals, ExpressionToNodeConvertorEmptyModel)
     auto* nodeSum = dynamic_cast<Nodes::SumNode*>(expr.node);
     BOOST_REQUIRE(nodeSum);
     const auto& operands = nodeSum->getOperands();
+    BOOST_REQUIRE_EQUAL(operands.size(), 3);
     BOOST_CHECK_EQUAL(toLiteral(operands[0])->value(), 1);
     BOOST_CHECK_EQUAL(toLiteral(operands[1])->value(), 2);
-    BOOST_CHECK_EQUAL(toLiteral(operands[1])->value(), 3);
+    BOOST_CHECK_EQUAL(toLiteral(operands[2])->value(), 3);
 }
 
 BOOST_FIXTURE_TEST_CASE(subtractTwoLiterals, ExpressionToNodeConvertorEmptyModel)
