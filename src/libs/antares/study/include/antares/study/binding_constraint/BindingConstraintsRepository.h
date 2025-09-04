@@ -152,11 +152,6 @@ public:
     bool rename(Data::BindingConstraint* bc, const AnyString& newname);
 
     /*!
-    ** \brief Convert all weekly constraints into daily ones
-    */
-    void changeConstraintsWeeklyToDaily();
-
-    /*!
     ** \brief Invalidate all matrices of all binding constraints
     */
     void forceReload(bool reload = false) const;

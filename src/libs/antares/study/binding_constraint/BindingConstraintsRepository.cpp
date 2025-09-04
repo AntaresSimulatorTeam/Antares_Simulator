@@ -244,28 +244,7 @@ bool BindingConstraintsRepository::loadFromFolder(Study& study,
         }
     }
 
-    // When ran from the solver and if the simplex is in `weekly` mode,
-    // all weekly constraints will become daily ones.
-    if (study.usedByTheSolver && sorDay == study.parameters.simplexOptimizationRange)
-    {
-        changeConstraintsWeeklyToDaily();
-    }
-
     return true;
-}
-
-void BindingConstraintsRepository::changeConstraintsWeeklyToDaily()
-{
-    each(
-      [](BindingConstraint& constraint)
-      {
-          if (constraint.type() == BindingConstraint::typeWeekly)
-          {
-              logs.info() << "  The type of the constraint '" << constraint.name()
-                          << "' is now 'daily'";
-              constraint.setTimeGranularity(BindingConstraint::typeDaily);
-          }
-      });
 }
 
 bool BindingConstraintsRepository::internalSaveToFolder(
