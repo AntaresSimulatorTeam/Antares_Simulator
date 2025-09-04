@@ -350,7 +350,6 @@ void Parameters::reset()
     include.reserve.strategic = true;
     include.reserve.spinning = true;
     include.reserve.primary = true;
-    simplexOptimizationRange = sorWeek;
 
     include.exportMPS = mpsExportStatus::NO_EXPORT;
     include.exportStructure = false;
@@ -714,9 +713,11 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         return result;
     }
 
+    // deprecated
     if (key == "simplex-range")
     {
-        d.simplexOptimizationRange = sorWeek;
+        // Parameter 'simplex-range' ignored :
+        // simplexOptimizationRange == sorWeek always 
         return true;
     }
 
