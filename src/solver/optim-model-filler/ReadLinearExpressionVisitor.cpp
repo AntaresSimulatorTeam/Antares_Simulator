@@ -143,6 +143,7 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const VariableNode* nod
     // {
     //     out.addVectorCoeff(col, 1);
     // }
+    return out;
 }
 
 LinearExpressionEigen ReadLinearExpressionVisitor::visit(const ParameterNode* node)
