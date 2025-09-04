@@ -36,9 +36,7 @@ namespace Antares::Solver::Simulation
 {
 
 const unsigned int HOURS_IN_WEEK = 168;
-const unsigned int HOURS_IN_DAY = 24;
 
-template<uint step>
 static bool Remix(const Data::AreaList& areas,
                   PROBLEME_HEBDO& problem,
                   uint numSpace,
@@ -70,154 +68,147 @@ static bool Remix(const Data::AreaList& areas,
           memset(remix, 0, sizeof(remix));
           memset(G, 0, sizeof(G));
 
-          uint endHour = step;
-          uint offset = 0;
-          for (; offset < HOURS_IN_WEEK; offset += step, endHour += step)
+          double WD = 0.;
+          for (uint h = 0; h != HOURS_IN_WEEK; ++h)
           {
+              WD += D[h];
+          }
+          if (WD < EPSILON)
+          {
+              return;
+          }
+
+          double WH = 0.;
+
+          for (uint h = 0; h != HOURS_IN_WEEK; ++h)
+          {
+              if (S[h] < EPSILON)
               {
-                  double WD = 0.;
-                  for (uint i = offset; i != endHour; ++i)
-                  {
-                      WD += D[i];
-                  }
-                  if (WD < EPSILON)
-                  {
-                      continue;
-                  }
+                  WH += H[h];
               }
+          }
 
-              double WH = 0.;
+          if (WH < EPSILON)
+          {
+              return;
+          }
 
-              for (uint i = offset; i != endHour; ++i)
+          WH = 0.;
+
+          double bottom = std::numeric_limits<double>::max();
+          double top = 0;
+
+          auto* L = area.load.series.getColumn(problem.year);
+
+          const double* M = area.scratchpad[numSpace].dispatchableGenerationMargin;
+
+          for (uint h = 0; h < HOURS_IN_WEEK; ++h)
+          {
+              double h_d = H[h] + D[h];
+              if (h_d > 0. && Utils::isZero(S[h] + M[h]))
               {
-                  if (S[i] < EPSILON)
+                  double Li = L[h + hourInYear];
+
+                  remix[h] = true;
+                  G[h] = Li - h_d;
+
+                  if (G[h] < bottom)
                   {
-                      WH += H[i];
+                      bottom = G[h];
                   }
-              }
-
-              if (WH < EPSILON)
-              {
-                  continue;
-              }
-
-              WH = 0.;
-
-              double bottom = std::numeric_limits<double>::max();
-              double top = 0;
-
-              auto* L = area.load.series.getColumn(problem.year);
-
-              const double* M = area.scratchpad[numSpace].dispatchableGenerationMargin;
-
-              for (uint i = offset; i < endHour; ++i)
-              {
-                  double h_d = H[i] + D[i];
-                  if (h_d > 0. && Utils::isZero(S[i] + M[i]))
+                  if (Li > top)
                   {
-                      double Li = L[i + hourInYear];
+                      top = Li;
+                  }
 
-                      remix[i] = true;
-                      G[i] = Li - h_d;
+                  WH += H[h];
+              }
+          }
 
-                      if (G[i] < bottom)
+          const auto& P = problem.CaracteristiquesHydrauliques[index]
+                            .ContrainteDePmaxHydrauliqueHoraire;
+
+          double ecart = 1.;
+          uint loop = 100;
+          do
+          {
+              double niveau = (top + bottom) * 0.5;
+              double stock = 0.;
+
+              for (uint h = 0; h != HOURS_IN_WEEK; ++h)
+              {
+                  if (remix[h])
+                  {
+                      double HEi;
+                      uint iYear = h + hourInYear;
+                      if (niveau > L[iYear])
                       {
-                          bottom = G[i];
-                      }
-                      if (Li > top)
-                      {
-                          top = Li;
-                      }
-
-                      WH += H[i];
-                  }
-              }
-
-              const auto& P = problem.CaracteristiquesHydrauliques[index]
-                                .ContrainteDePmaxHydrauliqueHoraire;
-
-              double ecart = 1.;
-              uint loop = 100;
-              do
-              {
-                  double niveau = (top + bottom) * 0.5;
-                  double stock = 0.;
-
-                  for (uint i = offset; i != endHour; ++i)
-                  {
-                      if (remix[i])
-                      {
-                          double HEi;
-                          uint iYear = i + hourInYear;
-                          if (niveau > L[iYear])
+                          HEi = H[h] + D[h];
+                          if (HEi > P[h])
                           {
-                              HEi = H[i] + D[i];
-                              if (HEi > P[i])
-                              {
-                                  HEi = P[i];
-                                  DE[i] = H[i] + D[i] - HEi;
-                              }
-                              else
-                              {
-                                  DE[i] = 0;
-                              }
+                              HEi = P[h];
+                              DE[h] = H[h] + D[h] - HEi;
                           }
                           else
                           {
-                              if (G[i] > niveau)
-                              {
-                                  HEi = 0;
-                                  DE[i] = H[i] + D[i];
-                              }
-                              else
-                              {
-                                  HEi = niveau - G[i];
-                                  if (HEi > P[i])
-                                  {
-                                      HEi = P[i];
-                                  }
-                                  DE[i] = H[i] + D[i] - HEi;
-                              }
+                              DE[h] = 0;
                           }
-                          stock += HEi;
-                          HE[i] = HEi;
                       }
                       else
                       {
-                          HE[i] = H[i];
-                          DE[i] = D[i];
+                          if (G[h] > niveau)
+                          {
+                              HEi = 0;
+                              DE[h] = H[h] + D[h];
+                          }
+                          else
+                          {
+                              HEi = niveau - G[h];
+                              if (HEi > P[h])
+                              {
+                                  HEi = P[h];
+                              }
+                              DE[h] = H[h] + D[h] - HEi;
+                          }
                       }
-                  }
-
-                  ecart = WH - stock;
-                  if (ecart > 0.)
-                  {
-                      bottom = niveau;
+                      stock += HEi;
+                      HE[h] = HEi;
                   }
                   else
                   {
-                      top = niveau;
+                      HE[h] = H[h];
+                      DE[h] = D[h];
                   }
-
-                  if (!--loop)
-                  {
-                      status = false;
-                      logs.error() << "hydro remix: " << area.name
-                                   << ": infinite loop detected. please check input data";
-                      break;
-                  }
-              } while (std::abs(ecart) > 0.01);
-
-              for (uint i = offset; i != endHour; ++i)
-              {
-                  H[i] = HE[i];
-                  assert(not std::isnan(HE[i]) && "hydro remix: nan detected");
               }
-              for (uint i = offset; i != endHour; ++i)
+
+              ecart = WH - stock;
+              if (ecart > 0.)
               {
-                  D[i] = DE[i];
-                  assert(not std::isnan(DE[i]) && "hydro remix: nan detected");
+                  bottom = niveau;
               }
+              else
+              {
+                  top = niveau;
+              }
+
+              if (!--loop)
+              {
+                  status = false;
+                  logs.error() << "hydro remix: " << area.name
+                               << ": infinite loop detected. please check input data";
+                  break;
+              }
+          } while (std::abs(ecart) > 0.01);
+
+          for (uint h = 0; h != HOURS_IN_WEEK; ++h)
+          {
+              H[h] = HE[h];
+              assert(not std::isnan(HE[h]) && "hydro remix: nan detected");
+          }
+          for (uint h = 0; h != HOURS_IN_WEEK; ++h)
+          {
+              D[h] = DE[h];
+              assert(not std::isnan(DE[h]) && "hydro remix: nan detected");
           }
       });
 
@@ -310,20 +301,7 @@ void RemixHydroForAllAreas(const Data::AreaList& areas,
     {
         bool result = true;
 
-        switch (simplexOptimizationRange)
-        {
-        case Data::sorWeek:
-            result = Remix<HOURS_IN_WEEK>(areas, problem, numSpace, hourInYear);
-            break;
-        case Data::sorDay:
-            result = Remix<HOURS_IN_DAY>(areas, problem, numSpace, hourInYear);
-            break;
-        case Data::sorUnknown:
-            logs.fatal() << "invalid simplex optimization range";
-            break;
-        }
-
-        if (!result)
+        if (!Remix(areas, problem, numSpace, hourInYear))
         {
             throw Data::AssertionError(
               "Error in simplex optimisation. Check logs for more details.");
