@@ -21,6 +21,7 @@
  */
 
 #include "antares/solver/modeler/Modeler.h"
+
 #include <chrono>
 
 #include <antares/logs/logs.h>
@@ -142,7 +143,8 @@ void Modeler::solve() const
         logs.info() << "Number of constraints: " << ortools_linear_problem.constraintCount();
 
         auto endTime = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::seconds>(endTime - startTime).count();
+        auto duration = std::chrono::duration_cast<std::chrono::seconds>(endTime - startTime)
+                          .count();
         logs.info() << "Modeler build took " << duration << " s";
 
         writer_.writeProblem(ortools_linear_problem);
