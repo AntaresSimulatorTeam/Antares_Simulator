@@ -298,13 +298,19 @@ BOOST_FIXTURE_TEST_CASE(comparison_nodes__exception_thrown, CreateVisitorFixture
     auto predicate = checkMessage("A linear expression can't contain comparison operators.");
 
     Node* node = create<EqualNode>(literal, literal);
-    BOOST_CHECK_EXCEPTION(visitor().dispatch(node), Antares::Error::InvalidArgumentError, predicate);
+    BOOST_CHECK_EXCEPTION(visitor().dispatch(node),
+                          Antares::Error::InvalidArgumentError,
+                          predicate);
 
     node = create<LessThanOrEqualNode>(literal, literal);
-    BOOST_CHECK_EXCEPTION(visitor().dispatch(node), Antares::Error::InvalidArgumentError, predicate);
+    BOOST_CHECK_EXCEPTION(visitor().dispatch(node),
+                          Antares::Error::InvalidArgumentError,
+                          predicate);
 
     node = create<GreaterThanOrEqualNode>(literal, literal);
-    BOOST_CHECK_EXCEPTION(visitor().dispatch(node), Antares::Error::InvalidArgumentError, predicate);
+    BOOST_CHECK_EXCEPTION(visitor().dispatch(node),
+                          Antares::Error::InvalidArgumentError,
+                          predicate);
 }
 
 BOOST_FIXTURE_TEST_CASE(not_implemented_nodes__exception_thrown, CreateVisitorFixture)
