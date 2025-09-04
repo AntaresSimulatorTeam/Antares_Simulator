@@ -105,7 +105,7 @@ void Modeler::solve() const
         logs.info() << "Parameters loaded";
         const auto data = loader_.loadAll();
 
-        auto startTime = std::chrono::high_resolution_clock::now();
+        Utils::TimeMeasurement measure;
 
         SystemLinearProblemBuilder system_linear_problem(data.system.get());
 
@@ -142,10 +142,9 @@ void Modeler::solve() const
         logs.info() << "Number of variables: " << ortools_linear_problem.variableCount();
         logs.info() << "Number of constraints: " << ortools_linear_problem.constraintCount();
 
-        auto endTime = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::seconds>(endTime - startTime)
-                          .count();
-        logs.info() << "Modeler build took " << duration << " s";
+        measure.tick();
+        logs.info();
+        logs.info() << "Modeler build took " << measure.toStringInSeconds();
 
         writer_.writeProblem(ortools_linear_problem);
 
