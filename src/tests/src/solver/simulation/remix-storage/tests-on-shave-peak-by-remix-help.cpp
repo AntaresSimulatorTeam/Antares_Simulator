@@ -11,7 +11,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-help.h"
-#include "antares/solver/simulation/remix-storage/storage-for-remix.h"
+#include "antares/solver/simulation/remix-storage/create-storage-for-remix.h"
 
 using namespace Antares::Solver::Simulation;
 
