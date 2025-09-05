@@ -40,14 +40,7 @@ EvaluationContext::EvaluationContext(std::map<std::string, ParameterTypeAndValue
 
 double EvaluationContext::getVariableValue(const std::string& key) const
 {
-    try
-    {
-        return variables_.at(key);
-    }
-    catch (const std::exception&)
-    {
-        throw CouldNotEvaluateConstantParameter<std::exception>();
-    }
+    return variables_.at(key);
 }
 
 static double convertToDouble(const std::string& key, const std::string& value)
@@ -81,14 +74,7 @@ double EvaluationContext::getSystemParameterValueAsDouble(const std::string& key
 
 std::string EvaluationContext::getSystemParameterValue(const std::string& key) const
 {
-    try
-    {
-        return parameters_types_and_values_.at(key).value;
-    }
-    catch (const std::exception&)
-    {
-        throw CouldNotEvaluateConstantParameter<std::exception>();
-    }
+    return parameters_types_and_values_.at(key).value;
 }
 
 double EvaluationContext::getParameterValue(const std::string& key,
@@ -106,14 +92,7 @@ ParameterType EvaluationContext::getParameterType(const std::string& key) const
 
 ParameterTypeAndValue EvaluationContext::getParameter(const std::string& key) const
 {
-    try
-    {
-        return parameters_types_and_values_.at(key);
-    }
-    catch (const std::exception&)
-    {
-        throw CouldNotEvaluateConstantParameter<std::exception>();
-    }
+    return parameters_types_and_values_.at(key);
 }
 
 const ILinearProblemData& EvaluationContext::data() const
