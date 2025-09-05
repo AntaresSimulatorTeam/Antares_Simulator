@@ -1,5 +1,6 @@
 var NAVTREEINDEX28 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinearAbs.html#ac0113131445070f75435ae0aaaf68371":[8,0,0,18,4,4,50,13],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinearAbs.html#ac568dfd820b1a669b021d872056728c2":[8,0,0,18,4,4,50,5],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinearAbs.html#ad2a0dd7b32e8a0f9faa24176648b92a8":[8,0,0,18,4,4,50,1],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinearAbs.html#ad4c7845a62686de1badd286ae0105899":[8,0,0,18,4,4,50,20],
@@ -248,6 +249,5 @@ var NAVTREEINDEX28 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#a94a11c3e812d152a5c7d0c9fb2635610":[8,0,0,18,4,4,58,8],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#aa3b0c8acb941914eb1b5fe09fdba8ce3":[8,0,0,18,4,4,58,13],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#aa40c23951c60faa58d435891bb4e9baa":[8,0,0,18,4,4,58,15],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#aa59d396c1182277deeef0b8f7f4cd2a4":[8,0,0,18,4,4,58,5],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#aa6b63f3122e17154eb74b881573b9526":[8,0,0,18,4,4,58,3]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#aa59d396c1182277deeef0b8f7f4cd2a4":[8,0,0,18,4,4,58,5]
 };

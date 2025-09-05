@@ -1,5 +1,10 @@
 var NAVTREEINDEX54 =
 {
+"structAntares_1_1Data_1_1DailyDemand.html#a11ba7fd49661f192700bcd64117d193c":[8,0,0,4,46,1],
+"structAntares_1_1Data_1_1DailyDemand.html#abf4245f123852739c1b3264dd244c53d":[8,0,0,4,46,0],
+"structAntares_1_1Data_1_1MonthlyGenerationTargetData.html":[8,0,0,4,47],
+"structAntares_1_1Data_1_1MonthlyGenerationTargetData.html#a93325064a31e8aa5ba40d51a88f5dfc2":[8,0,0,4,47,2],
+"structAntares_1_1Data_1_1MonthlyGenerationTargetData.html#a94bda17ae8d7de49990cb5ea66a3681f":[8,0,0,4,47,0],
 "structAntares_1_1Data_1_1MonthlyGenerationTargetData.html#ad94d7a42522c191d2b8fb1ddc01a7573":[8,0,0,4,47,1],
 "structAntares_1_1Data_1_1Parameters_1_1Compatibility.html":[8,0,0,4,41,0],
 "structAntares_1_1Data_1_1Parameters_1_1Compatibility.html#a01a2c753290e829d75346091474fd418":[8,0,0,4,41,0,1],
@@ -244,10 +249,5 @@ var NAVTREEINDEX54 =
 "structAntares_1_1Optimization_1_1VariableBounds.html":[8,0,0,16,4],
 "structAntares_1_1Optimization_1_1VariableBounds.html#a03e3cbbfabe7cc02a18535fd955b7b6e":[8,0,0,16,4,0],
 "structAntares_1_1Optimization_1_1VariableBounds.html#a2212021f92d0c5922a0e698178a2b22a":[8,0,0,16,4,3],
-"structAntares_1_1Optimization_1_1VariableBounds.html#ab585fb575c38a211d9f6a9e3a4b67a71":[8,0,0,16,4,2],
-"structAntares_1_1Optimization_1_1VariableBounds.html#acb6a350257a9655e941067a3383a4041":[8,0,0,16,4,1],
-"structAntares_1_1ScenarioGroupParser_1_1Line.html":[8,0,0,40,0],
-"structAntares_1_1ScenarioGroupParser_1_1Line.html#a6c7b44ff33b68ee45d35bb2374ec2f4f":[8,0,0,40,0,2],
-"structAntares_1_1ScenarioGroupParser_1_1Line.html#aa916761057fc5e3ee82ade8d4d354416":[8,0,0,40,0,0],
-"structAntares_1_1ScenarioGroupParser_1_1Line.html#adaedb692c41c436902463305dce21a0e":[8,0,0,40,0,1]
+"structAntares_1_1Optimization_1_1VariableBounds.html#ab585fb575c38a211d9f6a9e3a4b67a71":[8,0,0,16,4,2]
 };

@@ -1,5 +1,10 @@
 var NAVTREEINDEX56 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardInflows.html#a954c8175b3b13bba78dfa1e75aa8ff85":[8,0,0,18,4,4,39,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardInflows.html#aa00d12357b8cd4d8f13fc9935ebe19d3":[8,0,0,18,4,4,39,4],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardInflows.html#af376f96d6c90aa3a9bceffd92401da59":[8,0,0,18,4,4,39,3],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLMRViolations.html":[8,0,0,18,4,4,59],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLMRViolations.html#a382498529be86ea5a1903ee4daafac60":[8,0,0,18,4,4,59,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLMRViolations.html#a889f9c6299aa4d67d579e9fc6be25def":[8,0,0,18,4,4,59,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLMRViolations.html#a8afef3f661a348620d2e22307a7b378a":[8,0,0,18,4,4,59,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLMRViolations.html#aa988dd4558b02a7d1393863163dfe6a0":[8,0,0,18,4,4,59,3],
@@ -244,10 +249,5 @@ var NAVTREEINDEX56 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTag.html":[8,0,0,18,4,4,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTraits.html":[8,0,0,18,4,4,3],
 "structAntares_1_1Solver_1_1Variable_1_1Empty.html":[8,0,0,18,4,43],
-"structAntares_1_1Solver_1_1Variable_1_1Empty.html#af09b400c19dced6f209c4c3c5de88f91":[8,0,0,18,4,43,0],
-"structAntares_1_1Solver_1_1Variable_1_1IVariable_1_1Statistics.html":[8,0,0,18,4,47,0],
-"structAntares_1_1Solver_1_1Variable_1_1Join_1_1Statistics.html":[8,0,0,18,4,12,0],
-"structAntares_1_1Solver_1_1Variable_1_1Links_1_1Statistics.html":[8,0,0,18,4,14,0],
-"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat.html":[8,0,0,18,4,32],
-"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_010_01_4.html":[8,0,0,18,4,33]
+"structAntares_1_1Solver_1_1Variable_1_1Empty.html#af09b400c19dced6f209c4c3c5de88f91":[8,0,0,18,4,43,0]
 };

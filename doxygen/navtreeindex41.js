@@ -1,5 +1,7 @@
 var NAVTREEINDEX41 =
 {
+"classHydroPowerSmoothingUsingVariationSum.html#a00cacb7e585917637bf3cdfc91a0c4ba":[8,0,155,0],
+"classHydroPowerSmoothingUsingVariationSum.html#a16f83c45906b11c5f8dcf26670674503":[8,0,155,2],
 "classHydroPowerSmoothingUsingVariationSum.html#ae2985230ac7e6c6dc7715307120eda04":[8,0,155,1],
 "classHydro__problem__costs.html":[8,0,148],
 "classHydro__problem__costs.html#a27ff1277524bb4cc8f1c19da2b75c10a":[8,0,148,6],
@@ -239,15 +241,13 @@ var NAVTREEINDEX41 =
 "classMockLinearProblem.html#a4f7df22e90eb7a081b25bb861b669588":[8,0,195,15],
 "classMockLinearProblem.html#a5dbd1aca9a23d3fd4c6372759d3bc81c":[8,0,195,3],
 "classMockLinearProblem.html#a6929cb0ca9c2449063f5581f4f3f0a97":[8,0,195,30],
-"classMockLinearProblem.html#a76d75747090e5286e43be590d0eb05ba":[8,0,195,11],
 "classMockLinearProblem.html#a76d75747090e5286e43be590d0eb05ba":[8,0,195,12],
+"classMockLinearProblem.html#a76d75747090e5286e43be590d0eb05ba":[8,0,195,11],
 "classMockLinearProblem.html#a8537f266ecbbcb9e1f7719497e0a157a":[8,0,195,25],
 "classMockLinearProblem.html#a8537f266ecbbcb9e1f7719497e0a157a":[8,0,195,26],
 "classMockLinearProblem.html#a8aac323a31893b14d4b8698e7975b6d2":[8,0,195,10],
 "classMockLinearProblem.html#a8f585c93a93fe4245d582e20c4fb0d90":[8,0,195,18],
 "classMockLinearProblem.html#aa16493772f201a039dbadca26bd965bb":[8,0,195,4],
 "classMockLinearProblem.html#ab85a3462ecf51ac9eda81da4516f2b2b":[8,0,195,0],
-"classMockLinearProblem.html#ac2c863b15a6b07aa93af2b25de8124e5":[8,0,195,24],
-"classMockLinearProblem.html#ac2c863b15a6b07aa93af2b25de8124e5":[8,0,195,23],
-"classMockLinearProblem.html#ac8995cf8176cf34aeccdea065ae3b7b4":[8,0,195,7]
+"classMockLinearProblem.html#ac2c863b15a6b07aa93af2b25de8124e5":[8,0,195,23]
 };

@@ -1,5 +1,8 @@
 var NAVTREEINDEX44 =
 {
+"classTimeSeriesConfigurer.html#adb20a03277de3d723aee72bb0df2913a":[8,0,310,0],
+"classTypedColumn.html":[8,0,318],
+"classTypedColumn.html#a027ea725c6aebf26e994453a07a1b78a":[8,0,318,6],
 "classTypedColumn.html#a35758095aaafd161a0914f526c96292a":[8,0,318,3],
 "classTypedColumn.html#a8816a2e0c3f5702933990b8bc1168e07":[8,0,318,5],
 "classTypedColumn.html#aa6d5e8f2f533c8ae543428572236b1fa":[8,0,318,2],
@@ -33,9 +36,10 @@ var NAVTREEINDEX44 =
 "classVariableManagement_1_1VariableManager.html#a6339bf52361262365c5504a75ab45d80":[8,0,32,0,3],
 "classVariableManagement_1_1VariableManager.html#a66e38ec7baf1dadf5d9830565b12358d":[8,0,32,0,7],
 "classVariableManagement_1_1VariableManager.html#a7d5fc73eb1b0f5262fffc1b7f7568129":[8,0,32,0,10],
-"classVariableManagement_1_1VariableManager.html#a8ae2ecf25176c721838d8ccf5eb73f12":[8,0,32,0,23],
+"classVariableManagement_1_1VariableManager.html#a8ae2ecf25176c721838d8ccf5eb73f12":[8,0,32,0,24],
 "classVariableManagement_1_1VariableManager.html#a95e7ed4852ffbdc52612d443afa1b734":[8,0,32,0,9],
 "classVariableManagement_1_1VariableManager.html#a9af0557fd0c30fd4dc8ad2056cd6d64a":[8,0,32,0,16],
+"classVariableManagement_1_1VariableManager.html#aafc9e3db642b8a4f66b0a2e28b347326":[8,0,32,0,23],
 "classVariableManagement_1_1VariableManager.html#abf705f60dc4920f6934849896c6aeecb":[8,0,32,0,15],
 "classVariableManagement_1_1VariableManager.html#ac01e708a7d5fc4c3ba92bfd40bea03a6":[8,0,32,0,13],
 "classVariableManagement_1_1VariableManager.html#ac093cb6a2b38c602aa7e2ef997ad0e81":[8,0,32,0,8],
@@ -45,11 +49,12 @@ var NAVTREEINDEX44 =
 "classVariableNamer.html":[8,0,322],
 "classVariableNamer.html#a029adcd0b6f7058b7b1245832324623b":[8,0,322,4],
 "classVariableNamer.html#a1a9db6f05dc7dcc87785a87fc6c0e6ae":[8,0,322,18],
+"classVariableNamer.html#a2afbb72faeca7e98251988b36c97c404":[8,0,322,24],
 "classVariableNamer.html#a40c238369e9807b2a2ebd0ec56a599d2":[8,0,322,20],
 "classVariableNamer.html#a4d4c09d1697793ba655c40483f73bac7":[8,0,322,15],
 "classVariableNamer.html#a5c6f31b62fc3ba3ef9e23deb188b9e1e":[8,0,322,7],
 "classVariableNamer.html#a665b57fc3df311dc3495fde7ddd1d3b3":[8,0,322,8],
-"classVariableNamer.html#a69b5ebe26acddd1473dfdcefc466e73e":[8,0,322,24],
+"classVariableNamer.html#a69b5ebe26acddd1473dfdcefc466e73e":[8,0,322,25],
 "classVariableNamer.html#a732e68fd17e4a196651fb4dfa9297b21":[8,0,322,17],
 "classVariableNamer.html#a8982b16531f5c585d692d8a345d90647":[8,0,322,3],
 "classVariableNamer.html#ab1d0717749c4f9d80c37e8bde083b270":[8,0,322,21],
@@ -244,10 +249,5 @@ var NAVTREEINDEX44 =
 "classoutput__compare_1_1output__compare.html#a1de7df71c219da712c3748479788394c":[8,0,20,0,4],
 "classoutput__compare_1_1output__compare.html#a313b2571125a69d14e8aeb29bff5eb45":[8,0,20,0,0],
 "classoutput__compare_1_1output__compare.html#a4da0e0b571871e4d00a9e3c111a9f240":[8,0,20,0,3],
-"classoutput__compare_1_1output__compare.html#ac893628521a45bb8c19e942531c68b4e":[8,0,20,0,2],
-"classoutput__compare_1_1output__compare.html#ae625a93da73247a17fbb99cd27ea6694":[8,0,20,0,1],
-"classreferenceIniFile.html":[8,0,251],
-"classreferenceIniFile.html#a2eddf21fbd2a266bccc0a34904e384d1":[8,0,251,5],
-"classreferenceIniFile.html#a4ed163a7f9aae97cf995aaf4ff5da5dd":[8,0,251,0],
-"classreferenceIniFile.html#a4ed163a7f9aae97cf995aaf4ff5da5dd":[8,0,251,2]
+"classoutput__compare_1_1output__compare.html#ac893628521a45bb8c19e942531c68b4e":[8,0,20,0,2]
 };

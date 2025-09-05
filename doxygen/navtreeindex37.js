@@ -1,5 +1,6 @@
 var NAVTREEINDEX37 =
 {
+"classAntares_1_1Window_1_1OutputViewer_1_1SpotlightProviderGlobalSelection.html#a453ecf7ba92de2ac4e2adf3b168ea3fa":[8,0,0,24,3,4,7],
 "classAntares_1_1Window_1_1OutputViewer_1_1SpotlightProviderGlobalSelection.html#a481d707c56543f7ea2d929d00161da4f":[8,0,0,24,3,4,12],
 "classAntares_1_1Window_1_1OutputViewer_1_1SpotlightProviderGlobalSelection.html#a589675c16ca0131a5900d8097aa77d79":[8,0,0,24,3,4,5],
 "classAntares_1_1Window_1_1OutputViewer_1_1SpotlightProviderGlobalSelection.html#a6d2c3731de2c9aa7eb921066c0cdda06":[8,0,0,24,3,4,15],
@@ -248,6 +249,5 @@ var NAVTREEINDEX37 =
 "classBindingConstraintDayGroup.html":[8,0,53],
 "classBindingConstraintDayGroup.html#aedd8f967c204c600ed992ac73b69bf13":[8,0,53,1],
 "classBindingConstraintDayGroup.html#af3126ce99b8e10081b5c10f7487ff102":[8,0,53,0],
-"classBindingConstraintHour.html":[8,0,55],
-"classBindingConstraintHour.html#a7adbfc31f706154144a22cf4a6c720ea":[8,0,55,1]
+"classBindingConstraintHour.html":[8,0,55]
 };

@@ -1,5 +1,10 @@
 var NAVTREEINDEX55 =
 {
+"structAntares_1_1Optimization_1_1VariableBounds.html#acb6a350257a9655e941067a3383a4041":[8,0,0,16,4,1],
+"structAntares_1_1ScenarioGroupParser_1_1Line.html":[8,0,0,40,0],
+"structAntares_1_1ScenarioGroupParser_1_1Line.html#a6c7b44ff33b68ee45d35bb2374ec2f4f":[8,0,0,40,0,2],
+"structAntares_1_1ScenarioGroupParser_1_1Line.html#aa916761057fc5e3ee82ade8d4d354416":[8,0,0,40,0,0],
+"structAntares_1_1ScenarioGroupParser_1_1Line.html#adaedb692c41c436902463305dce21a0e":[8,0,0,40,0,1],
 "structAntares_1_1Solver_1_1ConstantDataFromAntares.html":[8,0,0,18,22],
 "structAntares_1_1Solver_1_1ConstantDataFromAntares.html#a34a1c1aaf9c2b92ee3e8984c22bcfd4a":[8,0,0,18,22,6],
 "structAntares_1_1Solver_1_1ConstantDataFromAntares.html#a42c5937ebc93142c27f5b788d85909dd":[8,0,0,18,22,10],
@@ -244,10 +249,5 @@ var NAVTREEINDEX55 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroStorage.html#ad8828eab147d733abf1ab293a3ee1b24":[8,0,0,18,4,4,37,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardInflows.html":[8,0,0,18,4,4,39],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardInflows.html#a1550f5f030f5732bbf66c23632f9a69f":[8,0,0,18,4,4,39,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardInflows.html#a6a78471aac8a9ea1158cff75ad01022b":[8,0,0,18,4,4,39,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardInflows.html#a954c8175b3b13bba78dfa1e75aa8ff85":[8,0,0,18,4,4,39,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardInflows.html#aa00d12357b8cd4d8f13fc9935ebe19d3":[8,0,0,18,4,4,39,4],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardInflows.html#af376f96d6c90aa3a9bceffd92401da59":[8,0,0,18,4,4,39,3],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLMRViolations.html":[8,0,0,18,4,4,59],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLMRViolations.html#a382498529be86ea5a1903ee4daafac60":[8,0,0,18,4,4,59,2]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardInflows.html#a6a78471aac8a9ea1158cff75ad01022b":[8,0,0,18,4,4,39,1]
 };
