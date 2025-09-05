@@ -1,5 +1,9 @@
 var NAVTREEINDEX28 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinearAbs.html#ac568dfd820b1a669b021d872056728c2":[8,0,0,18,4,4,50,5],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinearAbs.html#ad2a0dd7b32e8a0f9faa24176648b92a8":[8,0,0,18,4,4,50,1],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinearAbs.html#ad4c7845a62686de1badd286ae0105899":[8,0,0,18,4,4,50,20],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinearAbs.html#ae20ed8dc42b12130bc31a53debf6def3":[8,0,0,18,4,4,50,17],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinearAbs.html#aea5ab31f6f94cd9594fcbcd01a1e301f":[8,0,0,18,4,4,50,19],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinearAbs.html#af9d4c2fb6a56417d9132101a09a5e98c":[8,0,0,18,4,4,50,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinearAbs.html#afd8aa192ad644a2884e6b9e11cbc38c5":[8,0,0,18,4,4,50,11],
@@ -245,9 +249,5 @@ var NAVTREEINDEX28 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#aa3b0c8acb941914eb1b5fe09fdba8ce3":[8,0,0,18,4,4,58,13],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#aa40c23951c60faa58d435891bb4e9baa":[8,0,0,18,4,4,58,15],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#aa59d396c1182277deeef0b8f7f4cd2a4":[8,0,0,18,4,4,58,5],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#aa6b63f3122e17154eb74b881573b9526":[8,0,0,18,4,4,58,3],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#ac35ec915b2a6ca5f5ec77d16aebd9b06":[8,0,0,18,4,4,58,10],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#ac937816e4583651a1a17586121ff17a9":[8,0,0,18,4,4,58,20],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#ad40ca214991b3679eeefcfc4ed61c332":[8,0,0,18,4,4,58,19],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#ad4185b7daa6eedec87f69f9b678fd75b":[8,0,0,18,4,4,58,7]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#aa6b63f3122e17154eb74b881573b9526":[8,0,0,18,4,4,58,3]
 };

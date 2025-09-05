@@ -1,5 +1,6 @@
 var NAVTREEINDEX19 =
 {
+"classAntares_1_1FatalError.html":[8,0,0,36],
 "classAntares_1_1FileTreeStudyLoader.html":[8,0,0,35],
 "classAntares_1_1FileTreeStudyLoader.html#a06769b5dfbddcbc4ea08c2a32c547194":[8,0,0,35,1],
 "classAntares_1_1FileTreeStudyLoader.html#aec874bace5d8216b2c11f0947d557019":[8,0,0,35,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX19 =
 "classAntares_1_1IniFile.html":[8,0,0,37],
 "classAntares_1_1IniFile.html#a00a4ab7ba3da35393f7d334396177126":[8,0,0,37,20],
 "classAntares_1_1IniFile.html#a01aed3c0fb4625e725e5f7274ba997ec":[8,0,0,37,15],
-"classAntares_1_1IniFile.html#a06acf136758c4ce722cdc0afc88eb8cd":[8,0,0,37,22],
-"classAntares_1_1IniFile.html#a072c2782308977e7a081f799b159ee05":[8,0,0,37,10]
+"classAntares_1_1IniFile.html#a06acf136758c4ce722cdc0afc88eb8cd":[8,0,0,37,22]
 };

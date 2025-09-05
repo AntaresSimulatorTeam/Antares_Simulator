@@ -11,5 +11,6 @@ var structComponentToAreaConnectionFillerFixture =
     [ "linearProblem", "structComponentToAreaConnectionFillerFixture.html#ae456599d2ae1b88b4c454b4227bc36c3", null ],
     [ "modelerSystem", "structComponentToAreaConnectionFillerFixture.html#a6994bbdc982bbc621a370f36464ed9e2", null ],
     [ "modelerVariableDictionary", "structComponentToAreaConnectionFillerFixture.html#a44adfa5caa650230b94dd4c4cda5ffde", null ],
-    [ "problemeHebdo", "structComponentToAreaConnectionFillerFixture.html#a536168e56f7d23bace96ae4c600d897d", null ]
+    [ "problemeHebdo", "structComponentToAreaConnectionFillerFixture.html#a536168e56f7d23bace96ae4c600d897d", null ],
+    [ "scenarioGroupRepository", "structComponentToAreaConnectionFillerFixture.html#a2e559e571c28637117cec35195ca3d44", null ]
 ];

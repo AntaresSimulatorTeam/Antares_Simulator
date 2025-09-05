@@ -1,5 +1,9 @@
 var NAVTREEINDEX41 =
 {
+"classHydroPowerSmoothingUsingVariationSum.html#ae2985230ac7e6c6dc7715307120eda04":[8,0,155,1],
+"classHydro__problem__costs.html":[8,0,148],
+"classHydro__problem__costs.html#a27ff1277524bb4cc8f1c19da2b75c10a":[8,0,148,6],
+"classHydro__problem__costs.html#a2bdc9b0a457e87c939c8680f067d8395":[8,0,148,2],
 "classHydro__problem__costs.html#a2fe89ed7cfdd97846abad74a6a25a1f7":[8,0,148,5],
 "classHydro__problem__costs.html#a622782915ebb0432fd791d4ac4ab88e0":[8,0,148,3],
 "classHydro__problem__costs.html#a78dbcc7de13d8e12e8327a243aa97637":[8,0,148,4],
@@ -220,8 +224,8 @@ var NAVTREEINDEX41 =
 "classMockConstraint.html#a580ebd87c5f7b4d6b4c2d32a21283288":[8,0,194,1],
 "classMockConstraint.html#adab95f658d0e85983eada1dc6b4a76c9":[8,0,194,2],
 "classMockLinearProblem.html":[8,0,195],
-"classMockLinearProblem.html#a00f9abc99d9b72a216483ba478c28563":[8,0,195,2],
 "classMockLinearProblem.html#a00f9abc99d9b72a216483ba478c28563":[8,0,195,1],
+"classMockLinearProblem.html#a00f9abc99d9b72a216483ba478c28563":[8,0,195,2],
 "classMockLinearProblem.html#a06d37374ee03257d5db7a5e9bcc9793f":[8,0,195,8],
 "classMockLinearProblem.html#a0cc3a3f70d70fa3570a18b8a750d48c6":[8,0,195,14],
 "classMockLinearProblem.html#a0cc3a3f70d70fa3570a18b8a750d48c6":[8,0,195,13],
@@ -235,19 +239,15 @@ var NAVTREEINDEX41 =
 "classMockLinearProblem.html#a4f7df22e90eb7a081b25bb861b669588":[8,0,195,15],
 "classMockLinearProblem.html#a5dbd1aca9a23d3fd4c6372759d3bc81c":[8,0,195,3],
 "classMockLinearProblem.html#a6929cb0ca9c2449063f5581f4f3f0a97":[8,0,195,30],
-"classMockLinearProblem.html#a76d75747090e5286e43be590d0eb05ba":[8,0,195,12],
 "classMockLinearProblem.html#a76d75747090e5286e43be590d0eb05ba":[8,0,195,11],
-"classMockLinearProblem.html#a8537f266ecbbcb9e1f7719497e0a157a":[8,0,195,26],
+"classMockLinearProblem.html#a76d75747090e5286e43be590d0eb05ba":[8,0,195,12],
 "classMockLinearProblem.html#a8537f266ecbbcb9e1f7719497e0a157a":[8,0,195,25],
+"classMockLinearProblem.html#a8537f266ecbbcb9e1f7719497e0a157a":[8,0,195,26],
 "classMockLinearProblem.html#a8aac323a31893b14d4b8698e7975b6d2":[8,0,195,10],
 "classMockLinearProblem.html#a8f585c93a93fe4245d582e20c4fb0d90":[8,0,195,18],
 "classMockLinearProblem.html#aa16493772f201a039dbadca26bd965bb":[8,0,195,4],
 "classMockLinearProblem.html#ab85a3462ecf51ac9eda81da4516f2b2b":[8,0,195,0],
 "classMockLinearProblem.html#ac2c863b15a6b07aa93af2b25de8124e5":[8,0,195,24],
 "classMockLinearProblem.html#ac2c863b15a6b07aa93af2b25de8124e5":[8,0,195,23],
-"classMockLinearProblem.html#ac8995cf8176cf34aeccdea065ae3b7b4":[8,0,195,7],
-"classMockLinearProblem.html#acdec83f2d1a48f515cfc2c96c49f96cc":[8,0,195,5],
-"classMockLinearProblem.html#acebed606c69767a5122403bdc18db2f0":[8,0,195,20],
-"classMockLinearProblem.html#ae920d2fbdb93c8aef5643c517f17d1c7":[8,0,195,16],
-"classMockLinearProblem.html#af38b6c46c98aa9ecebddac99f27514b8":[8,0,195,17]
+"classMockLinearProblem.html#ac8995cf8176cf34aeccdea065ae3b7b4":[8,0,195,7]
 };

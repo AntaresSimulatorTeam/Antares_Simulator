@@ -1,5 +1,9 @@
 var NAVTREEINDEX50 =
 {
+"jobs_8h_source.html":[9,0,0,11,2,1,12],
+"join_8h_source.html":[9,0,0,7,12,0,0,0,0,1,4],
+"json__collector_8py.html#a0c62b73bc38896e7325ed89ea6a9346c":[7,0,24,4],
+"json__collector_8py.html#a3a9035b9088b08d576bc6e8981fdf65d":[7,0,24,5],
 "json__collector_8py.html#ab3452d8338e49d9dea1fba125b0559aa":[7,0,24,3],
 "law_8h.html#a216163bccb431c1e85890d4b8208cda8":[7,0,0,6,106],
 "law_8h.html#a216163bccb431c1e85890d4b8208cda8a11b2fa0f579d102298e1aa388ee89ecf":[7,0,0,6,106,0],
@@ -245,9 +249,5 @@ var NAVTREEINDEX50 =
 "libs_2antares_2study_2include_2antares_2study_2parts_2thermal_2cluster_8h.html#a8f516d1e51949ecea43fb6b10376a2a5":[7,0,0,6,86],
 "libs_2antares_2study_2include_2antares_2study_2parts_2thermal_2cluster_8h.html#a8f516d1e51949ecea43fb6b10376a2a5a3e6f3315e516bbd173d35bd7e04df5a4":[7,0,0,6,86,0],
 "libs_2antares_2study_2include_2antares_2study_2parts_2thermal_2cluster_8h.html#a8f516d1e51949ecea43fb6b10376a2a5a8e934cf0bd3b192d0556a9c00f1c1d72":[7,0,0,6,86,1],
-"libs_2antares_2study_2include_2antares_2study_2parts_2thermal_2cluster_8h.html#ad812eaf7aee328a84ce2392b9223a9d9":[7,0,0,6,137],
-"libs_2antares_2study_2include_2antares_2study_2parts_2thermal_2cluster_8h.html#ae155111eb9e7ecab971984a68cdd2378":[7,0,0,6,93],
-"libs_2antares_2study_2include_2antares_2study_2parts_2thermal_2cluster_8h.html#ae155111eb9e7ecab971984a68cdd2378a3e4b86aa01228a8a31ca9dad7c613205":[7,0,0,6,93,2],
-"libs_2antares_2study_2include_2antares_2study_2parts_2thermal_2cluster_8h.html#ae155111eb9e7ecab971984a68cdd2378a471690288ac168634e38e8973a95c584":[7,0,0,6,93,0],
-"libs_2antares_2study_2include_2antares_2study_2parts_2thermal_2cluster_8h.html#ae155111eb9e7ecab971984a68cdd2378afb89438f572053e7b5dc7973347751a9":[7,0,0,6,93,1]
+"libs_2antares_2study_2include_2antares_2study_2parts_2thermal_2cluster_8h.html#ad812eaf7aee328a84ce2392b9223a9d9":[7,0,0,6,137]
 };

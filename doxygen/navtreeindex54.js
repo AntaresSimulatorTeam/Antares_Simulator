@@ -1,5 +1,9 @@
 var NAVTREEINDEX54 =
 {
+"structAntares_1_1Data_1_1MonthlyGenerationTargetData.html#ad94d7a42522c191d2b8fb1ddc01a7573":[8,0,0,4,47,1],
+"structAntares_1_1Data_1_1Parameters_1_1Compatibility.html":[8,0,0,4,41,0],
+"structAntares_1_1Data_1_1Parameters_1_1Compatibility.html#a01a2c753290e829d75346091474fd418":[8,0,0,4,41,0,1],
+"structAntares_1_1Data_1_1Parameters_1_1Compatibility.html#a299211b0305b9bb1bcdb3caaecc8f9d5":[8,0,0,4,41,0,0],
 "structAntares_1_1Data_1_1Parameters_1_1Compatibility.html#a299211b0305b9bb1bcdb3caaecc8f9d5a769cb50c95fd3a43c659aa73aba99e5b":[8,0,0,4,41,0,0,1],
 "structAntares_1_1Data_1_1Parameters_1_1Compatibility.html#a299211b0305b9bb1bcdb3caaecc8f9d5ac512b685438f41daa7386329a3b8f8d3":[8,0,0,4,41,0,0,0],
 "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions.html":[8,0,0,4,41,1],
@@ -245,9 +249,5 @@ var NAVTREEINDEX54 =
 "structAntares_1_1ScenarioGroupParser_1_1Line.html":[8,0,0,40,0],
 "structAntares_1_1ScenarioGroupParser_1_1Line.html#a6c7b44ff33b68ee45d35bb2374ec2f4f":[8,0,0,40,0,2],
 "structAntares_1_1ScenarioGroupParser_1_1Line.html#aa916761057fc5e3ee82ade8d4d354416":[8,0,0,40,0,0],
-"structAntares_1_1ScenarioGroupParser_1_1Line.html#adaedb692c41c436902463305dce21a0e":[8,0,0,40,0,1],
-"structAntares_1_1Solver_1_1ConstantDataFromAntares.html":[8,0,0,18,22],
-"structAntares_1_1Solver_1_1ConstantDataFromAntares.html#a34a1c1aaf9c2b92ee3e8984c22bcfd4a":[8,0,0,18,22,6],
-"structAntares_1_1Solver_1_1ConstantDataFromAntares.html#a42c5937ebc93142c27f5b788d85909dd":[8,0,0,18,22,10],
-"structAntares_1_1Solver_1_1ConstantDataFromAntares.html#a5f31e9cea5d21f1311176e1f173d7478":[8,0,0,18,22,7]
+"structAntares_1_1ScenarioGroupParser_1_1Line.html#adaedb692c41c436902463305dce21a0e":[8,0,0,40,0,1]
 };
