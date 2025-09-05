@@ -207,45 +207,47 @@ typedef // Prices
                                     Common::SpatialAggregate<
                                       WaterValue,
                                       Common::SpatialAggregate<
-                                        UnsupliedEnergy,
+                                        HydroCost,
                                         Common::SpatialAggregate<
-                                          DomesticUnsuppliedEnergy,
+                                          UnsupliedEnergy,
                                           Common::SpatialAggregate<
-                                            LMRViolations,
+                                            DomesticUnsuppliedEnergy,
                                             Common::SpatialAggregate<
-                                              SpilledEnergy,
-                                              // LOLD
+                                              LMRViolations,
                                               Common::SpatialAggregate<
-                                                LOLD,
+                                                SpilledEnergy,
+                                                // LOLD
                                                 Common::SpatialAggregate<
-                                                  LOLP,
+                                                  LOLD,
                                                   Common::SpatialAggregate<
-                                                    NearPriceCap,
+                                                    LOLP,
                                                     Common::SpatialAggregate<
-                                                      AvailableDispatchGen,
+                                                      NearPriceCap,
                                                       Common::SpatialAggregate<
-                                                        DispatchableGenMargin,
+                                                        AvailableDispatchGen,
                                                         Common::SpatialAggregate<
-                                                          DtgMarginCsr,
+                                                          DispatchableGenMargin,
                                                           Common::SpatialAggregate<
-                                                            Marge,
-
-                                                            // Detail Prices
+                                                            DtgMarginCsr,
                                                             Common::SpatialAggregate<
-                                                              NonProportionalCost, // MBO
-                                                                                   // 13/05/2014
-                                                                                   // -
-                                                                                   // refs:
-                                                                                   // #21
+                                                              Marge,
 
-                                                              // Number Of Dispatched Units
+                                                              // Detail Prices
                                                               Common::SpatialAggregate<
-                                                                NbOfDispatchedUnits // MBO
-                                                                                    // 25/02/2016
-                                                                                    // -
-                                                                                    // refs:
-                                                                                    // #55
-                                                                >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                                                NonProportionalCost, // MBO
+                                                                                     // 13/05/2014
+                                                                                     // -
+                                                                                     // refs:
+                                                                                     // #21
+
+                                                                // Number Of Dispatched Units
+                                                                Common::SpatialAggregate<
+                                                                  NbOfDispatchedUnits // MBO
+                                                                                      // 25/02/2016
+                                                                                      // -
+                                                                                      // refs:
+                                                                                      // #55
+                                                                  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
 typedef BindingConstMarginCost< // Marginal cost for a binding constraint
