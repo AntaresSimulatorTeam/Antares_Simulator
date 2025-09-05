@@ -1,0 +1,43 @@
+/*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+#include <antares/solver/optim-model-filler/EvaluationContextProvider.h>
+
+namespace Antares::Optimisation
+{
+EvaluationContextProvider::EvaluationContextProvider(
+  const LinearProblemApi::ILinearProblemData& data,
+  const ScenarioGroupRepository& scenarioGroupRepository):
+    data_(data),
+    scenarioGroupRepository_(scenarioGroupRepository)
+{
+}
+
+Expressions::Visitors::EvaluationContext EvaluationContextProvider::provide(
+  const ModelerStudy::SystemModel::Component& component) const
+{
+    return Expressions::Visitors::EvaluationContext(component.getParameterValues(),
+                                                    {},
+                                                    data_,
+                                                    scenarioGroupRepository_.scenario(
+                                                      component.getScenarioGroupId()));
+}
+} // namespace Antares::Optimisation

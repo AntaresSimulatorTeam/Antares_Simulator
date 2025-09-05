@@ -74,23 +74,19 @@ static void logProblemSize(const MPSolver* mpSolver)
 }
 
 static void fillModelerComponents(
-  std::vector<std::unique_ptr<Optimisation::ComponentFiller>>& componentFillers,
-  std::vector<LinearProblemFiller*>& fillersCollection,
+  std::vector<std::unique_ptr<LinearProblemFiller>>& fillersCollection,
   const ModelerStudy::SystemModel::System* modelerSystem,
+  const ILinearProblemData& linearProblemData,
   const Optimisation::ScenarioGroupRepository& scenarioGroupRepository,
   VariableDictionary& variableDictionary)
 {
     for (const auto& [_, component]: modelerSystem->Components())
     {
-        componentFillers.push_back(
+        fillersCollection.push_back(
           std::make_unique<Optimisation::ComponentFiller>(component,
                                                           variableDictionary,
+                                                          linearProblemData,
                                                           scenarioGroupRepository));
-        // TODO: use scenario group repository
-    }
-    for (auto& component_filler: componentFillers)
-    {
-        fillersCollection.push_back(component_filler.get());
     }
 }
 
@@ -126,27 +122,26 @@ MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
                              const PROBLEME_HEBDO* problemeHebdo,
                              bool namedProblems)
 {
-    LegacyFiller legacyOrtoolsFiller(problemeHebdo, namedProblems);
-    std::vector<LinearProblemFiller*> fillersCollection = {&legacyOrtoolsFiller};
-
+    std::vector<std::unique_ptr<LinearProblemFiller>> fillersCollection;
+    fillersCollection.push_back(std::make_unique<LegacyFiller>(problemeHebdo, namedProblems));
     Utils::TimeMeasurement measure;
-
     VariableDictionary variableDictionary;
-    std::vector<std::unique_ptr<Optimisation::ComponentFiller>> componentFillers;
-    ComponentToAreaConnectionFiller componentToAreaConnectionFiller(problemeHebdo,
-                                                                    variableDictionary);
     if (problemeHebdo->modelerSystem && problemeHebdo->scenarioGroupRepository)
     {
         // All LP variables coordinates (component id, variable id, scenario, time step)
-        fillModelerComponents(componentFillers,
-                              fillersCollection,
+        fillModelerComponents(fillersCollection,
                               problemeHebdo->modelerSystem,
+                              *problemeHebdo->linear_problem_data_,
                               *problemeHebdo->scenarioGroupRepository,
                               variableDictionary);
 
         // Add compatibility filler that connects components to areas
         // Must be the last one, because it uses constraints defined by the other fillers !!
-        fillersCollection.push_back(&componentToAreaConnectionFiller);
+        fillersCollection.push_back(std::make_unique<ComponentToAreaConnectionFiller>(
+          problemeHebdo,
+          variableDictionary,
+          *problemeHebdo->linear_problem_data_,
+          *problemeHebdo->scenarioGroupRepository));
     }
 
     LinearProblemBuilder linearProblemBuilder(fillersCollection);

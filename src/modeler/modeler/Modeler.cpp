@@ -64,23 +64,19 @@ public:
                  const Optimisation::ScenarioGroupRepository& scenario_group_repository,
                  const FillContext& timeScenarioCtx)
     {
-        std::vector<std::unique_ptr<Optimisation::ComponentFiller>> fillers;
-        std::vector<LinearProblemFiller*> fillers_ptr;
+        std::vector<std::unique_ptr<LinearProblemFiller>> fillers;
         // All LP variables coordinates (component id, variable id, scenario, time step)
 
         for (const auto& [_, component]: system_->Components())
         {
             auto cf = std::make_unique<Optimisation::ComponentFiller>(component,
                                                                       variableDictionary_,
+                                                                      *dataSeries,
                                                                       scenario_group_repository);
             fillers.push_back(std::move(cf));
         }
-        for (auto& component_filler: fillers)
-        {
-            fillers_ptr.push_back(component_filler.get());
-        }
 
-        LinearProblemBuilder linear_problem_builder(fillers_ptr);
+        LinearProblemBuilder linear_problem_builder(fillers);
 
         linear_problem_builder.build(pb, *dataSeries, timeScenarioCtx);
     }

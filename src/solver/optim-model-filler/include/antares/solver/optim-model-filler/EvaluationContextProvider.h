@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -20,22 +20,24 @@
  */
 
 #pragma once
+#include "antares/expressions/visitors/EvaluationContext.h"
+#include "antares/study/system-model/component.h"
 
-#include <vector>
+#include "scenarioGroupRepo.h"
 
-#include "linearProblemFiller.h"
-
-namespace Antares::Optimisation::LinearProblemApi
+namespace Antares::Optimisation
 {
-
-class LinearProblemBuilder
+class EvaluationContextProvider
 {
 public:
-    explicit LinearProblemBuilder(std::vector<std::unique_ptr<LinearProblemFiller>>& fillers);
-    void build(ILinearProblem& pb, ILinearProblemData& data, const FillContext& ctx);
+    explicit EvaluationContextProvider(const LinearProblemApi::ILinearProblemData& data,
+                                       const ScenarioGroupRepository& scenarioGroupRepository);
+
+    [[nodiscard]] Expressions::Visitors::EvaluationContext provide(
+      const ModelerStudy::SystemModel::Component& component) const;
 
 private:
-    const std::vector<std::unique_ptr<LinearProblemFiller>> fillers_;
+    const LinearProblemApi::ILinearProblemData& data_;
+    const ScenarioGroupRepository& scenarioGroupRepository_;
 };
-
-} // namespace Antares::Optimisation::LinearProblemApi
+} // namespace Antares::Optimisation
