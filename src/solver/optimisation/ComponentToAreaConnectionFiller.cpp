@@ -125,9 +125,6 @@ void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
   const std::string& areaId)
 {
     std::string injectionFieldId = getConnectionFieldId(component, portId);
-    DefaultScenario defaultScenario("empty"); // TODO default ?
-    const Expressions::Visitors::EvaluationContext connectedComponentEvalContext
-      = evaluationContextProvider_.provide(component);
     ReadLinearExpressionVisitor visitor(evaluationContextProvider_, ctx, component);
     auto timeDependentLinearExpression = visitor.dispatch(
       component.nodeAtPortField(portId, injectionFieldId));

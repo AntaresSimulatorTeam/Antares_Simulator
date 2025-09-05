@@ -262,8 +262,6 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
                                      Optimisation::LinearProblemApi::ILinearProblemData& data,
                                      const Optimisation::LinearProblemApi::FillContext& ctx)
 {
-    Expressions::Visitors::EvaluationContext evaluationContext = evaluationContextProvider_.provide(
-      component_);
     Optimization::ReadLinearConstraintVisitor visitor(evaluationContextProvider_, ctx, component_);
     for (const auto& constraint: component_.getModel()->Constraints() | std::views::values)
     {
@@ -292,9 +290,6 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
     {
         return;
     }
-    Expressions::Visitors::EvaluationContext evaluationContext = evaluationContextProvider_.provide(
-      component_);
-
     Optimization::ReadLinearExpressionVisitor visitor(evaluationContextProvider_, ctx, component_);
 
     const auto timeDependentLinearExpression = visitor.dispatch(model->Objective().RootNode());
