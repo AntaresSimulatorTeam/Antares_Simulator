@@ -232,30 +232,74 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const ComponentParamete
 {
     throw std::invalid_argument("ReadLinearExpressionVisitor cannot visit ComponentParameterNodes");
 }
-
-LinearExpressionEigen ReadLinearExpressionVisitor::TimeShift(const LinearExpressionEigen& left,
-                                                             int timeShift) const
+template<typename Derived>
+requires(std::same_as<Derived, Eigen::MatrixXd> || std::same_as<Derived, Eigen::VectorXd>)
+Derived cyclicRowShiftPerm(const Eigen::MatrixBase<Derived>& m, int shift)
 {
-    // TODO to be continued ...
-    LinearExpressionEigen to_return(nbtimeSteps_, nbModelVariables_);
-    // to_return.setCol()
-    for (auto localTimeStep = fillContext_.getLocalFirstTimeStep();
-         localTimeStep <= fillContext_.getLocalLastTimeStep();
-         ++localTimeStep)
+    int n = m.rows();
+    if (n == 0)
     {
-        to_return.setRow(localTimeStep,
-                         left.coefPerVar().row(
-                           rotatedIndex(localTimeStep, timeShift, fillContext_)));
+        return Derived(m);
     }
-    return to_return;
+    int s = ((shift % n) + n) % n;
+    Eigen::PermutationMatrix<Eigen::Dynamic> perm(n);
+    for (int i = 0; i < n; ++i)
+    {
+        perm.indices()[i] = (i + s) % n;
+    }
+    return (perm * m).eval(); // permutes rows
 }
+
+// Eigen::VectorXd cyclicRowShiftPerm(const Eigen::VectorXd& v, int shift)
+// {
+//     int n = v.size();
+//     if (n == 0)
+//     {
+//         return v;
+//     }
+//     int s = ((shift % n) + n) % n; // normalize shift to [0,n-1]
+//
+//     Eigen::PermutationMatrix<Eigen::Dynamic> perm(n);
+//     for (int i = 0; i < n; ++i)
+//     {
+//         perm.indices()[i] = (i + s) % n;
+//     }
+//
+//     return perm * v; // permutes entries of v
+// }
+
+// template <typename Derived>
+// auto cyclicRowShift(const Eigen::MatrixBase<Derived>& m, int shift) {
+//     int n = m.rows();
+//     if (n == 0) return m;
+//
+//     int s = ((shift % n) + n) % n; // 1. Normalize the shift
+//     return (Eigen::VectorXi::LinSpaced(n, s, s + n - 1).array() % n).matrix()(Eigen::all); // 2.
+//     The magic line
+// }
+
+// LinearExpressionEigen ReadLinearExpressionVisitor::TimeShift(const LinearExpressionEigen& left,
+//                                                              int timeShift) const
+// {
+//     // TODO to be continued ...
+//     LinearExpressionEigen to_return(nbtimeSteps_, nbModelVariables_);
+//     // to_return.setCol()
+//     for (auto localTimeStep = fillContext_.getLocalFirstTimeStep();
+//          localTimeStep <= fillContext_.getLocalLastTimeStep();
+//          ++localTimeStep)
+//     {
+//         auto shiftedIndex = rotatedIndex(localTimeStep, timeShift, fillContext_);
+//         to_return.setRow(localTimeStep, left.coefPerVar().row(shiftedIndex));
+//     }
+//     return to_return;
+// }
 
 LinearExpressionEigen ReadLinearExpressionVisitor::visit(const TimeShiftNode* node)
 {
     const auto expression = dispatch(node->left());
     // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
     const auto timeShift = static_cast<int>(evalVisitor_.dispatch(node->right()).valueAsDouble());
-    return TimeShift(expression, timeShift);
+    return {cyclicRowShiftPerm(expression.coefPerVar(), timeShift)};
 }
 
 LinearExpressionEigen ReadLinearExpressionVisitor::TimeIndex(
@@ -264,7 +308,17 @@ LinearExpressionEigen ReadLinearExpressionVisitor::TimeIndex(
 {
     // TODO to be continued ...
     LinearExpressionEigen to_return(nbtimeSteps_, nbModelVariables_);
-    to_return.setCol(timeIndex, expression.coefPerVar().col(timeIndex));
+    const auto& expressionMatrix = expression.coefPerVar();
+
+    for (auto i(0); i < variableStartColumn_.size(); ++i)
+    {
+        const auto variableStart = variableStartColumn_.at(i);
+        const auto timeIndexCol = variableStart + timeIndex;
+        Eigen::VectorXd col = Eigen::VectorXd::Constant(nbtimeSteps_,
+                                                        expressionMatrix.coeff(timeIndex,
+                                                                               timeIndexCol));
+        to_return.setCol(timeIndexCol, col);
+    }
     return to_return;
 }
 
