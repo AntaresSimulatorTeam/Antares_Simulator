@@ -54,14 +54,9 @@ struct TimeBlock
     std::optional<int> blockTimeIndex;
     std::optional<int> absoluteTimeIndex;
 };
-enum class TimeConversionMode
-{
-    SingleBlock, // for Modeler
-    DailyBlocks,
-    WeeklyBlocks
-};
 
-TimeBlock convertTimeStepToBlockTimeIndex(unsigned int timeStep, const TimeConversionMode& mode);
+TimeBlock convertTimeStepToBlockTimeIndex(unsigned timeStep,
+                                          const unsigned timeBlockSize = UINT_MAX);
 
 std::string BuildModelerConstraintName(const std::string& cid,
                                        const std::string& cname,
@@ -74,7 +69,7 @@ void addVariableEntries(
   const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
   const Antares::ModelerStudy::SystemModel::Component& component,
   unsigned currentBlock,
-  const TimeConversionMode& timeConversionMode,
+  const unsigned timeBlockSize,
   std::optional<unsigned> scenario);
 
 void addConstraintEntries(
@@ -83,7 +78,7 @@ void addConstraintEntries(
   const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
   const Antares::ModelerStudy::SystemModel::Component& component,
   unsigned currentBlock,
-  const TimeConversionMode& timeConversionMode,
+  const unsigned timeBlockSize,
   std::optional<unsigned> scenario);
 
 void FillSimulationTable(
@@ -93,4 +88,4 @@ void FillSimulationTable(
   const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>& components,
   const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
   unsigned currentBlock,
-  const TimeConversionMode& timeConversionMode);
+  const unsigned timeBlockSize = UINT_MAX);

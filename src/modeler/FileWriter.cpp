@@ -66,8 +66,7 @@ void FileWriter::writeSimulationTable(
                             solution.getObjectiveValue(),
                             components,
                             fillContext,
-                            1,
-                            TimeConversionMode::SingleBlock);
+                            1);
         simulationTable.writeHeader();
         simulationTable.write();
     }

@@ -533,20 +533,20 @@ BOOST_AUTO_TEST_CASE(TimeStep_BoundaryValues)
     // Test boundary values for different time conversion modes
 
     // Daily blocks - exactly at day boundary
-    auto result1 = convertTimeStepToBlockTimeIndex(23, TimeConversionMode::DailyBlocks);
-    BOOST_CHECK_EQUAL(result1.block, 1);
-    BOOST_CHECK_EQUAL(*result1.blockTimeIndex, 24);
+    auto timeBlock1 = convertTimeStepToBlockTimeIndex(23, 24);
+    BOOST_CHECK_EQUAL(timeBlock1.block, 1);
+    BOOST_CHECK_EQUAL(*timeBlock1.blockTimeIndex, 24);
 
-    auto result2 = convertTimeStepToBlockTimeIndex(24, TimeConversionMode::DailyBlocks);
-    BOOST_CHECK_EQUAL(result2.block, 2);
-    BOOST_CHECK_EQUAL(*result2.blockTimeIndex, 1);
+    auto timeBlock2 = convertTimeStepToBlockTimeIndex(24, 24);
+    BOOST_CHECK_EQUAL(timeBlock2.block, 2);
+    BOOST_CHECK_EQUAL(*timeBlock2.blockTimeIndex, 1);
 
     // Weekly blocks - exactly at week boundary
-    auto result3 = convertTimeStepToBlockTimeIndex(167, TimeConversionMode::WeeklyBlocks);
-    BOOST_CHECK_EQUAL(result3.block, 1);
-    BOOST_CHECK_EQUAL(*result3.blockTimeIndex, 168);
+    auto timeBlock3 = convertTimeStepToBlockTimeIndex(167, 168);
+    BOOST_CHECK_EQUAL(timeBlock3.block, 1);
+    BOOST_CHECK_EQUAL(*timeBlock3.blockTimeIndex, 168);
 
-    auto result4 = convertTimeStepToBlockTimeIndex(168, TimeConversionMode::WeeklyBlocks);
+    auto result4 = convertTimeStepToBlockTimeIndex(168, 168);
     BOOST_CHECK_EQUAL(result4.block, 2);
     BOOST_CHECK_EQUAL(*result4.blockTimeIndex, 1);
 }
@@ -958,13 +958,7 @@ BOOST_AUTO_TEST_CASE(TemplateFunction_VariableEntries_AllCombinations)
     build();
     const FillContext fillContext(0, 9, 0, 9, 0); // 10 time steps
 
-    addVariableEntries(table,
-                       linearProblem,
-                       fillContext,
-                       components.begin()->second,
-                       1,
-                       TimeConversionMode::SingleBlock,
-                       0);
+    addVariableEntries(table, linearProblem, fillContext, components.begin()->second, 1, 1, 0);
     table.writeHeader();
     table.write();
     std::string buffer = table.buffer();
@@ -1110,13 +1104,8 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_ModelerIntegration)
 
     build(fillContext, &linearProblem);
     MockMipSolution solution;
-    BOOST_CHECK_NO_THROW(FillSimulationTable(table,
-                                             linearProblem,
-                                             45.0,
-                                             components,
-                                             fillContext,
-                                             1,
-                                             TimeConversionMode::SingleBlock););
+    BOOST_CHECK_NO_THROW(
+      FillSimulationTable(table, linearProblem, 45.0, components, fillContext, 1););
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -1255,52 +1244,52 @@ BOOST_AUTO_TEST_SUITE(TimeConversionTests)
 
 BOOST_AUTO_TEST_CASE(ConvertTimeStep_SingleBlock)
 {
-    auto result = convertTimeStepToBlockTimeIndex(42, TimeConversionMode::SingleBlock);
-    BOOST_CHECK_EQUAL(result.block, 1);
-    BOOST_CHECK_EQUAL(*result.blockTimeIndex, 43);    // 42 + 1
-    BOOST_CHECK_EQUAL(*result.absoluteTimeIndex, 43); // 42 + 1
+    auto timeBlock = convertTimeStepToBlockTimeIndex(42);
+    BOOST_CHECK_EQUAL(timeBlock.block, 1);
+    BOOST_CHECK_EQUAL(*timeBlock.blockTimeIndex, 43);    // 42 + 1
+    BOOST_CHECK_EQUAL(*timeBlock.absoluteTimeIndex, 43); // 42 + 1
 }
 
 BOOST_AUTO_TEST_CASE(ConvertTimeStep_DailyBlocks)
 {
     // Test first day
-    auto result1 = convertTimeStepToBlockTimeIndex(0, TimeConversionMode::DailyBlocks);
-    BOOST_CHECK_EQUAL(result1.block, 1);
-    BOOST_CHECK_EQUAL(*result1.blockTimeIndex, 1);
-    BOOST_CHECK_EQUAL(*result1.absoluteTimeIndex, 1);
+    auto timeBlock1 = convertTimeStepToBlockTimeIndex(0, 24);
+    BOOST_CHECK_EQUAL(timeBlock1.block, 1);
+    BOOST_CHECK_EQUAL(*timeBlock1.blockTimeIndex, 1);
+    BOOST_CHECK_EQUAL(*timeBlock1.absoluteTimeIndex, 1);
 
     // Test second day
-    auto result2 = convertTimeStepToBlockTimeIndex(24, TimeConversionMode::DailyBlocks);
-    BOOST_CHECK_EQUAL(result2.block, 2);
-    BOOST_CHECK_EQUAL(*result2.blockTimeIndex, 1);
-    BOOST_CHECK_EQUAL(*result2.absoluteTimeIndex, 25);
+    auto timeBlock2 = convertTimeStepToBlockTimeIndex(24, 24);
+    BOOST_CHECK_EQUAL(timeBlock2.block, 2);
+    BOOST_CHECK_EQUAL(*timeBlock2.blockTimeIndex, 1);
+    BOOST_CHECK_EQUAL(*timeBlock2.absoluteTimeIndex, 25);
 
     // Test middle of day
-    auto result3 = convertTimeStepToBlockTimeIndex(35, TimeConversionMode::DailyBlocks);
-    BOOST_CHECK_EQUAL(result3.block, 2);
-    BOOST_CHECK_EQUAL(*result3.blockTimeIndex, 12); // 35 % 24 + 1
-    BOOST_CHECK_EQUAL(*result3.absoluteTimeIndex, 36);
+    auto timeBlock3 = convertTimeStepToBlockTimeIndex(35, 24);
+    BOOST_CHECK_EQUAL(timeBlock3.block, 2);
+    BOOST_CHECK_EQUAL(*timeBlock3.blockTimeIndex, 12); // 35 % 24 + 1
+    BOOST_CHECK_EQUAL(*timeBlock3.absoluteTimeIndex, 36);
 }
 
 BOOST_AUTO_TEST_CASE(ConvertTimeStep_WeeklyBlocks)
 {
     // Test first week
-    auto result1 = convertTimeStepToBlockTimeIndex(0, TimeConversionMode::WeeklyBlocks);
-    BOOST_CHECK_EQUAL(result1.block, 1);
-    BOOST_CHECK_EQUAL(*result1.blockTimeIndex, 1);
-    BOOST_CHECK_EQUAL(*result1.absoluteTimeIndex, 1);
+    auto timeBlock1 = convertTimeStepToBlockTimeIndex(0, 168);
+    BOOST_CHECK_EQUAL(timeBlock1.block, 1);
+    BOOST_CHECK_EQUAL(*timeBlock1.blockTimeIndex, 1);
+    BOOST_CHECK_EQUAL(*timeBlock1.absoluteTimeIndex, 1);
 
     // Test second week
-    auto result2 = convertTimeStepToBlockTimeIndex(168, TimeConversionMode::WeeklyBlocks);
-    BOOST_CHECK_EQUAL(result2.block, 2);
-    BOOST_CHECK_EQUAL(*result2.blockTimeIndex, 1);
-    BOOST_CHECK_EQUAL(*result2.absoluteTimeIndex, 169);
+    auto timeBlock2 = convertTimeStepToBlockTimeIndex(168, 168);
+    BOOST_CHECK_EQUAL(timeBlock2.block, 2);
+    BOOST_CHECK_EQUAL(*timeBlock2.blockTimeIndex, 1);
+    BOOST_CHECK_EQUAL(*timeBlock2.absoluteTimeIndex, 169);
 
     // Test middle of week
-    auto result3 = convertTimeStepToBlockTimeIndex(100, TimeConversionMode::WeeklyBlocks);
-    BOOST_CHECK_EQUAL(result3.block, 1);
-    BOOST_CHECK_EQUAL(*result3.blockTimeIndex, 101); // 100 % 168 + 1
-    BOOST_CHECK_EQUAL(*result3.absoluteTimeIndex, 101);
+    auto timeBlock3 = convertTimeStepToBlockTimeIndex(100, 168);
+    BOOST_CHECK_EQUAL(timeBlock3.block, 1);
+    BOOST_CHECK_EQUAL(*timeBlock3.blockTimeIndex, 101); // 100 % 168 + 1
+    BOOST_CHECK_EQUAL(*timeBlock3.absoluteTimeIndex, 101);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -1634,33 +1623,18 @@ BOOST_DATA_TEST_CASE(StatusToString_AllStatuses,
     BOOST_CHECK_EQUAL(StatusToString(status), expected_string);
 }
 
-inline std::ostream& operator<<(std::ostream& os, const TimeConversionMode& mode)
-{
-    switch (mode)
-    {
-    case TimeConversionMode::SingleBlock:
-        return os << "SingleBlock";
-    case TimeConversionMode::DailyBlocks:
-        return os << "DailyBlocks";
-    case TimeConversionMode::WeeklyBlocks:
-        return os << "WeeklyBlocks";
-    default:
-        return os << "Unknown";
-    }
-}
-
 struct TimeTestCase
 {
-    unsigned int timeStep;
-    TimeConversionMode mode;
-    unsigned int expectedBlock;
+    unsigned timeStep;
+    unsigned timeBlockSize;
+    unsigned expectedBlock;
     int expectedBlockTime;
     int expectedAbsTime;
 };
 
 inline std::ostream& operator<<(std::ostream& os, const TimeTestCase& tc)
 {
-    return os << "{timeStep=" << tc.timeStep << ", mode=" << tc.mode
+    return os << "{timeStep=" << tc.timeStep << ", blockSize=" << tc.timeBlockSize
               << ", expectedBlock=" << tc.expectedBlock
               << ", expectedBlockTime=" << tc.expectedBlockTime
               << ", expectedAbsTime=" << tc.expectedAbsTime << "}";
@@ -1668,21 +1642,20 @@ inline std::ostream& operator<<(std::ostream& os, const TimeTestCase& tc)
 
 // Test data for time conversion modes
 
-constexpr std::array<TimeTestCase, 8> time_test_data{
-  {{0, TimeConversionMode::SingleBlock, 1, 1, 1},
-   {23, TimeConversionMode::SingleBlock, 1, 24, 24},
-   {0, TimeConversionMode::DailyBlocks, 1, 1, 1},
-   {23, TimeConversionMode::DailyBlocks, 1, 24, 24},
-   {24, TimeConversionMode::DailyBlocks, 2, 1, 25},
-   {0, TimeConversionMode::WeeklyBlocks, 1, 1, 1},
-   {167, TimeConversionMode::WeeklyBlocks, 1, 168, 168},
-   {168, TimeConversionMode::WeeklyBlocks, 2, 1, 169}}};
+constexpr std::array<TimeTestCase, 8> time_test_data{{{0, UINT_MAX, 1, 1, 1},
+                                                      {23, UINT_MAX, 1, 24, 24},
+                                                      {0, 24, 1, 1, 1},
+                                                      {23, 24, 1, 24, 24},
+                                                      {24, 24, 2, 1, 25},
+                                                      {0, 168, 1, 1, 1},
+                                                      {167, 168, 1, 168, 168},
+                                                      {168, 168, 2, 1, 169}}};
 
 BOOST_DATA_TEST_CASE(TimeConversion_ParameterizedTest,
                      boost::unit_test::data::make(time_test_data),
                      testCase)
 {
-    auto result = convertTimeStepToBlockTimeIndex(testCase.timeStep, testCase.mode);
+    auto result = convertTimeStepToBlockTimeIndex(testCase.timeStep, testCase.timeBlockSize);
 
     BOOST_CHECK_EQUAL(result.block, testCase.expectedBlock);
     BOOST_CHECK_EQUAL(*result.blockTimeIndex, testCase.expectedBlockTime);

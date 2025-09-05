@@ -130,20 +130,11 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
     unsigned globalFirst, globalLast;
     unsigned localFirst = 0, localLast;
     auto nTsInDay = static_cast<unsigned>(problemeHebdo->NombreDePasDeTempsDUneJournee);
-    if (problemeHebdo->OptimisationAuPasHebdomadaire)
-    {
-        globalFirst = problemeHebdo->weekInTheYear * nTsInDay * problemeHebdo->NombreDeJours;
-        globalLast = globalFirst + nTsInDay * problemeHebdo->NombreDeJours - 1;
-        localLast = nTsInDay * problemeHebdo->NombreDeJours - 1;
-    }
-    else
-    {
-        globalFirst = (problemeHebdo->weekInTheYear * problemeHebdo->NombreDeJours
-                       + static_cast<unsigned>(NumIntervalle))
-                      * nTsInDay;
-        globalLast = globalFirst + nTsInDay - 1;
-        localLast = nTsInDay - 1;
-    }
+
+    globalFirst = problemeHebdo->weekInTheYear * nTsInDay * problemeHebdo->NombreDeJours;
+    globalLast = globalFirst + nTsInDay * problemeHebdo->NombreDeJours - 1;
+    localLast = nTsInDay * problemeHebdo->NombreDeJours - 1;
+
     return {localFirst,
             localLast,
             globalFirst,
@@ -265,19 +256,14 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
 
     if (problemeHebdo->modelerSystem)
     {
-        unsigned currentBlock = problemeHebdo->OptimisationAuPasHebdomadaire
-                                  ? problemeHebdo->weekInTheYear
-                                  : NumIntervalle;
-        TimeConversionMode timeConversionMode = problemeHebdo->OptimisationAuPasHebdomadaire
-                                                  ? TimeConversionMode::WeeklyBlocks
-                                                  : TimeConversionMode::DailyBlocks;
+        unsigned currentWeek = problemeHebdo->weekInTheYear;
         FillSimulationTable(simulationTable,
                             ortoolsProblem,
                             ::getObjectiveValue(solver),
                             problemeHebdo->modelerSystem->Components(),
                             fillCtx,
-                            currentBlock,
-                            timeConversionMode);
+                            currentWeek,
+                            Constants::nbHoursInAWeek);
     }
 
     return {.success = true,

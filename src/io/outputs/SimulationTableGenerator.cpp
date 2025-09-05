@@ -31,22 +31,11 @@
 
 using namespace Antares::Optimisation::LinearProblemApi;
 
-TimeBlock convertTimeStepToBlockTimeIndex(unsigned int timeStep, const TimeConversionMode& mode)
+TimeBlock convertTimeStepToBlockTimeIndex(unsigned timeStep, const unsigned timeBlockSize)
 {
-    switch (mode)
-    {
-    case TimeConversionMode::WeeklyBlocks:
-        return {.block = timeStep / 168 + 1,
-                .blockTimeIndex = timeStep % 168 + 1,
-                .absoluteTimeIndex = timeStep + 1};
-    case TimeConversionMode::DailyBlocks:
-        return {.block = timeStep / 24 + 1,
-                .blockTimeIndex = timeStep % 24 + 1,
-                .absoluteTimeIndex = timeStep + 1};
-    case TimeConversionMode::SingleBlock:
-    default:
-        return {.block = 1, .blockTimeIndex = timeStep + 1, .absoluteTimeIndex = timeStep + 1};
-    }
+    return {.block = timeStep / timeBlockSize + 1,
+            .blockTimeIndex = timeStep % timeBlockSize + 1,
+            .absoluteTimeIndex = timeStep + 1};
 }
 
 std::string BuildModelerConstraintName(const std::string& cid,
@@ -78,7 +67,7 @@ void addVariableEntries(ISimulationTable& simulationTable,
                         const FillContext& fillContext,
                         const Antares::ModelerStudy::SystemModel::Component& component,
                         unsigned currentBlock,
-                        const TimeConversionMode& timeConversionMode,
+                        const unsigned timeBlockSize,
                         std::optional<unsigned> scenario)
 {
     const auto& cid = component.Id();
@@ -96,7 +85,7 @@ void addVariableEntries(ISimulationTable& simulationTable,
               timeStep);
             TimeBlock tb = timeStep ? convertTimeStepToBlockTimeIndex(
                                         *timeStep + fillContext.getGlobalFirstTimeStep(),
-                                        timeConversionMode)
+                                        timeBlockSize)
                                     : TimeBlock{.block = currentBlock,
                                                 .blockTimeIndex = std::nullopt,
                                                 .absoluteTimeIndex = std::nullopt};
@@ -146,7 +135,7 @@ void addConstraintEntries(ISimulationTable& simulationTable,
                           const FillContext& fillContext,
                           const Antares::ModelerStudy::SystemModel::Component& component,
                           unsigned currentBlock,
-                          const TimeConversionMode& timeConversionMode,
+                          const unsigned timeBlockSize,
                           std::optional<unsigned> scenario)
 {
     using TI = Antares::Expressions::Visitors::TimeIndex;
@@ -163,7 +152,7 @@ void addConstraintEntries(ISimulationTable& simulationTable,
             const auto* c = linearProblem.lookupConstraint(fullConstName);
             TimeBlock tb = ts ? convertTimeStepToBlockTimeIndex(
                                   *ts + fillContext.getGlobalFirstTimeStep(),
-                                  timeConversionMode)
+                                  timeBlockSize)
                               : TimeBlock{.block = currentBlock,
                                           .blockTimeIndex = std::nullopt,
                                           .absoluteTimeIndex = std::nullopt};
@@ -229,7 +218,7 @@ void FillSimulationTable(
   const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>& components,
   const FillContext& fillContext,
   unsigned currentBlock,
-  const TimeConversionMode& timeConversionMode)
+  const unsigned timeBlockSize)
 {
     unsigned scenario = fillContext.getYear();
     for (const auto& component: components | std::views::values)
@@ -239,7 +228,7 @@ void FillSimulationTable(
                            fillContext,
                            component,
                            currentBlock,
-                           timeConversionMode,
+                           timeBlockSize,
                            scenario);
 
         addConstraintEntries(simulationTable,
@@ -247,7 +236,7 @@ void FillSimulationTable(
                              fillContext,
                              component,
                              currentBlock,
-                             timeConversionMode,
+                             timeBlockSize,
                              scenario);
     }
     addObjectiveValue(simulationTable, objectiveValue, currentBlock, scenario);
