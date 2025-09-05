@@ -43,6 +43,7 @@
 #include "antares/solver/variable/economy/balance.h"
 #include "antares/solver/variable/economy/dispatchable-generation-margin.h"
 #include "antares/solver/variable/economy/dispatchableGeneration.h"
+#include "antares/solver/variable/economy/hydroCost.h"
 #include "antares/solver/variable/economy/hydrostorage.h"
 #include "antares/solver/variable/economy/inflow.h"
 #include "antares/solver/variable/economy/lold.h"

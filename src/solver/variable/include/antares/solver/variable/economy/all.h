@@ -44,6 +44,7 @@
 #include "dispatchableGeneration.h"
 #include "domesticUnsuppliedEnergy.h"
 #include "dtgMarginAfterCsr.h"
+#include "hydroCost.h"
 #include "hydrostorage.h"
 #include "inflow.h"
 #include "localMatchingRuleViolations.h"
