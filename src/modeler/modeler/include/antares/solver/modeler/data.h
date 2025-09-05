@@ -24,7 +24,6 @@
 #include <antares/solver/optim-model-filler/scenarioGroupRepo.h>
 #include <antares/study/system-model/library.h>
 #include <antares/study/system-model/system.h>
-#include "antares/solver/optim-model-filler/scenarioGroupRepo.h"
 
 namespace Antares::Modeler
 {
@@ -34,7 +33,7 @@ struct Data
     std::vector<ModelerStudy::SystemModel::Library> libraries;
     std::unique_ptr<ModelerStudy::SystemModel::System> system;
     std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> dataSeries;
-    Optimisation::ScenarioGroupRepository scenario_group_repository;
+    Optimisation::ScenarioGroupRepository scenarioGroupRepository;
 };
 
 } // namespace Antares::Modeler

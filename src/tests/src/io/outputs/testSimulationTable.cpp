@@ -1106,8 +1106,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_ModelerIntegration)
     BOOST_CHECK_NO_THROW(FillSimulationTable(table,
                                              linearProblem,
                                              45.0,
-                                             components,
-                                             &data,
+                                             getModelerData(),
                                              fillContext,
                                              1,
                                              TimeConversionMode::SingleBlock););

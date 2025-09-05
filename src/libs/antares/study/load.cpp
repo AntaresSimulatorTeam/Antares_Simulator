@@ -229,7 +229,7 @@ void Study::loadModelerComponents()
 {
     try
     {
-        modelerInput_ = Solver::LoadFiles::loadAll(folder);
+        modelerInput_ = std::make_unique<Modeler::Data>(Solver::LoadFiles::loadAll(folder));
         checkModelerDataCompatibility();
     }
     catch (const std::exception& e)
@@ -251,7 +251,7 @@ void Study::loadModelerComponents()
  */
 void Study::checkModelerDataCompatibility() const
 {
-    for (auto& component: modelerInput_.system->Components() | std::views::values)
+    for (auto& component: modelerInput_->system->Components() | std::views::values)
     {
         for (auto& variable: component.getModel()->Variables() | std::views::values)
         {

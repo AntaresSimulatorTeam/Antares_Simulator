@@ -75,18 +75,16 @@ static void logProblemSize(const MPSolver* mpSolver)
 
 static void fillModelerComponents(
   std::vector<std::unique_ptr<LinearProblemFiller>>& fillersCollection,
-  const ModelerStudy::SystemModel::System* modelerSystem,
-  const ILinearProblemData& linearProblemData,
-  const Optimisation::ScenarioGroupRepository& scenarioGroupRepository,
+  Modeler::Data* modelerData,
   VariableDictionary& variableDictionary)
 {
-    for (const auto& [_, component]: modelerSystem->Components())
+    for (const auto& [_, component]: modelerData->system->Components())
     {
         fillersCollection.push_back(
           std::make_unique<Optimisation::ComponentFiller>(component,
                                                           variableDictionary,
-                                                          linearProblemData,
-                                                          scenarioGroupRepository));
+                                                          *modelerData->dataSeries,
+                                                          modelerData->scenarioGroupRepository));
     }
 }
 
@@ -126,22 +124,18 @@ MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
     fillersCollection.push_back(std::make_unique<LegacyFiller>(problemeHebdo, namedProblems));
     Utils::TimeMeasurement measure;
     VariableDictionary variableDictionary;
-    if (problemeHebdo->modelerSystem && problemeHebdo->scenarioGroupRepository)
+    if (problemeHebdo->modelerData)
     {
         // All LP variables coordinates (component id, variable id, scenario, time step)
-        fillModelerComponents(fillersCollection,
-                              problemeHebdo->modelerSystem,
-                              *problemeHebdo->linear_problem_data_,
-                              *problemeHebdo->scenarioGroupRepository,
-                              variableDictionary);
+        fillModelerComponents(fillersCollection, problemeHebdo->modelerData, variableDictionary);
 
         // Add compatibility filler that connects components to areas
         // Must be the last one, because it uses constraints defined by the other fillers !!
         fillersCollection.push_back(std::make_unique<ComponentToAreaConnectionFiller>(
           problemeHebdo,
           variableDictionary,
-          *problemeHebdo->linear_problem_data_,
-          *problemeHebdo->scenarioGroupRepository));
+          *problemeHebdo->modelerData->dataSeries,
+          problemeHebdo->modelerData->scenarioGroupRepository));
     }
 
     LinearProblemBuilder linearProblemBuilder(fillersCollection);
@@ -149,7 +143,7 @@ MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
     // Note that the modeler is only called for the 1st simulation week,
     // this limitation must be lifted later,
     // when appropriate solvers (e.g with warm start) is integrated.
-    linearProblemBuilder.build(ortoolsProblem, *problemeHebdo->linear_problem_data_, fillCtx);
+    linearProblemBuilder.build(ortoolsProblem, *problemeHebdo->modelerData->dataSeries, fillCtx);
 
     measure.tick();
 
@@ -234,7 +228,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         throw FatalError("Internal error: insufficient memory");
     }
 
-    if (problemeHebdo->modelerSystem)
+    if (problemeHebdo->modelerData->system)
     {
         unsigned currentBlock = problemeHebdo->OptimisationAuPasHebdomadaire
                                   ? problemeHebdo->weekInTheYear
@@ -245,8 +239,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         FillSimulationTable(simulationTable,
                             ortoolsProblem,
                             ::getObjectiveValue(solver),
-                            problemeHebdo->modelerSystem->Components(),
-                            problemeHebdo->linear_problem_data_,
+                            *problemeHebdo->modelerData,
                             fillCtx,
                             currentBlock,
                             timeConversionMode,

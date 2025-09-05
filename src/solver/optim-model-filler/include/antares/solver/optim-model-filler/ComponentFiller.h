@@ -84,9 +84,7 @@ private:
       const std::vector<Optimization::LinearConstraint>& linear_constraints,
       const std::string& constraint_id) const;
 
-    bool IsThisConstraintTimeDependent(
-      const Expressions::Nodes::Node* node,
-      Expressions::Visitors::EvaluationContext& evaluationContext) const;
+    bool IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node) const;
 
     const ModelerStudy::SystemModel::Component& component_;
     Optimization::VariableDictionary& variableDictionary_;

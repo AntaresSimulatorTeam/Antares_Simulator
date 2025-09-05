@@ -20,6 +20,7 @@
 */
 #pragma once
 
+#include "antares/expressions/IEvaluationContextProvider.h"
 #include "antares/expressions/visitors/NodeVisitor.h"
 #include "antares/expressions/visitors/TimeIndex.h"
 #include "antares/study/system-model/component.h"
@@ -34,7 +35,7 @@ class TimeIndexVisitor: public NodeVisitor<TimeIndex>
 {
 public:
     explicit TimeIndexVisitor(const ModelerStudy::SystemModel::Component& component,
-                              EvaluationContext context);
+                              const IEvaluationContextProvider& contextProvider);
 
     std::string name() const override;
 
@@ -60,6 +61,7 @@ private:
     std::vector<const ModelerStudy::SystemModel::Component*> getConnectedComponents();
 
     const ModelerStudy::SystemModel::Component& component_;
+    const IEvaluationContextProvider& contextProvider_;
     const EvaluationContext context_;
 };
 } // namespace Antares::Expressions::Visitors

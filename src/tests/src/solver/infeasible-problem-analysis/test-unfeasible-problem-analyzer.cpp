@@ -404,7 +404,7 @@ void setupMinimalProblem(PROBLEME_HEBDO& problemeHebdo, ProblemFeasibility feasi
     // Solver export options
     problemeHebdo.ExportMPS = Data::mpsExportStatus::EXPORT_BOTH_OPTIMS;
     problemeHebdo.exportMPSOnError = true;
-    problemeHebdo.modelerSystem = nullptr;
+    problemeHebdo.modelerData = nullptr;
     problemeHebdo.NamedProblems = false;
 }
 

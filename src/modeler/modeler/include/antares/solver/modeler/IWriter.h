@@ -20,6 +20,8 @@
 
 #pragma once
 
+#include "data.h"
+
 namespace Antares::Optimization
 {
 class VariableDictionary;
@@ -59,8 +61,7 @@ public:
     virtual void writeSimulationTable(
       const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
       const Optimisation::LinearProblemApi::IMipSolution& solution,
-      const std::unordered_map<std::string, ModelerStudy::SystemModel::Component>& components,
-      Optimisation::LinearProblemApi::ILinearProblemData* dataSeries,
+      const Antares::Modeler::Data& modelerData,
       const Optimisation::LinearProblemApi::FillContext& fillContext) const
       = 0;
 

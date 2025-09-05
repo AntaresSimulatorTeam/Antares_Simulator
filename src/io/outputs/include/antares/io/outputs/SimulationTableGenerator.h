@@ -26,6 +26,8 @@
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/study/system-model/component.h>
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
+#include "antares/solver/modeler/data.h"
+#include "antares/solver/optim-model-filler/EvaluationContextProvider.h"
 #include "antares/solver/optim-model-filler/VariableDictionary.h"
 
 #include "ISimulationTable.h"
@@ -91,7 +93,7 @@ void addConstraintEntries(
   const TimeConversionMode& timeConversionMode,
   std::optional<unsigned> scenario,
   bool forceExportForScenarioIndex,
-  const Antares::Expressions::Visitors::EvaluationContext& evalContext);
+  const Antares::Optimisation::EvaluationContextProvider& contextProvider);
 
 void addPortEntries(ISimulationTable& simulationTable,
                     const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
@@ -100,7 +102,7 @@ void addPortEntries(ISimulationTable& simulationTable,
                     const TimeConversionMode& timeConversionMode,
                     std::optional<unsigned> scenario,
                     bool forceExportForScenarioIndex,
-                    const Antares::Expressions::Visitors::EvaluationContext& evalContext);
+                    const Antares::Optimisation::EvaluationContextProvider& contextProvider);
 
 /**
  * Fill modeler outputs in the simulation table
@@ -119,8 +121,7 @@ void FillSimulationTable(
   ISimulationTable& simulationTable,
   const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
   double objectiveValue,
-  const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>& components,
-  const Antares::Optimisation::LinearProblemApi::ILinearProblemData* dataSeries,
+  const Antares::Modeler::Data& modelerData,
   const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
   unsigned currentBlock,
   const TimeConversionMode& timeConversionMode,

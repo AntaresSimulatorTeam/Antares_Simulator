@@ -111,11 +111,7 @@ TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldSumNode* node)
         auto* component = connexion_end.component();
         auto* port = connexion_end.port();
 
-        const EvaluationContext connectedComponentEvalContext(component->getParameterValues(),
-                                                              {},
-                                                              context_.data(),
-                                                              context_.scenario());
-        TimeIndexVisitor visitor(*component, connectedComponentEvalContext);
+        TimeIndexVisitor visitor(*component, contextProvider_);
         const Nodes::Node* node = component->nodeAtPortField(port->Id(), fieldId);
         to_return = to_return | visitor.dispatch(node);
     }
@@ -143,9 +139,11 @@ TimeIndex TimeIndexVisitor::visit([[maybe_unused]] const Nodes::AllTimeSumNode* 
     return TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
 }
 
-TimeIndexVisitor::TimeIndexVisitor(const Component& component, EvaluationContext context):
+TimeIndexVisitor::TimeIndexVisitor(const Component& component,
+                                   const IEvaluationContextProvider& contextProvider):
     component_(component),
-    context_(context)
+    contextProvider_(contextProvider),
+    context_(contextProvider.provide(component))
 {
 }
 

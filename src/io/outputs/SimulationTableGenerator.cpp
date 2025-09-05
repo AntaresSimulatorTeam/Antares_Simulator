@@ -29,6 +29,9 @@
 #include "antares/optimisation/linear-problem-api/IScenario.h"
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
 #include "antares/optimisation/linear-problem-api/mipConstraint.h"
+#include "antares/solver/optim-model-filler/EvaluationContextProvider.h"
+
+#include "../../modeler/FileWriter.h"
 
 using namespace Antares::Optimisation::LinearProblemApi;
 using TI = Antares::Expressions::Visitors::TimeIndex;
@@ -184,13 +187,13 @@ void addConstraintEntries(ISimulationTable& simulationTable,
                           const TimeConversionMode& timeConversionMode,
                           std::optional<unsigned> scenario,
                           bool forceExportForScenarioIndex,
-                          const Antares::Expressions::Visitors::EvaluationContext& evalContext)
+                          const Antares::Optimisation::EvaluationContextProvider& contextProvider)
 {
     const auto& cid = component.Id();
     const bool isLp = linearProblem.isLP();
     for (const auto& [cname, modelConstr]: component.getModel()->Constraints())
     {
-        TI idxType = Antares::Expressions::Visitors::TimeIndexVisitor(component, evalContext)
+        TI idxType = Antares::Expressions::Visitors::TimeIndexVisitor(component, contextProvider)
                        .dispatch(modelConstr.expression().RootNode());
         idxType = updateTimeIndexIfShouldForceScenario(idxType, forceExportForScenarioIndex);
 
@@ -243,9 +246,10 @@ void addPortEntries(ISimulationTable& simulationTable,
                     const TimeConversionMode& timeConversionMode,
                     std::optional<unsigned> scenario,
                     bool forceExportForScenarioIndex,
-                    const Antares::Expressions::Visitors::EvaluationContext& evalContext)
+                    const Antares::Optimisation::EvaluationContextProvider& contextProvider)
 {
     const auto& cid = component.Id();
+    auto evalContext = contextProvider.provide(component);
 
     for (const auto& [portFieldKey, portFieldDef]: component.getModel()->PortFieldDefinitions())
     {
@@ -255,7 +259,7 @@ void addPortEntries(ISimulationTable& simulationTable,
 
         auto portValue = evalVisitor.dispatch(portFieldDef.Definition().RootNode());
 
-        TI idxType = Antares::Expressions::Visitors::TimeIndexVisitor(component, evalContext)
+        TI idxType = Antares::Expressions::Visitors::TimeIndexVisitor(component, contextProvider)
                        .dispatch(portFieldDef.Definition().RootNode());
         idxType = updateTimeIndexIfShouldForceScenario(idxType, forceExportForScenarioIndex);
         // TODO: EvalVistior already uses a TimeIndexVisitor under the hood to know if the port
@@ -287,16 +291,14 @@ void addPortEntries(ISimulationTable& simulationTable,
     }
 }
 
-void FillSimulationTable(
-  ISimulationTable& simulationTable,
-  const ILinearProblem& linearProblem,
-  double objectiveValue,
-  const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>& components,
-  const ILinearProblemData* dataSeries,
-  const FillContext& fillContext,
-  unsigned currentBlock,
-  const TimeConversionMode& timeConversionMode,
-  bool forceExportForScenarioIndex)
+void FillSimulationTable(ISimulationTable& simulationTable,
+                         const ILinearProblem& linearProblem,
+                         double objectiveValue,
+                         const Antares::Modeler::Data& modelerData,
+                         const FillContext& fillContext,
+                         unsigned currentBlock,
+                         const TimeConversionMode& timeConversionMode,
+                         bool forceExportForScenarioIndex)
 {
     unsigned scenario = fillContext.getYear();
     std::map<std::string, double> solutions;
@@ -305,11 +307,11 @@ void FillSimulationTable(
         auto* var = linearProblem.getVariable(i);
         solutions.try_emplace(var->getName(), var->solutionValue());
     }
-    for (const auto& component: components | std::views::values)
+    for (const auto& component: modelerData.system->Components() | std::views::values)
     {
         EmptyScenario emptyScenario;
-        const Antares::Expressions::Visitors::EvaluationContext
-          evalContext(component.getParameterValues(), solutions, *dataSeries, emptyScenario);
+        Antares::Optimisation::EvaluationContextProvider
+          contextProvider(*modelerData.dataSeries, modelerData.scenarioGroupRepository, solutions);
 
         addVariableEntries(simulationTable,
                            linearProblem,
@@ -327,7 +329,7 @@ void FillSimulationTable(
                              timeConversionMode,
                              scenario,
                              forceExportForScenarioIndex,
-                             evalContext);
+                             contextProvider);
 
         addPortEntries(simulationTable,
                        fillContext,
@@ -336,7 +338,7 @@ void FillSimulationTable(
                        timeConversionMode,
                        scenario,
                        forceExportForScenarioIndex,
-                       evalContext);
+                       contextProvider);
     }
     addObjectiveValue(simulationTable, objectiveValue, currentBlock, scenario);
 }

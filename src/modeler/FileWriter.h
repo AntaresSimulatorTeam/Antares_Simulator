@@ -50,8 +50,7 @@ public:
     void writeSimulationTable(
       const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
       const Optimisation::LinearProblemApi::IMipSolution& solution,
-      const std::unordered_map<std::string, ModelerStudy::SystemModel::Component>& components,
-      Optimisation::LinearProblemApi::ILinearProblemData* dataSeries,
+      const Data& modelerData,
       const Optimisation::LinearProblemApi::FillContext& fillContext) const override;
     explicit FileWriter(std::filesystem::path path);
 

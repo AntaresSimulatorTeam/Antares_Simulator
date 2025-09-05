@@ -32,6 +32,9 @@
 #include <antares/expressions/visitors/TimeIndexVisitor.h>
 #include "antares/optimisation/linear-problem-api/ILinearProblemData.h"
 #include "antares/optimisation/linear-problem-api/IScenario.h"
+#include "antares/solver/optim-model-filler/EvaluationContextProvider.h"
+
+#include "MockEvaluationContextProvider.h"
 
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
@@ -92,13 +95,13 @@ struct BasicFixture: Registry<Node>
 
     Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
 
-    // TODO update these tests and add new cases
     EvaluationContext context;
+    MockEvaluationContextProvider contextProvider = MockEvaluationContextProvider(context);
     TimeIndexVisitor timeIndexVisitor;
 
     BasicFixture():
         context(system_parameters, variables, mockData, emptyScenario),
-        timeIndexVisitor(component, context)
+        timeIndexVisitor(component, contextProvider)
     {
     }
 };
@@ -205,7 +208,7 @@ BOOST_DATA_TEST_CASE_F(BasicFixture,
                        binaryOperator)
 {
     auto [root, parameter] = binaryOperator(*this, timeIndex);
-    TimeIndexVisitor timeIndexVisitor(component, context);
+    TimeIndexVisitor timeIndexVisitor(component, contextProvider);
     BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(root), timeIndex);
 
     Node* neg = create<NegationNode>(root);
@@ -227,7 +230,7 @@ BOOST_DATA_TEST_CASE_F(BasicFixture,
                        not_handled_node)
 {
     Node* nonHandldedNode = not_handled_node(*this);
-    TimeIndexVisitor timeIndexVisitor(component, context);
+    TimeIndexVisitor timeIndexVisitor(component, contextProvider);
     BOOST_CHECK_THROW(timeIndexVisitor.dispatch(nonHandldedNode), std::invalid_argument);
 }
 
@@ -287,7 +290,8 @@ BOOST_FIXTURE_TEST_CASE(test_overwrite_time_inde_from_component, BasicFixture)
       {},
       mockData,
       emptyScenario);
-    TimeIndexVisitor timeIndexVisitor1{component, context1};
+    auto provider1 = MockEvaluationContextProvider(context1);
+    TimeIndexVisitor timeIndexVisitor1{component, provider1};
     auto timeIndex = timeIndexVisitor1.dispatch(&parameterNode);
     BOOST_CHECK_EQUAL(timeIndex, TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
 
@@ -296,7 +300,8 @@ BOOST_FIXTURE_TEST_CASE(test_overwrite_time_inde_from_component, BasicFixture)
       {},
       mockData,
       emptyScenario);
-    TimeIndexVisitor timeIndexVisitor2{component, context2};
+    auto provider2 = MockEvaluationContextProvider(context2);
+    TimeIndexVisitor timeIndexVisitor2{component, provider2};
     timeIndex = timeIndexVisitor2.dispatch(&parameterNode);
     BOOST_CHECK_EQUAL(timeIndex, TimeIndex::VARYING_IN_TIME_AND_SCENARIO);
 }

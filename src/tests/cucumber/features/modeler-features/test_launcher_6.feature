@@ -7,11 +7,11 @@ Feature: 6 - Simple end-to-end tests to test port management
     Then the simulation succeeds
     And the objective value is 160
     And the modeler outputs contain the following entries
-      | component | output              | timestep | scenario | value |
-      | NG        | gen1_p              | 1        | 0        | 80    |
-      | NG        | gen2_p              | 1        | 0        | 20    |
-      | NG        | injection_port.flow | 1        | 0        | 100   |
-      | NL        | injection_port.flow |          |          | -100  |
+      | block | component | output              | timestep | scenario | value |
+      | 1     | NG        | gen1_p              | 1        | 0        | 80    |
+      | 1     | NG        | gen2_p              | 1        | 0        | 20    |
+      | 1     | NG        | injection_port.flow | 1        | 0        | 100   |
+      | 1     | NL        | injection_port.flow |          |          | -100  |
 
   @fast
   Scenario: 6.2: test system with 3 components : one balance node, one load (100 MW) and one component with two generators (with Pmax_1 = 80 MW & Pmax_2 = 200 MW) ; gen1 has a fixed cost. Two time steps.
@@ -61,4 +61,4 @@ Feature: 6 - Simple end-to-end tests to test port management
       | NG        | gen1_p              | 1        | 0        | 80    |
       | NG        | gen2_p              | 1        | 0        | 20    |
       | NG        | injection_port.flow | 1        | 0        | 100   |
-      | NL        | injection_port.flow |          |          | -100  |
+      | NL        | injection_port.flow | 1        | 0        | -100  |
