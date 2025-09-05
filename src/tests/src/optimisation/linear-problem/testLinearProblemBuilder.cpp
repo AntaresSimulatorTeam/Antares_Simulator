@@ -42,7 +42,7 @@ struct Fixture
         pb = std::make_unique<OrtoolsLinearProblem>(false, "sirius");
     }
 
-    std::vector<LinearProblemFiller*> fillers;
+    std::vector<std::unique_ptr<LinearProblemFiller>> fillers;
     LinearProblemData LP_Data;
     FillContext ctx = {0, 0, 0, 0, 0}; // dummy value for other tests than context
     std::unique_ptr<ILinearProblem> pb;
@@ -61,8 +61,7 @@ BOOST_FIXTURE_TEST_CASE(no_filler_given_to_builder___nothing_built, Fixture)
 
 BOOST_FIXTURE_TEST_CASE(one_var_filler___the_var_is_built, Fixture)
 {
-    auto oneVarFiller = std::make_unique<OneVarFiller>();
-    fillers = {oneVarFiller.get()};
+    fillers.push_back(std::make_unique<OneVarFiller>());
 
     LinearProblemBuilder lpBuilder(fillers);
     lpBuilder.build(*pb, LP_Data, ctx);
@@ -76,8 +75,7 @@ BOOST_FIXTURE_TEST_CASE(one_var_filler___the_var_is_built, Fixture)
 
 BOOST_FIXTURE_TEST_CASE(one_constraint_filler___the_constraint_is_built, Fixture)
 {
-    auto oneConstrFiller = std::make_unique<OneConstraintFiller>();
-    fillers = {oneConstrFiller.get()};
+    fillers.push_back(std::make_unique<OneConstraintFiller>());
 
     LinearProblemBuilder lpBuilder(fillers);
     lpBuilder.build(*pb, LP_Data, ctx);
@@ -89,10 +87,8 @@ BOOST_FIXTURE_TEST_CASE(one_constraint_filler___the_constraint_is_built, Fixture
 
 BOOST_FIXTURE_TEST_CASE(two_fillers_given_to_builder___all_is_built, Fixture)
 {
-    auto oneVarFiller = std::make_unique<OneVarFiller>();
-    auto oneConstrFiller = std::make_unique<OneConstraintFiller>();
-
-    fillers = {oneVarFiller.get(), oneConstrFiller.get()};
+    fillers.push_back(std::make_unique<OneVarFiller>());
+    fillers.push_back(std::make_unique<OneConstraintFiller>());
 
     LinearProblemBuilder lpBuilder(fillers);
     lpBuilder.build(*pb, LP_Data, ctx);
@@ -104,10 +100,9 @@ BOOST_FIXTURE_TEST_CASE(two_fillers_given_to_builder___all_is_built, Fixture)
 
 BOOST_FIXTURE_TEST_CASE(three_fillers_given_to_builder___3_vars_3_constr_are_built, Fixture)
 {
-    auto oneVarFiller = std::make_unique<OneVarFiller>();
-    auto oneConstrFiller = std::make_unique<OneConstraintFiller>();
-    auto twoVarsTwoConstrFiller = std::make_unique<TwoVarsTwoConstraintsFiller>();
-    fillers = {oneVarFiller.get(), oneConstrFiller.get(), twoVarsTwoConstrFiller.get()};
+    fillers.push_back(std::make_unique<OneVarFiller>());
+    fillers.push_back(std::make_unique<OneConstraintFiller>());
+    fillers.push_back(std::make_unique<TwoVarsTwoConstraintsFiller>());
 
     LinearProblemBuilder lpBuilder(fillers);
     lpBuilder.build(*pb, LP_Data, ctx);
@@ -118,8 +113,7 @@ BOOST_FIXTURE_TEST_CASE(three_fillers_given_to_builder___3_vars_3_constr_are_bui
 
 BOOST_FIXTURE_TEST_CASE(FillerWithContext, Fixture)
 {
-    auto varFiller = std::make_unique<VarFillerContext>();
-    fillers = {varFiller.get()};
+    fillers.push_back(std::make_unique<VarFillerContext>());
 
     ctx = FillContext(0, 5, 0, 5, 0);
 
@@ -132,10 +126,10 @@ BOOST_FIXTURE_TEST_CASE(FillerWithContext, Fixture)
     BOOST_CHECK_EQUAL(pb->variableCount(), 10); // 5 timestep * 2 scenario
 
     auto var1 = pb->lookupVariable("variable-ts0-sc0");
-    BOOST_CHECK_EQUAL(var1->getLb(), varFiller->timeseries[0][0]);
+    BOOST_CHECK_EQUAL(var1->getLb(), 1);
 
     auto var2 = pb->lookupVariable("variable-ts3-sc2");
-    BOOST_CHECK_EQUAL(var2->getLb(), varFiller->timeseries[3][2]);
+    BOOST_CHECK_EQUAL(var2->getLb(), 12);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

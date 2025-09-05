@@ -60,13 +60,11 @@ public:
     ~SystemLinearProblemBuilder() = default;
 
     void Provide(ILinearProblem& pb,
-                 const ModelerParameters& parameters,
                  ILinearProblemData* dataSeries,
                  const Optimisation::ScenarioGroupRepository& scenario_group_repository,
                  const FillContext& timeScenarioCtx)
     {
-        std::vector<std::unique_ptr<Optimisation::ComponentFiller>> fillers;
-        std::vector<LinearProblemFiller*> fillers_ptr;
+        std::vector<std::unique_ptr<LinearProblemFiller>> fillers;
         // All LP variables coordinates (component id, variable id, scenario, time step)
 
         for (const auto& [_, component]: system_->Components())
@@ -77,12 +75,8 @@ public:
                                                                       scenario_group_repository);
             fillers.push_back(std::move(cf));
         }
-        for (auto& component_filler: fillers)
-        {
-            fillers_ptr.push_back(component_filler.get());
-        }
 
-        LinearProblemBuilder linear_problem_builder(fillers_ptr);
+        LinearProblemBuilder linear_problem_builder(fillers);
 
         linear_problem_builder.build(pb, *dataSeries, timeScenarioCtx);
     }
@@ -133,7 +127,6 @@ void Modeler::solve() const
           parameters.lastTimeStep,  // global = local
           0};
         system_linear_problem.Provide(ortools_linear_problem,
-                                      parameters,
                                       data.dataSeries.get(),
                                       data.scenario_group_repository,
                                       timeScenarioCtx);
