@@ -716,8 +716,11 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
     // deprecated
     if (key == "simplex-range")
     {
-        // Parameter 'simplex-range' ignored :
-        // simplexOptimizationRange == sorWeek always 
+        if (value == "day")
+        {
+            logs.error("simplex-range : value 'day' is deprecated");
+            return false;
+        }
         return true;
     }
 
