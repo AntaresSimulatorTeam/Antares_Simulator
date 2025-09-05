@@ -437,8 +437,6 @@ public:
 
     //! Transmission capacities
     GlobalTransmissionCapacities transmissionCapacities;
-    //! Simplex optimization range (day/week)
-    const SimplexOptimization simplexOptimizationRange = sorWeek;
     //@}
 
     AdequacyPatch::AdqPatchParams adqPatchParams;

@@ -139,7 +139,7 @@ void SIM_InitialisationProblemeHebdo(Study& study,
     problem.OptimisationAvecVariablesEntieres = (study.parameters.unitCommitment.ucMode
                                                  == Antares::Data::UnitCommitmentMode::ucMILP);
 
-    problem.OptimisationAuPasHebdomadaire = (parameters.simplexOptimizationRange == Data::sorWeek);
+    problem.OptimisationAuPasHebdomadaire = true;
 
     switch (parameters.power.fluctuations)
     {

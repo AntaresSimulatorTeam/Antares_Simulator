@@ -395,7 +395,7 @@ void Optimization::onResetToDefault(void*)
             study.parameters.include.reserve.primary = true;
             study.parameters.include.reserve.spinning = true;
             study.parameters.include.exportMPS = Data::mpsExportStatus::NO_EXPORT;
-            study.parameters.simplexOptimizationRange = Data::sorWeek;
+            // study.parameters.simplexOptimizationRange = Data::sorWeek;
             study.parameters.include.unfeasibleProblemBehavior
               = Data::UnfeasibleProblemBehavior::ERROR_MPS;
 
@@ -448,6 +448,7 @@ void Optimization::refresh()
       Data::getDisplayName(study.parameters.include.unfeasibleProblemBehavior));
 
     // Simplex Optimization Range
+    /*
     if (Data::sorDay == study.parameters.simplexOptimizationRange)
     {
         pBtnSimplexOptimizationRange->image("images/16x16/calendar_day.png");
@@ -458,6 +459,9 @@ void Optimization::refresh()
         pBtnSimplexOptimizationRange->image("images/16x16/calendar_week.png");
         pBtnSimplexOptimizationRange->caption(wxT("Week"));
     }
+    */
+    pBtnSimplexOptimizationRange->image("images/16x16/calendar_week.png");
+    pBtnSimplexOptimizationRange->caption(wxT("Week"));
 }
 
 void Optimization::onPopupMenu(Component::Button&, wxMenu& menu, void*, const PopupInfo& info)
@@ -623,12 +627,14 @@ void Optimization::onSelectSimplexDay(wxCommandEvent&)
     auto study = GetCurrentStudy();
     if (!(!study))
     {
+        /*
         if (study->parameters.simplexOptimizationRange != Data::sorDay)
         {
             study->parameters.simplexOptimizationRange = Data::sorDay;
             refresh();
             MarkTheStudyAsModified();
         }
+        */
     }
 }
 
@@ -637,12 +643,14 @@ void Optimization::onSelectSimplexWeek(wxCommandEvent&)
     auto study = GetCurrentStudy();
     if (!(!study))
     {
+        /*
         if (study->parameters.simplexOptimizationRange != Data::sorWeek)
         {
             study->parameters.simplexOptimizationRange = Data::sorWeek;
             refresh();
             MarkTheStudyAsModified();
         }
+        */
     }
 }
 
