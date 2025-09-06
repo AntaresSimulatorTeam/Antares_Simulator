@@ -21,8 +21,15 @@
 #include <antares/solver/optim-model-filler/LinearExpressionEigen.h>
 
 LinearExpressionEigen::LinearExpressionEigen(int nTimesteps, int nVars):
-    coeffs_(Eigen::MatrixXd::Zero(nTimesteps, nVars)),
-    offsets_(Eigen::VectorXd::Zero(nTimesteps))
+    coeffs_(nTimesteps, nVars),
+    offsets_(nTimesteps)
+{
+}
+
+LinearExpressionEigen::LinearExpressionEigen(const Eigen::SparseMatrix<double>& coeffs,
+                                             const Eigen::VectorXd& offsets):
+    coeffs_(coeffs),
+    offsets_(offsets)
 {
 }
 
@@ -37,7 +44,7 @@ LinearExpressionEigen& LinearExpressionEigen::operator+=(const LinearExpressionE
 {
     coeffs_ += b.coeffs_;
     offsets_ += b.offsets_;
-    return a;
+    return *this;
 }
 
 LinearExpressionEigen LinearExpressionEigen::operator-(const LinearExpressionEigen& b) const
@@ -51,7 +58,7 @@ LinearExpressionEigen& LinearExpressionEigen::operator-=(const LinearExpressionE
 {
     coeffs_ -= b.coeffs_;
     offsets_ -= b.offsets_;
-    return a;
+    return *this;
 }
 
 LinearExpressionEigen LinearExpressionEigen::operator-() const
@@ -64,8 +71,8 @@ LinearExpressionEigen LinearExpressionEigen::operator-() const
 
 LinearExpressionEigen LinearExpressionEigen::operator*(const LinearExpressionEigen& b) const
 {
-    bool aHasVars = (coeffs_.cwiseAbs().maxCoeff() > 1e-12);
-    bool bHasVars = (b.coeffs_.cwiseAbs().maxCoeff() > 1e-12);
+    bool aHasVars = (coeffs_.nonZeros() > 0);
+    bool bHasVars = (b.coeffs_.nonZeros() > 0);
     if (aHasVars && bHasVars)
     {
         throw std::invalid_argument("A linear expression can't have quadratic terms.");
@@ -78,7 +85,21 @@ LinearExpressionEigen LinearExpressionEigen::operator*(const LinearExpressionEig
     }
     else if (!bHasVars)
     {
-        out.coeffs_ = coeffs_.array().colwise() * b.offsets_.array();
+        out.coeffs_ = coeffs_; //
+        for (int j = 0; j < coeffs_.cols(); ++j)
+        {
+            double scale = b.offsets_[j];
+            if (scale != 0.0)
+            {
+                out.coeffs_.col(j) *= scale;
+            }
+            else
+            {
+                out.coeffs_.col(j) = Eigen::SparseVector<double>(out.coeffs_.rows());
+            }
+        }
+
+        // offsets = offsets ∘ b.offsets
         out.offsets_ = offsets_.cwiseProduct(b.offsets_);
     }
     return out;
@@ -181,7 +202,7 @@ void LinearExpressionEigen::addVectorOffset(double value)
     }
 }
 
-void LinearExpressionEigen::setCol(int colIndex, const Eigen::VectorXd& col)
+void LinearExpressionEigen::setCol(int colIndex, Eigen::VectorXd& col)
 {
     if (col.size() != coeffs_.rows())
     {
@@ -190,7 +211,7 @@ void LinearExpressionEigen::setCol(int colIndex, const Eigen::VectorXd& col)
     coeffs_.col(colIndex) = col;
 }
 
-void LinearExpressionEigen::setRow(int rowIndex, const Eigen::VectorXd& row)
+void LinearExpressionEigen::setRow(int rowIndex, Eigen::VectorXd& row)
 {
     if (row.size() != coeffs_.cols())
     {

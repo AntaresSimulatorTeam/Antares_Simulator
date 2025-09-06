@@ -413,8 +413,6 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
                 addStaticConstraint(pb, linear_constraints, constraint.Id());
             }
         }
-    }
-}
 
 size_t ComponentFiller::getNbVars() const
 {

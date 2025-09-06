@@ -33,6 +33,10 @@ public:
     explicit TimeSeriesSet(std::string name, unsigned height);
     void add(const std::vector<double>& ts);
     double getData(unsigned tsNumber, unsigned hour) const override;
+    [[nodiscard]] std::span<const double> getData(
+      LinearProblemApi::IScenario::TimeSeriesNumber tsNumber,
+      unsigned firstHour,
+      unsigned lastHour) const override;
 
 private:
     unsigned height_ = 0;

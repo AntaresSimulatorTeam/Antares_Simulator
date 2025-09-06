@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <span>
 #include <stdexcept>
 #include <string>
 
@@ -69,6 +70,10 @@ public:
     [[nodiscard]] double getParameterValue(const std::string& key,
                                            unsigned int year,
                                            unsigned int hour) const;
+    std::span<const double> EvaluationContext::getParameterValue(const std::string& key,
+                                                                 unsigned int year,
+                                                                 unsigned int firstHour,
+                                                                 unsigned int lastHour) const;
 
     [[nodiscard]] ParameterType getParameterType(const std::string& key) const;
 

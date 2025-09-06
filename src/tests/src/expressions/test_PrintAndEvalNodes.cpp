@@ -623,6 +623,15 @@ struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearPr
     {
         return hour; // for test
     }
+
+    [[nodiscard]] std::span<const double> getData(const std::string& dataSetId,
+                                                  unsigned timeSeriesNumber,
+                                                  unsigned firstHour,
+                                                  unsigned lastHour) const override
+    {
+        static std::vector<double> data{0};
+        return data;
+    }
 };
 
 BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_param, MyDummyFixture)

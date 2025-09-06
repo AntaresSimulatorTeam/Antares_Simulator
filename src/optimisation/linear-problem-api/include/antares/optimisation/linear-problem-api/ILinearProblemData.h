@@ -22,6 +22,7 @@
 
 #pragma once
 
+#include <span>
 #include <string>
 #include <vector>
 
@@ -117,6 +118,11 @@ public:
     [[nodiscard]] virtual double getData(const std::string& dataSetId,
                                          unsigned timeSeriesNumber,
                                          unsigned hour) const
+      = 0;
+    [[nodiscard]] virtual std::span<const double> getData(const std::string& dataSetId,
+                                                          unsigned timeSeriesNumber,
+                                                          unsigned firstHour,
+                                                          unsigned lastHour) const
       = 0;
 };
 

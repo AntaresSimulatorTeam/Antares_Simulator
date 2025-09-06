@@ -45,9 +45,9 @@ namespace Antares::Optimization
  */
 struct LinearConstraint
 {
-    std::vector<std::vector<double>> coef_per_var;
-    std::vector<double> lb;
-    std::vector<double> ub;
+    Eigen::MatrixXd coef_per_var;
+    Eigen::VectorXd lb;
+    Eigen::VectorXd ub;
 };
 
 class ReadLinearConstraintVisitor: public Expressions::Visitors::NodeVisitor<LinearConstraint>

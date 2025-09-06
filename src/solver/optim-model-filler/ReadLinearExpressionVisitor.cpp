@@ -125,24 +125,37 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const VariableNode* nod
     const auto variableEnd = variableStart == *variableStartColumn_.rbegin()
                                ? nbModelVariables_
                                : variableStartColumn_.at(globalIndex + 1);
-    for (auto localTimeStep = fillContext_.getLocalFirstTimeStep();
-         localTimeStep < fillContext_.getLocalLastTimeStep();
-         ++localTimeStep)
+
+    if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
     {
-        for (auto variableIndex(variableStart); variableIndex < variableEnd; ++variableIndex)
+        for (auto localTimeStep = fillContext_.getLocalFirstTimeStep();
+             localTimeStep < fillContext_.getLocalLastTimeStep();
+             ++localTimeStep)
         {
-            out.addCoeff(localTimeStep, variableIndex, 1);
+            out.addCoeff(localTimeStep, variableStart, 1);
         }
     }
-    // if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
-    // {
-    //     out.addVectorCoeff(variableStart, 1);
-    //     return out;
-    // }
-    // for (auto col = variableStart; col < variableStart + nbtimeSteps_; col++)
-    // {
-    //     out.addVectorCoeff(col, 1);
-    // }
+    // else time-dep only hanled    //  check if var is time-dep then nbTimeStep == variableEnd -
+    // variableStart+1
+    if (node->timeIndex() == TimeIndex::VARYING_IN_TIME_ONLY
+        || node->timeIndex() == TimeIndex::VARYING_IN_TIME_AND_SCENARIO) /* scenario not handled !*/
+    {
+        for (auto localTimeStep = fillContext_.getLocalFirstTimeStep();
+             localTimeStep < fillContext_.getLocalLastTimeStep();
+             ++localTimeStep)
+        {
+            for (auto variableIndex(variableStart); variableIndex < variableEnd; ++variableIndex)
+            {
+                out.addCoeff(localTimeStep, variableIndex, 1);
+            }
+        }
+    }
+    else
+    {
+        throw std::invalid_argument(
+          "the support of scenario dependent variables is not available for now :(" + node->value()
+          + ").");
+    }
     return out;
 }
 
@@ -162,23 +175,22 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const ParameterNode* no
     LinearExpressionEigen out(nbtimeSteps_, nbModelVariables_);
     if (systemParameter.type == ParameterType::CONSTANT)
     {
-        out.addVectorOffset(evalContext_.getSystemParameterValueAsDouble(node->value()));
+        out.setOffset(
+          Eigen::VectorXd::Constant(nbtimeSteps_,
+                                    evalContext_.getSystemParameterValueAsDouble(node->value())));
         return out;
     }
     // only dependent
 
     int idx = 0;
-    for (auto localTimeStep = fillContext_.getLocalFirstTimeStep();
-         localTimeStep <= fillContext_.getLocalLastTimeStep();
-         ++localTimeStep)
-    {
-        auto globalTimeStep = fillContext_.getGlobalFirstTimeStep() + idx;
-        auto value = evalContext_.getParameterValue(node->value(),
-                                                    fillContext_.getYear(),
-                                                    globalTimeStep);
-        out.addOffset(localTimeStep, value);
-        idx++;
-    }
+    // assume glo nb timeStep == nbtimeSteps
+    const auto& parmeters = evalContext_.getParameterValue(node->value(),
+                                                           fillContext_.getYear(),
+                                                           fillContext_.getGlobalFirstTimeStep(),
+                                                           fillContext_.getGlobalLastTimeStep());
+    out.setOffset(
+      {nbtimeSteps_, Eigen::Map<const Eigen::VectorXd>(parmeters.data(), parmeters.size())});
+
     return out;
 }
 
@@ -186,7 +198,7 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const LiteralNode* node
 {
     // TODO
     LinearExpressionEigen out(nbtimeSteps_, nbModelVariables_);
-    out.addVectorOffset(node->value());
+    out.setOffset(Eigen::VectorXd::Constant(nbtimeSteps_, node->value()));
     return out;
 }
 
@@ -299,7 +311,8 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const TimeShiftNode* no
     const auto expression = dispatch(node->left());
     // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
     const auto timeShift = static_cast<int>(evalVisitor_.dispatch(node->right()).valueAsDouble());
-    return {cyclicRowShiftPerm(expression.coefPerVar(), timeShift)};
+    return {cyclicRowShiftPerm(expression.coefPerVar(), timeShift),
+            cyclicRowShiftPerm(expression.offset(), timeShift)};
 }
 
 LinearExpressionEigen ReadLinearExpressionVisitor::TimeIndex(
@@ -342,7 +355,8 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const TimeSumNode* node
     LinearExpressionEigen to_return(nbtimeSteps_, nbModelVariables_);
     for (auto timeShift = from; timeShift <= to; ++timeShift)
     {
-        to_return += TimeShift(expression, timeShift);
+        to_return += {cyclicRowShiftPerm(expression.coefPerVar(), timeShift),
+                      cyclicRowShiftPerm(expression.offset(), timeShift)};
     }
     return to_return;
 }

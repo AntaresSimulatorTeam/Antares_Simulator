@@ -85,6 +85,18 @@ double EvaluationContext::getParameterValue(const std::string& key,
     return data_.getData(parameters_types_and_values_.at(key).value, time_series_number, hour);
 }
 
+std::span<const double> EvaluationContext::getParameterValue(const std::string& key,
+                                                             unsigned int year,
+                                                             unsigned int firstHour,
+                                                             unsigned int lastHour) const
+{
+    IScenario::TimeSeriesNumber time_series_number = scenario_.getData(year);
+    return data_.getData(parameters_types_and_values_.at(key).value,
+                         time_series_number,
+                         firstHour,
+                         lastHour);
+}
+
 ParameterType EvaluationContext::getParameterType(const std::string& key) const
 {
     return parameters_types_and_values_.at(key).type;

@@ -67,7 +67,6 @@ private:
     LinearExpressionEigen visit(const Expressions::Nodes::PortFieldSumNode* node) override;
     LinearExpressionEigen visit(const Expressions::Nodes::ComponentVariableNode* node) override;
     LinearExpressionEigen visit(const Expressions::Nodes::ComponentParameterNode* node) override;
-    LinearExpressionEigen TimeShift(const LinearExpressionEigen& left, int timeShift) const;
     LinearExpressionEigen visit(const Expressions::Nodes::TimeShiftNode* node) override;
     LinearExpressionEigen TimeIndex(const LinearExpressionEigen& expression, int timeIndex) const;
     LinearExpressionEigen visit(const Expressions::Nodes::TimeIndexNode* node) override;

@@ -19,12 +19,15 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 #include <Eigen/Dense>
+#include <Eigen/Sparse>
 #pragma once
 
 class LinearExpressionEigen
 {
 public:
     LinearExpressionEigen(int nTimesteps, int nVars);
+    LinearExpressionEigen(const Eigen::SparseMatrix<double>& coeffs,
+                          const Eigen::VectorXd& offsets);
 
     LinearExpressionEigen operator+(const LinearExpressionEigen& b) const;
 
@@ -58,7 +61,12 @@ public:
         return offsets_;
     }
 
-    const Eigen::MatrixXd& coefPerVar() const
+    void setOffset(const Eigen::VectorXd& offsets)
+    {
+        offsets_ = offsets;
+    }
+
+    const Eigen::SparseMatrix<double>& coefPerVar() const
     {
         return coeffs_;
     }
@@ -67,6 +75,6 @@ public:
     void setRow(int rowIndex, const Eigen::VectorXd& row);
 
 private:
-    Eigen::MatrixXd coeffs_;  // [nTimesteps × nVars]
+    Eigen::SparseMatrix<double, Eigen::RowMajor> coeffs_; // [nTimesteps × nVars]
     Eigen::VectorXd offsets_; // [nTimesteps]
 };
