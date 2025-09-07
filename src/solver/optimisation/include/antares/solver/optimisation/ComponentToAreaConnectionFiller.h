@@ -23,7 +23,7 @@
 
 #include "antares/optimisation/linear-problem-api/linearProblemFiller.h"
 #include "antares/solver/optim-model-filler/LinearExpressionEigen.h"
-#include "antares/solver/optim-model-filler/VariableDictionary.h"
+#include "antares/solver/optim-model-filler/VariableContainer.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/study/system-model/system.h"
 
@@ -41,8 +41,7 @@ class ComponentToAreaConnectionFiller: public Optimisation::LinearProblemApi::Li
 {
 public:
     explicit ComponentToAreaConnectionFiller(const PROBLEME_HEBDO* problemeHebdo,
-      const std::vector<std::vector<Optimisation::LinearProblemApi::IMipVariable*>>&
-        modelerVariableDictionary);
+      const VariableContainer variableContainer& variableContainer);
     void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
                       const Optimisation::LinearProblemApi::FillContext& ctx) override;
@@ -56,8 +55,7 @@ public:
 private:
     const PROBLEME_HEBDO* problemeHebdo_;
     const ModelerStudy::SystemModel::System* modelerSystem_;
-    const std::vector<std::vector<Optimisation::LinearProblemApi::IMipVariable*>>&
-      modelerVariableDictionary_;
+    const VariableContainer& variableContainer_;
 
     std::map<std::string, unsigned> areaIndices_;
 
@@ -69,7 +67,6 @@ private:
                                    const LinearExpressionEigen& linearExpression,
                                    const Optimisation::LinearProblemApi::FillContext& ctx,
                                    const std::string& areaId) const;
-    const std::vector<unsigned>& getVariableStartColumn() const;
     void addComponentPortContributionToArea(
       Optimisation::LinearProblemApi::ILinearProblem& pb,
       Optimisation::LinearProblemApi::ILinearProblemData& data,

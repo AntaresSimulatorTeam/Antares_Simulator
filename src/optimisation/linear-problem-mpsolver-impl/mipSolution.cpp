@@ -81,7 +81,7 @@ double OrtoolsMipSolution::getOptimalValue(const LinearProblemApi::IMipVariable*
 }
 
 std::vector<double> OrtoolsMipSolution::getOptimalValues(
-  const std::vector<LinearProblemApi::IMipVariable*>& vars) const
+  const VariableContainer& vars) const
 {
     std::vector<double> solution;
     solution.reserve(vars.size());

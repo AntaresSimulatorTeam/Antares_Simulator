@@ -50,39 +50,12 @@ namespace Antares::Optimisation
 {
 VariablesBulkAddition::VariablesBulkAddition(
   Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
-  std::vector<std::vector<LinearProblemApi::IMipVariable*>>& variableDictionary):
+  VariableContainer& variableDictionary):
     linear_problem_(linear_problem),
-    variableDictionary(variableDictionary)
+    variableDictionary_(variableDictionary)
 {
 }
 
-void VariablesBulkAddition::checkVariableDictionary(const std::string& compoId,
-                                                    const std::string& variableId,
-                                                    unsigned int modelVariableIndex,
-                                                    unsigned localIndex) const
-{
-    // TOdo reserve the dict
-
-    if (const auto size = variableDictionary.size(); size == modelVariableIndex) // create the entry
-    {
-        variableDictionary.push_back({});
-    }
-    else if (modelVariableIndex > size)
-    {
-        throw std::runtime_error("can not add variable " + variableId + "from component "
-                                 + compoId);
-    }
-    auto& entry = variableDictionary[modelVariableIndex];
-    if (const auto varsSize = entry.size(); varsSize == localIndex)
-    {
-        entry.push_back(nullptr);
-    }
-    else if (localIndex > varsSize)
-    {
-        throw std::runtime_error("can not add variable " + variableId + "from component "
-                                 + compoId);
-    }
-}
 
 void VariablesBulkAddition::addVariable(const std::string& compoId,
                                         const std::string& variableId,
@@ -92,6 +65,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
                                         bool integer,
                                         const Optimization::Dimensions& dim) const
 {
+    variableDictionary_.addStartColumn(modelVariableIndex);
     for (const auto& s: dim.getScenarioIndices())
     {
         for (const auto t: dim.getTimesteps())
@@ -101,12 +75,11 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
               static_cast<Optimization::MCYearAndTime::MCYear>(s));
             const auto ts = buildOptional(dim.isTimeDependent(), t);
             auto localIndex = s * dim.getNumberOfTimesteps() + t;
-            checkVariableDictionary(compoId, variableId, modelVariableIndex, localIndex);
-            variableDictionary[modelVariableIndex][localIndex] = linear_problem_.addVariable(
-              lb,
-              ub,
-              integer,
-              buildVariableName(compoId, variableId, year, ts));
+            variableDictionary_.addVariable(
+              linear_problem_.addVariable(lb,
+                                          ub,
+                                          integer,
+                                          buildVariableName(compoId, variableId, year, ts)));
         }
     }
 }
@@ -127,7 +100,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
         errMessage << "requested " << count << " variables but lb size = " << lb.size();
         throw BoundsSizeMismatch(errMessage.str());
     }
-
+variableDictionary_.addStartColumn(modelVariableIndex);
     for (const auto& s: dim.getScenarioIndices())
     {
         for (const auto t: dim.getTimesteps())
@@ -138,12 +111,11 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
             const auto ts = buildOptional(dim.isTimeDependent(), t);
             auto localIndex = s * dim.getNumberOfTimesteps() + t;
 
-            checkVariableDictionary(compoId, variableId, modelVariableIndex, localIndex);
-            variableDictionary[modelVariableIndex][localIndex] = linear_problem_.addVariable(
-              lb.at(t), /*use localIndex*/
-              ub,
-              integer,
-              buildVariableName(compoId, variableId, year, ts));
+            variableDictionary_.addVariable(
+              linear_problem_.addVariable(lb.at(t), /*use localIndex*/
+                                          ub,
+                                          integer,
+                                          buildVariableName(compoId, variableId, year, ts)));
         }
     }
 }
@@ -163,7 +135,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
         errMessage << "requested " << count << " variables but ub size = " << ub.size();
         throw BoundsSizeMismatch(errMessage.str());
     }
-
+    variableDictionary_.addStartColumn(modelVariableIndex);
     for (const auto& s: dim.getScenarioIndices())
     {
         for (const auto t: dim.getTimesteps())
@@ -174,12 +146,11 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
             const auto ts = buildOptional(dim.isTimeDependent(), t);
             auto localIndex = s * dim.getNumberOfTimesteps() + t;
 
-            checkVariableDictionary(compoId, variableId, modelVariableIndex, localIndex);
-            variableDictionary[modelVariableIndex][localIndex] = linear_problem_.addVariable(
-              lb,
-              ub.at(t), /*use localIndex*/
-              integer,
-              buildVariableName(compoId, variableId, year, ts));
+            variableDictionary_.addVariable(
+              linear_problem_.addVariable(lb,
+                                          ub.at(t), /*use localIndex*/
+                                          integer,
+                                          buildVariableName(compoId, variableId, year, ts)));
         }
     }
 }
@@ -200,7 +171,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
                    << " and ub size = " << ub.size();
         throw BoundsSizeMismatch(errMessage.str());
     }
-
+variableDictionary_.addStartColumn(modelVariableIndex);
     for (const auto& s: dim.getScenarioIndices())
     {
         for (const auto t: dim.getTimesteps())
@@ -210,12 +181,11 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
               static_cast<Optimization::MCYearAndTime::MCYear>(s));
             const auto ts = buildOptional(dim.isTimeDependent(), t);
             auto localIndex = s * dim.getNumberOfTimesteps() + t;
-            checkVariableDictionary(compoId, variableId, modelVariableIndex, localIndex);
-            variableDictionary[modelVariableIndex][localIndex] = linear_problem_.addVariable(
-              lb.at(t), /*use localIndex*/
-              ub.at(t), /*use localIndex*/
-              integer,
-              buildVariableName(compoId, variableId, year, ts));
+            variableDictionary_.addVariable(
+              linear_problem_.addVariable(lb.at(t), /*use localIndex*/
+                                          ub.at(t), /*use localIndex*/
+                                          integer,
+                                          buildVariableName(compoId, variableId, year, ts)));
         }
     }
 }
@@ -239,10 +209,10 @@ std::string VariablesBulkAddition::buildVariableName(
 }
 
 ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& component,
-  std::vector<std::vector<LinearProblemApi::IMipVariable*>>& variableDictionary,
-  const ScenarioGroupRepository& scenarioGroupRepository):
+                                 VariableContainer& solverVariables,
+                                 const ScenarioGroupRepository& scenarioGroupRepository):
     component_(component),
-    variableDictionary_(variableDictionary),
+    solverVariables_(solverVariables),
     scenarioGroupRepository_(scenarioGroupRepository)
 {
 }
@@ -302,7 +272,7 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
               [&pb, &variable, this, &dim, &modelVariableGlobalIndex](const auto& lb_,
                                                                       const auto& ub_)
               {
-                  VariablesBulkAddition(pb, variableDictionary_)
+                  VariablesBulkAddition(pb, solverVariables_)
                     .addVariable(component_.Id(),
                                  variable.Id(),
                                  modelVariableGlobalIndex,
@@ -319,7 +289,7 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
             // No time component
             const Optimization::Dimensions dim({}, {});
 
-            VariablesBulkAddition(pb, variableDictionary_)
+            VariablesBulkAddition(pb, solverVariables_)
               .addVariable(component_.Id(),
                            variable.Id(),
                            modelVariableGlobalIndex,
@@ -338,12 +308,14 @@ void ComponentFiller::addStaticConstraint(Optimisation::LinearProblemApi::ILinea
     auto* ct = pb.addConstraint(linear_constraint.lb(0),
                                 linear_constraint.ub(0),
                                 component_.Id() + "." + constraint_id);
+    const auto& solverVariables = solverVariables_.getVariables();
 
-    for (Eigen::SparseMatrix<double>::InnerIterator it(linear_constraint.coef_per_var, 0); it; ++it)
+    for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator
+           it(linear_constraint.coef_per_var, 0);
+         it;
+         ++it)
     {
-        const auto& variables = variableDictionary_.at(it.col());
-
-        ct->setCoefficient(variables.at(0), it.value());
+        ct->setCoefficient(solverVariables.at(it.col()), it.value());
     }
 }
 
@@ -356,6 +328,8 @@ void ComponentFiller::addTimeDependentConstraints(
     const Optimization::Dimensions dim(
       Optimization::IntegerInterval{ctx.getYear(), ctx.getYear()}, /*TODO Handle range of year ? */
       Optimization::IntegerInterval(ctx.getLocalFirstTimeStep(), ctx.getLocalLastTimeStep()));
+    const auto& solverVariables = solverVariables_.getVariables();
+
     for (const auto s: dim.getScenarioIndices()) // TODO
     {
         for (const auto t: dim.getTimesteps())
@@ -366,14 +340,12 @@ void ComponentFiller::addTimeDependentConstraints(
                                         component_.Id() + "." + constraint_id + '_'
                                           + std::to_string(t));
 
-            for (Eigen::SparseMatrix<double>::InnerIterator it(linear_constraints.coef_per_var,
-                                                               localIndex);
+            for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator
+                   it(linear_constraints.coef_per_var, localIndex);
                  it;
                  ++it)
             {
-                const auto& variables = variableDictionary_.at(it.col());
-
-                ct->setCoefficient(variables.at(localIndex), it.value());
+                ct->setCoefficient(solverVariables.at(it.col()), it.value());
             }
         }
     }
@@ -391,8 +363,8 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
     Optimization::ReadLinearConstraintVisitor visitor(evaluationContext,
                                                       ctx,
                                                       component_,
-                                                      getNbVars(),
-                                                      getVariableStartColumn());
+                                                      solverVariables_.getVariables().size(),
+                                                      solverVariables_.getVariableStartColumn());
     for (const auto& constraint: component_.getModel()->Constraints() | std::views::values)
     {
         auto* root_node = constraint.expression().RootNode();
@@ -411,34 +383,7 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
     }
 }
 
-size_t ComponentFiller::getNbVars() const
-{
-    return std::accumulate(variableDictionary_.begin(),
-                           variableDictionary_.end(),
-                           0,
-                           [](size_t nbVars,
-                              const std::vector<LinearProblemApi::IMipVariable*>& modelVar)
-                           { return nbVars += modelVar.size(); });
-}
 
-const std::vector<unsigned>& ComponentFiller::getVariableStartColumn() const
-{
-    static std::vector<unsigned> startColumn(variableDictionary_.size());
-    unsigned i = 0;
-    for (const auto& variables: variableDictionary_)
-    {
-        if (i == 0)
-        {
-            startColumn[i] = 0;
-        }
-        else
-        {
-            startColumn[i] = startColumn.at(i - 1) + variableDictionary_.at(i - 1).size();
-        }
-        ++i;
-    }
-    return startColumn;
-}
 
 void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProblem& pb,
                                    Optimisation::LinearProblemApi::ILinearProblemData& data,
@@ -455,11 +400,12 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
                                                                data,
                                                                scenario);
 
+    const auto& solverVariables = solverVariables_.getVariables();
     Optimization::ReadLinearExpressionVisitor visitor(evaluationContext,
                                                       ctx,
                                                       component_,
-                                                      getNbVars(),
-                                                      getVariableStartColumn());
+                                                      solverVariables.size(),
+                                                      solverVariables_.getVariableStartColumn());
 
     const auto linearExpression = visitor.dispatch(model->Objective().RootNode());
 
@@ -479,10 +425,12 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
         for (const auto t: dim.getTimesteps())
         {
             const auto localIndex = s * dim.getNumberOfTimesteps() + t;
-            for (Eigen::SparseMatrix<double>::InnerIterator it(coefPerVars, localIndex); it; ++it)
+            for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator it(coefPerVars,
+                                                                                localIndex);
+                 it;
+                 ++it)
             {
-                const auto& variables = variableDictionary_.at(it.col());
-                pb.setObjectiveCoefficient(variables.at(localIndex), it.value());
+                pb.setObjectiveCoefficient(solverVariables.at(it.col()), it.value());
             }
         }
     }

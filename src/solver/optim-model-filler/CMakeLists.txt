@@ -18,6 +18,7 @@ set(SRC_optim_model_filler
         include/antares/solver/optim-model-filler/VariableDictionary.h
         include/antares/solver/optim-model-filler/scenarioGroupRepo.h
         include/antares/solver/optim-model-filler/LinearExpressionEigen.h
+        include/antares/solver/optim-model-filler/VariableContainer.h
         scenarioGroupRepo.cpp
         scenarioGroupRepoExceptions.cpp
 )

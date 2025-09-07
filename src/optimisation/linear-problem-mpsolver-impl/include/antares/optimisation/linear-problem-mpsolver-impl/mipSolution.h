@@ -27,6 +27,7 @@
 #include <vector>
 
 #include <antares/optimisation/linear-problem-api/mipSolution.h>
+#include "antares/solver/optim-model-filler/VariableContainer.h"
 
 namespace Antares::Optimisation::LinearProblemMpsolverImpl
 {
@@ -43,7 +44,7 @@ public:
     [[nodiscard]] double getObjectiveValue() const override;
     [[nodiscard]] double getOptimalValue(const LinearProblemApi::IMipVariable* var) const override;
     [[nodiscard]] std::vector<double> getOptimalValues(
-      const std::vector<LinearProblemApi::IMipVariable*>& vars) const override;
+      const VariableContainer& vars) const override;
     [[nodiscard]] const std::map<std::string, double>& getOptimalValues() const override;
 
 private:

@@ -27,6 +27,7 @@
 #include "antares/solver/optim-model-filler/VariableDictionary.h"
 
 #include "ReadLinearConstraintVisitor.h"
+#include "VariableContainer.h"
 
 namespace Antares::ModelerStudy::SystemModel
 {
@@ -57,8 +58,8 @@ public:
 
     /// Create a ComponentFiller for a Component
     explicit ComponentFiller(const ModelerStudy::SystemModel::Component& component,
-      std::vector<std::vector<LinearProblemApi::IMipVariable*>>& variableDictionary,
-      const ScenarioGroupRepository& scenarioGroupRepository);
+                             VariableContainer& solverVariables,
+                             const ScenarioGroupRepository& scenarioGroupRepository);
 
     void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
@@ -67,7 +68,6 @@ public:
     void addConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
                         Optimisation::LinearProblemApi::ILinearProblemData& data,
                         const Optimisation::LinearProblemApi::FillContext& ctx) override;
-    size_t getNbVars() const;
     const std::vector<unsigned int>& getVariableStartColumn() const;
 
     void addObjective(Optimisation::LinearProblemApi::ILinearProblem& pb,
@@ -88,7 +88,7 @@ private:
     bool IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node) const;
 
     const ModelerStudy::SystemModel::Component& component_;
-    std::vector<std::vector<LinearProblemApi::IMipVariable*>>& variableDictionary_;
+    VariableContainer& solverVariables_;
     const ScenarioGroupRepository& scenarioGroupRepository_;
 };
 
@@ -97,11 +97,7 @@ class VariablesBulkAddition
 public:
     VariablesBulkAddition(
       Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
-      std::vector<std::vector<LinearProblemApi::IMipVariable*>>& variableDictionary);
-    void checkVariableDictionary(const std::string& compoId,
-                                 const std::string& variableId,
-                                 unsigned int modelVariableIndex,
-                                 unsigned localIndex) const;
+                          VariableContainer& variableDictionary);
 
     void addVariable(const std::string& compoId,
                      const std::string& variableId,
@@ -147,6 +143,6 @@ public:
 
 private:
     Optimisation::LinearProblemApi::ILinearProblem& linear_problem_;
-    std::vector<std::vector<LinearProblemApi::IMipVariable*>>& variableDictionary;
+    VariableContainer& variableDictionary_;
 };
 } // namespace Antares::Optimisation

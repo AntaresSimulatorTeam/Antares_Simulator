@@ -70,7 +70,7 @@ public:
         for (const auto& component: system_->Components())
         {
             auto cf = std::make_unique<Optimisation::ComponentFiller>(component,
-                                                                      variableDictionary_,
+                                                                      variableContainer_,
                                                                       scenario_group_repository);
             fillers.push_back(std::move(cf));
         }
@@ -84,14 +84,14 @@ public:
         linear_problem_builder.build(pb, *dataSeries, timeScenarioCtx);
     }
 
-    [[nodiscard]] const std::vector<std::vector<IMipVariable*>>& getVariableDictionary() const
+    [[nodiscard]] const VariableContainer& getVariableDictionary() const
     {
-        return variableDictionary_;
+        return variableContainer_;
     }
 
 private:
     const ModelerStudy::SystemModel::System* system_;
-    std::vector<std::vector<IMipVariable*>> variableDictionary_;
+    VariableContainer variableContainer_;
 };
 
 void Modeler::solve() const

@@ -35,10 +35,10 @@ namespace Antares::Optimization
 {
 ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
   const PROBLEME_HEBDO* problemeHebdo,
-  const std::vector<std::vector<IMipVariable*>>& modelerVariableDictionary):
+  const VariableContainer variableContainer& variableContainer):
     problemeHebdo_(problemeHebdo),
     modelerSystem_(problemeHebdo->modelerSystem),
-    modelerVariableDictionary_(modelerVariableDictionary)
+    variableContainer_(variableContainer)
 {
     int i = 0;
     for (auto name: problemeHebdo_->NomsDesPays)
@@ -102,6 +102,8 @@ void ComponentToAreaConnectionFiller::addExpressionToConstraint(
     // }
     std::string lowerAreaId = areaId;
     boost::algorithm::to_lower(lowerAreaId);
+    const auto& solverVariables = variableContainer_.getVariables();
+
     for (auto localIndex(ctx.getLocalFirstTimeStep()); localIndex <= ctx.getLocalLastTimeStep();
          ++localIndex)
     {
@@ -114,9 +116,7 @@ void ComponentToAreaConnectionFiller::addExpressionToConstraint(
              it;
              ++it)
         {
-            const auto& variables = modelerVariableDictionary_.at(it.col());
-
-            areaBalanceConstraint->setCoefficient(variables.at(localIndex), it.value());
+            areaBalanceConstraint->setCoefficient(solverVariables.at(it.col()), it.value());
         }
         double offset = linearExpression.offset()(localIndex);
         areaBalanceConstraint->setBounds(areaBalanceConstraint->getLb() + offset,
@@ -135,25 +135,6 @@ public:
         return 1; // Default rank for empty groupId
     }
 };
-// TODO duplicated  from ComponentFiller
-const std::vector<unsigned>& ComponentToAreaConnectionFiller::getVariableStartColumn() const
-{
-    static std::vector<unsigned> startColumn(modelerVariableDictionary_.size());
-    unsigned i = 0;
-    for (const auto& variables: modelerVariableDictionary_)
-    {
-        if (i == 0)
-        {
-            startColumn[i] = 0;
-        }
-        else
-        {
-            startColumn[i] = startColumn.at(i - 1) + modelerVariableDictionary_.at(i - 1).size();
-        }
-        ++i;
-    }
-    return startColumn;
-}
 
 void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
   ILinearProblem& pb,
@@ -170,8 +151,8 @@ void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
     ReadLinearExpressionVisitor visitor(connectedComponentEvalContext,
                                         ctx,
                                         component,
-                                        modelerVariableDictionary_.size(),
-                                        getVariableStartColumn());
+                                        variableContainer_.getVariables().size(),
+                                        variableContainer_.getVariableStartColumn());
     auto linearExpression = visitor.dispatch(component.nodeAtPortField(portId, injectionFieldId));
     addExpressionToConstraint(pb, linearExpression, ctx, areaId);
 }

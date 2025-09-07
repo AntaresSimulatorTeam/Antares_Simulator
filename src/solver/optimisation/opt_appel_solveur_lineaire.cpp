@@ -96,7 +96,7 @@ static void fillModelerComponents(
   std::vector<LinearProblemFiller*>& fillersCollection,
   const ModelerStudy::SystemModel::System* modelerSystem,
   const Optimisation::ScenarioGroupRepository& scenarioGroupRepository,
-  std::vector<std::vector<IMipVariable*>>& variableDictionary)
+  VariableContainer& variablesContainer)
 {
     if (!modelerSystem)
     {
@@ -108,7 +108,7 @@ static void fillModelerComponents(
     {
         componentFillers.push_back(
           std::make_unique<Optimisation::ComponentFiller>(component,
-                                                          variableDictionary,
+                                                          variablesContainer,
                                                           scenarioGroupRepository));
         // TODO: use scenario group repository
     }
@@ -153,10 +153,10 @@ MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
     LegacyFiller legacyOrtoolsFiller(problemeHebdo, namedProblems);
     std::vector<LinearProblemFiller*> fillersCollection = {&legacyOrtoolsFiller};
 
-    std::vector<std::vector<IMipVariable*>> variableDictionary;
+    VariableContainer variableContainer;
     std::vector<std::unique_ptr<Optimisation::ComponentFiller>> componentFillers;
     ComponentToAreaConnectionFiller componentToAreaConnectionFiller(problemeHebdo,
-                                                                    variableDictionary);
+                                                                    variableContainer);
     if (problemeHebdo->modelerSystem && problemeHebdo->scenarioGroupRepository)
     {
         // All LP variables coordinates (component id, variable id, scenario, time step)
@@ -164,7 +164,7 @@ MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
                               fillersCollection,
                               problemeHebdo->modelerSystem,
                               *problemeHebdo->scenarioGroupRepository,
-                              variableDictionary);
+                              variableContainer);
 
         // Add compatibility filler that connects components to areas
         // Must be the last one, because it uses constraints defined by the other fillers !!
