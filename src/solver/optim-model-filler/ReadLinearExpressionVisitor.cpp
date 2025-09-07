@@ -188,8 +188,8 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const ParameterNode* no
     // assume global nb timeStep == nbtimeSteps
     const auto& parameters = evalContext_.getParameterValue(node->value(),
                                                             fillContext_.getYear(),
-                                                            fillContext_.getGlobalFirstTimeStep(),
-                                                            fillContext_.getGlobalLastTimeStep());
+      fillContext_.getGlobalFirstTimeStep() + fillContext_.getLocalFirstTimeStep(),
+      fillContext_.getGlobalFirstTimeStep() + fillContext_.getLocalLastTimeStep());
     out.setOffset(Eigen::Map<const Eigen::VectorXd>(parameters.data(), parameters.size()));
 
     return out;
