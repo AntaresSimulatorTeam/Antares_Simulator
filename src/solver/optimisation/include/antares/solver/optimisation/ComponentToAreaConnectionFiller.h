@@ -41,7 +41,7 @@ class ComponentToAreaConnectionFiller: public Optimisation::LinearProblemApi::Li
 {
 public:
     explicit ComponentToAreaConnectionFiller(const PROBLEME_HEBDO* problemeHebdo,
-      const VariableContainer variableContainer& variableContainer);
+                                             const VariableContainer& variableContainer);
     void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
                       const Optimisation::LinearProblemApi::FillContext& ctx) override;

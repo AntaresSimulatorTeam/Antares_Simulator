@@ -35,7 +35,7 @@ namespace Antares::Optimization
 {
 ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
   const PROBLEME_HEBDO* problemeHebdo,
-  const VariableContainer variableContainer& variableContainer):
+  const VariableContainer& variableContainer):
     problemeHebdo_(problemeHebdo),
     modelerSystem_(problemeHebdo->modelerSystem),
     variableContainer_(variableContainer)
