@@ -88,7 +88,7 @@ IMipConstraint* ComponentToAreaConnectionFiller::getBalanceConstraint(ILinearPro
 
 void ComponentToAreaConnectionFiller::addExpressionToConstraint(
   ILinearProblem& pb,
-  const LinearExpression& linearExpression,
+  const LinearExpressionEigen& linearExpression,
   const FillContext& ctx,
   const std::string& areaId) const
 {
@@ -107,24 +107,17 @@ void ComponentToAreaConnectionFiller::addExpressionToConstraint(
     {
         IMipConstraint* areaBalanceConstraint = getBalanceConstraint(pb, lowerAreaId, localIndex);
         // addExpressionToConstraint(expression, areaBalanceConstraint);
-        for (auto modelVarIndex = 0; modelVarIndex < linearExpression.coefPerVar().size();
-             ++modelVarIndex)
+
+        const auto& coeffPerVar = linearExpression.coefPerVar();
+        for (Eigen::SparseMatrix<double>::InnerIterator it(coeffPerVar, localIndex); it; ++it)
         {
-            const auto& coeffPerVar = linearExpression.coefPerVar();
-            const auto& variables = modelerVariableDictionary_.at(modelVarIndex);
-            if (variables.size() > localIndex)
-            {
-                const auto& coefficients = coeffPerVar.at(modelVarIndex);
-                areaBalanceConstraint->setCoefficient(variables.at(localIndex),
-                                                      coefficients.singleValueOrAtIndex(
-                                                        localIndex));
-            }
+            const auto& variables = modelerVariableDictionary_.at(it.col());
+
+            areaBalanceConstraint->setCoefficient(variables.at(localIndex), it.value());
         }
-        areaBalanceConstraint->setBounds(
-          areaBalanceConstraint->getLb()
-            + linearExpression.offset().singleValueOrAtIndex(localIndex),
-          areaBalanceConstraint->getUb()
-            + linearExpression.offset().singleValueOrAtIndex(localIndex));
+        double offset = linearExpression.offset()(localIndex);
+        areaBalanceConstraint->setBounds(areaBalanceConstraint->getLb() + offset,
+                                         areaBalanceConstraint->getUb() + offset);
     }
 }
 
@@ -139,6 +132,25 @@ public:
         return 1; // Default rank for empty groupId
     }
 };
+// TODO duplicated  from ComponentFiller
+const std::vector<unsigned>& ComponentToAreaConnectionFiller::getVariableStartColumn() const
+{
+    static std::vector<unsigned> startColumn(modelerVariableDictionary_.size());
+    unsigned i = 0;
+    for (const auto& variables: modelerVariableDictionary_)
+    {
+        if (i == 0)
+        {
+            startColumn[i] = 0;
+        }
+        else
+        {
+            startColumn[i] = startColumn.at(i - 1) + modelerVariableDictionary_.at(i - 1).size();
+        }
+        ++i;
+    }
+    return startColumn;
+}
 
 void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
   ILinearProblem& pb,
@@ -155,7 +167,8 @@ void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
     ReadLinearExpressionVisitor visitor(connectedComponentEvalContext,
                                         ctx,
                                         component,
-                                        modelerVariableDictionary_.size());
+                                        modelerVariableDictionary_.size(),
+                                        getVariableStartColumn());
     auto linearExpression = visitor.dispatch(component.nodeAtPortField(portId, injectionFieldId));
     addExpressionToConstraint(pb, linearExpression, ctx, areaId);
 }
