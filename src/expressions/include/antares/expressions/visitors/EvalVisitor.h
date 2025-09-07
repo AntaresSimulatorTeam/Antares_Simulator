@@ -181,9 +181,13 @@ std::vector<double> computeBinaryOperation(const std::vector<double>& lhs, doubl
 template<typename BinaryOp>
 std::vector<double> computeBinaryOperation(double lhs, const std::vector<double>& rhs, BinaryOp op)
 {
-    return computeBinaryOperation(rhs, lhs, op);
+    std::vector<double> result(rhs.size());
+    for (size_t i = 0; i < rhs.size(); ++i)
+    {
+        result[i] = op(lhs, rhs[i]);
+    }
+    return result;
 }
-
 class VectorsMismatchSize final: public std::runtime_error
 {
 public:

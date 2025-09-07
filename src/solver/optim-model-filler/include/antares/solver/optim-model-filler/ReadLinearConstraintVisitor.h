@@ -45,7 +45,7 @@ namespace Antares::Optimization
  */
 struct LinearConstraint
 {
-    Eigen::SparseMatrix<double> coef_per_var;
+    Eigen::SparseMatrix<double, Eigen::RowMajor> coef_per_var;
     Eigen::VectorXd lb;
     Eigen::VectorXd ub;
 };

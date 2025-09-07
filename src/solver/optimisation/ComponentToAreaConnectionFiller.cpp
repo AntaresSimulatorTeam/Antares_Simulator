@@ -109,7 +109,10 @@ void ComponentToAreaConnectionFiller::addExpressionToConstraint(
         // addExpressionToConstraint(expression, areaBalanceConstraint);
 
         const auto& coeffPerVar = linearExpression.coefPerVar();
-        for (Eigen::SparseMatrix<double>::InnerIterator it(coeffPerVar, localIndex); it; ++it)
+        for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator it(coeffPerVar,
+                                                                            localIndex);
+             it;
+             ++it)
         {
             const auto& variables = modelerVariableDictionary_.at(it.col());
 

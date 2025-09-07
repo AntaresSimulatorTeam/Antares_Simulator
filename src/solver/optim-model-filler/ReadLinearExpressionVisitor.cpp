@@ -129,7 +129,7 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const VariableNode* nod
     if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
     {
         for (auto localTimeStep = fillContext_.getLocalFirstTimeStep();
-             localTimeStep < fillContext_.getLocalLastTimeStep();
+             localTimeStep <= fillContext_.getLocalLastTimeStep();
              ++localTimeStep)
         {
             out.setCoeff(localTimeStep, variableStart, 1);
@@ -140,14 +140,16 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const VariableNode* nod
     if (node->timeIndex() == TimeIndex::VARYING_IN_TIME_ONLY
         || node->timeIndex() == TimeIndex::VARYING_IN_TIME_AND_SCENARIO) /* scenario not handled !*/
     {
+        auto variableIndex = variableStart;
         for (auto localTimeStep = fillContext_.getLocalFirstTimeStep();
-             localTimeStep < fillContext_.getLocalLastTimeStep();
+             localTimeStep <= fillContext_.getLocalLastTimeStep();
              ++localTimeStep)
         {
-            for (auto variableIndex(variableStart); variableIndex < variableEnd; ++variableIndex)
-            {
-                out.setCoeff(localTimeStep, variableIndex, 1);
-            }
+            // for (auto variableIndex(variableStart); variableIndex < variableEnd; ++variableIndex)
+            // {
+            out.setCoeff(localTimeStep, variableIndex, 1);
+            //}
+            ++variableIndex;
         }
     }
     else
@@ -244,7 +246,7 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const ComponentParamete
     throw std::invalid_argument("ReadLinearExpressionVisitor cannot visit ComponentParameterNodes");
 }
 template<typename Derived>
-requires(std::same_as<Derived, Eigen::SparseMatrix<double>>
+requires(std::same_as<Derived, Eigen::SparseMatrix<double, Eigen::RowMajor>>
          || std::same_as<Derived, Eigen::VectorXd>)
 Derived cyclicRowShiftPerm(const Derived& m, int shift)
 {

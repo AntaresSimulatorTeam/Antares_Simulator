@@ -18,6 +18,8 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
+// TODO just to print matrix
+#include <iostream>
 #include <span>
 
 #include <antares/solver/optim-model-filler/LinearExpressionEigen.h>
@@ -26,10 +28,18 @@ LinearExpressionEigen::LinearExpressionEigen(int nRows, int nCols):
     coeffs_(nRows, nCols),
     offsets_(nRows)
 {
+    // TODO
+    offsets_.setZero();
 }
 
-LinearExpressionEigen::LinearExpressionEigen(const Eigen::SparseMatrix<double>& coeffs,
-                                             const Eigen::VectorXd& offsets)
+void LinearExpressionEigen::print() const
+{
+    std::cout << coeffs_ << std::endl;
+}
+
+LinearExpressionEigen::LinearExpressionEigen(
+  const Eigen::SparseMatrix<double, Eigen::RowMajor>& coeffs,
+  const Eigen::VectorXd& offsets)
 {
     if (coeffs.rows() != offsets.size())
     {

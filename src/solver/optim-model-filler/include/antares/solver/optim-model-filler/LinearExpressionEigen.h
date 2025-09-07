@@ -26,7 +26,8 @@ class LinearExpressionEigen
 {
 public:
     LinearExpressionEigen(int nRows, int nCols);
-    LinearExpressionEigen(const Eigen::SparseMatrix<double>& coeffs,
+    void print() const;
+    LinearExpressionEigen(const Eigen::SparseMatrix<double, Eigen::RowMajor>& coeffs,
                           const Eigen::VectorXd& offsets);
 
     LinearExpressionEigen operator+(const LinearExpressionEigen& b) const;
@@ -68,7 +69,7 @@ public:
         offsets_ = offsets;
     }
 
-    const Eigen::SparseMatrix<double>& coefPerVar() const
+    const Eigen::SparseMatrix<double, Eigen::RowMajor>& coefPerVar() const
     {
         return coeffs_;
     }
