@@ -59,13 +59,12 @@ VariablesBulkAddition::VariablesBulkAddition(
 
 void VariablesBulkAddition::addVariable(const std::string& compoId,
                                         const std::string& variableId,
-                                        unsigned int modelVariableIndex,
                                         double lb,
                                         double ub,
                                         bool integer,
                                         const Optimization::Dimensions& dim) const
 {
-    variableDictionary_.addStartColumn(modelVariableIndex);
+    variableDictionary_.addStartColumn();
     for (const auto& s: dim.getScenarioIndices())
     {
         for (const auto t: dim.getTimesteps())
@@ -86,7 +85,6 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
 
 void VariablesBulkAddition::addVariable(const std::string& compoId,
                                         const std::string& variableId,
-                                        unsigned int modelVariableIndex,
                                         const std::vector<double>& lb,
                                         double ub,
                                         bool integer,
@@ -100,7 +98,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
         errMessage << "requested " << count << " variables but lb size = " << lb.size();
         throw BoundsSizeMismatch(errMessage.str());
     }
-variableDictionary_.addStartColumn(modelVariableIndex);
+    variableDictionary_.addStartColumn();
     for (const auto& s: dim.getScenarioIndices())
     {
         for (const auto t: dim.getTimesteps())
@@ -122,7 +120,6 @@ variableDictionary_.addStartColumn(modelVariableIndex);
 
 void VariablesBulkAddition::addVariable(const std::string& compoId,
                                         const std::string& variableId,
-                                        unsigned int modelVariableIndex,
                                         double lb,
                                         const std::vector<double>& ub,
                                         bool integer,
@@ -135,7 +132,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
         errMessage << "requested " << count << " variables but ub size = " << ub.size();
         throw BoundsSizeMismatch(errMessage.str());
     }
-    variableDictionary_.addStartColumn(modelVariableIndex);
+    variableDictionary_.addStartColumn();
     for (const auto& s: dim.getScenarioIndices())
     {
         for (const auto t: dim.getTimesteps())
@@ -157,7 +154,6 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
 
 void VariablesBulkAddition::addVariable(const std::string& compoId,
                                         const std::string& variableId,
-                                        unsigned int modelVariableIndex,
                                         const std::vector<double>& lb,
                                         const std::vector<double>& ub,
                                         bool integer,
@@ -171,7 +167,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
                    << " and ub size = " << ub.size();
         throw BoundsSizeMismatch(errMessage.str());
     }
-variableDictionary_.addStartColumn(modelVariableIndex);
+    variableDictionary_.addStartColumn();
     for (const auto& s: dim.getScenarioIndices())
     {
         for (const auto t: dim.getTimesteps())
@@ -269,13 +265,11 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
             // std::visit to handle the 4 cases: double/double, vector/double,
             // double/vector and vector/vector.
             std::visit(
-              [&pb, &variable, this, &dim, &modelVariableGlobalIndex](const auto& lb_,
-                                                                      const auto& ub_)
+              [&pb, &variable, this, &dim](const auto& lb_, const auto& ub_)
               {
                   VariablesBulkAddition(pb, solverVariables_)
                     .addVariable(component_.Id(),
                                  variable.Id(),
-                                 modelVariableGlobalIndex,
                                  lb_,
                                  ub_,
                                  variable.Type() != ModelerStudy::SystemModel::ValueType::FLOAT,
@@ -292,7 +286,6 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
             VariablesBulkAddition(pb, solverVariables_)
               .addVariable(component_.Id(),
                            variable.Id(),
-                           modelVariableGlobalIndex,
                            lb.valueAsDouble(),
                            ub.valueAsDouble(),
                            variable.Type() != ModelerStudy::SystemModel::ValueType::FLOAT,

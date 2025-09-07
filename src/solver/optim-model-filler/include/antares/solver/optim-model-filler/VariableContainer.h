@@ -32,9 +32,9 @@ public:
         return variableStartColumn_;
     }
 
-    void addStartColumn(unsigned int startColumn)
+    void addStartColumn()
     {
-        variableStartColumn_.push_back(startColumn);
+        variableStartColumn_.push_back(variables_.size());
     }
 
     std::vector<Antares::Optimisation::LinearProblemApi::IMipVariable*> getVariables() const

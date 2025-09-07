@@ -101,7 +101,6 @@ public:
 
     void addVariable(const std::string& compoId,
                      const std::string& variableId,
-                     unsigned int modelVariableIndex,
                      double lb,
                      double ub,
                      bool integer,
@@ -109,7 +108,6 @@ public:
 
     void addVariable(const std::string& compoId,
                      const std::string& variableId,
-                     unsigned int modelVariableIndex,
                      const std::vector<double>& lb,
                      double ub,
                      bool integer,
@@ -117,7 +115,6 @@ public:
 
     void addVariable(const std::string& compoId,
                      const std::string& variableId,
-                     unsigned int modelVariableIndex,
                      double lb,
                      const std::vector<double>& ub,
                      bool integer,
@@ -125,7 +122,6 @@ public:
 
     void addVariable(const std::string& compoId,
                      const std::string& variableId,
-                     unsigned int modelVariableIndex,
                      const std::vector<double>& lb,
                      const std::vector<double>& ub,
                      bool integer,
