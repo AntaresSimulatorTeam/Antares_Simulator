@@ -95,7 +95,7 @@ double TimeSeriesSet::getData(LinearProblemApi::IScenario::TimeSeriesNumber tsNu
         throw HourTooBig(name(), lastHour);
     }
     auto& tsSet = tsSet_[tsIndex];
-    return std::span(tsSet.begin() + firstHour, tsSet.begin() + lastHour);
+    return std::span(tsSet.begin() + firstHour, tsSet.begin() + lastHour + 1);
 }
 
 } // namespace Antares::Optimisation::LinearProblemDataImpl

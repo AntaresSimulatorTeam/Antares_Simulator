@@ -408,11 +408,18 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
                                                       solverVariables_.getVariableStartColumn());
 
     const auto linearExpression = visitor.dispatch(model->Objective().RootNode());
-
-    if (linearExpression.offset().nonZeros() > 0)
+    const auto& offset = linearExpression.offset();
+    // this is the simplest way to check if any entry of the offset is zero
+    // Eigen::VectorXd returns the number of non-zero elements in the vector, based on the internal
+    // storage. It does not use a tolerance for floating-point comparisons by default.
+    for (auto i = 0; i < offset.size(); ++i)
     {
-        throw std::invalid_argument("Antares does not support objective offsets (found in model '"
-                                    + model->Id() + "' of component '" + component_.Id() + "').");
+        if (std::abs(offset[i]) > 1e-10)
+        {
+            throw std::invalid_argument(
+              "Antares does not support objective offsets (found in model '" + model->Id()
+              + "' of component '" + component_.Id() + "').");
+        }
     }
 
     const auto& coefPerVars = linearExpression.coefPerVar();
