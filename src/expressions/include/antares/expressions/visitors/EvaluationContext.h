@@ -70,10 +70,10 @@ public:
     [[nodiscard]] double getParameterValue(const std::string& key,
                                            unsigned int year,
                                            unsigned int hour) const;
-    std::span<const double> EvaluationContext::getParameterValue(const std::string& key,
-                                                                 unsigned int year,
-                                                                 unsigned int firstHour,
-                                                                 unsigned int lastHour) const;
+    std::span<const double> getParameterValue(const std::string& key,
+                                              unsigned int year,
+                                              unsigned int firstHour,
+                                              unsigned int lastHour) const;
 
     [[nodiscard]] ParameterType getParameterType(const std::string& key) const;
 

@@ -132,7 +132,7 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const VariableNode* nod
              localTimeStep < fillContext_.getLocalLastTimeStep();
              ++localTimeStep)
         {
-            out.addCoeff(localTimeStep, variableStart, 1);
+            out.setCoeff(localTimeStep, variableStart, 1);
         }
     }
     // else time-dep only hanled    //  check if var is time-dep then nbTimeStep == variableEnd -
@@ -146,7 +146,7 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const VariableNode* nod
         {
             for (auto variableIndex(variableStart); variableIndex < variableEnd; ++variableIndex)
             {
-                out.addCoeff(localTimeStep, variableIndex, 1);
+                out.setCoeff(localTimeStep, variableIndex, 1);
             }
         }
     }
@@ -183,13 +183,12 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const ParameterNode* no
     // only dependent
 
     int idx = 0;
-    // assume glo nb timeStep == nbtimeSteps
-    const auto& parmeters = evalContext_.getParameterValue(node->value(),
-                                                           fillContext_.getYear(),
-                                                           fillContext_.getGlobalFirstTimeStep(),
-                                                           fillContext_.getGlobalLastTimeStep());
-    out.setOffset(
-      {nbtimeSteps_, Eigen::Map<const Eigen::VectorXd>(parmeters.data(), parmeters.size())});
+    // assume global nb timeStep == nbtimeSteps
+    const auto& parameters = evalContext_.getParameterValue(node->value(),
+                                                            fillContext_.getYear(),
+                                                            fillContext_.getGlobalFirstTimeStep(),
+                                                            fillContext_.getGlobalLastTimeStep());
+    out.setOffset(Eigen::Map<const Eigen::VectorXd>(parameters.data(), parameters.size()));
 
     return out;
 }
@@ -245,66 +244,22 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const ComponentParamete
     throw std::invalid_argument("ReadLinearExpressionVisitor cannot visit ComponentParameterNodes");
 }
 template<typename Derived>
-requires(std::same_as<Derived, Eigen::MatrixXd> || std::same_as<Derived, Eigen::VectorXd>)
-Derived cyclicRowShiftPerm(const Eigen::MatrixBase<Derived>& m, int shift)
+requires(std::same_as<Derived, Eigen::SparseMatrix<double>>
+         || std::same_as<Derived, Eigen::VectorXd>)
+Derived cyclicRowShiftPerm(const Derived& m, int shift)
 {
     int n = m.rows();
     if (n == 0)
-    {
         return Derived(m);
-    }
+
     int s = ((shift % n) + n) % n;
     Eigen::PermutationMatrix<Eigen::Dynamic> perm(n);
     for (int i = 0; i < n; ++i)
-    {
         perm.indices()[i] = (i + s) % n;
-    }
-    return (perm * m).eval(); // permutes rows
+
+    return (perm * m).eval();
 }
 
-// Eigen::VectorXd cyclicRowShiftPerm(const Eigen::VectorXd& v, int shift)
-// {
-//     int n = v.size();
-//     if (n == 0)
-//     {
-//         return v;
-//     }
-//     int s = ((shift % n) + n) % n; // normalize shift to [0,n-1]
-//
-//     Eigen::PermutationMatrix<Eigen::Dynamic> perm(n);
-//     for (int i = 0; i < n; ++i)
-//     {
-//         perm.indices()[i] = (i + s) % n;
-//     }
-//
-//     return perm * v; // permutes entries of v
-// }
-
-// template <typename Derived>
-// auto cyclicRowShift(const Eigen::MatrixBase<Derived>& m, int shift) {
-//     int n = m.rows();
-//     if (n == 0) return m;
-//
-//     int s = ((shift % n) + n) % n; // 1. Normalize the shift
-//     return (Eigen::VectorXi::LinSpaced(n, s, s + n - 1).array() % n).matrix()(Eigen::all); // 2.
-//     The magic line
-// }
-
-// LinearExpressionEigen ReadLinearExpressionVisitor::TimeShift(const LinearExpressionEigen& left,
-//                                                              int timeShift) const
-// {
-//     // TODO to be continued ...
-//     LinearExpressionEigen to_return(nbtimeSteps_, nbModelVariables_);
-//     // to_return.setCol()
-//     for (auto localTimeStep = fillContext_.getLocalFirstTimeStep();
-//          localTimeStep <= fillContext_.getLocalLastTimeStep();
-//          ++localTimeStep)
-//     {
-//         auto shiftedIndex = rotatedIndex(localTimeStep, timeShift, fillContext_);
-//         to_return.setRow(localTimeStep, left.coefPerVar().row(shiftedIndex));
-//     }
-//     return to_return;
-// }
 
 LinearExpressionEigen ReadLinearExpressionVisitor::visit(const TimeShiftNode* node)
 {
@@ -319,18 +274,31 @@ LinearExpressionEigen ReadLinearExpressionVisitor::TimeIndex(
   const LinearExpressionEigen& expression,
   int timeIndex) const
 {
-    // TODO to be continued ...
     LinearExpressionEigen to_return(nbtimeSteps_, nbModelVariables_);
+    const auto offset = expression.offset()(timeIndex);
+    to_return.setOffset(Eigen::VectorXd::Constant(nbtimeSteps_, offset));
     const auto& expressionMatrix = expression.coefPerVar();
-
-    for (auto i(0); i < variableStartColumn_.size(); ++i)
+    for (auto globalIndex: component_.ModelVariablesGlobalIndices())
     {
-        const auto variableStart = variableStartColumn_.at(i);
-        const auto timeIndexCol = variableStart + timeIndex;
-        Eigen::VectorXd col = Eigen::VectorXd::Constant(nbtimeSteps_,
-                                                        expressionMatrix.coeff(timeIndex,
-                                                                               timeIndexCol));
-        to_return.setCol(timeIndexCol, col);
+        const auto variableStart = variableStartColumn_.at(globalIndex);
+        const auto variableEnd = variableStart == *variableStartColumn_.rbegin()
+                                   ? nbModelVariables_
+                                   : variableStartColumn_.at(globalIndex + 1);
+
+        if (variableEnd - variableStart > 1)
+        {
+            const auto timeIndexCol = variableStart + timeIndex;
+            if (const auto value = expressionMatrix.coeff(timeIndex, timeIndexCol);
+                std::abs(value) > 1e-16)
+            {
+                Eigen::VectorXd col = Eigen::VectorXd::Constant(nbtimeSteps_, value);
+                to_return.setCol(timeIndexCol, col.sparseView());
+            }
+        }
+        else
+        {
+            to_return.setCol(variableStart, expressionMatrix.coeff(timeIndex, variableStart));
+        }
     }
     return to_return;
 }
@@ -364,14 +332,18 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const TimeSumNode* node
 LinearExpressionEigen ReadLinearExpressionVisitor::visit(const AllTimeSumNode* node)
 {
     const auto expression = dispatch(node->child());
-    LinearExpressionEigen to_return(nbtimeSteps_, nbModelVariables_);
+    Eigen::RowVectorXd row = Eigen::RowVectorXd::Zero(nbModelVariables_);
 
-    for (auto localTimeStep = fillContext_.getLocalFirstTimeStep();
+    for (int localTimeStep = fillContext_.getLocalFirstTimeStep();
          localTimeStep <= fillContext_.getLocalLastTimeStep();
          ++localTimeStep)
     {
-        to_return += TimeIndex(expression, localTimeStep);
+        row += expression.coefPerVar().row(localTimeStep);
     }
+
+    LinearExpressionEigen to_return(nbtimeSteps_, nbModelVariables_);
+    to_return.setCoefPerVar(row.replicate(nbtimeSteps_, 1).sparseView());
+
     return to_return;
 }
 } // namespace Antares::Optimization

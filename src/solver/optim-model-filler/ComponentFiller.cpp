@@ -335,18 +335,15 @@ void ComponentFiller::addStaticConstraint(Optimisation::LinearProblemApi::ILinea
                                           const Optimization::LinearConstraint& linear_constraint,
                                           const std::string& constraint_id) const
 {
-    auto* ct = pb.addConstraint(linear_constraint.lb.valueAsDouble(),
-                                linear_constraint.ub.valueAsDouble(),
+    auto* ct = pb.addConstraint(linear_constraint.lb(0),
+                                linear_constraint.ub(0),
                                 component_.Id() + "." + constraint_id);
 
-    for (auto modelVarIndex = 0; modelVarIndex < linear_constraint.coef_per_var.size();
-         ++modelVarIndex)
+    for (Eigen::SparseMatrix<double>::InnerIterator it(linear_constraint.coef_per_var, 0); it; ++it)
     {
-        const auto& coeffs = linear_constraint.coef_per_var[modelVarIndex];
+        const auto& variables = variableDictionary_.at(it.col());
 
-        const auto& variables = variableDictionary_.at(modelVarIndex);
-
-        ct->setCoefficient(variables.at(0), coeffs.singleValueOrAtIndex(0));
+        ct->setCoefficient(variables.at(0), it.value());
     }
 }
 
@@ -364,21 +361,19 @@ void ComponentFiller::addTimeDependentConstraints(
         for (const auto t: dim.getTimesteps())
         {
             const auto localIndex = s * dim.getNumberOfTimesteps() + t;
-            auto* ct = pb.addConstraint(linear_constraints.lb.(localIndex),
-                                        linear_constraints.ub.at(localIndex),
+            auto* ct = pb.addConstraint(linear_constraints.lb(localIndex),
+                                        linear_constraints.ub(localIndex),
                                         component_.Id() + "." + constraint_id + '_'
                                           + std::to_string(t));
 
-            for (auto modelVarIndex = 0; modelVarIndex < linear_constraints.coef_per_var.size();
-                 ++modelVarIndex)
+            for (Eigen::SparseMatrix<double>::InnerIterator it(linear_constraints.coef_per_var,
+                                                               localIndex);
+                 it;
+                 ++it)
             {
-                const auto& variables = variableDictionary_.at(modelVarIndex);
-                if (variables.size() > localIndex)
-                {
-                    const auto& coefficients = linear_constraints.coef_per_var[modelVarIndex];
-                    ct->setCoefficient(variables.at(localIndex),
-                                       coefficients.singleValueOrAtIndex(localIndex));
-                }
+                const auto& variables = variableDictionary_.at(it.col());
+
+                ct->setCoefficient(variables.at(localIndex), it.value());
             }
         }
     }
@@ -413,6 +408,8 @@ void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProb
                 addStaticConstraint(pb, linear_constraints, constraint.Id());
             }
         }
+    }
+}
 
 size_t ComponentFiller::getNbVars() const
 {
@@ -466,21 +463,27 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
 
     const auto linearExpression = visitor.dispatch(model->Objective().RootNode());
 
-    if (std::abs(linearExpression.offset().at(0)) > 1e-10)
+    if (linearExpression.offset().nonZeros() > 0)
     {
         throw std::invalid_argument("Antares does not support objective offsets (found in model '"
                                     + model->Id() + "' of component '" + component_.Id() + "').");
     }
 
     const auto& coefPerVars = linearExpression.coefPerVar();
-    for (auto modelVarIndex: component_.ModelVariablesGlobalIndices())
-    {
-        const auto& coefficients = coefPerVars.at(modelVarIndex);
-        const auto& mipVariables = variableDictionary_.at(modelVarIndex);
+    const Optimization::Dimensions dim(Optimization::IntegerInterval{ctx.getYear(), ctx.getYear()},
+                                       Optimization::IntegerInterval(ctx.getLocalFirstTimeStep(),
+                                                                     ctx.getLocalLastTimeStep()));
 
-        for (auto i = 0; i < coefficients.size(); ++i)
+    for (const auto s: dim.getScenarioIndices())
+    {
+        for (const auto t: dim.getTimesteps())
         {
-            pb.setObjectiveCoefficient(mipVariables.at(i), coefficients.at(i));
+            const auto localIndex = s * dim.getNumberOfTimesteps() + t;
+            for (Eigen::SparseMatrix<double>::InnerIterator it(coefPerVars, localIndex); it; ++it)
+            {
+                const auto& variables = variableDictionary_.at(it.col());
+                pb.setObjectiveCoefficient(variables.at(localIndex), it.value());
+            }
         }
     }
 }

@@ -25,11 +25,13 @@
 class LinearExpressionEigen
 {
 public:
-    LinearExpressionEigen(int nTimesteps, int nVars);
+    LinearExpressionEigen(int nRows, int nCols);
     LinearExpressionEigen(const Eigen::SparseMatrix<double>& coeffs,
                           const Eigen::VectorXd& offsets);
 
     LinearExpressionEigen operator+(const LinearExpressionEigen& b) const;
+    static void CheckLinearExpressionSize(const LinearExpressionEigen& a,
+                                          const LinearExpressionEigen& b);
 
     LinearExpressionEigen& operator+=(const LinearExpressionEigen& b);
 
@@ -48,12 +50,12 @@ public:
     // --- Division ---
     LinearExpressionEigen operator/(const LinearExpressionEigen& b) const;
     LinearExpressionEigen& operator/=(const LinearExpressionEigen& b);
-    void addCoeff(size_t t, size_t col, double value);
-    void addVectorCoeff(size_t col, const std::vector<double>& values);
-    void addVectorCoeff(size_t col, double value);
-    void addOffset(size_t t, double value);
-    void addVectorOffset(const std::vector<double>& values);
-    void addVectorOffset(double value);
+    void setCoeff(size_t row, size_t col, double value);
+    void setCol(size_t colIndex, const std::vector<double>& values);
+    void setCol(size_t col, double value);
+    void setOffset(size_t t, double value);
+    void setOffset(const std::vector<double>& values);
+    void setOffset(double value);
 
     // --- Getters ---
     const Eigen::VectorXd& offset() const
@@ -71,8 +73,13 @@ public:
         return coeffs_;
     }
 
-    void setCol(int colIndex, const Eigen::VectorXd& col);
-    void setRow(int rowIndex, const Eigen::VectorXd& row);
+    void setCoefPerVar(const Eigen::SparseMatrix<double>& coeffs)
+    {
+        coeffs_ = coeffs;
+    }
+
+    void setCol(int colIndex, const Eigen::SparseVector<double>& col);
+    void setRow(int rowIndex, const Eigen::SparseVector<double>& row);
 
 private:
     Eigen::SparseMatrix<double, Eigen::RowMajor> coeffs_; // [nTimesteps × nVars]
