@@ -239,6 +239,46 @@ void addObjectiveValue(ISimulationTable& simulation,
                          .status = MipBasisStatus::NOT_AVAILABLE});
 }
 
+void addEntriesForNode(ISimulationTable& simulationTable,
+                       const FillContext& fillContext,
+                       const Antares::ModelerStudy::SystemModel::Component& component,
+                       unsigned currentBlock,
+                       const TimeConversionMode& timeConversionMode,
+                       std::optional<unsigned> scenario,
+                       bool forceExportForScenarioIndex,
+                       const Antares::Optimisation::EvaluationContextProvider& contextProvider,
+                       const Antares::Expressions::Visitors::EvaluationContext& evalContext,
+                       const std::string& cid,
+                       const std::string& outputName,
+                       const Antares::Expressions::Nodes::Node* rootNode)
+{
+    Antares::Expressions::Visitors::EvalVisitor evalVisitor(evalContext, fillContext, &component);
+    auto value = evalVisitor.dispatch(rootNode);
+    TI idxType = Antares::Expressions::Visitors::TimeIndexVisitor(component, contextProvider)
+                   .dispatch(rootNode);
+    idxType = updateTimeIndexIfShouldForceScenario(idxType, forceExportForScenarioIndex);
+
+    auto handle = [&](std::optional<unsigned> ts, std::optional<unsigned> scenIdx)
+    {
+        TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(*ts,
+                                                                   timeConversionMode,
+                                                                   currentBlock)
+                          : TimeBlock{.block = currentBlock + 1,
+                                      .blockTimeIndex = std::nullopt,
+                                      .absoluteTimeIndex = std::nullopt};
+        auto val = ts.has_value() ? value.valuesAsVector()[ts.value()] : value.valueAsDouble();
+        simulationTable.addEntry({.block = tb.block,
+                                  .component = cid,
+                                  .output = outputName,
+                                  .absolute_time_index = tb.absoluteTimeIndex,
+                                  .block_time_index = tb.blockTimeIndex,
+                                  .scenario_index = scenIdx,
+                                  .value = val,
+                                  .status = MipBasisStatus::NOT_AVAILABLE});
+    };
+    handleDependingOnTimeIndex(fillContext, scenario, idxType, handle);
+}
+
 void addPortEntries(ISimulationTable& simulationTable,
                     const FillContext& fillContext,
                     const Antares::ModelerStudy::SystemModel::Component& component,
@@ -250,44 +290,22 @@ void addPortEntries(ISimulationTable& simulationTable,
 {
     const auto& cid = component.Id();
     auto evalContext = contextProvider.provide(component);
-
     for (const auto& [portFieldKey, portFieldDef]: component.getModel()->PortFieldDefinitions())
     {
-        Antares::Expressions::Visitors::EvalVisitor evalVisitor(evalContext,
-                                                                fillContext,
-                                                                &component);
-
-        auto portValue = evalVisitor.dispatch(portFieldDef.Definition().RootNode());
-
-        TI idxType = Antares::Expressions::Visitors::TimeIndexVisitor(component, contextProvider)
-                       .dispatch(portFieldDef.Definition().RootNode());
-        idxType = updateTimeIndexIfShouldForceScenario(idxType, forceExportForScenarioIndex);
-        // TODO: EvalVistior already uses a TimeIndexVisitor under the hood to know if the port
-        // is time and/or scenario dependent. It may be more efficient to enrich EvaluationResult
-        // by adding a TimeIndex to it? It would require some careful work inside EvalVisitor
-
-        auto handle = [&](std::optional<unsigned> ts, std::optional<unsigned> scenIdx)
-        {
-            TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(*ts,
-                                                                       timeConversionMode,
-                                                                       currentBlock)
-                              : TimeBlock{.block = currentBlock + 1,
-                                          .blockTimeIndex = std::nullopt,
-                                          .absoluteTimeIndex = std::nullopt};
-
-            auto value = ts.has_value() ? portValue.valuesAsVector()[ts.value()]
-                                        : portValue.valueAsDouble();
-            simulationTable.addEntry({.block = tb.block,
-                                      .component = cid,
-                                      .output = portFieldKey.portId + "." + portFieldKey.fieldId,
-                                      .absolute_time_index = tb.absoluteTimeIndex,
-                                      .block_time_index = tb.blockTimeIndex,
-                                      .scenario_index = scenIdx,
-                                      .value = value,
-                                      .status = MipBasisStatus::NOT_AVAILABLE});
-        };
-
-        handleDependingOnTimeIndex(fillContext, scenario, idxType, handle);
+        const auto& rootNode = portFieldDef.Definition().RootNode();
+        std::string outputName = portFieldKey.portId + "." + portFieldKey.fieldId;
+        addEntriesForNode(simulationTable,
+                          fillContext,
+                          component,
+                          currentBlock,
+                          timeConversionMode,
+                          scenario,
+                          forceExportForScenarioIndex,
+                          contextProvider,
+                          evalContext,
+                          cid,
+                          outputName,
+                          rootNode);
     }
 }
 
@@ -302,41 +320,22 @@ void addExtraOutputEntries(ISimulationTable& simulationTable,
 {
     const auto& cid = component.Id();
     auto evalContext = contextProvider.provide(component);
-
     for (const auto& [extraOutputId, extraOutput]: component.getModel()->ExtraOutputs())
     {
-        Antares::Expressions::Visitors::EvalVisitor evalVisitor(evalContext,
-                                                                fillContext,
-                                                                &component);
-
-        TI idxType = Antares::Expressions::Visitors::TimeIndexVisitor(component, contextProvider)
-                       .dispatch(extraOutput.expression().RootNode());
-        idxType = updateTimeIndexIfShouldForceScenario(idxType, forceExportForScenarioIndex);
-
-        auto extraOutputValue = evalVisitor.dispatch(extraOutput.expression().RootNode());
-
-        auto handle = [&](std::optional<unsigned> ts, std::optional<unsigned> scenIdx)
-        {
-            TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(*ts,
-                                                                       timeConversionMode,
-                                                                       currentBlock)
-                              : TimeBlock{.block = currentBlock + 1,
-                                          .blockTimeIndex = std::nullopt,
-                                          .absoluteTimeIndex = std::nullopt};
-
-            auto value = ts.has_value() ? extraOutputValue.valuesAsVector()[ts.value()]
-                                        : extraOutputValue.valueAsDouble();
-            simulationTable.addEntry({.block = tb.block,
-                                      .component = cid,
-                                      .output = extraOutputId,
-                                      .absolute_time_index = tb.absoluteTimeIndex,
-                                      .block_time_index = tb.blockTimeIndex,
-                                      .scenario_index = scenIdx,
-                                      .value = value,
-                                      .status = MipBasisStatus::NOT_AVAILABLE});
-        };
-
-        handleDependingOnTimeIndex(fillContext, scenario, idxType, handle);
+        const auto& rootNode = extraOutput.expression().RootNode();
+        std::string outputName = extraOutputId;
+        addEntriesForNode(simulationTable,
+                          fillContext,
+                          component,
+                          currentBlock,
+                          timeConversionMode,
+                          scenario,
+                          forceExportForScenarioIndex,
+                          contextProvider,
+                          evalContext,
+                          cid,
+                          outputName,
+                          rootNode);
     }
 }
 
